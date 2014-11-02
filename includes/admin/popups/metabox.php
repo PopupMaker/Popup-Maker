@@ -1,0 +1,337 @@
+<?php
+/**
+ * Metabox Functions
+ *
+ * @package     POPMAKE
+ * @subpackage  Admin/Popups
+ * @copyright   Copyright (c) 2014, Wizard Internet Solutions
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since 1.0
+ */
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/** All Popups *****************************************************************/
+
+/**
+ * Register all the meta boxes for the Popup custom post type
+ *
+ * @since 1.0
+ * @return void
+ */
+function popmake_add_popup_meta_box() {
+	/** Display Meta **/
+	add_meta_box( 'popmake_popup_display', __( 'Display Settings', 'popup-maker' ),  'popmake_render_popup_display_meta_box', 'popup', 'normal', 'high' );
+	/** Close Meta **/
+	add_meta_box( 'popmake_popup_close', __( 'Close Settings', 'popup-maker' ),  'popmake_render_popup_close_meta_box', 'popup', 'normal', 'high' );
+	/** Loading Meta **/
+	add_meta_box( 'popmake_popup_loading_condition', __( 'Loading Conditions', 'popup-maker' ),  'popmake_render_popup_loading_condition_meta_box', 'popup', 'side', 'high' );
+}
+add_action( 'add_meta_boxes', 'popmake_add_popup_meta_box' );
+
+
+
+
+
+function popmake_popup_meta_fields() {
+	$fields = array(
+		'popup_defaults_set',
+		'popup_title',
+		'popup_loading_condition_on_entire_site',
+		'popup_loading_condition_on_home',
+		'popup_loading_condition_exclude_on_home',
+	);
+	foreach(popmake_popup_meta_field_groups() as $group) {
+		foreach(apply_filters( 'popmake_popup_meta_field_group_' . $group, $fields ) as $field) {
+			$fields[] = 'popup_' . $group . '_' . $field;
+		}
+	}
+	foreach(popmake_get_supported_types() as $name) {
+		$labels = get_post_type_object( $name ) ? get_post_type_object( $name ) : get_taxonomy( $name );
+		$plural = strtolower( $labels->labels->name );
+		$fields[] = "popup_loading_condition_on_{$plural}";
+		$fields[] = "popup_loading_condition_exclude_on_{$plural}";
+		$fields[] = "popup_loading_condition_on_specific_{$plural}";
+		$fields[] = "popup_loading_condition_exclude_on_specific_{$plural}";
+	}
+	return apply_filters( 'popmake_popup_meta_fields', $fields );
+}
+
+function popmake_popup_meta_field_groups() {
+	$groups = array(
+		'display',
+		'close'
+	);
+	return apply_filters( 'popmake_popup_meta_field_groups', $groups );
+}
+
+
+function popmake_popup_meta_field_group_display() {
+	return array(
+		'overlay_disabled',
+		'size',
+		'custom_width',
+		'custom_width_unit',
+		'custom_height',
+		'custom_height_unit',
+		'custom_height_auto',
+		'location',
+		'position_top',
+		'position_left',
+		'position_bottom',
+		'position_right',
+		'position_fixed',
+		'animation_type',
+		'animation_speed',
+		'animation_origin',
+	);
+}
+add_filter('popmake_popup_meta_field_group_display', 'popmake_popup_meta_field_group_display', 0);
+
+
+function popmake_popup_meta_field_group_close() {
+	return array(
+		'overlay_click',
+		'esc_press',
+	);
+}
+add_filter('popmake_popup_meta_field_group_close', 'popmake_popup_meta_field_group_close', 0);
+
+
+
+/**
+ * Save post meta when the save_post action is called
+ *
+ * @since 1.0
+ * @param int $post_id Popup (Post) ID
+ * @global array $post All the data of the the current post
+ * @return void
+ */
+function popmake_popup_meta_box_save( $post_id, $post ) {
+
+	if ( isset( $post->post_type ) && 'popup' != $post->post_type ) {
+		return;
+	}
+
+	if ( ! isset( $_POST['popmake_popup_meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['popmake_popup_meta_box_nonce'], basename( __FILE__ ) ) ) {
+		return;
+	}
+
+	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ( defined( 'DOING_AJAX') && DOING_AJAX ) || isset( $_REQUEST['bulk_edit'] ) ) {
+		return;
+	}
+
+	if ( isset( $post->post_type ) && 'revision' == $post->post_type ) {
+		return;
+	}
+
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		return;
+	}
+	foreach ( popmake_popup_meta_fields() as $field ) {
+		if ( isset( $_POST[ $field ] ) ) {
+			$new = apply_filters( 'popmake_metabox_save_' . $field, $_POST[ $field ] );
+			update_post_meta( $post_id, $field, $new );
+		} else {
+			delete_post_meta( $post_id, $field );
+		}
+	}
+
+	$includes = popmake_get_popup_loading_condition_includes( $post_id );
+	$excludes = popmake_get_popup_loading_condition_excludes( $post_id );
+
+	foreach(popmake_get_supported_types() as $name) {
+
+		foreach(array('include', 'exclude') as $type) {
+			$prefix = "popup_loading_condition_" . ($type == 'exclude' ? 'exclude_' : '') . "on_{$name}";
+			$current = $type == 'include' ? (!empty($includes[$name]) ? $includes[$name] : array() ) : (!empty($excludes[$name]) ? $excludes[$name] : array() );
+			$type_field = $prefix;
+			$type_prefix = $prefix .'_';
+
+			$temp_ids = array();
+			if( !empty($_POST[$type_field]) ) {
+				foreach(explode(',', trim($_POST[$type_field])) as $id) {
+					if(is_int( intval( $id ) ) ) {
+						$temp_ids[] = intval( $id );
+					}
+				}
+			}
+			/**
+			 * Remove existing meta that no longer exist in $_POST field.
+			 */
+			if(!empty($current)) {
+				foreach($current as $id) {
+					if(!in_array($id, $temp_ids)) {
+						delete_post_meta( $post_id, $type_prefix.$id );
+					}
+				}
+			}
+			/**
+			 * Adds post meta for non existing post type ids in $_POST.
+			 */
+			foreach($temp_ids as $id) {
+				if(!in_array($id, $current) && $id > 0) {
+					update_post_meta( $post_id, $type_prefix.$id, true );
+				}
+			}
+		}
+	}
+	do_action( 'popmake_save_popup', $post_id, $post );
+}
+add_action( 'save_post', 'popmake_popup_meta_box_save', 10, 2 );
+
+
+
+function popmake_set_popup_slug( $data , $postarr ) {
+	if($data['post_type'] == 'popup') {
+		$popup_name = popmake_post('popup_name');
+		$post_slug = sanitize_title_with_dashes( $popup_name, NULL, 'save' );
+		$data['post_name'] = wp_unique_post_slug( sanitize_title( popmake_post('popup_name') ), $postarr['ID'], $data['post_status'], $data['post_type'], $data['post_parent'] );
+	}
+	return $data;
+}
+add_filter( 'wp_insert_post_data' , 'popmake_set_popup_slug' , 99, 2 );
+
+
+
+/** Popup Configuration *****************************************************************/
+
+function popmake_popup_title_meta() {
+	global $post;
+	if(popmake_is_admin_popup_page()) { ?>
+		<div id="popuptitlediv">
+			<div id="popuptitlewrap">
+				<label class="screen-reader-text" id="popuptitle-prompt-text" for="popuptitle"><?php _e( 'Enter popup title here', 'popup-maker' ); ?></label>
+				<input type="text" tabindex="2" name="popup_title" size="30" value="<?php esc_attr_e( popmake_get_the_popup_title( $post->ID ) );?>" id="popuptitle" autocomplete="off" placeholder="<?php _e( 'Enter popup title here', 'popup-maker' ); ?>"/>
+			</div>
+			<div class="inside">
+			</div>
+		</div><?php
+	}
+}
+add_action( 'edit_form_advanced', 'popmake_popup_title_meta' );
+add_action( 'edit_page_form', 'popmake_popup_title_meta' );
+
+
+/**
+ * Popup Display Metabox
+ *
+ * Extensions (as well as the core plugin) can add items to the popup display
+ * configuration metabox via the `popmake_popup_display_meta_box_fields` action.
+ *
+ * @since 1.0
+ * @return void
+ */
+function popmake_render_popup_display_meta_box() {
+	global $post, $popmake_options;
+	wp_nonce_field( basename( __FILE__ ), 'popmake_popup_meta_box_nonce' ); ?>
+	<input type="hidden" name="popup_defaults_set" value="true" />
+	<div id="popmake_popup_display_fields" class="popmake_meta_table_wrap">
+		<table class="form-table">
+			<tbody>
+				<?php do_action( 'popmake_popup_display_meta_box_fields', $post->ID );?>
+			</tbody>
+		</table>
+	</div><?php
+}
+
+
+
+/**
+ * Popup Close Metabox
+ *
+ * Extensions (as well as the core plugin) can add items to the popup close
+ * configuration metabox via the `popmake_popup_close_meta_box_fields` action.
+ *
+ * @since 1.0
+ * @return void
+ */
+function popmake_render_popup_close_meta_box() {
+	global $post, $popmake_options;?>
+	<div id="popmake_popup_close_fields" class="popmake_meta_table_wrap">
+		<table class="form-table">
+			<tbody>
+				<?php do_action( 'popmake_popup_close_meta_box_fields', $post->ID );?>
+			</tbody>
+		</table>
+	</div><?php
+}
+
+
+
+
+
+
+/**
+ * Popup Load Settings Metabox
+ *
+ * Extensions (as well as the core plugin) can add items to the popup loading_condition
+ * metabox via the `popmake_popup_loading_condition_meta_box_fields` action.
+ *
+ * @since 1.0
+ * @return void
+ */
+function popmake_render_popup_loading_condition_meta_box() {
+	global $post; ?>
+	<div id="popmake_popup_loading_condition_fields" class="popmake_meta_table_wrap">
+		<?php do_action( 'popmake_popup_loading_condition_meta_box_fields', $post->ID ); ?>
+	</div><?php
+}
+
+
+
+
+/**
+ * Adds Popup Theme meta fields to revisions.
+ *
+ * @since 1.0
+ * @return array $fields Array of fields.
+ */
+function popmake_popup_post_revision_fields( $fields ) {
+	$popup_fields = popmake_popup_meta_fields();
+	foreach($popup_fields as $field) {
+		$fields[$field] = __( ucwords( str_replace('_', ' ', str_replace('popup_', '', $field) ) ), 'popup-maker' );
+	}
+	return $fields;
+}
+//add_filter( '_wp_post_revision_fields', 'popmake_popup_post_revision_fields' );
+
+
+function popmake_popup_revision_field( $value, $field, $revision) {
+	return get_metadata( 'post', $revision->ID, $field, true );
+}
+
+
+function popmake_add_popup_revision_fields() {
+	foreach(popmake_popup_meta_fields() as $field) {
+		add_filter( '_wp_post_revision_field_' . $field, 'popmake_popup_revision_field', 10, 3 );
+	}
+}
+//add_action('plugins_loaded', 'popmake_add_popup_revision_fields');
+
+
+function popmake_popup_meta_restore_revision( $post_id, $revision_id ) {
+	$post = get_post( $post_id );
+	$revision = get_post( $revision_id );
+	foreach(popmake_popup_meta_fields() as $field) {
+		$meta = get_metadata( 'post', $revision->ID, $field, true );
+		if ( false === $meta )
+			delete_post_meta( $post_id, $field );
+		else
+			update_post_meta( $post_id, $field, $meta );
+	}
+}
+//add_action( 'wp_restore_post_revision', 'popmake_popup_meta_restore_revision', 10, 2 );
+
+function popmake_popup_meta_save_revision( $post_id, $post ) {
+	if ( $parent_id = wp_is_post_revision( $post_id ) ) {
+		foreach(popmake_popup_meta_fields() as $field) {
+			$meta = get_post_meta( $parent_id, $field, true );
+			if ( false !== $meta )
+				add_metadata( 'post', $post_id, $field, $meta );
+
+		}
+	}
+}
+//add_action( 'save_post', 'popmake_popup_meta_save_revision', 11, 2 );
