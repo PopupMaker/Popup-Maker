@@ -59,18 +59,18 @@ add_filter('popmake_popup_display_size_options', 'popmake_popup_display_size_opt
 function popmake_popup_display_size_options_responsive( $options ) {
 	return array_merge($options, array(
 		// option => value
-		__( 'Responsive Sizes&#10549;', 'popup-maker' )	=> '',
-		__( 'Nano', 'popup-maker' )						=> 'nano',
+		__( 'Responsive Sizes&#10549;', 'popup-maker' )		=> '',
+		__( 'Nano', 'popup-maker' )							=> 'nano',
 		__( 'Micro', 'popup-maker' )						=> 'micro',
-		__( 'Tiny', 'popup-maker' )						=> 'tiny',
+		__( 'Tiny', 'popup-maker' )							=> 'tiny',
 		__( 'Small', 'popup-maker' )						=> 'small',
-		__( 'Medium', 'popup-maker' )					=> 'medium',
-		__( 'Normal', 'popup-maker' )					=> 'normal',
+		__( 'Medium', 'popup-maker' )						=> 'medium',
+		__( 'Normal', 'popup-maker' )						=> 'normal',
 		__( 'Large', 'popup-maker' )						=> 'large',
-		__( 'X Large', 'popup-maker' )					=> 'x-large',
+		__( 'X Large', 'popup-maker' )						=> 'x-large',
 		__( 'Non Responsive Sizes&#10549;', 'popup-maker' )	=> '',
-		__( 'Auto', 'popup-maker' )						=> 'auto',
-		__( 'Custom', 'popup-maker' ) => 'custom',
+		__( 'Auto', 'popup-maker' )							=> 'auto',
+		__( 'Custom', 'popup-maker' )						=> 'custom',
 	));
 }
 

@@ -24,10 +24,9 @@ function popmake_the_popup_classes( $popup_id = null ) {
 }
 
 
-function popmake_add_popup_size_classes( $classes, $popup_id )
-{
+function popmake_add_popup_size_classes( $classes, $popup_id ) {
 	$popup_size = popmake_get_popup_display( $popup_id, 'size' );
-	if( in_array( $popup_size, array('normal','nano','tiny','small','medium','large','x-large') ) )
+	if( in_array( $popup_size, array('nano','micro','tiny','small','medium','normal','large','x-large') ) )
 	{
 		$classes[] = 'responsive';
 		$classes[] = $popup_size;

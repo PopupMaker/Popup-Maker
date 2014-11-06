@@ -141,11 +141,11 @@ final class Popup_Maker {
 		}
 
 		if ( !defined('POPMAKE_VERSION') ) {
-			define('POPMAKE_VERSION', '3' );	
+			define('POPMAKE_VERSION', '1.0' );	
 		}
 
 		if ( !defined('POPMAKE_DB_VERSION') ) {
-			define('POPMAKE_DB_VERSION', '1.1' );	
+			define('POPMAKE_DB_VERSION', '1.0' );	
 		}
 
 		if ( !defined('POPMAKE_API_URL') ) {

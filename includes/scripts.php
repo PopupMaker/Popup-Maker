@@ -27,7 +27,7 @@ function popmake_load_site_scripts() {
 	$suffix = '.js'; //( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.js' : '.min.js';
 	wp_register_script('jquery-transit', $js_dir . 'jquery.transit.min.js', array('jquery'), '0.9.11', true);
 	wp_register_script('jquery-cookie', $js_dir . 'jquery.cookie' . $suffix, array('jquery'), '1.4.1', true);
-	wp_enqueue_script('popup-maker-site', $js_dir . 'popup-maker-site' . $suffix . '?defer', array('jquery', 'jquery-ui-core', 'jquery-ui-position', 'jquery-transit'), '3', true);
+	wp_enqueue_script('popup-maker-site', $js_dir . 'popup-maker-site' . $suffix . '?defer', array('jquery', 'jquery-ui-core', 'jquery-ui-position', 'jquery-transit'), '1.0', true);
 	wp_localize_script('popup-maker-site', 'ajaxurl', admin_url('admin-ajax.php') );
 	wp_localize_script('popup-maker-site', 'popmake_default_theme', popmake_get_default_popup_theme() );
 	wp_localize_script('popup-maker-site', 'popmake_themes', array('l10n_print_after' => 'popmake_themes = ' . json_encode( popmake_get_popup_themes_data() ) . ';'));
@@ -48,7 +48,7 @@ function popmake_load_site_styles() {
 	$css_dir = POPMAKE_URL . '/assets/styles/';
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = '.css'; //( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css' : '.min.css';
-	wp_enqueue_style('popup-maker-site', $css_dir . 'popup-maker-site' . $suffix, false, 1);
+	wp_enqueue_style('popup-maker-site', $css_dir . 'popup-maker-site' . $suffix, false, '1.0');
 	
 }
 add_action( 'wp_enqueue_scripts', 'popmake_load_site_styles' );
@@ -69,7 +69,7 @@ function popmake_load_admin_scripts( $hook ) {
 	$suffix = '.js'; //( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.js' : '.min.js';
 
 	if(popmake_is_admin_page()) {
-		wp_enqueue_script('popup-maker-admin', $js_dir . 'popup-maker-admin' . $suffix,  array('jquery', 'wp-color-picker', 'jquery-ui-slider'));
+		wp_enqueue_script('popup-maker-admin', $js_dir . 'popup-maker-admin' . $suffix,  array('jquery', 'wp-color-picker', 'jquery-ui-slider'), '1.0');
 	}
 
 }
@@ -92,7 +92,7 @@ function popmake_load_admin_styles( $hook ) {
 
 	if(popmake_is_admin_page()) {
 		wp_enqueue_style('wp-color-picker');
-		wp_enqueue_style('popup-maker-admin', $css_dir . 'popup-maker-admin' . $suffix, false, 0.1);
+		wp_enqueue_style('popup-maker-admin', $css_dir . 'popup-maker-admin' . $suffix, false, '1.0');
 	}
 
 }
