@@ -1,6 +1,7 @@
+var PopMakeAdmin;
 (function () {
     "use strict";
-    var PopMakeAdmin = {
+    PopMakeAdmin = {
         init: function () {
             PopMakeAdmin.initialize_tabs();
             if (jQuery('body.post-type-popup form#post').length) {
