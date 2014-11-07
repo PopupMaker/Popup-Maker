@@ -15,8 +15,6 @@
  * @since		1.0
 */
 
-if(!defined('SCRIPT_DEBUG')) define('SCRIPT_DEBUG', true);
-
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 

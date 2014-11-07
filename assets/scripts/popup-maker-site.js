@@ -3,7 +3,6 @@
  */
 (function (jQuery) {
     "use strict";
-
     if (!jQuery.isFunction(jQuery.fn.on)) {
         jQuery.fn.on = function (types, sel, fn) {
             return this.delegate(sel, types, fn);
@@ -477,117 +476,107 @@
             // dates with two-digit years differently
             // etc...etc...
             // ...therefore we manually parse lots of common date formats
-            match = text.match(
-                /^(\d{1,4})([\-\.\/\:])(\d{1,2})([\-\.\/\:])(\d{1,4})(?:\s(\d{1,2}):(\d{2})?:?(\d{2})?)?(?:\s([A-Z]+)?)?$/);
+            match = text.match(/^(\d{1,4})([\-\.\/\:])(\d{1,2})([\-\.\/\:])(\d{1,4})(?:\s(\d{1,2}):(\d{2})?:?(\d{2})?)?(?:\s([A-Z]+)?)?$/);
             if (match && match[2] === match[4]) {
                 if (match[1] > 1901) {
                     switch (match[2]) {
                     case '-':
-                        { // YYYY-M-D
-                            if (match[3] > 12 || match[5] > 31) {
-                                return fail;
-                            }
-                            return new Date(match[1], parseInt(match[3], 10) - 1, match[5],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
-                        }
-                    case '.':
-                        { // YYYY.M.D is not parsed by strtotime()
+                        // YYYY-M-D
+                        if (match[3] > 12 || match[5] > 31) {
                             return fail;
                         }
+                        return new Date(match[1], parseInt(match[3], 10) - 1, match[5],
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                    case '.':
+                        // YYYY.M.D is not parsed by strtotime()
+                        return fail;
                     case '/':
-                        { // YYYY/M/D
-                            if (match[3] > 12 || match[5] > 31) {
-                                return fail;
-                            }
-                            return new Date(match[1], parseInt(match[3], 10) - 1, match[5],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                        // YYYY/M/D
+                        if (match[3] > 12 || match[5] > 31) {
+                            return fail;
                         }
+                        return new Date(match[1], parseInt(match[3], 10) - 1, match[5],
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     }
                 } else if (match[5] > 1901) {
                     switch (match[2]) {
                     case '-':
-                        { // D-M-YYYY
-                            if (match[3] > 12 || match[1] > 31) {
-                                return fail;
-                            }
-                            return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                        // D-M-YYYY
+                        if (match[3] > 12 || match[1] > 31) {
+                            return fail;
                         }
+                        return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     case '.':
-                        { // D.M.YYYY
-                            if (match[3] > 12 || match[1] > 31) {
-                                return fail;
-                            }
-                            return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                        // D.M.YYYY
+                        if (match[3] > 12 || match[1] > 31) {
+                            return fail;
                         }
+                        return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     case '/':
-                        { // M/D/YYYY
-                            if (match[1] > 12 || match[3] > 31) {
-                                return fail;
-                            }
-                            return new Date(match[5], parseInt(match[1], 10) - 1, match[3],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                        // M/D/YYYY
+                        if (match[1] > 12 || match[3] > 31) {
+                            return fail;
                         }
+                        return new Date(match[5], parseInt(match[1], 10) - 1, match[3],
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     }
                 } else {
                     switch (match[2]) {
                     case '-':
-                        { // YY-M-D
-                            if (match[3] > 12 || match[5] > 31 || (match[1] < 70 && match[1] > 38)) {
-                                return fail;
-                            }
-                            year = match[1] >= 0 && match[1] <= 38 ? +match[1] + 2000 : match[1];
-                            return new Date(year, parseInt(match[3], 10) - 1, match[5],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                        // YY-M-D
+                        if (match[3] > 12 || match[5] > 31 || (match[1] < 70 && match[1] > 38)) {
+                            return fail;
                         }
+                        year = match[1] >= 0 && match[1] <= 38 ? +match[1] + 2000 : match[1];
+                        return new Date(year, parseInt(match[3], 10) - 1, match[5],
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     case '.':
-                        { // D.M.YY or H.MM.SS
-                            if (match[5] >= 70) { // D.M.YY
-                                if (match[3] > 12 || match[1] > 31) {
-                                    return fail;
-                                }
-                                return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
-                                    match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
-                            }
-                            if (match[5] < 60 && !match[6]) { // H.MM.SS
-                                if (match[1] > 23 || match[3] > 59) {
-                                    return fail;
-                                }
-                                today = new Date();
-                                return new Date(today.getFullYear(), today.getMonth(), today.getDate(),
-                                    match[1] || 0, match[3] || 0, match[5] || 0, match[9] || 0) / 1000;
-                            }
-                            return fail; // invalid format, cannot be parsed
-                        }
-                    case '/':
-                        { // M/D/YY
-                            if (match[1] > 12 || match[3] > 31 || (match[5] < 70 && match[5] > 38)) {
+                        // D.M.YY or H.MM.SS
+                        if (match[5] >= 70) { // D.M.YY
+                            if (match[3] > 12 || match[1] > 31) {
                                 return fail;
                             }
-                            year = match[5] >= 0 && match[5] <= 38 ? +match[5] + 2000 : match[5];
-                            return new Date(year, parseInt(match[1], 10) - 1, match[3],
+                            return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
                                 match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                         }
-                    case ':':
-                        { // HH:MM:SS
-                            if (match[1] > 23 || match[3] > 59 || match[5] > 59) {
+                        if (match[5] < 60 && !match[6]) { // H.MM.SS
+                            if (match[1] > 23 || match[3] > 59) {
                                 return fail;
                             }
                             today = new Date();
                             return new Date(today.getFullYear(), today.getMonth(), today.getDate(),
-                                match[1] || 0, match[3] || 0, match[5] || 0) / 1000;
+                                match[1] || 0, match[3] || 0, match[5] || 0, match[9] || 0) / 1000;
                         }
+                        return fail; // invalid format, cannot be parsed
+                    case '/':
+                        // M/D/YY
+                        if (match[1] > 12 || match[3] > 31 || (match[5] < 70 && match[5] > 38)) {
+                            return fail;
+                        }
+                        year = match[5] >= 0 && match[5] <= 38 ? +match[5] + 2000 : match[5];
+                        return new Date(year, parseInt(match[1], 10) - 1, match[3],
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                    case ':':
+                        // HH:MM:SS
+                        if (match[1] > 23 || match[3] > 59 || match[5] > 59) {
+                            return fail;
+                        }
+                        today = new Date();
+                        return new Date(today.getFullYear(), today.getMonth(), today.getDate(),
+                            match[1] || 0, match[3] || 0, match[5] || 0) / 1000;
                     }
                 }
             }
             // other formats and "now" should be parsed by Date.parse()
             if (text === 'now') {
                 return now === null || isNaN(now) ? new Date()
-                    .getTime() / 1000 | 0 : now | 0;
+                    .getTime() / 1000 || 0 : now || 0;
             }
-            if (!isNaN(parsed = Date.parse(text))) {
-                return parsed / 1000 | 0;
+            parsed = Date.parse(text);
+            if (!isNaN(parsed)) {
+                return parsed / 1000 || 0;
             }
             date = now ? new Date(now * 1000) : new Date();
             days = {
@@ -610,7 +599,7 @@
 
             function lastNext(type, range, modifier) {
                 var diff, day = days[range];
-                if (typeof day !== 'undefined') {
+                if (day !== undefined) {
                     diff = day - date.getDay();
                     if (diff === 0) {
                         diff = 7 * modifier;
@@ -624,7 +613,7 @@
             }
 
             function process(val) {
-                var splt = val.split(' '), // Todo: Reconcile this with regex using \s, taking into account browser issues with split and regexes
+                var splt = val.split(' '),
                     type = splt[0],
                     range = splt[1].substring(0, 3),
                     typeIsNumber = /\d+/.test(type),
@@ -654,7 +643,7 @@
             if (!match) {
                 return fail;
             }
-            for (i = 0, len = match.length; i < len; i++) {
+            for (i = 0, len = match.length; i < len; i += 1) {
                 if (!process(match[i])) {
                     return fail;
                 }

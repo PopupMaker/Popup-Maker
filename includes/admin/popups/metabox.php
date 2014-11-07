@@ -47,9 +47,10 @@ function popmake_popup_meta_fields() {
 			$fields[] = 'popup_' . $group . '_' . $field;
 		}
 	}
-	foreach(popmake_get_supported_types() as $name) {
-		$labels = get_post_type_object( $name ) ? get_post_type_object( $name ) : get_taxonomy( $name );
-		$plural = strtolower( $labels->labels->name );
+	foreach(popmake_get_supported_types() as $pt) {
+		var_dump($pt);
+		$labels = get_post_type_object( $pt ) ? get_post_type_object( $pt ) : get_taxonomy( $pt );
+		$plural = $pt . 's';
 		$fields[] = "popup_loading_condition_on_{$plural}";
 		$fields[] = "popup_loading_condition_exclude_on_{$plural}";
 		$fields[] = "popup_loading_condition_on_specific_{$plural}";
@@ -141,11 +142,11 @@ function popmake_popup_meta_box_save( $post_id, $post ) {
 	$includes = popmake_get_popup_loading_condition_includes( $post_id );
 	$excludes = popmake_get_popup_loading_condition_excludes( $post_id );
 
-	foreach(popmake_get_supported_types() as $name) {
+	foreach(popmake_get_supported_types() as $pt) {
 
 		foreach(array('include', 'exclude') as $type) {
-			$prefix = "popup_loading_condition_" . ($type == 'exclude' ? 'exclude_' : '') . "on_{$name}";
-			$current = $type == 'include' ? (!empty($includes[$name]) ? $includes[$name] : array() ) : (!empty($excludes[$name]) ? $excludes[$name] : array() );
+			$prefix = "popup_loading_condition_" . ($type == 'exclude' ? 'exclude_' : '') . "on_{$pt}";
+			$current = $type == 'include' ? (!empty($includes[$pt]) ? $includes[$pt] : array() ) : (!empty($excludes[$pt]) ? $excludes[$pt] : array() );
 			$type_field = $prefix;
 			$type_prefix = $prefix .'_';
 
