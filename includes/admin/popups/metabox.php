@@ -70,6 +70,7 @@ function popmake_popup_meta_field_groups() {
 
 function popmake_popup_meta_field_group_display() {
 	return array(
+		'scrollable_content',
 		'overlay_disabled',
 		'size',
 		'custom_width',

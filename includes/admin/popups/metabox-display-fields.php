@@ -30,8 +30,7 @@ function popmake_popup_display_meta_box_field_size( $popup_id )
 
 
 add_action('popmake_popup_display_meta_box_fields', 'popmake_popup_display_meta_box_field_custom_sizes', 20);
-function popmake_popup_display_meta_box_field_custom_sizes( $popup_id )
-{
+function popmake_popup_display_meta_box_field_custom_sizes( $popup_id ) {
 	?><tr class="custom-size-only">
 		<th scope="row">
 			<label for="popup_display_custom_width"><?php _e( 'Width', 'popup-maker' );?></label>
@@ -57,6 +56,15 @@ function popmake_popup_display_meta_box_field_custom_sizes( $popup_id )
 		<td>
 			<input type="checkbox" value="true" name="popup_display_custom_height_auto" id="popup_display_custom_height_auto" <?php echo popmake_get_popup_display( $popup_id, 'custom_height_auto') ? 'checked="checked" ' : '';?>/>
 			<label for="popup_display_custom_height_auto" class="description"><?php _e( 'Checking this option will set height to fit the content.', 'popup-maker' );?></label>
+		</td>
+	</tr>
+
+
+	<tr class="custom-size-only custom-size-height-only">
+		<th scope="row"><?php _e( 'Scrollable Content', 'popup-maker' );?></th>
+		<td>
+			<input type="checkbox" value="true" name="popup_display_scrollable_content" id="popup_display_scrollable_content" <?php echo popmake_get_popup_display( $popup_id, 'scrollable_content') ? 'checked="checked" ' : '';?>/>
+			<label for="popup_display_scrollable_content" class="description"><?php _e( 'Checking this option will add a scroll bar to your content.', 'popup-maker' );?></label>
 		</td>
 	</tr>
 

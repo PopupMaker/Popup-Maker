@@ -78,6 +78,11 @@
 	margin-left: inherit;
 }
 
+.popmake.scrollable .popmake-content {
+	overflow: auto;
+	overflow-y: scroll;
+}
+
 .popmake .popmake-content :last-child {
 	margin-bottom:0;
 }

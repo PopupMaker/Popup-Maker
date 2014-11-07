@@ -13,6 +13,7 @@ add_filter('popmake_popup_display_defaults', 'popmake_popup_display_defaults', 0
 function popmake_popup_display_defaults( $defaults = array() ) {
 	return array_merge( $defaults, array(
 		'overlay_disabled'		=> false,
+		'scrollable_content'	=> false,
 		'size'					=> 'medium',
 		'custom_width'			=> 640,
 		'custom_width_unit'		=> 'px',
@@ -130,6 +131,6 @@ function popmake_popup_theme_close_defaults( $defaults ) {
 		'textshadow_vertical'	=> 0,
 		'textshadow_blur'		=> 0,
 		'textshadow_color'		=> '#000000',
-		'textshadow_opacity'		=> 23,
+		'textshadow_opacity'	=> 23,
 	));
 }

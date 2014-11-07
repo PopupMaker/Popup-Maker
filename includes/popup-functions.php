@@ -26,15 +26,18 @@ function popmake_the_popup_classes( $popup_id = null ) {
 
 function popmake_add_popup_size_classes( $classes, $popup_id ) {
 	$popup_size = popmake_get_popup_display( $popup_id, 'size' );
-	if( in_array( $popup_size, array('nano','micro','tiny','small','medium','normal','large','x-large') ) )
-	{
+	if( in_array( $popup_size, array('nano','micro','tiny','small','medium','normal','large','x-large') ) ) {
 		$classes[] = 'responsive';
 		$classes[] = $popup_size;
 	}
-	elseif($popup_size == 'custom')
-	{
+	elseif($popup_size == 'custom') {}
 		$classes[] = 'custom';
 	}
+
+	if(!popmake_get_popup_display( $popup_id, 'custom_height_auto' ) && popmake_get_popup_display( $popup_id, 'scrollable_content' )) {
+		$classes[] = 'scrollable';
+	}
+
 	return $classes;
 }
 add_filter('popmake_get_the_popup_classes', 'popmake_add_popup_size_classes', 5, 2);
