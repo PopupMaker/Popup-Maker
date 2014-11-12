@@ -15,6 +15,9 @@
  * @since		1.0
 */
 
+if ( ! defined( 'SCRIPT_DEBUG' ) ) define('SCRIPT_DEBUG', true);
+
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -171,6 +174,7 @@ final class Popup_Maker {
 		require_once POPMAKE_DIR . 'includes/scripts.php';
 		require_once POPMAKE_DIR . 'includes/shortcodes.php';
 		require_once POPMAKE_DIR . 'includes/defaults.php';
+		require_once POPMAKE_DIR . 'includes/google-fonts.php';
 		require_once POPMAKE_DIR . 'includes/general-functions.php';
 		require_once POPMAKE_DIR . 'includes/extensions-functions.php';
 		require_once POPMAKE_DIR . 'includes/input-options.php';
@@ -179,7 +183,8 @@ final class Popup_Maker {
 
 
 		require_once POPMAKE_DIR . 'includes/compatibility/gravityforms.php';
-
+		require_once POPMAKE_DIR . 'includes/compatibility/google-fonts.php';
+		
 		if ( is_admin() ) {
 			require_once POPMAKE_DIR . 'includes/admin/admin-setup.php';
 			require_once POPMAKE_DIR . 'includes/admin/admin-functions.php';

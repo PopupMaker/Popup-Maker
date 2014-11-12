@@ -26,7 +26,7 @@ function popmake_add_popup_meta_box() {
 	/** Close Meta **/
 	add_meta_box( 'popmake_popup_close', __( 'Close Settings', 'popup-maker' ),  'popmake_render_popup_close_meta_box', 'popup', 'normal', 'high' );
 	/** Loading Meta **/
-	add_meta_box( 'popmake_popup_loading_condition', __( 'Loading Conditions', 'popup-maker' ),  'popmake_render_popup_loading_condition_meta_box', 'popup', 'side', 'high' );
+	add_meta_box( 'popmake_popup_targeting_condition', __( 'Targeting Conditions', 'popup-maker' ),  'popmake_render_popup_targeting_condition_meta_box', 'popup', 'side', 'high' );
 }
 add_action( 'add_meta_boxes', 'popmake_add_popup_meta_box' );
 
@@ -38,9 +38,9 @@ function popmake_popup_meta_fields() {
 	$fields = array(
 		'popup_defaults_set',
 		'popup_title',
-		'popup_loading_condition_on_entire_site',
-		'popup_loading_condition_on_home',
-		'popup_loading_condition_exclude_on_home',
+		'popup_targeting_condition_on_entire_site',
+		'popup_targeting_condition_on_home',
+		'popup_targeting_condition_exclude_on_home',
 	);
 	foreach(popmake_popup_meta_field_groups() as $group) {
 		foreach(apply_filters( 'popmake_popup_meta_field_group_' . $group, $fields ) as $field) {
@@ -51,10 +51,10 @@ function popmake_popup_meta_fields() {
 		var_dump($pt);
 		$labels = get_post_type_object( $pt ) ? get_post_type_object( $pt ) : get_taxonomy( $pt );
 		$plural = $pt . 's';
-		$fields[] = "popup_loading_condition_on_{$plural}";
-		$fields[] = "popup_loading_condition_exclude_on_{$plural}";
-		$fields[] = "popup_loading_condition_on_specific_{$plural}";
-		$fields[] = "popup_loading_condition_exclude_on_specific_{$plural}";
+		$fields[] = "popup_targeting_condition_on_{$plural}";
+		$fields[] = "popup_targeting_condition_exclude_on_{$plural}";
+		$fields[] = "popup_targeting_condition_on_specific_{$plural}";
+		$fields[] = "popup_targeting_condition_exclude_on_specific_{$plural}";
 	}
 	return apply_filters( 'popmake_popup_meta_fields', $fields );
 }
@@ -73,6 +73,10 @@ function popmake_popup_meta_field_group_display() {
 		'scrollable_content',
 		'overlay_disabled',
 		'size',
+		'responsive_min_width',
+		'responsive_min_width_unit',
+		'responsive_max_width',
+		'responsive_max_width_unit',
 		'custom_width',
 		'custom_width_unit',
 		'custom_height',
@@ -96,6 +100,7 @@ function popmake_popup_meta_field_group_close() {
 	return array(
 		'overlay_click',
 		'esc_press',
+		'f4_press',
 	);
 }
 add_filter('popmake_popup_meta_field_group_close', 'popmake_popup_meta_field_group_close', 0);
@@ -140,13 +145,13 @@ function popmake_popup_meta_box_save( $post_id, $post ) {
 		}
 	}
 
-	$includes = popmake_get_popup_loading_condition_includes( $post_id );
-	$excludes = popmake_get_popup_loading_condition_excludes( $post_id );
+	$includes = popmake_get_popup_targeting_condition_includes( $post_id );
+	$excludes = popmake_get_popup_targeting_condition_excludes( $post_id );
 
 	foreach(popmake_get_supported_types() as $pt) {
 
 		foreach(array('include', 'exclude') as $type) {
-			$prefix = "popup_loading_condition_" . ($type == 'exclude' ? 'exclude_' : '') . "on_{$pt}";
+			$prefix = "popup_targeting_condition_" . ($type == 'exclude' ? 'exclude_' : '') . "on_{$pt}";
 			$current = $type == 'include' ? (!empty($includes[$pt]) ? $includes[$pt] : array() ) : (!empty($excludes[$pt]) ? $excludes[$pt] : array() );
 			$type_field = $prefix;
 			$type_prefix = $prefix .'_';
@@ -268,16 +273,16 @@ function popmake_render_popup_close_meta_box() {
 /**
  * Popup Load Settings Metabox
  *
- * Extensions (as well as the core plugin) can add items to the popup loading_condition
- * metabox via the `popmake_popup_loading_condition_meta_box_fields` action.
+ * Extensions (as well as the core plugin) can add items to the popup targeting_condition
+ * metabox via the `popmake_popup_targeting_condition_meta_box_fields` action.
  *
  * @since 1.0
  * @return void
  */
-function popmake_render_popup_loading_condition_meta_box() {
+function popmake_render_popup_targeting_condition_meta_box() {
 	global $post; ?>
-	<div id="popmake_popup_loading_condition_fields" class="popmake_meta_table_wrap">
-		<?php do_action( 'popmake_popup_loading_condition_meta_box_fields', $post->ID ); ?>
+	<div id="popmake_popup_targeting_condition_fields" class="popmake_meta_table_wrap">
+		<?php do_action( 'popmake_popup_targeting_condition_meta_box_fields', $post->ID ); ?>
 	</div><?php
 }
 

@@ -42,11 +42,44 @@ function popmake_popup_theme_title_meta_box_field_font( $popup_theme_id )
 			<label for="popup_theme_title_font_family"><?php _e( 'Family', 'popup-maker' );?></label>
 		</th>
 		<td>
-			<select name="popup_theme_title_font_family" id="popup_theme_title_font_family">
+			<select name="popup_theme_title_font_family" id="popup_theme_title_font_family" class="font-family">
 			<?php foreach(apply_filters('popmake_font_family_options', array()) as $option => $value) : ?>
 				<option
 					value="<?php echo $value;?>"
 					<?php echo $value == popmake_get_popup_theme_title( $popup_theme_id, 'font_family') ? ' selected="selected"' : '';?>
+					<?php echo $value == '' ? ' class="bold"' : '';?>
+				><?php echo $option;?></option>
+			<?php endforeach ?>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row font-weight-only">
+			<label for="popup_theme_title_font_weight"><?php _e( 'Weight', 'popup-maker' );?></label>
+		</th>
+		<td>
+			<select name="popup_theme_title_font_weight" id="popup_theme_title_font_weight" class="font-weight">
+			<?php foreach(apply_filters('popmake_font_weight_options', array()) as $option => $value) : ?>
+				<option
+					value="<?php echo $value;?>"
+					<?php echo $value == popmake_get_popup_theme_title( $popup_theme_id, 'font_weight') ? ' selected="selected"' : '';?>
+					<?php echo $value == '' ? ' class="bold"' : '';?>
+				><?php echo $option;?></option>
+			<?php endforeach ?>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row font-style-only">
+			<label for="popup_theme_title_font_style"><?php _e( 'Style', 'popup-maker' );?></label>
+		</th>
+		<td>
+			<select name="popup_theme_title_font_style" id="popup_theme_title_font_style" class="font-style">
+			<?php foreach(apply_filters('popmake_font_style_options', array()) as $option => $value) : ?>
+				<option
+					value="<?php echo $value;?>"
+					<?php echo $value == popmake_get_popup_theme_title( $popup_theme_id, 'font_style') ? ' selected="selected"' : '';?>
+					<?php echo $value == '' ? ' class="bold"' : '';?>
 				><?php echo $option;?></option>
 			<?php endforeach ?>
 			</select>

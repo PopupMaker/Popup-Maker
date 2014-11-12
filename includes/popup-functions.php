@@ -26,12 +26,12 @@ function popmake_the_popup_classes( $popup_id = null ) {
 
 function popmake_add_popup_size_classes( $classes, $popup_id ) {
 	$popup_size = popmake_get_popup_display( $popup_id, 'size' );
-	if( in_array( $popup_size, array('nano','micro','tiny','small','medium','normal','large','x-large') ) ) {
+	if( in_array( $popup_size, array('nano','micro','tiny','small','medium','normal','large','xlarge') ) ) {
 		$classes[] = 'responsive';
-		$classes[] = $popup_size;
+		$classes[] = 'size-' . $popup_size;
 	}
-	elseif($popup_size == 'custom') {}
-		$classes[] = 'custom';
+	elseif($popup_size == 'custom') {
+		$classes[] = 'size-custom';
 	}
 
 	if(!popmake_get_popup_display( $popup_id, 'custom_height_auto' ) && popmake_get_popup_display( $popup_id, 'scrollable_content' )) {
@@ -75,7 +75,7 @@ function popmake_get_popup_meta_group( $group, $popup_id = NULL, $key = NULL ) {
 
 	$post_meta = get_post_custom( $popup_id );
 	$default_check_key = 'popup_defaults_set';
-	if(!in_array($group, array('close','display','loading_condition'))) {
+	if(!in_array($group, array('close','display','targeting_condition'))) {
 		$default_check_key = "popup_{$group}_defaults_set";
 	}
 
@@ -110,21 +110,21 @@ function popmake_get_popup_meta_group( $group, $popup_id = NULL, $key = NULL ) {
  * @param int $popup_id ID number of the popup to retrieve a overlay meta for
  * @return mixed array|string of the popup load settings meta 
  */
-function popmake_get_popup_loading_condition( $popup_id = NULL, $key = NULL ) {
-	return popmake_get_popup_meta_group( 'loading_condition', $popup_id, $key );
+function popmake_get_popup_targeting_condition( $popup_id = NULL, $key = NULL ) {
+	return popmake_get_popup_meta_group( 'targeting_condition', $popup_id, $key );
 }
 
-function popmake_get_popup_loading_condition_includes( $popup_id, $post_type = NULL ) {
+function popmake_get_popup_targeting_condition_includes( $popup_id, $post_type = NULL ) {
 	$post_meta = get_post_custom_keys( $popup_id );
 	$includes = array();
 	if(!empty($post_meta)) {
 		foreach( $post_meta as $meta_key ) {
-			if(strpos($meta_key, 'popup_loading_condition_on_') !== false) {
+			if(strpos($meta_key, 'popup_targeting_condition_on_') !== false) {
 				$id = intval( substr( strrchr( $meta_key, "_" ), 1 ) );
 
 				if($id > 0) {
 					$remove = strrchr( $meta_key  , strrchr( $meta_key, "_" ));
-					$name = str_replace( 'popup_loading_condition_on_', "",  str_replace( $remove, "", $meta_key ) );
+					$name = str_replace( 'popup_targeting_condition_on_', "",  str_replace( $remove, "", $meta_key ) );
 					
 					$includes[$name][] = intval( $id );
 				}
@@ -140,17 +140,17 @@ function popmake_get_popup_loading_condition_includes( $popup_id, $post_type = N
 	return $includes;
 }
 
-function popmake_get_popup_loading_condition_excludes( $popup_id, $post_type = NULL ) {
+function popmake_get_popup_targeting_condition_excludes( $popup_id, $post_type = NULL ) {
 	$post_meta = get_post_custom_keys( $popup_id );
 	$excludes = array();
 	if(!empty($post_meta)) {
 		foreach( $post_meta as $meta_key ) {
-			if(strpos($meta_key, 'popup_loading_condition_exclude_on_') !== false) {
+			if(strpos($meta_key, 'popup_targeting_condition_exclude_on_') !== false) {
 				$id = intval( substr( strrchr( $meta_key, "_" ), 1 ) );
 
 				if($id > 0) {
 					$remove = strrchr( $meta_key  , strrchr( $meta_key, "_" ));
-					$name = str_replace( 'popup_loading_condition_exclude_on_', "",  str_replace( $remove, "", $meta_key ) );
+					$name = str_replace( 'popup_targeting_condition_exclude_on_', "",  str_replace( $remove, "", $meta_key ) );
 					
 					$excludes[$name][] = intval( $id );
 				}
@@ -244,7 +244,7 @@ function popmake_popup_is_loadable( $popup_id ) {
 	global $post, $wp_query;
 	
 	$popmake_enqueued_popups = get_enqueued_popups();
-	$conditions = popmake_get_popup_loading_condition( $popup_id );
+	$conditions = popmake_get_popup_targeting_condition( $popup_id );
 
 	$return = false;
 

@@ -29,7 +29,49 @@ function popmake_popup_display_meta_box_field_size( $popup_id )
 }
 
 
-add_action('popmake_popup_display_meta_box_fields', 'popmake_popup_display_meta_box_field_custom_sizes', 20);
+add_action('popmake_popup_display_meta_box_fields', 'popmake_popup_display_meta_box_field_responsive_sizes', 20);
+function popmake_popup_display_meta_box_field_responsive_sizes( $popup_id ) {
+	?><tr class="responsive-size-only">
+		<th scope="row">
+			<label for="popup_display_responsive_min_width"><?php _e( 'Min Width', 'popup-maker' );?></label>
+		</th>
+		<td>
+			<input type="text" value="<?php esc_html_e(popmake_get_popup_display( $popup_id, 'responsive_min_width' ));?>" size="5" name="popup_display_responsive_min_width" id="popup_display_responsive_min_width"/>
+			<select name="popup_display_responsive_min_width_unit" id="popup_display_responsive_min_width_unit">
+			<?php foreach(apply_filters('popmake_size_unit_options', array()) as $option => $value) : ?>
+				<option
+					value="<?php echo $value;?>"
+					<?php echo $value == popmake_get_popup_display( $popup_id, 'responsive_min_width_unit' ) ? ' selected="selected"' : '';?>
+					<?php echo $value == '' ? ' class="bold"' : '';?>
+				><?php echo $option;?></option>
+			<?php endforeach ?>
+			</select>
+			<p class="description"><?php _e( 'Set a minimum width for the popup.', 'popup-maker' );?></p>
+		</td>
+	</tr>
+	<tr class="responsive-size-only">
+		<th scope="row">
+			<label for="popup_display_responsive_max_width"><?php _e( 'Max Width', 'popup-maker' );?></label>
+		</th>
+		<td>
+			<input type="text" value="<?php esc_html_e(popmake_get_popup_display( $popup_id, 'responsive_max_width' ));?>" size="5" name="popup_display_responsive_max_width" id="popup_display_responsive_max_width"/>
+			<select name="popup_display_responsive_max_width_unit" id="popup_display_responsive_max_width_unit">
+			<?php foreach(apply_filters('popmake_size_unit_options', array()) as $option => $value) : ?>
+				<option
+					value="<?php echo $value;?>"
+					<?php echo $value == popmake_get_popup_display( $popup_id, 'responsive_max_width_unit' ) ? ' selected="selected"' : '';?>
+					<?php echo $value == '' ? ' class="bold"' : '';?>
+				><?php echo $option;?></option>
+			<?php endforeach ?>
+			</select>
+			<p class="description"><?php _e( 'Set a maximum width for the popup.', 'popup-maker' );?></p>
+		</td>
+	</tr><?php
+}
+
+
+
+add_action('popmake_popup_display_meta_box_fields', 'popmake_popup_display_meta_box_field_custom_sizes', 30);
 function popmake_popup_display_meta_box_field_custom_sizes( $popup_id ) {
 	?><tr class="custom-size-only">
 		<th scope="row">
@@ -90,10 +132,13 @@ function popmake_popup_display_meta_box_field_custom_sizes( $popup_id ) {
 	<?php
 }
 
-add_action('popmake_popup_display_meta_box_fields', 'popmake_popup_display_meta_box_field_overlay_disabled', 30);
+add_action('popmake_popup_display_meta_box_fields', 'popmake_popup_display_meta_box_field_overlay_disabled', 40);
 function popmake_popup_display_meta_box_field_overlay_disabled( $popup_id )
 {
-	?><tr>
+	?><tr class="title-divider">
+		<th colspan="2"><h3 class="title"><?php _e( 'Overlay', 'popup-maker' );?></h3></th>
+	</tr>
+	<tr>
 		<th scope="row"><?php _e( 'Disable Overlay', 'popup-maker' );?></th>
 		<td>
 			<input type="checkbox" value="true" name="popup_display_overlay_disabled" id="popup_display_overlay_disabled" <?php echo popmake_get_popup_display( $popup_id, 'overlay_disabled') ? 'checked="checked" ' : '';?>/>
@@ -102,7 +147,7 @@ function popmake_popup_display_meta_box_field_overlay_disabled( $popup_id )
 	</tr><?php
 }
 
-add_action('popmake_popup_display_meta_box_fields', 'popmake_popup_display_meta_box_field_animation', 40);
+add_action('popmake_popup_display_meta_box_fields', 'popmake_popup_display_meta_box_field_animation', 50);
 function popmake_popup_display_meta_box_field_animation( $popup_id )
 {
 	?><tr class="title-divider">
@@ -120,6 +165,7 @@ function popmake_popup_display_meta_box_field_animation( $popup_id )
 				<option
 					value="<?php echo $value;?>"
 					<?php echo $value == popmake_get_popup_display( $popup_id, 'animation_type') ? ' selected="selected"' : '';?>
+					<?php echo $value == '' ? ' class="bold"' : '';?>
 				><?php echo $option;?></option>
 			<?php endforeach ?>
 			</select>
@@ -168,7 +214,7 @@ function popmake_popup_display_meta_box_field_animation( $popup_id )
 }
 
 
-add_action('popmake_popup_display_meta_box_fields', 'popmake_admin_popup_form_display_tab_settings_position', 50);
+add_action('popmake_popup_display_meta_box_fields', 'popmake_admin_popup_form_display_tab_settings_position', 60);
 function popmake_admin_popup_form_display_tab_settings_position( $popup_id )
 {
 	?><tr class="title-divider">

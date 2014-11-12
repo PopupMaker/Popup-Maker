@@ -63,14 +63,14 @@ function popmake_shortcode_popup($atts, $content = NULL)
 	);
 
 	$classes = array('popmake', 'theme-'. $atts['theme_id']);
-	if( in_array( $atts['size'], array('normal','nano','tiny','small','medium','large','x-large') ) )
+	if( in_array( $atts['size'], array('normal', 'nano', 'tiny', 'small', 'medium', 'large', 'xlarge') ) )
 	{
 		$classes[] = 'responsive';
-		$classes[] = $atts['size'];
+		$classes[] = 'size-' . $atts['size'];
 	}
 	elseif($atts['size'] == 'custom')
 	{
-		$classes[] = 'custom';
+		$classes[] = 'size-custom';
 	}
 
 	$return = "<div id='popmake-". $atts['id'] ."' class='". implode(' ', $classes) ."' data-popmake='". json_encode($popup_fields) ."'>";

@@ -23,12 +23,16 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function popmake_load_site_scripts() {
 	$js_dir = POPMAKE_URL . '/assets/scripts/';
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.js' : '.min.js';
+	wp_register_script('TweenMax', $js_dir . 'TweenMax.min.js', false, '1.14.2', true);
+	wp_register_script('jquery-gsap', $js_dir . 'jquery.gsap.min.js', array('jquery', 'TweenMax'), '0.1.9', true);
 	wp_register_script('jquery-transit', $js_dir . 'jquery.transit.min.js', array('jquery'), '0.9.11', true);
 	wp_register_script('jquery-cookie', $js_dir . 'jquery.cookie' . $suffix, array('jquery'), '1.4.1', true);
-	wp_enqueue_script('popup-maker-site', $js_dir . 'popup-maker-site' . $suffix . '?defer', array('jquery', 'jquery-ui-core', 'jquery-ui-position', 'jquery-transit'), '1.0', true);
+	wp_enqueue_script('popup-maker-site', $js_dir . 'popup-maker-site' . $suffix . '?defer', array('jquery', 'jquery-ui-core', 'jquery-ui-position', 'jquery-gsap'), '1.0', true);
+	//wp_enqueue_script('popup-maker-site', $js_dir . 'popup-maker-site' . $suffix . '?defer', array('jquery', 'jquery-ui-core', 'jquery-ui-position', 'jquery-transit'), '1.0', true);
 	wp_localize_script('popup-maker-site', 'ajaxurl', admin_url('admin-ajax.php') );
 	wp_localize_script('popup-maker-site', 'popmake_default_theme', popmake_get_default_popup_theme() );
 	wp_localize_script('popup-maker-site', 'popmake_themes', array('l10n_print_after' => 'popmake_themes = ' . json_encode( popmake_get_popup_themes_data() ) . ';'));
+
 }
 add_action( 'wp_enqueue_scripts', 'popmake_load_site_scripts' );
 
@@ -44,6 +48,21 @@ function popmake_load_site_styles() {
 	$css_dir = POPMAKE_URL . '/assets/styles/';
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css' : '.min.css';
 	wp_enqueue_style('popup-maker-site', $css_dir . 'popup-maker-site' . $suffix, false, '1.0');
+	global $popmake_needed_google_fonts;
+	if(!empty($popmake_needed_google_fonts)) {
+		$link = "//fonts.googleapis.com/css?family=";
+		foreach($popmake_needed_google_fonts as $font_family => $variants) {
+			if($link != "//fonts.googleapis.com/css?family=") {
+				$link .= "|";
+			}
+			$link .= $font_family;
+			if(!empty($variants)) {
+				$link .= ":";
+				$link .= implode(',', $variants);
+			}
+		}
+		wp_enqueue_style('popup-maker-google-fonts', $link);
+	}
 }
 add_action( 'wp_enqueue_scripts', 'popmake_load_site_styles' );
 
@@ -62,6 +81,9 @@ function popmake_load_admin_scripts( $hook ) {
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.js' : '.min.js';
 	if(popmake_is_admin_page()) {
 		wp_enqueue_script('popup-maker-admin', $js_dir . 'popup-maker-admin' . $suffix,  array('jquery', 'wp-color-picker', 'jquery-ui-slider'), '1.0');
+	}
+	if(popmake_is_admin_popup_theme_page()) {
+		wp_localize_script('popup-maker-admin', 'popmake_google_fonts', popmake_get_google_webfonts_list());
 	}
 }
 add_action( 'admin_enqueue_scripts', 'popmake_load_admin_scripts', 100 );

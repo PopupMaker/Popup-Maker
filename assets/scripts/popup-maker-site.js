@@ -12,10 +12,6 @@
         };
     }
 
-    if (!jQuery.support.transition) {
-        jQuery.fn.transition = jQuery.fn.animate;
-    }
-
     jQuery.fn.popmake = function (method) {
         // Method calling logic
         if (jQuery.fn.popmake.methods[method]) {
@@ -101,18 +97,20 @@
                     e.preventDefault();
                     e.stopPropagation();
 
-                    jQuery.fn.popmake.last_close_trigger = 'Close Click';
+                    jQuery.fn.popmake.last_close_trigger = 'Close Button';
                     $this.popmake('close');
                 });
-            if (settings.meta.close.esc_press) {
+            if (settings.meta.close.esc_press || settings.meta.close.f4_press) {
                 jQuery(window)
                     .off('keyup.popmake')
                     .on('keyup.popmake', function (e) {
-                        if (e.keyCode === 27) {
-
-                            jQuery.fn.popmake.last_close_trigger = 'ESC Button';
+                        if (e.keyCode === 27 && settings.meta.close.esc_press) {
+                            jQuery.fn.popmake.last_close_trigger = 'ESC Key';
                             $this.popmake('close');
-
+                        }
+                        if (e.keyCode === 115 && settings.meta.close.f4_press) {
+                            jQuery.fn.popmake.last_close_trigger = 'F4 Key';
+                            $this.popmake('close');
                         }
                     });
             }
@@ -245,6 +243,19 @@
                     width: settings.meta.display.custom_width + settings.meta.display.custom_width_unit,
                     height: settings.meta.display.custom_height_auto ? 'auto' : settings.meta.display.custom_height + settings.meta.display.custom_height_unit
                 });
+            } else {
+                if (settings.meta.display.size !== 'auto') {
+                    if (settings.meta.display.responsive_min_width !== '') {
+                        $this.css({
+                            maxWidth: settings.meta.display.responsive_min_width + settings.meta.display.responsive_min_width_unit
+                        });
+                    }
+                    if (settings.meta.display.responsive_max_width !== '') {
+                        $this.css({
+                            maxWidth: settings.meta.display.responsive_max_width + settings.meta.display.responsive_max_width_unit
+                        });
+                    }
+                }
             }
 
             $this
@@ -297,13 +308,17 @@
                 color: theme.title.font_color,
                 fontSize: theme.title.font_size + 'px',
                 fontFamily: theme.title.font_family,
+                fontWeight: theme.title.font_weight,
+                fontStyle: theme.title.font_style,
                 textAlign: theme.title.text_align,
                 textShadow: theme.title.textshadow_horizontal + 'px ' + theme.title.textshadow_vertical + 'px ' + theme.title.textshadow_blur + 'px ' + jQuery.fn.popmake.utilities.convert_hex(theme.title.textshadow_color, theme.title.textshadow_opacity)
             });
             $content.css({
                 color: theme.content.font_color,
                 //fontSize: theme.content.font_size+'px',
-                fontFamily: theme.content.font_family
+                fontFamily: theme.content.font_family,
+                fontWeight: theme.content.font_weight,
+                fontStyle: theme.content.font_style
             });
             jQuery('p, label', $content).css({
                 color: theme.content.font_color,
@@ -315,6 +330,8 @@
                 backgroundColor: jQuery.fn.popmake.utilities.convert_hex(theme.close.background_color, theme.close.background_opacity),
                 color: theme.close.font_color,
                 fontSize: theme.close.font_size + 'px',
+                fontWeight: theme.close.font_weight,
+                fontStyle: theme.close.font_style,
                 fontFamily: theme.close.font_family,
                 borderStyle: theme.close.border_style,
                 borderColor: theme.close.border_color,
@@ -373,6 +390,77 @@
             }
             jQuery.error('Animation style ' + jQuery.fn.popmake.animations + ' does not exist.');
             return this;
+        },
+        animation_origin: function (origin) {
+            var $this = jQuery(this),
+                start = {
+                    my: "",
+                    at: ""
+                };
+
+            switch (origin) {
+            case 'top':
+                start = {
+                    my: "left+" + $this.offset().left + " bottom",
+                    at: "left top"
+                };
+                break;
+            case 'bottom':
+                start = {
+                    my: "left+" + $this.offset().left + " top",
+                    at: "left bottom"
+                };
+                break;
+            case 'left':
+                start = {
+                    my: "right top+" + $this.offset().top,
+                    at: "left top"
+                };
+                break;
+            case 'right':
+                start = {
+                    my: "left top+" + $this.offset().top,
+                    at: "right top"
+                };
+                break;
+            default:
+                if (origin.indexOf('left') >= 0) {
+                    start = {
+                        my: start.my + " right",
+                        at: start.at + " left"
+                    };
+                }
+                if (origin.indexOf('right') >= 0) {
+                    start = {
+                        my: start.my + " left",
+                        at: start.at + " right"
+                    };
+                }
+                if (origin.indexOf('center') >= 0) {
+                    start = {
+                        my: start.my + " center",
+                        at: start.at + " center"
+                    };
+                }
+                if (origin.indexOf('top') >= 0) {
+                    start = {
+                        my: start.my + " bottom",
+                        at: start.at + " top"
+                    };
+                }
+                if (origin.indexOf('bottom') >= 0) {
+                    start = {
+                        my: start.my + " top",
+                        at: start.at + " bottom"
+                    };
+                }
+                start.my = jQuery.trim(start.my);
+                start.at = jQuery.trim(start.at);
+                break;
+            }
+            start.of = window;
+            start.collision = 'none';
+            return start;
         }
     };
 
@@ -664,6 +752,10 @@
                 stackable: 0,
                 overlay_disabled: 0,
                 size: 'medium',
+                responsive_max_width: '',
+                responsive_max_width_unit: '%',
+                responsive_min_width: '',
+                responsive_min_width_unit: '%',
                 custom_width: '',
                 custom_width_unit: '%',
                 custom_height: '',
@@ -681,7 +773,8 @@
             },
             close: {
                 overlay_click: 0,
-                esc_press: 0
+                esc_press: 0,
+                f4_press: 0
             }
         },
 
@@ -740,7 +833,7 @@
         none: function (callback) {
             var $this = jQuery(this);
             $this.popmake('animate_overlay', 'none', 0, function () {
-                $this.show();
+                $this.css({display: 'block'});
                 if (callback !== undefined) {
                     callback();
                 }
@@ -748,324 +841,141 @@
             return this;
         },
         slide: function (callback) {
-            var $this = jQuery(this).show(0).css({
-                opacity: 0
-            }),
+            var $this = jQuery(this).show(0).css({ opacity: 0 }),
                 settings = $this.data('popmake'),
-                speed = settings.meta.display.animation_speed,
-                origin = settings.meta.display.animation_origin,
-                start = {
-                    my: "",
-                    at: ""
-                };
-            switch (origin) {
-            case 'top':
-                start = {
-                    my: "left+" + $this.offset().left + " bottom",
-                    at: "left top"
-                };
-                break;
-            case 'bottom':
-                start = {
-                    my: "left+" + $this.offset().left + " top",
-                    at: "left bottom"
-                };
-                break;
-            case 'left':
-                start = {
-                    my: "right top+" + $this.offset().top,
-                    at: "left top"
-                };
-                break;
-            case 'right':
-                start = {
-                    my: "left top+" + $this.offset().top,
-                    at: "right top"
-                };
-                break;
-            default:
-                if (origin.indexOf('left') >= 0) {
-                    start = {
-                        my: start.my + " right",
-                        at: start.at + " left"
-                    };
-                }
-                if (origin.indexOf('right') >= 0) {
-                    start = {
-                        my: start.my + " left",
-                        at: start.at + " right"
-                    };
-                }
-                if (origin.indexOf('center') >= 0) {
-                    start = {
-                        my: start.my + " center",
-                        at: start.at + " center"
-                    };
-                }
-                if (origin.indexOf('top') >= 0) {
-                    start = {
-                        my: start.my + " bottom",
-                        at: start.at + " top"
-                    };
-                }
-                if (origin.indexOf('bottom') >= 0) {
-                    start = {
-                        my: start.my + " top",
-                        at: start.at + " bottom"
-                    };
-                }
-                start.my = jQuery.trim(start.my);
-                start.at = jQuery.trim(start.at);
-                break;
-            }
-            start.of = window;
-            start.collision = 'none';
-            jQuery('html').css('overflow-x', 'hidden');
-            $this.position(start).css({
-                opacity: 1
-            });
+                speed = settings.meta.display.animation_speed / 2000,
+                start = $this.popmake('animation_origin', settings.meta.display.animation_origin);
 
-            $this.popmake('animate_overlay', 'fade', speed * 0.25, function () {
-                $this.popmake('reposition', function (position) {
-                    position.opacity = 1;
-                    $this.transition(position, speed * 0.75, function () {
-                        jQuery('html').css('overflow-x', 'inherit');
-                        if (callback !== undefined) {
-                            callback();
-                        }
+            jQuery('html').css('overflow-x', 'hidden');
+
+            $this
+                .position(start)
+                .css({ opacity: 1 })
+                .popmake('animate_overlay', 'fade', speed * 1000, function () {
+                    $this.popmake('reposition', function (position) {
+
+                        TweenLite.to($this, speed, jQuery.extend(position, {
+                            onComplete: function () {
+                                jQuery('html').css('overflow-x', 'inherit');
+                                if (callback !== undefined) {
+                                    callback();
+                                }
+                            }
+                        }));
+
                     });
                 });
-            });
             return this;
         },
         fade: function (callback) {
-            var $this = jQuery(this),
+            var $this = jQuery(this).show(0).css({ opacity: 0 }),
                 settings = $this.data('popmake'),
-                speed = settings.meta.display.animation_speed / 2;
-            $this.popmake('animate_overlay', 'fade', speed, function () {
-                $this.fadeIn(speed, function () {
-                    if (callback !== undefined) {
-                        callback();
-                    }
+                speed = settings.meta.display.animation_speed / 2000;
+
+            $this
+                .popmake('animate_overlay', 'fade', speed * 1000, function () {
+
+                    TweenLite.to($this, speed, {
+                        opacity: 1,
+                        onComplete: function () {
+                            if (callback !== undefined) {
+                                callback();
+                            }
+                        }
+                    });
+
                 });
-            });
             return this;
         },
         fadeAndSlide: function (callback) {
-            var $this = jQuery(this).show(0).css({
-                    opacity: 0
-                }),
+            var $this = jQuery(this).show(0).css({ opacity: 0 }),
                 settings = $this.data('popmake'),
-                speed = settings.meta.display.animation_speed,
-                origin = settings.meta.display.animation_origin,
-                start = {
-                    my: "",
-                    at: ""
-                };
-            switch (origin) {
-            case 'top':
-                start = {
-                    my: "left+" + $this.offset().left + " bottom",
-                    at: "left top"
-                };
-                break;
+                speed = settings.meta.display.animation_speed / 2000,
+                start = $this.popmake('animation_origin', settings.meta.display.animation_origin);
 
-            case 'bottom':
-                start = {
-                    my: "left+" + $this.offset().left + " top",
-                    at: "left bottom"
-                };
-                break;
-
-            case 'left':
-                start = {
-                    my: "right top+" + $this.offset().top,
-                    at: "left top"
-                };
-                break;
-
-            case 'right':
-                start = {
-                    my: "left top+" + $this.offset().top,
-                    at: "right top"
-                };
-                break;
-
-            default:
-                if (origin.indexOf('left') >= 0) {
-                    start = {
-                        my: start.my + " right",
-                        at: start.at + " left"
-                    };
-                }
-                if (origin.indexOf('right') >= 0) {
-                    start = {
-                        my: start.my + " left",
-                        at: start.at + " right"
-                    };
-                }
-                if (origin.indexOf('center') >= 0) {
-                    start = {
-                        my: start.my + " center",
-                        at: start.at + " center"
-                    };
-                }
-                if (origin.indexOf('top') >= 0) {
-                    start = {
-                        my: start.my + " bottom",
-                        at: start.at + " top"
-                    };
-                }
-                if (origin.indexOf('bottom') >= 0) {
-                    start = {
-                        my: start.my + " top",
-                        at: start.at + " bottom"
-                    };
-                }
-                start.my = jQuery.trim(start.my);
-                start.at = jQuery.trim(start.at);
-                break;
-            }
-            start.of = window;
-            start.collision = 'none';
             jQuery('html').css('overflow-x', 'hidden');
-            $this.position(start);
-            $this.popmake('animate_overlay', 'fade', speed * 0.25, function () {
-                $this.popmake('reposition', function (position) {
-                    position.opacity = 1;
-                    $this.transition(position, speed * 0.75, function () {
-                        jQuery('html').css('overflow-x', 'inherit');
-                        if (callback !== undefined) {
-                            callback();
-                        }
+
+            $this
+                .position(start)
+                .popmake('animate_overlay', 'fade', speed * 1000, function () {
+                    $this.popmake('reposition', function (position) {
+
+                        TweenLite.to($this, speed, jQuery.extend(position, {
+                            opacity: 1,
+                            onComplete: function () {
+                                jQuery('html').css('overflow-x', 'inherit');
+                                if (callback !== undefined) {
+                                    callback();
+                                }
+                            }
+                        }));
+
                     });
                 });
-            });
             return this;
         },
         grow: function (callback) {
-            var $this = jQuery(this),
+            var $this = jQuery(this).show(0).css({ opacity: 0 }),
                 settings = $this.data('popmake'),
-                speed = settings.meta.display.animation_speed,
+                speed = settings.meta.display.animation_speed / 2000,
                 origin = settings.meta.display.animation_origin;
 
-            // Set css for animation start.
-            $this.css({
-                transformOrigin: origin,
-                opacity: 0
-            }).show();
+            if (origin === 'top' || origin === 'bottom') {
+                origin = 'center ' + origin;
+            }
+            if (origin === 'left' || origin === 'right') {
+                origin = origin + ' center';
+            }
 
-            // Begin Animation with overlay fade in then grow animation.
-            $this.popmake('animate_overlay', 'fade', speed * 0.25, function () {
+            TweenLite.to($this, 0, {
+                transformOrigin: origin,
+                scale: 0,
+                opacity: 1
+            });
+
+            $this.popmake('animate_overlay', 'fade', speed * 1000, function () {
                 // Reposition with callback. position returns default positioning.
                 $this.popmake('reposition', function (position) {
-                    position.scale = 1;
-                    position.duration = speed * 0.75;
-                    $this
-                        .css({
-                            scale: 0,
-                            opacity: 1
-                        })
-                        .transition(position);
-                    if (callback !== undefined) {
-                        callback();
-                    }
+
+                    TweenLite.to($this, speed, {
+                        scale: 1,
+                        onComplete: function () {
+                            if (callback !== undefined) {
+                                callback();
+                            }
+                        }
+                    });
                 });
             });
             return this;
         },
         growAndSlide: function (callback) {
-            var $this = jQuery(this).css({
-                    opacity: 0
-                }).show(),
+            var $this = jQuery(this).show(0).css({ opacity: 0 }),
                 settings = $this.data('popmake'),
-                speed = settings.meta.display.animation_speed,
+                speed = settings.meta.display.animation_speed / 2000,
                 origin = settings.meta.display.animation_origin,
-                start = {
-                    my: "",
-                    at: ""
-                };
-            switch (origin) {
-            case 'top':
-                start = {
-                    my: "left+" + $this.offset().left + " bottom",
-                    at: "left top"
-                };
-                break;
-            case 'bottom':
-                start = {
-                    my: "left+" + $this.offset().left + " top",
-                    at: "left bottom"
-                };
-                break;
-            case 'left':
-                start = {
-                    my: "right top+" + $this.offset().top,
-                    at: "left top"
-                };
-                break;
-            case 'right':
-                start = {
-                    my: "left top+" + $this.offset().top,
-                    at: "right top"
-                };
-                break;
-            default:
-                if (origin.indexOf('left') >= 0) {
-                    start = {
-                        my: start.my + " right",
-                        at: start.at + " left"
-                    };
-                }
-                if (origin.indexOf('right') >= 0) {
-                    start = {
-                        my: start.my + " left",
-                        at: start.at + " right"
-                    };
-                }
-                if (origin.indexOf('center') >= 0) {
-                    start = {
-                        my: start.my + " center",
-                        at: start.at + " center"
-                    };
-                }
-                if (origin.indexOf('top') >= 0) {
-                    start = {
-                        my: start.my + " bottom",
-                        at: start.at + " top"
-                    };
-                }
-                if (origin.indexOf('bottom') >= 0) {
-                    start = {
-                        my: start.my + " top",
-                        at: start.at + " bottom"
-                    };
-                }
-                start.my = jQuery.trim(start.my);
-                start.at = jQuery.trim(start.at);
-                break;
-            }
-            start.of = window;
-            start.collision = 'none';
+                start = $this.popmake('animation_origin', origin);
+
             jQuery('html').css('overflow-x', 'hidden');
-            $this.position(start)
-                .css({
-                    opacity: origin === 'center center' ? 0 : 1,
-                    transformOrigin: origin
-                });
-            $this.popmake('animate_overlay', 'fade', speed * 0.25, function () {
+
+            $this.position(start);
+
+            TweenLite.to($this, 0, { scale: 0, opacity: 1, transformOrigin: '0 0' });
+
+            $this.popmake('animate_overlay', 'fade', speed * 1000, function () {
                 $this.popmake('reposition', function (position) {
-                    position.scale = 1;
-                    position.opacity = 1;
-                    position.duration = speed * 0.75;
-                    $this
-                        .css({scale: 0})
-                        .transition(position, function () {
+
+                    TweenLite.to($this, speed, jQuery.extend(position, {
+                        scale: 1,
+                        transformOrigin: '50% 50%',
+                        onComplete: function () {
                             jQuery('html').css('overflow-x', 'inherit');
-                        });
-                    if (callback !== undefined) {
-                        callback();
-                    }
+                            if (callback !== undefined) {
+                                callback();
+                            }
+                        }
+                    }));
+
                 });
             });
             return this;

@@ -38,31 +38,31 @@
 }
 
 @media only screen and (min-width: 768px){
-.popmake.nano {
+.popmake.size-nano {
 	margin-left: -5%;
 	width: 10%;
 }
-.popmake.micro {
+.popmake.size-micro {
 	margin-left: -10%;
 	width: 20%;
 }
-.popmake.tiny {
+.popmake.size-tiny {
 	margin-left: -15%;
 	width: 30%;
 }
-.popmake.small {
+.popmake.size-small {
 	margin-left: -20%;
 	width: 40%;
 }
-.popmake.medium {
+.popmake.size-medium {
 	margin-left: -30%;
 	width: 60%;
 }
-.popmake.large {
+.popmake.size-large {
 	margin-left: -35%;
 	width: 70%;
 }
-.popmake.xlarge {
+.popmake.size-xlarge {
 	margin-left: -47.5%;
 	width: 95%;
 }

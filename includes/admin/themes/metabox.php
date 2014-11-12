@@ -108,6 +108,8 @@ function popmake_popup_theme_meta_field_group_title() {
 		'font_color',
 		'font_size',
 		'font_family',
+		'font_weight',
+		'font_style',
 		'text_align',
 		'textshadow_horizontal',
 		'textshadow_vertical',
@@ -123,6 +125,8 @@ function popmake_popup_theme_meta_field_group_content() {
 	return array(
 		'font_color',
 		'font_family',
+		'font_weight',
+		'font_style',
 	);
 }
 add_filter('popmake_popup_theme_meta_field_group_content', 'popmake_popup_theme_meta_field_group_content', 0);
@@ -140,6 +144,8 @@ function popmake_popup_theme_meta_field_group_close() {
 		'font_color',
 		'font_size',
 		'font_family',
+		'font_weight',
+		'font_style',
 		'background_color',
 		'background_opacity',
 		'border_radius',

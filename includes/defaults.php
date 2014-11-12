@@ -12,23 +12,28 @@ add_filter('popmake_popup_display_defaults', 'popmake_popup_display_defaults', 0
  */
 function popmake_popup_display_defaults( $defaults = array() ) {
 	return array_merge( $defaults, array(
-		'overlay_disabled'		=> false,
-		'scrollable_content'	=> false,
-		'size'					=> 'medium',
-		'custom_width'			=> 640,
-		'custom_width_unit'		=> 'px',
-		'custom_height'			=> 380,
-		'custom_height_unit'	=> 'px',
-		'custom_height_auto'	=> true,
-		'location'				=> 'center top',
-		'position_top'			=> 100,
-		'position_left'			=> 0,
-		'position_bottom'		=> 0,
-		'position_right'		=> 0,
-		'position_fixed'		=> false,
-		'animation_type'		=> 'fade',
-		'animation_speed'		=> 350,
-		'animation_origin'		=> 'center top',
+		'overlay_disabled'			=> false,
+		'scrollable_content'		=> false,
+		'size'						=> 'medium',
+		'responsive_min_width'		=> '',
+		'responsive_min_width_unit'	=> '%',
+		'responsive_max_width'		=> '',
+		'responsive_max_width_unit'	=> '%',
+		'custom_width'				=> 640,
+		'custom_width_unit'			=> 'px',
+		'custom_width_unit'			=> 'px',
+		'custom_height'				=> 380,
+		'custom_height_unit'		=> 'px',
+		'custom_height_auto'		=> true,
+		'location'					=> 'center top',
+		'position_top'				=> 100,
+		'position_left'				=> 0,
+		'position_bottom'			=> 0,
+		'position_right'			=> 0,
+		'position_fixed'			=> false,
+		'animation_type'			=> 'fade',
+		'animation_speed'			=> 350,
+		'animation_origin'			=> 'center top',
 	));
 }
 
@@ -39,6 +44,7 @@ function popmake_popup_close_defaults( $defaults ) {
 	return array_merge( $defaults, array(
 		'overlay_click'	=> false,
 		'esc_press'		=> false,
+		'f4_press'		=> false,
 	));
 }
 
@@ -79,6 +85,8 @@ function popmake_popup_theme_title_defaults( $defaults ) {
 		'font_color'			=> '#000000',
 		'font_size'				=> 32,
 		'font_family'			=> 'inherit',
+		'font_weight'			=> 'inherit',
+		'font_style'			=> 'normal',
 		'font_align'			=> 'left',
 		'textshadow_horizontal'	=> 0,
 		'textshadow_vertical'	=> 0,
@@ -96,6 +104,8 @@ function popmake_popup_theme_content_defaults( $defaults ) {
 	return array_merge( $defaults, array(
 		'font_color'	=> '#8c8c8c',
 		'font_family'	=> 'inherit',
+		'font_weight'	=> 'inherit',
+		'font_style'	=> 'normal',
 	));
 }
 
@@ -116,6 +126,8 @@ function popmake_popup_theme_close_defaults( $defaults ) {
 		'font_color'			=> '#ffffff',
 		'font_size'				=> 12,
 		'font_family'			=> 'inherit',
+		'font_weight'			=> 'inherit',
+		'font_style'			=> 'normal',
 		'border_style'			=> 'none',
 		'border_color'			=> '#ffffff',
 		'border_width'			=> 1,

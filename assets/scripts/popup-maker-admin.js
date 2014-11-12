@@ -383,9 +383,9 @@ var PopMakeAdmin;
                     if ($this.is(':checked')) {
                         $options.show();
 
-                        if ($this.attr('id') === 'popup_loading_condition_on_entire_site') {
-                            excludes = $this.parents('#popmake_popup_loading_condition_fields').find('[id^="loading_condition-exclude_on_"]');
-                            others = $this.parents('.loading_condition').siblings('.loading_condition');
+                        if ($this.attr('id') === 'popup_targeting_condition_on_entire_site') {
+                            excludes = $this.parents('#popmake_popup_targeting_condition_fields').find('[id^="targeting_condition-exclude_on_"]');
+                            others = $this.parents('.targeting_condition').siblings('.targeting_condition');
                             others.hide();
                             jQuery('> *', others).prop('disabled', true);
                             excludes.show();
@@ -395,9 +395,9 @@ var PopMakeAdmin;
                         }
                     } else {
                         $options.hide();
-                        if ($this.attr('id') === 'popup_loading_condition_on_entire_site') {
-                            excludes = $this.parents('#popmake_popup_loading_condition_fields').find('[id^="loading_condition-exclude_on_"]');
-                            others = $this.parents('.loading_condition').siblings('.loading_condition');
+                        if ($this.attr('id') === 'popup_targeting_condition_on_entire_site') {
+                            excludes = $this.parents('#popmake_popup_targeting_condition_fields').find('[id^="targeting_condition-exclude_on_"]');
+                            others = $this.parents('.targeting_condition').siblings('.targeting_condition');
                             others.show();
                             jQuery('> *', others).removeProp('disabled');
                             excludes.hide();
@@ -410,7 +410,7 @@ var PopMakeAdmin;
                 update_specific_checkboxes = function ($this) {
                     var $option = $this.parent().siblings('input[type="checkbox"]:first'),
                         exclude = $option.attr('name').indexOf("exclude") >= 0,
-                        type = exclude ? $option.attr('name').replace('popup_loading_condition_exclude_on_specific_', '') : $option.attr('name').replace('popup_loading_condition_on_specific_', ''),
+                        type = exclude ? $option.attr('name').replace('popup_targeting_condition_exclude_on_specific_', '') : $option.attr('name').replace('popup_targeting_condition_on_specific_', ''),
                         type_box = exclude ? jQuery('#exclude_on_specific_' + type) : jQuery('#on_specific_' + type);
                     if ($this.is(':checked')) {
                         if ($this.val() === 'true') {
@@ -425,16 +425,23 @@ var PopMakeAdmin;
                     }
                 },
                 update_size = function () {
-                    if (jQuery("#popup_display_size").val() !== 'custom') {
-                        jQuery('.custom-size-only').hide();
-                    } else {
+                    if (jQuery("#popup_display_size").val() === 'custom') {
                         jQuery('.custom-size-only').show();
+                        jQuery('.responsive-size-only').hide();
                         if (jQuery('#popup_display_custom_height_auto').is(':checked')) {
                             jQuery('.custom-size-height-only').hide();
                         } else {
                             jQuery('.custom-size-height-only').show();
                         }
+                    } else {
+                        jQuery('.custom-size-only').hide();
+                        if (jQuery("#popup_display_size").val() !== 'auto') {
+                            jQuery('.responsive-size-only').show();
+                        } else {
+                            jQuery('.responsive-size-only').hide();
+                        }
                     }
+
                 },
                 update_animation = function () {
                     jQuery('.animation-speed, .animation-origin').hide();
@@ -513,7 +520,7 @@ var PopMakeAdmin;
 
 
 
-            jQuery('#popmake_popup_loading_condition_fields .loading_condition > input[type="checkbox"]')
+            jQuery('#popmake_popup_targeting_condition_fields .targeting_condition > input[type="checkbox"]')
                 .on('click', function () { update_type_options(jQuery(this)); })
                 .each(function () { update_type_options(jQuery(this)); });
 
@@ -536,9 +543,17 @@ var PopMakeAdmin;
             update_animation();
             update_location();
         },
+
         theme_page_listeners: function () {
             var self = this;
             jQuery(document)
+                .on('change', 'select.font-family', function () {
+                    jQuery('select.font-weight option, select.font-style option', jQuery(this).parents('table')).removeProp('selected');
+                    self.update_font_selectboxes();
+                })
+                .on('change', 'select.font-weight, select.font-style', function () {
+                    self.update_font_selectboxes();
+                })
                 .on('change input focusout', 'select, input:not(.color-picker)', function () {
                     self.update_theme();
                 })
@@ -593,6 +608,59 @@ var PopMakeAdmin;
                 }
             });
         },
+        update_font_selectboxes: function () {
+            return jQuery('select.font-family').each(function () {
+                var $this = jQuery(this),
+                    $font_weight = $this.parents('table').find('select.font-weight'),
+                    $font_style = $this.parents('table').find('select.font-style'),
+                    $font_weight_options = $font_weight.find('option'),
+                    $font_style_options = $font_style.find('option'),
+                    font,
+                    i;
+
+
+                // Google Font Chosen
+                if (popmake_google_fonts[$this.val()] !== undefined) {
+                    font = popmake_google_fonts[$this.val()];
+
+                    $font_weight_options.hide();
+                    $font_style_options.hide();
+
+                    if (font.variants.length) {
+                        for (i = 0; font.variants.length > i; i += 1) {
+                            if (font.variants[i] === 'regular') {
+                                jQuery('option[value="normal"]', $font_weight).show();
+                                jQuery('option[value="normal"]', $font_style).show();
+                            } else {
+                                if (font.variants[i].indexOf('italic') >= 0) {
+                                    jQuery('option[value="italic"]', $font_style).show();
+                                }
+                                jQuery('option[value="' + parseInt(font.variants[i], 10) + '"]', $font_weight).show();
+                            }
+                        }
+                    }
+                // Standard Font Chosen
+                } else {
+                    $font_weight_options.show();
+                    $font_style_options.show();
+                }
+
+                $font_weight.parents('tr:first').show();
+                if ($font_weight.find('option:visible').length <= 1) {
+                    $font_weight.parents('tr:first').hide();
+                } else {
+                    $font_weight.parents('tr:first').show();
+                }
+
+                $font_style.parents('tr:first').show();
+                if ($font_style.find('option:visible').length <= 1) {
+                    $font_style.parents('tr:first').hide();
+                } else {
+                    $font_style.parents('tr:first').show();
+                }
+            });
+        },
+
         initialize_theme_page: function () {
             jQuery('#popuptitlediv').insertAfter('#titlediv');
 
@@ -601,6 +669,7 @@ var PopMakeAdmin;
             self.update_theme();
             self.theme_page_listeners();
             self.theme_preview_scroll();
+            self.update_font_selectboxes();
 
             jQuery('select.border-style').each(function () {
                 var $this = jQuery(this);
@@ -644,7 +713,56 @@ var PopMakeAdmin;
                 $content = jQuery('.content', $container),
                 $close = jQuery('.close-popup', $container),
                 container_inset = theme.container_boxshadow_inset === 'yes' ? 'inset ' : '',
-                close_inset = theme.close_boxshadow_inset === 'yes' ? 'inset ' : '';
+                close_inset = theme.close_boxshadow_inset === 'yes' ? 'inset ' : '',
+                link;
+
+            if (popmake_google_fonts[theme.title_font_family] !== undefined) {
+
+                link = "//fonts.googleapis.com/css?family=" + theme.title_font_family;
+
+                if (theme.title_font_weight !== 'normal') {
+                    link += ":" + theme.title_font_weight;
+                }
+                if (theme.title_font_style === 'italic') {
+                    if (link.indexOf(':') === -1) {
+                        link += ":";
+                    }
+                    link += "italic";
+                }
+                jQuery('body').append('<link href="' + link + '" rel="stylesheet" type="text/css">');
+            }
+            if (popmake_google_fonts[theme.content_font_family] !== undefined) {
+
+                link = "//fonts.googleapis.com/css?family=" + theme.content_font_family;
+
+                if (theme.content_font_weight !== 'normal') {
+                    link += ":" + theme.content_font_weight;
+                }
+                if (theme.content_font_style === 'italic') {
+                    if (link.indexOf(':') === -1) {
+                        link += ":";
+                    }
+                    link += "italic";
+                }
+                jQuery('body').append('<link href="' + link + '" rel="stylesheet" type="text/css">');
+            }
+            if (popmake_google_fonts[theme.close_font_family] !== undefined) {
+
+                link = "//fonts.googleapis.com/css?family=" + theme.close_font_family;
+
+                if (theme.close_font_weight !== 'normal') {
+                    link += ":" + theme.close_font_weight;
+                }
+                if (theme.close_font_style === 'italic') {
+                    if (link.indexOf(':') === -1) {
+                        link += ":";
+                    }
+                    link += "italic";
+                }
+                jQuery('body').append('<link href="' + link + '" rel="stylesheet" type="text/css">');
+            }
+
+
 
             $overlay.removeAttr('style').css({
                 backgroundColor: this.convert_hex(theme.overlay_background_color, theme.overlay_background_opacity)
@@ -662,13 +780,17 @@ var PopMakeAdmin;
                 color: theme.title_font_color,
                 fontSize: theme.title_font_size + 'px',
                 fontFamily: theme.title_font_family,
+                fontStyle: theme.title_font_style,
+                fontWeight: theme.title_font_weight,
                 textAlign: theme.title_text_align,
                 textShadow: theme.title_textshadow_horizontal + 'px ' + theme.title_textshadow_vertical + 'px ' + theme.title_textshadow_blur + 'px ' + this.convert_hex(theme.title_textshadow_color, theme.title_textshadow_opacity)
             });
             $content.removeAttr('style').css({
                 color: theme.content_font_color,
                 //fontSize: theme.content_font_size+'px',
-                fontFamily: theme.content_font_family
+                fontFamily: theme.content_font_family,
+                fontStyle: theme.content_font_style,
+                fontWeight: theme.content_font_weight
             });
             $close.html(theme.close_text).removeAttr('style').css({
                 padding: theme.close_padding + 'px',
@@ -676,6 +798,8 @@ var PopMakeAdmin;
                 color: theme.close_font_color,
                 fontSize: theme.close_font_size + 'px',
                 fontFamily: theme.close_font_family,
+                fontWeight: theme.close_font_weight,
+                fontStyle: theme.close_font_style,
                 borderStyle: theme.close_border_style,
                 borderColor: theme.close_border_color,
                 borderWidth: theme.close_border_width + 'px',
