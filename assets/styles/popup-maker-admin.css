@@ -78,8 +78,9 @@
 
 
 
-.bold {
+option.bold {
 	font-weight:bold;
+	font-size: 1.125em;
 }
 .title-divider th {
 	border-top:1px solid #ccc;
