@@ -10,7 +10,7 @@
 */
 function popmake_extensions_page() {?>
 	<div class="wrap">
-		<h2><?php _e( 'Popup Maker Addons', 'popup-maker' ) ?></h2>
+		<h2><?php _e( 'Popup Maker Extensions', 'popup-maker' ) ?></h2>
 		<div id="poststuff">
 			<div id="post-body" class="metabox-holder">
 				<div id="post-body-content"><?php
@@ -108,7 +108,7 @@ function popmake_extensions_page() {?>
 					            */
 					            ?>
 				                <span class="action-links"><a class="button" target="_blank" href="<?php esc_attr_e($extension->homepage);?>"><?php _e( 'Get It Now', 'popup-maker' );?></a></span>
-					            <a href="<?php echo esc_url($extension->homepage);?>" target="_blank"><?php _e( 'View the entire Add On Specs', 'popup-maker' );?></a>
+					            <a href="<?php echo esc_url($extension->homepage);?>#features" target="_blank"><?php _e( 'View all the features.', 'popup-maker' );?></a>
 					        </li>
 					        <?php endforeach;				
 						}?>

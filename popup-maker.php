@@ -77,6 +77,8 @@ final class Popup_Maker {
 			self::$instance->setup_constants();
 			self::$instance->includes();
 			self::$instance->load_textdomain();
+
+			register_activation_hook( __FILE__ , 'popmake_install' );
 		}
 		return self::$instance;
 	}
@@ -138,7 +140,7 @@ final class Popup_Maker {
 		}
 
 		if ( !defined('POPMAKE_NONCE') ) {
-			define('POPMAKE_NONCE', POPMAKE_SLUG.'_nonce' );	
+			define('POPMAKE_NONCE', 'popmake_nonce' );	
 		}
 
 		if ( !defined('POPMAKE_VERSION') ) {
@@ -180,15 +182,22 @@ final class Popup_Maker {
 		require_once POPMAKE_DIR . 'includes/input-options.php';
 		require_once POPMAKE_DIR . 'includes/popup-functions.php';
 		require_once POPMAKE_DIR . 'includes/theme-functions.php';
+		require_once POPMAKE_DIR . 'includes/ajax-calls.php';
 
 
 		require_once POPMAKE_DIR . 'includes/compatibility/gravityforms.php';
 		require_once POPMAKE_DIR . 'includes/compatibility/google-fonts.php';
 		
 		if ( is_admin() ) {
+			require_once POPMAKE_DIR . 'includes/admin/welcome.php';
+			require_once POPMAKE_DIR . 'includes/admin/welcome/about.php';
+			require_once POPMAKE_DIR . 'includes/admin/welcome/credits.php';
+			require_once POPMAKE_DIR . 'includes/admin/welcome/changelog.php';
+			require_once POPMAKE_DIR . 'includes/admin/welcome/getting-started.php';
 			require_once POPMAKE_DIR . 'includes/admin/admin-setup.php';
 			require_once POPMAKE_DIR . 'includes/admin/admin-functions.php';
 			require_once POPMAKE_DIR . 'includes/admin/admin-pages.php';
+			require_once POPMAKE_DIR . 'includes/admin/admin-notices.php';
 			require_once POPMAKE_DIR . 'includes/admin/post-editor.php';
 			require_once POPMAKE_DIR . 'includes/admin/popups/metabox.php';
 			require_once POPMAKE_DIR . 'includes/admin/popups/dashboard-columns.php';
@@ -206,6 +215,8 @@ final class Popup_Maker {
 			require_once POPMAKE_DIR . 'includes/admin/settings/settings-page.php';
 			require_once POPMAKE_DIR . 'includes/admin/extensions/extensions-page.php';
 			require_once POPMAKE_DIR . 'includes/admin/help/help-page.php';
+			require_once POPMAKE_DIR . 'includes/admin/metabox-support.php';
+			require_once POPMAKE_DIR . 'includes/admin/metabox-share.php';
 		} else {
 			require_once POPMAKE_DIR . 'includes/templates.php';
 			require_once POPMAKE_DIR . 'includes/load-popups.php';
@@ -266,10 +277,10 @@ endif; // End if class_exists check
 function PopMake() {
 	return Popup_Maker::instance();
 }
+PopMake();
 
 function popmake_initialize() {
 	// Get POPMAKE Running
-	PopMake();
 	do_action('popmake_initialize');
 }
 add_action('plugins_loaded', 'popmake_initialize', 0);

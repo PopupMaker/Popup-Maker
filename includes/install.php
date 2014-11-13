@@ -54,7 +54,6 @@ function popmake_install() {
 
 	}
 
-
 	update_option( 'popmake_settings', array_merge( $popmake_options, $options ) );
 	update_option( 'popmake_version', POPMAKE_VERSION );
 
@@ -65,12 +64,10 @@ function popmake_install() {
 	if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
 		return;
 	}
-
 	// Add the transient to redirect to welcome page.
 	set_transient( '_popmake_activation_redirect', true, 30 );
 }
 register_activation_hook( POPMAKE , 'popmake_install' );
-
 
 
 

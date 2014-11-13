@@ -42,6 +42,10 @@ function popmake_add_popup_theme_meta_box() {
 
 	/** Close Meta **/
 	add_meta_box( 'popmake_popup_theme_close', __( 'Close Settings', 'popup-maker' ),  'popmake_render_popup_theme_close_meta_box', 'popup_theme', 'normal', 'high' );
+	/** Support Meta **/
+	add_meta_box( 'popmake_popup_support', __( 'Support', 'popup-maker' ),  'popmake_render_support_meta_box', 'popup_theme', 'side', 'high' );
+	/** Share Meta **/
+	add_meta_box( 'popmake_popup_share', __( 'Share', 'popup-maker' ),  'popmake_render_share_meta_box', 'popup_theme', 'side', 'high', true );
 
 }
 add_action( 'add_meta_boxes', 'popmake_add_popup_theme_meta_box' );

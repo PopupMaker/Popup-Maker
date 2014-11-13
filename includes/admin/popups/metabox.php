@@ -27,6 +27,11 @@ function popmake_add_popup_meta_box() {
 	add_meta_box( 'popmake_popup_close', __( 'Close Settings', 'popup-maker' ),  'popmake_render_popup_close_meta_box', 'popup', 'normal', 'high' );
 	/** Loading Meta **/
 	add_meta_box( 'popmake_popup_targeting_condition', __( 'Targeting Conditions', 'popup-maker' ),  'popmake_render_popup_targeting_condition_meta_box', 'popup', 'side', 'high' );
+
+	/** Support Meta **/
+	add_meta_box( 'popmake_popup_support', __( 'Support', 'popup-maker' ),  'popmake_render_support_meta_box', 'popup', 'side', 'high' );
+	/** Share Meta **/
+	add_meta_box( 'popmake_popup_share', __( 'Share', 'popup-maker' ),  'popmake_render_share_meta_box', 'popup', 'side', 'high' );
 }
 add_action( 'add_meta_boxes', 'popmake_add_popup_meta_box' );
 

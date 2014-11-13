@@ -81,6 +81,7 @@ function popmake_load_admin_scripts( $hook ) {
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.js' : '.min.js';
 	if(popmake_is_admin_page()) {
 		wp_enqueue_script('popup-maker-admin', $js_dir . 'popup-maker-admin' . $suffix,  array('jquery', 'wp-color-picker', 'jquery-ui-slider'), '1.0');
+		wp_localize_script('popup-maker-admin', 'popmake_admin_ajax_nonce', wp_create_nonce( POPMAKE_NONCE ));
 	}
 	if(popmake_is_admin_popup_theme_page()) {
 		wp_localize_script('popup-maker-admin', 'popmake_google_fonts', popmake_get_google_webfonts_list());

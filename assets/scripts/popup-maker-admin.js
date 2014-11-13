@@ -15,15 +15,71 @@ var PopMakeAdmin;
             PopMakeAdmin.initialize_color_pickers();
             PopMakeAdmin.initialize_range_sliders();
 
+            PopMakeAdmin.initialize_marketing();
+
+
             jQuery(document).keydown(function (event) {
                 if ((event.which === '115' || event.which === '83') && (event.ctrlKey || event.metaKey)) {
                     event.preventDefault();
-                    jQuery('#popmake-theme-editor, #popmake-popup-editor, body.post-type-popup form#post, body.post-type-popup_theme form#post').submit();
+                    jQuery('body.post-type-popup form#post, body.post-type-popup_theme form#post').submit();
                     return false;
                 }
                 return true;
             });
 
+        },
+        initialize_marketing: function () {
+            jQuery('#menu-posts-popup ul li:eq(-1)').addClass('popmake-menu-highlight');
+
+            jQuery('.popmake-newsletter-optin').show();
+
+            jQuery('#popmake_popup_share').removeClass('postbox');
+
+            // Modal & Theme Indexes
+            if (jQuery('#posts-filter').length) {
+                jQuery('#wpbody-content > .wrap > h2:first').after(jQuery('.popmake-newsletter-optin'));
+
+            // Modal & Theme Editors
+            } else if (jQuery('#titlediv').length) {
+                jQuery('#titlediv').append(jQuery('.popmake-newsletter-optin'));
+
+            // Welcome & Similar Pages
+            } else if (jQuery('.about-text').length && jQuery('.popmake-badge').length) {
+                jQuery('.nav-tab-wrapper').after(jQuery('.popmake-newsletter-optin'));
+
+            // Settings & Other Tabbed Pages
+            } else if (jQuery('#poststuff .tabwrapper').length) {
+                jQuery('#poststuff .tabwrapper').prepend(jQuery('.popmake-newsletter-optin'));
+
+            // Settings & Other Tabbed Pages
+            } else if (jQuery('#poststuff').length) {
+                jQuery('#poststuff').prepend(jQuery('.popmake-newsletter-optin'));
+            }
+
+            jQuery('.popmake-optin-dismiss').on('click', function (event) {
+                var $this = jQuery(this);
+                event.preventDefault();
+                jQuery.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        action: "popmake_optin",
+                        popmake_nonce: popmake_admin_ajax_nonce,
+                        optin_dismiss: true,
+                        optin_name: $this.data('optin-name'),
+                        optin_type: $this.data('optin-type')
+                    },
+                })
+                .done(function(data) {
+                    if(data.success) {
+                        $this.parents('.popmake-optin').slideUp(function () {
+                            jQuery(this).remove();
+                        });
+                    }
+                });
+                
+            })
         },
         attachTabsPanelListeners : function () {
 
