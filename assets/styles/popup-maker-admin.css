@@ -1,4 +1,7 @@
 /* UI */
+h3.title {
+    color: #9aba27;
+}
 #popuptitlediv #popuptitle {
     background-color: #fff;
     font-size: 1.5em;
@@ -176,10 +179,11 @@ option.bold {
 	margin-bottom: 10px;
 }
 .popmake-support-links a {
-	text-decoration: none;
-	color:#000;
-	text-transform: uppercase;
-	font-size: 1.25em;
+    color: #20252b;
+    font-family: "Montserrat";
+    font-size: 1.25em;
+    text-transform: uppercase;
+    text-decoration: none;
 }
 .popmake-support-links a span {
 	margin-left: 10px;
@@ -197,14 +201,16 @@ option.bold {
 	box-shadow: none;
 	border:0;
 	border-radius:2px;
-	background:#9ABA27;
-	color:#000;
+	background:#9aba27;
+	color:#fff;
 	padding-left:18px;
 	padding-right:18px;
 	transition:transform .5s;
 	margin-bottom:10px;
 }
 .button.rounded:hover, .button.rounded:focus {
+	color:#fff;
+	background:#20252b;
 	transform:scale(1.125);
 }
 #popmake_popup_support {
@@ -344,8 +350,9 @@ option.bold {
     float:left;
 }
 .extensions-available h3 {
-	text-align: center;
-	font:18px/1.125 "Exo"!important;
+    font: 16px/1.5 "Montserrat" !important;
+    text-align: center;
+    text-transform: uppercase;
 }
 .extensions-available li > .action-links {
 	margin:0 10px;
