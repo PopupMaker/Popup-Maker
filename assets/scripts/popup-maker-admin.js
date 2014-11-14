@@ -59,27 +59,27 @@ var PopMakeAdmin;
             jQuery('.popmake-optin-dismiss').on('click', function (event) {
                 var $this = jQuery(this);
                 event.preventDefault();
-                jQuery.ajax({
-                    url: ajaxurl,
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        action: "popmake_optin",
-                        popmake_nonce: popmake_admin_ajax_nonce,
-                        optin_dismiss: true,
-                        optin_name: $this.data('optin-name'),
-                        optin_type: $this.data('optin-type')
-                    },
-                })
-                .done(function(data) {
-                    if(data.success) {
-                        $this.parents('.popmake-optin').slideUp(function () {
-                            jQuery(this).remove();
-                        });
-                    }
-                });
-                
-            })
+                jQuery
+                    .ajax({
+                        url: ajaxurl,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            action: "popmake_optin",
+                            popmake_nonce: popmake_admin_ajax_nonce,
+                            optin_dismiss: true,
+                            optin_name: $this.data('optin-name'),
+                            optin_type: $this.data('optin-type')
+                        }
+                    })
+                    .done(function (data) {
+                        if (data.success) {
+                            $this.parents('.popmake-optin').slideUp(function () {
+                                jQuery(this).remove();
+                            });
+                        }
+                    });
+            });
         },
         attachTabsPanelListeners : function () {
 
