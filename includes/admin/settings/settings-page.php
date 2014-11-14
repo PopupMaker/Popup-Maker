@@ -9,27 +9,40 @@
  * @return      void
 */
 function popmake_settings_page() {
-	$tabs = apply_filters('popmake_settings_page_tabs', array());?>
+	global $popmake_options;
+	$active_tab = isset( $_GET[ 'tab' ] ) && array_key_exists( $_GET['tab'], popmake_get_settings_tabs() ) ? $_GET[ 'tab' ] : 'general';
+	ob_start();?>
 	<div class="wrap">
 		<h2><?php esc_html_e( __( 'Popup Maker Settings', 'popup-maker' ) );?></h2>
-		<h2 id="popmake-tabs" class="nav-tab-wrapper">
-		<?php foreach($tabs as $tab){ ?>
-			<a href="#<?php echo $tab['id']?>" id="<?php echo $tab['id']?>-tab" class="nav-tab popmake-tab"><?php echo $tab['label'];?></a>
-		<?php } ?>
+		<h2 id="popmake-tabs" class="nav-tab-wrapper"><?php
+			foreach( popmake_get_settings_tabs() as $tab_id => $tab_name ) {
+
+				$tab_url = add_query_arg( array(
+					'settings-updated' => false,
+					'tab' => $tab_id
+				) );
+
+				$active = $active_tab == $tab_id ? ' nav-tab-active' : '';
+
+				echo '<a href="' . esc_url( $tab_url ) . '" title="' . esc_attr( $tab_name ) . '" class="nav-tab' . $active . '">';
+					echo esc_html( $tab_name );
+				echo '</a>';
+			}?>
 		</h2>
-		<form id="popmake-settings-editor" method="post" action="">
+		<form id="popmake-settings-editor" method="post" action="options.php">
 			<?php do_action('popmake_form_nonce');?>
-			<?php wp_nonce_field( POPMAKE_NONCE, POPMAKE_NONCE );?>
 			<div id="poststuff">
 				<div id="post-body" class="metabox-holder columns-2">
 					<div id="post-body-content">
-						<div class="tabwrapper">
-						<?php foreach($tabs as $tab){ ?>
-							<div id="<?php echo $tab['id']?>" class="popmake-tab-content">
-								<?php do_action('popmake_settings_page_tab_'.$tab['id'])?>
-							</div>
-						<?php } ?>
-						</div>
+						<div id="tab_container">
+							<table class="form-table">
+							<?php
+							settings_fields( 'popmake_settings' );
+							do_settings_fields( 'popmake_settings_' . $active_tab, 'popmake_settings_' . $active_tab );
+							?>
+							</table>
+							<?php submit_button(); ?>
+						</div><!-- #tab_container-->
 					</div>
 					<div id="postbox-container-1" class="postbox-container">
 						<div class="meta-box-sortables ui-sortable" id="side-sortables">
@@ -57,6 +70,7 @@ function popmake_settings_page() {
 			</div>
 		</form>
 	</div><?php
+	echo ob_get_clean();
 }
 
 

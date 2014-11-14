@@ -3,7 +3,7 @@ var PopMakeAdmin;
     "use strict";
     PopMakeAdmin = {
         init: function () {
-            PopMakeAdmin.initialize_tabs();
+            //PopMakeAdmin.initialize_tabs();
             if (jQuery('body.post-type-popup form#post').length) {
                 PopMakeAdmin.initialize_popup_page();
                 PopMakeAdmin.attachQuickSearchListeners();

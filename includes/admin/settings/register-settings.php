@@ -124,6 +124,19 @@ function popmake_get_registered_settings() {
 		/** General Settings */
 		'general' => apply_filters( 'popmake_settings_general',
 			array(
+				'powered_by' => array(
+					'id' => 'powered_by',
+					'name' => '<strong>' . __( 'Powered By', 'popup-maker' ) . '</strong>',
+					'desc' => '',
+					'type' => 'header'
+				),
+				'popmake_powered_by_opt_out' => array(
+					'id' => 'popmake_powered_by_opt_out',
+					'name' => __( 'Hide Powered By Link?', 'popup-maker' ),
+					'desc' => __( 'Check this to defy how awesome Popup Maker is. <strong>For those who like to make little kids cry or are compulsive liers.</strong>.', 'popup-maker' ),
+					'type' => 'checkbox'
+				),
+				/*
 				'tracking_settings' => array(
 					'id' => 'tracking_settings',
 					'name' => '<strong>' . __( 'Tracking Settings', 'popup-maker' ) . '</strong>',
@@ -142,6 +155,7 @@ function popmake_get_registered_settings() {
 					'desc' => __( 'Check this box if you would like POPMAKE to completely remove all of its data when the plugin is deleted.', 'popup-maker' ),
 					'type' => 'checkbox'
 				)
+				*/
 			)
 		),
 
@@ -645,33 +659,6 @@ function popmake_color_callback( $args ) {
 	echo $html;
 }
 
-/**
- * Shop States Callback
- *
- * Renders states drop down based on the currently selected country
- *
- * @since 1.0
- * @param array $args Arguments passed by the setting
- * @global $popmake_options Array of all the POPMAKE Options
- * @return void
- */
-function popmake_shop_states_callback($args) {
-	global $popmake_options;
-
-	$states = popmake_get_shop_states();
-	$class  = empty( $states ) ? ' class="popmake-no-states"' : '';
-	$html   = '<select id="popmake_settings[' . $args['id'] . ']" name="popmake_settings[' . $args['id'] . ']"' . $class . '/>';
-
-	foreach ( $states as $option => $name ) :
-		$selected = isset( $popmake_options[ $args['id'] ] ) ? selected( $option, $popmake_options[$args['id']], false ) : '';
-		$html .= '<option value="' . $option . '" ' . $selected . '>' . $name . '</option>';
-	endforeach;
-
-	$html .= '</select>';
-	$html .= '<label for="popmake_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
-
-	echo $html;
-}
 
 /**
  * Descriptive text callback.
@@ -727,14 +714,3 @@ if ( ! function_exists( 'popmake_license_key_callback' ) ) {
 function popmake_hook_callback( $args ) {
 	do_action( 'popmake_' . $args['id'] );
 }
-
-/**
- * Set manage_shop_settings as the cap required to save POPMAKE settings pages
- *
- * @since 1.0
- * @return string capability required
- */
-function popmake_set_settings_cap() {
-	return 'manage_shop_settings';
-}
-add_filter( 'option_page_capability_popmake_settings', 'popmake_set_settings_cap' );
