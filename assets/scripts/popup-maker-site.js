@@ -48,6 +48,10 @@
                     }
                 });
 
+                if (typeof popmake_powered_by === 'string' && popmake_powered_by !== '') {
+                    jQuery('.popmake-content', $this).append(jQuery(popmake_powered_by));
+                }
+
                 $this
                     .data('popmake', settings)
                     .on('popmakeBeforeOpen.hide_popup', function () {

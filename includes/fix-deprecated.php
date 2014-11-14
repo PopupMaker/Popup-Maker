@@ -1,7 +1,6 @@
 <?php
 add_filter('popmake_shortcode_popup_atts', 'popmake_shortcode_popup_attribute_deprecated_options');
-function popmake_shortcode_popup_attribute_deprecated_options($atts)
-{
+function popmake_shortcode_popup_attribute_deprecated_options($atts) {
 	if(!empty($atts['theme']))
 	{
 		 $atts['theme_id'] = $atts['theme'];

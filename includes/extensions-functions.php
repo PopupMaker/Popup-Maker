@@ -1,13 +1,11 @@
 <?php
 
 function popmake_available_extensions() {
-	//if(($extensions = get_site_transient('popup-maker-extension-list')) === false) {
-		//$access_key = trim( popmake_get_license('key') );
+	if(($extensions = get_site_transient('popup-maker-extension-list')) === false) {
 
 		// data to send in our API request
 		$api_params = array( 
 			'edd_action'	=> 'extension_list', 
-			//'access_key' 	=> $access_key, 
 			'url'       => home_url()
 		);
 		// Call the custom API.
@@ -19,7 +17,7 @@ function popmake_available_extensions() {
 
 		$extensions = json_decode( wp_remote_retrieve_body( $response ) );
 		set_site_transient( 'popup-maker-extension-list', $extensions, 86400 );
-	//}
+	}
 	return $extensions;
 }
 
