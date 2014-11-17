@@ -124,6 +124,26 @@ function popmake_get_registered_settings() {
 		/** General Settings */
 		'general' => apply_filters( 'popmake_settings_general',
 			array(
+				'custom_post_type_support_heading' => array(
+					'id' => 'custom_post_type_support_heading',
+					'name' => '<strong>' . __( 'Support for CPTs', 'popup-maker' ) . '</strong>',
+					'desc' => '',
+					'type' => 'header'
+				),
+				'supported_post_types' => array(
+					'id' => 'supported_post_types',
+					'name' => __( 'Supported Post Types?', 'popup-maker' ),
+					//'desc' => __( 'Check this to defy how awesome Popup Maker is. <strong>For those who like to make little kids cry or are compulsive liers.</strong>.', 'popup-maker' ),
+					'type' => 'multicheck',
+					'options' => get_post_types(array('_builtin' => false, 'public'   => true))
+				),
+				'supported_taxonomies' => array(
+					'id' => 'supported_taxonomies',
+					'name' => __( 'Supported Taxonomies?', 'popup-maker' ),
+					//'desc' => __( 'Check this to defy how awesome Popup Maker is. <strong>For those who like to make little kids cry or are compulsive liers.</strong>.', 'popup-maker' ),
+					'type' => 'multicheck',
+					'options' => get_taxonomies(array('_builtin' => false, 'public'   => true))
+				),
 				'powered_by' => array(
 					'id' => 'powered_by',
 					'name' => '<strong>' . __( 'Powered By', 'popup-maker' ) . '</strong>',
@@ -135,6 +155,17 @@ function popmake_get_registered_settings() {
 					'name' => __( 'Hide Powered By Link?', 'popup-maker' ),
 					'desc' => __( 'Check this to defy how awesome Popup Maker is. <strong>For those who like to make little kids cry or are compulsive liers.</strong>.', 'popup-maker' ),
 					'type' => 'checkbox'
+				),
+				'popmake_powered_by_size' => array(
+					'id' => 'popmake_powered_by_size',
+					'name' => __( 'How much do you love it?', 'popup-maker' ),
+					'desc' => __( 'This affects the size of the credit link below your popups.', 'popup-maker' ),
+					'type' => 'select',
+					'options' => array(
+						'small'	=> 'A Little.',
+						'' 		=> 'It\'s Pretty Good',
+						'large' => 'I Love It!',
+					)
 				),
 				/*
 				'tracking_settings' => array(
@@ -158,7 +189,16 @@ function popmake_get_registered_settings() {
 				*/
 			)
 		),
-
+		'assets' => apply_filters( 'popmake_settings_assets',
+			array(
+				'disable_google_font_loading' => array(
+					'id' => 'disable_google_font_loading',
+					'name' => __( 'Don\'t Load Google Fonts', 'popup-maker' ),
+					'desc' => __( 'Check this disable loading of google fonts, useful if the fonts you chose are already loaded with your theme.', 'popup-maker' ),
+					'type' => 'checkbox'
+				),
+			)
+		),
 
 		/** Extension Settings */
 		'extensions' => apply_filters('popmake_settings_extensions',
@@ -236,7 +276,6 @@ function popmake_settings_sanitize( $input = array() ) {
 
 		// Get the setting type (checkbox, select, etc)
 		$type = isset( $settings[$tab][$key]['type'] ) ? $settings[$tab][$key]['type'] : false;
-
 		if ( $type ) {
 			// Field type specific filter
 			$input[$key] = apply_filters( 'popmake_settings_sanitize_' . $type, $value, $key );
@@ -264,7 +303,6 @@ function popmake_settings_sanitize( $input = array() ) {
 
 	// Merge our new settings with the existing
 	$output = array_merge( $popmake_options, $input );
-
 	add_settings_error( 'popmake-notices', '', __( 'Settings updated.', 'popup-maker' ), 'updated' );
 
 	return $output;
@@ -294,6 +332,7 @@ function popmake_get_settings_tabs() {
 
 	$tabs             = array();
 	$tabs['general']  = __( 'General', 'popup-maker' );
+	$tabs['assets']  = __( 'Assets', 'popup-maker' );
 
 	if( ! empty( $settings['extensions'] ) ) {
 		$tabs['extensions'] = __( 'Extensions', 'popup-maker' );
@@ -301,8 +340,9 @@ function popmake_get_settings_tabs() {
 	if( ! empty( $settings['licenses'] ) ) {
 		$tabs['licenses'] = __( 'Licenses', 'popup-maker' );
 	}
-
-	$tabs['misc']      = __( 'Misc', 'popup-maker' );
+	if( ! empty( $settings['misc'] ) ) {
+		$tabs['misc'] = __( 'Misc', 'popup-maker' );
+	}
 
 	return apply_filters( 'popmake_settings_tabs', $tabs );
 }
@@ -691,7 +731,8 @@ if ( ! function_exists( 'popmake_license_key_callback' ) ) {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 
 		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-		$html = '<input type="text" class="' . $size . '-text" id="popmake_settings[' . $args['id'] . ']" name="popmake_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
+
+		$html = '<input type="'. ($value == '' ? 'text' : 'password') . '" class="' . $size . '-text" id="popmake_settings[' . $args['id'] . ']" name="popmake_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
 
 		if ( 'valid' == get_option( $args['options']['is_valid_license_option'] ) ) {
 			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License',  'popup-maker' ) . '"/>';
@@ -701,6 +742,28 @@ if ( ! function_exists( 'popmake_license_key_callback' ) ) {
 		echo $html;
 	}
 }
+
+
+function popmake_sanitize_license_key_field( $new, $key ) {
+	global $popmake_options;
+	$old = !empty($popmake_options[$key]) ? $popmake_options[$key] : null;
+	if( $old && $old != $new ) {
+		unset($popmake_options[$key]); // new license has been entered, so must reactivate
+	}
+	if($new != '')
+	{
+		if($old === null || $old == '')
+		{
+			$new = SHA1($new);
+		}
+		elseif($old && $old != $new && $old != SHA1($new))
+		{
+			$new = SHA1($new);
+		}
+	}
+ 	return $new;
+}
+//add_filter('popmake_settings_sanitize_license_key', 'popmake_sanitize_license_key_field', 10, 2);
 
 /**
  * Hook Callback

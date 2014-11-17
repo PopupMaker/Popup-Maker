@@ -107,8 +107,11 @@ function popmake_extensions_page() {?>
 					            }
 					            */
 					            ?>
-				                <span class="action-links"><a class="button" target="_blank" href="<?php esc_attr_e($extension->homepage);?>"><?php _e( 'Get It Now', 'popup-maker' );?></a></span>
-					            <a href="<?php echo esc_url($extension->homepage);?>#features" target="_blank"><?php _e( 'View all the features.', 'popup-maker' );?></a>
+				                <span class="action-links">
+				                	<!--<a class="button" target="_blank" href="<?php esc_attr_e($extension->homepage);?>"><?php _e( 'Get It Now', 'popup-maker' );?></a>-->
+				                	<span class="button"><?php _e( 'Coming Soon!', 'popup-maker' );?></span>
+				                </span>
+					            <!--<a href="<?php echo esc_url($extension->homepage);?>#features" target="_blank"><?php _e( 'View all the features.', 'popup-maker' );?></a>-->
 					        </li>
 					        <?php endforeach;				
 						}?>

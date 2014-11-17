@@ -23,7 +23,7 @@ function popmake_share_meta_box_links( $popup_id ) { ?>
 	<h3 class="loveit-shareit" style="text-align:center">Love It? <span>Share It!</span></h3>
 	<ul class="share-buttons">
 		<li><div class="fb-like" data-href="https://wppopupmaker.com" data-width="100" data-ref="true" data-layout="box_count" data-action="like" data-show-faces="false" data-send="true"></div></li>
-		<li><a href="https://twitter.com/intent/tweet" class="twitter-share-button" data-text="<?php _e( 'Try Popup Maker plugin for WordPress. Create unique and beautiful popups in minutes. #WPPopupMaker', 'popup-maker' );?>" data-count="vertical" data-url="https://wppopupmaker.com" data-via="wppopupmaker" data-related="wppopupmaker"><?php _e( 'Tweet', 'popup-maker' ); ?></a></li>
+		<li><a href="https://twitter.com/intent/tweet" class="twitter-share-button" data-text="<?php _e( 'Want to destroy your old conversion rates? Create high performing popups now! #WPPopupMaker', 'popup-maker' );?>" data-count="vertical" data-url="https://wppopupmaker.com" data-via="wppopupmaker" data-related="wppopupmaker"><?php _e( 'Tweet', 'popup-maker' ); ?></a></li>
 		<li><div class="g-plusone" data-href="https://wppopupmaker.com" data-size="tall"></div></li>
 	</ul>
 	<br class="clear" />

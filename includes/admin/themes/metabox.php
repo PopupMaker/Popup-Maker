@@ -43,9 +43,9 @@ function popmake_add_popup_theme_meta_box() {
 	/** Close Meta **/
 	add_meta_box( 'popmake_popup_theme_close', __( 'Close Settings', 'popup-maker' ),  'popmake_render_popup_theme_close_meta_box', 'popup_theme', 'normal', 'high' );
 	/** Support Meta **/
-	add_meta_box( 'popmake_popup_support', __( 'Support', 'popup-maker' ),  'popmake_render_support_meta_box', 'popup_theme', 'side', 'high' );
+	add_meta_box( 'popmake_popup_support', __( 'Support', 'popup-maker' ),  'popmake_render_support_meta_box', 'popup_theme', 'side', 'default' );
 	/** Share Meta **/
-	add_meta_box( 'popmake_popup_share', __( 'Share', 'popup-maker' ),  'popmake_render_share_meta_box', 'popup_theme', 'side', 'high', true );
+	add_meta_box( 'popmake_popup_share', __( 'Share', 'popup-maker' ),  'popmake_render_share_meta_box', 'popup_theme', 'side', 'default' );
 
 }
 add_action( 'add_meta_boxes', 'popmake_add_popup_theme_meta_box' );
@@ -110,6 +110,7 @@ add_filter('popmake_popup_theme_meta_field_group_container', 'popmake_popup_them
 function popmake_popup_theme_meta_field_group_title() {
 	return array(
 		'font_color',
+		'line_height',
 		'font_size',
 		'font_family',
 		'font_weight',
@@ -145,6 +146,7 @@ function popmake_popup_theme_meta_field_group_close() {
 		'position_left',
 		'position_bottom',
 		'position_right',
+		'line_height',
 		'font_color',
 		'font_size',
 		'font_family',

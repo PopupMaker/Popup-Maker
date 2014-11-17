@@ -178,6 +178,7 @@ function popmake_setup_taxonomies() {
 	$category_args = apply_filters( 'popmake_category_args', array(
 			'hierarchical' 	=> true,
 			'labels' 		=> apply_filters('popmake_category_labels', $category_labels),
+			'public'		=> false,
 			'show_ui' 		=> true,
 		)
 	);
@@ -204,6 +205,7 @@ function popmake_setup_taxonomies() {
 	$tag_args = apply_filters( 'popmake_tag_args', array(
 			'hierarchical' 	=> false,
 			'labels' 		=> apply_filters( 'popmake_tag_labels', $tag_labels ),
+			'public'		=> false,
 			'show_ui' 		=> true,
 		)
 	);

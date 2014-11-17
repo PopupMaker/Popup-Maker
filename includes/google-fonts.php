@@ -4,7 +4,7 @@
  * Google Web Font Integrations.
  */
 
-function popmake_get_google_webfonts_list( $key = 'AIzaSyAqXbKCykzxMy2-fnmGBjiwI_-LdfoFxAU', $sort = 'trending' ) {
+function popmake_get_google_webfonts_list( $key = 'AIzaSyAqXbKCykzxMy2-fnmGBjiwI_-LdfoFxAU', $sort = 'alpha' ) {
 	/*
 	$key = Web Fonts Developer API
 	$sort=

@@ -30,7 +30,7 @@ function popmake_popup_display_defaults( $defaults = array() ) {
 		'position_left'				=> 0,
 		'position_bottom'			=> 0,
 		'position_right'			=> 0,
-		'position_fixed'			=> false,
+		'position_fixed'			=> true,
 		'animation_type'			=> 'fade',
 		'animation_speed'			=> 350,
 		'animation_origin'			=> 'center top',
@@ -83,6 +83,7 @@ add_filter('popmake_popup_theme_title_defaults', 'popmake_popup_theme_title_defa
 function popmake_popup_theme_title_defaults( $defaults ) {
 	return array_merge( $defaults, array(
 		'font_color'			=> '#000000',
+		'line_height'			=> 36,
 		'font_size'				=> 32,
 		'font_family'			=> 'inherit',
 		'font_weight'			=> 'inherit',
@@ -124,6 +125,7 @@ function popmake_popup_theme_close_defaults( $defaults ) {
 		'background_color'		=> '#00b7cd',
 		'background_opacity'	=> 100,
 		'font_color'			=> '#ffffff',
+		'line_height'			=> 14,
 		'font_size'				=> 12,
 		'font_family'			=> 'inherit',
 		'font_weight'			=> 'inherit',

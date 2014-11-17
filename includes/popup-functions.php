@@ -45,8 +45,10 @@ add_filter('popmake_get_the_popup_classes', 'popmake_add_popup_size_classes', 5,
 
 function popmake_get_the_popup_data_attr( $popup_id = null ) {
 	if( !$popup_id ) $popup_id = get_the_ID();
+	$post = get_post( $popup_id );
 	$data_attr = array(
 		'id' => $popup_id,
+		'slug' => $post->post_name,
 		'meta' => array(
 			'display' => popmake_get_popup_display( $popup_id ),
 			'close' => popmake_get_popup_close( $popup_id )

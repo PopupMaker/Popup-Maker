@@ -1,13 +1,15 @@
 <?php
+
+// uncomment this line for testing
+//set_site_transient( 'update_plugins', null );
+
 /**
  * Allows plugins to use their own update API.
  *
  * @author Pippin Williamson
  * @version 1.2
- * Note for wordpress.org admins. This is not called in the free hosted version and is simply used for hooking in extensions to one update system rather than including it in each plugin.
-*/
-
-class POPMAKE_Plugin_Updater {
+ */
+class PopumpMaker_Plugin_Updater {
 	private $api_url  = '';
 	private $api_data = array();
 	private $name     = '';
@@ -155,9 +157,9 @@ class POPMAKE_Plugin_Updater {
 			'url'        => home_url()
 		);
 		$request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+
 		if ( ! is_wp_error( $request ) ):
 			$request = json_decode( wp_remote_retrieve_body( $request ) );
-
 			if( $request && isset( $request->sections ) )
 				$request->sections = maybe_unserialize( $request->sections );
 			return $request;

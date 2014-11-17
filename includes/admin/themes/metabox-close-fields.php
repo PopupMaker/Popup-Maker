@@ -171,6 +171,23 @@ function popmake_popup_theme_close_meta_box_field_font( $popup_theme_id )
 	</tr>
 	<tr>
 		<th scope="row">
+			<label for="popup_theme_close_line_height"><?php _e( 'Line Height', 'popup-maker' );?></label> 
+		</th>
+		<td>
+			<input type="text" readonly
+				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'line_height' ))?>"
+				name="popup_theme_close_line_height"
+				id="popup_theme_close_line_height"
+				class="popmake-range-manual"
+				step="<?php esc_html_e(apply_filters('popmake_popup_theme_step_close_line_height', 1));?>"
+				min="<?php esc_html_e(apply_filters('popmake_popup_theme_min_close_line_height', 8));?>"
+				max="<?php esc_html_e(apply_filters('popmake_popup_theme_max_close_line_height', 32));?>"
+			/>
+			<span class="range-value-unit regular-text">px</span>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">
 			<label for="popup_theme_close_font_family"><?php _e( 'Family', 'popup-maker' );?></label>
 		</th>
 		<td>

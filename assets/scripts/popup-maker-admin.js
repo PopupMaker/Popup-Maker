@@ -397,7 +397,7 @@ var PopMakeAdmin;
                     $input.after($slider).hide();
                 });
             }
-        },
+        },/*
         initialize_tabs: function () {
             //var active_tab = window.location.hash.replace('#top#','');
             var active_tab = window.location.hash;
@@ -428,7 +428,7 @@ var PopMakeAdmin;
                     jQuery(window).scrollTop(0);
                 }
             });
-        },
+        },*/
         initialize_popup_page: function () {
 
             var update_type_options = function ($this) {
@@ -834,6 +834,7 @@ var PopMakeAdmin;
             });
             $title.removeAttr('style').css({
                 color: theme.title_font_color,
+                lineHeight: theme.title_line_height + 'px',
                 fontSize: theme.title_font_size + 'px',
                 fontFamily: theme.title_font_family,
                 fontStyle: theme.title_font_style,
@@ -852,6 +853,7 @@ var PopMakeAdmin;
                 padding: theme.close_padding + 'px',
                 backgroundColor: this.convert_hex(theme.close_background_color, theme.close_background_opacity),
                 color: theme.close_font_color,
+                lineHeight: theme.close_line_height + 'px',
                 fontSize: theme.close_font_size + 'px',
                 fontFamily: theme.close_font_family,
                 fontWeight: theme.close_font_weight,

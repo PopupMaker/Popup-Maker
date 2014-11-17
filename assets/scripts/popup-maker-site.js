@@ -148,7 +148,9 @@
             $this
                 .trigger('popmakeBeforeOpen')
                 .popmake('animate', settings.meta.display.animation_type, function () {
-                    $this.trigger('popmakeAfterOpen');
+                    $this
+                        .addClass('active')
+                        .trigger('popmakeAfterOpen');
                     if (callback !== undefined) {
                         callback();
                     }
@@ -161,9 +163,10 @@
                     settings = $this.data('popmake');
                 $this
                     .trigger('popmakeBeforeClose')
-                    .removeClass('active')
                     .fadeOut(settings.close.close_speed, function () {
-                        $this.trigger('popmakeAfterClose');
+                        $this
+                            .removeClass('active')
+                            .trigger('popmakeAfterClose');
                     });
                 return this;
             });
@@ -280,7 +283,7 @@
                 settings = $this.data('popmake'),
                 $overlay = jQuery('#' + settings.overlay.attr.id),
                 $container = $this,
-                $title = jQuery('> .' + settings.title.attr.class, $container),
+                $title = jQuery('.' + settings.title.attr.class, $container),
                 $content = jQuery('> .' + settings.content.attr.class, $container),
                 $close = jQuery('> .' + settings.close.attr.class, $container),
                 container_inset,
@@ -310,6 +313,7 @@
             });
             $title.css({
                 color: theme.title.font_color,
+                lineHeight: theme.title.line_height + 'px',
                 fontSize: theme.title.font_size + 'px',
                 fontFamily: theme.title.font_family,
                 fontWeight: theme.title.font_weight,
@@ -333,6 +337,7 @@
                 padding: theme.close.padding + 'px',
                 backgroundColor: jQuery.fn.popmake.utilities.convert_hex(theme.close.background_color, theme.close.background_opacity),
                 color: theme.close.font_color,
+                lineHeight: theme.close.line_height + 'px',
                 fontSize: theme.close.font_size + 'px',
                 fontWeight: theme.close.font_weight,
                 fontStyle: theme.close.font_style,
@@ -405,13 +410,13 @@
             switch (origin) {
             case 'top':
                 start = {
-                    my: "left+" + $this.offset().left + " bottom",
+                    my: "left+" + $this.offset().left + " bottom-100",
                     at: "left top"
                 };
                 break;
             case 'bottom':
                 start = {
-                    my: "left+" + $this.offset().left + " top",
+                    my: "left+" + $this.offset().left + " top+100",
                     at: "left bottom"
                 };
                 break;
@@ -448,13 +453,13 @@
                 }
                 if (origin.indexOf('top') >= 0) {
                     start = {
-                        my: start.my + " bottom",
+                        my: start.my + " bottom-100",
                         at: start.at + " top"
                     };
                 }
                 if (origin.indexOf('bottom') >= 0) {
                     start = {
-                        my: start.my + " top",
+                        my: start.my + " top+100",
                         at: start.at + " bottom"
                     };
                 }
@@ -992,17 +997,17 @@
         jQuery('.popmake')
             .popmake()
             .each(function () {
-                var $this = jQuery(this);
-                jQuery(document).on('click', '.' + $this.attr('id'), function (e) {
+                var $this = jQuery(this),
+                    settings = $this.data('popmake'),
+                    trigger_selector = '.popmake-' + settings.id + ', .popmake-' + settings.slug;
 
-                    e.preventDefault();
-                    e.stopPropagation();
-
+                jQuery(trigger_selector).css({cursor: "pointer"});
+                jQuery(document).on('click', trigger_selector, function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
                     jQuery.fn.popmake.last_open_trigger = jQuery.fn.popmake.utilities.getXPath(this);
                     $this.popmake('open');
-
                 });
-                jQuery('.' + $this.attr('id')).css('cursor', 'pointer');
             });
     });
 }(jQuery));
