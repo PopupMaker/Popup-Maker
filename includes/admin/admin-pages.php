@@ -99,7 +99,7 @@ function popmake_remove_admin_subpages() {
 	remove_submenu_page( 'index.php', 'popmake-getting-started' );
 	remove_submenu_page( 'index.php', 'popmake-credits' );
 }
-//add_action( 'admin_head', 'popmake_remove_admin_subpages' );
+add_action( 'admin_head', 'popmake_remove_admin_subpages' );
 
 
 

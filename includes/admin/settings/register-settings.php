@@ -124,6 +124,7 @@ function popmake_get_registered_settings() {
 		/** General Settings */
 		'general' => apply_filters( 'popmake_settings_general',
 			array(
+/*
 				'custom_post_type_support_heading' => array(
 					'id' => 'custom_post_type_support_heading',
 					'name' => '<strong>' . __( 'Support for CPTs', 'popup-maker' ) . '</strong>',
@@ -144,6 +145,7 @@ function popmake_get_registered_settings() {
 					'type' => 'multicheck',
 					'options' => get_taxonomies(array('_builtin' => false, 'public'   => true))
 				),
+*/
 				'powered_by' => array(
 					'id' => 'powered_by',
 					'name' => '<strong>' . __( 'Powered By', 'popup-maker' ) . '</strong>',

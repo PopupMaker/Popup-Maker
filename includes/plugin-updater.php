@@ -1,11 +1,9 @@
 <?php
 
-// uncomment this line for testing
-//set_site_transient( 'update_plugins', null );
-
 /**
  * Allows plugins to use their own update API.
  *
+ * Note for wordpress.org admins. This is not called in the free hosted version and is simply used for hooking in addons to one update system rather than including it in each plugin.
  * @author Pippin Williamson
  * @version 1.2
  */

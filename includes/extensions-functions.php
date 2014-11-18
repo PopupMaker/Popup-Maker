@@ -1,7 +1,7 @@
 <?php
 
 function popmake_available_extensions() {
-	if(($extensions = get_site_transient('popup-maker-extension-list')) === false) {
+	//if(($extensions = get_site_transient('popup-maker-extension-list')) === false) {
 
 		// data to send in our API request
 		$api_params = array( 
@@ -17,16 +17,16 @@ function popmake_available_extensions() {
 
 		$extensions = json_decode( wp_remote_retrieve_body( $response ) );
 		set_site_transient( 'popup-maker-extension-list', $extensions, 86400 );
-	}
+	//}
 	return $extensions;
 }
 
 add_filter('popmake_existing_extension_images', 'popmake_core_extension_images', 10);
 function popmake_core_extension_images($array) {
 	return array_merge($array, array(
-		'premium-support',
 		'unlimited-themes',
 		'scroll-triggered-popups',
+		'popup-analytics',
 		'forced-interaction',
 		'age-verification-modals',
 		'advanced-theme-builder',

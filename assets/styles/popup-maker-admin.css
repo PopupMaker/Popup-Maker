@@ -340,14 +340,17 @@ option.bold {
 }
 .extensions-available li {
 	box-sizing: border-box;
-    border: .25%px solid #ccc;
-    padding:10px 8px 6px;
+    border: 1px solid #ccc;
+    padding:0 0 4px;
     background:#fff;
     vertical-align: top;
     width: 280px;
-    margin:0 10px 10px;
+    margin:0 10px 20px;
     display:inline;
     float:left;
+    -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);  
+    -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);  
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25); 
 }
 .extensions-available h3 {
     font: 16px/1.5 "Montserrat" !important;
@@ -386,7 +389,7 @@ option.bold {
 	font-size:14px;
 	text-align: center;
 	font-style: italic;
-	min-height: 4.5em;
+	min-height: 7.5em;
 }
 .extensions-available a {
 	display:block;

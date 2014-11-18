@@ -2,25 +2,63 @@
 Contributors: danieliser, waltmesser
 Author URI: http://wizardinternetsolutions.com
 Plugin URI: https://wppopupmaker.com
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PQTG2JYUKSLFW
-Tags: popup,popup box,popup form,popup window,popup,popup box,popup form,popup window,ajax forms, lightbox
+Donate link: 
+Tags: modal,modal box,modal form,modal window,popup,popup box,popup form,popup window,ajax forms, lightbox, login modals
 Requires at least: 3.4
 Tested up to: 4.0
-Stable tag: 1
-The #1 WordPress Popup Plugin! Make glorious & powerful popups and market your content like never before - all in minutes!
+Stable tag: 1.0
+Easily turn users into cash using Popup Maker - the most versatile & expansive popup plugin for WordPress!
 
 == Description ==
-Increase your site's leads generated, usability & conversion rates using Popup Maker's ultimate theme capabilities and customization options. Popup Maker gives you the ability to stream line and transform your website, plus promote and market your content like never before!
+Increase your site's leads generated, usability & conversion rates using our unlimited WYSIWIG content editor - put any content you can imagine inside your popups! Plus, Popup Maker gives you the ability to streamline, transform your website, and promote & market your content like never before using our ultimate theme capabilities & customization options!
 
-[Read More About our Extensions](https://wppopupmaker.com/extensions "Popup Maker Extensions") - Popup Maker Extensions
+After installing Popup maker, use it like a Pro! Read the About & Getting Started Tabs in the Popup Maker Welcome Center.
+
+Use any of your forms from the most popular form plugins, out-of-the-box, inside your popups with ease and efficiency. 100% seamless compatibility with:
+* Gravity Forms
+* Ninja Forms
+* Contact Form 7
+
+[Subscribe to our Newsletter](https://wppopupmaker.com/newsletter-sign-up "Popup Maker Newsletter Sign Up") and receive tutorials and guides tailored to teaching you how to drastically improve your conversion rates using Popup Maker.
+
+* If you like the plugin please rate & review it! If you love the plugin and want news & updates, follow us on [Twitter](https://twitter.com/wppopupmaker "Popup Maker on Twitter")!
+* Check out the [Popup Maker Website](https://wppopupmaker.com "Popup Maker Website") for everything Popup Maker.
+ 
+= Core Features =
+* Unlimited Content Customization
+ * Use the Popup Maker WYSIWIG Content Editor to easily create as many popups as you like with any content you like! Plus, use Short Codes, HTML, and other code to give your popups ultimate power! Adding content in Popup Maker is just like adding content in WordPress.
+* Use Popups Conditionally 
+ * Target specific users for your popups! Our Targeting Conditions feature allows you to tailor your popups to specific users by giving you the ability to use popups exactly where you want. Use Auto Open, Scroll Triggered & Exit Intent Popup Extensions to enhance your popups' effectiveness.
+* One (1) Customizable Popup Theme
+ * Customize every aspect of our default theme to match your needs. To differentiate your popup themes, you can create unlimited themes by upgrading to the Unlimited Themes Extension.
+* Popup Opening Animations
+ * Give your popup more power and customize how it pops up by choosing from several opening animations. Need more power? Check out our Animation Pack Extensions!
+* Complete Positioning Control
+ * Popup Maker offers you pixel perfect positioning settings to match your needs and fit your website perfectly.
+* Theme Builder
+ * Create high performing themes in minutes with our user friendly Theme Builder. Want more options? Get our Advanced Theme Builder now!
+* Scrollable Content
+ * Use the Scrollable Content Feature to add more content to your popups and ensure all of your content is visible to users!
+* Responsive Popups
+ * Create popups ready for any device in seconds by simply selecting an option from our robust Responsive Popups tool set.
+* Lightweight, Dependable & Versatile
+ * Speed matters, and at only 5.9kb, our popups won't slow you down. Our optimization techniques and program enhancement means your popups will perform at a consistently high level with 100% uptime.
+
+= Our extensions enhance your popups and drastically improve your conversion rates =
+* Exit Intent Popups (coming soon)
+* Auto Open Popups (coming soon)
+* Analytics (coming soon)
+* Forced Interaction (coming soon)
+* AJAX Login Modals (coming soon)
+* Scroll Triggered Popups (coming soon)
+* Age Verification Modals (coming soon)
+* Advanced Theme Builder (coming soon)
+* Unlimited Themes (coming soon)
+
+For more information, visit [Popup Maker](https://wppopupmaker.com "WordPress Popup Maker")!
 
 [Plugin Developers Site](http://wizardinternetsolutions.com "Web & Plugin Development") - Wizard Internet Solutions
 
-== Installation ==
-1. Login to WordPress and update to/install Popup  Maker.
-2. For current users, settings from previously existing functionality will be imported to the appropriate Addons containing respective functionality automatically.
-4. Theme, customize, and make a popup in minutes.
-
 == Changelog ==
-= v1.0 =
+= v1.0.0 =
 * Initial Release
