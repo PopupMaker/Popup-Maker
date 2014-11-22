@@ -5,8 +5,8 @@ Plugin URI: https://wppopupmaker.com
 Donate link: 
 Tags: modal,modal box,modal form,modal window,popup,popup box,popup form,popup window,ajax forms, lightbox, login modals
 Requires at least: 3.4
-Tested up to: 4.0
-Stable tag: 1.0
+Tested up to: 4.0.1
+Stable tag: 1.0.1
 Easily turn users into cash using Popup Maker - the most versatile & expansive popup plugin for WordPress!
 
 == Description ==
@@ -70,3 +70,8 @@ For more information, visit [Popup Maker](https://wppopupmaker.com "WordPress Po
 == Changelog ==
 = v1.0.0 =
 * Initial Release
+= v1.0.1 =
+* Removed links to getting started from "Dashboard" Admin Menu.
+* Added Line Height Setting to Both Title and Close, Allowing Perfect Circles for close button.
+* Updated admin styles.
+* Misc Admin changes, including new filters/hooks for upcoming extensions.
