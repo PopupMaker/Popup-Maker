@@ -26,17 +26,17 @@ Use any of your forms from the most popular form plugins, out-of-the-box, inside
  
 = Core Features =
 * Unlimited Content Customization
- * Use the Popup Maker WYSIWIG Content Editor to easily create as many popups as you like with any content you like! Plus, use Short Codes, HTML, and other code to give your popups ultimate power! Adding content in Popup Maker is just like adding content in WordPress.
+ * Use the Popup Maker WYSIWIG Content Editor to easily create as many popups as you like with any content you like! Plus, use Short Codes, HTML, and other code to give your popups ultimate power! Adding content and popups in Popup Maker is just like adding content and pages in WordPress.
 * Use Popups Conditionally 
- * Target specific users for your popups! Our Targeting Conditions feature allows you to tailor your popups to specific users by giving you the ability to use popups exactly where you want. Use Auto Open, Scroll Triggered & Exit Intent Popup Extensions to enhance your popups' effectiveness.
+ * Target specific users for your popups! Our Targeting Conditions feature allows you to tailor your popups to specific users by giving you the ability to use popups exactly where you want. Use [Auto Open](https://wppopupmaker.com/extensions/auto-open-popups "Auto Open Popups"), [Scroll Triggered](https://wppopupmaker.com/extensions/scroll-triggered-popups "Scroll Triggered Popups") & [Exit Intent](https://wppopupmaker.com/extensions/exit-intent-popups "Exit Intent Popups") Popup Extensions to enhance your popups' effectiveness.
 * One (1) Customizable Popup Theme
- * Customize every aspect of our default theme to match your needs. To differentiate your popup themes, you can create unlimited themes by upgrading to the Unlimited Themes Extension.
+ * Customize every aspect of our default theme to match your needs – from colors to Google Fonts. To differentiate your popup themes on your popups, you can create unlimited themes by upgrading to the [Unlimited Themes Extension](https://wppopupmaker.com/extensions/unlimited-themes "Unlimited Popup Themes").
 * Popup Opening Animations
- * Give your popup more power and customize how it pops up by choosing from several opening animations. Need more power? Check out our Animation Pack Extensions!
-* Complete Positioning Control
- * Popup Maker offers you pixel perfect positioning settings to match your needs and fit your website perfectly.
+ * Our WordPress Popup Plugin gives your popup more power and allows you to customize how it pops up by choosing from several opening animations.
+* Complete Positioning and Size Control
+ * Popup Maker offers you pixel perfect positioning settings to match your needs and fit your website perfectly – from centered popups to anchored popups. Plus, choose from a grab bag full of responsive sizes ready to go, out-of-the-box, or customize your own popup size using 4 units of measurement: pixels, %, EM, and REM.
 * Theme Builder
- * Create high performing themes in minutes with our user friendly Theme Builder. Want more options? Get our Advanced Theme Builder now!
+ * Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options! Plus, revert back to old saves with Revision History! Want more options? Get our [Advanced Theme Builder](https://wppopupmaker.com/extensions/advanced-theme-builder "Advanced Theme Builder") now!
 * Scrollable Content
  * Use the Scrollable Content Feature to add more content to your popups and ensure all of your content is visible to users!
 * Responsive Popups
@@ -64,7 +64,7 @@ For more information, visit [Popup Maker](https://wppopupmaker.com "WordPress Po
 1. Create an infinite amount of popups and put any content inside your popups! No restrictions, no limitations - customize your popup content to fit your needs.
 2. Use the Popup Maker WYSIWIG Content Editor to easily customize your popups' content! Plus, use Short Codes, HTML, and other code to give your popups ultimate power. Adding popups and content in Popup Maker is just like adding pages and content in WordPress.
 3. Popup Maker offers you pixel perfect positioning settings to match your needs and fit your website perfectly.
-4. Create high performing themes in minutes with our user friendly Theme Builder.
+4. Create high performing themes in minutes with our user friendly Theme Builder. Plus revert to old saves with Revision History.
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
