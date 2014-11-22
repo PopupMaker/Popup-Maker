@@ -17,9 +17,9 @@ function popmake_getting_started_page() {
 
 			<div class="feature-section">
 
-				<img src="<?php echo POPMAKE_URL . 'assets/images/screenshots/edit-popup.png'; ?>" class="popmake-welcome-screenshots"/>
 
 				<h4><?php printf( __( '<a href="%s">%s &rarr; Add New</a>', 'popup-maker' ), admin_url( 'post-new.php?post_type=popup' ), popmake_get_label_plural() ); ?></h4>
+				<img src="<?php echo POPMAKE_URL . '/assets/images/welcome/getting-started-1.jpg'; ?>" class="popmake-welcome-screenshots" width="540"/>
 				<p><?php printf( __( 'The %s menu is your access point for all aspects of your Popup Maker product creation and setup. To create your first popup, simply click Add New and then choose from many available options to get it just right.', 'popup-maker' ), popmake_get_label_plural() ); ?></p>
 
 				<h4><?php _e( 'Display Options', 'popup-maker' );?></h4>
@@ -42,7 +42,7 @@ function popmake_getting_started_page() {
 
 			<div class="feature-section">
 
-				<img src="<?php echo POPMAKE_URL . 'assets/images/screenshots/edit-popup.png'; ?>" class="popmake-welcome-screenshots"/>
+				<img src="<?php echo POPMAKE_URL . '/assets/images/welcome/calling-popup.jpg'; ?>" class="popmake-welcome-screenshots" width="540"/>
 
 				<h4><?php _e( 'Using the Popup Maker CSS Tag', 'popup-maker' );?></h4>
 				<p><?php _e( 'In the <em>All Popups Menu</em>, you can find all of your popups and their various attributes. One of the most important attributes is the CSS Class of your popups. You will use this class wherever you want to call your popups!', 'popup-maker' );?></p>
@@ -120,7 +120,6 @@ function popmake_getting_started_page() {
 						'https://wppopupmaker.com/extensions'
 					);?>
 				</p>
-				<p><?php _e;?></p>
 
 			</div>
 		</div>

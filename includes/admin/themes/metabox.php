@@ -230,8 +230,8 @@ add_action( 'save_post', 'popmake_popup_theme_meta_box_save', 10, 2 );
 function popmake_popup_thmem_ut_extension_promotion() {
 	if(popmake_is_admin_popup_theme_page()) { ?>
 		<div id="popuptitlediv">
-			<div class="pro-upgrade-tip">
-				<img style="" src="<?php echo POPMAKE_URL;?>/assets/images/admin/icon-info-21x21.png"/> <?php _e( 'Need more than one (1) theme?', 'popup-maker' ); ?> <a href="https://wppopupmaker.com/extensions/unlimited-themes" target="_blank"><?php _e( 'Check out Unlimited Themes!', 'popup-maker' ); ?></a>.
+			<div class="popmake-upgrade-tip">
+				<img style="" src="<?php echo POPMAKE_URL;?>/assets/images/admin/icon-unlimited-themes.png"/> <?php _e( 'Need more than one (1) theme?', 'popup-maker' ); ?> <a href="https://wppopupmaker.com/extensions/unlimited-themes" target="_blank"><?php _e( 'Check out Unlimited Themes!', 'popup-maker' ); ?></a>.
 			</div>
 		</div><?php
 	}

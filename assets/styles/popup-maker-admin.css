@@ -78,9 +78,12 @@ option.bold {
 /* Upgrade Tips */
 .popmake-upgrade-tip {
 	color:#333;
+	line-height: 2em!important;
 }
-.popmake-upgrade-tip hr {
-	margin-bottom:25px;
+div.popmake-upgrade-tip {
+	margin-bottom:15px;
+	display: block;
+	font-weight: bold;
 }
 .popmake-upgrade-tip img {
 	float:left;

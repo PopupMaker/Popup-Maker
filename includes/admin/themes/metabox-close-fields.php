@@ -275,8 +275,8 @@ function popmake_popup_theme_close_meta_box_field_background( $popup_theme_id )
 add_action('popmake_popup_theme_close_meta_box_fields', 'popmake_popup_theme_close_meta_box_field_atb_extension_promotion', 60);
 function popmake_popup_theme_close_meta_box_field_atb_extension_promotion( $popup_theme_id ) { ?>
 	<tr>
-		<th colspan="2" class="pro-upgrade-tip">
-			<img style="" src="<?php echo POPMAKE_URL;?>/assets/images/admin/icon-info-21x21.png"/> <?php _e( 'Wanna use background images?', 'popup-maker' ); ?> <a href="https://wppopupmaker.com/extensions/advanced-theme-builder" target="_blank"><?php _e( 'Check out Advanced Theme Builder!', 'popup-maker' ); ?></a>.
+		<th colspan="2" class="popmake-upgrade-tip">
+			<img style="" src="<?php echo POPMAKE_URL;?>/assets/images/admin/icon-advanced-theme-builder.png"/> <?php _e( 'Want to use background images?', 'popup-maker' ); ?> <a href="https://wppopupmaker.com/extensions/advanced-theme-builder" target="_blank"><?php _e( 'Check out Advanced Theme Builder!', 'popup-maker' ); ?></a>.
 		</th>
 	</tr><?php
 }

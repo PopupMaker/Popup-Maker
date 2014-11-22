@@ -59,6 +59,14 @@ For more information, visit [Popup Maker](https://wppopupmaker.com "WordPress Po
 
 [Plugin Developers Site](http://wizardinternetsolutions.com "Web & Plugin Development") - Wizard Internet Solutions
 
+== Screenshots ==
+
+1. Create an infinite amount of popups and put any content inside your popups! No restrictions, no limitations - customize your popup content to fit your needs.
+2. Use the Popup Maker WYSIWIG Content Editor to easily customize your popups' content! Plus, use Short Codes, HTML, and other code to give your popups ultimate power. Adding popups and content in Popup Maker is just like adding pages and content in WordPress.
+3. Popup Maker offers you pixel perfect positioning settings to match your needs and fit your website perfectly.
+4. Create high performing themes in minutes with our user friendly Theme Builder.
+5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
+
 == Changelog ==
 = v1.0.0 =
 * Initial Release

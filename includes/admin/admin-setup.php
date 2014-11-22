@@ -26,7 +26,7 @@ add_action('admin_header', 'popmake_admin_header');
 
 function popmake_admin_notice() {
 	if(popmake_is_admin_page()) {
-		if(!get_usermeta( get_current_user_id(), '_popmake_dismiss_optin_newsletter_promo_banner' )) {?>
+		if(!get_user_meta( get_current_user_id(), '_popmake_dismiss_optin_newsletter_promo_banner', true )) {?>
 			<div class="popmake-optin popmake-newsletter-optin">
 				<a href="https://wppopupmaker.com/newsletter-sign-up" target="_blank" class="newsletter-banner">
 					<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/newsletter-banner.png"/>
