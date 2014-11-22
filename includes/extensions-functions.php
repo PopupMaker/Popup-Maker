@@ -1,7 +1,7 @@
 <?php
 
 function popmake_available_extensions() {
-	//if(($extensions = get_site_transient('popup-maker-extension-list')) === false) {
+	if(($extensions = get_site_transient('popup-maker-extension-list')) === false) {
 
 		// data to send in our API request
 		$api_params = array( 
@@ -17,7 +17,7 @@ function popmake_available_extensions() {
 
 		$extensions = json_decode( wp_remote_retrieve_body( $response ) );
 		set_site_transient( 'popup-maker-extension-list', $extensions, 86400 );
-	//}
+	}
 	return $extensions;
 }
 
