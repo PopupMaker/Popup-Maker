@@ -155,7 +155,7 @@ function popmake_get_registered_settings() {
 				'popmake_powered_by_opt_out' => array(
 					'id' => 'popmake_powered_by_opt_out',
 					'name' => __( 'Hide Powered By Link?', 'popup-maker' ),
-					'desc' => __( 'Check this to defy how awesome Popup Maker is. <strong>For those who like to make little kids cry or are compulsive liers.</strong>.', 'popup-maker' ),
+					'desc' => sprintf( __( 'If you check this box, it will hide the <em>Powered By Popup Maker</em> tag on all of your popups. But don\'t forget to <a href="%s">rate and review us on WordPress</a>!', 'popup-maker' ), 'https://wordpress.org/support/view/plugin-reviews/popup-maker'),
 					'type' => 'checkbox'
 				),
 				'popmake_powered_by_size' => array(
