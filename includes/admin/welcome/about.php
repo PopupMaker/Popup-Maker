@@ -19,9 +19,9 @@ function popmake_about_page() {
 				<p>
 					<?php printf(
 						__( 'Use %sAuto Open%s, %sScroll Triggered%s & %sExit Intent Popup%s Extensions to enhance your popups’ effectiveness and easily convert users into cash.', 'popup-maker' ),
-						'<a href="https://wppopupmaker.com/extensions/auto-open-popups" target="_blank">', '</a>',
-						'<a href="https://wppopupmaker.com/extensions/scroll-triggered-popups" target="_blank">', '</a>',
-						'<a href="https://wppopupmaker.com/extensions/exit-intent-popups" target="_blank">', '</a>'
+						'<a href="https://wppopupmaker.com/extensions/auto-open-popups?utm_source=WP+Welcome+About&utm_medium=Auto+Open+Text+Link&utm_campaign=WP+Welcome+Text+Links" target="_blank">', '</a>',
+						'<a href="https://wppopupmaker.com/extensions/scroll-triggered-popups?utm_source=WP+Welcome+About&utm_medium=Scroll+Triggered+Text+Link&utm_campaign=WP+Welcome+Text+Links" target="_blank">', '</a>',
+						'<a href="https://wppopupmaker.com/extensions/exit-intent-popups?utm_source=WP+Welcome+About&utm_medium=Exit+Intent+Text+Link&utm_campaign=WP+Welcome+Text+Links" target="_blank">', '</a>'
 					); ?>
 				</p>
 			</div>
@@ -55,8 +55,8 @@ function popmake_about_page() {
 				<p>
 					<?php printf(
 						__( 'If you need to create an unlimited number of themes and customize your popups, check out our %sUnlimited Themes%s Extension. Also, you may be interested in our %sAdvanced Theme Builder%s Extension, which allows you to add background images to many elements of your popup within a couple of clicks.', 'popup-maker' ),
-						'<a href="https://wppopupmaker.com/extensions/unlimited-themes" target="_blank">', '</a>',
-						'<a href="https://wppopupmaker.com/extensions/advanced-theme-builder" target="_blank">', '</a>'
+						'<a href="https://wppopupmaker.com/extensions/unlimited-themes?utm_source=WP+Welcome+About&utm_medium=Unlimited+Themes+Text+Link&utm_campaign=WP+Welcome+Text+Links" target="_blank">', '</a>',
+						'<a href="https://wppopupmaker.com/extensions/advanced-theme-builder?utm_source=WP+Welcome+About&utm_medium=Advanced+Theme+Builder+Text+Link&utm_campaign=WP+Welcome+Text+Links" target="_blank">', '</a>'
 					); ?>
 				</p>
 			</div>
@@ -71,7 +71,7 @@ function popmake_about_page() {
 					<p>
 						<?php printf(
 							__( 'Easily convert abandoning users into cash with our Exit Intent Extension. Exit Intent now comes with Hard Exit Technology. Learn more %shere%s.', 'popup-maker' ),
-							'<a href="https://wppopupmaker.com/extensions/exit-intent-popups" target="_blank">', '</a>'
+							'<a href="https://wppopupmaker.com/extensions/exit-intent-popups?utm_source=WP+Welcome+About&utm_medium=Exit+Intent+Text+Link&utm_campaign=WP+Welcome+Text+Links" target="_blank">', '</a>'
 						); ?>
 					</p>
 				</div>

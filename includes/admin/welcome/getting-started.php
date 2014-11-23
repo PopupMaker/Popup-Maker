@@ -74,7 +74,7 @@ function popmake_getting_started_page() {
 				<p><?php
 					printf(
 						__( 'Our <a href="%s" target="_blank">Priority Support Forums</a> are there for customers that need a solution and/or more in-depth assistance immediately.', 'popup-maker' ),
-						'https://wppopupmaker.com/support/pricing'
+						'https://wppopupmaker.com/support/pricing?utm_source=WP+Welcome+Getting+Started&utm_medium=Priority+Support+Text+Link&utm_campaign=WP+Welcome+Text+Links'
 					);?>
 				</p>
 			</div>
@@ -89,7 +89,7 @@ function popmake_getting_started_page() {
 				<p><?php
 					printf(
 						__( 'New extensions that make Popup Maker even more powerful are released nearly every single week. <a href="%s" target="_blank">Subscribe to the newsletter</a> to stay up to date with our latest releases. Signup now to ensure you do not miss a release!', 'popup-maker' ),
-						'https://wppopupmaker.com/newsletter-sign-up'
+						'https://wppopupmaker.com/newsletter-sign-up?utm_source=WP+Welcome+Getting+Started&utm_medium=Newsletter+Signup+Text+Link&utm_campaign=WP+Welcome+Text+Links'
 					);?>
 				</p>
 
@@ -97,7 +97,7 @@ function popmake_getting_started_page() {
 				<p><?php
 					printf(
 						__( '<a href="%s" target="_blank">Signup now</a> to hear about the latest tutorial releases that explain how to take Popup Maker further.', 'popup-maker' ),
-						'https://wppopupmaker.com/newsletter-sign-up'
+						'https://wppopupmaker.com/newsletter-sign-up?utm_source=WP+Welcome+Getting+Started&utm_medium=Newsletter+Signup+Text+Link&utm_campaign=WP+Welcome+Text+Links'
 					);?>
 				</p>
 
@@ -117,7 +117,7 @@ function popmake_getting_started_page() {
 				<p><?php
 					printf(
 						__( '<a href="%s" target="_blank">The Extensions store</a> has a list of all available extensions, including convenient category filters so you can find exactly what you are looking for.', 'popup-maker' ),
-						'https://wppopupmaker.com/extensions'
+						'https://wppopupmaker.com/extensions?utm_source=WP+Welcome+Getting+Started&utm_medium=Extensions+Store+Text+Link&utm_campaign=WP+Welcome+Text+Links'
 					);?>
 				</p>
 
