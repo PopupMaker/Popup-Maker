@@ -4,7 +4,7 @@ function popmake_plugin_action_links($links, $file) {
 		$settings_page_url = admin_url('edit.php?post_type=popup&page=settings');
 		$plugin_action_links = apply_filters('popmake_action_links', array(
 			//'settings' => '<a href="'. $settings_page_url .'">'.__( 'Settings', 'popup-maker' ).'</a>',
-			'extensions' => '<a href="https://wppopupmaker.com/extensions?utm_source=em-free&utm_medium=plugins+page&utm_campaign=extensions" target="_blank">'.__('Extensions', 'popup-maker' ).'</a>',
+			'extensions' => '<a href="https://wppopupmaker.com/extensions?utm_source=WP+Admin+Plugins+Page&utm_medium=Text+Link&utm_campaign=Extensions" target="_blank">'.__('Extensions', 'popup-maker' ).'</a>',
 		));
 		foreach($plugin_action_links  as $link) {
 			array_unshift( $links, $link );
@@ -28,7 +28,7 @@ function popmake_admin_notice() {
 	if(popmake_is_admin_page()) {
 		if(!get_user_meta( get_current_user_id(), '_popmake_dismiss_optin_newsletter_promo_banner', true )) {?>
 			<div class="popmake-optin popmake-newsletter-optin">
-				<a href="https://wppopupmaker.com/newsletter-sign-up" target="_blank" class="newsletter-banner">
+				<a href="https://wppopupmaker.com/newsletter-sign-up?utm_source=Popmake+WP+Admin&utm_medium=Notification+Banner&utm_campaign=Newsletter+Signup" target="_blank" class="newsletter-banner">
 					<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/newsletter-banner.png"/>
 				</a>
 				<a class="popmake-optin-dismiss" data-optin-name="newsletter_promo_banner" data-optin-type="user"><?php _e( 'No Thanks', 'popup-maker' ); ?></a>
