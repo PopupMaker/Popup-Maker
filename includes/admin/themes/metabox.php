@@ -231,7 +231,7 @@ function popmake_popup_thmem_ut_extension_promotion() {
 	if(popmake_is_admin_popup_theme_page()) { ?>
 		<div id="popuptitlediv">
 			<div class="popmake-upgrade-tip">
-				<img style="" src="<?php echo POPMAKE_URL;?>/assets/images/admin/icon-unlimited-themes.png"/> <?php _e( 'Need more than one (1) theme?', 'popup-maker' ); ?> <a href="https://wppopupmaker.com/extensions/unlimited-themes" target="_blank"><?php _e( 'Check out Unlimited Themes!', 'popup-maker' ); ?></a>.
+				<img style="" src="<?php echo POPMAKE_URL;?>/assets/images/admin/icon-unlimited-themes.png"/> <?php _e( 'Need more than one (1) theme?', 'popup-maker' ); ?> <a href="https://wppopupmaker.com/extensions/unlimited-themes?utm_source=Plugin+Admin+Theme+Editor&utm_medium=Text+Link&utm_campaign=Unlimited+Themes" target="_blank"><?php _e( 'Check out Unlimited Themes!', 'popup-maker' ); ?></a>.
 			</div>
 		</div><?php
 	}

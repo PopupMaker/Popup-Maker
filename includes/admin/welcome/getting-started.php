@@ -68,13 +68,18 @@ function popmake_getting_started_page() {
 			<div class="feature-section">
 
 				<h4><?php _e( 'Top-Notch Support','popup-maker' );?></h4>
-				<p><?php _e( 'We provide top-notch support! If you encounter a problem or have a question, post a question in the WordPress Support Forums, or if you’ve purchased a membership or extension, the Members Only Forums.', 'popup-maker' );?></p>
-
+				<p>
+					<?php printf(
+						__( 'We provide top-notch support! If you encounter a problem or have a question, post a question in the %sWordPress Support Forums%s, or if you’ve purchased a membership or extension, the %sMembers Only Forums%s.', 'popup-maker' ),
+						'<a href="https://wordpress.org/support/plugin/popup-maker?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=WordPress+Forums" target="_blank">', '</a>',
+						'<a href="https://wppopupmaker.com/extensions/auto-open-popups?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=Member+Forums" target="_blank">', '</a>'
+					); ?>
+				</p>
 				<h4><?php _e( 'Need a Solution Now?', 'popup-maker' );?></h4>
 				<p><?php
 					printf(
 						__( 'Our <a href="%s" target="_blank">Priority Support Forums</a> are there for customers that need a solution and/or more in-depth assistance immediately.', 'popup-maker' ),
-						'https://wppopupmaker.com/support/pricing'
+						'https://wppopupmaker.com/support/pricing?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=Priority+Support'
 					);?>
 				</p>
 			</div>
@@ -89,7 +94,7 @@ function popmake_getting_started_page() {
 				<p><?php
 					printf(
 						__( 'New extensions that make Popup Maker even more powerful are released nearly every single week. <a href="%s" target="_blank">Subscribe to the newsletter</a> to stay up to date with our latest releases. Signup now to ensure you do not miss a release!', 'popup-maker' ),
-						'https://wppopupmaker.com/newsletter-sign-up'
+						'https://wppopupmaker.com/newsletter-sign-up?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=Newsletter+Signup'
 					);?>
 				</p>
 
@@ -97,7 +102,7 @@ function popmake_getting_started_page() {
 				<p><?php
 					printf(
 						__( '<a href="%s" target="_blank">Signup now</a> to hear about the latest tutorial releases that explain how to take Popup Maker further.', 'popup-maker' ),
-						'https://wppopupmaker.com/newsletter-sign-up'
+						'https://wppopupmaker.com/newsletter-sign-up?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=Newsletter+Signup'
 					);?>
 				</p>
 
@@ -117,7 +122,7 @@ function popmake_getting_started_page() {
 				<p><?php
 					printf(
 						__( '<a href="%s" target="_blank">The Extensions store</a> has a list of all available extensions, including convenient category filters so you can find exactly what you are looking for.', 'popup-maker' ),
-						'https://wppopupmaker.com/extensions'
+						'https://wppopupmaker.com/extensions?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=Extensions'
 					);?>
 				</p>
 
@@ -127,7 +132,7 @@ function popmake_getting_started_page() {
 		<div class="return-to-dashboard">
 			<a href="<?php echo esc_url( admin_url( 'post.php?post='. popmake_get_default_popup_theme() .'&action=edit' ) ); ?>"><?php _e( 'Customize Your First Theme', 'popup-maker' ); ?></a> &middot;
 			<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=popup' ) ); ?>"><?php _e( 'Create a Modal', 'popup-maker' ); ?></a> &middot;
-			<a href="<?php echo esc_url( 'https://wppopupmaker.com/getting-started' ); ?>" target="_blank"><?php _e( 'View the Full Getting Started Guide', 'popup-maker' ); ?></a>
+			<a href="<?php echo esc_url( 'https://wppopupmaker.com/getting-started?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=Getting+Started' ); ?>" target="_blank"><?php _e( 'View the Full Getting Started Guide', 'popup-maker' ); ?></a>
 		</div>
 	</div><?php
 }
