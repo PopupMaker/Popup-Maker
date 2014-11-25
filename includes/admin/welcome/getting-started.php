@@ -68,8 +68,13 @@ function popmake_getting_started_page() {
 			<div class="feature-section">
 
 				<h4><?php _e( 'Top-Notch Support','popup-maker' );?></h4>
-				<p><?php _e( 'We provide top-notch support! If you encounter a problem or have a question, post a question in the WordPress Support Forums, or if you’ve purchased a membership or extension, the Members Only Forums.', 'popup-maker' );?></p>
-
+				<p>
+					<?php printf(
+						__( 'We provide top-notch support! If you encounter a problem or have a question, post a question in the %sWordPress Support Forums%s, or if you’ve purchased a membership or extension, the %sMembers Only Forums%s.', 'popup-maker' ),
+						'<a href="https://wordpress.org/support/plugin/popup-maker?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=WordPress+Forums" target="_blank">', '</a>',
+						'<a href="https://wppopupmaker.com/extensions/auto-open-popups?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=Member+Forums" target="_blank">', '</a>'
+					); ?>
+				</p>
 				<h4><?php _e( 'Need a Solution Now?', 'popup-maker' );?></h4>
 				<p><?php
 					printf(

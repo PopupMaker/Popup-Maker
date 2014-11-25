@@ -67,7 +67,7 @@ add_action('popmake_popup_theme_container_meta_box_fields', 'popmake_popup_theme
 function popmake_popup_theme_container_meta_box_field_atb_extension_promotion( $popup_theme_id ) { ?>
 	<tr>
 		<th colspan="2" class="popmake-upgrade-tip">
-			<img style="" src="<?php echo POPMAKE_URL;?>/assets/images/admin/icon-advanced-theme-builder.png"/> <?php _e( 'Want to use background images?', 'popup-maker' ); ?> <a href="https://wppopupmaker.com/extensions/advanced-theme-builder" target="_blank"><?php _e( 'Check out Advanced Theme Builder!', 'popup-maker' ); ?></a>.
+			<img style="" src="<?php echo POPMAKE_URL;?>/assets/images/admin/icon-advanced-theme-builder.png"/> <?php _e( 'Want to use background images?', 'popup-maker' ); ?> <a href="https://wppopupmaker.com/extensions/advanced-theme-builder?utm_source=Plugin+Admin+Theme+Editor&utm_medium=Text+Link&utm_campaign=Advanced+Theme+Builder" target="_blank"><?php _e( 'Check out Advanced Theme Builder!', 'popup-maker' ); ?></a>.
 		</th>
 	</tr><?php
 }
