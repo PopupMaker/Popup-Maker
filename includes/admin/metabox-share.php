@@ -29,7 +29,7 @@ function popmake_share_meta_box_links( $popup_id ) { ?>
 	<br class="clear" />
 	<br class="clear" />
 	<div style="text-align:center">
-		<a class="button rounded" target="_blank" href="http://wordpress.org/support/view/plugin-reviews/popup-maker#postform"><?php _e( 'Rate Popup Maker on WP!', 'popup-maker' ); ?></a>
+		<a class="button rounded" target="_blank" href="http://wordpress.org/support/view/plugin-reviews/popup-maker#postform?utm_source=Plugin+Admin&utm_medium=WP+Review+Button&utm_campaign=WP+Reviews"><?php _e( 'Rate Popup Maker on WP!', 'popup-maker' ); ?></a>
 	</div><?php
 }
 
