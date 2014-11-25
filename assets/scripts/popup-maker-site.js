@@ -1,5 +1,5 @@
 /**
- * Popup Maker v1.0
+ * Popup Maker v1.0.2
  */
 (function (jQuery) {
     "use strict";

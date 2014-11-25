@@ -1,12 +1,12 @@
 === Popup Maker ===
 Contributors: danieliser, waltmesser
 Author URI: http://wizardinternetsolutions.com
-Plugin URI: https://wppopupmaker.com
+Plugin URI: https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Plugin+URI
 Donate link: 
 Tags: popup, popups, modal, modals, modal form, modal window, popup box, popup form, popup window, lightbox
 Requires at least: 3.4
 Tested up to: 4.0.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 Easily turn users into cash using Popup Maker - the most versatile & expansive popup plugin for WordPress!
 
 == Description ==
@@ -71,7 +71,14 @@ For more information, visit [Popup Maker](https://wppopupmaker.com?utm_source=Wo
 
 = v1.0.2 =
 * Resized Extension page images to load quicker on extensions page.
-
+* Added last_open_popup proerty to popmake jQuery function.
+* Resized Extension page images to load quicker on extensions page.
+* Fixed misc Admin Styles.
+* Corrected support links.
+* Fixed Bug in Meta boxes on settings page.
+* Renamed files appropriately.
+* Added new section callback for settings API.
+* Fixed small glitch in Opt In for Credit Link.
 
 
 = v1.0.1 =
