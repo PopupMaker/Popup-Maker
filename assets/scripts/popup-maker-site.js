@@ -23,6 +23,7 @@
         jQuery.error('Method ' + method + ' does not exist on jQuery.fn.popmake');
     };
 
+    jQuery.fn.popmake.last_open_popup = null;
     jQuery.fn.popmake.last_open_trigger = null;
     jQuery.fn.popmake.last_close_trigger = null;
 
@@ -151,6 +152,7 @@
                     $this
                         .addClass('active')
                         .trigger('popmakeAfterOpen');
+                    jQuery.fn.popmake.last_open_popup = $this;
                     if (callback !== undefined) {
                         callback();
                     }

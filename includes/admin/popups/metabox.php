@@ -53,7 +53,6 @@ function popmake_popup_meta_fields() {
 		}
 	}
 	foreach(popmake_get_supported_types() as $pt) {
-		var_dump($pt);
 		$labels = get_post_type_object( $pt ) ? get_post_type_object( $pt ) : get_taxonomy( $pt );
 		$plural = $pt . 's';
 		$fields[] = "popup_targeting_condition_on_{$plural}";

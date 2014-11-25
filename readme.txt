@@ -3,7 +3,7 @@ Contributors: danieliser, waltmesser
 Author URI: http://wizardinternetsolutions.com
 Plugin URI: https://wppopupmaker.com
 Donate link: 
-Tags: modal,modal box,modal form,modal window,popup,popup box,popup form,popup window,ajax forms, lightbox, login modals
+Tags: popup, popups, modal, modals, modal form, modal window, popup box, popup form, popup window, lightbox
 Requires at least: 3.4
 Tested up to: 4.0.1
 Stable tag: 1.0.1
@@ -68,10 +68,17 @@ For more information, visit [Popup Maker](https://wppopupmaker.com "WordPress Po
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
-= v1.0.0 =
-* Initial Release
+
+= v1.0.2 =
+* Resized Extension page images to load quicker on extensions page.
+
+
+
 = v1.0.1 =
 * Removed links to getting started from "Dashboard" Admin Menu.
 * Added Line Height Setting to Both Title and Close, Allowing Perfect Circles for close button.
 * Updated admin styles.
 * Misc Admin changes, including new filters/hooks for upcoming extensions.
+
+= v1.0.0 =
+* Initial Release

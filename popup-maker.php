@@ -203,7 +203,7 @@ final class Popup_Maker {
 			require_once POPMAKE_DIR . 'includes/admin/popups/dashboard-columns.php';
 			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-close-fields.php';
 			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-display-fields.php';
-			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-loading-fields.php';
+			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-targeting-condition-fields.php';
 			require_once POPMAKE_DIR . 'includes/admin/popups/post-type-item-metaboxes.php';
 			require_once POPMAKE_DIR . 'includes/admin/themes/metabox.php';
 			require_once POPMAKE_DIR . 'includes/admin/themes/metabox-close-fields.php';

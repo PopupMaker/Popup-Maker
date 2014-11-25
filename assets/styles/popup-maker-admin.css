@@ -311,12 +311,12 @@ div.popmake-upgrade-tip {
 }
 .tab-box a {
 	font:300 18px/1.125 "Oswald";
-	color:#00b7cd;
+	color:#9ABA27;
 }
 .tab-box button {
 	font:300 18px/1.125 "Oswald";
 	color:#fff;
-	background:#00b7cd;
+	background:#9ABA27;
 	box-shadow: none;
 	border:0;
 	padding:5px 10px 7px;
@@ -359,6 +359,9 @@ div.popmake-upgrade-tip {
     font: 16px/1.5 "Montserrat" !important;
     text-align: center;
     text-transform: uppercase;
+}
+.extensions-available h3 a {
+    color: inherit;
 }
 .extensions-available li > .action-links {
 	margin:0 10px;

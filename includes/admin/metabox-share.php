@@ -9,17 +9,16 @@
  * @since 1.0
  * @return void
  */
-function popmake_render_share_meta_box() {
-	global $post; ?>
+function popmake_render_share_meta_box() { ?>
 	<div id="popmake_share_fields" class="popmake_meta_table_wrap">
-		<?php do_action( 'popmake_share_meta_box_fields', $post->ID ); ?>
+		<?php do_action( 'popmake_share_meta_box_fields' ); ?>
 	</div><?php
 }
 
 
 
 add_action('popmake_share_meta_box_fields', 'popmake_share_meta_box_links', 10);
-function popmake_share_meta_box_links( $popup_id ) { ?>
+function popmake_share_meta_box_links() { ?>
 	<h3 class="loveit-shareit" style="text-align:center">Love It? <span>Share It!</span></h3>
 	<ul class="share-buttons">
 		<li><div class="fb-like" data-href="https://wppopupmaker.com" data-width="100" data-ref="true" data-layout="box_count" data-action="like" data-show-faces="false" data-send="true"></div></li>

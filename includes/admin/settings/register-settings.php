@@ -63,7 +63,7 @@ function popmake_get_settings() {
 function popmake_register_settings() {
 
 	if ( false == get_option( 'popmake_settings' ) ) {
-		add_option( 'popmake_settings' );
+		add_option( 'popmake_settings', popmake_default_settings() );
 	}
 
 	foreach( popmake_get_registered_settings() as $tab => $settings ) {
@@ -348,6 +348,23 @@ function popmake_get_settings_tabs() {
 
 	return apply_filters( 'popmake_settings_tabs', $tabs );
 }
+
+
+/**
+ * Section Callback
+ *
+ * Renders the header.
+ *
+ * @since 1.0
+ * @param array $args Arguments passed by the setting
+ * @return void
+ */
+function popmake_section_callback( $args ) {
+	echo '</td></tr></tbody></table>';
+	echo $args['desc'];
+	echo '<table class="form-table"><tbody><tr style="display:none;"><td colspan="2">';
+}
+
 
 
 /**

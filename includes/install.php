@@ -54,6 +54,10 @@ function popmake_install() {
 
 	}
 
+	if(!isset($popmake_options['popmake_powered_by_size'])) {
+		$popmake_options['popmake_powered_by_size'] = '';
+	}
+
 	update_option( 'popmake_settings', array_merge( $popmake_options, $options ) );
 	update_option( 'popmake_version', POPMAKE_VERSION );
 

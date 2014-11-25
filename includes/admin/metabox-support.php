@@ -9,17 +9,16 @@
  * @since 1.0
  * @return void
  */
-function popmake_render_support_meta_box() {
-	global $post; ?>
+function popmake_render_support_meta_box() { ?>
 	<div id="popmake_support_fields" class="popmake_meta_table_wrap">
-		<?php do_action( 'popmake_support_meta_box_fields', $post->ID ); ?>
+		<?php do_action( 'popmake_support_meta_box_fields' ); ?>
 	</div><?php
 }
 
 
 
 add_action('popmake_support_meta_box_fields', 'popmake_support_meta_box_links', 10);
-function popmake_support_meta_box_links( $popup_id ) { ?>
+function popmake_support_meta_box_links() { ?>
 	<ul class="popmake-support-links">
 		<li>
 			<a href="https://wppopupmaker.com/kb">
