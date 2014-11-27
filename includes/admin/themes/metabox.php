@@ -57,7 +57,7 @@ function popmake_popup_theme_meta_fields() {
 		'popup_theme_defaults_set'
 	);
 	foreach(popmake_popup_theme_meta_field_groups() as $group) {
-		foreach(apply_filters( 'popmake_popup_theme_meta_field_group_' . $group, $fields ) as $field) {
+		foreach(apply_filters( 'popmake_popup_theme_meta_field_group_' . $group, array()) as $field) {
 			$fields[] = 'popup_theme_' . $group . '_' . $field;
 		}
 	}

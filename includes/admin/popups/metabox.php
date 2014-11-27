@@ -48,7 +48,7 @@ function popmake_popup_meta_fields() {
 		'popup_targeting_condition_exclude_on_home',
 	);
 	foreach(popmake_popup_meta_field_groups() as $group) {
-		foreach(apply_filters( 'popmake_popup_meta_field_group_' . $group, $fields ) as $field) {
+		foreach(apply_filters( 'popmake_popup_meta_field_group_' . $group, array()) as $field) {
 			$fields[] = 'popup_' . $group . '_' . $field;
 		}
 	}
