@@ -3,10 +3,12 @@ Contributors: danieliser, waltmesser
 Author URI: http://wizardinternetsolutions.com
 Plugin URI: https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Plugin+URI
 Donate link: 
-Tags: popup, popups, modal, modals, modal form, modal window, popup box, popup form, popup window, lightbox
+Tags: popup,popups,modal,modals,popup form,form modal,conversion,conversions,dialog box
 Requires at least: 3.4
 Tested up to: 4.0.1
-Stable tag: 1.0.2
+Stable tag: 1.0.3
+
+License: GNU Version 2 or Any Later Version
 Easily turn users into cash using Popup Maker - the most versatile & expansive popup plugin for WordPress!
 
 == Description ==
@@ -68,6 +70,11 @@ For more information, visit [Popup Maker](https://wppopupmaker.com?utm_source=Wo
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.0.3 =
+* Fixed bug with recursive filter.
+* Fixed bug caused by typo.
+
 
 = v1.0.2 =
 * Resized Extension page images to load quicker on extensions page.
