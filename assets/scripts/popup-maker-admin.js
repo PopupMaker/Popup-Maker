@@ -160,7 +160,7 @@ var PopMakeAdmin;
                     current_ids = $textarea.val().split(',');
 
                     current_ids = jQuery.grep(current_ids, function (value) {
-                        return value !== removeItem;
+                        return parseInt(value, 10) !== parseInt(removeItem, 10);
                     });
 
                     $item.parent('span').remove();
