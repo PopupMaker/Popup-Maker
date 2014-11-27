@@ -580,7 +580,7 @@ var PopMakeAdmin;
                 .on('click', function () { update_type_options(jQuery(this)); })
                 .each(function () { update_type_options(jQuery(this)); });
 
-            jQuery('input[type="radio"][name*="radio_checkbox_"]')
+            jQuery('input[type="radio"][name*="popup_targeting_condition_"]')
                 .on('click', function () { update_specific_checkboxes(jQuery(this)); })
                 .each(function () { update_specific_checkboxes(jQuery(this)); });
 
