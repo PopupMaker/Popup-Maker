@@ -5,8 +5,7 @@
  * @param $post_id
  */
 add_action('popmake_popup_display_meta_box_fields', 'popmake_popup_display_meta_box_field_size', 10);
-function popmake_popup_display_meta_box_field_size( $popup_id )
-{
+function popmake_popup_display_meta_box_field_size( $popup_id ) {
 	?><tr>
 		<th scope="row">
 			<label for="popup_display_size">
@@ -133,8 +132,7 @@ function popmake_popup_display_meta_box_field_custom_sizes( $popup_id ) {
 }
 
 add_action('popmake_popup_display_meta_box_fields', 'popmake_popup_display_meta_box_field_overlay_disabled', 40);
-function popmake_popup_display_meta_box_field_overlay_disabled( $popup_id )
-{
+function popmake_popup_display_meta_box_field_overlay_disabled( $popup_id ) {
 	?><tr class="title-divider">
 		<th colspan="2"><h3 class="title"><?php _e( 'Overlay', 'popup-maker' );?></h3></th>
 	</tr>
@@ -148,8 +146,7 @@ function popmake_popup_display_meta_box_field_overlay_disabled( $popup_id )
 }
 
 add_action('popmake_popup_display_meta_box_fields', 'popmake_popup_display_meta_box_field_animation', 50);
-function popmake_popup_display_meta_box_field_animation( $popup_id )
-{
+function popmake_popup_display_meta_box_field_animation( $popup_id ) {
 	?><tr class="title-divider">
 		<th colspan="2"><h3 class="title"><?php _e( 'Animation', 'popup-maker' );?></h3></th>
 	</tr>
@@ -215,8 +212,7 @@ function popmake_popup_display_meta_box_field_animation( $popup_id )
 
 
 add_action('popmake_popup_display_meta_box_fields', 'popmake_admin_popup_form_display_tab_settings_position', 60);
-function popmake_admin_popup_form_display_tab_settings_position( $popup_id )
-{
+function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 	?><tr class="title-divider">
 		<th colspan="2"><h3 class="title"><?php _e( 'Position', 'popup-maker' );?></h3></th>
 	</tr>
