@@ -24,6 +24,7 @@ h3.title {
 }
 #titlediv #title {
 	margin: 0 0 1em;
+	height:40px!important;
 }
 .posttypediv, .taxonomydiv {
 	margin-bottom:10px;
@@ -31,6 +32,75 @@ h3.title {
 	overflow:auto;
 }
 
+.wp-core-ui .button-primary, .button-primary {
+	background-color:#9aba27;
+	color:#fff;
+	border-color:#000;
+	text-shadow: 1px 1px 0px rgba(0,0,0,1);
+}
+
+.wp-core-ui .button-primary.focus, .wp-core-ui .button-primary.hover, .wp-core-ui .button-primary:focus, .wp-core-ui .button-primary:hover {
+	background-color:rgba(154, 186, 39, .95);
+}
+.wp-core-ui .button-primary-disabled, .wp-core-ui .button-primary.disabled, .wp-core-ui .button-primary:disabled, .wp-core-ui .button-primary[disabled] {
+	background-color:rgba(154, 186, 39, .95)!important;
+	color:#000!important;
+}
+.wp-core-ui .button-primary.active, .wp-core-ui .button-primary.active:focus, .wp-core-ui .button-primary.active:hover, .wp-core-ui .button-primary:active {
+	background-color:rgba(154, 186, 39, .95);
+}
+input[type="text"], select {
+    font-size: 13px;
+    margin: 0;
+	height: 30px!important;
+    line-height: 28px!important;
+    padding: 0 6px 2px!important;
+    box-shadow: 0 1px 0 rgb(255, 255, 255) inset, 0 1px 0 rgba(0, 0, 0, 0.08);
+}
+input[type="range"] {
+    vertical-align: middle;
+}
+input.popmake-range-manual {
+	padding-right:25px!important;
+}
+/*
+input[type="text"], select {
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 13px;
+    margin: 0;
+    text-decoration: none;
+    white-space: nowrap;
+	height: 30px!important;
+    line-height: 28px!important;
+    padding: 0 12px 2px!important;
+    background: none repeat scroll 0 0 rgb(247, 247, 247)!important;
+    border-color: rgb(204, 204, 204);
+    box-shadow: 0 1px 0 rgb(255, 255, 255) inset, 0 1px 0 rgba(0, 0, 0, 0.08);
+    color: rgb(85, 85, 85);
+    vertical-align: top!important;
+}
+input[type="text"] {
+    background-color: rgb(247, 247, 247)!important;
+}
+input[type="range"] {
+	background: transparent!important;
+	border:none!important;
+	outline:0;
+	box-shadow:none;
+}
+
+button.popmake-range-minus, button.popmake-range-plus {
+	height:30px;
+	width:30px;
+	text-align: center;
+}
+
+*/
 option.bold {
 	font-weight:bold;
 	font-size: 1.125em;
