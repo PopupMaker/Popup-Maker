@@ -6,7 +6,7 @@ Donate link:
 Tags: popup,popups,modal,modals,popup form,form modal,conversion,conversions,dialog box
 Requires at least: 3.4
 Tested up to: 4.0.1
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 
 License: GNU Version 2 or Any Later Version
 Easily turn users into cash using Popup Maker - the most versatile & expansive popup plugin for WordPress!
@@ -32,11 +32,11 @@ Use any of your forms from the most popular form plugins, out-of-the-box, inside
 * Use Popups Conditionally 
  * Target specific users for your popups! Our Targeting Conditions feature allows you to tailor your popups to specific users by giving you the ability to use popups exactly where you want. Use [Auto Open](https://wppopupmaker.com/extensions/auto-open-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Auto+Open "Auto Open Popups"), [Scroll Triggered](https://wppopupmaker.com/extensions/scroll-triggered-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Scroll+Triggered "Scroll Triggered Popups") & [Exit Intent](https://wppopupmaker.com/extensions/exit-intent-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Exit+Intent "Exit Intent Popups") Popup Extensions to enhance your popups' effectiveness.
 * One (1) Customizable Popup Theme
- * Customize every aspect of our default theme to match your needs – from colors to Google Fonts. To differentiate your popup themes on your popups, you can create unlimited themes by upgrading to the [Unlimited Themes Extension](https://wppopupmaker.com/extensions/unlimited-themes?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Unlimited+Themes "Unlimited Popup Themes").
+ * Customize every aspect of our default theme to match your needs - from colors to Google Fonts. To differentiate your popup themes on your popups, you can create unlimited themes by upgrading to the [Unlimited Themes Extension](https://wppopupmaker.com/extensions/unlimited-themes?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Unlimited+Themes "Unlimited Popup Themes").
 * Popup Opening Animations
  * Our WordPress Popup Plugin gives your popup more power and allows you to customize how it pops up by choosing from several opening animations.
 * Complete Positioning and Size Control
- * Popup Maker offers you pixel perfect positioning settings to match your needs and fit your website perfectly – from centered popups to anchored popups. Plus, choose from a grab bag full of responsive sizes ready to go, out-of-the-box, or customize your own popup size using 4 units of measurement: pixels, %, EM, and REM.
+ * Popup Maker offers you pixel perfect positioning settings to match your needs and fit your website perfectly - from centered popups to anchored popups. Plus, choose from a grab bag full of responsive sizes ready to go, out-of-the-box, or customize your own popup size using 4 units of measurement: pixels, %, EM, and REM.
 * Theme Builder
  * Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options! Plus, don't be worried to go with the flow, you can easily revert to old saves with Revision History! Want more options? Get our [Advanced Theme Builder](https://wppopupmaker.com/extensions/advanced-theme-builder?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Advanced+Theme+Builder "Advanced Theme Builder")!
 * Scrollable Content
@@ -50,12 +50,14 @@ Use any of your forms from the most popular form plugins, out-of-the-box, inside
 * Exit Intent Popups (coming soon)
 * Auto Open Popups (coming soon)
 * Analytics (coming soon)
+* Advanced Targeting Conditions (coming soon)
 * Forced Interaction (coming soon)
 * AJAX Login Modals (coming soon)
 * Scroll Triggered Popups (coming soon)
 * Age Verification Modals (coming soon)
 * Advanced Theme Builder (coming soon)
 * Unlimited Themes (coming soon)
+* Secure Idle User Logout (coming soon)
 
 For more information, visit [Popup Maker](https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Home+Page "WordPress Popup Maker")!
 
@@ -71,9 +73,17 @@ For more information, visit [Popup Maker](https://wppopupmaker.com?utm_source=Wo
 
 == Changelog ==
 
+= v1.0.4 =
+* Admin UI Adjustments & Tweaks.
+* Fixed bug in removing specific post types.
+* Reformatted Code.
+* Fixed incorrect variable.
+
+
 = v1.0.3 =
 * Fixed bug with recursive filter.
 * Fixed bug caused by typo.
+* Fixed bug in JS for removing specific post type posts.
 
 
 = v1.0.2 =

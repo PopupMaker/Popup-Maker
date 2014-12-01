@@ -4,7 +4,7 @@
  * Plugin URI: https://wppopupmaker.com
  * Description: Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more. 
  * Author: Wizard Internet Solutions
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author URI: http://wizardinternetsolutions.com
  * Text Domain: popup-maker
  * 
@@ -144,7 +144,7 @@ final class Popup_Maker {
 		}
 
 		if ( !defined('POPMAKE_VERSION') ) {
-			define('POPMAKE_VERSION', '1.0.3' );	
+			define('POPMAKE_VERSION', '1.0.4' );	
 		}
 
 		if ( !defined('POPMAKE_DB_VERSION') ) {
