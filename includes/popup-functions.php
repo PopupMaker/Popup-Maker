@@ -286,7 +286,7 @@ function popmake_popup_is_loadable( $popup_id ) {
 			$return = true;
 		}
 		// Load on specific pages
-		if( array_key_exists('on_specific_pages', $conditions) && array_key_exists('on_page_' . $popup_id, $conditions) ) {
+		if( array_key_exists('on_specific_pages', $conditions) && array_key_exists('on_page_' . $post->ID, $conditions) ) {
 			$return = true;
 		}
 		// Load on entire site not excluding all pages.
@@ -294,7 +294,7 @@ function popmake_popup_is_loadable( $popup_id ) {
 			$return = true;
 		}
 		// Load on entire site not excluding specific pages.
-		if( array_key_exists('on_entire_site', $conditions) && array_key_exists('exclude_on_specific_pages', $conditions) && !array_key_exists('exclude_on_page_' . $popup_id, $conditions) ) {
+		if( array_key_exists('on_entire_site', $conditions) && array_key_exists('exclude_on_specific_pages', $conditions) && !array_key_exists('exclude_on_page_' . $post->ID, $conditions) ) {
 			$return = true;
 		}
 
@@ -347,7 +347,7 @@ function popmake_popup_is_loadable( $popup_id ) {
 			$return = true;
 		}
 		// Load on specific pages
-		if( array_key_exists('on_specific_posts', $conditions) && array_key_exists('on_post_' . $popup_id, $conditions) ) {
+		if( array_key_exists('on_specific_posts', $conditions) && array_key_exists('on_post_' . $post->ID, $conditions) ) {
 			$return = true;
 		}
 		// Load on entire site not excluding all pages.
@@ -355,7 +355,7 @@ function popmake_popup_is_loadable( $popup_id ) {
 			$return = true;
 		}
 		// Load on entire site not excluding specific pages.
-		if( array_key_exists('on_entire_site', $conditions) && array_key_exists('exclude_on_specific_posts', $conditions) && !array_key_exists('exclude_on_post_' . $popup_id, $conditions) ) {
+		if( array_key_exists('on_entire_site', $conditions) && array_key_exists('exclude_on_specific_posts', $conditions) && !array_key_exists('exclude_on_post_' . $post->ID, $conditions) ) {
 			$return = true;
 		}
 
@@ -368,7 +368,7 @@ function popmake_popup_is_loadable( $popup_id ) {
 			$return = true;
 		}
 		// Load on specific pages
-		if( array_key_exists("on_specific_{$pt}s", $conditions) && array_key_exists("on_{$pt}_" . $popup_id, $conditions) ) {
+		if( array_key_exists("on_specific_{$pt}s", $conditions) && array_key_exists("on_{$pt}_" . $post->ID, $conditions) ) {
 			$return = true;
 		}
 		// Load on entire site not excluding all pages.
@@ -376,7 +376,7 @@ function popmake_popup_is_loadable( $popup_id ) {
 			$return = true;
 		}
 		// Load on entire site not excluding specific pages.
-		if( array_key_exists("on_entire_site", $conditions) && array_key_exists("exclude_on_specific_{$pt}s", $conditions) && !array_key_exists("exclude_on_{$pt}_" . $popup_id, $conditions) ) {
+		if( array_key_exists("on_entire_site", $conditions) && array_key_exists("exclude_on_specific_{$pt}s", $conditions) && !array_key_exists("exclude_on_{$pt}_" . $post->ID, $conditions) ) {
 			$return = true;
 		}
 
