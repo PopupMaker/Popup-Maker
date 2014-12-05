@@ -35,6 +35,9 @@ function popmake_load_site_scripts() {
 		$size = !empty($popmake_options['popmake_powered_by_size']) ? $popmake_options['popmake_powered_by_size'] : '';
 		wp_localize_script('popup-maker-site', 'popmake_powered_by', '<div class="powered-by-popmake '. $size .'"><a href="https://wppopupmaker.com" target="_blank"><img src="' . POPMAKE_URL . '/assets/images/admin/powered-by-popup-maker.png" alt="'. __( 'Powered By Popup Maker', 'popup-maker' ) .'"/></a></div>' );
 	}
+	if(isset($popmake_options['enable_easy_modal_compatibility_mode'])) {
+		wp_enqueue_script('popup-maker-easy-modal-importer-site', $js_dir . 'popup-maker-easy-modal-importer-site' . $suffix . '?defer', array('popup-maker-site'), '1.0', true);
+	}
 
 }
 add_action( 'wp_enqueue_scripts', 'popmake_load_site_scripts' );

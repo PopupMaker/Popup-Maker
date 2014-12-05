@@ -209,6 +209,16 @@ function popmake_get_registered_settings() {
 		'licenses' => apply_filters('popmake_settings_licenses',
 			array()
 		),
+		'misc' =>  apply_filters('popmake_settings_misc',
+			array(
+				'enable_easy_modal_compatibility_mode' => array(
+					'id' => 'enable_easy_modal_compatibility_mode',
+					'name' => __( 'Enable Easy Modal v2 Compatibility Mode', 'popup-maker' ),
+					'desc' => __( 'This will automatically make any eModal classes you have added to your site launch the appropriate Popup after import.', 'popup-maker' ),
+					'type' => 'checkbox'
+				),
+			)
+		),
 	);
 
 	return apply_filters( 'popmake_registered_settings', $popmake_settings );

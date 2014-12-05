@@ -1,24 +1,25 @@
 <?php
 /**
- * Settings Page
+ * Tools Page
  *
- * Renders the settings page contents.
+ * Renders the tools page contents.
  *
  * @access      private
  * @since 		1.0
  * @return      void
 */
-function popmake_settings_page() {
+function popmake_tools_page() {
 	global $popmake_options;
-	$active_tab = isset( $_GET[ 'tab' ] ) && array_key_exists( $_GET['tab'], popmake_get_settings_tabs() ) ? $_GET[ 'tab' ] : 'general';
+	$active_tab = isset( $_GET[ 'tab' ] ) && array_key_exists( $_GET['tab'], popmake_get_tools_tabs() ) ? $_GET[ 'tab' ] : 'import';
 	ob_start();?>
 	<div class="wrap">
-		<h2><?php esc_html_e( __( 'Popup Maker Settings', 'popup-maker' ) );?></h2>
+		<h2><?php esc_html_e( __( 'Popup Maker Tools', 'popup-maker' ) );?></h2>
+		<?php $notices = PopMake_Admin_Notice::render_notices();?>
 		<h2 id="popmake-tabs" class="nav-tab-wrapper"><?php
-			foreach( popmake_get_settings_tabs() as $tab_id => $tab_name ) {
+			foreach( popmake_get_tools_tabs() as $tab_id => $tab_name ) {
 
 				$tab_url = add_query_arg( array(
-					'settings-updated' => false,
+					'tools-updated' => false,
 					'tab' => $tab_id
 				) );
 
@@ -29,19 +30,13 @@ function popmake_settings_page() {
 				echo '</a>';
 			}?>
 		</h2>
-		<form id="popmake-settings-editor" method="post" action="options.php">
+		<form id="popmake-tools-editor" method="post" action="">
 			<?php do_action('popmake_form_nonce');?>
 				<div id="poststuff">
 				<div id="post-body" class="metabox-holder columns-2">
 					<div id="post-body-content">
 						<div id="tab_container">
-							<table class="form-table">
-							<?php
-							settings_fields( 'popmake_settings' );
-							do_settings_fields( 'popmake_settings_' . $active_tab, 'popmake_settings_' . $active_tab );
-							?>
-							</table>
-							<?php submit_button(); ?>
+							<?php do_action('popmake_tools_page_tab_' . $tab_id); ?>
 						</div><!-- #tab_container-->
 					</div>
 					<div id="postbox-container-1" class="postbox-container">
@@ -82,3 +77,30 @@ function popmake_settings_page() {
 	</div><?php
 	echo ob_get_clean();
 }
+
+/**
+ * Retrieve settings tabs
+ *
+ * @since 1.0
+ * @return array $tabs
+ */
+function popmake_get_tools_tabs() {
+
+	$tabs = array();
+	$tabs['import'] = __('Import / Export', 'popup-maker');
+	return apply_filters( 'popmake_tools_tabs', $tabs );
+}
+
+
+function popmake_emodal_v2_import_button() {
+	?><button id="popmake_emodal_v2_import" name="popmake_emodal_v2_import" class="button button-large">Import From Easy Modal v2</button><?php
+}
+add_action('popmake_tools_page_tab_import', 'popmake_emodal_v2_import_button');
+
+function popmake_emodal_admin_init() {
+	if(!isset($_REQUEST['popmake_emodal_v2_import'])) {
+		return;
+	}
+	popmake_emodal_v2_import();
+}
+add_action('admin_init', 'popmake_emodal_admin_init');

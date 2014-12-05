@@ -8,32 +8,27 @@ function popmake_shortcode_popup($atts, $content = NULL)
 			'theme_id' => 1,
 			'title' => "",
 			'overlay_disabled' => 0,
-			'size' => "auto",
+			'size' => "small",
 			'width' => "",
-			'widthUnit' => "px",
+			'width_unit' => "px",
 			'height' => "",
-			'heightUnit' => "px",
+			'height_unit' => "px",
 			'location' => "center top",
-			'positionTop' => 100,
-			'positionLeft' => 0,
-			'positionBottom' => 0,
-			'positionRight' => 0,
-			'positionFixed' => 0,
-			'animation' => "slide",
-			'animationSpeed' => 350,
-			'animationOrigin' => 'top',
-			'overlayClose' => 0,
-			'escClose' => 1,
-			// Deprecated
-			'theme' => NULL,
-			'duration' => NULL,
-			'direction' => NULL,
-			'overlayEscClose' => NULL,
+			'position_top' => 100,
+			'position_left' => 0,
+			'position_bottom' => 0,
+			'position_right' => 0,
+			'position_fixed' => 0,
+			'animation_type' => "slide",
+			'animation_speed' => 350,
+			'animation_origin' => 'top',
+			'overlay_click' => 0,
+			'esc_press' => 1,
 		)),
 		apply_filters('popmake_shortcode_popup_atts', $atts)
 	);
 
-	$popup_fields = array(
+	$popup_fields = apply_filters('popmake_shortcode_data_attr', array(
 		'id' => $atts['id'],
 		'theme' => $atts['theme_id'],
 		'meta' => array(
@@ -41,26 +36,26 @@ function popmake_shortcode_popup($atts, $content = NULL)
 				'size' => $atts['size'],
 				'overlay_disabled' => $atts['overlay_disabled'],
 				'custom_width' => $atts['width'],
-				'custom_width_unit' => $atts['widthUnit'],
+				'custom_width_unit' => $atts['width_unit'],
 				'custom_height' => $atts['height'],
-				'custom_height_unit' => $atts['heightUnit'],
+				'custom_height_unit' => $atts['height_unit'],
 				'custom_height_auto' => $atts['width'] > 0 ? 0 : 1,
 				'location' => $atts['location'],
-				'position_top' => $atts['positionTop'],
-				'position_left' => $atts['positionLeft'],
-				'position_bottom' => $atts['positionBottom'],
-				'position_right' => $atts['positionRight'],
-				'position_fixed' => $atts['positionFixed'],
-				'animation_type' => $atts['animation'],
-				'animation_speed' => $atts['animationSpeed'],
-				'animation_origin' => $atts['animationOrigin'],
+				'position_top' => $atts['position_top'],
+				'position_left' => $atts['position_left'],
+				'position_bottom' => $atts['position_bottom'],
+				'position_right' => $atts['position_right'],
+				'position_fixed' => $atts['position_fixed'],
+				'animation_type' => $atts['animation_type'],
+				'animation_speed' => $atts['animation_speed'],
+				'animation_origin' => $atts['animation_origin'],
 			),
 			'close' => array(
-				'overlay_click' => $atts['overlayClose'],
-				'esc_press' => $atts['escClose']
+				'overlay_click' => $atts['overlay_click'],
+				'esc_press' => $atts['esc_press']
 			),
 		),
-	);
+	), $atts);
 
 	$classes = array('popmake', 'theme-'. $atts['theme_id']);
 	if( in_array( $atts['size'], array('normal', 'nano', 'tiny', 'small', 'medium', 'large', 'xlarge') ) )

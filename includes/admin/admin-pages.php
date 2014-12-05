@@ -19,14 +19,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.0
  * @global $popmake_popup_themes_page
  * @global $popmake_settings_page
- * @global $popmake_add_ons_page
+ * @global $popmake_extensions_page
  * @global $popmake_help_page
  * @return void
  */
 function popmake_admin_submenu_pages() {
-	global $popmake_settings_page, $popmake_add_ons_page, $popmake_help_page, $popmake_about_page, $popmake_changelog_page, $popmake_getting_started_page, $popmake_credits_page;
+	global $popmake_settings_page, $popmake_tools_page, $popmake_extensions_page, $popmake_help_page, $popmake_about_page, $popmake_changelog_page, $popmake_getting_started_page, $popmake_credits_page;
 
-	$popmake_settings_page	= add_submenu_page(
+	$popmake_settings_page = add_submenu_page(
 		'edit.php?post_type=popup',
 		apply_filters( 'popmake_admin_submenu_settings_page_title', __( 'Settings', 'popup-maker' ) ),
 		apply_filters( 'popmake_admin_submenu_settings_menu_title', __( 'Settings', 'popup-maker' ) ),
@@ -35,7 +35,16 @@ function popmake_admin_submenu_pages() {
 		apply_filters( 'popmake_admin_submenu_settings_function', 'popmake_settings_page' )
 	);
 
-	$popmake_add_ons_page	= add_submenu_page(
+	$popmake_tools_page	= add_submenu_page(
+		'edit.php?post_type=popup',
+		apply_filters( 'popmake_admin_submenu_tools_page_title', __( 'Tools', 'popup-maker' ) ),
+		apply_filters( 'popmake_admin_submenu_tools_menu_title', __( 'Tools', 'popup-maker' ) ),
+		apply_filters( 'popmake_admin_submenu_tools_capability', 'manage_options' ),
+		'tools',
+		apply_filters( 'popmake_admin_submenu_tools_function', 'popmake_tools_page' )
+	);
+
+	$popmake_extensions_page = add_submenu_page(
 		'edit.php?post_type=popup',
 		apply_filters( 'popmake_admin_submenu_extensions_page_title', __( 'Extensions', 'popup-maker' ) ),
 		apply_filters( 'popmake_admin_submenu_extensions_menu_title', __( 'Extensions', 'popup-maker' ) ),
@@ -44,7 +53,7 @@ function popmake_admin_submenu_pages() {
 		apply_filters( 'popmake_admin_submenu_extensions_function', 'popmake_extensions_page' )
 	);
 
-	$popmake_help_page	= add_submenu_page(
+	$popmake_help_page = add_submenu_page(
 		'edit.php?post_type=popup',
 		apply_filters( 'popmake_admin_submenu_help_page_title', __( 'Help', 'popup-maker' ) ),
 		apply_filters( 'popmake_admin_submenu_help_menu_title', __( 'Help', 'popup-maker' ) ),
@@ -138,7 +147,7 @@ function popmake_is_admin_page() {
 		return false;
 	}
 	
-	global $pagenow, $typenow, $popmake_popup_themes_page, $popmake_settings_page, $popmake_add_ons_page, $popmake_help_page;
+	global $pagenow, $typenow, $popmake_popup_themes_page, $popmake_settings_page, $popmake_tools_page, $popmake_extensions_page, $popmake_help_page;
 
 	if ( 'popup' == $typenow || 'popup_theme' == $typenow ) {
 		return true;
@@ -148,7 +157,7 @@ function popmake_is_admin_page() {
 		return true;
 	}
 
-	$popmake_admin_pages = apply_filters( 'popmake_admin_pages', array( $popmake_popup_themes_page, $popmake_settings_page, $popmake_add_ons_page, $popmake_help_page ) );
+	$popmake_admin_pages = apply_filters( 'popmake_admin_pages', array( $popmake_popup_themes_page, $popmake_settings_page, $popmake_tools_page, $popmake_extensions_page, $popmake_help_page ) );
 	
 	if ( in_array( $pagenow, $popmake_admin_pages ) ) {
 		return true;

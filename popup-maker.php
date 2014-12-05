@@ -4,7 +4,7 @@
  * Plugin URI: https://wppopupmaker.com
  * Description: Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more. 
  * Author: Wizard Internet Solutions
- * Version: 1.0.4
+ * Version: 1.0.6
  * Author URI: http://wizardinternetsolutions.com
  * Text Domain: popup-maker
  * 
@@ -144,7 +144,7 @@ final class Popup_Maker {
 		}
 
 		if ( !defined('POPMAKE_VERSION') ) {
-			define('POPMAKE_VERSION', '1.0.4' );	
+			define('POPMAKE_VERSION', '1.0.6' );	
 		}
 
 		if ( !defined('POPMAKE_DB_VERSION') ) {
@@ -185,6 +185,7 @@ final class Popup_Maker {
 		require_once POPMAKE_DIR . 'includes/ajax-calls.php';
 
 
+		require_once POPMAKE_DIR . 'includes/importer/easy-modal-v2.php';
 		require_once POPMAKE_DIR . 'includes/integrations/gravityforms.php';
 		require_once POPMAKE_DIR . 'includes/integrations/google-fonts.php';
 		
@@ -213,6 +214,7 @@ final class Popup_Maker {
 			require_once POPMAKE_DIR . 'includes/admin/themes/metabox-title-fields.php';
 			require_once POPMAKE_DIR . 'includes/admin/themes/metabox-preview.php';
 			require_once POPMAKE_DIR . 'includes/admin/settings/settings-page.php';
+			require_once POPMAKE_DIR . 'includes/admin/tools/tools-page.php';
 			require_once POPMAKE_DIR . 'includes/admin/extensions/extensions-page.php';
 			require_once POPMAKE_DIR . 'includes/admin/help/help-page.php';
 			require_once POPMAKE_DIR . 'includes/admin/metabox-support.php';

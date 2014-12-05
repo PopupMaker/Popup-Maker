@@ -141,7 +141,7 @@ option.bold {
 
 /* Marketing & Standouts */
 /* Menu Highlight */
-#menu-posts-popup ul.wp-submenu li:nth-child(0n+8) a {
+#menu-posts-popup ul.wp-submenu li:nth-child(0n+9) a {
 	color: #9ABA27;
 }
 
