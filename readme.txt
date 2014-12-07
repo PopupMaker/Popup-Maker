@@ -1,6 +1,6 @@
 === Popup Maker ===
 Contributors: danieliser, waltmesser
-Author URI: http://wizardinternetsolutions.com
+Author URI: https://wppopupmaker.com
 Plugin URI: https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Plugin+URI
 Donate link: 
 Tags: popup,popups,modal,modals,popup form,form modal,conversion,conversions,dialog box

@@ -28,6 +28,9 @@ function popmake_add_popup_meta_box() {
 	/** Loading Meta **/
 	add_meta_box( 'popmake_popup_targeting_condition', __( 'Targeting Conditions', 'popup-maker' ),  'popmake_render_popup_targeting_condition_meta_box', 'popup', 'side', 'high' );
 
+	/** Click Open Meta **/
+	add_meta_box( 'popmake_popup_click_open', __( 'Click Open Settings', 'popup-maker' ),  'popmake_render_popup_click_open_meta_box', 'popup', 'side', 'default' );
+
 	/** Support Meta **/
 	add_meta_box( 'popmake_popup_support', __( 'Support', 'popup-maker' ),  'popmake_render_support_meta_box', 'popup', 'side', 'default' );
 	/** Share Meta **/
@@ -66,7 +69,8 @@ function popmake_popup_meta_fields() {
 function popmake_popup_meta_field_groups() {
 	$groups = array(
 		'display',
-		'close'
+		'close',
+		'click_open',
 	);
 	return apply_filters( 'popmake_popup_meta_field_groups', $groups );
 }
@@ -109,6 +113,14 @@ function popmake_popup_meta_field_group_close() {
 }
 add_filter('popmake_popup_meta_field_group_close', 'popmake_popup_meta_field_group_close', 0);
 
+
+
+function popmake_popup_meta_field_group_click_open() {
+	return array(
+		'extra_selectors',
+	);
+}
+add_filter('popmake_popup_meta_field_group_click_open', 'popmake_popup_meta_field_group_click_open', 0);
 
 
 /**
@@ -242,6 +254,28 @@ function popmake_render_popup_display_meta_box() {
 		<table class="form-table">
 			<tbody>
 				<?php do_action( 'popmake_popup_display_meta_box_fields', $post->ID );?>
+			</tbody>
+		</table>
+	</div><?php
+}
+
+
+
+/**
+ * Popup Click Open Metabox
+ *
+ * Extensions (as well as the core plugin) can add items to the popup click_open
+ * configuration metabox via the `popmake_popup_click_open_meta_box_fields` action.
+ *
+ * @since 1.1.0
+ * @return void
+ */
+function popmake_render_popup_click_open_meta_box() {
+	global $post, $popmake_options; ?>
+	<div id="popmake_popup_click_open_fields" class="popmake_meta_table_wrap">
+		<table class="form-table">
+			<tbody>
+				<?php do_action( 'popmake_popup_click_open_meta_box_fields', $post->ID );?>
 			</tbody>
 		</table>
 	</div><?php

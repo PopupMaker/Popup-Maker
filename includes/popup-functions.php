@@ -47,11 +47,12 @@ function popmake_get_the_popup_data_attr( $popup_id = null ) {
 	if( !$popup_id ) $popup_id = get_the_ID();
 	$post = get_post( $popup_id );
 	$data_attr = array(
-		'id' => $popup_id,
+		'id'   => $popup_id,
 		'slug' => $post->post_name,
 		'meta' => array(
-			'display' => popmake_get_popup_display( $popup_id ),
-			'close' => popmake_get_popup_close( $popup_id )
+			'display'    => popmake_get_popup_display( $popup_id ),
+			'close'      => popmake_get_popup_close( $popup_id ),
+			'click_open' => popmake_get_popup_click_open( $popup_id )
 		)
 	);
 	return apply_filters('popmake_get_the_popup_data_attr', $data_attr, $popup_id );
@@ -222,11 +223,24 @@ function popmake_get_popup_display( $popup_id = NULL, $key = NULL ) {
  *
  * @since 1.0
  * @param int $popup_id ID number of the popup to retrieve a close meta for
- * @return mixed array|string of the popup close meta
+ * @return mixed array|string of the popup close meta 
  */
 function popmake_get_popup_close( $popup_id = NULL, $key = NULL ) {
 	return popmake_get_popup_meta_group( 'close', $popup_id, $key );
 }
+
+
+/**
+ * Returns the click_open meta of a popup.
+ *
+ * @since 1.0
+ * @param int $popup_id ID number of the popup to retrieve a click_open meta for
+ * @return mixed array|string of the popup click_open meta
+ */
+function popmake_get_popup_click_open( $popup_id = NULL, $key = NULL ) {
+	return popmake_get_popup_meta_group( 'click_open', $popup_id, $key );
+}
+
 
 
 function popmake_popup_content_container( $content ) {

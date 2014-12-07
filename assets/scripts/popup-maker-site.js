@@ -1,5 +1,5 @@
 /**
- * Popup Maker v1.0.2
+ * Popup Maker v1.1
  */
 (function (jQuery) {
     "use strict";
@@ -1001,7 +1001,12 @@
             .each(function () {
                 var $this = jQuery(this),
                     settings = $this.data('popmake'),
+                    click_open = settings.meta.click_open,
                     trigger_selector = '.popmake-' + settings.id + ', .popmake-' + settings.slug;
+
+                if (click_open !== undefined && click_open.extra_selectors !== '') {
+                    trigger_selector += ', ' + click_open.extra_selectors;
+                }
 
                 jQuery(trigger_selector).css({cursor: "pointer"});
                 jQuery(document).on('click', trigger_selector, function (event) {

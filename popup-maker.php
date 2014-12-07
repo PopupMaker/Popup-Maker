@@ -3,9 +3,9 @@
  * Plugin Name: Popup Maker
  * Plugin URI: https://wppopupmaker.com
  * Description: Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more. 
- * Author: Wizard Internet Solutions
+ * Author: Daniel Iser
  * Version: 1.0.6
- * Author URI: http://wizardinternetsolutions.com
+ * Author URI: https://wppopupmaker.com
  * Text Domain: popup-maker
  * 
  * @package		POPMAKE
@@ -204,6 +204,7 @@ final class Popup_Maker {
 			require_once POPMAKE_DIR . 'includes/admin/popups/dashboard-columns.php';
 			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-close-fields.php';
 			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-display-fields.php';
+			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-click-open-fields.php';
 			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-targeting-condition-fields.php';
 			require_once POPMAKE_DIR . 'includes/admin/popups/post-type-item-metaboxes.php';
 			require_once POPMAKE_DIR . 'includes/admin/themes/metabox.php';

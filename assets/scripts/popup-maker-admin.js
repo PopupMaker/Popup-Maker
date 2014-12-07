@@ -1,3 +1,6 @@
+/**
+ * Popup Maker v1.1
+ */
 var PopMakeAdmin;
 (function () {
     "use strict";
@@ -261,6 +264,15 @@ var PopMakeAdmin;
         initialize_color_pickers: function () {
             var self = this;
             jQuery('.color-picker').wpColorPicker({
+                change: function (event) {
+                    self.throttle(setTimeout(function () {
+                        self.update_theme();
+                    }, 5), 250);
+                    var $input = jQuery(event.currentTarget);
+                    if ($input.hasClass('background-color')) {
+                        $input.parents('table').find('.background-opacity').show();
+                    }
+                },
                 clear: function (event) {
                     self.update_theme();
                     var $input = jQuery(event.currentTarget).prev();
@@ -610,7 +622,7 @@ var PopMakeAdmin;
                 .on('change', 'select.font-weight, select.font-style', function () {
                     self.update_font_selectboxes();
                 })
-                .on('change input focusout', 'select, input:not(.color-picker)', function () {
+                .on('change input focusout', 'select, input', function () {
                     self.update_theme();
                 })
                 .on('change', 'select.border-style', function () {
@@ -626,13 +638,6 @@ var PopMakeAdmin;
                         table = $this.parents('table');
                     jQuery('tr.topleft, tr.topright, tr.bottomleft, tr.bottomright', table).hide();
                     jQuery('tr.' + $this.val(), table).show();
-                })
-                .on('change, irischange', '.color-picker', function (event) {
-                    self.update_theme();
-                    var $input = jQuery(event.currentTarget);
-                    if ($input.hasClass('background-color')) {
-                        $input.parents('table').find('.background-opacity').show();
-                    }
                 });
         },
         update_theme: function () {
