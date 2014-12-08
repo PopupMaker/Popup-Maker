@@ -27,13 +27,13 @@ function popmake_load_site_scripts() {
 	wp_register_script('TweenMax', $js_dir . '/gsap/TweenMax.min.js', false, '1.14.2', true);
 	wp_register_script('jquery-gsap', $js_dir . '/gsap/jquery.gsap.min.js', array('jquery', 'TweenMax'), '0.1.9', true);
 	wp_register_script('jquery-cookie', $js_dir . 'jquery.cookie' . $suffix, array('jquery'), '1.4.1', true);
-	wp_enqueue_script('popup-maker-site', $js_dir . 'popup-maker-site' . $suffix . '?defer', array('jquery', 'jquery-ui-core', 'jquery-ui-position', 'jquery-gsap'), '1.0', true);
+	wp_enqueue_script('popup-maker-site', $js_dir . 'popup-maker-site' . $suffix . '?defer', array('jquery', 'jquery-ui-core', 'jquery-ui-position', 'jquery-gsap', 'jquery-cookie'), '1.0', true);
 	wp_localize_script('popup-maker-site', 'ajaxurl', admin_url('admin-ajax.php') );
 	wp_localize_script('popup-maker-site', 'popmake_default_theme', popmake_get_default_popup_theme() );
 	wp_localize_script('popup-maker-site', 'popmake_themes', array('l10n_print_after' => 'popmake_themes = ' . json_encode( popmake_get_popup_themes_data() ) . ';'));
 	if(!isset($popmake_options['popmake_powered_by_opt_out']) || $popmake_options['popmake_powered_by_opt_out'] == false) {
 		$size = !empty($popmake_options['popmake_powered_by_size']) ? $popmake_options['popmake_powered_by_size'] : '';
-		wp_localize_script('popup-maker-site', 'popmake_powered_by', '<div class="powered-by-popmake '. $size .'"><a href="https://wppopupmaker.com" target="_blank"><img src="' . POPMAKE_URL . '/assets/images/admin/powered-by-popup-maker.png" alt="'. __( 'Powered By Popup Maker', 'popup-maker' ) .'"/></a></div>' );
+		wp_localize_script('popup-maker-site', 'popmake_powered_by', '<div class="powered-by-popmake '. $size .'"><a href="https://wppopupmaker.com?utm_source=Powered+By&utm_medium=Powered+By&utm_campaign=Powered+By" target="_blank"><img src="' . POPMAKE_URL . '/assets/images/admin/powered-by-popup-maker.png" alt="'. __( 'Powered By Popup Maker', 'popup-maker' ) .'"/></a></div>' );
 	}
 	if(isset($popmake_options['enable_easy_modal_compatibility_mode'])) {
 		wp_enqueue_script('popup-maker-easy-modal-importer-site', $js_dir . 'popup-maker-easy-modal-importer-site' . $suffix . '?defer', array('popup-maker-site'), '1.0', true);

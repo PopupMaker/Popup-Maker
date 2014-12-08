@@ -56,6 +56,19 @@ function popmake_popup_click_open_defaults( $defaults ) {
 }
 
 
+add_filter('popmake_popup_auto_open_defaults', 'popmake_popup_auto_open_defaults');
+function popmake_popup_auto_open_defaults( $defaults ) {
+	return array_merge( $defaults, array(
+		'enabled' => NULL,
+		'delay' => 500,
+		'cookie_trigger' => 'close',
+		'cookie_time' => '1 month',
+		'cookie_path' => '/',
+		'cookie_key' => '',
+	));
+}
+
+
 add_filter('popmake_popup_theme_overlay_defaults', 'popmake_popup_theme_overlay_defaults', 0);
 function popmake_popup_theme_overlay_defaults( $defaults ) {
 	return array_merge( $defaults, array(

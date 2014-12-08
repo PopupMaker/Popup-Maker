@@ -165,3 +165,14 @@ function popmake_core_theme_close_location_options( $options ) {
 		__( 'Bottom Right', 'popup-maker' )	=> 'bottomright',
 	));
 }
+
+
+add_filter('popmake_cookie_trigger_options', 'popmake_cookie_trigger_options', 10);
+function popmake_cookie_trigger_options( $options ) {
+	return array_merge($options, array(
+		// option => value
+		__( 'Disabled', 'popup-maker' ) => 'disabled',
+		__( 'On Open', 'popup-maker' ) => 'open',
+		__( 'On Close', 'popup-maker' ) => 'close',
+	));
+}

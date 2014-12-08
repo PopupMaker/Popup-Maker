@@ -378,7 +378,6 @@ function popmake_render_popup_theme_close_meta_box() {
 }
 
 
-
 /**
  * Adds Popup Theme meta fields to revisions.
  *
@@ -392,7 +391,7 @@ function popmake_popup_theme_post_revision_fields( $fields ) {
 	}
 	return $fields;
 }
-//add_filter( '_wp_post_revision_fields', 'popmake_popup_theme_post_revision_fields' );
+add_filter( '_wp_post_revision_fields', 'popmake_popup_theme_post_revision_fields' );
 
 
 function popmake_popup_theme_revision_field( $value, $field, $revision) {
@@ -405,8 +404,7 @@ function popmake_add_popup_theme_revision_fields() {
 		add_filter( '_wp_post_revision_field_' . $field, 'popmake_popup_theme_revision_field', 10, 3 );
 	}
 }
-//add_action('plugins_loaded', 'popmake_add_popup_theme_revision_fields');
-
+add_action('plugins_loaded', 'popmake_add_popup_theme_revision_fields');
 
 function popmake_popup_theme_meta_restore_revision( $post_id, $revision_id ) {
 	$post = get_post( $post_id );
@@ -419,7 +417,7 @@ function popmake_popup_theme_meta_restore_revision( $post_id, $revision_id ) {
 			update_post_meta( $post_id, $field, $meta );
 	}
 }
-//add_action( 'wp_restore_post_revision', 'popmake_popup_theme_meta_restore_revision', 10, 2 );
+add_action( 'wp_restore_post_revision', 'popmake_popup_theme_meta_restore_revision', 10, 2 );
 
 function popmake_popup_theme_meta_save_revision( $post_id, $post ) {
 	if ( $parent_id = wp_is_post_revision( $post_id ) ) {
@@ -431,5 +429,5 @@ function popmake_popup_theme_meta_save_revision( $post_id, $post ) {
 		}
 	}
 }
-//add_action( 'save_post', 'popmake_popup_theme_meta_save_revision', 11, 2 );
+add_action( 'save_post', 'popmake_popup_theme_meta_save_revision', 11, 2 );
 

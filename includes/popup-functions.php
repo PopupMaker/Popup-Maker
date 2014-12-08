@@ -52,7 +52,8 @@ function popmake_get_the_popup_data_attr( $popup_id = null ) {
 		'meta' => array(
 			'display'    => popmake_get_popup_display( $popup_id ),
 			'close'      => popmake_get_popup_close( $popup_id ),
-			'click_open' => popmake_get_popup_click_open( $popup_id )
+			'click_open' => popmake_get_popup_click_open( $popup_id ),
+			'auto_open'  => popmake_get_popup_auto_open( $popup_id ),
 		)
 	);
 	return apply_filters('popmake_get_the_popup_data_attr', $data_attr, $popup_id );
@@ -195,10 +196,19 @@ function popmake_get_the_popup_content( $popup_id = NULL ) {
 }
 
 
-function popmake_apply_the_content( $content ) {
-	return apply_filters( 'the_content', $content );
+function popmake_apply_the_content( $content, $popup_id ) {
+	$remove_do_shortcode = false;
+	if ( ! has_filter( 'the_content', 'do_shortcode' ) ) {
+	    add_filter( 'the_content', 'do_shortcode' );
+	    $remove_do_shortcode = true;
+	}
+	$content = apply_filters( 'the_content', $content );
+	if($remove_do_shortcode) {
+		remove_filter( 'the_content', 'do_shortcode' );
+	}
+	return $content;
 }
-add_filter('popmake_get_the_popup_content', 'popmake_apply_the_content', 100);
+add_filter('popmake_get_the_popup_content', 'popmake_apply_the_content', 100, 2);
 
 
 function popmake_the_popup_content( $popup_id = NULL ) {
@@ -239,6 +249,18 @@ function popmake_get_popup_close( $popup_id = NULL, $key = NULL ) {
  */
 function popmake_get_popup_click_open( $popup_id = NULL, $key = NULL ) {
 	return popmake_get_popup_meta_group( 'click_open', $popup_id, $key );
+}
+
+
+/**
+ * Returns the auto open meta of a popup.
+ *
+ * @since 1.1.0
+ * @param int $popup_id ID number of the popup to retrieve a auto open meta for
+ * @return mixed array|string of the popup auto open meta 
+ */
+function popmake_get_popup_auto_open( $popup_id = NULL, $key = NULL ) {
+	return popmake_get_popup_meta_group( 'auto_open', $popup_id, $key );
 }
 
 
@@ -397,10 +419,17 @@ function popmake_popup_is_loadable( $popup_id ) {
 	}
 	elseif( is_tax() ) {
 		$term_id = $wp_query->get_queried_object_id();
+		if( array_key_exists("on_entire_site", $conditions)) {
+			$return = true;
+		}
 	}
 
 	// An Archive is a Category, Tag, Author or a Date based pages.
-	elseif( is_archive() ) {}
+	elseif( is_archive() ) {
+		if( array_key_exists("on_entire_site", $conditions)) {
+			$return = true;
+		}
+	}
 
 	return apply_filters('popmake_popup_is_loadable', $return, $popup_id);
 }

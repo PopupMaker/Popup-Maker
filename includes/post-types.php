@@ -281,3 +281,23 @@ function popmake_get_supported_types( $type = null, $collapse = true ) {
 	}
 	return $types;
 }
+
+
+function popmake_supported_post_types( $post_types = array() ) {
+	global $popmake_options;
+	if(empty($popmake_options['supported_post_types']) || !is_array($popmake_options['supported_post_types'])) {
+		return $post_types;
+	}
+	return array_merge($post_types, array_values($popmake_options['supported_post_types']));
+}
+add_filter('popmake_supported_post_types', 'popmake_supported_post_types');
+
+
+function popmake_supported_taxonomies( $taxonomies = array() ) {
+	global $popmake_options;
+	if(empty($popmake_options['supported_taxonomies']) || !is_array($popmake_options['supported_taxonomies'])) {
+		return $taxonomies;
+	}
+	return array_merge($taxonomies, array_values($popmake_options['supported_taxonomies']));
+}
+add_filter('popmake_supported_taxonomies', 'popmake_supported_taxonomies');

@@ -31,6 +31,9 @@ function popmake_add_popup_meta_box() {
 	/** Click Open Meta **/
 	add_meta_box( 'popmake_popup_click_open', __( 'Click Open Settings', 'popup-maker' ),  'popmake_render_popup_click_open_meta_box', 'popup', 'side', 'default' );
 
+	/** Auto Open Popups Meta **/
+	add_meta_box( 'popmake_popup_auto_open', __( 'Auto Open Settings', 'popup-maker' ),  'popmake_render_popup_auto_open_meta_box', 'popup', 'normal', 'high' );
+
 	/** Support Meta **/
 	add_meta_box( 'popmake_popup_support', __( 'Support', 'popup-maker' ),  'popmake_render_support_meta_box', 'popup', 'side', 'default' );
 	/** Share Meta **/
@@ -71,6 +74,7 @@ function popmake_popup_meta_field_groups() {
 		'display',
 		'close',
 		'click_open',
+		'auto_open',
 	);
 	return apply_filters( 'popmake_popup_meta_field_groups', $groups );
 }
@@ -114,13 +118,25 @@ function popmake_popup_meta_field_group_close() {
 add_filter('popmake_popup_meta_field_group_close', 'popmake_popup_meta_field_group_close', 0);
 
 
-
 function popmake_popup_meta_field_group_click_open() {
 	return array(
 		'extra_selectors',
 	);
 }
 add_filter('popmake_popup_meta_field_group_click_open', 'popmake_popup_meta_field_group_click_open', 0);
+
+
+function popmake_popup_meta_field_group_auto_open( $fields ) {
+	return array_merge( $fields, array(
+		'enabled',
+		'delay',
+		'cookie_trigger',
+		'cookie_time',
+		'cookie_path',
+		'cookie_key'
+	));
+}
+add_filter('popmake_popup_meta_field_group_auto_open', 'popmake_popup_meta_field_group_auto_open', 0);
 
 
 /**
@@ -204,6 +220,14 @@ function popmake_popup_meta_box_save( $post_id, $post ) {
 }
 add_action( 'save_post', 'popmake_popup_meta_box_save', 10, 2 );
 
+
+function popmake_metabox_save_popup_auto_open_cookie_key( $field = '' ) {
+	if($field == '') {
+		$field = uniqid();
+	}
+	return $field;
+}
+add_filter( 'popmake_metabox_save_popup_auto_open_cookie_key', 'popmake_metabox_save_popup_auto_open_cookie_key');
 
 
 function popmake_set_popup_slug( $data , $postarr ) {
@@ -325,10 +349,29 @@ function popmake_render_popup_targeting_condition_meta_box() {
 }
 
 
+/**
+ * Popup Auto Open Popups Metabox
+ *
+ * Extensions (as well as the core plugin) can add items to the popup display
+ * configuration metabox via the `popmake_popup_auto_open_meta_box_fields` action.
+ *
+ * @since 1.0
+ * @return void
+ */
+function popmake_render_popup_auto_open_meta_box() {
+	global $post, $popmake_options;?>
+	<div id="popmake_popup_auto_open_fields" class="popmake_meta_table_wrap">
+		<table class="form-table">
+			<tbody>
+				<?php do_action( 'popmake_popup_auto_open_meta_box_fields', $post->ID );?>
+			</tbody>
+		</table>
+	</div><?php
+}
 
 
 /**
- * Adds Popup Theme meta fields to revisions.
+ * Adds Popup meta fields to revisions.
  *
  * @since 1.0
  * @return array $fields Array of fields.
@@ -340,7 +383,7 @@ function popmake_popup_post_revision_fields( $fields ) {
 	}
 	return $fields;
 }
-//add_filter( '_wp_post_revision_fields', 'popmake_popup_post_revision_fields' );
+add_filter( '_wp_post_revision_fields', 'popmake_popup_post_revision_fields' );
 
 
 function popmake_popup_revision_field( $value, $field, $revision) {
@@ -353,7 +396,7 @@ function popmake_add_popup_revision_fields() {
 		add_filter( '_wp_post_revision_field_' . $field, 'popmake_popup_revision_field', 10, 3 );
 	}
 }
-//add_action('plugins_loaded', 'popmake_add_popup_revision_fields');
+add_action('plugins_loaded', 'popmake_add_popup_revision_fields');
 
 
 function popmake_popup_meta_restore_revision( $post_id, $revision_id ) {
@@ -367,7 +410,7 @@ function popmake_popup_meta_restore_revision( $post_id, $revision_id ) {
 			update_post_meta( $post_id, $field, $meta );
 	}
 }
-//add_action( 'wp_restore_post_revision', 'popmake_popup_meta_restore_revision', 10, 2 );
+add_action( 'wp_restore_post_revision', 'popmake_popup_meta_restore_revision', 10, 2 );
 
 function popmake_popup_meta_save_revision( $post_id, $post ) {
 	if ( $parent_id = wp_is_post_revision( $post_id ) ) {
@@ -379,4 +422,4 @@ function popmake_popup_meta_save_revision( $post_id, $post ) {
 		}
 	}
 }
-//add_action( 'save_post', 'popmake_popup_meta_save_revision', 11, 2 );
+add_action( 'save_post', 'popmake_popup_meta_save_revision', 11, 2 );
