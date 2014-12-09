@@ -1022,7 +1022,7 @@
                     $this.popmake('open');
                 });
 
-                if (auto_open !== undefined) {
+                if (auto_open.enabled !== undefined) {
                     jQuery.cookie.json = true;
 
                     cookieName = "popmake-auto-open-" + settings.id + "-" + auto_open.cookie_key;
