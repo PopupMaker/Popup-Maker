@@ -3,7 +3,7 @@ Contributors: danieliser, waltmesser
 Author URI: https://wppopupmaker.com
 Plugin URI: https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Plugin+URI
 Donate link: 
-Tags: popup,popups,modal,modals,popup form,form modal,conversion,conversions,dialog box
+Tags: popup,popups,modal,modals,popup form,form modal,conversion,conversions,dialog box,auto open
 Requires at least: 3.4
 Tested up to: 4.0.1
 Stable tag: 1.1.0
@@ -33,6 +33,8 @@ Use any of your forms from the most popular form plugins, out-of-the-box, inside
  * Target specific users for your popups! Our Targeting Conditions feature allows you to tailor your popups to specific users by giving you the ability to use popups exactly where you want. Use [Auto Open](https://wppopupmaker.com/extensions/auto-open-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Auto+Open "Auto Open Popups"), [Scroll Triggered](https://wppopupmaker.com/extensions/scroll-triggered-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Scroll+Triggered "Scroll Triggered Popups") & [Exit Intent](https://wppopupmaker.com/extensions/exit-intent-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Exit+Intent "Exit Intent Popups") Popup Extensions to enhance your popups' effectiveness.
 * One (1) Customizable Popup Theme
  * Customize every aspect of our default theme to match your needs - from colors to Google Fonts. To differentiate your popup themes on your popups, you can create unlimited themes by upgrading to the [Unlimited Themes Extension](https://wppopupmaker.com/extensions/unlimited-themes?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Unlimited+Themes "Unlimited Popup Themes").
+* Auto Open Popups
+ * Choose the delay before opening, when the cookie is set, how long the cookie will last, even reset cookies for a popup.
 * Popup Opening Animations
  * Our WordPress Popup Plugin gives your popup more power and allows you to customize how it pops up by choosing from several opening animations.
 * Complete Positioning and Size Control
@@ -48,7 +50,6 @@ Use any of your forms from the most popular form plugins, out-of-the-box, inside
 
 = Our extensions enhance your popups and drastically improve your conversion rates =
 * Exit Intent Popups (coming soon)
-* Auto Open Popups (coming soon)
 * Analytics (coming soon)
 * Advanced Targeting Conditions (coming soon)
 * Forced Interaction (coming soon)
