@@ -1,5 +1,5 @@
 /**
- * Popup Maker v1.1
+ * Popup Maker v1.1.2
  */
 (function (jQuery) {
     "use strict";
@@ -1022,7 +1022,7 @@
                     $this.popmake('open');
                 });
 
-                if (auto_open.enabled !== undefined) {
+                if (auto_open.enabled !== undefined && auto_open.enabled) {
                     jQuery.cookie.json = true;
 
                     cookieName = "popmake-auto-open-" + settings.id + "-" + auto_open.cookie_key;
