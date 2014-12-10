@@ -75,13 +75,6 @@ function popmake_getting_started_page() {
 						'<a href="https://wppopupmaker.com/extensions/auto-open-popups?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=Member+Forums" target="_blank">', '</a>'
 					); ?>
 				</p>
-				<h4><?php _e( 'Need a Solution Now?', 'popup-maker' );?></h4>
-				<p><?php
-					printf(
-						__( 'Our <a href="%s" target="_blank">Priority Support Forums</a> are there for customers that need a solution and/or more in-depth assistance immediately.', 'popup-maker' ),
-						'https://wppopupmaker.com/support/pricing?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=Priority+Support'
-					);?>
-				</p>
 			</div>
 		</div>
 
