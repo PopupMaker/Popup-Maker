@@ -17,11 +17,12 @@ Increase your site's leads generated, usability & conversion rates using our unl
 After installing Popup maker, use it like a Pro! Read the About & Getting Started Tabs in the Popup Maker Welcome Center.
 
 Use any of your forms from the most popular form plugins, out-of-the-box, inside your popups with ease and efficiency. 100% seamless compatibility with:
+
 * Gravity Forms
 * Ninja Forms
 * Contact Form 7
 
-[Subscribe to our Newsletter](https://wppopupmaker.com/newsletter-sign-up?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Newsletter+Signup "Popup Maker Newsletter Sign Up") and receive tutorials and guides tailored to teaching you how to drastically improve your conversion rates using Popup Maker.
+[Subscribe to our Newsletter](https://wppopupmaker.com/newsletter-sign-up?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Newsletter+Signup "Popup Maker Newsletter Sign Up") and receive tutorials and guides tailored to teaching you how to drastically improve your conversion rates using Popup Maker. Also, for a limited time only, sign up and receive Unlimited Themes and Advanced Theme Builder for free, plus 25% off your first purchase from our Extension Marketplace!
 
 * If you like the plugin please rate & review it! If you love the plugin and want news & updates, follow us on [Twitter](https://twitter.com/wppopupmaker "Popup Maker on Twitter")!
 * Check out the [Popup Maker Website](https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Home+Page "Popup Maker Website") for everything Popup Maker.
@@ -34,7 +35,7 @@ Use any of your forms from the most popular form plugins, out-of-the-box, inside
 * One (1) Customizable Popup Theme
  * Customize every aspect of our default theme to match your needs - from colors to Google Fonts. To differentiate your popup themes on your popups, you can create unlimited themes by upgrading to the [Unlimited Themes Extension](https://wppopupmaker.com/extensions/unlimited-themes?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Unlimited+Themes "Unlimited Popup Themes").
 * Auto Open Popups
- * Choose the delay before opening, when the cookie is set, how long the cookie will last, even reset cookies for a popup.
+ * Popup Maker Core delivers the ultimate tool for WordPress Popup Plugins: Auto Open Popups! One of the absolute best ways to market your most valuable and precious content, our Auto Open Popups Feature allows you to destroy your old conversion rates! Plus, choose the delay before opening, when the cookie is set, how long the cookie will last, even reset cookies for a popup.
 * Popup Opening Animations
  * Our WordPress Popup Plugin gives your popup more power and allows you to customize how it pops up by choosing from several opening animations.
 * Complete Positioning and Size Control
@@ -49,16 +50,17 @@ Use any of your forms from the most popular form plugins, out-of-the-box, inside
  * Speed matters, and at only 5.9kb, our popups won't slow you down. Our optimization techniques and program enhancement means your popups will perform at a consistently high level with 100% uptime.
 
 = Our extensions enhance your popups and drastically improve your conversion rates =
-* Exit Intent Popups (coming soon)
-* Analytics (coming soon)
-* Advanced Targeting Conditions (coming soon)
-* Forced Interaction (coming soon)
-* AJAX Login Modals (coming soon)
-* Scroll Triggered Popups (coming soon)
-* Age Verification Modals (coming soon)
-* Advanced Theme Builder (coming soon)
-* Unlimited Themes (coming soon)
-* Secure Idle User Logout (coming soon)
+* [Exit Intent Popups](https://wppopupmaker.com/extensions/exit-intent-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Exit+Intent "Exit Intent Popups")
+* [Advanced Targeting Conditions](https://wppopupmaker.com/extensions/advanced-targeting-conditions?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Advanced+Targeting+Conditions "Advanced Targeting Conditions")
+* [Forced Interaction](https://wppopupmaker.com/extensions/forced-interaction?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Forced+Interaction "Forced Interaction")
+* [AJAX Login Modals](?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=AJAX+Login+Modals "AJAX Login Modals")
+* [Scroll Triggered Popups](?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Scroll+Triggered "Scroll Triggered Popups")
+* [Age Verification Modals](?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Age+Verification+Modals "Age Verification Modals")
+* [Advanced Theme Builder](?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Advanced+Theme+Builder "Advanced Theme Builder")
+* [Unlimited Themes](?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Unlimited+Themes "Unlimited Themes")
+* [Secure Idle User Logout](?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Secure+Idle+User+Logout "Secure Idle User Logout")
+* Popup Analytics (coming soon)
+* A/B/Z Split Testing (coming soon)
 
 For more information, visit [Popup Maker](https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Home+Page "WordPress Popup Maker")!
 
