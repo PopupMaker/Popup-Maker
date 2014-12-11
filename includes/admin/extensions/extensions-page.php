@@ -114,7 +114,6 @@ function popmake_extensions_page() {?>
 				                <span class="action-links">
 				                	<a class="button" target="_blank" href="<?php esc_attr_e($extension->homepage);?>?utm_source=Plugin+Admin&amp;utm_medium=Extensions+Page+Extension+Buttons&amp;utm_campaign=<?php esc_attr_e( str_replace(' ', '+', $extension->name) );?>"><?php _e( 'Get it instantly!', 'popup-maker' );?></a>
 				                </span>
-					            <a href="<?php echo esc_url($extension->homepage);?>" target="_blank"><?php _e( 'View all the features.', 'popup-maker' );?></a>
 					        </li>
 					        <?php endforeach;				
 						}?>
