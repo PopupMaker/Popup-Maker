@@ -15,11 +15,12 @@ function popmake_about_page() {
 			<div class="feature-section">
 				<h4><?php _e( 'Target specific users for your popups!', 'popup-maker' );?></h4>	
 				<p><?php printf( __( 'Our %sTargeting Conditions%s feature allows you to tailor your popups to specific users by giving you the ability to use popups exactly where you want within your website.', 'popup-maker' ), '<strong>', '</strong>'); ?></p>
+				<h4><?php _e( 'Destroy Old Conversion Rates with Auto Open!', 'popup-maker' );?></h4>	
+				<p><?php printf( __( 'One of the absolute best ways to market your most valuable and precious content, our %sAuto Open Popups%s Feature allows you to choose the delay before opening, when the cookie is set, how long the cookie will last, even reset cookies for a popup.', 'popup-maker' ), '<strong>', '</strong>'); ?></p>
 				<h4><?php _e( 'Drive Conversions!', 'popup-maker' );?></h4>	
 				<p>
 					<?php printf(
-						__( 'Use %sAuto Open%s, %sScroll Triggered%s & %sExit Intent Popup%s Extensions to enhance your popups’ effectiveness and easily convert users into cash.', 'popup-maker' ),
-						'<a href="https://wppopupmaker.com/extensions/auto-open-popups?utm_source=WP+Welcome+About&utm_medium=Text+Link&utm_campaign=Auto+Open" target="_blank">', '</a>',
+						__( 'Use %sScroll Triggered%s & %sExit Intent Popup%s Extensions to enhance your popups’ effectiveness and easily convert users into cash.', 'popup-maker' ),
 						'<a href="https://wppopupmaker.com/extensions/scroll-triggered-popups?utm_source=WP+Welcome+About&utm_medium=Text+Link&utm_campaign=Scroll+Triggered" target="_blank">', '</a>',
 						'<a href="https://wppopupmaker.com/extensions/exit-intent-popups?utm_source=WP+Welcome+About&utm_medium=Text+Link&utm_campaign=Exit+Intent" target="_blank">', '</a>'
 					); ?>
