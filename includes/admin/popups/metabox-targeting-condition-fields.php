@@ -91,7 +91,8 @@ function popmake_popup_targeting_condition_meta_box_fields( $popup_id ) {
 							$label = ($include_exclude == 'include' ? 'Load' : 'Exclude') . ' on All ';
 							echo __( $label, 'popup-maker' ) . $labels->labels->name; ?>
 							<input type="radio"
-								name="popup_targeting_condition_<?php echo $key; ?>"
+								name="<?php echo $key;?>"
+								id="popup_targeting_condition_<?php echo $key; ?>"
 								value=""
 								<?php if(!isset($targeting_condition[$key])) echo 'checked'; ?>
 							/>
@@ -100,7 +101,8 @@ function popmake_popup_targeting_condition_meta_box_fields( $popup_id ) {
 							$label = ($include_exclude == 'include' ? 'Load' : 'Exclude') . ' on Specific ';
 							echo __( $label, 'popup-maker' ) . $labels->labels->name; ?>
 							<input type="radio"
-								name="popup_targeting_condition_<?php echo $key; ?>"
+								name="<?php echo $key;?>"
+								id="popup_targeting_condition_<?php echo $key; ?>"
 								value="true"
 								<?php if(isset($targeting_condition[$key])) echo 'checked'; ?>
 							/>
