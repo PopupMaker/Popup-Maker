@@ -126,11 +126,12 @@ function popmake_admin_submenu_theme_pages() {
     $popmake_popup_themes_page = admin_url( 'post.php?post='. popmake_get_default_popup_theme() .'&action=edit' );
     $submenu['edit.php?post_type=popup'][] = array(
     	apply_filters( 'popmake_admin_submenu_themes_page_title', __( 'Theme', 'popup-maker' ) ),
-    	apply_filters( 'popmake_admin_submenu_themes_capability', 'edit_themes' ),
+    	apply_filters( 'popmake_admin_submenu_themes_capability', 'edit_posts' ),
     	$popmake_popup_themes_page
     );
 }
 add_action( 'admin_menu', 'popmake_admin_submenu_theme_pages', 10 );
+
 
 /**
  *  Determines whether the current admin page is an POPMAKE admin page.
