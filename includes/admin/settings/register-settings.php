@@ -151,10 +151,10 @@ function popmake_get_registered_settings() {
 					'desc' => '',
 					'type' => 'header'
 				),
-				'popmake_powered_by_opt_out' => array(
-					'id' => 'popmake_powered_by_opt_out',
-					'name' => __( 'Hide Powered By Link?', 'popup-maker' ),
-					'desc' => sprintf( __( 'If you check this box, it will hide the <em>Powered By Popup Maker</em> tag on all of your popups. But don\'t forget to <a href="%s">rate and review us on WordPress</a>!', 'popup-maker' ), 'https://wordpress.org/support/view/plugin-reviews/popup-maker'),
+				'popmake_powered_by_opt_in' => array(
+					'id' => 'popmake_powered_by_opt_in',
+					'name' => __( 'Show Powered By Link?', 'popup-maker' ),
+					'desc' => sprintf( __( 'If you check this box, it will show the <em>Powered By Popup Maker</em> tag on all of your popups. Even if you don\'t, please take a moment to <a href="%s">rate and review us on WordPress</a>!', 'popup-maker' ), 'https://wordpress.org/support/view/plugin-reviews/popup-maker'),
 					'type' => 'checkbox'
 				),
 				'popmake_powered_by_size' => array(
