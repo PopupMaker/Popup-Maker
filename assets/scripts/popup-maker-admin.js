@@ -1,5 +1,5 @@
 /**
- * Popup Maker v1.1
+ * Popup Maker v1.1.4
  */
 var PopMakeAdmin;
 (function () {
@@ -409,38 +409,7 @@ var PopMakeAdmin;
                     $input.after($slider).hide();
                 });
             }
-        },/*
-        initialize_tabs: function () {
-            //var active_tab = window.location.hash.replace('#top#','');
-            var active_tab = window.location.hash;
-            if (active_tab === '') {
-                active_tab = '#' + jQuery('.popmake-tab-content').eq(0).attr('id');
-            }
-
-            jQuery('.popmake-tab-content').hide();
-            jQuery(active_tab).show();
-            jQuery(active_tab + '-tab').addClass('nav-tab-active');
-            jQuery(window).scrollTop(0);
-
-
-            jQuery('#popmake-tabs .nav-tab').click(function (event) {
-                event.preventDefault();
-
-                jQuery('.popmake-tab-content').hide();
-                jQuery('.popmake-tab').removeClass('nav-tab-active');
-
-                var id = jQuery(this).attr('href');
-                jQuery(id).show();
-                jQuery(this).addClass('nav-tab-active');
-
-                if (history.pushState) {
-                    history.pushState(null, null, id);
-                } else {
-                    location.hash = id;
-                    jQuery(window).scrollTop(0);
-                }
-            });
-        },*/
+        },
         initialize_popup_page: function () {
 
             var update_type_options = function ($this) {
@@ -605,7 +574,7 @@ var PopMakeAdmin;
                 .on('click', function () { update_type_options(jQuery(this)); })
                 .each(function () { update_type_options(jQuery(this)); });
 
-            jQuery('input[type="radio"][name*="popup_targeting_condition_"]')
+            jQuery('input[type="radio"][id*="popup_targeting_condition_"]')
                 .on('click', function () { update_specific_checkboxes(jQuery(this)); })
                 .each(function () { update_specific_checkboxes(jQuery(this)); });
 
