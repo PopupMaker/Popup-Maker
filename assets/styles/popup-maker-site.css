@@ -81,6 +81,7 @@
 .popmake.scrollable .popmake-content {
 	overflow: auto;
 	overflow-y: scroll;
+	max-height: 95%;
 }
 
 .popmake .popmake-content :last-child {
