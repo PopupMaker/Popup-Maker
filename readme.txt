@@ -6,7 +6,7 @@ Donate link:
 Tags: popup,popups,modal,modals,popup form,form modal,conversion,conversions,dialog box,auto open
 Requires at least: 3.4
 Tested up to: 4.0.1
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 
 License: GNU Version 2 or Any Later Version
 Easily turn users into cash using Popup Maker - the most versatile & expansive popup plugin for WordPress!
@@ -75,6 +75,14 @@ For more information, visit [Popup Maker](https://wppopupmaker.com?utm_source=Wo
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.1.4 =
+* Fixed bug in scrollable content styles.
+* Fixed bug in admin JS for duplicate input names.
+* Changed Powered By Setting to Off by Default.
+* Changed default permissions required to use theme builder.
+* Fixed bug in targeting conditions.
+
 
 = v1.1.3 =
 * Fixed some incorrect links to resources and kb.
