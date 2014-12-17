@@ -29,7 +29,6 @@ var PopMakeAdmin;
                 }
                 return true;
             });
-
         },
         initialize_marketing: function () {
             jQuery('#menu-posts-popup ul li:eq(-1)').addClass('popmake-menu-highlight');
@@ -85,7 +84,6 @@ var PopMakeAdmin;
             });
         },
         attachTabsPanelListeners : function () {
-
             jQuery('#poststuff').bind('click', function (event) {
                 var selectAreaMatch, panelId, wrapper, items,
                     target = jQuery(event.target),
@@ -102,23 +100,16 @@ var PopMakeAdmin;
 
 
                 if (target.hasClass('nav-tab-link')) {
-
                     panelId = target.data('type');
-
                     wrapper = target.parents('.posttypediv, .taxonomydiv').first();
-
                     // upon changing tabs, we want to uncheck all checkboxes
                     jQuery('input', wrapper).removeAttr('checked');
-
                     jQuery('.tabs-panel-active', wrapper).removeClass('tabs-panel-active').addClass('tabs-panel-inactive');
                     jQuery('#' + panelId, wrapper).removeClass('tabs-panel-inactive').addClass('tabs-panel-active');
-
                     jQuery('.tabs', wrapper).removeClass('tabs');
                     target.parent().addClass('tabs');
-
                     // select the search bar
                     jQuery('.quick-search', wrapper).focus();
-
                     event.preventDefault();
                 } else if (target.hasClass('select-all')) {
                     selectAreaMatch = /#(.*)$/.exec(event.target.href);
@@ -136,24 +127,20 @@ var PopMakeAdmin;
                     $textarea = jQuery('textarea', $parent);
                     $tag_area = jQuery('.tagchecklist', $parent);
                     current_ids = $textarea.val().split(',');
-
                     for (i = 0; i < current_ids.length; i += 1) {
                         current_ids[i] = parseInt(current_ids[i], 10);
                     }
-
                     $items.each(function () {
                         $item = jQuery(this);
                         id = parseInt($item.val(), 10);
                         name = $item.parent('label').siblings('.menu-item-title').val();
-
                         if (jQuery.inArray(id, current_ids) === -1) {
                             current_ids.push(id);
                         }
-
                         $tag_area.append('<span><a class="ntdelbutton" data-id="' + id + '">X</a> ' + name + '</span>');
                     });
                     $textarea.text(current_ids.join(','));
-
+                    event.preventDefault();
                 } else if (target.hasClass('ntdelbutton')) {
                     $item = target;
                     removeItem = parseInt($item.data('id'), 10);
@@ -161,33 +148,25 @@ var PopMakeAdmin;
                     $textarea = jQuery('textarea', $parent);
                     $tag_area = jQuery('.tagchecklist', $parent);
                     current_ids = $textarea.val().split(',');
-
                     current_ids = jQuery.grep(current_ids, function (value) {
                         return parseInt(value, 10) !== parseInt(removeItem, 10);
                     });
-
                     $item.parent('span').remove();
                     $textarea.text(current_ids.join(','));
                 }
-
             });
-
         },
         attachQuickSearchListeners : function () {
             var searchTimer;
-
             jQuery('.quick-search').keypress(function (event) {
                 var t = jQuery(this);
-
                 if (13 === event.which) {
                     PopMakeAdmin.updateQuickSearchResults(t);
                     return false;
                 }
-
                 if (searchTimer) {
                     clearTimeout(searchTimer);
                 }
-
                 searchTimer = setTimeout(function () {
                     PopMakeAdmin.updateQuickSearchResults(t);
                 }, 400);
@@ -197,11 +176,9 @@ var PopMakeAdmin;
             var panel, params,
                 minSearchLength = 2,
                 q = input.val();
-
             if (q.length < minSearchLength) {
                 return;
             }
-
             panel = input.parents('.tabs-panel');
             params = {
                 'action': 'menu-quick-search',
@@ -211,9 +188,7 @@ var PopMakeAdmin;
                 'q': q,
                 'type': input.attr('name')
             };
-
             jQuery('.spinner', panel).show();
-
             jQuery.post(ajaxurl, params, function (menuMarkup) {
                 PopMakeAdmin.processQuickSearchQueryResponse(menuMarkup, params, panel);
             });
@@ -411,7 +386,6 @@ var PopMakeAdmin;
             }
         },
         initialize_popup_page: function () {
-
             var update_type_options = function ($this) {
                     var $options = $this.siblings('.options'),
                         excludes,
@@ -419,7 +393,6 @@ var PopMakeAdmin;
 
                     if ($this.is(':checked')) {
                         $options.show();
-
                         if ($this.attr('id') === 'popup_targeting_condition_on_entire_site') {
                             excludes = $this.parents('#popmake_popup_targeting_condition_fields').find('[id^="targeting_condition-exclude_on_"]');
                             others = $this.parents('.targeting_condition').siblings('.targeting_condition');
