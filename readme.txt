@@ -76,6 +76,11 @@ For more information, visit [Popup Maker](https://wppopupmaker.com?utm_source=Wo
 
 == Changelog ==
 
+= v1.1.5 =
+* Fixed bug when clicking add selected buttons.
+* Changed how popmake_popup_is_loadable works. It is now more organized and readable.
+* Added 2 new Targeting Conditions: Search & 404.
+
 = v1.1.4 =
 * Fixed bug in scrollable content styles.
 * Fixed bug in admin JS for duplicate input names.
