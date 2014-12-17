@@ -132,5 +132,53 @@ function popmake_popup_targeting_condition_meta_box_fields( $popup_id ) {
 				</div>
 			</div><?php
 		}
-	}
+	}?>
+	<div id="targeting_condition-on_search" class="targeting_condition form-table">
+		<input type="checkbox"
+			id="popup_targeting_condition_on_search"
+			name="popup_targeting_condition_on_search"
+			value="true"
+			<?php if(!empty($targeting_condition['on_search'])) echo 'checked="checked" '; ?>
+		/>
+		<label for="popup_targeting_condition_on_search"><?php _e( 'On Search Pages', 'popup-maker' ); ?></label>
+		<div class="options">
+			<?php do_action("popmake_popup_targeting_condition_on_search_options", $targeting_condition); ?>
+		</div>
+	</div>
+	<div id="targeting_condition-exclude_on_search" class="targeting_condition form-table">
+			<input type="checkbox"
+			id="popup_targeting_condition_exclude_on_search"
+			name="popup_targeting_condition_exclude_on_search"
+			value="true"
+			<?php if(!empty($targeting_condition['exclude_on_search'])) echo 'checked="checked" '; ?>
+		/>
+		<label for="popup_targeting_condition_exclude_on_search"><?php _e( 'Exclude on Search Pages', 'popup-maker' ); ?></label>
+		<div class="options">
+			<?php do_action("popmake_popup_targeting_condition_exclude_on_search_options", $targeting_condition); ?>
+		</div>
+	</div>
+	<div id="targeting_condition-on_404" class="targeting_condition form-table">
+		<input type="checkbox"
+			id="popup_targeting_condition_on_404"
+			name="popup_targeting_condition_on_404"
+			value="true"
+			<?php if(!empty($targeting_condition['on_404'])) echo 'checked="checked" '; ?>
+		/>
+		<label for="popup_targeting_condition_on_404"><?php _e( 'On 404 Pages', 'popup-maker' ); ?></label>
+		<div class="options">
+			<?php do_action("popmake_popup_targeting_condition_on_404_options", $targeting_condition); ?>
+		</div>
+	</div>
+	<div id="targeting_condition-exclude_on_404" class="targeting_condition form-table">
+			<input type="checkbox"
+			id="popup_targeting_condition_exclude_on_404"
+			name="popup_targeting_condition_exclude_on_404"
+			value="true"
+			<?php if(!empty($targeting_condition['exclude_on_404'])) echo 'checked="checked" '; ?>
+		/>
+		<label for="popup_targeting_condition_exclude_on_404"><?php _e( 'Exclude on 404 Pages', 'popup-maker' ); ?></label>
+		<div class="options">
+			<?php do_action("popmake_popup_targeting_condition_exclude_on_404_options", $targeting_condition); ?>
+		</div>
+	</div><?php
 }

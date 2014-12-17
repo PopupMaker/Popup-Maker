@@ -52,6 +52,10 @@ function popmake_popup_meta_fields() {
 		'popup_targeting_condition_on_entire_site',
 		'popup_targeting_condition_on_home',
 		'popup_targeting_condition_exclude_on_home',
+		'popup_targeting_condition_on_search',
+		'popup_targeting_condition_exclude_on_search',
+		'popup_targeting_condition_on_404',
+		'popup_targeting_condition_exclude_on_404',
 	);
 	foreach(popmake_popup_meta_field_groups() as $group) {
 		foreach(apply_filters( 'popmake_popup_meta_field_group_' . $group, array()) as $field) {

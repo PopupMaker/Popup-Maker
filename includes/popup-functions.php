@@ -282,156 +282,213 @@ function popmake_popup_is_loadable( $popup_id ) {
 	global $post, $wp_query;
 	
 	$conditions = popmake_get_popup_targeting_condition( $popup_id );
+	$sitewide = false;
+	$is_loadable = false;
 
-	$return = false;
-
+	if(array_key_exists('on_entire_site', $conditions)) {
+		$sitewide = true;
+		$is_loadable = true;
+	}
 	/**
-	 * on_home
-	 * 
-	 * on_entire_site
-	 *
-	 * on_entire_site
-	 * exclude_on_home
+	 * Home & Front Page Checks
 	 */
-	if( is_home() && ( array_key_exists('on_home', $conditions) || ( array_key_exists('on_entire_site', $conditions) && !array_key_exists('exclude_on_home', $conditions) ) ) ) {
-		$return = true;
+	if( is_front_page() || is_home() ) {
+		if( !$sitewide && array_key_exists('on_home', $conditions) ) {
+			$is_loadable = true;
+		}
+		elseif( $sitewide && array_key_exists('exclude_on_home', $conditions) ) {
+			$is_loadable = false;
+		}
 	}
-
-	/*
-		on_pages
-
-		on_pages
-		on_specific_pages
-		on_page_235
-
-		on_entire_site
-		exclude_on_pages
-
-		on_entire_site
-		exclude_on_pages
-		
-
-		on_entire_site
-		exclude_on_specific_pages
-		exclude_on_page_235
-	*/
+	/**
+	 * Page Checks
+	 */
 	elseif( is_page() ) {
-
-		// Load on all pages
-		if( array_key_exists('on_pages', $conditions) && !array_key_exists('on_specific_pages', $conditions) ) {
-			$return = true;
+		if( !$sitewide ) {
+			// Load on all pages
+			if( array_key_exists('on_pages', $conditions) && !array_key_exists('on_specific_pages', $conditions) ) {
+				$is_loadable = true;
+			}
+			// Load on specific pages
+			elseif( array_key_exists('on_specific_pages', $conditions) && array_key_exists('on_page_' . $post->ID, $conditions) ) {
+				$is_loadable = true;
+			}
 		}
-		// Load on specific pages
-		if( array_key_exists('on_specific_pages', $conditions) && array_key_exists('on_page_' . $post->ID, $conditions) ) {
-			$return = true;
+		else {
+			// Exclude on all pages.
+			if( array_key_exists('exclude_on_pages', $conditions) && !array_key_exists('exclude_on_specific_pages', $conditions) ) {
+				$is_loadable = false;
+			}
+			// Exclude on specific pages.
+			elseif( array_key_exists('exclude_on_specific_pages', $conditions) && array_key_exists('exclude_on_page_' . $post->ID, $conditions) ) {
+				$is_loadable = false;
+			}
 		}
-		// Load on entire site not excluding all pages.
-		if( array_key_exists('on_entire_site', $conditions) && !array_key_exists('exclude_on_pages', $conditions) ) {
-			$return = true;
-		}
-		// Load on entire site not excluding specific pages.
-		if( array_key_exists('on_entire_site', $conditions) && array_key_exists('exclude_on_specific_pages', $conditions) && !array_key_exists('exclude_on_page_' . $post->ID, $conditions) ) {
-			$return = true;
-		}
-
 	}
+	/**
+	 * Post Checks
+	 */
+	elseif( is_single() && $post->post_type == 'post' ) {
+		if( !$sitewide ) {
+			// Load on all posts`1
+			if( array_key_exists('on_posts', $conditions) && !array_key_exists('on_specific_posts', $conditions) ) {
+				$is_loadable = true;
+			}
+			// Load on specific posts
+			elseif( array_key_exists('on_specific_posts', $conditions) && array_key_exists('on_post_' . $post->ID, $conditions) ) {
+				$is_loadable = true;
+			}
+		}
+		else {
+			// Exclude on all posts.
+			if( array_key_exists('exclude_on_posts', $conditions) && !array_key_exists('exclude_on_specific_posts', $conditions) ) {
+				$is_loadable = false;
+			}
+			// Exclude on specific posts.
+			elseif( array_key_exists('exclude_on_specific_posts', $conditions) && array_key_exists('exclude_on_post_' . $post->ID, $conditions) ) {
+				$is_loadable = false;
+			}
+		}
+	}
+	/**
+	 * Category Checks
+	 */
 	elseif( is_category() ) {
 		$category_id = $wp_query->get_queried_object_id();
-
-		// Load on all categories
-		if( array_key_exists('on_categories', $conditions) && !array_key_exists('on_specific_categories', $conditions) ) {
-			$return = true;
+		if( !$sitewide ) {
+			// Load on all categories
+			if( array_key_exists('on_categories', $conditions) && !array_key_exists('on_specific_categories', $conditions) ) {
+				$is_loadable = true;
+			}
+			// Load on specific categories
+			elseif( array_key_exists('on_specific_categories', $conditions) && array_key_exists('on_category_' . $category_id, $conditions) ) {
+				$is_loadable = true;
+			}
 		}
-		// Load on specific categories
-		if( array_key_exists('on_specific_categories', $conditions) && array_key_exists('on_category_' . $category_id, $conditions) ) {
-			$return = true;
+		else {
+			// Exclude on all categories.
+			if( array_key_exists('exclude_on_categories', $conditions) && !array_key_exists('exclude_on_specific_categories', $conditions) ) {
+				$is_loadable = false;
+			}
+			// Exclude on specific categories.
+			elseif( array_key_exists('exclude_on_specific_categories', $conditions) && array_key_exists('exclude_on_category_' . $category_id, $conditions) ) {
+				$is_loadable = false;
+			}
 		}
-		// Load on entire site not excluding all categories.
-		if( array_key_exists('on_entire_site', $conditions) && !array_key_exists('exclude_on_categories', $conditions) ) {
-			$return = true;
-		}
-		// Load on entire site not excluding specific categories.
-		if( array_key_exists('on_entire_site', $conditions) && array_key_exists('exclude_on_specific_categories', $conditions) && !array_key_exists('exclude_on_category_' . $category_id, $conditions) ) {
-			$return = true;
-		}
-
 	}
+	/**
+	 * Tag Checks
+	 */
 	elseif( is_tag() ) {
-
-		// Load on all tags
-		if( array_key_exists('on_tags', $conditions) && !array_key_exists('on_specific_tags', $conditions) ) {
-			$return = true;
+		$tag_id = $wp_query->get_queried_object_id();
+		if( !$sitewide ) {
+			// Load on all tags
+			if( array_key_exists('on_tags', $conditions) && !array_key_exists('on_specific_tags', $conditions) ) {
+				$is_loadable = true;
+			}
+			// Load on specific tags
+			elseif( array_key_exists('on_specific_tags', $conditions) && array_key_exists('on_tag_' . $tag_id, $conditions) ) {
+				$is_loadable = true;
+			}
 		}
-		// Load on specific tags
-		if( array_key_exists('on_specific_tags', $conditions) && array_key_exists('on_post_tag_' . $category_id, $conditions) ) {
-			$return = true;
+		else {
+			// Exclude on all tags.
+			if( array_key_exists('exclude_on_tags', $conditions) && !array_key_exists('exclude_on_specific_tags', $conditions) ) {
+				$is_loadable = false;
+			}
+			// Exclude on specific tags.
+			elseif( array_key_exists('exclude_on_specific_tags', $conditions) && array_key_exists('exclude_on_tag_' . $tag_id, $conditions) ) {
+				$is_loadable = false;
+			}
 		}
-		// Load on entire site not excluding all tags.
-		if( array_key_exists('on_entire_site', $conditions) && !array_key_exists('exclude_on_tags', $conditions) ) {
-			$return = true;
-		}
-		// Load on entire site not excluding specific tags.
-		if( array_key_exists('on_entire_site', $conditions) && array_key_exists('exclude_on_specific_tags', $conditions) && !array_key_exists('exclude_on_post_tag_' . $category_id, $conditions) ) {
-			$return = true;
-		}
-
 	}
-	elseif( is_single() && $post->post_type == 'post' ) {
-
-		// Load on all pages
-		if( array_key_exists('on_posts', $conditions) && !array_key_exists('on_specific_posts', $conditions) ) {
-			$return = true;
-		}
-		// Load on specific pages
-		if( array_key_exists('on_specific_posts', $conditions) && array_key_exists('on_post_' . $post->ID, $conditions) ) {
-			$return = true;
-		}
-		// Load on entire site not excluding all pages.
-		if( array_key_exists('on_entire_site', $conditions) && !array_key_exists('exclude_on_posts', $conditions) ) {
-			$return = true;
-		}
-		// Load on entire site not excluding specific pages.
-		if( array_key_exists('on_entire_site', $conditions) && array_key_exists('exclude_on_specific_posts', $conditions) && !array_key_exists('exclude_on_post_' . $post->ID, $conditions) ) {
-			$return = true;
-		}
-
-	}
-	// Add support for custom post types
-	elseif( is_single() && $post->post_type != 'post' ) {
+	/**
+	 * Custom Post Type Checks
+	 * Add support for custom post types
+	 */
+	elseif( is_single() && !in_array($post->post_type, array('post','page')) ) {
 		$pt = $post->post_type;
-		// Load on all pages
-		if( array_key_exists("on_{$pt}s", $conditions) && !array_key_exists("on_specific_{$pt}s", $conditions) ) {
-			$return = true;
-		}
-		// Load on specific pages
-		if( array_key_exists("on_specific_{$pt}s", $conditions) && array_key_exists("on_{$pt}_" . $post->ID, $conditions) ) {
-			$return = true;
-		}
-		// Load on entire site not excluding all pages.
-		if( array_key_exists("on_entire_site", $conditions) && !array_key_exists("exclude_on_{$pt}s", $conditions) ) {
-			$return = true;
-		}
-		// Load on entire site not excluding specific pages.
-		if( array_key_exists("on_entire_site", $conditions) && array_key_exists("exclude_on_specific_{$pt}s", $conditions) && !array_key_exists("exclude_on_{$pt}_" . $post->ID, $conditions) ) {
-			$return = true;
-		}
 
+		if( !$sitewide ) {
+			// Load on all post type items
+			if( array_key_exists("on_{$pt}s", $conditions) && !array_key_exists("on_specific_{$pt}s", $conditions) ) {
+				$is_loadable = true;
+			}
+			// Load on specific post type items
+			elseif( array_key_exists("on_specific_{$pt}s", $conditions) && array_key_exists("on_{$pt}_" . $post->ID, $conditions) ) {
+				$is_loadable = true;
+			}
+		}
+		else {
+			// Exclude on all post type items.
+			if( array_key_exists("exclude_on_{$pt}s", $conditions) && !array_key_exists("exclude_on_specific_{$pt}s", $conditions) ) {
+				$is_loadable = false;
+			}
+			// Exclude on specific post type items.
+			elseif( array_key_exists("exclude_on_specific_{$pt}s", $conditions) && array_key_exists("exclude_on_{$pt}_" . $post->ID, $conditions) ) {
+				$is_loadable = false;
+			}
+		}
 	}
+	/**
+	 * Custom Taxonomy Checks
+	 * Add support for custom taxonomies
+	 */
 	elseif( is_tax() ) {
 		$term_id = $wp_query->get_queried_object_id();
-		if( array_key_exists("on_entire_site", $conditions)) {
-			$return = true;
+		$tax = get_query_var('taxonomy');
+		if( !$sitewide ) {
+			// Load on all custom tax terms.
+			if( array_key_exists("on_{$tax}s", $conditions) && !array_key_exists("on_specific_{$tax}s", $conditions) ) {
+				$is_loadable = true;
+			}
+			// Load on specific custom tax terms.
+			elseif( array_key_exists("on_specific_{$tax}s", $conditions) && array_key_exists("on_{$tax}_" . $term_id, $conditions) ) {
+				$is_loadable = true;
+			}
+		}
+		else {
+			// Exclude on all custom tax terms.
+			if( array_key_exists("exclude_on_{$tax}s", $conditions) && !array_key_exists("exclude_on_specific_{$tax}s", $conditions) ) {
+				$is_loadable = false;
+			}
+			// Exclude on specific custom tax terms.
+			elseif( array_key_exists("exclude_on_specific_{$tax}s", $conditions) && array_key_exists("exclude_on_{$tax}_" . $term_id, $conditions) ) {
+				$is_loadable = false;
+			}
 		}
 	}
-
+	/**
+	 * Search Checks
+	 */
+	if( is_search() ) {
+		if( !$sitewide && array_key_exists('on_search', $conditions) ) {
+			$is_loadable = true;
+		}
+		elseif( $sitewide && array_key_exists('exclude_on_search', $conditions) ) {
+			$is_loadable = false;
+		}
+	}
+	/**
+	 * 404 Page Checks
+	 */
+	if( is_404() ) {
+		if( !$sitewide && array_key_exists('on_404', $conditions) ) {
+			$is_loadable = true;
+		}
+		elseif( $sitewide && array_key_exists('exclude_on_404', $conditions) ) {
+			$is_loadable = false;
+		}
+	}
+/*
 	// An Archive is a Category, Tag, Author or a Date based pages.
 	elseif( is_archive() ) {
 		if( array_key_exists("on_entire_site", $conditions)) {
-			$return = true;
+			$is_loadable = true;
 		}
 	}
-
-	return apply_filters('popmake_popup_is_loadable', $return, $popup_id);
+*/
+	return apply_filters('popmake_popup_is_loadable', $is_loadable, $popup_id);
 }
 
 
