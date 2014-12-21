@@ -256,7 +256,7 @@
                 if (settings.meta.display.size !== 'auto') {
                     if (settings.meta.display.responsive_min_width !== '') {
                         $this.css({
-                            maxWidth: settings.meta.display.responsive_min_width + settings.meta.display.responsive_min_width_unit
+                            mixWidth: settings.meta.display.responsive_min_width + settings.meta.display.responsive_min_width_unit
                         });
                     }
                     if (settings.meta.display.responsive_max_width !== '') {
@@ -1016,6 +1016,7 @@
 
                 jQuery(trigger_selector).css({cursor: "pointer"});
                 jQuery(document).on('click', trigger_selector, function (event) {
+                    console.log(this);
                     event.preventDefault();
                     event.stopPropagation();
                     jQuery.fn.popmake.last_open_trigger = jQuery.fn.popmake.utilities.getXPath(this);

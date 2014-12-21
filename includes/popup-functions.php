@@ -270,7 +270,7 @@ function popmake_popup_content_container( $content ) {
 	if ($post->post_type == 'popup') {
 		$content = '<div class="popmake-content">' . $content;
 		$content .= '</div>';
-		$content .= '<a class="popmake-close">'. apply_filters( 'popmake_popup_default_close_text', __( '&#215;', 'popup-maker'), $post->ID ) .'</a>';
+		$content .= '<span class="popmake-close">'. apply_filters( 'popmake_popup_default_close_text', __( '&#215;', 'popup-maker'), $post->ID ) .'</span>';
 	}
 	return $content;
 }
