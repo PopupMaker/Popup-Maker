@@ -73,7 +73,11 @@
                     })
                     .on('popmakeAfterClose.reset_videos', function () {
                         jQuery('iframe', $this).filter('[src*="youtube"],[src*="vimeo"]').each(function () {
-                            var src = jQuery(this).attr('src');
+                            var src = jQuery(this).attr('src')
+                                // Remove autoplay so video doesn't start playing again.
+                                .replace('autoplay=1', '1=1');
+
+                            console.log(src);
                             jQuery(this).attr('src', '').attr('src', src);
                         });
                     })
