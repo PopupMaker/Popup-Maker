@@ -1,5 +1,5 @@
 /**
- * Popup Maker v1.1.4
+ * Popup Maker v1.2.0
  */
 var PopMakeAdmin;
 (function () {
@@ -418,7 +418,7 @@ var PopMakeAdmin;
                     }
                 },
                 update_specific_checkboxes = function ($this) {
-                    var $option = $this.parent().siblings('input[type="checkbox"]:first'),
+                    var $option = $this.parents('.options').find('input[type="checkbox"]:first'),
                         exclude = $option.attr('name').indexOf("exclude") >= 0,
                         type = exclude ? $option.attr('name').replace('popup_targeting_condition_exclude_on_specific_', '') : $option.attr('name').replace('popup_targeting_condition_on_specific_', ''),
                         type_box = exclude ? jQuery('#exclude_on_specific_' + type) : jQuery('#on_specific_' + type);
