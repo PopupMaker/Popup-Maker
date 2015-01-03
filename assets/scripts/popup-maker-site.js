@@ -1056,7 +1056,11 @@
                                     setCookie();
                                 });
                             }
-
+                            if (cookie_trigger === 'manual') {
+                                $this.on('manualCookie', function () {
+                                    setCookie();
+                                });
+                            }
                         }
                         setTimeout(function () {
                             jQuery.fn.popmake.last_open_trigger = 'Auto Open Popups ID-' + settings.id;

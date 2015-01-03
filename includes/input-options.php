@@ -174,5 +174,6 @@ function popmake_cookie_trigger_options( $options ) {
 		__( 'Disabled', 'popup-maker' ) => 'disabled',
 		__( 'On Open', 'popup-maker' ) => 'open',
 		__( 'On Close', 'popup-maker' ) => 'close',
+		__( 'Manual', 'popup-maker' ) => 'manual',
 	));
 }
