@@ -307,7 +307,7 @@ var PopMakeAdmin;
             jQuery(document)
                 .on('click', '.popmake-range-manual', function () {
                     var $this = jQuery(this);
-                    $this.removeProp('readonly');
+                    $this.prop('readonly', false);
                 })
                 .on('focusout', '.popmake-range-manual', function () {
                     var $this = jQuery(this);
@@ -399,9 +399,9 @@ var PopMakeAdmin;
                             others.hide();
                             jQuery('> *', others).prop('disabled', true);
                             excludes.show();
-                            jQuery('> *', excludes).removeProp('disabled');
+                            jQuery('> *', excludes).prop('disabled', false);
                         } else {
-                            jQuery('*', $options).removeProp('disabled');
+                            jQuery('*', $options).prop('disabled', false);
                         }
                     } else {
                         $options.hide();
@@ -409,7 +409,7 @@ var PopMakeAdmin;
                             excludes = $this.parents('#popmake_popup_targeting_condition_fields').find('[id^="targeting_condition-exclude_on_"]');
                             others = $this.parents('.targeting_condition').siblings('.targeting_condition');
                             others.show();
-                            jQuery('> *', others).removeProp('disabled');
+                            jQuery('> *', others).prop('disabled', false);
                             excludes.hide();
                             jQuery('> *', excludes).prop('disabled', true);
                         } else {
@@ -418,17 +418,18 @@ var PopMakeAdmin;
                     }
                 },
                 update_specific_checkboxes = function ($this) {
-                    var $option = $this.parents('.options').find('input[type="checkbox"]:first'),
+                    var $option = $this.parents('.options').find('input[type="checkbox"]:eq(0)'),
                         exclude = $option.attr('name').indexOf("exclude") >= 0,
                         type = exclude ? $option.attr('name').replace('popup_targeting_condition_exclude_on_specific_', '') : $option.attr('name').replace('popup_targeting_condition_on_specific_', ''),
                         type_box = exclude ? jQuery('#exclude_on_specific_' + type) : jQuery('#on_specific_' + type);
+                    
                     if ($this.is(':checked')) {
                         if ($this.val() === 'true') {
                             $option.prop('checked', true);
                             type_box.show();
-                            jQuery('*', type_box).removeProp('disabled');
+                            jQuery('*', type_box).prop('disabled', false);
                         } else if ($this.val() === '') {
-                            $option.removeProp('checked');
+                            $option.prop('checked', false);
                             type_box.hide();
                             jQuery('*', type_box).prop('disabled', true);
                         }
@@ -576,7 +577,7 @@ var PopMakeAdmin;
             var self = this;
             jQuery(document)
                 .on('change', 'select.font-family', function () {
-                    jQuery('select.font-weight option, select.font-style option', jQuery(this).parents('table')).removeProp('selected');
+                    jQuery('select.font-weight option, select.font-style option', jQuery(this).parents('table')).prop('selected', false);
                     self.update_font_selectboxes();
                 })
                 .on('change', 'select.font-weight, select.font-style', function () {
