@@ -109,6 +109,13 @@ function popmake_register_settings() {
 add_action('admin_init', 'popmake_register_settings');
 
 /**
+* Returns default options
+*/
+function popmake_default_settings() {
+	return array();
+}
+
+/**
  * Retrieve the array of plugin settings
  *
  * @since 1.0
