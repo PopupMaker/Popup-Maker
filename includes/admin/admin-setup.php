@@ -29,9 +29,9 @@ function popmake_admin_notice() {
 		if(!get_user_meta( get_current_user_id(), '_popmake_dismiss_optin_newsletter_promo_banner_v2', true )) {?>
 			<div class="popmake-optin popmake-newsletter-optin">
 				<a href="https://wppopupmaker.com/newsletter-sign-up?utm_source=Popmake+WP+Admin&utm_medium=Notification+Banner&utm_campaign=Newsletter+Signup" target="_blank" class="newsletter-banner">
-					<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/newsletter-banner.png"/>
+					<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/newsletter-banner_v3.png"/>
 				</a>
-				<a class="popmake-optin-dismiss" data-optin-name="newsletter_promo_banner_v2" data-optin-type="user"><?php _e( 'No Thanks', 'popup-maker' ); ?></a>
+				<a class="popmake-optin-dismiss" data-optin-name="newsletter_promo_banner_v3" data-optin-type="user"><?php _e( 'No Thanks', 'popup-maker' ); ?></a>
 			</div><?php
 		}
 		do_action('popmake_admin_notice');
