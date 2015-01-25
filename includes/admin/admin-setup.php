@@ -26,7 +26,11 @@ add_action('admin_header', 'popmake_admin_header');
 
 function popmake_admin_notice() {
 	if(popmake_is_admin_page()) {
-		if(!get_user_meta( get_current_user_id(), '_popmake_dismiss_optin_newsletter_promo_banner_v2', true )) {?>
+		$banner_v1 = get_user_meta( get_current_user_id(), '_popmake_dismiss_optin_newsletter_promo_banner_v1', true );
+		$banner_v2 = get_user_meta( get_current_user_id(), '_popmake_dismiss_optin_newsletter_promo_banner_v2', true );
+		$banner_v3 = get_user_meta( get_current_user_id(), '_popmake_dismiss_optin_newsletter_promo_banner_v3', true );
+
+		if(!$banner_v2 && !$banner_v3) {?>
 			<div class="popmake-optin popmake-newsletter-optin">
 				<a href="https://wppopupmaker.com/newsletter-sign-up?utm_source=Popmake+WP+Admin&utm_medium=Notification+Banner&utm_campaign=Newsletter+Signup" target="_blank" class="newsletter-banner">
 					<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/newsletter-banner_v3.png"/>
