@@ -40,7 +40,7 @@ function popmake_setup_post_types() {
 		'show_ui' 			=> true,
 		'query_var' 		=> false,
 		'menu_icon'			=> POPMAKE_URL.'/assets/images/admin/dashboard-icon.png',
-		'menu_position'		=> 20,
+		'menu_position'		=> 20.292892729,
 		'supports' 			=> apply_filters( 'popmake_popup_supports', array( 'title', 'editor', 'revisions', 'author' ) ),
 	);
 	$popup_post_type = register_post_type( 'popup', apply_filters( 'popmake_popup_post_type_args', $popup_args ) );
