@@ -312,3 +312,28 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 		</td>
 	</tr><?php
 }
+
+add_action('popmake_popup_display_meta_box_fields', 'popmake_admin_popup_form_display_tab_settings_zindex', 70);
+function popmake_admin_popup_form_display_tab_settings_zindex( $popup_id ) {
+	?><tr class="title-divider">
+		<th colspan="2"><h3 class="title"><?php _e( 'Z Index', 'popup-maker' );?></h3></th>
+	</tr>
+	<tr>
+		<th scope="row">
+			<label for="popup_display_overlay_zindex"><?php _e( 'Overlay Z-Index', 'popup-maker' );?></label>
+		</th>
+		<td>
+			<input type="number" max="2147483647" min="0" name="popup_display_overlay_zindex" id="popup_display_overlay_zindex" value="<?php esc_attr_e(popmake_get_popup_display( $popup_id, 'overlay_zindex')); ?>">
+			<p class="description"><?php _e( 'Change the z-index layer level for the overlay.', 'popup-maker' ); ?></p>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">
+			<label for="popup_display_zindex"><?php _e( 'Popup Z-Index', 'popup-maker' );?></label>
+		</th>
+		<td>
+			<input type="number" max="2147483647" min="0" name="popup_display_zindex" id="popup_display_zindex" value="<?php esc_attr_e(popmake_get_popup_display( $popup_id, 'zindex')); ?>">
+			<p class="description"><?php _e( 'Change the z-index layer level for the popup.', 'popup-maker' ); ?></p>
+		</td>
+	</tr><?php
+}

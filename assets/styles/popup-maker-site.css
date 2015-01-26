@@ -8,7 +8,7 @@
 	height:100%;
 	top:0;
 	left:0;
-	z-index:998!important;
+	z-index:998;
 }
 
 .popmake {
@@ -16,7 +16,7 @@
 	visibility: hidden;
 	position: absolute;
 	display:none;
-	z-index: 999!important;
+	z-index: 999;
 }
 
 .popmake > .popmake-close {

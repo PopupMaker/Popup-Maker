@@ -306,7 +306,8 @@
             close_inset = theme.close.boxshadow_inset === 'yes' ? 'inset ' : '';
 
             $overlay.removeAttr('style').css({
-                backgroundColor: jQuery.fn.popmake.utilities.convert_hex(theme.overlay.background_color, theme.overlay.background_opacity)
+                backgroundColor: jQuery.fn.popmake.utilities.convert_hex(theme.overlay.background_color, theme.overlay.background_opacity),
+                zIndex: settings.meta.display.overlay_zindex || 998
             });
             $container.css({
                 padding: theme.container.padding + 'px',
@@ -315,7 +316,8 @@
                 borderColor: theme.container.border_color,
                 borderWidth: theme.container.border_width + 'px',
                 borderRadius: theme.container.border_radius + 'px',
-                boxShadow: container_inset + theme.container.boxshadow_horizontal + 'px ' + theme.container.boxshadow_vertical + 'px ' + theme.container.boxshadow_blur + 'px ' + theme.container.boxshadow_spread + 'px ' + jQuery.fn.popmake.utilities.convert_hex(theme.container.boxshadow_color, theme.container.boxshadow_opacity)
+                boxShadow: container_inset + theme.container.boxshadow_horizontal + 'px ' + theme.container.boxshadow_vertical + 'px ' + theme.container.boxshadow_blur + 'px ' + theme.container.boxshadow_spread + 'px ' + jQuery.fn.popmake.utilities.convert_hex(theme.container.boxshadow_color, theme.container.boxshadow_opacity),
+                zIndex: settings.meta.display.zindex || 999
             });
             $title.css({
                 color: theme.title.font_color,
@@ -1124,7 +1126,7 @@
                         return jQuery.pm_cookie("popmake-auto-open-" + settings.id + "-" + auto_open.cookie_key) === undefined;
                     };
 
-                    $this.on('setCookie', function () {
+                    $this.on('popmakeSetCookie', function () {
                         if (auto_open.cookie_time !== '' && noCookieCheck()) {
                             jQuery.pm_cookie(
                                 "popmake-auto-open-" + settings.id + "-" + auto_open.cookie_key,
@@ -1138,12 +1140,12 @@
                     switch (auto_open.cookie_trigger) {
                     case "open":
                         $this.on('popmakeAfterOpen', function () {
-                            $this.trigger('setCookie');
+                            $this.trigger('popmakeSetCookie');
                         });
                         break;
                     case "close":
                         $this.on('popmakeBeforeClose', function () {
-                            $this.trigger('setCookie');
+                            $this.trigger('popmakeSetCookie');
                         });
                         break;
                     }

@@ -107,6 +107,8 @@ function popmake_popup_meta_field_group_display() {
 		'animation_type',
 		'animation_speed',
 		'animation_origin',
+		'overlay_zindex',
+		'zindex',
 	);
 }
 add_filter('popmake_popup_meta_field_group_display', 'popmake_popup_meta_field_group_display', 0);
