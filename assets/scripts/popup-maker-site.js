@@ -1,5 +1,5 @@
 /**
- * Popup Maker v1.1.6
+ * Popup Maker v1.1.8
  */
 (function (jQuery) {
     "use strict";
@@ -484,6 +484,102 @@
             jQuery(this).css(position);
         }
     };
+
+    jQuery.fn.popmake.cookie = {
+        defaults: {},
+        raw: false,
+        json: true,
+        pluses: /\+/g,
+        encode: function (s) {
+            return jQuery.fn.popmake.cookie.raw ? s : encodeURIComponent(s);
+        },
+        decode: function (s) {
+            return jQuery.fn.popmake.cookie.raw ? s : decodeURIComponent(s);
+        },
+        stringifyCookieValue: function (value) {
+            return jQuery.fn.popmake.cookie.encode(jQuery.fn.popmake.cookie.json ? JSON.stringify(value) : String(value));
+        },
+        parseCookieValue: function (s) {
+            if (s.indexOf('"') === 0) {
+                // This is a quoted cookie as according to RFC2068, unescape...
+                s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+            }
+
+            try {
+                // Replace server-side written pluses with spaces.
+                // If we can't decode the cookie, ignore it, it's unusable.
+                // If we can't parse the cookie, ignore it, it's unusable.
+                s = decodeURIComponent(s.replace(jQuery.fn.popmake.cookie.pluses, ' '));
+                return jQuery.fn.popmake.cookie.json ? JSON.parse(s) : s;
+            } catch (ignore) {}
+        },
+        read: function (s, converter) {
+            var value = jQuery.fn.popmake.cookie.raw ? s : jQuery.fn.popmake.cookie.parseCookieValue(s);
+            return jQuery.isFunction(converter) ? converter(value) : value;
+        },
+        process: function (key, value, expires, path) {
+            var result = key ? undefined : {},
+                t = new Date(),
+                cookies = document.cookie ? document.cookie.split('; ') : [],
+                parts,
+                name,
+                cookie,
+                i,
+                l;
+            // Write
+
+            if (value !== undefined && !jQuery.isFunction(value)) {
+
+                switch (typeof expires) {
+                case 'number':
+                    t.setTime(+t + expires * 864e+5);
+                    expires = t;
+                    break;
+                case 'string':
+                    t.setTime(jQuery.fn.popmake.utilities.strtotime("+" + expires) * 1000);
+                    expires = t;
+                    break;
+                }
+
+                document.cookie = [
+                    jQuery.fn.popmake.cookie.encode(key), '=', jQuery.fn.popmake.cookie.stringifyCookieValue(value),
+                    expires ? '; expires=' + expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
+                    path    ? '; path=' + path : ''
+                ].join('');
+                return;
+            }
+
+            for (i = 0, l = cookies.length; i < l; i += 1) {
+                parts = cookies[i].split('=');
+                name = jQuery.fn.popmake.cookie.decode(parts.shift());
+                cookie = parts.join('=');
+
+                if (key && key === name) {
+                    // If second argument (value) is a function it's a converter...
+                    result = jQuery.fn.popmake.cookie.read(cookie, value);
+                    break;
+                }
+
+                // Prevent storing a cookie that we couldn't decode.
+                cookie = jQuery.fn.popmake.cookie.read(cookie);
+                if (!key && cookie !== undefined) {
+                    result[name] = cookie;
+                }
+            }
+
+            return result;
+        },
+        remove: function (key) {
+            if (jQuery.pm_cookie(key) === undefined) {
+                return false;
+            }
+            jQuery.pm_cookie(key, '', -1);
+            return !jQuery.pm_cookie(key);
+        }
+    };
+
+    jQuery.pm_cookie = jQuery.fn.popmake.cookie.process;
+    jQuery.pm_remove_cookie = jQuery.fn.popmake.cookie.remove;
 
     jQuery.fn.popmake.utilities = {
         convert_hex: function (hex, opacity) {
@@ -1006,21 +1102,16 @@
                 var $this = jQuery(this),
                     settings = $this.data('popmake'),
                     click_open = settings.meta.click_open,
-                    auto_open = settings.meta.auto_open,
                     trigger_selector = '.popmake-' + settings.id + ', .popmake-' + settings.slug,
-                    cookie,
-                    cookieName,
-                    cookieDate,
-                    setCookie,
-                    cookie_trigger;
+                    auto_open = settings.meta.auto_open,
+                    noCookieCheck;
 
-                if (click_open !== undefined && click_open.extra_selectors !== '') {
+                if (click_open.extra_selectors !== undefined && click_open.extra_selectors !== '') {
                     trigger_selector += ', ' + click_open.extra_selectors;
                 }
 
                 jQuery(trigger_selector).css({cursor: "pointer"});
                 jQuery(document).on('click', trigger_selector, function (event) {
-                    console.log(this);
                     event.preventDefault();
                     event.stopPropagation();
                     jQuery.fn.popmake.last_open_trigger = jQuery.fn.popmake.utilities.getXPath(this);
@@ -1028,45 +1119,41 @@
                 });
 
                 if (auto_open !== undefined && auto_open.enabled) {
-                    jQuery.cookie.json = true;
 
-                    cookieName = "popmake-auto-open-" + settings.id + "-" + auto_open.cookie_key;
-
-                    cookie = jQuery.cookie(cookieName);
-                    setCookie = function () {
-                        if (auto_open.cookie_time !== '') {
-                            cookieDate = new Date();
-                            cookieDate.setTime(jQuery.fn.popmake.utilities.strtotime("+" + auto_open.cookie_time) * 1000);
-                            jQuery.cookie(cookieName, {opened: true, expires: cookieDate}, {
-                                expires: cookieDate,
-                                path: auto_open.cookie_path
-                            });
-                        }
+                    noCookieCheck = function () {
+                        return jQuery.pm_cookie("popmake-auto-open-" + settings.id + "-" + auto_open.cookie_key) === undefined;
                     };
-                    if (cookie === undefined) {
-                        cookie_trigger = auto_open.cookie_trigger;
-                        if (cookie_trigger !== 'disabled') {
-                            if (cookie_trigger === 'open') {
-                                $this.on('popmakeAfterOpen', function () {
-                                    setCookie();
-                                });
-                            }
-                            if (cookie_trigger === 'close') {
-                                $this.on('popmakeBeforeClose', function () {
-                                    setCookie();
-                                });
-                            }
-                            if (cookie_trigger === 'manual') {
-                                $this.on('manualCookie', function () {
-                                    setCookie();
-                                });
-                            }
+
+                    $this.on('setCookie', function () {
+                        if (auto_open.cookie_time !== '' && noCookieCheck()) {
+                            jQuery.pm_cookie(
+                                "popmake-auto-open-" + settings.id + "-" + auto_open.cookie_key,
+                                true,
+                                auto_open.cookie_time,
+                                auto_open.cookie_path
+                            );
                         }
-                        setTimeout(function () {
+                    });
+
+                    switch (auto_open.cookie_trigger) {
+                    case "open":
+                        $this.on('popmakeAfterOpen', function () {
+                            $this.trigger('setCookie');
+                        });
+                        break;
+                    case "close":
+                        $this.on('popmakeBeforeClose', function () {
+                            $this.trigger('setCookie');
+                        });
+                        break;
+                    }
+
+                    setTimeout(function () {
+                        if (noCookieCheck()) {
                             jQuery.fn.popmake.last_open_trigger = 'Auto Open Popups ID-' + settings.id;
                             $this.popmake('open');
-                        }, auto_open.delay);
-                    }
+                        }
+                    }, auto_open.delay);
                 }
             });
     });
