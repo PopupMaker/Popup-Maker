@@ -236,7 +236,7 @@
             reposition.my = jQuery.trim(reposition.my);
             reposition.at = jQuery.trim(reposition.at);
             reposition.of = window;
-            reposition.collision = 'fit';
+            reposition.collision = 'none';
             reposition.using = typeof callback === "function" ? callback : jQuery.fn.popmake.callbacks.reposition_using;
 
             if ($this.is(':hidden')) {
