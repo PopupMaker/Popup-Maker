@@ -37,6 +37,11 @@
 	overflow:visible;
 }
 
+.popmake.responsive .popmake-content img {
+    max-width:100%;
+    height: auto;
+}
+
 @media only screen and (min-width: 768px){
 .popmake.size-nano {
 	margin-left: -5%;
