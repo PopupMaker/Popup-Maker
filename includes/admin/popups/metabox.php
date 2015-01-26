@@ -52,6 +52,8 @@ function popmake_popup_meta_fields() {
 		'popup_targeting_condition_on_entire_site',
 		'popup_targeting_condition_on_home',
 		'popup_targeting_condition_exclude_on_home',
+		'popup_targeting_condition_on_blog',
+		'popup_targeting_condition_exclude_on_blog',
 		'popup_targeting_condition_on_search',
 		'popup_targeting_condition_exclude_on_search',
 		'popup_targeting_condition_on_404',

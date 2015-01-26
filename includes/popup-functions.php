@@ -290,13 +290,24 @@ function popmake_popup_is_loadable( $popup_id ) {
 		$is_loadable = true;
 	}
 	/**
-	 * Home & Front Page Checks
+	 * Front Page Checks
 	 */
-	if( is_front_page() || is_home() ) {
+	if( is_front_page() ) {
 		if( !$sitewide && array_key_exists('on_home', $conditions) ) {
 			$is_loadable = true;
 		}
 		elseif( $sitewide && array_key_exists('exclude_on_home', $conditions) ) {
+			$is_loadable = false;
+		}
+	}
+	/**
+	 * Blog Index Page Checks
+	 */
+	if( is_home() ) {
+		if( !$sitewide && array_key_exists('on_blog', $conditions) ) {
+			$is_loadable = true;
+		}
+		elseif( $sitewide && array_key_exists('exclude_on_blog', $conditions) ) {
 			$is_loadable = false;
 		}
 	}
