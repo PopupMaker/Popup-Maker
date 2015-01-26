@@ -1105,6 +1105,7 @@
                     settings = $this.data('popmake'),
                     click_open = settings.meta.click_open,
                     trigger_selector = '.popmake-' + settings.id + ', .popmake-' + settings.slug,
+                    admin_debug = settings.meta.admin_debug,
                     auto_open = settings.meta.auto_open,
                     noCookieCheck;
 
@@ -1119,6 +1120,11 @@
                     jQuery.fn.popmake.last_open_trigger = jQuery.fn.popmake.utilities.getXPath(this);
                     $this.popmake('open');
                 });
+
+                if (admin_debug !== undefined && admin_debug.enabled) {
+                    $this.popmake('open');
+                    return;
+                }
 
                 if (auto_open !== undefined && auto_open.enabled) {
 

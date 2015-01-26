@@ -50,10 +50,11 @@ function popmake_get_the_popup_data_attr( $popup_id = null ) {
 		'id'   => $popup_id,
 		'slug' => $post->post_name,
 		'meta' => array(
-			'display'    => popmake_get_popup_display( $popup_id ),
-			'close'      => popmake_get_popup_close( $popup_id ),
-			'click_open' => popmake_get_popup_click_open( $popup_id ),
-			'auto_open'  => popmake_get_popup_auto_open( $popup_id ),
+			'display'     => popmake_get_popup_display( $popup_id ),
+			'close'       => popmake_get_popup_close( $popup_id ),
+			'click_open'  => popmake_get_popup_click_open( $popup_id ),
+			'auto_open'   => popmake_get_popup_auto_open( $popup_id ),
+			'admin_debug' => popmake_get_popup_admin_debug( $popup_id ),
 		)
 	);
 	return apply_filters('popmake_get_the_popup_data_attr', $data_attr, $popup_id );
@@ -261,6 +262,18 @@ function popmake_get_popup_click_open( $popup_id = NULL, $key = NULL ) {
  */
 function popmake_get_popup_auto_open( $popup_id = NULL, $key = NULL ) {
 	return popmake_get_popup_meta_group( 'auto_open', $popup_id, $key );
+}
+
+
+/**
+ * Returns the auto open meta of a popup.
+ *
+ * @since 1.1.8
+ * @param int $popup_id ID number of the popup to retrieve a admin debug meta for
+ * @return mixed array|string of the popup admin debug meta 
+ */
+function popmake_get_popup_admin_debug( $popup_id = NULL, $key = NULL ) {
+	return popmake_get_popup_meta_group( 'admin_debug', $popup_id, $key );
 }
 
 

@@ -207,6 +207,7 @@ final class Popup_Maker {
 			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-click-open-fields.php';
 			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-targeting-condition-fields.php';
 			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-auto-open-popups-fields.php';
+			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-admin-debug-fields.php';
 			require_once POPMAKE_DIR . 'includes/admin/popups/post-type-item-metaboxes.php';
 			require_once POPMAKE_DIR . 'includes/admin/themes/metabox.php';
 			require_once POPMAKE_DIR . 'includes/admin/themes/metabox-close-fields.php';

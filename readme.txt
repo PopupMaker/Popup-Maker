@@ -84,7 +84,8 @@ For more information, visit [Popup Maker](https://wppopupmaker.com?utm_source=Wo
 * Added new setCookie JS event. Used to manually set a popups cookies. Usage jQuery('#popmake-123').trigger('popmakeSetCookie');
 * Added new z-index override values. This helps with theme compatibility and future multi popup capability.
 * Added Blog Index support. Available under targeting conditions 'On Blog Index' & 'Exclude On Blog Index'.
-
+* Added better responsive image handling.
+* Added Admin Debug option for popups.
 
 = v1.1.7 =
 * Fixed undefined function popmake_default_settings.

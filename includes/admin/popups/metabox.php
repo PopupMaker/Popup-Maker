@@ -34,6 +34,9 @@ function popmake_add_popup_meta_box() {
 	/** Auto Open Popups Meta **/
 	add_meta_box( 'popmake_popup_auto_open', __( 'Auto Open Settings', 'popup-maker' ),  'popmake_render_popup_auto_open_meta_box', 'popup', 'normal', 'high' );
 
+	/** Admin Debug **/
+	add_meta_box( 'popmake_popup_admin_debug', __( 'Admin Debug Settings', 'popup-maker' ),  'popmake_render_popup_admin_debug_meta_box', 'popup', 'normal', 'low' );
+
 	/** Support Meta **/
 	add_meta_box( 'popmake_popup_support', __( 'Support', 'popup-maker' ),  'popmake_render_support_meta_box', 'popup', 'side', 'default' );
 	/** Share Meta **/
@@ -81,6 +84,7 @@ function popmake_popup_meta_field_groups() {
 		'close',
 		'click_open',
 		'auto_open',
+		'admin_debug',
 	);
 	return apply_filters( 'popmake_popup_meta_field_groups', $groups );
 }
@@ -145,6 +149,14 @@ function popmake_popup_meta_field_group_auto_open( $fields ) {
 	));
 }
 add_filter('popmake_popup_meta_field_group_auto_open', 'popmake_popup_meta_field_group_auto_open', 0);
+
+
+function popmake_popup_meta_field_group_admin_debug( $fields ) {
+	return array_merge( $fields, array(
+		'enabled',
+	));
+}
+add_filter('popmake_popup_meta_field_group_admin_debug', 'popmake_popup_meta_field_group_admin_debug', 0);
 
 
 /**
@@ -372,6 +384,27 @@ function popmake_render_popup_auto_open_meta_box() {
 		<table class="form-table">
 			<tbody>
 				<?php do_action( 'popmake_popup_auto_open_meta_box_fields', $post->ID );?>
+			</tbody>
+		</table>
+	</div><?php
+}
+
+
+/**
+ * Popup Admin Debug Metabox
+ *
+ * Extensions (as well as the core plugin) can add items to the popup debug
+ * configuration metabox via the `popmake_popup_admin_debug_meta_box_fields` action.
+ *
+ * @since 1.0
+ * @return void
+ */
+function popmake_render_popup_admin_debug_meta_box() {
+	global $post, $popmake_options;?>
+	<div id="popmake_popup_admin_debug_fields" class="popmake_meta_table_wrap">
+		<table class="form-table">
+			<tbody>
+				<?php do_action( 'popmake_popup_admin_debug_meta_box_fields', $post->ID );?>
 			</tbody>
 		</table>
 	</div><?php

@@ -71,6 +71,14 @@ function popmake_popup_auto_open_defaults( $defaults ) {
 }
 
 
+add_filter('popmake_popup_admin_debug_defaults', 'popmake_popup_admin_debug_defaults');
+function popmake_popup_admin_debug_defaults( $defaults ) {
+	return array_merge( $defaults, array(
+		'enabled' => NULL,
+	));
+}
+
+
 add_filter('popmake_popup_theme_overlay_defaults', 'popmake_popup_theme_overlay_defaults', 0);
 function popmake_popup_theme_overlay_defaults( $defaults ) {
 	return array_merge( $defaults, array(
