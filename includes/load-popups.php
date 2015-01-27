@@ -25,12 +25,13 @@ function popmake_load_popup( int $id ) {
 			'post_type' => 'popup',
 			'p' => $id
 		));
-		$query1 = new WP_Query( $args1 );
-		if ( $query1->have_posts() ) {
-			while ( $query1->have_posts() ) : $query1->next_post();
-				do_action( 'popmake_preload_popup', $query1->post->ID );
-				$popmake_loaded_popups->posts[] = $query1->post;
+		$query = new WP_Query( $args1 );
+		if ( $query->have_posts() ) {
+			while ( $query->have_posts() ) : $query->next_post();
+				do_action( 'popmake_preload_popup', $query->post->ID );
+				$popmake_loaded_popups->posts[] = $query->post;
 				$popmake_loaded_popups->post_count++;
+				popmake_enqueue_scripts( $query->post->ID );
 			endwhile;
 		}
 	}
@@ -72,8 +73,7 @@ function popmake_preload_popups() {
 
 	}
 }
-add_action('wp_head', 'popmake_preload_popups', 1000);
-add_action('wp_footer', 'popmake_render_popups', 1);
+add_action( 'wp_head', 'popmake_preload_popups', 1000 );
 
 
 function popmake_render_popups() {
@@ -85,3 +85,4 @@ function popmake_render_popups() {
 		wp_reset_postdata();
 	}
 }
+add_action('wp_footer', 'popmake_render_popups', 1);

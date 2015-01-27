@@ -1109,7 +1109,7 @@
                     auto_open = settings.meta.auto_open,
                     noCookieCheck;
 
-                if (click_open.extra_selectors !== undefined && click_open.extra_selectors !== '') {
+                if (click_open !== undefined && click_open.extra_selectors !== '') {
                     trigger_selector += ', ' + click_open.extra_selectors;
                 }
 
