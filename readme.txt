@@ -1,11 +1,11 @@
 === Popup Maker ===
 Contributors: danieliser
-Author URI: https://wppopupmaker.com
+Author URI: https://danieliser.com
 Plugin URI: https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Plugin+URI
 Donate link: 
-Tags: popup,popups,modal,modals,popup form,form modal,conversion,conversions,dialog box,auto open
+Tags: popup,popups,modal,modals,popup form,form modal,conversion,conversions,dialog box,auto openwordpress popup,popup,popups,modal,modals,popup form,conversion,conversions,exit intent,full page popup,full screen pop,full screen popup,optin popup,pop-up,pop-ups,popup box,popup message,popup window,unblockable,automatic popup,custom popup,fancy box,fancy popup,onclick popup,popup ads,popup advertising,age restriction,age verification,marketing,popup
 Requires at least: 3.4
-Tested up to: 4.1
+Tested up to: 4.2
 Stable tag: 1.1.8
 
 License: GNU Version 2 or Any Later Version
@@ -31,7 +31,7 @@ Use any of your forms from the most popular form plugins, out-of-the-box, inside
 * Unlimited Content Customization
  * Use the Popup Maker WYSIWIG Content Editor to easily create as many popups as you like with any content you like! Plus, use Short Codes, HTML, and other code to give your popups ultimate power! Adding content and popups in Popup Maker is just like adding content and pages in WordPress.
 * Use Popups Conditionally 
- * Target specific users for your popups! Our Targeting Conditions feature allows you to tailor your popups to specific users by giving you the ability to use popups exactly where you want. Use [Auto Open](https://wppopupmaker.com/extensions/auto-open-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Auto+Open "Auto Open Popups"), [Scroll Triggered](https://wppopupmaker.com/extensions/scroll-triggered-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Scroll+Triggered "Scroll Triggered Popups") & [Exit Intent](https://wppopupmaker.com/extensions/exit-intent-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Exit+Intent "Exit Intent Popups") Popup Extensions to enhance your popups' effectiveness.
+ * Target specific users for your popups! Our Targeting Conditions feature allows you to tailor your popups to specific users by giving you the ability to use popups exactly where you want. Use Auto Open or check out the [Scroll Triggered](https://wppopupmaker.com/extensions/scroll-triggered-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Scroll+Triggered "Scroll Triggered Popups") & [Exit Intent](https://wppopupmaker.com/extensions/exit-intent-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Exit+Intent "Exit Intent Popups") Popup Extensions to enhance your popups' effectiveness.
 * One (1) Customizable Popup Theme
  * Customize every aspect of our default theme to match your needs - from colors to Google Fonts. To differentiate your popup themes on your popups, you can create unlimited themes by upgrading to the [Unlimited Themes Extension](https://wppopupmaker.com/extensions/unlimited-themes?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Unlimited+Themes "Unlimited Popup Themes").
 * Auto Open Popups
@@ -53,18 +53,18 @@ Use any of your forms from the most popular form plugins, out-of-the-box, inside
 * [Exit Intent Popups](https://wppopupmaker.com/extensions/exit-intent-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Exit+Intent "Exit Intent Popups")
 * [Advanced Targeting Conditions](https://wppopupmaker.com/extensions/advanced-targeting-conditions?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Advanced+Targeting+Conditions "Advanced Targeting Conditions")
 * [Forced Interaction](https://wppopupmaker.com/extensions/forced-interaction?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Forced+Interaction "Forced Interaction")
-* [AJAX Login Modals](?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=AJAX+Login+Modals "AJAX Login Modals")
-* [Scroll Triggered Popups](?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Scroll+Triggered "Scroll Triggered Popups")
-* [Age Verification Modals](?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Age+Verification+Modals "Age Verification Modals")
-* [Advanced Theme Builder](?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Advanced+Theme+Builder "Advanced Theme Builder")
-* [Unlimited Themes](?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Unlimited+Themes "Unlimited Themes")
-* [Secure Idle User Logout](?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Secure+Idle+User+Logout "Secure Idle User Logout")
-* Popup Analytics (coming soon)
+* [AJAX Login Modals](https://wppopupmaker.com/extensions/ajax-login-modals?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=AJAX+Login+Modals "AJAX Login Modals")
+* [Scroll Triggered Popups](https://wppopupmaker.com/extensions/scroll-triggered-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Scroll+Triggered "Scroll Triggered Popups")
+* [Age Verification Modals](https://wppopupmaker.com/extensions/age-verification-modals?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Age+Verification+Modals "Age Verification Modals")
+* [Advanced Theme Builder](https://wppopupmaker.com/extensions/advanced-theme-builder?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Advanced+Theme+Builder "Advanced Theme Builder")
+* [Unlimited Themes](https://wppopupmaker.com/extensions/unlimited-themes?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Unlimited+Themes "Unlimited Themes")
+* [Secure Idle User Logout](https://wppopupmaker.com/extensions/secure-idle-user-logout?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Secure+Idle+User+Logout "Secure Idle User Logout")
+* [Popup Analytics](https://wppopupmaker.com/extensions/popup-analytics?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Popup+Analytics "Popup Analytics")
 * A/B/Z Split Testing (coming soon)
 
 For more information, visit [Popup Maker](https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Home+Page "WordPress Popup Maker")!
 
-[Plugin Developers Site](http://wizardinternetsolutions.com "Web & Plugin Development") - Wizard Internet Solutions
+[Plugin Developers Site](http://danieliser.com "Web Developer & WordPress Enthusiast") - Daniel Iser
 
 == Screenshots ==
 
