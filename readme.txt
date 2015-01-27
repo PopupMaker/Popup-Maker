@@ -6,7 +6,7 @@ Donate link:
 Tags: popup,popups,modal,modals,popup form,form modal,conversion,conversions,dialog box,auto open
 Requires at least: 3.4
 Tested up to: 4.1
-Stable tag: 1.1.7
+Stable tag: 1.1.8
 
 License: GNU Version 2 or Any Later Version
 Easily turn users into cash using Popup Maker - the most versatile & expansive popup plugin for WordPress!
@@ -86,6 +86,9 @@ For more information, visit [Popup Maker](https://wppopupmaker.com?utm_source=Wo
 * Added Blog Index support. Available under targeting conditions 'On Blog Index' & 'Exclude On Blog Index'.
 * Added better responsive image handling.
 * Added Admin Debug option for popups.
+* Changed jquery-ui-position collission property to none to solve positioning issues.
+* Disabled Popup Maker JS & CSS when no popups detected to load.
+* Added new function popmake_enqueue_scripts() which allows manual enqueuing of scripts and styles.
 
 = v1.1.7 =
 * Fixed undefined function popmake_default_settings.
