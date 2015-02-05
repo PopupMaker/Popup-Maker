@@ -193,23 +193,19 @@ function popmake_the_popup_title( $popup_id = NULL ) {
 
 function popmake_get_the_popup_content( $popup_id = NULL ) {
 	if( !$popup_id ) $popup_id = get_the_ID();
-	return apply_filters( 'popmake_get_the_popup_content', get_the_content( $popup_id ), $popup_id );
+	return apply_filters( 'the_popup_content', get_the_content( $popup_id ), $popup_id );
 }
-
-
-function popmake_apply_the_content( $content, $popup_id ) {
-	$remove_do_shortcode = false;
-	if ( ! has_filter( 'the_content', 'do_shortcode' ) ) {
-	    add_filter( 'the_content', 'do_shortcode' );
-	    $remove_do_shortcode = true;
-	}
-	$content = apply_filters( 'the_content', $content );
-	if($remove_do_shortcode) {
-		remove_filter( 'the_content', 'do_shortcode' );
-	}
-	return $content;
-}
-add_filter('popmake_get_the_popup_content', 'popmake_apply_the_content', 100, 2);
+add_filter( 'the_popup_content', array( $GLOBALS['wp_embed'], 'run_shortcode' ), 8 );
+add_filter( 'the_popup_content', array( $GLOBALS['wp_embed'], 'autoembed' ), 8 );
+add_filter( 'the_popup_content', 'wptexturize', 10 );
+add_filter( 'the_popup_content', 'convert_smilies', 10 );
+add_filter( 'the_popup_content', 'convert_chars', 10 );
+add_filter( 'the_popup_content', 'wpautop', 10 );
+add_filter( 'the_popup_content', 'shortcode_unautop', 10 );
+add_filter( 'the_popup_content', 'prepend_attachment', 10 );
+add_filter( 'the_popup_content', 'do_shortcode', 11 );
+add_filter( 'the_popup_content', 'capital_P_dangit', 11 );
+add_filter( 'the_popup_content', 'popmake_popup_content_container', 10000 );
 
 
 function popmake_the_popup_content( $popup_id = NULL ) {
@@ -287,8 +283,6 @@ function popmake_popup_content_container( $content ) {
 	}
 	return $content;
 }
-add_filter('the_content', 'popmake_popup_content_container', 10000);
-
 
 
 function popmake_popup_is_loadable( $popup_id ) {
