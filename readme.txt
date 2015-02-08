@@ -3,12 +3,12 @@ Contributors: danieliser
 Author URI: https://danieliser.com
 Plugin URI: https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Plugin+URI
 Donate link: 
-Tags: popup,popups,modal,modals,popup form,form modal,conversion,conversions,dialog box,auto openwordpress popup,popup,popups,modal,modals,popup form,conversion,conversions,exit intent,full page popup,full screen pop,full screen popup,optin popup,pop-up,pop-ups,popup box,popup message,popup window,unblockable,automatic popup,custom popup,fancy box,fancy popup,onclick popup,popup ads,popup advertising,age restriction,age verification,marketing,popup
+Tags: age restriction, age verification, auto open, automatic popup, conversion, conversions, custom popup, dialog box, exit intent, fancy box, fancy popup, form modal, full page popup, full screen pop, full screen popup, marketing, modal, modals, onclick popup, optin popup, pop-up, pop-ups, popup, popup ads, popup advertising, popup box, popup form, popup message, popup window, popups, unblockable, wordpress popup
 Requires at least: 3.4
 Tested up to: 4.2
-Stable tag: 1.1.8
-
+Stable tag: 1.1.9
 License: GNU Version 2 or Any Later Version
+
 Easily turn users into cash using Popup Maker - the most versatile & expansive popup plugin for WordPress!
 
 == Description ==
@@ -75,6 +75,11 @@ For more information, visit [Popup Maker](https://wppopupmaker.com?utm_source=Wo
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.1.9 =
+* Added %'s to reponsive sizes in size dropdown.
+* Remove usage of the_content and the_content filters.
+* Fixed responsive sizes.
 
 = v1.1.8 =
 * Fixed issue with admin menu position collisions.
