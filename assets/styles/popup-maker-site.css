@@ -32,7 +32,7 @@
 .popmake.responsive {
 	left: 50%;
 	margin-left: -40%;
-	width: 80%;
+	width: 70%;
 	height: auto;
 	overflow:visible;
 }
@@ -63,9 +63,13 @@
 	margin-left: -30%;
 	width: 60%;
 }
+.popmake.size-normal {
+	margin-left: -30%;
+	width: 70%;
+}
 .popmake.size-large {
 	margin-left: -35%;
-	width: 70%;
+	width: 80%;
 }
 .popmake.size-xlarge {
 	margin-left: -47.5%;
