@@ -13,7 +13,7 @@ function popmake_popup_display_meta_box_field_size( $popup_id ) {
 			</label>
 		</th>
 		<td>
-			<select name="popup_display_size" id="popup_display_size">
+			<select name="popup_display_size" id="popup_display_size" required>
 			<?php foreach(apply_filters('popmake_popup_display_size_options', array()) as $option => $value) : ?>
 				<option
 					value="<?php echo $value;?>"
