@@ -25,8 +25,10 @@ function popmake_get_google_webfonts_list( $key = 'AIzaSyAqXbKCykzxMy2-fnmGBjiwI
 		$data = json_decode($response, true);
 		$items = $data['items'];
 		$font_list = array();
-		foreach($items as $item) {
-			$font_list[$item['family']] = $item;
+		if( count( $items ) ) {
+			foreach($items as $item) {
+				$font_list[$item['family']] = $item;
+			}
 		}
 		set_transient( 'popmake-google-fonts-list', $font_list, WEEK_IN_SECONDS );
 		return $font_list;
