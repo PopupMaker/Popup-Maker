@@ -1,0 +1,1742 @@
+# Copyright (C) 2015 Popup Maker
+# This file is distributed under the same license as the Popup Maker package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Popup Maker 1.1.9\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/popup-maker\n"
+"POT-Creation-Date: 2015-02-21 06:42:03+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2015-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: includes/admin/admin-pages.php:31 includes/admin/admin-pages.php:32
+msgid "Settings"
+msgstr ""
+
+#: includes/admin/admin-pages.php:40 includes/admin/admin-pages.php:41
+msgid "Tools"
+msgstr ""
+
+#: includes/admin/admin-pages.php:49 includes/admin/admin-pages.php:50
+#: includes/admin/admin-setup.php:7
+#: includes/admin/settings/register-settings.php:356
+msgid "Extensions"
+msgstr ""
+
+#: includes/admin/admin-pages.php:58 includes/admin/admin-pages.php:59
+msgid "Help"
+msgstr ""
+
+#: includes/admin/admin-pages.php:67 includes/admin/admin-pages.php:68
+msgid "Welcome to Popup Maker"
+msgstr ""
+
+#: includes/admin/admin-pages.php:76 includes/admin/admin-pages.php:77
+#: includes/admin/welcome/changelog.php:6
+msgid "Popup Maker Changelog"
+msgstr ""
+
+#: includes/admin/admin-pages.php:85 includes/admin/admin-pages.php:86
+msgid "Getting started with Popup Maker"
+msgstr ""
+
+#: includes/admin/admin-pages.php:94 includes/admin/admin-pages.php:95
+msgid "The people that build Popup Maker"
+msgstr ""
+
+#: includes/admin/admin-pages.php:128 includes/post-types.php:95
+msgid "Theme"
+msgstr ""
+
+#: includes/admin/admin-setup.php:38
+msgid "No Thanks"
+msgstr ""
+
+#: includes/admin/extensions/extensions-page.php:13
+msgid "Popup Maker Extensions"
+msgstr ""
+
+#: includes/admin/extensions/extensions-page.php:115
+msgid "Get it instantly!"
+msgstr ""
+
+#: includes/admin/help/help-page.php:16
+msgid "General Usage"
+msgstr ""
+
+#: includes/admin/help/help-page.php:25
+msgid "Copy the class to the link/button you want to open this popup."
+msgstr ""
+
+#: includes/admin/help/help-page.php:25
+msgid ""
+"Will start with popmake- and end with a # of the popup you want to open."
+msgstr ""
+
+#: includes/admin/help/help-page.php:27
+msgid "Link Example"
+msgstr ""
+
+#: includes/admin/help/help-page.php:28 includes/admin/help/help-page.php:29
+#: includes/admin/help/help-page.php:33 includes/admin/help/help-page.php:34
+msgid "Open Popup"
+msgstr ""
+
+#: includes/admin/help/help-page.php:32
+msgid "Button Example"
+msgstr ""
+
+#: includes/admin/help/help-page.php:37
+msgid "Image Example"
+msgstr ""
+
+#: includes/admin/metabox-share.php:25
+msgid ""
+"Want to destroy your old conversion rates? Create high performing popups "
+"now! #WPPopupMaker"
+msgstr ""
+
+#: includes/admin/metabox-share.php:25
+msgid "Tweet"
+msgstr ""
+
+#: includes/admin/metabox-share.php:31
+msgid "Rate Popup Maker on WP!"
+msgstr ""
+
+#: includes/admin/metabox-support.php:26
+msgid "Knowledge Base"
+msgstr ""
+
+#: includes/admin/metabox-support.php:32
+msgid "Member Forums"
+msgstr ""
+
+#: includes/admin/metabox-support.php:38
+msgid "WordPress Forums"
+msgstr ""
+
+#: includes/admin/popups/dashboard-columns.php:28
+msgid "Name"
+msgstr ""
+
+#: includes/admin/popups/dashboard-columns.php:29
+msgid "CSS Classes"
+msgstr ""
+
+#: includes/admin/popups/dashboard-columns.php:30
+msgid "Title"
+msgstr ""
+
+#: includes/admin/popups/dashboard-columns.php:31 includes/post-types.php:174
+msgid "Categories"
+msgstr ""
+
+#: includes/admin/popups/dashboard-columns.php:32 includes/post-types.php:201
+msgid "Tags"
+msgstr ""
+
+#: includes/admin/popups/dashboard-columns.php:145
+msgid "Show all categories"
+msgstr ""
+
+#: includes/admin/popups/dashboard-columns.php:156
+msgid "Show all tags"
+msgstr ""
+
+#: includes/admin/popups/dashboard-columns.php:203
+msgid "%s Configuration"
+msgstr ""
+
+#: includes/admin/popups/dashboard-columns.php:205
+msgid "Price"
+msgstr ""
+
+#: includes/admin/popups/metabox-admin-debug-fields.php:11
+msgid "Enable Admin Debug"
+msgstr ""
+
+#: includes/admin/popups/metabox-admin-debug-fields.php:14
+msgid ""
+"When Enabled, the popup will show immediately on the given page for admins."
+msgstr ""
+
+#: includes/admin/popups/metabox-auto-open-popups-fields.php:10
+msgid "Enable Auto Open Popups"
+msgstr ""
+
+#: includes/admin/popups/metabox-auto-open-popups-fields.php:13
+msgid "Checking this will cause popup to open automatically."
+msgstr ""
+
+#: includes/admin/popups/metabox-auto-open-popups-fields.php:23
+msgid "Delay"
+msgstr ""
+
+#: includes/admin/popups/metabox-auto-open-popups-fields.php:36
+msgid "The delay before the popup will open in milliseconds."
+msgstr ""
+
+#: includes/admin/popups/metabox-auto-open-popups-fields.php:47
+msgid "Cookie Trigger"
+msgstr ""
+
+#: includes/admin/popups/metabox-auto-open-popups-fields.php:59
+msgid "When do you want to create the cookie."
+msgstr ""
+
+#: includes/admin/popups/metabox-auto-open-popups-fields.php:70
+msgid "Cookie Time"
+msgstr ""
+
+#: includes/admin/popups/metabox-auto-open-popups-fields.php:75
+msgid ""
+"Enter a plain english time before cookie expires. <br/>Example \"364 days 23 "
+"hours 59 minutes 59 seconds\" will reset just before 1 year exactly."
+msgstr ""
+
+#: includes/admin/popups/metabox-auto-open-popups-fields.php:84
+msgid "Sitewide Cookie"
+msgstr ""
+
+#: includes/admin/popups/metabox-auto-open-popups-fields.php:87
+msgid ""
+"This will prevent the popup from auto opening on any page until the cookie "
+"expires."
+msgstr ""
+
+#: includes/admin/popups/metabox-auto-open-popups-fields.php:98
+msgid "Cookie Key"
+msgstr ""
+
+#: includes/admin/popups/metabox-auto-open-popups-fields.php:102
+msgid ""
+"This changes the key used when setting and checking cookies. Resetting this "
+"will cause all existing cookies to be invalid."
+msgstr ""
+
+#: includes/admin/popups/metabox-click-open-fields.php:13
+msgid "Extra CSS Selectors"
+msgstr ""
+
+#: includes/admin/popups/metabox-click-open-fields.php:17
+msgid ".my-class, #button2"
+msgstr ""
+
+#: includes/admin/popups/metabox-click-open-fields.php:18
+msgid ""
+"This allows custom css classes, ids or selector strings to trigger the popup "
+"when clicked. Seperate multiple selectors using commas."
+msgstr ""
+
+#: includes/admin/popups/metabox-close-fields.php:11
+msgid "Click Overlay to Close"
+msgstr ""
+
+#: includes/admin/popups/metabox-close-fields.php:14
+msgid "Checking this will cause popup to close when user clicks on overlay."
+msgstr ""
+
+#: includes/admin/popups/metabox-close-fields.php:23
+msgid "Press ESC to Close"
+msgstr ""
+
+#: includes/admin/popups/metabox-close-fields.php:26
+msgid "Checking this will cause popup to close when user presses ESC key."
+msgstr ""
+
+#: includes/admin/popups/metabox-close-fields.php:35
+msgid "Press F4 to Close"
+msgstr ""
+
+#: includes/admin/popups/metabox-close-fields.php:38
+msgid "Checking this will cause popup to close when user presses F4 key."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:12
+#: includes/admin/themes/metabox-close-fields.php:157
+#: includes/admin/themes/metabox-title-fields.php:24
+msgid "Size"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:25
+msgid "Select the size of the popup."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:35
+msgid "Min Width"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:48
+msgid "Set a minimum width for the popup."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:53
+msgid "Max Width"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:66
+msgid "Set a maximum width for the popup."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:77
+msgid "Width"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:90
+msgid "Set a custom width for the popup."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:96
+msgid "Auto Adjusted Height"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:99
+msgid "Checking this option will set height to fit the content."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:105
+msgid "Scrollable Content"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:108
+msgid "Checking this option will add a scroll bar to your content."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:115
+msgid "Height"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:128
+msgid "Set a custom height for the popup."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:137
+msgid "Overlay"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:140
+msgid "Disable Overlay"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:143
+msgid "Checking this will disable and hide the overlay for this popup."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:151
+msgid "Animation"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:156
+msgid "Animation Type"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:169
+msgid "Select an animation type for your popup."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:175
+msgid "Animation Speed"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:189
+msgid "Set the animation speed for the popup."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:195
+msgid "Animation Origin"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:207
+msgid "Choose where the animation will begin."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:217
+#: includes/admin/themes/metabox-close-fields.php:66
+msgid "Position"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:221
+#: includes/admin/themes/metabox-close-fields.php:51
+msgid "Location"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:232
+#: includes/admin/themes/metabox-close-fields.php:62
+msgid "Choose which corner the close button will be positioned."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:236
+msgid "Fixed Postioning"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:239
+msgid "Checking this sets the positioning of the popup to fixed."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:244
+#: includes/admin/themes/metabox-close-fields.php:70
+#: includes/input-options.php:124
+msgid "Top"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:257
+msgid "Distance from the top edge of the screen."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:262
+#: includes/admin/themes/metabox-close-fields.php:104
+#: includes/input-options.php:126
+msgid "Bottom"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:275
+msgid "Distance from the bottom edge of the screen."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:280
+#: includes/admin/themes/metabox-close-fields.php:87
+#: includes/input-options.php:80 includes/input-options.php:125
+msgid "Left"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:293
+msgid "Distance from the left edge of the screen."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:298
+#: includes/admin/themes/metabox-close-fields.php:121
+#: includes/input-options.php:82 includes/input-options.php:127
+msgid "Right"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:311
+msgid "Distance from the right edge of the screen."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:319
+msgid "Z Index"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:323
+msgid "Overlay Z-Index"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:327
+msgid "Change the z-index layer level for the overlay."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:332
+msgid "Popup Z-Index"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:336
+msgid "Change the z-index layer level for the popup."
+msgstr ""
+
+#: includes/admin/popups/metabox-targeting-condition-fields.php:34
+msgid "On Entire Site"
+msgstr ""
+
+#: includes/admin/popups/metabox-targeting-condition-fields.php:46
+msgid "On Home Page"
+msgstr ""
+
+#: includes/admin/popups/metabox-targeting-condition-fields.php:58
+msgid "Exclude on Home Page"
+msgstr ""
+
+#: includes/admin/popups/metabox-targeting-condition-fields.php:70
+msgid "On Blog Index"
+msgstr ""
+
+#: includes/admin/popups/metabox-targeting-condition-fields.php:82
+msgid "Exclude on Blog Index"
+msgstr ""
+
+#: includes/admin/popups/metabox-targeting-condition-fields.php:170
+msgid "On Search Pages"
+msgstr ""
+
+#: includes/admin/popups/metabox-targeting-condition-fields.php:182
+msgid "Exclude on Search Pages"
+msgstr ""
+
+#: includes/admin/popups/metabox-targeting-condition-fields.php:194
+msgid "On 404 Pages"
+msgstr ""
+
+#: includes/admin/popups/metabox-targeting-condition-fields.php:206
+msgid "Exclude on 404 Pages"
+msgstr ""
+
+#: includes/admin/popups/metabox.php:25
+msgid "Display Settings"
+msgstr ""
+
+#: includes/admin/popups/metabox.php:27 includes/admin/themes/metabox.php:44
+msgid "Close Settings"
+msgstr ""
+
+#: includes/admin/popups/metabox.php:29 includes/admin/welcome/about.php:13
+#: includes/admin/welcome/getting-started.php:31
+msgid "Targeting Conditions"
+msgstr ""
+
+#: includes/admin/popups/metabox.php:32
+msgid "Click Open Settings"
+msgstr ""
+
+#: includes/admin/popups/metabox.php:35
+msgid "Auto Open Settings"
+msgstr ""
+
+#: includes/admin/popups/metabox.php:38
+msgid "Admin Debug Settings"
+msgstr ""
+
+#: includes/admin/popups/metabox.php:41
+#: includes/admin/settings/settings-page.php:64
+#: includes/admin/themes/metabox.php:46 includes/admin/tools/tools-page.php:59
+msgid "Support"
+msgstr ""
+
+#: includes/admin/popups/metabox.php:43 includes/admin/themes/metabox.php:48
+msgid "Share"
+msgstr ""
+
+#: includes/admin/popups/metabox.php:272 includes/admin/popups/metabox.php:273
+msgid "Enter popup title here"
+msgstr ""
+
+#: includes/admin/popups/post-type-item-metaboxes.php:42
+#: includes/admin/popups/post-type-item-metaboxes.php:285
+msgid "No items."
+msgstr ""
+
+#: includes/admin/popups/post-type-item-metaboxes.php:58
+#: includes/admin/popups/post-type-item-metaboxes.php:301
+msgid "&laquo;"
+msgstr ""
+
+#: includes/admin/popups/post-type-item-metaboxes.php:59
+#: includes/admin/popups/post-type-item-metaboxes.php:302
+msgid "&raquo;"
+msgstr ""
+
+#: includes/admin/popups/post-type-item-metaboxes.php:94
+msgid "Most Recent"
+msgstr ""
+
+#: includes/admin/popups/post-type-item-metaboxes.php:99
+#: includes/admin/popups/post-type-item-metaboxes.php:342
+msgid "View All"
+msgstr ""
+
+#: includes/admin/popups/post-type-item-metaboxes.php:104
+#: includes/admin/popups/post-type-item-metaboxes.php:135
+#: includes/admin/popups/post-type-item-metaboxes.php:137
+#: includes/admin/popups/post-type-item-metaboxes.php:347
+#: includes/admin/popups/post-type-item-metaboxes.php:398
+#: includes/admin/popups/post-type-item-metaboxes.php:400
+msgid "Search"
+msgstr ""
+
+#: includes/admin/popups/post-type-item-metaboxes.php:149
+#: includes/admin/popups/post-type-item-metaboxes.php:412
+msgid "No results found."
+msgstr ""
+
+#: includes/admin/popups/post-type-item-metaboxes.php:185
+msgctxt "nav menu home label"
+msgid "Home"
+msgstr ""
+
+#: includes/admin/popups/post-type-item-metaboxes.php:236
+#: includes/admin/popups/post-type-item-metaboxes.php:427
+msgid "Select All"
+msgstr ""
+
+#: includes/admin/popups/post-type-item-metaboxes.php:240
+msgid "Add Selected"
+msgstr ""
+
+#: includes/admin/popups/post-type-item-metaboxes.php:337
+msgid "Most Used"
+msgstr ""
+
+#: includes/admin/popups/post-type-item-metaboxes.php:431
+msgid "Add to Menu"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:137
+msgid "Support for CPTs"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:143
+msgid "Supported Post Types?"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:150
+msgid "Supported Taxonomies?"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:157
+msgid "Powered By"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:163
+msgid "Show Powered By Link?"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:164
+msgid ""
+"If you check this box, it will show the <em>Powered By Popup Maker</em> tag "
+"on all of your popups. Even if you don't, please take a moment to <a href="
+"\"%s\">rate and review us on WordPress</a>!"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:169
+msgid "How much do you love it?"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:170
+msgid "This affects the size of the credit link below your popups."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:204
+msgid "Don't Load Google Fonts"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:205
+msgid ""
+"Check this disable loading of google fonts, useful if the fonts you chose "
+"are already loaded with your theme."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:222
+msgid "Enable Easy Modal v2 Compatibility Mode"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:223
+msgid ""
+"This will automatically make any eModal classes you have added to your site "
+"launch the appropriate Popup after import."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:324
+msgid "Settings updated."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:352
+msgid "General"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:353
+msgid "Assets"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:359
+msgid "Licenses"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:362
+msgid "Misc"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:584
+msgid ""
+"The callback function used for the <strong>%s</strong> setting is missing."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:703
+msgid "Upload File"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:773
+msgid "Deactivate License"
+msgstr ""
+
+#: includes/admin/settings/settings-page.php:49
+#: includes/admin/settings/settings-page.php:55
+#: includes/admin/tools/tools-page.php:44
+#: includes/admin/tools/tools-page.php:50
+msgid "Save"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:5
+msgid "Theme the close button for the popups."
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:13
+msgid "Text"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:17
+msgid "Enter the close button text."
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:28
+#: includes/admin/themes/metabox-container-fields.php:13
+msgid "Padding"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:144
+#: includes/admin/themes/metabox-content-fields.php:14
+#: includes/admin/themes/metabox-title-fields.php:12
+msgid "Font"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:148
+#: includes/admin/themes/metabox-close-fields.php:248
+#: includes/admin/themes/metabox-close-fields.php:326
+#: includes/admin/themes/metabox-close-fields.php:447
+#: includes/admin/themes/metabox-close-fields.php:532
+#: includes/admin/themes/metabox-container-fields.php:40
+#: includes/admin/themes/metabox-container-fields.php:117
+#: includes/admin/themes/metabox-container-fields.php:237
+#: includes/admin/themes/metabox-content-fields.php:20
+#: includes/admin/themes/metabox-overlay-fields.php:11
+#: includes/admin/themes/metabox-title-fields.php:16
+#: includes/admin/themes/metabox-title-fields.php:180
+msgid "Color"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:174
+#: includes/admin/themes/metabox-title-fields.php:41
+msgid "Line Height"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:191
+#: includes/admin/themes/metabox-content-fields.php:28
+#: includes/admin/themes/metabox-title-fields.php:58
+msgid "Family"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:207
+#: includes/admin/themes/metabox-content-fields.php:43
+#: includes/admin/themes/metabox-title-fields.php:74
+msgid "Weight"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:223
+#: includes/admin/themes/metabox-close-fields.php:310
+#: includes/admin/themes/metabox-container-fields.php:101
+#: includes/admin/themes/metabox-content-fields.php:59
+#: includes/admin/themes/metabox-title-fields.php:90
+msgid "Style"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:244
+#: includes/admin/themes/metabox-container-fields.php:36
+msgid "Background"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:256
+#: includes/admin/themes/metabox-close-fields.php:455
+#: includes/admin/themes/metabox-close-fields.php:540
+#: includes/admin/themes/metabox-container-fields.php:48
+#: includes/admin/themes/metabox-container-fields.php:245
+#: includes/admin/themes/metabox-overlay-fields.php:20
+#: includes/admin/themes/metabox-title-fields.php:188
+msgid "Opacity"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:279
+#: includes/admin/themes/metabox-container-fields.php:70
+#: includes/admin/themes/metabox-overlay-fields.php:43
+msgid "Want to use background images?"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:279
+#: includes/admin/themes/metabox-container-fields.php:70
+#: includes/admin/themes/metabox-overlay-fields.php:43
+msgid "Check out Advanced Theme Builder!"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:288
+#: includes/admin/themes/metabox-container-fields.php:79
+msgid "Border"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:292
+#: includes/admin/themes/metabox-container-fields.php:83
+msgid "Radius"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:305
+msgid "Choose a corner radius for your close button."
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:321
+msgid "Choose a border style for your close button."
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:334
+#: includes/admin/themes/metabox-container-fields.php:125
+msgid "Thickness"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:356
+#: includes/admin/themes/metabox-container-fields.php:146
+msgid "Drop Shadow"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:360
+#: includes/admin/themes/metabox-container-fields.php:150
+#: includes/input-options.php:27
+msgid "Inset"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:365
+#: includes/admin/themes/metabox-container-fields.php:155
+msgid "No"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:366
+#: includes/admin/themes/metabox-container-fields.php:156
+msgid "Yes"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:374
+#: includes/admin/themes/metabox-container-fields.php:164
+msgid "Set the box shadow to inset (inner shadow)."
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:379
+#: includes/admin/themes/metabox-close-fields.php:481
+#: includes/admin/themes/metabox-container-fields.php:169
+#: includes/admin/themes/metabox-title-fields.php:129
+msgid "Horizontal Position"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:396
+#: includes/admin/themes/metabox-close-fields.php:498
+#: includes/admin/themes/metabox-container-fields.php:186
+#: includes/admin/themes/metabox-title-fields.php:146
+msgid "Vertical Position"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:413
+#: includes/admin/themes/metabox-close-fields.php:515
+#: includes/admin/themes/metabox-container-fields.php:203
+#: includes/admin/themes/metabox-title-fields.php:163
+msgid "Blur Radius"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:430
+#: includes/admin/themes/metabox-container-fields.php:220
+msgid "Spread"
+msgstr ""
+
+#: includes/admin/themes/metabox-close-fields.php:477
+#: includes/admin/themes/metabox-title-fields.php:125
+msgid "Text Shadow"
+msgstr ""
+
+#: includes/admin/themes/metabox-container-fields.php:5
+msgid "Theme the container inside the popups."
+msgstr ""
+
+#: includes/admin/themes/metabox-container-fields.php:96
+msgid "Choose a corner radius for your container button."
+msgstr ""
+
+#: includes/admin/themes/metabox-container-fields.php:112
+msgid "Choose a border style for your container button."
+msgstr ""
+
+#: includes/admin/themes/metabox-content-fields.php:5
+msgid "Theme the content inside the popups."
+msgstr ""
+
+#: includes/admin/themes/metabox-overlay-fields.php:4
+msgid "Theme the overlay behind the popups."
+msgstr ""
+
+#: includes/admin/themes/metabox-overlay-fields.php:15
+msgid "Choose the overlay color."
+msgstr ""
+
+#: includes/admin/themes/metabox-overlay-fields.php:34
+msgid "The opacity value for the overlay."
+msgstr ""
+
+#: includes/admin/themes/metabox-title-fields.php:5
+msgid "Theme the title of the popups."
+msgstr ""
+
+#: includes/admin/themes/metabox-title-fields.php:106
+msgid "Align"
+msgstr ""
+
+#: includes/admin/themes/metabox.php:29
+msgid "Theme Preview"
+msgstr ""
+
+#: includes/admin/themes/metabox.php:32
+msgid "Overlay Settings"
+msgstr ""
+
+#: includes/admin/themes/metabox.php:35
+msgid "Container Settings"
+msgstr ""
+
+#: includes/admin/themes/metabox.php:38
+msgid "Title Settings"
+msgstr ""
+
+#: includes/admin/themes/metabox.php:41
+msgid "Content Settings"
+msgstr ""
+
+#: includes/admin/themes/metabox.php:234
+msgid "Need more than one (1) theme?"
+msgstr ""
+
+#: includes/admin/themes/metabox.php:234
+msgid "Check out Unlimited Themes!"
+msgstr ""
+
+#: includes/admin/themes/metabox.php:264
+msgid "Title Text"
+msgstr ""
+
+#: includes/admin/themes/metabox.php:266 includes/popup-functions.php:282
+#: includes/shortcodes.php:76
+msgid "&#215;"
+msgstr ""
+
+#: includes/admin/themes/metabox.php:390
+msgid "Theme Overlay"
+msgstr ""
+
+#: includes/admin/tools/tools-page.php:90
+msgid "Import / Export"
+msgstr ""
+
+#: includes/admin/welcome/about.php:6 includes/admin/welcome/credits.php:6
+#: includes/admin/welcome/getting-started.php:6
+msgid "Welcome to Popup Maker %s"
+msgstr ""
+
+#: includes/admin/welcome/about.php:7 includes/admin/welcome/changelog.php:7
+#: includes/admin/welcome/credits.php:7
+#: includes/admin/welcome/getting-started.php:7
+msgid ""
+"Thank you for updating to the latest version! Are you ready to destroy your "
+"old conversion rates and transform your website? We sure are!"
+msgstr ""
+
+#: includes/admin/welcome/about.php:8 includes/admin/welcome/changelog.php:8
+#: includes/admin/welcome/credits.php:8
+#: includes/admin/welcome/getting-started.php:8
+msgid "Version %s"
+msgstr ""
+
+#: includes/admin/welcome/about.php:16
+msgid "Target specific users for your popups!"
+msgstr ""
+
+#: includes/admin/welcome/about.php:17
+msgid ""
+"Our %sTargeting Conditions%s feature allows you to tailor your popups to "
+"specific users by giving you the ability to use popups exactly where you "
+"want within your website."
+msgstr ""
+
+#: includes/admin/welcome/about.php:18
+msgid "Destroy Old Conversion Rates with Auto Open!"
+msgstr ""
+
+#: includes/admin/welcome/about.php:19
+msgid ""
+"One of the absolute best ways to market your most valuable and precious "
+"content, our %sAuto Open Popups%s Feature allows you to choose the delay "
+"before opening, when the cookie is set, how long the cookie will last, even "
+"reset cookies for a popup."
+msgstr ""
+
+#: includes/admin/welcome/about.php:20
+msgid "Drive Conversions!"
+msgstr ""
+
+#: includes/admin/welcome/about.php:23
+msgid ""
+"Use %sScroll Triggered%s & %sExit Intent Popup%s Extensions to enhance your "
+"popups’ effectiveness and easily convert users into cash."
+msgstr ""
+
+#: includes/admin/welcome/about.php:29
+msgid "Google Font Integration"
+msgstr ""
+
+#: includes/admin/welcome/about.php:31
+msgid ""
+"Easily plug and play all of your favorite fonts from Google Fonts all within "
+"a few clicks!"
+msgstr ""
+
+#: includes/admin/welcome/about.php:39
+msgid "WordPress Form Plug-In Integrations"
+msgstr ""
+
+#: includes/admin/welcome/about.php:41
+msgid ""
+"Use any of your forms from the most popular form plugins out-of-the-box "
+"inside your popups with ease and efficiency. 100% seamless compatibility "
+"with:"
+msgstr ""
+
+#: includes/admin/welcome/about.php:51
+msgid "Easy Theme Builder"
+msgstr ""
+
+#: includes/admin/welcome/about.php:54
+msgid ""
+"Our theme builder allows you to create a high performing theme in no time "
+"for your popups. Use our color picker to grab the perfect colors to meet "
+"your needs and find pixel perfect sizes with ease for a plethora of "
+"additional theme settings."
+msgstr ""
+
+#: includes/admin/welcome/about.php:55
+msgid "Make it Your Own!"
+msgstr ""
+
+#: includes/admin/welcome/about.php:58
+msgid ""
+"If you need to create an unlimited number of themes and customize your "
+"popups, check out our %sUnlimited Themes%s Extension. Also, you may be "
+"interested in our %sAdvanced Theme Builder%s Extension, which allows you to "
+"add background images to many elements of your popup within a couple of "
+"clicks."
+msgstr ""
+
+#: includes/admin/welcome/about.php:67
+msgid "Further Enhancements & Updates"
+msgstr ""
+
+#: includes/admin/welcome/about.php:71
+msgid "Exit Intent"
+msgstr ""
+
+#: includes/admin/welcome/about.php:74
+msgid ""
+"Easily convert abandoning users into cash with our Exit Intent Extension. "
+"Exit Intent now comes with Hard Exit Technology. Learn more %shere%s."
+msgstr ""
+
+#: includes/admin/welcome/about.php:81
+msgid "Lightweight & Dependable"
+msgstr ""
+
+#: includes/admin/welcome/about.php:82
+msgid ""
+"Speed matters, and at only 5.9kb, our popups won’t slow you down. Our "
+"optimization techniques and program enhancement means your popups will "
+"perform at a consistently high level with 100% uptime."
+msgstr ""
+
+#: includes/admin/welcome/about.php:86
+msgid "Popup Tags & Categories"
+msgstr ""
+
+#: includes/admin/welcome/about.php:87
+msgid ""
+"Popup Maker allows you to categorize and tag your popups for easy "
+"organization and recognition."
+msgstr ""
+
+#: includes/admin/welcome/about.php:93
+#: includes/admin/welcome/getting-started.php:126
+msgid "Customize Your First Theme"
+msgstr ""
+
+#: includes/admin/welcome/about.php:94
+#: includes/admin/welcome/getting-started.php:127
+msgid "Create a Modal"
+msgstr ""
+
+#: includes/admin/welcome/about.php:95
+msgid "View the Full Changelog"
+msgstr ""
+
+#: includes/admin/welcome/changelog.php:13
+msgid "Full Changelog"
+msgstr ""
+
+#: includes/admin/welcome/changelog.php:32
+msgid "No valid changlog was found."
+msgstr ""
+
+#: includes/admin/welcome/credits.php:12
+msgid ""
+"Popup Maker is created by expert WordPress developers who aim to provide the "
+"#1 popup marketing platform for converting more users with WordPress."
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:13
+msgid ""
+"Use the tips below to get started using Popup Maker. You will have those "
+"high performance popups up and running in no time!"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:16
+msgid "Creating Your First Popup Maker Popup"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:21
+msgid "<a href=\"%s\">%s &rarr; Add New</a>"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:23
+msgid ""
+"The %s menu is your access point for all aspects of your Popup Maker product "
+"creation and setup. To create your first popup, simply click Add New and "
+"then choose from many available options to get it just right."
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:25
+msgid "Display Options"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:26
+msgid ""
+"Display options control how your popup shows and how it behaves, "
+"respectively. Set the size, how the background operates, animation options, "
+"and positioning positioning."
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:28
+msgid "Close Option"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:29
+msgid ""
+"These settings allow you to control how a user is able to close your popups: "
+"clicking on the background overlay, pressing ESC, or pressing F4. You can "
+"enable or disable all of these settings, or pick and choose based on your "
+"preference. Also, you can prevent users from closing your popups using our "
+"Forced Interaction Extension."
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:32
+msgid ""
+"Use Targeting Conditions to load your popups wherever you please! If you’re "
+"not running some type of auto open popup extension (Scroll Triggered, Exit "
+"Intent, or Auto Open), then remember, you have to call your popup using the "
+"<em>popmake class</em> on your HTML element (more information below.)"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:34
+msgid "Theme Settings"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:35
+msgid ""
+"Choose your theme from the drop down to customize how your popup looks. "
+"Without Unlimited Themes, only the Default Theme will appear, which you can "
+"customize and change the name to suit your needs."
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:41
+msgid "Calling Your Popups Anywhere"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:47
+msgid "Using the Popup Maker CSS Tag"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:48
+msgid ""
+"In the <em>All Popups Menu</em>, you can find all of your popups and their "
+"various attributes. One of the most important attributes is the CSS Class of "
+"your popups. You will use this class wherever you want to call your popups!"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:51
+msgid "Read More"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:52
+msgid "Sign Up Now!"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:56
+msgid "Using Popup Maker Short Codes"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:57
+msgid ""
+"You can also use shortcodes to create popups directly inline with the "
+"content of your posts and pages. This is useful if you wanna have unique "
+"content in your popups for each page/post."
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:66
+msgid "Need Help?"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:70
+msgid "Top-Notch Support"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:73
+msgid ""
+"We provide top-notch support! If you encounter a problem or have a question, "
+"post a question in the %sWordPress Support Forums%s, or if you’ve purchased "
+"a membership or extension, the %sMembers Only Forums%s."
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:82
+msgid "Stay Up-to-Date"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:86
+msgid "Get Notified of Extension Releases"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:89
+msgid ""
+"New extensions that make Popup Maker even more powerful are released nearly "
+"every single week. <a href=\"%s\" target=\"_blank\">Subscribe to the "
+"newsletter</a> to stay up to date with our latest releases. Signup now to "
+"ensure you do not miss a release!"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:94
+msgid "Get Alerted About New Tutorials"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:97
+msgid ""
+"<a href=\"%s\" target=\"_blank\">Signup now</a> to hear about the latest "
+"tutorial releases that explain how to take Popup Maker further."
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:106
+msgid "Extensions for Everything"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:110
+msgid "9 Extensions and Counting..."
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:111
+msgid ""
+"Add-on plugins are available that greatly extend the default functionality "
+"of Popup Maker. There are extensions enhancing the Theme Builder "
+"capabilities, extensions for marketing your most precious content like Auto "
+"Open and Exit Intent, plus much more now, and even more to come."
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:112
+msgid ""
+"We have over 25 more extensions in works, and over 35 integration extensions "
+"in the works as well. Stay updated and tuned in to be a part of what is "
+"going to be the robust Popup Maker tool on the market."
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:114
+msgid "Visit the Extension Store"
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:117
+msgid ""
+"<a href=\"%s\" target=\"_blank\">The Extensions store</a> has a list of all "
+"available extensions, including convenient category filters so you can find "
+"exactly what you are looking for."
+msgstr ""
+
+#: includes/admin/welcome/getting-started.php:128
+msgid "View the Full Getting Started Guide"
+msgstr ""
+
+#: includes/admin/welcome.php:41
+msgid "What's New"
+msgstr ""
+
+#: includes/admin/welcome.php:44
+msgid "Getting Started"
+msgstr ""
+
+#: includes/admin/welcome.php:47
+msgid "Credits"
+msgstr ""
+
+#: includes/defaults.php:148
+msgid "CLOSE"
+msgstr ""
+
+#: includes/google-fonts.php:45
+msgid "Google Web Fonts&#10549;"
+msgstr ""
+
+#: includes/input-options.php:10
+msgid "PX"
+msgstr ""
+
+#: includes/input-options.php:11
+msgid "%"
+msgstr ""
+
+#: includes/input-options.php:12
+msgid "EM"
+msgstr ""
+
+#: includes/input-options.php:13
+msgid "REM"
+msgstr ""
+
+#: includes/input-options.php:21 includes/input-options.php:110
+msgid "None"
+msgstr ""
+
+#: includes/input-options.php:22
+msgid "Solid"
+msgstr ""
+
+#: includes/input-options.php:23
+msgid "Dotted"
+msgstr ""
+
+#: includes/input-options.php:24
+msgid "Dashed"
+msgstr ""
+
+#: includes/input-options.php:25
+msgid "Double"
+msgstr ""
+
+#: includes/input-options.php:26
+msgid "Groove"
+msgstr ""
+
+#: includes/input-options.php:28
+msgid "Outset"
+msgstr ""
+
+#: includes/input-options.php:29
+msgid "Ridge"
+msgstr ""
+
+#: includes/input-options.php:38
+msgid "Use Your Themes"
+msgstr ""
+
+#: includes/input-options.php:39
+msgid "Sans-Serif"
+msgstr ""
+
+#: includes/input-options.php:40
+msgid "Tahoma"
+msgstr ""
+
+#: includes/input-options.php:41
+msgid "Georgia"
+msgstr ""
+
+#: includes/input-options.php:42
+msgid "Comic Sans MS"
+msgstr ""
+
+#: includes/input-options.php:43
+msgid "Arial"
+msgstr ""
+
+#: includes/input-options.php:44
+msgid "Lucida Grande"
+msgstr ""
+
+#: includes/input-options.php:45
+msgid "Times New Roman"
+msgstr ""
+
+#: includes/input-options.php:53 includes/input-options.php:70
+msgid "Normal"
+msgstr ""
+
+#: includes/input-options.php:54
+msgid "100 "
+msgstr ""
+
+#: includes/input-options.php:55
+msgid "200 "
+msgstr ""
+
+#: includes/input-options.php:56
+msgid "300 "
+msgstr ""
+
+#: includes/input-options.php:57
+msgid "400 "
+msgstr ""
+
+#: includes/input-options.php:58
+msgid "500 "
+msgstr ""
+
+#: includes/input-options.php:59
+msgid "600 "
+msgstr ""
+
+#: includes/input-options.php:60
+msgid "700 "
+msgstr ""
+
+#: includes/input-options.php:61
+msgid "800 "
+msgstr ""
+
+#: includes/input-options.php:62
+msgid "900 "
+msgstr ""
+
+#: includes/input-options.php:71
+msgid "Italic"
+msgstr ""
+
+#: includes/input-options.php:81
+msgid "Center"
+msgstr ""
+
+#: includes/input-options.php:90
+msgid "Responsive Sizes&#10549;"
+msgstr ""
+
+#: includes/input-options.php:91
+msgid "Nano - 10%"
+msgstr ""
+
+#: includes/input-options.php:92
+msgid "Micro - 20%"
+msgstr ""
+
+#: includes/input-options.php:93
+msgid "Tiny - 30%"
+msgstr ""
+
+#: includes/input-options.php:94
+msgid "Small - 40%"
+msgstr ""
+
+#: includes/input-options.php:95
+msgid "Medium - 60%"
+msgstr ""
+
+#: includes/input-options.php:96
+msgid "Normal - 70%"
+msgstr ""
+
+#: includes/input-options.php:97
+msgid "Large - 80%"
+msgstr ""
+
+#: includes/input-options.php:98
+msgid "X Large - 95%"
+msgstr ""
+
+#: includes/input-options.php:99
+msgid "Non Responsive Sizes&#10549;"
+msgstr ""
+
+#: includes/input-options.php:100
+msgid "Auto"
+msgstr ""
+
+#: includes/input-options.php:101
+msgid "Custom"
+msgstr ""
+
+#: includes/input-options.php:111
+msgid "Slide"
+msgstr ""
+
+#: includes/input-options.php:112
+msgid "Fade"
+msgstr ""
+
+#: includes/input-options.php:113
+msgid "Fade and Slide"
+msgstr ""
+
+#: includes/input-options.php:114
+msgid "Grow"
+msgstr ""
+
+#: includes/input-options.php:115
+msgid "Grow and Slide"
+msgstr ""
+
+#: includes/input-options.php:128 includes/input-options.php:145
+#: includes/input-options.php:162
+msgid "Top Left"
+msgstr ""
+
+#: includes/input-options.php:129 includes/input-options.php:146
+msgid "Top Center"
+msgstr ""
+
+#: includes/input-options.php:130 includes/input-options.php:147
+#: includes/input-options.php:163
+msgid "Top Right"
+msgstr ""
+
+#: includes/input-options.php:131 includes/input-options.php:148
+msgid "Middle Left"
+msgstr ""
+
+#: includes/input-options.php:132 includes/input-options.php:149
+msgid "Middle Center"
+msgstr ""
+
+#: includes/input-options.php:133 includes/input-options.php:150
+msgid "Middle Right"
+msgstr ""
+
+#: includes/input-options.php:134 includes/input-options.php:151
+#: includes/input-options.php:164
+msgid "Bottom Left"
+msgstr ""
+
+#: includes/input-options.php:135 includes/input-options.php:152
+msgid "Bottom Center"
+msgstr ""
+
+#: includes/input-options.php:136 includes/input-options.php:153
+#: includes/input-options.php:165
+msgid "Bottom Right"
+msgstr ""
+
+#: includes/input-options.php:174
+msgid "Disabled"
+msgstr ""
+
+#: includes/input-options.php:175
+msgid "On Open"
+msgstr ""
+
+#: includes/input-options.php:176
+msgid "On Close"
+msgstr ""
+
+#: includes/input-options.php:177
+msgid "Manual"
+msgstr ""
+
+#: includes/install.php:89
+msgid "Default Theme"
+msgstr ""
+
+#: includes/license-handler.php:120
+msgid "%1$s License Key"
+msgstr ""
+
+#: includes/post-types.php:21 includes/post-types.php:51
+msgid "Add New"
+msgstr ""
+
+#: includes/post-types.php:22 includes/post-types.php:52
+msgid "Add New %1$s"
+msgstr ""
+
+#: includes/post-types.php:23 includes/post-types.php:53
+msgid "Edit %1$s"
+msgstr ""
+
+#: includes/post-types.php:24 includes/post-types.php:54
+msgid "New %1$s"
+msgstr ""
+
+#: includes/post-types.php:25 includes/post-types.php:55
+msgid "All %2$s"
+msgstr ""
+
+#: includes/post-types.php:26 includes/post-types.php:56
+msgid "View %1$s"
+msgstr ""
+
+#: includes/post-types.php:27 includes/post-types.php:57
+msgid "Search %2$s"
+msgstr ""
+
+#: includes/post-types.php:28 includes/post-types.php:58
+msgid "No %2$s found"
+msgstr ""
+
+#: includes/post-types.php:29 includes/post-types.php:59
+msgid "No %2$s found in Trash"
+msgstr ""
+
+#: includes/post-types.php:91
+msgid "Popup"
+msgstr ""
+
+#: includes/post-types.php:92
+msgid "Popups"
+msgstr ""
+
+#: includes/post-types.php:96
+msgid "Themes"
+msgstr ""
+
+#: includes/post-types.php:144
+msgid "%s Name"
+msgstr ""
+
+#: includes/post-types.php:146
+msgid "Enter %s name here"
+msgstr ""
+
+#: includes/post-types.php:164
+msgctxt "taxonomy general name"
+msgid "%s Categories"
+msgstr ""
+
+#: includes/post-types.php:165
+msgctxt "taxonomy singular name"
+msgid "Category"
+msgstr ""
+
+#: includes/post-types.php:166
+msgid "Search Categories"
+msgstr ""
+
+#: includes/post-types.php:167
+msgid "All Categories"
+msgstr ""
+
+#: includes/post-types.php:168
+msgid "Parent Category"
+msgstr ""
+
+#: includes/post-types.php:169
+msgid "Parent Category:"
+msgstr ""
+
+#: includes/post-types.php:170
+msgid "Edit Category"
+msgstr ""
+
+#: includes/post-types.php:171
+msgid "Update Category"
+msgstr ""
+
+#: includes/post-types.php:172
+msgid "Add New %s Category"
+msgstr ""
+
+#: includes/post-types.php:173
+msgid "New Category Name"
+msgstr ""
+
+#: includes/post-types.php:175
+msgid "Choose from most used %s categories"
+msgstr ""
+
+#: includes/post-types.php:191
+msgctxt "taxonomy general name"
+msgid "%s Tags"
+msgstr ""
+
+#: includes/post-types.php:192
+msgctxt "taxonomy singular name"
+msgid "Tag"
+msgstr ""
+
+#: includes/post-types.php:193
+msgid "Search Tags"
+msgstr ""
+
+#: includes/post-types.php:194
+msgid "All Tags"
+msgstr ""
+
+#: includes/post-types.php:195
+msgid "Parent Tag"
+msgstr ""
+
+#: includes/post-types.php:196
+msgid "Parent Tag:"
+msgstr ""
+
+#: includes/post-types.php:197
+msgid "Edit Tag"
+msgstr ""
+
+#: includes/post-types.php:198
+msgid "Update Tag"
+msgstr ""
+
+#: includes/post-types.php:199
+msgid "Add New Tag"
+msgstr ""
+
+#: includes/post-types.php:200
+msgid "New Tag Name"
+msgstr ""
+
+#: includes/post-types.php:202
+msgid "Choose from most used %s tags"
+msgstr ""
+
+#: includes/post-types.php:226
+msgctxt "Inactive status"
+msgid "Inactive"
+msgstr ""
+
+#: includes/post-types.php:231
+msgid "Inactive <span class=\"count\">(%s)</span>"
+msgid_plural "Inactive <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/post-types.php:250 includes/post-types.php:251
+#: includes/post-types.php:259 includes/post-types.php:260
+msgid "%1$s updated."
+msgstr ""
+
+#: includes/post-types.php:252 includes/post-types.php:261
+msgid "%1$s published."
+msgstr ""
+
+#: includes/post-types.php:253 includes/post-types.php:262
+msgid "%1$s saved."
+msgstr ""
+
+#: includes/post-types.php:254 includes/post-types.php:263
+msgid "%1$s submitted."
+msgstr ""
+
+#: includes/scripts.php:37
+msgid "Powered By Popup Maker"
+msgstr ""
+
+#: popup-maker.php:98 popup-maker.php:110
+msgid "Cheatin&#8217; huh?"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Popup Maker"
+msgstr ""
+
+#. #-#-#-#-#  plugin.pot (Popup Maker 1.1.9)  #-#-#-#-#
+#. Plugin URI of the plugin/theme
+#. #-#-#-#-#  plugin.pot (Popup Maker 1.1.9)  #-#-#-#-#
+#. Author URI of the plugin/theme
+msgid "https://wppopupmaker.com"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Easily create & style popups with any content. Theme editor to quickly style "
+"your popups. Add forms, social media boxes, videos & more."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Daniel Iser"
+msgstr ""
