@@ -200,11 +200,7 @@ function popmake_emodal_v2_import() {
 			update_post_meta( $new_modal_id, $meta_key, $meta_value );
 		}
 
-
 	}
-
-	$message = 'Successfully Imported ' . count($themes) . ' ' . (count($themes) > 1 ? 'Themes' : 'Theme') .' &amp; ' . count($modals) . ' ' . (count($modals) > 1 ? 'Modals' : 'Modal') . ' from Easy Modal.';
-	PopMake_Admin_Notice::add(__($message, 'popup-maker'));
 }
 
 

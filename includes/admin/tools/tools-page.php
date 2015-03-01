@@ -14,7 +14,11 @@ function popmake_tools_page() {
 	ob_start();?>
 	<div class="wrap">
 		<h2><?php esc_html_e( __( 'Popup Maker Tools', 'popup-maker' ) );?></h2>
-		<?php $notices = PopMake_Admin_Notice::render_notices();?>
+		<?php if( isset( $_GET['imported'] ) ) : ?>
+		<div class="updated">
+			<p><?php _e( 'Successfully Imported your themes &amp; modals from Easy Modal.' );?></p>
+		</div>
+		<?php endif; ?>
 		<h2 id="popmake-tabs" class="nav-tab-wrapper"><?php
 			foreach( popmake_get_tools_tabs() as $tab_id => $tab_name ) {
 
@@ -98,9 +102,10 @@ function popmake_emodal_v2_import_button() {
 add_action('popmake_tools_page_tab_import', 'popmake_emodal_v2_import_button');
 
 function popmake_emodal_admin_init() {
-	if(!isset($_REQUEST['popmake_emodal_v2_import'])) {
+	if( ! isset( $_REQUEST['popmake_emodal_v2_import'] ) ) {
 		return;
 	}
 	popmake_emodal_v2_import();
+	wp_redirect( admin_url( 'edit.php?post_type=popup&page=tools&imported=1' ), 302 );
 }
 add_action('admin_init', 'popmake_emodal_admin_init');
