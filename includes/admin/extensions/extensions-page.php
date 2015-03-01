@@ -54,13 +54,13 @@ function popmake_extensions_page() {?>
 					        foreach($extensions as $extension) :?>
 					        <li class="available-extension-inner">
 					            <h3>
-									<a target="_blank" href="<?php esc_attr_e($extension->homepage);?>?utm_source=Plugin+Admin&amp;utm_medium=Extensions+Page+Extension+Names&amp;utm_campaign=<?php esc_attr_e( str_replace(' ', '+', $extension->name) );?>">
-										<?php esc_html_e($extension->name)?>
+									<a target="_blank" href="<?php esc_attr_e($extension['homepage']);?>?utm_source=Plugin+Admin&amp;utm_medium=Extensions+Page+Extension+Names&amp;utm_campaign=<?php esc_attr_e( str_replace(' ', '+', $extension['name']) );?>">
+										<?php esc_html_e($extension['name'])?>
 									</a>
 								</h3>
-					            <?php $image = in_array($extension->slug, $existing_extension_images) ? POPMAKE_URL .'/assets/images/extensions/' . $extension->slug .'.jpg' : $extension->image;?>
+					            <?php $image = in_array($extension['slug'], $existing_extension_images) ? POPMAKE_URL .'/assets/images/extensions/' . $extension['slug'] .'.jpg' : $extension['image'];?>
 					            <img class="extension-thumbnail" src="<?php esc_attr_e($image)?>">
-					            <p><?php esc_html_e($extension->excerpt)?></p>
+					            <p><?php esc_html_e($extension['excerpt'])?></p>
 					            <hr/><?php
 					            /*
 					            if(!empty($extension->download_link) && !isset($installed_plugins[$extension->slug.'/'.$extension->slug.'.php']))
@@ -112,7 +112,7 @@ function popmake_extensions_page() {?>
 					            */
 					            ?>
 				                <span class="action-links">
-				                	<a class="button" target="_blank" href="<?php esc_attr_e($extension->homepage);?>?utm_source=Plugin+Admin&amp;utm_medium=Extensions+Page+Extension+Buttons&amp;utm_campaign=<?php esc_attr_e( str_replace(' ', '+', $extension->name) );?>"><?php _e( 'Get it instantly!', 'popup-maker' );?></a>
+				                	<a class="button" target="_blank" href="<?php esc_attr_e($extension['homepage']);?>?utm_source=Plugin+Admin&amp;utm_medium=Extensions+Page+Extension+Buttons&amp;utm_campaign=<?php esc_attr_e( str_replace(' ', '+', $extension['name']) );?>"><?php _e( 'Get it instantly!', 'popup-maker' );?></a>
 				                </span>
 					        </li>
 					        <?php endforeach;				
