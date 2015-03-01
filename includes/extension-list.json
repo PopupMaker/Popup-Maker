@@ -1,0 +1,90 @@
+[
+    {
+        "new_version": "1.0.2",
+        "name": "Exit Intent Popups",
+        "slug": "exit-intent-popups",
+        "url": "https://wppopupmaker.com/extensions/exit-intent-popups?changelog=1",
+        "homepage": "https://wppopupmaker.com/extensions/exit-intent-popups",
+        "package": "",
+        "download_link": "",
+        "image": "https://wppopupmaker.com/wp-content/uploads/edd/2014/11/exit-intent1.jpg",
+        "excerpt": "Easily turn abandoning users into cash!  Exit Intent opens a popup when users attempt to leave your site."
+    },
+    {
+        "new_version": "1.0.3",
+        "name": "Popup Analytics",
+        "slug": "popup-analytics",
+        "url": "https://wppopupmaker.com/extensions/popup-analytics?changelog=1",
+        "homepage": "https://wppopupmaker.com/extensions/popup-analytics",
+        "package": "",
+        "download_link": "",
+        "image": "https://wppopupmaker.com/wp-content/uploads/edd/2014/12/analytics.jpg",
+        "excerpt": "Create high performance popups with Analytics - get up-to-the-minute statistical information on impressions, conversions, and more."
+    },
+    {
+        "new_version": "1.0.1",
+        "name": "Unlimited Themes",
+        "slug": "unlimited-themes",
+        "url": "https://wppopupmaker.com/extensions/unlimited-themes?changelog=1",
+        "homepage": "https://wppopupmaker.com/extensions/unlimited-themes",
+        "package": "",
+        "download_link": "",
+        "image": "https://wppopupmaker.com/wp-content/uploads/edd/2014/12/unlimited-themes.jpg",
+        "excerpt": "Create as many themes as you desire and differentiate your popups from one another using the Unlimited Themes Extension."
+    },
+    {
+        "new_version": "1.0.1",
+        "name": "Advanced Theme Builder",
+        "slug": "advanced-theme-builder",
+        "url": "https://wppopupmaker.com/extensions/advanced-theme-builder?changelog=1",
+        "homepage": "https://wppopupmaker.com/extensions/advanced-theme-builder",
+        "package": "",
+        "download_link": "",
+        "image": "https://wppopupmaker.com/wp-content/uploads/edd/2014/12/advanced-theme-builder.jpg",
+        "excerpt": "Build more powerful and influential themes for your popups - this extension allows you to add background images to different elements of your popup."
+    },
+    {
+        "new_version": "1.0.3",
+        "name": "Age Verification Modals",
+        "slug": "age-verification-modals",
+        "url": "https://wppopupmaker.com/extensions/age-verification-modals?changelog=1",
+        "homepage": "https://wppopupmaker.com/extensions/age-verification-modals",
+        "package": "",
+        "download_link": "",
+        "image": "https://wppopupmaker.com/wp-content/uploads/edd/2014/11/age-verification.jpg",
+        "excerpt": "Streamline and enhance your user experience, and protect your content from unqualified users using the Age Verification Modals Extension."
+    },
+    {
+        "new_version": "1.0",
+        "name": "Scroll Triggered Popups",
+        "slug": "scroll-triggered-popups",
+        "url": "https://wppopupmaker.com/extensions/scroll-triggered-popups?changelog=1",
+        "homepage": "https://wppopupmaker.com/extensions/scroll-triggered-popups",
+        "package": "",
+        "download_link": "",
+        "image": "https://wppopupmaker.com/wp-content/uploads/edd/2014/11/scroll-triggered1.jpg",
+        "excerpt": "Use this extension and market your valuable content as users scroll down your pages - great for increasing revenue and funneling users throughout your site."
+    },
+    {
+        "new_version": "1.0.5",
+        "name": "AJAX Login Modals",
+        "slug": "ajax-login-modals",
+        "url": "https://wppopupmaker.com/extensions/ajax-login-modals?changelog=1",
+        "homepage": "https://wppopupmaker.com/extensions/ajax-login-modals",
+        "package": "",
+        "download_link": "",
+        "image": "https://wppopupmaker.com/wp-content/uploads/edd/2014/11/ajax-login.jpg",
+        "excerpt": "Use this Extension in a variety of ways and streamline and enhance your user experience. Great for funneling users post-log in and protecting content or areas of your site."
+    },
+    {
+        "new_version": "1.0.1",
+        "name": "Forced Interaction",
+        "slug": "forced-interaction",
+        "url": "https://wppopupmaker.com/extensions/forced-interaction?changelog=1",
+        "homepage": "https://wppopupmaker.com/extensions/forced-interaction",
+        "package": "",
+        "download_link": "",
+        "image": "https://wppopupmaker.com/wp-content/uploads/edd/2014/11/forced-interaction1.jpg",
+        "excerpt": "Disabling the close button can be used in a variety of ways, from protecting content or areas of your site to forcing users to complete an action before continuing."
+    }
+]

@@ -1,6 +1,9 @@
 <?php
 
 function popmake_available_extensions() {
+	$json_data = file_get_contents( POPMAKE_DIR . 'includes/extension-list.json' );
+	return json_decode( $json_data, true );
+	/*
 	if(($extensions = get_site_transient('popup-maker-extension-list')) === false) {
 
 		// data to send in our API request
@@ -19,6 +22,7 @@ function popmake_available_extensions() {
 		set_site_transient( 'popup-maker-extension-list', $extensions, 86400 );
 	}
 	return $extensions;
+	*/
 }
 
 add_filter('popmake_existing_extension_images', 'popmake_core_extension_images', 10);
@@ -31,7 +35,6 @@ function popmake_core_extension_images($array) {
 		'age-verification-modals',
 		'advanced-theme-builder',
 		'exit-intent-popups',
-		'auto-open-popups',
 		'ajax-login-modals',
 	));
 }
