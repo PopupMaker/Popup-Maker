@@ -22,12 +22,11 @@ class PopMake_License {
 	private $item_shortname;
 	private $version;
 	private $author;
-	private $api_url = 'https://wppopupmaker.com';
+	private $api_url = 'https://wppopupmaker.com/edd-sl-api/';
 
 	/**
 	 * Class constructor
 	 *
-	 * @global  array $popmake_options
 	 * @param string  $_file
 	 * @param string  $_item_name
 	 * @param string  $_version
@@ -35,13 +34,11 @@ class PopMake_License {
 	 * @param string  $_api_url
 	 */
 	function __construct( $_file, $_item_name, $_version, $_author, $_api_url = null ) {
-		global $popmake_options;
-
 		$this->file           = $_file;
 		$this->item_name      = $_item_name;
 		$this->item_shortname = 'popmake_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
 		$this->version        = $_version;
-		$this->license        = isset( $popmake_options[ $this->item_shortname . '_license_key' ] ) ? trim( $popmake_options[ $this->item_shortname . '_license_key' ] ) : '';
+		$this->license        = trim( popmake_get_option( $this->item_shortname . '_license_key', '' ) );
 		$this->author         = $_author;
 		$this->api_url        = is_null( $_api_url ) ? $this->api_url : $_api_url;
 
@@ -84,7 +81,6 @@ class PopMake_License {
 	 * Auto updater
 	 *
 	 * @access  private
-	 * @global  array $popmake_options
 	 * @return  void
 	 */
 	public function auto_updater() {
@@ -136,7 +132,7 @@ class PopMake_License {
 	 * @return  void
 	 */
 	public function activate_license() {
-		global $popmake_options;
+
 		if ( ! isset( $_POST['popmake_settings'] ) ) {
 			return;
 		}
