@@ -1,4 +1,15 @@
 <?php
+
+function popmake_prevent_default_theme_deletion($allcaps, $caps, $args) {
+	global $wpdb;
+	if ( isset( $args[0] ) && isset( $args[2] ) && $args[2] == get_option('popmake_default_theme') && $args[0] == 'delete_post' ) {
+		$allcaps[ $caps[0] ] = false;
+	}
+	return $allcaps;
+}
+add_filter ('user_has_cap', 'popmake_prevent_default_theme_deletion', 10, 3);
+
+
 function popmake_plugin_action_links($links, $file) {
 	if($file == plugin_basename(POPMAKE)) {
 		$settings_page_url = admin_url('edit.php?post_type=popup&page=settings');
