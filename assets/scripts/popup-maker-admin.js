@@ -35,8 +35,6 @@ var PopMakeAdmin;
 
             jQuery('.popmake-newsletter-optin').show();
 
-            jQuery('#popmake_popup_share').removeClass('postbox');
-
             // Modal & Theme Indexes
             if (jQuery('#posts-filter').length) {
                 jQuery('#wpbody-content > .wrap > h2:first').after(jQuery('.popmake-newsletter-optin'));

@@ -289,6 +289,12 @@ div.popmake-upgrade-tip {
 #popmake_popup_support {
 	margin-bottom:10px;
 }
+#popmake_popup_share {
+	background: transparent;
+	border: 0;
+	padding: 0;
+	box-shadow: none;
+}
 #popmake_popup_share .handlediv {
 	display:none;
 }
@@ -297,6 +303,7 @@ div.popmake-upgrade-tip {
 }
 #popmake_popup_share .inside {
 	margin:0 0 20px;
+	padding: 0;
 }
 .loveit-shareit {
 	font-weight: 700!important;

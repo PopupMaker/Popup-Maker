@@ -1,4 +1,4 @@
-<?php
+	<?php
 /**
  * Tools Page
  *
@@ -66,12 +66,14 @@ function popmake_tools_page() {
 								<div class="clear"></div>
 							</div>
 						</div>
+						<?php /*
 						<div id="sharediv">
 							<div class="inside">
 								<?php popmake_render_share_meta_box();?>
 								<div class="clear"></div>
 							</div>
 						</div>
+						*/ ?>
 						<?php do_action('popmake_admin_sidebar');?>
 					</div>
 				</div>
