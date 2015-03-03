@@ -142,7 +142,7 @@ add_filter( 'clean_url', 'popmake_defer_js_url', 11, 1 );
 
 function popmake_script_loading_enabled() {
 	global $wp_query;
-	if( has_shortcode( $wp_query->post->post_content, 'popup' ) || ( defined("POPMAKE_FORCE_SCRIPTS") && POPMAKE_FORCE_SCRIPTS ) ){
+	if( !empty( $wp_query->post ) && has_shortcode( $wp_query->post->post_content, 'popup' ) || ( defined("POPMAKE_FORCE_SCRIPTS") && POPMAKE_FORCE_SCRIPTS ) ){
 		popmake_enqueue_scripts();
 	}
 }
