@@ -269,6 +269,9 @@ function popmake_get_popup_auto_open( $popup_id = NULL, $key = NULL ) {
  * @return mixed array|string of the popup admin debug meta 
  */
 function popmake_get_popup_admin_debug( $popup_id = NULL, $key = NULL ) {
+	if( ! current_user_can( 'edit_post', $popup_id ) ) {
+		return null;
+	}
 	return popmake_get_popup_meta_group( 'admin_debug', $popup_id, $key );
 }
 
