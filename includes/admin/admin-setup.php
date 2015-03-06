@@ -62,3 +62,19 @@ function popmake_admin_footer() {
 	}
 }
 add_action('admin_print_footer_scripts', 'popmake_admin_footer', 1000);
+
+
+
+function popmake_admin_popup_preview() {
+	echo do_shortcode( '[popup id="preview" title="' . __('A Popup Preview', 'popup-maker' ) . '"]'. popmake_get_default_example_popup_content() . '[/popup]' );
+}
+
+
+
+function popmake_post_submitbox_misc_actions() {
+	global $post;
+	//if( $post && in_array($post->type, array( 'popup', 'popup_theme' ) ) ) : ?>
+	<a href="#" id="trigger-popmake-preview" class="popmake-preview button button-large"><?php _e( 'Preview' ); ?></a><?php
+	//endif;
+}
+add_action( 'post_submitbox_start', 'popmake_post_submitbox_misc_actions' );
