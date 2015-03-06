@@ -405,7 +405,12 @@ div.popmake-upgrade-tip {
 }
 
 
-
+#popmake-preview {
+	z-index: 9999999!important;
+}
+#popmake-overlay {
+	z-index: 9999998!important;
+}
 
 
 /* Extensions Page */
