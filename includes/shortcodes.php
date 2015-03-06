@@ -1,9 +1,8 @@
 <?php
 add_shortcode( 'popup', 'popmake_shortcode_popup');
-function popmake_shortcode_popup($atts, $content = NULL)
-{
+function popmake_shortcode_popup( $atts, $content = NULL ) {
 	$atts = shortcode_atts(
-		apply_filters('popmake_shortcode_popup_default_atts', array(
+		apply_filters( 'popmake_shortcode_popup_default_atts', array(
 			'id' => "",
 			'theme_id' => 1,
 			'title' => "",
@@ -24,7 +23,7 @@ function popmake_shortcode_popup($atts, $content = NULL)
 			'animation_origin' => 'top',
 			'overlay_click' => 0,
 			'esc_press' => 1,
-		)),
+		) ),
 		apply_filters('popmake_shortcode_popup_atts', $atts)
 	);
 
