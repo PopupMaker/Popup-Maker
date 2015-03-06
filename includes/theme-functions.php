@@ -162,8 +162,9 @@ function popmake_get_popup_themes_data() {
 		while ( $query->have_posts() ) : $query->the_post();
 			$popmake_themes[$query->post->ID] = popmake_get_popup_theme_data_attr();
 		endwhile;
-		wp_reset_postdata();
 	}
+	
+	wp_reset_postdata();
 
 	return apply_filters( 'popmake_get_popup_themes_data', $popmake_themes );
 
