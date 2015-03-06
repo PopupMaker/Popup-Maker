@@ -680,9 +680,32 @@ var PopMakeAdmin;
                 }
             });
         },
+        convert_theme_for_preview: function (theme) {
+            var converted_theme = {
+                    overlay: {},
+                    container: {},
+                    title: {},
+                    content: {},
+                    close: {}
+                },
+                element,
+                property;
 
+
+            for (var key in theme) {
+                element = key.split(/_(.+)?/)[0];
+                property = key.split(/_(.+)?/)[1];
+                if(element === 'defaults') {
+                    continue;
+                }
+                converted_theme[element][property] = theme[key];
+            }
+            popmake_themes[popmake_default_theme] = converted_theme;
+        },
         initialize_theme_page: function () {
             jQuery('#popuptitlediv').insertAfter('#titlediv');
+
+            popmake_default_theme = jQuery('#post_ID').val();
 
             var self = this,
                 table = jQuery('#popup_theme_close_location').parents('table');
@@ -735,6 +758,8 @@ var PopMakeAdmin;
                 container_inset = theme.container_boxshadow_inset === 'yes' ? 'inset ' : '',
                 close_inset = theme.close_boxshadow_inset === 'yes' ? 'inset ' : '',
                 link;
+
+            this.convert_theme_for_preview(theme);
 
             if (popmake_google_fonts[theme.title_font_family] !== undefined) {
 
