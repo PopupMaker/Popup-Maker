@@ -355,7 +355,11 @@
                 borderWidth: theme.close.border_width + 'px',
                 borderRadius: theme.close.border_radius + 'px',
                 boxShadow: close_inset + theme.close.boxshadow_horizontal + 'px ' + theme.close.boxshadow_vertical + 'px ' + theme.close.boxshadow_blur + 'px ' + theme.close.boxshadow_spread + 'px ' + jQuery.fn.popmake.utilities.convert_hex(theme.close.boxshadow_color, theme.close.boxshadow_opacity),
-                textShadow: theme.close.textshadow_horizontal + 'px ' + theme.close.textshadow_vertical + 'px ' + theme.close.textshadow_blur + 'px ' + jQuery.fn.popmake.utilities.convert_hex(theme.close.textshadow_color, theme.close.textshadow_opacity)
+                textShadow: theme.close.textshadow_horizontal + 'px ' + theme.close.textshadow_vertical + 'px ' + theme.close.textshadow_blur + 'px ' + jQuery.fn.popmake.utilities.convert_hex(theme.close.textshadow_color, theme.close.textshadow_opacity),
+                left: 'auto',
+                right: 'auto',
+                bottom: 'auto',
+                top: 'auto'
             });
             switch (theme.close.location) {
             case "topleft":
