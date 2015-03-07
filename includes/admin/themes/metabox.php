@@ -242,10 +242,11 @@ add_action( 'edit_page_form', 'popmake_popup_thmem_ut_extension_promotion', 1 );
 
 
 function popmake_popup_theme_setup() {
-	if('popup_theme' == get_post_type())
+	if( 'popup_theme' == get_post_type() ) {
 		echo '<style type="text/css">#visibility, #favorite-actions, .add-new-h2, .tablenav, #delete-action {display:none;}</style>';
+	}
 }
-add_action('admin_head', 'popmake_popup_theme_setup');
+add_action( 'admin_head', 'popmake_popup_theme_setup' );
 
 /**
  * Theme Preview Metabox
