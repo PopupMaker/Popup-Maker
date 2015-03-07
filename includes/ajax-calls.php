@@ -22,3 +22,20 @@ function popmake_optin_ajax_call() {
 
 add_action('wp_ajax_popmake_optin', 'popmake_optin_ajax_call');
 add_action('wp_ajax_nopriv_popmake_optin', 'popmake_optin_ajax_call');
+
+
+function popmake_popup_preview_content_ajax_call() { 
+	// Check our nonce and make sure it's correct.
+	check_ajax_referer(POPMAKE_NONCE, POPMAKE_NONCE);
+	if ( isset( $_REQUEST['popup_content'] ) ) {
+		remove_filter( 'the_popup_content', 'popmake_popup_content_container', 10000 );
+		$response['content'] = apply_filters( 'the_popup_content', $_REQUEST['popup_content'], $_REQUEST['popup_id']) ;
+		$response['success'] = true;
+	}
+	$response['new_nonce'] = wp_create_nonce(POPMAKE_NONCE);
+	echo json_encode($response);
+	die();
+}
+
+add_action('wp_ajax_popmake_popup_preview_content', 'popmake_popup_preview_content_ajax_call');
+add_action('wp_ajax_nopriv_popmake_popup_preview_content', 'popmake_popup_preview_content_ajax_call');
