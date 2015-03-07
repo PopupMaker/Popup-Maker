@@ -488,14 +488,71 @@ var PopMakeAdmin;
                 },
                 auto_open_reset_cookie_key = function () {
                     jQuery('#popup_auto_open_cookie_key').val((new Date().getTime()).toString(16));
+                },
+                update_popup_preview_title = function () {
+                    if (jQuery('#popuptitle').val() !== '') {
+                        jQuery('#popmake-preview .popmake-title').show().html(jQuery('#popuptitle').val());
+                    } else {
+                        jQuery('#popmake-preview .popmake-title').hide();
+                    }
+                },
+                update_popup_preview_content = function () {
+                    var content = '';
+
+                    if (jQuery("#wp-content-wrap").hasClass("tmce-active")){
+                        console.log(1);
+                        content = tinyMCE.activeEditor.getContent();
+                    } else {
+                        console.log(2);
+                        content = jQuery('#content-textarea-clone').val();
+                    }
+
+                    console.log(content);
+
+                    jQuery
+                        .ajax({
+                            url: ajaxurl,
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                action: "popmake_popup_preview_content",
+                                popmake_nonce: popmake_admin_ajax_nonce,
+                                popup_id: jQuery('#post_ID').val(),
+                                popup_content: content
+                            }
+                        })
+                        .done(function (data) {
+                            if (data.success) {
+                                jQuery('#popmake-preview .popmake-content').html(data.content);
+                            }
+                        });
+                },
+                update_popup_preview_data = function () {
+                    var form_values = jQuery("[name^='popup_display_']").serializeArray(),
+                        display = {},
+                        i,
+                        data = jQuery('#popmake-preview').data('popmake');
+
+                    for (i = 0; form_values.length > i; i += 1) {
+                        if (form_values[i].name.indexOf('popup_display_') === 0) {
+                            data.meta.display[form_values[i].name.replace('popup_display_', '')] = form_values[i].value;
+                        }
+                    }
+
+                    jQuery('#popmake-preview').data('popmake', data);
+
                 };
-
-
 
             jQuery('#popuptitlediv').insertAfter('#titlediv');
             jQuery('[name^="menu-item"]').removeAttr('name');
 
             jQuery(document)
+                .on('click', '#trigger-popmake-preview', function (event) {
+                    update_popup_preview_title();
+                    update_popup_preview_content();
+                    update_popup_preview_data();
+
+                })
                 .on('keydown', '#popuptitle', function (event) {
                     var keyCode = event.keyCode || event.which;
                     if (9 === keyCode) {
@@ -503,6 +560,7 @@ var PopMakeAdmin;
                         jQuery('#title').focus();
                     }
                 })
+
                 .on('keydown', '#title, #popuptitle', function (event) {
                     var keyCode = event.keyCode || event.which,
                         target;
@@ -570,7 +628,6 @@ var PopMakeAdmin;
                 auto_open_reset_cookie_key();
             }
         },
-
         theme_page_listeners: function () {
             var self = this;
             jQuery(document)
@@ -681,26 +738,23 @@ var PopMakeAdmin;
             });
         },
         convert_theme_for_preview: function (theme) {
-            var converted_theme = {
-                    overlay: {},
-                    container: {},
-                    title: {},
-                    content: {},
-                    close: {}
-                },
+            jQuery.fn.popmake.themes[popmake_default_theme] = this.convert_meta_to_object(theme);
+        },
+        convert_meta_to_object: function (data) {
+            var converted_data = {},
                 element,
                 property;
 
 
-            for (var key in theme) {
+            for (var key in data) {
                 element = key.split(/_(.+)?/)[0];
                 property = key.split(/_(.+)?/)[1];
-                if(element === 'defaults') {
-                    continue;
+                if(converted_data[element] === undefined) {
+                    converted_data[element] = {};
                 }
-                converted_theme[element][property] = theme[key];
+                converted_data[element][property] = data[key];
             }
-            popmake_themes[popmake_default_theme] = converted_theme;
+            return converted_data;
         },
         initialize_theme_page: function () {
             jQuery('#popuptitlediv').insertAfter('#titlediv');
@@ -747,7 +801,6 @@ var PopMakeAdmin;
                 jQuery('tr.bottomright', table).show();
                 break;
             }
-
         },
         retheme_popup: function (theme) {
             var $overlay = jQuery('.empreview .example-popup-overlay'),
