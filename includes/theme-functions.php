@@ -150,22 +150,18 @@ function popmake_get_popup_theme_default_meta() {
 }
 
 function popmake_get_popup_themes_data() {
-
-	$query = new WP_Query( array(
+	$query = get_posts( array(
 		'post_type' => 'popup_theme',
 		'posts_per_page' => -1
 	) );
 
 	$popmake_themes = array();
 
-	if ( $query->have_posts() ) {
-		while ( $query->have_posts() ) : $query->the_post();
-			$popmake_themes[$query->post->ID] = popmake_get_popup_theme_data_attr();
-		endwhile;
+	foreach( $query as $theme ) {
+		$popmake_themes[ $theme->ID ] = popmake_get_popup_theme_data_attr( $theme->ID );
 	}
-	
+
 	wp_reset_postdata();
 
 	return apply_filters( 'popmake_get_popup_themes_data', $popmake_themes );
-
 }
