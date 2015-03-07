@@ -1,4 +1,4 @@
-	<?php
+<?php
 /**
  * Tools Page
  *
