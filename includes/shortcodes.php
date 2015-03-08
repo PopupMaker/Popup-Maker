@@ -24,7 +24,8 @@ function popmake_shortcode_popup( $atts, $content = NULL ) {
 			'overlay_click' => 0,
 			'esc_press' => 1,
 		) ),
-		apply_filters('popmake_shortcode_popup_atts', $atts)
+		apply_filters('popmake_shortcode_popup_atts', $atts),
+		'popup'
 	);
 
 	$popup_fields = apply_filters('popmake_shortcode_data_attr', array(
@@ -74,5 +75,23 @@ function popmake_shortcode_popup( $atts, $content = NULL ) {
 		$return .= '<div class="popmake-content">'. do_shortcode($content) . '</div>';
 		$return .= '<a class="popmake-close">'. __( '&#215;', 'popup-maker') .'</a>';
 	$return .= '</div>';
+	return $return;
+}
+
+add_shortcode( 'popup_trigger', 'popmake_shortcode_popup_trigger');
+function popmake_shortcode_popup_trigger( $atts, $content = NULL ) {
+	$atts = shortcode_atts(
+		apply_filters( 'popmake_shortcode_popup_trigger_default_atts', array(
+			'id' => "",
+			'tag' => 'span',
+			'class' => '',
+		) ),
+		apply_filters('popmake_shortcode_popup_trigger_atts', $atts),
+		'popup_trigger'
+	);
+
+	$return = '<' . $atts['tag'] . ' class="popmake-' . $atts['id'] . ' ' . $atts['class'] .'">';
+		$return .= $content;
+	$return .= '</' . $atts['tag'] . '>';
 	return $return;
 }
