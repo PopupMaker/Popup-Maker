@@ -121,14 +121,15 @@ add_action( 'admin_head', 'popmake_remove_admin_subpages' );
  * @return void
  */
 function popmake_admin_submenu_theme_pages() {
-	global $submenu, $popmake_popup_themes_page;
+	global $popmake_popup_themes_page;
 	
-    $popmake_popup_themes_page = admin_url( 'post.php?post='. popmake_get_default_popup_theme() .'&action=edit' );
-    $submenu['edit.php?post_type=popup'][] = array(
+	$popmake_popup_themes_page = add_submenu_page(
+		'edit.php?post_type=popup',
+    	apply_filters( 'popmake_admin_submenu_themes_page_title', __( 'Theme', 'popup-maker' ) ),
     	apply_filters( 'popmake_admin_submenu_themes_page_title', __( 'Theme', 'popup-maker' ) ),
     	apply_filters( 'popmake_admin_submenu_themes_capability', 'edit_posts' ),
-    	$popmake_popup_themes_page
-    );
+		'post.php?post='. popmake_get_default_popup_theme() .'&action=edit'
+	);
 }
 add_action( 'admin_menu', 'popmake_admin_submenu_theme_pages', 10 );
 
@@ -143,12 +144,11 @@ add_action( 'admin_menu', 'popmake_admin_submenu_theme_pages', 10 );
  *  @return bool True if POPMAKE admin page.
  */
 function popmake_is_admin_page() {
+	global $pagenow, $typenow, $popmake_popup_themes_page, $popmake_settings_page, $popmake_tools_page, $popmake_extensions_page, $popmake_help_page;
 
 	if ( ! is_admin() || ! did_action( 'wp_loaded' ) ) {
 		return false;
 	}
-	
-	global $pagenow, $typenow, $popmake_popup_themes_page, $popmake_settings_page, $popmake_tools_page, $popmake_extensions_page, $popmake_help_page;
 
 	if ( 'popup' == $typenow || 'popup_theme' == $typenow ) {
 		return true;
