@@ -504,7 +504,7 @@ var PopMakeAdmin;
                         content = tinyMCE.activeEditor.getContent();
                     } else {
                         console.log(2);
-                        content = jQuery('#content-textarea-clone').val();
+                        content = jQuery('#content').val();
                     }
 
                     console.log(content);
@@ -524,6 +524,7 @@ var PopMakeAdmin;
                         .done(function (data) {
                             if (data.success) {
                                 jQuery('#popmake-preview .popmake-content').html(data.content);
+                                jQuery('#popmake-preview').popmake('open');
                             }
                         });
                 },
@@ -538,21 +539,23 @@ var PopMakeAdmin;
                             data.meta.display[form_values[i].name.replace('popup_display_', '')] = form_values[i].value;
                         }
                     }
-
-                    jQuery('#popmake-preview').data('popmake', data);
-
+                    jQuery('#popmake-preview')
+                        .data('popmake', data);
                 };
 
             jQuery('#popuptitlediv').insertAfter('#titlediv');
             jQuery('[name^="menu-item"]').removeAttr('name');
 
-            jQuery(document)
-                .on('click', '#trigger-popmake-preview', function (event) {
+            jQuery('#trigger-popmake-preview')
+                .on('click', function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
                     update_popup_preview_title();
-                    update_popup_preview_content();
                     update_popup_preview_data();
-
-                })
+                    update_popup_preview_content();
+                    return false;
+                });
+            jQuery(document)
                 .on('keydown', '#popuptitle', function (event) {
                     var keyCode = event.keyCode || event.which;
                     if (9 === keyCode) {
