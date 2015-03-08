@@ -246,10 +246,13 @@
                 }).show();
             }
 
+            $this
+                .removeClass('responsive size-nano size-micro size-tiny size-small size-medium size-normal size-large size-xlarge fixed custom-position')
+                .addClass('size-' + settings.meta.display.size);
+
+
             if (display.position_fixed) {
                 $this.addClass('fixed');
-            } else {
-                $this.removeClass('fixed');
             }
             if (settings.meta.display.size === 'custom') {
                 $this.css({
@@ -258,16 +261,12 @@
                 });
             } else {
                 if (settings.meta.display.size !== 'auto') {
-                    if (settings.meta.display.responsive_min_width !== '') {
-                        $this.css({
-                            mixWidth: settings.meta.display.responsive_min_width + settings.meta.display.responsive_min_width_unit
+                    $this
+                        .addClass('responsive')
+                        .css({
+                            mixWidth: settings.meta.display.responsive_min_width !== '' ? settings.meta.display.responsive_min_width + settings.meta.display.responsive_min_width_unit : 'auto',
+                            maxWidth: settings.meta.display.responsive_max_width !== '' ? settings.meta.display.responsive_max_width + settings.meta.display.responsive_max_width_unit : 'auto'
                         });
-                    }
-                    if (settings.meta.display.responsive_max_width !== '') {
-                        $this.css({
-                            maxWidth: settings.meta.display.responsive_max_width + settings.meta.display.responsive_max_width_unit
-                        });
-                    }
                 }
             }
 
