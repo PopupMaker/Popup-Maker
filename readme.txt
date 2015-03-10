@@ -1,12 +1,12 @@
 === Popup Maker ===
 Contributors: danieliser
-Author URI: https://danieliser.com
+Author URI: http://danieliser.com
 Plugin URI: https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Plugin+URI
 Donate link: 
 Tags: age restriction, age verification, auto open, automatic popup, conversion, conversions, custom popup, dialog box, exit intent, fancy box, fancy popup, form modal, full page popup, full screen pop, full screen popup, marketing, modal, modals, onclick popup, optin popup, pop-up, pop-ups, popup, popup ads, popup advertising, popup box, popup form, popup message, popup window, popups, unblockable, wordpress popup
 Requires at least: 3.4
 Tested up to: 4.2
-Stable tag: 1.1.9
+Stable tag: 1.2
 License: GNU Version 2 or Any Later Version
 
 Easily turn users into cash using Popup Maker - the most versatile & expansive popup plugin for WordPress!
@@ -21,6 +21,8 @@ Use any of your forms from the most popular form plugins, out-of-the-box, inside
 * Gravity Forms
 * Ninja Forms
 * Contact Form 7
+
+Need it in another language? Help us [translate Popup Maker](https://www.transifex.com/projects/p/popup-maker).
 
 [Subscribe to our Newsletter](https://wppopupmaker.com/newsletter-sign-up?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Newsletter+Signup "Popup Maker Newsletter Sign Up") and receive tutorials and guides tailored to teaching you how to drastically improve your conversion rates using Popup Maker. Also, for a limited time only, sign up and receive Unlimited Themes and Advanced Theme Builder for free, plus 25% off your first purchase from our Extension Marketplace!
 
@@ -75,6 +77,24 @@ For more information, visit [Popup Maker](https://wppopupmaker.com?utm_source=Wo
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.2 =
+* Added full screen preview for themes when editing using the Preview button.
+* Added full screen preview for popup when editing using the Preview button.
+* Added new shortcode 'popup_trigger' that allows users to easily add the correct popmake- class. Accepts id, tag & class parameters.
+* Updated GSAP JS plugin to latest version.
+* Removed jQuery.gsap.js usage.
+* Added fallback list of Google Fonts for when API is unavailable.
+* Setup extensions page to use a static list of extensions for the time being.
+* Updated API url.
+* Removed Popmake_Admin_Notices class as it was unused.
+* Fixed bug where share metabox wouldn't stay hidden.
+* Added function to prevent deletion of default theme.
+* Fixed bug which caused Popup Maker menu to show to all users.
+
+= v1.1.10 =
+* Fixed invalid argument bug passed to google font foreach.
+* Fixed CSS box-sizing cross browser support.
 
 = v1.1.9 =
 * Added %'s to reponsive sizes in size dropdown.

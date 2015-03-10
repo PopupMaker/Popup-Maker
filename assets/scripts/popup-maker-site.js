@@ -1,5 +1,5 @@
 /**
- * Popup Maker v1.1.8
+ * Popup Maker v1.2
  */
 (function (jQuery) {
     "use strict";
@@ -76,8 +76,6 @@
                             var src = jQuery(this).attr('src')
                                 // Remove autoplay so video doesn't start playing again.
                                 .replace('autoplay=1', '1=1');
-
-                            console.log(src);
                             jQuery(this).attr('src', '').attr('src', src);
                         });
                     })
@@ -893,8 +891,6 @@
                 f4_press: 0
             }
         },
-
-
         container: {
             active_class: 'active',
             attr: {

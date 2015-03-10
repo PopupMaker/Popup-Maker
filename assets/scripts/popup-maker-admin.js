@@ -1,5 +1,5 @@
 /**
- * Popup Maker v1.2.0
+ * Popup Maker v1.2
  */
 var PopMakeAdmin;
 (function () {
