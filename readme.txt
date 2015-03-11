@@ -6,7 +6,7 @@ Donate link:
 Tags: age restriction, age verification, auto open, automatic popup, conversion, conversions, custom popup, dialog box, exit intent, fancy box, fancy popup, form modal, full page popup, full screen pop, full screen popup, marketing, modal, modals, onclick popup, optin popup, pop-up, pop-ups, popup, popup ads, popup advertising, popup box, popup form, popup message, popup window, popups, unblockable, wordpress popup
 Requires at least: 3.4
 Tested up to: 4.2
-Stable tag: 1.2
+Stable tag: 1.2.1
 License: GNU Version 2 or Any Later Version
 
 Easily turn users into cash using Popup Maker - the most versatile & expansive popup plugin for WordPress!
@@ -77,6 +77,9 @@ For more information, visit [Popup Maker](https://wppopupmaker.com?utm_source=Wo
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.2.1 =
+* Fixed bug caused by null value passed to JS data attr.
 
 = v1.2 =
 * Added full screen preview for themes when editing using the Preview button.
