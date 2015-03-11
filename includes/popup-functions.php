@@ -44,7 +44,7 @@ add_filter('popmake_get_the_popup_classes', 'popmake_add_popup_size_classes', 5,
 
 
 function popmake_get_the_popup_data_attr( $popup_id = null ) {
-	if( !$popup_id ) $popup_id = get_the_ID();
+	if( ! $popup_id ) $popup_id = get_the_ID();
 	$post = get_post( $popup_id );
 	$data_attr = array(
 		'id'   => $popup_id,
@@ -53,10 +53,14 @@ function popmake_get_the_popup_data_attr( $popup_id = null ) {
 			'display'     => popmake_get_popup_display( $popup_id ),
 			'close'       => popmake_get_popup_close( $popup_id ),
 			'click_open'  => popmake_get_popup_click_open( $popup_id ),
-			'auto_open'   => popmake_get_popup_auto_open( $popup_id ),
-			'admin_debug' => popmake_get_popup_admin_debug( $popup_id ),
 		)
 	);
+	if( popmake_get_popup_auto_open( $popup_id, 'enabled' ) ) {
+		$data_attr['meta']['auto_open'] = popmake_get_popup_auto_open( $popup_id );
+	}
+	if( popmake_get_popup_admin_debug( $popup_id, 'enabled' ) ) {
+		$data_attr['meta']['admin_debug'] = popmake_get_popup_admin_debug( $popup_id );
+	}
 	return apply_filters('popmake_get_the_popup_data_attr', $data_attr, $popup_id );
 }
 
