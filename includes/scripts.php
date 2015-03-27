@@ -33,7 +33,7 @@ function popmake_load_site_scripts() {
 
 	wp_register_script( 'popup-maker-site', $js_dir . 'popup-maker-site' . $suffix . '?defer', array( 'jquery', 'jquery-ui-core', 'jquery-ui-position', 'tweenmax' ), '1.2', true );
 	wp_localize_script( 'popup-maker-site', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
-	wp_localize_script( 'popup-maker-site', 'popmake_default_theme', popmake_get_default_popup_theme() );
+	wp_localize_script( 'popup-maker-site', 'popmake_default_theme', (string) popmake_get_default_popup_theme() );
 	wp_localize_script( 'popup-maker-site', 'popmake_themes', array( 'l10n_print_after' => 'popmake_themes = ' . json_encode( popmake_get_popup_themes_data() ) . ';' ) );
 
 	if( popmake_get_option( 'popmake_powered_by_opt_in', false ) ) {
@@ -98,7 +98,7 @@ function popmake_load_admin_scripts() {
 
 		wp_enqueue_script( 'popup-maker-site', $js_dir . 'popup-maker-site' . $suffix . '?defer', array( 'jquery', 'jquery-ui-core', 'jquery-ui-position', 'tweenmax' ), '1.2', true );
 		wp_localize_script( 'popup-maker-site', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
-		wp_localize_script( 'popup-maker-site', 'popmake_default_theme', popmake_get_default_popup_theme() );
+		wp_localize_script( 'popup-maker-site', 'popmake_default_theme', (string) popmake_get_default_popup_theme() );
 		wp_localize_script( 'popup-maker-site', 'popmake_themes', array( 'l10n_print_after' => 'popmake_themes = ' . json_encode( popmake_get_popup_themes_data() ) ) );
 	}
 	if( popmake_is_admin_page() ) {
