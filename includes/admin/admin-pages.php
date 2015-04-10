@@ -99,7 +99,7 @@ function popmake_admin_submenu_pages() {
 	);
 
 }
-add_action( 'admin_menu', 'popmake_admin_submenu_pages', 11 );
+add_action( 'admin_menu', 'popmake_admin_submenu_pages', 999 );
 
 
 function popmake_remove_admin_subpages() {
