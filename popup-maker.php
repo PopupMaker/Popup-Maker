@@ -189,6 +189,10 @@ final class Popup_Maker {
 		require_once POPMAKE_DIR . 'includes/integrations/gravityforms.php';
 		require_once POPMAKE_DIR . 'includes/integrations/google-fonts.php';
 		
+		require_once POPMAKE_DIR . 'includes/templates.php';
+		require_once POPMAKE_DIR . 'includes/load-popups.php';
+		require_once POPMAKE_DIR . 'includes/license-handler.php';
+
 		if ( is_admin() ) {
 			require_once POPMAKE_DIR . 'includes/admin/welcome.php';
 			require_once POPMAKE_DIR . 'includes/admin/welcome/about.php';
@@ -221,10 +225,6 @@ final class Popup_Maker {
 			require_once POPMAKE_DIR . 'includes/admin/help/help-page.php';
 			require_once POPMAKE_DIR . 'includes/admin/metabox-support.php';
 			require_once POPMAKE_DIR . 'includes/admin/metabox-share.php';
-			require_once POPMAKE_DIR . 'includes/license-handler.php';
-		} else {
-			require_once POPMAKE_DIR . 'includes/templates.php';
-			require_once POPMAKE_DIR . 'includes/load-popups.php';
 		}
 
 		require_once POPMAKE_DIR . 'includes/install.php';
