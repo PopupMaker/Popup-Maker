@@ -1,8 +1,18 @@
 /**
- * Popup Maker v1.2
+ * Popup Maker v1.3
  */
 (function (jQuery) {
     "use strict";
+    var isScrolling = false;
+    jQuery(window)
+        .on('scroll', function () {
+            isScrolling = true;
+        })
+        .on('scrollstop', function () {
+            isScrolling = false;
+        });
+
+
     if (!jQuery.isFunction(jQuery.fn.on)) {
         jQuery.fn.on = function (types, sel, fn) {
             return this.delegate(sel, types, fn);
@@ -11,6 +21,8 @@
             return this.undelegate(sel, types, fn);
         };
     }
+
+
 
     jQuery.fn.popmake = function (method) {
         // Method calling logic
@@ -22,6 +34,8 @@
         }
         jQuery.error('Method ' + method + ' does not exist on jQuery.fn.popmake');
     };
+
+    jQuery.fn.popmake.version = 1.3;
 
     jQuery.fn.popmake.last_open_popup = null;
     jQuery.fn.popmake.last_open_trigger = null;
@@ -148,8 +162,14 @@
             var $this = jQuery(this),
                 settings = $this.data('popmake');
 
+            $this.trigger('popmakeBeforeOpen');
+
+            if ($this.hasClass('preventOpen')) {
+                $this.removeClass('preventOpen');
+                return this;
+            }
+
             $this
-                .trigger('popmakeBeforeOpen')
                 .popmake('animate', settings.meta.display.animation_type, function () {
                     $this
                         .addClass('active')
@@ -262,7 +282,7 @@
                     $this
                         .addClass('responsive')
                         .css({
-                            mixWidth: settings.meta.display.responsive_min_width !== '' ? settings.meta.display.responsive_min_width + settings.meta.display.responsive_min_width_unit : 'auto',
+                            minWidth: settings.meta.display.responsive_min_width !== '' ? settings.meta.display.responsive_min_width + settings.meta.display.responsive_min_width_unit : 'auto',
                             maxWidth: settings.meta.display.responsive_max_width !== '' ? settings.meta.display.responsive_max_width + settings.meta.display.responsive_max_width_unit : 'auto'
                         });
                 }
@@ -958,7 +978,9 @@
                 speed = settings.meta.display.animation_speed / 2000,
                 start = $this.popmake('animation_origin', settings.meta.display.animation_origin);
 
-            jQuery('html').css('overflow-x', 'hidden');
+            if (!settings.meta.display.position_fixed && !isScrolling) {
+                jQuery('html').css('overflow-x', 'hidden');
+            }
 
             $this
                 .position(start)
@@ -968,7 +990,9 @@
 
                         TweenLite.to($this, speed, jQuery.extend(position, {
                             onComplete: function () {
-                                jQuery('html').css('overflow-x', 'inherit');
+                                if (!settings.meta.display.position_fixed) {
+                                    jQuery('html').css('overflow-x', 'inherit');
+                                }
                                 if (callback !== undefined) {
                                     callback();
                                 }
@@ -1005,7 +1029,9 @@
                 speed = settings.meta.display.animation_speed / 2000,
                 start = $this.popmake('animation_origin', settings.meta.display.animation_origin);
 
-            jQuery('html').css('overflow-x', 'hidden');
+            if (!settings.meta.display.position_fixed && !isScrolling) {
+                jQuery('html').css('overflow-x', 'hidden');
+            }
 
             $this
                 .position(start)
@@ -1015,7 +1041,9 @@
                         TweenLite.to($this, speed, jQuery.extend(position, {
                             opacity: 1,
                             onComplete: function () {
-                                jQuery('html').css('overflow-x', 'inherit');
+                                if (!settings.meta.display.position_fixed) {
+                                    jQuery('html').css('overflow-x', 'inherit');
+                                }
                                 if (callback !== undefined) {
                                     callback();
                                 }
@@ -1068,7 +1096,9 @@
                 origin = settings.meta.display.animation_origin,
                 start = $this.popmake('animation_origin', origin);
 
-            jQuery('html').css('overflow-x', 'hidden');
+            if (!settings.meta.display.position_fixed && !isScrolling) {
+                jQuery('html').css('overflow-x', 'hidden');
+            }
 
             $this.position(start);
 
@@ -1081,7 +1111,9 @@
                         scale: 1,
                         transformOrigin: '50% 50%',
                         onComplete: function () {
-                            jQuery('html').css('overflow-x', 'inherit');
+                            if (!settings.meta.display.position_fixed) {
+                                jQuery('html').css('overflow-x', 'inherit');
+                            }
                             if (callback !== undefined) {
                                 callback();
                             }
@@ -1113,10 +1145,10 @@
                 }
 
                 jQuery(trigger_selector).css({cursor: "pointer"});
-                jQuery(document).on('click', trigger_selector, function (event) {
+                jQuery(document).on('click.popmakeOpen', trigger_selector, function (event) {
                     event.preventDefault();
                     event.stopPropagation();
-                    jQuery.fn.popmake.last_open_trigger = jQuery.fn.popmake.utilities.getXPath(this);
+                    jQuery.fn.popmake.last_open_trigger = this; //jQuery.fn.popmake.utilities.getXPath(this);
                     $this.popmake('open');
                 });
 
@@ -1131,7 +1163,7 @@
                         return jQuery.pm_cookie("popmake-auto-open-" + settings.id + "-" + auto_open.cookie_key) === undefined;
                     };
 
-                    $this.on('popmakeSetCookie', function () {
+                    $this.on('popmakeSetCookie.auto-open', function () {
                         if (auto_open.cookie_time !== '' && noCookieCheck()) {
                             jQuery.pm_cookie(
                                 "popmake-auto-open-" + settings.id + "-" + auto_open.cookie_key,
