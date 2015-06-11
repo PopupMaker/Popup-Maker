@@ -102,6 +102,8 @@ There are several common causes for this which include:
 * Changed the last open trigger to use the jQuery object instead of xpath.
 * Added an isScrolling variable to detect when the browser is actively scrolling.
 * Checked isScrolling before adding overflow styles to the HTML element to prevent glitching.
+* Temporarily removed the grow animations due to removal of Greensock Animation Platform.
+* Removed Greensock Animation Platform dependancy.
 
 = v1.2.1 =
 * Fixed bug caused by null value passed to JS data attr.

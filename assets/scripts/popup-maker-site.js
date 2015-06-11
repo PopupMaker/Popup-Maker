@@ -975,7 +975,7 @@
         slide: function (callback) {
             var $this = jQuery(this).show(0).css({ opacity: 0 }),
                 settings = $this.data('popmake'),
-                speed = settings.meta.display.animation_speed / 2000,
+                speed = settings.meta.display.animation_speed / 2,
                 start = $this.popmake('animation_origin', settings.meta.display.animation_origin);
 
             if (!settings.meta.display.position_fixed && !isScrolling) {
@@ -985,19 +985,17 @@
             $this
                 .position(start)
                 .css({ opacity: 1 })
-                .popmake('animate_overlay', 'fade', speed * 1000, function () {
+                .popmake('animate_overlay', 'fade', speed, function () {
                     $this.popmake('reposition', function (position) {
 
-                        TweenLite.to($this, speed, jQuery.extend(position, {
-                            onComplete: function () {
-                                if (!settings.meta.display.position_fixed) {
-                                    jQuery('html').css('overflow-x', 'inherit');
-                                }
-                                if (callback !== undefined) {
-                                    callback();
-                                }
+                        $this.animate(position, speed, 'swing', function () {
+                            if (!settings.meta.display.position_fixed) {
+                                jQuery('html').css('overflow-x', 'inherit');
                             }
-                        }));
+                            if (callback !== undefined) {
+                                callback();
+                            }
+                        });
 
                     });
                 });
@@ -1006,17 +1004,14 @@
         fade: function (callback) {
             var $this = jQuery(this).show(0).css({ opacity: 0 }),
                 settings = $this.data('popmake'),
-                speed = settings.meta.display.animation_speed / 2000;
+                speed = settings.meta.display.animation_speed / 2;
 
             $this
-                .popmake('animate_overlay', 'fade', speed * 1000, function () {
+                .popmake('animate_overlay', 'fade', speed, function () {
 
-                    TweenLite.to($this, speed, {
-                        opacity: 1,
-                        onComplete: function () {
-                            if (callback !== undefined) {
-                                callback();
-                            }
+                    $this.animate({opacity: 1}, speed, 'swing', function () {
+                        if (callback !== undefined) {
+                            callback();
                         }
                     });
 
@@ -1026,7 +1021,7 @@
         fadeAndSlide: function (callback) {
             var $this = jQuery(this).show(0).css({ opacity: 0 }),
                 settings = $this.data('popmake'),
-                speed = settings.meta.display.animation_speed / 2000,
+                speed = settings.meta.display.animation_speed / 2,
                 start = $this.popmake('animation_origin', settings.meta.display.animation_origin);
 
             if (!settings.meta.display.position_fixed && !isScrolling) {
@@ -1035,30 +1030,29 @@
 
             $this
                 .position(start)
-                .popmake('animate_overlay', 'fade', speed * 1000, function () {
+                .popmake('animate_overlay', 'fade', speed, function () {
                     $this.popmake('reposition', function (position) {
 
-                        TweenLite.to($this, speed, jQuery.extend(position, {
-                            opacity: 1,
-                            onComplete: function () {
-                                if (!settings.meta.display.position_fixed) {
-                                    jQuery('html').css('overflow-x', 'inherit');
-                                }
-                                if (callback !== undefined) {
-                                    callback();
-                                }
+                        position.opacity = 1;
+                        $this.animate(position, speed, 'swing', function () {
+                            if (!settings.meta.display.position_fixed) {
+                                jQuery('html').css('overflow-x', 'inherit');
                             }
-                        }));
+                            if (callback !== undefined) {
+                                callback();
+                            }
+                        });
 
                     });
                 });
             return this;
         },
         grow: function (callback) {
-            var $this = jQuery(this).show(0).css({ opacity: 0 }),
+/*            var $this = jQuery(this).show(0).css({ opacity: 0 }),
                 settings = $this.data('popmake'),
-                speed = settings.meta.display.animation_speed / 2000,
-                origin = settings.meta.display.animation_origin;
+                speed = settings.meta.display.animation_speed / 2,
+                origin = settings.meta.display.animation_origin,
+                original_size = {height: $this.height(), width: $this.width()};
 
             if (origin === 'top' || origin === 'bottom') {
                 origin = 'center ' + origin;
@@ -1067,29 +1061,87 @@
                 origin = origin + ' center';
             }
 
-            TweenLite.to($this, 0, {
-                transformOrigin: origin,
-                scale: 0,
+            $this.css({
                 opacity: 1
             });
 
-            $this.popmake('animate_overlay', 'fade', speed * 1000, function () {
+            $this.popmake('animate_overlay', 'fade', speed, function () {
                 // Reposition with callback. position returns default positioning.
                 $this.popmake('reposition', function (position) {
 
-                    TweenLite.to($this, speed, {
-                        scale: 1,
-                        onComplete: function () {
-                            if (callback !== undefined) {
-                                callback();
-                            }
+                    position.height = original_size.height;
+                    position.width = original_size.width;
+                    $this.css({
+                        height: 0,
+                        width: 0
+                    }).animate(position, speed, 'swing', function () {
+                        if (callback !== undefined) {
+                            callback();
                         }
                     });
+
                 });
             });
             return this;
+*/
+            var $this = jQuery(this).show(0).css({ opacity: 0 }),
+                settings = $this.data('popmake'),
+                speed = settings.meta.display.animation_speed / 2,
+                start = $this.popmake('animation_origin', settings.meta.display.animation_origin);
+
+            if (!settings.meta.display.position_fixed && !isScrolling) {
+                jQuery('html').css('overflow-x', 'hidden');
+            }
+
+            $this
+                .position(start)
+                .css({ opacity: 1 })
+                .popmake('animate_overlay', 'fade', speed, function () {
+                    $this.popmake('reposition', function (position) {
+
+                        $this.animate(position, speed, 'swing', function () {
+                            if (!settings.meta.display.position_fixed) {
+                                jQuery('html').css('overflow-x', 'inherit');
+                            }
+                            if (callback !== undefined) {
+                                callback();
+                            }
+                        });
+
+                    });
+                });
+            return this;
+
         },
         growAndSlide: function (callback) {
+            var $this = jQuery(this).show(0).css({ opacity: 0 }),
+                settings = $this.data('popmake'),
+                speed = settings.meta.display.animation_speed / 2,
+                start = $this.popmake('animation_origin', settings.meta.display.animation_origin);
+
+            if (!settings.meta.display.position_fixed && !isScrolling) {
+                jQuery('html').css('overflow-x', 'hidden');
+            }
+
+            $this
+                .position(start)
+                .css({ opacity: 1 })
+                .popmake('animate_overlay', 'fade', speed, function () {
+                    $this.popmake('reposition', function (position) {
+
+                        $this.animate(position, speed, 'swing', function () {
+                            if (!settings.meta.display.position_fixed) {
+                                jQuery('html').css('overflow-x', 'inherit');
+                            }
+                            if (callback !== undefined) {
+                                callback();
+                            }
+                        });
+
+                    });
+                });
+            return this;
+/*
             var $this = jQuery(this).show(0).css({ opacity: 0 }),
                 settings = $this.data('popmake'),
                 speed = settings.meta.display.animation_speed / 2000,
@@ -1123,6 +1175,7 @@
                 });
             });
             return this;
+*/
         }
     };
 
