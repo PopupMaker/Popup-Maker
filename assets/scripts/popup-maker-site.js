@@ -47,10 +47,6 @@
                 var $this = jQuery(this),
                     settings = jQuery.extend(true, {}, jQuery.fn.popmake.defaults, $this.data('popmake'), options);
 
-                if (!$this.parent().is('body')) {
-                    $this.appendTo('body');
-                }
-
                 if (!jQuery('#' + settings.overlay.attr.id).length) {
                     jQuery('<div>').attr(settings.overlay.attr).appendTo('body');
                 }
