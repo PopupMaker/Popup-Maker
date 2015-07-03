@@ -28,6 +28,9 @@ function popmake_add_popup_meta_box() {
 	/** Loading Meta **/
 	add_meta_box( 'popmake_popup_targeting_condition', __( 'Targeting Conditions', 'popup-maker' ),  'popmake_render_popup_targeting_condition_meta_box', 'popup', 'side', 'high' );
 
+	/** Theme Meta **/
+	add_meta_box( 'popmake_popup_themes', __( 'Theme Settings', 'popup-maker' ),  'popmake_render_popup_themes_meta_box', 'popup', 'side', 'high' );
+
 	/** Click Open Meta **/
 	add_meta_box( 'popmake_popup_click_open', __( 'Click Open Settings', 'popup-maker' ),  'popmake_render_popup_click_open_meta_box', 'popup', 'side', 'default' );
 
@@ -52,6 +55,7 @@ function popmake_popup_meta_fields() {
 	$fields = array(
 		'popup_defaults_set',
 		'popup_title',
+		'popup_theme',
 		'popup_targeting_condition_on_entire_site',
 		'popup_targeting_condition_on_home',
 		'popup_targeting_condition_exclude_on_home',
@@ -349,6 +353,25 @@ function popmake_render_popup_close_meta_box() {
 
 
 
+/**
+ * Popup Theme Metabox
+ *
+ * Extensions (as well as the core plugin) can add items to the popup display
+ * configuration metabox via the `popmake_popup_themes_meta_box_fields` action.
+ *
+ * @since 1.0
+ * @return void
+ */
+function popmake_render_popup_themes_meta_box() {
+	global $post ?>
+	<div id="popmake_popup_themes_fields" class="popmake_meta_table_wrap">
+	<table class="form-table">
+		<tbody>
+			<?php do_action( 'popmake_popup_themes_meta_box_fields', $post->ID );?>
+		</tbody>
+	</table>
+	</div><?php
+}
 
 
 

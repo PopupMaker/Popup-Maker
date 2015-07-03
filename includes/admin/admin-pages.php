@@ -111,29 +111,6 @@ function popmake_remove_admin_subpages() {
 add_action( 'admin_head', 'popmake_remove_admin_subpages' );
 
 
-
-/**
- * Creates the admin submenu pages for theme editor in the Popup Maker menu and assigns its
- * link to global variables
- *
- * @since 1.0
- * @global $popmake_popup_themes_page
- * @return void
- */
-function popmake_admin_submenu_theme_pages() {
-	global $popmake_popup_themes_page;
-	
-	$popmake_popup_themes_page = add_submenu_page(
-		'edit.php?post_type=popup',
-    	apply_filters( 'popmake_admin_submenu_themes_page_title', __( 'Theme', 'popup-maker' ) ),
-    	apply_filters( 'popmake_admin_submenu_themes_page_title', __( 'Theme', 'popup-maker' ) ),
-    	apply_filters( 'popmake_admin_submenu_themes_capability', 'edit_posts' ),
-		'post.php?post='. popmake_get_default_popup_theme() .'&action=edit'
-	);
-}
-add_action( 'admin_menu', 'popmake_admin_submenu_theme_pages', 10 );
-
-
 /**
  *  Determines whether the current admin page is an POPMAKE admin page.
  *  

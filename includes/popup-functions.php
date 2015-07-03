@@ -13,6 +13,14 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
+function popmake_get_the_popup_theme( $popup_id = NULL ) {
+	if( !$popup_id ) $popup_id = get_the_ID();
+	$theme = get_post_meta( $popup_id, 'popup_theme', true );
+	if(empty($theme)) $theme = popmake_get_default_popup_theme();
+	return apply_filters( 'popmake_get_the_popup_theme', $theme, $popup_id );
+}
+
+
 function popmake_get_the_popup_classes( $popup_id = null ) {
 	if( !$popup_id ) $popup_id = get_the_ID();
 	return implode( ' ', apply_filters( 'popmake_get_the_popup_classes', array( 'popmake' ), $popup_id ) );
@@ -49,6 +57,7 @@ function popmake_get_the_popup_data_attr( $popup_id = null ) {
 	$data_attr = array(
 		'id'   => $popup_id,
 		'slug' => $post->post_name,
+		'theme_id' => popmake_get_the_popup_theme( $popup_id ),
 		'meta' => array(
 			'display'     => popmake_get_popup_display( $popup_id ),
 			'close'       => popmake_get_popup_close( $popup_id ),

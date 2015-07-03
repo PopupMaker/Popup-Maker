@@ -24,6 +24,17 @@ function popmake_get_default_popup_theme() {
 }
 
 
+function popmake_get_all_popup_themes() {
+	$query = new WP_Query( array(
+		'post_type' => 'popup_theme',
+		'post_status' => 'publish',
+		'posts_per_page' => -1
+	) );
+	return $query;
+}
+
+
+
 /**
  * Returns the meta group of a theme or value if key is set.
  *

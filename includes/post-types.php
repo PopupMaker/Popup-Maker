@@ -68,7 +68,7 @@ function popmake_setup_post_types() {
 		'labels' 			=> $popup_theme_labels,
 		'show_ui' 			=> true,
 		'show_in_nav_menus'	=> false,
-		'show_in_menu'		=> false,
+		'show_in_menu'		=> 'edit.php?post_type=popup',
 		'show_in_admin_bar'	=> false,
 		'query_var' 		=> false,
 		'supports' 			=> apply_filters( 'popmake_popup_theme_supports', array( 'title', 'revisions', 'author' ) ),
