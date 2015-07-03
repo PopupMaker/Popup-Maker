@@ -87,7 +87,7 @@ function popmake_the_popup_data_attr( $popup_id = null ) {
  * @param int $popup_id ID number of the popup to retrieve a overlay meta for
  * @return mixed array|string
  */
-function popmake_get_popup_meta_group( $group, $popup_id = NULL, $key = NULL ) {
+function popmake_get_popup_meta_group( $group, $popup_id = NULL, $key = NULL, $default = NULL ) {
 	global $pagenow;
 	if(!$popup_id) $popup_id = get_the_ID();
 
@@ -110,9 +110,11 @@ function popmake_get_popup_meta_group( $group, $popup_id = NULL, $key = NULL ) {
 	if($key) {
 		$key = str_replace('.', '_', $key);
 		if(!isset($group_values[$key])) {
-			return false;
+			$value = $default;
 		}
-		$value = $group_values[$key];
+		else {
+			$value = $group_values[$key];
+		}
 		return apply_filters( "popmake_get_popup_{$group}_$key", $value, $popup_id );
 	}
 	else {
