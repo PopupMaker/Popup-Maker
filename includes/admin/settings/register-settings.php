@@ -23,7 +23,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 function popmake_get_option( $key = '', $default = false ) {
 	global $popmake_options;
-	$value = ! empty( $popmake_options[ $key ] ) ? $popmake_options[ $key ] : $default;
+	$value = isset( $popmake_options[ $key ] ) ? $popmake_options[ $key ] : $default;
 	$value = apply_filters( 'popmake_get_option', $value, $key, $default );
 	return apply_filters( 'popmake_get_option_' . $key, $value, $key, $default );
 }
