@@ -229,7 +229,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 				><?php echo $option;?></option>
 			<?php endforeach ?>
 			</select>
-			<p class="description"><?php _e( 'Choose which corner the close button will be positioned.', 'popup-maker' ); ?></p>
+			<p class="description"><?php _e( 'Choose where the popup will be displayed.', 'popup-maker' ); ?></p>
 		</td>
 	</tr>
 	<tr>
