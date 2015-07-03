@@ -177,7 +177,7 @@
                 });
             return this;
         },
-        close: function () {
+        close: function (callback) {
             return this.each(function () {
                 var $this = jQuery(this),
                     settings = $this.data('popmake');
@@ -187,6 +187,9 @@
                         $this
                             .removeClass('active')
                             .trigger('popmakeAfterClose');
+                        if (callback !== undefined) {
+                            callback();
+                        }
                     });
                 return this;
             });
