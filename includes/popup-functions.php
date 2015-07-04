@@ -110,7 +110,7 @@ function popmake_get_popup_meta_group( $group, $popup_id = NULL, $key = NULL, $d
 
 	$post_meta = get_post_custom( $popup_id );
 	$default_check_key = 'popup_defaults_set';
-	if(!in_array($group, array('close','display','targeting_condition'))) {
+	if(!in_array($group, array('auto_open', 'close', 'display', 'targeting_condition'))) {
 		$default_check_key = "popup_{$group}_defaults_set";
 	}
 

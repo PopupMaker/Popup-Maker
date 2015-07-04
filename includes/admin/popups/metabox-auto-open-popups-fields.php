@@ -83,7 +83,7 @@ function popmake_popup_auto_open_meta_box_field_cookie_path( $popup_id ) {
 	?><tr class="auto-open-enabled">
 		<th scope="row"><?php _e( 'Sitewide Cookie', 'popup-maker' );?></th>
 		<td>
-			<input type="checkbox" value="/" name="popup_auto_open_cookie_path" id="popup_auto_open_cookie_path" <?php echo popmake_get_popup_auto_open( $popup_id, 'cookie_path' ) ? 'checked="checked" ' : '';?>/>
+			<input type="checkbox" value="/" name="popup_auto_open_cookie_path" id="popup_auto_open_cookie_path" <?php checked( popmake_get_popup_auto_open( $popup_id, 'cookie_path' ), '/' );?>/>
 			<label for="popup_auto_open_cookie_path" class="description"><?php _e( 'This will prevent the popup from auto opening on any page until the cookie expires.', 'popup-maker' );?></label>
 		</td>
 	</tr><?php
