@@ -237,7 +237,7 @@ function popmake_post_type_item_metabox( $post_type_name ) {
 			</span>
 
 			<span class="add-to-list">
-				<input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add Selected' ); ?>" name="add-post-type-menu-item" id="<?php echo esc_attr( 'submit-posttype-' . $post_type_name ); ?>" />
+				<button type="button" <?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button-secondary submit-add-to-menu right" id="<?php echo esc_attr( 'submit-posttype-' . $post_type_name ); ?>"><?php esc_attr_e( 'Add Selected' ); ?></button>
 				<span class="spinner"></span>
 			</span>
 		</p>
