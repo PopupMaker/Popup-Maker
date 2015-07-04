@@ -12,3 +12,19 @@ function popmake_enqueue_gravityforms_during_preload( $popup_id ) {
 	}
 }
 add_action('popmake_preload_popup', 'popmake_enqueue_gravityforms_during_preload');
+
+function popmake_force_gfroms_ajax( $out, $pairs, $atts ) {
+	$out['ajax'] = true;
+	return $out;
+}
+
+function popmake_gforms_force_ajax() {
+	if( current_action() == 'popmake_popup_before_inner' ) {
+		add_filter( 'shortcode_atts_gravityforms', 'popmake_force_gfroms_ajax', 10, 3 );
+	}
+	if( current_action() == 'popmake_popup_after_inner' ) {
+		remove_filter( 'shortcode_atts_gravityforms', 'popmake_force_gfroms_ajax', 10, 3 );
+	}
+}
+add_action( 'popmake_popup_before_inner', 'popmake_gforms_force_ajax' );
+add_action( 'popmake_popup_after_inner', 'popmake_gforms_force_ajax' );
