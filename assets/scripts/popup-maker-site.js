@@ -1198,8 +1198,10 @@
 
                 jQuery(trigger_selector).css({cursor: "pointer"});
                 jQuery(document).on('click.popmakeOpen', trigger_selector, function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
+                    if (!$(event.target).hasClass('do-default')) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
                     jQuery.fn.popmake.last_open_trigger = this; //jQuery.fn.popmake.utilities.getXPath(this);
                     $this.popmake('open');
                 });
