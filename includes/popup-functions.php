@@ -12,9 +12,27 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+function popmake_get_popup( $popup_id ) {
+	if( !$popup_id ) $popup_id = popmake_get_the_popup_ID();
+	return get_post( $popup_id );
+}
+
+
+function popmake_get_the_popup_ID() {
+	global $popup;
+	return $popup ? $popup->ID : 0;
+}
+
+function popmake_the_popup_ID() {
+	echo popmake_get_the_popup_ID();
+}
+
+function get_the_popup_ID() {
+	return popmake_get_the_popup_ID();
+}
 
 function popmake_get_the_popup_theme( $popup_id = NULL ) {
-	if( !$popup_id ) $popup_id = get_the_ID();
+	if( !$popup_id ) $popup_id = popmake_get_the_popup_ID();
 	$theme = get_post_meta( $popup_id, 'popup_theme', true );
 	if(empty($theme)) $theme = popmake_get_default_popup_theme();
 	return apply_filters( 'popmake_get_the_popup_theme', $theme, $popup_id );
@@ -22,7 +40,7 @@ function popmake_get_the_popup_theme( $popup_id = NULL ) {
 
 
 function popmake_get_the_popup_classes( $popup_id = null ) {
-	if( !$popup_id ) $popup_id = get_the_ID();
+	if( !$popup_id ) $popup_id = popmake_get_the_popup_ID();
 	return implode( ' ', apply_filters( 'popmake_get_the_popup_classes', array( 'popmake' ), $popup_id ) );
 }
 
@@ -52,7 +70,7 @@ add_filter('popmake_get_the_popup_classes', 'popmake_add_popup_size_classes', 5,
 
 
 function popmake_get_the_popup_data_attr( $popup_id = null ) {
-	if( ! $popup_id ) $popup_id = get_the_ID();
+	if( !$popup_id ) $popup_id = popmake_get_the_popup_ID();
 	$post = get_post( $popup_id );
 	$data_attr = array(
 		'id'   => $popup_id,
@@ -88,8 +106,7 @@ function popmake_the_popup_data_attr( $popup_id = null ) {
  * @return mixed array|string
  */
 function popmake_get_popup_meta_group( $group, $popup_id = NULL, $key = NULL, $default = NULL ) {
-	global $pagenow;
-	if(!$popup_id) $popup_id = get_the_ID();
+	if( !$popup_id ) $popup_id = popmake_get_the_popup_ID();
 
 	$post_meta = get_post_custom( $popup_id );
 	$default_check_key = 'popup_defaults_set';
@@ -195,7 +212,7 @@ function popmake_get_popup_targeting_condition_excludes( $popup_id, $post_type =
  * @return mixed string|int
  */
 function popmake_get_the_popup_title( $popup_id = NULL ) {
-	if( !$popup_id ) $popup_id = get_the_ID();
+	if( !$popup_id ) $popup_id = popmake_get_the_popup_ID();
 	$title = get_post_meta( $popup_id, 'popup_title', true );
 	return apply_filters( 'popmake_get_the_popup_title', $title, $popup_id );
 }
@@ -207,8 +224,9 @@ function popmake_the_popup_title( $popup_id = NULL ) {
 
 
 function popmake_get_the_popup_content( $popup_id = NULL ) {
-	if( !$popup_id ) $popup_id = get_the_ID();
-	return apply_filters( 'the_popup_content', get_the_content( $popup_id ), $popup_id );
+	if( !$popup_id ) $popup_id = popmake_get_the_popup_ID();
+	$popup = popmake_get_popup( $popup_id );
+	return apply_filters( 'the_popup_content', $popup->post_content, $popup_id );
 }
 add_filter( 'the_popup_content', array( $GLOBALS['wp_embed'], 'run_shortcode' ), 8 );
 add_filter( 'the_popup_content', array( $GLOBALS['wp_embed'], 'autoembed' ), 8 );
@@ -221,7 +239,7 @@ add_filter( 'the_popup_content', 'prepend_attachment', 10 );
 add_filter( 'the_popup_content', 'do_shortcode', 11 );
 add_filter( 'the_popup_content', 'capital_P_dangit', 11 );
 add_filter( 'the_popup_content', 'force_balance_tags', 12 );
-add_filter( 'the_popup_content', 'popmake_popup_content_container', 10000 );
+add_filter( 'the_popup_content', 'popmake_popup_content_container', 10000, 2 );
 
 
 function popmake_the_popup_content( $popup_id = NULL ) {
@@ -293,12 +311,12 @@ function popmake_get_popup_admin_debug( $popup_id = NULL, $key = NULL ) {
 
 
 
-function popmake_popup_content_container( $content ) {
-	global $post;
-	if ($post->post_type == 'popup') {
+function popmake_popup_content_container( $content, $popup_id ) {
+	$popup = popmake_get_popup( $popup_id );
+	if ($popup->post_type == 'popup') {
 		$content = '<div class="popmake-content">' . $content;
 		$content .= '</div>';
-		$content .= '<span class="popmake-close">'. apply_filters( 'popmake_popup_default_close_text', __( '&#215;', 'popup-maker'), $post->ID ) .'</span>';
+		$content .= '<span class="popmake-close">'. apply_filters( 'popmake_popup_default_close_text', __( '&#215;', 'popup-maker'), $popup_id ) .'</span>';
 	}
 	return $content;
 }

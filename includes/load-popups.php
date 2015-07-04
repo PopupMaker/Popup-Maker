@@ -77,12 +77,13 @@ add_action( 'wp_head', 'popmake_preload_popups', 1000 );
 
 
 function popmake_render_popups() {
-	global $popmake_loaded_popups;
+	global $popmake_loaded_popups, $popup;
 	if ( $popmake_loaded_popups->have_posts() ) {
-		while ( $popmake_loaded_popups->have_posts() ) : $popmake_loaded_popups->the_post();
-			popmake_get_template_part('popup');
+		while ( $popmake_loaded_popups->have_posts() ) : $popmake_loaded_popups->next_post();
+			$popup = $popmake_loaded_popups->post;
+			popmake_get_template_part( 'popup' );
 		endwhile;
-		wp_reset_postdata();
+		$popup = null;
 	}
 }
 add_action('wp_footer', 'popmake_render_popups', 1);
