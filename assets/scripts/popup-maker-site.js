@@ -1241,8 +1241,10 @@
 
                     setTimeout(function () {
                         if (noCookieCheck()) {
-                            jQuery.fn.popmake.last_open_trigger = 'Auto Open Popups ID-' + settings.id;
-                            $this.popmake('open');
+                            if (!$this.hasClass('active')) {
+                                jQuery.fn.popmake.last_open_trigger = 'Auto Open Popups ID-' + settings.id;
+                                $this.popmake('open');
+                            }
                         }
                     }, auto_open.delay);
                 }
