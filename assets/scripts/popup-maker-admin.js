@@ -1,6 +1,7 @@
 /**
  * Popup Maker v1.2
  */
+
 var PopMakeAdmin;
 (function () {
     "use strict";
@@ -563,7 +564,6 @@ var PopMakeAdmin;
                         jQuery('#title').focus();
                     }
                 })
-
                 .on('keydown', '#title, #popuptitle', function (event) {
                     var keyCode = event.keyCode || event.which,
                         target;
@@ -585,12 +585,13 @@ var PopMakeAdmin;
                 .on('submit', '#post', function (event) {
                     var title = jQuery('#title').val();
                     if (title.length === 0 || title.replace(/\s/g, '').length === 0) {
+                        console.log(1);
                         event.preventDefault();
                         jQuery('div#notice').remove();
                         jQuery("<div id='notice' class='error below-h2'><p>A name is required for all popups.</p></div>").insertAfter('h2');
                         jQuery('#title').focus();
-                        jQuery('#ajax-loading').hide();
-                        jQuery('#publish').removeClass('button-primary-disabled');
+                        jQuery('#publishing-action .spinner').removeClass('is-active');
+                        jQuery('#publish').removeClass('disabled');
                         jQuery('#title').prop('required', 'required');
                     }
                 })
