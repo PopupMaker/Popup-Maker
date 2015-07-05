@@ -205,7 +205,8 @@ div.popmake-upgrade-tip {
 #popmake_popup_theme_preview .empreview {
 	padding-top: 25px;
 }
-.example-popup, .example-popup:before, .example-popup:after {
+.example-popup, .example-popup:before, .example-popup:after,
+.example-popup *, .example-popup *:before, .example-popup *:after {
 	-moz-box-sizing: border-box;
 }
 .empreview .example-popup-overlay{

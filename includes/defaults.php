@@ -153,6 +153,8 @@ function popmake_popup_theme_close_defaults( $defaults ) {
 		'position_bottom'		=> 0,
 		'position_right'		=> 0,
 		'padding'				=> 8,
+		'height'				=> 20,
+		'width'				    => 20,
 		'background_color'		=> '#00b7cd',
 		'background_opacity'	=> 100,
 		'font_color'			=> '#ffffff',

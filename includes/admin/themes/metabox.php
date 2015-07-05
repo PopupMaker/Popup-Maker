@@ -141,6 +141,8 @@ function popmake_popup_theme_meta_field_group_close() {
 	return array(
 		'text',
 		'padding',
+		'height',
+		'width',
 		'location',
 		'position_top',
 		'position_left',

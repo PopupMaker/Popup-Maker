@@ -363,6 +363,8 @@
             });
             $close.html(theme.close.text).css({
                 padding: theme.close.padding + 'px',
+                height: theme.close.height + 'px',
+                width: theme.close.width + 'px',
                 backgroundColor: jQuery.fn.popmake.utilities.convert_hex(theme.close.background_color, theme.close.background_opacity),
                 color: theme.close.font_color,
                 lineHeight: theme.close.line_height + 'px',
@@ -1203,7 +1205,7 @@
 
                 jQuery(trigger_selector).css({cursor: "pointer"});
                 jQuery(document).on('click.popmakeOpen', trigger_selector, function (event) {
-                    if (!$(event.target).hasClass('do-default')) {
+                    if (!jQuery(event.target).hasClass('do-default')) {
                         event.preventDefault();
                         event.stopPropagation();
                     }

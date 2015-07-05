@@ -316,7 +316,9 @@ function popmake_popup_content_container( $content, $popup_id ) {
 	if ($popup->post_type == 'popup') {
 		$content = '<div class="popmake-content">' . $content;
 		$content .= '</div>';
-		$content .= '<span class="popmake-close">'. apply_filters( 'popmake_popup_default_close_text', __( '&#215;', 'popup-maker'), $popup_id ) .'</span>';
+		if ( apply_filters( 'popmake_show_close_button', true, $popup_id ) ) {
+			$content .= '<span class="popmake-close">'. apply_filters( 'popmake_popup_default_close_text', __( '&#215;', 'popup-maker'), $popup_id ) .'</span>';
+		}
 	}
 	return $content;
 }
