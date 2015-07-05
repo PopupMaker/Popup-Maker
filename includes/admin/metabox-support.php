@@ -21,21 +21,21 @@ add_action('popmake_support_meta_box_fields', 'popmake_support_meta_box_links', 
 function popmake_support_meta_box_links() { ?>
 	<ul class="popmake-support-links">
 		<li>
-			<a href="https://wppopupmaker.com/kb?utm_source=Plugin+Admin&utm_medium=Support+Metabox&utm_campaign=Knowledgebase">
+			<a href="https://wppopupmaker.com/docs?utm_source=Plugin+Admin&utm_medium=Support+Metabox&utm_campaign=Docs">
 				<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/knowledge-base.png"/>
 				<span><?php _e( 'Knowledge Base', 'popup-maker' ); ?></span>
-			</a>
-		</li>
-		<li>
-			<a href="https://wppopupmaker.com/support?utm_source=Plugin+Admin&utm_medium=Support+Metabox&utm_campaign=Member+Forums">
-				<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/member-forums.png"/>
-				<span><?php _e( 'Member Forums', 'popup-maker' ); ?></span>
 			</a>
 		</li>
 		<li>
 			<a href="https://wordpress.org/support/plugin/popup-maker?utm_source=Plugin+Admin&utm_medium=Support+Metabox&utm_campaign=WordPress+Forums">
 				<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/wordpress-forums.png"/>
 				<span><?php _e( 'WordPress Forums', 'popup-maker' ); ?></span>
+			</a>
+		</li>
+		<li>
+			<a href="https://wppopupmaker.com/support?utm_source=Plugin+Admin&utm_medium=Support+Metabox&utm_campaign=Member+Forums">
+				<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/member-forums.png"/>
+				<span><?php _e( 'Paid Member Forums', 'popup-maker' ); ?></span>
 			</a>
 		</li>
 	</ul>
