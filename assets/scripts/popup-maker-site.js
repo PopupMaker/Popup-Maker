@@ -211,6 +211,10 @@
                 },
                 opacity = false;
 
+            if (jQuery('body').hasClass('admin-bar')) {
+                display.position_top = parseInt(display.position_top) + 32;
+            }
+
             if (location.indexOf('left') >= 0) {
                 reposition = {
                     my: reposition.my + " left" + (display.position_left !== 0 ? "+" + display.position_left : ""),
