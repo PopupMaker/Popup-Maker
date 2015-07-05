@@ -65,6 +65,7 @@ function popmake_preload_popups() {
 	if ( $query->have_posts() ) {
 		while ( $query->have_posts() ) : $query->next_post();
 			if( popmake_popup_is_loadable( $query->post->ID ) ) {
+				$popmake_loaded_popup_ids[] = $query->post->ID;
 				do_action( 'popmake_preload_popup', $query->post->ID );
 				$popmake_loaded_popups->posts[] = $query->post;
 				$popmake_loaded_popups->post_count++;
@@ -73,7 +74,7 @@ function popmake_preload_popups() {
 
 	}
 }
-add_action( 'wp_head', 'popmake_preload_popups', 1000 );
+add_action( 'wp_enqueue_scripts', 'popmake_preload_popups', 11 );
 
 
 function popmake_render_popups() {

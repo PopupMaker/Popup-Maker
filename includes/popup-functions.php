@@ -236,9 +236,9 @@ add_filter( 'the_popup_content', 'convert_chars', 10 );
 add_filter( 'the_popup_content', 'wpautop', 10 );
 add_filter( 'the_popup_content', 'shortcode_unautop', 10 );
 add_filter( 'the_popup_content', 'prepend_attachment', 10 );
+add_filter( 'the_popup_content', 'force_balance_tags', 10 );
 add_filter( 'the_popup_content', 'do_shortcode', 11 );
 add_filter( 'the_popup_content', 'capital_P_dangit', 11 );
-add_filter( 'the_popup_content', 'force_balance_tags', 12 );
 add_filter( 'the_popup_content', 'popmake_popup_content_container', 10000, 2 );
 
 

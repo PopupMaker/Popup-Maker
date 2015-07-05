@@ -42,7 +42,7 @@ function popmake_load_site_scripts() {
 		wp_register_script( 'popup-maker-easy-modal-importer-site', $js_dir . 'popup-maker-easy-modal-importer-site' . $suffix . '?defer', array( 'popup-maker-site' ), POPMAKE_VERSION, true );
 	}
 }
-add_action( 'wp_enqueue_scripts', 'popmake_load_site_scripts', 1000 );
+add_action( 'wp_enqueue_scripts', 'popmake_load_site_scripts' );
 
 
 /**
