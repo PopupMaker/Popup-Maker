@@ -1190,6 +1190,7 @@
                     trigger_selector = '.popmake-' + settings.id + ', .popmake-' + settings.slug,
                     admin_debug = settings.meta.admin_debug,
                     auto_open = settings.meta.auto_open,
+                    cookie_name = "popmake-auto-open-" + settings.id,
                     noCookieCheck;
 
                 if (click_open !== undefined && click_open.extra_selectors !== '') {
@@ -1213,14 +1214,18 @@
 
                 if (auto_open !== undefined && auto_open.enabled) {
 
+                    if (auto_open.cookie_key !== undefined && auto_open.cookie_key !== '') {
+                        cookie_name = cookie_name + "-" + auto_open.cookie_key;
+                    }
+
                     noCookieCheck = function () {
-                        return jQuery.pm_cookie("popmake-auto-open-" + settings.id + "-" + auto_open.cookie_key) === undefined;
+                        return jQuery.pm_cookie(cookie_name) === undefined;
                     };
 
                     $this.on('popmakeSetCookie.auto-open', function () {
                         if (auto_open.cookie_time !== '' && noCookieCheck()) {
                             jQuery.pm_cookie(
-                                "popmake-auto-open-" + settings.id + "-" + auto_open.cookie_key,
+                                cookie_name,
                                 true,
                                 auto_open.cookie_time,
                                 auto_open.cookie_path
