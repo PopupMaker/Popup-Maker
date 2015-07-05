@@ -62,23 +62,38 @@ function popmake_popup_auto_open_meta_box_field_cookie_trigger( $popup_id ) {
 }
 
 
-add_action('popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_cookie_time', 40);
-function popmake_popup_auto_open_meta_box_field_cookie_time( $popup_id ) {
+add_action('popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_session_cookie', 40);
+function popmake_popup_auto_open_meta_box_field_session_cookie( $popup_id ) {
 	?><tr class="auto-open-enabled">
-		<th scope="row">
-			<label for="popup_auto_open_cookie_time">
-				<?php _e( 'Cookie Time', 'popup-maker' );?>
-			</label>
-		</th>
-		<td>
-			<input type="text" class="regular-text" name="popup_auto_open_cookie_time" id="popup_auto_open_cookie_time" value="<?php esc_attr_e(popmake_get_popup_auto_open( $popup_id, 'cookie_time' ))?>"/>
-			<p class="description"><?php _e( 'Enter a plain english time before cookie expires. <br/>Example "364 days 23 hours 59 minutes 59 seconds" will reset just before 1 year exactly.', 'popup-maker' )?></p>
-		</td>
+	<th scope="row">
+		<label for="popup_auto_open_session_cookie">
+			<?php _e( 'Use Session Cookie?', 'popup-maker' );?>
+		</label>
+	</th>
+	<td>
+		<input type="checkbox" value="true" name="popup_auto_open_session_cookie" id="popup_auto_open_session_cookie" <?php checked( popmake_get_popup_auto_open( $popup_id, 'session_cookie' ), 'true' );?>/>
+		<label class="description" for="popup_auto_open_session_cookie"><?php _e( 'Session cookies expire when the user closes their browser.', 'popup-maker' )?></label>
+	</td>
+	</tr><?php
+}
+
+add_action('popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_cookie_time', 50);
+function popmake_popup_auto_open_meta_box_field_cookie_time( $popup_id ) {
+	?><tr class="auto-open-enabled not-session-cookie">
+	<th scope="row">
+		<label for="popup_auto_open_cookie_time">
+			<?php _e( 'Cookie Time', 'popup-maker' );?>
+		</label>
+	</th>
+	<td>
+		<input type="text" class="regular-text" name="popup_auto_open_cookie_time" id="popup_auto_open_cookie_time" value="<?php esc_attr_e(popmake_get_popup_auto_open( $popup_id, 'cookie_time' ))?>"/>
+		<p class="description"><?php _e( 'Enter a plain english time before cookie expires. <br/>Example "364 days 23 hours 59 minutes 59 seconds" will reset just before 1 year exactly.', 'popup-maker' )?></p>
+	</td>
 	</tr><?php
 }
 
 
-add_action('popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_cookie_path', 50);
+add_action('popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_cookie_path', 60);
 function popmake_popup_auto_open_meta_box_field_cookie_path( $popup_id ) {
 	?><tr class="auto-open-enabled">
 		<th scope="row"><?php _e( 'Sitewide Cookie', 'popup-maker' );?></th>
@@ -90,7 +105,7 @@ function popmake_popup_auto_open_meta_box_field_cookie_path( $popup_id ) {
 }
 
 
-add_action('popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_cookie_key', 60);
+add_action('popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_cookie_key', 70);
 function popmake_popup_auto_open_meta_box_field_cookie_key( $popup_id ) {
 	?><tr class="auto-open-enabled">
 		<th scope="row">

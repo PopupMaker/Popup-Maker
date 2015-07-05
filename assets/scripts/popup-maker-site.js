@@ -1227,7 +1227,7 @@
                             jQuery.pm_cookie(
                                 cookie_name,
                                 true,
-                                auto_open.cookie_time,
+                                auto_open.session_cookie ? null : auto_open.cookie_time,
                                 auto_open.cookie_path
                             );
                         }

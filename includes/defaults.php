@@ -64,6 +64,7 @@ function popmake_popup_auto_open_defaults( $defaults ) {
 		'enabled' => NULL,
 		'delay' => 500,
 		'cookie_trigger' => 'close',
+		'session_cookie' => false,
 		'cookie_time' => '1 month',
 		'cookie_path' => '/',
 		'cookie_key' => '',

@@ -480,9 +480,17 @@ var PopMakeAdmin;
                         jQuery('tr.right').show();
                     }
                 },
+                auto_open_session_cookie_check = function () {
+                    if (jQuery("#popup_auto_open_session_cookie").is(":checked")) {
+                        jQuery('.not-session-cookie').hide();
+                    } else {
+                        jQuery('.not-session-cookie').show();
+                    }
+                },
                 auto_open_enabled_check = function () {
                     if (jQuery("#popup_auto_open_enabled").is(":checked")) {
                         jQuery('.auto-open-enabled').show();
+                        auto_open_session_cookie_check();
                     } else {
                         jQuery('.auto-open-enabled').hide();
                     }
@@ -596,6 +604,7 @@ var PopMakeAdmin;
                     }
                 })
                 .on('click', '#popup_display_custom_height_auto', function () { update_size(); })
+                .on('click', "#popup_auto_open_session_cookie", function () { auto_open_session_cookie_check(); })
                 .on('click', "#popup_auto_open_enabled", function () { auto_open_enabled_check(); })
                 .on('click', ".popmake-reset-auto-open-cookie-key", function () { auto_open_reset_cookie_key(); })
                 .on('change', "#popup_display_size", function () { update_size(); })

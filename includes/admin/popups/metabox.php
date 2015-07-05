@@ -147,6 +147,7 @@ function popmake_popup_meta_field_group_auto_open( $fields ) {
 		'enabled',
 		'delay',
 		'cookie_trigger',
+		'session_cookie',
 		'cookie_time',
 		'cookie_path',
 		'cookie_key'
