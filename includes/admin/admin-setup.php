@@ -67,6 +67,7 @@ add_action('admin_print_footer_scripts', 'popmake_admin_footer', 1000);
 
 function popmake_admin_popup_preview() {
 	echo do_shortcode( '[popup id="preview" title="' . __( 'A Popup Preview', 'popup-maker' ) . '"]'. popmake_get_default_example_popup_content() . '[/popup]' );
+	echo '<div id="popmake-overlay" class="popmake-overlay"></div>';
 }
 
 
