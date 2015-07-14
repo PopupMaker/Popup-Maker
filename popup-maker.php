@@ -182,6 +182,7 @@ final class Popup_Maker {
 		require_once POPMAKE_DIR . 'includes/input-options.php';
 		require_once POPMAKE_DIR . 'includes/popup-functions.php';
 		require_once POPMAKE_DIR . 'includes/theme-functions.php';
+		require_once POPMAKE_DIR . 'includes/css-functions.php';
 		require_once POPMAKE_DIR . 'includes/ajax-calls.php';
 
 
