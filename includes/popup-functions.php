@@ -38,10 +38,15 @@ function popmake_get_the_popup_theme( $popup_id = NULL ) {
 	return apply_filters( 'popmake_get_the_popup_theme', $theme, $popup_id );
 }
 
+function popmake_the_popup_theme( $popup_id = null ) {
+	echo popmake_get_the_popup_theme( $popup_id );
+}
+
 
 function popmake_get_the_popup_classes( $popup_id = null ) {
 	if( !$popup_id ) $popup_id = popmake_get_the_popup_ID();
-	return implode( ' ', apply_filters( 'popmake_get_the_popup_classes', array( 'popmake' ), $popup_id ) );
+	$theme_id = popmake_get_the_popup_theme( $popup_id );
+	return implode( ' ', apply_filters( 'popmake_get_the_popup_classes', array( 'popmake', 'theme-' . $theme_id ), $popup_id ) );
 }
 
 
@@ -308,8 +313,6 @@ function popmake_get_popup_admin_debug( $popup_id = NULL, $key = NULL ) {
 	}
 	return popmake_get_popup_meta_group( 'admin_debug', $popup_id, $key );
 }
-
-
 
 function popmake_popup_content_container( $content, $popup_id ) {
 	$popup = popmake_get_popup( $popup_id );
