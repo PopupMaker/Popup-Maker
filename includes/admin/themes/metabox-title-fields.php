@@ -79,7 +79,6 @@ function popmake_popup_theme_title_meta_box_field_font( $popup_theme_id )
 				<option
 					value="<?php echo $value;?>"
 					<?php echo $value == popmake_get_popup_theme_title( $popup_theme_id, 'font_weight') ? ' selected="selected"' : '';?>
-					<?php echo $value == '' ? ' class="bold"' : '';?>
 				><?php echo $option;?></option>
 			<?php endforeach ?>
 			</select>
@@ -95,7 +94,6 @@ function popmake_popup_theme_title_meta_box_field_font( $popup_theme_id )
 				<option
 					value="<?php echo $value;?>"
 					<?php echo $value == popmake_get_popup_theme_title( $popup_theme_id, 'font_style') ? ' selected="selected"' : '';?>
-					<?php echo $value == '' ? ' class="bold"' : '';?>
 				><?php echo $option;?></option>
 			<?php endforeach ?>
 			</select>
