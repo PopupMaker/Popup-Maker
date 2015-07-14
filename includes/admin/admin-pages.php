@@ -153,14 +153,13 @@ function popmake_is_admin_page() {
  *  @return bool True if POPMAKE admin popup page.
  */
 function popmake_is_admin_popup_page() {
+	global $pagenow, $typenow;
 
 	if ( ! is_admin() || ! popmake_is_admin_page() ) {
 		return false;
 	}
-	
-	global $pagenow, $typenow;
 
-	if ( 'popup' == $typenow && ( $pagenow == 'post-new.php' || $pagenow == 'post.php' || $pagenow == 'edit.php' )) {
+	if ( 'popup' == $typenow && in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) ) {
 		return true;
 	}
 	else {
@@ -176,14 +175,13 @@ function popmake_is_admin_popup_page() {
  *  @return bool True if POPMAKE admin theme page.
  */
 function popmake_is_admin_popup_theme_page() {
+	global $pagenow, $typenow;
 
 	if ( ! is_admin() || ! popmake_is_admin_page() ) {
 		return false;
 	}
-	
-	global $pagenow, $typenow;
 
-	if ( 'popup_theme' == $typenow && ( $pagenow == 'post-new.php' || $pagenow == 'post.php' || $pagenow == 'edit.php' )) {
+	if ( 'popup_theme' == $typenow && in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) ) {
 		return true;
 	}
 	else {

@@ -74,21 +74,28 @@ function popmake_load_site_styles() {
 add_action( 'wp_enqueue_scripts', 'popmake_load_site_styles' );
 
 function popmake_render_popup_theme_styles() {
-
-	if ( current_action() == 'admin_head' && ! popmake_is_admin_popup_page() ) {
+	if (
+		( current_action() == 'wp_head' && popmake_get_option( 'disable_popup_theme_styles', false ) ) ||
+		( current_action() == 'admin_head' && ! popmake_is_admin_popup_page() )
+	) {
 		return;
 	}
 
-	$themes = popmake_get_all_popup_themes();
+	$styles = get_transient( 'popmake_theme_styles' );
+	if ( ! $styles ) {
 
-	echo '<style id="popup-maker-themes"  type="text/css">';
+		$styles = '';
 
-	foreach ( $themes as $theme ) {
-		echo "/* Popup Theme " . $theme->ID . ": " . $theme->post_title . " */\r\n";
-		echo popmake_render_theme_styles( $theme->ID );
+		foreach ( popmake_get_all_popup_themes() as $theme ) {
+			$styles .= "/* Popup Theme " . $theme->ID . ": " . $theme->post_title . " */\r\n";
+			$styles .= popmake_render_theme_styles( $theme->ID );
+		}
+
+		set_transient( 'popmake_theme_styles', $styles, 7 * DAY_IN_SECONDS );
+
 	}
 
-	echo '</style>';
+	echo '<style id="popup-maker-themes"  type="text/css">' . $styles . '</style>';
 }
 add_action( 'wp_head', 'popmake_render_popup_theme_styles' );
 add_action( 'admin_head', 'popmake_render_popup_theme_styles' );

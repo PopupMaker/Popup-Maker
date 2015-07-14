@@ -219,6 +219,8 @@ function popmake_popup_theme_meta_box_save( $post_id, $post ) {
 		}
 	}
 
+	delete_transient( 'popmake_theme_styles' );
+
 	do_action( 'popmake_save_popup_theme', $post_id, $post );
 }
 add_action( 'save_post', 'popmake_popup_theme_meta_box_save', 10, 2 );

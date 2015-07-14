@@ -161,7 +161,7 @@ function popmake_get_registered_settings() {
 				'popmake_powered_by_opt_in' => array(
 					'id' => 'popmake_powered_by_opt_in',
 					'name' => __( 'Show Powered By Link?', 'popup-maker' ),
-					'desc' => sprintf( __( 'If you check this box, it will show the <em>Powered By Popup Maker</em> tag on all of your popups. Even if you don\'t, please take a moment to <a href="%s">rate and review us on WordPress</a>!', 'popup-maker' ), 'https://wordpress.org/support/view/plugin-reviews/popup-maker'),
+					'desc' => sprintf( __( 'If you check this box, it will show the <em>Powered By Popup Maker</em> tag on all of your popups. Even if you don\'t, please take a moment to <a href="%s">rate and review us on WordPress</a>!', 'popup-maker' ), 'https://wordpress.org/support/view/plugin-reviews/popup-maker' ),
 					'type' => 'checkbox'
 				),
 				'popmake_powered_by_size' => array(
@@ -203,6 +203,12 @@ function popmake_get_registered_settings() {
 					'id' => 'disable_google_font_loading',
 					'name' => __( 'Don\'t Load Google Fonts', 'popup-maker' ),
 					'desc' => __( 'Check this disable loading of google fonts, useful if the fonts you chose are already loaded with your theme.', 'popup-maker' ),
+					'type' => 'checkbox'
+				),
+				'disable_popup_theme_styles' => array(
+					'id' => 'disable_popup_theme_styles',
+					'name' => __( 'Don\'t load popup theme styles to the head.', 'popup-maker' ),
+					'desc' => __( 'Check this if you have copied the popup theme styles to your own stylesheet or are using custom styles.', 'popup-maker' ),
 					'type' => 'checkbox'
 				),
 			)
