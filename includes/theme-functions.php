@@ -25,7 +25,7 @@ function popmake_get_default_popup_theme() {
 
 
 function popmake_get_all_popup_themes() {
-	$query = new WP_Query( array(
+	$query = get_posts( array(
 		'post_type' => 'popup_theme',
 		'post_status' => 'publish',
 		'posts_per_page' => -1
@@ -135,8 +135,7 @@ function popmake_get_popup_theme_close( $popup_theme_id = NULL, $key = NULL ) {
 
 
 
-function popmake_get_popup_theme_data_attr( $popup_theme_id = NULL ) {
-	if(!$popup_theme_id) $popup_theme_id = get_the_ID();
+function popmake_get_popup_theme_data_attr( $popup_theme_id = 0 ) {
 	$data_attr = array(
 		'overlay' => popmake_get_popup_theme_overlay( $popup_theme_id ),
 		'container' => popmake_get_popup_theme_container( $popup_theme_id ),
@@ -161,14 +160,11 @@ function popmake_get_popup_theme_default_meta() {
 }
 
 function popmake_get_popup_themes_data() {
-	$query = get_posts( array(
-		'post_type' => 'popup_theme',
-		'posts_per_page' => -1
-	) );
+	$themes = popmake_get_all_popup_themes();
 
 	$popmake_themes = array();
 
-	foreach( $query as $theme ) {
+	foreach( $themes as $theme ) {
 		$popmake_themes[ $theme->ID ] = popmake_get_popup_theme_data_attr( $theme->ID );
 	}
 
