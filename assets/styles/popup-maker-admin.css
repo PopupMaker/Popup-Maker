@@ -407,6 +407,7 @@ div.popmake-upgrade-tip {
 
 
 #popmake-preview {
+	position: fixed;
 	z-index: 9999999!important;
 }
 #popmake-overlay {
