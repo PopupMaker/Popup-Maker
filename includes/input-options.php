@@ -50,7 +50,7 @@ function popmake_core_font_family_options( $options ) {
 add_filter('popmake_font_weight_options', 'popmake_core_font_weight_options',10);
 function popmake_core_font_weight_options( $options ) {
 	return array_merge($options, array(
-		__( 'Normal', 'popup-maker' )		=> 'normal',
+		__( 'Normal', 'popup-maker' )		=> '',
 		__( '100 ', 'popup-maker' )			=> '100',
 		__( '200 ', 'popup-maker' )			=> '200',
 		__( '300 ', 'popup-maker' )			=> '300',
@@ -67,7 +67,7 @@ function popmake_core_font_weight_options( $options ) {
 add_filter('popmake_font_style_options', 'popmake_core_font_style_options',10);
 function popmake_core_font_style_options( $options ) {
 	return array_merge($options, array(
-		__( 'Normal', 'popup-maker' )		=> 'normal',
+		__( 'Normal', 'popup-maker' )		=> '',
 		__( 'Italic', 'popup-maker' )		=> 'italic',
 	));
 }

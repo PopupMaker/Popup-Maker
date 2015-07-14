@@ -119,7 +119,7 @@ function popmake_popup_theme_title_defaults( $defaults ) {
 		'font_family'			=> 'inherit',
 		'font_weight'			=> 'inherit',
 		'font_style'			=> 'normal',
-		'font_align'			=> 'left',
+		'text_align'			=> 'left',
 		'textshadow_horizontal'	=> 0,
 		'textshadow_vertical'	=> 0,
 		'textshadow_blur'		=> 0,
