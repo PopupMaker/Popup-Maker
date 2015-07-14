@@ -35,7 +35,7 @@
         jQuery.error('Method ' + method + ' does not exist on jQuery.fn.popmake');
     };
 
-    jQuery.fn.popmake.version = 1.2;
+    jQuery.fn.popmake.version = 1.3;
 
     jQuery.fn.popmake.last_open_popup = null;
     jQuery.fn.popmake.last_open_trigger = null;
@@ -65,39 +65,6 @@
 
                 $this
                     .data('popmake', settings)
-                    .on('popmakeBeforeOpen.hide_popup', function () {
-                        jQuery(this)
-                            .css({ visibility: "visible" })
-                            .hide()
-                            .addClass(settings.container.active_class);
-
-                        if (!settings.meta.display.stackable) {
-                            $this.popmake('close_all');
-                        }
-                    })
-                    .on('popmakeAfterClose.close_overlay', function () {
-                        var $overlay = jQuery('#' + settings.overlay.attr.id);
-                        if ($overlay.length && $overlay.is(":visible")) {
-                            $overlay.fadeOut(settings.close.close_speed);
-                        }
-                    })
-                    .on('popmakeAfterClose.reset_videos', function () {
-                        jQuery('iframe', $this).filter('[src*="youtube"],[src*="vimeo"]').each(function () {
-                            var src = jQuery(this).attr('src')
-                                // Remove autoplay so video doesn't start playing again.
-                                .replace('autoplay=1', '1=1');
-                            jQuery(this).attr('src', '').attr('src', src);
-                        });
-                    })
-                    .on('popmakeBeforeOpen.setup_close', function () {
-                        $this.popmake('setup_close');
-                    })
-                    .on('popmakeBeforeOpen.retheme', function () {
-                        $this.popmake('retheme');
-                    })
-                    .on('popmakeBeforeOpen.reposition', function () {
-                        $this.popmake('reposition');
-                    })
                     .trigger('popmakeInit');
                 return this;
             });
@@ -105,18 +72,18 @@
         setup_close: function () {
             var $this = jQuery(this),
                 settings = $this.data('popmake'),
-                $overlay = jQuery('#' + settings.overlay.attr.id),
-                $close = jQuery('.' + settings.close.attr.class, $this);
+                $overlay = jQuery('#popmake-overlay'),
+                $close = jQuery('.popmake-close', $this);
 
             $close
                 .off('click.popmake')
                 .on("click.popmake", function (e) {
                     e.preventDefault();
                     e.stopPropagation();
-
                     jQuery.fn.popmake.last_close_trigger = 'Close Button';
                     $this.popmake('close');
                 });
+
             if (settings.meta.close.esc_press || settings.meta.close.f4_press) {
                 jQuery(window)
                     .off('keyup.popmake')
@@ -132,7 +99,6 @@
                     });
             }
 
-
             if (settings.meta.close.overlay_click) {
                 $overlay
                     .off('click.popmake')
@@ -146,30 +112,37 @@
                     });
             }
 
-            $this
-                .on('popmakeAfterClose', function () {
-                    jQuery(window).off('keyup.popmake');
-                    $overlay.off('click.popmake');
-                    $close.off('click.popmake');
-                })
-                .trigger('popmakeSetupClose');
+            $this.trigger('popmakeSetupClose');
+            return this;
         },
         open: function (callback) {
             var $this = jQuery(this),
                 settings = $this.data('popmake');
 
-            $this.trigger('popmakeBeforeOpen');
-
-            if ($this.hasClass('preventOpen')) {
-                $this.removeClass('preventOpen');
-                return this;
+            if (!settings.meta.display.stackable) {
+                $this.popmake('close_all');
             }
 
             $this
+                .css({ visibility: "visible" })
+                .hide()
+                .addClass('active')
+                .popmake('setup_close')
+                .popmake('reposition')
+                .trigger('popmakeBeforeOpen');
+
+            if ($this.hasClass('preventOpen')) {
+                $this
+                    .removeClass('preventOpen')
+                    .removeClass('active');
+                return this;
+            }
+
+            jQuery('#popmake-overlay').prop('class', 'popmake-overlay theme-' + settings.theme_id);
+
+            $this
                 .popmake('animate', settings.meta.display.animation_type, function () {
-                    $this
-                        .addClass('active')
-                        .trigger('popmakeAfterOpen');
+                    $this.trigger('popmakeAfterOpen');
                     jQuery.fn.popmake.last_open_popup = $this;
                     if (callback !== undefined) {
                         callback();
@@ -180,13 +153,34 @@
         close: function (callback) {
             return this.each(function () {
                 var $this = jQuery(this),
+                    $overlay = jQuery('#popmake-overlay'),
+                    $close = jQuery('.popmake-close', $this),
                     settings = $this.data('popmake');
+
                 $this
                     .trigger('popmakeBeforeClose')
                     .fadeOut(settings.close.close_speed, function () {
+
+                        if ($overlay.length && $overlay.is(":visible")) {
+                            $overlay.fadeOut(settings.close.close_speed);
+                        }
+
+                        jQuery(window).off('keyup.popmake');
+                        $overlay.off('click.popmake');
+                        $close.off('click.popmake');
+
                         $this
                             .removeClass('active')
                             .trigger('popmakeAfterClose');
+
+                        jQuery('iframe', $this).filter('[src*="youtube"],[src*="vimeo"]').each(function () {
+                            var $iframe = jQuery(this),
+                                src = $iframe.attr('src')
+                                // Remove autoplay so video doesn't start playing again.
+                                .replace('autoplay=1', '1=1');
+                            $iframe.attr('src', '').attr('src', src);
+                        });
+
                         if (callback !== undefined) {
                             callback();
                         }
@@ -195,8 +189,7 @@
             });
         },
         close_all: function () {
-            var settings = jQuery(this).data('popmake');
-            jQuery('.' + settings.container.attr.class).removeClass('active').hide(0);
+            jQuery('.popmake.active').popmake('close');
             return this;
         },
         reposition: function (callback) {
@@ -210,10 +203,6 @@
                     at: ""
                 },
                 opacity = false;
-
-            if (jQuery('body').hasClass('admin-bar')) {
-                display.position_top = parseInt(display.position_top) + 32;
-            }
 
             if (location.indexOf('left') >= 0) {
                 reposition = {
@@ -242,7 +231,7 @@
             }
             if (location.indexOf('top') >= 0) {
                 reposition = {
-                    my: reposition.my + " top" + (display.position_top !== 0 ? "+" + display.position_top : ""),
+                    my: reposition.my + " top" + (display.position_top !== 0 ? "+" + (jQuery('body').hasClass('admin-bar') ? parseInt(display.position_top) + 32 : display.position_top) : ""),
                     at: reposition.at + " top"
                 };
             }
@@ -885,7 +874,6 @@
     jQuery.fn.popmake.utilies = jQuery.fn.popmake.utilities;
 
     jQuery.fn.popmake.defaults = {
-        theme_id: popmake_default_theme,
         meta: {
             display: {
                 stackable: 0,
@@ -946,23 +934,15 @@
         }
     };
 
-    jQuery.fn.popmake.themes = popmake_themes;
-
     jQuery.fn.popmake.overlay_animations = {
         none: function (duration, callback) {
-            var $this = jQuery(this),
-                settings = $this.data('popmake');
-            jQuery('#' + settings.overlay.attr.id).show(duration, callback);
+            jQuery('#popmake-overlay').show(duration, callback);
         },
         fade: function (duration, callback) {
-            var $this = jQuery(this),
-                settings = $this.data('popmake');
-            jQuery('#' + settings.overlay.attr.id).fadeIn(duration, callback);
+            jQuery('#popmake-overlay').fadeIn(duration, callback);
         },
         slide: function (duration, callback) {
-            var $this = jQuery(this),
-                settings = $this.data('popmake');
-            jQuery('#' + settings.overlay.attr.id).slideDown(duration, callback);
+            jQuery('#popmake-overlay').slideDown(duration, callback);
         }
     };
 
