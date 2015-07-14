@@ -517,8 +517,6 @@ var PopMakeAdmin;
                         content = jQuery('#content').val();
                     }
 
-                    console.log(content);
-
                     jQuery
                         .ajax({
                             url: ajaxurl,
@@ -542,14 +540,21 @@ var PopMakeAdmin;
                     var form_values = jQuery("[name^='popup_display_']").serializeArray(),
                         display = {},
                         i,
-                        data = jQuery('#popmake-preview').data('popmake');
+                        $popup = jQuery('#popmake-preview'),
+                        data = $popup.data('popmake');
 
                     for (i = 0; form_values.length > i; i += 1) {
                         if (form_values[i].name.indexOf('popup_display_') === 0) {
                             data.meta.display[form_values[i].name.replace('popup_display_', '')] = form_values[i].value;
                         }
                     }
+
+                    $popup.removeClass('theme-' + data.theme_id);
+
+                    data.theme_id = jQuery('#popup_theme').val();
+
                     jQuery('#popmake-preview')
+                        .addClass('theme-' + data.theme_id)
                         .data('popmake', data);
                 };
 
@@ -752,7 +757,7 @@ var PopMakeAdmin;
             });
         },
         convert_theme_for_preview: function (theme) {
-            jQuery.fn.popmake.themes[popmake_default_theme] = this.convert_meta_to_object(theme);
+            //jQuery.fn.popmake.themes[popmake_default_theme] = this.convert_meta_to_object(theme);
         },
         convert_meta_to_object: function (data) {
             var converted_data = {},
@@ -773,14 +778,21 @@ var PopMakeAdmin;
         initialize_theme_page: function () {
             jQuery('#popuptitlediv').insertAfter('#titlediv');
 
-            popmake_default_theme = jQuery('#post_ID').val();
-
             var self = this,
                 table = jQuery('#popup_theme_close_location').parents('table');
             self.update_theme();
             self.theme_page_listeners();
             self.theme_preview_scroll();
             self.update_font_selectboxes();
+
+            jQuery(document)
+                .on('click', '.popmake-preview', function (e) {
+                    e.preventDefault();
+                    jQuery('#popmake-preview, #popmake-overlay').css({visibility:"visible"}).show();
+                })
+                .on('click', '.popmake-close', function() {
+                    jQuery('#popmake-preview, #popmake-overlay').hide();
+                });
 
             jQuery('select.border-style').each(function () {
                 var $this = jQuery(this);
@@ -817,11 +829,11 @@ var PopMakeAdmin;
             }
         },
         retheme_popup: function (theme) {
-            var $overlay = jQuery('.empreview .example-popup-overlay'),
-                $container = jQuery('.empreview .example-popup'),
-                $title = jQuery('.title', $container),
-                $content = jQuery('.content', $container),
-                $close = jQuery('.close-popup', $container),
+            var $overlay = jQuery('.empreview .example-popup-overlay, #popmake-overlay'),
+                $container = jQuery('.empreview .example-popup, #popmake-preview'),
+                $title = jQuery('.title, .popmake-title', $container),
+                $content = jQuery('.content, .popmake-content', $container),
+                $close = jQuery('.close-popup, .popmake-close', $container),
                 container_inset = theme.container_boxshadow_inset === 'yes' ? 'inset ' : '',
                 close_inset = theme.close_boxshadow_inset === 'yes' ? 'inset ' : '',
                 link;
@@ -873,8 +885,6 @@ var PopMakeAdmin;
                 }
                 jQuery('body').append('<link href="' + link + '" rel="stylesheet" type="text/css">');
             }
-
-
 
             $overlay.removeAttr('style').css({
                 backgroundColor: this.convert_hex(theme.overlay_background_color, theme.overlay_background_opacity)
