@@ -4,7 +4,7 @@ function popmake_popup_themes_meta_box_field_theme( $popup_id ) { ?>
 		<td scope="row">
 			<label for="popup_theme"><strong><?php _e( 'Theme', 'popup-maker' ); ?></strong></label>
 			<select name="popup_theme" id="popup_theme" class="input-large">
-				<?php foreach ( popmake_get_all_popup_themes()->posts as $theme ) : ?>
+				<?php foreach ( popmake_get_all_popup_themes() as $theme ) : ?>
 					<option value="<?php echo $theme->ID; ?>" <?php selected( $theme->ID, popmake_get_the_popup_theme( $popup_id ) ); ?>>
 						<?php echo $theme->post_title; ?>
 					</option>
