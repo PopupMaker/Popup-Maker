@@ -326,6 +326,16 @@ function popmake_popup_content_container( $content, $popup_id ) {
 	return $content;
 }
 
+function popmake_popup_close_text( $text, $popup_id ) {
+	$theme_text = get_post_meta( popmake_get_the_popup_theme( $popup_id ), 'popup_theme_close_text', true );
+	if ( $theme_text ) {
+		return $theme_text;
+	}
+	return $text;
+}
+
+add_filter( 'popmake_popup_default_close_text', 'popmake_popup_close_text', 10, 2 );
+
 
 function popmake_popup_is_loadable( $popup_id ) {
 	global $post, $wp_query;
