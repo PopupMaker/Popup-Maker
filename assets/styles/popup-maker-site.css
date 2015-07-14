@@ -5,6 +5,11 @@
     box-sizing: border-box;
 }
 
+html.popup-open,
+.popup-open body {
+    overflow: hidden;
+}
+
 .popmake-overlay {
     position: fixed;
     display: none;
@@ -13,6 +18,8 @@
     top: 0;
     left: 0;
     z-index: 1999999998;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .popmake {
