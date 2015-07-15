@@ -1,6 +1,8 @@
 /* UI */
 h3.title {
+	font-size: 16px!important;
     color: #9aba27;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.125);
 }
 #popuptitlediv #popuptitle {
     background-color: #fff;
@@ -279,49 +281,49 @@ div.popmake-upgrade-tip {
 	padding: 0;
 	box-shadow: none;
 }
-#popmake_popup_share .handlediv {
-	display:none;
-}
-#popmake_popup_share .hndle {
-	display:none;
-}
-#popmake_popup_share .inside {
-	margin:0 0 20px;
-	padding: 0;
-}
-.loveit-shareit {
-	font-weight: 700!important;
-	font-size: 28px!important;
-	color:#333;
-	text-transform: uppercase;
-}
-.loveit-shareit span {
-	color:#9ABA27;
-}
-.follow-box {
-	text-align: center;
-	padding:14px 36px;
-	background:#fff;
-	border:1px solid #e5e5e5;
-}
+	#popmake_popup_share .handlediv {
+		display:none;
+	}
+	#popmake_popup_share .hndle {
+		display:none;
+	}
+	#popmake_popup_share .inside {
+		margin:0 0 20px;
+		padding: 0;
+	}
+	.loveit-shareit {
+		font-weight: 700!important;
+		font-size: 28px!important;
+		color:#333;
+		text-transform: uppercase;
+	}
+	.loveit-shareit span {
+		color:#9ABA27;
+	}
+	.follow-box {
+		text-align: center;
+		padding:14px 36px;
+		background:#fff;
+		border:1px solid #e5e5e5;
+	}
 
-.share-buttons {
-	margin:0 auto;
-	width:68%;
-	display:block;
-	clear:both;	
-}
-.share-buttons li {
-	text-align:center;
-	width:32%;
-	display:inline-block;
-	float:left;
-	margin-right:1%;	
-	margin-bottom:0;
-}
-.share-buttons li:last-child {
-	margin-right:0;	
-}
+	.share-buttons {
+		margin:0 auto;
+		width:68%;
+		display:block;
+		clear:both;
+	}
+	.share-buttons li {
+		text-align:center;
+		width:32%;
+		display:inline-block;
+		float:left;
+		margin-right:1%;
+		margin-bottom:0;
+	}
+	.share-buttons li:last-child {
+		margin-right:0;
+	}
 
 
 
