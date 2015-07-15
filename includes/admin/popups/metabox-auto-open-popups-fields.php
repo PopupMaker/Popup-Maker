@@ -113,7 +113,7 @@ function popmake_popup_auto_open_meta_box_field_cookie_key( $popup_id ) {
 				<?php _e( 'Cookie Key', 'popup-maker' );?>
 			</label>
 		<td>
-			<input type="text" value="<?php esc_attr_e(popmake_get_popup_auto_open( $popup_id, 'cookie_key' ))?>" name="popup_auto_open_cookie_key" id="popup_auto_open_cookie_key" /><button type="button" style="font-size:26px;height:31px" class="popmake-reset-auto-open-cookie-key button button-primary large-button">&#9851;</button>
+			<input type="text" value="<?php esc_attr_e(popmake_get_popup_auto_open( $popup_id, 'cookie_key' ))?>" name="popup_auto_open_cookie_key" id="popup_auto_open_cookie_key" /><button type="button" class="popmake-reset-cookie-key popmake-reset-auto-open-cookie-key button large-button"><?php _e( 'Reset', 'popup-maker' ); ?></button>
 			<p class="description"><?php _e( 'This changes the key used when setting and checking cookies. Resetting this will cause all existing cookies to be invalid.', 'popup-maker' );?></p>
 		</td>
 	</tr><?php

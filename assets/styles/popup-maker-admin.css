@@ -31,24 +31,8 @@ h3.title {
 	clear:both;
 	overflow:auto;
 }
+/*
 
-.wp-core-ui .button-primary, .button-primary {
-	background-color:#9aba27;
-	color:#fff;
-	border-color:#000;
-	text-shadow: 1px 1px 0px rgba(0,0,0,1);
-}
-
-.wp-core-ui .button-primary.focus, .wp-core-ui .button-primary.hover, .wp-core-ui .button-primary:focus, .wp-core-ui .button-primary:hover {
-	background-color:rgba(154, 186, 39, .95);
-}
-.wp-core-ui .button-primary-disabled, .wp-core-ui .button-primary.disabled, .wp-core-ui .button-primary:disabled, .wp-core-ui .button-primary[disabled] {
-	background-color:rgba(154, 186, 39, .95)!important;
-	color:#000!important;
-}
-.wp-core-ui .button-primary.active, .wp-core-ui .button-primary.active:focus, .wp-core-ui .button-primary.active:hover, .wp-core-ui .button-primary:active {
-	background-color:rgba(154, 186, 39, .95);
-}
 input[type="text"], select {
     font-size: 13px;
     margin: 0;
@@ -57,6 +41,9 @@ input[type="text"], select {
     padding: 0 6px 2px!important;
     box-shadow: 0 1px 0 rgb(255, 255, 255) inset, 0 1px 0 rgba(0, 0, 0, 0.08);
 }
+*/
+
+
 input[type="range"] {
     vertical-align: middle;
 }
@@ -275,16 +262,12 @@ div.popmake-upgrade-tip {
 	box-shadow: none;
 	border:0;
 	border-radius:2px;
-	background:#9aba27;
-	color:#fff;
 	padding-left:18px;
 	padding-right:18px;
 	transition:transform .5s;
 	margin-bottom:10px;
 }
 .button.rounded:hover, .button.rounded:focus {
-	color:#fff;
-	background:#20252b;
 	transform:scale(1.125);
 }
 #popmake_popup_support {
