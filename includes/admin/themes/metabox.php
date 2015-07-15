@@ -42,11 +42,15 @@ function popmake_add_popup_theme_meta_box() {
 
 	/** Close Meta **/
 	add_meta_box( 'popmake_popup_theme_close', __( 'Close Settings', 'popup-maker' ),  'popmake_render_popup_theme_close_meta_box', 'popup_theme', 'normal', 'high' );
-	/** Support Meta **/
-	add_meta_box( 'popmake_popup_support', __( 'Support', 'popup-maker' ),  'popmake_render_support_meta_box', 'popup_theme', 'side', 'default' );
-	/** Share Meta **/
-	add_meta_box( 'popmake_popup_share', __( 'Share', 'popup-maker' ),  'popmake_render_share_meta_box', 'popup_theme', 'side', 'default' );
 
+	if ( ! popmake_get_option( 'disable_admin_support_widget', false ) ) {
+		/** Support Meta **/
+		add_meta_box( 'popmake_popup_support', __( 'Support', 'popup-maker' ),  'popmake_render_support_meta_box', 'popup_theme', 'side', 'default' );
+	}
+	if ( ! popmake_get_option( 'disable_admin_share_widget', false ) ) {
+		/** Share Meta **/
+		add_meta_box( 'popmake_popup_share', __( 'Share', 'popup-maker' ),  'popmake_render_share_meta_box', 'popup_theme', 'side', 'default' );
+	}
 }
 add_action( 'add_meta_boxes', 'popmake_add_popup_theme_meta_box' );
 

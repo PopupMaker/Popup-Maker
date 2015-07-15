@@ -140,16 +140,16 @@ function popmake_get_registered_settings() {
 				),
 				'supported_post_types' => array(
 					'id' => 'supported_post_types',
-					'name' => __( 'Supported Post Types?', 'popup-maker' ),
+					'name' => __( 'Custom Post Types?', 'popup-maker' ),
 					//'desc' => __( 'Check this to defy how awesome Popup Maker is. <strong>For those who like to make little kids cry or are compulsive liers.</strong>.', 'popup-maker' ),
 					'type' => 'multicheck',
 					'options' => get_post_types(array('_builtin' => false, 'public'   => true))
 				),
 				'supported_taxonomies' => array(
 					'id' => 'supported_taxonomies',
-					'name' => __( 'Supported Taxonomies?', 'popup-maker' ),
+					'name' => __( 'Custom Taxonomies?', 'popup-maker' ),
 					//'desc' => __( 'Check this to defy how awesome Popup Maker is. <strong>For those who like to make little kids cry or are compulsive liers.</strong>.', 'popup-maker' ),
-					'type' => '.',
+					'type' => 'multicheck',
 					'options' => get_taxonomies(array('_builtin' => false, 'public'   => true))
 				),
 				'powered_by' => array(
@@ -227,6 +227,18 @@ function popmake_get_registered_settings() {
 					'id' => 'enable_easy_modal_compatibility_mode',
 					'name' => __( 'Enable Easy Modal v2 Compatibility Mode', 'popup-maker' ),
 					'desc' => __( 'This will automatically make any eModal classes you have added to your site launch the appropriate Popup after import.', 'popup-maker' ),
+					'type' => 'checkbox'
+				),
+				'disable_admin_support_widget' => array(
+					'id' => 'disable_admin_support_widget',
+					'name' => __( 'Hide Admin Support Widget', 'popup-maker' ),
+					'desc' => __( 'This will hide the support widget on all popup maker admin pages.', 'popup-maker' ),
+					'type' => 'checkbox'
+				),
+				'disable_admin_share_widget' => array(
+					'id' => 'disable_admin_share_widget',
+					'name' => __( 'Hide Admin Share Widget', 'popup-maker' ),
+					'desc' => __( 'This will hide the share widget on all popup maker admin pages.', 'popup-maker' ),
 					'type' => 'checkbox'
 				),
 			)

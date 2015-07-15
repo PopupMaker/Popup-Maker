@@ -60,19 +60,24 @@ function popmake_settings_page() {
 								<div class="clear"></div>
 							</div>
 						</div>
+						<?php if ( ! popmake_get_option( 'disable_admin_support_widget', false ) ) { ?>
 						<div class="postbox " id="supportdiv">
 							<h3 class="hndle"><span><?php _e( 'Support', 'popup-maker' );?></span></h3>
 							<div class="inside">
+
 								<?php popmake_render_support_meta_box();?>
 								<div class="clear"></div>
 							</div>
 						</div>
+						<?php } ?>
+						<?php if ( ! popmake_get_option( 'disable_admin_share_widget', false ) ) { ?>
 						<div id="sharediv">
 							<div class="inside">
 								<?php popmake_render_share_meta_box();?>
 								<div class="clear"></div>
 							</div>
 						</div>
+						<?php } ?>
 						<?php do_action('popmake_admin_sidebar');?>
 					</div>
 				</div>
