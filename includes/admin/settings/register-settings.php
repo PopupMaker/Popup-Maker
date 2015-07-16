@@ -161,7 +161,7 @@ function popmake_get_registered_settings() {
 				'popmake_powered_by_opt_in' => array(
 					'id' => 'popmake_powered_by_opt_in',
 					'name' => __( 'Show Powered By Link?', 'popup-maker' ),
-					'desc' => sprintf( __( 'If you check this box, it will show the <em>Powered By Popup Maker</em> tag on all of your popups. Even if you don\'t, please take a moment to <a href="%s">rate and review us on WordPress</a>!', 'popup-maker' ), 'https://wordpress.org/support/view/plugin-reviews/popup-maker' ),
+					'desc' => sprintf( __( 'If you check this box, it will show the <em>Powered By Popup Maker</em> tag on all of your popups. Even if you don\'t, please take a moment to <a href="%s">rate and review us on WordPress</a>!', 'popup-maker' ), 'https://wordpress.org/support/view/plugin-reviews/popup-maker#postform' ),
 					'type' => 'checkbox'
 				),
 				'popmake_powered_by_size' => array(
@@ -185,13 +185,13 @@ function popmake_get_registered_settings() {
 				'allow_tracking' => array(
 					'id' => 'allow_tracking',
 					'name' => __( 'Allow Usage Tracking?', 'popup-maker' ),
-					'desc' => __( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in and receive a 20% discount code for any purchase from the <a href="https://easydigitaldownloads.com/extensions" target="_blank">Easy Digital Downloads store</a>. Your discount code will be emailed to you.', 'popup-maker' ),
+					'desc' => __( 'Allow Popup Maker to anonymously track how this plugin is used and help us make the plugin better. Opt-in and receive a 20% discount code for any purchase from the <a href="https://wppopupmaker.com/extensions" target="_blank">Popup Maker store</a>. Your discount code will be emailed to you.', 'popup-maker' ),
 					'type' => 'checkbox'
 				),
 				'uninstall_on_delete' => array(
 					'id' => 'uninstall_on_delete',
 					'name' => __( 'Remove Data on Uninstall?', 'popup-maker' ),
-					'desc' => __( 'Check this box if you would like POPMAKE to completely remove all of its data when the plugin is deleted.', 'popup-maker' ),
+					'desc' => __( 'Check this box if you would like Popup Maker to completely remove all of its data when the plugin is deleted.', 'popup-maker' ),
 					'type' => 'checkbox'
 				)
 				*/

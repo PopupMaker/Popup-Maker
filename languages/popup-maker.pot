@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.1.9\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/popup-maker\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/popup-maker\n"
 "POT-Creation-Date: 2015-02-21 06:42:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"

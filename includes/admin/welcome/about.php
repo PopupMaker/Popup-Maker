@@ -55,8 +55,7 @@ function popmake_about_page() {
 				<h4><?php _e( 'Make it Your Own!', 'popup-maker' );?></h4>	
 				<p>
 					<?php printf(
-						__( 'If you need to create an unlimited number of themes and customize your popups, check out our %sUnlimited Themes%s Extension. Also, you may be interested in our %sAdvanced Theme Builder%s Extension, which allows you to add background images to many elements of your popup within a couple of clicks.', 'popup-maker' ),
-						'<a href="https://wppopupmaker.com/extensions/unlimited-themes?utm_source=WP+Welcome+About&utm_medium=Text+Link&utm_campaign=Unlimited+Themes" target="_blank">', '</a>',
+						__( 'You may be interested in our %sAdvanced Theme Builder%s Extension, which allows you to add background images to many elements of your popup within a couple of clicks.', 'popup-maker' ),
 						'<a href="https://wppopupmaker.com/extensions/advanced-theme-builder?utm_source=WP+Welcome+About&utm_medium=Text+Link&utm_campaign=Advanced+Theme+Builder" target="_blank">', '</a>'
 					); ?>
 				</p>

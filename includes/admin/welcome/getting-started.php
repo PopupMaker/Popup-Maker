@@ -70,9 +70,9 @@ function popmake_getting_started_page() {
 				<h4><?php _e( 'Top-Notch Support','popup-maker' );?></h4>
 				<p>
 					<?php printf(
-						__( 'We provide top-notch support! If you encounter a problem or have a question, post a question in the %sWordPress Support Forums%s, or if you’ve purchased a membership or extension, the %sMembers Only Forums%s.', 'popup-maker' ),
-						'<a href="https://wordpress.org/support/plugin/popup-maker?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=WordPress+Forums" target="_blank">', '</a>',
-						'<a href="https://wppopupmaker.com/extensions/auto-open-popups?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=Member+Forums" target="_blank">', '</a>'
+						__( 'We provide top-notch support! If you encounter a problem or have a question, post a question in the %sWordPress Support Forums%s, or if you’ve purchased an extension, the %sSupport Page%s.', 'popup-maker' ),
+						'<a href="https://wordpress.org/support/plugin/popup-maker" target="_blank">', '</a>',
+						'<a href="https://wppopupmaker.com/support?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=Extension+Support" target="_blank">', '</a>'
 					); ?>
 				</p>
 			</div>
@@ -125,7 +125,7 @@ function popmake_getting_started_page() {
 		<div class="return-to-dashboard">
 			<a href="<?php echo esc_url( admin_url( 'post.php?post='. popmake_get_default_popup_theme() .'&action=edit' ) ); ?>"><?php _e( 'Customize Your First Theme', 'popup-maker' ); ?></a> &middot;
 			<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=popup' ) ); ?>"><?php _e( 'Create a Modal', 'popup-maker' ); ?></a> &middot;
-			<a href="<?php echo esc_url( 'https://wppopupmaker.com/getting-started?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=Getting+Started' ); ?>" target="_blank"><?php _e( 'View the Full Getting Started Guide', 'popup-maker' ); ?></a>
+			<a href="<?php echo esc_url( 'https://wppopupmaker.com/docs/getting-started/?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=Getting+Started' ); ?>" target="_blank"><?php _e( 'View the Full Getting Started Guide', 'popup-maker' ); ?></a>
 		</div>
 	</div><?php
 }

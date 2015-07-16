@@ -17,12 +17,6 @@ function popmake_credits_page() {
 				</a>
 				<a class="web" href="https://profiles.wordpress.org/danieliser" target="_blank">danieliser</a>
 			</li>
-			<li class="wp-person">
-				<a href="https://profiles.wordpress.org/waltmesser/" title="View waltmesser">
-					<img src="http://www.gravatar.com/avatar/<?php echo md5( "walt@wizardinternetsolutions.com" );?>" width="64" height="64" class="gravatar" alt="waltmesser" />
-				</a>
-				<a class="web" href="https://profiles.wordpress.org/waltmesser/" target="_blank">waltmesser</a>
-			</li>
 		</ul>
 	</div><?php
 }
