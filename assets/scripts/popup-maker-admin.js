@@ -447,7 +447,7 @@ var PopMakeAdmin;
                         jQuery('.custom-size-only').hide();
                         if (jQuery("#popup_display_size").val() !== 'auto') {
                             jQuery('.responsive-size-only').show();
-                            jQuery('#popup_display_position_fixed').prop('checked', false);
+                            jQuery('#popup_display_position_fixed, #popup_display_custom_height_auto, #popup_display_scrollable_content').prop('checked', false);
                         } else {
                             jQuery('.responsive-size-only').hide();
                         }
