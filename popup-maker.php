@@ -287,7 +287,10 @@ function PopMake() {
 PopMake();
 
 function popmake_initialize() {
-	// Get POPMAKE Running
+	// Disable Unlimited Themes extension if active.
+	remove_action( 'popmake_initialize', 'popmake_ut_initialize' );
+
+	// Get Popup Maker Running
 	do_action('popmake_initialize');
 }
 add_action('plugins_loaded', 'popmake_initialize', 0);
