@@ -96,6 +96,60 @@ function popmake_get_the_popup_data_attr( $popup_id = null ) {
 	return apply_filters('popmake_get_the_popup_data_attr', $data_attr, $popup_id );
 }
 
+function popmake_clean_popup_data_attr( $data_attr ) {
+
+	$display = $data_attr['meta']['display'];
+
+	if ( ! in_array( $display['size'], array( 'nano', 'micro', 'tiny', 'small', 'medium', 'normal', 'large', 'xlarge' ) ) ) {
+		unset( $display['responsive_max_width'], $display['responsive_max_width_unit'], $display['responsive_min_width'], $display['responsive_min_width_unit'] );
+	}
+	else if ( $display['size'] != 'custom' ) {
+		unset( $display['custom_height'], $display['custom_height_auto'], $display['custom_height_unit'], $display['custom_width'], $display['custom_width_unit'] );
+	}
+
+	if ( empty( $display['responsive_max_width'] ) ) {
+		unset( $display['responsive_max_width'], $display['responsive_max_width_unit'] );
+	}
+	if ( empty( $display['responsive_min_width'] ) ) {
+		unset( $display['responsive_min_width'], $display['responsive_min_width_unit'] );
+	}
+	if ( ! strpos( $display['location'], 'left') ) {
+		unset( $display['position_left'] );
+	}
+	if ( ! strpos( $display['location'], 'right') ) {
+		unset( $display['position_right'] );
+	}
+	if ( ! strpos( $display['location'], 'top') ) {
+		unset( $display['position_top'] );
+	}
+	if ( ! strpos( $display['location'], 'bottom') ) {
+		unset( $display['position_bottom'] );
+	}
+
+	$data_attr['meta']['display'] = $display;
+
+	if ( $data_attr['meta']['click_open']['extra_selectors'] == '' ) {
+		unset($data_attr['meta']['click_open']['extra_selectors']);
+	}
+
+	if ( $data_attr['meta']['close']['text'] == '' ) {
+		unset($data_attr['meta']['close']['text']);
+	}
+
+	if ( $data_attr['meta']['close']['button_delay'] == '' ) {
+		unset($data_attr['meta']['close']['button_delay']);
+	}
+
+	foreach ( $data_attr['meta'] as $key => $opts ) {
+		if ( empty ( $opts ) ) {
+			unset( $data_attr['meta'][ $key ] );
+		}
+	}
+
+	return $data_attr;
+}
+add_filter( 'popmake_get_the_popup_data_attr', 'popmake_clean_popup_data_attr' );
+
 
 function popmake_the_popup_data_attr( $popup_id = null ) {
 	echo 'data-popmake="'. esc_attr( json_encode( popmake_get_the_popup_data_attr( $popup_id ) ) ) .'"';
