@@ -12,6 +12,7 @@ add_filter('popmake_popup_display_defaults', 'popmake_popup_display_defaults', 0
  */
 function popmake_popup_display_defaults( $defaults = array() ) {
 	return array_merge( $defaults, array(
+		'stackable' => false,
 		'overlay_disabled'          => false,
 		'scrollable_content'        => false,
 		'size'                      => 'medium',
@@ -34,8 +35,8 @@ function popmake_popup_display_defaults( $defaults = array() ) {
 		'animation_type'            => 'fade',
 		'animation_speed'           => 350,
 		'animation_origin'          => 'center top',
-		'overlay_zindex'            => 998,
-		'zindex'                    => 999,
+		'overlay_zindex'            => 1999999999,
+		'zindex'                    => 1999999999,
 	));
 }
 
