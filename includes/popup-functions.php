@@ -328,9 +328,15 @@ function popmake_popup_content_container( $content, $popup_id ) {
 
 function popmake_popup_close_text( $text, $popup_id ) {
 	$theme_text = get_post_meta( popmake_get_the_popup_theme( $popup_id ), 'popup_theme_close_text', true );
-	if ( $theme_text ) {
-		return $theme_text;
+	if ( $theme_text && $theme_text != '' ) {
+		$text = $theme_text;
 	}
+
+	$popup_close_text = popmake_get_popup_close( $popup_id, 'text' );
+	if ( $popup_close_text && $popup_close_text != '' ) {
+		$text = $popup_close_text;
+	}
+
 	return $text;
 }
 
