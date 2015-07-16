@@ -44,6 +44,7 @@ add_filter('popmake_popup_close_defaults', 'popmake_popup_close_defaults', 0);
 function popmake_popup_close_defaults( $defaults ) {
 	return array_merge( $defaults, array(
 		'text' => '',
+		'button_delay' => '0',
 		'overlay_click'	=> false,
 		'esc_press'		=> false,
 		'f4_press'		=> false,

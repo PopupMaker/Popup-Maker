@@ -131,6 +131,10 @@
                 .popmake('reposition')
                 .trigger('popmakeBeforeOpen');
 
+            if (settings.meta.close.button_delay > 0) {
+                $this.find('.popmake-content + .popmake-close').fadeOut(0);
+            }
+
             if ($this.hasClass('preventOpen')) {
                 $this
                     .removeClass('preventOpen')
@@ -142,6 +146,13 @@
 
             $this
                 .popmake('animate', settings.meta.display.animation_type, function () {
+
+                    if (settings.meta.close.button_delay > 0) {
+                        setTimeout(function () {
+                            $this.find('.popmake-content + .popmake-close').fadeIn();
+                        }, settings.meta.close.button_delay);
+                    }
+
                     $this.trigger('popmakeAfterOpen');
                     jQuery.fn.popmake.last_open_popup = $this;
                     if (callback !== undefined) {

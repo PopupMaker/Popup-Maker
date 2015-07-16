@@ -131,6 +131,7 @@ add_filter('popmake_popup_meta_field_group_display', 'popmake_popup_meta_field_g
 function popmake_popup_meta_field_group_close() {
 	return array(
 		'text',
+		'button_delay',
 		'overlay_click',
 		'esc_press',
 		'f4_press',
