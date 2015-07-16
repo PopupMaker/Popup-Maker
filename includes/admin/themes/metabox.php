@@ -394,6 +394,9 @@ add_action('plugins_loaded', 'popmake_add_popup_theme_revision_fields');
 
 function popmake_popup_theme_meta_restore_revision( $post_id, $revision_id ) {
 	$post = get_post( $post_id );
+	if ( $post->post_type != 'popup_theme' ) {
+		return;
+	}
 	$revision = get_post( $revision_id );
 	foreach(popmake_popup_theme_meta_fields() as $field) {
 		$meta = get_metadata( 'post', $revision->ID, $field, true );
@@ -406,6 +409,9 @@ function popmake_popup_theme_meta_restore_revision( $post_id, $revision_id ) {
 add_action( 'wp_restore_post_revision', 'popmake_popup_theme_meta_restore_revision', 10, 2 );
 
 function popmake_popup_theme_meta_save_revision( $post_id, $post ) {
+	if ( $post->post_type != 'popup_theme' ) {
+		return;
+	}
 	if ( $parent_id = wp_is_post_revision( $post_id ) ) {
 		foreach(popmake_popup_theme_meta_fields() as $field) {
 			$meta = get_post_meta( $parent_id, $field, true );
