@@ -4,7 +4,7 @@
  * Plugin URI: https://wppopupmaker.com
  * Description: Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more. 
  * Author: Daniel Iser
- * Version: 1.2.2
+ * Version: 1.3
  * Author URI: https://wppopupmaker.com
  * Text Domain: popup-maker
  * 
@@ -144,7 +144,7 @@ final class Popup_Maker {
 		}
 
 		if ( !defined('POPMAKE_VERSION') ) {
-			define('POPMAKE_VERSION', '1.2.2' );	
+			define('POPMAKE_VERSION', '1.3' );
 		}
 
 		if ( !defined('POPMAKE_DB_VERSION') ) {
@@ -227,6 +227,8 @@ final class Popup_Maker {
 			require_once POPMAKE_DIR . 'includes/admin/help/help-page.php';
 			require_once POPMAKE_DIR . 'includes/admin/metabox-support.php';
 			require_once POPMAKE_DIR . 'includes/admin/metabox-share.php';
+
+			require_once POPMAKE_DIR . 'includes/admin/upgrades/v1_3.php';
 		}
 
 		if ( class_exists( 'WooCommerce' ) ) {
@@ -249,8 +251,8 @@ final class Popup_Maker {
 		$popmake_lang_dir = apply_filters( 'popmake_languages_directory', $popmake_lang_dir );
 
 		// Traditional WordPress plugin locale filter
-		$locale        = apply_filters( 'plugin_locale',  get_locale(), 'popup-maker' );
-		$mofile        = sprintf( '%1$s-%2$s.mo', 'popup-maker', $locale );
+		$locale = apply_filters( 'plugin_locale', get_locale(), 'popup-maker' );
+		$mofile = sprintf( '%1$s-%2$s.mo', 'popup-maker', $locale );
 
 		// Setup paths to current locale file
 		$mofile_local  = $popmake_lang_dir . $mofile;
@@ -267,6 +269,25 @@ final class Popup_Maker {
 			load_plugin_textdomain( 'popup-maker', false, $popmake_lang_dir );
 		}
 	}
+
+	public function process_upgrades() {
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		// Add Upgraded From Option
+		$current_version = get_option( 'popmake_version' );
+		if ( $current_version ) {
+			update_option( 'popmake_version_upgraded_from', $current_version );
+		}
+
+		if ( $current_version != POPMAKE_VERSION ) {
+			do_action( "popmake_process_upgrade", POPMAKE_VERSION, $current_version );
+		}
+
+		update_option( 'popmake_version', POPMAKE_VERSION );
+	}
+
 }
 
 endif; // End if class_exists check
@@ -298,5 +319,7 @@ function popmake_initialize() {
 	// Get Popup Maker Running
 	PopMake();
 	do_action('popmake_initialize');
+
+	PopMake()->process_upgrades();
 }
 add_action('plugins_loaded', 'popmake_initialize', 0);

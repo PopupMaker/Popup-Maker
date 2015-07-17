@@ -17,7 +17,6 @@ function popmake_get_popup( $popup_id ) {
 	return get_post( $popup_id );
 }
 
-
 function popmake_get_the_popup_ID() {
 	global $popup;
 	return $popup ? $popup->ID : 0;
@@ -42,18 +41,15 @@ function popmake_the_popup_theme( $popup_id = null ) {
 	echo popmake_get_the_popup_theme( $popup_id );
 }
 
-
 function popmake_get_the_popup_classes( $popup_id = null ) {
 	if( !$popup_id ) $popup_id = popmake_get_the_popup_ID();
 	$theme_id = popmake_get_the_popup_theme( $popup_id );
 	return implode( ' ', apply_filters( 'popmake_get_the_popup_classes', array( 'popmake', 'theme-' . $theme_id ), $popup_id ) );
 }
 
-
 function popmake_the_popup_classes( $popup_id = null ) {
 	esc_attr_e( popmake_get_the_popup_classes( $popup_id ) );
 }
-
 
 function popmake_add_popup_size_classes( $classes, $popup_id ) {
 	$popup_size = popmake_get_popup_display( $popup_id, 'size' );
@@ -72,7 +68,6 @@ function popmake_add_popup_size_classes( $classes, $popup_id ) {
 	return $classes;
 }
 add_filter('popmake_get_the_popup_classes', 'popmake_add_popup_size_classes', 5, 2);
-
 
 function popmake_get_the_popup_data_attr( $popup_id = null ) {
 	if( !$popup_id ) $popup_id = popmake_get_the_popup_ID();
@@ -150,11 +145,46 @@ function popmake_clean_popup_data_attr( $data_attr ) {
 }
 add_filter( 'popmake_get_the_popup_data_attr', 'popmake_clean_popup_data_attr' );
 
-
 function popmake_the_popup_data_attr( $popup_id = null ) {
 	echo 'data-popmake="'. esc_attr( json_encode( popmake_get_the_popup_data_attr( $popup_id ) ) ) .'"';
 }
 
+
+function popmake_get_popup_meta( $group, $popup_id = NULL, $key = NULL, $default = NULL ) {
+	if ( ! $popup_id ) {
+		$popup_id = popmake_get_the_popup_ID();
+	}
+
+	$values = get_post_meta( $popup_id, "popup_{$group}", true );
+
+	if ( ! $values ) {
+		$values = apply_filters( "popmake_popup_{$group}_defaults", array() );
+	}
+
+	if ( $key ) {
+
+		// Check for dot notation key value.
+		$test = uniqid();
+		$value = popmake_resolve( $values, $key, $test );
+		if ( $value == $test ) {
+
+			$key = str_replace( '.', '_', $key );
+
+			if ( ! isset( $values[ $key ] ) ) {
+				$value = $default;
+			}
+			else {
+				$value = $values[$key];
+			}
+
+		}
+
+		return apply_filters( "popmake_get_popup_{$group}_$key", $value, $popup_id );
+	}
+	else {
+		return apply_filters( "popmake_get_popup_{$group}", $values, $popup_id );
+	}
+}
 
 
 /**
@@ -313,8 +343,8 @@ function popmake_the_popup_content( $popup_id = NULL ) {
  * @param int $popup_id ID number of the popup to retrieve a display meta for
  * @return mixed array|string of the popup display meta 
  */
-function popmake_get_popup_display( $popup_id = NULL, $key = NULL ) {
-	return popmake_get_popup_meta_group( 'display', $popup_id, $key );
+function popmake_get_popup_display( $popup_id = NULL, $key = NULL, $default = NULL ) {
+	return popmake_get_popup_meta( 'display', $popup_id, $key, $default );
 }
 
 
@@ -325,8 +355,8 @@ function popmake_get_popup_display( $popup_id = NULL, $key = NULL ) {
  * @param int $popup_id ID number of the popup to retrieve a close meta for
  * @return mixed array|string of the popup close meta 
  */
-function popmake_get_popup_close( $popup_id = NULL, $key = NULL ) {
-	return popmake_get_popup_meta_group( 'close', $popup_id, $key );
+function popmake_get_popup_close( $popup_id = NULL, $key = NULL, $default = NULL ) {
+	return popmake_get_popup_meta( 'close', $popup_id, $key, $default );
 }
 
 
@@ -337,8 +367,8 @@ function popmake_get_popup_close( $popup_id = NULL, $key = NULL ) {
  * @param int $popup_id ID number of the popup to retrieve a click_open meta for
  * @return mixed array|string of the popup click_open meta
  */
-function popmake_get_popup_click_open( $popup_id = NULL, $key = NULL ) {
-	return popmake_get_popup_meta_group( 'click_open', $popup_id, $key );
+function popmake_get_popup_click_open( $popup_id = NULL, $key = NULL, $default = NULL ) {
+	return popmake_get_popup_meta( 'click_open', $popup_id, $key, $default );
 }
 
 
@@ -349,8 +379,8 @@ function popmake_get_popup_click_open( $popup_id = NULL, $key = NULL ) {
  * @param int $popup_id ID number of the popup to retrieve a auto open meta for
  * @return mixed array|string of the popup auto open meta 
  */
-function popmake_get_popup_auto_open( $popup_id = NULL, $key = NULL ) {
-	return popmake_get_popup_meta_group( 'auto_open', $popup_id, $key );
+function popmake_get_popup_auto_open( $popup_id = NULL, $key = NULL, $default = NULL ) {
+	return popmake_get_popup_meta( 'auto_open', $popup_id, $key, $default );
 }
 
 
@@ -361,11 +391,11 @@ function popmake_get_popup_auto_open( $popup_id = NULL, $key = NULL ) {
  * @param int $popup_id ID number of the popup to retrieve a admin debug meta for
  * @return mixed array|string of the popup admin debug meta 
  */
-function popmake_get_popup_admin_debug( $popup_id = NULL, $key = NULL ) {
+function popmake_get_popup_admin_debug( $popup_id = NULL, $key = NULL, $default = NULL ) {
 	if( ! current_user_can( 'edit_post', $popup_id ) ) {
 		return null;
 	}
-	return popmake_get_popup_meta_group( 'admin_debug', $popup_id, $key );
+	return popmake_get_popup_meta( 'admin_debug', $popup_id, $key, $default );
 }
 
 function popmake_popup_content_container( $content, $popup_id ) {

@@ -8,9 +8,9 @@
  * @param string $default is the default returned if key empty or not found.
  * @return mixed results of lookup
  */
-function popmake_resolve(array $a, $path, $default = null){
+function popmake_resolve( array $a, $path, $default = null ){
 	$current = $a;
-	$p = strtok($path, '.');
+	$p = strtok( $path, '.' );
 	while ($p !== false) {
 		if (!isset($current[$p])) {
 			return $default;

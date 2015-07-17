@@ -42,7 +42,7 @@ function popmake_popup_display_defaults( $defaults = array() ) {
 
 
 add_filter('popmake_popup_close_defaults', 'popmake_popup_close_defaults', 0);
-function popmake_popup_close_defaults( $defaults ) {
+function popmake_popup_close_defaults( $defaults = array() ) {
 	return array_merge( $defaults, array(
 		'text' => '',
 		'button_delay' => '0',
@@ -54,7 +54,7 @@ function popmake_popup_close_defaults( $defaults ) {
 
 
 add_filter('popmake_popup_click_open_defaults', 'popmake_popup_click_open_defaults', 0);
-function popmake_popup_click_open_defaults( $defaults ) {
+function popmake_popup_click_open_defaults( $defaults = array() ) {
 	return array_merge( $defaults, array(
 		'extra_selectors' => '',
 	));
@@ -62,7 +62,7 @@ function popmake_popup_click_open_defaults( $defaults ) {
 
 
 add_filter('popmake_popup_auto_open_defaults', 'popmake_popup_auto_open_defaults');
-function popmake_popup_auto_open_defaults( $defaults ) {
+function popmake_popup_auto_open_defaults( $defaults = array() ) {
 	return array_merge( $defaults, array(
 		'enabled' => NULL,
 		'delay' => 500,
@@ -76,7 +76,7 @@ function popmake_popup_auto_open_defaults( $defaults ) {
 
 
 add_filter('popmake_popup_admin_debug_defaults', 'popmake_popup_admin_debug_defaults');
-function popmake_popup_admin_debug_defaults( $defaults ) {
+function popmake_popup_admin_debug_defaults( $defaults = array() ) {
 	return array_merge( $defaults, array(
 		'enabled' => NULL,
 	));
@@ -84,7 +84,7 @@ function popmake_popup_admin_debug_defaults( $defaults ) {
 
 
 add_filter('popmake_popup_theme_overlay_defaults', 'popmake_popup_theme_overlay_defaults', 0);
-function popmake_popup_theme_overlay_defaults( $defaults ) {
+function popmake_popup_theme_overlay_defaults( $defaults = array() ) {
 	return array_merge( $defaults, array(
 		'background_color'		=> '#ffffff',
 		'background_opacity'	=> 100,
@@ -93,7 +93,7 @@ function popmake_popup_theme_overlay_defaults( $defaults ) {
 
 
 add_filter('popmake_popup_theme_container_defaults', 'popmake_popup_theme_container_defaults', 0);
-function popmake_popup_theme_container_defaults( $defaults ) {
+function popmake_popup_theme_container_defaults( $defaults = array() ) {
 	return array_merge( $defaults, array(
 		'padding'				=> 18,
 		'background_color'		=> '#f9f9f9',
@@ -114,7 +114,7 @@ function popmake_popup_theme_container_defaults( $defaults ) {
 
 
 add_filter('popmake_popup_theme_title_defaults', 'popmake_popup_theme_title_defaults', 0);
-function popmake_popup_theme_title_defaults( $defaults ) {
+function popmake_popup_theme_title_defaults( $defaults = array() ) {
 	return array_merge( $defaults, array(
 		'font_color'			=> '#000000',
 		'line_height'			=> 36,
@@ -135,7 +135,7 @@ function popmake_popup_theme_title_defaults( $defaults ) {
 
 
 add_filter('popmake_popup_theme_content_defaults', 'popmake_popup_theme_content_defaults', 0);
-function popmake_popup_theme_content_defaults( $defaults ) {
+function popmake_popup_theme_content_defaults( $defaults = array() ) {
 	return array_merge( $defaults, array(
 		'font_color'	=> '#8c8c8c',
 		'font_family'	=> 'inherit',
@@ -147,7 +147,7 @@ function popmake_popup_theme_content_defaults( $defaults ) {
 
 
 add_filter('popmake_popup_theme_close_defaults', 'popmake_popup_theme_close_defaults', 0);
-function popmake_popup_theme_close_defaults( $defaults ) {
+function popmake_popup_theme_close_defaults( $defaults = array() ) {
 	return array_merge( $defaults, array(
 		'text'					=> __( 'CLOSE', 'popup-maker' ),
 		'location'				=> 'topright',
