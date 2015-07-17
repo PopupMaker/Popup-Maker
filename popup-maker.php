@@ -229,6 +229,10 @@ final class Popup_Maker {
 			require_once POPMAKE_DIR . 'includes/admin/metabox-share.php';
 		}
 
+		if ( class_exists( 'WooCommerce' ) ) {
+			require_once POPMAKE_DIR . 'includes/integrations/woocommerce.php';
+		}
+
 		require_once POPMAKE_DIR . 'includes/install.php';
 	}
 
@@ -284,13 +288,15 @@ endif; // End if class_exists check
 function PopMake() {
 	return Popup_Maker::instance();
 }
-PopMake();
+
 
 function popmake_initialize() {
+
 	// Disable Unlimited Themes extension if active.
 	remove_action( 'popmake_initialize', 'popmake_ut_initialize' );
 
 	// Get Popup Maker Running
+	PopMake();
 	do_action('popmake_initialize');
 }
 add_action('plugins_loaded', 'popmake_initialize', 0);

@@ -618,7 +618,7 @@ function popmake_popup_is_loadable( $popup_id ) {
 		}
 	}
 */
-	return apply_filters('popmake_popup_is_loadable', $is_loadable, $popup_id);
+	return apply_filters( 'popmake_popup_is_loadable', $is_loadable, $popup_id, $conditions, $sitewide );
 }
 
 

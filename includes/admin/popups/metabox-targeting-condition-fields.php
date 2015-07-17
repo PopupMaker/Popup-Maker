@@ -60,18 +60,18 @@ function popmake_popup_targeting_condition_meta_box_fields( $popup_id ) {
 			<?php do_action("popmake_popup_targeting_condition_exclude_on_home_options", $targeting_condition); ?>
 		</div>
 	</div>
-		<div id="targeting_condition-on_blog" class="targeting_condition form-table">
-		<input type="checkbox"
-			id="popup_targeting_condition_on_blog"
-			name="popup_targeting_condition_on_blog"
-			value="true"
-			<?php if(!empty($targeting_condition['on_blog'])) echo 'checked="checked" '; ?>
-		/>
-		<label for="popup_targeting_condition_on_blog"><?php _e( 'On Blog Index', 'popup-maker' ); ?></label>
-		<div class="options">
-			<?php do_action("popmake_popup_targeting_condition_on_blog_options", $targeting_condition); ?>
-		</div>
+	<div id="targeting_condition-on_blog" class="targeting_condition form-table">
+	<input type="checkbox"
+		id="popup_targeting_condition_on_blog"
+		name="popup_targeting_condition_on_blog"
+		value="true"
+		<?php if(!empty($targeting_condition['on_blog'])) echo 'checked="checked" '; ?>
+	/>
+	<label for="popup_targeting_condition_on_blog"><?php _e( 'On Blog Index', 'popup-maker' ); ?></label>
+	<div class="options">
+		<?php do_action("popmake_popup_targeting_condition_on_blog_options", $targeting_condition); ?>
 	</div>
+</div>
 	<div id="targeting_condition-exclude_on_blog" class="targeting_condition form-table">
 			<input type="checkbox"
 			id="popup_targeting_condition_exclude_on_blog"
@@ -84,6 +84,8 @@ function popmake_popup_targeting_condition_meta_box_fields( $popup_id ) {
 			<?php do_action("popmake_popup_targeting_condition_exclude_on_blog_options", $targeting_condition); ?>
 		</div>
 	</div><?php
+
+	do_action( 'popmake_before_post_type_targeting_conditions', $targeting_condition );
 
 	$includes = popmake_get_popup_targeting_condition_includes( $popup_id );
 	$excludes = popmake_get_popup_targeting_condition_excludes( $popup_id );
