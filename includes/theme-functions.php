@@ -44,6 +44,9 @@ function popmake_get_popup_theme_meta( $group, $popup_theme_id = NULL, $key = NU
 	if ( ! $values ) {
 		$values = apply_filters( "popmake_popup_theme_{$group}_defaults", array() );
 	}
+	else {
+		$values = array_merge( popmake_get_popup_theme_meta_group( $group, $popup_theme_id ), $values );
+	}
 
 	if ( $key ) {
 
@@ -70,18 +73,16 @@ function popmake_get_popup_theme_meta( $group, $popup_theme_id = NULL, $key = NU
 	}
 }
 
-
-
 /**
  * Returns the meta group of a theme or value if key is set.
  *
  * @since 1.0
  * @param int $popup_theme_id ID number of the popup to retrieve a overlay meta for
- * @return mixed array|string of the popup overlay meta 
- */
+ * @return mixed array|string of the popup overlay meta
+	                                            */
 function popmake_get_popup_theme_meta_group( $group, $popup_theme_id = NULL, $key = NULL ) {
 	if(!$popup_theme_id) $popup_theme_id = get_the_ID();
-	
+
 	$post_meta = get_post_custom( $popup_theme_id );
 	$group_values = $post_meta ? array() : apply_filters("popmake_popup_theme_{$group}_defaults", array());
 	if($post_meta) {

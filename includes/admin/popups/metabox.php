@@ -200,6 +200,31 @@ function popmake_popup_meta_box_save( $post_id, $post ) {
 	if ( ! current_user_can( 'edit_post', $post_id ) ) {
 		return;
 	}
+
+	$field_prefix = Popmake_Popup_Fields::instance()->field_prefix;
+
+	foreach ( Popmake_Popup_Fields::instance()->get_all_fields() as $section => $fields ) {
+
+		$section_prefix = "{$field_prefix}{$section}";
+
+		$meta_values = array();
+
+		foreach ( $fields as $field => $args ) {
+
+			$field_name = "{$section_prefix}_{$field}";
+
+			if ( isset( $_POST[ $field_name ] ) ) {
+				$meta_values[ $field ] = apply_filters( 'popmake_metabox_save_' . $field_name, $_POST[ $field_name ] );
+			}
+
+		}
+
+		update_post_meta( $post_id, "popup_{$section}", $meta_values );
+
+	}
+
+
+
 	foreach ( popmake_popup_meta_fields() as $field ) {
 		if ( isset( $_POST[ $field ] ) ) {
 			$new = apply_filters( 'popmake_metabox_save_' . $field, $_POST[ $field ] );

@@ -173,6 +173,7 @@ final class Popup_Maker {
 
 
 		require_once POPMAKE_DIR . 'includes/post-types.php';
+		require_once POPMAKE_DIR . 'includes/class-popmake-fields.php';
 		require_once POPMAKE_DIR . 'includes/scripts.php';
 		require_once POPMAKE_DIR . 'includes/shortcodes.php';
 		require_once POPMAKE_DIR . 'includes/defaults.php';
