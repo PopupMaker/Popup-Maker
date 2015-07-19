@@ -35,7 +35,7 @@ function popmake_popup_display_defaults( $defaults = array() ) {
 		'animation_type'            => 'fade',
 		'animation_speed'           => 350,
 		'animation_origin'          => 'center top',
-		'overlay_zindex'            => 1999999999,
+		'overlay_zindex'            => 1999999998,
 		'zindex'                    => 1999999999,
 	));
 }

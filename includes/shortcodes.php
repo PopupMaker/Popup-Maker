@@ -91,7 +91,7 @@ function popmake_shortcode_popup_trigger( $atts, $content = NULL ) {
 	);
 
 	$return = '<' . $atts['tag'] . ' class="popmake-' . $atts['id'] . ' ' . $atts['class'] .'">';
-		$return .= $content;
+		$return .= do_shortcode( $content );
 	$return .= '</' . $atts['tag'] . '>';
 	return $return;
 }

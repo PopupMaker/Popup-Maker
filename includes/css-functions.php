@@ -74,8 +74,8 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
 	);
 
 	$styles['close'] = array(
-		'height' => empty( $close['height'] ) ? 'auto' : "{$close['height']}px",
-		'width' => empty( $close['width'] ) ? 'auto' : "{$close['width']}px",
+		'height' => empty( $close['height'] ) || $close['height'] <= 0 ? 'auto' : "{$close['height']}px",
+		'width' => empty( $close['width'] ) || $close['width'] <= 0 ? 'auto' : "{$close['width']}px",
 		'left' => 'auto',
         'right' => 'auto',
         'bottom' => 'auto',
