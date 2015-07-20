@@ -160,6 +160,9 @@ function popmake_get_popup_meta( $group, $popup_id = NULL, $key = NULL, $default
 	if ( ! $values ) {
 		$values = apply_filters( "popmake_popup_{$group}_defaults", array() );
 	}
+	else {
+		$values = array_merge( popmake_get_popup_meta_group( $group, $popup_id ), $values );
+	}
 
 	if ( $key ) {
 

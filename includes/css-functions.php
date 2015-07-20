@@ -47,17 +47,23 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
 
 	extract( $theme );
 
-	$styles['overlay'] = array(
-		'background-color' => popmake_get_rgba_value( $overlay['background_color'], $overlay['background_opacity'] ),
-	);
+	$styles['overlay'] = array();
+
+	if ( ! empty( $overlay['background_color'] ) ) {
+		$styles['overlay']['background-color'] = popmake_get_rgba_value( $overlay['background_color'], $overlay['background_opacity'] );
+	}
 
 	$styles['container'] = array(
 		'padding' => "{$container['padding']}px",
-		'background-color' => popmake_get_rgba_value( $container['background_color'], $container['background_opacity'] ),
 		'border-radius' => "{$container['border_radius']}px",
 		'border' => popmake_get_border_style( $container['border_width'], $container['border_style'], $container['border_color'] ),
 		'box-shadow' => popmake_get_box_shadow_style( $container['boxshadow_horizontal'], $container['boxshadow_vertical'], $container['boxshadow_blur'], $container['boxshadow_spread'], $container['boxshadow_color'], $container['boxshadow_opacity'], $container['boxshadow_inset'] ),
 	);
+
+	if ( ! empty( $container['background_color'] ) ) {
+		$styles['container']['background-color'] = popmake_get_rgba_value( $container['background_color'], $container['background_opacity'] );
+	}
+
 
 	$styles['title'] = array(
 		'color' => $title['font_color'],
@@ -81,7 +87,6 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
         'bottom' => 'auto',
         'top' => 'auto',
 		'padding' => "{$close['padding']}px",
-		'background-color' => popmake_get_rgba_value( $close['background_color'], $close['background_opacity'] ),
 		'color' => $close['font_color'],
 		'font' => popmake_get_font_style( $close['font_size'], $close['font_weight'], $close['line_height'], $close['font_family'], $close['font_style'] ),
 		'border' => popmake_get_border_style( $close['border_width'], $close['border_style'], $close['border_color'] ),
@@ -89,6 +94,10 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
 		'box-shadow' => popmake_get_box_shadow_style( $close['boxshadow_horizontal'], $close['boxshadow_vertical'], $close['boxshadow_blur'], $close['boxshadow_spread'], $close['boxshadow_color'], $close['boxshadow_opacity'], $close['boxshadow_inset'] ),
 		'text-shadow' => popmake_get_text_shadow_style( $close['textshadow_horizontal'], $close['textshadow_vertical'], $close['textshadow_blur'], $close['textshadow_color'], $close['textshadow_opacity'] ),
 	);
+
+	if ( ! empty( $close['background_color'] ) ) {
+		$styles['close']['background-color'] = popmake_get_rgba_value( $close['background_color'], $close['background_opacity'] );
+	}
 
 	switch ( $close['location'] ) {
 		case "topleft":
@@ -109,7 +118,7 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
             break;
     }
 
-	return apply_filters( 'popmake_generate_theme_styles', $styles, $popup_theme_id );
+	return apply_filters( 'popmake_generate_theme_styles', $styles, $popup_theme_id, $theme );
 }
 
 function popmake_render_theme_styles( $popup_theme_id ) {

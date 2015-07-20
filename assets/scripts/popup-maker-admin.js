@@ -917,8 +917,8 @@ var PopMakeAdmin;
             });
             $close.html(theme.close_text).removeAttr('style').css({
                 padding: theme.close_padding + 'px',
-                height: theme.close_height + 'px',
-                width: theme.close_width + 'px',
+                height: theme.close_height > 0 ? theme.close_height + 'px' : 'auto',
+                width: theme.close_width > 0 ? theme.close_width + 'px' : 'auto',
                 backgroundColor: this.convert_hex(theme.close_background_color, theme.close_background_opacity),
                 color: theme.close_font_color,
                 lineHeight: theme.close_line_height + 'px',
