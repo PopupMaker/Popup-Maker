@@ -175,7 +175,6 @@ function popmake_get_registered_settings() {
 						'large' => 'I Love It!',
 					)
 				),
-				/*
 				'tracking_settings' => array(
 					'id' => 'tracking_settings',
 					'name' => '<strong>' . __( 'Tracking Settings', 'popup-maker' ) . '</strong>',
@@ -185,9 +184,10 @@ function popmake_get_registered_settings() {
 				'allow_tracking' => array(
 					'id' => 'allow_tracking',
 					'name' => __( 'Allow Usage Tracking?', 'popup-maker' ),
-					'desc' => __( 'Allow Popup Maker to anonymously track how this plugin is used and help us make the plugin better. Opt-in and receive a 20% discount code for any purchase from the <a href="https://wppopupmaker.com/extensions" target="_blank">Popup Maker store</a>. Your discount code will be emailed to you.', 'popup-maker' ),
+					'desc' => __( 'Allow Popup Maker to anonymously track how this plugin is used and help us make the plugin better. Opt-in and receive a 20% discount code for any purchase from the <a href="https://wppopupmaker.com/extensions/" target="_blank">Popup Maker store</a>. Your discount code will be emailed to you.', 'popup-maker' ),
 					'type' => 'checkbox'
 				),
+				/*
 				'uninstall_on_delete' => array(
 					'id' => 'uninstall_on_delete',
 					'name' => __( 'Remove Data on Uninstall?', 'popup-maker' ),
@@ -305,6 +305,7 @@ function popmake_settings_sanitize( $input = array() ) {
 	$tab      = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
 
 	$input = $input ? $input : array();
+
 	$input = apply_filters( 'popmake_settings_' . $tab . '_sanitize', $input );
 
 	// Loop through each setting being saved and pass it through a sanitization filter

@@ -172,6 +172,7 @@ final class Popup_Maker {
 
 
 
+		require_once POPMAKE_DIR . 'includes/actions.php';
 		require_once POPMAKE_DIR . 'includes/post-types.php';
 		require_once POPMAKE_DIR . 'includes/class-popmake-fields.php';
 		require_once POPMAKE_DIR . 'includes/scripts.php';
@@ -228,6 +229,7 @@ final class Popup_Maker {
 			require_once POPMAKE_DIR . 'includes/admin/help/help-page.php';
 			require_once POPMAKE_DIR . 'includes/admin/metabox-support.php';
 			require_once POPMAKE_DIR . 'includes/admin/metabox-share.php';
+			require_once POPMAKE_DIR . 'includes/admin/tracking.php';
 
 			require_once POPMAKE_DIR . 'includes/admin/upgrades/v1_3.php';
 		}

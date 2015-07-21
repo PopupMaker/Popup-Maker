@@ -52,7 +52,7 @@ function popmake_admin_notice() {
 		do_action('popmake_admin_notice');
 	}
 }
-add_action( 'admin_notices', 'popmake_admin_notice' );
+//add_action( 'admin_notices', 'popmake_admin_notice' );
 
 
 
@@ -75,7 +75,7 @@ function popmake_admin_popup_preview() {
 function popmake_post_submitbox_misc_actions() {
 	global $post;
 	if( $post && in_array($post->post_type, array( 'popup', 'popup_theme' ) ) ) : ?>
-	<a href="#" id="trigger-popmake-preview" class="popmake-preview button button-large"><?php _e( 'Preview' ); ?></a><?php
+	<a href="#" id="trigger-popmake-preview" class="popmake-preview button button-large"><span class="dashicons dashicons-visibility"></span></a><?php
 	endif;
 }
-add_action( 'post_submitbox_start', 'popmake_post_submitbox_misc_actions' );
+add_action( 'post_submitbox_start', 'popmake_post_submitbox_misc_actions', 100 );
