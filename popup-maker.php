@@ -4,7 +4,7 @@
  * Plugin URI: https://wppopupmaker.com
  * Description: Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more. 
  * Author: Daniel Iser
- * Version: 1.3
+ * Version: 1.3b
  * Author URI: https://wppopupmaker.com
  * Text Domain: popup-maker
  * 
@@ -144,7 +144,7 @@ final class Popup_Maker {
 		}
 
 		if ( !defined('POPMAKE_VERSION') ) {
-			define('POPMAKE_VERSION', '1.3' );
+			define('POPMAKE_VERSION', '1.3b' );
 		}
 
 		if ( !defined('POPMAKE_DB_VERSION') ) {
@@ -171,10 +171,10 @@ final class Popup_Maker {
 		$popmake_options = popmake_get_settings();
 
 
-
 		require_once POPMAKE_DIR . 'includes/actions.php';
 		require_once POPMAKE_DIR . 'includes/post-types.php';
 		require_once POPMAKE_DIR . 'includes/class-popmake-fields.php';
+		require_once POPMAKE_DIR . 'includes/class-popmake-cron.php';
 		require_once POPMAKE_DIR . 'includes/scripts.php';
 		require_once POPMAKE_DIR . 'includes/shortcodes.php';
 		require_once POPMAKE_DIR . 'includes/defaults.php';
@@ -186,7 +186,6 @@ final class Popup_Maker {
 		require_once POPMAKE_DIR . 'includes/theme-functions.php';
 		require_once POPMAKE_DIR . 'includes/css-functions.php';
 		require_once POPMAKE_DIR . 'includes/ajax-calls.php';
-
 
 		require_once POPMAKE_DIR . 'includes/importer/easy-modal-v2.php';
 		require_once POPMAKE_DIR . 'includes/integrations/gravityforms.php';
