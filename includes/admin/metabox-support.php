@@ -1,5 +1,10 @@
 <?php
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Popup Maker Support Metabox
  *
@@ -11,13 +16,12 @@
  */
 function popmake_render_support_meta_box() { ?>
 	<div id="popmake_support_fields" class="popmake_meta_table_wrap">
-		<?php do_action( 'popmake_support_meta_box_fields' ); ?>
+	<?php do_action( 'popmake_support_meta_box_fields' ); ?>
 	</div><?php
 }
 
 
-
-add_action('popmake_support_meta_box_fields', 'popmake_support_meta_box_links', 10);
+add_action( 'popmake_support_meta_box_fields', 'popmake_support_meta_box_links', 10 );
 function popmake_support_meta_box_links() { ?>
 	<ul class="popmake-support-links">
 		<li>

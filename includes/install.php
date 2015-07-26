@@ -2,15 +2,17 @@
 /**
  * Install Function
  *
- * @package 	POPMAKE
+ * @package    POPMAKE
  * @subpackage  Functions/Install
  * @copyright   Copyright (c) 2014, Daniel Iser
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since 		1.0
-*/
+ * @since        1.0
+ */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Install
@@ -48,13 +50,13 @@ function popmake_install() {
 	$options = array();
 
 	// Checks if the purchase page option exists
-	if ( ! get_option('popmake_default_theme') ) {
+	if ( ! get_option( 'popmake_default_theme' ) ) {
 		// Default Theme
 		popmake_install_default_theme();
 
 	}
 
-	if(!isset($popmake_options['popmake_powered_by_size'])) {
+	if ( ! isset( $popmake_options['popmake_powered_by_size'] ) ) {
 		$popmake_options['popmake_powered_by_size'] = '';
 	}
 
@@ -71,8 +73,8 @@ function popmake_install() {
 	// Add the transient to redirect to welcome page.
 	set_transient( '_popmake_activation_redirect', true, 30 );
 }
-register_activation_hook( POPMAKE , 'popmake_install' );
 
+register_activation_hook( POPMAKE, 'popmake_install' );
 
 
 /**
@@ -86,19 +88,19 @@ register_activation_hook( POPMAKE , 'popmake_install' );
 function popmake_install_default_theme() {
 	$default_theme = wp_insert_post(
 		array(
-			'post_title'		=> __( 'Default Theme', 'popup-maker' ),
-			'post_status'		=> 'publish',
-			'post_author'		=> 1,
-			'post_type'			=> 'popup_theme',
-			'comment_status'	=> 'closed'
+			'post_title'     => __( 'Default Theme', 'popup-maker' ),
+			'post_status'    => 'publish',
+			'post_author'    => 1,
+			'post_type'      => 'popup_theme',
+			'comment_status' => 'closed'
 		)
 	);
-	foreach(popmake_get_popup_theme_default_meta() as $meta_key => $meta_value) {
+	foreach ( popmake_get_popup_theme_default_meta() as $meta_key => $meta_value ) {
 		update_post_meta( $default_theme, $meta_key, $meta_value );
 	}
 	update_post_meta( $default_theme, 'popup_theme_defaults_set', true );
 	update_post_meta( $default_theme, 'popmake_default_theme', true );
-	update_option('popmake_default_theme', $default_theme);
+	update_option( 'popmake_default_theme', $default_theme );
 }
 
 
@@ -129,4 +131,5 @@ function popmake_after_install() {
 
 	do_action( 'popmake_after_install', $popmake_options );
 }
+
 add_action( 'admin_init', 'popmake_after_install' );

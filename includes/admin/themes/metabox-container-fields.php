@@ -1,14 +1,18 @@
 <?php
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 add_action('popmake_popup_theme_container_meta_box_fields', 'popmake_popup_theme_container_meta_box_field_description', 0);
-function popmake_popup_theme_container_meta_box_field_description( $popup_theme_id )
-{
-	?></tbody></table><p><?php _e( 'Theme the container inside the popups.', 'popup-maker' ); ?></p><table class="form-table"><tbody><?php
+function popmake_popup_theme_container_meta_box_field_description( $popup_theme_id ) { ?>
+	</tbody></table><p><?php _e( 'Theme the container inside the popups.', 'popup-maker' ); ?></p><table class="form-table"><tbody><?php
 }
 
 add_action('popmake_popup_theme_container_meta_box_fields', 'popmake_popup_theme_container_meta_box_field_padding', 10);
-function popmake_popup_theme_container_meta_box_field_padding( $popup_theme_id )
-{
-	?><tr>
+function popmake_popup_theme_container_meta_box_field_padding( $popup_theme_id ) { ?>
+	<tr>
 		<th scope="row">
 			<label for="popup_theme_container_padding"><?php _e( 'Padding', 'popup-maker' );?></label> 
 		</th>
@@ -29,9 +33,8 @@ function popmake_popup_theme_container_meta_box_field_padding( $popup_theme_id )
 
 
 add_action('popmake_popup_theme_container_meta_box_fields', 'popmake_popup_theme_container_meta_box_field_background', 20);
-function popmake_popup_theme_container_meta_box_field_background( $popup_theme_id )
-{
-	?><tr class="title-divider">
+function popmake_popup_theme_container_meta_box_field_background( $popup_theme_id ) { ?>
+	<tr class="title-divider">
 		<th colspan="2">
 			<h3 class="title"><?php _e( 'Background', 'popup-maker' );?></h3></th>
 	</tr>
@@ -73,9 +76,8 @@ function popmake_popup_theme_container_meta_box_field_atb_extension_promotion( $
 }
 
 add_action('popmake_popup_theme_container_meta_box_fields', 'popmake_popup_theme_container_meta_box_field_border', 40);
-function popmake_popup_theme_container_meta_box_field_border( $popup_theme_id )
-{
-	?><tr class="title-divider">
+function popmake_popup_theme_container_meta_box_field_border( $popup_theme_id ) { ?>
+	<tr class="title-divider">
 		<th colspan="2"><h3 class="title"><?php _e( 'Border', 'popup-maker' );?></h3></th>
 	</tr>
 	<tr>
@@ -140,9 +142,8 @@ function popmake_popup_theme_container_meta_box_field_border( $popup_theme_id )
 }
 
 add_action('popmake_popup_theme_container_meta_box_fields', 'popmake_popup_theme_container_meta_box_field_boxshadow', 50);
-function popmake_popup_theme_container_meta_box_field_boxshadow( $popup_theme_id )
-{
-	?><tr class="title-divider">
+function popmake_popup_theme_container_meta_box_field_boxshadow( $popup_theme_id ) { ?>
+	<tr class="title-divider">
 		<th colspan="2"><h3 class="title"><?php _e( 'Drop Shadow', 'popup-maker' );?></h3></th>
 	</tr>
 	<tr>
@@ -204,13 +205,13 @@ function popmake_popup_theme_container_meta_box_field_boxshadow( $popup_theme_id
 		</th>
 		<td>
 			<input type="text" readonly
-				value="<?php esc_attr_e(popmake_get_popup_theme_container( $popup_theme_id, 'boxshadow_blur' ))?>"
+				value="<?php esc_attr_e( popmake_get_popup_theme_container( $popup_theme_id, 'boxshadow_blur' ) ); ?>"
 				name="popup_theme_container_boxshadow_blur"
 				id="popup_theme_container_boxshadow_blur"
 				class="popmake-range-manual"
-				step="<?php esc_html_e(apply_filters('popmake_popup_theme_step_container_boxshadow_blur', 1));?>"
-				min="<?php esc_html_e(apply_filters('popmake_popup_theme_min_container_boxshadow_blur', 0));?>"
-				max="<?php esc_html_e(apply_filters('popmake_popup_theme_max_container_boxshadow_blur', 100));?>"
+				step="<?php esc_html_e( apply_filters( 'popmake_popup_theme_step_container_boxshadow_blur', 1 ) );?>"
+				min="<?php esc_html_e( apply_filters( 'popmake_popup_theme_min_container_boxshadow_blur', 0 ) );?>"
+				max="<?php esc_html_e( apply_filters( 'popmake_popup_theme_max_container_boxshadow_blur', 100 ) );?>"
 			/>
 			<span class="range-value-unit regular-text">px</span>
 		</td>
@@ -221,13 +222,13 @@ function popmake_popup_theme_container_meta_box_field_boxshadow( $popup_theme_id
 		</th>
 		<td>
 			<input type="text" readonly
-				value="<?php esc_attr_e(popmake_get_popup_theme_container( $popup_theme_id, 'boxshadow_spread' ))?>"
+				value="<?php esc_attr_e( popmake_get_popup_theme_container( $popup_theme_id, 'boxshadow_spread' ) ); ?>"
 				name="popup_theme_container_boxshadow_spread"
 				id="popup_theme_container_boxshadow_spread"
 				class="popmake-range-manual"
-				step="<?php esc_html_e(apply_filters('popmake_popup_theme_step_container_boxshadow_spread', 1));?>"
-				min="<?php esc_html_e(apply_filters('popmake_popup_theme_min_container_boxshadow_spread', -100));?>"
-				max="<?php esc_html_e(apply_filters('popmake_popup_theme_max_container_boxshadow_spread', 100));?>"
+				step="<?php esc_html_e( apply_filters( 'popmake_popup_theme_step_container_boxshadow_spread', 1 ) );?>"
+				min="<?php esc_html_e( apply_filters( 'popmake_popup_theme_min_container_boxshadow_spread', -100 ) );?>"
+				max="<?php esc_html_e( apply_filters( 'popmake_popup_theme_max_container_boxshadow_spread', 100 ) );?>"
 			/>
 			<span class="range-value-unit regular-text">px</span>
 		</td>
@@ -246,7 +247,7 @@ function popmake_popup_theme_container_meta_box_field_boxshadow( $popup_theme_id
 		</th>
 		<td>
 			<input type="text" readonly
-				value="<?php esc_attr_e(popmake_get_popup_theme_container( $popup_theme_id, 'boxshadow_opacity' ))?>"
+				value="<?php esc_attr_e( popmake_get_popup_theme_container( $popup_theme_id, 'boxshadow_opacity' ) ); ?>"
 				name="popup_theme_container_boxshadow_opacity"
 				id="popup_theme_container_boxshadow_opacity"
 				class="popmake-range-manual"

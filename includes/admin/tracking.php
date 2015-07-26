@@ -79,13 +79,13 @@ class Popmake_Tracking {
 			$theme      = $theme_data->Name . ' ' . $theme_data->Version;
 		}
 
-		$data['url']   = home_url();
-		$data['wp_version'] = get_bloginfo('version');
-		$data['version'] = POPMAKE_VERSION;
-		$data['theme'] = $theme;
-		$data['email'] = get_bloginfo( 'admin_email' );
+		$data['url']           = home_url();
+		$data['wp_version']    = get_bloginfo( 'version' );
+		$data['version']       = POPMAKE_VERSION;
+		$data['theme']         = $theme;
+		$data['email']         = get_bloginfo( 'admin_email' );
 		$data["mysql_version"] = $wpdb->db_version();
-		$data['php_version'] = PHP_VERSION;
+		$data['php_version']   = PHP_VERSION;
 
 		// Retrieve current plugin information
 		if ( ! function_exists( 'get_plugins' ) ) {
@@ -204,7 +204,8 @@ class Popmake_Tracking {
 
 		update_option( 'popmake_tracking_notice', '1' );
 
-		wp_redirect( remove_query_arg( 'popmake_action' ) ); exit;
+		wp_redirect( remove_query_arg( 'popmake_action' ) );
+		exit;
 
 	}
 

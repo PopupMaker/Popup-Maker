@@ -8,8 +8,13 @@
  * @since 		1.0
  * @return      void
 */
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 function popmake_settings_page() {
-	global $popmake_options;
 	$active_tab = isset( $_GET[ 'tab' ] ) && array_key_exists( $_GET['tab'], popmake_get_settings_tabs() ) ? $_GET[ 'tab' ] : 'general';
 	ob_start();?>
 	<div class="wrap">
@@ -30,16 +35,14 @@ function popmake_settings_page() {
 			}?>
 		</h2>
 		<form id="popmake-settings-editor" method="post" action="options.php">
-			<?php do_action('popmake_form_nonce');?>
+			<?php do_action( 'popmake_form_nonce' ); ?>
 				<div id="poststuff">
 				<div id="post-body" class="metabox-holder columns-2">
 					<div id="post-body-content">
 						<div id="tab_container">
-							<table class="form-table">
-							<?php
-							settings_fields( 'popmake_settings' );
-							do_settings_fields( 'popmake_settings_' . $active_tab, 'popmake_settings_' . $active_tab );
-							?>
+							<table class="form-table"><?php
+								settings_fields( 'popmake_settings' );
+								do_settings_fields( 'popmake_settings_' . $active_tab, 'popmake_settings_' . $active_tab ); ?>
 							</table>
 							<?php submit_button(); ?>
 						</div><!-- #tab_container-->

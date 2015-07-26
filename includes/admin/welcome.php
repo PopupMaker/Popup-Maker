@@ -1,36 +1,45 @@
 <?php
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Sends user to the Welcome page on first activation of Popup Maker as well as each
  * time Popup Maker is upgraded to a new version
  *
  * @access public
- * @since 1.4
+ * @since 1.0.0
  * @return void
  */
 function popmake_welcome_redirect() {
 
 	// Bail if no activation redirect
-	if ( ! get_transient( '_popmake_activation_redirect' ) )
+	if ( ! get_transient( '_popmake_activation_redirect' ) ) {
 		return;
+	}
 
 	// Delete the redirect transient
 	delete_transient( '_popmake_activation_redirect' );
 
 	// Bail if activating from network, or bulk
-	if ( is_network_admin() || isset( $_GET['activate-multi'] ) )
+	if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
 		return;
+	}
 
 	$upgrade = get_option( 'popmake_version_upgraded_from' );
 
-	if( ! $upgrade ) { // First time install
-		wp_safe_redirect( admin_url( 'index.php?page=popmake-getting-started' ) ); exit;
+	if ( ! $upgrade ) { // First time install
+		wp_safe_redirect( admin_url( 'index.php?page=popmake-getting-started' ) );
+		exit;
 	} else { // Update
-		wp_safe_redirect( admin_url( 'index.php?page=popmake-about' ) ); exit;
+		wp_safe_redirect( admin_url( 'index.php?page=popmake-about' ) );
+		exit;
 	}
 }
-add_action( 'admin_init', 'popmake_welcome_redirect' );
 
+add_action( 'admin_init', 'popmake_welcome_redirect' );
 
 
 function popmake_welcome_page_tabs() {

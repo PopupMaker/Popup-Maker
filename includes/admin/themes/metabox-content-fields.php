@@ -1,14 +1,17 @@
 <?php
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 add_action('popmake_popup_theme_content_meta_box_fields', 'popmake_popup_theme_content_meta_box_field_description', 0);
-function popmake_popup_theme_content_meta_box_field_description( $popup_theme_id )
-{
-	?></tbody></table><p><?php _e( 'Theme the content inside the popups.', 'popup-maker' ); ?></p><table class="form-table"><tbody><?php
+function popmake_popup_theme_content_meta_box_field_description( $popup_theme_id ) { ?>
+	</tbody></table><p><?php _e( 'Theme the content inside the popups.', 'popup-maker' ); ?></p><table class="form-table"><tbody><?php
 }
 
 add_action('popmake_popup_theme_content_meta_box_fields', 'popmake_popup_theme_content_meta_box_field_font', 10);
-function popmake_popup_theme_content_meta_box_field_font( $popup_theme_id )
-{
-	?>
+function popmake_popup_theme_content_meta_box_field_font( $popup_theme_id ) { ?>
 	<tr>
 		<th scope="row">
 			<label for="popup_theme_content_font_color"><strong class="title"><?php _e( 'Font', 'popup-maker' );?></strong></label>
@@ -29,7 +32,7 @@ function popmake_popup_theme_content_meta_box_field_font( $popup_theme_id )
 		</th>
 		<td>
 			<select name="popup_theme_content_font_family" id="popup_theme_content_font_family" class="font-family">
-			<?php foreach(apply_filters('popmake_font_family_options', array()) as $option => $value) : ?>
+			<?php foreach( apply_filters( 'popmake_font_family_options', array() ) as $option => $value ) : ?>
 				<option value="<?php echo $value;?>"
 					<?php echo $value == popmake_get_popup_theme_content( $popup_theme_id, 'font_family' ) ? ' selected="selected"' : '';?>
 					<?php echo $value == '' ? ' class="bold"' : '';?>

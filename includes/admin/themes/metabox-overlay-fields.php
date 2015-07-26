@@ -1,7 +1,12 @@
 <?php
-function popmake_popup_theme_overlay_meta_box_field_description( $popup_theme_id )
-{
-	?></tbody></table><p><?php _e( 'Theme the overlay behind the popups.', 'popup-maker' ); ?></p><table class="form-table"><tbody><?php
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+function popmake_popup_theme_overlay_meta_box_field_description( $popup_theme_id ) { ?>
+	</tbody></table><p><?php _e( 'Theme the overlay behind the popups.', 'popup-maker' ); ?></p><table class="form-table"><tbody><?php
 }
 add_action('popmake_popup_theme_overlay_meta_box_fields', 'popmake_popup_theme_overlay_meta_box_field_description', 0);
 

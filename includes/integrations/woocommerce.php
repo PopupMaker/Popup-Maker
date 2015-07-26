@@ -1,5 +1,10 @@
 <?php
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 final class Popmake_Woocommerce_Integration {
 	public function __construct() {
 		add_action( 'popmake_before_post_type_targeting_conditions', array( $this, 'targeting_conditions' ) );
@@ -15,11 +20,14 @@ final class Popmake_Woocommerce_Integration {
 			       id="popup_targeting_condition_on_woocommerce"
 			       name="popup_targeting_condition_on_woocommerce"
 			       value="true"
-				<?php if(!empty($targeting_condition['on_woocommerce'])) echo 'checked="checked" '; ?>
+				<?php if ( ! empty( $targeting_condition['on_woocommerce'] ) ) {
+					echo 'checked="checked" ';
+				} ?>
 				/>
 			<label for="popup_targeting_condition_on_woocommerce"><?php _e( 'On All WooCommerce', 'popup-maker' ); ?></label>
+
 			<div class="options">
-				<?php do_action("popmake_popup_targeting_condition_on_woocommerce_options", $targeting_condition); ?>
+				<?php do_action( "popmake_popup_targeting_condition_on_woocommerce_options", $targeting_condition ); ?>
 			</div>
 		</div>
 		<div id="targeting_condition-exclude_on_woocommerce" class="targeting_condition form-table">
@@ -27,11 +35,14 @@ final class Popmake_Woocommerce_Integration {
 			       id="popup_targeting_condition_exclude_on_woocommerce"
 			       name="popup_targeting_condition_exclude_on_woocommerce"
 			       value="true"
-				<?php if(!empty($targeting_condition['exclude_on_woocommerce'])) echo 'checked="checked" '; ?>
+				<?php if ( ! empty( $targeting_condition['exclude_on_woocommerce'] ) ) {
+					echo 'checked="checked" ';
+				} ?>
 				/>
 			<label for="popup_targeting_condition_exclude_on_woocommerce"><?php _e( 'Exclude on All WooCommerce', 'popup-maker' ); ?></label>
+
 			<div class="options">
-				<?php do_action("popmake_popup_targeting_condition_exclude_on_woocommerce_options", $targeting_condition); ?>
+				<?php do_action( "popmake_popup_targeting_condition_exclude_on_woocommerce_options", $targeting_condition ); ?>
 			</div>
 		</div>
 		<div id="targeting_condition-on_shop" class="targeting_condition form-table">
@@ -39,11 +50,14 @@ final class Popmake_Woocommerce_Integration {
 			       id="popup_targeting_condition_on_shop"
 			       name="popup_targeting_condition_on_shop"
 			       value="true"
-				<?php if(!empty($targeting_condition['on_shop'])) echo 'checked="checked" '; ?>
+				<?php if ( ! empty( $targeting_condition['on_shop'] ) ) {
+					echo 'checked="checked" ';
+				} ?>
 				/>
 			<label for="popup_targeting_condition_on_shop"><?php _e( 'On Shop Page', 'popup-maker' ); ?></label>
+
 			<div class="options">
-				<?php do_action("popmake_popup_targeting_condition_on_shop_options", $targeting_condition); ?>
+				<?php do_action( "popmake_popup_targeting_condition_on_shop_options", $targeting_condition ); ?>
 			</div>
 		</div>
 		<div id="targeting_condition-exclude_on_shop" class="targeting_condition form-table">
@@ -51,11 +65,14 @@ final class Popmake_Woocommerce_Integration {
 		       id="popup_targeting_condition_exclude_on_shop"
 		       name="popup_targeting_condition_exclude_on_shop"
 		       value="true"
-			<?php if(!empty($targeting_condition['exclude_on_shop'])) echo 'checked="checked" '; ?>
+			<?php if ( ! empty( $targeting_condition['exclude_on_shop'] ) ) {
+				echo 'checked="checked" ';
+			} ?>
 			/>
 		<label for="popup_targeting_condition_exclude_on_shop"><?php _e( 'Exclude on Shop Page', 'popup-maker' ); ?></label>
+
 		<div class="options">
-			<?php do_action("popmake_popup_targeting_condition_exclude_on_shop_options", $targeting_condition); ?>
+			<?php do_action( "popmake_popup_targeting_condition_exclude_on_shop_options", $targeting_condition ); ?>
 		</div>
 		</div><?php
 	}
@@ -87,11 +104,10 @@ final class Popmake_Woocommerce_Integration {
 		/**
 		 * WooCommerce Page Checks
 		 */
-		if( is_woocommerce() ) {
-			if( !$sitewide && array_key_exists('on_woocommerce', $conditions) ) {
+		if ( is_woocommerce() ) {
+			if ( ! $sitewide && array_key_exists( 'on_woocommerce', $conditions ) ) {
 				$is_loadable = true;
-			}
-			elseif( $sitewide && array_key_exists('exclude_on_woocommerce', $conditions) ) {
+			} elseif ( $sitewide && array_key_exists( 'exclude_on_woocommerce', $conditions ) ) {
 				$is_loadable = false;
 			}
 		}
@@ -99,11 +115,10 @@ final class Popmake_Woocommerce_Integration {
 		/**
 		 * Shop Page Checks
 		 */
-		if( is_shop() ) {
-			if( !$sitewide && array_key_exists('on_shop', $conditions) ) {
+		if ( is_shop() ) {
+			if ( ! $sitewide && array_key_exists( 'on_shop', $conditions ) ) {
 				$is_loadable = true;
-			}
-			elseif( $sitewide && array_key_exists('exclude_on_shop', $conditions) ) {
+			} elseif ( $sitewide && array_key_exists( 'exclude_on_shop', $conditions ) ) {
 				$is_loadable = false;
 			}
 		}

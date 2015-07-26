@@ -10,7 +10,9 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Popmake_Cron Class
@@ -27,8 +29,8 @@ class Popmake_Cron {
 	 * @see Popmake_Cron::weekly_events()
 	 */
 	public function __construct() {
-		add_filter( 'cron_schedules', array( $this, 'add_schedules'   ) );
-		add_action( 'wp',             array( $this, 'schedule_Events' ) );
+		add_filter( 'cron_schedules', array( $this, 'add_schedules' ) );
+		add_action( 'wp', array( $this, 'schedule_Events' ) );
 	}
 
 	/**
@@ -37,6 +39,7 @@ class Popmake_Cron {
 	 * @since 1.3.0
 	 *
 	 * @param array $schedules
+	 *
 	 * @return array
 	 */
 	public function add_schedules( $schedules = array() ) {
@@ -88,4 +91,5 @@ class Popmake_Cron {
 	}
 
 }
+
 $popmake_cron = new Popmake_Cron;

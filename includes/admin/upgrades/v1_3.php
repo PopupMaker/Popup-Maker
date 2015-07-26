@@ -1,5 +1,10 @@
 <?php
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 class Popmake_Upgrade_v1_3 {
 
 	public function __construct() {
@@ -11,7 +16,7 @@ class Popmake_Upgrade_v1_3 {
 		global $wpdb;
 
 		// Return if upgrade is not needed.
-		if ( ! version_compare( $old, '1.2.2', '<=') ) {
+		if ( ! version_compare( $old, '1.2.2', '<=' ) ) {
 			return;
 		}
 
@@ -23,16 +28,16 @@ class Popmake_Upgrade_v1_3 {
 	public function process_popups() {
 
 		$popups = get_posts( array(
-			'post_type' => 'popup',
-			'post_status' => 'all',
-			'posts_per_page' => -1,
+			'post_type'      => 'popup',
+			'post_status'    => 'all',
+			'posts_per_page' => - 1,
 		) );
 
 		$popup_groups = array(
-			'display' => popmake_popup_display_defaults(),
-			'close' => popmake_popup_close_defaults(),
-			'click_open' => popmake_popup_click_open_defaults(),
-			'auto_open' => popmake_popup_auto_open_defaults(),
+			'display'     => popmake_popup_display_defaults(),
+			'close'       => popmake_popup_close_defaults(),
+			'click_open'  => popmake_popup_click_open_defaults(),
+			'auto_open'   => popmake_popup_auto_open_defaults(),
 			'admin_debug' => popmake_popup_admin_debug_defaults()
 		);
 
@@ -50,17 +55,17 @@ class Popmake_Upgrade_v1_3 {
 	public function process_popup_themes() {
 
 		$themes = get_posts( array(
-			'post_type' => 'popup_theme',
-			'post_status' => 'all',
-			'posts_per_page' => -1,
+			'post_type'      => 'popup_theme',
+			'post_status'    => 'all',
+			'posts_per_page' => - 1,
 		) );
 
 		$theme_groups = array(
-			'overlay' => popmake_popup_theme_overlay_defaults(),
+			'overlay'   => popmake_popup_theme_overlay_defaults(),
 			'container' => popmake_popup_theme_container_defaults(),
-			'title' => popmake_popup_theme_title_defaults(),
-			'content' => popmake_popup_theme_content_defaults(),
-			'close' => popmake_popup_theme_close_defaults(),
+			'title'     => popmake_popup_theme_title_defaults(),
+			'content'   => popmake_popup_theme_content_defaults(),
+			'close'     => popmake_popup_theme_close_defaults(),
 		);
 
 		foreach ( $themes as $theme ) {
@@ -87,8 +92,8 @@ class Popmake_Upgrade_v1_3 {
 
 		$popup_fields = array();
 
-		foreach( $popup_groups as $group ) {
-			foreach( apply_filters( 'popmake_popup_meta_field_group_' . $group, array() ) as $field ) {
+		foreach ( $popup_groups as $group ) {
+			foreach ( apply_filters( 'popmake_popup_meta_field_group_' . $group, array() ) as $field ) {
 				$popup_fields[] = 'popup_' . $group . '_' . $field;
 			}
 		}
@@ -96,7 +101,6 @@ class Popmake_Upgrade_v1_3 {
 		$popup_fields = implode( "','", $popup_fields );
 
 		$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key IN('$popup_fields');" );
-
 
 
 		$theme_groups = array(
@@ -109,8 +113,8 @@ class Popmake_Upgrade_v1_3 {
 
 		$theme_fields = array();
 
-		foreach( $theme_groups as $group ) {
-			foreach( apply_filters( 'popmake_popup_theme_meta_field_group_' . $group, array() ) as $field ) {
+		foreach ( $theme_groups as $group ) {
+			foreach ( apply_filters( 'popmake_popup_theme_meta_field_group_' . $group, array() ) as $field ) {
 				$theme_fields[] = 'popup_theme_' . $group . '_' . $field;
 			}
 		}

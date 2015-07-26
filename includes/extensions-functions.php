@@ -1,7 +1,13 @@
 <?php
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 function popmake_available_extensions() {
 	$json_data = file_get_contents( POPMAKE_DIR . 'includes/extension-list.json' );
+
 	return json_decode( $json_data, true );
 	/*
 	if(($extensions = get_site_transient('popup-maker-extension-list')) === false) {
@@ -25,10 +31,9 @@ function popmake_available_extensions() {
 	*/
 }
 
-add_filter('popmake_existing_extension_images', 'popmake_core_extension_images', 10);
-function popmake_core_extension_images($array) {
-	return array_merge($array, array(
-		'unlimited-themes',
+add_filter( 'popmake_existing_extension_images', 'popmake_core_extension_images', 10 );
+function popmake_core_extension_images( $array ) {
+	return array_merge( $array, array(
 		'scroll-triggered-popups',
 		'popup-analytics',
 		'forced-interaction',
@@ -36,5 +41,8 @@ function popmake_core_extension_images($array) {
 		'advanced-theme-builder',
 		'exit-intent-popups',
 		'ajax-login-modals',
-	));
+		'advanced-targeting-conditions',
+		'secure-idle-user-logout',
+		'terms-conditions-popups',
+	) );
 }

@@ -1,6 +1,11 @@
 <?php
 
-add_action('popmake_example_popup_content', 'popmake_default_example_popup_content',1);
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+add_action( 'popmake_example_popup_content', 'popmake_default_example_popup_content', 1 );
 function popmake_default_example_popup_content() {
 	echo popmake_get_default_example_popup_content();
 }

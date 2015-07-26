@@ -10,7 +10,9 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Hooks Popup Maker actions, when present in the $_GET superglobal. Every popmake_action
@@ -25,6 +27,7 @@ function popmake_get_actions() {
 		do_action( 'popmake_' . $_GET['popmake_action'], $_GET );
 	}
 }
+
 add_action( 'init', 'popmake_get_actions' );
 
 /**
@@ -40,4 +43,5 @@ function popmake_post_actions() {
 		do_action( 'popmake_' . $_POST['popmake_action'], $_POST );
 	}
 }
+
 add_action( 'init', 'popmake_post_actions' );

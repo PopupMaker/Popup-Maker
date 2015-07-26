@@ -1,8 +1,3 @@
-<?php
-/**
- * 
- */
-?>
 <div id="popmake-<?php popmake_the_popup_ID(); ?>" class="<?php popmake_the_popup_classes(); ?>" <?php popmake_the_popup_data_attr(); ?>>
 
 	<?php do_action('popmake_popup_before_inner'); ?>
