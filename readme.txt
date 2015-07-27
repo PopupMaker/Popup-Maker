@@ -5,67 +5,79 @@ Plugin URI: https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+L
 Donate link: 
 Tags: age restriction, age verification, auto open, automatic popup, conversion, conversions, custom popup, dialog box, exit intent, fancy box, fancy popup, form modal, full page popup, full screen pop, full screen popup, marketing, modal, modals, onclick popup, optin popup, pop-up, pop-ups, popup, popup ads, popup advertising, popup box, popup form, popup message, popup window, popups, unblockable, wordpress popup
 Requires at least: 3.4
-Tested up to: 4.2
-Stable tag: 1.2.2
+Tested up to: 4.2.3
+Stable tag: 1.3b
 License: GNU Version 2 or Any Later Version
 
-Easily turn users into cash using Popup Maker - the most versatile & expansive popup plugin for WordPress!
+The most versatile popup plugin for WordPress! Grow email subscriber lists, get more FB Likes, create login modals, content restriction popups & much more.
 
 == Description ==
-Increase your site's leads generated, usability & conversion rates using our unlimited WYSIWIG content editor - put any content you can imagine inside your popups! Plus, Popup Maker gives you the ability to streamline, transform your website, and promote & market your content like never before using our ultimate theme capabilities & customization options!
+This isn't your grandmas popup software, get ready to increase subscriptions, user interaction, conversion rates and overall usability of your website. Popup Maker is the most versatile and easy to use popup, modal & content overlay plugin available. With a wide variety of customization settings you can create any type of overlay you can imagine. With a growing library of extensions you can further increase it's power. Create slide outs for related content, banner notices, optin or contact forms, special advertisements & much more. there are no limits here for customizability or creativity.
 
-After installing Popup maker, use it like a Pro! Read the About & Getting Started Tabs in the Popup Maker Welcome Center.
+With hooks, filters and a full JavaScript events API you can take basic popups to a new level. Customize the content, the look, the animations, the triggers, or create your own. The potential is limitless, or just use the included functionality to make great popups out of the box.
 
-Use any of your forms from the most popular form plugins, out-of-the-box, inside your popups with ease and efficiency. 100% seamless compatibility with:
+= Core Features =
+* **Unlimited Customizable Popups & Popup Themes**
+* **WYSIWYG content editor** - Allows shortcodes, HTML optin forms and any other content you can think of.
+* **Content Targeting Conditions** - With our targeting conditions you can show a popup on one page or all pages of your site for precise content targeting.
+* **Visual Theme Builder** - Customize every visual aspect of your popups to blend perfectly into your site with no coding required. We include color pickers, sliders, Google Fonts & much more. Over 60 options!
+* **Click Open Popup Triggers** - Open popups from your menus, sidebars, footers, text content, buttons, images or anything else on the page that the user can click.
+* **Auto Open Popups** - One of the absolute best ways to market your most valuable offers, Auto Open Popups allows you to choose the delay before opening, when the cookie is set and how long the cookie will last.
+* **Precise Positioning, Size & Animation Controls** - Customize where your popup will show, the size, animation style and even where it animates from. Easily make slide outs in the bottom corner or top banner bars.
+* **Responsive Popups** - Choosing a responsive size will make your popups resize automatically with users screen size. Great for use with themes that are responsive.
+* **Too many features to list here** - If you can't figure out how to get the functionality your after, ask us we will be glad to help.
 
+= Supported Optin Forms =
+* Mailchimp
+* Aweber
+* InfusionSoft
+* GetResponse
+* Constant Contact
+* MailPoet
+* MadMimi
+* HubSpot
+* Emma
+* Plus Many More - Just about any optin form. If you find one that doesn't work let us know.
+
+= 100% Supported Form Plugins =
+Not all form plugins are optimal for use in popups. The following support AJAX submission which is ideal for modal forms.
 * Gravity Forms
 * Ninja Forms
 * Contact Form 7
 
+= Available Languages =
+* Danish
+* French
+* Hungarian (Hungary)
+* Italian (Italy)
+* Norwegian
+* Swedish (Sweden)
+* Arabic
+* Spanish - 84%
+* Russian (Russia) - 80%
+* German (Germany) - 59%
+* Italian (Switzerland) - 35%
+* Danish (Denmark) - 33%
+* Slovak (Slovakia) - 29%
+
 Need it in another language? Help us [translate Popup Maker](https://www.transifex.com/projects/p/popup-maker).
 
-[Subscribe to our Newsletter](https://wppopupmaker.com/newsletter-sign-up?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Newsletter+Signup "Popup Maker Newsletter Sign Up") and receive tutorials and guides tailored to teaching you how to drastically improve your conversion rates using Popup Maker. Also, for a limited time only, sign up and receive Unlimited Themes and Advanced Theme Builder for free, plus 25% off your first purchase from our Extension Marketplace!
+= Check out our extension line to increase conversions & further enhance your popups. =
+> + [Exit Intent Popups](https://wppopupmaker.com/extensions/exit-intent-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Exit+Intent "Exit Intent Popups")
+> + [Advanced Targeting Conditions](https://wppopupmaker.com/extensions/advanced-targeting-conditions?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Advanced+Targeting+Conditions "Advanced Targeting Conditions")
+> + [Forced Interaction](https://wppopupmaker.com/extensions/forced-interaction?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Forced+Interaction "Forced Interaction")
+> + [AJAX Login Modals](https://wppopupmaker.com/extensions/ajax-login-modals?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=AJAX+Login+Modals "AJAX Login Modals")
+> + [Scroll Triggered Popups](https://wppopupmaker.com/extensions/scroll-triggered-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Scroll+Triggered "Scroll Triggered Popups")
+> + [Age Verification Modals](https://wppopupmaker.com/extensions/age-verification-modals?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Age+Verification+Modals "Age Verification Modals")
+> + [Terms & Conditions Popups](https://wppopupmaker.com/extensions/terms-conditions-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Terms+Conditions+Popups "Terms & Conditions Popups")
+> + [Advanced Theme Builder](https://wppopupmaker.com/extensions/advanced-theme-builder?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Advanced+Theme+Builder "Advanced Theme Builder")
+> + [Secure Idle User Logout](https://wppopupmaker.com/extensions/secure-idle-user-logout?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Secure+Idle+User+Logout "Secure Idle User Logout")
+> + [Popup Analytics](https://wppopupmaker.com/extensions/popup-analytics?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Popup+Analytics "Popup Analytics")
+> For the full list of extensions and more information, visit [our extension store](https://wppopupmaker.com/extensions/?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Extensions+Page "Popup Maker Extensions")!
 
+[Subscribe to our Newsletter](https://wppopupmaker.com/newsletter-sign-up?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Newsletter+Signup "Popup Maker Newsletter Sign Up") and receive tutorials and guides tailored to teaching you how to drastically improve your conversion rates using Popup Maker.
 * If you like the plugin please rate & review it! If you love the plugin and want news & updates, follow us on [Twitter](https://twitter.com/wppopupmaker "Popup Maker on Twitter")!
 * Check out the [Popup Maker Website](https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Home+Page "Popup Maker Website") for everything Popup Maker.
- 
-= Core Features =
-* Unlimited Content Customization
- * Use the Popup Maker WYSIWIG Content Editor to easily create as many popups as you like with any content you like! Plus, use Short Codes, HTML, and other code to give your popups ultimate power! Adding content and popups in Popup Maker is just like adding content and pages in WordPress.
-* Use Popups Conditionally 
- * Target specific users for your popups! Our Targeting Conditions feature allows you to tailor your popups to specific users by giving you the ability to use popups exactly where you want. Use Auto Open or check out the [Scroll Triggered](https://wppopupmaker.com/extensions/scroll-triggered-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Scroll+Triggered "Scroll Triggered Popups") & [Exit Intent](https://wppopupmaker.com/extensions/exit-intent-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Exit+Intent "Exit Intent Popups") Popup Extensions to enhance your popups' effectiveness.
-* One (1) Customizable Popup Theme
- * Customize every aspect of our default theme to match your needs - from colors to Google Fonts. To differentiate your popup themes on your popups, you can create unlimited themes by upgrading to the [Unlimited Themes Extension](https://wppopupmaker.com/extensions/unlimited-themes?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Unlimited+Themes "Unlimited Popup Themes").
-* Auto Open Popups
- * Popup Maker Core delivers the ultimate tool for WordPress Popup Plugins: Auto Open Popups! One of the absolute best ways to market your most valuable and precious content, our Auto Open Popups Feature allows you to destroy your old conversion rates! Plus, choose the delay before opening, when the cookie is set, how long the cookie will last, even reset cookies for a popup.
-* Popup Opening Animations
- * Our WordPress Popup Plugin gives your popup more power and allows you to customize how it pops up by choosing from several opening animations.
-* Complete Positioning and Size Control
- * Popup Maker offers you pixel perfect positioning settings to match your needs and fit your website perfectly - from centered popups to anchored popups. Plus, choose from a grab bag full of responsive sizes ready to go, out-of-the-box, or customize your own popup size using 4 units of measurement: pixels, %, EM, and REM.
-* Theme Builder
- * Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options! Plus, don't be worried to go with the flow, you can easily revert to old saves with Revision History! Want more options? Get our [Advanced Theme Builder](https://wppopupmaker.com/extensions/advanced-theme-builder?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Advanced+Theme+Builder "Advanced Theme Builder")!
-* Scrollable Content
- * Use the Scrollable Content Feature to add more content to your popups and ensure all of your content is visible to users!
-* Responsive Popups
- * Create popups ready for any device in seconds by simply selecting an option from our robust Responsive Popups tool set.
-* Lightweight, Dependable & Versatile
- * Speed matters, and at only 5.9kb, our popups won't slow you down. Our optimization techniques and program enhancement means your popups will perform at a consistently high level with 100% uptime.
-
-= Our extensions enhance your popups and drastically improve your conversion rates =
-* [Exit Intent Popups](https://wppopupmaker.com/extensions/exit-intent-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Exit+Intent "Exit Intent Popups")
-* [Advanced Targeting Conditions](https://wppopupmaker.com/extensions/advanced-targeting-conditions?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Advanced+Targeting+Conditions "Advanced Targeting Conditions")
-* [Forced Interaction](https://wppopupmaker.com/extensions/forced-interaction?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Forced+Interaction "Forced Interaction")
-* [AJAX Login Modals](https://wppopupmaker.com/extensions/ajax-login-modals?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=AJAX+Login+Modals "AJAX Login Modals")
-* [Scroll Triggered Popups](https://wppopupmaker.com/extensions/scroll-triggered-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Scroll+Triggered "Scroll Triggered Popups")
-* [Age Verification Modals](https://wppopupmaker.com/extensions/age-verification-modals?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Age+Verification+Modals "Age Verification Modals")
-* [Advanced Theme Builder](https://wppopupmaker.com/extensions/advanced-theme-builder?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Advanced+Theme+Builder "Advanced Theme Builder")
-* [Unlimited Themes](https://wppopupmaker.com/extensions/unlimited-themes?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Unlimited+Themes "Unlimited Themes")
-* [Secure Idle User Logout](https://wppopupmaker.com/extensions/secure-idle-user-logout?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Secure+Idle+User+Logout "Secure Idle User Logout")
-* [Popup Analytics](https://wppopupmaker.com/extensions/popup-analytics?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Popup+Analytics "Popup Analytics")
-* A/B/Z Split Testing (coming soon)
-
-For more information, visit [Popup Maker](https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Home+Page "WordPress Popup Maker")!
-
 [Plugin Developers Site](http://danieliser.com "Web Developer & WordPress Enthusiast") - Daniel Iser
 
 == Frequently Asked Questions ==
@@ -73,7 +85,6 @@ For more information, visit [Popup Maker](https://wppopupmaker.com?utm_source=Wo
 = Why aren't my popups opening/working? =
 
 There are several common causes for this which include:
-* Your site includes RevSlider and it is older than v4.6.5
 * You have not set up your popups targeting conditions (top right when editing a popup).
 * Your site is loading multiple copies of jQuery
 * There is a JS error caused by another plugin or your theme. You can check this using your browsers console (Press F12).
@@ -87,6 +98,46 @@ There are several common causes for this which include:
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.3 =
+
+* Feature: Added unlimited themes functionality to the core.
+* Feature: Allow disabling of event.prevendDefault() for on click events by adding do-default class.
+* Feature: Added support for session based cookies.
+* Feature: Add Height & Width options to Close Button for better control.
+* Feature: Theme styling is now rendered in the head via inline CSS with an option to disable in the case that popup styles have been moved to the theme stylesheet.
+* Feature: Delay showing the close button after the popup opens. Set the delay in ms.
+* Feature: Added stackable popups option to show more than one popup at a time. ( A stackable popup won't close other popups when its opened. )
+* Feature: Added WooCommerce Targeting Conditions.
+* Feature: Added new system info tab on the tools page to make debugging faster.
+* Tweak: Change default responsive mobile size to 95%.
+* Tweak: Change default z-index to 1999999999.
+* Tweak: Add ability to pass a callback to the popmake('close') method.
+* Tweak: Add namespace to click open event ('click.popmakeOpen').
+* Tweak: Add $default arg to popmake_get_popup_meta_group function.
+* Tweak: Auto close content tags using balanceTags().
+* Tweak: Added new popmake_get_popup(), get_the_popup_ID(), popmake_get_the_popup_ID(), popmake_the_popup_ID() functions.
+* Tweak: Check if popup is already open before auto opening.
+* Tweak: Add ajax="true" to gravity forms shortcodes if not there.
+* Tweak: Make auto open cookie key optional.
+* Tweak: Disable fixed position for responsive sizes.
+* Tweak: Compensate for Admin Bar when visible.
+* Tweak: Added options to disable Support & Share admin widgets.
+* Tweak: Added new filter popmake_popup_default_close_text to allow filtering of popup close text.
+* Tweak: Added close text override on a per popup basis. New option under Close Settings.
+* Tweak: Choosing a responsive size will automatically disable fixed position & scrollable content.
+* Tweak: Unneeded data attributes are now removed to clean up html.
+* Tweak: Meta has now been compressed into serialized arrays for popups and themes.
+* Tweak: Added new Meta Field management class as a step toward a more maintainable code base.
+* Fix: Add option to disable moving of popup to end of <body>.
+* Fix: Corrected input type under Click-Open Settings meta box.
+* Fix: Description cleanup for popup location.
+* Fix: Correct French translation file name.
+* Fix: Rewrote popup loop to not overwrite global $post breaking some content shortcodes.
+* Fix: Bug when clicking publish with empty name field publish becomes unclickable again.
+* Fix: Sitewide cookie option will not stay unchecked.
+* Fix: Bug where popup & popup_theme meta was stored with other post types on revision.
+* Fix: Bug in the popup_trigger shortcode with $content not being rendered properly.
 
 = v1.2.2 =
 * Added (string) typecast to prevent errors in wp_localize_script when passing integers.
@@ -166,7 +217,6 @@ There are several common causes for this which include:
 * Changed default permissions required to use theme builder.
 * Fixed bug in targeting conditions.
 
-
 = v1.1.3 =
 * Fixed some incorrect links to resources and kb.
 * Removed Auto Open Promotional Material ( as it is now included ).
@@ -177,16 +227,13 @@ There are several common causes for this which include:
 = v1.1.1 =
 * Fixed bug in JS that didn't properly check if Auto Open was enabled.
 
-
 = v1.1 =
 * Added Importer for Easy Modal v2 - Availabe under Tools -> Import
 * Added Easy Modal v2 Compatibility Option - Available under Settings -> Misc (This will allow all of your existing eModal classes to open the proper Popup once imported)
 * Added custom selector functionality - Availabe on Modal editor (This will allow you to use your own css selectors that when clicked will trigger the popup to open. Ex. #main-menu li.menu-item-3 would cause the corresponding menu item to trigger that popup)
 
-
 = v1.0.5 =
 * Fixed bug caused by changes in v1.0.4.
-
 
 = v1.0.4 =
 * Admin UI Adjustments & Tweaks.
@@ -194,12 +241,10 @@ There are several common causes for this which include:
 * Reformatted Code.
 * Fixed incorrect variable.
 
-
 = v1.0.3 =
 * Fixed bug with recursive filter.
 * Fixed bug caused by typo.
 * Fixed bug in JS for removing specific post type posts.
-
 
 = v1.0.2 =
 * Resized Extension page images to load quicker on extensions page.
@@ -211,7 +256,6 @@ There are several common causes for this which include:
 * Renamed files appropriately.
 * Added new section callback for settings API.
 * Fixed small glitch in Opt In for Credit Link.
-
 
 = v1.0.1 =
 * Removed links to getting started from "Dashboard" Admin Menu.
