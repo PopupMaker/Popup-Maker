@@ -7,6 +7,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Popmake_Fields {
 
+	public static $class_name = 'Popmake_Fields';
+
 	public $field_prefix = '';
 
 	public $callback_prefix = 'popmake_field_';
@@ -18,7 +20,7 @@ class Popmake_Fields {
 	private static $instance;
 
 	public static function instance() {
-		$class = get_called_class();
+		$class = self::$class_name;
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof $class ) ) {
 			self::$instance = new $class;
 		}
@@ -104,6 +106,7 @@ class Popmake_Fields {
 
 
 class Popmake_Popup_Fields extends Popmake_Fields {
+	public static $class_name = 'Popmake_Popup_Fields';
 	public $field_prefix = 'popup_';
 
 	public function __construct() {
@@ -420,6 +423,7 @@ function popmake_register_popup_meta_fields( $section, $fields = array() ) {
 
 
 class Popmake_Popup_Theme_Fields extends Popmake_Fields {
+	public static $class_name = 'Popmake_Popup_Theme_Fields';
 	public $field_prefix = 'popup_theme_';
 
 	public function __construct() {
