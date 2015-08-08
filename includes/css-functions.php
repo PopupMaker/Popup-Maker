@@ -53,6 +53,10 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
 
 	extract( $theme );
 
+	if ( empty( $overlay ) || empty( $container ) || empty( $title ) || empty( $content ) || empty( $close ) ) {
+		return array();
+	}
+
 	$styles['overlay'] = array();
 
 	if ( ! empty( $overlay['background_color'] ) ) {
@@ -129,7 +133,14 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
 
 function popmake_render_theme_styles( $popup_theme_id ) {
 	$styles = '';
-	foreach ( popmake_generate_theme_styles( $popup_theme_id ) as $element => $rules ) {
+
+	$theme_styles = popmake_generate_theme_styles( $popup_theme_id );
+
+	if ( empty( $theme_styles ) ) {
+		return '';
+	}
+
+	foreach ( $theme_styles as $element => $rules ) {
 		switch ( $element ) {
 			case 'overlay':
 				$rule = ".popmake-overlay.theme-{$popup_theme_id}";

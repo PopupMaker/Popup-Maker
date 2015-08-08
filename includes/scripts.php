@@ -94,8 +94,12 @@ function popmake_render_popup_theme_styles() {
 		$styles = '';
 
 		foreach ( popmake_get_all_popup_themes() as $theme ) {
-			$styles .= "/* Popup Theme " . $theme->ID . ": " . $theme->post_title . " */\r\n";
-			$styles .= popmake_render_theme_styles( $theme->ID );
+			$theme_styles = popmake_render_theme_styles( $theme->ID );
+
+			if ( $theme_styles != '' ) {
+				$styles .= "/* Popup Theme " . $theme->ID . ": " . $theme->post_title . " */\r\n";
+				$styles .= $theme_styles;
+			}
 		}
 
 		set_transient( 'popmake_theme_styles', $styles, 7 * DAY_IN_SECONDS );

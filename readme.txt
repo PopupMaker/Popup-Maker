@@ -6,10 +6,10 @@ Donate link:
 Tags: age restriction, age verification, auto open, automatic popup, conversion, conversions, custom popup, dialog box, exit intent, fancy box, fancy popup, form modal, full page popup, full screen pop, full screen popup, marketing, modal, modals, onclick popup, optin popup, pop-up, pop-ups, popup, popup ads, popup advertising, popup box, popup form, popup message, popup window, popups, unblockable, wordpress popup
 Requires at least: 3.4
 Tested up to: 4.2.4
-Stable tag: 1.3
+Stable tag: 1.3.1
 License: GNU Version 2 or Any Later Version
 
-The most versatile popup plugin for WordPress! Grow email subscriber lists, get more FB Likes, create login modals, content restriction popups & much more.
+The most versatile popup plugin for WordPress! Grow email subscriber lists, get more FB Likes, create login modals, content restriction & more.
 
 == Description ==
 This isn't your grandmas popup software, get ready to increase subscriptions, user interaction, conversion rates and overall usability of your website. Popup Maker is the most versatile and easy to use popup, modal & content overlay plugin available. With a wide variety of customization settings you can create any type of overlay you can imagine. With a growing library of extensions you can further increase it's power. Create slide outs for related content, banner notices, optin or contact forms, special advertisements & much more. there are no limits here for customizability or creativity.
@@ -99,8 +99,12 @@ There are several common causes for this which include:
 
 == Changelog ==
 
-= v1.3 =
+= v1.3.1 - 8/8/2015 =
+* Fix: Error in get_called_class alternate function for PHP 5.2
+* Fix: Force theme css builder to check for empty themes.
+* Fix: Bug where z-indexes were incorrectly set.
 
+= v1.3 - 8/7/2015 =
 * Feature: Added unlimited themes functionality to the core.
 * Feature: Allow disabling of event.prevendDefault() for on click events by adding do-default class.
 * Feature: Added support for session based cookies.

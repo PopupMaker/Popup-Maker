@@ -1,5 +1,5 @@
 /**
- * Popup Maker v1.3.0
+ * Popup Maker v1.3.1
  */
 (function (jQuery) {
     "use strict";
@@ -141,9 +141,12 @@
                 return this;
             }
 
-            jQuery('#popmake-overlay').prop('class', 'popmake-overlay theme-' + settings.theme_id);
+            jQuery('#popmake-overlay')
+                .prop('class', 'popmake-overlay theme-' + settings.theme_id)
+                .css({'z-index': settings.meta.display.overlay_zindex || 1999999998});
 
             $this
+                .css({'z-index': settings.meta.display.zindex || 1999999999})
                 .popmake('animate', settings.meta.display.animation_type, function () {
 
                     if (settings.meta.close.button_delay > 0) {
