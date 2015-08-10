@@ -725,7 +725,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 				'height'                => array(
 					'label'    => __( 'Height', 'popup-maker' ),
 					'type'     => 'rangeslider',
-					'std'      => 20,
+					'std'      => 0,
 					'priority' => 2,
 					'step'     => apply_filters( 'popmake_popup_theme_close_height_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_height_min', 0 ),
@@ -735,7 +735,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 				'width'                 => array(
 					'label'    => __( 'Width', 'popup-maker' ),
 					'type'     => 'rangeslider',
-					'std'      => 20,
+					'std'      => 0,
 					'priority' => 2,
 					'step'     => apply_filters( 'popmake_popup_theme_close_width_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_width_min', 0 ),
