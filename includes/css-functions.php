@@ -5,28 +5,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! function_exists( 'hex2rgb' ) ) {
-	function hex2rgb( $hex ) {
-		$hex = str_replace( "#", "", $hex );
+function popmake_hex2rgb( $hex ) {
+	$hex = str_replace( "#", "", $hex );
 
-		if ( strlen( $hex ) == 3 ) {
-			$r = hexdec( substr( $hex, 0, 1 ) . substr( $hex, 0, 1 ) );
-			$g = hexdec( substr( $hex, 1, 1 ) . substr( $hex, 1, 1 ) );
-			$b = hexdec( substr( $hex, 2, 1 ) . substr( $hex, 2, 1 ) );
-		} else {
-			$r = hexdec( substr( $hex, 0, 2 ) );
-			$g = hexdec( substr( $hex, 2, 2 ) );
-			$b = hexdec( substr( $hex, 4, 2 ) );
-		}
-		$rgb = array( $r, $g, $b );
-
-		//return implode(",", $rgb); // returns the rgb values separated by commas
-		return $rgb; // returns an array with the rgb values
+	if ( strlen( $hex ) == 3 ) {
+		$r = hexdec( substr( $hex, 0, 1 ) . substr( $hex, 0, 1 ) );
+		$g = hexdec( substr( $hex, 1, 1 ) . substr( $hex, 1, 1 ) );
+		$b = hexdec( substr( $hex, 2, 1 ) . substr( $hex, 2, 1 ) );
+	} else {
+		$r = hexdec( substr( $hex, 0, 2 ) );
+		$g = hexdec( substr( $hex, 2, 2 ) );
+		$b = hexdec( substr( $hex, 4, 2 ) );
 	}
+	$rgb = array( $r, $g, $b );
+
+	//return implode(",", $rgb); // returns the rgb values separated by commas
+	return $rgb; // returns an array with the rgb values
 }
 
 function popmake_get_rgba_value( $hex, $opacity = 100 ) {
-	return 'rgba( ' . implode( ', ', hex2rgb( $hex ) ) . ', ' . ( $opacity / 100 ) . ' )';
+	return 'rgba( ' . implode( ', ', popmake_hex2rgb( $hex ) ) . ', ' . ( $opacity / 100 ) . ' )';
 }
 
 function popmake_get_border_style( $w, $s, $c ) {
