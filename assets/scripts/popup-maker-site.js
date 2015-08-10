@@ -1,5 +1,5 @@
 /**
- * Popup Maker v1.3.1
+ * Popup Maker v1.3.2
  */
 (function (jQuery) {
     "use strict";
@@ -192,6 +192,10 @@
                                     // Remove autoplay so video doesn't start playing again.
                                     .replace('autoplay=1', '1=1');
                             $iframe.attr('src', '').attr('src', src);
+                        });
+
+                        jQuery('video', $this).each(function () {
+                           this.pause();
                         });
 
                         if (callback !== undefined) {
