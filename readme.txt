@@ -6,7 +6,7 @@ Donate link:
 Tags: age restriction, age verification, auto open, automatic popup, conversion, conversions, custom popup, dialog box, exit intent, fancy box, fancy popup, form modal, full page popup, full screen pop, full screen popup, marketing, modal, modals, onclick popup, optin popup, pop-up, pop-ups, popup, popup ads, popup advertising, popup box, popup form, popup message, popup window, popups, unblockable, wordpress popup
 Requires at least: 3.4
 Tested up to: 4.2.4
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GNU Version 2 or Any Later Version
 
 The most versatile popup plugin for WordPress! Grow email subscriber lists, get more FB Likes, create login modals, content restriction & more.
@@ -98,6 +98,11 @@ There are several common causes for this which include:
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.3.2 - 8/10/2015 =
+* Tweak: Pause HTML5 Videos when popup closes.
+* Fix: Prefixed several functions that collided with some themes.
+* Fix: Changed default Close Height & Width to 0/auto.
 
 = v1.3.1 - 8/8/2015 =
 * Fix: Error in get_called_class alternate function for PHP 5.2
