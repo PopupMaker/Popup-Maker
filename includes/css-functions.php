@@ -45,7 +45,13 @@ function popmake_get_font_style( $s, $w, $lh, $f, $st = null, $v = null ) {
 
 function popmake_generate_theme_styles( $popup_theme_id ) {
 
-	$styles = array();
+	$styles = array(
+		'overlay' => array(),
+		'container' => array(),
+		'title' => array(),
+		'content' => array(),
+		'close' => array()
+	);
 
 	$theme = popmake_get_popup_theme_data_attr( $popup_theme_id );
 
@@ -55,12 +61,16 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
 		return array();
 	}
 
-	$styles['overlay'] = array();
-
+	/*
+	 * Overlay Styles
+	 */
 	if ( ! empty( $overlay['background_color'] ) ) {
 		$styles['overlay']['background-color'] = popmake_get_rgba_value( $overlay['background_color'], $overlay['background_opacity'] );
 	}
 
+	/*
+	 * Container Styles
+	 */
 	$styles['container'] = array(
 		'padding'       => "{$container['padding']}px",
 		'border-radius' => "{$container['border_radius']}px",
@@ -72,14 +82,23 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
 		$styles['container']['background-color'] = popmake_get_rgba_value( $container['background_color'], $container['background_opacity'] );
 	}
 
-
+	/*
+	 * Title Styles
+	 */
 	$styles['title'] = array(
 		'color'       => $title['font_color'],
 		'text-align'  => $title['text_align'],
 		'text-shadow' => popmake_get_text_shadow_style( $title['textshadow_horizontal'], $title['textshadow_vertical'], $title['textshadow_blur'], $title['textshadow_color'], $title['textshadow_opacity'] ),
-		'font'        => popmake_get_font_style( $title['font_size'], $title['font_weight'], $title['line_height'], $title['font_family'], $title['font_style'] )
+		'font-family' => $title['font_family'],
+		'font-weight' => $title['font_weight'],
+		'font-size'   => $title['font_size'],
+		'font-style'  => $title['font_style'],
+		'line-height' => $title['line_height'],
 	);
 
+	/*
+	 * Content Styles
+	 */
 	$styles['content'] = array(
 		'color'       => $content['font_color'],
 		'font-family' => $content['font_family'],
@@ -87,6 +106,9 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
 		'font-style'  => $content['font_style'],
 	);
 
+	/*
+	 * Close Styles
+	 */
 	$styles['close'] = array(
 		'height'        => empty( $close['height'] ) || $close['height'] <= 0 ? 'auto' : "{$close['height']}px",
 		'width'         => empty( $close['width'] ) || $close['width'] <= 0 ? 'auto' : "{$close['width']}px",
@@ -96,7 +118,11 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
 		'top'           => 'auto',
 		'padding'       => "{$close['padding']}px",
 		'color'         => $close['font_color'],
-		'font'          => popmake_get_font_style( $close['font_size'], $close['font_weight'], $close['line_height'], $close['font_family'], $close['font_style'] ),
+		'font-family'   => $close['font_family'],
+		'font-weight'   => $close['font_weight'],
+		'font-size'     => $close['font_size'],
+		'font-style'    => $close['font_style'],
+		'line-height'   => $close['line_height'],
 		'border'        => popmake_get_border_style( $close['border_width'], $close['border_style'], $close['border_color'] ),
 		'border-radius' => "{$close['border_radius']}px",
 		'box-shadow'    => popmake_get_box_shadow_style( $close['boxshadow_horizontal'], $close['boxshadow_vertical'], $close['boxshadow_blur'], $close['boxshadow_spread'], $close['boxshadow_color'], $close['boxshadow_opacity'], $close['boxshadow_inset'] ),
@@ -132,6 +158,11 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
 function popmake_render_theme_styles( $popup_theme_id ) {
 	$styles = '';
 
+	$theme_data = get_post($popup_theme_id);
+	$slug = $theme_data->post_name != $popup_theme_id ? $theme_data->post_name : false;
+
+
+
 	$theme_styles = popmake_generate_theme_styles( $popup_theme_id );
 
 	if ( empty( $theme_styles ) ) {
@@ -142,12 +173,21 @@ function popmake_render_theme_styles( $popup_theme_id ) {
 		switch ( $element ) {
 			case 'overlay':
 				$rule = ".popmake-overlay.theme-{$popup_theme_id}";
+				if ( $slug ) {
+					$rule .= ", .popmake-overlay.theme-{$slug}";
+				}
 				break;
 			case 'container':
 				$rule = ".popmake.theme-{$popup_theme_id}";
+				if ( $slug ) {
+					$rule .= ", .popmake.theme-{$slug}";
+				}
 				break;
 			default:
 				$rule = ".popmake.theme-{$popup_theme_id} .popmake-{$element}";
+				if ( $slug ) {
+					$rule .= ", .popmake.theme-{$slug} .popmake-{$element}";
+				}
 				break;
 		}
 
