@@ -6,7 +6,7 @@ Donate link:
 Tags: age restriction, age verification, auto open, automatic popup, conversion, conversions, custom popup, dialog box, exit intent, fancy box, fancy popup, form modal, full page popup, full screen pop, full screen popup, marketing, modal, modals, onclick popup, optin popup, pop-up, pop-ups, popup, popup ads, popup advertising, popup box, popup form, popup message, popup window, popups, unblockable, wordpress popup
 Requires at least: 3.4
 Tested up to: 4.2.4
-Stable tag: 1.3.2
+Stable tag: 1.3.3
 License: GNU Version 2 or Any Later Version
 
 The most versatile popup plugin for WordPress! Grow email subscriber lists, get more FB Likes, create login modals, content restriction & more.
@@ -41,6 +41,7 @@ With hooks, filters and a full JavaScript events API you can take basic popups t
 
 = 100% Supported Form Plugins =
 Not all form plugins are optimal for use in popups. The following support AJAX submission which is ideal for modal forms.
+
 * Gravity Forms
 * Ninja Forms
 * Contact Form 7
@@ -73,11 +74,14 @@ Need it in another language? Help us [translate Popup Maker](https://www.transif
 > + [Advanced Theme Builder](https://wppopupmaker.com/extensions/advanced-theme-builder?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Advanced+Theme+Builder "Advanced Theme Builder")
 > + [Secure Idle User Logout](https://wppopupmaker.com/extensions/secure-idle-user-logout?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Secure+Idle+User+Logout "Secure Idle User Logout")
 > + [Popup Analytics](https://wppopupmaker.com/extensions/popup-analytics?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Popup+Analytics "Popup Analytics")
+>
 > For the full list of extensions and more information, visit [our extension store](https://wppopupmaker.com/extensions/?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Extensions+Page "Popup Maker Extensions")!
 
 [Subscribe to our Newsletter](https://wppopupmaker.com/newsletter-sign-up?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Newsletter+Signup "Popup Maker Newsletter Sign Up") and receive tutorials and guides tailored to teaching you how to drastically improve your conversion rates using Popup Maker.
+
 * If you like the plugin please rate & review it! If you love the plugin and want news & updates, follow us on [Twitter](https://twitter.com/wppopupmaker "Popup Maker on Twitter")!
 * Check out the [Popup Maker Website](https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Home+Page "Popup Maker Website") for everything Popup Maker.
+
 [Plugin Developers Site](http://danieliser.com "Web Developer & WordPress Enthusiast") - Daniel Iser
 
 == Frequently Asked Questions ==
@@ -98,6 +102,10 @@ There are several common causes for this which include:
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.3.3 - 8/12/2015 =
+* Fix: Added current_action fallback function for older versions of WP.
+* Fix: Theme CSS rendering incorrect font settings.
 
 = v1.3.2 - 8/10/2015 =
 * Tweak: Pause HTML5 Videos when popup closes.
