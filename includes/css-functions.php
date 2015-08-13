@@ -91,9 +91,9 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
 		'text-shadow' => popmake_get_text_shadow_style( $title['textshadow_horizontal'], $title['textshadow_vertical'], $title['textshadow_blur'], $title['textshadow_color'], $title['textshadow_opacity'] ),
 		'font-family' => $title['font_family'],
 		'font-weight' => $title['font_weight'],
-		'font-size'   => $title['font_size'],
+		'font-size'   => "{$title['font_size']}px",
 		'font-style'  => $title['font_style'],
-		'line-height' => $title['line_height'],
+		'line-height' => "{$title['line_height']}px",
 	);
 
 	/*
@@ -120,9 +120,9 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
 		'color'         => $close['font_color'],
 		'font-family'   => $close['font_family'],
 		'font-weight'   => $close['font_weight'],
-		'font-size'     => $close['font_size'],
+		'font-size'     => "{$close['font_size']}px",
 		'font-style'    => $close['font_style'],
-		'line-height'   => $close['line_height'],
+		'line-height'   => "{$close['line_height']}px",
 		'border'        => popmake_get_border_style( $close['border_width'], $close['border_style'], $close['border_color'] ),
 		'border-radius' => "{$close['border_radius']}px",
 		'box-shadow'    => popmake_get_box_shadow_style( $close['boxshadow_horizontal'], $close['boxshadow_vertical'], $close['boxshadow_blur'], $close['boxshadow_spread'], $close['boxshadow_color'], $close['boxshadow_opacity'], $close['boxshadow_inset'] ),
