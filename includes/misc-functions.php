@@ -5,6 +5,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! function_exists( 'current_action' ) ) {
+	function current_action() {
+		return current_filter();
+	}
+}
+
 if ( ! function_exists( 'get_called_class' ) ) {
 	function get_called_class() {
 		$bt = debug_backtrace();
