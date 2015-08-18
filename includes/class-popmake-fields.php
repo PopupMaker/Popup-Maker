@@ -315,7 +315,7 @@ class Popmake_Popup_Fields extends Popmake_Fields {
 					'unit'        => __( 'ms', 'popup-maker' ),
 				),
 				'cookie_trigger' => array(
-					'label'       => __( 'Delay', 'popup-maker' ),
+					'label'       => __( 'Cookie Trigger', 'popup-maker' ),
 					'description' => __( 'When do you want to create the cookie.', 'popup-maker' ),
 					'type'        => 'select',
 					'std'         => 'close',

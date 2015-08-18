@@ -188,7 +188,8 @@ function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default
 	$values = get_post_meta( $popup_id, "popup_{$group}", true );
 
 	if ( ! $values ) {
-		$values = apply_filters( "popmake_popup_{$group}_defaults", array() );
+		$defaults = apply_filters( "popmake_popup_{$group}_defaults", array() );
+		$values = array_merge( $defaults, popmake_get_popup_meta_group( $group, $popup_id ) );
 	} else {
 		$values = array_merge( popmake_get_popup_meta_group( $group, $popup_id ), $values );
 	}
@@ -232,6 +233,11 @@ function popmake_get_popup_meta_group( $group, $popup_id = null, $key = null, $d
 	}
 
 	$post_meta         = get_post_custom( $popup_id );
+
+	if ( ! is_array( $post_meta ) ) {
+		$post_meta = array();
+	}
+
 	$default_check_key = 'popup_defaults_set';
 	if ( ! in_array( $group, array( 'auto_open', 'close', 'display', 'targeting_condition' ) ) ) {
 		$default_check_key = "popup_{$group}_defaults_set";

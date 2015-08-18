@@ -214,8 +214,8 @@ add_action( 'wp_head', 'popmake_script_loading_enabled' );
 
 function popmake_enqueue_scripts( $popup_id = null ) {
 	$scripts_needed = apply_filters( 'popmake_enqueue_scripts', array(
-		'popup-maker-site',
-		'popup-maker-easy-modal-importer-site'
+		'popup-maker' => 'popup-maker-site',
+		'easy-modal-importer' => 'popup-maker-easy-modal-importer-site'
 	), $popup_id );
 	foreach ( $scripts_needed as $script ) {
 		if ( wp_script_is( $script, 'registered' ) ) {
@@ -224,8 +224,8 @@ function popmake_enqueue_scripts( $popup_id = null ) {
 	}
 
 	$styles_needed = apply_filters( 'popmake_enqueue_styles', array(
-		'popup-maker-site',
-		'popup-maker-google-fonts'
+		'popup-maker' => 'popup-maker-site',
+		'google-fonts' => 'popup-maker-google-fonts'
 	), $popup_id );
 	foreach ( $styles_needed as $style ) {
 		if ( wp_style_is( $style, 'registered' ) ) {

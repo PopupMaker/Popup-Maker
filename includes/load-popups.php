@@ -26,10 +26,10 @@ add_action( 'plugins_loaded', 'popmake_init_popups' );
 function popmake_load_popup( int $id ) {
 	global $popmake_loaded_popups, $popmake_loaded_popup_ids, $popmake_enqueued_popups;
 	if ( did_action( 'wp_head' ) && ! in_array( $id, $popmake_loaded_popup_ids ) ) {
-		$args1 = array_merge( $base_args, array(
+		$args1 = array(
 			'post_type' => 'popup',
 			'p'         => $id
-		) );
+		);
 		$query = new WP_Query( $args1 );
 		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) : $query->next_post();
