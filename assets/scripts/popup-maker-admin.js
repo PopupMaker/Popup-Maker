@@ -1,5 +1,5 @@
 /**
- * Popup Maker v1.3.0
+ * Popup Maker v1.3.6
  */
 
 var PopMakeAdmin;
@@ -446,7 +446,7 @@ var PopMakeAdmin;
                         jQuery('.custom-size-only').hide();
                         if (jQuery("#popup_display_size").val() !== 'auto') {
                             jQuery('.responsive-size-only').show();
-                            jQuery('#popup_display_position_fixed, #popup_display_custom_height_auto, #popup_display_scrollable_content').prop('checked', false);
+                            jQuery('#popup_display_custom_height_auto').prop('checked', false);
                         } else {
                             jQuery('.responsive-size-only').hide();
                         }
@@ -620,6 +620,9 @@ var PopMakeAdmin;
                     auto_open_reset_cookie_key();
                 })
                 .on('change', "#popup_display_size", function () {
+                    if (jQuery("#popup_display_size").val() !== 'custom' && jQuery("#popup_display_size").val() !== 'auto') {
+                        jQuery('#popup_display_position_fixed, #popup_display_scrollable_content').prop('checked', false);
+                    }
                     update_size();
                 })
                 .on('change', "#popup_display_animation_type", function () {
