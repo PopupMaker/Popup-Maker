@@ -1,5 +1,5 @@
 /**
- * Popup Maker v1.3.2
+ * Popup Maker v1.3.6
  */
 (function (jQuery) {
     "use strict";
@@ -45,6 +45,10 @@
             return this.each(function () {
                 var $this = jQuery(this),
                     settings = jQuery.extend(true, {}, jQuery.fn.popmake.defaults, $this.data('popmake'), options);
+
+                if (!(settings.theme_id > 0)) {
+                    settings.theme_id = popmake_default_theme;
+                }
 
                 if (!jQuery('#' + settings.overlay.attr.id).length) {
                     jQuery('<div>').attr(settings.overlay.attr).appendTo('body');

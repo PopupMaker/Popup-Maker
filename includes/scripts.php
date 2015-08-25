@@ -35,6 +35,7 @@ function popmake_load_site_scripts() {
 		'jquery-ui-position'
 	), POPMAKE_VERSION, true );
 	wp_localize_script( 'popup-maker-site', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
+	wp_localize_script( 'popup-maker-site', 'popmake_default_theme', (string) get_option( 'popmake_default_theme' ) );
 
 	if ( popmake_get_option( 'popmake_powered_by_opt_in', false ) ) {
 		$size = popmake_get_option( 'popmake_powered_by_size', '' );
@@ -146,6 +147,7 @@ function popmake_load_admin_scripts() {
 			'jquery-ui-position'
 		), POPMAKE_VERSION, true );
 		wp_localize_script( 'popup-maker-site', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
+		wp_localize_script( 'popup-maker-site', 'popmake_default_theme', (string) get_option( 'popmake_default_theme' ) );
 	}
 	if ( popmake_is_admin_popup_theme_page() ) {
 		wp_localize_script( 'popup-maker-admin', 'popmake_google_fonts', popmake_get_google_webfonts_list() );
