@@ -45,7 +45,8 @@ function popmake_get_popup_theme_meta( $group, $popup_theme_id = null, $key = nu
 	$values = get_post_meta( $popup_theme_id, "popup_theme_{$group}", true );
 
 	if ( ! $values ) {
-		$values = apply_filters( "popmake_popup_theme_{$group}_defaults", array() );
+		$defaults = apply_filters( "popmake_popup_theme_{$group}_defaults", array() );
+		$values = array_merge( $defaults, popmake_get_popup_theme_meta_group( $group, $popup_theme_id ) );
 	} else {
 		$values = array_merge( popmake_get_popup_theme_meta_group( $group, $popup_theme_id ), $values );
 	}
@@ -82,32 +83,40 @@ function popmake_get_popup_theme_meta( $group, $popup_theme_id = null, $key = nu
  *
  * @return mixed array|string of the popup overlay meta
  */
-function popmake_get_popup_theme_meta_group( $group, $popup_theme_id = null, $key = null ) {
+function popmake_get_popup_theme_meta_group( $group, $popup_theme_id = null, $key = null, $default = null ) {
 	if ( ! $popup_theme_id ) {
 		$popup_theme_id = get_the_ID();
 	}
 
 	$post_meta    = get_post_custom( $popup_theme_id );
-	$group_values = $post_meta ? array() : apply_filters( "popmake_popup_theme_{$group}_defaults", array() );
-	if ( $post_meta ) {
-		foreach ( $post_meta as $meta_key => $value ) {
-			if ( strpos( $meta_key, "popup_theme_{$group}_" ) !== false ) {
-				$new_key = str_replace( "popup_theme_{$group}_", '', $meta_key );
-				if ( count( $value ) == 1 ) {
-					$group_values[ $new_key ] = $value[0];
-				} else {
-					$group_values[ $new_key ] = $value;
-				}
+
+	if ( ! is_array( $post_meta ) ) {
+		$post_meta = array();
+	}
+
+	$default_check_key = 'popup_theme_defaults_set';
+	if ( ! in_array( $group, array( 'overlay', 'close', 'display', 'targeting_condition' ) ) ) {
+		$default_check_key = "popup_{$group}_defaults_set";
+	}
+
+	$group_values = array_key_exists( $default_check_key, $post_meta ) ? array() : apply_filters( "popmake_popup_theme_{$group}_defaults", array() );
+	foreach ( $post_meta as $meta_key => $value ) {
+		if ( strpos( $meta_key, "popup_theme_{$group}_" ) !== false ) {
+			$new_key = str_replace( "popup_theme_{$group}_", '', $meta_key );
+			if ( count( $value ) == 1 ) {
+				$group_values[ $new_key ] = $value[0];
+			} else {
+				$group_values[ $new_key ] = $value;
 			}
 		}
-
 	}
 	if ( $key ) {
 		$key = str_replace( '.', '_', $key );
 		if ( ! isset( $group_values[ $key ] ) ) {
-			return false;
+			$value = $default;
+		} else {
+			$value = $group_values[ $key ];
 		}
-		$value = $group_values[ $key ];
 
 		return apply_filters( "popmake_get_popup_theme_{$group}_$key", $value, $popup_theme_id );
 	} else {

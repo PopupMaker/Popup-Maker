@@ -263,7 +263,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 	<tr>
 		<th scope="row"><?php _e( 'Fixed Postioning', 'popup-maker' ); ?></th>
 		<td>
-			<input type="checkbox" value="true" name="popup_display_position_fixed" id="popup_display_position_fixed" <?php echo popmake_get_popup_display( $popup_id, 'position_fixed' ) ? 'checked="checked" ' : ''; ?>/>
+			<input type="checkbox" value="true" name="popup_display_position_fixed" id="popup_display_position_fixed" <?php checked( popmake_get_popup_display( $popup_id, 'position_fixed' ), true ); ?>/>
 			<label for="popup_display_position_fixed" class="description"><?php _e( 'Checking this sets the positioning of the popup to fixed.', 'popup-maker' ); ?></label>
 		</td>
 	</tr>
