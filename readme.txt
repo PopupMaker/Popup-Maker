@@ -5,8 +5,8 @@ Plugin URI: https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+L
 Donate link: 
 Tags: age restriction, age verification, auto open, automatic popup, conversion, conversions, custom popup, dialog box, exit intent, fancy box, fancy popup, form modal, full page popup, full screen pop, full screen popup, marketing, modal, modals, onclick popup, optin popup, pop-up, pop-ups, popup, popup ads, popup advertising, popup box, popup form, popup message, popup window, popups, unblockable, wordpress popup
 Requires at least: 3.4
-Tested up to: 4.2.4
-Stable tag: 1.3.5
+Tested up to: 4.3
+Stable tag: 1.3.6
 License: GNU Version 2 or Any Later Version
 
 The most versatile popup plugin for WordPress! Grow email subscriber lists, get more FB Likes, create login modals, content restriction & more.
@@ -102,6 +102,12 @@ There are several common causes for this which include:
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.3.6 - 8/25/2015 =
+* Confirmed WP v4.3 compatibility.
+* Tweak: Default theme is automatically used if a popup does not have one assigned.
+* Fix:  UI bug where fixed position checkbox wouldn't stay checked.
+* Fix: Bug with Theme Default values & v1.2 values not being merged.
 
 = v1.3.5 - 8/18/2015 =
 * Tweak: Corrected missing keys for required script checks.
