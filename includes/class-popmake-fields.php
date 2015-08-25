@@ -15,16 +15,18 @@ class Popmake_Fields {
 
 	public $sections = array();
 
-	private static $instance;
+	private static $instances = array();
 
 	public static function instance() {
 		$class = get_called_class();
 
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof $class ) ) {
-			self::$instance = new $class;
+		$class_key = md5( $class );
+
+		if ( ! isset( self::$instances[ $class_key ] ) || ! self::$instances[ $class_key ] instanceof $class ) {
+			self::$instances[ $class_key ] = new $class;
 		}
 
-		return self::$instance;
+		return self::$instances[ $class_key ];
 	}
 
 	public function register_section( $id, $title, $callback = null ) {
