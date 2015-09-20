@@ -10,7 +10,8 @@ function popmake_shortcode_popup( $atts, $content = null ) {
 	$atts = shortcode_atts(
 		apply_filters( 'popmake_shortcode_popup_default_atts', array(
 			'id'               => "",
-			'theme_id'         => 1,
+			'theme_id'         => null,
+			'theme'            => null,
 			'title'            => "",
 			'overlay_disabled' => 0,
 			'size'             => "small",
@@ -33,6 +34,15 @@ function popmake_shortcode_popup( $atts, $content = null ) {
 		apply_filters( 'popmake_shortcode_popup_atts', $atts ),
 		'popup'
 	);
+
+	if ( ! $atts['theme_id'] ) {
+		if ( ! $atts['theme'] ) {
+			$atts['theme_id'] = get_option( 'popmake_default_theme' );
+		}
+		else {
+			$atts['theme_id'] = $atts['theme'];
+		}
+	}
 
 	$popup_fields = apply_filters( 'popmake_shortcode_data_attr', array(
 		'id'    => $atts['id'],
