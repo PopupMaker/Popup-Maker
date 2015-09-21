@@ -238,6 +238,9 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/integrations/woocommerce.php';
 			}
 
+			if ( defined( 'WPB_VC_VERSION' ) ) {
+				require_once POPMAKE_DIR . 'includes/integrations/visual-composer.php';
+			}
 			require_once POPMAKE_DIR . 'includes/install.php';
 		}
 
