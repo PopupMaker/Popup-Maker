@@ -37,7 +37,7 @@ function popmake_shortcode_popup( $atts, $content = null ) {
 
 	if ( ! $atts['theme_id'] ) {
 		if ( ! $atts['theme'] ) {
-			$atts['theme_id'] = get_option( 'popmake_default_theme' );
+			$atts['theme_id'] = popmake_get_default_popup_theme();
 		}
 		else {
 			$atts['theme_id'] = $atts['theme'];
