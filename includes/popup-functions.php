@@ -137,16 +137,16 @@ function popmake_clean_popup_data_attr( $data_attr ) {
 	if ( empty( $display['responsive_min_width'] ) ) {
 		unset( $display['responsive_min_width'], $display['responsive_min_width_unit'] );
 	}
-	if ( ! strpos( $display['location'], 'left' ) ) {
+	if ( strpos( $display['location'], 'left' ) === false ) {
 		unset( $display['position_left'] );
 	}
-	if ( ! strpos( $display['location'], 'right' ) ) {
+	if ( strpos( $display['location'], 'right' ) === false ) {
 		unset( $display['position_right'] );
 	}
-	if ( ! strpos( $display['location'], 'top' ) ) {
+	if ( strpos( $display['location'], 'top' ) === false ) {
 		unset( $display['position_top'] );
 	}
-	if ( ! strpos( $display['location'], 'bottom' ) ) {
+	if ( strpos( $display['location'], 'bottom' ) === false ) {
 		unset( $display['position_bottom'] );
 	}
 
