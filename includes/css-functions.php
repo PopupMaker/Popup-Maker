@@ -6,6 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function popmake_hex2rgb( $hex ) {
+	if ( is_array( $hex ) ) {
+		$hex = implode( '', $hex );
+	}
 	$hex = str_replace( "#", "", $hex );
 
 	if ( strlen( $hex ) == 3 ) {

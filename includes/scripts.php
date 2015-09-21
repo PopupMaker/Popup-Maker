@@ -59,26 +59,10 @@ add_action( 'wp_enqueue_scripts', 'popmake_load_site_scripts' );
  * @return void
  */
 function popmake_load_site_styles() {
-	global $popmake_needed_google_fonts;
 	$css_dir = POPMAKE_URL . '/assets/styles/';
 	$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css' : '.min.css';
 	wp_register_style( 'popup-maker-site', $css_dir . 'popup-maker-site' . $suffix, false, POPMAKE_VERSION );
-	if ( ! empty( $popmake_needed_google_fonts ) && ! popmake_get_option( 'disable_google_font_loading', false ) ) {
-		$link = "//fonts.googleapis.com/css?family=";
-		foreach ( $popmake_needed_google_fonts as $font_family => $variants ) {
-			if ( $link != "//fonts.googleapis.com/css?family=" ) {
-				$link .= "|";
-			}
-			$link .= $font_family;
-			if ( ! empty( $variants ) ) {
-				$link .= ":";
-				$link .= implode( ',', $variants );
-			}
-		}
-		wp_register_style( 'popup-maker-google-fonts', $link );
-	}
 }
-
 add_action( 'wp_enqueue_scripts', 'popmake_load_site_styles' );
 
 function popmake_render_popup_theme_styles() {
@@ -94,14 +78,35 @@ function popmake_render_popup_theme_styles() {
 
 		$styles = '';
 
+		$google_fonts = array();
+
 		foreach ( popmake_get_all_popup_themes() as $theme ) {
 			$theme_styles = popmake_render_theme_styles( $theme->ID );
+
+			$google_fonts = array_merge( $google_fonts, popmake_get_popup_theme_google_fonts( $theme->ID ) );
 
 			if ( $theme_styles != '' ) {
 				$styles .= "/* Popup Theme " . $theme->ID . ": " . $theme->post_title . " */\r\n";
 				$styles .= $theme_styles;
 			}
 		}
+
+		if ( ! empty( $google_fonts ) ) {
+			$link = "//fonts.googleapis.com/css?family=";
+			foreach ( $google_fonts as $font_family => $variants ) {
+				if ( $link != "//fonts.googleapis.com/css?family=" ) {
+					$link .= "|";
+				}
+				$link .= $font_family;
+				if ( ! empty( $variants ) ) {
+					$link .= ":";
+					$link .= implode( ',', $variants );
+				}
+			}
+
+			$styles = "/* Popup Google Fonts */\r\n@import url('$link');\r\n\r\n" . $styles;
+		}
+
 
 		set_transient( 'popmake_theme_styles', $styles, 7 * DAY_IN_SECONDS );
 
