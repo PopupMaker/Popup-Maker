@@ -101,6 +101,7 @@ function popmake_install_default_theme() {
 	update_post_meta( $default_theme, 'popup_theme_defaults_set', true );
 	update_post_meta( $default_theme, 'popmake_default_theme', true );
 	update_option( 'popmake_default_theme', $default_theme );
+	delete_transient( 'popmake_theme_styles' );
 }
 
 
