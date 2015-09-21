@@ -93,10 +93,16 @@ html.popup-open,
         margin-left: -47.5%;
         width: 95%;
     }
+
+    .popmake.fixed {
+        position: fixed;
+    }
 }
 
-.popmake.fixed {
-    position: fixed;
+@media only screen and (max-width: 767px) {
+    .popmake.fixed {
+        position: static!important;
+    }
 }
 
 .popmake.custom-position {
