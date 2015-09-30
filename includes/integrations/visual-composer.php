@@ -14,6 +14,11 @@ final class Popmake_VisualComposer_Integration {
 		if ( ! empty( $_GET['page'] ) && $_GET['page'] == 'vc_settings' ) {
 			$popup_args['public'] = true;
 		}
+		if ( ! empty( $_GET['page'] ) && $_GET['page'] == 'fl-builder-settings' ) {
+			$popup_args['public'] = true;
+		}
+
+
 		return $popup_args;
 	}
 }

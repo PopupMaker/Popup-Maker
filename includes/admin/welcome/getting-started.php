@@ -148,7 +148,7 @@ function popmake_getting_started_page() {
 	<div class="return-to-dashboard">
 		<a href="<?php echo esc_url( admin_url( 'post.php?post=' . popmake_get_default_popup_theme() . '&action=edit' ) ); ?>"><?php _e( 'Customize Your First Theme', 'popup-maker' ); ?></a> &middot;
 		<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=popup' ) ); ?>"><?php _e( 'Create a Modal', 'popup-maker' ); ?></a> &middot;
-		<a href="<?php echo esc_url( 'https://wppopupmaker.com/docs/getting-started/?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=Getting+Started' ); ?>" target="_blank"><?php _e( 'View the Full Getting Started Guide', 'popup-maker' ); ?></a>
+		<a href="<?php echo esc_url( 'http://docs.wppopupmaker.com/collection/1-getting-started?utm_source=WP+Welcome+Getting+Started&utm_medium=Text+Link&utm_campaign=Getting+Started' ); ?>" target="_blank"><?php _e( 'View the Full Getting Started Guide', 'popup-maker' ); ?></a>
 	</div>
 	</div><?php
 }
