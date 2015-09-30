@@ -6,7 +6,7 @@ Donate link:
 Tags: age restriction, age verification, auto open, automatic popup, conversion, conversions, custom popup, dialog box, exit intent, fancy box, fancy popup, form modal, full page popup, full screen pop, full screen popup, marketing, modal, modals, onclick popup, optin popup, pop-up, pop-ups, popup, popup ads, popup advertising, popup box, popup form, popup message, popup window, popups, unblockable, wordpress popup
 Requires at least: 3.4
 Tested up to: 4.3.1
-Stable tag: 1.3.7
+Stable tag: 1.3.8
 License: GNU Version 2 or Any Later Version
 
 The most versatile popup plugin for WordPress! Grow email subscriber lists, get more FB Likes, create login modals, content restriction & more.
@@ -27,7 +27,7 @@ With hooks, filters and a full JavaScript events API you can take basic popups t
 * **Responsive Popups** - Choosing a responsive size will make your popups resize automatically with users screen size. Great for use with themes that are responsive.
 * **Too many features to list here** - If you can't figure out how to get the functionality your after, ask us we will be glad to help.
 
-Now works with Visual Composer by WP Bakery - Craft beautify & fully responsive popups in no time with Popup Maker & Visual Composer.
+Now works with Visual Composer by WP Bakery - Craft beautiful & fully responsive popups in no time with Popup Maker & Visual Composer.
 
 = Supported Optin Forms =
 * Mailchimp
@@ -105,6 +105,10 @@ There are several common causes for this which include:
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.3.8 - 9/29/2015 =
+* Fix: Updated links to documentation.
+* Fix: Removed exploitable bug allowing script execution in the admin. Discovered 9/29/15 - Patched 9/29/15
 
 = v1.3.7 - 9/21/2015 =
 * Feature: Added support for Visual Composer to popups. (Backend Editor Only). Works Perfectly with Responsive Popups.
