@@ -64,7 +64,7 @@ function popmake_render_popup_columns( $column_name, $post_id ) {
 
 		switch ( $column_name ) {
 			case 'popup_title':
-				echo '<strong>' . popmake_get_the_popup_title( $post_id ) . '</strong>';
+				echo '<strong>' . esc_html(popmake_get_the_popup_title( $post_id )  ) . '</strong>';
 				break;
 			case 'popup_category':
 				echo get_the_term_list( $post_id, 'popup_category', '', ', ', '' );
