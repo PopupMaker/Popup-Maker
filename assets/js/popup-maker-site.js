@@ -1,6 +1,7 @@
 /**
  * Popup Maker v1.3.6
  */
+var pm_cookie, pm_remove_cookie;
 (function (jQuery) {
     "use strict";
     var isScrolling = false;
@@ -617,8 +618,8 @@
         }
     };
 
-    jQuery.pm_cookie = jQuery.fn.popmake.cookie.process;
-    jQuery.pm_remove_cookie = jQuery.fn.popmake.cookie.remove;
+    pm_cookie = jQuery.pm_cookie = jQuery.fn.popmake.cookie.process;
+    pm_remove_cookie = jQuery.pm_remove_cookie = jQuery.fn.popmake.cookie.remove;
 
     jQuery.fn.popmake.utilities = {
         convert_hex: function (hex, opacity) {
