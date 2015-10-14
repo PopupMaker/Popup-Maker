@@ -186,6 +186,12 @@ function popmake_render_theme_styles( $popup_theme_id ) {
 					$rule .= ", .popmake.theme-{$slug}";
 				}
 				break;
+			case 'close':
+				$rule = ".popmake.theme-{$popup_theme_id} > .popmake-close";
+				if ( $slug ) {
+					$rule .= ", .popmake.theme-{$slug} > .popmake-close";
+				}
+				break;
 			default:
 				$rule = ".popmake.theme-{$popup_theme_id} .popmake-{$element}";
 				if ( $slug ) {

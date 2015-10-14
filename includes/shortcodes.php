@@ -110,3 +110,22 @@ function popmake_shortcode_popup_trigger( $atts, $content = null ) {
 
 	return $return;
 }
+
+add_shortcode( 'popup_close', 'popmake_shortcode_popup_close' );
+function popmake_shortcode_popup_close( $atts, $content = null ) {
+	$atts = shortcode_atts(
+		apply_filters( 'popmake_shortcode_popup_close_default_atts', array(
+			'id'    => "",
+			'tag'   => 'span',
+			'class' => '',
+		) ),
+		apply_filters( 'popmake_shortcode_popup_close_atts', $atts ),
+		'popup_trigger'
+	);
+
+	$return = '<' . $atts['tag'] . ' class="popmake-close' . ' ' . $atts['class'] . '">';
+	$return .= do_shortcode( $content );
+	$return .= '</' . $atts['tag'] . '>';
+
+	return $return;
+}
