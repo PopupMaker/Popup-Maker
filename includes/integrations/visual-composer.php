@@ -11,13 +11,12 @@ final class Popmake_VisualComposer_Integration {
 	}
 
 	public static function popup_post_type_args( $popup_args ) {
-		if ( ! empty( $_GET['page'] ) && $_GET['page'] == 'vc_settings' ) {
+		if ( defined( 'WPB_VC_VERSION' ) || ( ! empty( $_GET['page'] ) && in_array( $_GET['page'], array( 'fl-builder-settings' ) ) ) ) {
 			$popup_args['public'] = true;
+			$popup_args['exclude_from_search'] = true;
+			$popup_args['publicly_queryable'] = true;
+			$popup_args['show_in_nav_menus'] = false;
 		}
-		if ( ! empty( $_GET['page'] ) && $_GET['page'] == 'fl-builder-settings' ) {
-			$popup_args['public'] = true;
-		}
-
 
 		return $popup_args;
 	}
