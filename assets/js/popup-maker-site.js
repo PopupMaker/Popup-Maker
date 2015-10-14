@@ -175,8 +175,14 @@ var pm_cookie, pm_remove_cookie;
                     $close = jQuery('.popmake-close', $this),
                     settings = $this.data('popmake');
 
+                $this.trigger('popmakeBeforeClose');
+
+                if ($this.hasClass('preventClose')) {
+                    $this.removeClass('preventClose');
+                    return this;
+                }
+
                 $this
-                    .trigger('popmakeBeforeClose')
                     .fadeOut(settings.close.close_speed, function () {
 
                         if ($overlay.length && $overlay.is(":visible")) {
