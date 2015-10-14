@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return void
  */
 function popmake_load_site_scripts() {
-	$js_dir = POPMAKE_URL . '/assets/scripts/';
+	$js_dir = POPMAKE_URL . '/assets/js/';
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.js' : '.min.js';
 
 	// Deprecated. No longer used. Here for older versions of some extensions.
@@ -59,7 +59,7 @@ add_action( 'wp_enqueue_scripts', 'popmake_load_site_scripts' );
  * @return void
  */
 function popmake_load_site_styles() {
-	$css_dir = POPMAKE_URL . '/assets/styles/';
+	$css_dir = POPMAKE_URL . '/assets/css/';
 	$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css' : '.min.css';
 	wp_register_style( 'popup-maker-site', $css_dir . 'popup-maker-site' . $suffix, false, POPMAKE_VERSION );
 }
@@ -130,7 +130,7 @@ add_action( 'admin_head', 'popmake_render_popup_theme_styles' );
  * @return void
  */
 function popmake_load_admin_scripts() {
-	$js_dir = POPMAKE_URL . '/assets/scripts/';
+	$js_dir = POPMAKE_URL . '/assets/js/';
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.js' : '.min.js';
 	if ( popmake_is_admin_popup_page() || popmake_is_admin_popup_theme_page() ) {
@@ -173,7 +173,7 @@ add_action( 'admin_enqueue_scripts', 'popmake_load_admin_scripts', 100 );
  * @return void
  */
 function popmake_load_admin_styles() {
-	$css_dir = POPMAKE_URL . '/assets/styles/';
+	$css_dir = POPMAKE_URL . '/assets/css/';
 	$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css' : '.min.css';
 	if ( popmake_is_admin_popup_page() || popmake_is_admin_popup_theme_page() ) {
 		wp_enqueue_style( 'popup-maker-site', $css_dir . 'popup-maker-site' . $suffix, false, POPMAKE_VERSION );
