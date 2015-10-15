@@ -747,10 +747,12 @@ var PopMakeAdmin;
                     if (font.variants.length) {
                         for (i = 0; font.variants.length > i; i += 1) {
                             if (font.variants[i] === 'regular') {
-                                jQuery('option[value="normal"]', $font_weight).show();
-                                jQuery('option[value="normal"]', $font_style).show();
+                                jQuery('option[value=""]', $font_weight).show();
+                                jQuery('option[value=""]', $font_style).show();
                             } else {
                                 if (font.variants[i].indexOf('italic') >= 0) {
+
+                                    console.log('italic');
                                     jQuery('option[value="italic"]', $font_style).show();
                                 }
                                 jQuery('option[value="' + parseInt(font.variants[i], 10) + '"]', $font_weight).show();
