@@ -98,9 +98,11 @@ function popmake_render_popup_theme_styles() {
 					$link .= "|";
 				}
 				$link .= $font_family;
-				if ( ! empty( $variants ) ) {
-					$link .= ":";
-					$link .= implode( ',', $variants );
+				if ( is_array( $variants ) ) {
+					if ( implode( ',', $variants ) != '' ) {
+						$link .= ":";
+						$link .= trim( implode( ',', $variants ), ':' );
+					}
 				}
 			}
 
