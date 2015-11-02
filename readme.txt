@@ -6,7 +6,7 @@ Donate link:
 Tags: age restriction, age verification, auto open, automatic popup, conversion, conversions, custom popup, dialog box, exit intent, fancy box, fancy popup, form modal, full page popup, full screen pop, full screen popup, marketing, modal, modals, onclick popup, optin popup, pop-up, pop-ups, popup, popup ads, popup advertising, popup box, popup form, popup message, popup window, popups, unblockable, wordpress popup
 Requires at least: 3.4
 Tested up to: 4.3.1
-Stable tag: 1.3.8
+Stable tag: 1.3.9
 License: GNU Version 2 or Any Later Version
 
 The most versatile popup plugin for WordPress! Grow email subscriber lists, get more FB Likes, create login modals, content restriction & more.
@@ -49,22 +49,7 @@ Not all form plugins are optimal for use in popups. The following support AJAX s
 * Caldera Forms
 * Contact Form 7
 
-= Available Languages =
-* Danish
-* French
-* Hungarian (Hungary)
-* Italian (Italy)
-* Norwegian
-* Swedish (Sweden)
-* Arabic
-* Spanish - 84%
-* Russian (Russia) - 80%
-* German (Germany) - 59%
-* Italian (Switzerland) - 35%
-* Danish (Denmark) - 33%
-* Slovak (Slovakia) - 29%
-
-Need it in another language? Help us [translate Popup Maker](https://www.transifex.com/projects/p/popup-maker).
+Need it in another language? Help us [translate Popup Maker](https://transla	te.wordpress.org/projects/wp-plugins/popup-maker).
 
 = Check out our extension line to increase conversions & further enhance your popups. =
 > + [Exit Intent Popups](https://wppopupmaker.com/extensions/exit-intent-popups?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Exit+Intent "Exit Intent Popups")
@@ -105,6 +90,17 @@ There are several common causes for this which include:
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.3.9 - 10/14/2015 =
+* Feature: New shortcode - [popup_close] allows adding custom close buttons/text. Ex. [popup_close] Click Me [/popup_close].
+* Improvement: Added SASS/SCSS files for the site & admin styles.
+* Improvement: Added better support for current & legacy versions of Visual Composer.
+* Improvement: Added check for preventClose class on a popup just before closing. If found the popup won't close.
+* Fix: Fixed bug in theme editor that caused Google Font variants to not show up.
+* Fix: Fixed bug in CSS generation where Google Font URL would become corrupted and cause a 404.
+* Fix: Fixed bug where fixed position would show unchecked even if it was checked.
+* Fix: Fixed bug in CSS that caused popup to appear below site on mobile.
+* Fix: WP Multi Site: Fatal Error.
 
 = v1.3.8 - 9/29/2015 =
 * Fix: Updated links to documentation.
