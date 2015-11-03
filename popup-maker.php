@@ -326,8 +326,6 @@ function popmake_initialize() {
 	PopMake();
 	do_action( 'popmake_initialize' );
 
-	echo $_SERVER['HTTP_REFERER'];
-
 	PopMake()->process_upgrades();
 }
 
