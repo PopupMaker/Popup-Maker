@@ -5,6 +5,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! function_exists( 'maybe_json_attr' ) ) {
+	function maybe_json_attr( $value ) {
+		if ( is_object( $value ) || is_array( $value ) ) {
+			return json_encode( $value );
+		}
+		return $value;
+	}
+}
+
 /**
  * Returns array key from dot notated array key..
  *

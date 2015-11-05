@@ -1,0 +1,62 @@
+@mixin table-alignments() {
+  thead, tbody {
+    th, td {
+      text-align: center;
+
+      &:first-child {
+        text-align: left;
+      }
+
+      &:last-child {
+        text-align: right;
+      }
+    }
+  }
+
+  tbody {
+    th, td {
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+  }
+
+}
+
+.add-new {
+  float: right;
+}
+
+#popup_trigger_add_type {
+  display: block;
+  font-size: 1.4em;
+  height: auto;
+  margin: 1.5em 0;
+  padding: 0.25em;
+  width: 100%;
+}
+
+#pum_trigger_add_type_modal {
+
+  .pum-modal-wrap {
+    width: 440px;
+    margin-left: -220px;
+  }
+
+}
+
+#pum_popup_trigger_fields {}
+
+#pum_popup_triggers_list {
+  @include table-alignments();
+
+  .actions {
+    i {
+      cursor:pointer;
+    }
+  }
+}

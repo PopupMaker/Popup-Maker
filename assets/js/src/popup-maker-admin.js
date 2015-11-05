@@ -2,9 +2,330 @@
  * Popup Maker v1.3.6
  */
 
+function properObjectString (object) {
+    var string = null;
+    console.log(object);
+    jQuery.each(object, function(key, value) {
+        if (string) {
+            string += ' / ';
+        } else {
+            string = '';
+        }
+        string += '<strong>' + key.capitalize() + '</strong>: ' + value.capitalize();
+    });
+    console.log(string);
+    return string;
+}
+
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
+function pumTriggerColumnDescription(type, column, values) {
+    var template = _.template(I10n.column_descriptions.triggers[type][column]);
+    values.I10n = I10n;
+    return template(values);
+}
+
+var defaults = {
+        triggers: {
+            click_open: {
+                options: {
+                    extra_selectors: ''
+                }
+            },
+            auto_open: {
+                options: {
+                    delay: 500
+                },
+                cookie: {
+                    trigger: 'close',
+                    session: false,
+                    time: '1 month',
+                    path: '/',
+                    name: 'pum_auto_open_%d',
+                    key: ''
+                }
+            }
+        }
+    },
+    I10n = {
+        add: "Add",
+        save: "Save",
+        modal_titles: {
+            click_open: "Click Trigger Settings",
+            auto_open: "Auto Open Settings"
+        },
+        labels: {
+            triggers: {
+                click_open: 'Click',
+                auto_open: 'Auto Open'
+            },
+            cookie_triggers: {
+                open: 'On Open',
+                close: 'On Close',
+                manual: 'Manual',
+                disabled: 'Disabled'
+            }
+        },
+        column_descriptions: {
+            triggers: {
+                click_open: {
+                    options: 'Extra Selectors: <%= extra_selectors %>',
+                    cookie: 'N/A'
+                },
+                auto_open: {
+                    options: 'Delay: <%= delay %>',
+                    cookie: '<%= I10n.labels.cookie_triggers[trigger] %><% if (trigger !== "disabled") { %> / <% if (typeof session === "undefined") { %><%= time %><% } else { %>Sessions<% } %><% } %>'
+                }
+            }
+        }
+    };
+
+
 var PopMakeAdmin;
-(function () {
+(function ($) {
     "use strict";
+
+    if ($.fn.serializeObject === undefined) {
+        $.fn.serializeObject = function(){
+
+            var self = this,
+                json = {},
+                push_counters = {},
+                patterns = {
+                    "validate": /^[a-zA-Z][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/,
+                    "key":      /[a-zA-Z0-9_]+|(?=\[\])/g,
+                    "push":     /^$/,
+                    "fixed":    /^\d+$/,
+                    "named":    /^[a-zA-Z0-9_]+$/
+                };
+
+
+            this.build = function(base, key, value){
+                base[key] = value;
+                return base;
+            };
+
+            this.push_counter = function(key){
+                if(push_counters[key] === undefined){
+                    push_counters[key] = 0;
+                }
+                return push_counters[key]++;
+            };
+
+            $.each($(this).serializeArray(), function(){
+
+                // skip invalid keys
+                if(!patterns.validate.test(this.name)){
+                    return;
+                }
+
+                var k,
+                    keys = this.name.match(patterns.key),
+                    merge = this.value,
+                    reverse_key = this.name;
+
+                while((k = keys.pop()) !== undefined){
+
+                    // adjust reverse_key
+                    reverse_key = reverse_key.replace(new RegExp("\\[" + k + "\\]$"), '');
+
+                    // push
+                    if(k.match(patterns.push)){
+                        merge = self.build([], self.push_counter(reverse_key), merge);
+                    }
+
+                    // fixed
+                    else if(k.match(patterns.fixed)){
+                        merge = self.build([], k, merge);
+                    }
+
+                    // named
+                    else if(k.match(patterns.named)){
+                        merge = self.build({}, k, merge);
+                    }
+                }
+
+                json = $.extend(true, json, merge);
+            });
+
+            return json;
+        };
+    }
+
+    function closeModals() {
+        $('.pum-modal-background').hide();
+        $('html').css({overflow: 'visible', width: 'auto'});
+    }
+    function showModal(modal) {
+        closeModals();
+        $('html').data('origwidth', $('html').innerWidth()).css({overflow: 'hidden', 'width': $('html').innerWidth()});
+        $(modal).show();
+        PopMakeAdmin.initialize_color_pickers();
+        PopMakeAdmin.initialize_range_sliders();
+        initializeTabs();
+    }
+    function removeModal(modal) {
+        $(modal).remove();
+    }
+
+
+    function renumberTriggers() {
+        $('#pum_popup_triggers_list tbody tr').each(function () {
+            var $this = $(this),
+                index = $this.parent().children().index($this),
+                number = index + 1,
+                originalIndex = $this.data('index');
+
+            $this.data('index', index);
+
+            $this.find('input').each(function () {
+                var replace_with = "[" + index + "]";
+                this.name = this.name.replace("[" + originalIndex + "]", replace_with).replace("[]", replace_with);
+            });
+        });
+    }
+
+
+
+
+    function initializeTabs() {
+        $('.pum-tabs-container').filter(':not(.initialized)').each(function () {
+            var $this = $(this),
+                first_tab = $this.find('.tab:first');
+
+            $this.find('.active').removeClass('active');
+            first_tab.addClass('active');
+            $(first_tab.find('a').attr('href')).addClass('active');
+        });
+    }
+
+    initializeTabs();
+
+
+    $(document)
+        .on('click', '.pum-tabs-container .tab', function (e) {
+            var $this = $(this),
+                tab_group = $this.parents('.pum-tabs-container:first'),
+                link = $this.find('a').attr('href');
+
+            tab_group.find('.active').removeClass('active');
+
+            $this.addClass('active');
+            $(link).addClass('active');
+
+            e.preventDefault();
+        })
+        .on('click', '.pum-modal-background, .pum-modal-wrap .cancel, .pum-modal-wrap .pum-modal-close', function (e) {
+            var $target = $(e.target);
+            if ($target.hasClass('pum-modal-background') || $target.hasClass('cancel') || $target.hasClass('pum-modal-close') || $target.hasClass('submitdelete') ) {
+                closeModals();
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        })
+        .on('click', '#pum_popup_triggers .add-new', function () {
+            var template = _.template($('script#pum_trigger_add_type_templ').html());
+            removeModal('#pum_trigger_add_type_modal');
+            $('body').append(template());
+            showModal('#pum_trigger_add_type_modal');
+        })
+
+        .on('submit', '#pum_trigger_add_type_modal .pum-form', function (e) {
+            var type = $('#popup_trigger_add_type').val(),
+                id = '#pum_trigger_' + type + '_editor_modal',
+                template = _.template($('script' + id + '_templ').html()),
+                data = defaults.triggers[type] !== undefined ? defaults.triggers[type] : {};
+
+            e.preventDefault();
+
+            data.title = I10n.modal_titles[type] !== undefined ? I10n.modal_titles[type] : '';
+            data.save_button_text = I10n.add;
+            data.index = null;
+
+
+            if (!template.length) {
+                alert('Something went wrong. Please refresh and try again.');
+            }
+
+            removeModal(id);
+            $('body').append(template(data));
+            showModal(id);
+        })
+        .on('submit', '.trigger-editor .pum-form', function (e) {
+            var $form = $(this),
+                type = $form.find('input.type').val(),
+                values = $.extend({}, defaults.triggers[type], $form.serializeObject()),
+                index = parseInt(values.index),
+                $row = index >= 0 ? $('#pum_popup_triggers_list tbody tr').eq(index) : null,
+                template = _.template($('script#pum_trigger_row_templ').html()),
+                $new_row;
+
+            e.preventDefault();
+
+            if (!(index >= 0)) {
+                values.index = $('#pum_popup_triggers_list tbody tr').length;
+            }
+
+            $new_row = template(values);
+
+            if (!$row) {
+                $('#pum_popup_triggers_list tbody').append($new_row);
+                console.log(1);
+            }
+            else {
+                console.log(2);
+                $row.replaceWith($new_row);
+            }
+
+            closeModals();
+            renumberTriggers();
+        })
+        .on('click', '#pum_popup_triggers_list .actions .edit', function (e) {
+            var $this = $(this),
+                $row = $this.parents('tr:first'),
+                index = $row.parent().children().index($row),
+                type = $row.find('.popup_triggers_field_type').val(),
+                options = JSON.parse(decodeURIComponent($row.find('.popup_triggers_field_options:first').val())),
+                cookie = JSON.parse(decodeURIComponent($row.find('.popup_triggers_field_cookie:first').val())),
+                id = '#pum_trigger_' + type + '_editor_modal',
+                template = _.template($('script' + id + '_templ').html()),
+                data = {
+                    index: index,
+                    type: type,
+                    options: options,
+                    cookie: cookie
+                };
+
+            console.log(data);
+            e.preventDefault();
+
+            data.title = I10n.modal_titles[type] !== undefined ? I10n.modal_titles[type] : '';
+            data.save_button_text = I10n.save;
+
+            if (!template.length) {
+                alert('Something went wrong. Please refresh and try again.');
+            }
+
+            removeModal(id);
+            $('body').append(
+                template(data)
+            );
+            showModal(id);
+        })
+        .on('click', '#pum_popup_triggers_list .actions .remove', function (e) {
+            var $this = $(this),
+                $row = $this.parents('tr:first'),
+                index = $row.parent().children().index($row);
+
+            e.preventDefault();
+            $row.remove();
+            renumberTriggers();
+        });
+
+
+
     PopMakeAdmin = {
         init: function () {
             //PopMakeAdmin.initialize_tabs();
@@ -262,16 +583,17 @@ var PopMakeAdmin;
                 $slider,
                 $plus,
                 $minus,
-                slider = jQuery('<input type="range"/>'),
-                plus = jQuery('<button class="popmake-range-plus">+</button>'),
-                minus = jQuery('<button class="popmake-range-minus">-</button>');
+                slider = $('<input type="range"/>'),
+                plus = $('<button class="popmake-range-plus">+</button>'),
+                minus = $('<button class="popmake-range-minus">-</button>');
 
-            jQuery(document).on('input', 'input[type="range"]', function () {
-                var $this = jQuery(this);
+            $(document)
+                .on('input', 'input[type="range"]', function () {
+                var $this = $(this);
                 $this.siblings('.popmake-range-manual').val($this.val());
             });
-            jQuery('.popmake-range-manual').each(function () {
-                var $this = jQuery(this),
+            $('.popmake-range-manual').each(function () {
+                var $this = $(this),
                     force = $this.data('force-minmax'),
                     min = parseInt($this.prop('min'), 0),
                     max = parseInt($this.prop('max'), 0),
@@ -1047,4 +1369,4 @@ var PopMakeAdmin;
     jQuery(document).ready(function () {
         PopMakeAdmin.init();
     });
-}());
+}(jQuery));

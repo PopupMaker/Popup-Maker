@@ -207,6 +207,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/admin-pages.php';
 				require_once POPMAKE_DIR . 'includes/admin/post-editor.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox.php';
+				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-triggers.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/dashboard-columns.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-close-fields.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-display-fields.php';

@@ -61,7 +61,7 @@ add_action( 'wp_enqueue_scripts', 'popmake_load_site_scripts' );
 function popmake_load_site_styles() {
 	$css_dir = POPMAKE_URL . '/assets/css/';
 	$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css' : '.min.css';
-	wp_register_style( 'popup-maker-site', $css_dir . 'popup-maker-site' . $suffix, false, POPMAKE_VERSION );
+	wp_register_style( 'popup-maker-site', $css_dir . 'site' . $suffix, false, POPMAKE_VERSION );
 }
 add_action( 'wp_enqueue_scripts', 'popmake_load_site_styles' );
 
@@ -178,11 +178,11 @@ function popmake_load_admin_styles() {
 	$css_dir = POPMAKE_URL . '/assets/css/';
 	$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css' : '.min.css';
 	if ( popmake_is_admin_popup_page() || popmake_is_admin_popup_theme_page() ) {
-		wp_enqueue_style( 'popup-maker-site', $css_dir . 'popup-maker-site' . $suffix, false, POPMAKE_VERSION );
+		wp_enqueue_style( 'popup-maker-site', $css_dir . 'site' . $suffix, false, POPMAKE_VERSION );
 	}
 	if ( popmake_is_admin_page() ) {
 		wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_style( 'popup-maker-admin', $css_dir . 'popup-maker-admin' . $suffix, false, POPMAKE_VERSION );
+		wp_enqueue_style( 'popup-maker-admin', $css_dir . 'admin' . $suffix, false, POPMAKE_VERSION );
 	}
 }
 
