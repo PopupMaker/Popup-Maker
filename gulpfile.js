@@ -14,10 +14,6 @@ gulp.task('sass', function() {
 });
 gulp.task('css', function() {
     return gulp.src(['!assets/css/*.min.css', 'assets/css/*.css', ])
-        // Lint the CSS
-        //.pipe($.csslint())
-        //.pipe($.csslint.reporter())
-
         // Minify the CSS
         .pipe($.csso())
 
@@ -28,7 +24,26 @@ gulp.task('css', function() {
         .pipe(gulp.dest('assets/css'))
         .pipe($.livereload());
 });
-gulp.task('js', function() {
+
+gulp.task('js:admin', function() {
+    return gulp.src(['assets/js/src/admin/plugins/**/*.js', 'assets/js/src/admin/general.js'])
+        .pipe($.concat('popup-maker-admin.js'))
+        .pipe(gulp.dest('assets/js'))
+        .pipe($.uglify())
+        .pipe($.rename({extname: '.min.js'}))
+        .pipe(gulp.dest('assets/js'))
+        .pipe($.livereload());
+});
+gulp.task('js:site', function() {
+    return gulp.src(['assets/js/src/site/plugins/**/*.js', 'assets/js/src/site/general.js'])
+        .pipe($.concat('popup-maker-site.js'))
+        .pipe(gulp.dest('assets/js'))
+        .pipe($.uglify())
+        .pipe($.rename({extname: '.min.js'}))
+        .pipe(gulp.dest('assets/js'))
+        .pipe($.livereload());
+});
+gulp.task('js:other', function() {
     return gulp.src('assets/js/src/*.js')
         .pipe(gulp.dest('assets/js'))
         .pipe($.uglify())
@@ -36,6 +51,7 @@ gulp.task('js', function() {
         .pipe(gulp.dest('assets/js'))
         .pipe($.livereload());
 });
+
 
 gulp.task('js:complexity', function () {
     return gulp.src('assets/js/src/*.js')
@@ -58,5 +74,5 @@ gulp.task('watch', function() {
     $.livereload.listen();
     gulp.watch('assets/sass/**/*.scss', ['sass']);
     gulp.watch('assets/css/*.css', ['css']);
-    gulp.watch('assets/js/src/*.js', ['js']);
+    gulp.watch('assets/js/src/**/*.js', ['js:site', 'js:admin', 'js:other']);
 });
