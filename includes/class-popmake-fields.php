@@ -23,9 +23,13 @@ class Popmake_Fields {
 
 	public function __construct( $args = array() ) {
 
-		$this->sections = isset( $args['sections'] ) ? $args['sections'] : array(
-			'general' => __( 'General', 'popup-maker' )
+		$sections = isset( $args['sections'] ) ? $args['sections'] : array(
+			'general' => array(
+				'title' => __( 'General', 'popup-maker' )
+			)
 		);
+
+		$this->add_sections( $sections );
 
 		if ( ! empty( $args['fields'] ) ) {
 			$this->add_fields( $args['fields'] );
@@ -48,13 +52,43 @@ class Popmake_Fields {
 		return self::$instances[ $class_key ];
 	}
 
+
+	/**
+	 * This function should no longer be used.
+	 *
+	 * @deprecated v1.4
+	 *
+	 * @param $id
+	 * @param $title
+	 * @param null $callback
+	 */
 	public function register_section( $id, $title, $callback = null ) {
-		$this->sections[ $id ] = array(
+		$this->add_section( array(
 			'id'       => $id,
 			'title'    => $title,
 			'callback' => $callback
-		);
+		) );
 	}
+
+	public function add_sections( $sections ) {
+		foreach( $sections as $id => $section ) {
+			if ( empty( $section['id'] ) ) {
+				$section['id'] = $id;
+			}
+
+			$this->add_section( $section );
+		}
+	}
+
+	public function add_section( $section ) {
+		$section = wp_parse_args( $section, array(
+			'id' => null,
+			'title' => '',
+			'callback' => null,
+		) );
+		$this->sections[ $section['id'] ] = $section;
+	}
+
 
 	public function add_field( $field = array() ) {
 
@@ -72,7 +106,7 @@ class Popmake_Fields {
 			'max'         => null,
 			'step'        => null,
 			'chosen'      => null,
-			'placeholder' => null,
+			'placeholder' => '',
 			'allow_blank' => true,
 			'readonly'    => false,
 			'faux'        => false,

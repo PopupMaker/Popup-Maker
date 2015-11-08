@@ -124,9 +124,9 @@ class PUM_Popup_Triggers_Metabox {
 					/**
 					 * Render Each settings tab.
 					 */
-					foreach ( $trigger->get_sections() as $tab => $label ) { ?>
+					foreach ( $trigger->get_sections() as $tab => $args ) { ?>
 						<li class="tab">
-							<a href="#<?php esc_attr_e( $id . '_' . $tab ); ?>_settings"><?php esc_html_e( $label ); ?></a>
+							<a href="#<?php esc_attr_e( $id . '_' . $tab ); ?>_settings"><?php esc_html_e( $args['title'] ); ?></a>
 						</li>
 					<?php } ?>
 				</ul>
@@ -135,7 +135,7 @@ class PUM_Popup_Triggers_Metabox {
 				/**
 				 * Render Each settings tab contents.
 				 */
-				foreach ( $trigger->get_sections() as $tab => $label ) { ?>
+				foreach ( $trigger->get_sections() as $tab => $args ) { ?>
 					<div id="<?php esc_attr_e( $id . '_' . $tab ); ?>_settings" class="tab-content">
 						<?php $trigger->render_templ_fields( $tab ); ?>
 					</div>

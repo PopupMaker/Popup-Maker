@@ -79,8 +79,12 @@ function pum_get_triggers() {
 				'modal_title' => __( 'Auto Open Settings', 'popup-maker' ),
 			),
 			'sections' => array(
-				'general' => __( 'General', 'popup-maker' ),
-				'cookie' => __( 'Cookie', 'popup-maker' ),
+				'general' => array(
+					'title' => __( 'General', 'popup-maker' ),
+				),
+				'cookie' => array(
+					'title' => __( 'Cookie', 'popup-maker' ),
+				),
 			),
 			'fields' => array(
 				'delay'          => array(
@@ -102,7 +106,9 @@ function pum_get_triggers() {
 				'modal_title' => __( 'Click Trigger Settings', 'popup-maker' ),
 			),
 			'sections' => array(
-				'general' => __( 'General', 'popup-maker' ),
+				'general' => array(
+					'title' => __( 'General', 'popup-maker' ),
+				),
 			),
 			'fields' => array(
 				'general' => array(
