@@ -206,7 +206,7 @@ var pm_cookie, pm_remove_cookie;
                         });
 
                         jQuery('video', $this).each(function () {
-                           this.pause();
+                            this.pause();
                         });
 
                         if (callback !== undefined) {
@@ -401,30 +401,30 @@ var pm_cookie, pm_remove_cookie;
                 top: 'auto'
             });
             switch (theme.close.location) {
-            case "topleft":
-                $close.css({
-                    top: theme.close.position_top + 'px',
-                    left: theme.close.position_left + 'px'
-                });
-                break;
-            case "topright":
-                $close.css({
-                    top: theme.close.position_top + 'px',
-                    right: theme.close.position_right + 'px'
-                });
-                break;
-            case "bottomleft":
-                $close.css({
-                    bottom: theme.close.position_bottom + 'px',
-                    left: theme.close.position_left + 'px'
-                });
-                break;
-            case "bottomright":
-                $close.css({
-                    bottom: theme.close.position_bottom + 'px',
-                    right: theme.close.position_right + 'px'
-                });
-                break;
+                case "topleft":
+                    $close.css({
+                        top: theme.close.position_top + 'px',
+                        left: theme.close.position_left + 'px'
+                    });
+                    break;
+                case "topright":
+                    $close.css({
+                        top: theme.close.position_top + 'px',
+                        right: theme.close.position_right + 'px'
+                    });
+                    break;
+                case "bottomleft":
+                    $close.css({
+                        bottom: theme.close.position_bottom + 'px',
+                        left: theme.close.position_left + 'px'
+                    });
+                    break;
+                case "bottomright":
+                    $close.css({
+                        bottom: theme.close.position_bottom + 'px',
+                        right: theme.close.position_right + 'px'
+                    });
+                    break;
             }
             $this.trigger('popmakeAfterRetheme', [theme]);
             return this;
@@ -459,64 +459,64 @@ var pm_cookie, pm_remove_cookie;
                 };
 
             switch (origin) {
-            case 'top':
-                start = {
-                    my: "left+" + $this.offset().left + " bottom-100",
-                    at: "left top"
-                };
-                break;
-            case 'bottom':
-                start = {
-                    my: "left+" + $this.offset().left + " top+100",
-                    at: "left bottom"
-                };
-                break;
-            case 'left':
-                start = {
-                    my: "right top+" + $this.offset().top,
-                    at: "left top"
-                };
-                break;
-            case 'right':
-                start = {
-                    my: "left top+" + $this.offset().top,
-                    at: "right top"
-                };
-                break;
-            default:
-                if (origin.indexOf('left') >= 0) {
+                case 'top':
                     start = {
-                        my: start.my + " right",
-                        at: start.at + " left"
+                        my: "left+" + $this.offset().left + " bottom-100",
+                        at: "left top"
                     };
-                }
-                if (origin.indexOf('right') >= 0) {
+                    break;
+                case 'bottom':
                     start = {
-                        my: start.my + " left",
-                        at: start.at + " right"
+                        my: "left+" + $this.offset().left + " top+100",
+                        at: "left bottom"
                     };
-                }
-                if (origin.indexOf('center') >= 0) {
+                    break;
+                case 'left':
                     start = {
-                        my: start.my + " center",
-                        at: start.at + " center"
+                        my: "right top+" + $this.offset().top,
+                        at: "left top"
                     };
-                }
-                if (origin.indexOf('top') >= 0) {
+                    break;
+                case 'right':
                     start = {
-                        my: start.my + " bottom-100",
-                        at: start.at + " top"
+                        my: "left top+" + $this.offset().top,
+                        at: "right top"
                     };
-                }
-                if (origin.indexOf('bottom') >= 0) {
-                    start = {
-                        my: start.my + " top+100",
-                        at: start.at + " bottom"
-                    };
-                }
-                start.my = jQuery.trim(start.my);
-                start.at = jQuery.trim(start.at);
-                break;
+                    break;
+                default:
+                    if (origin.indexOf('left') >= 0) {
+                        start = {
+                            my: start.my + " right",
+                            at: start.at + " left"
+                        };
+                    }
+                    if (origin.indexOf('right') >= 0) {
+                        start = {
+                            my: start.my + " left",
+                            at: start.at + " right"
+                        };
+                    }
+                    if (origin.indexOf('center') >= 0) {
+                        start = {
+                            my: start.my + " center",
+                            at: start.at + " center"
+                        };
+                    }
+                    if (origin.indexOf('top') >= 0) {
+                        start = {
+                            my: start.my + " bottom-100",
+                            at: start.at + " top"
+                        };
+                    }
+                    if (origin.indexOf('bottom') >= 0) {
+                        start = {
+                            my: start.my + " top+100",
+                            at: start.at + " bottom"
+                        };
+                    }
+                    start.my = jQuery.trim(start.my);
+                    start.at = jQuery.trim(start.at);
+                    break;
             }
             start.of = window;
             start.collision = 'none';
@@ -577,14 +577,14 @@ var pm_cookie, pm_remove_cookie;
             if (value !== undefined && !jQuery.isFunction(value)) {
 
                 switch (typeof expires) {
-                case 'number':
-                    t.setTime(+t + expires * 864e+5);
-                    expires = t;
-                    break;
-                case 'string':
-                    t.setTime(jQuery.fn.popmake.utilities.strtotime("+" + expires) * 1000);
-                    expires = t;
-                    break;
+                    case 'number':
+                        t.setTime(+t + expires * 864e+5);
+                        expires = t;
+                        break;
+                    case 'string':
+                        t.setTime(jQuery.fn.popmake.utilities.strtotime("+" + expires) * 1000);
+                        expires = t;
+                        break;
                 }
 
                 document.cookie = [
@@ -690,7 +690,7 @@ var pm_cookie, pm_remove_cookie;
             // original by: Caio Ariede (http://caioariede.com)
             // improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
             // improved by: Caio Ariede (http://caioariede.com)
-            // improved by: A. MatÃ­as Quezada (http://amatiasq.com)
+            // improved by: A. Matías Quezada (http://amatiasq.com)
             // improved by: preuter
             // improved by: Brett Zamir (http://brett-zamir.me)
             // improved by: Mirko Faber
@@ -725,92 +725,92 @@ var pm_cookie, pm_remove_cookie;
             if (match && match[2] === match[4]) {
                 if (match[1] > 1901) {
                     switch (match[2]) {
-                    case '-':
-                        // YYYY-M-D
-                        if (match[3] > 12 || match[5] > 31) {
+                        case '-':
+                            // YYYY-M-D
+                            if (match[3] > 12 || match[5] > 31) {
+                                return fail;
+                            }
+                            return new Date(match[1], parseInt(match[3], 10) - 1, match[5],
+                                    match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                        case '.':
+                            // YYYY.M.D is not parsed by strtotime()
                             return fail;
-                        }
-                        return new Date(match[1], parseInt(match[3], 10) - 1, match[5],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
-                    case '.':
-                        // YYYY.M.D is not parsed by strtotime()
-                        return fail;
-                    case '/':
-                        // YYYY/M/D
-                        if (match[3] > 12 || match[5] > 31) {
-                            return fail;
-                        }
-                        return new Date(match[1], parseInt(match[3], 10) - 1, match[5],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                        case '/':
+                            // YYYY/M/D
+                            if (match[3] > 12 || match[5] > 31) {
+                                return fail;
+                            }
+                            return new Date(match[1], parseInt(match[3], 10) - 1, match[5],
+                                    match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     }
                 } else if (match[5] > 1901) {
                     switch (match[2]) {
-                    case '-':
-                        // D-M-YYYY
-                        if (match[3] > 12 || match[1] > 31) {
-                            return fail;
-                        }
-                        return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
-                    case '.':
-                        // D.M.YYYY
-                        if (match[3] > 12 || match[1] > 31) {
-                            return fail;
-                        }
-                        return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
-                    case '/':
-                        // M/D/YYYY
-                        if (match[1] > 12 || match[3] > 31) {
-                            return fail;
-                        }
-                        return new Date(match[5], parseInt(match[1], 10) - 1, match[3],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
-                    }
-                } else {
-                    switch (match[2]) {
-                    case '-':
-                        // YY-M-D
-                        if (match[3] > 12 || match[5] > 31 || (match[1] < 70 && match[1] > 38)) {
-                            return fail;
-                        }
-                        year = match[1] >= 0 && match[1] <= 38 ? +match[1] + 2000 : match[1];
-                        return new Date(year, parseInt(match[3], 10) - 1, match[5],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
-                    case '.':
-                        // D.M.YY or H.MM.SS
-                        if (match[5] >= 70) { // D.M.YY
+                        case '-':
+                            // D-M-YYYY
                             if (match[3] > 12 || match[1] > 31) {
                                 return fail;
                             }
                             return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
                                     match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
-                        }
-                        if (match[5] < 60 && !match[6]) { // H.MM.SS
-                            if (match[1] > 23 || match[3] > 59) {
+                        case '.':
+                            // D.M.YYYY
+                            if (match[3] > 12 || match[1] > 31) {
+                                return fail;
+                            }
+                            return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
+                                    match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                        case '/':
+                            // M/D/YYYY
+                            if (match[1] > 12 || match[3] > 31) {
+                                return fail;
+                            }
+                            return new Date(match[5], parseInt(match[1], 10) - 1, match[3],
+                                    match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                    }
+                } else {
+                    switch (match[2]) {
+                        case '-':
+                            // YY-M-D
+                            if (match[3] > 12 || match[5] > 31 || (match[1] < 70 && match[1] > 38)) {
+                                return fail;
+                            }
+                            year = match[1] >= 0 && match[1] <= 38 ? +match[1] + 2000 : match[1];
+                            return new Date(year, parseInt(match[3], 10) - 1, match[5],
+                                    match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                        case '.':
+                            // D.M.YY or H.MM.SS
+                            if (match[5] >= 70) { // D.M.YY
+                                if (match[3] > 12 || match[1] > 31) {
+                                    return fail;
+                                }
+                                return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
+                                        match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                            }
+                            if (match[5] < 60 && !match[6]) { // H.MM.SS
+                                if (match[1] > 23 || match[3] > 59) {
+                                    return fail;
+                                }
+                                today = new Date();
+                                return new Date(today.getFullYear(), today.getMonth(), today.getDate(),
+                                        match[1] || 0, match[3] || 0, match[5] || 0, match[9] || 0) / 1000;
+                            }
+                            return fail; // invalid format, cannot be parsed
+                        case '/':
+                            // M/D/YY
+                            if (match[1] > 12 || match[3] > 31 || (match[5] < 70 && match[5] > 38)) {
+                                return fail;
+                            }
+                            year = match[5] >= 0 && match[5] <= 38 ? +match[5] + 2000 : match[5];
+                            return new Date(year, parseInt(match[1], 10) - 1, match[3],
+                                    match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                        case ':':
+                            // HH:MM:SS
+                            if (match[1] > 23 || match[3] > 59 || match[5] > 59) {
                                 return fail;
                             }
                             today = new Date();
                             return new Date(today.getFullYear(), today.getMonth(), today.getDate(),
-                                    match[1] || 0, match[3] || 0, match[5] || 0, match[9] || 0) / 1000;
-                        }
-                        return fail; // invalid format, cannot be parsed
-                    case '/':
-                        // M/D/YY
-                        if (match[1] > 12 || match[3] > 31 || (match[5] < 70 && match[5] > 38)) {
-                            return fail;
-                        }
-                        year = match[5] >= 0 && match[5] <= 38 ? +match[5] + 2000 : match[5];
-                        return new Date(year, parseInt(match[1], 10) - 1, match[3],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
-                    case ':':
-                        // HH:MM:SS
-                        if (match[1] > 23 || match[3] > 59 || match[5] > 59) {
-                            return fail;
-                        }
-                        today = new Date();
-                        return new Date(today.getFullYear(), today.getMonth(), today.getDate(),
-                                match[1] || 0, match[3] || 0, match[5] || 0) / 1000;
+                                    match[1] || 0, match[3] || 0, match[5] || 0) / 1000;
                     }
                 }
             }
@@ -1250,16 +1250,16 @@ var pm_cookie, pm_remove_cookie;
                     });
 
                     switch (auto_open.cookie_trigger) {
-                    case "open":
-                        $this.on('popmakeAfterOpen', function () {
-                            $this.trigger('popmakeSetCookie');
-                        });
-                        break;
-                    case "close":
-                        $this.on('popmakeBeforeClose', function () {
-                            $this.trigger('popmakeSetCookie');
-                        });
-                        break;
+                        case "open":
+                            $this.on('popmakeAfterOpen', function () {
+                                $this.trigger('popmakeSetCookie');
+                            });
+                            break;
+                        case "close":
+                            $this.on('popmakeBeforeClose', function () {
+                                $this.trigger('popmakeSetCookie');
+                            });
+                            break;
                     }
 
                     setTimeout(function () {
