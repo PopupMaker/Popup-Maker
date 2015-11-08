@@ -54,9 +54,15 @@
 #pum_popup_triggers_list {
   @include table-alignments();
 
+  span.edit {
+    cursor: pointer;
+    color: #0073aa;
+    text-decoration: underline;
+  }
+
   .actions {
     i {
-      cursor:pointer;
+      cursor: pointer;
     }
   }
 }

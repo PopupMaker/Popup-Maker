@@ -7,23 +7,42 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Popmake_Fields {
 
-	public $field_prefix = '';
+	public $field_prefix = 'settings';
 
-	public $callback_prefix = 'popmake_field_';
+	public $field_name_format = '{$prefix}[{$section}][{$field}]';
+
+	public $templ_value_format = '{$prefix}{$section}.{$field}';
 
 	public $fields = array();
 
 	public $sections = array();
 
+	public $args = array();
+
 	private static $instances = array();
 
-	public static function instance() {
+	public function __construct( $args = array() ) {
+
+		$this->sections = isset( $args['sections'] ) ? $args['sections'] : array(
+			'general' => __( 'General', 'popup-maker' )
+		);
+
+		if ( ! empty( $args['fields'] ) ) {
+			$this->add_fields( $args['fields'] );
+		}
+
+		$this->args = $args;
+
+		return $this;
+	}
+
+	public static function instance( $args = array() ) {
 		$class = get_called_class();
 
 		$class_key = md5( $class );
 
 		if ( ! isset( self::$instances[ $class_key ] ) || ! self::$instances[ $class_key ] instanceof $class ) {
-			self::$instances[ $class_key ] = new $class;
+			self::$instances[ $class_key ] = new $class( $args );
 		}
 
 		return self::$instances[ $class_key ];
@@ -37,21 +56,69 @@ class Popmake_Fields {
 		);
 	}
 
-	/**
-	 * @param $id
-	 * @param $section
-	 * @param $args
-	 */
-	public function add_field( $id, $section, $args ) {
-		$this->fields[ $section ][ $id ] = $args;
+	public function add_field( $field = array() ) {
+
+		$field = wp_parse_args( $field, array(
+			'section'     => 'general',
+			'type'        => 'text',
+			'id'          => null,
+			'desc'        => '',
+			'name'        => null,
+			'templ_name'  => null,
+			'size'        => null,
+			'options'     => '',
+			'std'         => '',
+			'min'         => null,
+			'max'         => null,
+			'step'        => null,
+			'chosen'      => null,
+			'placeholder' => null,
+			'allow_blank' => true,
+			'readonly'    => false,
+			'faux'        => false,
+			'hook'        => null,
+			'unit'        => __( 'ms', 'popup-maker' ),
+			'priority'    => null,
+		) );
+
+		if ( ! $field['name'] ) {
+			$field['name'] = $this->get_field_name( $field );
+		}
+
+		if ( ! $field['templ_name'] ) {
+			$field['templ_name'] = $this->get_templ_name( $field, false );
+		}
+
+		$this->fields[ $field['section'] ][ $field['id'] ] = $field;
 	}
 
-	public function add_fields( $section, $fields ) {
-		foreach ( $fields as $field => $args ) {
-			$this->add_field( $field, $section, $args );
+	public function add_fields( $fields = array(), $section = null ) {
+
+		foreach ( $fields as $key => $field ) {
+
+			// If the settings are separated by section ID then reprocess their fields individually.
+			if ( is_array( $field[ key( $field ) ] ) ) {
+				$this->add_fields( $field, $key );
+			}
+			// Process the fields.
+			else {
+
+				if ( $section ) {
+					$field['section'] = $section;
+				}
+
+				if ( empty( $field['id'] ) && ! is_numeric( $key ) ) {
+					$field['id'] = $key;
+				}
+
+				$this->add_field( $field );
+			}
 		}
 	}
 
+	public function get_sections() {
+		return $this->sections;
+	}
 
 	public function get_fields( $section = null ) {
 		if ( ! $section ) {
@@ -93,14 +160,169 @@ class Popmake_Fields {
 		return ( $a['priority'] < $b['priority'] ) ? - 1 : 1;
 	}
 
+
+	/**
+	 * Returns the a generated field name for given ID.
+	 *
+	 * Replaces {$prefix} with $field_prefix, {$section}
+	 * with $section and {$field} with $field
+	 *
+	 * @param $id
+	 * @param $section
+	 *
+	 * @uses public $field_prefix
+	 * @uses public $field_name_format
+	 *
+	 * @return string $field_name
+	 */
+	public function get_field_name( $field ) {
+		return str_replace(
+			array(
+				'{$prefix}',
+				'{$section}',
+				'{$field}'
+			),
+			array(
+				$this->field_prefix,
+				$field['section'],
+				$field['id']
+			),
+			$this->field_name_format
+		);
+	}
+
 	public function get_field_names( $section ) {
 		$names = array();
 
-		foreach ( $this->get_fields( $section ) as $field => $args ) {
-			$names[] = "{$this->field_prefix}_{$section}_{$field}";
+		foreach ( $this->get_fields( $section ) as $id => $args ) {
+			$names[] = $this->get_field_name( $args );
 		}
 
 		return $names;
+	}
+
+	function render_fields( $section = 'general', $values = array() ) {
+		foreach ( $this->get_fields( $section ) as $key => $args ) {
+			$value = isset( $values[ $args['id'] ] ) ? $values[ $args['id'] ] : null;
+
+			$this->render_field( $args, $value );
+		}
+	}
+
+	public function render_field( $args = array(), $value = null ) {
+
+		// If no type default to text.
+		$type = ! empty( $args['type'] ) ? $args['type'] : 'text';
+
+		/**
+		 * Check if any actions hooked to this type of field and load run those.
+		 */
+		if ( has_action( "pum_{$type}_field" ) ) {
+			do_action( "pum_{$type}_field", $args, $value );
+		}
+		else {
+			/**
+			 * Check if override or custom function exists and load that.
+			 */
+			if ( function_exists( "pum_{$type}_callback" ) ) {
+				$function_name = "pum_{$type}_callback";
+			}
+			/**
+			 * Check if core method exists and load that.
+			 */
+			elseif ( method_exists( $this, $type . '_callback' ) ) {
+				$function_name = array( $this, $type . '_callback' );
+			}
+			/**
+			 * No method exists, lets notify them the field type doesn't exist.
+			 */
+			else {
+				$function_name = array( $this, 'missing_callback' );
+			}
+
+			/**
+			 * Call the determined method, passing the field args & $value to the callback.
+			 */
+			call_user_func_array( $function_name, array( $args, $value ) );
+		}
+
+	}
+
+
+	public function get_templ_name( $args, $print = true ) {
+		$name = str_replace(
+			array(
+				'{$prefix}',
+				'{$section}',
+				'{$field}'
+			),
+			array(
+				$this->field_prefix,
+				$args['section'] != 'general' ? ".{$args['section']}" : "",
+				$args['id']
+			),
+			$this->templ_value_format
+		);
+
+		if ( $print ) {
+			$name = "<%= $name %>";
+		}
+
+		return $name;
+	}
+
+	function render_templ_fields( $section = 'general' ) {
+		foreach ( $this->get_fields( $section ) as $key => $args ) {
+			$this->render_templ_field( $args );
+		}
+	}
+
+	public function render_templ_field( $args = array() ) {
+
+		// If no type default to text.
+		$type = ! empty( $args['type'] ) ? $args['type'] : 'text';
+
+		/**
+		 * Check if any actions hooked to this type of field and load run those.
+		 */
+		if ( has_action( "pum_{$type}_templ_field" ) ) {
+			do_action( "pum_{$type}_templ_field", $args, $this );
+		}
+		else {
+			/**
+			 * Check if override or custom function exists and load that.
+			 */
+			if ( function_exists( "pum_{$type}_templ_callback" ) ) {
+				$function_name = "pum_{$type}_templ_callback";
+			}
+			/**
+			 * Check if core method exists and load that.
+			 */
+			elseif ( method_exists( $this, $type . '_templ_callback' ) ) {
+				$function_name = array( $this, $type . '_templ_callback' );
+			}
+			/**
+			 * No method exists, lets notify them the field type doesn't exist.
+			 */
+			else {
+				$function_name = array( $this, 'missing_callback' );
+			}
+
+			/**
+			 * Call the determined method, passing the field args & $value to the callback.
+			 */
+			call_user_func_array( $function_name, array( $args, $this ) );
+		}
+
+	}
+
+
+	public function field_before( $class = '' ) {
+		?><div class="field <?php esc_attr_e( $class ); ?>"><?php
+	}
+
+	public function field_after() {
+		?></div><?php
 	}
 
 }

@@ -47,6 +47,7 @@
 .pum-tabs-container.vertical-tabs
 {
     max-width: calc(100% - 150px - 16px);
+    min-height: 100px;
     padding-left: 150px;
 }
 .pum-tabs-container.vertical-tabs ul.tabs
@@ -146,6 +147,14 @@
 #pum_popup_triggers_list tbody td:last-child
 {
     padding-right: 0;
+}
+
+#pum_popup_triggers_list span.edit
+{
+    cursor: pointer;
+    text-decoration: underline; 
+
+    color: #0073aa;
 }
 
 #pum_popup_triggers_list .actions i
@@ -499,13 +508,6 @@ option.bold
     padding-top: 20px !important;
     padding-bottom: 0 !important; 
     padding-left: 0 !important;
-}
-
-/* Marketing & Standouts */
-/* Menu Highlight */
-#menu-posts-popup ul.wp-submenu li:nth-child(0n+9) a
-{
-    color: #9aba27;
 }
 
 /* Upgrade Tips */
