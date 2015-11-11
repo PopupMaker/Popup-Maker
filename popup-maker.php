@@ -172,6 +172,8 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 
 			// Phasing Out
 			require_once POPMAKE_DIR . 'includes/class-popmake-fields.php';
+			require_once POPMAKE_DIR . 'includes/class-popmake-popup-fields.php';
+			require_once POPMAKE_DIR . 'includes/class-popmake-popup-theme-fields.php';
 
 
 			// New
