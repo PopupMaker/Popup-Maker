@@ -148,46 +148,16 @@ function popmake_load_admin_scripts() {
 		wp_localize_script( 'popup-maker-admin', 'popmake_admin_ajax_nonce', wp_create_nonce( POPMAKE_NONCE ) );
 		wp_localize_script( 'popup-maker-admin', 'pum_admin', array(
 			'defaults' => array(
-				'triggers' => array(
-					'click_open' => array(
-						'extra_selectors' => ''
-					),
-					'auto_open' => array(
-						'delay' => 500,
-		                'cookie' => array(
-							'trigger' => 'close',
-		                   'session' => false,
-		                    'time' => '1 month',
-		                    'path' => true,
-		                    'key' => ''
-		                )
-		            )
-				)
+				'triggers' => PUM_Triggers::instance()->get_defaults(),
 			),
 		    'I10n' => array(
-				'add' => "Add",
-		        'save' => "Save",
-		        'confirm' => array(
-					'trigger_delete' => "Are you sure you want to delete this trigger?"
-		        ),
-		        'labels' => array(
-					'triggers' => array(
-						'click_open' => 'Click',
-		                'auto_open' => 'Auto Open'
-					),
-					'cookie_triggers' => array(
-						'open' => 'On Open',
-		                'close' => 'On Close',
-		                'manual' => 'Manual',
-		                'disabled' => 'Disabled'
-					)
-		        ),
-		        'column_descriptions' => array(
-					'triggers' => array(
-						'click_open' => '<strong>Extra Selectors</strong>: <%= extra_selectors %>',
-		                'auto_open' => '<strong>Delay</strong>: <%= delay %> <strong>Cookie</strong>: <%= I10n.labels.cookie_triggers[cookie.trigger] %><% if (cookie.trigger !== "disabled") { %> / <% if (typeof cookie.session === "undefined") { %><%= cookie.time %><% } else { %>Sessions<% } %><% } %>'
-					)
-		        )
+				'add' => __( 'Add', 'popup-maker' ),
+		        'save' => __( 'Save', 'popup-maker' ),
+				'confirm_delete_trigger' => __( "Are you sure you want to delete this trigger?", 'popup-maker' ),
+			    'labels' => array(
+				    'triggers' => PUM_Triggers::instance()->get_labels(),
+				    'cookie_triggers' => array_flip ( pum_trigger_cookie_options() ),
+			    ),
 		    )
 		) );
 	}
