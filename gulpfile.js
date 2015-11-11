@@ -74,5 +74,7 @@ gulp.task('watch', function() {
     $.livereload.listen();
     gulp.watch('assets/sass/**/*.scss', ['sass']);
     gulp.watch('assets/css/*.css', ['css']);
-    gulp.watch('assets/js/src/**/*.js', ['js:site', 'js:admin', 'js:other']);
+    gulp.watch('assets/js/src/admin/**/*.js', ['js:admin']);
+    gulp.watch('assets/js/src/site/**/*.js', ['js:site']);
+    gulp.watch(['assets/js/src/**/*.js', '!assets/js/src/admin/**/*.js', '!assets/js/src/admin/**/*.js'], ['js:other']);
 });
