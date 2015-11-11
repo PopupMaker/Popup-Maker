@@ -3,25 +3,26 @@ var PUMColorPickers;
     "use strict";
     PUMColorPickers = {
         init: function () {
-            $('.color-picker').wpColorPicker({
-                change: function (e) {
-                    var $input = $(e.currentTarget);
-                    if ($input.hasClass('background-color')) {
-                        $input.parents('table').find('.background-opacity').show();
-                    }
-                    PUMUtils.throttle(function () {
+            $('.color-picker').filter(':not(.initialized)')
+                .addClass('initialized')
+                .wpColorPicker({
+                    change: function (e) {
+                        var $input = $(e.currentTarget);
+                        if ($input.hasClass('background-color')) {
+                            $input.parents('table').find('.background-opacity').show();
+                        }
+                        PUMUtils.throttle(function () {
+                            PopMakeAdmin.update_theme();
+                        }, 50);
+                    },
+                    clear: function (e) {
+                        var $input = $(e.currentTarget).prev();
+                        if ($input.hasClass('background-color')) {
+                            $input.parents('table').find('.background-opacity').hide();
+                        }
                         PopMakeAdmin.update_theme();
-                    }, 50);
-                },
-                clear: function (e) {
-                    var $input = $(e.currentTarget).prev();
-                    if ($input.hasClass('background-color')) {
-                        $input.parents('table').find('.background-opacity').hide();
                     }
-                    PopMakeAdmin.update_theme();
-                }
-            });
-
+                });
         }
     };
 
@@ -247,10 +248,10 @@ var PUMTriggers;
 
     PUMTriggers = {
         getLabel: function (type) {
-            return I10n.labels.triggers[type];
+            return I10n.labels.triggers[type].name;
         },
-        getSettingsDesc: function pumTriggerSettingDesc(type, values) {
-            var template = _.template(I10n.column_descriptions.triggers[type]);
+        getSettingsDesc: function (type, values) {
+            var template = _.template(I10n.labels.triggers[type].settings_column);
             values.I10n = I10n;
             return template(values);
         },
@@ -267,8 +268,19 @@ var PUMTriggers;
                     this.name = this.name.replace("[" + originalIndex + "]", replace_with).replace("[]", replace_with);
                 });
             });
+        },
+        refreshDescriptions: function () {
+            $('#pum_popup_triggers_list tbody tr').each(function () {
+                var $row = $(this),
+                    type = $row.find('.popup_triggers_field_type').val(),
+                    values = JSON.parse($row.find('.popup_triggers_field_settings:first').val());
+
+                $row.find('td:eq(1)').html(PUMTriggers.getSettingsDesc(type, values));
+            });
         }
     };
+
+    PUMTriggers.refreshDescriptions();
 
     $(document)
         .on('click', '#pum_popup_triggers .add-new', function () {
@@ -284,7 +296,7 @@ var PUMTriggers;
                 data = {
                     index: $row.parent().children().index($row),
                     type: type,
-                    trigger_settings: JSON.parse(decodeURIComponent($row.find('.popup_triggers_field_settings:first').val()))
+                    trigger_settings: JSON.parse($row.find('.popup_triggers_field_settings:first').val())
                 };
 
             e.preventDefault();
@@ -304,7 +316,7 @@ var PUMTriggers;
 
             e.preventDefault();
 
-            if (window.confirm(I10n.confirm.trigger_delete)) {
+            if (window.confirm(I10n.confirm_delete_trigger)) {
                 $row.remove();
                 PUMTriggers.renumber();
             }
@@ -355,7 +367,9 @@ var PUMTriggers;
 
             PUMModals.closeAll();
             PUMTriggers.renumber();
-        });
+        })
+        .ready(PUMTriggers.refreshDescriptions);
+
 }(jQuery));
 var PUMUtils;
 (function ($) {
@@ -510,7 +524,7 @@ var PUMUtils;
 
 }(jQuery));
 /**
- * Popup Maker v1.3.6
+ * Popup Maker v1.4.0
  */
 
 var PopMakeAdmin, PUM_Admin;

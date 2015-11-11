@@ -1,5 +1,5 @@
 /**
- * Popup Maker v1.3.6
+ * Popup Maker v1.4.0
  */
 
 var PopMakeAdmin, PUM_Admin;
