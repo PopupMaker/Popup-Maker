@@ -6,9 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! function_exists( 'maybe_json_attr' ) ) {
-	function maybe_json_attr( $value ) {
+	function maybe_json_attr( $value, $encode = false ) {
 		if ( is_object( $value ) || is_array( $value ) ) {
-			return json_encode( $value );
+			return $encode ? htmlspecialchars( json_encode( $value ) ) : json_encode( $value );
 		}
 		return $value;
 	}
