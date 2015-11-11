@@ -60,4 +60,62 @@ class PUM_Triggers {
 		return $this->triggers;
 	}
 
+	public function get_trigger( $trigger = null ) {
+		return isset( $this->triggers[ $trigger ] ) ? $this->triggers[ $trigger ] : null;
+	}
+
+	public function get_defaults( $trigger = null ) {
+		$defaults = array();
+
+		if ( ! $trigger ) {
+			foreach ( $this->get_triggers() as $trigger ) {
+				foreach ( $trigger->get_all_fields() as $section => $fields ) {
+					foreach ( $fields as $field ) {
+						if ( $section != 'general' ) {
+							$defaults[ $trigger->get_id() ][ $section ][ $field['id'] ] = $field['std'];
+						}
+						else {
+							$defaults[ $trigger->get_id() ][ $field['id'] ] = $field['std'];
+						}
+					}
+				}
+			}
+		}
+		else {
+			$trigger = $this->get_trigger( $trigger );
+			if ( $trigger ) {
+				foreach ( $trigger->get_all_fields() as $section => $fields ) {
+					foreach ( $fields as $field ) {
+						if ( $section != 'general' ) {
+							$defaults[ $section ][ $field['id'] ] = $field['std'];
+						}
+						else {
+							$defaults[ $field['id'] ] = $field['std'];
+						}
+					}
+				}
+			}
+		}
+
+		return $defaults;
+	}
+
+	public function get_labels( $trigger = null ) {
+		$labels = array();
+
+		if ( ! $trigger ) {
+			foreach ( $this->get_triggers() as $trigger ) {
+				$labels[ $trigger->get_id() ] = $trigger->get_labels();
+			}
+		}
+		else {
+			$trigger = $this->get_trigger( $trigger );
+			if ( $trigger ) {
+				$labels = $trigger->get_labels();
+			}
+		}
+
+		return $labels;
+	}
+
 }

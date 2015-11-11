@@ -32,16 +32,30 @@ class PUM_Trigger extends PUM_Fields {
 		$this->id = $args['id'];
 
 		if ( ! empty( $args['labels'] ) ) {
-			$this->labels = wp_parse_args( $args['labels'], array(
-				'modal_title' => __( 'Trigger Settings', 'popup-maker' )
-			) );
+			$this->set_labels( $args['labels'] );
 		}
 
 		return parent::__construct( $args );
 	}
 
+	public function get_id() {
+		return $this->id;
+	}
+
+	public function set_labels( $labels = array() ) {
+		$this->labels = wp_parse_args( $labels, array(
+			'name' => __( 'Trigger', 'popup-maker' ),
+			'modal_title' => __( 'Trigger Settings', 'popup-maker' ),
+			'settings_column' => '',
+		) );
+	}
+
 	public function get_label( $key ) {
 		return isset( $this->labels[ $key ] ) ? $this->labels[ $key ] : null;
+	}
+
+	public function get_labels() {
+		return $this->labels;
 	}
 
 	public function get_field_name( $field ) {
