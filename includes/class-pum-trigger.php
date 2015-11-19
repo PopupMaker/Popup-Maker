@@ -97,4 +97,44 @@ class PUM_Trigger extends PUM_Fields {
 		<hr/><?php
 	}
 
+
+	/**
+	 * Sanitize fields
+	 *
+	 * @param array $values
+	 *
+	 * @return string $input Sanitized value
+	 * @internal param array $input The value inputted in the field
+	 *
+	 */
+	function sanitize_fields( $values = array() ) {
+
+		$sanitized_values = array();
+
+		foreach ( $this->get_all_fields() as $section => $fields ) {
+			foreach ( $fields as $field ) {
+
+				if ( $section != 'general' ) {
+					$value = isset( $values[ $section ][ $field['id'] ] ) ? $values[ $section ][ $field['id'] ] : null;
+				}
+				else {
+					$value = isset( $values[ $field['id'] ] ) ? $values[ $field['id'] ] : null;
+				}
+
+				$value = $this->sanitize_field( $field, $value );
+
+				if ( ! is_null( $value ) ) {
+					if ( $section != 'general' ) {
+						$sanitized_values[ $section ][ $field['id'] ] = $value;
+					}
+					else {
+						$sanitized_values[ $field['id'] ] = $value;
+					}
+				}
+			}
+		}
+
+		return $sanitized_values;
+	}
+
 }
