@@ -179,6 +179,13 @@ function popmake_the_popup_data_attr( $popup_id = null ) {
 	echo 'data-popmake="' . esc_attr( json_encode( popmake_get_the_popup_data_attr( $popup_id ) ) ) . '"';
 }
 
+function popmake_get_popup_triggers( $popup_id = null ) {
+	if ( ! $popup_id ) {
+		$popup_id = popmake_get_the_popup_ID();
+	}
+	$triggers = get_post_meta( $popup_id, 'popup_triggers', true );
+	return apply_filters( 'popmake_get_popup_triggers', $triggers, $popup_id );
+}
 
 function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default = null ) {
 	if ( ! $popup_id ) {
