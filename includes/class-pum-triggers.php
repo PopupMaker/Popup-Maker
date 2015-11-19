@@ -118,4 +118,17 @@ class PUM_Triggers {
 		return $labels;
 	}
 
+	public function validate_trigger( $trigger = null, $settings = array() ) {
+		if ( ! $trigger || empty( $settings ) ) {
+			return $settings;
+		}
+
+		$trigger = $this->get_trigger( $trigger );
+		if ( $trigger ) {
+			$settings = $trigger->sanitize_fields( $settings );
+		}
+
+		return $settings;
+	}
+
 }
