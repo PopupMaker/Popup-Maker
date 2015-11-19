@@ -129,7 +129,6 @@ class Popmake_Fields {
 		$this->sections[ $section['id'] ] = $section;
 	}
 
-
 	/**
 	 * @param array $field
 	 */
@@ -245,37 +244,21 @@ class Popmake_Fields {
 		return $all_fields;
 	}
 
-
-	/**
-	 * Sort array by priority value
-	 *
-	 * @param $a
-	 * @param $b
-	 *
-	 * @return int
-	 */
-	protected function sort_by_priority( $a, $b ) {
-		if ( ! isset( $a['priority'] ) || ! isset( $b['priority'] ) || $a['priority'] === $b['priority'] ) {
-			return 0;
-		}
-
-		return ( $a['priority'] < $b['priority'] ) ? - 1 : 1;
-	}
-
-
 	/**
 	 * Returns the a generated field name for given ID.
 	 *
 	 * Replaces {$prefix} with $field_prefix, {$section}
 	 * with $section and {$field} with $field
 	 *
-	 * @param $id
-	 * @param $section
+	 * @param $field
+	 *
+	 * @return string $field_name
+	 * @internal param $id
+	 * @internal param $section
 	 *
 	 * @uses public $field_prefix
 	 * @uses public $field_name_format
 	 *
-	 * @return string $field_name
 	 */
 	public function get_field_name( $field ) {
 		return str_replace(
@@ -306,6 +289,34 @@ class Popmake_Fields {
 		}
 
 		return $names;
+	}
+
+	/**
+	 * @param $args
+	 * @param bool|true $print
+	 *
+	 * @return mixed|string
+	 */
+	public function get_templ_name( $args, $print = true ) {
+		$name = str_replace(
+			array(
+				'{$prefix}',
+				'{$section}',
+				'{$field}'
+			),
+			array(
+				$this->field_prefix,
+				$args['section'] != 'general' ? ".{$args['section']}" : "",
+				$args['id']
+			),
+			$this->templ_value_format
+		);
+
+		if ( $print ) {
+			$name = "<%= $name %>";
+		}
+
+		return $name;
 	}
 
 	/**
@@ -363,39 +374,10 @@ class Popmake_Fields {
 
 	}
 
-
-	/**
-	 * @param $args
-	 * @param bool|true $print
-	 *
-	 * @return mixed|string
-	 */
-	public function get_templ_name( $args, $print = true ) {
-		$name = str_replace(
-			array(
-				'{$prefix}',
-				'{$section}',
-				'{$field}'
-			),
-			array(
-				$this->field_prefix,
-				$args['section'] != 'general' ? ".{$args['section']}" : "",
-				$args['id']
-			),
-			$this->templ_value_format
-		);
-
-		if ( $print ) {
-			$name = "<%= $name %>";
-		}
-
-		return $name;
-	}
-
 	/**
 	 * @param string $section
 	 */
-	function render_templ_fields( $section = 'general' ) {
+	public function render_templ_fields( $section = 'general' ) {
 		foreach ( $this->get_fields( $section ) as $key => $args ) {
 			$this->render_templ_field( $args );
 		}
@@ -443,7 +425,6 @@ class Popmake_Fields {
 
 	}
 
-
 	/**
 	 * @param string $class
 	 */
@@ -456,6 +437,100 @@ class Popmake_Fields {
 	 */
 	public function field_after() {
 		?></div><?php
+	}
+
+
+	public function sanitize_field( $args, $value = null ) {
+
+		// If no type default to text.
+		$type = ! empty( $args['type'] ) ? $args['type'] : 'text';
+
+		/**
+		 * Check if any actions hooked to this type of field and load run those.
+		 */
+		if ( has_filter( "pum_{$type}_sanitize" ) ) {
+			$value = apply_filters( "pum_{$type}_sanitize", $value, $args );
+		}
+		else {
+			/**
+			 * Check if override or custom function exists and load that.
+			 */
+			if ( function_exists( "pum_{$type}_sanitize" ) ) {
+				$function_name = "pum_{$type}_sanitize";
+			}
+			/**
+			 * Check if core method exists and load that.
+			 */
+			elseif ( method_exists( $this, $type . '_sanitize' ) ) {
+				$function_name = array( $this, $type . '_sanitize' );
+			}
+			else {
+				$function_name = null;
+			}
+
+			if ( $function_name ) {
+				/**
+				 * Call the determined method, passing the field args & $value to the callback.
+				 */
+				$value = call_user_func_array( $function_name, array( $value, $args ) );
+			}
+
+		}
+
+		$value = apply_filters( 'pum_settings_sanitize', $value, $args );
+
+		return $value;
+	}
+
+	/**
+	 * Sanitize fields
+	 *
+	 * @param array $values
+	 *
+	 * @return string $input Sanitized value
+	 * @internal param array $input The value inputted in the field
+	 *
+	 */
+	public function sanitize_fields( $values = array() ) {
+
+		$sanitized_values = array();
+
+		foreach ( $this->get_all_fields() as $section => $fields ) {
+			foreach ( $fields as $field ) {
+				$value = isset( $settings[ $section ][ $field['id'] ] ) ? $settings[ $section ][ $field['id'] ] : null;
+
+				$value = $this->sanitize_field( $field, $value );
+
+				if ( ! is_null( $value ) ) {
+					$sanitized_values[ $section ][ $field['id'] ] = $value;
+				}
+			}
+		}
+
+		return $sanitized_values;
+	}
+
+	/**
+	 * Sort array by priority value
+	 *
+	 * @param $a
+	 * @param $b
+	 *
+	 * @return int
+	 */
+	protected function sort_by_priority( $a, $b ) {
+		if ( ! isset( $a['priority'] ) || ! isset( $b['priority'] ) || $a['priority'] === $b['priority'] ) {
+			return 0;
+		}
+
+		return ( $a['priority'] < $b['priority'] ) ? - 1 : 1;
+	}
+
+	public function checkbox_sanitize( $value = null, $args = array() ) {
+		if ( intval( $value ) == 1 ) {
+			return 1;
+		}
+		return null;
 	}
 
 }
