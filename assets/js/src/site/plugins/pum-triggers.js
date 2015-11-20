@@ -50,6 +50,11 @@
             $(document)
                 .on('click.pumTrigger', trigger_selector, function (e) {
 
+                    // If trigger is inside of the popup that it opens, do nothing.
+                    if ($popup.has(this).length > 0) {
+                        return;
+                    }
+
                     // If trigger has the class do-default we don't prevent default actions.
                     if (!$(e.target).hasClass('do-default')) {
                         e.preventDefault();
