@@ -36,6 +36,12 @@ gulp.task('js:admin', function() {
 });
 gulp.task('js:site', function() {
     return gulp.src(['assets/js/src/site/plugins/**/*.js', 'assets/js/src/site/general.js'])
+        .pipe($.order([
+            "plugins/compatibility.js",
+            "plugins/pum.js",
+            "plugins/**/*.js",
+            'general.js'
+        ], { base: 'assets/js/src/site/' }))
         .pipe($.concat('popup-maker-site.js'))
         .pipe(gulp.dest('assets/js'))
         .pipe($.uglify())
@@ -76,5 +82,5 @@ gulp.task('watch', function() {
     gulp.watch('assets/css/*.css', ['css']);
     gulp.watch('assets/js/src/admin/**/*.js', ['js:admin']);
     gulp.watch('assets/js/src/site/**/*.js', ['js:site']);
-    gulp.watch(['assets/js/src/**/*.js', '!assets/js/src/admin/**/*.js', '!assets/js/src/admin/**/*.js'], ['js:other']);
+    gulp.watch(['assets/js/src/**/*.js', '!assets/js/src/site/**/*.js', '!assets/js/src/admin/**/*.js'], ['js:other']);
 });
