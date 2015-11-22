@@ -79,24 +79,12 @@ class PUM_Popup_Cookies_Metabox {
 		$cookies = array();
 		if ( ! empty ( $_POST['popup_cookies'] ) ) {
 			foreach ( $_POST['popup_cookies'] as $key => $cookie ) {
-				$cookie['settings'] = static::object_to_array( json_decode( stripslashes( $cookie['settings'] ) ) );
+				$cookie['settings'] = PUM_Admin_Helpers::object_to_array( json_decode( stripslashes( $cookie['settings'] ) ) );
 				$cookie['settings'] = PUM_Cookies::instance()->validate_cookie( $cookie['type'], $cookie['settings'] );
 				$cookies[] = $cookie;
 			}
 		}
 		update_post_meta( $post_id, 'popup_cookies', $cookies );
-	}
-
-	public static function object_to_array($obj) {
-		if(is_object($obj)) $obj = (array) $obj;
-		if(is_array($obj)) {
-			$new = array();
-			foreach($obj as $key => $val) {
-				$new[$key] = static::object_to_array($val);
-			}
-		}
-		else $new = $obj;
-		return $new;
 	}
 
 	/**

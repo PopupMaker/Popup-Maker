@@ -78,24 +78,12 @@ class PUM_Popup_Triggers_Metabox {
 		$triggers = array();
 		if ( ! empty ( $_POST['popup_triggers'] ) ) {
 			foreach ( $_POST['popup_triggers'] as $key => $trigger ) {
-				$trigger['settings'] = static::object_to_array( json_decode( stripslashes( $trigger['settings'] ) ) );
+				$trigger['settings'] = PUM_Admin_Helpers::object_to_array( json_decode( stripslashes( $trigger['settings'] ) ) );
 				$trigger['settings'] = PUM_Triggers::instance()->validate_trigger( $trigger['type'], $trigger['settings'] );
 				$triggers[] = $trigger;
 			}
 		}
 		update_post_meta( $post_id, 'popup_triggers', $triggers );
-	}
-
-	public static function object_to_array($obj) {
-		if(is_object($obj)) $obj = (array) $obj;
-		if(is_array($obj)) {
-			$new = array();
-			foreach($obj as $key => $val) {
-				$new[$key] = static::object_to_array($val);
-			}
-		}
-		else $new = $obj;
-		return $new;
 	}
 
 	/**
