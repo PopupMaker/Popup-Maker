@@ -21,7 +21,7 @@ class PUM_Triggers {
 	public $triggers = array();
 
 	public static function instance() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Popup_Maker ) ) {
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof PUM_Triggers ) ) {
 			self::$instance = new PUM_Triggers;
 		}
 
