@@ -1062,9 +1062,11 @@ var pm_cookie, pm_remove_cookie;
                 triggers = settings.triggers,
                 trigger = null;
 
-            for (var i = 0; triggers.length > i; i++) {
-                trigger = triggers[i];
-                $popup.popmake('add_trigger', trigger.type, trigger.settings);
+            if (typeof triggers !== 'undefined' && triggers.length) {
+                for (var i = 0; triggers.length > i; i++) {
+                    trigger = triggers[i];
+                    $popup.popmake('add_trigger', trigger.type, trigger.settings);
+                }
             }
         });
 
