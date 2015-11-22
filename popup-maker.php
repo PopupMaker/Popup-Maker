@@ -175,13 +175,30 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/class-popmake-popup-fields.php';
 			require_once POPMAKE_DIR . 'includes/class-popmake-popup-theme-fields.php';
 
-
-			// New
+			/**
+			 * v1.4 Additions
+			 */
 			require_once POPMAKE_DIR . 'includes/class-pum-fields.php';
+
+			require_once POPMAKE_DIR . 'includes/pum-popup-functions.php';
+
+			// Triggers
 			require_once POPMAKE_DIR . 'includes/class-pum-trigger.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-triggers.php';
 			require_once POPMAKE_DIR . 'includes/pum-trigger-functions.php';
+			if ( is_admin() ) {
+				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-triggers.php';
+			}
 
+			// Cookies
+			require_once POPMAKE_DIR . 'includes/class-pum-cookie.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-cookies.php';
+			require_once POPMAKE_DIR . 'includes/pum-cookie-functions.php';
+			if ( is_admin() ) {
+				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-cookies.php';
+			}
+
+			// Admin Helper Class
 			if ( is_admin() ) {
 				require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-helpers.php';
 			}
@@ -223,7 +240,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/admin-pages.php';
 				require_once POPMAKE_DIR . 'includes/admin/post-editor.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox.php';
-				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-triggers.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/dashboard-columns.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-close-fields.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-display-fields.php';
