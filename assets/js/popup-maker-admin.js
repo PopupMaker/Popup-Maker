@@ -140,6 +140,7 @@ var PUMCookies;
             e.preventDefault();
 
             data.cookie_settings = defaults.cookies[event] !== undefined ? defaults.cookies[event] : {};
+            data.cookie_settings.name = 'pum-' + $('#post_ID').val();
             data.save_button_text = I10n.add;
             data.index = null;
 

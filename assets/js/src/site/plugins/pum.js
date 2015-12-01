@@ -117,6 +117,7 @@
                 .addClass('active')
                 .popmake('setup_close')
                 .popmake('reposition')
+                .trigger('pumBeforeOpen')
                 .trigger('popmakeBeforeOpen');
 
             if (settings.meta.close.button_delay > 0) {
@@ -144,7 +145,9 @@
                         }, settings.meta.close.button_delay);
                     }
 
-                    $this.trigger('popmakeAfterOpen');
+                    $this
+                        .trigger('pumAfterOpen')
+                        .trigger('popmakeAfterOpen');
                     $.fn.popmake.last_open_popup = $this;
                     if (callback !== undefined) {
                         callback();
@@ -159,7 +162,9 @@
                     $close = $('.popmake-close', $this),
                     settings = $this.data('popmake');
 
-                $this.trigger('popmakeBeforeClose');
+                $this
+                    .trigger('pumBeforeClose')
+                    .trigger('popmakeBeforeClose');
 
                 if ($this.hasClass('preventClose')) {
                     $this.removeClass('preventClose');
@@ -179,6 +184,7 @@
 
                         $this
                             .removeClass('active')
+                            .trigger('pumAfterClose')
                             .trigger('popmakeAfterClose');
 
                         $('iframe', $this).filter('[src*="youtube"],[src*="vimeo"]').each(function () {

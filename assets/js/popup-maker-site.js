@@ -134,6 +134,7 @@
                 .addClass('active')
                 .popmake('setup_close')
                 .popmake('reposition')
+                .trigger('pumBeforeOpen')
                 .trigger('popmakeBeforeOpen');
 
             if (settings.meta.close.button_delay > 0) {
@@ -161,7 +162,9 @@
                         }, settings.meta.close.button_delay);
                     }
 
-                    $this.trigger('popmakeAfterOpen');
+                    $this
+                        .trigger('pumAfterOpen')
+                        .trigger('popmakeAfterOpen');
                     $.fn.popmake.last_open_popup = $this;
                     if (callback !== undefined) {
                         callback();
@@ -176,7 +179,9 @@
                     $close = $('.popmake-close', $this),
                     settings = $this.data('popmake');
 
-                $this.trigger('popmakeBeforeClose');
+                $this
+                    .trigger('pumBeforeClose')
+                    .trigger('popmakeBeforeClose');
 
                 if ($this.hasClass('preventClose')) {
                     $this.removeClass('preventClose');
@@ -196,6 +201,7 @@
 
                         $this
                             .removeClass('active')
+                            .trigger('pumAfterClose')
                             .trigger('popmakeAfterClose');
 
                         $('iframe', $this).filter('[src*="youtube"],[src*="vimeo"]').each(function () {
@@ -909,6 +915,67 @@ var pm_cookie, pm_remove_cookie;
     pm_remove_cookie = $.pm_remove_cookie = $.fn.popmake.cookie.remove;
 
 }(jQuery));
+(function ($) {
+    "use strict";
+
+    $.fn.popmake.methods.addCookie = function (type, settings) {
+        // Method calling logic
+        if ($.fn.popmake.cookies[type]) {
+            return $.fn.popmake.cookies[type].apply(this, Array.prototype.slice.call(arguments, 1));
+        }
+        $.error('Cookie type ' + $.fn.popmake.cookies + ' does not exist.');
+        return this;
+    };
+
+    $.fn.popmake.methods.setCookie = function (settings) {
+        $.pm_cookie(
+            settings.name,
+            true,
+            settings.session ? null : settings.time,
+            settings.path ? '/' : null
+        );
+    };
+
+    $.fn.popmake.cookies = {
+        on_popup_open: function (settings) {
+            var $popup = $(this);
+            $popup.on('pumAfterOpen', function () {
+                $popup.popmake('setCookie', settings);
+            });
+        },
+        on_popup_close: function (settings) {
+            var $popup = $(this);
+            console.log($popup, settings);
+            $popup.on('pumBeforeClose', function () {
+                $popup.popmake('setCookie', settings);
+            });
+        },
+        manual: function (settings) {
+            var $popup = $(this);
+            $popup.on('pumSetCookie', function () {
+                $popup.popmake('setCookie', settings);
+            });
+        }
+    };
+
+    // Register All Cookies for a Popup
+    $(document)
+        .on('pumInit', '.popmake', function (e) {
+            var $popup = $(this),
+                settings = $popup.data('popmake'),
+                cookies = settings.cookies,
+                cookie = null;
+
+            if (typeof cookies !== 'undefined' && cookies.length) {
+                for (var i = 0; cookies.length > i; i++) {
+                    cookie = cookies[i];
+                    console.log(cookie);
+                    $popup.popmake('addCookie', cookie.event, cookie.settings);
+                }
+            }
+        });
+
+}(jQuery));
 /**
  * Defines the core $.popmake defaults.
  * Version 1.4.0
@@ -984,7 +1051,7 @@ var pm_cookie, pm_remove_cookie;
     $.fn.popmake.last_open_trigger = null;
     $.fn.popmake.last_close_trigger = null;
 
-    $.fn.popmake.methods.add_trigger = function (type, settings) {
+    $.fn.popmake.methods.addTrigger = function (type, settings) {
         // Method calling logic
         if ($.fn.popmake.triggers[type]) {
             return $.fn.popmake.triggers[type].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -1003,6 +1070,11 @@ var pm_cookie, pm_remove_cookie;
 
                 // If the popup is already open return.
                 if ($popup.hasClass('active') || $popup.hasClass('pum-open')) {
+                    return;
+                }
+
+                // If cookie exists return.
+                if ($.pm_cookie(settings.cookie.name) !== undefined) {
                     return;
                 }
 
@@ -1032,6 +1104,11 @@ var pm_cookie, pm_remove_cookie;
 
                     // If trigger is inside of the popup that it opens, do nothing.
                     if ($popup.has(this).length > 0) {
+                        return;
+                    }
+
+                    // If cookie exists return.
+                    if ($.pm_cookie(settings.cookie.name) !== undefined) {
                         return;
                     }
 
@@ -1065,7 +1142,7 @@ var pm_cookie, pm_remove_cookie;
             if (typeof triggers !== 'undefined' && triggers.length) {
                 for (var i = 0; triggers.length > i; i++) {
                     trigger = triggers[i];
-                    $popup.popmake('add_trigger', trigger.type, trigger.settings);
+                    $popup.popmake('addTrigger', trigger.type, trigger.settings);
                 }
             }
         });
@@ -1367,62 +1444,5 @@ var pm_cookie, pm_remove_cookie;
 
     $(document).ready(function () {
         $('.popmake').popmake();
-
-            /* Commented out so that the cookie parts can be converted later.
-            .each(function () {
-                var $this = $(this),
-                    settings = $this.data('popmake'),
-                    auto_open = settings.meta.auto_open,
-                    cookie_name = "popmake-auto-open-" + settings.id,
-                    noCookieCheck;
-
-
-
-
-                if (auto_open !== undefined && auto_open.enabled) {
-
-                    if (auto_open.cookie_key !== undefined && auto_open.cookie_key !== '') {
-                        cookie_name = cookie_name + "-" + auto_open.cookie_key;
-                    }
-
-                    noCookieCheck = function () {
-                        return $.pm_cookie(cookie_name) === undefined;
-                    };
-
-                    $this.on('popmakeSetCookie.auto-open', function () {
-                        if (auto_open.cookie_time !== '' && noCookieCheck()) {
-                            $.pm_cookie(
-                                cookie_name,
-                                true,
-                                auto_open.session_cookie ? null : auto_open.cookie_time,
-                                auto_open.cookie_path
-                            );
-                        }
-                    });
-
-                    switch (auto_open.cookie_trigger) {
-                        case "open":
-                            $this.on('popmakeAfterOpen', function () {
-                                $this.trigger('popmakeSetCookie');
-                            });
-                            break;
-                        case "close":
-                            $this.on('popmakeBeforeClose', function () {
-                                $this.trigger('popmakeSetCookie');
-                            });
-                            break;
-                    }
-
-                    setTimeout(function () {
-                        if (noCookieCheck()) {
-                            if (!$this.hasClass('active')) {
-                                $.fn.popmake.last_open_trigger = 'Auto Open Popups ID-' + settings.id;
-                                $this.popmake('open');
-                            }
-                        }
-                    }, auto_open.delay);
-                }
-            });
-         */
     });
 }(jQuery));

@@ -43,7 +43,7 @@ function pum_get_cookie_fields() {
 			'label'       => __( 'Cookie Name', 'popup-maker' ),
 			'placeholder'        => __( 'Cookie Name ex. popmaker-123', 'popup-maker' ),
 			'desc'        => __( 'The name that will be used when checking for or saving this cookie.', 'popup-maker' ),
-			'std'         => 'popmake-123',
+			'std'         => '',
 			'priority'    => 1,
 		),
 		'key'     => array(
@@ -100,7 +100,7 @@ function pum_get_cookies() {
 			),
 			'manual' => array(
 				'labels' => array(
-					'name' => __( 'On Popup Close', 'popup-maker' ),
+					'name' => __( 'Manual JavaScript', 'popup-maker' ),
 				),
 				'fields' => pum_get_cookie_fields(),
 			),
@@ -113,9 +113,7 @@ function pum_get_cookies() {
  * @uses function pum_get_cookies
  */
 function pum_register_cookies() {
-global $post;
-
 	$cookies = pum_get_cookies();
 	PUM_Cookies::instance()->add_cookies( $cookies );
 }
-add_action( 'wp', 'pum_register_cookies', 1000 );
+add_action( 'init', 'pum_register_cookies' );

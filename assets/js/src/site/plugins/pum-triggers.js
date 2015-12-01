@@ -4,7 +4,7 @@
     $.fn.popmake.last_open_trigger = null;
     $.fn.popmake.last_close_trigger = null;
 
-    $.fn.popmake.methods.add_trigger = function (type, settings) {
+    $.fn.popmake.methods.addTrigger = function (type, settings) {
         // Method calling logic
         if ($.fn.popmake.triggers[type]) {
             return $.fn.popmake.triggers[type].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -23,6 +23,11 @@
 
                 // If the popup is already open return.
                 if ($popup.hasClass('active') || $popup.hasClass('pum-open')) {
+                    return;
+                }
+
+                // If cookie exists return.
+                if ($.pm_cookie(settings.cookie.name) !== undefined) {
                     return;
                 }
 
@@ -52,6 +57,11 @@
 
                     // If trigger is inside of the popup that it opens, do nothing.
                     if ($popup.has(this).length > 0) {
+                        return;
+                    }
+
+                    // If cookie exists return.
+                    if ($.pm_cookie(settings.cookie.name) !== undefined) {
                         return;
                     }
 
@@ -85,7 +95,7 @@
             if (typeof triggers !== 'undefined' && triggers.length) {
                 for (var i = 0; triggers.length > i; i++) {
                     trigger = triggers[i];
-                    $popup.popmake('add_trigger', trigger.type, trigger.settings);
+                    $popup.popmake('addTrigger', trigger.type, trigger.settings);
                 }
             }
         });
