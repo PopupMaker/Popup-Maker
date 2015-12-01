@@ -36,44 +36,15 @@ function pum_trigger_cookie_options() {
  *
  * @return array
  */
-function pum_trigger_cookie_fields( $custom_fields = array() ) {
-	return apply_filters( 'pum_trigger_cookie_fields', array_merge( array(
-		'trigger' => array(
-			'label'       => __( 'Cookie Trigger', 'popup-maker' ),
+function pum_trigger_cookie_fields() {
+	return apply_filters( 'pum_trigger_cookie_fields', array(
+		'name' => array(
+			'label'       => __( 'Cookie Name', 'popup-maker' ),
 			'desc'        => __( 'When do you want to create the cookie.', 'popup-maker' ),
-			'type'        => 'select',
-			'std'         => 'close',
+			'std'         => 'popmake-123',
 			'priority'    => 1,
-			'options'     => pum_trigger_cookie_options(),
 		),
-		'session' => array(
-			'label'       => __( 'Use Session Cookie?', 'popup-maker' ),
-			'desc'        => __( 'Session cookies expire when the user closes their browser.', 'popup-maker' ),
-			'type'        => 'checkbox',
-			'std'         => false,
-			'priority'    => 2,
-		),
-		'time'    => array(
-			'label'       => __( 'Cookie Time', 'popup-maker' ),
-			'placeholder' => __( '364 days 23 hours 59 minutes 59 seconds', 'popup-maker' ),
-			'desc'        => __( 'Enter a plain english time before cookie expires.', 'popup-maker' ),
-			'std'         => '1 month',
-			'priority'    => 3,
-		),
-		'path'    => array(
-			'label'       => __( 'Sitewide Cookie', 'popup-maker' ),
-			'desc'        => __( '	This will prevent the popup from auto opening on any page until the cookie expires.', 'popup-maker' ),
-			'type'        => 'checkbox',
-			'std'         => true,
-			'priority'    => 4,
-		),
-		'key'     => array(
-			'label'       => __( 'Cookie Key', 'popup-maker' ),
-			'desc'        => __( 'Resetting this will cause all existing cookies to be invalid.', 'popup-maker' ),
-			'std'         => '',
-			'priority'    => 5,
-		),
-	), $custom_fields ) );
+	) );
 }
 
 /**
@@ -101,6 +72,9 @@ function pum_get_triggers() {
 				'general' => array(
 					'title' => __( 'General', 'popup-maker' ),
 				),
+				'cookie' => array(
+						'title' => __( 'Cookie', 'popup-maker' ),
+				),
 			),
 			'fields' => array(
 				'general' => array(
@@ -111,6 +85,7 @@ function pum_get_triggers() {
 						'priority'    => 1,
 					),
 				),
+				'cookie' => pum_trigger_cookie_fields(),
 			),
 		),
 		'auto_open' => array(
@@ -119,15 +94,9 @@ function pum_get_triggers() {
 				'name' => __( 'Auto Open', 'popup-maker' ),
 				'modal_title' => __( 'Auto Open Settings', 'popup-maker' ),
 				'settings_column' => sprintf(
-					'<strong>%1$s</strong>: %2$s <strong>%3$s</strong>: %4$s',
+					'<strong>%1$s</strong>: %2$s',
 					__( 'Delay', 'popup-maker' ),
-					'<%= delay %>',
-					__( 'Cookie', 'popup-maker' ),
-					sprintf( '%s%s%s',
-						'<%= I10n.labels.cookie_triggers[cookie.trigger] %><% if (cookie.trigger !== "disabled") { %> / <% if (typeof cookie.session === "undefined") { %><%= cookie.time %><% } else { %>',
-						__( 'Sessions', 'popup-maker' ),
-						'<% } %><% } %>'
-					)
+					'<%= delay %>'
 				),
 			),
 			'sections' => array(
