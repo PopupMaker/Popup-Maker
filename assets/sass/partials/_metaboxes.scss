@@ -27,11 +27,13 @@
 
 }
 
+
 .add-new {
   float: right;
 }
 
-#popup_trigger_add_type {
+#popup_trigger_add_type,
+#popup_cookie_add_event {
   display: block;
   font-size: 1.4em;
   height: auto;
@@ -40,7 +42,8 @@
   width: 100%;
 }
 
-#pum_trigger_add_type_modal {
+#pum_trigger_add_type_modal,
+#pum_cookie_add_event_modal {
 
   .pum-modal-wrap {
     width: 440px;
@@ -51,7 +54,8 @@
 
 #pum_popup_trigger_fields {}
 
-#pum_popup_triggers_list {
+#pum_popup_triggers_list,
+#pum_popup_cookies_list{
   @include table-alignments();
 
   span.edit {

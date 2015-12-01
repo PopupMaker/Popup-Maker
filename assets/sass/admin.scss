@@ -2,11 +2,105 @@
 @import 'partials/metaboxes';
 @import 'partials/admin_modal';
 
+
+.pum-form {
+/*
+  box-sizing: border-box;
+  .field {
+
+
+    &.half, &.one-half, &.two-quarters &.third, &.one-third, &.one-thirds, &.two-thirds, &.quarter, &.one-quarter, &.one-quarters, &.three-quarters, &.one-fifth, &.one-fifths, &.two-fifths, &.three-fifths, &.four-fifths {
+      display: inline-block;
+      float: left;
+      margin-left: 0;
+      margin-right: 0;
+      padding-left: 1%;
+      padding-right: 1%;
+
+      .first {
+        clear: left;
+      }
+      input[type="text"], select {
+        width: 100%;
+      }
+    }
+
+    &.half,
+    &.one-half,
+    &.two-quarters {
+      width: 48%;
+    }
+    &.third,
+    &.one-third,
+    &.one-thirds {
+      width: 31%;
+    }
+    &.two-thirds {
+      width: 64%;
+    }
+    &.quarter,
+    &.one-quarter,
+    &.one-quarters {
+      width: 23%;
+    }
+    &.three-quarters {
+      width: 73%;
+    }
+
+    &.one-fifth,
+    &.one-fifths {
+      width: 18%;
+    }
+
+    &.two-fifths {
+      width: 38%;
+    }
+    &.three-fifths {
+      width: 58%;
+    }
+    &.four-fifths {
+      width: 78%;
+    }
+  }
+*/
+}
+
+
 .tabbed-form {
+  .field {
+    margin: 0 0 1em;
+  }
+
+  .field.cookiekey {
+
+    .cookie-key {
+      position: relative;
+      display: inline-block;
+      button.reset {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        height: 100%;
+      }
+    }
+  }
   label {
     display: block;
     font-weight: bold;
     font-size: 1.1em;
+  }
+
+  .field.checkbox {
+    label {
+
+      &.desc {
+        display: inline;
+        font-weight:inherit;
+        font-size:inherit;
+        margin: 0 0 1em;
+      }
+    }
   }
 }
 

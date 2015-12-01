@@ -1,4 +1,13 @@
 .pum-modal-background {
+
+  &, &:before, &:after,
+  & *, & *:before, & *:after {
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    box-sizing: border-box;
+  }
+
+
   display: none;
   position: fixed;
   top: 0;
@@ -8,7 +17,6 @@
   height: 100%;
   width: 100%;
   background: rgba(0,0,0,0.70);
-  //opacity: .7;
   z-index: 100100;
   overflow-y: scroll;
 
@@ -17,7 +25,7 @@
     top: 60px;
     margin-bottom: 60px;
     left: 50%;
-    width: 600px;
+    width: 550px;
     margin-left: -300px;
     background-color: #fff;
     box-shadow: 0 3px 6px rgba(0,0,0,.3);
