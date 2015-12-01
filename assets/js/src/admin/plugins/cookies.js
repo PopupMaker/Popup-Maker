@@ -6,11 +6,11 @@ var PUMCookies;
         defaults = pum_admin.defaults;
 
     PUMCookies = {
-        getLabel: function (type) {
-            return I10n.labels.cookies[type].name;
+        getLabel: function (event) {
+            return I10n.labels.cookies[event].name;
         },
-        getSettingsDesc: function (type, values) {
-            var template = _.template(I10n.labels.cookies[type].settings_column);
+        getSettingsDesc: function (event, values) {
+            var template = _.template(I10n.labels.cookies[event].settings_column);
             values.I10n = I10n;
             return template(values);
         },
@@ -22,7 +22,7 @@ var PUMCookies;
 
                 $this.data('index', index);
 
-                $this.find('input').each(function () {
+                $this.find('[name]').each(function () {
                     var replace_with = "[" + index + "]";
                     this.name = this.name.replace("[" + originalIndex + "]", replace_with).replace("[]", replace_with);
                 });
@@ -31,30 +31,51 @@ var PUMCookies;
         refreshDescriptions: function () {
             $('#pum_popup_cookies_list tbody tr').each(function () {
                 var $row = $(this),
-                    type = $row.find('.popup_cookies_field_type').val(),
+                    event = $row.find('.popup_cookies_field_event').val(),
                     values = JSON.parse($row.find('.popup_cookies_field_settings:first').val());
 
-                $row.find('td:eq(1)').html(PUMCookies.getSettingsDesc(type, values));
+                $row.find('td.settings-column').html(PUMCookies.getSettingsDesc(event, values));
             });
+        },
+        initEditForm: function () {
+            PUMCookies.updateSessionsCheckbox();
+        },
+        updateSessionsCheckbox: function () {
+            var $parent = $('.cookie-editor .pum-form'),
+                sessions = $parent.find('.field.checkbox.session input[type="checkbox"]').is(':checked'),
+                $otherFields = $parent.find('.field').filter('.time');
+
+            if (sessions) {
+                $otherFields.hide();
+            } else {
+                $otherFields.show();
+            }
+        },
+        resetCookieKey: function () {
+            var $this = $(this),
+                newKey = (new Date().getTime()).toString(16);
+
+            $this.parents('.pum-form').find('.field.text.name').data('cookiekey', newKey);
+            $this.siblings('input[type="text"]:first').val(newKey);
         }
     };
 
-    PUMCookies.refreshDescriptions();
-
     $(document)
+        .on('click', '.field.cookiekey button.reset', PUMCookies.resetCookieKey)
+        .on('click', '.cookie-editor .pum-form .field.checkbox.session', PUMCookies.updateSessionsCheckbox)
         .on('click', '#pum_popup_cookies .add-new', function () {
-            var template = _.template($('script#pum_cookie_add_type_templ').html());
-            PUMModals.reload('#pum_cookie_add_type_modal', template());
+            var template = _.template($('script#pum_cookie_add_event_templ').html());
+            PUMModals.reload('#pum_cookie_add_event_modal', template());
         })
         .on('click', '#pum_popup_cookies_list .edit', function (e) {
             var $this = $(this),
                 $row = $this.parents('tr:first'),
-                type = $row.find('.popup_cookies_field_type').val(),
-                id = '#pum_cookie_settings_' + type,
+                event = $row.find('.popup_cookies_field_event').val(),
+                id = '#pum_cookie_settings_' + event,
                 template = _.template($('script' + id + '_templ').html()),
                 data = {
                     index: $row.parent().children().index($row),
-                    type: type,
+                    event: event,
                     cookie_settings: JSON.parse($row.find('.popup_cookies_field_settings:first').val())
                 };
 
@@ -67,11 +88,11 @@ var PUMCookies;
             }
 
             PUMModals.reload(id, template(data));
+            PUMCookies.initEditForm();
         })
         .on('click', '#pum_popup_cookies_list .remove', function (e) {
             var $this = $(this),
-                $row = $this.parents('tr:first'),
-                index = $row.parent().children().index($row);
+                $row = $this.parents('tr:first');
 
             e.preventDefault();
 
@@ -80,15 +101,15 @@ var PUMCookies;
                 PUMCookies.renumber();
             }
         })
-        .on('submit', '#pum_cookie_add_type_modal .pum-form', function (e) {
-            var type = $('#popup_cookie_add_type').val(),
-                id = '#pum_cookie_settings_' + type,
+        .on('submit', '#pum_cookie_add_event_modal .pum-form', function (e) {
+            var event = $('#popup_cookie_add_event').val(),
+                id = '#pum_cookie_settings_' + event,
                 template = _.template($('script' + id + '_templ').html()),
                 data = {};
 
             e.preventDefault();
 
-            data.cookie_settings = defaults.cookies[type] !== undefined ? defaults.cookies[type] : {};
+            data.cookie_settings = defaults.cookies[event] !== undefined ? defaults.cookies[event] : {};
             data.save_button_text = I10n.add;
             data.index = null;
 
@@ -97,10 +118,11 @@ var PUMCookies;
             }
 
             PUMModals.reload(id, template(data));
+            PUMCookies.initEditForm(id);
         })
         .on('submit', '.cookie-editor .pum-form', function (e) {
             var $form = $(this),
-                type = $form.find('input.type').val(),
+                event = $form.find('input.event').val(),
                 values = $form.serializeObject(),
                 index = parseInt(values.index),
                 $row = index >= 0 ? $('#pum_popup_cookies_list tbody tr').eq(index) : null,

@@ -34,8 +34,11 @@ var PUMTriggers;
                     type = $row.find('.popup_triggers_field_type').val(),
                     values = JSON.parse($row.find('.popup_triggers_field_settings:first').val());
 
-                $row.find('td:eq(1)').html(PUMTriggers.getSettingsDesc(type, values));
+                $row.find('td.settings-column').html(PUMTriggers.getSettingsDesc(type, values));
             });
+        },
+        initEditForm: function () {
+
         }
     };
 
@@ -67,11 +70,11 @@ var PUMTriggers;
             }
 
             PUMModals.reload(id, template(data));
+            PUMTriggers.initEditForm();
         })
         .on('click', '#pum_popup_triggers_list .remove', function (e) {
             var $this = $(this),
-                $row = $this.parents('tr:first'),
-                index = $row.parent().children().index($row);
+                $row = $this.parents('tr:first');
 
             e.preventDefault();
 
@@ -97,6 +100,7 @@ var PUMTriggers;
             }
 
             PUMModals.reload(id, template(data));
+            PUMTriggers.initEditForm();
         })
         .on('submit', '.trigger-editor .pum-form', function (e) {
             var $form = $(this),
