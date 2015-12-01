@@ -59,7 +59,6 @@ class PUM_Popup_Cookies_Metabox {
 							static::render_row( array(
 								'index' => esc_attr( $key ),
 								'event' => esc_attr( $values['event'] ),
-								'name' => esc_attr( $values['settings']['name'] ),
 								'columns' => array(
 									'event' => $cookie->get_label( 'name' ),
 									'name' =>  $values['settings']['name'],
@@ -80,7 +79,7 @@ class PUM_Popup_Cookies_Metabox {
 		if ( ! empty ( $_POST['popup_cookies'] ) ) {
 			foreach ( $_POST['popup_cookies'] as $key => $cookie ) {
 				$cookie['settings'] = PUM_Admin_Helpers::object_to_array( json_decode( stripslashes( $cookie['settings'] ) ) );
-				$cookie['settings'] = PUM_Cookies::instance()->validate_cookie( $cookie['type'], $cookie['settings'] );
+				$cookie['settings'] = PUM_Cookies::instance()->validate_cookie( $cookie['event'], $cookie['settings'] );
 				$cookies[] = $cookie;
 			}
 		}
@@ -95,18 +94,19 @@ class PUM_Popup_Cookies_Metabox {
 		<script type="text/template" id="pum_cookie_row_templ">
 			<?php static::render_row( array(
 				'index' => '<%= index %>',
-				'type' => '<%= type %>',
+				'event' => '<%= event %>',
 				'columns' => array(
-					'type' => '<%= PUMCookies.getLabel(type) %>',
-					'settings' => '<%= PUMCookies.getSettingsDesc(type, cookie_settings) %>',
+					'event' => '<%= PUMCookies.getLabel(event) %>',
+					'name' => '<%= cookie_settings.name %>',
+					'settings' => '<%= PUMCookies.getSettingsDesc(event, cookie_settings) %>',
 				),
 				'settings' => '<%- JSON.stringify(cookie_settings) %>',
 			) ); ?>
 		</script>
 
-		<script type="text/template" id="pum_cookie_add_type_templ"><?php
+		<script type="text/template" id="pum_cookie_add_event_templ"><?php
 			ob_start(); ?>
-			<select id="popup_cookie_add_type">
+			<select id="popup_cookie_add_event">
 				<?php foreach ( PUM_Cookies::instance()->get_cookies() as $id => $cookie ) : ?>
 					<option value="<?php echo $id; ?>"><?php echo $cookie->get_label( 'name' ); ?></option>
 				<?php endforeach ?>
@@ -114,8 +114,8 @@ class PUM_Popup_Cookies_Metabox {
 			$content = ob_get_clean();
 
 			PUM_Admin_Helpers::modal( array(
-				'id' => 'pum_cookie_add_type_modal',
-				'title' => __( 'Choose what type of cookie to add?', 'popup-maker' ),
+				'id' => 'pum_cookie_add_event_modal',
+				'title' => __( 'What will trigger your cookie to be created?', 'popup-maker' ),
 				'content' => $content
 			) ); ?>
 		</script>
@@ -125,7 +125,7 @@ class PUM_Popup_Cookies_Metabox {
 
 			<?php ob_start(); ?>
 
-			<input type="hidden" name="type" class="type" value="<?php esc_attr_e( $id ); ?>"/>
+			<input type="hidden" name="event" class="event" value="<?php esc_attr_e( $id ); ?>"/>
 			<input type="hidden" name="index" class=index" value="<%= index %>"/>
 
 			<div class="pum-tabs-container vertical-tabs tabbed-form">
@@ -135,11 +135,11 @@ class PUM_Popup_Cookies_Metabox {
 					/**
 					 * Render Each settings tab.
 					 */
-					foreach ( $cookie->get_sections() as $tab => $args ) { ?>
+					foreach ( $cookie->get_sections() as $tab => $args ) { if ( ! $args['hidden'] ) { ?>
 						<li class="tab">
 							<a href="#<?php esc_attr_e( $id . '_' . $tab ); ?>_settings"><?php esc_html_e( $args['title'] ); ?></a>
 						</li>
-					<?php } ?>
+					<?php } } ?>
 				</ul>
 
 				<?php
@@ -158,7 +158,7 @@ class PUM_Popup_Cookies_Metabox {
 
 			PUM_Admin_Helpers::modal( array(
 				'id' => 'pum_cookie_settings_' . $id,
-				'title' => $cookie->get_label( 'modal_title' ),
+				'title' =>  __( 'Cookie Settings', 'popup-maker' ),
 				'class' => 'tabbed-content cookie-editor',
 				'save_button_text' => '<%= save_button_text %>',
 				'content' => $content
@@ -172,31 +172,38 @@ class PUM_Popup_Cookies_Metabox {
 	 * @param array $row
 	 */
 	public static function render_row( $row = array() ) {
+		global $post;
+
 		$row = wp_parse_args( $row, array(
 			'index' => 0,
-			'type' => 'auto_open',
+			'event' => 'on_popup_close',
 			'columns' => array(
-				'type' => __( 'Auto Open', 'popup-maker' ),
-				'settings' => __( 'Delay: 0', 'popup-maker' ),
+				'event' => __( 'On Popup Close', 'popup-maker' ),
+				'name' => 'popmake-' . $post->ID,
+				'settings' => __( 'Time: 1 Month', 'popup-maker' ),
 			),
 			'settings' => array(
-				'delay' => 0,
-				'cookie' => array(
-					'cookie' => 'close',
-					'time' => '1 month',
-					'session' => 0,
-					'path' => '/',
-					'key' => ''
-				)
+				'name' => 'popmake-' . $post->ID,
+				'key' => '',
+				'session' => 0,
+				'time' => '1 month',
+				'path' => 1,
 			),
 		) );
 		?>
 		<tr data-index="<?php echo $row['index']; ?>">
-			<td><span class="edit"><?php echo $row['columns']['type']; ?></span>
-				<input class="popup_cookies_field_type" type="hidden" name="popup_cookies[<?php echo $row['index']; ?>][type]" value="<?php echo $row['type']; ?>" />
+			<td class="event-column">
+				<span class="edit"><?php echo $row['columns']['event']; ?></span>
+				<input class="popup_cookies_field_event" type="hidden" name="popup_cookies[<?php echo $row['index']; ?>][event]" value="<?php echo $row['event']; ?>" />
 				<input class="popup_cookies_field_settings" type="hidden" name="popup_cookies[<?php echo $row['index']; ?>][settings]" value="<?php echo maybe_json_attr( $row['settings'], true ); ?>" />
 			</td>
-			<td><?php echo $row['columns']['settings']; ?></td>
+			<td class="name-column">
+				<code>
+					<?php echo $row['columns']['name']; ?>
+					<i class="copy-name dashicons dashicons-clipboard"></i>
+				</code>
+			</td>
+			<td class="settings-column"><?php echo $row['columns']['settings']; ?></td>
 			<td class="actions">
 				<i class="edit dashicons dashicons-edit"></i>
 				<i class="remove dashicons dashicons-no"></i>

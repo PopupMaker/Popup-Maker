@@ -46,6 +46,7 @@ class PUM_Popup_Triggers_Metabox {
 				<thead>
 					<tr>
 						<th><?php _e( 'Type', 'popup-maker' ); ?></th>
+						<th><?php _e( 'Cookie', 'popup-maker' ); ?></th>
 						<th><?php _e( 'Settings', 'popup-maker' ); ?></th>
 						<th><?php _e( 'Actions', 'popup-maker' ); ?></th>
 					</tr>
@@ -62,6 +63,7 @@ class PUM_Popup_Triggers_Metabox {
 								'type' => esc_attr( $values['type'] ),
 								'columns' => array(
 									'type' => $trigger->get_label('name'),
+									'cookie' => isset( $values['settings']['cookie']['name'] ) ? $values['settings']['cookie']['name'] : '',
 									'settings' => '<%= PUMTriggers.getSettingsDesc(type, trigger_settings) %>',
 								),
 								'settings' => $values['settings'],
@@ -97,6 +99,7 @@ class PUM_Popup_Triggers_Metabox {
 				'type' => '<%= type %>',
 				'columns' => array(
 					'type' => '<%= PUMTriggers.getLabel(type) %>',
+					'cookie' => "<%= trigger_settings.cookie.name %>",
 					'settings' => '<%= PUMTriggers.getSettingsDesc(type, trigger_settings) %>',
 				),
 				'settings' => '<%- JSON.stringify(trigger_settings) %>',
@@ -176,26 +179,29 @@ class PUM_Popup_Triggers_Metabox {
 			'type' => 'auto_open',
 			'columns' => array(
 				'type' => __( 'Auto Open', 'popup-maker' ),
+				'cookie' => 'popmake-123',
 				'settings' => __( 'Delay: 0', 'popup-maker' ),
 			),
 			'settings' => array(
 				'delay' => 0,
 				'cookie' => array(
-					'trigger' => 'close',
-					'time' => '1 month',
-					'session' => 0,
-					'path' => '/',
-					'key' => ''
+					'name' => 'popmake-123',
 				)
 			),
 		) );
 		?>
 		<tr data-index="<?php echo $row['index']; ?>">
-			<td><span class="edit"><?php echo $row['columns']['type']; ?></span>
+			<td class="type-column"><span class="edit"><?php echo $row['columns']['type']; ?></span>
 				<input class="popup_triggers_field_type" type="hidden" name="popup_triggers[<?php echo $row['index']; ?>][type]" value="<?php echo $row['type']; ?>" />
 				<input class="popup_triggers_field_settings" type="hidden" name="popup_triggers[<?php echo $row['index']; ?>][settings]" value="<?php echo maybe_json_attr( $row['settings'], true ); ?>" />
 			</td>
-			<td><?php echo $row['columns']['settings']; ?></td>
+			<td class="cookie-column">
+				<code>
+					<?php echo $row['columns']['cookie']; ?>
+					<i class="copy-name dashicons dashicons-clipboard"></i>
+				</code>
+			</td>
+			<td class="settings-column"><?php echo $row['columns']['settings']; ?></td>
 			<td class="actions">
 				<i class="edit dashicons dashicons-edit"></i>
 				<i class="remove dashicons dashicons-no"></i>
