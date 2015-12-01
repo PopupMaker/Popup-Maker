@@ -44,7 +44,7 @@ class PUM_Fields extends Popmake_Fields {
 	 */
 	public function text_callback( $args, $value ) {
 
-		$class = 'text';
+		$class = 'text ' . $args['id'];
 
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
@@ -62,7 +62,7 @@ class PUM_Fields extends Popmake_Fields {
 
 		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular'; ?>
 
-		<input type="text" placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" class="<?php esc_attr_e( $size ); ?>-text" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php esc_attr( stripslashes( $value ) ); ?>"/><?php
+		<input type="text" placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" class="<?php esc_attr_e( $size ); ?>-text" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php esc_attr_e( stripslashes( $value ) ); ?>"/><?php
 
 		if ( $args['desc'] != '' ) { ?>
 			<p class="desc"><?php esc_html_e( $args['desc'] ); ?></p><?php
@@ -71,6 +71,29 @@ class PUM_Fields extends Popmake_Fields {
 		$this->field_after();
 	}
 
+	/**
+	 * Hidden Callback
+	 *
+	 * Renders hidden fields.
+	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @param $value
+	*/
+	public function hidden_callback( $args, $value ) {
+
+		$class = 'hidden ' . $args['id'];
+
+		if ( ! empty ( $args['class'] ) ) {
+			$class .= ' ' . $args['class'];
+		}
+
+		if ( ! $value ) {
+			$value = isset( $args['std'] ) ? $args['std'] : '';
+		} ?>
+
+		<input type="hidden" class="<?php esc_attr_e( implode( ',', $class ) ); ?>" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php esc_attr_e( stripslashes( $value ) ); ?>"/><?php
+	}
 
 	/**
 	 * Select Callback
@@ -83,7 +106,7 @@ class PUM_Fields extends Popmake_Fields {
 	 */
 	public function select_callback( $args, $value ) {
 
-		$class = 'select';
+		$class = 'select ' . $args['id'];
 
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
@@ -116,7 +139,6 @@ class PUM_Fields extends Popmake_Fields {
 		$this->field_after();
 	}
 
-
 	/**
 	 * Checkbox Callback
 	 *
@@ -127,7 +149,7 @@ class PUM_Fields extends Popmake_Fields {
 	 * @return void
 	 */
 	public function checkbox_callback( $args, $value ) {
-		$class = 'checkbox';
+		$class = 'checkbox ' . $args['id'];
 
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
@@ -148,7 +170,6 @@ class PUM_Fields extends Popmake_Fields {
 		$this->field_after();
 	}
 
-
 	/**
 	 * Multicheck Callback
 	 *
@@ -161,7 +182,7 @@ class PUM_Fields extends Popmake_Fields {
 	public function multicheck_callback( $args, $value = array() ) {
 		if ( ! empty( $args['options'] ) ) {
 
-			$class = 'multicheck';
+			$class = 'multicheck ' . $args['id'];
 
 			if ( ! empty ( $args['class'] ) ) {
 				$class .= ' ' . $args['class'];
@@ -190,7 +211,6 @@ class PUM_Fields extends Popmake_Fields {
 		}
 	}
 
-
 	/**
 	 * Rangeslider Callback
 	 *
@@ -202,7 +222,7 @@ class PUM_Fields extends Popmake_Fields {
 	 */
 	public function rangeslider_callback( $args, $value ) {
 
-		$class = 'rangeslider';
+		$class = 'rangeslider ' . $args['id'];
 
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
@@ -236,10 +256,6 @@ class PUM_Fields extends Popmake_Fields {
 	}
 
 
-
-
-
-
 	public function heading_templ_callback( $args ) {
 		$this->heading_callback( $args );
 	}
@@ -247,7 +263,7 @@ class PUM_Fields extends Popmake_Fields {
 	public function text_templ_callback( $args ) {
 		$templ_name = $this->get_templ_name( $args );
 
-		$class = 'text';
+		$class = 'text ' . $args['id'];
 
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
@@ -270,10 +286,31 @@ class PUM_Fields extends Popmake_Fields {
 		$this->field_after();
 	}
 
+	/**
+	 * Hidden Callback
+	 *
+	 * Renders hidden fields.
+	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @param $value
+	*/
+	public function hidden_templ_callback( $args, $value ) {
+		$templ_name = $this->get_templ_name( $args, false );
+
+		$class = 'hidden ' . $args['id'];
+
+		if ( ! empty ( $args['class'] ) ) {
+			$class .= ' ' . $args['class'];
+		} ?>
+
+		<input type="hidden" class="<?php esc_attr_e( implode( ',', $class ) ); ?>" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php echo $templ_name; ?>"/><?php
+	}
+
 	public function select_templ_callback( $args ) {
 		$templ_name = $this->get_templ_name( $args, false );
 
-		$class = 'select';
+		$class = 'select ' . $args['id'];
 
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
@@ -307,7 +344,7 @@ class PUM_Fields extends Popmake_Fields {
 	public function checkbox_templ_callback( $args ) {
 		$templ_name = $this->get_templ_name( $args, false );
 
-		$class = 'checkbox';
+		$class = 'checkbox ' . $args['id'];
 
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
@@ -333,7 +370,7 @@ class PUM_Fields extends Popmake_Fields {
 
 			$templ_name = $this->get_templ_name( $args, false );
 
-			$class = 'multicheck';
+			$class = 'multicheck ' . $args['id'];
 
 			if ( ! empty ( $args['class'] ) ) {
 				$class .= ' ' . $args['class'];
