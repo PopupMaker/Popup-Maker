@@ -90,7 +90,7 @@ class Popmake_Fields {
 	/**
 	 * This function should no longer be used.
 	 *
-	 * @deprecated v1.4
+	 * @deprecated 1.4.0 Replace with add_section()
 	 *
 	 * @param $id
 	 * @param $title
@@ -124,6 +124,7 @@ class Popmake_Fields {
 		$section = wp_parse_args( $section, array(
 			'id' => null,
 			'title' => '',
+			'hidden' => false,
 			'callback' => null,
 		) );
 		$this->sections[ $section['id'] ] = $section;
