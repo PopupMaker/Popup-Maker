@@ -99,7 +99,7 @@ class PUM_Popup_Triggers_Metabox {
 				'type' => '<%= type %>',
 				'columns' => array(
 					'type' => '<%= PUMTriggers.getLabel(type) %>',
-					'cookie' => "<%= trigger_settings.cookie.name %>",
+					'cookie' => "<% if (trigger_settings.cookie.name !== undefined) { print(trigger_settings.cookie.name); } %>",
 					'settings' => '<%= PUMTriggers.getSettingsDesc(type, trigger_settings) %>',
 				),
 				'settings' => '<%- JSON.stringify(trigger_settings) %>',

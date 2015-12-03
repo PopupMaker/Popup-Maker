@@ -47,7 +47,6 @@ var PUMRangeSLiders;
                 if (input.type === 'text') {
                     $('input[type=range]').each(function (index, input) {
                         $input = $(input);
-                        console.log($input);
                         $slider = $('<div />').slider({
                             min: parseInt($input.attr('min'), 10) || 0,
                             max: parseInt($input.attr('max'), 10) || 100,

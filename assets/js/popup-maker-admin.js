@@ -1,3 +1,21 @@
+var PUMChosenFields;
+(function ($) {
+    "use strict";
+    PUMChosenFields = {
+        init: function () {
+            $('.pum-chosen select').filter(':not(.initialized)')
+                .addClass('initialized')
+                .chosen({
+                    allow_single_deselect: true,
+                    width: '100%'
+                })
+                .next()
+                .css({});
+        }
+    };
+
+    $(document).on('pum_init', PUMChosenFields.init);
+}(jQuery));
 var PUMColorPickers;
 (function ($) {
     "use strict";
@@ -158,7 +176,8 @@ var PUMCookies;
                 index = parseInt(values.index),
                 $row = index >= 0 ? $('#pum_popup_cookies_list tbody tr').eq(index) : null,
                 template = _.template($('script#pum_cookie_row_templ').html()),
-                $new_row;
+                $new_row,
+                $trigger, trigger_settings;
 
             e.preventDefault();
 
@@ -179,6 +198,17 @@ var PUMCookies;
 
             PUMModals.closeAll();
             PUMCookies.renumber();
+
+            if (PUMTriggers.new_cookie >= 0) {
+                $trigger = $('#pum_popup_triggers_list tbody tr').eq(PUMTriggers.new_cookie).find('.popup_triggers_field_settings:first');
+                trigger_settings = JSON.parse($trigger.val());
+                trigger_settings.cookie.name[trigger_settings.cookie.name.indexOf('add_new')] = values.cookie_settings.name;
+
+                $trigger.val(JSON.stringify(trigger_settings));
+
+                PUMTriggers.new_cookie = -1;
+                PUMTriggers.refreshDescriptions();
+            }
         })
         .ready(PUMCookies.refreshDescriptions);
 
@@ -285,7 +315,6 @@ var PUMRangeSLiders;
                 if (input.type === 'text') {
                     $('input[type=range]').each(function (index, input) {
                         $input = $(input);
-                        console.log($input);
                         $slider = $('<div />').slider({
                             min: parseInt($input.attr('min'), 10) || 0,
                             max: parseInt($input.attr('max'), 10) || 100,
@@ -363,6 +392,98 @@ var PUMRangeSLiders;
         });
 
 }(jQuery));
+/**
+ * jQuery.serializeObject v0.0.2
+ *
+ * Documentation: https://github.com/viart/jquery.serializeObject
+ *
+ * Artem Vitiuk (@avitiuk)
+ */
+
+(function () {
+
+    var root = this,
+        $ = root.jQuery || root.Zepto || root.ender,
+        inputTypes = 'color,date,datetime,datetime-local,email,hidden,month,number,password,range,search,tel,text,time,url,week'.split(','),
+        inputNodes = 'select,textarea'.split(','),
+        rName = /\[([^\]]*)\]/g;
+
+    // ugly hack for IE7-8
+    function isInArray(array, needle) {
+        return $.inArray(needle, array) !== -1;
+    }
+
+    function storeValue(container, parsedName, value) {
+
+        var part = parsedName[0];
+
+        if (parsedName.length > 1) {
+            if (!container[part]) {
+                // If the next part is eq to '' it means we are processing complex name (i.e. `some[]`)
+                // for this case we need to use Array instead of an Object for the index increment purpose
+                container[part] = parsedName[1] ? {} : [];
+            }
+            storeValue(container[part], parsedName.slice(1), value);
+        } else {
+
+            // Increment Array index for `some[]` case
+            if (!part) {
+                part = container.length;
+            }
+
+            container[part] = value;
+        }
+    }
+
+    $.fn.serializeObject = function (options) {
+        options || (options = {});
+
+        var values = {},
+            settings = $.extend(true, {
+                include: [],
+                exclude: [],
+                includeByClass: ''
+            }, options);
+
+        this.find(':input').each(function () {
+
+            var parsedName;
+
+            // Apply simple checks and filters
+            if (!this.name || this.disabled ||
+                isInArray(settings.exclude, this.name) ||
+                (settings.include.length && !isInArray(settings.include, this.name)) ||
+                this.className.indexOf(settings.includeByClass) === -1) {
+                return;
+            }
+
+            // Parse complex names
+            // JS RegExp doesn't support "positive look behind" :( that's why so weird parsing is used
+            parsedName = this.name.replace(rName, '[$1').split('[');
+            if (!parsedName[0]) {
+                return;
+            }
+
+            if (this.checked ||
+                isInArray(inputTypes, this.type) ||
+                isInArray(inputNodes, this.nodeName.toLowerCase())) {
+
+                // Simulate control with a complex name (i.e. `some[]`)
+                // as it handled in the same way as Checkboxes should
+                if (this.type === 'checkbox') {
+                    parsedName.push('');
+                }
+
+                // jQuery.val() is used to simplify of getting values
+                // from the custom controls (which follow jQuery .val() API) and Multiple Select
+                storeValue(values, parsedName, $(this).val());
+            }
+        });
+
+        return values;
+    };
+
+}).call(this);
 var PUMTabs;
 (function ($) {
     "use strict";
@@ -402,6 +523,7 @@ var PUMTriggers;
         defaults = pum_admin.defaults;
 
     PUMTriggers = {
+        new_cookie: null,
         getLabel: function (type) {
             return I10n.labels.triggers[type].name;
         },
@@ -431,10 +553,28 @@ var PUMTriggers;
                     values = JSON.parse($row.find('.popup_triggers_field_settings:first').val());
 
                 $row.find('td.settings-column').html(PUMTriggers.getSettingsDesc(type, values));
+                if (typeof values.cookie.name === 'array') {
+                    $row.find('td.cookie-column code').text(values.cookie.name.join(', '));
+                } else {
+                    $row.find('td.cookie-column code').text(values.cookie.name);
+                }
             });
         },
-        initEditForm: function () {
+        initEditForm: function (data) {
+            var $form = $('.trigger-editor .pum-form'),
+                $cookie = $('#name', $form),
+                trigger_settings = data.trigger_settings;
 
+            $('#pum_popup_cookies_list tbody tr').each(function () {
+                var settings = JSON.parse($(this).find('.popup_cookies_field_settings:first').val());
+                if (!$cookie.find('option[value="' + settings.name + '"]').length) {
+                    $('<option value="' + settings.name + '">' + settings.name + '</option>').appendTo($cookie);
+                }
+            });
+
+            $cookie.val(trigger_settings.cookie.name);
+
+            $cookie.trigger("chosen:updated");
         }
     };
 
@@ -466,7 +606,7 @@ var PUMTriggers;
             }
 
             PUMModals.reload(id, template(data));
-            PUMTriggers.initEditForm();
+            PUMTriggers.initEditForm(data);
         })
         .on('click', '#pum_popup_triggers_list .remove', function (e) {
             var $this = $(this),
@@ -496,7 +636,7 @@ var PUMTriggers;
             }
 
             PUMModals.reload(id, template(data));
-            PUMTriggers.initEditForm();
+            PUMTriggers.initEditForm(data);
         })
         .on('submit', '.trigger-editor .pum-form', function (e) {
             var $form = $(this),
@@ -526,6 +666,11 @@ var PUMTriggers;
 
             PUMModals.closeAll();
             PUMTriggers.renumber();
+
+            if (values.trigger_settings.cookie.name !== null && values.trigger_settings.cookie.name.indexOf('add_new') >= 0) {
+                PUMTriggers.new_cookie = values.index;
+                $('#pum_popup_cookie_fields button.add-new').trigger('click');
+            }
         })
         .ready(PUMTriggers.refreshDescriptions);
 
@@ -609,72 +754,6 @@ var PUMUtils;
         }
     };
 
-    if ($.fn.serializeObject === undefined) {
-        $.fn.serializeObject = function(){
-
-            var self = this,
-                json = {},
-                push_counters = {},
-                patterns = {
-                    "validate": /^[a-zA-Z][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/,
-                    "key":      /[a-zA-Z0-9_]+|(?=\[\])/g,
-                    "push":     /^$/,
-                    "fixed":    /^\d+$/,
-                    "named":    /^[a-zA-Z0-9_]+$/
-                };
-
-
-            this.build = function(base, key, value){
-                base[key] = value;
-                return base;
-            };
-
-            this.push_counter = function(key){
-                if(push_counters[key] === undefined){
-                    push_counters[key] = 0;
-                }
-                return push_counters[key]++;
-            };
-
-            $.each($(this).serializeArray(), function(){
-
-                // skip invalid keys
-                if(!patterns.validate.test(this.name)){
-                    return;
-                }
-
-                var k,
-                    keys = this.name.match(patterns.key),
-                    merge = this.value,
-                    reverse_key = this.name;
-
-                while((k = keys.pop()) !== undefined){
-
-                    // adjust reverse_key
-                    reverse_key = reverse_key.replace(new RegExp("\\[" + k + "\\]$"), '');
-
-                    // push
-                    if(k.match(patterns.push)){
-                        merge = self.build([], self.push_counter(reverse_key), merge);
-                    }
-
-                    // fixed
-                    else if(k.match(patterns.fixed)){
-                        merge = self.build([], k, merge);
-                    }
-
-                    // named
-                    else if(k.match(patterns.named)){
-                        merge = self.build({}, k, merge);
-                    }
-                }
-
-                json = $.extend(true, json, merge);
-            });
-
-            return json;
-        };
-    }
 
     String.prototype.capitalize = function() {
         return this.charAt(0).toUpperCase() + this.slice(1);

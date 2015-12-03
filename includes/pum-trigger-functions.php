@@ -41,8 +41,13 @@ function pum_trigger_cookie_fields() {
 		'name' => array(
 			'label'       => __( 'Cookie Name', 'popup-maker' ),
 			'desc'        => __( 'When do you want to create the cookie.', 'popup-maker' ),
-			'std'         => 'popmake-123',
+			'type'        => 'select',
+			'multiple'    => true,
+			'chosen'    => true,
 			'priority'    => 1,
+			'options'     => array(
+				__( 'Add New Cookie', 'popup-maker' ) => 'add_new'
+			)
 		),
 	) );
 }

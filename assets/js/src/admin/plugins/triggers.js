@@ -6,6 +6,7 @@ var PUMTriggers;
         defaults = pum_admin.defaults;
 
     PUMTriggers = {
+        new_cookie: null,
         getLabel: function (type) {
             return I10n.labels.triggers[type].name;
         },
@@ -35,10 +36,28 @@ var PUMTriggers;
                     values = JSON.parse($row.find('.popup_triggers_field_settings:first').val());
 
                 $row.find('td.settings-column').html(PUMTriggers.getSettingsDesc(type, values));
+                if (typeof values.cookie.name === 'array') {
+                    $row.find('td.cookie-column code').text(values.cookie.name.join(', '));
+                } else {
+                    $row.find('td.cookie-column code').text(values.cookie.name);
+                }
             });
         },
-        initEditForm: function () {
+        initEditForm: function (data) {
+            var $form = $('.trigger-editor .pum-form'),
+                $cookie = $('#name', $form),
+                trigger_settings = data.trigger_settings;
 
+            $('#pum_popup_cookies_list tbody tr').each(function () {
+                var settings = JSON.parse($(this).find('.popup_cookies_field_settings:first').val());
+                if (!$cookie.find('option[value="' + settings.name + '"]').length) {
+                    $('<option value="' + settings.name + '">' + settings.name + '</option>').appendTo($cookie);
+                }
+            });
+
+            $cookie.val(trigger_settings.cookie.name);
+
+            $cookie.trigger("chosen:updated");
         }
     };
 
@@ -70,7 +89,7 @@ var PUMTriggers;
             }
 
             PUMModals.reload(id, template(data));
-            PUMTriggers.initEditForm();
+            PUMTriggers.initEditForm(data);
         })
         .on('click', '#pum_popup_triggers_list .remove', function (e) {
             var $this = $(this),
@@ -100,7 +119,7 @@ var PUMTriggers;
             }
 
             PUMModals.reload(id, template(data));
-            PUMTriggers.initEditForm();
+            PUMTriggers.initEditForm(data);
         })
         .on('submit', '.trigger-editor .pum-form', function (e) {
             var $form = $(this),
@@ -130,6 +149,11 @@ var PUMTriggers;
 
             PUMModals.closeAll();
             PUMTriggers.renumber();
+
+            if (values.trigger_settings.cookie.name !== null && values.trigger_settings.cookie.name.indexOf('add_new') >= 0) {
+                PUMTriggers.new_cookie = values.index;
+                $('#pum_popup_cookie_fields button.add-new').trigger('click');
+            }
         })
         .ready(PUMTriggers.refreshDescriptions);
 

@@ -108,9 +108,15 @@ class PUM_Fields extends Popmake_Fields {
 
 		$class = 'select ' . $args['id'];
 
+		if ( isset ( $args['chosen'] ) ) {
+			$class .= ' pum-chosen';
+		}
+
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
 		}
+
+		$multiple = isset ( $args['multiple'] ) && $args['multiple'] ? 'multiple' : '';
 
 		$this->field_before( $class );
 
@@ -122,7 +128,7 @@ class PUM_Fields extends Popmake_Fields {
 			<label for="<?php esc_attr_e( $args['id'] ); ?>"><?php esc_html_e( $args['label'] ); ?></label><?php
 		} ?>
 
-		<select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" >
+		<select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" <?php echo $multiple; ?>>
 
 		<?php if ( ! empty( $args['options'] ) ) {
 			foreach ( $args['options'] as $label => $option ) { ?>
@@ -312,9 +318,15 @@ class PUM_Fields extends Popmake_Fields {
 
 		$class = 'select ' . $args['id'];
 
+		if ( isset ( $args['chosen'] ) ) {
+			$class .= ' pum-chosen';
+		}
+
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
 		}
+
+		$multiple = isset ( $args['multiple'] ) && $args['multiple'] ? 'multiple' : '';
 
 		$this->field_before( $class );
 
@@ -322,7 +334,7 @@ class PUM_Fields extends Popmake_Fields {
 			<label for="<?php esc_attr_e( $args['id'] ); ?>"><?php esc_html_e( $args['label'] ); ?></label><?php
 		} ?>
 
-		<select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" >
+		<select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" <?php echo $multiple; ?>>
 
 		<?php if ( ! empty( $args['options'] ) ) {
 			foreach ( $args['options'] as $label => $option ) { ?>

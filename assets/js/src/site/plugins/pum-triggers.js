@@ -13,6 +13,24 @@
         return this;
     };
 
+    $.fn.popmake.methods.checkCookies = function ( settings) {
+        var i;
+        // If cookie exists return true
+        console.log(settings.cookie.name, typeof settings.cookie.name);
+
+        if (typeof settings.cookie.name === 'array' || typeof settings.cookie.name === 'object') {
+            for(i = 0; settings.cookie.name.length > i; i++) {
+                if ($.pm_cookie(settings.cookie.name[i]) !== undefined) {
+                    return true;
+                }
+            }
+        } else if (typeof settings.cookie.name === 'string') {
+            if ($.pm_cookie(settings.cookie.name) !== undefined) {
+                return true;
+            }
+        }
+        return false;
+    };
 
     $.fn.popmake.triggers = {
         auto_open: function (settings) {
@@ -27,7 +45,7 @@
                 }
 
                 // If cookie exists return.
-                if ($.pm_cookie(settings.cookie.name) !== undefined) {
+                if ($popup.popmake('checkCookies', settings)) {
                     return;
                 }
 
@@ -61,7 +79,7 @@
                     }
 
                     // If cookie exists return.
-                    if ($.pm_cookie(settings.cookie.name) !== undefined) {
+                    if ($popup.popmake('checkCookies', settings)) {
                         return;
                     }
 

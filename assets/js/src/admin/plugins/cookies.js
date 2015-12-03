@@ -128,7 +128,8 @@ var PUMCookies;
                 index = parseInt(values.index),
                 $row = index >= 0 ? $('#pum_popup_cookies_list tbody tr').eq(index) : null,
                 template = _.template($('script#pum_cookie_row_templ').html()),
-                $new_row;
+                $new_row,
+                $trigger, trigger_settings;
 
             e.preventDefault();
 
@@ -149,6 +150,17 @@ var PUMCookies;
 
             PUMModals.closeAll();
             PUMCookies.renumber();
+
+            if (PUMTriggers.new_cookie >= 0) {
+                $trigger = $('#pum_popup_triggers_list tbody tr').eq(PUMTriggers.new_cookie).find('.popup_triggers_field_settings:first');
+                trigger_settings = JSON.parse($trigger.val());
+                trigger_settings.cookie.name[trigger_settings.cookie.name.indexOf('add_new')] = values.cookie_settings.name;
+
+                $trigger.val(JSON.stringify(trigger_settings));
+
+                PUMTriggers.new_cookie = -1;
+                PUMTriggers.refreshDescriptions();
+            }
         })
         .ready(PUMCookies.refreshDescriptions);
 

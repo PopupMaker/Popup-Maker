@@ -200,7 +200,6 @@ class PUM_Popup_Cookies_Metabox {
 			<td class="name-column">
 				<code>
 					<?php echo $row['columns']['name']; ?>
-					<i class="copy-name dashicons dashicons-clipboard"></i>
 				</code>
 			</td>
 			<td class="settings-column"><?php echo $row['columns']['settings']; ?></td>

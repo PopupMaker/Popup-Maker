@@ -149,6 +149,7 @@ class Popmake_Fields {
 			'max'         => null,
 			'step'        => null,
 			'chosen'      => null,
+			'multiple'    => null,
 			'placeholder' => '',
 			'allow_blank' => true,
 			'readonly'    => false,
