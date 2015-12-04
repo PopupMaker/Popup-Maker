@@ -178,6 +178,8 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			/**
 			 * v1.4 Additions
 			 */
+			require_once POPMAKE_DIR . 'includes/class-pum-post.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-popup.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-fields.php';
 
 			require_once POPMAKE_DIR . 'includes/pum-popup-functions.php';
