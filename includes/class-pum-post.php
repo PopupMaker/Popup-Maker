@@ -74,6 +74,7 @@ if ( ! class_exists( 'PUM_Post' ) ) {
 		 * @param bool $_id
 		 * @param array $_args
 		 *
+		 * return boolean $valid
 		 */
 		public function __construct( $_id = false, $_args = array() ) {
 			$post = WP_Post::get_instance( $_id );
