@@ -51,8 +51,8 @@ class PUM_Popup_Cookies_Metabox {
 				</thead>
 				<tbody>
 					<?php
-					$cookies = PUM_Cookies::instance()->get_cookies();
-					$current_cookies = popmake_get_popup_cookies( $post->ID );
+					$cookies         = PUM_Cookies::instance()->get_cookies();
+					$current_cookies = pum_get_popup_cookies( $post->ID );
 					if ( ! empty( $current_cookies ) ) {
 						foreach ( $current_cookies as $key => $values ) {
 							$cookie = $cookies[ $values['event'] ];

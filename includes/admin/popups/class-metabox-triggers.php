@@ -53,8 +53,8 @@ class PUM_Popup_Triggers_Metabox {
 				</thead>
 				<tbody>
 					<?php
-					$triggers = PUM_Triggers::instance()->get_triggers();
-					$current_triggers = popmake_get_popup_triggers( $post->ID );
+					$triggers         = PUM_Triggers::instance()->get_triggers();
+					$current_triggers = pum_get_popup_triggers( $post->ID );
 					if ( ! empty( $current_triggers ) ) {
 						foreach ( $current_triggers as $key => $values ) {
 							$trigger = $triggers[ $values['type'] ];
