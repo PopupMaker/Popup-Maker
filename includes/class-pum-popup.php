@@ -14,16 +14,55 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 	 */
 	class PUM_Popup extends PUM_Post {
 
+		/**
+		 * @var string
+		 */
 		protected $required_post_type = 'popup';
 
-		private $_cookies = null;
-		private $_triggers = null;
-		private $_conditions = null;
+		/**
+		 * @var null
+		 */
+		protected $cookies = null;
 
-		private $theme_id = null;
-		private $data_attr = null;
-		private $title = null;
-		private $content = null;
+		/**
+		 * @var null
+		 */
+		protected $triggers = null;
+
+		/**
+		 * @var null
+		 */
+		protected $conditions = null;
+
+		/**
+		 * @var null
+		 */
+		protected $display = null;
+
+		/**
+		 * @var null
+		 */
+		protected $close = null;
+
+		/**
+		 * @var null
+		 */
+		protected $theme_id = null;
+
+		/**
+		 * @var null
+		 */
+		protected $data_attr = null;
+
+		/**
+		 * @var null
+		 */
+		protected $title = null;
+
+		/**
+		 * @var null
+		 */
+		protected $content = null;
 
 		/**
 		 * If no id is passed this will check for the current global id.
@@ -34,22 +73,21 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		 *
 		 * @param bool $_id
 		 * @param array $_args
+		 *
+		 * return boolean $valid
 		 */
-		public function __construct( $_id = false, $_args = array() ) {
+		public function __construct( $_id = null, $_args = array() ) {
 			if ( ! $_id ) {
-				$id = popmake_get_the_popup_ID();
-				if ( ! $id ) {
-					return false;
-				}
-				$_id = $id;
+				$_id = popmake_get_the_popup_ID();
 			}
-			parent::__construct( $_id, $_args );
+
+			return parent::__construct( $_id, $_args );
 		}
 
 		/**
 		 * Returns the title of a popup.
 		 *
-		 * @uses deprecated filter `popmake_get_the_popup_title`
+		 * @uses filter `popmake_get_the_popup_title`
 		 * @uses filter `pum_popup_get_title`
 		 *
 		 * @return string
@@ -59,20 +97,16 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 				$title = get_post_meta( $this->ID, 'popup_title', true );
 
 				// Deprecated
-				$title = apply_filters( 'popmake_get_the_popup_title', $title, $this->ID );
-
-				$this->title = apply_filters( 'pum_popup_get_title', $title, $this->ID );
+				$this->title = apply_filters( 'popmake_get_the_popup_title', $title, $this->ID );
 			}
 
-			return $this->title;
+			return apply_filters( 'pum_popup_get_title', $this->title, $this->ID );;
 		}
 
 		/**
 		 * Returns the content of a popup.
 		 *
-		 * todo incorporate the
-		 *
-		 * @uses deprecated filter `the_popup_content`
+		 * @uses filter `the_popup_content`
 		 * @uses filter `pum_popup_content`
 		 *
 		 * @return string
@@ -80,18 +114,16 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		public function get_content() {
 			if ( ! $this->content ) {
 				// Deprecated Filter
-				$content = apply_filters( 'the_popup_content', $this->post_content, $this->ID );
-
-				$this->content = apply_filters( 'pum_popup_content', $content, $this->ID );
+				$this->content = apply_filters( 'the_popup_content', $this->post_content, $this->ID );
 			}
 
-			return $this->content;
+			return $this->content = apply_filters( 'pum_popup_content', $this->content, $this->ID );
 		}
 
 		/**
 		 * Returns this popups theme id or the default id.
 		 *
-		 * todo replace usage of popmake_get_default_popup_theme.
+		 * @todo replace usage of popmake_get_default_popup_theme.
 		 *
 		 * @uses filter `popmake_get_the_popup_theme`
 		 * @uses filter `pum_popup_get_theme_id`
@@ -106,13 +138,11 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 					$theme_id = popmake_get_default_popup_theme();
 				}
 
-				$this->theme_id = $theme_id;
+				// Deprecated filter
+				$this->theme_id = apply_filters( 'popmake_get_the_popup_theme', $theme_id, $this->ID );
 			}
 
-			// Deprecated
-			$theme_id = apply_filters( 'popmake_get_the_popup_theme', $this->theme_id, $this->ID );
-
-			return (int) apply_filters( 'pum_popup_get_theme_id', $theme_id, $this->ID );
+			return (int) apply_filters( 'pum_popup_get_theme_id', $this->theme_id, $this->ID );
 		}
 
 		/**
@@ -131,35 +161,76 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 				'theme-' . $this->get_theme_id()
 			);
 
+			// Add a class for each trigger type.
+			foreach ( $this->get_triggers() as $trigger => $trigger_settings ) {
+				if ( ! in_array( $trigger, $classes ) ) {
+					$classes[] = $trigger;
+				}
+			}
+
 			// Deprecated
 			$classes = apply_filters( 'popmake_get_the_popup_classes', $classes, $this->ID );
 
 			return apply_filters( 'pum_popup_get_classes', $classes, $this->ID );
 		}
 
-		function get_cookies() {}
-		function get_triggers() {}
+		/**
+		 * @return mixed|void
+		 */
+		function get_cookies() {
+			if ( ! $this->cookies ) {
+				$this->cookies = get_post_meta( $this->ID, 'popup_cookies', true );
+
+				if ( ! $this->cookies ) {
+					$this->cookies = array();
+				}
+			}
+
+			return apply_filters( 'pum_popup_get_cookies', $this->cookies, $this->ID );
+		}
+
+		/**
+		 * @return mixed|void
+		 */
+		function get_triggers() {
+			if ( ! $this->triggers ) {
+				$this->triggers = get_post_meta( $this->ID, 'popup_triggers', true );
+
+				if ( ! $this->triggers ) {
+					$this->triggers = array();
+				}
+			}
+
+			return apply_filters( 'pum_popup_get_triggers', $this->triggers, $this->ID );
+		}
 
 		/**
 		 * Returns all or single display settings.
 		 *
 		 * @param null $key
 		 *
-		 * @return bool|mixed|WP_Error
+		 * @return mixed
 		 */
 		function get_display( $key = null ) {
 			if ( ! $this->display ) {
-				$this->display = get_post_meta( $this->ID, 'popup_display', true );
+				$display_values = get_post_meta( $this->ID, 'popup_display', true );
+
+				if ( ! $display_values ) {
+					$display_values = apply_filters( "pum_popup_display_defaults", array() );
+				}
+
+				$this->display = $display_values;
 			}
+
+			$values = apply_filters( 'pum_popup_get_display', $this->display, $this->ID );
+
 			if ( ! $key ) {
-				return $this->display;
+				return $values;
 			}
 
-			if ( isset ( $this->display[ $key ] ) ) {
-				return $this->display[ $key ];
-			}
+			$value = isset ( $values[ $key ] ) ? $values[ $key ] : null;
 
-			return false;
+			return apply_filters( 'pum_popup_get_display_' . $key, $value, $this->ID );
 		}
 
 		/**
@@ -167,54 +238,29 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		 *
 		 * @param null $key
 		 *
-		 * @return bool|mixed|WP_Error
+		 * @return mixed
 		 */
 		function get_close( $key = null ) {
 			if ( ! $this->close ) {
-				$values = get_post_meta( $this->ID, 'popup_close', true );
+				$close_values = get_post_meta( $this->ID, 'popup_close', true );
 
-
-				if ( ! $values ) {
-					$values = apply_filters( "pum_popup_close_defaults", array() );
+				if ( ! $close_values ) {
+					$close_values = apply_filters( "pum_popup_close_defaults", array() );
 				}
 
-				$this->close = $values;
+				$this->close = $close_values;
 			}
 
-			if ( $key ) {
-
-				// Check for dot notation key value.
-				$test  = uniqid();
-				$value = popmake_resolve( $values, $key, $test );
-				if ( $value == $test ) {
-
-					$key = str_replace( '.', '_', $key );
-
-					if ( ! isset( $values[ $key ] ) ) {
-						$value = $default;
-					} else {
-						$value = $values[ $key ];
-					}
-
-				}
-
-				return apply_filters( "pum_popup_close_$key", $value, $this->ID );
-			} else {
-				return apply_filters( "popmake_get_popup_{$group}", $values, $popup_id );
-			}
-
-
-
+			$values = apply_filters( 'pum_popup_get_close', $this->close, $this->ID );
 
 			if ( ! $key ) {
-				return $this->close;
+				return $values;
 			}
 
-			if ( isset ( $this->close[ $key ] ) ) {
-				return $this->close[ $key ];
-			}
+			$value = isset ( $values[ $key ] ) ? $values[ $key ] : null;
 
-			return false;
+			return apply_filters( 'pum_popup_get_close_' . $key, $value, $this->ID );
+
 		}
 
 		/**
@@ -237,19 +283,17 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 					'cookies'  => $this->get_cookies(),
 					'triggers' => $this->get_triggers(),
 					'meta'     => array(
-						'display'    => popmake_get_popup_display( $this->ID ),
-						'close'      => popmake_get_popup_close( $this->ID ),
+						'display'    => $this->get_display(),
+						'close'      => $this->get_close(),
 						'click_open' => popmake_get_popup_click_open( $this->ID ),
 					)
 				);
 
 				// Deprecated
-				$data_attr = apply_filters( 'popmake_get_the_popup_data_attr', $data_attr, $this->ID );
-
-				$this->data_attr = apply_filters( 'pum_popup_get_data_attr', $data_attr, $this->ID );
+				$this->data_attr = apply_filters( 'popmake_get_the_popup_data_attr', $data_attr, $this->ID );
 			}
 
-			return $this->data_attr;
+			return apply_filters( 'pum_popup_get_data_attr', $this->data_attr, $this->ID );
 		}
 
 		/**
@@ -268,23 +312,15 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 				$text = $theme_text;
 			}
 
-			// todo replace this with PUM_Popup close settings.
-			$popup_close_text = popmake_get_popup_close( $popup_id, 'text' );
+			// Check to see if popup has close text to over ride default.
+			$popup_close_text = $this->get_close( 'text' );
 			if ( $popup_close_text && $popup_close_text != '' ) {
 				$text = $popup_close_text;
 			}
 
-
 			return apply_filters( 'pum_popup_close_text', $text, $this->ID );
 		}
 
-
-		public function get_preview_url() {
-			$args = apply_filters( 'pum_popup_preview_url_args', array(
-				'printable' => true,
-			),$this );
-			return get_permalink( $this->ID ) . '?' . http_build_query( $args );
-		}
 
 		/**
 		 * Returns whether or not the popup is visible in the loop.
