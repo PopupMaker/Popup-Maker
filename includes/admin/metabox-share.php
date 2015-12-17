@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function popmake_render_share_meta_box() { ?>
 	<div id="popmake_share_fields" class="popmake_meta_table_wrap">
+	<?php add_action( 'popmake_admin_footer', 'popmake_admin_footer_social_scripts' ); ?>
 	<?php do_action( 'popmake_share_meta_box_fields' ); ?>
 	</div><?php
 }
@@ -43,7 +44,6 @@ function popmake_share_meta_box_links() { ?>
 }
 
 
-add_action( 'popmake_admin_footer', 'popmake_admin_footer_social_scripts' );
 function popmake_admin_footer_social_scripts() { ?>
 	<div id="fb-root"></div>
 	<script>

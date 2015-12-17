@@ -1,10 +1,18 @@
-/* UI */
-h3.title {
-  font-size: 16px !important;
-  color: #9aba27;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.125);
+@import 'partials/tabs';
+@import 'partials/metaboxes';
+@import 'partials/admin_modal';
+
+.tabbed-form {
+  label {
+    display: block;
+    font-weight: bold;
+    font-size: 1.1em;
+  }
 }
 
+
+
+/* UI */
 #popuptitlediv #popuptitle {
   background-color: #fff;
   font-size: 1.5em;
@@ -144,11 +152,7 @@ option.bold {
   padding-bottom: 0 !important;
 }
 
-/* Marketing & Standouts */
-/* Menu Highlight */
-#menu-posts-popup ul.wp-submenu li:nth-child(0n+9) a {
-  color: #9ABA27;
-}
+
 
 /* Upgrade Tips */
 .popmake-upgrade-tip {

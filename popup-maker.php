@@ -170,10 +170,26 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/admin/settings/register-settings.php';
 			$popmake_options = popmake_get_settings();
 
+			// Phasing Out
+			require_once POPMAKE_DIR . 'includes/class-popmake-fields.php';
+			require_once POPMAKE_DIR . 'includes/class-popmake-popup-fields.php';
+			require_once POPMAKE_DIR . 'includes/class-popmake-popup-theme-fields.php';
+
+
+			// New
+			require_once POPMAKE_DIR . 'includes/class-pum-fields.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-trigger.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-triggers.php';
+			require_once POPMAKE_DIR . 'includes/pum-trigger-functions.php';
+
+			if ( is_admin() ) {
+				require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-helpers.php';
+			}
+
+
 
 			require_once POPMAKE_DIR . 'includes/actions.php';
 			require_once POPMAKE_DIR . 'includes/post-types.php';
-			require_once POPMAKE_DIR . 'includes/class-popmake-fields.php';
 			require_once POPMAKE_DIR . 'includes/class-popmake-cron.php';
 			require_once POPMAKE_DIR . 'includes/scripts.php';
 			require_once POPMAKE_DIR . 'includes/shortcodes.php';
@@ -207,6 +223,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/admin-pages.php';
 				require_once POPMAKE_DIR . 'includes/admin/post-editor.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox.php';
+				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-triggers.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/dashboard-columns.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-close-fields.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-display-fields.php';
