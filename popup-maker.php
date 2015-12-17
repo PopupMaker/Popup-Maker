@@ -170,6 +170,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/admin/settings/register-settings.php';
 			$popmake_options = popmake_get_settings();
 
+			require_once POPMAKE_DIR . 'includes/pum-script-functions.php';
 
 			require_once POPMAKE_DIR . 'includes/actions.php';
 			require_once POPMAKE_DIR . 'includes/post-types.php';
