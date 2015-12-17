@@ -100,7 +100,7 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 				$this->title = apply_filters( 'popmake_get_the_popup_title', $title, $this->ID );
 			}
 
-			return apply_filters( 'pum_popup_get_title', $this->title, $this->ID );;
+			return apply_filters( 'pum_popup_get_title', $this->title, $this->ID );
 		}
 
 		/**
@@ -325,13 +325,15 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		/**
 		 * Returns whether or not the popup is visible in the loop.
 		 *
+		 * @todo this function will be rebuilt as part of another issue anyways so this is currently a placeholder.
+		 *
 		 * @return bool
 		 */
 		public function is_loadable() {
 			if ( ! $this->ID ) {
 				$loadable = false;
 				// Published/private
-			} elseif ( $this->post_status !== 'publish' && ! current_user_can( 'edit_post', $this->id ) ) {
+			} elseif ( $this->post_status !== 'publish' && ! current_user_can( 'edit_post', $this->ID ) ) {
 				$loadable = false;
 
 				// visibility setting
