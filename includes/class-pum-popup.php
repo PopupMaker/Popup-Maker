@@ -153,25 +153,71 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		 * @uses deprecated filter `popmake_get_the_popup_classes`
 		 * @uses filter `pum_popup_get_classes`
 		 *
+		 * @param string $element The key or html element identifier.
+		 *
 		 * @return array $classes
 		 */
-		function get_classes() {
+		function get_classes( $element = 'overlay' ) {
 			$classes = array(
-				'popmake',
-				'theme-' . $this->get_theme_id()
+				'overlay' => array(
+					'pum-overlay',
+					'pum-theme-' . $this->get_theme_id(),
+					'popmake-overlay', // Backward Compatibility
+				),
+				'container' => array(
+					'pum-container',
+					'popmake', // Backward Compatibility
+					'theme-' . $this->get_theme_id(), // Backward Compatibility
+				),
+				'title' => array(
+					'pum-title',
+					'popmake-title', // Backward Compatibility
+				),
+				'content' => array(
+					'pum-content',
+					'popmake-content', // Backward Compatibility
+				),
+				'close' => array(
+					'pum-close',
+					'popmake-close' // Backward Compatibility
+				),
 			);
+
+
+			$size = $this->get_display( 'size' );
+			if ( in_array( $size, array( 'nano', 'micro', 'tiny', 'small', 'medium', 'normal', 'large', 'xlarge' ) ) ) {
+				$classes['container'][] = 'pum-responsive';
+				$classes['container'][] = 'pum-responsive-' . $size;
+				$classes['container'][] = 'responsive'; // Backward Compatibility
+				$classes['container'][] = 'size-' . $size; // Backward Compatibility
+			} elseif ( $size == 'custom' ) {
+				$classes['container'][] = 'size-custom'; // Backward Compatibility
+			}
+
+			if ( ! $this->get_display( 'custom_height_auto' ) && $this->get_display( 'scrollable_content' ) ) {
+				$classes['container'][] = 'pum-scrollable';
+				$classes['container'][] = 'scrollable'; // Backward Compatibility
+			}
+
+			if ( $this->get_display( 'position_fixed' ) ) {
+				$classes['container'][] = 'pum-position-fixed';
+			}
 
 			// Add a class for each trigger type.
 			foreach ( $this->get_triggers() as $trigger => $trigger_settings ) {
-				if ( ! in_array( $trigger, $classes ) ) {
-					$classes[] = $trigger;
+				if ( ! in_array( $trigger, $classes['overlay'] ) ) {
+					$classes['overlay'][] = $trigger;
 				}
 			}
 
-			// Deprecated
-			$classes = apply_filters( 'popmake_get_the_popup_classes', $classes, $this->ID );
+			// Deprecated: applies old classes to the new overlay
+			if ( $element == 'container' ) {
+				$classes['container'] = apply_filters( 'popmake_get_the_popup_classes', $classes['container'], $this->ID );
+			}
 
-			return apply_filters( 'pum_popup_get_classes', $classes, $this->ID );
+			$classes = apply_filters( 'pum_popup_get_classes', $classes, $this->ID );
+
+			return apply_filters( "pum_popup_get_{$element}_classes", $classes[ $element ], $this->ID );
 		}
 
 		/**
@@ -319,6 +365,22 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 			}
 
 			return apply_filters( 'pum_popup_close_text', $text, $this->ID );
+		}
+
+
+		/**
+		 * Returns true if the close button should be rendered.
+		 *
+		 * @uses apply_filters `popmake_show_close_button`
+		 * @uses apply_filters `pum_popup_show_close_button`
+		 *
+		 * @return bool
+		 */
+		public function show_close_button() {
+			// Deprecated filter.
+			$show = apply_filters( 'popmake_show_close_button', true, $this->ID );
+
+			return boolval( apply_filters( 'pum_popup_show_close_button', $show, $this->ID ) );
 		}
 
 
