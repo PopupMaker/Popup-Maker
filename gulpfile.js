@@ -12,20 +12,29 @@ gulp.task('sass', function() {
         .pipe($.csscomb())
         .pipe(gulp.dest('assets/css'));
 });
-gulp.task('css', function() {
+gulp.task('css', ['sass'], function() {
+    return gulp.src(['!assets/css/*.min.css', 'assets/css/*.css', ])
+        // Minify the CSS
+        .pipe($.csso())
+        // Rename the file with the .min.css extension
+        .pipe($.rename({ extname: '.min.css' }))
+        // Save the file
+        .pipe(gulp.dest('assets/css'));
+});
+gulp.task('css:minify', function() {
+    return gulp.src(['!assets/css/*.min.css', 'assets/css/*.css', ])
+        // Minify the CSS
+        .pipe($.csso())
+        // Rename the file with the .min.css extension
+        .pipe($.rename({ extname: '.min.css' }))
+        // Save the file
+        .pipe(gulp.dest('assets/css'));
+});
+gulp.task('css:lint', function() {
     return gulp.src(['!assets/css/*.min.css', 'assets/css/*.css', ])
         // Lint the CSS
         .pipe($.csslint())
-        .pipe($.csslint.reporter())
-
-        // Minify the CSS
-        .pipe($.csso())
-
-        // Rename the file with the .min.css extension
-        .pipe($.rename({ extname: '.min.css' }))
-
-        // Save the file
-        .pipe(gulp.dest('assets/css'));
+        .pipe($.csslint.reporter());
 });
 gulp.task('js', function() {
     return gulp.src('assets/js/src/*.js')
@@ -53,7 +62,10 @@ gulp.task('js:lint', function () {
 });
 
 gulp.task('watch', function() {
-    gulp.watch('assets/sass/*.scss', ['sass']);
-    gulp.watch('assets/css/*.css', ['css']);
+    gulp.watch('assets/sass/*.scss', ['css']);
     gulp.watch('assets/js/src/*.js', ['js']);
 });
+
+gulp.task('build', ['css', 'js']);
+
+gulp.task('default', ['build']);
