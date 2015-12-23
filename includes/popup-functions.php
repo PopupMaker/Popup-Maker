@@ -106,7 +106,7 @@ function popmake_add_popup_size_classes( $classes, $popup_id ) {
 	return $classes;
 }
 
-add_filter( 'popmake_get_the_popup_classes', 'popmake_add_popup_size_classes', 5, 2 );
+//add_filter( 'popmake_get_the_popup_classes', 'popmake_add_popup_size_classes', 5, 2 );
 
 /**
  * @deprecated 1.4.0 Use the PUM_Popup class instead.
