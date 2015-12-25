@@ -14,10 +14,6 @@ gulp.task('sass', function() {
 });
 gulp.task('css', function() {
     return gulp.src(['!assets/css/*.min.css', 'assets/css/*.css', ])
-        // Lint the CSS
-        .pipe($.csslint())
-        .pipe($.csslint.reporter())
-
         // Minify the CSS
         .pipe($.csso())
 
@@ -25,15 +21,43 @@ gulp.task('css', function() {
         .pipe($.rename({ extname: '.min.css' }))
 
         // Save the file
-        .pipe(gulp.dest('assets/css'));
+        .pipe(gulp.dest('assets/css'))
+        .pipe($.livereload());
 });
-gulp.task('js', function() {
+
+gulp.task('js:admin', function() {
+    return gulp.src(['assets/js/src/admin/plugins/**/*.js', 'assets/js/src/admin/general.js'])
+        .pipe($.concat('popup-maker-admin.js'))
+        .pipe(gulp.dest('assets/js'))
+        .pipe($.uglify())
+        .pipe($.rename({extname: '.min.js'}))
+        .pipe(gulp.dest('assets/js'))
+        .pipe($.livereload());
+});
+gulp.task('js:site', function() {
+    return gulp.src(['assets/js/src/site/plugins/**/*.js', 'assets/js/src/site/general.js'])
+        .pipe($.order([
+            "plugins/compatibility.js",
+            "plugins/pum.js",
+            "plugins/**/*.js",
+            'general.js'
+        ], { base: 'assets/js/src/site/' }))
+        .pipe($.concat('popup-maker-site.js'))
+        .pipe(gulp.dest('assets/js'))
+        .pipe($.uglify())
+        .pipe($.rename({extname: '.min.js'}))
+        .pipe(gulp.dest('assets/js'))
+        .pipe($.livereload());
+});
+gulp.task('js:other', function() {
     return gulp.src('assets/js/src/*.js')
         .pipe(gulp.dest('assets/js'))
         .pipe($.uglify())
         .pipe($.rename({extname: '.min.js'}))
-        .pipe(gulp.dest('assets/js'));
+        .pipe(gulp.dest('assets/js'))
+        .pipe($.livereload());
 });
+
 
 gulp.task('js:complexity', function () {
     return gulp.src('assets/js/src/*.js')
@@ -53,7 +77,10 @@ gulp.task('js:lint', function () {
 });
 
 gulp.task('watch', function() {
-    gulp.watch('assets/sass/*.scss', ['sass']);
+    $.livereload.listen();
+    gulp.watch('assets/sass/**/*.scss', ['sass']);
     gulp.watch('assets/css/*.css', ['css']);
-    gulp.watch('assets/js/src/*.js', ['js']);
+    gulp.watch('assets/js/src/admin/**/*.js', ['js:admin']);
+    gulp.watch('assets/js/src/site/**/*.js', ['js:site']);
+    gulp.watch(['assets/js/src/**/*.js', '!assets/js/src/site/**/*.js', '!assets/js/src/admin/**/*.js'], ['js:other']);
 });
