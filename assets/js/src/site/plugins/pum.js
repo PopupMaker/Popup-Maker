@@ -24,7 +24,8 @@
 
     // Defines the core $.popmake methods.
 
-     $.fn.popmake.methods = {
+
+    $.fn.popmake.methods = {
         init: function (options) {
             return this.each(function () {
                 var $this = $(this),
@@ -32,10 +33,6 @@
 
                 if (!(settings.theme_id > 0)) {
                     settings.theme_id = popmake_default_theme;
-                }
-
-                if (!$('#' + settings.overlay.attr.id).length) {
-                    $('<div>').attr(settings.overlay.attr).appendTo('body');
                 }
 
                 $(window).on('resize', function () {
@@ -57,51 +54,20 @@
                 return this;
             });
         },
-        setup_close: function () {
-            var $this = $(this),
-                settings = $this.data('popmake'),
-                $overlay = $('#popmake-overlay'),
-                $close = $('.popmake-close', $this);
-
-            $close
-                .off('click.popmake')
-                .on("click.popmake", function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    $.fn.popmake.last_close_trigger = 'Close Button';
-                    $this.popmake('close');
-                });
-
-            if (settings.meta.close.esc_press || settings.meta.close.f4_press) {
-                $(window)
-                    .off('keyup.popmake')
-                    .on('keyup.popmake', function (e) {
-                        if (e.keyCode === 27 && settings.meta.close.esc_press) {
-                            $.fn.popmake.last_close_trigger = 'ESC Key';
-                            $this.popmake('close');
-                        }
-                        if (e.keyCode === 115 && settings.meta.close.f4_press) {
-                            $.fn.popmake.last_close_trigger = 'F4 Key';
-                            $this.popmake('close');
-                        }
-                    });
-            }
-
-            if (settings.meta.close.overlay_click) {
-                $overlay
-                    .off('click.popmake')
-                    .on('click.popmake', function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        $.fn.popmake.last_close_trigger = 'Overlay Click';
-                        $this.popmake('close');
-
-                    });
-            }
-
-            $this.trigger('popmakeSetupClose');
-            return this;
+        getOverlay: function () {
+            return $(this);
+        },
+        getContainer: function () {
+            return $(this).find('.pum-container');
+        },
+        getTitle: function () {
+            return $(this).find('.pum-title') || null;
+        },
+        getContent: function () {
+            return $(this).find('.pum-content') || null;
+        },
+        getClose: function () {
+            return $(this).find('.popmake-content + .popmake-close') || null;
         },
         open: function (callback) {
             var $this = $(this),
@@ -153,6 +119,52 @@
                         callback();
                     }
                 });
+            return this;
+        },
+        setup_close: function () {
+            var $this = $(this),
+                settings = $this.data('popmake'),
+                $overlay = $('#popmake-overlay'),
+                $close = $('.popmake-close', $this);
+
+            $close
+                .off('click.popmake')
+                .on("click.popmake", function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $.fn.popmake.last_close_trigger = 'Close Button';
+                    $this.popmake('close');
+                });
+
+            if (settings.meta.close.esc_press || settings.meta.close.f4_press) {
+                $(window)
+                    .off('keyup.popmake')
+                    .on('keyup.popmake', function (e) {
+                        if (e.keyCode === 27 && settings.meta.close.esc_press) {
+                            $.fn.popmake.last_close_trigger = 'ESC Key';
+                            $this.popmake('close');
+                        }
+                        if (e.keyCode === 115 && settings.meta.close.f4_press) {
+                            $.fn.popmake.last_close_trigger = 'F4 Key';
+                            $this.popmake('close');
+                        }
+                    });
+            }
+
+            if (settings.meta.close.overlay_click) {
+                $overlay
+                    .off('click.popmake')
+                    .on('click.popmake', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        $.fn.popmake.last_close_trigger = 'Overlay Click';
+                        $this.popmake('close');
+
+                    });
+            }
+
+            $this.trigger('popmakeSetupClose');
             return this;
         },
         close: function (callback) {
@@ -391,30 +403,30 @@
                 top: 'auto'
             });
             switch (theme.close.location) {
-                case "topleft":
-                    $close.css({
-                        top: theme.close.position_top + 'px',
-                        left: theme.close.position_left + 'px'
-                    });
-                    break;
-                case "topright":
-                    $close.css({
-                        top: theme.close.position_top + 'px',
-                        right: theme.close.position_right + 'px'
-                    });
-                    break;
-                case "bottomleft":
-                    $close.css({
-                        bottom: theme.close.position_bottom + 'px',
-                        left: theme.close.position_left + 'px'
-                    });
-                    break;
-                case "bottomright":
-                    $close.css({
-                        bottom: theme.close.position_bottom + 'px',
-                        right: theme.close.position_right + 'px'
-                    });
-                    break;
+            case "topleft":
+                $close.css({
+                    top: theme.close.position_top + 'px',
+                    left: theme.close.position_left + 'px'
+                });
+                break;
+            case "topright":
+                $close.css({
+                    top: theme.close.position_top + 'px',
+                    right: theme.close.position_right + 'px'
+                });
+                break;
+            case "bottomleft":
+                $close.css({
+                    bottom: theme.close.position_bottom + 'px',
+                    left: theme.close.position_left + 'px'
+                });
+                break;
+            case "bottomright":
+                $close.css({
+                    bottom: theme.close.position_bottom + 'px',
+                    right: theme.close.position_right + 'px'
+                });
+                break;
             }
             $this.trigger('popmakeAfterRetheme', [theme]);
             return this;
@@ -427,64 +439,64 @@
                 };
 
             switch (origin) {
-                case 'top':
+            case 'top':
+                start = {
+                    my: "left+" + $this.offset().left + " bottom-100",
+                    at: "left top"
+                };
+                break;
+            case 'bottom':
+                start = {
+                    my: "left+" + $this.offset().left + " top+100",
+                    at: "left bottom"
+                };
+                break;
+            case 'left':
+                start = {
+                    my: "right top+" + $this.offset().top,
+                    at: "left top"
+                };
+                break;
+            case 'right':
+                start = {
+                    my: "left top+" + $this.offset().top,
+                    at: "right top"
+                };
+                break;
+            default:
+                if (origin.indexOf('left') >= 0) {
                     start = {
-                        my: "left+" + $this.offset().left + " bottom-100",
-                        at: "left top"
+                        my: start.my + " right",
+                        at: start.at + " left"
                     };
-                    break;
-                case 'bottom':
+                }
+                if (origin.indexOf('right') >= 0) {
                     start = {
-                        my: "left+" + $this.offset().left + " top+100",
-                        at: "left bottom"
+                        my: start.my + " left",
+                        at: start.at + " right"
                     };
-                    break;
-                case 'left':
+                }
+                if (origin.indexOf('center') >= 0) {
                     start = {
-                        my: "right top+" + $this.offset().top,
-                        at: "left top"
+                        my: start.my + " center",
+                        at: start.at + " center"
                     };
-                    break;
-                case 'right':
+                }
+                if (origin.indexOf('top') >= 0) {
                     start = {
-                        my: "left top+" + $this.offset().top,
-                        at: "right top"
+                        my: start.my + " bottom-100",
+                        at: start.at + " top"
                     };
-                    break;
-                default:
-                    if (origin.indexOf('left') >= 0) {
-                        start = {
-                            my: start.my + " right",
-                            at: start.at + " left"
-                        };
-                    }
-                    if (origin.indexOf('right') >= 0) {
-                        start = {
-                            my: start.my + " left",
-                            at: start.at + " right"
-                        };
-                    }
-                    if (origin.indexOf('center') >= 0) {
-                        start = {
-                            my: start.my + " center",
-                            at: start.at + " center"
-                        };
-                    }
-                    if (origin.indexOf('top') >= 0) {
-                        start = {
-                            my: start.my + " bottom-100",
-                            at: start.at + " top"
-                        };
-                    }
-                    if (origin.indexOf('bottom') >= 0) {
-                        start = {
-                            my: start.my + " top+100",
-                            at: start.at + " bottom"
-                        };
-                    }
-                    start.my = $.trim(start.my);
-                    start.at = $.trim(start.at);
-                    break;
+                }
+                if (origin.indexOf('bottom') >= 0) {
+                    start = {
+                        my: start.my + " top+100",
+                        at: start.at + " bottom"
+                    };
+                }
+                start.my = $.trim(start.my);
+                start.at = $.trim(start.at);
+                break;
             }
             start.of = window;
             start.collision = 'none';
