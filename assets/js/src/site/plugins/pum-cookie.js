@@ -55,14 +55,14 @@ var pm_cookie, pm_remove_cookie;
             if (value !== undefined && !$.isFunction(value)) {
 
                 switch (typeof expires) {
-                    case 'number':
-                        t.setTime(+t + expires * 864e+5);
-                        expires = t;
-                        break;
-                    case 'string':
-                        t.setTime($.fn.popmake.utilities.strtotime("+" + expires) * 1000);
-                        expires = t;
-                        break;
+                case 'number':
+                    t.setTime(+t + expires * 864e+5);
+                    expires = t;
+                    break;
+                case 'string':
+                    t.setTime($.fn.popmake.utilities.strtotime("+" + expires) * 1000);
+                    expires = t;
+                    break;
                 }
 
                 document.cookie = [
