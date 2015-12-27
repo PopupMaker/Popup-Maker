@@ -98,7 +98,7 @@ gulp.task('js:lint', function () {
         .pipe($.jshint.reporter('default'));
 });
 
-gulp.task('watch', ['build'], function() {
+gulp.task('watch', ['build'], function () {
     $.livereload.listen();
     gulp.watch('assets/sass/**/*.scss', ['css']);
     gulp.watch('assets/js/src/admin/**/*.js', ['js:admin']);
