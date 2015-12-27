@@ -21,8 +21,8 @@ gulp.task('css', ['sass'], function() {
         // Rename the file with the .min.css extension
         .pipe($.rename({ extname: '.min.css' }))
         // Save the file
-        .pipe(gulp.dest('assets/css'));
-        //.pipe($.livereload());
+        .pipe(gulp.dest('assets/css'))
+        .pipe($.livereload());
 
 });
 
@@ -53,8 +53,8 @@ gulp.task('js:admin', function() {
         .pipe(gulp.dest('assets/js'))
         .pipe($.uglify())
         .pipe($.rename({extname: '.min.js'}))
-        .pipe(gulp.dest('assets/js'));
-        //.pipe($.livereload());
+        .pipe(gulp.dest('assets/js'))
+        .pipe($.livereload());
 });
 gulp.task('js:site', function() {
     return gulp.src(['assets/js/src/site/plugins/**/*.js', 'assets/js/src/site/general.js'])
@@ -68,16 +68,16 @@ gulp.task('js:site', function() {
         .pipe(gulp.dest('assets/js'))
         .pipe($.uglify())
         .pipe($.rename({extname: '.min.js'}))
-        .pipe(gulp.dest('assets/js'));
-        //.pipe($.livereload());
+        .pipe(gulp.dest('assets/js'))
+        .pipe($.livereload());
 });
 gulp.task('js:other', function() {
     return gulp.src('assets/js/src/*.js')
         .pipe(gulp.dest('assets/js'))
         .pipe($.uglify())
         .pipe($.rename({extname: '.min.js'}))
-        .pipe(gulp.dest('assets/js'));
-        //.pipe($.livereload());
+        .pipe(gulp.dest('assets/js'))
+        .pipe($.livereload());
 });
 
 
@@ -98,10 +98,9 @@ gulp.task('js:lint', function () {
         .pipe($.jshint.reporter('default'));
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', ['build'], function () {
     $.livereload.listen();
-    gulp.watch('assets/sass/**/*.scss', ['sass']);
-    gulp.watch('assets/css/*.css', ['css']);
+    gulp.watch('assets/sass/**/*.scss', ['css']);
     gulp.watch('assets/js/src/admin/**/*.js', ['js:admin']);
     gulp.watch('assets/js/src/site/**/*.js', ['js:site']);
     gulp.watch(['assets/js/src/**/*.js', '!assets/js/src/site/**/*.js', '!assets/js/src/admin/**/*.js'], ['js:other']);
