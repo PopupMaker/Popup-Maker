@@ -1,12 +1,4 @@
-html.pum-open,
-.pum-open body {
-  overflow: hidden;
-}
-
 .pum-overlay {
-
-  //display: none;
-  //visibility: hidden;
   position: fixed;
   height: 100%;
   width: 100%;
@@ -15,7 +7,8 @@ html.pum-open,
   right: 0;
   bottom: 0;
   z-index: 1999999999;
-  overflow-y: auto; // Todo this may need to be changed to scroll. Needs testing.
+  overflow: auto;
+  display: none;
 
   /**
   * Use border-box for all popup content. Providing more precise sizing.
@@ -30,7 +23,7 @@ html.pum-open,
   .pum-container {
     top: 100px;
     position: absolute;
-    //display: none; // todo: may be able to remove this, but will require updating animations.
+    margin-bottom: 3em;
 
     &.pum-responsive {
 
@@ -143,4 +136,12 @@ html.pum-open,
 
   }
 
+}
+
+html.pum-open {
+  overflow: hidden;
+
+  .pum-overlay.pum-active {
+    overflow-y: scroll;
+  }
 }
