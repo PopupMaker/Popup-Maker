@@ -16,7 +16,6 @@
   * Use border-box for all popup content. Providing more precise sizing.
   */
 }
-
 .pum-overlay,
 .pum-overlay:before,
 .pum-overlay:after,
@@ -28,7 +27,6 @@
     /* Firefox, other Gecko */
     box-sizing: border-box;
 }
-
 .pum-overlay .pum-container
 {
     position: absolute;
@@ -36,7 +34,6 @@
 
     margin-bottom: 3em;
 }
-
 .pum-overlay .pum-container.pum-responsive
 {
     left: 50%;
@@ -47,13 +44,11 @@
     height: auto;
     margin-left: -47.5%;
 }
-
 .pum-overlay .pum-container.pum-responsive img
 {
     max-width: 100%;
     height: auto;
 }
-
 @media only screen and (min-width: 1024px)
 {
     .pum-overlay .pum-container.pum-responsive.pum-responsive-nano
@@ -61,55 +56,46 @@
         width: 10%; 
         margin-left: -5%;
     }
-
     .pum-overlay .pum-container.pum-responsive.pum-responsive-micro
     {
         width: 20%; 
         margin-left: -10%;
     }
-
     .pum-overlay .pum-container.pum-responsive.pum-responsive-tiny
     {
         width: 30%; 
         margin-left: -15%;
     }
-
     .pum-overlay .pum-container.pum-responsive.pum-responsive-small
     {
         width: 40%; 
         margin-left: -20%;
     }
-
     .pum-overlay .pum-container.pum-responsive.pum-responsive-medium
     {
         width: 60%; 
         margin-left: -30%;
     }
-
     .pum-overlay .pum-container.pum-responsive.pum-responsive-normal
     {
         width: 70%; 
         margin-left: -30%;
     }
-
     .pum-overlay .pum-container.pum-responsive.pum-responsive-large
     {
         width: 80%; 
         margin-left: -35%;
     }
-
     .pum-overlay .pum-container.pum-responsive.pum-responsive-xlarge
     {
         width: 95%; 
         margin-left: -47.5%;
     }
-
     .pum-overlay .pum-container.pum-responsive.pum-position-fixed
     {
         position: fixed;
     }
 }
-
 @media only screen and (max-width: 1024px)
 {
     .pum-overlay .pum-container.pum-responsive.pum-position-fixed
@@ -117,7 +103,6 @@
         position: absolute;
     }
 }
-
 .pum-overlay .pum-container.custom-position
 {
     top: auto;
@@ -125,7 +110,6 @@
 
     margin-left: inherit;
 }
-
 .pum-overlay .pum-container .pum-content > :last-child
 {
     margin-bottom: 0;
@@ -143,7 +127,7 @@
 
     position: absolute;
 
-    min-width: 1em;
+    min-width: 1em; 
 
     cursor: pointer;
     text-align: center;

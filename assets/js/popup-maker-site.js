@@ -85,7 +85,7 @@ var PUM;
             return $(this).find('.pum-content') || null;
         },
         getClose: function () {
-            return $(this).find('.popmake-content + .popmake-close') || null;
+            return $(this).find('.pum-content + .pum-close') || null;
         },
         getSettings: function () {
             return $(this).data('popmake');
@@ -1048,7 +1048,7 @@ var pm_cookie, pm_remove_cookie;
     $.fn.popmake.methods.checkCookies = function (settings) {
         var i;
 
-        if (settings.cookie === undefined) {
+        if (settings.cookie === undefined || settings.cookie.name === undefined || settings.cookie.name === null) {
             return false;
         }
 

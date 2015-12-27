@@ -74,7 +74,7 @@ function popmake_render_popup_theme_styles() {
 	}
 
 	$styles = get_transient( 'popmake_theme_styles' );
-	if ( ! $styles ) {
+	if ( ! $styles || defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 
 		$styles = '';
 
