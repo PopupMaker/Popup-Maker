@@ -68,7 +68,7 @@ var PUM;
             return $(this).find('.pum-content') || null;
         },
         getClose: function () {
-            return $(this).find('.popmake-content + .popmake-close') || null;
+            return $(this).find('.pum-content + .pum-close') || null;
         },
         getSettings: function () {
             return $(this).data('popmake');
