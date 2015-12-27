@@ -4,7 +4,7 @@
     $.fn.popmake.last_open_trigger = null;
     $.fn.popmake.last_close_trigger = null;
 
-    $.fn.popmake.methods.addTrigger = function (type, settings) {
+    $.fn.popmake.methods.addTrigger = function (type) {
         // Method calling logic
         if ($.fn.popmake.triggers[type]) {
             return $.fn.popmake.triggers[type].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -13,34 +13,41 @@
         return this;
     };
 
-    $.fn.popmake.methods.checkCookies = function ( settings) {
+    $.fn.popmake.methods.checkCookies = function (settings) {
         var i;
-        // If cookie exists return true
-        console.log(settings.cookie.name, typeof settings.cookie.name);
 
-        if (typeof settings.cookie.name === 'array' || typeof settings.cookie.name === 'object') {
-            for(i = 0; settings.cookie.name.length > i; i++) {
+        if (settings.cookie === undefined) {
+            return false;
+        }
+
+        switch (typeof settings.cookie.name) {
+        case 'object':
+        case 'array':
+            for (i = 0; settings.cookie.name.length > i; i += 1) {
                 if ($.pm_cookie(settings.cookie.name[i]) !== undefined) {
                     return true;
                 }
             }
-        } else if (typeof settings.cookie.name === 'string') {
+            break;
+        case 'string':
             if ($.pm_cookie(settings.cookie.name) !== undefined) {
                 return true;
             }
+            break;
         }
+
         return false;
     };
 
     $.fn.popmake.triggers = {
         auto_open: function (settings) {
-            var $popup = $(this);
+            var $popup = PUM.getPopup(this);
 
             // Set a delayed open.
             setTimeout(function () {
 
                 // If the popup is already open return.
-                if ($popup.hasClass('active') || $popup.hasClass('pum-open')) {
+                if ($popup.hasClass('pum-open') || $popup.popmake('getContainer').hasClass('active')) {
                     return;
                 }
 
@@ -58,8 +65,8 @@
             }, settings.delay);
         },
         click_open: function (settings) {
-            var $popup = $(this),
-                popup_settings = $popup.data('popmake'),
+            var $popup = PUM.getPopup(this),
+                popup_settings = $popup.popmake('getSettings'),
                 trigger_selector = '.popmake-' + popup_settings.id + ', .popmake-' + popup_settings.slug;
 
             if (settings.extra_selectors !== '') {
@@ -98,20 +105,21 @@
                 });
         },
         admin_debug: function () {
-            $(this).popmake('open');
+            PUM.getPopup(this).popmake('open');
         }
     };
 
     // Register All Triggers for a Popup
     $(document)
-        .on('pumInit', '.popmake', function (e) {
-            var $popup = $(this),
-                settings = $popup.data('popmake'),
+        .on('pumInit', '.pum', function () {
+            var $popup = PUM.getPopup(this),
+                settings = $popup.popmake('getSettings'),
                 triggers = settings.triggers,
-                trigger = null;
+                trigger = null,
+                i;
 
-            if (typeof triggers !== 'undefined' && triggers.length) {
-                for (var i = 0; triggers.length > i; i++) {
+            if (triggers !== undefined && triggers.length) {
+                for (i = 0; triggers.length > i; i += 1) {
                     trigger = triggers[i];
                     $popup.popmake('addTrigger', trigger.type, trigger.settings);
                 }
