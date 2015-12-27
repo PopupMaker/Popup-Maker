@@ -41,7 +41,7 @@
 		 */
 		?>
 		<?php if ( pum_show_close_button() ) : ?>
-			<span class="<?php pum_popup_classes( null, 'close' ); ?>">
+		<span class="<?php pum_popup_classes( null, 'close' ); ?>">
 			<?php pum_popup_close_text(); ?>
 		</span>
 		<?php endif; ?>
