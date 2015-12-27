@@ -16,7 +16,7 @@
     $.fn.popmake.methods.checkCookies = function (settings) {
         var i;
 
-        if (settings.cookie === undefined) {
+        if (settings.cookie === undefined || settings.cookie.name === undefined || settings.cookie.name === null) {
             return false;
         }
 
