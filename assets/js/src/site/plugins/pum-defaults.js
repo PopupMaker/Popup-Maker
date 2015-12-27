@@ -35,34 +35,6 @@
                 esc_press: 0,
                 f4_press: 0
             }
-        },
-        container: {
-            active_class: 'active',
-            attr: {
-                class: "popmake"
-            }
-        },
-        title: {
-            attr: {
-                class: "popmake-title"
-            }
-        },
-        content: {
-            attr: {
-                class: "popmake-content"
-            }
-        },
-        close: {
-            close_speed: 0,
-            attr: {
-                class: "popmake-close"
-            }
-        },
-        overlay: {
-            attr: {
-                id: "popmake-overlay",
-                class: "popmake-overlay"
-            }
         }
     };
 
