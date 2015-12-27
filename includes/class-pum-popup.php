@@ -160,6 +160,7 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		function get_classes( $element = 'overlay' ) {
 			$classes = array(
 				'overlay' => array(
+					'pum',
 					'pum-overlay',
 					'pum-theme-' . $this->get_theme_id(),
 					'popmake-overlay', // Backward Compatibility
