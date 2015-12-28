@@ -659,8 +659,7 @@ var PUMTriggers;
 
             if (!$row) {
                 $('#pum_popup_triggers_list tbody').append($new_row);
-            }
-            else {
+            } else {
                 $row.replaceWith($new_row);
             }
 

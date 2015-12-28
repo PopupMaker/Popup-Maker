@@ -174,6 +174,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/class-popmake-fields.php';
 			require_once POPMAKE_DIR . 'includes/class-popmake-popup-fields.php';
 			require_once POPMAKE_DIR . 'includes/class-popmake-popup-theme-fields.php';
+			require_once POPMAKE_DIR . 'includes/popup-functions.php';
 
 			/**
 			 * v1.4 Additions
@@ -183,6 +184,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/class-pum-fields.php';
 
 			require_once POPMAKE_DIR . 'includes/pum-popup-functions.php';
+			require_once POPMAKE_DIR . 'includes/pum-template-functions.php';
 
 			// Triggers
 			require_once POPMAKE_DIR . 'includes/class-pum-trigger.php';
@@ -206,7 +208,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 
 
-
 			require_once POPMAKE_DIR . 'includes/actions.php';
 			require_once POPMAKE_DIR . 'includes/post-types.php';
 			require_once POPMAKE_DIR . 'includes/class-popmake-cron.php';
@@ -217,7 +218,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/general-functions.php';
 			require_once POPMAKE_DIR . 'includes/extensions-functions.php';
 			require_once POPMAKE_DIR . 'includes/input-options.php';
-			require_once POPMAKE_DIR . 'includes/popup-functions.php';
 			require_once POPMAKE_DIR . 'includes/theme-functions.php';
 			require_once POPMAKE_DIR . 'includes/misc-functions.php';
 			require_once POPMAKE_DIR . 'includes/css-functions.php';

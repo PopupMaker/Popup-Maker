@@ -773,6 +773,7 @@ div.popmake-upgrade-tip
 
     transition: -webkit-transform .5s;
     transition:         transform .5s;
+    transition:         transform .5s, -webkit-transform .5s;
 
     border: 0;
     border-radius: 2px;
@@ -947,7 +948,8 @@ div.popmake-upgrade-tip
 
     cursor: pointer;
     transition: -webkit-transform .5s;
-    transition:         transform .5s; 
+    transition:         transform .5s;
+    transition:         transform .5s, -webkit-transform .5s; 
 
     color: #fff;
     border: 0;
@@ -1039,6 +1041,7 @@ div.popmake-upgrade-tip
 
     transition: -webkit-transform .5s;
     transition:         transform .5s;
+    transition:         transform .5s, -webkit-transform .5s;
 }
 
 .extensions-available .action-links .button.install

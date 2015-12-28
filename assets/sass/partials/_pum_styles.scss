@@ -1,0 +1,147 @@
+.pum-overlay {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1999999999;
+  overflow: auto;
+  display: none;
+
+  /**
+  * Use border-box for all popup content. Providing more precise sizing.
+  */
+  &, &:before, &:after,
+  & *, & *:before, & *:after {
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    box-sizing: border-box;
+  }
+
+  .pum-container {
+    top: 100px;
+    position: absolute;
+    margin-bottom: 3em;
+
+    &.pum-responsive {
+
+      left: 50%;
+      margin-left: -47.5%;
+      width: 95%;
+      height: auto;
+      overflow: visible;
+
+      // Add Responsive Image Handling.
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      @media only screen and (min-width: 1024px) {
+        &.pum-responsive-nano {
+          margin-left: -5%;
+          width: 10%;
+        }
+
+        &.pum-responsive-micro {
+          margin-left: -10%;
+          width: 20%;
+        }
+
+        &.pum-responsive-tiny {
+          margin-left: -15%;
+          width: 30%;
+        }
+
+        &.pum-responsive-small {
+          margin-left: -20%;
+          width: 40%;
+        }
+
+        &.pum-responsive-medium {
+          margin-left: -30%;
+          width: 60%;
+        }
+
+        &.pum-responsive-normal {
+          margin-left: -30%;
+          width: 70%;
+        }
+
+        &.pum-responsive-large {
+          margin-left: -35%;
+          width: 80%;
+        }
+
+        &.pum-responsive-xlarge {
+          margin-left: -47.5%;
+          width: 95%;
+        }
+
+        &.pum-position-fixed {
+          position: fixed;
+        }
+      }
+
+      @media only screen and (max-width: 1024px) {
+        &.pum-position-fixed {
+          position: absolute;
+        }
+      }
+
+    }
+
+    &.custom-position {
+      left: auto;
+      top: auto;
+      margin-left: inherit;
+    }
+
+    .pum-title {
+
+    }
+
+    .pum-content {
+
+      > :last-child {
+        margin-bottom: 0;
+      }
+
+    }
+
+    &.pum-scrollable {
+
+      .pum-content {
+
+        overflow: auto;
+        overflow-y: scroll;
+        max-height: 95%;
+
+      }
+
+    }
+
+    .pum-close {
+
+      text-decoration: none;
+      text-align: center;
+      line-height: 1;
+      position: absolute;
+      cursor: pointer;
+      min-width: 1em;
+
+    }
+
+  }
+
+}
+
+html.pum-open {
+  overflow: hidden;
+
+  .pum-overlay.pum-active {
+    overflow-y: scroll;
+  }
+}

@@ -123,14 +123,14 @@ class PUM_Trigger extends PUM_Fields {
 
 				$value = $this->sanitize_field( $field, $value );
 
-				if ( ! is_null( $value ) ) {
+				//if ( ! is_null( $value ) ) {
 					if ( $section != 'general' ) {
 						$sanitized_values[ $section ][ $field['id'] ] = $value;
 					}
 					else {
 						$sanitized_values[ $field['id'] ] = $value;
 					}
-				}
+				//}
 			}
 		}
 

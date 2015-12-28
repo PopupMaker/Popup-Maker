@@ -1,0 +1,163 @@
+.popmake, .popmake:before, .popmake:after,
+.popmake *, .popmake *:before, .popmake *:after {
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box; /* Firefox, other Gecko */
+  box-sizing: border-box;
+}
+
+html.popup-open,
+.popup-open body {
+  overflow: hidden;
+}
+
+.popmake-overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1999999998;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.popmake {
+  top: 100px;
+  visibility: hidden;
+  position: absolute;
+  display: none;
+  z-index: 1999999999;
+}
+
+.popmake > .popmake-close {
+  text-decoration: none;
+  text-align: center;
+  line-height: 1;
+  position: absolute;
+  font-weight: bold;
+  cursor: pointer;
+  min-width: 1em;
+}
+
+.popmake.responsive {
+  left: 50%;
+  margin-left: -40%;
+  width: 95%;
+  height: auto;
+  overflow: visible;
+}
+
+.popmake.responsive .popmake-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media only screen and (min-width: 768px) {
+  .popmake.size-nano {
+    margin-left: -5%;
+    width: 10%;
+  }
+
+  .popmake.size-micro {
+    margin-left: -10%;
+    width: 20%;
+  }
+
+  .popmake.size-tiny {
+    margin-left: -15%;
+    width: 30%;
+  }
+
+  .popmake.size-small {
+    margin-left: -20%;
+    width: 40%;
+  }
+
+  .popmake.size-medium {
+    margin-left: -30%;
+    width: 60%;
+  }
+
+  .popmake.size-normal {
+    margin-left: -30%;
+    width: 70%;
+  }
+
+  .popmake.size-large {
+    margin-left: -35%;
+    width: 80%;
+  }
+
+  .popmake.size-xlarge {
+    margin-left: -47.5%;
+    width: 95%;
+  }
+
+  .popmake.fixed {
+    position: fixed;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .popmake.fixed {
+    position: absolute;
+  }
+}
+
+.popmake.custom-position {
+  left: auto;
+  top: auto;
+  margin-left: inherit;
+}
+
+.popmake.scrollable .popmake-content {
+  overflow: auto;
+  overflow-y: scroll;
+  max-height: 95%;
+}
+
+.popmake .popmake-content :last-child {
+  margin-bottom: 0;
+}
+
+.popmake iframe.formidable {
+  width: 100%;
+  overflow: visible;
+}
+
+.powered-by-popmake {
+  bottom: -28px;
+  display: block;
+  left: 0;
+  margin: 0 auto;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+}
+
+.powered-by-popmake > a {
+  display: inline-block;
+  max-width: 205px;
+}
+
+.powered-by-popmake img {
+  max-width: 100%;
+  width: 100%;
+}
+
+.powered-by-popmake.small {
+  bottom: -22px;
+}
+
+.powered-by-popmake.small > a {
+  max-width: 125px;
+}
+
+.powered-by-popmake.large {
+  bottom: -30px;
+}
+
+.powered-by-popmake.large > a {
+  max-width: 285px;
+}

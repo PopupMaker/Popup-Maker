@@ -1,9 +1,19 @@
 /**
  * Defines the core $.popmake function which will load the proper methods.
  * Version 1.4.0
+ *
+ * todo Set each function to be aware of the element called. If old selectors used fallback to parent for $this.
  */
+var PUM;
 (function ($) {
     "use strict";
+
+    PUM = {
+        getPopup: function (el) {
+            var $this = $(el);
+            return $this.hasClass('popmake') ? $this.parents('.pum-overlay') : $this;
+        }
+    };
 
     $.fn.popmake = function (method) {
         // Method calling logic
@@ -16,211 +26,248 @@
         $.error('Method ' + method + ' does not exist on $.fn.popmake');
     };
 
-    // Defines the current version.
-    $.fn.popmake.version = 1.4;
-
-    // Stores the last open popup.
-    $.fn.popmake.last_open_popup = null;
-
     // Defines the core $.popmake methods.
-
-     $.fn.popmake.methods = {
+    $.fn.popmake.methods = {
         init: function (options) {
             return this.each(function () {
-                var $this = $(this),
-                    settings = $.extend(true, {}, $.fn.popmake.defaults, $this.data('popmake'), options);
+                var $popup = PUM.getPopup(this),
+                    settings = $.extend(true, {}, $.fn.popmake.defaults, $popup.data('popmake'), options);
 
                 if (!(settings.theme_id > 0)) {
                     settings.theme_id = popmake_default_theme;
                 }
 
-                if (!$('#' + settings.overlay.attr.id).length) {
-                    $('<div>').attr(settings.overlay.attr).appendTo('body');
-                }
-
                 $(window).on('resize', function () {
-                    if ($this.hasClass('active')) {
+                    if ($popup.hasClass('pum-active') || $popup.find('.popmake.active').length) {
                         $.fn.popmake.utilities.throttle(setTimeout(function () {
-                            $this.popmake('reposition');
+                            $popup.popmake('reposition');
                         }, 25), 500, false);
                     }
                 });
 
                 if (typeof popmake_powered_by === 'string' && popmake_powered_by !== '') {
-                    $('.popmake-content', $this).append($(popmake_powered_by));
+                    $popup.popmake('getContent').append($(popmake_powered_by));
                 }
 
-                $this
+                $popup
                     .data('popmake', settings)
-                    .trigger('popmakeInit')
                     .trigger('pumInit');
                 return this;
             });
         },
-        setup_close: function () {
-            var $this = $(this),
-                settings = $this.data('popmake'),
-                $overlay = $('#popmake-overlay'),
-                $close = $('.popmake-close', $this);
+        getOverlay: function () {
+            return $(this);
+        },
+        getContainer: function () {
+            return $(this).find('.pum-container');
+        },
+        getTitle: function () {
+            return $(this).find('.pum-title') || null;
+        },
+        getContent: function () {
+            return $(this).find('.pum-content') || null;
+        },
+        getClose: function () {
+            return $(this).find('.pum-content + .pum-close') || null;
+        },
+        getSettings: function () {
+            return $(this).data('popmake');
+        },
+        open: function (callback) {
+            var $popup = PUM.getPopup(this),
+                $container = $popup.popmake('getContainer'),
+                $close = $popup.popmake('getClose'),
+                settings = $popup.popmake('getSettings');
 
+            if (!settings.meta.display.stackable) {
+                $popup.popmake('close_all');
+            }
+
+            $popup
+                .addClass('pum-active')
+                .popmake('setup_close')
+                .popmake('reposition')
+                .trigger('pumBeforeOpen');
+
+
+            // TODO: Remove this after testing for its neccessity.
+            /*
+             $container
+             .css({visibility: "visible"})
+             .hide();
+             */
+
+            if (settings.meta.close.button_delay > 0) {
+                $close.fadeOut(0);
+            }
+
+            if ($popup.hasClass('preventOpen') || $container.hasClass('preventOpen')) {
+                $popup
+                    .removeClass('preventOpen')
+                    .removeClass('pum-active')
+                    .trigger('pumOpenPrevented');
+
+                return this;
+            }
+
+            $('html').addClass('pum-open');
+
+            $popup
+            // TODO: Remove this.
+            //.prop('class', 'popmake-overlay theme-' + settings.theme_id)
+            // TODO: Remove this.
+                .css({'z-index': settings.meta.display.overlay_zindex || 1999999998})
+                .popmake('animate', settings.meta.display.animation_type, function () {
+
+                    if (settings.meta.close.button_delay > 0) {
+                        setTimeout(function () {
+                            $close.fadeIn();
+                        }, settings.meta.close.button_delay);
+                    }
+
+                    $popup.trigger('pumAfterOpen');
+
+                    $.fn.popmake.last_open_popup = $popup;
+
+                    // Fire user passed callback.
+                    if (callback !== undefined) {
+                        callback();
+                        // TODO Test this new method. Then remove the above.
+                        //callback.apply(this);
+                    }
+                });
+
+            return this;
+        },
+        setup_close: function () {
+            var $popup = PUM.getPopup(this),
+                $close = $popup.popmake('getClose'),
+                settings = $popup.popmake('getSettings');
+
+            // TODO: Move to a global $(document).on type bind. Possibly look for an inactive class to fail on.
             $close
                 .off('click.popmake')
                 .on("click.popmake", function (e) {
                     e.preventDefault();
                     e.stopPropagation();
                     $.fn.popmake.last_close_trigger = 'Close Button';
-                    $this.popmake('close');
+                    $popup.popmake('close');
                 });
 
             if (settings.meta.close.esc_press || settings.meta.close.f4_press) {
+                // TODO: Move to a global $(document).on type bind. Possibly look for a class to succeed on.
                 $(window)
                     .off('keyup.popmake')
                     .on('keyup.popmake', function (e) {
                         if (e.keyCode === 27 && settings.meta.close.esc_press) {
                             $.fn.popmake.last_close_trigger = 'ESC Key';
-                            $this.popmake('close');
+                            $popup.popmake('close');
                         }
                         if (e.keyCode === 115 && settings.meta.close.f4_press) {
                             $.fn.popmake.last_close_trigger = 'F4 Key';
-                            $this.popmake('close');
+                            $popup.popmake('close');
                         }
                     });
             }
 
             if (settings.meta.close.overlay_click) {
-                $overlay
+                // TODO: Move to a global $(document).on type bind. Possibly look for a class to succeed on.
+                $popup
                     .off('click.popmake')
                     .on('click.popmake', function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
+                        if (e.target !== $popup) {
+                            return;
+                        }
 
                         $.fn.popmake.last_close_trigger = 'Overlay Click';
-                        $this.popmake('close');
-
+                        $popup.popmake('close');
                     });
             }
 
-            $this.trigger('popmakeSetupClose');
-            return this;
-        },
-        open: function (callback) {
-            var $this = $(this),
-                settings = $this.data('popmake');
+            $popup.trigger('pumSetupClose');
 
-            if (!settings.meta.display.stackable) {
-                $this.popmake('close_all');
-            }
-
-            $this
-                .css({visibility: "visible"})
-                .hide()
-                .addClass('active')
-                .popmake('setup_close')
-                .popmake('reposition')
-                .trigger('pumBeforeOpen')
-                .trigger('popmakeBeforeOpen');
-
-            if (settings.meta.close.button_delay > 0) {
-                $this.find('.popmake-content + .popmake-close').fadeOut(0);
-            }
-
-            if ($this.hasClass('preventOpen')) {
-                $this
-                    .removeClass('preventOpen')
-                    .removeClass('active');
-                return this;
-            }
-
-            $('#popmake-overlay')
-                .prop('class', 'popmake-overlay theme-' + settings.theme_id)
-                .css({'z-index': settings.meta.display.overlay_zindex || 1999999998});
-
-            $this
-                .css({'z-index': settings.meta.display.zindex || 1999999999})
-                .popmake('animate', settings.meta.display.animation_type, function () {
-
-                    if (settings.meta.close.button_delay > 0) {
-                        setTimeout(function () {
-                            $this.find('.popmake-content + .popmake-close').fadeIn();
-                        }, settings.meta.close.button_delay);
-                    }
-
-                    $this
-                        .trigger('pumAfterOpen')
-                        .trigger('popmakeAfterOpen');
-                    $.fn.popmake.last_open_popup = $this;
-                    if (callback !== undefined) {
-                        callback();
-                    }
-                });
             return this;
         },
         close: function (callback) {
             return this.each(function () {
-                var $this = $(this),
-                    $overlay = $('#popmake-overlay'),
-                    $close = $('.popmake-close', $this),
-                    settings = $this.data('popmake');
+                var $popup = PUM.getPopup(this),
+                    $container = $popup.popmake('getContainer'),
+                    $close = $popup.popmake('getClose');
 
-                $this
-                    .trigger('pumBeforeClose')
-                    .trigger('popmakeBeforeClose');
+                $popup.trigger('pumBeforeClose');
 
-                if ($this.hasClass('preventClose')) {
-                    $this.removeClass('preventClose');
+                if ($popup.hasClass('preventClose') || $container.hasClass('preventClose')) {
+                    $popup
+                        .removeClass('preventClose')
+                        .trigger('pumClosePrevented');
+
                     return this;
                 }
 
-                $this
-                    .fadeOut(settings.close.close_speed, function () {
+                $container
+                    .fadeOut('fast', function () {
 
-                        if ($overlay.length && $overlay.is(":visible")) {
-                            $overlay.fadeOut(settings.close.close_speed);
+                        if ($popup.is(":visible")) {
+                            $popup.fadeOut('fast');
                         }
 
                         $(window).off('keyup.popmake');
-                        $overlay.off('click.popmake');
+
+                        $popup.off('click.popmake');
+
                         $close.off('click.popmake');
 
-                        $this
-                            .removeClass('active')
-                            .trigger('pumAfterClose')
-                            .trigger('popmakeAfterClose');
+                        $('html').removeClass('pum-open');
 
-                        $('iframe', $this).filter('[src*="youtube"],[src*="vimeo"]').each(function () {
+                        $popup
+                            .removeClass('pum-active')
+                            .trigger('pumAfterClose');
+
+                        // TODO: Move this to its own event binding to keep this method clean and simple.
+                        $container.find('iframe').filter('[src*="youtube"],[src*="vimeo"]').each(function () {
                             var $iframe = $(this),
-                                src = $iframe.attr('src')
-                                    // Remove autoplay so video doesn't start playing again.
-                                    .replace('autoplay=1', '1=1');
-                            $iframe.attr('src', '').attr('src', src);
+                                src = $iframe.attr('src'),
+                            // Remove autoplay so video doesn't start playing again.
+                                new_src = src.replace('autoplay=1', '1=1');
+
+                            if (new_src !== src) {
+                                src = new_src;
+                            }
+
+                            // TODO: Should this be .prop()?
+                            $iframe.attr('src', src);
                         });
 
-                        $('video', $this).each(function () {
+                        // TODO: Move this to its own event binding to keep this method clean and simple.
+                        $container.find('video').each(function () {
                             this.pause();
                         });
 
+                        // Fire user passed callback.
                         if (callback !== undefined) {
                             callback();
+                            // TODO Test this new method. Then remove the above.
+                            //callback.apply(this);
                         }
                     });
                 return this;
             });
         },
         close_all: function () {
-            $('.popmake.active').popmake('close');
+            $('.pum-active').popmake('close');
             return this;
         },
         reposition: function (callback) {
-            $(this).trigger('popmakeBeforeReposition');
-            var $this = $(this),
-                settings = $this.data('popmake'),
+            var $popup = PUM.getPopup(this).trigger('pumBeforeReposition'),
+                $container = $popup.popmake('getContainer'),
+                settings = $popup.popmake('getSettings'),
                 display = settings.meta.display,
                 location = display.location,
                 reposition = {
                     my: "",
                     at: ""
                 },
-                opacity = false;
+                opacity = {overlay: null, container: null};
 
             if (location.indexOf('left') >= 0) {
                 reposition = {
@@ -267,29 +314,33 @@
             reposition.collision = 'none';
             reposition.using = typeof callback === "function" ? callback : $.fn.popmake.callbacks.reposition_using;
 
-            if ($this.is(':hidden')) {
-                opacity = $this.css("opacity");
-                $this.css({
-                    opacity: 0
-                }).show();
+            if ($popup.is(':hidden')) {
+                opacity.overlay = $popup.css("opacity");
+                $popup.css({opacity: 0}).show();
             }
 
-            $this
-                .removeClass('responsive size-nano size-micro size-tiny size-small size-medium size-normal size-large size-xlarge fixed custom-position')
-                .addClass('size-' + settings.meta.display.size);
+            if ($container.is(':hidden')) {
+                opacity.container = $container.css("opacity");
+                $container.css({opacity: 0}).show();
+            }
+
+            // TODO: Check for neccessity and remove if not needed.
+            //$container
+            //.removeClass('responsive size-nano size-micro size-tiny size-small size-medium size-normal size-large size-xlarge fixed custom-position')
+            //.addClass('size-' + settings.meta.display.size);
 
 
             if (display.position_fixed) {
-                $this.addClass('fixed');
+                $container.addClass('fixed');
             }
             if (settings.meta.display.size === 'custom') {
-                $this.css({
+                $container.css({
                     width: settings.meta.display.custom_width + settings.meta.display.custom_width_unit,
                     height: settings.meta.display.custom_height_auto ? 'auto' : settings.meta.display.custom_height + settings.meta.display.custom_height_unit
                 });
             } else {
                 if (settings.meta.display.size !== 'auto') {
-                    $this
+                    $container
                         .addClass('responsive')
                         .css({
                             minWidth: settings.meta.display.responsive_min_width !== '' ? settings.meta.display.responsive_min_width + settings.meta.display.responsive_min_width_unit : 'auto',
@@ -298,27 +349,34 @@
                 }
             }
 
-            $this
+            // TODO: Remove the add class and migrate the trigger to the $popup with pum prefix.
+            $container
                 .addClass('custom-position')
                 .position(reposition)
                 .trigger('popmakeAfterReposition');
 
-            if (opacity) {
-                $this.css({
-                    opacity: opacity
-                }).hide();
+            if (opacity.overlay) {
+                $popup.css({opacity: opacity.overlay}).hide();
+            }
+            if (opacity.container) {
+                $container.css({opacity: opacity.container}).hide();
             }
             return this;
         },
+        /**
+         * @deprecated 1.3.0
+         *
+         * @param theme
+         * @returns {$.fn.popmake.methods}
+         */
         retheme: function (theme) {
             $(this).trigger('popmakeBeforeRetheme');
-            var $this = $(this),
-                settings = $this.data('popmake'),
-                $overlay = $('#' + settings.overlay.attr.id),
-                $container = $this,
-                $title = $('.' + settings.title.attr.class, $container),
-                $content = $('> .' + settings.content.attr.class, $container),
-                $close = $('> .' + settings.close.attr.class, $container),
+            var $popup = PUM.getPopup(this),
+                $container = $popup.popmake('getContainer'),
+                $title = $popup.popmake('getTitle'),
+                $content = $popup.popmake('getContent'),
+                $close = $popup.popmake('getClose'),
+                settings = $popup.popmake('getSettings'),
                 container_inset,
                 close_inset;
 
@@ -332,7 +390,7 @@
             container_inset = theme.container.boxshadow_inset === 'yes' ? 'inset ' : '';
             close_inset = theme.close.boxshadow_inset === 'yes' ? 'inset ' : '';
 
-            $overlay.removeAttr('style').css({
+            $popup.removeAttr('style').css({
                 backgroundColor: $.fn.popmake.utilities.convert_hex(theme.overlay.background_color, theme.overlay.background_opacity),
                 zIndex: settings.meta.display.overlay_zindex || 998
             });
@@ -391,100 +449,101 @@
                 top: 'auto'
             });
             switch (theme.close.location) {
-                case "topleft":
-                    $close.css({
-                        top: theme.close.position_top + 'px',
-                        left: theme.close.position_left + 'px'
-                    });
-                    break;
-                case "topright":
-                    $close.css({
-                        top: theme.close.position_top + 'px',
-                        right: theme.close.position_right + 'px'
-                    });
-                    break;
-                case "bottomleft":
-                    $close.css({
-                        bottom: theme.close.position_bottom + 'px',
-                        left: theme.close.position_left + 'px'
-                    });
-                    break;
-                case "bottomright":
-                    $close.css({
-                        bottom: theme.close.position_bottom + 'px',
-                        right: theme.close.position_right + 'px'
-                    });
-                    break;
+            case "topleft":
+                $close.css({
+                    top: theme.close.position_top + 'px',
+                    left: theme.close.position_left + 'px'
+                });
+                break;
+            case "topright":
+                $close.css({
+                    top: theme.close.position_top + 'px',
+                    right: theme.close.position_right + 'px'
+                });
+                break;
+            case "bottomleft":
+                $close.css({
+                    bottom: theme.close.position_bottom + 'px',
+                    left: theme.close.position_left + 'px'
+                });
+                break;
+            case "bottomright":
+                $close.css({
+                    bottom: theme.close.position_bottom + 'px',
+                    right: theme.close.position_right + 'px'
+                });
+                break;
             }
-            $this.trigger('popmakeAfterRetheme', [theme]);
+            $popup.trigger('popmakeAfterRetheme', [theme]);
             return this;
         },
         animation_origin: function (origin) {
-            var $this = $(this),
+            var $popup = PUM.getPopup(this),
+                $container = $popup.popmake('getContainer'),
                 start = {
                     my: "",
                     at: ""
                 };
 
             switch (origin) {
-                case 'top':
+            case 'top':
+                start = {
+                    my: "left+" + $container.offset().left + " bottom-100",
+                    at: "left top"
+                };
+                break;
+            case 'bottom':
+                start = {
+                    my: "left+" + $container.offset().left + " top+100",
+                    at: "left bottom"
+                };
+                break;
+            case 'left':
+                start = {
+                    my: "right top+" + $container.offset().top,
+                    at: "left top"
+                };
+                break;
+            case 'right':
+                start = {
+                    my: "left top+" + $container.offset().top,
+                    at: "right top"
+                };
+                break;
+            default:
+                if (origin.indexOf('left') >= 0) {
                     start = {
-                        my: "left+" + $this.offset().left + " bottom-100",
-                        at: "left top"
+                        my: start.my + " right",
+                        at: start.at + " left"
                     };
-                    break;
-                case 'bottom':
+                }
+                if (origin.indexOf('right') >= 0) {
                     start = {
-                        my: "left+" + $this.offset().left + " top+100",
-                        at: "left bottom"
+                        my: start.my + " left",
+                        at: start.at + " right"
                     };
-                    break;
-                case 'left':
+                }
+                if (origin.indexOf('center') >= 0) {
                     start = {
-                        my: "right top+" + $this.offset().top,
-                        at: "left top"
+                        my: start.my + " center",
+                        at: start.at + " center"
                     };
-                    break;
-                case 'right':
+                }
+                if (origin.indexOf('top') >= 0) {
                     start = {
-                        my: "left top+" + $this.offset().top,
-                        at: "right top"
+                        my: start.my + " bottom-100",
+                        at: start.at + " top"
                     };
-                    break;
-                default:
-                    if (origin.indexOf('left') >= 0) {
-                        start = {
-                            my: start.my + " right",
-                            at: start.at + " left"
-                        };
-                    }
-                    if (origin.indexOf('right') >= 0) {
-                        start = {
-                            my: start.my + " left",
-                            at: start.at + " right"
-                        };
-                    }
-                    if (origin.indexOf('center') >= 0) {
-                        start = {
-                            my: start.my + " center",
-                            at: start.at + " center"
-                        };
-                    }
-                    if (origin.indexOf('top') >= 0) {
-                        start = {
-                            my: start.my + " bottom-100",
-                            at: start.at + " top"
-                        };
-                    }
-                    if (origin.indexOf('bottom') >= 0) {
-                        start = {
-                            my: start.my + " top+100",
-                            at: start.at + " bottom"
-                        };
-                    }
-                    start.my = $.trim(start.my);
-                    start.at = $.trim(start.at);
-                    break;
+                }
+                if (origin.indexOf('bottom') >= 0) {
+                    start = {
+                        my: start.my + " top+100",
+                        at: start.at + " bottom"
+                    };
+                }
+                start.my = $.trim(start.my);
+                start.at = $.trim(start.at);
+                break;
             }
             start.of = window;
             start.collision = 'none';
