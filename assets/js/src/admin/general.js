@@ -1,10 +1,17 @@
 /**
- * Popup Maker v1.3.6
+ * Popup Maker v1.4.0
  */
 
-var PopMakeAdmin;
-(function () {
+var PopMakeAdmin, PUM_Admin;
+(function ($) {
     "use strict";
+
+    var $document = $(document),
+        I10n = pum_admin.I10n,
+        defaults = pum_admin.defaults;
+
+    PUM_Admin = {}
+
     PopMakeAdmin = {
         init: function () {
             //PopMakeAdmin.initialize_tabs();
@@ -16,10 +23,6 @@ var PopMakeAdmin;
             if (jQuery('body.post-type-popup_theme form#post').length) {
                 PopMakeAdmin.initialize_theme_page();
             }
-            PopMakeAdmin.initialize_color_pickers();
-            PopMakeAdmin.initialize_range_sliders();
-
-            PopMakeAdmin.initialize_marketing();
 
 
             jQuery(document).keydown(function (event) {
@@ -31,57 +34,7 @@ var PopMakeAdmin;
                 return true;
             });
         },
-        initialize_marketing: function () {
-            jQuery('#menu-posts-popup ul li:eq(-1)').addClass('popmake-menu-highlight');
 
-            jQuery('.popmake-newsletter-optin').show();
-
-            // Modal & Theme Indexes
-            if (jQuery('#posts-filter').length) {
-                jQuery('#wpbody-content > .wrap > h2:first').after(jQuery('.popmake-newsletter-optin'));
-
-                // Modal & Theme Editors
-            } else if (jQuery('#titlediv').length) {
-                jQuery('#titlediv').append(jQuery('.popmake-newsletter-optin'));
-
-                // Welcome & Similar Pages
-            } else if (jQuery('.about-text').length && jQuery('.popmake-badge').length) {
-                jQuery('.nav-tab-wrapper').after(jQuery('.popmake-newsletter-optin'));
-
-                // Settings & Other Tabbed Pages
-            } else if (jQuery('#poststuff .tabwrapper').length) {
-                jQuery('#poststuff .tabwrapper').prepend(jQuery('.popmake-newsletter-optin'));
-
-                // Settings & Other Tabbed Pages
-            } else if (jQuery('#poststuff').length) {
-                jQuery('#poststuff').prepend(jQuery('.popmake-newsletter-optin'));
-            }
-
-            jQuery('.popmake-optin-dismiss').on('click', function (event) {
-                var $this = jQuery(this);
-                event.preventDefault();
-                jQuery
-                    .ajax({
-                        url: ajaxurl,
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {
-                            action: "popmake_optin",
-                            popmake_nonce: popmake_admin_ajax_nonce,
-                            optin_dismiss: true,
-                            optin_name: $this.data('optin-name'),
-                            optin_type: $this.data('optin-type')
-                        }
-                    })
-                    .done(function (data) {
-                        if (data.success) {
-                            $this.parents('.popmake-optin').slideUp(function () {
-                                jQuery(this).remove();
-                            });
-                        }
-                    });
-            });
-        },
         attachTabsPanelListeners: function () {
             jQuery('#poststuff').bind('click', function (event) {
                 var selectAreaMatch, panelId, wrapper, items,
@@ -234,155 +187,6 @@ var PopMakeAdmin;
             jQuery('.spinner', panel).hide();
             jQuery('[name^="menu-item"]').removeAttr('name');
         },
-        initialize_color_pickers: function () {
-            var self = this;
-            jQuery('.color-picker').wpColorPicker({
-                change: function (event) {
-                    self.throttle(setTimeout(function () {
-                        self.update_theme();
-                    }, 5), 250);
-                    var $input = jQuery(event.currentTarget);
-                    if ($input.hasClass('background-color')) {
-                        $input.parents('table').find('.background-opacity').show();
-                    }
-                },
-                clear: function (event) {
-                    self.update_theme();
-                    var $input = jQuery(event.currentTarget).prev();
-                    if ($input.hasClass('background-color')) {
-                        $input.parents('table').find('.background-opacity').hide();
-                    }
-                }
-            });
-        },
-        initialize_range_sliders: function () {
-
-            var input,
-                $input,
-                $slider,
-                $plus,
-                $minus,
-                slider = jQuery('<input type="range"/>'),
-                plus = jQuery('<button class="popmake-range-plus">+</button>'),
-                minus = jQuery('<button class="popmake-range-minus">-</button>');
-
-            jQuery(document).on('input', 'input[type="range"]', function () {
-                var $this = jQuery(this);
-                $this.siblings('.popmake-range-manual').val($this.val());
-            });
-            jQuery('.popmake-range-manual').each(function () {
-                var $this = jQuery(this),
-                    force = $this.data('force-minmax'),
-                    min = parseInt($this.prop('min'), 0),
-                    max = parseInt($this.prop('max'), 0),
-                    step = parseInt($this.prop('step'), 0),
-                    value = parseInt($this.val(), 0);
-
-                $slider = slider.clone();
-                $plus = plus.clone();
-                $minus = minus.clone();
-
-                if (force && value > max) {
-                    value = max;
-                    $this.val(value);
-                }
-
-                $slider
-                    .prop({
-                        'min': min || 0,
-                        'max': force || (max && max > value) ? max : value * 1.5,
-                        'step': step || value * 1.5 / 100,
-                        'value': value
-                    })
-                    .on('change input', function () {
-                        $this.trigger('input');
-                    });
-                $this.next().after($minus, $plus);
-                $this.before($slider);
-
-            });
-
-            jQuery(document)
-                .on('click', '.popmake-range-manual', function () {
-                    var $this = jQuery(this);
-                    $this.prop('readonly', false);
-                })
-                .on('focusout', '.popmake-range-manual', function () {
-                    var $this = jQuery(this);
-                    $this.prop('readonly', true);
-                })
-                .on('change', '.popmake-range-manual', function () {
-
-                    var $this = jQuery(this),
-                        max = parseInt($this.prop('max'), 0),
-                        step = parseInt($this.prop('step'), 0),
-                        force = $this.data('force-minmax'),
-                        value = parseInt($this.val(), 0);
-
-                    $slider = $this.prev();
-
-                    if (force && value > max) {
-                        value = max;
-                        $this.val(value);
-                    }
-
-                    $slider.prop({
-                        'max': force || (max && max > value) ? max : value * 1.5,
-                        'step': step || value * 1.5 / 100,
-                        'value': value
-                    });
-
-                })
-                .on('click', '.popmake-range-plus', function (event) {
-
-                    event.preventDefault();
-
-                    var $this = jQuery(this).siblings('.popmake-range-manual'),
-                        step = parseInt($this.prop('step'), 0),
-                        value = parseInt($this.val(), 0),
-                        val = value + step;
-
-                    $slider = $this.prev();
-
-                    $this.val(val).trigger('input');
-                    $slider.val(val);
-
-                })
-                .on('click', '.popmake-range-minus', function (event) {
-
-                    event.preventDefault();
-
-                    var $this = jQuery(this).siblings('.popmake-range-manual'),
-                        step = parseInt($this.prop('step'), 0),
-                        value = parseInt($this.val(), 0),
-                        val = value - step;
-
-                    $slider = $this.prev();
-
-                    $this.val(val).trigger('input');
-                    $slider.val(val);
-
-                });
-
-
-            input = document.createElement('input');
-            input.setAttribute('type', 'range');
-            if (input.type === 'text') {
-                jQuery('input[type=range]').each(function (index, input) {
-                    $input = jQuery(input);
-                    $slider = jQuery('<div />').slider({
-                        min: parseInt($input.attr('min'), 10) || 0,
-                        max: parseInt($input.attr('max'), 10) || 100,
-                        value: parseInt($input.attr('value'), 10) || 0,
-                        step: parseInt($input.attr('step'), 10) || 1,
-                        slide: function (event, ui) {
-                            jQuery(this).prev('input').val(ui.value);
-                        }
-                    });
-                    $input.after($slider).hide();
-                });
-            }
-        },
         initialize_popup_page: function () {
             var update_type_options = function ($this) {
                     var $options = $this.siblings('.options'),
@@ -509,10 +313,8 @@ var PopMakeAdmin;
                     var content = '';
 
                     if (jQuery("#wp-content-wrap").hasClass("tmce-active")) {
-                        console.log(1);
                         content = tinyMCE.activeEditor.getContent();
                     } else {
-                        console.log(2);
                         content = jQuery('#content').val();
                     }
 
@@ -597,7 +399,6 @@ var PopMakeAdmin;
                 .on('submit', '#post', function (event) {
                     var title = jQuery('#title').val();
                     if (title.length === 0 || title.replace(/\s/g, '').length === 0) {
-                        console.log(1);
                         event.preventDefault();
                         jQuery('div#notice').remove();
                         jQuery("<div id='notice' class='error below-h2'><p>A name is required for all popups.</p></div>").insertAfter('h2');
@@ -752,7 +553,6 @@ var PopMakeAdmin;
                             } else {
                                 if (font.variants[i].indexOf('italic') >= 0) {
 
-                                    console.log('italic');
                                     jQuery('option[value="italic"]', $font_style).show();
                                 }
                                 jQuery('option[value="' + parseInt(font.variants[i], 10) + '"]', $font_weight).show();
@@ -782,25 +582,7 @@ var PopMakeAdmin;
         },
         convert_theme_for_preview: function (theme) {
             return;
-            //jQuery.fn.popmake.themes[popmake_default_theme] = this.convert_meta_to_object(theme);
-        },
-        convert_meta_to_object: function (data) {
-            var converted_data = {},
-                element,
-                property,
-                key;
-
-            for (key in data) {
-                if (data.hasOwnProperty(key)) {
-                    element = key.split(/_(.+)?/)[0];
-                    property = key.split(/_(.+)?/)[1];
-                    if (converted_data[element] === undefined) {
-                        converted_data[element] = {};
-                    }
-                    converted_data[element][property] = data[key];
-                }
-            }
-            return converted_data;
+            //jQuery.fn.popmake.themes[popmake_default_theme] = PUMUtils.convert_meta_to_object(theme);
         },
         initialize_theme_page: function () {
             jQuery('#popuptitlediv').insertAfter('#titlediv');
@@ -914,16 +696,16 @@ var PopMakeAdmin;
             }
 
             $overlay.removeAttr('style').css({
-                backgroundColor: this.convert_hex(theme.overlay_background_color, theme.overlay_background_opacity)
+                backgroundColor: PUMUtils.convert_hex(theme.overlay_background_color, theme.overlay_background_opacity)
             });
             $container.removeAttr('style').css({
                 padding: theme.container_padding + 'px',
-                backgroundColor: this.convert_hex(theme.container_background_color, theme.container_background_opacity),
+                backgroundColor: PUMUtils.convert_hex(theme.container_background_color, theme.container_background_opacity),
                 borderStyle: theme.container_border_style,
                 borderColor: theme.container_border_color,
                 borderWidth: theme.container_border_width + 'px',
                 borderRadius: theme.container_border_radius + 'px',
-                boxShadow: container_inset + theme.container_boxshadow_horizontal + 'px ' + theme.container_boxshadow_vertical + 'px ' + theme.container_boxshadow_blur + 'px ' + theme.container_boxshadow_spread + 'px ' + this.convert_hex(theme.container_boxshadow_color, theme.container_boxshadow_opacity)
+                boxShadow: container_inset + theme.container_boxshadow_horizontal + 'px ' + theme.container_boxshadow_vertical + 'px ' + theme.container_boxshadow_blur + 'px ' + theme.container_boxshadow_spread + 'px ' + PUMUtils.convert_hex(theme.container_boxshadow_color, theme.container_boxshadow_opacity)
             });
             $title.removeAttr('style').css({
                 color: theme.title_font_color,
@@ -933,7 +715,7 @@ var PopMakeAdmin;
                 fontStyle: theme.title_font_style,
                 fontWeight: theme.title_font_weight,
                 textAlign: theme.title_text_align,
-                textShadow: theme.title_textshadow_horizontal + 'px ' + theme.title_textshadow_vertical + 'px ' + theme.title_textshadow_blur + 'px ' + this.convert_hex(theme.title_textshadow_color, theme.title_textshadow_opacity)
+                textShadow: theme.title_textshadow_horizontal + 'px ' + theme.title_textshadow_vertical + 'px ' + theme.title_textshadow_blur + 'px ' + PUMUtils.convert_hex(theme.title_textshadow_color, theme.title_textshadow_opacity)
             });
             $content.removeAttr('style').css({
                 color: theme.content_font_color,
@@ -946,7 +728,7 @@ var PopMakeAdmin;
                 padding: theme.close_padding + 'px',
                 height: theme.close_height > 0 ? theme.close_height + 'px' : 'auto',
                 width: theme.close_width > 0 ? theme.close_width + 'px' : 'auto',
-                backgroundColor: this.convert_hex(theme.close_background_color, theme.close_background_opacity),
+                backgroundColor: PUMUtils.convert_hex(theme.close_background_color, theme.close_background_opacity),
                 color: theme.close_font_color,
                 lineHeight: theme.close_line_height + 'px',
                 fontSize: theme.close_font_size + 'px',
@@ -957,8 +739,8 @@ var PopMakeAdmin;
                 borderColor: theme.close_border_color,
                 borderWidth: theme.close_border_width + 'px',
                 borderRadius: theme.close_border_radius + 'px',
-                boxShadow: close_inset + theme.close_boxshadow_horizontal + 'px ' + theme.close_boxshadow_vertical + 'px ' + theme.close_boxshadow_blur + 'px ' + theme.close_boxshadow_spread + 'px ' + this.convert_hex(theme.close_boxshadow_color, theme.close_boxshadow_opacity),
-                textShadow: theme.close_textshadow_horizontal + 'px ' + theme.close_textshadow_vertical + 'px ' + theme.close_textshadow_blur + 'px ' + this.convert_hex(theme.close_textshadow_color, theme.close_textshadow_opacity)
+                boxShadow: close_inset + theme.close_boxshadow_horizontal + 'px ' + theme.close_boxshadow_vertical + 'px ' + theme.close_boxshadow_blur + 'px ' + theme.close_boxshadow_spread + 'px ' + PUMUtils.convert_hex(theme.close_boxshadow_color, theme.close_boxshadow_opacity),
+                textShadow: theme.close_textshadow_horizontal + 'px ' + theme.close_textshadow_vertical + 'px ' + theme.close_textshadow_blur + 'px ' + PUMUtils.convert_hex(theme.close_textshadow_color, theme.close_textshadow_opacity)
             });
             switch (theme.close_location) {
                 case "topleft":
@@ -987,64 +769,11 @@ var PopMakeAdmin;
                     break;
             }
             jQuery(document).trigger('popmake-admin-retheme', [theme]);
-        },
-        serialize_form: function ($form) {
-            var serialized = {};
-            jQuery("[name]", $form).each(function () {
-                var name = jQuery(this).attr('name'),
-                    value = jQuery(this).val(),
-                    nameBits = name.split('['),
-                    previousRef = serialized,
-                    i,
-                    l = nameBits.length,
-                    nameBit;
-                for (i = 0; i < l; i += 1) {
-                    nameBit = nameBits[i].replace(']', '');
-                    if (!previousRef[nameBit]) {
-                        previousRef[nameBit] = {};
-                    }
-                    if (i !== nameBits.length - 1) {
-                        previousRef = previousRef[nameBit];
-                    } else if (i === nameBits.length - 1) {
-                        previousRef[nameBit] = value;
-                    }
-                }
-            });
-            return serialized;
-        },
-        convert_hex: function (hex, opacity) {
-            hex = hex.replace('#', '');
-            var r = parseInt(hex.substring(0, 2), 16),
-                g = parseInt(hex.substring(2, 4), 16),
-                b = parseInt(hex.substring(4, 6), 16),
-                result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity / 100 + ')';
-            return result;
-        },
-        debounce: function (callback, threshold) {
-            var timeout;
-            return function () {
-                var context = this, params = arguments;
-                window.clearTimeout(timeout);
-                timeout = window.setTimeout(function () {
-                    callback.apply(context, params);
-                }, threshold);
-            };
-        },
-        throttle: function (callback, threshold) {
-            var suppress = false,
-                clear = function () {
-                    suppress = false;
-                };
-            return function () {
-                if (!suppress) {
-                    callback();
-                    window.setTimeout(clear, threshold);
-                    suppress = true;
-                }
-            };
         }
+
     };
-    jQuery(document).ready(function () {
+    $document.ready(function () {
         PopMakeAdmin.init();
+        $document.trigger('pum_init');
     });
-}());
+}(jQuery));
