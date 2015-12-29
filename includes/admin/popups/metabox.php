@@ -281,7 +281,7 @@ function popmake_popup_meta_box_save( $post_id, $post ) {
 			}
 		}
 	}
-	do_action( 'popmake_save_popup', $post_id, $post );
+	do_action( 'pum_save_popup', $post_id, $post );
 }
 
 add_action( 'save_post', 'popmake_popup_meta_box_save', 10, 2 );
