@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @uses filter pum_cookie_cookie_options
  * @uses filter popmake_cookie_cookie_options @deprecated
  *
+ * TODO Is this used?
+ *
  * @return array $options
  */
 function pum_cookie_cookie_options() {
