@@ -1,0 +1,148 @@
+.pum-popup-conditions {
+
+  .pum-alert-box {
+  }
+
+}
+
+.facet-builder {
+
+  a {
+    text-decoration: none;
+  }
+
+  .facet-groups {
+
+    .facet-group-wrap {
+
+      .facet-group {
+        background-color: #f1f3f4;
+      }
+    }
+  }
+
+  .facet-list {
+  }
+
+  .facet {
+    position: relative;
+    padding: 13px 30px 7px 20px;
+    border-bottom: 1px solid #E7E7E7;
+    border-top: 1px solid #fff;
+
+    &:first-child {
+      border-top: 0;
+    }
+
+    &::before,
+    &::after {
+      display: table;
+      content: "";
+      line-height: 0;
+    }
+
+    &::after {
+      clear: both;
+    }
+
+  }
+
+  .facet-col {
+    float: left;
+    margin-right: 20px;
+    padding-bottom: 6px;
+
+    select,
+    input {
+      margin: 0;
+    }
+
+    select {
+      width: 200px;
+    }
+  }
+
+  .facet-options {
+
+  }
+
+  .facet-actions {
+    position: absolute;
+    right: 10px;
+    top: 17px;
+
+    a {
+      margin-left: 5px;
+    }
+  }
+
+  .dashicons-plus-alt,
+  .dashicons-dismiss {
+    color: #999;
+  }
+
+  .badge {
+    -webkit-font-smoothing: antialiased;
+    background: #aaaeb7;
+    border-radius: 2px;
+    color: #fff;
+    display: inline-block;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: 10px;
+    padding: 4px 5px;
+    text-transform: uppercase;
+    vertical-align: text-top;
+  }
+
+  .or {
+    color: #484848;
+    font-weight: 500;
+    margin-left: -21px;
+    left: 50%;
+    position: absolute;
+    top: -6px;
+  }
+
+  .add-or {
+    border-top: 1px solid #fff;
+    text-align: center;
+
+    > .add {
+      left: -6.5px;
+      position: relative;
+      top: -9px;
+    }
+  }
+
+  .and {
+    border-bottom: 1px dashed #e1e1e1;
+    margin: .5em 0 1.7em;
+    text-align: center;
+
+    em,
+    a,
+    label {
+      background: #fff;
+      font-size: 1.1em;
+      font-style: normal;
+      margin: 0 10px;
+      padding: 0 10px;
+      position: relative;
+      top: 9px;
+    }
+
+    em {
+      color: #484848;
+    }
+  }
+
+  .or,
+  .add-or > .add {
+    background: #f1f3f4;
+    font-size: 1.1em;
+    padding: 0 10px;
+  }
+
+}

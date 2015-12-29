@@ -202,6 +202,14 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-cookies.php';
 			}
 
+			// Conditions
+			require_once POPMAKE_DIR . 'includes/class-pum-condition.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-conditions.php';
+			require_once POPMAKE_DIR . 'includes/pum-condition-functions.php';
+			if ( is_admin() ) {
+				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-conditions.php';
+			}
+
 			// Admin Helper Class
 			if ( is_admin() ) {
 				require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-helpers.php';
@@ -317,6 +325,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 
 			// Add Upgraded From Option
+
 			$current_version = get_option( 'popmake_version' );
 			if ( $current_version ) {
 				update_option( 'popmake_version_upgraded_from', $current_version );
