@@ -252,6 +252,21 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		}
 
 		/**
+		 * @return mixed|void
+		 */
+		function get_conditions() {
+			if ( ! $this->conditions ) {
+				$this->conditions = get_post_meta( $this->ID, 'popup_conditions', true );
+
+				if ( ! $this->conditions ) {
+					$this->conditions = array();
+				}
+			}
+
+			return apply_filters( 'pum_popup_get_conditions', $this->conditions, $this->ID );
+		}
+
+		/**
 		 * Returns all or single display settings.
 		 *
 		 * @param null $key

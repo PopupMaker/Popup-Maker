@@ -15,11 +15,18 @@ function pum_get_popup_triggers( $popup_id = null ) {
 }
 
 function pum_get_popup_cookies( $popup_id = null ) {
-	if ( ! $popup_id ) {
-		$popup_id = popmake_get_the_popup_ID();
-	}
-	$cookies = get_post_meta( $popup_id, 'popup_cookies', true );
+	if ( ! ( $popup = new PUM_Popup( $popup_id ) ) ) {
+		return array();
+	};
 
-	return apply_filters( 'pum_get_popup_cookies', $cookies, $popup_id );
+	return $popup->get_cookies();
+}
+
+function pum_get_popup_conditions( $popup_id = null ) {
+	if ( ! ( $popup = new PUM_Popup( $popup_id ) ) ) {
+		return array();
+	};
+
+	return $popup->get_conditions();
 }
 

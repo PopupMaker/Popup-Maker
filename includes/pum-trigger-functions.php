@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @uses filter pum_cookie_trigger_options
  * @uses filter popmake_cookie_trigger_options @deprecated
  *
+ * @deprecated 1.4.0 No Longer Used.
+ *
  * @return array $options
  */
 function pum_trigger_cookie_options() {
@@ -63,6 +65,8 @@ function pum_get_triggers() {
 	return apply_filters( 'pum_get_triggers', array(
 		'click_open' => array(
 			'id' => 'click_open',
+			// TODO: Move these into their own function similar to pum_get_condition_group_label
+			// TODO: This will reduce the needed parameters greatly. Could possibly be in the PUM_Trigger function as well rather than global.
 			'labels' => array(
 				'name' => __( 'Click Open', 'popup-maker' ),
 				'modal_title' => __( 'Click Trigger Settings', 'popup-maker' ),
@@ -72,13 +76,14 @@ function pum_get_triggers() {
 					'<%= extra_selectors %>'
 				),
 			),
-			'<strong>Extra Selectors</strong>: <%= extra_selectors %>',
+			// TODO: Move these into their own function similar to pum_get_condition_group_label
+			// TODO: This will reduce the needed parameters greatly. Could possibly be in the PUM_Trigger function as well rather than global.
 			'sections' => array(
 				'general' => array(
 					'title' => __( 'General', 'popup-maker' ),
 				),
 				'cookie' => array(
-						'title' => __( 'Cookie', 'popup-maker' ),
+					'title' => __( 'Cookie', 'popup-maker' ),
 				),
 			),
 			'fields' => array(
@@ -95,6 +100,8 @@ function pum_get_triggers() {
 		),
 		'auto_open' => array(
 			'id' => 'auto_open',
+			// TODO: Move these into their own function similar to pum_get_condition_group_label
+			// TODO: This will reduce the needed parameters greatly. Could possibly be in the PUM_Trigger function as well rather than global.
 			'labels' => array(
 				'name' => __( 'Auto Open', 'popup-maker' ),
 				'modal_title' => __( 'Auto Open Settings', 'popup-maker' ),
@@ -104,6 +111,8 @@ function pum_get_triggers() {
 					'<%= delay %>'
 				),
 			),
+			// TODO: Move these into their own function similar to pum_get_condition_group_label
+			// TODO: This will reduce the needed parameters greatly. Could possibly be in the PUM_Trigger function as well rather than global.
 			'sections' => array(
 				'general' => array(
 					'title' => __( 'General', 'popup-maker' ),

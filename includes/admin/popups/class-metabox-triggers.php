@@ -150,7 +150,7 @@ class PUM_Popup_Triggers_Metabox {
 				 */
 				foreach ( $trigger->get_sections() as $tab => $args ) { ?>
 					<div id="<?php esc_attr_e( $id . '_' . $tab ); ?>_settings" class="tab-content">
-						<?php $trigger->render_templ_fields( $tab ); ?>
+						<?php $trigger->render_templ_fields_by_section( $tab ); ?>
 					</div>
 				<?php } ?>
 

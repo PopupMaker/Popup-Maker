@@ -114,15 +114,15 @@
 {
     margin-bottom: 0;
 }
-
-.pum-overlay .pum-container.pum-scrollable .pum-content {
+.pum-overlay .pum-container.pum-scrollable .pum-content
+{
     overflow: auto;
     overflow-y: scroll;
 
     max-height: 95%;
 }
-
-.pum-overlay .pum-container .pum-close {
+.pum-overlay .pum-container .pum-close
+{
     line-height: 1;
 
     position: absolute;
@@ -138,8 +138,8 @@ html.pum-open
 {
     overflow: hidden;
 }
-
-html.pum-open .pum-overlay.pum-active {
+html.pum-open .pum-overlay.pum-active
+{
     overflow-y: scroll;
 }
 
@@ -148,6 +148,11 @@ html.pum-open .pum-overlay.pum-active {
     overflow: visible; 
 
     width: 100%;
+}
+
+body div#ui-datepicker-div[style]
+{
+    z-index: 9999999999 !important;
 }
 
 .powered-by-popmake

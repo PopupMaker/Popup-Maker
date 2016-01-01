@@ -210,7 +210,9 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-conditions.php';
 			}
 
-			// Admin Helper Class
+			require_once POPMAKE_DIR . 'includes/pum-ajax-functions.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-helpers.php';
+			// Helper Classes
 			if ( is_admin() ) {
 				require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-helpers.php';
 			}

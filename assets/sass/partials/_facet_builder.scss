@@ -60,6 +60,33 @@
     select {
       width: 200px;
     }
+
+    &.pum-chosen {
+      width: 200px;
+
+      .chosen-container {
+        min-width: 150px !important;
+        max-width: 100% !important;
+        min-height: 27px;
+        position: relative;
+
+        .chosen-choices {
+
+          overflow-y: auto;
+          max-height: 250px;
+
+          .search-choice {
+            padding-bottom: 3px;
+          }
+        }
+        input {
+          min-height: 24px;
+          width: 100% !important;
+        }
+      }
+
+    }
+
   }
 
   .facet-options {

@@ -149,6 +149,10 @@ class Popmake_Fields {
 			'max'         => null,
 			'step'        => null,
 			'chosen'      => null,
+			'object_type' => 'post_type',
+			'object_key'  => 'post',
+			'post_type'   => null,
+			'taxonomy'    => null,
 			'multiple'    => null,
 			'placeholder' => '',
 			'allow_blank' => true,
@@ -325,11 +329,24 @@ class Popmake_Fields {
 	 * @param string $section
 	 * @param array $values
 	 */
-	function render_fields( $section = 'general', $values = array() ) {
+	function render_fields_by_section( $section = 'general', $values = array() ) {
 		foreach ( $this->get_fields( $section ) as $key => $args ) {
 			$value = isset( $values[ $args['id'] ] ) ? $values[ $args['id'] ] : null;
 
 			$this->render_field( $args, $value );
+		}
+	}
+
+	/**
+	 * @param array $values
+	 */
+	function render_fields( $values = array() ) {
+		foreach ( $this->get_all_fields() as $section => $fields ) {
+			foreach ( $fields as $id => $args ) {
+				$value = isset( $values[ $args['id'] ] ) ? $values[ $args['id'] ] : null;
+
+				$this->render_field( $args, $value );
+			}
 		}
 	}
 
@@ -377,9 +394,19 @@ class Popmake_Fields {
 	}
 
 	/**
+	 */
+	public function render_templ_fields() {
+		foreach ( $this->get_all_fields() as $section => $fields ) {
+			foreach ( $fields as $id => $args ) {
+				$this->render_templ_field( $args );
+			}
+		}
+	}
+
+	/**
 	 * @param string $section
 	 */
-	public function render_templ_fields( $section = 'general' ) {
+	public function render_templ_fields_by_section( $section = 'general' ) {
 		foreach ( $this->get_fields( $section ) as $key => $args ) {
 			$this->render_templ_field( $args );
 		}

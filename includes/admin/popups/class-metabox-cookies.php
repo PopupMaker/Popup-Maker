@@ -148,7 +148,7 @@ class PUM_Popup_Cookies_Metabox {
 				 */
 				foreach ( $cookie->get_sections() as $tab => $args ) { ?>
 					<div id="<?php esc_attr_e( $id . '_' . $tab ); ?>_settings" class="tab-content">
-						<?php $cookie->render_templ_fields( $tab ); ?>
+						<?php $cookie->render_templ_fields_by_section( $tab ); ?>
 					</div>
 				<?php } ?>
 

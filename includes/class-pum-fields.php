@@ -44,7 +44,7 @@ class PUM_Fields extends Popmake_Fields {
 	 */
 	public function text_callback( $args, $value ) {
 
-		$class = 'text ' . $args['id'];
+		$class = 'pum-field text ' . $args['id'];
 
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
@@ -82,7 +82,7 @@ class PUM_Fields extends Popmake_Fields {
 	*/
 	public function hidden_callback( $args, $value ) {
 
-		$class = 'hidden ' . $args['id'];
+		$class = 'pum-field hidden ' . $args['id'];
 
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
@@ -106,7 +106,7 @@ class PUM_Fields extends Popmake_Fields {
 	 */
 	public function select_callback( $args, $value ) {
 
-		$class = 'select ' . $args['id'];
+		$class = 'pum-field select ' . $args['id'];
 
 		if ( isset ( $args['chosen'] ) ) {
 			$class .= ' pum-chosen';
@@ -145,6 +145,91 @@ class PUM_Fields extends Popmake_Fields {
 		$this->field_after();
 	}
 
+
+	/**
+	 * Select Callback
+	 *
+	 * Renders select fields.
+	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
+	 */
+	public function objectselect_callback( $args, $value ) {
+
+		$class = 'pum-field pum-objectselect pum-chosen ' . $args['id'];
+
+		if ( ! empty ( $args['class'] ) ) {
+			$class .= ' ' . $args['class'];
+		}
+
+		$multiple = isset ( $args['multiple'] ) && $args['multiple'] ? 'multiple' : '';
+
+		$this->field_before( $class );
+
+		if ( ! $value ) {
+			$value = isset( $args['std'] ) ? $args['std'] : '';
+		}
+
+		if ( ! empty( $args['label'] ) ) { ?>
+			<label for="<?php esc_attr_e( $args['id'] ); ?>"><?php esc_html_e( $args['label'] ); ?></label><?php
+		} ?>
+
+		<select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" <?php echo $multiple; ?> placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" data-objecttype="<?php esc_attr_e( $args['object_type'] ); ?>"  data-objectkey="<?php esc_attr_e( $args['post_type'] ); ?>">
+
+		<?php if ( ! empty( $args['options'] ) ) {
+			foreach ( $args['options'] as $label => $option ) { ?>
+				<option value="<?php esc_attr_e( $option ); ?>" <?php selected( $option, $value ); ?>><?php esc_html_e( $label ); ?></option><?php
+			}
+		} ?>
+
+		</select><?php
+
+		if ( $args['desc'] != '' ) { ?>
+			<p class="desc"><?php esc_html_e( $args['desc'] ); ?></p><?php
+		}
+
+		$this->field_after();
+	}
+
+	/**
+	 * Select Callback
+	 *
+	 * Renders select fields.
+	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
+	 */
+	public function postselect_callback( $args, $value ) {
+
+		$args['object_type'] = 'post_type';
+		$args['object_key'] = $args['post_type'];
+		$args['class'] = ! empty( $args['class'] ) ? $args['class'] : '' . ' pum-postselect';
+
+		$this->objectselect_callback( $args, $value );
+
+	}
+
+	/**
+	 * Select Callback
+	 *
+	 * Renders select fields.
+	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
+	 */
+	public function taxonomyselect_callback( $args, $value ) {
+
+		$args['object_type'] = 'taxonomy';
+		$args['object_key'] = $args['taxonomy'];
+		$args['class'] = ! empty( $args['class'] ) ? $args['class'] : '' . ' pum-taxonomyselect';
+
+		$this->objectselect_callback( $args, $value );
+
+	}
+
 	/**
 	 * Checkbox Callback
 	 *
@@ -155,7 +240,7 @@ class PUM_Fields extends Popmake_Fields {
 	 * @return void
 	 */
 	public function checkbox_callback( $args, $value ) {
-		$class = 'checkbox ' . $args['id'];
+		$class = 'pum-field checkbox ' . $args['id'];
 
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
@@ -188,7 +273,7 @@ class PUM_Fields extends Popmake_Fields {
 	public function multicheck_callback( $args, $value = array() ) {
 		if ( ! empty( $args['options'] ) ) {
 
-			$class = 'multicheck ' . $args['id'];
+			$class = 'pum-field multicheck ' . $args['id'];
 
 			if ( ! empty ( $args['class'] ) ) {
 				$class .= ' ' . $args['class'];
@@ -228,7 +313,7 @@ class PUM_Fields extends Popmake_Fields {
 	 */
 	public function rangeslider_callback( $args, $value ) {
 
-		$class = 'rangeslider ' . $args['id'];
+		$class = 'pum-field rangeslider ' . $args['id'];
 
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
@@ -269,7 +354,7 @@ class PUM_Fields extends Popmake_Fields {
 	public function text_templ_callback( $args ) {
 		$templ_name = $this->get_templ_name( $args );
 
-		$class = 'text ' . $args['id'];
+		$class = 'pum-field text ' . $args['id'];
 
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
@@ -304,7 +389,7 @@ class PUM_Fields extends Popmake_Fields {
 	public function hidden_templ_callback( $args, $value ) {
 		$templ_name = $this->get_templ_name( $args, false );
 
-		$class = 'hidden ' . $args['id'];
+		$class = 'pum-field hidden ' . $args['id'];
 
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
@@ -316,7 +401,7 @@ class PUM_Fields extends Popmake_Fields {
 	public function select_templ_callback( $args ) {
 		$templ_name = $this->get_templ_name( $args, false );
 
-		$class = 'select ' . $args['id'];
+		$class = 'pum-field select ' . $args['id'];
 
 		if ( isset ( $args['chosen'] ) ) {
 			$class .= ' pum-chosen';
@@ -353,10 +438,46 @@ class PUM_Fields extends Popmake_Fields {
 		$this->field_after();
 	}
 
+	public function objectselect_templ_callback( $args ) {
+		$templ_name = $this->get_templ_name( $args, false );
+
+		$class = 'pum-field pum-objectselect pum-chosen ' . $args['id'];
+
+		if ( ! empty ( $args['class'] ) ) {
+			$class .= ' ' . $args['class'];
+		}
+
+		$multiple = isset ( $args['multiple'] ) && $args['multiple'] ? 'multiple' : '';
+
+		$this->field_before( $class );
+
+		if ( ! empty( $args['label'] ) ) { ?>
+			<label for="<?php esc_attr_e( $args['id'] ); ?>"><?php esc_html_e( $args['label'] ); ?></label><?php
+		} ?>
+
+		<select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" <?php echo $multiple; ?> data-posttype="<?php esc_attr_e( $args['post_type'] ); ?>">
+
+		<?php if ( ! empty( $args['options'] ) ) {
+			foreach ( $args['options'] as $label => $option ) { ?>
+				<option value="<?php esc_attr_e( $option ); ?>"
+				<% if(<?php esc_attr_e( $templ_name ); ?> === '<?php echo $option; ?>') { %>selected="selected"<% } %>
+				><?php esc_html_e( $label ); ?></option><?php
+			}
+		} ?>
+
+		</select><?php
+
+		if ( $args['desc'] != '' ) { ?>
+			<p class="desc"><?php esc_html_e( $args['desc'] ); ?></p><?php
+		}
+
+		$this->field_after();
+	}
+
 	public function checkbox_templ_callback( $args ) {
 		$templ_name = $this->get_templ_name( $args, false );
 
-		$class = 'checkbox ' . $args['id'];
+		$class = 'pum-field checkbox ' . $args['id'];
 
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
@@ -382,7 +503,7 @@ class PUM_Fields extends Popmake_Fields {
 
 			$templ_name = $this->get_templ_name( $args, false );
 
-			$class = 'multicheck ' . $args['id'];
+			$class = 'pum-field multicheck ' . $args['id'];
 
 			if ( ! empty ( $args['class'] ) ) {
 				$class .= ' ' . $args['class'];

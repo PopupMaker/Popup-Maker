@@ -16,10 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class PUM_Helpers {
 
-	public static function post_selectbox( $args = array() ) {
+	public static function post_type_selectbox( $post_type, $args = array() ) {
 		$args = wp_parse_args( $args, array(
 			'posts_per_page' => 30,
-			'post_type'      => 'post',
+			'post_type'      => $post_type,
 		) );
 
 		$query = new WP_Query( $args );
@@ -30,6 +30,12 @@ class PUM_Helpers {
 		}
 
 		return $posts;
+	}
+
+
+
+	public static function post_selectbox( $args = array() ) {
+		return static::post_type_selectbox( 'post', $args );
 	}
 
 	public static function taxonomy_selectbox( $taxonomies = array(), $args = array() ) {
