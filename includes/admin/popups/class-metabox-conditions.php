@@ -1,4 +1,13 @@
 <?php
+/**
+ * Fields
+ *
+ * @package     PUM
+ * @subpackage  Classes/Admin/Popups/PUM_Popup_Conditions_Metabox
+ * @copyright   Copyright (c) 2016, Daniel Iser
+ * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
+ * @since       1.4.0
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -17,8 +26,8 @@ class PUM_Popup_Conditions_Metabox {
 	 */
 	public static function init() {
 		add_action( 'add_meta_boxes', array( __CLASS__, 'register_metabox' ) );
-		add_action( 'print_media_templates', array( __CLASS__, 'media_templates' ) );
-		add_action( 'popmake_save_popup', array( __CLASS__, 'save_popup' ) );
+		//add_action( 'print_media_templates', array( __CLASS__, 'media_templates' ) );
+		//add_action( 'popmake_save_popup', array( __CLASS__, 'save_popup' ) );
 	}
 
 	/**
@@ -43,122 +52,82 @@ class PUM_Popup_Conditions_Metabox {
 		<div id="pum_popup_condition_fields" class="popmake_meta_table_wrap">
 		<?php do_action( 'pum_popup_conditions_metabox_before', $post->ID ); ?>
 
-
 		<div id="pum-popup-conditions" class="pum-popup-conditions">
-			<section class="pum-alert-box" style="display:none"></section>
-			<section class="facet-builder">
-				<div class="facet-groups">
-					<div class="facet-group-wrap">
-						<section class="facet-group">
-							<div class="facet-list">
-								<div class="facet">
-									<div class="facet-col">
-										<select class="type">
-											<option value="0">Select a Condition ...</option>
-											<optgroup label="People">
-												<option value="10">Customer Name</option>
-												<option value="20">Customer Email</option>
-												<option value="140">Help Scout User</option>
-											</optgroup>
-										</select>
-									</div>
-									<div class="facet-options">
-										<div class="facet-col">
-											<select class="operator">
-												<option value="8">Is not in the last</option>
-												<option value="7">Is in the last</option>
-											</select>
-										</div>
-										<div class="facet-col">
-											<input style="float:left; width:90px;" type="text"
-											       class="value input-xsmall count">
-											<select style="width:90px" class="value-mod value units">
-												<option value=":h">Hours</option>
-												<option value=":d">Days</option>
-											</select>
-										</div>
-									</div>
-									<div class="facet-actions">
-										<a href="javascript:void(0)" class="remove remove-facet" rel="tooltip"
-										   data-placement="bottom" data-original-title="Remove line" tabindex="-1">
-											<i class="dashicons dashicons-dismiss"></i>
-										</a>
-									</div>
-								</div>
-								<div class="facet">
-									<i class="badge or">or</i>
-
-									<div class="facet-col">
-										<select class="type facet-select">
-											<option value="0">Select a Condition ...</option>
-											<optgroup label="People">
-												<option value="10">Customer Name</option>
-												<option value="20">Customer Email</option>
-												<option value="140">Help Scout User</option>
-											</optgroup>
-										</select>
-									</div>
-									<div class="facet-options">
-										<div></div>
-									</div>
-									<div class="facet-actions">
-										<a href="javascript:void(0)" class="remove remove-facet" rel="tooltip"
-										   data-placement="bottom" data-original-title="Remove line" tabindex="-1">
-											<i class="dashicons dashicons-dismiss"></i>
-										</a>
-									</div>
-								</div>
-							</div>
-							<div class="add-or">
-								<a href="javascript:void(0)" class="add addFacet" tabindex="-1">+ OR</a>
-							</div>
-						</section>
-						<p class="and">
-							<em>AND</em>
-						</p>
-					</div>
-					<div class="facet-group-wrap">
-						<section class="facet-group">
-							<div class="facet-list">
-								<div class="facet">
-									<div class="facet-col">
-										<select class="type">
-											<option value="0">Select a Condition ...</option>
-											<optgroup label="People">
-												<option value="10">Customer Name</option>
-												<option value="20">Customer Email</option>
-												<option value="140">Help Scout User</option>
-											</optgroup>
-										</select>
-									</div>
-									<div class="facet-options">
-										<div></div>
-									</div>
-									<div class="facet-actions">
-										<a href="javascript:void(0)" class="remove remove-facet" rel="tooltip"
-										   data-placement="bottom" data-original-title="Remove line" tabindex="-1">
-											<i class="dashicons dashicons-dismiss"></i>
-										</a>
-									</div>
-								</div>
-							</div>
-							<div class="add-or">
-								<a href="javascript:void(0)" class="add addFacet" tabindex="-1">+ OR</a>
-							</div>
-						</section>
-						<p class="and">
-							<a href="javascript:void(0);" class="addCondition" tabindex="-1">+ AND</a>
-						</p>
-					</div>
-				</div>
-			</section>
-			<section class="form-actions"></section>
+			<?php static::render_builder(); ?>
 		</div>
-
 
 		<?php do_action( 'pum_popup_conditions_metabox_after', $post->ID ); ?>
 		</div><?php
 	}
+
+	public static function render_builder() {
+		global $post;
+		$conditions     = pum_get_popup_conditions( $post->ID );
+		$has_conditions = boolval( count( $conditions ) );
+		$group_count    = 0; ?>
+		<script id="pum-popup-conditions-json">
+			var pum_popup_conditions = <?php echo json_encode( $conditions ); ?>;
+		</script>
+		<div class="facet-builder <?php echo $has_conditions ? 'has-conditions' : ''; ?>">
+			<section class="pum-alert-box" style="display:none"></section>
+			<div class="facet-groups">
+				<?php foreach ( $conditions as $group => $conditions ) : ?>
+					<div class="facet-group-wrap">
+					<section class="facet-group">
+						<div class="facet-list"><?php
+							$condition_count = 0;
+							foreach ( $conditions as $values ) :
+								$condition = PUM_Conditions::instance()->get_condition( $values['type'] ); ?>
+								<div class="facet">
+								<?php if ( $condition_count > 1 ) : ?>
+									<i class="badge or">or</i>
+							<?php endif; ?>
+									<div class="facet-col">
+										<?php PUM_Conditions::instance()->conditions_dropdown( array( 'name'  => 'popup_conditions[][type]',
+										                                                              'value' => $values['type']
+										) ); ?>
+									</div>
+									<div class="facet-options">
+										<?php $condition->render_fields( $values ); ?>
+									</div>
+									<div class="facet-actions">
+										<a href="javascript:void(0)" class="remove remove-facet" rel="tooltip"
+										   data-placement="bottom" data-original-title="Remove line" tabindex="-1">
+											<i class="dashicons dashicons-dismiss"></i>
+										</a>
+									</div>
+								</div><?php
+								$condition_count ++; // Increment condition index.
+							endforeach; ?>
+						</div>
+						<div class="add-or">
+							<a href="javascript:void(0)" class="add addFacet" tabindex="-1">+ OR</a>
+						</div>
+					</section>
+					<p class="and">
+						<?php if ( false ) { ?>
+							<em>AND</em>
+						<?php } else { ?>
+							<a href="javascript:void(0);" class="addCondition" tabindex="-1">+ AND</a>
+						<?php } ?>
+					</p>
+					</div><?php
+
+					$group_count ++; // Increment group index.
+
+				endforeach; ?>
+			</div>
+			<div class="no-facet-groups">
+				<p>
+					<strong><?php _e( 'Conditions limit where and who will see your popups.', 'popup-maker' ); ?></strong>
+				</p>
+				<label
+					for="pum-first-condition"><?php _e( 'Choose a condition to get started.', 'popup-maker' ); ?></label>
+				<?php PUM_Conditions::instance()->conditions_dropdown( array( 'id' => 'pum-first-condition' ) ); ?>
+			</div>
+		</div><?php
+	}
+
 
 	public static function save_popup( $post_id ) {
 		$conditions = array();
@@ -187,22 +156,6 @@ class PUM_Popup_Conditions_Metabox {
 					'settings' => '<%= PUMConditions.getSettingsDesc(event, condition_settings) %>',
 				),
 				'settings' => '<%- JSON.stringify(condition_settings) %>',
-			) ); ?>
-		</script>
-
-		<script type="text/template" id="pum_condition_add_event_templ"><?php
-			ob_start(); ?>
-			<select id="popup_condition_add_event">
-				<?php foreach ( PUM_Conditions::instance()->get_conditions() as $id => $condition ) : ?>
-					<option value="<?php echo $id; ?>"><?php echo $condition->get_label( 'name' ); ?></option>
-				<?php endforeach ?>
-			</select><?php
-			$content = ob_get_clean();
-
-			PUM_Admin_Helpers::modal( array(
-				'id'      => 'pum_condition_add_event_modal',
-				'title'   => __( 'What will trigger your condition to be created?', 'popup-maker' ),
-				'content' => $content
 			) ); ?>
 		</script>
 
@@ -237,7 +190,7 @@ class PUM_Popup_Conditions_Metabox {
 					 */
 					foreach ( $condition->get_sections() as $tab => $args ) { ?>
 						<div id="<?php esc_attr_e( $id . '_' . $tab ); ?>_settings" class="tab-content">
-							<?php $condition->render_templ_fields( $tab ); ?>
+							<?php $condition->render_templ_fields_by_section( $tab ); ?>
 						</div>
 					<?php } ?>
 
@@ -255,53 +208,6 @@ class PUM_Popup_Conditions_Metabox {
 			</script><?php
 		}
 
-	}
-
-	/**
-	 * @param array $row
-	 */
-	public static function render_row( $row = array() ) {
-		global $post;
-
-		$row = wp_parse_args( $row, array(
-			'index'    => 0,
-			'event'    => 'on_popup_close',
-			'columns'  => array(
-				'event'    => __( 'On Popup Close', 'popup-maker' ),
-				'name'     => 'popmake-' . $post->ID,
-				'settings' => __( 'Time: 1 Month', 'popup-maker' ),
-			),
-			'settings' => array(
-				'name'    => 'popmake-' . $post->ID,
-				'key'     => '',
-				'session' => 0,
-				'time'    => '1 month',
-				'path'    => 1,
-			),
-		) );
-		?>
-		<tr data-index="<?php echo $row['index']; ?>">
-			<td class="event-column">
-				<span class="edit"><?php echo $row['columns']['event']; ?></span>
-				<input class="popup_conditions_field_event" type="hidden"
-				       name="popup_conditions[<?php echo $row['index']; ?>][event]"
-				       value="<?php echo $row['event']; ?>"/>
-				<input class="popup_conditions_field_settings" type="hidden"
-				       name="popup_conditions[<?php echo $row['index']; ?>][settings]"
-				       value="<?php echo maybe_json_attr( $row['settings'], true ); ?>"/>
-			</td>
-			<td class="name-column">
-				<code>
-					<?php echo $row['columns']['name']; ?>
-				</code>
-			</td>
-			<td class="settings-column"><?php echo $row['columns']['settings']; ?></td>
-			<td class="actions">
-				<i class="edit dashicons dashicons-edit"></i>
-				<i class="remove dashicons dashicons-no"></i>
-			</td>
-		</tr>
-		<?php
 	}
 
 }

@@ -20,12 +20,14 @@ class PUM_Condition extends PUM_Fields {
 
 	public $labels = array();
 
-	public $field_prefix = 'condition_settings';
+	public $field_prefix = 'popup_conditions';
 
-	public $field_name_format = '{$prefix}{$section}[{$field}]';
+	public $field_name_format = '{$prefix}[][][{$field}]';
+
+	public $group = 'general';
 
 	/**
-	 * Sets the $id of the Condition and returns the parent __cunstruct()
+	 * Sets the $id of the Condition and returns the parent __construct()
 	 *
 	 * @param array $args
 	 */
@@ -34,6 +36,10 @@ class PUM_Condition extends PUM_Fields {
 
 		if ( ! empty( $args['labels'] ) ) {
 			$this->set_labels( $args['labels'] );
+		}
+
+		if ( ! empty( $args['group'] ) ) {
+			$this->group = $args['group'];
 		}
 
 		return parent::__construct( $args );
@@ -45,9 +51,7 @@ class PUM_Condition extends PUM_Fields {
 
 	public function set_labels( $labels = array() ) {
 		$this->labels = wp_parse_args( $labels, array(
-			'name'            => __( 'Condition', 'popup-maker' ),
-			'modal_title'     => __( 'Condition Settings', 'popup-maker' ),
-			'settings_column' => sprintf( '%s', __( 'Settings', 'popup-maker' ) ),
+			'name' => __( 'Condition', 'popup-maker' ),
 		) );
 	}
 
@@ -76,28 +80,12 @@ class PUM_Condition extends PUM_Fields {
 	}
 
 	public function field_before( $class = '' ) {
-		?><div class="field <?php esc_attr_e( $class ); ?>"><?php
+		?><div class="facet-col <?php esc_attr_e( $class ); ?>"><?php
 	}
 
 	public function field_after() {
 		?></div><?php
 	}
-
-
-	/**
-	 * Heading Callback
-	 *
-	 * Renders the heading.
-	 *
-	 * @param array $args Arguments passed by the setting
-	 *
-	 * @return void
-	 */
-	public function heading_callback( $args ) { ?>
-		<h2 class="pum-setting-heading"><?php esc_html_e( $args['desc'] ); ?></h2>
-		<hr/><?php
-	}
-
 
 	/**
 	 * Sanitize fields

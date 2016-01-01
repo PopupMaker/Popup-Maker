@@ -1,80 +1,159 @@
 <?php
+/**
+ * Conditions Functions
+ *
+ * @package     PUM
+ * @subpackage  Functions/PUM_Conditions
+ * @copyright   Copyright (c) 2016, Daniel Iser
+ * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
+ * @since       1.4.0
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * Gets all condition conditions.
- *
- * @uses filter pum_condition_condition_options
- * @uses filter popmake_condition_condition_options @deprecated
- *
- * @return array $options
- */
-function pum_condition_condition_options() {
-	$options = apply_filters( 'pum_condition_condition_options', array(
-		__( 'Disabled', 'popup-maker' ) => 'disabled',
-		__( 'On Open', 'popup-maker' )  => 'open',
-		__( 'On Close', 'popup-maker' ) => 'close',
-		__( 'Manual', 'popup-maker' )   => 'manual',
-	) );
+function pum_generate_post_type_conditions() {
+	$conditions = array();
+	$post_types = get_post_types( array( 'public' => true ), 'objects' );
 
-	// Deprecated filter used by old extensions.
-	$options = apply_filters( 'popmake_condition_condition_options', $options );
+	foreach ( $post_types as $name => $post_type ) {
 
-	return $options;
+		$conditions[ $name . '_all' ]    = array(
+			'group'  => 'content',
+			'labels' => array(
+				'name' => sprintf(
+					_x( '%s: All', 'condition: post type plural label ie. Posts: All', 'popup-maker' ),
+					$post_type->labels->name
+				),
+			),
+		);
+		$conditions[ $name . '_select' ] = array(
+			'group'  => 'content',
+			'labels' => array(
+				'name' => sprintf(
+					_x( '%s: Selected', 'condition: post type plural label ie. Posts: Selected', 'popup-maker' ),
+					$post_type->labels->name
+				),
+			),
+			'fields' => array(
+				'selected' => array(
+					'placeholder' => sprintf(
+						_x( 'Select %s.', 'condition: post type plural label ie. Select Posts', 'popup-maker' ),
+						strtolower( $post_type->labels->name )
+					),
+					'type'        => 'postselect',
+					'post_type'   => $name,
+					'multiple'    => true,
+					'options'     => PUM_Helpers::post_type_selectbox( $name ),
+				),
+			)
+		);
+
+		$conditions = array_merge( $conditions, pum_generate_post_type_tax_conditions( $name ) );
+
+	}
+
+	return $conditions;
 }
 
-/**
- * Returns the condition fields used for condition options.
- *
- * @uses filter pum_condition_condition_fields
- *
- * @param array $stds
- *
- * @return array
- *
- */
-function pum_get_condition_fields() {
-	return apply_filters( 'pum_get_condition_fields', array(
-		'name'    => array(
-			'label'       => __( 'Condition Name', 'popup-maker' ),
-			'placeholder' => __( 'Condition Name ex. popmaker-123', 'popup-maker' ),
-			'desc'        => __( 'The name that will be used when checking for or saving this condition.', 'popup-maker' ),
-			'std'         => '',
-			'priority'    => 1,
-		),
-		'key'     => array(
-			'label'    => __( 'Condition Key', 'popup-maker' ),
-			'desc'     => __( 'Changing this will cause all existing conditions to be invalid.', 'popup-maker' ),
-			'type'     => 'conditionkey',
-			'std'      => '',
-			'priority' => 2,
-		),
-		'session' => array(
-			'label'    => __( 'Use Session Condition?', 'popup-maker' ),
-			'desc'     => __( 'Session conditions expire when the user closes their browser.', 'popup-maker' ),
-			'type'     => 'checkbox',
-			'std'      => false,
-			'priority' => 3,
-		),
-		'time'    => array(
-			'label'       => __( 'Condition Time', 'popup-maker' ),
-			'placeholder' => __( '364 days 23 hours 59 minutes 59 seconds', 'popup-maker' ),
-			'desc'        => __( 'Enter a plain english time before condition expires.', 'popup-maker' ),
-			'std'         => '1 month',
-			'priority'    => 4,
-		),
-		'path'    => array(
-			'label'    => __( 'Sitewide Condition', 'popup-maker' ),
-			'desc'     => __( 'This will prevent the popup from triggering on all pages until the condition expires.', 'popup-maker' ),
-			'type'     => 'checkbox',
-			'std'      => true,
-			'priority' => 5,
-		),
-	) );
+function pum_generate_post_type_tax_conditions( $name ) {
+	$post_type  = get_post_type_object( $name );
+	$taxonomies = get_object_taxonomies( $name, 'object' );
+	$conditions = array();
+	foreach ( $taxonomies as $tax_name => $taxonomy ) {
+
+
+		$conditions[ $name . '_w_' . $tax_name ]  = array(
+			'group'  => 'content',
+			'labels' => array(
+				'name' => sprintf(
+					_x( '%1$s: With %2$s', 'condition: post type plural and taxonomy singular label ie. Posts: With Category', 'popup-maker' ),
+					$post_type->labels->name,
+					$taxonomy->labels->singular_name
+				),
+			),
+			'fields' => array(
+				'selected' => array(
+					'placeholder' => sprintf(
+						_x( 'Select %s.', 'condition: post type plural label ie. Select categories', 'popup-maker' ),
+						strtolower( $taxonomy->labels->name )
+					),
+					'type'        => 'taxonomyselect',
+					'taxonomy'    => $tax_name,
+					'multiple'    => true,
+					'options'     => PUM_Helpers::taxonomy_selectbox( $tax_name ),
+				),
+			)
+		);
+		$conditions[ $name . '_wo_' . $tax_name ] = array(
+			'group'  => 'content',
+			'labels' => array(
+				'name' => sprintf(
+					_x( '%1$s: Without %2$s', 'condition: post type plural and taxonomy singular label ie. Posts: Not Without Category', 'popup-maker' ),
+					$post_type->labels->name,
+					$taxonomy->labels->singular_name
+				),
+			),
+			'fields' => array(
+				'selected' => array(
+					'placeholder' => sprintf(
+						_x( 'Select %s.', 'condition: post type plural label ie. Select categories', 'popup-maker' ),
+						strtolower( $taxonomy->labels->name )
+					),
+					'type'        => 'taxonomyselect',
+					'taxonomy'    => $tax_name,
+					'multiple'    => true,
+					'options'     => PUM_Helpers::taxonomy_selectbox( $tax_name ),
+				),
+			)
+		);
+	}
+
+	return $conditions;
+}
+
+function pum_generate_taxonomy_conditions() {
+	$conditions = array();
+	$taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
+
+	foreach ( $taxonomies as $tax_name => $taxonomy ) {
+
+		$conditions[ 'tax_' . $tax_name . '_all' ]    = array(
+			'group'  => 'content',
+			'labels' => array(
+				'name' => sprintf(
+					_x( '%s: All', 'condition: taxonomy plural label ie. Categories: All', 'popup-maker' ),
+					$taxonomy->labels->name
+				),
+			),
+		);
+		$conditions[ 'tax_' . $tax_name . '_select' ] = array(
+			'group'  => 'content',
+			'labels' => array(
+				'name' => sprintf(
+					_x( '%s: Selected', 'condition: taxonomy plural label ie. Categories: Selected', 'popup-maker' ),
+					$taxonomy->labels->name
+				),
+			),
+			'fields' => array(
+				'selected' => array(
+					'placeholder' => sprintf(
+						_x( 'Select %s.', 'condition: taxonomy plural label ie. Select Categories', 'popup-maker' ),
+						strtolower( $taxonomy->labels->name )
+					),
+					'type'        => 'taxonomyselect',
+					'taxonomy'    => $tax_name,
+					'multiple'    => true,
+					'options'     => PUM_Helpers::taxonomy_selectbox( $tax_name ),
+				),
+			)
+		);
+
+	}
+
+	return $conditions;
 }
 
 /**
@@ -85,26 +164,13 @@ function pum_get_condition_fields() {
  * @return array
  */
 function pum_get_conditions() {
-	return apply_filters( 'pum_get_conditions', array(
-		'on_popup_open'  => array(
-			'labels' => array(
-				'name' => __( 'On Popup Open', 'popup-maker' ),
-			),
-			'fields' => pum_get_condition_fields(),
-		),
-		'on_popup_close' => array(
-			'labels' => array(
-				'name' => __( 'On Popup Close', 'popup-maker' ),
-			),
-			'fields' => pum_get_condition_fields(),
-		),
-		'manual'         => array(
-			'labels' => array(
-				'name' => __( 'Manual JavaScript', 'popup-maker' ),
-			),
-			'fields' => pum_get_condition_fields(),
-		),
-	) );
+	$conditions = array_merge(
+		pum_generate_post_type_conditions(),
+		pum_generate_taxonomy_conditions()
+	);
+
+
+	return apply_filters( 'pum_get_conditions', $conditions );
 }
 
 /**
