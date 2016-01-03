@@ -26,8 +26,8 @@ class PUM_Popup_Conditions_Metabox {
 	 */
 	public static function init() {
 		add_action( 'add_meta_boxes', array( __CLASS__, 'register_metabox' ) );
-		//add_action( 'print_media_templates', array( __CLASS__, 'media_templates' ) );
-		//add_action( 'popmake_save_popup', array( __CLASS__, 'save_popup' ) );
+		add_action( 'print_media_templates', array( __CLASS__, 'media_templates' ) );
+		add_action( 'pum_save_popup', array( __CLASS__, 'save_popup' ) );
 	}
 
 	/**
@@ -62,54 +62,55 @@ class PUM_Popup_Conditions_Metabox {
 
 	public static function render_builder() {
 		global $post;
-		$conditions     = pum_get_popup_conditions( $post->ID );
-		$has_conditions = boolval( count( $conditions ) );
-		$group_count    = 0; ?>
+		$condition_groups = pum_get_popup_conditions( $post->ID );
+		$has_conditions   = boolval( count( $condition_groups ) );
+		$group_count      = 0; ?>
 		<script id="pum-popup-conditions-json">
-			var pum_popup_conditions = <?php echo json_encode( $conditions ); ?>;
+			var pum_popup_conditions = <?php echo json_encode( $condition_groups ); ?>;
 		</script>
 		<div class="facet-builder <?php echo $has_conditions ? 'has-conditions' : ''; ?>">
 			<section class="pum-alert-box" style="display:none"></section>
 			<div class="facet-groups">
-				<?php foreach ( $conditions as $group => $conditions ) : ?>
-					<div class="facet-group-wrap">
+				<?php foreach ( $condition_groups as $group => $conditions ) : ?>
+				<div class="facet-group-wrap" data-index="<?php echo $group_count; ?>">
 					<section class="facet-group">
 						<div class="facet-list"><?php
 							$condition_count = 0;
 							foreach ( $conditions as $values ) :
-								$condition = PUM_Conditions::instance()->get_condition( $values['type'] ); ?>
-								<div class="facet">
-								<?php if ( $condition_count > 1 ) : ?>
-									<i class="badge or">or</i>
-							<?php endif; ?>
-									<div class="facet-col">
-										<?php PUM_Conditions::instance()->conditions_dropdown( array( 'name'  => 'popup_conditions[][type]',
-										                                                              'value' => $values['type']
+								$condition = PUM_Conditions::instance()->get_condition( $values['target'] ); ?>
+								<div class="facet" data-index="<%= index %>" data-target="<%= target %>">
+
+								<i class="or">or</i>
+
+								<div class="facet-col">
+									<?php PUM_Conditions::instance()->conditions_selectbox( array(
+										'id'      => "popup_conditions[$group_count][$condition_count][target]",
+										'name'    => "popup_conditions[$group_count][$condition_count][target]",
+										'current' => $values['target'],
 										) ); ?>
 									</div>
-									<div class="facet-options">
+
+								<div class="facet-settings">
 										<?php $condition->render_fields( $values ); ?>
 									</div>
+
 									<div class="facet-actions">
-										<a href="javascript:void(0)" class="remove remove-facet" rel="tooltip"
-										   data-placement="bottom" data-original-title="Remove line" tabindex="-1">
+										<a href="javascript:void(0)" class="remove remove-facet"
+										   title="<?php _e( 'Remove Condition', 'popup-maker' ); ?>" tabindex="-1">
 											<i class="dashicons dashicons-dismiss"></i>
 										</a>
 									</div>
+
 								</div><?php
 								$condition_count ++; // Increment condition index.
 							endforeach; ?>
 						</div>
 						<div class="add-or">
-							<a href="javascript:void(0)" class="add addFacet" tabindex="-1">+ OR</a>
+							<a href="javascript:void(0)" class="add add-facet" tabindex="-1">or</a>
 						</div>
 					</section>
 					<p class="and">
-						<?php if ( false ) { ?>
-							<em>AND</em>
-						<?php } else { ?>
-							<a href="javascript:void(0);" class="addCondition" tabindex="-1">+ AND</a>
-						<?php } ?>
+						<a href="javascript:void(0);" class="add-facet" tabindex="-1">and</a>
 					</p>
 					</div><?php
 
@@ -123,19 +124,21 @@ class PUM_Popup_Conditions_Metabox {
 				</p>
 				<label
 					for="pum-first-condition"><?php _e( 'Choose a condition to get started.', 'popup-maker' ); ?></label>
-				<?php PUM_Conditions::instance()->conditions_dropdown( array( 'id' => 'pum-first-condition' ) ); ?>
+				<?php PUM_Conditions::instance()->conditions_selectbox( array( 'id' => 'pum-first-condition' ) ); ?>
 			</div>
 		</div><?php
 	}
 
-
 	public static function save_popup( $post_id ) {
 		$conditions = array();
 		if ( ! empty ( $_POST['popup_conditions'] ) ) {
-			foreach ( $_POST['popup_conditions'] as $key => $condition ) {
-				$condition['settings'] = PUM_Admin_Helpers::object_to_array( json_decode( stripslashes( $condition['settings'] ) ) );
-				$condition['settings'] = PUM_Conditions::instance()->validate_condition( $condition['event'], $condition['settings'] );
-				$conditions[]          = $condition;
+			foreach ( $_POST['popup_conditions'] as $group_key => $group ) {
+				foreach ( $group as $condition_key => $condition ) {
+					$validated = PUM_Conditions::instance()->validate_condition( $condition );
+					if ( ! is_wp_error( $validated ) ) {
+						$conditions[ $group_key ][ $condition_key ] = $validated;
+					}
+				}
 			}
 		}
 		update_post_meta( $post_id, 'popup_conditions', $conditions );
@@ -146,67 +149,89 @@ class PUM_Popup_Conditions_Metabox {
 	 */
 	public static function media_templates() { ?>
 
-		<script type="text/template" id="pum_condition_row_templ">
-			<?php static::render_row( array(
-				'index'    => '<%= index %>',
-				'event'    => '<%= event %>',
-				'columns'  => array(
-					'event'    => '<%= PUMConditions.getLabel(event) %>',
-					'name'     => '<%= condition_settings.name %>',
-					'settings' => '<%= PUMConditions.getSettingsDesc(event, condition_settings) %>',
-				),
-				'settings' => '<%- JSON.stringify(condition_settings) %>',
-			) ); ?>
+		<script type="text/template" id="pum_condition_group_templ">
+			<div class="facet-group-wrap" data-index="<%= index %>">
+				<section class="facet-group">
+					<div class="facet-list">
+						<% for(var i = 0; conditions.length > i; i++) {
+						conditions[i].index = i;
+						conditions[i].group = index;
+						print(PUMConditions.templates.facet( conditions[i] ));
+						} %>
+					</div>
+					<div class="add-or">
+						<a href="javascript:void(0)" class="add add-facet" tabindex="-1">or</a>
+					</div>
+				</section>
+				<p class="and">
+					<a href="javascript:void(0);" class="add-facet" tabindex="-1">and</a>
+				</p>
+			</div>
 		</script>
 
-		<?php foreach ( PUM_Conditions::instance()->get_conditions() as $id => $condition ) { ?>
-			<script type="text/template" class="pum-condition-settings <?php esc_attr_e( $id ); ?> templ"
-			        id="pum_condition_settings_<?php esc_attr_e( $id ); ?>_templ">
 
-				<?php ob_start(); ?>
+		<?php
+		/**
+		 * Renders a _ template for a condition facet/row
+		 *
+		 * Passed Data
+		 * index: current index inside group
+		 * target: condition target
+		 * settings: values for option fields
+		 */
+		?>
+		<script type="text/template" id="pum_condition_facet_templ">
+			<div class="facet" data-index="<%= index %>" data-target="<%= target %>">
 
-				<input type="hidden" name="event" class="event" value="<?php esc_attr_e( $id ); ?>"/>
-				<input type="hidden" name="index" class=index" value="<%= index %>"/>
+				<i class="or">or</i>
 
-				<div class="pum-tabs-container vertical-tabs tabbed-form">
+				<div class="facet-col">
+					<select class="target facet-select" id="popup_conditions[<%= group %>][<%= index %>][target]"
+					        name="popup_conditions[<%= group %>][<%= index %>][target]">
+						<option value=""><?php _e( 'Select a condition', 'popup-maker' ); ?></option>
+						<?php foreach ( PUM_Conditions::instance()->get_conditions_by_group() as $group => $conditions ) : ?>
+							<optgroup label="<?php echo PUM_Conditions::instance()->get_group_label( $group ); ?>">
+								<?php foreach ( $conditions as $id => $condition ) : ?>
+							<option value="<?php echo $id; ?>" <% if(target === '<?php echo $id; ?>') { %>selected="selected"<% } %>>
+								<?php echo $condition->get_label( 'name' ); ?>
+							</option>
+							<?php endforeach ?>
+							</optgroup>
+						<?php endforeach ?>
+					</select>
+				</div>
 
-					<ul class="tabs">
-						<?php
-						/**
-						 * Render Each settings tab.
-						 */
-						foreach ( $condition->get_sections() as $tab => $args ) {
-							if ( ! $args['hidden'] ) { ?>
-								<li class="tab">
-									<a href="#<?php esc_attr_e( $id . '_' . $tab ); ?>_settings"><?php esc_html_e( $args['title'] ); ?></a>
-								</li>
-							<?php }
-						} ?>
-					</ul>
+				<div class="facet-settings">
+					<%
+					settings.index = index;
+					if (typeof target === 'string' && PUMConditions.templates.settings[ target ] !== undefined) {
+					print(PUMConditions.templates.settings[ target ]( settings ));
+					}
+					%>
+				</div>
 
-					<?php
-					/**
-					 * Render Each settings tab contents.
-					 */
-					foreach ( $condition->get_sections() as $tab => $args ) { ?>
-						<div id="<?php esc_attr_e( $id . '_' . $tab ); ?>_settings" class="tab-content">
-							<?php $condition->render_templ_fields_by_section( $tab ); ?>
-						</div>
-					<?php } ?>
+				<div class="facet-actions">
+					<a href="javascript:void(0)" class="remove remove-facet"
+					   title="<?php _e( 'Remove Condition', 'popup-maker' ); ?>" tabindex="-1">
+						<i class="dashicons dashicons-dismiss"></i>
+					</a>
+				</div>
+			</div>
+		</script>
 
-				</div><?php
 
-				$content = ob_get_clean();
+		<?php foreach ( PUM_Conditions::instance()->get_conditions() as $id => $condition ) : ?>
 
-				PUM_Admin_Helpers::modal( array(
-					'id'               => 'pum_condition_settings_' . $id,
-					'title'            => __( 'Condition Settings', 'popup-maker' ),
-					'class'            => 'tabbed-content condition-editor',
-					'save_button_text' => '<%= save_button_text %>',
-					'content'          => $content
-				) ); ?>
-			</script><?php
-		}
+			<script type="text/template" id="pum_condition_settings_<?php esc_attr_e( $id ); ?>_templ"
+			        class="pum-condition-settings templ" data-condition="<?php esc_attr_e( $id ); ?>">
+				<?php
+				/**
+				 * Render Each settings tab contents.
+				 */
+				$condition->render_templ_fields(); ?>
+			</script>
+
+		<?php endforeach;
 
 	}
 

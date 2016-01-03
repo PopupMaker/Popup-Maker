@@ -24,7 +24,7 @@ function pum_generate_post_type_conditions() {
 			'group'  => 'content',
 			'labels' => array(
 				'name' => sprintf(
-					_x( '%s: All', 'condition: post type plural label ie. Posts: All', 'popup-maker' ),
+					_x( 'All %s', 'condition: post type plural label ie. Posts: All', 'popup-maker' ),
 					$post_type->labels->name
 				),
 			),
@@ -46,7 +46,7 @@ function pum_generate_post_type_conditions() {
 					'type'        => 'postselect',
 					'post_type'   => $name,
 					'multiple'    => true,
-					'options'     => PUM_Helpers::post_type_selectbox( $name ),
+					'options'     => PUM_Helpers::post_type_selectlist( $name ),
 				),
 			)
 		);
@@ -83,7 +83,7 @@ function pum_generate_post_type_tax_conditions( $name ) {
 					'type'        => 'taxonomyselect',
 					'taxonomy'    => $tax_name,
 					'multiple'    => true,
-					'options'     => PUM_Helpers::taxonomy_selectbox( $tax_name ),
+					'options'     => PUM_Helpers::taxonomy_selectlist( $tax_name ),
 				),
 			)
 		);
@@ -105,7 +105,7 @@ function pum_generate_post_type_tax_conditions( $name ) {
 					'type'        => 'taxonomyselect',
 					'taxonomy'    => $tax_name,
 					'multiple'    => true,
-					'options'     => PUM_Helpers::taxonomy_selectbox( $tax_name ),
+					'options'     => PUM_Helpers::taxonomy_selectlist( $tax_name ),
 				),
 			)
 		);
@@ -146,7 +146,7 @@ function pum_generate_taxonomy_conditions() {
 					'type'        => 'taxonomyselect',
 					'taxonomy'    => $tax_name,
 					'multiple'    => true,
-					'options'     => PUM_Helpers::taxonomy_selectbox( $tax_name ),
+					'options'     => PUM_Helpers::taxonomy_selectlist( $tax_name ),
 				),
 			)
 		);

@@ -19,7 +19,7 @@ function pum_ajax_object_search() {
 				$args['post__not_in'] = array( intval( $_REQUEST['current_id'] ) );
 			}
 
-			foreach ( PUM_Helpers::post_type_selectbox( $post_type, $args ) as $name => $id ) {
+			foreach ( PUM_Helpers::post_type_selectlist( $post_type, $args ) as $name => $id ) {
 				$results[] = array( 'id' => $id, 'name' => $name );
 			}
 			break;
@@ -31,7 +31,7 @@ function pum_ajax_object_search() {
 				'search' => ! empty( $_REQUEST['s'] ) ? $_REQUEST['s'] : '',
 			);
 
-			foreach ( PUM_Helpers::taxonomy_selectbox( $taxonomy, $args ) as $name => $id ) {
+			foreach ( PUM_Helpers::taxonomy_selectlist( $taxonomy, $args ) as $name => $id ) {
 				$results[] = array( 'id' => $id, 'name' => $name );
 			}
 			break;

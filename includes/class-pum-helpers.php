@@ -16,9 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class PUM_Helpers {
 
-	public static function post_type_selectbox( $post_type, $args = array() ) {
+	public static function post_type_selectlist( $post_type, $args = array() ) {
 		$args = wp_parse_args( $args, array(
-			'posts_per_page' => 30,
+			'posts_per_page' => 10,
 			'post_type'      => $post_type,
 		) );
 
@@ -33,29 +33,25 @@ class PUM_Helpers {
 	}
 
 
-
-	public static function post_selectbox( $args = array() ) {
-		return static::post_type_selectbox( 'post', $args );
+	public static function post_selectlist( $args = array() ) {
+		return static::post_type_selectlist( 'post', $args );
 	}
 
-	public static function taxonomy_selectbox( $taxonomies = array(), $args = array() ) {
+	public static function taxonomy_selectlist( $taxonomies = array(), $args = array() ) {
 		if ( empty ( $taxonomies ) ) {
 			$taxonomies = array( 'category' );
 		}
 
 		$args = wp_parse_args( $args, array(
 			'hide_empty' => false,
-			'number'     => '',
+			'number'     => 10,
 			'fields'     => 'id=>name',
 			'search'     => '',
 		) );
 
-		$terms = array();
-		foreach ( get_terms( $taxonomies, $args ) as $id => $name ) {
-			$terms[ $name ] = $id;
-		}
+		$terms = get_terms( $taxonomies, $args );
 
-		return $terms;
+		return array_flip( $terms );
 	}
 
 

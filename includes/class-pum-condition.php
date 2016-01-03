@@ -24,6 +24,11 @@ class PUM_Condition extends PUM_Fields {
 
 	public $field_name_format = '{$prefix}[][][{$field}]';
 
+	/**
+	 * @var string
+	 */
+	public $templ_value_format = '{$field}';
+
 	public $group = 'general';
 
 	/**
@@ -79,6 +84,60 @@ class PUM_Condition extends PUM_Fields {
 		);
 	}
 
+	/**
+	 * @return array
+	 */
+	public function get_all_fields() {
+		$all_fields = array();
+		foreach ( $this->fields as $section => $fields ) {
+			$all_fields = array_merge( $all_fields, $this->get_fields( $section ) );
+		}
+
+		return $all_fields;
+	}
+
+	public function get_templ_name( $args, $print = true ) {
+		$name = str_replace(
+			array(
+				'{$prefix}',
+				'{$section}',
+				'{$field}'
+			),
+			array(
+				$this->field_prefix,
+				$args['section'] != 'general' ? ".{$args['section']}" : "",
+				$args['id']
+			),
+			$this->templ_value_format
+		);
+
+		if ( $print ) {
+			$name = "<%= $name %>";
+		}
+
+		return $name;
+	}
+
+
+	/**
+	 * @param array $values
+	 */
+	function render_fields( $values = array() ) {
+		foreach ( $this->get_all_fields() as $id => $args ) {
+			$value = isset( $values[ $args['id'] ] ) ? $values[ $args['id'] ] : null;
+
+			$this->render_field( $args, $value );
+		}
+	}
+
+	/**
+	 */
+	public function render_templ_fields() {
+		foreach ( $this->get_all_fields() as $id => $args ) {
+			$this->render_templ_field( $args );
+		}
+	}
+
 	public function field_before( $class = '' ) {
 		?><div class="facet-col <?php esc_attr_e( $class ); ?>"><?php
 	}
@@ -97,27 +156,15 @@ class PUM_Condition extends PUM_Fields {
 	 *
 	 */
 	function sanitize_fields( $values = array() ) {
-
 		$sanitized_values = array();
-
-		foreach ( $this->get_all_fields() as $section => $fields ) {
-			foreach ( $fields as $field ) {
-
-				if ( $section != 'general' ) {
-					$value = isset( $values[ $section ][ $field['id'] ] ) ? $values[ $section ][ $field['id'] ] : null;
-				} else {
-					$value = isset( $values[ $field['id'] ] ) ? $values[ $field['id'] ] : null;
-				}
-
-				$value = $this->sanitize_field( $field, $value );
-
-				if ( ! is_null( $value ) ) {
-					if ( $section != 'general' ) {
-						$sanitized_values[ $section ][ $field['id'] ] = $value;
-					} else {
-						$sanitized_values[ $field['id'] ] = $value;
-					}
-				}
+		if ( isset( $values['target'] ) && $values['target'] == $this->get_id() ) {
+			$sanitized_values['target'] = $this->get_id();
+		}
+		foreach ( $this->get_all_fields() as $id => $field ) {
+			$value = isset( $values[ $field['id'] ] ) ? $values[ $field['id'] ] : null;
+			$value = $this->sanitize_field( $field, $value );
+			if ( ! is_null( $value ) ) {
+				$sanitized_values[ $field['id'] ] = $value;
 			}
 		}
 

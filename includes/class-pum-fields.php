@@ -455,7 +455,11 @@ class PUM_Fields extends Popmake_Fields {
 			<label for="<?php esc_attr_e( $args['id'] ); ?>"><?php esc_html_e( $args['label'] ); ?></label><?php
 		} ?>
 
-		<select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" <?php echo $multiple; ?> data-posttype="<?php esc_attr_e( $args['post_type'] ); ?>">
+		<% if (typeof <?php esc_attr_e( $templ_name ); ?> === 'undefined') {
+		<?php esc_attr_e( $templ_name ); ?> = '';
+		} %>
+
+		<select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" <?php echo $multiple; ?> placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" data-objecttype="<?php esc_attr_e( $args['object_type'] ); ?>"  data-objectkey="<?php esc_attr_e( $args['post_type'] ); ?>">
 
 		<?php if ( ! empty( $args['options'] ) ) {
 			foreach ( $args['options'] as $label => $option ) { ?>
@@ -473,6 +477,45 @@ class PUM_Fields extends Popmake_Fields {
 
 		$this->field_after();
 	}
+
+	/**
+	 * Select Callback
+	 *
+	 * Renders select fields.
+	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
+	 */
+	public function postselect_templ_callback( $args, $value ) {
+
+		$args['object_type'] = 'post_type';
+		$args['object_key'] = $args['post_type'];
+		$args['class'] = ! empty( $args['class'] ) ? $args['class'] : '' . ' pum-postselect';
+
+		$this->objectselect_templ_callback( $args, $value );
+
+	}
+
+	/**
+	 * Select Callback
+	 *
+	 * Renders select fields.
+	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
+	 */
+	public function taxonomyselect_templ_callback( $args, $value ) {
+
+		$args['object_type'] = 'taxonomy';
+		$args['object_key'] = $args['taxonomy'];
+		$args['class'] = ! empty( $args['class'] ) ? $args['class'] : '' . ' pum-taxonomyselect';
+
+		$this->objectselect_templ_callback( $args, $value );
+
+	}
+
 
 	public function checkbox_templ_callback( $args ) {
 		$templ_name = $this->get_templ_name( $args, false );

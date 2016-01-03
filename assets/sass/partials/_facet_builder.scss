@@ -3,173 +3,206 @@
   .pum-alert-box {
   }
 
-}
-
-.facet-builder {
-
-  a {
-    text-decoration: none;
-  }
-
-  .facet-groups {
-
-    .facet-group-wrap {
-
-      .facet-group {
-        background-color: #f1f3f4;
-      }
-    }
-  }
-
-  .facet-list {
-  }
-
-  .facet {
-    position: relative;
-    padding: 13px 30px 7px 20px;
-    border-bottom: 1px solid #E7E7E7;
-    border-top: 1px solid #fff;
-
-    &:first-child {
-      border-top: 0;
-    }
-
-    &::before,
-    &::after {
-      display: table;
-      content: "";
-      line-height: 0;
-    }
-
-    &::after {
-      clear: both;
-    }
-
-  }
-
-  .facet-col {
-    float: left;
-    margin-right: 20px;
-    padding-bottom: 6px;
-
-    select,
-    input {
-      margin: 0;
-    }
-
-    select {
-      width: 200px;
-    }
-
-    &.pum-chosen {
-      width: 200px;
-
-      .chosen-container {
-        min-width: 150px !important;
-        max-width: 100% !important;
-        min-height: 27px;
-        position: relative;
-
-        .chosen-choices {
-
-          overflow-y: auto;
-          max-height: 250px;
-
-          .search-choice {
-            padding-bottom: 3px;
-          }
-        }
-        input {
-          min-height: 24px;
-          width: 100% !important;
-        }
-      }
-
-    }
-
-  }
-
-  .facet-options {
-
-  }
-
-  .facet-actions {
-    position: absolute;
-    right: 10px;
-    top: 17px;
+  .facet-builder {
 
     a {
-      margin-left: 5px;
+      text-decoration: none;
     }
-  }
 
-  .dashicons-plus-alt,
-  .dashicons-dismiss {
-    color: #999;
-  }
+    .facet-groups {
 
-  .badge {
-    -webkit-font-smoothing: antialiased;
-    background: #aaaeb7;
-    border-radius: 2px;
-    color: #fff;
-    display: inline-block;
-    font-size: 11px;
-    font-style: normal;
-    font-weight: bold;
-    line-height: 10px;
-    padding: 4px 5px;
-    text-transform: uppercase;
-    vertical-align: text-top;
-  }
+      display: none;
 
-  .or {
-    color: #484848;
-    font-weight: 500;
-    margin-left: -21px;
-    left: 50%;
-    position: absolute;
-    top: -6px;
-  }
+      .facet-group-wrap {
 
-  .add-or {
-    border-top: 1px solid #fff;
-    text-align: center;
+        .facet-group {
+          background-color: #f1f3f4;
+        }
 
-    > .add {
-      left: -6.5px;
+        &:last-child .and,
+        .add-or {
+          em,
+          a {
+            color: #0073aa;
+            cursor: pointer;
+
+            &::before {
+              content: "+ ";
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+    .facet-list {
+    }
+
+    .facet {
       position: relative;
-      top: -9px;
+      padding: 13px 30px 7px 20px;
+      border-bottom: 1px solid #E7E7E7;
+      border-top: 1px solid #fff;
+
+      &:first-child {
+        border-top: 0;
+
+        .or {
+          display: none;
+        }
+      }
+
+      &::before,
+      &::after {
+        display: table;
+        content: "";
+        line-height: 0;
+      }
+
+      &::after {
+        clear: both;
+      }
+
     }
-  }
 
-  .and {
-    border-bottom: 1px dashed #e1e1e1;
-    margin: .5em 0 1.7em;
-    text-align: center;
+    .facet-col {
+      float: left;
+      margin-right: 20px;
+      padding-bottom: 6px;
 
-    em,
-    a,
-    label {
-      background: #fff;
-      font-size: 1.1em;
-      font-style: normal;
-      margin: 0 10px;
-      padding: 0 10px;
-      position: relative;
-      top: 9px;
+      select,
+      input {
+        margin: 0;
+      }
+
+      select {
+        width: 200px;
+      }
+
+      &.pum-chosen {
+        width: 200px;
+
+        .chosen-container {
+          min-width: 150px !important;
+          max-width: 100% !important;
+          min-height: 27px;
+          position: relative;
+
+          .chosen-choices {
+
+            overflow-y: auto;
+            max-height: 250px;
+
+            .search-choice {
+              padding-bottom: 3px;
+            }
+          }
+          input {
+            min-height: 24px;
+            width: 100% !important;
+          }
+        }
+
+      }
+
     }
 
-    em {
+    .facet-settings {
+
+    }
+
+    .facet-actions {
+      position: absolute;
+      right: 10px;
+      top: 17px;
+
+      a {
+        margin-left: 5px;
+      }
+    }
+
+    .dashicons-plus-alt,
+    .dashicons-dismiss {
+      color: #999;
+    }
+
+    /* + AND + OR link stylings */
+    .or {
       color: #484848;
+      font-weight: 500;
+      margin-left: -21px;
+      left: 50%;
+      position: absolute;
+      top: -6px;
+      font-style: normal;
+      line-height: 10px;
+      text-transform: uppercase;
     }
+
+    .add-or {
+      border-top: 1px solid #fff;
+      text-align: center;
+
+      > .add {
+        left: -6.5px;
+        position: relative;
+        top: -9px;
+      }
+    }
+
+    .and {
+      border-bottom: 1px dashed #e1e1e1;
+      margin: .5em 0 1.7em;
+      text-align: center;
+    }
+
+    .or,
+    .add-or > .add {
+      background: #f1f3f4;
+      font-size: 1.1em;
+      padding: 0 10px;
+    }
+
+    .and, .add-or {
+      em,
+      a,
+      label {
+        background: #fff;
+        font-size: 1.1em;
+        font-style: normal;
+        margin: 0 10px;
+        padding: 0 10px;
+        position: relative;
+        top: 9px;
+        text-transform: uppercase;
+        box-shadow: none;
+        color: #484848;
+        cursor: default;
+
+      }
+
+      em {
+        color: #484848;
+      }
+    }
+
   }
 
-  .or,
-  .add-or > .add {
-    background: #f1f3f4;
-    font-size: 1.1em;
-    padding: 0 10px;
+  /* Conditionals */
+  .has-conditions {
+
+    .facet-groups {
+      display: block;
+    }
+
+    .no-facet-groups {
+      display: none;
+    }
+
   }
 
 }
+

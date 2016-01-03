@@ -71,24 +71,29 @@ class PUM_Conditions {
 		return $groups;
 	}
 
-	public function conditions_dropdown( $args = array() ) {
+
+	public function conditions_selectbox( $args = array() ) {
 		$args = wp_parse_args( $args, array(
-			'id'   => '',
-			'name' => '',
+			'id'      => '',
+			'name'    => '',
+			'current' => ''
 		) );
 
 		// TODO: Generate this using PUM_Fields. Use a switch to generate a tmpl version when needed. ?>
 	<select class="type facet-select" id="<?php esc_attr_e( $args['id'] ); ?>"
 	        name="<?php esc_attr_e( $args['name'] ); ?>">
+		<option value=""><?php _e( 'Select a condition', 'popup-maker' ); ?></option>
 		<?php foreach ( $this->get_conditions_by_group() as $group => $conditions ) : ?>
 			<optgroup label="<?php echo $this->get_group_label( $group ); ?>">
 				<?php foreach ( $conditions as $id => $condition ) : ?>
-					<option value="<?php echo $id; ?>"><?php echo $condition->get_label( 'name' ); ?></option>
+					<option
+						value="<?php echo $id; ?>" <?php selected( $args['current'], $id ); ?>><?php echo $condition->get_label( 'name' ); ?></option>
 				<?php endforeach ?>
 			</optgroup>
 		<?php endforeach ?>
 		</select><?php
 	}
+
 
 	public function get_condition( $condition = null ) {
 		return isset( $this->conditions[ $condition ] ) ? $this->conditions[ $condition ] : null;
@@ -175,17 +180,12 @@ class PUM_Conditions {
 	}
 
 
-	public function validate_condition( $condition = null, $settings = array() ) {
-		if ( ! $condition || empty( $settings ) ) {
-			return $settings;
+	public function validate_condition( $condition = array() ) {
+		if ( empty( $condition ) || empty( $condition['target'] ) ) {
+			return new WP_Error( 'empty_condition', __( "Invalid condition[target].", "popup-maker" ) );
 		}
 
-		$condition = $this->get_condition( $condition );
-		if ( $condition ) {
-			$settings = $condition->sanitize_fields( $settings );
-		}
-
-		return $settings;
+		return $this->get_condition( $condition['target'] )->sanitize_fields( $condition );;
 	}
 
 }
