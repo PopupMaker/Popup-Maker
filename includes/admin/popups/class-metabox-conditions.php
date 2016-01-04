@@ -14,13 +14,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 /**
  * Class PUM_Popup_Conditions_Metabox
  *
  * @since 1.4
  */
 class PUM_Popup_Conditions_Metabox {
+
 	/**
 	 * Initialize the needed actions & filters.
 	 */
@@ -36,10 +36,7 @@ class PUM_Popup_Conditions_Metabox {
 	 * @return void
 	 */
 	public static function register_metabox() {
-		add_meta_box( 'pum_popup_conditions', __( 'Conditions', 'popup-maker' ), array(
-			__CLASS__,
-			'render_metabox'
-		), 'popup', 'normal', 'high' );
+        add_meta_box( 'pum_popup_conditions', __( 'Conditions', 'popup-maker' ), array( __CLASS__, 'render_metabox' ), 'popup', 'normal', 'high' );
 	}
 
 	/**
@@ -87,19 +84,19 @@ class PUM_Popup_Conditions_Metabox {
 										'id'      => "popup_conditions[$group_count][$condition_count][target]",
 										'name'    => "popup_conditions[$group_count][$condition_count][target]",
 										'current' => $values['target'],
-										) ); ?>
-									</div>
+                                    ) ); ?>
+                                </div>
 
 								<div class="facet-settings">
-										<?php $condition->render_fields( $values ); ?>
-									</div>
+                                    <?php $condition->render_fields( $values ); ?>
+                                </div>
 
-									<div class="facet-actions">
-										<a href="javascript:void(0)" class="remove remove-facet"
-										   title="<?php _e( 'Remove Condition', 'popup-maker' ); ?>" tabindex="-1">
-											<i class="dashicons dashicons-dismiss"></i>
-										</a>
-									</div>
+                                <div class="facet-actions">
+                                    <a href="javascript:void(0)" class="remove remove-facet"
+                                       title="<?php _e( 'Remove Condition', 'popup-maker' ); ?>" tabindex="-1">
+                                        <i class="dashicons dashicons-dismiss"></i>
+                                    </a>
+                                </div>
 
 								</div><?php
 								$condition_count ++; // Increment condition index.
