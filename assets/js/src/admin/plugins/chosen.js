@@ -9,15 +9,43 @@ var PUMChosenFields;
     PUMChosenFields = {
         init: function () {
             $('.pum-chosen select').filter(':not(.initialized)').each(function () {
-                var $this = $(this);
-                console.log($this.attr('placeholder'));
+                var $this = $(this),
+                    current = $this.data('current'),
+                    object_type = $this.data('objecttype'),
+                    object_key = $this.data('objectkey');
+
                 $this
                     .addClass('initialized')
                     .chosen({
                         allow_single_deselect: true,
-                        width: '100%',
-                        placeholder_text_multiple: $this.attr('placeholder')
+                        width: $this.is(':visible') ? $this.outerWidth(true) + 'px' : '200px',
+                        placeholder_text_multiple: $this.attr('title')
                     });
+
+                $.ajax({
+                    type: 'GET',
+                    url: ajaxurl,
+                    data: {
+                        action: "pum_object_search",
+                        object_type: object_type,
+                        object_key: object_key,
+                        include: current,
+                        current_id: pum_admin.post_id
+                    },
+                    async: true,
+                    dataType: "json",
+                    success: function (data) {
+                        $.each(data, function (key, item) {
+                            // Add any option that doesn't already exist
+                            if (!$this.find('option[value="' + item.id + '"]').length) {
+                                $this.prepend('<option value="' + item.id + '">' + item.name + '</option>');
+                            }
+                        });
+                        // Update the options
+                        $this.val(current);
+                        $this.trigger('chosen:updated');
+                    }
+                });
             });
         }
     };
@@ -29,12 +57,11 @@ var PUMChosenFields;
         .on('keyup', '.pum-objectselect .chosen-container .chosen-search input, .pum-objectselect .chosen-container .search-field input', function (e) {
             var $this = $(this),
                 $field = $this.parents('.pum-field'),
+                $select = $field.find('select:first'),
                 val = $this.val(),
-                container = $field.find('.chosen-container'),
-                menu_id = container.attr('id').replace('_chosen', ''),
                 lastKey = e.which,
-                object_type= $field.find('[data-objecttype]').data('objecttype'),
-                object_key = $field.find('[data-objectkey]').data('objectkey');
+                object_type = $select.data('objecttype'),
+                object_key = $select.data('objectkey');
 
             // Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
             if (
@@ -68,27 +95,21 @@ var PUMChosenFields;
                         },
                         dataType: "json",
                         beforeSend: function () {
-                            $('ul.chosen-results').empty();
+                            $field.find('ul.chosen-results').empty();
                         },
                         success: function (data) {
                             // Remove all options but those that are selected
-                            $('#' + menu_id + ' option:not(:selected)').remove();
+                            $select.find('option:not(:selected)').remove();
                             $.each(data, function (key, item) {
                                 // Add any option that doesn't already exist
-                                if (!$('#' + menu_id + ' option[value="' + item.id + '"]').length) {
-                                    $('#' + menu_id).prepend('<option value="' + item.id + '">' + item.name + '</option>');
+                                if (!$select.find('option[value="' + item.id + '"]').length) {
+                                    $select.prepend('<option value="' + item.id + '">' + item.name + '</option>');
                                 }
                             });
                             // Update the options
-                            $('.pum-chosen select').trigger('chosen:updated');
-                            $('#' + menu_id).next().find('input').val(val);
+                            $select.trigger('chosen:updated');
+                            $this.val(val);
                         }
-                    }).fail(function (response) {
-                        if (window.console && window.console.log) {
-                            console.log(response);
-                        }
-                    }).done(function (response) {
-
                     });
                 },
                 doneTypingInterval
