@@ -64,9 +64,28 @@ class PUM_Condition extends PUM_Fields {
 		return isset( $this->labels[ $key ] ) ? $this->labels[ $key ] : null;
 	}
 
-	public function get_labels() {
-		return $this->labels;
-	}
+    public function get_labels() {
+        return $this->labels;
+    }
+
+    public function has_callback() {
+        return ! empty( $this->args['callback'] ) ? true : false;
+    }
+
+    public function get_callback() {
+
+        if ( $this->has_callback() && is_callable( $this->args['callback'] ) ) {
+            $callback = $this->args['callback'];
+        } elseif ( method_exists( 'PUM_Condition_Callbacks', $this->id ) ) {
+            $callback = array( 'PUM_Condition_Callbacks', $this->id );
+        } else {
+            $callback = "pum_condition_{$this->id}";
+        }
+
+        $callback =  apply_filters( 'pum_condition_get_callback', $callback, $this );
+
+        return is_callable( $callback ) ? $callback : '__return_false';
+    }
 
 	public function get_field_name( $field ) {
 		return str_replace(
@@ -117,7 +136,6 @@ class PUM_Condition extends PUM_Fields {
 
 		return $name;
 	}
-
 
 	/**
 	 * @param array $values
