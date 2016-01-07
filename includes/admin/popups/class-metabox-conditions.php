@@ -47,13 +47,13 @@ class PUM_Popup_Conditions_Metabox {
 	public static function render_metabox() {
 		global $post; ?>
 		<div id="pum_popup_condition_fields" class="popmake_meta_table_wrap">
-		<?php do_action( 'pum_popup_conditions_metabox_before', $post->ID ); ?>
+            <?php do_action( 'pum_popup_conditions_metabox_before', $post->ID ); ?>
 
-		<div id="pum-popup-conditions" class="pum-popup-conditions">
-			<?php static::render_builder(); ?>
-		</div>
+            <div id="pum-popup-conditions" class="pum-popup-conditions">
+                <?php static::render_builder(); ?>
+            </div>
 
-		<?php do_action( 'pum_popup_conditions_metabox_after', $post->ID ); ?>
+            <?php do_action( 'pum_popup_conditions_metabox_after', $post->ID ); ?>
 		</div><?php
 	}
 
@@ -62,65 +62,63 @@ class PUM_Popup_Conditions_Metabox {
 		$condition_groups = pum_get_popup_conditions( $post->ID );
 		$has_conditions   = boolval( count( $condition_groups ) );
 		$group_count      = 0; ?>
-		<script id="pum-popup-conditions-json">
-			var pum_popup_conditions = <?php echo json_encode( $condition_groups ); ?>;
-		</script>
-		<div class="facet-builder <?php echo $has_conditions ? 'has-conditions' : ''; ?>">
+        <div class="facet-builder <?php echo $has_conditions ? 'has-conditions' : ''; ?>">
 			<section class="pum-alert-box" style="display:none"></section>
 			<div class="facet-groups">
 				<?php foreach ( $condition_groups as $group => $conditions ) : ?>
-				<div class="facet-group-wrap" data-index="<?php echo $group_count; ?>">
-					<section class="facet-group">
-						<div class="facet-list"><?php
-							$condition_count = 0;
-							foreach ( $conditions as $values ) :
-								$condition = PUM_Conditions::instance()->get_condition( $values['target'] ); ?>
-								<div class="facet" data-index="<%= index %>" data-target="<%= target %>">
+                    <div class="facet-group-wrap" data-index="<?php echo $group_count; ?>">
+                        <section class="facet-group">
+                            <div class="facet-list"><?php
+                                $condition_count = 0;
+                                foreach ( $conditions as $values ) :
+                                    if ( ! PUM_Conditions::instance()->get_condition( $values['target'] ) ) {
+                                        continue;
+                                    } ?>
+                                    <div class="facet" data-index="<?php echo $condition_count; ?>" data-target="<?php esc_attr_e( $values['target'] ); ?>">
 
-								<i class="or">or</i>
+                                        <i class="or">or</i>
 
-								<div class="facet-col">
-									<?php PUM_Conditions::instance()->conditions_selectbox( array(
-										'id'      => "popup_conditions[$group_count][$condition_count][target]",
-										'name'    => "popup_conditions[$group_count][$condition_count][target]",
-										'current' => $values['target'],
-                                    ) ); ?>
-                                </div>
+                                        <div class="facet-col pum-field select pum-chosen">
+                                            <?php PUM_Conditions::instance()->conditions_selectbox( array(
+                                                'id'      => "popup_conditions[$group_count][$condition_count][target]",
+                                                'name'    => "popup_conditions[$group_count][$condition_count][target]",
+                                                'current' => $values['target'],
+                                            ) ); ?>
+                                        </div>
 
-								<div class="facet-settings">
-                                    <?php $condition->render_fields( $values ); ?>
-                                </div>
+                                        <div class="facet-settings">
+                                            <?php PUM_Conditions::instance()->get_condition( $values['target'] )->render_fields( $values ); ?>
+                                        </div>
 
-                                <div class="facet-actions">
-                                    <a href="javascript:void(0)" class="remove remove-facet"
-                                       title="<?php _e( 'Remove Condition', 'popup-maker' ); ?>" tabindex="-1">
-                                        <i class="dashicons dashicons-dismiss"></i>
-                                    </a>
-                                </div>
+                                        <div class="facet-actions">
+                                            <a href="javascript:void(0)" class="remove remove-facet"
+                                               title="<?php _e( 'Remove Condition', 'popup-maker' ); ?>" tabindex="-1">
+                                                <i class="dashicons dashicons-dismiss"></i>
+                                            </a>
+                                        </div>
 
-								</div><?php
-								$condition_count ++; // Increment condition index.
-							endforeach; ?>
-						</div>
-						<div class="add-or">
-							<a href="javascript:void(0)" class="add add-facet" tabindex="-1">or</a>
-						</div>
-					</section>
-					<p class="and">
-						<a href="javascript:void(0);" class="add-facet" tabindex="-1">and</a>
-					</p>
-					</div><?php
+                                    </div><?php
+                                    $condition_count ++; // Increment condition index.
+                                endforeach; ?>
+                            </div>
+                            <div class="add-or">
+                                <a href="javascript:void(0)" class="add add-facet" tabindex="-1">or</a>
+                            </div>
+                        </section>
+                        <p class="and">
+                            <a href="javascript:void(0);" class="add-facet" tabindex="-1">and</a>
+                        </p>
+                    </div><?php
 
-					$group_count ++; // Increment group index.
+                    $group_count ++; // Increment group index.
 
 				endforeach; ?>
 			</div>
-			<div class="no-facet-groups">
+			<div class="no-facet-groups pum-field select pum-chosen">
 				<p>
 					<strong><?php _e( 'Conditions limit where and who will see your popups.', 'popup-maker' ); ?></strong>
 				</p>
-				<label
-					for="pum-first-condition"><?php _e( 'Choose a condition to get started.', 'popup-maker' ); ?></label>
+				<label for="pum-first-condition"><?php _e( 'Choose a condition to get started.', 'popup-maker' ); ?></label>
 				<?php PUM_Conditions::instance()->conditions_selectbox( array( 'id' => 'pum-first-condition' ) ); ?>
 			</div>
 		</div><?php
@@ -149,11 +147,11 @@ class PUM_Popup_Conditions_Metabox {
 		<script type="text/template" id="pum_condition_group_templ">
 			<div class="facet-group-wrap" data-index="<%= index %>">
 				<section class="facet-group">
-					<div class="facet-list">
-						<% for(var i = 0; conditions.length > i; i++) {
-						conditions[i].index = i;
-						conditions[i].group = index;
-						print(PUMConditions.templates.facet( conditions[i] ));
+					<div class="facet-list"><%
+						for(var i = 0; conditions.length > i; i++) {
+                            conditions[i].index = i;
+                            conditions[i].group = index;
+                            print(PUMConditions.templates.facet( conditions[i] ));
 						} %>
 					</div>
 					<div class="add-or">
@@ -182,29 +180,26 @@ class PUM_Popup_Conditions_Metabox {
 
 				<i class="or">or</i>
 
-				<div class="facet-col">
-					<select class="target facet-select" id="popup_conditions[<%= group %>][<%= index %>][target]"
-					        name="popup_conditions[<%= group %>][<%= index %>][target]">
+				<div class="facet-col pum-field select pum-chosen">
+					<select class="target facet-select" id="popup_conditions[<%= group %>][<%= index %>][target]" name="popup_conditions[<%= group %>][<%= index %>][target]">
 						<option value=""><?php _e( 'Select a condition', 'popup-maker' ); ?></option>
 						<?php foreach ( PUM_Conditions::instance()->get_conditions_by_group() as $group => $conditions ) : ?>
-							<optgroup label="<?php echo PUM_Conditions::instance()->get_group_label( $group ); ?>">
+							<optgroup label="<?php echo esc_attr_e( $group ); ?>">
 								<?php foreach ( $conditions as $id => $condition ) : ?>
-							<option value="<?php echo $id; ?>" <% if(target === '<?php echo $id; ?>') { %>selected="selected"<% } %>>
-								<?php echo $condition->get_label( 'name' ); ?>
-							</option>
-							<?php endforeach ?>
+                                    <option value="<?php echo $id; ?>" <% if(target === '<?php echo $id; ?>') { %>selected="selected"<% } %>>
+                                        <?php echo $condition->get_label( 'name' ); ?>
+                                    </option>
+                                <?php endforeach ?>
 							</optgroup>
 						<?php endforeach ?>
 					</select>
 				</div>
 
-				<div class="facet-settings">
-					<%
-					settings.index = index;
+				<div class="facet-settings"><%
+					//settings.index = index;
 					if (typeof target === 'string' && PUMConditions.templates.settings[ target ] !== undefined) {
-					print(PUMConditions.templates.settings[ target ]( settings ));
-					}
-					%>
+                        print(PUMConditions.templates.settings[ target ]( settings ));
+					} %>
 				</div>
 
 				<div class="facet-actions">
