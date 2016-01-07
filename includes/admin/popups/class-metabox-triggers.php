@@ -196,8 +196,12 @@ class PUM_Popup_Triggers_Metabox {
 				<input class="popup_triggers_field_settings" type="hidden" name="popup_triggers[<?php echo $row['index']; ?>][settings]" value="<?php echo maybe_json_attr( $row['settings'], true ); ?>" />
 			</td>
 			<td class="cookie-column">
-				<code>
-					<?php echo $row['columns']['cookie']; ?>
+				<code><?php
+                    if ( is_array( $row['columns']['cookie'] ) ) {
+                        echo implode( ',', $row['columns']['cookie'] );
+                    } else {
+                        echo $row['columns']['cookie'];
+                    } ?>
 					<i class="copy-name dashicons dashicons-clipboard"></i>
 				</code>
 			</td>
