@@ -154,6 +154,7 @@ class Popmake_Fields {
 			'post_type'   => null,
 			'taxonomy'    => null,
 			'multiple'    => null,
+            'as_array'    => false,
 			'placeholder' => '',
 			'allow_blank' => true,
 			'readonly'    => false,

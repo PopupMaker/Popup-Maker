@@ -20,7 +20,14 @@ class PUM_Helpers {
 		$args = wp_parse_args( $args, array(
 			'posts_per_page' => 10,
 			'post_type'      => $post_type,
+			'post__in'       => null,
+			'post__not_in'   => null,
+			'post_status'    => null,
 		) );
+
+		if ( $post_type == 'attachment' ) {
+			$args['post_status'] = 'inherit';
+		}
 
 		$query = new WP_Query( $args );
 
@@ -45,13 +52,17 @@ class PUM_Helpers {
 		$args = wp_parse_args( $args, array(
 			'hide_empty' => false,
 			'number'     => 10,
-			'fields'     => 'id=>name',
 			'search'     => '',
+			'include'    => null,
 		) );
 
-		$terms = get_terms( $taxonomies, $args );
+		$terms = array();
 
-		return array_flip( $terms );
+		foreach ( get_terms( $taxonomies, $args ) as $term ) {
+			$terms[ $term->name ] = $term->term_id;
+		}
+
+		return $terms;
 	}
 
 
