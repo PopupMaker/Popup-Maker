@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+
 /**
  * @return array
  */
@@ -23,6 +24,19 @@ function pum_generate_post_type_conditions() {
 
 	foreach ( $post_types as $name => $post_type ) {
 
+		if ( $post_type->has_archive ) {
+			$conditions[ $name . '_index' ] = array(
+				'group'    => __( 'General', 'popup-maker' ),
+				'labels'   => array(
+					'name' => sprintf(
+						_x( '%s Archive', 'condition: post type plural label ie. Posts: All', 'popup-maker' ),
+						$post_type->labels->name
+					),
+				),
+				'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
+				'priority' => 5,
+			);
+		}
 		$conditions[ $name . '_all' ]    = array(
 			'group'  => $post_type->labels->name,
 			'labels' => array(
@@ -81,30 +95,6 @@ function pum_generate_post_type_tax_conditions( $name ) {
 			'labels' => array(
 				'name' => sprintf(
 					_x( '%1$s: With %2$s', 'condition: post type plural and taxonomy singular label ie. Posts: With Category', 'popup-maker' ),
-					$post_type->labels->name,
-					$taxonomy->labels->singular_name
-				),
-			),
-			'fields' => array(
-				'selected' => array(
-					'placeholder' => sprintf(
-						_x( 'Select %s.', 'condition: post type plural label ie. Select categories', 'popup-maker' ),
-						strtolower( $taxonomy->labels->name )
-					),
-					'type'        => 'taxonomyselect',
-					'taxonomy'    => $tax_name,
-					'multiple'    => true,
-					'as_array'    => true,
-					'options'     => PUM_Helpers::taxonomy_selectlist( $tax_name ),
-				),
-			),
-			'callback' => array( 'PUM_Condition_Callbacks', 'post_type_tax' ),
-		);
-		$conditions[ $name . '_wo_' . $tax_name ] = array(
-			'group'  => $post_type->labels->name,
-			'labels' => array(
-				'name' => sprintf(
-					_x( '%1$s: Without %2$s', 'condition: post type plural and taxonomy singular label ie. Posts: Not Without Category', 'popup-maker' ),
 					$post_type->labels->name,
 					$taxonomy->labels->singular_name
 				),
@@ -191,6 +181,40 @@ function pum_get_conditions() {
 	$conditions = array_merge(
 		pum_generate_post_type_conditions(),
 		pum_generate_taxonomy_conditions()
+	);
+
+	$conditions['is_front_page'] = array(
+		'group'    => __( 'Pages' ),
+		'labels'   => array(
+			'name' => __( 'Home Page', 'popup-maker' ),
+		),
+		'callback' => 'is_front_page',
+		'priority' => 2,
+	);
+
+	$conditions['is_home'] = array(
+		'group'    => __( 'Posts' ),
+		'labels'   => array(
+			'name' => __( 'Blog Index', 'popup-maker' ),
+		),
+		'callback' => 'is_home',
+		'priority' => 1,
+	);
+
+	$conditions['is_search'] = array(
+		'group'    => __( 'Pages' ),
+		'labels'   => array(
+			'name' => __( 'Search Pages', 'popup-maker' ),
+		),
+		'callback' => 'is_search',
+	);
+
+	$conditions['is_404'] = array(
+		'group'    => __( 'Pages' ),
+		'labels'   => array(
+			'name' => __( '404 Pages', 'popup-maker' ),
+		),
+		'callback' => 'is_404',
 	);
 
 	return apply_filters( 'pum_get_conditions', $conditions );
