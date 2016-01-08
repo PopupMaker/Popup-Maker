@@ -16,7 +16,10 @@
       .facet-group-wrap {
 
         .facet-group {
-          background-color: #f1f3f4;
+          box-shadow: 0 1px 0 #ccc;
+          color: #555;
+          border: 1px solid #ccc;
+          background: #f7f7f7;
         }
 
         &:last-child .and,
@@ -78,40 +81,73 @@
         margin: 0;
       }
 
-      select {
-        width: 200px;
+      select, .pum-chosen {
+        width: 180px;
       }
 
-      &.pum-chosen {
-        width: 200px;
 
-        .chosen-container {
-          min-width: 150px !important;
-          max-width: 100% !important;
-          min-height: 27px;
-          position: relative;
 
-          .chosen-choices {
 
-            overflow-y: auto;
-            max-height: 250px;
+    }
 
-            .search-choice {
-              padding-bottom: 3px;
-              font-size: 0.8em;
-            }
-          }
-          input {
-            min-height: 24px;
-            width: 100% !important;
-          }
+    .pum-condition-target {
+
+      position: relative;
+      max-width: 180px;
+
+      * {
+        box-sizing: border-box;
+      }
+
+      .chosen-single {
+        padding-left: 28px;
+
+      }
+
+      .pum-not-operand {
+        cursor: pointer;
+        position: absolute;
+        left: 2px;
+        top: 2px;
+        z-index: 10;
+        width: 23px;
+        line-height: 24px;
+
+        background: #f7f7f7;
+        border-radius: 2px 0 0 2px;
+        border-right: 1px solid #ddd;
+        text-align: center;
+
+        &::before {
+          color: #555;
+          font-size: 16px;
+          line-height: 24px;
+        }
+
+        input[type="checkbox"] {
+          display: none;
         }
 
       }
 
-    }
+      &.not-operand-checked {
 
-    .facet-settings {
+        .pum-not-operand {
+          &::before {
+            color: #a00;
+
+          }
+        }
+      }
+
+
+      .chosen-container-active {
+        .chosen-choices,
+        .chosen-single {
+          border-color: #5b9dd9;
+          box-shadow: 0 0 2px rgba( 30, 140, 190, 0.8 );
+        }
+      }
 
     }
 
@@ -162,7 +198,7 @@
 
     .or,
     .add-or > .add {
-      background: #f1f3f4;
+      background: #f7f7f7;
       font-size: 1.1em;
       padding: 0 10px;
     }
