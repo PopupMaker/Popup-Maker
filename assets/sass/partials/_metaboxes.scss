@@ -70,3 +70,32 @@
     }
   }
 }
+
+#pum_popup_conditions {
+
+  .inside {
+    margin: 0;
+    padding: 0;
+
+    .facet-builder {
+      padding: 6px 12px 12px;
+
+    }
+
+    .facet-groups {
+      display: none;
+    }
+    .no-facet-groups {
+      display: block;
+    }
+
+    .has-conditions {
+      .facet-groups {
+        display: block;
+      }
+      .no-facet-groups {
+        display: none;
+      }
+    }
+  }
+}

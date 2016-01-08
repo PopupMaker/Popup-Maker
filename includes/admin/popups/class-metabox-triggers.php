@@ -20,7 +20,7 @@ class PUM_Popup_Triggers_Metabox {
 	public static function init() {
 		add_action( 'add_meta_boxes', array( __CLASS__, 'register_metabox' ) );
 		add_action( 'print_media_templates', array( __CLASS__, 'media_templates' ) );
-		add_action( 'popmake_save_popup', array( __CLASS__, 'save_popup' ) );
+		add_action( 'pum_save_popup', array( __CLASS__, 'save_popup' ) );
 	}
 
 	/**
@@ -150,7 +150,7 @@ class PUM_Popup_Triggers_Metabox {
 				 */
 				foreach ( $trigger->get_sections() as $tab => $args ) { ?>
 					<div id="<?php esc_attr_e( $id . '_' . $tab ); ?>_settings" class="tab-content">
-						<?php $trigger->render_templ_fields( $tab ); ?>
+						<?php $trigger->render_templ_fields_by_section( $tab ); ?>
 					</div>
 				<?php } ?>
 
@@ -196,8 +196,12 @@ class PUM_Popup_Triggers_Metabox {
 				<input class="popup_triggers_field_settings" type="hidden" name="popup_triggers[<?php echo $row['index']; ?>][settings]" value="<?php echo maybe_json_attr( $row['settings'], true ); ?>" />
 			</td>
 			<td class="cookie-column">
-				<code>
-					<?php echo $row['columns']['cookie']; ?>
+				<code><?php
+                    if ( is_array( $row['columns']['cookie'] ) ) {
+                        echo implode( ',', $row['columns']['cookie'] );
+                    } else {
+                        echo $row['columns']['cookie'];
+                    } ?>
 					<i class="copy-name dashicons dashicons-clipboard"></i>
 				</code>
 			</td>

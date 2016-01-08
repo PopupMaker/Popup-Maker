@@ -151,11 +151,12 @@ function popmake_load_admin_scripts() {
 		), POPMAKE_VERSION );
 		wp_localize_script( 'popup-maker-admin', 'popmake_admin_ajax_nonce', wp_create_nonce( POPMAKE_NONCE ) );
 		wp_localize_script( 'popup-maker-admin', 'pum_admin', array(
+			'post_id'  => ! empty( $_GET['post'] ) ? intval( $_GET['post'] ) : null,
 			'defaults' => array(
 					'triggers' => PUM_Triggers::instance()->get_defaults(),
 					'cookies' => PUM_Cookies::instance()->get_defaults(),
 			),
-		    'I10n' => array(
+			'I10n'     => array(
 				'add' => __( 'Add', 'popup-maker' ),
 		        'save' => __( 'Save', 'popup-maker' ),
 				'confirm_delete_trigger' => __( "Are you sure you want to delete this trigger?", 'popup-maker' ),

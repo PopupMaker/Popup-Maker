@@ -18,7 +18,7 @@ class PUM_Popup_Cookies_Metabox {
 	public static function init() {
 		add_action( 'add_meta_boxes', array( __CLASS__, 'register_metabox' ) );
 		add_action( 'print_media_templates', array( __CLASS__, 'media_templates' ) );
-		add_action( 'popmake_save_popup', array( __CLASS__, 'save_popup' ) );
+		add_action( 'pum_save_popup', array( __CLASS__, 'save_popup' ) );
 	}
 
 	/**
@@ -148,7 +148,7 @@ class PUM_Popup_Cookies_Metabox {
 				 */
 				foreach ( $cookie->get_sections() as $tab => $args ) { ?>
 					<div id="<?php esc_attr_e( $id . '_' . $tab ); ?>_settings" class="tab-content">
-						<?php $cookie->render_templ_fields( $tab ); ?>
+						<?php $cookie->render_templ_fields_by_section( $tab ); ?>
 					</div>
 				<?php } ?>
 

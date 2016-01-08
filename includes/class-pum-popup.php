@@ -252,6 +252,28 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		}
 
 		/**
+		 * @return mixed|void
+		 */
+		function get_conditions() {
+			if ( ! $this->conditions ) {
+				$this->conditions = get_post_meta( $this->ID, 'popup_conditions', true );
+
+				if ( ! $this->conditions ) {
+					$this->conditions = array();
+				}
+			}
+
+			return apply_filters( 'pum_popup_get_conditions', $this->conditions, $this->ID );
+		}
+
+		/**
+		 * @return mixed|void
+		 */
+		function has_conditions() {
+			return boolval( count ( $this->get_conditions() ) );
+		}
+
+		/**
 		 * Returns all or single display settings.
 		 *
 		 * @param null $key
@@ -388,21 +410,61 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		/**
 		 * Returns whether or not the popup is visible in the loop.
 		 *
-		 * @todo this function will be rebuilt as part of another issue anyways so this is currently a placeholder.
-		 *
 		 * @return bool
 		 */
 		public function is_loadable() {
+
+			// Loadable defaults to true if no conditions. Making the popup available everywhere.
 			$loadable = true;
 
 			if ( ! $this->ID ) {
-				$loadable = false;
+				return false;
 				// Published/private
+			}
+
+			if ( $this->has_conditions() ) {
+
+				// All Groups Must Return True. Break if any is false and set $loadable to false.
+				foreach ( $this->get_conditions() as $group => $conditions ) {
+
+					// Groups are false until a condition proves true.
+					$group_check = false;
+
+					// At least one group condition must be true. Break this loop if any condition is true.
+					foreach ( $conditions as $condition ) {
+
+						// If any condition passes, set $group_check true and break.
+						if ( ! $condition['not_operand'] && $this->check_condition( $condition ) ) {
+							$group_check = true;
+							break;
+						} elseif ( $condition['not_operand'] && ! $this->check_condition( $condition ) ) {
+							$group_check = true;
+							break;
+						}
+
+					}
+
+					// If any group of conditions doesn't pass, popup is not loadable.
+					if ( ! $group_check ) {
+						$loadable = false;
+					}
+
+				}
+
 			}
 
 			return apply_filters( 'pum_popup_is_loadable', $loadable, $this->ID );
 		}
 
+		public function check_condition( $settings = array() ) {
+			$condition = PUM_Conditions::instance()->get_condition( $settings['target'] );
+
+			if ( ! $condition ) {
+				return false;
+			}
+
+			return call_user_func( $condition->get_callback(), $settings, $this );
+		}
 
 	}
 

@@ -1,0 +1,13 @@
+{
+  "name": "popupmaker/popup-maker",
+  "description": "WordPress Popup Plugin",
+  "type": "project",
+  "license": "GPL-3.0",
+  "authors": [
+    {
+      "name": "danieliser",
+      "email": "danieliser@wizardinternetsolutions.com"
+    }
+  ],
+  "minimum-stability": "dev"
+}
