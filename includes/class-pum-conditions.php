@@ -22,6 +22,8 @@ class PUM_Conditions {
 
     public $group_labels = null;
 
+    public $condition_sort_order = array();
+
     public static function instance() {
         if ( ! isset( self::$instance ) && ! ( self::$instance instanceof PUM_Conditions ) ) {
             self::$instance = new PUM_Conditions;
@@ -62,15 +64,41 @@ class PUM_Conditions {
         return $this->conditions;
     }
 
-    public function sort_condition_groups( $a, $b ) {
-        $order = apply_filters( 'pum_sort_condition_groups', array(
-            __( 'General', 'popup-maker' ),
-            __( 'Pages', 'popup-maker' ),
-            __( 'Posts', 'popup-maker' ),
-        ) );
+    public function condition_sort_order() {
+        if ( ! $this->condition_sort_order ) {
 
-        $ai = in_array( $a, $order ) ? array_search ( $a, $order ) : count( $order ) + 1;
-        $bi = in_array( $b, $order ) ? array_search ( $b, $order ) : count( $order ) + 1;
+            $order = array(
+                    __( 'General', 'popup-maker' )    => 1,
+                    __( 'Pages', 'popup-maker' )      => 5,
+                    __( 'Posts', 'popup-maker' )      => 5,
+                    __( 'Categories', 'popup-maker' ) => 14,
+                    __( 'Tags', 'popup-maker' )       => 14,
+                    __( 'Format', 'popup-maker' )     => 16,
+            );
+
+            $post_types = get_post_types( array( 'public' => true, '_builtin' => false ), 'objects' );
+            foreach ( $post_types as $name => $post_type ) {
+                $order[ $post_type->labels->name ] = 10;
+            }
+
+            $taxonomies = get_taxonomies( array( 'public' => true, '_builtin' => false ), 'objects' );
+            foreach ( $taxonomies as $tax_name => $taxonomy ) {
+                $order[ $taxonomy->labels->name ] = 15;
+            }
+
+            $this->condition_sort_order = apply_filters( 'pum_condition_sort_order', $order );
+
+        }
+
+        return $this->condition_sort_order;
+    }
+
+    public function sort_condition_groups( $a, $b ) {
+
+        $order = $this->condition_sort_order();
+
+        $ai = isset( $order[ $a ] ) ? intval( $order[ $a ] ) : 10;
+        $bi = isset( $order[ $b ] ) ? intval( $order[ $b ] ) : 10;
 
         if ( $ai == $bi ) {
             return 0;

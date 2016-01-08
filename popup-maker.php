@@ -281,7 +281,8 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 
 			if ( class_exists( 'WooCommerce' ) ) {
-				require_once POPMAKE_DIR . 'includes/integrations/woocommerce.php';
+				require_once POPMAKE_DIR . 'includes/integrations/class-popmake-woocommerce-integration.php';
+				require_once POPMAKE_DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
 			}
 
 			if ( defined( 'WPB_VC_VERSION' ) || defined( 'FL_BUILDER_VERSION' ) ) {
