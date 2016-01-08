@@ -4,13 +4,14 @@ var PUMConditions;
 
     PUMConditions = {
         templates: {},
-        addGroup: function (target) {
+        addGroup: function (target, not_operand) {
             var $container = $('#pum-popup-conditions'),
                 data = {
                     index: $container.find('.facet-group-wrap').length,
                     conditions: [
                         {
                             target: target || null,
+                            not_operand: not_operand || false,
                             settings: {}
                         }
                     ]
@@ -58,9 +59,27 @@ var PUMConditions;
         })
         .on('change', '#pum-first-condition', function () {
             var $this = $(this),
-                target = $this.val();
+                target = $this.val(),
+                $operand = $('#pum-first-condition-operand'),
+                not_operand = $operand.is(':checked') ? $operand.val() : null;
 
-            PUMConditions.addGroup(target);
+            PUMConditions.addGroup(target, not_operand);
+
+            $this.val('').trigger('chosen:updated');
+            $operand.prop('checked', false).parents('.pum-condition-target').removeClass('not-operand-checked');
+        })
+        .on('click', '#pum-popup-conditions .pum-not-operand', function () {
+            var $this = $(this),
+                $input = $this.find('input'),
+                $container = $this.parents('.pum-condition-target');
+
+            if ($input.is(':checked')) {
+                $container.removeClass('not-operand-checked');
+                $input.prop('checked', false);
+            } else {
+                $container.addClass('not-operand-checked');
+                $input.prop('checked', true);
+            }
         })
         .on('change', '#pum-popup-conditions select.target', function () {
             var $this = $(this),
