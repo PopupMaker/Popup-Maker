@@ -62,11 +62,32 @@ class PUM_Conditions {
         return $this->conditions;
     }
 
+    public function sort_condition_groups( $a, $b ) {
+        $order = apply_filters( 'pum_sort_condition_groups', array(
+            __( 'General', 'popup-maker' ),
+            __( 'Pages', 'popup-maker' ),
+            __( 'Posts', 'popup-maker' ),
+        ) );
+
+        $ai = in_array( $a, $order ) ? array_search ( $a, $order ) : count( $order ) + 1;
+        $bi = in_array( $b, $order ) ? array_search ( $b, $order ) : count( $order ) + 1;
+
+        if ( $ai == $bi ) {
+            return 0;
+        }
+
+        // Compare their positions in line.
+        return $ai > $bi ? 1 : -1;
+    }
+
     public function get_conditions_by_group() {
         $groups = array();
+
         foreach ( $this->get_conditions() as $condition ) {
             $groups[ $condition->group ][ $condition->get_id() ] = $condition;
         }
+
+        uksort( $groups, array( $this, 'sort_condition_groups' ) );
 
         return $groups;
     }
