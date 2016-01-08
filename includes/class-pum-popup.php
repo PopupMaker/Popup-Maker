@@ -434,7 +434,10 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 					foreach ( $conditions as $condition ) {
 
 						// If any condition passes, set $group_check true and break.
-						if ( $this->check_condition( $condition ) ) {
+						if ( ! $condition['not_operand'] && $this->check_condition( $condition ) ) {
+							$group_check = true;
+							break;
+						} elseif ( $condition['not_operand'] && ! $this->check_condition( $condition ) ) {
 							$group_check = true;
 							break;
 						}

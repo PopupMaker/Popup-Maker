@@ -78,7 +78,12 @@ class PUM_Popup_Conditions_Metabox {
 
                                         <i class="or">or</i>
 
-                                        <div class="facet-col pum-field select pum-chosen">
+
+                                        <?php $checked = isset( $values['not_operand'] ) ? absint( $values['not_operand'] ) : false; ?>
+                                        <div class="facet-col pum-field pum-condition-target select pum-chosen<?php echo $checked ? ' not-operand-checked' : ''; ?>">
+                                            <div class="pum-not-operand dashicons-before dashicons-warning" title="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
+                                                <input type="checkbox" name="popup_conditions[<?php echo $group_count; ?>][<?php echo $condition_count; ?>][not_operand]" value="1" <?php checked( $checked, 1 ); ?> />
+                                            </div>
                                             <?php PUM_Conditions::instance()->conditions_selectbox( array(
                                                 'id'      => "popup_conditions[$group_count][$condition_count][target]",
                                                 'name'    => "popup_conditions[$group_count][$condition_count][target]",
@@ -114,12 +119,17 @@ class PUM_Popup_Conditions_Metabox {
 
 				endforeach; ?>
 			</div>
-			<div class="no-facet-groups pum-field select pum-chosen">
+			<div class="no-facet-groups">
 				<p>
 					<strong><?php _e( 'Conditions limit where and who will see your popups.', 'popup-maker' ); ?></strong>
 				</p>
 				<label for="pum-first-condition"><?php _e( 'Choose a condition to get started.', 'popup-maker' ); ?></label>
-				<?php PUM_Conditions::instance()->conditions_selectbox( array( 'id' => 'pum-first-condition' ) ); ?>
+                <div class="pum-field select pum-chosen pum-condition-target">
+                    <div class="pum-not-operand dashicons-before dashicons-warning" title="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
+                        <input type="checkbox" id="pum-first-condition-operand" value="1" />
+                    </div>
+                    <?php PUM_Conditions::instance()->conditions_selectbox( array( 'id' => 'pum-first-condition' ) ); ?>
+                </div>
 			</div>
 		</div><?php
 	}
@@ -180,8 +190,13 @@ class PUM_Popup_Conditions_Metabox {
 
 				<i class="or">or</i>
 
-				<div class="facet-col pum-field select pum-chosen">
-					<select class="target facet-select" id="popup_conditions[<%= group %>][<%= index %>][target]" name="popup_conditions[<%= group %>][<%= index %>][target]">
+
+				<div class="facet-col pum-field pum-condition-target select pum-chosen <% if (typeof not_operand !== 'undefined' && pumChecked(not_operand, '1')) print('not-operand-checked'); %>">
+                    <div class="pum-not-operand dashicons-before dashicons-warning" title="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
+                        <input type="checkbox" name="popup_conditions[<%= group %>][<%= index %>][not_operand]" value="1" <% if (typeof not_operand !== 'undefined') print(pumChecked(not_operand, '1', true)); %>  />
+                    </div>
+
+                    <select class="target facet-select" id="popup_conditions[<%= group %>][<%= index %>][target]" name="popup_conditions[<%= group %>][<%= index %>][target]">
 						<option value=""><?php _e( 'Select a condition', 'popup-maker' ); ?></option>
 						<?php foreach ( PUM_Conditions::instance()->get_conditions_by_group() as $group => $conditions ) : ?>
 							<optgroup label="<?php echo esc_attr_e( $group ); ?>">

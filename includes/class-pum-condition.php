@@ -175,9 +175,13 @@ class PUM_Condition extends PUM_Fields {
 	 */
 	function sanitize_fields( $values = array() ) {
 		$sanitized_values = array();
-		if ( isset( $values['target'] ) && $values['target'] == $this->get_id() ) {
-			$sanitized_values['target'] = $this->get_id();
-		}
+
+        $sanitized_values['not_operand'] = isset( $values['not_operand'] ) && $values['not_operand'] ? 1 : 0;
+
+        if ( isset( $values['target'] ) && $values['target'] == $this->get_id() ) {
+            $sanitized_values['target'] = $this->get_id();
+        }
+
 		foreach ( $this->get_all_fields() as $id => $field ) {
 			$value = isset( $values[ $field['id'] ] ) ? $values[ $field['id'] ] : null;
 			$value = $this->sanitize_field( $field, $value );
