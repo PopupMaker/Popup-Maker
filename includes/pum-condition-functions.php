@@ -229,4 +229,5 @@ function pum_register_conditions() {
 	$conditions = pum_get_conditions();
 	PUM_Conditions::instance()->add_conditions( $conditions );
 }
-add_action( 'init', 'pum_register_conditions' );
+
+add_action( 'init', 'pum_register_conditions', 11 );
