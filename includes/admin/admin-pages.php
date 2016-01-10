@@ -48,11 +48,11 @@ function popmake_admin_submenu_pages() {
 
 	$popmake_extensions_page = add_submenu_page(
 		'edit.php?post_type=popup',
-		apply_filters( 'popmake_admin_submenu_extensions_page_title', __( 'Extensions', 'popup-maker' ) ),
-		apply_filters( 'popmake_admin_submenu_extensions_menu_title', __( 'Extensions', 'popup-maker' ) ),
-		apply_filters( 'popmake_admin_submenu_extensions_capability', 'manage_options' ),
+		__( 'Extend', 'popup-maker' ),
+		__( 'Extend', 'popup-maker' ),
+		apply_filters( 'popmake_admin_submenu_extensions_capability', 'edit_posts' ),
 		'pum-extensions',
-		apply_filters( 'popmake_admin_submenu_extensions_function', 'popmake_extensions_page' )
+		'popmake_extensions_page'
 	);
 
 	$popmake_help_page = add_submenu_page(
