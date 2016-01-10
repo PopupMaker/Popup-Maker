@@ -3,6 +3,7 @@
 @import 'partials/admin_modal';
 @import 'partials/pum_chosen';
 @import 'partials/facet_builder';
+@import 'partials/extensions_page';
 
 .pum-form {
 /*
@@ -500,93 +501,3 @@ div.popmake-upgrade-tip {
   z-index: 9999998 !important;
 }
 
-/* Extensions Page */
-.extensions-available {
-  display: block;
-}
-
-.extensions-available img {
-  width: 100%;
-  display: block;
-  height: auto;
-  max-width: 100%;
-}
-
-.extensions-available li {
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  background: #fff;
-  vertical-align: top;
-  width: 280px;
-  margin: 0 10px 20px;
-  display: inline;
-  float: left;
-  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
-  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
-}
-
-.extensions-available h3 {
-  text-align: center;
-  font-size: 16px !important;
-}
-
-.extensions-available h3 a {
-  color: inherit;
-}
-
-.extensions-available li > .action-links {
-  margin: 0 10px;
-  text-align: center;
-  display: block;
-}
-
-.extensions-available .action-links .button {
-  display: inline-block;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  padding: 7px 30px;
-  font-weight: bold;
-  height: auto;
-  position: relative;
-  transition: transform .5s;
-}
-
-.extensions-available .action-links .button.install {
-  background: #00a651;
-}
-
-.extensions-available p {
-  margin: 10px;
-  color: #717171;
-  font-size: 14px;
-  text-align: center;
-  font-style: italic;
-  min-height: 7.5em;
-}
-
-.extensions-available a {
-  display: block;
-  text-align: center;
-  text-decoration: none;
-}
-
-@media only screen and (max-width: 360px) {
-  .extensions-available li {
-    display: block;
-    margin: 0 0 10px;
-    width: 100%;
-  }
-}
-
-@media only screen and (min-width: 361px) and (max-width: 768px) {
-  .extensions-available li {
-    width: 320px;
-  }
-}
-
-@media only screen and (min-width: 769px) and (max-width: 980px) {
-  .extensions-available li {
-    width: 240px;
-  }
-}

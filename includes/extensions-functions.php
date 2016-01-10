@@ -14,7 +14,7 @@ function popmake_available_extensions() {
 
 		// data to send in our API request
 		$api_params = array( 
-			'edd_action'	=> 'extension_list', 
+			'edd_action'	=> 'extension_list',
 			'url'       => home_url()
 		);
 		// Call the custom API.
@@ -34,6 +34,10 @@ function popmake_available_extensions() {
 add_filter( 'popmake_existing_extension_images', 'popmake_core_extension_images', 10 );
 function popmake_core_extension_images( $array ) {
 	return array_merge( $array, array(
+		'core-extensions-bundle',
+		'aweber-integration',
+		'mailchimp-integration',
+		'remote-content',
 		'scroll-triggered-popups',
 		'popup-analytics',
 		'forced-interaction',
