@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @global $wp_version
  * @return void
  */
-function popmake_install() {
+function popmake_install( $network_wide ) {
 	global $wpdb, $popmake_options, $wp_version;
 
 	// Setup the Popup & Theme Custom Post Type
@@ -49,12 +49,9 @@ function popmake_install() {
 	// Setup some default options
 	$options = array();
 
-	// Checks if the purchase page option exists
-	if ( ! get_option( 'popmake_default_theme' ) ) {
-		// Default Theme
-		popmake_install_default_theme();
+	popmake_get_default_popup_theme();
 
-	}
+	pum_install_built_in_themes();
 
 	if ( ! isset( $popmake_options['popmake_powered_by_size'] ) ) {
 		$popmake_options['popmake_powered_by_size'] = '';
@@ -74,8 +71,6 @@ function popmake_install() {
 	set_transient( '_popmake_activation_redirect', true, 30 );
 }
 
-register_activation_hook( POPMAKE, 'popmake_install' );
-
 
 /**
  * Install Default Theme
@@ -92,7 +87,11 @@ function popmake_install_default_theme() {
 			'post_status'    => 'publish',
 			'post_author'    => 1,
 			'post_type'      => 'popup_theme',
-			'comment_status' => 'closed'
+			'comment_status' => 'closed',
+			'meta_input' => array(
+				'_pum_built_in' => 'default-theme',
+				'_pub_default_theme' => true
+			),
 		)
 	);
 	foreach ( popmake_get_popup_theme_default_meta() as $meta_key => $meta_value ) {
@@ -101,7 +100,7 @@ function popmake_install_default_theme() {
 	update_post_meta( $default_theme, 'popup_theme_defaults_set', true );
 	update_post_meta( $default_theme, 'popmake_default_theme', true );
 	update_option( 'popmake_default_theme', $default_theme );
-	delete_transient( 'popmake_theme_styles' );
+	pum_force_theme_css_refresh();
 }
 
 

@@ -46,16 +46,19 @@ var PUMConditions;
     $(document)
         .on('pum_init', PUMConditions.renumber)
         .ready(function () {
-            PUMConditions.templates.group = _.template($('#pum_condition_group_templ').text());
-            PUMConditions.templates.facet = _.template($('#pum_condition_facet_templ').text());
-            PUMConditions.templates.settings = {};
+            // TODO Remove this check once admin scripts have been split into popup-editor, theme-editor etc.
+            if ($('body.post-type-popup form#post').length) {
+                PUMConditions.templates.group = _.template($('#pum_condition_group_templ').text());
+                PUMConditions.templates.facet = _.template($('#pum_condition_facet_templ').text());
+                PUMConditions.templates.settings = {};
 
-            $('script.templ.pum-condition-settings').each(function () {
-                var $this = $(this);
-                PUMConditions.templates.settings[$this.data('condition')] = _.template($this.text());
-            });
+                $('script.templ.pum-condition-settings').each(function () {
+                    var $this = $(this);
+                    PUMConditions.templates.settings[$this.data('condition')] = _.template($this.text());
+                });
 
-            PUMConditions.renumber();
+                PUMConditions.renumber();
+            }
         })
         .on('change', '#pum-first-condition', function () {
             var $this = $(this),

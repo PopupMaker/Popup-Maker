@@ -77,7 +77,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				self::$instance->includes();
 				self::$instance->load_textdomain();
 
-				register_activation_hook( __FILE__, 'popmake_install' );
+				register_activation_hook( POPMAKE, 'popmake_install' );
 			}
 
 			return self::$instance;
@@ -106,7 +106,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 		 * @return void
 		 */
 		public function __wakeup() {
-			// Unserializing instances of the class is forbidden
+			// Unserializing instances of the class is forbiddePOPMAKE_DB_VERSIONn
 			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'popup-maker' ), '3' );
 		}
 
@@ -185,6 +185,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 
 			require_once POPMAKE_DIR . 'includes/pum-popup-functions.php';
 			require_once POPMAKE_DIR . 'includes/pum-template-functions.php';
+			require_once POPMAKE_DIR . 'includes/pum-general-functions.php';
 
 			// Triggers
 			require_once POPMAKE_DIR . 'includes/class-pum-trigger.php';
@@ -281,12 +282,14 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 
 			if ( class_exists( 'WooCommerce' ) ) {
-				require_once POPMAKE_DIR . 'includes/integrations/woocommerce.php';
+				require_once POPMAKE_DIR . 'includes/integrations/class-popmake-woocommerce-integration.php';
+				require_once POPMAKE_DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
 			}
 
 			if ( defined( 'WPB_VC_VERSION' ) || defined( 'FL_BUILDER_VERSION' ) ) {
 				require_once POPMAKE_DIR . 'includes/integrations/visual-composer.php';
 			}
+			require_once POPMAKE_DIR . 'includes/pum-install-functions.php';
 			require_once POPMAKE_DIR . 'includes/install.php';
 		}
 
@@ -322,17 +325,22 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 		}
 
-		public function process_upgrades() {
+		/**
+		 *
+		 */
+		public function process_upgrades( $network_wide = false ) {
 			if ( ! is_admin() ) {
 				return;
 			}
 
 			// Add Upgraded From Option
-
 			$current_version = get_option( 'popmake_version' );
 			if ( $current_version ) {
 				update_option( 'popmake_version_upgraded_from', $current_version );
 			}
+
+			// Install Built In Themes (Only those never installed).
+			pum_install_built_in_themes();
 
 			if ( $current_version != POPMAKE_VERSION ) {
 				do_action( "popmake_process_upgrade", POPMAKE_VERSION, $current_version );
@@ -362,7 +370,7 @@ endif; // End if class_exists check
 function PopMake() {
 	return Popup_Maker::instance();
 }
-
+PopMake();
 
 function popmake_initialize() {
 
@@ -375,5 +383,4 @@ function popmake_initialize() {
 
 	PopMake()->process_upgrades();
 }
-
 add_action( 'plugins_loaded', 'popmake_initialize', 0 );
