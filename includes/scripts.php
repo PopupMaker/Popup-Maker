@@ -109,12 +109,15 @@ function popmake_render_popup_theme_styles() {
 			$styles = "/* Popup Google Fonts */\r\n@import url('$link');\r\n\r\n" . $styles;
 		}
 
+        $styles = apply_filters( 'popmake_theme_styles', $styles );
 
 		set_site_transient( 'popmake_theme_styles', $styles, 7 * DAY_IN_SECONDS );
 
-	}
-
-	echo '<style id="popup-maker-themes"  type="text/css">' . $styles . '</style>';
+    } ?>
+    <style id="pum-styles" type="text/css">
+    <?php echo $styles; ?>
+    <?php do_action( 'pum_styles'); ?>
+    </style><?php
 }
 
 add_action( 'wp_head', 'popmake_render_popup_theme_styles' );
