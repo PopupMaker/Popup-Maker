@@ -91,7 +91,7 @@ function popmake_render_popup_theme_styles() {
 			}
 		}
 
-		if ( ! empty( $google_fonts ) ) {
+		if ( ! empty( $google_fonts ) && ! popmake_get_option( 'disable_google_font_loading', false ) ) {
 			$link = "//fonts.googleapis.com/css?family=";
 			foreach ( $google_fonts as $font_family => $variants ) {
 				if ( $link != "//fonts.googleapis.com/css?family=" ) {
