@@ -254,7 +254,7 @@ function popmake_popup_theme_meta_box_save( $post_id, $post ) {
 		}
 	}
 
-	delete_transient( 'popmake_theme_styles' );
+    pum_force_theme_css_refresh();
 
 	do_action( 'popmake_save_popup_theme', $post_id, $post );
 }

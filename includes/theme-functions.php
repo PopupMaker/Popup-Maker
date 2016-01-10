@@ -20,6 +20,7 @@ function popmake_get_default_popup_theme() {
 	if ( false === get_post_status( $default_theme ) ) {
 		popmake_install_default_theme();
 		$default_theme = get_option( 'popmake_default_theme' );
+		pum_force_theme_css_refresh();
 	}
 
 	return $default_theme;
