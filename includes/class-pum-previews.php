@@ -25,12 +25,10 @@ class PUM_Previews {
 	 * Initiator method.
 	 */
 	public static function init() {
-		if ( current_user_can( 'edit_posts' ) ) {
-			add_filter( 'template_include', array( __CLASS__, 'template_include' ), 1000, 2 );
-			add_filter( 'pum_popup_is_loadable', array( __CLASS__, 'is_loadable' ), 1000, 2 );
-			add_filter( 'pum_popup_get_data_attr', array( __CLASS__, 'data_attr' ), 1000, 2 );
-			add_filter( 'popmake_popup_post_type_args', array( __CLASS__, 'post_type_args' ) );
-		}
+		add_filter( 'template_include', array( __CLASS__, 'template_include' ), 1000, 2 );
+		add_filter( 'pum_popup_is_loadable', array( __CLASS__, 'is_loadable' ), 1000, 2 );
+		add_filter( 'pum_popup_get_data_attr', array( __CLASS__, 'data_attr' ), 1000, 2 );
+		add_filter( 'popmake_popup_post_type_args', array( __CLASS__, 'post_type_args' ) );
 	}
 
 	/**
@@ -100,8 +98,9 @@ class PUM_Previews {
 	 * @return mixed
 	 */
 	public static function post_type_args( $args ) {
-		$args['public'] = true;
-
+		if ( current_user_can( 'edit_posts' ) ) {
+			$args['public'] = true;
+		}
 		return $args;
 	}
 }
