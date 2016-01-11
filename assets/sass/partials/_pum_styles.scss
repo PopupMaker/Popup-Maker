@@ -10,6 +10,11 @@
   overflow: auto;
   display: none;
 
+  &.pum-preview,
+  &.pum-form-submission-detected {
+    display: block;
+  }
+
   /**
   * Use border-box for all popup content. Providing more precise sizing.
   */
