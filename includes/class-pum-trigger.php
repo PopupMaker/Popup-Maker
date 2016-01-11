@@ -31,9 +31,18 @@ class PUM_Trigger extends PUM_Fields {
 	public function __construct( $args = array() ) {
 		$this->id = $args['id'];
 
+        $labels = pum_get_trigger_labels();
 		if ( ! empty( $args['labels'] ) ) {
 			$this->set_labels( $args['labels'] );
-		}
+        } elseif ( isset( $labels[ $args['id'] ] ) ) {
+            $this->set_labels( $labels[ $args['id'] ] );
+        } else {
+            $this->set_labels();
+        }
+
+        if ( empty( $args['sections'] ) ) {
+            $this->sections = pum_get_trigger_section_labels();
+        }
 
 		return parent::__construct( $args );
 	}
