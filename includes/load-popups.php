@@ -20,7 +20,7 @@ function popmake_init_popups() {
 	}
 }
 
-add_action( 'plugins_loaded', 'popmake_init_popups' );
+add_action( 'init', 'popmake_init_popups' );
 
 
 function popmake_load_popup( $id ) {

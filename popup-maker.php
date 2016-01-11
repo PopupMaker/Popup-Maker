@@ -144,7 +144,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 
 			if ( ! defined( 'POPMAKE_VERSION' ) ) {
-				define( 'POPMAKE_VERSION', '1.3.9' );
+				define( 'POPMAKE_VERSION', '1.4.0' );
 			}
 
 			if ( ! defined( 'POPMAKE_DB_VERSION' ) ) {
@@ -182,10 +182,12 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/class-pum-post.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-popup.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-fields.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-previews.php';
 
 			require_once POPMAKE_DIR . 'includes/pum-popup-functions.php';
 			require_once POPMAKE_DIR . 'includes/pum-template-functions.php';
 			require_once POPMAKE_DIR . 'includes/pum-general-functions.php';
+			require_once POPMAKE_DIR . 'includes/pum-template-hooks.php';
 
 			// Triggers
 			require_once POPMAKE_DIR . 'includes/class-pum-trigger.php';

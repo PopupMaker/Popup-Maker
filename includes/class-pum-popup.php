@@ -211,6 +211,10 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 				}
 			}
 
+			if ( is_singular( 'popup' ) ) {
+				$classes['overlay'][] = 'pum-preview';
+			}
+
 			// Deprecated: applies old classes to the new overlay
 			if ( $element == 'container' ) {
 				$classes['container'] = apply_filters( 'popmake_get_the_popup_classes', $classes['container'], $this->ID );
