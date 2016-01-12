@@ -39,11 +39,19 @@ class PUM_Condition extends PUM_Fields {
 	public function __construct( $args = array() ) {
 		$this->id = $args['id'];
 
-		if ( ! empty( $args['labels'] ) ) {
-			$this->set_labels( $args['labels'] );
-		}
+        if ( ! empty( $args['labels'] ) && is_array( $args['labels'] ) ) {
+            $labels = $args['labels'];
+        } else {
+            $labels = array();
+        }
 
-		if ( ! empty( $args['group'] ) ) {
+        if ( ! empty( $args['name'] ) ) {
+            $labels['name'] = $args['name'];
+        }
+
+        $this->set_labels( $labels );
+
+        if ( ! empty( $args['group'] ) ) {
 			$this->group = $args['group'];
 		}
 
