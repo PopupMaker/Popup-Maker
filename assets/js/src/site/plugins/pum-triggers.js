@@ -67,7 +67,7 @@
         click_open: function (settings) {
             var $popup = PUM.getPopup(this),
                 popup_settings = $popup.popmake('getSettings'),
-                trigger_selector = '.popmake-' + popup_settings.id + ', .popmake-' + popup_settings.slug;
+                trigger_selector = '.popmake-' + popup_settings.id + ', .popmake-' + decodeURIComponent(popup_settings.slug);
 
             if (settings.extra_selectors !== '') {
                 trigger_selector += ', ' + settings.extra_selectors;
