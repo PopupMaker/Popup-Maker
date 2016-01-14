@@ -1,20 +1,122 @@
 var PUMChosenFields;
 (function ($) {
     "use strict";
+
+    // Variables for setting up the typing timer
+    var typingTimer,               // Timer identifier
+        doneTypingInterval = 464;  // Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
+
     PUMChosenFields = {
         init: function () {
-            $('.pum-chosen select').filter(':not(.initialized)')
-                .addClass('initialized')
-                .chosen({
-                    allow_single_deselect: true,
-                    width: '100%'
-                })
-                .next()
-                .css({});
+            $('.pum-chosen select')
+                .filter(':not(.initialized)').each(function () {
+                var $this = $(this),
+                    current = $this.data('current'),
+                    object_type = $this.data('objecttype'),
+                    object_key = $this.data('objectkey');
+
+                $this
+                    .addClass('initialized')
+                    .chosen({
+                        allow_single_deselect: true,
+                        width: $this.is(':visible') ? $this.outerWidth(true) + 'px' : '200px',
+                        placeholder_text_multiple: $this.attr('title')
+                    });
+
+                $.ajax({
+                    type: 'GET',
+                    url: ajaxurl,
+                    data: {
+                        action: "pum_object_search",
+                        object_type: object_type,
+                        object_key: object_key,
+                        include: current,
+                        current_id: pum_admin.post_id
+                    },
+                    async: true,
+                    dataType: "json",
+                    success: function (data) {
+                        $.each(data, function (key, item) {
+                            // Add any option that doesn't already exist
+                            if (!$this.find('option[value="' + item.id + '"]').length) {
+                                $this.prepend('<option value="' + item.id + '">' + item.name + '</option>');
+                            }
+                        });
+                        // Update the options
+                        $this.val(current);
+                        $this.trigger('chosen:updated');
+                    }
+                });
+            });
         }
     };
 
-    $(document).on('pum_init', PUMChosenFields.init);
+
+    $(document)
+        .on('pum_init', PUMChosenFields.init)
+        // Replace options with search results
+        .on('keyup', '.pum-objectselect .chosen-container .chosen-search input, .pum-objectselect .chosen-container .search-field input', function (e) {
+            var $this = $(this),
+                $field = $this.parents('.pum-field'),
+                $select = $field.find('select:first'),
+                val = $this.val(),
+                lastKey = e.which,
+                object_type = $select.data('objecttype'),
+                object_key = $select.data('objectkey');
+
+            // Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
+            if (
+                (val.length <= 2) || (
+                    lastKey === 16 ||
+                    lastKey === 13 ||
+                    lastKey === 91 ||
+                    lastKey === 17 ||
+                    lastKey === 37 ||
+                    lastKey === 38 ||
+                    lastKey === 39 ||
+                    lastKey === 40 ||
+                    lastKey === 8
+                )
+            ) {
+                return;
+            }
+
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(
+                function () {
+                    $.ajax({
+                        type: 'GET',
+                        url: ajaxurl,
+                        data: {
+                            action: "pum_object_search",
+                            object_type: object_type,
+                            object_key: object_key,
+                            s: val,
+                            current_id: pum_admin.post_id
+                        },
+                        dataType: "json",
+                        beforeSend: function () {
+                            $field.find('ul.chosen-results').empty();
+                        },
+                        success: function (data) {
+                            // Remove all options but those that are selected
+                            $select.find('option:not(:selected)').remove();
+                            $.each(data, function (key, item) {
+                                // Add any option that doesn't already exist
+                                if (!$select.find('option[value="' + item.id + '"]').length) {
+                                    $select.prepend('<option value="' + item.id + '">' + item.name + '</option>');
+                                }
+                            });
+                            // Update the options
+                            $select.trigger('chosen:updated');
+                            $this.val(val);
+                        }
+                    });
+                },
+                doneTypingInterval
+            );
+        });
+
 }(jQuery));
 var PUMColorPickers;
 (function ($) {
@@ -46,6 +148,144 @@ var PUMColorPickers;
 
     $(document).on('pum_init', PUMColorPickers.init);
 }(jQuery));
+var PUMConditions;
+(function ($, document, undefined) {
+    "use strict";
+
+    PUMConditions = {
+        templates: {},
+        addGroup: function (target, not_operand) {
+            var $container = $('#pum-popup-conditions'),
+                data = {
+                    index: $container.find('.facet-group-wrap').length,
+                    conditions: [
+                        {
+                            target: target || null,
+                            not_operand: not_operand || false,
+                            settings: {}
+                        }
+                    ]
+                };
+            $container.find('.facet-groups').append(PUMConditions.templates.group(data));
+            $container.find('.facet-builder').addClass('has-conditions');
+            $(document).trigger('pum_init');
+        },
+        renumber: function () {
+            $('#pum-popup-conditions .facet-group-wrap').each(function () {
+                var $group = $(this),
+                    groupIndex = $group.parent().children().index($group);
+
+                $group
+                    .data('index', groupIndex)
+                    .find('.facet').each(function () {
+                    var $facet = $(this),
+                        facetIndex = $facet.parent().children().index($facet);
+
+                    $facet
+                        .data('index', facetIndex)
+                        .find('[name]').each(function () {
+                        var replace_with = "popup_conditions[" + groupIndex + "][" + facetIndex + "]";
+                        this.name = this.name.replace(/popup_conditions\[\d*?\]\[\d*?\]/, replace_with);
+                        this.id = this.name;
+                    });
+                });
+            });
+        }
+    };
+
+    $(document)
+        .on('pum_init', PUMConditions.renumber)
+        .ready(function () {
+            // TODO Remove this check once admin scripts have been split into popup-editor, theme-editor etc.
+            if ($('body.post-type-popup form#post').length) {
+                PUMConditions.templates.group = _.template($('#pum_condition_group_templ').text());
+                PUMConditions.templates.facet = _.template($('#pum_condition_facet_templ').text());
+                PUMConditions.templates.settings = {};
+
+                $('script.templ.pum-condition-settings').each(function () {
+                    var $this = $(this);
+                    PUMConditions.templates.settings[$this.data('condition')] = _.template($this.text());
+                });
+
+                PUMConditions.renumber();
+            }
+        })
+        .on('change', '#pum-first-condition', function () {
+            var $this = $(this),
+                target = $this.val(),
+                $operand = $('#pum-first-condition-operand'),
+                not_operand = $operand.is(':checked') ? $operand.val() : null;
+
+            PUMConditions.addGroup(target, not_operand);
+
+            $this.val('').trigger('chosen:updated');
+            $operand.prop('checked', false).parents('.pum-condition-target').removeClass('not-operand-checked');
+        })
+        .on('click', '#pum-popup-conditions .pum-not-operand', function () {
+            var $this = $(this),
+                $input = $this.find('input'),
+                $container = $this.parents('.pum-condition-target');
+
+            if ($input.is(':checked')) {
+                $container.removeClass('not-operand-checked');
+                $input.prop('checked', false);
+            } else {
+                $container.addClass('not-operand-checked');
+                $input.prop('checked', true);
+            }
+        })
+        .on('change', '#pum-popup-conditions select.target', function () {
+            var $this = $(this),
+                target = $this.val(),
+                data = {
+                    index: $this.parents('.facet-group').find('.facet').length,
+                    target: target,
+                    settings: {}
+                };
+
+            if (target === '' || target === $this.parents('.facet').data('target') || PUMConditions.templates.settings[target] === undefined) {
+                // TODO Add better error handling.
+                return;
+            }
+
+            $this.parents('.facet').data('target', target).find('.facet-settings').html(PUMConditions.templates.settings[target](data));
+            $(document).trigger('pum_init');
+        })
+        .on('click', '#pum-popup-conditions .facet-group-wrap:last-child .and .add-facet', PUMConditions.addGroup)
+        .on('click', '#pum-popup-conditions .add-or .add-facet:not(.disabled)', function () {
+            var $this = $(this),
+                $group = $this.parents('.facet-group-wrap'),
+                data = {
+                    group: $group.data('index'),
+                    index: $group.find('.facet').length,
+                    target: null,
+                    settings: {}
+                };
+
+            $group.find('.facet-list').append(PUMConditions.templates.facet(data));
+            $(document).trigger('pum_init');
+        })
+        .on('click', '#pum-popup-conditions .remove-facet', function () {
+            var $this = $(this),
+                $container = $('#pum-popup-conditions'),
+                $facet = $this.parents('.facet'),
+                $group = $this.parents('.facet-group-wrap');
+
+            $facet.remove();
+
+            if ($group.find('.facet').length === 0) {
+                $group.prev('.facet-group-wrap').find('.and .add-facet').removeClass('disabled');
+                $group.remove();
+
+                if ($container.find('.facet-group-wrap').length === 0) {
+                    $container.find('.facet-builder').removeClass('has-conditions');
+                }
+            }
+            PUMConditions.renumber();
+        });
+
+
+}(jQuery, document));
 var PUMCookies;
 (function ($) {
     "use strict";
@@ -213,6 +453,42 @@ var PUMCookies;
         .ready(PUMCookies.refreshDescriptions);
 
 }(jQuery));
+function pumSelected(val1, val2, print) {
+    "use strict";
+
+    var selected = false;
+    if (typeof val1 === 'object' && typeof val2 === 'string' && jQuery.inArray(val2, val1) !== -1) {
+        selected = true;
+    } else if (typeof val2 === 'object' && typeof val1 === 'string' && jQuery.inArray(val1, val2) !== -1) {
+        selected = true;
+    } else if (val1 === val2) {
+        selected = true;
+    }
+
+    if (selected && print !== undefined && print) {
+        return ' selected="selected"';
+    }
+    return selected;
+}
+
+function pumChecked(val1, val2, print) {
+    "use strict";
+
+    var checked = false;
+    if (typeof val1 === 'object' && typeof val2 === 'string' && jQuery.inArray(val2, val1) !== -1) {
+        checked = true;
+    } else if (typeof val2 === 'object' && typeof val1 === 'string' && jQuery.inArray(val1, val2) !== -1) {
+        checked = true;
+    } else if (val1 === val2) {
+        checked = true;
+    }
+
+    if (checked && print !== undefined && print) {
+        return ' checked="checked"';
+    }
+    return checked;
+}
+
 var PUMMarketing;
 (function ($) {
     "use strict";
@@ -226,21 +502,124 @@ var PUMMarketing;
     $(document).ready(PUMMarketing.init);
 }(jQuery));
 var PUMModals;
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
     var $html = $('html'),
-        $document = $(document);
+        $document = $(document),
+        $top_level_elements,
+        focusableElementsString = "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]",
+        previouslyFocused,
+        currentModal;
 
     PUMModals = {
+        // Accessibility: Checks focus events to ensure they stay inside the modal.
+        forceFocus: function (event) {
+            if (currentModal && !currentModal.contains(event.target)) {
+                event.stopPropagation();
+                currentModal.focus();
+            }
+        },
+        trapEscapeKey: function (e) {
+            if (e.keyCode === 27) {
+                PUMModals.closeAll();
+                e.preventDefault();
+            }
+        },
+        trapTabKey: function (e) {
+            // if tab or shift-tab pressed
+            if (e.keyCode === 9) {
+                // get list of focusable items
+                var focusableItems = currentModal.find('*').filter(focusableElementsString).filter(':visible'),
+                // get currently focused item
+                    focusedItem = $(':focus'),
+                // get the number of focusable items
+                    numberOfFocusableItems = focusableItems.length,
+                // get the index of the currently focused item
+                    focusedItemIndex = focusableItems.index(focusedItem);
+
+                if (e.shiftKey) {
+                    //back tab
+                    // if focused on first item and user preses back-tab, go to the last focusable item
+                    if (focusedItemIndex === 0) {
+                        focusableItems.get(numberOfFocusableItems - 1).focus();
+                        e.preventDefault();
+                    }
+                } else {
+                    //forward tab
+                    // if focused on the last item and user preses tab, go to the first focusable item
+                    if (focusedItemIndex === numberOfFocusableItems - 1) {
+                        focusableItems.get(0).focus();
+                        e.preventDefault();
+                    }
+                }
+            }
+        },
+        setFocusToFirstItem: function () {
+            // set focus to first focusable item
+            currentModal.find('.pum-modal-content *').filter(focusableElementsString).filter(':visible').first().focus();
+        },
         closeAll: function () {
-            $('.pum-modal-background').hide();
+            $('.pum-modal-background')
+                .off('keydown.pum_modal')
+                .hide()
+                .attr('aria-hidden', 'true');
+
             $('html').css({overflow: 'visible', width: 'auto'});
+
+            if ($top_level_elements) {
+                $top_level_elements.attr('aria-hidden', 'false');
+                $top_level_elements = null;
+            }
+
+            // Accessibility: Focus back on the previously focused element.
+            if (previouslyFocused.length) {
+                previouslyFocused.focus();
+            }
+
+            // Accessibility: Clears the currentModal var.
+            currentModal = null;
+
+            // Accessibility: Removes the force focus check.
+            $document.off('focus.pum_modal');
         },
         show: function (modal) {
-            PUMModals.closeAll();
-            $html.data('origwidth', $html.innerWidth()).css({overflow: 'hidden', 'width': $html.innerWidth()});
-            $(modal).show();
-            $document.trigger('pum_init');
+            $('.pum-modal-background')
+                .off('keydown.pum_modal')
+                .hide()
+                .attr('aria-hidden', 'true');
+
+            $html
+                .data('origwidth', $html.innerWidth())
+                .css({overflow: 'hidden', 'width': $html.innerWidth()});
+
+            // Accessibility: Sets the previous focus element.
+
+            var $focused = $(':focus');
+            if (!$focused.parents('.pum-modal-wrap').length) {
+                previouslyFocused = $focused;
+            }
+
+            // Accessibility: Sets the current modal for focus checks.
+            currentModal = $(modal)
+            // Accessibility: Close on esc press.
+                .on('keydown.pum_modal', function (e) {
+                    PUMModals.trapEscapeKey(e);
+                    PUMModals.trapTabKey(e);
+                })
+                .show()
+                .attr('aria-hidden', 'false');
+
+            $top_level_elements = $('body > *').filter(':visible').not(currentModal);
+            $top_level_elements.attr('aria-hidden', 'true');
+
+            $document
+                .trigger('pum_init')
+
+                // Accessibility: Add focus check that prevents tabbing outside of modal.
+                .on('focus.pum_modal', PUMModals.forceFocus);
+
+            // Accessibility: Focus on the modal.
+            PUMModals.setFocusToFirstItem();
         },
         remove: function (modal) {
             $(modal).remove();
@@ -258,14 +637,14 @@ var PUMModals;
     $(document)
         .on('click', '.pum-modal-background, .pum-modal-wrap .cancel, .pum-modal-wrap .pum-modal-close', function (e) {
             var $target = $(e.target);
-            if ($target.hasClass('pum-modal-background') || $target.hasClass('cancel') || $target.hasClass('pum-modal-close') || $target.hasClass('submitdelete') ) {
+            if ($target.hasClass('pum-modal-background') || $target.hasClass('cancel') || $target.hasClass('pum-modal-close') || $target.hasClass('submitdelete')) {
                 PUMModals.closeAll();
                 e.preventDefault();
                 e.stopPropagation();
             }
         });
 
-}(jQuery));
+}(jQuery, document));
 var PUMRangeSLiders;
 (function ($) {
     "use strict";
@@ -1123,15 +1502,6 @@ var PopMakeAdmin, PUM_Admin;
             jQuery('#popuptitlediv').insertAfter('#titlediv');
             jQuery('[name^="menu-item"]').removeAttr('name');
 
-            jQuery('#trigger-popmake-preview')
-                .on('click', function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    update_popup_preview_title();
-                    update_popup_preview_data();
-                    update_popup_preview_content();
-                    return false;
-                });
             jQuery(document)
                 .on('keydown', '#popuptitle', function (event) {
                     var keyCode = event.keyCode || event.which;

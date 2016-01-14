@@ -6,30 +6,33 @@
 class PUM_Admin_Helpers {
 	public static function modal( $args = array() ) {
 		$args = wp_parse_args( $args, array(
-			'id' => 'default',
-			'title' => '',
-			'class' => '',
-			'cancel_button' => true,
-			'cancel_button_text' => __( 'Cancel', 'popup-maker' ),
-			'save_button' => true,
-			'save_button_text' => __( 'Add', 'popup-maker' ),
+                'id'                 => 'default',
+                'title'              => '',
+                'description'        => '',
+                'class'              => '',
+                'cancel_button'      => true,
+                'cancel_button_text' => __( 'Cancel', 'popup-maker' ),
+                'save_button'        => true,
+                'save_button_text'   => __( 'Add', 'popup-maker' ),
 		) );
 		?>
-	<div id="<?php echo $args['id']; ?>" class="pum-modal-background <?php esc_attr_e( $args['class'] ); ?>">
+    <div id="<?php echo $args['id']; ?>" class="pum-modal-background <?php esc_attr_e( $args['class'] ); ?>" role="dialog" aria-hidden="true" aria-labelledby="<?php echo $args['id']; ?>-title" <?php if ( $args['description'] != '' ) { ?>aria-describedby="<?php echo $args['id']; ?>-description"<?php } ?>>
 
 		<div class="pum-modal-wrap">
 
-			<form class="pum-form" tabindex="-1">
+            <form class="pum-form">
 
 				<div class="pum-modal-header">
 
 					<?php if ( $args['title'] != '' ) { ?>
-						<span class="pum-modal-title"><?php echo $args['title']; ?></span>
+                        <span id="<?php echo $args['id']; ?>-title" class="pum-modal-title"><?php echo $args['title']; ?></span>
 					<?php } ?>
-					<div class="pum-modal-close">
-						<span class="screen-reader-text"><?php _e( 'Close', 'popup-maker' ); ?></span>
-					</div>
+                    <button type="button" class="pum-modal-close" aria-label="<?php _e( 'Close', 'popup-maker' ); ?>"></button>
 				</div>
+
+                <?php if ( $args['description'] != '' ) { ?>
+                    <span id="<?php echo $args['id']; ?>-description" class="screen-reader-text"><?php echo $args['description']; ?></span>
+                <?php } ?>
 
 				<div class="pum-modal-content">
 					<?php echo $args['content']; ?>
@@ -39,7 +42,7 @@ class PUM_Admin_Helpers {
 					<div class="pum-modal-footer submitbox">
 						<?php if ( $args['cancel_button'] ) { ?>
 							<div class="cancel">
-								<a class="submitdelete" href="#"><?php echo $args['cancel_button_text']; ?></a>
+                                <button type="button" class="submitdelete no-button" href="#"><?php echo $args['cancel_button_text']; ?></button>
 							</div>
 						<?php } ?>
 						<?php if ( $args['save_button'] ) { ?>

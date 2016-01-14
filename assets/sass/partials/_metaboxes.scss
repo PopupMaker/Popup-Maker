@@ -32,6 +32,19 @@
   float: right;
 }
 
+.no-button {
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+
+  &.link-button {
+    color: #0073aa;
+    text-decoration: underline;
+  }
+
+}
+
 #popup_trigger_add_type,
 #popup_cookie_add_event {
   display: block;

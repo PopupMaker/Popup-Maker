@@ -40,7 +40,7 @@ class PUM_Popup_Triggers_Metabox {
 	public static function render_metabox() {
 		global $post; ?>
 		<div id="pum_popup_trigger_fields" class="popmake_meta_table_wrap">
-			<button type="button" class="button button-primary add-new"><?php _e( 'Add Trigger', 'popup-maker' ); ?></button>
+        <button type="button" class="button button-primary add-new no-button"><?php _e( 'Add New Trigger', 'popup-maker' ); ?></button>
 			<?php do_action( 'pum_popup_triggers_metabox_before', $post->ID ); ?>
 			<table id="pum_popup_triggers_list" class="form-table">
 				<thead>
@@ -191,7 +191,8 @@ class PUM_Popup_Triggers_Metabox {
 		) );
 		?>
 		<tr data-index="<?php echo $row['index']; ?>">
-			<td class="type-column"><span class="edit"><?php echo $row['columns']['type']; ?></span>
+            <td class="type-column">
+                <button type="button" class="edit no-button link-button" aria-label="<?php _e( 'Edit this trigger', 'popup-maker' ); ?>"><?php echo $row['columns']['type']; ?></button>
 				<input class="popup_triggers_field_type" type="hidden" name="popup_triggers[<?php echo $row['index']; ?>][type]" value="<?php echo $row['type']; ?>" />
 				<input class="popup_triggers_field_settings" type="hidden" name="popup_triggers[<?php echo $row['index']; ?>][settings]" value="<?php echo maybe_json_attr( $row['settings'], true ); ?>" />
 			</td>
@@ -207,8 +208,8 @@ class PUM_Popup_Triggers_Metabox {
 			</td>
 			<td class="settings-column"><?php echo $row['columns']['settings']; ?></td>
 			<td class="actions">
-				<i class="edit dashicons dashicons-edit"></i>
-				<i class="remove dashicons dashicons-no"></i>
+                <button type="button" class="edit dashicons dashicons-edit no-button" aria-label="<?php _e( 'Edit this trigger', 'popup-maker' ); ?>"></button>
+                <button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php _e( 'Delete` this trigger', 'popup-maker' ); ?>"></button>
 			</td>
 		</tr>
 		<?php

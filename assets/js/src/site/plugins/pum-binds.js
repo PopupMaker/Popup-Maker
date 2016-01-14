@@ -38,7 +38,7 @@
         /**
          * Fires the deprecated popmakeAfterClose event
          */
-        .on('pumBeforeClose', '.pum', function () {
+        .on('pumAfterClose', '.pum', function () {
             $(this).popmake('getContainer')
                 .removeClass('active')
                 .trigger('popmakeAfterClose');
