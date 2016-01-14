@@ -6,30 +6,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Gets all cookie cookies.
- *
- * @uses filter pum_cookie_cookie_options
- * @uses filter popmake_cookie_cookie_options @deprecated
- *
- * TODO Is this used?
- *
- * @return array $options
- */
-function pum_cookie_cookie_options() {
-	$options = apply_filters( 'pum_cookie_cookie_options', array(
-		__( 'Disabled', 'popup-maker' ) => 'disabled',
-		__( 'On Open', 'popup-maker' )  => 'open',
-		__( 'On Close', 'popup-maker' ) => 'close',
-		__( 'Manual', 'popup-maker' )   => 'manual',
-	) );
-
-	// Deprecated filter used by old extensions.
-	$options = apply_filters( 'popmake_cookie_cookie_options', $options );
-
-	return $options;
-}
-
-/**
  * Returns the cookie fields used for cookie options.
  *
  * @uses filter pum_cookie_cookie_fields
@@ -118,4 +94,5 @@ function pum_register_cookies() {
 	$cookies = pum_get_cookies();
 	PUM_Cookies::instance()->add_cookies( $cookies );
 }
-add_action( 'init', 'pum_register_cookies' );
+
+add_action( 'init', 'pum_register_cookies', 11 );
