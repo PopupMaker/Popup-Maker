@@ -6,8 +6,6 @@ function pum_popup_ID( $popup_id = null ) {
 }
 
 function pum_popup_title( $popup_id = null ) {
-	$popup = new PUM_Popup( $popup_id );
-	return $popup->get_title();
 	echo pum_get_popup_title( $popup_id );
 }
 
