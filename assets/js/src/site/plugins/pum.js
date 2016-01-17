@@ -49,9 +49,15 @@ var PUM;
                     $popup.popmake('getContent').append($(popmake_powered_by));
                 }
 
+
+                // Added popmake settings to the container for temporary backward compatibility with extensions.
+                // TODO Once extensions updated remove this.
+                $popup.find('.pum-container').data('popmake', settings);
+
                 $popup
                     .data('popmake', settings)
                     .trigger('pumInit');
+
                 return this;
             });
         },
