@@ -623,18 +623,18 @@ var PopMakeAdmin, PUM_Admin;
 
             jQuery('tr.topleft, tr.topright, tr.bottomleft, tr.bottomright', table).hide();
             switch (jQuery('#popup_theme_close_location').val()) {
-                case "topleft":
-                    jQuery('tr.topleft', table).show();
-                    break;
-                case "topright":
-                    jQuery('tr.topright', table).show();
-                    break;
-                case "bottomleft":
-                    jQuery('tr.bottomleft', table).show();
-                    break;
-                case "bottomright":
-                    jQuery('tr.bottomright', table).show();
-                    break;
+            case "topleft":
+                jQuery('tr.topleft', table).show();
+                break;
+            case "topright":
+                jQuery('tr.topright', table).show();
+                break;
+            case "bottomleft":
+                jQuery('tr.bottomleft', table).show();
+                break;
+            case "bottomright":
+                jQuery('tr.bottomright', table).show();
+                break;
             }
         },
         retheme_popup: function (theme) {
@@ -743,30 +743,30 @@ var PopMakeAdmin, PUM_Admin;
                 textShadow: theme.close_textshadow_horizontal + 'px ' + theme.close_textshadow_vertical + 'px ' + theme.close_textshadow_blur + 'px ' + PUMUtils.convert_hex(theme.close_textshadow_color, theme.close_textshadow_opacity)
             });
             switch (theme.close_location) {
-                case "topleft":
-                    $close.css({
-                        top: theme.close_position_top + 'px',
-                        left: theme.close_position_left + 'px'
-                    });
-                    break;
-                case "topright":
-                    $close.css({
-                        top: theme.close_position_top + 'px',
-                        right: theme.close_position_right + 'px'
-                    });
-                    break;
-                case "bottomleft":
-                    $close.css({
-                        bottom: theme.close_position_bottom + 'px',
-                        left: theme.close_position_left + 'px'
-                    });
-                    break;
-                case "bottomright":
-                    $close.css({
-                        bottom: theme.close_position_bottom + 'px',
-                        right: theme.close_position_right + 'px'
-                    });
-                    break;
+            case "topleft":
+                $close.css({
+                    top: theme.close_position_top + 'px',
+                    left: theme.close_position_left + 'px'
+                });
+                break;
+            case "topright":
+                $close.css({
+                    top: theme.close_position_top + 'px',
+                    right: theme.close_position_right + 'px'
+                });
+                break;
+            case "bottomleft":
+                $close.css({
+                    bottom: theme.close_position_bottom + 'px',
+                    left: theme.close_position_left + 'px'
+                });
+                break;
+            case "bottomright":
+                $close.css({
+                    bottom: theme.close_position_bottom + 'px',
+                    right: theme.close_position_right + 'px'
+                });
+                break;
             }
             jQuery(document).trigger('popmake-admin-retheme', [theme]);
         }

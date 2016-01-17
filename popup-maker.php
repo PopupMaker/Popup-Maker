@@ -77,7 +77,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				self::$instance->includes();
 				self::$instance->load_textdomain();
 
-				register_activation_hook( POPMAKE, 'popmake_install' );
+
 			}
 
 			return self::$instance;
@@ -148,7 +148,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 
 			if ( ! defined( 'POPMAKE_DB_VERSION' ) ) {
-				define( 'POPMAKE_DB_VERSION', '1.0' );
+				define( 'POPMAKE_DB_VERSION', '3' );
 			}
 
 			if ( ! defined( 'POPMAKE_API_URL' ) ) {
@@ -327,33 +327,41 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 		}
 
-		/**
-		 *
-		 */
-		public function process_upgrades( $network_wide = false ) {
-			if ( ! is_admin() ) {
+		public function maybe_update() {
+			// bail if this plugin data doesn't need updating
+			if ( get_option( 'pum_db_ver' ) >= POPMAKE_DB_VERSION ) {
 				return;
 			}
 
-			// Add Upgraded From Option
-			$current_version = get_option( 'popmake_version' );
-			if ( $current_version ) {
-				update_option( 'popmake_version_upgraded_from', $current_version );
-			}
-
-			// Install Built In Themes (Only those never installed).
-			pum_install_built_in_themes();
-
-			if ( $current_version != POPMAKE_VERSION ) {
-				do_action( "popmake_process_upgrade", POPMAKE_VERSION, $current_version );
-			}
-
-			update_option( 'popmake_version', POPMAKE_VERSION );
+			require_once POPMAKE_DIR . 'includes/class-pum-updates.php';
+			//PUM_Updates::process_updates();
 		}
 
 	}
 
 endif; // End if class_exists check
+
+
+/**
+ * The code that runs during plugin activation.
+ * This action is documented in includes/class-pum-activator.php
+ */
+function activate_pum() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-pum-activator.php';
+	PUM_Activator::activate();
+}
+
+/**
+ * The code that runs during plugin deactivation.
+ * This action is documented in includes/class-pum-deactivator.php
+ */
+function deactivate_pum() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-pum-deactivator.php';
+	PUM_Deactivator::deactivate();
+}
+
+register_activation_hook( __FILE__, 'activate_pum' );
+register_deactivation_hook( __FILE__, 'deactivate_pum' );
 
 
 /**
@@ -383,6 +391,6 @@ function popmake_initialize() {
 	PopMake();
 	do_action( 'popmake_initialize' );
 
-	PopMake()->process_upgrades();
+	PopMake()->maybe_update();
 }
 add_action( 'plugins_loaded', 'popmake_initialize', 0 );

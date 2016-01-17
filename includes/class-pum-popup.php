@@ -204,6 +204,10 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 				$classes['container'][] = 'pum-position-fixed';
 			}
 
+			if ( $this->get_display( 'overlay_disabled' ) ) {
+				$classes['overlay'][] = 'pum-overlay-disabled';
+			}
+
 			// Add a class for each trigger type.
 			foreach ( $this->get_triggers() as $trigger => $trigger_settings ) {
 				if ( ! in_array( $trigger, $classes['overlay'] ) ) {

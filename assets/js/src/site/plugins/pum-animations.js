@@ -10,18 +10,14 @@
         var settings = PUM.getPopup(this).popmake('getSettings');
 
         if (settings.meta.display.overlay_disabled) {
-            // Fire user passed callback.
-            if (callback !== undefined) {
-                callback();
-                // TODO Test this new method. Then remove the above.
-                //callback.apply(this);
-            }
-        } else {
-            if ($.fn.popmake.overlay_animations[style]) {
-                return $.fn.popmake.overlay_animations[style].apply(this, [duration, callback]);
-            }
-            $.error('Animation style ' + $.fn.popmake.overlay_animations + ' does not exist.');
+            return $.fn.popmake.overlay_animations.none.apply(this, [duration, callback]);
         }
+
+        if ($.fn.popmake.overlay_animations[style]) {
+            return $.fn.popmake.overlay_animations[style].apply(this, [duration, callback]);
+        }
+        $.error('Animation style ' + $.fn.popmake.overlay_animations + ' does not exist.');
+
         return this;
     };
 
