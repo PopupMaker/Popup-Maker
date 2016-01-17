@@ -22,30 +22,33 @@ var PUMChosenFields;
                         placeholder_text_multiple: $this.attr('title')
                     });
 
-                $.ajax({
-                    type: 'GET',
-                    url: ajaxurl,
-                    data: {
-                        action: "pum_object_search",
-                        object_type: object_type,
-                        object_key: object_key,
-                        include: current,
-                        current_id: pum_admin.post_id
-                    },
-                    async: true,
-                    dataType: "json",
-                    success: function (data) {
-                        $.each(data, function (key, item) {
-                            // Add any option that doesn't already exist
-                            if (!$this.find('option[value="' + item.id + '"]').length) {
-                                $this.prepend('<option value="' + item.id + '">' + item.name + '</option>');
-                            }
-                        });
-                        // Update the options
-                        $this.val(current);
-                        $this.trigger('chosen:updated');
-                    }
-                });
+                if (current && object_type && object_key) {
+                    $.ajax({
+                        type: 'GET',
+                        url: ajaxurl,
+                        data: {
+                            action: "pum_object_search",
+                            object_type: object_type,
+                            object_key: object_key,
+                            include: current,
+                            current_id: pum_admin.post_id
+                        },
+                        async: true,
+                        dataType: "json",
+                        success: function (data) {
+                            $.each(data, function (key, item) {
+                                // Add any option that doesn't already exist
+                                if (!$this.find('option[value="' + item.id + '"]').length) {
+                                    $this.prepend('<option value="' + item.id + '">' + item.name + '</option>');
+                                }
+                            });
+                            // Update the options
+                            $this.val(current);
+                            $this.trigger('chosen:updated');
+                        }
+                    });
+                }
+
             });
         }
     };
