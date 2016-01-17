@@ -1,20 +1,124 @@
 var PUMChosenFields;
 (function ($) {
     "use strict";
+
+    // Variables for setting up the typing timer
+    var typingTimer,               // Timer identifier
+        doneTypingInterval = 464;  // Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
+
     PUMChosenFields = {
         init: function () {
-            $('.pum-chosen select').filter(':not(.initialized)')
-                .addClass('initialized')
-                .chosen({
-                    allow_single_deselect: true,
-                    width: '100%'
-                })
-                .next()
-                .css({});
+            $('.pum-chosen select').filter(':not(.initialized)').each(function () {
+                var $this = $(this),
+                    current = $this.data('current'),
+                    object_type = $this.data('objecttype'),
+                    object_key = $this.data('objectkey');
+
+                $this
+                    .addClass('initialized')
+                    .chosen({
+                        allow_single_deselect: true,
+                        width: $this.is(':visible') ? $this.outerWidth(true) + 'px' : '200px',
+                        placeholder_text_multiple: $this.attr('title')
+                    });
+
+                if (current && object_type && object_key) {
+                    $.ajax({
+                        type: 'GET',
+                        url: ajaxurl,
+                        data: {
+                            action: "pum_object_search",
+                            object_type: object_type,
+                            object_key: object_key,
+                            include: current,
+                            current_id: pum_admin.post_id
+                        },
+                        async: true,
+                        dataType: "json",
+                        success: function (data) {
+                            $.each(data, function (key, item) {
+                                // Add any option that doesn't already exist
+                                if (!$this.find('option[value="' + item.id + '"]').length) {
+                                    $this.prepend('<option value="' + item.id + '">' + item.name + '</option>');
+                                }
+                            });
+                            // Update the options
+                            $this.val(current);
+                            $this.trigger('chosen:updated');
+                        }
+                    });
+                }
+
+            });
         }
     };
 
-    $(document).on('pum_init', PUMChosenFields.init);
+
+    $(document)
+        .on('pum_init', PUMChosenFields.init)
+        // Replace options with search results
+        .on('keyup', '.pum-objectselect .chosen-container .chosen-search input, .pum-objectselect .chosen-container .search-field input', function (e) {
+            var $this = $(this),
+                $field = $this.parents('.pum-field'),
+                $select = $field.find('select:first'),
+                val = $this.val(),
+                lastKey = e.which,
+                object_type = $select.data('objecttype'),
+                object_key = $select.data('objectkey');
+
+            // Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
+            if (
+                (val.length <= 2) || (
+                    lastKey === 16 ||
+                    lastKey === 13 ||
+                    lastKey === 91 ||
+                    lastKey === 17 ||
+                    lastKey === 37 ||
+                    lastKey === 38 ||
+                    lastKey === 39 ||
+                    lastKey === 40 ||
+                    lastKey === 8
+                )
+            ) {
+                return;
+            }
+
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(
+                function () {
+                    $.ajax({
+                        type: 'GET',
+                        url: ajaxurl,
+                        data: {
+                            action: "pum_object_search",
+                            object_type: object_type,
+                            object_key: object_key,
+                            s: val,
+                            current_id: pum_admin.post_id
+                        },
+                        dataType: "json",
+                        beforeSend: function () {
+                            $field.find('ul.chosen-results').empty();
+                        },
+                        success: function (data) {
+                            // Remove all options but those that are selected
+                            $select.find('option:not(:selected)').remove();
+                            $.each(data, function (key, item) {
+                                // Add any option that doesn't already exist
+                                if (!$select.find('option[value="' + item.id + '"]').length) {
+                                    $select.prepend('<option value="' + item.id + '">' + item.name + '</option>');
+                                }
+                            });
+                            // Update the options
+                            $select.trigger('chosen:updated');
+                            $this.val(val);
+                        }
+                    });
+                },
+                doneTypingInterval
+            );
+        });
+
 }(jQuery));
 var PUMColorPickers;
 (function ($) {
@@ -46,6 +150,144 @@ var PUMColorPickers;
 
     $(document).on('pum_init', PUMColorPickers.init);
 }(jQuery));
+var PUMConditions;
+(function ($, document, undefined) {
+    "use strict";
+
+    PUMConditions = {
+        templates: {},
+        addGroup: function (target, not_operand) {
+            var $container = $('#pum-popup-conditions'),
+                data = {
+                    index: $container.find('.facet-group-wrap').length,
+                    conditions: [
+                        {
+                            target: target || null,
+                            not_operand: not_operand || false,
+                            settings: {}
+                        }
+                    ]
+                };
+            $container.find('.facet-groups').append(PUMConditions.templates.group(data));
+            $container.find('.facet-builder').addClass('has-conditions');
+            $(document).trigger('pum_init');
+        },
+        renumber: function () {
+            $('#pum-popup-conditions .facet-group-wrap').each(function () {
+                var $group = $(this),
+                    groupIndex = $group.parent().children().index($group);
+
+                $group
+                    .data('index', groupIndex)
+                    .find('.facet').each(function () {
+                    var $facet = $(this),
+                        facetIndex = $facet.parent().children().index($facet);
+
+                    $facet
+                        .data('index', facetIndex)
+                        .find('[name]').each(function () {
+                        var replace_with = "popup_conditions[" + groupIndex + "][" + facetIndex + "]";
+                        this.name = this.name.replace(/popup_conditions\[\d*?\]\[\d*?\]/, replace_with);
+                        this.id = this.name;
+                    });
+                });
+            });
+        }
+    };
+
+    $(document)
+        .on('pum_init', PUMConditions.renumber)
+        .ready(function () {
+            // TODO Remove this check once admin scripts have been split into popup-editor, theme-editor etc.
+            if ($('body.post-type-popup form#post').length) {
+                PUMConditions.templates.group = _.template($('#pum_condition_group_templ').text());
+                PUMConditions.templates.facet = _.template($('#pum_condition_facet_templ').text());
+                PUMConditions.templates.settings = {};
+
+                $('script.templ.pum-condition-settings').each(function () {
+                    var $this = $(this);
+                    PUMConditions.templates.settings[$this.data('condition')] = _.template($this.text());
+                });
+
+                PUMConditions.renumber();
+            }
+        })
+        .on('change', '#pum-first-condition', function () {
+            var $this = $(this),
+                target = $this.val(),
+                $operand = $('#pum-first-condition-operand'),
+                not_operand = $operand.is(':checked') ? $operand.val() : null;
+
+            PUMConditions.addGroup(target, not_operand);
+
+            $this.val('').trigger('chosen:updated');
+            $operand.prop('checked', false).parents('.pum-condition-target').removeClass('not-operand-checked');
+        })
+        .on('click', '#pum-popup-conditions .pum-not-operand', function () {
+            var $this = $(this),
+                $input = $this.find('input'),
+                $container = $this.parents('.pum-condition-target');
+
+            if ($input.is(':checked')) {
+                $container.removeClass('not-operand-checked');
+                $input.prop('checked', false);
+            } else {
+                $container.addClass('not-operand-checked');
+                $input.prop('checked', true);
+            }
+        })
+        .on('change', '#pum-popup-conditions select.target', function () {
+            var $this = $(this),
+                target = $this.val(),
+                data = {
+                    index: $this.parents('.facet-group').find('.facet').length,
+                    target: target,
+                    settings: {}
+                };
+
+            if (target === '' || target === $this.parents('.facet').data('target') || PUMConditions.templates.settings[target] === undefined) {
+                // TODO Add better error handling.
+                return;
+            }
+
+            $this.parents('.facet').data('target', target).find('.facet-settings').html(PUMConditions.templates.settings[target](data));
+            $(document).trigger('pum_init');
+        })
+        .on('click', '#pum-popup-conditions .facet-group-wrap:last-child .and .add-facet', PUMConditions.addGroup)
+        .on('click', '#pum-popup-conditions .add-or .add-facet:not(.disabled)', function () {
+            var $this = $(this),
+                $group = $this.parents('.facet-group-wrap'),
+                data = {
+                    group: $group.data('index'),
+                    index: $group.find('.facet').length,
+                    target: null,
+                    settings: {}
+                };
+
+            $group.find('.facet-list').append(PUMConditions.templates.facet(data));
+            $(document).trigger('pum_init');
+        })
+        .on('click', '#pum-popup-conditions .remove-facet', function () {
+            var $this = $(this),
+                $container = $('#pum-popup-conditions'),
+                $facet = $this.parents('.facet'),
+                $group = $this.parents('.facet-group-wrap');
+
+            $facet.remove();
+
+            if ($group.find('.facet').length === 0) {
+                $group.prev('.facet-group-wrap').find('.and .add-facet').removeClass('disabled');
+                $group.remove();
+
+                if ($container.find('.facet-group-wrap').length === 0) {
+                    $container.find('.facet-builder').removeClass('has-conditions');
+                }
+            }
+            PUMConditions.renumber();
+        });
+
+
+}(jQuery, document));
 var PUMCookies;
 (function ($) {
     "use strict";
@@ -213,6 +455,42 @@ var PUMCookies;
         .ready(PUMCookies.refreshDescriptions);
 
 }(jQuery));
+function pumSelected(val1, val2, print) {
+    "use strict";
+
+    var selected = false;
+    if (typeof val1 === 'object' && typeof val2 === 'string' && jQuery.inArray(val2, val1) !== -1) {
+        selected = true;
+    } else if (typeof val2 === 'object' && typeof val1 === 'string' && jQuery.inArray(val1, val2) !== -1) {
+        selected = true;
+    } else if (val1 === val2) {
+        selected = true;
+    }
+
+    if (selected && print !== undefined && print) {
+        return ' selected="selected"';
+    }
+    return selected;
+}
+
+function pumChecked(val1, val2, print) {
+    "use strict";
+
+    var checked = false;
+    if (typeof val1 === 'object' && typeof val2 === 'string' && jQuery.inArray(val2, val1) !== -1) {
+        checked = true;
+    } else if (typeof val2 === 'object' && typeof val1 === 'string' && jQuery.inArray(val1, val2) !== -1) {
+        checked = true;
+    } else if (val1 === val2) {
+        checked = true;
+    }
+
+    if (checked && print !== undefined && print) {
+        return ' checked="checked"';
+    }
+    return checked;
+}
+
 var PUMMarketing;
 (function ($) {
     "use strict";
@@ -1385,18 +1663,18 @@ var PopMakeAdmin, PUM_Admin;
 
             jQuery('tr.topleft, tr.topright, tr.bottomleft, tr.bottomright', table).hide();
             switch (jQuery('#popup_theme_close_location').val()) {
-                case "topleft":
-                    jQuery('tr.topleft', table).show();
-                    break;
-                case "topright":
-                    jQuery('tr.topright', table).show();
-                    break;
-                case "bottomleft":
-                    jQuery('tr.bottomleft', table).show();
-                    break;
-                case "bottomright":
-                    jQuery('tr.bottomright', table).show();
-                    break;
+            case "topleft":
+                jQuery('tr.topleft', table).show();
+                break;
+            case "topright":
+                jQuery('tr.topright', table).show();
+                break;
+            case "bottomleft":
+                jQuery('tr.bottomleft', table).show();
+                break;
+            case "bottomright":
+                jQuery('tr.bottomright', table).show();
+                break;
             }
         },
         retheme_popup: function (theme) {
@@ -1505,30 +1783,30 @@ var PopMakeAdmin, PUM_Admin;
                 textShadow: theme.close_textshadow_horizontal + 'px ' + theme.close_textshadow_vertical + 'px ' + theme.close_textshadow_blur + 'px ' + PUMUtils.convert_hex(theme.close_textshadow_color, theme.close_textshadow_opacity)
             });
             switch (theme.close_location) {
-                case "topleft":
-                    $close.css({
-                        top: theme.close_position_top + 'px',
-                        left: theme.close_position_left + 'px'
-                    });
-                    break;
-                case "topright":
-                    $close.css({
-                        top: theme.close_position_top + 'px',
-                        right: theme.close_position_right + 'px'
-                    });
-                    break;
-                case "bottomleft":
-                    $close.css({
-                        bottom: theme.close_position_bottom + 'px',
-                        left: theme.close_position_left + 'px'
-                    });
-                    break;
-                case "bottomright":
-                    $close.css({
-                        bottom: theme.close_position_bottom + 'px',
-                        right: theme.close_position_right + 'px'
-                    });
-                    break;
+            case "topleft":
+                $close.css({
+                    top: theme.close_position_top + 'px',
+                    left: theme.close_position_left + 'px'
+                });
+                break;
+            case "topright":
+                $close.css({
+                    top: theme.close_position_top + 'px',
+                    right: theme.close_position_right + 'px'
+                });
+                break;
+            case "bottomleft":
+                $close.css({
+                    bottom: theme.close_position_bottom + 'px',
+                    left: theme.close_position_left + 'px'
+                });
+                break;
+            case "bottomright":
+                $close.css({
+                    bottom: theme.close_position_bottom + 'px',
+                    right: theme.close_position_right + 'px'
+                });
+                break;
             }
             jQuery(document).trigger('popmake-admin-retheme', [theme]);
         }
