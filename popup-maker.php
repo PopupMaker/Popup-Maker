@@ -148,7 +148,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 
 			if ( ! defined( 'POPMAKE_DB_VERSION' ) ) {
-				define( 'POPMAKE_DB_VERSION', '3' );
+				define( 'POPMAKE_DB_VERSION', '5' );
 			}
 
 			if ( ! defined( 'POPMAKE_API_URL' ) ) {
@@ -179,14 +179,18 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			/**
 			 * v1.4 Additions
 			 */
+			require_once POPMAKE_DIR . 'includes/class-pum.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-post.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-popup.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-popup-query.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-fields.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-previews.php';
 
+			// Functions
 			require_once POPMAKE_DIR . 'includes/pum-popup-functions.php';
 			require_once POPMAKE_DIR . 'includes/pum-template-functions.php';
 			require_once POPMAKE_DIR . 'includes/pum-general-functions.php';
+			require_once POPMAKE_DIR . 'includes/pum-misc-functions.php';
 			require_once POPMAKE_DIR . 'includes/pum-template-hooks.php';
 
 			// Triggers
@@ -212,6 +216,11 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/pum-condition-functions.php';
 			if ( is_admin() ) {
 				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-conditions.php';
+			}
+
+			// Upgrades
+			if ( is_admin() ) {
+				require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-upgrades.php';
 			}
 
 			require_once POPMAKE_DIR . 'includes/pum-ajax-functions.php';
@@ -280,7 +289,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/metabox-share.php';
 				require_once POPMAKE_DIR . 'includes/admin/tracking.php';
 
-				require_once POPMAKE_DIR . 'includes/admin/upgrades/v1_3.php';
 			}
 
 			if ( class_exists( 'WooCommerce' ) ) {
@@ -327,15 +335,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 		}
 
-		public function maybe_update() {
-			// bail if this plugin data doesn't need updating
-			if ( get_option( 'pum_db_ver' ) >= POPMAKE_DB_VERSION ) {
-				return;
-			}
-
-			require_once POPMAKE_DIR . 'includes/class-pum-updates.php';
-			//PUM_Updates::process_updates();
-		}
 
 	}
 
@@ -389,8 +388,9 @@ function popmake_initialize() {
 
 	// Get Popup Maker Running
 	PopMake();
+	do_action( 'pum_initialize' );
 	do_action( 'popmake_initialize' );
-
-	PopMake()->maybe_update();
 }
+
+// TODO test and see if the 0 priority is needed.
 add_action( 'plugins_loaded', 'popmake_initialize', 0 );
