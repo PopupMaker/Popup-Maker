@@ -398,7 +398,6 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 			return apply_filters( 'pum_popup_close_text', $text, $this->ID );
 		}
 
-
 		/**
 		 * Returns true if the close button should be rendered.
 		 *
@@ -413,7 +412,6 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 
 			return boolval( apply_filters( 'pum_popup_show_close_button', $show, $this->ID ) );
 		}
-
 
 		/**
 		 * Returns whether or not the popup is visible in the loop.
@@ -472,6 +470,10 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 			}
 
 			return call_user_func( $condition->get_callback(), $settings, $this );
+		}
+
+		public function get_meta( $key = null, $single = false ) {
+			return get_post_meta( $this->ID, $key, $single );
 		}
 
 	}
