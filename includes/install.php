@@ -90,15 +90,13 @@ function popmake_install_default_theme() {
 			'comment_status' => 'closed',
 			'meta_input' => array(
 				'_pum_built_in' => 'default-theme',
-				'_pub_default_theme' => true
+				'_pum_default_theme' => true
 			),
 		)
 	);
 	foreach ( popmake_get_popup_theme_default_meta() as $meta_key => $meta_value ) {
 		update_post_meta( $default_theme, $meta_key, $meta_value );
 	}
-	update_post_meta( $default_theme, 'popup_theme_defaults_set', true );
-	update_post_meta( $default_theme, 'popmake_default_theme', true );
 	update_option( 'popmake_default_theme', $default_theme );
 	pum_force_theme_css_refresh();
 }
