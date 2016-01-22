@@ -54,6 +54,8 @@ class PUM_Admin_Upgrades {
      * Initialize the actions needed to process upgrades.
      */
     public function init() {
+        update_site_option( 'pum_db_ver', 5 );
+
         // bail if this plugin data doesn't need updating
         if ( get_site_option( 'pum_db_ver' ) >= PUM::DB_VER ) {
             return;
@@ -207,9 +209,14 @@ class PUM_Admin_Upgrades {
 
             foreach ( $this->get_upgrades() as $version => $notice ) {
                 printf(
-                        '<div class="updated"><p>' . esc_html( $notice ) . ' ' . __( 'Click %shere%s to start the upgrade.', 'popup-maker' ) . '</p></div>',
-                        '<a href="' . esc_url( admin_url( 'options.php?page=pum-upgrades' ) ) . '">',
-                        '</a>'
+                        '<div class="updated"><p><strong>%s: </strong> %s %s</p></div>',
+                        __( 'Popup Maker', 'popup-maker' ),
+                        esc_html( $notice ),
+                        sprintf(
+                                __( 'Click %shere%s to start the upgrade.', 'popup-maker' ),
+                                '<a href="' . esc_url( admin_url( 'options.php?page=pum-upgrades' ) ) . '">',
+                                '</a>'
+                        )
                 );
             }
 
@@ -245,8 +252,14 @@ class PUM_Admin_Upgrades {
 
         if ( DOING_AJAX ) {
             echo json_encode( array(
-                    'complete' => true,
-                    'status'   => sprintf( '<strong>%s</strong>', __( 'Upgrades have been completed successfully.', 'popup-maker' ) ),
+                    'complete'  => true,
+                    'status'    => sprintf(
+                            '<strong>%s</strong><br/>%s',
+                            __( 'Upgrades have been completed successfully.', 'popup-maker' ),
+                            sprintf( 'You will automatically be redirected in %s seconds', '<span id="pum-countdown"></span>' )
+                    ),
+                    'redirect'  => admin_url( 'index.php?page=pum-about' ),
+                    'countdown' => 5000,
             ) ); // Let AJAX know that the upgrade is complete
             exit;
         }
@@ -523,7 +536,9 @@ class PUM_Admin_Upgrades {
             <script type="text/javascript">
                 (function ($, document, undefined) {
                     var $loader = $('#pum-upgrade-loader').hide(),
-                            $status_box = $('#pum-upgrade-status');
+                            $status_box = $('#pum-upgrade-status'),
+                            $timer,
+                            timer = 500;
 
                     function update_status(message) {
                         $('<p>')
@@ -536,6 +551,18 @@ class PUM_Admin_Upgrades {
                             duration: 'slow',
                             queue: false
                         });
+                    }
+
+                    function countdown(timer, callback) {
+                        var time_left = timer - 1000;
+                        if (time_left >= 0) {
+                            setTimeout(function () {
+                                $timer.text(time_left / 1000);
+                                countdown(time_left, callback);
+                            }, 1000);
+                        } else {
+                            callback();
+                        }
                     }
 
                     function next_step(args) {
@@ -565,9 +592,16 @@ class PUM_Admin_Upgrades {
                                     }
 
                                     if (response.redirect !== undefined) {
-                                        setTimeout(function () {
-                                            document.location.href = response.redirect;
-                                        }, 500);
+                                        if (response.countdown === undefined) {
+                                            setTimeout(function () {
+                                                document.location.href = response.redirect;
+                                            }, timer);
+                                        } else {
+                                            $timer = $('#pum-countdown');
+                                            countdown(response.countdown, function () {
+                                                document.location.href = response.redirect;
+                                            });
+                                        }
                                     }
                                 })
                                 .fail(function () {
