@@ -54,8 +54,6 @@ class PUM_Admin_Upgrades {
      * Initialize the actions needed to process upgrades.
      */
     public function init() {
-        update_site_option( 'pum_db_ver', 5 );
-
         // bail if this plugin data doesn't need updating
         if ( get_site_option( 'pum_db_ver' ) >= PUM::DB_VER ) {
             return;
@@ -256,7 +254,7 @@ class PUM_Admin_Upgrades {
                     'status'    => sprintf(
                             '<strong>%s</strong><br/>%s',
                             __( 'Upgrades have been completed successfully.', 'popup-maker' ),
-                            sprintf( 'You will automatically be redirected in %s seconds', '<span id="pum-countdown"></span>' )
+                            sprintf( 'You will automatically be redirected in %s seconds', '<span id="pum-countdown">5</span>' )
                     ),
                     'redirect'  => admin_url( 'index.php?page=pum-about' ),
                     'countdown' => 5000,
