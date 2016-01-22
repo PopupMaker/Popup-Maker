@@ -81,9 +81,9 @@ class PUM_Popup_Conditions_Metabox {
 
                                         <?php $checked = isset( $values['not_operand'] ) ? absint( $values['not_operand'] ) : false; ?>
                                         <div class="facet-col pum-field pum-condition-target select pum-chosen<?php echo $checked ? ' not-operand-checked' : ''; ?>">
-                                            <div class="pum-not-operand dashicons-before dashicons-warning" title="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
+                                            <button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
                                                 <input type="checkbox" name="popup_conditions[<?php echo $group_count; ?>][<?php echo $condition_count; ?>][not_operand]" value="1" <?php checked( $checked, 1 ); ?> />
-                                            </div>
+                                            </button>
                                             <?php PUM_Conditions::instance()->conditions_selectbox( array(
                                                 'id'      => "popup_conditions[$group_count][$condition_count][target]",
                                                 'name'    => "popup_conditions[$group_count][$condition_count][target]",
@@ -96,10 +96,7 @@ class PUM_Popup_Conditions_Metabox {
                                         </div>
 
                                         <div class="facet-actions">
-                                            <a href="javascript:void(0)" class="remove remove-facet"
-                                               title="<?php _e( 'Remove Condition', 'popup-maker' ); ?>" tabindex="-1">
-                                                <i class="dashicons dashicons-dismiss"></i>
-                                            </a>
+                                            <button type="button" class="remove remove-facet dashicons dashicons-dismiss no-button" aria-label="<?php _e( 'Remove Condition', 'popup-maker' ); ?>"></button>
                                         </div>
 
                                     </div><?php
@@ -107,11 +104,11 @@ class PUM_Popup_Conditions_Metabox {
                                 endforeach; ?>
                             </div>
                             <div class="add-or">
-                                <a href="javascript:void(0)" class="add add-facet" tabindex="-1">or</a>
+                                <button type="button" class="add add-facet no-button link-button" aria-label="<?php _ex( 'Add another OR condition', 'aria-label for add new OR condition button', 'popup-maker' ); ?>"><?php _e( 'or', 'popup-maker' ); ?></button>
                             </div>
                         </section>
                         <p class="and">
-                            <a href="javascript:void(0);" class="add-facet" tabindex="-1">and</a>
+                            <button type="button" class="add-facet no-button link-button" aria-label="<?php _ex( 'Add another AND condition group', 'aria-label for add new AND condition button', 'popup-maker' ); ?>"><?php _e( 'and', 'popup-maker' ); ?></button>
                         </p>
                     </div><?php
 
@@ -125,9 +122,9 @@ class PUM_Popup_Conditions_Metabox {
 				</p>
 				<label for="pum-first-condition"><?php _e( 'Choose a condition to get started.', 'popup-maker' ); ?></label>
                 <div class="pum-field select pum-chosen pum-condition-target">
-                    <div class="pum-not-operand dashicons-before dashicons-warning" title="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
+                    <button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
                         <input type="checkbox" id="pum-first-condition-operand" value="1" />
-                    </div>
+                    </button>
                     <?php PUM_Conditions::instance()->conditions_selectbox( array( 'id' => 'pum-first-condition' ) ); ?>
                 </div>
 			</div>
@@ -165,11 +162,11 @@ class PUM_Popup_Conditions_Metabox {
 						} %>
 					</div>
 					<div class="add-or">
-						<a href="javascript:void(0)" class="add add-facet" tabindex="-1">or</a>
+                        <button type="button" class="add add-facet no-button" aria-label="<?php _ex( 'Add another OR condition', 'aria-label for add new OR condition button', 'popup-maker' ); ?>"><?php _e( 'or', 'popup-maker' ); ?></button>
 					</div>
 				</section>
 				<p class="and">
-					<a href="javascript:void(0);" class="add-facet" tabindex="-1">and</a>
+                    <button type="button" class="add-facet no-button" aria-label="<?php _ex( 'Add another AND condition group', 'aria-label for add new AND condition button', 'popup-maker' ); ?>"><?php _e( 'and', 'popup-maker' ); ?></button>
 				</p>
 			</div>
 		</script>
@@ -192,9 +189,9 @@ class PUM_Popup_Conditions_Metabox {
 
 
 				<div class="facet-col pum-field pum-condition-target select pum-chosen <% if (typeof not_operand !== 'undefined' && pumChecked(not_operand, '1')) print('not-operand-checked'); %>">
-                    <div class="pum-not-operand dashicons-before dashicons-warning" title="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
+                    <button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
                         <input type="checkbox" name="popup_conditions[<%= group %>][<%= index %>][not_operand]" value="1" <% if (typeof not_operand !== 'undefined') print(pumChecked(not_operand, '1', true)); %>  />
-                    </div>
+                    </button>
 
                     <select class="target facet-select" id="popup_conditions[<%= group %>][<%= index %>][target]" name="popup_conditions[<%= group %>][<%= index %>][target]">
 						<option value=""><?php _e( 'Select a condition', 'popup-maker' ); ?></option>
@@ -218,10 +215,7 @@ class PUM_Popup_Conditions_Metabox {
 				</div>
 
 				<div class="facet-actions">
-					<a href="javascript:void(0)" class="remove remove-facet"
-					   title="<?php _e( 'Remove Condition', 'popup-maker' ); ?>" tabindex="-1">
-						<i class="dashicons dashicons-dismiss"></i>
-					</a>
+                    <button type="button" class="remove remove-facet dashicons dashicons-dismiss no-button" aria-label="<?php _e( 'Remove Condition', 'popup-maker' ); ?>"></button>
 				</div>
 			</div>
 		</script>

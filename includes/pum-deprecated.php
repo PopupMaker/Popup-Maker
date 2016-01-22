@@ -17,6 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
+
 /**
  * @see popmake_popup_meta_box_save
  *
@@ -24,6 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param $post
  */
 function pum_deprecated_save_popup_action( $post_id, $post ) {
+	_deprecated_function( 'popmake_save_popup', '1.4.0', 'pum_save_popup' );
 	/**
 	 * Calls old save action.
 	 *

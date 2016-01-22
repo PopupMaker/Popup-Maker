@@ -66,4 +66,4 @@ function popmake_post_submitbox_misc_actions() {
 	endif;
 }
 
-add_action( 'post_submitbox_start', 'popmake_post_submitbox_misc_actions', 100 );
+//add_action( 'post_submitbox_start', 'popmake_post_submitbox_misc_actions', 100 );

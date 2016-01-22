@@ -1,4 +1,4 @@
-<div id="pum-<?php pum_popup_ID(); ?>" class="<?php pum_popup_classes(); ?>" <?php pum_popup_data_attr(); ?>>
+<div id="pum-<?php pum_popup_ID(); ?>" class="<?php pum_popup_classes(); ?>" <?php pum_popup_data_attr(); ?> role="dialog" aria-hidden="true" aria-labelledby="pum_popup_title_<?php pum_popup_ID(); ?>">
 
 	<div id="popmake-<?php pum_popup_ID(); ?>" class="<?php pum_popup_classes( null, 'container' ); ?>">
 
@@ -12,7 +12,7 @@
 		 */
 		?>
 		<?php if ( pum_get_popup_title() != '' ) : ?>
-			<div class="<?php pum_popup_classes( null, 'title' ); ?>">
+            <div id="pum_popup_title_<?php pum_popup_ID(); ?>" class="<?php pum_popup_classes( null, 'title' ); ?>">
 				<?php pum_popup_title(); ?>
 			</div>
 		<?php endif; ?>
@@ -41,9 +41,9 @@
 		 */
 		?>
 		<?php if ( pum_show_close_button() ) : ?>
-		<span class="<?php pum_popup_classes( null, 'close' ); ?>">
+            <button type="button" class="<?php pum_popup_classes( null, 'close' ); ?>" aria-label="<?php _e( 'Close', 'popup-maker' ); ?>">
 			<?php pum_popup_close_text(); ?>
-		</span>
+            </button>
 		<?php endif; ?>
 
 	</div>

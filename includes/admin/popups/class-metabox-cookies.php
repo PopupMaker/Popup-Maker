@@ -38,7 +38,7 @@ class PUM_Popup_Cookies_Metabox {
 	public static function render_metabox() {
 		global $post; ?>
 		<div id="pum_popup_cookie_fields" class="popmake_meta_table_wrap">
-			<button type="button" class="button button-primary add-new"><?php _e( 'Add Cookie', 'popup-maker' ); ?></button>
+        <button type="button" class="button button-primary add-new no-button"><?php _e( 'Add New Cookie', 'popup-maker' ); ?></button>
 			<?php do_action( 'pum_popup_cookies_metabox_before', $post->ID ); ?>
 			<table id="pum_popup_cookies_list" class="form-table">
 				<thead>
@@ -140,7 +140,8 @@ class PUM_Popup_Cookies_Metabox {
 							<a href="#<?php esc_attr_e( $id . '_' . $tab ); ?>_settings"><?php esc_html_e( $args['title'] ); ?></a>
 						</li>
 					<?php } } ?>
-				</ul>
+                </ul>
+                *
 
 				<?php
 				/**
@@ -193,7 +194,7 @@ class PUM_Popup_Cookies_Metabox {
 		?>
 		<tr data-index="<?php echo $row['index']; ?>">
 			<td class="event-column">
-				<span class="edit"><?php echo $row['columns']['event']; ?></span>
+                <button type="button" class="edit no-button link-button" aria-label="<?php _e( 'Edit this cookie', 'popup-maker' ); ?>"><?php echo $row['columns']['event']; ?></button>
 				<input class="popup_cookies_field_event" type="hidden" name="popup_cookies[<?php echo $row['index']; ?>][event]" value="<?php echo $row['event']; ?>" />
 				<input class="popup_cookies_field_settings" type="hidden" name="popup_cookies[<?php echo $row['index']; ?>][settings]" value="<?php echo maybe_json_attr( $row['settings'], true ); ?>" />
 			</td>
@@ -204,8 +205,8 @@ class PUM_Popup_Cookies_Metabox {
 			</td>
 			<td class="settings-column"><?php echo $row['columns']['settings']; ?></td>
 			<td class="actions">
-				<i class="edit dashicons dashicons-edit"></i>
-				<i class="remove dashicons dashicons-no"></i>
+                <button type="button" class="edit dashicons dashicons-edit no-button" aria-label="<?php _e( 'Edit this cookie', 'popup-maker' ); ?>"></button>
+                <button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php _e( 'Delete` this cookie', 'popup-maker' ); ?>"></button>
 			</td>
 		</tr>
 		<?php

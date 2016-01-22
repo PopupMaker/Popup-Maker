@@ -139,7 +139,7 @@ function popmake_load_admin_scripts() {
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.js' : '.min.js';
 	if ( popmake_is_admin_popup_page() || popmake_is_admin_popup_theme_page() ) {
-		add_action( 'popmake_admin_footer', 'popmake_admin_popup_preview' );
+        //add_action( 'popmake_admin_footer', 'popmake_admin_popup_preview' );
 
 	}
 	if ( popmake_is_admin_page() ) {
