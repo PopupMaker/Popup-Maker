@@ -370,6 +370,10 @@ var PopMakeAdmin, PUM_Admin;
                     update_popup_preview_content();
                     return false;
                 });
+
+
+            jQuery('#title').prop('required', true);
+
             jQuery(document)
                 .on('keydown', '#popuptitle', function (event) {
                     var keyCode = event.keyCode || event.which;
@@ -394,18 +398,6 @@ var PopMakeAdmin, PUM_Admin;
                         event.preventDefault();
                         target = jQuery(this).attr('id') === 'popuptitle' ? '#title' : '#popuptitle';
                         jQuery(target).focus();
-                    }
-                })
-                .on('submit', '#post', function (event) {
-                    var title = jQuery('#title').val();
-                    if (title.length === 0 || title.replace(/\s/g, '').length === 0) {
-                        event.preventDefault();
-                        jQuery('div#notice').remove();
-                        jQuery("<div id='notice' class='error below-h2'><p>A name is required for all popups.</p></div>").insertAfter('h2');
-                        jQuery('#title').focus();
-                        jQuery('#publishing-action .spinner').removeClass('is-active');
-                        jQuery('#publish').removeClass('disabled');
-                        jQuery('#title').prop('required', 'required');
                     }
                 })
                 .on('click', '#popup_display_custom_height_auto', function () {
