@@ -84,6 +84,18 @@
     float: right
 }
 
+.no-button {
+    padding: 0;
+    cursor: pointer;
+    border: 0;
+    background: 0 0
+}
+
+.no-button.link-button {
+    text-decoration: underline;
+    color: #0073aa
+}
+
 #popup_trigger_add_type, #popup_cookie_add_event {
     font-size: 1.4em;
     display: block;
@@ -376,12 +388,12 @@
     box-shadow: 0 1px 0 #ccc
 }
 
-.pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap:last-child .and em, .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap:last-child .and a, .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or em, .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or a {
+.pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap:last-child .and em, .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap:last-child .and a, .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap:last-child .and button, .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or em, .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or a, .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or button {
     cursor: pointer;
     color: #0073aa
 }
 
-.pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap:last-child .and em::before, .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap:last-child .and a::before, .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or em::before, .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or a::before {
+.pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap:last-child .and em::before, .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap:last-child .and a::before, .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap:last-child .and button::before, .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or em::before, .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or a::before, .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or button::before {
     content: '+ '
 }
 
@@ -444,8 +456,10 @@
     top: 2px;
     left: 2px;
     width: 23px;
+    padding: 0;
     cursor: pointer;
     text-align: center;
+    border: 0;
     border-right: 1px solid #ddd;
     border-radius: 2px 0 0 2px;
     background: #f7f7f7
@@ -476,8 +490,11 @@
     right: 10px
 }
 
-.pum-popup-conditions .facet-builder .facet-actions a {
-    margin-left: 5px
+.pum-popup-conditions .facet-builder .facet-actions button {
+    margin-left: 5px;
+    padding: 0;
+    border: 0;
+    background: 0 0
 }
 
 .pum-popup-conditions .facet-builder .dashicons-plus-alt, .pum-popup-conditions .facet-builder .dashicons-dismiss {
@@ -519,7 +536,7 @@
     background: #f7f7f7
 }
 
-.pum-popup-conditions .facet-builder .and em, .pum-popup-conditions .facet-builder .and a, .pum-popup-conditions .facet-builder .and label, .pum-popup-conditions .facet-builder .add-or em, .pum-popup-conditions .facet-builder .add-or a, .pum-popup-conditions .facet-builder .add-or label {
+.pum-popup-conditions .facet-builder .and em, .pum-popup-conditions .facet-builder .and a, .pum-popup-conditions .facet-builder .and button, .pum-popup-conditions .facet-builder .and label, .pum-popup-conditions .facet-builder .add-or em, .pum-popup-conditions .facet-builder .add-or a, .pum-popup-conditions .facet-builder .add-or button, .pum-popup-conditions .facet-builder .add-or label {
     font-size: 1.1em;
     font-style: normal;
     position: relative;
@@ -529,6 +546,7 @@
     cursor: default;
     text-transform: uppercase;
     color: #484848;
+    border: 0;
     background: #fff;
     box-shadow: none
 }

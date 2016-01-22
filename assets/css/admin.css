@@ -96,6 +96,22 @@
     float: right;
 }
 
+.no-button
+{
+    padding: 0;
+
+    cursor: pointer; 
+
+    border: 0;
+    background: none;
+}
+.no-button.link-button
+{
+    text-decoration: underline; 
+
+    color: #0073aa;
+}
+
 #popup_trigger_add_type,
 #popup_cookie_add_event
 {
@@ -489,8 +505,10 @@ The bulk of this is to style jquery chosen to better resemble the default WP das
 }
 .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap:last-child .and em,
 .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap:last-child .and a,
+.pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap:last-child .and button,
 .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or em,
-.pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or a
+.pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or a,
+.pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or button
 {
     cursor: pointer; 
 
@@ -498,8 +516,10 @@ The bulk of this is to style jquery chosen to better resemble the default WP das
 }
 .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap:last-child .and em::before,
 .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap:last-child .and a::before,
+.pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap:last-child .and button::before,
 .pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or em::before,
-.pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or a::before
+.pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or a::before,
+.pum-popup-conditions .facet-builder .facet-groups .facet-group-wrap .add-or button::before
 {
     content: '+ ';
 }
@@ -574,10 +594,12 @@ The bulk of this is to style jquery chosen to better resemble the default WP das
     left: 2px;
 
     width: 23px;
+    padding: 0;
 
     cursor: pointer;
     text-align: center; 
 
+    border: 0;
     border-right: 1px solid #ddd;
     border-radius: 2px 0 0 2px;
     background: #f7f7f7;
@@ -609,9 +631,13 @@ The bulk of this is to style jquery chosen to better resemble the default WP das
     top: 17px; 
     right: 10px;
 }
-.pum-popup-conditions .facet-builder .facet-actions a
+.pum-popup-conditions .facet-builder .facet-actions button
 {
-    margin-left: 5px;
+    margin-left: 5px; 
+    padding: 0;
+
+    border: 0;
+    background: none;
 }
 .pum-popup-conditions .facet-builder .dashicons-plus-alt,
 .pum-popup-conditions .facet-builder .dashicons-dismiss
@@ -665,9 +691,11 @@ The bulk of this is to style jquery chosen to better resemble the default WP das
 }
 .pum-popup-conditions .facet-builder .and em,
 .pum-popup-conditions .facet-builder .and a,
+.pum-popup-conditions .facet-builder .and button,
 .pum-popup-conditions .facet-builder .and label,
 .pum-popup-conditions .facet-builder .add-or em,
 .pum-popup-conditions .facet-builder .add-or a,
+.pum-popup-conditions .facet-builder .add-or button,
 .pum-popup-conditions .facet-builder .add-or label
 {
     font-size: 1.1em;
@@ -679,10 +707,11 @@ The bulk of this is to style jquery chosen to better resemble the default WP das
     margin: 0 10px;
     padding: 0 10px;
 
-    cursor: default; 
+    cursor: default;
     text-transform: uppercase;
 
     color: #484848;
+    border: 0; 
     background: #fff;
     box-shadow: none;
 }

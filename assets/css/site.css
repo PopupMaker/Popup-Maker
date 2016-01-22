@@ -16,7 +16,6 @@
   * Use border-box for all popup content. Providing more precise sizing.
   */
 }
-
 .pum-overlay.pum-preview,
 .pum-overlay.pum-form-submission-detected {
     display: block;
