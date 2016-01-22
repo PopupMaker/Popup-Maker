@@ -141,6 +141,18 @@
 
   }
 
+  &.pum-overlay-disabled {
+    visibility: hidden;
+
+    &::-webkit-scrollbar {
+      display: block;
+    }
+
+    .pum-container {
+      visibility: visible;
+    }
+  }
+
 }
 
 html.pum-open {

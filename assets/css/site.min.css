@@ -115,6 +115,18 @@
     text-decoration: none
 }
 
+.pum-overlay.pum-overlay-disabled {
+    visibility: hidden
+}
+
+.pum-overlay.pum-overlay-disabled::-webkit-scrollbar {
+    display: block
+}
+
+.pum-overlay.pum-overlay-disabled .pum-container {
+    visibility: visible
+}
+
 html.pum-open {
     overflow: hidden
 }

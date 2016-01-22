@@ -77,7 +77,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				self::$instance->includes();
 				self::$instance->load_textdomain();
 
-				register_activation_hook( POPMAKE, 'popmake_install' );
+
 			}
 
 			return self::$instance;
@@ -148,7 +148,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 
 			if ( ! defined( 'POPMAKE_DB_VERSION' ) ) {
-				define( 'POPMAKE_DB_VERSION', '1.0' );
+				define( 'POPMAKE_DB_VERSION', '5' );
 			}
 
 			if ( ! defined( 'POPMAKE_API_URL' ) ) {
@@ -179,14 +179,18 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			/**
 			 * v1.4 Additions
 			 */
+			require_once POPMAKE_DIR . 'includes/class-pum.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-post.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-popup.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-popup-query.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-fields.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-previews.php';
 
+			// Functions
 			require_once POPMAKE_DIR . 'includes/pum-popup-functions.php';
 			require_once POPMAKE_DIR . 'includes/pum-template-functions.php';
 			require_once POPMAKE_DIR . 'includes/pum-general-functions.php';
+			require_once POPMAKE_DIR . 'includes/pum-misc-functions.php';
 			require_once POPMAKE_DIR . 'includes/pum-template-hooks.php';
 
 			// Triggers
@@ -212,6 +216,11 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/pum-condition-functions.php';
 			if ( is_admin() ) {
 				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-conditions.php';
+			}
+
+			// Upgrades
+			if ( is_admin() ) {
+				require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-upgrades.php';
 			}
 
 			require_once POPMAKE_DIR . 'includes/pum-ajax-functions.php';
@@ -280,7 +289,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/metabox-share.php';
 				require_once POPMAKE_DIR . 'includes/admin/tracking.php';
 
-				require_once POPMAKE_DIR . 'includes/admin/upgrades/v1_3.php';
 			}
 
 			if ( class_exists( 'WooCommerce' ) ) {
@@ -327,33 +335,32 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 		}
 
-		/**
-		 *
-		 */
-		public function process_upgrades( $network_wide = false ) {
-			if ( ! is_admin() ) {
-				return;
-			}
-
-			// Add Upgraded From Option
-			$current_version = get_option( 'popmake_version' );
-			if ( $current_version ) {
-				update_option( 'popmake_version_upgraded_from', $current_version );
-			}
-
-			// Install Built In Themes (Only those never installed).
-			pum_install_built_in_themes();
-
-			if ( $current_version != POPMAKE_VERSION ) {
-				do_action( "popmake_process_upgrade", POPMAKE_VERSION, $current_version );
-			}
-
-			update_option( 'popmake_version', POPMAKE_VERSION );
-		}
 
 	}
 
 endif; // End if class_exists check
+
+
+/**
+ * The code that runs during plugin activation.
+ * This action is documented in includes/class-pum-activator.php
+ */
+function activate_pum() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-pum-activator.php';
+	PUM_Activator::activate();
+}
+
+/**
+ * The code that runs during plugin deactivation.
+ * This action is documented in includes/class-pum-deactivator.php
+ */
+function deactivate_pum() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-pum-deactivator.php';
+	PUM_Deactivator::deactivate();
+}
+
+register_activation_hook( __FILE__, 'activate_pum' );
+register_deactivation_hook( __FILE__, 'deactivate_pum' );
 
 
 /**
@@ -381,8 +388,9 @@ function popmake_initialize() {
 
 	// Get Popup Maker Running
 	PopMake();
+	do_action( 'pum_initialize' );
 	do_action( 'popmake_initialize' );
-
-	PopMake()->process_upgrades();
 }
+
+// TODO test and see if the 0 priority is needed.
 add_action( 'plugins_loaded', 'popmake_initialize', 0 );

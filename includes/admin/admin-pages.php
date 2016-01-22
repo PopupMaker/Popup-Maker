@@ -69,7 +69,7 @@ function popmake_admin_submenu_pages() {
 		__( 'Welcome to Popup Maker', 'popup-maker' ),
 		__( 'Welcome to Popup Maker', 'popup-maker' ),
 		'manage_options',
-		'popmake-about',
+		'pum-about',
 		'popmake_about_page'
 	);
 
@@ -78,7 +78,7 @@ function popmake_admin_submenu_pages() {
 		__( 'Popup Maker Changelog', 'popup-maker' ),
 		__( 'Popup Maker Changelog', 'popup-maker' ),
 		'manage_options',
-		'popmake-changelog',
+		'pum-changelog',
 		'popmake_changelog_page'
 	);
 
@@ -87,7 +87,7 @@ function popmake_admin_submenu_pages() {
 		__( 'Getting started with Popup Maker', 'popup-maker' ),
 		__( 'Getting started with Popup Maker', 'popup-maker' ),
 		'manage_options',
-		'popmake-getting-started',
+		'pum-getting-started',
 		'popmake_getting_started_page'
 	);
 
@@ -96,7 +96,7 @@ function popmake_admin_submenu_pages() {
 		__( 'The people that build Popup Maker', 'popup-maker' ),
 		__( 'The people that build Popup Maker', 'popup-maker' ),
 		'manage_options',
-		'popmake-credits',
+		'pum-credits',
 		'popmake_credits_page'
 	);
 
@@ -106,10 +106,10 @@ add_action( 'admin_menu', 'popmake_admin_submenu_pages', 999 );
 
 
 function popmake_remove_admin_subpages() {
-	remove_submenu_page( 'index.php', 'popmake-about' );
-	remove_submenu_page( 'index.php', 'popmake-changelog' );
-	remove_submenu_page( 'index.php', 'popmake-getting-started' );
-	remove_submenu_page( 'index.php', 'popmake-credits' );
+	remove_submenu_page( 'index.php', 'pum-about' );
+	remove_submenu_page( 'index.php', 'pum-changelog' );
+	remove_submenu_page( 'index.php', 'pum-getting-started' );
+	remove_submenu_page( 'index.php', 'pum-credits' );
 }
 
 add_action( 'admin_head', 'popmake_remove_admin_subpages' );
@@ -136,10 +136,10 @@ function popmake_is_admin_page() {
 	}
 
 	if ( 'index.php' == $pagenow && isset( $_GET['page'] ) && in_array( $_GET['page'], array(
-			'popmake-about',
-			'popmake-changelog',
-			'popmake-getting-started',
-			'popmake-credits'
+			'pum-about',
+			'pum-changelog',
+			'pum-getting-started',
+			'pum-credits',
 		) )
 	) {
 		return true;

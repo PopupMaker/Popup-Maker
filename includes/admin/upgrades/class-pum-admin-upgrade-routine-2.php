@@ -1,31 +1,49 @@
 <?php
+/**
+ * Upgrade Routine 2
+ *
+ * @package     PUM
+ * @subpackage  Admin/Upgrades
+ * @copyright   Copyright (c) 2016, Daniel Iser
+ * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
+ * @since       1.4.0
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class Popmake_Upgrade_v1_3 {
+if ( ! class_exists( 'PUM_Admin_Upgrade_Routine' ) ) {
+	require_once POPMAKE_DIR . "includes/admin/upgrades/class-pum-admin-upgrade-routine.php";
+}
 
-	public function __construct() {
-		add_action( 'popmake_process_upgrade', array( $this, 'process' ), 10, 2 );
+/**
+ * Class PUM_Admin_Upgrade_Routine_2
+ */
+final class PUM_Admin_Upgrade_Routine_2 extends PUM_Admin_Upgrade_Routine {
+
+	public static function description() {
+		return __( 'Update your popups & themes settings.', 'popup-maker' );
 	}
 
-	public function process( $new, $old ) {
-
-		global $wpdb;
-
-		// Return if upgrade is not needed.
-		if ( ! version_compare( $old, '1.2.2', '<=' ) ) {
-			return;
+	public static function run() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( __( 'You do not have permission to do upgrades', 'popup-maker' ), __( 'Error', 'popup-maker' ), array( 'response' => 403 ) );
 		}
 
-		$this->process_popups();
-		$this->process_popup_themes();
+		ignore_user_abort( true );
 
+		if ( ! pum_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+			@set_time_limit( 0 );
+		}
+
+		static::process_popups();
+		static::process_popup_themes();
+		static::cleanup_old_data();
 	}
 
-	public function process_popups() {
+	public static function process_popups() {
 
 		$popups = get_posts( array(
 			'post_type'      => 'popup',
@@ -38,7 +56,7 @@ class Popmake_Upgrade_v1_3 {
 			'close'       => popmake_popup_close_defaults(),
 			'click_open'  => popmake_popup_click_open_defaults(),
 			'auto_open'   => popmake_popup_auto_open_defaults(),
-			'admin_debug' => popmake_popup_admin_debug_defaults()
+			'admin_debug' => popmake_popup_admin_debug_defaults(),
 		);
 
 		foreach ( $popups as $popup ) {
@@ -52,7 +70,7 @@ class Popmake_Upgrade_v1_3 {
 
 	}
 
-	public function process_popup_themes() {
+	public static function process_popup_themes() {
 
 		$themes = get_posts( array(
 			'post_type'      => 'popup_theme',
@@ -79,7 +97,7 @@ class Popmake_Upgrade_v1_3 {
 
 	}
 
-	public function cleanup_old_data() {
+	public static function cleanup_old_data() {
 		global $wpdb;
 
 		$popup_groups = array(
@@ -87,7 +105,7 @@ class Popmake_Upgrade_v1_3 {
 			'close',
 			'click_open',
 			'auto_open',
-			'admin_debug'
+			'admin_debug',
 		);
 
 		$popup_fields = array();
@@ -124,6 +142,5 @@ class Popmake_Upgrade_v1_3 {
 		$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key IN('$theme_fields');" );
 
 	}
-}
 
-new Popmake_Upgrade_v1_3();
+}

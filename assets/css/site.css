@@ -16,7 +16,6 @@
   * Use border-box for all popup content. Providing more precise sizing.
   */
 }
-
 .pum-overlay.pum-preview,
 .pum-overlay.pum-form-submission-detected {
     display: block;
@@ -137,6 +136,18 @@
     cursor: pointer;
     text-align: center;
     text-decoration: none;
+}
+
+.pum-overlay.pum-overlay-disabled {
+    visibility: hidden;
+}
+
+.pum-overlay.pum-overlay-disabled::-webkit-scrollbar {
+    display: block;
+}
+
+.pum-overlay.pum-overlay-disabled .pum-container {
+    visibility: visible;
 }
 
 html.pum-open

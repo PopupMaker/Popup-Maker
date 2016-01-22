@@ -8,8 +8,7 @@ var PUMChosenFields;
 
     PUMChosenFields = {
         init: function () {
-            $('.pum-chosen select')
-                .filter(':not(.initialized)').each(function () {
+            $('.pum-chosen select').filter(':not(.initialized)').each(function () {
                 var $this = $(this),
                     current = $this.data('current'),
                     object_type = $this.data('objecttype'),
@@ -23,30 +22,33 @@ var PUMChosenFields;
                         placeholder_text_multiple: $this.attr('title')
                     });
 
-                $.ajax({
-                    type: 'GET',
-                    url: ajaxurl,
-                    data: {
-                        action: "pum_object_search",
-                        object_type: object_type,
-                        object_key: object_key,
-                        include: current,
-                        current_id: pum_admin.post_id
-                    },
-                    async: true,
-                    dataType: "json",
-                    success: function (data) {
-                        $.each(data, function (key, item) {
-                            // Add any option that doesn't already exist
-                            if (!$this.find('option[value="' + item.id + '"]').length) {
-                                $this.prepend('<option value="' + item.id + '">' + item.name + '</option>');
-                            }
-                        });
-                        // Update the options
-                        $this.val(current);
-                        $this.trigger('chosen:updated');
-                    }
-                });
+                if (current && object_type && object_key) {
+                    $.ajax({
+                        type: 'GET',
+                        url: ajaxurl,
+                        data: {
+                            action: "pum_object_search",
+                            object_type: object_type,
+                            object_key: object_key,
+                            include: current,
+                            current_id: pum_admin.post_id
+                        },
+                        async: true,
+                        dataType: "json",
+                        success: function (data) {
+                            $.each(data, function (key, item) {
+                                // Add any option that doesn't already exist
+                                if (!$this.find('option[value="' + item.id + '"]').length) {
+                                    $this.prepend('<option value="' + item.id + '">' + item.name + '</option>');
+                                }
+                            });
+                            // Update the options
+                            $this.val(current);
+                            $this.trigger('chosen:updated');
+                        }
+                    });
+                }
+
             });
         }
     };
@@ -188,7 +190,7 @@ var PUMConditions;
                         this.name = this.name.replace(/popup_conditions\[\d*?\]\[\d*?\]/, replace_with);
                         this.id = this.name;
                     });
-                });
+                    });
             });
         }
     };
@@ -1502,6 +1504,15 @@ var PopMakeAdmin, PUM_Admin;
             jQuery('#popuptitlediv').insertAfter('#titlediv');
             jQuery('[name^="menu-item"]').removeAttr('name');
 
+            jQuery('#trigger-popmake-preview')
+                .on('click', function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    update_popup_preview_title();
+                    update_popup_preview_data();
+                    update_popup_preview_content();
+                    return false;
+                });
             jQuery(document)
                 .on('keydown', '#popuptitle', function (event) {
                     var keyCode = event.keyCode || event.which;
@@ -1755,18 +1766,18 @@ var PopMakeAdmin, PUM_Admin;
 
             jQuery('tr.topleft, tr.topright, tr.bottomleft, tr.bottomright', table).hide();
             switch (jQuery('#popup_theme_close_location').val()) {
-                case "topleft":
-                    jQuery('tr.topleft', table).show();
-                    break;
-                case "topright":
-                    jQuery('tr.topright', table).show();
-                    break;
-                case "bottomleft":
-                    jQuery('tr.bottomleft', table).show();
-                    break;
-                case "bottomright":
-                    jQuery('tr.bottomright', table).show();
-                    break;
+            case "topleft":
+                jQuery('tr.topleft', table).show();
+                break;
+            case "topright":
+                jQuery('tr.topright', table).show();
+                break;
+            case "bottomleft":
+                jQuery('tr.bottomleft', table).show();
+                break;
+            case "bottomright":
+                jQuery('tr.bottomright', table).show();
+                break;
             }
         },
         retheme_popup: function (theme) {
@@ -1875,30 +1886,30 @@ var PopMakeAdmin, PUM_Admin;
                 textShadow: theme.close_textshadow_horizontal + 'px ' + theme.close_textshadow_vertical + 'px ' + theme.close_textshadow_blur + 'px ' + PUMUtils.convert_hex(theme.close_textshadow_color, theme.close_textshadow_opacity)
             });
             switch (theme.close_location) {
-                case "topleft":
-                    $close.css({
-                        top: theme.close_position_top + 'px',
-                        left: theme.close_position_left + 'px'
-                    });
-                    break;
-                case "topright":
-                    $close.css({
-                        top: theme.close_position_top + 'px',
-                        right: theme.close_position_right + 'px'
-                    });
-                    break;
-                case "bottomleft":
-                    $close.css({
-                        bottom: theme.close_position_bottom + 'px',
-                        left: theme.close_position_left + 'px'
-                    });
-                    break;
-                case "bottomright":
-                    $close.css({
-                        bottom: theme.close_position_bottom + 'px',
-                        right: theme.close_position_right + 'px'
-                    });
-                    break;
+            case "topleft":
+                $close.css({
+                    top: theme.close_position_top + 'px',
+                    left: theme.close_position_left + 'px'
+                });
+                break;
+            case "topright":
+                $close.css({
+                    top: theme.close_position_top + 'px',
+                    right: theme.close_position_right + 'px'
+                });
+                break;
+            case "bottomleft":
+                $close.css({
+                    bottom: theme.close_position_bottom + 'px',
+                    left: theme.close_position_left + 'px'
+                });
+                break;
+            case "bottomright":
+                $close.css({
+                    bottom: theme.close_position_bottom + 'px',
+                    right: theme.close_position_right + 'px'
+                });
+                break;
             }
             jQuery(document).trigger('popmake-admin-retheme', [theme]);
         }

@@ -66,9 +66,15 @@ var PUM;
                     $popup.popmake('getContent').append($(popmake_powered_by));
                 }
 
+
+                // Added popmake settings to the container for temporary backward compatibility with extensions.
+                // TODO Once extensions updated remove this.
+                $popup.find('.pum-container').data('popmake', settings);
+
                 $popup
                     .data('popmake', settings)
                     .trigger('pumInit');
+
                 return this;
             });
         },
@@ -725,18 +731,14 @@ var PUM_Accessibility;
         var settings = PUM.getPopup(this).popmake('getSettings');
 
         if (settings.meta.display.overlay_disabled) {
-            // Fire user passed callback.
-            if (callback !== undefined) {
-                callback();
-                // TODO Test this new method. Then remove the above.
-                //callback.apply(this);
-            }
-        } else {
-            if ($.fn.popmake.overlay_animations[style]) {
-                return $.fn.popmake.overlay_animations[style].apply(this, [duration, callback]);
-            }
-            $.error('Animation style ' + $.fn.popmake.overlay_animations + ' does not exist.');
+            return $.fn.popmake.overlay_animations.none.apply(this, [duration, callback]);
         }
+
+        if ($.fn.popmake.overlay_animations[style]) {
+            return $.fn.popmake.overlay_animations[style].apply(this, [duration, callback]);
+        }
+        $.error('Animation style ' + $.fn.popmake.overlay_animations + ' does not exist.');
+
         return this;
     };
 
@@ -1170,6 +1172,35 @@ var pm_cookie, pm_remove_cookie;
                 esc_press: 0,
                 f4_press: 0
             }
+        },
+        // TODO Remove these once extensions have all been updated.
+        container: {
+            active_class: 'active',
+            attr: {
+                class: "popmake"
+            }
+        },
+        title: {
+            attr: {
+                class: "popmake-title"
+            }
+        },
+        content: {
+            attr: {
+                class: "popmake-content"
+            }
+        },
+        close: {
+            close_speed: 0,
+            attr: {
+                class: "popmake-close"
+            }
+        },
+        overlay: {
+            attr: {
+                id: "popmake-overlay",
+                class: "popmake-overlay"
+            }
         }
     };
 
@@ -1243,7 +1274,7 @@ var pm_cookie, pm_remove_cookie;
         click_open: function (settings) {
             var $popup = PUM.getPopup(this),
                 popup_settings = $popup.popmake('getSettings'),
-                trigger_selector = '.popmake-' + popup_settings.id + ', .popmake-' + popup_settings.slug;
+                trigger_selector = '.popmake-' + popup_settings.id + ', .popmake-' + decodeURIComponent(popup_settings.slug);
 
             if (settings.extra_selectors !== '') {
                 trigger_selector += ', ' + settings.extra_selectors;

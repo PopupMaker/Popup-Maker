@@ -90,6 +90,15 @@ function popmake_the_popup_classes( $popup_id = null ) {
 	esc_attr_e( popmake_get_the_popup_classes( $popup_id ) );
 }
 
+
+/**
+ * @deprecated 1.4.0 Built into the PUM_Popup class instead.
+ *
+ * @param array $classes
+ * @param int   $popup_id
+ *
+ * @return array
+ */
 function popmake_add_popup_size_classes( $classes, $popup_id ) {
 	$popup_size = popmake_get_popup_display( $popup_id, 'size' );
 	if ( in_array( $popup_size, array( 'nano', 'micro', 'tiny', 'small', 'medium', 'normal', 'large', 'xlarge' ) ) ) {
@@ -105,8 +114,6 @@ function popmake_add_popup_size_classes( $classes, $popup_id ) {
 
 	return $classes;
 }
-
-//add_filter( 'popmake_get_the_popup_classes', 'popmake_add_popup_size_classes', 5, 2 );
 
 /**
  * @deprecated 1.4.0 Use the PUM_Popup class instead.
