@@ -21,8 +21,19 @@ class PUM_Activator {
 	 */
 	public static function activate( $network_wide = false ) {
 
-		update_option( 'pum_ver', POPMAKE_VERSION );
-		add_option( 'pum_db_ver', POPMAKE_DB_VERSION );
+		$deprecated_ver = get_site_option( 'popmake_version', false );
+		$current_ver    = get_site_option( 'pum_ver', $deprecated_ver );
+
+		// Save Upgraded From option
+		if ( $current_ver ) {
+			update_site_option( 'pum_ver_upgraded_from', $current_ver );
+		}
+
+		update_site_option( 'pum_ver', PUM::VER );
+
+		add_site_option( 'pum_db_ver', PUM::DB_VER );
+
+		pum_install_built_in_themes();
 
 		flush_rewrite_rules();
 	}
