@@ -33,14 +33,11 @@ var PUMTriggers;
             $('#pum_popup_triggers_list tbody tr').each(function () {
                 var $row = $(this),
                     type = $row.find('.popup_triggers_field_type').val(),
-                    values = JSON.parse($row.find('.popup_triggers_field_settings:first').val());
+                    values = JSON.parse($row.find('.popup_triggers_field_settings:first').val()),
+                    cookie_text = PUMTriggers.cookie_column_value(values.cookie.name);
 
                 $row.find('td.settings-column').html(PUMTriggers.getSettingsDesc(type, values));
-                if (typeof values.cookie.name === 'array') {
-                    $row.find('td.cookie-column code').text(values.cookie.name.join(', '));
-                } else {
-                    $row.find('td.cookie-column code').text(values.cookie.name);
-                }
+                $row.find('td.cookie-column code').text(cookie_text);
             });
         },
         initEditForm: function (data) {
@@ -58,6 +55,16 @@ var PUMTriggers;
             $cookie.val(trigger_settings.cookie.name);
 
             $cookie.trigger("chosen:updated");
+        },
+        cookie_column_value: function (cookie_name) {
+            var cookie_text = I10n.no_cookie;
+
+            if (typeof cookie_name === 'array') {
+                cookie_text = cookie_name.join(', ');
+            } else if (cookie_name !== null) {
+                cookie_text = cookie_name;
+            }
+            return cookie_text;
         }
     };
 

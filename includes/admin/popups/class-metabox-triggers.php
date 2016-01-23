@@ -98,9 +98,9 @@ class PUM_Popup_Triggers_Metabox {
 				'index' => '<%= index %>',
 				'type' => '<%= type %>',
 				'columns' => array(
-					'type' => '<%= PUMTriggers.getLabel(type) %>',
-					'cookie' => "<% if (trigger_settings.cookie.name !== undefined) { print(trigger_settings.cookie.name); } %>",
-					'settings' => '<%= PUMTriggers.getSettingsDesc(type, trigger_settings) %>',
+                        'type'     => '<%= PUMTriggers.getLabel(type) %>',
+                        'cookie'   => "<%= PUMTriggers.cookie_column_value(trigger_settings.cookie.name) %>",
+                        'settings' => '<%= PUMTriggers.getSettingsDesc(type, trigger_settings) %>',
 				),
 				'settings' => '<%- JSON.stringify(trigger_settings) %>',
 			) ); ?>
@@ -203,7 +203,6 @@ class PUM_Popup_Triggers_Metabox {
                     } else {
                         echo $row['columns']['cookie'];
                     } ?>
-					<i class="copy-name dashicons dashicons-clipboard"></i>
 				</code>
 			</td>
 			<td class="settings-column"><?php echo $row['columns']['settings']; ?></td>

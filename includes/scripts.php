@@ -160,14 +160,15 @@ function popmake_load_admin_scripts() {
 					'cookies' => PUM_Cookies::instance()->get_defaults(),
 			),
 			'I10n'     => array(
-				'add' => __( 'Add', 'popup-maker' ),
-		        'save' => __( 'Save', 'popup-maker' ),
-				'confirm_delete_trigger' => __( "Are you sure you want to delete this trigger?", 'popup-maker' ),
-				'confirm_delete_cookie' => __( "Are you sure you want to delete this cookie?", 'popup-maker' ),
-			    'labels' => array(
+                    'add'                    => __( 'Add', 'popup-maker' ),
+                    'save'                   => __( 'Save', 'popup-maker' ),
+                    'confirm_delete_trigger' => __( "Are you sure you want to delete this trigger?", 'popup-maker' ),
+                    'confirm_delete_cookie'  => __( "Are you sure you want to delete this cookie?", 'popup-maker' ),
+                    'labels'                 => array(
 				    'triggers' => PUM_Triggers::instance()->get_labels(),
 				    'cookies' => PUM_Cookies::instance()->get_labels(),
 			    ),
+                    'no_cookie'              => __( 'None', 'popup-maker' ),
 		    )
 		) );
 	}
