@@ -3,7 +3,7 @@
  * Version 1.4.0
  */
 var PUM_Accessibility;
-(function ($, undefined) {
+(function ($, document, undefined) {
     "use strict";
     var $top_level_elements,
         focusableElementsString = "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]",
@@ -141,4 +141,4 @@ var PUM_Accessibility;
         });
 
 
-}(jQuery));
+}(jQuery, document));

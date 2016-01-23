@@ -5,7 +5,7 @@
  * todo Set each function to be aware of the element called. If old selectors used fallback to parent for $this.
  */
 var PUM;
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     PUM = {
@@ -557,4 +557,4 @@ var PUM;
         }
     };
 
-}(jQuery));
+}(jQuery, document));

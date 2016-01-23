@@ -2,7 +2,7 @@
  * Initialize Popup Maker.
  * Version 1.4.0
  */
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
     // Defines the current version.
     $.fn.popmake.version = 1.4;

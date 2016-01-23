@@ -1,5 +1,5 @@
 var PUMMarketing;
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     PUMMarketing = {
@@ -9,4 +9,4 @@ var PUMMarketing;
     };
 
     $(document).ready(PUMMarketing.init);
-}(jQuery));
+}(jQuery, document));

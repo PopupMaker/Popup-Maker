@@ -2,7 +2,7 @@
  * Defines the core $.popmake.utilites methods.
  * Version 1.4.0
  */
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     $.fn.popmake.utilities = {
@@ -281,4 +281,4 @@
     // Deprecated fix. utilies was renamed because of typo.
     $.fn.popmake.utilies = $.fn.popmake.utilities;
 
-}(jQuery));
+}(jQuery, document));

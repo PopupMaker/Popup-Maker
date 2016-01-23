@@ -1,5 +1,5 @@
 var PUMChosenFields;
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     // Variables for setting up the typing timer
@@ -119,4 +119,4 @@ var PUMChosenFields;
             );
         });
 
-}(jQuery));
+}(jQuery, document));

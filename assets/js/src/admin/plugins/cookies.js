@@ -1,5 +1,5 @@
 var PUMCookies;
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     var I10n = pum_admin.I10n,
@@ -164,4 +164,4 @@ var PUMCookies;
         })
         .ready(PUMCookies.refreshDescriptions);
 
-}(jQuery));
+}(jQuery, document));

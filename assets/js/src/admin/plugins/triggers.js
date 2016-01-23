@@ -1,5 +1,5 @@
 var PUMTriggers;
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     var I10n = pum_admin.I10n,
@@ -163,4 +163,4 @@ var PUMTriggers;
         })
         .ready(PUMTriggers.refreshDescriptions);
 
-}(jQuery));
+}(jQuery, document));

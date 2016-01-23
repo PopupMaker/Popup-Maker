@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     $.fn.popmake.methods.addCookie = function (type) {
@@ -57,4 +57,4 @@
             }
         });
 
-}(jQuery));
+}(jQuery, document));

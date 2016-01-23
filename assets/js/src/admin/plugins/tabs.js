@@ -1,5 +1,5 @@
 var PUMTabs;
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
     PUMTabs = {
         init: function () {
@@ -28,4 +28,4 @@ var PUMTabs;
 
             e.preventDefault();
         });
-}(jQuery));
+}(jQuery, document));

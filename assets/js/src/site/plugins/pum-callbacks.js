@@ -2,7 +2,7 @@
  * Defines the core $.popmake callbacks.
  * Version 1.4.0
  */
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     $.fn.popmake.callbacks = {
@@ -11,4 +11,4 @@
         }
     };
 
-}(jQuery));
+}(jQuery, document));

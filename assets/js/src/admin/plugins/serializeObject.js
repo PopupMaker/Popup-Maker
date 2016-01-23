@@ -6,7 +6,7 @@
  * Artem Vitiuk (@avitiuk)
  */
 
-(function () {
+(function ($, document, undefined) {
 
     var root = this,
         $ = root.jQuery || root.Zepto || root.ender,
@@ -89,4 +89,4 @@
         return values;
     };
 
-}).call(this);
+}(jQuery, document));

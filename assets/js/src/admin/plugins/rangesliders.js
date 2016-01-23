@@ -1,5 +1,5 @@
 var PUMRangeSLiders;
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
     PUMRangeSLiders = {
         init: function () {
@@ -123,4 +123,4 @@ var PUMRangeSLiders;
             $slider.val(val);
         });
 
-}(jQuery));
+}(jQuery, document));

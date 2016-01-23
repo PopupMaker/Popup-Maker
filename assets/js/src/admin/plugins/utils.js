@@ -1,5 +1,5 @@
 var PUMUtils;
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
     PUMUtils = {
         convert_meta_to_object: function (data) {
@@ -83,4 +83,4 @@ var PUMUtils;
     };
 
 
-}(jQuery));
+}(jQuery, document));

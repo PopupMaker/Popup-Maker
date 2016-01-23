@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     $.fn.popmake.last_open_trigger = null;
@@ -126,4 +126,4 @@
             }
         });
 
-}(jQuery));
+}(jQuery, document));

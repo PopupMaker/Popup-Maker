@@ -2,7 +2,7 @@
  * Defines the core $.popmake animations.
  * Version 1.4.0
  */
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     $.fn.popmake.methods.animate_overlay = function (style, duration, callback) {
@@ -150,4 +150,4 @@
         }
     };
 
-}(jQuery));
+}(jQuery, document));

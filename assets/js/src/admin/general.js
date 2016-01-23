@@ -3,7 +3,7 @@
  */
 
 var PopMakeAdmin, PUM_Admin;
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     var $document = $(document),
@@ -23,16 +23,6 @@ var PopMakeAdmin, PUM_Admin;
             if (jQuery('body.post-type-popup_theme form#post').length) {
                 PopMakeAdmin.initialize_theme_page();
             }
-
-
-            jQuery(document).keydown(function (event) {
-                if ((event.which === '115' || event.which === '83') && (event.ctrlKey || event.metaKey)) {
-                    event.preventDefault();
-                    jQuery('body.post-type-popup form#post, body.post-type-popup_theme form#post').submit();
-                    return false;
-                }
-                return true;
-            });
         },
 
         attachTabsPanelListeners: function () {
@@ -768,4 +758,4 @@ var PopMakeAdmin, PUM_Admin;
         PopMakeAdmin.init();
         $document.trigger('pum_init');
     });
-}(jQuery));
+}(jQuery, document));

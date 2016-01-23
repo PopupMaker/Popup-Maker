@@ -5,7 +5,7 @@
  * Defines the pm_cookie & pm_remove_cookie global functions.
  */
 var pm_cookie, pm_remove_cookie;
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     $.fn.popmake.cookie = {
@@ -105,4 +105,4 @@ var pm_cookie, pm_remove_cookie;
     pm_cookie = $.pm_cookie = $.fn.popmake.cookie.process;
     pm_remove_cookie = $.pm_remove_cookie = $.fn.popmake.cookie.remove;
 
-}(jQuery));
+}(jQuery, document));

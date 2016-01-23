@@ -1,5 +1,5 @@
 var PUMColorPickers;
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
     PUMColorPickers = {
         init: function () {
@@ -27,4 +27,4 @@ var PUMColorPickers;
     };
 
     $(document).on('pum_init', PUMColorPickers.init);
-}(jQuery));
+}(jQuery, document));

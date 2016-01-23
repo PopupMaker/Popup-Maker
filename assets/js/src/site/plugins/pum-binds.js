@@ -2,7 +2,7 @@
  * Defines the core $.popmake binds.
  * Version 1.4.0
  */
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     $(document)
@@ -78,4 +78,4 @@
         });
 
 
-}(jQuery));
+}(jQuery, document));

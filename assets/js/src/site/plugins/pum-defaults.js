@@ -2,7 +2,7 @@
  * Defines the core $.popmake defaults.
  * Version 1.4.0
  */
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     $.fn.popmake.defaults = {
@@ -67,4 +67,4 @@
         }
     };
 
-}(jQuery));
+}(jQuery, document));
