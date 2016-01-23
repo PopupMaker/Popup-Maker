@@ -55,6 +55,7 @@ function popmake_admin_submenu_pages() {
 		'popmake_extensions_page'
 	);
 
+	/*
 	$popmake_help_page = add_submenu_page(
 		'edit.php?post_type=popup',
 		apply_filters( 'popmake_admin_submenu_help_page_title', __( 'Help', 'popup-maker' ) ),
@@ -63,6 +64,7 @@ function popmake_admin_submenu_pages() {
 		'help',
 		apply_filters( 'popmake_admin_submenu_help_function', 'popmake_help_page' )
 	);
+	*/
 
 	// About Page
 	$popmake_about_page = add_dashboard_page(
