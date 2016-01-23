@@ -175,16 +175,22 @@ class PUM_Popup_Cookies_Metabox {
 	public static function render_row( $row = array() ) {
 		global $post;
 
+        if ( ! $post ) {
+            $post_id = $_GET['post'];
+        } else {
+            $post_id = $post->ID;
+        }
+
 		$row = wp_parse_args( $row, array(
 			'index' => 0,
 			'event' => 'on_popup_close',
 			'columns' => array(
 				'event' => __( 'On Popup Close', 'popup-maker' ),
-				'name' => 'popmake-' . $post->ID,
+				'name' => 'popmake-' . $post_id,
 				'settings' => __( 'Time: 1 Month', 'popup-maker' ),
 			),
 			'settings' => array(
-				'name' => 'popmake-' . $post->ID,
+				'name' => 'popmake-' . $post_id,
 				'key' => '',
 				'session' => 0,
 				'time' => '1 month',
