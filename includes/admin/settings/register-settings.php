@@ -238,12 +238,6 @@ function popmake_get_registered_settings() {
 					'desc' => __( 'This will hide the support widget on all popup maker admin pages.', 'popup-maker' ),
 					'type' => 'checkbox'
 				),
-				'disable_admin_share_widget'           => array(
-					'id'   => 'disable_admin_share_widget',
-					'name' => __( 'Hide Admin Share Widget', 'popup-maker' ),
-					'desc' => __( 'This will hide the share widget on all popup maker admin pages.', 'popup-maker' ),
-					'type' => 'checkbox'
-				),
 			)
 		),
 	);

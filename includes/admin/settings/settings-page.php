@@ -73,14 +73,6 @@ function popmake_settings_page() {
 							</div>
 						</div>
 						<?php } ?>
-						<?php if ( ! popmake_get_option( 'disable_admin_share_widget', false ) ) { ?>
-						<div id="sharediv">
-							<div class="inside">
-								<?php popmake_render_share_meta_box();?>
-								<div class="clear"></div>
-							</div>
-						</div>
-						<?php } ?>
 						<?php do_action('popmake_admin_sidebar');?>
 					</div>
 				</div>
