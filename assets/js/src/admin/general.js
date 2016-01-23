@@ -15,361 +15,72 @@ var PopMakeAdmin, PUM_Admin;
     PopMakeAdmin = {
         init: function () {
             //PopMakeAdmin.initialize_tabs();
-            if (jQuery('body.post-type-popup form#post').length) {
+            if ($('body.post-type-popup form#post').length) {
                 PopMakeAdmin.initialize_popup_page();
-                PopMakeAdmin.attachQuickSearchListeners();
-                PopMakeAdmin.attachTabsPanelListeners();
             }
-            if (jQuery('body.post-type-popup_theme form#post').length) {
+            if ($('body.post-type-popup_theme form#post').length) {
                 PopMakeAdmin.initialize_theme_page();
             }
         },
-
-        attachTabsPanelListeners: function () {
-            jQuery('#poststuff').bind('click', function (event) {
-                var selectAreaMatch, panelId, wrapper, items,
-                    target = jQuery(event.target),
-                    $parent,
-                    $items,
-                    $textarea,
-                    $tag_area,
-                    current_ids,
-                    i,
-                    $item,
-                    id,
-                    name,
-                    removeItem;
-
-
-                if (target.hasClass('nav-tab-link')) {
-                    panelId = target.data('type');
-                    wrapper = target.parents('.posttypediv, .taxonomydiv').first();
-                    // upon changing tabs, we want to uncheck all checkboxes
-                    jQuery('input', wrapper).removeAttr('checked');
-                    jQuery('.tabs-panel-active', wrapper).removeClass('tabs-panel-active').addClass('tabs-panel-inactive');
-                    jQuery('#' + panelId, wrapper).removeClass('tabs-panel-inactive').addClass('tabs-panel-active');
-                    jQuery('.tabs', wrapper).removeClass('tabs');
-                    target.parent().addClass('tabs');
-                    // select the search bar
-                    jQuery('.quick-search', wrapper).focus();
-                    event.preventDefault();
-                } else if (target.hasClass('select-all')) {
-                    selectAreaMatch = /#(.*)$/.exec(event.target.href);
-                    if (selectAreaMatch && selectAreaMatch[1]) {
-                        items = jQuery('#' + selectAreaMatch[1] + ' .tabs-panel-active .menu-item-title input');
-                        if (items.length === items.filter(':checked').length) {
-                            items.removeAttr('checked');
-                        } else {
-                            items.prop('checked', true);
-                        }
-                    }
-                } else if (target.hasClass('submit-add-to-menu')) {
-                    $parent = target.parents('.options');
-                    $items = jQuery('.tabs-panel-active input[type="checkbox"]:checked', $parent);
-                    $textarea = jQuery('textarea', $parent);
-                    $tag_area = jQuery('.tagchecklist', $parent);
-                    current_ids = $textarea.val().split(',');
-                    for (i = 0; i < current_ids.length; i += 1) {
-                        current_ids[i] = parseInt(current_ids[i], 10);
-                    }
-                    $items.each(function () {
-                        $item = jQuery(this);
-                        id = parseInt($item.val(), 10);
-                        name = $item.parent('label').siblings('.menu-item-title').val();
-                        if (jQuery.inArray(id, current_ids) === -1) {
-                            current_ids.push(id);
-                        }
-                        $tag_area.append('<span><a class="ntdelbutton" data-id="' + id + '">X</a> ' + name + '</span>');
-                    });
-                    $textarea.text(current_ids.join(','));
-                    event.preventDefault();
-                } else if (target.hasClass('ntdelbutton')) {
-                    $item = target;
-                    removeItem = parseInt($item.data('id'), 10);
-                    $parent = target.parents('.options');
-                    $textarea = jQuery('textarea', $parent);
-                    $tag_area = jQuery('.tagchecklist', $parent);
-                    current_ids = $textarea.val().split(',');
-                    current_ids = jQuery.grep(current_ids, function (value) {
-                        return parseInt(value, 10) !== parseInt(removeItem, 10);
-                    });
-                    $item.parent('span').remove();
-                    $textarea.text(current_ids.join(','));
-                }
-            });
-        },
-        attachQuickSearchListeners: function () {
-            var searchTimer;
-            jQuery('.quick-search').keypress(function (event) {
-                var t = jQuery(this);
-                if (13 === event.which) {
-                    PopMakeAdmin.updateQuickSearchResults(t);
-                    return false;
-                }
-                if (searchTimer) {
-                    clearTimeout(searchTimer);
-                }
-                searchTimer = setTimeout(function () {
-                    PopMakeAdmin.updateQuickSearchResults(t);
-                }, 400);
-            }).attr('autocomplete', 'off');
-        },
-        updateQuickSearchResults: function (input) {
-            var panel, params,
-                minSearchLength = 2,
-                q = input.val();
-            if (q.length < minSearchLength) {
-                return;
-            }
-            panel = input.parents('.tabs-panel');
-            params = {
-                'action': 'menu-quick-search',
-                'response-format': 'markup',
-                'menu': null,
-                'menu-settings-column-nonce': jQuery('#menu-settings-column-nonce').val(),
-                'q': q,
-                'type': input.attr('name')
-            };
-            jQuery('.spinner', panel).show();
-            jQuery.post(ajaxurl, params, function (menuMarkup) {
-                PopMakeAdmin.processQuickSearchQueryResponse(menuMarkup, params, panel);
-            });
-        },
-        processQuickSearchQueryResponse: function (resp, req, panel) {
-            var matched, newID,
-                form = jQuery('form#post'),
-                takenIDs = {},
-                pattern = /menu-item[(\[\^]\]*/,
-                $items = jQuery('<div>').html(resp).find('li'),
-                $item;
-
-            if (!$items.length) {
-                jQuery('.categorychecklist', panel).html('<li><p>' + 'noResultsFound' + '</p></li>');
-                jQuery('.spinner', panel).hide();
-                return;
-            }
-
-            $items.each(function () {
-                $item = jQuery(this);
-
-                // make a unique DB ID number
-                matched = pattern.exec($item.html());
-
-                if (matched && matched[1]) {
-                    newID = matched[1];
-                    while (form.elements['menu-item[' + newID + '][menu-item-type]'] || takenIDs[newID]) {
-                        newID = newID - 1;
-                    }
-
-                    takenIDs[newID] = true;
-                    if (newID !== matched[1]) {
-                        $item.html(
-                            $item.html().replace(
-                                new RegExp('menu-item\\[' + matched[1] + '\\]', 'g'),
-                                'menu-item[' + newID + ']'
-                            )
-                        );
-                    }
-                }
-            });
-
-            jQuery('.categorychecklist', panel).html($items);
-            jQuery('.spinner', panel).hide();
-            jQuery('[name^="menu-item"]').removeAttr('name');
-        },
         initialize_popup_page: function () {
-            var update_type_options = function ($this) {
-                    var $options = $this.siblings('.options'),
-                        excludes,
-                        others;
-
-                    if ($this.is(':checked')) {
-                        $options.show();
-                        if ($this.attr('id') === 'popup_targeting_condition_on_entire_site') {
-                            excludes = $this.parents('#popmake_popup_targeting_condition_fields').find('[id^="targeting_condition-exclude_on_"]');
-                            others = $this.parents('.targeting_condition').siblings('.targeting_condition');
-                            others.hide();
-                            jQuery('> *', others).prop('disabled', true);
-                            excludes.show();
-                            jQuery('> *', excludes).prop('disabled', false);
+            var update_size = function () {
+                    if ($("#popup_display_size").val() === 'custom') {
+                        $('.custom-size-only').show();
+                        $('.responsive-size-only').hide();
+                        if ($('#popup_display_custom_height_auto').is(':checked')) {
+                            $('.custom-size-height-only').hide();
                         } else {
-                            jQuery('*', $options).prop('disabled', false);
+                            $('.custom-size-height-only').show();
                         }
                     } else {
-                        $options.hide();
-                        if ($this.attr('id') === 'popup_targeting_condition_on_entire_site') {
-                            excludes = $this.parents('#popmake_popup_targeting_condition_fields').find('[id^="targeting_condition-exclude_on_"]');
-                            others = $this.parents('.targeting_condition').siblings('.targeting_condition');
-                            others.show();
-                            jQuery('> *', others).prop('disabled', false);
-                            excludes.hide();
-                            jQuery('> *', excludes).prop('disabled', true);
+                        $('.custom-size-only').hide();
+                        if ($("#popup_display_size").val() !== 'auto') {
+                            $('.responsive-size-only').show();
+                            $('#popup_display_custom_height_auto').prop('checked', false);
                         } else {
-                            jQuery('*', $options).prop('disabled', true);
-                        }
-                    }
-                },
-                update_specific_checkboxes = function ($this) {
-                    var $option = $this.parents('.options').find('input[type="checkbox"]:eq(0)'),
-                        exclude = $option.attr('name').indexOf("exclude") >= 0,
-                        type = exclude ? $option.attr('name').replace('popup_targeting_condition_exclude_on_specific_', '') : $option.attr('name').replace('popup_targeting_condition_on_specific_', ''),
-                        type_box = exclude ? jQuery('#exclude_on_specific_' + type) : jQuery('#on_specific_' + type);
-
-                    if ($this.is(':checked')) {
-                        if ($this.val() === 'true') {
-                            $option.prop('checked', true);
-                            type_box.show();
-                            jQuery('*', type_box).prop('disabled', false);
-                        } else if ($this.val() === '') {
-                            $option.prop('checked', false);
-                            type_box.hide();
-                            jQuery('*', type_box).prop('disabled', true);
-                        }
-                    }
-                },
-                update_size = function () {
-                    if (jQuery("#popup_display_size").val() === 'custom') {
-                        jQuery('.custom-size-only').show();
-                        jQuery('.responsive-size-only').hide();
-                        if (jQuery('#popup_display_custom_height_auto').is(':checked')) {
-                            jQuery('.custom-size-height-only').hide();
-                        } else {
-                            jQuery('.custom-size-height-only').show();
-                        }
-                    } else {
-                        jQuery('.custom-size-only').hide();
-                        if (jQuery("#popup_display_size").val() !== 'auto') {
-                            jQuery('.responsive-size-only').show();
-                            jQuery('#popup_display_custom_height_auto').prop('checked', false);
-                        } else {
-                            jQuery('.responsive-size-only').hide();
+                            $('.responsive-size-only').hide();
                         }
                     }
                 },
                 update_animation = function () {
-                    jQuery('.animation-speed, .animation-origin').hide();
-                    if (jQuery("#popup_display_animation_type").val() === 'fade') {
-                        jQuery('.animation-speed').show();
+                    $('.animation-speed, .animation-origin').hide();
+                    if ($("#popup_display_animation_type").val() === 'fade') {
+                        $('.animation-speed').show();
                     } else {
-                        if (jQuery("#popup_display_animation_type").val() !== 'none') {
-                            jQuery('.animation-speed, .animation-origin').show();
+                        if ($("#popup_display_animation_type").val() !== 'none') {
+                            $('.animation-speed, .animation-origin').show();
                         }
                     }
                 },
                 update_location = function () {
-                    var $this = jQuery('#popup_display_location'),
+                    var $this = $('#popup_display_location'),
                         table = $this.parents('table'),
                         val = $this.val();
-                    jQuery('tr.top, tr.right, tr.left, tr.bottom', table).hide();
+                    $('tr.top, tr.right, tr.left, tr.bottom', table).hide();
                     if (val.indexOf("top") >= 0) {
-                        jQuery('tr.top').show();
+                        $('tr.top').show();
                     }
                     if (val.indexOf("left") >= 0) {
-                        jQuery('tr.left').show();
+                        $('tr.left').show();
                     }
                     if (val.indexOf("bottom") >= 0) {
-                        jQuery('tr.bottom').show();
+                        $('tr.bottom').show();
                     }
                     if (val.indexOf("right") >= 0) {
-                        jQuery('tr.right').show();
+                        $('tr.right').show();
                     }
-                },
-                auto_open_session_cookie_check = function () {
-                    if (jQuery("#popup_auto_open_session_cookie").is(":checked")) {
-                        jQuery('.not-session-cookie').hide();
-                    } else {
-                        jQuery('.not-session-cookie').show();
-                    }
-                },
-                auto_open_enabled_check = function () {
-                    if (jQuery("#popup_auto_open_enabled").is(":checked")) {
-                        jQuery('.auto-open-enabled').show();
-                        auto_open_session_cookie_check();
-                    } else {
-                        jQuery('.auto-open-enabled').hide();
-                    }
-                },
-                auto_open_reset_cookie_key = function () {
-                    jQuery('#popup_auto_open_cookie_key').val((new Date().getTime()).toString(16));
-                },
-                update_popup_preview_title = function () {
-                    if (jQuery('#popuptitle').val() !== '') {
-                        jQuery('#popmake-preview .popmake-title').show().html(jQuery('#popuptitle').val());
-                    } else {
-                        jQuery('#popmake-preview .popmake-title').hide();
-                    }
-                },
-                update_popup_preview_content = function () {
-                    var content = '';
-
-                    if (jQuery("#wp-content-wrap").hasClass("tmce-active")) {
-                        content = tinyMCE.activeEditor.getContent();
-                    } else {
-                        content = jQuery('#content').val();
-                    }
-
-                    jQuery
-                        .ajax({
-                            url: ajaxurl,
-                            type: 'POST',
-                            dataType: 'json',
-                            data: {
-                                action: "popmake_popup_preview_content",
-                                popmake_nonce: popmake_admin_ajax_nonce,
-                                popup_id: jQuery('#post_ID').val(),
-                                popup_content: content
-                            }
-                        })
-                        .done(function (data) {
-                            if (data.success) {
-                                jQuery('#popmake-preview .popmake-content').html(data.content);
-                                jQuery('#popmake-preview').popmake('open');
-                            }
-                        });
-                },
-                update_popup_preview_data = function () {
-                    var form_values = jQuery("[name^='popup_display_']").serializeArray(),
-                        i,
-                        $popup = jQuery('#popmake-preview'),
-                        data = $popup.data('popmake');
-
-                    for (i = 0; form_values.length > i; i += 1) {
-                        if (form_values[i].name.indexOf('popup_display_') === 0) {
-                            data.meta.display[form_values[i].name.replace('popup_display_', '')] = form_values[i].value;
-                        }
-                    }
-
-                    $popup.removeClass('theme-' + data.theme_id);
-
-                    data.theme_id = jQuery('#popup_theme').val();
-
-                    jQuery('#popmake-preview')
-                        .addClass('theme-' + data.theme_id)
-                        .data('popmake', data);
                 };
 
-            jQuery('#popuptitlediv').insertAfter('#titlediv');
-            jQuery('[name^="menu-item"]').removeAttr('name');
+            $('#popuptitlediv').insertAfter('#titlediv');
 
-            jQuery('#trigger-popmake-preview')
-                .on('click', function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    update_popup_preview_title();
-                    update_popup_preview_data();
-                    update_popup_preview_content();
-                    return false;
-                });
+            $('#title').prop('required', true);
 
-
-            jQuery('#title').prop('required', true);
-
-            jQuery(document)
+            $(document)
                 .on('keydown', '#popuptitle', function (event) {
                     var keyCode = event.keyCode || event.which;
                     if (9 === keyCode) {
                         event.preventDefault();
-                        jQuery('#title').focus();
+                        $('#title').focus();
                     }
                 })
                 .on('keydown', '#title, #popuptitle', function (event) {
@@ -377,8 +88,8 @@ var PopMakeAdmin, PUM_Admin;
                         target;
                     if (!event.shiftKey && 9 === keyCode) {
                         event.preventDefault();
-                        target = jQuery(this).attr('id') === 'title' ? '#popuptitle' : '#insert-media-button';
-                        jQuery(target).focus();
+                        target = $(this).attr('id') === 'title' ? '#popuptitle' : '#insert-media-button';
+                        $(target).focus();
                     }
                 })
                 .on('keydown', '#popuptitle, #insert-media-button', function (event) {
@@ -386,25 +97,16 @@ var PopMakeAdmin, PUM_Admin;
                         target;
                     if (event.shiftKey && 9 === keyCode) {
                         event.preventDefault();
-                        target = jQuery(this).attr('id') === 'popuptitle' ? '#title' : '#popuptitle';
-                        jQuery(target).focus();
+                        target = $(this).attr('id') === 'popuptitle' ? '#title' : '#popuptitle';
+                        $(target).focus();
                     }
                 })
                 .on('click', '#popup_display_custom_height_auto', function () {
                     update_size();
                 })
-                .on('click', "#popup_auto_open_session_cookie", function () {
-                    auto_open_session_cookie_check();
-                })
-                .on('click', "#popup_auto_open_enabled", function () {
-                    auto_open_enabled_check();
-                })
-                .on('click', ".popmake-reset-auto-open-cookie-key", function () {
-                    auto_open_reset_cookie_key();
-                })
                 .on('change', "#popup_display_size", function () {
-                    if (jQuery("#popup_display_size").val() !== 'custom' && jQuery("#popup_display_size").val() !== 'auto') {
-                        jQuery('#popup_display_position_fixed, #popup_display_scrollable_content').prop('checked', false);
+                    if ($("#popup_display_size").val() !== 'custom' && $("#popup_display_size").val() !== 'auto') {
+                        $('#popup_display_position_fixed, #popup_display_scrollable_content').prop('checked', false);
                     }
                     update_size();
                 })
@@ -415,48 +117,15 @@ var PopMakeAdmin, PUM_Admin;
                     update_location();
                 });
 
-
-            jQuery('#popmake_popup_targeting_condition_fields .targeting_condition > input[type="checkbox"]')
-                .on('click', function () {
-                    update_type_options(jQuery(this));
-                })
-                .each(function () {
-                    update_type_options(jQuery(this));
-                });
-
-            jQuery('input[type="radio"][id*="popup_targeting_condition_"]')
-                .on('click', function () {
-                    update_specific_checkboxes(jQuery(this));
-                })
-                .each(function () {
-                    update_specific_checkboxes(jQuery(this));
-                });
-
-            jQuery('.posttypediv, .taxonomydiv').each(function () {
-                var $this = jQuery(this),
-                    $tabs = jQuery('> ul li'),
-                    $sections = jQuery('.tabs-panel', $this);
-
-                $tabs.removeClass('tabs');
-                $tabs.eq(0).addClass('tabs');
-                $sections.removeClass('tabs-panel-active').addClass('tabs-panel-inactive').removeAttr('style');
-                $sections.eq(0).removeClass('tabs-panel-inactive').addClass('tabs-panel-active');
-            });
-
             update_size();
             update_animation();
             update_location();
-
-            auto_open_enabled_check();
-            if (jQuery('#popup_auto_open_cookie_key').val() === '') {
-                auto_open_reset_cookie_key();
-            }
         },
         theme_page_listeners: function () {
             var self = this;
-            jQuery(document)
+            $(document)
                 .on('change', 'select.font-family', function () {
-                    jQuery('select.font-weight option, select.font-style option', jQuery(this).parents('table')).prop('selected', false);
+                    $('select.font-weight option, select.font-style option', $(this).parents('table')).prop('selected', false);
                     self.update_font_selectboxes();
                 })
                 .on('change', 'select.font-weight, select.font-style', function () {
@@ -466,7 +135,7 @@ var PopMakeAdmin, PUM_Admin;
                     self.update_theme();
                 })
                 .on('change', 'select.border-style', function () {
-                    var $this = jQuery(this);
+                    var $this = $(this);
                     if ($this.val() === 'none') {
                         $this.parents('table').find('.border-options').hide();
                     } else {
@@ -474,14 +143,14 @@ var PopMakeAdmin, PUM_Admin;
                     }
                 })
                 .on('change', '#popup_theme_close_location', function () {
-                    var $this = jQuery(this),
+                    var $this = $(this),
                         table = $this.parents('table');
-                    jQuery('tr.topleft, tr.topright, tr.bottomleft, tr.bottomright', table).hide();
-                    jQuery('tr.' + $this.val(), table).show();
+                    $('tr.topleft, tr.topright, tr.bottomleft, tr.bottomright', table).hide();
+                    $('tr.' + $this.val(), table).show();
                 });
         },
         update_theme: function () {
-            var form_values = jQuery("[name^='popup_theme_']").serializeArray(),
+            var form_values = $("[name^='popup_theme_']").serializeArray(),
                 theme = {},
                 i;
             for (i = 0; form_values.length > i; i += 1) {
@@ -492,11 +161,11 @@ var PopMakeAdmin, PUM_Admin;
             this.retheme_popup(theme);
         },
         theme_preview_scroll: function () {
-            var $preview = jQuery('#popmake-theme-editor .empreview, body.post-type-popup_theme form#post #popmake_popup_theme_preview'),
+            var $preview = $('#popmake-theme-editor .empreview, body.post-type-popup_theme form#post #popmake_popup_theme_preview'),
                 $parent = $preview.parent(),
                 startscroll = $preview.offset().top - 50;
-            jQuery(window).on('scroll', function () {
-                if (jQuery('> .postbox:visible', $parent).index($preview) === (jQuery('> .postbox:visible', $parent).length - 1) && jQuery(window).scrollTop() >= startscroll) {
+            $(window).on('scroll', function () {
+                if ($('> .postbox:visible', $parent).index($preview) === ($('> .postbox:visible', $parent).length - 1) && $(window).scrollTop() >= startscroll) {
                     $preview.css({
                         left: $preview.offset().left,
                         width: $preview.width(),
@@ -510,8 +179,8 @@ var PopMakeAdmin, PUM_Admin;
             });
         },
         update_font_selectboxes: function () {
-            return jQuery('select.font-family').each(function () {
-                var $this = jQuery(this),
+            return $('select.font-family').each(function () {
+                var $this = $(this),
                     $font_weight = $this.parents('table').find('select.font-weight'),
                     $font_style = $this.parents('table').find('select.font-style'),
                     $font_weight_options = $font_weight.find('option'),
@@ -530,14 +199,14 @@ var PopMakeAdmin, PUM_Admin;
                     if (font.variants.length) {
                         for (i = 0; font.variants.length > i; i += 1) {
                             if (font.variants[i] === 'regular') {
-                                jQuery('option[value=""]', $font_weight).show();
-                                jQuery('option[value=""]', $font_style).show();
+                                $('option[value=""]', $font_weight).show();
+                                $('option[value=""]', $font_style).show();
                             } else {
                                 if (font.variants[i].indexOf('italic') >= 0) {
 
-                                    jQuery('option[value="italic"]', $font_style).show();
+                                    $('option[value="italic"]', $font_style).show();
                                 }
-                                jQuery('option[value="' + parseInt(font.variants[i], 10) + '"]', $font_weight).show();
+                                $('option[value="' + parseInt(font.variants[i], 10) + '"]', $font_weight).show();
                             }
                         }
                     }
@@ -564,29 +233,29 @@ var PopMakeAdmin, PUM_Admin;
         },
         convert_theme_for_preview: function (theme) {
             return;
-            //jQuery.fn.popmake.themes[popmake_default_theme] = PUMUtils.convert_meta_to_object(theme);
+            //$.fn.popmake.themes[popmake_default_theme] = PUMUtils.convert_meta_to_object(theme);
         },
         initialize_theme_page: function () {
-            jQuery('#popuptitlediv').insertAfter('#titlediv');
+            $('#popuptitlediv').insertAfter('#titlediv');
 
             var self = this,
-                table = jQuery('#popup_theme_close_location').parents('table');
+                table = $('#popup_theme_close_location').parents('table');
             self.update_theme();
             self.theme_page_listeners();
             self.theme_preview_scroll();
             self.update_font_selectboxes();
 
-            jQuery(document)
+            $(document)
                 .on('click', '.popmake-preview', function (e) {
                     e.preventDefault();
-                    jQuery('#popmake-preview, #popmake-overlay').css({visibility: "visible"}).show();
+                    $('#popmake-preview, #popmake-overlay').css({visibility: "visible"}).show();
                 })
                 .on('click', '.popmake-close', function () {
-                    jQuery('#popmake-preview, #popmake-overlay').hide();
+                    $('#popmake-preview, #popmake-overlay').hide();
                 });
 
-            jQuery('select.border-style').each(function () {
-                var $this = jQuery(this);
+            $('select.border-style').each(function () {
+                var $this = $(this);
                 if ($this.val() === 'none') {
                     $this.parents('table').find('.border-options').hide();
                 } else {
@@ -594,8 +263,8 @@ var PopMakeAdmin, PUM_Admin;
                 }
             });
 
-            jQuery('.color-picker.background-color').each(function () {
-                var $this = jQuery(this);
+            $('.color-picker.background-color').each(function () {
+                var $this = $(this);
                 if ($this.val() === '') {
                     $this.parents('table').find('.background-opacity').hide();
                 } else {
@@ -603,28 +272,28 @@ var PopMakeAdmin, PUM_Admin;
                 }
             });
 
-            jQuery('tr.topleft, tr.topright, tr.bottomleft, tr.bottomright', table).hide();
-            switch (jQuery('#popup_theme_close_location').val()) {
+            $('tr.topleft, tr.topright, tr.bottomleft, tr.bottomright', table).hide();
+            switch ($('#popup_theme_close_location').val()) {
             case "topleft":
-                jQuery('tr.topleft', table).show();
+                $('tr.topleft', table).show();
                 break;
             case "topright":
-                jQuery('tr.topright', table).show();
+                $('tr.topright', table).show();
                 break;
             case "bottomleft":
-                jQuery('tr.bottomleft', table).show();
+                $('tr.bottomleft', table).show();
                 break;
             case "bottomright":
-                jQuery('tr.bottomright', table).show();
+                $('tr.bottomright', table).show();
                 break;
             }
         },
         retheme_popup: function (theme) {
-            var $overlay = jQuery('.empreview .example-popup-overlay, #popmake-overlay'),
-                $container = jQuery('.empreview .example-popup, #popmake-preview'),
-                $title = jQuery('.title, .popmake-title', $container),
-                $content = jQuery('.content, .popmake-content', $container),
-                $close = jQuery('.close-popup, .popmake-close', $container),
+            var $overlay = $('.empreview .example-popup-overlay, #popmake-overlay'),
+                $container = $('.empreview .example-popup, #popmake-preview'),
+                $title = $('.title, .popmake-title', $container),
+                $content = $('.content, .popmake-content', $container),
+                $close = $('.close-popup, .popmake-close', $container),
                 container_inset = theme.container_boxshadow_inset === 'yes' ? 'inset ' : '',
                 close_inset = theme.close_boxshadow_inset === 'yes' ? 'inset ' : '',
                 link;
@@ -644,7 +313,7 @@ var PopMakeAdmin, PUM_Admin;
                     }
                     link += "italic";
                 }
-                jQuery('body').append('<link href="' + link + '" rel="stylesheet" type="text/css">');
+                $('body').append('<link href="' + link + '" rel="stylesheet" type="text/css">');
             }
             if (popmake_google_fonts[theme.content_font_family] !== undefined) {
 
@@ -659,7 +328,7 @@ var PopMakeAdmin, PUM_Admin;
                     }
                     link += "italic";
                 }
-                jQuery('body').append('<link href="' + link + '" rel="stylesheet" type="text/css">');
+                $('body').append('<link href="' + link + '" rel="stylesheet" type="text/css">');
             }
             if (popmake_google_fonts[theme.close_font_family] !== undefined) {
 
@@ -674,7 +343,7 @@ var PopMakeAdmin, PUM_Admin;
                     }
                     link += "italic";
                 }
-                jQuery('body').append('<link href="' + link + '" rel="stylesheet" type="text/css">');
+                $('body').append('<link href="' + link + '" rel="stylesheet" type="text/css">');
             }
 
             $overlay.removeAttr('style').css({
@@ -750,7 +419,7 @@ var PopMakeAdmin, PUM_Admin;
                 });
                 break;
             }
-            jQuery(document).trigger('popmake-admin-retheme', [theme]);
+            $(document).trigger('popmake-admin-retheme', [theme]);
         }
 
     };
