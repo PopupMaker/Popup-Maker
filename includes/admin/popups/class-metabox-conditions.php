@@ -36,7 +36,7 @@ class PUM_Popup_Conditions_Metabox {
 	 * @return void
 	 */
 	public static function register_metabox() {
-        add_meta_box( 'pum_popup_conditions', __( 'Conditions', 'popup-maker' ), array( __CLASS__, 'render_metabox' ), 'popup', 'normal', 'high' );
+        add_meta_box( 'pum_popup_conditions', __( 'Conditions', 'popup-maker' ), array( __CLASS__, 'render_metabox' ), 'popup', 'side', 'high' );
 	}
 
 	/**
@@ -117,9 +117,17 @@ class PUM_Popup_Conditions_Metabox {
 				endforeach; ?>
 			</div>
 			<div class="no-facet-groups">
-				<p>
-					<strong><?php _e( 'Conditions limit where and who will see your popups.', 'popup-maker' ); ?></strong>
-				</p>
+                <p>
+                    <strong><?php _e( 'Conditions limit where and who will see your popups.', 'popup-maker' ); ?></strong>
+                </p>
+                <p>
+                    <small>
+                        <?php printf(
+                                __( 'Use %s to check for the opposite of a condition.', 'popup-maker' ),
+                                '<i style="font-size: 16px;" class="dashicons dashicons-warning" aria-label="' . __( 'Negative Conditions', 'popup-maker' ) . '"></i>'
+                        ); ?>
+                    </small>
+                </p>
 				<label for="pum-first-condition"><?php _e( 'Choose a condition to get started.', 'popup-maker' ); ?></label>
                 <div class="pum-field select pum-chosen pum-condition-target">
                     <button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
