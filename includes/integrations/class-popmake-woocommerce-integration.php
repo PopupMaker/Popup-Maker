@@ -7,11 +7,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Popmake_Woocommerce_Integration {
 	public function __construct() {
-		add_action( 'popmake_before_post_type_targeting_conditions', array( $this, 'targeting_conditions' ) );
-		add_filter( 'popmake_supported_post_types', array( $this, 'post_types' ) );
-		add_filter( 'popmake_supported_taxonomies', array( $this, 'taxonomies' ) );
-		add_filter( 'popmake_popup_meta_fields', array( $this, 'popup_meta_fields' ) );
-		add_filter( 'popmake_popup_is_loadable', array( $this, 'popup_is_loadable' ), 10, 4 );
+        if ( function_exists( 'WC' ) || class_exists( 'WooCommerce' ) ) {
+            add_action( 'popmake_before_post_type_targeting_conditions', array( $this, 'targeting_conditions' ) );
+            add_filter( 'popmake_supported_post_types', array( $this, 'post_types' ) );
+            add_filter( 'popmake_supported_taxonomies', array( $this, 'taxonomies' ) );
+            add_filter( 'popmake_popup_meta_fields', array( $this, 'popup_meta_fields' ) );
+            add_filter( 'popmake_popup_is_loadable', array( $this, 'popup_is_loadable' ), 10, 4 );
+        }
 	}
 
 	public function targeting_conditions( $targeting_condition ) { ?>
@@ -128,4 +130,9 @@ final class Popmake_Woocommerce_Integration {
 
 }
 
-new Popmake_Woocommerce_Integration();
+function popmake_deprecated_woocommerce_support() {
+    new Popmake_Woocommerce_Integration();
+}
+
+add_action( 'plugins_loaded', 'popmake_deprecated_woocommerce_support' );
+

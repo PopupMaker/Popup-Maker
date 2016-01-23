@@ -299,10 +299,8 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 
 			}
 
-			if ( class_exists( 'WooCommerce' ) ) {
-				require_once POPMAKE_DIR . 'includes/integrations/class-popmake-woocommerce-integration.php';
-				require_once POPMAKE_DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
-			}
+			require_once POPMAKE_DIR . 'includes/integrations/class-popmake-woocommerce-integration.php';
+			require_once POPMAKE_DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
 
 			if ( defined( 'WPB_VC_VERSION' ) || defined( 'FL_BUILDER_VERSION' ) ) {
 				require_once POPMAKE_DIR . 'includes/integrations/visual-composer.php';
@@ -400,5 +398,4 @@ function popmake_initialize() {
 	do_action( 'popmake_initialize' );
 }
 
-// TODO test and see if the 0 priority is needed.
-add_action( 'plugins_loaded', 'popmake_initialize', 0 );
+add_action( 'plugins_loaded', 'popmake_initialize' );
