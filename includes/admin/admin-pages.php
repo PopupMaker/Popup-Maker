@@ -102,19 +102,86 @@ function popmake_admin_submenu_pages() {
 		'popmake_credits_page'
 	);
 
-}
-
-add_action( 'admin_menu', 'popmake_admin_submenu_pages', 999 );
-
-
-function popmake_remove_admin_subpages() {
+	// Hide About & Getting Started Pages.
 	remove_submenu_page( 'index.php', 'pum-about' );
 	remove_submenu_page( 'index.php', 'pum-changelog' );
 	remove_submenu_page( 'index.php', 'pum-getting-started' );
 	remove_submenu_page( 'index.php', 'pum-credits' );
 }
 
-add_action( 'admin_head', 'popmake_remove_admin_subpages' );
+add_action( 'admin_menu', 'popmake_admin_submenu_pages' );
+
+/**
+ * Submenu filter function. Tested with Wordpress 4.1.1
+ * Sort and order submenu positions to match our custom order.
+ *
+ * @since 1.4.0
+ */
+function pum_reorder_admin_submenu() {
+	global $submenu;
+
+	// Sort the menu according to your preferences
+	usort( $submenu['edit.php?post_type=popup'], 'pum_reorder_submenu_array' );
+}
+
+add_action( 'admin_head', 'pum_reorder_admin_submenu' );
+
+
+/**
+ * Reorders the submenu by title.
+ *
+ * Forces $first_pages to load in order at the beginning of the menu
+ * and $last_pages to load in order at the end. All remaining menu items will
+ * go out in generic order.
+ *
+ * @since 1.4.0
+ *
+ * @param $a
+ * @param $b
+ *
+ * @return int
+ */
+function pum_reorder_submenu_array( $a, $b ) {
+	$first_pages = apply_filters( 'pum_admin_submenu_first_pages', array(
+		__( 'All Popups', 'popup-maker' ),
+		__( 'Add New', 'popup-maker' ),
+		__( 'All Themes', 'popup-maker' ),
+		__( 'Categories', 'popup-maker' ),
+		__( 'Tags', 'popup-maker' ),
+	) );
+	$last_pages  = apply_filters( 'pum_admin_submenu_last_pages', array(
+		__( 'Extend', 'popup-maker' ),
+		__( 'Settings', 'popup-maker' ),
+		__( 'Tools', 'popup-maker' ),
+	) );
+
+	// Sort First Page Keys.
+	if ( in_array( $a[0], $first_pages ) && ! in_array( $b[0], $first_pages ) ) {
+		return - 1;
+	} elseif ( ! in_array( $a[0], $first_pages ) && in_array( $b[0], $first_pages ) ) {
+		return 1;
+	} elseif ( in_array( $a[0], $first_pages ) && in_array( $b[0], $first_pages ) ) {
+		$a_key = array_search( $a[0], $first_pages );
+		$b_key = array_search( $b[0], $first_pages );
+
+		return ( $a_key < $b_key ) ? - 1 : 1;
+	}
+
+	// Sort Last Page Keys.
+	if ( in_array( $a[0], $last_pages ) && ! in_array( $b[0], $last_pages ) ) {
+		return 1;
+	} elseif ( ! in_array( $a[0], $last_pages ) && in_array( $b[0], $last_pages ) ) {
+		return - 1;
+	} elseif ( in_array( $a[0], $last_pages ) && in_array( $b[0], $last_pages ) ) {
+		$a_key = array_search( $a[0], $last_pages );
+		$b_key = array_search( $b[0], $last_pages );
+
+		return ( $a_key < $b_key ) ? - 1 : 1;
+	}
+
+	// Sort remaining keys
+	return $a > $b ? 1 : - 1;
+}
 
 
 /**
