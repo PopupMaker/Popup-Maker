@@ -24,6 +24,10 @@ function pum_generate_post_type_conditions() {
 
 	foreach ( $post_types as $name => $post_type ) {
 
+		if ( $name == 'popup' || $name == 'popup_theme' ) {
+			continue;
+		}
+
 		if ( $post_type->has_archive ) {
 			$conditions[ $name . '_index' ] = array(
 				'group'    => __( 'General', 'popup-maker' ),
