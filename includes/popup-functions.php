@@ -14,6 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * @param $popup_id
+ *
+ * @return array|null|\WP_Post
+ */
 function popmake_get_popup( $popup_id ) {
 	if ( ! $popup_id ) {
 		$popup_id = popmake_get_the_popup_ID();
@@ -22,16 +27,25 @@ function popmake_get_popup( $popup_id ) {
 	return get_post( $popup_id );
 }
 
+/**
+ * @return int
+ */
 function popmake_get_the_popup_ID() {
 	global $popup;
 
 	return $popup ? $popup->ID : 0;
 }
 
+/**
+ *
+ */
 function popmake_the_popup_ID() {
 	echo popmake_get_the_popup_ID();
 }
 
+/**
+ * @return int
+ */
 function get_the_popup_ID() {
 	return popmake_get_the_popup_ID();
 }
@@ -149,6 +163,11 @@ function popmake_get_the_popup_data_attr( $popup_id = null ) {
 	return apply_filters( 'popmake_get_the_popup_data_attr', $data_attr, $popup_id );
 }
 
+/**
+ * @param $data_attr
+ *
+ * @return mixed
+ */
 function popmake_clean_popup_data_attr( $data_attr ) {
 
 	$display = $data_attr['meta']['display'];
@@ -326,6 +345,7 @@ function popmake_get_popup_meta_group( $group, $popup_id = null, $key = null, $d
  * Returns the load settings meta of a popup.
  *
  * @since 1.0
+ * @deprecated 1.4.0
  *
  * @param int $popup_id ID number of the popup to retrieve a overlay meta for
  *
@@ -335,6 +355,16 @@ function popmake_get_popup_targeting_condition( $popup_id = null, $key = null ) 
 	return popmake_get_popup_meta_group( 'targeting_condition', $popup_id, $key );
 }
 
+/**
+ *
+ * @since 1.0
+ * @deprecated 1.4.0
+ *
+ * @param      $popup_id
+ * @param null $post_type
+ *
+ * @return array
+ */
 function popmake_get_popup_targeting_condition_includes( $popup_id, $post_type = null ) {
 	$post_meta = get_post_custom_keys( $popup_id );
 	$includes  = array();
@@ -363,6 +393,12 @@ function popmake_get_popup_targeting_condition_includes( $popup_id, $post_type =
 	return $includes;
 }
 
+/**
+ * @param      $popup_id
+ * @param null $post_type
+ *
+ * @return array
+ */
 function popmake_get_popup_targeting_condition_excludes( $popup_id, $post_type = null ) {
 	$post_meta = get_post_custom_keys( $popup_id );
 	$excludes  = array();
@@ -460,7 +496,7 @@ function popmake_get_popup_display( $popup_id = null, $key = null, $default = nu
  * Returns the close meta of a popup.
  *
  * @since 1.0
- * @deprecated 1.4.0
+ * @deprecated 1.4.0 Use PUM_Popup class instead
  *
  * @param int $popup_id ID number of the popup to retrieve a close meta for
  *
@@ -565,6 +601,11 @@ function popmake_popup_close_text( $text, $popup_id ) {
 add_filter( 'popmake_popup_default_close_text', 'popmake_popup_close_text', 10, 2 );
 
 
+/**
+ * @param $popup_id
+ *
+ * @return mixed|void
+ */
 function popmake_popup_is_loadable( $popup_id ) {
 	global $post, $wp_query;
 
@@ -764,6 +805,9 @@ function popmake_popup_is_loadable( $popup_id ) {
 }
 
 
+/**
+ * @return \WP_Query
+ */
 function get_all_popups() {
 	$query = new WP_Query( array(
 		'post_type'      => 'popup',

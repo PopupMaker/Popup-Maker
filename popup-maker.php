@@ -264,16 +264,18 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/admin-functions.php';
 				require_once POPMAKE_DIR . 'includes/admin/admin-pages.php';
 				require_once POPMAKE_DIR . 'includes/admin/post-editor.php';
+
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/dashboard-columns.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-close-fields.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-display-fields.php';
-				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-click-open-fields.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-themes-fields.php';
-				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-targeting-condition-fields.php';
-				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-auto-open-popups-fields.php';
-				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-admin-debug-fields.php';
-				require_once POPMAKE_DIR . 'includes/admin/popups/post-type-item-metaboxes.php';
+
+				// If not yet upgraded still show and process the old meta boxes.
+				if ( ! get_site_option( 'pum_v1.4_triggers_upgraded', false ) || ! get_site_option( 'pum_v1.4_conditions_upgraded', false ) ) {
+					require_once POPMAKE_DIR . 'includes/admin/popups/deprecated.php';
+				}
+
 				require_once POPMAKE_DIR . 'includes/admin/themes/metabox.php';
 				require_once POPMAKE_DIR . 'includes/admin/themes/metabox-close-fields.php';
 				require_once POPMAKE_DIR . 'includes/admin/themes/metabox-container-fields.php';
@@ -281,12 +283,18 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/themes/metabox-overlay-fields.php';
 				require_once POPMAKE_DIR . 'includes/admin/themes/metabox-title-fields.php';
 				require_once POPMAKE_DIR . 'includes/admin/themes/metabox-preview.php';
+
 				require_once POPMAKE_DIR . 'includes/admin/settings/settings-page.php';
+
 				require_once POPMAKE_DIR . 'includes/admin/tools/tools-page.php';
+
 				require_once POPMAKE_DIR . 'includes/admin/extensions/extensions-page.php';
+
 				require_once POPMAKE_DIR . 'includes/admin/help/help-page.php';
+
 				require_once POPMAKE_DIR . 'includes/admin/metabox-support.php';
 				require_once POPMAKE_DIR . 'includes/admin/metabox-share.php';
+
 				require_once POPMAKE_DIR . 'includes/admin/tracking.php';
 
 			}
