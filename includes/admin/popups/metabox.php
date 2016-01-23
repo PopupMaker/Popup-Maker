@@ -32,14 +32,7 @@ function popmake_add_popup_meta_box() {
 
 	/** Theme Meta **/
 	add_meta_box( 'popmake_popup_themes', __( 'Theme Settings', 'popup-maker' ), 'popmake_render_popup_themes_meta_box', 'popup', 'side', 'high' );
-	if ( ! popmake_get_option( 'disable_admin_support_widget', false ) ) {
-		/** Support Meta **/
-		add_meta_box( 'popmake_popup_support', __( 'Support', 'popup-maker' ), 'popmake_render_support_meta_box', 'popup', 'side', 'default' );
-	}
-	if ( ! popmake_get_option( 'disable_admin_share_widget', false ) ) {
-		/** Share Meta **/
-		add_meta_box( 'popmake_popup_share', __( 'Share', 'popup-maker' ), 'popmake_render_share_meta_box', 'popup', 'side', 'default' );
-	}
+
 }
 add_action( 'add_meta_boxes', 'popmake_add_popup_meta_box' );
 
