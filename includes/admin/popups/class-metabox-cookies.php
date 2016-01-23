@@ -175,7 +175,7 @@ class PUM_Popup_Cookies_Metabox {
 	public static function render_row( $row = array() ) {
 		global $post;
 
-        if ( ! $post ) {
+        if ( ! $post instanceof WP_Post ) {
             $post_id = $_GET['post'];
         } else {
             $post_id = $post->ID;
