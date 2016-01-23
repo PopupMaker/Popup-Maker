@@ -254,6 +254,11 @@ function popmake_popup_theme_meta_box_save( $post_id, $post ) {
 		}
 	}
 
+    // If this is a built in theme and the user has modified it set a key so that we know not to make automatic upgrades to it in the future.
+    if ( get_post_meta( $post_id, '_pum_built_in', true ) !== false ) {
+        update_post_meta( $post_id, '_pum_user_modified', true );
+    }
+
     pum_force_theme_css_refresh();
 
 	do_action( 'popmake_save_popup_theme', $post_id, $post );
