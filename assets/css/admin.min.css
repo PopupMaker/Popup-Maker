@@ -395,27 +395,6 @@
     background: #3e86d0
 }
 
-.pum-select2 .select2-results {
-    font-size: 13px
-}
-
-.pum-select2 .select2-results li {
-    padding: 3px 6px
-}
-
-.pum-select2 .select2-results li.group-option {
-    padding-left: 10px
-}
-
-.pum-select2 .select2-results li.highlighted {
-    background: #3e86d0
-}
-
-.pum-select2 .select2-container-active .select2-selection--multiple, .pum-select2 .select2-container-active .select2-selection--single {
-    border-color: #5b9dd9;
-    box-shadow: 0 0 2px rgba(30, 140, 190, .8)
-}
-
 .pum-popup-conditions .facet-builder a {
     text-decoration: none
 }

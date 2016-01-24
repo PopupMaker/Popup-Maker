@@ -482,22 +482,6 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
 
     border-color: #ddd;
 }
-.pum-select2 .select2-container .select2-dropdown .select2-results
-{
-    /*
-                font-size: 13px;
-                li {
-                  padding: 3px 6px;
-                  margin-bottom: 0;
-                }
-                li ul li {
-                  padding-left: 10px;
-                }
-                li.highlighted {
-                  background: #3e86d0;
-                }
-        */
-}
 .pum-select2 .select2-container .select2-dropdown .select2-results .select2-results__option
 {
     margin: 0; 
@@ -518,30 +502,6 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
 .pum-select2 .select2-container .select2-dropdown .select2-results .select2-results__option--highlighted
 {
     background: #3e86d0;
-}
-
-.pum-select2 .select2-results
-{
-    font-size: 13px;
-}
-.pum-select2 .select2-results li
-{
-    padding: 3px 6px;
-}
-.pum-select2 .select2-results li.group-option
-{
-    padding-left: 10px;
-}
-.pum-select2 .select2-results li.highlighted
-{
-    background: #3e86d0;
-}
-
-.pum-select2 .select2-container-active .select2-selection--multiple,
-.pum-select2 .select2-container-active .select2-selection--single
-{
-    border-color: #5b9dd9;
-    box-shadow: 0 0 2px rgba(30, 140, 190, .8);
 }
 
 .pum-popup-conditions
