@@ -94,7 +94,6 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
           margin: 0;
 
           &[aria-selected=true] {
-
           }
 
         }
@@ -115,44 +114,10 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
           background: #3e86d0;
         }
 
-        /*
-                font-size: 13px;
-                li {
-                  padding: 3px 6px;
-                  margin-bottom: 0;
-                }
-                li ul li {
-                  padding-left: 10px;
-                }
-                li.highlighted {
-                  background: #3e86d0;
-                }
-        */
       }
 
     }
 
   }
-  // TODO Reset dropdown results to more resemble standard select boxes.
-  .select2-results {
-    font-size: 13px;
-    li {
-      padding: 3px 6px;
-    }
-    li.group-option {
-      padding-left: 10px;
-    }
-    li.highlighted {
-      background: #3e86d0;
-    }
-  }
 
-  // TODO Focus & Active Style field highlighting.
-  .select2-container-active {
-    .select2-selection--multiple,
-    .select2-selection--single {
-      border-color: #5b9dd9;
-      box-shadow: 0 0 2px rgba(30, 140, 190, 0.8);
-    }
-  }
 }
