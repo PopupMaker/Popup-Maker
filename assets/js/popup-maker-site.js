@@ -22,7 +22,7 @@
  * todo Set each function to be aware of the element called. If old selectors used fallback to parent for $this.
  */
 var PUM;
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     PUM = {
@@ -574,13 +574,13 @@ var PUM;
         }
     };
 
-}(jQuery));
+}(jQuery, document));
 /**
  * Defines the core $.popmake binds.
  * Version 1.4.0
  */
 var PUM_Accessibility;
-(function ($, undefined) {
+(function ($, document, undefined) {
     "use strict";
     var $top_level_elements,
         focusableElementsString = "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]",
@@ -718,12 +718,12 @@ var PUM_Accessibility;
         });
 
 
-}(jQuery));
+}(jQuery, document));
 /**
  * Defines the core $.popmake animations.
  * Version 1.4.0
  */
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     $.fn.popmake.methods.animate_overlay = function (style, duration, callback) {
@@ -871,12 +871,12 @@ var PUM_Accessibility;
         }
     };
 
-}(jQuery));
+}(jQuery, document));
 /**
  * Defines the core $.popmake binds.
  * Version 1.4.0
  */
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     $(document)
@@ -952,12 +952,12 @@ var PUM_Accessibility;
         });
 
 
-}(jQuery));
+}(jQuery, document));
 /**
  * Defines the core $.popmake callbacks.
  * Version 1.4.0
  */
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     $.fn.popmake.callbacks = {
@@ -966,7 +966,7 @@ var PUM_Accessibility;
         }
     };
 
-}(jQuery));
+}(jQuery, document));
 /**
  * Defines the core $.popmake.cookie functions.
  * Version 1.4.0
@@ -974,7 +974,7 @@ var PUM_Accessibility;
  * Defines the pm_cookie & pm_remove_cookie global functions.
  */
 var pm_cookie, pm_remove_cookie;
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     $.fn.popmake.cookie = {
@@ -1074,8 +1074,8 @@ var pm_cookie, pm_remove_cookie;
     pm_cookie = $.pm_cookie = $.fn.popmake.cookie.process;
     pm_remove_cookie = $.pm_remove_cookie = $.fn.popmake.cookie.remove;
 
-}(jQuery));
-(function ($) {
+}(jQuery, document));
+(function ($, document, undefined) {
     "use strict";
 
     $.fn.popmake.methods.addCookie = function (type) {
@@ -1134,12 +1134,12 @@ var pm_cookie, pm_remove_cookie;
             }
         });
 
-}(jQuery));
+}(jQuery, document));
 /**
  * Defines the core $.popmake defaults.
  * Version 1.4.0
  */
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     $.fn.popmake.defaults = {
@@ -1204,8 +1204,8 @@ var pm_cookie, pm_remove_cookie;
         }
     };
 
-}(jQuery));
-(function ($) {
+}(jQuery, document));
+(function ($, document, undefined) {
     "use strict";
 
     $.fn.popmake.last_open_trigger = null;
@@ -1333,12 +1333,12 @@ var pm_cookie, pm_remove_cookie;
             }
         });
 
-}(jQuery));
+}(jQuery, document));
 /**
  * Defines the core $.popmake.utilites methods.
  * Version 1.4.0
  */
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
 
     $.fn.popmake.utilities = {
@@ -1617,12 +1617,12 @@ var pm_cookie, pm_remove_cookie;
     // Deprecated fix. utilies was renamed because of typo.
     $.fn.popmake.utilies = $.fn.popmake.utilities;
 
-}(jQuery));
+}(jQuery, document));
 /**
  * Initialize Popup Maker.
  * Version 1.4.0
  */
-(function ($) {
+(function ($, document, undefined) {
     "use strict";
     // Defines the current version.
     $.fn.popmake.version = 1.4;

@@ -109,8 +109,8 @@ class PUM_Fields extends Popmake_Fields {
 
 		$class = 'pum-field select ' . $args['id'];
 
-		if ( isset ( $args['chosen'] ) ) {
-			$class .= ' pum-chosen';
+        if ( isset ( $args['select2'] ) ) {
+            $class .= ' pum-select2';
 		}
 
 		if ( ! empty ( $args['class'] ) ) {
@@ -144,7 +144,7 @@ class PUM_Fields extends Popmake_Fields {
 			<label for="<?php esc_attr_e( $args['id'] ); ?>"><?php esc_html_e( $args['label'] ); ?></label><?php
 		} ?>
 
-		<select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" <?php echo $multiple; ?>>
+    <select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" data-placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" data-allow-clear="true" <?php echo $multiple; ?>>
 
 		<?php if ( ! empty( $args['options'] ) ) {
 			foreach ( $args['options'] as $label => $option ) {
@@ -179,7 +179,7 @@ class PUM_Fields extends Popmake_Fields {
 	 */
 	public function objectselect_callback( $args, $value = null ) {
 
-		$class = 'pum-field pum-objectselect pum-chosen ' . $args['id'];
+        $class = 'pum-field pum-objectselect pum-select2 ' . $args['id'];
 
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
@@ -213,7 +213,7 @@ class PUM_Fields extends Popmake_Fields {
 			<label for="<?php esc_attr_e( $args['id'] ); ?>"><?php esc_html_e( $args['label'] ); ?></label><?php
 		} ?>
 
-		<select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" <?php echo $multiple; ?> placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" data-objecttype="<?php esc_attr_e( $args['object_type'] ); ?>"  data-objectkey="<?php esc_attr_e( $args['object_key'] ); ?>" data-current="<?php echo maybe_json_attr( $value, true ); ?>">
+    <select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" data-placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" data-allow-clear="true" <?php echo $multiple; ?> data-objecttype="<?php esc_attr_e( $args['object_type'] ); ?>" data-objectkey="<?php esc_attr_e( $args['object_key'] ); ?>" data-current="<?php echo maybe_json_attr( $value, true ); ?>">
 
             <?php if ( ! empty( $args['options'] ) ) {
                 foreach ( $args['options'] as $label => $option ) {
@@ -448,8 +448,8 @@ class PUM_Fields extends Popmake_Fields {
 
 		$class = 'pum-field select ' . $args['id'];
 
-		if ( isset ( $args['chosen'] ) ) {
-			$class .= ' pum-chosen';
+        if ( isset ( $args['select2'] ) ) {
+            $class .= ' pum-select2';
 		}
 
 		if ( ! empty ( $args['class'] ) ) {
@@ -470,7 +470,7 @@ class PUM_Fields extends Popmake_Fields {
 			<label for="<?php esc_attr_e( $args['id'] ); ?>"><?php esc_html_e( $args['label'] ); ?></label><?php
 		} ?>
 
-		<select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" <?php echo $multiple; ?>>
+    <select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" data-placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" data-allow-clear="true" <?php echo $multiple; ?>>
 
 		<?php if ( ! empty( $args['options'] ) ) {
 			foreach ( $args['options'] as $label => $option ) { ?>
@@ -492,7 +492,7 @@ class PUM_Fields extends Popmake_Fields {
 	public function objectselect_templ_callback( $args ) {
 		$templ_name = $this->get_templ_name( $args, false );
 
-		$class = 'pum-field pum-objectselect pum-chosen ' . $args['id'];
+        $class = 'pum-field pum-objectselect pum-select2 ' . $args['id'];
 
 		if ( ! empty ( $args['class'] ) ) {
 			$class .= ' ' . $args['class'];
@@ -516,7 +516,7 @@ class PUM_Fields extends Popmake_Fields {
 		<?php esc_attr_e( $templ_name ); ?> = '';
 		} %>
 
-		<select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" <?php echo $multiple; ?> title="<?php esc_attr_e( $args['placeholder'] ); ?>" data-objecttype="<?php esc_attr_e( $args['object_type'] ); ?>"  data-objectkey="<?php esc_attr_e( $args['object_key'] ); ?>">
+    <select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" data-placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" data-allow-clear="true" <?php echo $multiple; ?> data-objecttype="<?php esc_attr_e( $args['object_type'] ); ?>" data-objectkey="<?php esc_attr_e( $args['object_key'] ); ?>">
 
 		<?php if ( ! empty( $args['options'] ) ) {
 			foreach ( $args['options'] as $label => $option ) { ?>

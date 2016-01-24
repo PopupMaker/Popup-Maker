@@ -144,13 +144,13 @@ function popmake_load_admin_scripts() {
 	}
 	if ( popmake_is_admin_page() ) {
 
-		wp_register_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $suffix, array( 'jquery' ), POPMAKE_VERSION );
+        wp_register_script( 'select2', $js_dir . 'select2.full' . $suffix, array( 'jquery' ), POPMAKE_VERSION );
 
 		wp_enqueue_script( 'popup-maker-admin', $js_dir . 'popup-maker-admin' . $suffix, array(
-			'jquery',
-			'wp-color-picker',
-			'jquery-ui-slider',
-			'jquery-chosen'
+                'jquery',
+                'wp-color-picker',
+                'jquery-ui-slider',
+                'select2',
 		), POPMAKE_VERSION );
 		wp_localize_script( 'popup-maker-admin', 'popmake_admin_ajax_nonce', wp_create_nonce( POPMAKE_NONCE ) );
 		wp_localize_script( 'popup-maker-admin', 'pum_admin', array(
@@ -207,7 +207,8 @@ function popmake_load_admin_styles() {
 	}
 	if ( popmake_is_admin_page() ) {
 
-		wp_enqueue_style( 'jquery-chosen', $css_dir . 'chosen' . $suffix, array(), POPMAKE_VERSION );
+
+        wp_enqueue_style( 'select2', $css_dir . 'select2' . $suffix, array(), POPMAKE_VERSION );
 
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_style( 'popup-maker-admin', $css_dir . 'admin' . $suffix, false, POPMAKE_VERSION );

@@ -47,7 +47,7 @@
 
     .facet {
       position: relative;
-      padding: 13px 30px 7px 20px;
+      padding: 12px 30px 6px 10px;
       border-bottom: 1px solid #E7E7E7;
       border-top: 1px solid #fff;
 
@@ -76,19 +76,13 @@
       float: left;
       margin-right: 20px;
       padding-bottom: 6px;
+      position: relative;
+      min-width: 175px;
 
       select,
       input {
         margin: 0;
       }
-
-      select, .pum-chosen {
-        width: 180px;
-      }
-
-
-
-
     }
 
     .pum-condition-target {
@@ -100,9 +94,9 @@
         box-sizing: border-box;
       }
 
-      .chosen-single {
+      select,
+      .select2-container .select2-selection {
         padding-left: 28px;
-
       }
 
       .pum-not-operand {
@@ -113,10 +107,11 @@
         z-index: 10;
         width: 23px;
         line-height: 24px;
+        height: 26px;
 
         padding: 0;
         background: #f7f7f7;
-        border: 0;
+        border: 1px solid transparent;
         border-radius: 2px 0 0 2px;
         border-right: 1px solid #ddd;
         text-align: center;
@@ -131,6 +126,12 @@
           display: none;
         }
 
+        &:focus {
+          outline: none;
+          border: 1px solid #5b9dd9;
+          box-shadow: 0 0 2px rgba(30, 140, 190, 0.8);
+        }
+
       }
 
       &.not-operand-checked {
@@ -143,10 +144,9 @@
         }
       }
 
-
-      .chosen-container-active {
-        .chosen-choices,
-        .chosen-single {
+      .select2-container-active {
+        .select2-choices,
+        .select2-single {
           border-color: #5b9dd9;
           box-shadow: 0 0 2px rgba( 30, 140, 190, 0.8 );
         }
@@ -156,8 +156,8 @@
 
     .facet-actions {
       position: absolute;
-      right: 10px;
-      top: 17px;
+      right: 6px;
+      top: 18px;
 
       button {
         border: 0;
@@ -249,5 +249,27 @@
 
   }
 
+  .pum-select2 {
+    select {
+      width: 100%;
+    }
+  }
+
 }
 
+#side-sortables {
+
+  .pum-popup-conditions .facet-builder .facet-col {
+    width: 100%;
+    float: none;
+    max-width: none;
+  }
+  .pum-popup-conditions .facet-builder .facet-actions {
+    right: 6px;
+    top: 18px;
+  }
+
+  .select2-container {
+    width: 100%;
+  }
+}

@@ -1,7 +1,7 @@
 @import 'partials/tabs';
 @import 'partials/metaboxes';
 @import 'partials/admin_modal';
-@import 'partials/pum_chosen';
+@import 'partials/pum_select2';
 @import 'partials/facet_builder';
 @import 'partials/extensions_page';
 
@@ -70,7 +70,16 @@
 
 .tabbed-form {
   .field {
+    position: relative;
     margin: 0 0 1em;
+  }
+
+  .select2-container--default {
+    width: 100%!important;
+  }
+
+  .pum-select2 select {
+    width: 100%;
   }
 
   .field.cookiekey {
