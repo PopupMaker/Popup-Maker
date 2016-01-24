@@ -148,7 +148,7 @@ class Popmake_Fields {
 			'min'         => null,
 			'max'         => null,
 			'step'        => null,
-			'chosen'      => null,
+			'select2'      => null,
 			'object_type' => 'post_type',
 			'object_key'  => 'post',
 			'post_type'   => null,

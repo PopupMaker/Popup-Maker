@@ -23,13 +23,13 @@ function pum_trigger_cookie_fields() {
 	 */
 	return apply_filters( 'pum_trigger_cookie_fields', array(
 		'name' => array(
-			'label'       => __( 'Cookie Name', 'popup-maker' ),
-			'desc'        => __( 'When do you want to create the cookie.', 'popup-maker' ),
-			'type'        => 'select',
-			'multiple'    => true,
-			'chosen'    => true,
-			'priority'    => 1,
-			'options'     => array(
+			'label'    => __( 'Cookie Name', 'popup-maker' ),
+			'desc'     => __( 'When do you want to create the cookie.', 'popup-maker' ),
+			'type'     => 'select',
+			'multiple' => true,
+			'select2'  => true,
+			'priority' => 1,
+			'options'  => array(
 				__( 'Add New Cookie', 'popup-maker' ) => 'add_new'
 			)
 		),

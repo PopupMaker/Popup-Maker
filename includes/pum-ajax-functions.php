@@ -6,36 +6,49 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function pum_ajax_object_search() {
-	$results = array();
+	$results = array(
+		'items'       => array(),
+		'total_count' => 0,
+	);
 
 	switch ( $_REQUEST['object_type'] ) {
 		case 'post_type':
 			$post_type = ! empty( $_REQUEST['object_key'] ) ? $_REQUEST['object_key'] : 'post';
 			$args      = array(
-				's' => ! empty( $_REQUEST['s'] ) ? $_REQUEST['s'] : '',
-				'post__in' => ! empty( $_REQUEST['include'] ) ? array_map( 'intval', $_REQUEST['include'] ) : null,
+				's'              => ! empty( $_REQUEST['s'] ) ? $_REQUEST['s'] : null,
+				'post__in'       => ! empty( $_REQUEST['include'] ) ? array_map( 'intval', $_REQUEST['include'] ) : null,
+				'page'           => ! empty( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : null,
+				'posts_per_page' => 10,
 			);
 
-			if ( isset( $_REQUEST['current_id'] ) ) {
-				$args['post__not_in'] = array( intval( $_REQUEST['current_id'] ) );
+			$query = PUM_Helpers::post_type_selectlist( $post_type, $args, true );
+			foreach ( $query['items'] as $name => $id ) {
+				$results['items'][] = array(
+					'id'   => $id,
+					'text' => $name,
+				);
 			}
-
-			foreach ( PUM_Helpers::post_type_selectlist( $post_type, $args ) as $name => $id ) {
-				$results[] = array( 'id' => $id, 'name' => $name );
-			}
+			$results['total_count'] = $query['total_count'];
 			break;
 
 		case 'taxonomy':
 			$taxonomy = ! empty( $_REQUEST['object_key'] ) ? $_REQUEST['object_key'] : 'category';
 
 			$args = array(
-				'search' => ! empty( $_REQUEST['s'] ) ? $_REQUEST['s'] : '',
+				'search'  => ! empty( $_REQUEST['s'] ) ? $_REQUEST['s'] : '',
 				'include' => ! empty( $_REQUEST['include'] ) ? $_REQUEST['include'] : null,
+				'page'    => ! empty( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : null,
+				'number'  => 10,
 			);
 
-			foreach ( PUM_Helpers::taxonomy_selectlist( $taxonomy, $args ) as $name => $id ) {
-				$results[] = array( 'id' => $id, 'name' => $name );
+			$query = PUM_Helpers::taxonomy_selectlist( $taxonomy, $args, true );
+			foreach ( $query['items'] as $name => $id ) {
+				$results['items'][] = array(
+					'id'   => $id,
+					'text' => $name,
+				);
 			}
+			$results['total_count'] = $query['total_count'];
 			break;
 	}
 
