@@ -36,48 +36,77 @@ class PUM_Popup_Cookies_Metabox {
 	 * @return void
 	 */
 	public static function render_metabox() {
-		global $post; ?>
-		<div id="pum_popup_cookie_fields" class="popmake_meta_table_wrap">
-        <button type="button" class="button button-primary add-new no-button"><?php _e( 'Add New Cookie', 'popup-maker' ); ?></button>
-			<?php do_action( 'pum_popup_cookies_metabox_before', $post->ID ); ?>
-			<table id="pum_popup_cookies_list" class="form-table">
-				<thead>
-					<tr>
-						<th><?php _e( 'Event', 'popup-maker' ); ?></th>
-						<th><?php _e( 'Name', 'popup-maker' ); ?></th>
-						<th><?php _e( 'Settings', 'popup-maker' ); ?></th>
-						<th><?php _e( 'Actions', 'popup-maker' ); ?></th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php
-					$cookies         = PUM_Cookies::instance()->get_cookies();
-					$current_cookies = pum_get_popup_cookies( $post->ID );
-					if ( ! empty( $current_cookies ) ) {
-						foreach ( $current_cookies as $key => $values ) {
-							$cookie = $cookies[ $values['event'] ];
-							static::render_row( array(
-								'index' => esc_attr( $key ),
-								'event' => esc_attr( $values['event'] ),
-								'columns' => array(
-									'event' => $cookie->get_label( 'name' ),
-									'name' =>  $values['settings']['name'],
-									'settings' => '<%= PUMCookies.getSettingsDesc(event, cookie_settings) %>',
-								),
-								'settings' => $values['settings'],
-							) );
-						}
-					} ?>
-				</tbody>
-			</table>
-			<?php do_action( 'pum_popup_cookies_metabox_after', $post->ID ); ?>
-		</div><?php
+        global $post;
+
+
+        $cookies         = PUM_Cookies::instance()->get_cookies();
+        $current_cookies = pum_get_popup_cookies( $post->ID );
+        $has_cookies     = boolval( count( $current_cookies ) );
+
+        ?>
+    <div id="pum_popup_cookie_fields" class="popmake_meta_table_wrap <?php echo $has_cookies ? 'has-cookies' : ''; ?>">
+
+        <div id="pum_popup_cookies_list" class="cookies-list">
+
+            <button type="button" class="button button-primary add-new no-button"><?php _e( 'Add New Cookie', 'popup-maker' ); ?></button>
+
+            <?php do_action( 'pum_popup_cookies_metabox_before', $post->ID ); ?>
+
+            <table class="form-table">
+
+                <thead>
+                <tr>
+                    <th><?php _e( 'Event', 'popup-maker' ); ?></th>
+                    <th><?php _e( 'Name', 'popup-maker' ); ?></th>
+                    <th><?php _e( 'Settings', 'popup-maker' ); ?></th>
+                    <th><?php _e( 'Actions', 'popup-maker' ); ?></th>
+                </tr>
+                </thead>
+                <tbody><?php
+                if ( ! empty( $current_cookies ) ) {
+                    foreach ( $current_cookies as $key => $values ) {
+                        $cookie = $cookies[ $values['event'] ];
+                        static::render_row( array(
+                                'index'    => esc_attr( $key ),
+                                'event'    => esc_attr( $values['event'] ),
+                                'columns'  => array(
+                                        'event'    => $cookie->get_label( 'name' ),
+                                        'name'     => $values['settings']['name'],
+                                        'settings' => '<%= PUMCookies.getSettingsDesc(event, cookie_settings) %>',
+                                ),
+                                'settings' => $values['settings'],
+                        ) );
+                    }
+                } ?>
+                </tbody>
+            </table>
+
+            <?php do_action( 'pum_popup_cookies_metabox_after', $post->ID ); ?>
+
+        </div>
+
+        <div class="no-cookies">
+            <p>
+                <strong><?php _e( 'Cookies are used to prevent a trigger from opening the popup.', 'popup-maker' ); ?></strong>
+            </p>
+            <div class="pum-field select pum-select2">
+                <label for="pum-first-cookie"><?php _e( 'Choose when you want to set a cookie to get started.', 'popup-maker' ); ?></label>
+                <select id="pum-first-cookie" data-placeholder="<?php _e( 'Select an event.', 'popup-maker' ); ?>">
+                    <?php foreach ( $cookies as $id => $cookie ) : ?>
+                        <option value="<?php echo $id; ?>"><?php echo $cookie->get_label( 'name' ); ?></option>
+                    <?php endforeach ?>
+                </select>
+            </div>
+        </div>
+
+
+        </div><?php
 	}
 
 	public static function save_popup( $post_id ) {
 		$cookies = array();
 		if ( ! empty ( $_POST['popup_cookies'] ) ) {
-			foreach ( $_POST['popup_cookies'] as $key => $cookie ) {
+            foreach ( $_POST['popup_cookies'] as $id => $cookie ) {
 				$cookie['settings'] = PUM_Admin_Helpers::object_to_array( json_decode( stripslashes( $cookie['settings'] ) ) );
 				$cookie['settings'] = PUM_Cookies::instance()->validate_cookie( $cookie['event'], $cookie['settings'] );
 				$cookies[] = $cookie;

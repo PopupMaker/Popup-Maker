@@ -71,6 +71,28 @@ var PUMTriggers;
     PUMTriggers.refreshDescriptions();
 
     $(document)
+        .on('select2:select', '#pum-first-trigger', function () {
+            var $this = $(this),
+                type = $this.val(),
+                id = '#pum_trigger_settings_' + type,
+                template = _.template($('script' + id + '_templ').html()),
+                data = {};
+
+            data.trigger_settings = defaults.triggers[type] !== undefined ? defaults.triggers[type] : {};
+            data.save_button_text = I10n.add;
+            data.index = null;
+
+            if (!template.length) {
+                alert('Something went wrong. Please refresh and try again.');
+            }
+
+            PUMModals.reload(id, template(data));
+            PUMTriggers.initEditForm(data);
+
+            $this
+                .val(null)
+                .trigger('change');
+        })
         .on('click', '#pum_popup_triggers .add-new', function () {
             var template = _.template($('script#pum_trigger_add_type_templ').html());
             PUMModals.reload('#pum_trigger_add_type_modal', template());
@@ -106,6 +128,14 @@ var PUMTriggers;
 
             if (window.confirm(I10n.confirm_delete_trigger)) {
                 $row.remove();
+
+                if (!$('#pum_popup_triggers_list tbody tr').length) {
+                    $('#pum-first-trigger')
+                        .val(null)
+                        .trigger('change');
+                    $('#pum_popup_trigger_fields').removeClass('has-triggers');
+                }
+
                 PUMTriggers.renumber();
             }
         })
@@ -156,11 +186,18 @@ var PUMTriggers;
             PUMModals.closeAll();
             PUMTriggers.renumber();
 
+            $('#pum_popup_trigger_fields').addClass('has-triggers');
+
             if (values.trigger_settings.cookie.name !== null && values.trigger_settings.cookie.name.indexOf('add_new') >= 0) {
                 PUMTriggers.new_cookie = values.index;
                 $('#pum_popup_cookie_fields button.add-new').trigger('click');
             }
         })
-        .ready(PUMTriggers.refreshDescriptions);
+        .ready(function () {
+            PUMTriggers.refreshDescriptions();
+            $('#pum-first-trigger')
+                .val(null)
+                .trigger('change');
+        });
 
 }(jQuery, document));

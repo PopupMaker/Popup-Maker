@@ -45,6 +45,60 @@
 
 }
 
+#pum_popup_trigger_fields {
+
+  .triggers-list {
+    display: none;
+  }
+
+  .no-triggers {
+    display: block;
+    select {
+      width: 180px;
+    }
+  }
+
+  &.has-triggers {
+
+    .triggers-list {
+      display: block;
+    }
+
+    .no-triggers {
+      display: none;
+    }
+
+  }
+}
+
+#pum_popup_cookie_fields {
+
+  .cookies-list {
+    display: none;
+  }
+
+  .no-cookies {
+    display: block;
+    select {
+      width: 180px;
+    }
+  }
+
+  &.has-cookies {
+
+    .cookies-list {
+      display: block;
+    }
+
+    .no-cookies {
+      display: none;
+    }
+
+  }
+}
+
+
+
 #popup_trigger_add_type,
 #popup_cookie_add_event {
   display: block;

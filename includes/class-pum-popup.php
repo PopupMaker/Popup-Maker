@@ -546,6 +546,10 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		public function get_last_open_count_reset() {
 			$resets = $this->get_meta( 'popup_open_count_reset' );
 
+			if ( empty ( $resets ) ) {
+				return false;
+			}
+
 			/**
 			 * Compare function for reset timestamps. Sorts Newest First.
 			 *

@@ -97,6 +97,12 @@
       select,
       .select2-container .select2-selection {
         padding-left: 28px;
+
+          // Rendered Option
+          .select2-selection__rendered {
+            padding-left: 3px;
+          }
+
       }
 
       .pum-not-operand {

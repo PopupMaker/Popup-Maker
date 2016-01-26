@@ -4,6 +4,8 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
 
 .pum-select2 {
 
+  position: relative;
+
   // All Select2 Containers - Wraps Both Selectbox & Dropdown Elements
   .select2-container {
 
@@ -30,7 +32,7 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
 
       // Rendered Option
       .select2-selection__rendered {
-        padding-left: 0;
+        //padding-left: 0;
       }
 
     }

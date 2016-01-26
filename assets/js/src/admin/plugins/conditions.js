@@ -60,7 +60,7 @@ var PUMConditions;
                 PUMConditions.renumber();
             }
         })
-        .on('change', '#pum-first-condition', function () {
+        .on('select2:select', '#pum-first-condition', function () {
             var $this = $(this),
                 target = $this.val(),
                 $operand = $('#pum-first-condition-operand'),
@@ -68,7 +68,9 @@ var PUMConditions;
 
             PUMConditions.addGroup(target, not_operand);
 
-            $this.val('').trigger('chosen:updated');
+            $this
+                .val(null)
+                .trigger('change');
             $operand.prop('checked', false).parents('.pum-condition-target').removeClass('not-operand-checked');
         })
         .on('click', '#pum-popup-conditions .pum-not-operand', function () {

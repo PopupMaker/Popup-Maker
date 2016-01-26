@@ -61,6 +61,29 @@ var PUMCookies;
     };
 
     $(document)
+        .on('select2:select', '#pum-first-cookie', function () {
+            var $this = $(this),
+                event = $this.val(),
+                id = '#pum_cookie_settings_' + event,
+                template = _.template($('script' + id + '_templ').html()),
+                data = {};
+
+            data.cookie_settings = defaults.cookies[event] !== undefined ? defaults.cookies[event] : {};
+            data.cookie_settings.name = 'pum-' + $('#post_ID').val();
+            data.save_button_text = I10n.add;
+            data.index = null;
+
+            if (!template.length) {
+                alert('Something went wrong. Please refresh and try again.');
+            }
+
+            PUMModals.reload(id, template(data));
+            PUMCookies.initEditForm(id);
+
+            $this
+                .val(null)
+                .trigger('change');
+        })
         .on('click', '.field.cookiekey button.reset', PUMCookies.resetCookieKey)
         .on('click', '.cookie-editor .pum-form .field.checkbox.session', PUMCookies.updateSessionsCheckbox)
         .on('click', '#pum_popup_cookies .add-new', function () {
@@ -98,6 +121,15 @@ var PUMCookies;
 
             if (window.confirm(I10n.confirm_delete_cookie)) {
                 $row.remove();
+
+                if (!$('#pum_popup_cookies_list tbody tr').length) {
+                    $('#pum-first-cookie')
+                        .val(null)
+                        .trigger('change');
+
+                    $('#pum_popup_cookie_fields').removeClass('has-cookies');
+                }
+
                 PUMCookies.renumber();
             }
         })
@@ -129,7 +161,8 @@ var PUMCookies;
                 $row = index >= 0 ? $('#pum_popup_cookies_list tbody tr').eq(index) : null,
                 template = _.template($('script#pum_cookie_row_templ').html()),
                 $new_row,
-                $trigger, trigger_settings;
+                $trigger,
+                trigger_settings;
 
             e.preventDefault();
 
@@ -143,13 +176,14 @@ var PUMCookies;
 
             if (!$row) {
                 $('#pum_popup_cookies_list tbody').append($new_row);
-            }
-            else {
+            } else {
                 $row.replaceWith($new_row);
             }
 
             PUMModals.closeAll();
             PUMCookies.renumber();
+
+            $('#pum_popup_cookie_fields').addClass('has-cookies');
 
             if (PUMTriggers.new_cookie >= 0) {
                 $trigger = $('#pum_popup_triggers_list tbody tr').eq(PUMTriggers.new_cookie).find('.popup_triggers_field_settings:first');
@@ -162,6 +196,11 @@ var PUMCookies;
                 PUMTriggers.refreshDescriptions();
             }
         })
-        .ready(PUMCookies.refreshDescriptions);
+        .ready(function () {
+            PUMCookies.refreshDescriptions();
+            $('#pum-first-cookie')
+                .val(null)
+                .trigger('change');
+        });
 
 }(jQuery, document));

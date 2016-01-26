@@ -38,42 +38,70 @@ class PUM_Popup_Triggers_Metabox {
 	 * @return void
 	 */
 	public static function render_metabox() {
-		global $post; ?>
-		<div id="pum_popup_trigger_fields" class="popmake_meta_table_wrap">
-        <button type="button" class="button button-primary add-new no-button"><?php _e( 'Add New Trigger', 'popup-maker' ); ?></button>
-			<?php do_action( 'pum_popup_triggers_metabox_before', $post->ID ); ?>
-			<table id="pum_popup_triggers_list" class="form-table">
-				<thead>
-					<tr>
-						<th><?php _e( 'Type', 'popup-maker' ); ?></th>
-						<th><?php _e( 'Cookie', 'popup-maker' ); ?></th>
-						<th><?php _e( 'Settings', 'popup-maker' ); ?></th>
-						<th><?php _e( 'Actions', 'popup-maker' ); ?></th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php
-					$triggers         = PUM_Triggers::instance()->get_triggers();
-					$current_triggers = pum_get_popup_triggers( $post->ID );
-					if ( ! empty( $current_triggers ) ) {
-						foreach ( $current_triggers as $key => $values ) {
-							$trigger = $triggers[ $values['type'] ];
-							static::render_row( array(
-								'index' => esc_attr( $key ),
-								'type' => esc_attr( $values['type'] ),
-								'columns' => array(
-									'type' => $trigger->get_label('name'),
-									'cookie' => isset( $values['settings']['cookie']['name'] ) ? $values['settings']['cookie']['name'] : '',
-									'settings' => '<%= PUMTriggers.getSettingsDesc(type, trigger_settings) %>',
-								),
-								'settings' => $values['settings'],
-							) );
-						}
-					} ?>
-				</tbody>
-			</table>
-			<?php do_action( 'pum_popup_triggers_metabox_after', $post->ID ); ?>
-		</div><?php
+        global $post;
+
+
+        $triggers         = PUM_Triggers::instance()->get_triggers();
+        $current_triggers = pum_get_popup_triggers( $post->ID );
+        $has_triggers     = boolval( count( $current_triggers ) );
+
+        ?>
+    <div id="pum_popup_trigger_fields" class="popmake_meta_table_wrap <?php echo $has_triggers ? 'has-triggers' : ''; ?>">
+
+        <div id="pum_popup_triggers_list" class="triggers-list">
+
+            <button type="button" class="button button-primary add-new no-button"><?php _e( 'Add New Trigger', 'popup-maker' ); ?></button>
+
+            <?php do_action( 'pum_popup_triggers_metabox_before', $post->ID ); ?>
+
+            <table class="form-table">
+                <thead>
+                <tr>
+                    <th><?php _e( 'Type', 'popup-maker' ); ?></th>
+                    <th><?php _e( 'Cookie', 'popup-maker' ); ?></th>
+                    <th><?php _e( 'Settings', 'popup-maker' ); ?></th>
+                    <th><?php _e( 'Actions', 'popup-maker' ); ?></th>
+                </tr>
+                </thead>
+                <tbody><?php
+                if ( ! empty( $current_triggers ) ) {
+                    foreach ( $current_triggers as $key => $values ) {
+                        $trigger = $triggers[ $values['type'] ];
+                        static::render_row( array(
+                                'index'    => esc_attr( $key ),
+                                'type'     => esc_attr( $values['type'] ),
+                                'columns'  => array(
+                                        'type'     => $trigger->get_label( 'name' ),
+                                        'cookie'   => isset( $values['settings']['cookie']['name'] ) ? $values['settings']['cookie']['name'] : '',
+                                        'settings' => '<%= PUMTriggers.getSettingsDesc(type, trigger_settings) %>',
+                                ),
+                                'settings' => $values['settings'],
+                        ) );
+                    }
+                } ?>
+                </tbody>
+            </table>
+
+            <?php do_action( 'pum_popup_triggers_metabox_after', $post->ID ); ?>
+
+        </div>
+
+        <div class="no-triggers">
+            <p>
+                <strong><?php _e( 'Triggers are what make your popup open.', 'popup-maker' ); ?></strong>
+            </p>
+            <div class="pum-field select pum-select2">
+                <label for="pum-first-trigger"><?php _e( 'Choose a type of trigger to get started.', 'popup-maker' ); ?></label>
+                <select id="pum-first-trigger" data-placeholder="<?php _e( 'Select an trigger type.', 'popup-maker' ); ?>">
+                    <?php foreach ( $triggers as $id => $trigger ) : ?>
+                        <option value="<?php echo $id; ?>"><?php echo $trigger->get_label( 'name' ); ?></option>
+                    <?php endforeach ?>
+                </select>
+            </div>
+        </div>
+
+
+        </div><?php
 	}
 
 	public static function save_popup( $post_id ) {

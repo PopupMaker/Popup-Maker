@@ -62,7 +62,7 @@ var PUM_Analytics;
                     type: 'open'
                 };
 
-            if (data.pid > 0) {
+            if (data.pid > 0 && !$('body').hasClass('single-popup')) {
                 PUM_Analytics.send(data);
             }
         });
