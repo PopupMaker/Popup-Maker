@@ -476,6 +476,93 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 			return get_post_meta( $this->ID, $key, $single );
 		}
 
+		/**
+		 * Returns the correct open count meta key based on $which.
+		 *
+		 * Can be current or total.
+		 *
+		 * - 'current' since last reset
+		 * - 'total' since creation
+		 *
+		 * @param string $which
+		 *
+		 * @return integer
+		 */
+		public function get_open_count( $which = 'current' ) {
+			switch( $which ) {
+				case 'current' : return absint( $this->get_meta( 'popup_open_count', true ) );
+				case 'total'   : return absint( $this->get_meta( 'popup_open_count_total', true ) );
+			}
+			return 0;
+		}
+
+
+		public function increase_open_count() {
+
+			// Set the current open count
+			$current = $this->get_open_count();
+			if( ! $current ) {
+				$current = 0;
+			};
+			$current = $current + 1;
+
+			// Set the total open count since creation.
+			$total = $this->get_open_count( 'total' );
+			if( ! $total ) {
+				$total = 0;
+			}
+			$total = $total + 1;
+
+			update_post_meta( $this->ID, 'popup_open_count', absint( $current ) );
+			update_post_meta( $this->ID, 'popup_open_count_total', absint( $total ) );
+			update_post_meta( $this->ID, 'popup_last_opened', current_time( 'timestamp', 0 ) );
+
+			// TODO Possibly move this to a global scope.
+			$total_opens = get_site_option( 'pum_total_open_count', 0 );
+			update_option( 'pum_total_open_count', $total_opens + 1 );
+		}
+
+		/**
+		 * Log and reset popup open count to 0.
+		 */
+		public function reset_open_count() {
+
+			// Log the reset time and count.
+			add_post_meta( $this->ID, 'popup_open_count_reset', array(
+				'timestamp' => current_time( 'timestamp', 0 ),
+				'count' => absint( $this->get_open_count( 'current' ) )
+			) );
+
+			update_post_meta( $this->ID, 'popup_open_count', 0 );
+			update_post_meta( $this->ID, 'popup_last_opened', 0 );
+
+		}
+
+		/**
+		 * Returns the last reset information.
+		 *
+		 * @return mixed
+		 */
+		public function get_last_open_count_reset() {
+			$resets = $this->get_meta( 'popup_open_count_reset' );
+
+			/**
+			 * Compare function for reset timestamps. Sorts Newest First.
+			 *
+			 * @param $a
+			 * @param $b
+			 *
+			 * @return bool
+			 */
+			function cmp ( $a, $b ) {
+				return ( float ) $a['timestamp'] < ( float )$b['timestamp'];
+			}
+
+			usort( $resets, "cmp" );
+
+			return $resets[0];
+		}
+
 	}
 
 }
