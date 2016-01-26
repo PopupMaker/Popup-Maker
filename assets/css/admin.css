@@ -112,6 +112,54 @@
     color: #0073aa;
 }
 
+#pum_popup_trigger_fields .triggers-list
+{
+    display: none;
+}
+
+#pum_popup_trigger_fields .no-triggers
+{
+    display: block;
+}
+#pum_popup_trigger_fields .no-triggers select
+{
+    width: 180px;
+}
+
+#pum_popup_trigger_fields.has-triggers .triggers-list
+{
+    display: block;
+}
+
+#pum_popup_trigger_fields.has-triggers .no-triggers
+{
+    display: none;
+}
+
+#pum_popup_cookie_fields .cookies-list
+{
+    display: none;
+}
+
+#pum_popup_cookie_fields .no-cookies
+{
+    display: block;
+}
+#pum_popup_cookie_fields .no-cookies select
+{
+    width: 180px;
+}
+
+#pum_popup_cookie_fields.has-cookies .cookies-list
+{
+    display: block;
+}
+
+#pum_popup_cookie_fields.has-cookies .no-cookies
+{
+    display: none;
+}
+
 #popup_trigger_add_type,
 #popup_cookie_add_event
 {
@@ -409,6 +457,10 @@
 /* jQuery select2 Styles for Popup Maker.
 The bulk of this is to style jquery select2 to better resemble the default WP dashboard inputs.
 */
+.pum-select2
+{
+    position: relative;
+}
 .pum-select2 .select2-container .select2-selection
 {
     font-size: 14px;
@@ -421,19 +473,12 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
     border-radius: 0;
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, .07);
 }
-
 .pum-select2 .select2-container.select2-container--focus .select2-selection
 {
     border-color: #5b9dd9;
     outline: none;
     box-shadow: 0 0 2px rgba(30, 140, 190, .8);
 }
-
-.pum-select2 .select2-container .select2-selection--single .select2-selection__rendered
-{
-    padding-left: 0;
-}
-
 .pum-select2 .select2-container .select2-selection--multiple
 {
     font-size: 12px; 
@@ -464,7 +509,6 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
     margin-top: 4px;
     margin-bottom: 0;
 }
-
 .pum-select2 .select2-container .select2-dropdown
 {
     position: relative; 
@@ -606,6 +650,11 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
 .pum-popup-conditions .facet-builder .pum-condition-target .select2-container .select2-selection
 {
     padding-left: 28px;
+}
+.pum-popup-conditions .facet-builder .pum-condition-target select .select2-selection__rendered,
+.pum-popup-conditions .facet-builder .pum-condition-target .select2-container .select2-selection .select2-selection__rendered
+{
+    padding-left: 3px;
 }
 .pum-popup-conditions .facet-builder .pum-condition-target .pum-not-operand
 {

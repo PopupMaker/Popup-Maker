@@ -1,3 +1,14 @@
+(function ($, document, undefined) {
+    "use strict";
+
+    $(document)
+        .on('click', '#popup_reset_open_count', function () {
+            var $this = $(this);
+            if ($this.is(':checked') && !confirm(pum_admin.I10n.confirm_count_reset)) {
+                $this.prop('checked', false);
+            }
+        });
+}(jQuery, document));
 var PUMColorPickers;
 (function ($, document, undefined) {
     "use strict";
@@ -90,7 +101,7 @@ var PUMConditions;
                 PUMConditions.renumber();
             }
         })
-        .on('change', '#pum-first-condition', function () {
+        .on('select2:select', '#pum-first-condition', function () {
             var $this = $(this),
                 target = $this.val(),
                 $operand = $('#pum-first-condition-operand'),
@@ -98,7 +109,9 @@ var PUMConditions;
 
             PUMConditions.addGroup(target, not_operand);
 
-            $this.val('').trigger('chosen:updated');
+            $this
+                .val(null)
+                .trigger('change');
             $operand.prop('checked', false).parents('.pum-condition-target').removeClass('not-operand-checked');
         })
         .on('click', '#pum-popup-conditions .pum-not-operand', function () {
@@ -229,6 +242,29 @@ var PUMCookies;
     };
 
     $(document)
+        .on('select2:select', '#pum-first-cookie', function () {
+            var $this = $(this),
+                event = $this.val(),
+                id = '#pum_cookie_settings_' + event,
+                template = _.template($('script' + id + '_templ').html()),
+                data = {};
+
+            data.cookie_settings = defaults.cookies[event] !== undefined ? defaults.cookies[event] : {};
+            data.cookie_settings.name = 'pum-' + $('#post_ID').val();
+            data.save_button_text = I10n.add;
+            data.index = null;
+
+            if (!template.length) {
+                alert('Something went wrong. Please refresh and try again.');
+            }
+
+            PUMModals.reload(id, template(data));
+            PUMCookies.initEditForm(id);
+
+            $this
+                .val(null)
+                .trigger('change');
+        })
         .on('click', '.field.cookiekey button.reset', PUMCookies.resetCookieKey)
         .on('click', '.cookie-editor .pum-form .field.checkbox.session', PUMCookies.updateSessionsCheckbox)
         .on('click', '#pum_popup_cookies .add-new', function () {
@@ -266,6 +302,15 @@ var PUMCookies;
 
             if (window.confirm(I10n.confirm_delete_cookie)) {
                 $row.remove();
+
+                if (!$('#pum_popup_cookies_list tbody tr').length) {
+                    $('#pum-first-cookie')
+                        .val(null)
+                        .trigger('change');
+
+                    $('#pum_popup_cookie_fields').removeClass('has-cookies');
+                }
+
                 PUMCookies.renumber();
             }
         })
@@ -297,7 +342,8 @@ var PUMCookies;
                 $row = index >= 0 ? $('#pum_popup_cookies_list tbody tr').eq(index) : null,
                 template = _.template($('script#pum_cookie_row_templ').html()),
                 $new_row,
-                $trigger, trigger_settings;
+                $trigger,
+                trigger_settings;
 
             e.preventDefault();
 
@@ -311,13 +357,14 @@ var PUMCookies;
 
             if (!$row) {
                 $('#pum_popup_cookies_list tbody').append($new_row);
-            }
-            else {
+            } else {
                 $row.replaceWith($new_row);
             }
 
             PUMModals.closeAll();
             PUMCookies.renumber();
+
+            $('#pum_popup_cookie_fields').addClass('has-cookies');
 
             if (PUMTriggers.new_cookie >= 0) {
                 $trigger = $('#pum_popup_triggers_list tbody tr').eq(PUMTriggers.new_cookie).find('.popup_triggers_field_settings:first');
@@ -330,7 +377,12 @@ var PUMCookies;
                 PUMTriggers.refreshDescriptions();
             }
         })
-        .ready(PUMCookies.refreshDescriptions);
+        .ready(function () {
+            PUMCookies.refreshDescriptions();
+            $('#pum-first-cookie')
+                .val(null)
+                .trigger('change');
+        });
 
 }(jQuery, document));
 (function ($, document, undefined) {
@@ -1240,6 +1292,28 @@ var PUMTriggers;
     PUMTriggers.refreshDescriptions();
 
     $(document)
+        .on('select2:select', '#pum-first-trigger', function () {
+            var $this = $(this),
+                type = $this.val(),
+                id = '#pum_trigger_settings_' + type,
+                template = _.template($('script' + id + '_templ').html()),
+                data = {};
+
+            data.trigger_settings = defaults.triggers[type] !== undefined ? defaults.triggers[type] : {};
+            data.save_button_text = I10n.add;
+            data.index = null;
+
+            if (!template.length) {
+                alert('Something went wrong. Please refresh and try again.');
+            }
+
+            PUMModals.reload(id, template(data));
+            PUMTriggers.initEditForm(data);
+
+            $this
+                .val(null)
+                .trigger('change');
+        })
         .on('click', '#pum_popup_triggers .add-new', function () {
             var template = _.template($('script#pum_trigger_add_type_templ').html());
             PUMModals.reload('#pum_trigger_add_type_modal', template());
@@ -1275,6 +1349,14 @@ var PUMTriggers;
 
             if (window.confirm(I10n.confirm_delete_trigger)) {
                 $row.remove();
+
+                if (!$('#pum_popup_triggers_list tbody tr').length) {
+                    $('#pum-first-trigger')
+                        .val(null)
+                        .trigger('change');
+                    $('#pum_popup_trigger_fields').removeClass('has-triggers');
+                }
+
                 PUMTriggers.renumber();
             }
         })
@@ -1325,12 +1407,19 @@ var PUMTriggers;
             PUMModals.closeAll();
             PUMTriggers.renumber();
 
+            $('#pum_popup_trigger_fields').addClass('has-triggers');
+
             if (values.trigger_settings.cookie.name !== null && values.trigger_settings.cookie.name.indexOf('add_new') >= 0) {
                 PUMTriggers.new_cookie = values.index;
                 $('#pum_popup_cookie_fields button.add-new').trigger('click');
             }
         })
-        .ready(PUMTriggers.refreshDescriptions);
+        .ready(function () {
+            PUMTriggers.refreshDescriptions();
+            $('#pum-first-trigger')
+                .val(null)
+                .trigger('change');
+        });
 
 }(jQuery, document));
 var PUMUtils;
