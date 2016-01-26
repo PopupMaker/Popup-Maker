@@ -1,9 +1,6 @@
 (function ($, document, undefined) {
     "use strict";
 
-    $.fn.popmake.last_open_trigger = null;
-    $.fn.popmake.last_close_trigger = null;
-
     $.fn.popmake.methods.addTrigger = function (type) {
         // Method calling logic
         if ($.fn.popmake.triggers[type]) {
