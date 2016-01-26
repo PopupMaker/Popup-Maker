@@ -34,7 +34,15 @@ function popmake_load_site_scripts() {
 		'jquery-ui-core',
 		'jquery-ui-position'
 	), POPMAKE_VERSION, true );
+
+    wp_localize_script( 'popup-maker-site', 'pum_vars', apply_filters( 'pum_vars', array(
+        'ajaxurl' => admin_url( 'admin-ajax.php' ),
+        'default_theme' => (string) popmake_get_default_popup_theme(),
+    ) ) );
+
+    // @deprecated 1.4.0 Use pum_vars instead.
 	wp_localize_script( 'popup-maker-site', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
+    // @deprecated 1.4.0 Use pum_vars instead.
 	wp_localize_script( 'popup-maker-site', 'popmake_default_theme', (string) popmake_get_default_popup_theme() );
 
 	if ( popmake_get_option( 'popmake_powered_by_opt_in', false ) ) {
@@ -147,28 +155,29 @@ function popmake_load_admin_scripts() {
         wp_register_script( 'select2', $js_dir . 'select2.full' . $suffix, array( 'jquery' ), POPMAKE_VERSION );
 
 		wp_enqueue_script( 'popup-maker-admin', $js_dir . 'popup-maker-admin' . $suffix, array(
-                'jquery',
-                'wp-color-picker',
-                'jquery-ui-slider',
-                'select2',
+            'jquery',
+            'wp-color-picker',
+            'jquery-ui-slider',
+            'select2',
 		), POPMAKE_VERSION );
 		wp_localize_script( 'popup-maker-admin', 'popmake_admin_ajax_nonce', wp_create_nonce( POPMAKE_NONCE ) );
 		wp_localize_script( 'popup-maker-admin', 'pum_admin', array(
 			'post_id'  => ! empty( $_GET['post'] ) ? intval( $_GET['post'] ) : null,
 			'defaults' => array(
-					'triggers' => PUM_Triggers::instance()->get_defaults(),
-					'cookies' => PUM_Cookies::instance()->get_defaults(),
+                'triggers' => PUM_Triggers::instance()->get_defaults(),
+                'cookies' => PUM_Cookies::instance()->get_defaults(),
 			),
 			'I10n'     => array(
-                    'add'                    => __( 'Add', 'popup-maker' ),
-                    'save'                   => __( 'Save', 'popup-maker' ),
-                    'confirm_delete_trigger' => __( "Are you sure you want to delete this trigger?", 'popup-maker' ),
-                    'confirm_delete_cookie'  => __( "Are you sure you want to delete this cookie?", 'popup-maker' ),
-                    'labels'                 => array(
-				    'triggers' => PUM_Triggers::instance()->get_labels(),
-				    'cookies' => PUM_Cookies::instance()->get_labels(),
-			    ),
-                    'no_cookie'              => __( 'None', 'popup-maker' ),
+                'add'                    => __( 'Add', 'popup-maker' ),
+                'save'                   => __( 'Save', 'popup-maker' ),
+                'confirm_delete_trigger' => __( "Are you sure you want to delete this trigger?", 'popup-maker' ),
+                'confirm_delete_cookie'  => __( "Are you sure you want to delete this cookie?", 'popup-maker' ),
+                'labels'                 => array(
+                    'triggers' => PUM_Triggers::instance()->get_labels(),
+                    'cookies' => PUM_Cookies::instance()->get_labels(),
+                ),
+                'no_cookie'              => __( 'None', 'popup-maker' ),
+                'confirm_count_reset'    => __( 'Are you sure you want to reset the open count?', 'popup-maker' ),
 		    )
 		) );
 	}
