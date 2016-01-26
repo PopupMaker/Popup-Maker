@@ -185,6 +185,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/class-pum-popup-query.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-fields.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-previews.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-ajax.php';
 
 			// Functions
 			require_once POPMAKE_DIR . 'includes/pum-popup-functions.php';
@@ -216,6 +217,12 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/pum-condition-functions.php';
 			if ( is_admin() ) {
 				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-conditions.php';
+			}
+
+			// Analytics
+			require_once POPMAKE_DIR . 'includes/class-pum-analytics.php';
+			if ( is_admin() ) {
+				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-analytics.php';
 			}
 
 			// Upgrades

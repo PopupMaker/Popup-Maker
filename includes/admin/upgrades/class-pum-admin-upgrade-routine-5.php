@@ -86,20 +86,21 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 		}
 
 		// Check for popup analytics extension and import those stats if available.
-		$total_open_count = get_site_option( 'popup_analytics_total_opened_count' );
-		if ( $total_open_count ) {
-			$total_open_count = 0;
-		}
+		$total_open_count = get_site_option( 'popup_analytics_total_opened_count', 0 );
+
 		// Set the sites total open count.
 		update_site_option( 'pum_total_open_count', $total_open_count );
 
+		/**
+		 * TODO Move this to v1.5 routines.
+		 */
+		/*
 		// Check for popup analytics extension and import those stats if available.
-		$total_conversion_count = get_site_option( 'popup_analytics_total_conversion_count' );
-		if ( $total_conversion_count ) {
-			$total_conversion_count = 0;
-		}
+		$total_conversion_count = get_site_option( 'popup_analytics_total_conversion_count', 0 );
+
 		// Set the sites total open count.
 		update_site_option( 'pum_total_conversion_count', $total_conversion_count );
+		 */
 
 		static::done();
 	}
@@ -122,6 +123,15 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 			$last_open = 0;
 		}
 
+		// Add the meta.
+		update_post_meta( $popup_id, 'popup_open_count', absint( $open_count ) );
+		update_post_meta( $popup_id, 'popup_open_count_total', absint( $open_count ) );
+		update_post_meta( $popup_id, 'popup_last_opened', absint( $last_open ) );
+
+		/**
+		 * TODO Move this to v1.5 routines.
+		 */
+		/*
 		// Conversion Count
 		$conversion_count = get_post_meta( $popup_id, 'popup_analytic_conversion_count', true );
 		if ( ! $conversion_count ) {
@@ -138,11 +148,10 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 		$conversion_rate = $conversion_count / $open_count * 100;
 
 		// Add the meta.
-		add_post_meta( $popup_id, 'popup_open_count', $open_count, true );
-		add_post_meta( $popup_id, 'popup_last_opened', $last_open, true );
-		add_post_meta( $popup_id, 'popup_conversion_count', $conversion_count, true );
-		add_post_meta( $popup_id, 'popup_last_conversion', $last_conversion, true );
+		update_post_meta( $popup_id, 'popup_conversion_count', $conversion_count );
+		update_post_meta( $popup_id, 'popup_last_conversion', $last_conversion );
 		update_post_meta( $popup_id, 'popup_conversion_rate', $conversion_rate );
+		*/
 	}
 
 }
