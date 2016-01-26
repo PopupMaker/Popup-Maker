@@ -394,9 +394,6 @@ var PUMCookies;
                 PopMakeAdminDeprecated.attachQuickSearchListeners();
                 PopMakeAdminDeprecated.attachTabsPanelListeners();
             }
-            if ($('body.post-type-popup_theme form#post').length) {
-                PopMakeAdminDeprecated.initialize_theme_page();
-            }
         },
         attachTabsPanelListeners: function () {
             $('#poststuff').bind('click', function (event) {

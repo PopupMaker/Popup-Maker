@@ -1295,7 +1295,57 @@ div.popmake-upgrade-tip
 
 #popmake_popup_theme_preview .empreview
 {
+    position: relative; 
+
     padding-top: 25px;
+}
+
+.example-popup-overlay,
+.example-popup-overlay .example-popup,
+.pum-overlay .title,
+.pum-overlay .content,
+.example-popup-overlay .close-popup,
+.example-popup-overlay .close-popupclose-popup:hover,
+.example-popup-overlay .close-popup:focus,
+.example-popup-overlay .close-popup:active
+{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: medium;
+    font-weight: normal;
+    font-style: normal;
+    line-height: normal;
+
+    position: static;
+    z-index: auto; 
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+
+    visibility: visible;
+    /* didn't really know what the default for display should be*/
+    /*display:inline;*/
+    float: none;
+    clear: none;
+    overflow: visible;
+
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+
+    cursor: default;
+    text-align: left;
+    white-space: normal;
+    text-decoration: none;
+    text-indent: 0;
+    letter-spacing: normal;
+    text-transform: none;
+
+    border: none;
+    background: none;
 }
 
 .example-popup,
@@ -1305,7 +1355,7 @@ div.popmake-upgrade-tip
 .example-popup *:before,
 .example-popup *:after
 {
-    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .empreview .example-popup-overlay
@@ -1324,7 +1374,6 @@ div.popmake-upgrade-tip
 {
     font-size: 16px;
 
-    position: relative;
     position: relative;
     z-index: 99; 
 

@@ -1,3 +1,51 @@
+/* Reset Overlay, Container, Title, Content(div) & Close button */
+.pum-overlay,
+.pum-overlay .pum-container,
+.pum-overlay .pum-title,
+.pum-overlay .pum-content,
+.pum-overlay .pum-close,
+.pum-overlay .pum-close:hover,
+.pum-overlay .pum-close:focus,
+.pum-overlay .pum-close:active {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: medium;
+    font-weight: normal;
+    font-style: normal;
+    line-height: normal;
+
+    position: static;
+    z-index: auto;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+
+    visibility: visible;
+    /* didn't really know what the default for display should be*/
+    /*display:inline;*/
+    float: none;
+    clear: none;
+    overflow: visible;
+
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+
+    cursor: default;
+    text-align: left;
+    white-space: normal;
+    text-decoration: none;
+    text-indent: 0;
+    letter-spacing: normal;
+    text-transform: none;
+
+    border: none;
+    background: none;
+}
+
 .pum-overlay
 {
     position: fixed;
