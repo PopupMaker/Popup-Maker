@@ -352,6 +352,89 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 
 endif; // End if class_exists check
 
+#region Freemius
+
+// Create a helper function for easy SDK access.
+function pum_fs() {
+	global $pum_fs;
+
+	if ( ! isset( $pum_fs ) ) {
+		// Include Freemius SDK.
+		require_once dirname( __FILE__ ) . '/includes/libraries/freemius/start.php';
+
+		$pum_fs = fs_dynamic_init( array(
+			'id'                => '147',
+			'slug'              => 'popup-maker',
+			'public_key'        => 'pk_0a02cbd99443e0ab7211b19222fe3',
+			'is_premium'        => false,
+			'has_addons'        => false,
+			'has_paid_plans'    => false,
+			'menu'              => array(
+				'slug'       => 'edit.php?post_type=popup',
+				'account'    => false,
+				'contact'    => true,
+				'support'    => true,
+			),
+		) );
+	}
+
+	return $pum_fs;
+}
+
+if ( pum_fs()->is_plugin_update() ) {
+	function pum_fs_custom_connect_message( $message, $user_first_name, $plugin_title, $user_login, $site_link, $freemius_link ) {
+
+		// TODO LEFT OFF HERE. Optimize these messages and the upgrade flow.
+
+		// TODO The upgrade flow needs to be improved. WP Update Successful -> Notices to opt in and update. Clicking update must work without optin.
+
+		// 1. User has already opted in and is upgrading.
+		if ( popmake_get_option( 'allow_tracking', false ) ) {
+			return sprintf(
+				__fs( 'hey-x' ) . '<br>' .
+				__( 'Please help us improve %s!', 'popup-maker' ) . '<br>' .
+				__( 'If you opt-in, some data about your usage of %s will be captured. If you skip this, that\'s okay! The plugin will still work just fine.', 'popup-maker' ),
+				$user_first_name,
+				'<b>' . $plugin_title . '</b>',
+				'<b>' . $plugin_title . '</b>'
+			);
+		// 2. User hasn't opted in and is upgrading.
+		} else {
+			return sprintf(
+				__fs( 'hey-x' ) . '<br>' .
+				__( 'Please help us improve %s!', 'popup-maker' ) . '<br>' .
+				__( 'If you opt-in, some data about your usage of %s will be captured. If you skip this, that\'s okay! The plugin will still work just fine.', 'popup-maker' ),
+				$user_first_name,
+				'<b>' . $plugin_title . '</b>',
+				'<b>' . $plugin_title . '</b>'
+			);
+		}
+
+	}
+// 3. User is freshly installing.
+} else {
+	function pum_fs_custom_connect_message( $message, $user_first_name, $plugin_title, $user_login, $site_link, $freemius_link 	) {
+		return sprintf(
+			__fs( 'hey-x' ) . '<br>' .
+			__( 'Allow %s to track plugin usage?', 'popup-maker' ) . ' ' .
+			__( 'Opt-in to tracking and our newsletter and we will immediately e-mail you a 20%% discount which you can use on any of our extensions.', 'popup-maker' ),
+			$user_first_name,
+			'<b>' . $plugin_title . '</b>'
+		);
+	}
+}
+
+pum_fs()->add_filter( 'connect_message', 'pum_fs_custom_connect_message', WP_FS__DEFAULT_PRIORITY, 6 );
+
+function pum_fs_user_opted_in( FS_User $user ) {
+//	$user->email;
+//	$user->get_name();
+}
+
+pum_fs()->add_action( 'after_account_connection', 'pum_fs_user_opted_in' );
+
+#endregion Freemius
+
 
 /**
  * The code that runs during plugin activation.
