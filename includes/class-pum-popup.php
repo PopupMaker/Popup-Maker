@@ -519,7 +519,7 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 
 			// TODO Possibly move this to a global scope.
 			$total_opens = get_site_option( 'pum_total_open_count', 0 );
-			update_option( 'pum_total_open_count', $total_opens + 1 );
+			update_site_option( 'pum_total_open_count', $total_opens + 1 );
 		}
 
 		/**
