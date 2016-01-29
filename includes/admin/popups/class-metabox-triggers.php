@@ -92,7 +92,7 @@ class PUM_Popup_Triggers_Metabox {
             </p>
             <div class="pum-field select pum-select2">
                 <label for="pum-first-trigger"><?php _e( 'Choose a type of trigger to get started.', 'popup-maker' ); ?></label>
-                <select id="pum-first-trigger" data-placeholder="<?php _e( 'Select an trigger type.', 'popup-maker' ); ?>">
+                <select id="pum-first-trigger" data-placeholder="<?php _e( 'Select a trigger type.', 'popup-maker' ); ?>">
                     <?php foreach ( $triggers as $id => $trigger ) : ?>
                         <option value="<?php echo $id; ?>"><?php echo $trigger->get_label( 'name' ); ?></option>
                     <?php endforeach ?>
