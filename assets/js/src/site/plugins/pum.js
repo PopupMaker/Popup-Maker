@@ -181,7 +181,7 @@ var PUM;
                 $popup
                     .off('click.popmake')
                     .on('click.popmake', function (e) {
-                        if (e.target !== $popup) {
+                        if (e.target !== $popup[0]) {
                             return;
                         }
 
