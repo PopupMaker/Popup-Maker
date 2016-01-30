@@ -45,8 +45,6 @@ class PUM_Activator {
 
 		update_site_option( 'pum_ver', PUM::VER );
 
-		add_site_option( 'pum_db_ver', PUM::DB_VER );
-
 		// Setup some default options
 		$options = array();
 
