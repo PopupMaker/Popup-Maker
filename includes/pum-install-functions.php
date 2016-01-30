@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 function pum_install_built_in_themes( $network_wide = false ) {
 
-	$installed_themes = get_site_option( '_pum_installed_themes', array() );
+	$installed_themes = get_option( '_pum_installed_themes', array() );
 
 	$built_in_themes = array(
 		'lightbox'        => array(
@@ -96,7 +96,7 @@ function pum_install_built_in_themes( $network_wide = false ) {
 
 	if ( $new_theme_installed ) {
 		pum_force_theme_css_refresh();
-		update_site_option( '_pum_installed_themes', $installed_themes );
+		update_option( '_pum_installed_themes', $installed_themes );
 	}
 
 }
