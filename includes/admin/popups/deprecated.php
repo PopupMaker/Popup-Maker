@@ -6,26 +6,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function pum_initialize_deprecated_popup_metaboxes() {
-    add_action( 'add_meta_boxes', 'popmake_deprecated_add_popup_meta_box' );
-    add_filter( 'popmake_popup_meta_fields', 'popmake_deprecated_popup_meta_fields' );
-    add_filter( 'popmake_popup_meta_field_groups', 'popmake_deprecated_popup_meta_field_groups' );
-    add_filter( 'popmake_popup_meta_field_group_click_open', 'popmake_popup_meta_field_group_click_open', 0 );
-    add_filter( 'popmake_popup_meta_field_group_auto_open', 'popmake_popup_meta_field_group_auto_open', 0 );
-    add_filter( 'popmake_popup_meta_field_group_admin_debug', 'popmake_popup_meta_field_group_admin_debug', 0 );
-    add_action( 'pum_save_popup', 'popmake_deprecated_popup_meta_box_save', 10, 2 );
-    add_filter( 'popmake_metabox_save_popup_auto_open_cookie_key', 'popmake_metabox_save_popup_auto_open_cookie_key' );
+
+    // If not yet upgraded still show and process the old meta boxes.
+    if ( pum_get_db_ver() < 4 && ( ! get_option( 'pum_v1.4_triggers_upgraded', false ) || ! get_option( 'pum_v1.4_conditions_upgraded', false ) ) ) {
+        add_action( 'add_meta_boxes', 'popmake_deprecated_add_popup_meta_box' );
+        add_filter( 'popmake_popup_meta_fields', 'popmake_deprecated_popup_meta_fields' );
+        add_filter( 'popmake_popup_meta_field_groups', 'popmake_deprecated_popup_meta_field_groups' );
+        add_filter( 'popmake_popup_meta_field_group_click_open', 'popmake_popup_meta_field_group_click_open', 0 );
+        add_filter( 'popmake_popup_meta_field_group_auto_open', 'popmake_popup_meta_field_group_auto_open', 0 );
+        add_filter( 'popmake_popup_meta_field_group_admin_debug', 'popmake_popup_meta_field_group_admin_debug', 0 );
+        add_action( 'pum_save_popup', 'popmake_deprecated_popup_meta_box_save', 10, 2 );
+        add_filter( 'popmake_metabox_save_popup_auto_open_cookie_key', 'popmake_metabox_save_popup_auto_open_cookie_key' );
 
 
-    add_action( 'popmake_popup_click_open_meta_box_fields', 'popmake_popup_click_open_meta_box_field_extra_selectors', 10 );
-    add_action( 'popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_enabled', 10 );
-    add_action( 'popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_delay', 20 );
-    add_action( 'popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_cookie_trigger', 30 );
-    add_action( 'popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_session_cookie', 40 );
-    add_action( 'popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_cookie_time', 50 );
-    add_action( 'popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_cookie_path', 60 );
-    add_action( 'popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_cookie_key', 70 );
-    add_action( 'popmake_popup_admin_debug_meta_box_fields', 'popmake_popup_admin_debug_meta_box_field_extra_selectors', 10 );
-    add_action( 'popmake_popup_targeting_condition_meta_box_fields', 'popmake_popup_targeting_condition_meta_box_fields', 10 );
+        add_action( 'popmake_popup_click_open_meta_box_fields', 'popmake_popup_click_open_meta_box_field_extra_selectors', 10 );
+        add_action( 'popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_enabled', 10 );
+        add_action( 'popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_delay', 20 );
+        add_action( 'popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_cookie_trigger', 30 );
+        add_action( 'popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_session_cookie', 40 );
+        add_action( 'popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_cookie_time', 50 );
+        add_action( 'popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_cookie_path', 60 );
+        add_action( 'popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_cookie_key', 70 );
+        add_action( 'popmake_popup_admin_debug_meta_box_fields', 'popmake_popup_admin_debug_meta_box_field_extra_selectors', 10 );
+        add_action( 'popmake_popup_targeting_condition_meta_box_fields', 'popmake_popup_targeting_condition_meta_box_fields', 10 );
+    }
+
 }
 
 add_action( 'init', 'pum_initialize_deprecated_popup_metaboxes' );
