@@ -86,10 +86,10 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 		}
 
 		// Check for popup analytics extension and import those stats if available.
-		$total_open_count = get_site_option( 'popup_analytics_total_opened_count', 0 );
+		$total_open_count = get_option( 'popup_analytics_total_opened_count', 0 );
 
 		// Set the sites total open count.
-		update_site_option( 'pum_total_open_count', $total_open_count );
+		update_option( 'pum_total_open_count', $total_open_count );
 
 		/**
 		 * TODO Move this to v1.5 routines.
