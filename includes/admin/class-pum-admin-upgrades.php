@@ -54,6 +54,9 @@ class PUM_Admin_Upgrades {
      * Initialize the actions needed to process upgrades.
      */
     public function init() {
+
+        $this->update_plugin_version();
+
         // bail if this plugin data doesn't need updating
         if ( pum_get_db_ver() >= PUM::DB_VER ) {
             return;
@@ -65,6 +68,27 @@ class PUM_Admin_Upgrades {
 
         add_action( 'wp_ajax_pum_trigger_upgrades', array( $this, 'trigger_upgrades' ) );
         add_action( 'admin_notices', array( $this, 'show_upgrade_notices' ) );
+    }
+
+    public function update_plugin_version() {
+
+        $current_ver = get_site_option( 'pum_ver', false );
+
+        if ( ! $current_ver ) {
+
+            $deprecated_ver = get_site_option( 'popmake_version', false );
+
+            $current_ver = $deprecated_ver ? $deprecated_ver : PUM::VER;
+            add_site_option( 'pum_ver', PUM::VER );
+
+        }
+
+        if ( version_compare( $current_ver, PUM::VER, '<' ) ) {
+            // Save Upgraded From option
+            update_site_option( 'pum_ver_upgraded_from', $current_ver );
+            update_site_option( 'pum_ver', PUM::VER );
+        }
+
     }
 
     /**
