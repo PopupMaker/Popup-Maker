@@ -179,12 +179,6 @@ function popmake_get_registered_settings() {
 						'large' => 'I Love It!',
 					)
 				),
-				'tracking_settings'                => array(
-					'id'   => 'tracking_settings',
-					'name' => '<strong>' . __( 'Tracking Settings', 'popup-maker' ) . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
 				'allow_tracking'                   => array(
 					'id'   => 'allow_tracking',
 					'name' => __( 'Allow Usage Tracking?', 'popup-maker' ),
@@ -236,6 +230,12 @@ function popmake_get_registered_settings() {
 					'id'   => 'disable_admin_support_widget',
 					'name' => __( 'Hide Admin Support Widget', 'popup-maker' ),
 					'desc' => __( 'This will hide the support widget on all popup maker admin pages.', 'popup-maker' ),
+					'type' => 'checkbox'
+				),
+				'disable_popup_category_tag'            => array(
+					'id'   => 'disable_popup_category_tag',
+					'name' => __( 'Disable categories & tags?', 'popup-maker' ),
+					'desc' => __( 'This will disable the popup tags & categories.', 'popup-maker' ),
 					'type' => 'checkbox'
 				),
 			)
