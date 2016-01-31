@@ -169,6 +169,10 @@ add_filter( 'enter_title_here', 'popmake_change_default_title' );
  */
 function popmake_setup_taxonomies() {
 
+	if ( popmake_get_option( 'disable_popup_category_tag', false ) ) {
+		return;
+	}
+
 	/** Categories */
 	$category_labels = array(
 		'name'                  => sprintf( _x( '%s Categories', 'taxonomy general name', 'popup-maker' ), popmake_get_label_singular() ),
