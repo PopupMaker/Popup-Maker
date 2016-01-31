@@ -6,7 +6,8 @@
 .pum-overlay .pum-close,
 .pum-overlay .pum-close:hover,
 .pum-overlay .pum-close:focus,
-.pum-overlay .pum-close:active {
+.pum-overlay .pum-close:active
+{
     font-family: Arial, Helvetica, sans-serif;
     font-size: medium;
     font-weight: normal;
@@ -14,7 +15,7 @@
     line-height: normal;
 
     position: static;
-    z-index: auto;
+    z-index: auto; 
     top: auto;
     right: auto;
     bottom: auto;
@@ -65,7 +66,8 @@
   */
 }
 .pum-overlay.pum-preview,
-.pum-overlay.pum-form-submission-detected {
+.pum-overlay.pum-form-submission-detected
+{
     display: block;
 }
 .pum-overlay,
@@ -185,16 +187,16 @@
     text-align: center;
     text-decoration: none;
 }
-
-.pum-overlay.pum-overlay-disabled {
+.pum-overlay.pum-overlay-disabled
+{
     visibility: hidden;
 }
-
-.pum-overlay.pum-overlay-disabled::-webkit-scrollbar {
+.pum-overlay.pum-overlay-disabled::-webkit-scrollbar
+{
     display: block;
 }
-
-.pum-overlay.pum-overlay-disabled .pum-container {
+.pum-overlay.pum-overlay-disabled .pum-container
+{
     visibility: visible;
 }
 
