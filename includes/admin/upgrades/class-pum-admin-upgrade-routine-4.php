@@ -144,9 +144,6 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 
 		}
 
-		// Set key that is used to disable deprecated stuff.
-		update_option( 'pum_v1.4_conditions_upgraded', true );
-
 		static::done();
 	}
 

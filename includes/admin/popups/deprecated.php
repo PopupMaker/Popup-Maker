@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function pum_initialize_deprecated_popup_metaboxes() {
 
     // If not yet upgraded still show and process the old meta boxes.
-    if ( pum_get_db_ver() < 4 && ( ! get_option( 'pum_v1.4_triggers_upgraded', false ) || ! get_option( 'pum_v1.4_conditions_upgraded', false ) ) ) {
+    if ( pum_get_db_ver() < 4 ) {
         add_action( 'add_meta_boxes', 'popmake_deprecated_add_popup_meta_box' );
         add_filter( 'popmake_popup_meta_fields', 'popmake_deprecated_popup_meta_fields' );
         add_filter( 'popmake_popup_meta_field_groups', 'popmake_deprecated_popup_meta_field_groups' );
