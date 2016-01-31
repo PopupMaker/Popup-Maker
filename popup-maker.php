@@ -230,6 +230,9 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-upgrades.php';
 			}
 
+			// Deprecated Code
+			require_once POPMAKE_DIR . 'includes/pum-deprecated.php';
+
 			require_once POPMAKE_DIR . 'includes/pum-ajax-functions.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-helpers.php';
 			// Helper Classes
@@ -279,7 +282,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-themes-fields.php';
 
 				// Deprecated Popup Metaboxes.
-				require_once POPMAKE_DIR . 'includes/admin/popups/deprecated.php';
 
 				require_once POPMAKE_DIR . 'includes/admin/themes/metabox.php';
 				require_once POPMAKE_DIR . 'includes/admin/themes/metabox-close-fields.php';
