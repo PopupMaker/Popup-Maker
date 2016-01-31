@@ -31,9 +31,16 @@ function pum_initialize_deprecated_popup_metaboxes() {
         add_action( 'popmake_popup_targeting_condition_meta_box_fields', 'popmake_popup_targeting_condition_meta_box_fields', 10 );
     }
 
+    if ( pum_get_db_ver() < 6 ) {
+
+
+    }
+
 }
 
 add_action( 'init', 'pum_initialize_deprecated_popup_metaboxes' );
+
+#region Meta Boxes
 
 /**
  * @deprecated 1.4.0
@@ -53,6 +60,93 @@ function popmake_deprecated_add_popup_meta_box() {
     add_meta_box( 'popmake_popup_admin_debug', __( 'Admin Debug Settings', 'popup-maker' ), 'popmake_render_popup_admin_debug_meta_box', 'popup', 'normal', 'low' );
 
 }
+
+/**
+ * Popup Click Open Metabox
+ *
+ * Extensions (as well as the core plugin) can add items to the popup click_open
+ * configuration metabox via the `popmake_popup_click_open_meta_box_fields` action.
+ *
+ * @since      1.1.0
+ * @deprecated 1.4.0
+ * @return void
+ */
+function popmake_render_popup_click_open_meta_box() {
+    global $post, $popmake_options; ?>
+    <div id="popmake_popup_click_open_fields" class="popmake_meta_table_wrap">
+    <table class="form-table">
+        <tbody>
+        <?php do_action( 'popmake_popup_click_open_meta_box_fields', $post->ID ); ?>
+        </tbody>
+    </table>
+    </div><?php
+}
+
+
+/**
+ * Popup Load Settings Metabox
+ *
+ * Extensions (as well as the core plugin) can add items to the popup targeting_condition
+ * metabox via the `popmake_popup_targeting_condition_meta_box_fields` action.
+ *
+ * @since      1.0
+ * @deprecated 1.4.0
+ * @return void
+ */
+function popmake_render_popup_targeting_condition_meta_box() {
+    global $post; ?>
+    <div id="popmake_popup_targeting_condition_fields" class="popmake_meta_table_wrap">
+    <?php do_action( 'popmake_popup_targeting_condition_meta_box_fields', $post->ID ); ?>
+    </div><?php
+}
+
+
+/**
+ * Popup Auto Open Popups Metabox
+ *
+ * Extensions (as well as the core plugin) can add items to the popup display
+ * configuration metabox via the `popmake_popup_auto_open_meta_box_fields` action.
+ *
+ * @since      1.0
+ * @deprecated 1.4.0
+ * @return void
+ */
+function popmake_render_popup_auto_open_meta_box() {
+    global $post, $popmake_options; ?>
+    <div id="popmake_popup_auto_open_fields" class="popmake_meta_table_wrap">
+    <table class="form-table">
+        <tbody>
+        <?php do_action( 'popmake_popup_auto_open_meta_box_fields', $post->ID ); ?>
+        </tbody>
+    </table>
+    </div><?php
+}
+
+
+/**
+ * Popup Admin Debug Metabox
+ *
+ * Extensions (as well as the core plugin) can add items to the popup debug
+ * configuration metabox via the `popmake_popup_admin_debug_meta_box_fields` action.
+ *
+ * @since      1.0
+ * @deprecated 1.4.0
+ * @return void
+ */
+function popmake_render_popup_admin_debug_meta_box() {
+    global $post, $popmake_options; ?>
+    <div id="popmake_popup_admin_debug_fields" class="popmake_meta_table_wrap">
+    <table class="form-table">
+        <tbody>
+        <?php do_action( 'popmake_popup_admin_debug_meta_box_fields', $post->ID ); ?>
+        </tbody>
+    </table>
+    </div><?php
+}
+
+#endregion Meta Boxes
+
+#region Meta Box Fields
 
 /**
  *
@@ -145,6 +239,10 @@ function popmake_popup_meta_field_group_admin_debug( $fields ) {
     ) );
 }
 
+#endregion Meta Box Fields
+
+#region Meta Box Saving
+
 /**
  * Save post meta when the save_post action is called
  *
@@ -215,89 +313,9 @@ function popmake_metabox_save_popup_auto_open_cookie_key( $field = '' ) {
 }
 
 
-/**
- * Popup Click Open Metabox
- *
- * Extensions (as well as the core plugin) can add items to the popup click_open
- * configuration metabox via the `popmake_popup_click_open_meta_box_fields` action.
- *
- * @since      1.1.0
- * @deprecated 1.4.0
- * @return void
- */
-function popmake_render_popup_click_open_meta_box() {
-    global $post, $popmake_options; ?>
-    <div id="popmake_popup_click_open_fields" class="popmake_meta_table_wrap">
-    <table class="form-table">
-        <tbody>
-        <?php do_action( 'popmake_popup_click_open_meta_box_fields', $post->ID ); ?>
-        </tbody>
-    </table>
-    </div><?php
-}
+#endregion Meta Box Saving
 
-
-/**
- * Popup Load Settings Metabox
- *
- * Extensions (as well as the core plugin) can add items to the popup targeting_condition
- * metabox via the `popmake_popup_targeting_condition_meta_box_fields` action.
- *
- * @since      1.0
- * @deprecated 1.4.0
- * @return void
- */
-function popmake_render_popup_targeting_condition_meta_box() {
-    global $post; ?>
-    <div id="popmake_popup_targeting_condition_fields" class="popmake_meta_table_wrap">
-    <?php do_action( 'popmake_popup_targeting_condition_meta_box_fields', $post->ID ); ?>
-    </div><?php
-}
-
-
-/**
- * Popup Auto Open Popups Metabox
- *
- * Extensions (as well as the core plugin) can add items to the popup display
- * configuration metabox via the `popmake_popup_auto_open_meta_box_fields` action.
- *
- * @since      1.0
- * @deprecated 1.4.0
- * @return void
- */
-function popmake_render_popup_auto_open_meta_box() {
-    global $post, $popmake_options; ?>
-    <div id="popmake_popup_auto_open_fields" class="popmake_meta_table_wrap">
-    <table class="form-table">
-        <tbody>
-        <?php do_action( 'popmake_popup_auto_open_meta_box_fields', $post->ID ); ?>
-        </tbody>
-    </table>
-    </div><?php
-}
-
-
-/**
- * Popup Admin Debug Metabox
- *
- * Extensions (as well as the core plugin) can add items to the popup debug
- * configuration metabox via the `popmake_popup_admin_debug_meta_box_fields` action.
- *
- * @since      1.0
- * @deprecated 1.4.0
- * @return void
- */
-function popmake_render_popup_admin_debug_meta_box() {
-    global $post, $popmake_options; ?>
-    <div id="popmake_popup_admin_debug_fields" class="popmake_meta_table_wrap">
-    <table class="form-table">
-        <tbody>
-        <?php do_action( 'popmake_popup_admin_debug_meta_box_fields', $post->ID ); ?>
-        </tbody>
-    </table>
-    </div><?php
-}
-
+#region Meta Boxes Render Fields
 
 /**
  * Deprecated Admin Popup Editor Functions
@@ -1216,3 +1234,5 @@ function popmake_taxonomy_item_metabox( $taxonomy_name ) {
     </div><!-- /.taxonomydiv -->
     <?php
 }
+
+#endregion Meta Boxes Render Fields
