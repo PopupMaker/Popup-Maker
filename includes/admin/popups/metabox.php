@@ -127,7 +127,7 @@ function popmake_popup_meta_box_save( $post_id, $post ) {
 add_action( 'save_post', 'popmake_popup_meta_box_save', 10, 2 );
 
 /**
- * TODO This needs to be reviewed. Not sure what it is for exactly.
+ * Ensures that the popups have unique slugs.
  *
  * @param $data
  * @param $postarr

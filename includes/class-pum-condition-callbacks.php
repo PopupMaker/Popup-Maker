@@ -9,8 +9,6 @@ class PUM_Condition_Callbacks {
 	/**
 	 * @param array $settings
 	 *
-	 * TODO: TEST Custom Post Types
-	 *
 	 * @return bool
 	 */
 	public static function post_type( $settings = array() ) {
@@ -40,8 +38,6 @@ class PUM_Condition_Callbacks {
 
 	/**
 	 * @param array $settings
-	 *
-	 * TODO: TEST Custom Taxonomies
 	 *
 	 * @return bool
 	 */
