@@ -154,6 +154,7 @@ function pum_reorder_submenu_array( $a, $b ) {
 		__( 'Settings', 'popup-maker' ),
 		__( 'Tools', 'popup-maker' ),
 		__( 'Support Forum', 'freemius' ),
+		__( 'Account', 'freemius' ),
 		__( 'Contact Us', 'freemius' ),
 	) );
 
