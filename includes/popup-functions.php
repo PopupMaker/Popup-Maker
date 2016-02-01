@@ -230,7 +230,7 @@ function popmake_clean_popup_data_attr( $data_attr ) {
 	return $data_attr;
 }
 
-add_filter( 'popmake_get_the_popup_data_attr', 'popmake_clean_popup_data_attr' );
+//add_filter( 'popmake_get_the_popup_data_attr', 'popmake_clean_popup_data_attr' );
 
 /**
  * @deprecated 1.4.0 Use pum_popup_data_attr instead.
