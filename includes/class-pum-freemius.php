@@ -87,7 +87,11 @@ class PUM_Freemius {
 		$this->fs()->add_action( 'after_account_connection', array( $this, 'account_connection' ), 10, 2 );
 		$this->fs()->add_action( 'after_account_plan_sync', array( $this, 'plan_sync' ), 10, 2 );
 
+	    $this->fs()->override_i18n( array(
+			'delete-account-confirm' => __( 'Deleting your account will stop sending usage statistics and disable usage of in dash support forms. This will not stop the plugin from functioning. Are you sure you want to do this?', 'popup-maker' )
+		) );
 	}
+
 
 	/**
 	 * Renders the popup maker usage statistics permission notification.
@@ -312,15 +316,18 @@ class PUM_Freemius {
      * Send the data to the Popup Maker V2 Server
      */
     public function api_call( $action = '', $data = array() ) {
-        return wp_remote_post( PUM::API_URL . $action, array(
-                'method'      => 'POST',
-                'timeout'     => 20,
-                'redirection' => 5,
-                'httpversion' => '1.1',
-                'blocking'    => true,
-                'body'        => json_encode( $data ),
-                'user-agent'  => 'POPMAKE/' . PUM::VER . '; ' . get_site_url()
-        ) );
+
+	    $response = wp_remote_post( PUM::API_URL . $action, array(
+		    'method'      => 'POST',
+		    'timeout'     => 20,
+		    'redirection' => 5,
+		    'httpversion' => '1.1',
+		    'blocking'    => true,
+		    'body'        => $data,
+		    'user-agent'  => 'POPMAKE/' . PUM::VER . '; ' . get_site_url()
+	    ) );
+
+        return $response;
     }
 
 
