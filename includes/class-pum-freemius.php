@@ -51,7 +51,7 @@ class PUM_Freemius {
 
 		if ( ! $this->fs ) {
 			// Include Freemius SDK.
-			require_once dirname( __FILE__ ) . '/libraries/freemius/start.php';
+			require_once dirname( __FILE__ ) . '/libs/freemius/start.php';
 
 			$this->fs = fs_dynamic_init( array(
 				'id'                => '147',

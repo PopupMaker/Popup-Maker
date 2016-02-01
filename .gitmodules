@@ -1,0 +1,3 @@
+[submodule "includes/libs/freemius"]
+	path = includes/libs/freemius
+	url = git@github.com:danieliser/wordpress-sdk
