@@ -94,10 +94,10 @@ class PUM_Freemius {
 	 */
 	public function permission_list( $permissions = array() ) {
         $permissions['metrics'] = array(
-            'icon-class' => 'dashicons dashicons-performance',
-            'label'      => __( 'Usage Statistics', 'popup-maker' ),
-            'desc'       => __( 'Popup & Theme Counts, Open Counts', 'popup-maker' ),
-            'priority'   => 25,
+            'icon-class'    => 'dashicons dashicons-performance',
+            'label'         => __( 'Usage Statistics', 'popup-maker' ),
+            'desc'          => __( 'Popup & Theme Counts, Open Counts', 'popup-maker' ),
+            'priority'      => 25,
         );
         return $permissions;
 	}
