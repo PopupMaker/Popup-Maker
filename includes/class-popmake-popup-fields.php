@@ -197,61 +197,6 @@ class Popmake_Popup_Fields extends Popmake_Fields {
 					'max'         => 2147483647,
 				),
 			),
-			'auto_open'   => array(
-				'enabled'        => array(
-					'label'       => __( 'Enable Auto Open Popups', 'popup-maker' ),
-					'description' => __( 'Checking this will cause popup to open automatically.', 'popup-maker' ),
-					'type'        => 'checkbox',
-					'std'         => false,
-					'priority'    => 1,
-				),
-				'delay'          => array(
-					'label'       => __( 'Delay', 'popup-maker' ),
-					'description' => __( 'The delay before the popup will open in milliseconds.', 'popup-maker' ),
-					'type'        => 'rangeslider',
-					'std'         => 500,
-					'priority'    => 2,
-					'step'        => apply_filters( 'popmake_popup_auto_open_delay_step', 500 ),
-					'min'         => apply_filters( 'popmake_popup_auto_open_delay_min', 0 ),
-					'max'         => apply_filters( 'popmake_popup_auto_open_delay_max', 10000 ),
-					'unit'        => __( 'ms', 'popup-maker' ),
-				),
-				'cookie_trigger' => array(
-					'label'       => __( 'Cookie Trigger', 'popup-maker' ),
-					'description' => __( 'When do you want to create the cookie.', 'popup-maker' ),
-					'type'        => 'select',
-					'std'         => 'close',
-					'priority'    => 3,
-					'options'     => apply_filters( 'popmake_cookie_trigger_options', array() ),
-				),
-				'session_cookie' => array(
-					'label'       => __( 'Use Session Cookie?', 'popup-maker' ),
-					'description' => __( 'Session cookies expire when the user closes their browser.', 'popup-maker' ),
-					'type'        => 'checkbox',
-					'std'         => false,
-					'priority'    => 4,
-				),
-				'cookie_time'    => array(
-					'label'       => __( 'Cookie Time', 'popup-maker' ),
-					'placeholder' => __( '364 days 23 hours 59 minutes 59 seconds', 'popup-maker' ),
-					'description' => __( 'Enter a plain english time before cookie expires.', 'popup-maker' ),
-					'std'         => '1 month',
-					'priority'    => 5,
-				),
-				'cookie_path'    => array(
-					'label'       => __( 'Sitewide Cookie', 'popup-maker' ),
-					'description' => __( '	This will prevent the popup from auto opening on any page until the cookie expires.', 'popup-maker' ),
-					'type'        => 'checkbox',
-					'std'         => true,
-					'priority'    => 6,
-				),
-				'cookie_key'     => array(
-					'label'       => __( 'Cookie Key', 'popup-maker' ),
-					'description' => __( 'Resetting this will cause all existing cookies to be invalid.', 'popup-maker' ),
-					'std'         => '',
-					'priority'    => 7,
-				),
-			),
 			'close'       => array(
 				'text'          => array(
 					'label'       => __( 'Close Text', 'popup-maker' ),
@@ -293,24 +238,6 @@ class Popmake_Popup_Fields extends Popmake_Fields {
 					'priority'    => 5,
 				),
 			),
-			'click_open'  => array(
-				'extra_selectors' => array(
-					'label'       => __( 'Extra CSS Selectors', 'popup-maker' ),
-					'placeholder' => __( '.my-class, #button2', 'popup-maker' ),
-					'description' => __( 'This allows custom css classes, ids or selector strings to trigger the popup when clicked. Seperate multiple selectors using commas.', 'popup-maker' ),
-					'std'         => '',
-					'priority'    => 1,
-				),
-			),
-			'admin_debug' => array(
-				'enabled' => array(
-					'label'       => __( 'Enable Admin Debug', 'popup-maker' ),
-					'description' => __( 'When Enabled, the popup will show immediately on the given page for admins.', 'popup-maker' ),
-					'type'        => 'checkbox',
-					'std'         => false,
-					'priority'    => 1,
-				),
-			)
 		);
 	}
 }

@@ -1089,42 +1089,47 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
 }
 
 /* UI */
-#popuptitlediv #popuptitle
+#popuptitlediv
 {
-    font-size: 1.5em;
-    line-height: 100%;
-
-    width: 100%; 
-    height: 1.8em;
-    margin: 0;
-    padding: 2px 8px;
-
-    outline: medium none;
-    background-color: #fff;
+    position: relative;
 }
+#popuptitlediv #popuptitlewrap
+{
+    padding: 0; 
 
-#popuptitlediv #popuptitle input
+    border: 0;
+}
+#popuptitlediv #popuptitle-prompt-text
 {
     font-size: 1.7em;
 
-    position: absolute; 
+    position: absolute;
 
-    padding: 11px 10px;
+    padding: 11px 10px; 
 
     color: #777;
 }
-
-#popuptitlediv #popuptitle-prompt-text
+#popuptitlediv label
 {
-    font-size: 1.4em;
+    cursor: text;
+}
+#popuptitlediv #popuptitle
+{
+    font-size: 1.7em;
+    line-height: 1.125;
 
-    padding: 8px 10px;
+    width: 100%;
+    height: 1.7em;
+    margin: 0 0 3px;
+    padding: 3px 8px;
+
+    outline: none;
+    background-color: #fff;
 }
 
-#titlediv #title
+.post-type-popup #edit-slug-box
 {
-    height: 40px !important; 
-    margin: 0 0 1em;
+    margin-bottom: 5px;
 }
 
 .posttypediv,

@@ -81,7 +81,7 @@ function popmake_render_popup_theme_styles() {
 		return;
 	}
 
-	$styles = get_site_transient( 'popmake_theme_styles' );
+	$styles = get_transient( 'popmake_theme_styles' );
 	if ( ! $styles || defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 
 		$styles = '';
@@ -119,7 +119,7 @@ function popmake_render_popup_theme_styles() {
 
         $styles = apply_filters( 'popmake_theme_styles', $styles );
 
-		set_site_transient( 'popmake_theme_styles', $styles, 7 * DAY_IN_SECONDS );
+		set_transient( 'popmake_theme_styles', $styles, 7 * DAY_IN_SECONDS );
 
     } ?>
     <style id="pum-styles" type="text/css">

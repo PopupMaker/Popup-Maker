@@ -16,6 +16,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+function pum_initialize_deprecated() {
+
+	for( $i = 0; $i <= PUM::DB_VER; $i ++ ) {
+		$filename = POPMAKE_DIR . 'includes/deprecated/v' . $i . '.php';
+		if ( file_exists( $filename ) ) {
+			require_once $filename;
+		}
+	}
+
+	do_action( 'pum_initialize_deprecated' );
+
+}
+
+add_action( 'init', 'pum_initialize_deprecated' );
 
 
 /**
@@ -25,16 +39,20 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param $post
  */
 function pum_deprecated_save_popup_action( $post_id, $post ) {
-	_deprecated_function( 'popmake_save_popup', '1.4.0', 'pum_save_popup' );
-	/**
-	 * Calls old save action.
-	 *
-	 * @deprecated 1.4.0
-	 *
-	 * @param int   $post_id $post Post ID.
-	 * @param array $post    Sanitized $_POST variable.
-	 */
-	do_action( 'popmake_save_popup', $post_id, $post );
+
+	if ( has_action( 'popmake_save_popup' ) ) {
+		_deprecated_function( 'popmake_save_popup', '1.4.0', 'pum_save_popup' );
+		/**
+		 * Calls old save action.
+		 *
+		 * @deprecated 1.4.0
+		 *
+		 * @param int   $post_id $post Post ID.
+		 * @param array $post    Sanitized $_POST variable.
+		 */
+		do_action( 'popmake_save_popup', $post_id, $post );
+	}
+
 }
 
 add_action( 'pum_save_popup', 'pum_deprecated_save_popup_action', 10, 2 );

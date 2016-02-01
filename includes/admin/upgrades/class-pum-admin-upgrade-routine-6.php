@@ -23,11 +23,19 @@ if ( ! class_exists( 'PUM_Admin_Upgrade_Routine' ) ) {
  */
 final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 
+	/**
+	 * @var null
+	 */
 	public static $valid_themes = null;
 
+	/**
+	 * @var null
+	 */
 	public static $default_theme = null;
 
 	/**
+	 * Returns the description.
+	 *
 	 * @return mixed|void
 	 */
 	public static function description() {
@@ -35,7 +43,7 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 	}
 
 	/**
-	 *
+	 * Run the update.
 	 */
 	public static function run() {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -84,6 +92,8 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 		// Delete All orphaned meta keys.
 		static::delete_all_orphaned_meta_keys();
 
+		static::process_popup_cats_tags();
+
 		if ( $popups ) {
 
 			foreach ( $popups as $popup ) {
@@ -104,11 +114,12 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 
 		}
 
-		// TODO Set up option that indicates its safe to disable loading of deprecated functions & filters later.
-
 		static::done();
 	}
 
+	/**
+	 * Create a list of valid popup themes.
+	 */
 	public static function setup_valid_themes() {
 		static::$valid_themes = array();
 
@@ -126,6 +137,9 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 		}
 	}
 
+	/**
+	 * Delete orphaned post meta keys.
+	 */
 	public static function delete_all_orphaned_meta_keys() {
 		global $wpdb;
 
@@ -138,16 +152,22 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 		);
 	}
 
+	/**
+	 * Delete all no longer meta keys to clean up after ourselves.
+	 *
+	 * @return false|int
+	 */
 	public static function delete_all_old_meta_keys() {
 		global $wpdb;
 
-		$wpdb->query( "
+		$query = $wpdb->query( "
 			DELETE FROM $wpdb->postmeta
 			WHERE meta_key LIKE 'popup_display_%'
 			OR meta_key LIKE 'popup_close_%'
 			OR meta_key LIKE 'popup_auto_open_%'
 			OR meta_key LIKE 'popup_click_open_%'
 			OR meta_key LIKE 'popup_targeting_condition_%'
+			OR meta_key LIKE 'popup_loading_condition_%'
 			OR meta_key = 'popup_admin_debug'
 			OR meta_key = 'popup_defaults_set'
 			OR meta_key LIKE 'popup_display_%'
@@ -162,6 +182,21 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 			OR meta_key = 'popup_theme_defaults_set'
 			"
 		);
+
+		return $query;
+	}
+
+	/**
+	 * Checks for popup taxonomy counts and disables popup taxonomies if none are found.
+	 */
+	public static function process_popup_cats_tags() {
+		global $popmake_options;
+		$categories =  wp_count_terms( 'popup_category', array( 'hide_empty' => true) );
+		$tags =  wp_count_terms( 'popup_tag', array( 'hide_empty' => true) );
+
+		$popmake_options['disable_popup_category_tag'] = $categories == 0 && $tags == 0;
+
+		update_option( 'popmake_settings', $popmake_options );
 	}
 
 }

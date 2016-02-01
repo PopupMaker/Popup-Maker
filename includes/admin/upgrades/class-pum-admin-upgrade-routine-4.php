@@ -81,10 +81,15 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 				$targeting_conditions = popmake_get_popup_targeting_condition( $popup->ID );
 
 				if ( empty( $targeting_conditions ) ) {
-					// Default popups with no conditions to draft
-					static::change_post_status( $popup->ID, 'draft' );
+					if ( $popup->post_status == 'publish' ) {
+						// Default popups with no conditions to draft
+						static::change_post_status( $popup->ID, 'draft' );
+					}
+					update_post_meta( $popup->ID, 'popup_conditions', $conditions );
+					$completed ++;
 					continue;
 				}
+
 
 				$sitewide = false;
 
@@ -138,9 +143,6 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 			}
 
 		}
-
-		// Set key that is used to disable deprecated stuff.
-		update_site_option( 'pum_v1.4_conditions_upgraded', true );
 
 		static::done();
 	}

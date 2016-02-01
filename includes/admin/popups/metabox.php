@@ -52,60 +52,8 @@ function popmake_popup_meta_fields() {
 }
 
 function popmake_popup_meta_field_groups() {
-	$groups = array(
-		'display',
-		'close',
-	);
-
-	return apply_filters( 'popmake_popup_meta_field_groups', $groups );
+	return apply_filters( 'popmake_popup_meta_field_groups', array() );
 }
-
-
-function popmake_popup_meta_field_group_display() {
-	return array(
-		'stackable',
-		'scrollable_content',
-		'overlay_disabled',
-		'size',
-		'responsive_min_width',
-		'responsive_min_width_unit',
-		'responsive_max_width',
-		'responsive_max_width_unit',
-		'custom_width',
-		'custom_width_unit',
-		'custom_height',
-		'custom_height_unit',
-		'custom_height_auto',
-		'location',
-		'position_top',
-		'position_left',
-		'position_bottom',
-		'position_right',
-		'position_fixed',
-		'animation_type',
-		'animation_speed',
-		'animation_origin',
-		'overlay_zindex',
-		'zindex',
-	);
-}
-
-add_filter( 'popmake_popup_meta_field_group_display', 'popmake_popup_meta_field_group_display', 0 );
-
-
-function popmake_popup_meta_field_group_close() {
-	return array(
-		'text',
-		'button_delay',
-		'overlay_click',
-		'esc_press',
-		'f4_press',
-	);
-}
-
-add_filter( 'popmake_popup_meta_field_group_close', 'popmake_popup_meta_field_group_close', 0 );
-
-
 
 
 /**
@@ -179,7 +127,7 @@ function popmake_popup_meta_box_save( $post_id, $post ) {
 add_action( 'save_post', 'popmake_popup_meta_box_save', 10, 2 );
 
 /**
- * TODO This needs to be reviewed. Not sure what it is for exactly.
+ * Ensures that the popups have unique slugs.
  *
  * @param $data
  * @param $postarr

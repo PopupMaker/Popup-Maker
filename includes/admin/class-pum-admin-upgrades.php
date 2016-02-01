@@ -54,8 +54,11 @@ class PUM_Admin_Upgrades {
      * Initialize the actions needed to process upgrades.
      */
     public function init() {
+
+        $this->update_plugin_version();
+
         // bail if this plugin data doesn't need updating
-        if ( get_site_option( 'pum_db_ver' ) >= PUM::DB_VER ) {
+        if ( pum_get_db_ver() >= PUM::DB_VER ) {
             return;
         }
 
@@ -65,6 +68,27 @@ class PUM_Admin_Upgrades {
 
         add_action( 'wp_ajax_pum_trigger_upgrades', array( $this, 'trigger_upgrades' ) );
         add_action( 'admin_notices', array( $this, 'show_upgrade_notices' ) );
+    }
+
+    public function update_plugin_version() {
+
+        $current_ver = get_site_option( 'pum_ver', false );
+
+        if ( ! $current_ver ) {
+
+            $deprecated_ver = get_site_option( 'popmake_version', false );
+
+            $current_ver = $deprecated_ver ? $deprecated_ver : PUM::VER;
+            add_site_option( 'pum_ver', PUM::VER );
+
+        }
+
+        if ( version_compare( $current_ver, PUM::VER, '<' ) ) {
+            // Save Upgraded From option
+            update_site_option( 'pum_ver_upgraded_from', $current_ver );
+            update_site_option( 'pum_ver', PUM::VER );
+        }
+
     }
 
     /**
@@ -274,7 +298,7 @@ class PUM_Admin_Upgrades {
 
         if ( $version ) {
             $version = preg_replace( '/[^0-9.].*/', '', $version );
-            update_site_option( 'pum_db_ver', $version );
+            update_option( 'pum_db_ver', $version );
 
             return;
         }
@@ -282,7 +306,7 @@ class PUM_Admin_Upgrades {
         $upgraded_from = get_site_option( 'pum_ver_upgraded_from', false );
 
         // this is the current database schema version number
-        $current_db_ver = get_site_option( 'pum_db_ver', false );
+        $current_db_ver = pum_get_db_ver();
 
         // If no current db version, but prior install detected, set db version correctly.
         if ( ! $current_db_ver ) {
@@ -293,9 +317,9 @@ class PUM_Admin_Upgrades {
                     $current_db_ver = 2;
                 }
             } else {
-                $current_db_ver = 1;
+                $current_db_ver = PUM::DB_VER;
             }
-            add_site_option( 'pum_db_ver', $current_db_ver );
+            add_option( 'pum_db_ver', $current_db_ver );
         }
 
     }
@@ -310,11 +334,11 @@ class PUM_Admin_Upgrades {
     public function get_pum_db_ver() {
 
         // this is the current database schema version number
-        $pum_db_ver = get_site_option( 'pum_db_ver', false );
+        $pum_db_ver = pum_get_db_ver();
 
         if ( ! $pum_db_ver ) {
             $this->set_pum_db_ver();
-            $pum_db_ver = get_site_option( 'pum_db_ver' );
+            $pum_db_ver = pum_get_db_ver();
         }
 
         return preg_replace( '/[^0-9.].*/', '', $pum_db_ver );

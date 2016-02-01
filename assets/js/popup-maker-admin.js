@@ -69,16 +69,16 @@ var PUMConditions;
                 $group
                     .data('index', groupIndex)
                     .find('.facet').each(function () {
-                    var $facet = $(this),
-                        facetIndex = $facet.parent().children().index($facet);
+                        var $facet = $(this),
+                            facetIndex = $facet.parent().children().index($facet);
 
-                    $facet
-                        .data('index', facetIndex)
-                        .find('[name]').each(function () {
-                        var replace_with = "popup_conditions[" + groupIndex + "][" + facetIndex + "]";
-                        this.name = this.name.replace(/popup_conditions\[\d*?\]\[\d*?\]/, replace_with);
-                        this.id = this.name;
-                    });
+                        $facet
+                            .data('index', facetIndex)
+                            .find('[name]').each(function () {
+                                var replace_with = "popup_conditions[" + groupIndex + "][" + facetIndex + "]";
+                                this.name = this.name.replace(/popup_conditions\[\d*?\]\[\d*?\]/, replace_with);
+                                this.id = this.name;
+                            });
                     });
             });
         }

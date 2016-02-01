@@ -13,7 +13,6 @@ var PUM_Accessibility;
     PUM_Accessibility = {
         // Accessibility: Checks focus events to ensure they stay inside the modal.
         forceFocus: function (e) {
-            console.log(currentModal, !$.contains(currentModal, e.target));
             if (currentModal && !$.contains(currentModal, e.target)) {
                 e.stopPropagation();
                 PUM_Accessibility.setFocusToFirstItem();
@@ -30,8 +29,6 @@ var PUM_Accessibility;
                     numberOfFocusableItems = focusableItems.length,
                 // get the index of the currently focused item
                     focusedItemIndex = focusableItems.index(focusedItem);
-
-                console.log(focusableItems);
 
                 if (e.shiftKey) {
                     //back tab
@@ -52,7 +49,7 @@ var PUM_Accessibility;
         },
         setFocusToFirstItem: function () {
             // set focus to first focusable item
-            currentModal.find('.pum-container *').filter(focusableElementsString).filter(':visible').first().focus();
+            currentModal.find('.pum-container *').filter(focusableElementsString).filter(':visible').filter(':not(.pum-close').first().focus();
         }
     };
 

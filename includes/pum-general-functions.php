@@ -14,6 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+function pum_get_db_ver() {
+	return get_option( 'pum_db_ver', false );
+}
+
 function pum_force_theme_css_refresh() {
-	delete_site_transient( 'popmake_theme_styles' );
+	delete_transient( 'popmake_theme_styles' );
 }

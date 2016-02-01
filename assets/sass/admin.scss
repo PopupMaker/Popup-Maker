@@ -118,33 +118,46 @@
 
 
 /* UI */
-#popuptitlediv #popuptitle {
-  background-color: #fff;
-  font-size: 1.5em;
-  height: 1.8em;
-  line-height: 100%;
-  margin: 0;
-  outline: medium none;
-  padding: 2px 8px;
-  width: 100%;
+
+#popuptitlediv {
+
+  position: relative;
+
+  #popuptitlewrap {
+    border: 0;
+    padding: 0;
+  }
+
+  #popuptitle-prompt-text {
+    color: #777;
+    position: absolute;
+    font-size: 1.7em;
+    padding: 11px 10px;
+  }
+
+  label {
+    cursor: text;
+  }
+
+  #popuptitle {
+    padding: 3px 8px;
+    font-size: 1.7em;
+    line-height: 1.125;
+    height: 1.7em;
+    width: 100%;
+    outline: none;
+    margin: 0 0 3px;
+    background-color: #fff;
+  }
+
 }
 
-#popuptitlediv #popuptitle input {
-  color: #777;
-  font-size: 1.7em;
-  padding: 11px 10px;
-  position: absolute;
+.post-type-popup {
+  #edit-slug-box {
+    margin-bottom: 5px;
+  }
 }
 
-#popuptitlediv #popuptitle-prompt-text {
-  font-size: 1.4em;
-  padding: 8px 10px;
-}
-
-#titlediv #title {
-  margin: 0 0 1em;
-  height: 40px !important;
-}
 
 .posttypediv, .taxonomydiv {
   margin-bottom: 10px;

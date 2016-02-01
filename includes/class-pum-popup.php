@@ -148,9 +148,7 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		/**
 		 * Returns array of classes for this popup.
 		 *
-		 * @todo integrate popmake_add_popup_size_classes into this method.
-		 *
-		 * @uses deprecated filter `popmake_get_the_popup_classes`
+		 * @uses filter `popmake_get_the_popup_classes`
 		 * @uses filter `pum_popup_get_classes`
 		 *
 		 * @param string $element The key or html element identifier.
@@ -362,6 +360,7 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 					'meta'     => array(
 						'display'    => $this->get_display(),
 						'close'      => $this->get_close(),
+						// Added here for backward compatibility in extensions.
 						'click_open' => popmake_get_popup_click_open( $this->ID ),
 					)
 				);
@@ -517,9 +516,8 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 			update_post_meta( $this->ID, 'popup_open_count_total', absint( $total ) );
 			update_post_meta( $this->ID, 'popup_last_opened', current_time( 'timestamp', 0 ) );
 
-			// TODO Possibly move this to a global scope.
-			$total_opens = get_site_option( 'pum_total_open_count', 0 );
-			update_site_option( 'pum_total_open_count', $total_opens + 1 );
+			$total_opens = get_option( 'pum_total_open_count', 0 );
+			update_option( 'pum_total_open_count', $total_opens + 1 );
 		}
 
 		/**

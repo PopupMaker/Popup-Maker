@@ -1,8 +1,6 @@
 /**
  * Defines the core $.popmake function which will load the proper methods.
  * Version 1.4.0
- *
- * todo Set each function to be aware of the element called. If old selectors used fallback to parent for $this.
  */
 var PUM;
 (function ($, document, undefined) {
@@ -120,8 +118,6 @@ var PUM;
 
             $popup
             // TODO: Remove this.
-            //.prop('class', 'popmake-overlay theme-' + settings.theme_id)
-            // TODO: Remove this.
                 .css({'z-index': settings.meta.display.overlay_zindex || 1999999998})
                 .popmake('animate', settings.meta.display.animation_type, function () {
 
@@ -181,7 +177,7 @@ var PUM;
                 $popup
                     .off('click.popmake')
                     .on('click.popmake', function (e) {
-                        if (e.target !== $popup) {
+                        if (e.target !== $popup[0]) {
                             return;
                         }
 
@@ -240,8 +236,7 @@ var PUM;
                                 src = new_src;
                             }
 
-                            // TODO: Should this be .prop()?
-                            $iframe.attr('src', src);
+                            $iframe.prop('src', src);
                         });
 
                         // TODO: Move this to its own event binding to keep this method clean and simple.
