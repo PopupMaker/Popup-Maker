@@ -82,7 +82,7 @@ class PUM_Freemius {
 		$this->fs()->add_filter( 'is_submenu_visible', array( $this, 'menu_permissions' ), 10, 2 );
 
 		$this->fs()->add_filter( 'connect_message', array( $this, 'custom_connect_message' ), WP_FS__DEFAULT_PRIORITY, 6 );
-		$this->fs()->add_action( 'permission_list_bottom', array( $this, 'permission_list' ) );
+		$this->fs()->add_filter( 'permission_list', array( $this, 'permission_list' ) );
 
 		$this->fs()->add_action( 'after_account_connection', array( $this, 'account_connection' ), 10, 2 );
 		$this->fs()->add_action( 'after_account_plan_sync', array( $this, 'plan_sync' ), 10, 2 );
@@ -92,16 +92,14 @@ class PUM_Freemius {
 	/**
 	 * Renders the popup maker usage statistics permission notification.
 	 */
-	public function permission_list() { ?>
-		<li>
-			<i class="dashicons dashicons-performance"></i>
-
-			<div>
-				<span><?php _e( 'Usage Statistics', 'popup-maker' ); ?></span>
-
-				<p><?php _e( 'Popup & Theme Counts, Open Counts', 'popup-maker' ); ?></p>
-			</div>
-		</li><?php
+	public function permission_list( $permissions = array() ) {
+        $permissions['metrics'] = array(
+            'icon-class' => 'dashicons dashicons-performance',
+            'label'      => __( 'Usage Statistics', 'popup-maker' ),
+            'desc'       => __( 'Popup & Theme Counts, Open Counts', 'popup-maker' ),
+            'priority'   => 25,
+        );
+        return $permissions;
 	}
 
 	/**
