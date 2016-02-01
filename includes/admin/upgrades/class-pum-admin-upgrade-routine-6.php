@@ -23,11 +23,19 @@ if ( ! class_exists( 'PUM_Admin_Upgrade_Routine' ) ) {
  */
 final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 
+	/**
+	 * @var null
+	 */
 	public static $valid_themes = null;
 
+	/**
+	 * @var null
+	 */
 	public static $default_theme = null;
 
 	/**
+	 * Returns the description.
+	 *
 	 * @return mixed|void
 	 */
 	public static function description() {
@@ -35,7 +43,7 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 	}
 
 	/**
-	 *
+	 * Run the update.
 	 */
 	public static function run() {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -109,6 +117,9 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 		static::done();
 	}
 
+	/**
+	 * Create a list of valid popup themes.
+	 */
 	public static function setup_valid_themes() {
 		static::$valid_themes = array();
 
@@ -126,6 +137,9 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 		}
 	}
 
+	/**
+	 * Delete orphaned post meta keys.
+	 */
 	public static function delete_all_orphaned_meta_keys() {
 		global $wpdb;
 
@@ -138,6 +152,11 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 		);
 	}
 
+	/**
+	 * Delete all no longer meta keys to clean up after ourselves.
+	 *
+	 * @return false|int
+	 */
 	public static function delete_all_old_meta_keys() {
 		global $wpdb;
 
@@ -167,6 +186,9 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 		return $query;
 	}
 
+	/**
+	 * Checks for popup taxonomy counts and disables popup taxonomies if none are found.
+	 */
 	public static function process_popup_cats_tags() {
 		global $popmake_options;
 		$categories =  wp_count_terms( 'popup_category', array( 'hide_empty' => true) );
