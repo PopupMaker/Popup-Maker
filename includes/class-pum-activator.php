@@ -43,7 +43,9 @@ class PUM_Activator {
 		PUM_Admin_Upgrades::instance();
 
 		// Setup some default options
-		$options = array();
+		$options = array(
+			'disable_popup_category_tag' => 1,
+		);
 		update_option( 'popmake_settings', array_merge( $popmake_options, $options ) );
 
 		// Add a temporary option that will fire a hookable action on next load.
