@@ -153,28 +153,34 @@ function pum_reorder_submenu_array( $a, $b ) {
 		__( 'Extend', 'popup-maker' ),
 		__( 'Settings', 'popup-maker' ),
 		__( 'Tools', 'popup-maker' ),
+		__( 'Support Forum', 'freemius' ),
+		__( 'Account', 'freemius' ),
+		__( 'Contact Us', 'freemius' ),
 	) );
 
+	$a_val = strip_tags( $a[0], false );
+	$b_val = strip_tags( $b[0], false );
+
 	// Sort First Page Keys.
-	if ( in_array( $a[0], $first_pages ) && ! in_array( $b[0], $first_pages ) ) {
+	if ( in_array( $a_val, $first_pages ) && ! in_array( $b_val, $first_pages ) ) {
 		return - 1;
-	} elseif ( ! in_array( $a[0], $first_pages ) && in_array( $b[0], $first_pages ) ) {
+	} elseif ( ! in_array( $a_val, $first_pages ) && in_array( $b_val, $first_pages ) ) {
 		return 1;
-	} elseif ( in_array( $a[0], $first_pages ) && in_array( $b[0], $first_pages ) ) {
-		$a_key = array_search( $a[0], $first_pages );
-		$b_key = array_search( $b[0], $first_pages );
+	} elseif ( in_array( $a_val, $first_pages ) && in_array( $b_val, $first_pages ) ) {
+		$a_key = array_search( $a_val, $first_pages );
+		$b_key = array_search( $b_val, $first_pages );
 
 		return ( $a_key < $b_key ) ? - 1 : 1;
 	}
 
 	// Sort Last Page Keys.
-	if ( in_array( $a[0], $last_pages ) && ! in_array( $b[0], $last_pages ) ) {
+	if ( in_array( $a_val, $last_pages ) && ! in_array( $b_val, $last_pages ) ) {
 		return 1;
-	} elseif ( ! in_array( $a[0], $last_pages ) && in_array( $b[0], $last_pages ) ) {
+	} elseif ( ! in_array( $a_val, $last_pages ) && in_array( $b_val, $last_pages ) ) {
 		return - 1;
-	} elseif ( in_array( $a[0], $last_pages ) && in_array( $b[0], $last_pages ) ) {
-		$a_key = array_search( $a[0], $last_pages );
-		$b_key = array_search( $b[0], $last_pages );
+	} elseif ( in_array( $a_val, $last_pages ) && in_array( $b_val, $last_pages ) ) {
+		$a_key = array_search( $a_val, $last_pages );
+		$b_key = array_search( $b_val, $last_pages );
 
 		return ( $a_key < $b_key ) ? - 1 : 1;
 	}

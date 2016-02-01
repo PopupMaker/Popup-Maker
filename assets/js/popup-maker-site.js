@@ -653,7 +653,7 @@ var PUM_Accessibility;
         },
         setFocusToFirstItem: function () {
             // set focus to first focusable item
-            currentModal.find('.pum-container *').filter(focusableElementsString).filter(':visible').filter(':not(.pum-close').first().focus();
+            currentModal.find('.pum-container *').filter(focusableElementsString).filter(':visible').filter(':not(.pum-close)').first().focus();
         }
     };
 

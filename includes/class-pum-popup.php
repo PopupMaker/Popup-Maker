@@ -22,47 +22,47 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		/**
 		 * @var null
 		 */
-		protected $cookies = null;
+		public $cookies = null;
 
 		/**
 		 * @var null
 		 */
-		protected $triggers = null;
+		public $triggers = null;
 
 		/**
 		 * @var null
 		 */
-		protected $conditions = null;
+		public $conditions = null;
 
 		/**
 		 * @var null
 		 */
-		protected $display = null;
+		public $display = null;
 
 		/**
 		 * @var null
 		 */
-		protected $close = null;
+		public $close = null;
 
 		/**
 		 * @var null
 		 */
-		protected $theme_id = null;
+		public $theme_id = null;
 
 		/**
 		 * @var null
 		 */
-		protected $data_attr = null;
+		public $data_attr = null;
 
 		/**
 		 * @var null
 		 */
-		protected $title = null;
+		public $title = null;
 
 		/**
 		 * @var null
 		 */
-		protected $content = null;
+		public $content = null;
 
 		/**
 		 * If no id is passed this will check for the current global id.

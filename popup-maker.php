@@ -301,8 +301,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 
 				require_once POPMAKE_DIR . 'includes/admin/metabox-support.php';
 
-				require_once POPMAKE_DIR . 'includes/admin/tracking.php';
-
 			}
 
 			require_once POPMAKE_DIR . 'includes/integrations/class-popmake-woocommerce-integration.php';
@@ -352,27 +350,35 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 
 endif; // End if class_exists check
 
+#region Freemius
+
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-pum-freemius.php';
+pum_fs();
+
+#endregion Freemius
 
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-pum-activator.php
  */
-function activate_pum() {
+function pum_activate() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-pum-activator.php';
 	PUM_Activator::activate();
 }
+
+register_activation_hook( __FILE__, 'pum_activate' );
+
 
 /**
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-pum-deactivator.php
  */
-function deactivate_pum() {
+function pum_deactivate() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-pum-deactivator.php';
 	PUM_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_pum' );
-register_deactivation_hook( __FILE__, 'deactivate_pum' );
+register_deactivation_hook( __FILE__, 'pum_deactivate' );
 
 
 /**
@@ -398,8 +404,7 @@ function popmake_initialize() {
 	// Disable Unlimited Themes extension if active.
 	remove_action( 'popmake_initialize', 'popmake_ut_initialize' );
 
-	// Get Popup Maker Running
-	PopMake();
+	// Initialize old PUM extensions
 	do_action( 'pum_initialize' );
 	do_action( 'popmake_initialize' );
 }
