@@ -18,7 +18,6 @@ function pum_deprecated_v4_initialize() {
 		add_action( 'pum_save_popup', 'popmake_deprecated_popup_meta_box_save', 10, 2 );
 		add_filter( 'popmake_metabox_save_popup_auto_open_cookie_key', 'popmake_metabox_save_popup_auto_open_cookie_key' );
 
-
 		add_action( 'popmake_popup_click_open_meta_box_fields', 'popmake_popup_click_open_meta_box_field_extra_selectors', 10 );
 		add_action( 'popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_enabled', 10 );
 		add_action( 'popmake_popup_auto_open_meta_box_fields', 'popmake_popup_auto_open_meta_box_field_delay', 20 );
@@ -30,8 +29,26 @@ function pum_deprecated_v4_initialize() {
 		add_action( 'popmake_popup_admin_debug_meta_box_fields', 'popmake_popup_admin_debug_meta_box_field_extra_selectors', 10 );
 		add_action( 'popmake_popup_targeting_condition_meta_box_fields', 'popmake_popup_targeting_condition_meta_box_fields', 10 );
 
-		add_action( 'add_meta_boxes', 'pum_deprecated_v4_remove_metaboxes', 20 );
-	}
+        // Remove metaboxes.
+        add_action( 'add_meta_boxes', 'pum_deprecated_v4_remove_metaboxes', 20 );
+
+        /**
+         * Popup Content Filtering
+         * @deprecated 1.4.0 hooks & filters
+         */
+        add_filter( 'the_popup_content', array( $GLOBALS['wp_embed'], 'run_shortcode' ), 8 );
+        add_filter( 'the_popup_content', array( $GLOBALS['wp_embed'], 'autoembed' ), 8 );
+        add_filter( 'the_popup_content', 'wptexturize', 10 );
+        add_filter( 'the_popup_content', 'convert_smilies', 10 );
+        add_filter( 'the_popup_content', 'convert_chars', 10 );
+        add_filter( 'the_popup_content', 'wpautop', 10 );
+        add_filter( 'the_popup_content', 'shortcode_unautop', 10 );
+        add_filter( 'the_popup_content', 'prepend_attachment', 10 );
+        add_filter( 'the_popup_content', 'force_balance_tags', 10 );
+        add_filter( 'the_popup_content', 'do_shortcode', 11 );
+        add_filter( 'the_popup_content', 'capital_P_dangit', 11 );
+        add_filter( 'the_popup_content', 'popmake_popup_content_container', 10000, 2 );
+    }
 
 }
 add_action( 'pum_initialize_deprecated', 'pum_deprecated_v4_initialize' );
@@ -782,7 +799,6 @@ function popmake_post_type_item_metabox( $post_type_name ) {
 		$args = array_merge( $args, (array) $post_type->_default_query );
 	}
 
-	// @todo transient caching of these results with proper invalidation on updating of a post of this type
 	$get_posts = new WP_Query;
 	$posts     = $get_posts->query( $args );
 	if ( ! $get_posts->post_count ) {
