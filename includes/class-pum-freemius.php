@@ -63,6 +63,7 @@ class PUM_Freemius {
 				'menu'              => array(
 					'slug'       => 'edit.php?post_type=popup',
 					'contact'    => true,
+					'account'    => false,
 					'support'    => true,
 				),
 				'permissions' => array(
@@ -90,6 +91,7 @@ class PUM_Freemius {
 	    $this->fs()->override_i18n( array(
 			'delete-account-confirm' => __( 'Deleting your account will stop sending usage statistics and disable usage of in dash support forms. This will not stop the plugin from functioning. Are you sure you want to do this?', 'popup-maker' )
 		) );
+
 	}
 
 
