@@ -15,23 +15,23 @@ function pum_popup_shortcode( $atts, $content = '' ) {
 			'theme_id'         => null,
 			'theme'            => null,
 			'title'            => "",
-			'overlay_disabled' => 0,#
-			'size'             => "small",#
-			'width'            => "",#
-			'width_unit'       => "px",#
-			'height'           => "",#
-			'height_unit'      => "px",#
-			'location'         => "center top",#
-			'position_top'     => 100,#
-			'position_left'    => 0,#
-			'position_bottom'  => 0,#
-			'position_right'   => 0,#
-			'position_fixed'   => 0,#
-			'animation_type'   => "slide",#
-			'animation_speed'  => 350,#
-			'animation_origin' => 'top',#
-			'overlay_click'    => 0,#
-			'esc_press'        => 1,#
+			'overlay_disabled' => 0,
+			'size'             => "small",
+			'width'            => "",
+			'width_unit'       => "px",
+			'height'           => "",
+			'height_unit'      => "px",
+			'location'         => "center top",
+			'position_top'     => 100,
+			'position_left'    => 0,
+			'position_bottom'  => 0,
+			'position_right'   => 0,
+			'position_fixed'   => 0,
+			'animation_type'   => "slide",
+			'animation_speed'  => 350,
+			'animation_origin' => 'top',
+			'overlay_click'    => 0,
+			'esc_press'        => 1,
 		) ),
 		apply_filters( 'popmake_shortcode_popup_atts', $atts ),
 		'popup'
@@ -77,6 +77,12 @@ function pum_popup_shortcode( $atts, $content = '' ) {
 		'esc_press'     => $atts['esc_press']
 	);
 
+	$popup->triggers = array(
+		array(
+			'type' => 'click_open',
+			'settings' => array(),
+		)
+	);
 
 	ob_start();
 	popmake_get_template_part( 'popup' );

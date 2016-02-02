@@ -70,6 +70,10 @@ function popmake_load_site_styles() {
 	$css_dir = POPMAKE_URL . '/assets/css/';
 	$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css' : '.min.css';
 	wp_register_style( 'popup-maker-site', $css_dir . 'site' . $suffix, false, POPMAKE_VERSION );
+
+    if ( ! popmake_get_option( 'disable_popup_theme_styles', false ) ) {
+        wp_enqueue_style( 'popup-maker-site' );
+    }
 }
 add_action( 'wp_enqueue_scripts', 'popmake_load_site_styles' );
 

@@ -192,7 +192,7 @@ var PUM;
         },
         setup_close: function () {
             var $popup = PUM.getPopup(this),
-                $close = $popup.popmake('getClose'),
+                $close = $popup.popmake('getClose').add($('.popmake-close', $popup)),
                 settings = $popup.popmake('getSettings');
 
             // TODO: Move to a global $(document).on type bind. Possibly look for an inactive class to fail on.
@@ -243,7 +243,7 @@ var PUM;
             return this.each(function () {
                 var $popup = PUM.getPopup(this),
                     $container = $popup.popmake('getContainer'),
-                    $close = $popup.popmake('getClose');
+                    $close = $popup.popmake('getClose').add($('.popmake-close', $popup));
 
                 $popup.trigger('pumBeforeClose');
 

@@ -261,3 +261,8 @@ body div#ui-datepicker-div[style]
 {
     max-width: 285px;
 }
+
+.popmake-close
+{
+    cursor: pointer;
+}
