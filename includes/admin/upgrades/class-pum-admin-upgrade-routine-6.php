@@ -191,8 +191,20 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 	 */
 	public static function process_popup_cats_tags() {
 		global $popmake_options;
+
+		// Setup the Popup Taxonomies
+		popmake_setup_taxonomies( true );
+
 		$categories =  wp_count_terms( 'popup_category', array( 'hide_empty' => true) );
 		$tags =  wp_count_terms( 'popup_tag', array( 'hide_empty' => true) );
+
+		if ( is_wp_error( $tags ) ) {
+			$tags = 0;
+		}
+
+		if ( is_wp_error( $categories ) ) {
+			$categories = 0;
+		}
 
 		$popmake_options['disable_popup_category_tag'] = $categories == 0 && $tags == 0;
 
