@@ -1,12 +1,12 @@
 === Popup Maker ===
 Contributors: danieliser
-Author URI: http://danieliser.com
+Author URI: https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Author+URI
 Plugin URI: https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Plugin+URI
 Donate link: 
-Tags: age restriction, age verification, auto open, automatic popup, conversion, conversions, custom popup, dialog box, exit intent, fancy box, fancy popup, form modal, full page popup, full screen pop, full screen popup, marketing, modal, modals, onclick popup, optin popup, pop-up, pop-ups, popup, popup ads, popup advertising, popup box, popup form, popup message, popup window, popups, unblockable, wordpress popup
+Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.4
-Tested up to: 4.3.1
-Stable tag: 1.3.9
+Tested up to: 4.4.2
+Stable tag: 1.4RC1
 License: GNU Version 2 or Any Later Version
 
 The most versatile popup plugin for WordPress! Grow email subscriber lists, get more FB Likes, create login modals, content restriction & more.
@@ -90,6 +90,44 @@ There are several common causes for this which include:
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.4.0 - TBD
+* Feature: Added basic analytics. Tracks how many unique opens each popup has.
+* Feature: Added option to reset popup open counts demand.
+* Feature: New add / remove targeting conditions UI.
+* Feature: Conditions can now be negative as well as grouped as AND / OR.
+* Feature: New conditions for targeting posts & cpt by taxonomy. IE Posts with Tag / Category.
+* Feature: New add / remove triggers UI that allows multiple of the same trigger per popup.
+* Feature: Added a new add / remove cookies UI that manages cookies separate from triggers.
+* Feature: Added 5 new built in themes.
+* Feature: Added support for pods content types.
+* Feature: Added full screen front end previews for admins and editors.
+* Feature: Added additional WooCommerce conditions such as on checkout.
+* Improvement: Added CSS resets to all core popup elements to ensure a reliable look.
+* Improvement: Popups are now rendered with their own overlay. This allows the popup to scroll inside the overlay.
+* Improvement: Cookie names can now be set to anything, including cookies from other plugins.
+* Improvement: Triggers now support checking more than one cookie.
+* Improvement: Accessibility & screen reader enhancements to the popups and admin.
+* Improvement: Auto Focus the first element in the popup when it opens for screen readers.
+* Improvement: Better JavaScript encapsulation and organization.
+* Improvement: Added support for Select2 smart dropdowns for admin interfaces.
+* Improvement: Added a more reliable upgrade routine system.
+* Improvement: Added an option to disable popup taxonomies if not in use.
+* Improvement: Added more reliable usage tracking via [Freemius](https://freemius.com/wordpress/).
+* Tweak: Updated extensions page and added a list of plugins that work well with Popup Maker.
+* Fixed: Super annoying fixed position checkbox glitch.
+* Fixed: Missing check for disabled google fonts before loading them.
+* Fixed: Bug where hidden about pages showed up when certain admin menu editing plugins were active.
+* Fixed: Bug where default theme was not properly created on install.
+* Fixed: Bug where non utf-8 characters were used in the name field and caused JS errors.
+* Fixed: Bug where popup triggers inside their own popup would cause it to close and reopen when clicked.
+* Dev: Introduced PUM_Fields a settings API that support _.js Templ fields.
+* Dev: Added new action 'pum_styles' that can be used to render custom CSS.
+* Dev: Added new PUM_Popup class with nearly all methods built in.
+* Dev: Introduced new prefix pum_ rather than popmake_.
+
+Change Set Statistics:
+
 
 = v1.3.9 - 10/14/2015 =
 * Feature: New shortcode - [popup_close] allows adding custom close buttons/text. Ex. [popup_close] Click Me [/popup_close].
