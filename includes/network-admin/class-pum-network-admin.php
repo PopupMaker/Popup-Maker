@@ -47,8 +47,13 @@ class PUM_Network_Admin {
 	public static function relabel_menu() {
 		global $submenu;
 
-		if ( isset( $submenu['pum-extensions'] ) ) {
-			$submenu['pum-extensions'][0][0] = __( 'Extend', 'popup-maker' );
+		if ( isset( $submenu['popup-maker'] ) ) {
+
+			foreach ( $submenu['popup-maker'] as $key => $item ) {
+				if ( $item[0] == __( 'Popup Maker', 'popup-maker' ) ) {
+					$submenu['popup-maker'][ $key ][0] = __( 'Extend', 'popup-maker' );
+				}
+			}
 		}
 	}
 
@@ -61,14 +66,14 @@ class PUM_Network_Admin {
 			__( 'Extend Popup Maker', 'popup-maker' ),
 			__( 'Popup Maker', 'popup-maker' ),
 			null,
-			'pum-extensions',
+			'popup-maker',
 			'popmake_extensions_page',
 			POPMAKE_URL . '/assets/images/admin/dashboard-icon.png',
 			26
 		);
 
 		static::$pages[] = add_submenu_page(
-			'pum-extensions',
+			'popup-maker',
 			__( 'Tools', 'popup-maker' ),
 			__( 'Tools', 'popup-maker' ),
 			null,
@@ -76,24 +81,18 @@ class PUM_Network_Admin {
 			'popmake_tools_page'
 		);
 
-		static::$pages[] = add_submenu_page(
-			'pum-extensions',
-			__( 'Licenses', 'popup-maker' ),
-			__( 'Licenses', 'popup-maker' ),
-			null,
-			'pum-licenses',
-			''
-		);
-
-		static::$pages[] = add_submenu_page(
-			null,
-			__( 'Update', 'popup-maker' ),
-			__( 'Update', 'popup-maker' ),
-			null,
-			'pum-updates',
-			array( PUM_Admin_Upgrades::instance(), 'upgrades_screen' )
-		);
-
+		// TODO Show this if there are active extensions and list the license key fields here.
+		// If this is shown the settings => licenses for regular blogs should not be. Either / Or
+		if ( false ) {
+			static::$pages[] = add_submenu_page(
+				'popup-maker',
+				__( 'Licenses', 'popup-maker' ),
+				__( 'Licenses', 'popup-maker' ),
+				null,
+				'pum-licenses',
+				''
+			);
+		}
 
 	}
 
