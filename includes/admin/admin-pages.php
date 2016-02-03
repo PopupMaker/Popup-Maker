@@ -120,8 +120,10 @@ add_action( 'admin_menu', 'popmake_admin_submenu_pages' );
 function pum_reorder_admin_submenu() {
 	global $submenu;
 
-	// Sort the menu according to your preferences
-	usort( $submenu['edit.php?post_type=popup'], 'pum_reorder_submenu_array' );
+	if ( isset( $submenu['edit.php?post_type=popup'] ) ) {
+		// Sort the menu according to your preferences
+		usort( $submenu['edit.php?post_type=popup'], 'pum_reorder_submenu_array' );
+	}
 }
 
 add_action( 'admin_head', 'pum_reorder_admin_submenu' );
@@ -228,6 +230,7 @@ function popmake_is_admin_page() {
 		$popmake_help_page
 	) );
 
+	// TODO Replace this whole function using the global $hook_suffix which is what add_submenu_page returns.
 	if ( in_array( $pagenow, $popmake_admin_pages ) ) {
 		return true;
 	} else {
