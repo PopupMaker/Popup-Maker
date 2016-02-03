@@ -229,18 +229,17 @@ class PUM_Admin_Upgrades {
 
         } else {
 
-            foreach ( $this->get_upgrades() as $version => $notice ) {
-                printf(
-                        '<div class="updated"><p><strong>%s: </strong> %s %s</p></div>',
-                        __( 'Popup Maker', 'popup-maker' ),
-                        esc_html( $notice ),
-                        sprintf(
-                                __( 'Click %shere%s to start the upgrade.', 'popup-maker' ),
-                                '<a href="' . esc_url( admin_url( 'options.php?page=pum-upgrades' ) ) . '">',
-                                '</a>'
-                        )
-                );
-            }
+            printf(
+                    '<div class="error"><p><strong>%s:</strong> <span class="dashicons dashicons-warning" style="color: #dc3232;"></span> %s %s %s</p></div>',
+                    __( 'Popup Maker', 'popup-maker' ),
+                    __( 'Important', 'popup-maker' ),
+                    __( 'Database upgrades required.', 'popup-maker' ),
+                    sprintf(
+                            __( 'Please click %shere%s to complete these changes now.', 'popup-maker' ),
+                            '<a href="' . esc_url( admin_url( 'options.php?page=pum-upgrades' ) ) . '">',
+                            '</a>'
+                    )
+            );
 
         }
 
