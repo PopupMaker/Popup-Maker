@@ -517,7 +517,22 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 			update_post_meta( $this->ID, 'popup_last_opened', current_time( 'timestamp', 0 ) );
 
 			$total_opens = get_option( 'pum_total_open_count', 0 );
-			update_option( 'pum_total_open_count', $total_opens + 1 );
+
+			$total_opens ++;
+
+			update_option( 'pum_total_open_count', $total_opens );
+
+			// If is multisite add this blogs total to the site totals.
+			if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+				$site_total_open_count = get_site_option( 'pum_site_total_open_count', false );
+				if ( ! $site_total_open_count ) {
+					$site_total_open_count = $total_opens;
+				} else {
+					$site_total_open_count ++;
+				}
+				update_site_option( 'pum_site_total_open_count', $site_total_open_count );
+			}
+
 		}
 
 		/**

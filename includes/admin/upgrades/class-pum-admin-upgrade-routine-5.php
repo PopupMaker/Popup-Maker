@@ -91,7 +91,13 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 		// Set the sites total open count.
 		update_option( 'pum_total_open_count', $total_open_count );
 
-		/**
+		// If is multisite add this blogs total to the site totals.
+		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+			$site_total_open_count = get_site_option( 'pum_site_total_open_count', 0 );
+			update_site_option( 'pum_site_total_open_count', $site_total_open_count + $total_open_count );
+		}
+
+			/**
 		 * TODO Move this to v1.5 routines.
 		 */
 		/*
