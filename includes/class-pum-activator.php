@@ -34,7 +34,7 @@ class PUM_Activator {
 		popmake_setup_post_types();
 
 		// Setup the Popup Taxonomies
-		popmake_setup_taxonomies();
+		popmake_setup_taxonomies( true );
 
 		// Get the Version Data Set.
 		if ( ! class_exists( 'PUM_Admin_Upgrades' ) ) {
