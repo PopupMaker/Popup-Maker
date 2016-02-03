@@ -133,7 +133,7 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 
 		if ( ! static::$default_theme ) {
 			reset( static::$valid_themes );
-			static::$default_theme = static::$valid_themes[ key( static::$valid_themes ) ];
+			static::$default_theme = static::$valid_themes[ key( static::$valid_themes ) ]->ID;
 		}
 	}
 
