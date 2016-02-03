@@ -17,8 +17,8 @@ class PUM_Popup_Cookies_Metabox {
 	 */
 	public static function init() {
 		add_action( 'add_meta_boxes', array( __CLASS__, 'register_metabox' ) );
-		add_action( 'print_media_templates', array( __CLASS__, 'media_templates' ) );
-		add_action( 'pum_save_popup', array( __CLASS__, 'save_popup' ) );
+        add_action( 'pum_save_popup', array( __CLASS__, 'save_popup' ) );
+        add_action( 'print_media_templates', array( __CLASS__, 'media_templates' ) );
 	}
 
 	/**
@@ -118,8 +118,10 @@ class PUM_Popup_Cookies_Metabox {
 	/**
 	 *
 	 */
-	public static function media_templates() { ?>
-
+	public static function media_templates() {
+        if ( ! popmake_is_admin_popup_page() ) {
+            return;
+        } ?>
 		<script type="text/template" id="pum_cookie_row_templ">
 			<?php static::render_row( array(
 				'index' => '<%= index %>',

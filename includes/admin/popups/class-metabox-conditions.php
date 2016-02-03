@@ -157,8 +157,10 @@ class PUM_Popup_Conditions_Metabox {
 	/**
 	 *
 	 */
-	public static function media_templates() { ?>
-
+	public static function media_templates() {
+        if ( ! popmake_is_admin_popup_page() ) {
+            return;
+        } ?>
 		<script type="text/template" id="pum_condition_group_templ">
 			<div class="facet-group-wrap" data-index="<%= index %>">
 				<section class="facet-group">

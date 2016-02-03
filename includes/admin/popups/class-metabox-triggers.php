@@ -119,8 +119,10 @@ class PUM_Popup_Triggers_Metabox {
 	/**
 	 *
 	 */
-	public static function media_templates() { ?>
-
+	public static function media_templates() {
+        if ( ! popmake_is_admin_popup_page() ) {
+            return;
+        } ?>
 		<script type="text/template" id="pum_trigger_row_templ">
 			<?php static::render_row( array(
 				'index' => '<%= index %>',
