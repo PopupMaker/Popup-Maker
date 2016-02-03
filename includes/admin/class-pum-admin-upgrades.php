@@ -72,21 +72,21 @@ class PUM_Admin_Upgrades {
 
     public function update_plugin_version() {
 
-        $current_ver = get_site_option( 'pum_ver', false );
+        $current_ver = get_option( 'pum_ver', false );
 
         if ( ! $current_ver ) {
 
             $deprecated_ver = get_site_option( 'popmake_version', false );
 
             $current_ver = $deprecated_ver ? $deprecated_ver : PUM::VER;
-            add_site_option( 'pum_ver', PUM::VER );
+            add_option( 'pum_ver', PUM::VER );
 
         }
 
         if ( version_compare( $current_ver, PUM::VER, '<' ) ) {
             // Save Upgraded From option
-            update_site_option( 'pum_ver_upgraded_from', $current_ver );
-            update_site_option( 'pum_ver', PUM::VER );
+            update_option( 'pum_ver_upgraded_from', $current_ver );
+            update_option( 'pum_ver', PUM::VER );
         }
 
     }
@@ -144,7 +144,7 @@ class PUM_Admin_Upgrades {
                 'number'      => $number,
                 'completed'   => $completed,
         );
-        update_site_option( 'pum_doing_upgrade', $this->upgrade_args );
+        update_option( 'pum_doing_upgrade', $this->upgrade_args );
 
     }
 
@@ -165,7 +165,7 @@ class PUM_Admin_Upgrades {
             // Prevent a weird case where the estimate was off. Usually only a couple.
             $this->upgrade_args['steps'] = $this->upgrade_args['step'];
         } elseif ( $this->upgrade_args['step'] * $this->upgrade_args['steps'] ) {
-            update_site_option( 'pum_doing_upgrade', $this->upgrade_args );
+            update_option( 'pum_doing_upgrade', $this->upgrade_args );
         }
 
     }
@@ -259,14 +259,14 @@ class PUM_Admin_Upgrades {
         }
 
         $deprecated_ver = get_site_option( 'popmake_version', false );
-        $current_ver    = get_site_option( 'pum_ver', $deprecated_ver );
+        $current_ver    = get_option( 'pum_ver', $deprecated_ver );
 
         // Save Upgraded From option
         if ( $current_ver ) {
-            update_site_option( 'pum_ver_upgraded_from', $current_ver );
+            update_option( 'pum_ver_upgraded_from', $current_ver );
         }
 
-        update_site_option( 'pum_ver', PUM::VER );
+        update_option( 'pum_ver', PUM::VER );
 
         // Process DB Upgrades
         $this->process_upgrades();
@@ -302,7 +302,7 @@ class PUM_Admin_Upgrades {
             return;
         }
 
-        $upgraded_from = get_site_option( 'pum_ver_upgraded_from', false );
+        $upgraded_from = get_option( 'pum_ver_upgraded_from', false );
 
         // this is the current database schema version number
         $current_db_ver = pum_get_db_ver();
@@ -450,7 +450,7 @@ class PUM_Admin_Upgrades {
      */
     public function maybe_resume_upgrade() {
 
-        $doing_upgrade = get_site_option( 'pum_doing_upgrade', false );
+        $doing_upgrade = get_option( 'pum_doing_upgrade', false );
 
         if ( empty( $doing_upgrade ) ) {
             return false;
@@ -479,7 +479,7 @@ class PUM_Admin_Upgrades {
         // Remove any blanks, and only show uniques
         $completed_upgrades = array_unique( array_values( $completed_upgrades ) );
 
-        return update_site_option( 'pum_completed_upgrades', $completed_upgrades );
+        return update_option( 'pum_completed_upgrades', $completed_upgrades );
     }
 
     /**
@@ -508,7 +508,7 @@ class PUM_Admin_Upgrades {
      */
     public function get_completed_upgrades() {
 
-        $completed_upgrades = get_site_option( 'pum_completed_upgrades' );
+        $completed_upgrades = get_option( 'pum_completed_upgrades' );
 
         if ( false === $completed_upgrades ) {
             $completed_upgrades = array();

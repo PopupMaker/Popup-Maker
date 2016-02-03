@@ -307,7 +307,7 @@ class PUM_Freemius {
             // Popup Metrics
             'popups'           => $popups,
             'popup_themes'     => $popup_themes,
-            'open_count'       => get_site_option( 'pum_total_open_count', 0 ),
+            'open_count'       => get_option( 'pum_total_open_count', 0 ),
         );
 
         return $args;
