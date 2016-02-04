@@ -2,7 +2,7 @@
 Contributors: danieliser
 Author URI: https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Author+URI
 Plugin URI: https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=Text+Link&utm_campaign=Plugin+URI
-Donate link: 
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4QWL6T68F539L
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.4
 Tested up to: 4.4.2
