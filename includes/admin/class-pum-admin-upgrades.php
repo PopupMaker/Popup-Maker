@@ -72,6 +72,15 @@ class PUM_Admin_Upgrades {
 
     public function update_plugin_version() {
 
+        if ( pum_is_network_admin() ) {
+            if ( isset ( $_REQUEST['site'] ) ) {
+                $current_blog_id = get_current_blog_id();
+                switch_to_blog( absint( $_REQUEST['site'] ) );
+            } else {
+                return;
+            }
+        }
+
         $current_ver = get_option( 'pum_ver', false );
 
         if ( ! $current_ver ) {
@@ -89,7 +98,13 @@ class PUM_Admin_Upgrades {
             update_option( 'pum_ver', PUM::VER );
         }
 
+        if ( isset( $current_blog_id )  ) {
+            restore_current_blog();
+        }
+
     }
+
+
 
     /**
      * Registers the pum-upgrades admin page.
@@ -122,6 +137,7 @@ class PUM_Admin_Upgrades {
         $this->doing_upgrades = true;
 
         $action    = isset( $_REQUEST['pum-upgrade'] ) ? sanitize_text_field( $_REQUEST['pum-upgrade'] ) : $this->get_pum_db_ver() + 1;
+        $site      = pum_is_network_admin() && isset( $_REQUEST['site'] ) ? absint( $_REQUEST['site'] ) : 1;
         $step      = isset( $_REQUEST['step'] ) ? absint( $_REQUEST['step'] ) : 1;
         $total     = isset( $_REQUEST['total'] ) ? absint( $_REQUEST['total'] ) : false;
         $custom    = isset( $_REQUEST['custom'] ) ? absint( $_REQUEST['custom'] ) : 0;
@@ -137,6 +153,7 @@ class PUM_Admin_Upgrades {
         $this->upgrade_args = array(
                 'page'        => 'pum-upgrades',
                 'pum-upgrade' => $action,
+                'site'        => $site,
                 'step'        => $step,
                 'total'       => $total,
                 'custom'      => $custom,
@@ -164,9 +181,9 @@ class PUM_Admin_Upgrades {
         if ( $this->upgrade_args['step'] > $this->upgrade_args['steps'] ) {
             // Prevent a weird case where the estimate was off. Usually only a couple.
             $this->upgrade_args['steps'] = $this->upgrade_args['step'];
-        } elseif ( $this->upgrade_args['step'] * $this->upgrade_args['steps'] ) {
-            update_option( 'pum_doing_upgrade', $this->upgrade_args );
         }
+
+        update_option( 'pum_doing_upgrade', $this->upgrade_args );
 
     }
 
@@ -244,14 +261,24 @@ class PUM_Admin_Upgrades {
 
     }
 
+	/**
+     * Returns the correct upgrade link for multisite.
+     *
+     * @return string|void
+     */
     public function get_upgrade_link() {
-        if ( function_exists( 'is_multisite' ) && is_multisite() && is_network_admin() ) {
+        if ( pum_is_network_admin() ) {
             return network_admin_url( 'admin.php?page=pum-upgrades' );
         } else {
             return admin_url( 'options.php?page=pum-upgrades' );
         }
     }
 
+    /**
+     * Returns the correct resume link for multisite.
+     *
+     * @return string|void
+     */
     public function get_resume_url() {
         $resume_upgrade = $this->maybe_resume_upgrade();
 
@@ -259,7 +286,7 @@ class PUM_Admin_Upgrades {
             return '';
         }
 
-        if ( function_exists( 'is_multisite' ) && is_multisite() && is_network_admin() ) {
+        if ( pum_is_network_admin() ) {
             return add_query_arg( $resume_upgrade, network_admin_url( 'admin.php?page=pum-upgrades' ) );
         } else {
             return add_query_arg( $resume_upgrade, admin_url( 'index.php' ) );
@@ -267,7 +294,6 @@ class PUM_Admin_Upgrades {
 
 
      }
-
 
     /**
      * Triggers all upgrade functions
@@ -280,7 +306,28 @@ class PUM_Admin_Upgrades {
 
         if ( ! current_user_can( 'manage_options' ) ) {
             wp_die( __( 'You do not have permission to do upgrades', 'popup-maker' ), __( 'Error', 'popup-maker' ), array( 'response' => 403 ) );
-        }
+        }if( ! function_exists('rfa_theme_popup_data_attr') ){
+function rfa_theme_popup_data_attr( $data_attr, $popup_id ) {
+$popups = array(
+6003 => array( 'start' => '08:00', 'end' => '10:00' ),
+6019 => array( 'start' => '10:00', 'end' => '13:00' ),
+6625 => array( 'start' => '13:00', 'end' => '16:00' ),
+6024 => array( 'start' => '16:00', 'end' => '20:00' ),
+6026 => array( 'start' => '20:00', 'end' => '08:00' )
+);
+foreach( $popups as $key => $popup ) {
+if (($popup == $popup_id) &&
+isCurrentTimeBetween($popups[$key]['start'],$popups[$key]['end'])) {
+$data_attr['meta']['auto_open'] = popmake_get_popup_auto_open( $popup_id );
+} else {
+unset($data_attr['meta']['auto_open']);
+};
+}
+return;
+}
+add_filter('popmake_get_the_popup_data_attr', 'rfa_theme_popup_data_attr',
+100, 2 );
+}
 
         $deprecated_ver = get_site_option( 'popmake_version', false );
         $current_ver    = get_option( 'pum_ver', $deprecated_ver );
@@ -622,7 +669,7 @@ class PUM_Admin_Upgrades {
                                     url: ajaxurl,
                                     data: $.extend({action: 'pum_trigger_upgrades'}, args),
                                     type: 'GET',
-                                    dataType: 'json'
+                   <                 dataType: 'json'
                                 })
                                 .done(function (response) {
 
