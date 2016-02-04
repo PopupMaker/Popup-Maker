@@ -221,9 +221,10 @@ class PUM_Admin_Upgrades {
 
         if ( ! empty( $resume_upgrade ) ) {
 
+            $resume_url = add_query_arg( $resume_upgrade, admin_url( 'index.php' ) );
             printf(
                     '<div class="error"><p>' . __( 'Popup Maker needs to complete a database upgrade that was previously started, click <a href="%s">here</a> to resume the upgrade.', 'popup-maker' ) . '</p></div>',
-                    esc_url( $this->get_resume_url() )
+                    esc_url( $resume_url )
             );
 
         } else {
@@ -235,7 +236,7 @@ class PUM_Admin_Upgrades {
                     __( 'Database upgrades required.', 'popup-maker' ),
                     sprintf(
                             __( 'Please click %shere%s to complete these changes now.', 'popup-maker' ),
-                            '<a href="' . esc_url( $this->get_upgrade_link() ) . '">',
+                            '<a href="' . esc_url( admin_url( 'options.php?page=pum-upgrades' ) ) . '">',
                             '</a>'
                     )
             );
@@ -243,31 +244,6 @@ class PUM_Admin_Upgrades {
         }
 
     }
-
-    public function get_upgrade_link() {
-        if ( function_exists( 'is_multisite' ) && is_multisite() && is_network_admin() ) {
-            return network_admin_url( 'admin.php?page=pum-upgrades' );
-        } else {
-            return admin_url( 'options.php?page=pum-upgrades' );
-        }
-    }
-
-    public function get_resume_url() {
-        $resume_upgrade = $this->maybe_resume_upgrade();
-
-        if ( empty( $resume_upgrade ) ) {
-            return '';
-        }
-
-        if ( function_exists( 'is_multisite' ) && is_multisite() && is_network_admin() ) {
-            return add_query_arg( $resume_upgrade, network_admin_url( 'admin.php?page=pum-upgrades' ) );
-        } else {
-            return add_query_arg( $resume_upgrade, admin_url( 'index.php' ) );
-        }
-
-
-     }
-
 
     /**
      * Triggers all upgrade functions
