@@ -6,7 +6,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.4
 Tested up to: 4.4.2
-Stable tag: 1.4RC1
+Stable tag: 1.3.9
 License: GNU Version 2 or Any Later Version
 
 The most versatile popup plugin for WordPress! Grow email subscriber lists, get more FB Likes, create login modals, content restriction & more.
