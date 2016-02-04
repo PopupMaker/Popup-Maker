@@ -45,9 +45,11 @@ class PUM_Network_Admin_Upgrades extends PUM_Admin_Upgrades {
 		$this->update_plugin_version();
 
 		// bail if this plugin data doesn't need updating
-		if ( pum_get_db_ver( true ) >= PUM::DB_VER ) {
+		if ( pum_get_db_ver() >= PUM::DB_VER ) {
 			return;
 		}
+
+		//add_action( 'wp_ajax_pum_trigger_upgrades', array( $this, 'trigger_upgrades' ) );
 
 		add_action( 'network_admin_menu', array( $this, 'register_pages' ) );
 		add_action( 'network_admin_notices', array( $this, 'show_upgrade_notices' ) );

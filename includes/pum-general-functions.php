@@ -14,44 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * Returns true if is a multisite install.
- *
- * @since 1.4.0
- *
- * @return bool
- */
-function pum_is_network() {
-	return function_exists( 'is_multisite' ) && is_multisite();
-}
-
-/**
- * Returns true if page is in network admin.
- *
- * @since 1.4.0
- *
- * @return bool
- */
-function pum_is_network_admin() {
-	return pum_is_network() && is_network_admin();
-}
-
-/**
- * Returns the current pum dv version or false.
- *
- * If network parameter is true and is multisite then returns network db version.
- *
- * @since 1.4.0
- *
- * @param bool $network
- *
- * @return mixed|void
- */
-function pum_get_db_ver( $network = false ) {
-	if ( pum_is_network() && $network ) {
-		return get_site_option( 'pum_db_ver', false );
-	}
-
+function pum_get_db_ver() {
 	return get_option( 'pum_db_ver', false );
 }
 
