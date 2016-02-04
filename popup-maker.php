@@ -240,10 +240,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-helpers.php';
 			}
 
-			// MultiSite Network Admin
-			if ( function_exists( 'is_multisite' ) && is_multisite() ) {
-				require_once POPMAKE_DIR . 'includes/network-admin/class-pum-network-admin.php';
-			}
 
 			require_once POPMAKE_DIR . 'includes/actions.php';
 			require_once POPMAKE_DIR . 'includes/post-types.php';
