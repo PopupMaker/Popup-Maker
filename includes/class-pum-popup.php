@@ -224,6 +224,10 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 
 			$classes = apply_filters( 'pum_popup_get_classes', $classes, $this->ID );
 
+			if ( ! isset( $classes[ $element ] ) ) {
+				return array();
+			}
+
 			return apply_filters( "pum_popup_get_{$element}_classes", $classes[ $element ], $this->ID );
 		}
 
