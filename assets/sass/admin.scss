@@ -4,6 +4,7 @@
 @import 'partials/pum_select2';
 @import 'partials/facet_builder';
 @import 'partials/extensions_page';
+@import 'partials/mce_buttons';
 
 .pum-form {
 /*
@@ -111,6 +112,14 @@
         font-size:inherit;
         margin: 0 0 1em;
       }
+    }
+  }
+
+  .pum-required {
+    label::after {
+      color: #a00;
+      content: "*";
+      margin-left: 5px;
     }
   }
 }
