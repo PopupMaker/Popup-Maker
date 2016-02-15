@@ -1,12 +1,12 @@
 /* Reset Overlay, Container, Title, Content(div) & Close button */
 .pum-overlay,
-.pum-overlay .pum-container,
-.pum-overlay .pum-title,
-.pum-overlay .pum-content,
-.pum-overlay .pum-close,
-.pum-overlay .pum-close:hover,
-.pum-overlay .pum-close:focus,
-.pum-overlay .pum-close:active {
+.pum-container,
+.pum-title,
+.pum-content,
+.pum-content + .pum-close,
+.pum-content + .pum-close:hover,
+.pum-content + .pum-close:focus,
+.pum-content + .pum-close:active {
   background: none;
   border: none;
   bottom: auto;
@@ -71,134 +71,130 @@
     box-sizing: border-box;
   }
 
-  .pum-container {
-    top: 100px;
-    position: absolute;
-    margin-bottom: 3em;
+}
 
-    &.pum-responsive {
+.pum-container {
+  top: 100px;
+  position: absolute;
+  margin-bottom: 3em;
 
-      left: 50%;
-      margin-left: -47.5%;
-      width: 95%;
+  &.pum-responsive {
+
+    left: 50%;
+    margin-left: -47.5%;
+    width: 95%;
+    height: auto;
+    overflow: visible;
+
+    // Add Responsive Image Handling.
+    img {
+      max-width: 100%;
       height: auto;
-      overflow: visible;
-
-      // Add Responsive Image Handling.
-      img {
-        max-width: 100%;
-        height: auto;
-      }
-
-      @media only screen and (min-width: 1024px) {
-        &.pum-responsive-nano {
-          margin-left: -5%;
-          width: 10%;
-        }
-
-        &.pum-responsive-micro {
-          margin-left: -10%;
-          width: 20%;
-        }
-
-        &.pum-responsive-tiny {
-          margin-left: -15%;
-          width: 30%;
-        }
-
-        &.pum-responsive-small {
-          margin-left: -20%;
-          width: 40%;
-        }
-
-        &.pum-responsive-medium {
-          margin-left: -30%;
-          width: 60%;
-        }
-
-        &.pum-responsive-normal {
-          margin-left: -30%;
-          width: 70%;
-        }
-
-        &.pum-responsive-large {
-          margin-left: -35%;
-          width: 80%;
-        }
-
-        &.pum-responsive-xlarge {
-          margin-left: -47.5%;
-          width: 95%;
-        }
-
-        &.pum-position-fixed {
-          position: fixed;
-        }
-      }
-
-      @media only screen and (max-width: 1024px) {
-        &.pum-position-fixed {
-          position: absolute;
-        }
-      }
-
     }
 
-    &.custom-position {
-      left: auto;
-      top: auto;
-      margin-left: inherit;
-    }
-
-    .pum-title {
-
-    }
-
-    .pum-content {
-
-      > :last-child {
-        margin-bottom: 0;
+    @media only screen and (min-width: 1024px) {
+      &.pum-responsive-nano {
+        margin-left: -5%;
+        width: 10%;
       }
 
-    }
-
-    &.pum-scrollable {
-
-      .pum-content {
-
-        overflow: auto;
-        overflow-y: scroll;
-        max-height: 95%;
-
+      &.pum-responsive-micro {
+        margin-left: -10%;
+        width: 20%;
       }
 
+      &.pum-responsive-tiny {
+        margin-left: -15%;
+        width: 30%;
+      }
+
+      &.pum-responsive-small {
+        margin-left: -20%;
+        width: 40%;
+      }
+
+      &.pum-responsive-medium {
+        margin-left: -30%;
+        width: 60%;
+      }
+
+      &.pum-responsive-normal {
+        margin-left: -30%;
+        width: 70%;
+      }
+
+      &.pum-responsive-large {
+        margin-left: -35%;
+        width: 80%;
+      }
+
+      &.pum-responsive-xlarge {
+        margin-left: -47.5%;
+        width: 95%;
+      }
+
+      &.pum-position-fixed {
+        position: fixed;
+      }
     }
 
-    .pum-close {
+    @media only screen and (max-width: 1024px) {
+      &.pum-position-fixed {
+        position: absolute;
+      }
+    }
 
+  }
+
+  &.custom-position {
+    left: auto;
+    top: auto;
+    margin-left: inherit;
+  }
+
+  .pum-title {}
+
+  .pum-content {
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+
+    + .pum-close {
       text-decoration: none;
       text-align: center;
       line-height: 1;
       position: absolute;
       cursor: pointer;
       min-width: 1em;
+    }
+  }
+
+  &.pum-scrollable {
+
+    .pum-content {
+
+      overflow: auto;
+      overflow-y: scroll;
+      max-height: 95%;
 
     }
 
   }
 
-  &.pum-overlay-disabled {
-    visibility: hidden;
 
-    &::-webkit-scrollbar {
-      display: block;
-    }
+}
 
-    .pum-container {
-      visibility: visible;
-    }
+&.pum-overlay-disabled {
+  visibility: hidden;
+
+  &::-webkit-scrollbar {
+    display: block;
   }
 
+  .pum-container {
+    visibility: visible;
+  }
 }
 
 html.pum-open {
