@@ -154,7 +154,7 @@ function popmake_load_admin_scripts() {
         //add_action( 'popmake_admin_footer', 'popmake_admin_popup_preview' );
 
 	}
-	if ( popmake_is_admin_page() ) {
+	if ( popmake_is_admin_page() || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD ) ) {
 
         wp_register_script( 'select2', $js_dir . 'select2.full' . $suffix, array( 'jquery' ), POPMAKE_VERSION );
 
@@ -165,25 +165,29 @@ function popmake_load_admin_scripts() {
             'select2',
 		), POPMAKE_VERSION );
 		wp_localize_script( 'popup-maker-admin', 'popmake_admin_ajax_nonce', wp_create_nonce( POPMAKE_NONCE ) );
-		wp_localize_script( 'popup-maker-admin', 'pum_admin', array(
+		wp_localize_script( 'popup-maker-admin', 'pum_admin', apply_filters( 'pum_admin_var', array(
 			'post_id'  => ! empty( $_GET['post'] ) ? intval( $_GET['post'] ) : null,
 			'defaults' => array(
                 'triggers' => PUM_Triggers::instance()->get_defaults(),
                 'cookies' => PUM_Cookies::instance()->get_defaults(),
 			),
-			'I10n'     => array(
-                'add'                    => __( 'Add', 'popup-maker' ),
-                'save'                   => __( 'Save', 'popup-maker' ),
-                'confirm_delete_trigger' => __( "Are you sure you want to delete this trigger?", 'popup-maker' ),
-                'confirm_delete_cookie'  => __( "Are you sure you want to delete this cookie?", 'popup-maker' ),
-                'labels'                 => array(
-                    'triggers' => PUM_Triggers::instance()->get_labels(),
-                    'cookies' => PUM_Cookies::instance()->get_labels(),
-                ),
-                'no_cookie'              => __( 'None', 'popup-maker' ),
-                'confirm_count_reset'    => __( 'Are you sure you want to reset the open count?', 'popup-maker' ),
-		    )
-		) );
+			'I10n' => array(
+				'add'                         => __( 'Add', 'popup-maker' ),
+				'save'                        => __( 'Save', 'popup-maker' ),
+				'update'                      => __( 'Update', 'popup-maker' ),
+				'insert'                      => __( 'Insert', 'popup-maker' ),
+				'cancel'                      => __( 'Cancel', 'popup-maker' ),
+				'shortcode_ui_button_tooltip' => __( 'Popup Maker Shortcodes', 'popup-maker' ),
+				'confirm_delete_trigger'      => __( "Are you sure you want to delete this trigger?", 'popup-maker' ),
+				'confirm_delete_cookie'       => __( "Are you sure you want to delete this cookie?", 'popup-maker' ),
+				'labels'                      => array(
+					'triggers' => PUM_Triggers::instance()->get_labels(),
+					'cookies'  => PUM_Cookies::instance()->get_labels(),
+				),
+				'no_cookie'                   => __( 'None', 'popup-maker' ),
+				'confirm_count_reset'         => __( 'Are you sure you want to reset the open count?', 'popup-maker' ),
+			),
+		) ) );
 	}
 	if ( popmake_is_admin_popup_page() ) {
 		wp_enqueue_script( 'popup-maker-site', $js_dir . 'popup-maker-site' . $suffix . '?defer', array(
@@ -199,7 +203,8 @@ function popmake_load_admin_scripts() {
 	}
 }
 
-add_action( 'admin_enqueue_scripts', 'popmake_load_admin_scripts', 100 );
+add_action( 'admin_enqueue_scripts', 'popmake_load_admin_scripts' );
+
 
 /**
  * Load Admin Styles
@@ -218,7 +223,7 @@ function popmake_load_admin_styles() {
 	if ( popmake_is_admin_popup_page() || popmake_is_admin_popup_theme_page() ) {
 		wp_enqueue_style( 'popup-maker-site', $css_dir . 'site' . $suffix, false, POPMAKE_VERSION );
 	}
-	if ( popmake_is_admin_page() ) {
+	if ( popmake_is_admin_page() || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD ) ) {
 
 
         wp_enqueue_style( 'select2', $css_dir . 'select2' . $suffix, array(), POPMAKE_VERSION );
