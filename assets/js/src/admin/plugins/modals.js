@@ -55,34 +55,38 @@ var PUMModals;
             // set focus to first focusable item
             currentModal.find('.pum-modal-content *').filter(focusableElementsString).filter(':visible').first().focus();
         },
-        closeAll: function () {
+        closeAll: function (callback) {
             $('.pum-modal-background')
                 .off('keydown.pum_modal')
-                .hide()
+                .hide(0, function () {
+                    $('html').css({overflow: 'visible', width: 'auto'});
+
+                    if ($top_level_elements) {
+                        $top_level_elements.attr('aria-hidden', 'false');
+                        $top_level_elements = null;
+                    }
+
+                    // Accessibility: Focus back on the previously focused element.
+                    if (previouslyFocused.length) {
+                        previouslyFocused.focus();
+                    }
+
+                    // Accessibility: Clears the currentModal var.
+                    currentModal = null;
+
+                    // Accessibility: Removes the force focus check.
+                    $document.off('focus.pum_modal');
+                    if (undefined !== callback) {
+                        callback();
+                    }
+                })
                 .attr('aria-hidden', 'true');
 
-            $('html').css({overflow: 'visible', width: 'auto'});
-
-            if ($top_level_elements) {
-                $top_level_elements.attr('aria-hidden', 'false');
-                $top_level_elements = null;
-            }
-
-            // Accessibility: Focus back on the previously focused element.
-            if (previouslyFocused.length) {
-                previouslyFocused.focus();
-            }
-
-            // Accessibility: Clears the currentModal var.
-            currentModal = null;
-
-            // Accessibility: Removes the force focus check.
-            $document.off('focus.pum_modal');
         },
-        show: function (modal) {
+        show: function (modal, callback) {
             $('.pum-modal-background')
                 .off('keydown.pum_modal')
-                .hide()
+                .hide(0)
                 .attr('aria-hidden', 'true');
 
             $html
@@ -97,37 +101,43 @@ var PUMModals;
             }
 
             // Accessibility: Sets the current modal for focus checks.
-            currentModal = $(modal)
+            currentModal = $(modal);
+
             // Accessibility: Close on esc press.
+            currentModal
                 .on('keydown.pum_modal', function (e) {
                     PUMModals.trapEscapeKey(e);
                     PUMModals.trapTabKey(e);
                 })
-                .show()
+                .show(0, function () {
+                    $top_level_elements = $('body > *').filter(':visible').not(currentModal);
+                    $top_level_elements.attr('aria-hidden', 'true');
+
+                    currentModal
+                        .trigger('pum_init')
+                        // Accessibility: Add focus check that prevents tabbing outside of modal.
+                        .on('focus.pum_modal', PUMModals.forceFocus);
+
+                    // Accessibility: Focus on the modal.
+                    PUMModals.setFocusToFirstItem();
+
+                    if (undefined !== callback) {
+                        callback();
+                    }
+                })
                 .attr('aria-hidden', 'false');
 
-            $top_level_elements = $('body > *').filter(':visible').not(currentModal);
-            $top_level_elements.attr('aria-hidden', 'true');
-
-            $document
-                .trigger('pum_init')
-
-                // Accessibility: Add focus check that prevents tabbing outside of modal.
-                .on('focus.pum_modal', PUMModals.forceFocus);
-
-            // Accessibility: Focus on the modal.
-            PUMModals.setFocusToFirstItem();
         },
         remove: function (modal) {
             $(modal).remove();
         },
         replace: function (modal, replacement) {
-            PUMModals.remove(modal);
-            $('body').append(replacement);
+            PUMModals.remove($.trim(modal));
+            $('body').append($.trim(replacement));
         },
-        reload: function (modal, replacement) {
+        reload: function (modal, replacement, callback) {
             PUMModals.replace(modal, replacement);
-            PUMModals.show(modal);
+            PUMModals.show(modal, callback);
         }
     };
 
