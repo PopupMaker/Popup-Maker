@@ -10,6 +10,7 @@ var PUMSelect2Fields;
                     object_type = $this.data('objecttype'),
                     object_key = $this.data('objectkey'),
                     options = {
+                        multiple: false,
                         dropdownParent: $this.parent()
                     };
 
@@ -62,31 +63,37 @@ var PUMSelect2Fields;
                     .addClass('initialized')
                     .select2(options);
 
-                if (current !== undefined && object_type && object_key) {
+                if (current !== undefined) {
 
-                    $.ajax({
-                        url: ajaxurl,
-                        data: {
-                            action: "pum_object_search",
-                            object_type: object_type,
-                            object_key: object_key,
-                            include: $this.data('current')
-                        },
-                        dataType: "json",
-                        success: function (data) {
-                            $.each(data.items, function (key, item) {
-                                // Add any option that doesn't already exist
-                                if (!$this.find('option[value="' + item.id + '"]').length) {
-                                    $this.prepend('<option value="' + item.id + '">' + item.text + '</option>');
-                                }
-                            });
-                            // Update the options
-                            $this.val(current).trigger('change');
-                        }
-                    });
+                    if ('object' !== typeof current) {
+                        current = [current];
+                    }
 
-                } else if (current !== undefined) {
-                    $this.val(current).trigger('change');
+                    if (object_type && object_key) {
+                        $.ajax({
+                            url: ajaxurl,
+                            data: {
+                                action: "pum_object_search",
+                                object_type: object_type,
+                                object_key: object_key,
+                                include: current
+                            },
+                            dataType: "json",
+                            success: function (data) {
+                                $.each(data.items, function (key, item) {
+                                    // Add any option that doesn't already exist
+                                    if (!$this.find('option[value="' + item.id + '"]').length) {
+                                        $this.prepend('<option value="' + item.id + '">' + item.text + '</option>');
+                                    }
+                                });
+                                // Update the options
+                                $this.val(current).trigger('change');
+                            }
+                        });
+                    } else {
+                        $this.val(current).trigger('change');
+                    }
+
                 }
 
             });
