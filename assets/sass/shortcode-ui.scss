@@ -1,0 +1,23 @@
+@import 'partials/tabs';
+@import 'partials/admin_modal';
+@import 'partials/pum_select2';
+
+.no-button {
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+
+  &.link-button {
+    color: #0073aa;
+    text-decoration: underline;
+  }
+
+}
+
+
+i.mce-i-pum_shortcodes {
+  background: url('../images/admin/popup-maker-icon.png') no-repeat center center transparent;
+  background-size: contain;
+}
+
