@@ -193,6 +193,9 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/pum-general-functions.php';
 			require_once POPMAKE_DIR . 'includes/pum-misc-functions.php';
 			require_once POPMAKE_DIR . 'includes/pum-template-hooks.php';
+			require_once POPMAKE_DIR . 'includes/pum-ajax-functions.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-helpers.php';
+
 
 			// Triggers
 			require_once POPMAKE_DIR . 'includes/class-pum-trigger.php';
@@ -225,6 +228,16 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-analytics.php';
 			}
 
+			// Shortcodes
+			require_once POPMAKE_DIR . 'includes/class-pum-shortcode.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-shortcodes.php';
+			require_once POPMAKE_DIR . 'includes/shortcodes/class-pum-shortcode-popup.php';
+			require_once POPMAKE_DIR . 'includes/shortcodes/class-pum-shortcode-popup-trigger.php';
+			require_once POPMAKE_DIR . 'includes/shortcodes/class-pum-shortcode-popup-close.php';
+			if ( is_admin() ) {
+				require_once POPMAKE_DIR . 'includes/admin/shortcode-ui/class-pum-admin-shortcode-ui.php';
+			}
+
 			// Upgrades
 			if ( is_admin() ) {
 				require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-upgrades.php';
@@ -233,8 +246,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			// Deprecated Code
 			require_once POPMAKE_DIR . 'includes/pum-deprecated.php';
 
-			require_once POPMAKE_DIR . 'includes/pum-ajax-functions.php';
-			require_once POPMAKE_DIR . 'includes/class-pum-helpers.php';
 			// Helper Classes
 			if ( is_admin() ) {
 				require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-helpers.php';
