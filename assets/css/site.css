@@ -1,12 +1,12 @@
 /* Reset Overlay, Container, Title, Content(div) & Close button */
 .pum-overlay,
-.pum-overlay .pum-container,
-.pum-overlay .pum-title,
-.pum-overlay .pum-content,
-.pum-overlay .pum-close,
-.pum-overlay .pum-close:hover,
-.pum-overlay .pum-close:focus,
-.pum-overlay .pum-close:active
+.pum-container,
+.pum-title,
+.pum-content,
+.pum-content + .pum-close,
+.pum-content + .pum-close:hover,
+.pum-content + .pum-close:focus,
+.pum-content + .pum-close:active
 {
     font-family: Arial, Helvetica, sans-serif;
     font-size: medium;
@@ -81,14 +81,15 @@
     /* Firefox, other Gecko */
     box-sizing: border-box;
 }
-.pum-overlay .pum-container
+
+.pum-container
 {
     position: absolute;
     top: 100px;
 
     margin-bottom: 3em;
 }
-.pum-overlay .pum-container.pum-responsive
+.pum-container.pum-responsive
 {
     left: 50%;
 
@@ -98,84 +99,77 @@
     height: auto;
     margin-left: -47.5%;
 }
-.pum-overlay .pum-container.pum-responsive img
+.pum-container.pum-responsive img
 {
     max-width: 100%;
     height: auto;
 }
 @media only screen and (min-width: 1024px)
 {
-    .pum-overlay .pum-container.pum-responsive.pum-responsive-nano
+    .pum-container.pum-responsive.pum-responsive-nano
     {
         width: 10%; 
         margin-left: -5%;
     }
-    .pum-overlay .pum-container.pum-responsive.pum-responsive-micro
+    .pum-container.pum-responsive.pum-responsive-micro
     {
         width: 20%; 
         margin-left: -10%;
     }
-    .pum-overlay .pum-container.pum-responsive.pum-responsive-tiny
+    .pum-container.pum-responsive.pum-responsive-tiny
     {
         width: 30%; 
         margin-left: -15%;
     }
-    .pum-overlay .pum-container.pum-responsive.pum-responsive-small
+    .pum-container.pum-responsive.pum-responsive-small
     {
         width: 40%; 
         margin-left: -20%;
     }
-    .pum-overlay .pum-container.pum-responsive.pum-responsive-medium
+    .pum-container.pum-responsive.pum-responsive-medium
     {
         width: 60%; 
         margin-left: -30%;
     }
-    .pum-overlay .pum-container.pum-responsive.pum-responsive-normal
+    .pum-container.pum-responsive.pum-responsive-normal
     {
         width: 70%; 
         margin-left: -30%;
     }
-    .pum-overlay .pum-container.pum-responsive.pum-responsive-large
+    .pum-container.pum-responsive.pum-responsive-large
     {
         width: 80%; 
         margin-left: -35%;
     }
-    .pum-overlay .pum-container.pum-responsive.pum-responsive-xlarge
+    .pum-container.pum-responsive.pum-responsive-xlarge
     {
         width: 95%; 
         margin-left: -47.5%;
     }
-    .pum-overlay .pum-container.pum-responsive.pum-position-fixed
+    .pum-container.pum-responsive.pum-position-fixed
     {
         position: fixed;
     }
 }
 @media only screen and (max-width: 1024px)
 {
-    .pum-overlay .pum-container.pum-responsive.pum-position-fixed
+    .pum-container.pum-responsive.pum-position-fixed
     {
         position: absolute;
     }
 }
-.pum-overlay .pum-container.custom-position
+.pum-container.custom-position
 {
     top: auto;
     left: auto;
 
     margin-left: inherit;
 }
-.pum-overlay .pum-container .pum-content > :last-child
+.pum-container .pum-content > :last-child
 {
     margin-bottom: 0;
 }
-.pum-overlay .pum-container.pum-scrollable .pum-content
-{
-    overflow: auto;
-    overflow-y: scroll;
-
-    max-height: 95%;
-}
-.pum-overlay .pum-container .pum-close
+.pum-container .pum-content + .pum-close
 {
     line-height: 1;
 
@@ -187,15 +181,23 @@
     text-align: center;
     text-decoration: none;
 }
-.pum-overlay.pum-overlay-disabled
+.pum-container.pum-scrollable .pum-content
+{
+    overflow: auto;
+    overflow-y: scroll;
+
+    max-height: 95%;
+}
+
+.pum-overlay-disabled
 {
     visibility: hidden;
 }
-.pum-overlay.pum-overlay-disabled::-webkit-scrollbar
+.pum-overlay-disabled::-webkit-scrollbar
 {
     display: block;
 }
-.pum-overlay.pum-overlay-disabled .pum-container
+.pum-overlay-disabled .pum-container
 {
     visibility: visible;
 }
