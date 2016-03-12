@@ -170,11 +170,39 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/admin/settings/register-settings.php';
 			$popmake_options = popmake_get_settings();
 
+			require_once POPMAKE_DIR . 'includes/actions.php';
+			require_once POPMAKE_DIR . 'includes/post-types.php';
+			require_once POPMAKE_DIR . 'includes/class-popmake-cron.php';
+			require_once POPMAKE_DIR . 'includes/scripts.php';
+			require_once POPMAKE_DIR . 'includes/shortcodes.php';
+			require_once POPMAKE_DIR . 'includes/defaults.php';
+			require_once POPMAKE_DIR . 'includes/google-fonts.php';
+			require_once POPMAKE_DIR . 'includes/general-functions.php';
+			require_once POPMAKE_DIR . 'includes/extensions-functions.php';
+			require_once POPMAKE_DIR . 'includes/input-options.php';
+			require_once POPMAKE_DIR . 'includes/theme-functions.php';
+			require_once POPMAKE_DIR . 'includes/misc-functions.php';
+			require_once POPMAKE_DIR . 'includes/css-functions.php';
+			require_once POPMAKE_DIR . 'includes/ajax-calls.php';
+
+			require_once POPMAKE_DIR . 'includes/importer/easy-modal-v2.php';
+			require_once POPMAKE_DIR . 'includes/integrations/gravityforms.php';
+			require_once POPMAKE_DIR . 'includes/integrations/google-fonts.php';
+
+			require_once POPMAKE_DIR . 'includes/templates.php';
+			require_once POPMAKE_DIR . 'includes/load-popups.php';
+			require_once POPMAKE_DIR . 'includes/license-handler.php';
+
 			// Phasing Out
 			require_once POPMAKE_DIR . 'includes/class-popmake-fields.php';
 			require_once POPMAKE_DIR . 'includes/class-popmake-popup-fields.php';
 			require_once POPMAKE_DIR . 'includes/class-popmake-popup-theme-fields.php';
 			require_once POPMAKE_DIR . 'includes/popup-functions.php';
+
+
+
+
+
 
 			/**
 			 * v1.4 Additions
@@ -184,6 +212,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/class-pum-popup.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-popup-query.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-fields.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-form.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-previews.php';
 			require_once POPMAKE_DIR . 'includes/class-pum-ajax.php';
 
@@ -252,28 +281,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 
 
-			require_once POPMAKE_DIR . 'includes/actions.php';
-			require_once POPMAKE_DIR . 'includes/post-types.php';
-			require_once POPMAKE_DIR . 'includes/class-popmake-cron.php';
-			require_once POPMAKE_DIR . 'includes/scripts.php';
-			require_once POPMAKE_DIR . 'includes/shortcodes.php';
-			require_once POPMAKE_DIR . 'includes/defaults.php';
-			require_once POPMAKE_DIR . 'includes/google-fonts.php';
-			require_once POPMAKE_DIR . 'includes/general-functions.php';
-			require_once POPMAKE_DIR . 'includes/extensions-functions.php';
-			require_once POPMAKE_DIR . 'includes/input-options.php';
-			require_once POPMAKE_DIR . 'includes/theme-functions.php';
-			require_once POPMAKE_DIR . 'includes/misc-functions.php';
-			require_once POPMAKE_DIR . 'includes/css-functions.php';
-			require_once POPMAKE_DIR . 'includes/ajax-calls.php';
-
-			require_once POPMAKE_DIR . 'includes/importer/easy-modal-v2.php';
-			require_once POPMAKE_DIR . 'includes/integrations/gravityforms.php';
-			require_once POPMAKE_DIR . 'includes/integrations/google-fonts.php';
-
-			require_once POPMAKE_DIR . 'includes/templates.php';
-			require_once POPMAKE_DIR . 'includes/load-popups.php';
-			require_once POPMAKE_DIR . 'includes/license-handler.php';
 
 			if ( is_admin() ) {
 				require_once POPMAKE_DIR . 'includes/admin/welcome.php';
