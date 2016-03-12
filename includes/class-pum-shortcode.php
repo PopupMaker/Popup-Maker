@@ -11,15 +11,32 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PUM_Shortcode extends PUM_Fields {
 
+	/**
+	 * Shortcode supports inner content.
+	 *
+	 * @var bool
+	 */
 	public $has_content = false;
 
-	public $field_prefix = 'attrs';
+	/**
+	 * @var string
+	 */
+	public $inner_content_section = 'general';
 
-	public $field_name_format = '{$prefix}[{$field}]';
-
+	/**
+	 * @var int
+	 */
 	public $inner_content_priority = 5;
 
-	public $inner_content_section = 'general';
+	/**
+	 * @var string
+	 */
+	public $field_prefix = 'attrs';
+
+	/**
+	 * @var string
+	 */
+	public $field_name_format = '{$prefix}[{$field}]';
 
 	/**
 	 * The shortcode tag.
@@ -31,7 +48,7 @@ class PUM_Shortcode extends PUM_Fields {
 	/**
 	 * Class constructor will set the needed filter and action hooks
 	 */
-	function __construct() {
+	public function __construct( $args = array() ) {
 		if ( ! did_action( 'plugins_loaded' ) ) {
 			add_action( 'plugins_loaded', array( $this, 'register' ) );
 		} elseif ( ! did_action( 'init' ) ) {
@@ -40,9 +57,16 @@ class PUM_Shortcode extends PUM_Fields {
 			$this->register();
 		}
 
-		parent::__construct();
+		$args = array(
+			'sections' => $this->sections(),
+		);
+
+		return parent::__construct( $args );
 	}
 
+	/**
+	 *
+	 */
 	public function register() {
 		add_shortcode( $this->tag(), array( $this, 'handler' ) );
 		add_action( 'print_media_templates', array( $this, '_template' ) );
@@ -51,17 +75,19 @@ class PUM_Shortcode extends PUM_Fields {
 		$fields = array();
 
 		if ( $this->has_content ) {
-			$inner_content_labels = $this->inner_content_labels();
+			$inner_content_labels     = $this->inner_content_labels();
 			$fields['_inner_content'] = array(
-				'label' => $inner_content_labels['label'],
-				'desc' => $inner_content_labels['description'],
-				'section' => $this->inner_content_section,
-				'type' => 'textarea',
+				'label'    => $inner_content_labels['label'],
+				'desc'     => $inner_content_labels['description'],
+				'section'  => $this->inner_content_section,
+				'type'     => 'textarea',
 				'priority' => $this->inner_content_priority,
 			);
 		}
 
-		$this->add_fields( array_merge_recursive( $fields, $this->fields() ) );
+		$fields = array_merge_recursive( $fields, $this->fields() );
+
+		$this->add_fields( $fields );
 
 		PUM_Shortcodes::instance()->add_shortcode( $this );
 	}
@@ -70,6 +96,9 @@ class PUM_Shortcode extends PUM_Fields {
 	/*
 	 * Limit this shortcode UI to specific posts. Optional.
 	 */
+	/**
+	 * @return array
+	 */
 	public function post_types() {
 		return array( 'post', 'page', 'popup' );
 	}
@@ -77,14 +106,23 @@ class PUM_Shortcode extends PUM_Fields {
 	/*
 	 * How the shortcode should be labeled in the UI. Required argument.
 	 */
+	/**
+	 * @return string
+	 */
 	public function label() {
 		return '';
 	}
 
+	/**
+	 * @return string
+	 */
 	public function description() {
 		return '';
 	}
 
+	/**
+	 * @return array
+	 */
 	public function inner_content_labels() {
 		return array(
 			'label' => $this->label(),
@@ -92,6 +130,9 @@ class PUM_Shortcode extends PUM_Fields {
 		);
 	}
 
+	/**
+	 * @return array
+	 */
 	public function sections() {
 		return array(
 			'general' => __( 'General', 'popup-maker' ),
@@ -103,10 +144,23 @@ class PUM_Shortcode extends PUM_Fields {
 	 * Include an icon with your shortcode. Optional.
 	 * Use a dashicon, or full URL to image.
 	 */
+	/**
+	 * @return string
+	 */
 	public function icon() {
 		return 'dashicons-editor-quote';
 	}
 
+	/**
+	 * @return array
+	 */
+	public function defaults() {
+		return array();
+	}
+
+	/**
+	 * @return array
+	 */
 	public function fields() {
 		return array();
 	}
@@ -123,8 +177,23 @@ class PUM_Shortcode extends PUM_Fields {
 		return '';
 	}
 
+	/**
+	 * @param $atts
+	 *
+	 * @return array
+	 */
+	public function shortcode_atts( $atts ) {
+		return shortcode_atts( $this->defaults(), $atts, $this->tag() );
+	}
+
+	/**
+	 *
+	 */
 	public function _template() {}
 
+	/**
+	 *
+	 */
 	public function register_shortcode_ui() {
 
 		$shortcode_ui_args = array(
