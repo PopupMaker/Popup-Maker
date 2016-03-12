@@ -1,8 +1,6 @@
 .pum-tabs-container
 {
     position: relative;
-
-    width: 100%;
 }
 .pum-tabs-container ul.tabs
 {
@@ -46,6 +44,7 @@
 }
 .pum-tabs-container.vertical-tabs
 {
+    width: calc(100% - 150px); 
     min-height: 100px;
     padding-left: 150px;
 }
@@ -58,11 +57,10 @@
     display: block;
 
     width: 140px;
-    height: 100%;
+    min-height: 100%;
     margin: 0;
-    padding-top: 8px;
 
-    border-top: 1px solid #dfdfdf;
+    border-top: 0;
     border-right: 1px solid #dfdfdf; 
     background: #fcfcfc;
 }
@@ -89,6 +87,10 @@
 .pum-tabs-container.vertical-tabs ul.tabs .tab.active a
 {
     color: #fff;
+}
+.pum-tabs-container.vertical-tabs ul.tabs .tab:first-child
+{
+    margin-top: 8px;
 }
 
 .pum-modal-background

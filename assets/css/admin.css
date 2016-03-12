@@ -1,8 +1,29 @@
+.pum-field-checkbox
+{
+    position: relative;
+}
+.pum-field-checkbox label
+{
+    margin-left: 1.5em;
+}
+.pum-field-checkbox label.pum-desc
+{
+    font-size: inherit;
+    font-weight: inherit;
+
+    display: inline;
+
+    margin: 0 0 1em;
+}
+.pum-field-checkbox input[type='checkbox']
+{
+    position: absolute;
+    top: .25em;
+}
+
 .pum-tabs-container
 {
     position: relative;
-
-    width: 100%;
 }
 .pum-tabs-container ul.tabs
 {
@@ -46,6 +67,7 @@
 }
 .pum-tabs-container.vertical-tabs
 {
+    width: calc(100% - 150px); 
     min-height: 100px;
     padding-left: 150px;
 }
@@ -58,11 +80,10 @@
     display: block;
 
     width: 140px;
-    height: 100%;
+    min-height: 100%;
     margin: 0;
-    padding-top: 8px;
 
-    border-top: 1px solid #dfdfdf;
+    border-top: 0;
     border-right: 1px solid #dfdfdf; 
     background: #fcfcfc;
 }
@@ -90,26 +111,14 @@
 {
     color: #fff;
 }
+.pum-tabs-container.vertical-tabs ul.tabs .tab:first-child
+{
+    margin-top: 8px;
+}
 
 .add-new
 {
     float: right;
-}
-
-.no-button
-{
-    padding: 0;
-
-    cursor: pointer; 
-
-    border: 0;
-    background: none;
-}
-.no-button.link-button
-{
-    text-decoration: underline; 
-
-    color: #0073aa;
 }
 
 #pum_popup_trigger_fields .triggers-list
@@ -974,6 +983,12 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
     background: #98b727;
 }
 
+i.mce-i-pum_shortcodes
+{
+    background: url('../images/admin/popup-maker-icon.png') no-repeat center center transparent;
+    background-size: contain;
+}
+
 .pum-form
 {
     /*
@@ -1078,7 +1093,7 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
     display: block;
 }
 
-.tabbed-form .field.checkbox label.desc
+.tabbed-form .field.checkbox label.pum-desc
 {
     font-size: inherit;
     font-weight: inherit;
@@ -1086,6 +1101,15 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
     display: inline;
 
     margin: 0 0 1em;
+}
+
+.tabbed-form .pum-required label::after
+{
+    margin-left: 5px; 
+
+    content: '*';
+
+    color: #a00;
 }
 
 /* UI */
@@ -1294,6 +1318,7 @@ div.popmake-upgrade-tip
 #popmake_popup_theme_preview .inside
 {
     margin-top: 0;
+    padding: 0;
 
     background: url(http://s.wordpress.com/mshots/v1/http://www.wordpress.org) no-repeat center top;
 }
@@ -1302,7 +1327,7 @@ div.popmake-upgrade-tip
 {
     position: relative; 
 
-    padding-top: 25px;
+    padding: 30px 20px;
 }
 
 .example-popup-overlay,
@@ -1386,7 +1411,7 @@ div.popmake-upgrade-tip
 
     width: 95%;
     max-width: 400px;
-    margin: 0 auto 25px;
+    margin: 0 auto;
 }
 
 .empreview .example-popup .close-popup
