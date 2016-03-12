@@ -16,6 +16,16 @@
 			wp.mce[tag] = {
 				shortcode_args: args,
 				shortcode_data: {},
+				cleanAttrs: function (attrs) {
+
+					_.each(attrs, function (v, k) {
+						if (null === v || '' === v) {
+							delete attrs[k];
+						}
+					});
+
+					return attrs;
+				},
 				template: function (options) {
 					var template = $('#tmpl-pum-shortcode-view-' + tag);
 
@@ -23,6 +33,8 @@
 						options.classes = options.class;
 						delete options.class;
 					}
+
+					options = this.cleanAttrs(options);
 
 					if (template.length) {
 						return _.template(template.html(), options);
@@ -37,7 +49,21 @@
 					return this.template(values);
 				},
 				View: { // before WP 4.2:
-					template: '',
+					template: function (options) {
+						var template = $('#tmpl-pum-shortcode-view-' + tag);
+
+						if (options.class) {
+							options.classes = options.class;
+							delete options.class;
+						}
+
+						options = wp.mce[tag].cleanAttrs(options);
+
+						if (template.length) {
+							return _.template(template.html(), options);
+						}
+						return this.text;
+					},
 					postID: $('#post_ID').val(),
 					initialize: function (options) {
 						this.shortcode = options.shortcode;
@@ -162,6 +188,8 @@
 						delete values._inner_content;
 					}
 
+					values = self.cleanAttrs(values);
+
 					//insert shortcode to tinymce
 					editor.insertContent(PUM_Templates.shortcode({
 						tag: tag,
@@ -173,7 +201,9 @@
 
 			};
 
-			wp.mce.views.register(tag, wp.mce[tag]);
+			if (wp.mce.views !== undefined && typeof wp.mce.views.register === 'function') {
+				wp.mce.views.register(tag, wp.mce[tag]);
+			}
 		});
 
 	}(jQuery));
