@@ -172,7 +172,6 @@ class PUM_Popup_Cookies_Metabox {
 						</li>
 					<?php } } ?>
                 </ul>
-                *
 
 				<?php
 				/**
