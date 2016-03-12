@@ -7,9 +7,16 @@ var PUMTabs;
                 var $this = $(this),
                     first_tab = $this.find('.tab:first');
 
+                if ($this.hasClass('vertical-tabs')) {
+                    $this.css({
+                        minHeight: $this.find('.tabs').eq(0).outerHeight(true)
+                    });
+                }
+
                 $this.find('.active').removeClass('active');
                 first_tab.addClass('active');
                 $(first_tab.find('a').attr('href')).addClass('active');
+                $this.addClass('initialized');
             });
         }
     };
