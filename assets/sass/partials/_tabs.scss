@@ -4,7 +4,6 @@ $tab-color: #E4E4E4;
 .pum-tabs-container {
 
   position: relative;
-  width: 100%;
 
   ul.tabs {
     margin: 0;
@@ -49,11 +48,11 @@ $tab-color: #E4E4E4;
   &.vertical-tabs {
     min-height: 100px;
     padding-left: 150px;
+    width: calc(100% - 150px);
 
     ul.tabs {
       width: 140px;
-      height: 100%;
-      padding-top: 8px;
+      min-height: 100%;
       display: block;
       position: absolute;
       left: 0;
@@ -61,7 +60,7 @@ $tab-color: #E4E4E4;
       margin: 0;
       //background: #23282D;
       background: #FCFCFC;
-      border-top: 1px solid #DFDFDF;
+      border-top: 0;
       border-right: 1px solid #DFDFDF;
 
       .tab {
@@ -83,6 +82,10 @@ $tab-color: #E4E4E4;
           a {
             color: #fff;
           }
+        }
+
+        &:first-child {
+          margin-top: 8px;
         }
 
       }

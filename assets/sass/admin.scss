@@ -1,3 +1,4 @@
+@import 'partials/pum_fields';
 @import 'partials/tabs';
 @import 'partials/metaboxes';
 @import 'partials/admin_modal';
@@ -106,7 +107,7 @@
   .field.checkbox {
     label {
 
-      &.desc {
+      &.pum-desc {
         display: inline;
         font-weight:inherit;
         font-size:inherit;
@@ -306,11 +307,12 @@ div.popmake-upgrade-tip {
 
 #popmake_popup_theme_preview .inside {
   margin-top: 0;
+  padding: 0;
   background: url(http://s.wordpress.com/mshots/v1/http://www.wordpress.org) no-repeat center top;
 }
 
 #popmake_popup_theme_preview .empreview {
-  padding-top: 25px;
+  padding: 30px 20px;
   position: relative;
 }
 
@@ -376,7 +378,7 @@ div.popmake-upgrade-tip {
   position: relative;
   width: 95%;
   max-width: 400px;
-  margin: 0 auto 25px;
+  margin: 0 auto;
   font-size: 16px;
   z-index: 99;
 }
