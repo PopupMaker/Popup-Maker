@@ -109,6 +109,12 @@ class Popmake_Fields {
 	 */
 	public function add_sections( $sections ) {
 		foreach( $sections as $id => $section ) {
+			if ( ! is_array( $section ) ) {
+				$section = array(
+					'title' => $section
+				);
+			}
+
 			if ( empty( $section['id'] ) ) {
 				$section['id'] = $id;
 			}
@@ -145,7 +151,7 @@ class Popmake_Fields {
 			'templ_name'  => null,
 			'size'        => 'regular',
 			'options'     => '',
-			'std'         => '',
+			'std'         => null,
 			'rows'        => 5,
 			'cols'        => 50,
 			'min'         => null,
@@ -158,10 +164,12 @@ class Popmake_Fields {
 			'taxonomy'    => null,
 			'multiple'    => null,
 			'as_array'    => false,
-			'placeholder' => '',
+			'placeholder' => null,
+			'checkbox_val'=> 1,
 			'allow_blank' => true,
 			'readonly'    => false,
 			'faux'        => false,
+			'required'    => false,
 			'hook'        => null,
 			'unit'        => __( 'ms', 'popup-maker' ),
 			'priority'    => null,
@@ -196,8 +204,14 @@ class Popmake_Fields {
 
 		foreach ( $fields as $key => $field ) {
 
-			// If the settings are separated by section ID then reprocess their fields individually.
-			if ( is_array( $field[ key( $field ) ] ) ) {
+			// Either an undefined field or empty section. So lets skip it.
+			if ( empty ( $field ) ) {
+				continue;
+			}
+
+			$first_key = key( $field );
+
+			if ( isset( $this->sections[ $key ] ) && is_array( $field[ $first_key ] ) ) {
 				$this->add_fields( $field, $key );
 			}
 			// Process the fields.
@@ -237,9 +251,22 @@ class Popmake_Fields {
 			return array();
 		}
 
-		uasort( $this->fields[ $section ], array( $this, 'sort_by_priority' ) );
+		$non_priority_fields = array();
+		$priority_fields = array();
 
-		return $this->fields[ $section ];
+		foreach ( $this->fields[ $section ] as $field_id => $field ) {
+			if ( ! isset( $field['priority'] ) || is_null( $field['priority'] ) ) {
+				$non_priority_fields[ $field_id ] = $field;
+			} else {
+				$priority_fields[ $field_id ] = $field;
+			}
+		}
+
+		uasort( $priority_fields, array( $this, 'sort_by_priority' ) );
+
+		$fields = $priority_fields + $non_priority_fields;
+
+		return $fields;
 	}
 
 	/**
@@ -462,7 +489,7 @@ class Popmake_Fields {
 	 * @param string $class
 	 */
 	public function field_before( $class = '' ) {
-		?><div class="field <?php esc_attr_e( $class ); ?>"><?php
+		?><div class="pum-field <?php esc_attr_e( $class ); ?>"><?php
 	}
 
 	/**
