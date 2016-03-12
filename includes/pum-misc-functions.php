@@ -30,3 +30,9 @@ if ( ! function_exists( 'write_log' ) ) {
 		}
 	}
 }
+
+if ( ! function_exists( 'boolval' ) ) {
+	function boolval( $val ) {
+		return ( bool ) $val;
+	}
+}
