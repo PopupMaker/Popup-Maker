@@ -33,7 +33,7 @@
     $.fn.popmake.animations = {
         none: function (callback) {
             PUM.getPopup(this)
-                .popmake('animate_overlay', 'none', null, function () {
+                .popmake('animate_overlay', 'none', 0, function () {
                     // Fire user passed callback.
                     if (callback !== undefined) {
                         callback();
