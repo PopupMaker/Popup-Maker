@@ -81,7 +81,8 @@ var PUM;
             var $popup = PUM.getPopup(this),
                 $container = $popup.popmake('getContainer'),
                 $close = $popup.popmake('getClose'),
-                settings = $popup.popmake('getSettings');
+                settings = $popup.popmake('getSettings'),
+                $html = $('html');
 
             if (!settings.meta.display.stackable) {
                 $popup.popmake('close_all');
@@ -114,7 +115,19 @@ var PUM;
                 return this;
             }
 
-            $('html').addClass('pum-open');
+            $html.addClass('pum-open');
+
+            if (settings.meta.display.overlay_disabled) {
+                $html.addClass('pum-open-overlay-disabled');
+            } else {
+                $html.addClass('pum-open-overlay');
+            }
+
+            if (settings.meta.display.position_fixed !== undefined && settings.meta.display.position_fixed) {
+                $html.addClass('pum-open-fixed');
+            } else {
+                $html.addClass('pum-open-scrollable');
+            }
 
             $popup
             // TODO: Remove this.
@@ -219,7 +232,11 @@ var PUM;
 
                         $close.off('click.popmake');
 
-                        $('html').removeClass('pum-open');
+                        $('html')
+                            .removeClass('pum-open')
+                            .removeClass('pum-open-scrollable')
+                            .removeClass('pum-open-overlay-disabled')
+                            .removeClass('pum-open-fixed');
 
                         $popup
                             .removeClass('pum-active')
