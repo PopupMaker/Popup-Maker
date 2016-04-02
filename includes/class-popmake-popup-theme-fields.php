@@ -9,7 +9,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 	public $field_prefix = 'popup_theme_';
 
 	public function __construct() {
-		$this->fields = array(
+		$this->fields = apply_filters( 'popmake_popup_theme_fields', array(
 			'overlay'   => array(
 				'background_color'   => array(
 					'label'    => __( 'Color', 'popup-maker' ),
@@ -587,7 +587,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'unit'     => __( '%', 'popup-maker' ),
 				),
 			)
-		);
+		) );
 	}
 }
 
