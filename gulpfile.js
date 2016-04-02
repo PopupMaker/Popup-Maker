@@ -2,6 +2,9 @@ var gulp = require('gulp');
 var gulpLoadPlugins = require('gulp-load-plugins');
 var $ = gulpLoadPlugins();
 
+// Uncomment this if you get Promise errors. You also need to run npm install es6-promise
+// require('es6-promise').polyfill();
+
 gulp.task('sass', function() {
     return gulp.src('assets/sass/*.scss')
         .pipe($.sass())
@@ -27,7 +30,7 @@ gulp.task('css', ['sass'], function() {
 });
 
 gulp.task('css:minify', function() {
-    return gulp.src(['!assets/css/*.min.css', 'assets/css/*.css', ])
+    return gulp.src(['!assets/css/*.min.css', 'assets/css/*.css'])
         // Minify the CSS
         .pipe($.csso())
 
@@ -39,7 +42,7 @@ gulp.task('css:minify', function() {
 });
 
 gulp.task('css:lint', function() {
-    return gulp.src(['!assets/css/*.min.css', 'assets/css/*.css', ])
+    return gulp.src(['!assets/css/*.min.css', 'assets/css/*.css'])
         // Lint the CSS
         .pipe($.csslint())
         .pipe($.csslint.reporter());
