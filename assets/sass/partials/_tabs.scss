@@ -2,6 +2,11 @@ $tab-color: #E4E4E4;
 
 
 .pum-tabs-container {
+  box-sizing: border-box;
+
+  > * {
+    box-sizing: border-box;
+  }
 
   position: relative;
 
@@ -47,8 +52,10 @@ $tab-color: #E4E4E4;
 
   &.vertical-tabs {
     min-height: 100px;
-    padding-left: 150px;
-    width: calc(100% - 150px);
+    //padding-left: 150px;
+    //width: calc(100% - 150px);
+    padding-left: 140px;
+    width: 100%;
 
     ul.tabs {
       width: 140px;
