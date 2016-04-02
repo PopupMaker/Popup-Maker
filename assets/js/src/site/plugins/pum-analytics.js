@@ -50,12 +50,12 @@ var PUM_Analytics;
     };
 
     // Only popups from the editor should fire analytics events.
-    $('body > .pum')
+    $(document)
 
     /**
      * Track opens for popups.
      */
-        .on('pumAfterOpen.core_analytics', function () {
+        .on('pumAfterOpen.core_analytics', 'body > .pum', function () {
             var $popup = PUM.getPopup(this),
                 data = {
                     pid: parseInt($popup.popmake('getSettings').id, 10) || null,
@@ -66,5 +66,4 @@ var PUM_Analytics;
                 PUM_Analytics.send(data);
             }
         });
-
 }(jQuery, document));
