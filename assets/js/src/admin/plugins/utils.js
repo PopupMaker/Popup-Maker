@@ -45,6 +45,13 @@ var PUMUtils;
             return serialized;
         },
         convert_hex: function (hex, opacity) {
+            if (undefined === hex) {
+                return '';
+            }
+            if (undefined === opacity) {
+                opacity = 100;
+            }
+            
             hex = hex.replace('#', '');
             var r = parseInt(hex.substring(0, 2), 16),
                 g = parseInt(hex.substring(2, 4), 16),
