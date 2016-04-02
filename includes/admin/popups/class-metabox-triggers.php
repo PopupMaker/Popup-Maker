@@ -66,6 +66,9 @@ class PUM_Popup_Triggers_Metabox {
                 <tbody><?php
                 if ( ! empty( $current_triggers ) ) {
                     foreach ( $current_triggers as $key => $values ) {
+                        if ( ! isset( $triggers[ $values['type'] ] ) ) {
+                            continue;
+                        }
                         $trigger = $triggers[ $values['type'] ];
                         static::render_row( array(
                                 'index'    => esc_attr( $key ),

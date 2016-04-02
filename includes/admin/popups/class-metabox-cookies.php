@@ -65,6 +65,9 @@ class PUM_Popup_Cookies_Metabox {
                 <tbody><?php
                 if ( ! empty( $current_cookies ) ) {
                     foreach ( $current_cookies as $key => $values ) {
+                        if ( ! isset( $cookies[ $values['event'] ] ) ) {
+                            continue;
+                        }
                         $cookie = $cookies[ $values['event'] ];
                         static::render_row( array(
                                 'index'    => esc_attr( $key ),
