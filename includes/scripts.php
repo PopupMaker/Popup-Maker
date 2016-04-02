@@ -146,7 +146,7 @@ add_action( 'admin_head', 'popmake_render_popup_theme_styles' );
  *
  * @return void
  */
-function popmake_load_admin_scripts() {
+function popmake_load_admin_scripts( $hook ) {
 	$js_dir = POPMAKE_URL . '/assets/js/';
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.js' : '.min.js';
@@ -154,7 +154,8 @@ function popmake_load_admin_scripts() {
         //add_action( 'popmake_admin_footer', 'popmake_admin_popup_preview' );
 
 	}
-	if ( popmake_is_admin_page() || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD ) ) {
+
+	if ( popmake_is_admin_page() || in_array( $hook, array( 'post.php', 'edit.php' ) ) || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD ) ) {
 
         wp_register_script( 'select2', $js_dir . 'select2.full' . $suffix, array( 'jquery' ), POPMAKE_VERSION );
 
@@ -217,13 +218,13 @@ add_action( 'admin_enqueue_scripts', 'popmake_load_admin_scripts' );
  *
  * @return void
  */
-function popmake_load_admin_styles() {
+function popmake_load_admin_styles( $hook ) {
 	$css_dir = POPMAKE_URL . '/assets/css/';
 	$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css' : '.min.css';
 	if ( popmake_is_admin_popup_page() || popmake_is_admin_popup_theme_page() ) {
 		wp_enqueue_style( 'popup-maker-site', $css_dir . 'site' . $suffix, false, POPMAKE_VERSION );
 	}
-	if ( popmake_is_admin_page() || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD ) ) {
+	if ( popmake_is_admin_page() || in_array( $hook, array( 'post.php', 'edit.php' ) ) || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD ) ) {
 
 
         wp_enqueue_style( 'select2', $css_dir . 'select2' . $suffix, array(), POPMAKE_VERSION );
@@ -245,7 +246,7 @@ add_action( 'admin_enqueue_scripts', 'popmake_load_admin_styles', 100 );
  *
  * @param string $url URL being cleaned
  *
- * @return Variable $url
+ * @return string $url
  */
 function popmake_defer_js_url( $url ) {
 	if ( false === strpos( $url, '.js?defer' ) ) {
