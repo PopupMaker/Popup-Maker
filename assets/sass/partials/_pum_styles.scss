@@ -41,7 +41,11 @@
   z-index: auto;
 }
 
-
+.pum-title,
+.pum-content {
+  position: relative;
+  z-index: 1;
+}
 
 
 .pum-overlay {
@@ -54,6 +58,7 @@
   bottom: 0;
   z-index: 1999999999;
   overflow: auto;
+  overflow: initial;
   display: none;
 
   &.pum-preview,
@@ -77,6 +82,7 @@
   top: 100px;
   position: absolute;
   margin-bottom: 3em;
+  z-index: 1;
 
   &.pum-responsive {
 
@@ -167,6 +173,12 @@
       position: absolute;
       cursor: pointer;
       min-width: 1em;
+      z-index: 2;
+
+      > span {
+        position: relative;
+        z-index: 1;
+      }
     }
   }
 
@@ -198,9 +210,49 @@
 }
 
 html.pum-open {
-  overflow: hidden;
 
-  .pum-overlay.pum-active {
-    overflow-y: scroll;
+  &.pum-open-overlay {
+    overflow: hidden;
+
+    &.pum-open-fixed {
+
+      .pum-overlay {
+        overflow: hidden;
+      }
+
+      .pum-container {
+        position: fixed;
+      }
+    }
+
+    &.pum-open-scrollable {
+
+      .pum-overlay.pum-active {
+        overflow-y: scroll;
+      }
+
+    }
+
   }
+
+  &.pum-open-overlay-disabled {
+
+    &.pum-open-fixed {
+      .pum-container {
+        position: fixed;
+      }
+    }
+
+    &.pum-open-scrollable {
+      .pum-overlay.pum-active {
+        position: static;
+        height: auto;
+        width: auto;
+      }
+    }
+
+  }
+
+
+
 }
