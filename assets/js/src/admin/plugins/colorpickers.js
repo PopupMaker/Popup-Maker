@@ -7,14 +7,17 @@ var PUMColorPickers;
                 .addClass('initialized')
                 .wpColorPicker({
                     change: function (e) {
-                        var $input = $(e.currentTarget);
+                        var $this = $(this),
+                            $input = $(e.currentTarget);
                         if ($input.hasClass('background-color')) {
                             $input.parents('table').find('.background-opacity').show();
                         }
 
-                        $(this).trigger('change.update');
+                        $this.trigger('change.update');
 
-                        PopMakeAdmin.update_theme();
+                        if ($('form#post input#post_type').val() === 'popup_theme') {
+                            PopMakeAdmin.update_theme();
+                        }
                     },
                     clear: function (e) {
                         var $input = $(e.currentTarget).prev();
@@ -24,7 +27,9 @@ var PUMColorPickers;
 
                         $(this).prev('input').trigger('change.clear').wpColorPicker('close');
 
-                        PopMakeAdmin.update_theme();
+                        if ($('form#post input#post_type').val() === 'popup_theme') {
+                            PopMakeAdmin.update_theme();
+                        }
                     }
                 });
         }
@@ -32,7 +37,6 @@ var PUMColorPickers;
 
     $(document)
         .on('click', '.iris-palette', function () {
-            console.log(this);
             $(this).parents('.wp-picker-active').find('input.color-picker').trigger('change');
             setTimeout(PopMakeAdmin.update_theme, 500);
         })
