@@ -792,7 +792,7 @@ function popmake_color_callback( $args ) {
 	$default = isset( $args['std'] ) ? $args['std'] : '';
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="text" class="popmake-color-picker" id="popmake_settings[' . $args['id'] . ']" name="popmake_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '" data-default-color="' . esc_attr( $default ) . '" />';
+	$html = '<input type="text" class="pum-color-picker color-picker" id="popmake_settings[' . $args['id'] . ']" name="popmake_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '" data-default-color="' . esc_attr( $default ) . '" />';
 	$html .= '<label for="popmake_settings[' . $args['id'] . ']"> ' . $args['desc'] . '</label>';
 
 	echo $html;
