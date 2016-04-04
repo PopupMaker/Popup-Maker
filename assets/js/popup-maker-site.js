@@ -130,7 +130,8 @@ var PUM;
             var $popup = PUM.getPopup(this),
                 $container = $popup.popmake('getContainer'),
                 $close = $popup.popmake('getClose'),
-                settings = $popup.popmake('getSettings');
+                settings = $popup.popmake('getSettings'),
+                $html = $('html');
 
             if (!settings.meta.display.stackable) {
                 $popup.popmake('close_all');
@@ -163,7 +164,19 @@ var PUM;
                 return this;
             }
 
-            $('html').addClass('pum-open');
+            $html.addClass('pum-open');
+
+            if (settings.meta.display.overlay_disabled) {
+                $html.addClass('pum-open-overlay-disabled');
+            } else {
+                $html.addClass('pum-open-overlay');
+            }
+
+            if (settings.meta.display.position_fixed !== undefined && settings.meta.display.position_fixed) {
+                $html.addClass('pum-open-fixed');
+            } else {
+                $html.addClass('pum-open-scrollable');
+            }
 
             $popup
             // TODO: Remove this.
@@ -268,7 +281,11 @@ var PUM;
 
                         $close.off('click.popmake');
 
-                        $('html').removeClass('pum-open');
+                        $('html')
+                            .removeClass('pum-open')
+                            .removeClass('pum-open-scrollable')
+                            .removeClass('pum-open-overlay-disabled')
+                            .removeClass('pum-open-fixed');
 
                         $popup
                             .removeClass('pum-active')
@@ -795,12 +812,12 @@ var PUM_Analytics;
     };
 
     // Only popups from the editor should fire analytics events.
-    $('body > .pum')
+    $(document)
 
     /**
      * Track opens for popups.
      */
-        .on('pumAfterOpen.core_analytics', function () {
+        .on('pumAfterOpen.core_analytics', 'body > .pum', function () {
             var $popup = PUM.getPopup(this),
                 data = {
                     pid: parseInt($popup.popmake('getSettings').id, 10) || null,
@@ -811,7 +828,6 @@ var PUM_Analytics;
                 PUM_Analytics.send(data);
             }
         });
-
 }(jQuery, document));
 /**
  * Defines the core $.popmake animations.
@@ -848,7 +864,7 @@ var PUM_Analytics;
     $.fn.popmake.animations = {
         none: function (callback) {
             PUM.getPopup(this)
-                .popmake('animate_overlay', 'none', null, function () {
+                .popmake('animate_overlay', 'none', 0, function () {
                     // Fire user passed callback.
                     if (callback !== undefined) {
                         callback();

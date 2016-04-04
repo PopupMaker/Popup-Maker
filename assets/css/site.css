@@ -47,6 +47,13 @@
     background: none;
 }
 
+.pum-title,
+.pum-content
+{
+    position: relative;
+    z-index: 1;
+}
+
 .pum-overlay
 {
     position: fixed;
@@ -58,6 +65,7 @@
 
     display: none;
     overflow: auto;
+    overflow: initial;
 
     width: 100%;
     height: 100%;
@@ -85,6 +93,7 @@
 .pum-container
 {
     position: absolute;
+    z-index: 1; 
     top: 100px;
 
     margin-bottom: 3em;
@@ -174,12 +183,18 @@
     line-height: 1;
 
     position: absolute;
+    z-index: 2; 
 
-    min-width: 1em; 
+    min-width: 1em;
 
     cursor: pointer;
     text-align: center;
     text-decoration: none;
+}
+.pum-container .pum-content + .pum-close > span
+{
+    position: relative;
+    z-index: 1;
 }
 .pum-container.pum-scrollable .pum-content
 {
@@ -202,13 +217,34 @@
     visibility: visible;
 }
 
-html.pum-open
+html.pum-open.pum-open-overlay
 {
     overflow: hidden;
 }
-html.pum-open .pum-overlay.pum-active
+html.pum-open.pum-open-overlay.pum-open-fixed .pum-overlay
+{
+    overflow: hidden;
+}
+html.pum-open.pum-open-overlay.pum-open-fixed .pum-container
+{
+    position: fixed;
+}
+html.pum-open.pum-open-overlay.pum-open-scrollable .pum-overlay.pum-active
 {
     overflow-y: scroll;
+}
+
+html.pum-open.pum-open-overlay-disabled.pum-open-fixed .pum-container
+{
+    position: fixed;
+}
+
+html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-active
+{
+    position: static;
+
+    width: auto; 
+    height: auto;
 }
 
 .pum-container iframe.formidable

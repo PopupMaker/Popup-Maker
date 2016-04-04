@@ -18,26 +18,40 @@ var PUMColorPickers;
                 .addClass('initialized')
                 .wpColorPicker({
                     change: function (e) {
-                        var $input = $(e.currentTarget);
+                        var $this = $(this),
+                            $input = $(e.currentTarget);
                         if ($input.hasClass('background-color')) {
                             $input.parents('table').find('.background-opacity').show();
                         }
-                        PUMUtils.throttle(function () {
+
+                        $this.trigger('change.update');
+
+                        if ($('form#post input#post_type').val() === 'popup_theme') {
                             PopMakeAdmin.update_theme();
-                        }, 50);
+                        }
                     },
                     clear: function (e) {
                         var $input = $(e.currentTarget).prev();
                         if ($input.hasClass('background-color')) {
                             $input.parents('table').find('.background-opacity').hide();
                         }
-                        PopMakeAdmin.update_theme();
+
+                        $(this).prev('input').trigger('change.clear').wpColorPicker('close');
+
+                        if ($('form#post input#post_type').val() === 'popup_theme') {
+                            PopMakeAdmin.update_theme();
+                        }
                     }
                 });
         }
     };
 
-    $(document).on('pum_init', PUMColorPickers.init);
+    $(document)
+        .on('click', '.iris-palette', function () {
+            $(this).parents('.wp-picker-active').find('input.color-picker').trigger('change');
+            setTimeout(PopMakeAdmin.update_theme, 500);
+        })
+        .on('pum_init', PUMColorPickers.init);
 }(jQuery, document));
 var PUMConditions;
 (function ($, document, undefined) {
@@ -1752,6 +1766,13 @@ var PUMUtils;
             return serialized;
         },
         convert_hex: function (hex, opacity) {
+            if (undefined === hex) {
+                return '';
+            }
+            if (undefined === opacity) {
+                opacity = 100;
+            }
+            
             hex = hex.replace('#', '');
             var r = parseInt(hex.substring(0, 2), 16),
                 g = parseInt(hex.substring(2, 4), 16),

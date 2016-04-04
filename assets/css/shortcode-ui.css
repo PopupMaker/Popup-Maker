@@ -1,6 +1,12 @@
 .pum-tabs-container
 {
-    position: relative;
+    position: relative; 
+
+    box-sizing: border-box;
+}
+.pum-tabs-container > *
+{
+    box-sizing: border-box;
 }
 .pum-tabs-container ul.tabs
 {
@@ -44,9 +50,9 @@
 }
 .pum-tabs-container.vertical-tabs
 {
-    width: calc(100% - 150px); 
+    width: 100%; 
     min-height: 100px;
-    padding-left: 150px;
+    padding-left: 140px;
 }
 .pum-tabs-container.vertical-tabs ul.tabs
 {

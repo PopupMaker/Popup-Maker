@@ -23,7 +23,13 @@
 
 .pum-tabs-container
 {
-    position: relative;
+    position: relative; 
+
+    box-sizing: border-box;
+}
+.pum-tabs-container > *
+{
+    box-sizing: border-box;
 }
 .pum-tabs-container ul.tabs
 {
@@ -67,9 +73,9 @@
 }
 .pum-tabs-container.vertical-tabs
 {
-    width: calc(100% - 150px); 
+    width: 100%; 
     min-height: 100px;
-    padding-left: 150px;
+    padding-left: 140px;
 }
 .pum-tabs-container.vertical-tabs ul.tabs
 {
@@ -1196,6 +1202,48 @@ input.popmake-range-manual
     padding-right: 25px !important;
 }
 
+.pum-image-field .pum-image-select,
+.pum-image-field.pum-image-empty .pum-image-preview
+{
+    display: none;
+}
+
+.pum-image-field.pum-image-empty .pum-image-select
+{
+    display: block;
+}
+
+.pum-image-field .pum-image-preview-img
+{
+    line-height: 0;
+
+    float: left;
+
+    margin: 5px 0;
+}
+
+.pum-image-field .pum-image-preview-img img
+{
+    max-width: 60px;
+}
+
+.pum-image-field .pum-image-preview select
+{
+    width: 200px; 
+    margin: 8px 0 8px 10px;
+}
+
+.pum-image-field .pum-image-edit
+{
+    margin: 0 0 0 11px;
+}
+
+.pum-image-field .pum-image-replace,
+.pum-image-field .pum-image-remove
+{
+    margin: 0 0 0 8px;
+}
+
 /*
 input[type="text"], select {
     border-radius: 3px;
@@ -1252,6 +1300,7 @@ option.bold
 .range-value-unit
 {
     position: relative;
+    top: .125em; 
 
     display: inline-block;
 
