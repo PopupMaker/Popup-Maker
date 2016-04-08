@@ -27,7 +27,14 @@
 					return attrs;
 				},
 				template: function (options) {
-					var template = $('#tmpl-pum-shortcode-view-' + tag);
+					var template = $('#tmpl-pum-shortcode-view-' + tag),
+						_template;
+
+					if (!template.length) {
+						return this.text;
+					}
+
+					_template = _.template(template.html());
 
 					if (options.class) {
 						options.classes = options.class;
@@ -36,10 +43,7 @@
 
 					options = this.cleanAttrs(options);
 
-					if (template.length) {
-						return _.template(template.html(), options);
-					}
-					return this.text;
+					return _template(options);
 				},
 				getContent: function () {
 					var values = this.shortcode.attrs.named;
@@ -50,19 +54,7 @@
 				},
 				View: { // before WP 4.2:
 					template: function (options) {
-						var template = $('#tmpl-pum-shortcode-view-' + tag);
-
-						if (options.class) {
-							options.classes = options.class;
-							delete options.class;
-						}
-
-						options = wp.mce[tag].cleanAttrs(options);
-
-						if (template.length) {
-							return _.template(template.html(), options);
-						}
-						return this.text;
+						return wp.mce[tag].template(options);
 					},
 					postID: $('#post_ID').val(),
 					initialize: function (options) {
