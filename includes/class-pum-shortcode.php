@@ -51,8 +51,6 @@ class PUM_Shortcode extends PUM_Fields {
 	public function __construct( $args = array() ) {
 		if ( ! did_action( 'plugins_loaded' ) ) {
 			add_action( 'plugins_loaded', array( $this, 'register' ) );
-		} elseif ( current_action() == 'plugins_loaded' ) {
-			$this->register();
 		} elseif ( ! did_action( 'init' ) ) {
 			add_action( 'init', array( $this, 'register' ) );
 		} else {
