@@ -471,6 +471,12 @@ class Popmake_Fields {
 				$function_name = array( $this, $type . '_templ_callback' );
 			}
 			/**
+			 * Check if the field type is hook.
+			 */
+			elseif ( $type == 'hook' ) {
+				$function_name = array( $this, 'hook_callback' );
+			}
+			/**
 			 * No method exists, lets notify them the field type doesn't exist.
 			 */
 			else {
