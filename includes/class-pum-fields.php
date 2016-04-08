@@ -754,7 +754,7 @@ class PUM_Fields extends Popmake_Fields {
 
 		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular'; ?>
 
-		<input type="text" placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" class="<?php esc_attr_e( $size ); ?>-text" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php echo $templ_name; ?>"/><?php
+		<input type="<?php esc_attr_e( $args['type'] ); ?>" placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" class="<?php esc_attr_e( $size ); ?>-text" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php echo $templ_name; ?>"/><?php
 
 		if ( $args['desc'] != '' ) { ?>
 			<p class="pum-desc"><?php esc_html_e( $args['desc'] ); ?></p><?php
@@ -762,6 +762,113 @@ class PUM_Fields extends Popmake_Fields {
 
 		$this->field_after();
 	}
+
+	#region html5 text fields
+	/**
+	 * Password Callback
+	 *
+	 * Renders password fields.
+	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
+	 */
+	public function password_templ_callback( $args ) {
+		$args['type'] = 'password';
+
+		$this->text_templ_callback( $args );
+	}
+
+	/**
+	 * Email Callback
+	 *
+	 * Renders email fields.
+	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
+	 */
+	public function email_templ_callback( $args ) {
+		$args['type'] = 'email';
+
+		$this->text_templ_callback( $args );
+	}
+
+	/**
+	 * Search Callback
+	 *
+	 * Renders search fields.
+	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
+	 */
+	public function search_templ_callback( $args ) {
+		$args['type'] = 'search';
+
+		$this->text_templ_callback( $args );
+	}
+
+	/**
+	 * URL Callback
+	 *
+	 * Renders url fields.
+	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
+	 */
+	public function url_templ_callback( $args ) {
+		$args['type'] = 'url';
+
+		$this->text_templ_callback( $args );
+	}
+
+	/**
+	 * Telephone Callback
+	 *
+	 * Renders telelphone number fields.
+	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
+	 */
+	public function tel_templ_callback( $args ) {
+		$args['type'] = 'tel';
+
+		$this->text_templ_callback( $args );
+	}
+
+	/**
+	 * Number Callback
+	 *
+	 * Renders number fields.
+	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
+	 */
+	public function number_templ_callback( $args ) {
+		$args['type'] = 'number';
+
+		$this->text_templ_callback( $args );
+	}
+
+	/**
+	 * Range Callback
+	 *
+	 * Renders range fields.
+	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
+	 */
+	public function range_templ_callback( $args ) {
+		$args['type'] = 'range';
+
+		$this->text_templ_callback( $args );
+	}
+#endregion html5 text fields
 
 	/**
 	 * Hidden Callback
