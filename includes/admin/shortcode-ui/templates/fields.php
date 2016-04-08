@@ -24,6 +24,34 @@
 	<input type="text" placeholder="<%= placeholder %>" class="<%= size %>-text" id="<%= id %>" name="<%= name %>" value="<%= value %>" <%= meta %>/>
 </script>
 
+<script type="text/template" id="tmpl-pum-field-range">
+	<input type="range" placeholder="<%= placeholder %>" class="<%= size %>-text" id="<%= id %>" name="<%= name %>" value="<%= value %>" <%= meta %>/>
+</script>
+
+<script type="text/template" id="tmpl-pum-field-search">
+	<input type="search" placeholder="<%= placeholder %>" class="<%= size %>-text" id="<%= id %>" name="<%= name %>" value="<%= value %>" <%= meta %>/>
+</script>
+
+<script type="text/template" id="tmpl-pum-field-number">
+	<input type="number" placeholder="<%= placeholder %>" class="<%= size %>-text" id="<%= id %>" name="<%= name %>" value="<%= value %>" <%= meta %>/>
+</script>
+
+<script type="text/template" id="tmpl-pum-field-email">
+	<input type="email" placeholder="<%= placeholder %>" class="<%= size %>-text" id="<%= id %>" name="<%= name %>" value="<%= value %>" <%= meta %>/>
+</script>
+
+<script type="text/template" id="tmpl-pum-field-url">
+	<input type="url" placeholder="<%= placeholder %>" class="<%= size %>-text" id="<%= id %>" name="<%= name %>" value="<%= value %>" <%= meta %>/>
+</script>
+
+<script type="text/template" id="tmpl-pum-field-tel">
+	<input type="tel" placeholder="<%= placeholder %>" class="<%= size %>-text" id="<%= id %>" name="<%= name %>" value="<%= value %>" <%= meta %>/>
+</script>
+
+<script type="text/template" id="tmpl-pum-field-password">
+	<input type="password" placeholder="<%= placeholder %>" class="<%= size %>-text" id="<%= id %>" name="<%= name %>" value="<%= value %>" <%= meta %>/>
+</script>
+
 <script type="text/template" id="tmpl-pum-field-textarea">
 	<textarea name="<%= name %>" id="<%= id %>" class="<%= size %>-text" <%= meta %>><%= value %></textarea>
 </script>
