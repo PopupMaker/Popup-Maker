@@ -6,7 +6,7 @@
         if ($.fn.popmake.triggers[type]) {
             return $.fn.popmake.triggers[type].apply(this, Array.prototype.slice.call(arguments, 1));
         }
-        $.error('Trigger type ' + $.fn.popmake.triggers + ' does not exist.');
+        $.error('Trigger type ' + type + ' does not exist.');
         return this;
     };
 

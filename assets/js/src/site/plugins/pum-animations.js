@@ -16,7 +16,7 @@
         if ($.fn.popmake.overlay_animations[style]) {
             return $.fn.popmake.overlay_animations[style].apply(this, [duration, callback]);
         }
-        $.error('Animation style ' + $.fn.popmake.overlay_animations + ' does not exist.');
+        $.error('Animation style ' + style + ' does not exist.');
 
         return this;
     };
@@ -26,7 +26,7 @@
         if ($.fn.popmake.animations[style]) {
             return $.fn.popmake.animations[style].apply(this, Array.prototype.slice.call(arguments, 1));
         }
-        $.error('Animation style ' + $.fn.popmake.animations + ' does not exist.');
+        $.error('Animation style ' + style + ' does not exist.');
         return this;
     };
 
