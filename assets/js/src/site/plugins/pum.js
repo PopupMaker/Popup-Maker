@@ -9,7 +9,16 @@ var PUM;
     PUM = {
         getPopup: function (el) {
             var $this = $(el);
-            return $this.hasClass('popmake') ? $this.parents('.pum-overlay') : $this;
+
+            if ($this.hasClass('pum-overlay')) {
+                return $this;
+            }
+
+            if ($this.hasClass('popmake')) {
+                return $this.parents('.pum-overlay');
+            }
+
+            return $this.parents('.pum-overlay').length ? $this.parents('.pum-overlay') : $();
         }
     };
 
