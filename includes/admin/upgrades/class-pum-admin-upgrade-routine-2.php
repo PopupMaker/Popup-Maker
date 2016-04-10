@@ -47,7 +47,7 @@ final class PUM_Admin_Upgrade_Routine_2 extends PUM_Admin_Upgrade_Routine {
 
 		$popups = get_posts( array(
 			'post_type'      => 'popup',
-			'post_status'    => 'all',
+			'post_status'    => array( 'any', 'trash' ),
 			'posts_per_page' => - 1,
 		) );
 
@@ -74,7 +74,7 @@ final class PUM_Admin_Upgrade_Routine_2 extends PUM_Admin_Upgrade_Routine {
 
 		$themes = get_posts( array(
 			'post_type'      => 'popup_theme',
-			'post_status'    => 'all',
+			'post_status'    => array( 'any', 'trash' ),
 			'posts_per_page' => - 1,
 		) );
 
