@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return void
  */
 function popmake_install_default_theme() {
-	$default_theme = wp_insert_post(
+	$default_theme = @wp_insert_post(
 		array(
 			'post_title'     => __( 'Default Theme', 'popup-maker' ),
 			'post_status'    => 'publish',
