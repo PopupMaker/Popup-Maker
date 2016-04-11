@@ -27,8 +27,7 @@ class PUM_Activator {
 	 * @param bool $network_wide
 	 */
 	public static function activate( $network_wide = false ) {
-
-		global $popmake_options;
+		global $wpdb;
 
 		// Setup the Popup & Theme Custom Post Type
 		popmake_setup_post_types();
@@ -36,29 +35,39 @@ class PUM_Activator {
 		// Setup the Popup Taxonomies
 		popmake_setup_taxonomies( true );
 
+		if ( is_multisite() && $network_wide ) { // See if being activated on the entire network or one blog
+
+			$current_blog = $wpdb->blogid;
+
+			$activated = array();
+
+			$blog_ids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
+
+			foreach ( $blog_ids as $blog_id ) {
+				switch_to_blog( $blog_id );
+
+				static::activate_site();
+
+				$activated[] = $blog_id;
+			}
+
+			// Switch back to the current blog
+			switch_to_blog( $current_blog );
+
+			// Store the array for a later function
+			update_site_option( 'pum_activated', $activated );
+
+			return;
+		}
+
 		// Get the Version Data Set.
 		if ( ! class_exists( 'PUM_Admin_Upgrades' ) ) {
 			require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-upgrades.php';
 		}
-		PUM_Admin_Upgrades::instance();
 
-		// Setup some default options
-		$options = array(
-			'disable_popup_category_tag' => 1,
-		);
-		update_option( 'popmake_settings', array_merge( $popmake_options, $options ) );
+		// Running on a single blog
 
-		// Add a temporary option that will fire a hookable action on next load.
-		set_transient( '_popmake_installed', true, 30 );
-
-		//
-		if ( $network_wide ) {
-			// TODO Add a loop here for each blog.
-			// foreach ( blog ) { do the actions }
-		} else {
-			popmake_get_default_popup_theme();
-			pum_install_built_in_themes();
-		}
+		static::activate_site();
 
 		// Bail if activating from network, or bulk
 		if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
@@ -70,6 +79,26 @@ class PUM_Activator {
 
 		// Clear the permalinks
 		flush_rewrite_rules();
+
+		return;
+
+	}
+
+
+	public static function activate_site() {
+
+		$options = array_merge( get_option( 'popmake_settings', array() ), array(
+			'disable_popup_category_tag' => 1,
+		) );
+
+		// Setup some default options
+		update_option( 'popmake_settings', $options );
+
+		// Add a temporary option that will fire a hookable action on next load.
+		set_transient( '_popmake_installed', true, 30 );
+
+		popmake_get_default_popup_theme();
+		pum_install_built_in_themes();
 
 	}
 
