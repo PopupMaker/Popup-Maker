@@ -379,9 +379,9 @@ pum_fs();
  * The code that runs during plugin activation.
  * This action is documented in includes/class-pum-activator.php
  */
-function pum_activate() {
+function pum_activate( $network_wide = false ) {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-pum-activator.php';
-	PUM_Activator::activate();
+	PUM_Activator::activate( $network_wide );
 }
 
 register_activation_hook( __FILE__, 'pum_activate' );
