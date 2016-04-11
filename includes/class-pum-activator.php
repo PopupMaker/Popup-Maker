@@ -43,6 +43,17 @@ class PUM_Activator {
 
 			$blog_ids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
 
+			// Try to reduce the chances of a timeout with a large number of sites.
+			if ( count( $blog_ids ) > 2 ) {
+
+				ignore_user_abort( true );
+
+				if ( ! pum_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+					@set_time_limit( 0 );
+				}
+
+			}
+
 			foreach ( $blog_ids as $blog_id ) {
 				switch_to_blog( $blog_id );
 

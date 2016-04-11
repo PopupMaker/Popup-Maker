@@ -63,6 +63,7 @@ class PUM_Admin_Upgrades {
         }
 
         add_action( 'admin_menu', array( $this, 'register_pages' ) );
+        add_action( 'network_admin_menu', array( $this, 'register_pages' ) );
 
         add_action( 'admin_init', array( $this, 'process_upgrade_args' ) );
 
@@ -96,13 +97,28 @@ class PUM_Admin_Upgrades {
      */
     public function register_pages() {
         global $pum_upgrades_page;
+
+        $parent = null;
+
+        if ( function_exists( 'is_network_admin' ) && is_network_admin() ) {
+            add_menu_page(
+                __( 'Popup Maker', 'popup-maker' ),
+                __( 'Popup Maker', 'popup-maker' ),
+                'manage_network_plugins',
+                'popup-maker',
+                '',
+                POPMAKE_URL . '/assets/images/admin/dashboard-icon.png'
+            );
+            $parent = 'popup-maker';
+        }
+
         $this->page = add_submenu_page(
-                null,
-                __( 'Popup Maker Upgrades', 'popup-maker' ),
-                __( 'Popup Maker Upgrades', 'popup-maker' ),
-                'manage_options',
-                'pum-upgrades',
-                array( $this, 'upgrades_screen' )
+            $parent,
+            __( 'Popup Maker Upgrades', 'popup-maker' ),
+            __( 'Popup Maker Upgrades', 'popup-maker' ),
+            'manage_options',
+            'pum-upgrades',
+            array( $this, 'upgrades_screen' )
         );
 
         $pum_upgrades_page = $this->page;

@@ -58,7 +58,16 @@ var PUM;
     PUM = {
         getPopup: function (el) {
             var $this = $(el);
-            return $this.hasClass('popmake') ? $this.parents('.pum-overlay') : $this;
+
+            if ($this.hasClass('pum-overlay')) {
+                return $this;
+            }
+
+            if ($this.hasClass('popmake')) {
+                return $this.parents('.pum-overlay');
+            }
+
+            return $this.parents('.pum-overlay').length ? $this.parents('.pum-overlay') : $();
         }
     };
 
@@ -210,8 +219,8 @@ var PUM;
 
             // TODO: Move to a global $(document).on type bind. Possibly look for an inactive class to fail on.
             $close
-                .off('click.popmake')
-                .on("click.popmake", function (e) {
+                .off('click.popmake click.pum')
+                .on("click.popmake click.pum", function (e) {
                     e.preventDefault();
                     e.stopPropagation();
                     $.fn.popmake.last_close_trigger = 'Close Button';
@@ -847,7 +856,7 @@ var PUM_Analytics;
         if ($.fn.popmake.overlay_animations[style]) {
             return $.fn.popmake.overlay_animations[style].apply(this, [duration, callback]);
         }
-        $.error('Animation style ' + $.fn.popmake.overlay_animations + ' does not exist.');
+        $.error('Animation style ' + style + ' does not exist.');
 
         return this;
     };
@@ -857,7 +866,7 @@ var PUM_Analytics;
         if ($.fn.popmake.animations[style]) {
             return $.fn.popmake.animations[style].apply(this, Array.prototype.slice.call(arguments, 1));
         }
-        $.error('Animation style ' + $.fn.popmake.animations + ' does not exist.');
+        $.error('Animation style ' + style + ' does not exist.');
         return this;
     };
 
@@ -1193,7 +1202,7 @@ var pm_cookie, pm_remove_cookie;
         if ($.fn.popmake.cookies[type]) {
             return $.fn.popmake.cookies[type].apply(this, Array.prototype.slice.call(arguments, 1));
         }
-        $.error('Cookie type ' + $.fn.popmake.cookies + ' does not exist.');
+        $.error('Cookie type ' + type + ' does not exist.');
         return this;
     };
 
@@ -1323,7 +1332,7 @@ var pm_cookie, pm_remove_cookie;
         if ($.fn.popmake.triggers[type]) {
             return $.fn.popmake.triggers[type].apply(this, Array.prototype.slice.call(arguments, 1));
         }
-        $.error('Trigger type ' + $.fn.popmake.triggers + ' does not exist.');
+        $.error('Trigger type ' + type + ' does not exist.');
         return this;
     };
 
