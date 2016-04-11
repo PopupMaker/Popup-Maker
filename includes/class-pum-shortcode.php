@@ -49,19 +49,22 @@ class PUM_Shortcode extends PUM_Fields {
 	 * Class constructor will set the needed filter and action hooks
 	 */
 	public function __construct( $args = array() ) {
-		if ( ! did_action( 'plugins_loaded' ) ) {
-			add_action( 'plugins_loaded', array( $this, 'register' ) );
-		} elseif ( ! did_action( 'init' ) ) {
-			add_action( 'init', array( $this, 'register' ) );
-		} else {
-			$this->register();
-		}
 
 		$args = array(
 			'sections' => $this->sections(),
 		);
 
-		return parent::__construct( $args );
+		parent::__construct( $args );
+
+		if ( ! did_action( 'plugins_loaded' ) ) {
+			add_action( 'plugins_loaded', array( $this, 'register' ) );
+		} elseif ( ! did_action( 'init' ) && current_action() != 'plugins_loaded' ) {
+			add_action( 'init', array( $this, 'register' ) );
+		} else {
+			$this->register();
+		}
+
+		return $this;
 	}
 
 	/**
@@ -76,7 +79,7 @@ class PUM_Shortcode extends PUM_Fields {
 
 		if ( $this->has_content ) {
 			$inner_content_labels     = $this->inner_content_labels();
-			$fields['_inner_content'] = array(
+			$fields[ $this->inner_content_section ]['_inner_content'] = array(
 				'label'    => $inner_content_labels['label'],
 				'desc'     => $inner_content_labels['description'],
 				'section'  => $this->inner_content_section,
