@@ -16,19 +16,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 function popmake_welcome_redirect() {
 
 	// Bail if no activation redirect
-	if ( ! get_transient( '_popmake_activation_redirect' ) ) {
+	if ( ! get_transient( '_pum_activation_redirect' ) ) {
 		return;
 	}
 
 	// Delete the redirect transient
-	delete_transient( '_popmake_activation_redirect' );
+	delete_transient( '_pum_activation_redirect' );
 
 	// Bail if activating from network, or bulk
 	if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
 		return;
 	}
 
-	$upgrade = get_option( 'popmake_version_upgraded_from' );
+	$upgrade = get_option( 'pum_ver_upgraded_from' );
 
 	if ( ! $upgrade ) { // First time install
         wp_safe_redirect( admin_url( 'index.php?page=pum-getting-started' ) );
@@ -39,7 +39,7 @@ function popmake_welcome_redirect() {
 	}
 }
 
-add_action( 'admin_init', 'popmake_welcome_redirect' );
+// add_action( 'admin_init', 'popmake_welcome_redirect' );
 
 
 function popmake_welcome_page_tabs() {

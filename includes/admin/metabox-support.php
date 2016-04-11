@@ -25,7 +25,7 @@ add_action( 'popmake_support_meta_box_fields', 'popmake_support_meta_box_links',
 function popmake_support_meta_box_links() { ?>
 	<ul class="popmake-support-links">
 		<li>
-            <a href="https://docs.wppopupmaker.com/?utm_source=Plugin+Admin&utm_medium=Support+Metabox&utm_campaign=Docs">
+            <a href="http://docs.wppopupmaker.com/?utm_source=Plugin+Admin&utm_medium=Support+Metabox&utm_campaign=Docs">
 				<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/knowledge-base.png"/>
                 <span><?php _e( 'Documentation', 'popup-maker' ); ?></span>
 			</a>
