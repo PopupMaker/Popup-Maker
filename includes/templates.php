@@ -16,7 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Returns the path to the Popup Maker templates directory
  */
 function popmake_get_templates_dir() {
-	return POPMAKE_DIR . 'templates';
+	$deprecated = ! pum_is_v1_4_compatible() ? 'deprecated/' : '';
+	return POPMAKE_DIR . $deprecated . 'templates';
 }
 
 /**
