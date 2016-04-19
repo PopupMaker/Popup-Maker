@@ -158,7 +158,7 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
 	return apply_filters( 'popmake_generate_theme_styles', $styles, $popup_theme_id, $theme );
 }
 
-function popmake_render_theme_styles( $popup_theme_id ) {
+function pum_render_theme_styles( $popup_theme_id ) {
 	$styles = '';
 
 	$theme_data = get_post($popup_theme_id);
