@@ -14,10 +14,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Get the current blog db_ver.
+ *
+ * @return mixed|void
+ */
 function pum_get_db_ver() {
 	return get_option( 'pum_db_ver', false );
 }
 
+/**
+ * Checks if the db_ver is v1.4 compatible.
+ *
+ * v1.4 compatibility is db_ver 6 or higher.
+ *
+ * @uses pum_get_db_ver()
+ *
+ * @return bool
+ */
+function pum_is_v1_4_compatible() {
+	return pum_get_db_ver() >= 6;
+}
+
+/**
+ * Deletes the theme css transient forcing it to refresh.
+ */
 function pum_force_theme_css_refresh() {
 	delete_transient( 'popmake_theme_styles' );
 }
