@@ -206,3 +206,57 @@ function popmake_popup_theme_meta_field_group_close() {
 }
 
 #endregion Popup Theme Meta Field Groups
+
+function popmake_render_theme_styles( $popup_theme_id ) {
+	$styles = '';
+
+	$theme_data = get_post($popup_theme_id);
+	$slug = $theme_data->post_name != $popup_theme_id ? $theme_data->post_name : false;
+
+	$theme_styles = popmake_generate_theme_styles( $popup_theme_id );
+
+	if ( empty( $theme_styles ) ) {
+		return '';
+	}
+
+	foreach ( $theme_styles as $element => $rules ) {
+		switch ( $element ) {
+			case 'overlay':
+				$rule = ".popmake-overlay.theme-{$popup_theme_id}";
+				if ( $slug ) {
+					$rule .= ", .popmake-overlay.theme-{$slug}";
+				}
+				break;
+			case 'container':
+				$rule = ".popmake.theme-{$popup_theme_id}";
+				if ( $slug ) {
+					$rule .= ", .popmake.theme-{$slug}";
+				}
+				break;
+			case 'close':
+				$rule = ".popmake.theme-{$popup_theme_id} > .popmake-close";
+				if ( $slug ) {
+					$rule .= ", .popmake.theme-{$slug} > .popmake-close";
+				}
+				break;
+			default:
+				$rule = ".popmake.theme-{$popup_theme_id} .popmake-{$element}";
+				if ( $slug ) {
+					$rule .= ", .popmake.theme-{$slug} .popmake-{$element}";
+				}
+				break;
+		}
+
+		$rule_set = $sep = '';
+		foreach ( $rules as $key => $value ) {
+			if ( ! empty( $value ) ) {
+				$rule_set .= $sep . $key . ': ' . $value;
+				$sep = '; ';
+			}
+		}
+
+		$styles .= "$rule { $rule_set } \r\n";
+	}
+
+	return $styles;
+}
