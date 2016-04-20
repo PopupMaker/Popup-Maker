@@ -295,7 +295,7 @@ class PUM_Admin_Upgrades {
                             __( 'Upgrades have been completed successfully.', 'popup-maker' ),
                             sprintf( 'You will automatically be redirected in %s seconds', '<span id="pum-countdown">5</span>' )
                     ),
-                    'redirect'  => admin_url( 'index.php?page=pum-about' ),
+                    'redirect'  => admin_url( 'edit.php?post_type=popup' ),
                     'countdown' => 5000,
             ) ); // Let AJAX know that the upgrade is complete
             exit;
