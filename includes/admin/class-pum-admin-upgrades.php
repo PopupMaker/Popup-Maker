@@ -443,8 +443,9 @@ class PUM_Admin_Upgrades {
     }
 
     public function get_upgrade( $version = null ) {
-        if ( isset ( $this->get_upgrades()[ $version ] ) ) {
-            return $this->get_upgrades()[ $version ];
+        $upgrades = $this->get_upgrades();
+        if ( isset ( $upgrades[ $version ] ) ) {
+            return $upgrades[ $version ];
         } else {
             return false;
         }
