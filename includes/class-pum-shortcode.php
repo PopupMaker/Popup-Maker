@@ -216,8 +216,7 @@ class PUM_Shortcode extends PUM_Fields {
 			$shortcode_ui_args['inner_content'] = $this->inner_content_labels();
 		}
 
-
-		if ( ! empty( $this->fields() ) ) {
+		if ( count( $this->fields() ) ) {
 			foreach ( $this->get_all_fields() as $section => $fields ) {
 				foreach ( $fields as $id => $field ) {
 
