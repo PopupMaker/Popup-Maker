@@ -36,7 +36,7 @@ function popmake_load_site_scripts() {
 	// Deprecated. No longer used. Here for older versions of some extensions.
 	wp_register_script( 'jquery-cookie', $js_dir . 'jquery.cookie' . $suffix, array( 'jquery' ), '1.4.1', true );
 
-	wp_register_script( 'popup-maker-site', $dep_js_dir . 'popup-maker-site' . $suffix . '?defer', array(
+	wp_register_script( 'popup-maker-site', $dep_js_dir . 'site' . $suffix . '?defer', array(
 		'jquery',
 		'jquery-ui-core',
 		'jquery-ui-position'
@@ -180,7 +180,7 @@ function popmake_load_admin_scripts( $hook ) {
 
         wp_register_script( 'select2', $js_dir . 'select2.full' . $suffix, array( 'jquery' ), POPMAKE_VERSION );
 
-		wp_enqueue_script( 'popup-maker-admin', $dep_js_dir . 'popup-maker-admin' . $suffix, array(
+		wp_enqueue_script( 'popup-maker-admin', $dep_js_dir . 'admin' . $suffix, array(
             'jquery',
             'wp-color-picker',
             'jquery-ui-slider',
@@ -212,7 +212,7 @@ function popmake_load_admin_scripts( $hook ) {
 		) ) );
 	}
 	if ( popmake_is_admin_popup_page() ) {
-		wp_enqueue_script( 'popup-maker-site', $dep_js_dir . 'popup-maker-site' . $suffix . '?defer', array(
+		wp_enqueue_script( 'popup-maker-site', $dep_js_dir . 'site' . $suffix . '?defer', array(
 			'jquery',
 			'jquery-ui-core',
 			'jquery-ui-position'

@@ -59,7 +59,7 @@ var PUMTriggers;
         cookie_column_value: function (cookie_name) {
             var cookie_text = I10n.no_cookie;
 
-            if (typeof cookie_name === 'object') {
+            if (cookie_name instanceof Array) {
                 cookie_text = cookie_name.join(', ');
             } else if (cookie_name !== null) {
                 cookie_text = cookie_name;
