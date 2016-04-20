@@ -1,6 +1,6 @@
 /**
  * Defines the core $.popmake.cookie functions.
- * Version 1.4.0
+ * Version 1.4
  *
  * Defines the pm_cookie & pm_remove_cookie global functions.
  */

@@ -1,6 +1,6 @@
 /**
  * Defines the core $.popmake function which will load the proper methods.
- * Version 1.4.0
+ * Version 1.4
  */
 var PUM;
 (function ($, document, undefined) {

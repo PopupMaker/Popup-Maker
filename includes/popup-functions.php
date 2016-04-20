@@ -51,7 +51,7 @@ function get_the_popup_ID() {
 }
 
 /**
- * @deprecated 1.4.0 Use the PUM_Popup class instead.
+ * @deprecated 1.4 Use the PUM_Popup class instead.
  *
  * @param int $popup_id
  *
@@ -70,7 +70,7 @@ function popmake_get_the_popup_theme( $popup_id = null ) {
 }
 
 /**
- * @deprecated 1.4.0 Use pum_popup_theme_id instead.
+ * @deprecated 1.4 Use pum_popup_theme_id instead.
  * @param int $popup_id
  */
 function popmake_the_popup_theme( $popup_id = null ) {
@@ -78,7 +78,7 @@ function popmake_the_popup_theme( $popup_id = null ) {
 }
 
 /**
- * @deprecated 1.4.0 Use the PUM_Popup class instead.
+ * @deprecated 1.4 Use the PUM_Popup class instead.
  *
  * @param int $popup_id
  *
@@ -97,7 +97,7 @@ function popmake_get_the_popup_classes( $popup_id = null ) {
 }
 
 /**
- * @deprecated 1.4.0 Use pum_popup_classes instead.
+ * @deprecated 1.4 Use pum_popup_classes instead.
  * @param int $popup_id
  */
 function popmake_the_popup_classes( $popup_id = null ) {
@@ -106,7 +106,7 @@ function popmake_the_popup_classes( $popup_id = null ) {
 
 
 /**
- * @deprecated 1.4.0 Built into the PUM_Popup class instead.
+ * @deprecated 1.4 Built into the PUM_Popup class instead.
  *
  * @param array $classes
  * @param int   $popup_id
@@ -130,7 +130,7 @@ function popmake_add_popup_size_classes( $classes, $popup_id ) {
 }
 
 /**
- * @deprecated 1.4.0 Use the PUM_Popup class instead.
+ * @deprecated 1.4 Use the PUM_Popup class instead.
  *
  * @param int $popup_id
  *
@@ -233,7 +233,7 @@ function popmake_clean_popup_data_attr( $data_attr ) {
 //add_filter( 'popmake_get_the_popup_data_attr', 'popmake_clean_popup_data_attr' );
 
 /**
- * @deprecated 1.4.0 Use pum_popup_data_attr instead.
+ * @deprecated 1.4 Use pum_popup_data_attr instead.
  * @param int $popup_id
  */
 function popmake_the_popup_data_attr( $popup_id = null ) {
@@ -244,7 +244,7 @@ function popmake_the_popup_data_attr( $popup_id = null ) {
  * Returns the meta group of a popup or value if key is set.
  *
  * @since 1.3.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param $group
  * @param int $popup_id ID number of the popup to retrieve a overlay meta for
@@ -345,7 +345,7 @@ function popmake_get_popup_meta_group( $group, $popup_id = null, $key = null, $d
  * Returns the load settings meta of a popup.
  *
  * @since 1.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param int $popup_id ID number of the popup to retrieve a overlay meta for
  *
@@ -358,7 +358,7 @@ function popmake_get_popup_targeting_condition( $popup_id = null, $key = null ) 
 /**
  *
  * @since 1.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param      $popup_id
  * @param null $post_type
@@ -431,7 +431,7 @@ function popmake_get_popup_targeting_condition_excludes( $popup_id, $post_type =
  * Returns the title of a popup.
  *
  * @since 1.0
- * @deprecated 1.4.0 Use the PUM_Popup class instead.
+ * @deprecated 1.4 Use the PUM_Popup class instead.
  *
  * @param int $popup_id ID number of the popup to retrieve a title for
  *
@@ -447,7 +447,7 @@ function popmake_get_the_popup_title( $popup_id = null ) {
 }
 
 /**
- * @deprecated 1.4.0 Use pum_popup_title instead.
+ * @deprecated 1.4 Use pum_popup_title instead.
  * @param int $popup_id
  */
 function popmake_the_popup_title( $popup_id = null ) {
@@ -455,7 +455,7 @@ function popmake_the_popup_title( $popup_id = null ) {
 }
 
 /**
- * @deprecated 1.4.0 Use the PUM_Popup class instead.
+ * @deprecated 1.4 Use the PUM_Popup class instead.
  *
  * @param int $popup_id
  *
@@ -471,7 +471,7 @@ function popmake_get_the_popup_content( $popup_id = null ) {
 }
 
 /**
- * @deprecated 1.4.0 Use pum_popup_content instead.
+ * @deprecated 1.4 Use pum_popup_content instead.
  * @param int $popup_id
  */
 function popmake_the_popup_content( $popup_id = null ) {
@@ -482,7 +482,7 @@ function popmake_the_popup_content( $popup_id = null ) {
  * Returns the display meta of a popup.
  *
  * @since 1.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param int $popup_id ID number of the popup to retrieve a display meta for
  *
@@ -496,7 +496,7 @@ function popmake_get_popup_display( $popup_id = null, $key = null, $default = nu
  * Returns the close meta of a popup.
  *
  * @since 1.0
- * @deprecated 1.4.0 Use PUM_Popup class instead
+ * @deprecated 1.4 Use PUM_Popup class instead
  *
  * @param int $popup_id ID number of the popup to retrieve a close meta for
  *
@@ -510,7 +510,7 @@ function popmake_get_popup_close( $popup_id = null, $key = null, $default = null
  * Returns the click_open meta of a popup.
  *
  * @since 1.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param int $popup_id ID number of the popup to retrieve a click_open meta for
  * @param null $key
@@ -526,7 +526,7 @@ function popmake_get_popup_click_open( $popup_id = null, $key = null, $default =
  * Returns the auto open meta of a popup.
  *
  * @since 1.1.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param int $popup_id ID number of the popup to retrieve a auto open meta for
  *
@@ -540,7 +540,7 @@ function popmake_get_popup_auto_open( $popup_id = null, $key = null, $default = 
  * Returns the auto open meta of a popup.
  *
  * @since 1.1.8
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param int $popup_id ID number of the popup to retrieve a admin debug meta for
  * @param null $key
@@ -578,7 +578,7 @@ function popmake_popup_content_container( $content, $popup_id ) {
 }
 
 /**
- * @deprecated 1.4.0 use PUM_Popup get_close_text method.
+ * @deprecated 1.4 use PUM_Popup get_close_text method.
  *
  * @param $text
  * @param $popup_id

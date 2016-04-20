@@ -34,7 +34,7 @@ function pum_deprecated_v4_initialize() {
 
         /**
          * Popup Content Filtering
-         * @deprecated 1.4.0 hooks & filters
+         * @deprecated 1.4 hooks & filters
          */
         add_filter( 'the_popup_content', array( $GLOBALS['wp_embed'], 'run_shortcode' ), 8 );
         add_filter( 'the_popup_content', array( $GLOBALS['wp_embed'], 'autoembed' ), 8 );
@@ -64,7 +64,7 @@ function pum_deprecated_v4_remove_metaboxes() {
 #region Meta Boxes
 
 /**
- * @deprecated 1.4.0
+ * @deprecated 1.4
  */
 function popmake_deprecated_add_popup_meta_box() {
 
@@ -89,7 +89,7 @@ function popmake_deprecated_add_popup_meta_box() {
  * configuration metabox via the `popmake_popup_click_open_meta_box_fields` action.
  *
  * @since      1.1.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  * @return void
  */
 function popmake_render_popup_click_open_meta_box() {
@@ -111,7 +111,7 @@ function popmake_render_popup_click_open_meta_box() {
  * metabox via the `popmake_popup_targeting_condition_meta_box_fields` action.
  *
  * @since      1.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  * @return void
  */
 function popmake_render_popup_targeting_condition_meta_box() {
@@ -129,7 +129,7 @@ function popmake_render_popup_targeting_condition_meta_box() {
  * configuration metabox via the `popmake_popup_auto_open_meta_box_fields` action.
  *
  * @since      1.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  * @return void
  */
 function popmake_render_popup_auto_open_meta_box() {
@@ -151,7 +151,7 @@ function popmake_render_popup_auto_open_meta_box() {
  * configuration metabox via the `popmake_popup_admin_debug_meta_box_fields` action.
  *
  * @since      1.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  * @return void
  */
 function popmake_render_popup_admin_debug_meta_box() {
@@ -171,7 +171,7 @@ function popmake_render_popup_admin_debug_meta_box() {
 
 /**
  *
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param $fields
  *
@@ -203,7 +203,7 @@ function popmake_deprecated_popup_meta_fields( $fields ) {
 }
 
 /**
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param $groups
  *
@@ -218,7 +218,7 @@ function popmake_deprecated_popup_meta_field_groups( $groups ) {
 }
 
 /**
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @return array
  */
@@ -229,7 +229,7 @@ function popmake_popup_meta_field_group_click_open() {
 }
 
 /**
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param $fields
  *
@@ -248,7 +248,7 @@ function popmake_popup_meta_field_group_auto_open( $fields ) {
 }
 
 /**
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param $fields
  *
@@ -268,7 +268,7 @@ function popmake_popup_meta_field_group_admin_debug( $fields ) {
  * Save post meta when the save_post action is called
  *
  * @since      1.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param int   $post_id Popup (Post) ID
  * @param array $post    All the data of the the current post
@@ -319,7 +319,7 @@ function popmake_deprecated_popup_meta_box_save( $post_id, $post ) {
 
 /**
  * @since      1.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param string $field
  *
@@ -344,7 +344,7 @@ function popmake_metabox_save_popup_auto_open_cookie_key( $field = '' ) {
 /**
  * Renders popup click open fields
  *
- * @deprecated 1.4.0
+ * @deprecated 1.4
  * @since      1.0
  *
  * @param $popup_id
@@ -368,7 +368,7 @@ function popmake_popup_click_open_meta_box_field_extra_selectors( $popup_id ) { 
  * Renders popup auto open fields
  *
  * @since      1.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param $popup_id
  */
@@ -501,7 +501,7 @@ function popmake_popup_auto_open_meta_box_field_cookie_key( $popup_id ) { ?>
  * Renders popup Admin Debug Metabox fields
  *
  * @since      1.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param $popup_id
  */
@@ -520,7 +520,7 @@ function popmake_popup_admin_debug_meta_box_field_extra_selectors( $popup_id ) {
  * Renders popup load settings fields
  *
  * @since      1.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param $popup_id
  */
@@ -766,7 +766,7 @@ function popmake_popup_targeting_condition_meta_box_fields( $popup_id ) {
  * Displays a metabox for a post type menu item.
  *
  * @since      1.0.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param $post_type_name
  */
@@ -1037,7 +1037,7 @@ function popmake_post_type_item_metabox( $post_type_name ) {
  * Displays a metabox for a taxonomy menu item.
  *
  * @since      1.0.0
- * @deprecated 1.4.0
+ * @deprecated 1.4
  *
  * @param string $taxonomy The taxonomy object.
  */

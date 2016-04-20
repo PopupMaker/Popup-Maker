@@ -47,9 +47,9 @@ function popmake_load_site_scripts() {
         'default_theme' => (string) popmake_get_default_popup_theme(),
     ) ) );
 
-    // @deprecated 1.4.0 Use pum_vars instead.
+    // @deprecated 1.4 Use pum_vars instead.
 	wp_localize_script( 'popup-maker-site', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
-    // @deprecated 1.4.0 Use pum_vars instead.
+    // @deprecated 1.4 Use pum_vars instead.
 	wp_localize_script( 'popup-maker-site', 'popmake_default_theme', (string) popmake_get_default_popup_theme() );
 
 	if ( popmake_get_option( 'popmake_powered_by_opt_in', false ) ) {

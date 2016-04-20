@@ -10,7 +10,7 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 	/**
 	 * Class PUM_Popup
 	 *
-	 * @since 1.4.0
+	 * @since 1.4
 	 */
 	class PUM_Popup extends PUM_Post {
 

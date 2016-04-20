@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * This class defines all code necessary to run during the plugin's activation.
  *
- * @since      1.4.0
+ * @since      1.4
  * @package    PUM
  * @subpackage PUM/includes
  * @author     Daniel Iser <danieliser@wizardinternetsolutions.com>
@@ -22,7 +22,7 @@ class PUM_Activator {
 	 *
 	 * Long Description.
 	 *
-	 * @since    1.4.0
+	 * @since    1.4
 	 *
 	 * @param bool $network_wide
 	 */

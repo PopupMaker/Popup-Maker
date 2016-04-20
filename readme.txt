@@ -6,7 +6,7 @@ Donate link:
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.4
 Tested up to: 4.5
-Stable tag: 1.4.0
+Stable tag: 1.4
 License: GNU Version 3 or Any Later Version
 
 Easily create attractive popups with no coding skills. Customize nearly every aspect of your popups, from theme & position, to targeting & cookies.
@@ -115,7 +115,7 @@ There are several common causes for this which include:
 
 == Changelog ==
 
-= v1.4.0 - 4/20/2016 =
+= v1.4 - 4/20/2016 =
 * Feature: Added basic analytics. Tracks how many unique opens each popup has.
 * Feature: Added new Popup Maker shortcodes button to the editor with visual previews.
 * Feature: Added option to reset popup open counts demand.

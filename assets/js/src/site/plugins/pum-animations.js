@@ -1,6 +1,6 @@
 /**
  * Defines the core $.popmake animations.
- * Version 1.4.0
+ * Version 1.4
  */
 (function ($, document, undefined) {
     "use strict";

@@ -115,7 +115,7 @@ add_action( 'admin_menu', 'popmake_admin_submenu_pages' );
  * Submenu filter function. Tested with Wordpress 4.1.1
  * Sort and order submenu positions to match our custom order.
  *
- * @since 1.4.0
+ * @since 1.4
  */
 function pum_reorder_admin_submenu() {
 	global $submenu;
@@ -136,7 +136,7 @@ add_action( 'admin_head', 'pum_reorder_admin_submenu' );
  * and $last_pages to load in order at the end. All remaining menu items will
  * go out in generic order.
  *
- * @since 1.4.0
+ * @since 1.4
  *
  * @param $a
  * @param $b

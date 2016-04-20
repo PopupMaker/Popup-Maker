@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Checks whether function is disabled.
  *
- * @since 1.4.0
+ * @since 1.4
  *
  * @param string $function Name of the function.
  *

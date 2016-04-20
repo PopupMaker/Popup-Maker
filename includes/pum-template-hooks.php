@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @since 1.4.0 hooks & filters
+ * @since 1.4 hooks & filters
  */
 add_filter( 'pum_popup_content', array( $GLOBALS['wp_embed'], 'run_shortcode' ), 8 );
 add_filter( 'pum_popup_content', array( $GLOBALS['wp_embed'], 'autoembed' ), 8 );

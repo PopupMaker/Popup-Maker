@@ -49,7 +49,7 @@
 
 /**
  * Defines the core $.popmake function which will load the proper methods.
- * Version 1.4.0
+ * Version 1.4
  */
 var PUM;
 (function ($, document, undefined) {
@@ -630,7 +630,7 @@ var PUM;
 }(jQuery, document));
 /**
  * Defines the core $.popmake binds.
- * Version 1.4.0
+ * Version 1.4
  */
 var PUM_Accessibility;
 (function ($, document, undefined) {
@@ -771,7 +771,7 @@ var PUM_Accessibility;
 }(jQuery, document));
 /**
  * Defines the core pum analytics methods.
- * Version 1.4.0
+ * Version 1.4
  */
 
 var PUM_Analytics;
@@ -840,7 +840,7 @@ var PUM_Analytics;
 }(jQuery, document));
 /**
  * Defines the core $.popmake animations.
- * Version 1.4.0
+ * Version 1.4
  */
 (function ($, document, undefined) {
     "use strict";
@@ -993,7 +993,7 @@ var PUM_Analytics;
 }(jQuery, document));
 /**
  * Defines the core $.popmake binds.
- * Version 1.4.0
+ * Version 1.4
  */
 (function ($, document, undefined) {
     "use strict";
@@ -1074,7 +1074,7 @@ var PUM_Analytics;
 }(jQuery, document));
 /**
  * Defines the core $.popmake callbacks.
- * Version 1.4.0
+ * Version 1.4
  */
 (function ($, document, undefined) {
     "use strict";
@@ -1088,7 +1088,7 @@ var PUM_Analytics;
 }(jQuery, document));
 /**
  * Defines the core $.popmake.cookie functions.
- * Version 1.4.0
+ * Version 1.4
  *
  * Defines the pm_cookie & pm_remove_cookie global functions.
  */
@@ -1256,7 +1256,7 @@ var pm_cookie, pm_remove_cookie;
 }(jQuery, document));
 /**
  * Defines the core $.popmake defaults.
- * Version 1.4.0
+ * Version 1.4
  */
 (function ($, document, undefined) {
     "use strict";
@@ -1452,7 +1452,7 @@ var pm_cookie, pm_remove_cookie;
 }(jQuery, document));
 /**
  * Defines the core $.popmake.utilites methods.
- * Version 1.4.0
+ * Version 1.4
  */
 (function ($, document, undefined) {
     "use strict";
@@ -1736,7 +1736,7 @@ var pm_cookie, pm_remove_cookie;
 }(jQuery, document));
 /**
  * Initialize Popup Maker.
- * Version 1.4.0
+ * Version 1.4
  */
 (function ($, document, undefined) {
     "use strict";

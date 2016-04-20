@@ -8,7 +8,7 @@
  * @subpackage  PUM_Deprecated
  * @copyright   Copyright (c) 2016, Daniel Iser
  * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
- * @since       1.4.0
+ * @since       1.4
  */
 
 // Exit if accessed directly
@@ -40,11 +40,11 @@ add_action( 'init', 'pum_initialize_deprecated' );
  */
 function pum_deprecated_save_popup_action( $post_id, $post ) {
 	if ( has_action( 'popmake_save_popup' ) ) {
-		_deprecated_function( 'popmake_save_popup', '1.4.0', 'pum_save_popup' );
+		_deprecated_function( 'popmake_save_popup', '1.4', 'pum_save_popup' );
 		/**
 		 * Calls old save action.
 		 *
-		 * @deprecated 1.4.0
+		 * @deprecated 1.4
 		 *
 		 * @param int   $post_id $post Post ID.
 		 * @param array $post    Sanitized $_POST variable.
@@ -67,11 +67,11 @@ add_action( 'pum_save_popup', 'pum_deprecated_save_popup_action', 10, 2 );
  */
 function pum_deprecated_popup_is_loadable_filter( $loadable, $popup_id ) {
 	if ( has_filter( 'popmake_popup_is_loadable' ) ) {
-		_deprecated_function( 'popmake_popup_is_loadable', '1.4.0', 'pum_popup_is_loadable' );
+		_deprecated_function( 'popmake_popup_is_loadable', '1.4', 'pum_popup_is_loadable' );
 		/**
 		 * Calls old filter.
 		 *
-		 * @deprecated 1.4.0
+		 * @deprecated 1.4
 		 *
 		 * @param bool  $loadable True if popup should load.
 		 * @param array $popup_id Post ID.

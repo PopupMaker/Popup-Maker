@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Popmake_Fields
  *
- * @deprecated 1.4.0 Use PUM_Fields instead.
+ * @deprecated 1.4 Use PUM_Fields instead.
  */
 class Popmake_Fields {
 
@@ -90,7 +90,7 @@ class Popmake_Fields {
 	/**
 	 * This function should no longer be used.
 	 *
-	 * @deprecated 1.4.0 Replace with add_section()
+	 * @deprecated 1.4 Replace with add_section()
 	 *
 	 * @param $id
 	 * @param $title

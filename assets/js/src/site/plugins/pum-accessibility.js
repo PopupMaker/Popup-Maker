@@ -1,6 +1,6 @@
 /**
  * Defines the core $.popmake binds.
- * Version 1.4.0
+ * Version 1.4
  */
 var PUM_Accessibility;
 (function ($, document, undefined) {

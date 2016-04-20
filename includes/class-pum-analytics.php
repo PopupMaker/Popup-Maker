@@ -2,7 +2,7 @@
 /**
  * Analytics Initialization & Event Management
  *
- * @since       1.4.0
+ * @since       1.4
  * @package     PUM
  * @subpackage  PUM/includes
  * @author      Daniel Iser <danieliser@wizardinternetsolutions.com>

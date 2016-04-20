@@ -6,7 +6,7 @@
  * @subpackage  Classes/Admin/Popups/PUM_Popup_Analytics_Metabox
  * @copyright   Copyright (c) 2016, Daniel Iser
  * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
- * @since       1.4.0
+ * @since       1.4
  */
 
 // Exit if accessed directly
