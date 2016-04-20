@@ -88,11 +88,11 @@ class PUM_Freemius {
 		$this->fs()->add_action( 'after_account_connection', array( $this, 'account_connection' ), 10, 2 );
 		$this->fs()->add_action( 'after_account_plan_sync', array( $this, 'plan_sync' ), 10, 2 );
 
-	    /*
-	    $this->fs()->override_i18n( array(
-			'delete-account-confirm' => __( 'Deleting your account will stop sending usage statistics and disable usage of in dash support forms. This will not stop the plugin from functioning. Are you sure you want to do this?', 'popup-maker' )
-		) );
-	    */
+	    if ( function_exists( 'fs_override_i18n' ) ) {
+		    $this->fs()->override_i18n( array(
+			    'delete-account-confirm' => __( 'Deleting your account will stop sending usage statistics and disable usage of in dash support forms. This will not stop the plugin from functioning. Are you sure you want to do this?', 'popup-maker' )
+		    ) );
+	    }
 	}
 
 
