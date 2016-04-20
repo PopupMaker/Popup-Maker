@@ -10,7 +10,7 @@ var PopMakeAdmin, PUM_Admin;
         I10n = pum_admin.I10n,
         defaults = pum_admin.defaults;
 
-    PUM_Admin = {}
+    PUM_Admin = {};
 
     PopMakeAdmin = {
         init: function () {

@@ -166,7 +166,7 @@ var PUMCookies;
 
             e.preventDefault();
 
-            if (!(index >= 0)) {
+            if (!index || index < 0) {
                 values.index = $('#pum_popup_cookies_list tbody tr').length;
             }
 

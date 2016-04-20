@@ -9,7 +9,6 @@
 (function ($, document, undefined) {
 
     var root = this,
-        $ = root.jQuery || root.Zepto || root.ender,
         inputTypes = 'color,date,datetime,datetime-local,email,hidden,month,number,password,range,search,tel,text,time,url,week'.split(','),
         inputNodes = 'select,textarea'.split(','),
         rName = /\[([^\]]*)\]/g;
@@ -42,7 +41,7 @@
     }
 
     $.fn.serializeObject = function (options) {
-        options || (options = {});
+        $.extend({}, options);
 
         var values = {},
             settings = $.extend(true, {

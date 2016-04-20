@@ -59,7 +59,7 @@ var PUMTriggers;
         cookie_column_value: function (cookie_name) {
             var cookie_text = I10n.no_cookie;
 
-            if (typeof cookie_name === 'array') {
+            if (typeof cookie_name === 'object') {
                 cookie_text = cookie_name.join(', ');
             } else if (cookie_name !== null) {
                 cookie_text = cookie_name;
@@ -169,7 +169,7 @@ var PUMTriggers;
 
             e.preventDefault();
 
-            if (!(index >= 0)) {
+            if (!index || index < 0) {
                 values.index = $('#pum_popup_triggers_list tbody tr').length;
             }
 

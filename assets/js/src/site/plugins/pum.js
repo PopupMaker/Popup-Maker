@@ -40,7 +40,7 @@ var PUM;
                 var $popup = PUM.getPopup(this),
                     settings = $.extend(true, {}, $.fn.popmake.defaults, $popup.data('popmake'), options);
 
-                if (!(settings.theme_id > 0)) {
+                if (settings.theme_id <= 0) {
                     settings.theme_id = popmake_default_theme;
                 }
 
