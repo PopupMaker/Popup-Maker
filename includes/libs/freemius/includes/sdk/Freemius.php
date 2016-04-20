@@ -41,6 +41,10 @@
 
 	define( 'FS_API__PROTOCOL', version_compare( $curl_version['version'], '7.37', '>=' ) ? 'https' : 'http' );
 
+	if ( ! defined( 'FS_API__LOGGER_ON' ) ) {
+		define( 'FS_API__LOGGER_ON', false );
+	}
+
 	if ( ! defined( 'FS_API__ADDRESS' ) ) {
 		define( 'FS_API__ADDRESS', '://api.freemius.com' );
 	}
@@ -49,15 +53,7 @@
 	}
 
 	class Freemius_Api extends Freemius_Api_Base {
-		/**
-		 * Default options for curl.
-		 */
-		public static $CURL_OPTS = array(
-			CURLOPT_CONNECTTIMEOUT => 10,
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_TIMEOUT        => 60,
-			CURLOPT_USERAGENT      => FS_SDK__USER_AGENT,
-		);
+		private static $_logger = array();
 
 		/**
 		 * @param string      $pScope   'app', 'developer', 'user' or 'install'.
@@ -237,6 +233,46 @@
 		}
 
 		/**
+		 * @param resource $pCurlHandler
+		 * @param array    $pCurlOptions
+		 *
+		 * @return mixed
+		 */
+		private static function ExecuteRequest( &$pCurlHandler, &$pCurlOptions ) {
+			$start = microtime( true );
+
+			$result = curl_exec( $pCurlHandler );
+
+			if ( FS_API__LOGGER_ON ) {
+				$end = microtime( true );
+
+				$has_body = ( isset( $pCurlOptions[ CURLOPT_POST ] ) && 0 < $pCurlOptions[ CURLOPT_POST ] );
+
+				self::$_logger[] = array(
+					'id'        => count( self::$_logger ),
+					'start'     => $start,
+					'end'       => $end,
+					'total'     => ( $end - $start ),
+					'method'    => $pCurlOptions[ CURLOPT_CUSTOMREQUEST ],
+					'path'      => $pCurlOptions[ CURLOPT_URL ],
+					'body'      => $has_body ? $pCurlOptions[ CURLOPT_POSTFIELDS ] : null,
+					'result'    => $result,
+					'code'      => curl_getinfo( $pCurlHandler, CURLINFO_HTTP_CODE ),
+					'backtrace' => debug_backtrace(),
+				);
+			}
+
+			return $result;
+		}
+
+		/**
+		 * @return array
+		 */
+		static function GetLogger() {
+			return self::$_logger;
+		}
+
+		/**
 		 * @param string        $pCanonizedPath
 		 * @param string        $pMethod
 		 * @param array         $pParams
@@ -271,7 +307,12 @@
 				$pCurlHandler = curl_init();
 			}
 
-			$opts = self::$CURL_OPTS;
+			$opts = array(
+				CURLOPT_CONNECTTIMEOUT => 10,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_TIMEOUT        => 60,
+				CURLOPT_USERAGENT      => FS_SDK__USER_AGENT,
+			);
 
 			if ( ! isset( $opts[ CURLOPT_HTTPHEADER ] ) || ! is_array( $opts[ CURLOPT_HTTPHEADER ] ) ) {
 				$opts[ CURLOPT_HTTPHEADER ] = array();
@@ -308,7 +349,7 @@
 			}
 
 			curl_setopt_array( $pCurlHandler, $opts );
-			$result = curl_exec( $pCurlHandler );
+			$result = self::ExecuteRequest( $pCurlHandler, $opts );
 
 			/*if (curl_errno($ch) == 60) // CURLE_SSL_CACERT
 			{
@@ -329,9 +370,9 @@
 				if ( preg_match( $regex, curl_error( $pCurlHandler ), $matches ) ) {
 					if ( strlen( @inet_pton( $matches[1] ) ) === 16 ) {
 //						self::errorLog('Invalid IPv6 configuration on server, Please disable or get native IPv6 on your server.');
-						self::$CURL_OPTS[ CURLOPT_IPRESOLVE ] = CURL_IPRESOLVE_V4;
+						$opts[ CURLOPT_IPRESOLVE ] = CURL_IPRESOLVE_V4;
 						curl_setopt( $pCurlHandler, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-						$result = curl_exec( $pCurlHandler );
+						$result = self::ExecuteRequest( $pCurlHandler, $opts );
 					}
 				}
 			}

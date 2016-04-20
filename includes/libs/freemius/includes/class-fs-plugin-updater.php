@@ -27,6 +27,11 @@
 		 * @since 1.0.4
 		 */
 		private $_logger;
+		/**
+		 * @var bool
+		 * @since 1.1.7
+		 */
+		private $_update_checked = false;
 
 		function __construct( Freemius $freemius ) {
 			$this->_fs = $freemius;
@@ -162,13 +167,22 @@
 			$this->_logger->entrance();
 
 			if ( empty( $transient_data ) ||
-			     defined( 'WP_FS__UNINSTALL_MODE' )
+			     defined( 'WP_FS__UNINSTALL_MODE' ) ||
+			     /**
+			      * From some reason 'pre_set_site_transient_update_plugins' filter
+			      * is called four times in a row.
+			      *
+			      * @since 1.1.7.3
+			      */
+			     $this->_update_checked
 			) {
 				return $transient_data;
 			}
 
 			// Get plugin's newest update.
-			$new_version = $this->_fs->get_update();
+			$new_version = $this->_fs->get_update(false, false);
+
+			$this->_update_checked = true;
 
 			if ( is_object( $new_version ) ) {
 				$this->_logger->log( 'Found newer plugin version ' . $new_version->version );
@@ -194,11 +208,11 @@
 		 * @since  1.0.5
 		 *
 		 * @param string $action
-		 * @param array  $args
+		 * @param object $args
 		 *
 		 * @return bool|mixed
 		 */
-		private function _fetch_plugin_info_from_repository( $action, $args ) {
+		static function _fetch_plugin_info_from_repository( $action, $args ) {
 			$url = $http_url = 'http://api.wordpress.org/plugins/info/1.0/';
 			if ( $ssl = wp_http_supports( array( 'ssl' ) ) ) {
 				$url = set_url_scheme( $url, 'https' );
@@ -266,7 +280,7 @@
 			$plugin_in_repo = false;
 			if ( ! $is_addon ) {
 				// Try to fetch info from .org repository.
-				$data = $this->_fetch_plugin_info_from_repository( $action, $args );
+				$data = self::_fetch_plugin_info_from_repository( $action, $args );
 
 				$plugin_in_repo = ( false !== $data );
 			}

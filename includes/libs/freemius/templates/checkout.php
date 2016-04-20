@@ -29,13 +29,23 @@
 
 	// Get site context secure params.
 	if ( $fs->is_registered() ) {
+		$site = $fs->get_site();
+		$plugin_id = fs_request_get( 'plugin_id', $fs->get_id() );
+
+		if ($plugin_id != $fs->get_id()) {
+			if ( $fs->is_addon_activated( $plugin_id ) ) {
+				$fs_addon = Freemius::get_instance_by_id( $plugin_id );
+				$site = $fs_addon->get_site();
+			}
+		}
+
 		$context_params = array_merge( $context_params, FS_Security::instance()->get_context_params(
-			$fs->get_site(),
+			$site,
 			$timestamp,
 			'checkout'
 		) );
 	} else {
-		$current_user = wp_get_current_user();
+		$current_user = Freemius::_get_current_wp_user();
 
 		// Add site and user info to the request, this information
 		// is NOT being stored unless the user complete the purchase
@@ -68,13 +78,21 @@
 		}
 	}
 
-	if ( $fs->is_payments_sandbox() ) // Append plugin secure token for sandbox mode authentication.)
+	if ( $fs->is_payments_sandbox() )
 	{
+		// Append plugin secure token for sandbox mode authentication.
 		$context_params['sandbox'] = FS_Security::instance()->get_secure_token(
 			$fs->get_plugin(),
 			$timestamp,
 			'checkout'
 		);
+
+		/**
+		 * @since 1.1.7.3 Add security timestamp for sandbox even for anonymous user.
+		 */
+		if ( empty( $context_params['s_ctx_ts'] ) ) {
+			$context_params['s_ctx_ts'] = $timestamp;
+		}
 	}
 
 	$return_url = fs_nonce_url( $fs->_get_admin_page_url(
@@ -203,11 +221,7 @@
 						// and then click the purchase button, the context information
 						// of the user will be shared with Freemius in order to complete the
 						// purchase workflow and activate the license for the right user.
-						<?php $current_user = wp_get_current_user() ?>
 						FS.PostMessage.post('context', {
-//						user_firstname: '<?php //echo $current_user->user_firstname ?>//',
-//						user_lastname: '<?php //echo $current_user->user_lastname ?>//',
-//						user_email: '<?php //echo $current_user->user_email ?>//'
 							plugin_id        : '<?php echo $fs->get_id() ?>',
 							plugin_public_key: '<?php echo $fs->get_public_key() ?>',
 							plugin_version   : '<?php echo $fs->get_plugin_version() ?>',
