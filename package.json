@@ -2,10 +2,6 @@
   "name": "popup-maker",
   "version": "1.4.0",
   "description": "WordPress Popup Plugin",
-  "main": "gulpfile.js",
-  "directories": {
-    "test": "tests"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,32 +9,34 @@
     "type": "git",
     "url": "git+https://github.com/PopupMaker/Popup-Maker.git"
   },
-  "keywords": [
-    "wordpress",
-    "popup",
-    "modal",
-    "popups"
-  ],
-  "author": "Daniel Iser",
+  "author": "WP Popup Maker",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/PopupMaker/Popup-Maker/issues"
   },
   "homepage": "https://github.com/PopupMaker/Popup-Maker#readme",
-  "dependencies": {
-    "gulp": "^3.9.0",
+  "devDependencies": {
+    "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
-    "gulp-complexity": "^0.3.2",
-    "gulp-csscomb": "^3.0.6",
-    "gulp-csslint": "^0.2.0",
-    "gulp-csso": "^1.0.1",
-    "gulp-jscpd": "0.0.6",
+    "gulp-combine-mq": "^0.4.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-csso": "^1.1.0",
+    "gulp-filter": "^4.0.0",
+    "gulp-ignore": "^2.0.1",
     "gulp-jshint": "^2.0.0",
-    "gulp-load-plugins": "^1.1.0",
+    "gulp-livereload": "^3.8.1",
+    "gulp-load-plugins": "^1.2.0",
+    "gulp-notify": "^2.2.0",
+    "gulp-order": "^1.1.1",
+    "gulp-plumber": "^1.1.0",
     "gulp-rename": "^1.2.2",
-    "gulp-sass": "^2.1.1",
-    "gulp-uglify": "^1.5.1",
+    "gulp-sass": "^2.2.0",
+    "gulp-sort": "^2.0.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^1.5.3",
     "gulp-watch": "^4.3.5",
-    "jshint": "^2.8.0"
+    "gulp-wp-pot": "^1.1.1",
+    "gulp-zip": "^3.2.0",
+    "jshint": "^2.9.1"
   }
 }

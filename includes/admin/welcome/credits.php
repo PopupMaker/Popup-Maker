@@ -17,12 +17,18 @@ function popmake_credits_page() {
 
 	<p class="about-description"><?php _e( 'Popup Maker is created by expert WordPress developers who aim to provide the #1 popup marketing platform for converting more users with WordPress.', 'popup-maker' ); ?></p>
 	<ul class="wp-people-group">
-		<li class="wp-person">
-			<a href="https://profiles.wordpress.org/danieliser" title="View danieliser">
-				<img src="http://www.gravatar.com/avatar/<?php echo md5( "danieliser@wizardinternetsolutions.com" ); ?>" width="64" height="64" class="gravatar" alt="danieliser"/>
-			</a>
-			<a class="web" href="https://profiles.wordpress.org/danieliser" target="_blank">danieliser</a>
-		</li>
+        <li class="wp-person">
+            <a href="https://profiles.wordpress.org/danieliser" title="View danieliser">
+                <img src="http://www.gravatar.com/avatar/<?php echo md5( "danieliser@wizardinternetsolutions.com" ); ?>" width="64" height="64" class="gravatar" alt="danieliser"/>
+            </a>
+            <a class="web" href="https://profiles.wordpress.org/danieliser" target="_blank">danieliser</a>
+        </li>
+        <li class="wp-person">
+            <a href="https://profiles.wordpress.org/fpcorso" title="View danieliser">
+                <img src="http://www.gravatar.com/avatar/<?php echo md5( "frank@mylocalwebstop.com" ); ?>" width="64" height="64" class="gravatar" alt="fpcorso"/>
+            </a>
+            <a class="web" href="https://profiles.wordpress.org/fpcorso" target="_blank">fpcorso</a>
+        </li>
 	</ul>
 	</div><?php
 }

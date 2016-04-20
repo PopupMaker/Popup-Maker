@@ -14,6 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * @param $popup_id
+ *
+ * @return array|null|\WP_Post
+ */
 function popmake_get_popup( $popup_id ) {
 	if ( ! $popup_id ) {
 		$popup_id = popmake_get_the_popup_ID();
@@ -22,20 +27,36 @@ function popmake_get_popup( $popup_id ) {
 	return get_post( $popup_id );
 }
 
+/**
+ * @return int
+ */
 function popmake_get_the_popup_ID() {
 	global $popup;
 
 	return $popup ? $popup->ID : 0;
 }
 
+/**
+ *
+ */
 function popmake_the_popup_ID() {
 	echo popmake_get_the_popup_ID();
 }
 
+/**
+ * @return int
+ */
 function get_the_popup_ID() {
 	return popmake_get_the_popup_ID();
 }
 
+/**
+ * @deprecated 1.4.0 Use the PUM_Popup class instead.
+ *
+ * @param int $popup_id
+ *
+ * @return mixed|void
+ */
 function popmake_get_the_popup_theme( $popup_id = null ) {
 	if ( ! $popup_id ) {
 		$popup_id = popmake_get_the_popup_ID();
@@ -48,10 +69,21 @@ function popmake_get_the_popup_theme( $popup_id = null ) {
 	return apply_filters( 'popmake_get_the_popup_theme', $theme, $popup_id );
 }
 
+/**
+ * @deprecated 1.4.0 Use pum_popup_theme_id instead.
+ * @param int $popup_id
+ */
 function popmake_the_popup_theme( $popup_id = null ) {
 	echo popmake_get_the_popup_theme( $popup_id );
 }
 
+/**
+ * @deprecated 1.4.0 Use the PUM_Popup class instead.
+ *
+ * @param int $popup_id
+ *
+ * @return string
+ */
 function popmake_get_the_popup_classes( $popup_id = null ) {
 	if ( ! $popup_id ) {
 		$popup_id = popmake_get_the_popup_ID();
@@ -64,10 +96,23 @@ function popmake_get_the_popup_classes( $popup_id = null ) {
 	), $popup_id ) );
 }
 
+/**
+ * @deprecated 1.4.0 Use pum_popup_classes instead.
+ * @param int $popup_id
+ */
 function popmake_the_popup_classes( $popup_id = null ) {
 	esc_attr_e( popmake_get_the_popup_classes( $popup_id ) );
 }
 
+
+/**
+ * @deprecated 1.4.0 Built into the PUM_Popup class instead.
+ *
+ * @param array $classes
+ * @param int   $popup_id
+ *
+ * @return array
+ */
 function popmake_add_popup_size_classes( $classes, $popup_id ) {
 	$popup_size = popmake_get_popup_display( $popup_id, 'size' );
 	if ( in_array( $popup_size, array( 'nano', 'micro', 'tiny', 'small', 'medium', 'normal', 'large', 'xlarge' ) ) ) {
@@ -84,8 +129,13 @@ function popmake_add_popup_size_classes( $classes, $popup_id ) {
 	return $classes;
 }
 
-add_filter( 'popmake_get_the_popup_classes', 'popmake_add_popup_size_classes', 5, 2 );
-
+/**
+ * @deprecated 1.4.0 Use the PUM_Popup class instead.
+ *
+ * @param int $popup_id
+ *
+ * @return array
+ */
 function popmake_get_the_popup_data_attr( $popup_id = null ) {
 	if ( ! $popup_id ) {
 		$popup_id = popmake_get_the_popup_ID();
@@ -95,6 +145,8 @@ function popmake_get_the_popup_data_attr( $popup_id = null ) {
 		'id'       => $popup_id,
 		'slug'     => $post->post_name,
 		'theme_id' => popmake_get_the_popup_theme( $popup_id ),
+		'cookies'  => pum_get_popup_cookies( $popup_id ),
+		'triggers' => pum_get_popup_triggers( $popup_id ),
 		'meta'     => array(
 			'display'    => popmake_get_popup_display( $popup_id ),
 			'close'      => popmake_get_popup_close( $popup_id ),
@@ -111,6 +163,11 @@ function popmake_get_the_popup_data_attr( $popup_id = null ) {
 	return apply_filters( 'popmake_get_the_popup_data_attr', $data_attr, $popup_id );
 }
 
+/**
+ * @param $data_attr
+ *
+ * @return mixed
+ */
 function popmake_clean_popup_data_attr( $data_attr ) {
 
 	$display = $data_attr['meta']['display'];
@@ -173,13 +230,29 @@ function popmake_clean_popup_data_attr( $data_attr ) {
 	return $data_attr;
 }
 
-add_filter( 'popmake_get_the_popup_data_attr', 'popmake_clean_popup_data_attr' );
+//add_filter( 'popmake_get_the_popup_data_attr', 'popmake_clean_popup_data_attr' );
 
+/**
+ * @deprecated 1.4.0 Use pum_popup_data_attr instead.
+ * @param int $popup_id
+ */
 function popmake_the_popup_data_attr( $popup_id = null ) {
 	echo 'data-popmake="' . esc_attr( json_encode( popmake_get_the_popup_data_attr( $popup_id ) ) ) . '"';
 }
 
-
+/**
+ * Returns the meta group of a popup or value if key is set.
+ *
+ * @since 1.3.0
+ * @deprecated 1.4.0
+ *
+ * @param $group
+ * @param int $popup_id ID number of the popup to retrieve a overlay meta for
+ * @param null $key
+ * @param null $default
+ *
+ * @return mixed array|string
+ */
 function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default = null ) {
 	if ( ! $popup_id ) {
 		$popup_id = popmake_get_the_popup_ID();
@@ -217,11 +290,11 @@ function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default
 	}
 }
 
-
 /**
  * Returns the meta group of a popup or value if key is set.
  *
  * @since 1.0
+ * @deprecated 1.3.0
  *
  * @param int $popup_id ID number of the popup to retrieve a overlay meta for
  *
@@ -268,11 +341,11 @@ function popmake_get_popup_meta_group( $group, $popup_id = null, $key = null, $d
 	}
 }
 
-
 /**
  * Returns the load settings meta of a popup.
  *
  * @since 1.0
+ * @deprecated 1.4.0
  *
  * @param int $popup_id ID number of the popup to retrieve a overlay meta for
  *
@@ -282,6 +355,16 @@ function popmake_get_popup_targeting_condition( $popup_id = null, $key = null ) 
 	return popmake_get_popup_meta_group( 'targeting_condition', $popup_id, $key );
 }
 
+/**
+ *
+ * @since 1.0
+ * @deprecated 1.4.0
+ *
+ * @param      $popup_id
+ * @param null $post_type
+ *
+ * @return array
+ */
 function popmake_get_popup_targeting_condition_includes( $popup_id, $post_type = null ) {
 	$post_meta = get_post_custom_keys( $popup_id );
 	$includes  = array();
@@ -310,6 +393,12 @@ function popmake_get_popup_targeting_condition_includes( $popup_id, $post_type =
 	return $includes;
 }
 
+/**
+ * @param      $popup_id
+ * @param null $post_type
+ *
+ * @return array
+ */
 function popmake_get_popup_targeting_condition_excludes( $popup_id, $post_type = null ) {
 	$post_meta = get_post_custom_keys( $popup_id );
 	$excludes  = array();
@@ -338,11 +427,11 @@ function popmake_get_popup_targeting_condition_excludes( $popup_id, $post_type =
 	return $excludes;
 }
 
-
 /**
  * Returns the title of a popup.
  *
  * @since 1.0
+ * @deprecated 1.4.0 Use the PUM_Popup class instead.
  *
  * @param int $popup_id ID number of the popup to retrieve a title for
  *
@@ -357,12 +446,21 @@ function popmake_get_the_popup_title( $popup_id = null ) {
 	return apply_filters( 'popmake_get_the_popup_title', $title, $popup_id );
 }
 
-
+/**
+ * @deprecated 1.4.0 Use pum_popup_title instead.
+ * @param int $popup_id
+ */
 function popmake_the_popup_title( $popup_id = null ) {
 	echo esc_html( popmake_get_the_popup_title( $popup_id ) );
 }
 
-
+/**
+ * @deprecated 1.4.0 Use the PUM_Popup class instead.
+ *
+ * @param int $popup_id
+ *
+ * @return mixed|void
+ */
 function popmake_get_the_popup_content( $popup_id = null ) {
 	if ( ! $popup_id ) {
 		$popup_id = popmake_get_the_popup_ID();
@@ -372,29 +470,19 @@ function popmake_get_the_popup_content( $popup_id = null ) {
 	return apply_filters( 'the_popup_content', $popup->post_content, $popup_id );
 }
 
-add_filter( 'the_popup_content', array( $GLOBALS['wp_embed'], 'run_shortcode' ), 8 );
-add_filter( 'the_popup_content', array( $GLOBALS['wp_embed'], 'autoembed' ), 8 );
-add_filter( 'the_popup_content', 'wptexturize', 10 );
-add_filter( 'the_popup_content', 'convert_smilies', 10 );
-add_filter( 'the_popup_content', 'convert_chars', 10 );
-add_filter( 'the_popup_content', 'wpautop', 10 );
-add_filter( 'the_popup_content', 'shortcode_unautop', 10 );
-add_filter( 'the_popup_content', 'prepend_attachment', 10 );
-add_filter( 'the_popup_content', 'force_balance_tags', 10 );
-add_filter( 'the_popup_content', 'do_shortcode', 11 );
-add_filter( 'the_popup_content', 'capital_P_dangit', 11 );
-add_filter( 'the_popup_content', 'popmake_popup_content_container', 10000, 2 );
-
-
+/**
+ * @deprecated 1.4.0 Use pum_popup_content instead.
+ * @param int $popup_id
+ */
 function popmake_the_popup_content( $popup_id = null ) {
 	echo popmake_get_the_popup_content( $popup_id );
 }
-
 
 /**
  * Returns the display meta of a popup.
  *
  * @since 1.0
+ * @deprecated 1.4.0
  *
  * @param int $popup_id ID number of the popup to retrieve a display meta for
  *
@@ -404,11 +492,11 @@ function popmake_get_popup_display( $popup_id = null, $key = null, $default = nu
 	return popmake_get_popup_meta( 'display', $popup_id, $key, $default );
 }
 
-
 /**
  * Returns the close meta of a popup.
  *
  * @since 1.0
+ * @deprecated 1.4.0 Use PUM_Popup class instead
  *
  * @param int $popup_id ID number of the popup to retrieve a close meta for
  *
@@ -418,13 +506,15 @@ function popmake_get_popup_close( $popup_id = null, $key = null, $default = null
 	return popmake_get_popup_meta( 'close', $popup_id, $key, $default );
 }
 
-
 /**
  * Returns the click_open meta of a popup.
  *
  * @since 1.0
+ * @deprecated 1.4.0
  *
  * @param int $popup_id ID number of the popup to retrieve a click_open meta for
+ * @param null $key
+ * @param null $default
  *
  * @return mixed array|string of the popup click_open meta
  */
@@ -432,11 +522,11 @@ function popmake_get_popup_click_open( $popup_id = null, $key = null, $default =
 	return popmake_get_popup_meta( 'click_open', $popup_id, $key, $default );
 }
 
-
 /**
  * Returns the auto open meta of a popup.
  *
  * @since 1.1.0
+ * @deprecated 1.4.0
  *
  * @param int $popup_id ID number of the popup to retrieve a auto open meta for
  *
@@ -446,13 +536,15 @@ function popmake_get_popup_auto_open( $popup_id = null, $key = null, $default = 
 	return popmake_get_popup_meta( 'auto_open', $popup_id, $key, $default );
 }
 
-
 /**
  * Returns the auto open meta of a popup.
  *
  * @since 1.1.8
+ * @deprecated 1.4.0
  *
  * @param int $popup_id ID number of the popup to retrieve a admin debug meta for
+ * @param null $key
+ * @param null $default
  *
  * @return mixed array|string of the popup admin debug meta
  */
@@ -464,6 +556,14 @@ function popmake_get_popup_admin_debug( $popup_id = null, $key = null, $default 
 	return popmake_get_popup_meta( 'admin_debug', $popup_id, $key, $default );
 }
 
+/**
+ * todo replace this with customizable templates.
+ *
+ * @param $content
+ * @param $popup_id
+ *
+ * @return string
+ */
 function popmake_popup_content_container( $content, $popup_id ) {
 	$popup = popmake_get_popup( $popup_id );
 	if ( $popup->post_type == 'popup' ) {
@@ -477,6 +577,14 @@ function popmake_popup_content_container( $content, $popup_id ) {
 	return $content;
 }
 
+/**
+ * @deprecated 1.4.0 use PUM_Popup get_close_text method.
+ *
+ * @param $text
+ * @param $popup_id
+ *
+ * @return mixed
+ */
 function popmake_popup_close_text( $text, $popup_id ) {
 	$theme_text = get_post_meta( popmake_get_the_popup_theme( $popup_id ), 'popup_theme_close_text', true );
 	if ( $theme_text && $theme_text != '' ) {
@@ -490,10 +598,14 @@ function popmake_popup_close_text( $text, $popup_id ) {
 
 	return $text;
 }
-
 add_filter( 'popmake_popup_default_close_text', 'popmake_popup_close_text', 10, 2 );
 
 
+/**
+ * @param $popup_id
+ *
+ * @return mixed|void
+ */
 function popmake_popup_is_loadable( $popup_id ) {
 	global $post, $wp_query;
 
@@ -693,6 +805,9 @@ function popmake_popup_is_loadable( $popup_id ) {
 }
 
 
+/**
+ * @return \WP_Query
+ */
 function get_all_popups() {
 	$query = new WP_Query( array(
 		'post_type'      => 'popup',

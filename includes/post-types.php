@@ -165,9 +165,15 @@ add_filter( 'enter_title_here', 'popmake_change_default_title' );
  * Registers the custom taxonomies for the downloads custom post type
  *
  * @since 1.0
- * @return void
+ *
+ * @param bool $force_load
  */
-function popmake_setup_taxonomies() {
+function popmake_setup_taxonomies( $force_load = false ) {
+	return;
+
+	if ( ! $force_load && popmake_get_option( 'disable_popup_category_tag', false ) ) {
+		return;
+	}
 
 	/** Categories */
 	$category_labels = array(

@@ -109,7 +109,7 @@ function popmake_about_page() {
 	<div class="return-to-dashboard">
 		<a href="<?php echo esc_url( admin_url( 'post.php?post=' . popmake_get_default_popup_theme() . '&action=edit' ) ); ?>"><?php _e( 'Customize Your First Theme', 'popup-maker' ); ?></a> &middot;
 		<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=popup' ) ); ?>"><?php _e( 'Create a Modal', 'popup-maker' ); ?></a> &middot;
-		<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'popmake-changelog' ), 'index.php' ) ) ); ?>"><?php _e( 'View the Full Changelog', 'popup-maker' ); ?></a>
+		<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'pum-changelog' ), 'index.php' ) ) ); ?>"><?php _e( 'View the Full Changelog', 'popup-maker' ); ?></a>
 	</div>
 	</div><?php
 }

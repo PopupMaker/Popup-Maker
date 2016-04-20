@@ -150,7 +150,7 @@ function popmake_tools_sysinfo_get() {
 	global $wpdb;
 
 	if( !class_exists( 'Browser' ) )
-		require_once POPMAKE_DIR . 'includes/libraries/browser.php';
+		require_once POPMAKE_DIR . 'includes/libs/browser.php';
 
 	$browser = new Browser();
 

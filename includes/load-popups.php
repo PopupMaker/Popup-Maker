@@ -20,10 +20,10 @@ function popmake_init_popups() {
 	}
 }
 
-add_action( 'plugins_loaded', 'popmake_init_popups' );
+add_action( 'init', 'popmake_init_popups' );
 
 
-function popmake_load_popup( int $id ) {
+function popmake_load_popup( $id ) {
 	global $popmake_loaded_popups, $popmake_loaded_popup_ids, $popmake_enqueued_popups;
 	if ( did_action( 'wp_head' ) && ! in_array( $id, $popmake_loaded_popup_ids ) ) {
 		$args1 = array(
@@ -47,7 +47,7 @@ function popmake_load_popup( int $id ) {
 }
 
 
-function popmake_enqueue_popup( int $id ) {
+function popmake_enqueue_popup( $id ) {
 	return popmake_load_popup( $id );
 }
 
@@ -70,7 +70,7 @@ function popmake_preload_popups() {
 
 	if ( $query->have_posts() ) {
 		while ( $query->have_posts() ) : $query->next_post();
-			if ( popmake_popup_is_loadable( $query->post->ID ) ) {
+			if ( pum_is_popup_loadable( $query->post->ID ) ) {
 				$popmake_loaded_popup_ids[] = $query->post->ID;
 				do_action( 'popmake_preload_popup', $query->post->ID );
 				$popmake_loaded_popups->posts[] = $query->post;

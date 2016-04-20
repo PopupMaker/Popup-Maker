@@ -1,0 +1,20 @@
+.pum-field-checkbox {
+  position: relative;
+
+  label {
+
+    margin-left: 1.5em;
+
+    &.pum-desc {
+      display: inline;
+      font-weight:inherit;
+      font-size:inherit;
+      margin: 0 0 1em;
+    }
+  }
+
+  input[type="checkbox"] {
+    position: absolute;
+    top: .25em;
+  }
+}

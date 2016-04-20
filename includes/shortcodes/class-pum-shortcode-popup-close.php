@@ -1,0 +1,100 @@
+<?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Class PUM_Shortcode_Popup_Close
+ *
+ * Registers the popup_close shortcode.
+ */
+class PUM_Shortcode_Popup_Close extends PUM_Shortcode {
+
+	public $has_content = true;
+
+	/**
+	 * The shortcode tag.
+	 */
+	public function tag() {
+		return 'popup_close';
+	}
+
+	public function label() {
+		return __( 'Popup Close Button', 'popup-maker' );
+	}
+
+	public function description() {
+		return __( 'Make text or html a close trigger for your popup.', 'popup-maker' );
+	}
+
+	public function inner_content_labels() {
+		return array(
+			'label' => __( 'Content', 'popup-maker' ),
+			'description' => __( 'Can contain other shortcodes, images, text or html content.')
+		);
+	}
+
+	public function post_types() {
+		return array( 'popup' );
+	}
+
+	public function fields() {
+		return array(
+			'options' => array(
+				'tag'   => array(
+					'label'       => __( 'HTML Tag', 'popup-maker' ),
+					'placeholder' => __( 'HTML Tags: button, span etc.', 'popup-maker' ),
+					'desc'        => __( 'The HTML tag used to generate the trigger and wrap your text.', 'popup-maker' ),
+					'type'        => 'text',
+					'std'         => 'span',
+					'priority'    => 10,
+					'required'    => true,
+				),
+				'classes' => array(
+					'label'       => __( 'CSS Class', 'popup-maker' ),
+					'placeholder' => __( 'CSS Class', 'popup-maker' ),
+					'type'        => 'text',
+					'desc'        => __( 'Add additional classes for styling.', 'popup-maker' ),
+					'priority'    => 15,
+				),
+			)
+		);
+	}
+
+	/**
+	 * Shortcode handler
+	 *
+	 * @param  array  $atts    shortcode attributes
+	 * @param  string $content shortcode content
+	 *
+	 * @return string
+	 */
+	public function handler( $atts, $content = null ) {
+		$atts = shortcode_atts( array(
+			'tag'   => 'span',
+			'class' => '',
+			'classes' => '',
+		), $atts, 'popup_close' );
+
+		if ( ! empty( $atts['class'] ) ) {
+			$atts['classes'] .= ' ' . $atts['class'];
+			unset( $atts['class'] );
+		}
+
+		$return = '<' . $atts['tag'] . ' class="pum-close popmake-close' . ' ' . $atts['classes'] . '">';
+		$return .= do_shortcode( $content );
+		$return .= '</' . $atts['tag'] . '>';
+
+		return $return;
+	}
+
+	public function _template() { ?>
+		<script type="text/template" id="tmpl-pum-shortcode-view-popup_close">
+			<<%= tag %> class="pum-close popmake-close <% if (typeof classes !== 'undefined') print(classes); %>"><%= _inner_content %></<%= tag %>>
+		</script><?php
+	}
+
+}
+
+new PUM_Shortcode_Popup_Close();

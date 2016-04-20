@@ -36,6 +36,15 @@ if ( ! function_exists( 'get_called_class' ) ) {
 	}
 }
 
+if ( ! function_exists( 'get_term_name' ) ) {
+	function get_term_name( $term_id, $taxonomy ) {
+		$term = get_term_by( 'id', absint( $term_id ), $taxonomy );
+
+		return $term->name;
+	}
+}
+
+
 /**
  * Get User IP
  *

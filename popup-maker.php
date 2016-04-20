@@ -1,18 +1,18 @@
 <?php
 /**
  * Plugin Name: Popup Maker
- * Plugin URI: https://wppopupmaker.com
+ * Plugin URI: https://wppopupmaker.com/
  * Description: Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
- * Author: Daniel Iser
- * Version: 1.3.9
- * Author URI: https://wppopupmaker.com
+ * Author: WP Popup Maker
+ * Version: 1.4.0
+ * Author URI: https://wppopupmaker.com/
  * Text Domain: popup-maker
  *
- * @package        POPMAKE
+ * @package     POPMAKE
  * @category    Core
- * @author        Daniel Iser
- * @copyright    Copyright (c) 2014, Wizard Internet Solutions
- * @since        1.0
+ * @author      Daniel Iser
+ * @copyright   Copyright (c) 2016, Wizard Internet Solutions
+ * @since       1.0
  */
 
 // Exit if accessed directly
@@ -77,7 +77,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				self::$instance->includes();
 				self::$instance->load_textdomain();
 
-				register_activation_hook( __FILE__, 'popmake_install' );
+
 			}
 
 			return self::$instance;
@@ -106,7 +106,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 		 * @return void
 		 */
 		public function __wakeup() {
-			// Unserializing instances of the class is forbidden
+			// Unserializing instances of the class is forbiddePOPMAKE_DB_VERSIONn
 			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'popup-maker' ), '3' );
 		}
 
@@ -144,11 +144,11 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 
 			if ( ! defined( 'POPMAKE_VERSION' ) ) {
-				define( 'POPMAKE_VERSION', '1.3.9' );
+				define( 'POPMAKE_VERSION', '1.4.0' );
 			}
 
 			if ( ! defined( 'POPMAKE_DB_VERSION' ) ) {
-				define( 'POPMAKE_DB_VERSION', '1.0' );
+				define( 'POPMAKE_DB_VERSION', '6' );
 			}
 
 			if ( ! defined( 'POPMAKE_API_URL' ) ) {
@@ -170,10 +170,8 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/admin/settings/register-settings.php';
 			$popmake_options = popmake_get_settings();
 
-
 			require_once POPMAKE_DIR . 'includes/actions.php';
 			require_once POPMAKE_DIR . 'includes/post-types.php';
-			require_once POPMAKE_DIR . 'includes/class-popmake-fields.php';
 			require_once POPMAKE_DIR . 'includes/class-popmake-cron.php';
 			require_once POPMAKE_DIR . 'includes/scripts.php';
 			require_once POPMAKE_DIR . 'includes/shortcodes.php';
@@ -182,7 +180,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/general-functions.php';
 			require_once POPMAKE_DIR . 'includes/extensions-functions.php';
 			require_once POPMAKE_DIR . 'includes/input-options.php';
-			require_once POPMAKE_DIR . 'includes/popup-functions.php';
 			require_once POPMAKE_DIR . 'includes/theme-functions.php';
 			require_once POPMAKE_DIR . 'includes/misc-functions.php';
 			require_once POPMAKE_DIR . 'includes/css-functions.php';
@@ -196,6 +193,95 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/load-popups.php';
 			require_once POPMAKE_DIR . 'includes/license-handler.php';
 
+			// Phasing Out
+			require_once POPMAKE_DIR . 'includes/class-popmake-fields.php';
+			require_once POPMAKE_DIR . 'includes/class-popmake-popup-fields.php';
+			require_once POPMAKE_DIR . 'includes/class-popmake-popup-theme-fields.php';
+			require_once POPMAKE_DIR . 'includes/popup-functions.php';
+
+
+
+
+
+
+			/**
+			 * v1.4 Additions
+			 */
+			require_once POPMAKE_DIR . 'includes/class-pum.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-post.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-popup.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-popup-query.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-fields.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-form.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-previews.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-ajax.php';
+
+			// Functions
+			require_once POPMAKE_DIR . 'includes/pum-popup-functions.php';
+			require_once POPMAKE_DIR . 'includes/pum-template-functions.php';
+			require_once POPMAKE_DIR . 'includes/pum-general-functions.php';
+			require_once POPMAKE_DIR . 'includes/pum-misc-functions.php';
+			require_once POPMAKE_DIR . 'includes/pum-template-hooks.php';
+			require_once POPMAKE_DIR . 'includes/pum-ajax-functions.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-helpers.php';
+
+
+			// Triggers
+			require_once POPMAKE_DIR . 'includes/class-pum-trigger.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-triggers.php';
+			require_once POPMAKE_DIR . 'includes/pum-trigger-functions.php';
+			if ( is_admin() ) {
+				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-triggers.php';
+			}
+
+			// Cookies
+			require_once POPMAKE_DIR . 'includes/class-pum-cookie.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-cookies.php';
+			require_once POPMAKE_DIR . 'includes/pum-cookie-functions.php';
+			if ( is_admin() ) {
+				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-cookies.php';
+			}
+
+			// Conditions
+			require_once POPMAKE_DIR . 'includes/class-pum-condition.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-conditions.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-condition-callbacks.php';
+			require_once POPMAKE_DIR . 'includes/pum-condition-functions.php';
+			if ( is_admin() ) {
+				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-conditions.php';
+			}
+
+			// Analytics
+			require_once POPMAKE_DIR . 'includes/class-pum-analytics.php';
+			if ( is_admin() ) {
+				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-analytics.php';
+			}
+
+			// Shortcodes
+			require_once POPMAKE_DIR . 'includes/class-pum-shortcode.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-shortcodes.php';
+			require_once POPMAKE_DIR . 'includes/shortcodes/class-pum-shortcode-popup.php';
+			require_once POPMAKE_DIR . 'includes/shortcodes/class-pum-shortcode-popup-trigger.php';
+			require_once POPMAKE_DIR . 'includes/shortcodes/class-pum-shortcode-popup-close.php';
+			if ( is_admin() ) {
+				require_once POPMAKE_DIR . 'includes/admin/shortcode-ui/class-pum-admin-shortcode-ui.php';
+			}
+
+			// Upgrades
+			if ( is_admin() ) {
+				require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-upgrades.php';
+			}
+
+			// Deprecated Code
+			require_once POPMAKE_DIR . 'includes/pum-deprecated.php';
+
+			// Helper Classes
+			if ( is_admin() ) {
+				require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-helpers.php';
+			}
+
+
+
 			if ( is_admin() ) {
 				require_once POPMAKE_DIR . 'includes/admin/welcome.php';
 				require_once POPMAKE_DIR . 'includes/admin/welcome/about.php';
@@ -206,16 +292,15 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/admin-functions.php';
 				require_once POPMAKE_DIR . 'includes/admin/admin-pages.php';
 				require_once POPMAKE_DIR . 'includes/admin/post-editor.php';
+
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/dashboard-columns.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-close-fields.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-display-fields.php';
-				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-click-open-fields.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-themes-fields.php';
-				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-targeting-condition-fields.php';
-				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-auto-open-popups-fields.php';
-				require_once POPMAKE_DIR . 'includes/admin/popups/metabox-admin-debug-fields.php';
-				require_once POPMAKE_DIR . 'includes/admin/popups/post-type-item-metaboxes.php';
+
+				// Deprecated Popup Metaboxes.
+
 				require_once POPMAKE_DIR . 'includes/admin/themes/metabox.php';
 				require_once POPMAKE_DIR . 'includes/admin/themes/metabox-close-fields.php';
 				require_once POPMAKE_DIR . 'includes/admin/themes/metabox-container-fields.php';
@@ -223,24 +308,26 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/themes/metabox-overlay-fields.php';
 				require_once POPMAKE_DIR . 'includes/admin/themes/metabox-title-fields.php';
 				require_once POPMAKE_DIR . 'includes/admin/themes/metabox-preview.php';
+
 				require_once POPMAKE_DIR . 'includes/admin/settings/settings-page.php';
+
 				require_once POPMAKE_DIR . 'includes/admin/tools/tools-page.php';
+
 				require_once POPMAKE_DIR . 'includes/admin/extensions/extensions-page.php';
+
 				require_once POPMAKE_DIR . 'includes/admin/help/help-page.php';
+
 				require_once POPMAKE_DIR . 'includes/admin/metabox-support.php';
-				require_once POPMAKE_DIR . 'includes/admin/metabox-share.php';
-				require_once POPMAKE_DIR . 'includes/admin/tracking.php';
 
-				require_once POPMAKE_DIR . 'includes/admin/upgrades/v1_3.php';
 			}
 
-			if ( class_exists( 'WooCommerce' ) ) {
-				require_once POPMAKE_DIR . 'includes/integrations/woocommerce.php';
-			}
+			require_once POPMAKE_DIR . 'includes/integrations/class-popmake-woocommerce-integration.php';
+			require_once POPMAKE_DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
 
 			if ( defined( 'WPB_VC_VERSION' ) || defined( 'FL_BUILDER_VERSION' ) ) {
 				require_once POPMAKE_DIR . 'includes/integrations/visual-composer.php';
 			}
+			require_once POPMAKE_DIR . 'includes/pum-install-functions.php';
 			require_once POPMAKE_DIR . 'includes/install.php';
 		}
 
@@ -276,27 +363,40 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 		}
 
-		public function process_upgrades() {
-			if ( ! is_admin() ) {
-				return;
-			}
-
-			// Add Upgraded From Option
-			$current_version = get_option( 'popmake_version' );
-			if ( $current_version ) {
-				update_option( 'popmake_version_upgraded_from', $current_version );
-			}
-
-			if ( $current_version != POPMAKE_VERSION ) {
-				do_action( "popmake_process_upgrade", POPMAKE_VERSION, $current_version );
-			}
-
-			update_option( 'popmake_version', POPMAKE_VERSION );
-		}
 
 	}
 
 endif; // End if class_exists check
+
+#region Freemius
+
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-pum-freemius.php';
+pum_fs();
+
+#endregion Freemius
+
+/**
+ * The code that runs during plugin activation.
+ * This action is documented in includes/class-pum-activator.php
+ */
+function pum_activate( $network_wide = false ) {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-pum-activator.php';
+	PUM_Activator::activate( $network_wide );
+}
+
+register_activation_hook( __FILE__, 'pum_activate' );
+
+
+/**
+ * The code that runs during plugin deactivation.
+ * This action is documented in includes/class-pum-deactivator.php
+ */
+function pum_deactivate() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-pum-deactivator.php';
+	PUM_Deactivator::deactivate();
+}
+
+register_deactivation_hook( __FILE__, 'pum_deactivate' );
 
 
 /**
@@ -315,18 +415,16 @@ endif; // End if class_exists check
 function PopMake() {
 	return Popup_Maker::instance();
 }
-
+PopMake();
 
 function popmake_initialize() {
 
 	// Disable Unlimited Themes extension if active.
 	remove_action( 'popmake_initialize', 'popmake_ut_initialize' );
 
-	// Get Popup Maker Running
-	PopMake();
+	// Initialize old PUM extensions
+	do_action( 'pum_initialize' );
 	do_action( 'popmake_initialize' );
-
-	PopMake()->process_upgrades();
 }
 
-add_action( 'plugins_loaded', 'popmake_initialize', 0 );
+add_action( 'plugins_loaded', 'popmake_initialize' );

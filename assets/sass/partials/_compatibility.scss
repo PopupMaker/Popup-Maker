@@ -1,0 +1,11 @@
+.pum-container {
+  iframe.formidable {
+    width: 100%;
+    overflow: visible;
+  }
+}
+
+// jQuery UI Datepicker shows up behind the popups without this.
+body div#ui-datepicker-div[style] {
+  z-index: 9999999999 !important;
+}

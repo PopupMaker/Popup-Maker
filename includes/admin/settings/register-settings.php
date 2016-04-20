@@ -133,119 +133,59 @@ function popmake_get_registered_settings() {
 	 */
 	$popmake_settings = array(
 		/** General Settings */
-		'general'    => apply_filters( 'popmake_settings_general',
-			array(
-
-				'custom_post_type_support_heading' => array(
-					'id'   => 'custom_post_type_support_heading',
-					'name' => '<strong>' . __( 'Support for CPTs', 'popup-maker' ) . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'supported_post_types'             => array(
-					'id'      => 'supported_post_types',
-					'name'    => __( 'Custom Post Types?', 'popup-maker' ),
-					//'desc' => __( 'Check this to defy how awesome Popup Maker is. <strong>For those who like to make little kids cry or are compulsive liers.</strong>.', 'popup-maker' ),
-					'type'    => 'multicheck',
-					'options' => get_post_types( array( '_builtin' => false, 'public' => true ) )
-				),
-				'supported_taxonomies'             => array(
-					'id'      => 'supported_taxonomies',
-					'name'    => __( 'Custom Taxonomies?', 'popup-maker' ),
-					//'desc' => __( 'Check this to defy how awesome Popup Maker is. <strong>For those who like to make little kids cry or are compulsive liers.</strong>.', 'popup-maker' ),
-					'type'    => 'multicheck',
-					'options' => get_taxonomies( array( '_builtin' => false, 'public' => true ) )
-				),
-				'powered_by'                       => array(
-					'id'   => 'powered_by',
-					'name' => '<strong>' . __( 'Powered By', 'popup-maker' ) . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'popmake_powered_by_opt_in'        => array(
-					'id'   => 'popmake_powered_by_opt_in',
-					'name' => __( 'Show Powered By Link?', 'popup-maker' ),
-					'desc' => sprintf( __( 'If you check this box, it will show the <em>Powered By Popup Maker</em> tag on all of your popups. Even if you don\'t, please take a moment to <a href="%s">rate and review us on WordPress</a>!', 'popup-maker' ), 'https://wordpress.org/support/view/plugin-reviews/popup-maker#postform' ),
-					'type' => 'checkbox'
-				),
-				'popmake_powered_by_size'          => array(
-					'id'      => 'popmake_powered_by_size',
-					'name'    => __( 'How much do you love it?', 'popup-maker' ),
-					'desc'    => __( 'This affects the size of the credit link below your popups.', 'popup-maker' ),
-					'type'    => 'select',
-					'options' => array(
-						'small' => 'A Little.',
-						''      => 'It\'s Pretty Good',
-						'large' => 'I Love It!',
-					)
-				),
-				'tracking_settings'                => array(
-					'id'   => 'tracking_settings',
-					'name' => '<strong>' . __( 'Tracking Settings', 'popup-maker' ) . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'allow_tracking'                   => array(
-					'id'   => 'allow_tracking',
-					'name' => __( 'Allow Usage Tracking?', 'popup-maker' ),
-					'desc' => __( 'Allow Popup Maker to anonymously track how this plugin is used and help us make the plugin better. Opt-in and receive a 20% discount code for any purchase from the <a href="https://wppopupmaker.com/extensions/" target="_blank">Popup Maker store</a>. Your discount code will be emailed to you.', 'popup-maker' ),
-					'type' => 'checkbox'
-				),
-				/*
-				'uninstall_on_delete' => array(
-					'id' => 'uninstall_on_delete',
-					'name' => __( 'Remove Data on Uninstall?', 'popup-maker' ),
-					'desc' => __( 'Check this box if you would like Popup Maker to completely remove all of its data when the plugin is deleted.', 'popup-maker' ),
-					'type' => 'checkbox'
-				)
-				*/
+		'general'    => apply_filters( 'popmake_settings_general', array(
+			'allow_tracking' => array(
+				'id'   => 'allow_tracking',
+				'name' => __( 'Allow Usage Tracking?', 'popup-maker' ),
+				'desc' => __( 'Allow Popup Maker to anonymously track how this plugin is used and help us make the plugin better. Opt-in and receive a 20% discount code for any purchase from the <a href="https://wppopupmaker.com/extensions/" target="_blank">Popup Maker store</a>. Your discount code will be emailed to you.', 'popup-maker' ),
+				'type' => 'checkbox',
+			),
+			/*
+			'uninstall_on_delete' => array(
+				'id' => 'uninstall_on_delete',
+				'name' => __( 'Remove Data on Uninstall?', 'popup-maker' ),
+				'desc' => __( 'Check this box if you would like Popup Maker to completely remove all of its data when the plugin is deleted.', 'popup-maker' ),
+				'type' => 'checkbox'
 			)
-		),
-		'assets'     => apply_filters( 'popmake_settings_assets',
-			array(
-				'disable_google_font_loading' => array(
-					'id'   => 'disable_google_font_loading',
-					'name' => __( 'Don\'t Load Google Fonts', 'popup-maker' ),
-					'desc' => __( 'Check this disable loading of google fonts, useful if the fonts you chose are already loaded with your theme.', 'popup-maker' ),
-					'type' => 'checkbox'
-				),
-				'disable_popup_theme_styles'  => array(
-					'id'   => 'disable_popup_theme_styles',
-					'name' => __( 'Don\'t load popup theme styles to the head.', 'popup-maker' ),
-					'desc' => __( 'Check this if you have copied the popup theme styles to your own stylesheet or are using custom styles.', 'popup-maker' ),
-					'type' => 'checkbox'
-				),
-			)
-		),
+			*/
+		) ),
+		'assets'     => apply_filters( 'popmake_settings_assets', array(
+			'disable_google_font_loading' => array(
+				'id'   => 'disable_google_font_loading',
+				'name' => __( 'Don\'t Load Google Fonts', 'popup-maker' ),
+				'desc' => __( 'Check this disable loading of google fonts, useful if the fonts you chose are already loaded with your theme.', 'popup-maker' ),
+				'type' => 'checkbox',
+			),
+			'disable_popup_theme_styles'  => array(
+				'id'   => 'disable_popup_theme_styles',
+				'name' => __( 'Don\'t load popup theme styles to the head.', 'popup-maker' ),
+				'desc' => __( 'Check this if you have copied the popup theme styles to your own stylesheet or are using custom styles.', 'popup-maker' ),
+				'type' => 'checkbox',
+			),
+		) ),
 		/** Extension Settings */
-		'extensions' => apply_filters( 'popmake_settings_extensions',
-			array()
-		),
-		'licenses'   => apply_filters( 'popmake_settings_licenses',
-			array()
-		),
-		'misc'       => apply_filters( 'popmake_settings_misc',
-			array(
-				'enable_easy_modal_compatibility_mode' => array(
-					'id'   => 'enable_easy_modal_compatibility_mode',
-					'name' => __( 'Enable Easy Modal v2 Compatibility Mode', 'popup-maker' ),
-					'desc' => __( 'This will automatically make any eModal classes you have added to your site launch the appropriate Popup after import.', 'popup-maker' ),
-					'type' => 'checkbox'
-				),
-				'disable_admin_support_widget'         => array(
-					'id'   => 'disable_admin_support_widget',
-					'name' => __( 'Hide Admin Support Widget', 'popup-maker' ),
-					'desc' => __( 'This will hide the support widget on all popup maker admin pages.', 'popup-maker' ),
-					'type' => 'checkbox'
-				),
-				'disable_admin_share_widget'           => array(
-					'id'   => 'disable_admin_share_widget',
-					'name' => __( 'Hide Admin Share Widget', 'popup-maker' ),
-					'desc' => __( 'This will hide the share widget on all popup maker admin pages.', 'popup-maker' ),
-					'type' => 'checkbox'
-				),
-			)
-		),
+		'extensions' => apply_filters( 'popmake_settings_extensions', array() ),
+		'licenses'   => apply_filters( 'popmake_settings_licenses', array() ),
+		'misc'       => apply_filters( 'popmake_settings_misc', array(
+			'enable_easy_modal_compatibility_mode' => array(
+				'id'   => 'enable_easy_modal_compatibility_mode',
+				'name' => __( 'Enable Easy Modal v2 Compatibility Mode', 'popup-maker' ),
+				'desc' => __( 'This will automatically make any eModal classes you have added to your site launch the appropriate Popup after import.', 'popup-maker' ),
+				'type' => 'checkbox',
+			),
+			'disable_admin_support_widget'         => array(
+				'id'   => 'disable_admin_support_widget',
+				'name' => __( 'Hide Admin Support Widget', 'popup-maker' ),
+				'desc' => __( 'This will hide the support widget on all popup maker admin pages.', 'popup-maker' ),
+				'type' => 'checkbox',
+			),
+			'disable_popup_category_tag'           => array(
+				'id'   => 'disable_popup_category_tag',
+				'name' => __( 'Disable categories & tags?', 'popup-maker' ),
+				'desc' => __( 'This will disable the popup tags & categories.', 'popup-maker' ),
+				'type' => 'checkbox',
+			),
+		) ),
 	);
 
 	return apply_filters( 'popmake_registered_settings', $popmake_settings );
@@ -798,7 +738,7 @@ function popmake_color_callback( $args ) {
 	$default = isset( $args['std'] ) ? $args['std'] : '';
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="text" class="popmake-color-picker" id="popmake_settings[' . $args['id'] . ']" name="popmake_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '" data-default-color="' . esc_attr( $default ) . '" />';
+	$html = '<input type="text" class="pum-color-picker color-picker" id="popmake_settings[' . $args['id'] . ']" name="popmake_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '" data-default-color="' . esc_attr( $default ) . '" />';
 	$html .= '<label for="popmake_settings[' . $args['id'] . ']"> ' . $args['desc'] . '</label>';
 
 	echo $html;

@@ -158,7 +158,7 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
 	return apply_filters( 'popmake_generate_theme_styles', $styles, $popup_theme_id, $theme );
 }
 
-function popmake_render_theme_styles( $popup_theme_id ) {
+function pum_render_theme_styles( $popup_theme_id ) {
 	$styles = '';
 
 	$theme_data = get_post($popup_theme_id);
@@ -175,27 +175,27 @@ function popmake_render_theme_styles( $popup_theme_id ) {
 	foreach ( $theme_styles as $element => $rules ) {
 		switch ( $element ) {
 			case 'overlay':
-				$rule = ".popmake-overlay.theme-{$popup_theme_id}";
+				$rule = ".pum-theme-{$popup_theme_id}";
 				if ( $slug ) {
-					$rule .= ", .popmake-overlay.theme-{$slug}";
+					$rule .= ", .pum-theme-{$slug}";
 				}
 				break;
 			case 'container':
-				$rule = ".popmake.theme-{$popup_theme_id}";
+				$rule = ".pum-theme-{$popup_theme_id} .pum-container";
 				if ( $slug ) {
-					$rule .= ", .popmake.theme-{$slug}";
+					$rule .= ", .pum-theme-{$slug} .pum-container";
 				}
 				break;
 			case 'close':
-				$rule = ".popmake.theme-{$popup_theme_id} > .popmake-close";
+				$rule = ".pum-theme-{$popup_theme_id} .pum-content + .pum-close";
 				if ( $slug ) {
-					$rule .= ", .popmake.theme-{$slug} > .popmake-close";
+					$rule .= ", .pum-theme-{$slug} .pum-content + .pum-close";
 				}
 				break;
 			default:
-				$rule = ".popmake.theme-{$popup_theme_id} .popmake-{$element}";
+				$rule = ".pum-theme-{$popup_theme_id} .pum-{$element}";
 				if ( $slug ) {
-					$rule .= ", .popmake.theme-{$slug} .popmake-{$element}";
+					$rule .= ", .pum-theme-{$slug} .pum-{$element}";
 				}
 				break;
 		}

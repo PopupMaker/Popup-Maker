@@ -45,14 +45,6 @@ function popmake_add_popup_theme_meta_box() {
 	/** Close Meta **/
 	add_meta_box( 'popmake_popup_theme_close', __( 'Close Settings', 'popup-maker' ), 'popmake_render_popup_theme_close_meta_box', 'popup_theme', 'normal', 'high' );
 
-	if ( ! popmake_get_option( 'disable_admin_support_widget', false ) ) {
-		/** Support Meta **/
-		add_meta_box( 'popmake_popup_support', __( 'Support', 'popup-maker' ), 'popmake_render_support_meta_box', 'popup_theme', 'side', 'default' );
-	}
-	if ( ! popmake_get_option( 'disable_admin_share_widget', false ) ) {
-		/** Share Meta **/
-		add_meta_box( 'popmake_popup_share', __( 'Share', 'popup-maker' ), 'popmake_render_share_meta_box', 'popup_theme', 'side', 'default' );
-	}
 }
 
 add_action( 'add_meta_boxes', 'popmake_add_popup_theme_meta_box' );
@@ -73,121 +65,10 @@ function popmake_popup_theme_meta_fields() {
 
 
 function popmake_popup_theme_meta_field_groups() {
-	$groups = array(
-		'overlay',
-		'container',
-		'title',
-		'content',
-		'close'
-	);
-
-	return apply_filters( 'popmake_popup_theme_meta_field_groups', $groups );
+	return apply_filters( 'popmake_popup_theme_meta_field_groups', array() );
 }
 
 
-function popmake_popup_theme_meta_field_group_overlay() {
-	return array(
-		'background_color',
-		'background_opacity'
-	);
-}
-
-add_filter( 'popmake_popup_theme_meta_field_group_overlay', 'popmake_popup_theme_meta_field_group_overlay', 0 );
-
-
-function popmake_popup_theme_meta_field_group_container() {
-	return array(
-		'padding',
-		'background_color',
-		'background_opacity',
-		'border_radius',
-		'border_style',
-		'border_color',
-		'border_width',
-		'boxshadow_inset',
-		'boxshadow_horizontal',
-		'boxshadow_vertical',
-		'boxshadow_blur',
-		'boxshadow_spread',
-		'boxshadow_color',
-		'boxshadow_opacity',
-	);
-}
-
-add_filter( 'popmake_popup_theme_meta_field_group_container', 'popmake_popup_theme_meta_field_group_container', 0 );
-
-
-function popmake_popup_theme_meta_field_group_title() {
-	return array(
-		'font_color',
-		'line_height',
-		'font_size',
-		'font_family',
-		'font_weight',
-		'font_style',
-		'text_align',
-		'textshadow_horizontal',
-		'textshadow_vertical',
-		'textshadow_blur',
-		'textshadow_color',
-		'textshadow_opacity',
-	);
-}
-
-add_filter( 'popmake_popup_theme_meta_field_group_title', 'popmake_popup_theme_meta_field_group_title', 0 );
-
-
-function popmake_popup_theme_meta_field_group_content() {
-	return array(
-		'font_color',
-		'font_family',
-		'font_weight',
-		'font_style',
-	);
-}
-
-add_filter( 'popmake_popup_theme_meta_field_group_content', 'popmake_popup_theme_meta_field_group_content', 0 );
-
-
-function popmake_popup_theme_meta_field_group_close() {
-	return array(
-		'text',
-		'padding',
-		'height',
-		'width',
-		'location',
-		'position_top',
-		'position_left',
-		'position_bottom',
-		'position_right',
-		'line_height',
-		'font_color',
-		'font_size',
-		'font_family',
-		'font_weight',
-		'font_style',
-		'background_color',
-		'background_opacity',
-		'border_radius',
-		'border_style',
-		'border_color',
-		'border_width',
-		'boxshadow_inset',
-		'boxshadow_horizontal',
-		'boxshadow_vertical',
-		'boxshadow_blur',
-		'boxshadow_spread',
-		'boxshadow_color',
-		'boxshadow_opacity',
-		'textshadow_horizontal',
-		'textshadow_vertical',
-		'textshadow_blur',
-		'textshadow_color',
-		'textshadow_opacity',
-	);
-}
-
-add_filter( 'popmake_popup_theme_meta_field_group_close', 'popmake_popup_theme_meta_field_group_close', 0 );
 
 
 /**
@@ -254,7 +135,12 @@ function popmake_popup_theme_meta_box_save( $post_id, $post ) {
 		}
 	}
 
-	delete_transient( 'popmake_theme_styles' );
+    // If this is a built in theme and the user has modified it set a key so that we know not to make automatic upgrades to it in the future.
+    if ( get_post_meta( $post_id, '_pum_built_in', true ) !== false ) {
+        update_post_meta( $post_id, '_pum_user_modified', true );
+    }
+
+    pum_force_theme_css_refresh();
 
 	do_action( 'popmake_save_popup_theme', $post_id, $post );
 }

@@ -48,13 +48,14 @@ function popmake_admin_submenu_pages() {
 
 	$popmake_extensions_page = add_submenu_page(
 		'edit.php?post_type=popup',
-		apply_filters( 'popmake_admin_submenu_extensions_page_title', __( 'Extensions', 'popup-maker' ) ),
-		apply_filters( 'popmake_admin_submenu_extensions_menu_title', __( 'Extensions', 'popup-maker' ) ),
-		apply_filters( 'popmake_admin_submenu_extensions_capability', 'manage_options' ),
-		'extensions',
-		apply_filters( 'popmake_admin_submenu_extensions_function', 'popmake_extensions_page' )
+		__( 'Extend', 'popup-maker' ),
+		__( 'Extend', 'popup-maker' ),
+		apply_filters( 'popmake_admin_submenu_extensions_capability', 'edit_posts' ),
+		'pum-extensions',
+		'popmake_extensions_page'
 	);
 
+	/*
 	$popmake_help_page = add_submenu_page(
 		'edit.php?post_type=popup',
 		apply_filters( 'popmake_admin_submenu_help_page_title', __( 'Help', 'popup-maker' ) ),
@@ -63,13 +64,14 @@ function popmake_admin_submenu_pages() {
 		'help',
 		apply_filters( 'popmake_admin_submenu_help_function', 'popmake_help_page' )
 	);
+	*/
 
 	// About Page
 	$popmake_about_page = add_dashboard_page(
 		__( 'Welcome to Popup Maker', 'popup-maker' ),
 		__( 'Welcome to Popup Maker', 'popup-maker' ),
 		'manage_options',
-		'popmake-about',
+		'pum-about',
 		'popmake_about_page'
 	);
 
@@ -78,7 +80,7 @@ function popmake_admin_submenu_pages() {
 		__( 'Popup Maker Changelog', 'popup-maker' ),
 		__( 'Popup Maker Changelog', 'popup-maker' ),
 		'manage_options',
-		'popmake-changelog',
+		'pum-changelog',
 		'popmake_changelog_page'
 	);
 
@@ -87,7 +89,7 @@ function popmake_admin_submenu_pages() {
 		__( 'Getting started with Popup Maker', 'popup-maker' ),
 		__( 'Getting started with Popup Maker', 'popup-maker' ),
 		'manage_options',
-		'popmake-getting-started',
+		'pum-getting-started',
 		'popmake_getting_started_page'
 	);
 
@@ -96,23 +98,98 @@ function popmake_admin_submenu_pages() {
 		__( 'The people that build Popup Maker', 'popup-maker' ),
 		__( 'The people that build Popup Maker', 'popup-maker' ),
 		'manage_options',
-		'popmake-credits',
+		'pum-credits',
 		'popmake_credits_page'
 	);
 
+	// Hide About & Getting Started Pages.
+	remove_submenu_page( 'index.php', 'pum-about' );
+	remove_submenu_page( 'index.php', 'pum-changelog' );
+	remove_submenu_page( 'index.php', 'pum-getting-started' );
+	remove_submenu_page( 'index.php', 'pum-credits' );
 }
 
-add_action( 'admin_menu', 'popmake_admin_submenu_pages', 999 );
+add_action( 'admin_menu', 'popmake_admin_submenu_pages' );
 
+/**
+ * Submenu filter function. Tested with Wordpress 4.1.1
+ * Sort and order submenu positions to match our custom order.
+ *
+ * @since 1.4.0
+ */
+function pum_reorder_admin_submenu() {
+	global $submenu;
 
-function popmake_remove_admin_subpages() {
-	remove_submenu_page( 'index.php', 'popmake-about' );
-	remove_submenu_page( 'index.php', 'popmake-changelog' );
-	remove_submenu_page( 'index.php', 'popmake-getting-started' );
-	remove_submenu_page( 'index.php', 'popmake-credits' );
+	if ( isset( $submenu['edit.php?post_type=popup'] ) ) {
+		// Sort the menu according to your preferences
+		usort( $submenu['edit.php?post_type=popup'], 'pum_reorder_submenu_array' );
+	}
 }
 
-add_action( 'admin_head', 'popmake_remove_admin_subpages' );
+add_action( 'admin_head', 'pum_reorder_admin_submenu' );
+
+
+/**
+ * Reorders the submenu by title.
+ *
+ * Forces $first_pages to load in order at the beginning of the menu
+ * and $last_pages to load in order at the end. All remaining menu items will
+ * go out in generic order.
+ *
+ * @since 1.4.0
+ *
+ * @param $a
+ * @param $b
+ *
+ * @return int
+ */
+function pum_reorder_submenu_array( $a, $b ) {
+	$first_pages = apply_filters( 'pum_admin_submenu_first_pages', array(
+		__( 'All Popups', 'popup-maker' ),
+		__( 'Add New', 'popup-maker' ),
+		__( 'All Themes', 'popup-maker' ),
+		__( 'Categories', 'popup-maker' ),
+		__( 'Tags', 'popup-maker' ),
+	) );
+	$last_pages  = apply_filters( 'pum_admin_submenu_last_pages', array(
+		__( 'Extend', 'popup-maker' ),
+		__( 'Settings', 'popup-maker' ),
+		__( 'Tools', 'popup-maker' ),
+		__( 'Support Forum', 'freemius' ),
+		__( 'Account', 'freemius' ),
+		__( 'Contact Us', 'freemius' ),
+	) );
+
+	$a_val = strip_tags( $a[0], false );
+	$b_val = strip_tags( $b[0], false );
+
+	// Sort First Page Keys.
+	if ( in_array( $a_val, $first_pages ) && ! in_array( $b_val, $first_pages ) ) {
+		return - 1;
+	} elseif ( ! in_array( $a_val, $first_pages ) && in_array( $b_val, $first_pages ) ) {
+		return 1;
+	} elseif ( in_array( $a_val, $first_pages ) && in_array( $b_val, $first_pages ) ) {
+		$a_key = array_search( $a_val, $first_pages );
+		$b_key = array_search( $b_val, $first_pages );
+
+		return ( $a_key < $b_key ) ? - 1 : 1;
+	}
+
+	// Sort Last Page Keys.
+	if ( in_array( $a_val, $last_pages ) && ! in_array( $b_val, $last_pages ) ) {
+		return 1;
+	} elseif ( ! in_array( $a_val, $last_pages ) && in_array( $b_val, $last_pages ) ) {
+		return - 1;
+	} elseif ( in_array( $a_val, $last_pages ) && in_array( $b_val, $last_pages ) ) {
+		$a_key = array_search( $a_val, $last_pages );
+		$b_key = array_search( $b_val, $last_pages );
+
+		return ( $a_key < $b_key ) ? - 1 : 1;
+	}
+
+	// Sort remaining keys
+	return $a > $b ? 1 : - 1;
+}
 
 
 /**
@@ -136,10 +213,10 @@ function popmake_is_admin_page() {
 	}
 
 	if ( 'index.php' == $pagenow && isset( $_GET['page'] ) && in_array( $_GET['page'], array(
-			'popmake-about',
-			'popmake-changelog',
-			'popmake-getting-started',
-			'popmake-credits'
+			'pum-about',
+			'pum-changelog',
+			'pum-getting-started',
+			'pum-credits',
 		) )
 	) {
 		return true;
@@ -153,6 +230,7 @@ function popmake_is_admin_page() {
 		$popmake_help_page
 	) );
 
+	// TODO Replace this whole function using the global $hook_suffix which is what add_submenu_page returns.
 	if ( in_array( $pagenow, $popmake_admin_pages ) ) {
 		return true;
 	} else {

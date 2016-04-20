@@ -16,12 +16,18 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function popmake_extensions_page() { ?>
 	<div class="wrap">
-	<h2><?php _e( 'Popup Maker Extensions', 'popup-maker' ) ?></h2>
+    <h1><?php _e( 'Extend Popup Maker', 'popup-maker' ) ?></h1>
 
 	<div id="poststuff">
 		<div id="post-body" class="metabox-holder">
 			<div id="post-body-content"><?php
 				$extensions = popmake_available_extensions(); ?>
+                <hr class="clear"/>
+                <h2 class="section-heading">
+                    <?php _e( 'Extensions', 'popup-maker' ) ?>
+                    &nbsp;&nbsp;<a href="https://wppopupmaker.com/extensions/?utm_source=plugin-extension-page&amp;utm_medium=plugin&amp;utm_campaign=PUM+Extensions+Page&amp;utm_content=All+Extensions+Top" class="button-primary" title="<?php _e( 'Browse All Extensions', 'popup-maker' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'popup-maker' ); ?></a>
+                </h2>
+                <p><?php _e( 'These extensions <strong>add extra functionality</strong> to your popups.', 'popup-maker' ); ?></p>
 				<ul class="extensions-available">
 					<?php
 					$plugins           = get_plugins();
@@ -57,20 +63,30 @@ function popmake_extensions_page() { ?>
 					}
 					$existing_extension_images = apply_filters( 'popmake_existing_extension_images', array() );
 					if ( ! empty( $extensions ) ) {
-						foreach ( $extensions as $extension ) :?>
-							<li class="available-extension-inner">
+
+                        shuffle( $extensions );
+
+                        foreach ( $extensions as $key => $ext ) {
+                            unset( $extensions[ $key ] );
+                            $extensions[ $ext['slug'] ] = $ext;
+                        }
+
+                        $extensions = array_merge( array( 'core-extensions-bundle' => $extensions['core-extensions-bundle'] ), $extensions );
+
+                        $i = 0;
+
+                        foreach ( $extensions as $extension ) : ?>
+                        <li class="available-extension-inner <?php esc_attr_e( $extension['slug'] ); ?>">
 								<h3>
-									<a target="_blank" href="<?php esc_attr_e( $extension['homepage'] ); ?>?utm_source=Plugin+Admin&amp;utm_medium=Extensions+Page+Extension+Names&amp;utm_campaign=<?php esc_attr_e( str_replace( ' ', '+', $extension['name'] ) ); ?>">
+                                    <a target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&amp;utm_medium=plugin&amp;utm_campaign=PUM+Extensions+Page&amp;utm_content=Extension+Name+Pos<?php echo $i; ?>&amp;utm_term=<?php esc_attr_e( str_replace( ' ', '+', $extension['name'] ) ); ?>">
 										<?php esc_html_e( $extension['name'] ) ?>
 									</a>
 								</h3>
 								<?php $image = in_array( $extension['slug'], $existing_extension_images ) ? POPMAKE_URL . '/assets/images/extensions/' . $extension['slug'] . '.png' : $extension['image']; ?>
 								<img class="extension-thumbnail" src="<?php esc_attr_e( $image ) ?>">
-<!--
-								<p><?php esc_html_e( $extension['excerpt'] ) ?></p>
-								<hr/>
-								 -->
-								<?php
+
+                            <p><?php esc_html_e( $extension['excerpt'] ); ?></p>
+                            <?php
 								/*
 								if(!empty($extension->download_link) && !isset($installed_plugins[$extension->slug.'/'.$extension->slug.'.php']))
 								{
@@ -121,15 +137,81 @@ function popmake_extensions_page() { ?>
 								*/
 								?>
 								<span class="action-links">
-				                	<a class="button" target="_blank" href="<?php esc_attr_e( $extension['homepage'] ); ?>?utm_source=Plugin+Admin&amp;utm_medium=Extensions+Page+Extension+Buttons&amp;utm_campaign=<?php esc_attr_e( str_replace( ' ', '+', $extension['name'] ) ); ?>"><?php _e( 'Learn More', 'popup-maker' ); ?></a>
+				                	<a class="button" target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&amp;utm_medium=plugin&amp;utm_campaign=PUM+Extensions+Page&amp;utm_content=Get+this+Extension+Pos<?php echo $i; ?>&amp;utm_term=<?php esc_attr_e( str_replace( ' ', '+', $extension['name'] ) ); ?>"><?php _e( 'Get this Extension', 'popup-maker' ); ?></a>
 				                </span>
-							</li>
-						<?php endforeach;
+                            </li><?php
+                            $i ++;
+                        endforeach;
 					} ?>
 				</ul>
-			</div>
-		</div>
-		<br class="clear"/>
-	</div>
+
+                <br class="clear"/>
+
+                <a href="https://wppopupmaker.com/extensions/?utm_source=plugin-extension-page&amp;utm_medium=plugin&amp;utm_campaign=PUM+Extensions+Page&amp;utm_content=All+Extensions+Top" class="button-primary" title="<?php _e( 'Browse All Extensions', 'popup-maker' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'popup-maker' ); ?></a>
+
+                <br class="clear"/>
+                <br class="clear"/>
+                <br class="clear"/>
+                <hr class="clear"/>
+                <br class="clear"/>
+
+                <h2 class="section-heading">
+                    <?php _e( 'Other Compatible Plugins', 'popup-maker' ); ?>
+                </h2>
+                <p><?php _e( 'These plugins should work in popups with no extra setup.', 'popup-maker' ); ?></p>
+                <ul class="extensions-available">
+                    <?php
+                    $compatible_plugins = array(
+                            array(
+                                    'slug' => 'gravity-forms',
+                                    'name' => __( 'Gravity Forms', 'popup-maker' ),
+                                    'url'  => 'https://wppopupmaker.com/grab/gravity-forms',
+                                    'desc' => __( 'Gravity Forms is one of the most popular form building plugins.', 'popup-maker' ),
+                            ),
+                            array(
+                                    'slug' => 'ninja-forms',
+                                    'name' => __( 'Ninja Forms', 'popup-maker' ),
+                                    'url'  => 'https://wppopupmaker.com/grab/ninja-forms',
+                                    'desc' => __( 'Ninja Forms has fast become the most extensible form plugin available. Build super custom forms and integrate with your favorite services.', 'popup-maker' ),
+                            ),
+                            array(
+                                    'slug' => 'contact-form-7',
+                                    'name' => __( 'Contact Form 7', 'popup-maker' ),
+                                    'url'  => 'https://wppopupmaker.com/grab/contact-form-7',
+                                    'desc' => __( 'CF7 is one of the most downloaded plugins on the WordPress repo. Make simple forms with ease and plenty of free addons available.', 'popup-maker' ),
+                            ),
+                            array(
+                                    'slug' => 'quiz-survey-master',
+                                    'name' => __( 'Quiz & Survey Master', 'popup-maker' ),
+                                    'url'  => 'https://wppopupmaker.com/grab/quiz-survey-master',
+                                    'desc' => __( 'If you need more from your forms data look no further, QSM is all about the statistics & collective data, something other form plugins neglect.', 'popup-maker' ),
+                            ),
+                    );
+
+                    shuffle( $compatible_plugins );
+
+                    $i = 1;
+
+                    foreach ( $compatible_plugins as $plugin ) : ?>
+                    <li class="available-extension-inner <?php esc_attr_e( $plugin['slug'] ); ?>">
+                        <h3>
+                            <a target="_blank" href="<?php esc_attr_e( $plugin['url'] ); ?>">
+                                <?php esc_html_e( $plugin['name'] ) ?>
+                            </a>
+                        </h3>
+                        <img class="extension-thumbnail" src="<?php esc_attr_e( POPMAKE_URL . '/assets/images/plugins/' . $plugin['slug'] . '.png' ) ?>">
+
+                        <p><?php esc_html_e( $plugin['desc'] ); ?></p>
+                            <span class="action-links">
+                                <a class="button" target="_blank" href="<?php echo esc_url( $plugin['url'] ); ?>"><?php _e( 'Check it out', 'popup-maker' ); ?></a>
+                            </span>
+                        </li><?php
+                        $i ++;
+                    endforeach; ?>
+                </ul>
+
+            </div>
+
+        </div>
 	</div><?php
 }

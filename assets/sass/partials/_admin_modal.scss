@@ -1,0 +1,152 @@
+.pum-modal-background {
+
+  &, &:before, &:after,
+  & *, & *:before, & *:after {
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    box-sizing: border-box;
+  }
+
+
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0,0,0,0.70);
+  z-index: 100100;
+  overflow-y: scroll;
+
+  .pum-modal-wrap {
+    position: absolute;
+    top: 60px;
+    margin-bottom: 60px;
+    left: 50%;
+    width: 550px;
+    margin-left: -300px;
+    background-color: #fff;
+    box-shadow: 0 3px 6px rgba(0,0,0,.3);
+    z-index: 100105;
+    transition: height .2s, margin-top .2s;
+
+    @media screen and ( max-width: 520px ) {
+      width: auto;
+      margin-left: 0;
+      top: 10px;
+      right: 10px;
+      bottom: 10px;
+      left: 10px;
+    }
+  }
+
+  .pum-modal-header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 36px;
+    padding: 0 36px 0 16px;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 36px;
+    background: #fcfcfc;
+    border-bottom: 1px solid #dfdfdf;
+
+    .pum-modal-close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      color: #666;
+      text-align: center;
+      background: 0 0;
+      border: none;
+      cursor: pointer;
+
+      &::before {
+        font: 400 20px/36px dashicons;
+        vertical-align: top;
+        speak: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        width: 36px;
+        height: 36px;
+        content: '\f158';
+      }
+    }
+
+  }
+
+  .pum-modal-content {
+    padding: 36px 16px 44px;
+
+    div.error {
+      margin: 0 0 10px;
+    }
+    p {
+      margin-top: 0;
+    }
+    textarea {
+      width: 100%;
+    }
+
+    @media screen and (max-width: 782px) {
+      padding: 50px 16px 60px;
+    }
+  }
+
+  .pum-modal-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 8px 16px;
+    background: #fcfcfc;
+    border-top: 1px solid #dfdfdf;
+
+    .cancel {
+      line-height: 25px;
+      float: left;
+
+      .submitdelete {
+        text-decoration: none;
+        padding: 1px 2px;
+      }
+
+      @media screen and (max-width: 782px) {
+        line-height: 32px;
+      }
+    }
+
+    .pum-submit {
+      line-height: 23px;
+      float: right;
+
+      button {
+        float: right;
+        margin-bottom: 0;
+
+      }
+
+      .spinner {
+        float: left;
+        vertical-align: middle;
+      }
+
+    }
+  }
+
+  &.tabbed-content {
+
+    .pum-modal-content {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+}
