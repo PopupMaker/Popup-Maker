@@ -1,18 +1,18 @@
 <?php
 /**
  * Plugin Name: Popup Maker
- * Plugin URI: https://wppopupmaker.com
+ * Plugin URI: https://wppopupmaker.com/
  * Description: Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
- * Author: Daniel Iser
- * Version: 1.4.0-beta1
- * Author URI: https://wppopupmaker.com
+ * Author: WP Popup Maker
+ * Version: 1.4.0
+ * Author URI: https://wppopupmaker.com/
  * Text Domain: popup-maker
  *
- * @package        POPMAKE
+ * @package     POPMAKE
  * @category    Core
- * @author        Daniel Iser
- * @copyright    Copyright (c) 2014, Wizard Internet Solutions
- * @since        1.0
+ * @author      Daniel Iser
+ * @copyright   Copyright (c) 2016, Wizard Internet Solutions
+ * @since       1.0
  */
 
 // Exit if accessed directly
@@ -144,7 +144,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 
 			if ( ! defined( 'POPMAKE_VERSION' ) ) {
-				define( 'POPMAKE_VERSION', '1.4.0-beta1' );
+				define( 'POPMAKE_VERSION', '1.4.0' );
 			}
 
 			if ( ! defined( 'POPMAKE_DB_VERSION' ) ) {
