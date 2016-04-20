@@ -1,114 +1,142 @@
-var gulp = require('gulp');
-var gulpLoadPlugins = require('gulp-load-plugins');
-var $ = gulpLoadPlugins();
+var gulp = require('gulp'),
+    $fn = require('gulp-load-plugins')({ camelize: true }),
+    plumberErrorHandler = {
+        errorHandler: $fn.notify.onError({
+            title: 'Gulp',
+            message: 'Error: <%= error.message %>'
+        })
+    },
+    pkg = require('./package.json');
 
-// Uncomment this if you get Promise errors. You also need to run npm install es6-promise
-// require('es6-promise').polyfill();
-
-gulp.task('sass', function() {
-    return gulp.src('assets/sass/*.scss')
-        .pipe($.sass())
-        .pipe($.autoprefixer({
-            browsers: ['> 10%', 'last 2 versions'],
-            cascade: false
-        }))
-        .pipe($.csscomb())
-        .pipe(gulp.dest('assets/css'));
-});
-
-
-gulp.task('css', ['sass'], function() {
-    return gulp.src(['!assets/css/*.min.css', 'assets/css/*.css', ])
-        // Minify the CSS
-        .pipe($.csso())
-        // Rename the file with the .min.css extension
-        .pipe($.rename({ extname: '.min.css' }))
-        // Save the file
-        .pipe(gulp.dest('assets/css'))
-        .pipe($.livereload());
-
-});
-
-gulp.task('css:minify', function() {
-    return gulp.src(['!assets/css/*.min.css', 'assets/css/*.css'])
-        // Minify the CSS
-        .pipe($.csso())
-
-        // Rename the file with the .min.css extension
-        .pipe($.rename({ extname: '.min.css' }))
-
-        // Save the file
-        .pipe(gulp.dest('assets/css'));
-});
-
-gulp.task('css:lint', function() {
-    return gulp.src(['!assets/css/*.min.css', 'assets/css/*.css'])
-        // Lint the CSS
-        .pipe($.csslint())
-        .pipe($.csslint.reporter());
-});
-
-gulp.task('js', ['js:admin', 'js:site', 'js:other']);
-
+//region JavaScript
 gulp.task('js:admin', function() {
     return gulp.src(['assets/js/src/admin/plugins/**/*.js', 'assets/js/src/admin/general.js'])
-        .pipe($.concat('popup-maker-admin.js'))
+        .pipe($fn.plumber(plumberErrorHandler))
+        .pipe($fn.jshint())
+        .pipe($fn.jshint.reporter('default'))
+        .pipe($fn.concat('admin.js'))
         .pipe(gulp.dest('assets/js'))
-        .pipe($.uglify())
-        .pipe($.rename({extname: '.min.js'}))
+        .pipe($fn.uglify())
+        .pipe($fn.rename({extname: '.min.js'}))
         .pipe(gulp.dest('assets/js'))
-        .pipe($.livereload());
+        .pipe($fn.notify({
+            message: 'Admin JS task complete',
+            onLast: true
+        }))
+        .pipe($fn.livereload());
 });
+
 gulp.task('js:site', function() {
     return gulp.src(['assets/js/src/site/plugins/**/*.js', 'assets/js/src/site/general.js'])
-        .pipe($.order([
+        .pipe($fn.plumber(plumberErrorHandler))
+        .pipe($fn.jshint())
+        .pipe($fn.jshint.reporter('default'))
+        .pipe($fn.order([
             "plugins/compatibility.js",
             "plugins/pum.js",
             "plugins/**/*.js",
             'general.js'
         ], { base: 'assets/js/src/site/' }))
-        .pipe($.concat('popup-maker-site.js'))
+        .pipe($fn.concat('site.js'))
         .pipe(gulp.dest('assets/js'))
-        .pipe($.uglify())
-        .pipe($.rename({extname: '.min.js'}))
+        .pipe($fn.uglify())
+        .pipe($fn.rename({extname: '.min.js'}))
         .pipe(gulp.dest('assets/js'))
-        .pipe($.livereload());
+        .pipe($fn.notify({
+            message: 'Site JS task complete',
+            onLast: true
+        }))
+        .pipe($fn.livereload());
 });
+
 gulp.task('js:other', function() {
     return gulp.src('assets/js/src/*.js')
+        .pipe($fn.plumber(plumberErrorHandler))
+        .pipe($fn.jshint())
+        .pipe($fn.jshint.reporter('default'))
         .pipe(gulp.dest('assets/js'))
-        .pipe($.uglify())
-        .pipe($.rename({extname: '.min.js'}))
+        .pipe($fn.uglify())
+        .pipe($fn.rename({extname: '.min.js'}))
         .pipe(gulp.dest('assets/js'))
-        .pipe($.livereload());
+        .pipe($fn.notify({
+            message: 'Other JS task complete',
+            onLast: true
+        }))
+        .pipe($fn.livereload());
 });
 
+gulp.task('js', ['js:admin', 'js:site', 'js:other']);
+//endregion JavaScript
 
-gulp.task('js:complexity', function () {
-    return gulp.src('assets/js/src/*.js')
-        .pipe($.complexity());
-});
-gulp.task('js:duplicates', function () {
-    return gulp.src('assets/js/src/*.js')
-        .pipe($.jscpd({
-            'min-lines': 10,
-            verbose    : true
+//region Language Files
+gulp.task('langpack', function () {
+    return gulp.src(['**/*.php'])
+        .pipe($fn.plumber(plumberErrorHandler))
+        .pipe($fn.sort())
+        .pipe($fn.wpPot( {
+            domain: pkg.name,
+            bugReport: 'https://wppopupmaker.com/support',
+            team: 'WP Popup Maker <support@wppopupmaker.com>'
+        } ))
+
+        .pipe(gulp.dest('languages'))
+        .pipe($fn.notify({
+            message: 'Language files task complete',
+            onLast: true
         }));
 });
-gulp.task('js:lint', function () {
-    return gulp.src('assets/js/src/*.js')
-        .pipe($.jshint())
-        .pipe($.jshint.reporter('default'));
-});
+//endregion Language Files
 
-gulp.task('watch', ['build'], function () {
-    $.livereload.listen();
+//region SASS & CSS
+gulp.task('css', function() {
+    return gulp.src('assets/sass/*.scss')
+        .pipe($fn.plumber(plumberErrorHandler))
+        .pipe($fn.sourcemaps.init())
+        .pipe($fn.sass({
+            errLogToConsole: true,
+            outputStyle: 'expanded',
+            precision: 10
+        }))
+        .pipe($fn.sourcemaps.write())
+        .pipe($fn.sourcemaps.init({
+            loadMaps: true
+        }))
+        .pipe($fn.autoprefixer('last 2 version', '> 1%', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
+        .pipe($fn.sourcemaps.write('.'))
+        .pipe($fn.plumber.stop())
+        .pipe(gulp.dest('assets/css'))
+        .pipe($fn.filter('**/*.css')) // Filtering stream to only css files
+        .pipe($fn.combineMq()) // Combines Media Queries
+        .pipe($fn.livereload())
+        .pipe($fn.rename({ suffix: '.min' }))
+        .pipe($fn.csso({
+            //sourceMap: true,
+        }))
+        .pipe(gulp.dest('assets/css'))
+        .pipe($fn.livereload())
+        .pipe($fn.notify({
+            message: 'Styles task complete',
+            onLast: true
+        }))
+        .pipe(gulp.dest('assets/css'));
+});
+//endregion SASS & CSS
+
+//region Watch & Build
+gulp.task('watch', function () {
+    $fn.livereload.listen();
     gulp.watch('assets/sass/**/*.scss', ['css']);
     gulp.watch('assets/js/src/admin/**/*.js', ['js:admin']);
     gulp.watch('assets/js/src/site/**/*.js', ['js:site']);
     gulp.watch(['assets/js/src/**/*.js', '!assets/js/src/site/**/*.js', '!assets/js/src/admin/**/*.js'], ['js:other']);
+    gulp.watch('**/*.php', ['langpack']);
 });
 
-gulp.task('build', ['css', 'js']);
+gulp.task('build', ['css', 'js', 'langpack'], function () {
+    return gulp.src(['./**/*.*', '!./dist/**', '!./build/**', '!./node_modules/**', '!./gulpfile.js', '!./package.json', '!./assets/js/src/**'])
+        .pipe($fn.zip(pkg.name+'_v'+pkg.version+'.zip'))
+        .pipe(gulp.dest('build'));
+});
 
-gulp.task('default', ['build']);
+gulp.task('default', ['langpack', 'css', 'js', 'watch']);
+//endregion Watch & Build
