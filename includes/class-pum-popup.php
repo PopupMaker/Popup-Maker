@@ -387,7 +387,7 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 			$text = apply_filters( 'popmake_popup_default_close_text', $text, $this->ID );
 
 			// todo replace this with PUM_Theme class in the future.
-			$theme_text = get_post_meta( $this->get_theme_id(), 'popup_theme_close_text', true );
+			$theme_text = popmake_get_popup_theme_close( $this->get_theme_id(), 'text', false );
 			if ( $theme_text && $theme_text != '' ) {
 				$text = $theme_text;
 			}
