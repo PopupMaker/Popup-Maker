@@ -178,7 +178,12 @@ function popmake_load_admin_scripts( $hook ) {
 
 	if ( popmake_is_admin_page() || in_array( $hook, array( 'post.php', 'edit.php' ) ) || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD ) ) {
 
-        wp_register_script( 'select2', $js_dir . 'select2.full' . $suffix, array( 'jquery' ), POPMAKE_VERSION );
+		// Deregister older versions, loaded by Types, Advanced Custom Fields etc.
+		if ( wp_script_is( 'select2', 'registered' ) ) {
+			wp_deregister_script( 'select2' );
+		}
+
+		wp_register_script( 'select2', $js_dir . 'select2.full' . $suffix, array( 'jquery' ), '4.0.1' );
 
 		wp_enqueue_script( 'popup-maker-admin', $dep_js_dir . 'admin' . $suffix, array(
             'jquery',
@@ -255,7 +260,11 @@ function popmake_load_admin_styles( $hook ) {
 	if ( popmake_is_admin_page() || in_array( $hook, array( 'post.php', 'edit.php' ) ) || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD ) ) {
 
 
-        wp_enqueue_style( 'select2', $css_dir . 'select2' . $suffix, array(), POPMAKE_VERSION );
+		if ( wp_style_is( 'select2', 'registered' ) ) {
+			wp_deregister_style( 'select2' );
+		}
+
+		wp_enqueue_style( 'select2', $css_dir . 'select2' . $suffix, array(), '4.0.1' );
 
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_style( 'popup-maker-admin', $dep_css_dir . 'admin' . $suffix, false, POPMAKE_VERSION );
