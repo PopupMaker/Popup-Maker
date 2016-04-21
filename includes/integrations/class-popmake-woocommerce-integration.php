@@ -1,4 +1,4 @@
-<?php
+	<?php
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -101,7 +101,7 @@ final class Popmake_Woocommerce_Integration {
 		) );
 	}
 
-	public function popup_is_loadable( $is_loadable, $popup_id, $conditions, $sitewide ) {
+	public function popup_is_loadable( $is_loadable, $popup_id, $conditions = array(), $sitewide = false ) {
 
 		/**
 		 * WooCommerce Page Checks

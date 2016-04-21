@@ -76,7 +76,7 @@ function pum_deprecated_popup_is_loadable_filter( $loadable, $popup_id ) {
 		 * @param bool  $loadable True if popup should load.
 		 * @param array $popup_id Post ID.
 		 */
-		return apply_filters( 'popmake_popup_is_loadable', $loadable, $popup_id );
+		return apply_filters( 'popmake_popup_is_loadable', $loadable, $popup_id, array(), false );
 	}
 
 	return $loadable;
