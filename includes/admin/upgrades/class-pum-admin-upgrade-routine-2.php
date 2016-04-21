@@ -38,9 +38,9 @@ final class PUM_Admin_Upgrade_Routine_2 extends PUM_Admin_Upgrade_Routine {
 			@set_time_limit( 0 );
 		}
 
-		static::process_popups();
-		static::process_popup_themes();
-		static::cleanup_old_data();
+		PUM_Admin_Upgrade_Routine_2::process_popups();
+		PUM_Admin_Upgrade_Routine_2::process_popup_themes();
+		PUM_Admin_Upgrade_Routine_2::cleanup_old_data();
 	}
 
 	public static function process_popups() {

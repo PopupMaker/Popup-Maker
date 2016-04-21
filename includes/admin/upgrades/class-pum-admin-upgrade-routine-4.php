@@ -83,7 +83,7 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 				if ( empty( $targeting_conditions ) ) {
 					if ( $popup->post_status == 'publish' ) {
 						// Default popups with no conditions to draft
-						static::change_post_status( $popup->ID, 'draft' );
+						PUM_Admin_Upgrade_Routine_4::change_post_status( $popup->ID, 'draft' );
 					}
 					update_post_meta( $popup->ID, 'popup_conditions', $conditions );
 					$completed ++;
@@ -95,12 +95,12 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 
 				if ( array_key_exists( 'on_entire_site', $targeting_conditions ) ) {
 					$sitewide             = true;
-					$targeting_conditions = static::filter_excludes( $targeting_conditions );
+					$targeting_conditions = PUM_Admin_Upgrade_Routine_4::filter_excludes( $targeting_conditions );
 				} else {
-					$targeting_conditions = static::filter_includes( $targeting_conditions );
+					$targeting_conditions = PUM_Admin_Upgrade_Routine_4::filter_includes( $targeting_conditions );
 				}
 
-				$targeting_conditions = static::parse_conditions( $targeting_conditions );
+				$targeting_conditions = PUM_Admin_Upgrade_Routine_4::parse_conditions( $targeting_conditions );
 
 				$_group = array();
 
@@ -139,12 +139,12 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 
 			if ( $completed < $total ) {
 				$upgrades->set_arg( 'completed', $completed );
-				static::next_step();
+				PUM_Admin_Upgrade_Routine_4::next_step();
 			}
 
 		}
 
-		static::done();
+		PUM_Admin_Upgrade_Routine_4::done();
 	}
 
 	/**
@@ -203,7 +203,7 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 		}
 
 		foreach ( get_post_types( array( 'public' => true ), 'objects' ) as $name => $post_type ) {
-			$pt_conditions = static::filter_conditions( $targeting_conditions, '_' . $name );
+			$pt_conditions = PUM_Admin_Upgrade_Routine_4::filter_conditions( $targeting_conditions, '_' . $name );
 
 			if ( empty( $pt_conditions ) ) {
 				continue;
@@ -239,7 +239,7 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 
 		foreach ( get_taxonomies( array( 'public' => true ), 'objects' ) as $tax_name => $taxonomy ) {
 
-			$tax_conditions = static::filter_conditions( $targeting_conditions, '_' . $tax_name );
+			$tax_conditions = PUM_Admin_Upgrade_Routine_4::filter_conditions( $targeting_conditions, '_' . $tax_name );
 
 			if ( empty( $tax_conditions ) ) {
 				continue;

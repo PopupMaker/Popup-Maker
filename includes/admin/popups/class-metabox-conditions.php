@@ -50,7 +50,7 @@ class PUM_Popup_Conditions_Metabox {
             <?php do_action( 'pum_popup_conditions_metabox_before', $post->ID ); ?>
 
             <div id="pum-popup-conditions" class="pum-popup-conditions">
-                <?php static::render_builder(); ?>
+                <?php self::render_builder(); ?>
             </div>
 
             <?php do_action( 'pum_popup_conditions_metabox_after', $post->ID ); ?>

@@ -70,7 +70,7 @@ class PUM_Popup_Triggers_Metabox {
                             continue;
                         }
                         $trigger = $triggers[ $values['type'] ];
-                        static::render_row( array(
+	                    self::render_row( array(
                                 'index'    => esc_attr( $key ),
                                 'type'     => esc_attr( $values['type'] ),
                                 'columns'  => array(
@@ -127,7 +127,7 @@ class PUM_Popup_Triggers_Metabox {
             return;
         } ?>
 		<script type="text/template" id="pum_trigger_row_templ">
-			<?php static::render_row( array(
+			<?php self::render_row( array(
 				'index' => '<%= index %>',
 				'type' => '<%= type %>',
 				'columns' => array(

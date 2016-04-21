@@ -172,12 +172,12 @@ final class PUM_Admin_Upgrade_Routine_3 extends PUM_Admin_Upgrade_Routine {
 
 			if ( $completed < $total ) {
 				$upgrades->set_arg( 'completed', $completed );
-				static::next_step();
+				PUM_Admin_Upgrade_Routine_3::next_step();
 			}
 
 		}
 
-		static::done();
+		PUM_Admin_Upgrade_Routine_3::done();
 
 	}
 }

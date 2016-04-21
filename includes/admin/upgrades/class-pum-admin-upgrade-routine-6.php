@@ -84,24 +84,24 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 		) );
 		$popups = $popups->get_popups();
 
-		static::setup_valid_themes();
+		PUM_Admin_Upgrade_Routine_6::setup_valid_themes();
 
 		// Delete All old meta keys.
-		static::delete_all_old_meta_keys();
+		PUM_Admin_Upgrade_Routine_6::delete_all_old_meta_keys();
 
 		// Delete All orphaned meta keys.
-		static::delete_all_orphaned_meta_keys();
+		PUM_Admin_Upgrade_Routine_6::delete_all_orphaned_meta_keys();
 
-		static::process_popup_cats_tags();
+		PUM_Admin_Upgrade_Routine_6::process_popup_cats_tags();
 
 		if ( $popups ) {
 
 			foreach ( $popups as $popup ) {
 
 				// Check that each popup has a valid theme id
-				if ( ! array_key_exists( $popup->get_theme_id(), static::$valid_themes ) ) {
+				if ( ! array_key_exists( $popup->get_theme_id(), PUM_Admin_Upgrade_Routine_6::$valid_themes ) ) {
 					// Set a valid theme.
-					update_post_meta( $popup->ID, 'popup_theme', static::$default_theme );
+					update_post_meta( $popup->ID, 'popup_theme', PUM_Admin_Upgrade_Routine_6::$default_theme );
 				}
 
 				$completed ++;
@@ -109,31 +109,31 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 
 			if ( $completed < $total ) {
 				$upgrades->set_arg( 'completed', $completed );
-				static::next_step();
+				PUM_Admin_Upgrade_Routine_6::next_step();
 			}
 
 		}
 
-		static::done();
+		PUM_Admin_Upgrade_Routine_6::done();
 	}
 
 	/**
 	 * Create a list of valid popup themes.
 	 */
 	public static function setup_valid_themes() {
-		static::$valid_themes = array();
+		PUM_Admin_Upgrade_Routine_6::$valid_themes = array();
 
 		foreach ( popmake_get_all_popup_themes() as $theme ) {
-			static::$valid_themes[ $theme->ID ] = $theme;
+			PUM_Admin_Upgrade_Routine_6::$valid_themes[ $theme->ID ] = $theme;
 			if ( popmake_get_default_popup_theme() == $theme->ID ) {
-				static::$default_theme = $theme->ID;
+				PUM_Admin_Upgrade_Routine_6::$default_theme = $theme->ID;
 			}
 		}
 
 
-		if ( ! static::$default_theme ) {
-			reset( static::$valid_themes );
-			static::$default_theme = static::$valid_themes[ key( static::$valid_themes ) ]->ID;
+		if ( ! PUM_Admin_Upgrade_Routine_6::$default_theme ) {
+			reset( PUM_Admin_Upgrade_Routine_6::$valid_themes );
+			PUM_Admin_Upgrade_Routine_6::$default_theme = PUM_Admin_Upgrade_Routine_6::$valid_themes[ key( PUM_Admin_Upgrade_Routine_6::$valid_themes ) ]->ID;
 		}
 	}
 

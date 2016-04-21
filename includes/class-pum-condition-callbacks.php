@@ -44,9 +44,9 @@ class PUM_Condition_Callbacks {
 	public static function taxonomy( $settings = array() ) {
 
 		if ( strpos( $settings['target'], 'tax_category' ) !== false ) {
-			return static::category( $settings );
+			return self::category( $settings );
 		} elseif ( strpos( $settings['target'], 'tax_post_tag' ) !== false ) {
-			return static::post_tag( $settings );
+			return self::post_tag( $settings );
 		}
 
 		$taxonomy = str_replace( array( 'tax_', '_all', '_selected' ), array( '', '', '' ), $settings['target'] );
@@ -130,9 +130,9 @@ class PUM_Condition_Callbacks {
 	public static function post_type_tax( $settings = array() ) {
 
 		if ( strpos( $settings['target'], '_w_category' ) !== false || strpos( $settings['target'], '_wp_category' ) !== false ) {
-			return static::post_type_category( $settings );
+			return self::post_type_category( $settings );
 		} elseif ( strpos( $settings['target'], '_w_post_tag' ) !== false || strpos( $settings['target'], '_wp_post_tag' ) !== false ) {
-			return static::post_type_tag( $settings );
+			return self::post_type_tag( $settings );
 		}
 
 		if ( strpos( $settings['target'], '_w_' ) ) {

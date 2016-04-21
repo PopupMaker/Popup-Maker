@@ -57,7 +57,7 @@ class PUM_Activator {
 			foreach ( $blog_ids as $blog_id ) {
 				switch_to_blog( $blog_id );
 
-				static::activate_site();
+				self::activate_site();
 
 				$activated[] = $blog_id;
 			}
@@ -78,7 +78,7 @@ class PUM_Activator {
 
 		// Running on a single blog
 
-		static::activate_site();
+		self::activate_site();
 
 		// Bail if activating from network, or bulk
 		if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {

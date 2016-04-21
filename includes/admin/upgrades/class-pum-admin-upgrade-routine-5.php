@@ -73,14 +73,14 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 				/**
 				 * Initialize the popup meta values for core analytics.
 				 */
-				static::initialize_analytics( $popup->ID );
+				PUM_Admin_Upgrade_Routine_5::initialize_analytics( $popup->ID );
 
 				$completed ++;
 			}
 
 			if ( $completed < $total ) {
 				$upgrades->set_arg( 'completed', $completed );
-				static::next_step();
+				PUM_Admin_Upgrade_Routine_5::next_step();
 			}
 
 		}
@@ -108,7 +108,7 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 		update_site_option( 'pum_total_conversion_count', $total_conversion_count );
 		 */
 
-		static::done();
+		PUM_Admin_Upgrade_Routine_5::done();
 	}
 
 	/**

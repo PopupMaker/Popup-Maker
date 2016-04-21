@@ -63,7 +63,7 @@ class PUM_Admin_Upgrade_Routine {
 			exit;
 		} else {
 			$redirect = add_query_arg( $upgrades->get_args(), admin_url() );
-			static::redirect( $redirect );
+			PUM_Admin_Upgrade_Routine::redirect( $redirect );
 		}
 
 	}

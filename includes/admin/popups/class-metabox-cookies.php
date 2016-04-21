@@ -69,7 +69,7 @@ class PUM_Popup_Cookies_Metabox {
                             continue;
                         }
                         $cookie = $cookies[ $values['event'] ];
-                        static::render_row( array(
+	                    self::render_row( array(
                                 'index'    => esc_attr( $key ),
                                 'event'    => esc_attr( $values['event'] ),
                                 'columns'  => array(
@@ -126,7 +126,7 @@ class PUM_Popup_Cookies_Metabox {
             return;
         } ?>
 		<script type="text/template" id="pum_cookie_row_templ">
-			<?php static::render_row( array(
+			<?php self::render_row( array(
 				'index' => '<%= index %>',
 				'event' => '<%= event %>',
 				'columns' => array(
