@@ -6,7 +6,7 @@ Donate link:
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.4
 Tested up to: 4.5
-Stable tag: 1.4.4
+Stable tag: 1.4.5
 License: GNU Version 3 or Any Later Version
 
 Easily create attractive popups with no coding skills. Customize nearly every aspect of your popups, from theme & position, to targeting & cookies.
@@ -115,8 +115,12 @@ There are several common causes for this which include:
 
 == Changelog ==
 
+= v1.4.5 - 4/21/2016 =
+* Fix: Replaced all usage of static:: for PHP 5.2 compatiblity.
+* Fix: Forced the latest version of Select2 to load on Popup Maker admin pages in the case that an older version was enqueued.
+
 = v1.4.4 - 4/20/2016 =
-* Version Bump to fix upgrade issues.
+* Fix: Version Bump to fix upgrade issues.
 
 = v1.4.3 - 4/20/2016 =
 * Fix: Removed extra whitespace before opening php tags.
