@@ -176,7 +176,7 @@ function popmake_load_admin_scripts( $hook ) {
 
 	}
 
-	if ( popmake_is_admin_page() || in_array( $hook, array( 'post.php', 'edit.php' ) ) || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD ) ) {
+	if ( popmake_is_admin_page() || in_array( $hook, array( 'post.php', 'edit.php', 'post-new.php' ) ) || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD ) ) {
 
 		// Deregister older versions, loaded by Types, Advanced Custom Fields etc.
 		if ( wp_script_is( 'select2', 'registered' ) ) {
