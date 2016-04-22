@@ -100,6 +100,7 @@ class PUM_Admin_Upgrades {
 
         $parent = null;
 
+        /*
         if ( function_exists( 'is_network_admin' ) && is_network_admin() ) {
             add_menu_page(
                 __( 'Popup Maker', 'popup-maker' ),
@@ -111,12 +112,13 @@ class PUM_Admin_Upgrades {
             );
             $parent = 'popup-maker';
         }
+        */
 
         $this->page = add_submenu_page(
             $parent,
             __( 'Popup Maker Upgrades', 'popup-maker' ),
             __( 'Popup Maker Upgrades', 'popup-maker' ),
-            'manage_options',
+            apply_filters( 'pum_upgrade_required_cap', 'manage_options' ),
             'pum-upgrades',
             array( $this, 'upgrades_screen' )
         );
