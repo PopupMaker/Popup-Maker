@@ -28,7 +28,7 @@ final class PUM_Admin_Upgrade_Routine_2 extends PUM_Admin_Upgrade_Routine {
 	}
 
 	public static function run() {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( PUM_Admin_Upgrades::instance()->required_cap ) ) {
 			wp_die( __( 'You do not have permission to do upgrades', 'popup-maker' ), __( 'Error', 'popup-maker' ), array( 'response' => 403 ) );
 		}
 

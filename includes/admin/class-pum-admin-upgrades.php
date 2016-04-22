@@ -34,6 +34,8 @@ class PUM_Admin_Upgrades {
 
     public $doing_upgrades = false;
 
+    public $required_cap = 'manage_options';
+
     public $current_routine = null;
 
     public $next_routine = null;
@@ -56,6 +58,8 @@ class PUM_Admin_Upgrades {
     public function init() {
 
         $this->update_plugin_version();
+
+        $this->required_cap = apply_filters( 'pum_upgrade_required_cap', 'manage_options' );
 
         // bail if this plugin data doesn't need updating
         if ( pum_get_db_ver() >= PUM::DB_VER ) {
@@ -118,7 +122,7 @@ class PUM_Admin_Upgrades {
             $parent,
             __( 'Popup Maker Upgrades', 'popup-maker' ),
             __( 'Popup Maker Upgrades', 'popup-maker' ),
-            apply_filters( 'pum_upgrade_required_cap', 'manage_options' ),
+            $this->required_cap,
             'pum-upgrades',
             array( $this, 'upgrades_screen' )
         );
@@ -272,7 +276,7 @@ class PUM_Admin_Upgrades {
      */
     public function trigger_upgrades() {
 
-        if ( ! current_user_can( 'manage_options' ) ) {
+        if ( ! current_user_can( $this->required_cap ) ) {
             wp_die( __( 'You do not have permission to do upgrades', 'popup-maker' ), __( 'Error', 'popup-maker' ), array( 'response' => 403 ) );
         }
 
