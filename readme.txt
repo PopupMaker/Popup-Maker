@@ -117,7 +117,6 @@ There are several common causes for this which include:
 
 = v1.4.6 - 4/22/2016 =
 * Fix: Bug in new post editor JS.
-* Fix: PHP parse errors.
 * Fix: Added filter to override permissions for upgrade routines.
 
 = v1.4.5 - 4/21/2016 =

@@ -88,51 +88,51 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:105, includes/admin/class-pum-admin-upgrades.php:106, includes/admin/class-pum-admin-upgrades.php:250
+#: includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256
 msgid "Popup Maker"
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:117, includes/admin/class-pum-admin-upgrades.php:118
+#: includes/admin/class-pum-admin-upgrades.php:123, includes/admin/class-pum-admin-upgrades.php:124
 msgid "Popup Maker Upgrades"
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:242
+#: includes/admin/class-pum-admin-upgrades.php:248
 msgid "Popup Maker needs to complete a database upgrade that was previously started, click <a href=\"%s\">here</a> to resume the upgrade."
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:251
+#: includes/admin/class-pum-admin-upgrades.php:257
 msgid "Important"
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:252
+#: includes/admin/class-pum-admin-upgrades.php:258
 msgid "Database upgrades required."
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:254
+#: includes/admin/class-pum-admin-upgrades.php:260
 msgid "Please click %shere%s to complete these changes now."
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:274, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50
+#: includes/admin/class-pum-admin-upgrades.php:280, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50
 msgid "You do not have permission to do upgrades"
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:274, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50, includes/plugin-updater.php:337
+#: includes/admin/class-pum-admin-upgrades.php:280, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50, includes/plugin-updater.php:337
 msgid "Error"
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:295
+#: includes/admin/class-pum-admin-upgrades.php:301
 msgid "Upgrades have been completed successfully."
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:556
+#: includes/admin/class-pum-admin-upgrades.php:562
 msgid "Popup Maker - Upgrades"
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:571
+#: includes/admin/class-pum-admin-upgrades.php:577
 msgid "The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished."
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:646
+#: includes/admin/class-pum-admin-upgrades.php:652
 msgid "Upgrade failed, please try again."
 msgstr ""
 
