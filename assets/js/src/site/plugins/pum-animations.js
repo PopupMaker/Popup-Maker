@@ -126,15 +126,15 @@
          * @deprecated
          * @returns {$.fn.popmake.animations}
          */
-        grow: function () {
-            return $.fn.popmake.animations.fade.apply(this, Array.prototype.slice.call(arguments, 1));
+        grow: function (callback) {
+            return $.fn.popmake.animations.fade.apply(this, arguments);
         },
         /**
          * @deprecated
          * @returns {$.fn.popmake.animations}
          */
-        growAndSlide: function () {
-            return $.fn.popmake.animations.fadeAndSlide.apply(this, Array.prototype.slice.call(arguments, 1));
+        growAndSlide: function (callback) {
+            return $.fn.popmake.animations.fadeAndSlide.apply(this, arguments);
         }
     };
 
