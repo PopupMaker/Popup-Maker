@@ -6,7 +6,7 @@ Donate link:
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.4
 Tested up to: 4.5
-Stable tag: 1.4.5
+Stable tag: 1.4.6
 License: GNU Version 3 or Any Later Version
 
 Easily create attractive popups with no coding skills. Customize nearly every aspect of your popups, from theme & position, to targeting & cookies.
@@ -114,6 +114,11 @@ There are several common causes for this which include:
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.4.6 - 4/22/2016 =
+* Fix: Bug in new post editor JS.
+* Fix: PHP parse errors.
+* Fix: Added filter to override permissions for upgrade routines.
 
 = v1.4.5 - 4/21/2016 =
 * Fix: Replaced all usage of static:: for PHP 5.2 compatiblity.
