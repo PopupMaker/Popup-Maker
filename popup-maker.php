@@ -291,7 +291,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/admin-setup.php';
 				require_once POPMAKE_DIR . 'includes/admin/admin-functions.php';
 				require_once POPMAKE_DIR . 'includes/admin/admin-pages.php';
-				require_once POPMAKE_DIR . 'includes/admin/post-editor.php';
 
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/dashboard-columns.php';
