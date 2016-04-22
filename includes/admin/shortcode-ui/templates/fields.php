@@ -87,7 +87,3 @@
 	<input type="text" id="<%= id %>" name="<%= name %>" value="<%= value %>" class="popmake-range-manual pum-range-manual" <%= meta %>/>
 	<span class="range-value-unit regular-text"><%= unit %></span>
 </script>
-
-<script type="text/template" id="tmpl-pum-field-">
-
-</script>
