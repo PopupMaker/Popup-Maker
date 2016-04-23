@@ -89,9 +89,21 @@ class PUM_Freemius {
 		$this->fs()->add_action( 'after_account_plan_sync', array( $this, 'plan_sync' ), 10, 2 );
 
 	    if ( function_exists( 'fs_override_i18n' ) ) {
-		    $this->fs()->override_i18n( array(
-			    'delete-account-confirm' => __( 'Deleting your account will stop sending usage statistics and disable usage of in dash support forms. This will not stop the plugin from functioning. Are you sure you want to do this?', 'popup-maker' )
-		    ) );
+		    $i18n = array(
+			    'delete-account-confirm' => __( 'Deleting your account will stop sending usage statistics and disable usage of in dash support forms. This will not stop the plugin from functioning. Are you sure you want to do this?', 'popup-maker' ),
+			    'skip'                   => _x( 'Maybe later', 'button label', 'popup-maker' ),
+		    );
+
+		    $settings = get_option( 'popmake_settings' );
+
+		    // If the user already opted in before ask them to do it again.
+		    if ( isset( $settings['allow_tracking'] ) && $settings['allow_tracking'] ) {
+			    $i18n['opt-in-connect'] = _x( 'Yes - I’m in!', 'button label', 'popup-maker' );
+		    } else {
+			    $i18n['opt-in-connect'] = _x( 'Awesome - I’m in!', 'button label', 'popup-maker' );
+		    }
+
+		    $this->fs()->override_i18n( $i18n );
 	    }
 	}
 
@@ -123,29 +135,16 @@ class PUM_Freemius {
 	 */
 	public function custom_connect_message( $message, $user_first_name, $plugin_title, $user_login, $site_link, $freemius_link ) {
 
+		$intro = __fs( 'hey-x' ) . '<br/><br/>';
+
 		// If the user already opted in before ask them to do it again.
 		if ( popmake_get_option( 'allow_tracking', false ) ) {
-			$intro = __( 'We have moved our usage tracking to a new platform.', 'popup-maker' ) . '<br/><br/>' .
-			         __( 'We appreciate that you chose to opt-in once before and ask that you please continue to help us improve %2$s!', 'popup-maker' ) . '<br/><br/>' .
-			         __( 'If you choose to opt-in again:', 'popup-maker' );
-
+			$intro .= __( 'We moved our usage tracking to a new platform called %s, kindly confirm if you are good with it?', 'popup-maker' );
 		} else {
-			$intro = __( 'Please help us improve %2$s and allow us to track plugin usage!', 'popup-maker' ) . '<br/><br/>' .
-			         __( 'If you opt-in now:', 'popup-maker' );
+			$intro .= __( 'Help us to improve Popup Maker and make it even more awesome by allowing us to capture some data with %s. In return, we will send you a 20%% discount for the extension store.', 'popup-maker' );
 		}
 
-		return sprintf(
-			__fs( 'hey-x' ) . '<br/><br/>' .
-			$intro .
-			'</p><ul style="font-size: 14px; padding-left: 18px;list-style:square;">' .
-			'<li>' . __( 'Receive a code for 20%% off any purchase in our extension store.', 'popup-maker' ) . '</li>' .
-			'<li>' . __( 'Submit support requests from your own dashboard and reply by email. (No more forums)', 'popup-maker' ) . '</li>' .
-			'<li>' . __( 'And no sensitive data is tracked.', 'popup-maker' ) . '</li>' .
-			'</ul><p>' .
-			__( 'If you skip this, that\'s okay! The plugin will still work just fine.', 'popup-maker' ),
-			$user_first_name,
-			'<strong>' . $plugin_title . '</strong>'
-		);
+		return sprintf( $intro, $user_first_name, '<a href="https://freemius.com/wordpress/insights/">Freemius</a>' );
 
 	}
 
