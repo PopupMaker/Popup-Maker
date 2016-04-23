@@ -161,15 +161,15 @@ class PUM_Popup_Conditions_Metabox {
         if ( ! popmake_is_admin_popup_page() ) {
             return;
         } ?>
-		<script type="text/template" id="pum_condition_group_templ">
-			<div class="facet-group-wrap" data-index="<%= index %>">
+		<script type="text/template" id="tmpl-pum-condition-group">
+			<div class="facet-group-wrap" data-index="{{data.index}}">
 				<section class="facet-group">
-					<div class="facet-list"><%
-						for(var i = 0; conditions.length > i; i++) {
-                            conditions[i].index = i;
-                            conditions[i].group = index;
-                            print(PUMConditions.templates.facet( conditions[i] ));
-						} %>
+					<div class="facet-list"><#
+						for(var i = 0; data.conditions.length > i; i++) {
+                            data.conditions[i].index = i;
+							data.conditions[i].group = data.index;
+                            print(PUMConditions.templates.facet( data.conditions[i] ));
+						} #>
 					</div>
 					<div class="add-or">
                         <button type="button" class="add add-facet no-button" aria-label="<?php _ex( 'Add another OR condition', 'aria-label for add new OR condition button', 'popup-maker' ); ?>"><?php _e( 'or', 'popup-maker' ); ?></button>
@@ -192,23 +192,23 @@ class PUM_Popup_Conditions_Metabox {
 		 * settings: values for option fields
 		 */
 		?>
-		<script type="text/template" id="pum_condition_facet_templ">
-			<div class="facet" data-index="<%= index %>" data-target="<%= target %>">
+		<script type="text/template" id="tmpl-pum-condition-facet">
+			<div class="facet" data-index="{{data.index}}" data-target="{{data.target}}">
 
 				<i class="or">or</i>
 
 
-                <div class="facet-col pum-field pum-condition-target select pum-select2 <% if (typeof not_operand !== 'undefined' && pumChecked(not_operand, '1')) print('not-operand-checked'); %>">
+                <div class="facet-col pum-field pum-condition-target select pum-select2 <# if (typeof data.not_operand !== 'undefined' && pumChecked(data.not_operand, '1')) print('not-operand-checked'); #>">
                     <button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
-                        <input type="checkbox" name="popup_conditions[<%= group %>][<%= index %>][not_operand]" value="1" <% if (typeof not_operand !== 'undefined') print(pumChecked(not_operand, '1', true)); %>  />
+                        <input type="checkbox" name="popup_conditions[{{data.group}}][{{data.index}}][not_operand]" value="1" <# if (typeof data.not_operand !== 'undefined') print(pumChecked(data.not_operand, '1', true)); #>  />
                     </button>
 
-                    <select class="target facet-select" id="popup_conditions[<%= group %>][<%= index %>][target]" name="popup_conditions[<%= group %>][<%= index %>][target]">
+                    <select class="target facet-select" id="popup_conditions[{{data.group}}][{{data.index}}][target]" name="popup_conditions[{{data.group}}][{{data.index}}][target]">
 						<option value=""><?php _e( 'Select a condition', 'popup-maker' ); ?></option>
 						<?php foreach ( PUM_Conditions::instance()->get_conditions_by_group() as $group => $conditions ) : ?>
 							<optgroup label="<?php echo esc_attr_e( $group ); ?>">
 								<?php foreach ( $conditions as $id => $condition ) : ?>
-                                    <option value="<?php echo $id; ?>" <% if(target === '<?php echo $id; ?>') { %>selected="selected"<% } %>>
+                                    <option value="<?php echo $id; ?>" {{{ pumSelected(data.target, '<?php echo $id; ?>', true) }}}>
                                         <?php echo $condition->get_label( 'name' ); ?>
                                     </option>
                                 <?php endforeach ?>
@@ -217,11 +217,11 @@ class PUM_Popup_Conditions_Metabox {
 					</select>
 				</div>
 
-				<div class="facet-settings"><%
+				<div class="facet-settings"><#
 					//settings.index = index;
-					if (typeof target === 'string' && PUMConditions.templates.settings[ target ] !== undefined) {
-                        print(PUMConditions.templates.settings[ target ]( settings ));
-					} %>
+					if (typeof data.target === 'string' && PUMConditions.templates.settings[ data.target ] !== undefined) {
+                        print(PUMConditions.templates.settings[ data.target ]( data.settings ));
+					} #>
 				</div>
 
 				<div class="facet-actions">
@@ -233,8 +233,7 @@ class PUM_Popup_Conditions_Metabox {
 
 		<?php foreach ( PUM_Conditions::instance()->get_conditions() as $id => $condition ) : ?>
 
-			<script type="text/template" id="pum_condition_settings_<?php esc_attr_e( $id ); ?>_templ"
-			        class="pum-condition-settings templ" data-condition="<?php esc_attr_e( $id ); ?>">
+			<script type="text/template" id="tmpl-pum-condition-settings-<?php esc_attr_e( $id ); ?>" class="pum-condition-settings tmpl" data-condition="<?php esc_attr_e( $id ); ?>">
 				<?php
 				/**
 				 * Render Each settings tab contents.

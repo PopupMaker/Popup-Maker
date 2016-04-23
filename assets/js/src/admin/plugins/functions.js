@@ -10,8 +10,8 @@ function pumSelected(val1, val2, print) {
         selected = true;
     }
 
-    if (selected && print !== undefined && print) {
-        return ' selected="selected"';
+    if (print !== undefined && print) {
+        return selected ? ' selected="selected"' : '';
     }
     return selected;
 }
@@ -28,8 +28,8 @@ function pumChecked(val1, val2, print) {
         checked = true;
     }
 
-    if (checked && print !== undefined && print) {
-        return ' checked="checked"';
+    if (print !== undefined && print) {
+        return checked ? ' checked="checked"' : '';
     }
     return checked;
 }

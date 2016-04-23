@@ -48,13 +48,14 @@ var PUMConditions;
         .ready(function () {
             // TODO Remove this check once admin scripts have been split into popup-editor, theme-editor etc.
             if ($('body.post-type-popup form#post').length) {
-                PUMConditions.templates.group = _.template($('#pum_condition_group_templ').text());
-                PUMConditions.templates.facet = _.template($('#pum_condition_facet_templ').text());
+                PUMConditions.templates.group = wp.template('pum-condition-group');
+                PUMConditions.templates.facet = wp.template('pum-condition-facet');
                 PUMConditions.templates.settings = {};
 
-                $('script.templ.pum-condition-settings').each(function () {
-                    var $this = $(this);
-                    PUMConditions.templates.settings[$this.data('condition')] = _.template($this.text());
+                $('script.tmpl.pum-condition-settings').each(function () {
+                    var $this = $(this),
+                        tmpl = $this.attr('id').replace('tmpl-', '');
+                    PUMConditions.templates.settings[$this.data('condition')] = wp.template(tmpl);
                 });
 
                 PUMConditions.renumber();
