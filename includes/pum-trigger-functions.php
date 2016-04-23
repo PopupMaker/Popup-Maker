@@ -81,7 +81,7 @@ function pum_get_trigger_labels() {
 			'settings_column' => sprintf(
 				'<strong>%1$s</strong>: %2$s',
 				__( 'Extra Selectors', 'popup-maker' ),
-				'<%= extra_selectors %>'
+				'{{data.extra_selectors}}'
 			),
 		),
 		'auto_open'  => array(
@@ -90,7 +90,7 @@ function pum_get_trigger_labels() {
 			'settings_column' => sprintf(
 				'<strong>%1$s</strong>: %2$s',
 				__( 'Delay', 'popup-maker' ),
-				'<%= delay %>'
+				'{{data.delay}}'
 			),
 		),
 	) );

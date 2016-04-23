@@ -76,7 +76,7 @@ class PUM_Popup_Triggers_Metabox {
                                 'columns'  => array(
                                         'type'     => $trigger->get_label( 'name' ),
                                         'cookie'   => isset( $values['settings']['cookie']['name'] ) ? $values['settings']['cookie']['name'] : '',
-                                        'settings' => '<%= PUMTriggers.getSettingsDesc(type, trigger_settings) %>',
+                                        'settings' => '{{{PUMTriggers.getSettingsDesc(data.type, data.trigger_settings)}}}',
                                 ),
                                 'settings' => $values['settings'],
                         ) );
@@ -126,20 +126,20 @@ class PUM_Popup_Triggers_Metabox {
         if ( ! popmake_is_admin_popup_page() ) {
             return;
         } ?>
-		<script type="text/template" id="pum_trigger_row_templ">
+		<script type="text/html" id="tmpl-pum-trigger-row">
 			<?php self::render_row( array(
-				'index' => '<%= index %>',
-				'type' => '<%= type %>',
+				'index' => '{{data.index}}',
+				'type' => '{{data.type}}',
 				'columns' => array(
-                        'type'     => '<%= PUMTriggers.getLabel(type) %>',
-                        'cookie'   => "<%= PUMTriggers.cookie_column_value(trigger_settings.cookie.name) %>",
-                        'settings' => '<%= PUMTriggers.getSettingsDesc(type, trigger_settings) %>',
+                        'type'     => '{{{PUMTriggers.getLabel(data.type)}}}',
+                        'cookie'   => "{{{PUMTriggers.cookie_column_value(data.trigger_settings.cookie.name)}}}",
+                        'settings' => '{{{PUMTriggers.getSettingsDesc(data.type, data.trigger_settings)}}}',
 				),
-				'settings' => '<%- JSON.stringify(trigger_settings) %>',
+				'settings' => '{{{JSON.stringify(data.trigger_settings)}}}',
 			) ); ?>
 		</script>
 
-		<script type="text/template" id="pum_trigger_add_type_templ"><?php
+		<script type="text/html" id="tmpl-pum-trigger-add-type"><?php
 			ob_start(); ?>
 			<select id="popup_trigger_add_type">
 				<?php foreach ( PUM_Triggers::instance()->get_triggers() as $id => $trigger ) : ?>
@@ -156,12 +156,12 @@ class PUM_Popup_Triggers_Metabox {
 		</script>
 
 		<?php foreach ( PUM_Triggers::instance()->get_triggers() as $id => $trigger ) { ?>
-		<script type="text/template" class="pum-trigger-settings <?php esc_attr_e( $id ); ?> templ" id="pum_trigger_settings_<?php esc_attr_e( $id ); ?>_templ">
+		<script type="text/html" id="tmpl-pum-trigger-settings-<?php esc_attr_e( $id ); ?>" class="pum-trigger-settings <?php esc_attr_e( $id ); ?> tmpl" data-trigger="<?php esc_attr_e( $id ); ?>">
 
 			<?php ob_start(); ?>
 
 			<input type="hidden" name="type" class="type" value="<?php esc_attr_e( $id ); ?>"/>
-			<input type="hidden" name="index" class=index" value="<%= index %>"/>
+			<input type="hidden" name="index" class=index" value="{{data.index}}"/>
 
 			<div class="pum-tabs-container vertical-tabs tabbed-form">
 
@@ -195,7 +195,7 @@ class PUM_Popup_Triggers_Metabox {
 				'id' => 'pum_trigger_settings_' . $id,
 				'title' => $trigger->get_label( 'modal_title' ),
 				'class' => 'tabbed-content trigger-editor',
-				'save_button_text' => '<%= save_button_text %>',
+				'save_button_text' => '{{data.save_button_text}}',
 				'content' => $content
 			) ); ?>
 		</script><?php

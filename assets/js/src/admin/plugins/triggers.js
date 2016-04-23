@@ -74,8 +74,8 @@ var PUMTriggers;
         .on('select2:select', '#pum-first-trigger', function () {
             var $this = $(this),
                 type = $this.val(),
-                id = '#pum_trigger_settings_' + type,
-                template = _.template($('script' + id + '_templ').html()),
+                id = 'pum-trigger-settings-' + type,
+                template = wp.template(id),
                 data = {};
 
             data.trigger_settings = defaults.triggers[type] !== undefined ? defaults.triggers[type] : {};
@@ -94,15 +94,17 @@ var PUMTriggers;
                 .trigger('change');
         })
         .on('click', '#pum_popup_triggers .add-new', function () {
-            var template = _.template($('script#pum_trigger_add_type_templ').html());
+            var template = wp.template('pum-trigger-add-type');
             PUMModals.reload('#pum_trigger_add_type_modal', template());
         })
         .on('click', '#pum_popup_triggers_list .edit', function (e) {
+
             var $this = $(this),
                 $row = $this.parents('tr:first'),
                 type = $row.find('.popup_triggers_field_type').val(),
-                id = '#pum_trigger_settings_' + type,
-                template = _.template($('script' + id + '_templ').html()),
+                id = 'pum-trigger-settings-' + type,
+                modalID = '#' + id.replace(/-/g,'_'),
+                template = wp.template(id),
                 data = {
                     index: $row.parent().children().index($row),
                     type: type,
@@ -117,7 +119,7 @@ var PUMTriggers;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(id, template(data));
+            PUMModals.reload(modalID, template(data));
             PUMTriggers.initEditForm(data);
         })
         .on('click', '#pum_popup_triggers_list .remove', function (e) {
@@ -141,8 +143,9 @@ var PUMTriggers;
         })
         .on('submit', '#pum_trigger_add_type_modal .pum-form', function (e) {
             var type = $('#popup_trigger_add_type').val(),
-                id = '#pum_trigger_settings_' + type,
-                template = _.template($('script' + id + '_templ').html()),
+                id = 'pum-trigger-settings-' + type,
+                modalID = '#' + id.replace(/-/g,'_'),
+                template = wp.template(id),
                 data = {};
 
             e.preventDefault();
@@ -155,7 +158,7 @@ var PUMTriggers;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(id, template(data));
+            PUMModals.reload(modalID, template(data));
             PUMTriggers.initEditForm(data);
         })
         .on('submit', '.trigger-editor .pum-form', function (e) {
@@ -164,7 +167,7 @@ var PUMTriggers;
                 values = $form.serializeObject(),
                 index = parseInt(values.index),
                 $row = index >= 0 ? $('#pum_popup_triggers_list tbody tr').eq(index) : null,
-                template = _.template($('script#pum_trigger_row_templ').html()),
+                template = wp.template('pum-trigger-row'),
                 $new_row;
 
             e.preventDefault();
