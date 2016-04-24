@@ -70,7 +70,7 @@ gulp.task('js', ['js:admin', 'js:site', 'js:other']);
 
 //region Language Files
 gulp.task('langpack', function () {
-    return gulp.src(['**/*.php'])
+    return gulp.src(['**/*.php', '!dist/**/*.*'])
         .pipe($fn.plumber(plumberErrorHandler))
         .pipe($fn.sort())
         .pipe($fn.wpPot( {
@@ -132,8 +132,13 @@ gulp.task('watch', function () {
     gulp.watch('**/*.php', ['langpack']);
 });
 
-gulp.task('build', ['css', 'js', 'langpack'], function () {
+gulp.task('prebuild', ['css', 'js', 'langpack'], function () {
     return gulp.src(['./**/*.*', '!./dist/**', '!./build/**', '!./node_modules/**', '!./gulpfile.js', '!./package.json', '!./assets/js/src/**'])
+        .pipe(gulp.dest('dist/'+pkg.version+'/'+pkg.name));
+});
+
+gulp.task('build', ['prebuild'], function () {
+    return gulp.src('dist/'+pkg.version+'/**/*.*')
         .pipe($fn.zip(pkg.name+'_v'+pkg.version+'.zip'))
         .pipe(gulp.dest('build'));
 });
