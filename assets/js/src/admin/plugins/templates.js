@@ -6,7 +6,7 @@ var PUM_Templates;
 
     PUM_Templates = {
         render: function (template, data) {
-            var _template = _.template($(template).html());
+            var _template = wp.template(template);
 
             if ('object' === typeof data.classes) {
                 data.classes = data.classes.join(' ');
@@ -24,7 +24,7 @@ var PUM_Templates;
                     has_content: false,
                     content: ''
                 }, args),
-                template = data.has_content ? '#tmpl-pum-shortcode-w-content' : '#tmpl-pum-shortcode';
+                template = data.has_content ? 'pum-shortcode-w-content' : 'pum-shortcode';
 
             return PUM_Templates.render(template, data);
         },
@@ -39,7 +39,7 @@ var PUM_Templates;
                 content: ''
             }, args);
 
-            return PUM_Templates.render('#tmpl-pum-modal', data);
+            return PUM_Templates.render('pum-modal', data);
         },
         tabs: function (args) {
             var classes = args.classes || [],
@@ -65,7 +65,7 @@ var PUM_Templates;
 
             data.classes = data.classes + ' ' + classes.join(' ');
 
-            return PUM_Templates.render('#tmpl-pum-tabs', data);
+            return PUM_Templates.render('pum-tabs', data);
         },
         section: function (args) {
             var data = $.extend(true, {}, {
@@ -74,10 +74,10 @@ var PUM_Templates;
             }, args);
 
 
-            return PUM_Templates.render('#tmpl-pum-field-section', data);
+            return PUM_Templates.render('pum-field-section', data);
         },
         field: function (args) {
-            var fieldTemplate = '#tmpl-pum-field-' + args.type,
+            var fieldTemplate = 'pum-field-' + args.type,
                 options = [],
                 data = $.extend(true, {}, {
                     type: 'text',
@@ -105,11 +105,11 @@ var PUM_Templates;
                     meta: {}
                 }, args);
 
-            if (!$(fieldTemplate).length) {
+            if (!$('#tmpl-' + fieldTemplate).length) {
                 if (args.type === 'objectselect' || args.type === 'postselect' || args.type === 'taxonomyselect') {
-                    fieldTemplate = '#tmpl-pum-field-select';
+                    fieldTemplate = 'pum-field-select';
                 }
-                if (!$(fieldTemplate).length) {
+                if (!$('#tmpl-' + fieldTemplate).length) {
                     return '';
                 }
             }
@@ -232,7 +232,7 @@ var PUM_Templates;
 
             data.field = PUM_Templates.render(fieldTemplate, data);
 
-            return PUM_Templates.render('#tmpl-pum-field-wrapper', data);
+            return PUM_Templates.render('pum-field-wrapper', data);
         },
         prepareMeta: function (data) {
             // Convert meta JSON to attribute string.

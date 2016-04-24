@@ -11,7 +11,13 @@ var PUMTriggers;
             return I10n.labels.triggers[type].name;
         },
         getSettingsDesc: function (type, values) {
-            var template = _.template(I10n.labels.triggers[type].settings_column);
+            var options = {
+                    evaluate:    /<#([\s\S]+?)#>/g,
+                    interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
+                    escape:      /\{\{([^\}]+?)\}\}(?!\})/g,
+                    variable:    'data'
+                },
+                template = _.template(I10n.labels.triggers[type].settings_column, null, options);
             values.I10n = I10n;
             return template(values);
         },
@@ -75,6 +81,7 @@ var PUMTriggers;
             var $this = $(this),
                 type = $this.val(),
                 id = 'pum-trigger-settings-' + type,
+                modalID = '#' + id.replace(/-/g,'_'),
                 template = wp.template(id),
                 data = {};
 
@@ -86,7 +93,7 @@ var PUMTriggers;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(id, template(data));
+            PUMModals.reload(modalID, template(data));
             PUMTriggers.initEditForm(data);
 
             $this
@@ -188,6 +195,7 @@ var PUMTriggers;
 
             PUMModals.closeAll();
             PUMTriggers.renumber();
+            PUMTriggers.refreshDescriptions();
 
             $('#pum_popup_trigger_fields').addClass('has-triggers');
 

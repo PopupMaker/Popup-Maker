@@ -10,7 +10,13 @@ var PUMCookies;
             return I10n.labels.cookies[event].name;
         },
         getSettingsDesc: function (event, values) {
-            var template = _.template(I10n.labels.cookies[event].settings_column);
+            var options = {
+                    evaluate:    /<#([\s\S]+?)#>/g,
+                    interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
+                    escape:      /\{\{([^\}]+?)\}\}(?!\})/g,
+                    variable:    'data'
+                },
+                template = _.template(I10n.labels.cookies[event].settings_column, null, options);
             values.I10n = I10n;
             return template(values);
         },
@@ -64,8 +70,9 @@ var PUMCookies;
         .on('select2:select', '#pum-first-cookie', function () {
             var $this = $(this),
                 event = $this.val(),
-                id = '#pum_cookie_settings_' + event,
-                template = _.template($('script' + id + '_templ').html()),
+                id = 'pum-cookie-settings-' + event,
+                modalID = '#' + id.replace(/-/g,'_'),
+                template = wp.template(id),
                 data = {};
 
             data.cookie_settings = defaults.cookies[event] !== undefined ? defaults.cookies[event] : {};
@@ -77,8 +84,8 @@ var PUMCookies;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(id, template(data));
-            PUMCookies.initEditForm(id);
+            PUMModals.reload(modalID, template(data));
+            PUMCookies.initEditForm();
 
             $this
                 .val(null)
@@ -87,15 +94,16 @@ var PUMCookies;
         .on('click', '.field.cookiekey button.reset', PUMCookies.resetCookieKey)
         .on('click', '.cookie-editor .pum-form .field.checkbox.session', PUMCookies.updateSessionsCheckbox)
         .on('click', '#pum_popup_cookies .add-new', function () {
-            var template = _.template($('script#pum_cookie_add_event_templ').html());
+            var template = wp.template('pum-cookie-add-event');
             PUMModals.reload('#pum_cookie_add_event_modal', template());
         })
         .on('click', '#pum_popup_cookies_list .edit', function (e) {
             var $this = $(this),
                 $row = $this.parents('tr:first'),
                 event = $row.find('.popup_cookies_field_event').val(),
-                id = '#pum_cookie_settings_' + event,
-                template = _.template($('script' + id + '_templ').html()),
+                id = 'pum-cookie-settings-' + event,
+                modalID = '#' + id.replace(/-/g, '_'),
+                template = wp.template(id),
                 data = {
                     index: $row.parent().children().index($row),
                     event: event,
@@ -110,7 +118,7 @@ var PUMCookies;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(id, template(data));
+            PUMModals.reload(modalID, template(data));
             PUMCookies.initEditForm();
         })
         .on('click', '#pum_popup_cookies_list .remove', function (e) {
@@ -135,8 +143,9 @@ var PUMCookies;
         })
         .on('submit', '#pum_cookie_add_event_modal .pum-form', function (e) {
             var event = $('#popup_cookie_add_event').val(),
-                id = '#pum_cookie_settings_' + event,
-                template = _.template($('script' + id + '_templ').html()),
+                id = 'pum-cookie-settings-' + event,
+                modalID = '#' + id.replace(/-/g,'_'),
+                template = wp.template(id),
                 data = {};
 
             e.preventDefault();
@@ -150,8 +159,8 @@ var PUMCookies;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(id, template(data));
-            PUMCookies.initEditForm(id);
+            PUMModals.reload(modalID, template(data));
+            PUMCookies.initEditForm();
         })
         .on('submit', '.cookie-editor .pum-form', function (e) {
             var $form = $(this),
@@ -159,7 +168,7 @@ var PUMCookies;
                 values = $form.serializeObject(),
                 index = parseInt(values.index),
                 $row = index >= 0 ? $('#pum_popup_cookies_list tbody tr').eq(index) : null,
-                template = _.template($('script#pum_cookie_row_templ').html()),
+                template = wp.template('pum-cookie-row'),
                 $new_row,
                 $trigger,
                 trigger_settings;
@@ -187,6 +196,7 @@ var PUMCookies;
 
             if (PUMTriggers.new_cookie && PUMTriggers.new_cookie >= 0) {
                 $trigger = $('#pum_popup_triggers_list tbody tr').eq(PUMTriggers.new_cookie).find('.popup_triggers_field_settings:first');
+                console.log($trigger, $trigger.val());
                 trigger_settings = JSON.parse($trigger.val());
                 trigger_settings.cookie.name[trigger_settings.cookie.name.indexOf('add_new')] = values.cookie_settings.name;
 
