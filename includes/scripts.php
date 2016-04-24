@@ -264,6 +264,11 @@ function popmake_load_admin_styles( $hook ) {
 			wp_deregister_style( 'select2' );
 		}
 
+		// Added because Ultimate Member currently adds bad stylesheets for select2 breaking form layouts.
+		if ( wp_style_is( 'um_minified', 'enqueued' ) ) {
+			wp_dequeue_style ( 'um_minified' );
+		}
+
 		wp_enqueue_style( 'select2', $css_dir . 'select2' . $suffix, array(), '4.0.1' );
 
 		wp_enqueue_style( 'wp-color-picker' );
