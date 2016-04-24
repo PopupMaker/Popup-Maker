@@ -919,7 +919,7 @@ class PUM_Fields extends Popmake_Fields {
 
 		<?php if ( ! empty( $args['options'] ) ) {
 			foreach ( $args['options'] as $label => $option ) { ?>
-				<option value="<?php esc_attr_e( $option ); ?>" {{{pumSelected(data.<?php esc_attr_e( $templ_name ); ?>, '<?php echo $option; ?>', true)}}}>
+				<option value="<?php esc_attr_e( $option ); ?>" {{pumSelected(data.<?php esc_attr_e( $templ_name ); ?>, '<?php echo $option; ?>', true)}}>
 				<?php esc_html_e( $label ); ?>
 				</option><?php
 			}
@@ -965,7 +965,7 @@ class PUM_Fields extends Popmake_Fields {
 
 		<?php if ( ! empty( $args['options'] ) ) {
 			foreach ( $args['options'] as $label => $option ) { ?>
-				<option value="<?php esc_attr_e( $option ); ?>" {{{pumSelected(data.<?php esc_attr_e( $templ_name ); ?>, '<?php echo $option; ?>', true)}}}>
+				<option value="<?php esc_attr_e( $option ); ?>" {{pumSelected(data.<?php esc_attr_e( $templ_name ); ?>, '<?php echo $option; ?>', true)}}>
 				<?php esc_html_e( $label ); ?>
 				</option><?php
 			}

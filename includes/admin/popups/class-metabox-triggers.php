@@ -76,7 +76,7 @@ class PUM_Popup_Triggers_Metabox {
                                 'columns'  => array(
                                         'type'     => $trigger->get_label( 'name' ),
                                         'cookie'   => isset( $values['settings']['cookie']['name'] ) ? $values['settings']['cookie']['name'] : '',
-                                        'settings' => '{{{PUMTriggers.getSettingsDesc(data.type, data.trigger_settings)}}}',
+                                        'settings' => '{{PUMTriggers.getSettingsDesc(data.type, data.trigger_settings)}}',
                                 ),
                                 'settings' => $values['settings'],
                         ) );
@@ -131,11 +131,11 @@ class PUM_Popup_Triggers_Metabox {
 				'index' => '{{data.index}}',
 				'type' => '{{data.type}}',
 				'columns' => array(
-                        'type'     => '{{{PUMTriggers.getLabel(data.type)}}}',
-                        'cookie'   => "{{{PUMTriggers.cookie_column_value(data.trigger_settings.cookie.name)}}}",
-                        'settings' => '{{{PUMTriggers.getSettingsDesc(data.type, data.trigger_settings)}}}',
+                        'type'     => '{{PUMTriggers.getLabel(data.type)}}',
+                        'cookie'   => "{{PUMTriggers.cookie_column_value(data.trigger_settings.cookie.name)}}",
+                        'settings' => '{{PUMTriggers.getSettingsDesc(data.type, data.trigger_settings)}}',
 				),
-				'settings' => '{{{JSON.stringify(data.trigger_settings)}}}',
+				'settings' => '{{JSON.stringify(data.trigger_settings)}}',
 			) ); ?>
 		</script>
 
@@ -156,7 +156,7 @@ class PUM_Popup_Triggers_Metabox {
 		</script>
 
 		<?php foreach ( PUM_Triggers::instance()->get_triggers() as $id => $trigger ) { ?>
-		<script type="text/html" id="tmpl-pum-trigger-settings-<?php esc_attr_e( $id ); ?>" class="pum-trigger-settings <?php esc_attr_e( $id ); ?> tmpl" data-trigger="<?php esc_attr_e( $id ); ?>">
+		<script type="text/html" id="tmpl-pum-trigger-settings-<?php esc_attr_e( $id ); ?>" class="pum-trigger-settings tmpl" data-trigger="<?php esc_attr_e( $id ); ?>">
 
 			<?php ob_start(); ?>
 

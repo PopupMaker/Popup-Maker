@@ -350,7 +350,7 @@ class Popmake_Fields {
 		);
 
 		if ( $print ) {
-			$name = "<%= $name %>";
+			$name = "{{data.$name}}";
 		}
 
 		return $name;

@@ -47,9 +47,9 @@ class PUM_Cookie extends PUM_Fields {
 			'name' => __( 'Cookie', 'popup-maker' ),
 			'modal_title' => __( 'Cookie Settings', 'popup-maker' ),
 			'settings_column' => sprintf( '%s%s%s',
-				'<% if (typeof session === "undefined" || session !== "1") { print(time); } else { print("',
+				'<# if (typeof data.session === "undefined" || data.session !== "1") { print(data.time); } else { print("',
 				__( 'Sessions', 'popup-maker' ),
-				'"); } %>'
+				'"); } #>'
 			),
 		) );
 	}

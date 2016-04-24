@@ -105,8 +105,6 @@ class PUM_Popup_Analytics_Metabox {
      */
     public static function media_templates() {
 
-        // <script type="text/template" id=""></script>
-
     }
 
 }

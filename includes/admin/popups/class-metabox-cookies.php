@@ -75,7 +75,7 @@ class PUM_Popup_Cookies_Metabox {
                                 'columns'  => array(
                                         'event'    => $cookie->get_label( 'name' ),
                                         'name'     => $values['settings']['name'],
-                                        'settings' => '<%= PUMCookies.getSettingsDesc(event, cookie_settings) %>',
+                                        'settings' => '{{PUMCookies.getSettingsDesc(data.event, data.cookie_settings)}}',
                                 ),
                                 'settings' => $values['settings'],
                         ) );
@@ -125,20 +125,20 @@ class PUM_Popup_Cookies_Metabox {
         if ( ! popmake_is_admin_popup_page() ) {
             return;
         } ?>
-		<script type="text/template" id="pum_cookie_row_templ">
+		<script type="text/html" id="tmpl-pum-cookie-row">
 			<?php self::render_row( array(
-				'index' => '<%= index %>',
-				'event' => '<%= event %>',
+				'index' => '{{data.index}}',
+				'event' => '{{data.event}}',
 				'columns' => array(
-					'event' => '<%= PUMCookies.getLabel(event) %>',
-					'name' => '<%= cookie_settings.name %>',
-					'settings' => '<%= PUMCookies.getSettingsDesc(event, cookie_settings) %>',
+					'event' => '{{PUMCookies.getLabel(data.event)}}',
+					'name' => '{{data.cookie_settings.name}}',
+					'settings' => '{{PUMCookies.getSettingsDesc(data.event, data.cookie_settings)}}',
 				),
-				'settings' => '<%- JSON.stringify(cookie_settings) %>',
+				'settings' => '{{JSON.stringify(data.cookie_settings)}}',
 			) ); ?>
 		</script>
 
-		<script type="text/template" id="pum_cookie_add_event_templ"><?php
+		<script type="text/html" id="tmpl-pum-cookie-add-event"><?php
 			ob_start(); ?>
 			<select id="popup_cookie_add_event">
 				<?php foreach ( PUM_Cookies::instance()->get_cookies() as $id => $cookie ) : ?>
@@ -155,12 +155,12 @@ class PUM_Popup_Cookies_Metabox {
 		</script>
 
 		<?php foreach ( PUM_Cookies::instance()->get_cookies() as $id => $cookie ) { ?>
-		<script type="text/template" class="pum-cookie-settings <?php esc_attr_e( $id ); ?> templ" id="pum_cookie_settings_<?php esc_attr_e( $id ); ?>_templ">
+		<script type="text/html" id="tmpl-pum-cookie-settings-<?php esc_attr_e( $id ); ?>" class="pum-cookie-settings tmpl" data-cookie="<?php esc_attr_e( $id ); ?>">
 
 			<?php ob_start(); ?>
 
 			<input type="hidden" name="event" class="event" value="<?php esc_attr_e( $id ); ?>"/>
-			<input type="hidden" name="index" class=index" value="<%= index %>"/>
+			<input type="hidden" name="index" class=index" value="{{data.index}}"/>
 
 			<div class="pum-tabs-container vertical-tabs tabbed-form">
 
@@ -194,7 +194,7 @@ class PUM_Popup_Cookies_Metabox {
 				'id' => 'pum_cookie_settings_' . $id,
 				'title' =>  __( 'Cookie Settings', 'popup-maker' ),
 				'class' => 'tabbed-content cookie-editor',
-				'save_button_text' => '<%= save_button_text %>',
+				'save_button_text' => '{{data.save_button_text}}',
 				'content' => $content
 			) ); ?>
 		</script><?php

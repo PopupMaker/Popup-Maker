@@ -28,13 +28,19 @@
 				},
 				template: function (options) {
 					var template = $('#tmpl-pum-shortcode-view-' + tag),
+						template_opts = {
+							evaluate:    /<#([\s\S]+?)#>/g,
+							interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
+							escape:      /\{\{([^\}]+?)\}\}(?!\})/g,
+							variable:    'attr'
+						},
 						_template;
 
 					if (!template.length) {
 						return this.text;
 					}
 
-					_template = _.template(template.html());
+					_template = _.template(template.html(), null, template_opts);
 
 					if (options.class) {
 						options.classes = options.class;
@@ -99,6 +105,7 @@
 					if (undefined === values) {
 						values = {};
 					}
+
 
 					// Fields come already arranged by section. Loop Sections then Fields.
 					_.each(data.fields, function (sectionFields, sectionID) {

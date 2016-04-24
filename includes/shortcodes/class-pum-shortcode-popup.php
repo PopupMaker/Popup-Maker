@@ -320,8 +320,8 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 	}
 
 	public function _template() { ?>
-		<script type="text/template" id="tmpl-pum-shortcode-view-popup">
-			<?php _e( 'Popup', 'popup-maker' ); ?>: ID "<%= id %>"
+		<script type="text/html" id="tmpl-pum-shortcode-view-popup">
+			<?php _e( 'Popup', 'popup-maker' ); ?>: ID "{{attr.id}}"
 		</script><?php
 	}
 

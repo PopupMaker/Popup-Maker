@@ -105,15 +105,15 @@ class PUM_Admin_Shortcode_UI {
         if ( ! $this->editor_enabled() ) {
             return;
         }
-		include_once __DIR__ . '/templates/fields.php';
-		include_once __DIR__ . '/templates/helpers.php';
+		include_once plugin_dir_path( __FILE__ ) . 'templates/fields.php';
+		include_once plugin_dir_path( __FILE__ ) . 'templates/helpers.php';
 	}
 
     public function admin_print_footer_scripts() {
         if ( ! $this->editor_enabled() ) {
             return;
         }
-        include_once __DIR__ . '/footer-scripts.php';
+        include_once plugin_dir_path( __FILE__ ) . 'footer-scripts.php';
     }
 
 	public function shortcode_ui_var() {

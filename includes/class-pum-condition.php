@@ -139,7 +139,7 @@ class PUM_Condition extends PUM_Fields {
 		);
 
 		if ( $print ) {
-			$name = "<%= $name %>";
+			$name = '{{' . $name . '}}';
 		}
 
 		return $name;

@@ -1,5 +1,5 @@
-<script type="text/template" id="tmpl-pum-modal">
-	<div id="<%= id %>" class="pum-modal-background <%= classes %>" role="dialog" aria-hidden="true" aria-labelledby="<%= id %>-title" aria-describedby="<%= id %>-description" <%= meta %>>
+<script type="text/html" id="tmpl-pum-modal">
+	<div id="{{data.id}}" class="pum-modal-background {{data.classes}}" role="dialog" aria-hidden="true" aria-labelledby="{{data.id}}-title" aria-describedby="{{data.id}}-description" {{data.meta}}>
 
 		<div class="pum-modal-wrap">
 
@@ -7,42 +7,42 @@
 
 				<div class="pum-modal-header">
 
-					<% if (title.length) { %>
-					<span id="<%= id %>-title" class="pum-modal-title"><%= title %></span>
-					<% } %>
+					<# if (data.title.length) { #>
+					<span id="{{data.id}}-title" class="pum-modal-title">{{data.title}}</span>
+					<# } #>
 
 					<button type="button" class="pum-modal-close" aria-label="<?php _e( 'Close', 'popup-maker' ); ?>"></button>
 
 				</div>
 
-				<% if (description.length) { %>
-				<span id="<%= id %>-description" class="screen-reader-text"><%= description %></span>
-				<% } %>
+				<# if (data.description.length) { #>
+				<span id="{{data.id}}-description" class="screen-reader-text">{{data.description}}</span>
+				<# } #>
 
 				<div class="pum-modal-content">
-					<%= content %>
+					{{{data.content}}}
 				</div>
 
-				<% if (save_button || cancel_button) { %>
+				<# if (data.save_button || data.cancel_button) { #>
 
 				<div class="pum-modal-footer submitbox">
 
-					<% if (cancel_button) { %>
+					<# if (data.cancel_button) { #>
 					<div class="cancel">
-						<button type="button" class="submitdelete no-button" href="#"><%= cancel_button %></button>
+						<button type="button" class="submitdelete no-button" href="#">{{data.cancel_button}}</button>
 					</div>
-					<% } %>
+					<# } #>
 
-					<% if (save_button) { %>
+					<# if (data.save_button) { #>
 					<div class="pum-submit">
 						<span class="spinner"></span>
-						<button class="button button-primary"><%= save_button %></button>
+						<button class="button button-primary">{{data.save_button}}</button>
 					</div>
-					<% } %>
+					<# } #>
 
 				</div>
 
-				<% } %>
+				<# } #>
 
 			</form>
 
@@ -51,30 +51,30 @@
 	</div>
 </script>
 
-<script type="text/template" id="tmpl-pum-tabs">
-	<div class="pum-tabs-container <%= classes %>" <%= meta %>>
+<script type="text/html" id="tmpl-pum-tabs">
+	<div class="pum-tabs-container {{data.classes}}" {{data.meta}}>
 
 		<ul class="tabs">
-			<% _.each(tabs, function(tab, key) { %>
+			<# _.each(data.tabs, function(tab, key) { #>
 				<li class="tab">
-					<a href="#<% print(id + '_' + key); %>"><%= tab.label %></a>
+					<a href="#{{data.id + '_' + key}}">{{tab.label}}</a>
 				</li>
-			<% }); %>
+			<# }); #>
 		</ul>
 
-		<% _.each(tabs, function(tab, key) { %>
-			<div id="<% print(id + '_' + key); %>" class="tab-content">
-				<%= tab.content %>
+		<# _.each(data.tabs, function(tab, key) { #>
+			<div id="{{data.id + '_' + key}}" class="tab-content">
+				{{{tab.content}}}
 			</div>
-		<% }); %>
+		<# }); #>
 
 	</div>
 </script>
 
-<script type="text/template" id="tmpl-pum-shortcode">
-	[<%= tag %> <%= meta %>]
+<script type="text/html" id="tmpl-pum-shortcode">
+	[{{{data.tag}}} {{{data.meta}}}]
 </script>
 
-<script type="text/template" id="tmpl-pum-shortcode-w-content">
-	[<%= tag %> <%= meta %>]<%= content %>[/<%= tag %>]
+<script type="text/html" id="tmpl-pum-shortcode-w-content">
+	[{{{data.tag}}} {{{data.meta}}}]{{{data.content}}}[/{{{data.tag}}}]
 </script>

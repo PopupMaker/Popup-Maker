@@ -104,8 +104,8 @@ class PUM_Shortcode_Popup_Trigger extends PUM_Shortcode {
 	}
 
 	public function _template() { ?>
-		<script type="text/template" id="tmpl-pum-shortcode-view-popup_trigger">
-			<<%= tag %> class="popmake-<%= id %> <% if (typeof classes !== 'undefined') print(classes); %>"><%= _inner_content %></<%= tag %>>
+		<script type="text/html" id="tmpl-pum-shortcode-view-popup_trigger">
+			<{{{attr.tag}}} class="popmake-{{{attr.id}}} {{{attr.classes}}}">{{{attr._inner_content}}}</{{{attr.tag}}}>
 		</script><?php
 	}
 

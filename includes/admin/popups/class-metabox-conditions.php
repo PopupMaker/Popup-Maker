@@ -161,7 +161,7 @@ class PUM_Popup_Conditions_Metabox {
         if ( ! popmake_is_admin_popup_page() ) {
             return;
         } ?>
-		<script type="text/template" id="tmpl-pum-condition-group">
+		<script type="text/html" id="tmpl-pum-condition-group">
 			<div class="facet-group-wrap" data-index="{{data.index}}">
 				<section class="facet-group">
 					<div class="facet-list"><#
@@ -192,7 +192,7 @@ class PUM_Popup_Conditions_Metabox {
 		 * settings: values for option fields
 		 */
 		?>
-		<script type="text/template" id="tmpl-pum-condition-facet">
+		<script type="text/html" id="tmpl-pum-condition-facet">
 			<div class="facet" data-index="{{data.index}}" data-target="{{data.target}}">
 
 				<i class="or">or</i>
@@ -208,7 +208,7 @@ class PUM_Popup_Conditions_Metabox {
 						<?php foreach ( PUM_Conditions::instance()->get_conditions_by_group() as $group => $conditions ) : ?>
 							<optgroup label="<?php echo esc_attr_e( $group ); ?>">
 								<?php foreach ( $conditions as $id => $condition ) : ?>
-                                    <option value="<?php echo $id; ?>" {{{ pumSelected(data.target, '<?php echo $id; ?>', true) }}}>
+                                    <option value="<?php echo $id; ?>" {{ pumSelected(data.target, '<?php echo $id; ?>', true) }}>
                                         <?php echo $condition->get_label( 'name' ); ?>
                                     </option>
                                 <?php endforeach ?>
@@ -233,7 +233,7 @@ class PUM_Popup_Conditions_Metabox {
 
 		<?php foreach ( PUM_Conditions::instance()->get_conditions() as $id => $condition ) : ?>
 
-			<script type="text/template" id="tmpl-pum-condition-settings-<?php esc_attr_e( $id ); ?>" class="pum-condition-settings tmpl" data-condition="<?php esc_attr_e( $id ); ?>">
+			<script type="text/html" id="tmpl-pum-condition-settings-<?php esc_attr_e( $id ); ?>" class="pum-condition-settings tmpl" data-condition="<?php esc_attr_e( $id ); ?>">
 				<?php
 				/**
 				 * Render Each settings tab contents.

@@ -90,8 +90,8 @@ class PUM_Shortcode_Popup_Close extends PUM_Shortcode {
 	}
 
 	public function _template() { ?>
-		<script type="text/template" id="tmpl-pum-shortcode-view-popup_close">
-			<<%= tag %> class="pum-close popmake-close <% if (typeof classes !== 'undefined') print(classes); %>"><%= _inner_content %></<%= tag %>>
+		<script type="text/html" id="tmpl-pum-shortcode-view-popup_close">
+			<{{{attr.tag}}} class="pum-close popmake-close <# if (typeof attr.classes !== 'undefined') print(attr.classes); #>">{{{attr._inner_content}}}</{{{attr.tag}}}>
 		</script><?php
 	}
 
