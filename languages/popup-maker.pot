@@ -694,10 +694,6 @@ msgstr ""
 msgid "ucwordsstr_replace_"
 msgstr ""
 
-#: includes/admin/post-editor.php:42, includes/shortcodes/class-pum-shortcode-popup-trigger.php:24
-msgid "Popup Trigger"
-msgstr ""
-
 #: includes/admin/settings/register-settings.php:139
 msgid "Allow Usage Tracking?"
 msgstr ""
@@ -1354,48 +1350,35 @@ msgstr ""
 msgid "Deleting your account will stop sending usage statistics and disable usage of in dash support forms. This will not stop the plugin from functioning. Are you sure you want to do this?"
 msgstr ""
 
-#: includes/class-pum-freemius.php:105
+#: includes/class-pum-freemius.php:94
+msgctxt "button label"
+msgid "Maybe later"
+msgstr ""
+
+#: includes/class-pum-freemius.php:101
+msgctxt "button label"
+msgid "Yes - I’m in!"
+msgstr ""
+
+#: includes/class-pum-freemius.php:103
+msgctxt "button label"
+msgid "Awesome - I’m in!"
+msgstr ""
+
+#: includes/class-pum-freemius.php:117
 msgid "Usage Statistics"
 msgstr ""
 
-#: includes/class-pum-freemius.php:106
+#: includes/class-pum-freemius.php:118
 msgid "Popup & Theme Counts, Open Counts"
 msgstr ""
 
-#: includes/class-pum-freemius.php:128
-msgid "We have moved our usage tracking to a new platform."
-msgstr ""
-
-#: includes/class-pum-freemius.php:129
-msgid "We appreciate that you chose to opt-in once before and ask that you please continue to help us improve %2$s!"
-msgstr ""
-
-#: includes/class-pum-freemius.php:130
-msgid "If you choose to opt-in again:"
-msgstr ""
-
-#: includes/class-pum-freemius.php:133
-msgid "Please help us improve %2$s and allow us to track plugin usage!"
-msgstr ""
-
-#: includes/class-pum-freemius.php:134
-msgid "If you opt-in now:"
-msgstr ""
-
-#: includes/class-pum-freemius.php:141
-msgid "Receive a code for 20%% off any purchase in our extension store."
-msgstr ""
-
 #: includes/class-pum-freemius.php:142
-msgid "Submit support requests from your own dashboard and reply by email. (No more forums)"
+msgid "We moved our usage tracking to a new platform called %s, kindly confirm if you are good with it?"
 msgstr ""
 
-#: includes/class-pum-freemius.php:143
-msgid "And no sensitive data is tracked."
-msgstr ""
-
-#: includes/class-pum-freemius.php:145
-msgid "If you skip this, that's okay! The plugin will still work just fine."
+#: includes/class-pum-freemius.php:144
+msgid "Help us to improve Popup Maker and make it even more awesome by allowing us to capture some data with %s. In return, we will send you a 20%% discount for the extension store."
 msgstr ""
 
 #: includes/class-pum-post.php:139
@@ -2216,6 +2199,10 @@ msgstr ""
 
 #: includes/shortcodes/class-pum-shortcode-popup-close.php:58, includes/shortcodes/class-pum-shortcode-popup-trigger.php:71
 msgid "Add additional classes for styling."
+msgstr ""
+
+#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:24
+msgid "Popup Trigger"
 msgstr ""
 
 #: includes/shortcodes/class-pum-shortcode-popup-trigger.php:28

@@ -103,13 +103,14 @@ var PUMConditions;
         .ready(function () {
             // TODO Remove this check once admin scripts have been split into popup-editor, theme-editor etc.
             if ($('body.post-type-popup form#post').length) {
-                PUMConditions.templates.group = _.template($('#pum_condition_group_templ').text());
-                PUMConditions.templates.facet = _.template($('#pum_condition_facet_templ').text());
+                PUMConditions.templates.group = wp.template('pum-condition-group');
+                PUMConditions.templates.facet = wp.template('pum-condition-facet');
                 PUMConditions.templates.settings = {};
 
-                $('script.templ.pum-condition-settings').each(function () {
-                    var $this = $(this);
-                    PUMConditions.templates.settings[$this.data('condition')] = _.template($this.text());
+                $('script.tmpl.pum-condition-settings').each(function () {
+                    var $this = $(this),
+                        tmpl = $this.attr('id').replace('tmpl-', '');
+                    PUMConditions.templates.settings[$this.data('condition')] = wp.template(tmpl);
                 });
 
                 PUMConditions.renumber();
@@ -205,7 +206,13 @@ var PUMCookies;
             return I10n.labels.cookies[event].name;
         },
         getSettingsDesc: function (event, values) {
-            var template = _.template(I10n.labels.cookies[event].settings_column);
+            var options = {
+                    evaluate:    /<#([\s\S]+?)#>/g,
+                    interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
+                    escape:      /\{\{([^\}]+?)\}\}(?!\})/g,
+                    variable:    'data'
+                },
+                template = _.template(I10n.labels.cookies[event].settings_column, null, options);
             values.I10n = I10n;
             return template(values);
         },
@@ -259,8 +266,9 @@ var PUMCookies;
         .on('select2:select', '#pum-first-cookie', function () {
             var $this = $(this),
                 event = $this.val(),
-                id = '#pum_cookie_settings_' + event,
-                template = _.template($('script' + id + '_templ').html()),
+                id = 'pum-cookie-settings-' + event,
+                modalID = '#' + id.replace(/-/g,'_'),
+                template = wp.template(id),
                 data = {};
 
             data.cookie_settings = defaults.cookies[event] !== undefined ? defaults.cookies[event] : {};
@@ -272,8 +280,8 @@ var PUMCookies;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(id, template(data));
-            PUMCookies.initEditForm(id);
+            PUMModals.reload(modalID, template(data));
+            PUMCookies.initEditForm();
 
             $this
                 .val(null)
@@ -282,15 +290,16 @@ var PUMCookies;
         .on('click', '.field.cookiekey button.reset', PUMCookies.resetCookieKey)
         .on('click', '.cookie-editor .pum-form .field.checkbox.session', PUMCookies.updateSessionsCheckbox)
         .on('click', '#pum_popup_cookies .add-new', function () {
-            var template = _.template($('script#pum_cookie_add_event_templ').html());
+            var template = wp.template('pum-cookie-add-event');
             PUMModals.reload('#pum_cookie_add_event_modal', template());
         })
         .on('click', '#pum_popup_cookies_list .edit', function (e) {
             var $this = $(this),
                 $row = $this.parents('tr:first'),
                 event = $row.find('.popup_cookies_field_event').val(),
-                id = '#pum_cookie_settings_' + event,
-                template = _.template($('script' + id + '_templ').html()),
+                id = 'pum-cookie-settings-' + event,
+                modalID = '#' + id.replace(/-/g, '_'),
+                template = wp.template(id),
                 data = {
                     index: $row.parent().children().index($row),
                     event: event,
@@ -305,7 +314,7 @@ var PUMCookies;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(id, template(data));
+            PUMModals.reload(modalID, template(data));
             PUMCookies.initEditForm();
         })
         .on('click', '#pum_popup_cookies_list .remove', function (e) {
@@ -330,8 +339,9 @@ var PUMCookies;
         })
         .on('submit', '#pum_cookie_add_event_modal .pum-form', function (e) {
             var event = $('#popup_cookie_add_event').val(),
-                id = '#pum_cookie_settings_' + event,
-                template = _.template($('script' + id + '_templ').html()),
+                id = 'pum-cookie-settings-' + event,
+                modalID = '#' + id.replace(/-/g,'_'),
+                template = wp.template(id),
                 data = {};
 
             e.preventDefault();
@@ -345,8 +355,8 @@ var PUMCookies;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(id, template(data));
-            PUMCookies.initEditForm(id);
+            PUMModals.reload(modalID, template(data));
+            PUMCookies.initEditForm();
         })
         .on('submit', '.cookie-editor .pum-form', function (e) {
             var $form = $(this),
@@ -354,7 +364,7 @@ var PUMCookies;
                 values = $form.serializeObject(),
                 index = parseInt(values.index),
                 $row = index >= 0 ? $('#pum_popup_cookies_list tbody tr').eq(index) : null,
-                template = _.template($('script#pum_cookie_row_templ').html()),
+                template = wp.template('pum-cookie-row'),
                 $new_row,
                 $trigger,
                 trigger_settings;
@@ -382,6 +392,7 @@ var PUMCookies;
 
             if (PUMTriggers.new_cookie && PUMTriggers.new_cookie >= 0) {
                 $trigger = $('#pum_popup_triggers_list tbody tr').eq(PUMTriggers.new_cookie).find('.popup_triggers_field_settings:first');
+                console.log($trigger, $trigger.val());
                 trigger_settings = JSON.parse($trigger.val());
                 trigger_settings.cookie.name[trigger_settings.cookie.name.indexOf('add_new')] = values.cookie_settings.name;
 
@@ -697,8 +708,8 @@ function pumSelected(val1, val2, print) {
         selected = true;
     }
 
-    if (selected && print !== undefined && print) {
-        return ' selected="selected"';
+    if (print !== undefined && print) {
+        return selected ? ' selected="selected"' : '';
     }
     return selected;
 }
@@ -715,8 +726,8 @@ function pumChecked(val1, val2, print) {
         checked = true;
     }
 
-    if (checked && print !== undefined && print) {
-        return ' checked="checked"';
+    if (print !== undefined && print) {
+        return checked ? ' checked="checked"' : '';
     }
     return checked;
 }
@@ -1016,6 +1027,8 @@ var PUMRangeSLiders;
 var PUMSelect2Fields;
 (function ($, document, undefined) {
     "use strict";
+    // Here because some plugins load additional copies, big no-no. This is the best we can do.
+    $.fn.pumSelect2 = $.fn.select2;
 
     PUMSelect2Fields = {
         init: function () {
@@ -1076,7 +1089,7 @@ var PUMSelect2Fields;
 
                 $this
                     .addClass('initialized')
-                    .select2(options);
+                    .pumSelect2(options);
 
                 if (current !== undefined) {
 
@@ -1261,7 +1274,7 @@ var PUM_Templates;
 
     PUM_Templates = {
         render: function (template, data) {
-            var _template = _.template($(template).html());
+            var _template = wp.template(template);
 
             if ('object' === typeof data.classes) {
                 data.classes = data.classes.join(' ');
@@ -1279,7 +1292,7 @@ var PUM_Templates;
                     has_content: false,
                     content: ''
                 }, args),
-                template = data.has_content ? '#tmpl-pum-shortcode-w-content' : '#tmpl-pum-shortcode';
+                template = data.has_content ? 'pum-shortcode-w-content' : 'pum-shortcode';
 
             return PUM_Templates.render(template, data);
         },
@@ -1294,7 +1307,7 @@ var PUM_Templates;
                 content: ''
             }, args);
 
-            return PUM_Templates.render('#tmpl-pum-modal', data);
+            return PUM_Templates.render('pum-modal', data);
         },
         tabs: function (args) {
             var classes = args.classes || [],
@@ -1320,7 +1333,7 @@ var PUM_Templates;
 
             data.classes = data.classes + ' ' + classes.join(' ');
 
-            return PUM_Templates.render('#tmpl-pum-tabs', data);
+            return PUM_Templates.render('pum-tabs', data);
         },
         section: function (args) {
             var data = $.extend(true, {}, {
@@ -1329,10 +1342,10 @@ var PUM_Templates;
             }, args);
 
 
-            return PUM_Templates.render('#tmpl-pum-field-section', data);
+            return PUM_Templates.render('pum-field-section', data);
         },
         field: function (args) {
-            var fieldTemplate = '#tmpl-pum-field-' + args.type,
+            var fieldTemplate = 'pum-field-' + args.type,
                 options = [],
                 data = $.extend(true, {}, {
                     type: 'text',
@@ -1360,11 +1373,11 @@ var PUM_Templates;
                     meta: {}
                 }, args);
 
-            if (!$(fieldTemplate).length) {
+            if (!$('#tmpl-' + fieldTemplate).length) {
                 if (args.type === 'objectselect' || args.type === 'postselect' || args.type === 'taxonomyselect') {
-                    fieldTemplate = '#tmpl-pum-field-select';
+                    fieldTemplate = 'pum-field-select';
                 }
-                if (!$(fieldTemplate).length) {
+                if (!$('#tmpl-' + fieldTemplate).length) {
                     return '';
                 }
             }
@@ -1487,7 +1500,7 @@ var PUM_Templates;
 
             data.field = PUM_Templates.render(fieldTemplate, data);
 
-            return PUM_Templates.render('#tmpl-pum-field-wrapper', data);
+            return PUM_Templates.render('pum-field-wrapper', data);
         },
         prepareMeta: function (data) {
             // Convert meta JSON to attribute string.
@@ -1528,7 +1541,13 @@ var PUMTriggers;
             return I10n.labels.triggers[type].name;
         },
         getSettingsDesc: function (type, values) {
-            var template = _.template(I10n.labels.triggers[type].settings_column);
+            var options = {
+                    evaluate:    /<#([\s\S]+?)#>/g,
+                    interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
+                    escape:      /\{\{([^\}]+?)\}\}(?!\})/g,
+                    variable:    'data'
+                },
+                template = _.template(I10n.labels.triggers[type].settings_column, null, options);
             values.I10n = I10n;
             return template(values);
         },
@@ -1591,8 +1610,9 @@ var PUMTriggers;
         .on('select2:select', '#pum-first-trigger', function () {
             var $this = $(this),
                 type = $this.val(),
-                id = '#pum_trigger_settings_' + type,
-                template = _.template($('script' + id + '_templ').html()),
+                id = 'pum-trigger-settings-' + type,
+                modalID = '#' + id.replace(/-/g,'_'),
+                template = wp.template(id),
                 data = {};
 
             data.trigger_settings = defaults.triggers[type] !== undefined ? defaults.triggers[type] : {};
@@ -1603,7 +1623,7 @@ var PUMTriggers;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(id, template(data));
+            PUMModals.reload(modalID, template(data));
             PUMTriggers.initEditForm(data);
 
             $this
@@ -1611,15 +1631,17 @@ var PUMTriggers;
                 .trigger('change');
         })
         .on('click', '#pum_popup_triggers .add-new', function () {
-            var template = _.template($('script#pum_trigger_add_type_templ').html());
+            var template = wp.template('pum-trigger-add-type');
             PUMModals.reload('#pum_trigger_add_type_modal', template());
         })
         .on('click', '#pum_popup_triggers_list .edit', function (e) {
+
             var $this = $(this),
                 $row = $this.parents('tr:first'),
                 type = $row.find('.popup_triggers_field_type').val(),
-                id = '#pum_trigger_settings_' + type,
-                template = _.template($('script' + id + '_templ').html()),
+                id = 'pum-trigger-settings-' + type,
+                modalID = '#' + id.replace(/-/g,'_'),
+                template = wp.template(id),
                 data = {
                     index: $row.parent().children().index($row),
                     type: type,
@@ -1634,7 +1656,7 @@ var PUMTriggers;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(id, template(data));
+            PUMModals.reload(modalID, template(data));
             PUMTriggers.initEditForm(data);
         })
         .on('click', '#pum_popup_triggers_list .remove', function (e) {
@@ -1658,8 +1680,9 @@ var PUMTriggers;
         })
         .on('submit', '#pum_trigger_add_type_modal .pum-form', function (e) {
             var type = $('#popup_trigger_add_type').val(),
-                id = '#pum_trigger_settings_' + type,
-                template = _.template($('script' + id + '_templ').html()),
+                id = 'pum-trigger-settings-' + type,
+                modalID = '#' + id.replace(/-/g,'_'),
+                template = wp.template(id),
                 data = {};
 
             e.preventDefault();
@@ -1672,7 +1695,7 @@ var PUMTriggers;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(id, template(data));
+            PUMModals.reload(modalID, template(data));
             PUMTriggers.initEditForm(data);
         })
         .on('submit', '.trigger-editor .pum-form', function (e) {
@@ -1681,7 +1704,7 @@ var PUMTriggers;
                 values = $form.serializeObject(),
                 index = parseInt(values.index),
                 $row = index >= 0 ? $('#pum_popup_triggers_list tbody tr').eq(index) : null,
-                template = _.template($('script#pum_trigger_row_templ').html()),
+                template = wp.template('pum-trigger-row'),
                 $new_row;
 
             e.preventDefault();
@@ -1702,6 +1725,7 @@ var PUMTriggers;
 
             PUMModals.closeAll();
             PUMTriggers.renumber();
+            PUMTriggers.refreshDescriptions();
 
             $('#pum_popup_trigger_fields').addClass('has-triggers');
 
