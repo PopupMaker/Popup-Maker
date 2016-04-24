@@ -6,7 +6,7 @@ Donate link:
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.4
 Tested up to: 4.5
-Stable tag: 1.4.6
+Stable tag: 1.4.7
 License: GNU Version 3 or Any Later Version
 
 Easily create attractive popups with no coding skills. Customize nearly every aspect of your popups, from theme & position, to targeting & cookies.
@@ -21,7 +21,7 @@ It is both a complete popup solution and a powerful, extendable framework.
 
 Follow this plugin on [GitHub](https://github.com/PopupMaker/Popup-Maker).
 
-Features of Popup Maker include:
+= Features of Popup Maker include: =
 * Unlimited Popups & Popup Themes
 * Add shortcodes, HTML optin forms or any other content you can think of.
 * Targeting conditions allow you to show a popup on one page or all pages of your site for precise targeting, others available as extensions.
@@ -47,7 +47,7 @@ Features of Popup Maker include:
 * Too many features to list here. Limitless potential.
   * If you can't figure out how to get the functionality your after, ask us we will be glad to help.
 
-If you like the plugin and/or support [please rate & review](https://wppopupmaker.com/rate-us?utm_source=WordPress+Page&utm_medium=Review+Link&utm_campaign=Review+It) it!
+= If you like the plugin and/or support [please rate & review](https://wppopupmaker.com/rate-us?utm_source=WordPress+Page&utm_medium=Review+Link&utm_campaign=Review+It) it! =
 
 = 100% Supported Form Plugins =
 Not all form plugins are optimal for use in popups. The following support AJAX submission which is ideal for modal forms.
@@ -81,16 +81,15 @@ Follow us on [Twitter](https://twitter.com/wppopupmaker "Popup Maker on Twitter"
 Find out more about [Popup Maker](https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=More+Info+Link&utm_campaign=Home+Page "Popup Maker Website").
 
 = Languages =
-
-* French (France)   87.00%
-* Hungarian	        84.00%
-* Arabic	        84.00%
-* Italian	        84.00%
-* Swedish	        84.00%
-* Danish	        84.00%
-* Spanish (Spain)	72.00%
-* Russian	        68.00%
-* German	        52.00%
+* French (France)   87%
+* Hungarian	        84%
+* Arabic	        84%
+* Italian	        84%
+* Swedish	        84%
+* Danish	        84%
+* Spanish (Spain)	72%
+* Russian	        68%
+* German	        52%
 
 Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](https://translate.wordpress.org/projects/wp-plugins/popup-maker).
 
@@ -99,6 +98,7 @@ Would you like to help translate the plugin into more languages? [Join our WP-Tr
 = Why aren't my popups opening/working? =
 
 There are several common causes for this which include:
+
 * You have not set up your popups targeting conditions (top right when editing a popup).
 * Your site is loading multiple copies of jQuery
 * Your themes footer.php file doesn't include <?php wp_footer(); ?> or it is not in the correct place (just before the `</body>`).
@@ -106,7 +106,6 @@ There are several common causes for this which include:
 * There is a JavaScript error caused by another plugin or your theme. You can check this using your browsers console (Press F12).
 
 == Screenshots ==
-
 1. Create an infinite amount of popups and put any content inside your popups! No restrictions, no limitations - customize your popup content to fit your needs.
 2. Use the Popup Maker WYSIWIG Content Editor to easily customize your popups' content! Plus, use Short Codes, HTML, and other code to give your popups ultimate power. Adding popups and content in Popup Maker is just like adding pages and content in WordPress.
 3. Popup Maker offers you pixel perfect positioning settings to match your needs and fit your website perfectly.
@@ -114,6 +113,12 @@ There are several common causes for this which include:
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.4.7 - 4/24/2016 =
+* Improvement: Removed the old styles dropdown as it is no longer needed.
+* Improvement: Added check for old versions of Select2 and replace them with latest which is backward compatible.
+* Fix: Bug that caused Close button delay to not show the close button.
+* Fix: Replaced usage of <% style JS template with <# & {{ for PHP asp_tags compatibility.
 
 = v1.4.6 - 4/22/2016 =
 * Fix: Bug in new post editor JS.
