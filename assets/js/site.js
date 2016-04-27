@@ -148,8 +148,6 @@ var PUM;
 
             $popup
                 .addClass('pum-active')
-                .popmake('setup_close')
-                .popmake('reposition')
                 .trigger('pumBeforeOpen');
 
 
@@ -188,7 +186,9 @@ var PUM;
             }
 
             $popup
-            // TODO: Remove this.
+                .popmake('setup_close')
+                .popmake('reposition')
+                // TODO: Remove this.
                 .css({'z-index': settings.meta.display.overlay_zindex || 1999999998})
                 .popmake('animate', settings.meta.display.animation_type, function () {
 
@@ -424,7 +424,7 @@ var PUM;
                         });
                 }
             }
-
+console.log(reposition);
             // TODO: Remove the add class and migrate the trigger to the $popup with pum prefix.
             $container
                 .addClass('custom-position')

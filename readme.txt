@@ -6,7 +6,7 @@ Donate link:
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.4
 Tested up to: 4.5
-Stable tag: 1.4.7
+Stable tag: 1.4.8
 License: GNU Version 3 or Any Later Version
 
 Easily create attractive popups with no coding skills. Customize nearly every aspect of your popups, from theme & position, to targeting & cookies.
@@ -113,6 +113,12 @@ There are several common causes for this which include:
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.4.8 - 4/27/2016 =
+* Improvement: Sandboxed Select2 v4 since it breaks other plugins when loaded properly. v4 adds accessiblity enhancements that we are not going to sacrifice for compatiblity with plugins who have not updated to include it. This provides a safe alternative in the meantime.
+* Tweak: Removed extra shortcode files.
+* Fix: Bug caused by pum_shortcode_ui not loading properly everywhere.
+* Fix: Bug in popup position calculation when the popup used Fixed Position and Disable Overlay
 
 = v1.4.7 - 4/24/2016 =
 * Improvement: Removed the old styles dropdown as it is no longer needed.
