@@ -10,10 +10,15 @@ var gulp = require('gulp'),
 
 //region JavaScript
 gulp.task('js:admin', function() {
-    return gulp.src(['assets/js/src/admin/plugins/**/*.js', 'assets/js/src/admin/general.js'])
+    return gulp.src(['assets/js/src/admin/vendors/*.js', 'assets/js/src/admin/plugins/**/*.js', 'assets/js/src/admin/general.js'])
         .pipe($fn.plumber(plumberErrorHandler))
         .pipe($fn.jshint())
         .pipe($fn.jshint.reporter('default'))
+        .pipe($fn.order([
+            "vendors/**/*.js",
+            "plugins/**/*.js",
+            'general.js'
+        ], { base: 'assets/js/src/admin/' }))
         .pipe($fn.concat('admin.js'))
         .pipe(gulp.dest('assets/js'))
         .pipe($fn.uglify())
