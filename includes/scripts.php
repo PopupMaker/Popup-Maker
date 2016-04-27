@@ -257,10 +257,10 @@ function popmake_load_admin_styles( $hook ) {
 	}
 	if ( pum_should_load_admin_scripts() ) {
 
-		wp_enqueue_style( 'pumselect2', $css_dir . 'select2' . $suffix, array(), '4.0.1' );
+		//wp_enqueue_style( 'pumselect2', $css_dir . 'select2' . $suffix, array(), '4.0.1' );
 
 		wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_style( 'popup-maker-admin', $dep_css_dir . 'admin' . $suffix, POPMAKE_VERSION );
+		wp_enqueue_style( 'popup-maker-admin', $dep_css_dir . 'admin' . $suffix, null, POPMAKE_VERSION );
 
  	}
 }

@@ -4,6 +4,66 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
 
 .pum-select2 {
 
+//region Select2 Core Styles
+
+  // These are here for the namespaced select2 and so that we can properly address issues when other plugins do things wrong.
+  .select2-container {
+    box-sizing: border-box;
+
+    display: inline-block;
+    margin: 0;
+    position: relative;
+    vertical-align: middle;
+
+    @import "vendor/select2/single";
+    @import "vendor/select2/multiple";
+  }
+
+  @import "vendor/select2/dropdown";
+
+  .select2-close-mask {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    min-height: 100%;
+    min-width: 100%;
+    height: auto;
+    width: auto;
+    opacity: 0;
+    z-index: 99;
+
+    // styles required for IE to work
+
+    background-color: #fff;
+    filter: alpha(opacity=0);
+  }
+
+  .select2-hidden-accessible {
+    border: 0 !important;
+    clip: rect(0 0 0 0) !important;
+    height: 1px !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    position: absolute !important;
+    width: 1px !important;
+  }
+
+  @import "vendor/select2/theme/default/layout";
+  @import "vendor/select2/theme/classic/layout";
+//endregion Select2 Core Styles
+
+  > .select2-container--below.select2-container--open + .select2-container--open,
+  > .select2-container--below.select2-container--open + .pum-desc + .select2-container--open {
+    position: absolute !important;
+  }
+
+
+
   position: relative;
 
   // All Select2 Containers - Wraps Both Selectbox & Dropdown Elements
