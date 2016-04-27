@@ -2,7 +2,7 @@ var PUMSelect2Fields;
 (function ($, document, undefined) {
     "use strict";
     // Here because some plugins load additional copies, big no-no. This is the best we can do.
-    $.fn.pumSelect2 = $.fn.select2;
+    $.fn.pumselect2 = $.fn.pumselect2 || $.fn.select2;
 
     PUMSelect2Fields = {
         init: function () {
@@ -63,7 +63,7 @@ var PUMSelect2Fields;
 
                 $this
                     .addClass('initialized')
-                    .pumSelect2(options);
+                    .pumselect2(options);
 
                 if (current !== undefined) {
 
