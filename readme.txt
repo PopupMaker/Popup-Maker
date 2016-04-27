@@ -23,6 +23,9 @@ Follow this plugin on [GitHub](https://github.com/PopupMaker/Popup-Maker).
 
 = Features of Popup Maker include: =
 * Unlimited Popups & Popup Themes
+* Accessibile Popups
+  * Screen Reader Compatible
+  * WAI ARIA Dialog Ready
 * Add shortcodes, HTML optin forms or any other content you can think of.
 * Targeting conditions allow you to show a popup on one page or all pages of your site for precise targeting, others available as extensions.
 * Customize the look of your popups with no coding required.
