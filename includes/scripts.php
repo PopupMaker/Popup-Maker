@@ -149,6 +149,12 @@ function popmake_render_popup_theme_styles() {
 add_action( 'wp_head', 'popmake_render_popup_theme_styles' );
 add_action( 'admin_head', 'popmake_render_popup_theme_styles' );
 
+function pum_should_load_admin_scripts() {
+	global $hook_suffix;
+	return popmake_is_admin_page() || in_array( $hook_suffix, array( 'post.php', 'edit.php', 'post-new.php' ) ) || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD );
+}
+
+
 /**
  * Load Admin Scripts
  *
@@ -176,20 +182,12 @@ function popmake_load_admin_scripts( $hook ) {
 
 	}
 
-	if ( popmake_is_admin_page() || in_array( $hook, array( 'post.php', 'edit.php', 'post-new.php' ) ) || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD ) ) {
-
-		// Deregister older versions, loaded by Types, Advanced Custom Fields etc.
-		if ( wp_script_is( 'select2', 'registered' ) ) {
-			wp_deregister_script( 'select2' );
-		}
-
-		wp_register_script( 'select2', $js_dir . 'select2.full' . $suffix, array( 'jquery' ), '4.0.1' );
+	if ( pum_should_load_admin_scripts() ) {
 
 		wp_enqueue_script( 'popup-maker-admin', $dep_js_dir . 'admin' . $suffix, array(
             'jquery',
             'wp-color-picker',
             'jquery-ui-slider',
-            'select2',
 		), POPMAKE_VERSION );
 		wp_localize_script( 'popup-maker-admin', 'popmake_admin_ajax_nonce', wp_create_nonce( POPMAKE_NONCE ) );
 		wp_localize_script( 'popup-maker-admin', 'pum_admin', apply_filters( 'pum_admin_var', array(
@@ -257,22 +255,12 @@ function popmake_load_admin_styles( $hook ) {
 	if ( popmake_is_admin_popup_page() || popmake_is_admin_popup_theme_page() ) {
 		wp_enqueue_style( 'popup-maker-site', $css_dir . 'site' . $suffix, false, POPMAKE_VERSION );
 	}
-	if ( popmake_is_admin_page() || in_array( $hook, array( 'post.php', 'edit.php' ) ) || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD ) ) {
+	if ( pum_should_load_admin_scripts() ) {
 
-
-		if ( wp_style_is( 'select2', 'registered' ) ) {
-			wp_deregister_style( 'select2' );
-		}
-
-		// Added because Ultimate Member currently adds bad stylesheets for select2 breaking form layouts.
-		if ( wp_style_is( 'um_minified', 'enqueued' ) ) {
-			wp_dequeue_style ( 'um_minified' );
-		}
-
-		wp_enqueue_style( 'select2', $css_dir . 'select2' . $suffix, array(), '4.0.1' );
+		wp_enqueue_style( 'pumselect2', $css_dir . 'select2' . $suffix, array(), '4.0.1' );
 
 		wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_style( 'popup-maker-admin', $dep_css_dir . 'admin' . $suffix, false, POPMAKE_VERSION );
+		wp_enqueue_style( 'popup-maker-admin', $dep_css_dir . 'admin' . $suffix, POPMAKE_VERSION );
 
  	}
 }

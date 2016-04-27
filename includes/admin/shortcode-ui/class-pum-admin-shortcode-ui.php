@@ -65,6 +65,10 @@ class PUM_Admin_Shortcode_UI {
 	 * @return array
 	 */
 	public function mce_external_plugins( $plugin_array ) {
+		if ( ! $this->editor_enabled() || ! pum_should_load_admin_scripts() ) {
+			return $plugin_array;
+		}
+
 		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
 		$plugin_array['pum_shortcodes'] = POPMAKE_URL . '/assets/js/mce-buttons' . $suffix . '.js';
@@ -80,13 +84,17 @@ class PUM_Admin_Shortcode_UI {
 	 * @return array
 	 */
 	public function mce_buttons( $buttons ) {
+		if ( ! $this->editor_enabled() || ! pum_should_load_admin_scripts() ) {
+			return $buttons;
+		}
+
 		array_push( $buttons, 'pum_shortcodes' );
 
 		return $buttons;
 	}
 
 	public function admin_enqueue_scripts() {
-        if ( ! $this->editor_enabled() ) {
+		if ( ! $this->editor_enabled() || ! pum_should_load_admin_scripts() ) {
             return;
         }
 
@@ -102,7 +110,7 @@ class PUM_Admin_Shortcode_UI {
      * Outputs the view inside the wordpress editor.
      */
 	public function print_media_templates() {
-        if ( ! $this->editor_enabled() ) {
+        if ( ! $this->editor_enabled() || ! pum_should_load_admin_scripts() ) {
             return;
         }
 		include_once plugin_dir_path( __FILE__ ) . 'templates/fields.php';
@@ -110,7 +118,7 @@ class PUM_Admin_Shortcode_UI {
 	}
 
     public function admin_print_footer_scripts() {
-        if ( ! $this->editor_enabled() ) {
+	    if ( ! $this->editor_enabled() || ! pum_should_load_admin_scripts() ) {
             return;
         }
         include_once plugin_dir_path( __FILE__ ) . 'footer-scripts.php';
@@ -139,6 +147,10 @@ class PUM_Admin_Shortcode_UI {
 	}
 
 	public function pum_admin_var( $var = array() ) {
+		if ( ! $this->editor_enabled() || ! pum_should_load_admin_scripts() ) {
+			return $var;
+		}
+		
 		$var['shortcode_ui'] = array(
 			'shortcodes' => $this->shortcode_ui_var(),
 		);
