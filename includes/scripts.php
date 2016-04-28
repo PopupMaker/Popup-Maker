@@ -137,7 +137,7 @@ function popmake_render_popup_theme_styles() {
 
         $styles = apply_filters( 'popmake_theme_styles', $styles );
 
-		set_transient( 'popmake_theme_styles', $styles, 7 * DAY_IN_SECONDS );
+		set_transient( 'popmake_theme_styles', $styles );
 
     } ?>
     <style id="pum-styles" type="text/css">
@@ -259,6 +259,7 @@ function popmake_load_admin_styles( $hook ) {
 
 		//wp_enqueue_style( 'pumselect2', $css_dir . 'select2' . $suffix, array(), '4.0.1' );
 
+		wp_enqueue_style( 'dashicons' );
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_style( 'popup-maker-admin', $dep_css_dir . 'admin' . $suffix, null, POPMAKE_VERSION );
 
