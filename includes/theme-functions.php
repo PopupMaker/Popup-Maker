@@ -16,8 +16,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 function popmake_get_default_popup_theme() {
-	$default_theme = get_option( 'popmake_default_theme' );
-	if ( false === get_post_status( $default_theme ) ) {
+	static $default_theme = null;
+
+	if ( $default_theme === null ) {
+		$default_theme = get_option( 'popmake_default_theme' );
+	}
+
+	if ( ! $default_theme ) {
 		if ( ! function_exists( 'popmake_install_default_theme' ) ) {
 			include_once POPMAKE_DIR . 'includes/install.php';
 		}
