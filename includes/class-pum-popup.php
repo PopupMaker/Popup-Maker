@@ -386,16 +386,16 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 			/** @deprecated */
 			$text = apply_filters( 'popmake_popup_default_close_text', $text, $this->ID );
 
-			// todo replace this with PUM_Theme class in the future.
-			$theme_text = popmake_get_popup_theme_close( $this->get_theme_id(), 'text', false );
-			if ( $theme_text && $theme_text != '' ) {
-				$text = $theme_text;
-			}
-
 			// Check to see if popup has close text to over ride default.
 			$popup_close_text = $this->get_close( 'text' );
 			if ( $popup_close_text && $popup_close_text != '' ) {
 				$text = $popup_close_text;
+			} else {
+				// todo replace this with PUM_Theme class in the future.
+				$theme_text = popmake_get_popup_theme_close( $this->get_theme_id(), 'text', false );
+				if ( $theme_text && $theme_text != '' ) {
+					$text = $theme_text;
+				}
 			}
 
 			return apply_filters( 'pum_popup_close_text', $text, $this->ID );
