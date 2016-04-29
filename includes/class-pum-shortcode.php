@@ -75,22 +75,25 @@ class PUM_Shortcode extends PUM_Fields {
 		add_action( 'print_media_templates', array( $this, '_template' ) );
 		add_action( 'register_shortcode_ui', array( $this, 'register_shortcode_ui' ) );
 
-		$fields = array();
+		if ( is_admin() && pum_should_load_admin_scripts() ) {
+			$fields = array();
 
-		if ( $this->has_content ) {
-			$inner_content_labels     = $this->inner_content_labels();
-			$fields[ $this->inner_content_section ]['_inner_content'] = array(
-				'label'    => $inner_content_labels['label'],
-				'desc'     => $inner_content_labels['description'],
-				'section'  => $this->inner_content_section,
-				'type'     => 'textarea',
-				'priority' => $this->inner_content_priority,
-			);
+			if ( $this->has_content ) {
+				$inner_content_labels     = $this->inner_content_labels();
+				$fields[ $this->inner_content_section ]['_inner_content'] = array(
+					'label'    => $inner_content_labels['label'],
+					'desc'     => $inner_content_labels['description'],
+					'section'  => $this->inner_content_section,
+					'type'     => 'textarea',
+					'priority' => $this->inner_content_priority,
+				);
+			}
+
+			$fields = array_merge_recursive( $fields, $this->fields() );
+
+			$this->add_fields( $fields );
 		}
 
-		$fields = array_merge_recursive( $fields, $this->fields() );
-
-		$this->add_fields( $fields );
 
 		PUM_Shortcodes::instance()->add_shortcode( $this );
 	}
