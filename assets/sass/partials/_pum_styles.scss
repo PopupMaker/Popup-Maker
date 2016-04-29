@@ -15,7 +15,7 @@
   /* didn't really know what the default for display should be*/
   /*display:inline;*/
   float: none;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: inherit;
   font-size: medium;
   font-style: normal;
   font-weight: normal;
@@ -226,6 +226,10 @@ html.pum-open {
     }
 
     &.pum-open-scrollable {
+
+      body > *[aria-hidden] {
+        padding-right: 15px;
+      }
 
       .pum-overlay.pum-active {
         overflow-y: scroll;
