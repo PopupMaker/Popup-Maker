@@ -17,31 +17,48 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Helpers {
 
 	public static function post_type_selectlist( $post_type, $args = array(), $include_total = false ) {
+
 		$args = wp_parse_args( $args, array(
-			'posts_per_page' => 10,
-			'post_type'      => $post_type,
-			'post__in'       => null,
-			'post__not_in'   => null,
-			'post_status'    => null,
-			'page'           => 1,
+			'posts_per_page'         => 10,
+			'post_type'              => $post_type,
+			'post__in'               => null,
+			'post__not_in'           => null,
+			'post_status'            => null,
+			'page'                   => 1,
+			// Performance Optimization.
+			'no_found_rows'          => ! $include_total ? true : false,
+			'update_post_term_cache' => false,
+			'update_post_meta_cache' => false,
 		) );
 
 		if ( $post_type == 'attachment' ) {
 			$args['post_status'] = 'inherit';
 		}
 
+		// Query Caching.
+		static $queries = array();
 
-		$query = new WP_Query( $args );
+		$key = md5( serialize( $args ) );
 
-		$posts = array();
-		foreach ( $query->get_posts() as $post ) {
-			$posts[ $post->post_title ] = $post->ID;
+		if ( ! isset( $queries[ $key ] ) ) {
+			$query = new WP_Query( $args );
+
+			$posts = array();
+			foreach ( $query->posts as $post ) {
+				$posts[ $post->post_title ] = $post->ID;
+			}
+
+			$results = array(
+				'items'       => $posts,
+				'total_count' => $query->found_posts,
+			);
+
+			$queries[ $key ] = $results;
+		} else {
+			$results = $queries[ $key ];
 		}
 
-		return ! $include_total ? $posts : array(
-			'items'       => $posts,
-			'total_count' => $query->found_posts,
-		);
+		return ! $include_total ? $results['items'] : $results;
 	}
 
 	public static function taxonomy_selectlist( $taxonomies = array(), $args = array(), $include_total = false ) {
@@ -62,20 +79,33 @@ class PUM_Helpers {
 			$args['offset'] = ( $args['page'] - 1 ) * $args['number'];
 		}
 
-		$terms = array();
+		// Query Caching.
+		static $queries = array();
 
-		foreach ( get_terms( $taxonomies, $args ) as $term ) {
-			$terms[ $term->name ] = $term->term_id;
+		$key = md5( serialize( $args ) );
+
+		if ( ! isset( $queries[ $key ] ) ) {
+			$terms = array();
+
+			foreach ( get_terms( $taxonomies, $args ) as $term ) {
+				$terms[ $term->name ] = $term->term_id;
+			}
+
+			$total_args = $args;
+			unset( $total_args['number'] );
+			unset( $total_args['offset'] );
+
+			$results = array(
+				'items'       => $terms,
+				'total_count' => $include_total ? wp_count_terms( $taxonomies, $total_args ) : null,
+			);
+
+			$queries[ $key ] = $results;
+		} else {
+			$results = $queries[ $key ];
 		}
 
-		$total_args = $args;
-		unset( $total_args['number'] );
-		unset( $total_args['offset'] );
-
-		return ! $include_total ? $terms : array(
-			'items'       => $terms,
-			'total_count' => count( get_terms( $taxonomies, $total_args ) ),
-		);
+		return ! $include_total ? $results['items'] : $results;
 	}
 
 
