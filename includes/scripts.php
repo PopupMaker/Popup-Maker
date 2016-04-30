@@ -151,7 +151,7 @@ add_action( 'admin_head', 'popmake_render_popup_theme_styles' );
 
 function pum_should_load_admin_scripts() {
 	global $pagenow;
-	return popmake_is_admin_page() || in_array( $pagenow, array( 'post.php', 'edit.php', 'post-new.php' ) ) || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD );
+	return ( is_admin() && ( popmake_is_admin_page() || in_array( $pagenow, array( 'post.php', 'edit.php', 'post-new.php' ) ) ) ) || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD );
 }
 
 
