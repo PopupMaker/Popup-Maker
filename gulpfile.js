@@ -204,7 +204,7 @@ gulp.task('build', ['prebuild'], function () {
 
 // Generates a release package with the current version from package.json
 gulp.task('package', ['clean-package'], function () {
-    return gulp.src('build/*')
+    return gulp.src('build/**/*.*')
         .pipe($fn.plumber(plumberErrorHandler))
         .pipe($fn.zip(pkg.name+'_v'+pkg.version+'.zip'))
         .pipe(gulp.dest('release'));
