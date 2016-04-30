@@ -61,7 +61,7 @@ var PUMConditions;
                 PUMConditions.renumber();
             }
         })
-        .on('select2:select', '#pum-first-condition', function () {
+        .on('select2:select pumselect2:select', '#pum-first-condition', function () {
             var $this = $(this),
                 target = $this.val(),
                 $operand = $('#pum-first-condition-operand'),

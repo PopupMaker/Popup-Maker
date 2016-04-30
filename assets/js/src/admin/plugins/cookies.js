@@ -67,7 +67,7 @@ var PUMCookies;
     };
 
     $(document)
-        .on('select2:select', '#pum-first-cookie', function () {
+        .on('select2:select pumselect2:select', '#pum-first-cookie', function () {
             var $this = $(this),
                 event = $this.val(),
                 id = 'pum-cookie-settings-' + event,
@@ -196,7 +196,7 @@ var PUMCookies;
 
             if (PUMTriggers.new_cookie && PUMTriggers.new_cookie >= 0) {
                 $trigger = $('#pum_popup_triggers_list tbody tr').eq(PUMTriggers.new_cookie).find('.popup_triggers_field_settings:first');
-                console.log($trigger, $trigger.val());
+
                 trigger_settings = JSON.parse($trigger.val());
                 trigger_settings.cookie.name[trigger_settings.cookie.name.indexOf('add_new')] = values.cookie_settings.name;
 

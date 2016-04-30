@@ -7,12 +7,6 @@
  * https://github.com/select2/select2/blob/master/LICENSE.md
  */
 (function (factory) {
-    var existingVersion = jQuery.fn.select2 || null;
-
-    if (existingVersion) {
-        delete jQuery.fn.select2;
-    }
-
     if (typeof define === 'function' && define.amd !== undefined && define.amd) {
         // AMD. Register as an anonymous module.
         define(['jquery'], factory);
@@ -23,13 +17,6 @@
         // Browser globals
         factory(jQuery);
     }
-
-    jQuery.fn.pumselect2 = jQuery.fn.select2;
-
-    if (existingVersion) {
-        delete jQuery.fn.select2;
-        jQuery.fn.select2 = existingVersion;
-    }
 }(function (jQuery) {
     // This is needed so we can catch the AMD loader configuration and use it
     // The inner file should be wrapped (by `banner.start.js`) in a function that
@@ -38,8 +25,8 @@
         (function () {
             // Restore the Select2 AMD loader so it can be used
             // Needed mostly in the language files, where the loader is not inserted
-            if (jQuery && jQuery.fn && jQuery.fn.select2 && jQuery.fn.select2.amd) {
-                var S2 = jQuery.fn.select2.amd;
+            if (jQuery && jQuery.fn && jQuery.fn.pumselect2 && jQuery.fn.pumselect2.amd) {
+                var S2 = jQuery.fn.pumselect2.amd;
             }
             var S2;(function () { if (!S2 || !S2.requirejs) {
                 if (!S2) { S2 = {}; } else { require = S2; }
@@ -494,7 +481,7 @@
                 return _$;
             });
 
-            S2.define('select2/utils',[
+            S2.define('pumselect2/utils',[
                 'jquery'
             ], function ($) {
                 var Utils = {};
@@ -757,7 +744,7 @@
                 return Utils;
             });
 
-            S2.define('select2/results',[
+            S2.define('pumselect2/results',[
                 'jquery',
                 './utils'
             ], function ($, Utils) {
@@ -773,7 +760,7 @@
 
                 Results.prototype.render = function () {
                     var $results = $(
-                        '<ul class="select2-results__options" role="tree"></ul>'
+                        '<ul class="pumselect2-results__options" role="tree"></ul>'
                     );
 
                     if (this.options.get('multiple')) {
@@ -797,7 +784,7 @@
 
                     var $message = $(
                         '<li role="treeitem" aria-live="assertive"' +
-                        ' class="select2-results__option"></li>'
+                        ' class="pumselect2-results__option"></li>'
                     );
 
                     var message = this.options.get('translations').get(params.message);
@@ -808,13 +795,13 @@
                         )
                     );
 
-                    $message[0].className += ' select2-results__message';
+                    $message[0].className += ' pumselect2-results__message';
 
                     this.$results.append($message);
                 };
 
                 Results.prototype.hideMessages = function () {
-                    this.$results.find('.select2-results__message').remove();
+                    this.$results.find('.pumselect2-results__message').remove();
                 };
 
                 Results.prototype.append = function (data) {
@@ -846,7 +833,7 @@
                 };
 
                 Results.prototype.position = function ($results, $dropdown) {
-                    var $resultsContainer = $dropdown.find('.select2-results');
+                    var $resultsContainer = $dropdown.find('.pumselect2-results');
                     $resultsContainer.append($results);
                 };
 
@@ -865,7 +852,7 @@
                         });
 
                         var $options = self.$results
-                            .find('.select2-results__option[aria-selected]');
+                            .find('.pumselect2-results__option[aria-selected]');
 
                         $options.each(function () {
                             var $option = $(this);
@@ -919,7 +906,7 @@
 
                 Results.prototype.option = function (data) {
                     var option = document.createElement('li');
-                    option.className = 'select2-results__option';
+                    option.className = 'pumselect2-results__option';
 
                     var attrs = {
                         'role': 'treeitem',
@@ -959,7 +946,7 @@
                         var $option = $(option);
 
                         var label = document.createElement('strong');
-                        label.className = 'select2-results__group';
+                        label.className = 'pumselect2-results__group';
 
                         var $label = $(label);
                         this.template(data, label);
@@ -975,7 +962,7 @@
                         }
 
                         var $childrenContainer = $('<ul></ul>', {
-                            'class': 'select2-results__options select2-results__options--nested'
+                            'class': 'pumselect2-results__options pumselect2-results__options--nested'
                         });
 
                         $childrenContainer.append($children);
@@ -1145,7 +1132,7 @@
                     });
 
                     container.on('results:focus', function (params) {
-                        params.element.addClass('select2-results__option--highlighted');
+                        params.element.addClass('pumselect2-results__option--highlighted');
                     });
 
                     container.on('results:message', function (params) {
@@ -1177,7 +1164,7 @@
                         });
                     }
 
-                    this.$results.on('mouseup', '.select2-results__option[aria-selected]',
+                    this.$results.on('mouseup', '.pumselect2-results__option[aria-selected]',
                         function (evt) {
                             var $this = $(this);
 
@@ -1202,12 +1189,12 @@
                             });
                         });
 
-                    this.$results.on('mouseenter', '.select2-results__option[aria-selected]',
+                    this.$results.on('mouseenter', '.pumselect2-results__option[aria-selected]',
                         function (evt) {
                             var data = $(this).data('data');
 
                             self.getHighlightedResults()
-                                .removeClass('select2-results__option--highlighted');
+                                .removeClass('pumselect2-results__option--highlighted');
 
                             self.trigger('results:focus', {
                                 data: data,
@@ -1218,7 +1205,7 @@
 
                 Results.prototype.getHighlightedResults = function () {
                     var $highlighted = this.$results
-                        .find('.select2-results__option--highlighted');
+                        .find('.pumselect2-results__option--highlighted');
 
                     return $highlighted;
                 };
@@ -1270,7 +1257,7 @@
                 return Results;
             });
 
-            S2.define('select2/keys',[
+            S2.define('pumselect2/keys',[
 
             ], function () {
                 var KEYS = {
@@ -1296,7 +1283,7 @@
                 return KEYS;
             });
 
-            S2.define('select2/selection/base',[
+            S2.define('pumselect2/selection/base',[
                 'jquery',
                 '../utils',
                 '../keys'
@@ -1312,7 +1299,7 @@
 
                 BaseSelection.prototype.render = function () {
                     var $selection = $(
-                        '<span class="select2-selection" role="combobox" ' +
+                        '<span class="pumselect2-selection" role="combobox" ' +
                         ' aria-haspopup="true" aria-expanded="false">' +
                         '</span>'
                     );
@@ -1414,12 +1401,12 @@
                 BaseSelection.prototype._attachCloseHandler = function (container) {
                     var self = this;
 
-                    $(document.body).on('mousedown.select2.' + container.id, function (e) {
+                    $(document.body).on('mousedown.pumselect2.' + container.id, function (e) {
                         var $target = $(e.target);
 
-                        var $select = $target.closest('.select2');
+                        var $select = $target.closest('.pumselect2');
 
-                        var $all = $('.select2.select2-container--open');
+                        var $all = $('.pumselect2.pumselect2-container--open');
 
                         $all.each(function () {
                             var $this = $(this);
@@ -1436,7 +1423,7 @@
                 };
 
                 BaseSelection.prototype._detachCloseHandler = function (container) {
-                    $(document.body).off('mousedown.select2.' + container.id);
+                    $(document.body).off('mousedown.pumselect2.' + container.id);
                 };
 
                 BaseSelection.prototype.position = function ($selection, $container) {
@@ -1455,7 +1442,7 @@
                 return BaseSelection;
             });
 
-            S2.define('select2/selection/single',[
+            S2.define('pumselect2/selection/single',[
                 'jquery',
                 './base',
                 '../utils',
@@ -1470,11 +1457,11 @@
                 SingleSelection.prototype.render = function () {
                     var $selection = SingleSelection.__super__.render.call(this);
 
-                    $selection.addClass('select2-selection--single');
+                    $selection.addClass('pumselect2-selection--single');
 
                     $selection.html(
-                        '<span class="select2-selection__rendered"></span>' +
-                        '<span class="select2-selection__arrow" role="presentation">' +
+                        '<span class="pumselect2-selection__rendered"></span>' +
+                        '<span class="pumselect2-selection__arrow" role="presentation">' +
                         '<b role="presentation"></b>' +
                         '</span>'
                     );
@@ -1489,7 +1476,7 @@
 
                     var id = container.id + '-container';
 
-                    this.$selection.find('.select2-selection__rendered').attr('id', id);
+                    this.$selection.find('.pumselect2-selection__rendered').attr('id', id);
                     this.$selection.attr('aria-labelledby', id);
 
                     this.$selection.on('mousedown', function (evt) {
@@ -1517,7 +1504,7 @@
                 };
 
                 SingleSelection.prototype.clear = function () {
-                    this.$selection.find('.select2-selection__rendered').empty();
+                    this.$selection.find('.pumselect2-selection__rendered').empty();
                 };
 
                 SingleSelection.prototype.display = function (data, container) {
@@ -1539,7 +1526,7 @@
 
                     var selection = data[0];
 
-                    var $rendered = this.$selection.find('.select2-selection__rendered');
+                    var $rendered = this.$selection.find('.pumselect2-selection__rendered');
                     var formatted = this.display(selection, $rendered);
 
                     $rendered.empty().append(formatted);
@@ -1549,7 +1536,7 @@
                 return SingleSelection;
             });
 
-            S2.define('select2/selection/multiple',[
+            S2.define('pumselect2/selection/multiple',[
                 'jquery',
                 './base',
                 '../utils'
@@ -1563,10 +1550,10 @@
                 MultipleSelection.prototype.render = function () {
                     var $selection = MultipleSelection.__super__.render.call(this);
 
-                    $selection.addClass('select2-selection--multiple');
+                    $selection.addClass('pumselect2-selection--multiple');
 
                     $selection.html(
-                        '<ul class="select2-selection__rendered"></ul>'
+                        '<ul class="pumselect2-selection__rendered"></ul>'
                     );
 
                     return $selection;
@@ -1585,7 +1572,7 @@
 
                     this.$selection.on(
                         'click',
-                        '.select2-selection__choice__remove',
+                        '.pumselect2-selection__choice__remove',
                         function (evt) {
                             // Ignore the event if it is disabled
                             if (self.options.get('disabled')) {
@@ -1606,7 +1593,7 @@
                 };
 
                 MultipleSelection.prototype.clear = function () {
-                    this.$selection.find('.select2-selection__rendered').empty();
+                    this.$selection.find('.pumselect2-selection__rendered').empty();
                 };
 
                 MultipleSelection.prototype.display = function (data, container) {
@@ -1618,8 +1605,8 @@
 
                 MultipleSelection.prototype.selectionContainer = function () {
                     var $container = $(
-                        '<li class="select2-selection__choice">' +
-                        '<span class="select2-selection__choice__remove" role="presentation">' +
+                        '<li class="pumselect2-selection__choice">' +
+                        '<span class="pumselect2-selection__choice__remove" role="presentation">' +
                         '&times;' +
                         '</span>' +
                         '</li>'
@@ -1651,7 +1638,7 @@
                         $selections.push($selection);
                     }
 
-                    var $rendered = this.$selection.find('.select2-selection__rendered');
+                    var $rendered = this.$selection.find('.pumselect2-selection__rendered');
 
                     Utils.appendMany($rendered, $selections);
                 };
@@ -1659,7 +1646,7 @@
                 return MultipleSelection;
             });
 
-            S2.define('select2/selection/placeholder',[
+            S2.define('pumselect2/selection/placeholder',[
                 '../utils'
             ], function (Utils) {
                 function Placeholder (decorated, $element, options) {
@@ -1683,8 +1670,8 @@
                     var $placeholder = this.selectionContainer();
 
                     $placeholder.html(this.display(placeholder));
-                    $placeholder.addClass('select2-selection__placeholder')
-                        .removeClass('select2-selection__choice');
+                    $placeholder.addClass('pumselect2-selection__placeholder')
+                        .removeClass('pumselect2-selection__choice');
 
                     return $placeholder;
                 };
@@ -1703,13 +1690,13 @@
 
                     var $placeholder = this.createPlaceholder(this.placeholder);
 
-                    this.$selection.find('.select2-selection__rendered').append($placeholder);
+                    this.$selection.find('.pumselect2-selection__rendered').append($placeholder);
                 };
 
                 return Placeholder;
             });
 
-            S2.define('select2/selection/allowClear',[
+            S2.define('pumselect2/selection/allowClear',[
                 'jquery',
                 '../keys'
             ], function ($, KEYS) {
@@ -1729,7 +1716,7 @@
                         }
                     }
 
-                    this.$selection.on('mousedown', '.select2-selection__clear',
+                    this.$selection.on('mousedown', '.pumselect2-selection__clear',
                         function (evt) {
                             self._handleClear(evt);
                         });
@@ -1745,7 +1732,7 @@
                         return;
                     }
 
-                    var $clear = this.$selection.find('.select2-selection__clear');
+                    var $clear = this.$selection.find('.pumselect2-selection__clear');
 
                     // Ignore the event if nothing has been selected
                     if ($clear.length === 0) {
@@ -1789,25 +1776,25 @@
                 AllowClear.prototype.update = function (decorated, data) {
                     decorated.call(this, data);
 
-                    if (this.$selection.find('.select2-selection__placeholder').length > 0 ||
+                    if (this.$selection.find('.pumselect2-selection__placeholder').length > 0 ||
                         data.length === 0) {
                         return;
                     }
 
                     var $remove = $(
-                        '<span class="select2-selection__clear">' +
+                        '<span class="pumselect2-selection__clear">' +
                         '&times;' +
                         '</span>'
                     );
                     $remove.data('data', data);
 
-                    this.$selection.find('.select2-selection__rendered').prepend($remove);
+                    this.$selection.find('.pumselect2-selection__rendered').prepend($remove);
                 };
 
                 return AllowClear;
             });
 
-            S2.define('select2/selection/search',[
+            S2.define('pumselect2/selection/search',[
                 'jquery',
                 '../utils',
                 '../keys'
@@ -1818,8 +1805,8 @@
 
                 Search.prototype.render = function (decorated) {
                     var $search = $(
-                        '<li class="select2-search select2-search--inline">' +
-                        '<input class="select2-search__field" type="search" tabindex="-1"' +
+                        '<li class="pumselect2-search pumselect2-search--inline">' +
+                        '<input class="pumselect2-search__field" type="search" tabindex="-1"' +
                         ' autocomplete="off" autocorrect="off" autocapitalize="off"' +
                         ' spellcheck="false" role="textbox" aria-autocomplete="list" />' +
                         '</li>'
@@ -1868,15 +1855,15 @@
                         self.$search.attr('aria-activedescendant', params.id);
                     });
 
-                    this.$selection.on('focusin', '.select2-search--inline', function (evt) {
+                    this.$selection.on('focusin', '.pumselect2-search--inline', function (evt) {
                         self.trigger('focus', evt);
                     });
 
-                    this.$selection.on('focusout', '.select2-search--inline', function (evt) {
+                    this.$selection.on('focusout', '.pumselect2-search--inline', function (evt) {
                         self._handleBlur(evt);
                     });
 
-                    this.$selection.on('keydown', '.select2-search--inline', function (evt) {
+                    this.$selection.on('keydown', '.pumselect2-search--inline', function (evt) {
                         evt.stopPropagation();
 
                         self.trigger('keypress', evt);
@@ -1887,7 +1874,7 @@
 
                         if (key === KEYS.BACKSPACE && self.$search.val() === '') {
                             var $previousChoice = self.$searchContainer
-                                .prev('.select2-selection__choice');
+                                .prev('.pumselect2-selection__choice');
 
                             if ($previousChoice.length > 0) {
                                 var item = $previousChoice.data('data');
@@ -1912,7 +1899,7 @@
                     // both the `keyup` and `input` events.
                     this.$selection.on(
                         'input.searchcheck',
-                        '.select2-search--inline',
+                        '.pumselect2-search--inline',
                         function (evt) {
                             // IE will trigger the `input` event when a placeholder is used on a
                             // search box. To get around this issue, we are forced to ignore all
@@ -1929,7 +1916,7 @@
 
                     this.$selection.on(
                         'keyup.search input.search',
-                        '.select2-search--inline',
+                        '.pumselect2-search--inline',
                         function (evt) {
                             // IE will trigger the `input` event when a placeholder is used on a
                             // search box. To get around this issue, we are forced to ignore all
@@ -1979,7 +1966,7 @@
 
                     decorated.call(this, data);
 
-                    this.$selection.find('.select2-selection__rendered')
+                    this.$selection.find('.pumselect2-selection__rendered')
                         .append(this.$searchContainer);
 
                     this.resizeSearch();
@@ -2017,7 +2004,7 @@
                     var width = '';
 
                     if (this.$search.attr('placeholder') !== '') {
-                        width = this.$selection.find('.select2-selection__rendered').innerWidth();
+                        width = this.$selection.find('.pumselect2-selection__rendered').innerWidth();
                     } else {
                         var minimumWidth = this.$search.val().length + 1;
 
@@ -2030,7 +2017,7 @@
                 return Search;
             });
 
-            S2.define('select2/selection/eventRelay',[
+            S2.define('pumselect2/selection/eventRelay',[
                 'jquery'
             ], function ($) {
                 function EventRelay () { }
@@ -2058,7 +2045,7 @@
                         params = params || {};
 
                         // Generate the jQuery event for the Select2 event
-                        var evt = $.Event('select2:' + name, {
+                        var evt = $.Event('pumselect2:' + name, {
                             params: params
                         });
 
@@ -2076,7 +2063,7 @@
                 return EventRelay;
             });
 
-            S2.define('select2/translation',[
+            S2.define('pumselect2/translation',[
                 'jquery',
                 'require'
             ], function ($, require) {
@@ -2113,7 +2100,7 @@
                 return Translation;
             });
 
-            S2.define('select2/diacritics',[
+            S2.define('pumselect2/diacritics',[
 
             ], function () {
                 var diacritics = {
@@ -2961,7 +2948,7 @@
                 return diacritics;
             });
 
-            S2.define('select2/data/base',[
+            S2.define('pumselect2/data/base',[
                 '../utils'
             ], function (Utils) {
                 function BaseAdapter ($element, options) {
@@ -3002,7 +2989,7 @@
                 return BaseAdapter;
             });
 
-            S2.define('select2/data/select',[
+            S2.define('pumselect2/data/select',[
                 './base',
                 '../utils',
                 'jquery'
@@ -3288,7 +3275,7 @@
                 return SelectAdapter;
             });
 
-            S2.define('select2/data/array',[
+            S2.define('pumselect2/data/array',[
                 './select',
                 '../utils',
                 'jquery'
@@ -3368,7 +3355,7 @@
                 return ArrayAdapter;
             });
 
-            S2.define('select2/data/ajax',[
+            S2.define('pumselect2/data/ajax',[
                 './array',
                 '../utils',
                 'jquery'
@@ -3472,7 +3459,7 @@
                 return AjaxAdapter;
             });
 
-            S2.define('select2/data/tags',[
+            S2.define('pumselect2/data/tags',[
                 'jquery'
             ], function ($) {
                 function Tags (decorated, $element, options) {
@@ -3549,7 +3536,7 @@
 
                         if (tag != null) {
                             var $option = self.option(tag);
-                            $option.attr('data-select2-tag', true);
+                            $option.attr('data-pumselect2-tag', true);
 
                             self.addOptions([$option]);
 
@@ -3584,7 +3571,7 @@
                 Tags.prototype._removeOldTags = function (_) {
                     var tag = this._lastTag;
 
-                    var $options = this.$element.find('option[data-select2-tag]');
+                    var $options = this.$element.find('option[data-pumselect2-tag]');
 
                     $options.each(function () {
                         if (this.selected) {
@@ -3598,7 +3585,7 @@
                 return Tags;
             });
 
-            S2.define('select2/data/tokenizer',[
+            S2.define('pumselect2/data/tokenizer',[
                 'jquery'
             ], function ($) {
                 function Tokenizer (decorated, $element, options) {
@@ -3615,7 +3602,7 @@
                     decorated.call(this, container, $container);
 
                     this.$search =  container.dropdown.$search || container.selection.$search ||
-                        $container.find('.select2-search__field');
+                        $container.find('.pumselect2-search__field');
                 };
 
                 Tokenizer.prototype.query = function (decorated, params, callback) {
@@ -3692,7 +3679,7 @@
                 return Tokenizer;
             });
 
-            S2.define('select2/data/minimumInputLength',[
+            S2.define('pumselect2/data/minimumInputLength',[
 
             ], function () {
                 function MinimumInputLength (decorated, $e, options) {
@@ -3723,7 +3710,7 @@
                 return MinimumInputLength;
             });
 
-            S2.define('select2/data/maximumInputLength',[
+            S2.define('pumselect2/data/maximumInputLength',[
 
             ], function () {
                 function MaximumInputLength (decorated, $e, options) {
@@ -3755,7 +3742,7 @@
                 return MaximumInputLength;
             });
 
-            S2.define('select2/data/maximumSelectionLength',[
+            S2.define('pumselect2/data/maximumSelectionLength',[
 
             ], function (){
                 function MaximumSelectionLength (decorated, $e, options) {
@@ -3787,7 +3774,7 @@
                 return MaximumSelectionLength;
             });
 
-            S2.define('select2/dropdown',[
+            S2.define('pumselect2/dropdown',[
                 'jquery',
                 './utils'
             ], function ($, Utils) {
@@ -3802,8 +3789,8 @@
 
                 Dropdown.prototype.render = function () {
                     var $dropdown = $(
-                        '<span class="select2-dropdown">' +
-                        '<span class="select2-results"></span>' +
+                        '<span class="pumselect2-dropdown">' +
+                        '<span class="pumselect2-results"></span>' +
                         '</span>'
                     );
 
@@ -3830,7 +3817,7 @@
                 return Dropdown;
             });
 
-            S2.define('select2/dropdown/search',[
+            S2.define('pumselect2/dropdown/search',[
                 'jquery',
                 '../utils'
             ], function ($, Utils) {
@@ -3840,8 +3827,8 @@
                     var $rendered = decorated.call(this);
 
                     var $search = $(
-                        '<span class="select2-search select2-search--dropdown">' +
-                        '<input class="select2-search__field" type="search" tabindex="-1"' +
+                        '<span class="pumselect2-search pumselect2-search--dropdown">' +
+                        '<input class="pumselect2-search__field" type="search" tabindex="-1"' +
                         ' autocomplete="off" autocorrect="off" autocapitalize="off"' +
                         ' spellcheck="false" role="textbox" />' +
                         '</span>'
@@ -3899,9 +3886,9 @@
                             var showSearch = self.showSearch(params);
 
                             if (showSearch) {
-                                self.$searchContainer.removeClass('select2-search--hide');
+                                self.$searchContainer.removeClass('pumselect2-search--hide');
                             } else {
-                                self.$searchContainer.addClass('select2-search--hide');
+                                self.$searchContainer.addClass('pumselect2-search--hide');
                             }
                         }
                     });
@@ -3926,7 +3913,7 @@
                 return Search;
             });
 
-            S2.define('select2/dropdown/hidePlaceholder',[
+            S2.define('pumselect2/dropdown/hidePlaceholder',[
 
             ], function () {
                 function HidePlaceholder (decorated, $element, options, dataAdapter) {
@@ -3969,7 +3956,7 @@
                 return HidePlaceholder;
             });
 
-            S2.define('select2/dropdown/infiniteScroll',[
+            S2.define('pumselect2/dropdown/infiniteScroll',[
                 'jquery'
             ], function ($) {
                 function InfiniteScroll (decorated, $element, options, dataAdapter) {
@@ -4045,7 +4032,7 @@
                 InfiniteScroll.prototype.createLoadingMore = function () {
                     var $option = $(
                         '<li ' +
-                        'class="select2-results__option select2-results__option--load-more"' +
+                        'class="pumselect2-results__option pumselect2-results__option--load-more"' +
                         'role="treeitem" aria-disabled="true"></li>'
                     );
 
@@ -4059,7 +4046,7 @@
                 return InfiniteScroll;
             });
 
-            S2.define('select2/dropdown/attachBody',[
+            S2.define('pumselect2/dropdown/attachBody',[
                 'jquery',
                 '../utils'
             ], function ($, Utils) {
@@ -4115,8 +4102,8 @@
                     // Clone all of the container classes
                     $dropdown.attr('class', $container.attr('class'));
 
-                    $dropdown.removeClass('select2');
-                    $dropdown.addClass('select2-container--open');
+                    $dropdown.removeClass('pumselect2');
+                    $dropdown.addClass('pumselect2-container--open');
 
                     $dropdown.css({
                         position: 'absolute',
@@ -4145,20 +4132,20 @@
                     function (decorated, container) {
                         var self = this;
 
-                        var scrollEvent = 'scroll.select2.' + container.id;
-                        var resizeEvent = 'resize.select2.' + container.id;
-                        var orientationEvent = 'orientationchange.select2.' + container.id;
+                        var scrollEvent = 'scroll.pumselect2.' + container.id;
+                        var resizeEvent = 'resize.pumselect2.' + container.id;
+                        var orientationEvent = 'orientationchange.pumselect2.' + container.id;
 
                         var $watchers = this.$container.parents().filter(Utils.hasScroll);
                         $watchers.each(function () {
-                            $(this).data('select2-scroll-position', {
+                            $(this).data('pumselect2-scroll-position', {
                                 x: $(this).scrollLeft(),
                                 y: $(this).scrollTop()
                             });
                         });
 
                         $watchers.on(scrollEvent, function (ev) {
-                            var position = $(this).data('select2-scroll-position');
+                            var position = $(this).data('pumselect2-scroll-position');
                             $(this).scrollTop(position.y);
                         });
 
@@ -4171,9 +4158,9 @@
 
                 AttachBody.prototype._detachPositioningHandler =
                     function (decorated, container) {
-                        var scrollEvent = 'scroll.select2.' + container.id;
-                        var resizeEvent = 'resize.select2.' + container.id;
-                        var orientationEvent = 'orientationchange.select2.' + container.id;
+                        var scrollEvent = 'scroll.pumselect2.' + container.id;
+                        var resizeEvent = 'resize.pumselect2.' + container.id;
+                        var orientationEvent = 'orientationchange.pumselect2.' + container.id;
 
                         var $watchers = this.$container.parents().filter(Utils.hasScroll);
                         $watchers.off(scrollEvent);
@@ -4184,8 +4171,8 @@
                 AttachBody.prototype._positionDropdown = function () {
                     var $window = $(window);
 
-                    var isCurrentlyAbove = this.$dropdown.hasClass('select2-dropdown--above');
-                    var isCurrentlyBelow = this.$dropdown.hasClass('select2-dropdown--below');
+                    var isCurrentlyAbove = this.$dropdown.hasClass('pumselect2-dropdown--above');
+                    var isCurrentlyBelow = this.$dropdown.hasClass('pumselect2-dropdown--below');
 
                     var newDirection = null;
 
@@ -4248,11 +4235,11 @@
 
                     if (newDirection != null) {
                         this.$dropdown
-                            .removeClass('select2-dropdown--below select2-dropdown--above')
-                            .addClass('select2-dropdown--' + newDirection);
+                            .removeClass('pumselect2-dropdown--below pumselect2-dropdown--above')
+                            .addClass('pumselect2-dropdown--' + newDirection);
                         this.$container
-                            .removeClass('select2-container--below select2-container--above')
-                            .addClass('select2-container--' + newDirection);
+                            .removeClass('pumselect2-container--below pumselect2-container--above')
+                            .addClass('pumselect2-container--' + newDirection);
                     }
 
                     this.$dropdownContainer.css(css);
@@ -4281,7 +4268,7 @@
                 return AttachBody;
             });
 
-            S2.define('select2/dropdown/minimumResultsForSearch',[
+            S2.define('pumselect2/dropdown/minimumResultsForSearch',[
 
             ], function () {
                 function countResults (data) {
@@ -4321,7 +4308,7 @@
                 return MinimumResultsForSearch;
             });
 
-            S2.define('select2/dropdown/selectOnClose',[
+            S2.define('pumselect2/dropdown/selectOnClose',[
 
             ], function () {
                 function SelectOnClose () { }
@@ -4362,7 +4349,7 @@
                 return SelectOnClose;
             });
 
-            S2.define('select2/dropdown/closeOnSelect',[
+            S2.define('pumselect2/dropdown/closeOnSelect',[
 
             ], function () {
                 function CloseOnSelect () { }
@@ -4395,7 +4382,7 @@
                 return CloseOnSelect;
             });
 
-            S2.define('select2/i18n/en',[],function () {
+            S2.define('pumselect2/i18n/en',[],function () {
                 // English
                 return {
                     errorLoading: function () {
@@ -4440,7 +4427,7 @@
                 };
             });
 
-            S2.define('select2/defaults',[
+            S2.define('pumselect2/defaults',[
                 'jquery',
                 'require',
 
@@ -4837,7 +4824,7 @@
                 return defaults;
             });
 
-            S2.define('select2/options',[
+            S2.define('pumselect2/options',[
                 'require',
                 'jquery',
                 './defaults',
@@ -4863,7 +4850,7 @@
                 }
 
                 Options.prototype.fromElement = function ($e) {
-                    var excludedData = ['select2'];
+                    var excludedData = ['pumselect2'];
 
                     if (this.options.multiple == null) {
                         this.options.multiple = $e.prop('multiple');
@@ -4894,16 +4881,16 @@
                     $e.prop('disabled', this.options.disabled);
                     $e.prop('multiple', this.options.multiple);
 
-                    if ($e.data('select2Tags')) {
+                    if ($e.data('pumselect2Tags')) {
                         if (this.options.debug && window.console && console.warn) {
                             console.warn(
-                                'Select2: The `data-select2-tags` attribute has been changed to ' +
+                                'Select2: The `data-pumselect2-tags` attribute has been changed to ' +
                                 'use the `data-data` and `data-tags="true"` attributes and will be ' +
                                 'removed in future versions of Select2.'
                             );
                         }
 
-                        $e.data('data', $e.data('select2Tags'));
+                        $e.data('data', $e.data('pumselect2Tags'));
                         $e.data('tags', true);
                     }
 
@@ -4960,15 +4947,15 @@
                 return Options;
             });
 
-            S2.define('select2/core',[
+            S2.define('pumselect2/core',[
                 'jquery',
                 './options',
                 './utils',
                 './keys'
             ], function ($, Options, Utils, KEYS) {
                 var Select2 = function ($element, options) {
-                    if ($element.data('select2') != null) {
-                        $element.data('select2').destroy();
+                    if ($element.data('pumselect2') != null) {
+                        $element.data('pumselect2').destroy();
                     }
 
                     this.$element = $element;
@@ -5039,13 +5026,13 @@
                     });
 
                     // Hide the original select
-                    $element.addClass('select2-hidden-accessible');
+                    $element.addClass('pumselect2-hidden-accessible');
                     $element.attr('aria-hidden', 'true');
 
                     // Synchronize any monitored attributes
                     this._syncAttributes();
 
-                    $element.data('select2', this);
+                    $element.data('pumselect2', this);
                 };
 
                 Utils.Extend(Select2, Utils.Observable);
@@ -5062,7 +5049,7 @@
                     }
 
                     id = id.replace(/(:|\.|\[|\]|,)/g, '');
-                    id = 'select2-' + id;
+                    id = 'pumselect2-' + id;
 
                     return id;
                 };
@@ -5135,7 +5122,7 @@
                 Select2.prototype._registerDomEvents = function () {
                     var self = this;
 
-                    this.$element.on('change.select2', function () {
+                    this.$element.on('change.pumselect2', function () {
                         self.dataAdapter.current(function (data) {
                             self.trigger('selection:update', {
                                 data: data
@@ -5216,23 +5203,23 @@
                     var self = this;
 
                     this.on('open', function () {
-                        self.$container.addClass('select2-container--open');
+                        self.$container.addClass('pumselect2-container--open');
                     });
 
                     this.on('close', function () {
-                        self.$container.removeClass('select2-container--open');
+                        self.$container.removeClass('pumselect2-container--open');
                     });
 
                     this.on('enable', function () {
-                        self.$container.removeClass('select2-container--disabled');
+                        self.$container.removeClass('pumselect2-container--disabled');
                     });
 
                     this.on('disable', function () {
-                        self.$container.addClass('select2-container--disabled');
+                        self.$container.addClass('pumselect2-container--disabled');
                     });
 
                     this.on('blur', function () {
-                        self.$container.removeClass('select2-container--focus');
+                        self.$container.removeClass('pumselect2-container--focus');
                     });
 
                     this.on('query', function (params) {
@@ -5374,11 +5361,11 @@
                 };
 
                 Select2.prototype.isOpen = function () {
-                    return this.$container.hasClass('select2-container--open');
+                    return this.$container.hasClass('pumselect2-container--open');
                 };
 
                 Select2.prototype.hasFocus = function () {
-                    return this.$container.hasClass('select2-container--focus');
+                    return this.$container.hasClass('pumselect2-container--focus');
                 };
 
                 Select2.prototype.focus = function (data) {
@@ -5387,14 +5374,14 @@
                         return;
                     }
 
-                    this.$container.addClass('select2-container--focus');
+                    this.$container.addClass('pumselect2-container--focus');
                     this.trigger('focus', {});
                 };
 
                 Select2.prototype.enable = function (args) {
                     if (this.options.get('debug') && window.console && console.warn) {
                         console.warn(
-                            'Select2: The `select2("enable")` method has been deprecated and will' +
+                            'Select2: The `pumselect2("enable")` method has been deprecated and will' +
                             ' be removed in later Select2 versions. Use $element.prop("disabled")' +
                             ' instead.'
                         );
@@ -5413,7 +5400,7 @@
                     if (this.options.get('debug') &&
                         arguments.length > 0 && window.console && console.warn) {
                         console.warn(
-                            'Select2: Data can no longer be set using `select2("data")`. You ' +
+                            'Select2: Data can no longer be set using `pumselect2("data")`. You ' +
                             'should consider setting the value instead using `$element.val()`.'
                         );
                     }
@@ -5430,7 +5417,7 @@
                 Select2.prototype.val = function (args) {
                     if (this.options.get('debug') && window.console && console.warn) {
                         console.warn(
-                            'Select2: The `select2("val")` method has been deprecated and will be' +
+                            'Select2: The `pumselect2("val")` method has been deprecated and will be' +
                             ' removed in later Select2 versions. Use $element.val() instead.'
                         );
                     }
@@ -5467,12 +5454,12 @@
 
                     this._sync = null;
 
-                    this.$element.off('.select2');
+                    this.$element.off('.pumselect2');
                     this.$element.attr('tabindex', this.$element.data('old-tabindex'));
 
-                    this.$element.removeClass('select2-hidden-accessible');
+                    this.$element.removeClass('pumselect2-hidden-accessible');
                     this.$element.attr('aria-hidden', 'false');
-                    this.$element.removeData('select2');
+                    this.$element.removeData('pumselect2');
 
                     this.dataAdapter.destroy();
                     this.selection.destroy();
@@ -5487,7 +5474,7 @@
 
                 Select2.prototype.render = function () {
                     var $container = $(
-                        '<span class="select2 select2-container">' +
+                        '<span class="pumselect2 pumselect2-container">' +
                         '<span class="selection"></span>' +
                         '<span class="dropdown-wrapper" aria-hidden="true"></span>' +
                         '</span>'
@@ -5497,7 +5484,7 @@
 
                     this.$container = $container;
 
-                    this.$container.addClass('select2-container--' + this.options.get('theme'));
+                    this.$container.addClass('pumselect2-container--' + this.options.get('theme'));
 
                     $container.data('element', this.$element);
 
@@ -5507,7 +5494,7 @@
                 return Select2;
             });
 
-            S2.define('select2/compat/utils',[
+            S2.define('pumselect2/compat/utils',[
                 'jquery'
             ], function ($) {
                 function syncCssClasses ($dest, $src, adapter) {
@@ -5520,7 +5507,7 @@
 
                         $(classes.split(/\s+/)).each(function () {
                             // Save all Select2 classes
-                            if (this.indexOf('select2-') === 0) {
+                            if (this.indexOf('pumselect2-') === 0) {
                                 replacements.push(this);
                             }
                         });
@@ -5533,7 +5520,7 @@
 
                         $(classes.split(/\s+/)).each(function () {
                             // Only adapt non-Select2 classes
-                            if (this.indexOf('select2-') !== 0) {
+                            if (this.indexOf('pumselect2-') !== 0) {
                                 adapted = adapter(this);
 
                                 if (adapted != null) {
@@ -5551,7 +5538,7 @@
                 };
             });
 
-            S2.define('select2/compat/containerCss',[
+            S2.define('pumselect2/compat/containerCss',[
                 'jquery',
                 './utils'
             ], function ($, CompatUtils) {
@@ -5608,7 +5595,7 @@
                 return ContainerCSS;
             });
 
-            S2.define('select2/compat/dropdownCss',[
+            S2.define('pumselect2/compat/dropdownCss',[
                 'jquery',
                 './utils'
             ], function ($, CompatUtils) {
@@ -5665,7 +5652,7 @@
                 return DropdownCSS;
             });
 
-            S2.define('select2/compat/initSelection',[
+            S2.define('pumselect2/compat/initSelection',[
                 'jquery'
             ], function ($) {
                 function InitSelection (decorated, $element, options) {
@@ -5708,7 +5695,7 @@
                 return InitSelection;
             });
 
-            S2.define('select2/compat/inputData',[
+            S2.define('pumselect2/compat/inputData',[
                 'jquery'
             ], function ($) {
                 function InputData (decorated, $element, options) {
@@ -5836,7 +5823,7 @@
                 return InputData;
             });
 
-            S2.define('select2/compat/matcher',[
+            S2.define('pumselect2/compat/matcher',[
                 'jquery'
             ], function ($) {
                 function oldMatcher (matcher) {
@@ -5879,7 +5866,7 @@
                 return oldMatcher;
             });
 
-            S2.define('select2/compat/query',[
+            S2.define('pumselect2/compat/query',[
 
             ], function () {
                 function Query (decorated, $element, options) {
@@ -5906,7 +5893,7 @@
                 return Query;
             });
 
-            S2.define('select2/dropdown/attachContainer',[
+            S2.define('pumselect2/dropdown/attachContainer',[
 
             ], function () {
                 function AttachContainer (decorated, $element, options) {
@@ -5918,14 +5905,14 @@
                         var $dropdownContainer = $container.find('.dropdown-wrapper');
                         $dropdownContainer.append($dropdown);
 
-                        $dropdown.addClass('select2-dropdown--below');
-                        $container.addClass('select2-container--below');
+                        $dropdown.addClass('pumselect2-dropdown--below');
+                        $container.addClass('pumselect2-container--below');
                     };
 
                 return AttachContainer;
             });
 
-            S2.define('select2/dropdown/stopPropagation',[
+            S2.define('pumselect2/dropdown/stopPropagation',[
 
             ], function () {
                 function StopPropagation () { }
@@ -5964,7 +5951,7 @@
                 return StopPropagation;
             });
 
-            S2.define('select2/selection/stopPropagation',[
+            S2.define('pumselect2/selection/stopPropagation',[
 
             ], function () {
                 function StopPropagation () { }
@@ -6225,18 +6212,18 @@
 
             }));
 
-            S2.define('jquery.select2',[
+            S2.define('jquery.pumselect2',[
                 'jquery',
                 'jquery-mousewheel',
 
-                './select2/core',
-                './select2/defaults'
+                './pumselect2/core',
+                './pumselect2/defaults'
             ], function ($, _, Select2, Defaults) {
-                if ($.fn.select2 == null) {
+                if ($.fn.pumselect2 == null) {
                     // All methods that should return the element
                     var thisMethods = ['open', 'close', 'destroy'];
 
-                    $.fn.select2 = function (options) {
+                    $.fn.pumselect2 = function (options) {
                         options = options || {};
 
                         if (typeof options === 'object') {
@@ -6251,11 +6238,11 @@
                             var ret;
 
                             this.each(function () {
-                                var instance = $(this).data('select2');
+                                var instance = $(this).data('pumselect2');
 
                                 if (instance == null && window.console && console.error) {
                                     console.error(
-                                        'The select2(\'' + options + '\') method was called on an ' +
+                                        'The pumselect2(\'' + options + '\') method was called on an ' +
                                         'element that is not using Select2.'
                                     );
                                 }
@@ -6277,8 +6264,8 @@
                     };
                 }
 
-                if ($.fn.select2.defaults == null) {
-                    $.fn.select2.defaults = Defaults;
+                if ($.fn.pumselect2.defaults == null) {
+                    $.fn.pumselect2.defaults = Defaults;
                 }
 
                 return Select2;
@@ -6293,13 +6280,13 @@
 
     // Autoload the jQuery bindings
     // We know that all of the modules exist above this, so we're safe
-    var select2 = S2.require('jquery.select2');
+    var pumselect2 = S2.require('jquery.pumselect2');
 
     // Hold the AMD module references on the jQuery function that was just loaded
     // This allows Select2 to use the internal loader outside of this file, such
     // as in the language files.
-    jQuery.fn.select2.amd = S2;
+    jQuery.fn.pumselect2.amd = S2;
 
     // Return the Select2 instance for anyone who is importing it.
-    return select2;
+    return pumselect2;
 }));

@@ -6,7 +6,7 @@
 	</div>
 </script>
 
-<script type="text/html" id="tmpl-pum-field-wrapper"><# console.log(data); #>
+<script type="text/html" id="tmpl-pum-field-wrapper">
 	<div class="pum-field pum-field-{{data.type}} {{data.id}}-wrapper {{data.classes}}">
 		<label for="{{data.id}}">{{data.label}}</label>
 		{{{data.field}}}

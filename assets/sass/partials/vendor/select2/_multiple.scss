@@ -1,4 +1,4 @@
-.select2-selection--multiple {
+.pumselect2-selection--multiple {
   box-sizing: border-box;
 
   cursor: pointer;
@@ -9,7 +9,7 @@
   user-select: none;
   -webkit-user-select: none;
 
-  .select2-selection__rendered {
+  .pumselect2-selection__rendered {
     display: inline-block;
     overflow: hidden;
     padding-left: 8px;
@@ -18,10 +18,10 @@
   }
 }
 
-.select2-search--inline {
+.pumselect2-search--inline {
   float: left;
 
-  .select2-search__field {
+  .pumselect2-search__field {
     box-sizing: border-box;
     border: none;
     font-size: 100%;

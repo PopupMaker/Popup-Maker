@@ -95,11 +95,11 @@
       }
 
       select,
-      .select2-container .select2-selection {
+      .pumselect2-container .pumselect2-selection {
         padding-left: 28px;
 
           // Rendered Option
-          .select2-selection__rendered {
+          .pumselect2-selection__rendered {
             padding-left: 3px;
           }
 
@@ -150,9 +150,9 @@
         }
       }
 
-      .select2-container-active {
-        .select2-choices,
-        .select2-single {
+      .pumselect2-container-active {
+        .pumselect2-choices,
+        .pumselect2-single {
           border-color: #5b9dd9;
           box-shadow: 0 0 2px rgba( 30, 140, 190, 0.8 );
         }
@@ -275,7 +275,7 @@
     top: 18px;
   }
 
-  .select2-container {
+  .pumselect2-container {
     width: 100%;
   }
 }

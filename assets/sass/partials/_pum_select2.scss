@@ -6,8 +6,8 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
 
 //region Select2 Core Styles
 
-  // These are here for the namespaced select2 and so that we can properly address issues when other plugins do things wrong.
-  .select2-container {
+  // These are here for the namespaced pumselect2 and so that we can properly address issues when other plugins do things wrong.
+  .pumselect2-container {
     box-sizing: border-box;
 
     display: inline-block;
@@ -21,7 +21,7 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
 
   @import "vendor/select2/dropdown";
 
-  .select2-close-mask {
+  .pumselect2-close-mask {
     border: 0;
     margin: 0;
     padding: 0;
@@ -42,7 +42,7 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
     filter: alpha(opacity=0);
   }
 
-  .select2-hidden-accessible {
+  .pumselect2-hidden-accessible {
     border: 0 !important;
     clip: rect(0 0 0 0) !important;
     height: 1px !important;
@@ -57,8 +57,8 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
   @import "vendor/select2/theme/classic/layout";
 //endregion Select2 Core Styles
 
-  > .select2-container--below.select2-container--open + .select2-container--open,
-  > .select2-container--below.select2-container--open + .pum-desc + .select2-container--open {
+  > .pumselect2-container--below.pumselect2-container--open + .pumselect2-container--open,
+  > .pumselect2-container--below.pumselect2-container--open + .pum-desc + .pumselect2-container--open {
     position: absolute !important;
   }
 
@@ -67,10 +67,10 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
   position: relative;
 
   // All Select2 Containers - Wraps Both Selectbox & Dropdown Elements
-  .select2-container {
+  .pumselect2-container {
 
     // Selectbox
-    .select2-selection {
+    .pumselect2-selection {
       margin: 1px;
       font-size: 14px;
       border-radius: 0;
@@ -79,51 +79,51 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
       transition: 0.05s border-color ease-in-out;
 
     }
-    &.select2-container--focus {
+    &.pumselect2-container--focus {
 
-      .select2-selection {
+      .pumselect2-selection {
         outline: none;
         border-color: #5b9dd9;
         box-shadow: 0 0 2px rgba(30, 140, 190, 0.8);
       }
     }
     // Single Select
-    .select2-selection--single {
+    .pumselect2-selection--single {
 
       // Rendered Option
-      .select2-selection__rendered {
+      .pumselect2-selection__rendered {
         //padding-left: 0;
       }
 
     }
 
     // Multiple Select
-    .select2-selection--multiple {
+    .pumselect2-selection--multiple {
       overflow-y: auto;
       max-height: 150px;
       min-height: 28px;
       line-height: 16px;
       font-size: 12px;
 
-      .select2-selection__clear {
+      .pumselect2-selection__clear {
         margin-right: 3px;
       }
 
-      .select2-selection__rendered {
+      .pumselect2-selection__rendered {
 
       }
 
-      .select2-search--inline {
+      .pumselect2-search--inline {
         margin: 0;
         // Search Field
-        .select2-search__field {
+        .pumselect2-search__field {
           border-color: #ddd;
           padding: 3px 5px 0;
           min-width: 5em;
         }
       }
 
-      .select2-selection__choice {
+      .pumselect2-selection__choice {
         margin-top: 4px;
         margin-bottom: 0;
       }
@@ -132,7 +132,7 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
     }
 
     // Dropdown
-    .select2-dropdown {
+    .pumselect2-dropdown {
       margin: 0 1px;
       border-color: #ddd;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07);
@@ -141,17 +141,17 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
       position: relative;
 
       // Search Field
-      .select2-search__field {
+      .pumselect2-search__field {
         border-color: #ddd;
         padding: 3px 5px;
         min-width: 5em;
       }
 
       // Results
-      .select2-results {
+      .pumselect2-results {
 
         // Each result set. Can be nested.
-        .select2-results__option {
+        .pumselect2-results__option {
           padding: 3px 6px;
           margin: 0;
 
@@ -159,20 +159,20 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
           }
 
         }
-        .select2-results__option[role=group] {
+        .pumselect2-results__option[role=group] {
           padding: 3px 0 0;
 
-          .select2-results__group {
+          .pumselect2-results__group {
             padding: 0 6px;
           }
         }
 
-        .select2-results__options--nested {
+        .pumselect2-results__options--nested {
           padding: 3px 6px 0;
         }
 
         // Hover
-        .select2-results__option--highlighted {
+        .pumselect2-results__option--highlighted {
           background: #3e86d0;
         }
 

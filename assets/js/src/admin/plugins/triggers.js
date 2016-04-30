@@ -77,7 +77,7 @@ var PUMTriggers;
     PUMTriggers.refreshDescriptions();
 
     $(document)
-        .on('select2:select', '#pum-first-trigger', function () {
+        .on('select2:select pumselect2:select', '#pum-first-trigger', function () {
             var $this = $(this),
                 type = $this.val(),
                 id = 'pum-trigger-settings-' + type,

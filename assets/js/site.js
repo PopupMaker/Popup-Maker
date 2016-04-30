@@ -424,7 +424,7 @@ var PUM;
                         });
                 }
             }
-console.log(reposition);
+
             // TODO: Remove the add class and migrate the trigger to the $popup with pum prefix.
             $container
                 .addClass('custom-position')

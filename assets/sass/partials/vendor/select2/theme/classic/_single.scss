@@ -1,4 +1,4 @@
-.select2-selection--single {
+.pumselect2-selection--single {
   background-color: mix($selection-bg-top-color, $selection-bg-bottom-color);
 
   border: 1px solid $border-color;
@@ -12,23 +12,23 @@
     border: 1px solid $focus-border-color;
   }
 
-  .select2-selection__rendered {
+  .pumselect2-selection__rendered {
     color: #444;
     line-height: 28px;
   }
 
-  .select2-selection__clear {
+  .pumselect2-selection__clear {
     cursor: pointer;
     float: right;
     font-weight: bold;
     margin-right: 10px;
   }
 
-  .select2-selection__placeholder {
+  .pumselect2-selection__placeholder {
     color: #999;
   }
 
-  .select2-selection__arrow {
+  .pumselect2-selection__arrow {
     background-color: #ddd;
 
     border: none;
@@ -67,12 +67,12 @@
 }
 
 &[dir="rtl"] {
-  .select2-selection--single {
-    .select2-selection__clear {
+  .pumselect2-selection--single {
+    .pumselect2-selection__clear {
       float: left;
     }
 
-    .select2-selection__arrow {
+    .pumselect2-selection__arrow {
       border: none;
       border-right: 1px solid $border-color;
 
@@ -86,11 +86,11 @@
   }
 }
 
-&.select2-container--open {
-  .select2-selection--single {
+&.pumselect2-container--open {
+  .pumselect2-selection--single {
     border: 1px solid $focus-border-color;
 
-    .select2-selection__arrow {
+    .pumselect2-selection__arrow {
       background: transparent;
 
       border: none;
@@ -102,8 +102,8 @@
     }
   }
 
-  &.select2-container--above {
-    .select2-selection--single {
+  &.pumselect2-container--above {
+    .pumselect2-selection--single {
       border-top: none;
       border-top-left-radius: 0;
       border-top-right-radius: 0;
@@ -112,8 +112,8 @@
     }
   }
 
-  &.select2-container--below {
-    .select2-selection--single {
+  &.pumselect2-container--below {
+    .pumselect2-selection--single {
       border-bottom: none;
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;

@@ -509,10 +509,8 @@ var PopMakeAdmin;
                     var content = '';
 
                     if (jQuery("#wp-content-wrap").hasClass("tmce-active")) {
-                        console.log(1);
                         content = tinyMCE.activeEditor.getContent();
                     } else {
-                        console.log(2);
                         content = jQuery('#content').val();
                     }
 
@@ -597,7 +595,6 @@ var PopMakeAdmin;
                 .on('submit', '#post', function (event) {
                     var title = jQuery('#title').val();
                     if (title.length === 0 || title.replace(/\s/g, '').length === 0) {
-                        console.log(1);
                         event.preventDefault();
                         jQuery('div#notice').remove();
                         jQuery("<div id='notice' class='error below-h2'><p>A name is required for all popups.</p></div>").insertAfter('h2');
@@ -751,8 +748,6 @@ var PopMakeAdmin;
                                 jQuery('option[value=""]', $font_style).show();
                             } else {
                                 if (font.variants[i].indexOf('italic') >= 0) {
-
-                                    console.log('italic');
                                     jQuery('option[value="italic"]', $font_style).show();
                                 }
                                 jQuery('option[value="' + parseInt(font.variants[i], 10) + '"]', $font_weight).show();
