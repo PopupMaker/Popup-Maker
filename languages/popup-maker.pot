@@ -754,7 +754,7 @@ msgstr ""
 msgid "Settings updated."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:317, includes/class-popmake-fields.php:57, includes/class-pum-conditions.php:71, includes/class-pum-shortcode.php:141, includes/pum-condition-functions.php:33, includes/pum-trigger-functions.php:55, includes/shortcodes/class-pum-shortcode-popup.php:46
+#: includes/admin/settings/register-settings.php:317, includes/class-popmake-fields.php:57, includes/class-pum-conditions.php:71, includes/class-pum-shortcode.php:144, includes/pum-condition-functions.php:33, includes/pum-trigger-functions.php:55, includes/shortcodes/class-pum-shortcode-popup.php:46
 msgid "General"
 msgstr ""
 
@@ -1385,7 +1385,7 @@ msgstr ""
 msgid "Can't get property %s"
 msgstr ""
 
-#: includes/class-pum-shortcode.php:142
+#: includes/class-pum-shortcode.php:145
 msgid "Options"
 msgstr ""
 

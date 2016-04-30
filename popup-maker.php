@@ -4,7 +4,7 @@
  * Plugin URI: https://wppopupmaker.com/
  * Description: Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
  * Author: WP Popup Maker
- * Version: 1.4.8
+ * Version: 1.4.9
  * Author URI: https://wppopupmaker.com/
  * Text Domain: popup-maker
  *
@@ -144,7 +144,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			}
 
 			if ( ! defined( 'POPMAKE_VERSION' ) ) {
-				define( 'POPMAKE_VERSION', '1.4.8' );
+				define( 'POPMAKE_VERSION', '1.4.9' );
 			}
 
 			if ( ! defined( 'POPMAKE_DB_VERSION' ) ) {
@@ -169,6 +169,9 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 
 			require_once POPMAKE_DIR . 'includes/admin/settings/register-settings.php';
 			$popmake_options = popmake_get_settings();
+
+			// TODO Find another place for these admin functions so this can be put in its correct place.
+			require_once POPMAKE_DIR . 'includes/admin/admin-pages.php';
 
 			require_once POPMAKE_DIR . 'includes/actions.php';
 			require_once POPMAKE_DIR . 'includes/post-types.php';
@@ -289,7 +292,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/welcome/getting-started.php';
 				require_once POPMAKE_DIR . 'includes/admin/admin-setup.php';
 				require_once POPMAKE_DIR . 'includes/admin/admin-functions.php';
-				require_once POPMAKE_DIR . 'includes/admin/admin-pages.php';
 
 				require_once POPMAKE_DIR . 'includes/admin/popups/metabox.php';
 				require_once POPMAKE_DIR . 'includes/admin/popups/dashboard-columns.php';
