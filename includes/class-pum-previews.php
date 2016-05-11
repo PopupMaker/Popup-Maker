@@ -97,10 +97,17 @@ class PUM_Previews {
 	 *
 	 * @return mixed
 	 */
-	public static function post_type_args( $args ) {
-		if ( current_user_can( 'edit_posts' ) ) {
+	public static function post_type_args( $args = array() ) {
+		global $pagenow;
+
+		if ( defined( "DOING_AJAX" ) && DOING_AJAX ) {
+			return $args;
+		}
+
+		if ( ( ( is_admin() && $pagenow == 'post.php' && get_post_type( $_GET['post'] ) == 'popup' ) || get_post_type() == 'popup' ) && current_user_can( 'edit_posts' ) ) {
 			$args['public'] = true;
 		}
+
 		return $args;
 	}
 }
