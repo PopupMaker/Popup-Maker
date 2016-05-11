@@ -55,6 +55,13 @@ function popmake_admin_submenu_pages() {
 		'popmake_extensions_page'
 	);
 
+	$popmake_appearance_themes_page = add_theme_page(
+		__( 'Popup Themes', 'popup-maker' ),
+		__( 'Popup Themes', 'popup-maker' ),
+		'edit_posts',
+		'edit.php?post_type=popup_theme'
+	);
+
 	/*
 	$popmake_help_page = add_submenu_page(
 		'edit.php?post_type=popup',

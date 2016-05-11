@@ -54,7 +54,7 @@ function popmake_setup_post_types() {
 		'add_new_item'       => __( 'Add New %1$s', 'popup-maker' ),
 		'edit_item'          => __( 'Edit %1$s', 'popup-maker' ),
 		'new_item'           => __( 'New %1$s', 'popup-maker' ),
-		'all_items'          => __( 'All %2$s', 'popup-maker' ),
+		'all_items'          => __( 'Popup %2$s', 'popup-maker' ),
 		'view_item'          => __( 'View %1$s', 'popup-maker' ),
 		'search_items'       => __( 'Search %2$s', 'popup-maker' ),
 		'not_found'          => __( 'No %2$s found', 'popup-maker' ),
