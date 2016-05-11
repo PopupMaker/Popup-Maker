@@ -107,8 +107,19 @@ function popmake_popup_display_meta_box_field_custom_sizes( $popup_id ) {
 
 	<tr class="custom-size-only">
 		<th scope="row"><?php _e( 'Auto Adjusted Height', 'popup-maker' ); ?></th>
-		<td>
-			<input type="checkbox" value="true" name="popup_display_custom_height_auto" id="popup_display_custom_height_auto" <?php echo popmake_get_popup_display( $popup_id, 'custom_height_auto' ) ? 'checked="checked" ' : ''; ?>/>
+		<td><?php
+			$custom_height_auto = popmake_get_popup_display( $popup_id, 'custom_height_auto', false );
+			switch( $custom_height_auto ) {
+				case 'true':
+				case true:
+				case 1:
+					$custom_height_auto = true;
+					break;
+				default:
+					$custom_height_auto = false;
+					break;
+			} ?>
+			<input type="checkbox" value="1" name="popup_display_custom_height_auto" id="popup_display_custom_height_auto" <?php checked( $custom_height_auto, 1 ); ?>/>
 			<label for="popup_display_custom_height_auto" class="description"><?php _e( 'Checking this option will set height to fit the content.', 'popup-maker' ); ?></label>
 		</td>
 	</tr>
@@ -116,8 +127,19 @@ function popmake_popup_display_meta_box_field_custom_sizes( $popup_id ) {
 
 	<tr class="custom-size-only custom-size-height-only">
 		<th scope="row"><?php _e( 'Scrollable Content', 'popup-maker' ); ?></th>
-		<td>
-			<input type="checkbox" value="true" name="popup_display_scrollable_content" id="popup_display_scrollable_content" <?php echo popmake_get_popup_display( $popup_id, 'scrollable_content' ) ? 'checked="checked" ' : ''; ?>/>
+		<td><?php
+			$scrollable_content = popmake_get_popup_display( $popup_id, 'scrollable_content', false );
+			switch( $scrollable_content ) {
+				case 'true':
+				case true:
+				case 1:
+					$scrollable_content = true;
+					break;
+				default:
+					$scrollable_content = false;
+					break;
+			} ?>
+			<input type="checkbox" value="1" name="popup_display_scrollable_content" id="popup_display_scrollable_content" <?php checked( $scrollable_content, 1 ); ?>/>
 			<label for="popup_display_scrollable_content" class="description"><?php _e( 'Checking this option will add a scroll bar to your content.', 'popup-maker' ); ?></label>
 		</td>
 	</tr>
@@ -153,8 +175,19 @@ function popmake_popup_display_meta_box_field_overlay_disabled( $popup_id ) {
 	</tr>
 	<tr>
 	<th scope="row"><?php _e( 'Disable Overlay', 'popup-maker' ); ?></th>
-	<td>
-		<input type="checkbox" value="true" name="popup_display_overlay_disabled" id="popup_display_overlay_disabled" <?php echo popmake_get_popup_display( $popup_id, 'overlay_disabled' ) ? 'checked="checked" ' : ''; ?>/>
+	<td><?php
+		$overlay_disabled = popmake_get_popup_display( $popup_id, 'overlay_disabled', false );
+		switch( $overlay_disabled ) {
+			case 'true':
+			case true:
+			case 1:
+			$overlay_disabled = true;
+				break;
+			default:
+				$overlay_disabled = false;
+				break;
+		} ?>
+		<input type="checkbox" value="1" name="popup_display_overlay_disabled" id="popup_display_overlay_disabled" <?php checked( $overlay_disabled, 1 ); ?>/>
 		<label for="popup_display_overlay_disabled" class="description"><?php _e( 'Checking this will disable and hide the overlay for this popup.', 'popup-maker' ); ?></label>
 	</td>
 	</tr><?php
@@ -238,8 +271,19 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 	</tr>
 	<tr>
 		<th scope="row"><?php _e( 'Stackable', 'popup-maker' ); ?></th>
-		<td>
-			<input type="checkbox" value="true" name="popup_display_stackable" id="popup_display_stackable" <?php echo popmake_get_popup_display( $popup_id, 'stackable' ) ? 'checked="checked" ' : ''; ?>/>
+		<td><?php
+			$stackable = popmake_get_popup_display( $popup_id, 'stackable', false );
+			switch( $stackable ) {
+				case 'true':
+				case true:
+				case 1:
+				$stackable = true;
+					break;
+				default:
+					$stackable = false;
+					break;
+			} ?>
+			<input type="checkbox" value="1" name="popup_display_stackable" id="popup_display_stackable" <?php checked( $stackable, 1 ); ?>/>
 			<label for="popup_display_stackable" class="description"><?php _e( 'This enables other popups to remain open.', 'popup-maker' ); ?></label>
 		</td>
 	</tr>
@@ -274,8 +318,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 					$position_fixed = false;
 					break;
 			} ?>
-			<input type="checkbox" value="1" name="popup_display_position_fixed"
-			       id="popup_display_position_fixed" <?php checked( $position_fixed, 1 ); ?>/>
+			<input type="checkbox" value="1" name="popup_display_position_fixed" id="popup_display_position_fixed" <?php checked( $position_fixed, 1 ); ?>/>
 			<label for="popup_display_position_fixed" class="description"><?php _e( 'Checking this sets the positioning of the popup to fixed.', 'popup-maker' ); ?></label>
 		</td>
 	</tr>
