@@ -90,7 +90,7 @@
                     }
 
                     // If trigger has the class do-default we don't prevent default actions.
-                    if (!$(e.target).hasClass('do-default')) {
+                    if (!settings.do_default && !$(e.target).hasClass('do-default')) {
                         e.preventDefault();
                         e.stopPropagation();
                     }
