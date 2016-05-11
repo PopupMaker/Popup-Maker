@@ -256,6 +256,29 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 				if ( ! $this->triggers ) {
 					$this->triggers = array();
 				}
+
+				if ( ! is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+					$has_click_trigger = false;
+
+					foreach ( $this->triggers as $trigger ) {
+						if ( $trigger['type'] == 'click_open' ) {
+							$has_click_trigger = true;
+						}
+					}
+
+					if ( ! $has_click_trigger ) {
+						$this->triggers[] = array(
+							'type'     => 'click_open',
+							'settings' => array(
+								'extra_selectors' => '',
+								'cookie'          => array(
+									'name' => null,
+								),
+							),
+						);
+					}
+				}
+
 			}
 
 			return apply_filters( 'pum_popup_get_triggers', $this->triggers, $this->ID );
