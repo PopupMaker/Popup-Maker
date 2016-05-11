@@ -21,7 +21,8 @@ class PUM_Condition_Callbacks {
 
 		switch ( $modifier ) {
 			case 'all':
-				if ( is_singular( $post_type ) ) {
+				// Checks for valid post type, if $post_type is page, then include the front page as most users simply expect this.
+				if ( is_singular( $post_type ) || ( $post_type == 'page' && is_front_page() ) ) {
 					return true;
 				}
 				break;
