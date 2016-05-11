@@ -6,7 +6,9 @@
         if ($.fn.popmake.cookies[type]) {
             return $.fn.popmake.cookies[type].apply(this, Array.prototype.slice.call(arguments, 1));
         }
-        $.error('Cookie type ' + type + ' does not exist.');
+        if (window.console) {
+            console.warn('Cookie type ' + type + ' does not exist.');
+        }
         return this;
     };
 

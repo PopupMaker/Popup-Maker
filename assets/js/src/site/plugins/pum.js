@@ -30,7 +30,9 @@ var PUM;
         if (typeof method === 'object' || !method) {
             return $.fn.popmake.methods.init.apply(this, arguments);
         }
-        $.error('Method ' + method + ' does not exist on $.fn.popmake');
+        if (window.console) {
+            console.warn('Method ' + method + ' does not exist on $.fn.popmake');
+        }
     };
 
     // Defines the core $.popmake methods.
