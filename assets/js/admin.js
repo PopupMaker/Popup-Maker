@@ -8205,6 +8205,13 @@ var PopMakeAdmin, PUM_Admin;
             $('#title').prop('required', true);
 
             $(document)
+                .on('change', '#popup_theme', function () {
+                    var $this = $(this),
+                        $link = $('#edit_theme_link'),
+                        val = $this.val();
+
+                    $link.attr('href', $link.data('baseurl')+val);
+                })
                 .on('keydown', '#popuptitle', function (event) {
                     var keyCode = event.keyCode || event.which;
                     if (9 === keyCode) {
