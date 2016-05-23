@@ -283,7 +283,9 @@ class PUM_Shortcode extends PUM_Fields {
 		 * @param string $shortcode_tag
 		 * @param array $ui_args
 		 */
-		shortcode_ui_register_for_shortcode( $this->tag(), $shortcode_ui_args );
+		if ( function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
+			shortcode_ui_register_for_shortcode( $this->tag(), $shortcode_ui_args );
+		}
 	}
 
 }
