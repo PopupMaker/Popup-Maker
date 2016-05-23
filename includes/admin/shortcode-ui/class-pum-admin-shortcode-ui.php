@@ -103,6 +103,8 @@ class PUM_Admin_Shortcode_UI {
 		$css_dir = POPMAKE_URL . '/assets/css/';
 		$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
+		//add_editor_style( $css_dir . 'wp-editor' . $suffix . '.css' );
+
 		wp_enqueue_style( 'pum-shortcode-ui', $css_dir . 'shortcode-ui' . $suffix . '.css', array( 'popup-maker-admin' ), PUM::VER );
 	}
 
