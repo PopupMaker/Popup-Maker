@@ -879,8 +879,12 @@ var PUM_Analytics;
 
     $.fn.popmake.animations = {
         none: function (callback) {
-            PUM.getPopup(this)
-                .popmake('animate_overlay', 'none', 0, function () {
+            var $popup = PUM.getPopup(this);
+
+            // Ensure the container is visible immediately.
+            $popup.popmake('getContainer').show(0);
+
+            $popup.popmake('animate_overlay', 'none', 0, function () {
                     // Fire user passed callback.
                     if (callback !== undefined) {
                         callback();
@@ -1425,7 +1429,7 @@ var pm_cookie, pm_remove_cookie;
                     }
 
                     // If trigger has the class do-default we don't prevent default actions.
-                    if (!$(e.target).hasClass('do-default')) {
+                    if (!settings.do_default && !$(e.target).hasClass('do-default')) {
                         e.preventDefault();
                         e.stopPropagation();
                     }

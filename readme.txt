@@ -5,8 +5,8 @@ Plugin URI: https://wppopupmaker.com/?utm_source=WordPress+Page&utm_medium=Readm
 Donate link: 
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.4
-Tested up to: 4.5
-Stable tag: 1.4.9
+Tested up to: 4.5.2
+Stable tag: 1.4.10
 License: GNU Version 3 or Any Later Version
 
 Easily create attractive popups with no coding skills. Customize nearly every aspect of your popups, from theme & position, to targeting & cookies.
@@ -117,7 +117,18 @@ There are several common causes for this which include:
 
 == Changelog ==
 
-= v1.4.9 - TBD =
+= v1.4.10 - 5/23/2016 =
+* Feature: Added Do Default option to the click triggers. Allows a triggers default browsers behavior to occur and still open a popup, such as a file link.
+* Improvement: Added additional links to the theme editor for better visibility and to guide users there.
+* Tweak: Older methods are only loaded when needed, this also removes usage of a deprecated filter.
+* Tweak: All Pages now includes Home Page / Front Page.
+* Tweak: A default click trigger is always added. (Like pre v1.4)
+* Fix: Low z-index caused issues when the overlay is disabled.
+* Fix: Bug where none animation couldn't be re-opened.
+* Fix: Cleaned up issues allowing popup post type to be added directly to menus and sitemaps.
+* Fix: Bug where auto height checkbox would not stay checked.
+
+= v1.4.9 - 5/01/2016 =
 * Improvement: Reduced front end queries by over 85%. Avgerage sites should now only have 2 to 3.
 * Improvement: Added caching enhancements for even better performance on servers with page, object & query caching.
 * Improvement: Added a fully namespaced version of Select2 for compatiblitiy while other plugins await updating. Will gracefully fall back to the non namespaced version when it no longer causes issues.
