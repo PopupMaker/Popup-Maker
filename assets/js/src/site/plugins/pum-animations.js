@@ -36,8 +36,12 @@
 
     $.fn.popmake.animations = {
         none: function (callback) {
-            PUM.getPopup(this)
-                .popmake('animate_overlay', 'none', 0, function () {
+            var $popup = PUM.getPopup(this);
+
+            // Ensure the container is visible immediately.
+            $popup.popmake('getContainer').show(0);
+
+            $popup.popmake('animate_overlay', 'none', 0, function () {
                     // Fire user passed callback.
                     if (callback !== undefined) {
                         callback();
