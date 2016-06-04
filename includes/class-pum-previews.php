@@ -104,7 +104,7 @@ class PUM_Previews {
 			return $args;
 		}
 
-		if ( ( ( is_admin() && $pagenow == 'post.php' && get_post_type( $_GET['post'] ) == 'popup' ) || get_post_type() == 'popup' ) && current_user_can( 'edit_posts' ) ) {
+		if ( ( ( is_admin() && $pagenow == 'post.php' && ( isset( $_GET['post'] ) && get_post_type( $_GET['post'] ) == 'popup' ) ) || get_post_type() == 'popup' ) && current_user_can( 'edit_posts' ) ) {
 			$args['public'] = true;
 		}
 
