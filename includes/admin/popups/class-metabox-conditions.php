@@ -63,6 +63,15 @@ class PUM_Popup_Conditions_Metabox {
 		$has_conditions   = boolval( count( $condition_groups ) );
 		$group_count      = 0; ?>
         <div class="facet-builder <?php echo $has_conditions ? 'has-conditions' : ''; ?>">
+			<p>
+				<strong>
+					<?php printf(
+						__( 'Conditions are used to limit where and who will see a popup. %sLearn More!%s', 'popup-maker' ),
+						'<a href="http://docs.wppopupmaker.com/article/140-conditions" target="_blank">',
+						'</a>'
+					); ?>
+				</strong>
+			</p>
 			<section class="pum-alert-box" style="display:none"></section>
 			<div class="facet-groups">
 				<?php foreach ( $condition_groups as $group => $conditions ) : ?>
@@ -117,17 +126,6 @@ class PUM_Popup_Conditions_Metabox {
 				endforeach; ?>
 			</div>
 			<div class="no-facet-groups">
-                <p>
-                    <strong><?php _e( 'Conditions limit where and who will see your popups.', 'popup-maker' ); ?></strong>
-                </p>
-                <p>
-                    <small>
-                        <?php printf(
-                                __( 'Use %s to check for the opposite of a condition.', 'popup-maker' ),
-                                '<i style="font-size: 16px;" class="dashicons dashicons-warning" aria-label="' . __( 'Negative Conditions', 'popup-maker' ) . '"></i>'
-                        ); ?>
-                    </small>
-                </p>
 				<label for="pum-first-condition"><?php _e( 'Choose a condition to get started.', 'popup-maker' ); ?></label>
                 <div class="pum-field select pum-select2 pum-condition-target">
                     <button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
