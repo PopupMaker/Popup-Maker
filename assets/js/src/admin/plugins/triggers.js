@@ -171,7 +171,7 @@ var PUMTriggers;
         .on('submit', '.trigger-editor .pum-form', function (e) {
             var $form = $(this),
                 type = $form.find('input.type').val(),
-                values = $form.serializeObject(),
+                values = $form.pumSerializeObject(),
                 index = parseInt(values.index),
                 $row = index >= 0 ? $('#pum_popup_triggers_list tbody tr').eq(index) : null,
                 template = wp.template('pum-trigger-row'),

@@ -40,7 +40,7 @@
         }
     }
 
-    $.fn.serializeObject = function (options) {
+    $.fn.pumSerializeObject = function (options) {
         $.extend({}, options);
 
         var values = {},

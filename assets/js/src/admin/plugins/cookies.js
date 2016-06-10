@@ -165,7 +165,7 @@ var PUMCookies;
         .on('submit', '.cookie-editor .pum-form', function (e) {
             var $form = $(this),
                 event = $form.find('input.event').val(),
-                values = $form.serializeObject(),
+                values = $form.pumSerializeObject(),
                 index = parseInt(values.index),
                 $row = index >= 0 ? $('#pum_popup_cookies_list tbody tr').eq(index) : null,
                 template = wp.template('pum-cookie-row'),
