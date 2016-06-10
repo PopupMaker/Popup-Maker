@@ -169,7 +169,6 @@ add_filter( 'enter_title_here', 'popmake_change_default_title' );
  * @param bool $force_load
  */
 function popmake_setup_taxonomies( $force_load = false ) {
-	return;
 
 	if ( ! $force_load && popmake_get_option( 'disable_popup_category_tag', false ) ) {
 		return;
