@@ -178,7 +178,7 @@
 				updateShortcode: function (form, editor) {
 					var self = this,
 						$form = $(form),
-						values = $form.serializeObject().attrs,
+						values = $form.pumSerializeObject().attrs,
 						has_content = self.shortcode_args.has_content,
 						content;
 
