@@ -27,6 +27,7 @@ class PUM_Condition_Callbacks {
 				}
 				break;
 
+			case 'ID':
 			case 'selected':
 				if ( is_singular( $post_type ) && in_array( $post->ID, wp_parse_id_list( $settings['selected'] ) ) ) {
 					return true;
@@ -61,6 +62,7 @@ class PUM_Condition_Callbacks {
 				}
 				break;
 
+			case 'ID':
 			case 'selected':
 				if ( is_tax( $taxonomy, wp_parse_id_list( $settings['selected'] ) ) ) {
 					return true;

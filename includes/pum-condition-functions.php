@@ -68,6 +68,23 @@ function pum_generate_post_type_conditions() {
 			),
 			'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
 		);
+		$conditions[ $name . '_ID' ] = array(
+			'group'    => $post_type->labels->name,
+			'name'     => sprintf(
+				_x( '%s: ID', 'condition: post type plural label ie. Posts: ID', 'popup-maker' ),
+				$post_type->labels->name
+			),
+			'fields'   => array(
+				'selected' => array(
+					'placeholder' => sprintf(
+						_x( '%s IDs: 128, 129', 'condition: post type singular label ie. Posts IDs', 'popup-maker' ),
+						strtolower( $post_type->labels->singular_name )
+					),
+					'type' => 'text',
+				),
+			),
+			'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
+		);
 
 		$conditions = array_merge( $conditions, pum_generate_post_type_tax_conditions( $name ) );
 
@@ -152,6 +169,23 @@ function pum_generate_taxonomy_conditions() {
 					'multiple'    => true,
 					'as_array'    => true,
 					'options'     => is_admin() && popmake_is_admin_popup_page() ? PUM_Helpers::taxonomy_selectlist( $tax_name ) : array(),
+				),
+			),
+			'callback' => array( 'PUM_Condition_Callbacks', 'taxonomy' ),
+		);
+		$conditions[ 'tax_' . $tax_name . '_ID' ] = array(
+			'group'    => $taxonomy->labels->name,
+			'name'     => sprintf(
+				_x( '%s: IDs', 'condition: taxonomy plural label ie. Categories: Selected', 'popup-maker' ),
+				$taxonomy->labels->name
+			),
+			'fields'   => array(
+				'selected' => array(
+					'placeholder' => sprintf(
+						_x( '%s IDs: 128, 129', 'condition: taxonomy plural label ie. Category IDs', 'popup-maker' ),
+						strtolower( $taxonomy->labels->singular_name )
+					),
+					'type' => 'text',
 				),
 			),
 			'callback' => array( 'PUM_Condition_Callbacks', 'taxonomy' ),
