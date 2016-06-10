@@ -19,7 +19,7 @@ function popmake_popup_themes_meta_box_field_theme( $popup_id ) {
 		</select><br />
 		<p class="description">
 			<?php _e( 'Choose a theme for this popup.', 'popup-maker' ) ?><br />
-			<a id="edit_theme_link" href="<?php echo admin_url( "post.php?action=edit&post={$popup_id}" ); ?>" data-baseurl="<?php echo admin_url( "post.php?action=edit&post=" ); ?>">
+			<a id="edit_theme_link" href="<?php echo admin_url( "post.php?action=edit&post={$popup->get_theme_id()}" ); ?>" data-baseurl="<?php echo admin_url( "post.php?action=edit&post=" ); ?>">
 				<?php _e( 'Customize This Theme', 'popup-maker' ); ?>
 			</a>
 		</p>
