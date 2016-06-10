@@ -123,27 +123,6 @@ class PUM_Condition extends PUM_Fields {
 		return $all_fields;
 	}
 
-	public function get_templ_name( $args, $print = true ) {
-		$name = str_replace(
-			array(
-				'{$prefix}',
-				'{$section}',
-				'{$field}'
-			),
-			array(
-				$this->field_prefix,
-				$args['section'] != 'general' ? ".{$args['section']}" : "",
-				$args['id']
-			),
-			$this->templ_value_format
-		);
-
-		if ( $print ) {
-			$name = '{{' . $name . '}}';
-		}
-
-		return $name;
-	}
 
 	/**
 	 * @param array $values
