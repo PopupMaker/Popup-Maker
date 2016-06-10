@@ -48,11 +48,15 @@ class PUM_Popup_Triggers_Metabox {
         ?>
     <div id="pum_popup_trigger_fields" class="popmake_meta_table_wrap <?php echo $has_triggers ? 'has-triggers' : ''; ?>">
 
-        <div id="pum_popup_triggers_list" class="triggers-list">
+		<button type="button" class="button button-primary add-new no-button"><?php _e( 'Add New Trigger', 'popup-maker' ); ?></button>
 
-            <button type="button" class="button button-primary add-new no-button"><?php _e( 'Add New Trigger', 'popup-maker' ); ?></button>
+		<p>
+			<strong><?php _e( 'Triggers are what make your popup open.', 'popup-maker' ); ?></strong>
+		</p>
 
-            <?php do_action( 'pum_popup_triggers_metabox_before', $post->ID ); ?>
+		<div id="pum_popup_triggers_list" class="triggers-list">
+
+	        <?php do_action( 'pum_popup_triggers_metabox_before', $post->ID ); ?>
 
             <table class="form-table">
                 <thead>
@@ -90,9 +94,6 @@ class PUM_Popup_Triggers_Metabox {
         </div>
 
         <div class="no-triggers">
-            <p>
-                <strong><?php _e( 'Triggers are what make your popup open.', 'popup-maker' ); ?></strong>
-            </p>
             <div class="pum-field select pum-select2">
                 <label for="pum-first-trigger"><?php _e( 'Choose a type of trigger to get started.', 'popup-maker' ); ?></label>
                 <select id="pum-first-trigger" data-placeholder="<?php _e( 'Select a trigger type.', 'popup-maker' ); ?>">
