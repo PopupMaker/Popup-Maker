@@ -6653,7 +6653,7 @@ var PUMCookies;
         .on('submit', '.cookie-editor .pum-form', function (e) {
             var $form = $(this),
                 event = $form.find('input.event').val(),
-                values = $form.serializeObject(),
+                values = $form.pumSerializeObject(),
                 index = parseInt(values.index),
                 $row = index >= 0 ? $('#pum_popup_cookies_list tbody tr').eq(index) : null,
                 template = wp.template('pum-cookie-row'),
@@ -7471,7 +7471,7 @@ var PUMSelect2Fields;
         }
     }
 
-    $.fn.serializeObject = function (options) {
+    $.fn.pumSerializeObject = function (options) {
         $.extend({}, options);
 
         var values = {},
@@ -7993,7 +7993,7 @@ var PUMTriggers;
         .on('submit', '.trigger-editor .pum-form', function (e) {
             var $form = $(this),
                 type = $form.find('input.type').val(),
-                values = $form.serializeObject(),
+                values = $form.pumSerializeObject(),
                 index = parseInt(values.index),
                 $row = index >= 0 ? $('#pum_popup_triggers_list tbody tr').eq(index) : null,
                 template = wp.template('pum-trigger-row'),

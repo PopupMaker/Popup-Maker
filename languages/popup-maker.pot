@@ -16,7 +16,7 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n\n"
 
-#: includes/admin/admin-pages.php:33, includes/admin/admin-pages.php:34, includes/admin/admin-pages.php:163, includes/admin/admin-setup.php:24, includes/admin/popups/class-metabox-cookies.php:61, includes/admin/popups/class-metabox-triggers.php:62
+#: includes/admin/admin-pages.php:33, includes/admin/admin-pages.php:34, includes/admin/admin-pages.php:163, includes/admin/admin-setup.php:24, includes/admin/popups/class-metabox-cookies.php:69, includes/admin/popups/class-metabox-triggers.php:66
 msgid "Settings"
 msgstr ""
 
@@ -64,11 +64,11 @@ msgstr ""
 msgid "All Themes"
 msgstr ""
 
-#: includes/admin/admin-pages.php:158, includes/admin/popups/dashboard-columns.php:43, includes/class-pum-conditions.php:74, includes/post-types.php:190
+#: includes/admin/admin-pages.php:158, includes/admin/popups/dashboard-columns.php:43, includes/class-pum-conditions.php:74, includes/post-types.php:189
 msgid "Categories"
 msgstr ""
 
-#: includes/admin/admin-pages.php:159, includes/admin/popups/dashboard-columns.php:39, includes/class-pum-conditions.php:75, includes/post-types.php:217
+#: includes/admin/admin-pages.php:159, includes/admin/popups/dashboard-columns.php:39, includes/class-pum-conditions.php:75, includes/post-types.php:216
 msgid "Tags"
 msgstr ""
 
@@ -280,153 +280,145 @@ msgstr ""
 msgid "Conditions"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:84, includes/admin/popups/class-metabox-conditions.php:133, includes/admin/popups/class-metabox-conditions.php:202
+#: includes/admin/popups/class-metabox-conditions.php:69
+msgid "Conditions are used to limit where and who will see a popup. %sLearn More!%s"
+msgstr ""
+
+#: includes/admin/popups/class-metabox-conditions.php:93, includes/admin/popups/class-metabox-conditions.php:131, includes/admin/popups/class-metabox-conditions.php:200
 msgid "Enable the Not Operand"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:99, includes/admin/popups/class-metabox-conditions.php:228
+#: includes/admin/popups/class-metabox-conditions.php:108, includes/admin/popups/class-metabox-conditions.php:226
 msgid "Remove Condition"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:107, includes/admin/popups/class-metabox-conditions.php:175
+#: includes/admin/popups/class-metabox-conditions.php:116, includes/admin/popups/class-metabox-conditions.php:173
 msgctxt "aria-label for add new OR condition button"
 msgid "Add another OR condition"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:107, includes/admin/popups/class-metabox-conditions.php:175
+#: includes/admin/popups/class-metabox-conditions.php:116, includes/admin/popups/class-metabox-conditions.php:173
 msgid "or"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:111, includes/admin/popups/class-metabox-conditions.php:179
+#: includes/admin/popups/class-metabox-conditions.php:120, includes/admin/popups/class-metabox-conditions.php:177
 msgctxt "aria-label for add new AND condition button"
 msgid "Add another AND condition group"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:111, includes/admin/popups/class-metabox-conditions.php:179
+#: includes/admin/popups/class-metabox-conditions.php:120, includes/admin/popups/class-metabox-conditions.php:177
 msgid "and"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:121
-msgid "Conditions limit where and who will see your popups."
-msgstr ""
-
-#: includes/admin/popups/class-metabox-conditions.php:126
-msgid "Use %s to check for the opposite of a condition."
-msgstr ""
-
-#: includes/admin/popups/class-metabox-conditions.php:127
-msgid "Negative Conditions"
-msgstr ""
-
-#: includes/admin/popups/class-metabox-conditions.php:131
+#: includes/admin/popups/class-metabox-conditions.php:129
 msgid "Choose a condition to get started."
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:207, includes/class-pum-conditions.php:132
+#: includes/admin/popups/class-metabox-conditions.php:205, includes/class-pum-conditions.php:132
 msgid "Select a condition"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:30
+#: includes/admin/popups/class-metabox-cookies.php:31
 msgid "Cookies"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:51, includes/pum-trigger-functions.php:32
+#: includes/admin/popups/class-metabox-cookies.php:53, includes/pum-trigger-functions.php:32
 msgid "Add New Cookie"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:59
-msgid "Event"
-msgstr ""
-
-#: includes/admin/popups/class-metabox-cookies.php:60, includes/admin/popups/dashboard-columns.php:32
-msgid "Name"
-msgstr ""
-
-#: includes/admin/popups/class-metabox-cookies.php:62, includes/admin/popups/class-metabox-triggers.php:63
-msgid "Actions"
-msgstr ""
-
-#: includes/admin/popups/class-metabox-cookies.php:93
+#: includes/admin/popups/class-metabox-cookies.php:56
 msgid "Cookies are used to prevent a trigger from opening the popup."
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:96
+#: includes/admin/popups/class-metabox-cookies.php:67
+msgid "Event"
+msgstr ""
+
+#: includes/admin/popups/class-metabox-cookies.php:68, includes/admin/popups/dashboard-columns.php:32
+msgid "Name"
+msgstr ""
+
+#: includes/admin/popups/class-metabox-cookies.php:70, includes/admin/popups/class-metabox-triggers.php:67
+msgid "Actions"
+msgstr ""
+
+#: includes/admin/popups/class-metabox-cookies.php:101
 msgid "Choose when you want to set a cookie to get started."
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:97
+#: includes/admin/popups/class-metabox-cookies.php:102
 msgid "Select an event."
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:152
-msgid "What will trigger your cookie to be created?"
-msgstr ""
-
-#: includes/admin/popups/class-metabox-cookies.php:195, includes/class-pum-cookie.php:48
-msgid "Cookie Settings"
-msgstr ""
-
-#: includes/admin/popups/class-metabox-cookies.php:221, includes/pum-cookie-functions.php:75
+#: includes/admin/popups/class-metabox-cookies.php:130, includes/pum-cookie-functions.php:75
 msgid "On Popup Close"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:223
+#: includes/admin/popups/class-metabox-cookies.php:132
 msgid "Time: 1 Month"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:236, includes/admin/popups/class-metabox-cookies.php:247
+#: includes/admin/popups/class-metabox-cookies.php:145, includes/admin/popups/class-metabox-cookies.php:156
 msgid "Edit this cookie"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:248
+#: includes/admin/popups/class-metabox-cookies.php:157
 msgid "Delete` this cookie"
+msgstr ""
+
+#: includes/admin/popups/class-metabox-cookies.php:206
+msgid "What will trigger your cookie to be created?"
+msgstr ""
+
+#: includes/admin/popups/class-metabox-cookies.php:251, includes/class-pum-cookie.php:48
+msgid "Cookie Settings"
 msgstr ""
 
 #: includes/admin/popups/class-metabox-triggers.php:32
 msgid "Triggers"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:53
+#: includes/admin/popups/class-metabox-triggers.php:51
 msgid "Add New Trigger"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:60
-msgid "Type"
-msgstr ""
-
-#: includes/admin/popups/class-metabox-triggers.php:61, includes/class-pum-cookie.php:47, includes/pum-trigger-functions.php:57
-msgid "Cookie"
-msgstr ""
-
-#: includes/admin/popups/class-metabox-triggers.php:94
+#: includes/admin/popups/class-metabox-triggers.php:54
 msgid "Triggers are what make your popup open."
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:97
-msgid "Choose a type of trigger to get started."
+#: includes/admin/popups/class-metabox-triggers.php:64
+msgid "Type"
+msgstr ""
+
+#: includes/admin/popups/class-metabox-triggers.php:65, includes/class-pum-cookie.php:47, includes/pum-trigger-functions.php:57
+msgid "Cookie"
 msgstr ""
 
 #: includes/admin/popups/class-metabox-triggers.php:98
+msgid "Choose a type of trigger to get started."
+msgstr ""
+
+#: includes/admin/popups/class-metabox-triggers.php:99
 msgid "Select a trigger type."
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:153
+#: includes/admin/popups/class-metabox-triggers.php:154
 msgid "Choose what type of trigger to add?"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:214, includes/pum-trigger-functions.php:83
+#: includes/admin/popups/class-metabox-triggers.php:215, includes/pum-trigger-functions.php:83
 msgid "Auto Open"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:216
+#: includes/admin/popups/class-metabox-triggers.php:217
 msgid "Delay: 0"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:228, includes/admin/popups/class-metabox-triggers.php:243
+#: includes/admin/popups/class-metabox-triggers.php:229, includes/admin/popups/class-metabox-triggers.php:244
 msgid "Edit this trigger"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:244
+#: includes/admin/popups/class-metabox-triggers.php:245
 msgid "Delete` this trigger"
 msgstr ""
 
@@ -1901,122 +1893,122 @@ msgstr ""
 msgid "Enter %s name here"
 msgstr ""
 
-#: includes/post-types.php:180
+#: includes/post-types.php:179
 msgctxt "taxonomy general name"
 msgid "%s Categories"
 msgstr ""
 
-#: includes/post-types.php:181
+#: includes/post-types.php:180
 msgctxt "taxonomy singular name"
 msgid "Category"
 msgstr ""
 
-#: includes/post-types.php:182
+#: includes/post-types.php:181
 msgid "Search Categories"
 msgstr ""
 
-#: includes/post-types.php:183
+#: includes/post-types.php:182
 msgid "All Categories"
 msgstr ""
 
-#: includes/post-types.php:184
+#: includes/post-types.php:183
 msgid "Parent Category"
 msgstr ""
 
-#: includes/post-types.php:185
+#: includes/post-types.php:184
 msgid "Parent Category:"
 msgstr ""
 
-#: includes/post-types.php:186
+#: includes/post-types.php:185
 msgid "Edit Category"
 msgstr ""
 
-#: includes/post-types.php:187
+#: includes/post-types.php:186
 msgid "Update Category"
 msgstr ""
 
-#: includes/post-types.php:188
+#: includes/post-types.php:187
 msgid "Add New %s Category"
 msgstr ""
 
-#: includes/post-types.php:189
+#: includes/post-types.php:188
 msgid "New Category Name"
 msgstr ""
 
-#: includes/post-types.php:191
+#: includes/post-types.php:190
 msgid "Choose from most used %s categories"
 msgstr ""
 
-#: includes/post-types.php:207
+#: includes/post-types.php:206
 msgctxt "taxonomy general name"
 msgid "%s Tags"
 msgstr ""
 
-#: includes/post-types.php:208
+#: includes/post-types.php:207
 msgctxt "taxonomy singular name"
 msgid "Tag"
 msgstr ""
 
-#: includes/post-types.php:209
+#: includes/post-types.php:208
 msgid "Search Tags"
 msgstr ""
 
-#: includes/post-types.php:210
+#: includes/post-types.php:209
 msgid "All Tags"
 msgstr ""
 
-#: includes/post-types.php:211
+#: includes/post-types.php:210
 msgid "Parent Tag"
 msgstr ""
 
-#: includes/post-types.php:212
+#: includes/post-types.php:211
 msgid "Parent Tag:"
 msgstr ""
 
-#: includes/post-types.php:213
+#: includes/post-types.php:212
 msgid "Edit Tag"
 msgstr ""
 
-#: includes/post-types.php:214
+#: includes/post-types.php:213
 msgid "Update Tag"
 msgstr ""
 
-#: includes/post-types.php:215
+#: includes/post-types.php:214
 msgid "Add New Tag"
 msgstr ""
 
-#: includes/post-types.php:216
+#: includes/post-types.php:215
 msgid "New Tag Name"
 msgstr ""
 
-#: includes/post-types.php:218
+#: includes/post-types.php:217
 msgid "Choose from most used %s tags"
 msgstr ""
 
-#: includes/post-types.php:243
+#: includes/post-types.php:242
 msgctxt "Inactive status"
 msgid "Inactive"
 msgstr ""
 
-#: includes/post-types.php:248
+#: includes/post-types.php:247
 msgid "Inactive <span class=\"count\">(%s)</span>"
 msgid_plural "Inactive <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:270, includes/post-types.php:271, includes/post-types.php:279, includes/post-types.php:280
+#: includes/post-types.php:269, includes/post-types.php:270, includes/post-types.php:278, includes/post-types.php:279
 msgid "%1$s updated."
 msgstr ""
 
-#: includes/post-types.php:272, includes/post-types.php:281
+#: includes/post-types.php:271, includes/post-types.php:280
 msgid "%1$s published."
 msgstr ""
 
-#: includes/post-types.php:273, includes/post-types.php:282
+#: includes/post-types.php:272, includes/post-types.php:281
 msgid "%1$s saved."
 msgstr ""
 
-#: includes/post-types.php:274, includes/post-types.php:283
+#: includes/post-types.php:273, includes/post-types.php:282
 msgid "%1$s submitted."
 msgstr ""
 
@@ -2040,44 +2032,64 @@ msgctxt "condition: post type plural label ie. Select Posts"
 msgid "Select %s."
 msgstr ""
 
-#: includes/pum-condition-functions.php:94
+#: includes/pum-condition-functions.php:74
+msgctxt "condition: post type plural label ie. Posts: ID"
+msgid "%s: ID"
+msgstr ""
+
+#: includes/pum-condition-functions.php:80
+msgctxt "condition: post type singular label ie. Posts IDs"
+msgid "%s IDs: 128, 129"
+msgstr ""
+
+#: includes/pum-condition-functions.php:111
 msgctxt "condition: post type plural and taxonomy singular label ie. Posts: With Category"
 msgid "%1$s: With %2$s"
 msgstr ""
 
-#: includes/pum-condition-functions.php:101
+#: includes/pum-condition-functions.php:118
 msgctxt "condition: post type plural label ie. Select categories"
 msgid "Select %s."
 msgstr ""
 
-#: includes/pum-condition-functions.php:133
+#: includes/pum-condition-functions.php:150
 msgctxt "condition: taxonomy plural label ie. Categories: All"
 msgid "%s: All"
 msgstr ""
 
-#: includes/pum-condition-functions.php:141
+#: includes/pum-condition-functions.php:158
 msgctxt "condition: taxonomy plural label ie. Categories: Selected"
 msgid "%s: Selected"
 msgstr ""
 
-#: includes/pum-condition-functions.php:147
+#: includes/pum-condition-functions.php:164
 msgctxt "condition: taxonomy plural label ie. Select Categories"
 msgid "Select %s."
 msgstr ""
 
-#: includes/pum-condition-functions.php:180
+#: includes/pum-condition-functions.php:179
+msgctxt "condition: taxonomy plural label ie. Categories: Selected"
+msgid "%s: IDs"
+msgstr ""
+
+#: includes/pum-condition-functions.php:185
+msgctxt "condition: taxonomy plural label ie. Category IDs"
+msgid "%s IDs: 128, 129"
+msgstr ""
+
+#: includes/pum-condition-functions.php:214
 msgid "Home Page"
 msgstr ""
 
-#: includes/pum-condition-functions.php:187
+#: includes/pum-condition-functions.php:221
 msgid "Blog Index"
 msgstr ""
 
-#: includes/pum-condition-functions.php:194
+#: includes/pum-condition-functions.php:228
 msgid "Search Pages"
 msgstr ""
 
-#: includes/pum-condition-functions.php:200
+#: includes/pum-condition-functions.php:234
 msgid "404 Pages"
 msgstr ""
 
