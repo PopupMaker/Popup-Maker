@@ -16,63 +16,43 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n\n"
 
-#: includes/admin/admin-pages.php:33, includes/admin/admin-pages.php:34, includes/admin/admin-pages.php:163, includes/admin/admin-setup.php:24, includes/admin/popups/class-metabox-cookies.php:69, includes/admin/popups/class-metabox-triggers.php:66
+#: includes/admin/admin-pages.php:32, includes/admin/admin-pages.php:33, includes/admin/admin-pages.php:108, includes/admin/admin-setup.php:24, includes/admin/popups/class-metabox-cookies.php:69, includes/admin/popups/class-metabox-triggers.php:66
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/admin-pages.php:42, includes/admin/admin-pages.php:43, includes/admin/admin-pages.php:164
+#: includes/admin/admin-pages.php:41, includes/admin/admin-pages.php:42, includes/admin/admin-pages.php:109
 msgid "Tools"
 msgstr ""
 
-#: includes/admin/admin-pages.php:51, includes/admin/admin-pages.php:52, includes/admin/admin-pages.php:162
+#: includes/admin/admin-pages.php:50, includes/admin/admin-pages.php:51, includes/admin/admin-pages.php:107
 msgid "Extend"
 msgstr ""
 
-#: includes/admin/admin-pages.php:59, includes/admin/admin-pages.php:60
+#: includes/admin/admin-pages.php:58, includes/admin/admin-pages.php:59
 msgid "Popup Themes"
 msgstr ""
 
-#: includes/admin/admin-pages.php:68, includes/admin/admin-pages.php:69
-msgid "Help"
-msgstr ""
-
-#: includes/admin/admin-pages.php:78, includes/admin/admin-pages.php:79
-msgid "Welcome to Popup Maker"
-msgstr ""
-
-#: includes/admin/admin-pages.php:87, includes/admin/admin-pages.php:88, includes/admin/welcome/changelog.php:11
-msgid "Popup Maker Changelog"
-msgstr ""
-
-#: includes/admin/admin-pages.php:96, includes/admin/admin-pages.php:97
-msgid "Getting started with Popup Maker"
-msgstr ""
-
-#: includes/admin/admin-pages.php:105, includes/admin/admin-pages.php:106
-msgid "The people that build Popup Maker"
-msgstr ""
-
-#: includes/admin/admin-pages.php:155
+#: includes/admin/admin-pages.php:100
 msgid "All Popups"
 msgstr ""
 
-#: includes/admin/admin-pages.php:156, includes/post-types.php:23, includes/post-types.php:53
+#: includes/admin/admin-pages.php:101
 msgid "Add New"
 msgstr ""
 
-#: includes/admin/admin-pages.php:157
+#: includes/admin/admin-pages.php:102
 msgid "All Themes"
 msgstr ""
 
-#: includes/admin/admin-pages.php:158, includes/admin/popups/dashboard-columns.php:43, includes/class-pum-conditions.php:74, includes/post-types.php:189
+#: includes/admin/admin-pages.php:103, includes/admin/popups/dashboard-columns.php:43, includes/class-pum-conditions.php:74
 msgid "Categories"
 msgstr ""
 
-#: includes/admin/admin-pages.php:159, includes/admin/popups/dashboard-columns.php:39, includes/class-pum-conditions.php:75, includes/post-types.php:216
+#: includes/admin/admin-pages.php:104, includes/admin/popups/dashboard-columns.php:39, includes/class-pum-conditions.php:75
 msgid "Tags"
 msgstr ""
 
-#: includes/admin/admin-setup.php:25, includes/admin/extensions/extensions-page.php:27, includes/admin/settings/register-settings.php:321
+#: includes/admin/admin-setup.php:25, includes/admin/extensions/extensions-page.php:27, includes/admin/settings/register-settings.php:309
 msgid "Extensions"
 msgstr ""
 
@@ -198,42 +178,6 @@ msgstr ""
 
 #: includes/admin/extensions/extensions-page.php:206
 msgid "Check it out"
-msgstr ""
-
-#: includes/admin/help/help-page.php:19
-msgid "__Popup Maker Help & Documentation"
-msgstr ""
-
-#: includes/admin/help/help-page.php:19
-msgid "Popup Maker Help & Documentation"
-msgstr ""
-
-#: includes/admin/help/help-page.php:23
-msgid "General Usage"
-msgstr ""
-
-#: includes/admin/help/help-page.php:33
-msgid "Copy the class to the link/button you want to open this popup."
-msgstr ""
-
-#: includes/admin/help/help-page.php:34
-msgid "Will start with popmake- and end with a # of the popup you want to open."
-msgstr ""
-
-#: includes/admin/help/help-page.php:38
-msgid "Link Example"
-msgstr ""
-
-#: includes/admin/help/help-page.php:39, includes/admin/help/help-page.php:40, includes/admin/help/help-page.php:45, includes/admin/help/help-page.php:46
-msgid "Open Popup"
-msgstr ""
-
-#: includes/admin/help/help-page.php:44
-msgid "Button Example"
-msgstr ""
-
-#: includes/admin/help/help-page.php:50
-msgid "Image Example"
 msgstr ""
 
 #: includes/admin/metabox-support.php:30
@@ -614,32 +558,21 @@ msgstr ""
 msgid "Top"
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:341, includes/class-popmake-popup-fields.php:139, includes/shortcodes/class-pum-shortcode-popup.php:144
-msgid "Distance from the top edge of the screen."
+#: includes/admin/popups/metabox-display-fields.php:341, includes/admin/popups/metabox-display-fields.php:360, includes/admin/popups/metabox-display-fields.php:379, includes/admin/popups/metabox-display-fields.php:398, includes/class-popmake-popup-fields.php:139, includes/class-popmake-popup-fields.php:150, includes/class-popmake-popup-fields.php:161, includes/class-popmake-popup-fields.php:172, includes/shortcodes/class-pum-shortcode-popup.php:144, includes/shortcodes/class-pum-shortcode-popup.php:155, includes/shortcodes/class-pum-shortcode-popup.php:166, includes/shortcodes/class-pum-shortcode-popup.php:177
+msgctxt "Screen Edge: top, bottom"
+msgid "Distance from the %s edge of the screen."
 msgstr ""
 
 #: includes/admin/popups/metabox-display-fields.php:346, includes/admin/themes/metabox-close-fields.php:145, includes/class-popmake-popup-fields.php:149, includes/class-popmake-popup-theme-fields.php:359, includes/input-options.php:131, includes/shortcodes/class-pum-shortcode-popup.php:154
 msgid "Bottom"
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:360, includes/class-popmake-popup-fields.php:150, includes/shortcodes/class-pum-shortcode-popup.php:155
-msgid "Distance from the bottom edge of the screen."
-msgstr ""
-
 #: includes/admin/popups/metabox-display-fields.php:365, includes/admin/themes/metabox-close-fields.php:128, includes/class-popmake-popup-fields.php:160, includes/class-popmake-popup-theme-fields.php:349, includes/input-options.php:85, includes/input-options.php:130, includes/shortcodes/class-pum-shortcode-popup.php:165
 msgid "Left"
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:379, includes/class-popmake-popup-fields.php:161, includes/shortcodes/class-pum-shortcode-popup.php:166
-msgid "Distance from the left edge of the screen."
-msgstr ""
-
 #: includes/admin/popups/metabox-display-fields.php:384, includes/admin/themes/metabox-close-fields.php:162, includes/class-popmake-popup-fields.php:171, includes/class-popmake-popup-theme-fields.php:369, includes/input-options.php:87, includes/input-options.php:132, includes/shortcodes/class-pum-shortcode-popup.php:176
 msgid "Right"
-msgstr ""
-
-#: includes/admin/popups/metabox-display-fields.php:398, includes/class-popmake-popup-fields.php:172, includes/shortcodes/class-pum-shortcode-popup.php:177
-msgid "Distance from the right edge of the screen."
 msgstr ""
 
 #: includes/admin/popups/metabox-display-fields.php:407
@@ -662,7 +595,7 @@ msgstr ""
 msgid "Change the z-index layer level for the popup."
 msgstr ""
 
-#: includes/admin/popups/metabox-themes-fields.php:12, includes/post-types.php:98
+#: includes/admin/popups/metabox-themes-fields.php:12
 msgid "Theme"
 msgstr ""
 
@@ -682,7 +615,7 @@ msgstr ""
 msgid "Close Settings"
 msgstr ""
 
-#: includes/admin/popups/metabox.php:34, includes/admin/welcome/getting-started.php:44
+#: includes/admin/popups/metabox.php:34
 msgid "Theme Settings"
 msgstr ""
 
@@ -694,91 +627,75 @@ msgstr ""
 msgid "ucwordsstr_replace_"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:139
-msgid "Allow Usage Tracking?"
-msgstr ""
-
 #: includes/admin/settings/register-settings.php:140
-msgid "Allow Popup Maker to anonymously track how this plugin is used and help us make the plugin better. Opt-in and receive a 20% discount code for any purchase from the <a href=\"https://wppopupmaker.com/extensions/\" target=\"_blank\">Popup Maker store</a>. Your discount code will be emailed to you."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:146
-msgid "Remove Data on Uninstall?"
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:147
-msgid "Check this box if you would like Popup Maker to completely remove all of its data when the plugin is deleted."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:155
 msgid "Don't Load Google Fonts"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:156
+#: includes/admin/settings/register-settings.php:141
 msgid "Check this disable loading of google fonts, useful if the fonts you chose are already loaded with your theme."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:161
+#: includes/admin/settings/register-settings.php:146
 msgid "Don't load popup theme styles to the head."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:162
+#: includes/admin/settings/register-settings.php:147
 msgid "Check this if you have copied the popup theme styles to your own stylesheet or are using custom styles."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:172
+#: includes/admin/settings/register-settings.php:157
 msgid "Enable Easy Modal v2 Compatibility Mode"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:173
+#: includes/admin/settings/register-settings.php:158
 msgid "This will automatically make any eModal classes you have added to your site launch the appropriate Popup after import."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:178
+#: includes/admin/settings/register-settings.php:163
 msgid "Hide Admin Support Widget"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:179
+#: includes/admin/settings/register-settings.php:164
 msgid "This will hide the support widget on all popup maker admin pages."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:184
+#: includes/admin/settings/register-settings.php:169
 msgid "Disable categories & tags?"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:185
+#: includes/admin/settings/register-settings.php:170
 msgid "This will disable the popup tags & categories."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:286
+#: includes/admin/settings/register-settings.php:271
 msgid "Settings updated."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:317, includes/class-popmake-fields.php:57, includes/class-pum-conditions.php:71, includes/class-pum-shortcode.php:144, includes/pum-condition-functions.php:33, includes/pum-trigger-functions.php:54, includes/shortcodes/class-pum-shortcode-popup.php:46
+#: includes/admin/settings/register-settings.php:303, includes/class-popmake-fields.php:57, includes/class-pum-conditions.php:71, includes/class-pum-shortcode.php:144, includes/pum-condition-functions.php:33, includes/pum-trigger-functions.php:54, includes/shortcodes/class-pum-shortcode-popup.php:46
 msgid "General"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:318
+#: includes/admin/settings/register-settings.php:306
 msgid "Assets"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:324
+#: includes/admin/settings/register-settings.php:312
 msgid "Licenses"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:327
+#: includes/admin/settings/register-settings.php:315
 msgid "Misc"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:577
+#: includes/admin/settings/register-settings.php:565
 msgid "The callback function used for the <strong>%s</strong> setting is missing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:710
+#: includes/admin/settings/register-settings.php:698
 msgid "Upload File"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:788
+#: includes/admin/settings/register-settings.php:776
 msgid "Deactivate License"
 msgstr ""
 
@@ -974,10 +891,6 @@ msgstr ""
 msgid "Title Text"
 msgstr ""
 
-#: includes/admin/themes/metabox.php:169, includes/class-pum-popup.php:407, includes/popup-functions.php:573
-msgid "&#215;"
-msgstr ""
-
 #: includes/admin/themes/metabox.php:292
 msgid "Theme Overlay"
 msgstr ""
@@ -1030,284 +943,12 @@ msgstr ""
 msgid "Step %d of approximately %d running"
 msgstr ""
 
-#: includes/admin/welcome.php:50
-msgid "What's New"
-msgstr ""
-
-#: includes/admin/welcome.php:53
-msgid "Getting Started"
-msgstr ""
-
-#: includes/admin/welcome.php:56
-msgid "Credits"
-msgstr ""
-
-#: includes/admin/welcome/about.php:11, includes/admin/welcome/credits.php:11, includes/admin/welcome/getting-started.php:11
-msgid "Welcome to Popup Maker %s"
-msgstr ""
-
-#: includes/admin/welcome/about.php:13, includes/admin/welcome/changelog.php:13, includes/admin/welcome/credits.php:13, includes/admin/welcome/getting-started.php:13
-msgid "Thank you for updating to the latest version! Are you ready to destroy your old conversion rates and transform your website? We sure are!"
-msgstr ""
-
-#: includes/admin/welcome/about.php:14, includes/admin/welcome/changelog.php:14, includes/admin/welcome/credits.php:14, includes/admin/welcome/getting-started.php:14
-msgid "Version %s"
-msgstr ""
-
-#: includes/admin/welcome/about.php:19, includes/admin/welcome/getting-started.php:40, includes/deprecated/v4.php:72
-msgid "Targeting Conditions"
-msgstr ""
-
-#: includes/admin/welcome/about.php:23
-msgid "Target specific users for your popups!"
-msgstr ""
-
-#: includes/admin/welcome/about.php:25
-msgid "Our %sTargeting Conditions%s feature allows you to tailor your popups to specific users by giving you the ability to use popups exactly where you want within your website."
-msgstr ""
-
-#: includes/admin/welcome/about.php:26
-msgid "Destroy Old Conversion Rates with Auto Open!"
-msgstr ""
-
-#: includes/admin/welcome/about.php:28
-msgid "One of the absolute best ways to market your most valuable and precious content, our %sAuto Open Popups%s Feature allows you to choose the delay before opening, when the cookie is set, how long the cookie will last, even reset cookies for a popup."
-msgstr ""
-
-#: includes/admin/welcome/about.php:29
-msgid "Drive Conversions!"
-msgstr ""
-
-#: includes/admin/welcome/about.php:33
-msgid "Use %sScroll Triggered%s & %sExit Intent Popup%s Extensions to enhance your popups’ effectiveness and easily convert users into cash."
-msgstr ""
-
-#: includes/admin/welcome/about.php:39
-msgid "Google Font Integration"
-msgstr ""
-
-#: includes/admin/welcome/about.php:42
-msgid "Easily plug and play all of your favorite fonts from Google Fonts all within a few clicks!"
-msgstr ""
-
-#: includes/admin/welcome/about.php:50
-msgid "WordPress Form Plug-In Integrations"
-msgstr ""
-
-#: includes/admin/welcome/about.php:53
-msgid "Use any of your forms from the most popular form plugins out-of-the-box inside your popups with ease and efficiency. 100% seamless compatibility with:"
-msgstr ""
-
-#: includes/admin/welcome/about.php:63
-msgid "Easy Theme Builder"
-msgstr ""
-
-#: includes/admin/welcome/about.php:68
-msgid "Our theme builder allows you to create a high performing theme in no time for your popups. Use our color picker to grab the perfect colors to meet your needs and find pixel perfect sizes with ease for a plethora of additional theme settings."
-msgstr ""
-
-#: includes/admin/welcome/about.php:69
-msgid "Make it Your Own!"
-msgstr ""
-
-#: includes/admin/welcome/about.php:73
-msgid "You may be interested in our %sAdvanced Theme Builder%s Extension, which allows you to add background images to many elements of your popup within a couple of clicks."
-msgstr ""
-
-#: includes/admin/welcome/about.php:81
-msgid "Further Enhancements & Updates"
-msgstr ""
-
-#: includes/admin/welcome/about.php:85
-msgid "Exit Intent"
-msgstr ""
-
-#: includes/admin/welcome/about.php:89
-msgid "Easily convert abandoning users into cash with our Exit Intent Extension. Exit Intent now comes with Hard Exit Technology. Learn more %shere%s."
-msgstr ""
-
-#: includes/admin/welcome/about.php:96
-msgid "Lightweight & Dependable"
-msgstr ""
-
-#: includes/admin/welcome/about.php:98
-msgid "Speed matters, and at only 5.9kb, our popups won’t slow you down. Our optimization techniques and program enhancement means your popups will perform at a consistently high level with 100% uptime."
-msgstr ""
-
-#: includes/admin/welcome/about.php:102
-msgid "Popup Tags & Categories"
-msgstr ""
-
-#: includes/admin/welcome/about.php:104
-msgid "Popup Maker allows you to categorize and tag your popups for easy organization and recognition."
-msgstr ""
-
-#: includes/admin/welcome/about.php:110, includes/admin/welcome/getting-started.php:149
-msgid "Customize Your First Theme"
-msgstr ""
-
-#: includes/admin/welcome/about.php:111, includes/admin/welcome/getting-started.php:150
-msgid "Create a Modal"
-msgstr ""
-
-#: includes/admin/welcome/about.php:112
-msgid "View the Full Changelog"
-msgstr ""
-
-#: includes/admin/welcome/changelog.php:19
-msgid "Full Changelog"
-msgstr ""
-
-#: includes/admin/welcome/changelog.php:38
-msgid "No valid changlog was found."
-msgstr ""
-
-#: includes/admin/welcome/credits.php:18
-msgid "Popup Maker is created by expert WordPress developers who aim to provide the #1 popup marketing platform for converting more users with WordPress."
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:19
-msgid "Use the tips below to get started using Popup Maker. You will have those high performance popups up and running in no time!"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:22
-msgid "Creating Your First Popup Maker Popup"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:27
-msgid "<a href=\"%s\">%s &rarr; Add New</a>"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:30
-msgid "The %s menu is your access point for all aspects of your Popup Maker product creation and setup. To create your first popup, simply click Add New and then choose from many available options to get it just right."
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:32
-msgid "Display Options"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:34
-msgid "Display options control how your popup shows and how it behaves, respectively. Set the size, how the background operates, animation options, and positioning positioning."
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:36
-msgid "Close Option"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:38
-msgid "These settings allow you to control how a user is able to close your popups: clicking on the background overlay, pressing ESC, or pressing F4. You can enable or disable all of these settings, or pick and choose based on your preference. Also, you can prevent users from closing your popups using our Forced Interaction Extension."
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:42
-msgid "Use Targeting Conditions to load your popups wherever you please! If you’re not running some type of auto open popup extension (Scroll Triggered, Exit Intent, or Auto Open), then remember, you have to call your popup using the <em>popmake class</em> on your HTML element (more information below.)"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:46
-msgid "Choose your theme from the drop down to customize how your popup looks. Without Unlimited Themes, only the Default Theme will appear, which you can customize and change the name to suit your needs."
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:52
-msgid "Calling Your Popups Anywhere"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:58
-msgid "Using the Popup Maker CSS Tag"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:60
-msgid "In the <em>All Popups Menu</em>, you can find all of your popups and their various attributes. One of the most important attributes is the CSS Class of your popups. You will use this class wherever you want to call your popups!"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:64
-msgid "Read More"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:65
-msgid "Sign Up Now!"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:70
-msgid "Using Popup Maker Short Codes"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:72
-msgid "You can also use shortcodes to create popups directly inline with the content of your posts and pages. This is useful if you wanna have unique content in your popups for each page/post."
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:83
-msgid "Need Help?"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:87
-msgid "Top-Notch Support"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:91
-msgid "We provide top-notch support! If you encounter a problem or have a question, post a question in the %sWordPress Support Forums%s, or if you’ve purchased an extension, the %sSupport Page%s."
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:100
-msgid "Stay Up-to-Date"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:104
-msgid "Get Notified of Extension Releases"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:108
-msgid "New extensions that make Popup Maker even more powerful are released nearly every single week. <a href=\"%s\" target=\"_blank\">Subscribe to the newsletter</a> to stay up to date with our latest releases. Signup now to ensure you do not miss a release!"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:113
-msgid "Get Alerted About New Tutorials"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:117
-msgid "<a href=\"%s\" target=\"_blank\">Signup now</a> to hear about the latest tutorial releases that explain how to take Popup Maker further."
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:126
-msgid "Extensions for Everything"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:130
-msgid "9 Extensions and Counting..."
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:132
-msgid "Add-on plugins are available that greatly extend the default functionality of Popup Maker. There are extensions enhancing the Theme Builder capabilities, extensions for marketing your most precious content like Auto Open and Exit Intent, plus much more now, and even more to come."
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:134
-msgid "We have over 25 more extensions in works, and over 35 integration extensions in the works as well. Stay updated and tuned in to be a part of what is going to be the robust Popup Maker tool on the market."
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:136
-msgid "Visit the Extension Store"
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:140
-msgid "<a href=\"%s\" target=\"_blank\">The Extensions store</a> has a list of all available extensions, including convenient category filters so you can find exactly what you are looking for."
-msgstr ""
-
-#: includes/admin/welcome/getting-started.php:151
-msgid "View the Full Getting Started Guide"
-msgstr ""
-
 #: includes/class-popmake-cron.php:49
 msgid "Once Weekly"
 msgstr ""
 
 #: includes/class-popmake-fields.php:174, includes/class-popmake-popup-fields.php:105, includes/class-popmake-popup-fields.php:217, includes/shortcodes/class-pum-shortcode-popup.php:205
 msgid "ms"
-msgstr ""
-
-#: includes/class-popmake-popup-fields.php:146, includes/class-popmake-popup-fields.php:157, includes/class-popmake-popup-fields.php:168, includes/class-popmake-popup-fields.php:179, includes/class-popmake-popup-theme-fields.php:40, includes/class-popmake-popup-theme-fields.php:67, includes/class-popmake-popup-theme-fields.php:91, includes/class-popmake-popup-theme-fields.php:112, includes/class-popmake-popup-theme-fields.php:122, includes/class-popmake-popup-theme-fields.php:132, includes/class-popmake-popup-theme-fields.php:142, includes/class-popmake-popup-theme-fields.php:176, includes/class-popmake-popup-theme-fields.php:186, includes/class-popmake-popup-theme-fields.php:224, includes/class-popmake-popup-theme-fields.php:234, includes/class-popmake-popup-theme-fields.php:244, includes/class-popmake-popup-theme-fields.php:308, includes/class-popmake-popup-theme-fields.php:318, includes/class-popmake-popup-theme-fields.php:328, includes/class-popmake-popup-theme-fields.php:346, includes/class-popmake-popup-theme-fields.php:356, includes/class-popmake-popup-theme-fields.php:366, includes/class-popmake-popup-theme-fields.php:376, includes/class-popmake-popup-theme-fields.php:386, includes/class-popmake-popup-theme-fields.php:402, includes/class-popmake-popup-theme-fields.php:450, includes/class-popmake-popup-theme-fields.php:474, includes/class-popmake-popup-theme-fields.php:495, includes/class-popmake-popup-theme-fields.php:505, includes/class-popmake-popup-theme-fields.php:515, includes/class-popmake-popup-theme-fields.php:525, includes/class-popmake-popup-theme-fields.php:551, includes/class-popmake-popup-theme-fields.php:561, includes/class-popmake-popup-theme-fields.php:571, includes/shortcodes/class-pum-shortcode-popup.php:151, includes/shortcodes/class-pum-shortcode-popup.php:162, includes/shortcodes/class-pum-shortcode-popup.php:173, includes/shortcodes/class-pum-shortcode-popup.php:184
-msgid "px"
-msgstr ""
-
-#: includes/class-popmake-popup-theme-fields.php:28, includes/class-popmake-popup-theme-fields.php:56, includes/class-popmake-popup-theme-fields.php:158, includes/class-popmake-popup-theme-fields.php:260, includes/class-popmake-popup-theme-fields.php:439, includes/class-popmake-popup-theme-fields.php:541, includes/class-popmake-popup-theme-fields.php:587, includes/input-options.php:16
-msgid "%"
 msgstr ""
 
 #: includes/class-popmake-popup-theme-fields.php:443
@@ -1395,6 +1036,10 @@ msgstr ""
 
 #: includes/class-pum-trigger.php:57
 msgid "Trigger Settings"
+msgstr ""
+
+#: includes/deprecated/v4.php:72
+msgid "Targeting Conditions"
 msgstr ""
 
 #: includes/deprecated/v4.php:75
@@ -1533,18 +1178,6 @@ msgstr ""
 msgid "Google Web Fonts&#10549;"
 msgstr ""
 
-#: includes/input-options.php:15
-msgid "PX"
-msgstr ""
-
-#: includes/input-options.php:17
-msgid "EM"
-msgstr ""
-
-#: includes/input-options.php:18
-msgid "REM"
-msgstr ""
-
 #: includes/input-options.php:26, includes/input-options.php:115, includes/scripts.php:212
 msgid "None"
 msgstr ""
@@ -1581,72 +1214,8 @@ msgstr ""
 msgid "Use Your Themes"
 msgstr ""
 
-#: includes/input-options.php:44
-msgid "Sans-Serif"
-msgstr ""
-
-#: includes/input-options.php:45
-msgid "Tahoma"
-msgstr ""
-
-#: includes/input-options.php:46
-msgid "Georgia"
-msgstr ""
-
-#: includes/input-options.php:47
-msgid "Comic Sans MS"
-msgstr ""
-
-#: includes/input-options.php:48
-msgid "Arial"
-msgstr ""
-
-#: includes/input-options.php:49
-msgid "Lucida Grande"
-msgstr ""
-
-#: includes/input-options.php:50
-msgid "Times New Roman"
-msgstr ""
-
 #: includes/input-options.php:58, includes/input-options.php:75
 msgid "Normal"
-msgstr ""
-
-#: includes/input-options.php:59
-msgid "100 "
-msgstr ""
-
-#: includes/input-options.php:60
-msgid "200 "
-msgstr ""
-
-#: includes/input-options.php:61
-msgid "300 "
-msgstr ""
-
-#: includes/input-options.php:62
-msgid "400 "
-msgstr ""
-
-#: includes/input-options.php:63
-msgid "500 "
-msgstr ""
-
-#: includes/input-options.php:64
-msgid "600 "
-msgstr ""
-
-#: includes/input-options.php:65
-msgid "700 "
-msgstr ""
-
-#: includes/input-options.php:66
-msgid "800 "
-msgstr ""
-
-#: includes/input-options.php:67
-msgid "900 "
 msgstr ""
 
 #: includes/input-options.php:76
@@ -1833,35 +1402,48 @@ msgstr ""
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/post-types.php:24, includes/post-types.php:54
+#: includes/post-types.php:23, includes/post-types.php:55
+msgctxt "Post Type Singular: \"Popup\""
 msgid "Add New %1$s"
 msgstr ""
 
-#: includes/post-types.php:25, includes/post-types.php:55
+#: includes/post-types.php:24, includes/post-types.php:62
+msgctxt "Post Type Singular: \"Popup\""
+msgid "Add %1$s"
+msgstr ""
+
+#: includes/post-types.php:25, includes/post-types.php:56
+msgctxt "Post Type Singular: \"Popup\""
 msgid "Edit %1$s"
 msgstr ""
 
-#: includes/post-types.php:26, includes/post-types.php:56
+#: includes/post-types.php:26, includes/post-types.php:57
+msgctxt "Post Type Singular: \"Popup\""
 msgid "New %1$s"
 msgstr ""
 
 #: includes/post-types.php:27
+msgctxt "Post Type Plural: \"Popups\""
 msgid "All %2$s"
 msgstr ""
 
 #: includes/post-types.php:28, includes/post-types.php:58
+msgctxt "Post Type Singular: \"Popup\""
 msgid "View %1$s"
 msgstr ""
 
 #: includes/post-types.php:29, includes/post-types.php:59
+msgctxt "Post Type Plural: \"Popups\""
 msgid "Search %2$s"
 msgstr ""
 
 #: includes/post-types.php:30, includes/post-types.php:60
+msgctxt "Post Type Plural: \"Popups\""
 msgid "No %2$s found"
 msgstr ""
 
 #: includes/post-types.php:31, includes/post-types.php:61
+msgctxt "Post Type Plural: \"Popups\""
 msgid "No %2$s found in Trash"
 msgstr ""
 
@@ -1869,19 +1451,28 @@ msgstr ""
 msgid "POPMAKE_NAME"
 msgstr ""
 
-#: includes/post-types.php:57
-msgid "Popup %2$s"
-msgstr ""
-
-#: includes/post-types.php:94, includes/shortcodes/class-pum-shortcode-popup.php:26, includes/shortcodes/class-pum-shortcode-popup.php:324
-msgid "Popup"
+#: includes/post-types.php:54
+msgctxt "Post Type Menu Label"
+msgid "Popup Themes"
 msgstr ""
 
 #: includes/post-types.php:95
+msgctxt "Singular Post Type Label"
+msgid "Popup"
+msgstr ""
+
+#: includes/post-types.php:96
+msgctxt "Plural Post Type Label"
 msgid "Popups"
 msgstr ""
 
 #: includes/post-types.php:99
+msgctxt "Singular Post Type Label"
+msgid "Theme"
+msgstr ""
+
+#: includes/post-types.php:100
+msgctxt "Plural Post Type Label"
 msgid "Themes"
 msgstr ""
 
@@ -1889,126 +1480,23 @@ msgstr ""
 msgid "%s Name"
 msgstr ""
 
-#: includes/post-types.php:155
-msgid "Enter %s name here"
-msgstr ""
-
-#: includes/post-types.php:179
-msgctxt "taxonomy general name"
-msgid "%s Categories"
-msgstr ""
-
-#: includes/post-types.php:180
-msgctxt "taxonomy singular name"
-msgid "Category"
-msgstr ""
-
-#: includes/post-types.php:181
-msgid "Search Categories"
-msgstr ""
-
-#: includes/post-types.php:182
-msgid "All Categories"
-msgstr ""
-
-#: includes/post-types.php:183
-msgid "Parent Category"
-msgstr ""
-
-#: includes/post-types.php:184
-msgid "Parent Category:"
-msgstr ""
-
-#: includes/post-types.php:185
-msgid "Edit Category"
-msgstr ""
-
-#: includes/post-types.php:186
-msgid "Update Category"
-msgstr ""
-
-#: includes/post-types.php:187
-msgid "Add New %s Category"
-msgstr ""
-
-#: includes/post-types.php:188
-msgid "New Category Name"
-msgstr ""
-
-#: includes/post-types.php:190
-msgid "Choose from most used %s categories"
-msgstr ""
-
-#: includes/post-types.php:206
-msgctxt "taxonomy general name"
-msgid "%s Tags"
-msgstr ""
-
-#: includes/post-types.php:207
-msgctxt "taxonomy singular name"
-msgid "Tag"
-msgstr ""
-
-#: includes/post-types.php:208
-msgid "Search Tags"
-msgstr ""
-
-#: includes/post-types.php:209
-msgid "All Tags"
-msgstr ""
-
-#: includes/post-types.php:210
-msgid "Parent Tag"
-msgstr ""
-
-#: includes/post-types.php:211
-msgid "Parent Tag:"
-msgstr ""
-
-#: includes/post-types.php:212
-msgid "Edit Tag"
-msgstr ""
-
-#: includes/post-types.php:213
-msgid "Update Tag"
-msgstr ""
-
-#: includes/post-types.php:214
-msgid "Add New Tag"
-msgstr ""
-
-#: includes/post-types.php:215
-msgid "New Tag Name"
-msgstr ""
-
-#: includes/post-types.php:217
-msgid "Choose from most used %s tags"
-msgstr ""
-
-#: includes/post-types.php:242
-msgctxt "Inactive status"
-msgid "Inactive"
-msgstr ""
-
-#: includes/post-types.php:247
-msgid "Inactive <span class=\"count\">(%s)</span>"
-msgid_plural "Inactive <span class=\"count\">(%s)</span>"
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/post-types.php:269, includes/post-types.php:270, includes/post-types.php:278, includes/post-types.php:279
+#: includes/post-types.php:218, includes/post-types.php:219
+msgctxt "Post Type Singular: Popup, Theme"
 msgid "%1$s updated."
 msgstr ""
 
-#: includes/post-types.php:271, includes/post-types.php:280
+#: includes/post-types.php:220
+msgctxt "Post Type Singular: Popup, Theme"
 msgid "%1$s published."
 msgstr ""
 
-#: includes/post-types.php:272, includes/post-types.php:281
+#: includes/post-types.php:221
+msgctxt "Post Type Singular: Popup, Theme"
 msgid "%1$s saved."
 msgstr ""
 
-#: includes/post-types.php:273, includes/post-types.php:282
+#: includes/post-types.php:222
+msgctxt "Post Type Singular: Popup, Theme"
 msgid "%1$s submitted."
 msgstr ""
 
@@ -2255,6 +1743,10 @@ msgstr ""
 
 #: includes/shortcodes/class-pum-shortcode-popup-trigger.php:48
 msgid "Choose which popup will be targeted by this trigger."
+msgstr ""
+
+#: includes/shortcodes/class-pum-shortcode-popup.php:26, includes/shortcodes/class-pum-shortcode-popup.php:324
+msgid "Popup"
 msgstr ""
 
 #: includes/shortcodes/class-pum-shortcode-popup.php:30
