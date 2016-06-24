@@ -231,45 +231,6 @@ input.popmake-range-manual {
   margin: 0 0 0 8px;
 }
 
-
-/*
-input[type="text"], select {
-    border-radius: 3px;
-    border-style: solid;
-    border-width: 1px;
-    box-sizing: border-box;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 13px;
-    margin: 0;
-    text-decoration: none;
-    white-space: nowrap;
-	height: 30px!important;
-    line-height: 28px!important;
-    padding: 0 12px 2px!important;
-    background: none repeat scroll 0 0 rgb(247, 247, 247)!important;
-    border-color: rgb(204, 204, 204);
-    box-shadow: 0 1px 0 rgb(255, 255, 255) inset, 0 1px 0 rgba(0, 0, 0, 0.08);
-    color: rgb(85, 85, 85);
-    vertical-align: top!important;
-}
-input[type="text"] {
-    background-color: rgb(247, 247, 247)!important;
-}
-input[type="range"] {
-	background: transparent!important;
-	border:none!important;
-	outline:0;
-	box-shadow:none;
-}
-
-button.popmake-range-minus, button.popmake-range-plus {
-	height:30px;
-	width:30px;
-	text-align: center;
-}
-
-*/
 option.bold {
   font-weight: bold;
   font-size: 1.125em;
@@ -471,74 +432,6 @@ div.popmake-upgrade-tip {
 }
 
 
-/* Welcome Page */
-.popmake-badge {
-  padding-top: 150px;
-  height: 52px;
-  width: 185px;
-  color: #666;
-  font-weight: bold;
-  font-size: 14px;
-  text-align: center;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
-  margin: 0 -5px;
-  background: url('../images/welcome/logo.png') no-repeat center center;
-}
-
-.about-wrap .popmake-badge {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-
-.popmake-welcome-screenshots {
-  float: right;
-  margin-left: 10px !important;
-  padding: 0 7.5em;
-}
-
-.popmake-wrap .feature-section {
-  margin-top: 20px;
-}
-
-.tab-box {
-  margin-top: 40px;
-  position: relative;
-  border: 1px solid #ccc;
-  max-width: 500px;
-  padding: 20px 10px 5px;
-}
-
-.tab-box h4 {
-  font: 13px/30px "Open Sans", sans-serif;
-  font-weight: bold;
-  position: absolute;
-  background: #ccc;
-  display: inline-block;
-  padding: 0 10px;
-  top: -48px;
-  left: -1px;
-}
-
-.tab-box a {
-  font: 300 18px/1.125 "Oswald";
-  color: #9ABA27;
-}
-
-.tab-box button {
-  font: 300 18px/1.125 "Oswald";
-  color: #fff;
-  background: #9ABA27;
-  box-shadow: none;
-  border: 0;
-  padding: 5px 10px 7px;
-  cursor: pointer;
-  transition: transform .5s;
-}
-
-.tab-box button:hover {
-  transform: scale(1.125);
-}
 
 #popmake-preview {
   position: fixed;

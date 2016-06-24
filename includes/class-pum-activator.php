@@ -85,9 +85,6 @@ class PUM_Activator {
 			return;
 		}
 
-		// Add the transient to redirect to welcome page.
-		set_transient( '_popmake_activation_redirect', true, 30 );
-
 		// Clear the permalinks
 		flush_rewrite_rules();
 

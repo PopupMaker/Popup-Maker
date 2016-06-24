@@ -285,11 +285,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 
 
 			if ( is_admin() ) {
-				require_once POPMAKE_DIR . 'includes/admin/welcome.php';
-				require_once POPMAKE_DIR . 'includes/admin/welcome/about.php';
-				require_once POPMAKE_DIR . 'includes/admin/welcome/credits.php';
-				require_once POPMAKE_DIR . 'includes/admin/welcome/changelog.php';
-				require_once POPMAKE_DIR . 'includes/admin/welcome/getting-started.php';
 				require_once POPMAKE_DIR . 'includes/admin/admin-setup.php';
 				require_once POPMAKE_DIR . 'includes/admin/admin-functions.php';
 

@@ -334,7 +334,7 @@ div.popmake-upgrade-tip {
     text-align: center;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
     margin: 0 -5px;
-    background: url("../images/welcome/logo.png") no-repeat center center;
+    background: url("../images/logo.png") no-repeat center center;
 }
 
 .about-wrap .popmake-badge {
