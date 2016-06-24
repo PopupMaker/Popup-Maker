@@ -133,22 +133,7 @@ function popmake_get_registered_settings() {
 	 */
 	$popmake_settings = array(
 		/** General Settings */
-		'general'    => apply_filters( 'popmake_settings_general', array(
-			'allow_tracking' => array(
-				'id'   => 'allow_tracking',
-				'name' => __( 'Allow Usage Tracking?', 'popup-maker' ),
-				'desc' => __( 'Allow Popup Maker to anonymously track how this plugin is used and help us make the plugin better. Opt-in and receive a 20% discount code for any purchase from the <a href="https://wppopupmaker.com/extensions/" target="_blank">Popup Maker store</a>. Your discount code will be emailed to you.', 'popup-maker' ),
-				'type' => 'checkbox',
-			),
-			/*
-			'uninstall_on_delete' => array(
-				'id' => 'uninstall_on_delete',
-				'name' => __( 'Remove Data on Uninstall?', 'popup-maker' ),
-				'desc' => __( 'Check this box if you would like Popup Maker to completely remove all of its data when the plugin is deleted.', 'popup-maker' ),
-				'type' => 'checkbox'
-			)
-			*/
-		) ),
+		'general'    => apply_filters( 'popmake_settings_general', array() ),
 		'assets'     => apply_filters( 'popmake_settings_assets', array(
 			'disable_google_font_loading' => array(
 				'id'   => 'disable_google_font_loading',
@@ -314,9 +299,12 @@ function popmake_get_settings_tabs() {
 	$settings = popmake_get_registered_settings();
 
 	$tabs            = array();
-	$tabs['general'] = __( 'General', 'popup-maker' );
-	$tabs['assets']  = __( 'Assets', 'popup-maker' );
-
+	if ( ! empty( $settings['general'] ) ) {
+		$tabs['general'] = __( 'General', 'popup-maker' );
+	}
+	if ( ! empty( $settings['assets'] ) ) {
+		$tabs['assets'] = __( 'Assets', 'popup-maker' );
+	}
 	if ( ! empty( $settings['extensions'] ) ) {
 		$tabs['extensions'] = __( 'Extensions', 'popup-maker' );
 	}
@@ -802,9 +790,9 @@ function popmake_sanitize_license_key_field( $new, $key ) {
 	}
 	if ( $new != '' ) {
 		if ( $old === null || $old == '' ) {
-			$new = SHA1( $new );
-		} elseif ( $old && $old != $new && $old != SHA1( $new ) ) {
-			$new = SHA1( $new );
+			$new = sha1( $new );
+		} elseif ( $old && $old != $new && $old != sha1( $new ) ) {
+			$new = sha1( $new );
 		}
 	}
 

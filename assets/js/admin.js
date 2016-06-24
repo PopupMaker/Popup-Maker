@@ -6682,15 +6682,15 @@ var PUMCookies;
 
             $('#pum_popup_cookie_fields').addClass('has-cookies');
 
-            if (PUMTriggers.new_cookie && PUMTriggers.new_cookie >= 0) {
+            if (PUMTriggers.new_cookie >= 0) {
                 $trigger = $('#pum_popup_triggers_list tbody tr').eq(PUMTriggers.new_cookie).find('.popup_triggers_field_settings:first');
-
                 trigger_settings = JSON.parse($trigger.val());
+
                 trigger_settings.cookie.name[trigger_settings.cookie.name.indexOf('add_new')] = values.cookie_settings.name;
 
                 $trigger.val(JSON.stringify(trigger_settings));
 
-                PUMTriggers.new_cookie = -1;
+                PUMTriggers.new_cookie = false;
                 PUMTriggers.refreshDescriptions();
             }
         })
@@ -7828,7 +7828,7 @@ var PUMTriggers;
         defaults = pum_admin.defaults;
 
     PUMTriggers = {
-        new_cookie: null,
+        new_cookie: false,
         getLabel: function (type) {
             return I10n.labels.triggers[type].name;
         },
