@@ -166,7 +166,7 @@ function popmake_render_popup_theme_preview_meta_box() { ?>
 		<div class="example-popup">
 			<div class="title"><?php _e( 'Title Text', 'popup-maker' ); ?></div>
 			<div class="content"><?php do_action( 'popmake_example_popup_content' ); ?></div>
-			<a class="close-popup"><?php _e( '&#215;', 'popup-maker' ); ?></a>
+			<a class="close-popup">&#215;</a>
 		</div>
 	</div>
 	</div><?php

@@ -404,8 +404,8 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		 * @return mixed|void
 		 */
 		public function close_text() {
-			$text = __( '&#215;', 'popup-maker' );
-
+			$text = '&#215;';
+			
 			/** @deprecated */
 			$text = apply_filters( 'popmake_popup_default_close_text', $text, $this->ID );
 

@@ -148,7 +148,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 					'step'        => 1,
 					'min'         => 0,
 					'max'         => 500,
-					'unit'        => __( 'px', 'popup-maker' ),
+					'unit'        => 'px',
 				),
 				'position_bottom' => array(
 					'label'       => __( 'Bottom', 'popup-maker' ),
@@ -159,7 +159,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 					'step'        => 1,
 					'min'         => 0,
 					'max'         => 500,
-					'unit'        => __( 'px', 'popup-maker' ),
+					'unit'        => 'px',
 				),
 				'position_left'   => array(
 					'label'       => __( 'Left', 'popup-maker' ),
@@ -170,7 +170,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 					'step'        => 1,
 					'min'         => 0,
 					'max'         => 500,
-					'unit'        => __( 'px', 'popup-maker' ),
+					'unit'        => 'px',
 				),
 				'position_right'  => array(
 					'label'       => __( 'Right', 'popup-maker' ),
@@ -181,7 +181,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 					'step'        => 1,
 					'min'         => 0,
 					'max'         => 500,
-					'unit'        => __( 'px', 'popup-maker' ),
+					'unit'        => 'px',
 				),
 			),
 			'animation' => array(

@@ -12,10 +12,10 @@ add_filter( 'popmake_size_unit_options', 'popmake_core_size_unit_options', 10 );
 function popmake_core_size_unit_options( $options ) {
 	return array_merge( $options, array(
 		// option => value
-		__( 'PX', 'popup-maker' )  => 'px',
-		__( '%', 'popup-maker' )   => '%',
-		__( 'EM', 'popup-maker' )  => 'em',
-		__( 'REM', 'popup-maker' ) => 'rem',
+		'px'  => 'px',
+		'%'   => '%',
+		'em'  => 'em',
+		'rem' => 'rem',
 	) );
 }
 
@@ -41,13 +41,13 @@ function popmake_core_font_family_options( $options ) {
 	return array_merge( $options, array(
 		// option => value
 		__( 'Use Your Themes', 'popup-maker' ) => 'inherit',
-		__( 'Sans-Serif', 'popup-maker' )      => 'Sans-Serif',
-		__( 'Tahoma', 'popup-maker' )          => 'Tahoma',
-		__( 'Georgia', 'popup-maker' )         => 'Georgia',
-		__( 'Comic Sans MS', 'popup-maker' )   => 'Comic Sans MS',
-		__( 'Arial', 'popup-maker' )           => 'Arial',
-		__( 'Lucida Grande', 'popup-maker' )   => 'Lucida Grande',
-		__( 'Times New Roman', 'popup-maker' ) => 'Times New Roman',
+		'Sans-Serif'                           => 'Sans-Serif',
+		'Tahoma'                               => 'Tahoma',
+		'Georgia'                              => 'Georgia',
+		'Comic Sans MS'                        => 'Comic Sans MS',
+		'Arial'                                => 'Arial',
+		'Lucida Grande'                        => 'Lucida Grande',
+		'Times New Roman'                      => 'Times New Roman',
 	) );
 }
 
@@ -56,15 +56,15 @@ add_filter( 'popmake_font_weight_options', 'popmake_core_font_weight_options', 1
 function popmake_core_font_weight_options( $options ) {
 	return array_merge( $options, array(
 		__( 'Normal', 'popup-maker' ) => '',
-		__( '100 ', 'popup-maker' )   => '100',
-		__( '200 ', 'popup-maker' )   => '200',
-		__( '300 ', 'popup-maker' )   => '300',
-		__( '400 ', 'popup-maker' )   => '400',
-		__( '500 ', 'popup-maker' )   => '500',
-		__( '600 ', 'popup-maker' )   => '600',
-		__( '700 ', 'popup-maker' )   => '700',
-		__( '800 ', 'popup-maker' )   => '800',
-		__( '900 ', 'popup-maker' )   => '900',
+		'100 '                        => '100',
+		'200 '                        => '200',
+		'300 '                        => '300',
+		'400 '                        => '400',
+		'500 '                        => '500',
+		'600 '                        => '600',
+		'700 '                        => '700',
+		'800 '                        => '800',
+		'900 '                        => '900',
 	) );
 }
 
@@ -84,7 +84,7 @@ function popmake_core_text_align_options( $options ) {
 		// option => value
 		__( 'Left', 'popup-maker' )   => 'left',
 		__( 'Center', 'popup-maker' ) => 'center',
-		__( 'Right', 'popup-maker' )  => 'right'
+		__( 'Right', 'popup-maker' )  => 'right',
 	) );
 }
 

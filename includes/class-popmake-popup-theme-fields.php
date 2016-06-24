@@ -25,7 +25,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => 1,
 					'min'      => 0,
 					'max'      => 100,
-					'unit'     => __( '%', 'popup-maker' ),
+					'unit'     => '%',
 				),
 			),
 			'container' => array(
@@ -37,7 +37,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_container_padding_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_container_padding_min', 1 ),
 					'max'      => apply_filters( 'popmake_popup_theme_container_padding_max', 100 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'background_color'     => array(
 					'label'    => __( 'Color', 'popup-maker' ),
@@ -53,7 +53,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => 1,
 					'min'      => 0,
 					'max'      => 100,
-					'unit'     => __( '%', 'popup-maker' ),
+					'unit'     => '%',
 				),
 				'border_radius'        => array(
 					'label'       => __( 'Radius', 'popup-maker' ),
@@ -64,7 +64,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'        => apply_filters( 'popmake_popup_theme_container_border_radius_step', 1 ),
 					'min'         => apply_filters( 'popmake_popup_theme_container_border_radius_min', 1 ),
 					'max'         => apply_filters( 'popmake_popup_theme_container_border_radius_max', 80 ),
-					'unit'        => __( 'px', 'popup-maker' ),
+					'unit'        => 'px',
 				),
 				'border_style'         => array(
 					'label'       => __( 'Style', 'popup-maker' ),
@@ -88,7 +88,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_container_border_width_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_container_border_width_min', 1 ),
 					'max'      => apply_filters( 'popmake_popup_theme_container_border_width_max', 5 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'boxshadow_inset'      => array(
 					'label'       => __( 'Inset', 'popup-maker' ),
@@ -109,7 +109,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_container_boxshadow_horizontal_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_container_boxshadow_horizontal_min', - 50 ),
 					'max'      => apply_filters( 'popmake_popup_theme_container_boxshadow_horizontal_max', 50 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'boxshadow_vertical'   => array(
 					'label'    => __( 'Vertical Position', 'popup-maker' ),
@@ -119,7 +119,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_container_boxshadow_vertical_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_container_boxshadow_vertical_min', - 50 ),
 					'max'      => apply_filters( 'popmake_popup_theme_container_boxshadow_vertical_max', 50 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'boxshadow_blur'       => array(
 					'label'    => __( 'Blur Radius', 'popup-maker' ),
@@ -129,7 +129,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_container_boxshadow_blur_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_container_boxshadow_blur_min', 0 ),
 					'max'      => apply_filters( 'popmake_popup_theme_container_boxshadow_blur_max', 100 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'boxshadow_spread'     => array(
 					'label'    => __( 'Spread', 'popup-maker' ),
@@ -139,7 +139,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_container_boxshadow_spread_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_container_boxshadow_spread_min', - 100 ),
 					'max'      => apply_filters( 'popmake_popup_theme_container_boxshadow_spread_max', 100 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'boxshadow_color'      => array(
 					'label'    => __( 'Color', 'popup-maker' ),
@@ -155,7 +155,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => 1,
 					'min'      => 0,
 					'max'      => 100,
-					'unit'     => __( '%', 'popup-maker' ),
+					'unit'     => '%',
 				),
 			),
 			'title'     => array(
@@ -173,7 +173,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_title_line_height_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_title_line_height_min', 8 ),
 					'max'      => apply_filters( 'popmake_popup_theme_title_line_height_max', 54 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'font_size'             => array(
 					'label'    => __( 'Spread', 'popup-maker' ),
@@ -183,7 +183,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_title_font_size_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_title_font_size_min', 8 ),
 					'max'      => apply_filters( 'popmake_popup_theme_title_font_size_max', 48 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'font_family'           => array(
 					'label'    => __( 'Family', 'popup-maker' ),
@@ -221,7 +221,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_title_textshadow_horizontal_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_title_textshadow_horizontal_min', - 50 ),
 					'max'      => apply_filters( 'popmake_popup_theme_title_textshadow_horizontal_max', 50 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'textshadow_vertical'   => array(
 					'label'    => __( 'Vertical Position', 'popup-maker' ),
@@ -231,7 +231,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_title_textshadow_vertical_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_title_textshadow_vertical_min', - 50 ),
 					'max'      => apply_filters( 'popmake_popup_theme_title_textshadow_vertical_max', 50 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'textshadow_blur'       => array(
 					'label'    => __( 'Blur Radius', 'popup-maker' ),
@@ -241,7 +241,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_title_textshadow_blur_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_title_textshadow_blur_min', 0 ),
 					'max'      => apply_filters( 'popmake_popup_theme_title_textshadow_blur_max', 100 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'textshadow_color'      => array(
 					'label'    => __( 'Color', 'popup-maker' ),
@@ -257,7 +257,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => 1,
 					'min'      => 0,
 					'max'      => 100,
-					'unit'     => __( '%', 'popup-maker' ),
+					'unit'     => '%',
 				),
 			),
 			'content'   => array(
@@ -305,7 +305,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_padding_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_padding_min', 0 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_padding_max', 100 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'height'                => array(
 					'label'    => __( 'Height', 'popup-maker' ),
@@ -315,7 +315,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_height_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_height_min', 0 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_height_max', 100 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'width'                 => array(
 					'label'    => __( 'Width', 'popup-maker' ),
@@ -325,7 +325,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_width_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_width_min', 0 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_width_max', 100 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'location'              => array(
 					'label'       => __( 'Location', 'popup-maker' ),
@@ -343,7 +343,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_position_top_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_position_top_min', - 100 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_position_top_max', 100 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'position_left'         => array(
 					'label'    => __( 'Left', 'popup-maker' ),
@@ -353,7 +353,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_position_left_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_position_left_min', - 100 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_position_left_max', 100 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'position_bottom'       => array(
 					'label'    => __( 'Bottom', 'popup-maker' ),
@@ -363,7 +363,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_position_bottom_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_position_bottom_min', - 100 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_position_bottom_max', 100 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'position_right'        => array(
 					'label'    => __( 'Right', 'popup-maker' ),
@@ -373,7 +373,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_position_right_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_position_right_min', - 100 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_position_right_max', 100 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'line_height'           => array(
 					'label'    => __( 'Line Height', 'popup-maker' ),
@@ -383,7 +383,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_line_height_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_line_height_min', 8 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_line_height_max', 54 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'font_color'            => array(
 					'label'    => __( 'Color', 'popup-maker' ),
@@ -399,7 +399,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_font_size_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_font_size_min', 8 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_font_size_max', 32 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'font_family'           => array(
 					'label'    => __( 'Family', 'popup-maker' ),
@@ -436,7 +436,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => 1,
 					'min'      => 0,
 					'max'      => 100,
-					'unit'     => __( '%', 'popup-maker' ),
+					'unit'     => '%',
 				),
 				'border_radius'         => array(
 					'label'       => __( 'Radius', 'popup-maker' ),
@@ -447,7 +447,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'        => apply_filters( 'popmake_popup_theme_close_border_radius_step', 1 ),
 					'min'         => apply_filters( 'popmake_popup_theme_close_border_radius_min', 1 ),
 					'max'         => apply_filters( 'popmake_popup_theme_close_border_radius_max', 28 ),
-					'unit'        => __( 'px', 'popup-maker' ),
+					'unit'        => 'px',
 				),
 				'border_style'          => array(
 					'label'       => __( 'Style', 'popup-maker' ),
@@ -471,7 +471,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_border_width_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_border_width_min', 1 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_border_width_max', 5 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'boxshadow_inset'       => array(
 					'label'       => __( 'Inset', 'popup-maker' ),
@@ -492,7 +492,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_boxshadow_horizontal_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_boxshadow_horizontal_min', - 50 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_boxshadow_horizontal_max', 50 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'boxshadow_vertical'    => array(
 					'label'    => __( 'Vertical Position', 'popup-maker' ),
@@ -502,7 +502,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_boxshadow_vertical_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_boxshadow_vertical_min', - 50 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_boxshadow_vertical_max', 50 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'boxshadow_blur'        => array(
 					'label'    => __( 'Blur Radius', 'popup-maker' ),
@@ -512,7 +512,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_boxshadow_blur_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_boxshadow_blur_min', 0 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_boxshadow_blur_max', 100 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'boxshadow_spread'      => array(
 					'label'    => __( 'Spread', 'popup-maker' ),
@@ -522,7 +522,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_boxshadow_spread_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_boxshadow_spread_min', - 100 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_boxshadow_spread_max', 100 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'boxshadow_color'       => array(
 					'label'    => __( 'Color', 'popup-maker' ),
@@ -538,7 +538,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => 1,
 					'min'      => 0,
 					'max'      => 100,
-					'unit'     => __( '%', 'popup-maker' ),
+					'unit'     => '%',
 				),
 				'textshadow_horizontal' => array(
 					'label'    => __( 'Horizontal Position', 'popup-maker' ),
@@ -548,7 +548,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_textshadow_horizontal_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_textshadow_horizontal_min', - 50 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_textshadow_horizontal_max', 50 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'textshadow_vertical'   => array(
 					'label'    => __( 'Vertical Position', 'popup-maker' ),
@@ -558,7 +558,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_textshadow_vertical_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_textshadow_vertical_min', - 50 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_textshadow_vertical_max', 50 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'textshadow_blur'       => array(
 					'label'    => __( 'Blur Radius', 'popup-maker' ),
@@ -568,7 +568,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => apply_filters( 'popmake_popup_theme_close_textshadow_blur_step', 1 ),
 					'min'      => apply_filters( 'popmake_popup_theme_close_textshadow_blur_min', 0 ),
 					'max'      => apply_filters( 'popmake_popup_theme_close_textshadow_blur_max', 100 ),
-					'unit'     => __( 'px', 'popup-maker' ),
+					'unit'     => 'px',
 				),
 				'textshadow_color'      => array(
 					'label'    => __( 'Color', 'popup-maker' ),
@@ -584,7 +584,7 @@ class Popmake_Popup_Theme_Fields extends Popmake_Fields {
 					'step'     => 1,
 					'min'      => 0,
 					'max'      => 100,
-					'unit'     => __( '%', 'popup-maker' ),
+					'unit'     => '%',
 				),
 			)
 		) );

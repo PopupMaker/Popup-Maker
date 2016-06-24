@@ -143,7 +143,7 @@ class Popmake_Popup_Fields extends Popmake_Fields {
 					'step'        => apply_filters( 'popmake_popup_display_position_top_step', 1 ),
 					'min'         => apply_filters( 'popmake_popup_display_position_top_min', 0 ),
 					'max'         => apply_filters( 'popmake_popup_display_position_top_max', 500 ),
-					'unit'        => __( 'px', 'popup-maker' ),
+					'unit'        => 'px',
 				),
 				'position_bottom'           => array(
 					'label'       => __( 'Bottom', 'popup-maker' ),
@@ -154,7 +154,7 @@ class Popmake_Popup_Fields extends Popmake_Fields {
 					'step'        => apply_filters( 'popmake_popup_display_position_bottom_step', 1 ),
 					'min'         => apply_filters( 'popmake_popup_display_position_bottom_min', 0 ),
 					'max'         => apply_filters( 'popmake_popup_display_position_bottom_max', 500 ),
-					'unit'        => __( 'px', 'popup-maker' ),
+					'unit'        => 'px',
 				),
 				'position_left'             => array(
 					'label'       => __( 'Left', 'popup-maker' ),
@@ -165,7 +165,7 @@ class Popmake_Popup_Fields extends Popmake_Fields {
 					'step'        => apply_filters( 'popmake_popup_display_position_left_step', 1 ),
 					'min'         => apply_filters( 'popmake_popup_display_position_left_min', 0 ),
 					'max'         => apply_filters( 'popmake_popup_display_position_left_max', 500 ),
-					'unit'        => __( 'px', 'popup-maker' ),
+					'unit'        => 'px',
 				),
 				'position_right'            => array(
 					'label'       => __( 'Right', 'popup-maker' ),
@@ -176,7 +176,7 @@ class Popmake_Popup_Fields extends Popmake_Fields {
 					'step'        => apply_filters( 'popmake_popup_display_position_right_step', 1 ),
 					'min'         => apply_filters( 'popmake_popup_display_position_right_min', 0 ),
 					'max'         => apply_filters( 'popmake_popup_display_position_right_max', 500 ),
-					'unit'        => __( 'px', 'popup-maker' ),
+					'unit'        => 'px',
 				),
 				'overlay_zindex'            => array(
 					'label'       => __( 'Overlay Z-Index', 'popup-maker' ),

@@ -570,7 +570,7 @@ function popmake_popup_content_container( $content, $popup_id ) {
 		$content = '<div class="popmake-content">' . $content;
 		$content .= '</div>';
 		if ( apply_filters( 'popmake_show_close_button', true, $popup_id ) ) {
-			$content .= '<span class="popmake-close">' . apply_filters( 'popmake_popup_default_close_text', __( '&#215;', 'popup-maker' ), $popup_id ) . '</span>';
+			$content .= '<span class="popmake-close">' . apply_filters( 'popmake_popup_default_close_text', '&#215;', $popup_id ) . '</span>';
 		}
 	}
 
