@@ -6,7 +6,7 @@ var PUMTriggers;
         defaults = pum_admin.defaults;
 
     PUMTriggers = {
-        new_cookie: null,
+        new_cookie: false,
         getLabel: function (type) {
             return I10n.labels.triggers[type].name;
         },
