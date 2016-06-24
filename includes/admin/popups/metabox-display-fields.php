@@ -338,7 +338,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 				/>
 			<span class="range-value-unit regular-text">px</span>
 
-			<p class="description"><?php _e( 'Distance from the top edge of the screen.', 'popup-maker' ); ?></p>
+			<p class="description"><?php printf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), 'top' ); ?></p>
 		</td>
 	</tr>
 	<tr class="bottom">
@@ -357,7 +357,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 				/>
 			<span class="range-value-unit regular-text">px</span>
 
-			<p class="description"><?php _e( 'Distance from the bottom edge of the screen.', 'popup-maker' ); ?></p>
+			<p class="description"><?php printf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), 'bottom' ); ?></p>
 		</td>
 	</tr>
 	<tr class="left">
@@ -376,7 +376,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 				/>
 			<span class="range-value-unit regular-text">px</span>
 
-			<p class="description"><?php _e( 'Distance from the left edge of the screen.', 'popup-maker' ); ?></p>
+			<p class="description"><?php printf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), 'left' ); ?></p>
 		</td>
 	</tr>
 	<tr class="right">
@@ -394,8 +394,8 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 		       step="1"
 			/>
 		<span class="range-value-unit regular-text">px</span>
-
-		<p class="description"><?php _e( 'Distance from the right edge of the screen.', 'popup-maker' ); ?></p>
+		
+		<p class="description"><?php printf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), 'right' ); ?></p>
 	</td>
 	</tr><?php
 }

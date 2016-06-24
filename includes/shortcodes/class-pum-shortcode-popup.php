@@ -141,7 +141,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 				),
 				'position_top'    => array(
 					'label'       => __( 'Top', 'popup-maker' ),
-					'description' => __( 'Distance from the top edge of the screen.', 'popup-maker' ),
+					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), 'top' ),
 					'type'        => 'rangeslider',
 					'std'         => 100,
 					'priority'    => 10,
@@ -152,7 +152,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 				),
 				'position_bottom' => array(
 					'label'       => __( 'Bottom', 'popup-maker' ),
-					'description' => __( 'Distance from the bottom edge of the screen.', 'popup-maker' ),
+					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), 'bottom' ),
 					'type'        => 'rangeslider',
 					'std'         => 0,
 					'priority'    => 10,
@@ -163,7 +163,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 				),
 				'position_left'   => array(
 					'label'       => __( 'Left', 'popup-maker' ),
-					'description' => __( 'Distance from the left edge of the screen.', 'popup-maker' ),
+					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), 'left' ),
 					'type'        => 'rangeslider',
 					'std'         => 0,
 					'priority'    => 10,
@@ -174,7 +174,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 				),
 				'position_right'  => array(
 					'label'       => __( 'Right', 'popup-maker' ),
-					'description' => __( 'Distance from the right edge of the screen.', 'popup-maker' ),
+					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), 'right' ),
 					'type'        => 'rangeslider',
 					'std'         => 0,
 					'priority'    => 10,
