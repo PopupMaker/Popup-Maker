@@ -338,7 +338,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 				/>
 			<span class="range-value-unit regular-text">px</span>
 
-			<p class="description"><?php printf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), 'top' ); ?></p>
+			<p class="description"><?php printf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Top', 'popup-maker' ) ) ); ?></p>
 		</td>
 	</tr>
 	<tr class="bottom">
@@ -357,7 +357,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 				/>
 			<span class="range-value-unit regular-text">px</span>
 
-			<p class="description"><?php printf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), 'bottom' ); ?></p>
+			<p class="description"><?php printf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Bottom', 'popup-maker' ) ) ); ?></p>
 		</td>
 	</tr>
 	<tr class="left">
@@ -376,7 +376,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 				/>
 			<span class="range-value-unit regular-text">px</span>
 
-			<p class="description"><?php printf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), 'left' ); ?></p>
+			<p class="description"><?php printf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Left', 'popup-maker' ) ) ); ?></p>
 		</td>
 	</tr>
 	<tr class="right">
@@ -395,7 +395,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 			/>
 		<span class="range-value-unit regular-text">px</span>
 		
-		<p class="description"><?php printf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), 'right' ); ?></p>
+		<p class="description"><?php printf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Right', 'popup-maker' ) ) ); ?></p>
 	</td>
 	</tr><?php
 }

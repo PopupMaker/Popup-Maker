@@ -136,7 +136,7 @@ class Popmake_Popup_Fields extends Popmake_Fields {
 				),
 				'position_top'              => array(
 					'label'       => __( 'Top', 'popup-maker' ),
-					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), 'top' ),
+					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Top', 'popup-maker' ) ) ),
 					'type'        => 'rangeslider',
 					'std'         => 100,
 					'priority'    => 15,
@@ -147,7 +147,7 @@ class Popmake_Popup_Fields extends Popmake_Fields {
 				),
 				'position_bottom'           => array(
 					'label'       => __( 'Bottom', 'popup-maker' ),
-					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), 'bottom' ),
+					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Bottom', 'popup-maker' ) ) ),
 					'type'        => 'rangeslider',
 					'std'         => 0,
 					'priority'    => 14,
@@ -158,7 +158,7 @@ class Popmake_Popup_Fields extends Popmake_Fields {
 				),
 				'position_left'             => array(
 					'label'       => __( 'Left', 'popup-maker' ),
-					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), 'left' ),
+					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Left', 'popup-maker' ) ) ),
 					'type'        => 'rangeslider',
 					'std'         => 0,
 					'priority'    => 15,
@@ -169,7 +169,7 @@ class Popmake_Popup_Fields extends Popmake_Fields {
 				),
 				'position_right'            => array(
 					'label'       => __( 'Right', 'popup-maker' ),
-					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), 'right' ),
+					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Right', 'popup-maker' ) ) ),
 					'type'        => 'rangeslider',
 					'std'         => 0,
 					'priority'    => 15,
