@@ -134,5 +134,5 @@ function popmake_deprecated_woocommerce_support() {
     new Popmake_Woocommerce_Integration();
 }
 
-add_action( 'plugins_loaded', 'popmake_deprecated_woocommerce_support' );
+add_action( 'init', 'popmake_deprecated_woocommerce_support' );
 

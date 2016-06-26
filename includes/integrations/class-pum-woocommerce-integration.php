@@ -57,11 +57,11 @@ class PUM_Woocommerce_Integration {
 	}
 
 	public static function condition_sort_order( $order = array() ) {
-		$order[ __( 'WooCommerce', 'woocommerce' ) ] = 5;
+		$order[ __( 'WooCommerce', 'woocommerce' ) ] = 5.256;
 
 		return $order;
 	}
 
 }
 
-add_action( 'plugins_loaded', 'PUM_Woocommerce_Integration::init' );
+add_action( 'init', 'PUM_Woocommerce_Integration::init' );

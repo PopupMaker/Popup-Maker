@@ -220,7 +220,7 @@ function popmake_emodal_init() {
 	}
 }
 
-add_action( 'plugins_loaded', 'popmake_emodal_init' );
+add_action( 'init', 'popmake_emodal_init' );
 
 
 function popmake_emodal_popup_is_loadable( $return, $popup_id ) {

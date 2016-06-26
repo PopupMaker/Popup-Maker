@@ -56,10 +56,10 @@ class PUM_Shortcode extends PUM_Fields {
 
 		parent::__construct( $args );
 
-		if ( ! did_action( 'plugins_loaded' ) ) {
-			add_action( 'plugins_loaded', array( $this, 'register' ) );
-		} elseif ( ! did_action( 'init' ) && current_action() != 'plugins_loaded' ) {
+		if ( ! did_action( 'init' ) ) {
 			add_action( 'init', array( $this, 'register' ) );
+		} elseif ( ! did_action( 'admin_head' ) && current_action() != 'init' ) {
+			add_action( 'admin_head', array( $this, 'register' ) );
 		} else {
 			$this->register();
 		}
