@@ -316,6 +316,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 
 			if ( pum_is_v1_4_compatible() ) {
 				require_once POPMAKE_DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
+				require_once POPMAKE_DIR . 'includes/integrations/class-pum-buddypress-integration.php';
 			} else {
 				require_once POPMAKE_DIR . 'includes/integrations/class-popmake-woocommerce-integration.php';
 			}
