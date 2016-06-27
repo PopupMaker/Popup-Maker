@@ -6,7 +6,7 @@ Donate link:
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.4
 Tested up to: 4.5.3
-Stable tag: 1.4.12
+Stable tag: 1.4.13
 License: GNU Version 3 or Any Later Version
 
 Easily create attractive popups. Customize nearly every aspect of your popups, from theme & position, to targeting & cookies.
@@ -100,6 +100,11 @@ There are several common causes for this which include:
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.4.13 - 6/26/2016 =
+* Feature: Added 12 of the most commonly needed BuddyPress content types & targeting conditions. Target any BP content type. Now full support for BuddyPress.
+* Tweak: Moved a few functions from the plugins_loaded action to the init action for minor compatibility benefits.
+* Tweak: Removed Popup & Popup Theme Meta Revisioning as it adds unneeded clutter to the DB.
 
 = v1.4.12 - 6/24/2016 =
 * Improvement: Reduced translatable strings from 569 total to 439 which is about a 23% reduction which will reduce work for our translators.

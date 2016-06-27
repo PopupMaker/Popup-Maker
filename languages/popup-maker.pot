@@ -554,7 +554,7 @@ msgstr ""
 msgid "Checking this sets the positioning of the popup to fixed."
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:327, includes/admin/themes/metabox-close-fields.php:111, includes/class-popmake-popup-fields.php:138, includes/class-popmake-popup-theme-fields.php:339, includes/input-options.php:129, includes/shortcodes/class-pum-shortcode-popup.php:143
+#: includes/admin/popups/metabox-display-fields.php:327, includes/admin/popups/metabox-display-fields.php:341, includes/admin/themes/metabox-close-fields.php:111, includes/class-popmake-popup-fields.php:138, includes/class-popmake-popup-fields.php:139, includes/class-popmake-popup-theme-fields.php:339, includes/input-options.php:129, includes/shortcodes/class-pum-shortcode-popup.php:143, includes/shortcodes/class-pum-shortcode-popup.php:144
 msgid "Top"
 msgstr ""
 
@@ -563,15 +563,15 @@ msgctxt "Screen Edge: top, bottom"
 msgid "Distance from the %s edge of the screen."
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:346, includes/admin/themes/metabox-close-fields.php:145, includes/class-popmake-popup-fields.php:149, includes/class-popmake-popup-theme-fields.php:359, includes/input-options.php:131, includes/shortcodes/class-pum-shortcode-popup.php:154
+#: includes/admin/popups/metabox-display-fields.php:346, includes/admin/popups/metabox-display-fields.php:360, includes/admin/themes/metabox-close-fields.php:145, includes/class-popmake-popup-fields.php:149, includes/class-popmake-popup-fields.php:150, includes/class-popmake-popup-theme-fields.php:359, includes/input-options.php:131, includes/shortcodes/class-pum-shortcode-popup.php:154, includes/shortcodes/class-pum-shortcode-popup.php:155
 msgid "Bottom"
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:365, includes/admin/themes/metabox-close-fields.php:128, includes/class-popmake-popup-fields.php:160, includes/class-popmake-popup-theme-fields.php:349, includes/input-options.php:85, includes/input-options.php:130, includes/shortcodes/class-pum-shortcode-popup.php:165
+#: includes/admin/popups/metabox-display-fields.php:365, includes/admin/popups/metabox-display-fields.php:379, includes/admin/themes/metabox-close-fields.php:128, includes/class-popmake-popup-fields.php:160, includes/class-popmake-popup-fields.php:161, includes/class-popmake-popup-theme-fields.php:349, includes/input-options.php:85, includes/input-options.php:130, includes/shortcodes/class-pum-shortcode-popup.php:165, includes/shortcodes/class-pum-shortcode-popup.php:166
 msgid "Left"
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:384, includes/admin/themes/metabox-close-fields.php:162, includes/class-popmake-popup-fields.php:171, includes/class-popmake-popup-theme-fields.php:369, includes/input-options.php:87, includes/input-options.php:132, includes/shortcodes/class-pum-shortcode-popup.php:176
+#: includes/admin/popups/metabox-display-fields.php:384, includes/admin/popups/metabox-display-fields.php:398, includes/admin/themes/metabox-close-fields.php:162, includes/class-popmake-popup-fields.php:171, includes/class-popmake-popup-fields.php:172, includes/class-popmake-popup-theme-fields.php:369, includes/input-options.php:87, includes/input-options.php:132, includes/shortcodes/class-pum-shortcode-popup.php:176, includes/shortcodes/class-pum-shortcode-popup.php:177
 msgid "Right"
 msgstr ""
 
@@ -621,10 +621,6 @@ msgstr ""
 
 #: includes/admin/popups/metabox.php:156, includes/admin/popups/metabox.php:157
 msgid "Enter popup title here"
-msgstr ""
-
-#: includes/admin/popups/metabox.php:243
-msgid "ucwordsstr_replace_"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:140
@@ -889,10 +885,6 @@ msgstr ""
 
 #: includes/admin/themes/metabox.php:167
 msgid "Title Text"
-msgstr ""
-
-#: includes/admin/themes/metabox.php:292
-msgid "Theme Overlay"
 msgstr ""
 
 #: includes/admin/tools/tools-page.php:21
@@ -1368,6 +1360,54 @@ msgstr ""
 
 #: includes/integrations/class-popmake-woocommerce-integration.php:74
 msgid "Exclude on Shop Page"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:35
+msgid "BP: Is a BuddyPress Page"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:43
+msgid "BP: Is User Page"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:51
+msgid "BP: Is Group Page"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:59
+msgid "BP: Is User Messages Page"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:67
+msgid "BP: Is Activation Page"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:75
+msgid "BP: Is Register Page"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:83
+msgid "BP: Is Item Admin"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:91
+msgid "BP: Is Item Mod"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:99
+msgid "BP: Is Directory"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:113
+msgid "BP: Is Current Component"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:131
+msgid "BP: Is Current Action"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:145
+msgid "BP: Is Action Variable"
 msgstr ""
 
 #: includes/integrations/class-pum-woocommerce-integration.php:23
