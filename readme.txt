@@ -6,7 +6,7 @@ Donate link:
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.4
 Tested up to: 4.5.3
-Stable tag: 1.4.13
+Stable tag: 1.4.14
 License: GNU Version 3 or Any Later Version
 
 Easily create attractive popups. Customize nearly every aspect of your popups, from theme & position, to targeting & cookies.
@@ -67,17 +67,6 @@ If you like the plugin and/or support [please rate & review](https://wppopupmake
 Follow us on [Twitter](https://twitter.com/wppopupmaker "Popup Maker on Twitter")!
 Find out more about [Popup Maker](https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=More+Info+Link&utm_campaign=Home+Page "Popup Maker Website").
 
-= Languages =
-* French (France)   87%
-* Hungarian	        84%
-* Arabic	        84%
-* Italian	        84%
-* Swedish	        84%
-* Danish	        84%
-* Spanish (Spain)	72%
-* Russian	        68%
-* German	        52%
-
 Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](https://translate.wordpress.org/projects/wp-plugins/popup-maker).
 
 == Frequently Asked Questions ==
@@ -100,6 +89,9 @@ There are several common causes for this which include:
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.4.14 - 7/14/2016 =
+* Feature: Links with the url #popmake-{ID} will now trigger a popup when clicked. Links with this href will work similar to elements with the popmake-{ID} class.
 
 = v1.4.13 - 6/26/2016 =
 * Feature: Added 12 of the most commonly needed BuddyPress content types & targeting conditions. Target any BP content type. Now full support for BuddyPress.

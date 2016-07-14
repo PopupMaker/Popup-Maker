@@ -1405,11 +1405,19 @@ var pm_cookie, pm_remove_cookie;
         click_open: function (settings) {
             var $popup = PUM.getPopup(this),
                 popup_settings = $popup.popmake('getSettings'),
-                trigger_selector = '.popmake-' + popup_settings.id + ', .popmake-' + decodeURIComponent(popup_settings.slug);
+                trigger_selectors = [
+                    '.popmake-' + popup_settings.id,
+                    '.popmake-' + decodeURIComponent(popup_settings.slug),
+                    'a[href="#popmake-' + popup_settings.id + '"]'
+                ],
+                trigger_selector;
+
 
             if (settings.extra_selectors !== '') {
-                trigger_selector += ', ' + settings.extra_selectors;
+                trigger_selectors.push(settings.extra_selectors);
             }
+
+            trigger_selector = trigger_selectors.join(', ');
 
             $(trigger_selector)
                 .addClass('pum-trigger')

@@ -979,39 +979,16 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: includes/class-pum-freemius.php:93
-msgid "Deleting your account will stop sending usage statistics and disable usage of in dash support forms. This will not stop the plugin from functioning. Are you sure you want to do this?"
-msgstr ""
-
-#: includes/class-pum-freemius.php:94
-msgctxt "button label"
-msgid "Maybe later"
-msgstr ""
-
-#: includes/class-pum-freemius.php:101
-msgctxt "button label"
-msgid "Yes - I’m in!"
-msgstr ""
-
-#: includes/class-pum-freemius.php:103
-msgctxt "button label"
-msgid "Awesome - I’m in!"
-msgstr ""
-
-#: includes/class-pum-freemius.php:117
+#: includes/class-pum-freemius.php:102
 msgid "Usage Statistics"
 msgstr ""
 
-#: includes/class-pum-freemius.php:118
+#: includes/class-pum-freemius.php:103
 msgid "Popup & Theme Counts, Open Counts"
 msgstr ""
 
-#: includes/class-pum-freemius.php:142
-msgid "We moved our usage tracking to a new platform called %s, kindly confirm if you are good with it?"
-msgstr ""
-
-#: includes/class-pum-freemius.php:144
-msgid "Help us to improve Popup Maker and make it even more awesome by allowing us to capture some data with %s. In return, we will send you a 20%% discount for the extension store."
+#: includes/class-pum-freemius.php:126
+msgid "Allow %3$sPopup Maker%4$s​ to collect some usage data with %2$s to make the plugin even more awesome. If you skip this, that's okay! ​%3$sPopup Maker%4$s will still work just fine."
 msgstr ""
 
 #: includes/class-pum-post.php:139
