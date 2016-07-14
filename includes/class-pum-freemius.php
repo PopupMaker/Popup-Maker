@@ -66,9 +66,11 @@ class PUM_Freemius {
 					'account'    => false,
 					'support'    => true,
 				),
+				/*
 				'permissions' => array(
 					'newsletter' => true,
 				)
+				*/
 			) );
 		}
 
@@ -83,41 +85,25 @@ class PUM_Freemius {
 		$this->fs()->add_filter( 'is_submenu_visible', array( $this, 'menu_permissions' ), 10, 2 );
 
 		$this->fs()->add_filter( 'connect_message', array( $this, 'custom_connect_message' ), WP_FS__DEFAULT_PRIORITY, 6 );
-		$this->fs()->add_filter( 'permission_list', array( $this, 'permission_list' ) );
+		//$this->fs()->add_filter( 'permission_list', array( $this, 'permission_list' ) );
 
 		$this->fs()->add_action( 'after_account_connection', array( $this, 'account_connection' ), 10, 2 );
 		$this->fs()->add_action( 'after_account_plan_sync', array( $this, 'plan_sync' ), 10, 2 );
-
-	    if ( function_exists( 'fs_override_i18n' ) ) {
-		    $i18n = array(
-			    'delete-account-confirm' => __( 'Deleting your account will stop sending usage statistics and disable usage of in dash support forms. This will not stop the plugin from functioning. Are you sure you want to do this?', 'popup-maker' ),
-			    'skip'                   => _x( 'Maybe later', 'button label', 'popup-maker' ),
-		    );
-
-		    $settings = get_option( 'popmake_settings' );
-
-		    // If the user already opted in before ask them to do it again.
-		    if ( isset( $settings['allow_tracking'] ) && $settings['allow_tracking'] ) {
-			    $i18n['opt-in-connect'] = _x( 'Yes - I’m in!', 'button label', 'popup-maker' );
-		    } else {
-			    $i18n['opt-in-connect'] = _x( 'Awesome - I’m in!', 'button label', 'popup-maker' );
-		    }
-
-		    $this->fs()->override_i18n( $i18n );
-	    }
-	}
+    }
 
 
 	/**
 	 * Renders the popup maker usage statistics permission notification.
 	 */
 	public function permission_list( $permissions = array() ) {
+		/*
         $permissions['metrics'] = array(
             'icon-class'    => 'dashicons dashicons-performance',
             'label'         => __( 'Usage Statistics', 'popup-maker' ),
             'desc'          => __( 'Popup & Theme Counts, Open Counts', 'popup-maker' ),
             'priority'      => 25,
         );
+		*/
         return $permissions;
 	}
 
@@ -137,14 +123,9 @@ class PUM_Freemius {
 
 		$intro = __fs( 'hey-x' ) . '<br/><br/>';
 
-		// If the user already opted in before ask them to do it again.
-		if ( popmake_get_option( 'allow_tracking', false ) ) {
-			$intro .= __( 'We moved our usage tracking to a new platform called %s, kindly confirm if you are good with it?', 'popup-maker' );
-		} else {
-			$intro .= __( 'Help us to improve Popup Maker and make it even more awesome by allowing us to capture some data with %s. In return, we will send you a 20%% discount for the extension store.', 'popup-maker' );
-		}
+		$intro .= __( 'Allow %3$sPopup Maker%4$s​ to collect some usage data with %2$s to make the plugin even more awesome. If you skip this, that\'s okay! ​%3$sPopup Maker%4$s will still work just fine.', 'popup-maker' );
 
-		return sprintf( $intro, $user_first_name, '<a href="https://freemius.com/wordpress/insights/">Freemius</a>' );
+		return sprintf( $intro, $user_first_name, '<a href="https://freemius.com/wordpress/insights/">Freemius</a>', '<strong>', '</strong>' );
 
 	}
 
@@ -200,7 +181,7 @@ class PUM_Freemius {
 
         $this->api_call( 'check_in', $args );
 
-        set_site_transient( 'pum_tracking_last_send', 6 * DAY_IN_SECONDS + 12 * HOUR_IN_SECONDS  );
+        set_site_transient( 'pum_tracking_last_send', 3 * DAY_IN_SECONDS + 12 * HOUR_IN_SECONDS  );
     }
 
 	/**
