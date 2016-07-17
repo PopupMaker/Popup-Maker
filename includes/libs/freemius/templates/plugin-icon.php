@@ -34,10 +34,10 @@
 			}
 		}
 
-		$icons = glob( fs_normalize_path( $img_dir . '/icon.*' ) );
+		$icons = glob( fs_normalize_path( $img_dir . '/' . $slug . '.*' ) );
 		if ( ! is_array( $icons ) || 0 === count( $icons ) ) {
 			$icon_found             = false;
-			$local_path             = fs_normalize_path( $img_dir . '/icon.png' );
+			$local_path             = fs_normalize_path( $img_dir . '/' . $slug . '.png' );
 			$have_write_permissions = is_writable( fs_normalize_path( $img_dir ) );
 
 			if ( WP_FS__IS_LOCALHOST && $fs->is_org_repo_compliant() && $have_write_permissions ) {
@@ -62,7 +62,7 @@
 				foreach ( $suffixes as $s ) {
 					$headers = get_headers( $base_url . $s );
 					if ( strpos( $headers[0], '200' ) ) {
-						$local_path = fs_normalize_path( $img_dir . '/icon.' . substr( $s, strpos( $s, '.' ) + 1 ) );
+						$local_path = fs_normalize_path( $img_dir . '/' . $slug . '.' . substr( $s, strpos( $s, '.' ) + 1 ) );
 						fs_download_image( $base_url . $s, $local_path );
 						$icon_found = true;
 						break;
@@ -89,5 +89,5 @@
 	$relative_url = fs_img_url( substr( $icons[0], strlen( $icon_dir ) ), $icon_dir );
 ?>
 <div class="fs-plugin-icon">
-	<img src="<?php echo $relative_url ?>"/>
+	<img src="<?php echo $relative_url ?>" width="80" height="80" />
 </div>

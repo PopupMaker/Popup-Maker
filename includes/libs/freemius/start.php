@@ -10,7 +10,12 @@
 		exit;
 	}
 
-	$this_sdk_version = '1.1.7.5';
+	/**
+	 * Freemius SDK Version.
+	 *
+	 * @var string
+	 */
+	$this_sdk_version = '1.1.9';
 
 	#region SDK Selection Logic --------------------------------------------------------------------
 
@@ -208,6 +213,7 @@
 	 *      fs_pending_activation_message_{plugin_slug}
 	 *      fs_is_submenu_visible_{plugin_slug}
 	 *      fs_plugin_icon_{plugin_slug}
+	 *      fs_show_trial_{plugin_slug}
 	 *
 	 * --------------------------------------------------------
 	 *
@@ -286,6 +292,7 @@
 		require_once WP_FS__DIR_INCLUDES . '/class-fs-plugin-updater.php';
 		require_once WP_FS__DIR_INCLUDES . '/class-fs-security.php';
 		require_once WP_FS__DIR_INCLUDES . '/class-freemius-abstract.php';
+		require_once WP_FS__DIR_INCLUDES . '/sdk/Exceptions/Exception.php';
 		require_once WP_FS__DIR_INCLUDES . '/class-freemius.php';
 
 		/**
