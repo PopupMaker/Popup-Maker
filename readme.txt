@@ -6,7 +6,7 @@ Donate link:
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.4
 Tested up to: 4.5.3
-Stable tag: 1.4.14
+Stable tag: 1.4.15
 License: GNU Version 3 or Any Later Version
 
 Easily create attractive popups. Customize nearly every aspect of your popups, from theme & position, to targeting & cookies.
@@ -90,6 +90,12 @@ There are several common causes for this which include:
 
 == Changelog ==
 
+= v1.4.15 - 7/20/2016 =
+* Improvement: Only showed the aria-label attribute if the label will be shown.
+* Tweak: Updated the Freemius SDK.
+* Tweak: Updated the #popmake-{ID} selector to work at the end of a link.
+* Fix: Bug where stackable popups would lose their scroll bar after one was closed.
+
 = v1.4.14 - 7/14/2016 =
 * Feature: Links with the url #popmake-{ID} will now trigger a popup when clicked. Links with this href will work similar to elements with the popmake-{ID} class.
 
@@ -100,7 +106,7 @@ There are several common causes for this which include:
 
 = v1.4.12 - 6/24/2016 =
 * Improvement: Reduced translatable strings from 569 total to 439 which is about a 23% reduction which will reduce work for our translators.
-* Removed the welcome page and associated CSS, images etc. This cleans up some useless strings for translation.
+* Tweak: Removed the welcome page and associated CSS, images etc. This cleans up some useless strings for translation.
 * Fix: Bug where add_new cookie wasn't properly replaced for the first trigger.
 
 = v1.4.11 - 6/10/2016 =

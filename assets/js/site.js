@@ -218,13 +218,13 @@ var PUM;
             var $popup = PUM.getPopup(this),
                 $close = $popup.popmake('getClose')
                     // Add For backward compatiblitiy.
-                    .add($('.popmake-close', $popup)),
+                    .add($('.popmake-close', $popup).not($close)),
                 settings = $popup.popmake('getSettings');
 
             // TODO: Move to a global $(document).on type bind. Possibly look for an inactive class to fail on.
             $close
-                .off('click.popmake click.pum')
-                .on("click.popmake click.pum", function (e) {
+                .off('click.pum')
+                .on("click.pum", function (e) {
                     e.preventDefault();
                     $.fn.popmake.last_close_trigger = 'Close Button';
                     $popup.popmake('close');
@@ -293,11 +293,14 @@ var PUM;
 
                         $close.off('click.popmake');
 
-                        $('html')
-                            .removeClass('pum-open')
-                            .removeClass('pum-open-scrollable')
-                            .removeClass('pum-open-overlay-disabled')
-                            .removeClass('pum-open-fixed');
+                        // Only re-enable scrolling for the document when the last popup has closed.
+                       if ($('.pum-active').length === 1) {
+                            $('html')
+                                .removeClass('pum-open')
+                                .removeClass('pum-open-scrollable')
+                                .removeClass('pum-open-overlay-disabled')
+                                .removeClass('pum-open-fixed');
+                        }
 
                         $popup
                             .removeClass('pum-active')
@@ -1408,7 +1411,7 @@ var pm_cookie, pm_remove_cookie;
                 trigger_selectors = [
                     '.popmake-' + popup_settings.id,
                     '.popmake-' + decodeURIComponent(popup_settings.slug),
-                    'a[href="#popmake-' + popup_settings.id + '"]'
+                    'a[href$="#popmake-' + popup_settings.id + '"]'
                 ],
                 trigger_selector;
 
