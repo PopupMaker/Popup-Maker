@@ -69,7 +69,7 @@
                 trigger_selectors = [
                     '.popmake-' + popup_settings.id,
                     '.popmake-' + decodeURIComponent(popup_settings.slug),
-                    'a[href="#popmake-' + popup_settings.id + '"]'
+                    'a[href$="#popmake-' + popup_settings.id + '"]'
                 ],
                 trigger_selector;
 
