@@ -294,6 +294,21 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 				if ( ! $this->conditions ) {
 					$this->conditions = array();
 				}
+
+				// Sanity Check on the values not operand value.
+				foreach ( $this->conditions as $key => $condition ) {
+
+					// The condition target doesn't exist. Lets ignore this condition.
+					if ( empty( $settings['target'] ) ) {
+						unset( $this->conditions[ $key ] );
+						continue;
+					}
+
+					// The not operand value is missing, set it to false.
+					if ( ! isset ( $condition['not_operand'] ) ) {
+						$this->conditions[ $key ]['not_operand'] = false;
+					}
+				}
 			}
 
 			return apply_filters( 'pum_popup_get_conditions', $this->conditions, $this->ID );
