@@ -12,41 +12,29 @@ var PUM_Analytics;
     $.fn.popmake.conversion_trigger = null;
 
     PUM_Analytics = {
-        send: function (data, callback) {
-            var img = (new Image());
+        beacon: function (opts) {
+            var beacon = new Image();
 
-            data = $.extend({}, {
-                'action': 'pum_analytics'
-            }, data);
+            opts = $.extend(true, {}, {
+                url: pum_vars.ajaxurl || null,
+                data: {
+                    action: 'pum_analytics',
+                    _cache: (+(new Date()))
+                },
+                callback: function () {
+                    console.log('test');
+                }
+            }, opts);
 
-            // Add Cache busting.
-            data._cache = (+(new Date()));
+            // Create a beacon if a url is provided
+            if (opts.url) {
+                // Attach the event handlers to the image object
+                $(beacon).on('error success load done', opts.callback);
 
-            // Method 1
-            if (callback !== undefined) {
-                img.addEventListener('load', function () {
-                    callback(data);
-                });
+                // Attach the src for the script call
+                beacon.src = opts.url + '?' + $.param(opts.data);
             }
-            img.src = pum_vars.ajaxurl + '?' + $.param(data);
-
-            return;
-            /*
-             Method 2 - True AJAX
-             $.get({
-             type: 'POST',
-             dataType: 'json',
-             url: pum_vars.ajaxurl,
-             data: data,
-             success: function (data) {
-             if (callback !== undefined) {
-             callback(data);
-             }
-             }
-             });
-             */
         }
-
     };
 
     // Only popups from the editor should fire analytics events.
@@ -63,7 +51,7 @@ var PUM_Analytics;
                 };
 
             if (data.pid > 0 && !$('body').hasClass('single-popup')) {
-                PUM_Analytics.send(data);
+                PUM_Analytics.beacon({data: data});
             }
         });
 }(jQuery, document));

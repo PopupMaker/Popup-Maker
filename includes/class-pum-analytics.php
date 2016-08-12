@@ -48,16 +48,27 @@ class PUM_Analytics {
 
 		$args = wp_parse_args( $_REQUEST, array(
 			'type'   => null,
-			'method' => 'image',
+			'method' => null,
 		) );
 
 		if ( has_action( 'pum_analytics_' . $args['type'] ) ) {
 			do_action( 'pum_analytics_' . $_REQUEST['type'] );
 		}
 
-		if ( $args['method'] == 'image' ) {
-			PUM_Ajax::serve_pixel();
+		switch ( $args['method'] ) {
+			case 'image':
+				PUM_Ajax::serve_pixel();
+				break;
+
+			case 'json':
+				PUM_Ajax::serve_json();
+				break;
+
+			default:
+				PUM_Ajax::serve_no_content();
+				break;
 		}
+
 	}
 
 	public function track_open() {
