@@ -26,10 +26,33 @@ class PUM_Ajax {
 	 * Creates and returns a 1x1 tracking gif to the browser.
 	 */
 	public static function serve_pixel() {
-		$gif = "\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x90\x00\x00\xff\x00\x00\x00\x00\x00\x21\xf9\x04\x05\x10\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x04\x01\x00\x3b";
+		$gif = static::get_file( POPMAKE_DIR . 'assets/images/beacon.gif' );
 		header( 'Content-Type: image/gif' );
 		header( 'Content-Length: ' . strlen( $gif ) );
 		exit( $gif );
+	}
+
+	public static function get_file( $path ) {
+
+		if ( function_exists( 'realpath' ) ) {
+			$path = realpath( $path );
+		}
+
+		if ( ! $path || ! @is_file( $path ) ) {
+			return '';
+		}
+
+		return @file_get_contents( $path );
+	}
+
+	/**
+	 * Returns a 204 no content header.
+	 */
+	public static function serve_no_content() {
+		header( "HTTP/1.0 204 No Content" );
+		header( 'Content-Type: image/gif' );
+		header( 'Content-Length: 0' );
+		exit;
 	}
 
 	/**
