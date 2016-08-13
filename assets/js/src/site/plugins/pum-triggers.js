@@ -74,7 +74,7 @@
                 trigger_selector;
 
 
-            if (settings.extra_selectors !== '') {
+            if (settings.extra_selectors && settings.extra_selectors !== '') {
                 trigger_selectors.push(settings.extra_selectors);
             }
 
