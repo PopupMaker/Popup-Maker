@@ -21,9 +21,7 @@ var PUM_Analytics;
                     action: 'pum_analytics',
                     _cache: (+(new Date()))
                 },
-                callback: function () {
-                    console.log('test');
-                }
+                callback: function () {}
             }, opts);
 
             // Create a beacon if a url is provided
