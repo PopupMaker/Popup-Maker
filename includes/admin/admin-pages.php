@@ -27,39 +27,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 function popmake_admin_submenu_pages() {
 	global $popmake_settings_page, $popmake_tools_page, $popmake_extensions_page;
 
-	$popmake_settings_page = add_submenu_page(
-		'edit.php?post_type=popup',
-		__( 'Settings', 'popup-maker' ),
-		__( 'Settings', 'popup-maker' ),
-		apply_filters( 'popmake_admin_submenu_settings_capability', 'manage_options' ),
-		'settings',
-		'popmake_settings_page'
-	);
+	$popmake_settings_page = add_submenu_page( 'edit.php?post_type=popup', __( 'Settings', 'popup-maker' ), __( 'Settings', 'popup-maker' ), apply_filters( 'popmake_admin_submenu_settings_capability', 'manage_options' ), 'settings', 'popmake_settings_page' );
 
-	$popmake_tools_page = add_submenu_page(
-		'edit.php?post_type=popup',
-		__( 'Tools', 'popup-maker' ),
-		__( 'Tools', 'popup-maker' ),
-		apply_filters( 'popmake_admin_submenu_tools_capability', 'manage_options' ),
-		'tools',
-		'popmake_tools_page'
-	);
+	$popmake_tools_page = add_submenu_page( 'edit.php?post_type=popup', __( 'Tools', 'popup-maker' ), __( 'Tools', 'popup-maker' ), apply_filters( 'popmake_admin_submenu_tools_capability', 'manage_options' ), 'tools', 'popmake_tools_page' );
 
-	$popmake_extensions_page = add_submenu_page(
-		'edit.php?post_type=popup',
-		__( 'Extend', 'popup-maker' ),
-		__( 'Extend', 'popup-maker' ),
-		apply_filters( 'popmake_admin_submenu_extensions_capability', 'edit_posts' ),
-		'pum-extensions',
-		'popmake_extensions_page'
-	);
+	$popmake_extensions_page = add_submenu_page( 'edit.php?post_type=popup', __( 'Extend', 'popup-maker' ), __( 'Extend', 'popup-maker' ), apply_filters( 'popmake_admin_submenu_extensions_capability', 'edit_posts' ), 'pum-extensions', 'popmake_extensions_page' );
 
-	$popmake_appearance_themes_page = add_theme_page(
-		__( 'Popup Themes', 'popup-maker' ),
-		__( 'Popup Themes', 'popup-maker' ),
-		'edit_posts',
-		'edit.php?post_type=popup_theme'
-	);}
+	$popmake_appearance_themes_page = add_theme_page( __( 'Popup Themes', 'popup-maker' ), __( 'Popup Themes', 'popup-maker' ), 'edit_posts', 'edit.php?post_type=popup_theme' );
+}
 
 add_action( 'admin_menu', 'popmake_admin_submenu_pages' );
 
@@ -160,15 +135,28 @@ function popmake_is_admin_page() {
 		return false;
 	}
 
+	// when editing pages, $typenow isn't set until later!
+	if ( empty( $typenow ) ) {
+		// try to pick it up from the query string
+		if ( ! empty( $_GET['post'] ) ) {
+			$post    = get_post( $_GET['post'] );
+			$typenow = $post->post_type;
+		} // try to pick it up from the quick edit AJAX post
+		elseif ( ! empty( $_POST['post_ID'] ) ) {
+			$post    = get_post( $_POST['post_ID'] );
+			$typenow = $post->post_type;
+		}
+	}
+
 	if ( 'popup' == $typenow || 'popup_theme' == $typenow ) {
 		return true;
 	}
-	
+
 	$popmake_admin_pages = apply_filters( 'popmake_admin_pages', array(
 		$popmake_popup_themes_page,
 		$popmake_settings_page,
 		$popmake_tools_page,
-		$popmake_extensions_page
+		$popmake_extensions_page,
 	) );
 
 	// TODO Replace this whole function using the global $hook_suffix which is what add_submenu_page returns.
