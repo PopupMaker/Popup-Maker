@@ -288,6 +288,42 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 		</td>
 	</tr>
 	<tr>
+		<th scope="row"><?php _e( 'Disable Repositioning', 'popup-maker' ); ?></th>
+		<td><?php
+			$disable_reposition = popmake_get_popup_display( $popup_id, 'disable_reposition', false );
+			switch ( $disable_reposition ) {
+				case 'true':
+				case true:
+				case 1:
+					$disable_reposition = true;
+					break;
+				default:
+					$disable_reposition = false;
+					break;
+			} ?>
+			<input type="checkbox" value="1" name="popup_display_disable_reposition" id="popup_display_disable_reposition" <?php checked( $disable_reposition, 1 ); ?>/>
+			<label for="popup_display_disable_reposition" class="description"><?php _e( 'This will disable automatic repositioning of the popup on window resizing.', 'popup-maker' ); ?></label>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row"><?php _e( 'Fixed Postioning', 'popup-maker' ); ?></th>
+		<td><?php
+			$position_fixed = popmake_get_popup_display( $popup_id, 'position_fixed', false );
+			switch ( $position_fixed ) {
+				case 'true':
+				case true:
+				case 1:
+					$position_fixed = true;
+					break;
+				default:
+					$position_fixed = false;
+					break;
+			} ?>
+			<input type="checkbox" value="1" name="popup_display_position_fixed" id="popup_display_position_fixed" <?php checked( $position_fixed, 1 ); ?>/>
+			<label for="popup_display_position_fixed" class="description"><?php _e( 'Checking this sets the positioning of the popup to fixed.', 'popup-maker' ); ?></label>
+		</td>
+	</tr>
+	<tr>
 		<th scope="row">
 			<label for="popup_display_location"><?php _e( 'Location', 'popup-maker' ); ?></label>
 		</th>
@@ -302,24 +338,6 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 			</select>
 
 			<p class="description"><?php _e( 'Choose where the popup will be displayed.', 'popup-maker' ); ?></p>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row"><?php _e( 'Fixed Postioning', 'popup-maker' ); ?></th>
-		<td><?php
-			$position_fixed = popmake_get_popup_display( $popup_id, 'position_fixed', false );
-			switch( $position_fixed ) {
-				case 'true':
-				case true:
-				case 1:
-					$position_fixed = true;
-					break;
-				default:
-					$position_fixed = false;
-					break;
-			} ?>
-			<input type="checkbox" value="1" name="popup_display_position_fixed" id="popup_display_position_fixed" <?php checked( $position_fixed, 1 ); ?>/>
-			<label for="popup_display_position_fixed" class="description"><?php _e( 'Checking this sets the positioning of the popup to fixed.', 'popup-maker' ); ?></label>
 		</td>
 	</tr>
 	<tr class="top">
@@ -394,7 +412,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 		       step="1"
 			/>
 		<span class="range-value-unit regular-text">px</span>
-		
+
 		<p class="description"><?php printf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Right', 'popup-maker' ) ) ); ?></p>
 	</td>
 	</tr><?php

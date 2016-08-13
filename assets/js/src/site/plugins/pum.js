@@ -46,13 +46,16 @@ var PUM;
                     settings.theme_id = popmake_default_theme;
                 }
 
-                $(window).on('resize', function () {
-                    if ($popup.hasClass('pum-active') || $popup.find('.popmake.active').length) {
-                        $.fn.popmake.utilities.throttle(setTimeout(function () {
-                            $popup.popmake('reposition');
-                        }, 25), 500, false);
-                    }
-                });
+                if (settings.meta.display.disable_reposition === undefined) {
+                    $(window).on('resize', function () {
+                        if ($popup.hasClass('pum-active') || $popup.find('.popmake.active').length) {
+                            $.fn.popmake.utilities.throttle(setTimeout(function () {
+                                $popup.popmake('reposition');
+                            }, 25), 500, false);
+                        }
+                    });
+                }
+
 
                 if (typeof popmake_powered_by === 'string' && popmake_powered_by !== '') {
                     $popup.popmake('getContent').append($(popmake_powered_by));

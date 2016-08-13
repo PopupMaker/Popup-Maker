@@ -119,6 +119,13 @@ class Popmake_Popup_Fields extends Popmake_Fields {
 					'std'         => false,
 					'priority'    => 12,
 				),
+				'disable_reposition'           => array(
+					'label'       => __( 'Disable Repositioning', 'popup-maker' ),
+					'description' => __( 'This will disable automatic repositioning of the popup on window resizing.', 'popup-maker' ),
+					'type'        => 'checkbox',
+					'std'         => false,
+					'priority'    => 13,
+				),
 				'position_fixed'            => array(
 					'label'       => __( 'Fixed Postioning', 'popup-maker' ),
 					'description' => __( 'Checking this sets the positioning of the popup to fixed.', 'popup-maker' ),
