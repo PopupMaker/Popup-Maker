@@ -296,17 +296,20 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 				}
 
 				// Sanity Check on the values not operand value.
-				foreach ( $this->conditions as $key => $condition ) {
+				foreach ( $this->conditions as $group_key => $group ) {
 
-					// The condition target doesn't exist. Lets ignore this condition.
-					if ( empty( $settings['target'] ) ) {
-						unset( $this->conditions[ $key ] );
-						continue;
-					}
+					foreach ( $group as $key => $condition ) {
 
-					// The not operand value is missing, set it to false.
-					if ( ! isset ( $condition['not_operand'] ) ) {
-						$this->conditions[ $key ]['not_operand'] = false;
+						// The condition target doesn't exist. Lets ignore this condition.
+						if ( empty( $condition['target'] ) ) {
+							unset( $this->conditions[ $group_key ][ $key ] );
+							continue;
+						}
+
+						// The not operand value is missing, set it to false.
+						if ( ! isset ( $condition['not_operand'] ) ) {
+							$this->conditions[ $group_key ][ $key ]['not_operand'] = false;
+						}
 					}
 				}
 			}
