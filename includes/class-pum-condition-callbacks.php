@@ -33,6 +33,11 @@ class PUM_Condition_Callbacks {
 					return true;
 				}
 				break;
+			case 'template':
+				if ( is_page() && is_page_template( $settings['selected'] ) ) {
+					return true;
+				}
+				break;
 		}
 
 		return false;
@@ -132,9 +137,9 @@ class PUM_Condition_Callbacks {
 	 */
 	public static function post_type_tax( $settings = array() ) {
 
-		if ( strpos( $settings['target'], '_w_category' ) !== false || strpos( $settings['target'], '_wp_category' ) !== false ) {
+		if ( strpos( $settings['target'], '_w_category' ) !== false || strpos( $settings['target'], '_wo_category' ) !== false ) {
 			return self::post_type_category( $settings );
-		} elseif ( strpos( $settings['target'], '_w_post_tag' ) !== false || strpos( $settings['target'], '_wp_post_tag' ) !== false ) {
+		} elseif ( strpos( $settings['target'], '_w_post_tag' ) !== false || strpos( $settings['target'], '_wo_post_tag' ) !== false ) {
 			return self::post_type_tag( $settings );
 		}
 

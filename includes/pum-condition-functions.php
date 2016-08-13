@@ -31,34 +31,24 @@ function pum_generate_post_type_conditions() {
 		if ( $post_type->has_archive ) {
 			$conditions[ $name . '_index' ] = array(
 				'group'    => __( 'General', 'popup-maker' ),
-				'name'     => sprintf(
-					_x( '%s Archive', 'condition: post type plural label ie. Posts: All', 'popup-maker' ),
-					$post_type->labels->name
-				),
+				'name'     => sprintf( _x( '%s Archive', 'condition: post type plural label ie. Posts: All', 'popup-maker' ), $post_type->labels->name ),
 				'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
 				'priority' => 5,
 			);
 		}
-		$conditions[ $name . '_all' ]    = array(
+
+		$conditions[ $name . '_all' ] = array(
 			'group'    => $post_type->labels->name,
-			'name'     => sprintf(
-				_x( 'All %s', 'condition: post type plural label ie. Posts: All', 'popup-maker' ),
-				$post_type->labels->name
-			),
+			'name'     => sprintf( _x( 'All %s', 'condition: post type plural label ie. Posts: All', 'popup-maker' ), $post_type->labels->name ),
 			'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
 		);
+
 		$conditions[ $name . '_selected' ] = array(
 			'group'    => $post_type->labels->name,
-			'name'     => sprintf(
-				_x( '%s: Selected', 'condition: post type plural label ie. Posts: Selected', 'popup-maker' ),
-				$post_type->labels->name
-			),
+			'name'     => sprintf( _x( '%s: Selected', 'condition: post type plural label ie. Posts: Selected', 'popup-maker' ), $post_type->labels->name ),
 			'fields'   => array(
 				'selected' => array(
-					'placeholder' => sprintf(
-						_x( 'Select %s.', 'condition: post type plural label ie. Select Posts', 'popup-maker' ),
-						strtolower( $post_type->labels->name )
-					),
+					'placeholder' => sprintf( _x( 'Select %s.', 'condition: post type plural label ie. Select Posts', 'popup-maker' ), strtolower( $post_type->labels->name ) ),
 					'type'        => 'postselect',
 					'post_type'   => $name,
 					'multiple'    => true,
@@ -68,23 +58,40 @@ function pum_generate_post_type_conditions() {
 			),
 			'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
 		);
+
 		$conditions[ $name . '_ID' ] = array(
 			'group'    => $post_type->labels->name,
-			'name'     => sprintf(
-				_x( '%s: ID', 'condition: post type plural label ie. Posts: ID', 'popup-maker' ),
-				$post_type->labels->name
-			),
+			'name'     => sprintf( _x( '%s: ID', 'condition: post type plural label ie. Posts: ID', 'popup-maker' ), $post_type->labels->name ),
 			'fields'   => array(
 				'selected' => array(
-					'placeholder' => sprintf(
-						_x( '%s IDs: 128, 129', 'condition: post type singular label ie. Posts IDs', 'popup-maker' ),
-						strtolower( $post_type->labels->singular_name )
-					),
-					'type' => 'text',
+					'placeholder' => sprintf( _x( '%s IDs: 128, 129', 'condition: post type singular label ie. Posts IDs', 'popup-maker' ), strtolower( $post_type->labels->singular_name ) ),
+					'type'        => 'text',
 				),
 			),
 			'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
 		);
+
+		if ( $name == 'page' && ! empty( wp_get_theme()->get_page_templates() ) ) {
+			$conditions[ $name . '_template' ] = array(
+				'group'    => $post_type->labels->name,
+				'name'     => sprintf( _x( '%s: With Template', 'condition: post type plural label ie. Pages: With Template', 'popup-maker' ), $post_type->labels->name ),
+				'fields'   => array(
+					'selected' => array(
+						'type'        => 'select',
+						'select2'     => true,
+						'multiple'    => true,
+						'as_array'    => true,
+						'options'     => array_flip(
+							array_merge(
+								array( 'default' => __( 'Default', 'popup-maker' ) ),
+								wp_get_theme()->get_page_templates()
+							)
+						),
+					),
+				),
+				'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
+			);
+		}
 
 		$conditions = array_merge( $conditions, pum_generate_post_type_tax_conditions( $name ) );
 
@@ -104,20 +111,12 @@ function pum_generate_post_type_tax_conditions( $name ) {
 	$conditions = array();
 	foreach ( $taxonomies as $tax_name => $taxonomy ) {
 
-
-		$conditions[ $name . '_w_' . $tax_name ]  = array(
+		$conditions[ $name . '_w_' . $tax_name ] = array(
 			'group'    => $post_type->labels->name,
-			'name'     => sprintf(
-				_x( '%1$s: With %2$s', 'condition: post type plural and taxonomy singular label ie. Posts: With Category', 'popup-maker' ),
-				$post_type->labels->name,
-				$taxonomy->labels->singular_name
-			),
+			'name'     => sprintf( _x( '%1$s: With %2$s', 'condition: post type plural and taxonomy singular label ie. Posts: With Category', 'popup-maker' ), $post_type->labels->name, $taxonomy->labels->singular_name ),
 			'fields'   => array(
 				'selected' => array(
-					'placeholder' => sprintf(
-						_x( 'Select %s.', 'condition: post type plural label ie. Select categories', 'popup-maker' ),
-						strtolower( $taxonomy->labels->name )
-					),
+					'placeholder' => sprintf( _x( 'Select %s.', 'condition: post type plural label ie. Select categories', 'popup-maker' ), strtolower( $taxonomy->labels->name ) ),
 					'type'        => 'taxonomyselect',
 					'taxonomy'    => $tax_name,
 					'multiple'    => true,
@@ -144,26 +143,18 @@ function pum_generate_taxonomy_conditions() {
 
 	foreach ( $taxonomies as $tax_name => $taxonomy ) {
 
-		$conditions[ 'tax_' . $tax_name . '_all' ]    = array(
+		$conditions[ 'tax_' . $tax_name . '_all' ]      = array(
 			'group'    => $taxonomy->labels->name,
-			'name'     => sprintf(
-				_x( '%s: All', 'condition: taxonomy plural label ie. Categories: All', 'popup-maker' ),
-				$taxonomy->labels->name
-			),
+			'name'     => sprintf( _x( '%s: All', 'condition: taxonomy plural label ie. Categories: All', 'popup-maker' ), $taxonomy->labels->name ),
 			'callback' => array( 'PUM_Condition_Callbacks', 'taxonomy' ),
 		);
+
 		$conditions[ 'tax_' . $tax_name . '_selected' ] = array(
 			'group'    => $taxonomy->labels->name,
-			'name'     => sprintf(
-				_x( '%s: Selected', 'condition: taxonomy plural label ie. Categories: Selected', 'popup-maker' ),
-				$taxonomy->labels->name
-			),
+			'name'     => sprintf( _x( '%s: Selected', 'condition: taxonomy plural label ie. Categories: Selected', 'popup-maker' ), $taxonomy->labels->name ),
 			'fields'   => array(
 				'selected' => array(
-					'placeholder' => sprintf(
-						_x( 'Select %s.', 'condition: taxonomy plural label ie. Select Categories', 'popup-maker' ),
-						strtolower( $taxonomy->labels->name )
-					),
+					'placeholder' => sprintf( _x( 'Select %s.', 'condition: taxonomy plural label ie. Select Categories', 'popup-maker' ), strtolower( $taxonomy->labels->name ) ),
 					'type'        => 'taxonomyselect',
 					'taxonomy'    => $tax_name,
 					'multiple'    => true,
@@ -173,19 +164,14 @@ function pum_generate_taxonomy_conditions() {
 			),
 			'callback' => array( 'PUM_Condition_Callbacks', 'taxonomy' ),
 		);
-		$conditions[ 'tax_' . $tax_name . '_ID' ] = array(
+
+		$conditions[ 'tax_' . $tax_name . '_ID' ]       = array(
 			'group'    => $taxonomy->labels->name,
-			'name'     => sprintf(
-				_x( '%s: IDs', 'condition: taxonomy plural label ie. Categories: Selected', 'popup-maker' ),
-				$taxonomy->labels->name
-			),
+			'name'     => sprintf( _x( '%s: IDs', 'condition: taxonomy plural label ie. Categories: Selected', 'popup-maker' ), $taxonomy->labels->name ),
 			'fields'   => array(
 				'selected' => array(
-					'placeholder' => sprintf(
-						_x( '%s IDs: 128, 129', 'condition: taxonomy plural label ie. Category IDs', 'popup-maker' ),
-						strtolower( $taxonomy->labels->singular_name )
-					),
-					'type' => 'text',
+					'placeholder' => sprintf( _x( '%s IDs: 128, 129', 'condition: taxonomy plural label ie. Category IDs', 'popup-maker' ), strtolower( $taxonomy->labels->singular_name ) ),
+					'type'        => 'text',
 				),
 			),
 			'callback' => array( 'PUM_Condition_Callbacks', 'taxonomy' ),
@@ -204,10 +190,7 @@ function pum_generate_taxonomy_conditions() {
  * @return array
  */
 function pum_get_conditions() {
-	$conditions = array_merge(
-		pum_generate_post_type_conditions(),
-		pum_generate_taxonomy_conditions()
-	);
+	$conditions = array_merge( pum_generate_post_type_conditions(), pum_generate_taxonomy_conditions() );
 
 	$conditions['is_front_page'] = array(
 		'group'    => __( 'Pages' ),
