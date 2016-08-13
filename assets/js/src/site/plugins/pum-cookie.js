@@ -98,6 +98,7 @@ var pm_cookie, pm_remove_cookie;
                 return false;
             }
             $.pm_cookie(key, '', -1);
+            $.pm_cookie(key, '', -1, '/');
             return !$.pm_cookie(key);
         }
     };
