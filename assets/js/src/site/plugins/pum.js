@@ -249,6 +249,7 @@ var PUM;
                             $('html')
                                 .removeClass('pum-open')
                                 .removeClass('pum-open-scrollable')
+                                .removeClass('pum-open-overlay')
                                 .removeClass('pum-open-overlay-disabled')
                                 .removeClass('pum-open-fixed');
                         }
