@@ -66,11 +66,6 @@ class PUM_Freemius {
 					'account'    => false,
 					'support'    => true,
 				),
-				/*
-				'permissions' => array(
-					'newsletter' => true,
-				)
-				*/
 			) );
 		}
 
@@ -88,7 +83,7 @@ class PUM_Freemius {
 		//$this->fs()->add_filter( 'permission_list', array( $this, 'permission_list' ) );
 
 		$this->fs()->add_action( 'after_account_connection', array( $this, 'account_connection' ), 10, 2 );
-		$this->fs()->add_action( 'after_account_plan_sync', array( $this, 'plan_sync' ), 10, 2 );
+		$this->fs()->add_action( 'after_sync_cron', array( $this, 'plan_sync' ), 10, 2 );
     }
 
 
