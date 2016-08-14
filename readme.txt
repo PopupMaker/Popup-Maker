@@ -5,8 +5,8 @@ Plugin URI: https://wppopupmaker.com/?utm_source=WordPress+Page&utm_medium=Readm
 Donate link: 
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.4
-Tested up to: 4.5.3
-Stable tag: 1.4.15
+Tested up to: 4.6
+Stable tag: 1.4.16
 License: GNU Version 3 or Any Later Version
 
 Easily create attractive popups. Customize nearly every aspect of your popups, from theme & position, to targeting & cookies.
@@ -89,6 +89,18 @@ There are several common causes for this which include:
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.4.16 - 8/14/2016 =
+* Feature: New Condition: Pages: With Template. Thanks @cedmund.
+* Feature: Option to Disable reposition on window resize/scroll.
+* Improvement: Enable Visual Composer for Popups by default (VC 4.8+).
+* Improvement: Replaced usage of gif hex code with loading of an actual tracking gif to prevent security scanners from throwing false positives.
+* Improvement: Changed default analytics response with a 204 no content heading, saving the need to load & return a tracking gif.
+* Fix: Missing condition value bug fixed by adding sanity checks to conditions on get.
+* Fix: Auto Height checkbox wouldn't stay unchecked.
+* Fix: CSS class pum-open-overlay wasn't being removed from HTML element on popup close causing issues for next popup.
+* Fix: Error in JS due to shortcodes: Uncaught Error: Syntax error, unrecognized expression.
+* Fix: Issue where some custom post types not working with conditions.
 
 = v1.4.15 - 7/20/2016 =
 * Improvement: Only showed the aria-label attribute if the label will be shown.

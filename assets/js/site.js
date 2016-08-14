@@ -95,13 +95,16 @@ var PUM;
                     settings.theme_id = popmake_default_theme;
                 }
 
-                $(window).on('resize', function () {
-                    if ($popup.hasClass('pum-active') || $popup.find('.popmake.active').length) {
-                        $.fn.popmake.utilities.throttle(setTimeout(function () {
-                            $popup.popmake('reposition');
-                        }, 25), 500, false);
-                    }
-                });
+                if (settings.meta.display.disable_reposition === undefined) {
+                    $(window).on('resize', function () {
+                        if ($popup.hasClass('pum-active') || $popup.find('.popmake.active').length) {
+                            $.fn.popmake.utilities.throttle(setTimeout(function () {
+                                $popup.popmake('reposition');
+                            }, 25), 500, false);
+                        }
+                    });
+                }
+
 
                 if (typeof popmake_powered_by === 'string' && popmake_powered_by !== '') {
                     $popup.popmake('getContent').append($(popmake_powered_by));
@@ -298,6 +301,7 @@ var PUM;
                             $('html')
                                 .removeClass('pum-open')
                                 .removeClass('pum-open-scrollable')
+                                .removeClass('pum-open-overlay')
                                 .removeClass('pum-open-overlay-disabled')
                                 .removeClass('pum-open-fixed');
                         }
@@ -789,41 +793,27 @@ var PUM_Analytics;
     $.fn.popmake.conversion_trigger = null;
 
     PUM_Analytics = {
-        send: function (data, callback) {
-            var img = (new Image());
+        beacon: function (opts) {
+            var beacon = new Image();
 
-            data = $.extend({}, {
-                'action': 'pum_analytics'
-            }, data);
+            opts = $.extend(true, {}, {
+                url: pum_vars.ajaxurl || null,
+                data: {
+                    action: 'pum_analytics',
+                    _cache: (+(new Date()))
+                },
+                callback: function () {}
+            }, opts);
 
-            // Add Cache busting.
-            data._cache = (+(new Date()));
+            // Create a beacon if a url is provided
+            if (opts.url) {
+                // Attach the event handlers to the image object
+                $(beacon).on('error success load done', opts.callback);
 
-            // Method 1
-            if (callback !== undefined) {
-                img.addEventListener('load', function () {
-                    callback(data);
-                });
+                // Attach the src for the script call
+                beacon.src = opts.url + '?' + $.param(opts.data);
             }
-            img.src = pum_vars.ajaxurl + '?' + $.param(data);
-
-            return;
-            /*
-             Method 2 - True AJAX
-             $.get({
-             type: 'POST',
-             dataType: 'json',
-             url: pum_vars.ajaxurl,
-             data: data,
-             success: function (data) {
-             if (callback !== undefined) {
-             callback(data);
-             }
-             }
-             });
-             */
         }
-
     };
 
     // Only popups from the editor should fire analytics events.
@@ -840,7 +830,7 @@ var PUM_Analytics;
                 };
 
             if (data.pid > 0 && !$('body').hasClass('single-popup')) {
-                PUM_Analytics.send(data);
+                PUM_Analytics.beacon({data: data});
             }
         });
 }(jQuery, document));
@@ -1200,6 +1190,7 @@ var pm_cookie, pm_remove_cookie;
                 return false;
             }
             $.pm_cookie(key, '', -1);
+            $.pm_cookie(key, '', -1, '/');
             return !$.pm_cookie(key);
         }
     };
@@ -1416,7 +1407,7 @@ var pm_cookie, pm_remove_cookie;
                 trigger_selector;
 
 
-            if (settings.extra_selectors !== '') {
+            if (settings.extra_selectors && settings.extra_selectors !== '') {
                 trigger_selectors.push(settings.extra_selectors);
             }
 

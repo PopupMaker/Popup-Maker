@@ -16,39 +16,39 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n\n"
 
-#: includes/admin/admin-pages.php:32, includes/admin/admin-pages.php:33, includes/admin/admin-pages.php:108, includes/admin/admin-setup.php:24, includes/admin/popups/class-metabox-cookies.php:69, includes/admin/popups/class-metabox-triggers.php:66
+#: includes/admin/admin-pages.php:30, includes/admin/admin-pages.php:30, includes/admin/admin-pages.php:83, includes/admin/admin-setup.php:24, includes/admin/popups/class-metabox-cookies.php:69, includes/admin/popups/class-metabox-triggers.php:66
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/admin-pages.php:41, includes/admin/admin-pages.php:42, includes/admin/admin-pages.php:109
+#: includes/admin/admin-pages.php:32, includes/admin/admin-pages.php:32, includes/admin/admin-pages.php:84
 msgid "Tools"
 msgstr ""
 
-#: includes/admin/admin-pages.php:50, includes/admin/admin-pages.php:51, includes/admin/admin-pages.php:107
+#: includes/admin/admin-pages.php:34, includes/admin/admin-pages.php:34, includes/admin/admin-pages.php:82
 msgid "Extend"
 msgstr ""
 
-#: includes/admin/admin-pages.php:58, includes/admin/admin-pages.php:59
+#: includes/admin/admin-pages.php:36, includes/admin/admin-pages.php:36
 msgid "Popup Themes"
 msgstr ""
 
-#: includes/admin/admin-pages.php:100
+#: includes/admin/admin-pages.php:75
 msgid "All Popups"
 msgstr ""
 
-#: includes/admin/admin-pages.php:101
+#: includes/admin/admin-pages.php:76
 msgid "Add New"
 msgstr ""
 
-#: includes/admin/admin-pages.php:102
+#: includes/admin/admin-pages.php:77
 msgid "All Themes"
 msgstr ""
 
-#: includes/admin/admin-pages.php:103, includes/admin/popups/dashboard-columns.php:43, includes/class-pum-conditions.php:74
+#: includes/admin/admin-pages.php:78, includes/admin/popups/dashboard-columns.php:43, includes/class-pum-conditions.php:74
 msgid "Categories"
 msgstr ""
 
-#: includes/admin/admin-pages.php:104, includes/admin/popups/dashboard-columns.php:39, includes/class-pum-conditions.php:75
+#: includes/admin/admin-pages.php:79, includes/admin/popups/dashboard-columns.php:39, includes/class-pum-conditions.php:75
 msgid "Tags"
 msgstr ""
 
@@ -386,47 +386,47 @@ msgstr ""
 msgid "Show all tags"
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:20, includes/class-popmake-popup-fields.php:202
+#: includes/admin/popups/metabox-close-fields.php:20, includes/class-popmake-popup-fields.php:209
 msgid "Close Text"
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:23, includes/class-popmake-popup-fields.php:203, includes/class-popmake-popup-theme-fields.php:295, includes/class-popmake-popup-theme-fields.php:297, includes/defaults.php:156
+#: includes/admin/popups/metabox-close-fields.php:23, includes/class-popmake-popup-fields.php:210, includes/class-popmake-popup-theme-fields.php:295, includes/class-popmake-popup-theme-fields.php:297, includes/defaults.php:156
 msgid "CLOSE"
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:25, includes/class-popmake-popup-fields.php:204
+#: includes/admin/popups/metabox-close-fields.php:25, includes/class-popmake-popup-fields.php:211
 msgid "Use this to override the default text set in the popup theme."
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:35, includes/class-popmake-popup-fields.php:209
+#: includes/admin/popups/metabox-close-fields.php:35, includes/class-popmake-popup-fields.php:216
 msgid "Close Button Delay"
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:49, includes/class-popmake-popup-fields.php:210
+#: includes/admin/popups/metabox-close-fields.php:49, includes/class-popmake-popup-fields.php:217
 msgid "This delays the display of the close button."
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:57, includes/class-popmake-popup-fields.php:220, includes/shortcodes/class-pum-shortcode-popup.php:218
+#: includes/admin/popups/metabox-close-fields.php:57, includes/class-popmake-popup-fields.php:227, includes/shortcodes/class-pum-shortcode-popup.php:218
 msgid "Click Overlay to Close"
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:60, includes/class-popmake-popup-fields.php:221, includes/shortcodes/class-pum-shortcode-popup.php:219
+#: includes/admin/popups/metabox-close-fields.php:60, includes/class-popmake-popup-fields.php:228, includes/shortcodes/class-pum-shortcode-popup.php:219
 msgid "Checking this will cause popup to close when user clicks on overlay."
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:69, includes/class-popmake-popup-fields.php:227
+#: includes/admin/popups/metabox-close-fields.php:69, includes/class-popmake-popup-fields.php:234
 msgid "Press ESC to Close"
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:72, includes/class-popmake-popup-fields.php:228
+#: includes/admin/popups/metabox-close-fields.php:72, includes/class-popmake-popup-fields.php:235
 msgid "Checking this will cause popup to close when user presses ESC key."
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:81, includes/class-popmake-popup-fields.php:234
+#: includes/admin/popups/metabox-close-fields.php:81, includes/class-popmake-popup-fields.php:241
 msgid "Press F4 to Close"
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:84, includes/class-popmake-popup-fields.php:235
+#: includes/admin/popups/metabox-close-fields.php:84, includes/class-popmake-popup-fields.php:242
 msgid "Checking this will cause popup to close when user presses F4 key."
 msgstr ""
 
@@ -538,60 +538,68 @@ msgstr ""
 msgid "This enables other popups to remain open."
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:292, includes/admin/themes/metabox-close-fields.php:92, includes/class-popmake-popup-fields.php:130, includes/class-popmake-popup-theme-fields.php:331, includes/shortcodes/class-pum-shortcode-popup.php:135
-msgid "Location"
+#: includes/admin/popups/metabox-display-fields.php:291, includes/class-popmake-popup-fields.php:123
+msgid "Disable Repositioning"
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:304, includes/class-popmake-popup-fields.php:131, includes/shortcodes/class-pum-shortcode-popup.php:136
-msgid "Choose where the popup will be displayed."
+#: includes/admin/popups/metabox-display-fields.php:305, includes/class-popmake-popup-fields.php:124
+msgid "This will disable automatic repositioning of the popup on window resizing."
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:308, includes/class-popmake-popup-fields.php:123
+#: includes/admin/popups/metabox-display-fields.php:309, includes/class-popmake-popup-fields.php:130
 msgid "Fixed Postioning"
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:322, includes/class-popmake-popup-fields.php:124
+#: includes/admin/popups/metabox-display-fields.php:323, includes/class-popmake-popup-fields.php:131
 msgid "Checking this sets the positioning of the popup to fixed."
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:327, includes/admin/popups/metabox-display-fields.php:341, includes/admin/themes/metabox-close-fields.php:111, includes/class-popmake-popup-fields.php:138, includes/class-popmake-popup-fields.php:139, includes/class-popmake-popup-theme-fields.php:339, includes/input-options.php:129, includes/shortcodes/class-pum-shortcode-popup.php:143, includes/shortcodes/class-pum-shortcode-popup.php:144
+#: includes/admin/popups/metabox-display-fields.php:328, includes/admin/themes/metabox-close-fields.php:92, includes/class-popmake-popup-fields.php:137, includes/class-popmake-popup-theme-fields.php:331, includes/shortcodes/class-pum-shortcode-popup.php:135
+msgid "Location"
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:340, includes/class-popmake-popup-fields.php:138, includes/shortcodes/class-pum-shortcode-popup.php:136
+msgid "Choose where the popup will be displayed."
+msgstr ""
+
+#: includes/admin/popups/metabox-display-fields.php:345, includes/admin/popups/metabox-display-fields.php:359, includes/admin/themes/metabox-close-fields.php:111, includes/class-popmake-popup-fields.php:145, includes/class-popmake-popup-fields.php:146, includes/class-popmake-popup-theme-fields.php:339, includes/input-options.php:129, includes/shortcodes/class-pum-shortcode-popup.php:143, includes/shortcodes/class-pum-shortcode-popup.php:144
 msgid "Top"
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:341, includes/admin/popups/metabox-display-fields.php:360, includes/admin/popups/metabox-display-fields.php:379, includes/admin/popups/metabox-display-fields.php:398, includes/class-popmake-popup-fields.php:139, includes/class-popmake-popup-fields.php:150, includes/class-popmake-popup-fields.php:161, includes/class-popmake-popup-fields.php:172, includes/shortcodes/class-pum-shortcode-popup.php:144, includes/shortcodes/class-pum-shortcode-popup.php:155, includes/shortcodes/class-pum-shortcode-popup.php:166, includes/shortcodes/class-pum-shortcode-popup.php:177
+#: includes/admin/popups/metabox-display-fields.php:359, includes/admin/popups/metabox-display-fields.php:378, includes/admin/popups/metabox-display-fields.php:397, includes/admin/popups/metabox-display-fields.php:416, includes/class-popmake-popup-fields.php:146, includes/class-popmake-popup-fields.php:157, includes/class-popmake-popup-fields.php:168, includes/class-popmake-popup-fields.php:179, includes/shortcodes/class-pum-shortcode-popup.php:144, includes/shortcodes/class-pum-shortcode-popup.php:155, includes/shortcodes/class-pum-shortcode-popup.php:166, includes/shortcodes/class-pum-shortcode-popup.php:177
 msgctxt "Screen Edge: top, bottom"
 msgid "Distance from the %s edge of the screen."
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:346, includes/admin/popups/metabox-display-fields.php:360, includes/admin/themes/metabox-close-fields.php:145, includes/class-popmake-popup-fields.php:149, includes/class-popmake-popup-fields.php:150, includes/class-popmake-popup-theme-fields.php:359, includes/input-options.php:131, includes/shortcodes/class-pum-shortcode-popup.php:154, includes/shortcodes/class-pum-shortcode-popup.php:155
+#: includes/admin/popups/metabox-display-fields.php:364, includes/admin/popups/metabox-display-fields.php:378, includes/admin/themes/metabox-close-fields.php:145, includes/class-popmake-popup-fields.php:156, includes/class-popmake-popup-fields.php:157, includes/class-popmake-popup-theme-fields.php:359, includes/input-options.php:131, includes/shortcodes/class-pum-shortcode-popup.php:154, includes/shortcodes/class-pum-shortcode-popup.php:155
 msgid "Bottom"
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:365, includes/admin/popups/metabox-display-fields.php:379, includes/admin/themes/metabox-close-fields.php:128, includes/class-popmake-popup-fields.php:160, includes/class-popmake-popup-fields.php:161, includes/class-popmake-popup-theme-fields.php:349, includes/input-options.php:85, includes/input-options.php:130, includes/shortcodes/class-pum-shortcode-popup.php:165, includes/shortcodes/class-pum-shortcode-popup.php:166
+#: includes/admin/popups/metabox-display-fields.php:383, includes/admin/popups/metabox-display-fields.php:397, includes/admin/themes/metabox-close-fields.php:128, includes/class-popmake-popup-fields.php:167, includes/class-popmake-popup-fields.php:168, includes/class-popmake-popup-theme-fields.php:349, includes/input-options.php:85, includes/input-options.php:130, includes/shortcodes/class-pum-shortcode-popup.php:165, includes/shortcodes/class-pum-shortcode-popup.php:166
 msgid "Left"
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:384, includes/admin/popups/metabox-display-fields.php:398, includes/admin/themes/metabox-close-fields.php:162, includes/class-popmake-popup-fields.php:171, includes/class-popmake-popup-fields.php:172, includes/class-popmake-popup-theme-fields.php:369, includes/input-options.php:87, includes/input-options.php:132, includes/shortcodes/class-pum-shortcode-popup.php:176, includes/shortcodes/class-pum-shortcode-popup.php:177
+#: includes/admin/popups/metabox-display-fields.php:402, includes/admin/popups/metabox-display-fields.php:416, includes/admin/themes/metabox-close-fields.php:162, includes/class-popmake-popup-fields.php:178, includes/class-popmake-popup-fields.php:179, includes/class-popmake-popup-theme-fields.php:369, includes/input-options.php:87, includes/input-options.php:132, includes/shortcodes/class-pum-shortcode-popup.php:176, includes/shortcodes/class-pum-shortcode-popup.php:177
 msgid "Right"
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:407
+#: includes/admin/popups/metabox-display-fields.php:425
 msgid "Z Index"
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:411, includes/class-popmake-popup-fields.php:182
+#: includes/admin/popups/metabox-display-fields.php:429, includes/class-popmake-popup-fields.php:189
 msgid "Overlay Z-Index"
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:416, includes/class-popmake-popup-fields.php:183
+#: includes/admin/popups/metabox-display-fields.php:434, includes/class-popmake-popup-fields.php:190
 msgid "Change the z-index layer level for the overlay."
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:421, includes/class-popmake-popup-fields.php:191
+#: includes/admin/popups/metabox-display-fields.php:439, includes/class-popmake-popup-fields.php:198
 msgid "Popup Z-Index"
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:426, includes/class-popmake-popup-fields.php:192
+#: includes/admin/popups/metabox-display-fields.php:444, includes/class-popmake-popup-fields.php:199
 msgid "Change the z-index layer level for the popup."
 msgstr ""
 
@@ -939,7 +947,7 @@ msgstr ""
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/class-popmake-fields.php:174, includes/class-popmake-popup-fields.php:105, includes/class-popmake-popup-fields.php:217, includes/shortcodes/class-pum-shortcode-popup.php:205
+#: includes/class-popmake-fields.php:174, includes/class-popmake-popup-fields.php:105, includes/class-popmake-popup-fields.php:224, includes/shortcodes/class-pum-shortcode-popup.php:205
 msgid "ms"
 msgstr ""
 
@@ -979,15 +987,15 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: includes/class-pum-freemius.php:102
+#: includes/class-pum-freemius.php:97
 msgid "Usage Statistics"
 msgstr ""
 
-#: includes/class-pum-freemius.php:103
+#: includes/class-pum-freemius.php:98
 msgid "Popup & Theme Counts, Open Counts"
 msgstr ""
 
-#: includes/class-pum-freemius.php:126
+#: includes/class-pum-freemius.php:121
 msgid "Allow %3$sPopup Maker%4$s​ to collect some usage data with %2$s to make the plugin even more awesome. If you skip this, that's okay! ​%3$sPopup Maker%4$s will still work just fine."
 msgstr ""
 
@@ -1517,84 +1525,93 @@ msgctxt "Post Type Singular: Popup, Theme"
 msgid "%1$s submitted."
 msgstr ""
 
-#: includes/pum-condition-functions.php:35
+#: includes/pum-condition-functions.php:34
 msgctxt "condition: post type plural label ie. Posts: All"
 msgid "%s Archive"
 msgstr ""
 
-#: includes/pum-condition-functions.php:45
+#: includes/pum-condition-functions.php:42
 msgctxt "condition: post type plural label ie. Posts: All"
 msgid "All %s"
 msgstr ""
 
-#: includes/pum-condition-functions.php:53
+#: includes/pum-condition-functions.php:48
 msgctxt "condition: post type plural label ie. Posts: Selected"
 msgid "%s: Selected"
 msgstr ""
 
-#: includes/pum-condition-functions.php:59
+#: includes/pum-condition-functions.php:51
 msgctxt "condition: post type plural label ie. Select Posts"
 msgid "Select %s."
 msgstr ""
 
-#: includes/pum-condition-functions.php:74
+#: includes/pum-condition-functions.php:64
 msgctxt "condition: post type plural label ie. Posts: ID"
 msgid "%s: ID"
 msgstr ""
 
-#: includes/pum-condition-functions.php:80
+#: includes/pum-condition-functions.php:67
 msgctxt "condition: post type singular label ie. Posts IDs"
 msgid "%s IDs: 128, 129"
 msgstr ""
 
-#: includes/pum-condition-functions.php:111
+#: includes/pum-condition-functions.php:77
+msgctxt "condition: post type plural label ie. Pages: With Template"
+msgid "%s: With Template"
+msgstr ""
+
+#: includes/pum-condition-functions.php:86
+msgid "Default"
+msgstr ""
+
+#: includes/pum-condition-functions.php:116
 msgctxt "condition: post type plural and taxonomy singular label ie. Posts: With Category"
 msgid "%1$s: With %2$s"
 msgstr ""
 
-#: includes/pum-condition-functions.php:118
+#: includes/pum-condition-functions.php:119
 msgctxt "condition: post type plural label ie. Select categories"
 msgid "Select %s."
 msgstr ""
 
-#: includes/pum-condition-functions.php:150
+#: includes/pum-condition-functions.php:148
 msgctxt "condition: taxonomy plural label ie. Categories: All"
 msgid "%s: All"
 msgstr ""
 
-#: includes/pum-condition-functions.php:158
+#: includes/pum-condition-functions.php:154
 msgctxt "condition: taxonomy plural label ie. Categories: Selected"
 msgid "%s: Selected"
 msgstr ""
 
-#: includes/pum-condition-functions.php:164
+#: includes/pum-condition-functions.php:157
 msgctxt "condition: taxonomy plural label ie. Select Categories"
 msgid "Select %s."
 msgstr ""
 
-#: includes/pum-condition-functions.php:179
+#: includes/pum-condition-functions.php:170
 msgctxt "condition: taxonomy plural label ie. Categories: Selected"
 msgid "%s: IDs"
 msgstr ""
 
-#: includes/pum-condition-functions.php:185
+#: includes/pum-condition-functions.php:173
 msgctxt "condition: taxonomy plural label ie. Category IDs"
 msgid "%s IDs: 128, 129"
 msgstr ""
 
-#: includes/pum-condition-functions.php:214
+#: includes/pum-condition-functions.php:197
 msgid "Home Page"
 msgstr ""
 
-#: includes/pum-condition-functions.php:221
+#: includes/pum-condition-functions.php:204
 msgid "Blog Index"
 msgstr ""
 
-#: includes/pum-condition-functions.php:228
+#: includes/pum-condition-functions.php:211
 msgid "Search Pages"
 msgstr ""
 
-#: includes/pum-condition-functions.php:234
+#: includes/pum-condition-functions.php:217
 msgid "404 Pages"
 msgstr ""
 
