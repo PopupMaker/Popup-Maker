@@ -7,6 +7,8 @@
 class PUM_Condition_Callbacks {
 
 	/**
+	 * Checks if this is one of the selected post_type items.
+	 *
 	 * @param array $settings
 	 *
 	 * @return bool
@@ -14,10 +16,10 @@ class PUM_Condition_Callbacks {
 	public static function post_type( $settings = array() ) {
 		global $post;
 
-		$target = explode( '_', $settings['target'] );
-
-		$post_type = $target[0];
-		$modifier  = $target[1];
+		// Everything prior to the last _ should represent the post_type.
+		$post_type = implode( '_', explode( '_', $settings['target'], - 1 ) );
+		// Modifier should be only one string after last _
+		$modifier = array_pop( explode( '_', $settings['target'] ) );
 
 		switch ( $modifier ) {
 			case 'all':
@@ -44,21 +46,30 @@ class PUM_Condition_Callbacks {
 	}
 
 	/**
+	 * Checks if this is one of the selected taxonomy term.
+	 *
 	 * @param array $settings
 	 *
 	 * @return bool
 	 */
 	public static function taxonomy( $settings = array() ) {
 
-		if ( strpos( $settings['target'], 'tax_category' ) !== false ) {
+		$target = explode( '_', $settings['target'] );
+
+		// Remove the tax_ prefix.
+		array_shift( $target );
+
+		// Assign the last key as the modifier _all, _selected
+		$modifier = array_pop( $target );
+
+		// Whatever is left is the taxonomy.
+		$taxonomy = implode( '_', $target );
+
+		if ( $taxonomy == 'category' ) {
 			return self::category( $settings );
-		} elseif ( strpos( $settings['target'], 'tax_post_tag' ) !== false ) {
+		} elseif ( $taxonomy == 'post_tag' ) {
 			return self::post_tag( $settings );
 		}
-
-		$taxonomy = str_replace( array( 'tax_', '_all', '_selected' ), array( '', '', '' ), $settings['target'] );
-
-		$modifier = str_replace( "tax_{$taxonomy}_", '', $settings['target'] );
 
 		switch ( $modifier ) {
 			case 'all':
@@ -79,39 +90,16 @@ class PUM_Condition_Callbacks {
 	}
 
 	/**
-	 * @param array $settings
+	 * Checks if this is one of the selected categories.
 	 *
-	 * @return bool
-	 */
-	public static function post_tag( $settings = array() ) {
-
-		$modifier = str_replace( 'tax_post_tag_', '', $settings['target'] );
-
-		switch ( $modifier ) {
-			case 'all':
-				if ( is_tag() ) {
-					return true;
-				}
-				break;
-
-			case 'selected':
-				if ( is_tag( wp_parse_id_list( $settings['selected'] ) ) ) {
-					return true;
-				}
-				break;
-		}
-
-		return false;
-	}
-
-	/**
 	 * @param array $settings
 	 *
 	 * @return bool
 	 */
 	public static function category( $settings = array() ) {
 
-		$modifier = str_replace( 'tax_category_', '', $settings['target'] );
+		// Assign the last key as the modifier _all, _selected
+		$modifier = array_pop( explode( '_', $settings['target'] ) );
 
 		switch ( $modifier ) {
 			case 'all':
@@ -131,115 +119,97 @@ class PUM_Condition_Callbacks {
 	}
 
 	/**
+	 * Checks if this is one of the selected tags.
+	 *
+	 * @param array $settings
+	 *
+	 * @return bool
+	 */
+	public static function post_tag( $settings = array() ) {
+
+		// Assign the last key as the modifier _all, _selected
+		$modifier = array_pop( explode( '_', $settings['target'] ) );
+
+		switch ( $modifier ) {
+			case 'all':
+				if ( is_tag() ) {
+					return true;
+				}
+				break;
+
+			case 'selected':
+				if ( is_tag( wp_parse_id_list( $settings['selected'] ) ) ) {
+					return true;
+				}
+				break;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks if the post_type has the selected categories.
+	 *
 	 * @param array $settings
 	 *
 	 * @return bool
 	 */
 	public static function post_type_tax( $settings = array() ) {
 
-		if ( strpos( $settings['target'], '_w_category' ) !== false || strpos( $settings['target'], '_wo_category' ) !== false ) {
+		$target = explode( '_w_', $settings['target'] );
+
+		// First key is the post type.
+		$post_type = array_shift( $target );
+
+		// Last Key is the taxonomy
+		$taxonomy = array_pop( $target );
+
+		if ( $taxonomy == 'category' ) {
 			return self::post_type_category( $settings );
-		} elseif ( strpos( $settings['target'], '_w_post_tag' ) !== false || strpos( $settings['target'], '_wo_post_tag' ) !== false ) {
+		} elseif ( $taxonomy == 'post_tag' ) {
 			return self::post_type_tag( $settings );
 		}
 
-		if ( strpos( $settings['target'], '_w_' ) ) {
-			$target = explode( '_w_', $settings['target'] );
-			$w_wo   = 'w';
-		} elseif ( strpos( $settings['target'], '_wo_' ) ) {
-			$target = explode( '_wo_', $settings['target'] );
-			$w_wo   = 'wo';
-		} else {
-			return false;
-		}
-
-		$post_type = $target[0];
-		$taxonomy  = $target[1];
-
-		switch ( $w_wo ) {
-			case 'w':
-				if ( is_singular( $post_type ) && has_term( wp_parse_id_list( $settings['selected'] ), $taxonomy ) ) {
-					return true;
-				}
-				break;
-
-			case 'wo':
-				if ( is_singular( $post_type ) && ! has_term( wp_parse_id_list( $settings['selected'] ), $taxonomy ) ) {
-					return true;
-				}
-				break;
+		if ( is_singular( $post_type ) && has_term( wp_parse_id_list( $settings['selected'] ), $taxonomy ) ) {
+			return true;
 		}
 
 		return false;
 	}
 
 	/**
+	 * Checks if the post_type has the selected categories.
+	 *
 	 * @param array $settings
 	 *
 	 * @return bool
 	 */
 	public static function post_type_category( $settings = array() ) {
 
-		if ( strpos( $settings['target'], '_w_' ) ) {
-			$target = explode( '_w_', $settings['target'] );
-			$w_wo   = 'w';
-		} elseif ( strpos( $settings['target'], '_wo_' ) ) {
-			$target = explode( '_wo_', $settings['target'] );
-			$w_wo   = 'wo';
-		} else {
-			return false;
-		}
+		// First key is the post type.
+		$post_type = array_shift( explode( '_w_', $settings['target'] ) );
 
-		$post_type = $target[0];
-
-		switch ( $w_wo ) {
-			case 'w':
-				if ( is_singular( $post_type ) && has_category( wp_parse_id_list( $settings['selected'] ) ) ) {
-					return true;
-				}
-				break;
-
-			case 'wo':
-				if ( is_singular( $post_type ) && ! has_category( wp_parse_id_list( $settings['selected'] ) ) ) {
-					return true;
-				}
-				break;
+		if ( is_singular( $post_type ) && has_category( wp_parse_id_list( $settings['selected'] ) ) ) {
+			return true;
 		}
 
 		return false;
 	}
 
 	/**
+	 * Checks is a post_type has the selected tags.
+	 *
 	 * @param array $settings
 	 *
 	 * @return bool
 	 */
 	public static function post_type_tag( $settings = array() ) {
 
-		if ( strpos( $settings['target'], '_w_' ) ) {
-			$target = explode( '_w_', $settings['target'] );
-			$w_wo   = 'w';
-		} elseif ( strpos( $settings['target'], '_wo_' ) ) {
-			$target = explode( '_wo_', $settings['target'] );
-			$w_wo   = 'wo';
-		} else {
-			return false;
-		}
+		// First key is the post type.
+		$post_type = array_shift( explode( '_w_', $settings['target'] ) );
 
-		$post_type = $target[0];
-
-		switch ( $w_wo ) {
-			case 'w':
-				if ( is_singular( $post_type ) && has_tag( wp_parse_id_list( $settings['selected'] ) ) ) {
-					return true;
-				}
-				break;
-
-			case 'wo':
-				if ( is_singular( $post_type ) && ! has_tag( wp_parse_id_list( $settings['selected'] ) ) ) {
-					return true;
-				}
-				break;
+		if ( is_singular( $post_type ) && has_tag( wp_parse_id_list( $settings['selected'] ) ) ) {
+			return true;
 		}
 
 		return false;
