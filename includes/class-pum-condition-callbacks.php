@@ -16,10 +16,13 @@ class PUM_Condition_Callbacks {
 	public static function post_type( $settings = array() ) {
 		global $post;
 
-		// Everything prior to the last _ should represent the post_type.
-		$post_type = implode( '_', explode( '_', $settings['target'], - 1 ) );
-		// Modifier should be only one string after last _
-		$modifier = array_pop( explode( '_', $settings['target'] ) );
+		$target = explode( '_', $settings['target'] );
+
+		// Modifier should be the last key.
+		$modifier = array_pop( $target );
+
+		// Post type is the remaining keys combined.
+		$post_type = implode( '_', $target );
 
 		switch ( $modifier ) {
 			case 'all':
@@ -98,8 +101,10 @@ class PUM_Condition_Callbacks {
 	 */
 	public static function category( $settings = array() ) {
 
+		$target = explode( '_', $settings['target'] );
+
 		// Assign the last key as the modifier _all, _selected
-		$modifier = array_pop( explode( '_', $settings['target'] ) );
+		$modifier = array_pop( $target );
 
 		switch ( $modifier ) {
 			case 'all':
@@ -127,8 +132,10 @@ class PUM_Condition_Callbacks {
 	 */
 	public static function post_tag( $settings = array() ) {
 
+		$target = explode( '_', $settings['target'] );
+
 		// Assign the last key as the modifier _all, _selected
-		$modifier = array_pop( explode( '_', $settings['target'] ) );
+		$modifier = array_pop( $target );
 
 		switch ( $modifier ) {
 			case 'all':
@@ -186,8 +193,10 @@ class PUM_Condition_Callbacks {
 	 */
 	public static function post_type_category( $settings = array() ) {
 
+		$target = explode( '_w_', $settings['target'] );
+
 		// First key is the post type.
-		$post_type = array_shift( explode( '_w_', $settings['target'] ) );
+		$post_type = array_shift( $target );
 
 		if ( is_singular( $post_type ) && has_category( wp_parse_id_list( $settings['selected'] ) ) ) {
 			return true;
@@ -205,8 +214,10 @@ class PUM_Condition_Callbacks {
 	 */
 	public static function post_type_tag( $settings = array() ) {
 
+		$target = explode( '_w_', $settings['target'] );
+
 		// First key is the post type.
-		$post_type = array_shift( explode( '_w_', $settings['target'] ) );
+		$post_type = array_shift( $target );
 
 		if ( is_singular( $post_type ) && has_tag( wp_parse_id_list( $settings['selected'] ) ) ) {
 			return true;
