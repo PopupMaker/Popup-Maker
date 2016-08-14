@@ -4,7 +4,7 @@ Author URI: https://wppopupmaker.com/?utm_source=WordPress+Page&utm_medium=Readm
 Plugin URI: https://wppopupmaker.com/?utm_source=WordPress+Page&utm_medium=Readme+Link&utm_campaign=Plugin+URI
 Donate link: 
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
-Requires at least: 3.4
+Requires at least: 3.6
 Tested up to: 4.6
 Stable tag: 1.4.16
 License: GNU Version 3 or Any Later Version
