@@ -71,7 +71,9 @@ function pum_generate_post_type_conditions() {
 			'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
 		);
 
-		if ( $name == 'page' && ! empty( wp_get_theme()->get_page_templates() ) ) {
+		$templates = wp_get_theme()->get_page_templates();
+
+		if ( $name == 'page' && ! empty( $templates ) ) {
 			$conditions[ $name . '_template' ] = array(
 				'group'    => $post_type->labels->name,
 				'name'     => sprintf( _x( '%s: With Template', 'condition: post type plural label ie. Pages: With Template', 'popup-maker' ), $post_type->labels->name ),
@@ -84,7 +86,7 @@ function pum_generate_post_type_conditions() {
 						'options'     => array_flip(
 							array_merge(
 								array( 'default' => __( 'Default', 'popup-maker' ) ),
-								wp_get_theme()->get_page_templates()
+								$templates
 							)
 						),
 					),
