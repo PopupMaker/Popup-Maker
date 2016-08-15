@@ -1555,63 +1555,63 @@ msgctxt "condition: post type singular label ie. Posts IDs"
 msgid "%s IDs: 128, 129"
 msgstr ""
 
-#: includes/pum-condition-functions.php:77
+#: includes/pum-condition-functions.php:79
 msgctxt "condition: post type plural label ie. Pages: With Template"
 msgid "%s: With Template"
 msgstr ""
 
-#: includes/pum-condition-functions.php:86
+#: includes/pum-condition-functions.php:88
 msgid "Default"
 msgstr ""
 
-#: includes/pum-condition-functions.php:116
+#: includes/pum-condition-functions.php:118
 msgctxt "condition: post type plural and taxonomy singular label ie. Posts: With Category"
 msgid "%1$s: With %2$s"
 msgstr ""
 
-#: includes/pum-condition-functions.php:119
+#: includes/pum-condition-functions.php:121
 msgctxt "condition: post type plural label ie. Select categories"
 msgid "Select %s."
 msgstr ""
 
-#: includes/pum-condition-functions.php:148
+#: includes/pum-condition-functions.php:150
 msgctxt "condition: taxonomy plural label ie. Categories: All"
 msgid "%s: All"
 msgstr ""
 
-#: includes/pum-condition-functions.php:154
+#: includes/pum-condition-functions.php:156
 msgctxt "condition: taxonomy plural label ie. Categories: Selected"
 msgid "%s: Selected"
 msgstr ""
 
-#: includes/pum-condition-functions.php:157
+#: includes/pum-condition-functions.php:159
 msgctxt "condition: taxonomy plural label ie. Select Categories"
 msgid "Select %s."
 msgstr ""
 
-#: includes/pum-condition-functions.php:170
+#: includes/pum-condition-functions.php:172
 msgctxt "condition: taxonomy plural label ie. Categories: Selected"
 msgid "%s: IDs"
 msgstr ""
 
-#: includes/pum-condition-functions.php:173
+#: includes/pum-condition-functions.php:175
 msgctxt "condition: taxonomy plural label ie. Category IDs"
 msgid "%s IDs: 128, 129"
 msgstr ""
 
-#: includes/pum-condition-functions.php:197
+#: includes/pum-condition-functions.php:199
 msgid "Home Page"
 msgstr ""
 
-#: includes/pum-condition-functions.php:204
+#: includes/pum-condition-functions.php:206
 msgid "Blog Index"
 msgstr ""
 
-#: includes/pum-condition-functions.php:211
+#: includes/pum-condition-functions.php:213
 msgid "Search Pages"
 msgstr ""
 
-#: includes/pum-condition-functions.php:217
+#: includes/pum-condition-functions.php:219
 msgid "404 Pages"
 msgstr ""
 
