@@ -25,6 +25,12 @@ class PUM_Condition_Callbacks {
 		$post_type = implode( '_', $target );
 
 		switch ( $modifier ) {
+			case 'index':
+				if ( is_post_type_archive( $post_type ) ) {
+					return true;
+				}
+				break;
+
 			case 'all':
 				// Checks for valid post type, if $post_type is page, then include the front page as most users simply expect this.
 				if ( is_singular( $post_type ) || ( $post_type == 'page' && is_front_page() ) ) {
