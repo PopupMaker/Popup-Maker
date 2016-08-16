@@ -26,7 +26,7 @@ class PUM_Ajax {
 	 * Creates and returns a 1x1 tracking gif to the browser.
 	 */
 	public static function serve_pixel() {
-		$gif = static::get_file( POPMAKE_DIR . 'assets/images/beacon.gif' );
+		$gif = PUM_Ajax::get_file( POPMAKE_DIR . 'assets/images/beacon.gif' );
 		header( 'Content-Type: image/gif' );
 		header( 'Content-Length: ' . strlen( $gif ) );
 		exit( $gif );
