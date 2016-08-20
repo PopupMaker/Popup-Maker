@@ -216,7 +216,7 @@ function popmake_emodal_init() {
 		add_filter( 'popmake_shortcode_popup_default_atts', 'popmake_emodal_shortcode_popup_default_atts', 10, 2 );
 		add_filter( 'popmake_shortcode_data_attr', 'popmake_emodal_shortcode_data_attr', 10, 2 );
 
-		add_filter( 'popmake_popup_is_loadable', 'popmake_emodal_popup_is_loadable', 20, 2 );
+		add_filter( 'pum_popup_is_loadable', 'popmake_emodal_popup_is_loadable', 20, 2 );
 	}
 }
 
@@ -225,6 +225,9 @@ add_action( 'init', 'popmake_emodal_init' );
 
 function popmake_emodal_popup_is_loadable( $return, $popup_id ) {
 	global $post;
+	if ( empty( $post ) || ! isset( $post->ID ) ) {
+		return $return;
+	}
 	$easy_modal_id = get_post_meta( $popup_id, 'popup_old_easy_modal_id', true );
 	$post_modals   = get_post_meta( $post->ID, 'easy-modal_post_modals', true );
 	if ( ! $easy_modal_id || empty( $post_modals ) || ! in_array( $easy_modal_id, $post_modals ) ) {
@@ -329,3 +332,5 @@ function popmake_emodal_shortcode_data_attr( $data, $attr ) {
 
 	return $data;
 }
+
+
