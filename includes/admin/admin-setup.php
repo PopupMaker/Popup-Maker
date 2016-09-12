@@ -19,7 +19,7 @@ add_filter( 'user_has_cap', 'popmake_prevent_default_theme_deletion', 10, 3 );
 
 function popmake_plugin_action_links( $links, $file ) {
 	if ( $file == plugin_basename( POPMAKE ) ) {
-		$settings_page_url   = admin_url( 'edit.php?post_type=popup&page=settings' );
+		$settings_page_url   = admin_url( 'edit.php?post_type=popup&page=pum-settings' );
 		$plugin_action_links = apply_filters( 'popmake_action_links', array(
 			'settings' => '<a href="'. $settings_page_url .'">'.__( 'Settings', 'popup-maker' ).'</a>',
 			'extensions' => '<a href="https://wppopupmaker.com/extensions?utm_source=WP+Admin+Plugins+Page&utm_medium=Text+Link&utm_campaign=Extensions" target="_blank">' . __( 'Extensions', 'popup-maker' ) . '</a>',

@@ -114,7 +114,7 @@ function popmake_emodal_admin_init() {
 		return;
 	}
 	popmake_emodal_v2_import();
-	wp_redirect( admin_url( 'edit.php?post_type=popup&page=tools&imported=1' ), 302 );
+	wp_redirect( admin_url( 'edit.php?post_type=popup&page=pum-tools&imported=1' ), 302 );
 }
 
 add_action( 'admin_init', 'popmake_emodal_admin_init' );
@@ -126,7 +126,7 @@ add_action( 'admin_init', 'popmake_emodal_admin_init' );
  * @return      void
  */
 function popmake_tools_sysinfo_display() { ?>
-	<form action="<?php echo esc_url( admin_url( 'edit.php?post_type=popup&page=tools&tab=system_info' ) ); ?>" method="post" dir="ltr">
+	<form action="<?php echo esc_url( admin_url( 'edit.php?post_type=popup&page=pum-tools&tab=system_info' ) ); ?>" method="post" dir="ltr">
 		<textarea style="min-height: 350px; width: 100%; display: block;" readonly="readonly" onclick="this.focus(); this.select()" id="system-info-textarea" name="popmake-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'popup-maker' ); ?>"><?php echo popmake_tools_sysinfo_get(); ?></textarea>
 		<p class="submit">
 			<input type="hidden" name="popmake_action" value="popup_sysinfo" />
