@@ -1,25 +1,51 @@
 (function ($, document, undefined) {
     "use strict";
 
-    $.fn.popmake.methods.addCookie = function (type) {
-        // Method calling logic
-        if ($.fn.popmake.cookies[type]) {
-            return $.fn.popmake.cookies[type].apply(this, Array.prototype.slice.call(arguments, 1));
-        }
-        if (window.console) {
-            console.warn('Cookie type ' + type + ' does not exist.');
-        }
-        return this;
-    };
+    $.extend($.fn.popmake.methods, {
+        addCookie: function (type) {
+            // Method calling logic
+            if ($.fn.popmake.cookies[type]) {
+                return $.fn.popmake.cookies[type].apply(this, Array.prototype.slice.call(arguments, 1));
+            }
+            if (window.console) {
+                console.warn('Cookie type ' + type + ' does not exist.');
+            }
+            return this;
+        },
+        setCookie: function (settings) {
+            $.pm_cookie(
+                settings.name,
+                true,
+                settings.session ? null : settings.time,
+                settings.path ? '/' : null
+            );
+        },
+        checkCookies: function (settings) {
+            var i;
 
-    $.fn.popmake.methods.setCookie = function (settings) {
-        $.pm_cookie(
-            settings.name,
-            true,
-            settings.session ? null : settings.time,
-            settings.path ? '/' : null
-        );
-    };
+            if (settings.cookie === undefined || settings.cookie.name === undefined || settings.cookie.name === null) {
+                return false;
+            }
+
+            switch (typeof settings.cookie.name) {
+            case 'object':
+            case 'array':
+                for (i = 0; settings.cookie.name.length > i; i += 1) {
+                    if ($.pm_cookie(settings.cookie.name[i]) !== undefined) {
+                        return true;
+                    }
+                }
+                break;
+            case 'string':
+                if ($.pm_cookie(settings.cookie.name) !== undefined) {
+                    return true;
+                }
+                break;
+            }
+
+            return false;
+        }
+    });
 
     $.fn.popmake.cookies = {
         on_popup_open: function (settings) {
