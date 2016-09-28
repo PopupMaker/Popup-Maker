@@ -157,7 +157,7 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		 */
 		function get_classes( $element = 'overlay' ) {
 			$classes = array(
-				'overlay' => array(
+				'overlay'   => array(
 					'pum',
 					'pum-overlay',
 					'pum-theme-' . $this->get_theme_id(),
@@ -168,15 +168,15 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 					'popmake', // Backward Compatibility
 					'theme-' . $this->get_theme_id(), // Backward Compatibility
 				),
-				'title' => array(
+				'title'     => array(
 					'pum-title',
 					'popmake-title', // Backward Compatibility
 				),
-				'content' => array(
+				'content'   => array(
 					'pum-content',
 					'popmake-content', // Backward Compatibility
 				),
-				'close' => array(
+				'close'     => array(
 					'pum-close',
 					'popmake-close' // Backward Compatibility
 				),
@@ -285,46 +285,6 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		}
 
 		/**
-		 * @return mixed|void
-		 */
-		function get_conditions() {
-			if ( ! $this->conditions ) {
-				$this->conditions = get_post_meta( $this->ID, 'popup_conditions', true );
-
-				if ( ! $this->conditions ) {
-					$this->conditions = array();
-				}
-
-				// Sanity Check on the values not operand value.
-				foreach ( $this->conditions as $group_key => $group ) {
-
-					foreach ( $group as $key => $condition ) {
-
-						// The condition target doesn't exist. Lets ignore this condition.
-						if ( empty( $condition['target'] ) ) {
-							unset( $this->conditions[ $group_key ][ $key ] );
-							continue;
-						}
-
-						// The not operand value is missing, set it to false.
-						if ( ! isset ( $condition['not_operand'] ) ) {
-							$this->conditions[ $group_key ][ $key ]['not_operand'] = false;
-						}
-					}
-				}
-			}
-
-			return apply_filters( 'pum_popup_get_conditions', $this->conditions, $this->ID );
-		}
-
-		/**
-		 * @return mixed|void
-		 */
-		function has_conditions() {
-			return boolval( count ( $this->get_conditions() ) );
-		}
-
-		/**
 		 * Returns all or single display settings.
 		 *
 		 * @param null $key
@@ -407,8 +367,14 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 						'close'      => $this->get_close(),
 						// Added here for backward compatibility in extensions.
 						'click_open' => popmake_get_popup_click_open( $this->ID ),
-					)
+					),
 				);
+
+				$filters = array( 'js_only' => true );
+
+				if ( $this->has_conditions( $filters ) ) {
+					$data_attr['conditions'] = $this->get_conditions( $filters );
+				}
 
 				// Deprecated
 				$this->data_attr = apply_filters( 'popmake_get_the_popup_data_attr', $data_attr, $this->ID );
@@ -423,7 +389,7 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		 */
 		public function close_text() {
 			$text = '&#215;';
-			
+
 			/** @deprecated */
 			$text = apply_filters( 'popmake_popup_default_close_text', $text, $this->ID );
 
@@ -458,6 +424,84 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		}
 
 		/**
+		 * @return mixed|void
+		 */
+		function get_conditions( $filters = array() ) {
+
+			$filters = wp_parse_args( $filters, array(
+				'php_only' => null,
+				'js_only'  => null,
+			) );
+
+
+			if ( ! $this->conditions ) {
+				$this->conditions = get_post_meta( $this->ID, 'popup_conditions', true );
+
+				if ( ! $this->conditions ) {
+					$this->conditions = array();
+				}
+			}
+
+			$conditions = $this->conditions;
+
+			// Sanity Check on the values not operand value.
+			foreach ( $conditions as $group_key => $group ) {
+
+				foreach ( $group as $key => $condition ) {
+
+					if ( $this->exclude_condition( $condition, $filters ) ) {
+						unset( $conditions[ $group_key ][ $key ] );
+						if ( empty( $conditions[ $group_key ] ) ) {
+							unset( $conditions[ $group_key ] );
+							break;
+						}
+						continue;
+					}
+
+					$conditions[ $group_key ][ $key ] = $this->parse_condition( $condition );
+				}
+			}
+
+			return apply_filters( 'pum_popup_get_conditions', $conditions, $this->ID );
+		}
+
+		public function parse_condition( $condition ) {
+			// The not operand value is missing, set it to false.
+			if ( ! isset ( $condition['not_operand'] ) ) {
+				$condition['not_operand'] = false;
+			}
+
+			return $condition;
+		}
+
+		public function exclude_condition( $condition, $filters = array() ) {
+
+			$exclude = false;
+
+			$condition_args = PUM_Conditions::instance()->get_condition( $condition['target'] );
+
+			// The condition target doesn't exist. Lets ignore this condition.
+			if ( empty( $condition['target'] ) ) {
+				return true;
+			}
+
+			if ( $filters['js_only'] && ! $condition_args->is_advanced() ) {
+				return true;
+			} elseif ( $filters['php_only'] && $condition_args->is_advanced() && $condition_args->has_callback( false ) ) {
+				return true;
+			}
+
+			return $exclude;
+		}
+
+		/**
+		 * @return mixed|void
+		 */
+		public function has_conditions( $filters = array() ) {
+			return boolval( count( $this->get_conditions( $filters ) ) );
+		}
+
+		/**
 		 * Returns whether or not the popup is visible in the loop.
 		 *
 		 * @return bool
@@ -472,10 +516,12 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 				// Published/private
 			}
 
-			if ( $this->has_conditions() ) {
+			$filters = array( 'php_only' => true );
+
+			if ( $this->has_conditions( $filters ) ) {
 
 				// All Groups Must Return True. Break if any is false and set $loadable to false.
-				foreach ( $this->get_conditions() as $group => $conditions ) {
+				foreach ( $this->get_conditions( $filters ) as $group => $conditions ) {
 
 					// Groups are false until a condition proves true.
 					$group_check = false;
@@ -533,10 +579,13 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		 * @return integer
 		 */
 		public function get_open_count( $which = 'current' ) {
-			switch( $which ) {
-				case 'current' : return absint( $this->get_meta( 'popup_open_count', true ) );
-				case 'total'   : return absint( $this->get_meta( 'popup_open_count_total', true ) );
+			switch ( $which ) {
+				case 'current' :
+					return absint( $this->get_meta( 'popup_open_count', true ) );
+				case 'total'   :
+					return absint( $this->get_meta( 'popup_open_count_total', true ) );
 			}
+
 			return 0;
 		}
 
@@ -545,14 +594,14 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 
 			// Set the current open count
 			$current = $this->get_open_count();
-			if( ! $current ) {
+			if ( ! $current ) {
 				$current = 0;
 			};
 			$current = $current + 1;
 
 			// Set the total open count since creation.
 			$total = $this->get_open_count( 'total' );
-			if( ! $total ) {
+			if ( ! $total ) {
 				$total = 0;
 			}
 			$total = $total + 1;
@@ -588,7 +637,7 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 			// Log the reset time and count.
 			add_post_meta( $this->ID, 'popup_open_count_reset', array(
 				'timestamp' => current_time( 'timestamp', 0 ),
-				'count' => absint( $this->get_open_count( 'current' ) )
+				'count'     => absint( $this->get_open_count( 'current' ) ),
 			) );
 
 			update_post_meta( $this->ID, 'popup_open_count', 0 );
@@ -616,8 +665,8 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 			 *
 			 * @return bool
 			 */
-			function cmp ( $a, $b ) {
-				return ( float ) $a['timestamp'] < ( float )$b['timestamp'];
+			function cmp( $a, $b ) {
+				return ( float ) $a['timestamp'] < ( float ) $b['timestamp'];
 			}
 
 			usort( $resets, "cmp" );
