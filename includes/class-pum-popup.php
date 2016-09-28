@@ -487,7 +487,7 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 
 			if ( $filters['js_only'] && ! $condition_args->is_advanced() ) {
 				return true;
-			} elseif ( $filters['php_only'] && $condition_args->is_advanced() && $condition_args->has_callback( false ) ) {
+			} elseif ( $filters['php_only'] && $condition_args->is_advanced() ) {
 				return true;
 			}
 
