@@ -37,6 +37,14 @@ class PUM_Condition extends PUM_Fields {
 	 * @param array $args
 	 */
 	public function __construct( $args = array() ) {
+		$args = wp_parse_args( $args, array(
+			'id' => '',
+			'group' => '',
+			'name' => '',
+			'labels' => array(),
+			'advanced' => false,
+		) );
+
 		$this->id = $args['id'];
 
         if ( ! empty( $args['labels'] ) && is_array( $args['labels'] ) ) {
@@ -76,8 +84,16 @@ class PUM_Condition extends PUM_Fields {
         return $this->labels;
     }
 
-    public function has_callback() {
-        return ! empty( $this->args['callback'] ) ? true : false;
+    public function has_callback( $valid_callback = true ) {
+    	if ( empty( $this->args['callback'] ) ) {
+    		return false;
+	    }
+
+        return $valid_callback ? is_callable( $this->args['callback'] ) : true;
+    }
+
+    public function is_advanced() {
+	    return $this->args['advanced'] != false;
     }
 
     public function get_callback() {
