@@ -1,42 +1,18 @@
 (function ($, document, undefined) {
     "use strict";
 
-    $.fn.popmake.methods.addTrigger = function (type) {
-        // Method calling logic
-        if ($.fn.popmake.triggers[type]) {
-            return $.fn.popmake.triggers[type].apply(this, Array.prototype.slice.call(arguments, 1));
-        }
-        if (window.console) {
-            console.warn('Trigger type ' + type + ' does not exist.');
-        }
-        return this;
-    };
-
-    $.fn.popmake.methods.checkCookies = function (settings) {
-        var i;
-
-        if (settings.cookie === undefined || settings.cookie.name === undefined || settings.cookie.name === null) {
-            return false;
-        }
-
-        switch (typeof settings.cookie.name) {
-        case 'object':
-        case 'array':
-            for (i = 0; settings.cookie.name.length > i; i += 1) {
-                if ($.pm_cookie(settings.cookie.name[i]) !== undefined) {
-                    return true;
-                }
+    $.extend($.fn.popmake.methods, {
+        addTrigger: function (type) {
+            // Method calling logic
+            if ($.fn.popmake.triggers[type]) {
+                return $.fn.popmake.triggers[type].apply(this, Array.prototype.slice.call(arguments, 1));
             }
-            break;
-        case 'string':
-            if ($.pm_cookie(settings.cookie.name) !== undefined) {
-                return true;
+            if (window.console) {
+                console.warn('Trigger type ' + type + ' does not exist.');
             }
-            break;
+            return this;
         }
-
-        return false;
-    };
+    });
 
     $.fn.popmake.triggers = {
         auto_open: function (settings) {
@@ -50,8 +26,8 @@
                     return;
                 }
 
-                // If cookie exists return.
-                if ($popup.popmake('checkCookies', settings)) {
+                // If cookie exists or conditions fail return.
+                if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
                     return;
                 }
 
@@ -92,8 +68,8 @@
                         return;
                     }
 
-                    // If cookie exists return.
-                    if ($popup.popmake('checkCookies', settings)) {
+                    // If cookie exists or conditions fail return.
+                    if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
                         return;
                     }
 
