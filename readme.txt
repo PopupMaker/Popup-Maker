@@ -90,6 +90,12 @@ There are several common causes for this which include:
 
 == Changelog ==
 
+= v1.4.19 - 9/30/2016 =
+* Improvement: Added support for JS (advanced) conditions & condition processing after checking for cookies.
+* Improvement: Upgraded from jQuery-Cookie (modified) to JS-Cookie (modified) for more flexibility.
+* Fix: Added prefix to admin pages to prevent conflicts.
+* Fix: Removed usage of deprecated filter.
+
 = v1.4.18 - 8/15/2016 =
 * Fix: Bug with PHP 5.2 compatibility.
 * Fix: Added missing post_type index condition callback.
@@ -100,7 +106,7 @@ There are several common causes for this which include:
 = v1.4.16 - 8/14/2016 =
 * Feature: New Condition: Pages: With Template. Thanks @cedmund.
 * Feature: Option to Disable reposition on window resize/scroll.
-* Improvement: Enable Visual Composer for Popups by default (VC 4.8+).
+* Improvement: Enable Visual Composer for Popups by default (VC 4.8+). Thanks @NoahjChampion.
 * Improvement: Replaced usage of gif hex code with loading of an actual tracking gif to prevent security scanners from throwing false positives.
 * Improvement: Changed default analytics response with a 204 no content heading, saving the need to load & return a tracking gif.
 * Fix: Missing condition value bug fixed by adding sanity checks to conditions on get.
