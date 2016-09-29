@@ -4,106 +4,165 @@
  *
  * Defines the pm_cookie & pm_remove_cookie global functions.
  */
-var pm_cookie, pm_remove_cookie;
-(function ($, document, undefined) {
+var pm_cookie, pm_cookie_json, pm_remove_cookie;
+(function ($) {
     "use strict";
 
-    $.fn.popmake.cookie = {
-        defaults: {},
-        raw: false,
-        json: true,
-        pluses: /\+/g,
-        encode: function (s) {
-            return $.fn.popmake.cookie.raw ? s : encodeURIComponent(s);
-        },
-        decode: function (s) {
-            return $.fn.popmake.cookie.raw ? s : decodeURIComponent(s);
-        },
-        stringifyCookieValue: function (value) {
-            return $.fn.popmake.cookie.encode($.fn.popmake.cookie.json ? JSON.stringify(value) : String(value));
-        },
-        parseCookieValue: function (s) {
-            if (s.indexOf('"') === 0) {
-                // This is a quoted cookie as according to RFC2068, unescape...
-                s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
-            }
+    function cookie (converter) {
+        if (converter === undefined) {
+            converter = function () {
+            };
+        }
 
-            try {
-                // Replace server-side written pluses with spaces.
-                // If we can't decode the cookie, ignore it, it's unusable.
-                // If we can't parse the cookie, ignore it, it's unusable.
-                s = decodeURIComponent(s.replace($.fn.popmake.cookie.pluses, ' '));
-                return $.fn.popmake.cookie.json ? JSON.parse(s) : s;
-            } catch (ignore) {
-            }
-        },
-        read: function (s, converter) {
-            var value = $.fn.popmake.cookie.raw ? s : $.fn.popmake.cookie.parseCookieValue(s);
-            return $.isFunction(converter) ? converter(value) : value;
-        },
-        process: function (key, value, expires, path) {
-            var result = key ? undefined : {},
-                t = new Date(),
-                cookies = document.cookie ? document.cookie.split('; ') : [],
-                parts,
-                name,
-                cookie,
-                i,
-                l;
-            // Write
-
-            if (value !== undefined && !$.isFunction(value)) {
-
-                switch (typeof expires) {
-                case 'number':
-                    t.setTime(+t + expires * 864e+5);
-                    expires = t;
-                    break;
-                case 'string':
-                    t.setTime($.fn.popmake.utilities.strtotime("+" + expires) * 1000);
-                    expires = t;
-                    break;
-                }
-
-                document.cookie = [
-                    $.fn.popmake.cookie.encode(key), '=', $.fn.popmake.cookie.stringifyCookieValue(value),
-                    expires ? '; expires=' + expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
-                    path ? '; path=' + path : ''
-                ].join('');
+        function api(key, value, attributes) {
+            var result,
+                expires = new Date();
+            if (typeof document === 'undefined') {
                 return;
             }
 
-            for (i = 0, l = cookies.length; i < l; i += 1) {
-                parts = cookies[i].split('=');
-                name = $.fn.popmake.cookie.decode(parts.shift());
-                cookie = parts.join('=');
+            // Write
 
-                if (key && key === name) {
-                    // If second argument (value) is a function it's a converter...
-                    result = $.fn.popmake.cookie.read(cookie, value);
+            if (arguments.length > 1) {
+                attributes = $.extend({
+                    path: '/'
+                }, api.defaults, attributes);
+
+                switch (typeof attributes.expires) {
+                case 'number':
+                    expires.setMilliseconds(expires.getMilliseconds() + attributes.expires * 864e+5);
+                    attributes.expires = expires;
+                    break;
+                case 'string':
+                    expires.setTime($.fn.popmake.utilities.strtotime("+" + attributes.expires) * 1000);
+                    attributes.expires = expires;
                     break;
                 }
 
-                // Prevent storing a cookie that we couldn't decode.
-                cookie = $.fn.popmake.cookie.read(cookie);
-                if (!key && cookie !== undefined) {
-                    result[name] = cookie;
+                try {
+                    result = JSON.stringify(value);
+                    if (/^[\{\[]/.test(result)) {
+                        value = result;
+                    }
+                } catch (e) {}
+
+                if (!converter.write) {
+                    value = encodeURIComponent(String(value))
+                        .replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g, decodeURIComponent);
+                } else {
+                    value = converter.write(value, key);
+                }
+
+                key = encodeURIComponent(String(key));
+                key = key.replace(/%(23|24|26|2B|5E|60|7C)/g, decodeURIComponent);
+                key = key.replace(/[\(\)]/g, escape);
+
+                return (document.cookie = [
+                    key, '=', value,
+                    attributes.expires ? '; expires=' + attributes.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
+                    attributes.path ? '; path=' + attributes.path : '',
+                    attributes.domain ? '; domain=' + attributes.domain : '',
+                    attributes.secure ? '; secure' : ''
+                ].join(''));
+            }
+
+            // Read
+
+            if (!key) {
+                result = {};
+            }
+
+            // To prevent the for loop in the first place assign an empty array
+            // in case there are no cookies at all. Also prevents odd result when
+            // calling "get()"
+            var cookies = document.cookie ? document.cookie.split('; ') : [];
+            var rdecode = /(%[0-9A-Z]{2})+/g;
+            var i = 0;
+
+            for (; i < cookies.length; i++) {
+                var parts = cookies[i].split('=');
+                var cookie = parts.slice(1).join('=');
+
+                if (cookie.charAt(0) === '"') {
+                    cookie = cookie.slice(1, -1);
+                }
+
+                try {
+                    var name = parts[0].replace(rdecode, decodeURIComponent);
+                    cookie = converter.read ?
+                        converter.read(cookie, name) : converter(cookie, name) ||
+                    cookie.replace(rdecode, decodeURIComponent);
+
+                    if (this.json) {
+                        try {
+                            cookie = JSON.parse(cookie);
+                        } catch (e) {
+                        }
+                    }
+
+                    if (key === name) {
+                        result = cookie;
+                        break;
+                    }
+
+                    if (!key) {
+                        result[name] = cookie;
+                    }
+                } catch (e) {
                 }
             }
 
             return result;
-        },
-        remove: function (key) {
-            if ($.pm_cookie(key) === undefined) {
-                return false;
-            }
-            $.pm_cookie(key, '', -1);
-            $.pm_cookie(key, '', -1, '/');
-            return !$.pm_cookie(key);
         }
-    };
+
+        api.set = api;
+        api.get = function (key) {
+            return api.call(api, key);
+        };
+        api.getJSON = function () {
+            return api.apply({
+                json: true
+            }, [].slice.call(arguments));
+        };
+        api.defaults = {};
+
+        api.remove = function (key, attributes) {
+            api(key, '', $.extend({}, attributes, {
+                expires: -1
+            }));
+        };
+
+        /**
+         * Polyfill for jQuery Cookie argument arrangement.
+         *
+         * @param key
+         * @param value
+         * @param attributes || expires (deprecated)
+         * @param path (deprecated)
+         * @returns {*}
+         */
+        api.process = function (key, value, attributes, path) {
+            if (arguments.length > 3 && typeof arguments[2] !== 'object' && value !== undefined) {
+                return api.apply(api, [key, value, {
+                    expires: attributes,
+                    path: path
+                }]);
+            } else {
+                return api.apply(api, [].slice.call(arguments, [0, 2]));
+            }
+        };
+
+        api.withConverter = $.fn.popmake.cookie;
+
+        return api;
+    }
+
+    $.extend($.fn.popmake, {
+        cookie: cookie()
+    });
 
     pm_cookie = $.pm_cookie = $.fn.popmake.cookie.process;
+    pm_cookie_json = $.pm_cookie_json = $.fn.popmake.cookie.getJSON;
     pm_remove_cookie = $.pm_remove_cookie = $.fn.popmake.cookie.remove;
 
-}(jQuery, document));
+}(jQuery));
