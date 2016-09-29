@@ -36,6 +36,8 @@ function popmake_load_site_scripts() {
 	// Deprecated. No longer used. Here for older versions of some extensions.
 	wp_register_script( 'jquery-cookie', $js_dir . 'jquery.cookie' . $suffix, array( 'jquery' ), '1.4.1', true );
 
+	wp_register_script( 'mobile-detect', $js_dir . 'mobile-detect' . $suffix, null, '1.3.3', true );
+
 	wp_register_script( 'popup-maker-site', $dep_js_dir . 'site' . $suffix . '?defer', array(
 		'jquery',
 		'jquery-ui-core',
