@@ -31,10 +31,10 @@ var PUMRangeSLiders;
 
                 $slider
                     .prop({
-                        'min': min || 0,
-                        'max': force || (max && max > value) ? max : value * 1.5,
-                        'step': step || value * 1.5 / 100,
-                        'value': value
+                        min: min || 0,
+                        max: ( force || (max && max > value) ) ? max : value * 1.5,
+                        step: step || value * 1.5 / 100,
+                        value: value
                     })
                     .on('change input', function () {
                         $this.trigger('input');

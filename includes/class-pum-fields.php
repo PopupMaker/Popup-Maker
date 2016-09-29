@@ -692,6 +692,7 @@ class PUM_Fields extends Popmake_Fields {
 			'max' => 50,
 			'step' => 1,
 			'unit' => 'px',
+			'force' => true,
 			'required' => false,
 			'disabled' => false,
 		) );
@@ -720,6 +721,7 @@ class PUM_Fields extends Popmake_Fields {
 		       min="<?php esc_attr_e( $args['min'] ); ?>"
 		       max="<?php esc_attr_e( $args['max'] ); ?>"
 			   <?php if ( $args['required'] ) { echo 'required'; } ?>
+			   data-force-minmax="<?php esc_attr_e( $args['force'] ); ?>"
 			/>
 		<span class="range-value-unit regular-text"><?php esc_html_e( $args['unit'] ); ?></span><?php
 
