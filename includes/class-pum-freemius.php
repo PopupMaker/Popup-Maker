@@ -158,17 +158,16 @@ class PUM_Freemius {
 
         $this->api_call( 'new_opt_in', $args );
 
+		set_transient( 'pum_tracking_last_send', true, 3 * DAY_IN_SECONDS + 12 * HOUR_IN_SECONDS );
 	}
 
 	/**
-	 * User just opted in.
-	 *
-	 * Forward the request to our server for discount code generation.
+	 * Sync tracking data with freemius.
 	 */
 	public function plan_sync() {
 
         // Send a maximum of once per week
-        if ( get_site_transient( 'pum_tracking_last_send' ) ) {
+        if ( get_transient( 'pum_tracking_last_send' ) ) {
             return;
         }
 
@@ -176,7 +175,8 @@ class PUM_Freemius {
 
         $this->api_call( 'check_in', $args );
 
-        set_site_transient( 'pum_tracking_last_send', 3 * DAY_IN_SECONDS + 12 * HOUR_IN_SECONDS  );
+		// Twice per week.
+        set_transient( 'pum_tracking_last_send', true, 3 * DAY_IN_SECONDS + 12 * HOUR_IN_SECONDS );
     }
 
 	/**
