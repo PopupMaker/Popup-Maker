@@ -10,6 +10,9 @@
 		exit;
 	}
 
+	/**
+	 * @var array $VARS
+	 */
 	$slug = $VARS['slug'];
 	/**
 	 * @var Freemius
@@ -130,15 +133,22 @@
 			<?php else : ?>
 
 
-			$('.fs-card.fs-addon').mouseover(function(){
-				$(this).find('.fs-cta .button').addClass('button-primary');
-			});
-
-			$('.fs-card.fs-addon').mouseout(function(){
-				$(this).find('.fs-cta .button').removeClass('button-primary');
-			});
+			$('.fs-card.fs-addon')
+				.mouseover(function () {
+					$(this).find('.fs-cta .button').addClass('button-primary');
+				}).mouseout(function () {
+					$(this).find('.fs-cta .button').removeClass('button-primary');
+				});
 
 			<?php endif ?>
 		})(jQuery);
 	</script>
-<?php fs_require_template( 'powered-by.php' ) ?>
+<?php
+	$params = array(
+		'page'           => 'addons',
+		'module_id'      => $fs->get_id(),
+		'module_slug'    => $slug,
+		'module_version' => $fs->get_plugin_version(),
+	);
+	fs_require_template( 'powered-by.php', $params );
+?>

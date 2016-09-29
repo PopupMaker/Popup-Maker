@@ -47,6 +47,10 @@
 		 */
 		public $expiration;
 		/**
+		 * @var string
+		 */
+		public $secret_key;
+		/**
 		 * @var bool $is_free_localhost Defaults to true. If true, allow unlimited localhost installs with the same
 		 *      license.
 		 */
@@ -83,8 +87,12 @@
 		 * @return int
 		 */
 		function left() {
-			if ( $this->is_expired() ) {
+			if ( ! $this->is_active() || $this->is_expired() ) {
 				return 0;
+			}
+
+			if ( $this->is_unlimited() ) {
+				return 999;
 			}
 
 			return ( $this->quota - $this->activated - ( $this->is_free_localhost ? 0 : $this->activated_local ) );
@@ -113,6 +121,18 @@
 		}
 
 		/**
+		 * Check if license is not expired.
+		 *
+		 * @author Vova Feldman (@svovaf)
+		 * @since  1.2.1
+		 *
+		 * @return bool
+		 */
+		function is_valid() {
+			return ! $this->is_expired();
+		}
+
+		/**
 		 * @author Vova Feldman (@svovaf)
 		 * @since  1.0.6
 		 *
@@ -120,6 +140,16 @@
 		 */
 		function is_lifetime() {
 			return is_null( $this->expiration );
+		}
+
+		/**
+		 * @author Vova Feldman (@svovaf)
+		 * @since  1.2.0
+		 *
+		 * @return bool
+		 */
+		function is_unlimited() {
+			return is_null( $this->quota );
 		}
 
 		/**
@@ -137,8 +167,22 @@
 				$is_localhost = WP_FS__IS_LOCALHOST_FOR_SERVER;
 			}
 
+			if ( $this->is_unlimited() ) {
+				return false;
+			}
+
 			return ! ( $this->is_free_localhost && $is_localhost ) &&
 			       ( $this->quota <= $this->activated + ( $this->is_free_localhost ? 0 : $this->activated_local ) );
+		}
+
+		/**
+		 * @author Vova Feldman (@svovaf)
+		 * @since  1.2.1
+		 *
+		 * @return bool
+		 */
+		function is_active() {
+			return ( ! $this->is_cancelled );
 		}
 
 		/**
@@ -153,7 +197,7 @@
 		 * @return bool
 		 */
 		function is_features_enabled() {
-			return ( ! $this->is_block_features || ! $this->is_expired() );
+			return $this->is_active() && ( ! $this->is_block_features || ! $this->is_expired() );
 		}
 
 		/**

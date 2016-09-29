@@ -16,6 +16,9 @@
 	fs_enqueue_local_script( 'fs-postmessage', 'postmessage.js' );
 	fs_enqueue_local_style( 'fs_checkout', '/admin/common.css' );
 
+	/**
+	 * @var array $VARS
+	 */
 	$slug = $VARS['slug'];
 	$fs   = freemius( $slug );
 
@@ -74,4 +77,12 @@
 			})(jQuery);
 		</script>
 	</div>
-<?php fs_require_template( 'powered-by.php' ) ?>
+<?php
+	$params = array(
+		'page'           => 'contact',
+		'module_id'      => $fs->get_id(),
+		'module_slug'    => $slug,
+		'module_version' => $fs->get_plugin_version(),
+	);
+	fs_require_template( 'powered-by.php', $params );
+?>
