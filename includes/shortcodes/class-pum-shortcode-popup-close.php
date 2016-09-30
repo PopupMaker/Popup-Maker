@@ -58,6 +58,12 @@ class PUM_Shortcode_Popup_Close extends PUM_Shortcode {
 					'desc'        => __( 'Add additional classes for styling.', 'popup-maker' ),
 					'priority'    => 15,
 				),
+				'do_default'      => array(
+					'type'  => 'checkbox',
+					'label' => __( 'Do not prevent the default click functionality.', 'popup-maker' ),
+					'desc'  => __( 'This prevents us from disabling the browsers default action when a close button is clicked. It can be used to allow a link to a file to both close a popup and still download the file.', 'popup-maker' ),
+					'priority'    => 20,
+				),
 			)
 		);
 	}
@@ -73,6 +79,7 @@ class PUM_Shortcode_Popup_Close extends PUM_Shortcode {
 	public function handler( $atts, $content = null ) {
 		$atts = shortcode_atts( array(
 			'tag'   => 'span',
+			'do_default' => false,
 			'class' => '',
 			'classes' => '',
 		), $atts, 'popup_close' );
@@ -82,7 +89,7 @@ class PUM_Shortcode_Popup_Close extends PUM_Shortcode {
 			unset( $atts['class'] );
 		}
 
-		$return = '<' . $atts['tag'] . ' class="pum-close popmake-close' . ' ' . $atts['classes'] . '">';
+		$return = '<' . $atts['tag'] . ' class="pum-close popmake-close' . ' ' . $atts['classes'] . '" data-do-default="' . esc_attr( $atts['do_default'] ) . '">';
 		$return .= do_shortcode( $content );
 		$return .= '</' . $atts['tag'] . '>';
 

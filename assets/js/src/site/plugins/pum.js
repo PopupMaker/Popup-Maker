@@ -178,8 +178,14 @@ var PUM;
             // TODO: Move to a global $(document).on type bind. Possibly look for an inactive class to fail on.
             $close
                 .off('click.pum')
-                .on("click.pum", function (e) {
-                    e.preventDefault();
+                .on("click.pum", function (event) {
+                    var $this = $(event.target),
+                        do_default = $this.data('do-default') !== undefined && $this.data('do-default');
+
+                    if (!do_default) {
+                        event.preventDefault();
+                    }
+
                     $.fn.popmake.last_close_trigger = 'Close Button';
                     $popup.popmake('close');
                 });
