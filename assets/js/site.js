@@ -227,8 +227,14 @@ var PUM;
             // TODO: Move to a global $(document).on type bind. Possibly look for an inactive class to fail on.
             $close
                 .off('click.pum')
-                .on("click.pum", function (e) {
-                    e.preventDefault();
+                .on("click.pum", function (event) {
+                    var $this = $(event.target),
+                        do_default = $this.data('do-default') !== undefined && $this.data('do-default');
+
+                    if (!do_default) {
+                        event.preventDefault();
+                    }
+
                     $.fn.popmake.last_close_trigger = 'Close Button';
                     $popup.popmake('close');
                 });
@@ -1090,137 +1096,306 @@ var PUM_Analytics;
     };
 
 }(jQuery, document));
+(function ($, document, undefined) {
+    "use strict";
+
+    $.extend($.fn.popmake.methods, {
+        checkConditions: function () {
+            var $popup = PUM.getPopup(this),
+                settings = $popup.popmake('getSettings'),
+                // Loadable defaults to true if no conditions. Making the popup available everywhere.
+                loadable = true,
+                group_check,
+                g,
+                c,
+                group,
+                condition;
+
+            if (settings.conditions !== undefined && settings.conditions.length) {
+
+                // All Groups Must Return True. Break if any is false and set loadable to false.
+                for (g = 0; settings.conditions.length > g; g++) {
+
+                    group = settings.conditions[g];
+
+                    // Groups are false until a condition proves true.
+                    group_check = false;
+
+                    // At least one group condition must be true. Break this loop if any condition is true.
+                    for (c = 0; group.length > c; c++) {
+
+                        condition = $.extend({}, {
+                            not_operand: false
+                        }, group[c]);
+
+                        // If any condition passes, set group_check true and break.
+                        if (!condition.not_operand && $popup.popmake('checkCondition', condition)) {
+                            group_check = true;
+                            break;
+                        } else if (condition.not_operand && !$popup.popmake('checkCondition', condition)) {
+                            group_check = true;
+                            break;
+                        }
+
+                    }
+
+                    // If any group of conditions doesn't pass, popup is not loadable.
+                    if (!group_check) {
+                        loadable = false;
+                    }
+
+                }
+
+            }
+
+            return loadable;
+        },
+        checkCondition: function (settings) {
+            var condition = settings.target || null;
+
+            if ( ! condition ) {
+                console.warn('Condition type not set.');
+                return false;
+            }
+
+            // Method calling logic
+            if ($.fn.popmake.conditions[condition]) {
+                return $.fn.popmake.conditions[condition].apply(this, [settings]);
+            }
+            if (window.console) {
+                console.warn('Condition ' + condition + ' does not exist.');
+                return true;
+            }
+        }
+    });
+
+
+    $.fn.popmake.conditions = {};
+
+}(jQuery, document));
+
 /**
  * Defines the core $.popmake.cookie functions.
  * Version 1.4
  *
  * Defines the pm_cookie & pm_remove_cookie global functions.
  */
-var pm_cookie, pm_remove_cookie;
-(function ($, document, undefined) {
+var pm_cookie, pm_cookie_json, pm_remove_cookie;
+(function ($) {
     "use strict";
 
-    $.fn.popmake.cookie = {
-        defaults: {},
-        raw: false,
-        json: true,
-        pluses: /\+/g,
-        encode: function (s) {
-            return $.fn.popmake.cookie.raw ? s : encodeURIComponent(s);
-        },
-        decode: function (s) {
-            return $.fn.popmake.cookie.raw ? s : decodeURIComponent(s);
-        },
-        stringifyCookieValue: function (value) {
-            return $.fn.popmake.cookie.encode($.fn.popmake.cookie.json ? JSON.stringify(value) : String(value));
-        },
-        parseCookieValue: function (s) {
-            if (s.indexOf('"') === 0) {
-                // This is a quoted cookie as according to RFC2068, unescape...
-                s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
-            }
+    function cookie (converter) {
+        if (converter === undefined) {
+            converter = function () {
+            };
+        }
 
-            try {
-                // Replace server-side written pluses with spaces.
-                // If we can't decode the cookie, ignore it, it's unusable.
-                // If we can't parse the cookie, ignore it, it's unusable.
-                s = decodeURIComponent(s.replace($.fn.popmake.cookie.pluses, ' '));
-                return $.fn.popmake.cookie.json ? JSON.parse(s) : s;
-            } catch (ignore) {
-            }
-        },
-        read: function (s, converter) {
-            var value = $.fn.popmake.cookie.raw ? s : $.fn.popmake.cookie.parseCookieValue(s);
-            return $.isFunction(converter) ? converter(value) : value;
-        },
-        process: function (key, value, expires, path) {
-            var result = key ? undefined : {},
-                t = new Date(),
-                cookies = document.cookie ? document.cookie.split('; ') : [],
-                parts,
-                name,
-                cookie,
-                i,
-                l;
-            // Write
-
-            if (value !== undefined && !$.isFunction(value)) {
-
-                switch (typeof expires) {
-                case 'number':
-                    t.setTime(+t + expires * 864e+5);
-                    expires = t;
-                    break;
-                case 'string':
-                    t.setTime($.fn.popmake.utilities.strtotime("+" + expires) * 1000);
-                    expires = t;
-                    break;
-                }
-
-                document.cookie = [
-                    $.fn.popmake.cookie.encode(key), '=', $.fn.popmake.cookie.stringifyCookieValue(value),
-                    expires ? '; expires=' + expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
-                    path ? '; path=' + path : ''
-                ].join('');
+        function api(key, value, attributes) {
+            var result,
+                expires = new Date();
+            if (typeof document === 'undefined') {
                 return;
             }
 
-            for (i = 0, l = cookies.length; i < l; i += 1) {
-                parts = cookies[i].split('=');
-                name = $.fn.popmake.cookie.decode(parts.shift());
-                cookie = parts.join('=');
+            // Write
 
-                if (key && key === name) {
-                    // If second argument (value) is a function it's a converter...
-                    result = $.fn.popmake.cookie.read(cookie, value);
+            if (arguments.length > 1) {
+                attributes = $.extend({
+                    path: '/'
+                }, api.defaults, attributes);
+
+                switch (typeof attributes.expires) {
+                case 'number':
+                    expires.setMilliseconds(expires.getMilliseconds() + attributes.expires * 864e+5);
+                    attributes.expires = expires;
+                    break;
+                case 'string':
+                    expires.setTime($.fn.popmake.utilities.strtotime("+" + attributes.expires) * 1000);
+                    attributes.expires = expires;
                     break;
                 }
 
-                // Prevent storing a cookie that we couldn't decode.
-                cookie = $.fn.popmake.cookie.read(cookie);
-                if (!key && cookie !== undefined) {
-                    result[name] = cookie;
+                try {
+                    result = JSON.stringify(value);
+                    if (/^[\{\[]/.test(result)) {
+                        value = result;
+                    }
+                } catch (e) {}
+
+                if (!converter.write) {
+                    value = encodeURIComponent(String(value))
+                        .replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g, decodeURIComponent);
+                } else {
+                    value = converter.write(value, key);
+                }
+
+                key = encodeURIComponent(String(key));
+                key = key.replace(/%(23|24|26|2B|5E|60|7C)/g, decodeURIComponent);
+                key = key.replace(/[\(\)]/g, escape);
+
+                return (document.cookie = [
+                    key, '=', value,
+                    attributes.expires ? '; expires=' + attributes.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
+                    attributes.path ? '; path=' + attributes.path : '',
+                    attributes.domain ? '; domain=' + attributes.domain : '',
+                    attributes.secure ? '; secure' : ''
+                ].join(''));
+            }
+
+            // Read
+
+            if (!key) {
+                result = {};
+            }
+
+            // To prevent the for loop in the first place assign an empty array
+            // in case there are no cookies at all. Also prevents odd result when
+            // calling "get()"
+            var cookies = document.cookie ? document.cookie.split('; ') : [];
+            var rdecode = /(%[0-9A-Z]{2})+/g;
+            var i = 0;
+
+            for (; i < cookies.length; i++) {
+                var parts = cookies[i].split('=');
+                var cookie = parts.slice(1).join('=');
+
+                if (cookie.charAt(0) === '"') {
+                    cookie = cookie.slice(1, -1);
+                }
+
+                try {
+                    var name = parts[0].replace(rdecode, decodeURIComponent);
+                    cookie = converter.read ?
+                        converter.read(cookie, name) : converter(cookie, name) ||
+                    cookie.replace(rdecode, decodeURIComponent);
+
+                    if (this.json) {
+                        try {
+                            cookie = JSON.parse(cookie);
+                        } catch (e) {
+                        }
+                    }
+
+                    if (key === name) {
+                        result = cookie;
+                        break;
+                    }
+
+                    if (!key) {
+                        result[name] = cookie;
+                    }
+                } catch (e) {
                 }
             }
 
             return result;
-        },
-        remove: function (key) {
-            if ($.pm_cookie(key) === undefined) {
-                return false;
-            }
-            $.pm_cookie(key, '', -1);
-            $.pm_cookie(key, '', -1, '/');
-            return !$.pm_cookie(key);
         }
-    };
+
+        api.set = api;
+        api.get = function (key) {
+            return api.call(api, key);
+        };
+        api.getJSON = function () {
+            return api.apply({
+                json: true
+            }, [].slice.call(arguments));
+        };
+        api.defaults = {};
+
+        api.remove = function (key, attributes) {
+            // Clears keys with current path.
+            api(key, '', $.extend({}, attributes, {
+                expires: -1,
+                path: ''
+            }));
+            // Clears sitewide keys.
+            api(key, '', $.extend({}, attributes, {
+                expires: -1
+            }));
+        };
+
+        /**
+         * Polyfill for jQuery Cookie argument arrangement.
+         *
+         * @param key
+         * @param value
+         * @param attributes || expires (deprecated)
+         * @param path (deprecated)
+         * @returns {*}
+         */
+        api.process = function (key, value, attributes, path) {
+            if (arguments.length > 3 && typeof arguments[2] !== 'object' && value !== undefined) {
+                return api.apply(api, [key, value, {
+                    expires: attributes,
+                    path: path
+                }]);
+            } else {
+                return api.apply(api, [].slice.call(arguments, [0, 2]));
+            }
+        };
+
+        api.withConverter = $.fn.popmake.cookie;
+
+        return api;
+    }
+
+    $.extend($.fn.popmake, {
+        cookie: cookie()
+    });
 
     pm_cookie = $.pm_cookie = $.fn.popmake.cookie.process;
+    pm_cookie_json = $.pm_cookie_json = $.fn.popmake.cookie.getJSON;
     pm_remove_cookie = $.pm_remove_cookie = $.fn.popmake.cookie.remove;
 
-}(jQuery, document));
+}(jQuery));
 (function ($, document, undefined) {
     "use strict";
 
-    $.fn.popmake.methods.addCookie = function (type) {
-        // Method calling logic
-        if ($.fn.popmake.cookies[type]) {
-            return $.fn.popmake.cookies[type].apply(this, Array.prototype.slice.call(arguments, 1));
-        }
-        if (window.console) {
-            console.warn('Cookie type ' + type + ' does not exist.');
-        }
-        return this;
-    };
+    $.extend($.fn.popmake.methods, {
+        addCookie: function (type) {
+            // Method calling logic
+            if ($.fn.popmake.cookies[type]) {
+                return $.fn.popmake.cookies[type].apply(this, Array.prototype.slice.call(arguments, 1));
+            }
+            if (window.console) {
+                console.warn('Cookie type ' + type + ' does not exist.');
+            }
+            return this;
+        },
+        setCookie: function (settings) {
+            $.pm_cookie(
+                settings.name,
+                true,
+                settings.session ? null : settings.time,
+                settings.path ? '/' : null
+            );
+        },
+        checkCookies: function (settings) {
+            var i;
 
-    $.fn.popmake.methods.setCookie = function (settings) {
-        $.pm_cookie(
-            settings.name,
-            true,
-            settings.session ? null : settings.time,
-            settings.path ? '/' : null
-        );
-    };
+            if (settings.cookie === undefined || settings.cookie.name === undefined || settings.cookie.name === null) {
+                return false;
+            }
+
+            switch (typeof settings.cookie.name) {
+            case 'object':
+            case 'array':
+                for (i = 0; settings.cookie.name.length > i; i += 1) {
+                    if ($.pm_cookie(settings.cookie.name[i]) !== undefined) {
+                        return true;
+                    }
+                }
+                break;
+            case 'string':
+                if ($.pm_cookie(settings.cookie.name) !== undefined) {
+                    return true;
+                }
+                break;
+            }
+
+            return false;
+        }
+    });
 
     $.fn.popmake.cookies = {
         on_popup_open: function (settings) {
@@ -1334,42 +1509,18 @@ var pm_cookie, pm_remove_cookie;
 (function ($, document, undefined) {
     "use strict";
 
-    $.fn.popmake.methods.addTrigger = function (type) {
-        // Method calling logic
-        if ($.fn.popmake.triggers[type]) {
-            return $.fn.popmake.triggers[type].apply(this, Array.prototype.slice.call(arguments, 1));
-        }
-        if (window.console) {
-            console.warn('Trigger type ' + type + ' does not exist.');
-        }
-        return this;
-    };
-
-    $.fn.popmake.methods.checkCookies = function (settings) {
-        var i;
-
-        if (settings.cookie === undefined || settings.cookie.name === undefined || settings.cookie.name === null) {
-            return false;
-        }
-
-        switch (typeof settings.cookie.name) {
-        case 'object':
-        case 'array':
-            for (i = 0; settings.cookie.name.length > i; i += 1) {
-                if ($.pm_cookie(settings.cookie.name[i]) !== undefined) {
-                    return true;
-                }
+    $.extend($.fn.popmake.methods, {
+        addTrigger: function (type) {
+            // Method calling logic
+            if ($.fn.popmake.triggers[type]) {
+                return $.fn.popmake.triggers[type].apply(this, Array.prototype.slice.call(arguments, 1));
             }
-            break;
-        case 'string':
-            if ($.pm_cookie(settings.cookie.name) !== undefined) {
-                return true;
+            if (window.console) {
+                console.warn('Trigger type ' + type + ' does not exist.');
             }
-            break;
+            return this;
         }
-
-        return false;
-    };
+    });
 
     $.fn.popmake.triggers = {
         auto_open: function (settings) {
@@ -1383,8 +1534,8 @@ var pm_cookie, pm_remove_cookie;
                     return;
                 }
 
-                // If cookie exists return.
-                if ($popup.popmake('checkCookies', settings)) {
+                // If cookie exists or conditions fail return.
+                if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
                     return;
                 }
 
@@ -1418,26 +1569,33 @@ var pm_cookie, pm_remove_cookie;
                 .css({cursor: "pointer"});
 
             $(document)
-                .on('click.pumTrigger', trigger_selector, function (e) {
-
+                .on('click.pumTrigger', trigger_selector, function (event) {
+                    var $this = $(this),
+                        do_default = settings.do_default;
                     // If trigger is inside of the popup that it opens, do nothing.
-                    if ($popup.has(this).length > 0) {
+                    if ($popup.has($this).length > 0) {
                         return;
                     }
 
-                    // If cookie exists return.
-                    if ($popup.popmake('checkCookies', settings)) {
+                    // If cookie exists or conditions fail return.
+                    if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
                         return;
+                    }
+
+                    if ($this.data('do-default')) {
+                        do_default = $this.data('do-default');
+                    } else {
+                        do_default = $this.hasClass('do-default');
                     }
 
                     // If trigger has the class do-default we don't prevent default actions.
-                    if (!settings.do_default && !$(e.target).hasClass('do-default')) {
-                        e.preventDefault();
-                        e.stopPropagation();
+                    if (!do_default) {
+                        event.preventDefault();
+                        event.stopPropagation();
                     }
 
                     // Set the global last open trigger to the clicked element.
-                    $.fn.popmake.last_open_trigger = this;
+                    $.fn.popmake.last_open_trigger = $this;
 
                     // Open the popup.
                     $popup.popmake('open');

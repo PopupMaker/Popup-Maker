@@ -1,12 +1,12 @@
 === Popup Maker ===
-Contributors: danieliser, wppopupmaker
+Contributors: danieliser, wppopupmaker, waltmesser
 Author URI: https://wppopupmaker.com/?utm_source=WordPress+Page&utm_medium=Readme+Link&utm_campaign=Author+URI
 Plugin URI: https://wppopupmaker.com/?utm_source=WordPress+Page&utm_medium=Readme+Link&utm_campaign=Plugin+URI
 Donate link: 
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.6
 Tested up to: 4.6
-Stable tag: 1.4.18
+Stable tag: 1.4.19
 License: GNU Version 3 or Any Later Version
 
 Easily create attractive popups. Customize nearly every aspect of your popups, from theme & position, to targeting & cookies.
@@ -91,8 +91,10 @@ There are several common causes for this which include:
 == Changelog ==
 
 = v1.4.19 - 9/30/2016 =
+* Feature: Added a do_default parameter to the trigger & close shortcodes. This allows making close buttons that also download a file.
 * Improvement: Added support for JS (advanced) conditions & condition processing after checking for cookies.
 * Improvement: Upgraded from jQuery-Cookie (modified) to JS-Cookie (modified) for more flexibility.
+* Fix: Bug where color didn't update properly when first clicked in theme editor.
 * Fix: Added prefix to admin pages to prevent conflicts.
 * Fix: Removed usage of deprecated filter.
 
