@@ -478,12 +478,18 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 
 			$exclude = false;
 
-			$condition_args = PUM_Conditions::instance()->get_condition( $condition['target'] );
-
 			// The condition target doesn't exist. Lets ignore this condition.
 			if ( empty( $condition['target'] ) ) {
 				return true;
 			}
+
+			$condition_args = PUM_Conditions::instance()->get_condition( $condition['target'] );
+
+			// The condition target doesn't exist. Lets ignore this condition.
+			if ( ! $condition_args ) {
+				return true;
+			}
+
 
 			if ( $filters['js_only'] && ! $condition_args->is_advanced() ) {
 				return true;
