@@ -127,6 +127,12 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
         api.defaults = {};
 
         api.remove = function (key, attributes) {
+            // Clears keys with current path.
+            api(key, '', $.extend({}, attributes, {
+                expires: -1,
+                path: ''
+            }));
+            // Clears sitewide keys.
             api(key, '', $.extend({}, attributes, {
                 expires: -1
             }));
