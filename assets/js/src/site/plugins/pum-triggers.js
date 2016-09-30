@@ -62,10 +62,10 @@
 
             $(document)
                 .on('click.pumTrigger', trigger_selector, function (event) {
-                    var $this = $(event.target),
+                    var $this = $(this),
                         do_default = settings.do_default;
                     // If trigger is inside of the popup that it opens, do nothing.
-                    if ($popup.has(this).length > 0) {
+                    if ($popup.has($this).length > 0) {
                         return;
                     }
 
@@ -77,7 +77,7 @@
                     if ($this.data('do-default')) {
                         do_default = $this.data('do-default');
                     } else {
-                        do_default = $(event.target).hasClass('do-default');
+                        do_default = $this.hasClass('do-default');
                     }
 
                     // If trigger has the class do-default we don't prevent default actions.
@@ -87,7 +87,7 @@
                     }
 
                     // Set the global last open trigger to the clicked element.
-                    $.fn.popmake.last_open_trigger = this;
+                    $.fn.popmake.last_open_trigger = $this;
 
                     // Open the popup.
                     $popup.popmake('open');
