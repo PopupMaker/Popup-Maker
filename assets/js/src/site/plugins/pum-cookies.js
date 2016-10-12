@@ -65,6 +65,12 @@
             $popup.on('pumSetCookie', function () {
                 $popup.popmake('setCookie', settings);
             });
+        },
+        ninja_form_success: function (settings) {
+            var $popup = PUM.getPopup(this);
+            $popup.on('pum_nf.success', function () {
+                $popup.popmake('setCookie', settings);
+            });
         }
     };
 

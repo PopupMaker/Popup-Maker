@@ -20,14 +20,6 @@ if ( version_compare( get_option( 'ninja_forms_version', '0.0.0' ), '3.0', '<' )
 	 */
 	final class NF_PUM {
 
-		const VERSION = '0.0.1';
-
-		const SLUG = 'popup-maker';
-
-		const NAME = 'Popup Maker';
-
-		const AUTHOR = 'Daniel Iser';
-
 		const PREFIX = 'NF_PUM';
 
 		/**
@@ -81,15 +73,11 @@ if ( version_compare( get_option( 'ninja_forms_version', '0.0.0' ), '3.0', '<' )
 		}
 
 		public function __construct() {
-			/*
-			 * Optional. If your extension creates a new field interaction or display template...
-			 */
 			add_filter( 'ninja_forms_register_fields', array( $this, 'register_fields' ) );
 
-			/*
-			 * Optional. If your extension processes or alters form submission data on a per form basis...
-			 */
 			add_filter( 'ninja_forms_register_actions', array( $this, 'register_actions' ) );
+
+			add_filter( 'pum_get_cookies', array( $this, 'register_cookies' ) );
 		}
 
 		/**
@@ -110,6 +98,23 @@ if ( version_compare( get_option( 'ninja_forms_version', '0.0.0' ), '3.0', '<' )
 
 			return $actions;
 		}
+
+
+		/**
+		 * Optional. If your extension creates a new field interaction or display template...
+		 */
+		public function register_cookies( $cookies ) {
+			$cookies['ninja_form_success'] = array(
+				'labels' => array(
+					'name' => __( 'Ninja Form Success', 'popup-maker' ),
+				),
+				'fields' => pum_get_cookie_fields(),
+			);
+
+			return $cookies;
+		}
+
+
 
 		/*
 		 * Optional methods for convenience.

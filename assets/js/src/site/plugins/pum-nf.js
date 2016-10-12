@@ -9,6 +9,22 @@
         initialize: function () {
             this.listenTo(nfRadio.channel('forms'), 'submit:response', this.closePopup);
             this.listenTo(nfRadio.channel('forms'), 'submit:response', this.openPopup);
+            this.listenTo(nfRadio.channel('forms'), 'submit:response', this.popupTriggers);
+        },
+        popupTriggers: function (response, textStatus, jqXHR, formID) {
+            var $popup;
+
+            $popup = $('#nf-form-' + formID + '-cont').parents('.pum');
+
+            if ($popup.length) {
+                $popup.trigger('pum_nf.success');
+
+                if (response.errors.length) {
+                    $popup.trigger('pum_nf.error');
+                } else {
+                    $popup.trigger('pum_nf.success');
+                }
+            }
         },
         closePopup: function (response, textStatus, jqXHR, formID) {
             var $popup;
