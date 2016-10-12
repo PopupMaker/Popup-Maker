@@ -52,7 +52,7 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: includes/admin/admin-setup.php:25, includes/admin/extensions/extensions-page.php:27, includes/admin/settings/register-settings.php:309
+#: includes/admin/admin-setup.php:25, includes/admin/extensions/extensions-page.php:26, includes/admin/settings/register-settings.php:309
 msgid "Extensions"
 msgstr ""
 
@@ -120,63 +120,63 @@ msgstr ""
 msgid "Upgrade failed, please try again."
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:19
+#: includes/admin/extensions/extensions-page.php:18
 msgid "Extend Popup Maker"
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:28, includes/admin/extensions/extensions-page.php:28, includes/admin/extensions/extensions-page.php:150, includes/admin/extensions/extensions-page.php:150
+#: includes/admin/extensions/extensions-page.php:27, includes/admin/extensions/extensions-page.php:27, includes/admin/extensions/extensions-page.php:143, includes/admin/extensions/extensions-page.php:143
 msgid "Browse All Extensions"
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:30
+#: includes/admin/extensions/extensions-page.php:29
 msgid "These extensions <strong>add extra functionality</strong> to your popups."
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:140
+#: includes/admin/extensions/extensions-page.php:133
 msgid "Get this Extension"
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:159
+#: includes/admin/extensions/extensions-page.php:152
 msgid "Other Compatible Plugins"
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:161
+#: includes/admin/extensions/extensions-page.php:154
 msgid "These plugins should work in popups with no extra setup."
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:167
+#: includes/admin/extensions/extensions-page.php:160
 msgid "Gravity Forms"
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:169
+#: includes/admin/extensions/extensions-page.php:162
 msgid "Gravity Forms is one of the most popular form building plugins."
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:173
-msgid "Ninja Forms"
-msgstr ""
-
-#: includes/admin/extensions/extensions-page.php:175
-msgid "Ninja Forms has fast become the most extensible form plugin available. Build super custom forms and integrate with your favorite services."
-msgstr ""
-
-#: includes/admin/extensions/extensions-page.php:179
+#: includes/admin/extensions/extensions-page.php:166
 msgid "Contact Form 7"
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:181
+#: includes/admin/extensions/extensions-page.php:168
 msgid "CF7 is one of the most downloaded plugins on the WordPress repo. Make simple forms with ease and plenty of free addons available."
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:185
+#: includes/admin/extensions/extensions-page.php:172
 msgid "Quiz & Survey Master"
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:187
+#: includes/admin/extensions/extensions-page.php:174
 msgid "If you need more from your forms data look no further, QSM is all about the statistics & collective data, something other form plugins neglect."
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:206
+#: includes/admin/extensions/extensions-page.php:182
+msgid "Ninja Forms"
+msgstr ""
+
+#: includes/admin/extensions/extensions-page.php:184
+msgid "Ninja Forms has fast become the most extensible form plugin available. Build super custom forms and integrate with your favorite services."
+msgstr ""
+
+#: includes/admin/extensions/extensions-page.php:200
 msgid "Check it out"
 msgstr ""
 
@@ -1393,6 +1393,10 @@ msgstr ""
 
 #: includes/integrations/class-pum-buddypress-integration.php:145
 msgid "BP: Is Action Variable"
+msgstr ""
+
+#: includes/integrations/class-pum-ninja-forms.php:109
+msgid "Ninja Form Success"
 msgstr ""
 
 #: includes/integrations/class-pum-woocommerce-integration.php:23

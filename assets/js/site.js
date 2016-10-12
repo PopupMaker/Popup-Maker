@@ -1415,6 +1415,12 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
             $popup.on('pumSetCookie', function () {
                 $popup.popmake('setCookie', settings);
             });
+        },
+        ninja_form_success: function (settings) {
+            var $popup = PUM.getPopup(this);
+            $popup.on('pum_nf.success', function () {
+                $popup.popmake('setCookie', settings);
+            });
         }
     };
 
@@ -1765,6 +1771,22 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
         initialize: function () {
             this.listenTo(nfRadio.channel('forms'), 'submit:response', this.closePopup);
             this.listenTo(nfRadio.channel('forms'), 'submit:response', this.openPopup);
+            this.listenTo(nfRadio.channel('forms'), 'submit:response', this.popupTriggers);
+        },
+        popupTriggers: function (response, textStatus, jqXHR, formID) {
+            var $popup;
+
+            $popup = $('#nf-form-' + formID + '-cont').parents('.pum');
+
+            if ($popup.length) {
+                $popup.trigger('pum_nf.success');
+
+                if (response.errors.length) {
+                    $popup.trigger('pum_nf.error');
+                } else {
+                    $popup.trigger('pum_nf.success');
+                }
+            }
         },
         closePopup: function (response, textStatus, jqXHR, formID) {
             var $popup;
