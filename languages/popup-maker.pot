@@ -1415,6 +1415,18 @@ msgstr ""
 msgid "Account Page"
 msgstr ""
 
+#: includes/integrations/ninja-forms/Actions/ClosePopup.php:36
+msgid "Close Popup"
+msgstr ""
+
+#: includes/integrations/ninja-forms/Actions/OpenPopup.php:35
+msgid "Open Popup"
+msgstr ""
+
+#: includes/integrations/ninja-forms/Actions/OpenPopup.php:78
+msgid "Select a popup"
+msgstr ""
+
 #: includes/plugin-updater.php:181
 msgid "There is a new version of %1$s available. <a target=\"_blank\" class=\"thickbox\" href=\"%2$s\">View version %3$s details</a>."
 msgstr ""

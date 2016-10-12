@@ -7582,7 +7582,7 @@ var PUM_Templates;
             return _template(data);
         },
         shortcode: function (args) {
-            var data = $.extend(true, {}, {
+            var data = $.extend({}, {
                     tag: '',
                     meta: {},
                     has_content: false,
@@ -7593,7 +7593,7 @@ var PUM_Templates;
             return PUM_Templates.render(template, data);
         },
         modal: function (args) {
-            var data = $.extend(true, {}, {
+            var data = $.extend({}, {
                 id: '',
                 title: '',
                 description: '',
@@ -7607,7 +7607,7 @@ var PUM_Templates;
         },
         tabs: function (args) {
             var classes = args.classes || [],
-                data = $.extend(true, {}, {
+                data = $.extend({}, {
                     id: '',
                     vertical: true,
                     form: true,
@@ -7632,7 +7632,7 @@ var PUM_Templates;
             return PUM_Templates.render('pum-tabs', data);
         },
         section: function (args) {
-            var data = $.extend(true, {}, {
+            var data = $.extend({}, {
                 classes: [],
                 fields: []
             }, args);
@@ -7643,7 +7643,7 @@ var PUM_Templates;
         field: function (args) {
             var fieldTemplate = 'pum-field-' + args.type,
                 options = [],
-                data = $.extend(true, {}, {
+                data = $.extend({}, {
                     type: 'text',
                     id: '',
                     id_prefix: '',

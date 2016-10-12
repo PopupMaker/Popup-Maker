@@ -220,7 +220,7 @@ var PUM;
         setup_close: function () {
             var $popup = PUM.getPopup(this),
                 $close = $popup.popmake('getClose')
-                    // Add For backward compatiblitiy.
+                // Add For backward compatiblitiy.
                     .add($('.popmake-close', $popup).not($close)),
                 settings = $popup.popmake('getSettings');
 
@@ -303,7 +303,7 @@ var PUM;
                         $close.off('click.popmake');
 
                         // Only re-enable scrolling for the document when the last popup has closed.
-                       if ($('.pum-active').length === 1) {
+                        if ($('.pum-active').length === 1) {
                             $('html')
                                 .removeClass('pum-open')
                                 .removeClass('pum-open-scrollable')
@@ -320,7 +320,7 @@ var PUM;
                         $container.find('iframe').filter('[src*="youtube"],[src*="vimeo"]').each(function () {
                             var $iframe = $(this),
                                 src = $iframe.attr('src'),
-                            // Remove autoplay so video doesn't start playing again.
+                                // Remove autoplay so video doesn't start playing again.
                                 new_src = src.replace('autoplay=1', '1=1');
 
                             if (new_src !== src) {
@@ -1506,6 +1506,309 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
     };
 
 }(jQuery, document));
+(function (window, undefined) {
+    'use strict';
+
+    /**
+     * Handles managing all events for whatever you plug it into. Priorities for hooks are based on lowest to highest in
+     * that, lowest priority hooks are fired first.
+     */
+    var EventManager = function () {
+        var slice = Array.prototype.slice;
+
+        /**
+         * Maintain a reference to the object scope so our public methods never get confusing.
+         */
+        var MethodsAvailable = {
+            removeFilter: removeFilter,
+            applyFilters: applyFilters,
+            addFilter: addFilter,
+            removeAction: removeAction,
+            doAction: doAction,
+            addAction: addAction
+        };
+
+        /**
+         * Contains the hooks that get registered with this EventManager. The array for storage utilizes a "flat"
+         * object literal such that looking up the hook utilizes the native object literal hash.
+         */
+        var STORAGE = {
+            actions: {},
+            filters: {}
+        };
+
+        /**
+         * Adds an action to the event manager.
+         *
+         * @param action Must contain namespace.identifier
+         * @param callback Must be a valid callback function before this action is added
+         * @param [priority=10] Used to control when the function is executed in relation to other callbacks bound to the same hook
+         * @param [context] Supply a value to be used for this
+         */
+        function addAction(action, callback, priority, context) {
+            if (typeof action === 'string' && typeof callback === 'function') {
+                priority = parseInt(( priority || 10 ), 10);
+                _addHook('actions', action, callback, priority, context);
+            }
+
+            return MethodsAvailable;
+        }
+
+        /**
+         * Performs an action if it exists. You can pass as many arguments as you want to this function; the only rule is
+         * that the first argument must always be the action.
+         */
+        function doAction(/* action, arg1, arg2, ... */) {
+            var args = slice.call(arguments);
+            var action = args.shift();
+
+            if (typeof action === 'string') {
+                _runHook('actions', action, args);
+            }
+
+            return MethodsAvailable;
+        }
+
+        /**
+         * Removes the specified action if it contains a namespace.identifier & exists.
+         *
+         * @param action The action to remove
+         * @param [callback] Callback function to remove
+         */
+        function removeAction(action, callback) {
+            if (typeof action === 'string') {
+                _removeHook('actions', action, callback);
+            }
+
+            return MethodsAvailable;
+        }
+
+        /**
+         * Adds a filter to the event manager.
+         *
+         * @param filter Must contain namespace.identifier
+         * @param callback Must be a valid callback function before this action is added
+         * @param [priority=10] Used to control when the function is executed in relation to other callbacks bound to the same hook
+         * @param [context] Supply a value to be used for this
+         */
+        function addFilter(filter, callback, priority, context) {
+            if (typeof filter === 'string' && typeof callback === 'function') {
+                priority = parseInt(( priority || 10 ), 10);
+                _addHook('filters', filter, callback, priority, context);
+            }
+
+            return MethodsAvailable;
+        }
+
+        /**
+         * Performs a filter if it exists. You should only ever pass 1 argument to be filtered. The only rule is that
+         * the first argument must always be the filter.
+         */
+        function applyFilters(/* filter, filtered arg, arg2, ... */) {
+            var args = slice.call(arguments);
+            var filter = args.shift();
+
+            if (typeof filter === 'string') {
+                return _runHook('filters', filter, args);
+            }
+
+            return MethodsAvailable;
+        }
+
+        /**
+         * Removes the specified filter if it contains a namespace.identifier & exists.
+         *
+         * @param filter The action to remove
+         * @param [callback] Callback function to remove
+         */
+        function removeFilter(filter, callback) {
+            if (typeof filter === 'string') {
+                _removeHook('filters', filter, callback);
+            }
+
+            return MethodsAvailable;
+        }
+
+        /**
+         * Removes the specified hook by resetting the value of it.
+         *
+         * @param type Type of hook, either 'actions' or 'filters'
+         * @param hook The hook (namespace.identifier) to remove
+         * @private
+         */
+        function _removeHook(type, hook, callback, context) {
+            var handlers, handler, i;
+
+            if (!STORAGE[type][hook]) {
+                return;
+            }
+            if (!callback) {
+                STORAGE[type][hook] = [];
+            } else {
+                handlers = STORAGE[type][hook];
+                if (!context) {
+                    for (i = handlers.length; i--;) {
+                        if (handlers[i].callback === callback) {
+                            handlers.splice(i, 1);
+                        }
+                    }
+                }
+                else {
+                    for (i = handlers.length; i--;) {
+                        handler = handlers[i];
+                        if (handler.callback === callback && handler.context === context) {
+                            handlers.splice(i, 1);
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * Adds the hook to the appropriate storage container
+         *
+         * @param type 'actions' or 'filters'
+         * @param hook The hook (namespace.identifier) to add to our event manager
+         * @param callback The function that will be called when the hook is executed.
+         * @param priority The priority of this hook. Must be an integer.
+         * @param [context] A value to be used for this
+         * @private
+         */
+        function _addHook(type, hook, callback, priority, context) {
+            var hookObject = {
+                callback: callback,
+                priority: priority,
+                context: context
+            };
+
+            // Utilize 'prop itself' : http://jsperf.com/hasownproperty-vs-in-vs-undefined/19
+            var hooks = STORAGE[type][hook];
+            if (hooks) {
+                hooks.push(hookObject);
+                hooks = _hookInsertSort(hooks);
+            }
+            else {
+                hooks = [hookObject];
+            }
+
+            STORAGE[type][hook] = hooks;
+        }
+
+        /**
+         * Use an insert sort for keeping our hooks organized based on priority. This function is ridiculously faster
+         * than bubble sort, etc: http://jsperf.com/javascript-sort
+         *
+         * @param hooks The custom array containing all of the appropriate hooks to perform an insert sort on.
+         * @private
+         */
+        function _hookInsertSort(hooks) {
+            var tmpHook, j, prevHook;
+            for (var i = 1, len = hooks.length; i < len; i++) {
+                tmpHook = hooks[i];
+                j = i;
+                while (( prevHook = hooks[j - 1] ) && prevHook.priority > tmpHook.priority) {
+                    hooks[j] = hooks[j - 1];
+                    --j;
+                }
+                hooks[j] = tmpHook;
+            }
+
+            return hooks;
+        }
+
+        /**
+         * Runs the specified hook. If it is an action, the value is not modified but if it is a filter, it is.
+         *
+         * @param type 'actions' or 'filters'
+         * @param hook The hook ( namespace.identifier ) to be ran.
+         * @param args Arguments to pass to the action/filter. If it's a filter, args is actually a single parameter.
+         * @private
+         */
+        function _runHook(type, hook, args) {
+            var handlers = STORAGE[type][hook], i, len;
+
+            if (!handlers) {
+                return (type === 'filters') ? args[0] : false;
+            }
+
+            len = handlers.length;
+            if (type === 'filters') {
+                for (i = 0; i < len; i++) {
+                    args[0] = handlers[i].callback.apply(handlers[i].context, args);
+                }
+            } else {
+                for (i = 0; i < len; i++) {
+                    handlers[i].callback.apply(handlers[i].context, args);
+                }
+            }
+
+            return ( type === 'filters' ) ? args[0] : true;
+        }
+
+        // return all of the publicly available methods
+        return MethodsAvailable;
+
+    };
+
+    window.pum = window.pum || {};
+    window.pum.hooks = window.pum.hooks || new EventManager();
+
+})(window);
+(function ($) {
+    "use strict";
+
+    if (typeof Marionette === 'undefined') {
+        return;
+    }
+
+    var pumNFController = Marionette.Object.extend({
+        initialize: function () {
+            this.listenTo(nfRadio.channel('forms'), 'submit:response', this.closePopup);
+            this.listenTo(nfRadio.channel('forms'), 'submit:response', this.openPopup);
+        },
+        closePopup: function (response, textStatus, jqXHR, formID) {
+            var $popup;
+
+            if ('undefined' === typeof response.data.actions || response.errors.length) {
+                return;
+            }
+
+            if ('undefined' === typeof response.data.actions.closepopup) {
+                return;
+            }
+
+            $popup = $('#nf-form-' + formID + '-cont').parents('.pum');
+
+            if ($popup.length) {
+                setTimeout(function () {
+                    $popup.popmake('close');
+                }, parseInt(response.data.actions.closepopup));
+            }
+        },
+        openPopup: function (response) {
+            var $popup;
+
+            if ('undefined' === typeof response.data.actions || response.errors.length) {
+                return;
+            }
+
+            if ('undefined' === typeof response.data.actions.openpopup) {
+                return;
+            }
+
+            $popup = $('#pum-' + parseInt(response.data.actions.openpopup));
+
+            if ($popup.length) {
+                $popup.popmake('open');
+            }
+        }
+
+    });
+
+    jQuery(document).ready(function () {
+        new pumNFController();
+    });
+}(jQuery));
 (function ($, document, undefined) {
     "use strict";
 
@@ -1562,6 +1865,8 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
                 trigger_selectors.push(settings.extra_selectors);
             }
 
+            trigger_selectors = pum.hooks.applyFilters('pum.trigger.click_open.selectors', trigger_selectors, settings, $popup);
+
             trigger_selector = trigger_selectors.join(', ');
 
             $(trigger_selector)
@@ -1572,6 +1877,7 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
                 .on('click.pumTrigger', trigger_selector, function (event) {
                     var $this = $(this),
                         do_default = settings.do_default;
+
                     // If trigger is inside of the popup that it opens, do nothing.
                     if ($popup.has($this).length > 0) {
                         return;
@@ -1584,12 +1890,12 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
 
                     if ($this.data('do-default')) {
                         do_default = $this.data('do-default');
-                    } else {
-                        do_default = $this.hasClass('do-default');
+                    } else if ($this.hasClass('do-default')) {
+                        do_default = true;
                     }
 
                     // If trigger has the class do-default we don't prevent default actions.
-                    if (!do_default) {
+                    if (!pum.hooks.applyFilters('pum.trigger.click_open.do_default', do_default, settings, $popup)) {
                         event.preventDefault();
                         event.stopPropagation();
                     }
@@ -1599,7 +1905,6 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
 
                     // Open the popup.
                     $popup.popmake('open');
-
                 });
         },
         admin_debug: function () {
@@ -1631,6 +1936,38 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
  */
 (function ($, document, undefined) {
     "use strict";
+
+    var root = this,
+        inputTypes = 'color,date,datetime,datetime-local,email,hidden,month,number,password,range,search,tel,text,time,url,week'.split(','),
+        inputNodes = 'select,textarea'.split(','),
+        rName = /\[([^\]]*)\]/g;
+
+    // ugly hack for IE7-8
+    function isInArray(array, needle) {
+        return $.inArray(needle, array) !== -1;
+    }
+
+    function storeValue(container, parsedName, value) {
+
+        var part = parsedName[0];
+
+        if (parsedName.length > 1) {
+            if (!container[part]) {
+                // If the next part is eq to '' it means we are processing complex name (i.e. `some[]`)
+                // for this case we need to use Array instead of an Object for the index increment purpose
+                container[part] = parsedName[1] ? {} : [];
+            }
+            storeValue(container[part], parsedName.slice(1), value);
+        } else {
+
+            // Increment Array index for `some[]` case
+            if (!part) {
+                part = container.length;
+            }
+
+            container[part] = value;
+        }
+    }
 
     $.fn.popmake.utilities = {
         convert_hex: function (hex, opacity) {
@@ -1902,8 +2239,57 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
             // if (!match.every(process))
             //    return false;
             return (date.getTime() / 1000);
-        }
+        },
+        serializeObject: function (options) {
+        $.extend({}, options);
+
+        var values = {},
+            settings = $.extend(true, {
+                include: [],
+                exclude: [],
+                includeByClass: ''
+            }, options);
+
+        this.find(':input').each(function () {
+
+            var parsedName;
+
+            // Apply simple checks and filters
+            if (!this.name || this.disabled ||
+                isInArray(settings.exclude, this.name) ||
+                (settings.include.length && !isInArray(settings.include, this.name)) ||
+                this.className.indexOf(settings.includeByClass) === -1) {
+                return;
+            }
+
+            // Parse complex names
+            // JS RegExp doesn't support "positive look behind" :( that's why so weird parsing is used
+            parsedName = this.name.replace(rName, '[$1').split('[');
+            if (!parsedName[0]) {
+                return;
+            }
+
+            if (this.checked ||
+                isInArray(inputTypes, this.type) ||
+                isInArray(inputNodes, this.nodeName.toLowerCase())) {
+
+                // Simulate control with a complex name (i.e. `some[]`)
+                // as it handled in the same way as Checkboxes should
+                if (this.type === 'checkbox') {
+                    parsedName.push('');
+                }
+
+                // jQuery.val() is used to simplify of getting values
+                // from the custom controls (which follow jQuery .val() API) and Multiple Select
+                storeValue(values, parsedName, $(this).val());
+            }
+        });
+
+        return values;
+    }
     };
+
+    $.fn.pumSerializeObject = $.fn.popmake.utilities.serializeObject;
 
     // Deprecated fix. utilies was renamed because of typo.
     $.fn.popmake.utilies = $.fn.popmake.utilities;
