@@ -171,7 +171,7 @@ var PUM;
         setup_close: function () {
             var $popup = PUM.getPopup(this),
                 $close = $popup.popmake('getClose')
-                    // Add For backward compatiblitiy.
+                // Add For backward compatiblitiy.
                     .add($('.popmake-close', $popup).not($close)),
                 settings = $popup.popmake('getSettings');
 
@@ -254,7 +254,7 @@ var PUM;
                         $close.off('click.popmake');
 
                         // Only re-enable scrolling for the document when the last popup has closed.
-                       if ($('.pum-active').length === 1) {
+                        if ($('.pum-active').length === 1) {
                             $('html')
                                 .removeClass('pum-open')
                                 .removeClass('pum-open-scrollable')
@@ -271,7 +271,7 @@ var PUM;
                         $container.find('iframe').filter('[src*="youtube"],[src*="vimeo"]').each(function () {
                             var $iframe = $(this),
                                 src = $iframe.attr('src'),
-                            // Remove autoplay so video doesn't start playing again.
+                                // Remove autoplay so video doesn't start playing again.
                                 new_src = src.replace('autoplay=1', '1=1');
 
                             if (new_src !== src) {

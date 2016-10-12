@@ -54,6 +54,8 @@
                 trigger_selectors.push(settings.extra_selectors);
             }
 
+            trigger_selectors = pum.hooks.applyFilters('pum.trigger.click_open.selectors', trigger_selectors, settings, $popup);
+
             trigger_selector = trigger_selectors.join(', ');
 
             $(trigger_selector)
@@ -64,6 +66,7 @@
                 .on('click.pumTrigger', trigger_selector, function (event) {
                     var $this = $(this),
                         do_default = settings.do_default;
+
                     // If trigger is inside of the popup that it opens, do nothing.
                     if ($popup.has($this).length > 0) {
                         return;
@@ -76,12 +79,12 @@
 
                     if ($this.data('do-default')) {
                         do_default = $this.data('do-default');
-                    } else {
-                        do_default = $this.hasClass('do-default');
+                    } else if ($this.hasClass('do-default')) {
+                        do_default = true;
                     }
 
                     // If trigger has the class do-default we don't prevent default actions.
-                    if (!do_default) {
+                    if (!pum.hooks.applyFilters('pum.trigger.click_open.do_default', do_default, settings, $popup)) {
                         event.preventDefault();
                         event.stopPropagation();
                     }
@@ -91,7 +94,6 @@
 
                     // Open the popup.
                     $popup.popmake('open');
-
                 });
         },
         admin_debug: function () {
