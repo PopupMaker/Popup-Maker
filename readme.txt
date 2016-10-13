@@ -6,7 +6,7 @@ Donate link:
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.6
 Tested up to: 4.6
-Stable tag: 1.4.19
+Stable tag: 1.4.20
 License: GNU Version 3 or Any Later Version
 
 Easily create attractive popups. Customize nearly every aspect of your popups, from theme & position, to targeting & cookies.
@@ -89,6 +89,12 @@ There are several common causes for this which include:
 5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
 
 == Changelog ==
+
+= v1.4.20 - 10/13/2016 =
+* Feature: Added [Ninja Forms](https://wppopupmaker.com/go/ninjaforms) success actions for opening & closing popups.
+* Feature: Added new cookie event for successful submission of a [Ninja Forms](https://wppopupmaker.com/go/ninjaforms) form.
+* Improvement: Added wp.hooks JS library, allowing actions & filters via our plugin JS.
+* Tweaks: Added various admin css tweaks.
 
 = v1.4.19 - 9/30/2016 =
 * Feature: Added a do_default parameter to the trigger & close shortcodes. This allows making close buttons that also download a file.
