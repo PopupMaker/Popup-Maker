@@ -1,7 +1,7 @@
 (function ($) {
     "use strict";
 
-    if (typeof Marionette === 'undefined') {
+    if (typeof Marionette === 'undefined' || typeof nfRadio === 'undefined') {
         return;
     }
 
