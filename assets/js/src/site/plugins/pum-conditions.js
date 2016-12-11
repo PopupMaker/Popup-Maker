@@ -1,7 +1,8 @@
 (function ($, document, undefined) {
     "use strict";
 
-    var md = MobileDetect !== undefined ? new MobileDetect(window.navigator.userAgent) : {};
+    // Used for Mobile Detect when needed.
+    var md;
 
     $.extend($.fn.popmake.methods, {
         checkConditions: function () {
@@ -16,6 +17,10 @@
                 condition;
 
             if (settings.mobile_disabled !== undefined && settings.mobile_disabled) {
+                if (typeof md !== 'object') {
+                    md = new MobileDetect(window.navigator.userAgent);
+                }
+
                 if (md.mobile()) {
                     return false
                 }
