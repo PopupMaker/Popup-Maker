@@ -1,6 +1,8 @@
 (function ($, document, undefined) {
     "use strict";
 
+    var md = MobileDetect !== undefined ? new MobileDetect(window.navigator.userAgent) : {};
+
     $.extend($.fn.popmake.methods, {
         checkConditions: function () {
             var $popup = PUM.getPopup(this),
@@ -12,6 +14,14 @@
                 c,
                 group,
                 condition;
+
+            console.log(settings.mobile_disabled, md.mobile());
+
+            if (settings.mobile_disabled !== undefined && settings.mobile_disabled) {
+                if (md.mobile()) {
+                    return false
+                }
+            }
 
             if (settings.conditions !== undefined && settings.conditions.length) {
 
@@ -72,6 +82,12 @@
     });
 
 
-    $.fn.popmake.conditions = {};
+    $.fn.popmake.conditions = {
+
+        device_is_mobile: function (settings) {
+            return md.mobile();
+        },
+
+    };
 
 }(jQuery, document));

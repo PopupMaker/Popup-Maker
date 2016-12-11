@@ -134,6 +134,13 @@ class PUM_Popup_Conditions_Metabox {
                     <?php PUM_Conditions::instance()->conditions_selectbox( array( 'id' => 'pum-first-condition' ) ); ?>
                 </div>
 			</div>
+			<p>
+				<?php $popup = new PUM_Popup( $post->ID ); ?>
+				<label>
+					<input type="checkbox" name="popup_mobile_disabled" value="1" <?php checked( $popup->mobile_disabled(), 1 ); ?> />
+					<?php _e( 'Disable this popup on mobile devices.', 'popup-maker' ); ?>
+				</label>
+			</p>
 		</div><?php
 	}
 
@@ -150,6 +157,12 @@ class PUM_Popup_Conditions_Metabox {
 			}
 		}
 		update_post_meta( $post_id, 'popup_conditions', $conditions );
+
+		if ( ! empty ( $_POST['popup_mobile_disabled'] ) ) {
+			update_post_meta( $post_id, 'popup_mobile_disabled', 1 );
+		} else {
+			delete_post_meta( $post_id, 'popup_mobile_disabled' );
+		}
 	}
 
 	/**

@@ -304,6 +304,12 @@ add_action( 'wp_head', 'popmake_script_loading_enabled' );
 
 
 function popmake_enqueue_scripts( $popup_id = null ) {
+
+	$popup = new PUM_Popup( $popup_id );
+	if ( $popup->mobile_disabled() ) {
+		wp_enqueue_script( 'mobile-detect' );
+	}
+
 	$scripts_needed = apply_filters( 'popmake_enqueue_scripts', array(
 		'popup-maker' => 'popup-maker-site',
 		'easy-modal-importer' => 'popup-maker-easy-modal-importer-site'
