@@ -228,29 +228,29 @@ msgstr ""
 msgid "Conditions are used to limit where and who will see a popup. %sLearn More!%s"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:93, includes/admin/popups/class-metabox-conditions.php:131, includes/admin/popups/class-metabox-conditions.php:200
+#: includes/admin/popups/class-metabox-conditions.php:93, includes/admin/popups/class-metabox-conditions.php:131, includes/admin/popups/class-metabox-conditions.php:213
 msgid "Enable the Not Operand"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:108, includes/admin/popups/class-metabox-conditions.php:226
+#: includes/admin/popups/class-metabox-conditions.php:108, includes/admin/popups/class-metabox-conditions.php:239
 msgid "Remove Condition"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:116, includes/admin/popups/class-metabox-conditions.php:173
+#: includes/admin/popups/class-metabox-conditions.php:116, includes/admin/popups/class-metabox-conditions.php:186
 msgctxt "aria-label for add new OR condition button"
 msgid "Add another OR condition"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:116, includes/admin/popups/class-metabox-conditions.php:173
+#: includes/admin/popups/class-metabox-conditions.php:116, includes/admin/popups/class-metabox-conditions.php:186
 msgid "or"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:120, includes/admin/popups/class-metabox-conditions.php:177
+#: includes/admin/popups/class-metabox-conditions.php:120, includes/admin/popups/class-metabox-conditions.php:190
 msgctxt "aria-label for add new AND condition button"
 msgid "Add another AND condition group"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:120, includes/admin/popups/class-metabox-conditions.php:177
+#: includes/admin/popups/class-metabox-conditions.php:120, includes/admin/popups/class-metabox-conditions.php:190
 msgid "and"
 msgstr ""
 
@@ -258,7 +258,11 @@ msgstr ""
 msgid "Choose a condition to get started."
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:205, includes/class-pum-conditions.php:132
+#: includes/admin/popups/class-metabox-conditions.php:141
+msgid "Disable this popup on mobile devices."
+msgstr ""
+
+#: includes/admin/popups/class-metabox-conditions.php:218, includes/class-pum-conditions.php:132
 msgid "Select a condition"
 msgstr ""
 

@@ -1099,6 +1099,8 @@ var PUM_Analytics;
 (function ($, document, undefined) {
     "use strict";
 
+    var md = MobileDetect !== undefined ? new MobileDetect(window.navigator.userAgent) : {};
+
     $.extend($.fn.popmake.methods, {
         checkConditions: function () {
             var $popup = PUM.getPopup(this),
@@ -1110,6 +1112,14 @@ var PUM_Analytics;
                 c,
                 group,
                 condition;
+
+            console.log(settings.mobile_disabled, md.mobile());
+
+            if (settings.mobile_disabled !== undefined && settings.mobile_disabled) {
+                if (md.mobile()) {
+                    return false
+                }
+            }
 
             if (settings.conditions !== undefined && settings.conditions.length) {
 
@@ -1170,7 +1180,13 @@ var PUM_Analytics;
     });
 
 
-    $.fn.popmake.conditions = {};
+    $.fn.popmake.conditions = {
+
+        device_is_mobile: function (settings) {
+            return md.mobile();
+        },
+
+    };
 
 }(jQuery, document));
 
@@ -1763,7 +1779,7 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
 (function ($) {
     "use strict";
 
-    if (typeof Marionette === 'undefined') {
+    if (typeof Marionette === 'undefined' || typeof nfRadio === 'undefined') {
         return;
     }
 

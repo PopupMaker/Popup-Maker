@@ -9,67 +9,60 @@ Tested up to: 4.6
 Stable tag: 1.4.20
 License: GNU Version 3 or Any Later Version
 
-Easily create attractive popups. Customize nearly every aspect of your popups, from theme & position, to targeting & cookies.
+Create any popup imaginable! Customize your popups from head-to-toe and give your site more utility, usability, and conversions.
 
 == Description ==
 
-Popup Maker is the most versatile and easy to use popup, modal & content overlay plugin available.
+Popup Maker is the most advanced and versatile popup, modal and content overlay plugin available on WordPress.
 
-Easily create attractive popups with no coding skills. Customize nearly every aspect of your popups, from theme & position, to targeting & cookies.
+Customize every facet of your popups, from theme and position, to targeting and cookies.
 
-Follow this plugin on [GitHub](https://github.com/PopupMaker/Popup-Maker).
+Learn tips and tricks, and create cool popups using guides found on our [Blog](https://wppopupmaker.com/blog/)!
 
-= Features of Popup Maker include: =
-* **Control Everything**: Complete control to customize every aspect of your popups including: triggers, cookies, conditions, appearance, position and of course content.
-* **Accessible Popups**: Popup Maker applies the latest in Modal & Popup Accessibility techniques to ensure that your message gets heard by everyone that visits your site.
-* **Translation Ready**: Translation-ready, for easy conversion to any language. Ask us about our special incentives for translators interested in joining the team.
-* **Extremely Flexible**: No arbitrary limitations imposed here, create unlimited popups of any type of overlay you can think of. That includes: welcome gates, banner bars, slide outs and more.
-* **Developer Friendly**: Built with developers in mind with hundreds of functions, action hooks, and filters that developers can use to create their own custom functionality.
+https://www.youtube.com/watch?v=MAf85_oax4g
+
+Follow this plugin on [GitHub](https://github.com/PopupMaker/Popup-Maker and [Twitter](https://twitter.com/wppopupmaker)!
+
+Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](https://translate.wordpress.org/projects/wp-plugins/popup-maker).
 
 = What's Included for Free: =
-> + Our conditions editor allows you to target who will see each popup.
-> + Target any WordPress content such as posts & pages or even posts by category.
+> + The plugin has limitless potential with no artificial restrictions. If you can’t get the functionality you’re after, we’ll be happy to help you! Just ask on the [Support Forums](https://wordpress.org/support/plugin/popup-maker).
+> + There’s simply too many features to list here! But we’ll start with:
+> + Slide Outs, Banner Bars, Floating Stickies, Notifications, Loading Screens, Video Lightboxes, and of course, Opt-In Forms.
+> + Supports the most popular form building plugins available: Ninja Forms, Gravity Forms, Contact Form 7 & More.
+> + We support practically every list building form, including but not limited to: MailChimp, AWeber, InfusionSoft, GetResponse, Constant Contact, Mail Poet, Mad Mimi, Hubspot, and Emma.
+> + All of our popups are Responsive popups.
+> + Use our unique **Popup Editor** to build any content you can imagine inside of our popups, plus control popup sizing, position, animation and so much more.
+> + **Conditions** allow you to target exactly who will (and will not) see your popups. Target any WordPress content such as: posts, pages and 26 more!
 > + We have included specific conditions for popular plugins such as WooCommerce.
-> + **Click triggers** allow you to trigger a popup on click of menu items, sidebars, buttons, images or any other content on your site. We have various methods alloing you to integrate our click triggers with nearly any plugin or theme.
-> + **Auto open** triggers allow you to set a **timed delay**, this is the typical Popup experience.
-> + Each Trigger can check for one or more cookies. Control when cookies are set and for how long.
-> + Set cookies on these events: popup opens, when the user closes it or even using JavaScript.
-> + Control every aspect of popup sizing, position, animation and more. We include Premade responsive sizes or you can create your own custom sizes.
-> + Vast set of options to customize the look of your popup using our Visual Theme Editor. Change colors, shadows, fonts, paddings & a whole lot more.
-> + Make more than just popups, create slide outs, banner bars, hidden sidebars* and more. * Requires additional customization, but very doable.
-> + Too many features to list here. Limitless potential. If you can't figure out how to get the functionality your after, ask us we will be glad to help.
-> + Built in support for popular form plugins including: Gravity Forms, Ninja Forms, Caldera Forms, & Contact Form 7.
-> + Easily insert HTML forms from any provider including:
+> + Dictate the frequency at which users see your popups using **Cookies**, and edit how the cookies are created using Cookie Creation Events.
+> + **Click Triggers** allows you to trigger a popup on click of menu items, sidebars, buttons, images or any other content on your site. We have various methods allowing you to integrate our click triggers with nearly any plugin or theme.
+> + **Auto Open Triggers** allows you to set a **timed delay**, then the popup will display according to your preference.
+> + Trove of options to customize the look of your popup using our unique **Theme Editor**. Change colors, shadows, fonts, paddings, and much, much more.
+> + Stat tracking: Popup Opens Count.
 
-If you like the plugin and/or support [please rate & review](https://wppopupmaker.com/rate-us?utm_source=WordPress+Page&utm_medium=Review+Link&utm_campaign=Review+It) it!
+If you are enjoying this wonderful project, [please rate & review it](https://wppopupmaker.com/rate-us?utm_source=WordPress+Page&utm_medium=Review+Link&utm_campaign=Review+It) to share the love <3!
 
-= Supported HTML Optin Forms Include: =
-* Mailchimp
-* Aweber
-* InfusionSoft
-* GetResponse
-* Constant Contact
-* MailPoet
-* MadMimi
-* HubSpot
-* Emma
-* Plus Many More - Just about any optin form. If you find one that doesn't work let us know.
-
-= Check out our extension line to increase conversions & further enhance your popups. =
+= Enhance Your Popups Using Our Extensions =
 > + [Exit Intent](https://wppopupmaker.com/extensions/exit-intent?utm_source=WordPress+Page&utm_medium=Extensions+Link&utm_campaign=Exit+Intent "Exit Intent")
 > + [AJAX Login Modals](https://wppopupmaker.com/extensions/ajax-login-modals?utm_source=WordPress+Page&utm_medium=Extensions+Link&utm_campaign=AJAX+Login+Modals "AJAX Login Modals")
 > + [Age Verification Modals](https://wppopupmaker.com/extensions/age-verification-modals?utm_source=WordPress+Page&utm_medium=Extensions+Link&utm_campaign=Age+Verification+Modals "Age Verification Modals")
 > + [Popup Analytics](https://wppopupmaker.com/extensions/popup-analytics?utm_source=WordPress+Page&utm_medium=Extensions+Link&utm_campaign=Popup+Analytics "Popup Analytics")
 > + [Advanced Targeting Conditions](https://wppopupmaker.com/extensions/advanced-targeting-conditions?utm_source=WordPress+Page&utm_medium=Extensions+Link&utm_campaign=Advanced+Targeting+Conditions "Advanced Targeting Conditions")
->
-> For the full list of extensions and more information, visit [our extension store](https://wppopupmaker.com/extensions/?utm_source=WordPress+Page&utm_medium=Extensions+Link&utm_campaign=Extensions+Page "Popup Maker Extensions")!
-
-Follow us on [Twitter](https://twitter.com/wppopupmaker "Popup Maker on Twitter")!
-Find out more about [Popup Maker](https://wppopupmaker.com?utm_source=WordPress+Page&utm_medium=More+Info+Link&utm_campaign=Home+Page "Popup Maker Website").
-
-Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](https://translate.wordpress.org/projects/wp-plugins/popup-maker).
 
 == Frequently Asked Questions ==
+
+= Where is your documentation? =
+Our documentation is located [here](http://docs.wppopupmaker.com/)
+
+= How do I open a popup? =
+Using [Triggers](http://docs.wppopupmaker.com/article/141-triggers-cookies)
+
+= How do I stop popups from opening repeatedly? =
+Using [Cookies](http://docs.wppopupmaker.com/article/148-cookies)
+
+= What do I do if I just want a popup to show on a certain page/post/etc? =
+Check out [Conditions](http://docs.wppopupmaker.com/article/140-conditions)
 
 = Why aren't my popups opening/working? =
 
@@ -82,11 +75,15 @@ There are several common causes for this which include:
 * There is a JavaScript error caused by another plugin or your theme. You can check this using your browsers console (Press F12).
 
 == Screenshots ==
-1. Create an infinite amount of popups and put any content inside your popups! No restrictions, no limitations - customize your popup content to fit your needs.
-2. Use the Popup Maker WYSIWIG Content Editor to easily customize your popups' content! Plus, use Short Codes, HTML, and other code to give your popups ultimate power. Adding popups and content in Popup Maker is just like adding pages and content in WordPress.
-3. Popup Maker offers you pixel perfect positioning settings to match your needs and fit your website perfectly.
-4. Create high performing themes in minutes with our user friendly Theme Builder. Don't be worried to go with the flow, you can easily revert to old saves with Revision History.
-5. Theme every element of your popups to blend perfectly into your site: Background Overlay, Popup Container, Close Button, Google Fonts & much more. All in all, customize your popup theme with over 60 options!
+1. Create and edit an infinite amount of unique popups to get any job done - you can even export and import them to your other sites! Clicking on a popup takes you to our unique Popup Editor.
+2. Use our unique Popup Editor to completely customize every facet of your popup! Plus, use our Content Editor to implement Shortcodes, HTML, and other code to create any popup imaginable. If you’ve created a page or post in WordPress, you’ll feel right at home!
+3. Use the Display Settings Pane in the Popup Editor and choose from a plethora of options, including Responsive Sizes and Animation Types!
+4. Trigger your popups on the front end using the Triggers Pane in the Popup Editor. Our Free triggers include: Click Open and Auto Open.
+5. Choose from 29 Conditions in the Popup Editor and target exactly who will (and will not) see your popups.
+6. Prevent popups from showing up again using the Cookies Pane in the Popup Editor. Our free Cookie Creation Events include: On Popup Open, On Popup Close and Manual Javascript.
+7. Create and edit an unlimited supply of popup themes for every situation. You can even export and import them to your other sites! Clicking on a theme takes you to our unique Theme Editor.
+8. Use the Theme Editor to choose from over 60 options and theme every element of your popup: Background Overlay, Popup Container, Close Button, Google Fonts and much more.
+9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
 
