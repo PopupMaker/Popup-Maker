@@ -15,8 +15,6 @@
                 group,
                 condition;
 
-            console.log(settings.mobile_disabled, md.mobile());
-
             if (settings.mobile_disabled !== undefined && settings.mobile_disabled) {
                 if (md.mobile()) {
                     return false
