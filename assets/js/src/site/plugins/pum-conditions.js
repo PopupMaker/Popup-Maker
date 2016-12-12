@@ -86,11 +86,9 @@
 
 
     $.fn.popmake.conditions = {
-
         device_is_mobile: function (settings) {
             return md.mobile();
-        },
-
+        }
     };
 
 }(jQuery, document));
