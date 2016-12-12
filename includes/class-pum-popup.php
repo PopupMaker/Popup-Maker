@@ -469,7 +469,7 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 				}
 			}
 
-			return apply_filters( 'pum_popup_get_conditions', $conditions, $this->ID );
+			return apply_filters( 'pum_popup_get_conditions', $conditions, $this->ID, $filters );
 		}
 
 		public function parse_condition( $condition ) {
