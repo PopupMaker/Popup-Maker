@@ -6,7 +6,7 @@ Donate link:
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.6
 Tested up to: 4.6
-Stable tag: 1.4.20
+Stable tag: 1.4.21
 License: GNU Version 3 or Any Later Version
 
 Create any popup imaginable! Customize your popups from head-to-toe and give your site more utility, usability, and conversions.
@@ -86,6 +86,12 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+
+= v1.4.21 - 12/12/2016 =
+* Feature: Added option to disable popup on mobile to comply with [Google's new interstital policy](https://webmasters.googleblog.com/2016/08/helping-users-easily-access-content-on.html).
+* Tweak: Added additional paramter to the pum_popup_get_conditions filter.
+* Tweak: Fixed possible false init of NF integration if NF is not enabled.
+* Tweak: Added CSS override for Ninja Forms datepickers to properly layer them above popups.
 
 = v1.4.20 - 10/13/2016 =
 * Feature: Added [Ninja Forms](https://wppopupmaker.com/go/ninjaforms) success actions for opening & closing popups.
