@@ -44,6 +44,38 @@ class PUM_Condition_Callbacks {
 					return true;
 				}
 				break;
+			case 'children':
+				if ( ! is_post_type_hierarchical( $post_type ) || ! is_singular( $post_type ) ) {
+					return false;
+				}
+
+				// Chosen parents.
+				$selected = wp_parse_id_list( $settings['selected'] );
+
+				foreach ( $selected as $id ) {
+					if ( $post->post_parent == $id ) {
+						return true;
+					}
+				}
+				break;
+			case 'ancestors':
+				if ( ! is_post_type_hierarchical( $post_type ) || ! is_singular( $post_type ) ) {
+					return false;
+				}
+
+				// Ancestors of the current page.
+				$ancestors = get_post_ancestors( $post->ID );
+
+				// Chosen parent/grandparents.
+				$selected = wp_parse_id_list( $settings['selected'] );
+
+				foreach ( $selected as $id ) {
+					if ( in_array( $id, $ancestors ) ) {
+						return true;
+					}
+				}
+
+				break;
 			case 'template':
 				if ( is_page() && is_page_template( $settings['selected'] ) ) {
 					return true;
