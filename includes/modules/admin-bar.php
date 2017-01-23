@@ -25,7 +25,7 @@ class PUM_Modules_Admin_Bar {
 	 * Renders the admin debug bar when PUM Debug is enabled.
 	 */
 	public static function show_debug_bar() {
-		if ( isset ( $_GET['pum_debug'] ) ) {
+		if ( PUM_Debug::on() ) {
 			show_admin_bar( true );
 		}
 	}
@@ -63,7 +63,10 @@ class PUM_Modules_Admin_Bar {
 				/** @var WP_Post $popup */
 
 				$node_id = 'loaded-popup-' . $popup->ID;
-				$edit_url = admin_url( 'post.php?post=' . $popup->ID . '&action=edit' );
+
+				$can_edit = current_user_can( 'edit_post', $popup->ID );
+
+				$edit_url = $can_edit ? admin_url( 'post.php?post=' . $popup->ID . '&action=edit' ) : '#';
 
 				// Single Popup Menu Node
 				$wp_admin_bar->add_node( array(
@@ -73,18 +76,28 @@ class PUM_Modules_Admin_Bar {
 					'parent' => 'loaded-popups',
 				) );
 
-				// Edit Popup Link
-				$wp_admin_bar->add_node( array(
-					'id'    => $node_id . '-edit',
-					'title' => __( 'Edit', 'popup-maker' ),
-					'href'  => $edit_url,
-					'parent' => $node_id,
-				) );
+				if ( $can_edit ) {
+					// Edit Popup Link
+					$wp_admin_bar->add_node( array(
+						'id'    => $node_id . '-edit',
+						'title' => __( 'Edit', 'popup-maker' ),
+						'href'  => $edit_url,
+						'parent' => $node_id,
+					) );
+				}
 
+				// Trigger Link
 				$wp_admin_bar->add_node( array(
 					'id'    => $node_id . '-trigger',
 					'title' => __( 'Trigger', 'popup-maker' ),
 					'href'  => '#popmake-' . $popup->ID,
+					'parent' => $node_id,
+				) );
+
+				$wp_admin_bar->add_node( array(
+					'id'    => $node_id . '-reset-cookies',
+					'title' => __( 'Reset Cookies', 'popup-maker' ),
+					'href'  => '#',
 					'parent' => $node_id,
 				) );
 			}
