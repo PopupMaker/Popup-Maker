@@ -87,6 +87,9 @@ There are several common causes for this which include:
 
 == Changelog ==
 
+= v1.5.0 - TBD
+* Feature: Added new conditions for targeting children & grandchildren / ancestors of selected content.
+
 = v1.4.21 - 12/12/2016 =
 * Feature: Added option to disable popup on mobile to comply with [Google's new interstital policy](https://webmasters.googleblog.com/2016/08/helping-users-easily-access-content-on.html).
 * Tweak: Added additional paramter to the pum_popup_get_conditions filter.
