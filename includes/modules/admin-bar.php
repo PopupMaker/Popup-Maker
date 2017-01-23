@@ -90,7 +90,20 @@ class PUM_Modules_Admin_Bar {
 				$wp_admin_bar->add_node( array(
 					'id'    => $node_id . '-trigger',
 					'title' => __( 'Trigger', 'popup-maker' ),
-					'href'  => '#popmake-' . $popup->ID,
+					'meta' => array(
+						'onclick' => 'PUM.open(' . $popup->ID . ');',
+					),
+					'href'  => '#',
+					'parent' => $node_id,
+				) );
+
+				$wp_admin_bar->add_node( array(
+					'id'    => $node_id . '-trigger',
+					'title' => __( 'Close', 'popup-maker' ),
+					'meta' => array(
+						'onclick' => 'PUM.close(' . $popup->ID . ');',
+					),
+					'href'  => '#',
 					'parent' => $node_id,
 				) );
 
