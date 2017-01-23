@@ -6,8 +6,24 @@ var PUM;
 (function ($, document, undefined) {
     "use strict";
 
+    function isInt(value) {
+        return !isNaN(value) && parseInt(Number(value)) == value && !isNaN(parseInt(value, 10));
+    }
+
     PUM = {
         getPopup: function (el) {
+
+            // Quick Shortcuts
+            if (isInt(el)) {
+                el = '#pum-' + el;
+            } else if (el === 'current') {
+                el = '.pum-overlay.pum-active:eq(0)';
+            } else if (el === 'open') {
+                el = '.pum-overlay.pum-active';
+            } else if (el === 'closed') {
+                el = '.pum-overlay:not(.pum-active)';
+            }
+
             var $this = $(el);
 
             if ($this.hasClass('pum-overlay')) {
@@ -19,6 +35,12 @@ var PUM;
             }
 
             return $this.parents('.pum-overlay').length ? $this.parents('.pum-overlay') : $();
+        },
+        open: function (el, callback) {
+            PUM.getPopup(el).popmake('open', callback);
+        },
+        close: function (el, callback) {
+            PUM.getPopup(el).popmake('close', callback);
         }
     };
 
