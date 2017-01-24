@@ -90,6 +90,8 @@ There are several common causes for this which include:
 = v1.5.0 - TBD
 * Feature: Added new conditions for targeting children & grandchildren / ancestors of selected content.
 * Feature: Added new settings to the Nav Menu editor to choose a popup that a menu item will trigger.
+* Feature: Added a new debug mode. Including:
+  * Admin Bar with manual open, close & cookie resets for loaded popups.
 
 = v1.4.21 - 12/12/2016 =
 * Feature: Added option to disable popup on mobile to comply with [Google's new interstital policy](https://webmasters.googleblog.com/2016/08/helping-users-easily-access-content-on.html).

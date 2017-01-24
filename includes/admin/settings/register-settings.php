@@ -71,36 +71,24 @@ function popmake_register_settings() {
 
 	foreach ( popmake_get_registered_settings() as $tab => $settings ) {
 
-		add_settings_section(
-			'popmake_settings_' . $tab,
-			__return_null(),
-			'__return_false',
-			'popmake_settings_' . $tab
-		);
+		add_settings_section( 'popmake_settings_' . $tab, __return_null(), '__return_false', 'popmake_settings_' . $tab );
 
 		foreach ( $settings as $option ) {
 
 			$name = isset( $option['name'] ) ? $option['name'] : '';
 
-			add_settings_field(
-				'popmake_settings[' . $option['id'] . ']',
-				$name,
-				function_exists( 'popmake_' . $option['type'] . '_callback' ) ? 'popmake_' . $option['type'] . '_callback' : 'popmake_missing_callback',
-				'popmake_settings_' . $tab,
-				'popmake_settings_' . $tab,
-				array(
-					'section' => $tab,
-					'id'      => isset( $option['id'] ) ? $option['id'] : null,
-					'desc'    => ! empty( $option['desc'] ) ? $option['desc'] : '',
-					'name'    => isset( $option['name'] ) ? $option['name'] : null,
-					'size'    => isset( $option['size'] ) ? $option['size'] : null,
-					'options' => isset( $option['options'] ) ? $option['options'] : '',
-					'std'     => isset( $option['std'] ) ? $option['std'] : '',
-					'min'     => isset( $option['min'] ) ? $option['min'] : null,
-					'max'     => isset( $option['max'] ) ? $option['max'] : null,
-					'step'    => isset( $option['step'] ) ? $option['step'] : null
-				)
-			);
+			add_settings_field( 'popmake_settings[' . $option['id'] . ']', $name, function_exists( 'popmake_' . $option['type'] . '_callback' ) ? 'popmake_' . $option['type'] . '_callback' : 'popmake_missing_callback', 'popmake_settings_' . $tab, 'popmake_settings_' . $tab, array(
+				'section' => $tab,
+				'id'      => isset( $option['id'] ) ? $option['id'] : null,
+				'desc'    => ! empty( $option['desc'] ) ? $option['desc'] : '',
+				'name'    => isset( $option['name'] ) ? $option['name'] : null,
+				'size'    => isset( $option['size'] ) ? $option['size'] : null,
+				'options' => isset( $option['options'] ) ? $option['options'] : '',
+				'std'     => isset( $option['std'] ) ? $option['std'] : '',
+				'min'     => isset( $option['min'] ) ? $option['min'] : null,
+				'max'     => isset( $option['max'] ) ? $option['max'] : null,
+				'step'    => isset( $option['step'] ) ? $option['step'] : null,
+			) );
 		}
 
 	}
@@ -152,6 +140,12 @@ function popmake_get_registered_settings() {
 		'extensions' => apply_filters( 'popmake_settings_extensions', array() ),
 		'licenses'   => apply_filters( 'popmake_settings_licenses', array() ),
 		'misc'       => apply_filters( 'popmake_settings_misc', array(
+			'debug_mode'                           => array(
+				'id'   => 'debug_mode',
+				'name' => __( 'Enable Debug Mode', 'popup-maker' ),
+				'desc' => __( 'This will turn on multiple debug tools used to quickly find issues.', 'popup-maker' ),
+				'type' => 'checkbox',
+			),
 			'enable_easy_modal_compatibility_mode' => array(
 				'id'   => 'enable_easy_modal_compatibility_mode',
 				'name' => __( 'Enable Easy Modal v2 Compatibility Mode', 'popup-maker' ),
@@ -298,7 +292,7 @@ function popmake_get_settings_tabs() {
 
 	$settings = popmake_get_registered_settings();
 
-	$tabs            = array();
+	$tabs = array();
 	if ( ! empty( $settings['general'] ) ) {
 		$tabs['general'] = __( 'General', 'popup-maker' );
 	}
@@ -660,7 +654,7 @@ function popmake_rich_editor_callback( $args ) {
 		ob_start();
 		wp_editor( stripslashes( $value ), 'popmake_settings_' . $args['id'], array(
 			'textarea_name' => 'popmake_settings[' . $args['id'] . ']',
-			'textarea_rows' => $rows
+			'textarea_rows' => $rows,
 		) );
 		$html = ob_get_clean();
 	} else {
