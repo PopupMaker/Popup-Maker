@@ -86,6 +86,12 @@ add_action( 'wp_enqueue_scripts', 'popmake_preload_popups', 11 );
 
 function popmake_render_popups() {
 	global $popmake_loaded_popups, $popup;
+
+	if ( ! $popmake_loaded_popups instanceof WP_Query ) {
+		$popmake_loaded_popups        = new WP_Query();
+		$popmake_loaded_popups->posts = array();
+	}
+
 	if ( $popmake_loaded_popups->have_posts() ) {
 		while ( $popmake_loaded_popups->have_posts() ) : $popmake_loaded_popups->next_post();
 			$popup = $popmake_loaded_popups->post;
