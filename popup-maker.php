@@ -253,6 +253,11 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-conditions.php';
 			}
 
+			// Modules
+			require_once POPMAKE_DIR . 'includes/modules/menus.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-debug.php';
+			require_once POPMAKE_DIR . 'includes/modules/admin-bar.php';
+
 			// Analytics
 			require_once POPMAKE_DIR . 'includes/class-pum-analytics.php';
 			if ( is_admin() ) {

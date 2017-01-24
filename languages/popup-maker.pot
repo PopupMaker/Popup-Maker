@@ -1435,6 +1435,14 @@ msgstr ""
 msgid "Select a popup"
 msgstr ""
 
+#: includes/modules/menus.php:116
+msgid "Trigger a Popup"
+msgstr ""
+
+#: includes/modules/menus.php:127
+msgid "Choose a popup to trigger when this item is clicked."
+msgstr ""
+
 #: includes/plugin-updater.php:181
 msgid "There is a new version of %1$s available. <a target=\"_blank\" class=\"thickbox\" href=\"%2$s\">View version %3$s details</a>."
 msgstr ""
