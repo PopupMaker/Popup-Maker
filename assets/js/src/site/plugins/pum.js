@@ -42,14 +42,26 @@ var PUM;
         close: function (el, callback) {
             PUM.getPopup(el).popmake('close', callback);
         },
-        clear_cookie: function (cookie_name, callback) {
+        preventOpen: function (el) {
+            PUM.getPopup(el).addClass('preventOpen');
+        },
+        setting: function (el, key) {
+            var $popup = PUM.getSettings(el),
+                settings = $popup.popmake('getSettings');
+
+            return typeof settings[key] !== 'undefined' ? settings[key] : null;
+        },
+        getCookie: function (cookie_name) {
+            return $.pm_cookie(cookie_name);
+        },
+        clearCookie: function (cookie_name, callback) {
             $.pm_remove_cookie(cookie_name);
 
             if (typeof callback === 'function') {
                 callback();
             }
         },
-        clear_cookies: function (el, callback) {
+        clearCookies: function (el, callback) {
             var $popup = PUM.getPopup(el),
                 settings = $popup.popmake('getSettings'),
                 cookies = settings.cookies,
