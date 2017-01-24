@@ -6,8 +6,24 @@ var PUM;
 (function ($, document, undefined) {
     "use strict";
 
+    function isInt(value) {
+        return !isNaN(value) && parseInt(Number(value)) == value && !isNaN(parseInt(value, 10));
+    }
+
     PUM = {
         getPopup: function (el) {
+
+            // Quick Shortcuts
+            if (isInt(el)) {
+                el = '#pum-' + el;
+            } else if (el === 'current') {
+                el = '.pum-overlay.pum-active:eq(0)';
+            } else if (el === 'open') {
+                el = '.pum-overlay.pum-active';
+            } else if (el === 'closed') {
+                el = '.pum-overlay:not(.pum-active)';
+            }
+
             var $this = $(el);
 
             if ($this.hasClass('pum-overlay')) {
@@ -19,6 +35,36 @@ var PUM;
             }
 
             return $this.parents('.pum-overlay').length ? $this.parents('.pum-overlay') : $();
+        },
+        open: function (el, callback) {
+            PUM.getPopup(el).popmake('open', callback);
+        },
+        close: function (el, callback) {
+            PUM.getPopup(el).popmake('close', callback);
+        },
+        clear_cookie: function (cookie_name, callback) {
+            $.pm_remove_cookie(cookie_name);
+
+            if (typeof callback === 'function') {
+                callback();
+            }
+        },
+        clear_cookies: function (el, callback) {
+            var $popup = PUM.getPopup(el),
+                settings = $popup.popmake('getSettings'),
+                cookies = settings.cookies,
+                cookie = null,
+                i;
+
+            if (cookies !== undefined && cookies.length) {
+                for (i = 0; cookies.length > i; i += 1) {
+                    $.pm_remove_cookie(cookies[i].settings.name);
+                }
+            }
+
+            if (typeof callback === 'function') {
+                callback();
+            }
         }
     };
 
