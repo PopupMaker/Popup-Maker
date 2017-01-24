@@ -41,6 +41,30 @@ var PUM;
         },
         close: function (el, callback) {
             PUM.getPopup(el).popmake('close', callback);
+        },
+        clear_cookie: function (cookie_name, callback) {
+            $.pm_remove_cookie(cookie_name);
+
+            if (typeof callback === 'function') {
+                callback();
+            }
+        },
+        clear_cookies: function (el, callback) {
+            var $popup = PUM.getPopup(el),
+                settings = $popup.popmake('getSettings'),
+                cookies = settings.cookies,
+                cookie = null,
+                i;
+
+            if (cookies !== undefined && cookies.length) {
+                for (i = 0; cookies.length > i; i += 1) {
+                    $.pm_remove_cookie(cookies[i].settings.name);
+                }
+            }
+
+            if (typeof callback === 'function') {
+                callback();
+            }
         }
     };
 
