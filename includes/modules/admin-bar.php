@@ -17,7 +17,7 @@ class PUM_Modules_Admin_Bar {
 	public static function init() {
 		add_action( 'admin_bar_menu', array( __CLASS__, 'toolbar_links' ), 999 );
 		//add_action( 'admin_bar_menu', array( __CLASS__, 'admin_toolbar_links' ), 999 );
-
+		add_action( 'wp_footer', array( __CLASS__, 'admin_bar_styles' ), 999 );
 		add_action( 'init', array( __CLASS__, 'show_debug_bar' ) );
 	}
 
@@ -30,6 +30,27 @@ class PUM_Modules_Admin_Bar {
 		}
 	}
 
+	public static function admin_bar_styles() {
+		if ( is_admin_bar_showing() ) : ?>
+			<style>
+				#wpadminbar {
+					z-index: 999999999999;
+				}
+				#wpadminbar #wp-admin-bar-popups > .ab-item::before {
+					/*background: url("<?php echo POPMAKE_URL; ?>/assets/images/admin/dashboard-icon.png") center center no-repeat transparent !important;*/
+					background: url("<?php echo POPMAKE_URL; ?>/assets/images/admin/icon-info-21x21.png") center center no-repeat transparent !important;
+					top: 3px;
+					content: "";
+					width: 20px;
+					height: 20px;
+				}
+				#wpadminbar #wp-admin-bar-popups:hover > .ab-item::before {
+					background-image: url("<?php echo POPMAKE_URL; ?>/assets/images/admin/icon-info-21x21.png")!important;
+				}
+
+			</style>
+		<?php endif;
+	}
 
 	/**
 	 * Add additional toolbar menu items to the front end.
@@ -41,28 +62,28 @@ class PUM_Modules_Admin_Bar {
 		if ( is_admin() ) {
 			return;
 		}
-
-		$wp_admin_bar->add_node( array(
-			'id'    => 'popup-maker',
-			'title' => __( 'Popup Maker', 'popup-maker' ),
-			'href'  => '#',
-			'meta'  => array( 'class' => 'popup-maker-toolbar' ),
-		) );
-
+		/*
+				$wp_admin_bar->add_node( array(
+					'id'    => 'popup-maker',
+					'title' => __( 'Popup Maker', 'popup-maker' ),
+					'href'  => '#',
+					'meta'  => array( 'class' => 'popup-maker-toolbar' ),
+				) );
+		*/
 		$popups = PUM_Modules_Admin_Bar::loaded_popups();
 
 		if ( count( $popups ) ) {
 			$wp_admin_bar->add_node( array(
-				'id'    => 'loaded-popups',
-				'title' => __( 'Loaded Popups', 'popup-maker' ),
-				'href'  => '#',
-				'parent' => 'popup-maker',
+				'id'     => 'popups',
+				'title'  => __( 'Popups', 'popup-maker' ),
+				'href'   => '#',
+				'parent' => false,
 			) );
 
 			foreach ( $popups as $popup ) {
 				/** @var WP_Post $popup */
 
-				$node_id = 'loaded-popup-' . $popup->ID;
+				$node_id = 'popup-' . $popup->ID;
 
 				$can_edit = current_user_can( 'edit_post', $popup->ID );
 
@@ -70,49 +91,50 @@ class PUM_Modules_Admin_Bar {
 
 				// Single Popup Menu Node
 				$wp_admin_bar->add_node( array(
-					'id'    => $node_id,
-					'title' => $popup->post_title,
-					'href'  => $edit_url,
-					'parent' => 'loaded-popups',
+					'id'     => $node_id,
+					'title'  => $popup->post_title,
+					'href'   => $edit_url,
+					'parent' => 'popups',
+				) );
+
+				// Trigger Link
+				$wp_admin_bar->add_node( array(
+					'id'     => $node_id . '-open',
+					'title'  => __( 'Open Popup', 'popup-maker' ),
+					'meta'   => array(
+						'onclick' => 'PUM.open(' . $popup->ID . ');',
+					),
+					'href'   => '#',
+					'parent' => $node_id,
+				) );
+
+				$wp_admin_bar->add_node( array(
+					'id'     => $node_id . '-close',
+					'title'  => __( 'Close Popup', 'popup-maker' ),
+					'meta'   => array(
+						'onclick' => 'PUM.close(' . $popup->ID . ');',
+					),
+					'href'   => '#',
+					'parent' => $node_id,
+				) );
+
+				$wp_admin_bar->add_node( array(
+					'id'     => $node_id . '-reset-cookies',
+					'title'  => __( 'Reset Cookies', 'popup-maker' ),
+					'href'   => '#',
+					'parent' => $node_id,
 				) );
 
 				if ( $can_edit ) {
 					// Edit Popup Link
 					$wp_admin_bar->add_node( array(
-						'id'    => $node_id . '-edit',
-						'title' => __( 'Edit', 'popup-maker' ),
-						'href'  => $edit_url,
+						'id'     => $node_id . '-edit',
+						'title'  => __( 'Edit Popup', 'popup-maker' ),
+						'href'   => $edit_url,
 						'parent' => $node_id,
 					) );
 				}
 
-				// Trigger Link
-				$wp_admin_bar->add_node( array(
-					'id'    => $node_id . '-trigger',
-					'title' => __( 'Trigger', 'popup-maker' ),
-					'meta' => array(
-						'onclick' => 'PUM.open(' . $popup->ID . ');',
-					),
-					'href'  => '#',
-					'parent' => $node_id,
-				) );
-
-				$wp_admin_bar->add_node( array(
-					'id'    => $node_id . '-trigger',
-					'title' => __( 'Close', 'popup-maker' ),
-					'meta' => array(
-						'onclick' => 'PUM.close(' . $popup->ID . ');',
-					),
-					'href'  => '#',
-					'parent' => $node_id,
-				) );
-
-				$wp_admin_bar->add_node( array(
-					'id'    => $node_id . '-reset-cookies',
-					'title' => __( 'Reset Cookies', 'popup-maker' ),
-					'href'  => '#',
-					'parent' => $node_id,
-				) );
 			}
 		}
 
