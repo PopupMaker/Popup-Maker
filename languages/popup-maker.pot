@@ -1,4 +1,4 @@
-# Copyright (C) 2016 popup-maker
+# Copyright (C) 2017 popup-maker
 # This file is distributed under the same license as the popup-maker package.
 msgid ""
 msgstr ""
@@ -7,7 +7,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "Language-Team: WP Popup Maker <support@wppopupmaker.com>\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -1560,7 +1560,7 @@ msgctxt "condition: post type plural label ie. Posts: Selected"
 msgid "%s: Selected"
 msgstr ""
 
-#: includes/pum-condition-functions.php:51
+#: includes/pum-condition-functions.php:51, includes/pum-condition-functions.php:80, includes/pum-condition-functions.php:96
 msgctxt "condition: post type plural label ie. Select Posts"
 msgid "Select %s."
 msgstr ""
@@ -1575,63 +1575,73 @@ msgctxt "condition: post type singular label ie. Posts IDs"
 msgid "%s IDs: 128, 129"
 msgstr ""
 
-#: includes/pum-condition-functions.php:79
+#: includes/pum-condition-functions.php:77
+msgctxt "condition: post type plural label ie. Posts: ID"
+msgid "%s: Child Of"
+msgstr ""
+
+#: includes/pum-condition-functions.php:93
+msgctxt "condition: post type plural label ie. Posts: ID"
+msgid "%s: Ancestor Of"
+msgstr ""
+
+#: includes/pum-condition-functions.php:115
 msgctxt "condition: post type plural label ie. Pages: With Template"
 msgid "%s: With Template"
 msgstr ""
 
-#: includes/pum-condition-functions.php:88
+#: includes/pum-condition-functions.php:122
 msgid "Default"
 msgstr ""
 
-#: includes/pum-condition-functions.php:118
+#: includes/pum-condition-functions.php:149
 msgctxt "condition: post type plural and taxonomy singular label ie. Posts: With Category"
 msgid "%1$s: With %2$s"
 msgstr ""
 
-#: includes/pum-condition-functions.php:121
+#: includes/pum-condition-functions.php:152
 msgctxt "condition: post type plural label ie. Select categories"
 msgid "Select %s."
 msgstr ""
 
-#: includes/pum-condition-functions.php:150
+#: includes/pum-condition-functions.php:181
 msgctxt "condition: taxonomy plural label ie. Categories: All"
 msgid "%s: All"
 msgstr ""
 
-#: includes/pum-condition-functions.php:156
+#: includes/pum-condition-functions.php:187
 msgctxt "condition: taxonomy plural label ie. Categories: Selected"
 msgid "%s: Selected"
 msgstr ""
 
-#: includes/pum-condition-functions.php:159
+#: includes/pum-condition-functions.php:190
 msgctxt "condition: taxonomy plural label ie. Select Categories"
 msgid "Select %s."
 msgstr ""
 
-#: includes/pum-condition-functions.php:172
+#: includes/pum-condition-functions.php:203
 msgctxt "condition: taxonomy plural label ie. Categories: Selected"
 msgid "%s: IDs"
 msgstr ""
 
-#: includes/pum-condition-functions.php:175
+#: includes/pum-condition-functions.php:206
 msgctxt "condition: taxonomy plural label ie. Category IDs"
 msgid "%s IDs: 128, 129"
 msgstr ""
 
-#: includes/pum-condition-functions.php:199
+#: includes/pum-condition-functions.php:230
 msgid "Home Page"
 msgstr ""
 
-#: includes/pum-condition-functions.php:206
+#: includes/pum-condition-functions.php:237
 msgid "Blog Index"
 msgstr ""
 
-#: includes/pum-condition-functions.php:213
+#: includes/pum-condition-functions.php:244
 msgid "Search Pages"
 msgstr ""
 
-#: includes/pum-condition-functions.php:219
+#: includes/pum-condition-functions.php:250
 msgid "404 Pages"
 msgstr ""
 

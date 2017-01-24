@@ -88,6 +88,7 @@ There are several common causes for this which include:
 == Changelog ==
 
 = v1.5.0 - TBD
+* Feature: New global JS functions for easily working with popups. PUM.open(123), PUM.close(123), PUM.clearCookies(123).
 * Feature: Added new conditions for targeting children & grandchildren / ancestors of selected content.
 
 = v1.4.21 - 12/12/2016 =
