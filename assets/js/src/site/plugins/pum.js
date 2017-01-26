@@ -83,6 +83,7 @@ var PUM;
     $.fn.popmake = function (method) {
         // Method calling logic
         if ($.fn.popmake.methods[method]) {
+            $(document).trigger('pumMethodCall', arguments);
             return $.fn.popmake.methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
         }
         if (typeof method === 'object' || !method) {
@@ -449,6 +450,8 @@ var PUM;
                         });
                 }
             }
+
+            $popup.trigger('pumAfterReposition');
 
             // TODO: Remove the add class and migrate the trigger to the $popup with pum prefix.
             $container
