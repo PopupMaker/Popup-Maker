@@ -2,11 +2,15 @@ var pum_debug_mode = false,
     pum_debug;
 (function ($) {
 
-    pum_debug_mode = pum_vars.debug_mode;
+    pum_debug_mode = pum_vars.debug_mode !== undefined && pum_vars.debug_mode;
+
+    // Force Debug Mode when the ?pum_debug query arg is present.
+    if (!pum_debug_mode && window.location.href.indexOf('pum_debug') !== -1) {
+        pum_debug_mode = true;
+    }
 
     var inited = current_popup_event = false,
         vars = pum_debug_vars || {};
-
 
     pum_debug = {
         odump: function (o) {
