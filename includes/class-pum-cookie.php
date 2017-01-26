@@ -31,8 +31,14 @@ class PUM_Cookie extends PUM_Fields {
 	public function __construct( $args = array() ) {
 		$this->id = $args['id'];
 
+		$labels = pum_get_cookie_labels();
+
 		if ( ! empty( $args['labels'] ) ) {
 			$this->set_labels( $args['labels'] );
+		} elseif ( isset( $labels[ $args['id'] ] ) ) {
+			$this->set_labels( $labels[ $args['id'] ] );
+		} else {
+			$this->set_labels();
 		}
 
 		return parent::__construct( $args );

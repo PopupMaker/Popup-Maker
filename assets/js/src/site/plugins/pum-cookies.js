@@ -4,6 +4,9 @@
     $.extend($.fn.popmake.methods, {
         addCookie: function (type) {
             // Method calling logic
+
+            pum.hooks.doAction('popmake.addCookie', arguments);
+
             if ($.fn.popmake.cookies[type]) {
                 return $.fn.popmake.cookies[type].apply(this, Array.prototype.slice.call(arguments, 1));
             }
@@ -19,9 +22,11 @@
                 settings.session ? null : settings.time,
                 settings.path ? '/' : null
             );
+            pum.hooks.doAction('popmake.setCookie', settings);
         },
         checkCookies: function (settings) {
-            var i;
+            var i,
+                ret = false;
 
             if (settings.cookie === undefined || settings.cookie.name === undefined || settings.cookie.name === null) {
                 return false;
@@ -32,18 +37,20 @@
             case 'array':
                 for (i = 0; settings.cookie.name.length > i; i += 1) {
                     if ($.pm_cookie(settings.cookie.name[i]) !== undefined) {
-                        return true;
+                         ret = true;
                     }
                 }
                 break;
             case 'string':
                 if ($.pm_cookie(settings.cookie.name) !== undefined) {
-                    return true;
+                    ret = true;
                 }
                 break;
             }
 
-            return false;
+            pum.hooks.doAction('popmake.checkCookies', settings, ret);
+
+            return ret;
         }
     });
 
