@@ -136,6 +136,8 @@ function popmake_render_popup_theme_styles() {
 		return;
 	}
 
+	global $pum_extra_styles;
+
 	$styles = get_transient( 'popmake_theme_styles' );
 	if ( ! $styles || defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 
@@ -179,6 +181,9 @@ function popmake_render_popup_theme_styles() {
 	} ?>
 	<style id="pum-styles" type="text/css">
 	<?php echo $styles; ?>
+
+	<?php echo $pum_extra_styles; ?>
+
 	<?php do_action( 'pum_styles'); ?>
 	</style><?php
 }
@@ -345,9 +350,20 @@ add_action( 'wp_head', 'popmake_script_loading_enabled' );
 
 function popmake_enqueue_scripts( $popup_id = null ) {
 
+	global $pum_extra_styles;
+
 	$popup = new PUM_Popup( $popup_id );
 	if ( $popup->mobile_disabled() || $popup->tablet_disabled() ) {
 		wp_enqueue_script( 'mobile-detect' );
+	}
+
+	$triggers = $popup->get_triggers();
+
+	foreach( $triggers as $trigger ) {
+		if ( $trigger['type'] == 'auto_open' && $trigger['settings']['delay'] == 0 ) {
+			$pum_extra_styles .= "#pum-" . $popup_id . " {display: block;}\r\n";
+			break;
+		}
 	}
 
 	$scripts_needed = apply_filters( 'popmake_enqueue_scripts', array(
@@ -369,7 +385,8 @@ function popmake_enqueue_scripts( $popup_id = null ) {
 			wp_enqueue_style( $style );
 		}
 	}
+
+
 }
 
 add_action( 'popmake_preload_popup', 'popmake_enqueue_scripts' );
-
