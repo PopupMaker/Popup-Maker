@@ -98,6 +98,7 @@ There are several common causes for this which include:
 * Tweak: Mobile Disable was also applied to tablets, now only to phones.
 * Tweak: Removed readonly from rangesliders to make the fact you can manually enter any value more intuitive.
 * Tweak: Use CSS to display a popup immediately if has trigger: auto open: delay 0.
+* Tweak: Clicking elements in the visual theme preview will now scroll to the relevant section of settings.
 * Fix: Bug in admin when editing a trigger, cookie field didn't repopulate properly.
 * Fix: Bug where rangeslider values can be set to strings.
 

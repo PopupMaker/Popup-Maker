@@ -8259,7 +8259,39 @@ var PopMakeAdmin, PUM_Admin;
         },
         theme_page_listeners: function () {
             var self = this;
+
+            $('.empreview .example-popup-overlay, .empreview .example-popup, .empreview .title, .empreview .content, .empreview .close-popup').css('cursor', 'pointer');
             $(document)
+                .on('click', '.empreview .example-popup-overlay, .empreview .example-popup, .empreview .title, .empreview .content, .empreview .close-popup', function (event) {
+                    var $this = $(this),
+                        clicked_class = $this.attr('class'),
+                        pos = 0;
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    switch( clicked_class) {
+                    case 'example-popup-overlay':
+                        pos = $('#popmake_popup_theme_overlay').offset().top;
+                        break;
+                    case 'example-popup':
+                        pos = $('#popmake_popup_theme_container').offset().top;
+                        break;
+                    case 'title':
+                        pos = $('#popmake_popup_theme_title').offset().top;
+                        break;
+                    case 'content':
+                        pos = $('#popmake_popup_theme_content').offset().top;
+                        break;
+                    case 'close-popup':
+                        pos = $('#popmake_popup_theme_close').offset().top;
+                        break;
+                    }
+
+                    $("html, body").animate({
+                        scrollTop: pos + 'px'
+                    });
+                })
                 .on('change', 'select.font-family', function () {
                     $('select.font-weight option, select.font-style option', $(this).parents('table')).prop('selected', false);
                     self.update_font_selectboxes();
