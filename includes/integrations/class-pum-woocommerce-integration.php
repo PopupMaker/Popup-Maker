@@ -14,6 +14,16 @@ class PUM_Woocommerce_Integration {
 		}
 	}
 
+	public static function is_wc_endpoint_url( $settings = array() ) {
+		$results = array();
+
+		foreach ( $settings['selected'] as $key ) {
+			$results[] = is_wc_endpoint_url( $key );
+		}
+
+		return in_array( true, $results );
+	}
+
 	public static function get_conditions( $conditions = array() ) {
 
 		// Add Additional Conditions
@@ -51,6 +61,33 @@ class PUM_Woocommerce_Integration {
 				'name' => __( 'Account Page', 'popup-maker' ),
 			),
 			'callback' => 'is_account_page',
+		);
+
+		$conditions['is_wc_endpoint_url'] = array(
+			'group'    => __( 'WooCommerce', 'woocommerce' ),
+			'labels'   => array(
+				'name' => __( 'Is Enpoint', 'popup-maker' ),
+			),
+			'fields'   => array(
+				'selected' => array(
+					'placeholder' => __( 'Selected Enpoints', 'popup-maker' ),
+					'type'        => 'select',
+					'select2' => true,
+					'multiple'    => true,
+					'as_array'    => true,
+					'options'     => array(
+						'order-pay'          => 'order-pay',
+						'order-received'     => 'order-received',
+						'view-order'         => 'view-order',
+						'edit-account'       => 'edit-account',
+						'edit-address'       => 'edit-address',
+						'lost-password'      => 'lost-password',
+						'customer-logout'    => 'customer-logout',
+						'add-payment-method' => 'add-payment-method',
+					),
+				),
+			),
+			'callback' => array( __CLASS__, 'is_wc_endpoint_url' ),
 		);
 
 		return $conditions;

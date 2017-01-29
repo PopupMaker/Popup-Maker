@@ -1419,24 +1419,32 @@ msgstr ""
 msgid "Ninja Form Success"
 msgstr ""
 
-#: includes/integrations/class-pum-woocommerce-integration.php:23
+#: includes/integrations/class-pum-woocommerce-integration.php:33
 msgid "All WooCommerce"
 msgstr ""
 
-#: includes/integrations/class-pum-woocommerce-integration.php:30
+#: includes/integrations/class-pum-woocommerce-integration.php:40
 msgid "Shop Page"
 msgstr ""
 
-#: includes/integrations/class-pum-woocommerce-integration.php:37
+#: includes/integrations/class-pum-woocommerce-integration.php:47
 msgid "Cart Page"
 msgstr ""
 
-#: includes/integrations/class-pum-woocommerce-integration.php:44
+#: includes/integrations/class-pum-woocommerce-integration.php:54
 msgid "Checkout Page"
 msgstr ""
 
-#: includes/integrations/class-pum-woocommerce-integration.php:51
+#: includes/integrations/class-pum-woocommerce-integration.php:61
 msgid "Account Page"
+msgstr ""
+
+#: includes/integrations/class-pum-woocommerce-integration.php:69
+msgid "Is Enpoint"
+msgstr ""
+
+#: includes/integrations/class-pum-woocommerce-integration.php:73
+msgid "Selected Enpoints"
 msgstr ""
 
 #: includes/integrations/ninja-forms/Actions/ClosePopup.php:36, includes/modules/admin-bar.php:113

@@ -94,6 +94,7 @@ There are several common causes for this which include:
 * Feature: Added a new debug mode. Including:
   * Admin Bar with manual open, close & cookie resets for loaded popups.
 * Feature: Addded option to Disable on Tablets as well as mobile phones.
+* Feature: Added WooCommerce is_wc_endpoint_url conditions.
 * Tweak: Mobile Disable was also applied to tablets, now only to phones.
 * Tweak: Removed readonly from rangesliders to make the fact you can manually enter any value more intuitive.
 * Tweak: Use CSS to display a popup immediately if has trigger: auto open: delay 0.
