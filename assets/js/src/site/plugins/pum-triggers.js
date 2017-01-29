@@ -22,7 +22,7 @@
             setTimeout(function () {
 
                 // If the popup is already open return.
-                if ($popup.hasClass('pum-open') || $popup.popmake('getContainer').hasClass('active')) {
+                if ($popup.popmake('state', 'isOpen')) {
                     return;
                 }
 

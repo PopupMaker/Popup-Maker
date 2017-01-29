@@ -150,6 +150,20 @@ var PUM;
         getSettings: function () {
             return $(this).data('popmake');
         },
+        state: function (test) {
+            var $popup = PUM.getPopup(this);
+
+            if (undefined !== test) {
+                switch(test) {
+                case 'isOpen':
+                    return $popup.hasClass('pum-open') || $popup.popmake('getContainer').hasClass('active');
+                    break;
+                case 'isClosed':
+                    return ! $popup.hasClass('pum-open') && ! $popup.popmake('getContainer').hasClass('active');
+                    break;
+                }
+            }
+        },
         open: function (callback) {
             var $popup = PUM.getPopup(this),
                 $container = $popup.popmake('getContainer'),
