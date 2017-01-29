@@ -196,6 +196,9 @@ var pum_debug_mode = false,
                 // Mobile Disabled.
                 console.log(vars.label_mobile_disabled, settings.mobile_disabled !== null);
 
+                // Tablet Disabled.
+                console.log(vars.label_tablet_disabled, settings.tablet_disabled !== null);
+
                 // Display Settings.
                 console.log(vars.label_display_settings, pum_debug.odump(settings.meta.display));
 

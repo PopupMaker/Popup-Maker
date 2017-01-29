@@ -70,6 +70,7 @@ function popmake_load_site_scripts() {
 		'label_settings'                => _x( 'Settings:', 'debug console text', 'popup-maker' ),
 		'label_selector'                => _x( 'Selector:', 'debug console text', 'popup-maker' ),
 		'label_mobile_disabled'         => _x( 'Mobile Disabled:', 'debug console text', 'popup-maker' ),
+		'label_tablet_disabled'         => _x( 'Tablet Disabled:', 'debug console text', 'popup-maker' ),
 		'label_display_settings'        => _x( 'Display Settings:', 'debug console text', 'popup-maker' ),
 		'label_close_settings'          => _x( 'Close Settings:', 'debug console text', 'popup-maker' ),
 		'label_event_before_open'       => _x( 'Event: Before Open', 'debug console text', 'popup-maker' ),
@@ -345,7 +346,7 @@ add_action( 'wp_head', 'popmake_script_loading_enabled' );
 function popmake_enqueue_scripts( $popup_id = null ) {
 
 	$popup = new PUM_Popup( $popup_id );
-	if ( $popup->mobile_disabled() ) {
+	if ( $popup->mobile_disabled() || $popup->tablet_disabled() ) {
 		wp_enqueue_script( 'mobile-detect' );
 	}
 

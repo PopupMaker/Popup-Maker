@@ -1180,7 +1180,17 @@ var PUM_Analytics;
                     md = new MobileDetect(window.navigator.userAgent);
                 }
 
-                if (md.mobile()) {
+                if (md.phone()) {
+                    return false
+                }
+            }
+
+            if (settings.tablet_disabled !== undefined && settings.tablet_disabled) {
+                if (typeof md !== 'object') {
+                    md = new MobileDetect(window.navigator.userAgent);
+                }
+
+                if (md.tablet()) {
                     return false
                 }
             }
@@ -1724,6 +1734,9 @@ var pum_debug_mode = false,
 
                 // Mobile Disabled.
                 console.log(vars.label_mobile_disabled, settings.mobile_disabled !== null);
+
+                // Tablet Disabled.
+                console.log(vars.label_tablet_disabled, settings.tablet_disabled !== null);
 
                 // Display Settings.
                 console.log(vars.label_display_settings, pum_debug.odump(settings.meta.display));
