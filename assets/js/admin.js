@@ -7274,6 +7274,11 @@ var PUMRangeSLiders;
                 value = parseInt($this.val(), 0),
                 $slider = $this.prev();
 
+            if (isNaN(value)) {
+                value = $slider.val();
+                $this.val(value);
+            }
+
             if (force && value > max) {
                 value = max;
                 $this.val(value);

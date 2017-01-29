@@ -98,6 +98,7 @@ There are several common causes for this which include:
 * Tweak: Removed readonly from rangesliders to make the fact you can manually enter any value more intuitive.
 * Tweak: Use CSS to display a popup immediately if has trigger: auto open: delay 0.
 * Fix: Bug in admin when editing a trigger, cookie field didn't repopulate properly.
+* Fix: Bug where rangeslider values can be set to strings.
 
 = v1.4.21 - 12/12/2016 =
 * Feature: Added option to disable popup on mobile to comply with [Google's new interstital policy](https://webmasters.googleblog.com/2016/08/helping-users-easily-access-content-on.html).
