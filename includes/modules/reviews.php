@@ -309,7 +309,7 @@ class PUM_Modules_Reviews {
 		$group  = self::get_trigger_group();
 		$code   = self::get_trigger_code();
 		$pri    = self::get_current_trigger( 'pri' );
-		$tigger = self::get_current_trigger();
+		$trigger = self::get_current_trigger();
 
 		// Used to anonymously distinguish unique site+user combinations in terms of effectiveness of each trigger.
 		$uuid = wp_hash( home_url() . '-' . get_current_user_id() );
@@ -377,6 +377,7 @@ class PUM_Modules_Reviews {
 					});
 			}(jQuery));
 		</script>
+
 		<style>
 			.pum-notice p {
 				margin-bottom: 0;
@@ -391,20 +392,19 @@ class PUM_Modules_Reviews {
 			}
 		</style>
 
-
 		<div class="notice notice-success is-dismissible pum-notice">
 
 			<p>
 				<img class="logo" src="<?php echo POPMAKE_URL; ?>/includes/libs/freemius/assets/img/plugin-icon.png" />
 				<strong>
-					<?php echo $tigger['message']; ?>
+					<?php echo $trigger['message']; ?>
 					<br />
 					~ danieliser
 				</strong>
 			</p>
 			<ul>
 				<li>
-					<a class="pum-dismiss" target="_blank" href="https://wordpress.org/support/plugin/popup-maker/reviews/?rate=5#rate-response" data-reason="am_now">
+					<a class="pum-dismiss" target="_blank" href="<?php echo $trigger['link']; ?>>" data-reason="am_now">
 						<strong><?php _e( 'Ok, you deserve it', 'popup-maker' ); ?></strong>
 					</a>
 				</li>
