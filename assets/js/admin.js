@@ -7875,9 +7875,9 @@ var PUMTriggers;
                 }
             });
 
-            $cookie.val(trigger_settings.cookie.name);
-
-            $cookie.trigger("chosen:updated");
+            $cookie
+                .val(trigger_settings.cookie.name)
+                .trigger('change.pumselect2');
         },
         cookie_column_value: function (cookie_name) {
             var cookie_text = I10n.no_cookie;
