@@ -219,7 +219,6 @@ var PUM_Templates;
                 }
                 break;
             case 'rangeslider':
-                data.meta.readonly = true;
                 data.meta.step = data.step;
                 data.meta.min = data.min;
                 data.meta.max = data.max;

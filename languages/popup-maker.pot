@@ -60,11 +60,11 @@ msgstr ""
 msgid "A Popup Preview"
 msgstr ""
 
-#: includes/admin/class-pum-admin-helpers.php:14, includes/scripts.php:245
+#: includes/admin/class-pum-admin-helpers.php:14, includes/scripts.php:246
 msgid "Cancel"
 msgstr ""
 
-#: includes/admin/class-pum-admin-helpers.php:16, includes/scripts.php:241
+#: includes/admin/class-pum-admin-helpers.php:16, includes/scripts.php:242
 msgid "Add"
 msgstr ""
 
@@ -224,45 +224,53 @@ msgstr ""
 msgid "Conditions"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:69
+#: includes/admin/popups/class-metabox-conditions.php:71
 msgid "Conditions are used to limit where and who will see a popup. %sLearn More!%s"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:93, includes/admin/popups/class-metabox-conditions.php:131, includes/admin/popups/class-metabox-conditions.php:213
+#: includes/admin/popups/class-metabox-conditions.php:92, includes/admin/popups/class-metabox-conditions.php:130, includes/admin/popups/class-metabox-conditions.php:238
 msgid "Enable the Not Operand"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:108, includes/admin/popups/class-metabox-conditions.php:239
+#: includes/admin/popups/class-metabox-conditions.php:107, includes/admin/popups/class-metabox-conditions.php:266
 msgid "Remove Condition"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:116, includes/admin/popups/class-metabox-conditions.php:186
+#: includes/admin/popups/class-metabox-conditions.php:115, includes/admin/popups/class-metabox-conditions.php:211
 msgctxt "aria-label for add new OR condition button"
 msgid "Add another OR condition"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:116, includes/admin/popups/class-metabox-conditions.php:186
+#: includes/admin/popups/class-metabox-conditions.php:115, includes/admin/popups/class-metabox-conditions.php:211
 msgid "or"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:120, includes/admin/popups/class-metabox-conditions.php:190
+#: includes/admin/popups/class-metabox-conditions.php:119, includes/admin/popups/class-metabox-conditions.php:215
 msgctxt "aria-label for add new AND condition button"
 msgid "Add another AND condition group"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:120, includes/admin/popups/class-metabox-conditions.php:190
+#: includes/admin/popups/class-metabox-conditions.php:119, includes/admin/popups/class-metabox-conditions.php:215
 msgid "and"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:129
+#: includes/admin/popups/class-metabox-conditions.php:128
 msgid "Choose a condition to get started."
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:141
+#: includes/admin/popups/class-metabox-conditions.php:140
 msgid "Disable this popup on mobile devices."
 msgstr ""
 
-#: includes/admin/popups/class-metabox-conditions.php:218, includes/class-pum-conditions.php:132
+#: includes/admin/popups/class-metabox-conditions.php:146
+msgid "Disable this popup on tablet devices."
+msgstr ""
+
+#: includes/admin/popups/class-metabox-conditions.php:154
+msgid "Need more %sadvanced targeting%s options?"
+msgstr ""
+
+#: includes/admin/popups/class-metabox-conditions.php:244, includes/class-pum-conditions.php:132
 msgid "Select a condition"
 msgstr ""
 
@@ -723,7 +731,7 @@ msgstr ""
 msgid "Popup Maker Settings"
 msgstr ""
 
-#: includes/admin/settings/settings-page.php:52, includes/admin/settings/settings-page.php:58, includes/admin/tools/tools-page.php:54, includes/admin/tools/tools-page.php:61, includes/scripts.php:242
+#: includes/admin/settings/settings-page.php:52, includes/admin/settings/settings-page.php:58, includes/admin/tools/tools-page.php:54, includes/admin/tools/tools-page.php:61, includes/scripts.php:243
 msgid "Save"
 msgstr ""
 
@@ -1167,7 +1175,7 @@ msgstr ""
 msgid "Google Web Fonts&#10549;"
 msgstr ""
 
-#: includes/input-options.php:26, includes/input-options.php:115, includes/scripts.php:253
+#: includes/input-options.php:26, includes/input-options.php:115, includes/scripts.php:254
 msgid "None"
 msgstr ""
 
@@ -1461,6 +1469,38 @@ msgstr ""
 
 #: includes/modules/menus.php:127
 msgid "Choose a popup to trigger when this item is clicked."
+msgstr ""
+
+#: includes/modules/reviews.php:226
+msgid "Hi there! You've been using Popup Maker on your site for %s - I hope it's been helpful. If you're enjoying my plugin, would you mind rating it 5-stars to help spread the word?"
+msgstr ""
+
+#: includes/modules/reviews.php:231
+msgid "1 week"
+msgstr ""
+
+#: includes/modules/reviews.php:239
+msgid "1 month"
+msgstr ""
+
+#: includes/modules/reviews.php:247
+msgid "3 months"
+msgstr ""
+
+#: includes/modules/reviews.php:265
+msgid "Hi there! You've recently hit %s popup views on your site – that’s awesome!! If you'd like to celebrate this milestone, rate Popup Maker 5-stars to help spread the word!"
+msgstr ""
+
+#: includes/modules/reviews.php:408
+msgid "Ok, you deserve it"
+msgstr ""
+
+#: includes/modules/reviews.php:413
+msgid "Nope, maybe later"
+msgstr ""
+
+#: includes/modules/reviews.php:418
+msgid "I already did"
 msgstr ""
 
 #: includes/plugin-updater.php:181
@@ -1858,84 +1898,89 @@ msgstr ""
 
 #: includes/scripts.php:73
 msgctxt "debug console text"
-msgid "Display Settings:"
+msgid "Tablet Disabled:"
 msgstr ""
 
 #: includes/scripts.php:74
 msgctxt "debug console text"
-msgid "Close Settings:"
+msgid "Display Settings:"
 msgstr ""
 
 #: includes/scripts.php:75
 msgctxt "debug console text"
-msgid "Event: Before Open"
+msgid "Close Settings:"
 msgstr ""
 
 #: includes/scripts.php:76
 msgctxt "debug console text"
-msgid "Event: After Open"
+msgid "Event: Before Open"
 msgstr ""
 
 #: includes/scripts.php:77
 msgctxt "debug console text"
-msgid "Event: Open Prevented"
+msgid "Event: After Open"
 msgstr ""
 
 #: includes/scripts.php:78
 msgctxt "debug console text"
-msgid "Event: Setup Close"
+msgid "Event: Open Prevented"
 msgstr ""
 
 #: includes/scripts.php:79
 msgctxt "debug console text"
-msgid "Event: Close Prevented"
+msgid "Event: Setup Close"
 msgstr ""
 
 #: includes/scripts.php:80
 msgctxt "debug console text"
-msgid "Event: Before Close"
+msgid "Event: Close Prevented"
 msgstr ""
 
 #: includes/scripts.php:81
 msgctxt "debug console text"
-msgid "Event: After Close"
+msgid "Event: Before Close"
 msgstr ""
 
 #: includes/scripts.php:82
 msgctxt "debug console text"
-msgid "Event: Before Reposition"
+msgid "Event: After Close"
 msgstr ""
 
 #: includes/scripts.php:83
 msgctxt "debug console text"
+msgid "Event: Before Reposition"
+msgstr ""
+
+#: includes/scripts.php:84
+msgctxt "debug console text"
 msgid "Event: After Reposition"
 msgstr ""
 
-#: includes/scripts.php:95
+#: includes/scripts.php:96
 msgid "Powered By Popup Maker"
 msgstr ""
 
-#: includes/scripts.php:243
+#: includes/scripts.php:244
 msgid "Update"
 msgstr ""
 
-#: includes/scripts.php:244
+#: includes/scripts.php:245
 msgid "Insert"
 msgstr ""
 
-#: includes/scripts.php:246
+#: includes/scripts.php:247
 msgid "Popup Maker Shortcodes"
 msgstr ""
 
-#: includes/scripts.php:247
+#: includes/scripts.php:248
 msgid "Are you sure you want to delete this trigger?"
 msgstr ""
 
-#: includes/scripts.php:248
+#: includes/scripts.php:249
 msgid "Are you sure you want to delete this cookie?"
 msgstr ""
 
-#: includes/scripts.php:254
+#: includes/scripts.php:255
 msgid "Are you sure you want to reset the open count?"
 msgstr ""
 

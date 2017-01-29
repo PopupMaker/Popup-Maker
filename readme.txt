@@ -95,6 +95,7 @@ There are several common causes for this which include:
   * Admin Bar with manual open, close & cookie resets for loaded popups.
 * Feature: Addded option to Disable on Tablets as well as mobile phones.
 * Tweak: Mobile Disable was also applied to tablets, now only to phones.
+* Tweak: Removed readonly from rangesliders to make the fact you can manually enter any value more intuitive.
 
 = v1.4.21 - 12/12/2016 =
 * Feature: Added option to disable popup on mobile to comply with [Google's new interstital policy](https://webmasters.googleblog.com/2016/08/helping-users-easily-access-content-on.html).

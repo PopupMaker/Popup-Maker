@@ -25,7 +25,7 @@ function popmake_popup_theme_overlay_meta_box_field_background( $popup_theme_id 
 			<label for="popup_theme_overlay_background_opacity"><?php _e( 'Opacity', 'popup-maker' );?></label>
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_overlay( $popup_theme_id, 'background_opacity' ))?>"
 				name="popup_theme_overlay_background_opacity"
 				id="popup_theme_overlay_background_opacity"

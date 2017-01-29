@@ -35,7 +35,7 @@ function popmake_popup_close_meta_box_field_button_delay( $popup_id ) { ?>
 			<?php _e( 'Close Button Delay', 'popup-maker' ); ?>
 		</label>
 	<td>
-		<input type="text" readonly
+		<input type="text"
 		       value="<?php esc_attr_e( popmake_get_popup_close( $popup_id, 'button_delay' ) ) ?>"
 		       name="popup_close_button_delay"
 		       id="popup_close_button_delay"

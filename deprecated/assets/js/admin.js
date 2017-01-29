@@ -303,14 +303,6 @@ var PopMakeAdmin;
             });
 
             jQuery(document)
-                .on('click', '.popmake-range-manual', function () {
-                    var $this = jQuery(this);
-                    $this.prop('readonly', false);
-                })
-                .on('focusout', '.popmake-range-manual', function () {
-                    var $this = jQuery(this);
-                    $this.prop('readonly', true);
-                })
                 .on('change', '.popmake-range-manual', function () {
 
                     var $this = jQuery(this),

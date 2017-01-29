@@ -712,7 +712,7 @@ class PUM_Fields extends Popmake_Fields {
 			<label for="<?php esc_attr_e( $args['id'] ); ?>"><?php esc_html_e( $args['label'] ); ?></label><?php
 		} ?>
 
-		<input type="text" readonly
+		<input type="text"
 		       value="<?php echo $value; ?>"
 		       name="<?php esc_attr_e( $args['name'] ); ?>"
 		       id="<?php esc_attr_e( $args['id'] ); ?>"

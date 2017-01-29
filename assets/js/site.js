@@ -1539,7 +1539,11 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
 }(jQuery, document));
 var pum_debug_mode = false,
     pum_debug;
-(function ($) {
+(function ($, pum_vars) {
+
+    pum_vars = window.pum_vars || {
+            debug_mode: false
+        };
 
     pum_debug_mode = pum_vars.debug_mode !== undefined && pum_vars.debug_mode;
 
@@ -1549,7 +1553,7 @@ var pum_debug_mode = false,
     }
 
     var inited = current_popup_event = false,
-        vars = pum_debug_vars || {};
+        vars = window.pum_debug_vars || {};
 
     pum_debug = {
         odump: function (o) {

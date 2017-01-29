@@ -70,14 +70,6 @@ var PUMRangeSLiders;
             var $this = $(this);
             $this.siblings('.popmake-range-manual').val($this.val());
         })
-        .on('click', '.popmake-range-manual', function () {
-            var $this = $(this);
-            $this.prop('readonly', false);
-        })
-        .on('focusout', '.popmake-range-manual', function () {
-            var $this = $(this);
-            $this.prop('readonly', true);
-        })
         .on('change', '.popmake-range-manual', function () {
             var $this = $(this),
                 max = parseInt($this.prop('max'), 0),
