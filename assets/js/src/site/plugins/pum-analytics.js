@@ -11,26 +11,37 @@ var PUM_Analytics;
     $.fn.popmake.last_close_trigger = null;
     $.fn.popmake.conversion_trigger = null;
 
+    var rest_enabled = typeof pum_vars.restapi !== 'undefined' && pum_vars.restapi ? true : false;
+
     PUM_Analytics = {
         beacon: function (opts) {
-            var beacon = new Image();
+            var beacon = new Image(),
+                url = rest_enabled ? pum_vars.restapi : pum_vars.ajaxurl;
 
-            opts = $.extend(true, {}, {
-                url: pum_vars.ajaxurl || null,
+            opts = $.extend(true, {
+                route: '/analytics/open',
+                type: 'open',
                 data: {
-                    action: 'pum_analytics',
+                    pid: null,
                     _cache: (+(new Date()))
                 },
                 callback: function () {}
             }, opts);
 
+            if (!rest_enabled) {
+                opts.data.action = 'pum_analytics';
+                opts.data.type = opts.type;
+            } else {
+                url += opts.route;
+            }
+
             // Create a beacon if a url is provided
-            if (opts.url) {
+            if (url) {
                 // Attach the event handlers to the image object
                 $(beacon).on('error success load done', opts.callback);
 
                 // Attach the src for the script call
-                beacon.src = opts.url + '?' + $.param(opts.data);
+                beacon.src = url + '?' + $.param(opts.data);
             }
         }
     };
@@ -44,8 +55,7 @@ var PUM_Analytics;
         .on('pumAfterOpen.core_analytics', 'body > .pum', function () {
             var $popup = PUM.getPopup(this),
                 data = {
-                    pid: parseInt($popup.popmake('getSettings').id, 10) || null,
-                    type: 'open'
+                    pid: parseInt($popup.popmake('getSettings').id, 10) || null
                 };
 
             if (data.pid > 0 && !$('body').hasClass('single-popup')) {
