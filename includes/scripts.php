@@ -49,7 +49,7 @@ function popmake_load_site_scripts() {
 		'restapi'       => function_exists( 'rest_url' ) ? esc_url_raw( rest_url( 'pum/v1' ) ) : false,
 		'rest_nonce'    => is_user_logged_in() ? wp_create_nonce( 'wp_rest' ) : null,
 		'default_theme' => (string) popmake_get_default_popup_theme(),
-		'debug_mode'    => PUM_Debug::on(),
+		'debug_mode'    => Popup_Maker::debug_mode(),
 	) ) );
 
 	wp_localize_script( 'popup-maker-site', 'pum_debug_vars', apply_filters( 'pum_debug_vars', array(

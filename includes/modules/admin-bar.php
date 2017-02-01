@@ -25,7 +25,7 @@ class PUM_Modules_Admin_Bar {
 	 * Renders the admin debug bar when PUM Debug is enabled.
 	 */
 	public static function show_debug_bar() {
-		if ( PUM_Debug::on() ) {
+		if ( Popup_Maker::debug_mode() ) {
 			show_admin_bar( true );
 		}
 	}
