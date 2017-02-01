@@ -46,6 +46,8 @@ function popmake_load_site_scripts() {
 
 	wp_localize_script( 'popup-maker-site', 'pum_vars', apply_filters( 'pum_vars', array(
 		'ajaxurl'       => admin_url( 'admin-ajax.php' ),
+		'restapi'       => function_exists( 'rest_url' ) ? esc_url_raw( rest_url( 'pum/v1' ) ) : false,
+		'rest_nonce'    => is_user_logged_in() ? wp_create_nonce( 'wp_rest' ) : null,
 		'default_theme' => (string) popmake_get_default_popup_theme(),
 		'debug_mode'    => PUM_Debug::on(),
 	) ) );
@@ -355,15 +357,6 @@ function popmake_enqueue_scripts( $popup_id = null ) {
 	$popup = new PUM_Popup( $popup_id );
 	if ( $popup->mobile_disabled() || $popup->tablet_disabled() ) {
 		wp_enqueue_script( 'mobile-detect' );
-	}
-
-	$triggers = $popup->get_triggers();
-
-	foreach( $triggers as $trigger ) {
-		if ( $trigger['type'] == 'auto_open' && $trigger['settings']['delay'] == 0 ) {
-			$pum_extra_styles .= "#pum-" . $popup_id . " {display: block;}\r\n";
-			break;
-		}
 	}
 
 	$scripts_needed = apply_filters( 'popmake_enqueue_scripts', array(
