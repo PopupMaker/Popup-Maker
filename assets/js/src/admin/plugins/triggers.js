@@ -49,9 +49,15 @@ var PUMTriggers;
         initEditForm: function (data) {
             var $form = $('.trigger-editor .pum-form'),
                 $cookie = $('#name', $form),
-                trigger_settings = data.trigger_settings;
+                trigger_settings = data.trigger_settings,
+                $cookies = $('#pum_popup_cookies_list tbody tr');
 
-            $('#pum_popup_cookies_list tbody tr').each(function () {
+            if (!$cookies.length) {
+                PUMCookies.insertDefault();
+                $cookies = $('#pum_popup_cookies_list tbody tr');
+            }
+
+            $cookies.each(function () {
                 var settings = JSON.parse($(this).find('.popup_cookies_field_settings:first').val());
                 if (!$cookie.find('option[value="' + settings.name + '"]').length) {
                     $('<option value="' + settings.name + '">' + settings.name + '</option>').appendTo($cookie);
@@ -88,6 +94,8 @@ var PUMTriggers;
             data.trigger_settings = defaults.triggers[type] !== undefined ? defaults.triggers[type] : {};
             data.save_button_text = I10n.add;
             data.index = null;
+
+            data.trigger_settings.cookie.name = 'pum-' + $('#post_ID').val();
 
             if (!template.length) {
                 alert('Something went wrong. Please refresh and try again.');

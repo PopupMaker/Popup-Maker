@@ -254,7 +254,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 
 			// Modules
 			require_once POPMAKE_DIR . 'includes/modules/menus.php';
-			require_once POPMAKE_DIR . 'includes/class-pum-debug.php';
 			require_once POPMAKE_DIR . 'includes/modules/admin-bar.php';
 			require_once POPMAKE_DIR . 'includes/modules/reviews.php';
 			require_once POPMAKE_DIR . 'includes/modules/analytics.php';
