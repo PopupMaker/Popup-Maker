@@ -98,6 +98,7 @@ There are several common causes for this which include:
 * Improvement: Reworked popup analytics to improving response times and decreasing server loads.
   * Moved Analytic tracking to the WP-API with a new endpoint.
   * Reduced number of queries by 75% for analytics tracking.
+  * Added option to disable it entirely if absolutely neccessary.
 * Tweak: Creating a new trigger will automatically create a cookie and assign it if one doesn't exist.
 * Tweak: Mobile Disable was also applied to tablets, now only to phones.
 * Tweak: Removed readonly from rangesliders to make the fact you can manually enter any value more intuitive.

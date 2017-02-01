@@ -50,6 +50,7 @@ function popmake_load_site_scripts() {
 		'rest_nonce'    => is_user_logged_in() ? wp_create_nonce( 'wp_rest' ) : null,
 		'default_theme' => (string) popmake_get_default_popup_theme(),
 		'debug_mode'    => Popup_Maker::debug_mode(),
+		'disable_open_tracking' => popmake_get_option( 'disable_popup_open_tracking' ),
 	) ) );
 
 	wp_localize_script( 'popup-maker-site', 'pum_debug_vars', apply_filters( 'pum_debug_vars', array(

@@ -46,20 +46,21 @@ var PUM_Analytics;
         }
     };
 
-    // Only popups from the editor should fire analytics events.
-    $(document)
+    if (pum_vars.disable_open_tracking === undefined || !pum_vars.disable_open_tracking) {
+        // Only popups from the editor should fire analytics events.
+        $(document)
+        /**
+         * Track opens for popups.
+         */
+            .on('pumAfterOpen.core_analytics', 'body > .pum', function () {
+                var $popup = PUM.getPopup(this),
+                    data = {
+                        pid: parseInt($popup.popmake('getSettings').id, 10) || null
+                    };
 
-    /**
-     * Track opens for popups.
-     */
-        .on('pumAfterOpen.core_analytics', 'body > .pum', function () {
-            var $popup = PUM.getPopup(this),
-                data = {
-                    pid: parseInt($popup.popmake('getSettings').id, 10) || null
-                };
-
-            if (data.pid > 0 && !$('body').hasClass('single-popup')) {
-                PUM_Analytics.beacon({data: data});
-            }
-        });
+                if (data.pid > 0 && !$('body').hasClass('single-popup')) {
+                    PUM_Analytics.beacon({data: data});
+                }
+            });
+    }
 }(jQuery, document));

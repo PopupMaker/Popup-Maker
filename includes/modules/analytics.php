@@ -23,6 +23,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Modules_Analytics {
 
 	public static function init() {
+		if ( popmake_get_option( 'disable_popup_open_tracking' ) ) {
+			// Popup Open Tracking is disabled.
+			return;
+		}
+
 		add_action( 'rest_api_init', array( __CLASS__, 'register_endpoints' ) );
 
 		add_action( 'wp_ajax_pum_analytics', array( __CLASS__, 'ajax_request' ) );
