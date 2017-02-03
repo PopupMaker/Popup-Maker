@@ -159,9 +159,11 @@ class PUM_Condition extends PUM_Fields {
 		}
 	}
 
-	public function field_before( $class = '' ) {
-		?><div class="facet-col <?php esc_attr_e( $class ); ?>"><?php
+	public function field_before( $args = array() ) {
+		$classes = is_array( $args ) ? $this->field_classes( $args ) : ( is_string( $args ) ? $args : '' );
+		?><div class="facet-col  <?php esc_attr_e( $classes ); ?>"><?php
 	}
+
 
 	public function field_after() {
 		?></div><?php

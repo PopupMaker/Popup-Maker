@@ -54,8 +54,8 @@ class Popmake_Fields {
 
 		$sections = isset( $args['sections'] ) ? $args['sections'] : array(
 			'general' => array(
-				'title' => __( 'General', 'popup-maker' )
-			)
+				'title' => __( 'General', 'popup-maker' ),
+			),
 		);
 
 		$this->add_sections( $sections );
@@ -100,7 +100,7 @@ class Popmake_Fields {
 		$this->add_section( array(
 			'id'       => $id,
 			'title'    => $title,
-			'callback' => $callback
+			'callback' => $callback,
 		) );
 	}
 
@@ -108,10 +108,10 @@ class Popmake_Fields {
 	 * @param $sections
 	 */
 	public function add_sections( $sections ) {
-		foreach( $sections as $id => $section ) {
+		foreach ( $sections as $id => $section ) {
 			if ( ! is_array( $section ) ) {
 				$section = array(
-					'title' => $section
+					'title' => $section,
 				);
 			}
 
@@ -127,10 +127,10 @@ class Popmake_Fields {
 	 * @param $section
 	 */
 	public function add_section( $section ) {
-		$section = wp_parse_args( $section, array(
-			'id' => null,
-			'title' => '',
-			'hidden' => false,
+		$section                          = wp_parse_args( $section, array(
+			'id'       => null,
+			'title'    => '',
+			'hidden'   => false,
 			'callback' => null,
 		) );
 		$this->sections[ $section['id'] ] = $section;
@@ -142,37 +142,42 @@ class Popmake_Fields {
 	public function add_field( $field = array() ) {
 
 		$field = wp_parse_args( $field, array(
-			'section'     => 'general',
-			'type'        => 'text',
-			'id'          => null,
-			'label'       => '',
-			'desc'        => '',
-			'name'        => null,
-			'templ_name'  => null,
-			'size'        => 'regular',
-			'options'     => '',
-			'std'         => null,
-			'rows'        => 5,
-			'cols'        => 50,
-			'min'         => null,
-			'max'         => null,
-			'step'        => null,
-			'select2'     => null,
-			'object_type' => 'post_type',
-			'object_key'  => 'post',
-			'post_type'   => null,
-			'taxonomy'    => null,
-			'multiple'    => null,
-			'as_array'    => false,
-			'placeholder' => null,
-			'checkbox_val'=> 1,
-			'allow_blank' => true,
-			'readonly'    => false,
-			'faux'        => false,
-			'required'    => false,
-			'hook'        => null,
-			'unit'        => __( 'ms', 'popup-maker' ),
-			'priority'    => null,
+			'section'      => 'general',
+			'type'         => 'text',
+			'id'           => null,
+			'label'        => '',
+			'desc'         => '',
+			'name'         => null,
+			'templ_name'   => null,
+			'size'         => 'regular',
+			'options'      => array(),
+			'std'          => null,
+			'rows'         => 5,
+			'cols'         => 50,
+			'min'          => 0,
+			'max'          => 50,
+			'force_minmax' => true,
+			'step'         => 1,
+			'select2'      => null,
+			'object_type'  => 'post_type',
+			'object_key'   => 'post',
+			'post_type'    => null,
+			'taxonomy'     => null,
+			'multiple'     => null,
+			'as_array'     => false,
+			'placeholder'  => null,
+			'checkbox_val' => 1,
+			'allow_blank'  => true,
+			'readonly'     => false,
+			'required'     => false,
+			'disabled'     => false,
+			'hook'         => null,
+			'unit'         => __( 'ms', 'popup-maker' ),
+			'priority'     => null,
+			'tooltip'      => false,
+			'doclink'      => '',
+			'button_type'  => 'submit',
+			'class'        => '',
 		) );
 
 		if ( ! $field['name'] ) {
@@ -197,8 +202,8 @@ class Popmake_Fields {
 		 * select few extensions that started using the v1.3 Settings API
 		 */
 		if ( is_string( $fields ) && is_array( $section ) ) {
-			$tmp = $fields;
-			$fields = $section;
+			$tmp     = $fields;
+			$fields  = $section;
 			$section = $tmp;
 		}
 
@@ -213,8 +218,7 @@ class Popmake_Fields {
 
 			if ( isset( $this->sections[ $key ] ) && is_array( $field[ $first_key ] ) ) {
 				$this->add_fields( $field, $key );
-			}
-			// Process the fields.
+			} // Process the fields.
 			else {
 
 				if ( $section ) {
@@ -252,7 +256,7 @@ class Popmake_Fields {
 		}
 
 		$non_priority_fields = array();
-		$priority_fields = array();
+		$priority_fields     = array();
 
 		foreach ( $this->fields[ $section ] as $field_id => $field ) {
 			if ( ! isset( $field['priority'] ) || is_null( $field['priority'] ) ) {
@@ -298,19 +302,15 @@ class Popmake_Fields {
 	 *
 	 */
 	public function get_field_name( $field ) {
-		return str_replace(
-			array(
-				'{$prefix}',
-				'{$section}',
-				'{$field}'
-			),
-			array(
+		return str_replace( array(
+			'{$prefix}',
+			'{$section}',
+			'{$field}',
+		), array(
 				$this->field_prefix,
 				$field['section'],
-				$field['id']
-			),
-			$this->field_name_format
-		);
+				$field['id'],
+			), $this->field_name_format );
 	}
 
 	/**
@@ -335,19 +335,15 @@ class Popmake_Fields {
 	 * @return mixed|string
 	 */
 	public function get_templ_name( $args, $print = true ) {
-		$name = str_replace(
-			array(
-				'{$prefix}',
-				'{$section}',
-				'{$field}'
-			),
-			array(
+		$name = str_replace( array(
+			'{$prefix}',
+			'{$section}',
+			'{$field}',
+		), array(
 				$this->field_prefix,
 				$args['section'] != 'general' ? ".{$args['section']}" : "",
-				$args['id']
-			),
-			$this->templ_value_format
-		);
+				$args['id'],
+			), $this->templ_value_format );
 
 		if ( $print ) {
 			$name = "{{data.$name}}";
@@ -395,24 +391,19 @@ class Popmake_Fields {
 		 */
 		if ( has_action( "pum_{$type}_field" ) ) {
 			do_action( "pum_{$type}_field", $args, $value );
-		}
-		else {
+		} else {
 			/**
 			 * Check if override or custom function exists and load that.
 			 */
 			if ( function_exists( "pum_{$type}_callback" ) ) {
 				$function_name = "pum_{$type}_callback";
-			}
-			/**
+			} /**
 			 * Check if core method exists and load that.
-			 */
-			elseif ( method_exists( $this, $type . '_callback' ) ) {
+			 */ elseif ( method_exists( $this, $type . '_callback' ) ) {
 				$function_name = array( $this, $type . '_callback' );
-			}
-			/**
+			} /**
 			 * No method exists, lets notify them the field type doesn't exist.
-			 */
-			else {
+			 */ else {
 				$function_name = array( $this, 'missing_callback' );
 			}
 
@@ -456,30 +447,23 @@ class Popmake_Fields {
 		 */
 		if ( has_action( "pum_{$type}_templ_field" ) ) {
 			do_action( "pum_{$type}_templ_field", $args, $this );
-		}
-		else {
+		} else {
 			/**
 			 * Check if override or custom function exists and load that.
 			 */
 			if ( function_exists( "pum_{$type}_templ_callback" ) ) {
 				$function_name = "pum_{$type}_templ_callback";
-			}
-			/**
+			} /**
 			 * Check if core method exists and load that.
-			 */
-			elseif ( method_exists( $this, $type . '_templ_callback' ) ) {
+			 */ elseif ( method_exists( $this, $type . '_templ_callback' ) ) {
 				$function_name = array( $this, $type . '_templ_callback' );
-			}
-			/**
+			} /**
 			 * Check if the field type is hook.
-			 */
-			elseif ( $type == 'hook' ) {
+			 */ elseif ( $type == 'hook' ) {
 				$function_name = array( $this, 'hook_callback' );
-			}
-			/**
+			} /**
 			 * No method exists, lets notify them the field type doesn't exist.
-			 */
-			else {
+			 */ else {
 				$function_name = array( $this, 'missing_callback' );
 			}
 
@@ -492,10 +476,11 @@ class Popmake_Fields {
 	}
 
 	/**
-	 * @param string $class
+	 * @param array $args
 	 */
-	public function field_before( $class = '' ) {
-		?><div class="pum-field <?php esc_attr_e( $class ); ?>"><?php
+	public function field_before( $args = array() ) {
+		$classes = is_array( $args ) ? $this->field_classes( $args ) : ( is_string( $args ) ? $args : '' );
+		?><div class="<?php esc_attr_e( $classes ); ?>"><?php
 	}
 
 	/**
@@ -503,6 +488,64 @@ class Popmake_Fields {
 	 */
 	public function field_after() {
 		?></div><?php
+	}
+
+	/**
+	 * @param $args
+	 * @param null $class
+	 *
+	 * @return string
+	 */
+	public function field_classes( $args, $class = null ) {
+
+		$args = wp_parse_args( $args, array(
+			'id'      => '',
+			'class'   => '',
+			'type'    => '',
+			'desc'    => '',
+			'tooltip' => false,
+			'doclink' => '',
+		) );
+
+		$classes = array(
+			'pum-field',
+			'pum-field-' . $args['id'],
+			'pum-field-' . $args['type'],
+		);
+
+		if ( $args['tooltip'] ) {
+			$classes[] = 'pum-field--has-tooltip';
+		}
+
+		if ( $args['tooltip'] ) {
+			$classes[] = 'pum-field--has-doclink';
+		}
+
+		$classes[] = is_array( $args['class'] ) ? implode( '  ', $args['class'] ) : $args['class'];
+
+		if ( isset( $class ) ) {
+			$classes[] = is_array( $class ) ? implode( '  ', $class ) : $class;
+		}
+
+		return implode( '  ', $classes );
+	}
+
+	public function field_description( $args ) {
+		if ( $args['desc'] != '' && ! $args['tooltip'] ) { ?>
+			<p class="pum-desc dashicons-before dashicons-info"><?php esc_html_e( $args['desc'] ); ?></p><?php
+		} else if ( $args['desc'] != '' && $args['tooltip'] ) { ?>
+			<i class="pum-tooltip dashicons dashicons-info" title="<?php esc_attr_e( $args['desc'] ); ?>"></i><?php
+		}
+
+		if ( $args['doclink'] != '' ) { ?>
+		<a href="<?php echo esc_url( $args['doclink'] ); ?>" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a><?php
+		}
+	}
+
+	public function field_label( $args ) {
+		if ( ! empty( $args['label'] ) ) { ?>
+			<label for="<?php esc_attr_e( $args['id'] ); ?>"><?php esc_html_e( $args['label'] ); ?></label><?php
+		}
 	}
 
 
@@ -516,21 +559,17 @@ class Popmake_Fields {
 		 */
 		if ( has_filter( "pum_{$type}_sanitize" ) ) {
 			$value = apply_filters( "pum_{$type}_sanitize", $value, $args );
-		}
-		else {
+		} else {
 			/**
 			 * Check if override or custom function exists and load that.
 			 */
 			if ( function_exists( "pum_{$type}_sanitize" ) ) {
 				$function_name = "pum_{$type}_sanitize";
-			}
-			/**
+			} /**
 			 * Check if core method exists and load that.
-			 */
-			elseif ( method_exists( $this, $type . '_sanitize' ) ) {
+			 */ elseif ( method_exists( $this, $type . '_sanitize' ) ) {
 				$function_name = array( $this, $type . '_sanitize' );
-			}
-			else {
+			} else {
 				$function_name = null;
 			}
 
@@ -596,6 +635,7 @@ class Popmake_Fields {
 		if ( intval( $value ) == 1 ) {
 			return 1;
 		}
+
 		return null;
 	}
 
