@@ -25,24 +25,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 function popmake_load_site_scripts() {
 	$js_dir = POPMAKE_URL . '/assets/js/';
 
-	$dep_js_dir = $js_dir;
-	// If not v1.4 compatible load backward version until migration complete.
-	if ( ! pum_is_v1_4_compatible() ) {
-		$dep_js_dir = POPMAKE_URL . '/deprecated/assets/js/';
-	}
-
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.js' : '.min.js';
-
-	// Deprecated. No longer used. Here for older versions of some extensions.
-	wp_register_script( 'jquery-cookie', $js_dir . 'jquery.cookie' . $suffix, array( 'jquery' ), '1.4.1', true );
 
 	wp_register_script( 'mobile-detect', $js_dir . 'mobile-detect' . $suffix, null, '1.3.3', true );
 
-	wp_register_script( 'popup-maker-site', $dep_js_dir . 'site' . $suffix . '?defer', array(
-		'jquery',
-		'jquery-ui-core',
-		'jquery-ui-position',
-	), POPMAKE_VERSION, true );
+	wp_register_script( 'popup-maker-site', $js_dir . 'site' . $suffix . '?defer', array( 'jquery', 'jquery-ui-core', 'jquery-ui-position' ), POPMAKE_VERSION, true );
 
 	wp_localize_script( 'popup-maker-site', 'pum_vars', apply_filters( 'pum_vars', array(
 		'ajaxurl'       => admin_url( 'admin-ajax.php' ),
@@ -53,51 +40,49 @@ function popmake_load_site_scripts() {
 		'disable_open_tracking' => popmake_get_option( 'disable_popup_open_tracking' ),
 	) ) );
 
-	wp_localize_script( 'popup-maker-site', 'pum_debug_vars', apply_filters( 'pum_debug_vars', array(
-		'debug_mode_enabled'            => _x( 'Popup Maker Debug Mode Enabled', 'debug console text', 'popup-maker' ),
-		'debug_started_at'              => _x( 'Debug started at:', 'debug console text', 'popup-maker' ),
-		'debug_more_info'               => sprintf( _x( 'For more information on how to use this information visit %s', 'debug console text', 'popup-maker' ), 'http://docs.wppopupmaker.com/' ),
-		'global_info'                   => _x( 'Global Information', 'debug console text', 'popup-maker' ),
-		'localized_vars'                => _x( 'Localized variables', 'debug console text', 'popup-maker' ),
-		'popups_initializing'           => _x( 'Popups Initializing', 'debug console text', 'popup-maker' ),
-		'popups_initialized'            => _x( 'Popups Initialized', 'debug console text', 'popup-maker' ),
-		'single_popup_label'            => _x( 'Popup: #', 'debug console text', 'popup-maker' ),
-		'theme_id'                      => _x( 'Theme ID: ', 'debug console text', 'popup-maker' ),
-		'label_method_call'             => _x( 'Method Call:', 'debug console text', 'popup-maker' ),
-		'label_method_args'             => _x( 'Method Arguments:', 'debug console text', 'popup-maker' ),
-		'label_popup_settings'          => _x( 'Settings', 'debug console text', 'popup-maker' ),
-		'label_triggers'                => _x( 'Triggers', 'debug console text', 'popup-maker' ),
-		'label_cookies'                 => _x( 'Cookies', 'debug console text', 'popup-maker' ),
-		'label_delay'                   => _x( 'Delay:', 'debug console text', 'popup-maker' ),
-		'label_cookie'                  => _x( 'Cookie:', 'debug console text', 'popup-maker' ),
-		'label_settings'                => _x( 'Settings:', 'debug console text', 'popup-maker' ),
-		'label_selector'                => _x( 'Selector:', 'debug console text', 'popup-maker' ),
-		'label_mobile_disabled'         => _x( 'Mobile Disabled:', 'debug console text', 'popup-maker' ),
-		'label_tablet_disabled'         => _x( 'Tablet Disabled:', 'debug console text', 'popup-maker' ),
-		'label_display_settings'        => _x( 'Display Settings:', 'debug console text', 'popup-maker' ),
-		'label_close_settings'          => _x( 'Close Settings:', 'debug console text', 'popup-maker' ),
-		'label_event_before_open'       => _x( 'Event: Before Open', 'debug console text', 'popup-maker' ),
-		'label_event_after_open'        => _x( 'Event: After Open', 'debug console text', 'popup-maker' ),
-		'label_event_open_prevented'    => _x( 'Event: Open Prevented', 'debug console text', 'popup-maker' ),
-		'label_event_setup_close'       => _x( 'Event: Setup Close', 'debug console text', 'popup-maker' ),
-		'label_event_close_prevented'   => _x( 'Event: Close Prevented', 'debug console text', 'popup-maker' ),
-		'label_event_before_close'      => _x( 'Event: Before Close', 'debug console text', 'popup-maker' ),
-		'label_event_after_close'       => _x( 'Event: After Close', 'debug console text', 'popup-maker' ),
-		'label_event_before_reposition' => _x( 'Event: Before Reposition', 'debug console text', 'popup-maker' ),
-		'label_event_after_reposition'  => _x( 'Event: After Reposition', 'debug console text', 'popup-maker' ),
-		'triggers'                      => pum_get_trigger_labels(),
-		'cookies'                       => pum_get_cookie_labels(),
-	) ) );
+	if ( Popup_Maker::debug_mode() ) {
+		wp_localize_script( 'popup-maker-site', 'pum_debug_vars', apply_filters( 'pum_debug_vars', array(
+			'debug_mode_enabled'            => _x( 'Popup Maker Debug Mode Enabled', 'debug console text', 'popup-maker' ),
+			'debug_started_at'              => _x( 'Debug started at:', 'debug console text', 'popup-maker' ),
+			'debug_more_info'               => sprintf( _x( 'For more information on how to use this information visit %s', 'debug console text', 'popup-maker' ), 'http://docs.wppopupmaker.com/' ),
+			'global_info'                   => _x( 'Global Information', 'debug console text', 'popup-maker' ),
+			'localized_vars'                => _x( 'Localized variables', 'debug console text', 'popup-maker' ),
+			'popups_initializing'           => _x( 'Popups Initializing', 'debug console text', 'popup-maker' ),
+			'popups_initialized'            => _x( 'Popups Initialized', 'debug console text', 'popup-maker' ),
+			'single_popup_label'            => _x( 'Popup: #', 'debug console text', 'popup-maker' ),
+			'theme_id'                      => _x( 'Theme ID: ', 'debug console text', 'popup-maker' ),
+			'label_method_call'             => _x( 'Method Call:', 'debug console text', 'popup-maker' ),
+			'label_method_args'             => _x( 'Method Arguments:', 'debug console text', 'popup-maker' ),
+			'label_popup_settings'          => _x( 'Settings', 'debug console text', 'popup-maker' ),
+			'label_triggers'                => _x( 'Triggers', 'debug console text', 'popup-maker' ),
+			'label_cookies'                 => _x( 'Cookies', 'debug console text', 'popup-maker' ),
+			'label_delay'                   => _x( 'Delay:', 'debug console text', 'popup-maker' ),
+			'label_cookie'                  => _x( 'Cookie:', 'debug console text', 'popup-maker' ),
+			'label_settings'                => _x( 'Settings:', 'debug console text', 'popup-maker' ),
+			'label_selector'                => _x( 'Selector:', 'debug console text', 'popup-maker' ),
+			'label_mobile_disabled'         => _x( 'Mobile Disabled:', 'debug console text', 'popup-maker' ),
+			'label_tablet_disabled'         => _x( 'Tablet Disabled:', 'debug console text', 'popup-maker' ),
+			'label_display_settings'        => _x( 'Display Settings:', 'debug console text', 'popup-maker' ),
+			'label_close_settings'          => _x( 'Close Settings:', 'debug console text', 'popup-maker' ),
+			'label_event_before_open'       => _x( 'Event: Before Open', 'debug console text', 'popup-maker' ),
+			'label_event_after_open'        => _x( 'Event: After Open', 'debug console text', 'popup-maker' ),
+			'label_event_open_prevented'    => _x( 'Event: Open Prevented', 'debug console text', 'popup-maker' ),
+			'label_event_setup_close'       => _x( 'Event: Setup Close', 'debug console text', 'popup-maker' ),
+			'label_event_close_prevented'   => _x( 'Event: Close Prevented', 'debug console text', 'popup-maker' ),
+			'label_event_before_close'      => _x( 'Event: Before Close', 'debug console text', 'popup-maker' ),
+			'label_event_after_close'       => _x( 'Event: After Close', 'debug console text', 'popup-maker' ),
+			'label_event_before_reposition' => _x( 'Event: Before Reposition', 'debug console text', 'popup-maker' ),
+			'label_event_after_reposition'  => _x( 'Event: After Reposition', 'debug console text', 'popup-maker' ),
+			'triggers'                      => pum_get_trigger_labels(),
+			'cookies'                       => pum_get_cookie_labels(),
+		) ) );
+	}
 
+	// TODO Remove all trace usages of these in JS so they can be removed.
 	// @deprecated 1.4 Use pum_vars instead.
 	wp_localize_script( 'popup-maker-site', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
 	// @deprecated 1.4 Use pum_vars instead.
 	wp_localize_script( 'popup-maker-site', 'popmake_default_theme', (string) popmake_get_default_popup_theme() );
-
-	if ( popmake_get_option( 'popmake_powered_by_opt_in', false ) ) {
-		$size = popmake_get_option( 'popmake_powered_by_size', '' );
-		wp_localize_script( 'popup-maker-site', 'popmake_powered_by', '<div class="powered-by-popmake ' . $size . '"><a href="https://wppopupmaker.com?utm_source=Powered+By&utm_medium=Powered+By&utm_campaign=Powered+By" target="_blank"><img src="' . POPMAKE_URL . '/assets/images/admin/powered-by-popup-maker.png" alt="' . __( 'Powered By Popup Maker', 'popup-maker' ) . '"/></a></div>' );
-	}
 
 	if ( popmake_get_option( 'enable_easy_modal_compatibility_mode', false ) ) {
 		wp_register_script( 'popup-maker-easy-modal-importer-site', $js_dir . 'popup-maker-easy-modal-importer-site' . $suffix . '?defer', array( 'popup-maker-site' ), POPMAKE_VERSION, true );
@@ -265,13 +250,7 @@ function popmake_load_admin_scripts( $hook ) {
 		) ) );
 	}
 	if ( popmake_is_admin_popup_page() ) {
-		wp_enqueue_script( 'popup-maker-site', $dep_js_dir . 'site' . $suffix . '?defer', array(
-			'jquery',
-			'jquery-ui-core',
-			'jquery-ui-position',
-		), POPMAKE_VERSION, true );
-		wp_localize_script( 'popup-maker-site', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
-		wp_localize_script( 'popup-maker-site', 'popmake_default_theme', (string) popmake_get_default_popup_theme() );
+		popmake_load_site_scripts();
 	}
 	if ( popmake_is_admin_popup_theme_page() ) {
 		wp_localize_script( 'popup-maker-admin', 'popmake_google_fonts', popmake_get_google_webfonts_list() );
