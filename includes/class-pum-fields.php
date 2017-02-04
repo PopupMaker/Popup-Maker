@@ -491,7 +491,7 @@ class PUM_Fields extends Popmake_Fields {
 
 		$this->field_label( $args ); ?>
 
-		<input type="<?php esc_attr_e( $args['type'] ); ?>" placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" class="<?php esc_attr_e( $args['size'] ); ?>-text" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php echo $args['templ_name']; ?>" /><?php
+		<input type="<?php esc_attr_e( $args['type'] ); ?>" placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" class="<?php esc_attr_e( $args['size'] ); ?>-text" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="{{data.<?php echo $args['templ_name']; ?>}}" /><?php
 
 		$this->field_description( $args );
 
@@ -603,7 +603,7 @@ class PUM_Fields extends Popmake_Fields {
 	 */
 	public function hidden_templ_callback( $args ) {
 		$class = $this->field_classes( $args ); ?>
-		<input type="hidden" class="<?php esc_attr_e( $class ); ?>" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php echo $args['templ_name']; ?>"/><?php
+		<input type="hidden" class="<?php esc_attr_e( $class ); ?>" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="{{data.<?php echo $args['templ_name']; ?>}}"/><?php
 	}
 
 	public function select_templ_callback( $args ) {
@@ -673,14 +673,16 @@ class PUM_Fields extends Popmake_Fields {
 
 		$this->field_label( $args ); ?>
 
-		<# if (typeof data.<?php esc_attr_e( $args['templ_name'] ); ?> === 'undefined') {
-			data.<?php esc_attr_e( $args['templ_name'] ); ?> = '';
+		<# var templ_name = '<?php esc_attr_e( $args['templ_name'] ); ?>'; #>
+
+		<# if (typeof data[templ_name] === 'undefined') {
+			data[templ_name] = '';
 		} #>
 
 	    <select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" data-placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" data-allow-clear="true" <?php echo $multiple; ?> data-objecttype="<?php esc_attr_e( $args['object_type'] ); ?>" data-objectkey="<?php esc_attr_e( $args['object_key'] ); ?>">
 			<?php if ( ! empty( $args['options'] ) ) {
 				foreach ( $args['options'] as $label => $option ) { ?>
-					<option value="<?php esc_attr_e( $option ); ?>" {{pumSelected(data.<?php esc_attr_e( $args['templ_name'] ); ?>, '<?php echo $option; ?>', true)}}>
+					<option value="<?php esc_attr_e( $option ); ?>" {{pumSelected(data[templ_name], '<?php echo $option; ?>', true)}}>
 						<?php esc_html_e( $label ); ?>
 					</option><?php
 				}
@@ -711,7 +713,7 @@ class PUM_Fields extends Popmake_Fields {
 
 		$this->field_label( $args ); ?>
 
-		<input type="checkbox" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php esc_attr_e( $args['checkbox_val'] ); ?>" <# if (data.<?php esc_attr_e( $args['templ_name'] ); ?>) { print('checked="checked"'); } #> /><?php
+		<input type="checkbox" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php esc_attr_e( $args['checkbox_val'] ); ?>" <# if (data[templ_name]) { print('checked="checked"'); } #> /><?php
 
 		$this->field_description( $args );
 
@@ -726,17 +728,22 @@ class PUM_Fields extends Popmake_Fields {
 			$this->field_description( $args ); ?>
 
 			<?php // TODO Replace these all with a single variable in JS like var value = data.<?php echo esc_attr( $args['templ_name'] ); ?/> || {}; ?>
-			<# if (!data.<?php echo esc_attr( $args['templ_name'] ); ?> || typeof data.<?php echo esc_attr( $args['templ_name'] ); ?> !== 'object') {
-				data.<?php echo esc_attr( $args['templ_name'] ); ?> = {};
-			} #><?php
+
+			<# var templ_name = '<?php echo esc_attr( $args['templ_name'] ); ?>';
+
+			<# if (!data[templ_name] || typeof data[templ_name] !== 'object') {
+				data[templ_name] = {};
+			} #>
+
+			<?php
 
 			if ( ! empty( $args['options'] ) ) {
 				foreach ( $args['options'] as $option => $label ) { ?>
-					<# if (data.<?php esc_attr_e( $args['templ_name'] ); ?>.<?php esc_attr_e( $option ); ?> === undefined) {
-						data.<?php esc_attr_e( $args['templ_name'] ); ?>.<?php esc_attr_e( $option ); ?> = false;
+					<# if (data[templ_name].<?php esc_attr_e( $option ); ?> === undefined) {
+						data[templ_name].<?php esc_attr_e( $option ); ?> = false;
 					} #>
 
-					<input name="<?php esc_attr_e( $args['name'] ); ?>[<?php esc_attr_e( $option ); ?>]" id="<?php esc_attr_e( $args['id'] ); ?>_<?php esc_attr_e( $option ); ?>" type="checkbox" value="<?php esc_html_e( $option ); ?>" {{pumChecked(data.<?php echo esc_attr( $args['templ_name'] ) . '.' . esc_attr( $option ); ?>, '<?php echo $option; ?>', true)}} />&nbsp;
+					<input name="<?php esc_attr_e( $args['name'] ); ?>[<?php esc_attr_e( $option ); ?>]" id="<?php esc_attr_e( $args['id'] ); ?>_<?php esc_attr_e( $option ); ?>" type="checkbox" value="<?php esc_html_e( $option ); ?>" {{pumChecked(data[templ_name].<?php echo esc_attr( $option ); ?>, '<?php echo $option; ?>', true)}} />&nbsp;
 					<label for="<?php esc_attr_e( $args['id'] ); ?>_<?php esc_attr_e( $option ); ?>"><?php esc_html_e( $label ); ?></label><br/><?php
 				}
 			}
@@ -745,7 +752,7 @@ class PUM_Fields extends Popmake_Fields {
 	}
 
 	public function rangeslider_templ_callback( $args ) {
-		$value = $this->get_templ_name( $args, true );
+		$value = '{{data.' . $args['templ_name'] . '}}';
 		$this->rangeslider_callback( $args, $value );
 	}
 

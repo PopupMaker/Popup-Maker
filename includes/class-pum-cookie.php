@@ -138,8 +138,6 @@ class PUM_Cookie extends PUM_Fields {
 	}
 
 	public function cookiekey_templ_callback( $args ) {
-		$templ_name = $this->get_templ_name( $args );
-
 		$args['class'] .= '  cookiekey ' . $args['id'];
 
 		$this->field_before( $args );
@@ -148,7 +146,7 @@ class PUM_Cookie extends PUM_Fields {
 
 		<div class="cookie-key">
 			<button type="button" class="reset dashicons-before dashicons-image-rotate" title="<?php _e( 'Reset Cookie Key', 'popup-maker' ); ?>"></button>
-			<input type="text" placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" class="<?php esc_attr_e( $args['size'] ); ?>-text" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php echo $templ_name; ?>"/>
+			<input type="text" placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" class="<?php esc_attr_e( $args['size'] ); ?>-text" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="{{data.<?php echo $args['templ_name']; ?>}}"/>
 		</div><?php
 
 		$this->field_description( $args );

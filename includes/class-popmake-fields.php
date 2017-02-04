@@ -174,7 +174,6 @@ class Popmake_Fields {
 			'hook'         => null,
 			'unit'         => __( 'ms', 'popup-maker' ),
 			'priority'     => null,
-			'tooltip'      => false,
 			'doclink'      => '',
 			'button_type'  => 'submit',
 			'class'        => '',
@@ -185,7 +184,7 @@ class Popmake_Fields {
 		}
 
 		if ( ! $field['templ_name'] ) {
-			$field['templ_name'] = $this->get_templ_name( $field, false );
+			$field['templ_name'] = $this->get_templ_name( $field );
 		}
 
 		$this->fields[ $field['section'] ][ $field['id'] ] = $field;
@@ -307,10 +306,10 @@ class Popmake_Fields {
 			'{$section}',
 			'{$field}',
 		), array(
-				$this->field_prefix,
-				$field['section'],
-				$field['id'],
-			), $this->field_name_format );
+			$this->field_prefix,
+			$field['section'],
+			$field['id'],
+		), $this->field_name_format );
 	}
 
 	/**
@@ -330,26 +329,19 @@ class Popmake_Fields {
 
 	/**
 	 * @param $args
-	 * @param bool|true $print
 	 *
 	 * @return mixed|string
 	 */
-	public function get_templ_name( $args, $print = true ) {
-		$name = str_replace( array(
+	public function get_templ_name( $args ) {
+		return str_replace( array(
 			'{$prefix}',
 			'{$section}',
 			'{$field}',
 		), array(
-				$this->field_prefix,
-				$args['section'] != 'general' ? ".{$args['section']}" : "",
-				$args['id'],
-			), $this->templ_value_format );
-
-		if ( $print ) {
-			$name = "{{data.$name}}";
-		}
-
-		return $name;
+			$this->field_prefix,
+			$args['section'] != 'general' ? ".{$args['section']}" : "",
+			$args['id'],
+		), $this->templ_value_format );
 	}
 
 	/**
@@ -503,7 +495,6 @@ class Popmake_Fields {
 			'class'   => '',
 			'type'    => '',
 			'desc'    => '',
-			'tooltip' => false,
 			'doclink' => '',
 		) );
 
@@ -513,11 +504,7 @@ class Popmake_Fields {
 			'pum-field-' . $args['type'],
 		);
 
-		if ( $args['tooltip'] ) {
-			$classes[] = 'pum-field--has-tooltip';
-		}
-
-		if ( $args['tooltip'] ) {
+		if ( $args['doclink'] != '' ) {
 			$classes[] = 'pum-field--has-doclink';
 		}
 
@@ -531,20 +518,24 @@ class Popmake_Fields {
 	}
 
 	public function field_description( $args ) {
-		if ( $args['desc'] != '' && ! $args['tooltip'] ) { ?>
+		if ( $args['desc'] != '' ) { ?>
 			<p class="pum-desc dashicons-before dashicons-info"><?php esc_html_e( $args['desc'] ); ?></p><?php
-		} else if ( $args['desc'] != '' && $args['tooltip'] ) { ?>
-			<i class="pum-tooltip dashicons dashicons-info" title="<?php esc_attr_e( $args['desc'] ); ?>"></i><?php
 		}
-
+/*
 		if ( $args['doclink'] != '' ) { ?>
-		<a href="<?php echo esc_url( $args['doclink'] ); ?>" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a><?php
+			<a href="<?php echo esc_url( $args['doclink'] ); ?>" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a><?php
 		}
+*/
 	}
 
 	public function field_label( $args ) {
 		if ( ! empty( $args['label'] ) ) { ?>
-			<label for="<?php esc_attr_e( $args['id'] ); ?>"><?php esc_html_e( $args['label'] ); ?></label><?php
+			<label for="<?php esc_attr_e( $args['id'] ); ?>"><?php
+				esc_html_e( $args['label'] );
+				if ( $args['doclink'] != '' ) { ?>
+					<a href="<?php echo esc_url( $args['doclink'] ); ?>" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a><?php
+				} ?>
+			</label><?php
 		}
 	}
 
