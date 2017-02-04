@@ -95,6 +95,7 @@ There are several common causes for this which include:
   * Admin Bar with manual open, close & cookie resets for loaded popups.
 * Feature: Addded option to Disable on Tablets as well as mobile phones.
 * Feature: Added WooCommerce is_wc_endpoint_url conditions.
+* Improvement: Added inline links to docs for various settings.
 * Improvement: Reworked popup analytics to improving response times and decreasing server loads.
   * Moved Analytic tracking to the WP-API with a new endpoint.
   * Reduced number of queries by 75% for analytics tracking.

@@ -60,11 +60,11 @@ msgstr ""
 msgid "A Popup Preview"
 msgstr ""
 
-#: includes/admin/class-pum-admin-helpers.php:14, includes/scripts.php:254
+#: includes/admin/class-pum-admin-helpers.php:14, includes/scripts.php:241
 msgid "Cancel"
 msgstr ""
 
-#: includes/admin/class-pum-admin-helpers.php:16, includes/scripts.php:250
+#: includes/admin/class-pum-admin-helpers.php:16, includes/scripts.php:237
 msgid "Add"
 msgstr ""
 
@@ -180,7 +180,7 @@ msgstr ""
 msgid "Check it out"
 msgstr ""
 
-#: includes/admin/metabox-support.php:30
+#: includes/admin/metabox-support.php:30, includes/admin/shortcode-ui/templates/fields.php:14
 msgid "Documentation"
 msgstr ""
 
@@ -278,7 +278,7 @@ msgstr ""
 msgid "Cookies"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:53, includes/pum-trigger-functions.php:32
+#: includes/admin/popups/class-metabox-cookies.php:53, includes/pum-trigger-functions.php:50
 msgid "Add New Cookie"
 msgstr ""
 
@@ -346,7 +346,7 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:65, includes/class-pum-cookie.php:53, includes/pum-trigger-functions.php:57
+#: includes/admin/popups/class-metabox-triggers.php:65, includes/class-pum-cookie.php:53, includes/pum-trigger-functions.php:74
 msgid "Cookie"
 msgstr ""
 
@@ -362,7 +362,7 @@ msgstr ""
 msgid "Choose what type of trigger to add?"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:215, includes/pum-trigger-functions.php:83
+#: includes/admin/popups/class-metabox-triggers.php:215, includes/pum-trigger-functions.php:100
 msgid "Auto Open"
 msgstr ""
 
@@ -703,7 +703,7 @@ msgstr ""
 msgid "Settings updated."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:303, includes/class-popmake-fields.php:57, includes/class-pum-conditions.php:71, includes/class-pum-shortcode.php:144, includes/pum-condition-functions.php:33, includes/pum-trigger-functions.php:54, includes/shortcodes/class-pum-shortcode-popup.php:46
+#: includes/admin/settings/register-settings.php:303, includes/class-popmake-fields.php:57, includes/class-pum-conditions.php:71, includes/class-pum-shortcode.php:144, includes/pum-condition-functions.php:33, includes/pum-trigger-functions.php:71, includes/shortcodes/class-pum-shortcode-popup.php:46
 msgid "General"
 msgstr ""
 
@@ -739,7 +739,7 @@ msgstr ""
 msgid "Popup Maker Settings"
 msgstr ""
 
-#: includes/admin/settings/settings-page.php:52, includes/admin/settings/settings-page.php:58, includes/admin/tools/tools-page.php:54, includes/admin/tools/tools-page.php:61, includes/scripts.php:251
+#: includes/admin/settings/settings-page.php:52, includes/admin/settings/settings-page.php:58, includes/admin/tools/tools-page.php:54, includes/admin/tools/tools-page.php:61, includes/scripts.php:238
 msgid "Save"
 msgstr ""
 
@@ -747,7 +747,7 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: includes/admin/shortcode-ui/class-pum-admin-shortcode-ui.php:225
+#: includes/admin/shortcode-ui/class-pum-admin-shortcode-ui.php:226
 msgid "You do not have access to preview this post."
 msgstr ""
 
@@ -975,7 +975,7 @@ msgstr ""
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/class-popmake-fields.php:174, includes/class-popmake-popup-fields.php:105, includes/class-popmake-popup-fields.php:224, includes/shortcodes/class-pum-shortcode-popup.php:205
+#: includes/class-popmake-fields.php:175, includes/class-popmake-popup-fields.php:105, includes/class-popmake-popup-fields.php:224, includes/shortcodes/class-pum-shortcode-popup.php:205
 msgid "ms"
 msgstr ""
 
@@ -1007,12 +1007,8 @@ msgstr ""
 msgid "Sessions"
 msgstr ""
 
-#: includes/class-pum-cookie.php:140, includes/class-pum-cookie.php:169
+#: includes/class-pum-cookie.php:131, includes/class-pum-cookie.php:148
 msgid "Reset Cookie Key"
-msgstr ""
-
-#: includes/class-pum-fields.php:53
-msgid "Submit"
 msgstr ""
 
 #: includes/class-pum-freemius.php:96
@@ -1051,7 +1047,7 @@ msgstr ""
 msgid "Click Open Settings"
 msgstr ""
 
-#: includes/deprecated/v4.php:78, includes/pum-trigger-functions.php:84
+#: includes/deprecated/v4.php:78, includes/pum-trigger-functions.php:101
 msgid "Auto Open Settings"
 msgstr ""
 
@@ -1059,11 +1055,11 @@ msgstr ""
 msgid "Admin Debug Settings"
 msgstr ""
 
-#: includes/deprecated/v4.php:356, includes/pum-trigger-functions.php:111
+#: includes/deprecated/v4.php:356, includes/pum-trigger-functions.php:128
 msgid "Extra CSS Selectors"
 msgstr ""
 
-#: includes/deprecated/v4.php:360, includes/pum-trigger-functions.php:113
+#: includes/deprecated/v4.php:360, includes/pum-trigger-functions.php:130
 msgid ".my-class, #button2"
 msgstr ""
 
@@ -1079,11 +1075,11 @@ msgstr ""
 msgid "Checking this will cause popup to open automatically."
 msgstr ""
 
-#: includes/deprecated/v4.php:391, includes/pum-trigger-functions.php:85, includes/pum-trigger-functions.php:129
+#: includes/deprecated/v4.php:391, includes/pum-trigger-functions.php:102, includes/pum-trigger-functions.php:147
 msgid "Delay"
 msgstr ""
 
-#: includes/deprecated/v4.php:405, includes/pum-trigger-functions.php:130
+#: includes/deprecated/v4.php:405, includes/pum-trigger-functions.php:148
 msgid "The delay before the popup will open in milliseconds."
 msgstr ""
 
@@ -1091,7 +1087,7 @@ msgstr ""
 msgid "Cookie Trigger"
 msgstr ""
 
-#: includes/deprecated/v4.php:430, includes/pum-trigger-functions.php:26
+#: includes/deprecated/v4.php:430, includes/pum-trigger-functions.php:44
 msgid "When do you want to create the cookie."
 msgstr ""
 
@@ -1183,7 +1179,7 @@ msgstr ""
 msgid "Google Web Fonts&#10549;"
 msgstr ""
 
-#: includes/input-options.php:26, includes/input-options.php:115, includes/scripts.php:262
+#: includes/input-options.php:26, includes/input-options.php:115, includes/scripts.php:249
 msgid "None"
 msgstr ""
 
@@ -1733,7 +1729,7 @@ msgstr ""
 msgid "404 Pages"
 msgstr ""
 
-#: includes/pum-cookie-functions.php:21, includes/pum-trigger-functions.php:25
+#: includes/pum-cookie-functions.php:21, includes/pum-trigger-functions.php:43
 msgid "Cookie Name"
 msgstr ""
 
@@ -1777,7 +1773,7 @@ msgstr ""
 msgid "Manual JavaScript"
 msgstr ""
 
-#: includes/pum-cookie-functions.php:83, includes/pum-trigger-functions.php:79
+#: includes/pum-cookie-functions.php:83, includes/pum-trigger-functions.php:96
 msgid "Click Trigger Settings"
 msgstr ""
 
@@ -1801,206 +1797,202 @@ msgstr ""
 msgid "Framed Border"
 msgstr ""
 
-#: includes/pum-trigger-functions.php:78
+#: includes/pum-trigger-functions.php:95
 msgid "Click Open"
 msgstr ""
 
-#: includes/pum-trigger-functions.php:80
+#: includes/pum-trigger-functions.php:97
 msgid "Extra Selectors"
 msgstr ""
 
-#: includes/pum-trigger-functions.php:112
+#: includes/pum-trigger-functions.php:129
 msgid "This allows custom css classes, ids or selector strings to trigger the popup when clicked. Separate multiple selectors using commas."
 msgstr ""
 
-#: includes/pum-trigger-functions.php:117, includes/shortcodes/class-pum-shortcode-popup-close.php:63, includes/shortcodes/class-pum-shortcode-popup-trigger.php:76
+#: includes/pum-trigger-functions.php:134, includes/shortcodes/class-pum-shortcode-popup-close.php:63, includes/shortcodes/class-pum-shortcode-popup-trigger.php:76
 msgid "Do not prevent the default click functionality."
 msgstr ""
 
-#: includes/pum-trigger-functions.php:118, includes/shortcodes/class-pum-shortcode-popup-trigger.php:77
+#: includes/pum-trigger-functions.php:135, includes/shortcodes/class-pum-shortcode-popup-trigger.php:77
 msgid "This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file."
 msgstr ""
 
-#: includes/scripts.php:57
+#: includes/scripts.php:48
 msgctxt "debug console text"
 msgid "Popup Maker Debug Mode Enabled"
 msgstr ""
 
-#: includes/scripts.php:58
+#: includes/scripts.php:49
 msgctxt "debug console text"
 msgid "Debug started at:"
 msgstr ""
 
-#: includes/scripts.php:59
+#: includes/scripts.php:50
 msgctxt "debug console text"
 msgid "For more information on how to use this information visit %s"
 msgstr ""
 
-#: includes/scripts.php:60
+#: includes/scripts.php:51
 msgctxt "debug console text"
 msgid "Global Information"
 msgstr ""
 
-#: includes/scripts.php:61
+#: includes/scripts.php:52
 msgctxt "debug console text"
 msgid "Localized variables"
 msgstr ""
 
-#: includes/scripts.php:62
+#: includes/scripts.php:53
 msgctxt "debug console text"
 msgid "Popups Initializing"
 msgstr ""
 
-#: includes/scripts.php:63
+#: includes/scripts.php:54
 msgctxt "debug console text"
 msgid "Popups Initialized"
 msgstr ""
 
-#: includes/scripts.php:64
+#: includes/scripts.php:55
 msgctxt "debug console text"
 msgid "Popup: #"
 msgstr ""
 
-#: includes/scripts.php:65
+#: includes/scripts.php:56
 msgctxt "debug console text"
 msgid "Theme ID: "
 msgstr ""
 
-#: includes/scripts.php:66
+#: includes/scripts.php:57
 msgctxt "debug console text"
 msgid "Method Call:"
 msgstr ""
 
-#: includes/scripts.php:67
+#: includes/scripts.php:58
 msgctxt "debug console text"
 msgid "Method Arguments:"
 msgstr ""
 
-#: includes/scripts.php:68
+#: includes/scripts.php:59
 msgctxt "debug console text"
 msgid "Settings"
 msgstr ""
 
-#: includes/scripts.php:69
+#: includes/scripts.php:60
 msgctxt "debug console text"
 msgid "Triggers"
 msgstr ""
 
-#: includes/scripts.php:70
+#: includes/scripts.php:61
 msgctxt "debug console text"
 msgid "Cookies"
 msgstr ""
 
-#: includes/scripts.php:71
+#: includes/scripts.php:62
 msgctxt "debug console text"
 msgid "Delay:"
 msgstr ""
 
-#: includes/scripts.php:72
+#: includes/scripts.php:63
 msgctxt "debug console text"
 msgid "Cookie:"
 msgstr ""
 
-#: includes/scripts.php:73
+#: includes/scripts.php:64
 msgctxt "debug console text"
 msgid "Settings:"
 msgstr ""
 
-#: includes/scripts.php:74
+#: includes/scripts.php:65
 msgctxt "debug console text"
 msgid "Selector:"
 msgstr ""
 
-#: includes/scripts.php:75
+#: includes/scripts.php:66
 msgctxt "debug console text"
 msgid "Mobile Disabled:"
 msgstr ""
 
-#: includes/scripts.php:76
+#: includes/scripts.php:67
 msgctxt "debug console text"
 msgid "Tablet Disabled:"
 msgstr ""
 
-#: includes/scripts.php:77
+#: includes/scripts.php:68
 msgctxt "debug console text"
 msgid "Display Settings:"
 msgstr ""
 
-#: includes/scripts.php:78
+#: includes/scripts.php:69
 msgctxt "debug console text"
 msgid "Close Settings:"
 msgstr ""
 
-#: includes/scripts.php:79
+#: includes/scripts.php:70
 msgctxt "debug console text"
 msgid "Event: Before Open"
 msgstr ""
 
-#: includes/scripts.php:80
+#: includes/scripts.php:71
 msgctxt "debug console text"
 msgid "Event: After Open"
 msgstr ""
 
-#: includes/scripts.php:81
+#: includes/scripts.php:72
 msgctxt "debug console text"
 msgid "Event: Open Prevented"
 msgstr ""
 
-#: includes/scripts.php:82
+#: includes/scripts.php:73
 msgctxt "debug console text"
 msgid "Event: Setup Close"
 msgstr ""
 
-#: includes/scripts.php:83
+#: includes/scripts.php:74
 msgctxt "debug console text"
 msgid "Event: Close Prevented"
 msgstr ""
 
-#: includes/scripts.php:84
+#: includes/scripts.php:75
 msgctxt "debug console text"
 msgid "Event: Before Close"
 msgstr ""
 
-#: includes/scripts.php:85
+#: includes/scripts.php:76
 msgctxt "debug console text"
 msgid "Event: After Close"
 msgstr ""
 
-#: includes/scripts.php:86
+#: includes/scripts.php:77
 msgctxt "debug console text"
 msgid "Event: Before Reposition"
 msgstr ""
 
-#: includes/scripts.php:87
+#: includes/scripts.php:78
 msgctxt "debug console text"
 msgid "Event: After Reposition"
 msgstr ""
 
-#: includes/scripts.php:99
-msgid "Powered By Popup Maker"
-msgstr ""
-
-#: includes/scripts.php:252
+#: includes/scripts.php:239
 msgid "Update"
 msgstr ""
 
-#: includes/scripts.php:253
+#: includes/scripts.php:240
 msgid "Insert"
 msgstr ""
 
-#: includes/scripts.php:255
+#: includes/scripts.php:242
 msgid "Popup Maker Shortcodes"
 msgstr ""
 
-#: includes/scripts.php:256
+#: includes/scripts.php:243
 msgid "Are you sure you want to delete this trigger?"
 msgstr ""
 
-#: includes/scripts.php:257
+#: includes/scripts.php:244
 msgid "Are you sure you want to delete this cookie?"
 msgstr ""
 
-#: includes/scripts.php:263
+#: includes/scripts.php:250
 msgid "Are you sure you want to reset the open count?"
 msgstr ""
 
