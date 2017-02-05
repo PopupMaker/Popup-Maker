@@ -258,7 +258,7 @@ function popmake_load_admin_scripts( $hook ) {
 		wp_localize_script( 'popup-maker-admin', 'popmake_google_fonts', popmake_get_google_webfonts_list() );
 	}
 
-	if ( $_GET['page'] == 'pum-support' ) {
+	if ( isset( $_GET['page'] ) && $_GET['page'] == 'pum-support' ) {
 		wp_enqueue_script( 'iframe-resizer', $dep_js_dir . 'iframeResizer' . $suffix, array(
 			'jquery',
 		) );
