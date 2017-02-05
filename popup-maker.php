@@ -312,6 +312,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/admin/tools/tools-page.php';
 
 				require_once POPMAKE_DIR . 'includes/admin/extensions/extensions-page.php';
+				require_once POPMAKE_DIR . 'includes/admin/pages/support.php';
 
 				require_once POPMAKE_DIR . 'includes/admin/metabox-support.php';
 

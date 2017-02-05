@@ -257,6 +257,13 @@ function popmake_load_admin_scripts( $hook ) {
 	if ( popmake_is_admin_popup_theme_page() ) {
 		wp_localize_script( 'popup-maker-admin', 'popmake_google_fonts', popmake_get_google_webfonts_list() );
 	}
+
+	if ( $_GET['page'] == 'pum-support' ) {
+		wp_enqueue_script( 'iframe-resizer', $dep_js_dir . 'iframeResizer' . $suffix, array(
+			'jquery',
+		) );
+
+	}
 }
 
 add_action( 'admin_enqueue_scripts', 'popmake_load_admin_scripts' );

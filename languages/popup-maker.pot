@@ -52,7 +52,7 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: includes/admin/admin-setup.php:25, includes/admin/extensions/extensions-page.php:26, includes/admin/settings/register-settings.php:309
+#: includes/admin/admin-setup.php:25, includes/admin/extensions/extensions-page.php:26, includes/admin/settings/register-settings.php:303
 msgid "Extensions"
 msgstr ""
 
@@ -687,19 +687,19 @@ msgstr ""
 msgid "Hide Admin Support Widget"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:164
+#: includes/admin/settings/register-settings.php:158
 msgid "This will hide the support widget on all popup maker admin pages."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:169
+#: includes/admin/settings/register-settings.php:163
 msgid "Disable categories & tags?"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:170
+#: includes/admin/settings/register-settings.php:164
 msgid "This will disable the popup tags & categories."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:271
+#: includes/admin/settings/register-settings.php:265
 msgid "Settings updated."
 msgstr ""
 
@@ -707,27 +707,27 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:306
+#: includes/admin/settings/register-settings.php:300
 msgid "Assets"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:312
+#: includes/admin/settings/register-settings.php:306
 msgid "Licenses"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:315
+#: includes/admin/settings/register-settings.php:309
 msgid "Misc"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:565
+#: includes/admin/settings/register-settings.php:559
 msgid "The callback function used for the <strong>%s</strong> setting is missing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:698
+#: includes/admin/settings/register-settings.php:692
 msgid "Upload File"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:776
+#: includes/admin/settings/register-settings.php:770
 msgid "Deactivate License"
 msgstr ""
 
