@@ -21,7 +21,17 @@
                     md = new MobileDetect(window.navigator.userAgent);
                 }
 
-                if (md.mobile()) {
+                if (md.phone()) {
+                    return false
+                }
+            }
+
+            if (settings.tablet_disabled !== undefined && settings.tablet_disabled) {
+                if (typeof md !== 'object') {
+                    md = new MobileDetect(window.navigator.userAgent);
+                }
+
+                if (md.tablet()) {
                     return false
                 }
             }

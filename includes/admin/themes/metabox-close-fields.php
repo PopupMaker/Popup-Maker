@@ -31,7 +31,7 @@ function popmake_popup_theme_close_meta_box_field_padding( $popup_theme_id ) { ?
 			<label for="popup_theme_close_padding"><?php _e( 'Padding', 'popup-maker' );?></label>
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'padding' ))?>"
 				name="popup_theme_close_padding"
 				id="popup_theme_close_padding"
@@ -53,7 +53,7 @@ function popmake_popup_theme_close_meta_box_field_size( $popup_theme_id ) { ?>
 			<label for="popup_theme_close_height"><?php _e( 'Height', 'popup-maker' );?></label>
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 			       value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'height' ))?>"
 			       name="popup_theme_close_height"
 			       id="popup_theme_close_height"
@@ -70,7 +70,7 @@ function popmake_popup_theme_close_meta_box_field_size( $popup_theme_id ) { ?>
 			<label for="popup_theme_close_width"><?php _e( 'Width', 'popup-maker' );?></label>
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 			       value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'width' ))?>"
 			       name="popup_theme_close_width"
 			       id="popup_theme_close_width"
@@ -111,7 +111,7 @@ function popmake_popup_theme_close_meta_box_field_location( $popup_theme_id ) { 
 			<label for="popup_theme_close_position_top"><?php _e( 'Top', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'position_top' ))?>"
 				name="popup_theme_close_position_top"
 				id="popup_theme_close_position_top"
@@ -128,7 +128,7 @@ function popmake_popup_theme_close_meta_box_field_location( $popup_theme_id ) { 
 			<label for="popup_theme_close_position_left"><?php _e( 'Left', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'position_left' ))?>"
 				name="popup_theme_close_position_left"
 				id="popup_theme_close_position_left"
@@ -145,7 +145,7 @@ function popmake_popup_theme_close_meta_box_field_location( $popup_theme_id ) { 
 			<label for="popup_theme_close_position_bottom"><?php _e( 'Bottom', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'position_bottom' ))?>"
 				name="popup_theme_close_position_bottom"
 				id="popup_theme_close_position_bottom"
@@ -162,7 +162,7 @@ function popmake_popup_theme_close_meta_box_field_location( $popup_theme_id ) { 
 			<label for="popup_theme_close_position_right"><?php _e( 'Right', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'position_right' ))?>"
 				name="popup_theme_close_position_right"
 				id="popup_theme_close_position_right"
@@ -196,7 +196,7 @@ function popmake_popup_theme_close_meta_box_field_font( $popup_theme_id ) { ?>
 			<label for="popup_theme_close_font_size"><?php _e( 'Size', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'font_size' ))?>"
 				name="popup_theme_close_font_size"
 				id="popup_theme_close_font_size"
@@ -213,7 +213,7 @@ function popmake_popup_theme_close_meta_box_field_font( $popup_theme_id ) { ?>
 			<label for="popup_theme_close_line_height"><?php _e( 'Line Height', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'line_height' ))?>"
 				name="popup_theme_close_line_height"
 				id="popup_theme_close_line_height"
@@ -294,7 +294,7 @@ function popmake_popup_theme_close_meta_box_field_background( $popup_theme_id ) 
 			<label for="popup_theme_close_background_opacity"><?php _e( 'Opacity', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'background_opacity' ))?>"
 				name="popup_theme_close_background_opacity"
 				id="popup_theme_close_background_opacity"
@@ -329,7 +329,7 @@ function popmake_popup_theme_close_meta_box_field_border( $popup_theme_id ) { ?>
 			<label for="popup_theme_close_border_radius"><?php _e( 'Radius', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'border_radius' ))?>"
 				name="popup_theme_close_border_radius"
 				id="popup_theme_close_border_radius"
@@ -371,7 +371,7 @@ function popmake_popup_theme_close_meta_box_field_border( $popup_theme_id ) { ?>
 			<label for="popup_theme_close_border_width"><?php _e( 'Thickness', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'border_width' ))?>"
 				name="popup_theme_close_border_width"
 				id="popup_theme_close_border_width"
@@ -415,7 +415,7 @@ function popmake_popup_theme_close_meta_box_field_boxshadow( $popup_theme_id ) {
 			<label for="popup_theme_close_boxshadow_horizontal"><?php _e( 'Horizontal Position', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'boxshadow_horizontal' ))?>"
 				name="popup_theme_close_boxshadow_horizontal"
 				id="popup_theme_close_boxshadow_horizontal"
@@ -432,7 +432,7 @@ function popmake_popup_theme_close_meta_box_field_boxshadow( $popup_theme_id ) {
 			<label for="popup_theme_close_boxshadow_vertical"><?php _e( 'Vertical Position', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'boxshadow_vertical' ))?>"
 				name="popup_theme_close_boxshadow_vertical"
 				id="popup_theme_close_boxshadow_vertical"
@@ -449,7 +449,7 @@ function popmake_popup_theme_close_meta_box_field_boxshadow( $popup_theme_id ) {
 			<label for="popup_theme_close_boxshadow_blur"><?php _e( 'Blur Radius', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'boxshadow_blur' ))?>"
 				name="popup_theme_close_boxshadow_blur"
 				id="popup_theme_close_boxshadow_blur"
@@ -466,7 +466,7 @@ function popmake_popup_theme_close_meta_box_field_boxshadow( $popup_theme_id ) {
 			<label for="popup_theme_close_boxshadow_spread"><?php _e( 'Spread', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'boxshadow_spread' ))?>"
 				name="popup_theme_close_boxshadow_spread"
 				id="popup_theme_close_boxshadow_spread"
@@ -491,7 +491,7 @@ function popmake_popup_theme_close_meta_box_field_boxshadow( $popup_theme_id ) {
 			<label for="popup_theme_close_boxshadow_opacity"><?php _e( 'Opacity', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'boxshadow_opacity' ))?>"
 				name="popup_theme_close_boxshadow_opacity"
 				id="popup_theme_close_boxshadow_opacity"
@@ -516,7 +516,7 @@ function popmake_popup_theme_close_meta_box_field_textshadow( $popup_theme_id ) 
 			<label for="popup_theme_close_textshadow_horizontal"><?php _e( 'Horizontal Position', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'textshadow_horizontal' ))?>"
 				name="popup_theme_close_textshadow_horizontal"
 				id="popup_theme_close_textshadow_horizontal"
@@ -533,7 +533,7 @@ function popmake_popup_theme_close_meta_box_field_textshadow( $popup_theme_id ) 
 			<label for="popup_theme_close_textshadow_vertical"><?php _e( 'Vertical Position', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'textshadow_vertical' ))?>"
 				name="popup_theme_close_textshadow_vertical"
 				id="popup_theme_close_textshadow_vertical"
@@ -550,7 +550,7 @@ function popmake_popup_theme_close_meta_box_field_textshadow( $popup_theme_id ) 
 			<label for="popup_theme_close_textshadow_blur"><?php _e( 'Blur Radius', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'textshadow_blur' ))?>"
 				name="popup_theme_close_textshadow_blur"
 				id="popup_theme_close_textshadow_blur"
@@ -575,7 +575,7 @@ function popmake_popup_theme_close_meta_box_field_textshadow( $popup_theme_id ) 
 			<label for="popup_theme_close_textshadow_opacity"><?php _e( 'Opacity', 'popup-maker' );?></label> 
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_close( $popup_theme_id, 'textshadow_opacity' ))?>"
 				name="popup_theme_close_textshadow_opacity"
 				id="popup_theme_close_textshadow_opacity"

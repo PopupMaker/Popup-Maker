@@ -31,8 +31,14 @@ class PUM_Cookie extends PUM_Fields {
 	public function __construct( $args = array() ) {
 		$this->id = $args['id'];
 
+		$labels = pum_get_cookie_labels();
+
 		if ( ! empty( $args['labels'] ) ) {
 			$this->set_labels( $args['labels'] );
+		} elseif ( isset( $labels[ $args['id'] ] ) ) {
+			$this->set_labels( $labels[ $args['id'] ] );
+		} else {
+			$this->set_labels();
 		}
 
 		return parent::__construct( $args );
@@ -78,8 +84,9 @@ class PUM_Cookie extends PUM_Fields {
 		);
 	}
 
-	public function field_before( $class = '' ) {
-		?><div class="field <?php esc_attr_e( $class ); ?>"><?php
+	public function field_before( $args = array() ) {
+		$classes = is_array( $args ) ? $this->field_classes( $args ) : ( is_string( $args ) ? $args : '' );
+		?><div class="field <?php esc_attr_e( $classes ); ?>"><?php
 	}
 
 	public function field_after() {
@@ -107,66 +114,42 @@ class PUM_Cookie extends PUM_Fields {
 	 * Renders cookie key fields.
 	 *
 	 * @param array $args Arguments passed by the setting
-	 *
-	 * @return void
 	 */
-	public function cookiekey_callback( $args, $value ) {
+	public function cookiekey_callback( $args, $value = null ) {
 
-		$class = 'cookiekey ' . $args['id'];
+		$args['class'] .= '  cookiekey ' . $args['id'];
 
-		if ( ! empty ( $args['class'] ) ) {
-			$class .= ' ' . $args['class'];
-		}
-
-		$this->field_before( $class );
+		$this->field_before( $args );
 
 		if ( ! $value ) {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		}
 
-		if ( ! empty( $args['label'] ) ) { ?>
-			<label for="<?php esc_attr_e( $args['id'] ); ?>"><?php esc_html_e( $args['label'] ); ?></label><?php
-		}
-
-		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular'; ?>
+		$this->field_label( $args ); ?>
 
 		<div class="cookie-key">
 			<button type="button" class="reset dashicons-before dashicons-image-rotate" title="<?php _e( 'Reset Cookie Key', 'popup-maker' ); ?>"></button>
-			<input type="text" placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" class="<?php esc_attr_e( $size ); ?>-text dashicons-before dashicons-image-rotate" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php esc_attr_e( stripslashes( $value ) ); ?>"/>
+			<input type="text" placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" class="<?php esc_attr_e( $args['size'] ); ?>-text dashicons-before dashicons-image-rotate" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php esc_attr_e( stripslashes( $value ) ); ?>"/>
 		</div><?php
 
-		if ( $args['desc'] != '' ) { ?>
-			<p class="desc"><?php esc_html_e( $args['desc'] ); ?></p><?php
-		}
+		$this->field_description( $args );
 
 		$this->field_after();
 	}
 
 	public function cookiekey_templ_callback( $args ) {
-		$templ_name = $this->get_templ_name( $args );
+		$args['class'] .= '  cookiekey ' . $args['id'];
 
-		$class = 'cookiekey ' . $args['id'];
+		$this->field_before( $args );
 
-		if ( ! empty ( $args['class'] ) ) {
-			$class .= ' ' . $args['class'];
-		}
-
-		$this->field_before( $class );
-
-		if ( ! empty( $args['label'] ) ) { ?>
-			<label for="<?php esc_attr_e( $args['id'] ); ?>"><?php esc_html_e( $args['label'] ); ?></label><?php
-		}
-
-		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular'; ?>
+		$this->field_label( $args ); ?>
 
 		<div class="cookie-key">
 			<button type="button" class="reset dashicons-before dashicons-image-rotate" title="<?php _e( 'Reset Cookie Key', 'popup-maker' ); ?>"></button>
-			<input type="text" placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" class="<?php esc_attr_e( $size ); ?>-text" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php echo $templ_name; ?>"/>
+			<input type="text" placeholder="<?php esc_attr_e( $args['placeholder'] ); ?>" class="<?php esc_attr_e( $args['size'] ); ?>-text" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="{{data.<?php echo $args['templ_name']; ?>}}"/>
 		</div><?php
 
-		if ( $args['desc'] != '' ) { ?>
-			<p class="desc"><?php esc_html_e( $args['desc'] ); ?></p><?php
-		}
+		$this->field_description( $args );
 
 		$this->field_after();
 	}

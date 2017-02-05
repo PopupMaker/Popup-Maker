@@ -6555,6 +6555,31 @@ var PUMCookies;
 
             $this.parents('.pum-form').find('.field.text.name').data('cookiekey', newKey);
             $this.siblings('input[type="text"]:first').val(newKey);
+        },
+        insertDefault: function () {
+            var event = 'on_popup_close',
+                template = wp.template('pum-cookie-row'),
+                data = {
+                    event: event,
+                    cookie_settings: defaults.cookies[event] !== undefined ? defaults.cookies[event] : {},
+                    save_button_text: I10n.add,
+                    index: $('#pum_popup_cookies_list tbody tr').length,
+                    I10n: I10n
+                },
+                $new_row;
+
+            data.cookie_settings.name = 'pum-' + $('#post_ID').val();
+
+            console.log(data);
+
+            $new_row = template(data);
+
+            $('#pum_popup_cookies_list tbody').append($new_row);
+
+            PUMCookies.renumber();
+
+            $('#pum_popup_cookie_fields').addClass('has-cookies');
+
         }
     };
 
@@ -6672,6 +6697,8 @@ var PUMCookies;
             }
 
             values.I10n = I10n;
+
+            console.log(values);
 
             $new_row = template(values);
 
@@ -7266,14 +7293,6 @@ var PUMRangeSLiders;
             var $this = $(this);
             $this.siblings('.popmake-range-manual').val($this.val());
         })
-        .on('click', '.popmake-range-manual', function () {
-            var $this = $(this);
-            $this.prop('readonly', false);
-        })
-        .on('focusout', '.popmake-range-manual', function () {
-            var $this = $(this);
-            $this.prop('readonly', true);
-        })
         .on('change', '.popmake-range-manual', function () {
             var $this = $(this),
                 max = parseInt($this.prop('max'), 0),
@@ -7281,6 +7300,11 @@ var PUMRangeSLiders;
                 force = $this.data('force-minmax'),
                 value = parseInt($this.val(), 0),
                 $slider = $this.prev();
+
+            if (isNaN(value)) {
+                value = $slider.val();
+                $this.val(value);
+            }
 
             if (force && value > max) {
                 value = max;
@@ -7783,7 +7807,6 @@ var PUM_Templates;
                 }
                 break;
             case 'rangeslider':
-                data.meta.readonly = true;
                 data.meta.step = data.step;
                 data.meta.min = data.min;
                 data.meta.max = data.max;
@@ -7875,18 +7898,24 @@ var PUMTriggers;
         initEditForm: function (data) {
             var $form = $('.trigger-editor .pum-form'),
                 $cookie = $('#name', $form),
-                trigger_settings = data.trigger_settings;
+                trigger_settings = data.trigger_settings,
+                $cookies = $('#pum_popup_cookies_list tbody tr');
 
-            $('#pum_popup_cookies_list tbody tr').each(function () {
+            if (!$cookies.length) {
+                PUMCookies.insertDefault();
+                $cookies = $('#pum_popup_cookies_list tbody tr');
+            }
+
+            $cookies.each(function () {
                 var settings = JSON.parse($(this).find('.popup_cookies_field_settings:first').val());
                 if (!$cookie.find('option[value="' + settings.name + '"]').length) {
                     $('<option value="' + settings.name + '">' + settings.name + '</option>').appendTo($cookie);
                 }
             });
 
-            $cookie.val(trigger_settings.cookie.name);
-
-            $cookie.trigger("chosen:updated");
+            $cookie
+                .val(trigger_settings.cookie.name)
+                .trigger('change.pumselect2');
         },
         cookie_column_value: function (cookie_name) {
             var cookie_text = I10n.no_cookie;
@@ -7914,6 +7943,8 @@ var PUMTriggers;
             data.trigger_settings = defaults.triggers[type] !== undefined ? defaults.triggers[type] : {};
             data.save_button_text = I10n.add;
             data.index = null;
+
+            data.trigger_settings.cookie.name = 'pum-' + $('#post_ID').val();
 
             if (!template.length) {
                 alert('Something went wrong. Please refresh and try again.');
@@ -8263,7 +8294,39 @@ var PopMakeAdmin, PUM_Admin;
         },
         theme_page_listeners: function () {
             var self = this;
+
+            $('.empreview .example-popup-overlay, .empreview .example-popup, .empreview .title, .empreview .content, .empreview .close-popup').css('cursor', 'pointer');
             $(document)
+                .on('click', '.empreview .example-popup-overlay, .empreview .example-popup, .empreview .title, .empreview .content, .empreview .close-popup', function (event) {
+                    var $this = $(this),
+                        clicked_class = $this.attr('class'),
+                        pos = 0;
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    switch( clicked_class) {
+                    case 'example-popup-overlay':
+                        pos = $('#popmake_popup_theme_overlay').offset().top;
+                        break;
+                    case 'example-popup':
+                        pos = $('#popmake_popup_theme_container').offset().top;
+                        break;
+                    case 'title':
+                        pos = $('#popmake_popup_theme_title').offset().top;
+                        break;
+                    case 'content':
+                        pos = $('#popmake_popup_theme_content').offset().top;
+                        break;
+                    case 'close-popup':
+                        pos = $('#popmake_popup_theme_close').offset().top;
+                        break;
+                    }
+
+                    $("html, body").animate({
+                        scrollTop: pos + 'px'
+                    });
+                })
                 .on('change', 'select.font-family', function () {
                     $('select.font-weight option, select.font-style option', $(this).parents('table')).prop('selected', false);
                     self.update_font_selectboxes();

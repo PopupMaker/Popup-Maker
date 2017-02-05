@@ -28,6 +28,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 	 * @since 1.0
 	 */
 	final class Popup_Maker {
+
 		/** Singleton *************************************************************/
 
 		/**
@@ -77,7 +78,9 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				self::$instance->includes();
 				self::$instance->load_textdomain();
 
-
+				if ( isset( $_GET['pum_debug'] ) || popmake_get_option( 'debug_mode', false ) ) {
+					self::$debug_mode = true;
+				}
 			}
 
 			return self::$instance;
@@ -202,10 +205,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/popup-functions.php';
 
 
-
-
-
-
 			/**
 			 * v1.4 Additions
 			 */
@@ -255,11 +254,11 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 
 			// Modules
 			require_once POPMAKE_DIR . 'includes/modules/menus.php';
-			require_once POPMAKE_DIR . 'includes/class-pum-debug.php';
 			require_once POPMAKE_DIR . 'includes/modules/admin-bar.php';
+			require_once POPMAKE_DIR . 'includes/modules/reviews.php';
+			require_once POPMAKE_DIR . 'includes/modules/analytics.php';
 
 			// Analytics
-			require_once POPMAKE_DIR . 'includes/class-pum-analytics.php';
 			if ( is_admin() ) {
 				require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-analytics.php';
 			}
@@ -286,7 +285,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			if ( is_admin() ) {
 				require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-helpers.php';
 			}
-
 
 
 			if ( is_admin() ) {
@@ -337,6 +335,22 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 
 			require_once POPMAKE_DIR . 'includes/pum-install-functions.php';
 			require_once POPMAKE_DIR . 'includes/install.php';
+		}
+
+		/**
+		 * Used to test if debug_mode is enabled.
+		 *
+		 * @var bool
+		 */
+		public static $debug_mode = false;
+
+		/**
+		 * Returns true when debug mode is enabled.
+		 *
+		 * @return bool
+		 */
+		public static function debug_mode() {
+			return true === self::$debug_mode;
 		}
 
 		/**
@@ -423,6 +437,7 @@ register_deactivation_hook( __FILE__, 'pum_deactivate' );
 function PopMake() {
 	return Popup_Maker::instance();
 }
+
 PopMake();
 
 function popmake_initialize() {

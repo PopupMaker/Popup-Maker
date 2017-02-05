@@ -391,7 +391,7 @@ function popmake_popup_auto_open_meta_box_field_delay( $popup_id ) { ?>
 		<label for="popup_auto_open_delay"><?php _e( 'Delay', 'popup-maker' ); ?></label>
 	</th>
 	<td>
-		<input type="text" readonly
+		<input type="text"
 		       value="<?php esc_attr_e( popmake_get_popup_auto_open( $popup_id, 'delay' ) ) ?>"
 		       name="popup_auto_open_delay"
 		       id="popup_auto_open_delay"

@@ -140,6 +140,7 @@ class PUM_Admin_Shortcode_UI {
 
 			foreach( $shortcode->get_all_fields() as $section => $fields ) {
 				foreach( $fields as $id => $field ) {
+					$field['class'] = $shortcode->field_classes( $field );
 					$shortcodes[ $tag ]['fields'][ $section ][] = $field;
 				}
 			}

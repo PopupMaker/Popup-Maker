@@ -152,6 +152,12 @@ function popmake_get_registered_settings() {
 				'desc' => __( 'This will automatically make any eModal classes you have added to your site launch the appropriate Popup after import.', 'popup-maker' ),
 				'type' => 'checkbox',
 			),
+			'disable_popup_open_tracking'          => array(
+				'id'   => 'disable_popup_open_tracking',
+				'name' => __( 'Disables popup open tracking?', 'popup-maker' ),
+				'desc' => __( 'This will disable the built in analytics functionality.', 'popup-maker' ),
+				'type' => 'checkbox',
+			),
 			'disable_admin_support_widget'         => array(
 				'id'   => 'disable_admin_support_widget',
 				'name' => __( 'Hide Admin Support Widget', 'popup-maker' ),

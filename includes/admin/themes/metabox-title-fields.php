@@ -31,7 +31,7 @@ function popmake_popup_theme_title_meta_box_field_description( $popup_theme_id )
 					<label for="popup_theme_title_font_size"><?php _e( 'Size', 'popup-maker' ); ?></label>
 				</th>
 				<td>
-					<input type="text" readonly
+					<input type="text"
 					       value="<?php esc_attr_e( popmake_get_popup_theme_title( $popup_theme_id, 'font_size' ) ) ?>"
 					       name="popup_theme_title_font_size"
 					       id="popup_theme_title_font_size"
@@ -48,7 +48,7 @@ function popmake_popup_theme_title_meta_box_field_description( $popup_theme_id )
 					<label for="popup_theme_title_line_height"><?php _e( 'Line Height', 'popup-maker' ); ?></label>
 				</th>
 				<td>
-					<input type="text" readonly
+					<input type="text"
 					       value="<?php esc_attr_e( popmake_get_popup_theme_title( $popup_theme_id, 'line_height' ) ) ?>"
 					       name="popup_theme_title_line_height"
 					       id="popup_theme_title_line_height"
@@ -135,7 +135,7 @@ function popmake_popup_theme_title_meta_box_field_description( $popup_theme_id )
 				<label for="popup_theme_title_textshadow_horizontal"><?php _e( 'Horizontal Position', 'popup-maker' ); ?></label>
 			</th>
 			<td>
-				<input type="text" readonly
+				<input type="text"
 				       value="<?php esc_attr_e( popmake_get_popup_theme_title( $popup_theme_id, 'textshadow_horizontal' ) ) ?>"
 				       name="popup_theme_title_textshadow_horizontal"
 				       id="popup_theme_title_textshadow_horizontal"
@@ -152,7 +152,7 @@ function popmake_popup_theme_title_meta_box_field_description( $popup_theme_id )
 				<label for="popup_theme_title_textshadow_vertical"><?php _e( 'Vertical Position', 'popup-maker' ); ?></label>
 			</th>
 			<td>
-				<input type="text" readonly
+				<input type="text"
 				       value="<?php esc_attr_e( popmake_get_popup_theme_title( $popup_theme_id, 'textshadow_vertical' ) ) ?>"
 				       name="popup_theme_title_textshadow_vertical"
 				       id="popup_theme_title_textshadow_vertical"
@@ -169,7 +169,7 @@ function popmake_popup_theme_title_meta_box_field_description( $popup_theme_id )
 				<label for="popup_theme_title_textshadow_blur"><?php _e( 'Blur Radius', 'popup-maker' ); ?></label>
 			</th>
 			<td>
-				<input type="text" readonly
+				<input type="text"
 				       value="<?php esc_attr_e( popmake_get_popup_theme_title( $popup_theme_id, 'textshadow_blur' ) ) ?>"
 				       name="popup_theme_title_textshadow_blur"
 				       id="popup_theme_title_textshadow_blur"
@@ -194,7 +194,7 @@ function popmake_popup_theme_title_meta_box_field_description( $popup_theme_id )
 				<label for="popup_theme_title_textshadow_opacity"><?php _e( 'Opacity', 'popup-maker' ); ?></label>
 			</th>
 			<td>
-				<input type="text" readonly
+				<input type="text"
 				       value="<?php esc_attr_e( popmake_get_popup_theme_title( $popup_theme_id, 'textshadow_opacity' ) ) ?>"
 				       name="popup_theme_title_textshadow_opacity"
 				       id="popup_theme_title_textshadow_opacity"

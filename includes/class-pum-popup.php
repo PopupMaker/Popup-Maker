@@ -363,6 +363,7 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 					'cookies'         => $this->get_cookies(),
 					'triggers'        => $this->get_triggers(),
 					'mobile_disabled' => $this->mobile_disabled() ? true : null,
+					'tablet_disabled' => $this->tablet_disabled() ? true : null,
 					'meta'            => array(
 						'display'    => $this->get_display(),
 						'close'      => $this->get_close(),
@@ -428,6 +429,12 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 			$mobile_disabled = $this->get_meta( 'popup_mobile_disabled', true );
 
 			return (bool) $mobile_disabled;
+		}
+
+		public function tablet_disabled() {
+			$tablet_disabled = $this->get_meta( 'popup_tablet_disabled', true );
+
+			return (bool) $tablet_disabled;
 		}
 
 		/**

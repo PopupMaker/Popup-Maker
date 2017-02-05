@@ -93,6 +93,20 @@ There are several common causes for this which include:
 * Feature: Added new settings to the Nav Menu editor to choose a popup that a menu item will trigger.
 * Feature: Added a new debug mode. Including:
   * Admin Bar with manual open, close & cookie resets for loaded popups.
+* Feature: Addded option to Disable on Tablets as well as mobile phones.
+* Feature: Added WooCommerce is_wc_endpoint_url conditions.
+* Improvement: Added inline links to docs for various settings.
+* Improvement: Reworked popup analytics to improving response times and decreasing server loads.
+  * Moved Analytic tracking to the WP-API with a new endpoint.
+  * Reduced number of queries by 75% for analytics tracking.
+  * Added option to disable it entirely if absolutely neccessary.
+* Tweak: Creating a new trigger will automatically create a cookie and assign it if one doesn't exist.
+* Tweak: Mobile Disable was also applied to tablets, now only to phones.
+* Tweak: Removed readonly from rangesliders to make the fact you can manually enter any value more intuitive.
+* Tweak: Use CSS to display a popup immediately if has trigger: auto open: delay 0.
+* Tweak: Clicking elements in the visual theme preview will now scroll to the relevant section of settings.
+* Fix: Bug in admin when editing a trigger, cookie field didn't repopulate properly.
+* Fix: Bug where rangeslider values can be set to strings.
 
 = v1.4.21 - 12/12/2016 =
 * Feature: Added option to disable popup on mobile to comply with [Google's new interstital policy](https://webmasters.googleblog.com/2016/08/helping-users-easily-access-content-on.html).

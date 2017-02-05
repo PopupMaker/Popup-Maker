@@ -226,7 +226,7 @@ function popmake_popup_display_meta_box_field_animation( $popup_id ) {
 			</label>
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 			       value="<?php esc_attr_e( popmake_get_popup_display( $popup_id, 'animation_speed' ) ); ?>"
 			       name="popup_display_animation_speed"
 			       id="popup_display_animation_speed"
@@ -345,7 +345,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 			<label for="popup_display_position_top"><?php _e( 'Top', 'popup-maker' ); ?></label>
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 			       value="<?php esc_attr_e( popmake_get_popup_display( $popup_id, 'position_top' ) ); ?>"
 			       name="popup_display_position_top"
 			       id="popup_display_position_top"
@@ -364,7 +364,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 			<label for="popup_display_position_bottom"><?php _e( 'Bottom', 'popup-maker' ); ?></label>
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 			       value="<?php esc_attr_e( popmake_get_popup_display( $popup_id, 'position_bottom' ) ); ?>"
 			       name="popup_display_position_bottom"
 			       id="popup_display_position_bottom"
@@ -383,7 +383,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 			<label for="popup_display_position_left"><?php _e( 'Left', 'popup-maker' ); ?></label>
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 			       value="<?php esc_attr_e( popmake_get_popup_display( $popup_id, 'position_left' ) ); ?>"
 			       name="popup_display_position_left"
 			       id="popup_display_position_left"
@@ -402,7 +402,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 		<label for="popup_display_position_right"><?php _e( 'Right', 'popup-maker' ); ?></label>
 	</th>
 	<td>
-		<input type="text" readonly
+		<input type="text"
 		       value="<?php esc_attr_e( popmake_get_popup_display( $popup_id, 'position_right' ) ); ?>"
 		       name="popup_display_position_right"
 		       id="popup_display_position_right"
