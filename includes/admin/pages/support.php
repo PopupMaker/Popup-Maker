@@ -23,7 +23,7 @@ function pum_settings_page() { ?>
 			padding: 10px 20px;
 			color: green;
 			z-index: 9999;
-			box-shadow: 0px 2px 2px rgba(6, 113, 6, 0.3);
+			box-shadow: 0 2px 2px rgba(6, 113, 6, 0.3);
 			opacity: 0.95;
 			filter: alpha(opacity=95);
 		}
@@ -32,22 +32,28 @@ function pum_settings_page() { ?>
 			margin: 40px 0 -65px -20px;
 		}
 
-		#pum-support-iframe {
+		#pum-support-frame iframe {
 			width: 100%;
 			border: 0;
-			transition: height .5s;
+			transition: scroll .5s;
 		}
 	</style>
 	<div class="pum-secure-notice">
 		<i class="dashicons dashicons-lock"></i>
-		<span><?php _e( '<b>Secure HTTPS contact page</b>, running via iframe from external domain', 'popup-maker' ); ?></span>
+		<span><?php _e( '<b>Secure HTTPS contact page</b>, running via iframe from external domain', 'popup-maker' ); ?> </span>
+		<i class="dashicons dashicons-info" title="https://api.wppopupmaker.com/dashboard-support/"></i>
 	</div>
-
 	<div id="pum-support-frame" class="wrap">
-		<iframe style="height: 535px;" id="pum-support-iframe" src="https://wppopupmaker.com/dashboard-support/?nouser&url" scrolling="no"></iframe>
 		<script type="text/javascript">
 			(function ($) {
-				$('#pum-support-iframe').iFrameResize({});
+				var frame = $('<iframe scrolling="no">')
+					.css({height: '535px'})
+					.attr('src', '<?php echo 'https://api.wppopupmaker.com/dashboard-support/?' . build_query( pum_support_assist_args() ); ?>')
+					.appendTo('#pum-support-frame');
+
+				frame.iFrameResize({
+					checkOrigin: false
+				});
 			})(jQuery);
 		</script>
 	</div>

@@ -56,3 +56,14 @@ function popmake_is_all_numeric( $array ) {
 
 	return true;
 }
+
+function pum_support_assist_args() {
+	return array(
+		// Forces the dashboard to force logout any users.
+		'nouser' => true,
+		'fname'  => wp_get_current_user()->first_name,
+		'lname'  => wp_get_current_user()->last_name,
+		'email'  => wp_get_current_user()->user_email,
+		'url'    => home_url(),
+	);
+}
