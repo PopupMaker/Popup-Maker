@@ -12,10 +12,10 @@ var PUMTriggers;
         },
         getSettingsDesc: function (type, values) {
             var options = {
-                    evaluate:    /<#([\s\S]+?)#>/g,
+                    evaluate: /<#([\s\S]+?)#>/g,
                     interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
-                    escape:      /\{\{([^\}]+?)\}\}(?!\})/g,
-                    variable:    'data'
+                    escape: /\{\{([^\}]+?)\}\}(?!\})/g,
+                    variable: 'data'
                 },
                 template = _.template(I10n.labels.triggers[type].settings_column, null, options);
             values.I10n = I10n;
@@ -77,17 +77,68 @@ var PUMTriggers;
                 cookie_text = cookie_name;
             }
             return cookie_text;
+        },
+        append_click_selector_presets: function () {
+            return $('#extra_selectors').each(function () {
+                var $this = $(this),
+                    template = _.template($('#tmpl-pum-click-selector-presets').html()),
+                    $presets = $this.parents('.pum-field').find('.pum-click-selector-presets');
+
+                if (!$presets.length) {
+                    $this.before(template());
+                    $presets = $this.parents('.pum-field').find('.pum-click-selector-presets');
+                }
+
+                $presets.position({
+                    my: 'right center',
+                    at: 'right center',
+                    of: $this
+                });
+            });
+        },
+        toggle_click_selector_presets: function () {
+            $(this).parent().toggleClass('open');
+        },
+
+
+        reset_click_selector_presets: function (e) {
+            if (e !== undefined && $(e.target).parents('.pum-click-selector-presets').length) {
+                return;
+            }
+
+            $('.pum-click-selector-presets').removeClass('open');
+        },
+        insert_click_selector_preset: function () {
+            var $this = $(this),
+                $input = $('#extra_selectors'),
+                val = $input.val();
+
+            if (val !== "") {
+                val = val + ', ';
+            }
+
+            console.log($input, val, $this, $this.data('preset'));
+
+            $input.val(val + $this.data('preset'));
+            PUMTriggers.reset_click_selector_presets();
         }
     };
+
 
     PUMTriggers.refreshDescriptions();
 
     $(document)
+        .on('pum_init', function () {
+            PUMTriggers.append_click_selector_presets();
+        })
+        .on('click', '.pum-click-selector-presets > span', PUMTriggers.toggle_click_selector_presets)
+        .on('click', '.pum-click-selector-presets li', PUMTriggers.insert_click_selector_preset)
+        .on('click', PUMTriggers.reset_click_selector_presets)
         .on('select2:select pumselect2:select', '#pum-first-trigger', function () {
             var $this = $(this),
                 type = $this.val(),
                 id = 'pum-trigger-settings-' + type,
-                modalID = '#' + id.replace(/-/g,'_'),
+                modalID = '#' + id.replace(/-/g, '_'),
                 template = wp.template(id),
                 data = {};
 
@@ -118,7 +169,7 @@ var PUMTriggers;
                 $row = $this.parents('tr:first'),
                 type = $row.find('.popup_triggers_field_type').val(),
                 id = 'pum-trigger-settings-' + type,
-                modalID = '#' + id.replace(/-/g,'_'),
+                modalID = '#' + id.replace(/-/g, '_'),
                 template = wp.template(id),
                 data = {
                     index: $row.parent().children().index($row),
@@ -159,7 +210,7 @@ var PUMTriggers;
         .on('submit', '#pum_trigger_add_type_modal .pum-form', function (e) {
             var type = $('#popup_trigger_add_type').val(),
                 id = 'pum-trigger-settings-' + type,
-                modalID = '#' + id.replace(/-/g,'_'),
+                modalID = '#' + id.replace(/-/g, '_'),
                 template = wp.template(id),
                 data = {};
 

@@ -16,43 +16,47 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: includes/admin/admin-pages.php:30, includes/admin/admin-pages.php:30, includes/admin/admin-pages.php:83, includes/admin/admin-setup.php:24, includes/admin/popups/class-metabox-cookies.php:69, includes/admin/popups/class-metabox-triggers.php:66
+#: includes/admin/admin-pages.php:30, includes/admin/admin-pages.php:30, includes/admin/admin-pages.php:85, includes/admin/admin-setup.php:24, includes/admin/popups/class-metabox-cookies.php:69, includes/admin/popups/class-metabox-triggers.php:66
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/admin-pages.php:32, includes/admin/admin-pages.php:32, includes/admin/admin-pages.php:84
+#: includes/admin/admin-pages.php:32, includes/admin/admin-pages.php:32, includes/admin/admin-pages.php:86
 msgid "Tools"
 msgstr ""
 
-#: includes/admin/admin-pages.php:34, includes/admin/admin-pages.php:34, includes/admin/admin-pages.php:82
+#: includes/admin/admin-pages.php:34, includes/admin/admin-pages.php:34, includes/admin/admin-pages.php:84
 msgid "Extend"
 msgstr ""
 
-#: includes/admin/admin-pages.php:36, includes/admin/admin-pages.php:36
+#: includes/admin/admin-pages.php:36, includes/admin/admin-pages.php:36, includes/admin/admin-pages.php:90
+msgid "Help & Support"
+msgstr ""
+
+#: includes/admin/admin-pages.php:38, includes/admin/admin-pages.php:38
 msgid "Popup Themes"
 msgstr ""
 
-#: includes/admin/admin-pages.php:75
+#: includes/admin/admin-pages.php:77
 msgid "All Popups"
 msgstr ""
 
-#: includes/admin/admin-pages.php:76
+#: includes/admin/admin-pages.php:78
 msgid "Add New"
 msgstr ""
 
-#: includes/admin/admin-pages.php:77
+#: includes/admin/admin-pages.php:79
 msgid "All Themes"
 msgstr ""
 
-#: includes/admin/admin-pages.php:78, includes/admin/popups/dashboard-columns.php:43, includes/class-pum-conditions.php:74
+#: includes/admin/admin-pages.php:80, includes/admin/popups/dashboard-columns.php:43, includes/class-pum-conditions.php:74
 msgid "Categories"
 msgstr ""
 
-#: includes/admin/admin-pages.php:79, includes/admin/popups/dashboard-columns.php:39, includes/class-pum-conditions.php:75
+#: includes/admin/admin-pages.php:81, includes/admin/popups/dashboard-columns.php:39, includes/class-pum-conditions.php:75
 msgid "Tags"
 msgstr ""
 
-#: includes/admin/admin-setup.php:25, includes/admin/extensions/extensions-page.php:26, includes/admin/settings/register-settings.php:303
+#: includes/admin/admin-setup.php:25, includes/admin/extensions/extensions-page.php:26, includes/admin/settings/register-settings.php:309
 msgid "Extensions"
 msgstr ""
 
@@ -194,6 +198,10 @@ msgstr ""
 
 #: includes/admin/metabox-support.php:48
 msgid "Priority Support"
+msgstr ""
+
+#: includes/admin/pages/support.php:43
+msgid "<b>Secure HTTPS contact page</b>, running via iframe from external domain"
 msgstr ""
 
 #: includes/admin/popups/class-metabox-analytics.php:39
@@ -687,19 +695,19 @@ msgstr ""
 msgid "Hide Admin Support Widget"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:158
+#: includes/admin/settings/register-settings.php:164
 msgid "This will hide the support widget on all popup maker admin pages."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:163
+#: includes/admin/settings/register-settings.php:169
 msgid "Disable categories & tags?"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:164
+#: includes/admin/settings/register-settings.php:170
 msgid "This will disable the popup tags & categories."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:265
+#: includes/admin/settings/register-settings.php:271
 msgid "Settings updated."
 msgstr ""
 
@@ -707,27 +715,27 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:300
+#: includes/admin/settings/register-settings.php:306
 msgid "Assets"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:306
+#: includes/admin/settings/register-settings.php:312
 msgid "Licenses"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:309
+#: includes/admin/settings/register-settings.php:315
 msgid "Misc"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:559
+#: includes/admin/settings/register-settings.php:565
 msgid "The callback function used for the <strong>%s</strong> setting is missing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:692
+#: includes/admin/settings/register-settings.php:698
 msgid "Upload File"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:770
+#: includes/admin/settings/register-settings.php:776
 msgid "Deactivate License"
 msgstr ""
 
@@ -1994,6 +2002,26 @@ msgstr ""
 
 #: includes/scripts.php:250
 msgid "Are you sure you want to reset the open count?"
+msgstr ""
+
+#: includes/scripts.php:381
+msgid "Link: Exact Match"
+msgstr ""
+
+#: includes/scripts.php:382
+msgid "Link: Containing"
+msgstr ""
+
+#: includes/scripts.php:383
+msgid "Link: Begins With"
+msgstr ""
+
+#: includes/scripts.php:384
+msgid "Link: Ends With"
+msgstr ""
+
+#: includes/scripts.php:389
+msgid "Insert Preset"
 msgstr ""
 
 #: includes/shortcodes/class-pum-shortcode-popup-close.php:24

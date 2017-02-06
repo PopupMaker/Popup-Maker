@@ -253,6 +253,8 @@ function popmake_load_admin_scripts( $hook ) {
 	}
 	if ( popmake_is_admin_popup_page() ) {
 		popmake_load_site_scripts();
+		add_action( 'admin_footer', 'pum_admin_popup_editor_media_templates' );
+
 	}
 	if ( popmake_is_admin_popup_theme_page() ) {
 		wp_localize_script( 'popup-maker-admin', 'popmake_google_fonts', popmake_get_google_webfonts_list() );
@@ -372,3 +374,27 @@ function popmake_enqueue_scripts( $popup_id = null ) {
 }
 
 add_action( 'popmake_preload_popup', 'popmake_enqueue_scripts' );
+
+function pum_admin_popup_editor_media_templates() {
+
+	$presets = apply_filters( 'pum_click_selector_presets', array(
+		'a[href="exact_url"]'  => __( 'Link: Exact Match', 'popup-maker' ),
+		'a[href*="contains"]' => __( 'Link: Containing', 'popup-maker' ),
+		'a[href^="begins_with"]'  => __( 'Link: Begins With', 'popup-maker' ),
+		'a[href$="ends_with"]'    => __( 'Link: Ends With', 'popup-maker' ),
+	) ); ?>
+
+	<script type="text/html" id="tmpl-pum-click-selector-presets">
+		<div class="pum-click-selector-presets">
+			<span class="dashicons dashicons-arrow-left" title="<?php _e( 'Insert Preset', 'popup-maker' ); ?>"></span>
+			<ul>
+				<?php foreach ( $presets as $preset => $label ) : ?>
+					<li data-preset='<?php echo $preset; ?>'><span><?php echo $label; ?></span></li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+	</script>
+
+	<?php
+
+}
