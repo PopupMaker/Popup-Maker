@@ -123,17 +123,27 @@ function popmake_get_registered_settings() {
 		/** General Settings */
 		'general'    => apply_filters( 'popmake_settings_general', array() ),
 		'assets'     => apply_filters( 'popmake_settings_assets', array(
-			'disable_google_font_loading' => array(
+			'disable_google_font_loading'     => array(
 				'id'   => 'disable_google_font_loading',
 				'name' => __( 'Don\'t Load Google Fonts', 'popup-maker' ),
 				'desc' => __( 'Check this disable loading of google fonts, useful if the fonts you chose are already loaded with your theme.', 'popup-maker' ),
 				'type' => 'checkbox',
 			),
-			'disable_popup_theme_styles'  => array(
+			'disable_popup_maker_core_styles' => array(
 				'id'   => 'disable_popup_theme_styles',
+				'name' => __( 'Don\'t load Popup Maker core stylesheet.', 'popup-maker' ),
+				'desc' => __( 'Check this if you have copied the Popup Maker core styles to your own stylesheet or are using custom styles.', 'popup-maker' ),
+				'type' => 'checkbox',
+			),
+			'disable_popup_theme_styles'      => array(
+				'id'   => 'disable_popup_maker_core_styles',
 				'name' => __( 'Don\'t load popup theme styles to the head.', 'popup-maker' ),
 				'desc' => __( 'Check this if you have copied the popup theme styles to your own stylesheet or are using custom styles.', 'popup-maker' ),
 				'type' => 'checkbox',
+			),
+			'output_pum_styles'               => array(
+				'id' => 'output_pum_styles',
+				'type' => 'hook',
 			),
 		) ),
 		/** Extension Settings */
@@ -815,3 +825,24 @@ function popmake_sanitize_license_key_field( $new, $key ) {
 function popmake_hook_callback( $args ) {
 	do_action( 'popmake_' . $args['id'] );
 }
+
+function popmake_output_pum_styles() {
+	?>
+	<button type="button" id="show_pum_styles" onclick="jQuery('#pum_style_output').slideDown();jQuery(this).hide();"><?php _e( 'Show Popup Maker CSS', 'popup-maker' ); ?></button>
+	<p class="pum-desc desc">Use this to quickly copy Popup Maker's CSS to your own stylesheet.</p>
+
+	<div id="pum_style_output" style="display:none;">
+		<h4><?php _e( 'Core Styles', 'popup-maker' ); ?></h4>
+		<textarea wrap="off" style="white-space: pre; width: 100%;">
+/* Popup Maker Core Styles */
+<?php include POPMAKE_DIR . 'assets/css/site.min.css'; ?>
+		</textarea>
+
+		<h4><?php _e( 'User Theme Styles', 'popup-maker' ); ?></h4>
+		<textarea wrap="off" style="white-space: pre; width: 100%; min-height: 200px;"><?php echo popmake_get_popup_theme_styles(); ?></textarea>
+	</div>
+
+	<?php
+}
+
+add_action( 'popmake_output_pum_styles', 'popmake_output_pum_styles' );

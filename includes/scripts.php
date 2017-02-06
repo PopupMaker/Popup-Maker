@@ -121,12 +121,7 @@ function popmake_load_site_styles() {
 
 add_action( 'wp_enqueue_scripts', 'popmake_load_site_styles' );
 
-function popmake_render_popup_theme_styles() {
-	if ( ( current_action() == 'wp_head' && popmake_get_option( 'disable_popup_theme_styles', false ) ) || ( current_action() == 'admin_head' && ! popmake_is_admin_popup_page() ) ) {
-		return;
-	}
-
-	global $pum_extra_styles;
+function popmake_get_popup_theme_styles() {
 
 	$styles = get_transient( 'popmake_theme_styles' );
 	if ( ! $styles || defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
@@ -142,7 +137,7 @@ function popmake_render_popup_theme_styles() {
 
 			if ( $theme_styles != '' ) {
 				$styles .= "/* Popup Theme " . $theme->ID . ": " . $theme->post_title . " */\r\n";
-				$styles .= $theme_styles;
+				$styles .= $theme_styles . "\r\n";
 			}
 		}
 
@@ -168,7 +163,19 @@ function popmake_render_popup_theme_styles() {
 
 		set_transient( 'popmake_theme_styles', $styles );
 
-	} ?>
+	}
+
+	return $styles;
+}
+
+function popmake_render_popup_theme_styles() {
+	if ( ( current_action() == 'wp_head' && popmake_get_option( 'disable_popup_theme_styles', false ) ) || ( current_action() == 'admin_head' && ! popmake_is_admin_popup_page() ) ) {
+		return;
+	}
+
+	global $pum_extra_styles;
+
+	$styles = popmake_get_popup_theme_styles(); ?>
 	<style id="pum-styles" type="text/css">
 	<?php echo $styles; ?>
 
