@@ -519,7 +519,7 @@ class Popmake_Fields {
 
 	public function field_description( $args ) {
 		if ( $args['desc'] != '' ) { ?>
-			<p class="pum-desc dashicons-before dashicons-info"><?php esc_html_e( $args['desc'] ); ?></p><?php
+			<p class="pum-desc"><?php esc_html_e( $args['desc'] ); ?></p><?php
 		}
 /*
 		if ( $args['doclink'] != '' ) { ?>
