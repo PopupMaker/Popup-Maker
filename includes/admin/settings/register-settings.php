@@ -142,7 +142,7 @@ function popmake_get_registered_settings() {
 				'type' => 'checkbox',
 			),
 			'output_pum_styles'               => array(
-				'id' => 'output_pum_styles',
+				'id'   => 'output_pum_styles',
 				'type' => 'hook',
 			),
 		) ),
@@ -770,46 +770,234 @@ function popmake_descriptive_text_callback( $args ) {
  */
 if ( ! function_exists( 'popmake_license_key_callback' ) ) {
 	function popmake_license_key_callback( $args ) {
-		global $popmake_options;
+		$current_key = PUM_Options::get( $args['id'] );
 
-		if ( isset( $popmake_options[ $args['id'] ] ) ) {
-			$value = $popmake_options[ $args['id'] ];
+		$messages = array();
+		$license  = get_option( $args['options']['is_valid_license_option'] );
+
+		if ( $current_key ) {
+			$value = $current_key;
 		} else {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		}
 
+		if ( ! empty( $license ) && is_object( $license ) ) {
+
+			// activate_license 'invalid' on anything other than valid, so if there was an error capture it
+			if ( false === $license->success ) {
+
+				switch ( $license->error ) {
+
+					// TODO TEST
+					case 'expired' :
+
+						$class      = 'expired';
+						$messages[] = sprintf( __( 'Your license key expired on %s. Please <a href="%s" target="_blank">renew your license key</a>.', 'popup-maker' ), date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), 'https://wppopupmaker.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired' );
+
+						$license_status = 'license-' . $class . '-notice';
+
+						break;
+
+					// TODO TEST
+					case 'revoked' :
+
+						$class      = 'error';
+						$messages[] = sprintf( __( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'popup-maker' ), 'https://wppopupmaker.com/support/?utm_campaign=admin&utm_source=licenses&utm_medium=revoked' );
+
+						$license_status = 'license-' . $class . '-notice';
+
+						break;
+
+					// TODO TEST
+					case 'missing' :
+
+						$class      = 'error';
+						$messages[] = sprintf( __( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'popup-maker' ), 'https://wppopupmaker.com/account/?tab=licenses&utm_campaign=admin&utm_source=licenses&utm_medium=missing' );
+
+						$license_status = 'license-' . $class . '-notice';
+
+						break;
+
+					// TODO TEST
+					case 'invalid' :
+						// TODO TEST
+					case 'site_inactive' :
+
+						$class      = 'error';
+						$messages[] = sprintf( __( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'popup-maker' ), $args['name'], 'https://wppopupmaker.com/account/?tab=licenses&utm_campaign=admin&utm_source=licenses&utm_medium=invalid' );
+
+						$license_status = 'license-' . $class . '-notice';
+
+						break;
+
+					// TODO TEST
+					case 'item_name_mismatch' :
+
+						$class      = 'error';
+						$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'popup-maker' ), $args['name'] );
+
+						$license_status = 'license-' . $class . '-notice';
+
+						break;
+
+					// TODO TEST
+					case 'no_activations_left':
+
+						$class      = 'error';
+						$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'popup-maker' ), 'https://wppopupmaker.com/account/?tab=licenses' );
+
+						$license_status = 'license-' . $class . '-notice';
+
+						break;
+
+					// TODO TEST
+					case 'license_not_activable':
+
+						$class      = 'error';
+						$messages[] = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'popup-maker' );
+
+						$license_status = 'license-' . $class . '-notice';
+						break;
+
+					default :
+
+						$class      = 'error';
+						$error      = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'popup-maker' );
+						$messages[] = sprintf( __( 'There was an error with this license key: %s. Please <a href="%s">contact our support team</a>.', 'popup-maker' ), $error, 'https://wppopupmaker.com/support/' );
+
+						$license_status = 'license-' . $class . '-notice';
+						break;
+				}
+
+			} else {
+
+				switch ( $license->license ) {
+
+					case 'valid' :
+					default:
+
+						$class = 'valid';
+
+						$now        = current_time( 'timestamp' );
+						$expiration = strtotime( $license->expires, current_time( 'timestamp' ) );
+
+						if ( 'lifetime' === $license->expires ) {
+
+							$messages[] = __( 'License key never expires.', 'popup-maker' );
+
+							$license_status = 'license-lifetime-notice';
+
+						} elseif ( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
+
+							$messages[] = sprintf( __( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank">Renew your license key</a>.', 'popup-maker' ), date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), 'https://wppopupmaker.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew' );
+
+							$license_status = 'license-expires-soon-notice';
+
+						} else {
+
+							$messages[] = sprintf( __( 'Your license key expires on %s.', 'popup-maker' ), date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ) );
+
+							$license_status = 'license-expiration-date-notice';
+
+						}
+
+						break;
+
+				}
+
+			}
+
+		} else {
+			$class = 'empty';
+
+			$messages[] = sprintf( __( 'To receive updates, please enter your valid %s license key.', 'popup-maker' ), $args['name'] );
+
+			$license_status = null;
+		}
+
+		if ( ! empty ( $args['field_class'] ) ) {
+			$class .= ' ' . popmake_sanitize_html_class( $args['field_class'] );
+		}
+
 		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+		$html = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="popmake_settings[' . popmake_sanitize_key( $args['id'] ) . ']" name="popmake_settings[' . popmake_sanitize_key( $args['id'] ) . ']" value="' . esc_attr( $value ) . '"/>';
 
-		$html = '<input type="' . ( $value == '' ? 'text' : 'password' ) . '" class="' . $size . '-text" id="popmake_settings[' . $args['id'] . ']" name="popmake_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
-
-		if ( 'valid' == get_option( $args['options']['is_valid_license_option'] ) ) {
+		if ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license ) {
 			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License', 'popup-maker' ) . '"/>';
 		}
-		$html .= '<label for="popmake_settings[' . $args['id'] . ']"> ' . $args['desc'] . '</label>';
+
+		$html .= '<label for="popmake_settings[' . popmake_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
+
+		if ( ! empty( $messages ) ) {
+			foreach ( $messages as $message ) {
+
+				$html .= '<div class="popmake-license-data popmake-license-' . $class . ' ' . $license_status . '">';
+				$html .= '<p>' . $message . '</p>';
+				$html .= '</div>';
+
+			}
+		}
+
+		wp_nonce_field( popmake_sanitize_key( $args['id'] ) . '-nonce', popmake_sanitize_key( $args['id'] ) . '-nonce' );
 
 		echo $html;
 	}
+
 }
 
+/**
+ * Sanitizes a string key for Popmake Settings
+ *
+ * Keys are used as internal identifiers. Alphanumeric characters, dashes, underscores, stops, colons and slashes are allowed
+ *
+ * @param  string $key String key
+ *
+ * @return string Sanitized key
+ */
+function popmake_sanitize_key( $key ) {
+	$raw_key = $key;
+	$key     = preg_replace( '/[^a-zA-Z0-9_\-\.\:\/]/', '', $key );
+
+	/**
+	 * Filter a sanitized key string.
+	 *
+	 * @param string $key Sanitized key.
+	 * @param string $raw_key The key prior to sanitization.
+	 */
+	return apply_filters( 'popmake_sanitize_key', $key, $raw_key );
+}
+
+/**
+ * Sanitize HTML Class Names
+ *
+ * @param  string|array $class HTML Class Name(s)
+ *
+ * @return string $class
+ */
+function popmake_sanitize_html_class( $class = '' ) {
+
+	if ( is_string( $class ) ) {
+		$class = sanitize_html_class( $class );
+	} else if ( is_array( $class ) ) {
+		$class = array_values( array_map( 'sanitize_html_class', $class ) );
+		$class = implode( ' ', array_unique( $class ) );
+	}
+
+	return $class;
+
+}
 
 function popmake_sanitize_license_key_field( $new, $key ) {
-	global $popmake_options;
-	$old = ! empty( $popmake_options[ $key ] ) ? $popmake_options[ $key ] : null;
+	$old = PUM_Options::get( $key );
 	if ( $old && $old != $new ) {
-		unset( $popmake_options[ $key ] ); // new license has been entered, so must reactivate
-	}
-	if ( $new != '' ) {
-		if ( $old === null || $old == '' ) {
-			$new = sha1( $new );
-		} elseif ( $old && $old != $new && $old != sha1( $new ) ) {
-			$new = sha1( $new );
-		}
+		PUM_Options::delete( $key ); // new license has been entered, so must reactivate
+		delete_option( str_replace( '_license_key', '_license_active', $key ) );
 	}
 
 	return $new;
 }
 
-//add_filter('popmake_settings_sanitize_license_key', 'popmake_sanitize_license_key_field', 10, 2);
+add_filter( 'popmake_settings_sanitize_license_key', 'popmake_sanitize_license_key_field', 10, 2 );
 
 /**
  * Hook Callback
@@ -835,7 +1023,7 @@ function popmake_output_pum_styles() {
 		<h4><?php _e( 'Core Styles', 'popup-maker' ); ?></h4>
 		<textarea wrap="off" style="white-space: pre; width: 100%;">
 /* Popup Maker Core Styles */
-<?php include POPMAKE_DIR . 'assets/css/site.min.css'; ?>
+			<?php include POPMAKE_DIR . 'assets/css/site.min.css'; ?>
 		</textarea>
 
 		<h4><?php _e( 'User Theme Styles', 'popup-maker' ); ?></h4>

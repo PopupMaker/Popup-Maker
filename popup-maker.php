@@ -199,7 +199,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 
 			require_once POPMAKE_DIR . 'includes/templates.php';
 			require_once POPMAKE_DIR . 'includes/load-popups.php';
-			require_once POPMAKE_DIR . 'includes/class-pum-license.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-extension-license.php';
 			require_once POPMAKE_DIR . 'includes/license-handler.php';
 
 			// Phasing Out

@@ -56,7 +56,7 @@ class PUM_Extension_License {
 
 		$this->item_shortname = 'popmake_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
 		$this->version        = $_version;
-		$this->license        = trim( PUM_Option::get( $this->item_shortname . '_license_key', '' ) );
+		$this->license        = trim( PUM_Options::get( $this->item_shortname . '_license_key', '' ) );
 		$this->author         = $_author;
 		$this->api_url        = is_null( $_api_url ) ? $this->api_url : $_api_url;
 
@@ -67,7 +67,7 @@ class PUM_Extension_License {
 		 * user having to reactive their license.
 		 */
 		if ( ! empty( $_optname ) ) {
-			$opt = PUM_Option::get( $_optname );
+			$opt = PUM_Options::get( $_optname );
 
 			if ( isset( $opt ) && empty( $this->license ) ) {
 				$this->license = trim( $opt );
@@ -101,6 +101,9 @@ class PUM_Extension_License {
 
 		// Register settings
 		add_filter( 'popmake_settings_licenses', array( $this, 'settings' ), 1 );
+
+		// Display help text at the top of the Licenses tab
+		add_action( 'popmake_settings_tab_top', array( $this, 'license_help_text' ) );
 
 		// Activate license key on settings save
 		add_action( 'admin_init', array( $this, 'activate_license' ) );
@@ -189,21 +192,27 @@ class PUM_Extension_License {
 	 * @return  void
 	 */
 	public function license_help_text( $active_tab = '' ) {
+		// This global is here to ensure no double messaging while migration to the new class takes place in all of the extensions.
+		global $pum_temp_license_help_text_global;
 
 		static $has_ran;
+
+		if ( ! isset( $has_ran ) && isset( $pum_temp_license_help_text_global ) ) {
+			$has_ran = $pum_temp_license_help_text_global;
+		}
 
 		if ( 'licenses' !== $active_tab ) {
 			return;
 		}
 
-		if ( ! empty( $has_ran ) ) {
+		if ( isset( $has_ran ) ) {
 			return;
 		}
 
 		echo '<p>' . sprintf( __( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank">renew your license</a>.', 'popup-maker' ), 'http://docs.wppopupmaker.com/article/177-license-renewal' ) . '</p>';
 
 		$has_ran = true;
-
+		$pum_temp_license_help_text_global = true;
 	}
 
 
@@ -422,10 +431,6 @@ class PUM_Extension_License {
 
 	/**
 	 * Displays message inline on plugin row that the license key is missing
-	 *
-	 * @access  public
-	 * @since   2.5
-	 * @return  void
 	 */
 	public function plugin_row_license_missing( $plugin_data, $version_info ) {
 
@@ -455,4 +460,5 @@ class PUM_Extension_License {
 
 		return $products;
 	}
+
 }

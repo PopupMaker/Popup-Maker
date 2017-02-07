@@ -15,9 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function popmake_settings_page() {
-	$active_tab = isset( $_GET[ 'tab' ] ) && array_key_exists( $_GET['tab'], popmake_get_settings_tabs() ) ? $_GET[ 'tab' ] : 'general';
+	$active_tab = isset( $_GET[ 'tab' ] ) && array_key_exists( $_GET['tab'], popmake_get_settings_tabs() ) ? $_GET[ 'tab' ] : 'assets';
 	ob_start();?>
-	<div class="wrap">
+	<div class="wrap  wrap-<?php echo $active_tab; ?>">
 		<h2><?php esc_html_e( __( 'Popup Maker Settings', 'popup-maker' ) );?></h2>
 		<h2 id="popmake-tabs" class="nav-tab-wrapper"><?php
 			foreach( popmake_get_settings_tabs() as $tab_id => $tab_name ) {
@@ -42,6 +42,9 @@ function popmake_settings_page() {
 						<div id="tab_container">
 							<table class="form-table"><?php
 								settings_fields( 'popmake_settings' );
+
+								do_action( 'popmake_settings_tab_top', $active_tab );
+
 								do_settings_fields( 'popmake_settings_' . $active_tab, 'popmake_settings_' . $active_tab ); ?>
 							</table>
 							<?php submit_button(); ?>
