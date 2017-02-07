@@ -20,13 +20,12 @@ class PUM_Freemius {
 	private static $instance;
 
 	/**
-	 * @var Popup_Maker The one true Popup_Maker
-	 * @since 1.0
+	 * @var Freemius
 	 */
-	public $fs = null;
+	public $fs ;
 
     /**
-     * @return \Popup_Maker|\PUM_Freemius
+     * @return PUM_Freemius
      */
     public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof PUM_Freemius ) ) {
@@ -49,7 +48,7 @@ class PUM_Freemius {
 	 */
 	public function fs() {
 
-		if ( ! $this->fs ) {
+		if ( ! isset( $this->fs ) ) {
 			// Include Freemius SDK.
 			require_once dirname( __FILE__ ) . '/libs/freemius/start.php';
 
@@ -310,11 +309,13 @@ class PUM_Freemius {
 
 }
 
-// Create a helper function for easy SDK access.
+//
 /**
- * @return \Freemius
+ * Create a helper function for easy SDK access.
+ *
+ * @return PUM_Freemius::instance
  */
 function pum_fs() {
-	return PUM_Freemius::instance()->fs();
+	return PUM_Freemius::instance();
 }
 
