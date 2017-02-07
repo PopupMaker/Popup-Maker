@@ -172,6 +172,9 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 
 			require_once POPMAKE_DIR . 'includes/admin/settings/register-settings.php';
 			$popmake_options = popmake_get_settings();
+			require_once POPMAKE_DIR . 'includes/class-pum-options.php';
+			PUM_Options::init();
+
 
 			// TODO Find another place for these admin functions so this can be put in its correct place.
 			require_once POPMAKE_DIR . 'includes/admin/admin-pages.php';
@@ -196,6 +199,7 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 
 			require_once POPMAKE_DIR . 'includes/templates.php';
 			require_once POPMAKE_DIR . 'includes/load-popups.php';
+			require_once POPMAKE_DIR . 'includes/class-pum-license.php';
 			require_once POPMAKE_DIR . 'includes/license-handler.php';
 
 			// Phasing Out
