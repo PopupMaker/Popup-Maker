@@ -232,6 +232,7 @@ function popmake_load_admin_scripts( $hook ) {
 			'jquery',
 			'wp-color-picker',
 			'jquery-ui-slider',
+			'wp-util',
 		), POPMAKE_VERSION );
 		wp_localize_script( 'popup-maker-admin', 'popmake_admin_ajax_nonce', wp_create_nonce( POPMAKE_NONCE ) );
 		wp_localize_script( 'popup-maker-admin', 'pum_admin', apply_filters( 'pum_admin_var', array(
