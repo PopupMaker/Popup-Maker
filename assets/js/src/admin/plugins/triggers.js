@@ -48,11 +48,12 @@ var PUMTriggers;
         },
         initEditForm: function (data) {
             var $form = $('.trigger-editor .pum-form'),
+                type = $form.find('input[name="type"]').val(),
                 $cookie = $('#name', $form),
                 trigger_settings = data.trigger_settings,
                 $cookies = $('#pum_popup_cookies_list tbody tr');
 
-            if (!$cookies.length) {
+            if (!$cookies.length && type !== 'click_open') {
                 PUMCookies.insertDefault();
                 $cookies = $('#pum_popup_cookies_list tbody tr');
             }
@@ -117,8 +118,6 @@ var PUMTriggers;
                 val = val + ', ';
             }
 
-            console.log($input, val, $this, $this.data('preset'));
-
             $input.val(val + $this.data('preset'));
             PUMTriggers.reset_click_selector_presets();
         }
@@ -146,7 +145,9 @@ var PUMTriggers;
             data.save_button_text = I10n.add;
             data.index = null;
 
-            data.trigger_settings.cookie.name = 'pum-' + $('#post_ID').val();
+            if ( type !== 'click_open' ) {
+                data.trigger_settings.cookie.name = 'pum-' + $('#post_ID').val();
+            }
 
             if (!template.length) {
                 alert('Something went wrong. Please refresh and try again.');
@@ -219,6 +220,10 @@ var PUMTriggers;
             data.trigger_settings = defaults.triggers[type] !== undefined ? defaults.triggers[type] : {};
             data.save_button_text = I10n.add;
             data.index = null;
+
+            if ( type !== 'click_open' ) {
+                data.trigger_settings.cookie.name = 'pum-' + $('#post_ID').val();
+            }
 
             if (!template.length) {
                 alert('Something went wrong. Please refresh and try again.');

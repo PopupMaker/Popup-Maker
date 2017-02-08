@@ -64,7 +64,7 @@ var PUMCookies;
             $this.parents('.pum-form').find('.field.text.name').data('cookiekey', newKey);
             $this.siblings('input[type="text"]:first').val(newKey);
         },
-        insertDefault: function () {
+        insertDefault: function (name) {
             var event = 'on_popup_close',
                 template = wp.template('pum-cookie-row'),
                 data = {
@@ -76,9 +76,7 @@ var PUMCookies;
                 },
                 $new_row;
 
-            data.cookie_settings.name = 'pum-' + $('#post_ID').val();
-
-            console.log(data);
+            data.cookie_settings.name = name || 'pum-' + $('#post_ID').val();
 
             $new_row = template(data);
 
@@ -205,8 +203,6 @@ var PUMCookies;
             }
 
             values.I10n = I10n;
-
-            console.log(values);
 
             $new_row = template(values);
 
