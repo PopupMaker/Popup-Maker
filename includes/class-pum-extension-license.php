@@ -139,8 +139,6 @@ class PUM_Extension_License {
 	 * @return  void
 	 */
 	public function auto_updater() {
-		$betas = PUM_Options::get( 'enabled_betas', array() );
-
 		$args = array(
 			'version' => $this->version,
 			'license' => $this->license,
