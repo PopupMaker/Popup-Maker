@@ -630,4 +630,17 @@ class Popmake_Fields {
 		return null;
 	}
 
+	/**
+	 * Hook Callback
+	 *
+	 * Adds a do_action() hook in place of the field
+	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
+	 */
+	public function hook_callback( $args ) {
+		do_action( 'popmake_' . $args['id'] );
+	}
+
 }
