@@ -1135,15 +1135,15 @@ msgstr ""
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/class-pum-freemius.php:95
+#: includes/class-pum-freemius.php:90
 msgid "Usage Statistics"
 msgstr ""
 
-#: includes/class-pum-freemius.php:96
+#: includes/class-pum-freemius.php:91
 msgid "Popup & Theme Counts, Open Counts"
 msgstr ""
 
-#: includes/class-pum-freemius.php:119
+#: includes/class-pum-freemius.php:116
 msgid "Allow %3$sPopup Maker%4$s​ to collect some usage data with %2$s to make the plugin even more awesome. If you skip this, that's okay! ​%3$sPopup Maker%4$s will still work just fine."
 msgstr ""
 
