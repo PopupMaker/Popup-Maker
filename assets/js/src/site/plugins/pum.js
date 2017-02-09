@@ -10,21 +10,47 @@ var PUM;
         return !isNaN(value) && parseInt(Number(value)) == value && !isNaN(parseInt(value, 10));
     }
 
+    function Selector_Cache() {
+        var elementCache = {};
+
+        var get_from_cache = function (selector, $ctxt, reset) {
+
+            if ('boolean' === typeof $ctxt) {
+                reset = $ctxt;
+                $ctxt = false;
+            }
+            var cacheKey = $ctxt ? $ctxt.selector + ' ' + selector : selector;
+
+            if (undefined === elementCache[cacheKey] || reset) {
+                elementCache[cacheKey] = $ctxt ? $ctxt.find(selector) : jQuery(selector);
+            }
+
+            return elementCache[cacheKey];
+        };
+
+        get_from_cache.elementCache = elementCache;
+        return get_from_cache;
+    }
+
     PUM = {
+        get: new Selector_Cache(),
         getPopup: function (el) {
+            var $this;
 
             // Quick Shortcuts
             if (isInt(el)) {
-                el = '#pum-' + el;
+                $this = PUM.get('#pum-' + el);
             } else if (el === 'current') {
-                el = '.pum-overlay.pum-active:eq(0)';
+                $this = PUM.get('.pum-overlay.pum-active:eq(0)', true);
             } else if (el === 'open') {
-                el = '.pum-overlay.pum-active';
+                $this = PUM.get('.pum-overlay.pum-active', true);
             } else if (el === 'closed') {
-                el = '.pum-overlay:not(.pum-active)';
+                $this = PUM.get('.pum-overlay:not(.pum-active)', true);
+            } else if (el instanceof jQuery) {
+                $this = el;
+            } else {
+                $this = $(el);
             }
-
-            var $this = $(el);
 
             if ($this.hasClass('pum-overlay')) {
                 return $this;
@@ -115,12 +141,6 @@ var PUM;
                     });
                 }
 
-
-                if (typeof popmake_powered_by === 'string' && popmake_powered_by !== '') {
-                    $popup.popmake('getContent').append($(popmake_powered_by));
-                }
-
-
                 // Added popmake settings to the container for temporary backward compatibility with extensions.
                 // TODO Once extensions updated remove this.
                 $popup.find('.pum-container').data('popmake', settings);
@@ -154,12 +174,12 @@ var PUM;
             var $popup = PUM.getPopup(this);
 
             if (undefined !== test) {
-                switch(test) {
+                switch (test) {
                 case 'isOpen':
                     return $popup.hasClass('pum-open') || $popup.popmake('getContainer').hasClass('active');
                     break;
                 case 'isClosed':
-                    return ! $popup.hasClass('pum-open') && ! $popup.popmake('getContainer').hasClass('active');
+                    return !$popup.hasClass('pum-open') && !$popup.popmake('getContainer').hasClass('active');
                     break;
                 }
             }
