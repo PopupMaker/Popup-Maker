@@ -11,7 +11,7 @@ function pum_popup( $popup_id = null ) {
 	} else {
 		$popup = new PUM_Popup( $popup_id );
 	}
-	return $popup;
+	return apply_filters( 'pum_popup', $popup, $popup_id );
 }
 
 function pum_get_popup_title( $popup_id = null ) {

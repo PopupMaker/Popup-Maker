@@ -428,19 +428,19 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		public function mobile_disabled() {
 			$mobile_disabled = $this->get_meta( 'popup_mobile_disabled', true );
 
-			return (bool) $mobile_disabled;
+			return (bool) apply_filters( 'pum_popup_mobile_disabled', $mobile_disabled, $this->ID );
 		}
 
 		public function tablet_disabled() {
 			$tablet_disabled = $this->get_meta( 'popup_tablet_disabled', true );
 
-			return (bool) $tablet_disabled;
+			return (bool) apply_filters( 'pum_popup_tablet_disabled', $tablet_disabled, $this->ID );
 		}
 
 		/**
 		 * @return mixed|void
 		 */
-		function get_conditions( $filters = array() ) {
+		public function get_conditions( $filters = array() ) {
 
 			$filters = wp_parse_args( $filters, array(
 				'php_only' => null,
@@ -608,7 +608,6 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 
 			return 0;
 		}
-
 
 		public function increase_open_count() {
 
