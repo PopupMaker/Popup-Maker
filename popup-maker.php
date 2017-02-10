@@ -334,8 +334,10 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/integrations/visual-composer.php';
 			}
 
-			// Ninja Forms Integrations
+			// Ninja Forms Integration
 			require_once POPMAKE_DIR . 'includes/integrations/class-pum-ninja-forms.php';
+			// WPML Integration
+			require_once POPMAKE_DIR . 'includes/integrations/class-pum-wpml.php';
 
 			require_once POPMAKE_DIR . 'includes/pum-install-functions.php';
 			require_once POPMAKE_DIR . 'includes/install.php';
