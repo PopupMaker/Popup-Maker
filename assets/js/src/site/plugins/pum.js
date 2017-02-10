@@ -265,15 +265,15 @@ var PUM;
             var $popup = PUM.getPopup(this),
                 $close = $popup.popmake('getClose')
                 // Add For backward compatiblitiy.
-                    .add($('.popmake-close', $popup).not($close)),
+                    .add($('.popmake-close', $popup).not($popup.popmake('getClose'))),
                 settings = $popup.popmake('getSettings');
 
             // TODO: Move to a global $(document).on type bind. Possibly look for an inactive class to fail on.
             $close
                 .off('click.pum')
                 .on("click.pum", function (event) {
-                    var $this = $(event.target),
-                        do_default = $this.data('do-default') !== undefined && $this.data('do-default');
+                    var $this = $(this),
+                        do_default = $this.hasClass('pum-do-default') || ( $this.data('do-default') !== undefined && $this.data('do-default') );
 
                     if (!do_default) {
                         event.preventDefault();
@@ -321,7 +321,7 @@ var PUM;
             return this.each(function () {
                 var $popup = PUM.getPopup(this),
                     $container = $popup.popmake('getContainer'),
-                    $close = $popup.popmake('getClose').add($('.popmake-close', $popup));
+                    $close = $popup.popmake('getClose').add($('.popmake-close', $popup).not($popup.popmake('getClose')));
 
                 $popup.trigger('pumBeforeClose');
 
