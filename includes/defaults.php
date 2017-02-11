@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 add_filter( 'popmake_popup_display_defaults', 'popmake_popup_display_defaults', 0 );
+add_filter( 'pum_popup_display_defaults', 'popmake_popup_display_defaults', 0 );
 
 /**
  * Returns default display settings for popups.
@@ -49,6 +50,7 @@ function popmake_popup_display_defaults( $defaults = array() ) {
 
 
 add_filter( 'popmake_popup_close_defaults', 'popmake_popup_close_defaults', 0 );
+add_filter( 'pum_popup_close_defaults', 'popmake_popup_close_defaults', 0 );
 function popmake_popup_close_defaults( $defaults = array() ) {
 	return array_merge( $defaults, array(
 		'text'          => '',
