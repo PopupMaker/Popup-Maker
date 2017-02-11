@@ -88,14 +88,14 @@ There are several common causes for this which include:
 == Changelog ==
 
 = v1.5.0 - TBD
-* Feature: New global JS functions for easily working with popups. PUM.open(123), PUM.close(123), PUM.clearCookies(123).
 * Feature: Added new conditions for targeting children & grandchildren / ancestors of selected content.
 * Feature: Added new settings to the Nav Menu editor to choose a popup that a menu item will trigger.
-* Feature: Added a new debug mode. Including:
-  * Admin Bar with manual open, close & cookie resets for loaded popups.
 * Feature: Addded option to Disable on Tablets as well as mobile phones.
 * Feature: Added WooCommerce is_wc_endpoint_url conditions.
 * Feature: Added new click selector presets for quicker targeting & more user friendly.
+* Feature: Added a new debug mode. Including:
+  * Admin Bar with manual open, close & cookie resets for loaded popups.
+* Improvement: New global JS functions for easily working with popups. PUM.open(123), PUM.close(123), PUM.clearCookies(123).
 * Improvement: Added inline links to docs for various settings.
 * Improvement: Reworked popup analytics to improving response times and decreasing server loads.
   * Moved Analytic tracking to the WP-API with a new endpoint.
