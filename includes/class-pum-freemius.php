@@ -55,6 +55,9 @@ class PUM_Freemius {
 				'is_premium'     => false,
 				'has_addons'     => false,
 				'has_paid_plans' => false,
+				'permissions'    => array(
+					'newsletter'    => true,
+				),
 				'menu'           => array(
 					'slug'    => 'edit.php?post_type=popup',
 					'contact' => false,

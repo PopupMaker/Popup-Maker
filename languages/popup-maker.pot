@@ -410,7 +410,7 @@ msgstr ""
 msgid "Close Text"
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:23, includes/class-popmake-popup-fields.php:210, includes/class-popmake-popup-theme-fields.php:295, includes/class-popmake-popup-theme-fields.php:297, includes/defaults.php:156
+#: includes/admin/popups/metabox-close-fields.php:23, includes/class-popmake-popup-fields.php:210, includes/class-popmake-popup-theme-fields.php:295, includes/class-popmake-popup-theme-fields.php:297, includes/defaults.php:158
 msgid "CLOSE"
 msgstr ""
 
