@@ -177,7 +177,7 @@ function popmake_extensions_page() { ?>
 
 				shuffle( $compatible_plugins );
 
-				array_push( $compatible_plugins, array(
+				array_unshift( $compatible_plugins, array(
 					'slug' => 'ninja-forms',
 					'name' => __( 'Ninja Forms', 'popup-maker' ),
 					'url'  => 'https://wppopupmaker.com/grab/ninja-forms',
