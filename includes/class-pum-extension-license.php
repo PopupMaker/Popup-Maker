@@ -183,7 +183,7 @@ class PUM_Extension_License {
 
 
 	/**
-	 * Display help text at the top of the Licenses tag
+	 * Display help text at the top of the Licenses tab
 	 *
 	 * @param   string $active_tab
 	 *
@@ -207,7 +207,7 @@ class PUM_Extension_License {
 			return;
 		}
 
-		echo '<p>' . sprintf( __( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank">renew your license</a>.', 'popup-maker' ), 'http://docs.wppopupmaker.com/article/177-license-renewal' ) . '</p>';
+		echo '<p>' . sprintf( __( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please %srenew your license%s.', 'popup-maker' ), '<a href="http://docs.wppopupmaker.com/article/177-license-renewal?utm_medium=license-help-text&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab" target="_blank">', '</a>' ) . '</p>';
 
 		$has_ran = true;
 		$pum_temp_license_help_text_global = true;
@@ -405,7 +405,7 @@ class PUM_Extension_License {
 
 			if ( empty( $_GET['tab'] ) || 'licenses' !== $_GET['tab'] ) {
 
-				$messages[] = sprintf( __( 'You have invalid or expired license keys for Popup Maker. Please go to the <a href="%s">Licenses page</a> to correct this issue.', 'popup-maker' ), admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=licenses' ) );
+				$messages[] = sprintf( __( 'You have invalid or expired license keys for Popup Maker. Please go to the %sLicenses page%s to correct this issue.', 'popup-maker' ), '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=licenses' ) . '">', '</a>' );
 
 				$showed_invalid_message = true;
 

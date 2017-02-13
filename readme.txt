@@ -53,16 +53,16 @@ If you are enjoying this wonderful project, [please rate & review it](https://wp
 == Frequently Asked Questions ==
 
 = Where is your documentation? =
-Our documentation is located [here](http://docs.wppopupmaker.com/)
+Our documentation is located [here](http://docs.wppopupmaker.com?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_term=where-are-docs)
 
 = How do I open a popup? =
-Using [Triggers](http://docs.wppopupmaker.com/article/141-triggers-cookies)
+Using [Triggers](http://docs.wppopupmaker.com/article/141-triggers-cookies?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_term=open-a-popup)
 
 = How do I stop popups from opening repeatedly? =
-Using [Cookies](http://docs.wppopupmaker.com/article/148-cookies)
+Using [Cookies](http://docs.wppopupmaker.com/article/148-cookies?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_term=stop-opening-repeatedly)
 
 = What do I do if I just want a popup to show on a certain page/post/etc? =
-Check out [Conditions](http://docs.wppopupmaker.com/article/140-conditions)
+Check out [Conditions](http://docs.wppopupmaker.com/article/140-conditions?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_term=target-certain-pages)
 
 = Why aren't my popups opening/working? =
 

@@ -47,7 +47,7 @@ function popmake_load_site_scripts() {
 	wp_localize_script( 'popup-maker-site', 'pum_debug_vars', apply_filters( 'pum_debug_vars', array(
 		'debug_mode_enabled'            => _x( 'Popup Maker Debug Mode Enabled', 'debug console text', 'popup-maker' ),
 		'debug_started_at'              => _x( 'Debug started at:', 'debug console text', 'popup-maker' ),
-		'debug_more_info'               => sprintf( _x( 'For more information on how to use this information visit %s', 'debug console text', 'popup-maker' ), 'http://docs.wppopupmaker.com/' ),
+		'debug_more_info'               => sprintf( _x( 'For more information on how to use this information visit %s', 'debug console text', 'popup-maker' ), 'http://docs.wppopupmaker.com/?utm_medium=js-debug-info&utm_campaign=ContextualHelp&utm_source=browser-console&utm_term=more-info' ),
 		'global_info'                   => _x( 'Global Information', 'debug console text', 'popup-maker' ),
 		'localized_vars'                => _x( 'Localized variables', 'debug console text', 'popup-maker' ),
 		'popups_initializing'           => _x( 'Popups Initializing', 'debug console text', 'popup-maker' ),
