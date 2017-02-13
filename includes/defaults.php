@@ -35,6 +35,7 @@ function popmake_popup_display_defaults( $defaults = array() ) {
 		'custom_height_unit'        => 'px',
 		'custom_height_auto'        => false,
 		'location'                  => 'center top',
+		'position_from_trigger'     => false,
 		'position_top'              => 100,
 		'position_left'             => 0,
 		'position_bottom'           => 0,

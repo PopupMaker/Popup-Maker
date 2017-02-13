@@ -401,54 +401,69 @@ var PUM;
                 location = display.location,
                 reposition = {
                     my: "",
-                    at: ""
+                    at: "",
+                    of: window,
+                    collision: 'none',
+                    using: typeof callback === "function" ? callback : $.fn.popmake.callbacks.reposition_using
                 },
-                opacity = {overlay: null, container: null};
+                opacity = {overlay: null, container: null},
+                $last_trigger = null;
 
-            if (location.indexOf('left') >= 0) {
-                reposition = {
-                    my: reposition.my + " left" + (display.position_left !== 0 ? "+" + display.position_left : ""),
-                    at: reposition.at + " left"
-                };
+            try {
+                $last_trigger = $($.fn.popmake.last_open_trigger);
+            } catch (error) {
+                $last_trigger = $();
             }
-            if (location.indexOf('right') >= 0) {
-                reposition = {
-                    my: reposition.my + " right" + (display.position_right !== 0 ? "-" + display.position_right : ""),
-                    at: reposition.at + " right"
-                };
-            }
-            if (location.indexOf('center') >= 0) {
-                if (location === 'center') {
-                    reposition = {
-                        my: "center",
-                        at: "center"
-                    };
-                } else {
-                    reposition = {
-                        my: reposition.my + " center",
-                        at: reposition.at + " center"
-                    };
+
+            if (display.position_from_trigger && $last_trigger.length) {
+
+                reposition.of = $last_trigger;
+
+                if (location.indexOf('left') >= 0) {
+                    reposition.my += " right";
+                    reposition.at += " left" + (display.position_left !== 0 ? "-" + display.position_left : "");
+                }
+                if (location.indexOf('right') >= 0) {
+                    reposition.my += " left";
+                    reposition.at += " right" + (display.position_right !== 0 ? "+" + display.position_right : "");
+                }
+                if (location.indexOf('center') >= 0) {
+                    reposition.my = location === 'center' ? "center" : reposition.my + " center";
+                    reposition.at = location === 'center' ? "center" : reposition.at + " center";
+                }
+                if (location.indexOf('top') >= 0) {
+                    reposition.my += " bottom";
+                    reposition.at += " top" + (display.position_top !== 0 ? "-" + display.position_top : "");
+                }
+                if (location.indexOf('bottom') >= 0) {
+                    reposition.my += " top";
+                    reposition.at += " bottom" + (display.position_bottom !== 0 ? "+" + display.position_bottom : "");
+                }
+            } else {
+                if (location.indexOf('left') >= 0) {
+                    reposition.my += " left" + (display.position_left !== 0 ? "+" + display.position_left : "");
+                    reposition.at += " left";
+                }
+                if (location.indexOf('right') >= 0) {
+                    reposition.my += " right" + (display.position_right !== 0 ? "-" + display.position_right : "");
+                    reposition.at += " right";
+                }
+                if (location.indexOf('center') >= 0) {
+                    reposition.my = location === 'center' ? "center" : reposition.my + " center";
+                    reposition.at = location === 'center' ? "center" : reposition.at + " center";
+                }
+                if (location.indexOf('top') >= 0) {
+                    reposition.my += " top" + (display.position_top !== 0 ? "+" + ($('body').hasClass('admin-bar') ? parseInt(display.position_top, 10) + 32 : display.position_top) : "")
+                    reposition.at += " top";
+                }
+                if (location.indexOf('bottom') >= 0) {
+                    reposition.my += " bottom" + (display.position_bottom !== 0 ? "-" + display.position_bottom : "");
+                    reposition.at += " bottom";
                 }
             }
-            if (location.indexOf('top') >= 0) {
-                reposition = {
-                    my: reposition.my + " top" + (display.position_top !== 0 ? "+" + ($('body').hasClass('admin-bar') ? parseInt(display.position_top, 10) + 32 : display.position_top) : ""),
-                    at: reposition.at + " top"
-                };
-            }
-            if (location.indexOf('bottom') >= 0) {
-                reposition = {
-                    my: reposition.my + " bottom" + (display.position_bottom !== 0 ? "-" + display.position_bottom : ""),
-                    at: reposition.at + " bottom"
-                };
-            }
-
 
             reposition.my = $.trim(reposition.my);
             reposition.at = $.trim(reposition.at);
-            reposition.of = window;
-            reposition.collision = 'none';
-            reposition.using = typeof callback === "function" ? callback : $.fn.popmake.callbacks.reposition_using;
 
             if ($popup.is(':hidden')) {
                 opacity.overlay = $popup.css("opacity");

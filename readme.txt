@@ -2,10 +2,10 @@
 Contributors: danieliser, wppopupmaker, waltmesser
 Author URI: https://wppopupmaker.com/?utm_source=WordPress+Page&utm_medium=Readme+Link&utm_campaign=Author+URI
 Plugin URI: https://wppopupmaker.com/?utm_source=WordPress+Page&utm_medium=Readme+Link&utm_campaign=Plugin+URI
-Donate link: 
+Donate link:
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.6
-Tested up to: 4.6
+Tested up to: 4.7.2
 Stable tag: 1.5.0
 License: GNU Version 3 or Any Later Version
 
@@ -88,6 +88,7 @@ There are several common causes for this which include:
 == Changelog ==
 
 = v1.5.0 - TBD
+* Feature: Position popups based on the click trigger. Tooltips & Popovers are now possible.
 * Feature: Added new conditions for targeting children & grandchildren / ancestors of selected content.
 * Feature: Added new settings to the Nav Menu editor to choose a popup that a menu item will trigger.
 * Feature: Addded option to Disable on Tablets as well as mobile phones.

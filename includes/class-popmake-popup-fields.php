@@ -141,6 +141,13 @@ class Popmake_Popup_Fields extends Popmake_Fields {
 					'priority'    => 14,
 					'options'     => apply_filters( 'popmake_popup_display_location_options', array() ),
 				),
+				'position_from_trigger' => array(
+					'label'       => __( 'Position from Trigger', 'popup-maker' ),
+					'description' => __( 'Checking this will cause popup to be positions based on the clicked trigger.', 'popup-maker' ),
+					'type'        => 'checkbox',
+					'std'         => false,
+					'priority'    => 14.5,
+				),
 				'position_top'              => array(
 					'label'       => __( 'Top', 'popup-maker' ),
 					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Top', 'popup-maker' ) ) ),

@@ -324,6 +324,24 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 		</td>
 	</tr>
 	<tr>
+		<th scope="row"><?php _e( 'Position from Trigger', 'popup-maker' ); ?></th>
+		<td><?php
+			$position_from_trigger = popmake_get_popup_display( $popup_id, 'position_from_trigger', false );
+			switch( $position_from_trigger ) {
+				case 'true':
+				case true:
+				case 1:
+				$position_from_trigger = true;
+					break;
+				default:
+					$position_from_trigger = false;
+					break;
+			} ?>
+			<input type="checkbox" value="1" name="popup_display_position_from_trigger" id="popup_display_position_from_trigger" <?php checked( $position_from_trigger, 1 ); ?>/>
+			<label for="popup_display_position_from_trigger" class="description"><?php _e(  'Checking this will cause popup to be positions based on the clicked trigger.', 'popup-maker' ); ?></label>
+		</td>
+	</tr>
+	<tr>
 		<th scope="row">
 			<label for="popup_display_location"><?php _e( 'Location', 'popup-maker' ); ?></label>
 		</th>
