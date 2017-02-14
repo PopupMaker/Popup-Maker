@@ -20,8 +20,8 @@ function popmake_plugin_action_links( $links, $file ) {
 
 	if ( $file == plugin_basename( POPMAKE ) ) {
 		$plugin_action_links = apply_filters( 'popmake_action_links', array(
-			'settings' => '<a href="'. admin_url( 'edit.php?post_type=popup&page=pum-settings' ) .'">'.__( 'Settings', 'popup-maker' ).'</a>',
 			'extensions' => '<a href="'. admin_url( 'edit.php?post_type=popup&page=pum-extensions' ) .'">'.__( 'Extensions', 'popup-maker' ).'</a>',
+			'settings' => '<a href="'. admin_url( 'edit.php?post_type=popup&page=pum-settings' ) .'">'.__( 'Settings', 'popup-maker' ).'</a>',
 		) );
 
 		foreach ( $plugin_action_links as $link ) {
