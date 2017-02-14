@@ -44,14 +44,12 @@ class PUM_Extension_License {
 	 * @param string $_optname
 	 * @param string $_api_url
 	 */
-	function __construct( $_file, $_item, $_version, $_author, $_optname = null, $_api_url = null ) {
+	function __construct( $_file, $_item_name, $_version, $_author, $_optname = null, $_api_url = null, $_item_id = null ) {
+		$this->file      = $_file;
+		$this->item_name = $_item_name;
 
-		$this->file = $_file;
-
-		if ( is_numeric( $_item ) ) {
-			$this->item_id = absint( $_item );
-		} else {
-			$this->item_name = $_item;
+		if ( is_numeric( $_item_id ) ) {
+			$this->item_id = absint( $_item_id );
 		}
 
 		$this->item_shortname = 'popmake_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
@@ -209,7 +207,7 @@ class PUM_Extension_License {
 
 		echo '<p>' . sprintf( __( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please %srenew your license%s.', 'popup-maker' ), '<a href="http://docs.wppopupmaker.com/article/177-license-renewal?utm_medium=license-help-text&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab" target="_blank">', '</a>' ) . '</p>';
 
-		$has_ran = true;
+		$has_ran                           = true;
 		$pum_temp_license_help_text_global = true;
 	}
 
