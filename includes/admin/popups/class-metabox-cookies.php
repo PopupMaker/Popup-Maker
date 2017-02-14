@@ -55,7 +55,7 @@ class PUM_Popup_Cookies_Metabox {
 		<p>
 			<strong>
 				<?php _e( 'Cookies are used to prevent a trigger from opening the popup.', 'popup-maker' ); ?>
-				<a href="<?php echo esc_url( 'http://docs.wppopupmaker.com/article/148-cookies?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_term=cookies-intro' ); ?>" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
+				<a href="<?php echo esc_url( 'http://docs.wppopupmaker.com/article/148-cookies?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=cookies-intro' ); ?>" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
 			</strong>
 		</p>
 

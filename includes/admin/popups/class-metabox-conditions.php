@@ -68,7 +68,7 @@ class PUM_Popup_Conditions_Metabox {
 		<div class="facet-builder <?php echo $has_conditions ? 'has-conditions' : ''; ?>">
 			<p>
 				<strong>
-					<?php printf( __( 'Conditions are used to limit where and who will see a popup. %sLearn More!%s', 'popup-maker' ), '<a href="http://docs.wppopupmaker.com/article/140-conditions?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_term=conditions-intro" target="_blank">', '</a>' ); ?>
+					<?php printf( __( 'Conditions are used to limit where and who will see a popup. %sLearn More!%s', 'popup-maker' ), '<a href="http://docs.wppopupmaker.com/article/140-conditions?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=conditions-intro" target="_blank">', '</a>' ); ?>
 				</strong>
 			</p>
 			<section class="pum-alert-box" style="display:none"></section>
@@ -152,7 +152,7 @@ class PUM_Popup_Conditions_Metabox {
 					<?php
 					printf(
 						__( 'Need more %sadvanced targeting%s options?', 'popup-maker' ),
-						'<a href="https://wppopupmaker.com/extensions/advanced-targeting-conditions/" target="_blank">',
+						'<a href="https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_campaign=Upsell&utm_source=plugin-popup-editor&utm_medium=text-link&utm_content=conditions-editor" target="_blank">',
 						'</a>'
 					);
 					?></p>

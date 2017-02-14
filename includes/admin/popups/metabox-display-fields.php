@@ -338,7 +338,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 					break;
 			} ?>
 			<input type="checkbox" value="1" name="popup_display_position_from_trigger" id="popup_display_position_from_trigger" <?php checked( $position_from_trigger, 1 ); ?>/>
-			<label for="popup_display_position_from_trigger" class="description"><?php printf( __( 'This will position the popup in relation to the %sClick Trigger%s.', 'popup-maker' ), '<a target="_blank" href="http://docs.wppopupmaker.com/article/144-trigger-click-open?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_term=position-from-trigger">', '</a>' ); ?></label>
+			<label for="popup_display_position_from_trigger" class="description"><?php printf( __( 'This will position the popup in relation to the %sClick Trigger%s.', 'popup-maker' ), '<a target="_blank" href="http://docs.wppopupmaker.com/article/144-trigger-click-open?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=position-from-trigger">', '</a>' ); ?></label>
 		</td>
 	</tr>
 	<tr>

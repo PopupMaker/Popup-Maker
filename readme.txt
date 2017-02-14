@@ -1,7 +1,7 @@
 === Popup Maker ===
 Contributors: danieliser, wppopupmaker, waltmesser
-Author URI: https://wppopupmaker.com/?utm_source=WordPress+Page&utm_medium=Readme+Link&utm_campaign=Author+URI
-Plugin URI: https://wppopupmaker.com/?utm_source=WordPress+Page&utm_medium=Readme+Link&utm_campaign=Plugin+URI
+Author URI: https://wppopupmaker.com/?utm_source=readme-header&utm_campaign=Readme&utm_medium=author-uri
+Plugin URI: https://wppopupmaker.com/?utm_capmaign=Readme&utm_source=readme-header&utm_medium=plugin-uri
 Donate link:
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.6
@@ -17,7 +17,7 @@ Popup Maker is the most advanced and versatile popup, modal and content overlay 
 
 Customize every facet of your popups, from theme and position, to targeting and cookies.
 
-Learn tips and tricks, and create cool popups using guides found on our [Blog](https://wppopupmaker.com/blog/)!
+Learn tips and tricks, and create cool popups using guides found on our [Blog](https://wppopupmaker.com/blog/?utm_campaign=Reamde&utm_source=readme-description&utm_medium=text-link)!
 
 https://www.youtube.com/watch?v=MAf85_oax4g
 
@@ -41,28 +41,28 @@ Would you like to help translate the plugin into more languages? [Join our WP-Tr
 > + Trove of options to customize the look of your popup using our unique **Theme Editor**. Change colors, shadows, fonts, paddings, and much, much more.
 > + Stat tracking: Popup Opens Count.
 
-If you are enjoying this wonderful project, [please rate & review it](https://wppopupmaker.com/rate-us?utm_source=WordPress+Page&utm_medium=Review+Link&utm_campaign=Review+It) to share the love <3!
+If you are enjoying this wonderful project, [please rate & review it](https://wppopupmaker.com/rate-us/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Readme&utm_content=rate-us) to share the love <3!
 
 = Enhance Your Popups Using Our Extensions =
-> + [Exit Intent](https://wppopupmaker.com/extensions/exit-intent?utm_source=WordPress+Page&utm_medium=Extensions+Link&utm_campaign=Exit+Intent "Exit Intent")
-> + [AJAX Login Modals](https://wppopupmaker.com/extensions/ajax-login-modals?utm_source=WordPress+Page&utm_medium=Extensions+Link&utm_campaign=AJAX+Login+Modals "AJAX Login Modals")
-> + [Age Verification Modals](https://wppopupmaker.com/extensions/age-verification-modals?utm_source=WordPress+Page&utm_medium=Extensions+Link&utm_campaign=Age+Verification+Modals "Age Verification Modals")
-> + [Popup Analytics](https://wppopupmaker.com/extensions/popup-analytics?utm_source=WordPress+Page&utm_medium=Extensions+Link&utm_campaign=Popup+Analytics "Popup Analytics")
-> + [Advanced Targeting Conditions](https://wppopupmaker.com/extensions/advanced-targeting-conditions?utm_source=WordPress+Page&utm_medium=Extensions+Link&utm_campaign=Advanced+Targeting+Conditions "Advanced Targeting Conditions")
+> + [Exit Intent](https://wppopupmaker.com/extensions/exit-intent/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Upsell&utm_content=exit-intent "Exit Intent")
+> + [AJAX Login Modals](https://wppopupmaker.com/extensions/ajax-login-modals/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Upsell&utm_content=ajax-login-modal "AJAX Login Modals")
+> + [Age Verification Modals](https://wppopupmaker.com/extensions/age-verification-modals/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Upsell&utm_content=age-verification-modals "Age Verification Modals")
+> + [Popup Analytics](https://wppopupmaker.com/extensions/popup-analytics/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Upsell&utm_content=popup-analytics "Popup Analytics")
+> + [Advanced Targeting Conditions](https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Upsell&utm_content=advanced-targeting-conditions "Advanced Targeting Conditions")
 
 == Frequently Asked Questions ==
 
 = Where is your documentation? =
-Our documentation is located [here](http://docs.wppopupmaker.com?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_term=where-are-docs)
+Our documentation is located [here](http://docs.wppopupmaker.com?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_content=where-are-docs)
 
 = How do I open a popup? =
-Using [Triggers](http://docs.wppopupmaker.com/article/141-triggers-cookies?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_term=open-a-popup)
+Using [Triggers](http://docs.wppopupmaker.com/article/141-triggers-cookies?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_content=open-a-popup)
 
 = How do I stop popups from opening repeatedly? =
-Using [Cookies](http://docs.wppopupmaker.com/article/148-cookies?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_term=stop-opening-repeatedly)
+Using [Cookies](http://docs.wppopupmaker.com/article/148-cookies?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_content=stop-opening-repeatedly)
 
 = What do I do if I just want a popup to show on a certain page/post/etc? =
-Check out [Conditions](http://docs.wppopupmaker.com/article/140-conditions?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_term=target-certain-pages)
+Check out [Conditions](http://docs.wppopupmaker.com/article/140-conditions?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_content=target-certain-pages)
 
 = Why aren't my popups opening/working? =
 
@@ -120,8 +120,8 @@ There are several common causes for this which include:
 * Tweak: Added CSS override for Ninja Forms datepickers to properly layer them above popups.
 
 = v1.4.20 - 10/13/2016 =
-* Feature: Added [Ninja Forms](https://wppopupmaker.com/go/ninjaforms) success actions for opening & closing popups.
-* Feature: Added new cookie event for successful submission of a [Ninja Forms](https://wppopupmaker.com/go/ninjaforms) form.
+* Feature: Added [Ninja Forms](https://wppopupmaker.com/grab/ninjaforms?utm_source=readme-changelog&utm_medium=text-link&utm_campaign=Readme&utm_content=ninja-forms-features) success actions for opening & closing popups.
+* Feature: Added new cookie event for successful submission of a [Ninja Forms](https://wppopupmaker.com/grab/ninjaforms) form.
 * Improvement: Added wp.hooks JS library, allowing actions & filters via our plugin JS.
 * Tweaks: Added various admin css tweaks.
 

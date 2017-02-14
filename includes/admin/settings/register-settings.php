@@ -792,7 +792,7 @@ if ( ! function_exists( 'popmake_license_key_callback' ) ) {
 					case 'expired' :
 
 						$class      = 'expired';
-						$messages[] = sprintf( __( 'Your license key expired on %s. Please %srenew your license key%s.', 'popup-maker' ), date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), '<a target="_blank" href="https://wppopupmaker.com/checkout/?edd_license_key=' . $value . '&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_medium=expired&utm_term=' . $args['id'] . '">', '</a>' );
+						$messages[] = sprintf( __( 'Your license key expired on %s. Please %srenew your license key%s.', 'popup-maker' ), date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), '<a target="_blank" href="https://wppopupmaker.com/checkout/?edd_license_key=' . $value . '&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_medium=expired&utm_content=' . $args['id'] . '">', '</a>' );
 
 						$license_status = 'license-' . $class . '-notice';
 
@@ -802,7 +802,7 @@ if ( ! function_exists( 'popmake_license_key_callback' ) ) {
 					case 'revoked' :
 
 						$class      = 'error';
-						$messages[] = sprintf( __( 'Your license key has been disabled. Please %scontact support%s for more information.', 'popup-maker' ), '<a target="_blank" href="https://wppopupmaker.com/support/?utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_term=' . $args['id'] . '&utm_medium=revoked">', '</a>' );
+						$messages[] = sprintf( __( 'Your license key has been disabled. Please %scontact support%s for more information.', 'popup-maker' ), '<a target="_blank" href="https://wppopupmaker.com/support/?utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_content=' . $args['id'] . '&utm_medium=revoked">', '</a>' );
 
 						$license_status = 'license-' . $class . '-notice';
 
@@ -812,7 +812,7 @@ if ( ! function_exists( 'popmake_license_key_callback' ) ) {
 					case 'missing' :
 
 						$class      = 'error';
-						$messages[] = sprintf( __( 'Invalid license. Please %svisit your account page%s and verify it.', 'popup-maker' ), '<a target="_blank" href="https://wppopupmaker.com/account/?tab=licenses&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_term=' . $args['id'] . '&utm_medium=missing">', '</a>' );
+						$messages[] = sprintf( __( 'Invalid license. Please %svisit your account page%s and verify it.', 'popup-maker' ), '<a target="_blank" href="https://wppopupmaker.com/account/?tab=licenses&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_content=' . $args['id'] . '&utm_medium=missing">', '</a>' );
 
 						$license_status = 'license-' . $class . '-notice';
 
@@ -824,7 +824,7 @@ if ( ! function_exists( 'popmake_license_key_callback' ) ) {
 					case 'site_inactive' :
 
 						$class      = 'error';
-						$messages[] = sprintf( __( 'Your %s is not active for this URL. Please %svisit your account page%s to manage your license key URLs.', 'popup-maker' ), $args['name'], '<a target="_blank" href="https://wppopupmaker.com/account/?tab=licenses&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_term=' . $args['id'] . '&utm_medium=invalid">', '</a>' );
+						$messages[] = sprintf( __( 'Your %s is not active for this URL. Please %svisit your account page%s to manage your license key URLs.', 'popup-maker' ), $args['name'], '<a target="_blank" href="https://wppopupmaker.com/account/?tab=licenses&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_content=' . $args['id'] . '&utm_medium=invalid">', '</a>' );
 
 						$license_status = 'license-' . $class . '-notice';
 
@@ -844,7 +844,7 @@ if ( ! function_exists( 'popmake_license_key_callback' ) ) {
 					case 'no_activations_left':
 
 						$class      = 'error';
-						$messages[] = sprintf( __( 'Your license key has reached its activation limit. %View possible upgrades% now.', 'popup-maker' ), '<a target="_blank" href="https://wppopupmaker.com/account/?tab=licenses&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_term=' . $args['id'] . '&utm_medium=no-activations-left">', '</a>' );
+						$messages[] = sprintf( __( 'Your license key has reached its activation limit. %View possible upgrades% now.', 'popup-maker' ), '<a target="_blank" href="https://wppopupmaker.com/account/?tab=licenses&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_content=' . $args['id'] . '&utm_medium=no-activations-left">', '</a>' );
 
 						$license_status = 'license-' . $class . '-notice';
 
@@ -863,7 +863,7 @@ if ( ! function_exists( 'popmake_license_key_callback' ) ) {
 
 						$class      = 'error';
 						$error      = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'popup-maker' );
-						$messages[] = sprintf( __( 'There was an error with this license key: %s. Please %scontact our support team%s.', 'popup-maker' ), $error, '<a target="_blank" href="https://wppopupmaker.com/support/?utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_term=' . $args['id'] . '&utm_medium=error-contact-support">', '</a>' );
+						$messages[] = sprintf( __( 'There was an error with this license key: %s. Please %scontact our support team%s.', 'popup-maker' ), $error, '<a target="_blank" href="https://wppopupmaker.com/support/?utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_content=' . $args['id'] . '&utm_medium=error-contact-support">', '</a>' );
 
 						$license_status = 'license-' . $class . '-notice';
 						break;
@@ -889,7 +889,7 @@ if ( ! function_exists( 'popmake_license_key_callback' ) ) {
 
 						} elseif ( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
 
-							$messages[] = sprintf( __( 'Your license key expires soon! It expires on %s. %sRenew your license key%s.', 'popup-maker' ), date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), '<a target="_blank" href="https://wppopupmaker.com/checkout/?edd_license_key=' . $value . '&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_term=' . $args['id'] . '&utm_medium=renew">', '</a>' );
+							$messages[] = sprintf( __( 'Your license key expires soon! It expires on %s. %sRenew your license key%s.', 'popup-maker' ), date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), '<a target="_blank" href="https://wppopupmaker.com/checkout/?edd_license_key=' . $value . '&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_content=' . $args['id'] . '&utm_medium=renew">', '</a>' );
 
 							$license_status = 'license-expires-soon-notice';
 

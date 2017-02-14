@@ -35,7 +35,7 @@ function popmake_support_meta_box_links() {
 	?>
 	<ul class="popmake-support-links">
 		<li>
-            <a href="http://docs.wppopupmaker.com/?utm_medium=support-sidebar&utm_campaign=ContextualHelp&utm_source=<?php echo $source; ?>&utm_term=documentation">
+            <a href="http://docs.wppopupmaker.com/?utm_medium=support-sidebar&utm_campaign=ContextualHelp&utm_source=<?php echo $source; ?>&utm_content=documentation">
 				<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/knowledge-base.png"/>
                 <span><?php _e( 'Documentation', 'popup-maker' ); ?></span>
 			</a>
@@ -47,7 +47,7 @@ function popmake_support_meta_box_links() {
 			</a>
 		</li>
 		<li>
-			<a href="https://wppopupmaker.com/support/?utm_medium=support-sidebar&utm_campaign=ContextualHelp&utm_source=<?php echo $source; ?>&utm_term=extension-support">
+			<a href="https://wppopupmaker.com/support/?utm_medium=support-sidebar&utm_campaign=ContextualHelp&utm_source=<?php echo $source; ?>&utm_content=extension-support">
 				<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/member-forums.png"/>
 				<span><?php _e( 'Extension Support', 'popup-maker' ); ?></span>
 			</a>

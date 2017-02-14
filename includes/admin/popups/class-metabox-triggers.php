@@ -53,7 +53,7 @@ class PUM_Popup_Triggers_Metabox {
 		<p>
 			<strong>
 				<?php _e( 'Triggers are what make your popup open.', 'popup-maker' ); ?>
-				<a href="<?php echo esc_url( 'http://docs.wppopupmaker.com/article/141-triggers?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_term=triggers-intro' ); ?>" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
+				<a href="<?php echo esc_url( 'http://docs.wppopupmaker.com/article/141-triggers?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=triggers-intro' ); ?>" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
 			</strong>
 		</p>
 
