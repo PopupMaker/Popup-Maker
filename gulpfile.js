@@ -234,3 +234,7 @@ gulp.task('default', function (done) {
         'watch'
     );
 });
+
+gulp.task('submodules', function(){
+    $fn.git.updateSubmodule({ args: '--init --recursive' });
+});
