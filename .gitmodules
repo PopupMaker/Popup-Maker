@@ -1,0 +1,3 @@
+[submodule "pum-sdk"]
+	path = includes/pum-sdk
+	url = https://github.com/PopupMaker/pum-sdk.git
