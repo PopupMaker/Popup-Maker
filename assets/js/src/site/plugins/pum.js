@@ -77,6 +77,9 @@ var PUM;
 
             return typeof settings[key] !== 'undefined' ? settings[key] : null;
         },
+        checkConditions: function(el) {
+            return PUM.getPopup(el).popmake('checkConditions');
+        },
         getCookie: function (cookie_name) {
             return $.pm_cookie(cookie_name);
         },

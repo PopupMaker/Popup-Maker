@@ -191,7 +191,9 @@ var pum_debug_mode = false,
 
                 // Conditions
                 if (settings.conditions !== undefined && settings.conditions.length) {
-                    console.log('Conditions: ', settings.conditions);
+                    console.groupCollapsed(vars.label_conditions);
+                    console.log(settings.conditions);
+                    console.groupEnd();
                 }
 
                 console.groupCollapsed(vars.label_popup_settings);
@@ -323,6 +325,18 @@ var pum_debug_mode = false,
                 pum_debug.popup_event_header($popup);
 
                 console.groupCollapsed(vars.label_event_after_reposition);
+
+                console.groupEnd();
+            })
+            .on('pumCheckingCondition', '.pum', function (event, result, condition) {
+                var $popup = PUM.getPopup($(this)),
+                    settings = $popup.popmake('getSettings');
+
+                pum_debug.popup_event_header($popup);
+
+                console.groupCollapsed(vars.label_event_checking_condition);
+
+                console.log( ( condition.not_operand ? '(!) ' : '' ) + condition.target + ': ' + result, condition);
 
                 console.groupEnd();
             });

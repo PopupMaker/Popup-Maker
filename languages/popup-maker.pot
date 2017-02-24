@@ -16,7 +16,7 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: includes/admin/admin-pages.php:30, includes/admin/admin-pages.php:30, includes/admin/admin-pages.php:85, includes/admin/admin-setup.php:24, includes/admin/popups/class-metabox-cookies.php:69, includes/admin/popups/class-metabox-triggers.php:66
+#: includes/admin/admin-pages.php:30, includes/admin/admin-pages.php:30, includes/admin/admin-pages.php:85, includes/admin/admin-setup.php:24, includes/admin/popups/class-metabox-cookies.php:72, includes/admin/popups/class-metabox-triggers.php:69
 msgid "Settings"
 msgstr ""
 
@@ -56,7 +56,7 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: includes/admin/admin-setup.php:25, includes/admin/extensions/extensions-page.php:26, includes/admin/settings/register-settings.php:319
+#: includes/admin/admin-setup.php:23, includes/admin/extensions/extensions-page.php:26, includes/admin/settings/register-settings.php:319
 msgid "Extensions"
 msgstr ""
 
@@ -64,11 +64,11 @@ msgstr ""
 msgid "A Popup Preview"
 msgstr ""
 
-#: includes/admin/class-pum-admin-helpers.php:14, includes/scripts.php:249
+#: includes/admin/class-pum-admin-helpers.php:14, includes/scripts.php:251
 msgid "Cancel"
 msgstr ""
 
-#: includes/admin/class-pum-admin-helpers.php:16, includes/scripts.php:245
+#: includes/admin/class-pum-admin-helpers.php:16, includes/scripts.php:247
 msgid "Add"
 msgstr ""
 
@@ -128,7 +128,7 @@ msgstr ""
 msgid "Extend Popup Maker"
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:27, includes/admin/extensions/extensions-page.php:27, includes/admin/extensions/extensions-page.php:143, includes/admin/extensions/extensions-page.php:143
+#: includes/admin/extensions/extensions-page.php:27, includes/admin/extensions/extensions-page.php:27, includes/admin/extensions/extensions-page.php:145, includes/admin/extensions/extensions-page.php:145
 msgid "Browse All Extensions"
 msgstr ""
 
@@ -136,68 +136,64 @@ msgstr ""
 msgid "These extensions <strong>add extra functionality</strong> to your popups."
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:133
+#: includes/admin/extensions/extensions-page.php:134
 msgid "Get this Extension"
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:152
+#: includes/admin/extensions/extensions-page.php:154
 msgid "Other Compatible Plugins"
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:154
+#: includes/admin/extensions/extensions-page.php:156
 msgid "These plugins should work in popups with no extra setup."
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:160
+#: includes/admin/extensions/extensions-page.php:162
 msgid "Gravity Forms"
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:162
+#: includes/admin/extensions/extensions-page.php:164
 msgid "Gravity Forms is one of the most popular form building plugins."
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:166
+#: includes/admin/extensions/extensions-page.php:168
 msgid "Contact Form 7"
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:168
+#: includes/admin/extensions/extensions-page.php:170
 msgid "CF7 is one of the most downloaded plugins on the WordPress repo. Make simple forms with ease and plenty of free addons available."
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:172
+#: includes/admin/extensions/extensions-page.php:174
 msgid "Quiz & Survey Master"
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:174
+#: includes/admin/extensions/extensions-page.php:176
 msgid "If you need more from your forms data look no further, QSM is all about the statistics & collective data, something other form plugins neglect."
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:182
+#: includes/admin/extensions/extensions-page.php:184
 msgid "Ninja Forms"
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:184
+#: includes/admin/extensions/extensions-page.php:186
 msgid "Ninja Forms has fast become the most extensible form plugin available. Build super custom forms and integrate with your favorite services."
 msgstr ""
 
-#: includes/admin/extensions/extensions-page.php:200
+#: includes/admin/extensions/extensions-page.php:202
 msgid "Check it out"
 msgstr ""
 
-#: includes/admin/metabox-support.php:30, includes/admin/shortcode-ui/templates/fields.php:14
+#: includes/admin/metabox-support.php:40, includes/admin/shortcode-ui/templates/fields.php:14
 msgid "Documentation"
 msgstr ""
 
-#: includes/admin/metabox-support.php:36
+#: includes/admin/metabox-support.php:46
 msgid "Free Support Forums"
 msgstr ""
 
-#: includes/admin/metabox-support.php:42
+#: includes/admin/metabox-support.php:52
 msgid "Extension Support"
-msgstr ""
-
-#: includes/admin/metabox-support.php:48
-msgid "Priority Support"
 msgstr ""
 
 #: includes/admin/pages/support.php:43
@@ -290,51 +286,51 @@ msgstr ""
 msgid "Add New Cookie"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:56
+#: includes/admin/popups/class-metabox-cookies.php:57
 msgid "Cookies are used to prevent a trigger from opening the popup."
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:67
+#: includes/admin/popups/class-metabox-cookies.php:70
 msgid "Event"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:68, includes/admin/popups/dashboard-columns.php:32
+#: includes/admin/popups/class-metabox-cookies.php:71, includes/admin/popups/dashboard-columns.php:32
 msgid "Name"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:70, includes/admin/popups/class-metabox-triggers.php:67
+#: includes/admin/popups/class-metabox-cookies.php:73, includes/admin/popups/class-metabox-triggers.php:70
 msgid "Actions"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:101
+#: includes/admin/popups/class-metabox-cookies.php:104
 msgid "Choose when you want to set a cookie to get started."
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:102
+#: includes/admin/popups/class-metabox-cookies.php:105
 msgid "Select an event."
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:130, includes/pum-cookie-functions.php:78, includes/pum-cookie-functions.php:106
+#: includes/admin/popups/class-metabox-cookies.php:133, includes/pum-cookie-functions.php:78, includes/pum-cookie-functions.php:106
 msgid "On Popup Close"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:132
+#: includes/admin/popups/class-metabox-cookies.php:135
 msgid "Time: 1 Month"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:145, includes/admin/popups/class-metabox-cookies.php:156
+#: includes/admin/popups/class-metabox-cookies.php:148, includes/admin/popups/class-metabox-cookies.php:159
 msgid "Edit this cookie"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:157
+#: includes/admin/popups/class-metabox-cookies.php:160
 msgid "Delete` this cookie"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:206
+#: includes/admin/popups/class-metabox-cookies.php:209
 msgid "What will trigger your cookie to be created?"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-cookies.php:251, includes/class-pum-cookie.php:54
+#: includes/admin/popups/class-metabox-cookies.php:254, includes/class-pum-cookie.php:54
 msgid "Cookie Settings"
 msgstr ""
 
@@ -346,43 +342,43 @@ msgstr ""
 msgid "Add New Trigger"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:54
+#: includes/admin/popups/class-metabox-triggers.php:55
 msgid "Triggers are what make your popup open."
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:64
+#: includes/admin/popups/class-metabox-triggers.php:67
 msgid "Type"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:65, includes/class-pum-cookie.php:53, includes/pum-trigger-functions.php:74
+#: includes/admin/popups/class-metabox-triggers.php:68, includes/class-pum-cookie.php:53, includes/pum-trigger-functions.php:74
 msgid "Cookie"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:98
+#: includes/admin/popups/class-metabox-triggers.php:101
 msgid "Choose a type of trigger to get started."
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:99
+#: includes/admin/popups/class-metabox-triggers.php:102
 msgid "Select a trigger type."
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:154
+#: includes/admin/popups/class-metabox-triggers.php:157
 msgid "Choose what type of trigger to add?"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:215, includes/pum-trigger-functions.php:100
+#: includes/admin/popups/class-metabox-triggers.php:218, includes/pum-trigger-functions.php:100
 msgid "Auto Open"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:217
+#: includes/admin/popups/class-metabox-triggers.php:220
 msgid "Delay: 0"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:229, includes/admin/popups/class-metabox-triggers.php:244
+#: includes/admin/popups/class-metabox-triggers.php:232, includes/admin/popups/class-metabox-triggers.php:247
 msgid "Edit this trigger"
 msgstr ""
 
-#: includes/admin/popups/class-metabox-triggers.php:245
+#: includes/admin/popups/class-metabox-triggers.php:248
 msgid "Delete` this trigger"
 msgstr ""
 
@@ -579,7 +575,7 @@ msgid "Position from Trigger"
 msgstr ""
 
 #: includes/admin/popups/metabox-display-fields.php:341, includes/class-popmake-popup-fields.php:146
-msgid "Checking this will cause popup to be positions based on the clicked trigger."
+msgid "This will position the popup in relation to the %sClick Trigger%s."
 msgstr ""
 
 #: includes/admin/popups/metabox-display-fields.php:346, includes/admin/themes/metabox-close-fields.php:92, includes/class-popmake-popup-fields.php:137, includes/class-popmake-popup-theme-fields.php:331, includes/shortcodes/class-pum-shortcode-popup.php:135
@@ -752,19 +748,19 @@ msgid "Upload File"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:795
-msgid "Your license key expired on %s. Please <a href=\"%s\" target=\"_blank\">renew your license key</a>."
+msgid "Your license key expired on %s. Please %srenew your license key%s."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:805
-msgid "Your license key has been disabled. Please <a href=\"%s\" target=\"_blank\">contact support</a> for more information."
+msgid "Your license key has been disabled. Please %scontact support%s for more information."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:815
-msgid "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account page</a> and verify it."
+msgid "Invalid license. Please %svisit your account page%s and verify it."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:827
-msgid "Your %s is not active for this URL. Please <a href=\"%s\" target=\"_blank\">visit your account page</a> to manage your license key URLs."
+msgid "Your %s is not active for this URL. Please %svisit your account page%s to manage your license key URLs."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:837
@@ -772,7 +768,7 @@ msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:847
-msgid "Your license key has reached its activation limit. <a href=\"%s\">View possible upgrades</a> now."
+msgid "Your license key has reached its activation limit. %View possible upgrades% now."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:857
@@ -784,7 +780,7 @@ msgid "unknown_error"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:866
-msgid "There was an error with this license key: %s. Please <a href=\"%s\">contact our support team</a>."
+msgid "There was an error with this license key: %s. Please %scontact our support team%s."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:886
@@ -792,7 +788,7 @@ msgid "License key never expires."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:892
-msgid "Your license key expires soon! It expires on %s. <a href=\"%s\" target=\"_blank\">Renew your license key</a>."
+msgid "Your license key expires soon! It expires on %s. %sRenew your license key%s."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:898
@@ -827,7 +823,7 @@ msgstr ""
 msgid "Popup Maker Settings"
 msgstr ""
 
-#: includes/admin/settings/settings-page.php:55, includes/admin/settings/settings-page.php:61, includes/admin/tools/tools-page.php:54, includes/admin/tools/tools-page.php:61, includes/admin/tools/tools-page.php:420, includes/scripts.php:246
+#: includes/admin/settings/settings-page.php:55, includes/admin/settings/settings-page.php:61, includes/admin/tools/tools-page.php:54, includes/admin/tools/tools-page.php:61, includes/admin/tools/tools-page.php:420, includes/scripts.php:248
 msgid "Save"
 msgstr ""
 
@@ -1115,19 +1111,19 @@ msgstr ""
 msgid "Reset Cookie Key"
 msgstr ""
 
-#: includes/class-pum-extension-license.php:173
+#: includes/class-pum-extension-license.php:171
 msgid "%1$s"
 msgstr ""
 
-#: includes/class-pum-extension-license.php:210
-msgid "Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href=\"%s\" target=\"_blank\">renew your license</a>."
+#: includes/class-pum-extension-license.php:208
+msgid "Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please %srenew your license%s."
 msgstr ""
 
-#: includes/class-pum-extension-license.php:408
-msgid "You have invalid or expired license keys for Popup Maker. Please go to the <a href=\"%s\">Licenses page</a> to correct this issue."
+#: includes/class-pum-extension-license.php:406
+msgid "You have invalid or expired license keys for Popup Maker. Please go to the %sLicenses page%s to correct this issue."
 msgstr ""
 
-#: includes/class-pum-extension-license.php:441
+#: includes/class-pum-extension-license.php:439
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
@@ -1143,15 +1139,15 @@ msgstr ""
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/class-pum-freemius.php:93
+#: includes/class-pum-freemius.php:95
 msgid "Usage Statistics"
 msgstr ""
 
-#: includes/class-pum-freemius.php:94
+#: includes/class-pum-freemius.php:96
 msgid "Popup & Theme Counts, Open Counts"
 msgstr ""
 
-#: includes/class-pum-freemius.php:119
+#: includes/class-pum-freemius.php:121
 msgid "Allow %3$sPopup Maker%4$s​ to collect some usage data with %2$s to make the plugin even more awesome. If you skip this, that's okay! ​%3$sPopup Maker%4$s will still work just fine."
 msgstr ""
 
@@ -1207,11 +1203,11 @@ msgstr ""
 msgid "Checking this will cause popup to open automatically."
 msgstr ""
 
-#: includes/deprecated/v4.php:391, includes/pum-trigger-functions.php:102, includes/pum-trigger-functions.php:147
+#: includes/deprecated/v4.php:391, includes/pum-trigger-functions.php:102, includes/pum-trigger-functions.php:148
 msgid "Delay"
 msgstr ""
 
-#: includes/deprecated/v4.php:405, includes/pum-trigger-functions.php:148
+#: includes/deprecated/v4.php:405, includes/pum-trigger-functions.php:149
 msgid "The delay before the popup will open in milliseconds."
 msgstr ""
 
@@ -1311,7 +1307,7 @@ msgstr ""
 msgid "Google Web Fonts&#10549;"
 msgstr ""
 
-#: includes/input-options.php:26, includes/input-options.php:115, includes/scripts.php:257
+#: includes/input-options.php:26, includes/input-options.php:115, includes/scripts.php:259
 msgid "None"
 msgstr ""
 
@@ -1599,11 +1595,15 @@ msgstr ""
 msgid "Popups"
 msgstr ""
 
-#: includes/modules/admin-bar.php:123
+#: includes/modules/admin-bar.php:124
+msgid "Check Conditions"
+msgstr ""
+
+#: includes/modules/admin-bar.php:135
 msgid "Reset Cookies"
 msgstr ""
 
-#: includes/modules/admin-bar.php:132
+#: includes/modules/admin-bar.php:144
 msgid "Edit Popup"
 msgstr ""
 
@@ -1917,6 +1917,10 @@ msgstr ""
 msgid "Framed Border"
 msgstr ""
 
+#: includes/pum-sdk/class-pum-extension-activation.php:50
+msgid "This plugin"
+msgstr ""
+
 #: includes/pum-trigger-functions.php:95
 msgid "Click Open"
 msgstr ""
@@ -1929,11 +1933,11 @@ msgstr ""
 msgid "This allows custom css classes, ids or selector strings to trigger the popup when clicked. Separate multiple selectors using commas."
 msgstr ""
 
-#: includes/pum-trigger-functions.php:134, includes/shortcodes/class-pum-shortcode-popup-close.php:63, includes/shortcodes/class-pum-shortcode-popup-trigger.php:76
+#: includes/pum-trigger-functions.php:135, includes/shortcodes/class-pum-shortcode-popup-close.php:63, includes/shortcodes/class-pum-shortcode-popup-trigger.php:76
 msgid "Do not prevent the default click functionality."
 msgstr ""
 
-#: includes/pum-trigger-functions.php:135, includes/shortcodes/class-pum-shortcode-popup-trigger.php:77
+#: includes/pum-trigger-functions.php:136, includes/shortcodes/class-pum-shortcode-popup-trigger.php:77
 msgid "This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file."
 msgstr ""
 
@@ -2014,125 +2018,135 @@ msgstr ""
 
 #: includes/scripts.php:63
 msgctxt "debug console text"
-msgid "Cookie:"
+msgid "Conditions"
 msgstr ""
 
 #: includes/scripts.php:64
 msgctxt "debug console text"
-msgid "Settings:"
+msgid "Cookie:"
 msgstr ""
 
 #: includes/scripts.php:65
 msgctxt "debug console text"
-msgid "Selector:"
+msgid "Settings:"
 msgstr ""
 
 #: includes/scripts.php:66
 msgctxt "debug console text"
-msgid "Mobile Disabled:"
+msgid "Selector:"
 msgstr ""
 
 #: includes/scripts.php:67
 msgctxt "debug console text"
-msgid "Tablet Disabled:"
+msgid "Mobile Disabled:"
 msgstr ""
 
 #: includes/scripts.php:68
 msgctxt "debug console text"
-msgid "Display Settings:"
+msgid "Tablet Disabled:"
 msgstr ""
 
 #: includes/scripts.php:69
 msgctxt "debug console text"
-msgid "Close Settings:"
+msgid "Display Settings:"
 msgstr ""
 
 #: includes/scripts.php:70
 msgctxt "debug console text"
-msgid "Event: Before Open"
+msgid "Close Settings:"
 msgstr ""
 
 #: includes/scripts.php:71
 msgctxt "debug console text"
-msgid "Event: After Open"
+msgid "Event: Before Open"
 msgstr ""
 
 #: includes/scripts.php:72
 msgctxt "debug console text"
-msgid "Event: Open Prevented"
+msgid "Event: After Open"
 msgstr ""
 
 #: includes/scripts.php:73
 msgctxt "debug console text"
-msgid "Event: Setup Close"
+msgid "Event: Open Prevented"
 msgstr ""
 
 #: includes/scripts.php:74
 msgctxt "debug console text"
-msgid "Event: Close Prevented"
+msgid "Event: Setup Close"
 msgstr ""
 
 #: includes/scripts.php:75
 msgctxt "debug console text"
-msgid "Event: Before Close"
+msgid "Event: Close Prevented"
 msgstr ""
 
 #: includes/scripts.php:76
 msgctxt "debug console text"
-msgid "Event: After Close"
+msgid "Event: Before Close"
 msgstr ""
 
 #: includes/scripts.php:77
 msgctxt "debug console text"
-msgid "Event: Before Reposition"
+msgid "Event: After Close"
 msgstr ""
 
 #: includes/scripts.php:78
 msgctxt "debug console text"
+msgid "Event: Before Reposition"
+msgstr ""
+
+#: includes/scripts.php:79
+msgctxt "debug console text"
 msgid "Event: After Reposition"
 msgstr ""
 
-#: includes/scripts.php:247
+#: includes/scripts.php:80
+msgctxt "debug console text"
+msgid "Event: Checking Condition"
+msgstr ""
+
+#: includes/scripts.php:249
 msgid "Update"
 msgstr ""
 
-#: includes/scripts.php:248
+#: includes/scripts.php:250
 msgid "Insert"
 msgstr ""
 
-#: includes/scripts.php:250
+#: includes/scripts.php:252
 msgid "Popup Maker Shortcodes"
 msgstr ""
 
-#: includes/scripts.php:251
+#: includes/scripts.php:253
 msgid "Are you sure you want to delete this trigger?"
 msgstr ""
 
-#: includes/scripts.php:252
+#: includes/scripts.php:254
 msgid "Are you sure you want to delete this cookie?"
 msgstr ""
 
-#: includes/scripts.php:258
+#: includes/scripts.php:260
 msgid "Are you sure you want to reset the open count?"
 msgstr ""
 
-#: includes/scripts.php:389
+#: includes/scripts.php:391
 msgid "Link: Exact Match"
 msgstr ""
 
-#: includes/scripts.php:390
+#: includes/scripts.php:392
 msgid "Link: Containing"
 msgstr ""
 
-#: includes/scripts.php:391
+#: includes/scripts.php:393
 msgid "Link: Begins With"
 msgstr ""
 
-#: includes/scripts.php:392
+#: includes/scripts.php:394
 msgid "Link: Ends With"
 msgstr ""
 
-#: includes/scripts.php:397
+#: includes/scripts.php:399
 msgid "Insert Preset"
 msgstr ""
 

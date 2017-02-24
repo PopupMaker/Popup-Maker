@@ -56,12 +56,15 @@
                         // If any condition passes, set group_check true and break.
                         if (!condition.not_operand && $popup.popmake('checkCondition', condition)) {
                             group_check = true;
-                            break;
                         } else if (condition.not_operand && !$popup.popmake('checkCondition', condition)) {
                             group_check = true;
-                            break;
                         }
 
+                        $(this).trigger('pumCheckingCondition', [group_check, condition]);
+
+                        if (group_check) {
+                            break;
+                        }
                     }
 
                     // If any group of conditions doesn't pass, popup is not loadable.
@@ -76,7 +79,8 @@
             return loadable;
         },
         checkCondition: function (settings) {
-            var condition = settings.target || null;
+            var condition = settings.target || null,
+                check;
 
             if ( ! condition ) {
                 console.warn('Condition type not set.');

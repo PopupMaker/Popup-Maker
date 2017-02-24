@@ -118,6 +118,18 @@ class PUM_Modules_Admin_Bar {
 					'parent' => $node_id,
 				) );
 
+				if ( pum_popup( $popup->ID )->has_conditions( array( 'js_only' => true ) ) ) {
+					$wp_admin_bar->add_node( array(
+						'id'     => $node_id . '-close',
+						'title'  => __( 'Check Conditions', 'popup-maker' ),
+						'meta'   => array(
+							'onclick' => 'alert(PUM.checkConditions(' . $popup->ID . ') ? "Pass" : "Fail");',
+						),
+						'href'   => '#',
+						'parent' => $node_id,
+					) );
+				}
+
 				$wp_admin_bar->add_node( array(
 					'id'     => $node_id . '-reset-cookies',
 					'title'  => __( 'Reset Cookies', 'popup-maker' ),

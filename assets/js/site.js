@@ -126,6 +126,9 @@ var PUM;
 
             return typeof settings[key] !== 'undefined' ? settings[key] : null;
         },
+        checkConditions: function(el) {
+            return PUM.getPopup(el).popmake('checkConditions');
+        },
         getCookie: function (cookie_name) {
             return $.pm_cookie(cookie_name);
         },
@@ -550,8 +553,6 @@ var PUM;
             }
 
             $popup.trigger('pumAfterReposition');
-
-            console.log(reposition);
 
             // TODO: Remove the add class and migrate the trigger to the $popup with pum prefix.
             $container
@@ -1277,12 +1278,15 @@ var PUM_Analytics;
                         // If any condition passes, set group_check true and break.
                         if (!condition.not_operand && $popup.popmake('checkCondition', condition)) {
                             group_check = true;
-                            break;
                         } else if (condition.not_operand && !$popup.popmake('checkCondition', condition)) {
                             group_check = true;
-                            break;
                         }
 
+                        $(this).trigger('pumCheckingCondition', [group_check, condition]);
+
+                        if (group_check) {
+                            break;
+                        }
                     }
 
                     // If any group of conditions doesn't pass, popup is not loadable.
@@ -1297,7 +1301,8 @@ var PUM_Analytics;
             return loadable;
         },
         checkCondition: function (settings) {
-            var condition = settings.target || null;
+            var condition = settings.target || null,
+                check;
 
             if ( ! condition ) {
                 console.warn('Condition type not set.');
@@ -1792,7 +1797,9 @@ var pum_debug_mode = false,
 
                 // Conditions
                 if (settings.conditions !== undefined && settings.conditions.length) {
-                    console.log('Conditions: ', settings.conditions);
+                    console.groupCollapsed(vars.label_conditions);
+                    console.log(settings.conditions);
+                    console.groupEnd();
                 }
 
                 console.groupCollapsed(vars.label_popup_settings);
@@ -1924,6 +1931,18 @@ var pum_debug_mode = false,
                 pum_debug.popup_event_header($popup);
 
                 console.groupCollapsed(vars.label_event_after_reposition);
+
+                console.groupEnd();
+            })
+            .on('pumCheckingCondition', '.pum', function (event, result, condition) {
+                var $popup = PUM.getPopup($(this)),
+                    settings = $popup.popmake('getSettings');
+
+                pum_debug.popup_event_header($popup);
+
+                console.groupCollapsed(vars.label_event_checking_condition);
+
+                console.log( ( condition.not_operand ? '(!) ' : '' ) + condition.target + ': ' + result, condition);
 
                 console.groupEnd();
             });
