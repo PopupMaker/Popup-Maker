@@ -72,13 +72,14 @@ class PUM_Modules_Admin_Bar {
 		*/
 		$popups = PUM_Modules_Admin_Bar::loaded_popups();
 
+		$wp_admin_bar->add_node( array(
+			'id'     => 'popups',
+			'title'  => __( 'Popups', 'popup-maker' ),
+			'href'   => '#',
+			'parent' => false,
+		) );
+
 		if ( count( $popups ) ) {
-			$wp_admin_bar->add_node( array(
-				'id'     => 'popups',
-				'title'  => __( 'Popups', 'popup-maker' ),
-				'href'   => '#',
-				'parent' => false,
-			) );
 
 			foreach ( $popups as $popup ) {
 				/** @var WP_Post $popup */
@@ -148,8 +149,14 @@ class PUM_Modules_Admin_Bar {
 				}
 
 			}
+		} else {
+			$wp_admin_bar->add_node( array(
+				'id'     => 'no-popups-loaded',
+				'title'  => __( 'No Popups Loaded', 'popup-maker' ),
+				'href'   => '#',
+				'parent' => 'popups',
+			) );
 		}
-
 	}
 
 	public static function loaded_popups() {
