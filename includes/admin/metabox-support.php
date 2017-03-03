@@ -36,19 +36,19 @@ function popmake_support_meta_box_links() {
 	<ul class="popmake-support-links">
 		<li>
             <a href="http://docs.wppopupmaker.com/?utm_medium=support-sidebar&utm_campaign=ContextualHelp&utm_source=<?php echo $source; ?>&utm_content=documentation">
-				<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/knowledge-base.png"/>
+				<img src="<?php echo POPMAKE_URL; ?>/assets/images/support-pane-docs-icon.png"/>
                 <span><?php _e( 'Documentation', 'popup-maker' ); ?></span>
 			</a>
 		</li>
 		<li>
 			<a href="https://wordpress.org/support/plugin/popup-maker">
-				<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/wordpress-forums.png"/>
+				<img src="<?php echo POPMAKE_URL; ?>/assets/images/support-pane-wpforums-icon.png"/>
 				<span><?php _e( 'Free Support Forums', 'popup-maker' ); ?></span>
 			</a>
 		</li>
 		<li>
 			<a href="https://wppopupmaker.com/support/?utm_medium=support-sidebar&utm_campaign=ContextualHelp&utm_source=<?php echo $source; ?>&utm_content=extension-support">
-				<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/member-forums.png"/>
+				<img src="<?php echo POPMAKE_URL; ?>/assets/images/support-pane-extensions-icon.png"/>
 				<span><?php _e( 'Extension Support', 'popup-maker' ); ?></span>
 			</a>
 		</li>
