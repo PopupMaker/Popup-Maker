@@ -32,7 +32,7 @@ class PUM_Modules_Menu {
 	public static function nav_menu_walker() {
 		global $wp_version;
 
-		if ( version_compare( $wp_version, '4.5.0', '>=' ) ) {
+		if ( version_compare( $wp_version, '4.4.0', '>=' ) ) {
 			require_once 'menus/walker/nav-menu-edit.php';
 
 			return 'PUM_Nav_Menu_Edit';
