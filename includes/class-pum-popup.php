@@ -35,6 +35,12 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		public $conditions = null;
 
 		/**
+		 * @var array
+		 */
+		public $conditions_filtered = array();
+
+
+		/**
 		 * @var null
 		 */
 		public $display = null;
@@ -438,6 +444,8 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 		}
 
 		/**
+		 * @param array $filters
+		 *
 		 * @return mixed|void
 		 */
 		public function get_conditions( $filters = array() ) {
@@ -447,6 +455,7 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 				'js_only'  => null,
 			) );
 
+			$cache_key = hash( 'md5', json_encode( $filters ) );
 
 			if ( ! $this->conditions ) {
 				$this->conditions = get_post_meta( $this->ID, 'popup_conditions', true );
@@ -456,25 +465,41 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 				}
 			}
 
-			$conditions = $this->conditions;
+			// Check if these exclusion filters have already been applied and prevent extra processing.
+			$conditions = isset( $this->conditions_filtered[ $cache_key ] ) ? $this->conditions_filtered[ $cache_key ] : false;
 
-			// Sanity Check on the values not operand value.
-			foreach ( $conditions as $group_key => $group ) {
+			if ( ! $conditions ) {
+				$conditions = $this->conditions;
+				// Sanity Check on the values not operand value.
+				foreach ( $conditions as $group_key => $group ) {
 
-				foreach ( $group as $key => $condition ) {
+					foreach ( $group as $key => $condition ) {
 
-					if ( $this->exclude_condition( $condition, $filters ) ) {
-						unset( $conditions[ $group_key ][ $key ] );
-						if ( empty( $conditions[ $group_key ] ) ) {
-							unset( $conditions[ $group_key ] );
-							break;
+						if ( $this->exclude_condition( $condition, $filters ) ) {
+							unset( $conditions[ $group_key ][ $key ] );
+							if ( empty( $conditions[ $group_key ] ) ) {
+								unset( $conditions[ $group_key ] );
+								break;
+							}
+							continue;
 						}
-						continue;
+
+						$conditions[ $group_key ][ $key ] = $this->parse_condition( $condition );
 					}
 
-					$conditions[ $group_key ][ $key ] = $this->parse_condition( $condition );
+					if ( ! empty( $conditions[ $group_key ] ) ) {
+						// Renumber each subarray.
+						$conditions[ $group_key ] = array_values( $conditions[ $group_key ] );
+					}
+
 				}
+
+				// Renumber top arrays.
+				$conditions = array_values( $conditions );
+
+				$this->conditions_filtered[ $cache_key ] = $conditions;
 			}
+
 
 			return apply_filters( 'pum_popup_get_conditions', $conditions, $this->ID, $filters );
 		}
