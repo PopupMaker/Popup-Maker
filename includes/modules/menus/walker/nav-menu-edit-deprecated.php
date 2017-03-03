@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Copied from Walker_Nav_Menu_Edit class in core /wp-admin/includes/nav-menu.php
  *
- * @since WordPress 4.4.0
+ * @since WordPress 3.0.0
  */
 class PUM_Nav_Menu_Edit_Deprecated extends Walker_Nav_Menu {
 
