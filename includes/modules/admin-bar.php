@@ -36,16 +36,20 @@ class PUM_Modules_Admin_Bar {
 				#wpadminbar {
 					z-index: 999999999999;
 				}
+
 				#wpadminbar #wp-admin-bar-popups > .ab-item::before {
-					/*background: url("<?php echo POPMAKE_URL; ?>/assets/images/admin/dashboard-icon.png") center center no-repeat transparent !important;*/
+					/*background: url("
+
+				<?php echo POPMAKE_URL; ?>  /assets/images/admin/dashboard-icon.png") center center no-repeat transparent !important;*/
 					background: url("<?php echo POPMAKE_URL; ?>/assets/images/admin/icon-info-21x21.png") center center no-repeat transparent !important;
 					top: 3px;
 					content: "";
 					width: 20px;
 					height: 20px;
 				}
+
 				#wpadminbar #wp-admin-bar-popups:hover > .ab-item::before {
-					background-image: url("<?php echo POPMAKE_URL; ?>/assets/images/admin/icon-info-21x21.png")!important;
+					background-image: url("<?php echo POPMAKE_URL; ?>/assets/images/admin/icon-info-21x21.png") !important;
 				}
 
 			</style>
@@ -72,10 +76,13 @@ class PUM_Modules_Admin_Bar {
 		*/
 		$popups = PUM_Modules_Admin_Bar::loaded_popups();
 
+
+		$popups_url = current_user_can( 'edit_posts' ) ? admin_url( 'edit.php?post_type=popup' ) : '#';
+
 		$wp_admin_bar->add_node( array(
 			'id'     => 'popups',
 			'title'  => __( 'Popups', 'popup-maker' ),
-			'href'   => '#',
+			'href'   => $popups_url,
 			'parent' => false,
 		) );
 
@@ -152,9 +159,13 @@ class PUM_Modules_Admin_Bar {
 		} else {
 			$wp_admin_bar->add_node( array(
 				'id'     => 'no-popups-loaded',
-				'title'  => __( 'No Popups Loaded', 'popup-maker' ),
-				'href'   => '#',
+				'title'  => __( 'No Popups Loaded', 'popup-maker' ) . '<strong style="color:#fff; margin-left: 5px;">?</strong>',
+				'href'   => 'http://docs.wppopupmaker.com/article/140-conditions',
 				'parent' => 'popups',
+				'meta'   => array(
+					'target' => '_blank',
+				),
+
 			) );
 		}
 	}
