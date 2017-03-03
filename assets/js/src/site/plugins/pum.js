@@ -32,6 +32,18 @@ var PUM;
         return get_from_cache;
     }
 
+    function string_to_ref(object, reference) {
+        function arr_deref(o, ref, i) {
+            return !ref ? o : (o[ref.slice(0, i ? -1 : ref.length)]);
+        }
+
+        function dot_deref(o, ref) {
+            return !ref ? o : ref.split('[').reduce(arr_deref, o);
+        }
+
+        return reference.split('.').reduce(dot_deref, object);
+    }
+
     PUM = {
         get: new Selector_Cache(),
         getPopup: function (el) {
@@ -71,13 +83,18 @@ var PUM;
         preventOpen: function (el) {
             PUM.getPopup(el).addClass('preventOpen');
         },
-        setting: function (el, key) {
-            var $popup = PUM.getSettings(el),
-                settings = $popup.popmake('getSettings');
+        getSettings: function (el) {
+            var $popup = PUM.getPopup(el);
 
-            return typeof settings[key] !== 'undefined' ? settings[key] : null;
+            return $popup.popmake('getSettings');
         },
-        checkConditions: function(el) {
+        getSetting: function (el, key, _default) {
+            var settings = PUM.getSettings(el),
+                value = string_to_ref(settings, key);
+
+            return typeof value !== 'undefined' ? value : ( _default !== undefined ? _default : null );
+        },
+        checkConditions: function (el) {
             return PUM.getPopup(el).popmake('checkConditions');
         },
         getCookie: function (cookie_name) {
