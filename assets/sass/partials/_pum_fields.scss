@@ -69,7 +69,8 @@ option.bold {
   position: relative;
 
   label {
-
+    display: block;
+    font-size: 1.1em;
     margin-left: 1.5em;
 
     &.pum-desc {
@@ -87,7 +88,10 @@ option.bold {
 
 }
 
-.pum-field-multicheck {
+.pum-field-multicheck,
+.pum-field-radio {
+
+  margin: 0 0 1em;
 
   input + label {
     font-weight: normal;
@@ -96,11 +100,12 @@ option.bold {
 
   label:first-child {
     font-weight: bold;
-    margin: 0 0 .25em;
+    margin: 0 0 .5em;
+    display: block;
   }
 
   > p.pum-desc {
-    margin: 0 0 .5em;
+    margin-top: .5em;
   }
 
 }
