@@ -211,12 +211,7 @@ var PUM;
                 settings = $popup.popmake('getSettings'),
                 $html = $('html');
 
-            if (!settings.meta.display.stackable) {
-                $popup.popmake('close_all');
-            }
-
             $popup
-                .addClass('pum-active')
                 .trigger('pumBeforeOpen');
 
 
@@ -227,17 +222,24 @@ var PUM;
              .hide();
              */
 
-            if (settings.meta.close.button_delay > 0) {
-                $close.fadeOut(0);
-            }
-
             if ($popup.hasClass('preventOpen') || $container.hasClass('preventOpen')) {
+                console.log('prevented');
                 $popup
                     .removeClass('preventOpen')
                     .removeClass('pum-active')
                     .trigger('pumOpenPrevented');
 
                 return this;
+            }
+
+            if (!settings.meta.display.stackable) {
+                $popup.popmake('close_all');
+            }
+
+            $popup.addClass('pum-active');
+
+            if (settings.meta.close.button_delay > 0) {
+                $close.fadeOut(0);
             }
 
             $html.addClass('pum-open');
