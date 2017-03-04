@@ -76,7 +76,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/modules/admin-bar.php:68
+#: includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/modules/admin-bar.php:72
 msgid "Popup Maker"
 msgstr ""
 
@@ -1139,15 +1139,15 @@ msgstr ""
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/class-pum-freemius.php:95
+#: includes/class-pum-freemius.php:93
 msgid "Usage Statistics"
 msgstr ""
 
-#: includes/class-pum-freemius.php:96
+#: includes/class-pum-freemius.php:94
 msgid "Popup & Theme Counts, Open Counts"
 msgstr ""
 
-#: includes/class-pum-freemius.php:121
+#: includes/class-pum-freemius.php:119
 msgid "Allow %3$sPopup Maker%4$s​ to collect some usage data with %2$s to make the plugin even more awesome. If you skip this, that's okay! ​%3$sPopup Maker%4$s will still work just fine."
 msgstr ""
 
@@ -1579,11 +1579,11 @@ msgstr ""
 msgid "Selected Enpoints"
 msgstr ""
 
-#: includes/integrations/ninja-forms/Actions/ClosePopup.php:36, includes/modules/admin-bar.php:113
+#: includes/integrations/ninja-forms/Actions/ClosePopup.php:36, includes/modules/admin-bar.php:121
 msgid "Close Popup"
 msgstr ""
 
-#: includes/integrations/ninja-forms/Actions/OpenPopup.php:35, includes/modules/admin-bar.php:103
+#: includes/integrations/ninja-forms/Actions/OpenPopup.php:35, includes/modules/admin-bar.php:111
 msgid "Open Popup"
 msgstr ""
 
@@ -1591,20 +1591,24 @@ msgstr ""
 msgid "Select a popup"
 msgstr ""
 
-#: includes/modules/admin-bar.php:78
+#: includes/modules/admin-bar.php:84
 msgid "Popups"
 msgstr ""
 
-#: includes/modules/admin-bar.php:124
+#: includes/modules/admin-bar.php:132
 msgid "Check Conditions"
 msgstr ""
 
-#: includes/modules/admin-bar.php:135
+#: includes/modules/admin-bar.php:143
 msgid "Reset Cookies"
 msgstr ""
 
-#: includes/modules/admin-bar.php:144
+#: includes/modules/admin-bar.php:152
 msgid "Edit Popup"
+msgstr ""
+
+#: includes/modules/admin-bar.php:162
+msgid "No Popups Loaded"
 msgstr ""
 
 #: includes/modules/analytics.php:90
