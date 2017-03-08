@@ -22,7 +22,7 @@
                 }
 
                 if (md.phone()) {
-                    return false
+                    return false;
                 }
             }
 
@@ -32,7 +32,7 @@
                 }
 
                 if (md.tablet()) {
-                    return false
+                    return false;
                 }
             }
 

@@ -15,7 +15,8 @@ var pum_debug_mode = false,
 
     if (pum_debug_mode) {
 
-        var inited = current_popup_event = false,
+        var inited = false,
+            current_popup_event = false,
             vars = window.pum_debug_vars || {};
 
         pum_debug = {
