@@ -87,7 +87,7 @@ There are several common causes for this which include:
 
 == Changelog ==
 
-= v1.5.0 - TBD
+= v1.5.0 - 03/08/2017
 * Feature: Position popups based on the click trigger. Tooltips & Popovers are now possible.
 * Feature: Added new conditions for targeting children & grandchildren / ancestors of selected content.
 * Feature: Added new settings to the Nav Menu editor to choose a popup that a menu item will trigger.

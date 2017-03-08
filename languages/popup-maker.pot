@@ -414,39 +414,44 @@ msgstr ""
 msgid "Use this to override the default text set in the popup theme."
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:35, includes/class-popmake-popup-fields.php:223
+#: includes/admin/popups/metabox-close-fields.php:38, includes/admin/themes/metabox-close-fields.php:35
+msgctxt "%s represent the opening & closing link html"
+msgid "Want to disable the close button? Check out %sForced Interaction%s!"
+msgstr ""
+
+#: includes/admin/popups/metabox-close-fields.php:52, includes/class-popmake-popup-fields.php:223
 msgid "Close Button Delay"
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:49, includes/class-popmake-popup-fields.php:224
+#: includes/admin/popups/metabox-close-fields.php:66, includes/class-popmake-popup-fields.php:224
 msgid "This delays the display of the close button."
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:57, includes/class-popmake-popup-fields.php:234, includes/shortcodes/class-pum-shortcode-popup.php:218
+#: includes/admin/popups/metabox-close-fields.php:74, includes/class-popmake-popup-fields.php:234, includes/shortcodes/class-pum-shortcode-popup.php:218
 msgid "Click Overlay to Close"
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:60, includes/class-popmake-popup-fields.php:235, includes/shortcodes/class-pum-shortcode-popup.php:219
+#: includes/admin/popups/metabox-close-fields.php:77, includes/class-popmake-popup-fields.php:235, includes/shortcodes/class-pum-shortcode-popup.php:219
 msgid "Checking this will cause popup to close when user clicks on overlay."
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:69, includes/class-popmake-popup-fields.php:241
+#: includes/admin/popups/metabox-close-fields.php:86, includes/class-popmake-popup-fields.php:241
 msgid "Press ESC to Close"
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:72, includes/class-popmake-popup-fields.php:242
+#: includes/admin/popups/metabox-close-fields.php:89, includes/class-popmake-popup-fields.php:242
 msgid "Checking this will cause popup to close when user presses ESC key."
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:81, includes/class-popmake-popup-fields.php:248
+#: includes/admin/popups/metabox-close-fields.php:98, includes/class-popmake-popup-fields.php:248
 msgid "Press F4 to Close"
 msgstr ""
 
-#: includes/admin/popups/metabox-close-fields.php:84, includes/class-popmake-popup-fields.php:249
+#: includes/admin/popups/metabox-close-fields.php:101, includes/class-popmake-popup-fields.php:249
 msgid "Checking this will cause popup to close when user presses F4 key."
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:20, includes/admin/themes/metabox-close-fields.php:196, includes/admin/themes/metabox-title-fields.php:31, includes/class-popmake-popup-fields.php:16, includes/class-popmake-popup-theme-fields.php:395, includes/shortcodes/class-pum-shortcode-popup.php:103
+#: includes/admin/popups/metabox-display-fields.php:20, includes/admin/themes/metabox-close-fields.php:156, includes/admin/themes/metabox-title-fields.php:31, includes/class-popmake-popup-fields.php:16, includes/class-popmake-popup-theme-fields.php:395, includes/shortcodes/class-pum-shortcode-popup.php:103
 msgid "Size"
 msgstr ""
 
@@ -470,7 +475,7 @@ msgstr ""
 msgid "Set a maximum width for the popup."
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:89, includes/admin/themes/metabox-close-fields.php:70, includes/class-popmake-popup-fields.php:46, includes/class-popmake-popup-theme-fields.php:321, includes/shortcodes/class-pum-shortcode-popup.php:111
+#: includes/admin/popups/metabox-display-fields.php:89, includes/admin/themes/metabox-close-fields.php:71, includes/class-popmake-popup-fields.php:46, includes/class-popmake-popup-theme-fields.php:321, includes/shortcodes/class-pum-shortcode-popup.php:111
 msgid "Width"
 msgstr ""
 
@@ -494,7 +499,7 @@ msgstr ""
 msgid "Checking this option will add a scroll bar to your content."
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:150, includes/admin/themes/metabox-close-fields.php:53, includes/class-popmake-popup-fields.php:71, includes/class-popmake-popup-theme-fields.php:311, includes/shortcodes/class-pum-shortcode-popup.php:122
+#: includes/admin/popups/metabox-display-fields.php:150, includes/admin/themes/metabox-close-fields.php:62, includes/class-popmake-popup-fields.php:71, includes/class-popmake-popup-theme-fields.php:311, includes/shortcodes/class-pum-shortcode-popup.php:122
 msgid "Height"
 msgstr ""
 
@@ -542,7 +547,7 @@ msgstr ""
 msgid "Choose where the animation will begin."
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:270, includes/admin/themes/metabox-close-fields.php:107, includes/shortcodes/class-pum-shortcode-popup.php:48
+#: includes/admin/popups/metabox-display-fields.php:270, includes/admin/themes/metabox-close-fields.php:99, includes/shortcodes/class-pum-shortcode-popup.php:48
 msgid "Position"
 msgstr ""
 
@@ -578,7 +583,7 @@ msgstr ""
 msgid "This will position the popup in relation to the %sClick Trigger%s."
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:346, includes/admin/themes/metabox-close-fields.php:92, includes/class-popmake-popup-fields.php:137, includes/class-popmake-popup-theme-fields.php:331, includes/shortcodes/class-pum-shortcode-popup.php:135
+#: includes/admin/popups/metabox-display-fields.php:346, includes/admin/themes/metabox-close-fields.php:85, includes/class-popmake-popup-fields.php:137, includes/class-popmake-popup-theme-fields.php:331, includes/shortcodes/class-pum-shortcode-popup.php:135
 msgid "Location"
 msgstr ""
 
@@ -586,7 +591,7 @@ msgstr ""
 msgid "Choose where the popup will be displayed."
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:363, includes/admin/popups/metabox-display-fields.php:377, includes/admin/themes/metabox-close-fields.php:111, includes/class-popmake-popup-fields.php:152, includes/class-popmake-popup-fields.php:153, includes/class-popmake-popup-theme-fields.php:339, includes/input-options.php:129, includes/shortcodes/class-pum-shortcode-popup.php:143, includes/shortcodes/class-pum-shortcode-popup.php:144
+#: includes/admin/popups/metabox-display-fields.php:363, includes/admin/popups/metabox-display-fields.php:377, includes/admin/themes/metabox-close-fields.php:103, includes/class-popmake-popup-fields.php:152, includes/class-popmake-popup-fields.php:153, includes/class-popmake-popup-theme-fields.php:339, includes/input-options.php:129, includes/shortcodes/class-pum-shortcode-popup.php:143, includes/shortcodes/class-pum-shortcode-popup.php:144
 msgid "Top"
 msgstr ""
 
@@ -595,15 +600,15 @@ msgctxt "Screen Edge: top, bottom"
 msgid "Distance from the %s edge of the screen."
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:382, includes/admin/popups/metabox-display-fields.php:396, includes/admin/themes/metabox-close-fields.php:145, includes/class-popmake-popup-fields.php:163, includes/class-popmake-popup-fields.php:164, includes/class-popmake-popup-theme-fields.php:359, includes/input-options.php:131, includes/shortcodes/class-pum-shortcode-popup.php:154, includes/shortcodes/class-pum-shortcode-popup.php:155
+#: includes/admin/popups/metabox-display-fields.php:382, includes/admin/popups/metabox-display-fields.php:396, includes/admin/themes/metabox-close-fields.php:121, includes/class-popmake-popup-fields.php:163, includes/class-popmake-popup-fields.php:164, includes/class-popmake-popup-theme-fields.php:359, includes/input-options.php:131, includes/shortcodes/class-pum-shortcode-popup.php:154, includes/shortcodes/class-pum-shortcode-popup.php:155
 msgid "Bottom"
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:401, includes/admin/popups/metabox-display-fields.php:415, includes/admin/themes/metabox-close-fields.php:128, includes/class-popmake-popup-fields.php:174, includes/class-popmake-popup-fields.php:175, includes/class-popmake-popup-theme-fields.php:349, includes/input-options.php:85, includes/input-options.php:130, includes/shortcodes/class-pum-shortcode-popup.php:165, includes/shortcodes/class-pum-shortcode-popup.php:166
+#: includes/admin/popups/metabox-display-fields.php:401, includes/admin/popups/metabox-display-fields.php:415, includes/admin/themes/metabox-close-fields.php:112, includes/class-popmake-popup-fields.php:174, includes/class-popmake-popup-fields.php:175, includes/class-popmake-popup-theme-fields.php:349, includes/input-options.php:85, includes/input-options.php:130, includes/shortcodes/class-pum-shortcode-popup.php:165, includes/shortcodes/class-pum-shortcode-popup.php:166
 msgid "Left"
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:420, includes/admin/popups/metabox-display-fields.php:434, includes/admin/themes/metabox-close-fields.php:162, includes/class-popmake-popup-fields.php:185, includes/class-popmake-popup-fields.php:186, includes/class-popmake-popup-theme-fields.php:369, includes/input-options.php:87, includes/input-options.php:132, includes/shortcodes/class-pum-shortcode-popup.php:176, includes/shortcodes/class-pum-shortcode-popup.php:177
+#: includes/admin/popups/metabox-display-fields.php:420, includes/admin/popups/metabox-display-fields.php:434, includes/admin/themes/metabox-close-fields.php:130, includes/class-popmake-popup-fields.php:185, includes/class-popmake-popup-fields.php:186, includes/class-popmake-popup-theme-fields.php:369, includes/input-options.php:87, includes/input-options.php:132, includes/shortcodes/class-pum-shortcode-popup.php:176, includes/shortcodes/class-pum-shortcode-popup.php:177
 msgid "Right"
 msgstr ""
 
@@ -835,119 +840,119 @@ msgstr ""
 msgid "You do not have access to preview this post."
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:10
+#: includes/admin/themes/metabox-close-fields.php:11
 msgid "Theme the close button for the popups."
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:17, includes/class-popmake-popup-theme-fields.php:294
+#: includes/admin/themes/metabox-close-fields.php:18, includes/class-popmake-popup-theme-fields.php:294
 msgid "Text"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:21, includes/class-popmake-popup-theme-fields.php:296
+#: includes/admin/themes/metabox-close-fields.php:22, includes/class-popmake-popup-theme-fields.php:296
 msgid "Enter the close button text."
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:31, includes/admin/themes/metabox-container-fields.php:17, includes/class-popmake-popup-theme-fields.php:33, includes/class-popmake-popup-theme-fields.php:301
+#: includes/admin/themes/metabox-close-fields.php:48, includes/admin/themes/metabox-container-fields.php:17, includes/class-popmake-popup-theme-fields.php:33, includes/class-popmake-popup-theme-fields.php:301
 msgid "Padding"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:103, includes/class-popmake-popup-theme-fields.php:332
+#: includes/admin/themes/metabox-close-fields.php:95, includes/class-popmake-popup-theme-fields.php:332
 msgid "Choose which corner the close button will be positioned."
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:183, includes/admin/themes/metabox-content-fields.php:17, includes/admin/themes/metabox-title-fields.php:19
+#: includes/admin/themes/metabox-close-fields.php:143, includes/admin/themes/metabox-content-fields.php:17, includes/admin/themes/metabox-title-fields.php:19
 msgid "Font"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:187, includes/admin/themes/metabox-close-fields.php:286, includes/admin/themes/metabox-close-fields.php:363, includes/admin/themes/metabox-close-fields.php:483, includes/admin/themes/metabox-close-fields.php:567, includes/admin/themes/metabox-container-fields.php:43, includes/admin/themes/metabox-container-fields.php:119, includes/admin/themes/metabox-container-fields.php:238, includes/admin/themes/metabox-content-fields.php:23, includes/admin/themes/metabox-overlay-fields.php:16, includes/admin/themes/metabox-title-fields.php:23, includes/admin/themes/metabox-title-fields.php:186, includes/class-popmake-popup-theme-fields.php:15, includes/class-popmake-popup-theme-fields.php:43, includes/class-popmake-popup-theme-fields.php:78, includes/class-popmake-popup-theme-fields.php:145, includes/class-popmake-popup-theme-fields.php:163, includes/class-popmake-popup-theme-fields.php:247, includes/class-popmake-popup-theme-fields.php:265, includes/class-popmake-popup-theme-fields.php:389, includes/class-popmake-popup-theme-fields.php:426, includes/class-popmake-popup-theme-fields.php:461, includes/class-popmake-popup-theme-fields.php:528, includes/class-popmake-popup-theme-fields.php:574
+#: includes/admin/themes/metabox-close-fields.php:147, includes/admin/themes/metabox-close-fields.php:227, includes/admin/themes/metabox-close-fields.php:291, includes/admin/themes/metabox-close-fields.php:372, includes/admin/themes/metabox-close-fields.php:423, includes/admin/themes/metabox-container-fields.php:43, includes/admin/themes/metabox-container-fields.php:119, includes/admin/themes/metabox-container-fields.php:238, includes/admin/themes/metabox-content-fields.php:23, includes/admin/themes/metabox-overlay-fields.php:16, includes/admin/themes/metabox-title-fields.php:23, includes/admin/themes/metabox-title-fields.php:186, includes/class-popmake-popup-theme-fields.php:15, includes/class-popmake-popup-theme-fields.php:43, includes/class-popmake-popup-theme-fields.php:78, includes/class-popmake-popup-theme-fields.php:145, includes/class-popmake-popup-theme-fields.php:163, includes/class-popmake-popup-theme-fields.php:247, includes/class-popmake-popup-theme-fields.php:265, includes/class-popmake-popup-theme-fields.php:389, includes/class-popmake-popup-theme-fields.php:426, includes/class-popmake-popup-theme-fields.php:461, includes/class-popmake-popup-theme-fields.php:528, includes/class-popmake-popup-theme-fields.php:574
 msgid "Color"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:213, includes/admin/themes/metabox-title-fields.php:48, includes/class-popmake-popup-theme-fields.php:169, includes/class-popmake-popup-theme-fields.php:379
+#: includes/admin/themes/metabox-close-fields.php:165, includes/admin/themes/metabox-title-fields.php:48, includes/class-popmake-popup-theme-fields.php:169, includes/class-popmake-popup-theme-fields.php:379
 msgid "Line Height"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:230, includes/admin/themes/metabox-content-fields.php:31, includes/admin/themes/metabox-title-fields.php:65, includes/class-popmake-popup-theme-fields.php:189, includes/class-popmake-popup-theme-fields.php:271, includes/class-popmake-popup-theme-fields.php:405
+#: includes/admin/themes/metabox-close-fields.php:174, includes/admin/themes/metabox-content-fields.php:31, includes/admin/themes/metabox-title-fields.php:65, includes/class-popmake-popup-theme-fields.php:189, includes/class-popmake-popup-theme-fields.php:271, includes/class-popmake-popup-theme-fields.php:405
 msgid "Family"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:246, includes/admin/themes/metabox-content-fields.php:46, includes/admin/themes/metabox-title-fields.php:81, includes/class-popmake-popup-theme-fields.php:196, includes/class-popmake-popup-theme-fields.php:278, includes/class-popmake-popup-theme-fields.php:412
+#: includes/admin/themes/metabox-close-fields.php:189, includes/admin/themes/metabox-content-fields.php:46, includes/admin/themes/metabox-title-fields.php:81, includes/class-popmake-popup-theme-fields.php:196, includes/class-popmake-popup-theme-fields.php:278, includes/class-popmake-popup-theme-fields.php:412
 msgid "Weight"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:262, includes/admin/themes/metabox-close-fields.php:347, includes/admin/themes/metabox-container-fields.php:103, includes/admin/themes/metabox-content-fields.php:62, includes/admin/themes/metabox-title-fields.php:96, includes/class-popmake-popup-theme-fields.php:70, includes/class-popmake-popup-theme-fields.php:203, includes/class-popmake-popup-theme-fields.php:285, includes/class-popmake-popup-theme-fields.php:419, includes/class-popmake-popup-theme-fields.php:453
+#: includes/admin/themes/metabox-close-fields.php:204, includes/admin/themes/metabox-close-fields.php:276, includes/admin/themes/metabox-container-fields.php:103, includes/admin/themes/metabox-content-fields.php:62, includes/admin/themes/metabox-title-fields.php:96, includes/class-popmake-popup-theme-fields.php:70, includes/class-popmake-popup-theme-fields.php:203, includes/class-popmake-popup-theme-fields.php:285, includes/class-popmake-popup-theme-fields.php:419, includes/class-popmake-popup-theme-fields.php:453
 msgid "Style"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:282, includes/admin/themes/metabox-container-fields.php:39
+#: includes/admin/themes/metabox-close-fields.php:223, includes/admin/themes/metabox-container-fields.php:39
 msgid "Background"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:294, includes/admin/themes/metabox-close-fields.php:491, includes/admin/themes/metabox-close-fields.php:575, includes/admin/themes/metabox-container-fields.php:51, includes/admin/themes/metabox-container-fields.php:246, includes/admin/themes/metabox-overlay-fields.php:25, includes/admin/themes/metabox-title-fields.php:194, includes/class-popmake-popup-theme-fields.php:21, includes/class-popmake-popup-theme-fields.php:49, includes/class-popmake-popup-theme-fields.php:151, includes/class-popmake-popup-theme-fields.php:253, includes/class-popmake-popup-theme-fields.php:432, includes/class-popmake-popup-theme-fields.php:534, includes/class-popmake-popup-theme-fields.php:580
+#: includes/admin/themes/metabox-close-fields.php:235, includes/admin/themes/metabox-close-fields.php:380, includes/admin/themes/metabox-close-fields.php:431, includes/admin/themes/metabox-container-fields.php:51, includes/admin/themes/metabox-container-fields.php:246, includes/admin/themes/metabox-overlay-fields.php:25, includes/admin/themes/metabox-title-fields.php:194, includes/class-popmake-popup-theme-fields.php:21, includes/class-popmake-popup-theme-fields.php:49, includes/class-popmake-popup-theme-fields.php:151, includes/class-popmake-popup-theme-fields.php:253, includes/class-popmake-popup-theme-fields.php:432, includes/class-popmake-popup-theme-fields.php:534, includes/class-popmake-popup-theme-fields.php:580
 msgid "Opacity"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:317, includes/admin/themes/metabox-container-fields.php:73, includes/admin/themes/metabox-overlay-fields.php:48
+#: includes/admin/themes/metabox-close-fields.php:249, includes/admin/themes/metabox-container-fields.php:73, includes/admin/themes/metabox-overlay-fields.php:48
 msgid "Want to use background images?"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:317, includes/admin/themes/metabox-container-fields.php:73, includes/admin/themes/metabox-overlay-fields.php:48
+#: includes/admin/themes/metabox-close-fields.php:250, includes/admin/themes/metabox-container-fields.php:73, includes/admin/themes/metabox-overlay-fields.php:48
 msgid "Check out Advanced Theme Builder!"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:325, includes/admin/themes/metabox-container-fields.php:81
+#: includes/admin/themes/metabox-close-fields.php:260, includes/admin/themes/metabox-container-fields.php:81
 msgid "Border"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:329, includes/admin/themes/metabox-container-fields.php:85, includes/class-popmake-popup-theme-fields.php:59, includes/class-popmake-popup-theme-fields.php:442
+#: includes/admin/themes/metabox-close-fields.php:266, includes/admin/themes/metabox-container-fields.php:85, includes/class-popmake-popup-theme-fields.php:59, includes/class-popmake-popup-theme-fields.php:442
 msgid "Radius"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:358, includes/class-popmake-popup-theme-fields.php:454
+#: includes/admin/themes/metabox-close-fields.php:286, includes/class-popmake-popup-theme-fields.php:454
 msgid "Choose a border style for your close button."
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:371, includes/admin/themes/metabox-container-fields.php:127, includes/class-popmake-popup-theme-fields.php:84, includes/class-popmake-popup-theme-fields.php:467
+#: includes/admin/themes/metabox-close-fields.php:299, includes/admin/themes/metabox-container-fields.php:127, includes/class-popmake-popup-theme-fields.php:84, includes/class-popmake-popup-theme-fields.php:467
 msgid "Thickness"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:392, includes/admin/themes/metabox-container-fields.php:147
+#: includes/admin/themes/metabox-close-fields.php:312, includes/admin/themes/metabox-container-fields.php:147
 msgid "Drop Shadow"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:396, includes/admin/themes/metabox-container-fields.php:151, includes/class-popmake-popup-theme-fields.php:94, includes/class-popmake-popup-theme-fields.php:477, includes/input-options.php:32
+#: includes/admin/themes/metabox-close-fields.php:316, includes/admin/themes/metabox-container-fields.php:151, includes/class-popmake-popup-theme-fields.php:94, includes/class-popmake-popup-theme-fields.php:477, includes/input-options.php:32
 msgid "Inset"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:401, includes/admin/themes/metabox-container-fields.php:156, includes/class-popmake-popup-theme-fields.php:100, includes/class-popmake-popup-theme-fields.php:483
+#: includes/admin/themes/metabox-close-fields.php:322, includes/admin/themes/metabox-container-fields.php:156, includes/class-popmake-popup-theme-fields.php:100, includes/class-popmake-popup-theme-fields.php:483
 msgid "No"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:402, includes/admin/themes/metabox-container-fields.php:157, includes/class-popmake-popup-theme-fields.php:101, includes/class-popmake-popup-theme-fields.php:484
+#: includes/admin/themes/metabox-close-fields.php:323, includes/admin/themes/metabox-container-fields.php:157, includes/class-popmake-popup-theme-fields.php:101, includes/class-popmake-popup-theme-fields.php:484
 msgid "Yes"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:410, includes/admin/themes/metabox-container-fields.php:165, includes/class-popmake-popup-theme-fields.php:95, includes/class-popmake-popup-theme-fields.php:478
+#: includes/admin/themes/metabox-close-fields.php:331, includes/admin/themes/metabox-container-fields.php:165, includes/class-popmake-popup-theme-fields.php:95, includes/class-popmake-popup-theme-fields.php:478
 msgid "Set the box shadow to inset (inner shadow)."
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:415, includes/admin/themes/metabox-close-fields.php:516, includes/admin/themes/metabox-container-fields.php:170, includes/admin/themes/metabox-title-fields.php:135, includes/class-popmake-popup-theme-fields.php:105, includes/class-popmake-popup-theme-fields.php:217, includes/class-popmake-popup-theme-fields.php:488, includes/class-popmake-popup-theme-fields.php:544
+#: includes/admin/themes/metabox-close-fields.php:336, includes/admin/themes/metabox-close-fields.php:396, includes/admin/themes/metabox-container-fields.php:170, includes/admin/themes/metabox-title-fields.php:135, includes/class-popmake-popup-theme-fields.php:105, includes/class-popmake-popup-theme-fields.php:217, includes/class-popmake-popup-theme-fields.php:488, includes/class-popmake-popup-theme-fields.php:544
 msgid "Horizontal Position"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:432, includes/admin/themes/metabox-close-fields.php:533, includes/admin/themes/metabox-container-fields.php:187, includes/admin/themes/metabox-title-fields.php:152, includes/class-popmake-popup-theme-fields.php:115, includes/class-popmake-popup-theme-fields.php:227, includes/class-popmake-popup-theme-fields.php:498, includes/class-popmake-popup-theme-fields.php:554
+#: includes/admin/themes/metabox-close-fields.php:345, includes/admin/themes/metabox-close-fields.php:405, includes/admin/themes/metabox-container-fields.php:187, includes/admin/themes/metabox-title-fields.php:152, includes/class-popmake-popup-theme-fields.php:115, includes/class-popmake-popup-theme-fields.php:227, includes/class-popmake-popup-theme-fields.php:498, includes/class-popmake-popup-theme-fields.php:554
 msgid "Vertical Position"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:449, includes/admin/themes/metabox-close-fields.php:550, includes/admin/themes/metabox-container-fields.php:204, includes/admin/themes/metabox-title-fields.php:169, includes/class-popmake-popup-theme-fields.php:125, includes/class-popmake-popup-theme-fields.php:237, includes/class-popmake-popup-theme-fields.php:508, includes/class-popmake-popup-theme-fields.php:564
+#: includes/admin/themes/metabox-close-fields.php:354, includes/admin/themes/metabox-close-fields.php:414, includes/admin/themes/metabox-container-fields.php:204, includes/admin/themes/metabox-title-fields.php:169, includes/class-popmake-popup-theme-fields.php:125, includes/class-popmake-popup-theme-fields.php:237, includes/class-popmake-popup-theme-fields.php:508, includes/class-popmake-popup-theme-fields.php:564
 msgid "Blur Radius"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:466, includes/admin/themes/metabox-container-fields.php:221, includes/class-popmake-popup-theme-fields.php:135, includes/class-popmake-popup-theme-fields.php:179, includes/class-popmake-popup-theme-fields.php:518
+#: includes/admin/themes/metabox-close-fields.php:363, includes/admin/themes/metabox-container-fields.php:221, includes/class-popmake-popup-theme-fields.php:135, includes/class-popmake-popup-theme-fields.php:179, includes/class-popmake-popup-theme-fields.php:518
 msgid "Spread"
 msgstr ""
 
-#: includes/admin/themes/metabox-close-fields.php:512, includes/admin/themes/metabox-title-fields.php:131
+#: includes/admin/themes/metabox-close-fields.php:392, includes/admin/themes/metabox-title-fields.php:131
 msgid "Text Shadow"
 msgstr ""
 
@@ -1139,15 +1144,15 @@ msgstr ""
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/class-pum-freemius.php:93
+#: includes/class-pum-freemius.php:94
 msgid "Usage Statistics"
 msgstr ""
 
-#: includes/class-pum-freemius.php:94
+#: includes/class-pum-freemius.php:95
 msgid "Popup & Theme Counts, Open Counts"
 msgstr ""
 
-#: includes/class-pum-freemius.php:119
+#: includes/class-pum-freemius.php:120
 msgid "Allow %3$sPopup Maker%4$s​ to collect some usage data with %2$s to make the plugin even more awesome. If you skip this, that's okay! ​%3$sPopup Maker%4$s will still work just fine."
 msgstr ""
 
