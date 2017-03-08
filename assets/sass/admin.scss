@@ -6,72 +6,10 @@
 @import 'partials/facet_builder';
 @import 'partials/extensions_page';
 @import 'partials/mce_buttons';
-
-.pum-form {
-/*
-  box-sizing: border-box;
-  .field {
-
-
-    &.half, &.one-half, &.two-quarters &.third, &.one-third, &.one-thirds, &.two-thirds, &.quarter, &.one-quarter, &.one-quarters, &.three-quarters, &.one-fifth, &.one-fifths, &.two-fifths, &.three-fifths, &.four-fifths {
-      display: inline-block;
-      float: left;
-      margin-left: 0;
-      margin-right: 0;
-      padding-left: 1%;
-      padding-right: 1%;
-
-      .first {
-        clear: left;
-      }
-      input[type="text"], select {
-        width: 100%;
-      }
-    }
-
-    &.half,
-    &.one-half,
-    &.two-quarters {
-      width: 48%;
-    }
-    &.third,
-    &.one-third,
-    &.one-thirds {
-      width: 31%;
-    }
-    &.two-thirds {
-      width: 64%;
-    }
-    &.quarter,
-    &.one-quarter,
-    &.one-quarters {
-      width: 23%;
-    }
-    &.three-quarters {
-      width: 73%;
-    }
-
-    &.one-fifth,
-    &.one-fifths {
-      width: 18%;
-    }
-
-    &.two-fifths {
-      width: 38%;
-    }
-    &.three-fifths {
-      width: 58%;
-    }
-    &.four-fifths {
-      width: 78%;
-    }
-  }
-*/
-}
-
+@import 'partials/admin/settings_page';
 
 .tabbed-form {
-  .field {
+  .pum-field {
     position: relative;
     margin: 0 0 1em;
   }
@@ -84,7 +22,7 @@
     width: 100%;
   }
 
-  .field.cookiekey {
+  .pum-field.cookiekey {
 
     .cookie-key {
       position: relative;
@@ -104,7 +42,7 @@
     font-size: 1.1em;
   }
 
-  .field.checkbox {
+  .pum-field.checkbox {
     label {
 
       &.pum-desc {
@@ -196,62 +134,6 @@ input[type="text"], select {
 }
 */
 
-input[type="range"] {
-  vertical-align: middle;
-}
-
-input.popmake-range-manual {
-  padding-right: 25px !important;
-}
-
-.pum-image-field .pum-image-select,
-.pum-image-field.pum-image-empty .pum-image-preview {
-  display: none;
-}
-.pum-image-field.pum-image-empty .pum-image-select {
-  display: block;
-}
-.pum-image-field .pum-image-preview-img {
-  float: left;
-  line-height: 0;
-  margin: 5px 0;
-}
-.pum-image-field .pum-image-preview-img img {
-  max-width: 60px;
-}
-.pum-image-field .pum-image-preview select {
-  margin: 8px 0 8px 10px;
-  width: 200px;
-}
-.pum-image-field .pum-image-edit {
-  margin: 0 0 0 11px;
-}
-.pum-image-field .pum-image-replace,
-.pum-image-field .pum-image-remove {
-  margin: 0 0 0 8px;
-}
-
-option.bold {
-  font-weight: bold;
-  font-size: 1.125em;
-}
-
-/* Range Slider Adjusters */
-.popmake-range-manual {
-  padding-right: 25px;
-  text-align: right;
-  width: 80px;
-}
-
-.range-value-unit {
-  position: relative;
-  display: inline-block;
-  margin-left: -30px;
-  margin-right: 10px;
-  width: 20px;
-  text-align: left;
-  top: .125em;
-}
 
 /* Form Table Dividers */
 .title-divider th {

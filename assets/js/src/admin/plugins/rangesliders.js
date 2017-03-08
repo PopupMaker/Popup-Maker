@@ -70,14 +70,6 @@ var PUMRangeSLiders;
             var $this = $(this);
             $this.siblings('.popmake-range-manual').val($this.val());
         })
-        .on('click', '.popmake-range-manual', function () {
-            var $this = $(this);
-            $this.prop('readonly', false);
-        })
-        .on('focusout', '.popmake-range-manual', function () {
-            var $this = $(this);
-            $this.prop('readonly', true);
-        })
         .on('change', '.popmake-range-manual', function () {
             var $this = $(this),
                 max = parseInt($this.prop('max'), 0),
@@ -85,6 +77,11 @@ var PUMRangeSLiders;
                 force = $this.data('force-minmax'),
                 value = parseInt($this.val(), 0),
                 $slider = $this.prev();
+
+            if (isNaN(value)) {
+                value = $slider.val();
+                $this.val(value);
+            }
 
             if (force && value > max) {
                 value = max;

@@ -22,30 +22,34 @@ function popmake_render_support_meta_box() { ?>
 
 
 add_action( 'popmake_support_meta_box_fields', 'popmake_support_meta_box_links', 10 );
-function popmake_support_meta_box_links() { ?>
+function popmake_support_meta_box_links() {
+	global $pagenow;
+
+	$source = $pagenow;
+
+	if ( isset( $_GET['page'] ) && $_GET['page'] == 'pum-settings' ) {
+		$source = 'plugin-settings-page' . ( !empty( $_GET['tab'] ) ? '-' . $_GET['tab'] . '-tab' : '');
+	} elseif ( isset( $_GET['page'] ) && $_GET['page'] == 'pum-tools' ) {
+		$source = 'plugin-tools-page' . ( !empty( $_GET['tab'] ) ? '-' . $_GET['tab'] . '-tab' : '');
+	}
+	?>
 	<ul class="popmake-support-links">
 		<li>
-            <a href="http://docs.wppopupmaker.com/?utm_source=Plugin+Admin&utm_medium=Support+Metabox&utm_campaign=Docs">
-				<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/knowledge-base.png"/>
+            <a href="http://docs.wppopupmaker.com/?utm_medium=support-sidebar&utm_campaign=ContextualHelp&utm_source=<?php echo $source; ?>&utm_content=documentation">
+				<img src="<?php echo POPMAKE_URL; ?>/assets/images/support-pane-docs-icon.png"/>
                 <span><?php _e( 'Documentation', 'popup-maker' ); ?></span>
 			</a>
 		</li>
 		<li>
 			<a href="https://wordpress.org/support/plugin/popup-maker">
-				<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/wordpress-forums.png"/>
+				<img src="<?php echo POPMAKE_URL; ?>/assets/images/support-pane-wpforums-icon.png"/>
 				<span><?php _e( 'Free Support Forums', 'popup-maker' ); ?></span>
 			</a>
 		</li>
 		<li>
-			<a href="https://wppopupmaker.com/support?utm_source=Plugin+Admin&utm_medium=Support+Metabox&utm_campaign=Extension+Support">
-				<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/member-forums.png"/>
+			<a href="https://wppopupmaker.com/support/?utm_medium=support-sidebar&utm_campaign=ContextualHelp&utm_source=<?php echo $source; ?>&utm_content=extension-support">
+				<img src="<?php echo POPMAKE_URL; ?>/assets/images/support-pane-extensions-icon.png"/>
 				<span><?php _e( 'Extension Support', 'popup-maker' ); ?></span>
-			</a>
-		</li>
-		<li>
-			<a href="https://wppopupmaker.com/support/priority-pricing?utm_source=Plugin+Admin&utm_medium=Support+Metabox&utm_campaign=Priority+Support">
-				<img src="<?php echo POPMAKE_URL; ?>/assets/images/admin/member-forums.png"/>
-				<span><?php _e( 'Priority Support', 'popup-maker' ); ?></span>
 			</a>
 		</li>
 	</ul>

@@ -226,7 +226,7 @@ function popmake_popup_display_meta_box_field_animation( $popup_id ) {
 			</label>
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 			       value="<?php esc_attr_e( popmake_get_popup_display( $popup_id, 'animation_speed' ) ); ?>"
 			       name="popup_display_animation_speed"
 			       id="popup_display_animation_speed"
@@ -324,6 +324,24 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 		</td>
 	</tr>
 	<tr>
+		<th scope="row"><?php _e( 'Position from Trigger', 'popup-maker' ); ?></th>
+		<td><?php
+			$position_from_trigger = popmake_get_popup_display( $popup_id, 'position_from_trigger', false );
+			switch( $position_from_trigger ) {
+				case 'true':
+				case true:
+				case 1:
+				$position_from_trigger = true;
+					break;
+				default:
+					$position_from_trigger = false;
+					break;
+			} ?>
+			<input type="checkbox" value="1" name="popup_display_position_from_trigger" id="popup_display_position_from_trigger" <?php checked( $position_from_trigger, 1 ); ?>/>
+			<label for="popup_display_position_from_trigger" class="description"><?php printf( __( 'This will position the popup in relation to the %sClick Trigger%s.', 'popup-maker' ), '<a target="_blank" href="http://docs.wppopupmaker.com/article/144-trigger-click-open?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=position-from-trigger">', '</a>' ); ?></label>
+		</td>
+	</tr>
+	<tr>
 		<th scope="row">
 			<label for="popup_display_location"><?php _e( 'Location', 'popup-maker' ); ?></label>
 		</th>
@@ -345,7 +363,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 			<label for="popup_display_position_top"><?php _e( 'Top', 'popup-maker' ); ?></label>
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 			       value="<?php esc_attr_e( popmake_get_popup_display( $popup_id, 'position_top' ) ); ?>"
 			       name="popup_display_position_top"
 			       id="popup_display_position_top"
@@ -364,7 +382,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 			<label for="popup_display_position_bottom"><?php _e( 'Bottom', 'popup-maker' ); ?></label>
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 			       value="<?php esc_attr_e( popmake_get_popup_display( $popup_id, 'position_bottom' ) ); ?>"
 			       name="popup_display_position_bottom"
 			       id="popup_display_position_bottom"
@@ -383,7 +401,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 			<label for="popup_display_position_left"><?php _e( 'Left', 'popup-maker' ); ?></label>
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 			       value="<?php esc_attr_e( popmake_get_popup_display( $popup_id, 'position_left' ) ); ?>"
 			       name="popup_display_position_left"
 			       id="popup_display_position_left"
@@ -402,7 +420,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 		<label for="popup_display_position_right"><?php _e( 'Right', 'popup-maker' ); ?></label>
 	</th>
 	<td>
-		<input type="text" readonly
+		<input type="text"
 		       value="<?php esc_attr_e( popmake_get_popup_display( $popup_id, 'position_right' ) ); ?>"
 		       name="popup_display_position_right"
 		       id="popup_display_position_right"

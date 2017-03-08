@@ -24,7 +24,7 @@ function popmake_extensions_page() { ?>
 			<hr class="clear" />
 			<h2 class="section-heading">
 				<?php _e( 'Extensions', 'popup-maker' ) ?>
-				&nbsp;&nbsp;<a href="https://wppopupmaker.com/extensions/?utm_source=plugin-extension-page&amp;utm_medium=plugin&amp;utm_campaign=PUM+Extensions+Page&amp;utm_content=All+Extensions+Top" class="button-primary" title="<?php _e( 'Browse All Extensions', 'popup-maker' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'popup-maker' ); ?></a>
+				&nbsp;&nbsp;<a href="https://wppopupmaker.com/extensions/?utm_source=plugin-extension-page&utm_medium=text-link&utm_campaign=Upsell&utm_content=browse-all" class="button-primary" title="<?php _e( 'Browse All Extensions', 'popup-maker' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'popup-maker' ); ?></a>
 			</h2>
 			<p><?php _e( 'These extensions <strong>add extra functionality</strong> to your popups.', 'popup-maker' ); ?></p>
 			<ul class="extensions-available">
@@ -69,70 +69,72 @@ function popmake_extensions_page() { ?>
 					$i = 0;
 
 					foreach ( $extensions as $extension ) : ?>
-					<li class="available-extension-inner <?php esc_attr_e( $extension['slug'] ); ?>">
-						<h3>
-							<a target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&amp;utm_medium=plugin&amp;utm_campaign=PUM+Extensions+Page&amp;utm_content=Extension+Name+Pos<?php echo $i; ?>&amp;utm_term=<?php esc_attr_e( str_replace( ' ', '+', $extension['name'] ) ); ?>">
-								<?php esc_html_e( $extension['name'] ) ?>
-							</a>
-						</h3>
-						<?php $image = in_array( $extension['slug'], $existing_extension_images ) ? POPMAKE_URL . '/assets/images/extensions/' . $extension['slug'] . '.png' : $extension['image']; ?>
-						<img class="extension-thumbnail" src="<?php esc_attr_e( $image ) ?>">
+						<li class="available-extension-inner <?php esc_attr_e( $extension['slug'] ); ?>">
+							<h3>
+								<a target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=extension-title-<?php echo $i; ?>&utm_campaign=Upsell&utm_content=<?php esc_attr_e( str_replace( ' ', '+', $extension['name'] ) ); ?>">
+									<?php esc_html_e( $extension['name'] ) ?>
+								</a>
+							</h3>
+							<?php $image = in_array( $extension['slug'], $existing_extension_images ) ? POPMAKE_URL . '/assets/images/extensions/' . $extension['slug'] . '.png' : $extension['image']; ?>
+							<img class="extension-thumbnail" src="<?php esc_attr_e( $image ) ?>">
 
-						<p><?php esc_html_e( $extension['excerpt'] ); ?></p>
+							<p><?php esc_html_e( $extension['excerpt'] ); ?></p>
+							<?php
+							/*
+							if(!empty($extension->download_link) && !isset($installed_plugins[$extension->slug.'/'.$extension->slug.'.php']))
+							{
+								$installerUrl = add_query_arg(
+									array(
+										'action' => 'install-plugin',
+										'plugin' => $extension->slug,
+										'edd_sample_plugin' => 1
+									),
+									network_admin_url('update.php')
+									//admin_url('update.php')
+								);
+								$installerUrl = wp_nonce_url($installerUrl, 'install-plugin_' . $extension->slug)?>
+								<span class="action-links"><?php
+								printf(
+									'<a class="button install" href="%s">%s</a>',
+									esc_attr($installerUrl),
+									__('Install')
+								);?>
+								</span><?php
+							}
+							elseif(isset($installed_plugins[$extension->slug.'/'.$extension->slug.'.php']['is_active']))
+							{?>
+								<span class="action-links"><?php
+									if(!$installed_plugins[$extension->slug.'/'.$extension->slug.'.php']['is_active'])
+									{
+										printf(
+											'<a class="button install" href="%s">%s</a>',
+											esc_attr($installed_plugins[$extension->slug.'/'.$extension->slug.'.php']["activation_url"]),
+											__('Activate')
+										);
+
+									}
+									else
+									{
+										printf(
+											'<a class="button install" href="%s">%s</a>',
+											esc_attr($installed_plugins[$extension->slug.'/'.$extension->slug.'.php']["deactivation_url"]),
+											__('Deactivate')
+										);
+									}?>
+								</span><?php
+							}
+							else
+							{
+								?><span class="action-links"><a class="button" target="_blank" href="<?php esc_attr_e($extension->homepage);?>"><?php _e('Get It Now');?></a></span><?php
+							}
+							*/
+							?>
+
+							<span class="action-links">
+			                    <a class="button" target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=extension-button-<?php echo $i; ?>&utm_campaign=Upsell&utm_content=<?php esc_attr_e( str_replace( ' ', '+', $extension['name'] ) ); ?>"><?php _e( 'Get this Extension', 'popup-maker' ); ?></a>
+			                </span>
+						</li>
 						<?php
-						/*
-						if(!empty($extension->download_link) && !isset($installed_plugins[$extension->slug.'/'.$extension->slug.'.php']))
-						{
-							$installerUrl = add_query_arg(
-								array(
-									'action' => 'install-plugin',
-									'plugin' => $extension->slug,
-									'edd_sample_plugin' => 1
-								),
-								network_admin_url('update.php')
-								//admin_url('update.php')
-							);
-							$installerUrl = wp_nonce_url($installerUrl, 'install-plugin_' . $extension->slug)?>
-							<span class="action-links"><?php
-							printf(
-								'<a class="button install" href="%s">%s</a>',
-								esc_attr($installerUrl),
-								__('Install')
-							);?>
-							</span><?php
-						}
-						elseif(isset($installed_plugins[$extension->slug.'/'.$extension->slug.'.php']['is_active']))
-						{?>
-							<span class="action-links"><?php
-								if(!$installed_plugins[$extension->slug.'/'.$extension->slug.'.php']['is_active'])
-								{
-									printf(
-										'<a class="button install" href="%s">%s</a>',
-										esc_attr($installed_plugins[$extension->slug.'/'.$extension->slug.'.php']["activation_url"]),
-										__('Activate')
-									);
-
-								}
-								else
-								{
-									printf(
-										'<a class="button install" href="%s">%s</a>',
-										esc_attr($installed_plugins[$extension->slug.'/'.$extension->slug.'.php']["deactivation_url"]),
-										__('Deactivate')
-									);
-								}?>
-							</span><?php
-						}
-						else
-						{
-							?><span class="action-links"><a class="button" target="_blank" href="<?php esc_attr_e($extension->homepage);?>"><?php _e('Get It Now');?></a></span><?php
-						}
-						*/
-						?>
-						<span class="action-links">
-				                	<a class="button" target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&amp;utm_medium=plugin&amp;utm_campaign=PUM+Extensions+Page&amp;utm_content=Get+this+Extension+Pos<?php echo $i; ?>&amp;utm_term=<?php esc_attr_e( str_replace( ' ', '+', $extension['name'] ) ); ?>"><?php _e( 'Get this Extension', 'popup-maker' ); ?></a>
-				                </span>
-						</li><?php
 						$i ++;
 					endforeach;
 				} ?>
@@ -140,7 +142,7 @@ function popmake_extensions_page() { ?>
 
 			<br class="clear" />
 
-			<a href="https://wppopupmaker.com/extensions/?utm_source=plugin-extension-page&amp;utm_medium=plugin&amp;utm_campaign=PUM+Extensions+Page&amp;utm_content=All+Extensions+Top" class="button-primary" title="<?php _e( 'Browse All Extensions', 'popup-maker' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'popup-maker' ); ?></a>
+			<a href="https://wppopupmaker.com/extensions/?utm_source=plugin-extension-page&utm_medium=text-link&utm_campaign=Upsell&utm_content=browse-all-bottom" class="button-primary" title="<?php _e( 'Browse All Extensions', 'popup-maker' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'popup-maker' ); ?></a>
 
 			<br class="clear" />
 			<br class="clear" />
@@ -177,7 +179,7 @@ function popmake_extensions_page() { ?>
 
 				shuffle( $compatible_plugins );
 
-				array_push( $compatible_plugins, array(
+				array_unshift( $compatible_plugins, array(
 					'slug' => 'ninja-forms',
 					'name' => __( 'Ninja Forms', 'popup-maker' ),
 					'url'  => 'https://wppopupmaker.com/grab/ninja-forms',
@@ -189,7 +191,7 @@ function popmake_extensions_page() { ?>
 				foreach ( $compatible_plugins as $plugin ) : ?>
 				<li class="available-extension-inner <?php esc_attr_e( $plugin['slug'] ); ?>">
 					<h3>
-						<a target="_blank" href="<?php esc_attr_e( $plugin['url'] ); ?>">
+						<a target="_blank" href="<?php esc_attr_e( $plugin['url'] ); ?>?utm_campaign=FormPlugins&utm_source=plugin-extend-page&utm_medium=form-banner&utm_content=<?php echo $plugin['slug']; ?>">
 							<?php esc_html_e( $plugin['name'] ) ?>
 						</a>
 					</h3>

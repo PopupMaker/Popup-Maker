@@ -21,16 +21,33 @@ function pum_trigger_cookie_fields() {
 	 * @param array $fields The list of trigger cookie fields.
 	 */
 	return apply_filters( 'pum_trigger_cookie_fields', array(
-		'name' => array(
-			'label'    => __( 'Cookie Name', 'popup-maker' ),
-			'desc'     => __( 'When do you want to create the cookie.', 'popup-maker' ),
-			'type'     => 'select',
-			'multiple' => true,
-			'select2'  => true,
-			'priority' => 1,
-			'options'  => array(
-				__( 'Add New Cookie', 'popup-maker' ) => 'add_new',
-			),
+		'name' => pum_trigger_cookie_field(),
+	) );
+}
+
+/**
+ * Returns the cookie field used for trigger options.
+ *
+ * @uses filter pum_trigger_cookie_field
+ *
+ * @return array
+ */
+function pum_trigger_cookie_field() {
+
+	/**
+	 * Filter the array of default trigger cookie field.
+	 *
+	 * @param array $fields The list of trigger cookie field.
+	 */
+	return apply_filters( 'pum_trigger_cookie_field', array(
+		'label'    => __( 'Cookie Name', 'popup-maker' ),
+		'desc'     => __( 'When do you want to create the cookie.', 'popup-maker' ),
+		'type'     => 'select',
+		'multiple' => true,
+		'select2'  => true,
+		'priority' => 1,
+		'options'  => array(
+			__( 'Add New Cookie', 'popup-maker' ) => 'add_new',
 		),
 	) );
 }
@@ -111,12 +128,14 @@ function pum_get_triggers() {
 						'label'       => __( 'Extra CSS Selectors', 'popup-maker' ),
 						'desc'        => __( 'This allows custom css classes, ids or selector strings to trigger the popup when clicked. Separate multiple selectors using commas.', 'popup-maker' ),
 						'placeholder' => __( '.my-class, #button2', 'popup-maker' ),
+						'doclink'     => 'http://docs.wppopupmaker.com/article/147-getting-css-selectors?page-popup-editor=&utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_content=extra-selectors',
 					),
 					'do_default'      => array(
 						'type'  => 'checkbox',
 						'label' => __( 'Do not prevent the default click functionality.', 'popup-maker' ),
 						'desc'  => __( 'This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file.', 'popup-maker' ),
 					),
+					//'cookie' => pum_trigger_cookie_field(),
 				),
 				'cookie'  => pum_trigger_cookie_fields(),
 			),
@@ -133,6 +152,7 @@ function pum_get_triggers() {
 						'max'   => 10000,
 						'step'  => 500,
 					),
+					//'cookie' => pum_trigger_cookie_field(),
 				),
 				'cookie'  => pum_trigger_cookie_fields(),
 			),

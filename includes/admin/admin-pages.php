@@ -33,6 +33,8 @@ function popmake_admin_submenu_pages() {
 
 	$popmake_extensions_page = add_submenu_page( 'edit.php?post_type=popup', __( 'Extend', 'popup-maker' ), __( 'Extend', 'popup-maker' ), apply_filters( 'popmake_admin_submenu_extensions_capability', 'edit_posts' ), 'pum-extensions', 'popmake_extensions_page' );
 
+	$popmake_support_page = add_submenu_page( 'edit.php?post_type=popup', __( 'Help & Support', 'popup-maker' ), __( 'Help & Support', 'popup-maker' ), apply_filters( 'popmake_admin_submenu_extensions_capability', 'edit_posts' ), 'pum-support', 'pum_settings_page' );
+
 	$popmake_appearance_themes_page = add_theme_page( __( 'Popup Themes', 'popup-maker' ), __( 'Popup Themes', 'popup-maker' ), 'edit_posts', 'edit.php?post_type=popup_theme' );
 }
 
@@ -85,6 +87,7 @@ function pum_reorder_submenu_array( $a, $b ) {
 		__( 'Support Forum', 'freemius' ),
 		__( 'Account', 'freemius' ),
 		__( 'Contact Us', 'freemius' ),
+		__( 'Help & Support', 'popup-maker' ),
 	) );
 
 	$a_val = strip_tags( $a[0], false );

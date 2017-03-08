@@ -300,7 +300,7 @@ define(function () {
         Array.isArray : function (value) { return Object.prototype.toString.call(value) === '[object Array]'; };
 
     function equalIC(a, b) {
-        return a != null && b != null && a.toLowerCase() === b.toLowerCase();
+        return a !== null && b !== null && a.toLowerCase() === b.toLowerCase();
     }
 
     function containsIC(array, value) {

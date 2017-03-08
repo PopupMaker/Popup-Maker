@@ -5,13 +5,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * @param null $popup_id
+ *
+ * @return PUM_Popup|false
+ */
 function pum_popup( $popup_id = null ) {
 	if ( ! $popup_id && isset( $GLOBALS['popup'] ) && is_a( $GLOBALS['popup'], 'PUM_Popup' ) ) {
 		$popup = $GLOBALS['popup'];
 	} else {
 		$popup = new PUM_Popup( $popup_id );
 	}
-	return $popup;
+	return apply_filters( 'pum_popup', $popup, $popup_id );
 }
 
 function pum_get_popup_title( $popup_id = null ) {

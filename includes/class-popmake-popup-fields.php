@@ -141,6 +141,13 @@ class Popmake_Popup_Fields extends Popmake_Fields {
 					'priority'    => 14,
 					'options'     => apply_filters( 'popmake_popup_display_location_options', array() ),
 				),
+				'position_from_trigger' => array(
+					'label'       => __( 'Position from Trigger', 'popup-maker' ),
+					'description' => sprintf( __( 'This will position the popup in relation to the %sClick Trigger%s.', 'popup-maker' ), '<a target="_blank" href="http://docs.wppopupmaker.com/article/144-trigger-click-open?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=position-from-trigger">', '</a>' ),
+					'type'        => 'checkbox',
+					'std'         => false,
+					'priority'    => 14.5,
+				),
 				'position_top'              => array(
 					'label'       => __( 'Top', 'popup-maker' ),
 					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Top', 'popup-maker' ) ) ),

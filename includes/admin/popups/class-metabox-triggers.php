@@ -51,7 +51,10 @@ class PUM_Popup_Triggers_Metabox {
 		<button type="button" class="button button-primary add-new no-button"><?php _e( 'Add New Trigger', 'popup-maker' ); ?></button>
 
 		<p>
-			<strong><?php _e( 'Triggers are what make your popup open.', 'popup-maker' ); ?></strong>
+			<strong>
+				<?php _e( 'Triggers are what make your popup open.', 'popup-maker' ); ?>
+				<a href="<?php echo esc_url( 'http://docs.wppopupmaker.com/article/141-triggers?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=triggers-intro' ); ?>" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
+			</strong>
 		</p>
 
 		<div id="pum_popup_triggers_list" class="triggers-list">

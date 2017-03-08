@@ -63,6 +63,29 @@ var PUMCookies;
 
             $this.parents('.pum-form').find('.field.text.name').data('cookiekey', newKey);
             $this.siblings('input[type="text"]:first').val(newKey);
+        },
+        insertDefault: function (name) {
+            var event = 'on_popup_close',
+                template = wp.template('pum-cookie-row'),
+                data = {
+                    event: event,
+                    cookie_settings: defaults.cookies[event] !== undefined ? defaults.cookies[event] : {},
+                    save_button_text: I10n.add,
+                    index: $('#pum_popup_cookies_list tbody tr').length,
+                    I10n: I10n
+                },
+                $new_row;
+
+            data.cookie_settings.name = name || 'pum-' + $('#post_ID').val();
+
+            $new_row = template(data);
+
+            $('#pum_popup_cookies_list tbody').append($new_row);
+
+            PUMCookies.renumber();
+
+            $('#pum_popup_cookie_fields').addClass('has-cookies');
+
         }
     };
 

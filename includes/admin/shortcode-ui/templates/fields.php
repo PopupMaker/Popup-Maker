@@ -7,11 +7,17 @@
 </script>
 
 <script type="text/html" id="tmpl-pum-field-wrapper">
-	<div class="pum-field pum-field-{{data.type}} {{data.id}}-wrapper {{data.classes}}">
-		<label for="{{data.id}}">{{data.label}}</label>
+	<div class="{{data.id}}-wrapper  {{data.classes}}">
+		<label for="{{data.id}} ">
+			{{data.label}}
+			<# if (data.doclink !== '') { #>
+				<a href="{{data.doclink}}" title="<?php _e( 'Documentation', 'popup-maker' ); ?>: {{data.label}}" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
+			<# } #>
+		</label>
 		{{{data.field}}}
-		<# if (data.desc) { #>
-		<p class="pum-desc desc">{{data.desc}}</p>
+
+		<# if (data.desc !== '') { #>
+		<p class="desc pum-desc">{{data.desc}}</p>
 		<# } #>
 	</div>
 </script>

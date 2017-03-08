@@ -25,7 +25,7 @@ function popmake_popup_theme_overlay_meta_box_field_background( $popup_theme_id 
 			<label for="popup_theme_overlay_background_opacity"><?php _e( 'Opacity', 'popup-maker' );?></label>
 		</th>
 		<td>
-			<input type="text" readonly
+			<input type="text"
 				value="<?php esc_attr_e(popmake_get_popup_theme_overlay( $popup_theme_id, 'background_opacity' ))?>"
 				name="popup_theme_overlay_background_opacity"
 				id="popup_theme_overlay_background_opacity"
@@ -45,7 +45,7 @@ add_action('popmake_popup_theme_overlay_meta_box_fields', 'popmake_popup_theme_o
 function popmake_popup_theme_overlay_meta_box_field_atb_extension_promotion( $popup_theme_id ) { ?>
 	<tr>
 		<th colspan="2" class="popmake-upgrade-tip">
-			<img style="" src="<?php echo POPMAKE_URL;?>/assets/images/admin/icon-advanced-theme-builder.png"/> <?php _e( 'Want to use background images?', 'popup-maker' ); ?> <a href="https://wppopupmaker.com/extensions/advanced-theme-builder?utm_source=Plugin+Admin+Theme+Editor&utm_medium=Text+Link&utm_campaign=Advanced+Theme+Builder" target="_blank"><?php _e( 'Check out Advanced Theme Builder!', 'popup-maker' ); ?></a>.
+			<img style="" src="<?php echo POPMAKE_URL;?>/assets/images/upsell-icon-advanted-theme-builder.png"/> <?php _e( 'Want to use background images?', 'popup-maker' ); ?> <a href="https://wppopupmaker.com/extensions/advanced-theme-builder/?utm_source=plugin-theme-editor&utm_medium=text-link&utm_campaign=Upsell&utm_content=overlay-settings" target="_blank"><?php _e( 'Check out Advanced Theme Builder!', 'popup-maker' ); ?></a>.
 		</th>
 	</tr><?php
 }

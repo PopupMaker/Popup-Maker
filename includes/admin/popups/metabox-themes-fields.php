@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function popmake_popup_themes_meta_box_field_theme( $popup_id ) {
-    $popup = new PUM_Popup( $popup_id ); ?>
+    $popup = pum_popup( $popup_id ); ?>
 	<tr>
 	<td scope="row">
 		<label for="popup_theme"><strong><?php _e( 'Theme', 'popup-maker' ); ?></strong></label>

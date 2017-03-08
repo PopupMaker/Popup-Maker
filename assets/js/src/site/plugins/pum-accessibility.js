@@ -110,7 +110,7 @@ var PUM_Accessibility;
             }
 
             // Accessibility: Focus back on the previously focused element.
-            if (previouslyFocused.length) {
+            if (previouslyFocused !== undefined && previouslyFocused.length) {
                 previouslyFocused.focus();
             }
 

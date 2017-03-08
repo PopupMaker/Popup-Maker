@@ -489,7 +489,8 @@ function popmake_the_popup_content( $popup_id = null ) {
  * @return mixed array|string of the popup display meta
  */
 function popmake_get_popup_display( $popup_id = null, $key = null, $default = null ) {
-	return popmake_get_popup_meta( 'display', $popup_id, $key, $default );
+	return pum_popup( $popup_id )->get_display( $key );
+	//return popmake_get_popup_meta( 'display', $popup_id, $key, $default );
 }
 
 /**
@@ -503,7 +504,8 @@ function popmake_get_popup_display( $popup_id = null, $key = null, $default = nu
  * @return mixed array|string of the popup close meta
  */
 function popmake_get_popup_close( $popup_id = null, $key = null, $default = null ) {
-	return popmake_get_popup_meta( 'close', $popup_id, $key, $default );
+	return pum_popup( $popup_id )->get_close( $key );
+	//return popmake_get_popup_meta( 'close', $popup_id, $key, $default );
 }
 
 /**

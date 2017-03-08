@@ -47,7 +47,6 @@
   z-index: 1;
 }
 
-
 .pum-overlay {
   position: fixed;
   height: 100%;
@@ -60,6 +59,7 @@
   overflow: auto;
   overflow: initial;
   display: none;
+  transition: all .15s ease-in-out;
 
   &.pum-preview,
   &.pum-form-submission-detected {
@@ -158,7 +158,8 @@
     margin-left: inherit;
   }
 
-  .pum-title {}
+  .pum-title {
+  }
 
   .pum-content {
 
@@ -193,7 +194,6 @@
     }
 
   }
-
 
 }
 
@@ -256,7 +256,5 @@ html.pum-open {
     }
 
   }
-
-
 
 }

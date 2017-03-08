@@ -25,39 +25,68 @@ if ( ! defined( 'ABSPATH' ) ) {
 function popmake_load_site_scripts() {
 	$js_dir = POPMAKE_URL . '/assets/js/';
 
-	$dep_js_dir = $js_dir;
-	// If not v1.4 compatible load backward version until migration complete.
-	if ( ! pum_is_v1_4_compatible() ) {
-		$dep_js_dir = POPMAKE_URL . '/deprecated/assets/js/';
-	}
-
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.js' : '.min.js';
-
-	// Deprecated. No longer used. Here for older versions of some extensions.
-	wp_register_script( 'jquery-cookie', $js_dir . 'jquery.cookie' . $suffix, array( 'jquery' ), '1.4.1', true );
 
 	wp_register_script( 'mobile-detect', $js_dir . 'mobile-detect' . $suffix, null, '1.3.3', true );
 
-	wp_register_script( 'popup-maker-site', $dep_js_dir . 'site' . $suffix . '?defer', array(
+	wp_register_script( 'popup-maker-site', $js_dir . 'site' . $suffix . '?defer', array(
 		'jquery',
 		'jquery-ui-core',
-		'jquery-ui-position'
+		'jquery-ui-position',
 	), POPMAKE_VERSION, true );
 
-    wp_localize_script( 'popup-maker-site', 'pum_vars', apply_filters( 'pum_vars', array(
-        'ajaxurl' => admin_url( 'admin-ajax.php' ),
-        'default_theme' => (string) popmake_get_default_popup_theme(),
-    ) ) );
+	wp_localize_script( 'popup-maker-site', 'pum_vars', apply_filters( 'pum_vars', array(
+		'ajaxurl'               => admin_url( 'admin-ajax.php' ),
+		'restapi'               => function_exists( 'rest_url' ) ? esc_url_raw( rest_url( 'pum/v1' ) ) : false,
+		'rest_nonce'            => is_user_logged_in() ? wp_create_nonce( 'wp_rest' ) : null,
+		'default_theme'         => (string) popmake_get_default_popup_theme(),
+		'debug_mode'            => Popup_Maker::debug_mode(),
+		'disable_open_tracking' => popmake_get_option( 'disable_popup_open_tracking' ),
+	) ) );
 
-    // @deprecated 1.4 Use pum_vars instead.
+	wp_localize_script( 'popup-maker-site', 'pum_debug_vars', apply_filters( 'pum_debug_vars', array(
+		'debug_mode_enabled'             => _x( 'Popup Maker Debug Mode Enabled', 'debug console text', 'popup-maker' ),
+		'debug_started_at'               => _x( 'Debug started at:', 'debug console text', 'popup-maker' ),
+		'debug_more_info'                => sprintf( _x( 'For more information on how to use this information visit %s', 'debug console text', 'popup-maker' ), 'http://docs.wppopupmaker.com/?utm_medium=js-debug-info&utm_campaign=ContextualHelp&utm_source=browser-console&utm_content=more-info' ),
+		'global_info'                    => _x( 'Global Information', 'debug console text', 'popup-maker' ),
+		'localized_vars'                 => _x( 'Localized variables', 'debug console text', 'popup-maker' ),
+		'popups_initializing'            => _x( 'Popups Initializing', 'debug console text', 'popup-maker' ),
+		'popups_initialized'             => _x( 'Popups Initialized', 'debug console text', 'popup-maker' ),
+		'single_popup_label'             => _x( 'Popup: #', 'debug console text', 'popup-maker' ),
+		'theme_id'                       => _x( 'Theme ID: ', 'debug console text', 'popup-maker' ),
+		'label_method_call'              => _x( 'Method Call:', 'debug console text', 'popup-maker' ),
+		'label_method_args'              => _x( 'Method Arguments:', 'debug console text', 'popup-maker' ),
+		'label_popup_settings'           => _x( 'Settings', 'debug console text', 'popup-maker' ),
+		'label_triggers'                 => _x( 'Triggers', 'debug console text', 'popup-maker' ),
+		'label_cookies'                  => _x( 'Cookies', 'debug console text', 'popup-maker' ),
+		'label_delay'                    => _x( 'Delay:', 'debug console text', 'popup-maker' ),
+		'label_conditions'               => _x( 'Conditions', 'debug console text', 'popup-maker' ),
+		'label_cookie'                   => _x( 'Cookie:', 'debug console text', 'popup-maker' ),
+		'label_settings'                 => _x( 'Settings:', 'debug console text', 'popup-maker' ),
+		'label_selector'                 => _x( 'Selector:', 'debug console text', 'popup-maker' ),
+		'label_mobile_disabled'          => _x( 'Mobile Disabled:', 'debug console text', 'popup-maker' ),
+		'label_tablet_disabled'          => _x( 'Tablet Disabled:', 'debug console text', 'popup-maker' ),
+		'label_display_settings'         => _x( 'Display Settings:', 'debug console text', 'popup-maker' ),
+		'label_close_settings'           => _x( 'Close Settings:', 'debug console text', 'popup-maker' ),
+		'label_event_before_open'        => _x( 'Event: Before Open', 'debug console text', 'popup-maker' ),
+		'label_event_after_open'         => _x( 'Event: After Open', 'debug console text', 'popup-maker' ),
+		'label_event_open_prevented'     => _x( 'Event: Open Prevented', 'debug console text', 'popup-maker' ),
+		'label_event_setup_close'        => _x( 'Event: Setup Close', 'debug console text', 'popup-maker' ),
+		'label_event_close_prevented'    => _x( 'Event: Close Prevented', 'debug console text', 'popup-maker' ),
+		'label_event_before_close'       => _x( 'Event: Before Close', 'debug console text', 'popup-maker' ),
+		'label_event_after_close'        => _x( 'Event: After Close', 'debug console text', 'popup-maker' ),
+		'label_event_before_reposition'  => _x( 'Event: Before Reposition', 'debug console text', 'popup-maker' ),
+		'label_event_after_reposition'   => _x( 'Event: After Reposition', 'debug console text', 'popup-maker' ),
+		'label_event_checking_condition' => _x( 'Event: Checking Condition', 'debug console text', 'popup-maker' ),
+		'triggers'                       => pum_get_trigger_labels(),
+		'cookies'                        => pum_get_cookie_labels(),
+	) ) );
+
+	// TODO Remove all trace usages of these in JS so they can be removed.
+	// @deprecated 1.4 Use pum_vars instead.
 	wp_localize_script( 'popup-maker-site', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
-    // @deprecated 1.4 Use pum_vars instead.
+	// @deprecated 1.4 Use pum_vars instead.
 	wp_localize_script( 'popup-maker-site', 'popmake_default_theme', (string) popmake_get_default_popup_theme() );
-
-	if ( popmake_get_option( 'popmake_powered_by_opt_in', false ) ) {
-		$size = popmake_get_option( 'popmake_powered_by_size', '' );
-		wp_localize_script( 'popup-maker-site', 'popmake_powered_by', '<div class="powered-by-popmake ' . $size . '"><a href="https://wppopupmaker.com?utm_source=Powered+By&utm_medium=Powered+By&utm_campaign=Powered+By" target="_blank"><img src="' . POPMAKE_URL . '/assets/images/admin/powered-by-popup-maker.png" alt="' . __( 'Powered By Popup Maker', 'popup-maker' ) . '"/></a></div>' );
-	}
 
 	if ( popmake_get_option( 'enable_easy_modal_compatibility_mode', false ) ) {
 		wp_register_script( 'popup-maker-easy-modal-importer-site', $js_dir . 'popup-maker-easy-modal-importer-site' . $suffix . '?defer', array( 'popup-maker-site' ), POPMAKE_VERSION, true );
@@ -84,22 +113,17 @@ function popmake_load_site_styles() {
 		$dep_css_dir = POPMAKE_URL . '/deprecated/assets/css/';
 	}
 
-	$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css' : '.min.css';
+	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css' : '.min.css';
 	wp_register_style( 'popup-maker-site', $dep_css_dir . 'site' . $suffix, false, POPMAKE_VERSION );
 
-    if ( ! popmake_get_option( 'disable_popup_theme_styles', false ) ) {
-        wp_enqueue_style( 'popup-maker-site' );
-    }
+	if ( ! popmake_get_option( 'disable_popup_theme_styles', false ) ) {
+		wp_enqueue_style( 'popup-maker-site' );
+	}
 }
+
 add_action( 'wp_enqueue_scripts', 'popmake_load_site_styles' );
 
-function popmake_render_popup_theme_styles() {
-	if (
-		( current_action() == 'wp_head' && popmake_get_option( 'disable_popup_theme_styles', false ) ) ||
-		( current_action() == 'admin_head' && ! popmake_is_admin_popup_page() )
-	) {
-		return;
-	}
+function popmake_get_popup_theme_styles() {
 
 	$styles = get_transient( 'popmake_theme_styles' );
 	if ( ! $styles || defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
@@ -115,7 +139,7 @@ function popmake_render_popup_theme_styles() {
 
 			if ( $theme_styles != '' ) {
 				$styles .= "/* Popup Theme " . $theme->ID . ": " . $theme->post_title . " */\r\n";
-				$styles .= $theme_styles;
+				$styles .= $theme_styles . "\r\n";
 			}
 		}
 
@@ -137,15 +161,30 @@ function popmake_render_popup_theme_styles() {
 			$styles = "/* Popup Google Fonts */\r\n@import url('$link');\r\n\r\n" . $styles;
 		}
 
-        $styles = apply_filters( 'popmake_theme_styles', $styles );
+		$styles = apply_filters( 'popmake_theme_styles', $styles );
 
 		set_transient( 'popmake_theme_styles', $styles );
 
-    } ?>
-    <style id="pum-styles" type="text/css">
-    <?php echo $styles; ?>
-    <?php do_action( 'pum_styles'); ?>
-    </style><?php
+	}
+
+	return $styles;
+}
+
+function popmake_render_popup_theme_styles() {
+	if ( ( current_action() == 'wp_head' && popmake_get_option( 'disable_popup_theme_styles', false ) ) || ( current_action() == 'admin_head' && ! popmake_is_admin_popup_page() ) ) {
+		return;
+	}
+
+	global $pum_extra_styles;
+
+	$styles = popmake_get_popup_theme_styles(); ?>
+	<style id="pum-styles" type="text/css">
+	<?php echo $styles; ?>
+
+	<?php echo $pum_extra_styles; ?>
+
+	<?php do_action( 'pum_styles'); ?>
+	</style><?php
 }
 
 add_action( 'wp_head', 'popmake_render_popup_theme_styles' );
@@ -153,7 +192,12 @@ add_action( 'admin_head', 'popmake_render_popup_theme_styles' );
 
 function pum_should_load_admin_scripts() {
 	global $pagenow;
-	return ( is_admin() && ( popmake_is_admin_page() || in_array( $pagenow, array( 'post.php', 'edit.php', 'post-new.php' ) ) ) ) || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD );
+
+	return ( is_admin() && ( popmake_is_admin_page() || in_array( $pagenow, array(
+				'post.php',
+				'edit.php',
+				'post-new.php',
+			) ) ) ) || ( defined( "PUM_FORCE_ADMIN_SCRIPTS_LOAD" ) && PUM_FORCE_ADMIN_SCRIPTS_LOAD );
 }
 
 
@@ -180,25 +224,26 @@ function popmake_load_admin_scripts( $hook ) {
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.js' : '.min.js';
 	if ( popmake_is_admin_popup_page() || popmake_is_admin_popup_theme_page() ) {
-        //add_action( 'popmake_admin_footer', 'popmake_admin_popup_preview' );
+		//add_action( 'popmake_admin_footer', 'popmake_admin_popup_preview' );
 
 	}
 
 	if ( pum_should_load_admin_scripts() ) {
 
 		wp_enqueue_script( 'popup-maker-admin', $dep_js_dir . 'admin' . $suffix, array(
-            'jquery',
-            'wp-color-picker',
-            'jquery-ui-slider',
+			'jquery',
+			'wp-color-picker',
+			'jquery-ui-slider',
+			'wp-util',
 		), POPMAKE_VERSION );
 		wp_localize_script( 'popup-maker-admin', 'popmake_admin_ajax_nonce', wp_create_nonce( POPMAKE_NONCE ) );
 		wp_localize_script( 'popup-maker-admin', 'pum_admin', apply_filters( 'pum_admin_var', array(
 			'post_id'  => ! empty( $_GET['post'] ) ? intval( $_GET['post'] ) : null,
 			'defaults' => array(
-                'triggers' => PUM_Triggers::instance()->get_defaults(),
-                'cookies' => PUM_Cookies::instance()->get_defaults(),
+				'triggers' => PUM_Triggers::instance()->get_defaults(),
+				'cookies'  => PUM_Cookies::instance()->get_defaults(),
 			),
-			'I10n' => array(
+			'I10n'     => array(
 				'add'                         => __( 'Add', 'popup-maker' ),
 				'save'                        => __( 'Save', 'popup-maker' ),
 				'update'                      => __( 'Update', 'popup-maker' ),
@@ -217,16 +262,19 @@ function popmake_load_admin_scripts( $hook ) {
 		) ) );
 	}
 	if ( popmake_is_admin_popup_page() ) {
-		wp_enqueue_script( 'popup-maker-site', $dep_js_dir . 'site' . $suffix . '?defer', array(
-			'jquery',
-			'jquery-ui-core',
-			'jquery-ui-position'
-		), POPMAKE_VERSION, true );
-		wp_localize_script( 'popup-maker-site', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
-		wp_localize_script( 'popup-maker-site', 'popmake_default_theme', (string) popmake_get_default_popup_theme() );
+		popmake_load_site_scripts();
+		add_action( 'admin_footer', 'pum_admin_popup_editor_media_templates' );
+
 	}
 	if ( popmake_is_admin_popup_theme_page() ) {
 		wp_localize_script( 'popup-maker-admin', 'popmake_google_fonts', popmake_get_google_webfonts_list() );
+	}
+
+	if ( isset( $_GET['page'] ) && $_GET['page'] == 'pum-support' ) {
+		wp_enqueue_script( 'iframe-resizer', $dep_js_dir . 'iframeResizer' . $suffix, array(
+			'jquery',
+		) );
+
 	}
 }
 
@@ -253,7 +301,7 @@ function popmake_load_admin_styles( $hook ) {
 		$dep_css_dir = POPMAKE_URL . '/deprecated/assets/css/';
 	}
 
-	$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css' : '.min.css';
+	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css' : '.min.css';
 	if ( popmake_is_admin_popup_page() || popmake_is_admin_popup_theme_page() ) {
 		wp_enqueue_style( 'popup-maker-site', $css_dir . 'site' . $suffix, false, POPMAKE_VERSION );
 	}
@@ -265,7 +313,7 @@ function popmake_load_admin_styles( $hook ) {
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_style( 'popup-maker-admin', $dep_css_dir . 'admin' . $suffix, null, POPMAKE_VERSION );
 
- 	}
+	}
 }
 
 add_action( 'admin_enqueue_scripts', 'popmake_load_admin_styles', 100 );
@@ -305,14 +353,16 @@ add_action( 'wp_head', 'popmake_script_loading_enabled' );
 
 function popmake_enqueue_scripts( $popup_id = null ) {
 
+	global $pum_extra_styles;
+
 	$popup = new PUM_Popup( $popup_id );
-	if ( $popup->mobile_disabled() ) {
+	if ( $popup->mobile_disabled() || $popup->tablet_disabled() ) {
 		wp_enqueue_script( 'mobile-detect' );
 	}
 
 	$scripts_needed = apply_filters( 'popmake_enqueue_scripts', array(
-		'popup-maker' => 'popup-maker-site',
-		'easy-modal-importer' => 'popup-maker-easy-modal-importer-site'
+		'popup-maker'         => 'popup-maker-site',
+		'easy-modal-importer' => 'popup-maker-easy-modal-importer-site',
 	), $popup_id );
 	foreach ( $scripts_needed as $script ) {
 		if ( wp_script_is( $script, 'registered' ) ) {
@@ -321,15 +371,40 @@ function popmake_enqueue_scripts( $popup_id = null ) {
 	}
 
 	$styles_needed = apply_filters( 'popmake_enqueue_styles', array(
-		'popup-maker' => 'popup-maker-site',
-		'google-fonts' => 'popup-maker-google-fonts'
+		'popup-maker'  => 'popup-maker-site',
+		'google-fonts' => 'popup-maker-google-fonts',
 	), $popup_id );
 	foreach ( $styles_needed as $style ) {
 		if ( wp_style_is( $style, 'registered' ) ) {
 			wp_enqueue_style( $style );
 		}
 	}
+
+
 }
 
 add_action( 'popmake_preload_popup', 'popmake_enqueue_scripts' );
 
+function pum_admin_popup_editor_media_templates() {
+
+	$presets = apply_filters( 'pum_click_selector_presets', array(
+		'a[href="exact_url"]'    => __( 'Link: Exact Match', 'popup-maker' ),
+		'a[href*="contains"]'    => __( 'Link: Containing', 'popup-maker' ),
+		'a[href^="begins_with"]' => __( 'Link: Begins With', 'popup-maker' ),
+		'a[href$="ends_with"]'   => __( 'Link: Ends With', 'popup-maker' ),
+	) ); ?>
+
+	<script type="text/html" id="tmpl-pum-click-selector-presets">
+		<div class="pum-click-selector-presets">
+			<span class="dashicons dashicons-arrow-left" title="<?php _e( 'Insert Preset', 'popup-maker' ); ?>"></span>
+			<ul>
+				<?php foreach ( $presets as $preset => $label ) : ?>
+					<li data-preset='<?php echo $preset; ?>'><span><?php echo $label; ?></span></li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+	</script>
+
+	<?php
+
+}
