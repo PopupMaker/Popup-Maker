@@ -11,17 +11,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Freemius {
 
 	/**
-	 * @var PUM_Freemius
+	 * @var \PUM_Freemius
 	 */
 	private static $instance;
 
 	/**
-	 * @var Freemius
+	 * @var \Freemius $fs
 	 */
 	public $fs;
 
 	/**
-	 * @return PUM_Freemius
+	 * @return \PUM_Freemius
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof PUM_Freemius ) ) {
@@ -36,6 +36,7 @@ class PUM_Freemius {
 
 		return self::$instance;
 	}
+
 
 	/**
 	 * Returns the Popup Maker instance of Freemius.
@@ -56,7 +57,7 @@ class PUM_Freemius {
 				'has_addons'     => false,
 				'has_paid_plans' => false,
 				'permissions'    => array(
-					'newsletter'    => true,
+					'newsletter' => true,
 				),
 				'menu'           => array(
 					'slug'    => 'edit.php?post_type=popup',
@@ -66,6 +67,7 @@ class PUM_Freemius {
 				),
 			) );
 		}
+
 
 		return $this->fs;
 	}
@@ -259,7 +261,7 @@ class PUM_Freemius {
 		}
 
 
-		$user = pum_fs()->get_user();
+		$user = pum_fs()->fs->get_user();
 
 		$args = array(
 			// UID
@@ -294,15 +296,20 @@ class PUM_Freemius {
 
 	/**
 	 * Send the data to the Popup Maker V2 Server
+	 *
+	 * @param string $action
+	 * @param array $data
+	 *
+	 * @return array|WP_Error
 	 */
 	public function api_call( $action = '', $data = array() ) {
 
-		$response = wp_remote_post( PUM::API_URL . $action, array(
+		$response = wp_remote_post( 'https://api.wppopupmaker.com/wp-json/pmapi/v1/' . $action, array(
 			'method'      => 'POST',
 			'timeout'     => 20,
 			'redirection' => 5,
 			'httpversion' => '1.1',
-			'blocking'    => true,
+			'blocking'    => false,
 			'body'        => $data,
 			'user-agent'  => 'POPMAKE/' . PUM::VER . '; ' . get_site_url(),
 		) );
