@@ -37,7 +37,6 @@ class PUM_Freemius {
 		return self::$instance;
 	}
 
-
 	/**
 	 * Returns the Popup Maker instance of Freemius.
 	 *
@@ -260,12 +259,11 @@ class PUM_Freemius {
 			$popup_themes += $status;
 		}
 
-
 		$user = pum_fs()->fs->get_user();
 
 		$args = array(
 			// UID
-			'uid'              => md5( strtolower( $user->email ) ),
+			'uid'              => md5( strtolower( ! empty( $user->email ) ? $user->email : '' ) ),
 
 			// Language Info
 			'language'         => get_bloginfo( 'language' ), // Language
