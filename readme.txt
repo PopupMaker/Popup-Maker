@@ -6,7 +6,7 @@ Donate link:
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.6
 Tested up to: 4.7.2
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 License: GNU Version 3 or Any Later Version
 
 Create any popup imaginable! Customize your popups from head-to-toe and give your site more utility, usability, and conversions.
@@ -86,6 +86,9 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+
+= v1.5.1 - 03/09/2017
+* Fix: PHP 5.2 Compatibility issue.
 
 = v1.5.0 - 03/08/2017
 * Feature: Position popups based on the click trigger. Tooltips & Popovers are now possible.

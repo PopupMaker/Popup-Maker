@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class PUM {
 
-	const VER = '1.5.0';
+	const VER = '1.5.1';
 
 	const DB_VER = 6;
 
