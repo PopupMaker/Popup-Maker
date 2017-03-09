@@ -16,7 +16,7 @@ class PUM_Modules_Reviews {
 	 *
 	 * @var string
 	 */
-	public static $api_url = 'https://api.wppopupmaker.com/wp-json/pum/v1/review_action';
+	public static $api_url = 'https://api.wppopupmaker.com/wp-json/pmapi/v1/review_action';
 
 	/**
 	 *
