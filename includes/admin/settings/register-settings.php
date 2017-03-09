@@ -150,6 +150,12 @@ function popmake_get_registered_settings() {
 		'extensions' => apply_filters( 'popmake_settings_extensions', array() ),
 		'licenses'   => apply_filters( 'popmake_settings_licenses', array() ),
 		'misc'       => apply_filters( 'popmake_settings_misc', array(
+			'disabled_admin_bar'                   => array(
+				'id'   => 'disabled_admin_bar',
+				'name' => __( 'Disable Popups Admin Bar', 'popup-maker' ),
+				'desc' => __( 'This will disable the admin Popups menu item.', 'popup-maker' ),
+				'type' => 'checkbox',
+			),
 			'debug_mode'                           => array(
 				'id'   => 'debug_mode',
 				'name' => __( 'Enable Debug Mode', 'popup-maker' ),

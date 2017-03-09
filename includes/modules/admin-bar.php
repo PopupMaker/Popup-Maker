@@ -63,7 +63,7 @@ class PUM_Modules_Admin_Bar {
 	 */
 	public static function toolbar_links( $wp_admin_bar ) {
 
-		if ( is_admin() ) {
+		if ( is_admin() || PUM_Options::get( 'disabled_admin_bar', false ) ) {
 			return;
 		}
 		/*
