@@ -28,7 +28,7 @@ class PUM_Options {
 	 */
 	public static function init() {
 		// Set the prefix on init.
-		static::$_data = static::get_all();
+		self::$_data = self::get_all();
 	}
 
 	/**
@@ -39,12 +39,12 @@ class PUM_Options {
 	 * @return array settings
 	 */
 	public static function get_all() {
-		$settings = get_option( static:: $_prefix . 'settings', array() );
+		$settings = get_option( self:: $_prefix . 'settings', array() );
 		if ( ! is_array( $settings ) ) {
 			$settings = array();
 		}
 
-		return apply_filters( static:: $_prefix . 'get_options', $settings );
+		return apply_filters( self:: $_prefix . 'get_options', $settings );
 	}
 
 	/**
@@ -58,9 +58,9 @@ class PUM_Options {
 	 * @return mixed
 	 */
 	public static function get( $key = '', $default = false ) {
-		$value = isset( static::$_data[ $key ] ) ? static::$_data[ $key ] : $default;
+		$value = isset( self::$_data[ $key ] ) ? self::$_data[ $key ] : $default;
 
-		return apply_filters( static::$_prefix . 'get_option', $value, $key, $default );
+		return apply_filters( self::$_prefix . 'get_option', $value, $key, $default );
 	}
 
 	/**
@@ -85,24 +85,24 @@ class PUM_Options {
 		}
 
 		if ( empty( $value ) ) {
-			$remove_option = static::delete( $key );
+			$remove_option = self::delete( $key );
 
 			return $remove_option;
 		}
 
 		// First let's grab the current settings
-		$options = get_option( static:: $_prefix . 'settings' );
+		$options = get_option( self:: $_prefix . 'settings' );
 
 		// Let's let devs alter that value coming in
-		$value = apply_filters( static::$_prefix . 'update_option', $value, $key );
+		$value = apply_filters( self::$_prefix . 'update_option', $value, $key );
 
 		// Next let's try to update the value
 		$options[ $key ] = $value;
-		$did_update      = update_option( static:: $_prefix . 'settings', $options );
+		$did_update      = update_option( self:: $_prefix . 'settings', $options );
 
 		// If it updated, let's update the global variable
 		if ( $did_update ) {
-			static::$_data[ $key ] = $value;
+			self::$_data[ $key ] = $value;
 
 		}
 
@@ -128,18 +128,18 @@ class PUM_Options {
 		}
 
 		// First let's grab the current settings
-		$options = get_option( static:: $_prefix . 'settings' );
+		$options = get_option( self:: $_prefix . 'settings' );
 
 		// Next let's try to update the value
 		if ( isset( $options[ $key ] ) ) {
 			unset( $options[ $key ] );
 		}
 
-		$did_update = update_option( static:: $_prefix . 'settings', $options );
+		$did_update = update_option( self:: $_prefix . 'settings', $options );
 
 		// If it updated, let's update the global variable
 		if ( $did_update ) {
-			static::$_data = $options;
+			self::$_data = $options;
 		}
 
 		return $did_update;
