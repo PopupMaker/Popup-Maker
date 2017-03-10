@@ -56,7 +56,7 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: includes/admin/admin-setup.php:23, includes/admin/extensions/extensions-page.php:26, includes/admin/settings/register-settings.php:319
+#: includes/admin/admin-setup.php:23, includes/admin/extensions/extensions-page.php:26, includes/admin/settings/register-settings.php:325
 msgid "Extensions"
 msgstr ""
 
@@ -104,7 +104,7 @@ msgstr ""
 msgid "You do not have permission to do upgrades"
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:280, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50, includes/class-pum-extension-updater.php:396
+#: includes/admin/class-pum-admin-upgrades.php:280, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50, includes/class-pum-extension-updater.php:394
 msgid "Error"
 msgstr ""
 
@@ -685,138 +685,146 @@ msgid "Check this if you have copied the popup theme styles to your own styleshe
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:155
-msgid "Enable Debug Mode"
+msgid "Disable Popups Admin Bar"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:156
-msgid "This will turn on multiple debug tools used to quickly find issues."
+msgid "This will disable the admin Popups menu item."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:161
-msgid "Enable Easy Modal v2 Compatibility Mode"
+msgid "Enable Debug Mode"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:162
-msgid "This will automatically make any eModal classes you have added to your site launch the appropriate Popup after import."
+msgid "This will turn on multiple debug tools used to quickly find issues."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:167
-msgid "Disables popup open tracking?"
+msgid "Enable Easy Modal v2 Compatibility Mode"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:168
-msgid "This will disable the built in analytics functionality."
+msgid "This will automatically make any eModal classes you have added to your site launch the appropriate Popup after import."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:173
-msgid "Hide Admin Support Widget"
+msgid "Disables popup open tracking?"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:174
-msgid "This will hide the support widget on all popup maker admin pages."
+msgid "This will disable the built in analytics functionality."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:179
-msgid "Disable categories & tags?"
+msgid "Hide Admin Support Widget"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:180
+msgid "This will hide the support widget on all popup maker admin pages."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:185
+msgid "Disable categories & tags?"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:186
 msgid "This will disable the popup tags & categories."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:281
+#: includes/admin/settings/register-settings.php:287
 msgid "Settings updated."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:313, includes/class-popmake-fields.php:57, includes/class-pum-conditions.php:71, includes/class-pum-shortcode.php:144, includes/pum-condition-functions.php:33, includes/pum-trigger-functions.php:71, includes/shortcodes/class-pum-shortcode-popup.php:46
+#: includes/admin/settings/register-settings.php:319, includes/class-popmake-fields.php:57, includes/class-pum-conditions.php:71, includes/class-pum-shortcode.php:144, includes/pum-condition-functions.php:33, includes/pum-trigger-functions.php:71, includes/shortcodes/class-pum-shortcode-popup.php:46
 msgid "General"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:316
+#: includes/admin/settings/register-settings.php:322
 msgid "Assets"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:322
+#: includes/admin/settings/register-settings.php:328
 msgid "Licenses"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:325
+#: includes/admin/settings/register-settings.php:331
 msgid "Misc"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:575
+#: includes/admin/settings/register-settings.php:581
 msgid "The callback function used for the <strong>%s</strong> setting is missing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:708
+#: includes/admin/settings/register-settings.php:714
 msgid "Upload File"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:795
+#: includes/admin/settings/register-settings.php:801
 msgid "Your license key expired on %s. Please %srenew your license key%s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:805
+#: includes/admin/settings/register-settings.php:811
 msgid "Your license key has been disabled. Please %scontact support%s for more information."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:815
+#: includes/admin/settings/register-settings.php:821
 msgid "Invalid license. Please %svisit your account page%s and verify it."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:827
+#: includes/admin/settings/register-settings.php:833
 msgid "Your %s is not active for this URL. Please %svisit your account page%s to manage your license key URLs."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:837
+#: includes/admin/settings/register-settings.php:843
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:847
+#: includes/admin/settings/register-settings.php:853
 msgid "Your license key has reached its activation limit. %View possible upgrades% now."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:857
+#: includes/admin/settings/register-settings.php:863
 msgid "The key you entered belongs to a bundle, please use the product specific license key."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:865
+#: includes/admin/settings/register-settings.php:871
 msgid "unknown_error"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:866
+#: includes/admin/settings/register-settings.php:872
 msgid "There was an error with this license key: %s. Please %scontact our support team%s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:886
+#: includes/admin/settings/register-settings.php:892
 msgid "License key never expires."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:892
+#: includes/admin/settings/register-settings.php:898
 msgid "Your license key expires soon! It expires on %s. %sRenew your license key%s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:898
+#: includes/admin/settings/register-settings.php:904
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:913
+#: includes/admin/settings/register-settings.php:919
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:926
+#: includes/admin/settings/register-settings.php:932
 msgid "Deactivate License"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1019
+#: includes/admin/settings/register-settings.php:1025
 msgid "Show Popup Maker CSS"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1023
+#: includes/admin/settings/register-settings.php:1029
 msgid "Core Styles"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1029
+#: includes/admin/settings/register-settings.php:1035
 msgid "User Theme Styles"
 msgstr ""
 
@@ -1140,7 +1148,7 @@ msgstr ""
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s."
 msgstr ""
 
-#: includes/class-pum-extension-updater.php:396
+#: includes/class-pum-extension-updater.php:394
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
@@ -1620,11 +1628,11 @@ msgstr ""
 msgid "Popup ID"
 msgstr ""
 
-#: includes/modules/menus.php:116
+#: includes/modules/menus.php:123
 msgid "Trigger a Popup"
 msgstr ""
 
-#: includes/modules/menus.php:127
+#: includes/modules/menus.php:134
 msgid "Choose a popup to trigger when this item is clicked."
 msgstr ""
 
