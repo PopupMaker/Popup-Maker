@@ -40,7 +40,7 @@ class PUM_Modules_Menu {
 				require_once ABSPATH . 'wp-admin/includes/class-walker-nav-menu-edit.php';
 			}
 
-			if ( version_compare( $wp_version, '4.5', '>=' ) ) {
+			if ( version_compare( $wp_version, '3.6', '>=' ) ) {
 				require_once POPMAKE_DIR . '/includes/modules/menus/class-pum-walker-nav-menu-edit.php';
 			} else {
 				require_once POPMAKE_DIR . '/includes/modules/menus/class-pum-walker-nav-menu-edit-deprecated.php';
