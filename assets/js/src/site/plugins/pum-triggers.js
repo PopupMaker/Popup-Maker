@@ -66,6 +66,20 @@
                 .data('do-default', settings.do_default)
                 .attr('data-do-default', settings.do_default)
                 .css({cursor: "pointer"});
+
+            // Catches any triggers added to the page late.
+            $(document).on('click', '.popmake-'+popup_settings.id+':not(.pum-trigger)', function (event) {
+                var $this = $(this);
+
+                $this
+                    .addClass('pum-trigger')
+                    .data('popup', popup_settings.id)
+                    .attr('data-popup', popup_settings.id)
+                    .data('settings', settings)
+                    .data('do-default', settings.do_default)
+                    .attr('data-do-default', settings.do_default)
+                    .css({cursor: "pointer"});
+            });
         },
         admin_debug: function () {
             PUM.getPopup(this).popmake('open');
