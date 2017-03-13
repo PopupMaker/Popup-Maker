@@ -68,23 +68,26 @@
                 .css({cursor: "pointer"});
 
             // Catches and initializes any triggers added to the page late.
-            $(document).on('click', trigger_selector+':not(.pum-trigger)', function (event) {
+            $(document).on('click', trigger_selector, function (event) {
                 var $this = $(this);
 
-                $this
-                    .addClass('pum-trigger')
-                    .data('popup', popup_settings.id)
-                    .attr('data-popup', popup_settings.id)
-                    .data('settings', settings)
-                    .data('do-default', settings.do_default)
-                    .attr('data-do-default', settings.do_default)
-                    .css({cursor: "pointer"});
+                if (!$this.hasClass('pum-trigger') || !$this.data('popup')) {
+                    $this
+                        .addClass('pum-trigger')
+                        .data('popup', popup_settings.id)
+                        .attr('data-popup', popup_settings.id)
+                        .data('settings', settings)
+                        .data('do-default', settings.do_default)
+                        .attr('data-do-default', settings.do_default)
+                        .css({cursor: "pointer"});
 
-                event.preventDefault();
-                event.stopPropagation();
+                    event.preventDefault();
+                    event.stopPropagation();
 
-                // TODO test this.
-                $this.trigger('click');
+                    // Retrigger clicks.
+                    $this.trigger('click');
+                }
+
             });
         },
         admin_debug: function () {
