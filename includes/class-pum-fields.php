@@ -731,7 +731,7 @@ class PUM_Fields extends Popmake_Fields {
 
 			<?php // TODO Replace these all with a single variable in JS like var value = data.<?php echo esc_attr( $args['templ_name'] ); ?/> || {}; ?>
 
-			<# var templ_name = '<?php echo esc_attr( $args['templ_name'] ); ?>';
+			<# var templ_name = '<?php echo esc_attr( $args['templ_name'] ); ?>'; #>
 
 			<# if (!data[templ_name] || typeof data[templ_name] !== 'object') {
 				data[templ_name] = {};
