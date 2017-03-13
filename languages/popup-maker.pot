@@ -1585,11 +1585,11 @@ msgid "Account Page"
 msgstr ""
 
 #: includes/integrations/class-pum-woocommerce-integration.php:69
-msgid "Is Enpoint"
+msgid "Is Endpoint"
 msgstr ""
 
 #: includes/integrations/class-pum-woocommerce-integration.php:73
-msgid "Selected Enpoints"
+msgid "Selected Endpoints"
 msgstr ""
 
 #: includes/integrations/ninja-forms/Actions/ClosePopup.php:36, includes/modules/admin-bar.php:121
