@@ -6,7 +6,7 @@
 
 if ( ! class_exists( 'Walker_Nav_Menu_Edit' ) ) {
 	/** Walker_Nav_Menu_Edit class */
-	require_once ABSPATH . 'wp-admin/includes/class-walker-nav-menu-edit.php';
+	require_once ABSPATH . 'wp-admin/includes/nav-menu.php';
 }
 
 /**

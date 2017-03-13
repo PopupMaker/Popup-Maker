@@ -4,9 +4,14 @@
  * Copyright (c) 2017, WP Popup Maker
  ******************************************************************************/
 
+/** Walker_Nav_Menu_Edit class */
 if ( ! class_exists( 'Walker_Nav_Menu_Edit' ) ) {
-	/** Walker_Nav_Menu_Edit class */
-	require_once ABSPATH . 'wp-admin/includes/class-walker-nav-menu-edit.php';
+	global $wp_version;
+	if ( version_compare( $wp_version, '4.4', '>=' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/class-walker-nav-menu-edit.php';
+	} else {
+		require_once ABSPATH . 'wp-admin/includes/nav-menu.php';
+	}
 }
 
 /**
