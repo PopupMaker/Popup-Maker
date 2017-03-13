@@ -19,7 +19,7 @@ class PUM_Modules_Menu {
 		// Merge Menu Item Options
 		add_filter( 'wp_setup_nav_menu_item', array( __CLASS__, 'merge_item_data' ) );
 		// Admin Menu Editor
-		add_filter( 'wp_edit_nav_menu_walker', array( __CLASS__, 'nav_menu_walker' ) );
+		add_filter( 'wp_edit_nav_menu_walker', array( __CLASS__, 'nav_menu_walker' ), 999999999 );
 		// Admin Menu Editor Fields.
 		add_action( 'wp_nav_menu_item_custom_fields', array( __CLASS__, 'fields' ), 10, 4 );
 		add_action( 'wp_update_nav_menu_item', array( __CLASS__, 'save' ), 10, 2 );
@@ -28,20 +28,30 @@ class PUM_Modules_Menu {
 	/**
 	 * Override the Admin Menu Walker
 	 *
+	 * @param $walker
+	 *
 	 * @return string
 	 */
-	public static function nav_menu_walker() {
+	public static function nav_menu_walker( $walker ) {
 		global $wp_version;
 
-		if ( ! class_exists( 'PUM_Walker_Nav_Menu_Edit' ) ) {
+		if ( doing_filter( 'plugins_loaded' ) ) {
+			return $walker;
+		}
+
+		if ( $walker == 'Walker_Nav_Menu_Edit_Custom_Fields' ) {
+			return $walker;
+		}
+
+		if ( ! class_exists( 'Walker_Nav_Menu_Edit_Custom_Fields' ) ) {
 			if ( version_compare( $wp_version, '3.6', '>=' ) ) {
-				require_once POPMAKE_DIR . '/includes/modules/menus/class-pum-walker-nav-menu-edit.php';
+				require_once POPMAKE_DIR . '/includes/modules/menus/class-nav-menu-edit-custom-fields.php';
 			} else {
-				require_once POPMAKE_DIR . '/includes/modules/menus/class-pum-walker-nav-menu-edit-deprecated.php';
+				require_once POPMAKE_DIR . '/includes/modules/menus/class-nav-menu-edit-custom-fields-deprecated.php';
 			}
 		}
 
-		return 'PUM_Walker_Nav_Menu_Edit';
+		return 'Walker_Nav_Menu_Edit_Custom_Fields';
 	}
 
 	/**
