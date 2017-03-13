@@ -2426,6 +2426,26 @@ var pum_debug_mode = false,
                 .data('do-default', settings.do_default)
                 .attr('data-do-default', settings.do_default)
                 .css({cursor: "pointer"});
+
+            // Catches and initializes any triggers added to the page late.
+            $(document).on('click', trigger_selector+':not(.pum-trigger)', function (event) {
+                var $this = $(this);
+
+                $this
+                    .addClass('pum-trigger')
+                    .data('popup', popup_settings.id)
+                    .attr('data-popup', popup_settings.id)
+                    .data('settings', settings)
+                    .data('do-default', settings.do_default)
+                    .attr('data-do-default', settings.do_default)
+                    .css({cursor: "pointer"});
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                // TODO test this.
+                $this.trigger('click');
+            });
         },
         admin_debug: function () {
             PUM.getPopup(this).popmake('open');
@@ -2456,6 +2476,11 @@ var pum_debug_mode = false,
 
             // If trigger is inside of the popup that it opens, do nothing.
             if ($popup.has($trigger).length > 0) {
+                return;
+            }
+
+            // If the popup is already open return.
+            if ($popup.popmake('state', 'isOpen')) {
                 return;
             }
 
