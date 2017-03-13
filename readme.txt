@@ -6,7 +6,7 @@ Donate link:
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.6
 Tested up to: 4.7.2
-Stable tag: 1.5.4
+Stable tag: 1.5.5
 License: GNU Version 3 or Any Later Version
 
 Create any popup imaginable! Customize your popups from head-to-toe and give your site more utility, usability, and conversions.
@@ -86,6 +86,10 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+
+= v1.5.5 - 03/??/2017 =
+* Improvment: Used generic Nav Menu Editor Walker classes for better support. This should remove the notices from other plugins as well.
+* Fix: Bug that causes click triggers to lag.
 
 = v1.5.4 - 03/13/2017 =
 * Fix: Typos in conditions.
