@@ -164,8 +164,8 @@ class PUM_Popup_Triggers_Metabox {
 
 			<?php ob_start(); ?>
 
-			<input type="hidden" name="type" class="type" value="<?php esc_attr_e( $id ); ?>"/>
-			<input type="hidden" name="index" class=index" value="{{data.index}}"/>
+			<input type="hidden" name="type" class="type" value="<?php esc_attr_e( $id ); ?>" />
+			<input type="hidden" name="index" class="index" value="{{data.index}}" />
 
 			<div class="pum-tabs-container vertical-tabs tabbed-form">
 
