@@ -34,12 +34,6 @@ class PUM_Modules_Menu {
 		global $wp_version;
 
 		if ( ! class_exists( 'PUM_Walker_Nav_Menu_Edit' ) ) {
-
-			if ( ! class_exists( 'Walker_Nav_Menu_Edit' ) ) {
-				/** Walker_Nav_Menu_Edit class */
-				require_once ABSPATH . 'wp-admin/includes/class-walker-nav-menu-edit.php';
-			}
-
 			if ( version_compare( $wp_version, '3.6', '>=' ) ) {
 				require_once POPMAKE_DIR . '/includes/modules/menus/class-pum-walker-nav-menu-edit.php';
 			} else {

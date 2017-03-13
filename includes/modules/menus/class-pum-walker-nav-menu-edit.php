@@ -4,6 +4,11 @@
  * Copyright (c) 2017, WP Popup Maker
  ******************************************************************************/
 
+if ( ! class_exists( 'Walker_Nav_Menu_Edit' ) ) {
+	/** Walker_Nav_Menu_Edit class */
+	require_once ABSPATH . 'wp-admin/includes/class-walker-nav-menu-edit.php';
+}
+
 /**
  * Custom Walker for Nav Menu Editor
  *
