@@ -88,6 +88,7 @@ There are several common causes for this which include:
 == Changelog ==
 
 = v1.5.4 - 03/13/2017 =
+* Fix: Typos in conditions.
 * Fix: Moved class_exists checks to better handle possible missing class errors.
 
 = v1.5.3 - 03/13/2017 =

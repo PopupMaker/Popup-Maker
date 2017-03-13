@@ -1628,11 +1628,11 @@ msgstr ""
 msgid "Popup ID"
 msgstr ""
 
-#: includes/modules/menus.php:123
+#: includes/modules/menus.php:117
 msgid "Trigger a Popup"
 msgstr ""
 
-#: includes/modules/menus.php:134
+#: includes/modules/menus.php:128
 msgid "Choose a popup to trigger when this item is clicked."
 msgstr ""
 

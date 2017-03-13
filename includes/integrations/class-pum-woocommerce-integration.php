@@ -66,11 +66,11 @@ class PUM_Woocommerce_Integration {
 		$conditions['is_wc_endpoint_url'] = array(
 			'group'    => __( 'WooCommerce', 'woocommerce' ),
 			'labels'   => array(
-				'name' => __( 'Is Enpoint', 'popup-maker' ),
+				'name' => __( 'Is Endpoint', 'popup-maker' ),
 			),
 			'fields'   => array(
 				'selected' => array(
-					'placeholder' => __( 'Selected Enpoints', 'popup-maker' ),
+					'placeholder' => __( 'Selected Endpoints', 'popup-maker' ),
 					'type'        => 'select',
 					'select2' => true,
 					'multiple'    => true,
