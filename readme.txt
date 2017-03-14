@@ -87,7 +87,7 @@ There are several common causes for this which include:
 
 == Changelog ==
 
-= v1.5.5 - 03/??/2017 =
+= v1.5.5 - 03/13/2017 =
 * Improvment: Used generic Nav Menu Editor Walker classes for better support. This should remove the notices from other plugins as well.
 * Fix: Bug that causes click triggers to lag.
 
