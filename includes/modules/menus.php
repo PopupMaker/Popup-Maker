@@ -23,6 +23,13 @@ class PUM_Modules_Menu {
 		// Admin Menu Editor Fields.
 		add_action( 'wp_nav_menu_item_custom_fields', array( __CLASS__, 'fields' ), 10, 4 );
 		add_action( 'wp_update_nav_menu_item', array( __CLASS__, 'save' ), 10, 2 );
+		add_filter( 'manage_nav-menus_columns', array( __CLASS__, 'nav_menu_columns' ), 11 );
+	}
+
+	public static function nav_menu_columns( $columns = array() ) {
+		$columns['popup_id'] = __( 'Popup', 'popup-maker' );
+
+		return $columns;
 	}
 
 	/**
@@ -120,13 +127,12 @@ class PUM_Modules_Menu {
 
 		wp_nonce_field( 'pum-menu-editor-nonce', 'pum-menu-editor-nonce' ); ?>
 
-		<p class="nav_item_options-popup_id  description  description-wide">
+		<p class="field-popup_id  description  description-wide">
 
-			<label for="pum_nav_item_options-popup_id-<?php echo $item->ID; ?>">
-
+			<label for="edit-menu-item-popup_id-<?php echo $item->ID; ?>">
 				<?php _e( 'Trigger a Popup', 'popup-maker' ); ?><br />
 
-				<select name="pum_nav_item_options[<?php echo $item->ID; ?>][popup_id]" id="pum_nav_item_options-popup_id-<?php echo $item->ID; ?>" class="widefat">
+				<select name="menu-item-pum[<?php echo $item->ID; ?>][popup_id]" id="edit-menu-item-popup_id-<?php echo $item->ID; ?>" class="widefat  edit-menu-item-popup_id">
 					<option value=""></option>
 					<?php foreach ( PUM_Modules_Menu::popup_list() as $option => $label ) : ?>
 						<option value="<?php echo $option; ?>" <?php selected( $option, $item->popup_id ); ?>>
@@ -135,9 +141,8 @@ class PUM_Modules_Menu {
 					<?php endforeach; ?>
 				</select>
 
-				<span class="desc"><?php _e( 'Choose a popup to trigger when this item is clicked.', 'popup-maker' ); ?></span>
+				<span class="description"><?php _e( 'Choose a popup to trigger when this item is clicked.', 'popup-maker' ); ?></span>
 			</label>
-
 
 		</p>
 
@@ -190,23 +195,35 @@ class PUM_Modules_Menu {
 			return;
 		}
 
-		if ( empty( $_POST['pum_nav_item_options'][ $item_id ] ) ) {
+		/**
+		 * Return early if there are no settings.
+		 */
+		if ( empty( $_POST['menu-item-pum'][ $item_id ] ) ) {
 			delete_post_meta( $item_id, '_pum_nav_item_options' );
 
 			return;
 		}
 
-		$item_options = PUM_Modules_Menu::parse_item_options( $_POST['pum_nav_item_options'][ $item_id ] );
+		/**
+		 * Parse options array for valid keys.
+		 */
+		$item_options = PUM_Modules_Menu::parse_item_options( $_POST['menu-item-pum'][ $item_id ] );
 
-		$item_options['popup_id'] = ! empty( $item_options['popup_id'] ) ? absint( $item_options['popup_id'] ) : 0;
-
+		/**
+		 * Check for invalid values.
+		 */
 		if ( ! in_array( $item_options['popup_id'], $allowed_popups ) || $item_options['popup_id'] <= 0 ) {
 			unset( $item_options['popup_id'] );
 		}
 
-		// Remove empty options to save space.
+		/**
+		 * Remove empty options to save space.
+		 */
 		$item_options = array_filter( $item_options );
 
+		/**
+		 * Save options or delete if empty.
+		 */
 		if ( ! empty( $item_options ) ) {
 			update_post_meta( $item_id, '_pum_nav_item_options', $item_options );
 		} else {
