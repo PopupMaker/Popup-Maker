@@ -536,23 +536,18 @@ var PUM;
 
             if ($popup.is(':hidden')) {
                 opacity.overlay = $popup.css("opacity");
-                $popup.css({opacity: 0}).show();
+                $popup.css({opacity: 0}).show(0);
             }
 
             if ($container.is(':hidden')) {
                 opacity.container = $container.css("opacity");
-                $container.css({opacity: 0}).show();
+                $container.css({opacity: 0}).show(0);
             }
-
-            // TODO: Check for neccessity and remove if not needed.
-            //$container
-            //.removeClass('responsive size-nano size-micro size-tiny size-small size-medium size-normal size-large size-xlarge fixed custom-position')
-            //.addClass('size-' + settings.meta.display.size);
-
 
             if (display.position_fixed) {
                 $container.addClass('fixed');
             }
+
             if (settings.meta.display.size === 'custom') {
                 $container.css({
                     width: settings.meta.display.custom_width + settings.meta.display.custom_width_unit,
@@ -578,10 +573,10 @@ var PUM;
                 .trigger('popmakeAfterReposition');
 
             if (opacity.overlay) {
-                $popup.css({opacity: opacity.overlay}).hide();
+                $popup.css({opacity: opacity.overlay}).hide(0);
             }
             if (opacity.container) {
-                $container.css({opacity: opacity.container}).hide();
+                $container.css({opacity: opacity.container}).hide(0);
             }
             return this;
         },
