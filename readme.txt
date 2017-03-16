@@ -6,7 +6,7 @@ Donate link:
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.6
 Tested up to: 4.7.2
-Stable tag: 1.5.5
+Stable tag: 1.5.6
 License: GNU Version 3 or Any Later Version
 
 Create any popup imaginable! Customize your popups from head-to-toe and give your site more utility, usability, and conversions.
@@ -21,7 +21,7 @@ Learn tips and tricks, and create cool popups using guides found on our [Blog](h
 
 https://www.youtube.com/watch?v=MAf85_oax4g
 
-Follow this plugin on [GitHub](https://github.com/PopupMaker/Popup-Maker and [Twitter](https://twitter.com/wppopupmaker)!
+Follow this plugin on [GitHub](https://github.com/PopupMaker/Popup-Maker) and [Twitter](https://twitter.com/wppopupmaker)!
 
 Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](https://translate.wordpress.org/projects/wp-plugins/popup-maker).
 
@@ -86,6 +86,12 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+
+= v1.5.6 - 03/16/2017 =
+* Feature: Admin Bar helper tool to assist in getting proper click trigger selectors easily.
+* Improvement: Further tweaks for maximium compatibitlity with nav menu editor.
+* Improvement: Added Popup option to nav menu editor Screen Options to easily hide them.
+* Fix: Updated the freemius-sdk to fix an obscure secured php core function error.
 
 = v1.5.5 - 03/13/2017 =
 * Improvment: Used generic Nav Menu Editor Walker classes for better support. This should remove the notices from other plugins as well.

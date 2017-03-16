@@ -20,7 +20,7 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/admin-pages.php:32, includes/admin/admin-pages.php:32, includes/admin/admin-pages.php:86
+#: includes/admin/admin-pages.php:32, includes/admin/admin-pages.php:32, includes/admin/admin-pages.php:86, includes/modules/admin-bar.php:518
 msgid "Tools"
 msgstr ""
 
@@ -76,7 +76,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/modules/admin-bar.php:72
+#: includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/modules/admin-bar.php:413
 msgid "Popup Maker"
 msgstr ""
 
@@ -1592,11 +1592,11 @@ msgstr ""
 msgid "Selected Endpoints"
 msgstr ""
 
-#: includes/integrations/ninja-forms/Actions/ClosePopup.php:36, includes/modules/admin-bar.php:121
+#: includes/integrations/ninja-forms/Actions/ClosePopup.php:36, includes/modules/admin-bar.php:462
 msgid "Close Popup"
 msgstr ""
 
-#: includes/integrations/ninja-forms/Actions/OpenPopup.php:35, includes/modules/admin-bar.php:111
+#: includes/integrations/ninja-forms/Actions/OpenPopup.php:35, includes/modules/admin-bar.php:452
 msgid "Open Popup"
 msgstr ""
 
@@ -1604,35 +1604,52 @@ msgstr ""
 msgid "Select a popup"
 msgstr ""
 
-#: includes/modules/admin-bar.php:84
+#: includes/modules/admin-bar.php:379
+msgid "After clicking ok, click the element you want a selector for."
+msgstr ""
+
+#: includes/modules/admin-bar.php:390
+msgctxt "JS alert for CSS get selector tool"
+msgid "Selector"
+msgstr ""
+
+#: includes/modules/admin-bar.php:423
 msgid "Popups"
 msgstr ""
 
-#: includes/modules/admin-bar.php:132
+#: includes/modules/admin-bar.php:473
 msgid "Check Conditions"
 msgstr ""
 
-#: includes/modules/admin-bar.php:143
+#: includes/modules/admin-bar.php:484
 msgid "Reset Cookies"
 msgstr ""
 
-#: includes/modules/admin-bar.php:152
+#: includes/modules/admin-bar.php:493
 msgid "Edit Popup"
 msgstr ""
 
-#: includes/modules/admin-bar.php:162
+#: includes/modules/admin-bar.php:503
 msgid "No Popups Loaded"
+msgstr ""
+
+#: includes/modules/admin-bar.php:528
+msgid "Get Selector"
 msgstr ""
 
 #: includes/modules/analytics.php:90
 msgid "Popup ID"
 msgstr ""
 
-#: includes/modules/menus.php:127
+#: includes/modules/menus.php:30, includes/shortcodes/class-pum-shortcode-popup.php:26, includes/shortcodes/class-pum-shortcode-popup.php:324
+msgid "Popup"
+msgstr ""
+
+#: includes/modules/menus.php:133
 msgid "Trigger a Popup"
 msgstr ""
 
-#: includes/modules/menus.php:138
+#: includes/modules/menus.php:144
 msgid "Choose a popup to trigger when this item is clicked."
 msgstr ""
 
@@ -2225,10 +2242,6 @@ msgstr ""
 
 #: includes/shortcodes/class-pum-shortcode-popup-trigger.php:48
 msgid "Choose which popup will be targeted by this trigger."
-msgstr ""
-
-#: includes/shortcodes/class-pum-shortcode-popup.php:26, includes/shortcodes/class-pum-shortcode-popup.php:324
-msgid "Popup"
 msgstr ""
 
 #: includes/shortcodes/class-pum-shortcode-popup.php:30
