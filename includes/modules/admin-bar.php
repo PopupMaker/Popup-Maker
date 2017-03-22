@@ -404,7 +404,7 @@ class PUM_Modules_Admin_Bar {
 	 */
 	public static function toolbar_links( $wp_admin_bar ) {
 
-		if ( is_admin() || PUM_Options::get( 'disabled_admin_bar', false ) ) {
+		if ( is_admin() || ! is_admin_bar_showing() || PUM_Options::get( 'disabled_admin_bar', false ) ) {
 			return;
 		}
 
