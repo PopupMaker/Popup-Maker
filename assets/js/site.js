@@ -2418,6 +2418,7 @@ var pum_debug_mode = false,
                 .data('popup', popup_settings.id)
                 .attr('data-popup', popup_settings.id)
                 .data('settings', settings)
+                .attr('data-settings', settings)
                 .data('do-default', settings.do_default)
                 .attr('data-do-default', settings.do_default)
                 .css({cursor: "pointer"});
@@ -2432,6 +2433,7 @@ var pum_debug_mode = false,
                         .data('popup', popup_settings.id)
                         .attr('data-popup', popup_settings.id)
                         .data('settings', settings)
+                        .attr('data-settings', settings)
                         .data('do-default', settings.do_default)
                         .attr('data-do-default', settings.do_default)
                         .css({cursor: "pointer"});
@@ -2469,7 +2471,7 @@ var pum_debug_mode = false,
         .on('click.pumTrigger', '.pum-trigger[data-popup]', function (event) {
             var $trigger = $(this),
                 $popup = PUM.getPopup($trigger.data('popup')),
-                settings = $trigger.data('settings'),
+                settings = $trigger.data('settings') || {},
                 do_default = settings.do_default || false;
 
             // If trigger is inside of the popup that it opens, do nothing.

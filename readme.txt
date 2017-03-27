@@ -6,7 +6,7 @@ Donate link:
 Tags: responsive popup, promotion, popover, pop-up, pop over, marketing, lightbox, advertising, conversion, modal, popup, popups
 Requires at least: 3.6
 Tested up to: 4.7.2
-Stable tag: 1.5.6
+Stable tag: 1.5.7
 License: GNU Version 3 or Any Later Version
 
 Create any popup imaginable! Customize your popups from head-to-toe and give your site more utility, usability, and conversions.
@@ -87,9 +87,10 @@ There are several common causes for this which include:
 
 == Changelog ==
 
-= v1.5.7 - 03/??/2017 =
+= v1.5.7 - 03/27/2017 =
 * Improvement: Added option to disable the menu editors in case of a conflict.
 * Fix: Forced 100% width on page select boxes to prevent them from being too small.
+* Fix: Bug where checkboxes were not staying checked.
 
 = v1.5.6 - 03/16/2017 =
 * Feature: Admin Bar helper tool to assist in getting proper click trigger selectors easily.

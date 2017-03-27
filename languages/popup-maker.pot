@@ -1641,15 +1641,24 @@ msgstr ""
 msgid "Popup ID"
 msgstr ""
 
-#: includes/modules/menus.php:30, includes/shortcodes/class-pum-shortcode-popup.php:26, includes/shortcodes/class-pum-shortcode-popup.php:324
+#: includes/modules/menus.php:39
+msgid "Disable Popups Menu Editor"
+msgstr ""
+
+#: includes/modules/menus.php:41
+msgctxt "%s represent opening and closing link html"
+msgid "Use this if there is a conflict with your theme or another plugin in the nav menu editor. %sSee Details%s"
+msgstr ""
+
+#: includes/modules/menus.php:52, includes/shortcodes/class-pum-shortcode-popup.php:26, includes/shortcodes/class-pum-shortcode-popup.php:324
 msgid "Popup"
 msgstr ""
 
-#: includes/modules/menus.php:133
+#: includes/modules/menus.php:155
 msgid "Trigger a Popup"
 msgstr ""
 
-#: includes/modules/menus.php:144
+#: includes/modules/menus.php:166
 msgid "Choose a popup to trigger when this item is clicked."
 msgstr ""
 
