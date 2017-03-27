@@ -103,10 +103,10 @@
       .pumselect2-container .pumselect2-selection {
         padding-left: 28px;
 
-          // Rendered Option
-          .pumselect2-selection__rendered {
-            padding-left: 3px;
-          }
+        // Rendered Option
+        .pumselect2-selection__rendered {
+          padding-left: 3px;
+        }
 
       }
 
@@ -159,7 +159,7 @@
         .pumselect2-choices,
         .pumselect2-single {
           border-color: #5b9dd9;
-          box-shadow: 0 0 2px rgba( 30, 140, 190, 0.8 );
+          box-shadow: 0 0 2px rgba(30, 140, 190, 0.8);
         }
       }
 
@@ -281,6 +281,6 @@
   }
 
   .pumselect2-container {
-    width: 100%;
+    width: 100% !important;
   }
 }
