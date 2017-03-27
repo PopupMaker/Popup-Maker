@@ -87,6 +87,10 @@ There are several common causes for this which include:
 
 == Changelog ==
 
+= v1.5.7 - 03/??/2017 =
+* Improvement: Added option to disable the menu editors in case of a conflict.
+* Fix: Forced 100% width on page select boxes to prevent them from being too small.
+
 = v1.5.6 - 03/16/2017 =
 * Feature: Admin Bar helper tool to assist in getting proper click trigger selectors easily.
 * Improvement: Further tweaks for maximium compatibitlity with nav menu editor.
