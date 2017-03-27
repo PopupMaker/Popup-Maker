@@ -713,9 +713,9 @@ class PUM_Fields extends Popmake_Fields {
 
 		$this->field_label( $args ); ?>
 
-		<# var templ_name = '<?php echo esc_attr( $args['templ_name'] ); ?>'; #>
+		<# var checked = data.<?php esc_attr_e( $args['templ_name'] ); ?> !== undefined ? true : false; #>
 
-		<input type="checkbox" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php esc_attr_e( $args['checkbox_val'] ); ?>" <# if (data[templ_name] !== undefined) { print('checked="checked"'); } #> /><?php
+		<input type="checkbox" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php esc_attr_e( $args['checkbox_val'] ); ?>" {{pumChecked(checked, true, true)}} /><?php
 
 		$this->field_description( $args );
 
@@ -729,23 +729,17 @@ class PUM_Fields extends Popmake_Fields {
 
 			$this->field_description( $args ); ?>
 
-			<?php // TODO Replace these all with a single variable in JS like var value = data.<?php echo esc_attr( $args['templ_name'] ); ?/> || {}; ?>
-
-			<# var templ_name = '<?php echo esc_attr( $args['templ_name'] ); ?>'; #>
-
-			<# if (!data[templ_name] || typeof data[templ_name] !== 'object') {
-				data[templ_name] = {};
-			} #>
+			<# var checked = data.<?php esc_attr_e( $args['templ_name'] ); ?> !== undefined && typeof data.<?php esc_attr_e( $args['templ_name'] ); ?> === 'object' ? data.<?php esc_attr_e( $args['templ_name'] ); ?> : {}; #>
 
 			<?php
 
 			if ( ! empty( $args['options'] ) ) {
 				foreach ( $args['options'] as $option => $label ) { ?>
-					<# if (data[templ_name].<?php esc_attr_e( $option ); ?> === undefined) {
-						data[templ_name].<?php esc_attr_e( $option ); ?> = false;
+					<# if (checked.<?php esc_attr_e( $option ); ?> === undefined) {
+						checked.<?php esc_attr_e( $option ); ?> = false;
 					} #>
 
-					<input name="<?php esc_attr_e( $args['name'] ); ?>[<?php esc_attr_e( $option ); ?>]" id="<?php esc_attr_e( $args['id'] ); ?>_<?php esc_attr_e( $option ); ?>" type="checkbox" value="<?php esc_html_e( $option ); ?>" {{pumChecked(data[templ_name].<?php echo esc_attr( $option ); ?>, '<?php echo $option; ?>', true)}} />&nbsp;
+					<input name="<?php esc_attr_e( $args['name'] ); ?>[<?php esc_attr_e( $option ); ?>]" id="<?php esc_attr_e( $args['id'] ); ?>_<?php esc_attr_e( $option ); ?>" type="checkbox" value="<?php esc_html_e( $option ); ?>" {{pumChecked(checked.<?php esc_attr_e( $option ); ?>, '<?php echo $option; ?>', true)}} />&nbsp;
 					<label for="<?php esc_attr_e( $args['id'] ); ?>_<?php esc_attr_e( $option ); ?>"><?php esc_html_e( $label ); ?></label><br/><?php
 				}
 			}
