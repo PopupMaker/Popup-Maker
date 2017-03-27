@@ -16,6 +16,12 @@ class PUM_Modules_Menu {
 	 * Initializes this module.
 	 */
 	public static function init() {
+		add_filter( 'popmake_settings_misc', array( __CLASS__, 'settings' ) );
+
+		if ( PUM_Options::get( 'disabled_menu_editor', false ) ) {
+			return;
+		}
+		
 		// Merge Menu Item Options
 		add_filter( 'wp_setup_nav_menu_item', array( __CLASS__, 'merge_item_data' ) );
 		// Admin Menu Editor
@@ -24,6 +30,22 @@ class PUM_Modules_Menu {
 		add_action( 'wp_nav_menu_item_custom_fields', array( __CLASS__, 'fields' ), 10, 4 );
 		add_action( 'wp_update_nav_menu_item', array( __CLASS__, 'save' ), 10, 2 );
 		add_filter( 'manage_nav-menus_columns', array( __CLASS__, 'nav_menu_columns' ), 11 );
+	}
+
+	public static function settings( $settings ) {
+		return array_merge( $settings, array(
+			'disabled_menu_editor' => array(
+				'id'   => 'disabled_menu_editor',
+				'name' => __( 'Disable Popups Menu Editor', 'popup-maker' ),
+				'desc' => sprintf(
+					_x( 'Use this if there is a conflict with your theme or another plugin in the nav menu editor. %sSee Details%s', '%s represent opening and closing link html', 'popup-maker' ),
+					'<a href="https://wordpress.org/support/topic/overrides-other-menu-functions/#post-8945399" target="_blank">',
+					'</a>'
+				),
+				'type' => 'checkbox',
+			),
+
+		) );
 	}
 
 	public static function nav_menu_columns( $columns = array() ) {
