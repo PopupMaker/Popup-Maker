@@ -729,7 +729,7 @@ class PUM_Fields extends Popmake_Fields {
 
 			$this->field_description( $args ); ?>
 
-			<# var checked = data.<?php esc_attr_e( $args['templ_name'] ); ?> !== undefined && typeof data.<?php esc_attr_e( $args['templ_name'] ); ?> === 'object' ? data.<?php esc_attr_e( $args['templ_name'] ); ?> : {}; #>
+			<# var checked = data.<?php esc_attr_e( $args['templ_name'] ); ?> !== undefined && data.<?php esc_attr_e( $args['templ_name'] ); ?> && typeof data.<?php esc_attr_e( $args['templ_name'] ); ?> === 'object' ? data.<?php esc_attr_e( $args['templ_name'] ); ?> : {}; #>
 
 			<?php
 
