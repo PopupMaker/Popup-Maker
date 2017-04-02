@@ -713,7 +713,7 @@ class PUM_Fields extends Popmake_Fields {
 
 		$this->field_label( $args ); ?>
 
-		<# var checked = data.<?php esc_attr_e( $args['templ_name'] ); ?> !== undefined ? true : false; #>
+		<# var checked = data.<?php esc_attr_e( $args['templ_name'] ); ?> !== undefined && data.<?php esc_attr_e( $args['templ_name'] ); ?> ? true : false; #>
 
 		<input type="checkbox" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>" value="<?php esc_attr_e( $args['checkbox_val'] ); ?>" {{pumChecked(checked, true, true)}} /><?php
 
