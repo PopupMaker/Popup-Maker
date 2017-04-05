@@ -46,7 +46,7 @@ If you are enjoying this wonderful project, [please rate & review it](https://wp
 = Enhance Your Popups Using Our Extensions =
 > + [Exit Intent](https://wppopupmaker.com/extensions/exit-intent/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Upsell&utm_content=exit-intent "Exit Intent")
 > + [AJAX Login Modals](https://wppopupmaker.com/extensions/ajax-login-modals/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Upsell&utm_content=ajax-login-modal "AJAX Login Modals")
-> + [Age Verification Modals](https://wppopupmaker.com/extensions/age-verification-modals/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Upsell&utm_content=age-verification-modals "Age Verification Modals")
+> + [Age Verification Modals](https://wppopupmaker.com/extensions/age-verification-modals/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Upsell&utm_content=age-verification-modals "Age Verification Modals") - Verify the age of your users before allowing them to view pages or click buttons/links.
 > + [Popup Analytics](https://wppopupmaker.com/extensions/popup-analytics/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Upsell&utm_content=popup-analytics "Popup Analytics")
 > + [Advanced Targeting Conditions](https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Upsell&utm_content=advanced-targeting-conditions "Advanced Targeting Conditions")
 
@@ -86,6 +86,10 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+
+= v1.5.8 - 04/04/2017 =
+* Fix: Error when extensions were active due to null values for checkboxes.
+
 
 = v1.5.7 - 03/27/2017 =
 * Improvement: Added option to disable the menu editors in case of a conflict.
