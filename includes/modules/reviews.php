@@ -386,7 +386,7 @@ class PUM_Modules_Reviews {
 			.pum-notice img.logo {
 				float: right;
 				margin-left: 10px;
-				width: 75px;
+				width: 128px;
 				padding: 0.25em;
 				border: 1px solid #ccc;
 			}
@@ -395,7 +395,7 @@ class PUM_Modules_Reviews {
 		<div class="notice notice-success is-dismissible pum-notice">
 
 			<p>
-				<img class="logo" src="<?php echo POPMAKE_URL; ?>/includes/libs/freemius/assets/img/plugin-icon.png" />
+				<img class="logo" src="<?php echo POPMAKE_URL; ?>/assets/images/icon-256x256.jpg" />
 				<strong>
 					<?php echo $trigger['message']; ?>
 					<br />
