@@ -217,7 +217,7 @@ var PUMCookies;
 
             $('#pum_popup_cookie_fields').addClass('has-cookies');
 
-            if (PUMTriggers.new_cookie >= 0) {
+            if (PUMTriggers.new_cookie !== false && PUMTriggers.new_cookie >= 0) {
                 $trigger = $('#pum_popup_triggers_list tbody tr').eq(PUMTriggers.new_cookie).find('.popup_triggers_field_settings:first');
                 trigger_settings = JSON.parse($trigger.val());
 
