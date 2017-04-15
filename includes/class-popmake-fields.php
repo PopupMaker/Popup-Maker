@@ -156,7 +156,7 @@ class Popmake_Fields {
 			'cols'         => 50,
 			'min'          => 0,
 			'max'          => 50,
-			'force_minmax' => true,
+			'force_minmax' => false,
 			'step'         => 1,
 			'select2'      => null,
 			'object_type'  => 'post_type',
