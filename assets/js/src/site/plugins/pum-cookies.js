@@ -54,7 +54,9 @@
         }
     });
 
-    $.fn.popmake.cookies = {
+    $.fn.popmake.cookies = $.fn.popmake.cookies || {};
+
+    $.extend($.fn.popmake.cookies, {
         on_popup_open: function (settings) {
             var $popup = PUM.getPopup(this);
             $popup.on('pumAfterOpen', function () {
@@ -78,8 +80,8 @@
             $popup.on('pum_nf.success', function () {
                 $popup.popmake('setCookie', settings);
             });
-        }
-    };
+        },
+    });
 
     // Register All Cookies for a Popup
     $(document)
