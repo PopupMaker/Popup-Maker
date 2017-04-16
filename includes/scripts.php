@@ -187,8 +187,8 @@ function popmake_render_popup_theme_styles() {
 	</style><?php
 }
 
-add_action( 'wp_head', 'popmake_render_popup_theme_styles' );
-add_action( 'admin_head', 'popmake_render_popup_theme_styles' );
+add_action( 'wp_head', 'popmake_render_popup_theme_styles', 99999 );
+add_action( 'admin_head', 'popmake_render_popup_theme_styles', 99999 );
 
 function pum_should_load_admin_scripts() {
 	global $pagenow;
