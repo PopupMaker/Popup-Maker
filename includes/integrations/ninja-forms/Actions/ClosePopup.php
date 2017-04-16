@@ -40,10 +40,10 @@ final class NF_PUM_Actions_ClosePopup extends NF_Abstracts_Action {
 				'name'        => 'close_delay',
 				'type'        => 'number',
 				'group'       => 'primary',
-				'label'       => __( 'Delay', 'ninja-forms' ),
+				'label'       => __( 'Delay', 'popup-maker' ),
 				'placeholder' => '',
 				'width'       => 'full',
-				'value'       => __( '0', 'ninja-forms' ),
+				'value'       => __( '0', 'popup-maker' ),
 			),
 		);
 

@@ -39,7 +39,7 @@ final class NF_PUM_Actions_OpenPopup extends NF_Abstracts_Action
 				'name' => 'popup',
 				'type' => 'select',
 				'group' => 'primary',
-				'label' => __( 'Popup ID', 'ninja-forms' ),
+				'label' => __( 'Popup ID', 'popup-maker' ),
 				'placeholder' => '',
 				'width' => 'full',
 				'options' => $this->get_popup_list(),

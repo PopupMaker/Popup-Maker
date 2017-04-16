@@ -1088,7 +1088,7 @@ msgstr ""
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/class-popmake-fields.php:175, includes/class-popmake-popup-fields.php:105, includes/class-popmake-popup-fields.php:231, includes/shortcodes/class-pum-shortcode-popup.php:205
+#: includes/class-popmake-fields.php:175, includes/class-popmake-popup-fields.php:105, includes/class-popmake-popup-fields.php:231, includes/integrations/class-pum-cf7.php:168, includes/shortcodes/class-pum-shortcode-popup.php:205
 msgid "ms"
 msgstr ""
 
@@ -1216,7 +1216,7 @@ msgstr ""
 msgid "Checking this will cause popup to open automatically."
 msgstr ""
 
-#: includes/deprecated/v4.php:391, includes/pum-trigger-functions.php:102, includes/pum-trigger-functions.php:148
+#: includes/deprecated/v4.php:391, includes/integrations/class-pum-cf7.php:165, includes/integrations/ninja-forms/Actions/ClosePopup.php:43, includes/pum-trigger-functions.php:102, includes/pum-trigger-functions.php:148
 msgid "Delay"
 msgstr ""
 
@@ -1560,6 +1560,34 @@ msgstr ""
 msgid "BP: Is Action Variable"
 msgstr ""
 
+#: includes/integrations/class-pum-cf7.php:99
+msgid "Contact Form 7 Success"
+msgstr ""
+
+#: includes/integrations/class-pum-cf7.php:117, includes/integrations/class-pum-cf7.php:131
+msgid "Popup Settings"
+msgstr ""
+
+#: includes/integrations/class-pum-cf7.php:132
+msgid "These settings control popups after successful form submissions."
+msgstr ""
+
+#: includes/integrations/class-pum-cf7.php:137, includes/integrations/ninja-forms/Actions/OpenPopup.php:35, includes/modules/admin-bar.php:452
+msgid "Open Popup"
+msgstr ""
+
+#: includes/integrations/class-pum-cf7.php:145, includes/modules/menus.php:52, includes/shortcodes/class-pum-shortcode-popup.php:26, includes/shortcodes/class-pum-shortcode-popup.php:324
+msgid "Popup"
+msgstr ""
+
+#: includes/integrations/class-pum-cf7.php:157, includes/integrations/ninja-forms/Actions/ClosePopup.php:36, includes/modules/admin-bar.php:462
+msgid "Close Popup"
+msgstr ""
+
+#: includes/integrations/class-pum-cf7.php:215, includes/integrations/ninja-forms/Actions/OpenPopup.php:78
+msgid "Select a popup"
+msgstr ""
+
 #: includes/integrations/class-pum-ninja-forms.php:109
 msgid "Ninja Form Success"
 msgstr ""
@@ -1592,16 +1620,12 @@ msgstr ""
 msgid "Selected Endpoints"
 msgstr ""
 
-#: includes/integrations/ninja-forms/Actions/ClosePopup.php:36, includes/modules/admin-bar.php:462
-msgid "Close Popup"
+#: includes/integrations/ninja-forms/Actions/ClosePopup.php:46
+msgid "0"
 msgstr ""
 
-#: includes/integrations/ninja-forms/Actions/OpenPopup.php:35, includes/modules/admin-bar.php:452
-msgid "Open Popup"
-msgstr ""
-
-#: includes/integrations/ninja-forms/Actions/OpenPopup.php:78
-msgid "Select a popup"
+#: includes/integrations/ninja-forms/Actions/OpenPopup.php:42, includes/modules/analytics.php:90
+msgid "Popup ID"
 msgstr ""
 
 #: includes/modules/admin-bar.php:379
@@ -1637,10 +1661,6 @@ msgstr ""
 msgid "Get Selector"
 msgstr ""
 
-#: includes/modules/analytics.php:90
-msgid "Popup ID"
-msgstr ""
-
 #: includes/modules/menus.php:39
 msgid "Disable Popups Menu Editor"
 msgstr ""
@@ -1648,10 +1668,6 @@ msgstr ""
 #: includes/modules/menus.php:41
 msgctxt "%s represent opening and closing link html"
 msgid "Use this if there is a conflict with your theme or another plugin in the nav menu editor. %sSee Details%s"
-msgstr ""
-
-#: includes/modules/menus.php:52, includes/shortcodes/class-pum-shortcode-popup.php:26, includes/shortcodes/class-pum-shortcode-popup.php:324
-msgid "Popup"
 msgstr ""
 
 #: includes/modules/menus.php:155
