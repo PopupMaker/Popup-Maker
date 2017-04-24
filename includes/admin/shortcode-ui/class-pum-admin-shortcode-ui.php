@@ -130,6 +130,9 @@ class PUM_Admin_Shortcode_UI {
 		$shortcodes = array();
 
 		foreach ( PUM_Shortcodes::instance()->get_shortcodes() as $tag => $shortcode ) {
+			/**
+			 * @var $shortcode PUM_Shortcode
+			 */
 			$shortcodes[ $tag ] = array(
 				'label' => $shortcode->label(),
 				'description' => $shortcode->description(),
@@ -215,6 +218,11 @@ class PUM_Admin_Shortcode_UI {
 
 	/**
 	 * Render a shortcode body for preview.
+	 *
+	 * @param $shortcode
+	 * @param null $post_id
+	 *
+	 * @return string
 	 */
 	private function render_shortcode_for_preview( $shortcode, $post_id = null ) {
 

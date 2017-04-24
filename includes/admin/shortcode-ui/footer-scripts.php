@@ -22,6 +22,11 @@
 						if (null === v || '' === v) {
 							delete attrs[k];
 						}
+
+						// Multicheck converts keys to array.
+						if (typeof v === 'object') {
+						    attrs[k] = Object.keys(v);
+                        }
 					});
 
 					return attrs;

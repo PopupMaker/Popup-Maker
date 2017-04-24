@@ -56,7 +56,7 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: includes/admin/admin-setup.php:23, includes/admin/extensions/extensions-page.php:26, includes/admin/settings/register-settings.php:325
+#: includes/admin/admin-setup.php:23, includes/admin/extensions/extensions-page.php:26, includes/admin/settings/register-settings.php:328
 msgid "Extensions"
 msgstr ""
 
@@ -660,171 +660,171 @@ msgstr ""
 msgid "Enter popup title here"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:128
+#: includes/admin/settings/register-settings.php:131
 msgid "Don't Load Google Fonts"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:129
+#: includes/admin/settings/register-settings.php:132
 msgid "Check this disable loading of google fonts, useful if the fonts you chose are already loaded with your theme."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:134
+#: includes/admin/settings/register-settings.php:137
 msgid "Don't load Popup Maker core stylesheet."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:135
+#: includes/admin/settings/register-settings.php:138
 msgid "Check this if you have copied the Popup Maker core styles to your own stylesheet or are using custom styles."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:140
+#: includes/admin/settings/register-settings.php:143
 msgid "Don't load popup theme styles to the head."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:141
+#: includes/admin/settings/register-settings.php:144
 msgid "Check this if you have copied the popup theme styles to your own stylesheet or are using custom styles."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:155
+#: includes/admin/settings/register-settings.php:158
 msgid "Disable Popups Admin Bar"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:156
+#: includes/admin/settings/register-settings.php:159
 msgid "This will disable the admin Popups menu item."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:161
+#: includes/admin/settings/register-settings.php:164
 msgid "Enable Debug Mode"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:162
+#: includes/admin/settings/register-settings.php:165
 msgid "This will turn on multiple debug tools used to quickly find issues."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:167
+#: includes/admin/settings/register-settings.php:170
 msgid "Enable Easy Modal v2 Compatibility Mode"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:168
+#: includes/admin/settings/register-settings.php:171
 msgid "This will automatically make any eModal classes you have added to your site launch the appropriate Popup after import."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:173
+#: includes/admin/settings/register-settings.php:176
 msgid "Disables popup open tracking?"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:174
+#: includes/admin/settings/register-settings.php:177
 msgid "This will disable the built in analytics functionality."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:179
+#: includes/admin/settings/register-settings.php:182
 msgid "Hide Admin Support Widget"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:180
+#: includes/admin/settings/register-settings.php:183
 msgid "This will hide the support widget on all popup maker admin pages."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:185
+#: includes/admin/settings/register-settings.php:188
 msgid "Disable categories & tags?"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:186
+#: includes/admin/settings/register-settings.php:189
 msgid "This will disable the popup tags & categories."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:287
+#: includes/admin/settings/register-settings.php:290
 msgid "Settings updated."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:319, includes/class-popmake-fields.php:57, includes/class-pum-conditions.php:71, includes/class-pum-shortcode.php:144, includes/pum-condition-functions.php:33, includes/pum-trigger-functions.php:71, includes/shortcodes/class-pum-shortcode-popup.php:46
+#: includes/admin/settings/register-settings.php:322, includes/class-popmake-fields.php:57, includes/class-pum-conditions.php:71, includes/class-pum-shortcode.php:146, includes/pum-condition-functions.php:33, includes/pum-trigger-functions.php:71, includes/shortcodes/class-pum-shortcode-popup.php:46
 msgid "General"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:322
+#: includes/admin/settings/register-settings.php:325
 msgid "Assets"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:328
+#: includes/admin/settings/register-settings.php:331
 msgid "Licenses"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:331
+#: includes/admin/settings/register-settings.php:334
 msgid "Misc"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:581
+#: includes/admin/settings/register-settings.php:584
 msgid "The callback function used for the <strong>%s</strong> setting is missing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:714
+#: includes/admin/settings/register-settings.php:717
 msgid "Upload File"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:801
+#: includes/admin/settings/register-settings.php:804
 msgid "Your license key expired on %s. Please %srenew your license key%s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:811
+#: includes/admin/settings/register-settings.php:814
 msgid "Your license key has been disabled. Please %scontact support%s for more information."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:821
+#: includes/admin/settings/register-settings.php:824
 msgid "Invalid license. Please %svisit your account page%s and verify it."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:833
+#: includes/admin/settings/register-settings.php:836
 msgid "Your %s is not active for this URL. Please %svisit your account page%s to manage your license key URLs."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:843
+#: includes/admin/settings/register-settings.php:846
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:853
+#: includes/admin/settings/register-settings.php:856
 msgid "Your license key has reached its activation limit. %View possible upgrades% now."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:863
+#: includes/admin/settings/register-settings.php:866
 msgid "The key you entered belongs to a bundle, please use the product specific license key."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:871
+#: includes/admin/settings/register-settings.php:874
 msgid "unknown_error"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:872
+#: includes/admin/settings/register-settings.php:875
 msgid "There was an error with this license key: %s. Please %scontact our support team%s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:892
+#: includes/admin/settings/register-settings.php:895
 msgid "License key never expires."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:898
+#: includes/admin/settings/register-settings.php:901
 msgid "Your license key expires soon! It expires on %s. %sRenew your license key%s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:904
+#: includes/admin/settings/register-settings.php:907
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:919
+#: includes/admin/settings/register-settings.php:922
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:932
+#: includes/admin/settings/register-settings.php:935
 msgid "Deactivate License"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1025
+#: includes/admin/settings/register-settings.php:1028
 msgid "Show Popup Maker CSS"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1029
+#: includes/admin/settings/register-settings.php:1032
 msgid "Core Styles"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1035
+#: includes/admin/settings/register-settings.php:1038
 msgid "User Theme Styles"
 msgstr ""
 
@@ -844,7 +844,7 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: includes/admin/shortcode-ui/class-pum-admin-shortcode-ui.php:226
+#: includes/admin/shortcode-ui/class-pum-admin-shortcode-ui.php:234
 msgid "You do not have access to preview this post."
 msgstr ""
 
@@ -1168,7 +1168,7 @@ msgstr ""
 msgid "Can't get property %s"
 msgstr ""
 
-#: includes/class-pum-shortcode.php:145
+#: includes/class-pum-shortcode.php:147
 msgid "Options"
 msgstr ""
 
@@ -2189,23 +2189,23 @@ msgstr ""
 msgid "Are you sure you want to reset the open count?"
 msgstr ""
 
-#: includes/scripts.php:391
+#: includes/scripts.php:392
 msgid "Link: Exact Match"
 msgstr ""
 
-#: includes/scripts.php:392
+#: includes/scripts.php:393
 msgid "Link: Containing"
 msgstr ""
 
-#: includes/scripts.php:393
+#: includes/scripts.php:394
 msgid "Link: Begins With"
 msgstr ""
 
-#: includes/scripts.php:394
+#: includes/scripts.php:395
 msgid "Link: Ends With"
 msgstr ""
 
-#: includes/scripts.php:399
+#: includes/scripts.php:400
 msgid "Insert Preset"
 msgstr ""
 

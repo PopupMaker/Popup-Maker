@@ -47,6 +47,8 @@ class PUM_Shortcode extends PUM_Fields {
 
 	/**
 	 * Class constructor will set the needed filter and action hooks
+	 *
+	 * @param array $args
 	 */
 	public function __construct( $args = array() ) {
 
@@ -79,7 +81,7 @@ class PUM_Shortcode extends PUM_Fields {
 			$fields = array();
 
 			if ( $this->has_content ) {
-				$inner_content_labels     = $this->inner_content_labels();
+				$inner_content_labels                                     = $this->inner_content_labels();
 				$fields[ $this->inner_content_section ]['_inner_content'] = array(
 					'label'    => $inner_content_labels['label'],
 					'desc'     => $inner_content_labels['description'],
@@ -131,8 +133,8 @@ class PUM_Shortcode extends PUM_Fields {
 	 */
 	public function inner_content_labels() {
 		return array(
-			'label' => $this->label(),
-			'description' => $this->description()
+			'label'       => $this->label(),
+			'description' => $this->description(),
 		);
 	}
 
@@ -174,7 +176,7 @@ class PUM_Shortcode extends PUM_Fields {
 	/**
 	 * Shortcode handler
 	 *
-	 * @param  array  $atts    shortcode attributes
+	 * @param  array $atts shortcode attributes
 	 * @param  string $content shortcode content
 	 *
 	 * @return string
@@ -203,15 +205,15 @@ class PUM_Shortcode extends PUM_Fields {
 	public function register_shortcode_ui() {
 
 		$shortcode_ui_args = array(
-			'label' => $this->label(),
+			'label'         => $this->label(),
 			'listItemImage' => $this->icon(),
-			'post_type' => $this->post_types(),
+			'post_type'     => $this->post_types(),
 			/*
 			 * Register UI for the "inner content" of the shortcode. Optional.
 			 * If no UI is registered for the inner content, then any inner content
 			 * data present will be backed up during editing.
 			 */
-			'attrs' => array()
+			'attrs'         => array(),
 		);
 
 
@@ -229,12 +231,12 @@ class PUM_Shortcode extends PUM_Fields {
 
 
 					//text, checkbox, textarea, radio, select, email, url, number, date, attachment, color, post_select
-					switch( $field['type'] ) {
+					switch ( $field['type'] ) {
 						case 'selectox':
-							$shortcode_ui_args['attrs'][  ] = array(
-								'label'  => esc_html( $field['label'] ),
-								'attr'   => $id,
-								'type' => 'select',
+							$shortcode_ui_args['attrs'][] = array(
+								'label'   => esc_html( $field['label'] ),
+								'attr'    => $id,
+								'type'    => 'select',
 								'options' => $field['options'],
 							);
 							break;
@@ -244,13 +246,12 @@ class PUM_Shortcode extends PUM_Fields {
 							if ( empty( $field['post_type'] ) ) {
 								break;
 							}
-							$shortcode_ui_args['attrs'][  ] = array(
-								'label'  => esc_html( $field['label'] ),
-								'attr'   => $id,
-								'type' => 'post_select',
+							$shortcode_ui_args['attrs'][] = array(
+								'label'   => esc_html( $field['label'] ),
+								'attr'    => $id,
+								'type'    => 'post_select',
 								'options' => isset( $field['options'] ) ? $field['options'] : array(),
-								'query' => array( 'post_type' => $field['post_type'] ),
-								'options' => $field['options'],
+								'query'   => array( 'post_type' => $field['post_type'] ),
 							);
 							break;
 
@@ -259,13 +260,13 @@ class PUM_Shortcode extends PUM_Fields {
 
 						case 'text';
 						default:
-							$shortcode_ui_args['attrs'][  ] = array(
-								'label'  => $field['label'],
-								'attr'   => $id,
-								'type'   => 'text',
-							    'value' => ! empty( $field['std'] ) ? $field['std'] : '',
+							$shortcode_ui_args['attrs'][] = array(
+								'label' => $field['label'],
+								'attr'  => $id,
+								'type'  => 'text',
+								'value' => ! empty( $field['std'] ) ? $field['std'] : '',
 								//'encode' => true,
-								'meta'   => array(
+								'meta'  => array(
 									'placeholder' => $field['placeholder'],
 								),
 							);

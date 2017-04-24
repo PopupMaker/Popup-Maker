@@ -79,14 +79,10 @@
 </script>
 
 <script type="text/html" id="tmpl-pum-field-multicheck">
-	<ul class="pum-field-mulitcheck-list">
-		<# _.each(data.options, function(option, key) { #>
-		<li>
-			<input type="checkbox" id="{{data.id}}_{{key}}" name="{{data.name}}[{{option.value}}]" value="1" {{{option.meta}}}/>
-			<label for="{{data.id}}_{{key}}">{{option.label}}</label>
-		</li>
-		<# }); #>
-	</ul>
+    <# _.each(data.options, function(option, key) { #>
+        <input name="{{data.name}}[{{option.value}}]" id="{{data.id}}_{{key}}" type="checkbox" value="1" {{{option.meta}}} />&nbsp;
+        <label for="{{data.id}}_{{key}}">{{option.label}}</label><br/>
+    <# }); #>
 </script>
 
 <script type="text/html" id="tmpl-pum-field-rangeslider">
