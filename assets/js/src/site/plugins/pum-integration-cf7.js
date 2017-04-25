@@ -21,8 +21,6 @@
             settings = $settings.length ? JSON.parse($settings.attr('content')) : false,
             $popup = $form.parents('.pum');
 
-        console.log($form, $settings, settings, $popup);
-
         if (!settings) {
             return;
         }

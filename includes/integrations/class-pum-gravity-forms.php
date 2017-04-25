@@ -1,0 +1,259 @@
+<?php
+
+class PUM_Gravity_Forms_Integation {
+
+	public static function init() {
+	    if ( class_exists( 'RGForms' ) ) {
+		    add_filter( 'gform_form_settings_menu', array( __CLASS__, 'settings_menu' ) );
+		    add_action( 'gform_form_settings_page_popup-maker', array( __CLASS__, 'render_settings_page' ) );
+		    add_filter( 'pum_get_cookies', array( __CLASS__, 'register_cookies' ) );
+		    add_filter( 'gform_get_form_filter', array( __CLASS__, 'get_form' ), 10, 2 );
+        }
+	}
+
+	public static function settings_menu( $setting_tabs ) {
+		$setting_tabs['40'] = array(
+			'name'  => 'popup-maker',
+			'label' => __( 'Popups', 'popup-maker' ),
+		);
+
+		return $setting_tabs;
+	}
+
+
+	public static function get_form( $form_string, $form ) {
+		$settings = wp_json_encode( self::form_options( $form['id'] ) );
+	    $field = "<meta name='gforms-pum' content='$settings' />";
+        $form_string = preg_replace( '/(<form.*>)/', "$1 \r\n " . $field, $form_string );
+	    return $form_string;
+    }
+
+	/**
+	 * Get default values.
+	 *
+	 * @return array
+	 */
+	public static function defaults() {
+		return array(
+			'closepopup'   => false,
+			'closedelay'   => 0,
+			'openpopup'    => false,
+			'openpopup_id' => 0,
+		);
+	}
+
+	/**
+	 * Get a specific forms options.
+	 *
+	 * @param $id
+	 *
+	 * @return array
+	 */
+	public static function form_options( $id ) {
+		$settings = get_option( 'gforms_pum_' . $id, self::defaults() );
+
+		return wp_parse_args( $settings, self::defaults() );
+	}
+
+	/**
+	 * Registers new cookie events.
+	 *
+	 * @param array $cookies
+	 *
+	 * @return array
+	 */
+	public static function register_cookies( $cookies = array() ) {
+		$cookies['gforms_form_success'] = array(
+			'labels' => array(
+				'name' => __( 'Gravity Form Success', 'popup-maker' ),
+			),
+			'fields' => pum_get_cookie_fields(),
+		);
+
+		return $cookies;
+	}
+
+
+	public static function render_settings_page() {
+		$form_id = rgget( 'id' );
+
+		self::save();
+
+		$settings = self::form_options( $form_id );
+
+		GFFormSettings::page_header( __( 'Popup Settings', 'popup-maker' ) );
+
+		?>
+
+        <div id="popup_settings-editor">
+
+            <form id="popup_settings_edit_form" method="post">
+
+                <table class="form-table gforms_form_settings">
+                    <tr>
+                        <th scope="row">
+                            <label for="gforms-pum-openpopup"><?php _e( 'Open Popup', 'popup-maker' ); ?></label>
+                        </th>
+                        <td>
+                            <input type="checkbox" id="gforms-pum-openpopup" name="gforms-pum[openpopup]" value="true" <?php checked( $settings['openpopup'], true ); ?> />
+                        </td>
+                    </tr>
+                    <tr id="gforms-pum-openpopup_id-wrapper">
+                        <th scope="row">
+                            <label for="gforms-pum-openpopup_id"><?php _e( 'Popup', 'popup-maker' ); ?></label>
+                        </th>
+                        <td>
+                            <select id="gforms-pum-openpopup_id" name="gforms-pum[openpopup_id]">
+								<?php foreach ( self::get_popup_list() as $option ) { ?>
+                                    <option value="<?php esc_attr_e( $option['value'] ); ?>" <?php selected( $settings['openpopup_id'], $option['value'] ); ?>><?php echo $option['label']; ?></option>
+								<?php } ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="gforms-pum-closepopup"><?php _e( 'Close Popup', 'popup-maker' ); ?></label>
+                        </th>
+                        <td>
+                            <input type="checkbox" id="gforms-pum-closepopup" name="gforms-pum[closepopup]" value="true" <?php checked( $settings['closepopup'], true ); ?> />
+                        </td>
+                    </tr>
+                    <tr id="gforms-pum-closedelay-wrapper">
+                        <th scope="row">
+                            <label for="gforms-pum-closedelay"><?php _e( 'Delay', 'popup-maker' ); ?></label>
+                        </th>
+                        <td>
+                            <input type="number" id="gforms-pum-closedelay" min="0" step="500" name="gforms-pum[closedelay]" style="width: 100px;" value="<?php esc_attr_e( $settings['closedelay'] ); ?>" /><?php _e( 'ms', 'popup-maker' ); ?>
+                        </td>
+                    </tr>
+                </table>
+
+                <input type="hidden" id="form_id" name="form_id" value="<?php echo esc_attr( $form_id ); ?>" />
+
+                <p class="submit">
+                    <input type="submit" name="save" value="<?php _e( 'Save', 'popup-maker' ); ?>" class="button-primary">
+                </p>
+
+				<?php wp_nonce_field( 'gform_popup_settings_edit', 'gform_popup_settings_edit' ); ?>
+
+            </form>
+            <script type="text/javascript">
+                (function ($) {
+                    var $open = $('#gforms-pum-openpopup'),
+                        $close = $('#gforms-pum-closepopup'),
+                        $popup_id_wrapper = $('#gforms-pum-openpopup_id-wrapper'),
+                        $delay_wrapper = $('#gforms-pum-closedelay-wrapper');
+
+                    function check_open() {
+                        if ($open.is(':checked')) {
+                            $popup_id_wrapper.show();
+                        } else {
+                            $popup_id_wrapper.hide();
+                        }
+                    }
+
+                    function check_close() {
+                        if ($close.is(':checked')) {
+                            $delay_wrapper.show();
+                        } else {
+                            $delay_wrapper.hide();
+                        }
+                    }
+
+                    check_open();
+                    check_close();
+
+                    $open.on('click', check_open);
+                    $close.on('click', check_close);
+                }(jQuery));
+            </script>
+
+        </div> <!-- / popup-editor -->
+
+		<?php
+
+		GFFormSettings::page_footer();
+
+	}
+
+
+	/**
+	 * Get a list of popups for a select box.
+	 *
+	 * @return array
+	 */
+	public static function get_popup_list() {
+		$popup_list = array(
+			array(
+				'value' => '',
+				'label' => __( 'Select a popup', 'popup-maker' ),
+			),
+		);
+
+		$popups = get_posts( array(
+			'post_type'      => 'popup',
+			'post_status'    => array( 'publish' ),
+			'posts_per_page' => - 1,
+		) );
+
+		foreach ( $popups as $popup ) {
+			$popup_list[] = array(
+				'value' => $popup->ID,
+				'label' => $popup->post_title,
+			);
+
+		}
+
+		return $popup_list;
+	}
+
+	/**
+	 * Save form popup options.
+	 */
+	public static function save() {
+
+	    if ( empty( $_POST ) || ! check_admin_referer( 'gform_popup_settings_edit', 'gform_popup_settings_edit' ) ) {
+	        return;
+        }
+
+		$form_id = rgget( 'id' );
+
+		if ( ! empty( $_POST['gforms-pum'] ) ) {
+			$settings = $_POST['gforms-pum'];
+
+			// Sanitize values.
+			$settings['openpopup']    = ! empty( $settings['openpopup'] );
+			$settings['openpopup_id'] = ! empty( $settings['openpopup_id'] ) ? absint( $settings['openpopup_id'] ) : 0;
+			$settings['closepopup']   = ! empty( $settings['closepopup'] );
+			$settings['closedelay']   = ! empty( $settings['closedelay'] ) ? absint( $settings['closedelay'] ) : 0;
+
+			update_option( 'gforms_pum_' . $form_id, $settings );
+		} else {
+			delete_option( 'gforms_pum_' . $form_id );
+		}
+	}
+
+}
+
+add_action( 'init', 'PUM_Gravity_Forms_Integation::init' );
+
+/**
+ *
+ * add_action( 'gform_loaded', array( 'PUM_Gravity_Forms_Integration', 'load' ), 5 );
+ *
+ * class PUM_Gravity_Forms_Integration {
+ *
+ * public static function load() {
+ * if ( ! method_exists( 'GFForms', 'include_feed_addon_framework' ) ) {
+ * return;
+ * }
+ * require_once 'gravity-forms/class-pum-gf-popup-addon.php';
+ * GFAddOn::register( 'PUM_GF_Popup_Addon' );
+ * }
+ * }
+ *
+ * function pum_gf_addon() {
+ * return PUM_GF_Popup_Addon::get_instance();
+ * }
+ *
+ */

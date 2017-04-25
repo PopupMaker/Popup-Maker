@@ -338,6 +338,8 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/integrations/class-pum-ninja-forms.php';
 			// CF7 Forms Integration
 			require_once POPMAKE_DIR . 'includes/integrations/class-pum-cf7.php';
+			// Gravity Forms Integration
+			require_once POPMAKE_DIR . 'includes/integrations/class-pum-gravity-forms.php';
 			// WPML Integration
 			require_once POPMAKE_DIR . 'includes/integrations/class-pum-wpml.php';
 
