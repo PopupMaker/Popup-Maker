@@ -213,9 +213,9 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 			}
 
 			// Add a class for each trigger type.
-			foreach ( $this->get_triggers() as $trigger => $trigger_settings ) {
-				if ( ! in_array( $trigger, $classes['overlay'] ) ) {
-					$classes['overlay'][] = $trigger;
+			foreach ( $this->get_triggers() as $trigger ) {
+				if ( ! in_array( $trigger['type'], $classes['overlay'] ) ) {
+					$classes['overlay'][] = $trigger['type'];
 				}
 			}
 

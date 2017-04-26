@@ -19,6 +19,19 @@ class PUM_Fields extends Popmake_Fields {
 	#region Non Fields
 
 	/**
+	 * Hook Callback
+	 *
+	 * Renders the heading.
+	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
+	 */
+	public function hook_callback( $args ) {
+	    do_action( $args['hook'], $args );
+	}
+
+	/**
 	 * Heading Callback
 	 *
 	 * Renders the heading.
@@ -28,10 +41,10 @@ class PUM_Fields extends Popmake_Fields {
 	 * @return void
 	 */
 	public function heading_callback( $args ) { ?>
-		</td></tr></tbody></table>
-		<h2 class="pum-setting-heading"><?php esc_html_e( $args['desc'] ); ?></h2>
-		<hr/>
-		<table class="form-table"><tbody><tr style="display:none;"><td colspan="2"><?php
+        </td></tr></tbody></table>
+        <h2 class="pum-setting-heading"><?php esc_html_e( $args['desc'] ); ?></h2>
+        <hr/>
+        <table class="form-table"><tbody><tr style="display:none;"><td colspan="2"><?php
 	}
 
 
