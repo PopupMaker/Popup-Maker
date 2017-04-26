@@ -194,7 +194,6 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			require_once POPMAKE_DIR . 'includes/ajax-calls.php';
 
 			require_once POPMAKE_DIR . 'includes/importer/easy-modal-v2.php';
-			require_once POPMAKE_DIR . 'includes/integrations/gravityforms.php';
 			require_once POPMAKE_DIR . 'includes/integrations/google-fonts.php';
 
 			require_once POPMAKE_DIR . 'includes/templates.php';

@@ -38,7 +38,6 @@
         }
 
         if ($popup.length && settings.closepopup) {
-
             setTimeout(function () {
                 $popup.popmake('close');
 
