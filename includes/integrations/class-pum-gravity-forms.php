@@ -39,7 +39,7 @@ class PUM_Gravity_Forms_Integation {
 				$popup = get_post( $popup_id );
 				preg_match_all( $regex, $popup->post_content, $matches );
 				foreach ( $matches[1] as $form_id ) {
-					add_filter( "gform_confirmation_anchor_{$form_id}", create_function( "", "return false;" ) );
+					add_filter( "gform_confirmation_anchor_{$form_id}", '__return_false' );
 					gravity_form_enqueue_scripts( $form_id, true );
 				}
 			}
