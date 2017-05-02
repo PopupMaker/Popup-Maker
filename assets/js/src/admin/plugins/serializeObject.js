@@ -76,7 +76,7 @@
                 // Simulate control with a complex name (i.e. `some[]`)
                 // as it handled in the same way as Checkboxes should
                 if (this.type === 'checkbox') {
-                    parsedName.push('');
+                   // parsedName.push('');
                 }
 
                 // jQuery.val() is used to simplify of getting values

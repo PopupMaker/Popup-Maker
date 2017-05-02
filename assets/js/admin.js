@@ -7537,7 +7537,7 @@ var PUMSelect2Fields;
                 // Simulate control with a complex name (i.e. `some[]`)
                 // as it handled in the same way as Checkboxes should
                 if (this.type === 'checkbox') {
-                    parsedName.push('');
+                   // parsedName.push('');
                 }
 
                 // jQuery.val() is used to simplify of getting values
@@ -7805,8 +7805,10 @@ var PUM_Templates;
                 break;
             case 'checkbox':
                 if (parseInt(data.value, 10) === 1) {
-                    data.meta.checked = true;
+                    //data.meta.checked = true;
                 }
+
+                data.meta.checked = !!data.value;
                 break;
             case 'rangeslider':
                 data.meta.step = data.step;
@@ -8091,6 +8093,9 @@ var PUMTriggers;
                 $row = index >= 0 ? $('#pum_popup_triggers_list tbody tr').eq(index) : null,
                 template = wp.template('pum-trigger-row'),
                 $new_row;
+
+            debugger;
+
 
             e.preventDefault();
 
