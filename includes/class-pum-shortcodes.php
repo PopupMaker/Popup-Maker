@@ -43,6 +43,10 @@ class PUM_Shortcodes {
 		return $this->shortcodes;
 	}
 
+	public function get_shortcode( $tag ) {
+		return isset( $this->shortcodes[ $tag ] ) ? $this->shortcodes[ $tag ] : false;
+	}
+
 }
 
 PUM_Shortcodes::instance();
