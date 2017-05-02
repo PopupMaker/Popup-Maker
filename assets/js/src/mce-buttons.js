@@ -11,11 +11,28 @@
                 text: args.label,
                 value: tag,
                 onclick: function () {
-                    var values = {};
+                    var values = {},
+                        shortcode,
+                        text = "[" + tag + "]";
+
                     if (args.has_content) {
-                        values._inner_content = editor.selection.getContent();
+                        text += editor.selection.getContent() + "[/" + tag + "]";
                     }
-                    wpmce[tag].openModal(editor, values);
+
+                    shortcode = wp.mce.views.get(tag);
+
+                    var encodedText = encodeURIComponent( text );
+
+                    var options = _.extend( options || {}, {
+                        text: text,
+                        encodedText: encodedText
+                    } );
+
+                    shortcode = new shortcode(options);
+
+                    shortcode.renderForm(values, function (content) {
+                        send_to_editor(content);
+                    });
                 }
             });
         });
@@ -28,4 +45,4 @@
         });
     });
 
-}(jQuery, tinymce || {}, wp.mce || {}));
+}(jQuery, tinymce || {}, wp.mce.pum_shortcodes || {}));

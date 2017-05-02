@@ -258,6 +258,7 @@ function popmake_load_admin_scripts( $hook ) {
 				),
 				'no_cookie'                   => __( 'None', 'popup-maker' ),
 				'confirm_count_reset'         => __( 'Are you sure you want to reset the open count?', 'popup-maker' ),
+                'error_loading_shortcode_preview' => __( 'There was an error in generating the preview', 'popup-maker' ),
 			),
 		) ) );
 	}

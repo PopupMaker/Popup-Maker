@@ -19,6 +19,11 @@ class PUM_Shortcode extends PUM_Fields {
 	public $has_content = false;
 
 	/**
+	 * @var bool Used to force ajax rendering of the shortcode.
+	 */
+	public $ajax_rendering = false;
+
+	/**
 	 * @var string
 	 */
 	public $inner_content_section = 'general';
@@ -198,6 +203,13 @@ class PUM_Shortcode extends PUM_Fields {
 	 *
 	 */
 	public function _template() {}
+
+	/**
+	 * @return string
+	 */
+	public function _template_styles() {
+		return '';
+	}
 
 	/**
 	 *
