@@ -215,8 +215,10 @@ var PUM_Templates;
                 break;
             case 'checkbox':
                 if (parseInt(data.value, 10) === 1) {
-                    data.meta.checked = true;
+                    //data.meta.checked = true;
                 }
+
+                data.meta.checked = !!data.value;
                 break;
             case 'rangeslider':
                 data.meta.step = data.step;
