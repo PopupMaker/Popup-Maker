@@ -23,7 +23,7 @@
 </script>
 
 <script type="text/html" id="tmpl-pum-field-heading">
-	<h3 class="pum-field-heading">{{data.desc}}</h3>
+	<h3 class="pum-field-heading">{{data.label}}</h3>
 </script>
 
 <script type="text/html" id="tmpl-pum-field-text">

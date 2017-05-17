@@ -8,6 +8,20 @@
 
 }
 
+.pum-field-hidden {
+  display: none;
+}
+
+.pum-field-heading {
+  label {
+    display: none !important;
+  }
+
+  h3 + .pum-desc {
+    margin-top: -1em!important;
+  }
+}
+
 input[type="range"] {
   vertical-align: middle;
 }
@@ -25,24 +39,30 @@ option.bold {
 .pum-image-field.pum-image-empty .pum-image-preview {
   display: none;
 }
+
 .pum-image-field.pum-image-empty .pum-image-select {
   display: block;
 }
+
 .pum-image-field .pum-image-preview-img {
   float: left;
   line-height: 0;
   margin: 5px 0;
 }
+
 .pum-image-field .pum-image-preview-img img {
   max-width: 60px;
 }
+
 .pum-image-field .pum-image-preview select {
   margin: 8px 0 8px 10px;
   width: 200px;
 }
+
 .pum-image-field .pum-image-edit {
   margin: 0 0 0 11px;
 }
+
 .pum-image-field .pum-image-replace,
 .pum-image-field .pum-image-remove {
   margin: 0 0 0 8px;

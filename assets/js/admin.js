@@ -8094,9 +8094,6 @@ var PUMTriggers;
                 template = wp.template('pum-trigger-row'),
                 $new_row;
 
-            debugger;
-
-
             e.preventDefault();
 
             if (!index || index < 0) {

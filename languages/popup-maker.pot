@@ -844,7 +844,7 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: includes/admin/shortcode-ui/class-pum-admin-shortcode-ui.php:235
+#: includes/admin/shortcode-ui/class-pum-admin-shortcode-ui.php:260
 msgid "You do not have access to preview this post."
 msgstr ""
 
@@ -1996,11 +1996,11 @@ msgstr ""
 msgid "This allows custom css classes, ids or selector strings to trigger the popup when clicked. Separate multiple selectors using commas."
 msgstr ""
 
-#: includes/pum-trigger-functions.php:135, includes/shortcodes/class-pum-shortcode-popup-close.php:63, includes/shortcodes/class-pum-shortcode-popup-trigger.php:78
+#: includes/pum-trigger-functions.php:135, includes/shortcodes/class-pum-shortcode-popup-close.php:63, includes/shortcodes/class-pum-shortcode-popup-trigger.php:76
 msgid "Do not prevent the default click functionality."
 msgstr ""
 
-#: includes/pum-trigger-functions.php:136, includes/shortcodes/class-pum-shortcode-popup-trigger.php:79
+#: includes/pum-trigger-functions.php:136, includes/shortcodes/class-pum-shortcode-popup-trigger.php:77
 msgid "This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file."
 msgstr ""
 
@@ -2229,23 +2229,23 @@ msgstr ""
 msgid "Content"
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-close.php:46, includes/shortcodes/class-pum-shortcode-popup-trigger.php:61
+#: includes/shortcodes/class-pum-shortcode-popup-close.php:46, includes/shortcodes/class-pum-shortcode-popup-trigger.php:59
 msgid "HTML Tag"
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-close.php:47, includes/shortcodes/class-pum-shortcode-popup-trigger.php:62
+#: includes/shortcodes/class-pum-shortcode-popup-close.php:47, includes/shortcodes/class-pum-shortcode-popup-trigger.php:60
 msgid "HTML Tags: button, span etc."
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-close.php:48, includes/shortcodes/class-pum-shortcode-popup-trigger.php:63
+#: includes/shortcodes/class-pum-shortcode-popup-close.php:48, includes/shortcodes/class-pum-shortcode-popup-trigger.php:61
 msgid "The HTML tag used to generate the trigger and wrap your text."
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-close.php:55, includes/shortcodes/class-pum-shortcode-popup-close.php:56, includes/shortcodes/class-pum-shortcode-popup-trigger.php:70, includes/shortcodes/class-pum-shortcode-popup-trigger.php:71
+#: includes/shortcodes/class-pum-shortcode-popup-close.php:55, includes/shortcodes/class-pum-shortcode-popup-close.php:56, includes/shortcodes/class-pum-shortcode-popup-trigger.php:68, includes/shortcodes/class-pum-shortcode-popup-trigger.php:69
 msgid "CSS Class"
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-close.php:58, includes/shortcodes/class-pum-shortcode-popup-trigger.php:73
+#: includes/shortcodes/class-pum-shortcode-popup-close.php:58, includes/shortcodes/class-pum-shortcode-popup-trigger.php:71
 msgid "Add additional classes for styling."
 msgstr ""
 
@@ -2253,27 +2253,27 @@ msgstr ""
 msgid "This prevents us from disabling the browsers default action when a close button is clicked. It can be used to allow a link to a file to both close a popup and still download the file."
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:26
+#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:24
 msgid "Popup Trigger"
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:30
+#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:28
 msgid "Inserts a click-able popup trigger."
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:35
+#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:33
 msgid "Trigger Content"
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:48
+#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:46
 msgid "Targeted Popup"
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:49
+#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:47
 msgid "Choose a Popup"
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:50
+#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:48
 msgid "Choose which popup will be targeted by this trigger."
 msgstr ""
 
