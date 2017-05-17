@@ -27,7 +27,7 @@ function popmake_hex2rgb( $hex ) {
 }
 
 function popmake_get_rgba_value( $hex, $opacity = 100 ) {
-	return 'rgba( ' . implode( ', ', popmake_hex2rgb( strval( $hex ) ) ) . ', ' . ( intval( $opacity ) / 100 ) . ' )';
+	return 'rgba( ' . implode( ', ', popmake_hex2rgb( strval( $hex ) ) ) . ', ' . number_format( intval( $opacity ) / 100 ) . ' )';
 }
 
 function popmake_get_border_style( $w, $s, $c ) {
@@ -49,11 +49,11 @@ function popmake_get_font_style( $s, $w, $lh, $f, $st = null, $v = null ) {
 function popmake_generate_theme_styles( $popup_theme_id ) {
 
 	$styles = array(
-		'overlay' => array(),
+		'overlay'   => array(),
 		'container' => array(),
-		'title' => array(),
-		'content' => array(),
-		'close' => array()
+		'title'     => array(),
+		'content'   => array(),
+		'close'     => array(),
 	);
 
 	$theme = popmake_get_popup_theme_data_attr( $popup_theme_id );
@@ -161,9 +161,8 @@ function popmake_generate_theme_styles( $popup_theme_id ) {
 function pum_render_theme_styles( $popup_theme_id ) {
 	$styles = '';
 
-	$theme_data = get_post($popup_theme_id);
-	$slug = $theme_data->post_name != $popup_theme_id ? $theme_data->post_name : false;
-
+	$theme_data = get_post( $popup_theme_id );
+	$slug       = $theme_data->post_name != $popup_theme_id ? $theme_data->post_name : false;
 
 
 	$theme_styles = popmake_generate_theme_styles( $popup_theme_id );
@@ -204,7 +203,7 @@ function pum_render_theme_styles( $popup_theme_id ) {
 		foreach ( $rules as $key => $value ) {
 			if ( ! empty( $value ) ) {
 				$rule_set .= $sep . $key . ': ' . $value;
-				$sep = '; ';
+				$sep      = '; ';
 			}
 		}
 
