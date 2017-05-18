@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, optin, advertising, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal, popup, popups
 Requires at least: 3.6
 Tested up to: 4.7.5
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 License: GNU Version 3 or Any Later Version
 
 Create any popup imaginable! Customize your popups from head-to-toe and give your site more utility, usability, and conversions.
@@ -91,9 +91,13 @@ There are several common causes for this which include:
 
 == Changelog ==
 
+= v1.6.2 - 05/18/2017 =
+* Fix: Bug caused by rounding to whole numbers in opacity values.
+
 = v1.6.1 - 05/17/2017 =
 * Improvement: Major improvements to the Shortcode UI (builder & in editor previews). Now supports true live rendering of PM shortcodes. This will be most apparent in upcoming extension updates.
 * Fix: Forced decimal formatting in CSS output functions in case of locale changes to formatting. Fix thanks to @timhavinga
+
 
 = v1.6.0 - 04/26/2017 =
 * Feature: Added Gravity Forms direct integrations.
