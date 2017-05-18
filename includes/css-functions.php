@@ -27,7 +27,7 @@ function popmake_hex2rgb( $hex ) {
 }
 
 function popmake_get_rgba_value( $hex, $opacity = 100 ) {
-	return 'rgba( ' . implode( ', ', popmake_hex2rgb( strval( $hex ) ) ) . ', ' . number_format( intval( $opacity ) / 100 ) . ' )';
+	return 'rgba( ' . implode( ', ', popmake_hex2rgb( strval( $hex ) ) ) . ', ' . number_format( intval( $opacity ) / 100, 2, '.' ) . ' )';
 }
 
 function popmake_get_border_style( $w, $s, $c ) {
