@@ -60,36 +60,44 @@
 
             $(trigger_selector)
                 .addClass('pum-trigger')
-                .data('popup', popup_settings.id)
-                .attr('data-popup', popup_settings.id)
-                .data('settings', settings)
-                .attr('data-settings', settings)
-                .data('do-default', settings.do_default)
-                .attr('data-do-default', settings.do_default)
                 .css({cursor: "pointer"});
 
-            // Catches and initializes any triggers added to the page late.
-            $(document).on('click', trigger_selector, function (event) {
-                var $this = $(this);
+            $(document).on('click.pumTrigger', trigger_selector, function (event) {
+              var $trigger = $(this),
+                  do_default = settings.do_default || false;
 
-                if (!$this.hasClass('pum-trigger') || !$this.data('popup')) {
-                    $this
-                        .addClass('pum-trigger')
-                        .data('popup', popup_settings.id)
-                        .attr('data-popup', popup_settings.id)
-                        .data('settings', settings)
-                        .attr('data-settings', settings)
-                        .data('do-default', settings.do_default)
-                        .attr('data-do-default', settings.do_default)
-                        .css({cursor: "pointer"});
+              // If trigger is inside of the popup that it opens, do nothing.
+              if ($popup.has($trigger).length > 0) {
+                return;
+              }
 
-                    event.preventDefault();
-                    event.stopPropagation();
+              // If the popup is already open return.
+              if ($popup.popmake('state', 'isOpen')) {
+                return;
+              }
 
-                    // Retrigger clicks.
-                    $this.trigger('click');
-                }
+              // If cookie exists or conditions fail return.
+              if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
+                return;
+              }
 
+              if ($trigger.data('do-default')) {
+                do_default = $trigger.data('do-default');
+              } else if ($trigger.hasClass('do-default') || $trigger.hasClass('popmake-do-default') || $trigger.hasClass('pum-do-default')) {
+                do_default = true;
+              }
+
+              // If trigger has the class do-default we don't prevent default actions.
+              if (!event.ctrlKey && !pum.hooks.applyFilters('pum.trigger.click_open.do_default', do_default, $popup, $trigger)) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+
+              // Set the global last open trigger to the clicked element.
+              $.fn.popmake.last_open_trigger = $trigger;
+
+              // Open the popup.
+              $popup.popmake('open');
             });
         },
         admin_debug: function () {
@@ -112,45 +120,6 @@
                     $popup.popmake('addTrigger', trigger.type, trigger.settings);
                 }
             }
-        })
-        .on('click.pumTrigger', '.pum-trigger[data-popup]', function (event) {
-            var $trigger = $(this),
-                $popup = PUM.getPopup($trigger.data('popup')),
-                settings = $trigger.data('settings') || {},
-                do_default = settings.do_default || false;
-
-            // If trigger is inside of the popup that it opens, do nothing.
-            if ($popup.has($trigger).length > 0) {
-                return;
-            }
-
-            // If the popup is already open return.
-            if ($popup.popmake('state', 'isOpen')) {
-                return;
-            }
-
-            // If cookie exists or conditions fail return.
-            if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
-                return;
-            }
-
-            if ($trigger.data('do-default')) {
-                do_default = $trigger.data('do-default');
-            } else if ($trigger.hasClass('do-default')) {
-                do_default = true;
-            }
-
-            // If trigger has the class do-default we don't prevent default actions.
-            if (!pum.hooks.applyFilters('pum.trigger.click_open.do_default', do_default, $popup, $trigger)) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-
-            // Set the global last open trigger to the clicked element.
-            $.fn.popmake.last_open_trigger = $trigger;
-
-            // Open the popup.
-            $popup.popmake('open');
         });
 
 }(jQuery, document));
