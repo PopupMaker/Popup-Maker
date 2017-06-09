@@ -145,4 +145,29 @@ class PUM_Options {
 		return $did_update;
 	}
 
+	/**
+	 * Remaps option keys.
+	 *
+	 * @param array $remap_array an array of $old_key => $new_key values.
+	 *
+	 * @return bool
+	 */
+	public static function remap_keys( $remap_array = array() ) {
+		$options = self::get_all();
+
+		foreach ( $remap_array as $key => $new_key ) {
+			$options[ $new_key ] = self::get( $key, false );
+			unset( $options[ $key ] );
+		}
+
+		$did_update = update_option( self:: $_prefix . 'settings', $options );
+
+		// If it updated, let's update the global variable
+		if ( $did_update ) {
+			self::$_data = $options;
+		}
+
+		return $did_update;
+	}
+
 }
