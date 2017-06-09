@@ -124,14 +124,14 @@ var pum_debug_mode = false,
                 console.groupCollapsed(vars.triggers[trigger.type].name);
 
                 switch (trigger.type) {
-                case 'auto_open':
-                    console.log(vars.label_delay, trigger.settings.delay);
-                    console.log(vars.label_cookie, trigger.settings.cookie.name);
-                    break;
-                case 'click_open':
-                    pum_debug.click_trigger($popup, trigger.settings);
-                    console.log(vars.label_cookie, trigger.settings.cookie.name);
-                    break;
+                    case 'auto_open':
+                        console.log(vars.label_delay, trigger.settings.delay);
+                        console.log(vars.label_cookie, trigger.settings.cookie.name);
+                        break;
+                    case 'click_open':
+                        pum_debug.click_trigger($popup, trigger.settings);
+                        console.log(vars.label_cookie, trigger.settings.cookie.name);
+                        break;
                 }
 
                 $(document).trigger('pum_debug_render_trigger', $popup, trigger);
@@ -139,20 +139,23 @@ var pum_debug_mode = false,
                 console.groupEnd();
             },
             cookie: function ($popup, cookie) {
-                console.groupCollapsed(vars.cookies[cookie.event].name);
+                if (typeof vars.cookies[cookie.event] === 'object') {
+                    console.groupCollapsed(vars.cookies[cookie.event].name);
 
-                switch (cookie.event) {
-                case 'on_popup_open':
-                case 'on_popup_close':
-                case 'manual':
-                case 'ninja_form_success':
-                    console.log(vars.label_settings, pum_debug.odump(cookie.settings));
-                    break;
+                    switch (cookie.event) {
+                        case 'on_popup_open':
+                        case 'on_popup_close':
+                        case 'manual':
+                        case 'ninja_form_success':
+                            console.log(vars.label_settings, pum_debug.odump(cookie.settings));
+                            break;
+                    }
+
+                    $(document).trigger('pum_debug_render_trigger', $popup, cookie);
+
+                    console.groupEnd();
+
                 }
-
-                $(document).trigger('pum_debug_render_trigger', $popup, cookie);
-
-                console.groupEnd();
             }
         };
 
@@ -337,7 +340,7 @@ var pum_debug_mode = false,
 
                 console.groupCollapsed(vars.label_event_checking_condition);
 
-                console.log( ( condition.not_operand ? '(!) ' : '' ) + condition.target + ': ' + result, condition);
+                console.log(( condition.not_operand ? '(!) ' : '' ) + condition.target + ': ' + result, condition);
 
                 console.groupEnd();
             });
