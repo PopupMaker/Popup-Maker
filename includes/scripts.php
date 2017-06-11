@@ -178,7 +178,7 @@ function popmake_render_popup_theme_styles() {
 	global $pum_extra_styles;
 
 	$styles = popmake_get_popup_theme_styles(); ?>
-	<style id="pum-styles" type="text/css">
+	<style id="pum-styles" type="text/css" media="all">
 	<?php echo $styles; ?>
 
 	<?php echo $pum_extra_styles; ?>
