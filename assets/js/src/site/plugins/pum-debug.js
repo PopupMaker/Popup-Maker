@@ -245,10 +245,10 @@ var pum_debug_mode = false,
 
                 try {
                     $last_trigger = $($.fn.popmake.last_open_trigger);
-                } catch (error) {
-                    $last_trigger = $();
-                } finally {
                     $last_trigger = $last_trigger.length ? $last_trigger : $.fn.popmake.last_open_trigger.toString();
+                } catch (error) {
+                    $last_trigger = "";
+                } finally {
                     console.log(vars.label_triggers, [$last_trigger]);
                 }
 
