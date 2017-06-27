@@ -92,6 +92,10 @@ class PUM_Modules_Menu {
 	 */
 	public static function merge_item_data( $item ) {
 
+		if ( ! is_object( $item ) || ! ! isset( $item->ID ) || $item->ID <= 0 ) {
+			return $item;
+		}
+
 		// Merge Rules.
 		foreach ( PUM_Modules_Menu::get_item_options( $item->ID ) as $key => $value ) {
 			$item->$key = $value;
