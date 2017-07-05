@@ -5,7 +5,7 @@ Plugin URI: https://wppopupmaker.com/?utm_capmaign=Readme&utm_source=readme-head
 Donate link:
 Tags: marketing, optin, advertising, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal, popup, popups
 Requires at least: 3.6
-Tested up to: 4.7.5
+Tested up to: 4.8
 Stable tag: 1.6.3
 License: GNU Version 3 or Any Later Version
 
@@ -90,6 +90,12 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+
+= v1.6.4 - 06/??/2017 =
+* Tweak: Added sanity check in case previous filter mucks up the $item object variable in menu item filters causing warnings.
+* Fix: Bug caused by use of a function some users host blocked.
+* Fix: Bug caused by debug mode being enabled with a form success cookie.
+* Fix: Bug when Gravity Form was not in popup but triggered a thank you popup.
 
 = v1.6.3 - 05/19/2017 =
 * Fix: Removed 3rd parameter from number_format as it only accepts 1, 2 or 4 arguments, not 3 per php.net documentation.

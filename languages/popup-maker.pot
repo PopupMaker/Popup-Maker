@@ -1674,11 +1674,11 @@ msgctxt "%s represent opening and closing link html"
 msgid "Use this if there is a conflict with your theme or another plugin in the nav menu editor. %sSee Details%s"
 msgstr ""
 
-#: includes/modules/menus.php:155
+#: includes/modules/menus.php:159
 msgid "Trigger a Popup"
 msgstr ""
 
-#: includes/modules/menus.php:166
+#: includes/modules/menus.php:170
 msgid "Choose a popup to trigger when this item is clicked."
 msgstr ""
 

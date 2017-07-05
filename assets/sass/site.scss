@@ -1,5 +1,13 @@
 //@import 'partials/popmake_styles';
 @import 'partials/pum_styles';
 @import 'partials/compatibility';
-@import 'partials/powered_by';
-@import 'partials/site_backward_compatibility';
+
+/* NF DatePicker Fix */
+.pika-single {
+  z-index: 19999999999;
+}
+
+/** Backward Compatibility */
+.popmake-close {
+  cursor: pointer;
+}
