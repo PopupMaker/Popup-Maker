@@ -2304,11 +2304,11 @@ var pum_debug_mode = false,
         }
     });
 
-    $(document).on('wpcf7:submit', '.wpcf7', function (event) {
-        var $form = $(event.target),
+    $(document).on('wpcf7:mailsent', '.wpcf7', function (event) {
+        var $form     = $(event.target),
             $settings = $form.find('meta[name="wpcf7-pum"]'),
-            settings = $settings.length ? JSON.parse($settings.attr('content')) : false,
-            $popup = $form.parents('.pum');
+            settings  = $settings.length ? JSON.parse($settings.attr('content')) : false,
+            $popup    = $form.parents('.pum');
 
         if (!settings) {
             return;
