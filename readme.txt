@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, optin, advertising, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal, popup, popups
 Requires at least: 3.6
 Tested up to: 4.8
-Stable tag: 1.6.3
+Stable tag: 1.6.4
 License: GNU Version 3 or Any Later Version
 
 Create any popup imaginable! Customize your popups from head-to-toe and give your site more utility, usability, and conversions.
@@ -91,9 +91,10 @@ There are several common causes for this which include:
 
 == Changelog ==
 
-= v1.6.4 - 06/??/2017 =
+= v1.6.4 - 07/07/2017 =
 * Imporvement: Reworked all form integrations to be as DRY as possible making it more reliable.
 * Tweak: Added sanity check in case previous filter mucks up the $item object variable in menu item filters causing warnings.
+* Tweak: Disabled the open count & sorting when Popup Analytics is activated.
 * Fix: Bug caused by use of a function some users host blocked.
 * Fix: Bug caused by debug mode being enabled with a form success cookie.
 * Fix: Bug when Gravity Form was not in popup but triggered a thank you popup.

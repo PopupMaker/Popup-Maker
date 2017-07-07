@@ -394,11 +394,11 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: includes/admin/popups/dashboard-columns.php:193
+#: includes/admin/popups/dashboard-columns.php:191
 msgid "Show all categories"
 msgstr ""
 
-#: includes/admin/popups/dashboard-columns.php:206
+#: includes/admin/popups/dashboard-columns.php:204
 msgid "Show all tags"
 msgstr ""
 
