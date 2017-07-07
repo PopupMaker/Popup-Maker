@@ -92,10 +92,12 @@ There are several common causes for this which include:
 == Changelog ==
 
 = v1.6.4 - 06/??/2017 =
+* Imporvement: Reworked all form integrations to be as DRY as possible making it more reliable.
 * Tweak: Added sanity check in case previous filter mucks up the $item object variable in menu item filters causing warnings.
 * Fix: Bug caused by use of a function some users host blocked.
 * Fix: Bug caused by debug mode being enabled with a form success cookie.
 * Fix: Bug when Gravity Form was not in popup but triggered a thank you popup.
+* Fix: Bug where CF7 Forms with required fields trigger popup to close without being filled properly.
 
 = v1.6.3 - 05/19/2017 =
 * Fix: Removed 3rd parameter from number_format as it only accepts 1, 2 or 4 arguments, not 3 per php.net documentation.
