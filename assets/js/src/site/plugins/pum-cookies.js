@@ -37,7 +37,7 @@
             case 'array':
                 for (i = 0; settings.cookie.name.length > i; i += 1) {
                     if ($.pm_cookie(settings.cookie.name[i]) !== undefined) {
-                         ret = true;
+                        ret = true;
                     }
                 }
                 break;
@@ -75,21 +75,30 @@
                 $popup.popmake('setCookie', settings);
             });
         },
-        ninja_form_success: function (settings) {
+        form_success: function (settings) {
             var $popup = PUM.getPopup(this);
-            $popup.on('pum_nf.success', function () {
+            $popup.on('pumFormSuccess', function () {
                 $popup.popmake('setCookie', settings);
             });
         },
+        ninja_form_success: function (settings) {
+            return $.fn.popmake.cookies.form_success.apply(this, arguments);
+        },
+        cf7_form_success: function (settings) {
+            return $.fn.popmake.cookies.form_success.apply(this, arguments);
+        },
+        gforms_form_success: function (settings) {
+            return $.fn.popmake.cookies.form_success.apply(this, arguments);
+        }
     });
 
     // Register All Cookies for a Popup
     $(document)
         .on('pumInit', '.pum', function () {
-            var $popup = PUM.getPopup(this),
+            var $popup   = PUM.getPopup(this),
                 settings = $popup.popmake('getSettings'),
-                cookies = settings.cookies,
-                cookie = null,
+                cookies  = settings.cookies,
+                cookie   = null,
                 i;
 
             if (cookies !== undefined && cookies.length) {

@@ -1554,7 +1554,7 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
             case 'array':
                 for (i = 0; settings.cookie.name.length > i; i += 1) {
                     if ($.pm_cookie(settings.cookie.name[i]) !== undefined) {
-                         ret = true;
+                        ret = true;
                     }
                 }
                 break;
@@ -1592,21 +1592,30 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
                 $popup.popmake('setCookie', settings);
             });
         },
-        ninja_form_success: function (settings) {
+        form_success: function (settings) {
             var $popup = PUM.getPopup(this);
-            $popup.on('pum_nf.success', function () {
+            $popup.on('pumFormSuccess', function () {
                 $popup.popmake('setCookie', settings);
             });
         },
+        ninja_form_success: function (settings) {
+            return $.fn.popmake.cookies.form_success.apply(this, arguments);
+        },
+        cf7_form_success: function (settings) {
+            return $.fn.popmake.cookies.form_success.apply(this, arguments);
+        },
+        gforms_form_success: function (settings) {
+            return $.fn.popmake.cookies.form_success.apply(this, arguments);
+        }
     });
 
     // Register All Cookies for a Popup
     $(document)
         .on('pumInit', '.pum', function () {
-            var $popup = PUM.getPopup(this),
+            var $popup   = PUM.getPopup(this),
                 settings = $popup.popmake('getSettings'),
-                cookies = settings.cookies,
-                cookie = null,
+                cookies  = settings.cookies,
+                cookie   = null,
                 i;
 
             if (cookies !== undefined && cookies.length) {
@@ -2039,6 +2048,50 @@ var pum_debug_mode = false,
     };
 
 }(jQuery, document));
+/*******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
+(function ($) {
+    "use strict";
+
+    var defaults = {
+        openpopup: false,
+        openpopup_id: 0,
+        closepopup: false,
+        closedelay: 0
+    };
+
+    window.PUM = window.PUM || {};
+    window.PUM.forms = window.PUM.forms || {};
+
+    window.PUM.forms.success = function ($form, settings) {
+        settings = $.extend({}, defaults, settings);
+
+        if (!settings) {
+            return;
+        }
+
+        var $parentPopup  = $form.parents('.pum'),
+            thankYouPopup = function () {
+                if (settings.openpopup && PUM.getPopup(settings.openpopup_id).length) {
+                    PUM.open(settings.openpopup_id);
+                }
+            };
+
+        if ($parentPopup.length) {
+            $parentPopup.trigger('pumFormSuccess');
+        }
+
+        if ($parentPopup.length && settings.closepopup) {
+            setTimeout(function () {
+                $parentPopup.popmake('close', thankYouPopup);
+            }, parseInt(settings.closedelay));
+        } else {
+            thankYouPopup();
+        }
+    };
+
+}(jQuery));
 (function (window, undefined) {
     'use strict';
 
@@ -2293,197 +2346,72 @@ var pum_debug_mode = false,
 (function ($) {
     "use strict";
 
-    $.fn.popmake.cookies = $.fn.popmake.cookies || {};
+    var gFormSettings = {},
+        pumNFController = false;
 
-    $.extend($.fn.popmake.cookies, {
-        cf7_form_success: function (settings) {
-            var $popup = PUM.getPopup(this);
-            $popup.on('pum_cf7.success', function () {
-                $popup.popmake('setCookie', settings);
-            });
-        }
-    });
-
-    $(document).on('wpcf7:mailsent', '.wpcf7', function (event) {
-        var $form     = $(event.target),
-            $settings = $form.find('meta[name="wpcf7-pum"]'),
-            settings  = $settings.length ? JSON.parse($settings.attr('content')) : false,
-            $popup    = $form.parents('.pum');
-
-        if (!settings) {
-            return;
-        }
-
-        settings = $.extend({
-            openpopup: false,
-            openpopup_id: 0,
-            closepopup: false,
-            closedelay: 0
-        }, settings);
-
-        if ($popup.length) {
-            $popup.trigger('pum_cf7.success');
-
-        }
-
-        if ($popup.length && settings.closepopup) {
-            setTimeout(function () {
-                $popup.popmake('close');
-
-                // Trigger another if set up.
-                if (settings.openpopup && PUM.getPopup(settings.openpopup_id).length) {
-                    PUM.open(settings.openpopup_id);
-                }
-            }, parseInt(settings.closedelay));
-        } else if (settings.openpopup) {
-            $popup = PUM.getPopup(settings.openpopup_id);
-
-            if ($popup.length) {
-                $popup.popmake('open');
-            }
-        }
-
-    });
-}(jQuery));
-/*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
- ******************************************************************************/
-(function ($) {
-    "use strict";
-
-    $.fn.popmake.cookies = $.fn.popmake.cookies || {};
-
-    $.extend($.fn.popmake.cookies, {
-        gforms_form_success: function (settings) {
-            var $popup = PUM.getPopup(this);
-            $popup.on('pum_gforms.success', function () {
-                $popup.popmake('setCookie', settings);
-            });
-        }
-    });
-
-    var defaults = {
-        openpopup: false,
-        openpopup_id: 0,
-        closepopup: false,
-        closedelay: 0
-    },
-    formSettings = {};
-
-    $(document).ready(function () {
-        $('.gform_wrapper > form').each(function () {
-            var $form     = $(this),
-                form_id   = $form.attr('id').replace('gform_', ''),
-                $settings = $form.find('meta[name="gforms-pum"]'),
-                settings  = $settings.length ? JSON.parse($settings.attr('content')) : false;
-
-            if (!settings) {
-                return;
-            }
-
-            formSettings[ form_id ] = $.extend({}, defaults, settings);
-        });
-    });
-
-    $(document).on('gform_confirmation_loaded', function (event, form_id) {
-        var $form = $('#gform_' + form_id),
-            settings  = formSettings[ form_id ] || false,
-            $parentPopup    = $form.parents('.pum'),
-            thankYouPopup = function () {
-                if (settings.openpopup && PUM.getPopup(settings.openpopup_id).length) {
-                    PUM.open(settings.openpopup_id);
-                }
-            };
-
-        if (!settings) {
-            return;
-        }
-
-        if ($parentPopup.length) {
-            $parentPopup.trigger('pum_gforms.success');
-        }
-
-        if ($parentPopup.length && settings.closepopup) {
-            setTimeout(function () {
-                $parentPopup.popmake('close', thankYouPopup);
-            }, parseInt(settings.closedelay));
-        } else if (settings.openpopup) {
-            // Trigger another if set up.
-            thankYouPopup();
-        }
-
-    });
-}(jQuery));
-(function ($) {
-    "use strict";
-
-    if (typeof Marionette === 'undefined' || typeof nfRadio === 'undefined') {
-        return;
-    }
-
-    var pumNFController = Marionette.Object.extend({
-        initialize: function () {
-            this.listenTo(nfRadio.channel('forms'), 'submit:response', this.closePopup);
-            this.listenTo(nfRadio.channel('forms'), 'submit:response', this.openPopup);
-            this.listenTo(nfRadio.channel('forms'), 'submit:response', this.popupTriggers);
-        },
-        popupTriggers: function (response, textStatus, jqXHR, formID) {
-            var $popup;
-
-            $popup = $('#nf-form-' + formID + '-cont').parents('.pum');
-
-            if ($popup.length) {
-                $popup.trigger('pum_nf.success');
+    /** Ninja Forms Support */
+    if (typeof Marionette !== 'undefined' || typeof nfRadio !== 'undefined') {
+        pumNFController = Marionette.Object.extend({
+            initialize: function () {
+                this.listenTo(nfRadio.channel('forms'), 'submit:response', this.popupMaker)
+            },
+            popupMaker: function (response, textStatus, jqXHR, formID) {
+                var $form    = $('#nf-form-' + formID + '-cont'),
+                    settings = {};
 
                 if (response.errors.length) {
-                    $popup.trigger('pum_nf.error');
-                } else {
-                    $popup.trigger('pum_nf.success');
+                    return;
                 }
+
+                if ('undefined' !== typeof response.data.actions) {
+                    settings.openpopup = 'undefined' !== typeof response.data.actions.openpopup;
+                    settings.openpopup_id = settings.openpopup ? parseInt(response.data.actions.openpopup) : 0;
+                    settings.closepopup = 'undefined' !== typeof response.data.actions.closepopup;
+                    settings.closedelay = settings.closepopup ? parseInt(response.data.actions.closepopup) : 0;
+                }
+
+                window.PUM.forms.success($form, settings);
             }
-        },
-        closePopup: function (response, textStatus, jqXHR, formID) {
-            var $popup;
+        });
+    }
 
-            if ('undefined' === typeof response.data.actions || response.errors.length) {
-                return;
-            }
-
-            if ('undefined' === typeof response.data.actions.closepopup) {
-                return;
-            }
-
-            $popup = $('#nf-form-' + formID + '-cont').parents('.pum');
-
-            if ($popup.length) {
-                setTimeout(function () {
-                    $popup.popmake('close');
-                }, parseInt(response.data.actions.closepopup));
-            }
-        },
-        openPopup: function (response) {
-            var $popup;
-
-            if ('undefined' === typeof response.data.actions || response.errors.length) {
-                return;
+    $(document)
+        .ready(function () {
+            /** Ninja Forms Support */
+            if (pumNFController !== false) {
+                new pumNFController();
             }
 
-            if ('undefined' === typeof response.data.actions.openpopup) {
-                return;
-            }
+            /** Gravity Forms Support */
+            $('.gform_wrapper > form').each(function () {
+                var $form     = $(this),
+                    form_id   = $form.attr('id').replace('gform_', ''),
+                    $settings = $form.find('meta[name="gforms-pum"]'),
+                    settings  = $settings.length ? JSON.parse($settings.attr('content')) : false;
 
-            $popup = $('#pum-' + parseInt(response.data.actions.openpopup));
+                if (!settings || typeof settings !== 'object') {
+                    return;
+                }
 
-            if ($popup.length) {
-                $popup.popmake('open');
-            }
-        }
+                gFormSettings[form_id] = settings;
+            });
+        })
+        /** Gravity Forms Support */
+        .on('gform_confirmation_loaded', function (event, form_id) {
+            var $form    = $('#gform_' + form_id),
+                settings = gFormSettings[form_id] || false;
 
-    });
+            window.PUM.forms.success($form, settings);
+        })
+        /** Contact Form 7 Support */
+        .on('wpcf7:mailsent', '.wpcf7', function (event) {
+            var $form     = $(event.target),
+                $settings = $form.find('meta[name="wpcf7-pum"]'),
+                settings  = $settings.length ? JSON.parse($settings.attr('content')) : false;
 
-    jQuery(document).ready(function () {
-        new pumNFController();
-    });
+            window.PUM.forms.success($form, settings);
+        });
+
 }(jQuery));
 (function ($, document, undefined) {
     "use strict";
