@@ -92,7 +92,7 @@ class PUM_Modules_Menu {
 	 */
 	public static function merge_item_data( $item ) {
 
-		if ( ! is_object( $item ) || ! ! isset( $item->ID ) || $item->ID <= 0 ) {
+		if ( ! is_object( $item ) || ! isset( $item->ID ) || $item->ID <= 0 ) {
 			return $item;
 		}
 
