@@ -246,7 +246,7 @@ function popmake_settings_sanitize( $input = array() ) {
 	parse_str( $_POST['_wp_http_referer'], $referrer );
 
 	$settings = popmake_get_registered_settings();
-	$tab      = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
+	$tab      = isset( $referrer['tab'] ) ? $referrer['tab'] : 'assets';
 
 	$input = $input ? $input : array();
 
