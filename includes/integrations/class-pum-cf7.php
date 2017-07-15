@@ -56,7 +56,7 @@ class PUM_CF7_Integration {
 
 		$settings = wp_json_encode( self::form_options( $form->id() ) );
 
-		return $elements . "<meta name='wpcf7-pum' content='$settings' />";
+		return $elements . "<input type='hidden' class='wpcf7-pum' value='$settings' />";
 	}
 
 	/**

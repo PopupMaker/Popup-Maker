@@ -59,7 +59,7 @@ class PUM_Gravity_Forms_Integation {
 
 	public static function get_form( $form_string, $form ) {
 		$settings    = wp_json_encode( self::form_options( $form['id'] ) );
-		$field       = "<meta name='gforms-pum' content='$settings' />";
+		$field       = "<input type='hidden' class='gforms-pum' value='$settings' />";
 		$form_string = preg_replace( '/(<form.*>)/', "$1 \r\n " . $field, $form_string );
 
 		return $form_string;
