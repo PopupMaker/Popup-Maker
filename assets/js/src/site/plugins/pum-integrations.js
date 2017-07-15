@@ -4,7 +4,7 @@
 (function ($) {
     "use strict";
 
-    var gFormSettings = {},
+    var gFormSettings   = {},
         pumNFController = false;
 
     /** Ninja Forms Support */
@@ -44,8 +44,8 @@
             $('.gform_wrapper > form').each(function () {
                 var $form     = $(this),
                     form_id   = $form.attr('id').replace('gform_', ''),
-                    $settings = $form.find('meta[name="gforms-pum"]'),
-                    settings  = $settings.length ? JSON.parse($settings.attr('content')) : false;
+                    $settings = $form.find('input.gforms-pum'),
+                    settings  = $settings.length ? JSON.parse($settings.val()) : false;
 
                 if (!settings || typeof settings !== 'object') {
                     return;
@@ -56,7 +56,7 @@
         })
         /** Gravity Forms Support */
         .on('gform_confirmation_loaded', function (event, form_id) {
-            var $form    = $('#gform_' + form_id),
+            var $form    = $('#gforms_confirmation_message_' + form_id),
                 settings = gFormSettings[form_id] || false;
 
             window.PUM.forms.success($form, settings);
@@ -64,8 +64,8 @@
         /** Contact Form 7 Support */
         .on('wpcf7:mailsent', '.wpcf7', function (event) {
             var $form     = $(event.target),
-                $settings = $form.find('meta[name="wpcf7-pum"]'),
-                settings  = $settings.length ? JSON.parse($settings.attr('content')) : false;
+                $settings = $form.find('input.wpcf7-pum'),
+                settings  = $settings.length ? JSON.parse($settings.val()) : false;
 
             window.PUM.forms.success($form, settings);
         });
