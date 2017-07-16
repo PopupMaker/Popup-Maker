@@ -91,7 +91,8 @@ There are several common causes for this which include:
 
 == Changelog ==
 
-= v1.6.5 - 07/15/2017 =
+= v1.6.5 - 07/16/2017 =
+* Tweak: Added new popup class for theme names. Thanks @bluantinoo.
 * Fix: Bug in menu popups save and render functionality not working correctly.
 * Fix: Finally found issue where randomly assets tab checkboxes wouldn't uncheck & save properly.
 * Fix: Sanitized active tab key against whitelist.
