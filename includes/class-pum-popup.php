@@ -167,6 +167,7 @@ if ( ! class_exists( 'PUM_Popup' ) ) {
 					'pum',
 					'pum-overlay',
 					'pum-theme-' . $this->get_theme_id(),
+					'pum-theme-' . get_post_field( 'post_name', $this->get_theme_id() ),
 					'popmake-overlay', // Backward Compatibility
 				),
 				'container' => array(
