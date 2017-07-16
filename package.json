@@ -1,6 +1,6 @@
 {
   "name": "popup-maker",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "description": "WordPress Popup Plugin",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

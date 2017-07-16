@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, optin, advertising, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal, popup, popups
 Requires at least: 3.6
 Tested up to: 4.8
-Stable tag: 1.6.4
+Stable tag: 1.6.5
 License: GNU Version 3 or Any Later Version
 
 Create any popup imaginable! Customize your popups from head-to-toe and give your site more utility, usability, and conversions.
@@ -91,13 +91,24 @@ There are several common causes for this which include:
 
 == Changelog ==
 
+= v1.6.5 - 07/15/2017 =
+* Fix: Bug in menu popups save and render functionality not working correctly.
+* Fix: Finally found issue where randomly assets tab checkboxes wouldn't uncheck & save properly.
+* Fix: Sanitized active tab key against whitelist.
+* Fix: Errors in w3c validation scans from form meta fields.
+* Fix: Settings asset label mismatch.
+
 = v1.6.4 - 07/07/2017 =
 * Imporvement: Reworked all form integrations to be as DRY as possible making it more reliable.
 * Tweak: Added sanity check in case previous filter mucks up the $item object variable in menu item filters causing warnings.
 * Tweak: Disabled the open count & sorting when Popup Analytics is activated.
+* Tweak: Added NF datepicker CSS fix.
+* Tweak: Added media type to head styles to force optimization plugins to keep them in order.
+* Tweak: Reverted to older method of click trigger assignment to better work with multiple popups on one trigger with conditions.
 * Fix: Bug caused by use of a function some users host blocked.
 * Fix: Bug caused by debug mode being enabled with a form success cookie.
 * Fix: Bug when Gravity Form was not in popup but triggered a thank you popup.
+* Fix: Bug with GForms closing popup after submission.
 * Fix: Bug where CF7 Forms with required fields trigger popup to close without being filled properly.
 
 = v1.6.3 - 05/19/2017 =
