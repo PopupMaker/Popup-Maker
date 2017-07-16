@@ -184,15 +184,15 @@ msgstr ""
 msgid "Check it out"
 msgstr ""
 
-#: includes/admin/metabox-support.php:40, includes/admin/shortcode-ui/templates/fields.php:14
+#: includes/admin/metabox-support.php:42, includes/admin/shortcode-ui/templates/fields.php:14
 msgid "Documentation"
 msgstr ""
 
-#: includes/admin/metabox-support.php:46
+#: includes/admin/metabox-support.php:48
 msgid "Free Support Forums"
 msgstr ""
 
-#: includes/admin/metabox-support.php:52
+#: includes/admin/metabox-support.php:54
 msgid "Extension Support"
 msgstr ""
 
