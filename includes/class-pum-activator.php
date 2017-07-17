@@ -30,10 +30,10 @@ class PUM_Activator {
 		global $wpdb;
 
 		// Setup the Popup & Theme Custom Post Type
-		popmake_setup_post_types();
+		PUM_Types::register_post_types();
 
 		// Setup the Popup Taxonomies
-		popmake_setup_taxonomies( true );
+		PUM_Types::register_taxonomies( true );
 
 		if ( is_multisite() && $network_wide ) { // See if being activated on the entire network or one blog
 

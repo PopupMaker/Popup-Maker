@@ -24,9 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function popmake_add_popup_theme_meta_box() {
 
-	$singular = popmake_get_label_singular( 'popup_theme' );
-	$plural   = popmake_get_label_plural( 'popup_theme' );
-
 	/** Preview Window **/
 	add_meta_box( 'popmake_popup_theme_preview', __( 'Theme Preview', 'popup-maker' ), 'popmake_render_popup_theme_preview_meta_box', 'popup_theme', 'side', 'high' );
 

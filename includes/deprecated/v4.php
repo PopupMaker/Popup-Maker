@@ -5,6 +5,45 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+function popmake_get_supported_types( $type = null, $collapse = true ) {
+	$types = array(
+		'post_type' => apply_filters( 'popmake_supported_post_types', array( 'post', 'page' ) ),
+		'taxonomy'  => apply_filters( 'popmake_supported_taxonomies', array( 'category', 'post_tag' ) ),
+	);
+
+	if ( $type ) {
+		return $types[ $type ];
+	} elseif ( $collapse ) {
+		return array_merge( $types['post_type'], $types['taxonomy'] );
+	}
+
+	return $types;
+}
+
+function popmake_supported_post_types( $post_types = array() ) {
+	global $popmake_options;
+	if ( empty( $popmake_options['supported_post_types'] ) || ! is_array( $popmake_options['supported_post_types'] ) ) {
+		return $post_types;
+	}
+
+	return array_merge( $post_types, array_values( $popmake_options['supported_post_types'] ) );
+}
+
+add_filter( 'popmake_supported_post_types', 'popmake_supported_post_types' );
+
+
+function popmake_supported_taxonomies( $taxonomies = array() ) {
+	global $popmake_options;
+	if ( empty( $popmake_options['supported_taxonomies'] ) || ! is_array( $popmake_options['supported_taxonomies'] ) ) {
+		return $taxonomies;
+	}
+
+	return array_merge( $taxonomies, array_values( $popmake_options['supported_taxonomies'] ) );
+}
+
+add_filter( 'popmake_supported_taxonomies', 'popmake_supported_taxonomies' );
+
+
 function pum_deprecated_v4_initialize() {
 
 	// If not yet upgraded still show and process the old meta boxes.
