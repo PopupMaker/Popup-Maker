@@ -391,7 +391,7 @@ class PUM_Extension_License {
 			return;
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_options' ) || $showed_invalid_message ) {
 			return;
 		}
 
@@ -399,7 +399,7 @@ class PUM_Extension_License {
 
 		$license = get_option( $this->item_shortname . '_license_active' );
 
-		if ( is_object( $license ) && 'valid' !== $license->license && empty( $showed_invalid_message ) ) {
+		if ( is_object( $license ) && 'valid' !== $license->license ) {
 
 			if ( empty( $_GET['tab'] ) || 'licenses' !== $_GET['tab'] ) {
 
