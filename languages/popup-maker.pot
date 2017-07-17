@@ -16,6 +16,95 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: classes/Types.php:21, classes/Types.php:145, classes/Types.php:176, includes/integrations/class-pum-cf7.php:145, includes/integrations/class-pum-gravity-forms.php:140, includes/modules/menus.php:52, includes/shortcodes/class-pum-shortcode-popup.php:26, includes/shortcodes/class-pum-shortcode-popup.php:324
+msgid "Popup"
+msgstr ""
+
+#: classes/Types.php:21, includes/modules/admin-bar.php:423
+msgid "Popups"
+msgstr ""
+
+#: classes/Types.php:23, includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/integrations/class-pum-gravity-forms.php:53, includes/modules/admin-bar.php:413
+msgid "Popup Maker"
+msgstr ""
+
+#: classes/Types.php:41, classes/Types.php:145, classes/Types.php:177, includes/shortcodes/class-pum-shortcode-popup.php:86
+msgid "Popup Theme"
+msgstr ""
+
+#: classes/Types.php:41, classes/Types.php:43, includes/admin/admin-pages.php:38, includes/admin/admin-pages.php:38
+msgid "Popup Themes"
+msgstr ""
+
+#: classes/Types.php:73
+msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
+msgid "Add New %1$s"
+msgstr ""
+
+#: classes/Types.php:74
+msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
+msgid "Add %1$s"
+msgstr ""
+
+#: classes/Types.php:75
+msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
+msgid "Edit %1$s"
+msgstr ""
+
+#: classes/Types.php:76
+msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
+msgid "New %1$s"
+msgstr ""
+
+#: classes/Types.php:77
+msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
+msgid "All %2$s"
+msgstr ""
+
+#: classes/Types.php:78
+msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
+msgid "View %1$s"
+msgstr ""
+
+#: classes/Types.php:79
+msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
+msgid "Search %2$s"
+msgstr ""
+
+#: classes/Types.php:80
+msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
+msgid "No %2$s found"
+msgstr ""
+
+#: classes/Types.php:81
+msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
+msgid "No %2$s found in Trash"
+msgstr ""
+
+#: classes/Types.php:146
+msgid "%s Name"
+msgstr ""
+
+#: classes/Types.php:166, classes/Types.php:167
+msgctxt "Post Type Singular: Popup, Theme"
+msgid "%1$s updated."
+msgstr ""
+
+#: classes/Types.php:168
+msgctxt "Post Type Singular: Popup, Theme"
+msgid "%1$s published."
+msgstr ""
+
+#: classes/Types.php:169
+msgctxt "Post Type Singular: Popup, Theme"
+msgid "%1$s saved."
+msgstr ""
+
+#: classes/Types.php:170
+msgctxt "Post Type Singular: Popup, Theme"
+msgid "%1$s submitted."
+msgstr ""
+
 #: includes/admin/admin-pages.php:30, includes/admin/admin-pages.php:30, includes/admin/admin-pages.php:85, includes/admin/admin-setup.php:24, includes/admin/popups/class-metabox-cookies.php:72, includes/admin/popups/class-metabox-triggers.php:69
 msgid "Settings"
 msgstr ""
@@ -30,10 +119,6 @@ msgstr ""
 
 #: includes/admin/admin-pages.php:36, includes/admin/admin-pages.php:36, includes/admin/admin-pages.php:90
 msgid "Help & Support"
-msgstr ""
-
-#: includes/admin/admin-pages.php:38, includes/admin/admin-pages.php:38
-msgid "Popup Themes"
 msgstr ""
 
 #: includes/admin/admin-pages.php:77
@@ -74,10 +159,6 @@ msgstr ""
 
 #: includes/admin/class-pum-admin-helpers.php:30, includes/admin/shortcode-ui/templates/helpers.php:14, includes/shortcodes/class-pum-shortcode-popup.php:50, templates/popup.php:44
 msgid "Close"
-msgstr ""
-
-#: includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/integrations/class-pum-gravity-forms.php:53, includes/modules/admin-bar.php:413
-msgid "Popup Maker"
 msgstr ""
 
 #: includes/admin/class-pum-admin-upgrades.php:123, includes/admin/class-pum-admin-upgrades.php:124
@@ -648,7 +729,7 @@ msgstr ""
 msgid "Display Settings"
 msgstr ""
 
-#: includes/admin/popups/metabox.php:31, includes/admin/themes/metabox.php:46
+#: includes/admin/popups/metabox.php:31, includes/admin/themes/metabox.php:43
 msgid "Close Settings"
 msgstr ""
 
@@ -996,27 +1077,27 @@ msgstr ""
 msgid "Align"
 msgstr ""
 
-#: includes/admin/themes/metabox.php:31
+#: includes/admin/themes/metabox.php:28
 msgid "Theme Preview"
 msgstr ""
 
-#: includes/admin/themes/metabox.php:34
+#: includes/admin/themes/metabox.php:31
 msgid "Overlay Settings"
 msgstr ""
 
-#: includes/admin/themes/metabox.php:37
+#: includes/admin/themes/metabox.php:34
 msgid "Container Settings"
 msgstr ""
 
-#: includes/admin/themes/metabox.php:40
+#: includes/admin/themes/metabox.php:37
 msgid "Title Settings"
 msgstr ""
 
-#: includes/admin/themes/metabox.php:43
+#: includes/admin/themes/metabox.php:40
 msgid "Content Settings"
 msgstr ""
 
-#: includes/admin/themes/metabox.php:167
+#: includes/admin/themes/metabox.php:164
 msgid "Title Text"
 msgstr ""
 
@@ -1180,139 +1261,139 @@ msgstr ""
 msgid "Trigger Settings"
 msgstr ""
 
-#: includes/deprecated/v4.php:72
+#: includes/deprecated/v4.php:111
 msgid "Targeting Conditions"
 msgstr ""
 
-#: includes/deprecated/v4.php:75
+#: includes/deprecated/v4.php:114
 msgid "Click Open Settings"
 msgstr ""
 
-#: includes/deprecated/v4.php:78, includes/pum-trigger-functions.php:101
+#: includes/deprecated/v4.php:117, includes/pum-trigger-functions.php:101
 msgid "Auto Open Settings"
 msgstr ""
 
-#: includes/deprecated/v4.php:81
+#: includes/deprecated/v4.php:120
 msgid "Admin Debug Settings"
 msgstr ""
 
-#: includes/deprecated/v4.php:356, includes/pum-trigger-functions.php:128
+#: includes/deprecated/v4.php:395, includes/pum-trigger-functions.php:128
 msgid "Extra CSS Selectors"
 msgstr ""
 
-#: includes/deprecated/v4.php:360, includes/pum-trigger-functions.php:130
+#: includes/deprecated/v4.php:399, includes/pum-trigger-functions.php:130
 msgid ".my-class, #button2"
 msgstr ""
 
-#: includes/deprecated/v4.php:362
+#: includes/deprecated/v4.php:401
 msgid "This allows custom css classes, ids or selector strings to trigger the popup when clicked. Seperate multiple selectors using commas."
 msgstr ""
 
-#: includes/deprecated/v4.php:377
+#: includes/deprecated/v4.php:416
 msgid "Enable Auto Open Popups"
 msgstr ""
 
-#: includes/deprecated/v4.php:380
+#: includes/deprecated/v4.php:419
 msgid "Checking this will cause popup to open automatically."
 msgstr ""
 
-#: includes/deprecated/v4.php:391, includes/integrations/class-pum-cf7.php:165, includes/integrations/class-pum-gravity-forms.php:160, includes/integrations/ninja-forms/Actions/ClosePopup.php:43, includes/pum-trigger-functions.php:102, includes/pum-trigger-functions.php:148
+#: includes/deprecated/v4.php:430, includes/integrations/class-pum-cf7.php:165, includes/integrations/class-pum-gravity-forms.php:160, includes/integrations/ninja-forms/Actions/ClosePopup.php:43, includes/pum-trigger-functions.php:102, includes/pum-trigger-functions.php:148
 msgid "Delay"
 msgstr ""
 
-#: includes/deprecated/v4.php:405, includes/pum-trigger-functions.php:149
+#: includes/deprecated/v4.php:444, includes/pum-trigger-functions.php:149
 msgid "The delay before the popup will open in milliseconds."
 msgstr ""
 
-#: includes/deprecated/v4.php:417
+#: includes/deprecated/v4.php:456
 msgid "Cookie Trigger"
 msgstr ""
 
-#: includes/deprecated/v4.php:430, includes/pum-trigger-functions.php:44
+#: includes/deprecated/v4.php:469, includes/pum-trigger-functions.php:44
 msgid "When do you want to create the cookie."
 msgstr ""
 
-#: includes/deprecated/v4.php:442, includes/pum-cookie-functions.php:35
+#: includes/deprecated/v4.php:481, includes/pum-cookie-functions.php:35
 msgid "Use Session Cookie?"
 msgstr ""
 
-#: includes/deprecated/v4.php:447, includes/pum-cookie-functions.php:36
+#: includes/deprecated/v4.php:486, includes/pum-cookie-functions.php:36
 msgid "Session cookies expire when the user closes their browser."
 msgstr ""
 
-#: includes/deprecated/v4.php:459, includes/pum-cookie-functions.php:42
+#: includes/deprecated/v4.php:498, includes/pum-cookie-functions.php:42
 msgid "Cookie Time"
 msgstr ""
 
-#: includes/deprecated/v4.php:465
+#: includes/deprecated/v4.php:504
 msgid "Enter a plain english time before cookie expires. <br/>Example \"364 days 23 hours 59 minutes 59 seconds\" will reset just before 1 year exactly."
 msgstr ""
 
-#: includes/deprecated/v4.php:475, includes/pum-cookie-functions.php:49
+#: includes/deprecated/v4.php:514, includes/pum-cookie-functions.php:49
 msgid "Sitewide Cookie"
 msgstr ""
 
-#: includes/deprecated/v4.php:478
+#: includes/deprecated/v4.php:517
 msgid "This will prevent the popup from auto opening on any page until the cookie expires."
 msgstr ""
 
-#: includes/deprecated/v4.php:490, includes/pum-cookie-functions.php:28
+#: includes/deprecated/v4.php:529, includes/pum-cookie-functions.php:28
 msgid "Cookie Key"
 msgstr ""
 
-#: includes/deprecated/v4.php:494
+#: includes/deprecated/v4.php:533
 msgid "Reset"
 msgstr ""
 
-#: includes/deprecated/v4.php:495
+#: includes/deprecated/v4.php:534
 msgid "This changes the key used when setting and checking cookies. Resetting this will cause all existing cookies to be invalid."
 msgstr ""
 
-#: includes/deprecated/v4.php:510
+#: includes/deprecated/v4.php:549
 msgid "Enable Admin Debug"
 msgstr ""
 
-#: includes/deprecated/v4.php:513
+#: includes/deprecated/v4.php:552
 msgid "When Enabled, the popup will show immediately on the given page for admins."
 msgstr ""
 
-#: includes/deprecated/v4.php:546
+#: includes/deprecated/v4.php:585
 msgid "On Entire Site"
 msgstr ""
 
-#: includes/deprecated/v4.php:561
+#: includes/deprecated/v4.php:600
 msgid "On Home Page"
 msgstr ""
 
-#: includes/deprecated/v4.php:576
+#: includes/deprecated/v4.php:615
 msgid "Exclude on Home Page"
 msgstr ""
 
-#: includes/deprecated/v4.php:591
+#: includes/deprecated/v4.php:630
 msgid "On Blog Index"
 msgstr ""
 
-#: includes/deprecated/v4.php:606
+#: includes/deprecated/v4.php:645
 msgid "Exclude on Blog Index"
 msgstr ""
 
-#: includes/deprecated/v4.php:641, includes/deprecated/v4.php:651, includes/deprecated/v4.php:663
+#: includes/deprecated/v4.php:680, includes/deprecated/v4.php:690, includes/deprecated/v4.php:702
 msgid "$label"
 msgstr ""
 
-#: includes/deprecated/v4.php:712
+#: includes/deprecated/v4.php:751
 msgid "On Search Pages"
 msgstr ""
 
-#: includes/deprecated/v4.php:727
+#: includes/deprecated/v4.php:766
 msgid "Exclude on Search Pages"
 msgstr ""
 
-#: includes/deprecated/v4.php:742
+#: includes/deprecated/v4.php:781
 msgid "On 404 Pages"
 msgstr ""
 
-#: includes/deprecated/v4.php:757
+#: includes/deprecated/v4.php:796
 msgid "Exclude on 404 Pages"
 msgstr ""
 
@@ -1576,10 +1657,6 @@ msgstr ""
 msgid "Open Popup"
 msgstr ""
 
-#: includes/integrations/class-pum-cf7.php:145, includes/integrations/class-pum-gravity-forms.php:140, includes/modules/menus.php:52, includes/shortcodes/class-pum-shortcode-popup.php:26, includes/shortcodes/class-pum-shortcode-popup.php:324
-msgid "Popup"
-msgstr ""
-
 #: includes/integrations/class-pum-cf7.php:157, includes/integrations/class-pum-gravity-forms.php:152, includes/integrations/ninja-forms/Actions/ClosePopup.php:36, includes/modules/admin-bar.php:462
 msgid "Close Popup"
 msgstr ""
@@ -1639,10 +1716,6 @@ msgstr ""
 #: includes/modules/admin-bar.php:390
 msgctxt "JS alert for CSS get selector tool"
 msgid "Selector"
-msgstr ""
-
-#: includes/modules/admin-bar.php:423
-msgid "Popups"
 msgstr ""
 
 #: includes/modules/admin-bar.php:473
@@ -1712,104 +1785,6 @@ msgstr ""
 
 #: includes/modules/reviews.php:418
 msgid "I already did"
-msgstr ""
-
-#: includes/post-types.php:23, includes/post-types.php:55
-msgctxt "Post Type Singular: \"Popup\""
-msgid "Add New %1$s"
-msgstr ""
-
-#: includes/post-types.php:24, includes/post-types.php:62
-msgctxt "Post Type Singular: \"Popup\""
-msgid "Add %1$s"
-msgstr ""
-
-#: includes/post-types.php:25, includes/post-types.php:56
-msgctxt "Post Type Singular: \"Popup\""
-msgid "Edit %1$s"
-msgstr ""
-
-#: includes/post-types.php:26, includes/post-types.php:57
-msgctxt "Post Type Singular: \"Popup\""
-msgid "New %1$s"
-msgstr ""
-
-#: includes/post-types.php:27
-msgctxt "Post Type Plural: \"Popups\""
-msgid "All %2$s"
-msgstr ""
-
-#: includes/post-types.php:28, includes/post-types.php:58
-msgctxt "Post Type Singular: \"Popup\""
-msgid "View %1$s"
-msgstr ""
-
-#: includes/post-types.php:29, includes/post-types.php:59
-msgctxt "Post Type Plural: \"Popups\""
-msgid "Search %2$s"
-msgstr ""
-
-#: includes/post-types.php:30, includes/post-types.php:60
-msgctxt "Post Type Plural: \"Popups\""
-msgid "No %2$s found"
-msgstr ""
-
-#: includes/post-types.php:31, includes/post-types.php:61
-msgctxt "Post Type Plural: \"Popups\""
-msgid "No %2$s found in Trash"
-msgstr ""
-
-#: includes/post-types.php:33
-msgid "POPMAKE_NAME"
-msgstr ""
-
-#: includes/post-types.php:54
-msgctxt "Post Type Menu Label"
-msgid "Popup Themes"
-msgstr ""
-
-#: includes/post-types.php:95
-msgctxt "Singular Post Type Label"
-msgid "Popup"
-msgstr ""
-
-#: includes/post-types.php:96
-msgctxt "Plural Post Type Label"
-msgid "Popups"
-msgstr ""
-
-#: includes/post-types.php:99
-msgctxt "Singular Post Type Label"
-msgid "Theme"
-msgstr ""
-
-#: includes/post-types.php:100
-msgctxt "Plural Post Type Label"
-msgid "Themes"
-msgstr ""
-
-#: includes/post-types.php:153
-msgid "%s Name"
-msgstr ""
-
-#: includes/post-types.php:218, includes/post-types.php:219
-msgctxt "Post Type Singular: Popup, Theme"
-msgid "%1$s updated."
-msgstr ""
-
-#: includes/post-types.php:220
-msgctxt "Post Type Singular: Popup, Theme"
-msgid "%1$s published."
-msgstr ""
-
-#: includes/post-types.php:221
-msgctxt "Post Type Singular: Popup, Theme"
-msgid "%1$s saved."
-msgstr ""
-
-#: includes/post-types.php:222
-msgctxt "Post Type Singular: Popup, Theme"
-msgid "%1$s submitted."
 msgstr ""
 
 #: includes/pum-condition-functions.php:34
@@ -2313,10 +2288,6 @@ msgstr ""
 msgid "This will be displayed above the content. Leave it empty to disable it."
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup.php:86
-msgid "Popup Theme"
-msgstr ""
-
 #: includes/shortcodes/class-pum-shortcode-popup.php:87
 msgid "Choose a theme,"
 msgstr ""
@@ -2333,6 +2304,6 @@ msgstr ""
 msgid "Height Unit"
 msgstr ""
 
-#: popup-maker.php:101, popup-maker.php:113
+#: popup-maker.php:155, popup-maker.php:167
 msgid "Cheatin&#8217; huh?"
 msgstr ""
