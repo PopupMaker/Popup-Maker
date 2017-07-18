@@ -2398,7 +2398,7 @@ var pum_debug_mode = false,
         })
         /** Gravity Forms Support */
         .on('gform_confirmation_loaded', function (event, form_id) {
-            var $form    = $('#gforms_confirmation_message_' + form_id),
+            var $form    = $('#gform_confirmation_wrapper_' + form_id + ',#gforms_confirmation_message_' + form_id),
                 settings = gFormSettings[form_id] || false;
 
             window.PUM.forms.success($form, settings);
