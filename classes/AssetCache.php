@@ -36,24 +36,31 @@ class PUM_AssetCache {
 	 */
 	public static $debug;
 
+	public static $initialized = false;
+
 	/**
 	 *
 	 */
 	public static function init() {
-		if ( isset( self::$cache_dir ) ) {
-			return;
+		if ( ! self::$initialized ) {
+			$upload_dir      = wp_upload_dir();
+			self::$cache_dir = trailingslashit( $upload_dir['basedir'] ) . 'pum';
+			self::$debug     = Popup_Maker::debug_mode() || ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
+			self::$suffix    = self::$debug ? '' : '.min';
+			self::$asset_url = Popup_Maker::$URL . 'assets/';
+			self::$js_url    = self::$asset_url . 'js/';
+			self::$css_url   = self::$asset_url . 'css/';
+
+			add_action( 'pum_extension_updated', array( __CLASS__, 'regenerate_cache' ) );
+			add_action( 'pum_extension_deactivated', array( __CLASS__, 'regenerate_cache' ) );
+			add_action( 'pum_extension_activated', array( __CLASS__, 'regenerate_cache' ) );
+			add_action( 'pum_regenerate_asset_cache', array( __CLASS__, 'regenerate_cache' ) );
+			add_action( 'pum_save_popup', array( __CLASS__, 'regenerate_cache' ) );
+			add_action( 'popmake_save_popup_theme', array( __CLASS__, 'regenerate_cache' ) );
+
+			// Prevent reinitialization.
+			self::$initialized = true;
 		}
-
-		$upload_dir      = wp_upload_dir();
-		self::$cache_dir = trailingslashit( $upload_dir['basedir'] ) . 'pum';
-		self::$debug     = Popup_Maker::debug_mode() || ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
-		self::$suffix    = self::$debug ? '' : '.min';
-		self::$asset_url = Popup_Maker::$URL . 'assets/';
-		self::$js_url    = self::$asset_url . 'js/';
-		self::$css_url   = self::$asset_url . 'css/';
-
-		add_action( 'pum_save_popup', array( __CLASS__, 'regenerate_cache' ) );
-		add_action( 'popmake_save_popup_theme', array( __CLASS__, 'regenerate_cache' ) );
 	}
 
 	/**

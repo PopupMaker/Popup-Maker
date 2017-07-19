@@ -61,7 +61,7 @@ class PUM_Options {
 	 * @return mixed
 	 */
 	public static function get( $key = '', $default = false ) {
-		// Early initialization if needed.
+		// Passive initialization.
 		self::init();
 
 		$value = isset( self::$_data[ $key ] ) ? self::$_data[ $key ] : $default;
@@ -84,7 +84,7 @@ class PUM_Options {
 	 * @return boolean True if updated, false if not.
 	 */
 	public static function update( $key = '', $value = false ) {
-		// Early initialization if needed.
+		// Passive initialization.
 		self::init();
 
 		// If no key, exit
@@ -129,7 +129,7 @@ class PUM_Options {
 	 * @return boolean True if updated, false if not.
 	 */
 	public static function delete( $key = '' ) {
-		// Early initialization if needed.
+		// Passive initialization.
 		self::init();
 
 		// If no key, exit
