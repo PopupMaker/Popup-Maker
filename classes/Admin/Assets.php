@@ -81,7 +81,6 @@ class PUM_Admin_Assets {
 
 		// TODO Clean up this next section, haven't touched it at all. Is any of it needed or can we move/remove it.
 		if ( popmake_is_admin_popup_page() ) {
-			self::register_scripts();
 			add_action( 'admin_footer', array( __CLASS__, 'admin_popup_editor_media_templates' ) );
 		}
 		if ( popmake_is_admin_popup_theme_page() ) {

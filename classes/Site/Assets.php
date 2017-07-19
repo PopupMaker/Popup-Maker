@@ -28,7 +28,16 @@ class PUM_Site_Assets {
 	/**
 	 * @var array
 	 */
-	public static $enqueued_assets = array();
+	public static $enqueued_scripts = array();
+
+	/**
+	 * @var array
+	 */
+	public static $enqueued_styles = array();
+
+	public static $scripts_registered = false;
+
+	public static $styles_registered = false;
 
 	/**
 	 * @var bool Use minified libraries if SCRIPT_DEBUG is turned off.
@@ -46,10 +55,10 @@ class PUM_Site_Assets {
 		self::$js_url    = Popup_Maker::$URL . 'assets/js/';
 		self::$css_url   = Popup_Maker::$URL . 'assets/css/';
 
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_styles' ) );
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_scripts' ) );
-		add_action( 'popmake_preload_popup', array( __CLASS__, 'enqueue_assets' ) );
-		add_action( 'popmake_preload_popup', array( __CLASS__, 'enqueue_popup_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_styles' ), 1 );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_scripts' ), 1 );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
+		add_action( 'popmake_preload_popup', array( __CLASS__, 'enqueue_popup_assets' ) );
 
 		add_action( 'wp_head', array( __CLASS__, 'check_force_script_loading' ) );
 
@@ -58,71 +67,16 @@ class PUM_Site_Assets {
 	}
 
 	/**
-	 * Enqueues a specific internal asset for inclusion in asset generation.
-	 *
-	 * @param string $handler
+	 * Enqueue all needed assets.
 	 */
-	public static function enqueue_asset( $handler = '' ) {
-		if ( ! in_array( $handler, self::$enqueued_assets ) ) {
-			self::$enqueued_assets[] = $handler;
-		}
-	}
-
-	// TODO Merge this with the following.
-
-	/**
-	 * @param int $popup_id
-	 */
-	public static function enqueue_assets( $popup_id = 0 ) {
-
-		return;
-
-		$popup = pum_get_popup( $popup_id );
-
-		if ( ! pum_is_popup( $popup ) ) {
-			return;
-		}
-
-		self::enqueue_asset( 'ahoy-site' );
-
-		if ( $popup->has_condition( array(
-			'device_is_mobile',
-			'device_is_phone',
-			'device_is_tablet',
-			'device_is_brand',
-		) ) ) {
-			self::enqueue_asset( 'mobile-detect' );
-		}
-
-		// Preprocess the content for shortcodes that need to enqueue their own assets.
-		do_shortcode( $popup->post_content );
-	}
-
-	/**
-	 * @param null $popup_id
-	 */
-	public static function enqueue_popup_scripts( $popup_id = null ) {
-		$popup = new PUM_Popup( $popup_id );
-		if ( $popup->mobile_disabled() || $popup->tablet_disabled() ) {
-			wp_enqueue_script( 'mobile-detect' );
-		}
-
-		$scripts_needed = apply_filters( 'popmake_enqueue_scripts', array(
-			'popup-maker'         => 'popup-maker-site',
-			'easy-modal-importer' => 'popup-maker-easy-modal-importer-site',
-		), $popup_id );
-
-		foreach ( $scripts_needed as $script ) {
+	public static function enqueue_assets() {
+		foreach ( self::$enqueued_scripts as $script ) {
 			if ( wp_script_is( $script, 'registered' ) ) {
 				wp_enqueue_script( $script );
 			}
 		}
 
-		$styles_needed = apply_filters( 'popmake_enqueue_styles', array(
-			'popup-maker' => 'popup-maker-site',
-		), $popup_id );
-
-		foreach ( $styles_needed as $style ) {
+		foreach ( self::$enqueued_styles as $style ) {
 			if ( wp_style_is( $style, 'registered' ) ) {
 				wp_enqueue_style( $style );
 			}
@@ -130,9 +84,80 @@ class PUM_Site_Assets {
 	}
 
 	/**
+	 * Enqueues a specific script asset for inclusion in asset generation.
+	 *
+	 * @param string $handler
+	 */
+	public static function enqueue_script( $handler = '' ) {
+		if ( ! in_array( $handler, self::$enqueued_scripts ) ) {
+			self::$enqueued_scripts[] = $handler;
+		}
+
+		if ( self::$scripts_registered ) {
+			wp_enqueue_script( $handler );
+		}
+	}
+
+	/**
+	 * Enqueues a specific script asset for inclusion in asset generation.
+	 *
+	 * @param string $handler
+	 */
+	public static function enqueue_style( $handler = '' ) {
+		if ( ! in_array( $handler, self::$enqueued_styles ) ) {
+			self::$enqueued_styles[] = $handler;
+		}
+
+		if ( self::$styles_registered ) {
+			wp_enqueue_style( $handler );
+		}
+	}
+
+	/**
+	 * @param int $popup_id
+	 */
+	public static function enqueue_popup_assets( $popup_id = 0 ) {
+		/**
+		 * TODO Replace this with a pum_get_popup function after new Popup model is in place.
+		 *
+		 * $popup = pum_get_popup( $popup_id );
+		 *
+		 * if ( ! pum_is_popup( $popup ) ) {
+		 *        return;
+		 * }
+		 */
+
+		$popup = new PUM_Popup( $popup_id );
+
+		self::enqueue_script( 'popup-maker-site' );
+		self::enqueue_style( 'popup-maker-site' );
+
+		if ( $popup->mobile_disabled() || $popup->tablet_disabled() ) {
+			self::enqueue_script( 'mobile-detect' );
+		}
+
+		/**
+		 * TODO Implement this in core $popup model & advanced targeting conditions.
+		 *
+		 * if ( $popup->has_condition( array(
+		 *    'device_is_mobile',
+		 *    'device_is_phone',
+		 *    'device_is_tablet',
+		 *    'device_is_brand',
+		 * ) ) ) {
+		 *    self::enqueue_script( 'mobile-detect' );
+		 * }
+		 */
+
+		// Preprocess the content for shortcodes that need to enqueue their own assets.
+		do_shortcode( $popup->post_content );
+	}
+
+	/**
 	 * Register JS.
 	 */
 	public static function register_scripts() {
+		self::$scripts_registered = true;
 
 		wp_register_script( 'mobile-detect', self::$js_url . 'mobile-detect' . self::$suffix, null, '1.3.3', true );
 
@@ -159,11 +184,6 @@ class PUM_Site_Assets {
 				'jquery-ui-core',
 				'jquery-ui-position',
 			), Popup_Maker::$VER, true );
-
-			// TODO This likely needs to allow fallbacks for each extension if caching is not available.
-			foreach ( self::$enqueued_assets as $script ) {
-				wp_enqueue_script( $script );
-			}
 		}
 
 		wp_localize_script( 'popup-maker-site', 'pum_vars', apply_filters( 'pum_vars', array(
@@ -222,6 +242,8 @@ class PUM_Site_Assets {
 	 * Register CSS.
 	 */
 	public static function register_styles() {
+		self::$styles_registered = true;
+
 		if ( PUM_AssetCache::writeable() ) {
 			$cached = get_option( 'pum-has-cached-css' );
 
