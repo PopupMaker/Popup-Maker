@@ -25,10 +25,13 @@ class PUM_Options {
 
 	/**
 	 * Initialize Options on run.
+	 *
+	 * @param bool $force
 	 */
-	public static function init() {
-		// Set the prefix on init.
-		self::$_data = self::get_all();
+	public static function init( $force = false ) {
+		if ( ! isset( self::$_data ) || $force ) {
+			self::$_data = self::get_all();
+		}
 	}
 
 	/**
@@ -58,6 +61,9 @@ class PUM_Options {
 	 * @return mixed
 	 */
 	public static function get( $key = '', $default = false ) {
+		// Early initialization if needed.
+		self::init();
+
 		$value = isset( self::$_data[ $key ] ) ? self::$_data[ $key ] : $default;
 
 		return apply_filters( self::$_prefix . 'get_option', $value, $key, $default );
@@ -78,6 +84,8 @@ class PUM_Options {
 	 * @return boolean True if updated, false if not.
 	 */
 	public static function update( $key = '', $value = false ) {
+		// Early initialization if needed.
+		self::init();
 
 		// If no key, exit
 		if ( empty( $key ) ) {
@@ -121,6 +129,8 @@ class PUM_Options {
 	 * @return boolean True if updated, false if not.
 	 */
 	public static function delete( $key = '' ) {
+		// Early initialization if needed.
+		self::init();
 
 		// If no key, exit
 		if ( empty( $key ) ) {
