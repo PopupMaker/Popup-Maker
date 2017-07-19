@@ -82,7 +82,7 @@ class PUM_Shortcode extends PUM_Fields {
 		add_action( 'print_media_templates', array( $this, '_template' ) );
 		add_action( 'register_shortcode_ui', array( $this, 'register_shortcode_ui' ) );
 
-		if ( is_admin() && pum_should_load_admin_scripts() ) {
+		if ( is_admin() && PUM_Admin_Assets::should_load() ) {
 			$fields = array();
 
 			if ( $this->has_content ) {

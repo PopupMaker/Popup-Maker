@@ -90,7 +90,7 @@ class PUM_Admin_Shortcode_UI {
 	 * @return array
 	 */
 	public function mce_external_plugins( $plugin_array ) {
-		if ( ! $this->editor_enabled() || ! pum_should_load_admin_scripts() ) {
+		if ( ! $this->editor_enabled() || ! PUM_Admin_Assets::should_load() ) {
 			return $plugin_array;
 		}
 
@@ -109,7 +109,7 @@ class PUM_Admin_Shortcode_UI {
 	 * @return array
 	 */
 	public function mce_buttons( $buttons ) {
-		if ( ! $this->editor_enabled() || ! pum_should_load_admin_scripts() ) {
+		if ( ! $this->editor_enabled() || ! PUM_Admin_Assets::should_load() ) {
 			return $buttons;
 		}
 
@@ -119,7 +119,7 @@ class PUM_Admin_Shortcode_UI {
 	}
 
 	public function admin_enqueue_scripts() {
-		if ( ! $this->editor_enabled() || ! pum_should_load_admin_scripts() ) {
+		if ( ! $this->editor_enabled() || ! PUM_Admin_Assets::should_load() ) {
             return;
         }
 
@@ -137,7 +137,7 @@ class PUM_Admin_Shortcode_UI {
      * Outputs the view inside the wordpress editor.
      */
 	public function print_media_templates() {
-        if ( ! $this->editor_enabled() || ! pum_should_load_admin_scripts() ) {
+        if ( ! $this->editor_enabled() || ! PUM_Admin_Assets::should_load() ) {
             return;
         }
 		include_once plugin_dir_path( __FILE__ ) . 'templates/fields.php';
@@ -145,7 +145,7 @@ class PUM_Admin_Shortcode_UI {
 	}
 
     public function admin_print_footer_scripts() {
-	    if ( ! $this->editor_enabled() || ! pum_should_load_admin_scripts() ) {
+	    if ( ! $this->editor_enabled() || ! PUM_Admin_Assets::should_load() ) {
             return;
         }
         include_once plugin_dir_path( __FILE__ ) . 'footer-scripts.php';
@@ -179,7 +179,7 @@ class PUM_Admin_Shortcode_UI {
 	}
 
 	public function pum_admin_var( $var = array() ) {
-		if ( ! $this->editor_enabled() || ! pum_should_load_admin_scripts() ) {
+		if ( ! $this->editor_enabled() || ! PUM_Admin_Assets::should_load() ) {
 			return $var;
 		}
 		

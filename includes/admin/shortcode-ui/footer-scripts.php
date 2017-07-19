@@ -286,7 +286,9 @@
 
                 wp.mce.pum_shortcodes[tag] = extend;
 
-                wp.mce.views.register(tag, extend);
+                if (  wp.mce.views !== undefined &&  wp.mce.views.register === 'function') {
+                    wp.mce.views.register(tag, extend);
+                }
             });
 
         });

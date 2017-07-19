@@ -148,7 +148,7 @@ var PUM;
                     settings = $.extend(true, {}, $.fn.popmake.defaults, $popup.data('popmake'), options);
 
                 if (settings.theme_id <= 0) {
-                    settings.theme_id = popmake_default_theme;
+                    settings.theme_id = pum_vars.default_theme;
                 }
 
                 if (settings.meta.display.disable_reposition === undefined) {

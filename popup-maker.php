@@ -81,46 +81,67 @@ spl_autoload_register( 'pum_autoloader' ); // Register autoloader
  */
 class Popup_Maker {
 
-	/** Singleton *************************************************************/
+	/**
+	 * @var string Plugin Name
+	 */
+	public static $NAME = 'Popup Maker';
+
+	/**
+	 * @var string Plugin Version
+	 */
+	public static $VER = '1.6.5';
+
+	/**
+	 * @var int DB Version
+	 */
+	public static $DB_VER = 6;
+
+	/**
+	 * @var string License API URL
+	 */
+	public static $API_URL = 'https://wppopupmaker.com';
+
+	/**
+	 * @var string
+	 */
+	public static $MIN_PHP_VER = '5.3';
+
+	/**
+	 * @var string
+	 */
+	public static $MIN_WP_VER = '3.5';
+
+	/**
+	 * @var string Plugin URL
+	 */
+	public static $URL;
+
+	/**
+	 * @var string Plugin Directory
+	 */
+	public static $DIR;
+
+	/**
+	 * @var string Plugin FILE
+	 */
+	public static $FILE;
+
+	/**
+	 * Used to test if debug_mode is enabled.
+	 *
+	 * @var bool
+	 */
+	public static $DEBUG_MODE = false;
+
 
 	/**
 	 * @var Popup_Maker The one true Popup_Maker
-	 * @since 1.0
 	 */
 	private static $instance;
 
 	/**
-	 * POPMAKE Roles Object
+	 * Main instance
 	 *
-	 * @var object
-	 * @since 1.0
-	 */
-	public $roles;
-
-	/**
-	 * POPMAKE HTML Session Object
-	 *
-	 * This holds cart items, purchase sessions, and anything else stored in the session
-	 *
-	 *
-	 * @var object
-	 * @since 1.0
-	 */
-	public $session;
-
-	/**
-	 * Main Popup_Maker Instance
-	 *
-	 * Insures that only one instance of Popup_Maker exists in memory at any one
-	 * time. Also prevents needing to define globals all over the place.
-	 *
-	 * @since 1.0
-	 * @static
-	 * @staticvar array $instance
-	 * @uses Popup_Maker::setup_constants() Setup the constants needed
-	 * @uses Popup_Maker::includes() Include the required files
-	 * @uses Popup_Maker::load_textdomain() load the language files
-	 * @see  PopMake()
 	 * @return Popup_Maker
 	 */
 	public static function instance() {
@@ -129,59 +150,31 @@ class Popup_Maker {
 			self::$instance->setup_constants();
 			self::$instance->includes();
 			self::$instance->load_textdomain();
-
 			self::$instance->init();
-
-			if ( isset( $_GET['pum_debug'] ) || popmake_get_option( 'debug_mode', false ) ) {
-				self::$debug_mode = true;
-			}
 		}
 
 		return self::$instance;
 	}
 
 	/**
-	 * Throw error on object clone
-	 *
-	 * The whole idea of the singleton design pattern is that there is a single
-	 * object therefore, we don't want the object to be cloned.
-	 *
-	 * @since 1.0
-	 * @access protected
-	 * @return void
-	 */
-	public function __clone() {
-		// Cloning instances of the class is forbidden
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'popup-maker' ), '3' );
-	}
-
-	/**
-	 * Disable unserializing of the class
-	 *
-	 * @since 1.0
-	 * @access protected
-	 * @return void
-	 */
-	public function __wakeup() {
-		// Unserializing instances of the class is forbiddePOPMAKE_DB_VERSIONn
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'popup-maker' ), '3' );
-	}
-
-	/**
 	 * Setup plugin constants
-	 *
-	 * @access private
-	 * @since 1.0
-	 * @return void
 	 */
 	private function setup_constants() {
+
+		self::$DIR  = plugin_dir_path( __FILE__ );
+		self::$URL  = plugins_url( '/', __FILE__ );
+		self::$FILE = __FILE__;
+
+		if ( isset( $_GET['pum_debug'] ) || PUM_Options::get( 'debug_mode', false ) ) {
+			self::$DEBUG_MODE = true;
+		}
 
 		if ( ! defined( 'POPMAKE' ) ) {
 			define( 'POPMAKE', __FILE__ );
 		}
 
 		if ( ! defined( 'POPMAKE_NAME' ) ) {
-			define( 'POPMAKE_NAME', 'Popup Maker' );
+			define( 'POPMAKE_NAME', self::$NAME );
 		}
 
 		if ( ! defined( 'POPMAKE_SLUG' ) ) {
@@ -201,41 +194,35 @@ class Popup_Maker {
 		}
 
 		if ( ! defined( 'POPMAKE_VERSION' ) ) {
-			define( 'POPMAKE_VERSION', '1.6.5' );
+			define( 'POPMAKE_VERSION', self::$VER );
 		}
 
 		if ( ! defined( 'POPMAKE_DB_VERSION' ) ) {
-			define( 'POPMAKE_DB_VERSION', '6' );
+			define( 'POPMAKE_DB_VERSION', self::$DB_VER );
 		}
 
 		if ( ! defined( 'POPMAKE_API_URL' ) ) {
-			define( 'POPMAKE_API_URL', 'https://wppopupmaker.com' );
+			define( 'POPMAKE_API_URL', self::$API_URL );
 		}
 
 	}
 
 	/**
 	 * Include required files
-	 *
-	 * @access private
-	 * @since 1.0
-	 * @return void
 	 */
 	private function includes() {
 		global $popmake_options;
 
 		require_once POPMAKE_DIR . 'includes/admin/settings/register-settings.php';
 		$popmake_options = popmake_get_settings();
-		require_once POPMAKE_DIR . 'includes/class-pum-options.php';
-		PUM_Options::init();
 
+		//PUM_Options::init();
 
 		// TODO Find another place for these admin functions so this can be put in its correct place.
 		require_once POPMAKE_DIR . 'includes/admin/admin-pages.php';
 
 		require_once POPMAKE_DIR . 'includes/actions.php';
 		require_once POPMAKE_DIR . 'includes/class-popmake-cron.php';
-		require_once POPMAKE_DIR . 'includes/scripts.php';
 		require_once POPMAKE_DIR . 'includes/defaults.php';
 		require_once POPMAKE_DIR . 'includes/google-fonts.php';
 		require_once POPMAKE_DIR . 'includes/general-functions.php';
@@ -401,14 +388,10 @@ class Popup_Maker {
 
 	public function init() {
 		PUM_Types::init();
+		PUM_AssetCache::init();
+		PUM_Site::init();
+		PUM_Admin::init();
 	}
-
-	/**
-	 * Used to test if debug_mode is enabled.
-	 *
-	 * @var bool
-	 */
-	public static $debug_mode = false;
 
 	/**
 	 * Returns true when debug mode is enabled.
@@ -416,15 +399,11 @@ class Popup_Maker {
 	 * @return bool
 	 */
 	public static function debug_mode() {
-		return true === self::$debug_mode;
+		return true === self::$DEBUG_MODE;
 	}
 
 	/**
 	 * Loads the plugin language files
-	 *
-	 * @access public
-	 * @since 1.0
-	 * @return void
 	 */
 	public function load_textdomain() {
 		// Set filter for plugin's languages directory
@@ -450,7 +429,6 @@ class Popup_Maker {
 			load_plugin_textdomain( 'popup-maker', false, $popmake_lang_dir );
 		}
 	}
-
 
 }
 

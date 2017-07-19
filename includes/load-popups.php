@@ -36,7 +36,6 @@ function popmake_load_popup( $id ) {
 				do_action( 'popmake_preload_popup', $query->post->ID );
 				$popmake_loaded_popups->posts[] = $query->post;
 				$popmake_loaded_popups->post_count ++;
-				popmake_enqueue_scripts( $query->post->ID );
 			endwhile;
 		}
 	} elseif ( ! did_action( 'wp_head' ) && ! in_array( $id, $popmake_enqueued_popups ) ) {
