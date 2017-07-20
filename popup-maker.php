@@ -332,6 +332,9 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 			if ( defined( 'WPB_VC_VERSION' ) || defined( 'FL_BUILDER_VERSION' ) ) {
 				require_once POPMAKE_DIR . 'includes/integrations/visual-composer.php';
 			}
+			
+			// KingComposer Integration
+			require_once POPMAKE_DIR . 'includes/integrations/king-composer.php';
 
 			// Ninja Forms Integration
 			require_once POPMAKE_DIR . 'includes/integrations/class-pum-ninja-forms.php';
