@@ -46,14 +46,9 @@ class PUM_Admin_Assets {
 
 		if ( self::should_load() ) {
 
-			wp_enqueue_script( 'popup-maker-admin', self::$js_url . 'admin' . self::$suffix . '.js', array(
-				'jquery',
-				'wp-color-picker',
-				'jquery-ui-slider',
-				'wp-util',
-			), Popup_Maker::$VER );
+			wp_enqueue_script( 'popup-maker-admin', self::$js_url . 'admin' . self::$suffix . '.js', array( 'jquery', 'wp-color-picker', 'jquery-ui-slider', 'wp-util' ), Popup_Maker::$VER, true );
 
-			wp_localize_script( 'popup-maker-admin', 'pum_admin', apply_filters( 'pum_admin_var', array(
+			$admin_vars = apply_filters( 'pum_admin_vars', apply_filters( 'pum_admin_var', array(
 				'post_id'  => ! empty( $_GET['post'] ) ? intval( $_GET['post'] ) : null,
 				'defaults' => array(
 					'triggers' => PUM_Triggers::instance()->get_defaults(),
@@ -77,10 +72,15 @@ class PUM_Admin_Assets {
 					'error_loading_shortcode_preview' => __( 'There was an error in generating the preview', 'popup-maker' ),
 				),
 			) ) );
+
+			wp_localize_script( 'popup-maker-admin', 'pum_admin_vars', $admin_vars );
+			// @deprecated.
+			wp_localize_script( 'popup-maker-admin', 'pum_admin', $admin_vars );
 		}
 
 		// TODO Clean up this next section, haven't touched it at all. Is any of it needed or can we move/remove it.
 		if ( popmake_is_admin_popup_page() ) {
+			PUM_Admin_Templates::init();
 			add_action( 'admin_footer', array( __CLASS__, 'admin_popup_editor_media_templates' ) );
 		}
 		if ( popmake_is_admin_popup_theme_page() ) {

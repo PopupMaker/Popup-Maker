@@ -263,14 +263,14 @@ var PopMakeAdmin;
                 $plus,
                 $minus,
                 slider = jQuery('<input type="range"/>'),
-                plus = jQuery('<button class="popmake-range-plus">+</button>'),
-                minus = jQuery('<button class="popmake-range-minus">-</button>');
+                plus = jQuery('<button class="pum-range-plus">+</button>'),
+                minus = jQuery('<button class="pum-range-minus">-</button>');
 
             jQuery(document).on('input', 'input[type="range"]', function () {
                 var $this = jQuery(this);
-                $this.siblings('.popmake-range-manual').val($this.val());
+                $this.siblings('.pum-range-manual').val($this.val());
             });
-            jQuery('.popmake-range-manual').each(function () {
+            jQuery('.pum-range-manual').each(function () {
                 var $this = jQuery(this),
                     force = $this.data('force-minmax'),
                     min = parseInt($this.prop('min'), 0),
@@ -303,7 +303,7 @@ var PopMakeAdmin;
             });
 
             jQuery(document)
-                .on('change', '.popmake-range-manual', function () {
+                .on('change', '.pum-range-manual', function () {
 
                     var $this = jQuery(this),
                         max = parseInt($this.prop('max'), 0),
@@ -325,11 +325,11 @@ var PopMakeAdmin;
                     });
 
                 })
-                .on('click', '.popmake-range-plus', function (event) {
+                .on('click', '.pum-range-plus', function (event) {
 
                     event.preventDefault();
 
-                    var $this = jQuery(this).siblings('.popmake-range-manual'),
+                    var $this = jQuery(this).siblings('.pum-range-manual'),
                         step = parseInt($this.prop('step'), 0),
                         value = parseInt($this.val(), 0),
                         val = value + step;
@@ -340,11 +340,11 @@ var PopMakeAdmin;
                     $slider.val(val);
 
                 })
-                .on('click', '.popmake-range-minus', function (event) {
+                .on('click', '.pum-range-minus', function (event) {
 
                     event.preventDefault();
 
-                    var $this = jQuery(this).siblings('.popmake-range-manual'),
+                    var $this = jQuery(this).siblings('.pum-range-manual'),
                         step = parseInt($this.prop('step'), 0),
                         value = parseInt($this.val(), 0),
                         val = value - step;
@@ -491,8 +491,8 @@ var PopMakeAdmin;
                     jQuery('#popup_auto_open_cookie_key').val((new Date().getTime()).toString(16));
                 },
                 update_popup_preview_title = function () {
-                    if (jQuery('#popuptitle').val() !== '') {
-                        jQuery('#popmake-preview .popmake-title').show().html(jQuery('#popuptitle').val());
+                    if (jQuery('#popup-title').val() !== '') {
+                        jQuery('#popmake-preview .popmake-title').show().html(jQuery('#popup-title').val());
                     } else {
                         jQuery('#popmake-preview .popmake-title').hide();
                     }
@@ -546,7 +546,7 @@ var PopMakeAdmin;
                         .data('popmake', data);
                 };
 
-            jQuery('#popuptitlediv').insertAfter('#titlediv');
+            jQuery('#popup-titlediv').insertAfter('#titlediv');
             jQuery('[name^="menu-item"]').removeAttr('name');
 
             jQuery('#trigger-popmake-preview')
@@ -559,28 +559,28 @@ var PopMakeAdmin;
                     return false;
                 });
             jQuery(document)
-                .on('keydown', '#popuptitle', function (event) {
+                .on('keydown', '#popup-title', function (event) {
                     var keyCode = event.keyCode || event.which;
                     if (9 === keyCode) {
                         event.preventDefault();
                         jQuery('#title').focus();
                     }
                 })
-                .on('keydown', '#title, #popuptitle', function (event) {
+                .on('keydown', '#title, #popup-title', function (event) {
                     var keyCode = event.keyCode || event.which,
                         target;
                     if (!event.shiftKey && 9 === keyCode) {
                         event.preventDefault();
-                        target = jQuery(this).attr('id') === 'title' ? '#popuptitle' : '#insert-media-button';
+                        target = jQuery(this).attr('id') === 'title' ? '#popup-title' : '#insert-media-button';
                         jQuery(target).focus();
                     }
                 })
-                .on('keydown', '#popuptitle, #insert-media-button', function (event) {
+                .on('keydown', '#popup-title, #insert-media-button', function (event) {
                     var keyCode = event.keyCode || event.which,
                         target;
                     if (event.shiftKey && 9 === keyCode) {
                         event.preventDefault();
-                        target = jQuery(this).attr('id') === 'popuptitle' ? '#title' : '#popuptitle';
+                        target = jQuery(this).attr('id') === 'popup-title' ? '#title' : '#popup-title';
                         jQuery(target).focus();
                     }
                 })
@@ -790,7 +790,7 @@ var PopMakeAdmin;
             return converted_data;
         },
         initialize_theme_page: function () {
-            jQuery('#popuptitlediv').insertAfter('#titlediv');
+            jQuery('#popup-titlediv').insertAfter('#titlediv');
 
             var self = this,
                 table = jQuery('#popup_theme_close_location').parents('table');

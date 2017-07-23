@@ -1,3 +1,7 @@
+/*!******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
+
 .pum-modal-background {
 
   &, &:before, &:after,
@@ -7,7 +11,6 @@
     box-sizing: border-box;
   }
 
-
   display: none;
   position: fixed;
   top: 0;
@@ -16,7 +19,7 @@
   bottom: 0;
   height: 100%;
   width: 100%;
-  background: rgba(0,0,0,0.70);
+  background: rgba(0, 0, 0, 0.70);
   z-index: 100100;
   overflow-y: scroll;
 
@@ -28,11 +31,11 @@
     width: 550px;
     margin-left: -300px;
     background-color: #fff;
-    box-shadow: 0 3px 6px rgba(0,0,0,.3);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, .3);
     z-index: 100105;
     transition: height .2s, margin-top .2s;
 
-    @media screen and ( max-width: 520px ) {
+    @media screen and (max-width: 520px) {
       width: auto;
       margin-left: 0;
       top: 10px;
@@ -83,7 +86,7 @@
   }
 
   .pum-modal-content {
-    padding: 36px 16px 44px;
+    padding: 52px 16px 60px;
 
     div.error {
       margin: 0 0 10px;
@@ -112,6 +115,19 @@
     .cancel {
       line-height: 25px;
       float: left;
+
+      .no-button {
+        border: 0;
+        padding: 0;
+        background: none;
+        cursor: pointer;
+
+        &.link-button {
+          color: #0073aa;
+          text-decoration: underline;
+        }
+
+      }
 
       .submitdelete {
         text-decoration: none;
@@ -144,8 +160,7 @@
   &.tabbed-content {
 
     .pum-modal-content {
-      padding-left: 0;
-      padding-right: 0;
+      padding: 36px 0 44px;
     }
   }
 

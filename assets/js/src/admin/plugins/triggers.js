@@ -2,8 +2,8 @@ var PUMTriggers;
 (function ($, document, undefined) {
     "use strict";
 
-    var I10n = pum_admin.I10n,
-        defaults = pum_admin.defaults;
+    var I10n = pum_admin_vars.I10n,
+        defaults = pum_admin_vars.defaults;
 
     PUMTriggers = {
         new_cookie: false,
@@ -153,7 +153,7 @@ var PUMTriggers;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(modalID, template(data));
+            PUM_Admin.modals.reload(modalID, template(data));
             PUMTriggers.initEditForm(data);
 
             $this
@@ -162,7 +162,7 @@ var PUMTriggers;
         })
         .on('click', '#pum_popup_triggers .add-new', function () {
             var template = wp.template('pum-trigger-add-type');
-            PUMModals.reload('#pum_trigger_add_type_modal', template());
+            PUM_Admin.modals.reload('#pum_trigger_add_type_modal', template());
         })
         .on('click', '#pum_popup_triggers_list .edit', function (e) {
 
@@ -186,7 +186,7 @@ var PUMTriggers;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(modalID, template(data));
+            PUM_Admin.modals.reload(modalID, template(data));
             PUMTriggers.initEditForm(data);
         })
         .on('click', '#pum_popup_triggers_list .remove', function (e) {
@@ -229,7 +229,7 @@ var PUMTriggers;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(modalID, template(data));
+            PUM_Admin.modals.reload(modalID, template(data));
             PUMTriggers.initEditForm(data);
         })
         .on('submit', '.trigger-editor .pum-form', function (e) {
@@ -257,7 +257,7 @@ var PUMTriggers;
                 $row.replaceWith($new_row);
             }
 
-            PUMModals.closeAll();
+            PUM_Admin.modals.closeAll();
             PUMTriggers.renumber();
             PUMTriggers.refreshDescriptions();
 

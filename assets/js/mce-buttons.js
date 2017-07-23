@@ -2,7 +2,7 @@
     "use strict";
 
     tinymce.PluginManager.add('pum_shortcodes', function (editor) {
-        var shortcodes = pum_shortcode_ui.shortcodes || pum_admin.shortcode_ui.shortcodes || [],
+        var shortcodes = pum_shortcode_ui.shortcodes || pum_admin_vars.shortcode_ui.shortcodes || [],
             menuItems = [];
 
         $.each(shortcodes, function (tag, args) {
@@ -40,7 +40,7 @@
         editor.addButton('pum_shortcodes', {
             type: 'menubutton',
             icon: 'pum_shortcodes',
-            tooltip: pum_admin.I10n.shortcode_ui_button_tooltip || '',
+            tooltip: pum_admin_vars.I10n.shortcode_ui_button_tooltip || '',
             menu: menuItems
         });
     });

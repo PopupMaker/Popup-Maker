@@ -2,8 +2,8 @@ var PUMCookies;
 (function ($, document, undefined) {
     "use strict";
 
-    var I10n = pum_admin.I10n,
-        defaults = pum_admin.defaults;
+    var I10n = pum_admin_vars.I10n,
+        defaults = pum_admin_vars.defaults;
 
     PUMCookies = {
         getLabel: function (event) {
@@ -107,7 +107,7 @@ var PUMCookies;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(modalID, template(data));
+            PUM_Admin.modals.reload(modalID, template(data));
             PUMCookies.initEditForm();
 
             $this
@@ -118,7 +118,7 @@ var PUMCookies;
         .on('click', '.cookie-editor .pum-form .field.checkbox.session', PUMCookies.updateSessionsCheckbox)
         .on('click', '#pum_popup_cookies .add-new', function () {
             var template = wp.template('pum-cookie-add-event');
-            PUMModals.reload('#pum_cookie_add_event_modal', template());
+            PUM_Admin.modals.reload('#pum_cookie_add_event_modal', template());
         })
         .on('click', '#pum_popup_cookies_list .edit', function (e) {
             var $this = $(this),
@@ -141,7 +141,7 @@ var PUMCookies;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(modalID, template(data));
+            PUM_Admin.modals.reload(modalID, template(data));
             PUMCookies.initEditForm();
         })
         .on('click', '#pum_popup_cookies_list .remove', function (e) {
@@ -182,7 +182,7 @@ var PUMCookies;
                 alert('Something went wrong. Please refresh and try again.');
             }
 
-            PUMModals.reload(modalID, template(data));
+            PUM_Admin.modals.reload(modalID, template(data));
             PUMCookies.initEditForm();
         })
         .on('submit', '.cookie-editor .pum-form', function (e) {
@@ -212,7 +212,7 @@ var PUMCookies;
                 $row.replaceWith($new_row);
             }
 
-            PUMModals.closeAll();
+            PUM_Admin.modals.closeAll();
             PUMCookies.renumber();
 
             $('#pum_popup_cookie_fields').addClass('has-cookies');

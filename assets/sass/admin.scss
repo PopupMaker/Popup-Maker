@@ -1,17 +1,40 @@
 @import 'partials/pum_fields';
-@import 'partials/tabs';
 @import 'partials/metaboxes';
-@import 'partials/admin_modal';
 @import 'partials/pum_select2';
-@import 'partials/facet_builder';
 @import 'partials/extensions_page';
 @import 'partials/mce_buttons';
+
+@import 'partials/admin/modal';
+@import 'partials/admin/tabs';
+@import 'partials/admin/fields';
 @import 'partials/admin/settings_page';
 
-.tabbed-form {
+#pum_popup_settings {
+  > h2.hndle,
+  > .handlediv {
+    // display: none;
+  }
+  > .inside {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+
+
+.pum-tabbed-form {
   .pum-field {
     position: relative;
-    margin: 0 0 1em;
+    margin: 0 0 24px;
+
+    label {
+      margin-bottom: 4px;
+    }
+
+    .pum-desc {
+      margin-top: 4px;
+      margin-bottom: 0;
+    }
   }
 
   .pumselect2-container--default {
@@ -67,16 +90,16 @@
 
 /* UI */
 
-#popuptitlediv {
+#popup-titlediv {
 
   position: relative;
 
-  #popuptitlewrap {
+  #popup-titlewrap {
     border: 0;
     padding: 0;
   }
 
-  #popuptitle-prompt-text {
+  #popup-title-prompt-text {
     color: #777;
     position: absolute;
     font-size: 1.7em;
@@ -87,7 +110,7 @@
     cursor: text;
   }
 
-  #popuptitle {
+  #popup-title {
     padding: 3px 8px;
     font-size: 1.7em;
     line-height: 1.125;
@@ -155,18 +178,18 @@ input[type="text"], select {
 
 
 /* Upgrade Tips */
-.popmake-upgrade-tip {
+.pum-upgrade-tip {
   color: #333;
   line-height: 2em !important;
 }
 
-div.popmake-upgrade-tip {
+div.pum-upgrade-tip {
   margin-bottom: 15px;
   display: block;
   font-weight: bold;
 }
 
-.popmake-upgrade-tip img {
+.pum-upgrade-tip img {
   float: left;
   margin-right: 15px;
 }

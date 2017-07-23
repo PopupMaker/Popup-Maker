@@ -1,263 +1,369 @@
-var PUM_Templates;
-(function ($, document, undefined) {
+(function ($) {
     "use strict";
+    var I10n      = pum_admin_vars.I10n,
+        templates = {
+            render: function (template, data) {
+                var _template = wp.template(template);
 
-    var I10n = pum_admin.I10n;
+                if ('object' === typeof data.classes) {
+                    data.classes = data.classes.join(' ');
+                }
 
-    PUM_Templates = {
-        render: function (template, data) {
-            var _template = wp.template(template);
+                // Prepare the meta data for templates.
+                data = PUM_Admin.templates.prepareMeta(data);
 
-            if ('object' === typeof data.classes) {
-                data.classes = data.classes.join(' ');
-            }
+                return _template(data);
+            },
+            renderInline: function (content, data) {
+                var options  = {
+                        evaluate: /<#([\s\S]+?)#>/g,
+                        interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
+                        escape: /\{\{([^\}]+?)\}\}(?!\})/g,
+                        variable: 'data'
+                    },
+                    template = _.template(content, null, options);
 
-            // Prepare the meta data for template.
-            data = PUM_Templates.prepareMeta(data);
+                return template(data);
+            },
+            shortcode: function (args) {
+                var data     = $.extend(true, {}, {
+                        tag: '',
+                        meta: {},
+                        has_content: false,
+                        content: ''
+                    }, args),
+                    template = data.has_content ? 'pum-shortcode-w-content' : 'pum-shortcode';
 
-            return _template(data);
-        },
-        shortcode: function (args) {
-            var data = $.extend({}, {
-                    tag: '',
-                    meta: {},
-                    has_content: false,
-                    content: ''
-                }, args),
-                template = data.has_content ? 'pum-shortcode-w-content' : 'pum-shortcode';
-
-            return PUM_Templates.render(template, data);
-        },
-        modal: function (args) {
-            var data = $.extend({}, {
-                id: '',
-                title: '',
-                description: '',
-                classes: '',
-                save_button: I10n.save,
-                cancel_button: I10n.cancel,
-                content: ''
-            }, args);
-
-            return PUM_Templates.render('pum-modal', data);
-        },
-        tabs: function (args) {
-            var classes = args.classes || [],
-                data = $.extend({}, {
+                return PUM_Admin.templates.render(template, data);
+            },
+            modal: function (args) {
+                var data = $.extend(true, {}, {
                     id: '',
-                    vertical: true,
-                    form: true,
+                    title: '',
+                    description: '',
                     classes: '',
-                    tabs: {
-                        general: {
-                            label: 'General',
-                            content: ''
-                        }
-                    }
+                    save_button: I10n.save,
+                    cancel_button: I10n.cancel,
+                    content: ''
                 }, args);
 
-            if (data.form) {
-                classes.push('tabbed-form');
-            }
-            if (data.vertical) {
-                classes.push('vertical-tabs');
-            }
-
-            data.classes = data.classes + ' ' + classes.join(' ');
-
-            return PUM_Templates.render('pum-tabs', data);
-        },
-        section: function (args) {
-            var data = $.extend({}, {
-                classes: [],
-                fields: []
-            }, args);
-
-
-            return PUM_Templates.render('pum-field-section', data);
-        },
-        field: function (args) {
-            var fieldTemplate = 'pum-field-' + args.type,
-                options = [],
-                data = $.extend({}, {
-                    type: 'text',
+                return PUM_Admin.templates.render('pum-modal', data);
+            },
+            tabs: function (data) {
+                data = $.extend(true, {}, {
                     id: '',
-                    id_prefix: '',
-                    name: '',
-                    label: null,
-                    placeholder: '',
-                    desc: null,
-                    size: 'regular',
+                    vertical: false,
+                    form: false,
                     classes: [],
-                    value: null,
-                    select2: false,
-                    multiple: false,
-                    as_array: false,
-                    options: [],
-                    object_type: null,
-                    object_key: null,
-                    std: null,
-                    min: 0,
-                    max: 50,
-                    step: 1,
-                    unit: 'px',
-                    required: false,
+                    tabs: {},
                     meta: {}
+                }, data);
+
+                if (typeof data.classes === 'string') {
+                    data.classes = [data.classes];
+                }
+
+                if (data.form) {
+                    data.classes.push('pum-tabbed-form');
+                }
+
+                data.meta['data-tab-count'] = Object.keys(data.tabs).length;
+
+                data.classes.push(data.vertical ? 'vertical-tabs' : 'horizontal-tabs');
+
+                data.classes = data.classes.join('  ');
+
+                return PUM_Admin.templates.render('pum-tabs', data);
+            },
+            section: function (args) {
+                var data = $.extend(true, {}, {
+                    classes: [],
+                    fields: []
                 }, args);
 
-            if (!$('#tmpl-' + fieldTemplate).length) {
-                if (args.type === 'objectselect' || args.type === 'postselect' || args.type === 'taxonomyselect') {
-                    fieldTemplate = 'pum-field-select';
+
+                return PUM_Admin.templates.render('pum-field-section', data);
+            },
+            fieldArgs: function (args) {
+                var options = [],
+                    data    = $.extend(true, {}, PUM_Admin.models.field(args));
+
+                if (!data.value && args.std !== undefined) {
+                    data.value = args.std;
                 }
-                if (!$('#tmpl-' + fieldTemplate).length) {
-                    return '';
+
+                if ('string' === typeof data.classes) {
+                    data.classes = data.classes.split(' ');
                 }
-            }
 
-            if (!data.value && args.std !== undefined) {
-                data.value = args.std;
-            }
+                if (args.class !== undefined) {
+                    data.classes.push(args.class);
+                }
 
-            if ('string' === typeof data.classes) {
-                data.classes = data.classes.split(' ');
-            }
+                if (args.dependencies !== undefined && typeof args.dependencies === 'object') {
+                    data.dependencies = JSON.stringify(args.dependencies);
+                }
 
-            if (args.class !== undefined) {
-                data.classes.push(args.class);
-            }
+                if (data.required) {
+                    data.meta.required = true;
+                    data.classes.push('pum-required');
+                }
 
-            if (data.required) {
-                data.meta.required = true;
-                data.classes.push('pum-required');
-            }
+                if (typeof data.dynamic_desc === 'string' && data.dynamic_desc.length) {
+                    data.classes.push('pum-field-dynamic-desc');
+                    data.desc = PUM_Admin.templates.renderInline(data.dynamic_desc, data);
+                }
 
-            switch (args.type) {
-            case 'select':
-            case 'objectselect':
-            case 'postselect':
-            case 'taxonomyselect':
-                if (data.options !== undefined) {
-                    _.each(data.options, function (value, label) {
-                        var selected = false;
-                        if (data.multiple && data.value.indexOf(value) !== false) {
-                            selected = 'selected';
-                        } else if (!data.multiple && data.value == value) {
-                            selected = 'selected';
-                        }
+                switch (args.type) {
+                case 'select':
+                case 'objectselect':
+                case 'postselect':
+                case 'taxonomyselect':
+                    if (data.options !== undefined) {
+                        _.each(data.options, function (label, value) {
+                            var selected = false,
+                                optgroup,
+                                optgroup_options;
 
-                        options.push(
-                            PUM_Templates.prepareMeta({
-                                label: label,
-                                value: value,
-                                meta: {
-                                    selected: selected
+                            // Check if the label is an object. If so this is a optgroup and the label is sub options array.
+                            // NOTE: The value in the case its an optgroup is the optgroup label.
+                            if (typeof label !== 'object') {
+
+                                if (data.multiple && ((typeof data.value === 'object' && data.value[value] !== undefined) || (typeof data.value === 'array' && data.value.indexOf(value) !== false))) {
+                                    selected = 'selected';
+                                } else if (!data.multiple && data.value == value) {
+                                    selected = 'selected';
                                 }
-                            })
-                        );
 
-                    });
+                                options.push(
+                                    PUM_Admin.templates.prepareMeta({
+                                        label: label,
+                                        value: value,
+                                        meta: {
+                                            selected: selected
+                                        }
+                                    })
+                                );
 
-                    data.options = options;
-                }
+                            } else {
+                                // Process Option Groups
 
-                if (data.multiple) {
+                                // Swap label & value due to group labels being used as keys.
+                                optgroup = value;
+                                optgroup_options = [];
 
-                    data.meta.multiple = true;
+                                _.each(label, function (label, value) {
+                                    var selected = false;
 
-                    if (data.as_array) {
-                        data.name += '[]';
-                    }
+                                    if (data.multiple && ((typeof data.value === 'object' && data.value[value] !== undefined) || (typeof data.value === 'array' && data.value.indexOf(value) !== false))) {
+                                        selected = 'selected';
+                                    } else if (!data.multiple && data.value == value) {
+                                        selected = 'selected';
+                                    }
 
-                    if (!data.value || !data.value.length) {
-                        data.value = [];
-                    }
+                                    optgroup_options.push(
+                                        PUM_Admin.templates.prepareMeta({
+                                            label: label,
+                                            value: value,
+                                            meta: {
+                                                selected: selected
+                                            }
+                                        })
+                                    );
 
-                    if (typeof data.value === 'string') {
-                        data.value = [data.value];
-                    }
+                                });
 
-                }
+                                options.push({
+                                    label: optgroup,
+                                    options: optgroup_options
+                                });
 
-                if (args.type !== 'select') {
-                    data.select2 = true;
-                    data.classes.push('pum-field-objectselect');
-                    data.classes.push(args.type === 'postselect' ? 'pum-field-postselect' : 'pum-field-taxonomyselect');
-                    data.meta['data-objecttype'] = args.type === 'postselect' ? 'post_type' : 'taxonomy';
-                    data.meta['data-objectkey'] = args.type === 'postselect' ? args.post_type : args.taxonomy;
-                    data.meta['data-current'] = data.value;
-                }
-
-                if (data.select2) {
-                    data.classes.push('pum-select2');
-
-                    if (data.placeholder) {
-                        data.meta['data-placeholder'] = data.placeholder;
-                    }
-                }
-
-                break;
-            case 'multicheck':
-                if (data.options !== undefined) {
-                    _.each(data.options, function (value, label) {
-
-                        options.push({
-                            label: label,
-                            value: value,
-                            meta: {
-                                checked: data.value.indexOf(value) >= 0
                             }
+
                         });
 
-                    });
+                        data.options = options;
 
-                    data.options = options;
-                }
-                break;
-            case 'checkbox':
-                if (parseInt(data.value, 10) === 1) {
-                    //data.meta.checked = true;
-                }
+                    }
 
-                data.meta.checked = !!data.value;
-                break;
-            case 'rangeslider':
-                data.meta.step = data.step;
-                data.meta.min = data.min;
-                data.meta.max = data.max;
-                break;
-            case 'textarea':
-                data.meta.cols = data.cols;
-                data.meta.rows = data.rows;
-                break;
-            }
+                    if (data.multiple) {
 
-            data.field = PUM_Templates.render(fieldTemplate, data);
+                        data.meta.multiple = true;
 
-            return PUM_Templates.render('pum-field-wrapper', data);
-        },
-        prepareMeta: function (data) {
-            // Convert meta JSON to attribute string.
-            var _meta = [],
-                key;
-
-            for (key in data.meta) {
-                if (data.meta.hasOwnProperty(key)) {
-                    // Boolean attributes can only require attribute key, not value.
-                    if ('boolean' === typeof data.meta[key]) {
-                        // Only set truthy boolean attributes.
-                        if (data.meta[key]) {
-                            _meta.push(_.escape(key));
+                        if (data.as_array) {
+                            data.name += '[]';
                         }
+
+                        if (!data.value || !data.value.length) {
+                            data.value = [];
+                        }
+
+                        if (typeof data.value === 'string') {
+                            data.value = [data.value];
+                        }
+
+                    }
+
+                    if (args.type !== 'select') {
+                        data.select2 = true;
+                        data.classes.push('pum-field-objectselect');
+                        data.classes.push(args.type === 'postselect' ? 'pum-field-postselect' : 'pum-field-taxonomyselect');
+                        data.meta['data-objecttype'] = args.type === 'postselect' ? 'post_type' : 'taxonomy';
+                        data.meta['data-objectkey'] = args.type === 'postselect' ? args.post_type : args.taxonomy;
+                        data.meta['data-current'] = data.value;
+                    }
+
+                    if (data.select2) {
+                        data.classes.push('jpselect2');
+
+                        if (data.placeholder) {
+                            data.meta['data-placeholder'] = data.placeholder;
+                        }
+                    }
+
+                    break;
+                case 'radio':
+                    if (data.options !== undefined) {
+                        _.each(data.options, function (label, value) {
+
+                            options.push(
+                                PUM_Admin.templates.prepareMeta({
+                                    label: label,
+                                    value: value,
+                                    meta: {
+                                        checked: data.value === value
+                                    }
+                                })
+                            );
+
+                        });
+
+                        data.options = options;
+                    }
+                    break;
+                case 'multicheck':
+                    if (data.options !== undefined) {
+
+                        if (!data.value) {
+                            data.value = [];
+                        }
+
+                        if (data.as_array) {
+                            data.name += '[]';
+                        }
+
+                        _.each(data.options, function (label, value) {
+
+                            options.push(
+                                PUM_Admin.templates.prepareMeta({
+                                    label: label,
+                                    value: value,
+                                    meta: {
+                                        checked: (typeof data.value === 'object' && data.value[value] !== undefined) || (typeof data.value === 'array' && data.value.indexOf(value) >= 0)
+                                    }
+                                })
+                            );
+
+                        });
+
+                        data.options = options;
+                    }
+                    break;
+                case 'checkbox':
+                    if (parseInt(data.value, 10) === 1) {
+                        data.meta.checked = true;
+                    }
+                    break;
+                case 'rangeslider':
+                    // data.meta.readonly = true;
+                    data.meta.step = data.step;
+                    data.meta.min = data.min;
+                    data.meta.max = data.max;
+                    break;
+                case 'textarea':
+                    data.meta.cols = data.cols;
+                    data.meta.rows = data.rows;
+                    break;
+                case 'measure':
+                    if (typeof data.value === 'string' && data.value !== '') {
+                        data.number = parseInt(data.value);
+                        data.unitValue = data.value.replace(data.number, "");
+                        data.value = data.number;
                     } else {
-                        _meta.push(_.escape(key) + '="' + _.escape(data.meta[key]) + '"');
+                        data.unitValue = null;
+                    }
+
+                    if (data.units !== undefined) {
+                        _.each(data.units, function (label, value) {
+                            var selected = false;
+
+                            if (data.unitValue == value) {
+                                selected = 'selected';
+                            }
+
+                            options.push(
+                                PUM_Admin.templates.prepareMeta({
+                                    label: label,
+                                    value: value,
+                                    meta: {
+                                        selected: selected
+                                    }
+                                })
+                            );
+
+                        });
+
+                        data.units = options;
+                    }
+                    break;
+                }
+
+                return data;
+            },
+            field: function (args) {
+                var fieldTemplate,
+                    data = PUM_Admin.templates.fieldArgs(args);
+
+                fieldTemplate = 'pum-field-' + data.type;
+
+                if (!$('#tmpl-' + fieldTemplate).length) {
+                    if (data.type === 'objectselfect' || data.type === 'postselect' || data.type === 'taxonomyselect') {
+                        fieldTemplate = 'pum-field-select';
+                    }
+                    if (!$('#tmpl-' + fieldTemplate).length) {
+                        return '';
                     }
                 }
+
+                data.field = PUM_Admin.templates.render(fieldTemplate, data);
+
+                return PUM_Admin.templates.render('pum-field-wrapper', data);
+            },
+            prepareMeta: function (data) {
+                // Convert meta JSON to attribute string.
+                var _meta = [],
+                    key;
+
+                for (key in data.meta) {
+                    if (data.meta.hasOwnProperty(key)) {
+                        // Boolean attributes can only require attribute key, not value.
+                        if ('boolean' === typeof data.meta[key]) {
+                            // Only set truthy boolean attributes.
+                            if (data.meta[key]) {
+                                _meta.push(_.escape(key));
+                            }
+                        } else {
+                            _meta.push(_.escape(key) + '="' + _.escape(data.meta[key]) + '"');
+                        }
+                    }
+                }
+
+                data.meta = _meta.join(' ');
+                return data;
             }
+        };
 
-            data.meta = _meta.join(' ');
-            return data;
-        }
-
-    };
-
-}(jQuery, document));
+    // Import this module.
+    window.PUM_Admin = window.PUM_Admin || {};
+    window.PUM_Admin.templates = templates;
+}(jQuery));

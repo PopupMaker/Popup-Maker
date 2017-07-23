@@ -1,10 +1,203 @@
-.pum-popup-conditions {
+/*!******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
+
+.pum-field {
+  position: relative;
+
+  margin-bottom: 1em;
+
+  > label {
+    display: block;
+    font-weight: bold;
+  }
+
+  .pum-doclink {
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+}
+
+/**
+ * Sections
+ */
+.pum-field-section {
+
+}
+
+/**
+ * Heading & separator fields
+ */
+.pum-field-heading,
+.pum-field-separator {
+  h3 {
+    margin-top: 0;
+    font-size: 1.2em;
+  }
+
+  .pum-desc {
+    display: none;
+  }
+
+  hr {
+    margin-bottom: 2em;
+  }
+}
+
+.pum-field-hidden {
+  display: none;
+}
+
+.pum-field-editor {
+  #insert-media-button {
+    display: none;
+  }
+}
+
+/**
+ * Select fields
+ */
+.pum-field-select {
+  option.bold {
+    font-weight: bold;
+    font-size: 1.125em;
+  }
+}
+
+/**
+ * Checkbox fields
+ */
+.pum-field-checkbox {
+  position: relative;
+
+  label {
+    margin-left: 1.5em;
+
+    &.pum-desc {
+      display: inline;
+      font-weight: inherit;
+      font-size: inherit;
+      margin: 0 0 1em;
+    }
+  }
+
+  input[type="checkbox"] {
+    position: absolute;
+    top: .25em;
+  }
+}
+
+/**
+ * Multicheck & Radio fields
+ */
+.pum-field-multicheck,
+.pum-field-radio {
+
+  input, label {
+    line-height: 1em;
+    margin-bottom: 10px;
+  }
+
+  input[type="radio"] {
+    display: inline-block;
+    margin-right: .25em;
+  }
+
+  input + label {
+    font-weight: normal;
+    display: inline-block;
+  }
+
+  label:first-child {
+    font-weight: bold;
+    margin: 0 0 10px;
+  }
+
+  > p.pum-desc {
+    margin: 0 0 .5em;
+  }
+
+}
+
+/**
+ * Range & range slider fields
+  */
+.pum-field-range,
+.pum-field-rangeslider {
+  input[type="range"] {
+    vertical-align: middle;
+  }
+
+  .pum-range-manual {
+    padding-right: 25px;
+    text-align: right;
+    width: 80px;
+  }
+
+  .range-value-unit,
+  .pum-range-value-unit {
+    position: relative;
+    display: inline-block;
+    margin-left: -30px;
+    margin-right: 10px;
+    width: 20px;
+    text-align: left;
+    top: .125em;
+  }
+}
+
+/**
+ * Image fields
+ */
+.pum-image-field {
+  .pum-image-field .pum-image-select,
+  &.pum-image-empty .pum-image-preview {
+    display: none;
+  }
+
+  &.pum-image-empty .pum-image-select {
+    display: block;
+  }
+
+  .pum-image-preview-img {
+    float: left;
+    line-height: 0;
+    margin: 5px 0;
+  }
+
+  .pum-image-preview-img img {
+    max-width: 60px;
+  }
+
+  .pum-image-preview select {
+    margin: 8px 0 8px 10px;
+    width: 200px;
+  }
+
+  .pum-image-edit {
+    margin: 0 0 0 11px;
+  }
+
+  .pum-image-replace,
+  .pum-image-remove {
+    margin: 0 0 0 8px;
+  }
+}
+
+/**
+ * Conditions field
+ */
+.pum-field-conditions {
 
   .pum-alert-box {
   }
 
   .facet-builder {
 
+    p {
+      margin: 0 0 1em;
+    }
     a {
       text-decoration: none;
     }
@@ -48,7 +241,7 @@
     .facet {
       position: relative;
       padding: 12px 30px 6px 10px;
-      border-bottom: 1px solid #E7E7E7;
+      border-bottom: 1px solid #e1e1e1;
       border-top: 1px solid #fff;
 
       &:first-child {
@@ -86,14 +279,10 @@
       }
     }
 
-    .pum-condition-target {
+    .pum-facet-target {
 
       position: relative;
       max-width: 240px;
-
-      #postbox-container-1 & {
-        max-width: 100%;
-      }
 
       * {
         box-sizing: border-box;
@@ -116,16 +305,20 @@
         left: 2px;
         top: 2px;
         z-index: 10;
-        width: 23px;
+        //width: 23px;
         line-height: 24px;
         height: 25px;
 
-        padding: 0;
+        //padding: 0;
         background: #f7f7f7;
         border: 1px solid transparent;
         border-radius: 2px 0 0 2px;
         border-right: 1px solid #ddd;
         text-align: center;
+
+        span {
+          font-size: 1.25em;
+        }
 
         &::before {
           color: #555;
@@ -148,11 +341,18 @@
       &.not-operand-checked {
 
         .pum-not-operand {
+          span,
           &::before {
             color: #a00;
 
           }
         }
+
+        select,
+        .pumselect2-container .pumselect2-selection {
+          padding-left: 58px;
+        }
+
       }
 
       .pumselect2-container-active {
@@ -247,6 +447,14 @@
 
   }
 
+  .no-facet-groups {
+    display: block;
+    .pum-facet-target {
+      max-width: 100%;
+    }
+  }
+
+
   /* Conditionals */
   .has-conditions {
 
@@ -268,19 +476,34 @@
 
 }
 
-#side-sortables {
 
-  .pum-popup-conditions .facet-builder .facet-col {
-    width: 100%;
-    float: none;
-    max-width: none;
-  }
-  .pum-popup-conditions .facet-builder .facet-actions {
-    right: 6px;
-    top: 18px;
+
+[data-pum-dependencies] {
+  display: none;
+}
+
+
+
+
+
+
+
+// TODO What are these, do something with them.
+.pum-field-link {
+  input {
+    margin-right: 24px;
+    display: block;
   }
 
-  .pumselect2-container {
-    width: 100% !important;
+  button.dashicons {
+    float: right;
+    width: 1.5em;
+    height: 1.5em;
+    line-height: 1;
+    padding: 0;
+    font-size: 16px;
+    vertical-align: sub;
+    margin-top: 1px;
+    box-shadow: 0 0 0 #cccccc;
   }
 }

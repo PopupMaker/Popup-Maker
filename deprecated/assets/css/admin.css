@@ -5,7 +5,7 @@ h3.title {
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.125);
 }
 
-#popuptitlediv #popuptitle {
+#popup-titlediv #popup-title {
     background-color: #fff;
     font-size: 1.5em;
     height: 1.8em;
@@ -16,14 +16,14 @@ h3.title {
     width: 100%;
 }
 
-#popuptitlediv #popuptitle input {
+#popup-titlediv #popup-title input {
     color: #777;
     font-size: 1.7em;
     padding: 11px 10px;
     position: absolute;
 }
 
-#popuptitlediv #popuptitle-prompt-text {
+#popup-titlediv #popup-title-prompt-text {
     font-size: 1.4em;
     padding: 8px 10px;
 }
@@ -62,7 +62,7 @@ input[type="range"] {
     vertical-align: middle;
 }
 
-input.popmake-range-manual {
+input.pum-range-manual {
     padding-right: 25px !important;
 }
 
@@ -97,7 +97,7 @@ input[type="range"] {
 	box-shadow:none;
 }
 
-button.popmake-range-minus, button.popmake-range-plus {
+button.pum-range-minus, button.pum-range-plus {
 	height:30px;
 	width:30px;
 	text-align: center;
@@ -110,7 +110,7 @@ option.bold {
 }
 
 /* Range Slider Adjusters */
-.popmake-range-manual {
+.pum-range-manual {
     padding-right: 25px;
     text-align: right;
     width: 80px;
@@ -149,18 +149,18 @@ option.bold {
 }
 
 /* Upgrade Tips */
-.popmake-upgrade-tip {
+.pum-upgrade-tip {
     color: #333;
     line-height: 2em !important;
 }
 
-div.popmake-upgrade-tip {
+div.pum-upgrade-tip {
     margin-bottom: 15px;
     display: block;
     font-weight: bold;
 }
 
-.popmake-upgrade-tip img {
+.pum-upgrade-tip img {
     float: left;
     margin-right: 15px;
 }

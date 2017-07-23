@@ -2,15 +2,16 @@
  * Popup Maker v1.4
  */
 
-var PopMakeAdmin, PUM_Admin;
+
+var PopMakeAdmin;
 (function ($, document, undefined) {
     "use strict";
 
-    var $document = $(document),
-        I10n = pum_admin.I10n,
-        defaults = pum_admin.defaults;
+    window.PUM_Admin = window.PUM_Admin || {};
 
-    PUM_Admin = {};
+    var $document = $(document),
+        I10n = pum_admin_vars.I10n,
+        defaults = pum_admin_vars.defaults;
 
     PopMakeAdmin = {
         init: function () {
@@ -71,8 +72,6 @@ var PopMakeAdmin, PUM_Admin;
                     }
                 };
 
-            $('#popuptitlediv').insertAfter('#titlediv');
-
             $('#title').prop('required', true);
 
             $(document)
@@ -83,28 +82,28 @@ var PopMakeAdmin, PUM_Admin;
 
                     $link.attr('href', $link.data('baseurl')+val);
                 })
-                .on('keydown', '#popuptitle', function (event) {
+                .on('keydown', '#popup-title', function (event) {
                     var keyCode = event.keyCode || event.which;
                     if (9 === keyCode) {
                         event.preventDefault();
                         $('#title').focus();
                     }
                 })
-                .on('keydown', '#title, #popuptitle', function (event) {
+                .on('keydown', '#title, #popup-title', function (event) {
                     var keyCode = event.keyCode || event.which,
                         target;
                     if (!event.shiftKey && 9 === keyCode) {
                         event.preventDefault();
-                        target = $(this).attr('id') === 'title' ? '#popuptitle' : '#insert-media-button';
+                        target = $(this).attr('id') === 'title' ? '#popup-title' : '#insert-media-button';
                         $(target).focus();
                     }
                 })
-                .on('keydown', '#popuptitle, #insert-media-button', function (event) {
+                .on('keydown', '#popup-title, #insert-media-button', function (event) {
                     var keyCode = event.keyCode || event.which,
                         target;
                     if (event.shiftKey && 9 === keyCode) {
                         event.preventDefault();
-                        target = $(this).attr('id') === 'popuptitle' ? '#title' : '#popuptitle';
+                        target = $(this).attr('id') === 'popup-title' ? '#title' : '#popup-title';
                         $(target).focus();
                     }
                 })
@@ -275,7 +274,7 @@ var PopMakeAdmin, PUM_Admin;
             //$.fn.popmake.themes[popmake_default_theme] = PUMUtils.convert_meta_to_object(theme);
         },
         initialize_theme_page: function () {
-            $('#popuptitlediv').insertAfter('#titlediv');
+            $('#popup-titlediv').insertAfter('#titlediv');
 
             var self = this,
                 table = $('#popup_theme_close_location').parents('table');
@@ -302,7 +301,7 @@ var PopMakeAdmin, PUM_Admin;
                 }
             });
 
-            $('.color-picker.background-color').each(function () {
+            $('.pum-color-picker.background-color').each(function () {
                 var $this = $(this);
                 if ($this.val() === '') {
                     $this.parents('table').find('.background-opacity').hide();

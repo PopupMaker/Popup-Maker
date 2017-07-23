@@ -1,12 +1,13 @@
 var PUMSelect2Fields;
 (function ($, document, undefined) {
     "use strict";
+
     // Here because some plugins load additional copies, big no-no. This is the best we can do.
     $.fn.pumselect2 = $.fn.pumselect2 || $.fn.select2;
 
-    PUMSelect2Fields = {
+    var select2 = {
         init: function () {
-            $('.pum-select2 select').filter(':not(.initialized)').each(function () {
+            $('.pumselect2 select').filter(':not(.pumselect2-initialized)').each(function () {
                 var $this = $(this),
                     current = $this.data('current'),
                     object_type = $this.data('objecttype'),
@@ -56,13 +57,14 @@ var PUMSelect2Fields;
                             return markup;
                         }, // let our custom formatter work
                         minimumInputLength: 1,
-                        templateResult: PUMSelect2Fields.formatObject,
-                        templateSelection: PUMSelect2Fields.formatObjectSelection
+                        templateResult: PUM_Admin.select2.formatObject,
+                        templateSelection: PUM_Admin.select2.formatObjectSelection
                     });
                 }
 
+
                 $this
-                    .addClass('initialized')
+                    .addClass('pumselect2-initialized')
                     .pumselect2(options);
 
                 if (current !== undefined) {
@@ -108,6 +110,18 @@ var PUMSelect2Fields;
         }
     };
 
-    $(document).on('pum_init', PUMSelect2Fields.init);
+    // Import this module.
+    window.PUM_Admin = window.PUM_Admin || {};
+    window.PUM_Admin.select2 = select2;
+
+    $(document).on('pum_init', PUM_Admin.select2.init);
+
+
+
+
+
+
+
+
 
 }(jQuery, document));
