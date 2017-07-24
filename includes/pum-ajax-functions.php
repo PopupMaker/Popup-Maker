@@ -13,13 +13,18 @@ function pum_ajax_object_search() {
 
 	switch ( $_REQUEST['object_type'] ) {
 		case 'post_type':
+
+			$include =  isset( $_REQUEST['include'] ) ? wp_parse_id_list( $_REQUEST['include'] ) : null;
+
 			$post_type = ! empty( $_REQUEST['object_key'] ) ? $_REQUEST['object_key'] : 'post';
 			$args      = array(
 				's'              => ! empty( $_REQUEST['s'] ) ? $_REQUEST['s'] : null,
-				'post__in'       => ! empty( $_REQUEST['include'] ) ? array_map( 'intval', $_REQUEST['include'] ) : null,
+				'post__in'       => $include,
 				'page'           => ! empty( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : null,
 				'posts_per_page' => 10,
 			);
+
+
 
 			$query = PUM_Helpers::post_type_selectlist( $post_type, $args, true );
 			foreach ( $query['items'] as $name => $id ) {
