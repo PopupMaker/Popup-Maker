@@ -287,12 +287,12 @@ class Popup_Maker {
 		}
 
 		// Conditions
-		require_once POPMAKE_DIR . 'includes/class-pum-condition.php';
-		require_once POPMAKE_DIR . 'includes/class-pum-conditions.php';
-		require_once POPMAKE_DIR . 'includes/class-pum-condition-callbacks.php';
-		require_once POPMAKE_DIR . 'includes/pum-condition-functions.php';
+		// require_once POPMAKE_DIR . 'includes/class-pum-condition.php';
+		// require_once POPMAKE_DIR . 'includes/class-pum-conditions.php';
+		// require_once POPMAKE_DIR . 'includes/class-pum-condition-callbacks.php';
+		// require_once POPMAKE_DIR . 'includes/pum-condition-functions.php';
 		if ( is_admin() ) {
-			require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-conditions.php';
+			// require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-conditions.php';
 		}
 
 		// Modules
