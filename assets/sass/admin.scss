@@ -27,6 +27,11 @@
     position: relative;
     margin: 0 0 24px;
 
+    label,
+    .pum-desc {
+      display: block;
+    }
+
     label {
       margin-bottom: 4px;
     }
@@ -41,7 +46,7 @@
     width: 100%!important;
   }
 
-  .pum-select2 select {
+  .pum-field-select2 select {
     width: 100%;
   }
 

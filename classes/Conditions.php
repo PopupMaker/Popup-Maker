@@ -244,7 +244,7 @@ class PUM_Conditions {
 						'post_type'   => $name,
 						'multiple'    => true,
 						'as_array'    => true,
-						'options'     => $this->preload_posts ? PUM_Helpers::post_type_selectlist( $name ) : array(),
+						'std'         => array(),
 					),
 				),
 				'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
@@ -273,7 +273,6 @@ class PUM_Conditions {
 							'post_type'   => $name,
 							'multiple'    => true,
 							'as_array'    => true,
-							'options'     => is_admin() && popmake_is_admin_popup_page() ? PUM_Helpers::post_type_selectlist( $name ) : array(),
 						),
 					),
 					'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
@@ -289,7 +288,6 @@ class PUM_Conditions {
 							'post_type'   => $name,
 							'multiple'    => true,
 							'as_array'    => true,
-							'options'     => is_admin() && popmake_is_admin_popup_page() ? PUM_Helpers::post_type_selectlist( $name ) : array(),
 						),
 					),
 					'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
@@ -345,7 +343,6 @@ class PUM_Conditions {
 						'taxonomy'    => $tax_name,
 						'multiple'    => true,
 						'as_array'    => true,
-						'options'     => $this->preload_posts ? PUM_Helpers::taxonomy_selectlist( $tax_name ) : array(),
 					),
 				),
 				'callback' => array( 'PUM_Condition_Callbacks', 'post_type_tax' ),
@@ -382,7 +379,6 @@ class PUM_Conditions {
 						'taxonomy'    => $tax_name,
 						'multiple'    => true,
 						'as_array'    => true,
-						'options'     => $this->preload_posts ? PUM_Helpers::taxonomy_selectlist( $tax_name ) : array(),
 					),
 				),
 				'callback' => array( 'PUM_Condition_Callbacks', 'taxonomy' ),
@@ -418,20 +414,20 @@ class PUM_Conditions {
 			'priority' => 2,
 		);
 
-		$conditions['is_home']       = array(
+		$conditions['is_home'] = array(
 			'group'    => __( 'Posts', 'popup-maker' ),
 			'name'     => __( 'Blog Index', 'popup-maker' ),
 			'callback' => 'is_home',
 			'priority' => 1,
 		);
 
-		$conditions['is_search']     = array(
+		$conditions['is_search'] = array(
 			'group'    => __( 'General', 'popup-maker' ),
 			'name'     => __( 'Search Result Page', 'popup-maker' ),
 			'callback' => 'is_search',
 		);
 
-		$conditions['is_404']        = array(
+		$conditions['is_404'] = array(
 			'group'    => __( 'General', 'popup-maker' ),
 			'name'     => __( '404 Error Page', 'popup-maker' ),
 			'callback' => 'is_404',

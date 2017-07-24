@@ -88,7 +88,7 @@ class PUM_Popup_Conditions_Metabox {
 
 
 								<?php $checked = isset( $values['not_operand'] ) ? absint( $values['not_operand'] ) : false; ?>
-								<div class="facet-col pum-field pum-condition-target select pum-select2<?php echo $checked ? ' not-operand-checked' : ''; ?>">
+								<div class="facet-col pum-field pum-condition-target select pum-field-select2<?php echo $checked ? ' not-operand-checked' : ''; ?>">
 									<button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
 										<input type="checkbox" name="popup_conditions[<?php echo $group_count; ?>][<?php echo $condition_count; ?>][not_operand]" value="1" <?php checked( $checked, 1 ); ?> />
 									</button>
@@ -126,7 +126,7 @@ class PUM_Popup_Conditions_Metabox {
 			</div>
 			<div class="no-facet-groups">
 				<label for="pum-first-condition"><?php _e( 'Choose a condition to get started.', 'popup-maker' ); ?></label>
-				<div class="pum-field select pum-select2 pum-condition-target">
+				<div class="pum-field pum-field-select pum-field-select2 pum-condition-target">
 					<button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
 						<input type="checkbox" id="pum-first-condition-operand" value="1" />
 					</button>
@@ -234,13 +234,13 @@ class PUM_Popup_Conditions_Metabox {
 				<i class="or">or</i>
 
 
-				<div class="facet-col pum-field pum-condition-target select pum-select2 <# if (typeof data.not_operand !== 'undefined' && pumChecked(data.not_operand, '1')) print('not-operand-checked'); #>">
+				<div class="facet-col facet-target pum-field pum-condition-target pum-field-select2 <# if (typeof data.not_operand !== 'undefined' && pumChecked(data.not_operand, '1')) print('not-operand-checked'); #>">
 					<button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
 						<input type="checkbox" name="popup_conditions[{{data.group}}][{{data.index}}][not_operand]" value="1"
 						<# if (typeof data.not_operand !== 'undefined') print(pumChecked(data.not_operand, '1', true)); #> />
 					</button>
 
-					<select class="target facet-select" id="popup_conditions[{{data.group}}][{{data.index}}][target]" name="popup_conditions[{{data.group}}][{{data.index}}][target]">
+					<select id="popup_conditions[{{data.group}}][{{data.index}}][target]" name="popup_conditions[{{data.group}}][{{data.index}}][target]">
 						<option value=""><?php _e( 'Select a condition', 'popup-maker' ); ?></option>
 						<?php foreach ( PUM_Conditions::instance()->get_conditions_by_group() as $group => $conditions ) : ?>
 							<optgroup label="<?php echo esc_attr_e( $group ); ?>">

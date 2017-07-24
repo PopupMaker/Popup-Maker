@@ -464,5 +464,10 @@ var PopMakeAdmin;
     $document.ready(function () {
         PopMakeAdmin.init();
         $document.trigger('pum_init');
+
+        // TODO Can't figure out why this is needed, but it looks stupid otherwise when the first condition field defaults to something other than the placeholder.
+        $('#pum-first-condition, #pum-first-trigger, #pum-first-cookie')
+            .val(null)
+            .trigger('change');
     });
 }(jQuery, document));

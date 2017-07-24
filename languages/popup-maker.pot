@@ -92,7 +92,7 @@ msgstr ""
 msgid "Analytics"
 msgstr ""
 
-#: classes/Admin/Popups.php:196, classes/Admin/Popups.php:222, classes/Conditions.php:109, classes/Conditions.php:415, classes/Conditions.php:429, classes/Conditions.php:435, includes/admin/settings/register-settings.php:319, includes/class-popmake-fields.php:57, includes/class-pum-conditions.php:71, includes/class-pum-shortcode.php:151, includes/pum-condition-functions.php:33, includes/pum-trigger-functions.php:71, includes/shortcodes/class-pum-shortcode-popup.php:46
+#: classes/Admin/Popups.php:196, classes/Admin/Popups.php:222, classes/Conditions.php:109, classes/Conditions.php:411, classes/Conditions.php:425, classes/Conditions.php:431, includes/admin/settings/register-settings.php:319, includes/class-popmake-fields.php:57, includes/class-pum-conditions.php:71, includes/class-pum-shortcode.php:151, includes/pum-condition-functions.php:33, includes/pum-trigger-functions.php:71, includes/shortcodes/class-pum-shortcode-popup.php:46
 msgid "General"
 msgstr ""
 
@@ -284,117 +284,117 @@ msgstr ""
 msgid "Choose where the animation will begin."
 msgstr ""
 
-#: classes/Admin/Popups.php:364, classes/Admin/Popups.php:423, classes/Admin/Popups.php:424, includes/admin/popups/metabox-display-fields.php:363, includes/admin/popups/metabox-display-fields.php:377, includes/admin/themes/metabox-close-fields.php:103, includes/class-popmake-popup-fields.php:152, includes/class-popmake-popup-fields.php:153, includes/class-popmake-popup-theme-fields.php:339, includes/input-options.php:129, includes/shortcodes/class-pum-shortcode-popup.php:143, includes/shortcodes/class-pum-shortcode-popup.php:144
+#: classes/Admin/Popups.php:364, classes/Admin/Popups.php:404, classes/Admin/Popups.php:405, includes/admin/popups/metabox-display-fields.php:363, includes/admin/popups/metabox-display-fields.php:377, includes/admin/themes/metabox-close-fields.php:103, includes/class-popmake-popup-fields.php:152, includes/class-popmake-popup-fields.php:153, includes/class-popmake-popup-theme-fields.php:339, includes/input-options.php:129, includes/shortcodes/class-pum-shortcode-popup.php:143, includes/shortcodes/class-pum-shortcode-popup.php:144
 msgid "Top"
 msgstr ""
 
-#: classes/Admin/Popups.php:365, classes/Admin/Popups.php:451, classes/Admin/Popups.php:452, includes/admin/popups/metabox-display-fields.php:401, includes/admin/popups/metabox-display-fields.php:415, includes/admin/themes/metabox-close-fields.php:112, includes/class-popmake-popup-fields.php:174, includes/class-popmake-popup-fields.php:175, includes/class-popmake-popup-theme-fields.php:349, includes/input-options.php:85, includes/input-options.php:130, includes/shortcodes/class-pum-shortcode-popup.php:165, includes/shortcodes/class-pum-shortcode-popup.php:166
+#: classes/Admin/Popups.php:365, classes/Admin/Popups.php:432, classes/Admin/Popups.php:433, includes/admin/popups/metabox-display-fields.php:401, includes/admin/popups/metabox-display-fields.php:415, includes/admin/themes/metabox-close-fields.php:112, includes/class-popmake-popup-fields.php:174, includes/class-popmake-popup-fields.php:175, includes/class-popmake-popup-theme-fields.php:349, includes/input-options.php:85, includes/input-options.php:130, includes/shortcodes/class-pum-shortcode-popup.php:165, includes/shortcodes/class-pum-shortcode-popup.php:166
 msgid "Left"
 msgstr ""
 
-#: classes/Admin/Popups.php:366, classes/Admin/Popups.php:437, classes/Admin/Popups.php:438, includes/admin/popups/metabox-display-fields.php:382, includes/admin/popups/metabox-display-fields.php:396, includes/admin/themes/metabox-close-fields.php:121, includes/class-popmake-popup-fields.php:163, includes/class-popmake-popup-fields.php:164, includes/class-popmake-popup-theme-fields.php:359, includes/input-options.php:131, includes/shortcodes/class-pum-shortcode-popup.php:154, includes/shortcodes/class-pum-shortcode-popup.php:155
+#: classes/Admin/Popups.php:366, classes/Admin/Popups.php:418, classes/Admin/Popups.php:419, includes/admin/popups/metabox-display-fields.php:382, includes/admin/popups/metabox-display-fields.php:396, includes/admin/themes/metabox-close-fields.php:121, includes/class-popmake-popup-fields.php:163, includes/class-popmake-popup-fields.php:164, includes/class-popmake-popup-theme-fields.php:359, includes/input-options.php:131, includes/shortcodes/class-pum-shortcode-popup.php:154, includes/shortcodes/class-pum-shortcode-popup.php:155
 msgid "Bottom"
 msgstr ""
 
-#: classes/Admin/Popups.php:367, classes/Admin/Popups.php:465, classes/Admin/Popups.php:466, includes/admin/popups/metabox-display-fields.php:420, includes/admin/popups/metabox-display-fields.php:434, includes/admin/themes/metabox-close-fields.php:130, includes/class-popmake-popup-fields.php:185, includes/class-popmake-popup-fields.php:186, includes/class-popmake-popup-theme-fields.php:369, includes/input-options.php:87, includes/input-options.php:132, includes/shortcodes/class-pum-shortcode-popup.php:176, includes/shortcodes/class-pum-shortcode-popup.php:177
+#: classes/Admin/Popups.php:367, classes/Admin/Popups.php:446, classes/Admin/Popups.php:447, includes/admin/popups/metabox-display-fields.php:420, includes/admin/popups/metabox-display-fields.php:434, includes/admin/themes/metabox-close-fields.php:130, includes/class-popmake-popup-fields.php:185, includes/class-popmake-popup-fields.php:186, includes/class-popmake-popup-theme-fields.php:369, includes/input-options.php:87, includes/input-options.php:132, includes/shortcodes/class-pum-shortcode-popup.php:176, includes/shortcodes/class-pum-shortcode-popup.php:177
 msgid "Right"
 msgstr ""
 
-#: classes/Admin/Popups.php:368, classes/Admin/Popups.php:411, includes/input-options.php:133, includes/input-options.php:150, includes/input-options.php:167
+#: classes/Admin/Popups.php:368, classes/Admin/Popups.php:392, includes/input-options.php:133, includes/input-options.php:150, includes/input-options.php:167
 msgid "Top Left"
 msgstr ""
 
-#: classes/Admin/Popups.php:369, classes/Admin/Popups.php:412, includes/input-options.php:134, includes/input-options.php:151
+#: classes/Admin/Popups.php:369, classes/Admin/Popups.php:393, includes/input-options.php:134, includes/input-options.php:151
 msgid "Top Center"
 msgstr ""
 
-#: classes/Admin/Popups.php:370, classes/Admin/Popups.php:413, includes/input-options.php:135, includes/input-options.php:152, includes/input-options.php:168
+#: classes/Admin/Popups.php:370, classes/Admin/Popups.php:394, includes/input-options.php:135, includes/input-options.php:152, includes/input-options.php:168
 msgid "Top Right"
 msgstr ""
 
-#: classes/Admin/Popups.php:371, classes/Admin/Popups.php:414, includes/input-options.php:136, includes/input-options.php:153
+#: classes/Admin/Popups.php:371, classes/Admin/Popups.php:395, includes/input-options.php:136, includes/input-options.php:153
 msgid "Middle Left"
 msgstr ""
 
-#: classes/Admin/Popups.php:372, classes/Admin/Popups.php:415, includes/input-options.php:137, includes/input-options.php:154
+#: classes/Admin/Popups.php:372, classes/Admin/Popups.php:396, includes/input-options.php:137, includes/input-options.php:154
 msgid "Middle Center"
 msgstr ""
 
-#: classes/Admin/Popups.php:373, classes/Admin/Popups.php:416, includes/input-options.php:138, includes/input-options.php:155
+#: classes/Admin/Popups.php:373, classes/Admin/Popups.php:397, includes/input-options.php:138, includes/input-options.php:155
 msgid "Middle Right"
 msgstr ""
 
-#: classes/Admin/Popups.php:374, classes/Admin/Popups.php:417, includes/input-options.php:139, includes/input-options.php:156, includes/input-options.php:169
+#: classes/Admin/Popups.php:374, classes/Admin/Popups.php:398, includes/input-options.php:139, includes/input-options.php:156, includes/input-options.php:169
 msgid "Bottom Left"
 msgstr ""
 
-#: classes/Admin/Popups.php:375, classes/Admin/Popups.php:418, includes/input-options.php:140, includes/input-options.php:157
+#: classes/Admin/Popups.php:375, classes/Admin/Popups.php:399, includes/input-options.php:140, includes/input-options.php:157
 msgid "Bottom Center"
 msgstr ""
 
-#: classes/Admin/Popups.php:376, classes/Admin/Popups.php:419, includes/input-options.php:141, includes/input-options.php:158, includes/input-options.php:170
+#: classes/Admin/Popups.php:376, classes/Admin/Popups.php:400, includes/input-options.php:141, includes/input-options.php:158, includes/input-options.php:170
 msgid "Bottom Right"
 msgstr ""
 
-#: classes/Admin/Popups.php:386, includes/admin/popups/metabox-display-fields.php:291, includes/class-popmake-popup-fields.php:123
-msgid "Disable Repositioning"
-msgstr ""
-
-#: classes/Admin/Popups.php:387, includes/admin/popups/metabox-display-fields.php:305, includes/class-popmake-popup-fields.php:124
-msgid "This will disable automatic repositioning of the popup on window resizing."
-msgstr ""
-
-#: classes/Admin/Popups.php:392, includes/admin/popups/metabox-display-fields.php:309, includes/class-popmake-popup-fields.php:130
-msgid "Fixed Postioning"
-msgstr ""
-
-#: classes/Admin/Popups.php:393, includes/admin/popups/metabox-display-fields.php:323, includes/class-popmake-popup-fields.php:131
-msgid "Checking this sets the positioning of the popup to fixed."
-msgstr ""
-
-#: classes/Admin/Popups.php:398, includes/admin/popups/metabox-display-fields.php:327, includes/class-popmake-popup-fields.php:145
-msgid "Position from Trigger"
-msgstr ""
-
-#: classes/Admin/Popups.php:399, includes/admin/popups/metabox-display-fields.php:341, includes/class-popmake-popup-fields.php:146
-msgid "This will position the popup in relation to the %sClick Trigger%s."
-msgstr ""
-
-#: classes/Admin/Popups.php:405, includes/admin/popups/metabox-display-fields.php:346, includes/admin/themes/metabox-close-fields.php:85, includes/class-popmake-popup-fields.php:137, includes/class-popmake-popup-theme-fields.php:331, includes/shortcodes/class-pum-shortcode-popup.php:135
+#: classes/Admin/Popups.php:386, includes/admin/popups/metabox-display-fields.php:346, includes/admin/themes/metabox-close-fields.php:85, includes/class-popmake-popup-fields.php:137, includes/class-popmake-popup-theme-fields.php:331, includes/shortcodes/class-pum-shortcode-popup.php:135
 msgid "Location"
 msgstr ""
 
-#: classes/Admin/Popups.php:406, includes/admin/popups/metabox-display-fields.php:358, includes/class-popmake-popup-fields.php:138, includes/shortcodes/class-pum-shortcode-popup.php:136
+#: classes/Admin/Popups.php:387, includes/admin/popups/metabox-display-fields.php:358, includes/class-popmake-popup-fields.php:138, includes/shortcodes/class-pum-shortcode-popup.php:136
 msgid "Choose where the popup will be displayed."
 msgstr ""
 
-#: classes/Admin/Popups.php:424, classes/Admin/Popups.php:438, classes/Admin/Popups.php:452, classes/Admin/Popups.php:466, includes/admin/popups/metabox-display-fields.php:377, includes/admin/popups/metabox-display-fields.php:396, includes/admin/popups/metabox-display-fields.php:415, includes/admin/popups/metabox-display-fields.php:434, includes/class-popmake-popup-fields.php:153, includes/class-popmake-popup-fields.php:164, includes/class-popmake-popup-fields.php:175, includes/class-popmake-popup-fields.php:186, includes/shortcodes/class-pum-shortcode-popup.php:144, includes/shortcodes/class-pum-shortcode-popup.php:155, includes/shortcodes/class-pum-shortcode-popup.php:166, includes/shortcodes/class-pum-shortcode-popup.php:177
+#: classes/Admin/Popups.php:405, classes/Admin/Popups.php:419, classes/Admin/Popups.php:433, classes/Admin/Popups.php:447, includes/admin/popups/metabox-display-fields.php:377, includes/admin/popups/metabox-display-fields.php:396, includes/admin/popups/metabox-display-fields.php:415, includes/admin/popups/metabox-display-fields.php:434, includes/class-popmake-popup-fields.php:153, includes/class-popmake-popup-fields.php:164, includes/class-popmake-popup-fields.php:175, includes/class-popmake-popup-fields.php:186, includes/shortcodes/class-pum-shortcode-popup.php:144, includes/shortcodes/class-pum-shortcode-popup.php:155, includes/shortcodes/class-pum-shortcode-popup.php:166, includes/shortcodes/class-pum-shortcode-popup.php:177
 msgctxt "Screen Edge: top, bottom"
 msgid "Distance from the %s edge of the screen."
 msgstr ""
 
-#: classes/Admin/Popups.php:479, includes/admin/popups/metabox-display-fields.php:457, includes/class-popmake-popup-fields.php:205
-msgid "Popup Z-Index"
+#: classes/Admin/Popups.php:460, includes/admin/popups/metabox-display-fields.php:327, includes/class-popmake-popup-fields.php:145
+msgid "Position from Trigger"
 msgstr ""
 
-#: classes/Admin/Popups.php:480, includes/admin/popups/metabox-display-fields.php:462, includes/class-popmake-popup-fields.php:206
-msgid "Change the z-index layer level for the popup."
+#: classes/Admin/Popups.php:461, includes/admin/popups/metabox-display-fields.php:341, includes/class-popmake-popup-fields.php:146
+msgid "This will position the popup in relation to the %sClick Trigger%s."
 msgstr ""
 
-#: classes/Admin/Popups.php:490, includes/admin/popups/metabox-display-fields.php:177, includes/class-popmake-popup-fields.php:82, includes/shortcodes/class-pum-shortcode-popup.php:96
+#: classes/Admin/Popups.php:467, includes/admin/popups/metabox-display-fields.php:309, includes/class-popmake-popup-fields.php:130
+msgid "Fixed Postioning"
+msgstr ""
+
+#: classes/Admin/Popups.php:468, includes/admin/popups/metabox-display-fields.php:323, includes/class-popmake-popup-fields.php:131
+msgid "Checking this sets the positioning of the popup to fixed."
+msgstr ""
+
+#: classes/Admin/Popups.php:475, includes/admin/popups/metabox-display-fields.php:177, includes/class-popmake-popup-fields.php:82, includes/shortcodes/class-pum-shortcode-popup.php:96
 msgid "Disable Overlay"
 msgstr ""
 
-#: classes/Admin/Popups.php:491, includes/admin/popups/metabox-display-fields.php:191, includes/class-popmake-popup-fields.php:83, includes/shortcodes/class-pum-shortcode-popup.php:97
+#: classes/Admin/Popups.php:476, includes/admin/popups/metabox-display-fields.php:191, includes/class-popmake-popup-fields.php:83, includes/shortcodes/class-pum-shortcode-popup.php:97
 msgid "Checking this will disable and hide the overlay for this popup."
 msgstr ""
 
-#: classes/Admin/Popups.php:496, includes/admin/popups/metabox-display-fields.php:273, includes/class-popmake-popup-fields.php:116
+#: classes/Admin/Popups.php:481, includes/admin/popups/metabox-display-fields.php:273, includes/class-popmake-popup-fields.php:116
 msgid "Stackable"
 msgstr ""
 
-#: classes/Admin/Popups.php:497, includes/admin/popups/metabox-display-fields.php:287, includes/class-popmake-popup-fields.php:117
+#: classes/Admin/Popups.php:482, includes/admin/popups/metabox-display-fields.php:287, includes/class-popmake-popup-fields.php:117
 msgid "This enables other popups to remain open."
+msgstr ""
+
+#: classes/Admin/Popups.php:487, includes/admin/popups/metabox-display-fields.php:291, includes/class-popmake-popup-fields.php:123
+msgid "Disable Repositioning"
+msgstr ""
+
+#: classes/Admin/Popups.php:488, includes/admin/popups/metabox-display-fields.php:305, includes/class-popmake-popup-fields.php:124
+msgid "This will disable automatic repositioning of the popup on window resizing."
+msgstr ""
+
+#: classes/Admin/Popups.php:493, includes/admin/popups/metabox-display-fields.php:457, includes/class-popmake-popup-fields.php:205
+msgid "Popup Z-Index"
+msgstr ""
+
+#: classes/Admin/Popups.php:494, includes/admin/popups/metabox-display-fields.php:462, includes/class-popmake-popup-fields.php:206
+msgid "Change the z-index layer level for the popup."
 msgstr ""
 
 #: classes/Admin/Popups.php:506, includes/admin/popups/metabox-close-fields.php:20, includes/class-popmake-popup-fields.php:216
@@ -510,48 +510,44 @@ msgid "Learn more about conditions"
 msgstr ""
 
 #: classes/Admin/Templates.php:282
-msgid "When users visit your site, the plugin will check the viewed content against your selection below and determine if this popup should be shown."
+msgid "When users visit your site, the plugin will check the viewed content/page against your selection below and determine if this popup should be shown."
 msgstr ""
 
-#: classes/Admin/Templates.php:296, classes/Admin/Templates.php:303, includes/admin/popups/class-metabox-conditions.php:128
+#: classes/Admin/Templates.php:284
+msgid "Use the %s button to check for the inverse of your chosen condition."
+msgstr ""
+
+#: classes/Admin/Templates.php:298, includes/admin/popups/class-metabox-conditions.php:128
 msgid "Choose a condition to get started."
 msgstr ""
 
-#: classes/Admin/Templates.php:298, classes/Admin/Templates.php:334, includes/admin/popups/class-metabox-conditions.php:92, includes/admin/popups/class-metabox-conditions.php:130, includes/admin/popups/class-metabox-conditions.php:238
+#: classes/Admin/Templates.php:300, classes/Admin/Templates.php:332, includes/admin/popups/class-metabox-conditions.php:92, includes/admin/popups/class-metabox-conditions.php:130, includes/admin/popups/class-metabox-conditions.php:238
 msgid "Enable the Not Operand"
 msgstr ""
 
-#: classes/Admin/Templates.php:299, classes/Admin/Templates.php:335
-msgid "Is"
+#: classes/Admin/Templates.php:303, classes/Admin/Templates.php:336
+msgid "Choose a condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:300, classes/Admin/Templates.php:336
-msgid "Is Not"
-msgstr ""
-
-#: classes/Admin/Templates.php:321, includes/admin/popups/class-metabox-conditions.php:115, includes/admin/popups/class-metabox-conditions.php:211
+#: classes/Admin/Templates.php:319, includes/admin/popups/class-metabox-conditions.php:115, includes/admin/popups/class-metabox-conditions.php:211
 msgctxt "aria-label for add new OR condition button"
 msgid "Add another OR condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:321, classes/Admin/Templates.php:332, includes/admin/popups/class-metabox-conditions.php:115, includes/admin/popups/class-metabox-conditions.php:211
+#: classes/Admin/Templates.php:319, classes/Admin/Templates.php:330, includes/admin/popups/class-metabox-conditions.php:115, includes/admin/popups/class-metabox-conditions.php:211
 msgid "or"
 msgstr ""
 
-#: classes/Admin/Templates.php:325, includes/admin/popups/class-metabox-conditions.php:119, includes/admin/popups/class-metabox-conditions.php:215
+#: classes/Admin/Templates.php:323, includes/admin/popups/class-metabox-conditions.php:119, includes/admin/popups/class-metabox-conditions.php:215
 msgctxt "aria-label for add new AND condition button"
 msgid "Add another AND condition group"
 msgstr ""
 
-#: classes/Admin/Templates.php:325, includes/admin/popups/class-metabox-conditions.php:119, includes/admin/popups/class-metabox-conditions.php:215
+#: classes/Admin/Templates.php:323, includes/admin/popups/class-metabox-conditions.php:119, includes/admin/popups/class-metabox-conditions.php:215
 msgid "and"
 msgstr ""
 
-#: classes/Admin/Templates.php:340
-msgid "Choose a condition"
-msgstr ""
-
-#: classes/Admin/Templates.php:350, includes/admin/popups/class-metabox-conditions.php:107, includes/admin/popups/class-metabox-conditions.php:266
+#: classes/Admin/Templates.php:344, includes/admin/popups/class-metabox-conditions.php:107, includes/admin/popups/class-metabox-conditions.php:266
 msgid "Remove Condition"
 msgstr ""
 
@@ -559,7 +555,7 @@ msgstr ""
 msgid "Pages"
 msgstr ""
 
-#: classes/Conditions.php:111, classes/Conditions.php:422, includes/class-pum-conditions.php:73
+#: classes/Conditions.php:111, classes/Conditions.php:418, includes/class-pum-conditions.php:73
 msgid "Posts"
 msgstr ""
 
@@ -590,7 +586,7 @@ msgctxt "condition: post type plural label ie. Posts: Selected"
 msgid "%s: Selected"
 msgstr ""
 
-#: classes/Conditions.php:242, classes/Conditions.php:271, classes/Conditions.php:287, includes/pum-condition-functions.php:51, includes/pum-condition-functions.php:80, includes/pum-condition-functions.php:96
+#: classes/Conditions.php:242, classes/Conditions.php:271, classes/Conditions.php:286, includes/pum-condition-functions.php:51, includes/pum-condition-functions.php:80, includes/pum-condition-functions.php:96
 msgctxt "condition: post type plural label ie. Select Posts"
 msgid "Select %s."
 msgstr ""
@@ -610,68 +606,68 @@ msgctxt "condition: post type plural label ie. Posts: ID"
 msgid "%s: Child Of"
 msgstr ""
 
-#: classes/Conditions.php:284, includes/pum-condition-functions.php:93
+#: classes/Conditions.php:283, includes/pum-condition-functions.php:93
 msgctxt "condition: post type plural label ie. Posts: ID"
 msgid "%s: Ancestor Of"
 msgstr ""
 
-#: classes/Conditions.php:306, includes/pum-condition-functions.php:115
+#: classes/Conditions.php:304, includes/pum-condition-functions.php:115
 msgctxt "condition: post type plural label ie. Pages: With Template"
 msgid "%s: With Template"
 msgstr ""
 
-#: classes/Conditions.php:313, includes/pum-condition-functions.php:122
+#: classes/Conditions.php:311, includes/pum-condition-functions.php:122
 msgid "Default"
 msgstr ""
 
-#: classes/Conditions.php:340, includes/pum-condition-functions.php:149
+#: classes/Conditions.php:338, includes/pum-condition-functions.php:149
 msgctxt "condition: post type plural and taxonomy singular label ie. Posts: With Category"
 msgid "%1$s: With %2$s"
 msgstr ""
 
-#: classes/Conditions.php:343, includes/pum-condition-functions.php:152
+#: classes/Conditions.php:341, includes/pum-condition-functions.php:152
 msgctxt "condition: post type plural label ie. Select categories"
 msgid "Select %s."
 msgstr ""
 
-#: classes/Conditions.php:371, includes/pum-condition-functions.php:181
+#: classes/Conditions.php:368, includes/pum-condition-functions.php:181
 msgctxt "condition: taxonomy plural label ie. Categories: All"
 msgid "%s: All"
 msgstr ""
 
-#: classes/Conditions.php:377, includes/pum-condition-functions.php:187
+#: classes/Conditions.php:374, includes/pum-condition-functions.php:187
 msgctxt "condition: taxonomy plural label ie. Categories: Selected"
 msgid "%s: Selected"
 msgstr ""
 
-#: classes/Conditions.php:380, includes/pum-condition-functions.php:190
+#: classes/Conditions.php:377, includes/pum-condition-functions.php:190
 msgctxt "condition: taxonomy plural label ie. Select Categories"
 msgid "Select %s."
 msgstr ""
 
-#: classes/Conditions.php:393, includes/pum-condition-functions.php:203
+#: classes/Conditions.php:389, includes/pum-condition-functions.php:203
 msgctxt "condition: taxonomy plural label ie. Categories: Selected"
 msgid "%s: IDs"
 msgstr ""
 
-#: classes/Conditions.php:396, includes/pum-condition-functions.php:206
+#: classes/Conditions.php:392, includes/pum-condition-functions.php:206
 msgctxt "condition: taxonomy plural label ie. Category IDs"
 msgid "%s IDs: 128, 129"
 msgstr ""
 
-#: classes/Conditions.php:416, includes/pum-condition-functions.php:230
+#: classes/Conditions.php:412, includes/pum-condition-functions.php:230
 msgid "Home Page"
 msgstr ""
 
-#: classes/Conditions.php:423, includes/pum-condition-functions.php:237
+#: classes/Conditions.php:419, includes/pum-condition-functions.php:237
 msgid "Blog Index"
 msgstr ""
 
-#: classes/Conditions.php:430
+#: classes/Conditions.php:426
 msgid "Search Result Page"
 msgstr ""
 
-#: classes/Conditions.php:436
+#: classes/Conditions.php:432
 msgid "404 Error Page"
 msgstr ""
 
@@ -2002,51 +1998,51 @@ msgstr ""
 msgid "Exclude on Shop Page"
 msgstr ""
 
-#: includes/integrations/class-pum-buddypress-integration.php:35
+#: includes/integrations/class-pum-buddypress-integration.php:34
 msgid "BP: Is a BuddyPress Page"
 msgstr ""
 
-#: includes/integrations/class-pum-buddypress-integration.php:43
+#: includes/integrations/class-pum-buddypress-integration.php:40
 msgid "BP: Is User Page"
 msgstr ""
 
-#: includes/integrations/class-pum-buddypress-integration.php:51
+#: includes/integrations/class-pum-buddypress-integration.php:46
 msgid "BP: Is Group Page"
 msgstr ""
 
-#: includes/integrations/class-pum-buddypress-integration.php:59
+#: includes/integrations/class-pum-buddypress-integration.php:52
 msgid "BP: Is User Messages Page"
 msgstr ""
 
-#: includes/integrations/class-pum-buddypress-integration.php:67
+#: includes/integrations/class-pum-buddypress-integration.php:58
 msgid "BP: Is Activation Page"
 msgstr ""
 
-#: includes/integrations/class-pum-buddypress-integration.php:75
+#: includes/integrations/class-pum-buddypress-integration.php:64
 msgid "BP: Is Register Page"
 msgstr ""
 
-#: includes/integrations/class-pum-buddypress-integration.php:83
+#: includes/integrations/class-pum-buddypress-integration.php:70
 msgid "BP: Is Item Admin"
 msgstr ""
 
-#: includes/integrations/class-pum-buddypress-integration.php:91
+#: includes/integrations/class-pum-buddypress-integration.php:76
 msgid "BP: Is Item Mod"
 msgstr ""
 
-#: includes/integrations/class-pum-buddypress-integration.php:99
+#: includes/integrations/class-pum-buddypress-integration.php:82
 msgid "BP: Is Directory"
 msgstr ""
 
-#: includes/integrations/class-pum-buddypress-integration.php:113
+#: includes/integrations/class-pum-buddypress-integration.php:94
 msgid "BP: Is Current Component"
 msgstr ""
 
-#: includes/integrations/class-pum-buddypress-integration.php:131
+#: includes/integrations/class-pum-buddypress-integration.php:110
 msgid "BP: Is Current Action"
 msgstr ""
 
-#: includes/integrations/class-pum-buddypress-integration.php:145
+#: includes/integrations/class-pum-buddypress-integration.php:122
 msgid "BP: Is Action Variable"
 msgstr ""
 

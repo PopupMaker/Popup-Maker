@@ -6360,147 +6360,6 @@ var PUMColorPickers;
         })
         .on('pum_init', colorpicker.init);
 }(jQuery, document));
-var PUMConditions;
-(function ($, document, undefined) {
-    "use strict";
-
-    PUMConditions = {
-        templates: {},
-        addGroup: function (target, not_operand) {
-            var $container = $('#pum-popup-conditions'),
-                data = {
-                    index: $container.find('.facet-group-wrap').length,
-                    conditions: [
-                        {
-                            target: target || null,
-                            not_operand: not_operand || false,
-                            settings: {}
-                        }
-                    ]
-                };
-            $container.find('.facet-groups').append(PUMConditions.templates.group(data));
-            $container.find('.facet-builder').addClass('has-conditions');
-            $(document).trigger('pum_init');
-        },
-        renumber: function () {
-            $('#pum-popup-conditions .facet-group-wrap').each(function () {
-                var $group = $(this),
-                    groupIndex = $group.parent().children().index($group);
-
-                $group
-                    .data('index', groupIndex)
-                    .find('.facet').each(function () {
-                        var $facet = $(this),
-                            facetIndex = $facet.parent().children().index($facet);
-
-                        $facet
-                            .data('index', facetIndex)
-                            .find('[name]').each(function () {
-                                var replace_with = "popup_conditions[" + groupIndex + "][" + facetIndex + "]";
-                                this.name = this.name.replace(/popup_conditions\[\d*?\]\[\d*?\]/, replace_with);
-                                this.id = this.name;
-                            });
-                    });
-            });
-        }
-    };
-
-    $(document)
-        .on('pum_init', PUMConditions.renumber)
-        .ready(function () {
-            // TODO Remove this check once admin scripts have been split into popup-editor, theme-editor etc.
-            if ($('body.post-type-popup form#post').length) {
-                PUMConditions.templates.group = wp.template('pum-condition-group');
-                PUMConditions.templates.facet = wp.template('pum-condition-facet');
-                PUMConditions.templates.settings = {};
-
-                $('script.tmpl.pum-condition-settings').each(function () {
-                    var $this = $(this),
-                        tmpl = $this.attr('id').replace('tmpl-', '');
-                    PUMConditions.templates.settings[$this.data('condition')] = wp.template(tmpl);
-                });
-
-                PUMConditions.renumber();
-            }
-        })
-        .on('select2:select pumselect2:select', '#pum-first-condition', function () {
-            var $this = $(this),
-                target = $this.val(),
-                $operand = $('#pum-first-condition-operand'),
-                not_operand = $operand.is(':checked') ? $operand.val() : null;
-
-            PUMConditions.addGroup(target, not_operand);
-
-            $this
-                .val(null)
-                .trigger('change');
-            $operand.prop('checked', false).parents('.pum-condition-target').removeClass('not-operand-checked');
-        })
-        .on('click', '#pum-popup-conditions .pum-not-operand', function () {
-            var $this = $(this),
-                $input = $this.find('input'),
-                $container = $this.parents('.pum-condition-target');
-
-            if ($input.is(':checked')) {
-                $container.removeClass('not-operand-checked');
-                $input.prop('checked', false);
-            } else {
-                $container.addClass('not-operand-checked');
-                $input.prop('checked', true);
-            }
-        })
-        .on('change', '#pum-popup-conditions select.target', function () {
-            var $this = $(this),
-                target = $this.val(),
-                data = {
-                    index: $this.parents('.facet-group').find('.facet').length,
-                    target: target,
-                    settings: {}
-                };
-
-            if (target === '' || target === $this.parents('.facet').data('target') || PUMConditions.templates.settings[target] === undefined) {
-                // TODO Add better error handling.
-                return;
-            }
-
-            $this.parents('.facet').data('target', target).find('.facet-settings').html(PUMConditions.templates.settings[target](data));
-            $(document).trigger('pum_init');
-        })
-        .on('click', '#pum-popup-conditions .facet-group-wrap:last-child .and .add-facet', PUMConditions.addGroup)
-        .on('click', '#pum-popup-conditions .add-or .add-facet:not(.disabled)', function () {
-            var $this = $(this),
-                $group = $this.parents('.facet-group-wrap'),
-                data = {
-                    group: $group.data('index'),
-                    index: $group.find('.facet').length,
-                    target: null,
-                    settings: {}
-                };
-
-            $group.find('.facet-list').append(PUMConditions.templates.facet(data));
-            $(document).trigger('pum_init');
-        })
-        .on('click', '#pum-popup-conditions .remove-facet', function () {
-            var $this = $(this),
-                $container = $('#pum-popup-conditions'),
-                $facet = $this.parents('.facet'),
-                $group = $this.parents('.facet-group-wrap');
-
-            $facet.remove();
-
-            if ($group.find('.facet').length === 0) {
-                $group.prev('.facet-group-wrap').find('.and .add-facet').removeClass('disabled');
-                $group.remove();
-
-                if ($container.find('.facet-group-wrap').length === 0) {
-                    $container.find('.facet-builder').removeClass('has-conditions');
-                }
-            }
-            PUMConditions.renumber();
-        });
-
-
-}(jQuery, document));
 (function ($) {
     "use strict";
 
@@ -6528,17 +6387,17 @@ var PUMConditions;
             return $element.each(function () {
                 var $this      = $(this),
                     $input     = $this.find('input'),
-                    $is        = $this.find('.is'),
-                    $not       = $this.find('.not'),
-                    $container = $this.parents('.pum-facet-target');
+                    // $is        = $this.find('.is'),
+                    // $not       = $this.find('.not'),
+                    $container = $this.parents('.facet-target');
 
                 if ($input.is(':checked')) {
-                    $is.hide();
-                    $not.show();
+                    // $is.hide();
+                    // $not.show();
                     $container.addClass('not-operand-checked');
                 } else {
-                    $is.show();
-                    $not.hide();
+                    // $is.show();
+                    // $not.hide();
                     $container.removeClass('not-operand-checked');
                 }
             });
@@ -6613,7 +6472,7 @@ var PUMConditions;
                     field.name = 'popup_settings[conditions][' + data.group + '][' + data.index + '][settings][' + fieldID + ']';
 
                     if (field.id === '') {
-                        field.id = 'conditions_' + data.group + '_' + data.index + '_settings_' + fieldID;
+                        field.id = 'popup_settings_conditions_' + data.group + '_' + data.index + '_settings_' + fieldID;
                     }
 
                     fields.push(PUM_Admin.templates.field(field));
@@ -6633,12 +6492,12 @@ var PUMConditions;
                     index: '',
                     value: null,
                     select2: true,
-                    classes: ['facet-target', 'facet-select'],
+                    classes: [],
                     options: conditions.get_conditions()
                 }, args);
 
                 if (data.id === null) {
-                    data.id = 'conditions_' + data.group + '_' + data.index + '_target';
+                    data.id = 'popup_settings_conditions_' + data.group + '_' + data.index + '_target';
                 }
 
                 if (data.name === null) {
@@ -6721,9 +6580,8 @@ var PUMConditions;
                     $facet
                         .data('index', facetIndex)
                         .find('[name]').each(function () {
-                        var replace_with = "_popup_settings[conditions][" + groupIndex + "][" + facetIndex + "]";
-                        this.name = this.name.replace(/_popup_settings\[conditions\]\[\d*?\]\[\d*?\]/, replace_with);
-                        this.id = this.name;
+                        this.name = this.name.replace(/popup_settings\[conditions\]\[\d*?\]\[\d*?\]/, "popup_settings[conditions][" + groupIndex + "][" + facetIndex + "]");
+                        this.id = this.id.replace(/popup_settings_conditions_\d*?_\d*?_/, "popup_settings_conditions_" + groupIndex + "_" + facetIndex + "_");
                     });
                 });
             });
@@ -6735,10 +6593,6 @@ var PUMConditions;
     window.PUM_Admin.conditions = conditions;
 
     $(document)
-        .on('pum_init', function () {
-            conditions.renumber();
-            conditions.toggle_not_operand();
-        })
         .on('pum_init', function () {
             conditions.renumber();
             conditions.toggle_not_operand();
@@ -6756,7 +6610,7 @@ var PUMConditions;
                 .val(null)
                 .trigger('change');
 
-            $operand.prop('checked', false).parents('.pum-facet-target').removeClass('not-operand-checked');
+            $operand.prop('checked', false).parents('.facet-target').removeClass('not-operand-checked');
             $(document).trigger('pum_init');
         })
         .on('click', '.facet-builder .pum-not-operand', function () {
@@ -8182,12 +8036,12 @@ var PUMSelect2Fields;
 
     var select2 = {
         init: function () {
-            $('.pumselect2 select').filter(':not(.pumselect2-initialized)').each(function () {
-                var $this = $(this),
-                    current = $this.data('current'),
+            $('.pum-field-select2 select').filter(':not(.pumselect2-initialized)').each(function () {
+                var $this       = $(this),
+                    current     = $this.data('current') || $this.find('option[selected="selected"]').attr('value'),
                     object_type = $this.data('objecttype'),
-                    object_key = $this.data('objectkey'),
-                    options = {
+                    object_key  = $this.data('objectkey'),
+                    options     = {
                         multiple: false,
                         dropdownParent: $this.parent()
                     };
@@ -8231,7 +8085,8 @@ var PUMSelect2Fields;
                         escapeMarkup: function (markup) {
                             return markup;
                         }, // let our custom formatter work
-                        minimumInputLength: 1,
+                        maximumInputLength: 20,
+                        closeOnSelect: !options.multiple,
                         templateResult: PUM_Admin.select2.formatObject,
                         templateSelection: PUM_Admin.select2.formatObjectSelection
                     });
@@ -8242,39 +8097,43 @@ var PUMSelect2Fields;
                     .addClass('pumselect2-initialized')
                     .pumselect2(options);
 
-                if (current !== undefined) {
+                if (current !== null && current !== undefined) {
 
-                    if ('object' !== typeof current) {
+                    if (options.multiple && 'object' !== typeof current && current !== "") {
                         current = [current];
+                    } else if (!options.multiple && current === '') {
+                        current = null;
                     }
-
-                    if (object_type && object_key) {
-                        $.ajax({
-                            url: ajaxurl,
-                            data: {
-                                action: "pum_object_search",
-                                object_type: object_type,
-                                object_key: object_key,
-                                include: current
-                            },
-                            dataType: "json",
-                            success: function (data) {
-                                $.each(data.items, function (key, item) {
-                                    // Add any option that doesn't already exist
-                                    if (!$this.find('option[value="' + item.id + '"]').length) {
-                                        $this.prepend('<option value="' + item.id + '">' + item.text + '</option>');
-                                    }
-                                });
-                                // Update the options
-                                $this.val(current).trigger('change');
-                            }
-                        });
-                    } else {
-                        $this.val(current).trigger('change');
-                    }
-
+                } else {
+                    current = null;
                 }
 
+                if (object_type && object_key && current !== null && current.length) {
+                    $.ajax({
+                        url: ajaxurl,
+                        data: {
+                            action: "pum_object_search",
+                            object_type: object_type,
+                            object_key: object_key,
+                            include: current && current.length ? current : null
+                        },
+                        dataType: "json",
+                        success: function (data) {
+                            $.each(data.items, function (key, item) {
+                                // Add any option that doesn't already exist
+                                if (!$this.find('option[value="' + item.id + '"]').length) {
+                                    $this.prepend('<option value="' + item.id + '">' + item.text + '</option>');
+                                }
+                            });
+                            // Update the options
+                            $this.val(current).trigger('change');
+                        }
+                    });
+                } else if (current && ((options.multiple && current.length) || (!options.multiple && current !== ""))) {
+                    $this.val(current).trigger('change');
+                } else if (current === null) {
+                    $this.val(current).trigger('change');
+                }
             });
         },
         formatObject: function (object) {
@@ -8290,13 +8149,6 @@ var PUMSelect2Fields;
     window.PUM_Admin.select2 = select2;
 
     $(document).on('pum_init', PUM_Admin.select2.init);
-
-
-
-
-
-
-
 
 
 }(jQuery, document));
@@ -8623,10 +8475,7 @@ var PUMSelect2Fields;
                     data.classes.push('pum-tabbed-form');
                 }
 
-
                 data.meta['data-tab-count'] = Object.keys(data.tabs).length;
-
-                console.log(data);
 
                 data.classes.push(data.vertical ? 'vertical-tabs' : 'horizontal-tabs');
 
@@ -8688,10 +8537,12 @@ var PUMSelect2Fields;
                             // NOTE: The value in the case its an optgroup is the optgroup label.
                             if (typeof label !== 'object') {
 
-                                if (data.multiple && ((typeof data.value === 'object' && data.value[value] !== undefined) || (typeof data.value === 'array' && data.value.indexOf(value) !== false))) {
-                                    selected = 'selected';
-                                } else if (!data.multiple && data.value == value) {
-                                    selected = 'selected';
+                                if (data.value !== null) {
+                                    if (data.multiple && ((typeof data.value === 'object' && data.value[value] !== undefined) || (typeof data.value === 'array' && data.value.indexOf(value) !== false))) {
+                                        selected = 'selected';
+                                    } else if (!data.multiple && data.value == value) {
+                                        selected = 'selected';
+                                    }
                                 }
 
                                 options.push(
@@ -8769,11 +8620,11 @@ var PUMSelect2Fields;
                         data.classes.push(args.type === 'postselect' ? 'pum-field-postselect' : 'pum-field-taxonomyselect');
                         data.meta['data-objecttype'] = args.type === 'postselect' ? 'post_type' : 'taxonomy';
                         data.meta['data-objectkey'] = args.type === 'postselect' ? args.post_type : args.taxonomy;
-                        data.meta['data-current'] = data.value;
+                        data.meta['data-current'] = JSON.stringify(data.value);
                     }
 
                     if (data.select2) {
-                        data.classes.push('jpselect2');
+                        data.classes.push('pum-field-select2');
 
                         if (data.placeholder) {
                             data.meta['data-placeholder'] = data.placeholder;
@@ -9872,5 +9723,10 @@ var PopMakeAdmin;
     $document.ready(function () {
         PopMakeAdmin.init();
         $document.trigger('pum_init');
+
+        // TODO Can't figure out why this is needed, but it looks stupid otherwise when the first condition field defaults to something other than the placeholder.
+        $('#pum-first-condition, #pum-first-trigger, #pum-first-cookie')
+            .val(null)
+            .trigger('change');
     });
 }(jQuery, document));

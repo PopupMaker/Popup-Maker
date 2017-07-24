@@ -97,7 +97,7 @@ class PUM_Popup_Triggers_Metabox {
         </div>
 
         <div class="no-triggers">
-            <div class="pum-field select pum-select2">
+            <div class="pum-field pum-field-select pum-field-select2">
                 <label for="pum-first-trigger"><?php _e( 'Choose a type of trigger to get started.', 'popup-maker' ); ?></label>
                 <select id="pum-first-trigger" data-placeholder="<?php _e( 'Select a trigger type.', 'popup-maker' ); ?>">
                     <?php foreach ( $triggers as $id => $trigger ) : ?>

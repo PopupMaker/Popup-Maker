@@ -275,11 +275,13 @@ class PUM_Admin_Templates {
 			<div class="facet-builder <# if (data.groups && data.groups.length) { print('has-conditions'); } #>">
 				<p>
 					<strong>
-						<?php _e( 'These conditions determine when this popup will be display.', 'popup-maker' ); ?><?php printf( '%2$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%3$s', __( 'Learn more about conditions', 'popup-maker' ), '<a href="http://docs.pum-messaging.com/article/140-conditions" target="_blank">', '</a>' ); ?>
+						<?php _e( 'These conditions determine when this popup will be display.', 'popup-maker' ); ?><?php printf( '%2$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%3$s', __( 'Learn more about conditions', 'popup-maker' ), '<a href="http://docs.wppopupmaker.com/article/140-conditions?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=conditions-intro" target="_blank">', '</a>' ); ?>
 					</strong>
 				</p>
 
-				<p><?php _e( 'When users visit your site, the plugin will check the viewed content against your selection below and determine if this popup should be shown.', 'popup-maker' ); ?></p>
+				<p><?php _e( 'When users visit your site, the plugin will check the viewed content/page against your selection below and determine if this popup should be shown.', 'popup-maker' ); ?></p>
+
+				<p><?php printf( __( 'Use the %s button to check for the inverse of your chosen condition.', 'popup-maker' ), '<i style="font-size: 1.25em;" class="dashicons dashicons-warning"></i>' ); ?></p>
 
 				<section class="pum-alert-box" style="display:none"></section>
 				<div class="facet-groups condition-groups">
@@ -294,13 +296,11 @@ class PUM_Admin_Templates {
 				</div>
 				<div class="no-facet-groups">
 					<label for="pum-first-condition"><?php _e( 'Choose a condition to get started.', 'popup-maker' ); ?></label>
-					<div class="pum-field select pumselect2 pum-facet-target">
-						<button type="button" class="pum-not-operand" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
-							<span class="is"><?php _e( 'Is', 'popup-maker' ); ?></span>
-							<span class="not"><?php _e( 'Is Not', 'popup-maker' ); ?></span>
-							<input type="checkbox" id="pum-first-facet-operand" value="1" />
+					<div class="facet-target">
+						<button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
+							<input type="checkbox" id="pum-first-facet-operand" value="1"/>
 						</button>
-						<# print(PUM_Admin.conditions.template.selectbox({id: 'pum-first-condition', name: "", placeholder: "<?php _e( 'Choose a condition to get started.', 'popup-maker' ); ?>"})); #>
+						<# print(PUM_Admin.conditions.template.selectbox({id: 'pum-first-condition', name: "", placeholder: "<?php _e( 'Choose a condition', 'popup-maker' ); ?>"})); #>
 					</div>
 				</div>
 			</div>
@@ -311,11 +311,9 @@ class PUM_Admin_Templates {
 			<div class="facet-group-wrap" data-index="{{data.index}}">
 				<section class="facet-group">
 					<div class="facet-list">
-						<#
-							_.each(data.facets, function (facet) {
+						<# _.each(data.facets, function (facet) {
 							print(PUM_Admin.conditions.template.facet(facet));
-							});
-							#>
+						}); #>
 					</div>
 					<div class="add-or">
 						<button type="button" class="add add-facet no-button" aria-label="<?php _ex( 'Add another OR condition', 'aria-label for add new OR condition button', 'popup-maker' ); ?>"><?php _e( 'or', 'popup-maker' ); ?></button>
@@ -330,20 +328,16 @@ class PUM_Admin_Templates {
 		<script type="text/html" id="tmpl-pum-condition-facet">
 			<div class="facet" data-index="{{data.index}}" data-target="{{data.target}}">
 				<i class="or"><?php _e( 'or', 'popup-maker' ); ?></i>
-				<div class="facet-col pum-field pum-facet-target select pumselect2 <# if (typeof data.not_operand !== 'undefined' && data.not_operand == '1') print('not-operand-checked'); #>">
-					<button type="button" class="pum-not-operand" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
-						<span class="is"><?php _e( 'Is', 'popup-maker' ); ?></span>
-						<span class="not"><?php _e( 'Is Not', 'popup-maker' ); ?></span>
-						<input type="checkbox" name="popup_meta[conditions][{{data.group}}][{{data.index}}][not_operand]" value="1"
+				<div class="facet-col facet-target <# if (typeof data.not_operand !== 'undefined' && data.not_operand == '1') print('not-operand-checked'); #>">
+					<button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
+						<input type="checkbox" name="popup_settings[conditions][{{data.group}}][{{data.index}}][not_operand]" value="1"
 						<# if (typeof data.not_operand !== 'undefined') print(PUM_Admin.utils.checked(data.not_operand, true, true)); #> />
 					</button>
 					<# print(PUM_Admin.conditions.template.selectbox({index: data.index, group: data.group, value: data.target, placeholder: "<?php _e( 'Choose a condition', 'popup-maker' ); ?>"})); #>
 				</div>
 
 				<div class="facet-settings facet-col">
-					<#
-						print(PUM_Admin.conditions.template.settings(data, data.settings));
-						#>
+					<# print(PUM_Admin.conditions.template.settings(data, data.settings)); #>
 				</div>
 
 				<div class="facet-actions">

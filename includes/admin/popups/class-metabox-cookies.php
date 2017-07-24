@@ -100,7 +100,7 @@ class PUM_Popup_Cookies_Metabox {
 		</div>
 
 		<div class="no-cookies">
-			<div class="pum-field select pum-select2">
+			<div class="pum-field pum-field-select pum-field-select2">
 				<label for="pum-first-cookie"><?php _e( 'Choose when you want to set a cookie to get started.', 'popup-maker' ); ?></label>
 				<select id="pum-first-cookie" data-placeholder="<?php _e( 'Select an event.', 'popup-maker' ); ?>">
 					<?php foreach ( $cookies as $id => $cookie ) : ?>

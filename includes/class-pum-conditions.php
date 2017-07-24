@@ -128,7 +128,7 @@ class PUM_Conditions {
         ) );
 
         // TODO: Generate this using PUM_Fields. Use a switch to generate a templ version when needed. ?>
-        <select class="target facet-select" id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>">
+        <select id="<?php esc_attr_e( $args['id'] ); ?>" name="<?php esc_attr_e( $args['name'] ); ?>">
             <option value=""><?php _e( 'Select a condition', 'popup-maker' ); ?></option>
             <?php foreach ( $this->get_conditions_by_group() as $group => $conditions ) : ?>
                 <optgroup label="<?php echo esc_attr_e( $group ); ?>">

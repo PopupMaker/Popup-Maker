@@ -1,91 +1,168 @@
 /**
- * jQuery.serializeObject v0.0.2
- *
- * Documentation: https://github.com/viart/jquery.serializeObject
- *
- * Artem Vitiuk (@avitiuk)
+ * jQuery serializeObject
+ * @copyright 2014, macek <paulmacek@gmail.com>
+ * @link https://github.com/macek/jquery-serialize-object
+ * @license BSD
+ * @version 2.5.0
  */
+(function (root, factory) {
 
-(function ($, document, undefined) {
-
-    var root = this,
-        inputTypes = 'color,date,datetime,datetime-local,email,hidden,month,number,password,range,search,tel,text,time,url,week'.split(','),
-        inputNodes = 'select,textarea'.split(','),
-        rName = /\[([^\]]*)\]/g;
-
-    // ugly hack for IE7-8
-    function isInArray(array, needle) {
-        return $.inArray(needle, array) !== -1;
-    }
-
-    function storeValue(container, parsedName, value) {
-
-        var part = parsedName[0];
-
-        if (parsedName.length > 1) {
-            if (!container[part]) {
-                // If the next part is eq to '' it means we are processing complex name (i.e. `some[]`)
-                // for this case we need to use Array instead of an Object for the index increment purpose
-                container[part] = parsedName[1] ? {} : [];
-            }
-            storeValue(container[part], parsedName.slice(1), value);
-        } else {
-
-            // Increment Array index for `some[]` case
-            if (!part) {
-                part = container.length;
-            }
-
-            container[part] = value;
-        }
-    }
-
-    $.fn.pumSerializeObject = function (options) {
-        $.extend({}, options);
-
-        var values = {},
-            settings = $.extend(true, {
-                include: [],
-                exclude: [],
-                includeByClass: ''
-            }, options);
-
-        this.find(':input').each(function () {
-
-            var parsedName;
-
-            // Apply simple checks and filters
-            if (!this.name || this.disabled ||
-                isInArray(settings.exclude, this.name) ||
-                (settings.include.length && !isInArray(settings.include, this.name)) ||
-                this.className.indexOf(settings.includeByClass) === -1) {
-                return;
-            }
-
-            // Parse complex names
-            // JS RegExp doesn't support "positive look behind" :( that's why so weird parsing is used
-            parsedName = this.name.replace(rName, '[$1').split('[');
-            if (!parsedName[0]) {
-                return;
-            }
-
-            if (this.checked ||
-                isInArray(inputTypes, this.type) ||
-                isInArray(inputNodes, this.nodeName.toLowerCase())) {
-
-                // Simulate control with a complex name (i.e. `some[]`)
-                // as it handled in the same way as Checkboxes should
-                if (this.type === 'checkbox') {
-                   // parsedName.push('');
-                }
-
-                // jQuery.val() is used to simplify of getting values
-                // from the custom controls (which follow jQuery .val() API) and Multiple Select
-                storeValue(values, parsedName, $(this).val());
-            }
+    // AMD
+    if (typeof define === "function" && define.amd) {
+        define(["exports", "jquery"], function (exports, $) {
+            return factory(exports, $);
         });
+    }
 
-        return values;
+    // CommonJS
+    else if (typeof exports !== "undefined") {
+        var $ = require("jquery");
+        factory(exports, $);
+    }
+
+    // Browser
+    else {
+        factory(root, (root.jQuery || root.Zepto || root.ender || root.$));
+    }
+
+}(this, function (exports, $) {
+
+    var patterns = {
+        validate: /^[a-z_][a-z0-9_]*(?:\[(?:\d*|[a-z0-9_]+)\])*$/i,
+        key: /[a-z0-9_]+|(?=\[\])/gi,
+        push: /^$/,
+        fixed: /^\d+$/,
+        named: /^[a-z0-9_]+$/i
     };
 
-}(jQuery, document));
+    function FormSerializer(helper, $form) {
+
+        // private variables
+        var data   = {},
+            pushes = {};
+
+        // private API
+        function build(base, key, value) {
+            base[key] = value;
+            return base;
+        }
+
+        function makeObject(root, value) {
+
+            var keys = root.match(patterns.key), k;
+
+            try {
+                value = JSON.parse(value);
+            } catch (Error) {
+            }
+
+            // nest, nest, ..., nest
+            while ((k = keys.pop()) !== undefined) {
+                // foo[]
+                if (patterns.push.test(k)) {
+                    var idx = incrementPush(root.replace(/\[\]$/, ''));
+                    value = build([], idx, value);
+                }
+
+                // foo[n]
+                else if (patterns.fixed.test(k)) {
+                    value = build([], k, value);
+                }
+
+                // foo; foo[bar]
+                else if (patterns.named.test(k)) {
+                    value = build({}, k, value);
+                }
+            }
+
+            return value;
+        }
+
+        function incrementPush(key) {
+            if (pushes[key] === undefined) {
+                pushes[key] = 0;
+            }
+            return pushes[key]++;
+        }
+
+        function encode(pair) {
+            switch ($('[name="' + pair.name + '"]', $form).attr("type")) {
+            case "checkbox":
+                return pair.value === "on" ? true : pair.value;
+            default:
+                return pair.value;
+            }
+        }
+
+        function addPair(pair) {
+            if (!patterns.validate.test(pair.name)) return this;
+            var obj = makeObject(pair.name, encode(pair));
+
+            data = helper.extend(true, data, obj);
+            return this;
+        }
+
+        function addPairs(pairs) {
+            if (!helper.isArray(pairs)) {
+                throw new Error("formSerializer.addPairs expects an Array");
+            }
+            for (var i = 0, len = pairs.length; i < len; i++) {
+                this.addPair(pairs[i]);
+            }
+            return this;
+        }
+
+        function serialize() {
+            return data;
+        }
+
+        function serializeJSON() {
+            return JSON.stringify(serialize());
+        }
+
+        // public API
+        this.addPair = addPair;
+        this.addPairs = addPairs;
+        this.serialize = serialize;
+        this.serializeJSON = serializeJSON;
+    }
+
+    FormSerializer.patterns = patterns;
+
+    FormSerializer.serializeObject = function serializeObject() {
+        var serialized;
+
+        if (this.is('form')) {
+            serialized = this.serializeArray();
+        } else {
+            serialized = this.find(':input').serializeArray();
+        }
+
+        return new FormSerializer($, this)
+            .addPairs(serialized)
+            .serialize();
+    };
+
+    FormSerializer.serializeJSON = function serializeJSON() {
+        var serialized;
+
+        if (this.is('form')) {
+            serialized = this.serializeArray();
+        } else {
+            serialized = this.find(':input').serializeArray();
+        }
+
+        return new FormSerializer($, this)
+            .addPairs(serialized)
+            .serializeJSON();
+    };
+
+    if (typeof $.fn !== "undefined") {
+        $.fn.pumSerializeObject = $.fn.serializeObject = FormSerializer.serializeObject;
+        $.fn.pumSerializeJSON = $.fn.serializeJSON = FormSerializer.serializeJSON;
+    }
+
+    exports.FormSerializer = FormSerializer;
+
+    return FormSerializer;
+}));

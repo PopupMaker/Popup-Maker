@@ -129,10 +129,12 @@
                             // NOTE: The value in the case its an optgroup is the optgroup label.
                             if (typeof label !== 'object') {
 
-                                if (data.multiple && ((typeof data.value === 'object' && data.value[value] !== undefined) || (typeof data.value === 'array' && data.value.indexOf(value) !== false))) {
-                                    selected = 'selected';
-                                } else if (!data.multiple && data.value == value) {
-                                    selected = 'selected';
+                                if (data.value !== null) {
+                                    if (data.multiple && ((typeof data.value === 'object' && data.value[value] !== undefined) || (typeof data.value === 'array' && data.value.indexOf(value) !== false))) {
+                                        selected = 'selected';
+                                    } else if (!data.multiple && data.value == value) {
+                                        selected = 'selected';
+                                    }
                                 }
 
                                 options.push(
@@ -210,11 +212,11 @@
                         data.classes.push(args.type === 'postselect' ? 'pum-field-postselect' : 'pum-field-taxonomyselect');
                         data.meta['data-objecttype'] = args.type === 'postselect' ? 'post_type' : 'taxonomy';
                         data.meta['data-objectkey'] = args.type === 'postselect' ? args.post_type : args.taxonomy;
-                        data.meta['data-current'] = data.value;
+                        data.meta['data-current'] = JSON.stringify(data.value);
                     }
 
                     if (data.select2) {
-                        data.classes.push('jpselect2');
+                        data.classes.push('pum-field-select2');
 
                         if (data.placeholder) {
                             data.meta['data-placeholder'] = data.placeholder;

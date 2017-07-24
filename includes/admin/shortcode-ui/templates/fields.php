@@ -86,6 +86,6 @@
 </script>
 
 <script type="text/html" id="tmpl-pum-field-rangeslider">
-	<input type="text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" class="popmake-range-manual pum-range-manual" {{{data.meta}}}/>
+	<input type="text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" class="pum-range-manual pum-range-manual" {{{data.meta}}}/>
 	<span class="range-value-unit regular-text">{{data.unit}}</span>
 </script>

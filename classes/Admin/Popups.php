@@ -382,31 +382,12 @@ class PUM_Admin_Popups {
 					),
 				),
 				'position'  => array(
-					'disable_reposition'    => array(
-						'label'    => __( 'Disable Repositioning', 'popup-maker' ),
-						'desc'     => __( 'This will disable automatic repositioning of the popup on window resizing.', 'popup-maker' ),
-						'type'     => 'checkbox',
-						'priority' => 10,
-					),
-					'position_fixed'        => array(
-						'label'    => __( 'Fixed Postioning', 'popup-maker' ),
-						'desc'     => __( 'Checking this sets the positioning of the popup to fixed.', 'popup-maker' ),
-						'type'     => 'checkbox',
-						'priority' => 20,
-					),
-					'position_from_trigger' => array(
-						'label'    => __( 'Position from Trigger', 'popup-maker' ),
-						'desc'     => sprintf( __( 'This will position the popup in relation to the %sClick Trigger%s.', 'popup-maker' ), '<a target="_blank" href="http://docs.wppopupmaker.com/article/144-trigger-click-open?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=position-from-trigger">', '</a>' ),
-						'type'     => 'checkbox',
-						'std'      => false,
-						'priority' => 30,
-					),
 					'location'              => array(
 						'label'    => __( 'Location', 'popup-maker' ),
 						'desc'     => __( 'Choose where the popup will be displayed.', 'popup-maker' ),
 						'type'     => 'select',
 						'std'      => 'center top',
-						'priority' => 40,
+						'priority' => 10,
 						'options'  => array(
 							'left top'      => __( 'Top Left', 'popup-maker' ),
 							'center top'    => __( 'Top Center', 'popup-maker' ),
@@ -428,7 +409,7 @@ class PUM_Admin_Popups {
 						'min'          => 0,
 						'max'          => 500,
 						'unit'         => 'px',
-						'priority'     => 50,
+						'priority'     => 20,
 						'dependencies' => array(
 							'location' => array( 'left top', 'center top', 'right top' ),
 						),
@@ -442,7 +423,7 @@ class PUM_Admin_Popups {
 						'min'          => 0,
 						'max'          => 500,
 						'unit'         => 'px',
-						'priority'     => 50,
+						'priority'     => 20,
 						'dependencies' => array(
 							'location' => array( 'left bottom', 'center bottom', 'right bottom' ),
 						),
@@ -456,7 +437,7 @@ class PUM_Admin_Popups {
 						'min'          => 0,
 						'max'          => 500,
 						'unit'         => 'px',
-						'priority'     => 60,
+						'priority'     => 30,
 						'dependencies' => array(
 							'location' => array( 'left top', 'left center', 'left bottom' ),
 						),
@@ -470,33 +451,52 @@ class PUM_Admin_Popups {
 						'min'          => 0,
 						'max'          => 500,
 						'unit'         => 'px',
-						'priority'     => 60,
+						'priority'     => 30,
 						'dependencies' => array(
 							'location' => array( 'right top', 'right center', 'right bottom' ),
 						),
 					),
-					'zindex'                => array(
-						'label'    => __( 'Popup Z-Index', 'popup-maker' ),
-						'desc'     => __( 'Change the z-index layer level for the popup.', 'popup-maker' ),
-						'type'     => 'number',
-						'std'      => 1999999999,
-						'priority' => 70,
-						'min'      => 999,
-						'max'      => 2147483647,
+					'position_from_trigger' => array(
+						'label'    => __( 'Position from Trigger', 'popup-maker' ),
+						'desc'     => sprintf( __( 'This will position the popup in relation to the %sClick Trigger%s.', 'popup-maker' ), '<a target="_blank" href="http://docs.wppopupmaker.com/article/144-trigger-click-open?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=position-from-trigger">', '</a>' ),
+						'type'     => 'checkbox',
+						'std'      => false,
+						'priority' => 40,
+					),
+					'position_fixed'        => array(
+						'label'    => __( 'Fixed Postioning', 'popup-maker' ),
+						'desc'     => __( 'Checking this sets the positioning of the popup to fixed.', 'popup-maker' ),
+						'type'     => 'checkbox',
+						'priority' => 50,
 					),
 				),
 				'misc'      => array(
-					'overlay_disabled' => array(
+					'overlay_disabled'   => array(
 						'label'    => __( 'Disable Overlay', 'popup-maker' ),
 						'desc'     => __( 'Checking this will disable and hide the overlay for this popup.', 'popup-maker' ),
 						'type'     => 'checkbox',
 						'priority' => 10,
 					),
-					'stackable'        => array(
+					'stackable'          => array(
 						'label'    => __( 'Stackable', 'popup-maker' ),
 						'desc'     => __( 'This enables other popups to remain open.', 'popup-maker' ),
 						'type'     => 'checkbox',
 						'priority' => 20,
+					),
+					'disable_reposition' => array(
+						'label'    => __( 'Disable Repositioning', 'popup-maker' ),
+						'desc'     => __( 'This will disable automatic repositioning of the popup on window resizing.', 'popup-maker' ),
+						'type'     => 'checkbox',
+						'priority' => 30,
+					),
+					'zindex'             => array(
+						'label'    => __( 'Popup Z-Index', 'popup-maker' ),
+						'desc'     => __( 'Change the z-index layer level for the popup.', 'popup-maker' ),
+						'type'     => 'number',
+						'std'      => 1999999999,
+						'priority' => 40,
+						'min'      => 999,
+						'max'      => 2147483647,
 					),
 				),
 			) ),
@@ -522,21 +522,21 @@ class PUM_Admin_Popups {
 				),
 				'methods' => array(
 					'overlay_click' => array(
-						'label' => __( 'Click Overlay to Close', 'popup-maker' ),
-						'desc'  => __( 'Checking this will cause popup to close when user clicks on overlay.', 'popup-maker' ),
-						'type'  => 'checkbox',
+						'label'    => __( 'Click Overlay to Close', 'popup-maker' ),
+						'desc'     => __( 'Checking this will cause popup to close when user clicks on overlay.', 'popup-maker' ),
+						'type'     => 'checkbox',
 						'priority' => 10,
 					),
 					'esc_press'     => array(
-						'label' => __( 'Press ESC to Close', 'popup-maker' ),
-						'desc'  => __( 'Checking this will cause popup to close when user presses ESC key.', 'popup-maker' ),
-						'type'  => 'checkbox',
+						'label'    => __( 'Press ESC to Close', 'popup-maker' ),
+						'desc'     => __( 'Checking this will cause popup to close when user presses ESC key.', 'popup-maker' ),
+						'type'     => 'checkbox',
 						'priority' => 20,
 					),
 					'f4_press'      => array(
-						'label' => __( 'Press F4 to Close', 'popup-maker' ),
-						'desc'  => __( 'Checking this will cause popup to close when user presses F4 key.', 'popup-maker' ),
-						'type'  => 'checkbox',
+						'label'    => __( 'Press F4 to Close', 'popup-maker' ),
+						'desc'     => __( 'Checking this will cause popup to close when user presses F4 key.', 'popup-maker' ),
+						'type'     => 'checkbox',
 						'priority' => 30,
 					),
 				),
@@ -544,8 +544,8 @@ class PUM_Admin_Popups {
 			'targeting' => array(
 				'main' => array(
 					'conditions' => array(
-						'type' => 'conditions',
-						'std'  => array(),
+						'type'     => 'conditions',
+						'std'      => array(),
 						'priority' => 10,
 					),
 				),

@@ -38,7 +38,7 @@ class PUM_Admin_Shortcode_UI {
 
 	public function init_editor() {
     	if ( current_user_can('edit_posts') || current_user_can('edit_pages') ) {
-			add_action( 'print_media_templates', array( $this, 'print_media_templates' ) );
+			//add_action( 'print_media_templates', array( $this, 'print_media_templates' ) );
 			add_action( 'admin_print_footer_scripts', array( $this, 'admin_print_footer_scripts' ), 100 );
 			add_action( 'wp_ajax_pum_do_shortcode', array( $this, 'wp_ajax_pum_do_shortcode' ) );
 

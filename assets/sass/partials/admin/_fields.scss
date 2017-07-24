@@ -265,6 +265,10 @@
 
     }
 
+    .pum-field {
+      margin-bottom: 0.5em;
+    }
+
     .facet-col {
       float: left;
       margin-right: 20px;
@@ -279,7 +283,7 @@
       }
     }
 
-    .pum-facet-target {
+    .facet-target {
 
       position: relative;
       max-width: 240px;
@@ -350,7 +354,7 @@
 
         select,
         .pumselect2-container .pumselect2-selection {
-          padding-left: 58px;
+          //padding-left: 58px;
         }
 
       }
@@ -449,9 +453,11 @@
 
   .no-facet-groups {
     display: block;
-    .pum-facet-target {
+    .facet-target {
       max-width: 100%;
     }
+
+
   }
 
 
@@ -468,7 +474,7 @@
 
   }
 
-  .pum-select2 {
+  .pum-field-select2 {
     select {
       width: 100%;
     }
