@@ -5,7 +5,7 @@
     (function ($, undefined) {
         "use strict";
 
-        var I10n = pum_admin.I10n || pum_shortcode_ui.I10n || {},
+        var I10n = pum_admin_vars.I10n || pum_shortcode_ui.I10n || {},
             shortcodes = pum_shortcode_ui.shortcodes || {},
             base = {
                 shortcode_args: {},
@@ -236,7 +236,7 @@
                         }
                     });
 
-                    PUMModals.reload('#' + data.id, modal, function () {
+                    PUM_Admin.modals.reload('#' + data.id, modal, function () {
                         var modal = $('#' + data.id);
 
                         modal.find('.pum-form').submit(function (event) {
@@ -249,7 +249,7 @@
 
                             callback(content);
 
-                            PUMModals.closeAll(function () {
+                            PUM_Admin.modals.closeAll(function () {
                                 $(modal).remove();
                             });
                         });

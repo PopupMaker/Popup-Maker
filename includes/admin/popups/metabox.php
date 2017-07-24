@@ -126,44 +126,7 @@ function popmake_popup_meta_box_save( $post_id, $post ) {
 
 add_action( 'save_post', 'popmake_popup_meta_box_save', 10, 2 );
 
-/**
- * Ensures that the popups have unique slugs.
- *
- * @param $data
- * @param $postarr
- *
- * @return mixed
- */
-function popmake_set_popup_slug( $data, $postarr ) {
-	if ( $data['post_type'] == 'popup' ) {
-		$popup_name        = popmake_post( 'popup_name' );
-		$post_slug         = sanitize_title_with_dashes( $popup_name, null, 'save' );
-		$data['post_name'] = wp_unique_post_slug( sanitize_title( popmake_post( 'popup_name' ) ), $postarr['ID'], $data['post_status'], $data['post_type'], $data['post_parent'] );
-	}
-
-	return $data;
-}
-add_filter( 'wp_insert_post_data', 'popmake_set_popup_slug', 99, 2 );
-
-
 /** Popup Configuration *****************************************************************/
-
-function popmake_popup_title_meta() {
-	global $post;
-	if ( popmake_is_admin_popup_page() ) { ?>
-		<div id="popuptitlediv">
-		<div id="popuptitlewrap">
-			<label class="screen-reader-text" id="popuptitle-prompt-text" for="popuptitle"><?php _e( 'Enter popup title here', 'popup-maker' ); ?></label>
-			<input type="text" tabindex="2" name="popup_title" size="30" value="<?php esc_attr_e( popmake_get_the_popup_title( $post->ID ) ); ?>" id="popuptitle" autocomplete="off" placeholder="<?php _e( 'Enter popup title here', 'popup-maker' ); ?>"/>
-		</div>
-		<div class="inside">
-		</div>
-		</div><?php
-	}
-}
-
-add_action( 'edit_form_advanced', 'popmake_popup_title_meta' );
-add_action( 'edit_page_form', 'popmake_popup_title_meta' );
 
 
 /**

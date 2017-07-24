@@ -470,7 +470,7 @@ class PUM_Fields extends Popmake_Fields {
 		       value="<?php echo $value; ?>"
 		       name="<?php esc_attr_e( $args['name'] ); ?>"
 		       id="<?php esc_attr_e( $args['id'] ); ?>"
-		       class="popmake-range-manual pum-range-manual"
+		       class="pum-range-manual pum-range-manual"
 		       step="<?php esc_attr_e( $args['step'] ); ?>"
 		       min="<?php esc_attr_e( $args['min'] ); ?>"
 		       max="<?php esc_attr_e( $args['max'] ); ?>"

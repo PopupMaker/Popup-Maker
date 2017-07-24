@@ -32,7 +32,7 @@ function popmake_popup_close_meta_box_field_fi_extension_promotion( $popup_theme
 	if ( ! class_exists( 'Popup_Maker_Forced_Interaction' ) && ! class_exists( 'PUM_Forced_Interaction' ) ) :
 		?>
 		<tr>
-		<th colspan="2" class="popmake-upgrade-tip">
+		<th colspan="2" class="pum-upgrade-tip">
 			<img style="" src="<?php echo POPMAKE_URL; ?>/assets/images/upsell-icon-forced-interaction.png" />
 			<?php printf(
 				_x( 'Want to disable the close button? Check out %sForced Interaction%s!', '%s represent the opening & closing link html', 'popup-maker' ),
@@ -56,7 +56,7 @@ function popmake_popup_close_meta_box_field_button_delay( $popup_id ) { ?>
 		       value="<?php esc_attr_e( popmake_get_popup_close( $popup_id, 'button_delay' ) ) ?>"
 		       name="popup_close_button_delay"
 		       id="popup_close_button_delay"
-		       class="popmake-range-manual"
+		       class="pum-range-manual"
 		       step="<?php esc_html_e( apply_filters( 'popmake_popup_step_close_button_delay', 100 ) ); ?>"
 		       min="<?php esc_html_e( apply_filters( 'popmake_popup_min_close_button_delay', 0 ) ); ?>"
 		       max="<?php esc_html_e( apply_filters( 'popmake_popup_max_close_button_delay', 3000 ) ); ?>"

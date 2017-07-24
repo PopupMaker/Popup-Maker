@@ -219,7 +219,7 @@ class PUM_Popup_Cookies_Metabox {
 				<input type="hidden" name="event" class="event" value="<?php esc_attr_e( $id ); ?>" />
 				<input type="hidden" name="index" class=index" value="{{data.index}}" />
 
-				<div class="pum-tabs-container vertical-tabs tabbed-form">
+				<div class="pum-tabs-container vertical-tabs pum-tabbed-form">
 
 					<ul class="tabs">
 						<?php
