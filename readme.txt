@@ -91,6 +91,16 @@ There are several common causes for this which include:
 
 == Changelog ==
 
+= v1.7.0 - ??/??/2017 =
+* Improvement: New Popup Settings tabbed interface to help make settings more intuitive & easy to find on one screen.
+* Improvement: Multiple improvments to smart select fields (jQuery select2) including:
+  * Allow multiple page/post selections without reopening/searching again.
+  * Properly highlights & shows selected items after save/reload.
+  * Paginated/scroll based loading of more results over ajax.
+  * Now shows list of recent "items" immeditaly upon clicking the field rather than requiring search.
+* Fix: Corrected labeling issues with BuddyPress conditions.
+
+
 = v1.6.5 - 07/16/2017 =
 * Tweak: Added new popup class for theme names. Thanks @bluantinoo.
 * Fix: Bug in menu popups save and render functionality not working correctly.
