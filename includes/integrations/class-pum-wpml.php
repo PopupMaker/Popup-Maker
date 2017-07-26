@@ -48,7 +48,7 @@ class PUM_WPML_Integration {
 
 		static $source_id;
 
-		if ( ! isset( $source_id ) ) {
+		if ( ! isset( $source_id ) && ! empty( $sitepress ) && is_a( $sitepress, 'SitePress' ) && method_exists( $sitepress, 'get_new_post_source_id' ) ) {
 			$source_id = absint( $sitepress->get_new_post_source_id( $post_id ) );
 		}
 
