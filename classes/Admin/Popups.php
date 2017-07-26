@@ -59,7 +59,7 @@ class PUM_Admin_Popups {
 					<label class="screen-reader-text" id="popup-title-prompt-text" for="popup-title">
 						<?php _e( 'Enter popup title here', 'popup-maker' ); ?>
 					</label>
-					<input type="text" tabindex="2" name="_popup_title" size="30" value="<?php esc_attr_e( get_post_meta( $post->ID, '_popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php _e( 'Enter popup title here', 'popup-maker' ); ?>" />
+					<input type="text" tabindex="2" name="popup_title" size="30" value="<?php esc_attr_e( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php _e( 'Enter popup title here', 'popup-maker' ); ?>" />
 				</div>
 				<div class="inside"></div>
 			</div>
@@ -85,7 +85,7 @@ class PUM_Admin_Popups {
 		global $post;
 
 		// Get the meta directly rather than from cached object.
-		$settings = get_post_meta( $post->ID, '_popup_settings', true );
+		$settings = get_post_meta( $post->ID, 'popup_setting', true );
 
 		if ( empty( $settings ) ) {
 			$settings = self::defaults();
@@ -136,19 +136,18 @@ class PUM_Admin_Popups {
 			return;
 		}
 
-		//$popup = pum_get_popup( $post_id );
+		$popup = pum_get_popup( $post_id );
 
 		if ( isset( $_POST['popup_reset_counts'] ) ) {
 			/**
 			 * Reset popup open count, per user request.
 			 */
-			//$popup->reset_counts();
+			$popup->reset_counts();
 		}
 
 
-		$title = ! empty ( $_POST['_popup_title'] ) ? trim( sanitize_text_field( $_POST['_popup_title'] ) ) : '';
-		update_post_meta( $post->ID, '_popup_title', $title );
-		//$popup->update_meta( '_popup_title', $title );
+		$title = ! empty ( $_POST['popup_title'] ) ? trim( sanitize_text_field( $_POST['popup_title'] ) ) : '';
+		$popup->update_meta( 'popup_title', $title );
 
 		$settings = ! empty( $_POST['popup_settings'] ) ? $_POST['popup_settings'] : array();
 
@@ -161,8 +160,7 @@ class PUM_Admin_Popups {
 
 		$settings = self::sanitize_settings( $settings );
 
-		//$popup->update_meta( '_popup_settings', $settings );
-		update_post_meta( $post->ID, '_popup_settings', $settings );
+		$popup->update_meta( 'popup_setting', $settings );
 
 		do_action( 'pum_save_popup', $post_id, $post );
 	}
