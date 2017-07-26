@@ -35,8 +35,14 @@ class PUM_Site_Assets {
 	 */
 	public static $enqueued_styles = array();
 
+	/**
+	 * @var bool
+	 */
 	public static $scripts_registered = false;
 
+	/**
+	 * @var bool
+	 */
 	public static $styles_registered = false;
 
 	/**

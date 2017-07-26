@@ -647,7 +647,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 
 	#endregion Conditions
 
-	#region Old Analytics
+	#region Deprecated Analytics
 
 	/**
 	 * Returns the correct open count meta key based on $which.
@@ -657,128 +657,77 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * - 'current' since last reset
 	 * - 'total' since creation
 	 *
+	 * @deprecated 1.7.0 Use PUM_Model_Popup::get_event_count( 'open', $which ) instead.
+	 *
 	 * @param string $which
 	 *
 	 * @return integer
 	 */
 	public function get_open_count( $which = 'current' ) {
-		switch ( $which ) {
-			case 'current' :
-				return absint( $this->get_meta( 'popup_open_count', true ) );
-			case 'total'   :
-				return absint( $this->get_meta( 'popup_open_count_total', true ) );
-		}
-
-		return 0;
+		return $this->get_event_count( 'open', $which );
 	}
 
+	/**
+	 * @deprecated 1.7.0 Use PUM_Model_Popup::increase_event_count( 'open' ) instead.
+	 */
 	public function increase_open_count() {
-
-		// Set the current open count
-		$current = $this->get_open_count();
-		if ( ! $current ) {
-			$current = 0;
-		};
-		$current = $current + 1;
-
-		// Set the total open count since creation.
-		$total = $this->get_open_count( 'total' );
-		if ( ! $total ) {
-			$total = 0;
-		}
-		$total = $total + 1;
-
-		update_post_meta( $this->ID, 'popup_open_count', absint( $current ) );
-		update_post_meta( $this->ID, 'popup_open_count_total', absint( $total ) );
-		update_post_meta( $this->ID, 'popup_last_opened', current_time( 'timestamp', 0 ) );
-
-		$total_opens = get_option( 'pum_total_open_count', 0 );
-
-		$total_opens ++;
-
-		update_option( 'pum_total_open_count', $total_opens );
-
-		// If is multisite add this blogs total to the site totals.
-		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
-			$site_total_open_count = get_site_option( 'pum_site_total_open_count', false );
-			if ( ! $site_total_open_count ) {
-				$site_total_open_count = $total_opens;
-			} else {
-				$site_total_open_count ++;
-			}
-			update_site_option( 'pum_site_total_open_count', $site_total_open_count );
-		}
-
+		$this->increase_event_count( 'open' );
 	}
 
 	/**
 	 * Log and reset popup open count to 0.
+	 *
+	 * @deprecated 1.7.0 Use PUM_Model_Popup::reset_counts() instead.
 	 */
 	public function reset_open_count() {
-
-		// Log the reset time and count.
-		add_post_meta( $this->ID, 'popup_open_count_reset', array(
-			'timestamp' => current_time( 'timestamp', 0 ),
-			'count'     => absint( $this->get_open_count( 'current' ) ),
-		) );
-
-		update_post_meta( $this->ID, 'popup_open_count', 0 );
-		update_post_meta( $this->ID, 'popup_last_opened', 0 );
-
+		$this->reset_counts();
 	}
 
 	/**
 	 * Returns the last reset information.
 	 *
+	 * @deprecated 1.7.0 Use PUM_Model_Popup::get_last_count_reset() instead.
+	 *
 	 * @return mixed
 	 */
 	public function get_last_open_count_reset() {
-		$resets = $this->get_meta( 'popup_open_count_reset' );
-
-		if ( empty ( $resets ) ) {
-			return false;
-		}
-
-		usort( $resets, array( $this, 'compare_resets' ) );
-
-		return $resets[0];
+		return $this->get_last_count_reset();
 	}
 
-
-	#endregion Old Analytics
+	#endregion Deprecated Analytics
 
 	#region Analytics
 
 	/**
+	 * Get a popups event count.
 	 *
 	 * @param string $event
 	 * @param string $which
 	 *
 	 * @return int
 	 */
-
-	public function get_event_count( $event = 'view', $which = 'current' ) {
+	public function get_event_count( $event = 'open', $which = 'current' ) {
 
 		$keys = Analytics::event_keys( $event );
 
 		switch ( $which ) {
 			case 'current' :
-				$current = $this->get_meta( 'pum_popup_' . $keys[0] . '_count', true );
+				$current = $this->get_meta( 'popup_' . $keys[0] . '_count', true );
 
 				// Save future queries by inserting a valid count.
 				if ( $current === false || ! is_numeric( $current ) ) {
 					$current = 0;
-					$this->update_meta( 'pum_popup_' . $keys[0] . '_count', $current );
+					$this->update_meta( 'popup_' . $keys[0] . '_count', $current );
 				}
 
 				return absint( $current );
 			case 'total'   :
-				$total = $this->get_meta( 'pum_popup_total_' . $keys[0] . '_count', true );
+				$total = $this->get_meta( 'popup_' . $keys[0] . '_count_total', true );
 
 				// Save future queries by inserting a valid count.
 				if ( $total === false || ! is_numeric( $total ) ) {
 					$total = 0;
-					$this->update_meta( 'pum_popup_total_' . $keys[0] . '_count_total', $total );
+					$this->update_meta( 'popup_' . $keys[0] . '_count_total', $total );
 				}
 
 				return absint( $total );
@@ -787,7 +736,12 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		return 0;
 	}
 
-	public function increase_event_count( $event = 'view' ) {
+	/**
+	 * Increase popup event counts.
+	 *
+	 * @param string $event
+	 */
+	public function increase_event_count( $event = 'open' ) {
 
 		/**
 		 * This section simply ensures that all keys exist before the below query runs. This should only ever cause extra queries once per popup, usually in the admin.
@@ -810,71 +764,49 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		}
 		$total = $total + 1;
 
-		$this->update_meta( 'pum_popup_' . $keys[0] . '_count', absint( $current ) );
-		$this->update_meta( 'pum_popup_total_' . $keys[0] . '_count', absint( $total ) );
-		$this->update_meta( 'pum_popup_last_' . $keys[1], current_time( 'timestamp', 0 ) );
+		$this->update_meta( 'popup_' . $keys[0] . '_count', absint( $current ) );
+		$this->update_meta( 'popup_' . $keys[0] . '_count_total', absint( $total ) );
+		$this->update_meta( 'popup_last_' . $keys[1], current_time( 'timestamp', 0 ) );
 
-		$site_total = get_option( 'pum_site_total_' . $keys[0] . '_count', 0 );
+		$site_total = get_option( 'pum_total_' . $keys[0] . '_count', 0 );
 		$site_total ++;
-		update_option( 'pum_site_total_' . $keys[0] . '_count', $site_total );
+		update_option( 'pum_total_' . $keys[0] . '_count', $site_total );
 
 		// If is multisite add this blogs total to the site totals.
 		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
-			$network_total = get_site_option( 'pum_network_total_' . $keys[0] . '_count', false );
+			$network_total = get_site_option( 'pum_site_total_' . $keys[0] . '_count', false );
 			$network_total = ! $network_total ? $site_total : $network_total + 1;
-			update_site_option( 'pum_network_total_' . $keys[0] . '_count', $network_total );
+			update_site_option( 'pum_site_total_' . $keys[0] . '_count', $network_total );
 		}
 	}
-
-	/*
-	public function increase_event_count( $event = 'view' ) {
-
-		global $wpdb;
-
-		$current_time = current_time( 'timestamp', 0 );
-		$keys         = Analytics::event_keys( $event );
-
-		/**
-		 * Single query to update multiple post meta values at once.
-		 *
-		$wpdb->query( "UPDATE $wpdb->postmeta SET meta_value = (
-			case when meta_key = 'pum_popup_" . $keys[0] . "_count' then meta_value + 1
-				 when meta_key = 'pum_popup_" . $keys[0] . "_count_total' then meta_value + 1
-				 when meta_key = 'pum_popup_last_" . $keys[1] . "' then '$current_time'
-			end
-		) WHERE meta_key in ('pum_popup_" . $keys[0] . "_count', 'pum_popup_" . $keys[0] . "_count_total', 'pum_popup_last_" . $keys[1] . "') AND post_id = '$this->ID';" );
-	}
-	*/
 
 	public function set_event_defaults( $event ) {
 		$this->get_event_count( $event );
 		$this->get_event_count( $event, 'total' );
 
 		$keys = Analytics::event_keys( $event );
-		$last = $this->get_meta( 'pum_popup_last_' . $keys[1] );
+		$last = $this->get_meta( 'popup_last_' . $keys[1] );
 
 		if ( empty( $last ) || ! is_numeric( $last ) ) {
-			$this->update_meta( 'pum_popup_last_' . $keys[1], 0 );
+			$this->update_meta( 'popup_last_' . $keys[1], 0 );
 		}
 	}
-
 
 	/**
 	 * Log and reset popup open count to 0.
 	 */
 	public function reset_counts() {
 		// Log the reset time and count.
-		add_post_meta( $this->ID, 'pum_popup_count_reset', array(
+		add_post_meta( $this->ID, 'popup_count_reset', array(
 			'timestamp'   => current_time( 'timestamp', 0 ),
-			'views'       => absint( $this->get_event_count( 'view', 'current' ) ),
 			'opens'       => absint( $this->get_event_count( 'open', 'current' ) ),
 			'conversions' => absint( $this->get_event_count( 'conversion', 'current' ) ),
 		) );
 
-		foreach ( array( 'view', 'open', 'conversion' ) as $event ) {
+		foreach ( array( 'open', 'conversion' ) as $event ) {
 			$keys = Analytics::event_keys( $event );
-			$this->update_meta( 'pum_popup_' . $keys[0] . '_count', 0 );
-			$this->update_meta( 'pum_popup_last_' . $keys[1], 0 );
+			$this->update_meta( 'popup_' . $keys[0] . '_count', 0 );
+			$this->update_meta( 'popup_last_' . $keys[1], 0 );
 		}
 
 		$this->update_cache();
@@ -886,29 +818,22 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * @return mixed
 	 */
 	public function get_last_count_reset() {
-		$resets = $this->get_meta( 'pum_popup_count_reset', false );
+		$resets = $this->get_meta( 'popup_count_reset', false );
 
 		if ( empty ( $resets ) ) {
+			// No results found.
 			return false;
 		}
 
 		if ( ! empty( $resets['timestamp'] ) ) {
+			// Looks like the result is already the last one, return it.
 			return $resets;
 		}
 
 		if ( count( $resets ) == 1 ) {
+			// Looks like we only got one result, return it.
 			return $resets[0];
 		}
-
-		/**
-		 * Compare function for reset timestamps. Sorts Newest First.
-		 *
-		 * @param $a
-		 * @param $b
-		 *
-		 * @return bool
-		 */
-
 
 		usort( $resets, array( $this, "compare_resets" ) );
 
