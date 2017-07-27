@@ -58,7 +58,7 @@ class PUM_Popup_Analytics_Metabox {
                 <tbody>
                 <tr>
                     <td><?php _e( 'Opens', 'popup-maker' ); ?></td>
-                    <td><?php echo $popup->get_open_count( 'current' ); ?></td>
+                    <td><?php echo $popup->get_event_count( 'open','current' ); ?></td>
                 </tr>
                 <tr class="separator">
                     <td colspan="2">
@@ -66,13 +66,13 @@ class PUM_Popup_Analytics_Metabox {
                             <input type="checkbox" name="popup_reset_open_count" id="popup_reset_open_count" value="1"/>
                             <?php _e( 'Reset Open Count', 'popup-maker' ); ?>
                         </label>
-                        <?php if ( ( $reset = $popup->get_last_open_count_reset() ) ) : ?><br/>
+                        <?php if ( ( $reset = $popup->get_last_count_reset() ) ) : ?><br/>
                             <small>
                                 <strong><?php _e( 'Last Reset', 'popup-maker' ); ?>:</strong> <?php echo date( 'm-d-Y H:i', $reset['timestamp'] ); ?>
                                 <br/>
-                                <strong><?php _e( 'Previous Opens', 'popup-maker' ); ?>:</strong> <?php echo $reset['count']; ?>
+                                <strong><?php _e( 'Previous Opens', 'popup-maker' ); ?>:</strong> <?php echo $reset['opens']; ?>
                                 <br/>
-                                <strong><?php _e( 'Lifetime Opens', 'popup-maker' ); ?>:</strong> <?php echo $popup->get_open_count( 'total' ); ?>
+                                <strong><?php _e( 'Lifetime Opens', 'popup-maker' ); ?>:</strong> <?php echo $popup->get_event_count( 'open','total' ); ?>
                             </small>
                         <?php endif; ?>
                     </td>
@@ -95,7 +95,7 @@ class PUM_Popup_Analytics_Metabox {
              * Reset popup open count, per user request.
              */
             $popup = new PUM_Popup( $post_id );
-            $popup->reset_open_count();
+            $popup->reset_counts();
 
         }
     }

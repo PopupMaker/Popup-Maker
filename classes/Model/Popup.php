@@ -647,55 +647,6 @@ class PUM_Model_Popup extends PUM_Model_Post {
 
 	#endregion Conditions
 
-	#region Deprecated Analytics
-
-	/**
-	 * Returns the correct open count meta key based on $which.
-	 *
-	 * Can be current or total.
-	 *
-	 * - 'current' since last reset
-	 * - 'total' since creation
-	 *
-	 * @deprecated 1.7.0 Use PUM_Model_Popup::get_event_count( 'open', $which ) instead.
-	 *
-	 * @param string $which
-	 *
-	 * @return integer
-	 */
-	public function get_open_count( $which = 'current' ) {
-		return $this->get_event_count( 'open', $which );
-	}
-
-	/**
-	 * @deprecated 1.7.0 Use PUM_Model_Popup::increase_event_count( 'open' ) instead.
-	 */
-	public function increase_open_count() {
-		$this->increase_event_count( 'open' );
-	}
-
-	/**
-	 * Log and reset popup open count to 0.
-	 *
-	 * @deprecated 1.7.0 Use PUM_Model_Popup::reset_counts() instead.
-	 */
-	public function reset_open_count() {
-		$this->reset_counts();
-	}
-
-	/**
-	 * Returns the last reset information.
-	 *
-	 * @deprecated 1.7.0 Use PUM_Model_Popup::get_last_count_reset() instead.
-	 *
-	 * @return mixed
-	 */
-	public function get_last_open_count_reset() {
-		return $this->get_last_count_reset();
-	}
-
-	#endregion Deprecated Analytics
-
 	#region Analytics
 
 	/**

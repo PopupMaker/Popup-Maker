@@ -93,7 +93,7 @@ function popmake_render_popup_columns( $column_name, $post_id ) {
 				break;
 			case 'opens':
 				if ( ! class_exists( 'PUM_Advanced_Analytics' ) && ! class_exists( 'PopMake_Popup_Analytics' ) ) {
-					echo '<strong>' . $popup->get_open_count() . '</strong>';
+					echo '<strong>' . $popup->get_event_count( 'open' ) . '</strong>';
 				}
 				break;
 		}
@@ -137,9 +137,9 @@ function popmake_sort_popups( $vars ) {
 			switch ( $vars['orderby'] ) {
 				case 'popup_title':
 					$vars = array_merge( $vars, array(
-							'meta_key' => 'popup_title',
-							'orderby'  => 'meta_value',
-						) );
+						'meta_key' => 'popup_title',
+						'orderby'  => 'meta_value',
+					) );
 					break;
 				case 'opens':
 					if ( ! class_exists( 'PUM_Advanced_Analytics' ) && ! class_exists( 'PopMake_Popup_Analytics' ) ) {
