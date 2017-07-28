@@ -659,7 +659,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 */
 	public function get_event_count( $event = 'open', $which = 'current' ) {
 
-		$keys = Analytics::event_keys( $event );
+		$keys = PUM_Analytics::event_keys( $event );
 
 		switch ( $which ) {
 			case 'current' :
@@ -699,7 +699,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		 */
 		//$this->set_event_defaults( $event );
 
-		$keys = Analytics::event_keys( $event );
+		$keys = PUM_Analytics::event_keys( $event );
 
 		// Set the current count
 		$current = $this->get_event_count( $event );
@@ -735,7 +735,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		$this->get_event_count( $event );
 		$this->get_event_count( $event, 'total' );
 
-		$keys = Analytics::event_keys( $event );
+		$keys = PUM_Analytics::event_keys( $event );
 		$last = $this->get_meta( 'popup_last_' . $keys[1] );
 
 		if ( empty( $last ) || ! is_numeric( $last ) ) {
@@ -755,7 +755,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		) );
 
 		foreach ( array( 'open', 'conversion' ) as $event ) {
-			$keys = Analytics::event_keys( $event );
+			$keys = PUM_Analytics::event_keys( $event );
 			$this->update_meta( 'popup_' . $keys[0] . '_count', 0 );
 			$this->update_meta( 'popup_last_' . $keys[1], 0 );
 		}

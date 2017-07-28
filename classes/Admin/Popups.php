@@ -16,40 +16,34 @@ class PUM_Admin_Popups {
 	 * Hook the initialize method to the WP init action.
 	 */
 	public static function init() {
+		// Add popup title field.
 		add_action( 'edit_form_advanced', array( __CLASS__, 'title_meta_field' ) );
-		add_action( 'edit_page_form', array( __CLASS__, 'title_meta_field' ) );
 
+		// Regitster Metaboxes
 		add_action( 'add_meta_boxes', array( __CLASS__, 'meta_box' ) );
+
+		// Process meta saving.
 		add_action( 'save_post', array( __CLASS__, 'save' ), 10, 2 );
 
+		// Set the slug properly on save.
 		add_filter( 'wp_insert_post_data', array( __CLASS__, 'set_slug' ), 99, 2 );
 
-
-		// ------------------------- Still To Do -------------------------------------------- //
-
-
-		add_action( 'pum_popup_settings_box_cta_tab_content', array( __CLASS__, 'cta_tab_content' ) );
-		add_action( 'pum_popup_settings_box_conditions_tab_content', array( __CLASS__, 'conditions_tab_content' ) );
-
-		add_filter( 'manage_edit-pum_popup_columns', array( __CLASS__, 'dashboard_columns' ) );
+		// Dashboard columns & filters.
+		add_filter( 'manage_edit-popup_columns', array( __CLASS__, 'dashboard_columns' ) );
 		add_action( 'manage_posts_custom_column', array( __CLASS__, 'render_columns' ), 10, 2 );
-		add_filter( 'manage_edit-pum_popup_sortable_columns', array( __CLASS__, 'sortable_columns' ) );
+		add_filter( 'manage_edit-popup_sortable_columns', array( __CLASS__, 'sortable_columns' ) );
 		add_action( 'load-edit.php', array( __CLASS__, 'load' ), 9999 );
-
+		add_action( 'restrict_manage_posts', array( __CLASS__, 'add_popup_filters' ), 100 );
 	}
-
-	#region Done
 
 	/**
 	 * Renders the popup title meta field.
-	 *
-	 * @return bool
 	 */
 	public static function title_meta_field() {
 		global $post, $pagenow, $typenow;
 
 		if ( ! is_admin() ) {
-			return false;
+			return;
 		}
 
 		if ( 'popup' == $typenow && in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) ) { ?>
@@ -59,7 +53,7 @@ class PUM_Admin_Popups {
 					<label class="screen-reader-text" id="popup-title-prompt-text" for="popup-title">
 						<?php _e( 'Enter popup title here', 'popup-maker' ); ?>
 					</label>
-					<input type="text" tabindex="2" name="popup_title" size="30" value="<?php esc_attr_e( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php _e( 'Enter popup title here', 'popup-maker' ); ?>" />
+					<input tabindex="2" name="popup_title" size="30" value="<?php esc_attr_e( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php _e( 'Enter popup title here', 'popup-maker' ); ?>" />
 				</div>
 				<div class="inside"></div>
 			</div>
@@ -68,15 +62,13 @@ class PUM_Admin_Popups {
 		}
 	}
 
-
 	/**
 	 * Registers popup metaboxes.
 	 */
 	public static function meta_box() {
 		add_meta_box( 'pum_popup_settings', __( 'Popup Settings', 'popup-maker' ), array( __CLASS__, 'render_settings_meta_box' ), 'popup', 'normal', 'high' );
-		//add_meta_box( 'pum_popup_analytics', __( 'Analytics', 'popup-maker' ), array( __CLASS__, 'render_analytics_meta_box' ), 'popup', 'side', 'high' );
+		add_meta_box( 'pum_popup_analytics', __( 'Analytics', 'popup-maker' ), array( __CLASS__, 'render_analytics_meta_box' ), 'popup', 'side', 'high' );
 	}
-
 
 	/**
 	 * Render the settings meta box wrapper and JS vars.
@@ -108,7 +100,6 @@ class PUM_Admin_Popups {
 
 		<div id="pum-popup-settings-container" class="pum-popup-settings-container"></div><?php
 	}
-
 
 	/**
 	 * @param $post_id
@@ -165,7 +156,6 @@ class PUM_Admin_Popups {
 		do_action( 'pum_save_popup', $post_id, $post );
 	}
 
-
 	public static function parse_values( $settings ) {
 
 		foreach ( $settings as $key => $value ) {
@@ -183,7 +173,6 @@ class PUM_Admin_Popups {
 		return $settings;
 	}
 
-
 	/**
 	 * List of tabs & labels for the settings panel.
 	 *
@@ -197,7 +186,6 @@ class PUM_Admin_Popups {
 			'targeting' => __( 'Targeting', 'popup-maker' ),
 		) );
 	}
-
 
 	/**
 	 * List of tabs & labels for the settings panel.
@@ -234,7 +222,9 @@ class PUM_Admin_Popups {
 	public static function fields() {
 
 		$tabs = apply_filters( 'pum_popup_settings_fields', array(
-			'general'   => apply_filters( 'pum_popup_general_settings_fields', array() ),
+			'general'   => apply_filters( 'pum_popup_general_settings_fields', array(
+				'main' => array(),
+			) ),
 			'display'   => apply_filters( 'pum_popup_display_settings_fields', array(
 				'size'      => array(
 					'size'                 => array(
@@ -676,7 +666,6 @@ class PUM_Admin_Popups {
 
 	#endregion Done
 
-
 	/**
 	 * Display analytics metabox
 	 *
@@ -691,13 +680,9 @@ class PUM_Admin_Popups {
 		<?php do_action( 'pum_popup_analytics_metabox_before', $post->ID ); ?>
 
 		<?php
-		$views       = $popup->get_event_count( 'view', 'current' );
 		$opens       = $popup->get_event_count( 'open', 'current' );
 		$conversions = $popup->get_event_count( 'conversion', 'current' );
-
-		$open_rate       = $views > 0 && $views >= $opens ? $opens / $views * 100 : false;
-		$conversion_rate = $views > 0 && $views >= $conversions ? $conversions / $views * 100 : false;
-
+		$conversion_rate = $opens > 0 && $opens >= $conversions ? $conversions / $opens * 100 : false;
 		?>
 
 		<div id="pum-popup-analytics" class="pum-popup-analytics">
@@ -705,19 +690,9 @@ class PUM_Admin_Popups {
 			<table class="form-table">
 				<tbody>
 				<tr>
-					<td><?php _e( 'Views', 'popup-maker' ); ?></td>
-					<td><?php echo $views; ?></td>
-				</tr>
-				<tr>
 					<td><?php _e( 'Opens', 'popup-maker' ); ?></td>
 					<td><?php echo $opens; ?></td>
 				</tr>
-				<?php if ( $open_rate && $open_rate !== 100 ) : ?>
-					<tr>
-						<td><?php _e( 'Open Rate', 'popup-maker' ); ?></td>
-						<td><?php echo round( $open_rate, 2 ); ?>%</td>
-					</tr>
-				<?php endif; ?>
 				<tr>
 					<td><?php _e( 'Conversions', 'popup-maker' ); ?></td>
 					<td><?php echo $conversions; ?></td>
@@ -738,13 +713,9 @@ class PUM_Admin_Popups {
 							<small>
 								<strong><?php _e( 'Last Reset', 'popup-maker' ); ?>:</strong> <?php echo date( 'm-d-Y H:i', $reset['timestamp'] ); ?>
 								<br />
-								<strong><?php _e( 'Previous Views', 'popup-maker' ); ?>:</strong> <?php echo $reset['views']; ?>
-								<br />
 								<strong><?php _e( 'Previous Opens', 'popup-maker' ); ?>:</strong> <?php echo $reset['opens']; ?>
 								<br />
 								<strong><?php _e( 'Previous Conversions', 'popup-maker' ); ?>:</strong> <?php echo $reset['conversions']; ?>
-								<br />
-								<strong><?php _e( 'Lifetime Views', 'popup-maker' ); ?>:</strong> <?php echo $popup->get_event_count( 'view', 'total' ); ?>
 								<br />
 								<strong><?php _e( 'Lifetime Opens', 'popup-maker' ); ?>:</strong> <?php echo $popup->get_event_count( 'open', 'total' ); ?>
 								<br />
@@ -758,9 +729,11 @@ class PUM_Admin_Popups {
 		</div>
 
 		<?php do_action( 'pum_popup_analytics_metabox_after', $post->ID ); ?>
-		</div><?php
-	}
 
+	</div>
+
+	<?php
+	}
 
 	/**
 	 * @param array $meta
@@ -786,7 +759,6 @@ class PUM_Admin_Popups {
 		return $meta;
 	}
 
-
 	/**
 	 * @return array
 	 */
@@ -802,39 +774,6 @@ class PUM_Admin_Popups {
 		}
 
 		return $defaults;
-	}
-
-	/**
-	 * Get top level tabs & labels.
-	 *
-	 * @return array $tabs
-	 */
-	public static function get_tabs() {
-		$fields = self::fields();
-
-		$tabs = self::tabs();
-
-		foreach ( $tabs as $key => $tab ) {
-			if ( empty( $fields[ $key ] ) ) {
-				// If there are no sections or fields for this tab then remove it from view.
-				unset( $tabs[ $key ] );
-			}
-		}
-
-		return $tabs;
-	}
-
-	/**
-	 * Get tab sections
-	 *
-	 * @param bool $tab
-	 *
-	 * @return array|bool $section
-	 */
-	public static function get_tab_sections( $tab = false ) {
-		$sections = self::sections();
-
-		return $tab && ! empty( $sections[ $tab ] ) ? $sections[ $tab ] : false;
 	}
 
 	/**
@@ -867,7 +806,6 @@ class PUM_Admin_Popups {
 		return ! self::is_field( $array );
 	}
 
-
 	/**
 	 * Ensures that the popups have unique slugs.
 	 *
@@ -884,25 +822,41 @@ class PUM_Admin_Popups {
 		return $data;
 	}
 
-	#region Later
 
 	/**
 	 * Defines the custom columns and their order
 	 *
-	 * @param array $columns Array of popup columns
+	 * @param array $_columns Array of popup columns
 	 *
-	 * @return array $columns Updated array of popup columns for Messages
+	 * @return array $columns Updated array of popup columns for
 	 *  Post Type List Table
 	 */
-	public static function dashboard_columns( $columns ) {
+	public static function dashboard_columns( $_columns ) {
 		$columns = array(
 			'cb'              => '<input type="checkbox"/>',
-			'tidtle'          => __( 'Name', 'popup-maker' ),
-			'headline'        => __( 'Headline', 'popup-maker' ),
+			'title'           => __( 'Name', 'popup-maker' ),
+			'popup_title'     => __( 'Title', 'popup-maker' ),
+			'class'           => __( 'CSS Classes', 'popup-maker' ),
 			'opens'           => __( 'Opens', 'popup-maker' ),
 			'conversions'     => __( 'Conversions', 'popup-maker' ),
 			'conversion_rate' => __( 'Conversion Rate', 'popup-maker' ),
 		);
+
+		// Add the date column preventing our own translation
+		if ( ! empty( $_columns['date'] ) ) {
+			$columns['date'] = $_columns['date'];
+		}
+
+		if ( get_taxonomy( 'popup_tag' ) ) {
+			$columns['popup_tag'] = __( 'Tags', 'popup-maker' );
+		}
+
+		if ( get_taxonomy( 'popup_category' ) ) {
+			$columns['popup_category'] = __( 'Categories', 'popup-maker' );
+		}
+
+		// Deprecated filter.
+		$columns = apply_filters( 'popmake_popup_columns', $columns );
 
 		return apply_filters( 'pum_popup_columns', $columns );
 	}
@@ -917,7 +871,7 @@ class PUM_Admin_Popups {
 		if ( get_post_type( $post_id ) == 'popup' ) {
 
 			$popup = pum_get_popup( $post_id );
-			setup_postdata( $popup );
+			//setup_postdata( $popup );
 
 			/**
 			 * Uncomment if need to check for permissions on certain columns.
@@ -927,14 +881,31 @@ class PUM_Admin_Popups {
 			 */
 
 			switch ( $column_name ) {
-				case 'headline':
-					echo esc_html( $popup->get_headline( false ) );
+				case 'popup_title':
+					echo esc_html( $popup->get_title() );
+					break;
+				case 'popup_category':
+					echo get_the_term_list( $post_id, 'popup_category', '', ', ', '' );
+					break;
+				case 'popup_tag':
+					echo get_the_term_list( $post_id, 'popup_tag', '', ', ', '' );
+					break;
+				case 'class':
+					echo '<pre style="display:inline-block;margin:0;"><code>popmake-' . absint( $post_id ) . '</code></pre>';
+					if ( $popup->post_name != $popup->ID ) {
+						echo '|';
+						echo '<pre style="display:inline-block;margin:0;"><code>popmake-' . $popup->post_name . '</code></pre>';
+					}
 					break;
 				case 'opens':
-					echo $popup->get_event_count( 'open' );
+					if ( ! pum_extension_enabled( 'popup-analytics' ) ) {
+						echo $popup->get_event_count( 'open' );
+					}
 					break;
 				case 'conversions':
-					echo $popup->get_event_count( 'conversion' );
+					if ( ! pum_extension_enabled( 'popup-analytics' ) ) {
+						echo $popup->get_event_count( 'conversion' );
+					}
 					break;
 				case 'conversion_rate':
 					$views       = $popup->get_event_count( 'view', 'current' );
@@ -955,7 +926,7 @@ class PUM_Admin_Popups {
 	 * @return array $columns Array of sortable columns
 	 */
 	public static function sortable_columns( $columns ) {
-		$columns['title']       = 'title';
+		$columns['popup_title'] = 'popup_title';
 		$columns['opens']       = 'opens';
 		$columns['conversions'] = 'conversions';
 
@@ -970,28 +941,32 @@ class PUM_Admin_Popups {
 	 * @return array $vars Array of all the sort variables
 	 */
 	public static function sort_columns( $vars ) {
-		// Check if we're viewing the "pum_popup" post type
+		// Check if we're viewing the "popup" post type
 		if ( isset( $vars['post_type'] ) && 'popup' == $vars['post_type'] ) {
 			// Check if 'orderby' is set to "name"
 			if ( isset( $vars['orderby'] ) ) {
 				switch ( $vars['orderby'] ) {
-					case 'headline':
+					case 'popup_title':
 						$vars = array_merge( $vars, array(
-							'meta_key' => 'pum_popup_title',
+							'meta_key' => 'popup_title',
 							'orderby'  => 'meta_value',
 						) );
 						break;
 					case 'opens':
-						$vars = array_merge( $vars, array(
-							'meta_key' => 'pum_popup_open_count',
-							'orderby'  => 'meta_value_num',
-						) );
+						if ( ! pum_extension_enabled( 'popup-analytics' ) ) {
+							$vars = array_merge( $vars, array(
+								'meta_key' => 'popup_open_count',
+								'orderby'  => 'meta_value_num',
+							) );
+						}
 						break;
 					case 'conversions':
-						$vars = array_merge( $vars, array(
-							'meta_key' => 'pum_popup_conversion_count',
-							'orderby'  => 'meta_value_num',
-						) );
+						if ( ! pum_extension_enabled( 'popup-analytics' ) ) {
+							$vars = array_merge( $vars, array(
+								'meta_key' => 'popup_conversion_count',
+								'orderby'  => 'meta_value_num',
+							) );
+						}
 						break;
 				}
 			}
@@ -1007,6 +982,45 @@ class PUM_Admin_Popups {
 		add_filter( 'request', array( __CLASS__, 'sort_columns' ) );
 	}
 
-	#endregion Later
+	/**
+	 * Add Popup Filters
+	 *
+	 * Adds taxonomy drop down filters for popups.
+	 */
+	public static function add_popup_filters() {
+		global $typenow;
+
+		// Checks if the current post type is 'popup'
+		if ( $typenow == 'popup' ) {
+
+			if ( get_taxonomy( 'popup_category' ) ) {
+				$terms = get_terms( 'popup_category' );
+				if ( count( $terms ) > 0 ) {
+					echo "<select name='popup_category' id='popup_category' class='postform'>";
+					echo "<option value=''>" . __( 'Show all categories', 'popup-maker' ) . "</option>";
+					foreach ( $terms as $term ) {
+						$selected = isset( $_GET['popup_category'] ) && $_GET['popup_category'] == $term->slug ? 'selected="selected"' : '';
+						echo '<option value="' . esc_attr( $term->slug ) . '" ' . $selected . '>' . esc_html( $term->name ) . ' (' . $term->count . ')</option>';
+					}
+					echo "</select>";
+				}
+			}
+
+			if ( get_taxonomy( 'popup_tag' ) ) {
+				$terms = get_terms( 'popup_tag' );
+				if ( count( $terms ) > 0 ) {
+					echo "<select name='popup_tag' id='popup_tag' class='postform'>";
+					echo "<option value=''>" . __( 'Show all tags', 'popup-maker' ) . "</option>";
+					foreach ( $terms as $term ) {
+						$selected = isset( $_GET['popup_tag'] ) && $_GET['popup_tag'] == $term->slug ? 'selected="selected"' : '';
+						echo '<option value="' . esc_attr( $term->slug ) . '" ' . $selected . '>' . esc_html( $term->name ) . ' (' . $term->count . ')</option>';
+					}
+					echo "</select>";
+				}
+			}
+		}
+
+	}
+
 }
 

@@ -11,13 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Controls the basic analytics methods for Popup Maker
  *
  */
-class Analytics {
+class PUM_Analytics {
 
 	/**
 	 *
 	 */
 	public static function init() {
-		if ( pum_get_option( 'disable_analytics' ) ) {
+		if ( pum_get_option( 'disable_analytics' ) || popmake_get_option( 'disable_popup_open_tracking' ) ) {
 			return;
 		}
 
@@ -29,7 +29,7 @@ class Analytics {
 	/**
 	 * @param $event
 	 *
-	 * @return mixed|void
+	 * @return mixed
 	 */
 	public static function event_keys( $event ) {
 		$keys = array( $event, $event . 'ed' );
@@ -47,13 +47,15 @@ class Analytics {
 	 * @param $args
 	 */
 	public static function track( $args ) {
-		if ( empty ( $args['mid'] ) || $args['mid'] <= 0 ) {
+		if ( empty ( $args['pid'] ) || $args['pid'] <= 0 ) {
 			return;
 		}
 
 		$event = $args['event'];
 
-		$popup = pum_get_popup( $args['mid'] );
+
+
+		$popup = pum_get_popup( $args['pid'] );
 
 		if ( ! pum_is_popup( $popup ) ) {
 			return;
@@ -74,7 +76,7 @@ class Analytics {
 
 		$args = wp_parse_args( $_REQUEST, array(
 			'event'  => null,
-			'mid'    => null,
+			'pid'    => null,
 			'method' => null,
 		) );
 
@@ -104,7 +106,7 @@ class Analytics {
 	public static function analytics_endpoint( \WP_REST_Request $request ) {
 		$args = $request->get_params();
 
-		if ( ! $args || empty( $args['mid'] ) ) {
+		if ( ! $args || empty( $args['pid'] ) ) {
 			return new \WP_Error( 'missing_params', __( 'Missing Parameters.' ), array( 'status' => 404 ) );
 		}
 
@@ -131,7 +133,7 @@ class Analytics {
 		$version   = 1;
 		$namespace = 'pum/v' . $version;
 
-		register_rest_route( $namespace, 'analytics', array(
+		register_rest_route( $namespace, 'PUM_Analytics', array(
 			'methods'  => 'GET',
 			'callback' => array( __CLASS__, 'analytics_endpoint' ),
 			'args'     => array(
@@ -140,9 +142,9 @@ class Analytics {
 					'description' => __( 'Event Type', 'popup-maker' ),
 					'type'        => 'string',
 				),
-				'mid'   => array(
+				'pid'   => array(
 					'required'            => true,
-					'description'         => __( 'Message ID', 'popup-maker' ),
+					'description'         => __( 'Popup ID', 'popup-maker' ),
 					'type'                => 'integer',
 					'validation_callback' => array( __CLASS__, 'endpoint_absint' ),
 					'sanitize_callback'   => 'absint',

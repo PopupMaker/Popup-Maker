@@ -300,12 +300,6 @@ class Popup_Maker {
 		require_once POPMAKE_DIR . 'includes/modules/menus.php';
 		require_once POPMAKE_DIR . 'includes/modules/admin-bar.php';
 		require_once POPMAKE_DIR . 'includes/modules/reviews.php';
-		require_once POPMAKE_DIR . 'includes/modules/analytics.php';
-
-		// Analytics
-		if ( is_admin() ) {
-			require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-analytics.php';
-		}
 
 		// Shortcodes
 		require_once POPMAKE_DIR . 'includes/class-pum-shortcode.php';
@@ -336,7 +330,7 @@ class Popup_Maker {
 			require_once POPMAKE_DIR . 'includes/admin/admin-functions.php';
 
 			require_once POPMAKE_DIR . 'includes/admin/popups/metabox.php';
-			require_once POPMAKE_DIR . 'includes/admin/popups/dashboard-columns.php';
+			require_once POPMAKE_DIR . 'includes/admin/popups/metabox.php';
 			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-close-fields.php';
 			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-display-fields.php';
 			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-themes-fields.php';
