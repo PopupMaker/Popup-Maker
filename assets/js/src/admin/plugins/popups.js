@@ -5,6 +5,11 @@
 (function ($) {
     "use strict";
 
+    window.pum_popup_settings_editor = window.pum_popup_settings_editor || {
+        form_args: {},
+        current_values: {}
+    };
+
     var popup_settings = {
         autosave: function () {
             var values = $('#pum-popup-settings-container').serializeObject().popup_settings;
@@ -28,8 +33,7 @@
         .ready(function () {
             var $container = $('#pum-popup-settings-container'),
                 args       = pum_popup_settings_editor.form_args || {},
-                values     = window.pum_popup_settings_editor.current_values || {};
-
+                values     = pum_popup_settings_editor.current_values || {};
 
             if ($container.length) {
                 PUM_Admin.forms.render($container, args, values);

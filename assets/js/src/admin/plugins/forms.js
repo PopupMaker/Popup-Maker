@@ -240,21 +240,26 @@
 
                         });
 
-                        _.each(sections, function (section, sectionID) {
-                            // Render the section into the content of a new tab.
-                            tabs[tabID].tabs[sectionID] = {
-                                label: data.sections[tabID][sectionID],
-                                content: PUM_Admin.templates.section(sections[sectionID])
+                        if (Object.keys(sections).length) {
+                            _.each(sections, function (section, sectionID) {
+                                // Render the section into the content of a new tab.
+                                tabs[tabID].tabs[sectionID] = {
+                                    label: data.sections[tabID][sectionID],
+                                    content: PUM_Admin.templates.section(sections[sectionID])
+                                };
+                            });
+                        }
+
+                        if (Object.keys(tabs[tabID].tabs).length) {
+                            // Render subtab sections into this top level tab's content.
+                            tabs[tabID] = {
+                                label: data.tabs[tabID],
+
+                                content: PUM_Admin.templates.tabs(tabs[tabID])
                             };
-                        });
-
-
-                        // Render subtab sections into this top level tab's content.
-                        tabs[tabID] = {
-                            label: data.tabs[tabID],
-
-                            content: PUM_Admin.templates.tabs(tabs[tabID])
-                        };
+                        } else {
+                            delete tabs[tabID];
+                        }
                     });
 
                     // Render Tabs
