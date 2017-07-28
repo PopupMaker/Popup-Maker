@@ -7412,21 +7412,26 @@ var PUMCookies;
 
                         });
 
-                        _.each(sections, function (section, sectionID) {
-                            // Render the section into the content of a new tab.
-                            tabs[tabID].tabs[sectionID] = {
-                                label: data.sections[tabID][sectionID],
-                                content: PUM_Admin.templates.section(sections[sectionID])
+                        if (Object.keys(sections).length) {
+                            _.each(sections, function (section, sectionID) {
+                                // Render the section into the content of a new tab.
+                                tabs[tabID].tabs[sectionID] = {
+                                    label: data.sections[tabID][sectionID],
+                                    content: PUM_Admin.templates.section(sections[sectionID])
+                                };
+                            });
+                        }
+
+                        if (Object.keys(tabs[tabID].tabs).length) {
+                            // Render subtab sections into this top level tab's content.
+                            tabs[tabID] = {
+                                label: data.tabs[tabID],
+
+                                content: PUM_Admin.templates.tabs(tabs[tabID])
                             };
-                        });
-
-
-                        // Render subtab sections into this top level tab's content.
-                        tabs[tabID] = {
-                            label: data.tabs[tabID],
-
-                            content: PUM_Admin.templates.tabs(tabs[tabID])
-                        };
+                        } else {
+                            delete tabs[tabID];
+                        }
                     });
 
                     // Render Tabs
@@ -7859,6 +7864,11 @@ var PUMMarketing;
 (function ($) {
     "use strict";
 
+    window.pum_popup_settings_editor = window.pum_popup_settings_editor || {
+        form_args: {},
+        current_values: {}
+    };
+
     var popup_settings = {
         autosave: function () {
             var values = $('#pum-popup-settings-container').serializeObject().popup_settings;
@@ -7882,8 +7892,7 @@ var PUMMarketing;
         .ready(function () {
             var $container = $('#pum-popup-settings-container'),
                 args       = pum_popup_settings_editor.form_args || {},
-                values     = window.pum_popup_settings_editor.current_values || {};
-
+                values     = pum_popup_settings_editor.current_values || {};
 
             if ($container.length) {
                 PUM_Admin.forms.render($container, args, values);
