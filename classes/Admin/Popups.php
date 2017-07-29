@@ -226,7 +226,15 @@ class PUM_Admin_Popups {
 		if ( ! isset( $tabs ) ) {
 			$tabs = apply_filters( 'pum_popup_settings_fields', array(
 				'general'   => apply_filters( 'pum_popup_general_settings_fields', array(
-					'main' => array(),
+					'main' => array(
+						'theme' => array(
+							'label'        => __( 'Theme', 'popup-maker' ),
+							'dynamic_desc' => sprintf( '%1$s<br/><a id="edit_theme_link" href="%3$s">%2$s</a>', __( 'Choose a theme for this popup.', 'popup-maker' ), __( 'Customize This Theme', 'popup-maker' ), admin_url( "post.php?action=edit&post={{data.value}}" ) ),
+							'type'         => 'select',
+							'options'      => PUM_Helpers::popup_theme_selectlist(),
+							'std'          => popmake_get_default_popup_theme(),
+						),
+					),
 				) ),
 				'display'   => apply_filters( 'pum_popup_display_settings_fields', array(
 					'size'      => array(
@@ -540,13 +548,13 @@ class PUM_Admin_Popups {
 							'priority' => 10,
 						),
 						'disable_on_mobile' => array(
-							'label' => __( 'Disable this popup on mobile devices.', 'popup-maker' ),
-							'type'  => 'checkbox',
+							'label'    => __( 'Disable this popup on mobile devices.', 'popup-maker' ),
+							'type'     => 'checkbox',
 							'priority' => 20,
 						),
 						'disable_on_tablet' => array(
-							'label' => __( 'Disable this popup on tablet devices.', 'popup-maker' ),
-							'type'  => 'checkbox',
+							'label'    => __( 'Disable this popup on tablet devices.', 'popup-maker' ),
+							'type'     => 'checkbox',
 							'priority' => 20,
 						),
 					),

@@ -268,7 +268,6 @@ class Popup_Maker {
 		require_once POPMAKE_DIR . 'includes/pum-misc-functions.php';
 		require_once POPMAKE_DIR . 'includes/pum-template-hooks.php';
 		require_once POPMAKE_DIR . 'includes/pum-ajax-functions.php';
-		require_once POPMAKE_DIR . 'includes/class-pum-helpers.php';
 
 
 		// Triggers
@@ -325,12 +324,6 @@ class Popup_Maker {
 		if ( is_admin() ) {
 			require_once POPMAKE_DIR . 'includes/admin/admin-setup.php';
 			require_once POPMAKE_DIR . 'includes/admin/admin-functions.php';
-
-			require_once POPMAKE_DIR . 'includes/admin/popups/metabox.php';
-			require_once POPMAKE_DIR . 'includes/admin/popups/metabox.php';
-			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-close-fields.php';
-			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-display-fields.php';
-			require_once POPMAKE_DIR . 'includes/admin/popups/metabox-themes-fields.php';
 
 			// Deprecated Popup Metaboxes.
 

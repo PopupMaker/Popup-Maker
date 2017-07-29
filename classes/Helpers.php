@@ -1,15 +1,11 @@
 <?php
-/**
- * Condition
- *
- * @package     PUM
- * @subpackage  Classes/PUM_Condition
- * @copyright   Copyright (c) 2016, Daniel Iser
- * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
- * @since       1.4
- */
 
 // Exit if accessed directly
+
+/*******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -108,5 +104,16 @@ class PUM_Helpers {
 		return ! $include_total ? $results['items'] : $results;
 	}
 
+	public static function popup_theme_selectlist() {
+
+		$themes = array();
+
+		foreach ( popmake_get_all_popup_themes() as $theme ) {
+			$themes[ $theme->ID ] = $theme->post_title;
+		}
+
+		return $themes;
+
+	}
 
 }
