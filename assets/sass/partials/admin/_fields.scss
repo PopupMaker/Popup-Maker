@@ -190,9 +190,6 @@
  */
 .pum-field-conditions {
 
-  .pum-alert-box {
-  }
-
   .facet-builder {
 
     p {
@@ -456,8 +453,6 @@
     .facet-target {
       max-width: 100%;
     }
-
-
   }
 
 
@@ -482,6 +477,12 @@
 
 }
 
+/**
+ * Triggers field
+ */
+.pum-field-triggers {
+  @include add-more-table-lists();
+}
 
 
 [data-pum-dependencies] {

@@ -24,64 +24,10 @@ var PopMakeAdmin;
             }
         },
         initialize_popup_page: function () {
-            var update_size = function () {
-                    if ($("#popup_display_size").val() === 'custom') {
-                        $('.custom-size-only').show();
-                        $('.responsive-size-only').hide();
-                        if ($('#popup_display_custom_height_auto').is(':checked')) {
-                            $('.custom-size-height-only').hide();
-                        } else {
-                            $('.custom-size-height-only').show();
-                        }
-                    } else {
-                        $('.custom-size-only').hide();
-                        if ($("#popup_display_size").val() !== 'auto') {
-                            $('.responsive-size-only').show();
-                            $('#popup_display_custom_height_auto').prop('checked', false);
-                        } else {
-                            $('.responsive-size-only').hide();
-                        }
-                    }
-                },
-                update_animation = function () {
-                    $('.animation-speed, .animation-origin').hide();
-                    if ($("#popup_display_animation_type").val() === 'fade') {
-                        $('.animation-speed').show();
-                    } else {
-                        if ($("#popup_display_animation_type").val() !== 'none') {
-                            $('.animation-speed, .animation-origin').show();
-                        }
-                    }
-                },
-                update_location = function () {
-                    var $this = $('#popup_display_location'),
-                        table = $this.parents('table'),
-                        val = $this.val();
-                    $('tr.top, tr.right, tr.left, tr.bottom', table).hide();
-                    if (val.indexOf("top") >= 0) {
-                        $('tr.top').show();
-                    }
-                    if (val.indexOf("left") >= 0) {
-                        $('tr.left').show();
-                    }
-                    if (val.indexOf("bottom") >= 0) {
-                        $('tr.bottom').show();
-                    }
-                    if (val.indexOf("right") >= 0) {
-                        $('tr.right').show();
-                    }
-                };
 
             $('#title').prop('required', true);
 
             $(document)
-                .on('change', '#popup_theme', function () {
-                    var $this = $(this),
-                        $link = $('#edit_theme_link'),
-                        val = $this.val();
-
-                    $link.attr('href', $link.data('baseurl')+val);
-                })
                 .on('keydown', '#popup-title', function (event) {
                     var keyCode = event.keyCode || event.which;
                     if (9 === keyCode) {
@@ -106,26 +52,7 @@ var PopMakeAdmin;
                         target = $(this).attr('id') === 'popup-title' ? '#title' : '#popup-title';
                         $(target).focus();
                     }
-                })
-                .on('click', '#popup_display_custom_height_auto', function () {
-                    update_size();
-                })
-                .on('change', "#popup_display_size", function () {
-                    if ($("#popup_display_size").val() !== 'custom' && $("#popup_display_size").val() !== 'auto') {
-                        $('#popup_display_position_fixed, #popup_display_scrollable_content').prop('checked', false);
-                    }
-                    update_size();
-                })
-                .on('change', "#popup_display_animation_type", function () {
-                    update_animation();
-                })
-                .on('change', '#popup_display_location', function () {
-                    update_location();
                 });
-
-            update_size();
-            update_animation();
-            update_location();
         },
         theme_page_listeners: function () {
             var self = this;

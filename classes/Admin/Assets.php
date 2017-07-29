@@ -81,7 +81,6 @@ class PUM_Admin_Assets {
 		// TODO Clean up this next section, haven't touched it at all. Is any of it needed or can we move/remove it.
 		if ( popmake_is_admin_popup_page() ) {
 			PUM_Admin_Templates::init();
-			add_action( 'admin_footer', array( __CLASS__, 'admin_popup_editor_media_templates' ) );
 		}
 		if ( popmake_is_admin_popup_theme_page() ) {
 			wp_localize_script( 'popup-maker-admin', 'popmake_google_fonts', popmake_get_google_webfonts_list() );
@@ -134,35 +133,6 @@ class PUM_Admin_Assets {
 
 
 		return popmake_is_admin_page() || in_array( $pagenow, $pages );
-	}
-
-	/**
-	 *
-	 */
-	public static function admin_popup_editor_media_templates() {
-
-		$presets = apply_filters( 'pum_click_selector_presets', array(
-			'a[href="exact_url"]'    => __( 'Link: Exact Match', 'popup-maker' ),
-			'a[href*="contains"]'    => __( 'Link: Containing', 'popup-maker' ),
-			'a[href^="begins_with"]' => __( 'Link: Begins With', 'popup-maker' ),
-			'a[href$="ends_with"]'   => __( 'Link: Ends With', 'popup-maker' ),
-		) ); ?>
-
-		<script type="text/html" id="tmpl-pum-click-selector-presets">
-			<div class="pum-click-selector-presets">
-				<span class="dashicons dashicons-arrow-left" title="<?php _e( 'Insert Preset', 'popup-maker' ); ?>"></span>
-				<ul>
-					<?php foreach ( $presets as $preset => $label ) : ?>
-						<li data-preset='<?php echo $preset; ?>'>
-							<span><?php echo $label; ?></span>
-						</li>
-					<?php endforeach; ?>
-				</ul>
-			</div>
-		</script>
-
-		<?php
-
 	}
 
 }

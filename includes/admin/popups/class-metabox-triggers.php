@@ -83,7 +83,7 @@ class PUM_Popup_Triggers_Metabox {
                                 'columns'  => array(
                                         'type'     => $trigger->get_label( 'name' ),
                                         'cookie'   => isset( $values['settings']['cookie']['name'] ) ? $values['settings']['cookie']['name'] : '',
-                                        'settings' => '{{PUMTriggers.getSettingsDesc(data.type, data.trigger_settings)}}',
+                                        'settings' => '{{PUM_Admin.triggers.getSettingsDesc(data.type, data.trigger_settings)}}',
                                 ),
                                 'settings' => $values['settings'],
                         ) );
@@ -135,9 +135,9 @@ class PUM_Popup_Triggers_Metabox {
 				'index' => '{{data.index}}',
 				'type' => '{{data.type}}',
 				'columns' => array(
-                        'type'     => '{{PUMTriggers.getLabel(data.type)}}',
-                        'cookie'   => "{{PUMTriggers.cookie_column_value(data.trigger_settings.cookie.name)}}",
-                        'settings' => '{{PUMTriggers.getSettingsDesc(data.type, data.trigger_settings)}}',
+                        'type'     => '{{PUM_Admin.triggers.getLabel(data.type)}}',
+                        'cookie'   => "{{PUM_Admin.triggers.cookie_column_value(data.trigger_settings.cookie.name)}}",
+                        'settings' => '{{PUM_Admin.triggers.getSettingsDesc(data.type, data.trigger_settings)}}',
 				),
 				'settings' => '{{JSON.stringify(data.trigger_settings)}}',
 			) ); ?>
@@ -243,7 +243,7 @@ class PUM_Popup_Triggers_Metabox {
 				</code>
 			</td>
 			<td class="settings-column"><?php echo $row['columns']['settings']; ?></td>
-			<td class="actions">
+			<td class="list-item-actions">
                 <button type="button" class="edit dashicons dashicons-edit no-button" aria-label="<?php _e( 'Edit this trigger', 'popup-maker' ); ?>"></button>
                 <button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php _e( 'Delete` this trigger', 'popup-maker' ); ?>"></button>
 			</td>

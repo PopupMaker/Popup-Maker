@@ -183,6 +183,7 @@ class PUM_Admin_Popups {
 			'general'   => __( 'General', 'popup-maker' ),
 			'display'   => __( 'Display', 'popup-maker' ),
 			'close'     => __( 'Close', 'popup-maker' ),
+			'triggers'  => __( 'Triggers', 'popup-maker' ),
 			'targeting' => __( 'Targeting', 'popup-maker' ),
 		) );
 	}
@@ -207,6 +208,9 @@ class PUM_Admin_Popups {
 			'close'     => array(
 				'main'    => __( 'General', 'popup-maker' ),
 				'methods' => __( 'Misc', 'popup-maker' ),
+			),
+			'triggers' => array(
+				'main' => __( 'Triggers', 'popup-maker' ),
 			),
 			'targeting' => array(
 				'main' => __( 'Conditions', 'popup-maker' ),
@@ -537,6 +541,15 @@ class PUM_Admin_Popups {
 							'desc'     => __( 'Checking this will cause popup to close when user presses F4 key.', 'popup-maker' ),
 							'type'     => 'checkbox',
 							'priority' => 30,
+						),
+					),
+				) ),
+				'triggers'  => apply_filters( 'pum_popup_triggers_settings_fields', array(
+					'main' => array(
+						'triggers'        => array(
+							'type'     => 'triggers',
+							'std'      => array(),
+							'priority' => 10,
 						),
 					),
 				) ),

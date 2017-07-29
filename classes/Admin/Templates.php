@@ -10,6 +10,7 @@ class PUM_Admin_Templates {
 	public static function init() {
 		add_action( 'admin_footer', array( __CLASS__, 'fields' ) );
 		add_action( 'admin_footer', array( __CLASS__, 'helpers' ) );
+		add_action( 'admin_footer', array( __CLASS__, 'triggers_editor' ) );
 		add_action( 'admin_footer', array( __CLASS__, 'conditions_editor' ) );
 	}
 
@@ -19,22 +20,22 @@ class PUM_Admin_Templates {
 			<div class="pum-field-section {{data.classes}}">
 				<# _.each(data.fields, function(field) { #>
 					{{{field}}}
-				<# }); #>
+					<# }); #>
 			</div>
 		</script>
 
 		<script type="text/html" id="tmpl-pum-field-wrapper">
 			<div class="pum-field pum-field-{{data.type}} {{data.id}}-wrapper {{data.classes}}" data-id="{{data.id}}" <?php /* data-field-args="{{JSON.stringify(data)}}" */ ?>
-				<# print( data.dependencies !== '' ? "data-pum-dependencies='" + data.dependencies + "'" : ''); #>
+			<# print( data.dependencies !== '' ? "data-pum-dependencies='" + data.dependencies + "'" : ''); #>
 				<# print( data.dynamic_desc !== '' ? "data-pum-dynamic-desc='" + data.dynamic_desc + "'" : ''); #>>
-				<# if (typeof data.label === 'string' && data.label.length > 0) { #>
-				<label for="{{data.id}}">{{{data.label}}}</label>
-				<# } #>
-				{{{data.field}}}
-				<# if (typeof data.desc === 'string' && data.desc.length > 0) { #>
-				<span class="pum-desc desc">{{{data.desc}}}</span>
-				<# } #>
-			</div>
+					<# if (typeof data.label === 'string' && data.label.length > 0) { #>
+						<label for="{{data.id}}">{{{data.label}}}</label>
+						<# } #>
+							{{{data.field}}}
+							<# if (typeof data.desc === 'string' && data.desc.length > 0) { #>
+								<span class="pum-desc desc">{{{data.desc}}}</span>
+								<# } #>
+									</div>
 		</script>
 
 		<script type="text/html" id="tmpl-pum-field-html">
@@ -47,9 +48,9 @@ class PUM_Admin_Templates {
 
 		<script type="text/html" id="tmpl-pum-field-separator">
 			<# if (typeof data.desc === 'string' && data.desc.length > 0) { #>
-			<h3 class="pum-field-heading">{{data.desc}}</h3>
-			<# } #>
-			<hr {{{data.meta}}} />
+				<h3 class="pum-field-heading">{{data.desc}}</h3>
+				<# } #>
+					<hr {{{data.meta}}} />
 		</script>
 
 		<script type="text/html" id="tmpl-pum-field-text">
@@ -57,8 +58,7 @@ class PUM_Admin_Templates {
 		</script>
 
 		<script type="text/html" id="tmpl-pum-field-link">
-			<button type="button" class="dashicons dashicons-admin-generic button"></button>
-			<input type="text" placeholder="{{data.placeholder}}" class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" {{{data.meta}}} />
+			<button type="button" class="dashicons dashicons-admin-generic button"></button>            <input type="text" placeholder="{{data.placeholder}}" class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" {{{data.meta}}} />
 		</script>
 
 		<script type="text/html" id="tmpl-pum-field-range">
@@ -107,19 +107,19 @@ class PUM_Admin_Templates {
 
 					if (option.options !== undefined && option.options.length) { #>
 
-						<optgroup label="{{{option.label}}}">
+					<optgroup label="{{{option.label}}}">
 
-							<# _.each(option.options, function(option, key) { #>
-								<option value="{{option.value}}" {{{option.meta}}}>{{{option.label}}}</option>
+						<# _.each(option.options, function(option, key) { #>
+							<option value="{{option.value}}" {{{option.meta}}}>{{{option.label}}}</option>
 							<# }); #>
 
-						</optgroup>
+					</optgroup>
 
 					<# } else { #>
 						<option value="{{option.value}}" {{{option.meta}}}>{{{option.label}}}</option>
-					<# }
+						<# }
 
-				}); #>
+							}); #>
 			</select>
 		</script>
 
@@ -141,11 +141,12 @@ class PUM_Admin_Templates {
 		<script type="text/html" id="tmpl-pum-field-radio">
 			<ul class="pum-field-radio-list">
 				<# _.each(data.options, function(option, key) { #>
-					<li <# print(option.value === data.value ? 'class="pum-selected"' : ''); #>>
+					<li
+					<# print(option.value === data.value ? 'class="pum-selected"' : ''); #>>
 						<input type="radio" id="{{data.id}}_{{key}}" name="{{data.name}}" value="{{option.value}}" {{{option.meta}}} />
 						<label for="{{data.id}}_{{key}}">{{{option.label}}}</label>
-					</li>
-				<# }); #>
+						</li>
+						<# }); #>
 			</ul>
 		</script>
 
@@ -173,11 +174,10 @@ class PUM_Admin_Templates {
 		</script>
 
 		<script type="text/html" id="tmpl-pum-field-measure">
-			<input type="number" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" size="5"  {{{data.meta}}} />
-			<select id="{{data.id}}_unit" name="<# print(data.name.replace(data.id, data.id + '_unit')); #>">
+			<input type="number" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" size="5" {{{data.meta}}} />            <select id="{{data.id}}_unit" name="<# print(data.name.replace(data.id, data.id + '_unit')); #>">
 				<# _.each(data.units, function(option, key) { #>
 					<option value="{{option.value}}" {{{option.meta}}}>{{{option.label}}}</option>
-				<# }); #>
+					<# }); #>
 			</select>
 		</script>
 
@@ -269,6 +269,159 @@ class PUM_Admin_Templates {
 		<?php
 	}
 
+	public static function triggers_editor() {
+		?>
+		<script type="text/html" id="tmpl-pum-field-triggers">
+			<# print(PUM_Admin.triggers.template.editor({triggers: data.value})); #>
+		</script>
+
+		<script type="text/html" id="tmpl-pum-trigger-editor">
+			<div class="pum-popup-trigger-editor  <# if (data.triggers && data.triggers.length) { print('has-list-items'); } #>">
+				<button type="button" class="button button-primary pum-add-new no-button"><?php _e( 'Add New Trigger', 'popup-maker' ); ?></button>
+
+				<p>
+					<strong>
+						<?php _e( 'Triggers are what make your popup open.', 'popup-maker' ); ?>
+						<a href="<?php echo esc_url( 'http://docs.wppopupmaker.com/article/141-triggers?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=triggers-intro' ); ?>" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
+					</strong>
+				</p>
+
+				<table class="list-table form-table">
+					<thead>
+					<tr>
+						<th><?php _e( 'Type', 'popup-maker' ); ?></th>
+						<th><?php _e( 'Cookie', 'popup-maker' ); ?></th>
+						<th><?php _e( 'Settings', 'popup-maker' ); ?></th>
+						<th><?php _e( 'Actions', 'popup-maker' ); ?></th>
+					</tr>
+					</thead>
+					<tbody>
+					<#
+						_.each(data.triggers, function (trigger, index) {
+						print(PUM_Admin.triggers.template.row({
+						index: index,
+						type: trigger.type,
+						settings: trigger.settings || {}
+						}));
+						});
+						#>
+					</tbody>
+				</table>
+
+				<div class="no-triggers  no-list-items">
+					<div class="pum-field pum-field-select pum-field-select2">
+						<label for="pum-first-trigger"><?php _e( 'Choose a type of trigger to get started.', 'popup-maker' ); ?></label>
+						<# print(PUM_Admin.triggers.template.selectbox({id: 'pum-first-trigger', name: "", placeholder: "<?php _e( 'Select a trigger type.', 'popup-maker' ); ?>"})); #>
+					</div>
+				</div>
+			</div>
+		</script>
+
+		<script type="text/html" id="tmpl-pum-trigger-row">
+			<tr data-index="{{data.index}}">
+				<td class="type-column">
+					<button type="button" class="edit no-button link-button" aria-label="<?php _e( 'Edit this trigger', 'popup-maker' ); ?>">{{PUM_Admin.triggers.getLabel(data.type)}}</button>
+					<input class="popup_triggers_field_type" type="hidden" name="popup_triggers[{{data.index}}][type]" value="{{data.type}}" />
+					<input class="popup_triggers_field_settings" type="hidden" name="popup_triggers[{{data.index}}][settings]" value="{{JSON.stringify(data.settings)}" />
+				</td>
+				<td class="cookie-column">
+					<code>{{PUM_Admin.triggers.cookie_column_value(data.settings.cookie.name)}}</code>
+				</td>
+				<td class="settings-column">{{PUM_Admin.triggers.getSettingsDesc(data.type, data.settings)}}</td>
+				<td class="list-item-actions">
+					<button type="button" class="edit dashicons dashicons-edit no-button" aria-label="<?php _e( 'Edit this trigger', 'popup-maker' ); ?>"></button>
+					<button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php _e( 'Delete` this trigger', 'popup-maker' ); ?>"></button>
+				</td>
+			</tr>
+		</script>
+
+		<?php
+		$presets = apply_filters( 'pum_click_selector_presets', array(
+			'a[href="exact_url"]'    => __( 'Link: Exact Match', 'popup-maker' ),
+			'a[href*="contains"]'    => __( 'Link: Containing', 'popup-maker' ),
+			'a[href^="begins_with"]' => __( 'Link: Begins With', 'popup-maker' ),
+			'a[href$="ends_with"]'   => __( 'Link: Ends With', 'popup-maker' ),
+		) );
+		?>
+
+		<script type="text/html" id="tmpl-pum-click-selector-presets">
+			<div class="pum-click-selector-presets">
+				<span class="dashicons dashicons-arrow-left" title="<?php _e( 'Insert Preset', 'popup-maker' ); ?>"></span>
+				<ul>
+					<?php foreach ( $presets as $preset => $label ) : ?>
+						<li data-preset='<?php echo $preset; ?>'>
+							<span><?php echo $label; ?></span>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+		</script>
+
+		<script type="text/html" id="tmpl-pum-trigger-add-type"><?php
+			ob_start(); ?>
+			<select id="popup_trigger_add_type">
+				<?php foreach ( PUM_Triggers::instance()->get_triggers() as $id => $trigger ) : ?>
+					<option value="<?php echo $id; ?>"><?php echo $trigger->get_label( 'name' ); ?></option>
+				<?php endforeach ?>
+			</select><?php
+			$content = ob_get_clean();
+
+			PUM_Admin_Helpers::modal( array(
+				'id'      => 'pum_trigger_add_type_modal',
+				'title'   => __( 'Choose what type of trigger to add?', 'popup-maker' ),
+				'content' => $content,
+			) ); ?>
+		</script>
+
+		<?php foreach ( PUM_Triggers::instance()->get_triggers() as $id => $trigger ) { ?>
+			<script type="text/html" id="tmpl-pum-trigger-settings-<?php esc_attr_e( $id ); ?>" class="pum-trigger-settings tmpl" data-trigger="<?php esc_attr_e( $id ); ?>">
+
+				<?php ob_start(); ?>
+
+				<input type="hidden" name="type" class="type" value="<?php esc_attr_e( $id ); ?>" />                <input type="hidden" name="index" class="index" value="{{data.index}}" />
+
+				<div class="pum-tabs-container vertical-tabs pum-tabbed-form">
+
+					<ul class="tabs">
+						<?php
+						/**
+						 * Render Each settings tab.
+						 */
+						foreach ( $trigger->get_sections() as $tab => $args ) { ?>
+							<li class="tab">
+								<a href="#<?php esc_attr_e( $id . '_' . $tab ); ?>_settings"><?php esc_html_e( $args['title'] ); ?></a>
+							</li>
+						<?php } ?>
+					</ul>
+
+					<?php
+					/**
+					 * Render Each settings tab contents.
+					 */
+					foreach ( $trigger->get_sections() as $tab => $args ) { ?>
+						<div id="<?php esc_attr_e( $id . '_' . $tab ); ?>_settings" class="tab-content">
+							<?php $trigger->render_templ_fields_by_section( $tab ); ?>
+						</div>
+					<?php } ?>
+
+				</div><?php
+
+				$content = ob_get_clean();
+
+				PUM_Admin_Helpers::modal( array(
+					'id'               => 'pum_trigger_settings_' . $id,
+					'title'            => $trigger->get_label( 'modal_title' ),
+					'class'            => 'tabbed-content trigger-editor',
+					'save_button_text' => '{{data.save_button_text}}',
+					'content'          => $content,
+				) ); ?>
+			</script>
+
+			<?php
+		}
+
+	}
+
 	public static function conditions_editor() {
 		?>
 		<script type="text/html" id="tmpl-pum-field-conditions">
@@ -302,7 +455,7 @@ class PUM_Admin_Templates {
 					<label for="pum-first-condition"><?php _e( 'Choose a condition to get started.', 'popup-maker' ); ?></label>
 					<div class="facet-target">
 						<button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
-							<input type="checkbox" id="pum-first-facet-operand" value="1"/>
+							<input type="checkbox" id="pum-first-facet-operand" value="1" />
 						</button>
 						<# print(PUM_Admin.conditions.template.selectbox({id: 'pum-first-condition', name: "", placeholder: "<?php _e( 'Choose a condition', 'popup-maker' ); ?>"})); #>
 					</div>
@@ -317,7 +470,7 @@ class PUM_Admin_Templates {
 					<div class="facet-list">
 						<# _.each(data.facets, function (facet) {
 							print(PUM_Admin.conditions.template.facet(facet));
-						}); #>
+							}); #>
 					</div>
 					<div class="add-or">
 						<button type="button" class="add add-facet no-button" aria-label="<?php _ex( 'Add another OR condition', 'aria-label for add new OR condition button', 'popup-maker' ); ?>"><?php _e( 'or', 'popup-maker' ); ?></button>
