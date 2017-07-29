@@ -37,6 +37,10 @@ class PUM_Admin_Templates {
 			</div>
 		</script>
 
+		<script type="text/html" id="tmpl-pum-field-html">
+			{{{data.content}}}
+		</script>
+
 		<script type="text/html" id="tmpl-pum-field-heading">
 			<h3 class="pum-field-heading">{{data.desc}}</h3>
 		</script>
