@@ -292,9 +292,6 @@ class Popup_Maker {
 		// require_once POPMAKE_DIR . 'includes/class-pum-conditions.php';
 		// require_once POPMAKE_DIR . 'includes/class-pum-condition-callbacks.php';
 		// require_once POPMAKE_DIR . 'includes/pum-condition-functions.php';
-		if ( is_admin() ) {
-			// require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-conditions.php';
-		}
 
 		// Modules
 		require_once POPMAKE_DIR . 'includes/modules/menus.php';
