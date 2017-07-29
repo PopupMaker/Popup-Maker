@@ -5,9 +5,14 @@ class PUM_Upsell {
 
 	public static function init() {
 
-		if ( ! class_exists( 'Popup_Maker_Forced_Interaction' ) && ! class_exists( 'PUM_Forced_Interaction' ) ) {
+		if ( ! pum_extension_enabled( 'forced-interaction' ) ) {
 			add_filter( 'pum_popup_close_settings_fields', array( __CLASS__, 'fi_promotion' ) );
 		}
+
+		if ( ! pum_extension_enabled( 'advanced-targetng-conditions' ) ) {
+			add_filter( 'pum_popup_targeting_settings_fields', array( __CLASS__, 'atc_promotion' ) );
+		}
+
 
 	}
 
@@ -25,13 +30,36 @@ class PUM_Upsell {
 
 		$html = ob_get_clean();
 
-		return array_merge( $fields, array(
-			'fi_promotion' => array(
-				'type'     => 'html',
-				'content'  => $html,
-				'priority' => 7,
-			)
-		) );
+		$fields['main']['fi_promotion'] = array(
+			'type'     => 'html',
+			'content'  => $html,
+			'priority' => 30,
+		);
+
+		return $fields;
+	}
+
+	public static function atc_promotion( $fields ) {
+		ob_start();
+
+		?>
+
+		<div class="pum-upgrade-tip">
+			<img src="<?php echo Popup_Maker::$URL; ?>/assets/images/logo.png" height="28"/>
+			<?php printf( __( 'Need more %sadvanced targeting%s options?', 'popup-maker' ), '<a href="https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_campaign=Upsell&utm_source=plugin-popup-editor&utm_medium=text-link&utm_content=conditions-editor" target="_blank">', '</a>' ); ?>
+		</div>
+
+		<?php
+
+		$html = ob_get_clean();
+
+		$fields['main']['atc_promotion'] = array(
+			'type'     => 'html',
+			'content'  => $html,
+			'priority' => 30,
+		);
+
+		return $fields;
 	}
 
 }
