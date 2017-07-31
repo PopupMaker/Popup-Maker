@@ -1,10 +1,9 @@
 <?php
+/*******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
 
-// All Conditions should return false by default and only true if 100% matched.
-/**
- * Class PUM_Condition_Callbacks
- */
-class PUM_Condition_Callbacks {
+class PUM_ConditionCallbacks {
 
 	/**
 	 * Checks if this is one of the selected post_type items.

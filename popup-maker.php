@@ -271,11 +271,9 @@ class Popup_Maker {
 
 
 		// Triggers
-		require_once POPMAKE_DIR . 'includes/class-pum-trigger.php';
-		require_once POPMAKE_DIR . 'includes/class-pum-triggers.php';
 		require_once POPMAKE_DIR . 'includes/pum-trigger-functions.php';
 		if ( is_admin() ) {
-			require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-triggers.php';
+			//require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-triggers.php';
 		}
 
 		// Cookies

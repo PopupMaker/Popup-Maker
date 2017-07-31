@@ -51,7 +51,6 @@ class PUM_Admin_Assets {
 			$admin_vars = apply_filters( 'pum_admin_vars', apply_filters( 'pum_admin_var', array(
 				'post_id'  => ! empty( $_GET['post'] ) ? intval( $_GET['post'] ) : null,
 				'defaults' => array(
-					'triggers' => PUM_Triggers::instance()->get_defaults(),
 					'cookies'  => PUM_Cookies::instance()->get_defaults(),
 				),
 				'I10n'     => array(
@@ -64,7 +63,6 @@ class PUM_Admin_Assets {
 					'confirm_delete_trigger'          => __( "Are you sure you want to delete this trigger?", 'popup-maker' ),
 					'confirm_delete_cookie'           => __( "Are you sure you want to delete this cookie?", 'popup-maker' ),
 					'labels'                          => array(
-						'triggers' => PUM_Triggers::instance()->get_labels(),
 						'cookies'  => PUM_Cookies::instance()->get_labels(),
 					),
 					'no_cookie'                       => __( 'None', 'popup-maker' ),

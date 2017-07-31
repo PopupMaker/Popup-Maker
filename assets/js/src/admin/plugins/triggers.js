@@ -6,21 +6,85 @@ var PUMTriggers;
         defaults = pum_admin_vars.defaults;
 
     var triggers = {
+        new_cookie: false,
         get_triggers: function () {
             return window.pum_popup_settings_editor.triggers;
         },
-        triggers: {
-            add: function (editor, type, settings) {
-                var $editor = $(editor),
-                    data    = {
-                        index: $editor.find('table.list-table tbody tr').length,
-                        type: type,
-                        settings: settings || {}
-                    };
+        get_trigger: function (type) {
+            var triggers = this.get_triggers(),
+                trigger  = triggers[type] !== 'undefined' ? triggers[type] : false;
+
+            if (!trigger) {
+                return false;
+            }
+
+            // To help with processing older triggers still in use.
+            trigger['updated'] = trigger.updated !== undefined && trigger.updated;
+
+            if (trigger && typeof trigger === 'object' && typeof trigger.fields === 'object' && Object.keys(trigger.fields).length) {
+                trigger = this.parseFields(trigger);
+            }
 
 
-                $editor.find('table.list-table tbody').append(triggers.template.trigger(data));
+            return trigger;
+        },
+        parseFields: function (trigger) {
+            _.each(trigger.fields, function (fields, tabID) {
+                _.each(fields, function (field, fieldID) {
+
+                    if (trigger.updated) {
+                        trigger.fields[tabID][fieldID].name = 'trigger_settings[' + fieldID + ']';
+                    } else {
+                        // Deprecated triggers that may still use nested settings.
+                        trigger.fields[tabID][fieldID].name = 'trigger_settings[' + tabID + '][' + fieldID + ']';
+                    }
+
+                    if (trigger.fields[tabID][fieldID].id === '') {
+                        trigger.fields[tabID][fieldID].id = 'trigger_settings_' + fieldID;
+                    }
+                });
+            });
+
+            return trigger;
+        },
+        parseValues: function (values, type) {
+
+
+
+            return values;
+        },
+        select_list: function () {
+            var i,
+                conditions = PUM_Admin.utils.object_to_array(triggers.get_triggers()),
+                options    = {};
+
+            for (i = 0; i < conditions.length; i++) {
+                options[conditions[i].id] = conditions[i].name;
+            }
+
+            return options;
+        },
+        rows: {
+            add: function (editor, trigger) {
+                var $editor  = $(editor),
+                    data     = {
+                        index: trigger.index !== null && trigger.index >= 0 ? trigger.index : $editor.find('table.list-table tbody tr').length,
+                        type: trigger.type,
+                        settings: trigger.settings || {}
+                    },
+                    $row     = $editor.find('tbody tr').eq(data.index),
+                    $new_row = PUM_Admin.templates.render('pum-trigger-row', data);
+
+                if ($row.length) {
+                    $row.replaceWith($new_row);
+                } else {
+                    $editor.find('tbody').append($new_row);
+                }
+
                 $editor.addClass('has-list-items');
+
+                triggers.renumber();
+                triggers.refreshDescriptions();
             },
             remove: function ($trigger) {
                 var $editor = $trigger.parents('.pum-popup-trigger-editor');
@@ -38,6 +102,47 @@ var PUMTriggers;
             }
         },
         template: {
+            form: function (type, values, callback) {
+                var trigger  = triggers.get_trigger(type),
+                    modalID  = '#pum_trigger_settings',
+                    firstTab = Object.keys(trigger.fields)[0];
+
+                values = values || {};
+                values.type = type;
+                values.index = values.index || null;
+
+                // Add hidden index & type fields.
+                trigger.fields[firstTab] = $.extend(true, trigger.fields[firstTab], {
+                    index: {
+                        type: 'hidden',
+                        name: 'index',
+                        std: null
+                    },
+                    type: {
+                        type: 'hidden',
+                        name: 'type'
+                    }
+                });
+
+                PUM_Admin.modals.reload(modalID, PUM_Admin.templates.modal({
+                    id: 'pum_trigger_settings',
+                    title: trigger.modal_title || trigger.name,
+                    classes: 'tabbed-content',
+                    save_button: values.index !== null ? I10n.update : I10n.add,
+                    content: PUM_Admin.forms.render({
+                        id: 'pum_trigger_settings_form',
+                        tabs: trigger.tabs || {},
+                        fields: trigger.fields || {}
+                    }, values || {})
+                }));
+
+                $(modalID + ' form').on('submit', callback || function (event) {
+                    event.preventDefault();
+                    PUM_Admin.modals.closeAll();
+                });
+
+                PUMTriggers.initEditForm(values);
+            },
             editor: function (args) {
                 var data = $.extend(true, {}, {
                     triggers: []
@@ -70,7 +175,7 @@ var PUMTriggers;
                     value: null,
                     select2: true,
                     classes: [],
-                    options: triggers.get_triggers()
+                    options: triggers.select_list()
                 }, args);
 
                 if (data.id === null) {
@@ -84,21 +189,32 @@ var PUMTriggers;
                 return PUM_Admin.templates.field(data);
             }
         },
-
-
         /* @deprecated */
         getLabel: function (type) {
-            return I10n.labels.triggers[type].name;
+            var trigger = triggers.get_trigger(type);
+
+            if (!trigger) {
+                return false;
+            }
+
+            return trigger.name;
         },
         getSettingsDesc: function (type, values) {
-            var options  = {
+            var trigger = triggers.get_trigger(type),
+                options = {
                     evaluate: /<#([\s\S]+?)#>/g,
                     interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
                     escape: /\{\{([^\}]+?)\}\}(?!\})/g,
                     variable: 'data'
                 },
-                template = _.template(I10n.labels.triggers[type].settings_column, null, options);
-            values.I10n = I10n;
+                template;
+
+            if (!trigger) {
+                return false;
+            }
+
+            template = _.template(trigger.settings_column, null, options);
+            //values.I10n = I10n;
             return template(values);
         },
         renumber: function () {
@@ -140,22 +256,24 @@ var PUMTriggers;
             return cookie_text;
         },
         append_click_selector_presets: function () {
-            // TODO is this the right selector now?
-            return $('#extra_selectors').each(function () {
-                var $this    = $(this),
-                    template = PUM_Admin.templates.render('pum-click-selector-presets'),
-                    $presets = $this.parents('.pum-field').find('.pum-click-selector-presets');
+            var $field   = $('#extra_selectors'),
+                template = PUM_Admin.templates.render('pum-click-selector-presets'),
+                $presets = $field.parents('.pum-field').find('.pum-click-selector-presets');
 
-                if (!$presets.length) {
-                    $this.before(template);
-                    $presets = $this.parents('.pum-field').find('.pum-click-selector-presets');
-                }
+            if (!$field.length || $field.hasClass('pum-click-selector-presets-initialized')) {
+                return;
+            }
 
-                $presets.position({
-                    my: 'right center',
-                    at: 'right center',
-                    of: $this
-                });
+            if (!$presets.length) {
+                $field.before(template);
+                $field.addClass('pum-click-selector-presets-initialized');
+                $presets = $field.parents('.pum-field').find('.pum-click-selector-presets');
+            }
+
+            $presets.position({
+                my: 'right center',
+                at: 'right center',
+                of: $field
             });
         },
         toggle_click_selector_presets: function () {
@@ -187,14 +305,80 @@ var PUMTriggers;
     window.PUM_Admin = window.PUM_Admin || {};
     window.PUM_Admin.triggers = triggers;
 
+    $(document)
+        .on('pum_init', function () {
+            PUM_Admin.triggers.append_click_selector_presets();
+        })
+        .on('click', '.pum-click-selector-presets > span', PUM_Admin.triggers.toggle_click_selector_presets)
+        .on('click', '.pum-click-selector-presets li', PUM_Admin.triggers.insert_click_selector_preset)
+        .on('click', PUM_Admin.triggers.reset_click_selector_presets)
+        .on('select2:select pumselect2:select', '#pum-first-trigger', function () {
+            var $this   = $(this),
+                $editor = $this.parents('.pum-popup-trigger-editor'),
+                type    = $this.val(),
+                trigger = triggers.get_trigger(type),
+                values  = {};
+
+            if (type !== 'click_open') {
+                if (trigger.updated) {
+                    values.cookie_name = 'pum-' + $('#post_ID').val();
+                } else {
+                    values.cookie = {};
+                    values.cookie.name = 'pum-' + $('#post_ID').val();
+                }
+            }
+
+            triggers.template.form(type, values, function (event) {
+                var $form  = $(this),
+                    type   = $form.find('input#type').val(),
+                    values = $form.pumSerializeObject(),
+                    index  = parseInt(values.index);
+
+                debugger;
+
+                event.preventDefault();
+
+                if (!index || index < 0) {
+                    index = $editor.find('tbody tr').length;
+                }
+
+                triggers.rows.add($editor, {
+                    index: index,
+                    type: type,
+                    settings: values.trigger_settings
+                });
+
+                PUM_Admin.modals.closeAll();
+
+                if (values.trigger_settings.cookie.name !== null && values.trigger_settings.cookie.name.indexOf('add_new') >= 0) {
+                    PUM_Admin.triggers.new_cookie = values.index;
+                    $('#pum_popup_cookie_fields button.add-new').trigger('click');
+                }
+            });
+
+            $this
+                .val(null)
+                .trigger('change');
+        })
+
+
+    ;
+
     PUMTriggers = {
         new_cookie: false,
         initEditForm: function (data) {
             var $form            = $('.trigger-editor .pum-form'),
-                type             = $form.find('input[name="type"]').val(),
+                type             = $form.find('input#type').val(),
+                trigger          = triggers.get_trigger(type),
                 $cookie          = $('#name', $form),
                 trigger_settings = data.trigger_settings,
                 $cookies         = $('#pum_popup_cookies_list tbody tr');
+
+            debugger;
+
+            if (!trigger) {
+                return;
+            }
 
             if (!$cookies.length && type !== 'click_open') {
                 PUMCookies.insertDefault();
@@ -209,45 +393,15 @@ var PUMTriggers;
             });
 
             $cookie
-                .val(trigger_settings.cookie.name)
+                .val(trigger && trigger.updated ? trigger_settings.cookie_name : trigger_settings.cookie.name)
                 .trigger('change.pumselect2');
-        },
+        }
 
     };
 
     $(document)
         .on('pum_init', function () {
             PUM_Admin.triggers.append_click_selector_presets();
-        })
-        .on('click', '.pum-click-selector-presets > span', PUM_Admin.triggers.toggle_click_selector_presets)
-        .on('click', '.pum-click-selector-presets li', PUM_Admin.triggers.insert_click_selector_preset)
-        .on('click', PUM_Admin.triggers.reset_click_selector_presets)
-        .on('select2:select pumselect2:select', '#pum-first-trigger', function () {
-            var $this    = $(this),
-                type     = $this.val(),
-                id       = 'pum-trigger-settings-' + type,
-                modalID  = '#' + id.replace(/-/g, '_'),
-                template = wp.template(id),
-                data     = {};
-
-            data.trigger_settings = defaults.triggers[type] !== undefined ? defaults.triggers[type] : {};
-            data.save_button_text = I10n.add;
-            data.index = null;
-
-            if (type !== 'click_open') {
-                data.trigger_settings.cookie.name = 'pum-' + $('#post_ID').val();
-            }
-
-            if (!template.length) {
-                alert('Something went wrong. Please refresh and try again.');
-            }
-
-            PUM_Admin.modals.reload(modalID, template(data));
-            PUM_Admin.triggers.initEditForm(data);
-
-            $this
-                .val(null)
-                .trigger('change');
         })
         .on('click', '#pum_popup_triggers .add-new', function () {
             var template = wp.template('pum-trigger-add-type');

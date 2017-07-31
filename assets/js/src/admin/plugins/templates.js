@@ -5,7 +5,9 @@
             render: function (template, data) {
                 var _template = wp.template(template);
 
-                if ('object' === typeof data.classes) {
+                data = data || {};
+
+                if (data.classes !== undefined && data.classes instanceof Array) {
                     data.classes = data.classes.join(' ');
                 }
 

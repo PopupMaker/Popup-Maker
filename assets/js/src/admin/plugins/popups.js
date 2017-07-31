@@ -36,7 +36,7 @@
                 values     = pum_popup_settings_editor.current_values || {};
 
             if ($container.length) {
-                PUM_Admin.forms.render($container, args, values);
+                PUM_Admin.forms.render(args, values, $container);
             }
         });
 

@@ -149,227 +149,258 @@
             ];
 
             return field_tests.indexOf(true) >= 0;
+        },
+        parseFields: function (fields, values) {
+
+            values = values || {};
+
+            _.each(fields, function (field, fieldID) {
+
+                fields[fieldID] = PUM_Admin.models.field(field);
+
+                if (typeof fields[fieldID].meta !== 'object') {
+                    fields[fieldID].meta = {};
+                }
+
+                if (undefined !== values[fieldID]) {
+                    fields[fieldID].value = values[fieldID];
+                }
+
+                if (fields[fieldID].id === '') {
+                    fields[fieldID].id = fieldID;
+                }
+            });
+
+            return fields;
+        },
+        renderTab: function () {
 
         },
-        render: function ($container, args, values) {
-            var tabs              = {},
+        renderSection: function () {
+
+        },
+        render: function (args, values, $container) {
+            var form,
+                maintabs          = {},
+                subtabs           = {},
+                sections          = {},
+                section           = [],
+                form_fields       = {},
                 data              = $.extend({
                     id: "",
                     tabs: {},
                     sections: {},
                     fields: {}
                 }, args),
-                form_fields       = {},
-                sections,
-                field,
-                container_classes = ['pum-dynamic-form'],
-                container_content;
+                container_classes = ['pum-dynamic-form'];
 
-            if (undefined === values) {
-                values = {};
-            }
+            values = values || {};
 
-            if (Object.keys(data.tabs).length) {
+            if (Object.keys(data.tabs).length && Object.keys(data.sections).length) {
                 container_classes.push('tabbed-content');
 
-                if (undefined === tabs) {
-                    tabs = {};
-                }
-
-                if (Object.keys(data.sections).length) {
-
-                    if (undefined === sections) {
-                        sections = {};
-                    }
-
-                    // Fields come already arranged by section. Loop Sections then Fields.
-                    _.each(data.fields, function (tabSections, tabID) {
-
-                        if (typeof tabSections !== 'object' || !Object.keys(tabSections).length) {
-                            return;
-                        }
-
-                        if (undefined === tabs[tabID]) {
-                            tabs[tabID] = {
-                                id: data.id + '-' + tabID + '-subtabs',
-                                classes: ['link-tabs','sub-tabs'],
-                                tabs: {},
-                                meta: {
-                                    'data-min-height': 250
-                                }
-                            };
-                        }
-
-                        sections = {};
-
-                        // Fields come already arranged by section. Loop Sections then Fields.
-                        _.each(tabSections, function (sectionFields, sectionID) {
-
-                            if (typeof sectionFields !== 'object' || !Object.keys(sectionFields).length) {
-                                return;
-                            }
-
-
-                            if (forms.is_field(sectionFields)) {
-                                var newSectionFields = {};
-                                newSectionFields[sectionID] = sectionFields;
-                                sectionID = 'main';
-                                sectionFields = newSectionFields;
-                            }
-
-                            if (undefined === sections[sectionID]) {
-                                sections[sectionID] = {
-                                    fields: []
-                                };
-                            }
-
-                            // Push rendered fields into the section array.
-                            _.each(sectionFields, function (fieldArgs) {
-
-                                // Store the field by id for easy lookup later.
-                                form_fields[fieldArgs.id] = fieldArgs;
-
-                                field = fieldArgs;
-
-                                if (undefined !== values[fieldArgs.id]) {
-                                    field.value = values[fieldArgs.id];
-                                }
-
-                                sections[sectionID].fields.push(PUM_Admin.templates.field(field));
-                            });
-
-                        });
-
-                        if (Object.keys(sections).length) {
-                            _.each(sections, function (section, sectionID) {
-                                // Render the section into the content of a new tab.
-                                tabs[tabID].tabs[sectionID] = {
-                                    label: data.sections[tabID][sectionID],
-                                    content: PUM_Admin.templates.section(sections[sectionID])
-                                };
-                            });
-                        }
-
-                        if (Object.keys(tabs[tabID].tabs).length) {
-                            // Render subtab sections into this top level tab's content.
-                            tabs[tabID] = {
-                                label: data.tabs[tabID],
-
-                                content: PUM_Admin.templates.tabs(tabs[tabID])
-                            };
-                        } else {
-                            delete tabs[tabID];
-                        }
-                    });
-
-                    // Render Tabs
-                    tabs = PUM_Admin.templates.tabs({
-                        id: data.id,
-                        classes: '',
-                        tabs: tabs,
-                        vertical: true,
-                        form: true,
-                        meta: {
-                            'data-min-height': 250
-                        }
-                    });
-
-                    container_content = tabs;
-                }
-
-            }
-            else if (Object.keys(data.sections).length) {
-                container_classes.push('tabbed-content');
-
-                if (undefined === sections) {
-                    sections = {};
-                }
-
-                // Fields come already arranged by section. Loop Sections then Fields.
-                _.each(data.fields, function (sectionFields, sectionID) {
-
-                    if (typeof sectionFields !== 'object' || !Object.keys(sectionFields).length) {
-                        return;
-                    }
-
-                    if (undefined === sections[sectionID]) {
-                        sections[sectionID] = [];
-                    }
-
-                    // Push rendered fields into the section array.
-                    _.each(sectionFields, function (fieldArgs) {
-
-                        // Store the field by id for easy lookup later.
-                        form_fields[fieldArgs.id] = fieldArgs;
-
-
-                        field = fieldArgs;
-
-                        if (undefined !== values[fieldArgs.id]) {
-                            field.value = values[fieldArgs.id];
-                        }
-
-                        sections[sectionID].push(PUM_Admin.templates.field(field));
-                    });
-
-                    // Render the section.
-                    sections[sectionID] = PUM_Admin.templates.section({
-                        fields: sections[sectionID]
-                    });
-                });
-
-                // Generate Tab List
-                _.each(sections, function (section, id) {
-
-                    tabs[id] = {
-                        label: data.sections[id],
-                        content: section
-                    };
-
-                });
-
-                // Render Tabs
-                tabs = PUM_Admin.templates.tabs({
+                maintabs = {
                     id: data.id,
                     classes: '',
-                    tabs: tabs,
+                    tabs: {},
+                    vertical: true,
+                    form: true,
                     meta: {
                         'data-min-height': 250
                     }
-                });
+                };
 
-                container_content = tabs;
-            } else {
-                if (undefined === sections) {
-                    sections = [];
-                }
 
-                // Replace the array with rendered fields.
-                _.each(data.fields, function (fieldArgs) {
-                    // Store the field by id for easy lookup later.
-                    form_fields[fieldArgs.id] = fieldArgs;
+                // Loop Tabs
+                _.each(data.fields, function (subTabs, tabID) {
 
-                    field = fieldArgs;
-                    if (undefined !== values[fieldArgs.id]) {
-                        field.value = values[fieldArgs.id];
+                    // If not a valid tab or no subsections skip it.
+                    if (typeof subTabs !== 'object' || !Object.keys(subTabs).length) {
+                        return;
                     }
 
-                    sections.push(PUM_Admin.templates.field(field));
+                    // Define this tab.
+                    if (undefined === maintabs.tabs[tabID]) {
+                        maintabs.tabs[tabID] = {
+                            label: data.tabs[tabID],
+                            content: ''
+                        };
+                    }
+
+                    // Define the sub tabs model.
+                    subtabs = {
+                        id: data.id + '-' + tabID + '-subtabs',
+                        classes: ['link-tabs', 'sub-tabs'],
+                        tabs: {}
+                    };
+
+                    // Loop Tab Sections
+                    _.each(subTabs, function (subTabFields, subTabID) {
+
+                        // If not a valid subtab or no fields skip it.
+                        if (typeof subTabFields !== 'object' || !Object.keys(subTabFields).length) {
+                            return;
+                        }
+
+                        // Move single fields into the main subtab.
+                        if (forms.is_field(subTabFields)) {
+                            var newSubTabFields = {};
+                            newSubTabFields[subTabID] = subTabFields;
+                            subTabID = 'main';
+                            subTabFields = newSubTabFields;
+                        }
+
+                        // Define this subtab model.
+                        if (undefined === subtabs.tabs[subTabID]) {
+                            subtabs.tabs[subTabID] = {
+                                label: data.sections[tabID][subTabID],
+                                content: ''
+                            };
+                        }
+
+                        subTabFields = forms.parseFields(subTabFields, values);
+
+                        // Loop Tab Section Fields
+                        _.each(subTabFields, function (field) {
+                            // Store the field by id for easy lookup later.
+                            form_fields[field.id] = field;
+
+                            // Push rendered fields into the subtab content.
+                            subtabs.tabs[subTabID].content += PUM_Admin.templates.field(field);
+                        });
+
+                        // Remove any empty tabs.
+                        if ("" === subtabs.tabs[subTabID].content) {
+                            delete subtabs.tabs[subTabID];
+                        }
+                    });
+
+                    // If there are subtabs, then render them into the main tabs content, otherwise remove this main tab.
+                    if (Object.keys(subtabs.tabs).length) {
+                        maintabs.tabs[tabID].content = PUM_Admin.templates.tabs(subtabs);
+                    } else {
+                        delete maintabs.tabs[tabID];
+                    }
+                });
+
+                if (Object.keys(maintabs.tabs).length) {
+                    form = PUM_Admin.templates.tabs(maintabs);
+                }
+            }
+            else if (Object.keys(data.tabs).length) {
+                container_classes.push('tabbed-content');
+
+                maintabs = {
+                    id: data.id,
+                    classes: '',
+                    tabs: {},
+                    vertical: true,
+                    form: true,
+                    meta: {
+                        'data-min-height': 250
+                    }
+                };
+
+                // Loop Tabs
+                _.each(data.fields, function (tabFields, tabID) {
+
+                    // If not a valid tab or no subsections skip it.
+                    if (typeof tabFields !== 'object' || !Object.keys(tabFields).length) {
+                        return;
+                    }
+
+                    // Define this tab.
+                    if (undefined === maintabs.tabs[tabID]) {
+                        maintabs.tabs[tabID] = {
+                            label: data.tabs[tabID],
+                            content: ''
+                        };
+                    }
+
+                    section = [];
+
+                    tabFields = forms.parseFields(tabFields, values);
+
+                    // Loop Tab Fields
+                    _.each(tabFields, function (field) {
+                        // Store the field by id for easy lookup later.
+                        form_fields[field.id] = field;
+
+                        // Push rendered fields into the subtab content.
+                        section.push(PUM_Admin.templates.field(field));
+                    });
+
+                    // Push rendered tab into the tab.
+                    if (section.length) {
+                        // Push rendered sub tabs into the main tabs if not empty.
+                        maintabs.tabs[tabID].content = PUM_Admin.templates.section({
+                            fields: section
+                        });
+                    } else {
+                        delete (maintabs.tabs[tabID]);
+                    }
+                });
+
+                if (Object.keys(maintabs.tabs).length) {
+                    form = PUM_Admin.templates.tabs(maintabs);
+                }
+            }
+            else if (Object.keys(data.sections).length) {
+
+                // Loop Sections
+                _.each(data.fields, function (sectionFields, sectionID) {
+                    section = [];
+
+                    section.push(PUM_Admin.templates.field({
+                        type: 'heading',
+                        desc: data.sections[sectionID] || ''
+                    }));
+
+                    sectionFields = forms.parseFields(sectionFields, values);
+
+                    // Loop Tab Section Fields
+                    _.each(sectionFields, function (field) {
+                        // Store the field by id for easy lookup later.
+                        form_fields[field.id] = field;
+
+                        // Push rendered fields into the section.
+                        section.push(PUM_Admin.templates.field(field));
+                    });
+
+                    // Push rendered sections into the form.
+                    form += PUM_Admin.templates.section({
+                        fields: section
+                    });
+                });
+            }
+            else {
+                data.fields = forms.parseFields(data.fields, values);
+
+                // Replace the array with rendered fields.
+                _.each(data.fields, function (field) {
+                    // Store the field by id for easy lookup later.
+                    form_fields[field.id] = field;
+
+                    // Push rendered fields into the section.
+                    section.push(PUM_Admin.templates.field(field));
                 });
 
                 // Render the section.
-                container_content = PUM_Admin.templates.section({
-                    fields: sections
+                form = PUM_Admin.templates.section({
+                    fields: section
                 });
-
             }
 
+            if ($container !== undefined && $container.length) {
+                $container
+                    .addClass(container_classes.join('  '))
+                    .data('form_fields', form_fields)
+                    .html(form)
+                    .trigger('pum_init');
+            }
 
-            $container
-                .addClass(container_classes.join('  '))
-                .data('form_fields', form_fields)
-                .html(container_content)
-                .trigger('pum_init');
+            return form;
+
         }
     };
 

@@ -89,8 +89,6 @@ class PUM_Conditions {
 	 * @return array
 	 */
 	public function get_conditions() {
-
-
 		if ( ! isset( $this->conditions ) ) {
 			$this->register_conditions();
 		}
@@ -223,7 +221,7 @@ class PUM_Conditions {
 				$conditions[ $name . '_index' ] = array(
 					'group'    => $post_type->labels->name,
 					'name'     => sprintf( _x( '%s Archive', 'condition: post type plural label ie. Posts: All', 'popup-maker' ), $post_type->labels->name ),
-					'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
+					'callback' => array( 'PUM_ConditionCallbacks', 'post_type' ),
 					'priority' => 5,
 				);
 			}
@@ -231,7 +229,7 @@ class PUM_Conditions {
 			$conditions[ $name . '_all' ] = array(
 				'group'    => $post_type->labels->name,
 				'name'     => sprintf( _x( 'All %s', 'condition: post type plural label ie. Posts: All', 'popup-maker' ), $post_type->labels->name ),
-				'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
+				'callback' => array( 'PUM_ConditionCallbacks', 'post_type' ),
 			);
 
 			$conditions[ $name . '_selected' ] = array(
@@ -247,7 +245,7 @@ class PUM_Conditions {
 						'std'         => array(),
 					),
 				),
-				'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
+				'callback' => array( 'PUM_ConditionCallbacks', 'post_type' ),
 			);
 
 			$conditions[ $name . '_ID' ] = array(
@@ -259,7 +257,7 @@ class PUM_Conditions {
 						'type'        => 'text',
 					),
 				),
-				'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
+				'callback' => array( 'PUM_ConditionCallbacks', 'post_type' ),
 			);
 
 			if ( is_post_type_hierarchical( $name ) ) {
@@ -275,7 +273,7 @@ class PUM_Conditions {
 							'as_array'    => true,
 						),
 					),
-					'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
+					'callback' => array( 'PUM_ConditionCallbacks', 'post_type' ),
 				);
 
 				$conditions[ $name . '_ancestors' ] = array(
@@ -290,7 +288,7 @@ class PUM_Conditions {
 							'as_array'    => true,
 						),
 					),
-					'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
+					'callback' => array( 'PUM_ConditionCallbacks', 'post_type' ),
 				);
 
 			}
@@ -311,7 +309,7 @@ class PUM_Conditions {
 							'options'  => array_flip( array_merge( array( 'default' => __( 'Default', 'popup-maker' ) ), $templates ) ),
 						),
 					),
-					'callback' => array( 'PUM_Condition_Callbacks', 'post_type' ),
+					'callback' => array( 'PUM_ConditionCallbacks', 'post_type' ),
 				);
 			}
 
@@ -345,7 +343,7 @@ class PUM_Conditions {
 						'as_array'    => true,
 					),
 				),
-				'callback' => array( 'PUM_Condition_Callbacks', 'post_type_tax' ),
+				'callback' => array( 'PUM_ConditionCallbacks', 'post_type_tax' ),
 			);
 		}
 
@@ -366,7 +364,7 @@ class PUM_Conditions {
 			$conditions[ 'tax_' . $tax_name . '_all' ] = array(
 				'group'    => $taxonomy->labels->name,
 				'name'     => sprintf( _x( '%s: All', 'condition: taxonomy plural label ie. Categories: All', 'popup-maker' ), $taxonomy->labels->name ),
-				'callback' => array( 'PUM_Condition_Callbacks', 'taxonomy' ),
+				'callback' => array( 'PUM_ConditionCallbacks', 'taxonomy' ),
 			);
 
 			$conditions[ 'tax_' . $tax_name . '_selected' ] = array(
@@ -381,7 +379,7 @@ class PUM_Conditions {
 						'as_array'    => true,
 					),
 				),
-				'callback' => array( 'PUM_Condition_Callbacks', 'taxonomy' ),
+				'callback' => array( 'PUM_ConditionCallbacks', 'taxonomy' ),
 			);
 
 			$conditions[ 'tax_' . $tax_name . '_ID' ] = array(
@@ -393,7 +391,7 @@ class PUM_Conditions {
 						'type'        => 'text',
 					),
 				),
-				'callback' => array( 'PUM_Condition_Callbacks', 'taxonomy' ),
+				'callback' => array( 'PUM_ConditionCallbacks', 'taxonomy' ),
 			);
 
 		}

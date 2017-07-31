@@ -20,7 +20,7 @@ class PUM_Admin_Templates {
 			<div class="pum-field-section {{data.classes}}">
 				<# _.each(data.fields, function(field) { #>
 					{{{field}}}
-					<# }); #>
+				<# }); #>
 			</div>
 		</script>
 
@@ -286,7 +286,7 @@ class PUM_Admin_Templates {
 					</strong>
 				</p>
 
-				<table class="list-table form-table">
+				<table class="list-table">
 					<thead>
 					<tr>
 						<th><?php _e( 'Type', 'popup-maker' ); ?></th>
@@ -298,13 +298,13 @@ class PUM_Admin_Templates {
 					<tbody>
 					<#
 						_.each(data.triggers, function (trigger, index) {
-						print(PUM_Admin.triggers.template.row({
-						index: index,
-						type: trigger.type,
-						settings: trigger.settings || {}
-						}));
+							print(PUM_Admin.triggers.template.row({
+								index: index,
+								type: trigger.type,
+								settings: trigger.settings || {}
+							}));
 						});
-						#>
+					#>
 					</tbody>
 				</table>
 
@@ -359,66 +359,16 @@ class PUM_Admin_Templates {
 
 		<script type="text/html" id="tmpl-pum-trigger-add-type"><?php
 			ob_start(); ?>
-			<select id="popup_trigger_add_type">
-				<?php foreach ( PUM_Triggers::instance()->get_triggers() as $id => $trigger ) : ?>
-					<option value="<?php echo $id; ?>"><?php echo $trigger->get_label( 'name' ); ?></option>
-				<?php endforeach ?>
-			</select><?php
-			$content = ob_get_clean();
-
-			PUM_Admin_Helpers::modal( array(
-				'id'      => 'pum_trigger_add_type_modal',
-				'title'   => __( 'Choose what type of trigger to add?', 'popup-maker' ),
-				'content' => $content,
-			) ); ?>
+			<#
+				print(PUM_Admin.templates.modal({
+					id: 'pum_trigger_add_type_modal',
+					title: '<?php _e( 'Choose what type of trigger to add?', 'popup-maker' ); ?>',
+					content: PUM_Admin.triggers.template.selectbox({id: 'popup_trigger_add_type', name: "", placeholder: "<?php _e( 'Select a trigger type.', 'popup-maker' ); ?>"})
+				}));
+				#>
 		</script>
 
-		<?php foreach ( PUM_Triggers::instance()->get_triggers() as $id => $trigger ) { ?>
-			<script type="text/html" id="tmpl-pum-trigger-settings-<?php esc_attr_e( $id ); ?>" class="pum-trigger-settings tmpl" data-trigger="<?php esc_attr_e( $id ); ?>">
-
-				<?php ob_start(); ?>
-
-				<input type="hidden" name="type" class="type" value="<?php esc_attr_e( $id ); ?>" />                <input type="hidden" name="index" class="index" value="{{data.index}}" />
-
-				<div class="pum-tabs-container vertical-tabs pum-tabbed-form">
-
-					<ul class="tabs">
-						<?php
-						/**
-						 * Render Each settings tab.
-						 */
-						foreach ( $trigger->get_sections() as $tab => $args ) { ?>
-							<li class="tab">
-								<a href="#<?php esc_attr_e( $id . '_' . $tab ); ?>_settings"><?php esc_html_e( $args['title'] ); ?></a>
-							</li>
-						<?php } ?>
-					</ul>
-
-					<?php
-					/**
-					 * Render Each settings tab contents.
-					 */
-					foreach ( $trigger->get_sections() as $tab => $args ) { ?>
-						<div id="<?php esc_attr_e( $id . '_' . $tab ); ?>_settings" class="tab-content">
-							<?php $trigger->render_templ_fields_by_section( $tab ); ?>
-						</div>
-					<?php } ?>
-
-				</div><?php
-
-				$content = ob_get_clean();
-
-				PUM_Admin_Helpers::modal( array(
-					'id'               => 'pum_trigger_settings_' . $id,
-					'title'            => $trigger->get_label( 'modal_title' ),
-					'class'            => 'tabbed-content trigger-editor',
-					'save_button_text' => '{{data.save_button_text}}',
-					'content'          => $content,
-				) ); ?>
-			</script>
-
-			<?php
-		}
+		<?php
 
 	}
 

@@ -95,6 +95,7 @@ class PUM_Admin_Popups {
 			),
 			'conditions'            => PUM_Conditions::instance()->get_conditions(),
 			'conditions_selectlist' => PUM_Conditions::instance()->dropdown_list(),
+			'triggers'              => PUM_Triggers::instance()->get_triggers(),
 			'current_values'        => self::parse_values( $settings ),
 		) ); ?>
 
@@ -209,7 +210,7 @@ class PUM_Admin_Popups {
 				'main'    => __( 'General', 'popup-maker' ),
 				'methods' => __( 'Misc', 'popup-maker' ),
 			),
-			'triggers' => array(
+			'triggers'  => array(
 				'main' => __( 'Triggers', 'popup-maker' ),
 			),
 			'targeting' => array(
@@ -546,7 +547,7 @@ class PUM_Admin_Popups {
 				) ),
 				'triggers'  => apply_filters( 'pum_popup_triggers_settings_fields', array(
 					'main' => array(
-						'triggers'        => array(
+						'triggers' => array(
 							'type'     => 'triggers',
 							'std'      => array(),
 							'priority' => 10,
