@@ -481,7 +481,9 @@
  * Triggers field
  */
 .pum-field-triggers {
-  @include add-more-table-lists();
+  .pum-popup-trigger-editor {
+    @include add-more-table-lists();
+  }
 }
 
 
