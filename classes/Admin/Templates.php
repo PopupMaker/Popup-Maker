@@ -286,7 +286,7 @@ class PUM_Admin_Templates {
 					</strong>
 				</p>
 
-				<table class="list-table">
+				<table class="list-table form-table">
 					<thead>
 					<tr>
 						<th><?php _e( 'Type', 'popup-maker' ); ?></th>
@@ -322,10 +322,10 @@ class PUM_Admin_Templates {
 				<td class="type-column">
 					<button type="button" class="edit no-button link-button" aria-label="<?php _e( 'Edit this trigger', 'popup-maker' ); ?>">{{PUM_Admin.triggers.getLabel(data.type)}}</button>
 					<input class="popup_triggers_field_type" type="hidden" name="popup_triggers[{{data.index}}][type]" value="{{data.type}}" />
-					<input class="popup_triggers_field_settings" type="hidden" name="popup_triggers[{{data.index}}][settings]" value="{{JSON.stringify(data.settings)}" />
+					<input class="popup_triggers_field_settings" type="hidden" name="popup_triggers[{{data.index}}][settings]" value="{{JSON.stringify(data.settings)}}" />
 				</td>
 				<td class="cookie-column">
-					<code>{{PUM_Admin.triggers.cookie_column_value(data.settings.cookie.name)}}</code>
+					<code>{{PUM_Admin.triggers.cookie_column_value(data.settings.cookie_name)}}</code>
 				</td>
 				<td class="settings-column">{{PUM_Admin.triggers.getSettingsDesc(data.type, data.settings)}}</td>
 				<td class="list-item-actions">
