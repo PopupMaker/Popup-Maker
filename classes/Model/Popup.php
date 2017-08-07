@@ -125,15 +125,19 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	/**
 	 * Returns array of all popup settings.
 	 *
+	 * @param bool $force
+	 *
 	 * @return array
 	 */
-	public function get_settings() {
-		if ( ! isset( $this->settings ) ) {
-			$this->settings = $this->get_meta( 'popup_settings', true );
+	public function get_settings( $force = false ) {
+		if ( ! isset( $this->settings ) || $force ) {
+			$this->settings = $this->get_meta( 'popup_settings', true, $force );
 
 			if ( ! is_array( $this->settings ) ) {
 				$this->settings = array();
 			}
+
+			$this->passive_settings_migration();
 		}
 
 		return apply_filters( 'pum_popup_settings', $this->settings, $this->ID );
@@ -197,9 +201,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 						'type'     => 'click_open',
 						'settings' => array(
 							'extra_selectors' => '',
-							'cookie'          => array(
-								'name' => null,
-							),
+							'cookie_name'     => null,
 						),
 					);
 				}
@@ -796,5 +798,42 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	}
 
 	#endregion Analytics
+
+
+	public function passive_settings_migration() {
+
+		$changed     = false;
+		$delete_meta = array();
+
+		// v1.7 Migrations
+		$triggers = $this->get_meta( 'popup_triggers' );
+		if ( $triggers !== false ) {
+			if ( ! empty( $triggers ) ) {
+				$triggers = ! empty( $this->settings['triggers'] ) && is_array( $this->settings['triggers'] ) ? array_merge( $this->settings['triggers'], $triggers ) : $triggers;
+
+				foreach ( $triggers as $key => $trigger ) {
+					if ( ! empty( $trigger['settings']['cookie']['name'] ) ) {
+						$triggers[ $key ]['settings']['cookie_name'] = $trigger['settings']['cookie']['name'];
+						unset( $triggers[ $key ]['settings']['cookie'] );
+					}
+				}
+
+				$this->settings['triggers'] = $triggers;
+				$changed       = true;
+			}
+
+			$delete_meta[] = 'popup_triggers';
+		}
+
+		if ( $changed ) {
+			//$this->update_meta( 'popup_settings', $this->settings );
+		}
+
+		if ( ! empty( $delete_meta ) ) {
+			foreach ( $delete_meta as $key ) {
+				//$this->delete_meta( $key );
+			}
+		}
+	}
 }
 
