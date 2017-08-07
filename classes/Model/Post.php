@@ -433,20 +433,25 @@ abstract class PUM_Model_Post {
 	}
 
 	public function update_meta( $key, $value ) {
-		$this->meta[ $key ] = $value;
+		$updated = update_post_meta( $this->ID, $key, $value );
 
-		$this->update_cache();
+		if ( $updated ) {
+			$this->meta[ $key ] = $value;
+			$this->update_cache();
+		}
 
-		return update_post_meta( $this->ID, $key, $value );
+		return $updated;
 	}
 
 	public function delete_meta( $key ) {
-		if ( isset ( $this->meta[ $key ] ) ) {
+		$deleted = delete_post_meta( $this->ID, $key );
+
+		if ( $deleted ) {
 			unset( $this->meta[ $key ] );
 			$this->update_cache();
 		}
 
-		return delete_post_meta( $this->ID, $key );
+		return $deleted;
 	}
 
 	/**
