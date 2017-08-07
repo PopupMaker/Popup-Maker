@@ -231,7 +231,7 @@ class PUM_Triggers {
 		 */
 		return apply_filters( 'pum_trigger_cookie_field', array(
 			'label'    => __( 'Cookie Name', 'popup-maker' ),
-			'desc'     => __( 'When do you want to create the cookie.', 'popup-maker' ),
+			'desc'     => __( 'Choose which cookies will disable this trigger?', 'popup-maker' ),
 			'type'     => 'select',
 			'multiple' => true,
 			'select2'  => true,
