@@ -76,12 +76,19 @@ class PUM_Admin_Popups {
 	public static function render_settings_meta_box() {
 		global $post;
 
+		$popup = pum_get_popup( $post->ID, true, true );
+
 		// Get the meta directly rather than from cached object.
-		$settings = get_post_meta( $post->ID, 'popup_setting', true );
+		$settings = $popup->get_settings( true );
 
 		if ( empty( $settings ) ) {
 			$settings = self::defaults();
 		}
+
+		// Do settings migration on the fly and then self clean for a passive migration?
+
+		// $settings['conditions'] = get_post_meta( $post->ID, 'popup_conditions', true );
+		//$settings['triggers'] = get_post_meta( $post->ID, 'popup_triggers', true );
 
 		wp_nonce_field( basename( __FILE__ ), 'pum_popup_settings_nonce' );
 
@@ -152,7 +159,7 @@ class PUM_Admin_Popups {
 
 		$settings = self::sanitize_settings( $settings );
 
-		$popup->update_meta( 'popup_setting', $settings );
+		$popup->update_meta( 'popup_settings', $settings );
 
 		do_action( 'pum_save_popup', $post_id, $post );
 	}
