@@ -136,7 +136,7 @@ class PUM_Popup_Triggers_Metabox {
 				'type' => '{{data.type}}',
 				'columns' => array(
                         'type'     => '{{PUM_Admin.triggers.getLabel(data.type)}}',
-                        'cookie'   => "{{PUM_Admin.triggers.cookie_column_value(data.trigger_settings.cookie.name)}}",
+                        'cookie'   => "{{PUM_Admin.triggers.cookie_column_value(data.trigger_settings.cookie_name)}}",
                         'settings' => '{{PUM_Admin.triggers.getSettingsDesc(data.type, data.trigger_settings)}}',
 				),
 				'settings' => '{{JSON.stringify(data.trigger_settings)}}',

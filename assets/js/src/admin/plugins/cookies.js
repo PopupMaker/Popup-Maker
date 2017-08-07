@@ -221,7 +221,7 @@ var PUMCookies;
                 $trigger = $('#pum_popup_triggers_list tbody tr').eq(PUMTriggers.new_cookie).find('.popup_triggers_field_settings:first');
                 trigger_settings = JSON.parse($trigger.val());
 
-                trigger_settings.cookie.name[trigger_settings.cookie.name.indexOf('add_new')] = values.cookie_settings.name;
+                trigger_settings.cookie_name[trigger_settings.cookie_name.indexOf('add_new')] = values.cookie_settings.name;
 
                 $trigger.val(JSON.stringify(trigger_settings));
 

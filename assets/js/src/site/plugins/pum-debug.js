@@ -126,11 +126,11 @@ var pum_debug_mode = false,
                 switch (trigger.type) {
                     case 'auto_open':
                         console.log(vars.label_delay, trigger.settings.delay);
-                        console.log(vars.label_cookie, trigger.settings.cookie.name);
+                        console.log(vars.label_cookie, trigger.settings.cookie_name);
                         break;
                     case 'click_open':
                         pum_debug.click_trigger($popup, trigger.settings);
-                        console.log(vars.label_cookie, trigger.settings.cookie.name);
+                        console.log(vars.label_cookie, trigger.settings.cookie_name);
                         break;
                 }
 

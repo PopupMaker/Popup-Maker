@@ -28,21 +28,21 @@
             var i,
                 ret = false;
 
-            if (settings.cookie === undefined || settings.cookie.name === undefined || settings.cookie.name === null) {
+            if (settings.cookie === undefined || settings.cookie_name === undefined || settings.cookie_name === null) {
                 return false;
             }
 
-            switch (typeof settings.cookie.name) {
+            switch (typeof settings.cookie_name) {
             case 'object':
             case 'array':
-                for (i = 0; settings.cookie.name.length > i; i += 1) {
-                    if ($.pm_cookie(settings.cookie.name[i]) !== undefined) {
+                for (i = 0; settings.cookie_name.length > i; i += 1) {
+                    if ($.pm_cookie(settings.cookie_name[i]) !== undefined) {
                         ret = true;
                     }
                 }
                 break;
             case 'string':
-                if ($.pm_cookie(settings.cookie.name) !== undefined) {
+                if ($.pm_cookie(settings.cookie_name) !== undefined) {
                     ret = true;
                 }
                 break;

@@ -1544,21 +1544,21 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
             var i,
                 ret = false;
 
-            if (settings.cookie === undefined || settings.cookie.name === undefined || settings.cookie.name === null) {
+            if (settings.cookie === undefined || settings.cookie_name === undefined || settings.cookie_name === null) {
                 return false;
             }
 
-            switch (typeof settings.cookie.name) {
+            switch (typeof settings.cookie_name) {
             case 'object':
             case 'array':
-                for (i = 0; settings.cookie.name.length > i; i += 1) {
-                    if ($.pm_cookie(settings.cookie.name[i]) !== undefined) {
+                for (i = 0; settings.cookie_name.length > i; i += 1) {
+                    if ($.pm_cookie(settings.cookie_name[i]) !== undefined) {
                         ret = true;
                     }
                 }
                 break;
             case 'string':
-                if ($.pm_cookie(settings.cookie.name) !== undefined) {
+                if ($.pm_cookie(settings.cookie_name) !== undefined) {
                     ret = true;
                 }
                 break;
@@ -1754,11 +1754,11 @@ var pum_debug_mode = false,
                 switch (trigger.type) {
                     case 'auto_open':
                         console.log(vars.label_delay, trigger.settings.delay);
-                        console.log(vars.label_cookie, trigger.settings.cookie.name);
+                        console.log(vars.label_cookie, trigger.settings.cookie_name);
                         break;
                     case 'click_open':
                         pum_debug.click_trigger($popup, trigger.settings);
-                        console.log(vars.label_cookie, trigger.settings.cookie.name);
+                        console.log(vars.label_cookie, trigger.settings.cookie_name);
                         break;
                 }
 

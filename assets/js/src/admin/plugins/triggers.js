@@ -50,7 +50,6 @@ var PUMTriggers;
         parseValues: function (values, type) {
 
 
-
             return values;
         },
         select_list: function () {
@@ -157,9 +156,7 @@ var PUMTriggers;
                     index: '',
                     type: '',
                     settings: {
-                        cookie: {
-                            name: ""
-                        }
+                        cookie_name: ""
                     }
                 }, args);
 
@@ -239,7 +236,7 @@ var PUMTriggers;
                 var $row        = $(this),
                     type        = $row.find('.popup_triggers_field_type').val(),
                     values      = JSON.parse($row.find('.popup_triggers_field_settings:first').val()),
-                    cookie_text = PUM_Admin.triggers.cookie_column_value(values.cookie.name);
+                    cookie_text = PUM_Admin.triggers.cookie_column_value(values.cookie_name);
 
                 $row.find('td.settings-column').html(PUM_Admin.triggers.getSettingsDesc(type, values));
                 $row.find('td.cookie-column code').text(cookie_text);
@@ -256,13 +253,17 @@ var PUMTriggers;
             return cookie_text;
         },
         append_click_selector_presets: function () {
-            var $field   = $('#extra_selectors'),
-                template = PUM_Admin.templates.render('pum-click-selector-presets'),
-                $presets = $field.parents('.pum-field').find('.pum-click-selector-presets');
+            var $field = $('#extra_selectors'),
+                template,
+                $presets;
 
             if (!$field.length || $field.hasClass('pum-click-selector-presets-initialized')) {
                 return;
             }
+
+            template = PUM_Admin.templates.render('pum-click-selector-presets');
+            $presets = $field.parents('.pum-field').find('.pum-click-selector-presets');
+
 
             if (!$presets.length) {
                 $field.before(template);
@@ -320,12 +321,7 @@ var PUMTriggers;
                 values  = {};
 
             if (type !== 'click_open') {
-                if (trigger.updated) {
-                    values.cookie_name = 'pum-' + $('#post_ID').val();
-                } else {
-                    values.cookie = {};
-                    values.cookie.name = 'pum-' + $('#post_ID').val();
-                }
+                values.cookie_name = 'pum-' + $('#post_ID').val();
             }
 
             triggers.template.form(type, values, function (event) {
@@ -350,7 +346,7 @@ var PUMTriggers;
 
                 PUM_Admin.modals.closeAll();
 
-                if (values.trigger_settings.cookie.name !== null && values.trigger_settings.cookie.name.indexOf('add_new') >= 0) {
+                if (values.trigger_settings.cookie_name !== null && values.trigger_settings.cookie_name.indexOf('add_new') >= 0) {
                     PUM_Admin.triggers.new_cookie = values.index;
                     $('#pum_popup_cookie_fields button.add-new').trigger('click');
                 }
@@ -393,7 +389,7 @@ var PUMTriggers;
             });
 
             $cookie
-                .val(trigger && trigger.updated ? trigger_settings.cookie_name : trigger_settings.cookie.name)
+                .val(trigger_settings.cookie_name)
                 .trigger('change.pumselect2');
         }
 
@@ -465,7 +461,7 @@ var PUMTriggers;
             data.index = null;
 
             if (type !== 'click_open') {
-                data.trigger_settings.cookie.name = 'pum-' + $('#post_ID').val();
+                data.trigger_settings.cookie_name = 'pum-' + $('#post_ID').val();
             }
 
             if (!template.length) {
@@ -506,7 +502,7 @@ var PUMTriggers;
 
             $('#pum_popup_trigger_fields').addClass('has-list-items');
 
-            if (values.trigger_settings.cookie.name !== null && values.trigger_settings.cookie.name.indexOf('add_new') >= 0) {
+            if (values.trigger_settings.cookie_name !== null && values.trigger_settings.cookie_name.indexOf('add_new') >= 0) {
                 PUM_Admin.triggers.new_cookie = values.index;
                 $('#pum_popup_cookie_fields button.add-new').trigger('click');
             }
