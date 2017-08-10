@@ -537,7 +537,7 @@ msgstr ""
 msgid "Choose a type of trigger to get started."
 msgstr ""
 
-#: classes/Admin/Templates.php:314, classes/Admin/Templates.php:366, includes/admin/popups/class-metabox-triggers.php:102
+#: classes/Admin/Templates.php:314, classes/Admin/Templates.php:365, includes/admin/popups/class-metabox-triggers.php:102
 msgid "Select a trigger type."
 msgstr ""
 
@@ -569,57 +569,57 @@ msgstr ""
 msgid "Insert Preset"
 msgstr ""
 
-#: classes/Admin/Templates.php:365, includes/admin/popups/class-metabox-triggers.php:157
+#: classes/Admin/Templates.php:364, includes/admin/popups/class-metabox-triggers.php:157
 msgid "Choose what type of trigger to add?"
 msgstr ""
 
-#: classes/Admin/Templates.php:385
+#: classes/Admin/Templates.php:384
 msgid "These conditions determine when this popup will be display."
 msgstr ""
 
-#: classes/Admin/Templates.php:385
+#: classes/Admin/Templates.php:384
 msgid "Learn more about conditions"
 msgstr ""
 
-#: classes/Admin/Templates.php:389
+#: classes/Admin/Templates.php:388
 msgid "When users visit your site, the plugin will check the viewed content/page against your selection below and determine if this popup should be shown."
 msgstr ""
 
-#: classes/Admin/Templates.php:391
+#: classes/Admin/Templates.php:390
 msgid "Use the %s button to check for the inverse of your chosen condition."
 msgstr ""
 
-#: classes/Admin/Templates.php:405
+#: classes/Admin/Templates.php:404
 msgid "Choose a condition to get started."
 msgstr ""
 
-#: classes/Admin/Templates.php:407, classes/Admin/Templates.php:439
+#: classes/Admin/Templates.php:406, classes/Admin/Templates.php:438
 msgid "Enable the Not Operand"
 msgstr ""
 
-#: classes/Admin/Templates.php:410, classes/Admin/Templates.php:443
+#: classes/Admin/Templates.php:409, classes/Admin/Templates.php:442
 msgid "Choose a condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:426
+#: classes/Admin/Templates.php:425
 msgctxt "aria-label for add new OR condition button"
 msgid "Add another OR condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:426, classes/Admin/Templates.php:437
+#: classes/Admin/Templates.php:425, classes/Admin/Templates.php:436
 msgid "or"
 msgstr ""
 
-#: classes/Admin/Templates.php:430
+#: classes/Admin/Templates.php:429
 msgctxt "aria-label for add new AND condition button"
 msgid "Add another AND condition group"
 msgstr ""
 
-#: classes/Admin/Templates.php:430
+#: classes/Admin/Templates.php:429
 msgid "and"
 msgstr ""
 
-#: classes/Admin/Templates.php:451
+#: classes/Admin/Templates.php:450
 msgid "Remove Condition"
 msgstr ""
 
