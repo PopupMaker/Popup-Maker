@@ -819,10 +819,38 @@ class PUM_Model_Popup extends PUM_Model_Post {
 				}
 
 				$this->settings['triggers'] = $triggers;
-				$changed       = true;
+				$changed                    = true;
 			}
 
 			$delete_meta[] = 'popup_triggers';
+		}
+
+		$conditions = $this->get_meta( 'popup_conditions' );
+		if ( $conditions !== false ) {
+			if ( ! empty( $conditions ) ) {
+				$conditions = ! empty( $this->settings['conditions'] ) && is_array( $this->settings['conditions'] ) ? array_merge( $this->settings['conditions'], $conditions ) : $conditions;
+
+				foreach ( $conditions as $cg_key => $group ) {
+					if ( ! empty( $group ) ) {
+						foreach ( $group as $c_key => $condition ) {
+							// Clean empty conditions.
+							if ( empty( $condition['target'] ) ) {
+								unset( $conditions[ $cg_key ][ $c_key ]);
+							}
+						}
+
+						// Clean empty groups.
+						if ( empty( $conditions[ $cg_key ] ) ) {
+							unset( $conditions[ $cg_key ] );
+						}
+					}
+				}
+
+				$this->settings['conditions'] = $conditions;
+				$changed                      = true;
+			}
+
+			$delete_meta[] = 'popup_conditions';
 		}
 
 		if ( $changed ) {
