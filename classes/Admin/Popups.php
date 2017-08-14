@@ -91,9 +91,10 @@ class PUM_Admin_Popups {
 		//$settings['triggers'] = get_post_meta( $post->ID, 'popup_triggers', true );
 
 		wp_nonce_field( basename( __FILE__ ), 'pum_popup_settings_nonce' );
-
 		wp_enqueue_script( 'popup-maker-admin' );
-		wp_localize_script( 'popup-maker-admin', 'pum_popup_settings_editor', array(
+		?>
+		<script type="text/javascript">
+		window.pum_popup_settings_editor = <?php echo json_encode( array(
 			'form_args'             => array(
 				'id'       => 'pum-popup-settings',
 				'tabs'     => self::tabs(),
@@ -104,7 +105,8 @@ class PUM_Admin_Popups {
 			'conditions_selectlist' => PUM_Conditions::instance()->dropdown_list(),
 			'triggers'              => PUM_Triggers::instance()->get_triggers(),
 			'current_values'        => self::parse_values( $settings ),
-		) ); ?>
+		) ); ?>;
+		</script>
 
 		<div id="pum-popup-settings-container" class="pum-popup-settings-container"></div><?php
 	}
