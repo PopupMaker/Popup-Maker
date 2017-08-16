@@ -237,7 +237,7 @@ class PUM_Triggers {
 			'select2'  => true,
 			'priority' => 1,
 			'options'  => array(
-				__( 'Add New Cookie', 'popup-maker' ) => 'add_new',
+				'add_new' => __( 'Add New Cookie', 'popup-maker' ),
 			),
 		) );
 	}

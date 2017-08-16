@@ -709,6 +709,53 @@ class PUM_Admin_Popups {
 		return $settings;
 	}
 
+	/**
+	 * @return array
+	 */
+	public static function defaults() {
+		$tabs = self::fields();
+
+		$defaults = array();
+
+		foreach ( $tabs as $section_id => $fields ) {
+			foreach ( $fields as $key => $field ) {
+				$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : null;
+			}
+		}
+
+		return $defaults;
+	}
+
+	/**
+	 * Checks if an array is a field.
+	 *
+	 * @param array $array
+	 *
+	 * @return bool
+	 */
+	public static function is_field( $array = array() ) {
+		$field_tests = array(
+			isset( $array['id'] ),
+			isset( $array['label'] ),
+			isset( $array['type'] ),
+			isset( $array['options'] ),
+			isset( $array['desc'] ),
+		);
+
+		return in_array( true, $field_tests );
+	}
+
+	/**
+	 * Checks if an array is a section.
+	 *
+	 * @param array $array
+	 *
+	 * @return bool
+	 */
+	public static function is_section( $array = array() ) {
+		return ! self::is_field( $array );
+	}
+
 	#endregion Done
 
 	/**
@@ -804,52 +851,7 @@ class PUM_Admin_Popups {
 		return $meta;
 	}
 
-	/**
-	 * @return array
-	 */
-	public static function defaults() {
-		$tabs = self::fields();
 
-		$defaults = array();
-
-		foreach ( $tabs as $section_id => $fields ) {
-			foreach ( $fields as $key => $field ) {
-				$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : null;
-			}
-		}
-
-		return $defaults;
-	}
-
-	/**
-	 * Checks if an array is a field.
-	 *
-	 * @param array $array
-	 *
-	 * @return bool
-	 */
-	public static function is_field( $array = array() ) {
-		$field_tests = array(
-			isset( $array['id'] ),
-			isset( $array['label'] ),
-			isset( $array['type'] ),
-			isset( $array['options'] ),
-			isset( $array['desc'] ),
-		);
-
-		return in_array( true, $field_tests );
-	}
-
-	/**
-	 * Checks if an array is a section.
-	 *
-	 * @param array $array
-	 *
-	 * @return bool
-	 */
-	public static function is_section( $array = array() ) {
-		return ! self::is_field( $array );
-	}
 
 	/**
 	 * Ensures that the popups have unique slugs.

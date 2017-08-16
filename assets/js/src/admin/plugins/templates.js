@@ -132,7 +132,7 @@
                             if (typeof label !== 'object') {
 
                                 if (data.value !== null) {
-                                    if (data.multiple && ((typeof data.value === 'object' && data.value[value] !== undefined) || (typeof data.value === 'array' && data.value.indexOf(value) !== false))) {
+                                    if (data.multiple && ((typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1))) {
                                         selected = 'selected';
                                     } else if (!data.multiple && data.value == value) {
                                         selected = 'selected';
@@ -159,12 +159,13 @@
                                 _.each(label, function (label, value) {
                                     var selected = false;
 
-                                    if (data.multiple && ((typeof data.value === 'object' && data.value[value] !== undefined) || (typeof data.value === 'array' && data.value.indexOf(value) !== false))) {
-                                        selected = 'selected';
-                                    } else if (!data.multiple && data.value == value) {
-                                        selected = 'selected';
+                                    if (data.value !== null) {
+                                        if (data.multiple && ((typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1))) {
+                                            selected = 'selected';
+                                        } else if (!data.multiple && data.value == value) {
+                                            selected = 'selected';
+                                        }
                                     }
-
                                     optgroup_options.push(
                                         PUM_Admin.templates.prepareMeta({
                                             label: label,

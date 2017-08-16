@@ -362,7 +362,8 @@ class PUM_Admin_Templates {
 				print(PUM_Admin.templates.modal({
 					id: 'pum_trigger_add_type_modal',
 					title: '<?php _e( 'Choose what type of trigger to add?', 'popup-maker' ); ?>',
-					content: PUM_Admin.triggers.template.selectbox({id: 'popup_trigger_add_type', name: "", placeholder: "<?php _e( 'Select a trigger type.', 'popup-maker' ); ?>"})
+					content: PUM_Admin.triggers.template.selectbox({id: 'popup_trigger_add_type', name: "", placeholder: "<?php _e( 'Select a trigger type.', 'popup-maker' ); ?>"}),
+					save_button: pum_admin_vars.I10n.add || '<?php __( 'Add','popup-maker' ); ?>'
 				}));
 			#>
 		</script>
