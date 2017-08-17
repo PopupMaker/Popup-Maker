@@ -410,7 +410,7 @@ class PUM_Modules_Admin_Bar {
 
 		$wp_admin_bar->add_node( array(
 			'id'     => 'popup-maker',
-			'title'  => __( 'Popup Maker', 'popup-maker' ),
+			'title'  => __( 'Popup Maker™', 'popup-maker' ),
 			'href'   => '#',
 			'meta'   => array( 'class' => 'popup-maker-toolbar' ),
 			'parent' => false,
