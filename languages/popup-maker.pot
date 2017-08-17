@@ -76,7 +76,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/integrations/class-pum-gravity-forms.php:53, includes/modules/admin-bar.php:413
+#: includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/integrations/class-pum-gravity-forms.php:53
 msgid "Popup Maker"
 msgstr ""
 
@@ -125,7 +125,7 @@ msgid "Upgrade failed, please try again."
 msgstr ""
 
 #: includes/admin/extensions/extensions-page.php:18
-msgid "Extend Popup Maker"
+msgid "Extend Popup Maker™"
 msgstr ""
 
 #: includes/admin/extensions/extensions-page.php:27, includes/admin/extensions/extensions-page.php:27, includes/admin/extensions/extensions-page.php:145, includes/admin/extensions/extensions-page.php:145
@@ -1639,6 +1639,10 @@ msgstr ""
 #: includes/modules/admin-bar.php:390
 msgctxt "JS alert for CSS get selector tool"
 msgid "Selector"
+msgstr ""
+
+#: includes/modules/admin-bar.php:413
+msgid "Popup Maker™"
 msgstr ""
 
 #: includes/modules/admin-bar.php:423

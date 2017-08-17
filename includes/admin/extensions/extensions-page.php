@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return      void
  */
 function popmake_extensions_page() { ?>
-	<div class="wrap"><h1><?php _e( 'Extend Popup Maker™', 'popup-maker' ) ?></h1>
+	<div class="wrap"><h1><?php _e( 'Extend Popup Maker', 'popup-maker' ) ?></h1>
 
 	<div id="poststuff">
 	<div id="post-body" class="metabox-holder">

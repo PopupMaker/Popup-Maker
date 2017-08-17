@@ -305,7 +305,7 @@ There are several common causes for this which include:
 
 = v1.4.5 - 4/21/2016 =
 * Fix: Replaced all usage of static:: for PHP 5.2 compatiblity.
-* Fix: Forced the latest version of Select2 to load on Popup Maker™ admin pages in the case that an older version was enqueued.
+* Fix: Forced the latest version of Select2 to load on Popup Maker admin pages in the case that an older version was enqueued.
 
 = v1.4.4 - 4/20/2016 =
 * Fix: Version Bump to fix upgrade issues.
@@ -321,7 +321,7 @@ There are several common causes for this which include:
 
 = v1.4 - 4/20/2016 =
 * Feature: Added basic analytics. Tracks how many unique opens each popup has.
-* Feature: Added new Popup Maker™ shortcodes button to the editor with visual previews.
+* Feature: Added new Popup Maker shortcodes button to the editor with visual previews.
 * Feature: Added option to reset popup open counts demand.
 * Feature: New add / remove targeting conditions UI.
 * Feature: Conditions can now be negative as well as grouped as AND / OR.
@@ -343,7 +343,7 @@ There are several common causes for this which include:
 * Improvement: Added a more reliable upgrade routine system.
 * Improvement: Added an option to disable popup taxonomies if not in use.
 * Improvement: Added more reliable usage tracking via [Freemius](https://freemius.com/wordpress/).
-* Tweak: Updated extensions page and added a list of plugins that work well with Popup Maker™.
+* Tweak: Updated extensions page and added a list of plugins that work well with Popup Maker.
 * Fixed: Super annoying fixed position checkbox glitch.
 * Fixed: Missing check for disabled google fonts before loading them.
 * Fixed: Bug where hidden about pages showed up when certain admin menu editing plugins were active.
@@ -486,7 +486,7 @@ There are several common causes for this which include:
 * Removed Popmake_Admin_Notices class as it was unused.
 * Fixed bug where share metabox wouldn't stay hidden.
 * Added function to prevent deletion of default theme.
-* Fixed bug which caused Popup Maker™ menu to show to all users.
+* Fixed bug which caused Popup Maker menu to show to all users.
 
 = v1.1.10 =
 * Fixed invalid argument bug passed to google font foreach.
@@ -508,7 +508,7 @@ There are several common causes for this which include:
 * Added better responsive image handling.
 * Added Admin Debug option for popups.
 * Changed jquery-ui-position collission property to none to solve positioning issues.
-* Disabled Popup Maker™ JS & CSS when no popups detected to load.
+* Disabled Popup Maker JS & CSS when no popups detected to load.
 * Added new function popmake_enqueue_scripts() which allows manual enqueuing of scripts and styles.
 
 = v1.1.7 =
