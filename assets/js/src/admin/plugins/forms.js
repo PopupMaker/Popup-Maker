@@ -181,35 +181,37 @@
         },
         render: function (args, values, $container) {
             var form,
-                maintabs          = {},
-                subtabs           = {},
                 sections          = {},
                 section           = [],
                 form_fields       = {},
-                data              = $.extend({
+                data              = $.extend(true, {
                     id: "",
                     tabs: {},
                     sections: {},
-                    fields: {}
+                    fields: {},
+                    maintabs: {},
+                    subtabs: {}
                 }, args),
-                container_classes = ['pum-dynamic-form'];
-
-            values = values || {};
-
-            if (Object.keys(data.tabs).length && Object.keys(data.sections).length) {
-                container_classes.push('tabbed-content');
-
-                maintabs = {
+                maintabs          = $.extend({
                     id: data.id,
-                    classes: '',
+                    classes: [],
                     tabs: {},
                     vertical: true,
                     form: true,
                     meta: {
                         'data-min-height': 250
                     }
-                };
+                }, data.maintabs),
+                subtabs           = $.extend({
+                    classes: ['link-tabs', 'sub-tabs'],
+                    tabs: {}
+                }, data.subtabs),
+                container_classes = ['pum-dynamic-form'];
 
+            values = values || {};
+
+            if (Object.keys(data.tabs).length && Object.keys(data.sections).length) {
+                container_classes.push('tabbed-content');
 
                 // Loop Tabs
                 _.each(data.fields, function (subTabs, tabID) {
@@ -228,11 +230,10 @@
                     }
 
                     // Define the sub tabs model.
-                    subtabs = {
+                    subtabs = $.extend(subtabs, {
                         id: data.id + '-' + tabID + '-subtabs',
-                        classes: ['link-tabs', 'sub-tabs'],
                         tabs: {}
-                    };
+                    });
 
                     // Loop Tab Sections
                     _.each(subTabs, function (subTabFields, subTabID) {
@@ -289,17 +290,6 @@
             }
             else if (Object.keys(data.tabs).length) {
                 container_classes.push('tabbed-content');
-
-                maintabs = {
-                    id: data.id,
-                    classes: '',
-                    tabs: {},
-                    vertical: true,
-                    form: true,
-                    meta: {
-                        'data-min-height': 250
-                    }
-                };
 
                 // Loop Tabs
                 _.each(data.fields, function (tabFields, tabID) {

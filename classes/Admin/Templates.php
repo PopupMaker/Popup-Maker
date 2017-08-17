@@ -20,7 +20,7 @@ class PUM_Admin_Templates {
 			<div class="pum-field-section {{data.classes}}">
 				<# _.each(data.fields, function(field) { #>
 					{{{field}}}
-				<# }); #>
+					<# }); #>
 			</div>
 		</script>
 
@@ -181,6 +181,26 @@ class PUM_Admin_Templates {
 			</select>
 		</script>
 
+		<script type="text/html" id="tmpl-pum-field-license_key">
+			<input class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value.key}}" {{{data.meta}}} />
+
+			<# if (data.value.key !== '') { #>
+				<# if (data.value.status === 'valid') { #>
+					<span style="color:green;"><?php _e('active'); ?></span>
+					<input type="submit" class="button-secondary pum-license-deactivate" id="{{data.id}}_deactivate" name="{{data.name}}_deactivate" value="<?php _e( 'Deactivate License', 'popup-maker' ); ?>" />
+					<# } else { #>
+						<input type="submit" class="button-secondary pum-license-activate" id="{{data.id}}_activate" name="{{data.name}}_activate" value="<?php _e( 'Activate License', 'popup-maker' ); ?>" />
+						<# } #>
+							<# } #>
+
+								<# if (data.value.messages && data.value.messages.length) { #>
+									<div class="pum-license-messages">
+										<# for(var i=0; i < data.value.messages.length; i++) { #>
+										<p>{{{data.value.messages[i]}}}</p>
+										<# } #>
+									</div>
+									<# } #>
+		</script>
 		<?php
 	}
 
