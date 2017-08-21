@@ -321,6 +321,23 @@
                         data.units = options;
                     }
                     break;
+                case 'license_key':
+
+                    data.value = $.extend({
+                        key: '',
+                        license: {},
+                        messages: [],
+                        status: 'empty',
+                        expires: false,
+                        classes: false
+                    }, data.value);
+
+                    data.classes.push('ahoy-license-' + data.value.status + '-notice');
+
+                    if (data.value.classes) {
+                        data.classes.push(data.value.classes);
+                    }
+                    break;
                 }
 
                 return data;

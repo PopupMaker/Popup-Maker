@@ -120,6 +120,7 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
           border-color: #ddd;
           padding: 3px 5px 0;
           min-width: 5em;
+          width: 100% !important;
         }
       }
 
@@ -180,6 +181,10 @@ The bulk of this is to style jquery select2 to better resemble the default WP da
 
     }
 
+  }
+
+  .pumselect2-container + .pumselect2-container--open {
+    top: inherit !important;
   }
 
 }

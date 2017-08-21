@@ -116,6 +116,8 @@
                         matched = required.indexOf(value) !== -1;
                     } else if ($wrapper.hasClass('pum-field-checkbox')) {
                         matched = required === $field.is(':checked');
+                    } else {
+                        matched = Array.isArray(required) ? required.indexOf(value) !== -1 : required == value;
                     }
 
                     if (matched) {

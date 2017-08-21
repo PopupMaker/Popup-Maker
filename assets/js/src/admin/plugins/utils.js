@@ -1,14 +1,14 @@
 (function ($) {
     "use strict";
 
-    String.prototype.capitalize = function() {
+    String.prototype.capitalize = function () {
         return this.charAt(0).toUpperCase() + this.slice(1);
     };
 
-    var root = this,
+    var root       = this,
         inputTypes = 'color,date,datetime,datetime-local,email,hidden,month,number,password,range,search,tel,text,time,url,week'.split(','),
         inputNodes = 'select,textarea'.split(','),
-        rName = /\[([^\]]*)\]/g;
+        rName      = /\[([^\]]*)\]/g;
 
     // ugly hack for IE7-8
     function isInArray(array, needle) {
@@ -115,9 +115,9 @@
             }
 
             hex = hex.replace('#', '');
-            var r = parseInt(hex.substring(0, 2), 16),
-                g = parseInt(hex.substring(2, 4), 16),
-                b = parseInt(hex.substring(4, 6), 16),
+            var r      = parseInt(hex.substring(0, 2), 16),
+                g      = parseInt(hex.substring(2, 4), 16),
+                b      = parseInt(hex.substring(4, 6), 16),
                 result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity / 100 + ')';
             return result;
         },
@@ -133,7 +133,7 @@
         },
         throttle: function (callback, threshold) {
             var suppress = false,
-                clear = function () {
+                clear    = function () {
                     suppress = false;
                 };
             return function () {
@@ -147,7 +147,7 @@
         serializeForm: function (options) {
             $.extend({}, options);
 
-            var values = {},
+            var values   = {},
                 settings = $.extend(true, {
                     include: [],
                     exclude: [],
