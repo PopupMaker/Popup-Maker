@@ -3,7 +3,7 @@ Contributors: danieliser, wppopupmaker, waltmesser, yogaman5020
 Author URI: https://wppopupmaker.com/?utm_source=readme-header&utm_campaign=Readme&utm_medium=author-uri
 Plugin URI: https://wppopupmaker.com/?utm_capmaign=Readme&utm_source=readme-header&utm_medium=plugin-uri
 Donate link:
-Tags: marketing, optin, advertising, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal, popup, popups
+Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.8
 Stable tag: 1.6.6
@@ -90,6 +90,9 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+
+= v1.6.7 - ?? =
+* Fix: WPML missing variable errors.
 
 = v1.6.6 - 07/29/2017 =
 * Fix: Bug with closing forms using newest version of Gravity Forms.
