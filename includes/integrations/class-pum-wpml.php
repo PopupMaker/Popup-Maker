@@ -48,7 +48,7 @@ class PUM_WPML_Integration {
 
 		static $source_id;
 
-		if ( ! isset( $source_id ) && ! empty( $sitepress ) && is_a( $sitepress, 'SitePress' ) && method_exists( $sitepress, 'get_new_post_source_id' ) ) {
+		if ( ! isset( $source_id ) && ! empty( $sitepress ) && method_exists( $sitepress, 'get_new_post_source_id' ) ) {
 			$source_id = absint( $sitepress->get_new_post_source_id( $post_id ) );
 		}
 
@@ -64,7 +64,7 @@ class PUM_WPML_Integration {
 
 		static $trid;
 
-		if ( ! isset( $trid ) ) {
+		if ( ! isset( $trid )  && ! empty( $sitepress ) && method_exists( $sitepress, 'get_element_trid' )) {
 			$trid = absint( $sitepress->get_element_trid( $post_id, 'post_popup' ) );
 		}
 
