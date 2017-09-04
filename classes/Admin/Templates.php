@@ -292,11 +292,11 @@ class PUM_Admin_Templates {
 	public static function triggers_editor() {
 		?>
 		<script type="text/html" id="tmpl-pum-field-triggers">
-			<# print(PUM_Admin.triggers.template.editor({triggers: data.value})); #>
+			<# print(PUM_Admin.triggers.template.editor({triggers: data.value, name: data.name})); #>
 		</script>
 
 		<script type="text/html" id="tmpl-pum-trigger-editor">
-			<div class="pum-popup-trigger-editor  <# if (data.triggers && data.triggers.length) { print('has-list-items'); } #>">
+			<div class="pum-popup-trigger-editor  <# if (data.triggers && data.triggers.length) { print('has-list-items'); } #>" data-field_name="{{data.name}}">
 				<button type="button" class="button button-primary pum-add-new no-button"><?php _e( 'Add New Trigger', 'popup-maker' ); ?></button>
 
 				<p>
@@ -321,6 +321,7 @@ class PUM_Admin_Templates {
 							print(PUM_Admin.triggers.template.row({
 								index: index,
 								type: trigger.type,
+								name: data.name,
 								settings: trigger.settings || {}
 							}));
 						});
@@ -341,13 +342,13 @@ class PUM_Admin_Templates {
 			<tr data-index="{{data.index}}">
 				<td class="type-column">
 					<button type="button" class="edit no-button link-button" aria-label="<?php _e( 'Edit this trigger', 'popup-maker' ); ?>">{{PUM_Admin.triggers.getLabel(data.type)}}</button>
-					<input class="popup_triggers_field_type" type="hidden" name="popup_triggers[{{data.index}}][type]" value="{{data.type}}" />
-					<input class="popup_triggers_field_settings" type="hidden" name="popup_triggers[{{data.index}}][settings]" value="{{JSON.stringify(data.settings)}}" />
+					<input class="popup_triggers_field_type" type="hidden" name="{{data.name}}[{{data.index}}][type]" value="{{data.type}}" />
+					<input class="popup_triggers_field_settings" type="hidden" name="{{data.name}}[{{data.index}}][settings]" value="{{JSON.stringify(data.settings)}}" />
 				</td>
 				<td class="cookie-column">
 					<code>{{PUM_Admin.triggers.cookie_column_value(data.settings.cookie_name)}}</code>
 				</td>
-				<td class="settings-column">{{PUM_Admin.triggers.getSettingsDesc(data.type, data.settings)}}</td>
+				<td class="settings-column">{{{PUM_Admin.triggers.getSettingsDesc(data.type, data.settings)}}}</td>
 				<td class="list-item-actions">
 					<button type="button" class="edit dashicons dashicons-edit no-button" aria-label="<?php _e( 'Edit this trigger', 'popup-maker' ); ?>"></button>
 					<button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php _e( 'Delete` this trigger', 'popup-maker' ); ?>"></button>

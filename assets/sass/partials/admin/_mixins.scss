@@ -34,7 +34,7 @@
 
 @mixin add-more-table-lists() {
   .list-table {
-    display: none;
+    display: none!important;
 
     @include table-alignments();
   }
@@ -61,11 +61,11 @@
   &.has-list-items {
 
     .list-table {
-      display: block;
+      display: block!important;;
     }
 
     .no-list-items {
-      display: none;
+      display: none!important;;
     }
 
   }

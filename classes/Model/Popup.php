@@ -157,6 +157,27 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		return isset( $settings[ $key ] ) ? $settings[ $key ] : $default;
 	}
 
+	/**
+	 * Adds a backward compatibility layer in case anybody calls for data from an old location.
+	 *
+	 * @param string $key
+	 *
+	 * @return bool|mixed
+	 */
+	public function remapped_meta( $key = '' ) {
+		// Let Passive Migration get the real data so it can be deleted eventually.
+		if ( $this->doing_passive_migration ) {
+			return false;
+		}
+
+		switch( $key ) {
+			case 'popup_triggers':
+				return $this->get_setting('triggers', array() );
+		}
+
+		return parent::remapped_meta( $key );
+	}
+
 	#endregion General
 
 	#region Data Getters
@@ -175,6 +196,8 @@ class PUM_Model_Popup extends PUM_Model_Post {
 
 		return apply_filters( 'pum_popup_get_cookies', $this->cookies, $this->ID );
 	}
+
+
 
 	/**
 	 * @return array
@@ -799,15 +822,19 @@ class PUM_Model_Popup extends PUM_Model_Post {
 
 	#endregion Analytics
 
+	public $doing_passive_migration = false;
+
 
 	public function passive_settings_migration() {
 
 		$changed     = false;
 		$delete_meta = array();
 
+		$this->doing_passive_migration = true;
+
 		// v1.7 Migrations
 		$triggers = $this->get_meta( 'popup_triggers' );
-		if ( $triggers !== false ) {
+		if ( ! empty( $triggers ) ) {
 			if ( ! empty( $triggers ) ) {
 				$triggers = ! empty( $this->settings['triggers'] ) && is_array( $this->settings['triggers'] ) ? array_merge( $this->settings['triggers'], $triggers ) : $triggers;
 
@@ -826,7 +853,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		}
 
 		$conditions = $this->get_meta( 'popup_conditions' );
-		if ( $conditions !== false ) {
+		if ( ! empty( $conditions ) ) {
 			if ( ! empty( $conditions ) ) {
 				$conditions = ! empty( $this->settings['conditions'] ) && is_array( $this->settings['conditions'] ) ? array_merge( $this->settings['conditions'], $conditions ) : $conditions;
 
@@ -854,14 +881,16 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		}
 
 		if ( $changed ) {
-			//$this->update_meta( 'popup_settings', $this->settings );
+			$this->update_meta( 'popup_settings', $this->settings );
 		}
 
 		if ( ! empty( $delete_meta ) ) {
 			foreach ( $delete_meta as $key ) {
-				//$this->delete_meta( $key );
+				$this->delete_meta( $key );
 			}
 		}
+
+		$this->doing_passive_migration = false;
 	}
 }
 

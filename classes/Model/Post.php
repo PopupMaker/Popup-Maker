@@ -423,6 +423,10 @@ abstract class PUM_Model_Post {
 	 * @return mixed|false
 	 */
 	public function get_meta( $key, $single = true, $force = false ) {
+		if ( ( $value = $this->remapped_meta( $key ) ) ) {
+			return $value;
+		}
+
 		if ( ! isset ( $this->meta[ $key ] ) || $force ) {
 			$this->meta[ $key ] = get_post_meta( $this->ID, $key, $single );
 
@@ -452,6 +456,17 @@ abstract class PUM_Model_Post {
 		}
 
 		return $deleted;
+	}
+
+	/**
+	 * Allows for easy backward compatibility layer management in each child class.
+	 *
+	 * @param string $key
+	 *
+	 * @return bool
+	 */
+	public function remapped_meta( $key = '' ) {
+		return false;
 	}
 
 	/**

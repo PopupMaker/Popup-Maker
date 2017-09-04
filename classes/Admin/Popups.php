@@ -94,18 +94,18 @@ class PUM_Admin_Popups {
 		wp_enqueue_script( 'popup-maker-admin' );
 		?>
 		<script type="text/javascript">
-		window.pum_popup_settings_editor = <?php echo json_encode( array(
-			'form_args'             => array(
-				'id'       => 'pum-popup-settings',
-				'tabs'     => self::tabs(),
-				'sections' => self::sections(),
-				'fields'   => self::fields(),
-			),
-			'conditions'            => PUM_Conditions::instance()->get_conditions(),
-			'conditions_selectlist' => PUM_Conditions::instance()->dropdown_list(),
-			'triggers'              => PUM_Triggers::instance()->get_triggers(),
-			'current_values'        => self::parse_values( $settings ),
-		) ); ?>;
+            window.pum_popup_settings_editor = <?php echo json_encode( array(
+				'form_args'             => array(
+					'id'       => 'pum-popup-settings',
+					'tabs'     => self::tabs(),
+					'sections' => self::sections(),
+					'fields'   => self::fields(),
+				),
+				'conditions'            => PUM_Conditions::instance()->get_conditions(),
+				'conditions_selectlist' => PUM_Conditions::instance()->dropdown_list(),
+				'triggers'              => PUM_Triggers::instance()->get_triggers(),
+				'current_values'        => self::parse_values( $settings ),
+			) ); ?>;
 		</script>
 
 		<div id="pum-popup-settings-container" class="pum-popup-settings-container"></div><?php
@@ -156,6 +156,7 @@ class PUM_Admin_Popups {
 
 		// Sanitize JSON values.
 		$settings['conditions'] = isset( $settings['conditions'] ) ? self::sanitize_meta( $settings['conditions'] ) : array();
+		$settings['triggers']   = isset( $settings['triggers'] ) ? self::sanitize_meta( $settings['triggers'] ) : array();
 
 		$settings = apply_filters( 'pum_popup_setting_pre_save', $settings, $post->ID );
 
@@ -837,20 +838,23 @@ class PUM_Admin_Popups {
 
 			foreach ( $meta as $key => $value ) {
 
-				if ( is_string( $value ) ) {
+				if ( is_array( $value ) ) {
+					$meta[ $key ] = self::sanitize_meta( $value );
+				} else if ( is_string( $value ) ) {
 					try {
 						$value = json_decode( stripslashes( $value ) );
+						if ( is_object( $value ) || is_array( $value ) ) {
+							$meta[ $key ] = PUM_Admin_Helpers::object_to_array( $value );
+						}
 					} catch ( \Exception $e ) {
 					};
 				}
 
-				$meta[ $key ] = PUM_Admin_Helpers::object_to_array( $value );
 			}
 		}
 
 		return $meta;
 	}
-
 
 
 	/**

@@ -66,12 +66,12 @@ class PUM_Triggers {
 				'modal_title'     => '',
 				'settings_column' => '',
 				'priority'        => 10,
-				'tabs'            => self::get_tabs(),
+				'tabs'            => $this->get_tabs(),
 				'fields'          => array(),
 			) );
 
 			// Here for backward compatibility to merge in labels properly.
-			$labels         = self::get_labels();
+			$labels         = $this->get_labels();
 			$trigger_labels = isset( $labels[ $trigger['id'] ] ) ? $labels[ $trigger['id'] ] : array();
 
 			if ( ! empty( $trigger_labels ) ) {
@@ -81,6 +81,14 @@ class PUM_Triggers {
 					}
 				}
 			}
+
+			// Remove cookie fields
+			if ( ! empty( $trigger['fields']['cookie'] ) ) {
+				unset( $trigger['fields']['cookie'] );
+			}
+
+			// Add cookie fields for all triggers automatically.
+			$trigger['fields']['general'] = array_merge( $trigger['fields']['general'], $this->cookie_fields() );
 
 			$this->triggers[ $trigger['id'] ] = $trigger;
 		}
@@ -145,7 +153,6 @@ class PUM_Triggers {
 							'desc'  => __( 'This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file.', 'popup-maker' ),
 						),
 					),
-					'cookie'  => self::cookie_fields(),
 				),
 			),
 			'auto_open'  => array(
@@ -164,22 +171,16 @@ class PUM_Triggers {
 							'step'  => 500,
 						),
 					),
-					'cookie'  => self::cookie_fields(),
 				),
 			),
 
 		) );
-
-		foreach( $triggers as $key => $trigger ) {
-			//$triggers[$key]['updated'] = true;
-		}
 
 		// @deprecated filter.
 		$triggers = apply_filters( 'pum_get_triggers', $triggers );
 
 		$this->add_triggers( $triggers );
 	}
-
 
 	/**
 	 * @return array
@@ -195,7 +196,6 @@ class PUM_Triggers {
 		return $triggers;
 	}
 
-
 	/**
 	 * Returns the cookie fields used for trigger options.
 	 *
@@ -203,7 +203,7 @@ class PUM_Triggers {
 	 *
 	 * @return array
 	 */
-	public static function cookie_fields() {
+	public function cookie_fields() {
 
 		/**
 		 * Filter the array of default trigger cookie fields.
@@ -211,7 +211,7 @@ class PUM_Triggers {
 		 * @param array $fields The list of trigger cookie fields.
 		 */
 		return apply_filters( 'pum_trigger_cookie_fields', array(
-			'cookie_name' => self::cookie_field(),
+			'cookie_name' => $this->cookie_field(),
 		) );
 	}
 
@@ -222,7 +222,7 @@ class PUM_Triggers {
 	 *
 	 * @return array
 	 */
-	public static function cookie_field() {
+	public function cookie_field() {
 
 		/**
 		 * Filter the array of default trigger cookie field.
@@ -235,13 +235,12 @@ class PUM_Triggers {
 			'type'     => 'select',
 			'multiple' => true,
 			'select2'  => true,
-			'priority' => 1,
+			'priority' => 99,
 			'options'  => array(
 				'add_new' => __( 'Add New Cookie', 'popup-maker' ),
 			),
 		) );
 	}
-
 
 	/**
 	 * Returns an array of section labels for all triggers.

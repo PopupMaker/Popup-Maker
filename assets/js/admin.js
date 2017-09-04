@@ -6763,7 +6763,7 @@ var PUMCookies;
         })
         .on('click', '.field.cookiekey button.reset', PUMCookies.resetCookieKey)
         .on('click', '.cookie-editor .pum-form .field.checkbox.session', PUMCookies.updateSessionsCheckbox)
-        .on('click', '#pum_popup_cookies .add-new', function () {
+        .on('click', '#pum_popup_cookies .pum-add-new', function () {
             var template = wp.template('pum-cookie-add-event');
             PUM_Admin.modals.reload('#pum_cookie_add_event_modal', template());
         })
@@ -6864,16 +6864,20 @@ var PUMCookies;
 
             $('#pum_popup_cookie_fields').addClass('has-cookies');
 
-            if (PUMTriggers.new_cookie !== false && PUMTriggers.new_cookie >= 0) {
-                $trigger = $('#pum_popup_triggers_list tbody tr').eq(PUMTriggers.new_cookie).find('.popup_triggers_field_settings:first');
+            if (PUM_Admin.triggers.new_cookie !== false && PUM_Admin.triggers.new_cookie >= 0) {
+                $trigger = $('.pum-field-triggers tbody tr').eq(PUM_Admin.triggers.new_cookie).find('.popup_triggers_field_settings:first');
                 trigger_settings = JSON.parse($trigger.val());
 
-                trigger_settings.cookie_name[trigger_settings.cookie_name.indexOf('add_new')] = values.cookie_settings.name;
+                if (typeof trigger_settings.cookie_name === 'string') {
+                    trigger_settings.cookie_name = trigger_settings.cookie_name.replace('add_new', values.cookie_settings.name);
+                } else {
+                    trigger_settings.cookie_name[trigger_settings.cookie_name.indexOf('add_new')] = values.cookie_settings.name;
+                }
 
                 $trigger.val(JSON.stringify(trigger_settings));
 
-                PUMTriggers.new_cookie = false;
-                PUMTriggers.refreshDescriptions();
+                PUM_Admin.triggers.new_cookie = false;
+                PUM_Admin.triggers.refreshDescriptions();
             }
         })
         .ready(function () {
@@ -7288,6 +7292,8 @@ var PUMCookies;
                         matched = required.indexOf(value) !== -1;
                     } else if ($wrapper.hasClass('pum-field-checkbox')) {
                         matched = required === $field.is(':checked');
+                    } else {
+                        matched = Array.isArray(required) ? required.indexOf(value) !== -1 : required == value;
                     }
 
                     if (matched) {
@@ -7353,35 +7359,37 @@ var PUMCookies;
         },
         render: function (args, values, $container) {
             var form,
-                maintabs          = {},
-                subtabs           = {},
                 sections          = {},
                 section           = [],
                 form_fields       = {},
-                data              = $.extend({
+                data              = $.extend(true, {
                     id: "",
                     tabs: {},
                     sections: {},
-                    fields: {}
+                    fields: {},
+                    maintabs: {},
+                    subtabs: {}
                 }, args),
-                container_classes = ['pum-dynamic-form'];
-
-            values = values || {};
-
-            if (Object.keys(data.tabs).length && Object.keys(data.sections).length) {
-                container_classes.push('tabbed-content');
-
-                maintabs = {
+                maintabs          = $.extend({
                     id: data.id,
-                    classes: '',
+                    classes: [],
                     tabs: {},
                     vertical: true,
                     form: true,
                     meta: {
                         'data-min-height': 250
                     }
-                };
+                }, data.maintabs),
+                subtabs           = $.extend({
+                    classes: ['link-tabs', 'sub-tabs'],
+                    tabs: {}
+                }, data.subtabs),
+                container_classes = ['pum-dynamic-form'];
 
+            values = values || {};
+
+            if (Object.keys(data.tabs).length && Object.keys(data.sections).length) {
+                container_classes.push('tabbed-content');
 
                 // Loop Tabs
                 _.each(data.fields, function (subTabs, tabID) {
@@ -7400,11 +7408,10 @@ var PUMCookies;
                     }
 
                     // Define the sub tabs model.
-                    subtabs = {
+                    subtabs = $.extend(subtabs, {
                         id: data.id + '-' + tabID + '-subtabs',
-                        classes: ['link-tabs', 'sub-tabs'],
                         tabs: {}
-                    };
+                    });
 
                     // Loop Tab Sections
                     _.each(subTabs, function (subTabFields, subTabID) {
@@ -7461,17 +7468,6 @@ var PUMCookies;
             }
             else if (Object.keys(data.tabs).length) {
                 container_classes.push('tabbed-content');
-
-                maintabs = {
-                    id: data.id,
-                    classes: '',
-                    tabs: {},
-                    vertical: true,
-                    form: true,
-                    meta: {
-                        'data-min-height': 250
-                    }
-                };
 
                 // Loop Tabs
                 _.each(data.fields, function (tabFields, tabID) {
@@ -8538,7 +8534,7 @@ var PUMSelect2Fields;
                 var options = [],
                     data    = $.extend(true, {}, PUM_Admin.models.field(args));
 
-                if (!data.value && args.std !== undefined) {
+                if (data.value === null && args.std !== undefined) {
                     data.value = args.std;
                 }
 
@@ -8580,7 +8576,7 @@ var PUMSelect2Fields;
                             if (typeof label !== 'object') {
 
                                 if (data.value !== null) {
-                                    if (data.multiple && ((typeof data.value === 'object' && data.value[value] !== undefined) || (typeof data.value === 'array' && data.value.indexOf(value) !== false))) {
+                                    if (data.multiple && ((typeof data.value === 'string' && data.value == value) || (typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1))) {
                                         selected = 'selected';
                                     } else if (!data.multiple && data.value == value) {
                                         selected = 'selected';
@@ -8607,12 +8603,13 @@ var PUMSelect2Fields;
                                 _.each(label, function (label, value) {
                                     var selected = false;
 
-                                    if (data.multiple && ((typeof data.value === 'object' && data.value[value] !== undefined) || (typeof data.value === 'array' && data.value.indexOf(value) !== false))) {
-                                        selected = 'selected';
-                                    } else if (!data.multiple && data.value == value) {
-                                        selected = 'selected';
+                                    if (data.value !== null) {
+                                        if (data.multiple && ((typeof data.value === 'string' && data.value == value) || (typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1))) {
+                                            selected = 'selected';
+                                        } else if (!data.multiple && data.value == value) {
+                                            selected = 'selected';
+                                        }
                                     }
-
                                     optgroup_options.push(
                                         PUM_Admin.templates.prepareMeta({
                                             label: label,
@@ -8768,6 +8765,23 @@ var PUMSelect2Fields;
                         data.units = options;
                     }
                     break;
+                case 'license_key':
+
+                    data.value = $.extend({
+                        key: '',
+                        license: {},
+                        messages: [],
+                        status: 'empty',
+                        expires: false,
+                        classes: false
+                    }, data.value);
+
+                    data.classes.push('ahoy-license-' + data.value.status + '-notice');
+
+                    if (data.value.classes) {
+                        data.classes.push(data.value.classes);
+                    }
+                    break;
                 }
 
                 return data;
@@ -8819,7 +8833,6 @@ var PUMSelect2Fields;
     window.PUM_Admin = window.PUM_Admin || {};
     window.PUM_Admin.templates = templates;
 }(jQuery));
-var PUMTriggers;
 (function ($, document, undefined) {
     "use strict";
 
@@ -8865,8 +8878,6 @@ var PUMTriggers;
             return trigger;
         },
         parseValues: function (values, type) {
-
-
             return values;
         },
         select_list: function () {
@@ -8886,6 +8897,7 @@ var PUMTriggers;
                     data     = {
                         index: trigger.index !== null && trigger.index >= 0 ? trigger.index : $editor.find('table.list-table tbody tr').length,
                         type: trigger.type,
+                        name: $editor.data('field_name'),
                         settings: trigger.settings || {}
                     },
                     $row     = $editor.find('tbody tr').eq(data.index),
@@ -8921,22 +8933,34 @@ var PUMTriggers;
             form: function (type, values, callback) {
                 var trigger  = triggers.get_trigger(type),
                     modalID  = '#pum_trigger_settings',
-                    firstTab = Object.keys(trigger.fields)[0];
+                    firstTab = Object.keys(trigger.fields)[0],
+                    $cookies = $('#pum_popup_cookies_list tbody tr');
 
                 values = values || {};
                 values.type = type;
-                values.index = values.index || null;
+                values.index = values.index >= 0 ? values.index : null;
 
                 // Add hidden index & type fields.
                 trigger.fields[firstTab] = $.extend(true, trigger.fields[firstTab], {
                     index: {
                         type: 'hidden',
-                        name: 'index',
-                        std: null
+                        name: 'index'
                     },
                     type: {
                         type: 'hidden',
                         name: 'type'
+                    }
+                });
+
+                if (!$cookies.length && type !== 'click_open') {
+                    PUMCookies.insertDefault();
+                    $cookies = $('#pum_popup_cookies_list tbody tr');
+                }
+
+                $cookies.each(function () {
+                    var settings = JSON.parse($(this).find('.popup_cookies_field_settings:first').val());
+                    if (typeof trigger.fields[firstTab].cookie_name.options[settings.name] === 'undefined') {
+                        trigger.fields[firstTab].cookie_name.options[settings.name] = settings.name;
                     }
                 });
 
@@ -8956,12 +8980,11 @@ var PUMTriggers;
                     event.preventDefault();
                     PUM_Admin.modals.closeAll();
                 });
-
-                PUMTriggers.initEditForm(values);
             },
             editor: function (args) {
                 var data = $.extend(true, {}, {
-                    triggers: []
+                    triggers: [],
+                    name: ''
                 }, args);
 
                 data.triggers = PUM_Admin.utils.object_to_array(data.triggers);
@@ -8972,6 +8995,7 @@ var PUMTriggers;
                 var data = $.extend(true, {}, {
                     index: '',
                     type: '',
+                    name: '',
                     settings: {
                         cookie_name: ""
                     }
@@ -9014,37 +9038,25 @@ var PUMTriggers;
             return trigger.name;
         },
         getSettingsDesc: function (type, values) {
-            var trigger = triggers.get_trigger(type),
-                options = {
-                    evaluate: /<#([\s\S]+?)#>/g,
-                    interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
-                    escape: /\{\{([^\}]+?)\}\}(?!\})/g,
-                    variable: 'data'
-                },
-                template;
+            var trigger = triggers.get_trigger(type);
 
             if (!trigger) {
                 return false;
             }
 
-            template = _.template(trigger.settings_column, null, options);
-            //values.I10n = I10n;
-            return template(values);
+            return PUM_Admin.templates.renderInline(trigger.settings_column, values);
         },
         renumber: function () {
             $('.pum-popup-trigger-editor table.list-table tbody tr').each(function () {
-                var $this         = $(this),
-                    index         = $this.parent().children().index($this),
-                    originalIndex = $this.data('index');
+                var $this = $(this),
+                    index = $this.parent().children().index($this);
 
-                $this.data('index', index);
+                $this.attr('data-index', index).data('index', index);
 
-                // TODO use :input or [name].
-                $this.find('input').each(function () {
-                    // TODO replace this with the newer method in conditions.renumber
-
-                    var replace_with = "[" + index + "]";
-                    this.name = this.name.replace("[" + originalIndex + "]", replace_with).replace("[]", replace_with);
+                $this.find(':input, [name]').each(function () {
+                    if (this.name && this.name !== '') {
+                        this.name = this.name.replace(/\[\d*?\]/, "[" + index + "]");
+                    }
                 });
             });
         },
@@ -9080,7 +9092,6 @@ var PUMTriggers;
 
             template = PUM_Admin.templates.render('pum-click-selector-presets');
             $presets = $field.parents('.pum-field').find('.pum-click-selector-presets');
-
 
             if (!$presets.length) {
                 $field.before(template);
@@ -9125,6 +9136,7 @@ var PUMTriggers;
     $(document)
         .on('pum_init', function () {
             PUM_Admin.triggers.append_click_selector_presets();
+            PUM_Admin.triggers.refreshDescriptions();
         })
         .on('click', '.pum-click-selector-presets > span', PUM_Admin.triggers.toggle_click_selector_presets)
         .on('click', '.pum-click-selector-presets li', PUM_Admin.triggers.insert_click_selector_preset)
@@ -9133,7 +9145,6 @@ var PUMTriggers;
             var $this   = $(this),
                 $editor = $this.parents('.pum-popup-trigger-editor'),
                 type    = $this.val(),
-                trigger = triggers.get_trigger(type),
                 values  = {};
 
             if (type !== 'click_open') {
@@ -9160,7 +9171,9 @@ var PUMTriggers;
 
                 PUM_Admin.modals.closeAll();
 
-                if (values.trigger_settings.cookie_name !== undefined && values.trigger_settings.cookie_name.indexOf('add_new') >= 0) {
+
+                // TODO Fix this
+                if (values.trigger_settings.cookie_name !== undefined && values.trigger_settings.cookie_name !== null && (values.trigger_settings.cookie_name === 'add_new' || values.trigger_settings.cookie_name.indexOf('add_new') >= 0)) {
                     PUM_Admin.triggers.new_cookie = values.index;
                     $('#pum_popup_cookie_fields button.pum-add-new').trigger('click');
                 }
@@ -9175,6 +9188,57 @@ var PUMTriggers;
             current_editor = $(this).parents('.pum-popup-trigger-editor');
             var template = wp.template('pum-trigger-add-type');
             PUM_Admin.modals.reload('#pum_trigger_add_type_modal', template({I10n: I10n}));
+        })
+        .on('click', '.pum-popup-trigger-editor .edit', function (event) {
+            var $this   = $(this),
+                $editor = $this.parents('.pum-popup-trigger-editor'),
+                $row    = $this.parents('tr:first'),
+                type    = $row.find('.popup_triggers_field_type').val(),
+                values  = _.extend({}, JSON.parse($row.find('.popup_triggers_field_settings:first').val()), {
+                    index: $row.parent().children().index($row),
+                    type: type
+                });
+
+            event.preventDefault();
+
+            triggers.template.form(type, values, function (event) {
+                var $form  = $(this),
+                    type   = $form.find('input#type').val(),
+                    index  = $form.find('input#index').val(),
+                    values = $form.pumSerializeObject();
+
+                event.preventDefault();
+
+                if (!index || index < 0) {
+                    index = $editor.find('tbody tr').length;
+                }
+
+                triggers.rows.add($editor, {
+                    index: index,
+                    type: type,
+                    settings: values.trigger_settings
+                });
+
+                PUM_Admin.modals.closeAll();
+
+                // TODO Fix this
+                debugger;
+                if (values.trigger_settings.cookie_name !== undefined && values.trigger_settings.cookie_name.indexOf('add_new') >= 0) {
+                    PUM_Admin.triggers.new_cookie = values.index;
+                    $('#pum_popup_cookie_fields button.pum-add-new').trigger('click');
+                }
+
+            });
+        })
+        .on('click', '.pum-popup-trigger-editor .remove', function (event) {
+            var $this = $(this),
+                $row  = $this.parents('tr:first');
+
+            event.preventDefault();
+
+            if (window.confirm(I10n.confirm_delete_trigger)) {
+                triggers.rows.remove($row);
+            }
         })
         .on('submit', '#pum_trigger_add_type_modal .pum-form', function (event) {
             var $editor = current_editor,
@@ -9212,143 +9276,21 @@ var PUMTriggers;
                     $('#pum_popup_cookie_fields button.pum-add-new').trigger('click');
                 }
             });
-        })
-
-
-    ;
-
-    PUMTriggers = {
-        initEditForm: function (data) {
-            var $form            = $('.trigger-editor .pum-form'),
-                type             = $form.find('input#type').val(),
-                trigger          = triggers.get_trigger(type),
-                $cookie          = $('#name', $form),
-                trigger_settings = data.trigger_settings,
-                $cookies         = $('#pum_popup_cookies_list tbody tr');
-
-            if (!trigger) {
-                return;
-            }
-
-            if (!$cookies.length && type !== 'click_open') {
-                PUMCookies.insertDefault();
-                $cookies = $('#pum_popup_cookies_list tbody tr');
-            }
-
-            $cookies.each(function () {
-                var settings = JSON.parse($(this).find('.popup_cookies_field_settings:first').val());
-                if (!$cookie.find('option[value="' + settings.name + '"]').length) {
-                    $('<option value="' + settings.name + '">' + settings.name + '</option>').appendTo($cookie);
-                }
-            });
-
-            $cookie
-                .val(trigger_settings.cookie_name)
-                .trigger('change.pumselect2');
-        }
-
-    };
-
-    $(document)
-        .on('click', '#pum_popup_triggers_list .edit', function (e) {
-
-            var $this    = $(this),
-                $row     = $this.parents('tr:first'),
-                type     = $row.find('.popup_triggers_field_type').val(),
-                id       = 'pum-trigger-settings-' + type,
-                modalID  = '#' + id.replace(/-/g, '_'),
-                template = wp.template(id),
-                data     = {
-                    index: $row.parent().children().index($row),
-                    type: type,
-                    trigger_settings: JSON.parse($row.find('.popup_triggers_field_settings:first').val())
-                };
-
-            e.preventDefault();
-
-            data.save_button_text = I10n.save;
-
-            if (!template.length) {
-                alert('Something went wrong. Please refresh and try again.');
-            }
-
-            PUM_Admin.modals.reload(modalID, template(data));
-            PUM_Admin.triggers.initEditForm(data);
-        })
-        .on('click', '#pum_popup_triggers_list .remove', function (e) {
-            var $this = $(this),
-                $row  = $this.parents('tr:first');
-
-            e.preventDefault();
-
-            if (window.confirm(I10n.confirm_delete_trigger)) {
-                $row.remove();
-
-                if (!$('#pum_popup_triggers_list tbody tr').length) {
-                    $('#pum-first-trigger')
-                        .val(null)
-                        .trigger('change');
-                    $('#pum_popup_trigger_fields').removeClass('has-list-items');
-                }
-
-                PUM_Admin.triggers.renumber();
-            }
-        })
-        .on('submit', '.trigger-editor .pum-form', function (e) {
-            var $form    = $(this),
-                type     = $form.find('input.type').val(),
-                values   = $form.pumSerializeObject(),
-                index    = parseInt(values.index),
-                $row     = index >= 0 ? $('#pum_popup_triggers_list tbody tr').eq(index) : null,
-                template = wp.template('pum-trigger-row'),
-                $new_row;
-
-            e.preventDefault();
-
-            if (!index || index < 0) {
-                values.index = $('#pum_popup_triggers_list tbody tr').length;
-            }
-
-            values.I10n = I10n;
-
-            $new_row = template(values);
-
-            if (!$row) {
-                $('#pum_popup_triggers_list tbody').append($new_row);
-            } else {
-                $row.replaceWith($new_row);
-            }
-
-            PUM_Admin.modals.closeAll();
-            PUM_Admin.triggers.renumber();
-            PUM_Admin.triggers.refreshDescriptions();
-
-            $('#pum_popup_trigger_fields').addClass('has-list-items');
-
-            if (values.trigger_settings.cookie_name !== null && values.trigger_settings.cookie_name.indexOf('add_new') >= 0) {
-                PUM_Admin.triggers.new_cookie = values.index;
-                $('#pum_popup_cookie_fields button.pum-add-new').trigger('click');
-            }
-        })
-        .ready(function () {
-            PUM_Admin.triggers.refreshDescriptions();
-            $('#pum-first-trigger')
-                .val(null)
-                .trigger('change');
         });
 
 }(jQuery, document));
+
 (function ($) {
     "use strict";
 
-    String.prototype.capitalize = function() {
+    String.prototype.capitalize = function () {
         return this.charAt(0).toUpperCase() + this.slice(1);
     };
 
-    var root = this,
+    var root       = this,
         inputTypes = 'color,date,datetime,datetime-local,email,hidden,month,number,password,range,search,tel,text,time,url,week'.split(','),
         inputNodes = 'select,textarea'.split(','),
-        rName = /\[([^\]]*)\]/g;
+        rName      = /\[([^\]]*)\]/g;
 
     // ugly hack for IE7-8
     function isInArray(array, needle) {
@@ -9455,9 +9397,9 @@ var PUMTriggers;
             }
 
             hex = hex.replace('#', '');
-            var r = parseInt(hex.substring(0, 2), 16),
-                g = parseInt(hex.substring(2, 4), 16),
-                b = parseInt(hex.substring(4, 6), 16),
+            var r      = parseInt(hex.substring(0, 2), 16),
+                g      = parseInt(hex.substring(2, 4), 16),
+                b      = parseInt(hex.substring(4, 6), 16),
                 result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity / 100 + ')';
             return result;
         },
@@ -9473,7 +9415,7 @@ var PUMTriggers;
         },
         throttle: function (callback, threshold) {
             var suppress = false,
-                clear = function () {
+                clear    = function () {
                     suppress = false;
                 };
             return function () {
@@ -9487,7 +9429,7 @@ var PUMTriggers;
         serializeForm: function (options) {
             $.extend({}, options);
 
-            var values = {},
+            var values   = {},
                 settings = $.extend(true, {
                     include: [],
                     exclude: [],

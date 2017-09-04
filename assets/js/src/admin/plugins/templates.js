@@ -90,7 +90,7 @@
                 var options = [],
                     data    = $.extend(true, {}, PUM_Admin.models.field(args));
 
-                if (!data.value && args.std !== undefined) {
+                if (data.value === null && args.std !== undefined) {
                     data.value = args.std;
                 }
 
@@ -132,7 +132,7 @@
                             if (typeof label !== 'object') {
 
                                 if (data.value !== null) {
-                                    if (data.multiple && ((typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1))) {
+                                    if (data.multiple && ((typeof data.value === 'string' && data.value == value) || (typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1))) {
                                         selected = 'selected';
                                     } else if (!data.multiple && data.value == value) {
                                         selected = 'selected';
@@ -160,7 +160,7 @@
                                     var selected = false;
 
                                     if (data.value !== null) {
-                                        if (data.multiple && ((typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1))) {
+                                        if (data.multiple && ((typeof data.value === 'string' && data.value == value) || (typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1))) {
                                             selected = 'selected';
                                         } else if (!data.multiple && data.value == value) {
                                             selected = 'selected';

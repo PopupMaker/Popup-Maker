@@ -50,7 +50,7 @@ class PUM_Popup_Cookies_Metabox {
 		?>
 	<div id="pum_popup_cookie_fields" class="popmake_meta_table_wrap <?php echo $has_cookies ? 'has-cookies' : ''; ?>">
 
-		<button type="button" class="button button-primary add-new no-button"><?php _e( 'Add New Cookie', 'popup-maker' ); ?></button>
+		<button type="button" class="button button-primary pum-add-new no-button"><?php _e( 'Add New Cookie', 'popup-maker' ); ?></button>
 
 		<p>
 			<strong>

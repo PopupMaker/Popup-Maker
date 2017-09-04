@@ -116,7 +116,7 @@ var PUMCookies;
         })
         .on('click', '.field.cookiekey button.reset', PUMCookies.resetCookieKey)
         .on('click', '.cookie-editor .pum-form .field.checkbox.session', PUMCookies.updateSessionsCheckbox)
-        .on('click', '#pum_popup_cookies .add-new', function () {
+        .on('click', '#pum_popup_cookies .pum-add-new', function () {
             var template = wp.template('pum-cookie-add-event');
             PUM_Admin.modals.reload('#pum_cookie_add_event_modal', template());
         })
@@ -217,16 +217,20 @@ var PUMCookies;
 
             $('#pum_popup_cookie_fields').addClass('has-cookies');
 
-            if (PUMTriggers.new_cookie !== false && PUMTriggers.new_cookie >= 0) {
-                $trigger = $('#pum_popup_triggers_list tbody tr').eq(PUMTriggers.new_cookie).find('.popup_triggers_field_settings:first');
+            if (PUM_Admin.triggers.new_cookie !== false && PUM_Admin.triggers.new_cookie >= 0) {
+                $trigger = $('.pum-field-triggers tbody tr').eq(PUM_Admin.triggers.new_cookie).find('.popup_triggers_field_settings:first');
                 trigger_settings = JSON.parse($trigger.val());
 
-                trigger_settings.cookie_name[trigger_settings.cookie_name.indexOf('add_new')] = values.cookie_settings.name;
+                if (typeof trigger_settings.cookie_name === 'string') {
+                    trigger_settings.cookie_name = trigger_settings.cookie_name.replace('add_new', values.cookie_settings.name);
+                } else {
+                    trigger_settings.cookie_name[trigger_settings.cookie_name.indexOf('add_new')] = values.cookie_settings.name;
+                }
 
                 $trigger.val(JSON.stringify(trigger_settings));
 
-                PUMTriggers.new_cookie = false;
-                PUMTriggers.refreshDescriptions();
+                PUM_Admin.triggers.new_cookie = false;
+                PUM_Admin.triggers.refreshDescriptions();
             }
         })
         .ready(function () {
