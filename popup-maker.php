@@ -31,14 +31,14 @@ function pum_autoloader( $class ) {
 	$pum_autoloaders = apply_filters( 'pum_autoloaders', array(
 		array(
 			'prefix' => 'PUM_',
-			'dir'    => __DIR__ . '/classes/',
+			'dir'    => dirname( __FILE__ ) . '/classes/',
 		),
 	) );
 
 	foreach ( $pum_autoloaders as $autoloader ) {
 		$autoloader = wp_parse_args( array(
 			'prefix'  => 'PUM_',
-			'dir'     => __DIR__ . '/classes/',
+			'dir'     => dirname( __FILE__ ) . '/classes/',
 			'search'  => '_',
 			'replace' => '/',
 		), $autoloader );
