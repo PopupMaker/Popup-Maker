@@ -31,10 +31,6 @@ function pum_get_popup_cookies( $popup_id = null ) {
 	return pum_popup( $popup_id )->get_cookies();
 }
 
-function pum_get_popup_conditions( $popup_id = null ) {
-	return pum_popup( $popup_id )->get_conditions();
-}
-
 function pum_is_popup_loadable( $popup_id = null ) {
 	return pum_popup( $popup_id )->is_loadable();
 }

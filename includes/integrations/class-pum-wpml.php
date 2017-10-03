@@ -212,7 +212,9 @@ class PUM_WPML_Integration {
 	public static function popup_get_conditions( $conditions, $post_id ) {
 		if ( self::is_new_popup_translation( $post_id ) ) {
 			remove_filter( 'pum_popup_get_conditions', array( __CLASS__, 'popup_get_conditions' ), 10 );
-			$conditions = pum_get_popup_conditions( self::source_id( $post_id ) );
+
+			$popup = pum_popup(  self::source_id( $post_id ) );
+			$conditions = $popup->get_conditions();
 
 			$conditions = self::remap_conditions( $conditions, $post_id );
 
