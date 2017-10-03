@@ -63,35 +63,6 @@ function popmake_popup_close_defaults( $defaults = array() ) {
 }
 
 
-add_filter( 'popmake_popup_click_open_defaults', 'popmake_popup_click_open_defaults', 0 );
-function popmake_popup_click_open_defaults( $defaults = array() ) {
-	return array_merge( $defaults, array(
-		'extra_selectors' => '',
-	) );
-}
-
-
-add_filter( 'popmake_popup_auto_open_defaults', 'popmake_popup_auto_open_defaults' );
-function popmake_popup_auto_open_defaults( $defaults = array() ) {
-	return array_merge( $defaults, array(
-		'enabled'        => null,
-		'delay'          => 500,
-		'cookie_trigger' => 'close',
-		'session_cookie' => false,
-		'cookie_time'    => '1 month',
-		'cookie_path'    => '/',
-		'cookie_key'     => '',
-	) );
-}
-
-
-add_filter( 'popmake_popup_admin_debug_defaults', 'popmake_popup_admin_debug_defaults' );
-function popmake_popup_admin_debug_defaults( $defaults = array() ) {
-	return array_merge( $defaults, array(
-		'enabled' => null,
-	) );
-}
-
 
 add_filter( 'popmake_popup_theme_overlay_defaults', 'popmake_popup_theme_overlay_defaults', 0 );
 function popmake_popup_theme_overlay_defaults( $defaults = array() ) {
