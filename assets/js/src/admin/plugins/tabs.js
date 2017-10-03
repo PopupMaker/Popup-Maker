@@ -3,9 +3,9 @@
     var tabs = {
         init: function () {
             $('.pum-tabs-container').filter(':not(.pum-tabs-initialized)').each(function () {
-                var $this          = $(this).addClass('pum-tabs-initialized'),
-                    $tabList       = $this.find('> ul.tabs'),
-                    $firstTab      = $tabList.find('> li:first'),
+                var $this = $(this).addClass('pum-tabs-initialized'),
+                    $tabList = $this.find('> ul.tabs'),
+                    $firstTab = $tabList.find('> li:first'),
                     forceMinHeight = $this.data('min-height');
 
                 if ($this.hasClass('vertical-tabs')) {
@@ -35,11 +35,11 @@
     $(document)
         .on('pum_init', PUM_Admin.tabs.init)
         .on('click', '.pum-tabs-initialized li.tab', function (e) {
-            var $this         = $(this),
-                $container    = $this.parents('.pum-tabs-container:first'),
-                $tabs         = $container.find('> ul.tabs > li.tab'),
+            var $this = $(this),
+                $container = $this.parents('.pum-tabs-container:first'),
+                $tabs = $container.find('> ul.tabs > li.tab'),
                 $tab_contents = $container.find('> div.tab-content'),
-                link          = $this.find('a').attr('href');
+                link = $this.find('a').attr('href');
 
             $tabs.removeClass('active');
             $tab_contents.removeClass('active');
