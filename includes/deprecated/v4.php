@@ -434,7 +434,7 @@ function popmake_popup_auto_open_meta_box_field_delay( $popup_id ) { ?>
 		       value="<?php esc_attr_e( popmake_get_popup_auto_open( $popup_id, 'delay' ) ) ?>"
 		       name="popup_auto_open_delay"
 		       id="popup_auto_open_delay"
-		       class="pum-range-manual"
+		       class="pum-range-manual popmake-range-manual"
 		       step="<?php esc_attr_e( apply_filters( 'popmake_popup_auto_open_delay_step', 500 ) ); ?>"
 		       min="<?php esc_attr_e( apply_filters( 'popmake_popup_auto_open_delay_min', 0 ) ); ?>"
 		       max="<?php esc_attr_e( apply_filters( 'popmake_popup_auto_open_delay_max', 10000 ) ); ?>"

@@ -165,7 +165,7 @@ class PUM_Admin_Templates {
 		</script>
 
 		<script type="text/html" id="tmpl-pum-field-rangeslider">
-			<input type="text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" class="pum-range-manual" {{{data.meta}}} />
+			<input type="text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" class="pum-range-manual popmake-range-manual" {{{data.meta}}} />
 			<span class="pum-range-value-unit regular-text">{{data.unit}}</span>
 		</script>
 

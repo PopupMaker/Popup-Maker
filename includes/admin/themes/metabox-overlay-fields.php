@@ -29,7 +29,7 @@ function popmake_popup_theme_overlay_meta_box_field_background( $popup_theme_id 
 				value="<?php esc_attr_e(popmake_get_popup_theme_overlay( $popup_theme_id, 'background_opacity' ))?>"
 				name="popup_theme_overlay_background_opacity"
 				id="popup_theme_overlay_background_opacity"
-				class="pum-range-manual"
+				class="pum-range-manual popmake-range-manual"
 				step="1"
 				min="0"
 				max="100"
