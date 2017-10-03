@@ -123,6 +123,25 @@ class PUM_Cache {
 	}
 
 	/**
+	 * @param string $group
+	 *
+	 * @return bool
+	 */
+	public static function delete_group( $group = '' ) {
+		if ( ! static::enabled() ) {
+			return true;
+		}
+
+		if ( ! function_exists( 'wp_cache_delete_group' ) ) {
+			return false;
+		}
+
+		return wp_cache_delete_group( static::prefix_( $group ) );
+	}
+
+
+
+	/**
 	 * @param $key
 	 * @param int $offset
 	 * @param string $group

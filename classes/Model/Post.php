@@ -254,6 +254,11 @@ abstract class PUM_Model_Post {
 		pum_cache_delete( $this->ID, $cache_group );
 	}
 
+	public static function clear_cache() {
+		$cache_group = self::get_cache_group();
+		pum_cache_delete_group( $cache_group );
+	}
+
 	/**
 	 * Get an array of new instances of this class (or an extension class) by meta_key value or values
 	 *
@@ -423,8 +428,11 @@ abstract class PUM_Model_Post {
 	 * @return mixed|false
 	 */
 	public function get_meta( $key, $single = true, $force = false ) {
-		if ( ( $value = $this->remapped_meta( $key ) ) ) {
-			return $value;
+		/**
+		 * Checks for remapped meta values. This allows easily adding compatibility layers in the object meta.
+		 */
+		if ( ( $remapped_value = $this->remapped_meta( $key ) ) ) {
+			return $remapped_value;
 		}
 
 		if ( ! isset ( $this->meta[ $key ] ) || $force ) {

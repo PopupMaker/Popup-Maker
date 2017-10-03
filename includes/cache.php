@@ -73,6 +73,17 @@ function pum_cache_delete( $key, $group = '' ) {
 }
 
 /**
+ * Delete a cache group via PUM Cache.
+ *
+ * @param string $group
+ *
+ * @return bool
+ */
+function pum_cache_delete_group( $group = '' ) {
+	return PUM_Cache::delete_group( $group );
+}
+
+/**
  * Increase a numeric cache value by the offset.
  *
  * @param $key
