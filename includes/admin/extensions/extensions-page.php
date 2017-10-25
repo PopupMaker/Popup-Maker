@@ -71,7 +71,7 @@ function popmake_extensions_page() { ?>
 					foreach ( $extensions as $extension ) : ?>
 						<li class="available-extension-inner <?php esc_attr_e( $extension['slug'] ); ?>">
 							<h3>
-								<a target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=extension-title-<?php echo $i; ?>&utm_campaign=Upsell&utm_content=<?php esc_attr_e( str_replace( ' ', '+', $extension['name'] ) ); ?>">
+								<a target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=extension-title-<?php echo $i; ?>&utm_campaign=Upsell&utm_content=<?php esc_attr_e( urlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>">
 									<?php esc_html_e( $extension['name'] ) ?>
 								</a>
 							</h3>
@@ -131,7 +131,7 @@ function popmake_extensions_page() { ?>
 							?>
 
 							<span class="action-links">
-			                    <a class="button" target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=extension-button-<?php echo $i; ?>&utm_campaign=Upsell&utm_content=<?php esc_attr_e( str_replace( ' ', '+', $extension['name'] ) ); ?>"><?php _e( 'Get this Extension', 'popup-maker' ); ?></a>
+			                    <a class="button" target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=extension-button-<?php echo $i; ?>&utm_campaign=Upsell&utm_content=<?php esc_attr_e( urlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>"><?php _e( 'Get this Extension', 'popup-maker' ); ?></a>
 			                </span>
 						</li>
 						<?php
