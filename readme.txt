@@ -21,7 +21,7 @@ Customize every facet of your popups, from theme and position, to targeting and 
 
 Easily create [EU cookie notices](https://ninjaforms.com/eu-cookie-notices-ninja-forms/), optin popups, slide-ins, modal forms & more.
 
-Learn tips and tricks, and create cool popups using guides found on our [Blog](https://wppopupmaker.com/blog/?utm_campaign=Reamde&utm_source=readme-description&utm_medium=text-link)!
+Learn tips and tricks, and create cool popups using guides found on our [Blog](https://wppopupmaker.com/blog/?utm_campaign=Readme&utm_source=readme-description&utm_medium=text-link)!
 
 https://www.youtube.com/watch?v=MAf85_oax4g
 
