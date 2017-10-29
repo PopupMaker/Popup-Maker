@@ -2,7 +2,6 @@
     "use strict";
 
     var I10n     = pum_admin_vars.I10n,
-        defaults = pum_admin_vars.defaults,
         current_editor;
 
     var triggers = {
@@ -25,7 +24,6 @@
                 trigger = this.parseFields(trigger);
             }
 
-
             return trigger;
         },
         parseFields: function (trigger) {
@@ -47,11 +45,11 @@
         },
         select_list: function () {
             var i,
-                conditions = PUM_Admin.utils.object_to_array(triggers.get_triggers()),
+                _triggers = PUM_Admin.utils.object_to_array(triggers.get_triggers()),
                 options    = {};
 
-            for (i = 0; i < conditions.length; i++) {
-                options[conditions[i].id] = conditions[i].name;
+            for (i = 0; i < _triggers.length; i++) {
+                options[_triggers[i].id] = _triggers[i].name;
             }
 
             return options;
