@@ -50,9 +50,6 @@ class PUM_Admin_Assets {
 
 			$admin_vars = apply_filters( 'pum_admin_vars', apply_filters( 'pum_admin_var', array(
 				'post_id'  => ! empty( $_GET['post'] ) ? intval( $_GET['post'] ) : null,
-				'defaults' => array(
-					'cookies'  => PUM_Cookies::instance()->get_defaults(),
-				),
 				'I10n'     => array(
 					'add'                             => __( 'Add', 'popup-maker' ),
 					'save'                            => __( 'Save', 'popup-maker' ),

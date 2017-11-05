@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Triggers {
 
 	/**
-	 * @var
+	 * @var PUM_Triggers
 	 */
 	public static $instance;
 
@@ -46,7 +46,6 @@ class PUM_Triggers {
 	 */
 	public function add_triggers( $triggers = array() ) {
 		foreach ( $triggers as $key => $trigger ) {
-
 			if ( empty( $trigger['id'] ) && ! is_numeric( $key ) ) {
 				$trigger['id'] = $key;
 			}

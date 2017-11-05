@@ -1,243 +1,402 @@
-var PUMCookies;
+var cookies;
 (function ($, document, undefined) {
     "use strict";
 
     var I10n = pum_admin_vars.I10n,
-        defaults = pum_admin_vars.defaults;
+        current_editor,
+        cookies = {
+            get_cookies: function () {
+                return window.pum_popup_settings_editor.cookies;
+            },
+            get_cookie: function (event) {
+                var cookies = this.get_cookies(),
+                    cookie = cookies[event] !== 'undefined' ? cookies[event] : false;
 
-    PUMCookies = {
-        getLabel: function (event) {
-            return I10n.labels.cookies[event].name;
-        },
-        getSettingsDesc: function (event, values) {
-            var options = {
-                    evaluate:    /<#([\s\S]+?)#>/g,
-                    interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
-                    escape:      /\{\{([^\}]+?)\}\}(?!\})/g,
-                    variable:    'data'
-                },
-                template = _.template(I10n.labels.cookies[event].settings_column, null, options);
-            values.I10n = I10n;
-            return template(values);
-        },
-        renumber: function () {
-            $('#pum_popup_cookies_list tbody tr').each(function () {
-                var $this = $(this),
-                    index = $this.parent().children().index($this),
-                    originalIndex = $this.data('index');
+                if (!cookie) {
+                    return false;
+                }
 
-                $this.data('index', index);
+                if (cookie && typeof cookie === 'object' && typeof cookie.fields === 'object' && Object.keys(cookie.fields).length) {
+                    cookie = this.parseFields(cookie);
+                }
 
-                $this.find('[name]').each(function () {
-                    var replace_with = "[" + index + "]";
-                    this.name = this.name.replace("[" + originalIndex + "]", replace_with).replace("[]", replace_with);
+                return cookie;
+            },
+            parseFields: function (cookie) {
+                _.each(cookie.fields, function (fields, tabID) {
+                    _.each(fields, function (field, fieldID) {
+                        cookie.fields[tabID][fieldID].name = 'cookie_settings[' + fieldID + ']';
+
+                        if (cookie.fields[tabID][fieldID].id === '') {
+                            cookie.fields[tabID][fieldID].id = 'cookie_settings_' + fieldID;
+                        }
+                    });
                 });
-            });
-        },
-        refreshDescriptions: function () {
-            $('#pum_popup_cookies_list tbody tr').each(function () {
-                var $row = $(this),
-                    event = $row.find('.popup_cookies_field_event').val(),
-                    values = JSON.parse($row.find('.popup_cookies_field_settings:first').val());
 
-                $row.find('td.settings-column').html(PUMCookies.getSettingsDesc(event, values));
-            });
-        },
-        initEditForm: function () {
-            PUMCookies.updateSessionsCheckbox();
-        },
-        updateSessionsCheckbox: function () {
-            var $parent = $('.cookie-editor .pum-form'),
-                sessions = $parent.find('.field.checkbox.session input[type="checkbox"]').is(':checked'),
-                $otherFields = $parent.find('.field').filter('.time');
+                return cookie;
+            },
+            parseValues: function (values, type) {
+                return values;
+            },
+            select_list: function () {
+                var i,
+                    _cookies = PUM_Admin.utils.object_to_array(cookies.get_cookies()),
+                    options = {};
 
-            if (sessions) {
-                $otherFields.hide();
-            } else {
-                $otherFields.show();
-            }
-        },
-        resetCookieKey: function () {
-            var $this = $(this),
-                newKey = (new Date().getTime()).toString(16);
+                for (i = 0; i < _cookies.length; i++) {
+                    options[_cookies[i].id] = _cookies[i].name;
+                }
 
-            $this.parents('.pum-form').find('.field.text.name').data('cookiekey', newKey);
-            $this.siblings('input[type="text"]:first').val(newKey);
-        },
-        insertDefault: function (name) {
-            var event = 'on_popup_close',
-                template = wp.template('pum-cookie-row'),
-                data = {
-                    event: event,
-                    cookie_settings: defaults.cookies[event] !== undefined ? defaults.cookies[event] : {},
-                    save_button_text: I10n.add,
-                    index: $('#pum_popup_cookies_list tbody tr').length,
-                    I10n: I10n
+                return options;
+            },
+            /**
+             * @deprecated
+             *
+             * @param event
+             */
+            getLabel: function (event) {
+                var cookie = cookies.get_cookie(event);
+
+                if (!cookie) {
+                    return false;
+                }
+
+                return cookie.name;
+            },
+            /**
+             * @param event
+             * @param values
+             */
+            getSettingsDesc: function (event, values) {
+                var cookie = cookies.get_cookie(event);
+
+                if (!cookie) {
+                    return false;
+                }
+
+                return PUM_Admin.templates.renderInline(cookie.settings_column, values);
+            },
+            /**
+             * Refresh all cookie row descriptions.
+             */
+            refreshDescriptions: function () {
+                $('.pum-popup-cookie-editor table.list-table tbody tr').each(function () {
+                    var $row = $(this),
+                        event = $row.find('.popup_cookies_field_event').val(),
+                        values = JSON.parse($row.find('.popup_cookies_field_settings:first').val());
+
+                    $row.find('td.settings-column').html(cookies.getSettingsDesc(event, values));
+                });
+            },
+            /**
+             * Insert a default cookie when needed.
+             *
+             * @param $editor
+             * @param name
+             */
+            insertDefault: function ($editor, name) {
+                cookies.rows.add($editor, {
+                    event: 'on_popup_close',
+                    settings: {
+                        name: name || 'pum-' + $('#post_ID').val()
+                    }
+                });
+            },
+            template: {
+                form: function (event, values, callback) {
+                    var cookie = cookies.get_cookie(event),
+                        modalID = 'pum_cookie_settings',
+                        firstTab = Object.keys(cookie.fields)[0];
+
+                    values = values || {};
+                    values.event = event;
+                    values.index = values.index >= 0 ? values.index : null;
+
+                    // Add hidden index & event fields.
+                    cookie.fields[firstTab] = $.extend(true, cookie.fields[firstTab], {
+                        index: {
+                            type: 'hidden',
+                            name: 'index'
+                        },
+                        event: {
+                            type: 'hidden',
+                            name: 'event'
+                        }
+                    });
+
+                    if (typeof values.key !== 'string' || values.key === '') {
+                        delete cookie.fields.advanced.key;
+                    }
+
+                    PUM_Admin.modals.reload('#' + modalID, PUM_Admin.templates.modal({
+                        id: modalID,
+                        title: cookie.modal_title || cookie.name,
+                        classes: 'tabbed-content',
+                        save_button: values.index !== null ? I10n.update : I10n.add,
+                        content: PUM_Admin.forms.render({
+                            id: 'pum_cookie_settings_form',
+                            tabs: cookie.tabs || {},
+                            fields: cookie.fields || {}
+                        }, values || {})
+                    }));
+
+                    $('#' + modalID + ' form').on('submit', callback || function (e) {
+                        e.preventDefault();
+                        PUM_Admin.modals.closeAll();
+                    });
                 },
-                $new_row;
+                editor: function (args) {
+                    var data = $.extend(true, {}, {
+                        cookies: [],
+                        name: ''
+                    }, args);
 
-            data.cookie_settings.name = name || 'pum-' + $('#post_ID').val();
+                    data.cookies = PUM_Admin.utils.object_to_array(data.cookies);
 
-            $new_row = template(data);
+                    return PUM_Admin.templates.render('pum-cookie-editor', data);
+                },
+                row: function (args) {
+                    var data = $.extend(true, {}, {
+                        index: '',
+                        event: '',
+                        name: '',
+                        settings: {
+                            name: "",
+                            key: "",
+                            session: false,
+                            time: '30 days',
+                            path: true
+                        }
+                    }, args);
 
-            $('#pum_popup_cookies_list tbody').append($new_row);
+                    return PUM_Admin.templates.render('pum-cookie-row', data);
+                },
+                selectbox: function (args) {
+                    var data = $.extend(true, {}, {
+                        id: null,
+                        name: null,
+                        type: 'select',
+                        group: '',
+                        index: '',
+                        value: null,
+                        select2: true,
+                        classes: [],
+                        options: cookies.select_list()
+                    }, args);
 
-            PUMCookies.renumber();
+                    if (data.id === null) {
+                        data.id = 'popup_settings_cookies_' + data.index + '_event';
+                    }
 
-            $('#pum_popup_cookie_fields').addClass('has-cookies');
+                    if (data.name === null) {
+                        data.name = 'popup_settings[cookies][' + data.index + '][event]';
+                    }
 
-        }
-    };
+                    return PUM_Admin.templates.field(data);
+                }
+            },
+            rows: {
+                add: function (editor, cookie) {
+                    var $editor = $(editor),
+                        data = {
+                            index: cookie.index !== null && cookie.index >= 0 ? cookie.index : $editor.find('table.list-table tbody tr').length,
+                            event: cookie.event,
+                            name: $editor.data('field_name'),
+                            settings: cookie.settings || {}
+                        },
+                        $row = $editor.find('tbody tr').eq(data.index),
+                        $new_row = PUM_Admin.templates.render('pum-cookie-row', data);
+
+                    if ($row.length) {
+                        $row.replaceWith($new_row);
+                    } else {
+                        $editor.find('tbody').append($new_row);
+                    }
+
+                    $editor.addClass('has-list-items');
+
+                    cookies.rows.renumber();
+                    cookies.refreshDescriptions();
+                },
+                /**
+                 * Remove a cookie editor table row.
+                 *
+                 * @param $cookie
+                 */
+                remove: function ($cookie) {
+                    var $editor = $cookie.parents('.pum-popup-cookie-editor');
+
+                    $cookie.remove();
+                    cookies.rows.renumber();
+
+                    if ($editor.find('table.list-table tbody tr').length === 0) {
+                        $editor.removeClass('has-list-items');
+
+                        $('#pum-first-cookie')
+                            .val(null)
+                            .trigger('change');
+                    }
+                },
+                /**
+                 * Renumber all rows for all editors.
+                 */
+                renumber: function () {
+                    $('.pum-popup-cookie-editor table.list-table tbody tr').each(function () {
+                        var $this = $(this),
+                            index = $this.parent().children().index($this);
+
+                        $this.attr('data-index', index).data('index', index);
+
+                        $this.find(':input, [name]').each(function () {
+                            if (this.name && this.name !== '') {
+                                this.name = this.name.replace(/\[\d*?\]/, "[" + index + "]");
+                            }
+                        });
+                    });
+                }
+            }
+        };
+
+    // Import this module.
+    window.PUM_Admin = window.PUM_Admin || {};
+    window.PUM_Admin.cookies = cookies;
 
     $(document)
+        .on('pum_init', function () {
+            cookies.refreshDescriptions();
+        })
         .on('select2:select pumselect2:select', '#pum-first-cookie', function () {
             var $this = $(this),
+                $editor = $this.parents('.pum-popup-cookie-editor'),
                 event = $this.val(),
-                id = 'pum-cookie-settings-' + event,
-                modalID = '#' + id.replace(/-/g,'_'),
-                template = wp.template(id),
-                data = {};
-
-            data.cookie_settings = defaults.cookies[event] !== undefined ? defaults.cookies[event] : {};
-            data.cookie_settings.name = 'pum-' + $('#post_ID').val();
-            data.save_button_text = I10n.add;
-            data.index = null;
-
-            if (!template.length) {
-                alert('Something went wrong. Please refresh and try again.');
-            }
-
-            PUM_Admin.modals.reload(modalID, template(data));
-            PUMCookies.initEditForm();
+                values = {
+                    name:  'pum-' + $('#post_ID').val()
+                };
 
             $this
                 .val(null)
                 .trigger('change');
+
+            cookies.template.form(event, values, function (e) {
+                var $form = $(this),
+                    event = $form.find('input#event').val(),
+                    index = $form.find('input#index').val(),
+                    values = $form.pumSerializeObject();
+
+                e.preventDefault();
+
+                if (!index || index < 0) {
+                    index = $editor.find('tbody tr').length;
+                }
+
+                cookies.rows.add($editor, {
+                    index: index,
+                    event: event,
+                    settings: values.cookie_settings
+                });
+
+                PUM_Admin.modals.closeAll();
+            });
         })
-        .on('click', '.field.cookiekey button.reset', PUMCookies.resetCookieKey)
-        .on('click', '.cookie-editor .pum-form .field.checkbox.session', PUMCookies.updateSessionsCheckbox)
-        .on('click', '#pum_popup_cookies .pum-add-new', function () {
+        .on('click', '.pum-popup-cookie-editor .pum-add-new', function () {
+            current_editor = $(this).parents('.pum-popup-cookie-editor');
             var template = wp.template('pum-cookie-add-event');
-            PUM_Admin.modals.reload('#pum_cookie_add_event_modal', template());
+            PUM_Admin.modals.reload('#pum_cookie_add_event_modal', template({I10n: I10n}));
         })
-        .on('click', '#pum_popup_cookies_list .edit', function (e) {
+        .on('click', '.pum-popup-cookie-editor .edit', function (e) {
             var $this = $(this),
+                $editor = $this.parents('.pum-popup-cookie-editor'),
                 $row = $this.parents('tr:first'),
                 event = $row.find('.popup_cookies_field_event').val(),
-                id = 'pum-cookie-settings-' + event,
-                modalID = '#' + id.replace(/-/g, '_'),
-                template = wp.template(id),
-                data = {
+                values = _.extend({}, JSON.parse($row.find('.popup_cookies_field_settings:first').val()), {
                     index: $row.parent().children().index($row),
-                    event: event,
-                    cookie_settings: JSON.parse($row.find('.popup_cookies_field_settings:first').val())
-                };
+                    event: event
+                });
 
             e.preventDefault();
 
-            data.save_button_text = I10n.save;
+            cookies.template.form(event, values, function (e) {
+                var $form = $(this),
+                    event = $form.find('input#event').val(),
+                    index = $form.find('input#index').val(),
+                    values = $form.pumSerializeObject();
 
-            if (!template.length) {
-                alert('Something went wrong. Please refresh and try again.');
-            }
+                e.preventDefault();
 
-            PUM_Admin.modals.reload(modalID, template(data));
-            PUMCookies.initEditForm();
+                if (!index || index < 0) {
+                    index = $editor.find('tbody tr').length;
+                }
+
+                cookies.rows.add($editor, {
+                    index: index,
+                    event: event,
+                    settings: values.cookie_settings
+                });
+
+                PUM_Admin.modals.closeAll();
+            });
         })
-        .on('click', '#pum_popup_cookies_list .remove', function (e) {
+        .on('click', '.pum-popup-cookie-editor .remove', function (e) {
             var $this = $(this),
                 $row = $this.parents('tr:first');
 
             e.preventDefault();
 
             if (window.confirm(I10n.confirm_delete_cookie)) {
-                $row.remove();
-
-                if (!$('#pum_popup_cookies_list tbody tr').length) {
-                    $('#pum-first-cookie')
-                        .val(null)
-                        .trigger('change');
-
-                    $('#pum_popup_cookie_fields').removeClass('has-cookies');
-                }
-
-                PUMCookies.renumber();
+                cookies.rows.remove($row);
             }
+        })
+        .on('click', '.pum-field-cookie_key button.reset', function (e) {
+            var $this = $(this),
+                newKey = (new Date().getTime()).toString(16);
+
+            $this.siblings('input[type="text"]:first').val(newKey);
         })
         .on('submit', '#pum_cookie_add_event_modal .pum-form', function (e) {
-            var event = $('#popup_cookie_add_event').val(),
-                id = 'pum-cookie-settings-' + event,
-                modalID = '#' + id.replace(/-/g,'_'),
-                template = wp.template(id),
-                data = {};
+            var $editor = current_editor,
+                event    = $('#popup_cookie_add_event').val(),
+                values  = {
+                    name: 'pum-' + $('#post_ID').val()
+                };
 
             e.preventDefault();
 
-            data.cookie_settings = defaults.cookies[event] !== undefined ? defaults.cookies[event] : {};
-            data.cookie_settings.name = 'pum-' + $('#post_ID').val();
-            data.save_button_text = I10n.add;
-            data.index = null;
+            cookies.template.form(event, values, function (e) {
+                var $form = $(this),
+                    event = $form.find('input#event').val(),
+                    index = $form.find('input#index').val(),
+                    values = $form.pumSerializeObject();
 
-            if (!template.length) {
-                alert('Something went wrong. Please refresh and try again.');
-            }
+                e.preventDefault();
 
-            PUM_Admin.modals.reload(modalID, template(data));
-            PUMCookies.initEditForm();
-        })
-        .on('submit', '.cookie-editor .pum-form', function (e) {
-            var $form = $(this),
-                event = $form.find('input.event').val(),
-                values = $form.pumSerializeObject(),
-                index = parseInt(values.index),
-                $row = index >= 0 ? $('#pum_popup_cookies_list tbody tr').eq(index) : null,
-                template = wp.template('pum-cookie-row'),
-                $new_row,
-                $trigger,
-                trigger_settings;
-
-            e.preventDefault();
-
-            if (!index || index < 0) {
-                values.index = $('#pum_popup_cookies_list tbody tr').length;
-            }
-
-            values.I10n = I10n;
-
-            $new_row = template(values);
-
-            if (!$row) {
-                $('#pum_popup_cookies_list tbody').append($new_row);
-            } else {
-                $row.replaceWith($new_row);
-            }
-
-            PUM_Admin.modals.closeAll();
-            PUMCookies.renumber();
-
-            $('#pum_popup_cookie_fields').addClass('has-cookies');
-
-            if (PUM_Admin.triggers.new_cookie !== false && PUM_Admin.triggers.new_cookie >= 0) {
-                $trigger = $('.pum-field-triggers tbody tr').eq(PUM_Admin.triggers.new_cookie).find('.popup_triggers_field_settings:first');
-                trigger_settings = JSON.parse($trigger.val());
-
-                if (typeof trigger_settings.cookie_name === 'string') {
-                    trigger_settings.cookie_name = trigger_settings.cookie_name.replace('add_new', values.cookie_settings.name);
-                } else {
-                    trigger_settings.cookie_name[trigger_settings.cookie_name.indexOf('add_new')] = values.cookie_settings.name;
+                if (!index || index < 0) {
+                    index = $editor.find('tbody tr').length;
                 }
 
-                $trigger.val(JSON.stringify(trigger_settings));
+                cookies.rows.add($editor, {
+                    index: index,
+                    event: event,
+                    settings: values.cookie_settings
+                });
 
-                PUM_Admin.triggers.new_cookie = false;
-                PUM_Admin.triggers.refreshDescriptions();
-            }
-        })
-        .ready(function () {
-            PUMCookies.refreshDescriptions();
-            $('#pum-first-cookie')
-                .val(null)
-                .trigger('change');
+                PUM_Admin.modals.closeAll();
+
+                if (typeof PUM_Admin.triggers !== 'undefined' && PUM_Admin.triggers.new_cookie !== false && PUM_Admin.triggers.new_cookie >= 0) {
+                    var $trigger = PUM_Admin.triggers.current_editor.find('tbody tr').eq(PUM_Admin.triggers.new_cookie).find('.popup_triggers_field_settings:first'),
+                        trigger_settings = JSON.parse($trigger.val());
+
+                    if (typeof trigger_settings.cookie_name === 'string') {
+                        trigger_settings.cookie_name = trigger_settings.cookie_name.replace('add_new', values.cookie_settings.name);
+                    } else {
+                        trigger_settings.cookie_name[trigger_settings.cookie_name.indexOf('add_new')] = values.cookie_settings.name;
+                    }
+
+                    $trigger.val(JSON.stringify(trigger_settings));
+
+                    PUM_Admin.triggers.new_cookie = false;
+                    PUM_Admin.triggers.refreshDescriptions();
+                }
+            });
         });
 
 }(jQuery, document));

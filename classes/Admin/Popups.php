@@ -104,6 +104,7 @@ class PUM_Admin_Popups {
 				'conditions'            => PUM_Conditions::instance()->get_conditions(),
 				'conditions_selectlist' => PUM_Conditions::instance()->dropdown_list(),
 				'triggers'              => PUM_Triggers::instance()->get_triggers(),
+				'cookies'               => PUM_Cookies::instance()->get_cookies(),
 				'current_values'        => self::parse_values( $settings ),
 			) ); ?>;
 		</script>
@@ -157,6 +158,7 @@ class PUM_Admin_Popups {
 		// Sanitize JSON values.
 		$settings['conditions'] = isset( $settings['conditions'] ) ? self::sanitize_meta( $settings['conditions'] ) : array();
 		$settings['triggers']   = isset( $settings['triggers'] ) ? self::sanitize_meta( $settings['triggers'] ) : array();
+		$settings['cookies']    = isset( $settings['cookies'] ) ? self::sanitize_meta( $settings['cookies'] ) : array();
 
 		$settings = apply_filters( 'pum_popup_setting_pre_save', $settings, $post->ID );
 
@@ -562,6 +564,11 @@ class PUM_Admin_Popups {
 							'std'      => array(),
 							'priority' => 10,
 						),
+						'cookies' => array(
+							'type'     => 'cookies',
+							'std'      => array(),
+							'priority' => 20,
+						),
 					),
 				) ),
 				'targeting' => apply_filters( 'pum_popup_targeting_settings_fields', array(
@@ -756,8 +763,6 @@ class PUM_Admin_Popups {
 	public static function is_section( $array = array() ) {
 		return ! self::is_field( $array );
 	}
-
-	#endregion Done
 
 	/**
 	 * Display analytics metabox

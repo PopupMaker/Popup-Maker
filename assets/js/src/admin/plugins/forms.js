@@ -270,8 +270,8 @@
 
                             // Push rendered fields into the subtab content.
                             subtabs.tabs[subTabID].content += PUM_Admin.templates.field(field);
-                        });
 
+                        });
                         // Remove any empty tabs.
                         if ("" === subtabs.tabs[subTabID].content) {
                             delete subtabs.tabs[subTabID];
@@ -423,8 +423,9 @@
         .on('pumFieldChanged', '.pum-field-dynamic-desc', function () {
             var $this       = $(this),
                 $input      = $this.find(':input'),
+                $container  = $this.parents('.pum-dynamic-form:first'),
                 val         = $input.val(),
-                form_fields = $this.data('form_fields') || {},
+                form_fields = $container.data('form_fields') || {},
                 field       = form_fields[$this.data('id')] || {},
                 $desc       = $this.find('.pum-desc'),
                 desc        = $this.data('pum-dynamic-desc');

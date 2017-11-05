@@ -348,13 +348,13 @@
 
                 fieldTemplate = 'pum-field-' + data.type;
 
+                if (data.type === 'objectselfect' || data.type === 'postselect' || data.type === 'taxonomyselect') {
+                    fieldTemplate = 'pum-field-select';
+                }
+
                 if (!$('#tmpl-' + fieldTemplate).length) {
-                    if (data.type === 'objectselfect' || data.type === 'postselect' || data.type === 'taxonomyselect') {
-                        fieldTemplate = 'pum-field-select';
-                    }
-                    if (!$('#tmpl-' + fieldTemplate).length) {
-                        return '';
-                    }
+                    console.warn('No field template found');
+                    return '';
                 }
 
                 data.field = PUM_Admin.templates.render(fieldTemplate, data);

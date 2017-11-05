@@ -36,12 +36,17 @@
     font-size: 1.2em;
   }
 
-  .pum-desc {
-    display: none;
+  h3 + .pum-desc {
+    margin-top: -1em !important;
   }
 
   hr {
     margin-bottom: 2em;
+  }
+
+  label,
+  .pum-desc {
+    display: none !important;
   }
 }
 
@@ -73,6 +78,8 @@
 
   label {
     margin-left: 1.5em;
+    display: block;
+    font-size: 1.1em;
 
     &.pum-desc {
       display: inline;
@@ -93,6 +100,7 @@
  */
 .pum-field-multicheck,
 .pum-field-radio {
+  margin: 0 0 1em;
 
   input, label {
     line-height: 1em;
@@ -112,6 +120,7 @@
   label:first-child {
     font-weight: bold;
     margin: 0 0 10px;
+    display: block;
   }
 
   > p.pum-desc {
@@ -455,7 +464,6 @@
     }
   }
 
-
   /* Conditionals */
   .has-conditions {
 
@@ -486,16 +494,32 @@
   }
 }
 
+/**
+ * Cookies field
+ */
+.pum-field-cookies {
+  .pum-popup-cookie-editor {
+    @include add-more-table-lists();
+  }
+}
+
+.pum-field-cookie_key {
+  .cookie-key {
+    position: relative;
+    display: inline-block;
+    button.reset {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      height: 100%;
+    }
+  }
+}
 
 [data-pum-dependencies] {
   display: none;
 }
-
-
-
-
-
-
 
 // TODO What are these, do something with them.
 .pum-field-link {

@@ -277,12 +277,7 @@ class Popup_Maker {
 		}
 
 		// Cookies
-		require_once POPMAKE_DIR . 'includes/class-pum-cookie.php';
-		require_once POPMAKE_DIR . 'includes/class-pum-cookies.php';
 		require_once POPMAKE_DIR . 'includes/pum-cookie-functions.php';
-		if ( is_admin() ) {
-			require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-cookies.php';
-		}
 
 		// Conditions
 		// require_once POPMAKE_DIR . 'includes/class-pum-condition.php';

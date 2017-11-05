@@ -8,59 +8,91 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Admin_Templates {
 
 	public static function init() {
-		add_action( 'admin_footer', array( __CLASS__, 'fields' ) );
-		add_action( 'admin_footer', array( __CLASS__, 'helpers' ) );
-		add_action( 'admin_footer', array( __CLASS__, 'triggers_editor' ) );
-		add_action( 'admin_footer', array( __CLASS__, 'conditions_editor' ) );
+		add_action( 'admin_footer', array( __CLASS__, 'render' ) );
+		add_action( 'admin_footer', array( __CLASS__, 'cookies_editor' ) );
 	}
 
-	public static function fields() {
+	public static function render() {
+		self::general_fields();
+		self::html5_fields();
+		self::custom_fields();
+		self::misc_fields();
+		self::helpers();
+		self::conditions_editor();
+		self::triggers_editor();
+		self::cookies_editor();
+	}
+
+	public static function general_fields() {
 		?>
-		<script type="text/html" id="tmpl-pum-field-section">
-			<div class="pum-field-section {{data.classes}}">
-				<# _.each(data.fields, function(field) { #>
-					{{{field}}}
-					<# }); #>
-			</div>
-		</script>
-
-		<script type="text/html" id="tmpl-pum-field-wrapper">
-			<div class="pum-field pum-field-{{data.type}} {{data.id}}-wrapper {{data.classes}}" data-id="{{data.id}}" <?php /* data-field-args="{{JSON.stringify(data)}}" */ ?>
-			<# print( data.dependencies !== '' ? "data-pum-dependencies='" + data.dependencies + "'" : ''); #>
-				<# print( data.dynamic_desc !== '' ? "data-pum-dynamic-desc='" + data.dynamic_desc + "'" : ''); #>>
-					<# if (typeof data.label === 'string' && data.label.length > 0) { #>
-						<label for="{{data.id}}">{{{data.label}}}</label>
-						<# } #>
-							{{{data.field}}}
-							<# if (typeof data.desc === 'string' && data.desc.length > 0) { #>
-								<span class="pum-desc desc">{{{data.desc}}}</span>
-								<# } #>
-									</div>
-		</script>
-
-		<script type="text/html" id="tmpl-pum-field-html">
-			{{{data.content}}}
-		</script>
-
-		<script type="text/html" id="tmpl-pum-field-heading">
-			<h3 class="pum-field-heading">{{data.desc}}</h3>
-		</script>
-
-		<script type="text/html" id="tmpl-pum-field-separator">
-			<# if (typeof data.desc === 'string' && data.desc.length > 0) { #>
-				<h3 class="pum-field-heading">{{data.desc}}</h3>
-				<# } #>
-					<hr {{{data.meta}}} />
-		</script>
-
 		<script type="text/html" id="tmpl-pum-field-text">
 			<input type="text" placeholder="{{data.placeholder}}" class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" {{{data.meta}}} />
 		</script>
 
-		<script type="text/html" id="tmpl-pum-field-link">
-			<button type="button" class="dashicons dashicons-admin-generic button"></button>            <input type="text" placeholder="{{data.placeholder}}" class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" {{{data.meta}}} />
+		<script type="text/html" id="tmpl-pum-field-password">
+			<input type="password" placeholder="{{data.placeholder}}" class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" {{{data.meta}}} />
 		</script>
 
+		<script type="text/html" id="tmpl-pum-field-select">
+			<select id="{{data.id}}" name="{{data.name}}" data-allow-clear="true" {{{data.meta}}}>
+				<# _.each(data.options, function(option, key) {
+
+				if (option.options !== undefined && option.options.length) { #>
+
+				<optgroup label="{{{option.label}}}">
+
+					<# _.each(option.options, function(option, key) { #>
+					<option value="{{option.value}}" {{{option.meta}}}>{{option.label}}</option>
+					<# }); #>
+
+				</optgroup>
+
+				<# } else { #>
+				<option value="{{option.value}}" {{{option.meta}}}>{{{option.label}}}</option>
+				<# }
+
+				}); #>
+			</select>
+		</script>
+
+		<script type="text/html" id="tmpl-pum-field-radio">
+			<ul class="pum-field-radio-list">
+				<# _.each(data.options, function(option, key) { #>
+				<li <# print(option.value === data.value ? 'class="pum-selected"' : ''); #>>
+				<input type="radio" id="{{data.id}}_{{key}}" name="{{data.name}}" value="{{option.value}}" {{{option.meta}}} />
+				<label for="{{data.id}}_{{key}}">{{{option.label}}}</label>
+				</li>
+				<# }); #>
+			</ul>
+		</script>
+
+		<script type="text/html" id="tmpl-pum-field-checkbox">
+			<input type="checkbox" id="{{data.id}}" name="{{data.name}}" value="1" {{{data.meta}}} />
+		</script>
+
+		<script type="text/html" id="tmpl-pum-field-multicheck">
+			<ul class="pum-field-mulitcheck-list">
+				<# _.each(data.options, function(option, key) { #>
+				<li>
+					<input type="checkbox" id="{{data.id}}_{{key}}" name="{{data.name}}[{{option.value}}]" value="1" {{{option.meta}}} />
+					<label for="{{data.id}}_{{key}}">{{option.label}}</label>
+				</li>
+				<# }); #>
+			</ul>
+		</script>
+
+		<script type="text/html" id="tmpl-pum-field-textarea">
+			<textarea name="{{data.name}}" id="{{data.id}}" class="{{data.size}}-text" {{{data.meta}}}>{{data.value}}</textarea>
+		</script>
+
+		<script type="text/html" id="tmpl-pum-field-hidden">
+			<input type="hidden" class="{{data.classes}}" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" {{{data.meta}}} />
+		</script>
+		<?php
+	}
+
+	public static function html5_fields() {
+		?>
 		<script type="text/html" id="tmpl-pum-field-range">
 			<input type="range" placeholder="{{data.placeholder}}" class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" {{{data.meta}}} />
 		</script>
@@ -84,70 +116,58 @@ class PUM_Admin_Templates {
 		<script type="text/html" id="tmpl-pum-field-tel">
 			<input type="tel" placeholder="{{data.placeholder}}" class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" {{{data.meta}}} />
 		</script>
+		<?php
+	}
 
-		<script type="text/html" id="tmpl-pum-field-password">
-			<input type="password" placeholder="{{data.placeholder}}" class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" {{{data.meta}}} />
-		</script>
-
-		<script type="text/html" id="tmpl-pum-field-textarea">
-			<textarea name="{{data.name}}" id="{{data.id}}" class="{{data.size}}-text" {{{data.meta}}}>{{data.value}}</textarea>
-		</script>
-
+	public static function custom_fields() {
+		?>
 		<script type="text/html" id="tmpl-pum-field-editor">
 			<textarea name="{{data.name}}" id="{{data.id}}" class="pum-wpeditor {{data.size}}-text" {{{data.meta}}}>{{data.value}}</textarea>
 		</script>
 
-		<script type="text/html" id="tmpl-pum-field-hidden">
-			<input type="hidden" class="{{data.classes}}" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" {{{data.meta}}} />
+		<script type="text/html" id="tmpl-pum-field-link">
+			<button type="button" class="dashicons dashicons-admin-generic button"></button>
+			<input type="text" placeholder="{{data.placeholder}}" class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" {{{data.meta}}} />
 		</script>
 
-		<script type="text/html" id="tmpl-pum-field-select">
-			<select id="{{data.id}}" name="{{data.name}}" data-allow-clear="true" {{{data.meta}}}>
-				<# _.each(data.options, function(option, key) {
+		<script type="text/html" id="tmpl-pum-field-rangeslider">
+			<input type="text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" class="pum-range-manual" {{{data.meta}}} />
+			<span class="pum-range-value-unit regular-text">{{data.unit}}</span>
+		</script>
 
-					if (option.options !== undefined && option.options.length) { #>
+		<script type="text/html" id="tmpl-pum-field-color">
+			<input type="text" class="pum-color-picker color-picker" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" data-default-color="{{data.std}}" {{{data.meta}}} />
+		</script>
 
-					<optgroup label="{{{option.label}}}">
-
-						<# _.each(option.options, function(option, key) { #>
-							<option value="{{option.value}}" {{{option.meta}}}>{{{option.label}}}</option>
-							<# }); #>
-
-					</optgroup>
-
-					<# } else { #>
-						<option value="{{option.value}}" {{{option.meta}}}>{{{option.label}}}</option>
-						<# }
-
-							}); #>
+		<script type="text/html" id="tmpl-pum-field-measure">
+			<input type="number" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" size="5" {{{data.meta}}} />            <select id="{{data.id}}_unit" name="<# print(data.name.replace(data.id, data.id + '_unit')); #>">
+				<# _.each(data.units, function(option, key) { #>
+				<option value="{{option.value}}" {{{option.meta}}}>{{{option.label}}}</option>
+				<# }); #>
 			</select>
 		</script>
 
-		<script type="text/html" id="tmpl-pum-field-checkbox">
-			<input type="checkbox" id="{{data.id}}" name="{{data.name}}" value="1" {{{data.meta}}} />
-		</script>
+		<script type="text/html" id="tmpl-pum-field-license_key">
+			<input class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value.key}}" {{{data.meta}}} />
 
-		<script type="text/html" id="tmpl-pum-field-multicheck">
-			<ul class="pum-field-mulitcheck-list">
-				<# _.each(data.options, function(option, key) { #>
-					<li>
-						<input type="checkbox" id="{{data.id}}_{{key}}" name="{{data.name}}[{{option.value}}]" value="1" {{{option.meta}}} />
-						<label for="{{data.id}}_{{key}}">{{option.label}}</label>
-					</li>
-					<# }); #>
-			</ul>
-		</script>
+			<# if (data.value.key !== '') { #>
+				<?php wp_nonce_field( 'pum_license_activation', 'pum_license_activation_nonce' ); ?>
+				<# if (data.value.status === 'valid') { #>
+					<span class="pum-license-status"><?php _e( 'Active', 'popup-maker' ); ?></span>
+					<input type="submit" class="button-secondary pum-license-deactivate" id="{{data.id}}_deactivate" name="pum_license_deactivate[{{data.id}}]" value="<?php _e( 'Deactivate License', 'popup-maker' ); ?>" />
+				<# } else { #>
+					<span class="pum-license-status"><?php _e( 'Inactive', 'popup-maker' ); ?></span>
+					<input type="submit" class="button-secondary pum-license-activate" id="{{data.id}}_activate" name="pum_license_activate[{{data.id}}]" value="<?php _e( 'Activate License', 'popup-maker' ); ?>" />
+				<# } #>
+			<# } #>
 
-		<script type="text/html" id="tmpl-pum-field-radio">
-			<ul class="pum-field-radio-list">
-				<# _.each(data.options, function(option, key) { #>
-					<li
-					<# print(option.value === data.value ? 'class="pum-selected"' : ''); #>>
-						<input type="radio" id="{{data.id}}_{{key}}" name="{{data.name}}" value="{{option.value}}" {{{option.meta}}} />
-						<label for="{{data.id}}_{{key}}">{{{option.label}}}</label>
-						</li>
-						<# }); #>
-			</ul>
+			<# if (data.value.messages && data.value.messages.length) { #>
+			<div class="pum-license-messages">
+				<# for(var i=0; i < data.value.messages.length; i++) { #>
+					<p>{{{data.value.messages[i]}}}</p>
+				<# } #>
+			</div>
+			<# } #>
 		</script>
 
 		<script type="text/html" id="tmpl-pum-field-datetime">
@@ -163,43 +183,56 @@ class PUM_Admin_Templates {
 				<a class="input-button" data-toggle><i class="dashicons dashicons-calendar-alt"></i></a>
 			</div>
 		</script>
+		<?php
+	}
 
-		<script type="text/html" id="tmpl-pum-field-rangeslider">
-			<input type="text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" class="pum-range-manual popmake-range-manual" {{{data.meta}}} />
-			<span class="pum-range-value-unit regular-text">{{data.unit}}</span>
+	public static function misc_fields() {
+		?>
+		<script type="text/html" id="tmpl-pum-field-section">
+			<div class="pum-field-section {{data.classes}}">
+				<# _.each(data.fields, function(field) { #>
+				{{{field}}}
+				<# }); #>
+			</div>
 		</script>
 
-		<script type="text/html" id="tmpl-pum-field-color">
-			<input type="text" class="pum-color-picker color-picker" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" data-default-color="{{data.std}}" {{{data.meta}}} />
+		<script type="text/html" id="tmpl-pum-field-wrapper">
+			<div class="pum-field pum-field-{{data.type}} {{data.id}}-wrapper {{data.classes}}" data-id="{{data.id}}" <# print( data.dependencies !== '' ? "data-pum-dependencies='" + data.dependencies + "'" : ''); #> <# print( data.dynamic_desc !== '' ? "data-pum-dynamic-desc='" + data.dynamic_desc + "'" : ''); #>>
+			<# if (typeof data.label === 'string' && data.label.length > 0) { #>
+			<label for="{{data.id}}">
+				{{{data.label}}}
+				<# if (typeof data.doclink === 'string' && data.doclink !== '') { #>
+				<a href="{{data.doclink}}" title="<?php _e( 'Documentation', 'popup-maker' ); ?>: {{data.label}}" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
+				<# } #>
+			</label>
+			<# } else { #>
+			<# if (typeof data.doclink === 'string' && data.doclink !== '') { #>
+			<a href="{{data.doclink}}" title="<?php _e( 'Documentation', 'popup-maker' ); ?>: {{data.label}}" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
+			<# } #>
+			<# } #>
+			{{{data.field}}}
+			<# if (typeof data.desc === 'string' && data.desc.length > 0) { #>
+			<span class="pum-desc desc">{{{data.desc}}}</span>
+			<# } #>
+			</div>
 		</script>
 
-		<script type="text/html" id="tmpl-pum-field-measure">
-			<input type="number" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" size="5" {{{data.meta}}} />            <select id="{{data.id}}_unit" name="<# print(data.name.replace(data.id, data.id + '_unit')); #>">
-				<# _.each(data.units, function(option, key) { #>
-					<option value="{{option.value}}" {{{option.meta}}}>{{{option.label}}}</option>
-					<# }); #>
-			</select>
+		<script type="text/html" id="tmpl-pum-field-html">
+			{{{data.content}}}
 		</script>
 
-		<script type="text/html" id="tmpl-pum-field-license_key">
-			<input class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value.key}}" {{{data.meta}}} />
+		<script type="text/html" id="tmpl-pum-field-heading">
+			<h3 class="pum-field-heading">{{data.desc}}</h3>
+		</script>
 
-			<# if (data.value.key !== '') { #>
-				<# if (data.value.status === 'valid') { #>
-					<span style="color:green;"><?php _e('active'); ?></span>
-					<input type="submit" class="button-secondary pum-license-deactivate" id="{{data.id}}_deactivate" name="{{data.name}}_deactivate" value="<?php _e( 'Deactivate License', 'popup-maker' ); ?>" />
-					<# } else { #>
-						<input type="submit" class="button-secondary pum-license-activate" id="{{data.id}}_activate" name="{{data.name}}_activate" value="<?php _e( 'Activate License', 'popup-maker' ); ?>" />
-						<# } #>
-							<# } #>
-
-								<# if (data.value.messages && data.value.messages.length) { #>
-									<div class="pum-license-messages">
-										<# for(var i=0; i < data.value.messages.length; i++) { #>
-										<p>{{{data.value.messages[i]}}}</p>
-										<# } #>
-									</div>
-									<# } #>
+		<script type="text/html" id="tmpl-pum-field-separator">
+			<# if (typeof data.desc === 'string' && data.desc.length > 0 && data.desc_position === 'top') { #>
+			<h3 class="pum-field-heading">{{data.desc}}</h3>
+			<# } #>
+			<hr {{{data.meta}}} />
+			<# if (typeof data.desc === 'string' && data.desc.length > 0 && data.desc_position === 'bottom') { #>
+			<h3 class="pum-field-heading">{{data.desc}}</h3>
+			<# } #>
 		</script>
 		<?php
 	}
@@ -208,74 +241,54 @@ class PUM_Admin_Templates {
 		?>
 		<script type="text/html" id="tmpl-pum-modal">
 			<div id="{{data.id}}" class="pum-modal-background {{data.classes}}" role="dialog" aria-hidden="true" aria-labelledby="{{data.id}}-title" aria-describedby="{{data.id}}-description" {{{data.meta}}}>
-
 				<div class="pum-modal-wrap">
-
 					<form class="pum-form">
-
 						<div class="pum-modal-header">
-
 							<# if (data.title.length) { #>
 								<span id="{{data.id}}-title" class="pum-modal-title">{{data.title}}</span>
-								<# } #>
-
-									<button type="button" class="pum-modal-close" aria-label="<?php _e( 'Close', 'popup-maker' ); ?>"></button>
-
+							<# } #>
+							<button type="button" class="pum-modal-close" aria-label="<?php _e( 'Close', 'popup-maker' ); ?>"></button>
 						</div>
-
 						<# if (data.description.length) { #>
 							<span id="{{data.id}}-description" class="screen-reader-text">{{data.description}}</span>
-							<# } #>
-
-								<div class="pum-modal-content">
-									{{{data.content}}}
-								</div>
-
-								<# if (data.save_button || data.cancel_button) { #>
-
-									<div class="pum-modal-footer submitbox">
-
-										<# if (data.cancel_button) { #>
-											<div class="cancel">
-												<button type="button" class="submitdelete no-button" href="#">{{data.cancel_button}}</button>
-											</div>
-											<# } #>
-
-												<# if (data.save_button) { #>
-													<div class="pum-submit">
-														<span class="spinner"></span>
-														<button class="button button-primary">{{data.save_button}}</button>
-													</div>
-													<# } #>
-
+						<# } #>
+						<div class="pum-modal-content">
+							{{{data.content}}}
+						</div>
+						<# if (data.save_button || data.cancel_button) { #>
+							<div class="pum-modal-footer submitbox">
+								<# if (data.cancel_button) { #>
+									<div class="cancel">
+										<button type="button" class="submitdelete no-button" href="#">{{data.cancel_button}}</button>
 									</div>
-
-									<# } #>
-
+								<# } #>
+								<# if (data.save_button) { #>
+									<div class="pum-submit">
+										<span class="spinner"></span>
+										<button class="button button-primary">{{data.save_button}}</button>
+									</div>
+								<# } #>
+							</div>
+						<# } #>
 					</form>
-
 				</div>
-
 			</div>
 		</script>
 
 		<script type="text/html" id="tmpl-pum-tabs">
 			<div class="pum-tabs-container {{data.classes}}" {{{data.meta}}}>
-
 				<ul class="tabs">
 					<# _.each(data.tabs, function(tab, key) { #>
 						<li class="tab">
 							<a href="#{{data.id + '_' + key}}">{{tab.label}}</a>
 						</li>
-						<# }); #>
+					<# }); #>
 				</ul>
-
 				<# _.each(data.tabs, function(tab, key) { #>
 					<div id="{{data.id + '_' + key}}" class="tab-content">
 						{{{tab.content}}}
 					</div>
-					<# }); #>
-
+				<# }); #>
 			</div>
 		</script>
 
@@ -474,6 +487,95 @@ class PUM_Admin_Templates {
 			</div>
 		</script>
 		<?php
+	}
+
+	public static function cookies_editor() {
+		?>
+		<script type="text/html" id="tmpl-pum-field-cookies">
+			<# print(PUM_Admin.cookies.template.editor({cookies: data.value, name: data.name})); #>
+		</script>
+
+		<script type="text/html" id="tmpl-pum-cookie-editor">
+			<div class="pum-popup-cookie-editor  <# if (data.cookies && data.cookies.length) { print('has-list-items'); } #>" data-field_name="{{data.name}}">
+				<button type="button" class="button button-primary pum-add-new no-button"><?php _e( 'Add New Cookie', 'popup-maker' ); ?></button>
+
+				<p>
+					<strong>
+						<?php _e( 'Cookies are used to prevent a trigger from opening the popup.', 'popup-maker' ); ?>
+						<a href="<?php echo esc_url( 'http://docs.wppopupmaker.com/article/148-cookies?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=cookies-intro' ); ?>" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
+					</strong>
+				</p>
+
+				<table class="list-table form-table">
+					<thead>
+					<tr>
+						<th><?php _e( 'Event', 'popup-maker' ); ?></th>
+						<th><?php _e( 'Name', 'popup-maker' ); ?></th>
+						<th><?php _e( 'Settings', 'popup-maker' ); ?></th>
+						<th><?php _e( 'Actions', 'popup-maker' ); ?></th>
+					</tr>
+					</thead>
+					<tbody>
+					<#
+						_.each(data.cookies, function (cookie, index) {
+							print(PUM_Admin.cookies.template.row({
+								index: index,
+								event: cookie.event,
+								name: data.name,
+								settings: cookie.settings || {}
+							}));
+						});
+					#>
+					</tbody>
+				</table>
+
+				<div class="no-cookies  no-list-items">
+					<div class="pum-field pum-field-select pum-field-select2">
+						<label for="pum-first-cookie"><?php _e( 'Choose when you want to set a cookie to get started.', 'popup-maker' ); ?></label>
+						<# print(PUM_Admin.cookies.template.selectbox({id: 'pum-first-cookie', name: "", placeholder: "<?php _e( 'Select an event.', 'popup-maker' ); ?>"})); #>
+					</div>
+				</div>
+			</div>
+		</script>
+
+		<script type="text/html" id="tmpl-pum-cookie-row">
+			<tr data-index="{{data.index}}">
+				<td class="event-column">
+					<button type="button" class="edit no-button link-button" aria-label="<?php _e( 'Edit this cookie', 'popup-maker' ); ?>">{{PUM_Admin.cookies.getLabel(data.event)}}</button>
+					<input class="popup_cookies_field_event" type="hidden" name="{{data.name}}[{{data.index}}][event]" value="{{data.event}}" />
+					<input class="popup_cookies_field_settings" type="hidden" name="{{data.name}}[{{data.index}}][settings]" value="{{JSON.stringify(data.settings)}}" />
+				</td>
+				<td class="name-column">
+					<code>{{data.settings.name}}</code>
+				</td>
+				<td class="settings-column">{{{PUM_Admin.cookies.getSettingsDesc(data.event, data.settings)}}}</td>
+				<td class="list-item-actions">
+					<button type="button" class="edit dashicons dashicons-edit no-button" aria-label="<?php _e( 'Edit this cookie', 'popup-maker' ); ?>"></button>
+					<button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php _e( 'Delete` this cookie', 'popup-maker' ); ?>"></button>
+				</td>
+			</tr>
+		</script>
+
+		<script type="text/html" id="tmpl-pum-cookie-add-event">
+			<#
+				print(PUM_Admin.templates.modal({
+					id: 'pum_cookie_add_event_modal',
+					title: '<?php _e( 'When should your cookie be created?', 'popup-maker' ); ?>',
+					content: PUM_Admin.cookies.template.selectbox({id: 'popup_cookie_add_event', name: "", placeholder: "<?php _e( 'Select a cookie type.', 'popup-maker' ); ?>"}),
+					save_button: pum_admin_vars.I10n.add || '<?php __( 'Add','popup-maker' ); ?>'
+				}));
+			#>
+		</script>
+
+		<script type="text/html" id="tmpl-pum-field-cookie_key">
+			<div class="cookie-key">
+				<button type="button" class="reset dashicons-before dashicons-image-rotate" title="<?php _e( 'Reset Cookie Key', 'popup-maker' ); ?>"></button>
+				<input type="text" placeholder="{{data.placeholder}}" class="{{data.size}}-text dashicons-before dashicons-image-rotate" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" {{{data.meta}}} />
+			</div>
+		</script>
+
+		<?php
+
 	}
 
 }
