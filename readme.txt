@@ -92,13 +92,27 @@ There are several common causes for this which include:
 == Changelog ==
 
 = v1.7.0 - ??/??/2017 =
+* Feature: Front end asset overhaul, now uses cached static assets.
+  * All front end assets now combined and minified into  single js & css file.
+  * Custom styles are now saved along with all core & extension styles eliminating inline style blocks.
+  * Reduction of footprint means massively improved loading performance.
+  * Dynamic file creation allows for some awesome upcoming features.
+  * Now completely compatible with plugins like Autoptimize (Thanks Frank).
 * Improvement: New Popup Settings tabbed interface to help make settings more intuitive & easy to find on one screen.
+  * Now all popup settings are stored in a single meta key reducing DB clutter.
+* Improvement: Resource reduction & optmization.
+  * Added class autoloading.
+  * Greatly simplified code base & internal apis.
+  * Converted many internal apis to use passive loading.
+  * Added internal caching.
+* Improvement: Migrated all admin forms to use the [WPJSF](https://github.com/danieliser/WP-JS-Form-Sample-Plugin) lib for easier maintanance and quicker updates.
 * Improvement: Multiple improvments to smart select fields (jQuery select2) including:
   * Allow multiple page/post selections without reopening/searching again.
   * Properly highlights & shows selected items after save/reload.
   * Paginated/scroll based loading of more results over ajax.
   * Now shows list of recent "items" immeditaly upon clicking the field rather than requiring search.
-* Fix: Corrected labeling issues with BuddyPress conditions.
+* Improvement: Admin asset handling
+  * Modularized admin assets for easier debugging & maintanance.
 
 = v1.6.7 - ?? =
 * Fix: WPML missing variable errors.
