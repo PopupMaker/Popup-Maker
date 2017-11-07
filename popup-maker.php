@@ -297,7 +297,7 @@ class Popup_Maker {
 		require_once POPMAKE_DIR . 'includes/shortcodes/class-pum-shortcode-popup-trigger.php';
 		require_once POPMAKE_DIR . 'includes/shortcodes/class-pum-shortcode-popup-close.php';
 		if ( is_admin() ) {
-			require_once POPMAKE_DIR . 'includes/admin/shortcode-ui/class-pum-admin-shortcode-ui.php';
+			//require_once POPMAKE_DIR . 'includes/admin/shortcode-ui/class-pum-admin-shortcode-ui.php';
 		}
 
 		// Upgrades

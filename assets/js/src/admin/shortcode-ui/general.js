@@ -5,12 +5,13 @@
 (function ($) {
     "use strict";
 
-    var I10n = pum_admin_vars.I10n || pum_shortcode_ui.I10n || {
+    var I10n = pum_shortcode_ui_vars.I10n || {
             error_loading_shortcode_preview: '',
+            shortcode_ui_button_tooltip: '',
             insert: '',
             update: ''
         },
-        shortcodes = pum_shortcode_ui.shortcodes || {},
+        shortcodes = pum_shortcode_ui_vars.shortcodes || {},
         base = {
             shortcode_args: {},
             shortcode_data: {},
@@ -100,12 +101,12 @@
 
                 values = this.cleanAttrs(values);
 
-                return PUM_Templates.shortcode({
+                return PUM_Admin.templates.shortcode({
                     tag: this.type,
                     meta: values,
                     has_content: has_content,
                     content: content
-                })
+                });
             },
             /**
              * Fetch preview.
@@ -138,7 +139,7 @@
                             post_id: $('#post_ID').val(),
                             tag: this.type,
                             shortcode: this.formatShortcode(),
-                            nonce: '<?php echo wp_create_nonce( "pum-shortcode-ui-nonce" ); ?>'
+                            nonce: pum_shortcode_ui_vars.nonce
                         };
 
                         $.post(ajaxurl, data)
@@ -146,7 +147,7 @@
                                 self.content = response.data;
                             })
                             .fail(function () {
-                                self.content = '<span class="pum_shortcode_ui_error">' + I10n.error_loading_shortcode_preview + '</span>';
+                                self.content = '<span class="pum_shortcode_ui_vars_error">' + I10n.error_loading_shortcode_preview + '</span>';
                             })
                             .always(function () {
                                 delete self.fetching;
@@ -172,6 +173,45 @@
                     '</div>'
                 );
             },
+            form: function (type, values, callback) {
+                var self  = this,
+                    modalID  = 'pum_trigger_settings',
+                    firstTab = Object.keys(trigger.fields)[0];
+
+                values = values || {};
+                values.type = type;
+                values.index = values.index >= 0 ? values.index : null;
+
+                // Add hidden index & type fields.
+                trigger.fields[firstTab] = $.extend(true, trigger.fields[firstTab], {
+                    index: {
+                        type: 'hidden',
+                        name: 'index'
+                    },
+                    type: {
+                        type: 'hidden',
+                        name: 'type'
+                    }
+                });
+
+                PUM_Admin.modals.reload('#'+modalID, PUM_Admin.templates.modal({
+                    id: modalID,
+                    title: trigger.modal_title || trigger.name,
+                    classes: 'tabbed-content',
+                    save_button: values.index !== null ? I10n.update : I10n.add,
+                    content: PUM_Admin.forms.render({
+                        id: 'pum_trigger_settings_form',
+                        tabs: trigger.tabs || {},
+                        fields: trigger.fields || {}
+                    }, values || {})
+                }));
+
+                $('#'+modalID + ' form').on('submit', callback || function (event) {
+                    event.preventDefault();
+                    PUM_Admin.modals.closeAll();
+                });
+            },
+
             renderForm: function (values, callback) {
                 var self = this,
                     editor = tinyMCE.activeEditor,
