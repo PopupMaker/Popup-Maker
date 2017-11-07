@@ -1,17 +1,31 @@
 <?php
+/*******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 
+/**
+ * Class PUM_Admin_Templates
+ *
+ * @since 1.7.0
+ */
 class PUM_Admin_Templates {
 
+	/**
+	 *
+	 */
 	public static function init() {
 		add_action( 'admin_footer', array( __CLASS__, 'render' ) );
 		add_action( 'admin_footer', array( __CLASS__, 'cookies_editor' ) );
 	}
 
+	/**
+	 *
+	 */
 	public static function render() {
 		self::general_fields();
 		self::html5_fields();
@@ -23,6 +37,9 @@ class PUM_Admin_Templates {
 		self::cookies_editor();
 	}
 
+	/**
+	 *
+	 */
 	public static function general_fields() {
 		?>
 		<script type="text/html" id="tmpl-pum-field-text">
@@ -91,6 +108,9 @@ class PUM_Admin_Templates {
 		<?php
 	}
 
+	/**
+	 *
+	 */
 	public static function html5_fields() {
 		?>
 		<script type="text/html" id="tmpl-pum-field-range">
@@ -119,6 +139,9 @@ class PUM_Admin_Templates {
 		<?php
 	}
 
+	/**
+	 *
+	 */
 	public static function custom_fields() {
 		?>
 		<script type="text/html" id="tmpl-pum-field-editor">
@@ -186,6 +209,9 @@ class PUM_Admin_Templates {
 		<?php
 	}
 
+	/**
+	 *
+	 */
 	public static function misc_fields() {
 		?>
 		<script type="text/html" id="tmpl-pum-field-section">
@@ -237,6 +263,9 @@ class PUM_Admin_Templates {
 		<?php
 	}
 
+	/**
+	 *
+	 */
 	public static function helpers() {
 		?>
 		<script type="text/html" id="tmpl-pum-modal">
@@ -302,6 +331,9 @@ class PUM_Admin_Templates {
 		<?php
 	}
 
+	/**
+	 *
+	 */
 	public static function triggers_editor() {
 		?>
 		<script type="text/html" id="tmpl-pum-field-triggers">
@@ -406,6 +438,9 @@ class PUM_Admin_Templates {
 
 	}
 
+	/**
+	 *
+	 */
 	public static function conditions_editor() {
 		?>
 		<script type="text/html" id="tmpl-pum-field-conditions">
@@ -489,6 +524,9 @@ class PUM_Admin_Templates {
 		<?php
 	}
 
+	/**
+	 *
+	 */
 	public static function cookies_editor() {
 		?>
 		<script type="text/html" id="tmpl-pum-field-cookies">

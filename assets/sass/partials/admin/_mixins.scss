@@ -31,10 +31,13 @@
 
 }
 
-
 @mixin add-more-table-lists() {
+  .pum-add-new, .add-new {
+    float: right;
+  }
+
   .list-table {
-    display: none!important;
+    display: none !important;
 
     @include table-alignments();
   }
@@ -61,11 +64,11 @@
   &.has-list-items {
 
     .list-table {
-      display: block!important;;
+      display: block !important;;
     }
 
     .no-list-items {
-      display: none!important;;
+      display: none !important;;
     }
 
   }

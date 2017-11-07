@@ -1,0 +1,31 @@
+/* Form Table Dividers */
+/*!******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
+
+.title-divider {
+  th {
+    border-top: 1px solid #ccc;
+    padding: 0;
+  }
+
+  .title {
+    font-size: 1.125em;
+    padding-left: 0 !important;
+    padding-top: 20px !important;
+    padding-bottom: 0 !important;
+  }
+}
+
+.form-table {
+  td, tr {
+    padding-top: 10px;
+  }
+}
+
+.posttypediv,
+.taxonomydiv {
+  margin-bottom: 10px;
+  clear: both;
+  overflow: auto;
+}

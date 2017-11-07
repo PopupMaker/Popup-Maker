@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Class PUM_Admin_Popups
+ *
+ * @since 1.7.0
  */
 class PUM_Admin_Popups {
 
