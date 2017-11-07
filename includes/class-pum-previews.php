@@ -59,11 +59,7 @@ class PUM_Previews {
 			return $loadable;
 		}
 
-		if ( absint( $popup_id ) == get_the_ID() ) {
-			return true;
-		}
-
-		return false;
+		return absint( $popup_id ) == get_the_ID();
 	}
 
 	/**
@@ -79,11 +75,13 @@ class PUM_Previews {
 			return $data_attr;
 		}
 
-		$data_attr['triggers'] = array(
-			array(
-				'type' => 'admin_debug',
-			),
-		);
+		if ( absint( $popup_id ) == get_the_ID() ) {
+			$data_attr['triggers'] = array(
+				array(
+					'type' => 'admin_debug',
+				),
+			);
+		}
 
 		return $data_attr;
 	}
