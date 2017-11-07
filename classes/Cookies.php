@@ -71,22 +71,13 @@ class PUM_Cookies {
 	public function register_cookies() {
 		$cookies = apply_filters( 'pum_registered_cookies', array(
 			'on_popup_open'  => array(
-				'name'            => __( 'On Popup Open', 'popup-maker' ),
-				'modal_title'     => __( 'Cookie Settings', 'popup-maker' ),
-				'settings_column' => sprintf( '%s%s%s', '<# if (typeof data.session === "undefined" || data.session !== "1") { print(data.time); } else { print("', __( 'Sessions', 'popup-maker' ), '"); } #>' ),
-				'fields'          => $this->cookie_fields(),
+				'name' => __( 'On Popup Open', 'popup-maker' ),
 			),
 			'on_popup_close' => array(
-				'name'            => __( 'On Popup Close', 'popup-maker' ),
-				'modal_title'     => __( 'Cookie Settings', 'popup-maker' ),
-				'settings_column' => sprintf( '%s%s%s', '<# if (typeof data.session === "undefined" || data.session !== "1") { print(data.time); } else { print("', __( 'Sessions', 'popup-maker' ), '"); } #>' ),
-				'fields'          => $this->cookie_fields(),
+				'name' => __( 'On Popup Close', 'popup-maker' ),
 			),
 			'manual'         => array(
-				'name'            => __( 'Manual JavaScript', 'popup-maker' ),
-				'modal_title'     => __( 'Cookie Settings', 'popup-maker' ),
-				'settings_column' => sprintf( '%s%s%s', '<# if (typeof data.session === "undefined" || data.session !== "1") { print(data.time); } else { print("', __( 'Sessions', 'popup-maker' ), '"); } #>' ),
-				'fields'          => $this->cookie_fields(),
+				'name' => __( 'Manual JavaScript', 'popup-maker' ),
 			),
 		) );
 
@@ -117,27 +108,26 @@ class PUM_Cookies {
 			$cookie = wp_parse_args( $cookie, array(
 				'id'              => '',
 				'name'            => '',
-				'modal_title'     => '',
-				'settings_column' => '',
+				'modal_title'     => __( 'Cookie Settings', 'popup-maker' ),
+				'settings_column' => sprintf( '%s%s%s', '<# if (typeof data.session === "undefined" || data.session !== "1") { print(data.time); } else { print("', __( 'Sessions', 'popup-maker' ), '"); } #>' ),
 				'priority'        => 10,
 				'tabs'            => $this->get_tabs(),
-				'fields'          => array(),
+				'fields'          => $this->cookie_fields(),
 			) );
 
 			// Here for backward compatibility to merge in labels properly.
-			$labels        = $this->get_labels();
-			$cookie_labels = isset( $labels[ $cookie['id'] ] ) ? $labels[ $cookie['id'] ] : array();
-
-			if ( ! empty( $cookie_labels ) ) {
-				foreach ( $cookie_labels as $key => $value ) {
-					if ( empty( $cookie[ $key ] ) ) {
-						$cookie[ $key ] = $value;
-					}
+			if ( ! empty( $cookie['labels'] ) ) {
+				foreach ( $cookie['labels'] as $key => $value ) {
+					$cookie[ $key ] = $value;
+					unset( $cookie['labels'][ $key ] );
 				}
+				unset( $cookie['labels'] );
 			}
 
 			// Add cookie fields for all cookies automatically.
-			$cookie['fields'] = array_merge( $cookie['fields'], $this->cookie_fields() );
+			if ( empty( $cookie['fields'] ) ) {
+				$cookie['fields'] = $this->cookie_fields();
+			}
 
 			$this->cookies[ $cookie['id'] ] = $cookie;
 		}
@@ -160,27 +150,9 @@ class PUM_Cookies {
 		 * @param array $to_do The list of trigger section labels.
 		 */
 		return apply_filters( 'pum_get_trigger_tabs', array(
-			'general' => __( 'General', 'popup-maker' ),
+			'general'  => __( 'General', 'popup-maker' ),
 			'advanced' => __( 'Advanced', 'popup-maker' ),
 		) );
-	}
-
-	/**
-	 * @return array
-	 */
-	public function get_labels() {
-		static $labels;
-
-		if ( ! isset( $labels ) ) {
-			/**
-			 * Filter the array of cookie labels.
-			 *
-			 * @param array $to_do The list of cookie labels.
-			 */
-			$labels = apply_filters( 'pum_get_cookie_labels', array() );
-		}
-
-		return $labels;
 	}
 
 	/**
@@ -193,15 +165,15 @@ class PUM_Cookies {
 	 */
 	public function cookie_fields() {
 		return apply_filters( 'pum_get_cookie_fields', array(
-			'general' => array(
-				'name'    => array(
+			'general'  => array(
+				'name' => array(
 					'label'       => __( 'Cookie Name', 'popup-maker' ),
 					'placeholder' => __( 'Cookie Name ex. popmaker-123', 'popup-maker' ),
 					'desc'        => __( 'The name that will be used when checking for or saving this cookie.', 'popup-maker' ),
 					'std'         => '',
 					'priority'    => 1,
 				),
-				'time'    => array(
+				'time' => array(
 					'label'       => __( 'Cookie Time', 'popup-maker' ),
 					'placeholder' => __( '364 days 23 hours 59 minutes 59 seconds', 'popup-maker' ),
 					'desc'        => __( 'Enter a plain english time before cookie expires.', 'popup-maker' ),
@@ -233,6 +205,24 @@ class PUM_Cookies {
 				),
 			),
 		) );
+	}
+
+	/**
+	 * @return array
+	 */
+	public function get_labels() {
+		static $labels;
+
+		if ( ! isset( $labels ) ) {
+			/**
+			 * Filter the array of cookie labels.
+			 *
+			 * @param array $to_do The list of cookie labels.
+			 */
+			$labels = apply_filters( 'pum_get_cookie_labels', array() );
+		}
+
+		return $labels;
 	}
 
 	/**
