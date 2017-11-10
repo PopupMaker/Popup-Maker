@@ -5,11 +5,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class PUM_Shortcode_Popup_Close
+ * Class PUM_Shortcode_PopupClose
  *
  * Registers the popup_close shortcode.
  */
-class PUM_Shortcode_Popup_Close extends PUM_Shortcode {
+class PUM_Shortcode_PopupClose extends PUM_Shortcode {
+
+	public $version = 2;
 
 	public $has_content = true;
 
@@ -44,8 +46,8 @@ class PUM_Shortcode_Popup_Close extends PUM_Shortcode {
 			'options' => array(
 				'tag'   => array(
 					'label'       => __( 'HTML Tag', 'popup-maker' ),
-					'placeholder' => __( 'HTML Tags: button, span etc.', 'popup-maker' ),
-					'desc'        => __( 'The HTML tag used to generate the trigger and wrap your text.', 'popup-maker' ),
+					'placeholder' => __( 'HTML Tag', 'popup-maker' ) . ': button, span etc',
+					'desc'        => __( 'The HTML tag used for this element.', 'popup-maker' ),
 					'type'        => 'text',
 					'std'         => 'span',
 					'priority'    => 10,
@@ -53,7 +55,7 @@ class PUM_Shortcode_Popup_Close extends PUM_Shortcode {
 				),
 				'classes' => array(
 					'label'       => __( 'CSS Class', 'popup-maker' ),
-					'placeholder' => __( 'CSS Class', 'popup-maker' ),
+					'placeholder' => 'my-custom-class',
 					'type'        => 'text',
 					'desc'        => __( 'Add additional classes for styling.', 'popup-maker' ),
 					'priority'    => 15,
@@ -98,10 +100,9 @@ class PUM_Shortcode_Popup_Close extends PUM_Shortcode {
 
 	public function _template() { ?>
 		<script type="text/html" id="tmpl-pum-shortcode-view-popup_close">
-			<{{{attr.tag}}} class="pum-close popmake-close <# if (typeof attr.classes !== 'undefined') print(attr.classes); #>">{{{attr._inner_content}}}</{{{attr.tag}}}>
+			<{{{attrs.tag}}} class="pum-close popmake-close <# if (typeof attrs.classes !== 'undefined') print(attrs.classes); #>">{{{attrs._inner_content}}}</{{{attrs.tag}}}>
 		</script><?php
 	}
 
 }
 
-new PUM_Shortcode_Popup_Close();

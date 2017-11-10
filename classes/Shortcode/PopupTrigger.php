@@ -9,8 +9,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * This is a base class for all popup maker & extension shortcodes.
  */
-class PUM_Shortcode_Popup_Trigger extends PUM_Shortcode {
+class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 
+	/**
+	 * @var int
+	 */
+	public $version = 2;
+
+	/**
+	 * @var bool
+	 */
 	public $has_content = true;
 
 	/**
@@ -20,14 +28,23 @@ class PUM_Shortcode_Popup_Trigger extends PUM_Shortcode {
 		return 'popup_trigger';
 	}
 
+	/**
+	 * @return string
+	 */
 	public function label() {
 		return __( 'Popup Trigger', 'popup-maker' );
 	}
 
+	/**
+	 * @return string
+	 */
 	public function description() {
 		return __( 'Inserts a click-able popup trigger.', 'popup-maker' );
 	}
 
+	/**
+	 * @return array
+	 */
 	public function inner_content_labels() {
 		return array(
 			'label'       => __( 'Trigger Content', 'popup-maker' ),
@@ -35,10 +52,16 @@ class PUM_Shortcode_Popup_Trigger extends PUM_Shortcode {
 		);
 	}
 
+	/**
+	 * @return array
+	 */
 	public function post_types() {
 		return array( 'post', 'page', 'popup' );
 	}
 
+	/**
+	 * @return array
+	 */
 	public function fields() {
 		return array(
 			'general' => array(
@@ -111,12 +134,13 @@ class PUM_Shortcode_Popup_Trigger extends PUM_Shortcode {
 		return $return;
 	}
 
+	/**
+	 *
+	 */
 	public function _template() { ?>
 		<script type="text/html" id="tmpl-pum-shortcode-view-popup_trigger">
-			<{{{attr.tag}}} class="popmake-{{{attr.id}}} {{{attr.classes}}}">{{{attr._inner_content}}}</{{{attr.tag}}}>
+			<{{{attrs.tag}}} class="popmake-{{{attrs.id}}} {{{attrs.classes}}}">{{{attrs._inner_content}}}</{{{attrs.tag}}}>
 		</script><?php
 	}
 
 }
-
-new PUM_Shortcode_Popup_Trigger();

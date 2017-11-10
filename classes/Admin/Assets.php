@@ -55,7 +55,7 @@ class PUM_Admin_Assets {
 		wp_register_script( 'pum-admin-popup-editor', self::$js_url . 'admin-popup-editor' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-theme-editor', self::$js_url . 'admin-theme-editor' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-settings-page', self::$js_url . 'admin-settings-page' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
-		wp_register_script( 'pum-admin-shortcode-ui', self::$js_url . 'admin-shortcode-ui' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
+		wp_register_script( 'pum-admin-shortcode-ui', self::$js_url . 'admin-shortcode-ui' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, false );
 		wp_register_script( 'iframe-resizer', self::$js_url . 'iframeResizer' . self::$suffix . '.js', array( 'jquery' ) );
 
 		// @deprecated handle. Currently loads empty file and admin-general as dependency.
@@ -94,11 +94,11 @@ class PUM_Admin_Assets {
 					'update'                          => __( 'Update', 'popup-maker' ),
 					'insert'                          => __( 'Insert', 'popup-maker' ),
 					'cancel'                          => __( 'Cancel', 'popup-maker' ),
-					'shortcode_ui_button_tooltip'     => __( 'Popup Maker Shortcodes', 'popup-maker' ),
 					'confirm_delete_trigger'          => __( "Are you sure you want to delete this trigger?", 'popup-maker' ),
 					'confirm_delete_cookie'           => __( "Are you sure you want to delete this cookie?", 'popup-maker' ),
 					'no_cookie'                       => __( 'None', 'popup-maker' ),
 					'confirm_count_reset'             => __( 'Are you sure you want to reset the open count?', 'popup-maker' ),
+					'shortcode_ui_button_tooltip'     => __( 'Popup Maker Shortcodes', 'popup-maker' ),
 					'error_loading_shortcode_preview' => __( 'There was an error in generating the preview', 'popup-maker' ),
 				),
 			) ) );

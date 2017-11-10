@@ -5,13 +5,15 @@
 (function ($) {
     "use strict";
 
-    var I10n = pum_admin_vars.I10n || pum_shortcode_ui.I10n || {
+    var I10n = pum_shortcode_ui_vars.I10n || {
             error_loading_shortcode_preview: '',
+            shortcode_ui_button_tooltip: '',
             insert: '',
             update: ''
         },
-        shortcodes = pum_shortcode_ui.shortcodes || {},
+        shortcodes = pum_shortcode_ui_vars.shortcodes || {},
         base = {
+            version: 1,
             shortcode_args: {},
             shortcode_data: {},
             initialize: function (options) {
@@ -36,31 +38,46 @@
 
                 return attrs;
             },
-            template: function (options) {
-                var template = $('#tmpl-pum-shortcode-view-' + this.type),
-                    template_opts = {
+            /**
+             * Renders preview from template when available.
+             *
+             * @param attrs
+             */
+            template: function (attrs) {
+                var template = 'pum-shortcode-view-' + this.type,
+                    _template,
+                    options = {
                         evaluate: /<#([\s\S]+?)#>/g,
                         interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
                         escape: /\{\{([^\}]+?)\}\}(?!\})/g,
-                        variable: 'attr'
-                    },
-                    _template;
+                        variable: 'attrs'
+                    };
 
-                if (!template.length) {
+                if (this.version === 1) {
+                    options.variable = 'attr';
+                }
+
+
+                if (!$('#tmpl-' + template).length) {
                     return this.text;
                 }
 
-                _template = _.template(template.html(), null, template_opts);
+                _template = _.template($('#tmpl-' + template).html(), options);
 
-                if (options.class) {
-                    options.classes = options.class;
-                    delete options.class;
+                if (attrs.class) {
+                    attrs.classes = attrs.class;
+                    delete attrs.class;
                 }
 
-                options = this.cleanAttrs(options);
+                attrs = this.cleanAttrs(attrs);
 
-                return _template(options);
+                return _template(attrs);
             },
+            /**
+             * Get shortcode attr values.
+             *
+             * @returns {*}
+             */
             getShortcodeValues: function () {
                 if (typeof this.shortcode === 'undefined' || typeof this.shortcode.attrs === 'undefined') {
                     return {};
@@ -68,6 +85,11 @@
 
                 return _.extend({}, this.shortcode.attrs.named || {});
             },
+            /**
+             * Get shortcode raw content.
+             *
+             * @returns {string}
+             */
             getShortcodeContent: function () {
                 if (typeof this.shortcode === 'undefined') {
                     return '';
@@ -87,6 +109,11 @@
                 }
                 return this.content;
             },
+            /**
+             * Format shortcode for text tab.
+             *
+             * @param values
+             */
             formatShortcode: function (values) {
                 var has_content = this.shortcode_args.has_content,
                     content = this.getShortcodeContent();
@@ -100,12 +127,12 @@
 
                 values = this.cleanAttrs(values);
 
-                return PUM_Templates.shortcode({
+                return PUM_Admin.templates.shortcode({
                     tag: this.type,
                     meta: values,
                     has_content: has_content,
                     content: content
-                })
+                });
             },
             /**
              * Fetch preview.
@@ -114,39 +141,42 @@
              * @return undefined
              */
             fetch: function () {
-                var self = this;
+                var self = this,
+                    values = self.getShortcodeValues(),
+                    data = {
+                        action: 'pum_do_shortcode',
+                        post_id: $('#post_ID').val(),
+                        tag: self.type,
+                        shortcode: self.formatShortcode(),
+                        nonce: pum_shortcode_ui_vars.nonce
+                    };
 
-                if (!this.fetching) {
+                if (!self.fetching) {
 
-                    this.fetching = true;
+                    self.fetching = true;
 
-                    var $template = $('#tmpl-pum-shortcode-view-' + this.type),
-                        values = this.getShortcodeValues(),
-                        data = {};
-
-                    if (this.shortcode_args.has_content) {
-                        values._inner_content = this.getShortcodeContent();
+                    /*
+                     * If shortcode has inner content, pass that to the renderer.
+                     */
+                    if (self.shortcode_args.has_content) {
+                        values._inner_content = self.getShortcodeContent();
                     }
 
-                    if (!this.shortcode_args.ajax_rendering && $template.length) {
-                        this.content = this.template(values);
-                        delete this.fetching;
-                        this.render();
+                    /*
+                     * Render templates immediately when available.
+                     * Otherwise request rendering via ajax.
+                     */
+                    if (!self.shortcode_args.ajax_rendering) {
+                        self.content = self.template(values);
+                        delete self.fetching;
+                        self.render();
                     } else {
-                        data = {
-                            action: 'pum_do_shortcode',
-                            post_id: $('#post_ID').val(),
-                            tag: this.type,
-                            shortcode: this.formatShortcode(),
-                            nonce: '<?php echo wp_create_nonce( "pum-shortcode-ui-nonce" ); ?>'
-                        };
-
                         $.post(ajaxurl, data)
                             .done(function (response) {
                                 self.content = response.data;
                             })
                             .fail(function () {
-                                self.content = '<span class="pum_shortcode_ui_error">' + I10n.error_loading_shortcode_preview + '</span>';
+                                self.content = '<span class="pum_shortcode_ui_vars_error">' + I10n.error_loading_shortcode_preview + '</span>';
                             })
                             .always(function () {
                                 delete self.fetching;
@@ -164,6 +194,9 @@
 
                 this.renderForm(values, update);
             },
+            /**
+             * Renders loading placeholder.
+             */
             setLoader: function () {
                 this.setContent(
                     '<div class="loading-placeholder">' +
@@ -172,109 +205,77 @@
                     '</div>'
                 );
             },
+            /**
+             * Render the shortcode edit form.
+             *
+             * @param values
+             * @param callback
+             */
             renderForm: function (values, callback) {
                 var self = this,
-                    editor = tinyMCE.activeEditor,
-                    modal,
-                    tabs = {},
-                    sections = {},
-                    field,
                     data = $.extend(true, {}, {
                         tag: this.type,
                         id: 'pum-shortcode-editor-' + this.type,
                         label: '',
+                        tabs: {},
+                        sections: {},
                         fields: {}
                     }, self.shortcode_args);
 
-                if (undefined === values) {
-                    values = {};
-                }
+                values = values || {};
 
-                // Fields come already arranged by section. Loop Sections then Fields.
-                _.each(data.fields, function (sectionFields, sectionID) {
-
-                    if (undefined === sections[sectionID]) {
-                        sections[sectionID] = [];
-                    }
-
-                    // Replace the array with rendered fields.
-                    _.each(sectionFields, function (fieldArgs, fieldKey) {
-                        field = fieldArgs;
-                        if (undefined !== values[fieldArgs.id]) {
-                            field.value = values[fieldArgs.id];
-                        }
-
-                        // Add unique prefix to IDs to prevent bad behavior.
-                        field.id = 'pum_shortcode_attrs_' + field.id;
-
-                        sections[sectionID].push(PUM_Templates.field(field));
-                    });
-
-                    // Render the section.
-                    sections[sectionID] = PUM_Templates.section({
-                        fields: sections[sectionID]
-                    });
-                });
-
-                // Generate Tab List
-                _.each(sections, function (section, id) {
-
-                    tabs[id] = {
-                        label: data.sections[id],
-                        content: section
-                    };
-
-                });
-
-                // Render Tabs
-                tabs = PUM_Templates.tabs({
-                    id: data.id,
-                    classes: '',
-                    tabs: tabs
-                });
-
-                // Render Modal
-                modal = PUM_Templates.modal({
+                PUM_Admin.modals.reload('#' + data.id, PUM_Admin.templates.modal({
                     id: data.id,
                     title: data.label,
                     description: data.description,
-                    save_button: undefined === values ? I10n.insert : I10n.update,
                     classes: 'tabbed-content pum-shortcode-editor',
-                    content: tabs,
+                    save_button: undefined === values ? I10n.insert : I10n.update,
+                    content: PUM_Admin.forms.render({
+                        id: 'pum-shortcode-editor-' + this.type,
+                        tabs: data.tabs || {},
+                        sections: data.sections || {},
+                        fields: data.fields || {}
+                    }, values || {}),
                     meta: {
                         'data-shortcode_tag': this.type
                     }
-                });
+                }));
 
-                PUM_Admin.modals.reload('#' + data.id, modal, function () {
-                    var modal = $('#' + data.id);
+                $('#' + data.id + ' form').on('submit', function (event) {
+                    event.preventDefault();
 
-                    modal.find('.pum-form').submit(function (event) {
+                    var $form = $(this),
+                        values = $form.pumSerializeObject(),
+                        content = self.formatShortcode(values.attrs);
 
-                        event.preventDefault();
-
-                        var $form = $(this),
-                            values = $form.pumSerializeObject(),
-                            content = self.formatShortcode(values.attrs);
-
+                    if (typeof callback === 'function') {
                         callback(content);
+                    }
 
-                        PUM_Admin.modals.closeAll(function () {
-                            $(modal).remove();
-                        });
-                    });
+                    PUM_Admin.modals.closeAll();
                 });
-            }
+            },
         };
 
     $(document).ready(function () {
-        wp.mce = wp.mce || {};
-        wp.mce.pum_shortcodes = wp.pum_shortcodes || {};
+        window.wp = window.wp || {};
+        window.wp.mce = window.wp.mce || {};
+        window.wp.mce.pum_shortcodes = window.wp.mce.pum_shortcodes || {};
 
-        $.each(shortcodes, function (tag, args) {
-            var extend = _.extend({}, base, {
+        _.each(shortcodes, function (args, tag) {
+
+            /**
+             * Create and store a view object for each shortcode.
+             *
+             * @type Object
+             */
+            wp.mce.pum_shortcodes[tag] = _.extend({}, base, {
+                version: args.version || 1,
                 shortcode_args: args,
-                View: { // before WP 4.2:
+                /**
+                 * For compatibility with WP prior to v4.2:
+                 */
+                View: { //
                     type: tag,
                     template: function (options) {
                         return wp.mce.pum_shortcodes[this.type].template(options);
@@ -287,20 +288,21 @@
                     getHtml: function () {
                         var values = this.shortcode.attrs.named;
                         if (this.shortcode_args.has_content) {
-                            values['_inner_content'] = this.shortcode.content;
+                            values._inner_content = this.shortcode.content;
                         }
                         return this.template(values);
                     }
                 }
+
             });
 
-            wp.mce.pum_shortcodes[tag] = extend;
-
-            if (wp.mce.views !== undefined && wp.mce.views.register === 'function') {
-                wp.mce.views.register(tag, extend);
+            /**
+             * Register each view with MCE.
+             */
+            if (typeof wp.mce.views !== 'undefined' && typeof wp.mce.views.register === 'function') {
+                wp.mce.views.register(tag, wp.mce.pum_shortcodes[tag]);
             }
         });
-
     });
 
 }(jQuery));

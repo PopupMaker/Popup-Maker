@@ -16,28 +16,24 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: classes/Admin/Assets.php:91, classes/Admin/Templates.php:432, classes/Admin/Templates.php:603, includes/admin/class-pum-admin-helpers.php:16
+#: classes/Admin/Assets.php:92, classes/Admin/Templates.php:432, classes/Admin/Templates.php:603, includes/admin/class-pum-admin-helpers.php:16
 msgid "Add"
 msgstr ""
 
-#: classes/Admin/Assets.php:92, includes/admin/settings/settings-page.php:55, includes/admin/settings/settings-page.php:61, includes/admin/tools/tools-page.php:54, includes/admin/tools/tools-page.php:61, includes/admin/tools/tools-page.php:420, includes/integrations/class-pum-gravity-forms.php:171
+#: classes/Admin/Assets.php:93, includes/admin/settings/settings-page.php:55, includes/admin/settings/settings-page.php:61, includes/admin/tools/tools-page.php:54, includes/admin/tools/tools-page.php:61, includes/admin/tools/tools-page.php:420, includes/integrations/class-pum-gravity-forms.php:171
 msgid "Save"
 msgstr ""
 
-#: classes/Admin/Assets.php:93
+#: classes/Admin/Assets.php:94
 msgid "Update"
 msgstr ""
 
-#: classes/Admin/Assets.php:94
+#: classes/Admin/Assets.php:95, classes/Admin/Shortcode/UI.php:85
 msgid "Insert"
 msgstr ""
 
-#: classes/Admin/Assets.php:95, includes/admin/class-pum-admin-helpers.php:14
+#: classes/Admin/Assets.php:96, classes/Admin/Shortcode/UI.php:86, includes/admin/class-pum-admin-helpers.php:14
 msgid "Cancel"
-msgstr ""
-
-#: classes/Admin/Assets.php:96
-msgid "Popup Maker Shortcodes"
 msgstr ""
 
 #: classes/Admin/Assets.php:97
@@ -56,7 +52,11 @@ msgstr ""
 msgid "Are you sure you want to reset the open count?"
 msgstr ""
 
-#: classes/Admin/Assets.php:101
+#: classes/Admin/Assets.php:101, classes/Admin/Shortcode/UI.php:87
+msgid "Popup Maker Shortcodes"
+msgstr ""
+
+#: classes/Admin/Assets.php:102, classes/Admin/Shortcode/UI.php:88
 msgid "There was an error in generating the preview"
 msgstr ""
 
@@ -112,7 +112,7 @@ msgstr ""
 msgid "Analytics"
 msgstr ""
 
-#: classes/Admin/Popups.php:198, classes/Admin/Popups.php:224, classes/Conditions.php:107, classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:163, classes/Triggers.php:258, includes/admin/settings/register-settings.php:319, includes/class-popmake-fields.php:57, includes/class-pum-shortcode.php:151, includes/shortcodes/class-pum-shortcode-popup.php:46
+#: classes/Admin/Popups.php:198, classes/Admin/Popups.php:224, classes/Conditions.php:107, classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:151, classes/Shortcode.php:131, classes/Shortcode.php:143, classes/Triggers.php:258, includes/admin/settings/register-settings.php:319, includes/class-popmake-fields.php:57, includes/shortcodes/class-pum-shortcode-popup.php:46
 msgid "General"
 msgstr ""
 
@@ -120,7 +120,7 @@ msgstr ""
 msgid "Display"
 msgstr ""
 
-#: classes/Admin/Popups.php:200, classes/Admin/Popups.php:525, classes/Admin/Templates.php:279, includes/admin/class-pum-admin-helpers.php:30, includes/admin/shortcode-ui/templates/helpers.php:14, includes/shortcodes/class-pum-shortcode-popup.php:50, templates/popup.php:44
+#: classes/Admin/Popups.php:200, classes/Admin/Popups.php:525, classes/Admin/Templates.php:279, includes/admin/class-pum-admin-helpers.php:30, includes/shortcodes/class-pum-shortcode-popup.php:50, templates/popup.php:44
 msgid "Close"
 msgstr ""
 
@@ -541,7 +541,7 @@ msgstr ""
 msgid "Show all tags"
 msgstr ""
 
-#: classes/Admin/Shortcode/UI.php:257
+#: classes/Admin/Shortcode/UI.php:142
 msgid "You do not have access to preview this post."
 msgstr ""
 
@@ -561,7 +561,7 @@ msgstr ""
 msgid "Activate License"
 msgstr ""
 
-#: classes/Admin/Templates.php:231, classes/Admin/Templates.php:236, includes/admin/metabox-support.php:42, includes/admin/shortcode-ui/templates/fields.php:14
+#: classes/Admin/Templates.php:231, classes/Admin/Templates.php:236, includes/admin/metabox-support.php:42
 msgid "Documentation"
 msgstr ""
 
@@ -835,80 +835,84 @@ msgstr ""
 msgid "404 Error Page"
 msgstr ""
 
-#: classes/Cookies.php:74
+#: classes/Cookies.php:72
 msgid "On Popup Open"
 msgstr ""
 
-#: classes/Cookies.php:75, classes/Cookies.php:81, classes/Cookies.php:87
-msgid "Cookie Settings"
-msgstr ""
-
-#: classes/Cookies.php:76, classes/Cookies.php:82, classes/Cookies.php:88
-msgid "Sessions"
-msgstr ""
-
-#: classes/Cookies.php:80
+#: classes/Cookies.php:75
 msgid "On Popup Close"
 msgstr ""
 
-#: classes/Cookies.php:86
+#: classes/Cookies.php:78
 msgid "Manual JavaScript"
 msgstr ""
 
-#: classes/Cookies.php:164
+#: classes/Cookies.php:109
+msgid "Cookie Settings"
+msgstr ""
+
+#: classes/Cookies.php:110
+msgid "Sessions"
+msgstr ""
+
+#: classes/Cookies.php:152
 msgid "Advanced"
 msgstr ""
 
-#: classes/Cookies.php:198, classes/Triggers.php:232
+#: classes/Cookies.php:168, classes/Triggers.php:232
 msgid "Cookie Name"
 msgstr ""
 
-#: classes/Cookies.php:199
+#: classes/Cookies.php:169
 msgid "Cookie Name ex. popmaker-123"
 msgstr ""
 
-#: classes/Cookies.php:200
+#: classes/Cookies.php:170
 msgid "The name that will be used when checking for or saving this cookie."
 msgstr ""
 
-#: classes/Cookies.php:205, includes/deprecated/v4.php:498
+#: classes/Cookies.php:175, includes/deprecated/v4.php:498
 msgid "Cookie Time"
 msgstr ""
 
-#: classes/Cookies.php:206
+#: classes/Cookies.php:176
 msgid "364 days 23 hours 59 minutes 59 seconds"
 msgstr ""
 
-#: classes/Cookies.php:207
+#: classes/Cookies.php:177
 msgid "Enter a plain english time before cookie expires."
 msgstr ""
 
-#: classes/Cookies.php:214, includes/deprecated/v4.php:481
+#: classes/Cookies.php:184, includes/deprecated/v4.php:481
 msgid "Use Session Cookie?"
 msgstr ""
 
-#: classes/Cookies.php:215, includes/deprecated/v4.php:486
+#: classes/Cookies.php:185, includes/deprecated/v4.php:486
 msgid "Session cookies expire when the user closes their browser."
 msgstr ""
 
-#: classes/Cookies.php:215
+#: classes/Cookies.php:185
 msgid "%sNote%s: Modern browsers that reopen your last browser session's tabs do not properly clear session cookies"
 msgstr ""
 
-#: classes/Cookies.php:221, includes/deprecated/v4.php:514
+#: classes/Cookies.php:191, includes/deprecated/v4.php:514
 msgid "Sitewide Cookie"
 msgstr ""
 
-#: classes/Cookies.php:222
+#: classes/Cookies.php:192
 msgid "This will prevent the popup from triggering on all pages until the cookie expires."
 msgstr ""
 
-#: classes/Cookies.php:228, includes/deprecated/v4.php:529
+#: classes/Cookies.php:198, includes/deprecated/v4.php:529
 msgid "Cookie Key"
 msgstr ""
 
-#: classes/Cookies.php:229
+#: classes/Cookies.php:199
 msgid "Changing this will cause all existing cookies to be invalid."
+msgstr ""
+
+#: classes/Shortcode.php:132, classes/Shortcode.php:144
+msgid "Options"
 msgstr ""
 
 #: classes/Site/Assets.php:205
@@ -1100,11 +1104,11 @@ msgstr ""
 msgid ".my-class, #button2"
 msgstr ""
 
-#: classes/Triggers.php:151, includes/shortcodes/class-pum-shortcode-popup-close.php:63, includes/shortcodes/class-pum-shortcode-popup-trigger.php:76
+#: classes/Triggers.php:151, includes/shortcodes/class-pum-shortcode-popup-close.php:63, includes/shortcodes/class-pum-shortcode-popup-trigger.php:99
 msgid "Do not prevent the default click functionality."
 msgstr ""
 
-#: classes/Triggers.php:152, includes/shortcodes/class-pum-shortcode-popup-trigger.php:77
+#: classes/Triggers.php:152, includes/shortcodes/class-pum-shortcode-popup-trigger.php:100
 msgid "This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file."
 msgstr ""
 
@@ -1806,10 +1810,6 @@ msgstr ""
 msgid "Allow %3$sPopup Maker%4$s​ to collect some usage data with %2$s to make the plugin even more awesome. If you skip this, that's okay! ​%3$sPopup Maker%4$s will still work just fine."
 msgstr ""
 
-#: includes/class-pum-shortcode.php:152
-msgid "Options"
-msgstr ""
-
 #: includes/deprecated/v4.php:111
 msgid "Targeting Conditions"
 msgstr ""
@@ -2224,23 +2224,23 @@ msgstr ""
 msgid "Content"
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-close.php:46, includes/shortcodes/class-pum-shortcode-popup-trigger.php:59
+#: includes/shortcodes/class-pum-shortcode-popup-close.php:46, includes/shortcodes/class-pum-shortcode-popup-trigger.php:82
 msgid "HTML Tag"
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-close.php:47, includes/shortcodes/class-pum-shortcode-popup-trigger.php:60
+#: includes/shortcodes/class-pum-shortcode-popup-close.php:47, includes/shortcodes/class-pum-shortcode-popup-trigger.php:83
 msgid "HTML Tags: button, span etc."
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-close.php:48, includes/shortcodes/class-pum-shortcode-popup-trigger.php:61
+#: includes/shortcodes/class-pum-shortcode-popup-close.php:48, includes/shortcodes/class-pum-shortcode-popup-trigger.php:84
 msgid "The HTML tag used to generate the trigger and wrap your text."
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-close.php:55, includes/shortcodes/class-pum-shortcode-popup-close.php:56, includes/shortcodes/class-pum-shortcode-popup-trigger.php:68, includes/shortcodes/class-pum-shortcode-popup-trigger.php:69
+#: includes/shortcodes/class-pum-shortcode-popup-close.php:55, includes/shortcodes/class-pum-shortcode-popup-close.php:56, includes/shortcodes/class-pum-shortcode-popup-trigger.php:91, includes/shortcodes/class-pum-shortcode-popup-trigger.php:92
 msgid "CSS Class"
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-close.php:58, includes/shortcodes/class-pum-shortcode-popup-trigger.php:71
+#: includes/shortcodes/class-pum-shortcode-popup-close.php:58, includes/shortcodes/class-pum-shortcode-popup-trigger.php:94
 msgid "Add additional classes for styling."
 msgstr ""
 
@@ -2248,27 +2248,27 @@ msgstr ""
 msgid "This prevents us from disabling the browsers default action when a close button is clicked. It can be used to allow a link to a file to both close a popup and still download the file."
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:24
+#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:35
 msgid "Popup Trigger"
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:28
+#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:42
 msgid "Inserts a click-able popup trigger."
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:33
+#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:50
 msgid "Trigger Content"
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:46
+#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:69
 msgid "Targeted Popup"
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:47
+#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:70
 msgid "Choose a Popup"
 msgstr ""
 
-#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:48
+#: includes/shortcodes/class-pum-shortcode-popup-trigger.php:71
 msgid "Choose which popup will be targeted by this trigger."
 msgstr ""
 

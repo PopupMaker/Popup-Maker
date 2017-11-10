@@ -16,33 +16,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PUM_Admin_Shortcode_UI {
 
-	/**
-	 * @var PUM_Admin_Shortcode_UI
-	 */
-	private static $instance;
-
-	/**
-	 * Main instance
-	 *
-	 * @return PUM_Admin_Shortcode_UI
-	 */
-	public static function instance() {
-		if ( ! isset( self::$instance ) ) {
-			self::$instance = new self;
-			self::$instance->init();
-		}
-
-		return self::$instance;
-	}
-
-	public function init() {
-		add_action( 'admin_init', array( $this, 'init_editor' ), 20 );
+	public static function init() {
+		add_action( 'admin_init', array( __CLASS__, 'init_editor' ), 20 );
 	}
 
 	/**
 	 * Initialize the editor button when needed.
 	 */
-	public function init_editor() {
+	public static function init_editor() {
 		/*
 		 * Check if the logged in WordPress User can edit Posts or Pages.
 		 */
@@ -65,12 +46,12 @@ class PUM_Admin_Shortcode_UI {
 		}
 
 		// Add shortcode ui button & js.
-		add_filter( 'mce_buttons', array( $this, 'mce_buttons' ) );
-		add_filter( 'mce_external_plugins', array( $this, 'mce_external_plugins' ) );
+		add_filter( 'mce_buttons', array( __CLASS__, 'mce_buttons' ) );
+		add_filter( 'mce_external_plugins', array( __CLASS__, 'mce_external_plugins' ) );
 
 		// Process live previews.
-		add_action( 'wp_ajax_pum_do_shortcode', array( $this, 'wp_ajax_pum_do_shortcode' ) );
-		add_action( 'wp_ajax_pum_do_shortcode', array( $this, 'do_shortcode' ) );
+		add_action( 'wp_ajax_pum_do_shortcode', array( __CLASS__, 'do_shortcode' ) );
+		//add_action( 'wp_ajax_pum_do_shortcode', array( __CLASS__, 'wp_ajax_pum_do_shortcode' ) );
 	}
 
 	/**
@@ -80,9 +61,9 @@ class PUM_Admin_Shortcode_UI {
 	 *
 	 * @return array
 	 */
-	public function mce_buttons( $buttons ) {
+	public static function mce_buttons( $buttons ) {
 		// Enqueue scripts when editor is detected.
-		$this->enqueue_scripts();
+		self::enqueue_scripts();
 
 		array_push( $buttons, 'pum_shortcodes' );
 
@@ -92,7 +73,7 @@ class PUM_Admin_Shortcode_UI {
 	/**
 	 * Enqueues needed assets.
 	 */
-	public function enqueue_scripts() {
+	public static function enqueue_scripts() {
 		// Register editor styles.
 		add_editor_style( PUM_Admin_Assets::$css_url . 'admin-editor-styles' . PUM_Admin_Assets::$suffix . '.css' );
 
@@ -106,32 +87,37 @@ class PUM_Admin_Shortcode_UI {
 				'shortcode_ui_button_tooltip'     => __( 'Popup Maker Shortcodes', 'popup-maker' ),
 				'error_loading_shortcode_preview' => __( 'There was an error in generating the preview', 'popup-maker' ),
 			),
-			'shortcodes' => $this->shortcode_ui_var(),
+			'shortcodes' => self::shortcode_ui_var(),
 		) ) );
 	}
 
-	public function shortcode_ui_var() {
+	/**
+	 * Generates a json object variable to pass to the Shortcode UI front end.
+	 *
+	 * @return array
+	 */
+	public static function shortcode_ui_var() {
+		$type = pum_typenow();
+
 		$shortcodes = array();
 
 		foreach ( PUM_Shortcodes::instance()->get_shortcodes() as $tag => $shortcode ) {
 			/**
 			 * @var $shortcode PUM_Shortcode
 			 */
+			if ( ! in_array( $type, $shortcode->post_types() ) ) {
+				continue;
+			}
+
 			$shortcodes[ $tag ] = array(
+				'version'        => $shortcode->version,
 				'label'          => $shortcode->label(),
 				'description'    => $shortcode->description(),
-				'sections'       => $shortcode->sections(),
-				'fields'         => array(),
+				'tabs'           => $shortcode->_tabs(),
+				'fields'         => $shortcode->_fields(),
 				'has_content'    => $shortcode->has_content,
 				'ajax_rendering' => $shortcode->ajax_rendering === true,
 			);
-
-			foreach ( $shortcode->get_all_fields() as $section => $fields ) {
-				foreach ( $fields as $id => $field ) {
-					$field['class']                             = $shortcode->field_classes( $field );
-					$shortcodes[ $tag ]['fields'][ $section ][] = $field;
-				}
-			}
 		}
 
 		return $shortcodes;
@@ -144,103 +130,29 @@ class PUM_Admin_Shortcode_UI {
 	 *
 	 * @return array
 	 */
-	public function mce_external_plugins( $plugin_array ) {
+	public static function mce_external_plugins( $plugin_array ) {
 		return array_merge( $plugin_array, array(
 			'pum_shortcodes' => PUM_Admin_Assets::$js_url . 'mce-buttons' . PUM_Admin_Assets::$suffix . '.js',
 		) );
 	}
 
-	public function do_shortcode() {
+	public static function do_shortcode() {
 
 		check_ajax_referer( 'pum-shortcode-ui-nonce', 'nonce' );
 
-		$tag = ! empty( $_REQUEST['tag'] ) ? $_REQUEST['tag'] : false;
-
-		/** @var PUM_Shortcode $shortcode */
-		$shortcode = PUM_Shortcodes::instance()->get_shortcode( $tag );
-
-
-		$code = stripslashes( $_REQUEST['shortcode'] );
-
-		$content = do_shortcode( $code );
-
-		if ( ! $shortcode || $content == $code ) {
-			wp_send_json_error();
-		}
-
-		$styles = "<style>" . $shortcode->_template_styles() . "</style>";
-
-		wp_send_json_success( $styles . $content );
-	}
-
-	/**
-	 * Get a bunch of shortcodes to render in MCE preview.
-	 */
-	public function wp_ajax_pum_do_shortcode() {
-
-		$shortcodes = $_REQUEST['queries'];
-
-		if ( ! is_array( $shortcodes ) ) {
-			// Don't sanitize shortcodes — can contain HTML kses doesn't allow (e.g. sourcecode shortcode)
-
-			$shortcode = ! empty( $shortcodes ) ? stripslashes( $shortcodes ) : null;
-			$post_id   = isset( $_REQUEST['post_id'] ) ? intval( $_REQUEST['post_id'] ) : null;
-
-			$responses = array(
-				'query' => $shortcodes,
-				'html'  => $this->render_shortcode_for_preview( $shortcode, $post_id ),
-			);
-
-			wp_send_json_success( $responses );
-			exit;
-		}
-
-		if ( count( $shortcodes ) ) {
-
-			$responses = array();
-
-			foreach ( $shortcodes as $posted_query ) {
-
-				// Don't sanitize shortcodes — can contain HTML kses doesn't allow (e.g. sourcecode shortcode)
-				if ( ! empty( $posted_query['shortcode'] ) ) {
-					$shortcode = stripslashes( $posted_query['shortcode'] );
-				} else {
-					$shortcode = null;
-				}
-				if ( isset( $_REQUEST['post_id'] ) ) {
-					$post_id = intval( $_REQUEST['post_id'] );
-				} else {
-					$post_id = null;
-				}
-
-				$responses[ $posted_query['counter'] ] = array(
-					'query'    => $posted_query,
-					'response' => $this->render_shortcode_for_preview( $shortcode, $post_id ),
-				);
-			}
-
-			wp_send_json_success( $responses );
-			exit;
-		}
-
-	}
-
-	/**
-	 * Render a shortcode body for preview.
-	 *
-	 * @param $shortcode
-	 * @param null $post_id
-	 *
-	 * @return string
-	 */
-	private function render_shortcode_for_preview( $shortcode, $post_id = null ) {
-
-		if ( ! defined( 'PUM_DOING_PREVIEW' ) ) {
-			define( 'PUM_DOING_PREVIEW', true );
-		}
+		$tag       = ! empty( $_REQUEST['tag'] ) ? $_REQUEST['tag'] : false;
+		$shortcode = ! empty( $_REQUEST['shortcode'] ) ? stripslashes( $_REQUEST['shortcode'] ) : null;
+		$post_id   = isset( $_REQUEST['post_id'] ) ? intval( $_REQUEST['post_id'] ) : null;
 
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			return esc_html__( "You do not have access to preview this post.", 'popup-maker' );
+		}
+
+		/** @var PUM_Shortcode $shortcode */
+		$shortcode_object = PUM_Shortcodes::instance()->get_shortcode( $tag );
+
+		if ( ! defined( 'PUM_DOING_PREVIEW' ) ) {
+			define( 'PUM_DOING_PREVIEW', true );
 		}
 
 		/**
@@ -252,24 +164,19 @@ class PUM_Admin_Shortcode_UI {
 			setup_postdata( $post );
 		}
 
-		ob_start();
 
-		/**
-		 * Fires before shortcode is rendered in preview.
-		 *
-		 * @param string $shortcode Full shortcode including attributes
-		 */
-		do_action( 'pum_before_do_shortcode', $shortcode );
+		/** @var string $content Rendered shortcode content. */
+		$content = do_shortcode( $shortcode );
 
-		echo do_shortcode( $shortcode ); // WPCS: xss ok
+		/** If no matching tag or $content wasn't rendered die. */
+		if ( ! $shortcode_object || $content == $shortcode ) {
+			wp_send_json_error();
+		}
 
-		/**
-		 * Fires after shortcode is rendered in preview.
-		 *
-		 * @param string $shortcode Full shortcode including attributes
-		 */
-		do_action( 'pum_after_do_shortcode', $shortcode );
+		/** Generate inline styles when needed. */
+		$styles = "<style>" . $shortcode_object->_template_styles() . "</style>";
 
-		return ob_get_clean();
+		wp_send_json_success( $styles . $content );
 	}
+
 }

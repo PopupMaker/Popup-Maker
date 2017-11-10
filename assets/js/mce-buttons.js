@@ -2,18 +2,18 @@
     "use strict";
 
     tinymce.PluginManager.add('pum_shortcodes', function (editor) {
-        var shortcodes = pum_shortcode_ui_vars.shortcodes || [],
+        var shortcodes = pum_shortcode_ui_vars.shortcodes || {},
             menuItems = [];
 
-        $.each(shortcodes, function (tag, args) {
-
+        _.each(shortcodes, function (args, tag) {
             menuItems.push({
                 text: args.label,
                 value: tag,
                 onclick: function () {
                     var values = {},
                         shortcode,
-                        text = "[" + tag + "]";
+                        text = "[" + tag + "]",
+                        options = {};
 
                     if (args.has_content) {
                         text += editor.selection.getContent() + "[/" + tag + "]";
@@ -21,12 +21,8 @@
 
                     shortcode = wp.mce.views.get(tag);
 
-                    var encodedText = encodeURIComponent( text );
-
-                    var options = _.extend( options || {}, {
-                        text: text,
-                        encodedText: encodedText
-                    } );
+                    options.text = text;
+                    options.encodedText = encodeURIComponent(text);
 
                     shortcode = new shortcode(options);
 

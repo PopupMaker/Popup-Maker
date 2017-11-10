@@ -289,17 +289,7 @@ class Popup_Maker {
 		require_once POPMAKE_DIR . 'includes/modules/menus.php';
 		require_once POPMAKE_DIR . 'includes/modules/admin-bar.php';
 		require_once POPMAKE_DIR . 'includes/modules/reviews.php';
-
-		// Shortcodes
-		require_once POPMAKE_DIR . 'includes/class-pum-shortcode.php';
-		require_once POPMAKE_DIR . 'includes/class-pum-shortcodes.php';
-		require_once POPMAKE_DIR . 'includes/shortcodes/class-pum-shortcode-popup.php';
-		require_once POPMAKE_DIR . 'includes/shortcodes/class-pum-shortcode-popup-trigger.php';
-		require_once POPMAKE_DIR . 'includes/shortcodes/class-pum-shortcode-popup-close.php';
-		if ( is_admin() ) {
-			//require_once POPMAKE_DIR . 'includes/admin/shortcode-ui/class-pum-admin-shortcode-ui.php';
-		}
-
+		
 		// Upgrades
 		if ( is_admin() ) {
 			require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-upgrades.php';
@@ -369,6 +359,10 @@ class Popup_Maker {
 		PUM_AssetCache::init();
 		PUM_Site::init();
 		PUM_Admin::init();
+
+		PUM_Shortcode_Popup::init();
+		PUM_Shortcode_PopupTrigger::init();
+		PUM_Shortcode_PopupClose::init();
 	}
 
 	/**

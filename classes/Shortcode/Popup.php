@@ -57,7 +57,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 		$popup_themes = array();
 
 		foreach ( $themes as $theme ) {
-			$popup_themes[ $theme->post_title ] = $theme->ID;
+			$popup_themes[ $theme->ID ] = $theme->post_title;
 		}
 
 		return $popup_themes;
@@ -104,7 +104,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 					'description' => __( 'Select the size of the popup.', 'popup-maker' ),
 					'type'        => 'select',
 					'std'         => 'small',
-					'options'     => apply_filters( 'popmake_popup_display_size_options', array() ),
+					'options'     => array_flip( apply_filters( 'popmake_popup_display_size_options', array() ) ),
 					'priority'    => 15,
 				),
 				'width'            => array(
@@ -115,7 +115,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 					'label'       => __( 'Width Unit', 'popup-maker' ),
 					'type'        => 'select',
 					'std'         => 'px',
-					'options'     => apply_filters( 'popmake_size_unit_options', array() ),
+					'options'     => array_flip( apply_filters( 'popmake_size_unit_options', array() ) ),
 					'priority'    => 25,
 				),
 				'height'           => array(
@@ -126,7 +126,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 					'label'       => __( 'Height Unit', 'popup-maker' ),
 					'type'        => 'select',
 					'std'         => 'px',
-					'options'     => apply_filters( 'popmake_size_unit_options', array() ),
+					'options'     => array_flip( apply_filters( 'popmake_size_unit_options', array() ) ),
 					'priority'    => 35,
 				),
 			),
@@ -137,7 +137,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 					'type'        => 'select',
 					'std'         => 'center top',
 					'priority'    => 4,
-					'options'     => apply_filters( 'popmake_popup_display_location_options', array() ),
+					'options'     => array_flip( apply_filters( 'popmake_popup_display_location_options', array() ) ),
 				),
 				'position_top'    => array(
 					'label'       => __( 'Top', 'popup-maker' ),
@@ -191,7 +191,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 					'type'        => 'select',
 					'std'         => 'fade',
 					'priority'    => 5,
-					'options'     => apply_filters( 'popmake_popup_display_animation_type_options', array() ),
+					'options'     => array_flip( apply_filters( 'popmake_popup_display_animation_type_options', array() ) ),
 				),
 				'animation_speed'           => array(
 					'label'       => __( 'Animation Speed', 'popup-maker' ),
@@ -210,7 +210,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 					'type'        => 'select',
 					'std'         => 'center top',
 					'priority'    => 15,
-					'options'     => apply_filters( 'popmake_popup_display_animation_origin_options', array() ),
+					'options'     => array_flip(apply_filters( 'popmake_popup_display_animation_origin_options', array() )),
 				),
 			),
 			'close'     => array(
@@ -321,10 +321,8 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 
 	public function _template() { ?>
 		<script type="text/html" id="tmpl-pum-shortcode-view-popup">
-			<?php _e( 'Popup', 'popup-maker' ); ?>: ID "{{attr.id}}"
+			<?php _e( 'Popup', 'popup-maker' ); ?>: ID "{{attrs.id}}"
 		</script><?php
 	}
 
 }
-
-new PUM_Shortcode_Popup();

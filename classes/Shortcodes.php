@@ -1,4 +1,7 @@
 <?php
+/*******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -12,11 +15,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Shortcodes {
 
 	/**
-	 * @var PUM_Shortcodes The one true PUM_Shortcodes
-	 * @since 1.0
+	 * @var PUM_Shortcodes Static Instance
 	 */
 	private static $instance;
 
+	/**
+	 * @var array Holds array of registered $shortcode_tags => $shortcode_objects.
+	 */
 	private $shortcodes = array();
 
 	/**
@@ -26,27 +31,39 @@ class PUM_Shortcodes {
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof PUM_Shortcodes ) ) {
-			self::$instance = new PUM_Shortcodes;
+			self::$instance = new self;
 		}
 
 		return self::$instance;
 	}
 
+	/**
+	 * Add a shortcode object to the collection.
+	 *
+	 * @param PUM_Shortcode $shortcode
+	 */
 	public function add_shortcode( PUM_Shortcode $shortcode ) {
 		$this->shortcodes[ $shortcode->tag() ] = $shortcode;
 	}
 
 	/**
+	 * Get all shortcodes.
+	 *
 	 * @return array PUM_Shortcode
 	 */
 	public function get_shortcodes() {
 		return $this->shortcodes;
 	}
 
+	/**
+	 * Get shortcode by tag.
+	 *
+	 * @param $tag
+	 *
+	 * @return bool|mixed
+	 */
 	public function get_shortcode( $tag ) {
 		return isset( $this->shortcodes[ $tag ] ) ? $this->shortcodes[ $tag ] : false;
 	}
 
 }
-
-PUM_Shortcodes::instance();
