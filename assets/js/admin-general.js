@@ -6290,7 +6290,6 @@
     // Return the Select2 instance for anyone who is importing it.
     return pumselect2;
 }));
-var PUMColorPickers;
 (function ($, document, undefined) {
     "use strict";
 
@@ -6308,9 +6307,6 @@ var PUMColorPickers;
                 });
         }
     };
-
-    // @deprecated remove.
-    PUMColorPickers = colorpicker;
 
     // Import this module.
     window.PUM_Admin = window.PUM_Admin || {};

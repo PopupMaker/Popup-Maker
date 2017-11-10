@@ -1,4 +1,3 @@
-var PUMColorPickers;
 (function ($, document, undefined) {
     "use strict";
 
@@ -16,9 +15,6 @@ var PUMColorPickers;
                 });
         }
     };
-
-    // @deprecated remove.
-    PUMColorPickers = colorpicker;
 
     // Import this module.
     window.PUM_Admin = window.PUM_Admin || {};
