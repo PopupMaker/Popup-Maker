@@ -120,10 +120,11 @@ var pum_debug_mode = false,
                 console.log(vars.label_selector, trigger_selector);
             },
             trigger: function ($popup, trigger) {
+                if (typeof vars.triggers[trigger.type] === 'string') {
 
-                console.groupCollapsed(vars.triggers[trigger.type].name);
+                    console.groupCollapsed(vars.triggers[trigger.type]);
 
-                switch (trigger.type) {
+                    switch (trigger.type) {
                     case 'auto_open':
                         console.log(vars.label_delay, trigger.settings.delay);
                         console.log(vars.label_cookie, trigger.settings.cookie_name);
@@ -132,15 +133,16 @@ var pum_debug_mode = false,
                         pum_debug.click_trigger($popup, trigger.settings);
                         console.log(vars.label_cookie, trigger.settings.cookie_name);
                         break;
+                    }
+
+                    $(document).trigger('pum_debug_render_trigger', $popup, trigger);
+
+                    console.groupEnd();
                 }
-
-                $(document).trigger('pum_debug_render_trigger', $popup, trigger);
-
-                console.groupEnd();
             },
             cookie: function ($popup, cookie) {
-                if (typeof vars.cookies[cookie.event] === 'object') {
-                    console.groupCollapsed(vars.cookies[cookie.event].name);
+                if (typeof vars.cookies[cookie.event] === 'string') {
+                    console.groupCollapsed(vars.cookies[cookie.event]);
 
                     switch (cookie.event) {
                         case 'on_popup_open':
@@ -241,7 +243,7 @@ var pum_debug_mode = false,
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_before_open);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumBeforeOpen'));
 
                 try {
                     $last_trigger = $($.fn.popmake.last_open_trigger);
@@ -259,7 +261,7 @@ var pum_debug_mode = false,
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_open_prevented);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumOpenPrevented'));
 
                 console.groupEnd();
             })
@@ -269,7 +271,7 @@ var pum_debug_mode = false,
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_after_open);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumAfterOpen'));
 
                 console.groupEnd();
             })
@@ -278,7 +280,8 @@ var pum_debug_mode = false,
                     settings = $popup.popmake('getSettings');
 
                 pum_debug.popup_event_header($popup);
-                console.groupCollapsed(vars.label_event_setup_close);
+
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumSetupClose'));
 
                 console.groupEnd();
             })
@@ -288,7 +291,7 @@ var pum_debug_mode = false,
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_close_prevented);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumClosePrevented'));
 
                 console.groupEnd();
             })
@@ -298,7 +301,7 @@ var pum_debug_mode = false,
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_before_close);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumBeforeClose'));
 
                 console.groupEnd();
             })
@@ -308,7 +311,7 @@ var pum_debug_mode = false,
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_after_close);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumAfterClose'));
 
                 console.groupEnd();
             })
@@ -318,7 +321,7 @@ var pum_debug_mode = false,
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_before_reposition);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumBeforeReposition'));
 
                 console.groupEnd();
             })
@@ -328,7 +331,7 @@ var pum_debug_mode = false,
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_after_reposition);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumAfterReposition'));
 
                 console.groupEnd();
             })
@@ -338,7 +341,7 @@ var pum_debug_mode = false,
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_checking_condition);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumCheckingCondition'));
 
                 console.log(( condition.not_operand ? '(!) ' : '' ) + condition.target + ': ' + result, condition);
 
