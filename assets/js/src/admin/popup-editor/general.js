@@ -25,8 +25,6 @@
                 PUM_Admin.forms.render(args, values, $container);
             }
 
-            return;
-
             // TODO Can't figure out why this is needed, but it looks stupid otherwise when the first condition field defaults to something other than the placeholder.
             $('#pum-first-condition, #pum-first-trigger, #pum-first-cookie')
                 .val(null)

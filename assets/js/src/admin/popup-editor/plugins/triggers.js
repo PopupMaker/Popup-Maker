@@ -18,7 +18,7 @@
             }
 
             // To help with processing older triggers still in use.
-            trigger['updated'] = trigger.updated !== undefined && trigger.updated;
+            trigger.updated = trigger.updated !== undefined && trigger.updated;
 
             if (trigger && typeof trigger === 'object' && typeof trigger.fields === 'object' && Object.keys(trigger.fields).length) {
                 trigger = this.parseFields(trigger);
