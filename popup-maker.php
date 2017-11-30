@@ -297,6 +297,8 @@ class Popup_Maker {
 
 		// Deprecated Code
 		require_once POPMAKE_DIR . 'includes/pum-deprecated.php';
+		require_once POPMAKE_DIR . 'includes/pum-deprecated-v1.4.php';
+		require_once POPMAKE_DIR . 'includes/pum-deprecated-v1.7.php';
 
 		// Helper Classes
 		if ( is_admin() ) {
@@ -329,12 +331,8 @@ class Popup_Maker {
 
 		}
 
-		if ( pum_is_v1_4_compatible() ) {
-			require_once POPMAKE_DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
-			require_once POPMAKE_DIR . 'includes/integrations/class-pum-buddypress-integration.php';
-		} else {
-			require_once POPMAKE_DIR . 'includes/integrations/class-popmake-woocommerce-integration.php';
-		}
+		require_once POPMAKE_DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
+		require_once POPMAKE_DIR . 'includes/integrations/class-pum-buddypress-integration.php';
 
 
 		if ( defined( 'WPB_VC_VERSION' ) || defined( 'FL_BUILDER_VERSION' ) ) {
