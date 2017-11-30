@@ -264,7 +264,7 @@
                                     label: label,
                                     value: value,
                                     meta: {
-                                        checked: (typeof data.value === 'object' && data.value[value] !== undefined) || (typeof data.value === 'array' && data.value.indexOf(value) >= 0)
+                                        checked: typeof data.value === 'object' && (data.value[value] !== undefined || data.value.indexOf(value) >= 0)
                                     }
                                 })
                             );

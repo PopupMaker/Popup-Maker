@@ -71,8 +71,6 @@
             return object;
         },
         checked: function (val1, val2, print) {
-            "use strict";
-
             var checked = false;
             if (typeof val1 === 'object' && typeof val2 === 'string' && jQuery.inArray(val2, val1) !== -1) {
                 checked = true;
@@ -90,8 +88,6 @@
             return checked;
         },
         selected: function (val1, val2, print) {
-            "use strict";
-
             var selected = false;
             if (typeof val1 === 'object' && typeof val2 === 'string' && jQuery.inArray(val2, val1) !== -1) {
                 selected = true;
