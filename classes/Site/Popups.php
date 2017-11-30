@@ -119,6 +119,8 @@ class PUM_Site_Popups {
 		self::$loaded->posts[] = $popup;
 		self::$loaded->post_count ++;
 
+		do_shortcode( $popup->post_content );
+
 		// Fire off preload action.
 		do_action( 'pum_preload_popup', $popup->ID );
 		// Deprecated filter.
