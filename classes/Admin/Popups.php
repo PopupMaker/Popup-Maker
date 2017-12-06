@@ -18,6 +18,9 @@ class PUM_Admin_Popups {
 	 * Hook the initialize method to the WP init action.
 	 */
 	public static function init() {
+		// Change title to popup name.
+		add_filter( 'enter_title_here', array( __CLASS__, '_default_title' ) );
+
 		// Add popup title field.
 		add_action( 'edit_form_advanced', array( __CLASS__, 'title_meta_field' ) );
 
@@ -37,6 +40,30 @@ class PUM_Admin_Popups {
 		add_action( 'load-edit.php', array( __CLASS__, 'load' ), 9999 );
 		add_action( 'restrict_manage_posts', array( __CLASS__, 'add_popup_filters' ), 100 );
 	}
+
+	/**
+	 * Change default "Enter title here" input
+	 *
+	 * @param string $title Default title placeholder text
+	 *
+	 * @return string $title New placeholder text
+	 */
+	public static function _default_title( $title ) {
+
+		if ( ! is_admin() ) {
+			return $title;
+		}
+
+		$screen = get_current_screen();
+
+		if ( 'popup' == $screen->post_type || 'popup_theme' == $screen->post_type ) {
+			$label = $screen->post_type == 'popup' ? __( 'Popup', 'popup-maker' ) : __( 'Popup Theme', 'popup-maker' );
+			$title = sprintf( __( '%s Name', 'popup-maker' ), $label );
+		}
+
+		return $title;
+	}
+
 
 	/**
 	 * Renders the popup title meta field.

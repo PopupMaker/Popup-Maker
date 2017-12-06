@@ -8,7 +8,6 @@ class PUM_Types {
 	public static function init() {
 		add_action( 'init', array( __CLASS__, 'register_post_types' ), 1 );
 		add_action( 'init', array( __CLASS__, 'register_taxonomies' ), 0 );
-		add_filter( 'enter_title_here', array( __CLASS__, '_default_title' ) );
 		add_filter( 'post_updated_messages', array( __CLASS__, 'updated_messages' ) );
 
 	}
@@ -124,29 +123,6 @@ class PUM_Types {
 		register_taxonomy( 'popup_tag', array( 'popup', 'popup_theme' ), $tag_args );
 		register_taxonomy_for_object_type( 'popup_tag', 'popup' );
 		register_taxonomy_for_object_type( 'popup_tag', 'popup_theme' );
-	}
-
-	/**
-	 * Change default "Enter title here" input
-	 *
-	 * @param string $title Default title placeholder text
-	 *
-	 * @return string $title New placeholder text
-	 */
-	public static function _default_title( $title ) {
-
-		if ( ! is_admin() ) {
-			return $title;
-		}
-
-		$screen = get_current_screen();
-
-		if ( 'popup' == $screen->post_type || 'popup_theme' == $screen->post_type ) {
-			$label = $screen->post_type == 'popup' ? __( 'Popup', 'popup-maker' ) : __( 'Popup Theme', 'popup-maker' );
-			$title = sprintf( __( '%s Name', 'popup-maker' ), $label );
-		}
-
-		return $title;
 	}
 
 	/**
