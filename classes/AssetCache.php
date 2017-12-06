@@ -222,7 +222,7 @@ class PUM_AssetCache {
 		$google_fonts = array();
 
 		foreach ( popmake_get_all_popup_themes() as $theme ) {
-			$theme_styles = pum_is_v1_4_compatible() ? pum_render_theme_styles( $theme->ID ) : popmake_render_theme_styles( $theme->ID );
+			$theme_styles = pum_render_theme_styles( $theme->ID );
 
 			$google_fonts = array_merge( $google_fonts, popmake_get_popup_theme_google_fonts( $theme->ID ) );
 
