@@ -547,13 +547,13 @@ class PUM_Admin_Popups {
 				) ),
 				'close'     => apply_filters( 'pum_popup_close_settings_fields', array(
 					'main'    => array(
-						'text'         => array(
+						'close_text'         => array(
 							'label'       => __( 'Close Text', 'popup-maker' ),
 							'placeholder' => __( 'Close', 'popup-maker' ),
 							'desc'        => __( 'Override the default close text.', 'popup-maker' ),
 							'priority'    => 10,
 						),
-						'button_delay' => array(
+						'close_button_delay' => array(
 							'label'    => __( 'Close Button Delay', 'popup-maker' ),
 							'desc'     => __( 'This delays the display of the close button.', 'popup-maker' ),
 							'type'     => 'rangeslider',
@@ -566,19 +566,19 @@ class PUM_Admin_Popups {
 						),
 					),
 					'methods' => array(
-						'overlay_click' => array(
+						'close_on_overlay_click' => array(
 							'label'    => __( 'Click Overlay to Close', 'popup-maker' ),
 							'desc'     => __( 'Checking this will cause popup to close when user clicks on overlay.', 'popup-maker' ),
 							'type'     => 'checkbox',
 							'priority' => 10,
 						),
-						'esc_press'     => array(
+						'close_on_esc_press'     => array(
 							'label'    => __( 'Press ESC to Close', 'popup-maker' ),
 							'desc'     => __( 'Checking this will cause popup to close when user presses ESC key.', 'popup-maker' ),
 							'type'     => 'checkbox',
 							'priority' => 20,
 						),
-						'f4_press'      => array(
+						'close_on_f4_press'      => array(
 							'label'    => __( 'Press F4 to Close', 'popup-maker' ),
 							'desc'     => __( 'Checking this will cause popup to close when user presses F4 key.', 'popup-maker' ),
 							'type'     => 'checkbox',
