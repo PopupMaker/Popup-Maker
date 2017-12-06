@@ -22,6 +22,9 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	/** @var string */
 	protected $required_post_type = 'popup';
 
+	/** @var int */
+	public $version = 3;
+
 	/** @var array */
 	public $cookies;
 
@@ -141,8 +144,10 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	}
 
 	/**
-	 * @param $key
-	 * @param $value
+	 * @param string $key
+	 * @param mixed $value
+	 *
+	 * @return bool|int
 	 */
 	public function update_setting( $key, $value ) {
 		$settings = $this->get_settings( true );
@@ -240,7 +245,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * @param $group
 	 * @param null $key
 	 *
-	 * @return mixed|void
+	 * @return mixed
 	 */
 	public function _dep_get_settings_group( $group, $key = null ) {
 		if ( ! $this->$group ) {
@@ -277,7 +282,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 			}
 
 			// Data manipulation begins here. We don't want any of this saved, only returned for backward compatibility.
-			foreach ( array_keys( $remapped_keys ) as $old_key => $new_key ) {
+			foreach ( $remapped_keys as $old_key => $new_key ) {
 				$group_values[ $old_key ] = $this->get_setting( $new_key );
 			}
 
@@ -554,19 +559,11 @@ class PUM_Model_Popup extends PUM_Model_Post {
 
 		$cache_key = hash( 'md5', json_encode( $filters ) );
 
-		if ( ! $this->conditions ) {
-			$old_conditions = $this->
-
-
-
-			$this->conditions = $this->get_setting( 'conditions', array() );
-		}
-
 		// Check if these exclusion filters have already been applied and prevent extra processing.
 		$conditions = isset( $this->conditions_filtered[ $cache_key ] ) ? $this->conditions_filtered[ $cache_key ] : false;
 
 		if ( ! $conditions ) {
-			$conditions = $this->conditions;
+			$conditions = $this->get_setting( 'conditions', array() );
 			// Sanity Check on the values not operand value.
 			foreach ( $conditions as $group_key => $group ) {
 

@@ -9,6 +9,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 abstract class PUM_Model_Post {
 
+	/**
+	 * Used for compatibility testing.
+	 *
+	 * @var int
+	 */
+	public $version = 1;
+
 	public static $instances = array();
 
 	/**
