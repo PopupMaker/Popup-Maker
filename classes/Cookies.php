@@ -234,4 +234,19 @@ class PUM_Cookies {
 	public function validate_cookie( $cookie = null, $settings = array() ) {
 		return $settings;
 	}
+
+
+	/**
+	 * @return array
+	 */
+	public function dropdown_list() {
+		$_cookies = $this->get_cookies();
+		$cookies  = array();
+
+		foreach ( $_cookies as $id => $cookie ) {
+			$cookies[ $id ] = $cookie['name'];
+		}
+
+		return $cookies;
+	}
 }
