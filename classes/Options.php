@@ -118,6 +118,24 @@ class PUM_Options {
 	}
 
 	/**
+	 * Update the entire settings array from a new array.
+	 *
+	 * @param array $options
+	 *
+	 * @return bool
+	 */
+	public static function update_all( $options = array() ) {
+		$did_update = update_option( static:: $_prefix . 'settings', $options );
+
+		// If it updated, let's update the global variable
+		if ( $did_update ) {
+			static::$_data = $options;
+		}
+
+		return $did_update;
+	}
+
+	/**
 	 * Remove an option
 	 *
 	 * Removes a setting value in both the db and the global variable.
