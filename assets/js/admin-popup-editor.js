@@ -716,7 +716,7 @@ var cookies;
             }
 
             // To help with processing older triggers still in use.
-            trigger['updated'] = trigger.updated !== undefined && trigger.updated;
+            trigger.updated = trigger.updated !== undefined && trigger.updated;
 
             if (trigger && typeof trigger === 'object' && typeof trigger.fields === 'object' && Object.keys(trigger.fields).length) {
                 trigger = this.parseFields(trigger);
@@ -1176,8 +1176,6 @@ var cookies;
             if ($container.length) {
                 PUM_Admin.forms.render(args, values, $container);
             }
-
-            return;
 
             // TODO Can't figure out why this is needed, but it looks stupid otherwise when the first condition field defaults to something other than the placeholder.
             $('#pum-first-condition, #pum-first-trigger, #pum-first-cookie')

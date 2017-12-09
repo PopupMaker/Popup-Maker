@@ -7825,7 +7825,7 @@ var PUMSelect2Fields;
                                     label: label,
                                     value: value,
                                     meta: {
-                                        checked: (typeof data.value === 'object' && data.value[value] !== undefined) || (typeof data.value === 'array' && data.value.indexOf(value) >= 0)
+                                        checked: typeof data.value === 'object' && (data.value[value] !== undefined || data.value.indexOf(value) >= 0)
                                     }
                                 })
                             );
@@ -8023,8 +8023,6 @@ var PUMSelect2Fields;
             return object;
         },
         checked: function (val1, val2, print) {
-            "use strict";
-
             var checked = false;
             if (typeof val1 === 'object' && typeof val2 === 'string' && jQuery.inArray(val2, val1) !== -1) {
                 checked = true;
@@ -8042,8 +8040,6 @@ var PUMSelect2Fields;
             return checked;
         },
         selected: function (val1, val2, print) {
-            "use strict";
-
             var selected = false;
             if (typeof val1 === 'object' && typeof val2 === 'string' && jQuery.inArray(val2, val1) !== -1) {
                 selected = true;
