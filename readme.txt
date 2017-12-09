@@ -92,6 +92,7 @@ There are several common causes for this which include:
 == Changelog ==
 
 = v1.6.7 - ?? =
+* Fix: JS errors when Marionette JS library on page without Ninja Forms.
 * Fix: WPML missing variable errors.
 
 = v1.6.6 - 07/29/2017 =
