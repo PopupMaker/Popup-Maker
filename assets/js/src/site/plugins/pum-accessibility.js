@@ -23,11 +23,11 @@ var PUM_Accessibility;
             if (e.keyCode === 9) {
                 // get list of focusable items
                 var focusableItems = currentModal.find('.pum-container *').filter(focusableElementsString).filter(':visible'),
-                // get currently focused item
+                    // get currently focused item
                     focusedItem = $(':focus'),
-                // get the number of focusable items
+                    // get the number of focusable items
                     numberOfFocusableItems = focusableItems.length,
-                // get the index of the currently focused item
+                    // get the index of the currently focused item
                     focusedItemIndex = focusableItems.index(focusedItem);
 
                 if (e.shiftKey) {
@@ -84,7 +84,7 @@ var PUM_Accessibility;
             $top_level_elements.attr('aria-hidden', 'true');
 
             // Accessibility: Add focus check that prevents tabbing outside of modal.
-            $(document).on('focus.pum_accessibility', PUM_Accessibility.forceFocus);
+            $(document).one('focusin.pum_accessibility', PUM_Accessibility.forceFocus);
 
             // Accessibility: Focus on the modal.
             PUM_Accessibility.setFocusToFirstItem();
@@ -118,7 +118,7 @@ var PUM_Accessibility;
             currentModal = null;
 
             // Accessibility: Removes the force focus check.
-            $(document).off('focus.pum_accessibility');
+            $(document).off('focusin.pum_accessibility');
         })
 
         .on('pumSetupClose', '.pum', function () {
