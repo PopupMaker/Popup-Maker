@@ -567,8 +567,8 @@ msgstr ""
 msgid "This will disable automatic repositioning of the popup on window resizing."
 msgstr ""
 
-#: includes/admin/popups/metabox-display-fields.php:309, includes/class-popmake-popup-fields.php:130
-msgid "Fixed Postioning"
+#: includes/admin/popups/metabox-display-fields.php:309
+msgid "Fixed Positioning"
 msgstr ""
 
 #: includes/admin/popups/metabox-display-fields.php:323, includes/class-popmake-popup-fields.php:131
@@ -1090,6 +1090,10 @@ msgstr ""
 
 #: includes/class-popmake-fields.php:175, includes/class-popmake-popup-fields.php:105, includes/class-popmake-popup-fields.php:231, includes/integrations/class-pum-cf7.php:168, includes/integrations/class-pum-gravity-forms.php:163, includes/shortcodes/class-pum-shortcode-popup.php:205
 msgid "ms"
+msgstr ""
+
+#: includes/class-popmake-popup-fields.php:130
+msgid "Fixed Postioning"
 msgstr ""
 
 #: includes/class-popmake-popup-theme-fields.php:443

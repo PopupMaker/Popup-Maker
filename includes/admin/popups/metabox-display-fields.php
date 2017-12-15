@@ -306,7 +306,7 @@ function popmake_admin_popup_form_display_tab_settings_position( $popup_id ) {
 		</td>
 	</tr>
 	<tr>
-		<th scope="row"><?php _e( 'Fixed Postioning', 'popup-maker' ); ?></th>
+		<th scope="row"><?php _e( 'Fixed Positioning', 'popup-maker' ); ?></th>
 		<td><?php
 			$position_fixed = popmake_get_popup_display( $popup_id, 'position_fixed', false );
 			switch ( $position_fixed ) {
