@@ -219,8 +219,8 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/admin/settings/register-settings.php';
 
 		/** General Functions */
-		require_once self::$DIR . 'includes/cache.php';
-		require_once self::$DIR . 'includes/options.php';
+		require_once self::$DIR . 'includes/functions/cache.php';
+		require_once self::$DIR . 'includes/functions/options.php';
 
 		// TODO Find another place for these admin functions so this can be put in its correct place.
 		require_once POPMAKE_DIR . 'includes/admin/admin-pages.php';
