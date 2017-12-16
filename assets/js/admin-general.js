@@ -7825,7 +7825,7 @@ var PUMSelect2Fields;
                                     label: label,
                                     value: value,
                                     meta: {
-                                        checked: typeof data.value === 'object' && (data.value[value] !== undefined || data.value.indexOf(value) >= 0)
+                                        checked: (typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1)
                                     }
                                 })
                             );
