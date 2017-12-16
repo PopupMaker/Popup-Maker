@@ -353,7 +353,7 @@
                 }
 
                 if (!$('#tmpl-' + fieldTemplate).length) {
-                    console.warn('No field template found');
+                    console.warn('No field template found for type:' + data.type + ' fieldID: ' + data.id);
                     return '';
                 }
 
