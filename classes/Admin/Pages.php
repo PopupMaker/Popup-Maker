@@ -50,7 +50,7 @@ class PUM_Admin_Pages {
 			'settings'   => array(
 				'page_title'  => __( 'Settings', 'popup-maker' ),
 				'capability'  => 'manage_options',
-				'callback'    => 'popmake_settings_page',
+				'callback'    => array( 'PUM_Admin_Settings', 'page' ),
 			),
 			'extensions' => array(
 				'page_title'  => __( 'Extend', 'popup-maker' ),

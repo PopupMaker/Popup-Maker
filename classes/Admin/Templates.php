@@ -206,6 +206,40 @@ class PUM_Admin_Templates {
 				<a class="input-button" data-toggle><i class="dashicons dashicons-calendar-alt"></i></a>
 			</div>
 		</script>
+
+		<script type="text/html" id="tmpl-pum-field-ga_event_labels">
+			<# data.value = _.extend({
+				category:'',
+				action: '',
+				label: '',
+				value: 0,
+			}, data.value); #>
+
+			<table>
+				<tbody>
+				<tr>
+					<td>
+						<label for="{{data.id}}_category" style="padding-left: 3px;"><?php _e( 'Category', 'popup-maker' );?></label>
+						<input type="text" style="width:100%;"  id="{{data.id}}_category" name="{{data.name}}[category]" value="{{data.value.category}}"/>
+					</td>
+					<td>
+						<label for="{{data.id}}_action" style="padding-left: 3px;"><?php _e( 'Action', 'popup-maker' );?></label>
+						<input type="text" style="width:100%;"  id="{{data.id}}_action" name="{{data.name}}[action]" value="{{data.value.action}}"/>
+					</td>
+					<td>
+						<label for="{{data.id}}_label" style="padding-left: 3px;"><?php _e( 'Label', 'popup-maker' );?></label>
+						<input type="text" style="width:100%;"  id="{{data.id}}_label" name="{{data.name}}[label]" value="{{data.value.label}}"/>
+					</td>
+					<td>
+						<label for="{{data.id}}_value" style="padding-left: 3px;"><?php _e( 'Value', 'popup-maker' );?></label>
+						<input type="number" style="width:100%;height: auto;"  id="{{data.id}}_value" name="{{data.name}}[value]" value="{{data.value.value}}" step="0.01" max="999999" min="0" />
+					</td>
+				</tr>
+				</tbody>
+			</table>
+
+			<hr />
+		</script>
 		<?php
 	}
 

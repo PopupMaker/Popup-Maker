@@ -7,6 +7,13 @@
     window.PUM_Admin = window.PUM_Admin || {};
 
     $(document).ready(function () {
+        var $container = $('#pum-settings-container'),
+            args = pum_settings_editor.form_args || {},
+            values = pum_settings_editor.current_values || {};
+
+        if ($container.length) {
+            PUM_Admin.forms.render(args, values, $container);
+        }
 
     });
 }(jQuery));

@@ -42,7 +42,27 @@ function pum_merge_deprecated_settings_fields( $tabs = array() ) {
 	if ( ! empty( $old_fields ) ) {
 		foreach ( $old_fields as $tab_id => $fields ) {
 			foreach ( $fields as $field_id => $field_args ) {
+				if ( is_numeric( $field_id ) && ! empty( $field_args['id'] ) ) {
+					$field_id = $field_args['id'];
+					unset( $field_args['id'] );
+				}
+
 				$field_args['label'] = ! empty( $field_args['name'] ) ? $field_args['name'] : '';
+
+				if ( $field_args['type'] == 'header' ) {
+					$field_args['type'] = 'separator';
+				} else if ( $field_args['type'] == 'gaeventlabel' ) {
+					$field_args['type'] = 'ga_event_labels';
+				} else if ( $field_args['type'] == 'hook' ) {
+					$field_args['type'] = 'html';
+
+					ob_start();
+
+					do_action( 'popmake_' . $field_id );
+
+					$field_args['content'] = ob_get_clean();
+				}
+
 				unset( $field_args['name'] );
 				$tabs[ array_key_exists( $tab_id, $tabs ) ? $tab_id : 'general' ]['main'][ $field_id ] = $field_args;
 			}
@@ -976,6 +996,8 @@ function popmake_hook_callback( $args ) {
  *
  */
 function popmake_output_pum_styles() {
+	ob_start();
+
 	?>
 	<button type="button" id="show_pum_styles"
 	        onclick="jQuery('#pum_style_output').slideDown();jQuery(this).hide();"><?php _e( 'Show Popup Maker CSS', 'popup-maker' ); ?></button>
@@ -990,9 +1012,11 @@ function popmake_output_pum_styles() {
 
 		<h4><?php _e( 'User Theme Styles', 'popup-maker' ); ?></h4>
 		<textarea wrap="off"
-		          style="white-space: pre; width: 100%; min-height: 200px;"><?php echo PUM_Admin_Assets::generate_popup_theme_styles(); ?></textarea>
+		          style="white-space: pre; width: 100%; min-height: 200px;"><?php echo PUM_AssetCache::generate_popup_theme_styles(); ?></textarea>
 	</div>
 
 	<?php
+
+	return ob_get_clean();
 }
 

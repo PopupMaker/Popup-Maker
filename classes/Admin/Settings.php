@@ -136,7 +136,7 @@ class PUM_Admin_Settings {
 
 				switch ( $field['type'] ) {
 					default:
-						$settings[ $key ] = trim( $value );
+						$settings[ $key ] = is_string( $value ) ? trim( $value ) : $value;
 						break;
 
 					case 'measure':
@@ -144,6 +144,15 @@ class PUM_Admin_Settings {
 						break;
 
 					case 'license_key':
+						$old = PUM_Options::get( $key );
+						$new = trim( $value );
+
+						if ( $old && $old != $new ) {
+							delete_option( str_replace( '_license_key', '_license_active', $key ) );
+							call_user_func( $field['options']['activation_callback'] );
+						}
+
+						$settings[ $key ] = is_string( $value ) ? trim( $value ) : $value;
 						// Activate / deactivate license keys maybe?
 						break;
 				}
@@ -220,7 +229,8 @@ class PUM_Admin_Settings {
 						),
 						'output_pum_styles'               => array(
 							'id'   => 'output_pum_styles',
-							'type' => 'hook',
+							'type' => 'html',
+							'content' => popmake_output_pum_styles(),
 						),
 					),
 				),
@@ -548,17 +558,17 @@ class PUM_Admin_Settings {
 				switch ( $field['type'] ) {
 					case 'measure':
 						break;
-					/*
 					case 'license_key':
+						$license  = get_option( $field['options']['is_valid_license_option'] );
+
 						$settings[ $key ] = array(
-							'key'      => $value,
-							'status'   => Licensing::get_status(),
-							'messages' => Licensing::get_status_messages(),
-							'expires'  => Licensing::get_license_expiration(),
-							'classes'  => Licensing::get_status_classes(),
+							'key'      => trim( $value ),
+							'status'   => PUM_Licensing::get_status( $license, ! empty( $value ) ),
+							'messages' => PUM_Licensing::get_status_messages( $license, trim( $value ) ),
+							'expires'  => PUM_Licensing::get_license_expiration( $license ),
+							'classes'  => PUM_Licensing::get_status_classes( $license ),
 						);
 						break;
-					*/
 				}
 
 				/**

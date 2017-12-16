@@ -16,11 +16,11 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: classes/Admin/Assets.php:92, classes/Admin/Templates.php:432, classes/Admin/Templates.php:603, includes/admin/class-pum-admin-helpers.php:16
+#: classes/Admin/Assets.php:92, classes/Admin/Templates.php:466, classes/Admin/Templates.php:637, includes/admin/class-pum-admin-helpers.php:16
 msgid "Add"
 msgstr ""
 
-#: classes/Admin/Assets.php:93, classes/Admin/Settings.php:519, classes/Admin/Settings.php:543, includes/admin/settings/settings-page.php:55, includes/admin/settings/settings-page.php:61, includes/admin/tools/tools-page.php:54, includes/admin/tools/tools-page.php:61, includes/admin/tools/tools-page.php:420, includes/integrations/class-pum-gravity-forms.php:171
+#: classes/Admin/Assets.php:93, classes/Admin/Settings.php:413, classes/Admin/Settings.php:438, includes/admin/tools/tools-page.php:54, includes/admin/tools/tools-page.php:61, includes/admin/tools/tools-page.php:420, includes/integrations/class-pum-gravity-forms.php:171
 msgid "Save"
 msgstr ""
 
@@ -60,7 +60,7 @@ msgstr ""
 msgid "There was an error in generating the preview"
 msgstr ""
 
-#: classes/Admin/Pages.php:51, classes/Admin/Pages.php:144, classes/Admin/Templates.php:359, classes/Admin/Templates.php:552, classes/Site/Assets.php:222, includes/admin/admin-setup.php:24
+#: classes/Admin/Pages.php:51, classes/Admin/Pages.php:144, classes/Admin/Templates.php:393, classes/Admin/Templates.php:586, classes/Site/Assets.php:222, includes/admin/admin-setup.php:24
 msgid "Settings"
 msgstr ""
 
@@ -120,11 +120,11 @@ msgstr ""
 msgid "Popup Settings"
 msgstr ""
 
-#: classes/Admin/Popups.php:99, classes/Admin/Settings.php:577
+#: classes/Admin/Popups.php:99
 msgid "Analytics"
 msgstr ""
 
-#: classes/Admin/Popups.php:225, classes/Admin/Popups.php:251, classes/Admin/Settings.php:575, classes/Conditions.php:107, classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:151, classes/Shortcode.php:131, classes/Shortcode.php:143, classes/Shortcode/Popup.php:46, classes/Triggers.php:258, includes/admin/settings/register-settings.php:319, includes/class-popmake-fields.php:57
+#: classes/Admin/Popups.php:225, classes/Admin/Popups.php:251, classes/Admin/Settings.php:473, classes/Conditions.php:107, classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:151, classes/Shortcode.php:131, classes/Shortcode.php:143, classes/Shortcode/Popup.php:46, classes/Triggers.php:258, includes/class-popmake-fields.php:57
 msgid "General"
 msgstr ""
 
@@ -132,7 +132,7 @@ msgstr ""
 msgid "Display"
 msgstr ""
 
-#: classes/Admin/Popups.php:227, classes/Admin/Popups.php:552, classes/Admin/Templates.php:279, classes/Shortcode/Popup.php:50, includes/admin/class-pum-admin-helpers.php:30, templates/popup.php:44
+#: classes/Admin/Popups.php:227, classes/Admin/Popups.php:552, classes/Admin/Templates.php:313, classes/Shortcode/Popup.php:50, includes/admin/class-pum-admin-helpers.php:30, templates/popup.php:44
 msgid "Close"
 msgstr ""
 
@@ -144,7 +144,7 @@ msgstr ""
 msgid "Targeting"
 msgstr ""
 
-#: classes/Admin/Popups.php:241, classes/Admin/Settings.php:590
+#: classes/Admin/Popups.php:241, classes/Admin/Settings.php:496
 msgid "General Settings"
 msgstr ""
 
@@ -164,7 +164,7 @@ msgstr ""
 msgid "Position"
 msgstr ""
 
-#: classes/Admin/Popups.php:248, classes/Admin/Popups.php:252, classes/Admin/Settings.php:578, includes/admin/settings/register-settings.php:331
+#: classes/Admin/Popups.php:248, classes/Admin/Popups.php:252, classes/Admin/Settings.php:477
 msgid "Misc"
 msgstr ""
 
@@ -320,7 +320,7 @@ msgstr ""
 msgid "Set the animation speed for the popup."
 msgstr ""
 
-#: classes/Admin/Popups.php:397, classes/Admin/Popups.php:564, classes/Admin/Popups.php:679, classes/Admin/Settings.php:447, classes/Shortcode/Popup.php:205, includes/class-popmake-fields.php:175, includes/integrations/class-pum-cf7.php:168, includes/integrations/class-pum-gravity-forms.php:163
+#: classes/Admin/Popups.php:397, classes/Admin/Popups.php:564, classes/Admin/Popups.php:679, classes/Admin/Settings.php:338, classes/Shortcode/Popup.php:205, includes/class-popmake-fields.php:175, includes/integrations/class-pum-cf7.php:168, includes/integrations/class-pum-gravity-forms.php:163
 msgid "ms"
 msgstr ""
 
@@ -529,7 +529,7 @@ msgstr ""
 msgid "Lifetime Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:922, classes/Admin/Templates.php:551
+#: classes/Admin/Popups.php:922, classes/Admin/Templates.php:585
 msgid "Name"
 msgstr ""
 
@@ -553,167 +553,127 @@ msgstr ""
 msgid "Show all tags"
 msgstr ""
 
-#: classes/Admin/Settings.php:38
+#: classes/Admin/Settings.php:51
 msgid "Dismiss this notice."
 msgstr ""
 
-#: classes/Admin/Settings.php:62
+#: classes/Admin/Settings.php:78
 msgid "Settings saved successfully!"
 msgstr ""
 
-#: classes/Admin/Settings.php:67
+#: classes/Admin/Settings.php:83
 msgid "There must have been an error, settings not saved successfully!"
 msgstr ""
 
-#: classes/Admin/Settings.php:98
+#: classes/Admin/Settings.php:114
 msgid "License activated successfully!"
 msgstr ""
 
-#: classes/Admin/Settings.php:172
-msgid "License Key"
-msgstr ""
-
-#: classes/Admin/Settings.php:180
-msgid "Updates"
-msgstr ""
-
-#: classes/Admin/Settings.php:187
-msgid "Enable beta version updates."
-msgstr ""
-
-#: classes/Admin/Settings.php:194
-msgid "Other"
-msgstr ""
-
-#: classes/Admin/Settings.php:201
-msgid "Powered by link"
-msgstr ""
-
-#: classes/Admin/Settings.php:203
-msgid "Enabled"
-msgstr ""
-
-#: classes/Admin/Settings.php:204, includes/input-options.php:179
-msgid "Disabled"
-msgstr ""
-
 #: classes/Admin/Settings.php:217
-msgid "Header Styling"
+msgid "Don't Load Google Fonts"
 msgstr ""
 
-#: classes/Admin/Settings.php:222, classes/Admin/Settings.php:239, classes/Admin/Settings.php:256, classes/Admin/Settings.php:285
-msgid "Background Color"
+#: classes/Admin/Settings.php:218
+msgid "Check this disable loading of google fonts, useful if the fonts you chose are already loaded with your theme."
 msgstr ""
 
-#: classes/Admin/Settings.php:228, classes/Admin/Settings.php:245, classes/Admin/Settings.php:268, classes/Admin/Settings.php:274, classes/Admin/Settings.php:291
-msgid "Text Color"
+#: classes/Admin/Settings.php:222
+msgid "Don't load Popup Maker core stylesheet."
 msgstr ""
 
-#: classes/Admin/Settings.php:234
-msgid "Body Styling"
+#: classes/Admin/Settings.php:223
+msgid "Check this if you have copied the Popup Maker core styles to your own stylesheet or are using custom styles."
 msgstr ""
 
-#: classes/Admin/Settings.php:251
-msgid "CTA Styling"
+#: classes/Admin/Settings.php:227
+msgid "Don't load popup theme styles to the head."
+msgstr ""
+
+#: classes/Admin/Settings.php:228
+msgid "Check this if you have copied the popup theme styles to your own stylesheet or are using custom styles."
+msgstr ""
+
+#: classes/Admin/Settings.php:247
+msgid "Disable Popups Admin Bar"
+msgstr ""
+
+#: classes/Admin/Settings.php:248
+msgid "This will disable the admin Popups menu item."
+msgstr ""
+
+#: classes/Admin/Settings.php:252
+msgid "Enable Debug Mode"
+msgstr ""
+
+#: classes/Admin/Settings.php:253
+msgid "This will turn on multiple debug tools used to quickly find issues."
+msgstr ""
+
+#: classes/Admin/Settings.php:257
+msgid "Enable Easy Modal v2 Compatibility Mode"
+msgstr ""
+
+#: classes/Admin/Settings.php:258
+msgid "This will automatically make any eModal classes you have added to your site launch the appropriate Popup after import."
 msgstr ""
 
 #: classes/Admin/Settings.php:262
-msgid "Hover Background Color"
+msgid "Disables popup open tracking?"
 msgstr ""
 
-#: classes/Admin/Settings.php:280
-msgid "Headline Styling"
+#: classes/Admin/Settings.php:263
+msgid "This will disable the built in analytics functionality."
 msgstr ""
 
-#: classes/Admin/Settings.php:297
-msgid "Font Size"
+#: classes/Admin/Settings.php:267
+msgid "Hide Admin Support Widget"
 msgstr ""
 
-#: classes/Admin/Settings.php:312
-msgid "Disable pum analytics ajax events"
+#: classes/Admin/Settings.php:268
+msgid "This will hide the support widget on all popup maker admin pages."
 msgstr ""
 
-#: classes/Admin/Settings.php:315
-msgid "Disable Tracking for Logged In Users?"
+#: classes/Admin/Settings.php:272
+msgid "Disable categories & tags?"
 msgstr ""
 
-#: classes/Admin/Settings.php:319
-msgid "Disable for which Roles?"
+#: classes/Admin/Settings.php:273
+msgid "This will disable the popup tags & categories."
 msgstr ""
 
-#: classes/Admin/Settings.php:330
-msgid "Enable Google Analytics Tracking?"
+#: classes/Admin/Settings.php:277
+msgid "Disable Popup Maker caching"
 msgstr ""
 
-#: classes/Admin/Settings.php:334
-msgid "Enter your GA Tracking ID."
-msgstr ""
-
-#: classes/Admin/Settings.php:342
-msgid "Open Event Defaults"
-msgstr ""
-
-#: classes/Admin/Settings.php:345, classes/Admin/Settings.php:358, classes/Admin/Settings.php:371
-msgid "Popup Maker Message"
-msgstr ""
-
-#: classes/Admin/Settings.php:346
-msgid "Open"
-msgstr ""
-
-#: classes/Admin/Settings.php:347
-msgid "[open_trigger]"
-msgstr ""
-
-#: classes/Admin/Settings.php:355
-msgid "Conversion Event Defaults"
-msgstr ""
-
-#: classes/Admin/Settings.php:359
-msgid "Conversion"
-msgstr ""
-
-#: classes/Admin/Settings.php:360
-msgid "[conversion_trigger]"
-msgstr ""
-
-#: classes/Admin/Settings.php:368
-msgid "Purchase Event Defaults"
-msgstr ""
-
-#: classes/Admin/Settings.php:372
-msgid "Purchase"
-msgstr ""
-
-#: classes/Admin/Settings.php:373
-msgid "[purchase_trigger]"
-msgstr ""
-
-#: classes/Admin/Settings.php:386
-msgid "Disable pum caching"
-msgstr ""
-
-#: classes/Admin/Settings.php:521, includes/admin/settings/settings-page.php:21
+#: classes/Admin/Settings.php:415
 msgid "Popup Maker Settings"
 msgstr ""
 
-#: classes/Admin/Settings.php:576
-msgid "Defaults"
+#: classes/Admin/Settings.php:474
+msgid "Assets"
 msgstr ""
 
-#: classes/Admin/Settings.php:593
-msgid "Default Styles"
+#: classes/Admin/Settings.php:475, includes/admin/admin-setup.php:23, includes/admin/extensions/extensions-page.php:26
+msgid "Extensions"
 msgstr ""
 
-#: classes/Admin/Settings.php:596
-msgid "Analytics Options"
+#: classes/Admin/Settings.php:476
+msgid "Licenses"
 msgstr ""
 
-#: classes/Admin/Settings.php:597
-msgid "Google Analytics"
+#: classes/Admin/Settings.php:499
+msgid "Asset Settings"
 msgstr ""
 
-#: classes/Admin/Settings.php:600
+#: classes/Admin/Settings.php:502
+msgid "Extension Settings"
+msgstr ""
+
+#: classes/Admin/Settings.php:505
+msgid "License Settings"
+msgstr ""
+
+#: classes/Admin/Settings.php:508
 msgid "Misc Settings"
 msgstr ""
 
@@ -725,7 +685,7 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: classes/Admin/Templates.php:180, includes/admin/settings/register-settings.php:932
+#: classes/Admin/Templates.php:180, includes/admin/settings/register-settings.php:892
 msgid "Deactivate License"
 msgstr ""
 
@@ -737,157 +697,173 @@ msgstr ""
 msgid "Activate License"
 msgstr ""
 
-#: classes/Admin/Templates.php:231, classes/Admin/Templates.php:236, includes/admin/metabox-support.php:42
+#: classes/Admin/Templates.php:222
+msgid "Category"
+msgstr ""
+
+#: classes/Admin/Templates.php:226
+msgid "Action"
+msgstr ""
+
+#: classes/Admin/Templates.php:230
+msgid "Label"
+msgstr ""
+
+#: classes/Admin/Templates.php:234
+msgid "Value"
+msgstr ""
+
+#: classes/Admin/Templates.php:265, classes/Admin/Templates.php:270, includes/admin/metabox-support.php:42
 msgid "Documentation"
 msgstr ""
 
-#: classes/Admin/Templates.php:345
+#: classes/Admin/Templates.php:379
 msgid "Add New Trigger"
 msgstr ""
 
-#: classes/Admin/Templates.php:349
+#: classes/Admin/Templates.php:383
 msgid "Triggers are what make your popup open."
 msgstr ""
 
-#: classes/Admin/Templates.php:357
+#: classes/Admin/Templates.php:391
 msgid "Type"
 msgstr ""
 
-#: classes/Admin/Templates.php:358, classes/Triggers.php:259
+#: classes/Admin/Templates.php:392, classes/Triggers.php:259
 msgid "Cookie"
 msgstr ""
 
-#: classes/Admin/Templates.php:360, classes/Admin/Templates.php:553
+#: classes/Admin/Templates.php:394, classes/Admin/Templates.php:587
 msgid "Actions"
 msgstr ""
 
-#: classes/Admin/Templates.php:379
+#: classes/Admin/Templates.php:413
 msgid "Choose a type of trigger to get started."
 msgstr ""
 
-#: classes/Admin/Templates.php:380, classes/Admin/Templates.php:431
+#: classes/Admin/Templates.php:414, classes/Admin/Templates.php:465
 msgid "Select a trigger type."
 msgstr ""
 
-#: classes/Admin/Templates.php:389, classes/Admin/Templates.php:398
+#: classes/Admin/Templates.php:423, classes/Admin/Templates.php:432
 msgid "Edit this trigger"
 msgstr ""
 
-#: classes/Admin/Templates.php:399
+#: classes/Admin/Templates.php:433
 msgid "Delete` this trigger"
 msgstr ""
 
-#: classes/Admin/Templates.php:406
+#: classes/Admin/Templates.php:440
 msgid "Link: Exact Match"
 msgstr ""
 
-#: classes/Admin/Templates.php:407
+#: classes/Admin/Templates.php:441
 msgid "Link: Containing"
 msgstr ""
 
-#: classes/Admin/Templates.php:408
+#: classes/Admin/Templates.php:442
 msgid "Link: Begins With"
 msgstr ""
 
-#: classes/Admin/Templates.php:409
+#: classes/Admin/Templates.php:443
 msgid "Link: Ends With"
 msgstr ""
 
-#: classes/Admin/Templates.php:415
+#: classes/Admin/Templates.php:449
 msgid "Insert Preset"
 msgstr ""
 
-#: classes/Admin/Templates.php:430
+#: classes/Admin/Templates.php:464
 msgid "Choose what type of trigger to add?"
 msgstr ""
 
-#: classes/Admin/Templates.php:454
+#: classes/Admin/Templates.php:488
 msgid "These conditions determine when this popup will be display."
 msgstr ""
 
-#: classes/Admin/Templates.php:454
+#: classes/Admin/Templates.php:488
 msgid "Learn more about conditions"
 msgstr ""
 
-#: classes/Admin/Templates.php:458
+#: classes/Admin/Templates.php:492
 msgid "When users visit your site, the plugin will check the viewed content/page against your selection below and determine if this popup should be shown."
 msgstr ""
 
-#: classes/Admin/Templates.php:460
+#: classes/Admin/Templates.php:494
 msgid "Use the %s button to check for the inverse of your chosen condition."
 msgstr ""
 
-#: classes/Admin/Templates.php:474
+#: classes/Admin/Templates.php:508
 msgid "Choose a condition to get started."
 msgstr ""
 
-#: classes/Admin/Templates.php:476, classes/Admin/Templates.php:508
+#: classes/Admin/Templates.php:510, classes/Admin/Templates.php:542
 msgid "Enable the Not Operand"
 msgstr ""
 
-#: classes/Admin/Templates.php:479, classes/Admin/Templates.php:512
+#: classes/Admin/Templates.php:513, classes/Admin/Templates.php:546
 msgid "Choose a condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:495
+#: classes/Admin/Templates.php:529
 msgctxt "aria-label for add new OR condition button"
 msgid "Add another OR condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:495, classes/Admin/Templates.php:506
+#: classes/Admin/Templates.php:529, classes/Admin/Templates.php:540
 msgid "or"
 msgstr ""
 
-#: classes/Admin/Templates.php:499
+#: classes/Admin/Templates.php:533
 msgctxt "aria-label for add new AND condition button"
 msgid "Add another AND condition group"
 msgstr ""
 
-#: classes/Admin/Templates.php:499
+#: classes/Admin/Templates.php:533
 msgid "and"
 msgstr ""
 
-#: classes/Admin/Templates.php:520
+#: classes/Admin/Templates.php:554
 msgid "Remove Condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:538, classes/Triggers.php:239
+#: classes/Admin/Templates.php:572, classes/Triggers.php:239
 msgid "Add New Cookie"
 msgstr ""
 
-#: classes/Admin/Templates.php:542
+#: classes/Admin/Templates.php:576
 msgid "Cookies are used to prevent a trigger from opening the popup."
 msgstr ""
 
-#: classes/Admin/Templates.php:550
+#: classes/Admin/Templates.php:584
 msgid "Event"
 msgstr ""
 
-#: classes/Admin/Templates.php:572
+#: classes/Admin/Templates.php:606
 msgid "Choose when you want to set a cookie to get started."
 msgstr ""
 
-#: classes/Admin/Templates.php:573
+#: classes/Admin/Templates.php:607
 msgid "Select an event."
 msgstr ""
 
-#: classes/Admin/Templates.php:582, classes/Admin/Templates.php:591
+#: classes/Admin/Templates.php:616, classes/Admin/Templates.php:625
 msgid "Edit this cookie"
 msgstr ""
 
-#: classes/Admin/Templates.php:592
+#: classes/Admin/Templates.php:626
 msgid "Delete` this cookie"
 msgstr ""
 
-#: classes/Admin/Templates.php:601
+#: classes/Admin/Templates.php:635
 msgid "When should your cookie be created?"
 msgstr ""
 
-#: classes/Admin/Templates.php:602
+#: classes/Admin/Templates.php:636
 msgid "Select a cookie type."
 msgstr ""
 
-#: classes/Admin/Templates.php:610
+#: classes/Admin/Templates.php:644
 msgid "Reset Cookie Key"
 msgstr ""
 
@@ -1085,6 +1061,58 @@ msgstr ""
 
 #: classes/Cookies.php:199
 msgid "Changing this will cause all existing cookies to be invalid."
+msgstr ""
+
+#: classes/Licensing.php:94, includes/admin/settings/register-settings.php:761
+msgid "Your license key expired on %s. Please %srenew your license key%s."
+msgstr ""
+
+#: classes/Licensing.php:97, includes/admin/settings/register-settings.php:771
+msgid "Your license key has been disabled. Please %scontact support%s for more information."
+msgstr ""
+
+#: classes/Licensing.php:100, includes/admin/settings/register-settings.php:781
+msgid "Invalid license. Please %svisit your account page%s and verify it."
+msgstr ""
+
+#: classes/Licensing.php:104, includes/admin/settings/register-settings.php:793
+msgid "Your %s is not active for this URL. Please %svisit your account page%s to manage your license key URLs."
+msgstr ""
+
+#: classes/Licensing.php:107, includes/admin/settings/register-settings.php:803
+msgid "This appears to be an invalid license key for %s."
+msgstr ""
+
+#: classes/Licensing.php:110
+msgid "Your license key has reached its activation limit. %sView possible upgrades%s now."
+msgstr ""
+
+#: classes/Licensing.php:113, includes/admin/settings/register-settings.php:823
+msgid "The key you entered belongs to a bundle, please use the product specific license key."
+msgstr ""
+
+#: classes/Licensing.php:116, includes/admin/settings/register-settings.php:831
+msgid "unknown_error"
+msgstr ""
+
+#: classes/Licensing.php:117, includes/admin/settings/register-settings.php:832
+msgid "There was an error with this license key: %s. Please %scontact our support team%s."
+msgstr ""
+
+#: classes/Licensing.php:130, includes/admin/settings/register-settings.php:852
+msgid "License key never expires."
+msgstr ""
+
+#: classes/Licensing.php:132, includes/admin/settings/register-settings.php:858
+msgid "Your license key expires soon! It expires on %s. %sRenew your license key%s."
+msgstr ""
+
+#: classes/Licensing.php:134, includes/admin/settings/register-settings.php:864
+msgid "Your license key expires on %s."
+msgstr ""
+
+#: classes/Licensing.php:141, includes/admin/settings/register-settings.php:879
+msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
 #: classes/Shortcode.php:132, classes/Shortcode.php:144
@@ -1421,10 +1449,6 @@ msgstr ""
 msgid "Need more %sadvanced targeting%s options?"
 msgstr ""
 
-#: includes/admin/admin-setup.php:23, includes/admin/extensions/extensions-page.php:26, includes/admin/settings/register-settings.php:325
-msgid "Extensions"
-msgstr ""
-
 #: includes/admin/admin-setup.php:57
 msgid "A Popup Preview"
 msgstr ""
@@ -1545,168 +1569,32 @@ msgstr ""
 msgid "<b>Secure HTTPS contact page</b>, running via iframe from external domain"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:128
-msgid "Don't Load Google Fonts"
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:129
-msgid "Check this disable loading of google fonts, useful if the fonts you chose are already loaded with your theme."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:134
-msgid "Don't load Popup Maker core stylesheet."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:135
-msgid "Check this if you have copied the Popup Maker core styles to your own stylesheet or are using custom styles."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:140
-msgid "Don't load popup theme styles to the head."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:141
-msgid "Check this if you have copied the popup theme styles to your own stylesheet or are using custom styles."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:155
-msgid "Disable Popups Admin Bar"
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:156
-msgid "This will disable the admin Popups menu item."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:161
-msgid "Enable Debug Mode"
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:162
-msgid "This will turn on multiple debug tools used to quickly find issues."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:167
-msgid "Enable Easy Modal v2 Compatibility Mode"
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:168
-msgid "This will automatically make any eModal classes you have added to your site launch the appropriate Popup after import."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:173
-msgid "Disables popup open tracking?"
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:174
-msgid "This will disable the built in analytics functionality."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:179
-msgid "Hide Admin Support Widget"
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:180
-msgid "This will hide the support widget on all popup maker admin pages."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:185
-msgid "Disable categories & tags?"
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:186
-msgid "This will disable the popup tags & categories."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:287
+#: includes/admin/settings/register-settings.php:268
 msgid "Settings updated."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:322
-msgid "Assets"
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:328
-msgid "Licenses"
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:581
+#: includes/admin/settings/register-settings.php:540
 msgid "The callback function used for the <strong>%s</strong> setting is missing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:714
+#: includes/admin/settings/register-settings.php:674
 msgid "Upload File"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:801
-msgid "Your license key expired on %s. Please %srenew your license key%s."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:811
-msgid "Your license key has been disabled. Please %scontact support%s for more information."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:821
-msgid "Invalid license. Please %svisit your account page%s and verify it."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:833
-msgid "Your %s is not active for this URL. Please %svisit your account page%s to manage your license key URLs."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:843
-msgid "This appears to be an invalid license key for %s."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:853
+#: includes/admin/settings/register-settings.php:813
 msgid "Your license key has reached its activation limit. %View possible upgrades% now."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:863
-msgid "The key you entered belongs to a bundle, please use the product specific license key."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:871
-msgid "unknown_error"
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:872
-msgid "There was an error with this license key: %s. Please %scontact our support team%s."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:892
-msgid "License key never expires."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:898
-msgid "Your license key expires soon! It expires on %s. %sRenew your license key%s."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:904
-msgid "Your license key expires on %s."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:919
-msgid "To receive updates, please enter your valid %s license key."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:1025
+#: includes/admin/settings/register-settings.php:1003
 msgid "Show Popup Maker CSS"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1029
+#: includes/admin/settings/register-settings.php:1007
 msgid "Core Styles"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1035
+#: includes/admin/settings/register-settings.php:1013
 msgid "User Theme Styles"
-msgstr ""
-
-#: includes/admin/settings/settings-page.php:21
-msgid "__Popup Maker Settings"
-msgstr ""
-
-#: includes/admin/settings/settings-page.php:71, includes/admin/tools/tools-page.php:71
-msgid "Support"
 msgstr ""
 
 #: includes/admin/themes/metabox-close-fields.php:11
@@ -1893,6 +1781,10 @@ msgstr ""
 msgid "Popup Maker Tools"
 msgstr ""
 
+#: includes/admin/tools/tools-page.php:71
+msgid "Support"
+msgstr ""
+
 #: includes/admin/tools/tools-page.php:100
 msgid "Beta Versions"
 msgstr ""
@@ -1961,19 +1853,19 @@ msgstr ""
 msgid "Choose a corner radius for your close button."
 msgstr ""
 
-#: includes/class-pum-extension-license.php:171
+#: includes/class-pum-extension-license.php:170
 msgid "%1$s"
 msgstr ""
 
-#: includes/class-pum-extension-license.php:208
+#: includes/class-pum-extension-license.php:206
 msgid "Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please %srenew your license%s."
 msgstr ""
 
-#: includes/class-pum-extension-license.php:406
+#: includes/class-pum-extension-license.php:401
 msgid "You have invalid or expired license keys for Popup Maker. Please go to the %sLicenses page%s to correct this issue."
 msgstr ""
 
-#: includes/class-pum-extension-license.php:439
+#: includes/class-pum-extension-license.php:434
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
@@ -2155,6 +2047,10 @@ msgstr ""
 
 #: includes/input-options.php:142
 msgid "Mouse"
+msgstr ""
+
+#: includes/input-options.php:179
+msgid "Disabled"
 msgstr ""
 
 #: includes/input-options.php:180
