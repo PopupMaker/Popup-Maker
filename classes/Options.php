@@ -29,8 +29,13 @@ class PUM_Options {
 	 * @param bool $force
 	 */
 	public static function init( $force = false ) {
+		global $popmake_options;
+
 		if ( ! isset( self::$_data ) || $force ) {
 			self::$_data = self::get_all();
+
+			/** @deprecated 1.7.0 */
+			$popmake_options = self::$_data;
 		}
 	}
 
@@ -46,6 +51,9 @@ class PUM_Options {
 		if ( ! is_array( $settings ) ) {
 			$settings = array();
 		}
+
+		/* @deprecated filter. */
+		$settings = apply_filters( 'popmake_get_settings', $settings );
 
 		return apply_filters( self:: $_prefix . 'get_options', $settings );
 	}
