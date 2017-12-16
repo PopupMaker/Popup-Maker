@@ -7,10 +7,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class PUM_Admin_Settings
+ */
 class PUM_Admin_Settings {
 
+	/**
+	 * @var array
+	 */
 	public static $notices = array();
 
+	/**
+	 *
+	 */
 	public static function init() {
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
 		add_action( 'admin_init', array( __CLASS__, 'save' ) );
@@ -19,6 +28,10 @@ class PUM_Admin_Settings {
 	}
 
 	// display default admin notice
+
+	/**
+	 * Displays any saved admin notices.
+	 */
 	public static function notices() {
 
 		if ( isset( $_GET['success'] ) && get_option( 'pum_settings_admin_notice' ) ) {
@@ -43,6 +56,9 @@ class PUM_Admin_Settings {
 	}
 
 
+	/**
+	 * Save settings when needed.
+	 */
 	public static function save() {
 		if ( ! empty( $_POST['pum_settings'] ) && empty( $_POST['pum_license_activate'] ) && empty( $_POST['pum_license_deactivate'] ) ) {
 
@@ -106,6 +122,11 @@ class PUM_Admin_Settings {
 
 	}
 
+	/**
+	 * @param array $settings
+	 *
+	 * @return array
+	 */
 	public static function sanitize_settings( $settings = array() ) {
 
 		foreach ( $settings as $key => $value ) {
@@ -114,6 +135,10 @@ class PUM_Admin_Settings {
 			if ( $field ) {
 
 				switch ( $field['type'] ) {
+					default:
+						$settings[ $key ] = trim( $value );
+						break;
+
 					case 'measure':
 						$settings[ $key ] .= $settings[ $key . '_unit' ];
 						break;
@@ -131,6 +156,11 @@ class PUM_Admin_Settings {
 		return $settings;
 	}
 
+	/**
+	 * @param $id
+	 *
+	 * @return bool
+	 */
 	public static function get_field( $id ) {
 		$tabs = self::fields();
 
@@ -168,31 +198,70 @@ class PUM_Admin_Settings {
 
 		if ( ! isset( $tabs ) ) {
 			$tabs = apply_filters( 'pum_settings_fields', array(
-				'general'   => array(
+				'general'    => array(
 					'main' => array(),
 				),
-				'analytics' => array(
+				'assets'     => array(
 					'main' => array(
-						'disable_analytics'           => array(
-							'type'  => 'checkbox',
-							'label' => __( 'Disable pum analytics ajax events', 'popup-maker' ),
+						'disable_google_font_loading'     => array(
+							'type' => 'checkbox',
+							'label' => __( 'Don\'t Load Google Fonts', 'popup-maker' ),
+							'desc' => __( 'Check this disable loading of google fonts, useful if the fonts you chose are already loaded with your theme.', 'popup-maker' ),
 						),
-						'logged_in_tracking_disabled' => array(
-							'label' => __( 'Disable Tracking for Logged In Users?', 'popup-maker' ),
-							'type'  => 'checkbox',
+						'disable_popup_maker_core_styles' => array(
+							'type' => 'checkbox',
+							'label' => __( 'Don\'t load Popup Maker core stylesheet.', 'popup-maker' ),
+							'desc' => __( 'Check this if you have copied the Popup Maker core styles to your own stylesheet or are using custom styles.', 'popup-maker' ),
 						),
-						'logged_in_tracking_level'    => array(
-							'label'        => __( 'Disable for which Roles?', 'popup-maker' ),
-							'type'         => 'multicheck',
-							'options'      => self::user_role_options(),
-							'dependencies' => array(
-								'logged_in_tracking_disabled' => true,
-							),
+						'disable_popup_theme_styles'      => array(
+							'type' => 'checkbox',
+							'label' => __( 'Don\'t load popup theme styles to the head.', 'popup-maker' ),
+							'desc' => __( 'Check this if you have copied the popup theme styles to your own stylesheet or are using custom styles.', 'popup-maker' ),
+						),
+						'output_pum_styles'               => array(
+							'id'   => 'output_pum_styles',
+							'type' => 'hook',
 						),
 					),
 				),
-				'misc'      => array(
+				'extensions' => array(
+					'main' => array(),
+				),
+				'licenses'   => array(
+					'main' => array(),
+				),
+				'misc'       => array(
 					'main' => array(
+						'disabled_admin_bar'                   => array(
+							'type' => 'checkbox',
+							'label' => __( 'Disable Popups Admin Bar', 'popup-maker' ),
+							'desc' => __( 'This will disable the admin Popups menu item.', 'popup-maker' ),
+						),
+						'debug_mode'                           => array(
+							'type' => 'checkbox',
+							'label' => __( 'Enable Debug Mode', 'popup-maker' ),
+							'desc' => __( 'This will turn on multiple debug tools used to quickly find issues.', 'popup-maker' ),
+						),
+						'enable_easy_modal_compatibility_mode' => array(
+							'type'  => 'checkbox',
+							'label' => __( 'Enable Easy Modal v2 Compatibility Mode', 'popup-maker' ),
+							'desc'  => __( 'This will automatically make any eModal classes you have added to your site launch the appropriate Popup after import.', 'popup-maker' ),
+						),
+						'disable_popup_open_tracking'          => array(
+							'type'  => 'checkbox',
+							'label' => __( 'Disables popup open tracking?', 'popup-maker' ),
+							'desc'  => __( 'This will disable the built in analytics functionality.', 'popup-maker' ),
+						),
+						'disable_admin_support_widget'         => array(
+							'type'  => 'checkbox',
+							'label' => __( 'Hide Admin Support Widget', 'popup-maker' ),
+							'desc'  => __( 'This will hide the support widget on all popup maker admin pages.', 'popup-maker' ),
+						),
+						'disable_popup_category_tag'           => array(
+							'type'  => 'checkbox',
+							'label' => __( 'Disable categories & tags?', 'popup-maker' ),
+							'desc'  => __( 'This will disable the popup tags & categories.', 'popup-maker' ),
+						),
 						'disable_cache' => array(
 							'type'  => 'checkbox',
 							'label' => __( 'Disable Popup Maker caching', 'popup-maker' ),
@@ -298,6 +367,9 @@ class PUM_Admin_Settings {
 		return in_array( true, $field_tests );
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function user_role_options() {
 		global $wp_roles;
 
@@ -352,6 +424,7 @@ class PUM_Admin_Settings {
 						'current_values' => self::parse_values( $settings ),
 					) ) ); ?>;
 				</script>
+
 				<button class="button-primary bottom right"><?php _e( 'Save', 'popup-maker' ); ?></button>
 
 			</form>
@@ -383,11 +456,23 @@ class PUM_Admin_Settings {
 	 * @return array
 	 */
 	public static function tabs() {
-		return apply_filters( 'pum_settings_tabs', array(
-			'general'   => __( 'General', 'popup-maker' ),
-			'analytics' => __( 'Analytics', 'popup-maker' ),
-			'misc'      => __( 'Misc', 'popup-maker' ),
-		) );
+		static $tabs;
+
+		if ( ! isset( $tabs ) ) {
+			$tabs = apply_filters( 'pum_settings_tabs', array(
+				'general'    => __( 'General', 'popup-maker' ),
+				'assets'     => __( 'Assets', 'popup-maker' ),
+				'extensions' => __( 'Extensions', 'popup-maker' ),
+				'licenses'   => __( 'Licenses', 'popup-maker' ),
+				'misc'       => __( 'Misc', 'popup-maker' ),
+			) );
+
+			/** @deprecated 1.7.0 */
+			$tabs = apply_filters( 'popmake_settings_tabs', $tabs );
+		}
+
+
+		return $tabs;
 	}
 
 	/**
@@ -397,25 +482,36 @@ class PUM_Admin_Settings {
 	 */
 	public static function sections() {
 		return apply_filters( 'pum_settings_tab_sections', array(
-			'general'   => array(
+			'general'    => array(
 				'main' => __( 'General Settings', 'popup-maker' ),
 			),
-			'analytics' => array(
-				'main'             => __( 'Analytics Options', 'popup-maker' ),
-				'google_analytics' => __( 'Google Analytics', 'popup-maker' ),
+			'assets'     => array(
+				'main' => __( 'Asset Settings', 'popup-maker' ),
 			),
-			'misc'      => array(
+			'extensions' => array(
+				'main' => __( 'Extension Settings', 'popup-maker' ),
+			),
+			'licenses'   => array(
+				'main' => __( 'License Settings', 'popup-maker' ),
+			),
+			'misc'       => array(
 				'main' => __( 'Misc Settings', 'popup-maker' ),
 			),
 		) );
 	}
 
+	/**
+	 * @return int|null|string
+	 */
 	public static function get_active_tab() {
 		$tabs = self::tabs();
 
 		return isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_text_field( $_GET['tab'] ) : key( $tabs );
 	}
 
+	/**
+	 * @return bool|int|null|string
+	 */
 	public static function get_active_section() {
 		$active_tab = self::get_active_tab();
 		$sections   = self::sections();
@@ -493,6 +589,9 @@ class PUM_Admin_Settings {
 		return ! self::is_field( $array );
 	}
 
+	/**
+	 *
+	 */
 	public static function license_deactivated() {
 
 	}

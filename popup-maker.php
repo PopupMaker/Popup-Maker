@@ -211,13 +211,14 @@ class Popup_Maker {
 	 * Include required files
 	 */
 	private function includes() {
-		global $popmake_options;
 
-		require_once POPMAKE_DIR . 'includes/admin/settings/register-settings.php';
-		$popmake_options = popmake_get_settings();
+		// Initialize global options
+		PUM_Options::init();
 
-		//PUM_Options::init();
+		/** @deprecated 1.7.0 */
+		require_once self::$DIR . 'includes/admin/settings/register-settings.php';
 
+		/** General Functions */
 		require_once self::$DIR . 'includes/cache.php';
 		require_once self::$DIR . 'includes/options.php';
 
@@ -272,18 +273,10 @@ class Popup_Maker {
 
 		// Triggers
 		require_once POPMAKE_DIR . 'includes/pum-trigger-functions.php';
-		if ( is_admin() ) {
-			//require_once POPMAKE_DIR . 'includes/admin/popups/class-metabox-triggers.php';
-		}
 
 		// Cookies
 		require_once POPMAKE_DIR . 'includes/pum-cookie-functions.php';
 
-		// Conditions
-		// require_once POPMAKE_DIR . 'includes/class-pum-condition.php';
-		// require_once POPMAKE_DIR . 'includes/class-pum-conditions.php';
-		// require_once POPMAKE_DIR . 'includes/class-pum-condition-callbacks.php';
-		// require_once POPMAKE_DIR . 'includes/pum-condition-functions.php';
 
 		// Modules
 		require_once POPMAKE_DIR . 'includes/modules/menus.php';
@@ -319,8 +312,6 @@ class Popup_Maker {
 			require_once POPMAKE_DIR . 'includes/admin/themes/metabox-overlay-fields.php';
 			require_once POPMAKE_DIR . 'includes/admin/themes/metabox-title-fields.php';
 			require_once POPMAKE_DIR . 'includes/admin/themes/metabox-preview.php';
-
-			require_once POPMAKE_DIR . 'includes/admin/settings/settings-page.php';
 
 			require_once POPMAKE_DIR . 'includes/admin/tools/tools-page.php';
 
