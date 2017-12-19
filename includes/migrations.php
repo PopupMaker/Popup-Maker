@@ -16,6 +16,9 @@ function pum_popup_passive_migration_2( &$popup ) {
 	$changed     = false;
 	$delete_meta = array();
 
+	/**
+	 * Migrate popup theme selection.
+	 */
 	$theme = $popup->get_meta( 'popup_theme' );
 	if ( ! empty( $theme ) && is_numeric( $theme ) ) {
 		$popup->settings['theme'] = absint( $theme );
@@ -143,6 +146,26 @@ function pum_popup_passive_migration_2( &$popup ) {
 		$popup->settings['conditions'] = $conditions;
 		$changed                       = true;
 		$delete_meta[]                 = 'popup_conditions';
+	}
+
+	/**
+	 * Migrate popup_mobile_disabled.
+	 */
+	$mobile_disabled = $popup->get_meta( 'popup_mobile_disabled' );
+	if ( ! empty( $mobile_disabled ) ) {
+		$popup->settings['disable_on_mobile'] = (bool) ( $mobile_disabled );
+		$changed                  = true;
+		$delete_meta[]            = 'popup_mobile_disabled';
+	}
+
+	/**
+	 * Migrate popup_tablet_disabled.
+	 */
+	$tablet_disabled = $popup->get_meta( 'popup_tablet_disabled' );
+	if ( ! empty( $tablet_disabled ) ) {
+		$popup->settings['disable_on_tablet'] = (bool) ( $tablet_disabled );
+		$changed                  = true;
+		$delete_meta[]            = 'popup_tablet_disabled';
 	}
 
 	/**
