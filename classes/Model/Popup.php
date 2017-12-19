@@ -22,9 +22,6 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	/** @var string */
 	protected $required_post_type = 'popup';
 
-	/** @var int */
-	public $version = 3;
-
 	/** @var array */
 	public $cookies;
 
@@ -64,6 +61,12 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * @var bool
 	 */
 	public $doing_passive_migration = false;
+
+	/** @var int */
+	public $model_version = 3;
+
+	/** @var int */
+	public $data_version;
 
 	#endregion Properties
 
@@ -119,11 +122,6 @@ class PUM_Model_Popup extends PUM_Model_Post {
 			if ( ! is_array( $this->settings ) ) {
 				$this->settings = array();
 			}
-
-			/**
-			 * Process passive settings migration as each popup is loaded. The will only run each migration routine once for each popup.
-			 */
-			$this->passive_settings_migration();
 		}
 
 		return apply_filters( 'pum_popup_settings', $this->settings, $this->ID );
@@ -604,10 +602,16 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * @return array
 	 */
 	public function parse_condition( $condition ) {
-		// The not operand value is missing, set it to false.
-		return wp_parse_args( $condition, array(
+		$condition = wp_parse_args( $condition, array(
 			'not_operand' => false,
+			'target' => '',
+			'settings' => array(),
 		) );
+
+		$condition['not_operand'] = boolval( $condition['not_operand'] );
+
+		// The not operand value is missing, set it to false.
+		return $condition;
 	}
 
 	/**
@@ -949,73 +953,46 @@ class PUM_Model_Popup extends PUM_Model_Post {
 
 	#region Migration
 
+	public function setup() {
+
+		if ( ! isset( $this->data_version ) ) {
+			$this->data_version = $this->get_meta( 'data_version' );
+
+			if ( ! $this->data_version ) {
+				$settings = $this->get_settings();
+
+				// If there are existing settings set the data version to 2 so they can be updated.
+				// Otherwise set to the current version as this is a new popup.
+				$this->data_version = ! empty( $settings ) && count( $settings ) ? 2 : $this->model_version;
+
+				$this->update_meta( 'data_version', $this->data_version );
+			}
+
+		}
+
+		if ( $this->data_version < $this->model_version ) {
+			/**
+			 * Process passive settings migration as each popup is loaded. The will only run each migration routine once for each popup.
+			 */
+			$this->passive_migration();
+		}
+
+	}
+
+
 	/**
-	 *
+	 * Allows for passive migration routines based on the current data version.
 	 */
-	public function passive_settings_migration() {
-
-		$changed     = false;
-		$delete_meta = array();
-
+	public function passive_migration() {
 		$this->doing_passive_migration = true;
 
-		// v1.7 Migrations
-		$triggers = $this->get_meta( 'popup_triggers' );
-		if ( ! empty( $triggers ) ) {
-			if ( ! empty( $triggers ) ) {
-				$triggers = ! empty( $this->settings['triggers'] ) && is_array( $this->settings['triggers'] ) ? array_merge( $this->settings['triggers'], $triggers ) : $triggers;
-
-				foreach ( $triggers as $key => $trigger ) {
-					if ( ! empty( $trigger['settings']['cookie']['name'] ) ) {
-						$triggers[ $key ]['settings']['cookie_name'] = $trigger['settings']['cookie']['name'];
-						unset( $triggers[ $key ]['settings']['cookie'] );
-					}
-				}
-
-				$this->settings['triggers'] = $triggers;
-				$changed                    = true;
-			}
-
-			$delete_meta[] = 'popup_triggers';
+		for ( $i = $this->data_version; $this->data_version < $this->model_version; $i ++ ) {
+			do_action_ref_array( 'pum_popup_passive_migration_' . $this->data_version, array( &$this ) );
+			$this->data_version ++;
+			$this->update_meta( 'data_version', $this->data_version );
 		}
 
-		$conditions = $this->get_meta( 'popup_conditions' );
-		if ( ! empty( $conditions ) ) {
-			if ( ! empty( $conditions ) ) {
-				$conditions = ! empty( $this->settings['conditions'] ) && is_array( $this->settings['conditions'] ) ? array_merge( $this->settings['conditions'], $conditions ) : $conditions;
-
-				foreach ( $conditions as $cg_key => $group ) {
-					if ( ! empty( $group ) ) {
-						foreach ( $group as $c_key => $condition ) {
-							// Clean empty conditions.
-							if ( empty( $condition['target'] ) ) {
-								unset( $conditions[ $cg_key ][ $c_key ] );
-							}
-						}
-
-						// Clean empty groups.
-						if ( empty( $conditions[ $cg_key ] ) ) {
-							unset( $conditions[ $cg_key ] );
-						}
-					}
-				}
-
-				$this->settings['conditions'] = $conditions;
-				$changed                      = true;
-			}
-
-			$delete_meta[] = 'popup_conditions';
-		}
-
-		if ( $changed ) {
-			$this->update_meta( 'popup_settings', $this->settings );
-		}
-
-		if ( ! empty( $delete_meta ) ) {
-			foreach ( $delete_meta as $key ) {
-				$this->delete_meta( $key );
-			}
-		}
+		do_action_ref_array( 'pum_popup_passive_migration', array( &$this, $this->data_version ) );
 
 		$this->doing_passive_migration = false;
 	}
