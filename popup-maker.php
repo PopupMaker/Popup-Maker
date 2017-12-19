@@ -170,7 +170,7 @@ class Popup_Maker {
 		}
 
 		if ( ! defined( 'POPMAKE' ) ) {
-			define( 'POPMAKE', __FILE__ );
+			define( 'POPMAKE', self::$FILE );
 		}
 
 		if ( ! defined( 'POPMAKE_NAME' ) ) {
@@ -182,11 +182,11 @@ class Popup_Maker {
 		}
 
 		if ( ! defined( 'POPMAKE_DIR' ) ) {
-			define( 'POPMAKE_DIR', WP_PLUGIN_DIR . '/' . POPMAKE_SLUG . '/' );
+			define( 'POPMAKE_DIR', self::$DIR );
 		}
 
 		if ( ! defined( 'POPMAKE_URL' ) ) {
-			define( 'POPMAKE_URL', plugins_url() . '/' . POPMAKE_SLUG );
+			define( 'POPMAKE_URL', self::$URL );
 		}
 
 		if ( ! defined( 'POPMAKE_NONCE' ) ) {
@@ -204,7 +204,6 @@ class Popup_Maker {
 		if ( ! defined( 'POPMAKE_API_URL' ) ) {
 			define( 'POPMAKE_API_URL', self::$API_URL );
 		}
-
 	}
 
 	/**
@@ -224,124 +223,124 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/migrations.php';
 
 		// TODO Find another place for these admin functions so this can be put in its correct place.
-		require_once POPMAKE_DIR . 'includes/admin/admin-pages.php';
+		require_once self::$DIR . 'includes/admin/admin-pages.php';
 
-		require_once POPMAKE_DIR . 'includes/actions.php';
-		require_once POPMAKE_DIR . 'includes/class-popmake-cron.php';
-		require_once POPMAKE_DIR . 'includes/defaults.php';
-		require_once POPMAKE_DIR . 'includes/google-fonts.php';
-		require_once POPMAKE_DIR . 'includes/general-functions.php';
-		require_once POPMAKE_DIR . 'includes/extensions-functions.php';
-		require_once POPMAKE_DIR . 'includes/input-options.php';
-		require_once POPMAKE_DIR . 'includes/theme-functions.php';
-		require_once POPMAKE_DIR . 'includes/misc-functions.php';
-		require_once POPMAKE_DIR . 'includes/css-functions.php';
-		require_once POPMAKE_DIR . 'includes/ajax-calls.php';
+		require_once self::$DIR . 'includes/actions.php';
+		require_once self::$DIR . 'includes/class-popmake-cron.php';
+		require_once self::$DIR . 'includes/defaults.php';
+		require_once self::$DIR . 'includes/google-fonts.php';
+		require_once self::$DIR . 'includes/general-functions.php';
+		require_once self::$DIR . 'includes/extensions-functions.php';
+		require_once self::$DIR . 'includes/input-options.php';
+		require_once self::$DIR . 'includes/theme-functions.php';
+		require_once self::$DIR . 'includes/misc-functions.php';
+		require_once self::$DIR . 'includes/css-functions.php';
+		require_once self::$DIR . 'includes/ajax-calls.php';
 
-		require_once POPMAKE_DIR . 'includes/importer/easy-modal-v2.php';
-		require_once POPMAKE_DIR . 'includes/integrations/google-fonts.php';
+		require_once self::$DIR . 'includes/importer/easy-modal-v2.php';
+		require_once self::$DIR . 'includes/integrations/google-fonts.php';
 
-		require_once POPMAKE_DIR . 'includes/templates.php';
-		require_once POPMAKE_DIR . 'includes/load-popups.php';
-		require_once POPMAKE_DIR . 'includes/class-pum-extension-license.php';
-		require_once POPMAKE_DIR . 'includes/license-handler.php';
+		require_once self::$DIR . 'includes/templates.php';
+		require_once self::$DIR . 'includes/load-popups.php';
+		require_once self::$DIR . 'includes/class-pum-extension-license.php';
+		require_once self::$DIR . 'includes/license-handler.php';
 
 		// Phasing Out
-		require_once POPMAKE_DIR . 'includes/class-popmake-fields.php';
-		require_once POPMAKE_DIR . 'includes/class-popmake-popup-fields.php';
-		require_once POPMAKE_DIR . 'includes/class-popmake-popup-theme-fields.php';
-		require_once POPMAKE_DIR . 'includes/popup-functions.php';
+		require_once self::$DIR . 'includes/class-popmake-fields.php';
+		require_once self::$DIR . 'includes/class-popmake-popup-fields.php';
+		require_once self::$DIR . 'includes/class-popmake-popup-theme-fields.php';
+		require_once self::$DIR . 'includes/popup-functions.php';
 
 
 		/**
 		 * v1.4 Additions
 		 */
-		require_once POPMAKE_DIR . 'includes/class-pum.php';
-		require_once POPMAKE_DIR . 'includes/class-pum-popup-query.php';
-		require_once POPMAKE_DIR . 'includes/class-pum-fields.php';
-		require_once POPMAKE_DIR . 'includes/class-pum-form.php';
-		require_once POPMAKE_DIR . 'includes/class-pum-previews.php';
-		require_once POPMAKE_DIR . 'includes/class-pum-ajax.php';
+		require_once self::$DIR . 'includes/class-pum.php';
+		require_once self::$DIR . 'includes/class-pum-popup-query.php';
+		require_once self::$DIR . 'includes/class-pum-fields.php';
+		require_once self::$DIR . 'includes/class-pum-form.php';
+		require_once self::$DIR . 'includes/class-pum-previews.php';
+		require_once self::$DIR . 'includes/class-pum-ajax.php';
 
 		// Functions
-		require_once POPMAKE_DIR . 'includes/pum-popup-functions.php';
-		require_once POPMAKE_DIR . 'includes/pum-template-functions.php';
-		require_once POPMAKE_DIR . 'includes/pum-general-functions.php';
-		require_once POPMAKE_DIR . 'includes/pum-misc-functions.php';
-		require_once POPMAKE_DIR . 'includes/pum-template-hooks.php';
-		require_once POPMAKE_DIR . 'includes/pum-ajax-functions.php';
+		require_once self::$DIR . 'includes/pum-popup-functions.php';
+		require_once self::$DIR . 'includes/pum-template-functions.php';
+		require_once self::$DIR . 'includes/pum-general-functions.php';
+		require_once self::$DIR . 'includes/pum-misc-functions.php';
+		require_once self::$DIR . 'includes/pum-template-hooks.php';
+		require_once self::$DIR . 'includes/pum-ajax-functions.php';
 
 
 		// Triggers
-		require_once POPMAKE_DIR . 'includes/pum-trigger-functions.php';
+		require_once self::$DIR . 'includes/pum-trigger-functions.php';
 
 		// Cookies
-		require_once POPMAKE_DIR . 'includes/pum-cookie-functions.php';
+		require_once self::$DIR . 'includes/pum-cookie-functions.php';
 
 
 		// Modules
-		require_once POPMAKE_DIR . 'includes/modules/menus.php';
-		require_once POPMAKE_DIR . 'includes/modules/admin-bar.php';
-		require_once POPMAKE_DIR . 'includes/modules/reviews.php';
+		require_once self::$DIR . 'includes/modules/menus.php';
+		require_once self::$DIR . 'includes/modules/admin-bar.php';
+		require_once self::$DIR . 'includes/modules/reviews.php';
 		
 		// Upgrades
 		if ( is_admin() ) {
-			require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-upgrades.php';
+			require_once self::$DIR . 'includes/admin/class-pum-admin-upgrades.php';
 		}
 
 		// Deprecated Code
-		require_once POPMAKE_DIR . 'includes/pum-deprecated.php';
-		require_once POPMAKE_DIR . 'includes/pum-deprecated-v1.4.php';
-		require_once POPMAKE_DIR . 'includes/pum-deprecated-v1.7.php';
+		require_once self::$DIR . 'includes/pum-deprecated.php';
+		require_once self::$DIR . 'includes/pum-deprecated-v1.4.php';
+		require_once self::$DIR . 'includes/pum-deprecated-v1.7.php';
 
 		// Helper Classes
 		if ( is_admin() ) {
-			require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-helpers.php';
+			require_once self::$DIR . 'includes/admin/class-pum-admin-helpers.php';
 		}
 
 
 		if ( is_admin() ) {
-			require_once POPMAKE_DIR . 'includes/admin/admin-setup.php';
-			require_once POPMAKE_DIR . 'includes/admin/admin-functions.php';
+			require_once self::$DIR . 'includes/admin/admin-setup.php';
+			require_once self::$DIR . 'includes/admin/admin-functions.php';
 
 			// Deprecated Popup Metaboxes.
 
-			require_once POPMAKE_DIR . 'includes/admin/themes/metabox.php';
-			require_once POPMAKE_DIR . 'includes/admin/themes/metabox-close-fields.php';
-			require_once POPMAKE_DIR . 'includes/admin/themes/metabox-container-fields.php';
-			require_once POPMAKE_DIR . 'includes/admin/themes/metabox-content-fields.php';
-			require_once POPMAKE_DIR . 'includes/admin/themes/metabox-overlay-fields.php';
-			require_once POPMAKE_DIR . 'includes/admin/themes/metabox-title-fields.php';
-			require_once POPMAKE_DIR . 'includes/admin/themes/metabox-preview.php';
+			require_once self::$DIR . 'includes/admin/themes/metabox.php';
+			require_once self::$DIR . 'includes/admin/themes/metabox-close-fields.php';
+			require_once self::$DIR . 'includes/admin/themes/metabox-container-fields.php';
+			require_once self::$DIR . 'includes/admin/themes/metabox-content-fields.php';
+			require_once self::$DIR . 'includes/admin/themes/metabox-overlay-fields.php';
+			require_once self::$DIR . 'includes/admin/themes/metabox-title-fields.php';
+			require_once self::$DIR . 'includes/admin/themes/metabox-preview.php';
 
-			require_once POPMAKE_DIR . 'includes/admin/tools/tools-page.php';
+			require_once self::$DIR . 'includes/admin/tools/tools-page.php';
 
-			require_once POPMAKE_DIR . 'includes/admin/extensions/extensions-page.php';
-			require_once POPMAKE_DIR . 'includes/admin/pages/support.php';
+			require_once self::$DIR . 'includes/admin/extensions/extensions-page.php';
+			require_once self::$DIR . 'includes/admin/pages/support.php';
 
-			require_once POPMAKE_DIR . 'includes/admin/metabox-support.php';
+			require_once self::$DIR . 'includes/admin/metabox-support.php';
 
 		}
 
-		require_once POPMAKE_DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
-		require_once POPMAKE_DIR . 'includes/integrations/class-pum-buddypress-integration.php';
+		require_once self::$DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
+		require_once self::$DIR . 'includes/integrations/class-pum-buddypress-integration.php';
 
 
 		if ( defined( 'WPB_VC_VERSION' ) || defined( 'FL_BUILDER_VERSION' ) ) {
-			require_once POPMAKE_DIR . 'includes/integrations/visual-composer.php';
+			require_once self::$DIR . 'includes/integrations/visual-composer.php';
 		}
 
 		// Ninja Forms Integration
-		require_once POPMAKE_DIR . 'includes/integrations/class-pum-ninja-forms.php';
+		require_once self::$DIR . 'includes/integrations/class-pum-ninja-forms.php';
 		// CF7 Forms Integration
-		require_once POPMAKE_DIR . 'includes/integrations/class-pum-cf7.php';
+		require_once self::$DIR . 'includes/integrations/class-pum-cf7.php';
 		// Gravity Forms Integration
-		require_once POPMAKE_DIR . 'includes/integrations/class-pum-gravity-forms.php';
+		require_once self::$DIR . 'includes/integrations/class-pum-gravity-forms.php';
 		// WPML Integration
-		require_once POPMAKE_DIR . 'includes/integrations/class-pum-wpml.php';
+		require_once self::$DIR . 'includes/integrations/class-pum-wpml.php';
 
-		require_once POPMAKE_DIR . 'includes/pum-install-functions.php';
-		require_once POPMAKE_DIR . 'includes/install.php';
+		require_once self::$DIR . 'includes/pum-install-functions.php';
+		require_once self::$DIR . 'includes/install.php';
 	}
 
 	public function init() {
