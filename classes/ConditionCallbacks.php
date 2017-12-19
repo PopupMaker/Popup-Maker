@@ -32,14 +32,14 @@ class PUM_ConditionCallbacks {
 
 			case 'all':
 				// Checks for valid post type, if $post_type is page, then include the front page as most users simply expect this.
-				if ( is_singular( $post_type ) || ( $post_type == 'page' && is_front_page() ) ) {
+				if ( self::is_post_type( $post_type ) || ( $post_type == 'page' && is_front_page() ) ) {
 					return true;
 				}
 				break;
 
 			case 'ID':
 			case 'selected':
-				if ( is_singular( $post_type ) && in_array( $post->ID, wp_parse_id_list( $settings['selected'] ) ) ) {
+				if ( self::is_post_type( $post_type ) && in_array( $post->ID, wp_parse_id_list( $settings['selected'] ) ) ) {
 					return true;
 				}
 				break;
@@ -83,6 +83,11 @@ class PUM_ConditionCallbacks {
 		}
 
 		return false;
+	}
+
+	public static function is_post_type( $post_type ) {
+		global $post;
+		return is_object( $post ) && ( is_singular( $post_type ) || $post->post_type == $post_type );
 	}
 
 	/**

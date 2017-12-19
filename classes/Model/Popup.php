@@ -603,12 +603,17 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 */
 	public function parse_condition( $condition ) {
 		$condition = wp_parse_args( $condition, array(
-			'not_operand' => false,
 			'target' => '',
+			'not_operand' => false,
 			'settings' => array(),
 		) );
 
-		$condition['not_operand'] = boolval( $condition['not_operand'] );
+		$condition['not_operand'] = (bool) $condition['not_operand'];
+
+		/** Backward compatibility layer */
+		foreach( $condition['settings'] as $key => $value ) {
+			$condition[ $key ] = $value;
+		}
 
 		// The not operand value is missing, set it to false.
 		return $condition;
@@ -746,14 +751,14 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	/**
 	 * Check an individual condition with settings.
 	 *
-	 * @param array $args
+	 * @param array $condition
 	 *
 	 * @return bool
 	 */
-	public function check_condition( $args = array() ) {
-		$condition = PUM_Conditions::instance()->get_condition( $args['target'] );
+	public function check_condition( $condition = array() ) {
+		$condition_args = PUM_Conditions::instance()->get_condition( $condition['target'] );
 
-		if ( ! $condition ) {
+		if ( ! $condition_args ) {
 			return false;
 		}
 
@@ -763,11 +768,9 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		 * return call_user_func( $condition->get_callback(), $args, $this );
 		 */
 
-		$settings = isset( $args['settings'] ) ? $args['settings'] : array();
+		$condition['settings'] = isset( $condition['settings'] ) && is_array( $condition['settings'] ) ? $condition['settings'] : array();
 
-		$settings['condition'] = $args['target'];
-
-		return (bool) call_user_func( $condition['callback'], $settings, $this );
+		return (bool) call_user_func( $condition_args['callback'], $condition, $this );
 	}
 
 	/**
@@ -956,7 +959,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	public function setup() {
 
 		if ( ! isset( $this->data_version ) ) {
-			$this->data_version = $this->get_meta( 'data_version' );
+			$this->data_version = (int) $this->get_meta( 'data_version' );
 
 			if ( ! $this->data_version ) {
 				$display_settings = $this->get_meta( 'popup_display' );

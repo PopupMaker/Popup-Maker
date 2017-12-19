@@ -79,7 +79,7 @@ function pum_popup_passive_migration_2( &$popup ) {
 		$triggers = ! empty( $popup->settings['triggers'] ) && is_array( $popup->settings['triggers'] ) ? array_merge( $popup->settings['triggers'], $triggers ) : $triggers;
 
 		foreach ( $triggers as $key => $trigger ) {
-			if ( ! empty( $trigger['settings']['cookie']['name'] ) ) {
+			if ( isset( $trigger['settings']['cookie']['name'] ) ) {
 				$triggers[ $key ]['settings']['cookie_name'] = $trigger['settings']['cookie']['name'];
 				unset( $triggers[ $key ]['settings']['cookie'] );
 			}
@@ -121,10 +121,10 @@ function pum_popup_passive_migration_2( &$popup ) {
 							'settings'    => isset( $condition['settings'] ) ? $condition['settings'] : array(),
 						);
 
-						unset( $condition['target'], $condition['not_operand'], $condition['settings'] );
-
-						if ( ! empty( $condition ) ) {
-							$fixed_condition['settings'] = array_merge( $fixed_condition['settings'], $condition );
+						foreach ( $condition as $key => $val ) {
+							if ( ! in_array( $key, array( 'target', 'not_operand', 'settings' ) ) ) {
+								$fixed_condition['settings'][ $key ] = $val;
+							}
 						}
 
 						$conditions[ $cg_key ][ $c_key ] = $fixed_condition;
