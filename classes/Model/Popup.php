@@ -959,11 +959,11 @@ class PUM_Model_Popup extends PUM_Model_Post {
 			$this->data_version = $this->get_meta( 'data_version' );
 
 			if ( ! $this->data_version ) {
-				$settings = $this->get_settings();
+				$display_settings = $this->get_meta( 'popup_display' );
 
 				// If there are existing settings set the data version to 2 so they can be updated.
 				// Otherwise set to the current version as this is a new popup.
-				$this->data_version = ! empty( $settings ) && count( $settings ) ? 2 : $this->model_version;
+				$this->data_version = ! empty( $display_settings ) && is_array( $display_settings ) ? 2 : $this->model_version;
 
 				$this->update_meta( 'data_version', $this->data_version );
 			}
