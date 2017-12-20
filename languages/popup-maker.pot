@@ -16,7 +16,7 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: classes/Admin/Assets.php:92, classes/Admin/Templates.php:466, classes/Admin/Templates.php:637, includes/admin/class-pum-admin-helpers.php:16
+#: classes/Admin/Assets.php:92, classes/Admin/Templates.php:496, classes/Admin/Templates.php:667, includes/admin/class-pum-admin-helpers.php:16
 msgid "Add"
 msgstr ""
 
@@ -60,7 +60,7 @@ msgstr ""
 msgid "There was an error in generating the preview"
 msgstr ""
 
-#: classes/Admin/Pages.php:51, classes/Admin/Pages.php:144, classes/Admin/Templates.php:393, classes/Admin/Templates.php:586, classes/Site/Assets.php:222, includes/admin/admin-setup.php:24
+#: classes/Admin/Pages.php:51, classes/Admin/Pages.php:144, classes/Admin/Templates.php:393, classes/Admin/Templates.php:616, classes/Site/Assets.php:186, includes/admin/admin-setup.php:24
 msgid "Settings"
 msgstr ""
 
@@ -92,11 +92,11 @@ msgstr ""
 msgid "All Themes"
 msgstr ""
 
-#: classes/Admin/Pages.php:139, classes/Admin/Popups.php:940, classes/Conditions.php:110
+#: classes/Admin/Pages.php:139, classes/Admin/Popups.php:945, classes/Conditions.php:110
 msgid "Categories"
 msgstr ""
 
-#: classes/Admin/Pages.php:140, classes/Admin/Popups.php:936, classes/Conditions.php:111
+#: classes/Admin/Pages.php:140, classes/Admin/Popups.php:941, classes/Conditions.php:111
 msgid "Tags"
 msgstr ""
 
@@ -136,7 +136,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: classes/Admin/Popups.php:228, classes/Admin/Popups.php:255, classes/Site/Assets.php:223
+#: classes/Admin/Popups.php:228, classes/Admin/Popups.php:255, classes/Site/Assets.php:187
 msgid "Triggers"
 msgstr ""
 
@@ -168,7 +168,7 @@ msgstr ""
 msgid "Misc"
 msgstr ""
 
-#: classes/Admin/Popups.php:258, classes/Site/Assets.php:226
+#: classes/Admin/Popups.php:258, classes/Site/Assets.php:190
 msgid "Conditions"
 msgstr ""
 
@@ -320,7 +320,7 @@ msgstr ""
 msgid "Set the animation speed for the popup."
 msgstr ""
 
-#: classes/Admin/Popups.php:397, classes/Admin/Popups.php:564, classes/Admin/Popups.php:679, classes/Admin/Settings.php:338, classes/Shortcode/Popup.php:205, includes/class-popmake-fields.php:175, includes/integrations/class-pum-cf7.php:168, includes/integrations/class-pum-gravity-forms.php:163
+#: classes/Admin/Popups.php:397, classes/Admin/Popups.php:565, classes/Admin/Popups.php:684, classes/Admin/Settings.php:338, classes/Shortcode/Popup.php:205, includes/class-popmake-fields.php:175, includes/integrations/class-pum-cf7.php:168, includes/integrations/class-pum-gravity-forms.php:163
 msgid "ms"
 msgstr ""
 
@@ -453,103 +453,103 @@ msgstr ""
 msgid "Override the default close text."
 msgstr ""
 
-#: classes/Admin/Popups.php:557
+#: classes/Admin/Popups.php:558
 msgid "Close Button Delay"
 msgstr ""
 
-#: classes/Admin/Popups.php:558
+#: classes/Admin/Popups.php:559
 msgid "This delays the display of the close button."
 msgstr ""
 
-#: classes/Admin/Popups.php:570, classes/Shortcode/Popup.php:218
+#: classes/Admin/Popups.php:571, classes/Shortcode/Popup.php:218
 msgid "Click Overlay to Close"
 msgstr ""
 
-#: classes/Admin/Popups.php:571, classes/Shortcode/Popup.php:219
+#: classes/Admin/Popups.php:572, classes/Shortcode/Popup.php:219
 msgid "Checking this will cause popup to close when user clicks on overlay."
 msgstr ""
 
-#: classes/Admin/Popups.php:576
+#: classes/Admin/Popups.php:577
 msgid "Press ESC to Close"
 msgstr ""
 
-#: classes/Admin/Popups.php:577
+#: classes/Admin/Popups.php:578
 msgid "Checking this will cause popup to close when user presses ESC key."
 msgstr ""
 
-#: classes/Admin/Popups.php:582
+#: classes/Admin/Popups.php:583
 msgid "Press F4 to Close"
 msgstr ""
 
-#: classes/Admin/Popups.php:583
+#: classes/Admin/Popups.php:584
 msgid "Checking this will cause popup to close when user presses F4 key."
 msgstr ""
 
-#: classes/Admin/Popups.php:611
+#: classes/Admin/Popups.php:616
 msgid "Disable this popup on mobile devices."
 msgstr ""
 
-#: classes/Admin/Popups.php:616
+#: classes/Admin/Popups.php:621
 msgid "Disable this popup on tablet devices."
 msgstr ""
 
-#: classes/Admin/Popups.php:820, classes/Admin/Popups.php:925
+#: classes/Admin/Popups.php:825, classes/Admin/Popups.php:930
 msgid "Opens"
 msgstr ""
 
-#: classes/Admin/Popups.php:824, classes/Admin/Popups.php:926
+#: classes/Admin/Popups.php:829, classes/Admin/Popups.php:931
 msgid "Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:829, classes/Admin/Popups.php:927
+#: classes/Admin/Popups.php:834, classes/Admin/Popups.php:932
 msgid "Conversion Rate"
 msgstr ""
 
-#: classes/Admin/Popups.php:837
+#: classes/Admin/Popups.php:842
 msgid "Reset Counts"
 msgstr ""
 
-#: classes/Admin/Popups.php:841
+#: classes/Admin/Popups.php:846
 msgid "Last Reset"
 msgstr ""
 
-#: classes/Admin/Popups.php:843
+#: classes/Admin/Popups.php:848
 msgid "Previous Opens"
 msgstr ""
 
-#: classes/Admin/Popups.php:845
+#: classes/Admin/Popups.php:850
 msgid "Previous Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:847
+#: classes/Admin/Popups.php:852
 msgid "Lifetime Opens"
 msgstr ""
 
-#: classes/Admin/Popups.php:849
+#: classes/Admin/Popups.php:854
 msgid "Lifetime Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:922, classes/Admin/Templates.php:585
+#: classes/Admin/Popups.php:927, classes/Admin/Templates.php:615
 msgid "Name"
 msgstr ""
 
-#: classes/Admin/Popups.php:923
+#: classes/Admin/Popups.php:928
 msgid "Title"
 msgstr ""
 
-#: classes/Admin/Popups.php:924
+#: classes/Admin/Popups.php:929
 msgid "CSS Classes"
 msgstr ""
 
-#: classes/Admin/Popups.php:999
+#: classes/Admin/Popups.php:1004
 msgid "N/A"
 msgstr ""
 
-#: classes/Admin/Popups.php:1085
+#: classes/Admin/Popups.php:1090
 msgid "Show all categories"
 msgstr ""
 
-#: classes/Admin/Popups.php:1098
+#: classes/Admin/Popups.php:1103
 msgid "Show all tags"
 msgstr ""
 
@@ -733,7 +733,7 @@ msgstr ""
 msgid "Cookie"
 msgstr ""
 
-#: classes/Admin/Templates.php:394, classes/Admin/Templates.php:587
+#: classes/Admin/Templates.php:394, classes/Admin/Templates.php:617
 msgid "Actions"
 msgstr ""
 
@@ -741,7 +741,7 @@ msgstr ""
 msgid "Choose a type of trigger to get started."
 msgstr ""
 
-#: classes/Admin/Templates.php:414, classes/Admin/Templates.php:465
+#: classes/Admin/Templates.php:414
 msgid "Select a trigger type."
 msgstr ""
 
@@ -773,97 +773,105 @@ msgstr ""
 msgid "Insert Preset"
 msgstr ""
 
-#: classes/Admin/Templates.php:464
+#: classes/Admin/Templates.php:468, classes/Admin/Templates.php:494
 msgid "Choose what type of trigger to add?"
 msgstr ""
 
-#: classes/Admin/Templates.php:488
+#: classes/Admin/Templates.php:476
+msgid "Would you like to set up a cookie as well?"
+msgstr ""
+
+#: classes/Admin/Templates.php:482
+msgid "When will the cookie be set?"
+msgstr ""
+
+#: classes/Admin/Templates.php:518
 msgid "These conditions determine when this popup will be display."
 msgstr ""
 
-#: classes/Admin/Templates.php:488
+#: classes/Admin/Templates.php:518
 msgid "Learn more about conditions"
 msgstr ""
 
-#: classes/Admin/Templates.php:492
+#: classes/Admin/Templates.php:522
 msgid "When users visit your site, the plugin will check the viewed content/page against your selection below and determine if this popup should be shown."
 msgstr ""
 
-#: classes/Admin/Templates.php:494
+#: classes/Admin/Templates.php:524
 msgid "Use the %s button to check for the inverse of your chosen condition."
 msgstr ""
 
-#: classes/Admin/Templates.php:508
+#: classes/Admin/Templates.php:538
 msgid "Choose a condition to get started."
 msgstr ""
 
-#: classes/Admin/Templates.php:510, classes/Admin/Templates.php:542
+#: classes/Admin/Templates.php:540, classes/Admin/Templates.php:572
 msgid "Enable the Not Operand"
 msgstr ""
 
-#: classes/Admin/Templates.php:513, classes/Admin/Templates.php:546
+#: classes/Admin/Templates.php:543, classes/Admin/Templates.php:576
 msgid "Choose a condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:529
+#: classes/Admin/Templates.php:559
 msgctxt "aria-label for add new OR condition button"
 msgid "Add another OR condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:529, classes/Admin/Templates.php:540
+#: classes/Admin/Templates.php:559, classes/Admin/Templates.php:570
 msgid "or"
 msgstr ""
 
-#: classes/Admin/Templates.php:533
+#: classes/Admin/Templates.php:563
 msgctxt "aria-label for add new AND condition button"
 msgid "Add another AND condition group"
 msgstr ""
 
-#: classes/Admin/Templates.php:533
+#: classes/Admin/Templates.php:563
 msgid "and"
 msgstr ""
 
-#: classes/Admin/Templates.php:554
+#: classes/Admin/Templates.php:584
 msgid "Remove Condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:572, classes/Triggers.php:239
+#: classes/Admin/Templates.php:602, classes/Triggers.php:239
 msgid "Add New Cookie"
 msgstr ""
 
-#: classes/Admin/Templates.php:576
+#: classes/Admin/Templates.php:606
 msgid "Cookies are used to prevent a trigger from opening the popup."
 msgstr ""
 
-#: classes/Admin/Templates.php:584
+#: classes/Admin/Templates.php:614
 msgid "Event"
 msgstr ""
 
-#: classes/Admin/Templates.php:606
+#: classes/Admin/Templates.php:636
 msgid "Choose when you want to set a cookie to get started."
 msgstr ""
 
-#: classes/Admin/Templates.php:607
+#: classes/Admin/Templates.php:637
 msgid "Select an event."
 msgstr ""
 
-#: classes/Admin/Templates.php:616, classes/Admin/Templates.php:625
+#: classes/Admin/Templates.php:646, classes/Admin/Templates.php:655
 msgid "Edit this cookie"
 msgstr ""
 
-#: classes/Admin/Templates.php:626
+#: classes/Admin/Templates.php:656
 msgid "Delete` this cookie"
 msgstr ""
 
-#: classes/Admin/Templates.php:635
+#: classes/Admin/Templates.php:665
 msgid "When should your cookie be created?"
 msgstr ""
 
-#: classes/Admin/Templates.php:636
+#: classes/Admin/Templates.php:666
 msgid "Select a cookie type."
 msgstr ""
 
-#: classes/Admin/Templates.php:644
+#: classes/Admin/Templates.php:674
 msgid "Reset Cookie Key"
 msgstr ""
 
@@ -1239,91 +1247,91 @@ msgstr ""
 msgid "This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file."
 msgstr ""
 
-#: classes/Site/Assets.php:211, classes/Types.php:22, includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/integrations/class-pum-gravity-forms.php:53, includes/modules/admin-bar.php:413
+#: classes/Site/Assets.php:175, classes/Types.php:22, includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/integrations/class-pum-gravity-forms.php:53, includes/modules/admin-bar.php:413
 msgid "Popup Maker"
 msgstr ""
 
-#: classes/Site/Assets.php:211
+#: classes/Site/Assets.php:175
 msgid "Debug Mode Enabled"
 msgstr ""
 
-#: classes/Site/Assets.php:212
+#: classes/Site/Assets.php:176
 msgid "Debug started at:"
 msgstr ""
 
-#: classes/Site/Assets.php:213
+#: classes/Site/Assets.php:177
 msgid "For more information on how to use this information visit %s"
 msgstr ""
 
-#: classes/Site/Assets.php:214
+#: classes/Site/Assets.php:178
 msgid "Global Information"
 msgstr ""
 
-#: classes/Site/Assets.php:215
+#: classes/Site/Assets.php:179
 msgid "Localized variables"
 msgstr ""
 
-#: classes/Site/Assets.php:216
+#: classes/Site/Assets.php:180
 msgid "Popups Initializing"
 msgstr ""
 
-#: classes/Site/Assets.php:217
+#: classes/Site/Assets.php:181
 msgid "Popups Initialized"
 msgstr ""
 
-#: classes/Site/Assets.php:218
+#: classes/Site/Assets.php:182
 msgid "Popup: #"
 msgstr ""
 
-#: classes/Site/Assets.php:219
+#: classes/Site/Assets.php:183
 msgid "Theme ID: "
 msgstr ""
 
-#: classes/Site/Assets.php:220
+#: classes/Site/Assets.php:184
 msgid "Method Call:"
 msgstr ""
 
-#: classes/Site/Assets.php:221
+#: classes/Site/Assets.php:185
 msgid "Method Arguments:"
 msgstr ""
 
-#: classes/Site/Assets.php:224
+#: classes/Site/Assets.php:188
 msgid "Cookies"
 msgstr ""
 
-#: classes/Site/Assets.php:225
+#: classes/Site/Assets.php:189
 msgid "Delay:"
 msgstr ""
 
-#: classes/Site/Assets.php:227
+#: classes/Site/Assets.php:191
 msgid "Cookie:"
 msgstr ""
 
-#: classes/Site/Assets.php:228
+#: classes/Site/Assets.php:192
 msgid "Settings:"
 msgstr ""
 
-#: classes/Site/Assets.php:229
+#: classes/Site/Assets.php:193
 msgid "Selector:"
 msgstr ""
 
-#: classes/Site/Assets.php:230
+#: classes/Site/Assets.php:194
 msgid "Mobile Disabled:"
 msgstr ""
 
-#: classes/Site/Assets.php:231
+#: classes/Site/Assets.php:195
 msgid "Tablet Disabled:"
 msgstr ""
 
-#: classes/Site/Assets.php:232
+#: classes/Site/Assets.php:196
 msgid "Display Settings:"
 msgstr ""
 
-#: classes/Site/Assets.php:233
+#: classes/Site/Assets.php:197
 msgid "Close Settings:"
 msgstr ""
 
-#: classes/Site/Assets.php:234
+#: classes/Site/Assets.php:198
 msgid "Event: %s"
 msgstr ""
 

@@ -34,13 +34,11 @@ class PUM_Site_Popups {
 
 		// Preload the $loaded query.
 		add_action( 'init', array( __CLASS__, 'get_loaded_popups' ) );
+
+		// TODO determine if the late priority is needed.
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'head_preload' ), 11 );
 
-		// Old
-		add_action( 'wp_footer', array( __CLASS__, 'render_popups' ), 1 );
-
-		// New?
-		add_action( 'wp_footer', array( __CLASS__, 'render_popups' ), 500 );
+		add_action( 'wp_footer', array( __CLASS__, 'render_popups' ) );
 	}
 
 	/**
@@ -119,6 +117,7 @@ class PUM_Site_Popups {
 		self::$loaded->posts[] = $popup;
 		self::$loaded->post_count ++;
 
+		// Preprocess the content for shortcodes that need to enqueue their own assets.
 		do_shortcode( $popup->post_content );
 
 		// Fire off preload action.

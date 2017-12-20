@@ -552,6 +552,7 @@ class PUM_Admin_Popups {
 							'placeholder' => __( 'Close', 'popup-maker' ),
 							'desc'        => __( 'Override the default close text.', 'popup-maker' ),
 							'priority'    => 10,
+							'private'     => true,
 						),
 						'close_button_delay' => array(
 							'label'    => __( 'Close Button Delay', 'popup-maker' ),
@@ -609,6 +610,7 @@ class PUM_Admin_Popups {
 							'type'     => 'conditions',
 							'std'      => array(),
 							'priority' => 10,
+							'private' => true,
 						),
 						'disable_on_mobile' => array(
 							'label'    => __( 'Disable this popup on mobile devices.', 'popup-maker' ),
@@ -690,7 +692,7 @@ class PUM_Admin_Popups {
 							'doclink'      => '',
 							'button_type'  => 'submit',
 							'class'        => '',
-
+							'private'      => false,
 						) );
 
 					}

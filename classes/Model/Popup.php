@@ -172,6 +172,29 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		return $this->update_meta( 'popup_settings', $settings );
 	}
 
+	public function get_public_settings() {
+		$settings = $this->get_settings();
+
+		foreach ( $settings as $key => $value ) {
+			$field = PUM_Admin_Popups::get_field( $key );
+
+			if ( $field['private'] ) {
+				unset( $settings[ $key ] );
+			}
+		}
+
+		$settings['id']   = $this->ID;
+		$settings['slug'] = $this->post_name;
+
+		$filters = array( 'js_only' => true );
+
+		if ( $this->has_conditions( $filters ) ) {
+			$settings['conditions'] = $this->get_conditions( $filters );
+		}
+
+		return apply_filters( 'pum_popup_get_public_settings', $settings, $this );
+	}
+
 	#endregion Settings
 
 	#region Data Getters
