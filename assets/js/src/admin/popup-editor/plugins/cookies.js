@@ -89,18 +89,20 @@ var cookies;
                 });
             },
             /**
-             * Insert a default cookie when needed.
+             * Insert a new cookie when needed.
              *
              * @param $editor
-             * @param name
+             * @param args
              */
-            insertDefault: function ($editor, name) {
-                cookies.rows.add($editor, {
+            insertCookie: function ($editor, args) {
+                args = $.extend(true, {}, {
                     event: 'on_popup_close',
                     settings: {
                         name: name || 'pum-' + $('#post_ID').val()
                     }
-                });
+                }, args);
+
+                cookies.rows.add($editor, args);
             },
             template: {
                 form: function (event, values, callback) {

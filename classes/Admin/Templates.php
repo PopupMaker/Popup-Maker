@@ -408,12 +408,12 @@ class PUM_Admin_Templates {
 					</tbody>
 				</table>
 
-				<div class="no-triggers  no-list-items">
-					<div class="pum-field pum-field-select pum-field-select2">
-						<label for="pum-first-trigger"><?php _e( 'Choose a type of trigger to get started.', 'popup-maker' ); ?></label>
-						<# print(PUM_Admin.triggers.template.selectbox({id: 'pum-first-trigger', name: "", placeholder: "<?php _e( 'Select a trigger type.', 'popup-maker' ); ?>"})); #>
-					</div>
-				</div>
+<!--				<div class="no-triggers  no-list-items">-->
+<!--					<div class="pum-field pum-field-select pum-field-select2">-->
+<!--						<label for="pum-first-trigger">--><?php //_e( 'Choose a type of trigger to get started.', 'popup-maker' ); ?><!--</label>-->
+<!--						<# print(PUM_Admin.triggers.template.selectbox({id: 'pum-first-trigger', name: "", placeholder: "--><?php //_e( 'Select a trigger type.', 'popup-maker' ); ?><!--"})); #>-->
+<!--					</div>-->
+<!--				</div>-->
 			</div>
 		</script>
 
@@ -459,10 +459,40 @@ class PUM_Admin_Templates {
 
 		<script type="text/html" id="tmpl-pum-trigger-add-type">
 			<#
+				var form_args = <?php echo json_encode( array(
+					'id'     => 'pum-add-trigger',
+					'fields' => array(
+						'popup_trigger_add_type' => array(
+							'id'   => 'popup_trigger_add_type',
+							'name' => "",
+							'label'=> __( 'Choose what type of trigger to add?', 'popup-maker' ),
+							'type' => 'select',
+							'options' => PUM_Triggers::instance()->dropdown_list(),
+						),
+						'popup_trigger_add_cookie' => array(
+							'id'   => 'popup_trigger_add_cookie',
+							'name' => "",
+							'type' => 'checkbox',
+							'label' => __( 'Would you like to set up a cookie as well?', 'popup-maker' ),
+						),
+						'popup_trigger_add_cookie_event' => array(
+							'id'   => 'popup_trigger_add_cookie_event',
+							'name' => "",
+							'type' => 'select',
+							'label' => __( 'When will the cookie be set?', 'popup-maker' ),
+							'options' => PUM_Cookies::instance()->dropdown_list(),
+							'dependencies' => array(
+								'popup_trigger_add_cookie' => true,
+							),
+						),
+					),
+				) ); ?>,
+					content = PUM_Admin.forms.render(form_args, {});
+
 				print(PUM_Admin.templates.modal({
 					id: 'pum_trigger_add_type_modal',
 					title: '<?php _e( 'Choose what type of trigger to add?', 'popup-maker' ); ?>',
-					content: PUM_Admin.triggers.template.selectbox({id: 'popup_trigger_add_type', name: "", placeholder: "<?php _e( 'Select a trigger type.', 'popup-maker' ); ?>"}),
+					content: content,
 					save_button: pum_admin_vars.I10n.add || '<?php __( 'Add','popup-maker' ); ?>'
 				}));
 			#>
@@ -601,12 +631,12 @@ class PUM_Admin_Templates {
 					</tbody>
 				</table>
 
-				<div class="no-cookies  no-list-items">
-					<div class="pum-field pum-field-select pum-field-select2">
-						<label for="pum-first-cookie"><?php _e( 'Choose when you want to set a cookie to get started.', 'popup-maker' ); ?></label>
-						<# print(PUM_Admin.cookies.template.selectbox({id: 'pum-first-cookie', name: "", placeholder: "<?php _e( 'Select an event.', 'popup-maker' ); ?>"})); #>
-					</div>
-				</div>
+<!--				<div class="no-cookies  no-list-items">-->
+<!--					<div class="pum-field pum-field-select pum-field-select2">-->
+<!--						<label for="pum-first-cookie">--><?php //_e( 'Choose when you want to set a cookie to get started.', 'popup-maker' ); ?><!--</label>-->
+<!--						<# print(PUM_Admin.cookies.template.selectbox({id: 'pum-first-cookie', name: "", placeholder: "--><?php //_e( 'Select an event.', 'popup-maker' ); ?><!--"})); #>-->
+<!--					</div>-->
+<!--				</div>-->
 			</div>
 		</script>
 

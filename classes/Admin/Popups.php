@@ -593,6 +593,9 @@ class PUM_Admin_Popups {
 							'std'      => array(),
 							'priority' => 10,
 						),
+						'separator1' => array(
+							'type' => 'separator',
+						),
 						'cookies' => array(
 							'type'     => 'cookies',
 							'std'      => array(),
