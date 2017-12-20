@@ -1,7 +1,7 @@
 (function ($, document, undefined) {
     "use strict";
 
-    var I10n     = pum_admin_vars.I10n;
+    var I10n = pum_admin_vars.I10n;
 
     var triggers = {
         current_editor: null,
@@ -11,14 +11,11 @@
         },
         get_trigger: function (type) {
             var triggers = this.get_triggers(),
-                trigger  = triggers[type] !== 'undefined' ? triggers[type] : false;
+                trigger = triggers[type] !== 'undefined' ? triggers[type] : false;
 
             if (!trigger) {
                 return false;
             }
-
-            // To help with processing older triggers still in use.
-            trigger.updated = trigger.updated !== undefined && trigger.updated;
 
             if (trigger && typeof trigger === 'object' && typeof trigger.fields === 'object' && Object.keys(trigger.fields).length) {
                 trigger = this.parseFields(trigger);
@@ -46,7 +43,7 @@
         select_list: function () {
             var i,
                 _triggers = PUM_Admin.utils.object_to_array(triggers.get_triggers()),
-                options    = {};
+                options = {};
 
             for (i = 0; i < _triggers.length; i++) {
                 options[_triggers[i].id] = _triggers[i].name;
@@ -56,14 +53,14 @@
         },
         rows: {
             add: function (editor, trigger) {
-                var $editor  = $(editor),
-                    data     = {
+                var $editor = $(editor),
+                    data = {
                         index: trigger.index !== null && trigger.index >= 0 ? trigger.index : $editor.find('table.list-table tbody tr').length,
                         type: trigger.type,
                         name: $editor.data('field_name'),
                         settings: trigger.settings || {}
                     },
-                    $row     = $editor.find('tbody tr').eq(data.index),
+                    $row = $editor.find('tbody tr').eq(data.index),
                     $new_row = PUM_Admin.templates.render('pum-trigger-row', data);
 
                 if ($row.length) {
@@ -94,10 +91,10 @@
         },
         template: {
             form: function (type, values, callback) {
-                var trigger  = triggers.get_trigger(type),
-                    modalID  = 'pum_trigger_settings',
+                var trigger = triggers.get_trigger(type),
+                    modalID = 'pum_trigger_settings',
                     firstTab = Object.keys(trigger.fields)[0],
-                    $cookies = $('#pum_popup_cookies_list tbody tr');
+                    $cookies = $('.pum-field-cookies .list-table tbody tr');
 
                 values = values || {};
                 values.type = type;
@@ -115,11 +112,6 @@
                     }
                 });
 
-                if (!$cookies.length && type !== 'click_open') {
-                    PUM_Admin.cookies.insertDefault();
-                    $cookies = $('#pum_popup_cookies_list tbody tr');
-                }
-
                 $cookies.each(function () {
                     var settings = JSON.parse($(this).find('.popup_cookies_field_settings:first').val());
                     if (typeof trigger.fields[firstTab].cookie_name.options[settings.name] === 'undefined') {
@@ -127,7 +119,7 @@
                     }
                 });
 
-                PUM_Admin.modals.reload('#'+modalID, PUM_Admin.templates.modal({
+                PUM_Admin.modals.reload('#' + modalID, PUM_Admin.templates.modal({
                     id: modalID,
                     title: trigger.modal_title || trigger.name,
                     classes: 'tabbed-content',
@@ -139,7 +131,7 @@
                     }, values || {})
                 }));
 
-                $('#'+modalID + ' form').on('submit', callback || function (event) {
+                $('#' + modalID + ' form').on('submit', callback || function (event) {
                     event.preventDefault();
                     PUM_Admin.modals.closeAll();
                 });
@@ -225,9 +217,9 @@
         },
         refreshDescriptions: function () {
             $('.pum-popup-trigger-editor table.list-table tbody tr').each(function () {
-                var $row        = $(this),
-                    type        = $row.find('.popup_triggers_field_type').val(),
-                    values      = JSON.parse($row.find('.popup_triggers_field_settings:first').val()),
+                var $row = $(this),
+                    type = $row.find('.popup_triggers_field_type').val(),
+                    values = JSON.parse($row.find('.popup_triggers_field_settings:first').val()),
                     cookie_text = PUM_Admin.triggers.cookie_column_value(values.cookie_name);
 
                 $row.find('td.settings-column').html(PUM_Admin.triggers.getSettingsDesc(type, values));
@@ -279,9 +271,9 @@
             $('.pum-click-selector-presets').removeClass('open');
         },
         insert_click_selector_preset: function () {
-            var $this  = $(this),
+            var $this = $(this),
                 $input = $('#extra_selectors'),
-                val    = $input.val();
+                val = $input.val();
 
             if (val !== "") {
                 val = val + ', ';
@@ -304,11 +296,14 @@
         .on('click', '.pum-click-selector-presets > span', PUM_Admin.triggers.toggle_click_selector_presets)
         .on('click', '.pum-click-selector-presets li', PUM_Admin.triggers.insert_click_selector_preset)
         .on('click', PUM_Admin.triggers.reset_click_selector_presets)
+        /**
+         * @deprecated 1.7.0
+         */
         .on('select2:select pumselect2:select', '#pum-first-trigger', function () {
-            var $this   = $(this),
+            var $this = $(this),
                 $editor = $this.parents('.pum-popup-trigger-editor'),
-                type    = $this.val(),
-                values  = {};
+                type = $this.val(),
+                values = {};
 
             // Set Current Editor.
             PUM_Admin.triggers.current_editor = $editor;
@@ -318,10 +313,10 @@
             }
 
             triggers.template.form(type, values, function (event) {
-                var $form  = $(this),
-                    type   = $form.find('input#type').val(),
+                var $form = $(this),
+                    type = $form.find('input#type').val(),
                     values = $form.pumSerializeObject(),
-                    index  = parseInt(values.index);
+                    index = parseInt(values.index);
 
                 event.preventDefault();
 
@@ -354,11 +349,11 @@
             PUM_Admin.modals.reload('#pum_trigger_add_type_modal', template({I10n: I10n}));
         })
         .on('click', '.pum-popup-trigger-editor .edit', function (event) {
-            var $this   = $(this),
+            var $this = $(this),
                 $editor = $this.parents('.pum-popup-trigger-editor'),
-                $row    = $this.parents('tr:first'),
-                type    = $row.find('.popup_triggers_field_type').val(),
-                values  = _.extend({}, JSON.parse($row.find('.popup_triggers_field_settings:first').val()), {
+                $row = $this.parents('tr:first'),
+                type = $row.find('.popup_triggers_field_type').val(),
+                values = _.extend({}, JSON.parse($row.find('.popup_triggers_field_settings:first').val()), {
                     index: $row.parent().children().index($row),
                     type: type
                 });
@@ -366,9 +361,9 @@
             event.preventDefault();
 
             triggers.template.form(type, values, function (event) {
-                var $form  = $(this),
-                    type   = $form.find('input#type').val(),
-                    index  = $form.find('input#index').val(),
+                var $form = $(this),
+                    type = $form.find('input#type').val(),
+                    index = $form.find('input#index').val(),
                     values = $form.pumSerializeObject();
 
                 // Set Current Editor.
@@ -392,13 +387,12 @@
                     PUM_Admin.triggers.new_cookie = values.index;
                     $('#pum-popup-settings-container .pum-popup-cookie-editor button.pum-add-new').trigger('click');
                 }
-
             });
         })
         .on('click', '.pum-popup-trigger-editor .remove', function (event) {
             var $this = $(this),
                 $editor = $this.parents('.pum-popup-trigger-editor'),
-                $row  = $this.parents('tr:first');
+                $row = $this.parents('tr:first');
 
             // Set Current Editor.
             PUM_Admin.triggers.current_editor = $editor;
@@ -411,20 +405,31 @@
         })
         .on('submit', '#pum_trigger_add_type_modal .pum-form', function (event) {
             var $editor = PUM_Admin.triggers.current_editor,
-                type    = $('#popup_trigger_add_type').val(),
-                values  = {};
+                $cookie_editor = $editor.parents('#pum-popup-settings-triggers-subtabs_main').find('.pum-field-cookies .pum-popup-cookie-editor'),
+                type = $('#popup_trigger_add_type').val(),
+                add_cookie = $('#popup_trigger_add_cookie').is(':checked'),
+                add_cookie_event = $('#popup_trigger_add_cookie_event').val(),
+                values = {};
 
             event.preventDefault();
 
-            if (type !== 'click_open') {
+            if (add_cookie) {
                 values.cookie_name = 'pum-' + $('#post_ID').val();
+                PUM_Admin.cookies.insertCookie($cookie_editor, {
+                    event: add_cookie_event,
+                    settings: {
+                        time: '1 month',
+                        path: true,
+                        name: values.cookie_name
+                    }
+                });
             }
 
             triggers.template.form(type, values, function (event) {
-                var $form  = $(this),
-                    type   = $form.find('input#type').val(),
+                var $form = $(this),
+                    type = $form.find('input#type').val(),
                     values = $form.pumSerializeObject(),
-                    index  = parseInt(values.index);
+                    index = parseInt(values.index);
 
                 // Set Current Editor.
                 PUM_Admin.triggers.current_editor = $editor;
