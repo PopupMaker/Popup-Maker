@@ -92,11 +92,11 @@ msgstr ""
 msgid "All Themes"
 msgstr ""
 
-#: classes/Admin/Pages.php:139, classes/Admin/Popups.php:945, classes/Conditions.php:110
+#: classes/Admin/Pages.php:139, classes/Admin/Popups.php:950, classes/Conditions.php:110
 msgid "Categories"
 msgstr ""
 
-#: classes/Admin/Pages.php:140, classes/Admin/Popups.php:941, classes/Conditions.php:111
+#: classes/Admin/Pages.php:140, classes/Admin/Popups.php:946, classes/Conditions.php:111
 msgid "Tags"
 msgstr ""
 
@@ -320,7 +320,7 @@ msgstr ""
 msgid "Set the animation speed for the popup."
 msgstr ""
 
-#: classes/Admin/Popups.php:397, classes/Admin/Popups.php:565, classes/Admin/Popups.php:684, classes/Admin/Settings.php:338, classes/Shortcode/Popup.php:205, includes/class-popmake-fields.php:175, includes/integrations/class-pum-cf7.php:168, includes/integrations/class-pum-gravity-forms.php:163
+#: classes/Admin/Popups.php:397, classes/Admin/Popups.php:565, classes/Admin/Popups.php:685, classes/Admin/Settings.php:338, classes/Shortcode/Popup.php:205, includes/class-popmake-fields.php:175, includes/integrations/class-pum-cf7.php:168, includes/integrations/class-pum-gravity-forms.php:163
 msgid "ms"
 msgstr ""
 
@@ -485,71 +485,71 @@ msgstr ""
 msgid "Checking this will cause popup to close when user presses F4 key."
 msgstr ""
 
-#: classes/Admin/Popups.php:616
+#: classes/Admin/Popups.php:617
 msgid "Disable this popup on mobile devices."
 msgstr ""
 
-#: classes/Admin/Popups.php:621
+#: classes/Admin/Popups.php:622
 msgid "Disable this popup on tablet devices."
 msgstr ""
 
-#: classes/Admin/Popups.php:825, classes/Admin/Popups.php:930
+#: classes/Admin/Popups.php:830, classes/Admin/Popups.php:935
 msgid "Opens"
 msgstr ""
 
-#: classes/Admin/Popups.php:829, classes/Admin/Popups.php:931
+#: classes/Admin/Popups.php:834, classes/Admin/Popups.php:936
 msgid "Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:834, classes/Admin/Popups.php:932
+#: classes/Admin/Popups.php:839, classes/Admin/Popups.php:937
 msgid "Conversion Rate"
 msgstr ""
 
-#: classes/Admin/Popups.php:842
+#: classes/Admin/Popups.php:847
 msgid "Reset Counts"
 msgstr ""
 
-#: classes/Admin/Popups.php:846
+#: classes/Admin/Popups.php:851
 msgid "Last Reset"
 msgstr ""
 
-#: classes/Admin/Popups.php:848
+#: classes/Admin/Popups.php:853
 msgid "Previous Opens"
 msgstr ""
 
-#: classes/Admin/Popups.php:850
+#: classes/Admin/Popups.php:855
 msgid "Previous Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:852
+#: classes/Admin/Popups.php:857
 msgid "Lifetime Opens"
 msgstr ""
 
-#: classes/Admin/Popups.php:854
+#: classes/Admin/Popups.php:859
 msgid "Lifetime Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:927, classes/Admin/Templates.php:615
+#: classes/Admin/Popups.php:932, classes/Admin/Templates.php:615
 msgid "Name"
 msgstr ""
 
-#: classes/Admin/Popups.php:928
+#: classes/Admin/Popups.php:933
 msgid "Title"
 msgstr ""
 
-#: classes/Admin/Popups.php:929
+#: classes/Admin/Popups.php:934
 msgid "CSS Classes"
 msgstr ""
 
-#: classes/Admin/Popups.php:1004
+#: classes/Admin/Popups.php:1009
 msgid "N/A"
 msgstr ""
 
-#: classes/Admin/Popups.php:1090
+#: classes/Admin/Popups.php:1095
 msgid "Show all categories"
 msgstr ""
 
-#: classes/Admin/Popups.php:1103
+#: classes/Admin/Popups.php:1108
 msgid "Show all tags"
 msgstr ""
 
@@ -1324,14 +1324,6 @@ msgid "Tablet Disabled:"
 msgstr ""
 
 #: classes/Site/Assets.php:196
-msgid "Display Settings:"
-msgstr ""
-
-#: classes/Site/Assets.php:197
-msgid "Close Settings:"
-msgstr ""
-
-#: classes/Site/Assets.php:198
 msgid "Event: %s"
 msgstr ""
 

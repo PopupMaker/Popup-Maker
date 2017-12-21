@@ -21,7 +21,7 @@ function pum_popup_passive_migration_2( &$popup ) {
 	 */
 	$theme = $popup->get_meta( 'popup_theme' );
 	if ( ! empty( $theme ) && is_numeric( $theme ) ) {
-		$popup->settings['theme'] = absint( $theme );
+		$popup->settings['theme_id'] = absint( $theme );
 		$changed                  = true;
 		$delete_meta[]            = 'popup_theme';
 	}

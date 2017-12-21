@@ -173,13 +173,15 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	}
 
 	public function get_public_settings() {
-		$settings = $this->get_settings();
+		$settings = wp_parse_args( $this->get_settings(), PUM_Admin_Popups::defaults() );
 
 		foreach ( $settings as $key => $value ) {
 			$field = PUM_Admin_Popups::get_field( $key );
 
 			if ( $field['private'] ) {
 				unset( $settings[ $key ] );
+			} elseif ( $field['type'] == 'checkbox' ) {
+				$settings[ $key ] = (bool) $value;
 			}
 		}
 
@@ -413,11 +415,11 @@ class PUM_Model_Popup extends PUM_Model_Post {
 			$old_theme_id = $this->get_meta( 'popup_theme', true );
 
 			if ( ! empty( $old_theme_id ) ) {
-				$this->update_setting( 'theme', $old_theme_id );
+				$this->update_setting( 'theme_id', $old_theme_id );
 				$this->delete_meta( 'popup_theme' );
 			}
 
-			$theme_id = $this->get_setting( 'theme', popmake_get_default_popup_theme() );
+			$theme_id = $this->get_setting( 'theme_id', popmake_get_default_popup_theme() );
 
 			// Deprecated filter
 			$this->theme_id = apply_filters( 'popmake_get_the_popup_theme', $theme_id, $this->ID );

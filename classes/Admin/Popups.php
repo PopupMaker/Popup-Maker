@@ -273,7 +273,7 @@ class PUM_Admin_Popups {
 			$tabs = apply_filters( 'pum_popup_settings_fields', array(
 				'general'   => apply_filters( 'pum_popup_general_settings_fields', array(
 					'main' => array(
-						'theme' => array(
+						'theme_id' => array(
 							'label'        => __( 'Theme', 'popup-maker' ),
 							'dynamic_desc' => sprintf( '%1$s<br/><a id="edit_theme_link" href="%3$s">%2$s</a>', __( 'Choose a theme for this popup.', 'popup-maker' ), __( 'Customize This Theme', 'popup-maker' ), admin_url( "post.php?action=edit&post={{data.value}}" ) ),
 							'type'         => 'select',
@@ -596,6 +596,7 @@ class PUM_Admin_Popups {
 						),
 						'separator1' => array(
 							'type' => 'separator',
+							'private' => true,
 						),
 						'cookies' => array(
 							'type'     => 'cookies',
@@ -759,9 +760,13 @@ class PUM_Admin_Popups {
 
 		$defaults = array();
 
-		foreach ( $tabs as $section_id => $fields ) {
-			foreach ( $fields as $key => $field ) {
-				$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : null;
+		foreach ( $tabs as $tab_id => $sections ) {
+			foreach ( $sections as $section_id => $fields ) {
+				foreach ( $fields as $key => $field ) {
+					if ( $field['type'] == 'checkbox' ) {
+						$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : ( $field['type'] == 'checkbox' ? false : null );
+					}
+				}
 			}
 		}
 
