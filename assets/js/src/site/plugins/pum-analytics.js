@@ -4,14 +4,14 @@
  */
 
 var PUM_Analytics;
-(function ($, document, undefined) {
+(function ($) {
     "use strict";
 
     $.fn.popmake.last_open_trigger = null;
     $.fn.popmake.last_close_trigger = null;
     $.fn.popmake.conversion_trigger = null;
 
-    var rest_enabled = typeof pum_vars.restapi !== 'undefined' && pum_vars.restapi ? true : false;
+    var rest_enabled = !!(typeof pum_vars.restapi !== 'undefined' && pum_vars.restapi);
 
     PUM_Analytics = {
         beacon: function (data, callback) {
@@ -45,7 +45,7 @@ var PUM_Analytics;
         }
     };
 
-    if (pum_vars.disable_tracking === undefined || !pum_vars.disable_tracking) {
+    if (typeof pum_vars.disable_tracking === 'undefined' || !pum_vars.disable_tracking) {
         // Only popups from the editor should fire analytics events.
         $(document)
         /**
@@ -62,4 +62,4 @@ var PUM_Analytics;
                 }
             });
     }
-}(jQuery, document));
+}(jQuery));

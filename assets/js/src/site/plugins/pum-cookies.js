@@ -28,7 +28,7 @@
             var i,
                 ret = false;
 
-            if (settings.cookie === undefined || settings.cookie_name === undefined || settings.cookie_name === null) {
+            if (settings.cookie_name === undefined || settings.cookie_name === null) {
                 return false;
             }
 
@@ -97,11 +97,11 @@
         .on('pumInit', '.pum', function () {
             var $popup   = PUM.getPopup(this),
                 settings = $popup.popmake('getSettings'),
-                cookies  = settings.cookies,
+                cookies  = settings.cookies || [],
                 cookie   = null,
                 i;
 
-            if (cookies !== undefined && cookies.length) {
+            if (cookies.length) {
                 for (i = 0; cookies.length > i; i += 1) {
                     cookie = cookies[i];
                     $popup.popmake('addCookie', cookie.event, cookie.settings);

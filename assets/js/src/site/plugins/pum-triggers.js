@@ -110,11 +110,11 @@
         .on('pumInit', '.pum', function () {
             var $popup = PUM.getPopup(this),
                 settings = $popup.popmake('getSettings'),
-                triggers = settings.triggers,
+                triggers = settings.triggers || [],
                 trigger = null,
                 i;
 
-            if (triggers !== undefined && triggers.length) {
+            if (triggers.length) {
                 for (i = 0; triggers.length > i; i += 1) {
                     trigger = triggers[i];
                     $popup.popmake('addTrigger', trigger.type, trigger.settings);

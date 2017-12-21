@@ -193,8 +193,6 @@ class PUM_Site_Assets {
 				'label_selector'         => __( 'Selector:', 'popup-maker' ),
 				'label_mobile_disabled'  => __( 'Mobile Disabled:', 'popup-maker' ),
 				'label_tablet_disabled'  => __( 'Tablet Disabled:', 'popup-maker' ),
-				'label_display_settings' => __( 'Display Settings:', 'popup-maker' ),
-				'label_close_settings'   => __( 'Close Settings:', 'popup-maker' ),
 				'label_event'            => __( 'Event: %s', 'popup-maker' ),
 				'triggers'               => PUM_Triggers::instance()->dropdown_list(),
 				'cookies'                => PUM_Cookies::instance()->dropdown_list(),
@@ -216,7 +214,8 @@ class PUM_Site_Assets {
 			while ( $loaded->have_posts() ) : $loaded->next_post();
 				PUM_Site_Popups::current_popup( $loaded->post );
 				$popup                  = pum_get_popup( $loaded->post->ID );
-				$settings[ $popup->ID ] = $popup->get_public_settings();
+				// Set the key to the CSS id of this popup for easy lookup.
+				$settings[ 'pum-' . $popup->ID ] = $popup->get_public_settings();
 			endwhile;
 
 			PUM_Site_Popups::current_popup( $current_popup );
