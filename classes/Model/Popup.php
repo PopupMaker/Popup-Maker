@@ -1,7 +1,4 @@
 <?php
-
-// Exit if accessed directly
-
 /*******************************************************************************
  * Copyright (c) 2017, WP Popup Maker
  ******************************************************************************/
@@ -49,17 +46,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	/** @var string */
 	public $content;
 
-	# TODO Remove these once no longer needed.
-
-	/** @var array */
-	public $display;
-
-	/** @var array */
-	public $close;
-
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	public $doing_passive_migration = false;
 
 	/** @var int */
@@ -68,6 +55,14 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	/** @var int */
 	public $data_version;
 
+	# TODO Remove these once no longer needed.
+
+	/** @var array */
+	public $display;
+
+	/** @var array */
+	public $close;
+
 	#endregion Properties
 
 	#region General
@@ -75,16 +70,12 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	/**
 	 * Returns the title of a popup.
 	 *
-	 * @uses filter `popmake_get_the_popup_title`
 	 * @uses filter `pum_popup_get_title`
 	 *
 	 * @return string
 	 */
 	public function get_title() {
-		$title = $this->get_meta( 'popup_title', true );
-
-		// Deprecated filter
-		$title = apply_filters( 'popmake_get_the_popup_title', $title, $this->ID );
+		$title = $this->get_meta( 'popup_title' );
 
 		return apply_filters( 'pum_popup_get_title', $title, $this->ID );
 	}
@@ -92,16 +83,12 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	/**
 	 * Returns the content of a popup.
 	 *
-	 * @uses filter `the_popup_content`
 	 * @uses filter `pum_popup_content`
 	 *
 	 * @return string
 	 */
 	public function get_content() {
-		// Deprecated Filter
-		$content = apply_filters( 'the_popup_content', $this->post_content, $this->ID );
-
-		return $this->content = apply_filters( 'pum_popup_content', $content, $this->ID );
+		return $this->content = apply_filters( 'pum_popup_content', $this->post_content, $this->ID );
 	}
 
 	#endregion General
@@ -172,6 +159,11 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		return $this->update_meta( 'popup_settings', $settings );
 	}
 
+	/**
+	 * Returns cleansed public settings for a popup.
+	 *
+	 * @return array
+	 */
 	public function get_public_settings() {
 		$settings = wp_parse_args( $this->get_settings(), PUM_Admin_Popups::defaults() );
 
@@ -204,14 +196,8 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	/**
 	 * @return array
 	 */
-	function get_cookies() {
-		if ( ! $this->cookies ) {
-			$this->cookies = $this->get_meta( 'popup_cookies', true );
-
-			if ( ! $this->cookies ) {
-				$this->cookies = array();
-			}
-		}
+	public function get_cookies() {
+		$this->cookies = $this->get_setting( 'cookies', array() );
 
 		return apply_filters( 'pum_popup_get_cookies', $this->cookies, $this->ID );
 	}
@@ -220,44 +206,44 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * @return array
 	 */
 	public function get_triggers() {
-		if ( ! isset( $this->triggers ) ) {
-			$old_triggers = $this->get_meta( 'popup_triggers', true );
+		$triggers = $this->get_setting( 'triggers', array() );
 
-			$triggers = $this->get_setting( 'triggers', array() );
+		// Automatically add click trigger when on the front end.
+		if ( ! is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+			$has_click_trigger = false;
 
-			if ( ! empty( $old_triggers ) ) {
-				foreach ( $old_triggers as $key => $value ) {
-					$triggers[] = $value;
-				}
-
-				// Clean up old key.
-				$this->delete_meta( 'popup_triggers' );
-			}
-
-			if ( ! is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-				$has_click_trigger = false;
-
-				foreach ( $triggers as $trigger ) {
-					if ( $trigger['type'] == 'click_open' ) {
-						$has_click_trigger = true;
-					}
-				}
-
-				if ( ! $has_click_trigger ) {
-					$triggers[] = array(
-						'type'     => 'click_open',
-						'settings' => array(
-							'extra_selectors' => '',
-							'cookie_name'     => null,
-						),
-					);
+			foreach ( $triggers as $trigger ) {
+				if ( $trigger['type'] == 'click_open' ) {
+					$has_click_trigger = true;
 				}
 			}
 
-			$this->triggers = $triggers;
+			if ( ! $has_click_trigger ) {
+				$triggers[] = array(
+					'type'     => 'click_open',
+					'settings' => array(
+						'extra_selectors' => '',
+						'cookie_name'     => null,
+					),
+				);
+			}
 		}
 
 		return apply_filters( 'pum_popup_get_triggers', $this->triggers, $this->ID );
+	}
+
+	/**
+	 * Returns this popups theme id or the default id.
+	 *
+	 * @uses filter `pum_popup_get_theme_id`
+	 *
+	 * @return int $theme_id
+	 */
+	public function get_theme_id() {
+		// TODO replace usage of popmake_get_default_popup_theme.
+		$theme_id = $this->get_setting( 'theme_id', popmake_get_default_popup_theme() );
+
+		return (int) apply_filters( 'pum_popup_get_theme_id', $theme_id, $this->ID );
 	}
 
 	#endregion Data Getters
@@ -265,6 +251,8 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	#region Deprecated Getters
 
 	/**
+	 * Retrieve settings in the form of deprecated grouped arrays.
+	 *
 	 * @param $group
 	 * @param null $key
 	 *
@@ -277,32 +265,8 @@ class PUM_Model_Popup extends PUM_Model_Post {
 			 */
 			$remapped_keys = $this->remapped_meta_settings_keys( $group );
 
-			$group_values = $this->get_meta( "popup_$group", true );
-
-			if ( ! empty( $group_values ) ) {
-
-				$settings = array();
-
-				foreach ( (array) $group_values as $key => $value ) {
-					if ( array_key_exists( $key, $remapped_keys ) ) {
-						// Add it to the new settings.
-						$settings[ $remapped_keys[ $key ] ] = $value;
-						// Remove it from old.
-						unset( $group_values[ $key ] );
-					}
-				}
-
-				if ( ! empty( $settings ) ) {
-					$this->update_settings( $settings );
-				}
-
-				// Auto cleanup when able.
-				if ( empty( $group_values ) ) {
-					$this->delete_meta( "popup_$group" );
-				} else {
-					$this->update_meta( "popup_$group", $group_values );
-				}
-			}
+			// This will only return data from extensions as core data has been migrated already.
+			$group_values = $this->get_meta( "popup_$group" );
 
 			// Data manipulation begins here. We don't want any of this saved, only returned for backward compatibility.
 			foreach ( $remapped_keys as $old_key => $new_key ) {
@@ -377,7 +341,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 *
 	 * @deprecated 1.7.0 Use get_setting instead.
 	 *
-	 * @param null $key
+	 * @param string|null $key
 	 *
 	 * @return mixed
 	 */
@@ -390,42 +354,12 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 *
 	 * @deprecated 1.7.0 Use get_setting instead.
 	 *
-	 * @param null $key
+	 * @param string|null $key
 	 *
 	 * @return mixed
 	 */
 	public function get_close( $key = null ) {
 		return $this->_dep_get_settings_group( 'close', $key );
-	}
-
-	/**
-	 * Returns this popups theme id or the default id.
-	 *
-	 * @deprecated 1.7.0 Use get_setting instead.
-	 *
-	 * @todo replace usage of popmake_get_default_popup_theme.
-	 *
-	 * @uses filter `popmake_get_the_popup_theme`
-	 * @uses filter `pum_popup_get_theme_id`
-	 *
-	 * @return int $theme_id
-	 */
-	public function get_theme_id() {
-		if ( ! $this->theme_id ) {
-			$old_theme_id = $this->get_meta( 'popup_theme', true );
-
-			if ( ! empty( $old_theme_id ) ) {
-				$this->update_setting( 'theme_id', $old_theme_id );
-				$this->delete_meta( 'popup_theme' );
-			}
-
-			$theme_id = $this->get_setting( 'theme_id', popmake_get_default_popup_theme() );
-
-			// Deprecated filter
-			$this->theme_id = apply_filters( 'popmake_get_the_popup_theme', $theme_id, $this->ID );
-		}
-
-		return (int) apply_filters( 'pum_popup_get_theme_id', $this->theme_id, $this->ID );
 	}
 
 	#endregion Deprecated Getters
@@ -435,7 +369,6 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	/**
 	 * Returns array of classes for this popup.
 	 *
-	 * @uses filter `popmake_get_the_popup_classes`
 	 * @uses filter `pum_popup_get_classes`
 	 *
 	 * @param string $element The key or html element identifier.
@@ -473,7 +406,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		$classes = apply_filters( 'pum_popup_classes', $classes, $this->ID );
 
 		if ( ! isset( $classes[ $element ] ) ) {
-			return array();
+			$classes[ $element ] = array();
 		}
 
 		return apply_filters( "pum_popup_{$element}_classes", $classes[ $element ], $this->ID );
@@ -482,43 +415,34 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	/**
 	 * Returns array for data attribute of this popup.
 	 *
-	 * @todo integrate popmake_clean_popup_data_attr
-	 *
-	 * @uses deprecated filter `popmake_get_the_popup_data_attr`
 	 * @uses filter `pum_popup_get_data_attr`
 	 *
 	 * @return array
 	 */
 	public function get_data_attr() {
-		if ( ! $this->data_attr ) {
+		$data_attr = array(
+			'id'              => $this->ID,
+			'slug'            => $this->post_name,
+			'theme_id'        => $this->get_theme_id(),
+			'cookies'         => $this->get_cookies(),
+			'triggers'        => $this->get_triggers(),
+			'mobile_disabled' => $this->mobile_disabled() ? true : null,
+			'tablet_disabled' => $this->tablet_disabled() ? true : null,
+			'meta'            => array(
+				'display'    => $this->get_display(),
+				'close'      => $this->get_close(),
+				// Added here for backward compatibility in extensions.
+				'click_open' => popmake_get_popup_click_open( $this->ID ),
+			),
+		);
 
-			$data_attr = array(
-				'id'              => $this->ID,
-				'slug'            => $this->post_name,
-				'theme_id'        => $this->get_theme_id(),
-				'cookies'         => $this->get_cookies(),
-				'triggers'        => $this->get_triggers(),
-				'mobile_disabled' => $this->mobile_disabled() ? true : null,
-				'tablet_disabled' => $this->tablet_disabled() ? true : null,
-				'meta'            => array(
-					'display'    => $this->get_display(),
-					'close'      => $this->get_close(),
-					// Added here for backward compatibility in extensions.
-					'click_open' => popmake_get_popup_click_open( $this->ID ),
-				),
-			);
+		$filters = array( 'js_only' => true );
 
-			$filters = array( 'js_only' => true );
-
-			if ( $this->has_conditions( $filters ) ) {
-				$data_attr['conditions'] = $this->get_conditions( $filters );
-			}
-
-			// Deprecated
-			$this->data_attr = apply_filters( 'popmake_get_the_popup_data_attr', $data_attr, $this->ID );
+		if ( $this->has_conditions( $filters ) ) {
+			$data_attr['conditions'] = $this->get_conditions( $filters );
 		}
 
-		return apply_filters( 'pum_popup_data_attr', $this->data_attr, $this->ID );
+		return apply_filters( 'pum_popup_data_attr', $data_attr, $this->ID );
 	}
 
 	/**
@@ -527,21 +451,10 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * @return string
 	 */
 	public function close_text() {
-		$text = '&#215;';
+		$text = $this->get_setting( 'close_text', '&#215;' );
 
-		/** @deprecated */
-		$text = apply_filters( 'popmake_popup_default_close_text', $text, $this->ID );
-
-		// Check to see if popup has close text to over ride default.
-		$popup_close_text = $this->get_close( 'text' );
-		if ( $popup_close_text && $popup_close_text != '' ) {
-			$text = $popup_close_text;
-		} else {
-			// todo replace this with PUM_Theme class in the future.
-			$theme_text = popmake_get_popup_theme_close( $this->get_theme_id(), 'text', false );
-			if ( $theme_text && $theme_text != '' ) {
-				$text = $theme_text;
-			}
+		if ( empty( $text ) && ! empty( $theme_text = popmake_get_popup_theme_close( $this->get_theme_id(), 'text', false ) ) ) {
+			$text = $theme_text;
 		}
 
 		return apply_filters( 'pum_popup_close_text', $text, $this->ID );
@@ -550,16 +463,12 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	/**
 	 * Returns true if the close button should be rendered.
 	 *
-	 * @uses apply_filters `popmake_show_close_button`
 	 * @uses apply_filters `pum_popup_show_close_button`
 	 *
 	 * @return bool
 	 */
 	public function show_close_button() {
-		// Deprecated filter.
-		$show = apply_filters( 'popmake_show_close_button', true, $this->ID );
-
-		return boolval( apply_filters( 'pum_popup_show_close_button', $show, $this->ID ) );
+		return (bool) apply_filters( 'pum_popup_show_close_button', true, $this->ID );
 	}
 
 	#endregion Templating & Rendering
@@ -683,7 +592,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * @return bool
 	 */
 	public function has_conditions( $filters = array() ) {
-		return boolval( count( $this->get_conditions( $filters ) ) );
+		return (bool) count( $this->get_conditions( $filters ) );
 	}
 
 	/**
@@ -787,12 +696,6 @@ class PUM_Model_Popup extends PUM_Model_Post {
 			return false;
 		}
 
-		/*
-		 * Old way, here until we have patched all conditions.
-		 *
-		 * return call_user_func( $condition->get_callback(), $args, $this );
-		 */
-
 		$condition['settings'] = isset( $condition['settings'] ) && is_array( $condition['settings'] ) ? $condition['settings'] : array();
 
 		return (bool) call_user_func( $condition_args['callback'], $condition, $this );
@@ -804,16 +707,18 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * @return bool
 	 */
 	public function mobile_disabled() {
-		$mobile_disabled = $this->get_meta( 'popup_mobile_disabled', true );
+		$mobile_disabled = $this->get_setting( 'disable_on_mobile' );
 
 		return (bool) apply_filters( 'pum_popup_mobile_disabled', $mobile_disabled, $this->ID );
 	}
 
 	/**
+	 * Check if tablet was disabled
+	 *
 	 * @return bool
 	 */
 	public function tablet_disabled() {
-		$tablet_disabled = $this->get_meta( 'popup_tablet_disabled', true );
+		$tablet_disabled = $this->get_setting( 'disable_on_tablet' );
 
 		return (bool) apply_filters( 'pum_popup_tablet_disabled', $tablet_disabled, $this->ID );
 	}
@@ -836,7 +741,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 
 		switch ( $which ) {
 			case 'current' :
-				$current = $this->get_meta( 'popup_' . $keys[0] . '_count', true );
+				$current = $this->get_meta( 'popup_' . $keys[0] . '_count' );
 
 				// Save future queries by inserting a valid count.
 				if ( $current === false || ! is_numeric( $current ) ) {
@@ -846,7 +751,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 
 				return absint( $current );
 			case 'total'   :
-				$total = $this->get_meta( 'popup_' . $keys[0] . '_count_total', true );
+				$total = $this->get_meta( 'popup_' . $keys[0] . '_count_total' );
 
 				// Save future queries by inserting a valid count.
 				if ( $total === false || ! is_numeric( $total ) ) {
@@ -987,15 +892,16 @@ class PUM_Model_Popup extends PUM_Model_Post {
 			$this->data_version = (int) $this->get_meta( 'data_version' );
 
 			if ( ! $this->data_version ) {
+				$theme = $this->get_meta( 'popup_theme' );
 				$display_settings = $this->get_meta( 'popup_display' );
 
 				// If there are existing settings set the data version to 2 so they can be updated.
 				// Otherwise set to the current version as this is a new popup.
-				$this->data_version = ! empty( $display_settings ) && is_array( $display_settings ) ? 2 : $this->model_version;
+				$is_v2  = ( ! empty( $display_settings ) && is_array( $display_settings ) ) || $theme > 0;
+				$this->data_version = $is_v2 ? 2 : $this->model_version;
 
 				$this->update_meta( 'data_version', $this->data_version );
 			}
-
 		}
 
 		if ( $this->data_version < $this->model_version ) {
