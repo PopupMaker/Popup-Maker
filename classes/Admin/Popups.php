@@ -241,7 +241,7 @@ class PUM_Admin_Popups {
 				'main' => __( 'General Settings', 'popup-maker' ),
 			),
 			'display'   => array(
-				'main'      => __( 'Display Settings', 'popup-maker' ),
+				'main'      => __( 'General', 'popup-maker' ),
 				'size'      => __( 'Size', 'popup-maker' ),
 				'animation' => __( 'Animation', 'popup-maker' ),
 				'position'  => __( 'Position', 'popup-maker' ),
@@ -272,6 +272,9 @@ class PUM_Admin_Popups {
 		if ( ! isset( $tabs ) ) {
 			$tabs = apply_filters( 'pum_popup_settings_fields', array(
 				'general'   => apply_filters( 'pum_popup_general_settings_fields', array(
+					'main' => array(),
+				) ),
+				'display'   => apply_filters( 'pum_popup_display_settings_fields', array(
 					'main' => array(
 						'theme_id' => array(
 							'label'        => __( 'Theme', 'popup-maker' ),
@@ -281,8 +284,6 @@ class PUM_Admin_Popups {
 							'std'          => popmake_get_default_popup_theme(),
 						),
 					),
-				) ),
-				'display'   => apply_filters( 'pum_popup_display_settings_fields', array(
 					'size'      => array(
 						'size'                 => array(
 							'label'    => __( 'Size', 'popup-maker' ),
