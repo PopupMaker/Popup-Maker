@@ -13,7 +13,7 @@ final class Popmake_KingComposer_Integration {
 	}
 
 	public static function popup_post_type_args( $popup_args ) {
-		if ( defined( 'KC_VERSION' ) || ( ! empty( $_GET['page'] ) ) ) {
+		if ( defined( 'KC_VERSION' ) ) {
 			$popup_args['public']              = true;
 			$popup_args['exclude_from_search'] = true;
 			$popup_args['publicly_queryable']  = true;
