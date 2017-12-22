@@ -260,7 +260,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/class-pum-fields.php';
 		require_once self::$DIR . 'includes/class-pum-form.php';
 		require_once self::$DIR . 'includes/class-pum-previews.php';
-		require_once self::$DIR . 'includes/class-pum-ajax.php';
 
 		// Functions
 		require_once self::$DIR . 'includes/pum-popup-functions.php';
@@ -268,7 +267,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/pum-general-functions.php';
 		require_once self::$DIR . 'includes/pum-misc-functions.php';
 		require_once self::$DIR . 'includes/pum-template-hooks.php';
-		require_once self::$DIR . 'includes/pum-ajax-functions.php';
 
 
 		// Triggers
@@ -282,7 +280,7 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/modules/menus.php';
 		require_once self::$DIR . 'includes/modules/admin-bar.php';
 		require_once self::$DIR . 'includes/modules/reviews.php';
-		
+
 		// Upgrades
 		if ( is_admin() ) {
 			require_once self::$DIR . 'includes/admin/class-pum-admin-upgrades.php';
@@ -302,8 +300,6 @@ class Popup_Maker {
 		if ( is_admin() ) {
 			require_once self::$DIR . 'includes/admin/admin-setup.php';
 			require_once self::$DIR . 'includes/admin/admin-functions.php';
-
-			// Deprecated Popup Metaboxes.
 
 			require_once self::$DIR . 'includes/admin/themes/metabox.php';
 			require_once self::$DIR . 'includes/admin/themes/metabox-close-fields.php';
@@ -343,26 +339,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/install.php';
 	}
 
-	public function init() {
-		PUM_Types::init();
-		PUM_AssetCache::init();
-		PUM_Site::init();
-		PUM_Admin::init();
-
-		PUM_Shortcode_Popup::init();
-		PUM_Shortcode_PopupTrigger::init();
-		PUM_Shortcode_PopupClose::init();
-	}
-
-	/**
-	 * Returns true when debug mode is enabled.
-	 *
-	 * @return bool
-	 */
-	public static function debug_mode() {
-		return true === self::$DEBUG_MODE;
-	}
-
 	/**
 	 * Loads the plugin language files
 	 */
@@ -391,37 +367,63 @@ class Popup_Maker {
 		}
 	}
 
+	public function init() {
+		PUM_Types::init();
+		PUM_AssetCache::init();
+		PUM_Site::init();
+		PUM_Admin::init();
+
+		PUM_Shortcode_Popup::init();
+		PUM_Shortcode_PopupTrigger::init();
+		PUM_Shortcode_PopupClose::init();
+	}
+
+	/**
+	 * Returns true when debug mode is enabled.
+	 *
+	 * @return bool
+	 */
+	public static function debug_mode() {
+		return true === self::$DEBUG_MODE;
+	}
+
 }
 
-#region Freemius
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-pum-freemius.php';
-pum_fs();
+/**
+ * Initialize the plugin.
+ */
+Popup_Maker::instance();
 
-#endregion Freemius
+/**
+ * Initiate Freemius
+ */
+PUM_Freemius::instance();
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-pum-activator.php
+ * This action is documented in classes/Activator.php
  */
-function pum_activate( $network_wide = false ) {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-pum-activator.php';
-	PUM_Activator::activate( $network_wide );
-}
-
-register_activation_hook( __FILE__, 'pum_activate' );
-
+register_activation_hook( __FILE__, array( 'PUM_Activator', 'activate' ) );
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-pum-deactivator.php
+ * This action is documented in classes/Deactivator.php
  */
-function pum_deactivate() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-pum-deactivator.php';
-	PUM_Deactivator::deactivate();
+register_deactivation_hook( __FILE__, array( 'PUM_Deactivator', 'deactivate' ) );
+
+/**
+ * @deprecated 1.7.0
+ */
+function popmake_initialize() {
+	// Disable Unlimited Themes extension if active.
+	remove_action( 'popmake_initialize', 'popmake_ut_initialize' );
+
+	// Initialize old PUM extensions
+	do_action( 'pum_initialize' );
+	do_action( 'popmake_initialize' );
 }
 
-register_deactivation_hook( __FILE__, 'pum_deactivate' );
-
+add_action( 'plugins_loaded', 'popmake_initialize' );
 
 /**
  * The main function responsible for returning the one true Popup_Maker
@@ -433,22 +435,11 @@ register_deactivation_hook( __FILE__, 'pum_deactivate' );
  * Example: <?php $popmake = PopMake(); ?>
  *
  * @since 1.0
+ * @deprecated 1.7.0
+ *
  * @return object The one true Popup_Maker Instance
  */
 
 function PopMake() {
 	return Popup_Maker::instance();
 }
-
-PopMake();
-
-function popmake_initialize() {
-	// Disable Unlimited Themes extension if active.
-	remove_action( 'popmake_initialize', 'popmake_ut_initialize' );
-
-	// Initialize old PUM extensions
-	do_action( 'pum_initialize' );
-	do_action( 'popmake_initialize' );
-}
-
-add_action( 'plugins_loaded', 'popmake_initialize' );

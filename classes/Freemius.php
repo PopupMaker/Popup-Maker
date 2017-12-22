@@ -46,7 +46,7 @@ class PUM_Freemius {
 
 		if ( ! isset( $this->fs ) ) {
 			// Include Freemius SDK.
-			require_once dirname( __FILE__ ) . '/pum-sdk/freemius/start.php';
+			require_once Popup_Maker::$DIR . 'includes/pum-sdk/freemius/start.php';
 
 			$this->fs = fs_dynamic_init( array(
 				'id'             => '147',
@@ -259,7 +259,7 @@ class PUM_Freemius {
 			$popup_themes += $status;
 		}
 
-		$user = pum_fs()->fs->get_user();
+		$user = PUM_Freemius::instance()->fs->get_user();
 
 		$args = array(
 			// UID
@@ -317,14 +317,3 @@ class PUM_Freemius {
 
 
 }
-
-//
-/**
- * Create a helper function for easy SDK access.
- *
- * @return PUM_Freemius::instance
- */
-function pum_fs() {
-	return PUM_Freemius::instance();
-}
-
