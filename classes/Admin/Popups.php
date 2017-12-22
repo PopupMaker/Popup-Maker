@@ -142,6 +142,35 @@ class PUM_Admin_Popups {
 	}
 
 	/**
+	 * Used to get deprecated fields for metabox saving of old extensions.
+	 *
+	 * @deprecated 1.7.0
+	 *
+	 * @return mixed
+	 */
+	public static function deprecated_meta_fields() {
+		$fields = array(
+		);
+		foreach ( self::deprecated_meta_field_groups() as $group ) {
+			foreach ( apply_filters( 'popmake_popup_meta_field_group_' . $group, array() ) as $field ) {
+				$fields[] = 'popup_' . $group . '_' . $field;
+			}
+		}
+		return apply_filters( 'popmake_popup_meta_fields', $fields );
+	}
+
+	/**
+	 * Used to get field groups from extensions.
+	 *
+	 * @deprecated 1.7.0
+	 *
+	 * @return mixed
+	 */
+	public static function deprecated_meta_field_groups() {
+		return apply_filters( 'popmake_popup_meta_field_groups', array() );
+	}
+
+	/**
 	 * @param $post_id
 	 * @param $post
 	 */
@@ -194,6 +223,16 @@ class PUM_Admin_Popups {
 		$settings = self::sanitize_settings( $settings );
 
 		$popup->update_meta( 'popup_settings', $settings );
+
+		// TODO Remove this and all other code here. This should be clean and all code more compartmentalized.
+		foreach ( self::deprecated_meta_fields() as $field ) {
+			if ( isset( $_POST[ $field ] ) ) {
+				$new = apply_filters( 'popmake_metabox_save_' . $field, $_POST[ $field ] );
+				update_post_meta( $post_id, $field, $new );
+			} else {
+				delete_post_meta( $post_id, $field );
+			}
+		}
 
 		do_action( 'pum_save_popup', $post_id, $post );
 	}
