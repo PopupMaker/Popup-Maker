@@ -104,7 +104,7 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: classes/Admin/Popups.php:60, classes/Shortcode/Popup.php:26, classes/Shortcode/Popup.php:324, classes/Types.php:20, classes/Types.php:152, includes/integrations/class-pum-cf7.php:145, includes/integrations/class-pum-gravity-forms.php:140, includes/modules/menus.php:52
+#: classes/Admin/Popups.php:60, classes/Shortcode/Popup.php:26, classes/Shortcode/Popup.php:317, classes/Types.php:20, classes/Types.php:152, includes/integrations/class-pum-cf7.php:145, includes/integrations/class-pum-gravity-forms.php:140, includes/modules/menus.php:52
 msgid "Popup"
 msgstr ""
 

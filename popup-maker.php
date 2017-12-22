@@ -268,14 +268,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/pum-misc-functions.php';
 		require_once self::$DIR . 'includes/pum-template-hooks.php';
 
-
-		// Triggers
-		require_once self::$DIR . 'includes/pum-trigger-functions.php';
-
-		// Cookies
-		require_once self::$DIR . 'includes/pum-cookie-functions.php';
-
-
 		// Modules
 		require_once self::$DIR . 'includes/modules/menus.php';
 		require_once self::$DIR . 'includes/modules/admin-bar.php';
@@ -294,7 +286,6 @@ class Popup_Maker {
 		if ( is_admin() ) {
 			require_once self::$DIR . 'includes/admin/admin-setup.php';
 			require_once self::$DIR . 'includes/admin/admin-functions.php';
-
 			require_once self::$DIR . 'includes/admin/themes/metabox.php';
 			require_once self::$DIR . 'includes/admin/themes/metabox-close-fields.php';
 			require_once self::$DIR . 'includes/admin/themes/metabox-container-fields.php';
@@ -302,19 +293,14 @@ class Popup_Maker {
 			require_once self::$DIR . 'includes/admin/themes/metabox-overlay-fields.php';
 			require_once self::$DIR . 'includes/admin/themes/metabox-title-fields.php';
 			require_once self::$DIR . 'includes/admin/themes/metabox-preview.php';
-
 			require_once self::$DIR . 'includes/admin/tools/tools-page.php';
-
 			require_once self::$DIR . 'includes/admin/extensions/extensions-page.php';
 			require_once self::$DIR . 'includes/admin/pages/support.php';
-
 			require_once self::$DIR . 'includes/admin/metabox-support.php';
-
 		}
 
 		require_once self::$DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
 		require_once self::$DIR . 'includes/integrations/class-pum-buddypress-integration.php';
-
 
 		if ( defined( 'WPB_VC_VERSION' ) || defined( 'FL_BUILDER_VERSION' ) ) {
 			require_once self::$DIR . 'includes/integrations/visual-composer.php';

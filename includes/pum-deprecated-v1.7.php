@@ -4,12 +4,11 @@
 /*******************************************************************************
  * Copyright (c) 2017, WP Popup Maker
  ******************************************************************************/
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
+# region Filters
 /**
  * Process deprecated filters.
  *
@@ -32,9 +31,7 @@ function pum_deprecated_get_the_popup_title_filter( $title, $popup_id ) {
 
 	return $title;
 }
-
-add_filter( 'pum_popup_get_title', 'pum_deprecated_get_the_popup_title', 10, 2 );
-
+add_filter( 'pum_popup_get_title', 'pum_deprecated_get_the_popup_title_filter', 10, 2 );
 
 /**
  * Process deprecated filters.
@@ -58,9 +55,7 @@ function pum_deprecated_get_the_popup_content_filter( $content, $popup_id ) {
 
 	return $content;
 }
-
 add_filter( 'pum_popup_content', 'pum_deprecated_get_the_popup_content_filter', 10, 2 );
-
 
 /**
  * Process deprecated filters.
@@ -84,9 +79,7 @@ function pum_deprecated_get_the_popup_theme_filter( $theme_id, $popup_id ) {
 
 	return $theme_id;
 }
-
 add_filter( 'pum_popup_get_theme_id', 'pum_deprecated_get_the_popup_theme_filter', 10, 2 );
-
 
 /**
  * Process deprecated filters.
@@ -110,9 +103,7 @@ function pum_deprecated_get_the_popup_classes_filter( $classes, $popup_id ) {
 
 	return $classes;
 }
-
 add_filter( 'pum_popup_container_classes', 'pum_deprecated_get_the_popup_classes_filter', 10, 2 );
-
 
 /**
  * Process deprecated filters.
@@ -136,8 +127,7 @@ function pum_deprecated_get_the_popup_data_attr_filter( $data_attr, $popup_id ) 
 
 	return $data_attr;
 }
-
-add_filter( 'pum_popup_data_attr', 'pum_deprecated_get_the_popup_classes_filter', 10, 2 );
+add_filter( 'pum_popup_data_attr', 'pum_deprecated_get_the_popup_data_attr_filter', 10, 2 );
 
 /**
  * Process deprecated filters.
@@ -161,5 +151,62 @@ function pum_deprecated_show_close_button_filter( $show, $popup_id ) {
 
 	return $show;
 }
-
 add_filter( 'pum_popup_show_close_button', 'pum_deprecated_show_close_button_filter', 10, 2 );
+# endregion Filters
+
+# region Functions
+/**
+ * Returns the cookie fields used for cookie options.
+ *
+ * @deprecated 1.7.0 Use PUM_Cookies::instance()->cookie_fields() instead.
+ *
+ * @return array
+ */
+function pum_get_cookie_fields() {
+	return PUM_Cookies::instance()->cookie_fields();
+}
+
+/**
+ * Returns an array of args for registering coo0kies.
+ *
+ * @deprecated 1.7.0 Use PUM_Cookies::instance()->cookie_fields() instead.
+ *
+ * @return array
+ */
+function pum_get_cookies() {
+	return PUM_Cookies::instance()->get_cookies();
+}
+
+/**
+ * Returns the cookie fields used for trigger options.
+ *
+ * @deprecated v1.7.0 Use PUM_Triggers::instance()->cookie_fields() instead.
+ *
+ * @return array
+ */
+function pum_trigger_cookie_fields() {
+	return PUM_Triggers::instance()->cookie_fields();
+}
+
+/**
+ * Returns the cookie field used for trigger options.
+ *
+ * @deprecated v1.7.0 Use PUM_Triggers::instance()->cookie_field() instead.
+ *
+ * @return array
+ */
+function pum_trigger_cookie_field() {
+	return PUM_Triggers::instance()->cookie_field();
+}
+
+/**
+ * Returns an array of section labels for all triggers.
+ *
+ * @deprecated v1.7.0 Use PUM_Triggers::instance()->get_tabs() instead.
+ *
+ * @return array
+ */
+function pum_get_trigger_section_labels() {
+	return PUM_Triggers::instance()->get_tabs();
+}
+# endregion Functions

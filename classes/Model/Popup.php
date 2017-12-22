@@ -197,9 +197,11 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * @return array
 	 */
 	public function get_cookies() {
-		$this->cookies = $this->get_setting( 'cookies', array() );
+		$cookies = $this->get_setting( 'cookies', array() );
 
-		return apply_filters( 'pum_popup_get_cookies', $this->cookies, $this->ID );
+		$this->cookies = $cookies;
+
+		return apply_filters( 'pum_popup_get_cookies', $cookies, $this->ID );
 	}
 
 	/**
@@ -207,6 +209,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 */
 	public function get_triggers() {
 		$triggers = $this->get_setting( 'triggers', array() );
+		$this->triggers = $triggers;
 
 		// Automatically add click trigger when on the front end.
 		if ( ! is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
@@ -229,7 +232,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 			}
 		}
 
-		return apply_filters( 'pum_popup_get_triggers', $this->triggers, $this->ID );
+		return apply_filters( 'pum_popup_get_triggers', $triggers, $this->ID );
 	}
 
 	/**

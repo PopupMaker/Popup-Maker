@@ -306,13 +306,6 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 			'esc_press'     => $atts['esc_press'],
 		);
 
-		$popup->triggers = array(
-			array(
-				'type'     => 'click_open',
-				'settings' => array(),
-			),
-		);
-
 		ob_start();
 		popmake_get_template_part( 'popup' );
 
