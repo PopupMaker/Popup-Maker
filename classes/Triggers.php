@@ -155,8 +155,8 @@ class PUM_Triggers {
 				),
 			),
 			'auto_open'  => array(
-				'name'            => __( 'Auto Open', 'popup-maker' ),
-				'modal_title'     => __( 'Auto Open Settings', 'popup-maker' ),
+				'name'            => __( 'Time Delay / Auto Open', 'popup-maker' ),
+				'modal_title'     => __( 'Time Delay Settings', 'popup-maker' ),
 				'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Delay', 'popup-maker' ), '{{data.delay}}' ),
 				'fields'          => array(
 					'general' => array(
