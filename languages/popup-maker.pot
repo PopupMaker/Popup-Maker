@@ -1031,7 +1031,7 @@ msgstr ""
 msgid "The name that will be used when checking for or saving this cookie."
 msgstr ""
 
-#: classes/Cookies.php:175, includes/deprecated/v4.php:498
+#: classes/Cookies.php:175
 msgid "Cookie Time"
 msgstr ""
 
@@ -1043,11 +1043,11 @@ msgstr ""
 msgid "Enter a plain english time before cookie expires."
 msgstr ""
 
-#: classes/Cookies.php:184, includes/deprecated/v4.php:481
+#: classes/Cookies.php:184
 msgid "Use Session Cookie?"
 msgstr ""
 
-#: classes/Cookies.php:185, includes/deprecated/v4.php:486
+#: classes/Cookies.php:185
 msgid "Session cookies expire when the user closes their browser."
 msgstr ""
 
@@ -1055,7 +1055,7 @@ msgstr ""
 msgid "%sNote%s: Modern browsers that reopen your last browser session's tabs do not properly clear session cookies"
 msgstr ""
 
-#: classes/Cookies.php:191, includes/deprecated/v4.php:514
+#: classes/Cookies.php:191
 msgid "Sitewide Cookie"
 msgstr ""
 
@@ -1063,7 +1063,7 @@ msgstr ""
 msgid "This will prevent the popup from triggering on all pages until the cookie expires."
 msgstr ""
 
-#: classes/Cookies.php:198, includes/deprecated/v4.php:529
+#: classes/Cookies.php:198
 msgid "Cookie Key"
 msgstr ""
 
@@ -1339,7 +1339,7 @@ msgstr ""
 msgid "Extra Selectors"
 msgstr ""
 
-#: classes/Triggers.php:144, includes/deprecated/v4.php:395
+#: classes/Triggers.php:144
 msgid "Extra CSS Selectors"
 msgstr ""
 
@@ -1347,7 +1347,7 @@ msgstr ""
 msgid "This allows custom css classes, ids or selector strings to trigger the popup when clicked. Separate multiple selectors using commas."
 msgstr ""
 
-#: classes/Triggers.php:146, includes/deprecated/v4.php:399
+#: classes/Triggers.php:146
 msgid ".my-class, #button2"
 msgstr ""
 
@@ -1355,15 +1355,15 @@ msgstr ""
 msgid "Auto Open"
 msgstr ""
 
-#: classes/Triggers.php:159, includes/deprecated/v4.php:117
+#: classes/Triggers.php:159
 msgid "Auto Open Settings"
 msgstr ""
 
-#: classes/Triggers.php:160, classes/Triggers.php:165, includes/deprecated/v4.php:430, includes/integrations/class-pum-cf7.php:165, includes/integrations/class-pum-gravity-forms.php:160, includes/integrations/ninja-forms/Actions/ClosePopup.php:43
+#: classes/Triggers.php:160, classes/Triggers.php:165, includes/integrations/class-pum-cf7.php:165, includes/integrations/class-pum-gravity-forms.php:160, includes/integrations/ninja-forms/Actions/ClosePopup.php:43
 msgid "Delay"
 msgstr ""
 
-#: classes/Triggers.php:166, includes/deprecated/v4.php:444
+#: classes/Triggers.php:166
 msgid "The delay before the popup will open in milliseconds."
 msgstr ""
 
@@ -1891,102 +1891,6 @@ msgstr ""
 
 #: includes/class-pum-freemius.php:120
 msgid "Allow %3$sPopup Maker%4$s​ to collect some usage data with %2$s to make the plugin even more awesome. If you skip this, that's okay! ​%3$sPopup Maker%4$s will still work just fine."
-msgstr ""
-
-#: includes/deprecated/v4.php:111
-msgid "Targeting Conditions"
-msgstr ""
-
-#: includes/deprecated/v4.php:114
-msgid "Click Open Settings"
-msgstr ""
-
-#: includes/deprecated/v4.php:120
-msgid "Admin Debug Settings"
-msgstr ""
-
-#: includes/deprecated/v4.php:401
-msgid "This allows custom css classes, ids or selector strings to trigger the popup when clicked. Seperate multiple selectors using commas."
-msgstr ""
-
-#: includes/deprecated/v4.php:416
-msgid "Enable Auto Open Popups"
-msgstr ""
-
-#: includes/deprecated/v4.php:419
-msgid "Checking this will cause popup to open automatically."
-msgstr ""
-
-#: includes/deprecated/v4.php:456
-msgid "Cookie Trigger"
-msgstr ""
-
-#: includes/deprecated/v4.php:469
-msgid "When do you want to create the cookie."
-msgstr ""
-
-#: includes/deprecated/v4.php:504
-msgid "Enter a plain english time before cookie expires. <br/>Example \"364 days 23 hours 59 minutes 59 seconds\" will reset just before 1 year exactly."
-msgstr ""
-
-#: includes/deprecated/v4.php:517
-msgid "This will prevent the popup from auto opening on any page until the cookie expires."
-msgstr ""
-
-#: includes/deprecated/v4.php:533
-msgid "Reset"
-msgstr ""
-
-#: includes/deprecated/v4.php:534
-msgid "This changes the key used when setting and checking cookies. Resetting this will cause all existing cookies to be invalid."
-msgstr ""
-
-#: includes/deprecated/v4.php:549
-msgid "Enable Admin Debug"
-msgstr ""
-
-#: includes/deprecated/v4.php:552
-msgid "When Enabled, the popup will show immediately on the given page for admins."
-msgstr ""
-
-#: includes/deprecated/v4.php:585
-msgid "On Entire Site"
-msgstr ""
-
-#: includes/deprecated/v4.php:600
-msgid "On Home Page"
-msgstr ""
-
-#: includes/deprecated/v4.php:615
-msgid "Exclude on Home Page"
-msgstr ""
-
-#: includes/deprecated/v4.php:630
-msgid "On Blog Index"
-msgstr ""
-
-#: includes/deprecated/v4.php:645
-msgid "Exclude on Blog Index"
-msgstr ""
-
-#: includes/deprecated/v4.php:680, includes/deprecated/v4.php:690, includes/deprecated/v4.php:702
-msgid "$label"
-msgstr ""
-
-#: includes/deprecated/v4.php:751
-msgid "On Search Pages"
-msgstr ""
-
-#: includes/deprecated/v4.php:766
-msgid "Exclude on Search Pages"
-msgstr ""
-
-#: includes/deprecated/v4.php:781
-msgid "On 404 Pages"
-msgstr ""
-
-#: includes/deprecated/v4.php:796
-msgid "Exclude on 404 Pages"
 msgstr ""
 
 #: includes/google-fonts.php:58
