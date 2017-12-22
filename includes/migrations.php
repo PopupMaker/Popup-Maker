@@ -22,8 +22,8 @@ function pum_popup_passive_migration_2( &$popup ) {
 	$theme = $popup->get_meta( 'popup_theme' );
 	if ( ! empty( $theme ) && is_numeric( $theme ) ) {
 		$popup->settings['theme_id'] = absint( $theme );
-		$changed                  = true;
-		$delete_meta[]            = 'popup_theme';
+		$changed                     = true;
+		$delete_meta[]               = 'popup_theme';
 	}
 
 	/**
@@ -154,8 +154,8 @@ function pum_popup_passive_migration_2( &$popup ) {
 	$mobile_disabled = $popup->get_meta( 'popup_mobile_disabled' );
 	if ( ! empty( $mobile_disabled ) ) {
 		$popup->settings['disable_on_mobile'] = (bool) ( $mobile_disabled );
-		$changed                  = true;
-		$delete_meta[]            = 'popup_mobile_disabled';
+		$changed                              = true;
+		$delete_meta[]                        = 'popup_mobile_disabled';
 	}
 
 	/**
@@ -164,8 +164,8 @@ function pum_popup_passive_migration_2( &$popup ) {
 	$tablet_disabled = $popup->get_meta( 'popup_tablet_disabled' );
 	if ( ! empty( $tablet_disabled ) ) {
 		$popup->settings['disable_on_tablet'] = (bool) ( $tablet_disabled );
-		$changed                  = true;
-		$delete_meta[]            = 'popup_tablet_disabled';
+		$changed                              = true;
+		$delete_meta[]                        = 'popup_tablet_disabled';
 	}
 
 	/**
