@@ -333,6 +333,10 @@ if ( ! class_exists( 'Popup_Maker' ) ) :
 				require_once POPMAKE_DIR . 'includes/integrations/visual-composer.php';
 			}
 			
+			if ( defined( 'KC_VERSION' ) ) {
+				require_once POPMAKE_DIR . 'includes/integrations/king-composer.php';
+			}
+			
 			// KingComposer Integration
 			require_once POPMAKE_DIR . 'includes/integrations/king-composer.php';
 
