@@ -30,6 +30,8 @@ function pum_get_popup_id( $popup_id = 0 ) {
 /**
  * Get a popup model instance.
  *
+ * @since 1.7.0
+ *
  * @param int $popup_id
  * @param bool $autoload Autoload post meta.
  * @param bool $force Clears cached instance and refreshes.
