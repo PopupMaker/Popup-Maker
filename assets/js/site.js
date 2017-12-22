@@ -1442,7 +1442,7 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
             var i,
                 ret = false;
 
-            if (settings.cookie_name === undefined || settings.cookie_name === null) {
+            if (settings.cookie_name === undefined || settings.cookie_name === null || settings.cookie_name === '') {
                 return false;
             }
 
@@ -1867,15 +1867,7 @@ var pum_debug_mode = false,
         slug: "",
         theme_id: null,
         cookies: [],
-        triggers: [
-            {
-                type: "click_open",
-                settings: {
-                    extra_selectors: "",
-                    cookie_name: null
-                }
-            }
-        ],
+        triggers: [],
         conditions: [],
         mobile_disabled: null,
         tablet_disabled: null,

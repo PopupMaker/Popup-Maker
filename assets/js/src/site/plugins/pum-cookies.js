@@ -28,7 +28,7 @@
             var i,
                 ret = false;
 
-            if (settings.cookie_name === undefined || settings.cookie_name === null) {
+            if (settings.cookie_name === undefined || settings.cookie_name === null || settings.cookie_name === '') {
                 return false;
             }
 

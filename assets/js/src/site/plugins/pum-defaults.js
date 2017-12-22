@@ -10,15 +10,7 @@
         slug: "",
         theme_id: null,
         cookies: [],
-        triggers: [
-            {
-                type: "click_open",
-                settings: {
-                    extra_selectors: "",
-                    cookie_name: null
-                }
-            }
-        ],
+        triggers: [],
         conditions: [],
         mobile_disabled: null,
         tablet_disabled: null,
