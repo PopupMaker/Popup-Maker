@@ -419,7 +419,7 @@
                     event: add_cookie_event,
                     settings: {
                         time: '1 month',
-                        path: true,
+                        path: '1',
                         name: values.cookie_name
                     }
                 });

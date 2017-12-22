@@ -654,7 +654,8 @@ var cookies;
             var $editor = current_editor,
                 event    = $('#popup_cookie_add_event').val(),
                 values  = {
-                    name: 'pum-' + $('#post_ID').val()
+                    name: 'pum-' + $('#post_ID').val(),
+                    path: '1'
                 };
 
             e.preventDefault();
@@ -1119,7 +1120,7 @@ var cookies;
                     event: add_cookie_event,
                     settings: {
                         time: '1 month',
-                        path: true,
+                        path: '1',
                         name: values.cookie_name
                     }
                 });

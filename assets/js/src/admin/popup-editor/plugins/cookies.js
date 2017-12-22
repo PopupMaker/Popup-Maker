@@ -358,7 +358,8 @@ var cookies;
             var $editor = current_editor,
                 event    = $('#popup_cookie_add_event').val(),
                 values  = {
-                    name: 'pum-' + $('#post_ID').val()
+                    name: 'pum-' + $('#post_ID').val(),
+                    path: '1'
                 };
 
             e.preventDefault();
