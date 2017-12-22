@@ -1,5 +1,4 @@
-var PUMSelect2Fields;
-(function ($, document, undefined) {
+(function ($) {
     "use strict";
 
     // Here because some plugins load additional copies, big no-no. This is the best we can do.
@@ -13,6 +12,7 @@ var PUMSelect2Fields;
                     object_type = $this.data('objecttype'),
                     object_key  = $this.data('objectkey'),
                     options     = {
+                        width: '100%',
                         multiple: false,
                         dropdownParent: $this.parent()
                     };
@@ -30,7 +30,7 @@ var PUMSelect2Fields;
                             data: function (params) {
                                 return {
                                     s: params.term, // search term
-                                    page: params.page,
+                                    paged: params.page,
                                     action: "pum_object_search",
                                     object_type: object_type,
                                     object_key: object_key
@@ -63,7 +63,6 @@ var PUMSelect2Fields;
                     });
                 }
 
-
                 $this
                     .addClass('pumselect2-initialized')
                     .pumselect2(options);
@@ -79,14 +78,14 @@ var PUMSelect2Fields;
                     current = null;
                 }
 
-                if (object_type && object_key && current !== null && current.length) {
+                if (object_type && object_key && current !== null && (typeof current === 'number' || current.length)) {
                     $.ajax({
                         url: ajaxurl,
                         data: {
                             action: "pum_object_search",
                             object_type: object_type,
                             object_key: object_key,
-                            include: current && current.length ? current : null
+                            include: current && current.length ? (typeof current === 'string' || typeof current === 'number') ? [current] : current : null
                         },
                         dataType: "json",
                         success: function (data) {
@@ -119,7 +118,8 @@ var PUMSelect2Fields;
     window.PUM_Admin = window.PUM_Admin || {};
     window.PUM_Admin.select2 = select2;
 
-    $(document).on('pum_init', PUM_Admin.select2.init);
-
-
-}(jQuery, document));
+    $(document)
+        .on('pum_init', function () {
+            PUM_Admin.select2.init();
+        });
+}(jQuery));
