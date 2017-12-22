@@ -168,6 +168,7 @@ class PUM_Triggers {
 							'min'   => 0,
 							'max'   => 10000,
 							'step'  => 500,
+							'unit' => 'ms',
 						),
 					),
 				),
