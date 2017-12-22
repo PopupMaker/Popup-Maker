@@ -20,7 +20,7 @@
                 settings.name,
                 true,
                 settings.session ? null : settings.time,
-                settings.path ? pum_vars.home_url : null
+                settings.path ? pum_vars.home_url || '/' : null
             );
             pum.hooks.doAction('popmake.setCookie', settings);
         },
