@@ -86,8 +86,7 @@ class PUM_Freemius {
 
 	/**
 	 * Renders the popup maker usage statistics permission notification.
-	 */
-	/*
+	 *
 	public function permission_list( $permissions = array() ) {
 		$permissions['metrics'] = array(
 			'icon-class'    => 'dashicons dashicons-performance',
@@ -111,8 +110,7 @@ class PUM_Freemius {
 	 * @param $freemius_link
 	 *
 	 * @return string
-	 */
-	/*
+	 *
 	public function custom_connect_message( $message, $user_first_name, $plugin_title, $user_login, $site_link, $freemius_link ) {
 
 		$intro = __fs( 'hey-x' ) . '<br/><br/>';
@@ -206,8 +204,7 @@ class PUM_Freemius {
 	 * @param $menu_id
 	 *
 	 * @return bool
-	 */
-	/*
+	 *
 	public function menu_permissions( $is_visible, $menu_id ) {
 		if ( 'contact' === $menu_id ) {
 			return $this->fs->is_registered();
