@@ -291,12 +291,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/pum-deprecated-v1.4.php';
 		require_once self::$DIR . 'includes/pum-deprecated-v1.7.php';
 
-		// Helper Classes
-		if ( is_admin() ) {
-			require_once self::$DIR . 'includes/admin/class-pum-admin-helpers.php';
-		}
-
-
 		if ( is_admin() ) {
 			require_once self::$DIR . 'includes/admin/admin-setup.php';
 			require_once self::$DIR . 'includes/admin/admin-functions.php';

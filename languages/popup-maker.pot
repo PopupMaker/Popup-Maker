@@ -16,7 +16,7 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: classes/Admin/Assets.php:92, classes/Admin/Templates.php:496, classes/Admin/Templates.php:667, includes/admin/class-pum-admin-helpers.php:16
+#: classes/Admin/Assets.php:92, classes/Admin/Helpers.php:20, classes/Admin/Templates.php:496, classes/Admin/Templates.php:667
 msgid "Add"
 msgstr ""
 
@@ -32,7 +32,7 @@ msgstr ""
 msgid "Insert"
 msgstr ""
 
-#: classes/Admin/Assets.php:96, classes/Admin/Shortcode/UI.php:86, includes/admin/class-pum-admin-helpers.php:14
+#: classes/Admin/Assets.php:96, classes/Admin/Helpers.php:18, classes/Admin/Shortcode/UI.php:86
 msgid "Cancel"
 msgstr ""
 
@@ -58,6 +58,10 @@ msgstr ""
 
 #: classes/Admin/Assets.php:102, classes/Admin/Shortcode/UI.php:88
 msgid "There was an error in generating the preview"
+msgstr ""
+
+#: classes/Admin/Helpers.php:34, classes/Admin/Popups.php:227, classes/Admin/Popups.php:552, classes/Admin/Templates.php:313, classes/Shortcode/Popup.php:50, templates/popup.php:44
+msgid "Close"
 msgstr ""
 
 #: classes/Admin/Pages.php:51, classes/Admin/Pages.php:144, classes/Admin/Templates.php:393, classes/Admin/Templates.php:616, classes/Site/Assets.php:186, includes/admin/admin-setup.php:24
@@ -130,10 +134,6 @@ msgstr ""
 
 #: classes/Admin/Popups.php:226, classes/Shortcode/Popup.php:47
 msgid "Display"
-msgstr ""
-
-#: classes/Admin/Popups.php:227, classes/Admin/Popups.php:552, classes/Admin/Templates.php:313, classes/Shortcode/Popup.php:50, includes/admin/class-pum-admin-helpers.php:30, templates/popup.php:44
-msgid "Close"
 msgstr ""
 
 #: classes/Admin/Popups.php:228, classes/Admin/Popups.php:255, classes/Site/Assets.php:187
@@ -1071,6 +1071,18 @@ msgstr ""
 msgid "Changing this will cause all existing cookies to be invalid."
 msgstr ""
 
+#: classes/Freemius.php:93
+msgid "Usage Statistics"
+msgstr ""
+
+#: classes/Freemius.php:94
+msgid "Popup & Theme Counts, Open Counts"
+msgstr ""
+
+#: classes/Freemius.php:118
+msgid "Allow %3$sPopup Maker%4$s​ to collect some usage data with %2$s to make the plugin even more awesome. If you skip this, that's okay! ​%3$sPopup Maker%4$s will still work just fine."
+msgstr ""
+
 #: classes/Licensing.php:94, includes/admin/settings/register-settings.php:761
 msgid "Your license key expired on %s. Please %srenew your license key%s."
 msgstr ""
@@ -1879,18 +1891,6 @@ msgstr ""
 
 #: includes/class-pum-extension-updater.php:394
 msgid "You do not have permission to install plugin updates"
-msgstr ""
-
-#: includes/class-pum-freemius.php:94
-msgid "Usage Statistics"
-msgstr ""
-
-#: includes/class-pum-freemius.php:95
-msgid "Popup & Theme Counts, Open Counts"
-msgstr ""
-
-#: includes/class-pum-freemius.php:120
-msgid "Allow %3$sPopup Maker%4$s​ to collect some usage data with %2$s to make the plugin even more awesome. If you skip this, that's okay! ​%3$sPopup Maker%4$s will still work just fine."
 msgstr ""
 
 #: includes/google-fonts.php:58

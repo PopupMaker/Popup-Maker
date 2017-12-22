@@ -1,7 +1,11 @@
 <?php
+/*******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
 
-
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 class PUM_Admin_Helpers {
 	public static function modal( $args = array() ) {
