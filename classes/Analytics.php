@@ -133,7 +133,7 @@ class PUM_Analytics {
 		$version   = 1;
 		$namespace = 'pum/v' . $version;
 
-		register_rest_route( $namespace, 'PUM_Analytics', array(
+		register_rest_route( $namespace, 'analytics', array(
 			'methods'  => 'GET',
 			'callback' => array( __CLASS__, 'analytics_endpoint' ),
 			'args'     => array(
