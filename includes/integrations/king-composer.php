@@ -9,11 +9,11 @@ final class Popmake_KingComposer_Integration {
 
 	public static function init() {
 		add_filter( 'popmake_popup_post_type_args', array( __CLASS__, 'popup_post_type_args' ) );
-		add_action( 'admin_init', array( __CLASS__, 'force_enable_kc' ), 99 );
+		add_action( 'admin_init', array( __CLASS__, 'force_enable_kc' ) );
 	}
 
 	public static function popup_post_type_args( $popup_args ) {
-		if ( defined( 'KC_VERSION' ) || ( ! empty( $_GET['page'] ) && in_array( $_GET['page'], array( 'fl-builder-settings' ) ) ) ) {
+		if ( defined( 'KC_VERSION' ) || ( ! empty( $_GET['page'] ) ) ) {
 			$popup_args['public']              = true;
 			$popup_args['exclude_from_search'] = true;
 			$popup_args['publicly_queryable']  = true;
