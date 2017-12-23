@@ -406,6 +406,46 @@ class PUM_Model_Popup extends PUM_Model_Post {
 			),
 		);
 
+		$size = $this->get_setting( 'size', 'medium' );
+
+		if ( in_array( $size, array( 'nano', 'micro', 'tiny', 'small', 'medium', 'normal', 'large', 'xlarge' ) ) ) {
+			$classes['container'] = array_merge( $classes['container'], array(
+				'pum-responsive',
+				'pum-responsive-' . $size,
+				'responsive', // Backward Compatibility
+				'size-' . $size, // Backward Compatibility
+			) );
+		} elseif ( $size == 'custom' ) {
+			$classes['container'][] = 'size-custom'; // Backward Compatibility
+		}
+
+		if ( ! $this->get_setting( 'custom_height_auto' ) && $this->get_setting( 'scrollable_content' ) ) {
+			$classes['container'] = array_merge( $classes['container'], array(
+				'pum-scrollable',
+				'scrollable', // Backward Compatibility
+			) );
+		}
+
+		if ( $this->get_setting( 'position_fixed' ) ) {
+			$classes['container'][] = 'pum-position-fixed';
+		}
+
+		if ( $this->get_setting( 'overlay_disabled' ) ) {
+			$classes['overlay'][] = 'pum-overlay-disabled';
+		}
+
+		// Add a class for each trigger type.
+		foreach ( $this->get_triggers() as $trigger ) {
+			if ( ! in_array( $trigger['type'], $classes['overlay'] ) ) {
+				$classes['overlay'][] = $trigger['type'];
+			}
+		}
+
+		if ( is_singular( 'popup' ) ) {
+			$classes['overlay'][] = 'pum-preview';
+		}
+
+
 		$classes = apply_filters( 'pum_popup_classes', $classes, $this->ID );
 
 		if ( ! isset( $classes[ $element ] ) ) {
