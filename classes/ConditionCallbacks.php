@@ -8,20 +8,22 @@ class PUM_ConditionCallbacks {
 	/**
 	 * Checks if this is one of the selected post_type items.
 	 *
-	 * @param array $settings
+	 * @param array $condition
 	 *
 	 * @return bool
 	 */
-	public static function post_type( $settings = array() ) {
+	public static function post_type( $condition = array() ) {
 		global $post;
 
-		$target = explode( '_', $settings['target'] );
+		$target = explode( '_', $condition['target'] );
 
 		// Modifier should be the last key.
 		$modifier = array_pop( $target );
 
 		// Post type is the remaining keys combined.
 		$post_type = implode( '_', $target );
+
+		$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : array();
 
 		switch ( $modifier ) {
 			case 'index':
@@ -39,17 +41,18 @@ class PUM_ConditionCallbacks {
 
 			case 'ID':
 			case 'selected':
-				if ( self::is_post_type( $post_type ) && in_array( $post->ID, wp_parse_id_list( $settings['selected'] ) ) ) {
+				if ( self::is_post_type( $post_type ) && in_array( $post->ID, wp_parse_id_list( $selected ) ) ) {
 					return true;
 				}
 				break;
+
 			case 'children':
 				if ( ! is_post_type_hierarchical( $post_type ) || ! is_singular( $post_type ) ) {
 					return false;
 				}
 
 				// Chosen parents.
-				$selected = wp_parse_id_list( $settings['selected'] );
+				$selected = wp_parse_id_list( $selected );
 
 				foreach ( $selected as $id ) {
 					if ( $post->post_parent == $id ) {
@@ -57,6 +60,7 @@ class PUM_ConditionCallbacks {
 					}
 				}
 				break;
+
 			case 'ancestors':
 				if ( ! is_post_type_hierarchical( $post_type ) || ! is_singular( $post_type ) ) {
 					return false;
@@ -66,17 +70,17 @@ class PUM_ConditionCallbacks {
 				$ancestors = get_post_ancestors( $post->ID );
 
 				// Chosen parent/grandparents.
-				$selected = wp_parse_id_list( $settings['selected'] );
+				$selected = wp_parse_id_list( $selected );
 
 				foreach ( $selected as $id ) {
 					if ( in_array( $id, $ancestors ) ) {
 						return true;
 					}
 				}
-
 				break;
-			case 'template':
-				if ( is_page() && is_page_template( $settings['selected'] ) ) {
+
+			case 'templates':
+				if ( is_page() && is_page_template( $selected ) ) {
 					return true;
 				}
 				break;
@@ -85,21 +89,16 @@ class PUM_ConditionCallbacks {
 		return false;
 	}
 
-	public static function is_post_type( $post_type ) {
-		global $post;
-		return is_object( $post ) && ( is_singular( $post_type ) || $post->post_type == $post_type );
-	}
-
 	/**
 	 * Checks if this is one of the selected taxonomy term.
 	 *
-	 * @param array $settings
+	 * @param array $condition
 	 *
 	 * @return bool
 	 */
-	public static function taxonomy( $settings = array() ) {
+	public static function taxonomy( $condition = array() ) {
 
-		$target = explode( '_', $settings['target'] );
+		$target = explode( '_', $condition['target'] );
 
 		// Remove the tax_ prefix.
 		array_shift( $target );
@@ -111,9 +110,9 @@ class PUM_ConditionCallbacks {
 		$taxonomy = implode( '_', $target );
 
 		if ( $taxonomy == 'category' ) {
-			return self::category( $settings );
+			return self::category( $condition );
 		} elseif ( $taxonomy == 'post_tag' ) {
-			return self::post_tag( $settings );
+			return self::post_tag( $condition );
 		}
 
 		switch ( $modifier ) {
@@ -125,7 +124,9 @@ class PUM_ConditionCallbacks {
 
 			case 'ID':
 			case 'selected':
-				if ( is_tax( $taxonomy, wp_parse_id_list( $settings['selected'] ) ) ) {
+				$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : array();
+
+				if ( is_tax( $taxonomy, wp_parse_id_list( $selected ) ) ) {
 					return true;
 				}
 				break;
@@ -137,13 +138,13 @@ class PUM_ConditionCallbacks {
 	/**
 	 * Checks if this is one of the selected categories.
 	 *
-	 * @param array $settings
+	 * @param array $condition
 	 *
 	 * @return bool
 	 */
-	public static function category( $settings = array() ) {
+	public static function category( $condition = array() ) {
 
-		$target = explode( '_', $settings['target'] );
+		$target = explode( '_', $condition['target'] );
 
 		// Assign the last key as the modifier _all, _selected
 		$modifier = array_pop( $target );
@@ -156,7 +157,8 @@ class PUM_ConditionCallbacks {
 				break;
 
 			case 'selected':
-				if ( is_category( wp_parse_id_list( $settings['selected'] ) ) ) {
+				$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : array();
+				if ( is_category( wp_parse_id_list( $selected ) ) ) {
 					return true;
 				}
 				break;
@@ -168,13 +170,13 @@ class PUM_ConditionCallbacks {
 	/**
 	 * Checks if this is one of the selected tags.
 	 *
-	 * @param array $settings
+	 * @param array $condition
 	 *
 	 * @return bool
 	 */
-	public static function post_tag( $settings = array() ) {
+	public static function post_tag( $condition = array() ) {
 
-		$target = explode( '_', $settings['target'] );
+		$target = explode( '_', $condition['target'] );
 
 		// Assign the last key as the modifier _all, _selected
 		$modifier = array_pop( $target );
@@ -187,7 +189,8 @@ class PUM_ConditionCallbacks {
 				break;
 
 			case 'selected':
-				if ( is_tag( wp_parse_id_list( $settings['selected'] ) ) ) {
+				$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : array();
+				if ( is_tag( wp_parse_id_list( $selected ) ) ) {
 					return true;
 				}
 				break;
@@ -199,13 +202,13 @@ class PUM_ConditionCallbacks {
 	/**
 	 * Checks if the post_type has the selected categories.
 	 *
-	 * @param array $settings
+	 * @param array $condition
 	 *
 	 * @return bool
 	 */
-	public static function post_type_tax( $settings = array() ) {
+	public static function post_type_tax( $condition = array() ) {
 
-		$target = explode( '_w_', $settings['target'] );
+		$target = explode( '_w_', $condition['target'] );
 
 		// First key is the post type.
 		$post_type = array_shift( $target );
@@ -214,12 +217,13 @@ class PUM_ConditionCallbacks {
 		$taxonomy = array_pop( $target );
 
 		if ( $taxonomy == 'category' ) {
-			return self::post_type_category( $settings );
+			return self::post_type_category( $condition );
 		} elseif ( $taxonomy == 'post_tag' ) {
-			return self::post_type_tag( $settings );
+			return self::post_type_tag( $condition );
 		}
 
-		if ( is_singular( $post_type ) && has_term( wp_parse_id_list( $settings['selected'] ), $taxonomy ) ) {
+		$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : array();
+		if ( self::is_post_type( $post_type ) && has_term( wp_parse_id_list( $selected ), $taxonomy ) ) {
 			return true;
 		}
 
@@ -229,18 +233,19 @@ class PUM_ConditionCallbacks {
 	/**
 	 * Checks if the post_type has the selected categories.
 	 *
-	 * @param array $settings
+	 * @param array $condition
 	 *
 	 * @return bool
 	 */
-	public static function post_type_category( $settings = array() ) {
+	public static function post_type_category( $condition = array() ) {
 
-		$target = explode( '_w_', $settings['target'] );
+		$target = explode( '_w_', $condition['target'] );
 
 		// First key is the post type.
 		$post_type = array_shift( $target );
 
-		if ( is_singular( $post_type ) && has_category( wp_parse_id_list( $settings['selected'] ) ) ) {
+		$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : array();
+		if ( self::is_post_type( $post_type ) && has_category( wp_parse_id_list( $selected ) ) ) {
 			return true;
 		}
 
@@ -250,22 +255,28 @@ class PUM_ConditionCallbacks {
 	/**
 	 * Checks is a post_type has the selected tags.
 	 *
-	 * @param array $settings
+	 * @param array $condition
 	 *
 	 * @return bool
 	 */
-	public static function post_type_tag( $settings = array() ) {
+	public static function post_type_tag( $condition = array() ) {
 
-		$target = explode( '_w_', $settings['target'] );
+		$target = explode( '_w_', $condition['target'] );
 
 		// First key is the post type.
 		$post_type = array_shift( $target );
 
-		if ( is_singular( $post_type ) && has_tag( wp_parse_id_list( $settings['selected'] ) ) ) {
+		$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : array();
+		if ( self::is_post_type( $post_type ) && has_tag( wp_parse_id_list( $selected ) ) ) {
 			return true;
 		}
 
 		return false;
+	}
+
+	public static function is_post_type( $post_type ) {
+		global $post;
+		return is_object( $post ) && ( is_singular( $post_type ) || $post->post_type == $post_type );
 	}
 
 }
