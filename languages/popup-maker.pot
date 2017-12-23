@@ -76,11 +76,11 @@ msgstr ""
 msgid "Help & Support"
 msgstr ""
 
-#: classes/Admin/Pages.php:66, classes/Admin/Pages.php:145, includes/modules/admin-bar.php:518
+#: classes/Admin/Pages.php:66, classes/Admin/Pages.php:145, includes/modules/admin-bar.php:522
 msgid "Tools"
 msgstr ""
 
-#: classes/Admin/Pages.php:101, classes/Admin/Pages.php:101, classes/Types.php:40, classes/Types.php:42
+#: classes/Admin/Pages.php:101, classes/Admin/Pages.php:101, classes/Types.php:42, classes/Types.php:44
 msgid "Popup Themes"
 msgstr ""
 
@@ -104,11 +104,11 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: classes/Admin/Popups.php:60, classes/Shortcode/Popup.php:26, classes/Shortcode/Popup.php:317, classes/Types.php:20, classes/Types.php:152, includes/integrations/class-pum-cf7.php:145, includes/integrations/class-pum-gravity-forms.php:140, includes/modules/menus.php:52
+#: classes/Admin/Popups.php:60, classes/Shortcode/Popup.php:26, classes/Shortcode/Popup.php:317, classes/Types.php:20, classes/Types.php:154, includes/integrations/class-pum-cf7.php:145, includes/integrations/class-pum-gravity-forms.php:140, includes/modules/menus.php:52
 msgid "Popup"
 msgstr ""
 
-#: classes/Admin/Popups.php:60, classes/Shortcode/Popup.php:86, classes/Types.php:40, classes/Types.php:153
+#: classes/Admin/Popups.php:60, classes/Shortcode/Popup.php:86, classes/Types.php:42, classes/Types.php:155
 msgid "Popup Theme"
 msgstr ""
 
@@ -1291,7 +1291,7 @@ msgstr ""
 msgid "This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file."
 msgstr ""
 
-#: classes/Site/Assets.php:175, classes/Types.php:22, includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/integrations/class-pum-gravity-forms.php:53, includes/modules/admin-bar.php:413
+#: classes/Site/Assets.php:175, classes/Types.php:22, includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/integrations/class-pum-gravity-forms.php:53, includes/modules/admin-bar.php:414
 msgid "Popup Maker"
 msgstr ""
 
@@ -1415,71 +1415,71 @@ msgstr ""
 msgid "Choose which cookies will disable this trigger?"
 msgstr ""
 
-#: classes/Types.php:20, includes/modules/admin-bar.php:423
+#: classes/Types.php:20, includes/modules/admin-bar.php:424
 msgid "Popups"
-msgstr ""
-
-#: classes/Types.php:72
-msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
-msgid "Add New %1$s"
-msgstr ""
-
-#: classes/Types.php:73
-msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
-msgid "Add %1$s"
 msgstr ""
 
 #: classes/Types.php:74
 msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
-msgid "Edit %1$s"
+msgid "Add New %1$s"
 msgstr ""
 
 #: classes/Types.php:75
 msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
-msgid "New %1$s"
+msgid "Add %1$s"
 msgstr ""
 
 #: classes/Types.php:76
-msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
-msgid "All %2$s"
+msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
+msgid "Edit %1$s"
 msgstr ""
 
 #: classes/Types.php:77
 msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
-msgid "View %1$s"
+msgid "New %1$s"
 msgstr ""
 
 #: classes/Types.php:78
 msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
-msgid "Search %2$s"
+msgid "All %2$s"
 msgstr ""
 
 #: classes/Types.php:79
-msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
-msgid "No %2$s found"
+msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
+msgid "View %1$s"
 msgstr ""
 
 #: classes/Types.php:80
 msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
+msgid "Search %2$s"
+msgstr ""
+
+#: classes/Types.php:81
+msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
+msgid "No %2$s found"
+msgstr ""
+
+#: classes/Types.php:82
+msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
 msgid "No %2$s found in Trash"
 msgstr ""
 
-#: classes/Types.php:142, classes/Types.php:143
+#: classes/Types.php:144, classes/Types.php:145
 msgctxt "Post Type Singular: Popup, Theme"
 msgid "%1$s updated."
 msgstr ""
 
-#: classes/Types.php:144
+#: classes/Types.php:146
 msgctxt "Post Type Singular: Popup, Theme"
 msgid "%1$s published."
 msgstr ""
 
-#: classes/Types.php:145
+#: classes/Types.php:147
 msgctxt "Post Type Singular: Popup, Theme"
 msgid "%1$s saved."
 msgstr ""
 
-#: classes/Types.php:146
+#: classes/Types.php:148
 msgctxt "Post Type Singular: Popup, Theme"
 msgid "%1$s submitted."
 msgstr ""
@@ -2033,11 +2033,11 @@ msgstr ""
 msgid "These settings control popups after successful form submissions."
 msgstr ""
 
-#: includes/integrations/class-pum-cf7.php:137, includes/integrations/class-pum-gravity-forms.php:132, includes/integrations/ninja-forms/Actions/OpenPopup.php:35, includes/modules/admin-bar.php:452
+#: includes/integrations/class-pum-cf7.php:137, includes/integrations/class-pum-gravity-forms.php:132, includes/integrations/ninja-forms/Actions/OpenPopup.php:35, includes/modules/admin-bar.php:453
 msgid "Open Popup"
 msgstr ""
 
-#: includes/integrations/class-pum-cf7.php:157, includes/integrations/class-pum-gravity-forms.php:152, includes/integrations/ninja-forms/Actions/ClosePopup.php:36, includes/modules/admin-bar.php:462
+#: includes/integrations/class-pum-cf7.php:157, includes/integrations/class-pum-gravity-forms.php:152, includes/integrations/ninja-forms/Actions/ClosePopup.php:36, includes/modules/admin-bar.php:463
 msgid "Close Popup"
 msgstr ""
 
@@ -2085,32 +2085,36 @@ msgstr ""
 msgid "0"
 msgstr ""
 
-#: includes/modules/admin-bar.php:379
+#: includes/modules/admin-bar.php:380
 msgid "After clicking ok, click the element you want a selector for."
 msgstr ""
 
-#: includes/modules/admin-bar.php:390
+#: includes/modules/admin-bar.php:391
 msgctxt "JS alert for CSS get selector tool"
 msgid "Selector"
 msgstr ""
 
-#: includes/modules/admin-bar.php:473
+#: includes/modules/admin-bar.php:474
 msgid "Check Conditions"
 msgstr ""
 
-#: includes/modules/admin-bar.php:484
+#: includes/modules/admin-bar.php:485
 msgid "Reset Cookies"
 msgstr ""
 
-#: includes/modules/admin-bar.php:493
+#: includes/modules/admin-bar.php:487
+msgid "Success"
+msgstr ""
+
+#: includes/modules/admin-bar.php:497
 msgid "Edit Popup"
 msgstr ""
 
-#: includes/modules/admin-bar.php:503
+#: includes/modules/admin-bar.php:507
 msgid "No Popups Loaded"
 msgstr ""
 
-#: includes/modules/admin-bar.php:528
+#: includes/modules/admin-bar.php:532
 msgid "Get Selector"
 msgstr ""
 

@@ -305,10 +305,6 @@ class Popup_Maker {
 			require_once self::$DIR . 'includes/integrations/visual-composer.php';
 		}
 
-		// KingComposer Integration
-		if ( defined( 'KC_VERSION' ) ) {
-			require_once self::$DIR . 'includes/integrations/king-composer.php';
-		}
 		// Ninja Forms Integration
 		require_once self::$DIR . 'includes/integrations/class-pum-ninja-forms.php';
 		// CF7 Forms Integration
@@ -355,6 +351,7 @@ class Popup_Maker {
 		PUM_AssetCache::init();
 		PUM_Site::init();
 		PUM_Admin::init();
+		PUM_Integrations::init();
 
 		PUM_Shortcode_Popup::init();
 		PUM_Shortcode_PopupTrigger::init();

@@ -21,7 +21,7 @@ class PUM_Types {
 
 			$labels['menu_name'] = __( 'Popup Maker', 'popup-maker' );
 
-			register_post_type( 'popup', apply_filters( 'popmake_popup_post_type_args', array(
+			$popup_args = apply_filters( 'popmake_popup_post_type_args', array(
 				'labels'        => $labels,
 				'show_ui'       => true,
 				'query_var'     => false,
@@ -33,7 +33,9 @@ class PUM_Types {
 					'revisions',
 					'author',
 				) ),
-			) ) );
+			) );
+
+			register_post_type( 'popup', apply_filters( 'pum_popup_post_type_args', $popup_args ) );
 		}
 
 		if ( ! post_type_exists( 'popup_theme' ) ) {
