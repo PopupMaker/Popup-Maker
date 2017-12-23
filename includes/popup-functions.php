@@ -852,10 +852,7 @@ function popmake_popup_is_loadable( $popup_id ) {
  * @return \WP_Query
  */
 function get_all_popups() {
-	$query = new WP_Query( array(
-		'post_type'      => 'popup',
-		'posts_per_page' => - 1
-	) );
+	$query = PUM_Popups::get_all();
 
 	return $query;
 }

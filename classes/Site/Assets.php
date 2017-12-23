@@ -62,14 +62,14 @@ class PUM_Site_Assets {
 		self::$css_url   = Popup_Maker::$URL . 'assets/css/';
 
 		// Register assets early.
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_styles' ), 1 );
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_scripts' ), 1 );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_styles' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_scripts' ) );
 
 		// Localize after popups rendered in PUM_Site_Popups
 		add_action( 'wp_footer', array( __CLASS__, 'localize_scripts' ) );
 
 		// Checks preloaded popups in the head for which assets to enqueue.
-		add_action( 'popmake_preload_popup', array( __CLASS__, 'enqueue_popup_assets' ) );
+		add_action( 'pum_preload_popup', array( __CLASS__, 'enqueue_popup_assets' ) );
 
 		// Allow forcing assets to load.
 		add_action( 'wp_head', array( __CLASS__, 'check_force_script_loading' ) );
@@ -257,7 +257,7 @@ class PUM_Site_Assets {
 			return;
 		}
 
-		wp_add_inline_style( 'popup-maker-site', PUM_AssetCache::generate_css() );
+		wp_add_inline_style( 'popup-maker-site', PUM_AssetCache::inline_css() );
 	}
 
 	/**

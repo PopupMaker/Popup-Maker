@@ -36,7 +36,7 @@ class PUM_Site_Popups {
 		add_action( 'init', array( __CLASS__, 'get_loaded_popups' ) );
 
 		// TODO determine if the late priority is needed.
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'head_preload' ), 11 );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'load_popups' ), 11 );
 
 		add_action( 'wp_footer', array( __CLASS__, 'render_popups' ) );
 	}
@@ -79,16 +79,13 @@ class PUM_Site_Popups {
 	 * @uses `pum_preload_popup` filter
 	 * @uses `popmake_preload_popup` filter
 	 */
-	public static function head_preload() {
+	public static function load_popups() {
 		if ( is_admin() ) {
 			return;
 		}
 
 		// TODO Replace this with PUM_Popup::query when available.
-		$query = new WP_Query( array(
-			'post_type'      => 'popup',
-			'posts_per_page' => - 1,
-		) );
+		$query = PUM_Popups::get_all();
 
 		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) : $query->next_post();
@@ -105,7 +102,6 @@ class PUM_Site_Popups {
 
 			// Clear the global $current.
 			self::current_popup( null );
-
 		}
 	}
 
@@ -124,7 +120,6 @@ class PUM_Site_Popups {
 		do_action( 'pum_preload_popup', $popup->ID );
 		// Deprecated filter.
 		do_action( 'popmake_preload_popup', $popup->ID );
-
 	}
 
 	public static function load_popup( $id ) {

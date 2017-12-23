@@ -96,11 +96,47 @@ class PUM_AssetCache {
 	}
 
 	/**
-	 * Reset the cache to force regeneration.
+	 * Generate JS cache file.
 	 */
-	public static function reset_cache() {
-		update_option( 'pum-has-cached-css', false );
-		update_option( 'pum-has-cached-js', false );
+	public static function cache_js() {
+		global $blog_id;
+		$is_multisite = ( is_multisite() ) ? '-' . $blog_id : '';
+
+		$js_file = self::$cache_dir . '/pum-site-scripts' . $is_multisite . '.js';
+
+		$js = "/**\n";
+		$js .= " * Do not touch this file! This file created by PHP\n";
+		$js .= " * Last modifiyed time: " . date( 'M d Y, h:s:i' ) . "\n";
+		$js .= " */\n\n\n";
+		$js .= self::generate_js();
+
+		if ( ! self::cache_file( $js_file, $js ) ) {
+			update_option( 'pum-has-cached-js', false );
+		} else {
+			update_option( 'pum-has-cached-js', strtotime( 'now' ) );
+		}
+	}
+
+	/**
+	 * Generate CSS cache file.
+	 */
+	public static function cache_css() {
+		global $blog_id;
+		$is_multisite = ( is_multisite() ) ? '-' . $blog_id : '';
+
+		$css_file = self::$cache_dir . '/pum-site-styles' . $is_multisite . '.css';
+
+		$css = "/**\n";
+		$css .= " * Do not touch this file! This file created by PHP\n";
+		$css .= " * Last modifiyed time: " . date( 'M d Y, h:s:i' ) . "\n";
+		$css .= " */\n\n\n";
+		$css .= self::generate_css();
+
+		if ( ! self::cache_file( $css_file, $css ) ) {
+			update_option( 'pum-has-cached-css', false );
+		} else {
+			update_option( 'pum-has-cached-css', strtotime( 'now' ) );
+		}
 	}
 
 	/**
@@ -114,7 +150,67 @@ class PUM_AssetCache {
 		// Include core styles so we can eliminate another stylesheet.
 		include Popup_Maker::$DIR . 'assets/js/site' . self::$suffix . '.js';
 
-		return ob_get_clean();
+		$core_js = ob_get_clean();
+
+		/**
+		 *  0 Core
+		 *  5 Extensions
+		 * 10 Per Popup JS
+		 */
+		$js = array(
+			'core' => array(
+				'content'  => $core_js,
+				'priority' => 0,
+			),
+		);
+
+		$query = PUM_Popups::get_all();
+
+		if ( $query->have_posts() ) {
+			while ( $query->have_posts() ) : $query->next_post();
+				// Set this popup as the global $current.
+				PUM_Site_Popups::current_popup( $query->post );
+
+				// Preprocess the content for shortcodes that need to enqueue their own assets.
+				do_shortcode( $query->post->post_content );
+
+				ob_start();
+
+				// Allow per popup JS additions.
+				do_action( 'pum_generate_popup_js', $query->post->ID );
+
+				$popup_js = ob_get_clean();
+
+				if ( ! empty( $popup_js ) ) {
+					$js[ 'popup-' . $query->post->ID ] = array(
+						'content' => $popup_js,
+					);
+				}
+			endwhile;
+
+			// Clear the global $current.
+			PUM_Site_Popups::current_popup( null );
+		}
+
+		$js = apply_filters( 'pum_generated_js', $js );
+
+		foreach ( $js as $key => $code ) {
+			$js[ $key ] = wp_parse_args( $code, array(
+				'content'  => '',
+				'priority' => 10,
+			) );
+		}
+
+		uasort( $js, array( __CLASS__, 'sort_by_priority' ) );
+
+		$js_code = '';
+		foreach ( $js as $key => $code ) {
+			if ( ! empty( $code['content'] ) ) {
+				$js_code .= $code['content'] . "\n\n";
+			}
+		}
+
+		return $js_code;
 	}
 
 	/**
@@ -139,76 +235,101 @@ class PUM_AssetCache {
 	}
 
 	/**
-	 * Generate JS cache file.
-	 */
-	public static function cache_js() {
-		global $blog_id;
-		$is_multisite = ( is_multisite() ) ? '-' . $blog_id : '';
-
-		$js_file = self::$cache_dir . '/pum-site-scripts' . $is_multisite . '.js';
-
-		$js = "/**\n";
-		$js .= " * Do not touch this file! This file created by PHP\n";
-		$js .= " * Last modifiyed time: " . date( 'M d Y, h:s:i' ) . "\n";
-		$js .= " */\n\n\n";
-		$js .= self::generate_js();
-
-		if ( ! self::cache_file( $js_file, $js ) ) {
-			update_option( 'pum-has-cached-js', false );
-		} else {
-			update_option( 'pum-has-cached-js', strtotime( 'now' ) );
-		}
-	}
-
-	/**
 	 * Generate Custom Styles
 	 *
 	 * @return string
 	 */
 	public static function generate_css() {
-		global $pum_extra_styles;
-		ob_start();
-
-		// Render popup theme styles.
-		echo self::generate_popup_theme_styles();
-
-		// Render any extra styles globally added.
-		echo $pum_extra_styles;
-
-		// Allows rendering extra css via action.
-		do_action( 'pum_styles' );
-
-		return ob_get_clean();
-	}
-
-	/**
-	 * Generate CSS cache file.
-	 */
-	public static function cache_css() {
-		global $blog_id;
-		$is_multisite = ( is_multisite() ) ? '-' . $blog_id : '';
-
-		$css_file = self::$cache_dir . '/pum-site-styles' . $is_multisite . '.css';
-
-		$css = "/**\n";
-		$css .= " * Do not touch this file! This file created by PHP\n";
-		$css .= " * Last modifiyed time: " . date( 'M d Y, h:s:i' ) . "\n";
-		$css .= " */\n\n\n";
-
 		ob_start();
 
 		// Include core styles so we can eliminate another stylesheet.
 		include Popup_Maker::$DIR . 'assets/css/site' . self::$suffix . '.css';
 
-		$css .= ob_get_clean();
+		$core_css = ob_get_clean();
 
-		$css .= self::generate_css();
+		// Reset ob.
+		ob_start();
 
-		if ( ! self::cache_file( $css_file, $css ) ) {
-			update_option( 'pum-has-cached-css', false );
-		} else {
-			update_option( 'pum-has-cached-css', strtotime( 'now' ) );
+		// Render any extra styles globally added.
+		if ( ! empty( $GLOBALS['pum_extra_styles'] ) ) {
+			echo $GLOBALS['pum_extra_styles'];
 		}
+
+		// Allows rendering extra css via action.
+		do_action( 'pum_styles' );
+
+		$custom_css = ob_get_clean();
+
+		/**
+		 *  0 Core
+		 *  1 Popup Themes
+		 *  5 Extensions
+		 * 10 Per Popup CSS
+		 */
+		$css = array(
+			'core'   => array(
+				'content'  => $core_css,
+				'priority' => 0,
+			),
+			'themes' => array(
+				'content'  => self::generate_popup_theme_styles(),
+				'priority' => 1,
+			),
+			'custom' => array(
+				'content'  => $custom_css,
+				'priority' => 10,
+			),
+		);
+
+		$query = PUM_Popups::get_all();
+
+		if ( $query->have_posts() ) {
+			while ( $query->have_posts() ) : $query->next_post();
+				// Set this popup as the global $current.
+				PUM_Site_Popups::current_popup( $query->post );
+
+				// Preprocess the content for shortcodes that need to enqueue their own assets.
+				do_shortcode( $query->post->post_content );
+
+				ob_start();
+
+				// Allow per popup CSS additions.
+				do_action( 'pum_generate_popup_css', $query->post->ID );
+
+				$popup_css = ob_get_clean();
+
+				if ( ! empty( $popup_css ) ) {
+					$css[ 'popup-' . $query->post->ID ] = array(
+						'content' => $popup_css,
+					);
+				}
+			endwhile;
+
+			// Clear the global $current.
+			PUM_Site_Popups::current_popup( null );
+		}
+
+		$css = apply_filters( 'pum_generated_css', $css );
+
+		foreach ( $css as $key => $code ) {
+			$css[ $key ] = wp_parse_args( $code, array(
+				'content'  => '',
+				'priority' => 10,
+			) );
+		}
+
+		uasort( $css, array( __CLASS__, 'sort_by_priority' ) );
+
+		$css_code = '';
+		foreach ( $css as $key => $code ) {
+			if ( ! empty( $code['content'] ) ) {
+				$css_code .= $code['content'] . "\n\n";
+			}
+		}
+
+		return $css_code;
+
+
 	}
 
 	/**
@@ -256,9 +377,33 @@ class PUM_AssetCache {
 	}
 
 	/**
+	 * Reset the cache to force regeneration.
+	 */
+	public static function reset_cache() {
+		update_option( 'pum-has-cached-css', false );
+		update_option( 'pum-has-cached-js', false );
+	}
+
+	/**
 	 * @param $theme_id
 	 */
 	public static function generate_popup_theme_style( $theme_id ) {
+	}
+
+	/**
+	 * Sort array by priority value
+	 *
+	 * @param $a
+	 * @param $b
+	 *
+	 * @return int
+	 */
+	public static function sort_by_priority( $a, $b ) {
+		if ( ! isset( $a['priority'] ) || ! isset( $b['priority'] ) || $a['priority'] === $b['priority'] ) {
+			return 0;
+		}
+
+		return ( $a['priority'] < $b['priority'] ) ? - 1 : 1;
 	}
 
 }

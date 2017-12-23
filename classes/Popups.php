@@ -32,10 +32,14 @@ class PUM_Popups {
 
 
 	public static function get_all() {
-		$query = new WP_Query( array(
-			'post_type'      => 'popup',
-			'posts_per_page' => - 1,
-		) );
+		static $query;
+
+		if ( ! isset( $query ) ) {
+			$query = new WP_Query( array(
+				'post_type'      => 'popup',
+				'posts_per_page' => - 1,
+			) );
+		}
 
 		return $query;
 	}

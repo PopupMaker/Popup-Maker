@@ -188,10 +188,7 @@ class PUM_Modules_Menu {
 
 			$popups = array();
 
-			$query = new WP_Query( array(
-				'post_type'      => 'popup',
-				'posts_per_page' => - 1,
-			) );
+			$query = PUM_Popups::get_all();
 
 			if ( $query->have_posts() ) {
 				while ( $query->have_posts() ) : $query->next_post();
