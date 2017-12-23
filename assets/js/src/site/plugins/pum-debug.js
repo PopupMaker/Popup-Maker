@@ -120,41 +120,42 @@ var pum_debug_mode = false,
                 console.log(vars.label_selector, trigger_selector);
             },
             trigger: function ($popup, trigger) {
+                if (typeof vars.triggers[trigger.type] === 'string') {
 
-                console.groupCollapsed(vars.triggers[trigger.type].name);
+                    console.groupCollapsed(vars.triggers[trigger.type]);
 
-                switch (trigger.type) {
+                    switch (trigger.type) {
                     case 'auto_open':
                         console.log(vars.label_delay, trigger.settings.delay);
-                        console.log(vars.label_cookie, trigger.settings.cookie.name);
+                        console.log(vars.label_cookie, trigger.settings.cookie_name);
                         break;
                     case 'click_open':
                         pum_debug.click_trigger($popup, trigger.settings);
-                        console.log(vars.label_cookie, trigger.settings.cookie.name);
+                        console.log(vars.label_cookie, trigger.settings.cookie_name);
                         break;
+                    }
+
+                    $(document).trigger('pum_debug_render_trigger', $popup, trigger);
+
+                    console.groupEnd();
                 }
-
-                $(document).trigger('pum_debug_render_trigger', $popup, trigger);
-
-                console.groupEnd();
             },
             cookie: function ($popup, cookie) {
-                if (typeof vars.cookies[cookie.event] === 'object') {
-                    console.groupCollapsed(vars.cookies[cookie.event].name);
+                if (typeof vars.cookies[cookie.event] === 'string') {
+                    console.groupCollapsed(vars.cookies[cookie.event]);
 
                     switch (cookie.event) {
                         case 'on_popup_open':
                         case 'on_popup_close':
                         case 'manual':
                         case 'ninja_form_success':
-                            console.log(vars.label_settings, pum_debug.odump(cookie.settings));
+                            console.log(vars.label_cookie, pum_debug.odump(cookie.settings));
                             break;
                     }
 
                     $(document).trigger('pum_debug_render_trigger', $popup, cookie);
 
                     console.groupEnd();
-
                 }
             }
         };
@@ -163,6 +164,9 @@ var pum_debug_mode = false,
             .on('pumInit', '.pum', function () {
                 var $popup = PUM.getPopup($(this)),
                     settings = $popup.popmake('getSettings'),
+                    triggers = settings.triggers || [],
+                    cookies = settings.cookies || [],
+                    conditions = settings.conditions || [],
                     i = 0;
 
                 if (!inited) {
@@ -176,27 +180,27 @@ var pum_debug_mode = false,
                 console.log(vars.theme_id, settings.theme_id);
 
                 // Triggers
-                if (settings.triggers !== undefined && settings.triggers.length) {
+                if (triggers.length) {
                     console.groupCollapsed(vars.label_triggers);
-                    for (i = 0; settings.triggers.length > i; i++) {
-                        pum_debug.trigger($popup, settings.triggers[i]);
+                    for (i = 0; triggers.length > i; i++) {
+                        pum_debug.trigger($popup, triggers[i]);
                     }
                     console.groupEnd();
                 }
 
                 // Cookies
-                if (settings.cookies !== undefined && settings.cookies.length) {
+                if (cookies.length) {
                     console.groupCollapsed(vars.label_cookies);
-                    for (i = 0; settings.cookies.length > i; i += 1) {
-                        pum_debug.cookie($popup, settings.cookies[i]);
+                    for (i = 0; cookies.length > i; i += 1) {
+                        pum_debug.cookie($popup, cookies[i]);
                     }
                     console.groupEnd();
                 }
 
                 // Conditions
-                if (settings.conditions !== undefined && settings.conditions.length) {
+                if (conditions.length) {
                     console.groupCollapsed(vars.label_conditions);
-                    console.log(settings.conditions);
+                    console.log(conditions);
                     console.groupEnd();
                 }
 
@@ -204,30 +208,16 @@ var pum_debug_mode = false,
 
 
                 // Mobile Disabled.
-                console.log(vars.label_mobile_disabled, settings.mobile_disabled !== null);
+                console.log(vars.label_mobile_disabled, settings.disable_on_mobile !== false);
 
                 // Tablet Disabled.
-                console.log(vars.label_tablet_disabled, settings.tablet_disabled !== null);
+                console.log(vars.label_tablet_disabled, settings.disable_on_tablet !== false);
 
-                // Display Settings.
-                console.log(vars.label_display_settings, pum_debug.odump(settings.meta.display));
-
-                // Display Settings.
-                console.log(vars.label_close_settings, pum_debug.odump(settings.meta.close));
+                // Settings.
+                console.log(vars.label_display_settings, pum_debug.odump(settings));
 
                 // Trigger to add more debug info from extensions.
                 $popup.trigger('pum_debug_popup_settings');
-
-                var cleaned_meta = pum.hooks.applyFilters('pum_debug.popup_settings.cleaned_meta', pum_debug.odump(settings.meta), $popup);
-
-                delete(cleaned_meta.display);
-                delete(cleaned_meta.close);
-                delete(cleaned_meta.click_open);
-
-                if (cleaned_meta.length) {
-                    // Meta & Other Settings
-                    console.log('Meta: ', cleaned_meta);
-                }
 
                 console.groupEnd();
 
@@ -236,12 +226,11 @@ var pum_debug_mode = false,
             })
             .on('pumBeforeOpen', '.pum', function () {
                 var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings'),
                     $last_trigger = $.fn.popmake.last_open_trigger;
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_before_open);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumBeforeOpen'));
 
                 try {
                     $last_trigger = $($.fn.popmake.last_open_trigger);
@@ -259,93 +248,84 @@ var pum_debug_mode = false,
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_open_prevented);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumOpenPrevented'));
 
                 console.groupEnd();
             })
             .on('pumAfterOpen', '.pum', function () {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings');
+                var $popup = PUM.getPopup($(this));
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_after_open);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumAfterOpen'));
 
                 console.groupEnd();
             })
             .on('pumSetupClose', '.pum', function () {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings');
+                var $popup = PUM.getPopup($(this));
 
                 pum_debug.popup_event_header($popup);
-                console.groupCollapsed(vars.label_event_setup_close);
+
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumSetupClose'));
 
                 console.groupEnd();
             })
             .on('pumClosePrevented', '.pum', function () {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings');
+                var $popup = PUM.getPopup($(this));
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_close_prevented);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumClosePrevented'));
 
                 console.groupEnd();
             })
             .on('pumBeforeClose', '.pum', function () {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings');
+                var $popup = PUM.getPopup($(this));
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_before_close);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumBeforeClose'));
 
                 console.groupEnd();
             })
             .on('pumAfterClose', '.pum', function () {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings');
+                var $popup = PUM.getPopup($(this));
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_after_close);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumAfterClose'));
 
                 console.groupEnd();
             })
             .on('pumBeforeReposition', '.pum', function () {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings');
+                var $popup = PUM.getPopup($(this));
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_before_reposition);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumBeforeReposition'));
 
                 console.groupEnd();
             })
             .on('pumAfterReposition', '.pum', function () {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings');
+                var $popup = PUM.getPopup($(this));
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_after_reposition);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumAfterReposition'));
 
                 console.groupEnd();
             })
             .on('pumCheckingCondition', '.pum', function (event, result, condition) {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings');
+                var $popup = PUM.getPopup($(this));
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_checking_condition);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumCheckingCondition'));
 
                 console.log(( condition.not_operand ? '(!) ' : '' ) + condition.target + ': ' + result, condition);
 
                 console.groupEnd();
             });
-
-
     }
 
 }(jQuery));

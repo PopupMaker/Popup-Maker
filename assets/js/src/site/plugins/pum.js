@@ -7,7 +7,7 @@ var PUM;
     "use strict";
 
     function isInt(value) {
-        return !isNaN(value) && parseInt(Number(value)) == value && !isNaN(parseInt(value, 10));
+        return !isNaN(value) && parseInt(Number(value)) === parseInt(value) && !isNaN(parseInt(value, 10));
     }
 
     function Selector_Cache() {
@@ -92,7 +92,7 @@ var PUM;
             var settings = PUM.getSettings(el),
                 value = string_to_ref(settings, key);
 
-            return typeof value !== 'undefined' ? value : ( _default !== undefined ? _default : null );
+            return typeof value !== 'undefined' ? value : (_default !== undefined ? _default : null);
         },
         checkConditions: function (el) {
             return PUM.getPopup(el).popmake('checkConditions');
@@ -142,16 +142,17 @@ var PUM;
 
     // Defines the core $.popmake methods.
     $.fn.popmake.methods = {
-        init: function (options) {
+        init: function () {
             return this.each(function () {
                 var $popup = PUM.getPopup(this),
-                    settings = $.extend(true, {}, $.fn.popmake.defaults, $popup.data('popmake'), options);
+                    settings = $popup.popmake('getSettings');
 
                 if (settings.theme_id <= 0) {
-                    settings.theme_id = popmake_default_theme;
+                    settings.theme_id = pum_vars.default_theme;
                 }
 
-                if (settings.meta.display.disable_reposition === undefined) {
+                // TODO Move this to be a single global $(window) function that looks at any open popup.
+                if (settings.disable_reposition === undefined || !settings.disable_reposition) {
                     $(window).on('resize', function () {
                         if ($popup.hasClass('pum-active') || $popup.find('.popmake.active').length) {
                             $.fn.popmake.utilities.throttle(setTimeout(function () {
@@ -173,22 +174,23 @@ var PUM;
             });
         },
         getOverlay: function () {
-            return $(this);
+            return PUM.getPopup(this);
         },
         getContainer: function () {
-            return $(this).find('.pum-container');
+            return PUM.getPopup(this).find('.pum-container');
         },
         getTitle: function () {
-            return $(this).find('.pum-title') || null;
+            return PUM.getPopup(this).find('.pum-title') || null;
         },
         getContent: function () {
-            return $(this).find('.pum-content') || null;
+            return PUM.getPopup(this).find('.pum-content') || null;
         },
         getClose: function () {
-            return $(this).find('.pum-content + .pum-close') || null;
+            return PUM.getPopup(this).find('.pum-content + .pum-close') || null;
         },
         getSettings: function () {
-            return $(this).data('popmake');
+            var $popup = PUM.getPopup(this);
+            return $.extend(true, {}, $.fn.popmake.defaults, $popup.data('popmake') || {}, pum_vars.popups[$popup.attr('id')] || {});
         },
         state: function (test) {
             var $popup = PUM.getPopup(this);
@@ -209,17 +211,11 @@ var PUM;
                 settings = $popup.popmake('getSettings'),
                 $html = $('html');
 
-            $popup
-                .trigger('pumBeforeOpen');
+            $popup.trigger('pumBeforeOpen');
 
-
-            // TODO: Remove this after testing for its neccessity.
-            /*
-             $container
-             .css({visibility: "visible"})
-             .hide();
+            /**
+             * Allow for preventing popups from opening.
              */
-
             if ($popup.hasClass('preventOpen') || $container.hasClass('preventOpen')) {
                 console.log('prevented');
                 $popup
@@ -230,25 +226,37 @@ var PUM;
                 return this;
             }
 
-            if (!settings.meta.display.stackable) {
+            /**
+             * If popup isn't stackable close all others.
+             */
+            if (!settings.stackable) {
                 $popup.popmake('close_all');
             }
 
             $popup.addClass('pum-active');
 
-            if (settings.meta.close.button_delay > 0) {
+            /**
+             * Hide the close button if delay is active.
+             */
+            if (settings.close_button_delay > 0) {
                 $close.fadeOut(0);
             }
 
             $html.addClass('pum-open');
 
-            if (settings.meta.display.overlay_disabled) {
+            /**
+             * Check for and disable the overlay.
+             */
+            if (settings.overlay_disabled) {
                 $html.addClass('pum-open-overlay-disabled');
             } else {
                 $html.addClass('pum-open-overlay');
             }
 
-            if (settings.meta.display.position_fixed !== undefined && settings.meta.display.position_fixed) {
+            /**
+             * Set position fixed when active.
+             */
+            if (settings.position_fixed) {
                 $html.addClass('pum-open-fixed');
             } else {
                 $html.addClass('pum-open-scrollable');
@@ -257,14 +265,15 @@ var PUM;
             $popup
                 .popmake('setup_close')
                 .popmake('reposition')
-                // TODO: Remove this.
-                .css({'z-index': settings.meta.display.overlay_zindex || 1999999998})
-                .popmake('animate', settings.meta.display.animation_type, function () {
+                .popmake('animate', settings.animation_type, function () {
 
-                    if (settings.meta.close.button_delay > 0) {
+                    /**
+                     * Fade the close button in after specified delay.
+                     */
+                    if (settings.close_button_delay > 0) {
                         setTimeout(function () {
                             $close.fadeIn();
-                        }, settings.meta.close.button_delay);
+                        }, settings.close_button_delay);
                     }
 
                     $popup.trigger('pumAfterOpen');
@@ -283,17 +292,18 @@ var PUM;
         },
         setup_close: function () {
             var $popup = PUM.getPopup(this),
-                $close = $popup.popmake('getClose')
-                // Add For backward compatiblitiy.
-                    .add($('.popmake-close', $popup).not($popup.popmake('getClose'))),
+                $close = $popup.popmake('getClose'),
                 settings = $popup.popmake('getSettings');
+
+            // Add For non built in close buttons and backward compatibility.
+            $close.add($('.popmake-close, .pum-close', $popup).not($close));
 
             // TODO: Move to a global $(document).on type bind. Possibly look for an inactive class to fail on.
             $close
                 .off('click.pum')
                 .on("click.pum", function (event) {
                     var $this = $(this),
-                        do_default = $this.hasClass('pum-do-default') || ( $this.data('do-default') !== undefined && $this.data('do-default') );
+                        do_default = $this.hasClass('pum-do-default') || ($this.data('do-default') !== undefined && $this.data('do-default'));
 
                     if (!do_default) {
                         event.preventDefault();
@@ -303,23 +313,23 @@ var PUM;
                     $popup.popmake('close');
                 });
 
-            if (settings.meta.close.esc_press || settings.meta.close.f4_press) {
+            if (settings.close_on_esc_press || settings.close_on_f4_press) {
                 // TODO: Move to a global $(document).on type bind. Possibly look for a class to succeed on.
                 $(window)
                     .off('keyup.popmake')
                     .on('keyup.popmake', function (e) {
-                        if (e.keyCode === 27 && settings.meta.close.esc_press) {
+                        if (e.keyCode === 27 && settings.close_on_esc_press) {
                             $.fn.popmake.last_close_trigger = 'ESC Key';
                             $popup.popmake('close');
                         }
-                        if (e.keyCode === 115 && settings.meta.close.f4_press) {
+                        if (e.keyCode === 115 && settings.close_on_f4_press) {
                             $.fn.popmake.last_close_trigger = 'F4 Key';
                             $popup.popmake('close');
                         }
                     });
             }
 
-            if (settings.meta.close.overlay_click) {
+            if (settings.close_on_overlay_click) {
                 // TODO: Move to a global $(document).on type bind. Possibly look for a class to succeed on.
                 $popup
                     .off('click.popmake')
@@ -341,7 +351,9 @@ var PUM;
             return this.each(function () {
                 var $popup = PUM.getPopup(this),
                     $container = $popup.popmake('getContainer'),
-                    $close = $popup.popmake('getClose').add($('.popmake-close', $popup).not($popup.popmake('getClose')));
+                    $close = $popup.popmake('getClose');
+
+                $close.add($('.popmake-close, .pum-close', $popup).not($close));
 
                 $popup.trigger('pumBeforeClose');
 
@@ -360,10 +372,11 @@ var PUM;
                             $popup.fadeOut('fast');
                         }
 
+                        /**
+                         * Clear global event spaces.
+                         */
                         $(window).off('keyup.popmake');
-
                         $popup.off('click.popmake');
-
                         $close.off('click.popmake');
 
                         // Only re-enable scrolling for the document when the last popup has closed.
@@ -417,8 +430,7 @@ var PUM;
             var $popup = PUM.getPopup(this).trigger('pumBeforeReposition'),
                 $container = $popup.popmake('getContainer'),
                 settings = $popup.popmake('getSettings'),
-                display = settings.meta.display,
-                location = display.location,
+                location = settings.location,
                 reposition = {
                     my: "",
                     at: "",
@@ -435,17 +447,17 @@ var PUM;
                 $last_trigger = $();
             }
 
-            if (display.position_from_trigger && $last_trigger.length) {
+            if (settings.position_from_trigger && $last_trigger.length) {
 
                 reposition.of = $last_trigger;
 
                 if (location.indexOf('left') >= 0) {
                     reposition.my += " right";
-                    reposition.at += " left" + (display.position_left !== 0 ? "-" + display.position_left : "");
+                    reposition.at += " left" + (settings.position_left !== 0 ? "-" + settings.position_left : "");
                 }
                 if (location.indexOf('right') >= 0) {
                     reposition.my += " left";
-                    reposition.at += " right" + (display.position_right !== 0 ? "+" + display.position_right : "");
+                    reposition.at += " right" + (settings.position_right !== 0 ? "+" + settings.position_right : "");
                 }
                 if (location.indexOf('center') >= 0) {
                     reposition.my = location === 'center' ? "center" : reposition.my + " center";
@@ -453,19 +465,19 @@ var PUM;
                 }
                 if (location.indexOf('top') >= 0) {
                     reposition.my += " bottom";
-                    reposition.at += " top" + (display.position_top !== 0 ? "-" + display.position_top : "");
+                    reposition.at += " top" + (settings.position_top !== 0 ? "-" + settings.position_top : "");
                 }
                 if (location.indexOf('bottom') >= 0) {
                     reposition.my += " top";
-                    reposition.at += " bottom" + (display.position_bottom !== 0 ? "+" + display.position_bottom : "");
+                    reposition.at += " bottom" + (settings.position_bottom !== 0 ? "+" + settings.position_bottom : "");
                 }
             } else {
                 if (location.indexOf('left') >= 0) {
-                    reposition.my += " left" + (display.position_left !== 0 ? "+" + display.position_left : "");
+                    reposition.my += " left" + (settings.position_left !== 0 ? "+" + settings.position_left : "");
                     reposition.at += " left";
                 }
                 if (location.indexOf('right') >= 0) {
-                    reposition.my += " right" + (display.position_right !== 0 ? "-" + display.position_right : "");
+                    reposition.my += " right" + (settings.position_right !== 0 ? "-" + settings.position_right : "");
                     reposition.at += " right";
                 }
                 if (location.indexOf('center') >= 0) {
@@ -473,11 +485,11 @@ var PUM;
                     reposition.at = location === 'center' ? "center" : reposition.at + " center";
                 }
                 if (location.indexOf('top') >= 0) {
-                    reposition.my += " top" + (display.position_top !== 0 ? "+" + ($('body').hasClass('admin-bar') ? parseInt(display.position_top, 10) + 32 : display.position_top) : "");
+                    reposition.my += " top" + (settings.position_top !== 0 ? "+" + ($('body').hasClass('admin-bar') ? parseInt(settings.position_top, 10) + 32 : settings.position_top) : "");
                     reposition.at += " top";
                 }
                 if (location.indexOf('bottom') >= 0) {
-                    reposition.my += " bottom" + (display.position_bottom !== 0 ? "-" + display.position_bottom : "");
+                    reposition.my += " bottom" + (settings.position_bottom !== 0 ? "-" + settings.position_bottom : "");
                     reposition.at += " bottom";
                 }
             }
@@ -495,22 +507,22 @@ var PUM;
                 $container.css({opacity: 0}).show(0);
             }
 
-            if (display.position_fixed) {
+            if (settings.position_fixed) {
                 $container.addClass('fixed');
             }
 
-            if (settings.meta.display.size === 'custom') {
+            if (settings.size === 'custom') {
                 $container.css({
-                    width: settings.meta.display.custom_width + settings.meta.display.custom_width_unit,
-                    height: settings.meta.display.custom_height_auto ? 'auto' : settings.meta.display.custom_height + settings.meta.display.custom_height_unit
+                    width: settings.custom_width,
+                    height: settings.custom_height_auto ? 'auto' : settings.custom_height
                 });
             } else {
-                if (settings.meta.display.size !== 'auto') {
+                if (settings.size !== 'auto') {
                     $container
                         .addClass('responsive')
                         .css({
-                            minWidth: settings.meta.display.responsive_min_width !== '' ? settings.meta.display.responsive_min_width + settings.meta.display.responsive_min_width_unit : 'auto',
-                            maxWidth: settings.meta.display.responsive_max_width !== '' ? settings.meta.display.responsive_max_width + settings.meta.display.responsive_max_width_unit : 'auto'
+                            minWidth: settings.responsive_min_width !== '' ? settings.responsive_min_width : 'auto',
+                            maxWidth: settings.responsive_max_width !== '' ? settings.responsive_max_width : 'auto'
                         });
                 }
             }
@@ -529,120 +541,6 @@ var PUM;
             if (opacity.container) {
                 $container.css({opacity: opacity.container}).hide(0);
             }
-            return this;
-        },
-        /**
-         * @deprecated 1.3.0
-         *
-         * @param theme
-         * @returns {$.fn.popmake.methods}
-         */
-        retheme: function (theme) {
-            $(this).trigger('popmakeBeforeRetheme');
-            var $popup = PUM.getPopup(this),
-                $container = $popup.popmake('getContainer'),
-                $title = $popup.popmake('getTitle'),
-                $content = $popup.popmake('getContent'),
-                $close = $popup.popmake('getClose'),
-                settings = $popup.popmake('getSettings'),
-                container_inset,
-                close_inset;
-
-            if (theme === undefined) {
-                theme = $.fn.popmake.themes[settings.theme_id];
-                if (theme === undefined) {
-                    theme = $.fn.popmake.themes[1];
-                }
-            }
-
-            container_inset = theme.container.boxshadow_inset === 'yes' ? 'inset ' : '';
-            close_inset = theme.close.boxshadow_inset === 'yes' ? 'inset ' : '';
-
-            $popup.removeAttr('style').css({
-                backgroundColor: $.fn.popmake.utilities.convert_hex(theme.overlay.background_color, theme.overlay.background_opacity),
-                zIndex: settings.meta.display.overlay_zindex || 998
-            });
-            $container.css({
-                padding: theme.container.padding + 'px',
-                backgroundColor: $.fn.popmake.utilities.convert_hex(theme.container.background_color, theme.container.background_opacity),
-                borderStyle: theme.container.border_style,
-                borderColor: theme.container.border_color,
-                borderWidth: theme.container.border_width + 'px',
-                borderRadius: theme.container.border_radius + 'px',
-                boxShadow: container_inset + theme.container.boxshadow_horizontal + 'px ' + theme.container.boxshadow_vertical + 'px ' + theme.container.boxshadow_blur + 'px ' + theme.container.boxshadow_spread + 'px ' + $.fn.popmake.utilities.convert_hex(theme.container.boxshadow_color, theme.container.boxshadow_opacity),
-                zIndex: settings.meta.display.zindex || 999
-            });
-            $title.css({
-                color: theme.title.font_color,
-                lineHeight: theme.title.line_height + 'px',
-                fontSize: theme.title.font_size + 'px',
-                fontFamily: theme.title.font_family,
-                fontWeight: theme.title.font_weight,
-                fontStyle: theme.title.font_style,
-                textAlign: theme.title.text_align,
-                textShadow: theme.title.textshadow_horizontal + 'px ' + theme.title.textshadow_vertical + 'px ' + theme.title.textshadow_blur + 'px ' + $.fn.popmake.utilities.convert_hex(theme.title.textshadow_color, theme.title.textshadow_opacity)
-            });
-            $content.css({
-                color: theme.content.font_color,
-                //fontSize: theme.content.font_size+'px',
-                fontFamily: theme.content.font_family,
-                fontWeight: theme.content.font_weight,
-                fontStyle: theme.content.font_style
-            });
-            $('p, label', $content).css({
-                color: theme.content.font_color,
-                //fontSize: theme.content.font_size+'px',
-                fontFamily: theme.content.font_family
-            });
-            $close.html(theme.close.text).css({
-                padding: theme.close.padding + 'px',
-                height: theme.close.height + 'px',
-                width: theme.close.width + 'px',
-                backgroundColor: $.fn.popmake.utilities.convert_hex(theme.close.background_color, theme.close.background_opacity),
-                color: theme.close.font_color,
-                lineHeight: theme.close.line_height + 'px',
-                fontSize: theme.close.font_size + 'px',
-                fontWeight: theme.close.font_weight,
-                fontStyle: theme.close.font_style,
-                fontFamily: theme.close.font_family,
-                borderStyle: theme.close.border_style,
-                borderColor: theme.close.border_color,
-                borderWidth: theme.close.border_width + 'px',
-                borderRadius: theme.close.border_radius + 'px',
-                boxShadow: close_inset + theme.close.boxshadow_horizontal + 'px ' + theme.close.boxshadow_vertical + 'px ' + theme.close.boxshadow_blur + 'px ' + theme.close.boxshadow_spread + 'px ' + $.fn.popmake.utilities.convert_hex(theme.close.boxshadow_color, theme.close.boxshadow_opacity),
-                textShadow: theme.close.textshadow_horizontal + 'px ' + theme.close.textshadow_vertical + 'px ' + theme.close.textshadow_blur + 'px ' + $.fn.popmake.utilities.convert_hex(theme.close.textshadow_color, theme.close.textshadow_opacity),
-                left: 'auto',
-                right: 'auto',
-                bottom: 'auto',
-                top: 'auto'
-            });
-            switch (theme.close.location) {
-            case "topleft":
-                $close.css({
-                    top: theme.close.position_top + 'px',
-                    left: theme.close.position_left + 'px'
-                });
-                break;
-            case "topright":
-                $close.css({
-                    top: theme.close.position_top + 'px',
-                    right: theme.close.position_right + 'px'
-                });
-                break;
-            case "bottomleft":
-                $close.css({
-                    bottom: theme.close.position_bottom + 'px',
-                    left: theme.close.position_left + 'px'
-                });
-                break;
-            case "bottomright":
-                $close.css({
-                    bottom: theme.close.position_bottom + 'px',
-                    right: theme.close.position_right + 'px'
-                });
-                break;
-            }
-            $popup.trigger('popmakeAfterRetheme', [theme]);
             return this;
         },
         animation_origin: function (origin) {

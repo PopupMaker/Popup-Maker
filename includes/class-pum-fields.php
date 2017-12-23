@@ -159,7 +159,7 @@ class PUM_Fields extends Popmake_Fields {
 	public function select_callback( $args, $value = null ) {
 
         if ( isset ( $args['select2'] ) ) {
-            $args['class'] .= '  pum-select2';
+            $args['class'] .= '  pum-field-select2';
 		}
 
         if ( ! $value ) {
@@ -381,7 +381,7 @@ class PUM_Fields extends Popmake_Fields {
 			$args['class'] .= '  pum-field-objectselect';
 		}
 
-		$args['class'] .= '  pum-field-select  pum-select2';
+		$args['class'] .= '  pum-field-select  pum-field-select2';
 
 		if ( ! $value ) {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
@@ -470,7 +470,7 @@ class PUM_Fields extends Popmake_Fields {
 		       value="<?php echo $value; ?>"
 		       name="<?php esc_attr_e( $args['name'] ); ?>"
 		       id="<?php esc_attr_e( $args['id'] ); ?>"
-		       class="popmake-range-manual pum-range-manual"
+		       class="pum-range-manual popmake-range-manual"
 		       step="<?php esc_attr_e( $args['step'] ); ?>"
 		       min="<?php esc_attr_e( $args['min'] ); ?>"
 		       max="<?php esc_attr_e( $args['max'] ); ?>"
@@ -621,7 +621,7 @@ class PUM_Fields extends Popmake_Fields {
 
 	public function select_templ_callback( $args ) {
         if ( $args['select2'] ) {
-            $args['class'] .= '  pum-select2';
+            $args['class'] .= '  pum-field-select2';
 		}
 
         $multiple = null;
@@ -673,7 +673,7 @@ class PUM_Fields extends Popmake_Fields {
 			$args['class'] .= '  pum-field-objectselect';
 		}
 
-		$args['class'] .= '  pum-field-select  pum-select2';
+		$args['class'] .= '  pum-field-select  pum-field-select2';
 
         $multiple = null;
         if ( $args['multiple'] ) {

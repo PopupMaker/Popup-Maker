@@ -233,6 +233,7 @@ html.pum-open {
 
       .pum-overlay.pum-active {
         overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
       }
 
     }

@@ -1,0 +1,38 @@
+/*!******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
+
+$plugin_prefix: 'plugin' !default;
+$custom_select2_selector: 'select2' !default;
+
+/**
+ * Triggers field
+ */
+.#{$plugin_prefix}-field-triggers {
+  .#{$plugin_prefix}-popup-trigger-editor {
+    @include add-more-table-lists();
+  }
+}
+
+/**
+ * Cookies field
+ */
+.#{$plugin_prefix}-field-cookies {
+  .#{$plugin_prefix}-popup-cookie-editor {
+    @include add-more-table-lists();
+  }
+}
+
+.#{$plugin_prefix}-field-cookie_key {
+  .cookie-key {
+    position: relative;
+    display: inline-block;
+    button.reset {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      height: 100%;
+    }
+  }
+}

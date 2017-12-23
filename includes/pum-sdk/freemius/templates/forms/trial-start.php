@@ -2,7 +2,7 @@
 	/**
 	 * @package     Freemius
 	 * @copyright   Copyright (c) 2015, Freemius, Inc.
-	 * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+	 * @license     https://www.gnu.org/licenses/gpl-3.0.html GNU General Public License Version 3
 	 * @since       1.2.0
 	 */
 
@@ -12,17 +12,21 @@
 
 	/**
 	 * @var array $VARS
+	 * @var Freemius $fs
 	 */
-	$slug = $VARS['slug'];
-	$fs   = freemius( $slug );
+	$fs   = freemius( $VARS['id'] );
+	$slug = $fs->get_slug();
 
 	$message_header  = sprintf(
-		fs_text( 'start-trial-prompt-header', $slug ),
+		/* translators: %1$s: Number of trial days; %2$s: Plan name; */
+		fs_text_inline( 'You are 1-click away from starting your %1$s-day free trial of the %2$s plan.', 'start-trial-prompt-header', $slug ),
 		'<span class="var-trial_period"></span>',
 		'<span class="var-plan_title"></span>'
 	);
 	$message_content = sprintf(
-		fs_text( 'start-trial-prompt-message', $slug ),
+		/* translators: %s: Link to freemius.com */
+		fs_text_inline( 'For compliance with the WordPress.org guidelines, before we start the trial we ask that you opt in with your user and non-sensitive site information, allowing the %s to periodically send data to %s to check for version updates and to validate your trial.', 'start-trial-prompt-message', $slug ),
+		$fs->get_module_type(),
 		sprintf(
 			'<a href="%s" target="_blank">%s</a>',
 			'https://freemius.com',
@@ -36,7 +40,7 @@
 	<p>{$message_content}</p>
 HTML;
 
-	fs_enqueue_local_style( 'dialog-boxes', '/admin/dialog-boxes.css' );
+	fs_enqueue_local_style( 'fs_dialog_boxes', '/admin/dialog-boxes.css' );
 ?>
 <script type="text/javascript">
 	(function ($) {
@@ -46,17 +50,16 @@ HTML;
 				    '<div class="fs-modal fs-modal-license-key-resend">'
 				    + '	<div class="fs-modal-dialog">'
 				    + '		<div class="fs-modal-header">'
-				    + '		    <h4><?php fs_esc_js_echo( 'start-free-trial', $slug ) ?></h4>'
+				    + '		    <h4><?php echo esc_js( fs_text_x_inline( 'Start free trial', 'call to action', 'start-free-trial', $slug ) ) ?></h4>'
 				    + '		</div>'
 				    + '		<div class="fs-modal-body">' + modalContentHtml + '</div>'
 				    + '		<div class="fs-modal-footer">'
-				    + '			<button class="button button-secondary button-close">' + <?php fs_json_encode_echo( 'cancel', $slug ) ?> +'</button>'
-				    + '			<button class="button button-primary button-connect">' + <?php fs_json_encode_echo( 'approve-start-trial', $slug ) ?> +'</button>'
+				    + '			<button class="button button-secondary button-close">' + <?php fs_json_encode_echo_inline( 'Cancel', 'cancel', $slug ) ?> +'</button>'
+				    + '			<button class="button button-primary button-connect">' + <?php fs_json_encode_echo_inline( 'Approve & Start Trial', 'approve-start-trial', $slug ) ?> +'</button>'
 				    + '		</div>'
 				    + '	</div>'
 				    + '</div>',
-			    $modal           = $(modalHtml),
-			    moduleSlug       = '<?php echo $slug; ?>',
+			    $modal = $( modalHtml ),
 			    trialData;
 
 			$modal.appendTo($('body'));
@@ -80,22 +83,22 @@ HTML;
 						url       : ajaxurl,
 						method    : 'POST',
 						data      : {
-							action  : '<?php echo $fs->get_ajax_action( 'start_trial' ) ?>',
-							security: '<?php echo $fs->get_ajax_security( 'start_trial' ) ?>',
-							slug    : moduleSlug,
-							trial   : trialData
+							action   : '<?php echo $fs->get_ajax_action( 'start_trial' ) ?>',
+							security : '<?php echo $fs->get_ajax_security( 'start_trial' ) ?>',
+							module_id: '<?php echo $fs->get_id() ?>',
+							trial    : trialData
 						},
 						beforeSend: function () {
 							// Disable all buttons during trial activation.
 							$modal.find('.button').prop('disabled', true);
 
-							$button.text(<?php fs_json_encode_echo( 'starting-trial', $slug ) ?> + '...');
+							$button.text(<?php fs_json_encode_echo_inline( 'Starting trial', 'starting-trial', $slug ) ?> + '...');
 
 							setLoadingMode();
 						},
 						success   : function (resultObj) {
 							if (resultObj.success) {
-								$button.text(<?php fs_json_encode_echo( 'please-wait', $slug ) ?> + '...');
+								$button.text(<?php fs_json_encode_echo_inline( 'Please wait', 'please-wait', $slug ) ?> + '...');
 
 								// Redirect to the "Account" page and sync the license.
 								window.location.href = resultObj.data.next_page;

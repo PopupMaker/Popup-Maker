@@ -3,10 +3,10 @@ Contributors: danieliser, wppopupmaker, waltmesser, yogaman5020
 Author URI: https://wppopupmaker.com/?utm_source=readme-header&utm_campaign=Readme&utm_medium=author-uri
 Plugin URI: https://wppopupmaker.com/?utm_capmaign=Readme&utm_source=readme-header&utm_medium=plugin-uri
 Donate link:
-Tags: marketing, optin, advertising, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal, popup, popups
+Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.8
-Stable tag: 1.6.5
+Stable tag: 1.6.6
 License: GNU Version 3 or Any Later Version
 
 Create any popup imaginable! Customize your popups from head-to-toe and give your site more utility, usability, and conversions.
@@ -90,6 +90,35 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+
+= v1.7.0 - ??/??/2017 =
+* Feature: Front end asset overhaul, now uses cached static assets.
+  * All front end assets now combined and minified into  single js & css file.
+  * Custom styles are now saved along with all core & extension styles eliminating inline style blocks.
+  * Reduction of footprint means massively improved loading performance.
+  * Dynamic file creation allows for some awesome upcoming features.
+  * Now completely compatible with plugins like Autoptimize (Thanks Frank).
+* Improvement: New Popup Settings tabbed interface to help make settings more intuitive & easy to find on one screen.
+  * Now all popup settings are stored in a single meta key reducing DB clutter.
+* Improvement: Resource reduction & optmization.
+  * Added class autoloading.
+  * Greatly simplified code base & internal apis.
+  * Converted many internal apis to use passive loading.
+  * Added internal caching.
+* Improvement: Migrated all admin forms to use the [WPJSF](https://github.com/danieliser/WP-JS-Form-Sample-Plugin) lib for easier maintanance and quicker updates.
+* Improvement: Multiple improvments to smart select fields (jQuery select2) including:
+  * Allow multiple page/post selections without reopening/searching again.
+  * Properly highlights & shows selected items after save/reload.
+  * Paginated/scroll based loading of more results over ajax.
+  * Now shows list of recent "items" immeditaly upon clicking the field rather than requiring search.
+* Improvement: Admin asset handling
+  * Modularized admin assets for easier debugging & maintanance.
+
+= v1.6.7 - ?? =
+* Fix: WPML missing variable errors.
+
+= v1.6.6 - 07/29/2017 =
+* Fix: Bug with closing forms using newest version of Gravity Forms.
 
 = v1.6.5 - 07/16/2017 =
 * Tweak: Added new popup class for theme names. Thanks @bluantinoo.

@@ -98,7 +98,7 @@ class PUM_Extension_License {
 	private function hooks() {
 
 		// Register settings
-		add_filter( 'popmake_settings_licenses', array( $this, 'settings' ), 1 );
+		add_filter( 'pum_settings_fields', array( $this, 'settings' ), 1 );
 
 		// Display help text at the top of the Licenses tab
 		add_action( 'popmake_settings_tab_top', array( $this, 'license_help_text' ) );
@@ -141,7 +141,7 @@ class PUM_Extension_License {
 			'version' => $this->version,
 			'license' => $this->license,
 			'author'  => $this->author,
-			'beta'    => pum_extension_has_beta_support( $this->item_shortname ),
+			'beta'    => PUM_Admin_Tools::extension_has_beta_support( $this->item_shortname ),
 		);
 
 		if ( ! empty( $this->item_id ) ) {
@@ -164,19 +164,17 @@ class PUM_Extension_License {
 	 *
 	 * @return  array
 	 */
-	public function settings( $settings ) {
-		$popmake_license_settings = array(
-			$this->item_shortname . '_license_key' => array(
-				'id'      => $this->item_shortname . '_license_key',
-				'name'    => sprintf( __( '%1$s', 'popup-maker' ), $this->item_name ),
-				'desc'    => '',
-				'type'    => 'license_key',
-				'options' => array( 'is_valid_license_option' => $this->item_shortname . '_license_active' ),
-				'size'    => 'regular',
+	public function settings( $tabs = array() ) {
+		$tabs['licenses']['main'][ $this->item_shortname . '_license_key' ] = array(
+			'type'    => 'license_key',
+			'label'   => sprintf( __( '%1$s', 'popup-maker' ), $this->item_name ),
+			'options' => array(
+				'is_valid_license_option' => $this->item_shortname . '_license_active',
+				'activation_callback'     => array( $this, 'activate_license' ),
 			),
 		);
 
-		return array_merge( $settings, $popmake_license_settings );
+		return $tabs;
 	}
 
 
@@ -220,18 +218,16 @@ class PUM_Extension_License {
 	 */
 	public function activate_license() {
 
-		if ( ! isset( $_POST['popmake_settings'] ) ) {
+		if ( ! isset( $_POST['pum_settings'] ) ) {
 			return;
 		}
-		if ( ! isset( $_POST['popmake_settings'][ $this->item_shortname . '_license_key' ] ) ) {
+		if ( ! isset( $_POST['pum_settings'][ $this->item_shortname . '_license_key' ] ) ) {
 			return;
 		}
 
-		foreach ( $_POST as $key => $value ) {
-			if ( false !== strpos( $key, 'license_key_deactivate' ) ) {
-				// Don't activate a key when deactivating a different key
-				return;
-			}
+		// Don't activate a key when deactivating a different key
+		if ( ! empty( $_POST['pum_license_deactivate'] )) {
+			return;
 		}
 
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -244,9 +240,9 @@ class PUM_Extension_License {
 			return;
 		}
 
-		$license = sanitize_text_field( $_POST['popmake_settings'][ $this->item_shortname . '_license_key' ] );
+		$license = sanitize_text_field( $_POST['pum_settings'][ $this->item_shortname . '_license_key' ] );
 
-		if ( empty( $license ) ) {
+		if ( empty( $license ) && empty( $_POST['pum_license_activate'][ $this->item_shortname . '_license_key' ] ) ) {
 			return;
 		}
 
@@ -277,7 +273,6 @@ class PUM_Extension_License {
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
 		update_option( $this->item_shortname . '_license_active', $license_data );
-
 	}
 
 
@@ -289,11 +284,11 @@ class PUM_Extension_License {
 	 */
 	public function deactivate_license() {
 
-		if ( ! isset( $_POST['popmake_settings'] ) ) {
+		if ( ! isset( $_POST['pum_settings'] ) ) {
 			return;
 		}
 
-		if ( ! isset( $_POST['popmake_settings'][ $this->item_shortname . '_license_key' ] ) ) {
+		if ( ! isset( $_POST['pum_settings'][ $this->item_shortname . '_license_key' ] ) ) {
 			return;
 		}
 
@@ -302,7 +297,7 @@ class PUM_Extension_License {
 		}
 
 		// Run on deactivate button press
-		if ( isset( $_POST[ $this->item_shortname . '_license_key_deactivate' ] ) ) {
+		if ( isset( $_POST[ 'pum_license_deactivate'][ $this->item_shortname . '_license_key' ] ) ) {
 
 			// Data to send to the API
 			$api_params = array(

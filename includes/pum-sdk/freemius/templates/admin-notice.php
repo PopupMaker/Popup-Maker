@@ -2,15 +2,17 @@
 	/**
 	 * @package     Freemius
 	 * @copyright   Copyright (c) 2015, Freemius, Inc.
-	 * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+	 * @license     https://www.gnu.org/licenses/gpl-3.0.html GNU General Public License Version 3
 	 * @since       1.0.3
 	 */
 
 	if ( ! defined( 'ABSPATH' ) ) {
 		exit;
 	}
+
+	$dismiss_text = fs_text_x_inline( 'Dismiss', 'as close a window', 'dismiss' );
 ?>
-<div<?php if ( ! empty( $VARS['id'] ) ) : ?> data-id="<?php echo $VARS['id'] ?>"<?php endif ?><?php if ( ! empty( $VARS['slug'] ) ) : ?> data-slug="<?php echo $VARS['slug'] ?>"<?php endif ?>
+<div<?php if ( ! empty( $VARS['id'] ) ) : ?> data-id="<?php echo $VARS['id'] ?>"<?php endif ?><?php if ( ! empty( $VARS['manager_id'] ) ) : ?> data-manager-id="<?php echo $VARS['manager_id'] ?>"<?php endif ?>
 	class="<?php
 		switch ( $VARS['type'] ) {
 			case 'error':
@@ -36,7 +38,7 @@
 	<?php endif ?>
 	<?php if ( ! empty( $VARS['sticky'] ) ) : ?>
 		<div class="fs-close"><i class="dashicons dashicons-no"
-		                         title="<?php fs_echo( 'dismiss' ) ?>"></i> <span><?php fs_echo( 'dismiss' ) ?></span>
+		                         title="<?php echo esc_attr( $dismiss_text ) ?>"></i> <span><?php echo esc_html( $dismiss_text ) ?></span>
 		</div>
 	<?php endif ?>
 	<div class="fs-notice-body">

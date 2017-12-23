@@ -1,0 +1,118 @@
+/*!******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
+
+.popup_page_pum-extensions {
+  #poststuff {
+    .section-heading {
+      font-size: 2em;
+      font-weight: normal;
+      padding: 0;
+    }
+  }
+}
+
+.extensions-available {
+  display: block;
+
+  img {
+    width: 100%;
+    display: block;
+    height: auto;
+    max-width: 100%;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+  }
+
+  li {
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    background: #fff;
+    vertical-align: top;
+    width: 280px;
+    margin: 0 20px 20px 0;
+    display: inline;
+    float: left;
+    -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+
+    > .action-links {
+      text-align: center;
+      display: block;
+      border-top: 1px solid #ccc;
+
+      .button {
+        display: inline-block;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        padding: 7px 30px;
+        font-weight: bold;
+        height: auto;
+        position: relative;
+        transition: transform .5s;
+
+        &.install {
+          background: #00a651;
+        }
+      }
+    }
+
+    @media only screen and (max-width: 360px) {
+      display: block;
+      margin: 0 0 10px;
+      width: 100%;
+    }
+    @media only screen and (min-width: 361px) and (max-width: 768px) {
+      width: 320px;
+    }
+    @media only screen and (min-width: 769px) and (max-width: 980px) {
+      width: 240px;
+    }
+  }
+
+  h3 {
+    text-align: center;
+    font-size: 16px !important;
+    margin: 0;
+    padding: 1em 0;
+
+    a {
+      color: inherit;
+    }
+  }
+
+  p {
+    margin: 10px;
+    color: #2d2d2d;
+    font-size: 14px;
+    text-align: center;
+    font-style: italic;
+    min-height: 7.5em;
+  }
+
+  a {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+  }
+
+}
+
+.extensions-available .core-extensions-bundle {
+
+  h3 {
+    color: #fff;
+    background: #98B727;
+  }
+
+  p {
+    background-color: #fff;
+    color: #2d2d2d;
+  }
+
+  .action-links {
+    background: #98B727;
+    border-top: 1px solid #A8C53A;
+  }
+}

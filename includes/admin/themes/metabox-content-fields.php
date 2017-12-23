@@ -23,7 +23,7 @@ function popmake_popup_theme_content_meta_box_field_font( $popup_theme_id ) { ?>
 			<label for="popup_theme_content_font_color"><?php _e( 'Color', 'popup-maker' );?></label>
 		</th>
 		<td>
-			<input type="text" name="popup_theme_content_font_color" id="popup_theme_content_font_color" value="<?php esc_attr_e(popmake_get_popup_theme_content( $popup_theme_id, 'font_color' ))?>" class="color-picker" />
+			<input type="text" name="popup_theme_content_font_color" id="popup_theme_content_font_color" value="<?php esc_attr_e(popmake_get_popup_theme_content( $popup_theme_id, 'font_color' ))?>" class="pum-color-picker" />
 		</td>
 	</tr>
 	<tr>

@@ -48,7 +48,7 @@ class PUM_WPML_Integration {
 
 		static $source_id;
 
-		if ( ! isset( $source_id ) ) {
+		if ( ! isset( $source_id ) && ! empty( $sitepress ) && method_exists( $sitepress, 'get_new_post_source_id' ) ) {
 			$source_id = absint( $sitepress->get_new_post_source_id( $post_id ) );
 		}
 
@@ -64,7 +64,7 @@ class PUM_WPML_Integration {
 
 		static $trid;
 
-		if ( ! isset( $trid ) ) {
+		if ( ! isset( $trid )  && ! empty( $sitepress ) && method_exists( $sitepress, 'get_element_trid' )) {
 			$trid = absint( $sitepress->get_element_trid( $post_id, 'post_popup' ) );
 		}
 
@@ -212,7 +212,9 @@ class PUM_WPML_Integration {
 	public static function popup_get_conditions( $conditions, $post_id ) {
 		if ( self::is_new_popup_translation( $post_id ) ) {
 			remove_filter( 'pum_popup_get_conditions', array( __CLASS__, 'popup_get_conditions' ), 10 );
-			$conditions = pum_get_popup_conditions( self::source_id( $post_id ) );
+
+			$popup = pum_popup(  self::source_id( $post_id ) );
+			$conditions = $popup->get_conditions();
 
 			$conditions = self::remap_conditions( $conditions, $post_id );
 

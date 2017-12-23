@@ -16,7 +16,7 @@ function popmake_popup_theme_overlay_meta_box_field_background( $popup_theme_id 
 			<label for="popup_theme_overlay_background_color"><?php _e( 'Color', 'popup-maker' );?></label>
 		</th>
 		<td>
-			<input type="text" name="popup_theme_overlay_background_color" id="popup_theme_overlay_background_color" value="<?php esc_attr_e(popmake_get_popup_theme_overlay( $popup_theme_id, 'background_color'))?>" class="color-picker background-color" />
+			<input type="text" name="popup_theme_overlay_background_color" id="popup_theme_overlay_background_color" value="<?php esc_attr_e(popmake_get_popup_theme_overlay( $popup_theme_id, 'background_color'))?>" class="pum-color-picker background-color" />
 			<p class="description"><?php _e( 'Choose the overlay color.', 'popup-maker' )?></p>
 		</td>
 	</tr>
@@ -29,7 +29,7 @@ function popmake_popup_theme_overlay_meta_box_field_background( $popup_theme_id 
 				value="<?php esc_attr_e(popmake_get_popup_theme_overlay( $popup_theme_id, 'background_opacity' ))?>"
 				name="popup_theme_overlay_background_opacity"
 				id="popup_theme_overlay_background_opacity"
-				class="popmake-range-manual"
+				class="pum-range-manual popmake-range-manual"
 				step="1"
 				min="0"
 				max="100"
@@ -44,7 +44,7 @@ add_action('popmake_popup_theme_overlay_meta_box_fields', 'popmake_popup_theme_o
 
 function popmake_popup_theme_overlay_meta_box_field_atb_extension_promotion( $popup_theme_id ) { ?>
 	<tr>
-		<th colspan="2" class="popmake-upgrade-tip">
+		<th colspan="2" class="pum-upgrade-tip">
 			<img style="" src="<?php echo POPMAKE_URL;?>/assets/images/upsell-icon-advanted-theme-builder.png"/> <?php _e( 'Want to use background images?', 'popup-maker' ); ?> <a href="https://wppopupmaker.com/extensions/advanced-theme-builder/?utm_source=plugin-theme-editor&utm_medium=text-link&utm_campaign=Upsell&utm_content=overlay-settings" target="_blank"><?php _e( 'Check out Advanced Theme Builder!', 'popup-maker' ); ?></a>.
 		</th>
 	</tr><?php

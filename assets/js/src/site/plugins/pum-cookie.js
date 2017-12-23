@@ -22,10 +22,9 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
             }
 
             // Write
-
             if (arguments.length > 1) {
                 attributes = $.extend({
-                    path: '/'
+                    path: pum_vars.home_url
                 }, api.defaults, attributes);
 
                 switch (typeof attributes.expires) {

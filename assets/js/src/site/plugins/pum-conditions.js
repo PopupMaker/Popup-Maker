@@ -16,7 +16,7 @@
                 group,
                 condition;
 
-            if (settings.mobile_disabled !== undefined && settings.mobile_disabled) {
+            if (settings.disable_on_mobile) {
                 if (typeof md !== 'object') {
                     md = new MobileDetect(window.navigator.userAgent);
                 }
@@ -26,7 +26,7 @@
                 }
             }
 
-            if (settings.tablet_disabled !== undefined && settings.tablet_disabled) {
+            if (settings.disable_on_tablet) {
                 if (typeof md !== 'object') {
                     md = new MobileDetect(window.navigator.userAgent);
                 }
@@ -36,7 +36,7 @@
                 }
             }
 
-            if (settings.conditions !== undefined && settings.conditions.length) {
+            if (settings.conditions.length) {
 
                 // All Groups Must Return True. Break if any is false and set loadable to false.
                 for (g = 0; settings.conditions.length > g; g++) {

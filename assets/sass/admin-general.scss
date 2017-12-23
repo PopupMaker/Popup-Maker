@@ -1,0 +1,74 @@
+/*!******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
+
+$plugin_prefix: 'pum';
+$custom_select2_selector: 'pumselect2';
+$tab-color: #E4E4E4;
+
+// Shared modules.
+@import 'modules/general';
+@import 'modules/fields';
+@import 'modules/select2';
+@import 'modules/tabs';
+@import 'modules/modal';
+
+@import 'partials/admin/mixins';
+@import 'partials/admin/fields';
+@import 'partials/admin/marketing';
+@import 'partials/admin/deprecated';
+
+.pum-tabbed-form {
+  .pum-field {
+    position: relative;
+    margin: 0 0 24px;
+
+    label,
+    .pum-desc {
+      display: block;
+    }
+
+    label {
+      margin-bottom: 4px;
+    }
+
+    .pum-desc {
+      margin-top: 4px;
+      margin-bottom: 0;
+    }
+  }
+
+  .pumselect2-container--default {
+    width: 100% !important;
+  }
+
+  .pum-field-select2 select {
+    width: 100%;
+  }
+
+  label {
+    display: block;
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+
+  .pum-field.checkbox {
+    label {
+
+      &.pum-desc {
+        display: inline;
+        font-weight: inherit;
+        font-size: inherit;
+        margin: 0 0 1em;
+      }
+    }
+  }
+
+  .pum-required {
+    label::after {
+      color: #a00;
+      content: "*";
+      margin-left: 5px;
+    }
+  }
+}

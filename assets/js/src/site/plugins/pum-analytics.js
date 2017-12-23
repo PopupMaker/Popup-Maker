@@ -4,33 +4,32 @@
  */
 
 var PUM_Analytics;
-(function ($, document, undefined) {
+(function ($) {
     "use strict";
 
     $.fn.popmake.last_open_trigger = null;
     $.fn.popmake.last_close_trigger = null;
     $.fn.popmake.conversion_trigger = null;
 
-    var rest_enabled = typeof pum_vars.restapi !== 'undefined' && pum_vars.restapi ? true : false;
+    var rest_enabled = !!(typeof pum_vars.restapi !== 'undefined' && pum_vars.restapi);
 
     PUM_Analytics = {
-        beacon: function (opts) {
+        beacon: function (data, callback) {
             var beacon = new Image(),
-                url = rest_enabled ? pum_vars.restapi : pum_vars.ajaxurl;
-
-            opts = $.extend(true, {
-                route: '/analytics/open',
-                type: 'open',
-                data: {
-                    pid: null,
-                    _cache: (+(new Date()))
-                },
-                callback: function () {}
-            }, opts);
+                url = rest_enabled ? pum_vars.restapi : pum_vars.ajaxurl,
+                opts   = {
+                    route: '/analytics/',
+                    data: $.extend({
+                        event: 'open',
+                        pid: null,
+                        _cache: (+(new Date()))
+                    }, data),
+                    callback: typeof callback === 'function' ? callback : function () {
+                    }
+                };
 
             if (!rest_enabled) {
                 opts.data.action = 'pum_analytics';
-                opts.data.type = opts.type;
             } else {
                 url += opts.route;
             }
@@ -46,7 +45,7 @@ var PUM_Analytics;
         }
     };
 
-    if (pum_vars.disable_open_tracking === undefined || !pum_vars.disable_open_tracking) {
+    if (typeof pum_vars.disable_tracking === 'undefined' || !pum_vars.disable_tracking) {
         // Only popups from the editor should fire analytics events.
         $(document)
         /**
@@ -59,8 +58,8 @@ var PUM_Analytics;
                     };
 
                 if (data.pid > 0 && !$('body').hasClass('single-popup')) {
-                    PUM_Analytics.beacon({data: data});
+                    PUM_Analytics.beacon(data);
                 }
             });
     }
-}(jQuery, document));
+}(jQuery));

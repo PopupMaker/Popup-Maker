@@ -1,18 +1,59 @@
 <?php
-/**
- * Popup Functions
- *
- * @package        POPMAKE
- * @subpackage  Functions
- * @copyright   Copyright (c) 2014, Daniel Iser
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since 1.0
- */
+/*******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+/**
+ * Return the popup id.
+ *
+ * @param int $popup_id
+ *
+ * @return int
+ */
+function pum_get_popup_id( $popup_id = 0 ) {
+	if ( ! empty( $popup_id ) && is_numeric( $popup_id ) ) {
+		$_popup_id = $popup_id;
+	} elseif ( is_object( PUM_Site_Popups::$current ) && is_numeric( PUM_Site_Popups::$current->ID ) ) {
+		$_popup_id = PUM_Site_Popups::$current->ID;
+	} else {
+		$_popup_id = 0;
+	}
+
+	return (int) apply_filters( 'pum_get_popup_id', (int) $_popup_id, $popup_id );
+}
+
+/**
+ * Get a popup model instance.
+ *
+ * @since 1.7.0
+ *
+ * @param int $popup_id
+ * @param bool $autoload Autoload post meta.
+ * @param bool $force Clears cached instance and refreshes.
+ *
+ * @return PUM_Model_Popup|false
+ */
+function pum_get_popup( $popup_id = 0, $autoload = true, $force = false ) {
+	return PUM_Model_Popup::instance( pum_get_popup_id( $popup_id ), $autoload, $force );
+}
+
+/**
+ * Checks if the $popup is valid.
+ *
+ * @param mixed|PUM_Model_Popup $popup
+ *
+ * @return bool
+ */
+function pum_is_popup( $popup ) {
+	return is_object( $popup ) && is_numeric( $popup->ID ) && $popup->is_valid();
+}
+
+#region Deprecated & Soon to Be Deprecated Functions
 
 /**
  * @param $popup_id
@@ -818,3 +859,6 @@ function get_all_popups() {
 
 	return $query;
 }
+
+
+#endregion

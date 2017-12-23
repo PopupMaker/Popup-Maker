@@ -56,7 +56,7 @@ var PUM;
     "use strict";
 
     function isInt(value) {
-        return !isNaN(value) && parseInt(Number(value)) == value && !isNaN(parseInt(value, 10));
+        return !isNaN(value) && parseInt(Number(value)) === parseInt(value) && !isNaN(parseInt(value, 10));
     }
 
     function Selector_Cache() {
@@ -141,7 +141,7 @@ var PUM;
             var settings = PUM.getSettings(el),
                 value = string_to_ref(settings, key);
 
-            return typeof value !== 'undefined' ? value : ( _default !== undefined ? _default : null );
+            return typeof value !== 'undefined' ? value : (_default !== undefined ? _default : null);
         },
         checkConditions: function (el) {
             return PUM.getPopup(el).popmake('checkConditions');
@@ -191,16 +191,17 @@ var PUM;
 
     // Defines the core $.popmake methods.
     $.fn.popmake.methods = {
-        init: function (options) {
+        init: function () {
             return this.each(function () {
                 var $popup = PUM.getPopup(this),
-                    settings = $.extend(true, {}, $.fn.popmake.defaults, $popup.data('popmake'), options);
+                    settings = $popup.popmake('getSettings');
 
                 if (settings.theme_id <= 0) {
-                    settings.theme_id = popmake_default_theme;
+                    settings.theme_id = pum_vars.default_theme;
                 }
 
-                if (settings.meta.display.disable_reposition === undefined) {
+                // TODO Move this to be a single global $(window) function that looks at any open popup.
+                if (settings.disable_reposition === undefined || !settings.disable_reposition) {
                     $(window).on('resize', function () {
                         if ($popup.hasClass('pum-active') || $popup.find('.popmake.active').length) {
                             $.fn.popmake.utilities.throttle(setTimeout(function () {
@@ -222,22 +223,23 @@ var PUM;
             });
         },
         getOverlay: function () {
-            return $(this);
+            return PUM.getPopup(this);
         },
         getContainer: function () {
-            return $(this).find('.pum-container');
+            return PUM.getPopup(this).find('.pum-container');
         },
         getTitle: function () {
-            return $(this).find('.pum-title') || null;
+            return PUM.getPopup(this).find('.pum-title') || null;
         },
         getContent: function () {
-            return $(this).find('.pum-content') || null;
+            return PUM.getPopup(this).find('.pum-content') || null;
         },
         getClose: function () {
-            return $(this).find('.pum-content + .pum-close') || null;
+            return PUM.getPopup(this).find('.pum-content + .pum-close') || null;
         },
         getSettings: function () {
-            return $(this).data('popmake');
+            var $popup = PUM.getPopup(this);
+            return $.extend(true, {}, $.fn.popmake.defaults, $popup.data('popmake') || {}, pum_vars.popups[$popup.attr('id')] || {});
         },
         state: function (test) {
             var $popup = PUM.getPopup(this);
@@ -258,17 +260,11 @@ var PUM;
                 settings = $popup.popmake('getSettings'),
                 $html = $('html');
 
-            $popup
-                .trigger('pumBeforeOpen');
+            $popup.trigger('pumBeforeOpen');
 
-
-            // TODO: Remove this after testing for its neccessity.
-            /*
-             $container
-             .css({visibility: "visible"})
-             .hide();
+            /**
+             * Allow for preventing popups from opening.
              */
-
             if ($popup.hasClass('preventOpen') || $container.hasClass('preventOpen')) {
                 console.log('prevented');
                 $popup
@@ -279,25 +275,37 @@ var PUM;
                 return this;
             }
 
-            if (!settings.meta.display.stackable) {
+            /**
+             * If popup isn't stackable close all others.
+             */
+            if (!settings.stackable) {
                 $popup.popmake('close_all');
             }
 
             $popup.addClass('pum-active');
 
-            if (settings.meta.close.button_delay > 0) {
+            /**
+             * Hide the close button if delay is active.
+             */
+            if (settings.close_button_delay > 0) {
                 $close.fadeOut(0);
             }
 
             $html.addClass('pum-open');
 
-            if (settings.meta.display.overlay_disabled) {
+            /**
+             * Check for and disable the overlay.
+             */
+            if (settings.overlay_disabled) {
                 $html.addClass('pum-open-overlay-disabled');
             } else {
                 $html.addClass('pum-open-overlay');
             }
 
-            if (settings.meta.display.position_fixed !== undefined && settings.meta.display.position_fixed) {
+            /**
+             * Set position fixed when active.
+             */
+            if (settings.position_fixed) {
                 $html.addClass('pum-open-fixed');
             } else {
                 $html.addClass('pum-open-scrollable');
@@ -306,14 +314,15 @@ var PUM;
             $popup
                 .popmake('setup_close')
                 .popmake('reposition')
-                // TODO: Remove this.
-                .css({'z-index': settings.meta.display.overlay_zindex || 1999999998})
-                .popmake('animate', settings.meta.display.animation_type, function () {
+                .popmake('animate', settings.animation_type, function () {
 
-                    if (settings.meta.close.button_delay > 0) {
+                    /**
+                     * Fade the close button in after specified delay.
+                     */
+                    if (settings.close_button_delay > 0) {
                         setTimeout(function () {
                             $close.fadeIn();
-                        }, settings.meta.close.button_delay);
+                        }, settings.close_button_delay);
                     }
 
                     $popup.trigger('pumAfterOpen');
@@ -332,17 +341,18 @@ var PUM;
         },
         setup_close: function () {
             var $popup = PUM.getPopup(this),
-                $close = $popup.popmake('getClose')
-                // Add For backward compatiblitiy.
-                    .add($('.popmake-close', $popup).not($popup.popmake('getClose'))),
+                $close = $popup.popmake('getClose'),
                 settings = $popup.popmake('getSettings');
+
+            // Add For non built in close buttons and backward compatibility.
+            $close.add($('.popmake-close, .pum-close', $popup).not($close));
 
             // TODO: Move to a global $(document).on type bind. Possibly look for an inactive class to fail on.
             $close
                 .off('click.pum')
                 .on("click.pum", function (event) {
                     var $this = $(this),
-                        do_default = $this.hasClass('pum-do-default') || ( $this.data('do-default') !== undefined && $this.data('do-default') );
+                        do_default = $this.hasClass('pum-do-default') || ($this.data('do-default') !== undefined && $this.data('do-default'));
 
                     if (!do_default) {
                         event.preventDefault();
@@ -352,23 +362,23 @@ var PUM;
                     $popup.popmake('close');
                 });
 
-            if (settings.meta.close.esc_press || settings.meta.close.f4_press) {
+            if (settings.close_on_esc_press || settings.close_on_f4_press) {
                 // TODO: Move to a global $(document).on type bind. Possibly look for a class to succeed on.
                 $(window)
                     .off('keyup.popmake')
                     .on('keyup.popmake', function (e) {
-                        if (e.keyCode === 27 && settings.meta.close.esc_press) {
+                        if (e.keyCode === 27 && settings.close_on_esc_press) {
                             $.fn.popmake.last_close_trigger = 'ESC Key';
                             $popup.popmake('close');
                         }
-                        if (e.keyCode === 115 && settings.meta.close.f4_press) {
+                        if (e.keyCode === 115 && settings.close_on_f4_press) {
                             $.fn.popmake.last_close_trigger = 'F4 Key';
                             $popup.popmake('close');
                         }
                     });
             }
 
-            if (settings.meta.close.overlay_click) {
+            if (settings.close_on_overlay_click) {
                 // TODO: Move to a global $(document).on type bind. Possibly look for a class to succeed on.
                 $popup
                     .off('click.popmake')
@@ -390,7 +400,9 @@ var PUM;
             return this.each(function () {
                 var $popup = PUM.getPopup(this),
                     $container = $popup.popmake('getContainer'),
-                    $close = $popup.popmake('getClose').add($('.popmake-close', $popup).not($popup.popmake('getClose')));
+                    $close = $popup.popmake('getClose');
+
+                $close.add($('.popmake-close, .pum-close', $popup).not($close));
 
                 $popup.trigger('pumBeforeClose');
 
@@ -409,10 +421,11 @@ var PUM;
                             $popup.fadeOut('fast');
                         }
 
+                        /**
+                         * Clear global event spaces.
+                         */
                         $(window).off('keyup.popmake');
-
                         $popup.off('click.popmake');
-
                         $close.off('click.popmake');
 
                         // Only re-enable scrolling for the document when the last popup has closed.
@@ -466,8 +479,7 @@ var PUM;
             var $popup = PUM.getPopup(this).trigger('pumBeforeReposition'),
                 $container = $popup.popmake('getContainer'),
                 settings = $popup.popmake('getSettings'),
-                display = settings.meta.display,
-                location = display.location,
+                location = settings.location,
                 reposition = {
                     my: "",
                     at: "",
@@ -484,17 +496,17 @@ var PUM;
                 $last_trigger = $();
             }
 
-            if (display.position_from_trigger && $last_trigger.length) {
+            if (settings.position_from_trigger && $last_trigger.length) {
 
                 reposition.of = $last_trigger;
 
                 if (location.indexOf('left') >= 0) {
                     reposition.my += " right";
-                    reposition.at += " left" + (display.position_left !== 0 ? "-" + display.position_left : "");
+                    reposition.at += " left" + (settings.position_left !== 0 ? "-" + settings.position_left : "");
                 }
                 if (location.indexOf('right') >= 0) {
                     reposition.my += " left";
-                    reposition.at += " right" + (display.position_right !== 0 ? "+" + display.position_right : "");
+                    reposition.at += " right" + (settings.position_right !== 0 ? "+" + settings.position_right : "");
                 }
                 if (location.indexOf('center') >= 0) {
                     reposition.my = location === 'center' ? "center" : reposition.my + " center";
@@ -502,19 +514,19 @@ var PUM;
                 }
                 if (location.indexOf('top') >= 0) {
                     reposition.my += " bottom";
-                    reposition.at += " top" + (display.position_top !== 0 ? "-" + display.position_top : "");
+                    reposition.at += " top" + (settings.position_top !== 0 ? "-" + settings.position_top : "");
                 }
                 if (location.indexOf('bottom') >= 0) {
                     reposition.my += " top";
-                    reposition.at += " bottom" + (display.position_bottom !== 0 ? "+" + display.position_bottom : "");
+                    reposition.at += " bottom" + (settings.position_bottom !== 0 ? "+" + settings.position_bottom : "");
                 }
             } else {
                 if (location.indexOf('left') >= 0) {
-                    reposition.my += " left" + (display.position_left !== 0 ? "+" + display.position_left : "");
+                    reposition.my += " left" + (settings.position_left !== 0 ? "+" + settings.position_left : "");
                     reposition.at += " left";
                 }
                 if (location.indexOf('right') >= 0) {
-                    reposition.my += " right" + (display.position_right !== 0 ? "-" + display.position_right : "");
+                    reposition.my += " right" + (settings.position_right !== 0 ? "-" + settings.position_right : "");
                     reposition.at += " right";
                 }
                 if (location.indexOf('center') >= 0) {
@@ -522,11 +534,11 @@ var PUM;
                     reposition.at = location === 'center' ? "center" : reposition.at + " center";
                 }
                 if (location.indexOf('top') >= 0) {
-                    reposition.my += " top" + (display.position_top !== 0 ? "+" + ($('body').hasClass('admin-bar') ? parseInt(display.position_top, 10) + 32 : display.position_top) : "");
+                    reposition.my += " top" + (settings.position_top !== 0 ? "+" + ($('body').hasClass('admin-bar') ? parseInt(settings.position_top, 10) + 32 : settings.position_top) : "");
                     reposition.at += " top";
                 }
                 if (location.indexOf('bottom') >= 0) {
-                    reposition.my += " bottom" + (display.position_bottom !== 0 ? "-" + display.position_bottom : "");
+                    reposition.my += " bottom" + (settings.position_bottom !== 0 ? "-" + settings.position_bottom : "");
                     reposition.at += " bottom";
                 }
             }
@@ -544,22 +556,22 @@ var PUM;
                 $container.css({opacity: 0}).show(0);
             }
 
-            if (display.position_fixed) {
+            if (settings.position_fixed) {
                 $container.addClass('fixed');
             }
 
-            if (settings.meta.display.size === 'custom') {
+            if (settings.size === 'custom') {
                 $container.css({
-                    width: settings.meta.display.custom_width + settings.meta.display.custom_width_unit,
-                    height: settings.meta.display.custom_height_auto ? 'auto' : settings.meta.display.custom_height + settings.meta.display.custom_height_unit
+                    width: settings.custom_width,
+                    height: settings.custom_height_auto ? 'auto' : settings.custom_height
                 });
             } else {
-                if (settings.meta.display.size !== 'auto') {
+                if (settings.size !== 'auto') {
                     $container
                         .addClass('responsive')
                         .css({
-                            minWidth: settings.meta.display.responsive_min_width !== '' ? settings.meta.display.responsive_min_width + settings.meta.display.responsive_min_width_unit : 'auto',
-                            maxWidth: settings.meta.display.responsive_max_width !== '' ? settings.meta.display.responsive_max_width + settings.meta.display.responsive_max_width_unit : 'auto'
+                            minWidth: settings.responsive_min_width !== '' ? settings.responsive_min_width : 'auto',
+                            maxWidth: settings.responsive_max_width !== '' ? settings.responsive_max_width : 'auto'
                         });
                 }
             }
@@ -578,120 +590,6 @@ var PUM;
             if (opacity.container) {
                 $container.css({opacity: opacity.container}).hide(0);
             }
-            return this;
-        },
-        /**
-         * @deprecated 1.3.0
-         *
-         * @param theme
-         * @returns {$.fn.popmake.methods}
-         */
-        retheme: function (theme) {
-            $(this).trigger('popmakeBeforeRetheme');
-            var $popup = PUM.getPopup(this),
-                $container = $popup.popmake('getContainer'),
-                $title = $popup.popmake('getTitle'),
-                $content = $popup.popmake('getContent'),
-                $close = $popup.popmake('getClose'),
-                settings = $popup.popmake('getSettings'),
-                container_inset,
-                close_inset;
-
-            if (theme === undefined) {
-                theme = $.fn.popmake.themes[settings.theme_id];
-                if (theme === undefined) {
-                    theme = $.fn.popmake.themes[1];
-                }
-            }
-
-            container_inset = theme.container.boxshadow_inset === 'yes' ? 'inset ' : '';
-            close_inset = theme.close.boxshadow_inset === 'yes' ? 'inset ' : '';
-
-            $popup.removeAttr('style').css({
-                backgroundColor: $.fn.popmake.utilities.convert_hex(theme.overlay.background_color, theme.overlay.background_opacity),
-                zIndex: settings.meta.display.overlay_zindex || 998
-            });
-            $container.css({
-                padding: theme.container.padding + 'px',
-                backgroundColor: $.fn.popmake.utilities.convert_hex(theme.container.background_color, theme.container.background_opacity),
-                borderStyle: theme.container.border_style,
-                borderColor: theme.container.border_color,
-                borderWidth: theme.container.border_width + 'px',
-                borderRadius: theme.container.border_radius + 'px',
-                boxShadow: container_inset + theme.container.boxshadow_horizontal + 'px ' + theme.container.boxshadow_vertical + 'px ' + theme.container.boxshadow_blur + 'px ' + theme.container.boxshadow_spread + 'px ' + $.fn.popmake.utilities.convert_hex(theme.container.boxshadow_color, theme.container.boxshadow_opacity),
-                zIndex: settings.meta.display.zindex || 999
-            });
-            $title.css({
-                color: theme.title.font_color,
-                lineHeight: theme.title.line_height + 'px',
-                fontSize: theme.title.font_size + 'px',
-                fontFamily: theme.title.font_family,
-                fontWeight: theme.title.font_weight,
-                fontStyle: theme.title.font_style,
-                textAlign: theme.title.text_align,
-                textShadow: theme.title.textshadow_horizontal + 'px ' + theme.title.textshadow_vertical + 'px ' + theme.title.textshadow_blur + 'px ' + $.fn.popmake.utilities.convert_hex(theme.title.textshadow_color, theme.title.textshadow_opacity)
-            });
-            $content.css({
-                color: theme.content.font_color,
-                //fontSize: theme.content.font_size+'px',
-                fontFamily: theme.content.font_family,
-                fontWeight: theme.content.font_weight,
-                fontStyle: theme.content.font_style
-            });
-            $('p, label', $content).css({
-                color: theme.content.font_color,
-                //fontSize: theme.content.font_size+'px',
-                fontFamily: theme.content.font_family
-            });
-            $close.html(theme.close.text).css({
-                padding: theme.close.padding + 'px',
-                height: theme.close.height + 'px',
-                width: theme.close.width + 'px',
-                backgroundColor: $.fn.popmake.utilities.convert_hex(theme.close.background_color, theme.close.background_opacity),
-                color: theme.close.font_color,
-                lineHeight: theme.close.line_height + 'px',
-                fontSize: theme.close.font_size + 'px',
-                fontWeight: theme.close.font_weight,
-                fontStyle: theme.close.font_style,
-                fontFamily: theme.close.font_family,
-                borderStyle: theme.close.border_style,
-                borderColor: theme.close.border_color,
-                borderWidth: theme.close.border_width + 'px',
-                borderRadius: theme.close.border_radius + 'px',
-                boxShadow: close_inset + theme.close.boxshadow_horizontal + 'px ' + theme.close.boxshadow_vertical + 'px ' + theme.close.boxshadow_blur + 'px ' + theme.close.boxshadow_spread + 'px ' + $.fn.popmake.utilities.convert_hex(theme.close.boxshadow_color, theme.close.boxshadow_opacity),
-                textShadow: theme.close.textshadow_horizontal + 'px ' + theme.close.textshadow_vertical + 'px ' + theme.close.textshadow_blur + 'px ' + $.fn.popmake.utilities.convert_hex(theme.close.textshadow_color, theme.close.textshadow_opacity),
-                left: 'auto',
-                right: 'auto',
-                bottom: 'auto',
-                top: 'auto'
-            });
-            switch (theme.close.location) {
-            case "topleft":
-                $close.css({
-                    top: theme.close.position_top + 'px',
-                    left: theme.close.position_left + 'px'
-                });
-                break;
-            case "topright":
-                $close.css({
-                    top: theme.close.position_top + 'px',
-                    right: theme.close.position_right + 'px'
-                });
-                break;
-            case "bottomleft":
-                $close.css({
-                    bottom: theme.close.position_bottom + 'px',
-                    left: theme.close.position_left + 'px'
-                });
-                break;
-            case "bottomright":
-                $close.css({
-                    bottom: theme.close.position_bottom + 'px',
-                    right: theme.close.position_right + 'px'
-                });
-                break;
-            }
-            $popup.trigger('popmakeAfterRetheme', [theme]);
             return this;
         },
         animation_origin: function (origin) {
@@ -916,33 +814,32 @@ var PUM_Accessibility;
  */
 
 var PUM_Analytics;
-(function ($, document, undefined) {
+(function ($) {
     "use strict";
 
     $.fn.popmake.last_open_trigger = null;
     $.fn.popmake.last_close_trigger = null;
     $.fn.popmake.conversion_trigger = null;
 
-    var rest_enabled = typeof pum_vars.restapi !== 'undefined' && pum_vars.restapi ? true : false;
+    var rest_enabled = !!(typeof pum_vars.restapi !== 'undefined' && pum_vars.restapi);
 
     PUM_Analytics = {
-        beacon: function (opts) {
+        beacon: function (data, callback) {
             var beacon = new Image(),
-                url = rest_enabled ? pum_vars.restapi : pum_vars.ajaxurl;
-
-            opts = $.extend(true, {
-                route: '/analytics/open',
-                type: 'open',
-                data: {
-                    pid: null,
-                    _cache: (+(new Date()))
-                },
-                callback: function () {}
-            }, opts);
+                url = rest_enabled ? pum_vars.restapi : pum_vars.ajaxurl,
+                opts   = {
+                    route: '/analytics/',
+                    data: $.extend({
+                        event: 'open',
+                        pid: null,
+                        _cache: (+(new Date()))
+                    }, data),
+                    callback: typeof callback === 'function' ? callback : function () {
+                    }
+                };
 
             if (!rest_enabled) {
                 opts.data.action = 'pum_analytics';
-                opts.data.type = opts.type;
             } else {
                 url += opts.route;
             }
@@ -958,7 +855,7 @@ var PUM_Analytics;
         }
     };
 
-    if (pum_vars.disable_open_tracking === undefined || !pum_vars.disable_open_tracking) {
+    if (typeof pum_vars.disable_tracking === 'undefined' || !pum_vars.disable_tracking) {
         // Only popups from the editor should fire analytics events.
         $(document)
         /**
@@ -971,11 +868,11 @@ var PUM_Analytics;
                     };
 
                 if (data.pid > 0 && !$('body').hasClass('single-popup')) {
-                    PUM_Analytics.beacon({data: data});
+                    PUM_Analytics.beacon(data);
                 }
             });
     }
-}(jQuery, document));
+}(jQuery));
 /**
  * Defines the core $.popmake animations.
  * Version 1.4
@@ -987,7 +884,7 @@ var PUM_Analytics;
         // Method calling logic
         var settings = PUM.getPopup(this).popmake('getSettings');
 
-        if (settings.meta.display.overlay_disabled) {
+        if (settings.overlay_disabled) {
             return $.fn.popmake.overlay_animations.none.apply(this, [duration, callback]);
         }
 
@@ -1033,8 +930,8 @@ var PUM_Analytics;
             var $popup = PUM.getPopup(this).show(0).css({opacity: 0}),
                 $container = $popup.popmake('getContainer').show(0).css({opacity: 0}),
                 settings = $popup.popmake('getSettings'),
-                speed = settings.meta.display.animation_speed / 2,
-                start = $popup.popmake('animation_origin', settings.meta.display.animation_origin);
+                speed = settings.animation_speed / 2,
+                start = $popup.popmake('animation_origin', settings.animation_origin);
 
             $container
                 .position(start)
@@ -1060,7 +957,7 @@ var PUM_Analytics;
             var $popup = PUM.getPopup(this),
                 $container = $popup.popmake('getContainer'),
                 settings = $popup.popmake('getSettings'),
-                speed = settings.meta.display.animation_speed / 2;
+                speed = settings.animation_speed / 2;
 
             $container
                 .show(0)
@@ -1082,8 +979,8 @@ var PUM_Analytics;
             var $popup = PUM.getPopup(this).show(0).css({opacity: 0}),
                 $container = $popup.popmake('getContainer').show(0).css({opacity: 0}),
                 settings = $popup.popmake('getSettings'),
-                speed = settings.meta.display.animation_speed / 2,
-                start = $popup.popmake('animation_origin', settings.meta.display.animation_origin);
+                speed = settings.animation_speed / 2,
+                start = $popup.popmake('animation_origin', settings.animation_origin);
 
             $container.position(start);
 
@@ -1250,7 +1147,7 @@ var PUM_Analytics;
                 group,
                 condition;
 
-            if (settings.mobile_disabled !== undefined && settings.mobile_disabled) {
+            if (settings.disable_on_mobile) {
                 if (typeof md !== 'object') {
                     md = new MobileDetect(window.navigator.userAgent);
                 }
@@ -1260,7 +1157,7 @@ var PUM_Analytics;
                 }
             }
 
-            if (settings.tablet_disabled !== undefined && settings.tablet_disabled) {
+            if (settings.disable_on_tablet) {
                 if (typeof md !== 'object') {
                     md = new MobileDetect(window.navigator.userAgent);
                 }
@@ -1270,7 +1167,7 @@ var PUM_Analytics;
                 }
             }
 
-            if (settings.conditions !== undefined && settings.conditions.length) {
+            if (settings.conditions.length) {
 
                 // All Groups Must Return True. Break if any is false and set loadable to false.
                 for (g = 0; settings.conditions.length > g; g++) {
@@ -1365,10 +1262,9 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
             }
 
             // Write
-
             if (arguments.length > 1) {
                 attributes = $.extend({
-                    path: '/'
+                    path: pum_vars.home_url
                 }, api.defaults, attributes);
 
                 switch (typeof attributes.expires) {
@@ -1537,7 +1433,7 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
                 settings.name,
                 true,
                 settings.session ? null : settings.time,
-                settings.path ? '/' : null
+                settings.path ? pum_vars.home_url || '/' : null
             );
             pum.hooks.doAction('popmake.setCookie', settings);
         },
@@ -1545,21 +1441,21 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
             var i,
                 ret = false;
 
-            if (settings.cookie === undefined || settings.cookie.name === undefined || settings.cookie.name === null) {
+            if (settings.cookie_name === undefined || settings.cookie_name === null || settings.cookie_name === '') {
                 return false;
             }
 
-            switch (typeof settings.cookie.name) {
+            switch (typeof settings.cookie_name) {
             case 'object':
             case 'array':
-                for (i = 0; settings.cookie.name.length > i; i += 1) {
-                    if ($.pm_cookie(settings.cookie.name[i]) !== undefined) {
+                for (i = 0; settings.cookie_name.length > i; i += 1) {
+                    if ($.pm_cookie(settings.cookie_name[i]) !== undefined) {
                         ret = true;
                     }
                 }
                 break;
             case 'string':
-                if ($.pm_cookie(settings.cookie.name) !== undefined) {
+                if ($.pm_cookie(settings.cookie_name) !== undefined) {
                     ret = true;
                 }
                 break;
@@ -1614,11 +1510,11 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
         .on('pumInit', '.pum', function () {
             var $popup   = PUM.getPopup(this),
                 settings = $popup.popmake('getSettings'),
-                cookies  = settings.cookies,
+                cookies  = settings.cookies || [],
                 cookie   = null,
                 i;
 
-            if (cookies !== undefined && cookies.length) {
+            if (cookies.length) {
                 for (i = 0; cookies.length > i; i += 1) {
                     cookie = cookies[i];
                     $popup.popmake('addCookie', cookie.event, cookie.settings);
@@ -1749,41 +1645,42 @@ var pum_debug_mode = false,
                 console.log(vars.label_selector, trigger_selector);
             },
             trigger: function ($popup, trigger) {
+                if (typeof vars.triggers[trigger.type] === 'string') {
 
-                console.groupCollapsed(vars.triggers[trigger.type].name);
+                    console.groupCollapsed(vars.triggers[trigger.type]);
 
-                switch (trigger.type) {
+                    switch (trigger.type) {
                     case 'auto_open':
                         console.log(vars.label_delay, trigger.settings.delay);
-                        console.log(vars.label_cookie, trigger.settings.cookie.name);
+                        console.log(vars.label_cookie, trigger.settings.cookie_name);
                         break;
                     case 'click_open':
                         pum_debug.click_trigger($popup, trigger.settings);
-                        console.log(vars.label_cookie, trigger.settings.cookie.name);
+                        console.log(vars.label_cookie, trigger.settings.cookie_name);
                         break;
+                    }
+
+                    $(document).trigger('pum_debug_render_trigger', $popup, trigger);
+
+                    console.groupEnd();
                 }
-
-                $(document).trigger('pum_debug_render_trigger', $popup, trigger);
-
-                console.groupEnd();
             },
             cookie: function ($popup, cookie) {
-                if (typeof vars.cookies[cookie.event] === 'object') {
-                    console.groupCollapsed(vars.cookies[cookie.event].name);
+                if (typeof vars.cookies[cookie.event] === 'string') {
+                    console.groupCollapsed(vars.cookies[cookie.event]);
 
                     switch (cookie.event) {
                         case 'on_popup_open':
                         case 'on_popup_close':
                         case 'manual':
                         case 'ninja_form_success':
-                            console.log(vars.label_settings, pum_debug.odump(cookie.settings));
+                            console.log(vars.label_cookie, pum_debug.odump(cookie.settings));
                             break;
                     }
 
                     $(document).trigger('pum_debug_render_trigger', $popup, cookie);
 
                     console.groupEnd();
-
                 }
             }
         };
@@ -1792,6 +1689,9 @@ var pum_debug_mode = false,
             .on('pumInit', '.pum', function () {
                 var $popup = PUM.getPopup($(this)),
                     settings = $popup.popmake('getSettings'),
+                    triggers = settings.triggers || [],
+                    cookies = settings.cookies || [],
+                    conditions = settings.conditions || [],
                     i = 0;
 
                 if (!inited) {
@@ -1805,27 +1705,27 @@ var pum_debug_mode = false,
                 console.log(vars.theme_id, settings.theme_id);
 
                 // Triggers
-                if (settings.triggers !== undefined && settings.triggers.length) {
+                if (triggers.length) {
                     console.groupCollapsed(vars.label_triggers);
-                    for (i = 0; settings.triggers.length > i; i++) {
-                        pum_debug.trigger($popup, settings.triggers[i]);
+                    for (i = 0; triggers.length > i; i++) {
+                        pum_debug.trigger($popup, triggers[i]);
                     }
                     console.groupEnd();
                 }
 
                 // Cookies
-                if (settings.cookies !== undefined && settings.cookies.length) {
+                if (cookies.length) {
                     console.groupCollapsed(vars.label_cookies);
-                    for (i = 0; settings.cookies.length > i; i += 1) {
-                        pum_debug.cookie($popup, settings.cookies[i]);
+                    for (i = 0; cookies.length > i; i += 1) {
+                        pum_debug.cookie($popup, cookies[i]);
                     }
                     console.groupEnd();
                 }
 
                 // Conditions
-                if (settings.conditions !== undefined && settings.conditions.length) {
+                if (conditions.length) {
                     console.groupCollapsed(vars.label_conditions);
-                    console.log(settings.conditions);
+                    console.log(conditions);
                     console.groupEnd();
                 }
 
@@ -1833,30 +1733,16 @@ var pum_debug_mode = false,
 
 
                 // Mobile Disabled.
-                console.log(vars.label_mobile_disabled, settings.mobile_disabled !== null);
+                console.log(vars.label_mobile_disabled, settings.disable_on_mobile !== false);
 
                 // Tablet Disabled.
-                console.log(vars.label_tablet_disabled, settings.tablet_disabled !== null);
+                console.log(vars.label_tablet_disabled, settings.disable_on_tablet !== false);
 
-                // Display Settings.
-                console.log(vars.label_display_settings, pum_debug.odump(settings.meta.display));
-
-                // Display Settings.
-                console.log(vars.label_close_settings, pum_debug.odump(settings.meta.close));
+                // Settings.
+                console.log(vars.label_display_settings, pum_debug.odump(settings));
 
                 // Trigger to add more debug info from extensions.
                 $popup.trigger('pum_debug_popup_settings');
-
-                var cleaned_meta = pum.hooks.applyFilters('pum_debug.popup_settings.cleaned_meta', pum_debug.odump(settings.meta), $popup);
-
-                delete(cleaned_meta.display);
-                delete(cleaned_meta.close);
-                delete(cleaned_meta.click_open);
-
-                if (cleaned_meta.length) {
-                    // Meta & Other Settings
-                    console.log('Meta: ', cleaned_meta);
-                }
 
                 console.groupEnd();
 
@@ -1865,12 +1751,11 @@ var pum_debug_mode = false,
             })
             .on('pumBeforeOpen', '.pum', function () {
                 var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings'),
                     $last_trigger = $.fn.popmake.last_open_trigger;
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_before_open);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumBeforeOpen'));
 
                 try {
                     $last_trigger = $($.fn.popmake.last_open_trigger);
@@ -1888,93 +1773,84 @@ var pum_debug_mode = false,
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_open_prevented);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumOpenPrevented'));
 
                 console.groupEnd();
             })
             .on('pumAfterOpen', '.pum', function () {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings');
+                var $popup = PUM.getPopup($(this));
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_after_open);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumAfterOpen'));
 
                 console.groupEnd();
             })
             .on('pumSetupClose', '.pum', function () {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings');
+                var $popup = PUM.getPopup($(this));
 
                 pum_debug.popup_event_header($popup);
-                console.groupCollapsed(vars.label_event_setup_close);
+
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumSetupClose'));
 
                 console.groupEnd();
             })
             .on('pumClosePrevented', '.pum', function () {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings');
+                var $popup = PUM.getPopup($(this));
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_close_prevented);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumClosePrevented'));
 
                 console.groupEnd();
             })
             .on('pumBeforeClose', '.pum', function () {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings');
+                var $popup = PUM.getPopup($(this));
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_before_close);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumBeforeClose'));
 
                 console.groupEnd();
             })
             .on('pumAfterClose', '.pum', function () {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings');
+                var $popup = PUM.getPopup($(this));
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_after_close);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumAfterClose'));
 
                 console.groupEnd();
             })
             .on('pumBeforeReposition', '.pum', function () {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings');
+                var $popup = PUM.getPopup($(this));
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_before_reposition);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumBeforeReposition'));
 
                 console.groupEnd();
             })
             .on('pumAfterReposition', '.pum', function () {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings');
+                var $popup = PUM.getPopup($(this));
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_after_reposition);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumAfterReposition'));
 
                 console.groupEnd();
             })
             .on('pumCheckingCondition', '.pum', function (event, result, condition) {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings');
+                var $popup = PUM.getPopup($(this));
 
                 pum_debug.popup_event_header($popup);
 
-                console.groupCollapsed(vars.label_event_checking_condition);
+                console.groupCollapsed(vars.label_event.replace('%s', 'pumCheckingCondition'));
 
                 console.log(( condition.not_operand ? '(!) ' : '' ) + condition.target + ': ' + result, condition);
 
                 console.groupEnd();
             });
-
-
     }
 
 }(jQuery));
@@ -1986,37 +1862,80 @@ var pum_debug_mode = false,
     "use strict";
 
     $.fn.popmake.defaults = {
+        id: null,
+        slug: "",
+        theme_id: null,
+        cookies: [],
+        triggers: [],
+        conditions: [],
+        mobile_disabled: null,
+        tablet_disabled: null,
+        custom_height_auto: false,
+        scrollable_content: false,
+        position_from_trigger: false,
+        position_fixed: false,
+        overlay_disabled: false,
+        stackable: false,
+        disable_reposition: false,
+        close_on_overlay_click: false,
+        close_on_esc_press: false,
+        close_on_f4_press: false,
+        disable_on_mobile: false,
+        disable_on_tablet: false,
+        size: "medium",
+        responsive_min_width: "0%",
+        responsive_max_width: "100%",
+        custom_width: "640px",
+        custom_height: "380px",
+        animation_type: "fade",
+        animation_speed: "350",
+        animation_origin: "center top",
+        location: "center top",
+        position_top: "100",
+        position_bottom: "0",
+        position_left: "0",
+        position_right: "0",
+        zindex: "1999999999",
+        close_button_delay: "0",
+        // TODO Remove these once extensions have all been updated.
         meta: {
             display: {
-                stackable: 0,
-                overlay_disabled: 0,
-                size: 'medium',
-                responsive_max_width: '',
+                stackable: false,
+                overlay_disabled: false,
+                size: "medium",
+                responsive_max_width: "100",
                 responsive_max_width_unit: '%',
-                responsive_min_width: '',
+                responsive_min_width: "0",
                 responsive_min_width_unit: '%',
-                custom_width: '',
-                custom_width_unit: '%',
-                custom_height: '',
-                custom_height_unit: 'em',
-                custom_height_auto: 0,
-                location: 'center top',
+                custom_width: "640",
+                custom_width_unit: 'px',
+                custom_height: "380",
+                custom_height_unit: 'px',
+                custom_height_auto: false,
+                location: "center top",
                 position_top: 100,
                 position_left: 0,
                 position_bottom: 0,
                 position_right: 0,
-                position_fixed: 0,
+                position_fixed: false,
                 animation_type: 'fade',
                 animation_speed: 350,
-                animation_origin: 'center top'
+                animation_origin: 'center top',
+                scrollable_content: false,
+                disable_reposition: false,
+                position_from_trigger: false,
+                overlay_zindex: false,
+                zindex: "1999999999"
             },
             close: {
-                overlay_click: 0,
-                esc_press: 0,
-                f4_press: 0
-            }
+                overlay_click: false,
+                esc_press: false,
+                f4_press: false,
+                text: "",
+                button_delay: 0
+            },
+            click_open: []
         },
-        // TODO Remove these once extensions have all been updated.
         container: {
             active_class: 'active',
             attr: {
@@ -2398,7 +2317,7 @@ var pum_debug_mode = false,
         })
         /** Gravity Forms Support */
         .on('gform_confirmation_loaded', function (event, form_id) {
-            var $form    = $('#gforms_confirmation_message_' + form_id),
+            var $form    = $('#gform_confirmation_wrapper_' + form_id + ',#gforms_confirmation_message_' + form_id),
                 settings = gFormSettings[form_id] || false;
 
             window.PUM.forms.success($form, settings);
@@ -2525,11 +2444,11 @@ var pum_debug_mode = false,
         .on('pumInit', '.pum', function () {
             var $popup = PUM.getPopup(this),
                 settings = $popup.popmake('getSettings'),
-                triggers = settings.triggers,
+                triggers = settings.triggers || [],
                 trigger = null,
                 i;
 
-            if (triggers !== undefined && triggers.length) {
+            if (triggers.length) {
                 for (i = 0; triggers.length > i; i += 1) {
                     trigger = triggers[i];
                     $popup.popmake('addTrigger', trigger.type, trigger.settings);
@@ -2680,7 +2599,7 @@ var pum_debug_mode = false,
                             return fail;
                         }
                         return new Date(match[1], parseInt(match[3], 10) - 1, match[5],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     case '.':
                         // YYYY.M.D is not parsed by strtotime()
                         return fail;
@@ -2690,7 +2609,7 @@ var pum_debug_mode = false,
                             return fail;
                         }
                         return new Date(match[1], parseInt(match[3], 10) - 1, match[5],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     }
                 } else if (match[5] > 1901) {
                     switch (match[2]) {
@@ -2700,21 +2619,21 @@ var pum_debug_mode = false,
                             return fail;
                         }
                         return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     case '.':
                         // D.M.YYYY
                         if (match[3] > 12 || match[1] > 31) {
                             return fail;
                         }
                         return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     case '/':
                         // M/D/YYYY
                         if (match[1] > 12 || match[3] > 31) {
                             return fail;
                         }
                         return new Date(match[5], parseInt(match[1], 10) - 1, match[3],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     }
                 } else {
                     switch (match[2]) {
@@ -2725,7 +2644,7 @@ var pum_debug_mode = false,
                         }
                         year = match[1] >= 0 && match[1] <= 38 ? +match[1] + 2000 : match[1];
                         return new Date(year, parseInt(match[3], 10) - 1, match[5],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     case '.':
                         // D.M.YY or H.MM.SS
                         if (match[5] >= 70) { // D.M.YY
@@ -2733,7 +2652,7 @@ var pum_debug_mode = false,
                                 return fail;
                             }
                             return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
-                                    match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                         }
                         if (match[5] < 60 && !match[6]) { // H.MM.SS
                             if (match[1] > 23 || match[3] > 59) {
@@ -2741,7 +2660,7 @@ var pum_debug_mode = false,
                             }
                             today = new Date();
                             return new Date(today.getFullYear(), today.getMonth(), today.getDate(),
-                                    match[1] || 0, match[3] || 0, match[5] || 0, match[9] || 0) / 1000;
+                                match[1] || 0, match[3] || 0, match[5] || 0, match[9] || 0) / 1000;
                         }
                         return fail; // invalid format, cannot be parsed
                     case '/':
@@ -2751,7 +2670,7 @@ var pum_debug_mode = false,
                         }
                         year = match[5] >= 0 && match[5] <= 38 ? +match[5] + 2000 : match[5];
                         return new Date(year, parseInt(match[1], 10) - 1, match[3],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     case ':':
                         // HH:MM:SS
                         if (match[1] > 23 || match[3] > 59 || match[5] > 59) {
@@ -2759,7 +2678,7 @@ var pum_debug_mode = false,
                         }
                         today = new Date();
                         return new Date(today.getFullYear(), today.getMonth(), today.getDate(),
-                                match[1] || 0, match[3] || 0, match[5] || 0) / 1000;
+                            match[1] || 0, match[3] || 0, match[5] || 0) / 1000;
                     }
                 }
             }
@@ -2849,52 +2768,52 @@ var pum_debug_mode = false,
             return (date.getTime() / 1000);
         },
         serializeObject: function (options) {
-        $.extend({}, options);
+            $.extend({}, options);
 
-        var values = {},
-            settings = $.extend(true, {
-                include: [],
-                exclude: [],
-                includeByClass: ''
-            }, options);
+            var values = {},
+                settings = $.extend(true, {
+                    include: [],
+                    exclude: [],
+                    includeByClass: ''
+                }, options);
 
-        this.find(':input').each(function () {
+            this.find(':input').each(function () {
 
-            var parsedName;
+                var parsedName;
 
-            // Apply simple checks and filters
-            if (!this.name || this.disabled ||
-                isInArray(settings.exclude, this.name) ||
-                (settings.include.length && !isInArray(settings.include, this.name)) ||
-                this.className.indexOf(settings.includeByClass) === -1) {
-                return;
-            }
-
-            // Parse complex names
-            // JS RegExp doesn't support "positive look behind" :( that's why so weird parsing is used
-            parsedName = this.name.replace(rName, '[$1').split('[');
-            if (!parsedName[0]) {
-                return;
-            }
-
-            if (this.checked ||
-                isInArray(inputTypes, this.type) ||
-                isInArray(inputNodes, this.nodeName.toLowerCase())) {
-
-                // Simulate control with a complex name (i.e. `some[]`)
-                // as it handled in the same way as Checkboxes should
-                if (this.type === 'checkbox') {
-                    parsedName.push('');
+                // Apply simple checks and filters
+                if (!this.name || this.disabled ||
+                    isInArray(settings.exclude, this.name) ||
+                    (settings.include.length && !isInArray(settings.include, this.name)) ||
+                    this.className.indexOf(settings.includeByClass) === -1) {
+                    return;
                 }
 
-                // jQuery.val() is used to simplify of getting values
-                // from the custom controls (which follow jQuery .val() API) and Multiple Select
-                storeValue(values, parsedName, $(this).val());
-            }
-        });
+                // Parse complex names
+                // JS RegExp doesn't support "positive look behind" :( that's why so weird parsing is used
+                parsedName = this.name.replace(rName, '[$1').split('[');
+                if (!parsedName[0]) {
+                    return;
+                }
 
-        return values;
-    }
+                if (this.checked ||
+                    isInArray(inputTypes, this.type) ||
+                    isInArray(inputNodes, this.nodeName.toLowerCase())) {
+
+                    // Simulate control with a complex name (i.e. `some[]`)
+                    // as it handled in the same way as Checkboxes should
+                    if (this.type === 'checkbox') {
+                        parsedName.push('');
+                    }
+
+                    // jQuery.val() is used to simplify of getting values
+                    // from the custom controls (which follow jQuery .val() API) and Multiple Select
+                    storeValue(values, parsedName, $(this).val());
+                }
+            });
+
+            return values;
+        }
     };
 
     $.fn.pumSerializeObject = $.fn.popmake.utilities.serializeObject;
@@ -2905,17 +2824,17 @@ var pum_debug_mode = false,
 }(jQuery, document));
 /**
  * Initialize Popup Maker.
- * Version 1.4
+ * Version 1.7
  */
 (function ($, document, undefined) {
     "use strict";
     // Defines the current version.
-    $.fn.popmake.version = 1.4;
+    $.fn.popmake.version = 1.7;
 
     // Stores the last open popup.
     $.fn.popmake.last_open_popup = null;
 
     $(document).ready(function () {
-        $('.popmake').popmake();
+        $('.pum').popmake();
     });
 }(jQuery));

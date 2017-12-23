@@ -1,7 +1,7 @@
 (function () {
     "use strict";
     jQuery(document)
-        .on('popmakeInit', '.popmake', function (event) {
+        .on('pumInit', '.pum', function (event) {
             var $this = jQuery(this),
                 settings = $this.data('popmake'),
                 emodal_id = settings.old_easy_modal_id,
@@ -16,34 +16,34 @@
                 });
             }
         })
-        .on('popmakeInit', '.popmake', function () {
+        .on('pumInit', '.pum', function () {
             jQuery(this).trigger('emodalInit');
         })
-        .on('popmakeBeforeOpen', '.popmake', function () {
+        .on('pumBeforeOpen', '.pum', function () {
             jQuery(this).trigger('emodalBeforeOpen');
         })
-        .on('popmakeAfterOpen', '.popmake', function () {
+        .on('pumAfterOpen', '.pum', function () {
             jQuery(this).trigger('emodalAfterOpen');
         })
-        .on('popmakeBeforeClose', '.popmake', function () {
+        .on('pumBeforeClose', '.pum', function () {
             jQuery(this).trigger('emodalBeforeClose');
         })
-        .on('popmakeAfterClose', '.popmake', function () {
+        .on('pumAfterClose', '.pum', function () {
             jQuery(this).trigger('emodalAfterClose');
         })
-        .on('popmakeBeforeReposition', '.popmake', function () {
+        .on('pumBeforeReposition', '.pum', function () {
             jQuery(this).trigger('emodalBeforeReposition');
         })
-        .on('popmakeAfterReposition', '.popmake', function () {
+        .on('pumAfterReposition', '.pum', function () {
             jQuery(this).trigger('emodalAfterReposition');
         })
-        .on('popmakeBeforeRetheme', '.popmake', function () {
+        .on('pumBeforeRetheme', '.pum', function () {
             jQuery(this).trigger('emodalBeforeRetheme');
         })
-        .on('popmakeAfterRetheme', function () {
+        .on('pumAfterRetheme', function () {
             jQuery(this).trigger('emodalAfterRetheme');
         })
-        .on('popmakeSetupClose', function () {
+        .on('pumSetupClose', function () {
             jQuery(this).trigger('emodalSetupClose');
         });
 }());
