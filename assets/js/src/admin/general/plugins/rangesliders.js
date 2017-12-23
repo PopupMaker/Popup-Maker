@@ -1,5 +1,8 @@
+/*******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
 (function ($) {
-    "use strict";
+    'use strict';
     var rangesliders = {
         cloneables: {
             slider: $('<input type="range" class="pum-range-slider" />'),

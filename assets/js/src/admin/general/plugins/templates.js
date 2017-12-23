@@ -1,13 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
 (function ($) {
     "use strict";
-    var I10n      = pum_admin_vars.I10n,
+    var I10n = pum_admin_vars.I10n,
         templates = {
             render: function (template, data) {
                 var _template = wp.template(template);
 
                 data = data || {};
 
-                if (data.classes !== undefined && data.classes instanceof Array) {
+                if (data.classes !== undefined && Array.isArray(data.classes)) {
                     data.classes = data.classes.join(' ');
                 }
 
@@ -17,7 +20,7 @@
                 return _template(data);
             },
             renderInline: function (content, data) {
-                var options  = {
+                var options = {
                         evaluate: /<#([\s\S]+?)#>/g,
                         interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
                         escape: /\{\{([^\}]+?)\}\}(?!\})/g,
@@ -28,7 +31,7 @@
                 return template(data);
             },
             shortcode: function (args) {
-                var data     = $.extend(true, {}, {
+                var data = $.extend(true, {}, {
                         tag: '',
                         meta: {},
                         has_content: false,
@@ -88,9 +91,9 @@
             },
             fieldArgs: function (args) {
                 var options = [],
-                    data    = $.extend(true, {}, PUM_Admin.models.field(args));
+                    data = $.extend(true, {}, PUM_Admin.models.field(args));
 
-                if (data.value === null && args.std !== undefined) {
+                if (!data.value && args.std !== undefined) {
                     data.value = args.std;
                 }
 
@@ -215,7 +218,7 @@
                         data.classes.push(args.type === 'postselect' ? 'pum-field-postselect' : 'pum-field-taxonomyselect');
                         data.meta['data-objecttype'] = args.type === 'postselect' ? 'post_type' : 'taxonomy';
                         data.meta['data-objectkey'] = args.type === 'postselect' ? args.post_type : args.taxonomy;
-                        data.meta['data-current'] = JSON.stringify(data.value);
+                        data.meta['data-current'] = typeof data.value === 'object' || Array.isArray(data.value) ? JSON.stringify(data.value) : data.value;
                     }
 
                     if (data.select2) {
@@ -332,7 +335,7 @@
                         classes: false
                     }, data.value);
 
-                    data.classes.push('ahoy-license-' + data.value.status + '-notice');
+                    data.classes.push('pum-license-' + data.value.status + '-notice');
 
                     if (data.value.classes) {
                         data.classes.push(data.value.classes);

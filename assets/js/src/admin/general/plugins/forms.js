@@ -270,8 +270,8 @@
 
                             // Push rendered fields into the subtab content.
                             subtabs.tabs[subTabID].content += PUM_Admin.templates.field(field);
-
                         });
+
                         // Remove any empty tabs.
                         if ("" === subtabs.tabs[subTabID].content) {
                             delete subtabs.tabs[subTabID];
@@ -402,7 +402,7 @@
 
     $(document)
         .on('pum_init  pum_form_check', function () {
-            forms.init();
+            PUM_Admin.forms.init();
         })
         .on('pumFieldChanged', '.pum-field', function () {
             var $wrapper            = $(this),
@@ -418,7 +418,7 @@
                 $dependent_fields = $dependent_fields.add('.pum-field[data-id="' + dependent_field_ids[i] + '"]');
             }
 
-            forms.checkDependencies($dependent_fields);
+            PUM_Admin.forms.checkDependencies($dependent_fields);
         })
         .on('pumFieldChanged', '.pum-field-dynamic-desc', function () {
             var $this       = $(this),

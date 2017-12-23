@@ -32,6 +32,7 @@
                 unit: 'px',
                 units: {},
                 required: false,
+                desc_position: 'bottom',
                 meta: {}
             }, args);
         }

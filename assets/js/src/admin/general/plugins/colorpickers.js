@@ -1,4 +1,7 @@
-(function ($, document, undefined) {
+/*******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
+(function ($) {
     "use strict";
 
     var colorpicker = {
@@ -52,4 +55,4 @@
             }
         })
         .on('pum_init', colorpicker.init);
-}(jQuery, document));
+}(jQuery));

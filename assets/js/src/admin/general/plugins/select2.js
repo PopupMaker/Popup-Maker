@@ -1,3 +1,6 @@
+/*******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
 (function ($) {
     "use strict";
 
@@ -7,11 +10,11 @@
     var select2 = {
         init: function () {
             $('.pum-field-select2 select').filter(':not(.pumselect2-initialized)').each(function () {
-                var $this       = $(this),
-                    current     = $this.data('current') || $this.find('option[selected="selected"]').attr('value'),
+                var $this = $(this),
+                    current = $this.data('current') || $this.find('option[selected="selected"]').attr('value'),
                     object_type = $this.data('objecttype'),
-                    object_key  = $this.data('objectkey'),
-                    options     = {
+                    object_key = $this.data('objectkey'),
+                    options = {
                         width: '100%',
                         multiple: false,
                         dropdownParent: $this.parent()
