@@ -2,7 +2,7 @@
 	/**
 	 * @package     Freemius
 	 * @copyright   Copyright (c) 2015, Freemius, Inc.
-	 * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+	 * @license     https://www.gnu.org/licenses/gpl-3.0.html GNU General Public License Version 3
 	 * @since       1.1.7.3
 	 */
 
@@ -38,8 +38,8 @@
 				require_once dirname( __FILE__ ) . '/class-fs-debug-bar-panel.php';
 				$statuses[] = array(
 					'fs_api_requests',
-					fs_text( 'Freemius API' ),
-					Freemius_Debug_Bar_Panel::requests_count() . ' ' . fs_text( 'Requests' ) .
+					fs_text_inline( 'Freemius API' ),
+					Freemius_Debug_Bar_Panel::requests_count() . ' ' . fs_text_inline( 'Requests' ) .
 					' (' . Freemius_Debug_Bar_Panel::total_time() . ')'
 				);
 			}
