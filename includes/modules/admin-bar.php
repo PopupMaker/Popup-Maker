@@ -376,6 +376,7 @@ class PUM_Modules_Admin_Bar {
                 var selector_generator = new CssSelectorGenerator;
 
                 $(document).on('click', '#wp-admin-bar-pum-get-selector', function (event) {
+
                     alert("<?php _e( 'After clicking ok, click the element you want a selector for.', 'popup-maker' ); ?>");
 
                     event.preventDefault();
@@ -411,7 +412,7 @@ class PUM_Modules_Admin_Bar {
 		$wp_admin_bar->add_node( array(
 			'id'     => 'popup-maker',
 			'title'  => __( 'Popup Maker', 'popup-maker' ),
-			'href'   => '#',
+			'href'   => '#popup-maker',
 			'meta'   => array( 'class' => 'popup-maker-toolbar' ),
 			'parent' => false,
 		) );
@@ -451,9 +452,9 @@ class PUM_Modules_Admin_Bar {
 					'id'     => $node_id . '-open',
 					'title'  => __( 'Open Popup', 'popup-maker' ),
 					'meta'   => array(
-						'onclick' => 'PUM.open(' . $popup->ID . ');',
+						'onclick' => 'PUM.open(' . $popup->ID . '); return false;',
 					),
-					'href'   => '#',
+					'href'   => '#popup-maker-open-popup-' . $popup->ID,
 					'parent' => $node_id,
 				) );
 
@@ -461,9 +462,9 @@ class PUM_Modules_Admin_Bar {
 					'id'     => $node_id . '-close',
 					'title'  => __( 'Close Popup', 'popup-maker' ),
 					'meta'   => array(
-						'onclick' => 'PUM.close(' . $popup->ID . ');',
+						'onclick' => 'PUM.close(' . $popup->ID . '); return false;',
 					),
-					'href'   => '#',
+					'href'   => '#popup-maker-close-popup-' . $popup->ID,
 					'parent' => $node_id,
 				) );
 
@@ -472,9 +473,9 @@ class PUM_Modules_Admin_Bar {
 						'id'     => $node_id . '-conditions',
 						'title'  => __( 'Check Conditions', 'popup-maker' ),
 						'meta'   => array(
-							'onclick' => 'alert(PUM.checkConditions(' . $popup->ID . ') ? "Pass" : "Fail");',
+							'onclick' => 'alert(PUM.checkConditions(' . $popup->ID . ') ? "Pass" : "Fail"); return false;',
 						),
-						'href'   => '#',
+						'href'   => '#popup-maker-check-conditions-popup-' . $popup->ID,
 						'parent' => $node_id,
 					) );
 				}
@@ -482,7 +483,10 @@ class PUM_Modules_Admin_Bar {
 				$wp_admin_bar->add_node( array(
 					'id'     => $node_id . '-reset-cookies',
 					'title'  => __( 'Reset Cookies', 'popup-maker' ),
-					'href'   => '#',
+					'meta'   => array(
+						'onclick' => 'PUM.clearCookies(' . $popup->ID . '); alert("' . __( 'Success', 'popup-maker' ) . '"); return false;',
+					),
+					'href'   => '#popup-maker-reset-cookies-popup-' . $popup->ID,
 					'parent' => $node_id,
 				) );
 
@@ -516,7 +520,7 @@ class PUM_Modules_Admin_Bar {
 		$wp_admin_bar->add_node( array(
 			'id'     => 'pum-tools',
 			'title'  => __( 'Tools', 'popup-maker' ),
-			'href'   => '#',
+			'href'   => '#popup-maker-tools',
 			'parent' => 'popup-maker',
 		) );
 
@@ -526,7 +530,7 @@ class PUM_Modules_Admin_Bar {
 		$wp_admin_bar->add_node( array(
 			'id'     => 'pum-get-selector',
 			'title'  => __( 'Get Selector', 'popup-maker' ),
-			'href'   => '#',
+			'href'   => '#popup-maker-get-selector-tool',
 			'parent' => 'pum-tools',
 		) );
 
