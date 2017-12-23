@@ -65,7 +65,7 @@ class PUM_Admin_Pages {
 			'tools'      => array(
 				'page_title'  => __( 'Tools', 'popup-maker' ),
 				'capability'  => 'manage_options',
-				'callback'    => 'popmake_tools_page',
+				'callback'    => array( 'PUM_Admin_Tools', 'page' ),
 			),
 		) );
 

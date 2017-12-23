@@ -20,7 +20,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: classes/Admin/Assets.php:93, classes/Admin/Settings.php:413, classes/Admin/Settings.php:438, includes/admin/tools/tools-page.php:54, includes/admin/tools/tools-page.php:61, includes/admin/tools/tools-page.php:420, includes/integrations/class-pum-gravity-forms.php:171
+#: classes/Admin/Assets.php:93, classes/Admin/Settings.php:413, classes/Admin/Settings.php:438, classes/Admin/Tools.php:85, classes/Admin/Tools.php:504, includes/integrations/class-pum-gravity-forms.php:171
 msgid "Save"
 msgstr ""
 
@@ -549,7 +549,7 @@ msgstr ""
 msgid "Show all tags"
 msgstr ""
 
-#: classes/Admin/Settings.php:51
+#: classes/Admin/Settings.php:51, classes/Admin/Tools.php:63
 msgid "Dismiss this notice."
 msgstr ""
 
@@ -869,6 +869,42 @@ msgstr ""
 
 #: classes/Admin/Templates.php:674
 msgid "Reset Cookie Key"
+msgstr ""
+
+#: classes/Admin/Tools.php:87
+msgid "Popup Maker Tools"
+msgstr ""
+
+#: classes/Admin/Tools.php:123
+msgid "Beta Versions"
+msgstr ""
+
+#: classes/Admin/Tools.php:124
+msgid "System Info"
+msgstr ""
+
+#: classes/Admin/Tools.php:125
+msgid "Import / Export"
+msgstr ""
+
+#: classes/Admin/Tools.php:169
+msgid "To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac)."
+msgstr ""
+
+#: classes/Admin/Tools.php:412
+msgid "Import From Easy Modal v2"
+msgstr ""
+
+#: classes/Admin/Tools.php:482
+msgid "Enable Beta Versions"
+msgstr ""
+
+#: classes/Admin/Tools.php:484
+msgid "Checking any of the below checkboxes will opt you in to receive pre-release update notifications. You can opt-out at any time. Pre-release updates do not install automatically, you will still have the opportunity to ignore update notifications."
+msgstr ""
+
+#: classes/Admin/Tools.php:496
+msgid "Get updates for pre-release versions of %s"
 msgstr ""
 
 #: classes/Analytics.php:142
@@ -1779,50 +1815,6 @@ msgstr ""
 
 #: includes/admin/themes/metabox.php:164
 msgid "Title Text"
-msgstr ""
-
-#: includes/admin/tools/tools-page.php:21
-msgid "__Popup Maker Tools"
-msgstr ""
-
-#: includes/admin/tools/tools-page.php:21
-msgid "Popup Maker Tools"
-msgstr ""
-
-#: includes/admin/tools/tools-page.php:71
-msgid "Support"
-msgstr ""
-
-#: includes/admin/tools/tools-page.php:100
-msgid "Beta Versions"
-msgstr ""
-
-#: includes/admin/tools/tools-page.php:103
-msgid "System Info"
-msgstr ""
-
-#: includes/admin/tools/tools-page.php:104
-msgid "Import / Export"
-msgstr ""
-
-#: includes/admin/tools/tools-page.php:111
-msgid "Import From Easy Modal v2"
-msgstr ""
-
-#: includes/admin/tools/tools-page.php:135
-msgid "To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac)."
-msgstr ""
-
-#: includes/admin/tools/tools-page.php:400
-msgid "Enable Beta Versions"
-msgstr ""
-
-#: includes/admin/tools/tools-page.php:402
-msgid "Checking any of the below checkboxes will opt you in to receive pre-release update notifications. You can opt-out at any time. Pre-release updates do not install automatically, you will still have the opportunity to ignore update notifications."
-msgstr ""
-
-#: includes/admin/tools/tools-page.php:412
-msgid "Get updates for pre-release versions of %s"
 msgstr ""
 
 #: includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:27

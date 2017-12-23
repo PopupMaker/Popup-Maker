@@ -141,7 +141,7 @@ class PUM_Extension_License {
 			'version' => $this->version,
 			'license' => $this->license,
 			'author'  => $this->author,
-			'beta'    => pum_extension_has_beta_support( $this->item_shortname ),
+			'beta'    => PUM_Admin_Tools::extension_has_beta_support( $this->item_shortname ),
 		);
 
 		if ( ! empty( $this->item_id ) ) {

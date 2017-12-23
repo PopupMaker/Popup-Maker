@@ -293,7 +293,6 @@ class Popup_Maker {
 			require_once self::$DIR . 'includes/admin/themes/metabox-overlay-fields.php';
 			require_once self::$DIR . 'includes/admin/themes/metabox-title-fields.php';
 			require_once self::$DIR . 'includes/admin/themes/metabox-preview.php';
-			require_once self::$DIR . 'includes/admin/tools/tools-page.php';
 			require_once self::$DIR . 'includes/admin/extensions/extensions-page.php';
 			require_once self::$DIR . 'includes/admin/pages/support.php';
 			require_once self::$DIR . 'includes/admin/metabox-support.php';

@@ -10,6 +10,7 @@ class PUM_Admin {
 		PUM_Admin_Assets::init();
 		PUM_Admin_Popups::init();
 		PUM_Admin_Settings::init();
+		PUM_Admin_Tools::init();
 		PUM_Admin_Shortcode_UI::init();
 		PUM_Upsell::init();
 	}
