@@ -301,10 +301,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
 		require_once self::$DIR . 'includes/integrations/class-pum-buddypress-integration.php';
 
-		if ( defined( 'WPB_VC_VERSION' ) || defined( 'FL_BUILDER_VERSION' ) ) {
-			require_once self::$DIR . 'includes/integrations/visual-composer.php';
-		}
-
 		// Ninja Forms Integration
 		require_once self::$DIR . 'includes/integrations/class-pum-ninja-forms.php';
 		// CF7 Forms Integration

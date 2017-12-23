@@ -1961,22 +1961,6 @@ msgstr ""
 msgid "Default Theme"
 msgstr ""
 
-#: includes/integrations/class-popmake-woocommerce-integration.php:29
-msgid "On All WooCommerce"
-msgstr ""
-
-#: includes/integrations/class-popmake-woocommerce-integration.php:44
-msgid "Exclude on All WooCommerce"
-msgstr ""
-
-#: includes/integrations/class-popmake-woocommerce-integration.php:59
-msgid "On Shop Page"
-msgstr ""
-
-#: includes/integrations/class-popmake-woocommerce-integration.php:74
-msgid "Exclude on Shop Page"
-msgstr ""
-
 #: includes/integrations/class-pum-buddypress-integration.php:34
 msgid "BP: Is a BuddyPress Page"
 msgstr ""
