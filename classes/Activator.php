@@ -48,7 +48,7 @@ class PUM_Activator {
 
 				ignore_user_abort( true );
 
-				if ( ! pum_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+				if ( ! pum_is_func_disabled( 'set_time_limit' ) ) {
 					@set_time_limit( 0 );
 				}
 
