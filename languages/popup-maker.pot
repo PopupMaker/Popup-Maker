@@ -20,7 +20,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: classes/Admin/Assets.php:93, classes/Admin/Settings.php:413, classes/Admin/Settings.php:438, classes/Admin/Tools.php:85, classes/Admin/Tools.php:504, includes/integrations/class-pum-gravity-forms.php:171
+#: classes/Admin/Assets.php:93, classes/Admin/Settings.php:413, classes/Admin/Settings.php:438, classes/Admin/Tools.php:86, classes/Admin/Tools.php:504, includes/integrations/class-pum-gravity-forms.php:171
 msgid "Save"
 msgstr ""
 
@@ -549,7 +549,7 @@ msgstr ""
 msgid "Show all tags"
 msgstr ""
 
-#: classes/Admin/Settings.php:51, classes/Admin/Tools.php:63
+#: classes/Admin/Settings.php:51, classes/Admin/Tools.php:64
 msgid "Dismiss this notice."
 msgstr ""
 
@@ -871,23 +871,23 @@ msgstr ""
 msgid "Reset Cookie Key"
 msgstr ""
 
-#: classes/Admin/Tools.php:87
+#: classes/Admin/Tools.php:88
 msgid "Popup Maker Tools"
 msgstr ""
 
-#: classes/Admin/Tools.php:123
+#: classes/Admin/Tools.php:124
 msgid "Beta Versions"
 msgstr ""
 
-#: classes/Admin/Tools.php:124
+#: classes/Admin/Tools.php:125
 msgid "System Info"
 msgstr ""
 
-#: classes/Admin/Tools.php:125
+#: classes/Admin/Tools.php:126
 msgid "Import / Export"
 msgstr ""
 
-#: classes/Admin/Tools.php:169
+#: classes/Admin/Tools.php:170
 msgid "To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac)."
 msgstr ""
 
