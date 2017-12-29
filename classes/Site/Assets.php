@@ -70,9 +70,22 @@ class PUM_Site_Assets {
 
 		// Checks preloaded popups in the head for which assets to enqueue.
 		add_action( 'pum_preload_popup', array( __CLASS__, 'enqueue_popup_assets' ) );
+		add_filter( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_page_assets' ) );
 
 		// Allow forcing assets to load.
 		add_action( 'wp_head', array( __CLASS__, 'check_force_script_loading' ) );
+	}
+
+	/**
+	 * Checks the current page content for the newsletter shortcode.
+	 */
+	public static function enqueue_page_assets() {
+		global $post;
+
+		if ( ! empty( $post ) && has_shortcode( $post->post_content, 'pum_sub_form' ) ) {
+			wp_enqueue_script( 'popup-maker-site' );
+			wp_enqueue_style( 'popup-maker-site' );
+		}
 	}
 
 	/**
@@ -165,6 +178,7 @@ class PUM_Site_Assets {
 				'popups'           => self::get_popup_settings(),
 				'disable_tracking' => popmake_get_option( 'disable_popup_open_tracking' ),
 				'home_url'         => home_url(),
+				'message_position' => 'top',
 			) ) );
 
 			// TODO Remove all trace usages of these in JS so they can be removed.
@@ -197,13 +211,17 @@ class PUM_Site_Assets {
 				'triggers'               => PUM_Triggers::instance()->dropdown_list(),
 				'cookies'                => PUM_Cookies::instance()->dropdown_list(),
 			) ) );
+
+			/* Here for backward compatibility. */
+			wp_localize_script( 'popup-maker-site', 'pum_sub_vars', array(
+				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				'message_position' => 'top',
+			) );
+
 		}
 	}
 
 	public static function get_popup_settings() {
-
-		// @TODO Left off here.
-		// This is running too early and popups not loaded yet apparently.
 		$loaded = PUM_Site_Popups::get_loaded_popups();
 
 		$settings = array();
