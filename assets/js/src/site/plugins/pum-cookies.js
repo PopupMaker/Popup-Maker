@@ -81,6 +81,23 @@
                 $popup.popmake('setCookie', settings);
             });
         },
+        pum_sub_form_success: function (settings) {
+            var $popup = PUM.getPopup(this);
+            $popup.find('form.pum-sub-form').on('success', function () {
+                $popup.popmake('setCookie', settings);
+            });
+        },
+        /**
+         * @deprecated 1.7.0
+         *
+         * @param settings
+         */
+        pum_sub_form_already_subscribed: function (settings) {
+            var $popup = PUM.getPopup(this);
+            $popup.find('form.pum-sub-form').on('success', function () {
+                $popup.popmake('setCookie', settings);
+            });
+        },
         ninja_form_success: function (settings) {
             return $.fn.popmake.cookies.form_success.apply(this, arguments);
         },

@@ -220,6 +220,7 @@ class Popup_Maker {
 		/** General Functions */
 		require_once self::$DIR . 'includes/functions/cache.php';
 		require_once self::$DIR . 'includes/functions/options.php';
+		require_once self::$DIR . 'includes/functions/newsletter.php';
 		require_once self::$DIR . 'includes/migrations.php';
 
 		// TODO Find another place for these admin functions so this can be put in its correct place.
@@ -347,11 +348,13 @@ class Popup_Maker {
 		PUM_AssetCache::init();
 		PUM_Site::init();
 		PUM_Admin::init();
+		PUM_Newsletters::init();
 		PUM_Integrations::init();
 
 		PUM_Shortcode_Popup::init();
 		PUM_Shortcode_PopupTrigger::init();
 		PUM_Shortcode_PopupClose::init();
+		PUM_Shortcode_Subscribe::init();
 	}
 
 	/**
