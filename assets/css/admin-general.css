@@ -477,7 +477,7 @@
   text-decoration: none;
 }
 
-.pum-field-license_key span.ahoy-license-status {
+.pum-field-license_key span.pum-license-status {
   margin-left: 5px;
   margin-right: 5px;
 }
@@ -494,7 +494,7 @@
   border-color: #46b450;
 }
 
-.pum-field-license_key.pum-license-valid-notice .ahoy-license-status {
+.pum-field-license_key.pum-license-valid-notice .pum-license-status {
   color: #46b450;
 }
 
