@@ -450,7 +450,7 @@ class PUM_Conditions {
 		static $roles;
 
 		if ( ! isset( $roles ) && is_object( $wp_roles ) ) {
-			$roles = apply_filters( 'ahoy_user_roles', $wp_roles->role_names );
+			$roles = apply_filters( 'pum_user_roles', $wp_roles->role_names );
 
 			if ( ! is_array( $roles ) || empty( $roles ) ) {
 				$roles = array();
