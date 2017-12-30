@@ -430,7 +430,7 @@
     $.fn.popmake.utilies = $.fn.popmake.utilities;
 
     window.PUM = window.PUM || {};
-    window.PUM.forms = window.PUM.utilities || {};
-    window.PUM.utilities = $.fn.popmake.utilities;
+    window.PUM.utilities = window.PUM.utilities || {};
+    window.PUM.utilities = $.extend(window.PUM.utilities, $.fn.popmake.utilities);
 
 }(jQuery, document));

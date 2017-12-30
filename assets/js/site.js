@@ -2600,7 +2600,7 @@ var pum_debug_mode = false,
                 event.preventDefault();
                 event.stopPropagation();
 
-                window.PUM.forms.form.beforeAjax($form);
+                window.PUM.newsletter.form.beforeAjax($form);
 
                 $.ajax({
                     type: 'POST',
@@ -2612,10 +2612,10 @@ var pum_debug_mode = false,
                     }
                 })
                     .always(function () {
-                        window.PUM.forms.form.afterAjax($form);
+                        window.PUM.newsletter.form.afterAjax($form);
                     })
                     .done(function (response) {
-                        window.PUM.forms.form.responseHandler($form, response);
+                        window.PUM.newsletter.form.responseHandler($form, response);
                     })
                     .error(function (jqXHR, textStatus, errorThrown) {
                         console.log('Error: type of ' + textStatus + ' with message of ' + errorThrown);
@@ -2638,7 +2638,7 @@ var pum_debug_mode = false,
 
             window.pum.hooks.doAction('pum-sub-form.success', data, $form);
 
-            window.PUM.newsletter.success($form, $form.data('settings') || {});
+            window.PUM.forms.success($form, $form.data('settings') || {});
         })
         .on('error', 'form.pum-sub-form', function (event, data) {
             var $form = $(event.target);
@@ -3207,8 +3207,8 @@ var pum_debug_mode = false,
     $.fn.popmake.utilies = $.fn.popmake.utilities;
 
     window.PUM = window.PUM || {};
-    window.PUM.forms = window.PUM.utilities || {};
-    window.PUM.utilities = $.fn.popmake.utilities;
+    window.PUM.utilities = window.PUM.utilities || {};
+    window.PUM.utilities = $.extend(window.PUM.utilities, $.fn.popmake.utilities);
 
 }(jQuery, document));
 /**

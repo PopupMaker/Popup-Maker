@@ -16,7 +16,7 @@
                 event.preventDefault();
                 event.stopPropagation();
 
-                window.PUM.forms.form.beforeAjax($form);
+                window.PUM.newsletter.form.beforeAjax($form);
 
                 $.ajax({
                     type: 'POST',
@@ -28,10 +28,10 @@
                     }
                 })
                     .always(function () {
-                        window.PUM.forms.form.afterAjax($form);
+                        window.PUM.newsletter.form.afterAjax($form);
                     })
                     .done(function (response) {
-                        window.PUM.forms.form.responseHandler($form, response);
+                        window.PUM.newsletter.form.responseHandler($form, response);
                     })
                     .error(function (jqXHR, textStatus, errorThrown) {
                         console.log('Error: type of ' + textStatus + ' with message of ' + errorThrown);
@@ -54,7 +54,7 @@
 
             window.pum.hooks.doAction('pum-sub-form.success', data, $form);
 
-            window.PUM.newsletter.success($form, $form.data('settings') || {});
+            window.PUM.forms.success($form, $form.data('settings') || {});
         })
         .on('error', 'form.pum-sub-form', function (event, data) {
             var $form = $(event.target);
