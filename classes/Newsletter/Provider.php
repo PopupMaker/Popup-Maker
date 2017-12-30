@@ -122,12 +122,12 @@ abstract class PUM_Newsletter_Provider {
 	}
 
 	/**
-	 * @param \WP_Error $errors
+	 * @param WP_Error $errors
 	 * @param array $values
 	 *
-	 * @return \WP_Error
+	 * @return WP_Error
 	 */
-	public function form_validation( \WP_Error $errors, $values = array() ) {
+	public function form_validation( WP_Error $errors, $values = array() ) {
 		return $errors;
 	}
 
@@ -136,11 +136,9 @@ abstract class PUM_Newsletter_Provider {
 	 *
 	 * @param $values
 	 * @param array $json_response
-	 * @param \WP_Error $errors
-	 *
-	 * @return void
+	 * @param WP_Error $errors
 	 */
-	public function form_submission( $values, &$json_response, \WP_Error &$errors ) {
+	public function form_submission( $values, &$json_response, WP_Error &$errors ) {
 
 	}
 
@@ -162,12 +160,12 @@ abstract class PUM_Newsletter_Provider {
 	}
 
 	/**
-	 * @param \WP_Error $errors
+	 * @param WP_Error $errors
 	 * @param array $values
 	 *
-	 * @return \WP_Error
+	 * @return WP_Error
 	 */
-	public function _form_validation( \WP_Error $errors, $values = array() ) {
+	public function _form_validation( WP_Error $errors, $values = array() ) {
 		if ( $this->id != $values['provider'] && ( $values['provider'] == 'none' && PUM_Options::get( 'newsletter_default_provider' ) !== $this->id ) ) {
 			return $errors;
 		}
@@ -180,11 +178,11 @@ abstract class PUM_Newsletter_Provider {
 	 *
 	 * @param $values
 	 * @param array $json_response
-	 * @param \WP_Error $errors
+	 * @param WP_Error $errors
 	 *
 	 * @return void
 	 */
-	public function _form_submission( $values, &$json_response, \WP_Error &$errors ) {
+	public function _form_submission( $values, &$json_response, WP_Error &$errors ) {
 		if ( $this->id != $values['provider'] && ( $values['provider'] == 'none' && PUM_Options::get( 'newsletter_default_provider' ) !== $this->id ) ) {
 			return;
 		}
@@ -246,20 +244,7 @@ abstract class PUM_Newsletter_Provider {
 	 * @return array|mixed|string
 	 */
 	public function default_messages( $context = null ) {
-		$messages = array(
-			'success'               => pum_get_option('default_success_message', __( 'You have been subscribed!', 'popup-maker' ) ),
-			'double_opt_in_success' => pum_get_option('default_double_opt_in_success',__( 'Please check your email and confirm your subscription.', 'popup-maker' ) ),
-			'error'                 => pum_get_option('default_error_message',__( 'Error occurred when subscribing. Please try again.', 'popup-maker' ) ),
-			'already_subscribed'    => pum_get_option('default_already_subscribed_message',__( 'You are already a subscriber.', 'popup-maker' ) ),
-			'empty_email'           => pum_get_option('default_empty_email_message',__( 'Please enter a valid email.', 'popup-maker' ) ),
-			'invalid_email'         => pum_get_option('default_invalid_email_message',__( 'Email provided is not a valid email address.', 'popup-maker' ) ),
-		);
-
-		if ( $context ) {
-			return isset( $messages[ $context ] ) ? $messages[ $context ] : '';
-		}
-
-		return $messages;
+		return pum_get_newsletter_default_messages( $context );
 	}
 
 	#endregion
