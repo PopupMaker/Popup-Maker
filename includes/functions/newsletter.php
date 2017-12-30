@@ -36,10 +36,34 @@ function pum_get_newsletter_provider_message( $provider_id, $context, $values = 
 	$provider = pum_get_newsletter_provider( $provider_id );
 
 	if ( ! $provider ) {
-		return '';
+		return pum_get_newsletter_default_messages( $context );
 	}
 
 	return $provider->get_message( $context, $values );
+}
+
+/**
+ * Gets default messages.
+ *
+ * @param null $context
+ *
+ * @return array|mixed|string
+ */
+function pum_get_newsletter_default_messages( $context = null ) {
+	$messages = array(
+		'success'               => pum_get_option('default_success_message', __( 'You have been subscribed!', 'popup-maker' ) ),
+		'double_opt_in_success' => pum_get_option('default_double_opt_in_success',__( 'Please check your email and confirm your subscription.', 'popup-maker' ) ),
+		'error'                 => pum_get_option('default_error_message',__( 'Error occurred when subscribing. Please try again.', 'popup-maker' ) ),
+		'already_subscribed'    => pum_get_option('default_already_subscribed_message',__( 'You are already a subscriber.', 'popup-maker' ) ),
+		'empty_email'           => pum_get_option('default_empty_email_message',__( 'Please enter a valid email.', 'popup-maker' ) ),
+		'invalid_email'         => pum_get_option('default_invalid_email_message',__( 'Email provided is not a valid email address.', 'popup-maker' ) ),
+	);
+
+	if ( $context ) {
+		return isset( $messages[ $context ] ) ? $messages[ $context ] : '';
+	}
+
+	return $messages;
 }
 
 function pum_get_newsletter_admin_localized_vars() {
