@@ -146,7 +146,7 @@ abstract class PUM_Shortcode {
 	}
 
 	public function _tabs() {
-		$tabs = $this->version < 2 ? $this->sections() : $this->tabs();
+		$tabs = $this->version < 2 && method_exists( $this,'sections' ) ? $this->sections() : $this->tabs();
 
 		return apply_filters( 'pum_shortcode_tabs', $tabs, $this->tag() );
 	}
