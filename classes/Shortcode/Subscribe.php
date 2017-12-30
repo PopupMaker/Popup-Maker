@@ -13,6 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 	/**
+	 * @var int
+	 */
+	public $version = 2;
+
+	/**
 	 * @var bool
 	 */
 	public $ajax_rendering = true;
@@ -41,7 +46,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	/**
 	 * @return array
 	 */
-	public function sections() {
+	public function tabs() {
 		return apply_filters( 'pum_sub_form_shortcode_sections', array(
 			'general'  => __( 'General', 'popup-maker' ),
 			'fields'   => __( 'Fields', 'popup-maker' ),
@@ -61,8 +66,11 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 					'desc'    => __( 'Choose which service provider to submit to.', 'popup-maker' ),
 					'type'    => 'select',
 					'options' => array_merge( array(
-						'none' => __( 'Default', 'popup-maker' ),
-					), PUM_Newsletter_Providers::dropdown_list() ),
+						'' => __( 'Default', 'popup-maker' ),
+					), PUM_Newsletter_Providers::dropdown_list(), array(
+						'none' => __( 'None', 'popup-maker' ),
+					) ),
+					'std'     => '',
 				),
 				'form_layout'    => array(
 					'label'   => __( 'Form Layout', 'popup-maker' ),
@@ -414,7 +422,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 	public function _template_styles() {
 		ob_start();
-		include PUM_NEWSLETTER_PATH . 'assets/css/pum-newsletter-site.min.css';
+		include Popup_Maker::$DIR . 'assets/css/site.min.css';
 
 		return ob_get_clean();
 	}
