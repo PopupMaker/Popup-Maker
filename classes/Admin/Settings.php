@@ -212,17 +212,19 @@ class PUM_Admin_Settings {
 				),
 				'subscriptions' => array(
 					'main' => array(
-						'newsletter_default_provider' => array(
+						'newsletter_default_provider'        => array(
 							'label'   => __( 'Default Newsletter Provider', 'popup-maker' ),
 							'desc'    => __( 'The default mailing provider used for the subscription form.', 'popup-maker' ),
 							'type'    => 'select',
-							'options' => array_merge( array( 'none' => __( 'None', 'popup-maker' ) ), PUM_Newsletter_Providers::dropdown_list() ),
+							'options' => array_merge( PUM_Newsletter_Providers::dropdown_list(), array(
+								'none' => __( 'None', 'popup-maker' ),
+							) ),
 						),
 						'default_success_message'            => array(
 							'label' => __( 'Success Message', 'popup-maker' ),
-							'desc' => __( 'Message to show user when successfuly subscribed.', 'popup-maker' ),
-							'type' => 'text',
-							'std'  => __( 'You have been subscribed!', 'popup-maker' ),
+							'desc'  => __( 'Message to show user when successfuly subscribed.', 'popup-maker' ),
+							'type'  => 'text',
+							'std'   => __( 'You have been subscribed!', 'popup-maker' ),
 						),
 						'default_double_opt_in_success'      => array(
 							'label' => __( 'Invalid Email Message', 'popup-maker' ),

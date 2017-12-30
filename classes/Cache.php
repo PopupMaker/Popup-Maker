@@ -34,7 +34,7 @@ class PUM_Cache {
 	 * @return string
 	 */
 	public static function prefix_( $string = '' ) {
-		return empty( $string ) ? static::$prefix : static::$prefix . '_' . $string;
+		return empty( $string ) ? self::$prefix : self::$prefix . '_' . $string;
 	}
 
 	/**
@@ -55,11 +55,11 @@ class PUM_Cache {
 	 * @return bool
 	 */
 	public static function add( $key, $data, $group = '' ) {
-		if ( ! static::enabled() ) {
+		if ( ! self::enabled() ) {
 			return true;
 		}
 
-		return wp_cache_add( $key, $data, static::prefix_( $group ), static::get_timeout( $key, $group ) );
+		return wp_cache_add( $key, $data, self::prefix_( $group ), self::get_timeout( $key, $group ) );
 	}
 
 	/**
@@ -70,11 +70,11 @@ class PUM_Cache {
 	 * @return bool
 	 */
 	public static function replace( $key, $data, $group = '' ) {
-		if ( ! static::enabled() ) {
+		if ( ! self::enabled() ) {
 			return true;
 		}
 
-		return wp_cache_replace( $key, $data, static::prefix_( $group ), static::get_timeout( $key, $group ) );
+		return wp_cache_replace( $key, $data, self::prefix_( $group ), self::get_timeout( $key, $group ) );
 	}
 
 	/**
@@ -85,11 +85,11 @@ class PUM_Cache {
 	 * @return bool
 	 */
 	public static function set( $key, $data, $group = '' ) {
-		if ( ! static::enabled() ) {
+		if ( ! self::enabled() ) {
 			return true;
 		}
 
-		return wp_cache_set( $key, $data, static::prefix_( $group ), static::get_timeout( $key, $group ) );
+		return wp_cache_set( $key, $data, self::prefix_( $group ), self::get_timeout( $key, $group ) );
 	}
 
 	/**
@@ -101,11 +101,11 @@ class PUM_Cache {
 	 * @return bool|mixed
 	 */
 	public static function get( $key, $group = '', $force = false, &$found = null ) {
-		if ( ! static::enabled() ) {
+		if ( ! self::enabled() ) {
 			return false;
 		}
 
-		return wp_cache_get( $key, static::prefix_( $group ), $force, $found );
+		return wp_cache_get( $key, self::prefix_( $group ), $force, $found );
 	}
 
 	/**
@@ -115,11 +115,11 @@ class PUM_Cache {
 	 * @return bool
 	 */
 	public static function delete( $key, $group = '' ) {
-		if ( ! static::enabled() ) {
+		if ( ! self::enabled() ) {
 			return true;
 		}
 
-		return wp_cache_delete( $key, static::prefix_( $group ) );
+		return wp_cache_delete( $key, self::prefix_( $group ) );
 	}
 
 	/**
@@ -128,7 +128,7 @@ class PUM_Cache {
 	 * @return bool
 	 */
 	public static function delete_group( $group = '' ) {
-		if ( ! static::enabled() ) {
+		if ( ! self::enabled() ) {
 			return true;
 		}
 
@@ -136,7 +136,7 @@ class PUM_Cache {
 			return false;
 		}
 
-		return wp_cache_delete_group( static::prefix_( $group ) );
+		return wp_cache_delete_group( self::prefix_( $group ) );
 	}
 
 
@@ -149,11 +149,11 @@ class PUM_Cache {
 	 * @return bool|false|int
 	 */
 	public static function incr( $key, $offset = 1, $group = '' ) {
-		if ( ! static::enabled() ) {
+		if ( ! self::enabled() ) {
 			return true;
 		}
 
-		return wp_cache_incr( $key, $offset, static::prefix_( $group ) );
+		return wp_cache_incr( $key, $offset, self::prefix_( $group ) );
 	}
 
 	/**
@@ -164,11 +164,11 @@ class PUM_Cache {
 	 * @return bool|false|int
 	 */
 	public static function decr( $key, $offset = 1, $group = '' ) {
-		if ( ! static::enabled() ) {
+		if ( ! self::enabled() ) {
 			return true;
 		}
 
-		return wp_cache_decr( $key, $offset, static::prefix_( $group ) );
+		return wp_cache_decr( $key, $offset, self::prefix_( $group ) );
 	}
 
 }
