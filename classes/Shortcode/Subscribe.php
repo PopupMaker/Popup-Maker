@@ -58,6 +58,21 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	/**
 	 * @return array
 	 */
+	public function defaults() {
+		$defaults = array();
+
+		foreach ( $this->fields() as $tab => $fields ) {
+			foreach ( $fields as $key => $field ) {
+				$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : null;
+			}
+		}
+
+		return apply_filters( 'pum_sub_form_shortcode_defaults', $defaults );
+	}
+
+	/**
+	 * @return array
+	 */
 	public function fields() {
 		return apply_filters( 'pum_sub_form_shortcode_fields', array(
 			'general'  => array(
@@ -65,11 +80,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 					'label'   => __( 'Service Provider', 'popup-maker' ),
 					'desc'    => __( 'Choose which service provider to submit to.', 'popup-maker' ),
 					'type'    => 'select',
-					'options' => array_merge( array(
-						'' => __( 'Default', 'popup-maker' ),
-					), PUM_Newsletter_Providers::dropdown_list(), array(
-						'none' => __( 'None', 'popup-maker' ),
-					) ),
+					'options' => array_merge( array( '' => __( 'Default', 'popup-maker' ) ), PUM_Newsletter_Providers::dropdown_list(), array( 'none' => __( 'None', 'popup-maker' ) ) ),
 					'std'     => '',
 				),
 				'form_layout'    => array(
@@ -80,6 +91,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						'block'  => __( 'Block', 'popup-maker' ),
 						'inline' => __( 'Inline', 'popup-maker' ),
 					),
+					'std'     => 'block',
 				),
 				'form_alignment' => array(
 					'label'   => __( 'Form Alignment', 'popup-maker' ),
@@ -90,6 +102,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						'center' => __( 'Center', 'popup-maker' ),
 						'right'  => __( 'Right', 'popup-maker' ),
 					),
+					'std'     => 'center',
 				),
 				'form_style'     => array(
 					'label'   => __( 'Form Style', 'popup-maker' ),
@@ -99,6 +112,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						''        => __( 'None', 'popup-maker' ),
 						'default' => __( 'Default', 'popup-maker' ),
 					),
+					'std'     => 'default',
 				),
 				'layout'         => array(
 					'type' => 'hidden',
@@ -108,15 +122,32 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 				),
 			),
 			'fields'   => array(
-				'name_optional' => array(
-					'label' => __( 'Name Optional', 'popup-maker' ),
-					'desc'  => __( 'Makes the name field optional.', 'popup-maker' ),
-					'type'  => 'checkbox',
+				'name_field_type' => array(
+					'label'   => __( 'Name Field Type', 'popup-maker' ),
+					'type'    => 'select',
+					'options' => array(
+						'disabled'   => __( 'None', 'popup-maker' ),
+						'fullname'   => __( 'Full', 'popup-maker' ),
+						'first_only' => __( 'First Only', 'popup-maker' ),
+						'first_last' => __( 'First & Last', 'popup-maker' ),
+					),
+					'std'     => 'fullname',
 				),
-				'name_disabled' => array(
-					'label' => __( 'Name Disabled', 'popup-maker' ),
-					'desc'  => __( 'Removes the name field.', 'popup-maker' ),
-					'type'  => 'checkbox',
+				'name_optional'   => array(
+					'label'        => __( 'Name Optional', 'popup-maker' ),
+					'desc'         => __( 'Makes the name field optional.', 'popup-maker' ),
+					'type'         => 'checkbox',
+					'dependencies' => array(
+						'name_field_type' => array( 'fullname', 'first_only', 'first_last' ),
+					),
+				),
+				'name_disabled'   => array(
+					'label'        => __( 'Name Disabled', 'popup-maker' ),
+					'desc'         => __( 'Removes the name field.', 'popup-maker' ),
+					'type'         => 'checkbox',
+					'dependencies' => array(
+						'name_field_type' => false,
+					),
 				),
 			),
 			'labeling' => array(
@@ -131,13 +162,39 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 					'type'  => 'heading',
 				),
 				'label_name'           => array(
-					'label' => __( 'Name', 'popup-maker' ),
+					'label'        => __( 'Full Name', 'popup-maker' ),
+					'dependencies' => array(
+						'disable_labels'  => false,
+						'name_field_type' => array( 'fullname' ),
+					),
+					'std'          => __( 'Name', 'popup-maker' ),
+				),
+				'label_fname'          => array(
+					'label'        => __( 'First Name', 'popup-maker' ),
+					'dependencies' => array(
+						'disable_labels'  => false,
+						'name_field_type' => array( 'first_only', 'first_last' ),
+					),
+					'std'          => __( 'First Name', 'popup-maker' ),
+				),
+				'label_lname'          => array(
+					'label'        => __( 'Last Name', 'popup-maker' ),
+					'dependencies' => array(
+						'disable_labels'  => false,
+						'name_field_type' => array( 'first_last' ),
+					),
+					'std'          => __( 'Last Name', 'popup-maker' ),
 				),
 				'label_email'          => array(
-					'label' => __( 'Email', 'popup-maker' ),
+					'label'        => __( 'Email', 'popup-maker' ),
+					'dependencies' => array(
+						'disable_labels' => false,
+					),
+					'std'          => __( 'Email', 'popup-maker' ),
 				),
 				'label_submit'         => array(
 					'label' => __( 'Submit Button', 'popup-maker' ),
+					'std'   => __( 'Subscribe', 'popup-maker' ),
 				),
 				// Deprecated fields.
 				'name_text'            => array(
@@ -155,10 +212,29 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 					'type'  => 'heading',
 				),
 				'placeholder_name'     => array(
-					'label' => __( 'Name', 'popup-maker' ),
+					'label'        => __( 'Full Name', 'popup-maker' ),
+					'dependencies' => array(
+						'name_field_type' => array( 'fullname' ),
+					),
+					'std'          => __( 'Name', 'popup-maker' ),
+				),
+				'placeholder_fname'    => array(
+					'label'        => __( 'First Name', 'popup-maker' ),
+					'dependencies' => array(
+						'name_field_type' => array( 'first_only', 'first_last' ),
+					),
+					'std'          => __( 'First Name', 'popup-maker' ),
+				),
+				'placeholder_lname'    => array(
+					'label'        => __( 'Last Name', 'popup-maker' ),
+					'dependencies' => array(
+						'name_field_type' => array( 'first_last' ),
+					),
+					'std'          => __( 'Last Name', 'popup-maker' ),
 				),
 				'placeholder_email'    => array(
 					'label' => __( 'Email', 'popup-maker' ),
+					'std'   => __( 'Email', 'popup-maker' ),
 				),
 			),
 			'actions'  => array(
@@ -185,7 +261,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 				'openpopup_id'     => array(
 					'label'        => __( 'Popup ID', 'popup-maker' ),
 					'type'         => 'select',
-					'options'      => array_flip( $this->get_popup_list() ),
+					'options'      => $this->get_popup_list(),
 					'std'          => 0,
 					'dependencies' => array(
 						'openpopup' => true,
@@ -220,32 +296,6 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 		}
 
 		return $popup_list;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function defaults() {
-		return apply_filters( 'pum_sub_form_shortcode_defaults', array(
-			'provider'          => 'none',
-			'name_optional'     => false,
-			'name_disabled'     => false,
-			'form_alignment'    => 'left',
-			'form_layout'       => 'block',
-			'form_style'        => 'default',
-			'disable_labels'    => false,
-			'label_name'        => __( 'Name', 'popup-maker' ),
-			'label_email'       => __( 'Email', 'popup-maker' ),
-			'label_submit'      => __( 'Subscribe', 'popup-maker' ),
-			'placeholder_name'  => __( 'Name', 'popup-maker' ),
-			'placeholder_email' => __( 'Email', 'popup-maker' ),
-			'closepopup'        => false,
-			'closedelay'        => 0,
-			'openpopup'         => false,
-			'openpopup_id'      => 0,
-			'redirect_enabled'  => false,
-			'redirect'          => '',
-		) );
 	}
 
 	/**
@@ -288,15 +338,56 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 			<?php do_action( 'pum_sub_form_before', $atts ); ?>
 
-			<?php if ( ! $atts['name_disabled'] ) : ?>
+			<?php
 
-				<div class="pum-form__field  pum-form__field--name  pum-sub-form-field  pum-sub-form-field--name">
-					<?php if ( ! $atts['disable_labels'] ) : ?>
-						<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_name']; ?></label>
-					<?php endif; ?>
-					<input type="text" name="name" <?php if ( ! $atts['name_optional'] ) : ?> required <?php endif; ?>
-					       placeholder="<?php esc_attr_e( $atts['placeholder_name'] ); ?>"/>
-				</div>
+
+			if ( ! $atts['name_field_type'] != 'disabled' ) :
+
+				$required = ! $atts['name_optional'] ? 'required' : '';
+
+				switch ( $atts['name_field_type'] ) {
+					case 'fullname': ?>
+
+						<div class="pum-form__field  pum-form__field--name  pum-sub-form-field  pum-sub-form-field--name">
+							<?php if ( ! $atts['disable_labels'] ) : ?>
+								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_name']; ?></label>
+							<?php endif; ?>
+							<input type="text" name="name" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_name'] ); ?>"/>
+						</div>
+
+						<?php
+						break;
+					case 'first_only': ?>
+
+						<div class="pum-form__field  pum-form__field--name  pum-sub-form-field  pum-sub-form-field--name  pum-sub-form-field--fname">
+							<?php if ( ! $atts['disable_labels'] ) : ?>
+								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_fname']; ?></label>
+							<?php endif; ?>
+							<input type="text" name="name" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_fname'] ); ?>"/>
+						</div>
+
+						<?php
+						break;
+
+					case 'first_last': ?>
+
+						<div class="pum-form__field  pum-form__field--name  pum-sub-form-field  pum-sub-form-field--name  pum-sub-form-field--fname">
+							<?php if ( ! $atts['disable_labels'] ) : ?>
+								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_name']; ?></label>
+							<?php endif; ?>
+							<input type="text" name="name" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_name'] ); ?>"/>
+						</div>
+
+						<div class="pum-form__field  pum-form__field--name  pum-sub-form-field  pum-sub-form-field--name  pum-sub-form-field--lname">
+							<?php if ( ! $atts['disable_labels'] ) : ?>
+								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_name']; ?></label>
+							<?php endif; ?>
+							<input type="text" name="name" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_name'] ); ?>"/>
+						</div>
+
+						<?php
+						break;
+				} ?>
 
 			<?php endif; ?>
 
@@ -304,8 +395,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 				<?php if ( ! $atts['disable_labels'] ) : ?>
 					<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_email']; ?></label>
 				<?php endif; ?>
-				<input type="email" name="email" required
-				       placeholder="<?php esc_attr_e( $atts['placeholder_email'] ); ?>"/>
+				<input type="email" name="email" required placeholder="<?php esc_attr_e( $atts['placeholder_email'] ); ?>"/>
 			</div>
 
 			<?php do_action( 'pum_sub_form_fields', $atts ); ?>
@@ -358,6 +448,15 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 		}
 
 		unset( $atts['layout'], $atts['style'], $atts['name_text'], $atts['email_text'], $atts['button_text'] );
+
+		/**
+		 * Remap v1.7 core shortcode attributes starting here.
+		 */
+		if ( ! empty( $atts['name_disabled'] ) && $atts['name_disabled'] ) {
+			$atts['name_field_type'] = 'disabled';
+		}
+
+		unset( $atts['name_disabled'] );
 
 		return $atts;
 	}

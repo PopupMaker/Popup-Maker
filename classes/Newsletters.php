@@ -149,7 +149,11 @@ class PUM_Newsletters {
 
 		$data['values'] = maybe_serialize( $values );
 
-		PUM_Subscribers::instance()->insert( $data );
+		$subscriber_id = PUM_Subscribers::instance()->insert( $data );
+
+		if ( is_user_logged_in() && $subscriber_id ) {
+			update_user_meta( get_current_user_id(), 'pum_subscribed', true );
+		}
 	}
 
 	/**
@@ -181,16 +185,24 @@ class PUM_Newsletters {
 
 		$values['provider'] = sanitize_text_field( $values['provider'] );
 
-		$name = isset( $values["name"] ) ? sanitize_text_field( $values["name"] ) : '';
+		// Split name into fname & lname or vice versa.
+		if ( isset( $values['name'] ) ) {
+			$values['name'] = trim( sanitize_text_field( $values["name"] ) );
 
-		//Creates last name
-		$name = explode( " ", $name );
-		if ( ! isset( $name[1] ) ) {
-			$name[1] = '';
+			//Creates last name
+			$name = explode( " ", $values['name'] );
+			if ( ! isset( $name[1] ) ) {
+				$name[1] = '';
+			}
+
+			$values['fname'] = trim( $name[0] );
+			$values['lname'] = trim( $name[1] );
+		} else {
+			$values['fname'] = isset( $values["fname"] ) ? sanitize_text_field( $values["fname"] ) : '';
+			$values['lname'] = isset( $values["lname"] ) ? sanitize_text_field( $values["lname"] ) : '';
+
+			$values['name'] = trim( $values['fname'] . ' ' . $values['lname'] );
 		}
-
-		$values['fname'] = $name[0];
-		$values['lname'] = $name[1];
 
 		$values['email']      = sanitize_email( $values["email"] );
 		$values['email_hash'] = md5( $values['email'] );
