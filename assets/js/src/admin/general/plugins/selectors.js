@@ -1,34 +1,74 @@
-/*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
- ******************************************************************************/
-(function ($) {
-    "use strict";
-
-    function Selector_Cache() {
-        var elementCache = {};
-
-        var get_from_cache = function (selector, $ctxt, reset) {
-
-            if ('boolean' === typeof $ctxt) {
-                reset = $ctxt;
-                $ctxt = false;
-            }
-            var cacheKey = $ctxt ? $ctxt.selector + ' ' + selector : selector;
-
-            if (undefined === elementCache[cacheKey] || reset) {
-                elementCache[cacheKey] = $ctxt ? $ctxt.find(selector) : jQuery(selector);
-            }
-
-            return elementCache[cacheKey];
-        };
-
-        get_from_cache.elementCache = elementCache;
-        return get_from_cache;
+/*
+ * $$ Selector Cache
+ * Cache your selectors, without messy code.
+ * @author Stephen Kamenar
+ */
+(function ($, undefined) {
+    // '#a': $('#a')
+    if (typeof window.$$ === 'function') {
+        return;
     }
 
-    var selectors = new Selector_Cache();
+    var cache = {},
+        cacheByContext = {}, // '#context': (a cache object for the element)
+        tmp, tmp2; // Here for performance/minification
 
-    // Import this module.
-    window.PUM_Admin = window.PUM_Admin || {};
-    window.PUM_Admin.selectors = selectors;
+    window.$$ = function (selector, context) {
+        if (context) {
+            if (tmp = context.selector) {
+                context = tmp;
+            }
+
+            // tmp2 is contextCache
+            tmp2 = cacheByContext[context];
+
+            if (tmp2 === undefined) {
+                tmp2 = cacheByContext[context] = {};
+            }
+
+            tmp = tmp2[selector];
+
+            if (tmp !== undefined) {
+                return tmp;
+            }
+
+            return tmp2[selector] = $(selector, $$(context));
+        }
+
+        tmp = cache[selector];
+
+        if (tmp !== undefined) {
+            return tmp;
+        }
+
+        return cache[selector] = $(selector);
+    };
+
+    window.$$clear = function (selector, context) {
+        if (context) {
+            if (tmp = context.selector) {
+                context = tmp;
+            }
+
+            if (selector && (tmp = cacheByContext[context])) {
+                tmp[selector] = undefined;
+            }
+
+            cacheByContext[context] = undefined;
+        } else {
+            if (selector) {
+                cache[selector] = undefined;
+                cacheByContext[selector] = undefined;
+            } else {
+                cache = {};
+                cacheByContext = {};
+            }
+        }
+    };
+
+    window.$$fresh = function (selector, context) {
+        $$clear(selector, context);
+        return $$(selector, context);
+    };
+
 }(jQuery));

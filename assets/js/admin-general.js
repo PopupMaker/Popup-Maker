@@ -6431,19 +6431,19 @@
                     $dependent.data("pum-dependent-fields", dependentFields);
                 }
 
+                if (dependentID === 'label_name' ) {
+                    debugger;
+                }
+
                 $(dependentFields).each(function () {
                     var $wrapper                   = $(this),
-                        $field                     = $(this).find(':input:first'),
+                        $field                     = $wrapper.find(':input:first'),
                         id                         = $wrapper.data("id"),
                         value                      = $field.val(),
-                        required                   = dependencies[id] || null,
+                        required                   = dependencies[id],
                         matched,
                         // Used for limiting the fields that get updated when this field is changed.
-                        all_this_fields_dependents = $wrapper.data('pum-field-dependents');
-
-                    if (!all_this_fields_dependents) {
-                        all_this_fields_dependents = [];
-                    }
+                        all_this_fields_dependents = $wrapper.data('pum-field-dependents') || [];
 
                     if (all_this_fields_dependents.indexOf(dependentID) === -1) {
                         all_this_fields_dependents.push(dependentID);
@@ -6451,7 +6451,7 @@
                     }
 
                     // If no required values found bail early.
-                    if (required === null) {
+                    if (typeof required === 'undefined' || required === null) {
                         $dependent.hide();
                         // Effectively breaks the .each for this $dependent and hides it.
                         return false;
@@ -6463,7 +6463,7 @@
 
                     // Check if the value matches required values.
                     if ($wrapper.hasClass('pum-field-select') || $wrapper.hasClass('pum-field-radio')) {
-                        matched = required.indexOf(value) !== -1;
+                        matched = required && required.indexOf(value) !== -1;
                     } else if ($wrapper.hasClass('pum-field-checkbox')) {
                         matched = required === $field.is(':checked');
                     } else {
@@ -6533,10 +6533,10 @@
         },
         render: function (args, values, $container) {
             var form,
-                sections          = {},
-                section           = [],
-                form_fields       = {},
-                data              = $.extend(true, {
+                sections = {},
+                section = [],
+                form_fields = {},
+                data = $.extend(true, {
                     id: "",
                     tabs: {},
                     sections: {},
@@ -6544,7 +6544,7 @@
                     maintabs: {},
                     subtabs: {}
                 }, args),
-                maintabs          = $.extend({
+                maintabs = $.extend({
                     id: data.id,
                     classes: [],
                     tabs: {},
@@ -6554,7 +6554,7 @@
                         'data-min-height': 250
                     }
                 }, data.maintabs),
-                subtabs           = $.extend({
+                subtabs = $.extend({
                     classes: ['link-tabs', 'sub-tabs'],
                     tabs: {}
                 }, data.subtabs),
@@ -6755,9 +6755,9 @@
             PUM_Admin.forms.init();
         })
         .on('pumFieldChanged', '.pum-field', function () {
-            var $wrapper            = $(this),
+            var $wrapper = $(this),
                 dependent_field_ids = $wrapper.data('pum-field-dependents') || [],
-                $dependent_fields   = $(),
+                $fields_with_dependencies = $(),
                 i;
 
             if (!dependent_field_ids || dependent_field_ids.length <= 0) {
@@ -6765,20 +6765,20 @@
             }
 
             for (i = 0; i < dependent_field_ids.length; i++) {
-                $dependent_fields = $dependent_fields.add('.pum-field[data-id="' + dependent_field_ids[i] + '"]');
+                $fields_with_dependencies = $fields_with_dependencies.add('.pum-field[data-id="' + dependent_field_ids[i] + '"]');
             }
 
-            PUM_Admin.forms.checkDependencies($dependent_fields);
+            PUM_Admin.forms.checkDependencies($fields_with_dependencies);
         })
         .on('pumFieldChanged', '.pum-field-dynamic-desc', function () {
-            var $this       = $(this),
-                $input      = $this.find(':input'),
-                $container  = $this.parents('.pum-dynamic-form:first'),
-                val         = $input.val(),
+            var $this = $(this),
+                $input = $this.find(':input'),
+                $container = $this.parents('.pum-dynamic-form:first'),
+                val = $input.val(),
                 form_fields = $container.data('form_fields') || {},
-                field       = form_fields[$this.data('id')] || {},
-                $desc       = $this.find('.pum-desc'),
-                desc        = $this.data('pum-dynamic-desc');
+                field = form_fields[$this.data('id')] || {},
+                $desc = $this.find('.pum-desc'),
+                desc = $this.data('pum-dynamic-desc');
 
             switch (field.type) {
             case 'radio':
@@ -6799,9 +6799,9 @@
             $(this).parents('.pum-field').trigger('pumFieldChanged');
         })
         .on('click', '.pum-field-radio input', function (event) {
-            var $this     = $(this),
+            var $this = $(this),
                 $selected = $this.parents('li'),
-                $wrapper  = $this.parents('.pum-field');
+                $wrapper = $this.parents('.pum-field');
 
             $wrapper.trigger('pumFieldChanged');
 
@@ -7318,39 +7318,79 @@ function pumChecked(val1, val2, print) {
             PUM_Admin.select2.init();
         });
 }(jQuery));
-/*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
- ******************************************************************************/
-(function ($) {
-    "use strict";
-
-    function Selector_Cache() {
-        var elementCache = {};
-
-        var get_from_cache = function (selector, $ctxt, reset) {
-
-            if ('boolean' === typeof $ctxt) {
-                reset = $ctxt;
-                $ctxt = false;
-            }
-            var cacheKey = $ctxt ? $ctxt.selector + ' ' + selector : selector;
-
-            if (undefined === elementCache[cacheKey] || reset) {
-                elementCache[cacheKey] = $ctxt ? $ctxt.find(selector) : jQuery(selector);
-            }
-
-            return elementCache[cacheKey];
-        };
-
-        get_from_cache.elementCache = elementCache;
-        return get_from_cache;
+/*
+ * $$ Selector Cache
+ * Cache your selectors, without messy code.
+ * @author Stephen Kamenar
+ */
+(function ($, undefined) {
+    // '#a': $('#a')
+    if (typeof window.$$ === 'function') {
+        return;
     }
 
-    var selectors = new Selector_Cache();
+    var cache = {},
+        cacheByContext = {}, // '#context': (a cache object for the element)
+        tmp, tmp2; // Here for performance/minification
 
-    // Import this module.
-    window.PUM_Admin = window.PUM_Admin || {};
-    window.PUM_Admin.selectors = selectors;
+    window.$$ = function (selector, context) {
+        if (context) {
+            if (tmp = context.selector) {
+                context = tmp;
+            }
+
+            // tmp2 is contextCache
+            tmp2 = cacheByContext[context];
+
+            if (tmp2 === undefined) {
+                tmp2 = cacheByContext[context] = {};
+            }
+
+            tmp = tmp2[selector];
+
+            if (tmp !== undefined) {
+                return tmp;
+            }
+
+            return tmp2[selector] = $(selector, $$(context));
+        }
+
+        tmp = cache[selector];
+
+        if (tmp !== undefined) {
+            return tmp;
+        }
+
+        return cache[selector] = $(selector);
+    };
+
+    window.$$clear = function (selector, context) {
+        if (context) {
+            if (tmp = context.selector) {
+                context = tmp;
+            }
+
+            if (selector && (tmp = cacheByContext[context])) {
+                tmp[selector] = undefined;
+            }
+
+            cacheByContext[context] = undefined;
+        } else {
+            if (selector) {
+                cache[selector] = undefined;
+                cacheByContext[selector] = undefined;
+            } else {
+                cache = {};
+                cacheByContext = {};
+            }
+        }
+    };
+
+    window.$$fresh = function (selector, context) {
+        $$clear(selector, context);
+        return $$(selector, context);
+    };
+
 }(jQuery));
 /**
  * jQuery serializeObject
