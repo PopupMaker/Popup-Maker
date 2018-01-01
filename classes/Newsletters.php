@@ -149,7 +149,7 @@ class PUM_Newsletters {
 
 		$data['values'] = maybe_serialize( $values );
 
-		$subscriber_id = PUM_Subscribers::instance()->insert( $data );
+		$subscriber_id = PUM_DB_Subscribers::instance()->insert( $data );
 
 		if ( is_user_logged_in() && $subscriber_id ) {
 			update_user_meta( get_current_user_id(), 'pum_subscribed', true );

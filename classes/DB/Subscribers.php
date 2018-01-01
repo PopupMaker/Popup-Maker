@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * PUM_Subscribers Class
  */
-class PUM_Subscribers extends PUM_Abstracts_Database {
+class PUM_DB_Subscribers extends PUM_Abstracts_Database {
 
 	/**
 	 * The name of our database table
@@ -34,17 +34,17 @@ class PUM_Subscribers extends PUM_Abstracts_Database {
 	 */
 	public function get_columns() {
 		return array(
-			'ID'       => '%d',
-			'uuid'     => '%s',
-			'popup_id' => '%d',
-			'email_hash'     => '%s',
-			'email'    => '%s',
-			'name'    => '%s',
-			'fname'    => '%s',
-			'lname'    => '%s',
-			'values'   => '%s',
-			'user_id'  => '%d',
-			'created'  => '%s',
+			'ID'         => '%d',
+			'uuid'       => '%s',
+			'popup_id'   => '%d',
+			'email_hash' => '%s',
+			'email'      => '%s',
+			'name'       => '%s',
+			'fname'      => '%s',
+			'lname'      => '%s',
+			'values'     => '%s',
+			'user_id'    => '%d',
+			'created'    => '%s',
 		);
 	}
 
@@ -53,16 +53,16 @@ class PUM_Subscribers extends PUM_Abstracts_Database {
 	 */
 	public function get_column_defaults() {
 		return array(
-			'uuid'     => '',
-			'popup_id' => 0,
-			'email_hash'     => '',
-			'email'    => '',
-			'name'    => '',
-			'fname'    => '',
-			'lname'    => '',
-			'values'   => '',
-			'user_id'  => 0,
-			'created'  => current_time( 'mysql', 0 ),
+			'uuid'       => '',
+			'popup_id'   => 0,
+			'email_hash' => '',
+			'email'      => '',
+			'name'       => '',
+			'fname'      => '',
+			'lname'      => '',
+			'values'     => '',
+			'user_id'    => 0,
+			'created'    => current_time( 'mysql', 0 ),
 		);
 	}
 
