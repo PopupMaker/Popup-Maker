@@ -156,7 +156,7 @@ var PopMakeAdmin;
         },
         convert_theme_for_preview: function (theme) {
             return;
-            //$.fn.popmake.themes[popmake_default_theme] = PUMUtils.convert_meta_to_object(theme);
+            //$.fn.popmake.themes[popmake_default_theme] = window.PUM_Admin.utilities.convert_meta_to_object(theme);
         },
         initialize_theme_page: function () {
             $('#popup-titlediv').insertAfter('#titlediv');
@@ -270,16 +270,16 @@ var PopMakeAdmin;
             }
 
             $overlay.removeAttr('style').css({
-                backgroundColor: PUMUtils.convert_hex(theme.overlay_background_color, theme.overlay_background_opacity)
+                backgroundColor:  window.PUM_Admin.utils.convert_hex(theme.overlay_background_color, theme.overlay_background_opacity)
             });
             $container.removeAttr('style').css({
                 padding: theme.container_padding + 'px',
-                backgroundColor: PUMUtils.convert_hex(theme.container_background_color, theme.container_background_opacity),
+                backgroundColor: window.PUM_Admin.utils.convert_hex(theme.container_background_color, theme.container_background_opacity),
                 borderStyle: theme.container_border_style,
                 borderColor: theme.container_border_color,
                 borderWidth: theme.container_border_width + 'px',
                 borderRadius: theme.container_border_radius + 'px',
-                boxShadow: container_inset + theme.container_boxshadow_horizontal + 'px ' + theme.container_boxshadow_vertical + 'px ' + theme.container_boxshadow_blur + 'px ' + theme.container_boxshadow_spread + 'px ' + PUMUtils.convert_hex(theme.container_boxshadow_color, theme.container_boxshadow_opacity)
+                boxShadow: container_inset + theme.container_boxshadow_horizontal + 'px ' + theme.container_boxshadow_vertical + 'px ' + theme.container_boxshadow_blur + 'px ' + theme.container_boxshadow_spread + 'px ' + window.PUM_Admin.utils.convert_hex(theme.container_boxshadow_color, theme.container_boxshadow_opacity)
             });
             $title.removeAttr('style').css({
                 color: theme.title_font_color,
@@ -289,7 +289,7 @@ var PopMakeAdmin;
                 fontStyle: theme.title_font_style,
                 fontWeight: theme.title_font_weight,
                 textAlign: theme.title_text_align,
-                textShadow: theme.title_textshadow_horizontal + 'px ' + theme.title_textshadow_vertical + 'px ' + theme.title_textshadow_blur + 'px ' + PUMUtils.convert_hex(theme.title_textshadow_color, theme.title_textshadow_opacity)
+                textShadow: theme.title_textshadow_horizontal + 'px ' + theme.title_textshadow_vertical + 'px ' + theme.title_textshadow_blur + 'px ' + window.PUM_Admin.utils.convert_hex(theme.title_textshadow_color, theme.title_textshadow_opacity)
             });
             $content.removeAttr('style').css({
                 color: theme.content_font_color,
@@ -302,7 +302,7 @@ var PopMakeAdmin;
                 padding: theme.close_padding + 'px',
                 height: theme.close_height > 0 ? theme.close_height + 'px' : 'auto',
                 width: theme.close_width > 0 ? theme.close_width + 'px' : 'auto',
-                backgroundColor: PUMUtils.convert_hex(theme.close_background_color, theme.close_background_opacity),
+                backgroundColor: window.PUM_Admin.utils.convert_hex(theme.close_background_color, theme.close_background_opacity),
                 color: theme.close_font_color,
                 lineHeight: theme.close_line_height + 'px',
                 fontSize: theme.close_font_size + 'px',
@@ -313,8 +313,8 @@ var PopMakeAdmin;
                 borderColor: theme.close_border_color,
                 borderWidth: theme.close_border_width + 'px',
                 borderRadius: theme.close_border_radius + 'px',
-                boxShadow: close_inset + theme.close_boxshadow_horizontal + 'px ' + theme.close_boxshadow_vertical + 'px ' + theme.close_boxshadow_blur + 'px ' + theme.close_boxshadow_spread + 'px ' + PUMUtils.convert_hex(theme.close_boxshadow_color, theme.close_boxshadow_opacity),
-                textShadow: theme.close_textshadow_horizontal + 'px ' + theme.close_textshadow_vertical + 'px ' + theme.close_textshadow_blur + 'px ' + PUMUtils.convert_hex(theme.close_textshadow_color, theme.close_textshadow_opacity)
+                boxShadow: close_inset + theme.close_boxshadow_horizontal + 'px ' + theme.close_boxshadow_vertical + 'px ' + theme.close_boxshadow_blur + 'px ' + theme.close_boxshadow_spread + 'px ' + window.PUM_Admin.utils.convert_hex(theme.close_boxshadow_color, theme.close_boxshadow_opacity),
+                textShadow: theme.close_textshadow_horizontal + 'px ' + theme.close_textshadow_vertical + 'px ' + theme.close_textshadow_blur + 'px ' + window.PUM_Admin.utils.convert_hex(theme.close_textshadow_color, theme.close_textshadow_opacity)
             });
             switch (theme.close_location) {
             case "topleft":
@@ -346,7 +346,13 @@ var PopMakeAdmin;
         }
 
     };
+
+    $('.popmake-range-manual').addClass('pum-range-manual').parent('td').addClass('pum-field').addClass( 'pum-field-rangeslider' );
+    $('.range-value-unit').addClass( 'pum-range-value-unit' );
+
+
     $document.ready(function () {
+
         PopMakeAdmin.initialize_theme_page();
         $document.trigger('pum_init');
 

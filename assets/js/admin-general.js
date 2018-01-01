@@ -8204,5 +8204,8 @@ function pumChecked(val1, val2, print) {
     window.PUM_Admin = window.PUM_Admin || {};
     window.PUM_Admin.utils = utils;
 
+    // @deprecated 1.7.0 Here for backward compatibility.
+    window.PUMUtils = utils;
+
     $.fn.pumSerializeForm = utils.serializeForm;
 }(jQuery));
