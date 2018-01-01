@@ -6431,10 +6431,6 @@
                     $dependent.data("pum-dependent-fields", dependentFields);
                 }
 
-                if (dependentID === 'label_name' ) {
-                    debugger;
-                }
-
                 $(dependentFields).each(function () {
                     var $wrapper                   = $(this),
                         $field                     = $wrapper.find(':input:first'),

@@ -23,6 +23,15 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	public $ajax_rendering = true;
 
 	/**
+	 * The shortcode tag.
+	 *
+	 * @return string
+	 */
+	public function tag() {
+		return 'pum_sub_form';
+	}
+
+	/**
 	 * @return string
 	 */
 	public function label() {
@@ -333,8 +342,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 		) ); ?>
 
 
-		<form class="<?php esc_attr_e( $classes ); ?>"
-		      data-settings="<?php esc_attr_e( json_encode( $data_attr ) ); ?>">
+		<form class="<?php esc_attr_e( $classes ); ?>" data-settings="<?php esc_attr_e( json_encode( $data_attr ) ); ?>">
 
 			<?php do_action( 'pum_sub_form_before', $atts ); ?>
 
@@ -357,6 +365,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 						<?php
 						break;
+
 					case 'first_only': ?>
 
 						<div class="pum-form__field  pum-form__field--name  pum-sub-form-field  pum-sub-form-field--name  pum-sub-form-field--fname">
@@ -499,31 +508,22 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	}
 
 	/**
-	 *
+	 * Render template.
 	 */
-	public function _template() { ?>
-		<script type="text/html" id="tmpl-pum-shortcode-view-<?php echo $this->tag(); ?>">
-			<style>
-				<?php // echo readfile( PUM_AVM::$DIR . 'assets/css/site.min.css' ); ?>
-			</style>
-			<p class="pum-avm-form-desc">
-				<?php _e( 'Subscription Form Placeholder', 'popup-maker' ); ?>
-			</p>
-		</script><?php
+	public function template() { ?>
+		<p class="pum-form-desc">
+			<?php _e( 'Form Placeholder', 'popup-maker' ); ?>
+		</p>
+		<?php
 	}
 
 	/**
-	 * The shortcode tag.
+	 * Returns template styles.
+	 *
+	 * @return bool|string
 	 */
-	public function tag() {
-		return 'pum_sub_form';
-	}
-
-	public function _template_styles() {
-		ob_start();
-		include Popup_Maker::$DIR . 'assets/css/site.min.css';
-
-		return ob_get_clean();
+	public function template_styles() {
+		return file_get_contents( Popup_Maker::$DIR . 'assets/css/site.min.css' );
 	}
 
 }
