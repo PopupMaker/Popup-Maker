@@ -159,9 +159,7 @@ class PUM_Integrations {
 	 */
 	public static function generated_css( $css = '' ) {
 
-		if ( self::enabled( 'calderaforms' ) && did_action( 'cf_geo_autocomplete_rendered' ) ) {
-			$css .= ".pum { z-index: 99; }\n";
-
+		if ( self::enabled( 'calderaforms' ) ) {
 			// puts the google places autocomplete dropdown results above the bootstrap modal 1050 zindex.
 			$css .= ".pac-container { z-index: 2000000000 !important; }\n";
 		}
