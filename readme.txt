@@ -113,6 +113,7 @@ There are several common causes for this which include:
   * Now shows list of recent "items" immeditaly upon clicking the field rather than requiring search.
 * Improvement: Admin asset handling
   * Modularized admin assets for easier debugging & maintanance.
+* Improvement: Popup Trigger shortcode can now use custom popup IDs.
 
 = v1.6.7 - ?? =
 * Fix: WPML missing variable errors.
