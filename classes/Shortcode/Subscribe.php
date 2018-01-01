@@ -368,11 +368,11 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 					case 'first_only': ?>
 
-						<div class="pum-form__field  pum-form__field--name  pum-sub-form-field  pum-sub-form-field--name  pum-sub-form-field--fname">
+						<div class="pum-form__field  pum-form__field--fname  pum-sub-form-field  pum-sub-form-field--fname">
 							<?php if ( ! $atts['disable_labels'] ) : ?>
 								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_fname']; ?></label>
 							<?php endif; ?>
-							<input type="text" name="name" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_fname'] ); ?>"/>
+							<input type="text" name="fname" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_fname'] ); ?>"/>
 						</div>
 
 						<?php
@@ -380,18 +380,18 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 					case 'first_last': ?>
 
-						<div class="pum-form__field  pum-form__field--name  pum-sub-form-field  pum-sub-form-field--name  pum-sub-form-field--fname">
+						<div class="pum-form__field  pum-form__field--fname  pum-sub-form-field  pum-sub-form-field--fname">
 							<?php if ( ! $atts['disable_labels'] ) : ?>
-								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_name']; ?></label>
+								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_fname']; ?></label>
 							<?php endif; ?>
-							<input type="text" name="name" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_name'] ); ?>"/>
+							<input type="text" name="fname" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_fname'] ); ?>"/>
 						</div>
 
-						<div class="pum-form__field  pum-form__field--name  pum-sub-form-field  pum-sub-form-field--name  pum-sub-form-field--lname">
+						<div class="pum-form__field  pum-form__field--lname  pum-sub-form-field  pum-sub-form-field--lname">
 							<?php if ( ! $atts['disable_labels'] ) : ?>
-								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_name']; ?></label>
+								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_lname']; ?></label>
 							<?php endif; ?>
-							<input type="text" name="name" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_name'] ); ?>"/>
+							<input type="text" name="lname" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_lname'] ); ?>"/>
 						</div>
 
 						<?php
@@ -482,9 +482,13 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 		$data_attr_fields = $this->data_attr_fields();
 
-		foreach ( $atts as $key => $val ) {
+		foreach ( $atts as $key => $value ) {
 			if ( in_array( $key, $data_attr_fields ) ) {
-				$data[ $key ] = $val;
+				$data[ $key ] = $value;
+
+				if ( $key == 'redirect' ) {
+					$data[ $key ] = base64_encode( $value );
+				}
 			}
 		}
 
@@ -508,23 +512,19 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	}
 
 	/**
-	 * Render template.
+	 *
 	 */
 	public function template() { ?>
-		<p class="pum-form-desc">
-			<?php _e( 'Form Placeholder', 'popup-maker' ); ?>
+		<p class="pum-sub-form-desc">
+			<?php _e( 'Subscription Form Placeholder', 'popup-maker' ); ?>
 		</p>
 		<?php
 	}
 
-	/**
-	 * Returns template styles.
-	 *
-	 * @return bool|string
-	 */
 	public function template_styles() {
-		return file_get_contents( Popup_Maker::$DIR . 'assets/css/site.min.css' );
+		include Popup_Maker::$DIR . 'assets/css/site.min.css';
 	}
+
 
 }
 

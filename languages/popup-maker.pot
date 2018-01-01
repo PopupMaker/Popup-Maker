@@ -1,4 +1,4 @@
-# Copyright (C) 2017 popup-maker
+# Copyright (C) 2018 popup-maker
 # This file is distributed under the same license as the popup-maker package.
 msgid ""
 msgstr ""
@@ -7,7 +7,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
 "Language-Team: WP Popup Maker <support@wppopupmaker.com>\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -28,11 +28,11 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: classes/Admin/Assets.php:95, classes/Admin/Shortcode/UI.php:85
+#: classes/Admin/Assets.php:95, classes/Admin/Shortcode/UI.php:88
 msgid "Insert"
 msgstr ""
 
-#: classes/Admin/Assets.php:96, classes/Admin/Helpers.php:18, classes/Admin/Shortcode/UI.php:86
+#: classes/Admin/Assets.php:96, classes/Admin/Helpers.php:18, classes/Admin/Shortcode/UI.php:89
 msgid "Cancel"
 msgstr ""
 
@@ -52,11 +52,11 @@ msgstr ""
 msgid "Are you sure you want to reset the open count?"
 msgstr ""
 
-#: classes/Admin/Assets.php:101, classes/Admin/Shortcode/UI.php:87
+#: classes/Admin/Assets.php:101, classes/Admin/Shortcode/UI.php:90
 msgid "Popup Maker Shortcodes"
 msgstr ""
 
-#: classes/Admin/Assets.php:102, classes/Admin/Shortcode/UI.php:88
+#: classes/Admin/Assets.php:102, classes/Admin/Shortcode/UI.php:91
 msgid "There was an error in generating the preview"
 msgstr ""
 
@@ -128,7 +128,7 @@ msgstr ""
 msgid "Analytics"
 msgstr ""
 
-#: classes/Admin/Popups.php:264, classes/Admin/Popups.php:283, classes/Admin/Popups.php:290, classes/Admin/Settings.php:520, classes/Admin/Settings.php:543, classes/Admin/Settings.php:546, classes/Conditions.php:107, classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:157, classes/Shortcode.php:131, classes/Shortcode.php:143, classes/Shortcode/Popup.php:46, classes/Shortcode/Subscribe.php:60, classes/Triggers.php:259, includes/class-popmake-fields.php:57
+#: classes/Admin/Popups.php:264, classes/Admin/Popups.php:283, classes/Admin/Popups.php:290, classes/Admin/Settings.php:520, classes/Admin/Settings.php:543, classes/Admin/Settings.php:546, classes/Conditions.php:107, classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:157, classes/Shortcode.php:137, classes/Shortcode.php:149, classes/Shortcode/Popup.php:46, classes/Shortcode/Subscribe.php:60, classes/Triggers.php:259, includes/class-popmake-fields.php:57
 msgid "General"
 msgstr ""
 
@@ -737,7 +737,7 @@ msgstr ""
 msgid "Assets"
 msgstr ""
 
-#: classes/Admin/Shortcode/UI.php:148
+#: classes/Admin/Shortcode/UI.php:151
 msgid "You do not have access to preview this post."
 msgstr ""
 
@@ -1239,7 +1239,7 @@ msgstr ""
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: classes/Shortcode.php:132, classes/Shortcode.php:144
+#: classes/Shortcode.php:138, classes/Shortcode.php:150
 msgid "Options"
 msgstr ""
 
@@ -1535,8 +1535,8 @@ msgstr ""
 msgid "Select a popup"
 msgstr ""
 
-#: classes/Shortcode/Subscribe.php:515
-msgid "Form Placeholder"
+#: classes/Shortcode/Subscribe.php:519
+msgid "Subscription Form Placeholder"
 msgstr ""
 
 #: classes/Site/Assets.php:189, classes/Types.php:22, includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/integrations/class-pum-gravity-forms.php:53, includes/modules/admin-bar.php:414

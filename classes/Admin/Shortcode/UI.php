@@ -49,6 +49,9 @@ class PUM_Admin_Shortcode_UI {
 		add_filter( 'mce_buttons', array( __CLASS__, 'mce_buttons' ) );
 		add_filter( 'mce_external_plugins', array( __CLASS__, 'mce_external_plugins' ) );
 
+		// Add core site styles for form previews.
+		//add_editor_style( Popup_Maker::$URL . 'assets/css/site.min.css' );
+
 		// Process live previews.
 		add_action( 'wp_ajax_pum_do_shortcode', array( __CLASS__, 'do_shortcode' ) );
 		//add_action( 'wp_ajax_pum_do_shortcode', array( __CLASS__, 'wp_ajax_pum_do_shortcode' ) );
@@ -174,7 +177,7 @@ class PUM_Admin_Shortcode_UI {
 		}
 
 		/** Generate inline styles when needed. */
-		$styles = "<style>" . $shortcode_object->_template_styles() . "</style>";
+		$styles = "<style>" . $shortcode_object->get_template_styles() . "</style>";
 
 		wp_send_json_success( $styles . $content );
 	}

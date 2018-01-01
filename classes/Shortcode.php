@@ -84,14 +84,6 @@ abstract class PUM_Shortcode {
 	}
 
 	/**
-	 * @return mixed
-	 */
-	public static function init() {
-		$class = get_called_class();
-		return new $class;
-	}
-
-	/**
 	 * Register this shortcode with Shortcode UI & Shortcake.
 	 */
 	public function register() {
@@ -108,6 +100,14 @@ abstract class PUM_Shortcode {
 	abstract public function tag();
 
 	/**
+	 * @return mixed
+	 */
+	public static function init() {
+		$class = get_called_class();
+		return new $class;
+	}
+
+	/**
 	 * Shortcode handler
 	 *
 	 * @param  array $atts shortcode attributes
@@ -116,6 +116,12 @@ abstract class PUM_Shortcode {
 	 * @return string
 	 */
 	abstract public function handler( $atts, $content = null );
+
+	public function _tabs() {
+		$tabs = $this->version < 2 && method_exists( $this, 'sections' ) ? $this->sections() : $this->tabs();
+
+		return apply_filters( 'pum_shortcode_tabs', $tabs, $this->tag() );
+	}
 
 	/**
 	 * Sections.
@@ -145,12 +151,6 @@ abstract class PUM_Shortcode {
 		);
 	}
 
-	public function _tabs() {
-		$tabs = $this->version < 2 && method_exists( $this,'sections' ) ? $this->sections() : $this->tabs();
-
-		return apply_filters( 'pum_shortcode_tabs', $tabs, $this->tag() );
-	}
-
 	/**
 	 * Gets preprocessed shortcode attributes.
 	 *
@@ -177,11 +177,11 @@ abstract class PUM_Shortcode {
 	 * Render the template based on shortcode classes methods.
 	 */
 	public function render_template() {
-		$template = $this->template();
-
-		if ( $template ) {
-			$template = $this->get_style_block() . $template;
-			echo '<script type="text/html" id="tmpl-pum-shortcode-view-' . $this->tag() . '">' . $template . '</script>';
+		if ( $this->version >= 2 && $this->get_template() !== false ) {
+			echo '<script type="text/html" id="tmpl-pum-shortcode-view-' . $this->tag() . '">';
+				$this->style_block();
+				$this->template();
+			echo '</script>';
 		} else {
 			/** @deprecated, here in case shortcode doesn't yet have the new $this->template() method. */
 			$this->_template();
@@ -202,15 +202,12 @@ abstract class PUM_Shortcode {
 	/**
 	 * Render the template based on shortcode classes methods.
 	 */
-	public function get_style_block() {
-		$template_styles = $this->template_styles();
+	public function style_block() {
+		$styles = $this->get_template_styles();
 
-		if ( ! $template_styles ) {
-			/** @deprecated, here in case shortcode doesn't yet have the new $this->template() method. */
-			$template_styles = $this->_template_styles();
+		if ( $styles !== false ) {
+			echo '<style>' . $styles . '</style>';
 		}
-
-		return '<style>' . $template_styles . '</style>';
 	}
 
 	/**
@@ -220,11 +217,28 @@ abstract class PUM_Shortcode {
 	}
 
 	/**
+	 * Render the template based on shortcode classes methods.
+	 *
+	 * @return string|false
+	 */
+	public function get_template_styles() {
+
+		ob_start();
+
+		$this->template_styles();
+
+		/**  $this->_template_styles() is @deprecated and here in case shortcode doesn't yet have the new $this->template() method. */
+		echo $this->_template_styles();
+
+		$styles = ob_get_clean();
+
+		return ! empty( $styles ) ? $styles: false;
+	}
+
+	/**
 	 * Returns the styles for inner contents of the JS templates.
 	 *
 	 * @todo Once all shortcodes have been updated to use template over _template make this abstract.
-	 *
-	 * @return bool|string
 	 */
 	public function template_styles() {
 		return false;
@@ -237,6 +251,23 @@ abstract class PUM_Shortcode {
 	 */
 	public function _template_styles() {
 		return '';
+	}
+
+	/**
+	 * Returns the inner contents of the JS templates.
+	 *
+	 * @todo Once all shortcodes have been updated to use template over _template make this abstract.
+	 *
+	 * @return bool|string
+	 */
+	public function get_template() {
+		ob_start();
+
+		$this->template();
+
+		$template = ob_get_clean();
+
+		return ! empty( $template ) ? $template : false;
 	}
 
 	/**
@@ -396,12 +427,12 @@ abstract class PUM_Shortcode {
 				 * Apply field compatibility fixes for shortcodes still on v1.
 				 */
 				if ( $this->version < 2 ) {
-					if ( ! empty( $field['type'] ) && in_array( $field['type'], array( 'select', 'postselect', 'radio', 'multicheck') ) ) {
+					if ( ! empty( $field['type'] ) && in_array( $field['type'], array( 'select', 'postselect', 'radio', 'multicheck' ) ) ) {
 						$fields[ $section_id ][ $field_id ]['options'] = ! empty( $field['options'] ) ? array_flip( $field['options'] ) : array();
 					}
 				}
 
-				$fields[ $section_id ][ $field_id ]['id'] = $field_id;
+				$fields[ $section_id ][ $field_id ]['id']   = $field_id;
 				$fields[ $section_id ][ $field_id ]['name'] = 'attrs[' . $field_id . ']';
 			}
 		}

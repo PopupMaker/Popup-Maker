@@ -2628,7 +2628,8 @@ var pum_debug_mode = false,
     $(document)
         .on('submit', 'form.pum-sub-form', window.PUM.newsletter.form.submit)
         .on('success', 'form.pum-sub-form', function (event, data) {
-            var $form = $(event.target);
+            var $form = $(event.target),
+                settings = $form.data('settings') || {};
 
             $form
                 .trigger('pumNewsletterSuccess', [data])
@@ -2638,7 +2639,13 @@ var pum_debug_mode = false,
 
             window.pum.hooks.doAction('pum-sub-form.success', data, $form);
 
-            window.PUM.forms.success($form, $form.data('settings') || {});
+            if (typeof settings.redirect === 'string') {
+                if (settings.redirect !== '') {
+                    settings.redirect = atob(settings.redirect);
+                }
+            }
+
+            window.PUM.forms.success($form, settings);
         })
         .on('error', 'form.pum-sub-form', function (event, data) {
             var $form = $(event.target);
