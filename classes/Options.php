@@ -133,11 +133,11 @@ class PUM_Options {
 	 * @return bool
 	 */
 	public static function update_all( $options = array() ) {
-		$did_update = update_option( static:: $_prefix . 'settings', $options );
+		$did_update = update_option( self:: $_prefix . 'settings', $options );
 
 		// If it updated, let's update the global variable
 		if ( $did_update ) {
-			static::$_data = $options;
+			self::$_data = $options;
 		}
 
 		return $did_update;

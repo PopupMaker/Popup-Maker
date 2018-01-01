@@ -207,50 +207,75 @@ class PUM_Admin_Settings {
 
 		if ( ! isset( $tabs ) ) {
 			$tabs = apply_filters( 'pum_settings_fields', array(
-				'general'    => array(
+				'general'       => array(
 					'main' => array(),
 				),
-				'assets'     => array(
+				'subscriptions' => array(
 					'main' => array(
-						'disable_google_font_loading'     => array(
-							'type' => 'checkbox',
-							'label' => __( 'Don\'t Load Google Fonts', 'popup-maker' ),
-							'desc' => __( 'Check this disable loading of google fonts, useful if the fonts you chose are already loaded with your theme.', 'popup-maker' ),
+						'newsletter_default_provider'        => array(
+							'label'   => __( 'Default Newsletter Provider', 'popup-maker' ),
+							'desc'    => __( 'The default mailing provider used for the subscription form.', 'popup-maker' ),
+							'type'    => 'select',
+							'options' => array_merge( PUM_Newsletter_Providers::dropdown_list(), array(
+								'none' => __( 'None', 'popup-maker' ),
+							) ),
 						),
-						'disable_popup_maker_core_styles' => array(
-							'type' => 'checkbox',
-							'label' => __( 'Don\'t load Popup Maker core stylesheet.', 'popup-maker' ),
-							'desc' => __( 'Check this if you have copied the Popup Maker core styles to your own stylesheet or are using custom styles.', 'popup-maker' ),
+						'default_success_message'            => array(
+							'label' => __( 'Success Message', 'popup-maker' ),
+							'desc'  => __( 'Message to show user when successfuly subscribed.', 'popup-maker' ),
+							'type'  => 'text',
+							'std'   => __( 'You have been subscribed!', 'popup-maker' ),
 						),
-						'disable_popup_theme_styles'      => array(
-							'type' => 'checkbox',
-							'label' => __( 'Don\'t load popup theme styles to the head.', 'popup-maker' ),
-							'desc' => __( 'Check this if you have copied the popup theme styles to your own stylesheet or are using custom styles.', 'popup-maker' ),
+						'default_double_opt_in_success'      => array(
+							'label' => __( 'Invalid Email Message', 'popup-maker' ),
+							'desc'  => __( 'Message to show user when an invalid email is entered.', 'popup-maker' ),
+							'type'  => 'text',
+							'std'   => __( 'Please check your email and confirm your subscription.', 'popup-maker' ),
 						),
-						'output_pum_styles'               => array(
-							'id'   => 'output_pum_styles',
-							'type' => 'html',
-							'content' => popmake_output_pum_styles(),
+						'default_empty_email_message'        => array(
+							'label' => __( 'Empty Email Message', 'popup-maker' ),
+							'desc'  => __( 'Message to show user when no email is entered.', 'popup-maker' ),
+							'type'  => 'text',
+							'std'   => __( 'Please enter a valid email.', 'popup-maker' ),
 						),
+						'default_invalid_email_message'      => array(
+							'label' => __( 'Invalid Email Message', 'popup-maker' ),
+							'desc'  => __( 'Message to show user when an invalid email is entered.', 'popup-maker' ),
+							'type'  => 'text',
+							'std'   => __( 'Email provided is not a valid email address.', 'popup-maker' ),
+						),
+						'default_error_message'              => array(
+							'label' => __( 'Error Message', 'popup-maker' ),
+							'desc'  => __( 'Message to show user when an error has occurred.', 'popup-maker' ),
+							'type'  => 'text',
+							'std'   => __( 'Error occurred when subscribing. Please try again.', 'popup-maker' ),
+						),
+						'default_already_subscribed_message' => array(
+							'label' => __( 'Already Subscribed Message', 'popup-maker' ),
+							'desc'  => __( 'Message to show user who is already subscribed.', 'popup-maker' ),
+							'type'  => 'text',
+							'std'   => __( 'You are already a subscriber.', 'popup-maker' ),
+						),
+
 					),
 				),
-				'extensions' => array(
+				'extensions'    => array(
 					'main' => array(),
 				),
-				'licenses'   => array(
+				'licenses'      => array(
 					'main' => array(),
 				),
-				'misc'       => array(
-					'main' => array(
+				'misc'          => array(
+					'main'   => array(
 						'disabled_admin_bar'                   => array(
-							'type' => 'checkbox',
+							'type'  => 'checkbox',
 							'label' => __( 'Disable Popups Admin Bar', 'popup-maker' ),
-							'desc' => __( 'This will disable the admin Popups menu item.', 'popup-maker' ),
+							'desc'  => __( 'This will disable the admin Popups menu item.', 'popup-maker' ),
 						),
 						'debug_mode'                           => array(
-							'type' => 'checkbox',
+							'type'  => 'checkbox',
 							'label' => __( 'Enable Debug Mode', 'popup-maker' ),
-							'desc' => __( 'This will turn on multiple debug tools used to quickly find issues.', 'popup-maker' ),
+							'desc'  => __( 'This will turn on multiple debug tools used to quickly find issues.', 'popup-maker' ),
 						),
 						'enable_easy_modal_compatibility_mode' => array(
 							'type'  => 'checkbox',
@@ -272,9 +297,31 @@ class PUM_Admin_Settings {
 							'label' => __( 'Disable categories & tags?', 'popup-maker' ),
 							'desc'  => __( 'This will disable the popup tags & categories.', 'popup-maker' ),
 						),
-						'disable_cache' => array(
+						'disable_cache'                        => array(
 							'type'  => 'checkbox',
 							'label' => __( 'Disable Popup Maker caching', 'popup-maker' ),
+						),
+					),
+					'assets' => array(
+						'disable_google_font_loading'     => array(
+							'type'  => 'checkbox',
+							'label' => __( 'Don\'t Load Google Fonts', 'popup-maker' ),
+							'desc'  => __( 'Check this disable loading of google fonts, useful if the fonts you chose are already loaded with your theme.', 'popup-maker' ),
+						),
+						'disable_popup_maker_core_styles' => array(
+							'type'  => 'checkbox',
+							'label' => __( 'Don\'t load Popup Maker core stylesheet.', 'popup-maker' ),
+							'desc'  => __( 'Check this if you have copied the Popup Maker core styles to your own stylesheet or are using custom styles.', 'popup-maker' ),
+						),
+						'disable_popup_theme_styles'      => array(
+							'type'  => 'checkbox',
+							'label' => __( 'Don\'t load popup theme styles to the head.', 'popup-maker' ),
+							'desc'  => __( 'Check this if you have copied the popup theme styles to your own stylesheet or are using custom styles.', 'popup-maker' ),
+						),
+						'output_pum_styles'               => array(
+							'id'      => 'output_pum_styles',
+							'type'    => 'html',
+							'content' => popmake_output_pum_styles(),
 						),
 					),
 				),
@@ -470,11 +517,11 @@ class PUM_Admin_Settings {
 
 		if ( ! isset( $tabs ) ) {
 			$tabs = apply_filters( 'pum_settings_tabs', array(
-				'general'    => __( 'General', 'popup-maker' ),
-				'assets'     => __( 'Assets', 'popup-maker' ),
-				'extensions' => __( 'Extensions', 'popup-maker' ),
-				'licenses'   => __( 'Licenses', 'popup-maker' ),
-				'misc'       => __( 'Misc', 'popup-maker' ),
+				'general'       => __( 'General', 'popup-maker' ),
+				'subscriptions' => __( 'Subscriptions', 'popup-maker' ),
+				'extensions'    => __( 'Extensions', 'popup-maker' ),
+				'licenses'      => __( 'Licenses', 'popup-maker' ),
+				'misc'          => __( 'Misc', 'popup-maker' ),
 			) );
 
 			/** @deprecated 1.7.0 */
@@ -492,20 +539,21 @@ class PUM_Admin_Settings {
 	 */
 	public static function sections() {
 		return apply_filters( 'pum_settings_tab_sections', array(
-			'general'    => array(
-				'main' => __( 'General Settings', 'popup-maker' ),
+			'general'       => array(
+				'main' => __( 'General', 'popup-maker' ),
 			),
-			'assets'     => array(
-				'main' => __( 'Asset Settings', 'popup-maker' ),
+			'subscriptions' => array(
+				'main' => __( 'General', 'popup-maker' ),
 			),
-			'extensions' => array(
+			'extensions'    => array(
 				'main' => __( 'Extension Settings', 'popup-maker' ),
 			),
-			'licenses'   => array(
-				'main' => __( 'License Settings', 'popup-maker' ),
+			'licenses'      => array(
+				'main' => __( 'Licenses', 'popup-maker' ),
 			),
-			'misc'       => array(
-				'main' => __( 'Misc Settings', 'popup-maker' ),
+			'misc'          => array(
+				'main'   => __( 'Misc', 'popup-maker' ),
+				'assets' => __( 'Assets', 'popup-maker' ),
 			),
 		) );
 	}
@@ -559,7 +607,7 @@ class PUM_Admin_Settings {
 					case 'measure':
 						break;
 					case 'license_key':
-						$license  = get_option( $field['options']['is_valid_license_option'] );
+						$license = get_option( $field['options']['is_valid_license_option'] );
 
 						$settings[ $key ] = array(
 							'key'      => trim( $value ),

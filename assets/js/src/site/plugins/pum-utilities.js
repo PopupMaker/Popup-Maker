@@ -5,14 +5,47 @@
 (function ($, document, undefined) {
     "use strict";
 
-    var root = this,
-        inputTypes = 'color,date,datetime,datetime-local,email,hidden,month,number,password,range,search,tel,text,time,url,week'.split(','),
+    var inputTypes = 'color,date,datetime,datetime-local,email,hidden,month,number,password,range,search,tel,text,time,url,week'.split(','),
         inputNodes = 'select,textarea'.split(','),
         rName = /\[([^\]]*)\]/g;
 
-    // ugly hack for IE7-8
-    function isInArray(array, needle) {
-        return $.inArray(needle, array) !== -1;
+    /**
+     * Polyfill for IE < 9
+     */
+    if (!Array.prototype.indexOf) {
+        Array.prototype.indexOf = function (searchElement /*, fromIndex */) {
+            "use strict";
+
+            if (this === void 0 || this === null)
+                throw new TypeError();
+
+            var t = Object(this);
+            var len = t.length >>> 0;
+            if (len === 0)
+                return -1;
+
+            var n = 0;
+            if (arguments.length > 0) {
+                n = Number(arguments[1]);
+                if (n !== n) // shortcut for verifying if it's NaN
+                    n = 0;
+                else if (n !== 0 && n !== (1 / 0) && n !== -(1 / 0))
+                    n = (n > 0 || -1) * Math.floor(Math.abs(n));
+            }
+
+            if (n >= len)
+                return -1;
+
+            var k = n >= 0
+                ? n
+                : Math.max(len - Math.abs(n), 0);
+
+            for (; k < len; k++) {
+                if (k in t && t[k] === searchElement)
+                    return k;
+            }
+            return -1;
+        };
     }
 
     function storeValue(container, parsedName, value) {
@@ -38,6 +71,40 @@
     }
 
     $.fn.popmake.utilities = {
+        scrollTo: function (target, callback) {
+            var $target = $(target) || $();
+
+            if (!$target.length) {
+                return;
+            }
+
+            $('html, body').animate({
+                scrollTop: $target.offset().top - 100
+            }, 1000, 'swing', function () {
+                // Find the first :input that isn't a button or hidden type.
+                var $input = $target.find(':input:not([type="button"]):not([type="hidden"]):not(button)').eq(0);
+
+                if ($input.hasClass('wp-editor-area')) {
+                    tinyMCE.execCommand('mceFocus', false, $input.attr('id'));
+                } else {
+                    $input.focus();
+                }
+
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            });
+        },
+        /**
+         * In Array tester function. Similar to PHP's in_array()
+
+         * @param needle
+         * @param array
+         * @returns {boolean}
+         */
+        inArray: function (needle, array) {
+            return !!~array.indexOf(needle);
+        },
         convert_hex: function (hex, opacity) {
             hex = hex.replace('#', '');
             var r = parseInt(hex.substring(0, 2), 16),
@@ -324,8 +391,8 @@
 
                 // Apply simple checks and filters
                 if (!this.name || this.disabled ||
-                    isInArray(settings.exclude, this.name) ||
-                    (settings.include.length && !isInArray(settings.include, this.name)) ||
+                    window.PUM.utilities.inArray(this.name, settings.exclude) ||
+                    (settings.include.length && !window.PUM.utilities.inArray(this.name, settings.include)) ||
                     this.className.indexOf(settings.includeByClass) === -1) {
                     return;
                 }
@@ -338,8 +405,8 @@
                 }
 
                 if (this.checked ||
-                    isInArray(inputTypes, this.type) ||
-                    isInArray(inputNodes, this.nodeName.toLowerCase())) {
+                    window.PUM.utilities.inArray(this.type, inputTypes) ||
+                    window.PUM.utilities.inArray(this.nodeName.toLowerCase(), inputNodes)) {
 
                     // Simulate control with a complex name (i.e. `some[]`)
                     // as it handled in the same way as Checkboxes should
@@ -361,5 +428,9 @@
 
     // Deprecated fix. utilies was renamed because of typo.
     $.fn.popmake.utilies = $.fn.popmake.utilities;
+
+    window.PUM = window.PUM || {};
+    window.PUM.utilities = window.PUM.utilities || {};
+    window.PUM.utilities = $.extend(window.PUM.utilities, $.fn.popmake.utilities);
 
 }(jQuery, document));

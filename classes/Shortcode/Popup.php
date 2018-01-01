@@ -312,10 +312,8 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 		return ob_get_clean();
 	}
 
-	public function _template() { ?>
-		<script type="text/html" id="tmpl-pum-shortcode-view-popup">
-			<?php _e( 'Popup', 'popup-maker' ); ?>: ID "{{attrs.id}}"
-		</script><?php
+	public function template() { ?>
+			<?php _e( 'Popup', 'popup-maker' ); ?>: ID "{{attrs.id}}"<?php
 	}
 
 }

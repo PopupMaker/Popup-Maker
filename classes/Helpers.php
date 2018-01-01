@@ -12,6 +12,37 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class PUM_Helpers {
 
+	/**
+	 * Sort nested arrays with various options.
+	 *
+	 * @param array $array
+	 * @param string $type
+	 * @param bool $reverse
+	 *
+	 * @return array
+	 */
+	public static function sort_array( $array = array(), $type = 'key', $reverse = false ) {
+		if ( ! is_array( $array ) ) {
+			return $array;
+		}
+
+		switch ( $type ) {
+			case 'key':
+				if ( ! $reverse ) {
+					ksort( $array );
+				} else {
+					krsort( $array );
+				}
+				break;
+
+			case 'natural':
+				natsort( $array );
+				break;
+		}
+
+		return array_map( array( __CLASS__, 'sort_array_by_key' ), $array, $type, $reverse );
+	}
+
 	public static function post_type_selectlist( $post_type, $args = array(), $include_total = false ) {
 
 		$args = wp_parse_args( $args, array(
@@ -114,6 +145,18 @@ class PUM_Helpers {
 
 		return $themes;
 
+	}
+
+	public static function popup_selectlist() {
+		$popup_list = array();
+
+		$popups = PUM_Popups::get_all();
+
+		foreach ( $popups->posts as $popup ) {
+			$popup_list[ $popup->ID ] = $popup->post_title;
+		}
+
+		return $popup_list;
 	}
 
 }

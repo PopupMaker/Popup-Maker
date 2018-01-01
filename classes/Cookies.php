@@ -74,6 +74,12 @@ class PUM_Cookies {
 			'on_popup_close' => array(
 				'name' => __( 'On Popup Close', 'popup-maker' ),
 			),
+			'pum_sub_form_success'             => array(
+				'name' => __( 'Subscription Form: Successful', 'popup-maker' ),
+			),
+			'pum_sub_form_already_subscribed' => array(
+				'name' => __( 'Subscription Form: Already Subscribed', 'popup-maker' ),
+			),
 			'manual'         => array(
 				'name' => __( 'Manual JavaScript', 'popup-maker' ),
 			),

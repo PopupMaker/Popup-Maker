@@ -333,6 +333,27 @@ class PUM_AssetCache {
 	}
 
 	/**
+	 * Used when asset cache is not enabled.
+	 *
+	 * @return string
+	 */
+	public static function inline_css() {
+		ob_start();
+
+		echo self::generate_popup_theme_styles();
+
+		// Render any extra styles globally added.
+		if ( ! empty( $GLOBALS['pum_extra_styles'] ) ) {
+			echo $GLOBALS['pum_extra_styles'];
+		}
+
+		// Allows rendering extra css via action.
+		do_action( 'pum_styles' );
+
+		return ob_get_clean();
+	}
+
+	/**
 	 * Generate Popup Theme Styles
 	 *
 	 * @return mixed|string
