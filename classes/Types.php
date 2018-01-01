@@ -22,12 +22,15 @@ class PUM_Types {
 			$labels['menu_name'] = __( 'Popup Maker', 'popup-maker' );
 
 			$popup_args = apply_filters( 'popmake_popup_post_type_args', array(
-				'labels'        => $labels,
-				'show_ui'       => true,
-				'query_var'     => false,
-				'menu_icon'     => POPMAKE_URL . '/assets/images/admin/dashboard-icon.png',
-				'menu_position' => 20.292892729,
-				'supports'      => apply_filters( 'popmake_popup_supports', array(
+				'labels'              => $labels,
+				'public'              => true,
+				'publicly_queryable'  => false,
+				'query_var'           => false,
+				'exclude_from_search' => true,
+				'show_ui'             => true,
+				'menu_icon'           => POPMAKE_URL . '/assets/images/admin/dashboard-icon.png',
+				'menu_position'       => 20.292892729,
+				'supports'            => apply_filters( 'popmake_popup_supports', array(
 					'title',
 					'editor',
 					'revisions',

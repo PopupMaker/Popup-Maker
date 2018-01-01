@@ -88,7 +88,9 @@ class PUM_Admin_Assets {
 		if ( wp_script_is( 'pum-admin-general' ) || wp_script_is( 'popup-maker-admin' ) ) {
 			$admin_vars = apply_filters( 'pum_admin_vars', apply_filters( 'pum_admin_var', array(
 				'post_id' => ! empty( $_GET['post'] ) ? intval( $_GET['post'] ) : null,
+				'homeurl' => home_url(),
 				'I10n'    => array(
+					'preview_popup'                   => __( 'Preview', 'popup-maker' ),
 					'add'                             => __( 'Add', 'popup-maker' ),
 					'save'                            => __( 'Save', 'popup-maker' ),
 					'update'                          => __( 'Update', 'popup-maker' ),
@@ -117,7 +119,7 @@ class PUM_Admin_Assets {
 	 */
 	public static function register_admin_styles() {
 
-		wp_register_style( 'pum-admin-general', self::$css_url . 'admin-general' . self::$suffix . '.css', array( 'dashicons','wp-color-picker' ), Popup_Maker::$VER );
+		wp_register_style( 'pum-admin-general', self::$css_url . 'admin-general' . self::$suffix . '.css', array( 'dashicons', 'wp-color-picker' ), Popup_Maker::$VER );
 		wp_register_style( 'pum-admin-popup-editor', self::$css_url . 'admin-popup-editor' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
 		wp_register_style( 'pum-admin-theme-editor', self::$css_url . 'admin-theme-editor' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
 		wp_register_style( 'pum-admin-extensions-page', self::$css_url . 'admin-extensions-page' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );

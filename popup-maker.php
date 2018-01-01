@@ -260,7 +260,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/class-pum-popup-query.php';
 		require_once self::$DIR . 'includes/class-pum-fields.php';
 		require_once self::$DIR . 'includes/class-pum-form.php';
-		require_once self::$DIR . 'includes/class-pum-previews.php';
 
 		// Functions
 		require_once self::$DIR . 'includes/pum-popup-functions.php';
@@ -348,6 +347,7 @@ class Popup_Maker {
 		PUM_AssetCache::init();
 		PUM_Site::init();
 		PUM_Admin::init();
+		PUM_Previews::init();
 		PUM_Newsletters::init();
 		PUM_Integrations::init();
 

@@ -1185,6 +1185,13 @@ var cookies;
                 PUM_Admin.forms.render(args, values, $container);
             }
 
+            $('a.page-title-action')
+                .clone()
+                .attr('target', '_blank')
+                .attr('href', pum_admin_vars.homeurl + '?popup_preview=true&popup=' + $('#post_ID').val())
+                .text(pum_admin_vars.I10n.preview_popup)
+                .insertAfter('a.page-title-action');
+
             // TODO Can't figure out why this is needed, but it looks stupid otherwise when the first condition field defaults to something other than the placeholder.
             $('#pum-first-condition, #pum-first-trigger, #pum-first-cookie')
                 .val(null)
