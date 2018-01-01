@@ -170,7 +170,15 @@ abstract class PUM_Shortcode {
 	 * @return array
 	 */
 	public function defaults() {
-		return array();
+		$defaults = array();
+
+		foreach ( $this->fields() as $tab => $fields ) {
+			foreach ( $fields as $key => $field ) {
+				$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : null;
+			}
+		}
+
+		return apply_filters( 'pum_shortcode_defaults', $defaults, $this );
 	}
 
 	/**
@@ -278,7 +286,7 @@ abstract class PUM_Shortcode {
 		$shortcode_ui_args = array(
 			'label'         => $this->label(),
 			'listItemImage' => $this->icon(),
-			'post_type'     => $this->post_types(),
+			'post_type'     => apply_filters( 'pum_shortcode_post_types', $this->post_types(), $this ),
 			'attrs'         => array(),
 		);
 
@@ -406,7 +414,7 @@ abstract class PUM_Shortcode {
 	 * @return array
 	 */
 	public function _fields() {
-		$fields = $this->fields();
+		$fields = apply_filters( 'pum_shortcode_fields', $this->fields(), $this );
 
 		if ( $this->has_content ) {
 			$inner_content_labels = $this->inner_content_labels();

@@ -67,21 +67,6 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	/**
 	 * @return array
 	 */
-	public function defaults() {
-		$defaults = array();
-
-		foreach ( $this->fields() as $tab => $fields ) {
-			foreach ( $fields as $key => $field ) {
-				$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : null;
-			}
-		}
-
-		return apply_filters( 'pum_sub_form_shortcode_defaults', $defaults );
-	}
-
-	/**
-	 * @return array
-	 */
 	public function fields() {
 		return apply_filters( 'pum_sub_form_shortcode_fields', array(
 			'general'  => array(
@@ -270,7 +255,9 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 				'openpopup_id'     => array(
 					'label'        => __( 'Popup ID', 'popup-maker' ),
 					'type'         => 'select',
-					'options'      => $this->get_popup_list(),
+					'options'      => array_merge( array(
+						0 => __( 'Select a popup', 'popup-maker' ),
+					), PUM_Helpers::popup_selectlist() ),
 					'std'          => 0,
 					'dependencies' => array(
 						'openpopup' => true,
@@ -291,20 +278,6 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 				),
 			),
 		) );
-	}
-
-	public function get_popup_list() {
-		$popup_list = array(
-			0 => __( 'Select a popup', 'popup-maker' ),
-		);
-
-		$popups = PUM_Popups::get_all();
-
-		foreach ( $popups->posts as $popup ) {
-			$popup_list[ $popup->ID ] = $popup->post_title;
-		}
-
-		return $popup_list;
 	}
 
 	/**
@@ -520,11 +493,6 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 		</p>
 		<?php
 	}
-
-	public function template_styles() {
-		include Popup_Maker::$DIR . 'assets/css/site.min.css';
-	}
-
 
 }
 
