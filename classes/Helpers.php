@@ -147,4 +147,16 @@ class PUM_Helpers {
 
 	}
 
+	public static function popup_selectlist() {
+		$popup_list = array();
+
+		$popups = PUM_Popups::get_all();
+
+		foreach ( $popups->posts as $popup ) {
+			$popup_list[ $popup->ID ] = $popup->post_title;
+		}
+
+		return $popup_list;
+	}
+
 }
