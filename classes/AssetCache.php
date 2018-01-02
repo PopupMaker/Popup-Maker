@@ -201,7 +201,7 @@ class PUM_AssetCache {
 			) );
 		}
 
-		uasort( $js, array( __CLASS__, 'sort_by_priority' ) );
+		uasort( $js, array( 'PUM_Helpers', 'sort_by_priority' ) );
 
 		$js_code = '';
 		foreach ( $js as $key => $code ) {
@@ -301,6 +301,7 @@ class PUM_AssetCache {
 				if ( ! empty( $popup_css ) ) {
 					$css[ 'popup-' . $query->post->ID ] = array(
 						'content' => $popup_css,
+						'priority' => 11,
 					);
 				}
 			endwhile;
@@ -318,7 +319,7 @@ class PUM_AssetCache {
 			) );
 		}
 
-		uasort( $css, array( __CLASS__, 'sort_by_priority' ) );
+		uasort( $css, array( 'PUM_Helpers', 'sort_by_priority' ) );
 
 		$css_code = '';
 		foreach ( $css as $key => $code ) {
@@ -411,20 +412,5 @@ class PUM_AssetCache {
 	public static function generate_popup_theme_style( $theme_id ) {
 	}
 
-	/**
-	 * Sort array by priority value
-	 *
-	 * @param $a
-	 * @param $b
-	 *
-	 * @return int
-	 */
-	public static function sort_by_priority( $a, $b ) {
-		if ( ! isset( $a['priority'] ) || ! isset( $b['priority'] ) || $a['priority'] === $b['priority'] ) {
-			return 0;
-		}
-
-		return ( $a['priority'] < $b['priority'] ) ? - 1 : 1;
-	}
 
 }

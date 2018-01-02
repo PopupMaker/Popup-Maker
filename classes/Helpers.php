@@ -13,6 +13,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Helpers {
 
 	/**
+	 * Sort array by priority value
+	 *
+	 * @param $a
+	 * @param $b
+	 *
+	 * @return int
+	 */
+	public static function sort_by_priority( $a, $b ) {
+		if ( ! isset( $a['priority'] ) || ! isset( $b['priority'] ) || $a['priority'] === $b['priority'] ) {
+			return 0;
+		}
+
+		return ( $a['priority'] < $b['priority'] ) ? - 1 : 1;
+	}
+
+
+	/**
 	 * Sort nested arrays with various options.
 	 *
 	 * @param array $array
