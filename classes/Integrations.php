@@ -183,16 +183,22 @@ class PUM_Integrations {
 	 */
 	public static function popup_settings( $settings = array(), $popup_id ) {
 
-		if ( is_admin() ) {
+		if ( is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 			return $settings;
 		}
 
 		static $form_popup_id;
 
+		/**
+		 * Checks for popup form submission.
+		 */
 		if ( ! isset( $form_popup_id ) ) {
 			$form_popup_id = isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false;
 		}
 
+		/**
+		 * If submission exists for this popup remove auto open triggers and add an admin_debug trigger to reshow the popup.
+		 */
 		if ( $form_popup_id && $popup_id == $form_popup_id ) {
 			$triggers = ! empty( $settings['triggers'] ) ? $settings['triggers'] : array();
 
@@ -220,6 +226,9 @@ class PUM_Integrations {
 	 */
 	public static function pum_vars( $vars = array() ) {
 
+		/**
+		 * If a form was submitted via non-ajax methods this checks if a successful submission was reported.
+		 */
 		if ( isset( self::$form_success ) && ! empty( self::$form_success['popup_id'] ) ) {
 			self::$form_success['settings'] = wp_parse_args( self::$form_success['settings'], array(
 				'openpopup'        => false,
