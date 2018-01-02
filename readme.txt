@@ -68,6 +68,16 @@ Using [Cookies](http://docs.wppopupmaker.com/article/148-cookies?utm_medium=text
 = What do I do if I just want a popup to show on a certain page/post/etc? =
 Check out [Conditions](http://docs.wppopupmaker.com/article/140-conditions?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_content=target-certain-pages)
 
+= How do I make it work with my 3rd party forms? =
+Beginning with Popup Maker v1.7 we now support most forms by default. We do this by adding a hidden field using JavaScript to any form inserted in a popup. This field contains the popup ID.
+
+When we detect that ID in PHP we que up that popup to reopen immediately after refresh to show errors or success messages.
+
+= How do I take advantage of the success actions Popup Maker provides for 3rd party forms? =
+We have built in support for the most popular form plugins. But if we don't then we have a few helper functions that allow you to take full advantage of our success actions and setting cookies.
+
+This link contains AJAX (JavaScript) & Non-AJAX (PHP) based solutions which you can hack with your forms hooks & events. https://gist.github.com/danieliser/0060112b18b6013f2683653236b02439
+
 = Why aren't my popups opening/working? =
 
 There are several common causes for this which include:
