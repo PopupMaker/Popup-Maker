@@ -158,15 +158,15 @@ class PUM_Integrations {
 
 
 	/**
-	 * @param string $css
+	 * @param array $css
 	 *
-	 * @return string $css
+	 * @return array $css
 	 */
-	public static function generated_css( $css = '' ) {
+	public static function generated_css( $css = array() ) {
 
 		if ( self::enabled( 'calderaforms' ) ) {
 			// puts the google places autocomplete dropdown results above the bootstrap modal 1050 zindex.
-			$css .= ".pac-container { z-index: 2000000000 !important; }\n";
+			$css['calderaforms'] = array( 'content' => ".pac-container { z-index: 2000000000 !important; }\n" );
 		}
 
 		return $css;
