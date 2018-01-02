@@ -98,8 +98,14 @@ There are several common causes for this which include:
   * Reduction of footprint means massively improved loading performance.
   * Dynamic file creation allows for some awesome upcoming features.
   * Now completely compatible with plugins like Autoptimize (Thanks Frank).
+* Feature: Support for nearly any form, including non ajax forms.
+  * Helper functions to integrate your 3rd party form plugins quickly.
+  * Show thank you popups, set cookies & close popups with a delay after success (requires code).
+  * Auto retrigger popup after refresh from a form submission inside that popup.
 * Improvement: New Popup Settings tabbed interface to help make settings more intuitive & easy to find on one screen.
   * Now all popup settings are stored in a single meta key reducing DB clutter.
+* Improvement: New Popup preview mode.
+* Improvement: Better page builder support by changing popup post type arg for public to true.
 * Improvement: Resource reduction & optmization.
   * Added class autoloading.
   * Greatly simplified code base & internal apis.

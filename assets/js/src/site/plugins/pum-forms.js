@@ -10,7 +10,8 @@
         closepopup: false,
         closedelay: 0,
         redirect_enabled: false,
-        redirect: ''
+        redirect: '',
+        cookie: false
     };
 
     window.PUM = window.PUM || {};
@@ -239,7 +240,8 @@
                 return;
             }
 
-            var $parentPopup = $form.parents('.pum'),
+            var $parentPopup = PUM.getPopup($form),
+                cookie = {},
                 redirect = function () {
                     if (settings.redirect_enabled) {
                         if (settings.redirect !== '') {
@@ -261,6 +263,17 @@
 
             if ($parentPopup.length) {
                 $parentPopup.trigger('pumFormSuccess');
+
+                if (settings.cookie) {
+                    cookie = $.extend({
+                        name: 'pum-' + PUM.getSetting($parentPopup, 'id'),
+                        expires: '+1 year'
+                    }, typeof settings.cookie === 'object' ? settings.cookie : {});
+
+                    // Set a cookie
+                    PUM.setCookie($parentPopup, cookie);
+                }
+
             }
 
             if ($parentPopup.length && settings.closepopup) {

@@ -100,6 +100,14 @@ var PUM;
         getCookie: function (cookie_name) {
             return $.pm_cookie(cookie_name);
         },
+        setCookie: function (el, settings) {
+            var $popup = PUM.getPopup(el);
+
+            $popup.popmake('setCookie', jQuery.extend({
+                name: 'pum-' + PUM.getSetting(el, 'id'),
+                expires: '+30 days'
+            }, settings));
+        },
         clearCookie: function (cookie_name, callback) {
             $.pm_remove_cookie(cookie_name);
 

@@ -149,6 +149,14 @@ var PUM;
         getCookie: function (cookie_name) {
             return $.pm_cookie(cookie_name);
         },
+        setCookie: function (el, settings) {
+            var $popup = PUM.getPopup(el);
+
+            $popup.popmake('setCookie', jQuery.extend({
+                name: 'pum-' + PUM.getSetting(el, 'id'),
+                expires: '+30 days'
+            }, settings));
+        },
         clearCookie: function (cookie_name, callback) {
             $.pm_remove_cookie(cookie_name);
 
@@ -1996,7 +2004,8 @@ var pum_debug_mode = false,
         closepopup: false,
         closedelay: 0,
         redirect_enabled: false,
-        redirect: ''
+        redirect: '',
+        cookie: false
     };
 
     window.PUM = window.PUM || {};
@@ -2225,7 +2234,8 @@ var pum_debug_mode = false,
                 return;
             }
 
-            var $parentPopup = $form.parents('.pum'),
+            var $parentPopup = PUM.getPopup($form),
+                cookie = {},
                 redirect = function () {
                     if (settings.redirect_enabled) {
                         if (settings.redirect !== '') {
@@ -2247,6 +2257,17 @@ var pum_debug_mode = false,
 
             if ($parentPopup.length) {
                 $parentPopup.trigger('pumFormSuccess');
+
+                if (settings.cookie) {
+                    cookie = $.extend({
+                        name: 'pum-' + PUM.getSetting($parentPopup, 'id'),
+                        expires: '+1 year'
+                    }, typeof settings.cookie === 'object' ? settings.cookie : {});
+
+                    // Set a cookie
+                    PUM.setCookie($parentPopup, cookie);
+                }
+
             }
 
             if ($parentPopup.length && settings.closepopup) {
@@ -3232,5 +3253,36 @@ var pum_debug_mode = false,
 
     $(document).ready(function () {
         $('.pum').popmake();
+        $(document).trigger('pumInitialized');
+
+        /**
+         * Process php based form submissions when the form_success args are passed.
+         */
+        if ( typeof pum_vars.form_success === 'object' ) {
+            pum_vars.form_success = $.extend({
+                popup_id: null,
+                settings: {}
+            });
+
+            PUM.forms.success(pum_vars.form_success.popup_id, pum_vars.form_success.settings);
+        }
     });
+
+    /**
+     * Add hidden field to all popup forms.
+     */
+    $('.pum').on('pumInit', function () {
+        var $popup = PUM.getPopup(this),
+            popupID = PUM.getSetting($popup, 'id'),
+            $forms = $popup.find('form');
+
+        /**
+         * If there are forms in the popup add a hidden field for use in retriggering the popup on reload.
+         */
+        if ($forms.length) {
+            $forms.prepend('<input type="hidden" name="pum_form_popup_id" value="' + popupID + '" />');
+        }
+    });
+
+
 }(jQuery));

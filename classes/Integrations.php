@@ -13,6 +13,8 @@ class PUM_Integrations {
 
 	public static $preload_posts = false;
 
+	public static $form_success;
+
 	public static function init() {
 		self::$integrations = array(
 			'calderaforms'   => defined( 'CFCORE_VER' ) && CFCORE_VER,
@@ -29,10 +31,13 @@ class PUM_Integrations {
 		add_action( 'pum_preload_popup', array( __CLASS__, 'enqueue_assets' ) );
 		add_filter( 'pum_registered_conditions', array( __CLASS__, 'register_conditions' ) );
 
+		add_filter( 'pum_vars', array( __CLASS__, 'pum_vars' ) );
+
 		add_action( 'init', array( __CLASS__, 'wp_init_late' ), 99 );
 		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
 		add_filter( 'pum_popup_post_type_args', array( __CLASS__, 'popup_post_type_args' ) );
 		add_filter( 'pum_generated_css', array( __CLASS__, 'generated_css' ) );
+		add_filter( 'pum_popup_settings', array( __CLASS__, 'popup_settings' ), 10, 2 );
 	}
 
 	/**
@@ -159,13 +164,84 @@ class PUM_Integrations {
 	 */
 	public static function generated_css( $css = '' ) {
 
-		if ( self::enabled( 'calderaforms' ) && did_action( 'cf_geo_autocomplete_rendered' ) ) {
-			$css .= ".pum { z-index: 99; }\n";
-
+		if ( self::enabled( 'calderaforms' ) ) {
 			// puts the google places autocomplete dropdown results above the bootstrap modal 1050 zindex.
 			$css .= ".pac-container { z-index: 2000000000 !important; }\n";
 		}
 
 		return $css;
 	}
+
+
+	/**
+	 * Modify popup settings.
+	 *
+	 * @param array $settings
+	 * @param $popup_id
+	 *
+	 * @return array
+	 */
+	public static function popup_settings( $settings = array(), $popup_id ) {
+
+		if ( is_admin() ) {
+			return $settings;
+		}
+
+		static $form_popup_id;
+
+		if ( ! isset( $form_popup_id ) ) {
+			$form_popup_id = isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false;
+		}
+
+		if ( $form_popup_id && $popup_id == $form_popup_id ) {
+			$triggers = ! empty( $settings['triggers'] ) ? $settings['triggers'] : array();
+
+			foreach ( $triggers as $key => $trigger ) {
+				if ( $trigger['type'] == 'auto_open' ) {
+					unset( $triggers[ $key ] );
+				}
+			}
+
+			$settings['triggers'][] = array(
+				'type' => 'admin_debug',
+			);
+		}
+
+		return $settings;
+	}
+
+
+	/**
+	 * Add various extra global pum_vars js values.
+	 *
+	 * @param array $vars
+	 *
+	 * @return array
+	 */
+	public static function pum_vars( $vars = array() ) {
+
+		if ( isset( self::$form_success ) && ! empty( self::$form_success['popup_id'] ) ) {
+			self::$form_success['settings'] = wp_parse_args( self::$form_success['settings'], array(
+				'openpopup'        => false,
+				'openpopup_id'     => 0,
+				'closepopup'       => false,
+				'closedelay'       => 0,
+				'redirect_enabled' => false,
+				'redirect'         => '',
+				'cookie'           => false,
+			) );
+
+			if ( is_array( self::$form_success['settings']['cookie'] ) ) {
+				self::$form_success['settings']['cookie'] = wp_parse_args( self::$form_success['settings']['cookie'], array(
+					'name'    => 'pum-' . self::$form_success['popup_id'],
+					'expires' => '+1 year',
+				) );
+			}
+
+			$vars['form_success'] = self::$form_success;
+		}
+
+		return $vars;
+	}
+
 }
