@@ -349,7 +349,23 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * @return mixed
 	 */
 	public function get_display( $key = null ) {
-		return $this->_dep_get_settings_group( 'display', $key );
+		$display = $this->_dep_get_settings_group( 'display', $key );
+
+		foreach( array(
+			'responsive_min_width',
+			'responsive_max_width',
+			'custom_width',
+			'custom_height',
+		) as $key => $value ) {
+			$temp = isset( $display[ $key ] ) ? $display[ $key ] : false;
+
+			if ( $temp ) {
+				$display[ $key ] = preg_replace('/\D/', '', $temp );
+				$display[ $key . '_unit' ] = str_replace( $display[ $key ], '', $temp );
+			}
+		}
+
+		return $display;
 	}
 
 	/**

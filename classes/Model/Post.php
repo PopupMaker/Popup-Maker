@@ -520,14 +520,20 @@ abstract class PUM_Model_Post {
 
 		// Only add changed values.
 		foreach ( $current as $key => $value ) {
-			if ( $original[ $key ] != $value ) {
+			if ( array_key_exists( $key, $original ) && $original[ $key ] != $value ) {
 				$new[ $key ] = $value;
-
 			}
 		}
 
 		if ( count( $new ) > 1 ) {
-			wp_update_post( $new );
+			$updated = wp_update_post( $new );
+
+			if ( $updated ) {
+				foreach( $new as $key => $value ) {
+					$this->post->$key = $value;
+				}
+				$this->update_cache();
+			}
 		}
 
 		if ( $save_meta ) {
