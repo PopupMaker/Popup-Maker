@@ -102,6 +102,8 @@ class PUM_Activator {
 		// Setup some default options
 		update_option( 'popmake_settings', $options );
 
+		update_option( 'pum_version', Popup_Maker::$VER );
+
 		// Add a temporary option that will fire a hookable action on next load.
 		set_transient( '_popmake_installed', true, 30 );
 
