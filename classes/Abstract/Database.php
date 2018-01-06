@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-abstract class PUM_Abstracts_Database {
+abstract class PUM_Abstract_Database {
 
 	/**
 	 * @var static

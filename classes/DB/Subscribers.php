@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * PUM_Subscribers Class
  */
-class PUM_DB_Subscribers extends PUM_Abstracts_Database {
+class PUM_DB_Subscribers extends PUM_Abstract_Database {
 
 	/**
 	 * The name of our database table
