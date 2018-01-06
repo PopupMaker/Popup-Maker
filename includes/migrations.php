@@ -17,6 +17,18 @@ function pum_popup_passive_migration_2( &$popup ) {
 	$delete_meta = array();
 
 	/**
+	 * Update pum_sub_form shortcode args
+	 */
+	if ( has_shortcode( $popup->post_content, 'pum_sub_form' ) ) {
+		$new_content = 		preg_replace('/\[pum_sub_form(.*)provider="none"(.*)\]/', '[pum_sub_form$1 provider=""$2]', $popup->post_content );
+
+		if ( $popup->post_content != $new_content ) {
+			$popup->post_content = $new_content;
+			$popup->save( false );
+		}
+	}
+
+	/**
 	 * Migrate popup theme selection.
 	 */
 	$theme = $popup->get_meta( 'popup_theme' );
@@ -35,10 +47,20 @@ function pum_popup_passive_migration_2( &$popup ) {
 
 		// Foreach old key, save the value under popup settings for the new key.
 		foreach ( $keys as $old_key => $new_key ) {
-			if ( isset( $display[ $old_key ] ) ) {
+			if ( isset( $display[ $old_key ] ) && ! empty( $display[ $old_key ] ) ) {
 				$popup->settings[ $new_key ] = $display[ $old_key ];
 				$changed                     = true;
 				unset( $display[ $old_key ] );
+
+				if ( in_array( $old_key, array(
+						'responsive_min_width',
+						'responsive_max_width',
+						'custom_width',
+						'custom_height',
+					) ) && isset( $display[ $old_key . '_unit' ] ) ) {
+					$popup->settings[ $new_key ] .= $display[ $old_key . '_unit' ];
+					unset( $display[ $old_key . '_unit' ] );
+				}
 			}
 		}
 
@@ -171,13 +193,17 @@ function pum_popup_passive_migration_2( &$popup ) {
 	/**
 	 * Migrate analytics reset keys.
 	 */
-	$open_count_reset = $popup->get_meta( 'popup_open_count_reset' );
+	$open_count_reset = $popup->get_meta( 'popup_open_count_reset', false );
 	if ( ! empty( $open_count_reset ) && is_array( $open_count_reset ) ) {
-		add_post_meta( $this->ID, 'popup_count_reset', array(
-			'timestamp'   => ! empty( $open_count_reset['timestamp'] ) ? $open_count_reset['timestamp'] : '',
-			'opens'       => ! empty( $open_count_reset['count'] ) ? absint( $open_count_reset['count'] ) : 0,
-			'conversions' => 0,
-		) );
+		foreach( $open_count_reset as $key => $reset ) {
+			if ( is_array( $reset ) ) {
+				add_post_meta( $popup->ID, 'popup_count_reset', array(
+					'timestamp'   => ! empty( $reset['timestamp'] ) ? $reset['timestamp'] : '',
+					'opens'       => ! empty( $reset['count'] ) ? absint( $reset['count'] ) : 0,
+					'conversions' => 0,
+				) );
+			}
+		}
 
 		$delete_meta[] = 'popup_open_count_reset';
 	}
