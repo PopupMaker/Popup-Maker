@@ -26,6 +26,22 @@ class PUM_Logging {
 	private $file       ='';
 
 	/**
+	 * @var PUM_Logging
+	 */
+	public static $instance;
+
+	/**
+	 * @return PUM_Logging
+	 */
+	public static function instance() {
+		if ( ! isset( self::$instance ) ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
+
+	/**
 	 * Get things started
 	 */
 	public function __construct() {
