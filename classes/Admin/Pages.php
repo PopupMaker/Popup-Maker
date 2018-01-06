@@ -60,7 +60,7 @@ class PUM_Admin_Pages {
 			'support'    => array(
 				'page_title'  => __( 'Help & Support', 'popup-maker' ),
 				'capability'  => 'edit_posts',
-				'callback'    => 'popmake_support_page',
+				'callback'    => 'pum_support_page',
 			),
 			'tools'      => array(
 				'page_title'  => __( 'Tools', 'popup-maker' ),
