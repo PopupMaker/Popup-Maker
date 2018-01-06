@@ -10,9 +10,22 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Renders the support page contents.
  *
- * @since        1.5.0
+ * @since 1.5.0
+ * @deprecated 1.7.0
  */
-function pum_settings_page() { ?>
+function pum_settings_page() {
+	pum_support_page();
+}
+
+
+/**
+ * Support Page
+ *
+ * Renders the support page contents.
+ *
+ * @since        1.7.0
+ */
+function pum_support_page() { ?>
 	<style>
 		.pum-secure-notice {
 			position: fixed;
@@ -45,16 +58,16 @@ function pum_settings_page() { ?>
 	</div>
 	<div id="pum-support-frame" class="wrap">
 		<script type="text/javascript">
-			(function ($) {
-				var frame = $('<iframe scrolling="no">')
-					.css({height: '535px'})
-					.attr('src', '<?php echo 'https://api.wppopupmaker.com/dashboard-support/?' . build_query( pum_support_assist_args() ); ?>')
-					.appendTo('#pum-support-frame');
+            (function ($) {
+                var frame = $('<iframe scrolling="no">')
+                    .css({height: '535px'})
+                    .attr('src', '<?php echo 'https://api.wppopupmaker.com/dashboard-support/?' . build_query( pum_support_assist_args() ); ?>')
+                    .appendTo('#pum-support-frame');
 
-				frame.iFrameResize({
-					checkOrigin: false
-				});
-			})(jQuery);
+                frame.iFrameResize({
+                    checkOrigin: false
+                });
+            })(jQuery);
 		</script>
 	</div>
 
