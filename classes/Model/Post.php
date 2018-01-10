@@ -228,10 +228,12 @@ abstract class PUM_Model_Post {
 				return false;
 			}
 
+			$class = get_called_class();
+
 			/**
 			 * @var PUM_Model_Post $post
 			 */
-			$post = new static( $_post, $autoload_meta );
+			$post = new $class( $_post, $autoload_meta );
 
 			if ( ! $post->is_valid() ) {
 				// Post isn't correct post type for the called class. Do not cache it.
@@ -343,9 +345,10 @@ abstract class PUM_Model_Post {
 	 * @param    bool $autoload_post_meta Used when constructing the class instance
 	 *
 	 * @return    array
-	 * @since    1.0.0
 	 */
 	public static function get( $wp_query_args, $autoload_post_meta = true ) {
+		$class = get_called_class();
+
 		$defaults = array(
 			'posts_per_page' => - 1,
 		);
@@ -357,7 +360,8 @@ abstract class PUM_Model_Post {
 		$out = array();
 
 		foreach ( $query->posts as $post ) {
-			$out[] = new static( $post, $autoload_post_meta );
+
+			$out[] = new $class( $post, $autoload_post_meta );
 		}
 
 		return $out;
@@ -373,6 +377,8 @@ abstract class PUM_Model_Post {
 	 * @since    1.0.0
 	 */
 	public static function query( $wp_query_args, $autoload_post_meta = true ) {
+		$class= get_called_class();
+
 		$defaults = array(
 			'posts_per_page' => - 1,
 		);
@@ -382,7 +388,7 @@ abstract class PUM_Model_Post {
 		$query = new WP_Query( $wp_query_args );
 
 		foreach ( $query->posts as $key => $post ) {
-			$query->posts[ $key ] = new static( $post, $autoload_post_meta );
+			$query->posts[ $key ] = new $class( $post, $autoload_post_meta );
 		}
 
 		return $query;
