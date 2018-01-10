@@ -100,9 +100,32 @@ class PUM_Activator {
 		) );
 
 		// Setup some default options
-		update_option( 'popmake_settings', $options );
+		add_option( 'popmake_settings', $options );
 
-		update_option( 'pum_version', Popup_Maker::$VER );
+		add_option( 'pum_version', Popup_Maker::$VER );
+
+		if ( ! get_option( 'pum_initial_version' ) ) {
+
+			$oldest_known = Popup_Maker::$VER;
+
+			$upgraded_from = get_option( 'pum_ver_upgraded_from' );
+			if ( $upgraded_from && version_compare( $upgraded_from, $oldest_known, '<' ) ) {
+				$oldest_known = $upgraded_from;
+			}
+
+			$deprecated_ver = get_site_option( 'popmake_version' );
+			if ( $deprecated_ver && version_compare( $deprecated_ver, $oldest_known, '<' ) ) {
+				$oldest_known = $deprecated_ver;
+			}
+
+			$dep_upgraded_from = get_option( 'popmake_version_upgraded_from' );
+			if ( $dep_upgraded_from && version_compare( $dep_upgraded_from, $oldest_known, '<' ) ) {
+				$oldest_known = $upgraded_from;
+			}
+
+			// Set this value to the oldest known.
+			add_option( 'pum_initial_version', $oldest_known );
+		}
 
 		// Add a temporary option that will fire a hookable action on next load.
 		set_transient( '_popmake_installed', true, 30 );
