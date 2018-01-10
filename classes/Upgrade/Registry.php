@@ -78,8 +78,8 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 			'rules' => array(
 				version_compare( $this->initial_version, '1.7', '<' ),
 			),
-			'class' => 'PUM_Batch_Upgrade_v1_7_Popups',
-			'file'  => Popup_Maker::$DIR . 'includes/batch/upgrade/class-batch-upgrade-v1_7-popups.php',
+			'class' => 'PUM_Upgrade_v1_7_Popups',
+			'file'  => Popup_Maker::$DIR . 'includes/batch/upgrade/class-upgrade-v1_7-popups.php',
 		) );
 
 		/**
