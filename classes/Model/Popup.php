@@ -57,10 +57,16 @@ class PUM_Model_Popup extends PUM_Model_Post {
 
 	# TODO Remove these once no longer needed.
 
-	/** @var array */
+	/**
+	 * @var array
+	 * @deprecated 1.7.0
+	 */
 	public $display;
 
-	/** @var array */
+	/**
+	 * @var array
+	 * @deprecated 1.7.0
+	 */
 	public $close;
 
 	#endregion Properties
