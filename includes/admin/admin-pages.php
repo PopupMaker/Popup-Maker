@@ -201,3 +201,36 @@ function popmake_is_admin_popup_page() {
 function popmake_is_admin_popup_theme_page() {
 	return pum_is_popup_theme_editor();
 }
+
+/**
+ * Generates an Popup Maker admin URL based on the given type.
+ *
+ * @since 1.7.0
+ *
+ * @param string $type       Optional. Type of admin URL. Accepts 'tools', 'settings'. Default empty
+ * @param array  $query_args Optional. Query arguments to append to the admin URL. Default empty array.
+ *
+ * @return string Constructed admin URL.
+ */
+function pum_admin_url( $type = '', $query_args = array() ) {
+	$page = '';
+
+	$whitelist = PUM_Admin_Pages::$pages;
+
+	if ( in_array( $type, $whitelist, true ) ) {
+		$page = "pum-{$type}";
+	}
+
+	$admin_query_args = array_merge( array( 'page' => $page ), $query_args );
+
+	$url = add_query_arg( $admin_query_args, admin_url( 'edit.php?post_type=popup' ) );
+
+	/**
+	 * Filters the Popup Maker admin URL.
+	 *
+	 * @param string $url        Admin URL.
+	 * @param string $type       Admin URL type.
+	 * @param array  $query_args Query arguments originally passed to pum_admin_url().
+	 */
+	return apply_filters( 'pum_admin_url', $url, $type, $query_args );
+}
