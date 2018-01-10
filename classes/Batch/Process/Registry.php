@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Implements a batch process registry class.
  *
+ * @since 1.7.0
+ *
  * @see PUM_Abstract_Registry
  */
 class PUM_Batch_Process_Registry extends PUM_Abstract_Registry {
@@ -63,6 +65,7 @@ class PUM_Batch_Process_Registry extends PUM_Abstract_Registry {
 	 *     @type string $class Batch processor class to use.
 	 *     @type string $file  File containing the batch processor class.
 	 * }
+	 *
 	 * @return WP_Error|true True on successful registration, otherwise a WP_Error object.
 	 */
 	public function register_process( $batch_id, $process_args ) {

@@ -1,13 +1,19 @@
 <?php
-/**
- * Implements a registry for core upgrade routines.
- *
- * @see PUM_Abstract_Registry
- */
-
 /*******************************************************************************
  * Copyright (c) 2018, WP Popup Maker
  ******************************************************************************/
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Implements a registry for core upgrade routines.
+ *
+ * @since 1.7.0
+ *
+ * @see PUM_Batch_Process_Registry
+ */
 class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 
 	/**
@@ -56,7 +62,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 		/**
 		 * Fires during instantiation of the batch processing registry.
 		 *
-		 * @param PUM_Batch_Process_Registry $this PUM_Abstract_Registry instance.
+		 * @param PUM_Upgrade_Registry $this PUM_Abstract_Registry instance.
 		 */
 		do_action( 'pum_upgrade_process_init', $this );
 	}
