@@ -151,8 +151,7 @@ class PUM_Upgrades {
 		}
 
 		// Enqueue admin JS for the batch processor.
-		wp_enqueue_script( 'pum-admin-batch' );
-		wp_enqueue_style( 'pum-admin-batch' ); ?>
+		wp_enqueue_script( 'pum-admin-batch' ); ?>
 
 		<div class="notice notice-info is-dismissible">
 			<?php $this->render_upgrade_notice(); ?>
@@ -168,7 +167,7 @@ class PUM_Upgrades {
 	 */
 	public function render_upgrade_notice() {
 		$resume_upgrade = $this->maybe_resume_upgrade(); ?>
-		<p class="pum-upgrade-notice">
+		<p>
 			<?php
 			if ( empty( $resume_upgrade ) ) {
 				_e( 'Your database needs to be upgraded following the latest Popup Maker or Popup Maker extension update.', 'popup-maker' );
@@ -183,35 +182,12 @@ class PUM_Upgrades {
 	 * Renders the upgrade processing form for reuse.
 	 */
 	public function render_form() {
-		$args = array(
-			'upgrade_id' => $this->get_current_upgrade_id(),
-			'step' => 1,
-		);
+		$resume_upgrade = $this->maybe_resume_upgrade(); ?>
 
-		$resume_upgrade = $this->maybe_resume_upgrade();
-
-		if ( $resume_upgrade && is_array( $resume_upgrade ) ) {
-			$args = wp_parse_args( $resume_upgrade, $args );
-		} ?>
-
-		<form method="post" class="pum-form  pum-batch-form  pum-upgrade-form" data-ays="<?php _e( 'This can sometimes take a few minutes, are you ready to begin?', 'popup-maker' ); ?>" data-upgrade_id="<?php echo $args['upgrade_id']; ?>" data-step="<?php echo (int) $args['step']; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'pum_upgrade_ajax_nonce' ) ); ?>">
-
-			<div class="pum-field  pum-field-button  pum-field-submit">
+		<form method="post" class="pum-upgrade-form" data-nonce="<?php echo esc_attr( wp_create_nonce( 'pum_upgrade_ajax_nonce' ) ); ?>">
+			<p>
 				<?php submit_button( ! empty( $resume_upgrade ) ? __( 'Finish Upgrades', 'popup-maker' ) : __( 'Process Upgrades', 'popup-maker' ), 'secondary', 'submit', false ); ?>
-			</div>
-
-			<div class="pum-batch-progress">
-				<progress class="pum-overall-progress" max="100">
-					<div class="progress-bar"><span></span></div>
-				</progress>
-
-				<progress class="pum-task-progress" max="100">
-					<div class="progress-bar"><span></span></div>
-				</progress>
-
-				<div class="pum-upgrade-messages"></div>
-			</div>
-
+			</p>
 		</form>
 		<?php
 	}
@@ -286,9 +262,6 @@ class PUM_Upgrades {
 	 * @return array The array of completed upgrades
 	 */
 	public function get_completed_upgrades() {
-		// TODO REMOVE THIS TEST CODE
-		// delete_option( 'pum_completed_upgrades' );
-
 		return get_option( 'pum_completed_upgrades', array() );
 	}
 
@@ -383,9 +356,7 @@ class PUM_Upgrades {
 		 * Garbage collect any old temporary data in the case step is 1.
 		 * Here to prevent case ajax passes step 1 without resetting process counts.
 		 */
-		$first_step = $step < 2;
-
-		if ( $first_step ) {
+		if ( $step < 2 ) {
 			$upgrade->finish();
 		}
 
@@ -406,7 +377,6 @@ class PUM_Upgrades {
 		if ( ! is_wp_error( $step ) ) {
 			$response_data = array(
 				'step' => $step,
-				'next' => null,
 			);
 
 			// Finish and set the status flag if done.
@@ -423,7 +393,6 @@ class PUM_Upgrades {
 				}
 			} else {
 				$response_data['done']       = false;
-				$response_data['message'] = $first_step ? $upgrade->get_message( 'start' ) : '';
 				$response_data['percentage'] = $upgrade->get_percentage_complete();
 			}
 
@@ -522,7 +491,6 @@ class PUM_Upgrades {
 
 		// Enqueue admin JS for the batch processor.
 		wp_enqueue_script( 'pum-admin-batch' );
-		wp_enqueue_style( 'pum-admin-batch' );
 
 		$this->render_upgrade_notice();
 		$this->render_form();
