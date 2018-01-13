@@ -16,59 +16,145 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: classes/Admin/Assets.php:93
+#: classes/Abstract/Batch/Process.php:117
+msgid "%s item was successfully processed."
+msgid_plural "%s items were successfully processed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: classes/Abstract/Upgrade/Popups.php:136
+msgid "Updating %d popup for v%s compatibility."
+msgid_plural "Updating %d popups for v%s compatibility."
+msgstr[0] ""
+msgstr[1] ""
+
+#: classes/Abstract/Upgrade/Popups.php:142
+msgid "%s popup was updated successfully."
+msgid_plural "%s popups were updated successfully."
+msgstr[0] ""
+msgstr[1] ""
+
+#: classes/Abstract/Upgrade/Settings.php:57
+msgid "Updating settings for v%s compatibility."
+msgstr ""
+
+#: classes/Abstract/Upgrade/Settings.php:61
+msgid "Settings updated successfully."
+msgstr ""
+
+#: classes/Abstract/Upgrade/Themes.php:139
+msgid "Updating %d popup theme for v%s compatibility."
+msgid_plural "Updating %d popup themes for v%s compatibility."
+msgstr[0] ""
+msgstr[1] ""
+
+#: classes/Abstract/Upgrade/Themes.php:145
+msgid "%s popup theme was updated successfully."
+msgid_plural "%s popup themes were updated successfully."
+msgstr[0] ""
+msgstr[1] ""
+
+#: classes/Admin/Ajax.php:103, classes/Admin/Ajax.php:270, classes/Upgrades.php:325
+msgid "A batch process ID must be present to continue."
+msgstr ""
+
+#: classes/Admin/Ajax.php:110, classes/Upgrades.php:332
+msgid "You do not have permission to initiate this request. Contact an administrator for more information."
+msgstr ""
+
+#: classes/Admin/Ajax.php:119, classes/Admin/Ajax.php:279, classes/Upgrades.php:351
+msgid "%s is an invalid batch process ID."
+msgstr ""
+
+#: classes/Admin/Ajax.php:128, classes/Admin/Ajax.php:288, classes/Upgrades.php:451
+msgid "An invalid file path is registered for the %1$s batch process handler."
+msgstr ""
+
+#: classes/Admin/Ajax.php:136, classes/Admin/Ajax.php:296, classes/Upgrades.php:457
+msgid "%1$s is an invalid handler for the %2$s batch process. Please try again."
+msgstr ""
+
+#: classes/Admin/Ajax.php:232
+msgid "Nonce verification failed"
+msgstr ""
+
+#: classes/Admin/Ajax.php:236
+msgid "Missing import file. Please provide an import file."
+msgstr ""
+
+#: classes/Admin/Ajax.php:255
+msgid "The file you uploaded does not appear to be a CSV file."
+msgstr ""
+
+#: classes/Admin/Ajax.php:259
+msgid "Something went wrong during the upload process, please try again."
+msgstr ""
+
+#: classes/Admin/Ajax.php:305
+msgid "You do not have permission to import data"
+msgstr ""
+
+#: classes/Admin/Assets.php:98
 msgid "Preview"
 msgstr ""
 
-#: classes/Admin/Assets.php:94, classes/Admin/Helpers.php:20, classes/Admin/Templates.php:496, classes/Admin/Templates.php:667
+#: classes/Admin/Assets.php:99, classes/Admin/Helpers.php:20, classes/Admin/Templates.php:501, classes/Admin/Templates.php:672
 msgid "Add"
 msgstr ""
 
-#: classes/Admin/Assets.php:95, classes/Admin/Settings.php:460, classes/Admin/Settings.php:485, classes/Admin/Tools.php:86, classes/Admin/Tools.php:504, includes/integrations/class-pum-gravity-forms.php:171
+#: classes/Admin/Assets.php:100, classes/Admin/Settings.php:460, classes/Admin/Settings.php:485, classes/Admin/Tools.php:86, classes/Admin/Tools.php:504, includes/integrations/class-pum-gravity-forms.php:171
 msgid "Save"
 msgstr ""
 
-#: classes/Admin/Assets.php:96
+#: classes/Admin/Assets.php:101
 msgid "Update"
 msgstr ""
 
-#: classes/Admin/Assets.php:97, classes/Admin/Shortcode/UI.php:88
+#: classes/Admin/Assets.php:102, classes/Admin/Shortcode/UI.php:88
 msgid "Insert"
 msgstr ""
 
-#: classes/Admin/Assets.php:98, classes/Admin/Helpers.php:18, classes/Admin/Shortcode/UI.php:89
+#: classes/Admin/Assets.php:103, classes/Admin/Helpers.php:18, classes/Admin/Shortcode/UI.php:89
 msgid "Cancel"
 msgstr ""
 
-#: classes/Admin/Assets.php:99
+#: classes/Admin/Assets.php:104
 msgid "Are you sure you want to delete this trigger?"
 msgstr ""
 
-#: classes/Admin/Assets.php:100
+#: classes/Admin/Assets.php:105
 msgid "Are you sure you want to delete this cookie?"
 msgstr ""
 
-#: classes/Admin/Assets.php:101, classes/Admin/Popups.php:421, classes/Admin/Settings.php:220, classes/Shortcode/Subscribe.php:77, classes/Shortcode/Subscribe.php:106, classes/Shortcode/Subscribe.php:123, includes/input-options.php:26, includes/input-options.php:115
+#: classes/Admin/Assets.php:106, classes/Admin/Popups.php:421, classes/Admin/Settings.php:220, classes/Shortcode/Subscribe.php:77, classes/Shortcode/Subscribe.php:106, classes/Shortcode/Subscribe.php:123, includes/input-options.php:26, includes/input-options.php:115
 msgid "None"
 msgstr ""
 
-#: classes/Admin/Assets.php:102
+#: classes/Admin/Assets.php:107
 msgid "Are you sure you want to reset the open count?"
 msgstr ""
 
-#: classes/Admin/Assets.php:103, classes/Admin/Shortcode/UI.php:90
+#: classes/Admin/Assets.php:108, classes/Admin/Shortcode/UI.php:90
 msgid "Popup Maker Shortcodes"
 msgstr ""
 
-#: classes/Admin/Assets.php:104, classes/Admin/Shortcode/UI.php:91
+#: classes/Admin/Assets.php:109, classes/Admin/Shortcode/UI.php:91
 msgid "There was an error in generating the preview"
 msgstr ""
 
-#: classes/Admin/Helpers.php:34, classes/Admin/Popups.php:266, classes/Admin/Popups.php:592, classes/Admin/Templates.php:313, classes/Shortcode/Popup.php:50, templates/popup.php:44
+#: classes/Admin/Assets.php:123
+msgid "Your all set, the upgrades completed successfully!"
+msgstr ""
+
+#: classes/Admin/Assets.php:124
+msgid "We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser."
+msgstr ""
+
+#: classes/Admin/Helpers.php:34, classes/Admin/Popups.php:266, classes/Admin/Popups.php:592, classes/Admin/Templates.php:318, classes/Shortcode/Popup.php:50, templates/popup.php:44
 msgid "Close"
 msgstr ""
 
-#: classes/Admin/Pages.php:51, classes/Admin/Pages.php:144, classes/Admin/Templates.php:393, classes/Admin/Templates.php:616, classes/Site/Assets.php:200, includes/admin/admin-setup.php:24
+#: classes/Admin/Pages.php:51, classes/Admin/Pages.php:144, classes/Admin/Templates.php:398, classes/Admin/Templates.php:621, classes/Site/Assets.php:200, includes/admin/admin-setup.php:24
 msgid "Settings"
 msgstr ""
 
@@ -529,7 +615,7 @@ msgstr ""
 msgid "Lifetime Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:972, classes/Admin/Templates.php:615, classes/Shortcode/Subscribe.php:164, classes/Shortcode/Subscribe.php:213
+#: classes/Admin/Popups.php:972, classes/Admin/Templates.php:620, classes/Shortcode/Subscribe.php:164, classes/Shortcode/Subscribe.php:213
 msgid "Name"
 msgstr ""
 
@@ -745,197 +831,197 @@ msgstr ""
 msgid "You do not have access to preview this post."
 msgstr ""
 
-#: classes/Admin/Templates.php:179
+#: classes/Admin/Templates.php:183
 msgid "Active"
 msgstr ""
 
-#: classes/Admin/Templates.php:180, includes/admin/settings/register-settings.php:892
+#: classes/Admin/Templates.php:184, includes/admin/settings/register-settings.php:892
 msgid "Deactivate License"
 msgstr ""
 
-#: classes/Admin/Templates.php:182
+#: classes/Admin/Templates.php:186
 msgid "Inactive"
 msgstr ""
 
-#: classes/Admin/Templates.php:183
+#: classes/Admin/Templates.php:187
 msgid "Activate License"
 msgstr ""
 
-#: classes/Admin/Templates.php:222
+#: classes/Admin/Templates.php:226
 msgid "Category"
 msgstr ""
 
-#: classes/Admin/Templates.php:226
+#: classes/Admin/Templates.php:230
 msgid "Action"
 msgstr ""
 
-#: classes/Admin/Templates.php:230
+#: classes/Admin/Templates.php:234
 msgid "Label"
 msgstr ""
 
-#: classes/Admin/Templates.php:234
+#: classes/Admin/Templates.php:238
 msgid "Value"
 msgstr ""
 
-#: classes/Admin/Templates.php:265, classes/Admin/Templates.php:270, includes/admin/metabox-support.php:42
+#: classes/Admin/Templates.php:270, classes/Admin/Templates.php:275, includes/admin/metabox-support.php:42
 msgid "Documentation"
 msgstr ""
 
-#: classes/Admin/Templates.php:379
+#: classes/Admin/Templates.php:384
 msgid "Add New Trigger"
 msgstr ""
 
-#: classes/Admin/Templates.php:383
+#: classes/Admin/Templates.php:388
 msgid "Triggers are what make your popup open."
 msgstr ""
 
-#: classes/Admin/Templates.php:391
+#: classes/Admin/Templates.php:396
 msgid "Type"
 msgstr ""
 
-#: classes/Admin/Templates.php:392, classes/Triggers.php:260
+#: classes/Admin/Templates.php:397, classes/Triggers.php:260
 msgid "Cookie"
 msgstr ""
 
-#: classes/Admin/Templates.php:394, classes/Admin/Templates.php:617, classes/Shortcode/Subscribe.php:63
+#: classes/Admin/Templates.php:399, classes/Admin/Templates.php:622, classes/Shortcode/Subscribe.php:63
 msgid "Actions"
 msgstr ""
 
-#: classes/Admin/Templates.php:413
+#: classes/Admin/Templates.php:418
 msgid "Choose a type of trigger to get started."
 msgstr ""
 
-#: classes/Admin/Templates.php:414
+#: classes/Admin/Templates.php:419
 msgid "Select a trigger type."
 msgstr ""
 
-#: classes/Admin/Templates.php:423, classes/Admin/Templates.php:432
+#: classes/Admin/Templates.php:428, classes/Admin/Templates.php:437
 msgid "Edit this trigger"
 msgstr ""
 
-#: classes/Admin/Templates.php:433
+#: classes/Admin/Templates.php:438
 msgid "Delete` this trigger"
 msgstr ""
 
-#: classes/Admin/Templates.php:440
+#: classes/Admin/Templates.php:445
 msgid "Link: Exact Match"
 msgstr ""
 
-#: classes/Admin/Templates.php:441
+#: classes/Admin/Templates.php:446
 msgid "Link: Containing"
 msgstr ""
 
-#: classes/Admin/Templates.php:442
+#: classes/Admin/Templates.php:447
 msgid "Link: Begins With"
 msgstr ""
 
-#: classes/Admin/Templates.php:443
+#: classes/Admin/Templates.php:448
 msgid "Link: Ends With"
 msgstr ""
 
-#: classes/Admin/Templates.php:449
+#: classes/Admin/Templates.php:454
 msgid "Insert Preset"
 msgstr ""
 
-#: classes/Admin/Templates.php:468, classes/Admin/Templates.php:494
+#: classes/Admin/Templates.php:473, classes/Admin/Templates.php:499
 msgid "Choose what type of trigger to add?"
 msgstr ""
 
-#: classes/Admin/Templates.php:476
+#: classes/Admin/Templates.php:481
 msgid "Would you like to set up a cookie as well?"
 msgstr ""
 
-#: classes/Admin/Templates.php:482
+#: classes/Admin/Templates.php:487
 msgid "When will the cookie be set?"
 msgstr ""
 
-#: classes/Admin/Templates.php:518
+#: classes/Admin/Templates.php:523
 msgid "These conditions determine when this popup will be display."
 msgstr ""
 
-#: classes/Admin/Templates.php:518
+#: classes/Admin/Templates.php:523
 msgid "Learn more about conditions"
 msgstr ""
 
-#: classes/Admin/Templates.php:522
+#: classes/Admin/Templates.php:527
 msgid "When users visit your site, the plugin will check the viewed content/page against your selection below and determine if this popup should be shown."
 msgstr ""
 
-#: classes/Admin/Templates.php:524
+#: classes/Admin/Templates.php:529
 msgid "Use the %s button to check for the inverse of your chosen condition."
 msgstr ""
 
-#: classes/Admin/Templates.php:538
+#: classes/Admin/Templates.php:543
 msgid "Choose a condition to get started."
 msgstr ""
 
-#: classes/Admin/Templates.php:540, classes/Admin/Templates.php:572
+#: classes/Admin/Templates.php:545, classes/Admin/Templates.php:577
 msgid "Enable the Not Operand"
 msgstr ""
 
-#: classes/Admin/Templates.php:543, classes/Admin/Templates.php:576
+#: classes/Admin/Templates.php:548, classes/Admin/Templates.php:581
 msgid "Choose a condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:559
+#: classes/Admin/Templates.php:564
 msgctxt "aria-label for add new OR condition button"
 msgid "Add another OR condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:559, classes/Admin/Templates.php:570
+#: classes/Admin/Templates.php:564, classes/Admin/Templates.php:575
 msgid "or"
 msgstr ""
 
-#: classes/Admin/Templates.php:563
+#: classes/Admin/Templates.php:568
 msgctxt "aria-label for add new AND condition button"
 msgid "Add another AND condition group"
 msgstr ""
 
-#: classes/Admin/Templates.php:563
+#: classes/Admin/Templates.php:568
 msgid "and"
 msgstr ""
 
-#: classes/Admin/Templates.php:584
+#: classes/Admin/Templates.php:589
 msgid "Remove Condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:602, classes/Triggers.php:240
+#: classes/Admin/Templates.php:607, classes/Triggers.php:240
 msgid "Add New Cookie"
 msgstr ""
 
-#: classes/Admin/Templates.php:606
+#: classes/Admin/Templates.php:611
 msgid "Cookies are used to prevent a trigger from opening the popup."
 msgstr ""
 
-#: classes/Admin/Templates.php:614
+#: classes/Admin/Templates.php:619
 msgid "Event"
 msgstr ""
 
-#: classes/Admin/Templates.php:636
+#: classes/Admin/Templates.php:641
 msgid "Choose when you want to set a cookie to get started."
 msgstr ""
 
-#: classes/Admin/Templates.php:637
+#: classes/Admin/Templates.php:642
 msgid "Select an event."
 msgstr ""
 
-#: classes/Admin/Templates.php:646, classes/Admin/Templates.php:655
+#: classes/Admin/Templates.php:651, classes/Admin/Templates.php:660
 msgid "Edit this cookie"
 msgstr ""
 
-#: classes/Admin/Templates.php:656
+#: classes/Admin/Templates.php:661
 msgid "Delete` this cookie"
 msgstr ""
 
-#: classes/Admin/Templates.php:665
+#: classes/Admin/Templates.php:670
 msgid "When should your cookie be created?"
 msgstr ""
 
-#: classes/Admin/Templates.php:666
+#: classes/Admin/Templates.php:671
 msgid "Select a cookie type."
 msgstr ""
 
-#: classes/Admin/Templates.php:674
+#: classes/Admin/Templates.php:679
 msgid "Reset Cookie Key"
 msgstr ""
 
@@ -981,6 +1067,18 @@ msgstr ""
 
 #: classes/Analytics.php:147, classes/Shortcode/Subscribe.php:256, includes/integrations/ninja-forms/Actions/OpenPopup.php:42
 msgid "Popup ID"
+msgstr ""
+
+#: classes/Batch/Process/Registry.php:75
+msgid "A batch process class must be specified."
+msgstr ""
+
+#: classes/Batch/Process/Registry.php:79
+msgid "No batch class handler file has been supplied."
+msgstr ""
+
+#: classes/Batch/Process/Registry.php:84
+msgid "An invalid batch class handler file has been supplied."
 msgstr ""
 
 #: classes/Conditions.php:108
@@ -1096,11 +1194,11 @@ msgid "404 Error Page"
 msgstr ""
 
 #: classes/Cookies.php:72
-msgid "On Popup Open"
+msgid "On Popup Close"
 msgstr ""
 
 #: classes/Cookies.php:75
-msgid "On Popup Close"
+msgid "On Popup Open"
 msgstr ""
 
 #: classes/Cookies.php:78
@@ -1736,6 +1834,30 @@ msgctxt "Post Type Singular: Popup, Theme"
 msgid "%1$s submitted."
 msgstr ""
 
+#: classes/Upgrades.php:173
+msgid "Your database needs to be upgraded following the latest Popup Maker or Popup Maker extension update."
+msgstr ""
+
+#: classes/Upgrades.php:175
+msgid "Popup Maker needs to complete a database upgrade that was previously started."
+msgstr ""
+
+#: classes/Upgrades.php:189
+msgid "Finish Upgrades"
+msgstr ""
+
+#: classes/Upgrades.php:189
+msgid "Process Upgrades"
+msgstr ""
+
+#: classes/Upgrades.php:477
+msgid "Upgrades"
+msgstr ""
+
+#: classes/Upgrades.php:488
+msgid "No upgrades currently required."
+msgstr ""
+
 #: classes/Upsell.php:26, includes/admin/themes/metabox-close-fields.php:35
 msgctxt "%s represent the opening & closing link html"
 msgid "Want to disable the close button? Check out %sForced Interaction%s!"
@@ -1781,15 +1903,15 @@ msgstr ""
 msgid "Upgrades have been completed successfully."
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:562
+#: includes/admin/class-pum-admin-upgrades.php:566
 msgid "Popup Maker - Upgrades"
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:577
+#: includes/admin/class-pum-admin-upgrades.php:581
 msgid "The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished."
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:652
+#: includes/admin/class-pum-admin-upgrades.php:656
 msgid "Upgrade failed, please try again."
 msgstr ""
 
@@ -1861,7 +1983,7 @@ msgstr ""
 msgid "Extension Support"
 msgstr ""
 
-#: includes/admin/pages/support.php:43
+#: includes/admin/pages/support.php:56
 msgid "<b>Secure HTTPS contact page</b>, running via iframe from external domain"
 msgstr ""
 
@@ -2065,8 +2187,20 @@ msgstr ""
 msgid "Close Settings"
 msgstr ""
 
-#: includes/admin/themes/metabox.php:164
+#: includes/admin/themes/metabox.php:162
 msgid "Title Text"
+msgstr ""
+
+#: includes/admin/themes/metabox.php:170
+msgid "If you move this theme preview to the bottom of your sidebar here it will follow you down the page?"
+msgstr ""
+
+#: includes/admin/themes/metabox.php:171
+msgid "Clicking on an element in this theme preview will take you to its relevant settings in the editor?"
+msgstr ""
+
+#: includes/admin/themes/metabox.php:174
+msgid "Did you know:"
 msgstr ""
 
 #: includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:27
