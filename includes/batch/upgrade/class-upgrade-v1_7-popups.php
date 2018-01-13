@@ -38,6 +38,13 @@ class PUM_Upgrade_v1_7_Popups extends PUM_Abstract_Upgrade_Popups {
 		$popup = pum_get_popup( $popup_id );
 
 		/**
+		 * If the popup is already updated, return early.
+		 */
+		if ( $popup->data_version >= 3 ) {
+			return $popup_id;
+		}
+
+		/**
 		 * Update pum_sub_form shortcode args
 		 */
 		if ( has_shortcode( $popup->post_content, 'pum_sub_form' ) ) {
@@ -246,7 +253,12 @@ class PUM_Upgrade_v1_7_Popups extends PUM_Abstract_Upgrade_Popups {
 			}
 		}
 
-		return $popup->ID;
+		/**
+		 * Update the popups data version.
+		 */
+		$popup->update_meta( 'data_version', 3 );
+
+		return $popup_id;
 	}
 
 }
