@@ -110,8 +110,7 @@ abstract class PUM_Abstract_Upgrade_Themes extends PUM_Abstract_Upgrade implemen
 		$updated = array();
 
 		foreach ( $themes as $theme_id ) {
-			$popup_theme     = pum_get_popup_theme( $theme_id );
-			$updated[] = $this->process_theme( $popup_theme );
+			$updated[] = $this->process_theme( $theme_id );
 		}
 
 		// Deduplicate.
@@ -156,9 +155,9 @@ abstract class PUM_Abstract_Upgrade_Themes extends PUM_Abstract_Upgrade implemen
 	/**
 	 * Process needed upgrades on each popup theme.
 	 *
-	 * @param PUM_Model_Theme $theme
+	 * @param int $theme_id
 	 *
 	 * @return int $theme_id
 	 */
-	abstract public function process_theme( &$theme );
+	abstract public function process_theme( $theme_id = 0 );
 }

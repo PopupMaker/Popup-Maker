@@ -26,14 +26,16 @@ class PUM_Upgrade_v1_7_Popups extends PUM_Abstract_Upgrade_Popups {
 	/**
 	 * Process needed upgrades on each popup.
 	 *
-	 * @param PUM_Model_Popup $popup
+	 * @param int $popup_id
 	 *
-	 * @return int $popup->ID
+	 * @return int $popup_id
 	 */
-	public function process_popup( &$popup ) {
+	public function process_popup( $popup_id = 0 ) {
 
 		$changed     = false;
 		$delete_meta = array();
+
+		$popup = pum_get_popup( $popup_id );
 
 		/**
 		 * Update pum_sub_form shortcode args
