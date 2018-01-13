@@ -3,6 +3,44 @@
  * Copyright (c) 2017, WP Popup Maker
  ******************************************************************************/
 
+/**
+ * Checks if passive migration for popups should be enabled.
+ *
+ * This determines if the query load may be potentially too high to run passive migrations on live servers.
+ *
+ * @return bool
+ */
+function pum_passive_popups_enabled() {
+	/** @var int $popup_count */
+	static $popup_count;
+
+	if ( defined( 'PUM_DISABLE_PASSIVE_UPGRADES' ) && PUM_DISABLE_PASSIVE_UPGRADES ) {
+		return false;
+	}
+
+	if ( ! $popup_count ) {
+		$popup_count = get_transient( 'pum_popup_count' );
+
+		if ( $popup_count === false ) {
+
+			$popups = get_posts( array(
+				'post_status'    => 'any',
+				'post_type'      => 'popup',
+				'fields'         => 'ids',
+				'posts_per_page' => -1,
+				'orderby'        => 'ID',
+				'order'          => 'ASC',
+			) );
+
+			$popup_count = ! empty( $popups ) ? count( $popups ) : 0;
+
+			set_transient( 'pum_popup_count', $popup_count, HOUR_IN_SECONDS * 24 );
+
+		}
+	}
+
+	return $popup_count > apply_filters( 'pum_passive_popups_enabled_max_count', 10 );
+}
 
 /**
  * Upgrade popup data to model v3.
@@ -11,7 +49,7 @@
  *
  * @param $popup PUM_Model_Popup
  */
-function pum_popup_passive_migration_2( &$popup ) {
+function pum_popup_migration_2( &$popup ) {
 
 	$changed     = false;
 	$delete_meta = array();
@@ -20,10 +58,11 @@ function pum_popup_passive_migration_2( &$popup ) {
 	 * Update pum_sub_form shortcode args
 	 */
 	if ( has_shortcode( $popup->post_content, 'pum_sub_form' ) ) {
-		$new_content = 		preg_replace('/\[pum_sub_form(.*)provider="none"(.*)\]/', '[pum_sub_form$1 provider=""$2]', $popup->post_content );
+		$new_content = preg_replace( '/\[pum_sub_form(.*)provider="none"(.*)\]/', '[pum_sub_form$1 provider=""$2]', $popup->post_content );
 
 		if ( $popup->post_content != $new_content ) {
 			$popup->post_content = $new_content;
+			$changed             = true;
 			$popup->save( false );
 		}
 	}
@@ -195,7 +234,7 @@ function pum_popup_passive_migration_2( &$popup ) {
 	 */
 	$open_count_reset = $popup->get_meta( 'popup_open_count_reset', false );
 	if ( ! empty( $open_count_reset ) && is_array( $open_count_reset ) ) {
-		foreach( $open_count_reset as $key => $reset ) {
+		foreach ( $open_count_reset as $key => $reset ) {
 			if ( is_array( $reset ) ) {
 				add_post_meta( $popup->ID, 'popup_count_reset', array(
 					'timestamp'   => ! empty( $reset['timestamp'] ) ? $reset['timestamp'] : '',
@@ -225,4 +264,4 @@ function pum_popup_passive_migration_2( &$popup ) {
 	}
 }
 
-add_action( 'pum_popup_passive_migration_2', 'pum_popup_passive_migration_2' );
+add_action( 'pum_popup_passive_migration_2', 'pum_popup_migration_2' );

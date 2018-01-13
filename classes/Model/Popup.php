@@ -987,7 +987,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 			}
 		}
 
-		if ( $this->data_version < $this->model_version ) {
+		if ( $this->data_version < $this->model_version && pum_passive_popups_enabled() ) {
 			/**
 			 * Process passive settings migration as each popup is loaded. The will only run each migration routine once for each popup.
 			 */
@@ -1006,6 +1006,10 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		for ( $i = $this->data_version; $this->data_version < $this->model_version; $i ++ ) {
 			do_action_ref_array( 'pum_popup_passive_migration_' . $this->data_version, array( &$this ) );
 			$this->data_version ++;
+
+			/**
+			 * Update the popups data version.
+			 */
 			$this->update_meta( 'data_version', $this->data_version );
 		}
 
