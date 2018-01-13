@@ -40,7 +40,7 @@ class PUM_Admin_Assets {
 		self::$css_url = Popup_Maker::$URL . 'assets/css/';
 
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'register_admin_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'maybe_localize_and_templates' ), 1000 );
+		add_action( 'admin_print_footer_scripts', array( __CLASS__, 'maybe_localize_and_templates' ), -1 );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'register_admin_styles' ), 100 );
 	}
 
@@ -51,6 +51,7 @@ class PUM_Admin_Assets {
 	public static function register_admin_scripts() {
 
 		wp_register_script( 'pum-admin-general', self::$js_url . 'admin-general' . self::$suffix . '.js', array( 'jquery', 'wp-color-picker', 'jquery-ui-slider', 'wp-util' ), Popup_Maker::$VER, true );
+		wp_register_script( 'pum-admin-batch', self::$js_url . 'admin-batch' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-marketing', self::$js_url . 'admin-marketing' . self::$suffix . '.js', null, Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-popup-editor', self::$js_url . 'admin-popup-editor' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-theme-editor', self::$js_url . 'admin-theme-editor' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
@@ -62,6 +63,10 @@ class PUM_Admin_Assets {
 		wp_register_script( 'popup-maker-admin', self::$js_url . 'admin-deprecated' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
 
 		wp_enqueue_script( 'pum-admin-marketing' );
+
+		if ( PUM_Upgrades::instance()->has_uncomplete_upgrades() ) {
+			wp_enqueue_script( 'pum-admin-batch' );
+		}
 
 		if ( pum_is_popup_editor() ) {
 			wp_enqueue_script( 'pum-admin-popup-editor' );
@@ -112,6 +117,14 @@ class PUM_Admin_Assets {
 			// Register Templates.
 			PUM_Admin_Templates::init();
 		}
+
+		if ( wp_script_is( 'pum-admin-batch' ) ) {
+			wp_localize_script( 'pum-admin-batch', 'pum_batch_vars', array(
+				'complete'              => __( 'Your all set, the upgrades completed successfully!', 'popup-maker' ),
+				'unsupported_browser'   => __( 'We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser.', 'popup-maker' ),
+				'import_field_required' => 'This field must be mapped for the import to proceed.',
+			) );
+		}
 	}
 
 	/**
@@ -120,6 +133,7 @@ class PUM_Admin_Assets {
 	public static function register_admin_styles() {
 
 		wp_register_style( 'pum-admin-general', self::$css_url . 'admin-general' . self::$suffix . '.css', array( 'dashicons', 'wp-color-picker' ), Popup_Maker::$VER );
+		wp_register_style( 'pum-admin-batch', self::$css_url . 'admin-batch' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
 		wp_register_style( 'pum-admin-popup-editor', self::$css_url . 'admin-popup-editor' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
 		wp_register_style( 'pum-admin-theme-editor', self::$css_url . 'admin-theme-editor' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
 		wp_register_style( 'pum-admin-extensions-page', self::$css_url . 'admin-extensions-page' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
@@ -129,6 +143,10 @@ class PUM_Admin_Assets {
 
 		// @deprecated handle. Currently loads empty file and admin-general as dependency.
 		wp_register_style( 'popup-maker-admin', self::$css_url . 'admin-deprecated' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
+
+		if ( PUM_Upgrades::instance()->has_uncomplete_upgrades() ) {
+			wp_enqueue_style( 'pum-admin-batch' );
+		}
 
 		if ( pum_is_popup_editor() ) {
 			wp_enqueue_style( 'pum-admin-popup-editor' );
