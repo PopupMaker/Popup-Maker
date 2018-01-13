@@ -49,10 +49,24 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	/** @var bool */
 	public $doing_passive_migration = false;
 
-	/** @var int */
+	/**
+	 * The current model version.
+	 *
+	 * 1 - v1.0.0
+	 * 2 - v1.4.0
+	 * 3 - v1.7.0
+	 *
+	 * @var int */
 	public $model_version = 3;
 
-	/** @var int */
+	/**
+	 * The version of the data currently stored for the current item.
+	 *
+	 * 1 - v1.0.0
+	 * 2 - v1.4.0
+	 * 3 - v1.7.0
+	 *
+	 * @var int */
 	public $data_version;
 
 	# TODO Remove these once no longer needed.
