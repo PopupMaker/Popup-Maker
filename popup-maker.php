@@ -221,6 +221,7 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/functions/cache.php';
 		require_once self::$DIR . 'includes/functions/options.php';
 		require_once self::$DIR . 'includes/functions/newsletter.php';
+		require_once self::$DIR . 'includes/functions/upgrades.php';
 		require_once self::$DIR . 'includes/functions/developers.php';
 		require_once self::$DIR . 'includes/migrations.php';
 
@@ -348,6 +349,7 @@ class Popup_Maker {
 		PUM_AssetCache::init();
 		PUM_Site::init();
 		PUM_Admin::init();
+		PUM_Upgrades::instance();
 		PUM_Previews::init();
 		PUM_Newsletters::init();
 		PUM_Integrations::init();
