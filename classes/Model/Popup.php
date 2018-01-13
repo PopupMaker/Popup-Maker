@@ -277,6 +277,10 @@ class PUM_Model_Popup extends PUM_Model_Post {
 			// This will only return data from extensions as core data has been migrated already.
 			$group_values = $this->get_meta( "popup_$group" );
 
+			if ( ! $group_values || ! is_array( $group_values ) ) {
+				$group_values = array();
+			}
+
 			// Data manipulation begins here. We don't want any of this saved, only returned for backward compatibility.
 			foreach ( $remapped_keys as $old_key => $new_key ) {
 				$group_values[ $old_key ] = $this->get_setting( $new_key );
