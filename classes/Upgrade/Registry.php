@@ -42,7 +42,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self();
-			add_action( 'admin_init', array( self::$instance, 'register_upgrades' ), - 9999 );
+			add_action( 'admin_init', array( self::$instance, 'init' ), - 9999 );
 		}
 
 		return self::$instance;
@@ -80,6 +80,14 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 			),
 			'class' => 'PUM_Upgrade_v1_7_Popups',
 			'file'  => Popup_Maker::$DIR . 'includes/batch/upgrade/class-upgrade-v1_7-popups.php',
+		) );
+
+		$this->add_upgrade( 'core-v1_7-settings', array(
+			'rules' => array(
+				version_compare( $this->initial_version, '1.7', '<' ),
+			),
+			'class' => 'PUM_Upgrade_v1_7_Settings',
+			'file'  => Popup_Maker::$DIR . 'includes/batch/upgrade/class-upgrade-v1_7-settings.php',
 		) );
 
 		/**
