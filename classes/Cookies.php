@@ -68,11 +68,11 @@ class PUM_Cookies {
 	 */
 	public function register_cookies() {
 		$cookies = apply_filters( 'pum_registered_cookies', array(
-			'on_popup_open'  => array(
-				'name' => __( 'On Popup Open', 'popup-maker' ),
-			),
 			'on_popup_close' => array(
 				'name' => __( 'On Popup Close', 'popup-maker' ),
+			),
+			'on_popup_open'  => array(
+				'name' => __( 'On Popup Open', 'popup-maker' ),
 			),
 			'pum_sub_form_success'             => array(
 				'name' => __( 'Subscription Form: Successful', 'popup-maker' ),
