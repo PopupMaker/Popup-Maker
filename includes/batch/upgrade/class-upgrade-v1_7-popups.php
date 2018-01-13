@@ -12,10 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.7.0
  *
- * @see PUM_Abstract_Batch_Process
- * @see PUM_Interface_Batch_PrefetchProcess
+ * @see PUM_Abstract_Upgrade_Popups
  */
-class PUM_Upgrade_v1_7_Popups extends PUM_Abstract_Batch_Process {
+class PUM_Upgrade_v1_7_Popups extends PUM_Abstract_Upgrade_Popups {
 
 	/**
 	 * Batch process ID.
@@ -23,73 +22,6 @@ class PUM_Upgrade_v1_7_Popups extends PUM_Abstract_Batch_Process {
 	 * @var    string
 	 */
 	public $batch_id = 'core-v1_7-popups';
-
-	/**
-	 * Number of popups to migrate per step.
-	 *
-	 * @var    int
-	 */
-	public $per_step = 1;
-
-	/**
-	 * Executes a single step in the batch process.
-	 *
-	 * @return int|string|\WP_Error Next step number, 'done', or a WP_Error object.
-	 */
-	public function process_step() {
-		$current_count = $this->get_current_count();
-
-		$args = array(
-			'posts_per_page' => $this->per_step,
-			'offset'         => $this->get_offset(),
-			'orderby'        => 'ID',
-			'order'          => 'ASC',
-		);
-
-		$popups = PUM_Model_Popup::get( $args );
-
-		if ( empty( $popups ) ) {
-			return 'done';
-		}
-
-		$updated = array();
-
-		foreach ( $popups as $popup ) {
-			$updated[] = $this->process_popup( $popup );
-		}
-
-		// Deduplicate.
-		$updated = wp_parse_id_list( $updated );
-
-		$this->set_current_count( absint( $current_count ) + count( $updated ) );
-
-		return ++ $this->step;
-	}
-
-	/**
-	 * Retrieves a message for the given code.
-	 *
-	 * @param string $code Message code.
-	 *
-	 * @return string Message.
-	 */
-	public function get_message( $code ) {
-
-		switch ( $code ) {
-
-			case 'done':
-				$final_count = $this->get_current_count();
-
-				$message = sprintf( _n( '%s popup was updated successfully.', '%s popups were updated successfully.', $final_count, 'popup-maker' ), number_format_i18n( $final_count ) );
-				break;
-
-			default:
-				$message = '';
-				break;
-		}
-
-		return $message;
-	}
 
 	/**
 	 * Process needed upgrades on each popup.
@@ -107,11 +39,11 @@ class PUM_Upgrade_v1_7_Popups extends PUM_Abstract_Batch_Process {
 		 * Update pum_sub_form shortcode args
 		 */
 		if ( has_shortcode( $popup->post_content, 'pum_sub_form' ) ) {
-			$new_content = 		preg_replace('/\[pum_sub_form(.*)provider="none"(.*)\]/', '[pum_sub_form$1 provider=""$2]', $popup->post_content );
+			$new_content = preg_replace( '/\[pum_sub_form(.*)provider="none"(.*)\]/', '[pum_sub_form$1 provider=""$2]', $popup->post_content );
 
 			if ( $popup->post_content != $new_content ) {
 				$popup->post_content = $new_content;
-				$changed                     = true;
+				$changed             = true;
 				$popup->save( false );
 			}
 		}
@@ -283,7 +215,7 @@ class PUM_Upgrade_v1_7_Popups extends PUM_Abstract_Batch_Process {
 		 */
 		$open_count_reset = $popup->get_meta( 'popup_open_count_reset', false );
 		if ( ! empty( $open_count_reset ) && is_array( $open_count_reset ) ) {
-			foreach( $open_count_reset as $key => $reset ) {
+			foreach ( $open_count_reset as $key => $reset ) {
 				if ( is_array( $reset ) ) {
 					add_post_meta( $popup->ID, 'popup_count_reset', array(
 						'timestamp'   => ! empty( $reset['timestamp'] ) ? $reset['timestamp'] : '',
@@ -314,4 +246,5 @@ class PUM_Upgrade_v1_7_Popups extends PUM_Abstract_Batch_Process {
 
 		return $popup->ID;
 	}
+
 }
