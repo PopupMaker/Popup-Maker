@@ -40,7 +40,7 @@ class PUM_Admin_Assets {
 		self::$css_url = Popup_Maker::$URL . 'assets/css/';
 
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'register_admin_scripts' ) );
-		add_action( 'admin_print_footer_scripts', array( __CLASS__, 'maybe_localize_and_templates' ), -1 );
+		add_action( 'admin_print_footer_scripts', array( __CLASS__, 'maybe_localize_and_templates' ), - 1 );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'register_admin_styles' ), 100 );
 	}
 
@@ -92,9 +92,10 @@ class PUM_Admin_Assets {
 	public static function maybe_localize_and_templates() {
 		if ( wp_script_is( 'pum-admin-general' ) || wp_script_is( 'popup-maker-admin' ) ) {
 			$admin_vars = apply_filters( 'pum_admin_vars', apply_filters( 'pum_admin_var', array(
-				'post_id' => ! empty( $_GET['post'] ) ? intval( $_GET['post'] ) : null,
-				'homeurl' => home_url(),
-				'I10n'    => array(
+				'post_id'          => ! empty( $_GET['post'] ) ? intval( $_GET['post'] ) : null,
+				'default_provider' => pum_get_option( 'newsletter_default_provider', 'none' ),
+				'homeurl'          => home_url(),
+				'I10n'             => array(
 					'preview_popup'                   => __( 'Preview', 'popup-maker' ),
 					'add'                             => __( 'Add', 'popup-maker' ),
 					'save'                            => __( 'Save', 'popup-maker' ),
