@@ -36,12 +36,12 @@ function pum_autoloader( $class ) {
 	) );
 
 	foreach ( $pum_autoloaders as $autoloader ) {
-		$autoloader = wp_parse_args( array(
+		$autoloader = wp_parse_args( $autoloader, array(
 			'prefix'  => 'PUM_',
 			'dir'     => dirname( __FILE__ ) . '/classes/',
 			'search'  => '_',
 			'replace' => '/',
-		), $autoloader );
+		) );
 
 		// project-specific namespace prefix
 		$prefix = $autoloader['prefix'];
@@ -104,12 +104,12 @@ class Popup_Maker {
 	/**
 	 * @var string
 	 */
-	public static $MIN_PHP_VER = '5.3';
+	public static $MIN_PHP_VER = '5.2.17';
 
 	/**
 	 * @var string
 	 */
-	public static $MIN_WP_VER = '3.5';
+	public static $MIN_WP_VER = '3.6';
 
 	/**
 	 * @var string Plugin URL
@@ -132,7 +132,6 @@ class Popup_Maker {
 	 * @var bool
 	 */
 	public static $DEBUG_MODE = false;
-
 
 	/**
 	 * @var Popup_Maker The one true Popup_Maker
@@ -245,7 +244,6 @@ class Popup_Maker {
 
 		require_once self::$DIR . 'includes/templates.php';
 		require_once self::$DIR . 'includes/load-popups.php';
-		require_once self::$DIR . 'includes/class-pum-extension-license.php';
 		require_once self::$DIR . 'includes/license-handler.php';
 
 		// Phasing Out
