@@ -1,21 +1,22 @@
 <?php
+/*******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * License handler for Popup Maker
  *
  * This class should simplify the process of adding license information to new Popup Maker extensions.
  *
  * Note for wordpress.org admins. This is not called in the free hosted version and is simply used for hooking in addons to one update system rather than including it in each plugin.
+ *
  * @version 1.1
  */
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
-/**
- * PUM_License Class
- */
 class PUM_Extension_License {
 
 	private $file;
@@ -83,11 +84,7 @@ class PUM_Extension_License {
 	 * @access  private
 	 * @return  void
 	 */
-	private function includes() {
-		if ( ! class_exists( 'PUM_Extension_Updater' ) ) {
-			require_once 'class-pum-extension-updater.php';
-		}
-	}
+	private function includes() {}
 
 	/**
 	 * Setup hooks

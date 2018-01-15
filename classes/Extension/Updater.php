@@ -1,10 +1,17 @@
 <?php
 
 // Exit if accessed directly
+
+/*******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Allows plugins to use their own update API.
+ * Allows paid/commercial extensions to update from our own servers.s
+ *
+ * Note for wordpress.org admins. This is not called in the free hosted version and is simply used for hooking in addons to one update system rather than including it in each plugin.
  *
  * @author Easy Digital Downloads
  * @version 1.6.10
