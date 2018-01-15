@@ -6,6 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Class PUM_Options
+ *
+ * @since 1.7.0
  */
 class PUM_Options {
 
@@ -84,8 +86,6 @@ class PUM_Options {
 	 * Warning: Passing in an empty, false or null string value will remove
 	 *          the key from the _options array.
 	 *
-	 * @since 1.0.0
-	 *
 	 * @param string $key The Key to update
 	 * @param string|bool|int $value The value to set the key to
 	 *
@@ -144,31 +144,19 @@ class PUM_Options {
 	}
 
 	/**
-	 * Remove an option
+	 * Merge the new options into the settings array.
 	 *
-	 * Removes a setting value in both the db and the global variable.
+	 * @param array $new_options
 	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $key The Key to delete
-	 *
-	 * @return boolean True if updated, false if not.
+	 * @return bool
 	 */
-	public static function delete( $key = '' ) {
-		// Passive initialization.
-		self::init();
+	public static function merge( $new_options = array() ) {
 
-		// If no key, exit
-		if ( empty( $key ) ) {
-			return false;
-		}
+		$options = self::get_all();
 
-		// First let's grab the current settings
-		$options = get_option( self:: $_prefix . 'settings' );
-
-		// Next let's try to update the value
-		if ( isset( $options[ $key ] ) ) {
-			unset( $options[ $key ] );
+		// Merge new options.
+		foreach ( $new_options as $key => $val ) {
+			$options[ $key ] = ! empty( $val ) ? $val : false;
 		}
 
 		$did_update = update_option( self:: $_prefix . 'settings', $options );
@@ -180,6 +168,47 @@ class PUM_Options {
 
 		return $did_update;
 	}
+
+	/**
+	 * Remove an option or multiple
+	 *
+	 * Removes a setting value in both the db and the global variable.
+	 *
+	 * @param string|array $keys The Key/s to delete
+	 *
+	 * @return boolean True if updated, false if not.
+	 */
+	public static function delete( $keys = '' ) {
+		// Passive initialization.
+		self::init();
+
+		// If no key, exit
+		if ( empty( $keys ) ) {
+			return false;
+		} else if ( is_string( $keys ) ) {
+			$keys = array( $keys );
+		}
+
+		// First let's grab the current settings
+		$options = get_option( self:: $_prefix . 'settings' );
+
+		// Remove each key/value pair.
+		foreach( $keys as $key ) {
+			if ( isset( $options[ $key ] ) ) {
+				unset( $options[ $key ] );
+			}
+		}
+
+		$did_update = update_option( self:: $_prefix . 'settings', $options );
+
+		// If it updated, let's update the global variable
+		if ( $did_update ) {
+			self::$_data = $options;
+		}
+
+		return $did_update;
+	}
+
 
 	/**
 	 * Remaps option keys.

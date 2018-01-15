@@ -41,6 +41,17 @@ function pum_update_option( $key = '', $value = false ) {
 }
 
 /**
+ * Merge array of new option values into the existing options array.
+ *
+ * @param array $new_options
+ *
+ * @return bool
+ */
+function pum_merge_options( $new_options = array() ){
+	return PUM_Options::merge( $new_options );
+}
+
+/**
  * Delete a forum option
  *
  * @param string $key
@@ -50,3 +61,27 @@ function pum_update_option( $key = '', $value = false ) {
 function pum_delete_option( $key = '' ) {
 	return PUM_Options::delete( $key );
 }
+
+/**
+ * Delete a forum option
+ *
+ * @param array $keys
+ *
+ * @return bool
+ */
+function pum_delete_options( $keys = array() ) {
+	return PUM_Options::delete( $keys );
+}
+
+/**
+ * Remap old option keys.
+ *
+ * @param array $remap_array
+ *
+ * @return bool
+ */
+function pum_remap_options( $remap_array = array() ) {
+	return PUM_Options::remap_keys( $remap_array );
+}
+
+
