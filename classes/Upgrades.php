@@ -34,6 +34,13 @@ class PUM_Upgrades {
 	private $upgraded_from;
 
 	/**
+	 * Popup Maker initial version.
+	 *
+	 * @var    string
+	 */
+	private $initial_version;
+
+	/**
 	 * Gets everything going with a singleton instance.
 	 *
 	 * @return PUM_Upgrades
@@ -72,6 +79,7 @@ class PUM_Upgrades {
 	public function update_plugin_version() {
 		$this->version       = get_option( 'pum_ver' );
 		$this->upgraded_from = get_option( 'pum_ver_upgraded_from' );
+		$this->initial_version = get_option( 'pum_initial_version' );
 
 		/**
 		 * If no version set check if a deprecated one exists.
@@ -107,6 +115,8 @@ class PUM_Upgrades {
 			if ( $dep_upgraded_from && version_compare( $dep_upgraded_from, $oldest_known, '<' ) ) {
 				$oldest_known = $dep_upgraded_from;
 			}
+
+			$this->initial_version = $oldest_known;
 
 			// Only set this value if it doesn't exist.
 			update_option( 'pum_initial_version', $oldest_known );
