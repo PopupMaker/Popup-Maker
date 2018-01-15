@@ -33,7 +33,6 @@ class PUM_Newsletters {
 
 		$values = isset( $_REQUEST['values'] ) ? $_REQUEST['values'] : array();
 
-
 		do_action( 'pum_sub_form_ajax_override', $values );
 
 		// Allow sanitization & manipulation of form values prior to usage.

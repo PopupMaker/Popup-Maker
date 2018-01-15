@@ -65,9 +65,3 @@ function pum_get_newsletter_default_messages( $context = null ) {
 
 	return $messages;
 }
-
-function pum_get_newsletter_admin_localized_vars() {
-	return array(
-		'default_provider' => PUM_Options::get( 'newsletter_default', '' ),
-	);
-}
