@@ -39,7 +39,7 @@
          */
         function addAction(action, callback, priority, context) {
             if (typeof action === 'string' && typeof callback === 'function') {
-                priority = parseInt(( priority || 10 ), 10);
+                priority = parseInt((priority || 10), 10);
                 _addHook('actions', action, callback, priority, context);
             }
 
@@ -85,7 +85,7 @@
          */
         function addFilter(filter, callback, priority, context) {
             if (typeof filter === 'string' && typeof callback === 'function') {
-                priority = parseInt(( priority || 10 ), 10);
+                priority = parseInt((priority || 10), 10);
                 _addHook('filters', filter, callback, priority, context);
             }
 
@@ -198,7 +198,7 @@
             for (var i = 1, len = hooks.length; i < len; i++) {
                 tmpHook = hooks[i];
                 j = i;
-                while (( prevHook = hooks[j - 1] ) && prevHook.priority > tmpHook.priority) {
+                while ((prevHook = hooks[j - 1]) && prevHook.priority > tmpHook.priority) {
                     hooks[j] = hooks[j - 1];
                     --j;
                 }
@@ -234,7 +234,7 @@
                 }
             }
 
-            return ( type === 'filters' ) ? args[0] : true;
+            return (type === 'filters') ? args[0] : true;
         }
 
         // return all of the publicly available methods

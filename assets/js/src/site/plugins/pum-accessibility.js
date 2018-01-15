@@ -23,11 +23,11 @@ var PUM_Accessibility;
             if (e.keyCode === 9) {
                 // get list of focusable items
                 var focusableItems = currentModal.find('.pum-container *').filter(focusableElementsString).filter(':visible'),
-                // get currently focused item
+                    // get currently focused item
                     focusedItem = $(':focus'),
-                // get the number of focusable items
+                    // get the number of focusable items
                     numberOfFocusableItems = focusableItems.length,
-                // get the index of the currently focused item
+                    // get the index of the currently focused item
                     focusedItemIndex = focusableItems.index(focusedItem);
 
                 if (e.shiftKey) {

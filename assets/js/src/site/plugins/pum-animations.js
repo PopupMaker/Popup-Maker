@@ -42,13 +42,13 @@
             $popup.popmake('getContainer').show(0);
 
             $popup.popmake('animate_overlay', 'none', 0, function () {
-                    // Fire user passed callback.
-                    if (callback !== undefined) {
-                        callback();
-                        // TODO Test this new method. Then remove the above.
-                        //callback.apply(this);
-                    }
-                });
+                // Fire user passed callback.
+                if (callback !== undefined) {
+                    callback();
+                    // TODO Test this new method. Then remove the above.
+                    //callback.apply(this);
+                }
+            });
             return this;
         },
         slide: function (callback) {

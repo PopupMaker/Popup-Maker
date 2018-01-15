@@ -25,7 +25,7 @@ var PopMakeAdmin;
                     event.preventDefault();
                     event.stopPropagation();
 
-                    switch( clicked_class) {
+                    switch (clicked_class) {
                     case 'example-popup-overlay':
                         pos = $('#popmake_popup_theme_overlay').offset().top;
                         break;
@@ -270,7 +270,7 @@ var PopMakeAdmin;
             }
 
             $overlay.removeAttr('style').css({
-                backgroundColor:  window.PUM_Admin.utils.convert_hex(theme.overlay_background_color, theme.overlay_background_opacity)
+                backgroundColor: window.PUM_Admin.utils.convert_hex(theme.overlay_background_color, theme.overlay_background_opacity)
             });
             $container.removeAttr('style').css({
                 padding: theme.container_padding + 'px',
@@ -347,8 +347,8 @@ var PopMakeAdmin;
 
     };
 
-    $('.popmake-range-manual').addClass('pum-range-manual').parent('td').addClass('pum-field').addClass( 'pum-field-rangeslider' );
-    $('.range-value-unit').addClass( 'pum-range-value-unit' );
+    $('.popmake-range-manual').addClass('pum-range-manual').parent('td').addClass('pum-field').addClass('pum-field-rangeslider');
+    $('.range-value-unit').addClass('pum-range-value-unit');
 
 
     $document.ready(function () {

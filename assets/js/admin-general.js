@@ -6323,9 +6323,9 @@
             setTimeout(PopMakeAdmin.update_theme, 500);
         })
         .on('colorchange', function (event, ui) {
-            var $input   = $(event.target),
+            var $input = $(event.target),
                 $opacity = $input.parents('tr').next('tr.background-opacity'),
-                color    = '';
+                color = '';
 
             if (ui !== undefined && ui.color !== undefined) {
                 color = ui.color.toString();
@@ -6381,14 +6381,14 @@
             $dependent_fields = _fields.length ? _fields : $("[data-pum-dependencies]:not([data-pum-processed-dependencies])");
 
             $dependent_fields.each(function () {
-                var $dependent      = $(this),
-                    dependentID     = $dependent.data('id'),
+                var $dependent = $(this),
+                    dependentID = $dependent.data('id'),
                     // The dependency object for this field.
-                    dependencies    = $dependent.data("pum-processed-dependencies") || {},
+                    dependencies = $dependent.data("pum-processed-dependencies") || {},
                     // Total number of fields this :input is dependent on.
-                    requiredCount   = Object.keys(dependencies).length,
+                    requiredCount = Object.keys(dependencies).length,
                     // Current count of fields this :input matched properly.
-                    count           = 0,
+                    count = 0,
                     // An array of fields this :input is dependent on.
                     dependentFields = $dependent.data("pum-dependent-fields"),
                     // Early declarations.
@@ -6432,11 +6432,11 @@
                 }
 
                 $(dependentFields).each(function () {
-                    var $wrapper                   = $(this),
-                        $field                     = $wrapper.find(':input:first'),
-                        id                         = $wrapper.data("id"),
-                        value                      = $field.val(),
-                        required                   = dependencies[id],
+                    var $wrapper = $(this),
+                        $field = $wrapper.find(':input:first'),
+                        id = $wrapper.data("id"),
+                        value = $field.val(),
+                        required = dependencies[id],
                         matched,
                         // Used for limiting the fields that get updated when this field is changed.
                         all_this_fields_dependents = $wrapper.data('pum-field-dependents') || [];
@@ -6849,12 +6849,12 @@ function pumChecked(val1, val2, print) {
 (function ($) {
     "use strict";
 
-    var $html                   = $('html'),
-        $document               = $(document),
+    var $html = $('html'),
+        $document = $(document),
         $top_level_elements,
         focusableElementsString = "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]",
         previouslyFocused,
-        modals                  = {
+        modals = {
             _current: null,
             // Accessibility: Checks focus events to ensure they stay inside the modal.
             forceFocus: function (event) {
@@ -6873,13 +6873,13 @@ function pumChecked(val1, val2, print) {
                 // if tab or shift-tab pressed
                 if (e.keyCode === 9) {
                     // get list of focusable items
-                    var focusableItems         = PUM_Admin.modals._current.find('*').filter(focusableElementsString).filter(':visible'),
+                    var focusableItems = PUM_Admin.modals._current.find('*').filter(focusableElementsString).filter(':visible'),
                         // get currently focused item
-                        focusedItem            = $(':focus'),
+                        focusedItem = $(':focus'),
                         // get the number of focusable items
                         numberOfFocusableItems = focusableItems.length,
                         // get the index of the currently focused item
-                        focusedItemIndex       = focusableItems.index(focusedItem);
+                        focusedItemIndex = focusableItems.index(focusedItem);
 
                     if (e.shiftKey) {
                         //back tab
@@ -7060,11 +7060,11 @@ function pumChecked(val1, val2, print) {
         },
         init: function () {
             $('.pum-field-rangeslider:not(.pum-rangeslider-initialized)').each(function () {
-                var $this    = $(this).addClass('pum-rangeslider-initialized'),
-                    $input   = $this.find('input.pum-range-manual'),
-                    $slider  = rangesliders.cloneables.slider.clone(),
-                    $plus    = rangesliders.cloneables.plus.clone(),
-                    $minus   = rangesliders.cloneables.minus.clone(),
+                var $this = $(this).addClass('pum-rangeslider-initialized'),
+                    $input = $this.find('input.pum-range-manual'),
+                    $slider = rangesliders.cloneables.slider.clone(),
+                    $plus = rangesliders.cloneables.plus.clone(),
+                    $minus = rangesliders.cloneables.minus.clone(),
                     settings = {
                         force: $input.data('force-minmax'),
                         min: parseInt($input.attr('min'), 10) || 0,
@@ -7080,7 +7080,7 @@ function pumChecked(val1, val2, print) {
 
                 $slider.prop({
                     min: settings.min || 0,
-                    max: ( settings.force || (settings.max && settings.max > settings.value) ) ? settings.max : settings.value *
+                    max: (settings.force || (settings.max && settings.max > settings.value)) ? settings.max : settings.value *
                         1.5,
                     step: settings.step || settings.value * 1.5 / 100,
                     value: settings.value
@@ -7112,12 +7112,12 @@ function pumChecked(val1, val2, print) {
          * Update sliders value, min, & max when manual entry is detected.
          */
         .on('change', '.pum-range-manual', function () {
-            var $input  = $(this),
-                max     = parseInt($input.prop('max'), 0),
-                min     = parseInt($input.prop('min'), 0),
-                step    = parseInt($input.prop('step'), 0),
-                force   = $input.data('force-minmax'),
-                value   = parseInt($input.val(), 0),
+            var $input = $(this),
+                max = parseInt($input.prop('max'), 0),
+                min = parseInt($input.prop('min'), 0),
+                step = parseInt($input.prop('step'), 0),
+                force = $input.data('force-minmax'),
+                value = parseInt($input.val(), 0),
                 $slider = $input.prev();
 
             if (isNaN(value)) {
@@ -7139,11 +7139,11 @@ function pumChecked(val1, val2, print) {
             });
         })
         .on('click', '.pum-range-plus', function (event) {
-            var $input  = $(this).siblings('.pum-range-manual'),
-                max     = parseInt($input.prop('max'), 0),
-                step    = parseInt($input.prop('step'), 0),
-                force   = $input.data('force-minmax'),
-                value   = parseInt($input.val(), 0),
+            var $input = $(this).siblings('.pum-range-manual'),
+                max = parseInt($input.prop('max'), 0),
+                step = parseInt($input.prop('step'), 0),
+                force = $input.data('force-minmax'),
+                value = parseInt($input.val(), 0),
                 $slider = $input.prev();
 
             event.preventDefault();
@@ -7162,11 +7162,11 @@ function pumChecked(val1, val2, print) {
             $slider.val(value);
         })
         .on('click', '.pum-range-minus', function (event) {
-            var $input  = $(this).siblings('.pum-range-manual'),
-                min     = parseInt($input.prop('min'), 0),
-                step    = parseInt($input.prop('step'), 0),
-                force   = $input.data('force-minmax'),
-                value   = parseInt($input.val(), 0),
+            var $input = $(this).siblings('.pum-range-manual'),
+                min = parseInt($input.prop('min'), 0),
+                step = parseInt($input.prop('step'), 0),
+                force = $input.data('force-minmax'),
+                value = parseInt($input.val(), 0),
                 $slider = $input.prev();
 
             event.preventDefault();
@@ -7428,7 +7428,7 @@ function pumChecked(val1, val2, print) {
     function FormSerializer(helper, $form) {
 
         // private variables
-        var data   = {},
+        var data = {},
             pushes = {};
 
         // private API
@@ -8015,10 +8015,10 @@ function pumChecked(val1, val2, print) {
         return this.charAt(0).toUpperCase() + this.slice(1);
     };
 
-    var root       = this,
+    var root = this,
         inputTypes = 'color,date,datetime,datetime-local,email,hidden,month,number,password,range,search,tel,text,time,url,week'.split(','),
         inputNodes = 'select,textarea'.split(','),
-        rName      = /\[([^\]]*)\]/g;
+        rName = /\[([^\]]*)\]/g;
 
     // ugly hack for IE7-8
     function isInArray(array, needle) {
@@ -8121,9 +8121,9 @@ function pumChecked(val1, val2, print) {
             }
 
             hex = hex.replace('#', '');
-            var r      = parseInt(hex.substring(0, 2), 16),
-                g      = parseInt(hex.substring(2, 4), 16),
-                b      = parseInt(hex.substring(4, 6), 16),
+            var r = parseInt(hex.substring(0, 2), 16),
+                g = parseInt(hex.substring(2, 4), 16),
+                b = parseInt(hex.substring(4, 6), 16),
                 result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity / 100 + ')';
             return result;
         },
@@ -8139,7 +8139,7 @@ function pumChecked(val1, val2, print) {
         },
         throttle: function (callback, threshold) {
             var suppress = false,
-                clear    = function () {
+                clear = function () {
                     suppress = false;
                 };
             return function () {
@@ -8153,7 +8153,7 @@ function pumChecked(val1, val2, print) {
         serializeForm: function (options) {
             $.extend({}, options);
 
-            var values   = {},
+            var values = {},
                 settings = $.extend(true, {
                     include: [],
                     exclude: [],

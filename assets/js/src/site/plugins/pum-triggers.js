@@ -63,41 +63,41 @@
                 .css({cursor: "pointer"});
 
             $(document).on('click.pumTrigger', trigger_selector, function (event) {
-              var $trigger = $(this),
-                  do_default = settings.do_default || false;
+                var $trigger = $(this),
+                    do_default = settings.do_default || false;
 
-              // If trigger is inside of the popup that it opens, do nothing.
-              if ($popup.has($trigger).length > 0) {
-                return;
-              }
+                // If trigger is inside of the popup that it opens, do nothing.
+                if ($popup.has($trigger).length > 0) {
+                    return;
+                }
 
-              // If the popup is already open return.
-              if ($popup.popmake('state', 'isOpen')) {
-                return;
-              }
+                // If the popup is already open return.
+                if ($popup.popmake('state', 'isOpen')) {
+                    return;
+                }
 
-              // If cookie exists or conditions fail return.
-              if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
-                return;
-              }
+                // If cookie exists or conditions fail return.
+                if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
+                    return;
+                }
 
-              if ($trigger.data('do-default')) {
-                do_default = $trigger.data('do-default');
-              } else if ($trigger.hasClass('do-default') || $trigger.hasClass('popmake-do-default') || $trigger.hasClass('pum-do-default')) {
-                do_default = true;
-              }
+                if ($trigger.data('do-default')) {
+                    do_default = $trigger.data('do-default');
+                } else if ($trigger.hasClass('do-default') || $trigger.hasClass('popmake-do-default') || $trigger.hasClass('pum-do-default')) {
+                    do_default = true;
+                }
 
-              // If trigger has the class do-default we don't prevent default actions.
-              if (!event.ctrlKey && !pum.hooks.applyFilters('pum.trigger.click_open.do_default', do_default, $popup, $trigger)) {
-                event.preventDefault();
-                event.stopPropagation();
-              }
+                // If trigger has the class do-default we don't prevent default actions.
+                if (!event.ctrlKey && !pum.hooks.applyFilters('pum.trigger.click_open.do_default', do_default, $popup, $trigger)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
 
-              // Set the global last open trigger to the clicked element.
-              $.fn.popmake.last_open_trigger = $trigger;
+                // Set the global last open trigger to the clicked element.
+                $.fn.popmake.last_open_trigger = $trigger;
 
-              // Open the popup.
-              $popup.popmake('open');
+                // Open the popup.
+                $popup.popmake('open');
             });
         },
         admin_debug: function () {

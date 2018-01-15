@@ -31,9 +31,9 @@
             setTimeout(PopMakeAdmin.update_theme, 500);
         })
         .on('colorchange', function (event, ui) {
-            var $input   = $(event.target),
+            var $input = $(event.target),
                 $opacity = $input.parents('tr').next('tr.background-opacity'),
-                color    = '';
+                color = '';
 
             if (ui !== undefined && ui.color !== undefined) {
                 color = ui.color.toString();

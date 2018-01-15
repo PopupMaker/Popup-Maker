@@ -925,13 +925,13 @@ var PUM_Analytics;
             $popup.popmake('getContainer').show(0);
 
             $popup.popmake('animate_overlay', 'none', 0, function () {
-                    // Fire user passed callback.
-                    if (callback !== undefined) {
-                        callback();
-                        // TODO Test this new method. Then remove the above.
-                        //callback.apply(this);
-                    }
-                });
+                // Fire user passed callback.
+                if (callback !== undefined) {
+                    callback();
+                    // TODO Test this new method. Then remove the above.
+                    //callback.apply(this);
+                }
+            });
             return this;
         },
         slide: function (callback) {
@@ -1221,7 +1221,7 @@ var PUM_Analytics;
             var condition = settings.target || null,
                 check;
 
-            if ( ! condition ) {
+            if (!condition) {
                 console.warn('Condition type not set.');
                 return false;
             }
@@ -1256,7 +1256,7 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
 (function ($) {
     "use strict";
 
-    function cookie (converter) {
+    function cookie(converter) {
         if (converter === undefined) {
             converter = function () {
             };
@@ -1291,7 +1291,8 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
                     if (/^[\{\[]/.test(result)) {
                         value = result;
                     }
-                } catch (e) {}
+                } catch (e) {
+                }
 
                 if (!converter.write) {
                     value = encodeURIComponent(String(value))
@@ -1338,7 +1339,7 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
                     var name = parts[0].replace(rdecode, decodeURIComponent);
                     cookie = converter.read ?
                         converter.read(cookie, name) : converter(cookie, name) ||
-                    cookie.replace(rdecode, decodeURIComponent);
+                        cookie.replace(rdecode, decodeURIComponent);
 
                     if (this.json) {
                         try {
@@ -1533,10 +1534,10 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
     // Register All Cookies for a Popup
     $(document)
         .on('pumInit', '.pum', function () {
-            var $popup   = PUM.getPopup(this),
+            var $popup = PUM.getPopup(this),
                 settings = $popup.popmake('getSettings'),
-                cookies  = settings.cookies || [],
-                cookie   = null,
+                cookies = settings.cookies || [],
+                cookie = null,
                 i;
 
             if (cookies.length) {
@@ -1553,8 +1554,8 @@ var pum_debug_mode = false,
 (function ($, pum_vars) {
 
     pum_vars = window.pum_vars || {
-            debug_mode: false
-        };
+        debug_mode: false
+    };
 
     pum_debug_mode = pum_vars.debug_mode !== undefined && pum_vars.debug_mode;
 
@@ -1695,12 +1696,12 @@ var pum_debug_mode = false,
                     console.groupCollapsed(vars.cookies[cookie.event]);
 
                     switch (cookie.event) {
-                        case 'on_popup_open':
-                        case 'on_popup_close':
-                        case 'manual':
-                        case 'ninja_form_success':
-                            console.log(vars.label_cookie, pum_debug.odump(cookie.settings));
-                            break;
+                    case 'on_popup_open':
+                    case 'on_popup_close':
+                    case 'manual':
+                    case 'ninja_form_success':
+                        console.log(vars.label_cookie, pum_debug.odump(cookie.settings));
+                        break;
                     }
 
                     $(document).trigger('pum_debug_render_trigger', $popup, cookie);
@@ -1872,7 +1873,7 @@ var pum_debug_mode = false,
 
                 console.groupCollapsed(vars.label_event.replace('%s', 'pumCheckingCondition'));
 
-                console.log(( condition.not_operand ? '(!) ' : '' ) + condition.target + ': ' + result, condition);
+                console.log((condition.not_operand ? '(!) ' : '') + condition.target + ': ' + result, condition);
 
                 console.groupEnd();
             });
@@ -2323,7 +2324,7 @@ var pum_debug_mode = false,
          */
         function addAction(action, callback, priority, context) {
             if (typeof action === 'string' && typeof callback === 'function') {
-                priority = parseInt(( priority || 10 ), 10);
+                priority = parseInt((priority || 10), 10);
                 _addHook('actions', action, callback, priority, context);
             }
 
@@ -2369,7 +2370,7 @@ var pum_debug_mode = false,
          */
         function addFilter(filter, callback, priority, context) {
             if (typeof filter === 'string' && typeof callback === 'function') {
-                priority = parseInt(( priority || 10 ), 10);
+                priority = parseInt((priority || 10), 10);
                 _addHook('filters', filter, callback, priority, context);
             }
 
@@ -2482,7 +2483,7 @@ var pum_debug_mode = false,
             for (var i = 1, len = hooks.length; i < len; i++) {
                 tmpHook = hooks[i];
                 j = i;
-                while (( prevHook = hooks[j - 1] ) && prevHook.priority > tmpHook.priority) {
+                while ((prevHook = hooks[j - 1]) && prevHook.priority > tmpHook.priority) {
                     hooks[j] = hooks[j - 1];
                     --j;
                 }
@@ -2518,7 +2519,7 @@ var pum_debug_mode = false,
                 }
             }
 
-            return ( type === 'filters' ) ? args[0] : true;
+            return (type === 'filters') ? args[0] : true;
         }
 
         // return all of the publicly available methods
@@ -2536,7 +2537,7 @@ var pum_debug_mode = false,
 (function ($) {
     "use strict";
 
-    var gFormSettings   = {},
+    var gFormSettings = {},
         pumNFController = false;
 
     /** Ninja Forms Support */
@@ -2546,7 +2547,7 @@ var pum_debug_mode = false,
                 this.listenTo(nfRadio.channel('forms'), 'submit:response', this.popupMaker)
             },
             popupMaker: function (response, textStatus, jqXHR, formID) {
-                var $form    = $('#nf-form-' + formID + '-cont'),
+                var $form = $('#nf-form-' + formID + '-cont'),
                     settings = {};
 
                 if (response.errors.length) {
@@ -2574,10 +2575,10 @@ var pum_debug_mode = false,
 
             /** Gravity Forms Support */
             $('.gform_wrapper > form').each(function () {
-                var $form     = $(this),
-                    form_id   = $form.attr('id').replace('gform_', ''),
+                var $form = $(this),
+                    form_id = $form.attr('id').replace('gform_', ''),
                     $settings = $form.find('input.gforms-pum'),
-                    settings  = $settings.length ? JSON.parse($settings.val()) : false;
+                    settings = $settings.length ? JSON.parse($settings.val()) : false;
 
                 if (!settings || typeof settings !== 'object') {
                     return;
@@ -2588,16 +2589,16 @@ var pum_debug_mode = false,
         })
         /** Gravity Forms Support */
         .on('gform_confirmation_loaded', function (event, form_id) {
-            var $form    = $('#gform_confirmation_wrapper_' + form_id + ',#gforms_confirmation_message_' + form_id),
+            var $form = $('#gform_confirmation_wrapper_' + form_id + ',#gforms_confirmation_message_' + form_id),
                 settings = gFormSettings[form_id] || false;
 
             window.PUM.forms.success($form, settings);
         })
         /** Contact Form 7 Support */
         .on('wpcf7:mailsent', '.wpcf7', function (event) {
-            var $form     = $(event.target),
+            var $form = $(event.target),
                 $settings = $form.find('input.wpcf7-pum'),
-                settings  = $settings.length ? JSON.parse($settings.val()) : false;
+                settings = $settings.length ? JSON.parse($settings.val()) : false;
 
             window.PUM.forms.success($form, settings);
         });
@@ -2743,41 +2744,41 @@ var pum_debug_mode = false,
                 .css({cursor: "pointer"});
 
             $(document).on('click.pumTrigger', trigger_selector, function (event) {
-              var $trigger = $(this),
-                  do_default = settings.do_default || false;
+                var $trigger = $(this),
+                    do_default = settings.do_default || false;
 
-              // If trigger is inside of the popup that it opens, do nothing.
-              if ($popup.has($trigger).length > 0) {
-                return;
-              }
+                // If trigger is inside of the popup that it opens, do nothing.
+                if ($popup.has($trigger).length > 0) {
+                    return;
+                }
 
-              // If the popup is already open return.
-              if ($popup.popmake('state', 'isOpen')) {
-                return;
-              }
+                // If the popup is already open return.
+                if ($popup.popmake('state', 'isOpen')) {
+                    return;
+                }
 
-              // If cookie exists or conditions fail return.
-              if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
-                return;
-              }
+                // If cookie exists or conditions fail return.
+                if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
+                    return;
+                }
 
-              if ($trigger.data('do-default')) {
-                do_default = $trigger.data('do-default');
-              } else if ($trigger.hasClass('do-default') || $trigger.hasClass('popmake-do-default') || $trigger.hasClass('pum-do-default')) {
-                do_default = true;
-              }
+                if ($trigger.data('do-default')) {
+                    do_default = $trigger.data('do-default');
+                } else if ($trigger.hasClass('do-default') || $trigger.hasClass('popmake-do-default') || $trigger.hasClass('pum-do-default')) {
+                    do_default = true;
+                }
 
-              // If trigger has the class do-default we don't prevent default actions.
-              if (!event.ctrlKey && !pum.hooks.applyFilters('pum.trigger.click_open.do_default', do_default, $popup, $trigger)) {
-                event.preventDefault();
-                event.stopPropagation();
-              }
+                // If trigger has the class do-default we don't prevent default actions.
+                if (!event.ctrlKey && !pum.hooks.applyFilters('pum.trigger.click_open.do_default', do_default, $popup, $trigger)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
 
-              // Set the global last open trigger to the clicked element.
-              $.fn.popmake.last_open_trigger = $trigger;
+                // Set the global last open trigger to the clicked element.
+                $.fn.popmake.last_open_trigger = $trigger;
 
-              // Open the popup.
-              $popup.popmake('open');
+                // Open the popup.
+                $popup.popmake('open');
             });
         },
         admin_debug: function () {

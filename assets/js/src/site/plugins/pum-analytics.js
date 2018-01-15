@@ -17,7 +17,7 @@ var PUM_Analytics;
         beacon: function (data, callback) {
             var beacon = new Image(),
                 url = rest_enabled ? pum_vars.restapi : pum_vars.ajaxurl,
-                opts   = {
+                opts = {
                     route: '/analytics/',
                     data: $.extend({
                         event: 'open',

@@ -10,7 +10,7 @@
             $element = $element || $('.pum-not-operand');
 
             return $element.each(function () {
-                var $this  = $(this),
+                var $this = $(this),
                     $input = $this.find('input');
 
                 $input.prop('checked', !$input.is(':checked'));
@@ -23,8 +23,8 @@
             $element = $element || $('.pum-not-operand');
 
             return $element.each(function () {
-                var $this      = $(this),
-                    $input     = $this.find('input'),
+                var $this = $(this),
+                    $input = $this.find('input'),
                     // $is        = $this.find('.is'),
                     // $not       = $this.find('.not'),
                     $container = $this.parents('.facet-target');
@@ -79,7 +79,7 @@
             },
             settings: function (args, values) {
                 var fields = [],
-                    data   = $.extend(true, {}, {
+                    data = $.extend(true, {}, {
                         index: '',
                         group: '',
                         target: null,
@@ -148,7 +148,7 @@
         groups: {
             add: function (editor, target, not_operand) {
                 var $editor = $(editor),
-                    data    = {
+                    data = {
                         index: $editor.find('.facet-group-wrap').length,
                         facets: [
                             {
@@ -206,13 +206,13 @@
         },
         renumber: function () {
             $('.facet-builder .facet-group-wrap').each(function () {
-                var $group     = $(this),
+                var $group = $(this),
                     groupIndex = $group.parent().children().index($group);
 
                 $group
                     .data('index', groupIndex)
                     .find('.facet').each(function () {
-                    var $facet     = $(this),
+                    var $facet = $(this),
                         facetIndex = $facet.parent().children().index($facet);
 
                     $facet
@@ -236,10 +236,10 @@
             conditions.toggle_not_operand();
         })
         .on('select2:select pumselect2:select', '#pum-first-condition', function (event) {
-            var $field      = $(this),
-                $editor     = $field.parents('.facet-builder').eq(0),
-                target      = $field.val(),
-                $operand    = $editor.find('#pum-first-facet-operand'),
+            var $field = $(this),
+                $editor = $field.parents('.facet-builder').eq(0),
+                target = $field.val(),
+                $operand = $editor.find('#pum-first-facet-operand'),
                 not_operand = $operand.is(':checked');
 
             conditions.groups.add($editor, target, not_operand);
@@ -255,10 +255,10 @@
             conditions.not_operand_checkbox($(this));
         })
         .on('change', '.facet-builder .facet-target select', function (event) {
-            var $this  = $(this),
+            var $this = $(this),
                 $facet = $this.parents('.facet'),
                 target = $this.val(),
-                data   = {
+                data = {
                     target: target
                 };
 

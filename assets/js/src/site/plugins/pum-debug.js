@@ -3,8 +3,8 @@ var pum_debug_mode = false,
 (function ($, pum_vars) {
 
     pum_vars = window.pum_vars || {
-            debug_mode: false
-        };
+        debug_mode: false
+    };
 
     pum_debug_mode = pum_vars.debug_mode !== undefined && pum_vars.debug_mode;
 
@@ -145,12 +145,12 @@ var pum_debug_mode = false,
                     console.groupCollapsed(vars.cookies[cookie.event]);
 
                     switch (cookie.event) {
-                        case 'on_popup_open':
-                        case 'on_popup_close':
-                        case 'manual':
-                        case 'ninja_form_success':
-                            console.log(vars.label_cookie, pum_debug.odump(cookie.settings));
-                            break;
+                    case 'on_popup_open':
+                    case 'on_popup_close':
+                    case 'manual':
+                    case 'ninja_form_success':
+                        console.log(vars.label_cookie, pum_debug.odump(cookie.settings));
+                        break;
                     }
 
                     $(document).trigger('pum_debug_render_trigger', $popup, cookie);
@@ -322,7 +322,7 @@ var pum_debug_mode = false,
 
                 console.groupCollapsed(vars.label_event.replace('%s', 'pumCheckingCondition'));
 
-                console.log(( condition.not_operand ? '(!) ' : '' ) + condition.target + ': ' + result, condition);
+                console.log((condition.not_operand ? '(!) ' : '') + condition.target + ': ' + result, condition);
 
                 console.groupEnd();
             });

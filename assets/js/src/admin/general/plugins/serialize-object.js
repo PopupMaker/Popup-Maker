@@ -38,7 +38,7 @@
     function FormSerializer(helper, $form) {
 
         // private variables
-        var data   = {},
+        var data = {},
             pushes = {};
 
         // private API

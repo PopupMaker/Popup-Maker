@@ -82,7 +82,7 @@
             var condition = settings.target || null,
                 check;
 
-            if ( ! condition ) {
+            if (!condition) {
                 console.warn('Condition type not set.');
                 return false;
             }

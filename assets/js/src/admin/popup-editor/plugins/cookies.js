@@ -272,7 +272,7 @@ var cookies;
                 $editor = $this.parents('.pum-popup-cookie-editor'),
                 event = $this.val(),
                 values = {
-                    name:  'pum-' + $('#post_ID').val()
+                    name: 'pum-' + $('#post_ID').val()
                 };
 
             $this
@@ -356,8 +356,8 @@ var cookies;
         })
         .on('submit', '#pum_cookie_add_event_modal .pum-form', function (e) {
             var $editor = current_editor,
-                event    = $('#popup_cookie_add_event').val(),
-                values  = {
+                event = $('#popup_cookie_add_event').val(),
+                values = {
                     name: 'pum-' + $('#post_ID').val(),
                     path: '1'
                 };

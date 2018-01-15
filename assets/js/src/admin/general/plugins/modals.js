@@ -4,12 +4,12 @@
 (function ($) {
     "use strict";
 
-    var $html                   = $('html'),
-        $document               = $(document),
+    var $html = $('html'),
+        $document = $(document),
         $top_level_elements,
         focusableElementsString = "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]",
         previouslyFocused,
-        modals                  = {
+        modals = {
             _current: null,
             // Accessibility: Checks focus events to ensure they stay inside the modal.
             forceFocus: function (event) {
@@ -28,13 +28,13 @@
                 // if tab or shift-tab pressed
                 if (e.keyCode === 9) {
                     // get list of focusable items
-                    var focusableItems         = PUM_Admin.modals._current.find('*').filter(focusableElementsString).filter(':visible'),
+                    var focusableItems = PUM_Admin.modals._current.find('*').filter(focusableElementsString).filter(':visible'),
                         // get currently focused item
-                        focusedItem            = $(':focus'),
+                        focusedItem = $(':focus'),
                         // get the number of focusable items
                         numberOfFocusableItems = focusableItems.length,
                         // get the index of the currently focused item
-                        focusedItemIndex       = focusableItems.index(focusedItem);
+                        focusedItemIndex = focusableItems.index(focusedItem);
 
                     if (e.shiftKey) {
                         //back tab

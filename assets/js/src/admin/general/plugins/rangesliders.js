@@ -11,11 +11,11 @@
         },
         init: function () {
             $('.pum-field-rangeslider:not(.pum-rangeslider-initialized)').each(function () {
-                var $this    = $(this).addClass('pum-rangeslider-initialized'),
-                    $input   = $this.find('input.pum-range-manual'),
-                    $slider  = rangesliders.cloneables.slider.clone(),
-                    $plus    = rangesliders.cloneables.plus.clone(),
-                    $minus   = rangesliders.cloneables.minus.clone(),
+                var $this = $(this).addClass('pum-rangeslider-initialized'),
+                    $input = $this.find('input.pum-range-manual'),
+                    $slider = rangesliders.cloneables.slider.clone(),
+                    $plus = rangesliders.cloneables.plus.clone(),
+                    $minus = rangesliders.cloneables.minus.clone(),
                     settings = {
                         force: $input.data('force-minmax'),
                         min: parseInt($input.attr('min'), 10) || 0,
@@ -31,7 +31,7 @@
 
                 $slider.prop({
                     min: settings.min || 0,
-                    max: ( settings.force || (settings.max && settings.max > settings.value) ) ? settings.max : settings.value *
+                    max: (settings.force || (settings.max && settings.max > settings.value)) ? settings.max : settings.value *
                         1.5,
                     step: settings.step || settings.value * 1.5 / 100,
                     value: settings.value
@@ -63,12 +63,12 @@
          * Update sliders value, min, & max when manual entry is detected.
          */
         .on('change', '.pum-range-manual', function () {
-            var $input  = $(this),
-                max     = parseInt($input.prop('max'), 0),
-                min     = parseInt($input.prop('min'), 0),
-                step    = parseInt($input.prop('step'), 0),
-                force   = $input.data('force-minmax'),
-                value   = parseInt($input.val(), 0),
+            var $input = $(this),
+                max = parseInt($input.prop('max'), 0),
+                min = parseInt($input.prop('min'), 0),
+                step = parseInt($input.prop('step'), 0),
+                force = $input.data('force-minmax'),
+                value = parseInt($input.val(), 0),
                 $slider = $input.prev();
 
             if (isNaN(value)) {
@@ -90,11 +90,11 @@
             });
         })
         .on('click', '.pum-range-plus', function (event) {
-            var $input  = $(this).siblings('.pum-range-manual'),
-                max     = parseInt($input.prop('max'), 0),
-                step    = parseInt($input.prop('step'), 0),
-                force   = $input.data('force-minmax'),
-                value   = parseInt($input.val(), 0),
+            var $input = $(this).siblings('.pum-range-manual'),
+                max = parseInt($input.prop('max'), 0),
+                step = parseInt($input.prop('step'), 0),
+                force = $input.data('force-minmax'),
+                value = parseInt($input.val(), 0),
                 $slider = $input.prev();
 
             event.preventDefault();
@@ -113,11 +113,11 @@
             $slider.val(value);
         })
         .on('click', '.pum-range-minus', function (event) {
-            var $input  = $(this).siblings('.pum-range-manual'),
-                min     = parseInt($input.prop('min'), 0),
-                step    = parseInt($input.prop('step'), 0),
-                force   = $input.data('force-minmax'),
-                value   = parseInt($input.val(), 0),
+            var $input = $(this).siblings('.pum-range-manual'),
+                min = parseInt($input.prop('min'), 0),
+                step = parseInt($input.prop('step'), 0),
+                force = $input.data('force-minmax'),
+                value = parseInt($input.val(), 0),
                 $slider = $input.prev();
 
             event.preventDefault();

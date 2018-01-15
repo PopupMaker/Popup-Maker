@@ -8,7 +8,7 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
 (function ($) {
     "use strict";
 
-    function cookie (converter) {
+    function cookie(converter) {
         if (converter === undefined) {
             converter = function () {
             };
@@ -43,7 +43,8 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
                     if (/^[\{\[]/.test(result)) {
                         value = result;
                     }
-                } catch (e) {}
+                } catch (e) {
+                }
 
                 if (!converter.write) {
                     value = encodeURIComponent(String(value))
@@ -90,7 +91,7 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
                     var name = parts[0].replace(rdecode, decodeURIComponent);
                     cookie = converter.read ?
                         converter.read(cookie, name) : converter(cookie, name) ||
-                    cookie.replace(rdecode, decodeURIComponent);
+                        cookie.replace(rdecode, decodeURIComponent);
 
                     if (this.json) {
                         try {

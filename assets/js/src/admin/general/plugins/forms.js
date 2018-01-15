@@ -31,14 +31,14 @@
             $dependent_fields = _fields.length ? _fields : $("[data-pum-dependencies]:not([data-pum-processed-dependencies])");
 
             $dependent_fields.each(function () {
-                var $dependent      = $(this),
-                    dependentID     = $dependent.data('id'),
+                var $dependent = $(this),
+                    dependentID = $dependent.data('id'),
                     // The dependency object for this field.
-                    dependencies    = $dependent.data("pum-processed-dependencies") || {},
+                    dependencies = $dependent.data("pum-processed-dependencies") || {},
                     // Total number of fields this :input is dependent on.
-                    requiredCount   = Object.keys(dependencies).length,
+                    requiredCount = Object.keys(dependencies).length,
                     // Current count of fields this :input matched properly.
-                    count           = 0,
+                    count = 0,
                     // An array of fields this :input is dependent on.
                     dependentFields = $dependent.data("pum-dependent-fields"),
                     // Early declarations.
@@ -82,11 +82,11 @@
                 }
 
                 $(dependentFields).each(function () {
-                    var $wrapper                   = $(this),
-                        $field                     = $wrapper.find(':input:first'),
-                        id                         = $wrapper.data("id"),
-                        value                      = $field.val(),
-                        required                   = dependencies[id],
+                    var $wrapper = $(this),
+                        $field = $wrapper.find(':input:first'),
+                        id = $wrapper.data("id"),
+                        value = $field.val(),
+                        required = dependencies[id],
                         matched,
                         // Used for limiting the fields that get updated when this field is changed.
                         all_this_fields_dependents = $wrapper.data('pum-field-dependents') || [];

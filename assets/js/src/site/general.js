@@ -17,7 +17,7 @@
         /**
          * Process php based form submissions when the form_success args are passed.
          */
-        if ( typeof pum_vars.form_success === 'object' ) {
+        if (typeof pum_vars.form_success === 'object') {
             pum_vars.form_success = $.extend({
                 popup_id: null,
                 settings: {}

@@ -9,7 +9,6 @@ $plugin_prefix: 'plugin' !default;
     box-sizing: border-box;
   }
 
-
   display: none;
   position: fixed;
   top: 0;
@@ -18,7 +17,7 @@ $plugin_prefix: 'plugin' !default;
   bottom: 0;
   height: 100%;
   width: 100%;
-  background: rgba(0,0,0,0.70);
+  background: rgba(0, 0, 0, 0.70);
   z-index: 100100;
   overflow-y: scroll;
 
@@ -30,11 +29,11 @@ $plugin_prefix: 'plugin' !default;
     width: 550px;
     margin-left: -300px;
     background-color: #fff;
-    box-shadow: 0 3px 6px rgba(0,0,0,.3);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, .3);
     z-index: 100105;
     transition: height .2s, margin-top .2s;
 
-    @media screen and ( max-width: 520px ) {
+    @media screen and (max-width: 520px) {
       width: auto;
       margin-left: 0;
       top: 10px;

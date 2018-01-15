@@ -1,5 +1,5 @@
 /*!******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2018, WP Popup Maker
  ******************************************************************************/
 
 .pum-form {
@@ -82,77 +82,7 @@
   border-color: green;
 }
 
-@keyframes rotate-forever {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+.pum-form--loading {
+  opacity: 0.5;
 }
 
-/**
- * Form Layouts
- */
-.pum-form--layout-standard {
-  .pum-form__field {
-    > label {
-      margin-bottom: .25em;
-      display: block;
-    }
-  }
-}
-
-.pum-form--layout-block {
-  .pum-form__field,
-  div, input, button {
-    display: block;
-    width: 100%;
-  }
-}
-
-.pum-form--layout-inline {
-  .pum-form__field {
-    display: inline-block;
-  }
-}
-
-/*
- * Form Styles
- */
-.pum-form--style-default {
-  label {
-    font-size: 14px;
-    font-weight: bold;
-  }
-
-  input[type=text],
-  input[type=email] {
-    background-color: #f8f7f7;
-    margin-bottom: 5px;
-    font-size: 14px;
-    padding: 10px 8px;
-  }
-
-  button {
-    font-size: 18px;
-    margin: 10px 0px 0px;
-    padding: 10px 5px;
-    cursor: pointer;
-  }
-}
-
-/*
- * Form Alignments
- */
-.pum-form--alignment-left {
-  text-align: left;
-}
-
-.pum-form--alignment-center {
-  text-align: center;
-}
-
-.pum-form--alignment-right {
-  text-align: right;
-}

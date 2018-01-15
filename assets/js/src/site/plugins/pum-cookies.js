@@ -112,10 +112,10 @@
     // Register All Cookies for a Popup
     $(document)
         .on('pumInit', '.pum', function () {
-            var $popup   = PUM.getPopup(this),
+            var $popup = PUM.getPopup(this),
                 settings = $popup.popmake('getSettings'),
-                cookies  = settings.cookies || [],
-                cookie   = null,
+                cookies = settings.cookies || [],
+                cookie = null,
                 i;
 
             if (cookies.length) {

@@ -435,7 +435,7 @@
             event.preventDefault();
 
             // Process presubmit actions like showing progress data and validating info.
-            if (batch_upgrades.form.beforeSubmit($form) ) {
+            if (batch_upgrades.form.beforeSubmit($form)) {
                 // Start the process.
                 batch_upgrades.process_step($form.data('step') || 1, data);
             }
