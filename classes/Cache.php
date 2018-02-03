@@ -17,7 +17,7 @@ class PUM_Cache {
 	/**
 	 * @var string
 	 */
-	static $prefix = 'jpf';
+	static $prefix = 'pum';
 
 	/**
 	 * @return bool
