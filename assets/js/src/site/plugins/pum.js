@@ -338,17 +338,18 @@ var PUM;
             }
 
             if (settings.close_on_overlay_click) {
-                // TODO: Move to a global $(document).on type bind. Possibly look for a class to succeed on.
-                $popup
-                    .off('click.popmake')
-                    .on('click.popmake', function (e) {
-                        if (e.target !== $popup[0]) {
-                            return;
+                $popup.on('pumAfterOpen', function () {
+                    $(document).on('click.pumCloseOverlay', function (e) {
+                        if(!$(e.target).closest('.pum-container').length) {
+                            $.fn.popmake.last_close_trigger = 'Overlay Click';
+                            $popup.popmake('close');
                         }
-
-                        $.fn.popmake.last_close_trigger = 'Overlay Click';
-                        $popup.popmake('close');
                     });
+                });
+
+                $popup.on('pumAfterClose', function () {
+                   $(document).off('click.pumCloseOverlay');
+                });
             }
 
             $popup.trigger('pumSetupClose');

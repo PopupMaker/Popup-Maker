@@ -387,17 +387,20 @@ var PUM;
             }
 
             if (settings.close_on_overlay_click) {
-                // TODO: Move to a global $(document).on type bind. Possibly look for a class to succeed on.
-                $popup
-                    .off('click.popmake')
-                    .on('click.popmake', function (e) {
-                        if (e.target !== $popup[0]) {
-                            return;
+                $popup.on('pumAfterOpen', function () {
+                    $(document).on('click.pumCloseOverlay', function (e) {
+                        console.log('click', e.target);
+                        if(!$(e.target).closest('.pum-container').length) {
+                            $.fn.popmake.last_close_trigger = 'Overlay Click';
+                            $popup.popmake('close');
                         }
-
-                        $.fn.popmake.last_close_trigger = 'Overlay Click';
-                        $popup.popmake('close');
                     });
+                });
+
+                $popup.on('pumAfterClose', function () {
+                    console.log('closed');
+                    $(document).off('click.pumCloseOverlay');
+                });
             }
 
             $popup.trigger('pumSetupClose');
@@ -700,11 +703,11 @@ var PUM_Accessibility;
             if (e.keyCode === 9) {
                 // get list of focusable items
                 var focusableItems = currentModal.find('.pum-container *').filter(focusableElementsString).filter(':visible'),
-                // get currently focused item
+                    // get currently focused item
                     focusedItem = $(':focus'),
-                // get the number of focusable items
+                    // get the number of focusable items
                     numberOfFocusableItems = focusableItems.length,
-                // get the index of the currently focused item
+                    // get the index of the currently focused item
                     focusedItemIndex = focusableItems.index(focusedItem);
 
                 if (e.shiftKey) {
@@ -835,7 +838,7 @@ var PUM_Analytics;
         beacon: function (data, callback) {
             var beacon = new Image(),
                 url = rest_enabled ? pum_vars.restapi : pum_vars.ajaxurl,
-                opts   = {
+                opts = {
                     route: '/analytics/',
                     data: $.extend({
                         event: 'open',
@@ -3259,7 +3262,7 @@ var pum_debug_mode = false,
         /**
          * Process php based form submissions when the form_success args are passed.
          */
-        if ( typeof pum_vars.form_success === 'object' ) {
+        if (typeof pum_vars.form_success === 'object') {
             pum_vars.form_success = $.extend({
                 popup_id: null,
                 settings: {}
