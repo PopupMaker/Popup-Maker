@@ -123,6 +123,20 @@ abstract class PUM_Shortcode {
 		return apply_filters( 'pum_shortcode_tabs', $tabs, $this->tag() );
 	}
 
+	public function _subtabs() {
+		$subtabs = $this->version >= 2 && method_exists( $this, 'subtabs' ) ? $this->subtabs() : false;
+
+		foreach( $this->_tabs() as $tab_id => $tab_label ) {
+			if ( empty( $subtabs[ $tab_id ] ) || ! is_array( $subtabs[ $tab_id ] ) ) {
+				$subtabs[ $tab_id ] = array(
+					'main' => $tab_label,
+				);
+			}
+		}
+
+		return apply_filters( 'pum_shortcode_subtabs', $subtabs, $this->tag() );
+	}
+
 	/**
 	 * Sections.
 	 *
@@ -148,6 +162,22 @@ abstract class PUM_Shortcode {
 		return array(
 			'general' => __( 'General', 'popup-maker' ),
 			'options' => __( 'Options', 'popup-maker' ),
+		);
+	}
+
+	/**
+	 * Returns a list of tabs for this shortcodes editor.
+	 *
+	 * @return array
+	 */
+	public function subtabs() {
+		return array(
+			'general' => array(
+				'main' => __( 'General', 'popup-maker' ),
+			),
+			'options' => array(
+				'main' => __( 'Options', 'popup-maker' ),
+			),
 		);
 	}
 
@@ -419,7 +449,7 @@ abstract class PUM_Shortcode {
 		if ( $this->has_content ) {
 			$inner_content_labels = $this->inner_content_labels();
 
-			$fields[ $this->inner_content_section ]['_inner_content'] = array(
+			$fields[ $this->inner_content_section ]['main']['_inner_content'] = array(
 				'label'    => $inner_content_labels['label'],
 				'desc'     => $inner_content_labels['description'],
 				'section'  => $this->inner_content_section,
@@ -428,20 +458,23 @@ abstract class PUM_Shortcode {
 			);
 		}
 
-		foreach ( $fields as $section_id => $section_fields ) {
-			foreach ( $section_fields as $field_id => $field ) {
+		$fields = PUM_Admin_Helpers::parse_tab_fields( $fields, array(
+			'has_subtabs' => true,
+			'name' => 'attrs[%s]',
+		) );
 
-				/**
-				 * Apply field compatibility fixes for shortcodes still on v1.
-				 */
-				if ( $this->version < 2 ) {
-					if ( ! empty( $field['type'] ) && in_array( $field['type'], array( 'select', 'postselect', 'radio', 'multicheck' ) ) ) {
-						$fields[ $section_id ][ $field_id ]['options'] = ! empty( $field['options'] ) ? array_flip( $field['options'] ) : array();
+		foreach( $fields as $tab_id => $tab_sections ) {
+			foreach( $tab_sections as $section_id => $section_fields ) {
+				foreach ( $section_fields as $field_id => $field ) {
+					/**
+					 * Apply field compatibility fixes for shortcodes still on v1.
+					 */
+					if ( $this->version < 2 ) {
+						if ( ! empty( $field['type'] ) && in_array( $field['type'], array( 'select', 'postselect', 'radio', 'multicheck' ) ) ) {
+							$fields[ $tab_id ][ $section_id ][ $field_id ]['options'] = ! empty( $field['options'] ) ? array_flip( $field['options'] ) : array();
+						}
 					}
 				}
-
-				$fields[ $section_id ][ $field_id ]['id']   = $field_id;
-				$fields[ $section_id ][ $field_id ]['name'] = 'attrs[' . $field_id . ']';
 			}
 		}
 

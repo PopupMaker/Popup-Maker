@@ -254,7 +254,7 @@
 
                     PUM_Admin.modals.closeAll();
                 });
-            },
+            }
         };
 
     $(document).ready(function () {

@@ -119,6 +119,7 @@ class PUM_Admin_Shortcode_UI {
 				'label'          => $shortcode->label(),
 				'description'    => $shortcode->description(),
 				'tabs'           => $shortcode->_tabs(),
+				'sections'        => $shortcode->_subtabs(),
 				'fields'         => $shortcode->_fields(),
 				'has_content'    => $shortcode->has_content,
 				'ajax_rendering' => $shortcode->ajax_rendering === true,

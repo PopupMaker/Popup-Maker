@@ -67,213 +67,246 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	/**
 	 * @return array
 	 */
+	public function subtabs() {
+		return apply_filters( 'pum_sub_form_shortcode_sections', array(
+			'general'  => array(
+				'main' => __( 'General', 'popup-maker' ),
+			),
+			'fields'   => array(
+				'main' => __( 'Fields', 'popup-maker' ),
+			),
+			'labeling' => array(
+				'main' => __( 'Labeling', 'popup-maker' ),
+			),
+			'actions'  => array(
+				'popup'     => __( 'Popup', 'popup-maker' ),
+				'redirect' => __( 'Redirect', 'popup-maker' ),
+			),
+		) );
+	}
+
+	/**
+	 * @return array
+	 */
 	public function fields() {
 		return apply_filters( 'pum_sub_form_shortcode_fields', array(
 			'general'  => array(
-				'provider'       => array(
-					'label'   => __( 'Service Provider', 'popup-maker' ),
-					'desc'    => __( 'Choose which service provider to submit to.', 'popup-maker' ),
-					'type'    => 'select',
-					'options' => array_merge( array( '' => __( 'Default', 'popup-maker' ) ), PUM_Newsletter_Providers::dropdown_list(), array( 'none' => __( 'None', 'popup-maker' ) ) ),
-					'std'     => '',
-				),
-				'form_layout'    => array(
-					'label'   => __( 'Form Layout', 'popup-maker' ),
-					'desc'    => __( 'Choose a form layout.', 'popup-maker' ),
-					'type'    => 'select',
-					'options' => array(
-						'block'  => __( 'Block', 'popup-maker' ),
-						'inline' => __( 'Inline', 'popup-maker' ),
+				'main' => array(
+					'provider'       => array(
+						'label'   => __( 'Service Provider', 'popup-maker' ),
+						'desc'    => __( 'Choose which service provider to submit to.', 'popup-maker' ),
+						'type'    => 'select',
+						'options' => array_merge( array( '' => __( 'Default', 'popup-maker' ) ), PUM_Newsletter_Providers::dropdown_list(), array( 'none' => __( 'None', 'popup-maker' ) ) ),
+						'std'     => '',
 					),
-					'std'     => 'block',
-				),
-				'form_alignment' => array(
-					'label'   => __( 'Form Alignment', 'popup-maker' ),
-					'desc'    => __( 'Choose a form alignment.', 'popup-maker' ),
-					'type'    => 'select',
-					'options' => array(
-						'left'   => __( 'Left', 'popup-maker' ),
-						'center' => __( 'Center', 'popup-maker' ),
-						'right'  => __( 'Right', 'popup-maker' ),
+					'form_layout'    => array(
+						'label'   => __( 'Form Layout', 'popup-maker' ),
+						'desc'    => __( 'Choose a form layout.', 'popup-maker' ),
+						'type'    => 'select',
+						'options' => array(
+							'block'  => __( 'Block', 'popup-maker' ),
+							'inline' => __( 'Inline', 'popup-maker' ),
+						),
+						'std'     => 'block',
 					),
-					'std'     => 'center',
-				),
-				'form_style'     => array(
-					'label'   => __( 'Form Style', 'popup-maker' ),
-					'desc'    => __( 'Choose how you want your form styled.', 'popup-maker' ),
-					'type'    => 'select',
-					'options' => array(
-						''        => __( 'None', 'popup-maker' ),
-						'default' => __( 'Default', 'popup-maker' ),
+					'form_alignment' => array(
+						'label'   => __( 'Form Alignment', 'popup-maker' ),
+						'desc'    => __( 'Choose a form alignment.', 'popup-maker' ),
+						'type'    => 'select',
+						'options' => array(
+							'left'   => __( 'Left', 'popup-maker' ),
+							'center' => __( 'Center', 'popup-maker' ),
+							'right'  => __( 'Right', 'popup-maker' ),
+						),
+						'std'     => 'center',
 					),
-					'std'     => 'default',
-				),
-				'layout'         => array(
-					'type' => 'hidden',
-				),
-				'style'          => array(
-					'type' => 'hidden',
+					'form_style'     => array(
+						'label'   => __( 'Form Style', 'popup-maker' ),
+						'desc'    => __( 'Choose how you want your form styled.', 'popup-maker' ),
+						'type'    => 'select',
+						'options' => array(
+							''        => __( 'None', 'popup-maker' ),
+							'default' => __( 'Default', 'popup-maker' ),
+						),
+						'std'     => 'default',
+					),
+					'layout'         => array(
+						'type' => 'hidden',
+					),
+					'style'          => array(
+						'type' => 'hidden',
+					),
 				),
 			),
 			'fields'   => array(
-				'name_field_type' => array(
-					'label'   => __( 'Name Field Type', 'popup-maker' ),
-					'type'    => 'select',
-					'options' => array(
-						'disabled'   => __( 'None', 'popup-maker' ),
-						'fullname'   => __( 'Full', 'popup-maker' ),
-						'first_only' => __( 'First Only', 'popup-maker' ),
-						'first_last' => __( 'First & Last', 'popup-maker' ),
+				'main' => array(
+					'name_field_type' => array(
+						'label'   => __( 'Name Field Type', 'popup-maker' ),
+						'type'    => 'select',
+						'options' => array(
+							'disabled'   => __( 'None', 'popup-maker' ),
+							'fullname'   => __( 'Full', 'popup-maker' ),
+							'first_only' => __( 'First Only', 'popup-maker' ),
+							'first_last' => __( 'First & Last', 'popup-maker' ),
+						),
+						'std'     => 'fullname',
 					),
-					'std'     => 'fullname',
-				),
-				'name_optional'   => array(
-					'label'        => __( 'Name Optional', 'popup-maker' ),
-					'desc'         => __( 'Makes the name field optional.', 'popup-maker' ),
-					'type'         => 'checkbox',
-					'dependencies' => array(
-						'name_field_type' => array( 'fullname', 'first_only', 'first_last' ),
+					'name_optional'   => array(
+						'label'        => __( 'Name Optional', 'popup-maker' ),
+						'desc'         => __( 'Makes the name field optional.', 'popup-maker' ),
+						'type'         => 'checkbox',
+						'dependencies' => array(
+							'name_field_type' => array( 'fullname', 'first_only', 'first_last' ),
+						),
 					),
-				),
-				'name_disabled'   => array(
-					'label'        => __( 'Name Disabled', 'popup-maker' ),
-					'desc'         => __( 'Removes the name field.', 'popup-maker' ),
-					'type'         => 'checkbox',
-					'dependencies' => array(
-						'name_field_type' => false,
+					'name_disabled'   => array(
+						'label'        => __( 'Name Disabled', 'popup-maker' ),
+						'desc'         => __( 'Removes the name field.', 'popup-maker' ),
+						'type'         => 'checkbox',
+						'dependencies' => array(
+							'name_field_type' => false,
+						),
 					),
+
 				),
 			),
 			'labeling' => array(
-				'disable_labels'       => array(
-					'label' => __( 'Disable Labels', 'popup-maker' ),
-					'desc'  => __( 'Disables the display of field labels.', 'popup-maker' ),
-					'type'  => 'checkbox',
-				),
-				'heading_labels'       => array(
-					'label' => __( 'Labels', 'popup-maker' ),
-					'desc'  => __( 'Field label text', 'popup-maker' ),
-					'type'  => 'heading',
-				),
-				'label_name'           => array(
-					'label'        => __( 'Full Name', 'popup-maker' ),
-					'dependencies' => array(
-						'disable_labels'  => false,
-						'name_field_type' => array( 'fullname' ),
+				'main' => array(
+					'disable_labels'       => array(
+						'label' => __( 'Disable Labels', 'popup-maker' ),
+						'desc'  => __( 'Disables the display of field labels.', 'popup-maker' ),
+						'type'  => 'checkbox',
 					),
-					'std'          => __( 'Name', 'popup-maker' ),
-				),
-				'label_fname'          => array(
-					'label'        => __( 'First Name', 'popup-maker' ),
-					'dependencies' => array(
-						'disable_labels'  => false,
-						'name_field_type' => array( 'first_only', 'first_last' ),
+					'heading_labels'       => array(
+						'label' => __( 'Labels', 'popup-maker' ),
+						'desc'  => __( 'Field label text', 'popup-maker' ),
+						'type'  => 'heading',
 					),
-					'std'          => __( 'First Name', 'popup-maker' ),
-				),
-				'label_lname'          => array(
-					'label'        => __( 'Last Name', 'popup-maker' ),
-					'dependencies' => array(
-						'disable_labels'  => false,
-						'name_field_type' => array( 'first_last' ),
+					'label_name'           => array(
+						'label'        => __( 'Full Name', 'popup-maker' ),
+						'dependencies' => array(
+							'disable_labels'  => false,
+							'name_field_type' => array( 'fullname' ),
+						),
+						'std'          => __( 'Name', 'popup-maker' ),
 					),
-					'std'          => __( 'Last Name', 'popup-maker' ),
-				),
-				'label_email'          => array(
-					'label'        => __( 'Email', 'popup-maker' ),
-					'dependencies' => array(
-						'disable_labels' => false,
+					'label_fname'          => array(
+						'label'        => __( 'First Name', 'popup-maker' ),
+						'dependencies' => array(
+							'disable_labels'  => false,
+							'name_field_type' => array( 'first_only', 'first_last' ),
+						),
+						'std'          => __( 'First Name', 'popup-maker' ),
 					),
-					'std'          => __( 'Email', 'popup-maker' ),
-				),
-				'label_submit'         => array(
-					'label' => __( 'Submit Button', 'popup-maker' ),
-					'std'   => __( 'Subscribe', 'popup-maker' ),
-				),
-				// Deprecated fields.
-				'name_text'            => array(
-					'type' => 'hidden',
-				),
-				'email_text'           => array(
-					'type' => 'hidden',
-				),
-				'button_text'          => array(
-					'type' => 'hidden',
-				),
-				'heading_placeholders' => array(
-					'label' => __( 'Placeholders', 'popup-maker' ),
-					'desc'  => __( 'Field placeholder text', 'popup-maker' ),
-					'type'  => 'heading',
-				),
-				'placeholder_name'     => array(
-					'label'        => __( 'Full Name', 'popup-maker' ),
-					'dependencies' => array(
-						'name_field_type' => array( 'fullname' ),
+					'label_lname'          => array(
+						'label'        => __( 'Last Name', 'popup-maker' ),
+						'dependencies' => array(
+							'disable_labels'  => false,
+							'name_field_type' => array( 'first_last' ),
+						),
+						'std'          => __( 'Last Name', 'popup-maker' ),
 					),
-					'std'          => __( 'Name', 'popup-maker' ),
-				),
-				'placeholder_fname'    => array(
-					'label'        => __( 'First Name', 'popup-maker' ),
-					'dependencies' => array(
-						'name_field_type' => array( 'first_only', 'first_last' ),
+					'label_email'          => array(
+						'label'        => __( 'Email', 'popup-maker' ),
+						'dependencies' => array(
+							'disable_labels' => false,
+						),
+						'std'          => __( 'Email', 'popup-maker' ),
 					),
-					'std'          => __( 'First Name', 'popup-maker' ),
-				),
-				'placeholder_lname'    => array(
-					'label'        => __( 'Last Name', 'popup-maker' ),
-					'dependencies' => array(
-						'name_field_type' => array( 'first_last' ),
+					'label_submit'         => array(
+						'label' => __( 'Submit Button', 'popup-maker' ),
+						'std'   => __( 'Subscribe', 'popup-maker' ),
 					),
-					'std'          => __( 'Last Name', 'popup-maker' ),
-				),
-				'placeholder_email'    => array(
-					'label' => __( 'Email', 'popup-maker' ),
-					'std'   => __( 'Email', 'popup-maker' ),
+					// Deprecated fields.
+					'name_text'            => array(
+						'type' => 'hidden',
+					),
+					'email_text'           => array(
+						'type' => 'hidden',
+					),
+					'button_text'          => array(
+						'type' => 'hidden',
+					),
+					'heading_placeholders' => array(
+						'label' => __( 'Placeholders', 'popup-maker' ),
+						'desc'  => __( 'Field placeholder text', 'popup-maker' ),
+						'type'  => 'heading',
+					),
+					'placeholder_name'     => array(
+						'label'        => __( 'Full Name', 'popup-maker' ),
+						'dependencies' => array(
+							'name_field_type' => array( 'fullname' ),
+						),
+						'std'          => __( 'Name', 'popup-maker' ),
+					),
+					'placeholder_fname'    => array(
+						'label'        => __( 'First Name', 'popup-maker' ),
+						'dependencies' => array(
+							'name_field_type' => array( 'first_only', 'first_last' ),
+						),
+						'std'          => __( 'First Name', 'popup-maker' ),
+					),
+					'placeholder_lname'    => array(
+						'label'        => __( 'Last Name', 'popup-maker' ),
+						'dependencies' => array(
+							'name_field_type' => array( 'first_last' ),
+						),
+						'std'          => __( 'Last Name', 'popup-maker' ),
+					),
+					'placeholder_email'    => array(
+						'label' => __( 'Email', 'popup-maker' ),
+						'std'   => __( 'Email', 'popup-maker' ),
+					),
+
 				),
 			),
 			'actions'  => array(
-				'closepopup'       => array(
-					'label' => __( 'Close Popup', 'popup-maker' ),
-					'type'  => 'checkbox',
-				),
-				'closedelay'       => array(
-					'label'        => __( 'Delay', 'popup-maker' ),
-					'type'         => 'rangeslider',
-					'min'          => 0,
-					'max'          => 180,
-					'step'         => 1,
-					'unit'         => 's',
-					'std'          => 0,
-					'dependencies' => array(
-						'closepopup' => true,
+				'popup'     => array(
+					'closepopup'   => array(
+						'label' => __( 'Close Popup', 'popup-maker' ),
+						'type'  => 'checkbox',
+					),
+					'closedelay'   => array(
+						'label'        => __( 'Delay', 'popup-maker' ),
+						'type'         => 'rangeslider',
+						'min'          => 0,
+						'max'          => 180,
+						'step'         => 1,
+						'unit'         => 's',
+						'std'          => 0,
+						'dependencies' => array(
+							'closepopup' => true,
+						),
+					),
+					'openpopup'    => array(
+						'label' => __( 'Open Popup', 'popup-maker' ),
+						'type'  => 'checkbox',
+					),
+					'openpopup_id' => array(
+						'label'        => __( 'Popup ID', 'popup-maker' ),
+						'type'         => 'select',
+						'options'      => array_merge( array(
+							0 => __( 'Select a popup', 'popup-maker' ),
+						), PUM_Helpers::popup_selectlist() ),
+						'std'          => 0,
+						'dependencies' => array(
+							'openpopup' => true,
+						),
 					),
 				),
-				'openpopup'        => array(
-					'label' => __( 'Open Popup', 'popup-maker' ),
-					'type'  => 'checkbox',
-				),
-				'openpopup_id'     => array(
-					'label'        => __( 'Popup ID', 'popup-maker' ),
-					'type'         => 'select',
-					'options'      => array_merge( array(
-						0 => __( 'Select a popup', 'popup-maker' ),
-					), PUM_Helpers::popup_selectlist() ),
-					'std'          => 0,
-					'dependencies' => array(
-						'openpopup' => true,
+				'redirect' => array(
+					'redirect_enabled' => array(
+						'label' => __( 'Redirect', 'popup-maker' ),
+						'desc'  => __( 'Enable refreshing the page or redirecting after success.', 'popup-maker' ),
+						'type'  => 'checkbox',
 					),
-				),
-				'redirect_enabled' => array(
-					'label' => __( 'Redirect', 'popup-maker' ),
-					'desc'  => __( 'Enable refreshing the page or redirecting after success.', 'popup-maker' ),
-					'type'  => 'checkbox',
-				),
-				'redirect'         => array(
-					'label'        => __( 'Redirect URL', 'popup-maker' ),
-					'desc'         => __( 'Leave blank to refresh, or enter a url that users will be taken to after success.', 'popup-maker' ),
-					'std'          => '',
-					'dependencies' => array(
-						'redirect_enabled' => true,
+					'redirect'         => array(
+						'label'        => __( 'Redirect URL', 'popup-maker' ),
+						'desc'         => __( 'Leave blank to refresh, or enter a url that users will be taken to after success.', 'popup-maker' ),
+						'std'          => '',
+						'dependencies' => array(
+							'redirect_enabled' => true,
+						),
 					),
 				),
 			),
