@@ -8,6 +8,128 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class PUM_Admin_Helpers {
+
+	public static function parse_field( $field ) {
+		return wp_parse_args( $field, array(
+			'section'        => 'main',
+			'type'           => 'text',
+			'id'             => null,
+			'label'          => '',
+			'desc'           => '',
+			'name'           => null,
+			'templ_name'     => null,
+			'size'           => 'regular',
+			'options'        => array(),
+			'std'            => null,
+			'rows'           => 5,
+			'cols'           => 50,
+			'min'            => 0,
+			'max'            => 50,
+			'force_minmax'   => false,
+			'step'           => 1,
+			'select2'        => null,
+			'object_type'    => 'post_type',
+			'object_key'     => 'post',
+			'post_type'      => null,
+			'taxonomy'       => null,
+			'multiple'       => null,
+			'as_array'       => false,
+			'placeholder'    => null,
+			'checkbox_val'   => 1,
+			'allow_blank'    => true,
+			'readonly'       => false,
+			'required'       => false,
+			'disabled'       => false,
+			'hook'           => null,
+			'unit'           => __( 'ms', 'popup-maker' ),
+			'desc_position'  => 'bottom',
+			'units'          => array(
+				'px'  => 'px',
+				'%'   => '%',
+				'em'  => 'em',
+				'rem' => 'rem',
+			),
+			'priority'       => null,
+			'doclink'        => '',
+			'button_type'    => 'submit',
+			'class'          => '',
+			'messages'       => array(),
+			'license_status' => '',
+		) );
+	}
+
+	public static function parse_tab_fields( $fields, $args = array() ) {
+		$args = wp_parse_args( $args, array(
+			'has_subtabs' => false,
+			'name' => '%s',
+		) );
+
+		if ( $args['has_subtabs'] ) {
+			foreach( $fields as $tab_id => $tab_sections ) {
+				foreach( $tab_sections as $section_id => $section_fields ) {
+					if ( self::is_field( $section_fields ) ) {
+						// Allow for flat tabs with no sections.
+						$section_id = 'main';
+						$section_fields     = array(
+							$section_id => $section_fields,
+						);
+					}
+
+					$fields[ $tab_id ][ $section_id ] = self::parse_fields( $section_fields, $args['name'] );
+				}
+			}
+		} else {
+			foreach( $fields as $tab_id => $tab_fields ) {
+				$fields[ $tab_id ] = self::parse_fields( $tab_fields, $args['name'] );
+			}
+		}
+
+
+
+		return $fields;
+
+	}
+
+	public static function parse_fields( $fields, $name = '%' ) {
+		foreach ( $fields as $field_id => $field ) {
+			if ( ! is_array( $field ) || ! self::is_field( $field ) ) {
+				continue;
+			}
+
+			if ( empty( $field['id'] ) ) {
+				$field['id'] = $field_id;
+			}
+
+			if ( empty( $field['name'] ) ) {
+				$field['name'] = sprintf( $name, $field_id );
+			}
+
+			$fields[ $field_id ] = self::parse_field( $field );
+		}
+
+		return $fields;
+	}
+
+	/**
+	 * Checks if an array is a field.
+	 *
+	 * @param array $array
+	 *
+	 * @return bool
+	 */
+	public static function is_field( $array = array() ) {
+		$field_tests = array(
+			isset( $array['id'] ),
+			isset( $array['label'] ),
+			isset( $array['type'] ),
+			isset( $array['options'] ),
+			isset( $array['desc'] ),
+		);
+
+		return in_array( true, $field_tests );
+	}
+
+
 	public static function modal( $args = array() ) {
 		$args = wp_parse_args( $args, array(
                 'id'                 => 'default',
