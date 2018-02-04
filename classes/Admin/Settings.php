@@ -175,7 +175,7 @@ class PUM_Admin_Settings {
 
 		foreach ( $tabs as $tab => $sections ) {
 
-			if ( self::is_field( $sections ) ) {
+			if ( PUM_Admin_Helpers::is_field( $sections ) ) {
 				$sections = array(
 					'main' => array(
 						$tab => $sections,
@@ -203,10 +203,10 @@ class PUM_Admin_Settings {
 	 */
 	public static function fields() {
 
-		static $tabs;
+		static $fields;
 
-		if ( ! isset( $tabs ) ) {
-			$tabs = apply_filters( 'pum_settings_fields', array(
+		if ( ! isset( $fields ) ) {
+			$fields = apply_filters( 'pum_settings_fields', array(
 				'general'       => array(
 					'main' => array(),
 				),
@@ -327,101 +327,13 @@ class PUM_Admin_Settings {
 				),
 			) );
 
-			foreach ( $tabs as $tab_id => $sections ) {
-
-				foreach ( $sections as $section_id => $fields ) {
-
-					if ( self::is_field( $fields ) ) {
-						// Allow for flat tabs with no sections.
-						$section_id = 'main';
-						$fields     = array(
-							$section_id => $fields,
-						);
-					}
-
-					foreach ( $fields as $field_id => $field ) {
-						if ( ! is_array( $field ) || ! self::is_field( $field ) ) {
-							continue;
-						}
-
-						if ( empty( $field['id'] ) ) {
-							$field['id'] = $field_id;
-						}
-						if ( empty( $field['name'] ) ) {
-							$field['name'] = 'pum_settings[' . $field_id . ']';
-						}
-
-						$tabs[ $tab_id ][ $section_id ][ $field_id ] = wp_parse_args( $field, array(
-							'section'        => 'main',
-							'type'           => 'text',
-							'id'             => null,
-							'label'          => '',
-							'desc'           => '',
-							'name'           => null,
-							'templ_name'     => null,
-							'size'           => 'regular',
-							'options'        => array(),
-							'std'            => null,
-							'rows'           => 5,
-							'cols'           => 50,
-							'min'            => 0,
-							'max'            => 50,
-							'force_minmax'   => false,
-							'step'           => 1,
-							'select2'        => null,
-							'object_type'    => 'post_type',
-							'object_key'     => 'post',
-							'post_type'      => null,
-							'taxonomy'       => null,
-							'multiple'       => null,
-							'as_array'       => false,
-							'placeholder'    => null,
-							'checkbox_val'   => 1,
-							'allow_blank'    => true,
-							'readonly'       => false,
-							'required'       => false,
-							'disabled'       => false,
-							'hook'           => null,
-							'unit'           => __( 'ms', 'popup-maker' ),
-							'desc_position'  => 'bottom',
-							'units'          => array(
-								'px'  => 'px',
-								'%'   => '%',
-								'em'  => 'em',
-								'rem' => 'rem',
-							),
-							'priority'       => null,
-							'doclink'        => '',
-							'button_type'    => 'submit',
-							'class'          => '',
-							'messages'       => array(),
-							'license_status' => '',
-						) );
-					}
-				}
-			}
+			$fields = PUM_Admin_Helpers::parse_tab_fields( $fields, array(
+				'has_subtabs' => true,
+				'name' => 'pum_settings[%s]',
+			) );
 		}
 
-		return $tabs;
-	}
-
-	/**
-	 * Checks if an array is a field.
-	 *
-	 * @param array $array
-	 *
-	 * @return bool
-	 */
-	public static function is_field( $array = array() ) {
-		$field_tests = array(
-			isset( $array['id'] ),
-			isset( $array['label'] ),
-			isset( $array['type'] ),
-			isset( $array['options'] ),
-			isset( $array['desc'] ),
-		);
-
-		return in_array( true, $field_tests );
+		return $fields;
 	}
 
 	/**
@@ -634,17 +546,6 @@ class PUM_Admin_Settings {
 		}
 
 		return $settings;
-	}
-
-	/**
-	 * Checks if an array is a section.
-	 *
-	 * @param array $array
-	 *
-	 * @return bool
-	 */
-	public static function is_section( $array = array() ) {
-		return ! self::is_field( $array );
 	}
 
 	/**

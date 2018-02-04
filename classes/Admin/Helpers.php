@@ -129,6 +129,17 @@ class PUM_Admin_Helpers {
 		return in_array( true, $field_tests );
 	}
 
+	/**
+	 * Checks if an array is a section.
+	 *
+	 * @param array $array
+	 *
+	 * @return bool
+	 */
+	public static function is_section( $array = array() ) {
+		return ! self::is_field( $array );
+	}
+
 
 	public static function modal( $args = array() ) {
 		$args = wp_parse_args( $args, array(
