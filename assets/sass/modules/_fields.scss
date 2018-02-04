@@ -122,7 +122,10 @@ $custom_select2_selector: 'select2' !default;
 
   input, label {
     line-height: 1em;
-    margin-bottom: 10px;
+  }
+
+  label {
+    margin-bottom: 4px;
   }
 
   input[type="radio"] {
@@ -132,7 +135,7 @@ $custom_select2_selector: 'select2' !default;
 
   input + label {
     font-weight: normal;
-    display: inline-block;
+    display: inline-block !important;
   }
 
   label:first-child {
