@@ -148,6 +148,11 @@ $custom_select2_selector: 'select2' !default;
     margin: 0 0 .5em;
   }
 
+  .pum-field-mulitcheck-list,
+  .pum-field-radio-list{
+    margin: 0;
+  }
+
 }
 
 /**
