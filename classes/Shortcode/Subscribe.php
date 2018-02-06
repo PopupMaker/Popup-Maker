@@ -56,90 +56,60 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	 * @return array
 	 */
 	public function tabs() {
-		return apply_filters( 'pum_sub_form_shortcode_sections', array(
-			'general'  => __( 'General', 'popup-maker' ),
-			'fields'   => __( 'Fields', 'popup-maker' ),
-			'labeling' => __( 'Labeling', 'popup-maker' ),
-			'actions'  => __( 'Actions', 'popup-maker' ),
-		) );
+		$tabs = array(
+			'general' => __( 'General', 'popup-maker' ),
+			'form'    => __( 'Form', 'popup-maker' ),
+			'actions' => __( 'Actions', 'popup-maker' ),
+		);
+
+		// Deprecated filter
+		$tabs = apply_filters( 'pum_sub_form_shortcode_sections', $tabs );
+
+		$tabs = apply_filters( 'pum_sub_form_shortcode_tabs', $tabs );
+
+		return $this->resort_provider_tabs( $tabs );
 	}
 
 	/**
 	 * @return array
 	 */
 	public function subtabs() {
-		return apply_filters( 'pum_sub_form_shortcode_sections', array(
-			'general'  => array(
+		$subtabs = apply_filters( 'pum_sub_form_shortcode_subtabs', array(
+			'general' => array(
 				'main' => __( 'General', 'popup-maker' ),
 			),
-			'fields'   => array(
-				'main' => __( 'Fields', 'popup-maker' ),
+			'form'    => array(
+				'appearance' => __( 'Appearance', 'popup-maker' ),
+				'fields'     => __( 'Fields', 'popup-maker' ),
+				'labeling'   => __( 'Labeling', 'popup-maker' ),
 			),
-			'labeling' => array(
-				'main' => __( 'Labeling', 'popup-maker' ),
-			),
-			'actions'  => array(
-				'popup'     => __( 'Popup', 'popup-maker' ),
+			'actions' => array(
+				'popup'    => __( 'Popup', 'popup-maker' ),
 				'redirect' => __( 'Redirect', 'popup-maker' ),
 			),
 		) );
+
+		return $this->resort_provider_tabs( $subtabs );
 	}
 
 	/**
 	 * @return array
 	 */
 	public function fields() {
-		return apply_filters( 'pum_sub_form_shortcode_fields', array(
-			'general'  => array(
+		$fields = apply_filters( 'pum_sub_form_shortcode_fields', array(
+			'general' => array(
 				'main' => array(
-					'provider'       => array(
+					'provider' => array(
 						'label'   => __( 'Service Provider', 'popup-maker' ),
 						'desc'    => __( 'Choose which service provider to submit to.', 'popup-maker' ),
 						'type'    => 'select',
 						'options' => array_merge( array( '' => __( 'Default', 'popup-maker' ) ), PUM_Newsletter_Providers::dropdown_list(), array( 'none' => __( 'None', 'popup-maker' ) ) ),
 						'std'     => '',
 					),
-					'form_layout'    => array(
-						'label'   => __( 'Form Layout', 'popup-maker' ),
-						'desc'    => __( 'Choose a form layout.', 'popup-maker' ),
-						'type'    => 'select',
-						'options' => array(
-							'block'  => __( 'Block', 'popup-maker' ),
-							'inline' => __( 'Inline', 'popup-maker' ),
-						),
-						'std'     => 'block',
-					),
-					'form_alignment' => array(
-						'label'   => __( 'Form Alignment', 'popup-maker' ),
-						'desc'    => __( 'Choose a form alignment.', 'popup-maker' ),
-						'type'    => 'select',
-						'options' => array(
-							'left'   => __( 'Left', 'popup-maker' ),
-							'center' => __( 'Center', 'popup-maker' ),
-							'right'  => __( 'Right', 'popup-maker' ),
-						),
-						'std'     => 'center',
-					),
-					'form_style'     => array(
-						'label'   => __( 'Form Style', 'popup-maker' ),
-						'desc'    => __( 'Choose how you want your form styled.', 'popup-maker' ),
-						'type'    => 'select',
-						'options' => array(
-							''        => __( 'None', 'popup-maker' ),
-							'default' => __( 'Default', 'popup-maker' ),
-						),
-						'std'     => 'default',
-					),
-					'layout'         => array(
-						'type' => 'hidden',
-					),
-					'style'          => array(
-						'type' => 'hidden',
-					),
 				),
 			),
-			'fields'   => array(
-				'main' => array(
+			'form'    => array(
+				'fields'     => array(
 					'name_field_type' => array(
 						'label'   => __( 'Name Field Type', 'popup-maker' ),
 						'type'    => 'select',
@@ -169,9 +139,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 					),
 
 				),
-			),
-			'labeling' => array(
-				'main' => array(
+				'labeling'   => array(
 					'disable_labels'       => array(
 						'label' => __( 'Disable Labels', 'popup-maker' ),
 						'desc'  => __( 'Disables the display of field labels.', 'popup-maker' ),
@@ -259,9 +227,48 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 					),
 
 				),
+				'appearance' => array(
+					'form_layout'    => array(
+						'label'   => __( 'Form Layout', 'popup-maker' ),
+						'desc'    => __( 'Choose a form layout.', 'popup-maker' ),
+						'type'    => 'select',
+						'options' => array(
+							'block'  => __( 'Block', 'popup-maker' ),
+							'inline' => __( 'Inline', 'popup-maker' ),
+						),
+						'std'     => 'block',
+					),
+					'form_alignment' => array(
+						'label'   => __( 'Form Alignment', 'popup-maker' ),
+						'desc'    => __( 'Choose a form alignment.', 'popup-maker' ),
+						'type'    => 'select',
+						'options' => array(
+							'left'   => __( 'Left', 'popup-maker' ),
+							'center' => __( 'Center', 'popup-maker' ),
+							'right'  => __( 'Right', 'popup-maker' ),
+						),
+						'std'     => 'center',
+					),
+					'form_style'     => array(
+						'label'   => __( 'Form Style', 'popup-maker' ),
+						'desc'    => __( 'Choose how you want your form styled.', 'popup-maker' ),
+						'type'    => 'select',
+						'options' => array(
+							''        => __( 'None', 'popup-maker' ),
+							'default' => __( 'Default', 'popup-maker' ),
+						),
+						'std'     => 'default',
+					),
+					'layout'         => array(
+						'type' => 'hidden',
+					),
+					'style'          => array(
+						'type' => 'hidden',
+					),
+				),
 			),
-			'actions'  => array(
-				'popup'     => array(
+			'actions' => array(
+				'popup'    => array(
 					'closepopup'   => array(
 						'label' => __( 'Close Popup', 'popup-maker' ),
 						'type'  => 'checkbox',
@@ -311,12 +318,33 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 				),
 			),
 		) );
+
+		return $this->resort_provider_tabs( $fields );
+	}
+
+	/**
+	 * Sorts tabs so that providers come first.
+	 *
+	 * @param array $tabs
+	 *
+	 * @return array
+	 */
+	public function resort_provider_tabs( $tabs = array() ) {
+		$sorted_tabs = $tabs;
+
+		foreach ( $tabs as $tab_id => $tab ) {
+			if ( strpos( $tab_id, 'provider_' ) === 0 ) {
+				PUM_Admin_Helpers::move_item( $sorted_tabs, $tab_id, 'down', 'general' );
+			}
+		}
+
+		return $sorted_tabs;
 	}
 
 	/**
 	 * Shortcode handler
 	 *
-	 * @param  array $atts shortcode attributes
+	 * @param  array  $atts    shortcode attributes
 	 * @param  string $content shortcode content
 	 *
 	 * @return string
