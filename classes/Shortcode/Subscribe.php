@@ -79,9 +79,10 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 				'main' => __( 'General', 'popup-maker' ),
 			),
 			'form'    => array(
-				'appearance' => __( 'Appearance', 'popup-maker' ),
-				'fields'     => __( 'Fields', 'popup-maker' ),
-				'labeling'   => __( 'Labeling', 'popup-maker' ),
+				'appearance'   => __( 'Appearance', 'popup-maker' ),
+				'fields'       => __( 'Fields', 'popup-maker' ),
+				'labels'       => __( 'Labels', 'popup-maker' ),
+				'placeholders' => __( 'Placeholders', 'popup-maker' ),
 			),
 			'actions' => array(
 				'popup'    => __( 'Popup', 'popup-maker' ),
@@ -109,7 +110,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 				),
 			),
 			'form'    => array(
-				'fields'     => array(
+				'fields'       => array(
 					'name_field_type' => array(
 						'label'   => __( 'Name Field Type', 'popup-maker' ),
 						'type'    => 'select',
@@ -139,18 +140,18 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 					),
 
 				),
-				'labeling'   => array(
-					'disable_labels'       => array(
+				'labels'       => array(
+					'disable_labels' => array(
 						'label' => __( 'Disable Labels', 'popup-maker' ),
 						'desc'  => __( 'Disables the display of field labels.', 'popup-maker' ),
 						'type'  => 'checkbox',
 					),
-					'heading_labels'       => array(
+					'heading_labels' => array(
 						'label' => __( 'Labels', 'popup-maker' ),
 						'desc'  => __( 'Field label text', 'popup-maker' ),
 						'type'  => 'heading',
 					),
-					'label_name'           => array(
+					'label_name'     => array(
 						'label'        => __( 'Full Name', 'popup-maker' ),
 						'dependencies' => array(
 							'disable_labels'  => false,
@@ -158,7 +159,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						),
 						'std'          => __( 'Name', 'popup-maker' ),
 					),
-					'label_fname'          => array(
+					'label_fname'    => array(
 						'label'        => __( 'First Name', 'popup-maker' ),
 						'dependencies' => array(
 							'disable_labels'  => false,
@@ -166,7 +167,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						),
 						'std'          => __( 'First Name', 'popup-maker' ),
 					),
-					'label_lname'          => array(
+					'label_lname'    => array(
 						'label'        => __( 'Last Name', 'popup-maker' ),
 						'dependencies' => array(
 							'disable_labels'  => false,
@@ -174,60 +175,57 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						),
 						'std'          => __( 'Last Name', 'popup-maker' ),
 					),
-					'label_email'          => array(
+					'label_email'    => array(
 						'label'        => __( 'Email', 'popup-maker' ),
 						'dependencies' => array(
 							'disable_labels' => false,
 						),
 						'std'          => __( 'Email', 'popup-maker' ),
 					),
-					'label_submit'         => array(
+					'label_submit'   => array(
 						'label' => __( 'Submit Button', 'popup-maker' ),
 						'std'   => __( 'Subscribe', 'popup-maker' ),
 					),
 					// Deprecated fields.
-					'name_text'            => array(
+					'name_text'      => array(
 						'type' => 'hidden',
 					),
-					'email_text'           => array(
+					'email_text'     => array(
 						'type' => 'hidden',
 					),
-					'button_text'          => array(
+					'button_text'    => array(
 						'type' => 'hidden',
 					),
-					'heading_placeholders' => array(
-						'label' => __( 'Placeholders', 'popup-maker' ),
-						'desc'  => __( 'Field placeholder text', 'popup-maker' ),
-						'type'  => 'heading',
-					),
-					'placeholder_name'     => array(
+				),
+				'placeholders' => array(
+					'placeholder_name'  => array(
 						'label'        => __( 'Full Name', 'popup-maker' ),
 						'dependencies' => array(
 							'name_field_type' => array( 'fullname' ),
 						),
 						'std'          => __( 'Name', 'popup-maker' ),
 					),
-					'placeholder_fname'    => array(
+					'placeholder_fname' => array(
 						'label'        => __( 'First Name', 'popup-maker' ),
 						'dependencies' => array(
 							'name_field_type' => array( 'first_only', 'first_last' ),
 						),
 						'std'          => __( 'First Name', 'popup-maker' ),
 					),
-					'placeholder_lname'    => array(
+					'placeholder_lname' => array(
 						'label'        => __( 'Last Name', 'popup-maker' ),
 						'dependencies' => array(
 							'name_field_type' => array( 'first_last' ),
 						),
 						'std'          => __( 'Last Name', 'popup-maker' ),
 					),
-					'placeholder_email'    => array(
+					'placeholder_email' => array(
 						'label' => __( 'Email', 'popup-maker' ),
 						'std'   => __( 'Email', 'popup-maker' ),
 					),
 
 				),
-				'appearance' => array(
+				'appearance'   => array(
 					'form_layout'    => array(
 						'label'   => __( 'Form Layout', 'popup-maker' ),
 						'desc'    => __( 'Choose a form layout.', 'popup-maker' ),
