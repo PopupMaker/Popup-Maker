@@ -23,22 +23,6 @@ interface PUM_Interface_Provider {
 
 
 	/**
-	 * Contains each providers unique fields.
-	 *
-	 * @return array
-	 */
-	public function fields();
-
-
-	/**
-	 * Contains defaults for the providers unique fields.
-	 *
-	 * @return array
-	 */
-	public function defaults();
-
-
-	/**
 	 * Contains each providers unique global settings.
 	 *
 	 * @return array
