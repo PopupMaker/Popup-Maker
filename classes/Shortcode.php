@@ -202,10 +202,10 @@ abstract class PUM_Shortcode {
 	public function defaults() {
 		$defaults = array();
 
-		foreach ( $this->fields() as $tab => $fields ) {
-			foreach ( $fields as $key => $field ) {
-				$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : null;
-			}
+		$fields = PUM_Admin_Helpers::flatten_fields_array( $this->fields() );
+
+		foreach ( $fields as $key => $field ) {
+			$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : null;
 		}
 
 		return apply_filters( 'pum_shortcode_defaults', $defaults, $this );

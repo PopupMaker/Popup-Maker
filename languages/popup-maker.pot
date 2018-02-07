@@ -98,7 +98,7 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: classes/Admin/Assets.php:100, classes/Admin/Helpers.php:305, classes/Admin/Templates.php:501, classes/Admin/Templates.php:672
+#: classes/Admin/Assets.php:100, classes/Admin/Helpers.php:322, classes/Admin/Templates.php:501, classes/Admin/Templates.php:672
 msgid "Add"
 msgstr ""
 
@@ -114,7 +114,7 @@ msgstr ""
 msgid "Insert"
 msgstr ""
 
-#: classes/Admin/Assets.php:104, classes/Admin/Helpers.php:303, classes/Admin/Shortcode/UI.php:89
+#: classes/Admin/Assets.php:104, classes/Admin/Helpers.php:320, classes/Admin/Shortcode/UI.php:89
 msgid "Cancel"
 msgstr ""
 
@@ -150,11 +150,11 @@ msgstr ""
 msgid "We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser."
 msgstr ""
 
-#: classes/Admin/Helpers.php:182, classes/Admin/Popups.php:437, classes/Admin/Popups.php:605, classes/Admin/Popups.php:725, classes/Shortcode/Popup.php:205, includes/class-popmake-fields.php:175, includes/integrations/class-pum-cf7.php:168, includes/integrations/class-pum-gravity-forms.php:163
+#: classes/Admin/Helpers.php:199, classes/Admin/Popups.php:437, classes/Admin/Popups.php:605, classes/Admin/Popups.php:725, classes/Shortcode/Popup.php:205, includes/class-popmake-fields.php:175, includes/integrations/class-pum-cf7.php:168, includes/integrations/class-pum-gravity-forms.php:163
 msgid "ms"
 msgstr ""
 
-#: classes/Admin/Helpers.php:320, classes/Admin/Popups.php:266, classes/Admin/Popups.php:592, classes/Admin/Templates.php:318, classes/Shortcode/Popup.php:50, templates/popup.php:44
+#: classes/Admin/Helpers.php:337, classes/Admin/Popups.php:266, classes/Admin/Popups.php:592, classes/Admin/Templates.php:318, classes/Shortcode/Popup.php:50, templates/popup.php:44
 msgid "Close"
 msgstr ""
 
@@ -1673,7 +1673,7 @@ msgstr ""
 msgid "Leave blank to refresh, or enter a url that users will be taken to after success."
 msgstr ""
 
-#: classes/Shortcode/Subscribe.php:572
+#: classes/Shortcode/Subscribe.php:576
 msgid "Subscription Form Placeholder"
 msgstr ""
 
