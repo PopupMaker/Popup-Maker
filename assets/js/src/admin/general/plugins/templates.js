@@ -256,9 +256,15 @@
                             data.value = [];
                         }
 
+                        if (typeof data.value === 'string' && data.value.indexOf(',')) {
+                            data.value = data.value.split(',');
+                        }
+
                         if (data.as_array) {
                             data.name += '[]';
                         }
+
+                        debugger;
 
                         _.each(data.options, function (label, value) {
 

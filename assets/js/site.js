@@ -389,7 +389,6 @@ var PUM;
             if (settings.close_on_overlay_click) {
                 $popup.on('pumAfterOpen', function () {
                     $(document).on('click.pumCloseOverlay', function (e) {
-                        console.log('click', e.target);
                         if(!$(e.target).closest('.pum-container').length) {
                             $.fn.popmake.last_close_trigger = 'Overlay Click';
                             $popup.popmake('close');
@@ -398,8 +397,7 @@ var PUM;
                 });
 
                 $popup.on('pumAfterClose', function () {
-                    console.log('closed');
-                    $(document).off('click.pumCloseOverlay');
+                   $(document).off('click.pumCloseOverlay');
                 });
             }
 

@@ -6412,6 +6412,8 @@
                                 } else {
                                     dependencies[key] = [dependencies[key]];
                                 }
+                            } else if (typeof dependencies[key] === "number") {
+                                dependencies[key] = [dependencies[key]];
                             }
                         }
                     }
@@ -6457,11 +6459,34 @@
                         value = $wrapper.find(':input:checked').val();
                     }
 
+                    if ($wrapper.hasClass('pum-field-multicheck')) {
+                        value = [];
+                        $wrapper.find(':checkbox:checked').each(function(i){
+                            value[i] = $(this).val();
+
+                            if (typeof value[i] === 'string' && !isNaN(parseInt(value[i])) ) {
+                                value[i] = parseInt(value[i]);
+                            }
+
+                        });
+                    }
+
                     // Check if the value matches required values.
                     if ($wrapper.hasClass('pum-field-select') || $wrapper.hasClass('pum-field-radio')) {
                         matched = required && required.indexOf(value) !== -1;
                     } else if ($wrapper.hasClass('pum-field-checkbox')) {
                         matched = required === $field.is(':checked');
+                    } else if ($wrapper.hasClass('pum-field-multicheck')) {
+                        if (Array.isArray(required)) {
+                            matched = false;
+                            for(var i=0;i < required.length; i++) {
+                                if (value.indexOf(required[i]) !== -1) {
+                                    matched = true;
+                                }
+                            }
+                        } else {
+                            matched = value.indexOf(required) !== -1;
+                        }
                     } else {
                         matched = Array.isArray(required) ? required.indexOf(value) !== -1 : required == value;
                     }
@@ -6792,6 +6817,9 @@
             $(this).parents('.pum-field').trigger('pumFieldChanged');
         })
         .on('click', '.pum-field-checkbox input', function () {
+            $(this).parents('.pum-field').trigger('pumFieldChanged');
+        })
+        .on('click', '.pum-field-multicheck input', function () {
             $(this).parents('.pum-field').trigger('pumFieldChanged');
         })
         .on('click', '.pum-field-radio input', function (event) {
@@ -7869,9 +7897,15 @@ function pumChecked(val1, val2, print) {
                             data.value = [];
                         }
 
+                        if (typeof data.value === 'string' && data.value.indexOf(',')) {
+                            data.value = data.value.split(',');
+                        }
+
                         if (data.as_array) {
                             data.name += '[]';
                         }
+
+                        debugger;
 
                         _.each(data.options, function (label, value) {
 

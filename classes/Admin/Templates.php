@@ -95,7 +95,7 @@ class PUM_Admin_Templates {
 			<ul class="pum-field-mulitcheck-list">
 				<# _.each(data.options, function(option, key) { #>
 				<li>
-					<input type="checkbox" id="{{data.id}}_{{key}}" name="{{data.name}}[{{option.value}}]" value="1" {{{option.meta}}}/>
+					<input type="checkbox" id="{{data.id}}_{{key}}" name="{{data.name}}[{{option.value}}]" value="{{option.value}}" {{{option.meta}}}/>
 					<label for="{{data.id}}_{{key}}">{{option.label}}</label>
 				</li>
 				<# }); #>
