@@ -8,6 +8,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * @deprecated 1.7.0
+ *
+ * @param string $string
+ *
+ * @return string
+ */
+function popmake_get_label_singular( $string = '' ) {
+	return '';
+}
+
+/**
+ * @deprecated 1.7.0
+ *
+ * @param string $string
+ *
+ * @return string
+ */
+function popmake_get_label_plural( $string = '' ) {
+	return '';
+}
+
 # region Filters
 /**
  * Process deprecated filters.
