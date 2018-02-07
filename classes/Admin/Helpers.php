@@ -95,6 +95,23 @@ class PUM_Admin_Helpers {
 		return true;
 	}
 
+	/**
+	 * @param array $array
+	 * @param bool  $string
+	 *
+	 * @return array
+	 */
+	public static function remove_keys_starting_with( $array, $string = false ) {
+
+		foreach( $array as $key => $value ) {
+			if ( strpos( $key, $string ) === 0 ) {
+				unset( $array[ $key ] );
+			}
+		}
+
+		return $array;
+	}
+
 	public static function sort_by_sort( $a, $b ) {
 		return $a['sort'] > $b['sort'];
 	}
