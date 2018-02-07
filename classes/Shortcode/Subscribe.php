@@ -491,6 +491,10 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	public function shortcode_atts( $atts ) {
 		$atts = parent::shortcode_atts( $atts );
 
+		if ( empty( $atts['provider'] ) ) {
+			$atts['provider'] = pum_get_option( 'newsletter_default_provider' );
+		}
+
 		// Remap old atts.
 		if ( ! empty( $atts['layout'] ) ) {
 			$atts['form_layout'] = $atts['layout'];
