@@ -121,6 +121,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							'first_last' => __( 'First & Last', 'popup-maker' ),
 						),
 						'std'     => 'fullname',
+						'private' => true,
 					),
 					'name_optional'   => array(
 						'label'        => __( 'Name Optional', 'popup-maker' ),
@@ -129,6 +130,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						'dependencies' => array(
 							'name_field_type' => array( 'fullname', 'first_only', 'first_last' ),
 						),
+						'private' => true,
 					),
 					'name_disabled'   => array(
 						'label'        => __( 'Name Disabled', 'popup-maker' ),
@@ -137,6 +139,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						'dependencies' => array(
 							'name_field_type' => false,
 						),
+						'private' => true,
 					),
 
 				),
@@ -145,11 +148,13 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						'label' => __( 'Disable Labels', 'popup-maker' ),
 						'desc'  => __( 'Disables the display of field labels.', 'popup-maker' ),
 						'type'  => 'checkbox',
+						'private' => true,
 					),
 					'heading_labels' => array(
 						'label' => __( 'Labels', 'popup-maker' ),
 						'desc'  => __( 'Field label text', 'popup-maker' ),
 						'type'  => 'heading',
+						'private' => true,
 					),
 					'label_name'     => array(
 						'label'        => __( 'Full Name', 'popup-maker' ),
@@ -158,6 +163,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							'name_field_type' => array( 'fullname' ),
 						),
 						'std'          => __( 'Name', 'popup-maker' ),
+						'private' => true,
 					),
 					'label_fname'    => array(
 						'label'        => __( 'First Name', 'popup-maker' ),
@@ -166,6 +172,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							'name_field_type' => array( 'first_only', 'first_last' ),
 						),
 						'std'          => __( 'First Name', 'popup-maker' ),
+						'private' => true,
 					),
 					'label_lname'    => array(
 						'label'        => __( 'Last Name', 'popup-maker' ),
@@ -174,6 +181,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							'name_field_type' => array( 'first_last' ),
 						),
 						'std'          => __( 'Last Name', 'popup-maker' ),
+						'private' => true,
 					),
 					'label_email'    => array(
 						'label'        => __( 'Email', 'popup-maker' ),
@@ -181,20 +189,25 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							'disable_labels' => false,
 						),
 						'std'          => __( 'Email', 'popup-maker' ),
+						'private' => true,
 					),
 					'label_submit'   => array(
 						'label' => __( 'Submit Button', 'popup-maker' ),
 						'std'   => __( 'Subscribe', 'popup-maker' ),
+						'private' => true,
 					),
 					// Deprecated fields.
 					'name_text'      => array(
 						'type' => 'hidden',
+						'private' => true,
 					),
 					'email_text'     => array(
+						'private' => true,
 						'type' => 'hidden',
 					),
 					'button_text'    => array(
 						'type' => 'hidden',
+						'private' => true,
 					),
 				),
 				'placeholders' => array(
@@ -204,6 +217,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							'name_field_type' => array( 'fullname' ),
 						),
 						'std'          => __( 'Name', 'popup-maker' ),
+						'private' => true,
 					),
 					'placeholder_fname' => array(
 						'label'        => __( 'First Name', 'popup-maker' ),
@@ -211,6 +225,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							'name_field_type' => array( 'first_only', 'first_last' ),
 						),
 						'std'          => __( 'First Name', 'popup-maker' ),
+						'private' => true,
 					),
 					'placeholder_lname' => array(
 						'label'        => __( 'Last Name', 'popup-maker' ),
@@ -218,10 +233,12 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							'name_field_type' => array( 'first_last' ),
 						),
 						'std'          => __( 'Last Name', 'popup-maker' ),
+						'private' => true,
 					),
 					'placeholder_email' => array(
 						'label' => __( 'Email', 'popup-maker' ),
 						'std'   => __( 'Email', 'popup-maker' ),
+						'private' => true,
 					),
 
 				),
@@ -235,6 +252,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							'inline' => __( 'Inline', 'popup-maker' ),
 						),
 						'std'     => 'block',
+						'private' => true,
 					),
 					'form_alignment' => array(
 						'label'   => __( 'Form Alignment', 'popup-maker' ),
@@ -246,6 +264,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							'right'  => __( 'Right', 'popup-maker' ),
 						),
 						'std'     => 'center',
+						'private' => true,
 					),
 					'form_style'     => array(
 						'label'   => __( 'Form Style', 'popup-maker' ),
@@ -259,9 +278,11 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 					),
 					'layout'         => array(
 						'type' => 'hidden',
+						'private' => true,
 					),
 					'style'          => array(
 						'type' => 'hidden',
+						'private' => true,
 					),
 				),
 			),
