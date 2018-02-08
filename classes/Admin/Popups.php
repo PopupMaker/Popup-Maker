@@ -24,6 +24,9 @@ class PUM_Admin_Popups {
 		// Add popup title field.
 		add_action( 'edit_form_advanced', array( __CLASS__, 'title_meta_field' ) );
 
+		// Add Contextual help to post_name field.
+		add_action( 'edit_form_before_permalink', array( __CLASS__, 'popup_post_title_contextual_message' ) );
+
 		// Regitster Metaboxes
 		add_action( 'add_meta_boxes', array( __CLASS__, 'meta_box' ) );
 
@@ -56,9 +59,13 @@ class PUM_Admin_Popups {
 
 		$screen = get_current_screen();
 
-		if ( 'popup' == $screen->post_type || 'popup_theme' == $screen->post_type ) {
+		if ( 'popup_theme' == $screen->post_type ) {
 			$label = $screen->post_type == 'popup' ? __( 'Popup', 'popup-maker' ) : __( 'Popup Theme', 'popup-maker' );
 			$title = sprintf( __( '%s Name', 'popup-maker' ), $label );
+		}
+
+		if ( 'popup' == $screen->post_type ) {
+			$title = __( 'Popup Name (appears under "Name" column on "All Popups" screen', 'popup-maker' );
 		}
 
 		return $title;
@@ -77,18 +84,28 @@ class PUM_Admin_Popups {
 
 		if ( 'popup' == $typenow && in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) ) { ?>
 
-			<div id="popup-titlediv">
+			<div id="popup-titlediv" class="pum-form">
 				<div id="popup-titlewrap">
 					<label class="screen-reader-text" id="popup-title-prompt-text" for="popup-title">
-						<?php _e( 'Enter popup title here', 'popup-maker' ); ?>
+						<?php _e( 'Popup Title (appears on front end inside the popup container)', 'popup-maker' ); ?>
 					</label>
-					<input tabindex="2" name="popup_title" size="30" value="<?php esc_attr_e( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php _e( 'Enter popup title here', 'popup-maker' ); ?>"/>
+					<input tabindex="2" name="popup_title" size="30" value="<?php esc_attr_e( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php _e( 'Popup Title (appears on front end inside the popup container)', 'popup-maker' ); ?>"/>
+					<p class="pum-desc"><?php echo '(' . __( 'Optional', 'popup-maker' ) . ') ' . __( 'Display a title inside the popup container. May be left empty.', 'popup-maker' ); ?></p>
 				</div>
 				<div class="inside"></div>
 			</div>
 			<script>jQuery('#popup-titlediv').insertAfter('#titlediv');</script>
 			<?php
 		}
+	}
+
+	/**
+	 * Renders contextual help for title.
+	 */
+	public static function popup_post_title_contextual_message() {
+		?>
+		<p class="pum-desc"><?php echo '(' . __( 'Required', 'popup-maker' ) . ') ' . __( 'Register a popup name. The CSS class ‘popmake-{popup-name}’ can be used to set a trigger to display a popup.', 'popup-maker' ); ?></p>
+		<?php
 	}
 
 	/**
