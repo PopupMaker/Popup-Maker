@@ -222,7 +222,7 @@ msgstr ""
 msgid "Analytics"
 msgstr ""
 
-#: classes/Admin/Popups.php:263, classes/Admin/Settings.php:432, classes/Admin/Settings.php:455, classes/Admin/Settings.php:458, classes/Conditions.php:107, classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:157, classes/Shortcode.php:151, classes/Shortcode.php:163, classes/Shortcode.php:176, classes/Shortcode/Popup.php:46, classes/Shortcode/Subscribe.php:60, classes/Shortcode/Subscribe.php:79, classes/Triggers.php:259, includes/class-popmake-fields.php:57
+#: classes/Admin/Popups.php:263, classes/Admin/Settings.php:432, classes/Admin/Settings.php:455, classes/Admin/Settings.php:458, classes/Conditions.php:107, classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:157, classes/Shortcode.php:151, classes/Shortcode.php:163, classes/Shortcode.php:176, classes/Shortcode/Popup.php:46, classes/Shortcode/Subscribe.php:60, classes/Shortcode/Subscribe.php:79, classes/Triggers.php:261, includes/class-popmake-fields.php:57
 msgid "General"
 msgstr ""
 
@@ -258,7 +258,7 @@ msgstr ""
 msgid "Position"
 msgstr ""
 
-#: classes/Admin/Popups.php:286, classes/Cookies.php:158
+#: classes/Admin/Popups.php:286, classes/Cookies.php:158, classes/Triggers.php:263
 msgid "Advanced"
 msgstr ""
 
@@ -891,7 +891,7 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-#: classes/Admin/Templates.php:397, classes/Triggers.php:260
+#: classes/Admin/Templates.php:397, classes/Triggers.php:262
 msgid "Cookie"
 msgstr ""
 
@@ -997,7 +997,7 @@ msgstr ""
 msgid "Remove Condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:607, classes/Triggers.php:240
+#: classes/Admin/Templates.php:607, classes/Triggers.php:242
 msgid "Add New Cookie"
 msgstr ""
 
@@ -1233,7 +1233,7 @@ msgstr ""
 msgid "Sessions"
 msgstr ""
 
-#: classes/Cookies.php:174, classes/Triggers.php:233
+#: classes/Cookies.php:174, classes/Triggers.php:235
 msgid "Cookie Name"
 msgstr ""
 
@@ -1461,7 +1461,7 @@ msgstr ""
 msgid "Add additional classes for styling."
 msgstr ""
 
-#: classes/Shortcode/PopupClose.php:66, classes/Shortcode/PopupTrigger.php:112, classes/Triggers.php:151
+#: classes/Shortcode/PopupClose.php:66, classes/Shortcode/PopupTrigger.php:112, classes/Triggers.php:153
 msgid "Do not prevent the default click functionality."
 msgstr ""
 
@@ -1505,7 +1505,7 @@ msgstr ""
 msgid "The HTML tag used to generate the trigger and wrap your text."
 msgstr ""
 
-#: classes/Shortcode/PopupTrigger.php:113, classes/Triggers.php:152
+#: classes/Shortcode/PopupTrigger.php:113, classes/Triggers.php:154
 msgid "This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file."
 msgstr ""
 
@@ -1653,7 +1653,7 @@ msgstr ""
 msgid "Close Popup"
 msgstr ""
 
-#: classes/Shortcode/Subscribe.php:296, classes/Triggers.php:160, classes/Triggers.php:165, includes/integrations/class-pum-cf7.php:165, includes/integrations/class-pum-gravity-forms.php:160, includes/integrations/ninja-forms/Actions/ClosePopup.php:43
+#: classes/Shortcode/Subscribe.php:296, classes/Triggers.php:162, classes/Triggers.php:167, includes/integrations/class-pum-cf7.php:165, includes/integrations/class-pum-gravity-forms.php:160, includes/integrations/ninja-forms/Actions/ClosePopup.php:43
 msgid "Delay"
 msgstr ""
 
@@ -1785,19 +1785,19 @@ msgstr ""
 msgid ".my-class, #button2"
 msgstr ""
 
-#: classes/Triggers.php:158
+#: classes/Triggers.php:160
 msgid "Time Delay / Auto Open"
 msgstr ""
 
-#: classes/Triggers.php:159
+#: classes/Triggers.php:161
 msgid "Time Delay Settings"
 msgstr ""
 
-#: classes/Triggers.php:166
+#: classes/Triggers.php:168
 msgid "The delay before the popup will open in milliseconds."
 msgstr ""
 
-#: classes/Triggers.php:234
+#: classes/Triggers.php:236
 msgid "Choose which cookies will disable this trigger?"
 msgstr ""
 

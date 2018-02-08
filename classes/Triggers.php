@@ -74,7 +74,7 @@ class PUM_Triggers {
 			$trigger_labels = isset( $labels[ $trigger['id'] ] ) ? $labels[ $trigger['id'] ] : array();
 
 			if ( ! empty( $trigger_labels ) ) {
-				foreach ($trigger_labels as $key => $value ) {
+				foreach ( $trigger_labels as $key => $value ) {
 					if ( empty( $trigger[ $key ] ) ) {
 						$trigger[ $key ] = $value;
 					}
@@ -120,7 +120,7 @@ class PUM_Triggers {
 	/**
 	 * @deprecated
 	 *
-	 * @param null $trigger
+	 * @param null  $trigger
 	 * @param array $settings
 	 *
 	 * @return array
@@ -139,14 +139,16 @@ class PUM_Triggers {
 				'modal_title'     => __( 'Click Trigger Settings', 'popup-maker' ),
 				'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Extra Selectors', 'popup-maker' ), '{{data.extra_selectors}}' ),
 				'fields'          => array(
-					'general' => array(
+					'general'  => array(
 						'extra_selectors' => array(
 							'label'       => __( 'Extra CSS Selectors', 'popup-maker' ),
 							'desc'        => __( 'This allows custom css classes, ids or selector strings to trigger the popup when clicked. Separate multiple selectors using commas.', 'popup-maker' ),
 							'placeholder' => __( '.my-class, #button2', 'popup-maker' ),
 							'doclink'     => 'http://docs.wppopupmaker.com/article/147-getting-css-selectors?utm_source=plugin-page-popup-editor=&utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_content=extra-selectors',
 						),
-						'do_default'      => array(
+					),
+					'advanced' => array(
+						'do_default' => array(
 							'type'  => 'checkbox',
 							'label' => __( 'Do not prevent the default click functionality.', 'popup-maker' ),
 							'desc'  => __( 'This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file.', 'popup-maker' ),
@@ -168,7 +170,7 @@ class PUM_Triggers {
 							'min'   => 0,
 							'max'   => 10000,
 							'step'  => 500,
-							'unit' => 'ms',
+							'unit'  => 'ms',
 						),
 					),
 				),
@@ -256,8 +258,9 @@ class PUM_Triggers {
 		 * @param array $to_do The list of trigger section labels.
 		 */
 		return apply_filters( 'pum_get_trigger_tabs', array(
-			'general' => __( 'General', 'popup-maker' ),
-			'cookie'  => __( 'Cookie', 'popup-maker' ),
+			'general'  => __( 'General', 'popup-maker' ),
+			'cookie'   => __( 'Cookie', 'popup-maker' ),
+			'advanced' => __( 'Advanced', 'popup-maker' ),
 		) );
 	}
 
