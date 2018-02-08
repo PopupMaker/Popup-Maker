@@ -11,7 +11,7 @@
         init: function () {
             $('.pum-field-select2 select').filter(':not(.pumselect2-initialized)').each(function () {
                 var $this = $(this),
-                    current = $this.data('current') || $this.find('option[selected="selected"]').attr('value'),
+                    current = $this.data('current') || $this.val(),
                     object_type = $this.data('objecttype'),
                     object_key = $this.data('objectkey'),
                     options = {
