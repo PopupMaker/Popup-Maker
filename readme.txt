@@ -102,6 +102,12 @@ There are several common causes for this which include:
 == Changelog ==
 
 = v1.7.0 - ??/??/2017 =
+This was one of our biggest updates to date in terms of improving existing functionality, reducing maintenance and the time it takes to implement new features in the future.
+
+Noticeably there are a lot of interface changes with this version as we simplified from having many meta boxes in the popup editor to a new single panel interface.
+
+Lastly we now have include our extendable subscription forms right in the free version. We currently don't provide support for mail/service providers in the free version, but have opened up our form API in the hopes that 3rd party developers will help us fill that gap. Don't fret though, submissions are stored in a custom table for retroactive syncing to lists or export (not yet available).
+
 * Feature: Front end asset overhaul, now uses cached static assets.
   * All front end assets now combined and minified into  single js & css file.
   * Custom styles are now saved along with all core & extension styles eliminating inline style blocks.
