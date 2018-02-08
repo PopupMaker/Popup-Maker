@@ -1802,11 +1802,15 @@ msgid "Extra CSS Selectors"
 msgstr ""
 
 #: classes/Triggers.php:145
-msgid "This allows custom css classes, ids or selector strings to trigger the popup when clicked. Separate multiple selectors using commas."
+msgid ".class-here"
 msgstr ""
 
 #: classes/Triggers.php:146
-msgid ".my-class, #button2"
+msgid "For more than one selector, separate by comma (,)"
+msgstr ""
+
+#: classes/Triggers.php:146
+msgid " .class-here, .class-2-here, #button"
 msgstr ""
 
 #: classes/Triggers.php:160
