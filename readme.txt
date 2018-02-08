@@ -1,5 +1,5 @@
 === Popup Maker - Best Rated ===
-Contributors: danieliser, wppopupmaker, waltmesser, yogaman5020
+Contributors: danieliser, wppopupmaker, yogaman5020
 Author URI: https://wppopupmaker.com/?utm_source=readme-header&utm_campaign=Readme&utm_medium=author-uri
 Plugin URI: https://wppopupmaker.com/?utm_capmaign=Readme&utm_source=readme-header&utm_medium=plugin-uri
 Donate link:
@@ -15,7 +15,7 @@ Create any popup imaginable! Customize your popups from head-to-toe and give you
 
 = Best WordPress Popup Plugin =
 
-Popup Maker is the **best popup plugin WordPress** has to offer. It is extremely versatile & flexible. Bend it to create any type of modal or content overlay for your WordPress website.
+Popup Maker™ is the **best popup plugin WordPress** has to offer. It is extremely versatile & flexible. Bend it to create any type of modal or content overlay for your WordPress website.
 
 Customize every facet of your popups, from theme and position, to targeting and cookies.
 
