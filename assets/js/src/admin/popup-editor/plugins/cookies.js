@@ -283,7 +283,7 @@ var cookies;
                 var $form = $(this),
                     event = $form.find('input#event').val(),
                     index = $form.find('input#index').val(),
-                    values = $form.pumSerializeObject();
+                    values = $form.pumSerializeForm();
 
                 e.preventDefault();
 
@@ -321,11 +321,11 @@ var cookies;
                 var $form = $(this),
                     event = $form.find('input#event').val(),
                     index = $form.find('input#index').val(),
-                    values = $form.pumSerializeObject();
+                    values = $form.pumSerializeForm();
 
                 e.preventDefault();
 
-                if (!index || index < 0) {
+                if (index === false || index < 0) {
                     index = $editor.find('tbody tr').length;
                 }
 
@@ -368,11 +368,11 @@ var cookies;
                 var $form = $(this),
                     event = $form.find('input#event').val(),
                     index = $form.find('input#index').val(),
-                    values = $form.pumSerializeObject();
+                    values = $form.pumSerializeForm();
 
                 e.preventDefault();
 
-                if (!index || index < 0) {
+                if (index === false || index < 0) {
                     index = $editor.find('tbody tr').length;
                 }
 
