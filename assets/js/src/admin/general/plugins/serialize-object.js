@@ -88,7 +88,7 @@
         function encode(pair) {
             switch ($('[name="' + pair.name + '"]', $form).attr("type")) {
             case "checkbox":
-                return pair.value === "on" ? true : pair.value;
+                return pair.value === "1" ? true : pair.value;
             default:
                 return pair.value;
             }
