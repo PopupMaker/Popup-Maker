@@ -22,7 +22,7 @@ class PUM_Upsell {
 		?>
 
 		<div class="pum-upgrade-tip">
-			<img src="<?php echo Popup_Maker::$URL; ?>/assets/images/upsell-icon-forced-interaction.png" />
+			<img src="<?php echo Popup_Maker::$URL; ?>/assets/images/upsell-icon-forced-interaction.png"/>
 			<?php printf( _x( 'Want to disable the close button? Check out %sForced Interaction%s!', '%s represent the opening & closing link html', 'popup-maker' ), '<a href="https://wppopupmaker.com/extensions/forced-interaction/?utm_source=plugin-theme-editor&utm_medium=text-link&utm_campaign=Upsell&utm_content=close-button-settings" target="_blank">', '</a>' ); ?>
 		</div>
 
@@ -30,7 +30,9 @@ class PUM_Upsell {
 
 		$html = ob_get_clean();
 
-		$fields['main']['fi_promotion'] = array(
+		$key = key( $fields );
+
+		$fields[ $key ]['fi_promotion'] = array(
 			'type'     => 'html',
 			'content'  => $html,
 			'priority' => 30,
@@ -52,8 +54,10 @@ class PUM_Upsell {
 		<?php
 
 		$html = ob_get_clean();
+		$key  = key( $fields );
 
-		$fields['main']['atc_promotion'] = array(
+
+		$fields[ $key ]['atc_promotion'] = array(
 			'type'     => 'html',
 			'content'  => $html,
 			'priority' => 30,

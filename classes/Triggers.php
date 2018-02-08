@@ -144,7 +144,7 @@ class PUM_Triggers {
 							'label'       => __( 'Extra CSS Selectors', 'popup-maker' ),
 							'desc'        => __( 'This allows custom css classes, ids or selector strings to trigger the popup when clicked. Separate multiple selectors using commas.', 'popup-maker' ),
 							'placeholder' => __( '.my-class, #button2', 'popup-maker' ),
-							'doclink'     => 'http://docs.wppopupmaker.com/article/147-getting-css-selectors?page-popup-editor=&utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_content=extra-selectors',
+							'doclink'     => 'http://docs.wppopupmaker.com/article/147-getting-css-selectors?utm_source=plugin-page-popup-editor=&utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_content=extra-selectors',
 						),
 						'do_default'      => array(
 							'type'  => 'checkbox',

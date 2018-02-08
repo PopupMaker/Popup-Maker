@@ -82,7 +82,7 @@ class PUM_Admin_Popups {
 					<label class="screen-reader-text" id="popup-title-prompt-text" for="popup-title">
 						<?php _e( 'Enter popup title here', 'popup-maker' ); ?>
 					</label>
-					<input tabindex="2" name="popup_title" size="30" value="<?php esc_attr_e( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php _e( 'Enter popup title here', 'popup-maker' ); ?>" />
+					<input tabindex="2" name="popup_title" size="30" value="<?php esc_attr_e( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php _e( 'Enter popup title here', 'popup-maker' ); ?>"/>
 				</div>
 				<div class="inside"></div>
 			</div>
@@ -149,8 +149,7 @@ class PUM_Admin_Popups {
 	 * @return mixed
 	 */
 	public static function deprecated_meta_fields() {
-		$fields = array(
-		);
+		$fields = array();
 		foreach ( self::deprecated_meta_field_groups() as $group ) {
 			foreach ( apply_filters( 'popmake_popup_meta_field_group_' . $group, array() ) as $field ) {
 				$fields[] = 'popup_' . $group . '_' . $field;
@@ -280,15 +279,15 @@ class PUM_Admin_Popups {
 				'main' => __( 'General Settings', 'popup-maker' ),
 			),
 			'display'   => array(
-				'main'      => __( 'General', 'popup-maker' ),
+				'main'      => __( 'Appearance', 'popup-maker' ),
 				'size'      => __( 'Size', 'popup-maker' ),
 				'animation' => __( 'Animation', 'popup-maker' ),
 				'position'  => __( 'Position', 'popup-maker' ),
-				'misc'      => __( 'Misc', 'popup-maker' ),
+				'advanced'  => __( 'Advanced', 'popup-maker' ),
 			),
 			'close'     => array(
-				'main'    => __( 'General', 'popup-maker' ),
-				'methods' => __( 'Misc', 'popup-maker' ),
+				'button'            => __( 'Button', 'popup-maker' ),
+				'alternate_methods' => __( 'Alternate Methods', 'popup-maker' ),
 			),
 			'triggers'  => array(
 				'main' => __( 'Triggers', 'popup-maker' ),
@@ -314,9 +313,9 @@ class PUM_Admin_Popups {
 					'main' => array(),
 				) ),
 				'display'   => apply_filters( 'pum_popup_display_settings_fields', array(
-					'main' => array(
+					'main'      => array(
 						'theme_id' => array(
-							'label'        => __( 'Theme', 'popup-maker' ),
+							'label'        => __( 'Popup Theme', 'popup-maker' ),
 							'dynamic_desc' => sprintf( '%1$s<br/><a id="edit_theme_link" href="%3$s">%2$s</a>', __( 'Choose a theme for this popup.', 'popup-maker' ), __( 'Customize This Theme', 'popup-maker' ), admin_url( "post.php?action=edit&post={{data.value}}" ) ),
 							'type'         => 'select',
 							'options'      => PUM_Helpers::popup_theme_selectlist(),
@@ -555,7 +554,7 @@ class PUM_Admin_Popups {
 							'priority' => 50,
 						),
 					),
-					'misc'      => array(
+					'advanced'  => array(
 						'overlay_disabled'   => array(
 							'label'    => __( 'Disable Overlay', 'popup-maker' ),
 							'desc'     => __( 'Checking this will disable and hide the overlay for this popup.', 'popup-maker' ),
@@ -586,7 +585,7 @@ class PUM_Admin_Popups {
 					),
 				) ),
 				'close'     => apply_filters( 'pum_popup_close_settings_fields', array(
-					'main'    => array(
+					'button'            => array(
 						'close_text'         => array(
 							'label'       => __( 'Close Text', 'popup-maker' ),
 							'placeholder' => __( 'Close', 'popup-maker' ),
@@ -606,7 +605,7 @@ class PUM_Admin_Popups {
 							'priority' => 20,
 						),
 					),
-					'methods' => array(
+					'alternate_methods' => array(
 						'close_on_overlay_click' => array(
 							'label'    => __( 'Click Overlay to Close', 'popup-maker' ),
 							'desc'     => __( 'Checking this will cause popup to close when user clicks on overlay.', 'popup-maker' ),
@@ -629,16 +628,16 @@ class PUM_Admin_Popups {
 				) ),
 				'triggers'  => apply_filters( 'pum_popup_triggers_settings_fields', array(
 					'main' => array(
-						'triggers' => array(
+						'triggers'   => array(
 							'type'     => 'triggers',
 							'std'      => array(),
 							'priority' => 10,
 						),
 						'separator1' => array(
-							'type' => 'separator',
+							'type'    => 'separator',
 							'private' => true,
 						),
-						'cookies' => array(
+						'cookies'    => array(
 							'type'     => 'cookies',
 							'std'      => array(),
 							'priority' => 20,
@@ -651,7 +650,7 @@ class PUM_Admin_Popups {
 							'type'     => 'conditions',
 							'std'      => array(),
 							'priority' => 10,
-							'private' => true,
+							'private'  => true,
 						),
 						'disable_on_mobile' => array(
 							'label'    => __( 'Disable this popup on mobile devices.', 'popup-maker' ),
@@ -740,6 +739,7 @@ class PUM_Admin_Popups {
 				}
 			}
 		}
+
 
 		return $tabs;
 	}
@@ -883,19 +883,19 @@ class PUM_Admin_Popups {
 					<tr class="separator">
 						<td colspan="2">
 							<label>
-								<input type="checkbox" name="popup_reset_counts" id="popup_reset_counts" value="1" />
+								<input type="checkbox" name="popup_reset_counts" id="popup_reset_counts" value="1"/>
 								<?php _e( 'Reset Counts', 'popup-maker' ); ?>
 							</label>
-							<?php if ( ( $reset = $popup->get_last_count_reset() ) ) : ?><br />
+							<?php if ( ( $reset = $popup->get_last_count_reset() ) ) : ?><br/>
 								<small>
 									<strong><?php _e( 'Last Reset', 'popup-maker' ); ?>:</strong> <?php echo date( 'm-d-Y H:i', $reset['timestamp'] ); ?>
-									<br />
+									<br/>
 									<strong><?php _e( 'Previous Opens', 'popup-maker' ); ?>:</strong> <?php echo $reset['opens']; ?>
-									<br />
+									<br/>
 									<strong><?php _e( 'Previous Conversions', 'popup-maker' ); ?>:</strong> <?php echo $reset['conversions']; ?>
-									<br />
+									<br/>
 									<strong><?php _e( 'Lifetime Opens', 'popup-maker' ); ?>:</strong> <?php echo $popup->get_event_count( 'open', 'total' ); ?>
-									<br />
+									<br/>
 									<strong><?php _e( 'Lifetime Conversions', 'popup-maker' ); ?>:</strong> <?php echo $popup->get_event_count( 'conversion', 'total' ); ?>
 								</small>
 							<?php endif; ?>
@@ -1000,7 +1000,7 @@ class PUM_Admin_Popups {
 	 * Render Columns
 	 *
 	 * @param string $column_name Column name
-	 * @param int $post_id (Post) ID
+	 * @param int    $post_id     (Post) ID
 	 */
 	public static function render_columns( $column_name, $post_id ) {
 		if ( get_post_type( $post_id ) == 'popup' ) {
