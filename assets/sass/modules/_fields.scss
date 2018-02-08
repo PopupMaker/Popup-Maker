@@ -5,6 +5,11 @@
 $plugin_prefix: 'plugin' !default;
 $custom_select2_selector: 'select2' !default;
 
+.#{$plugin_prefix}-desc {
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
 [data-#{$plugin_prefix}-dependencies] {
   display: none;
 }
