@@ -38,6 +38,22 @@ class PUM_Admin_Templates {
 		self::conditions_editor();
 		self::triggers_editor();
 		self::cookies_editor();
+
+		if ( class_exists( 'PUM_MCI' ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ) ) {
+			?>
+
+			<script type="text/html" id="tmpl-pum-field-mc_api_key">
+				<# var valid = data.value !== '' && <?php echo json_encode( pum_get_option( 'mci_api_key_is_valid', false ) ); ?>; #>
+				<input type="{{valid ? 'password' : 'text'}}" placeholder="{{data.placeholder}}" class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" {{{data.meta}}}/>
+				<button type="button" class="pum-mci-check-api-key">
+					<?php _e( 'Check', 'popup-maker' ); ?>
+					<i class="dashicons dashicons-{{valid ? 'yes' : 'no'}}" style="display: {{valid ? 'inline-block' : 'none'}};"></i>
+				</button>
+				<?php wp_nonce_field( 'pum-mci-check-api-key', null ); ?>
+			</script>
+
+			<?php
+		}
 	}
 
 	/**

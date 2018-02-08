@@ -65,3 +65,12 @@ function pum_get_newsletter_default_messages( $context = null ) {
 
 	return $messages;
 }
+
+/**
+ * @return array
+ */
+function pum_get_newsletter_admin_localized_vars() {
+	return array(
+		'default_provider' => pum_get_option( 'newsletter_default_provider', pum_get_option( 'newsletter_default', '' ) ),
+	);
+}

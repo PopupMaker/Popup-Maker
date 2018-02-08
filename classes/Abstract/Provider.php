@@ -234,7 +234,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	public function shortcode_tabs( $tabs = array() ) {
 		$resorted_tabs = array();
 
-		foreach( $tabs as $tab_id => $label ) {
+		foreach ( $tabs as $tab_id => $label ) {
 			$resorted_tabs[ $tab_id ] = $label;
 
 			if ( 'general' == $tab_id ) {
@@ -268,9 +268,18 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 * @return array
 	 */
 	public function shortcode_fields( $fields = array() ) {
+
+		$new_fields = $this->version < 2 ? PUM_Admin_Helpers::flatten_fields_array( $this->fields() ) : array();
+
+		foreach ( $new_fields as $field_id => $field ) {
+			if ( isset( $field['options'] ) ) {
+				$new_fields[ $field_id ]['options'] = array_flip( $field['options'] );
+			}
+		}
+
 		return array_merge( $fields, array(
 			$this->shortcode_tab_id() => array(
-				'main' => $this->version < 2 ? PUM_Admin_Helpers::flatten_fields_array( $this->fields() ) : array(),
+				'main' => $new_fields,
 			),
 		) );
 	}

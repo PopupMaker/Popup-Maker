@@ -42,8 +42,19 @@ class PUM_Admin_Assets {
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'register_admin_scripts' ) );
 		add_action( 'admin_print_footer_scripts', array( __CLASS__, 'maybe_localize_and_templates' ), - 1 );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'register_admin_styles' ), 100 );
+
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'fix_broken_extension_scripts' ), 100 );
 	}
 
+	public static function fix_broken_extension_scripts() {
+
+		if ( wp_script_is( 'pum-mci-admin' ) && class_exists( 'PUM_MCI' ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ) ) {
+			wp_dequeue_script( 'pum-mci-admin' );
+			//wp_enqueue_script( 'pum-mci-admin', PUM_MCI::$URL . '/assets/js/pum-mailchimp-integration-admin' . self::$suffix . '.js', array( 'jquery', 'popup-maker-admin' ), null, true );
+		}
+
+
+	}
 
 	/**
 	 * Load Admin Scripts
@@ -56,7 +67,7 @@ class PUM_Admin_Assets {
 		wp_register_script( 'pum-admin-popup-editor', self::$js_url . 'admin-popup-editor' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-theme-editor', self::$js_url . 'admin-theme-editor' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-settings-page', self::$js_url . 'admin-settings-page' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
-		wp_register_script( 'pum-admin-shortcode-ui', self::$js_url . 'admin-shortcode-ui' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, false );
+		wp_register_script( 'pum-admin-shortcode-ui', self::$js_url . 'admin-shortcode-ui' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
 		wp_register_script( 'iframe-resizer', self::$js_url . 'iframeResizer' . self::$suffix . '.js', array( 'jquery' ) );
 
 		// @deprecated handle. Currently loads empty file and admin-general as dependency.

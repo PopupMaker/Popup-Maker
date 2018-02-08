@@ -211,7 +211,7 @@ class PUM_Admin_Settings {
 					'main' => array(),
 				),
 				'subscriptions' => array(
-					'main' => array(
+					'main' => apply_filters( 'pum_newsletter_settings', array(
 						'newsletter_default_provider'        => array(
 							'label'   => __( 'Default Newsletter Provider', 'popup-maker' ),
 							'desc'    => __( 'The default mailing provider used for the subscription form.', 'popup-maker' ),
@@ -257,7 +257,7 @@ class PUM_Admin_Settings {
 							'std'   => __( 'You are already a subscriber.', 'popup-maker' ),
 						),
 
-					),
+					) ),
 				),
 				'extensions'    => array(
 					'main' => array(),

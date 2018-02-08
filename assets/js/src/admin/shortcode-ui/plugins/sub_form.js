@@ -36,4 +36,30 @@
         .on('pum_init', '#pum-shortcode-editor-pum_sub_form', check_provider)
         .on('change', '#pum-shortcode-editor-pum_sub_form #provider', check_provider);
 
+    /**
+     * Here for compatibility with the MC extension prior to v1.3.0
+     */
+    function check_list() {
+        var $list_id = $('#pum-shortcode-editor-pum_sub_form_provider_mailchimp #list_id'),
+            list_id = $list_id.val(),
+            $list_options = $('#pum-mci-list-' + list_id+',.pum-mci-list-' + list_id),
+            $all_options = $('.pum-mci-list-options');
+
+        $all_options.hide();
+        $all_options.find('input[type="checkbox"]').attr('disabled', true);
+
+        if ($list_options.length) {
+            $list_options.show();
+            $list_options.find('input[type="checkbox"]').attr('disabled', false);
+        }
+    }
+
+    /**
+     * Check API key when the "Check" button is clicked.
+     */
+    $(document)
+        .on('pumInit pum_init', '#pum-shortcode-editor-pum_sub_form', check_list)
+        .on('change', '#pum-shortcode-editor-pum_sub_form_provider_mailchimp #list_id', check_list);
+
+
 }(jQuery));
