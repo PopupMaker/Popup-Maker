@@ -278,6 +278,12 @@ class PUM_Admin_Popups {
 			'general'   => array(
 				'main' => __( 'General Settings', 'popup-maker' ),
 			),
+			'triggers'  => array(
+				'main' => __( 'Triggers', 'popup-maker' ),
+			),
+			'targeting' => array(
+				'main' => __( 'Conditions', 'popup-maker' ),
+			),
 			'display'   => array(
 				'main'      => __( 'Appearance', 'popup-maker' ),
 				'size'      => __( 'Size', 'popup-maker' ),
@@ -288,12 +294,6 @@ class PUM_Admin_Popups {
 			'close'     => array(
 				'button'            => __( 'Button', 'popup-maker' ),
 				'alternate_methods' => __( 'Alternate Methods', 'popup-maker' ),
-			),
-			'triggers'  => array(
-				'main' => __( 'Triggers', 'popup-maker' ),
-			),
-			'targeting' => array(
-				'main' => __( 'Conditions', 'popup-maker' ),
 			),
 		) );
 	}
@@ -311,6 +311,44 @@ class PUM_Admin_Popups {
 			$tabs = apply_filters( 'pum_popup_settings_fields', array(
 				'general'   => apply_filters( 'pum_popup_general_settings_fields', array(
 					'main' => array(),
+				) ),
+				'targeting' => apply_filters( 'pum_popup_targeting_settings_fields', array(
+					'main' => array(
+						'conditions'        => array(
+							'type'     => 'conditions',
+							'std'      => array(),
+							'priority' => 10,
+							'private'  => true,
+						),
+						'disable_on_mobile' => array(
+							'label'    => __( 'Disable this popup on mobile devices.', 'popup-maker' ),
+							'type'     => 'checkbox',
+							'priority' => 20,
+						),
+						'disable_on_tablet' => array(
+							'label'    => __( 'Disable this popup on tablet devices.', 'popup-maker' ),
+							'type'     => 'checkbox',
+							'priority' => 20,
+						),
+					),
+				) ),
+				'triggers'  => apply_filters( 'pum_popup_triggers_settings_fields', array(
+					'main' => array(
+						'triggers'   => array(
+							'type'     => 'triggers',
+							'std'      => array(),
+							'priority' => 10,
+						),
+						'separator1' => array(
+							'type'    => 'separator',
+							'private' => true,
+						),
+						'cookies'    => array(
+							'type'     => 'cookies',
+							'std'      => array(),
+							'priority' => 20,
+						),
+					),
 				) ),
 				'display'   => apply_filters( 'pum_popup_display_settings_fields', array(
 					'main'      => array(
@@ -623,44 +661,6 @@ class PUM_Admin_Popups {
 							'desc'     => __( 'Checking this will cause popup to close when user presses F4 key.', 'popup-maker' ),
 							'type'     => 'checkbox',
 							'priority' => 30,
-						),
-					),
-				) ),
-				'triggers'  => apply_filters( 'pum_popup_triggers_settings_fields', array(
-					'main' => array(
-						'triggers'   => array(
-							'type'     => 'triggers',
-							'std'      => array(),
-							'priority' => 10,
-						),
-						'separator1' => array(
-							'type'    => 'separator',
-							'private' => true,
-						),
-						'cookies'    => array(
-							'type'     => 'cookies',
-							'std'      => array(),
-							'priority' => 20,
-						),
-					),
-				) ),
-				'targeting' => apply_filters( 'pum_popup_targeting_settings_fields', array(
-					'main' => array(
-						'conditions'        => array(
-							'type'     => 'conditions',
-							'std'      => array(),
-							'priority' => 10,
-							'private'  => true,
-						),
-						'disable_on_mobile' => array(
-							'label'    => __( 'Disable this popup on mobile devices.', 'popup-maker' ),
-							'type'     => 'checkbox',
-							'priority' => 20,
-						),
-						'disable_on_tablet' => array(
-							'label'    => __( 'Disable this popup on tablet devices.', 'popup-maker' ),
-							'type'     => 'checkbox',
-							'priority' => 20,
 						),
 					),
 				) ),
