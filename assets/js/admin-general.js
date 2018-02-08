@@ -7227,7 +7227,7 @@ function pumChecked(val1, val2, print) {
         init: function () {
             $('.pum-field-select2 select').filter(':not(.pumselect2-initialized)').each(function () {
                 var $this = $(this),
-                    current = $this.data('current') || $this.find('option[selected="selected"]').attr('value'),
+                    current = $this.data('current') || $this.val(),
                     object_type = $this.data('objecttype'),
                     object_key = $this.data('objectkey'),
                     options = {
@@ -7506,7 +7506,7 @@ function pumChecked(val1, val2, print) {
         function encode(pair) {
             switch ($('[name="' + pair.name + '"]', $form).attr("type")) {
             case "checkbox":
-                return pair.value === "on" ? true : pair.value;
+                return pair.value === "1" ? true : pair.value;
             default:
                 return pair.value;
             }
@@ -7734,7 +7734,7 @@ function pumChecked(val1, val2, print) {
                 var options = [],
                     data = $.extend(true, {}, PUM_Admin.models.field(args));
 
-                if (!data.value && args.std !== undefined) {
+                if ((data.value === null || data.value === false) && args.std !== undefined) {
                     data.value = args.std;
                 }
 
@@ -7893,7 +7893,7 @@ function pumChecked(val1, val2, print) {
                 case 'multicheck':
                     if (data.options !== undefined) {
 
-                        if (!data.value) {
+                        if (data.value === false || data.value === null) {
                             data.value = [];
                         }
 
@@ -7904,8 +7904,6 @@ function pumChecked(val1, val2, print) {
                         if (data.as_array) {
                             data.name += '[]';
                         }
-
-                        debugger;
 
                         _.each(data.options, function (label, value) {
 
