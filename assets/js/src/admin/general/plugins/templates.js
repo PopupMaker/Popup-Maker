@@ -93,7 +93,7 @@
                 var options = [],
                     data = $.extend(true, {}, PUM_Admin.models.field(args));
 
-                if (!data.value && args.std !== undefined) {
+                if ((data.value === null || data.value === false) && args.std !== undefined) {
                     data.value = args.std;
                 }
 
@@ -252,7 +252,7 @@
                 case 'multicheck':
                     if (data.options !== undefined) {
 
-                        if (!data.value) {
+                        if (data.value === false || data.value === null) {
                             data.value = [];
                         }
 
@@ -263,8 +263,6 @@
                         if (data.as_array) {
                             data.name += '[]';
                         }
-
-                        debugger;
 
                         _.each(data.options, function (label, value) {
 
