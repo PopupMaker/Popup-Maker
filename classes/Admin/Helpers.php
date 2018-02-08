@@ -103,7 +103,7 @@ class PUM_Admin_Helpers {
 	 */
 	public static function remove_keys_starting_with( $array, $string = false ) {
 
-		foreach( $array as $key => $value ) {
+		foreach ( $array as $key => $value ) {
 			if ( strpos( $key, $string ) === 0 ) {
 				unset( $array[ $key ] );
 			}
@@ -251,30 +251,63 @@ class PUM_Admin_Helpers {
 	}
 
 	/**
-	 * @param        $fields
+	 * @param array  $fields
 	 * @param string $name
 	 *
 	 * @return mixed
 	 */
 	public static function parse_fields( $fields, $name = '%' ) {
-		foreach ( $fields as $field_id => $field ) {
-			if ( ! is_array( $field ) || ! self::is_field( $field ) ) {
-				continue;
-			}
+		if ( is_array( $fields ) && ! empty( $fields ) ) {
+			foreach ( $fields as $field_id => $field ) {
+				if ( ! is_array( $field ) || ! self::is_field( $field ) ) {
+					continue;
+				}
 
-			if ( empty( $field['id'] ) ) {
-				$field['id'] = $field_id;
-			}
+				// Remap old settings.
+				if ( is_numeric( $field_id ) && ! empty( $field['id'] ) ) {
+					try {
+						$fields = self::replace_key( $fields, $field_id, $field['id'] );
+					} catch ( Exception $e ) {
+					}
 
-			if ( empty( $field['name'] ) ) {
-				$field['name'] = sprintf( $name, $field_id );
-			}
+					$field_id = $field['id'];
+				} elseif ( empty( $field['id'] ) && ! is_numeric( $field_id ) ) {
+					$field['id'] = $field_id;
+				}
 
-			$fields[ $field_id ] = self::parse_field( $field );
+				if ( ! empty( $field['name'] ) && empty( $field['label'] ) ) {
+					$field['label'] = $field['name'];
+					unset( $field['name'] );
+				}
+
+				if ( empty( $field['name'] ) ) {
+					$field['name'] = sprintf( $name, $field_id );
+				}
+
+				$fields[ $field_id ] = self::parse_field( $field );
+			}
 		}
 
 		return $fields;
 	}
+
+	/**
+	 * @param $array
+	 * @param $old_key
+	 * @param $new_key
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	public static function replace_key( $array, $old_key, $new_key ) {
+		$keys = array_keys( $array );
+		if ( false === $index = array_search( $old_key, $keys, true ) ) {
+			throw new Exception( sprintf( 'Key "%s" does not exit', $old_key ) );
+		}
+		$keys[ $index ] = $new_key;
+		return array_combine( $keys, array_values( $array ) );
+	}
+
 
 	/**
 	 * Checks if an array is a field.
