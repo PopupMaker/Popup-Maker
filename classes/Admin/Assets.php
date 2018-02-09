@@ -50,10 +50,7 @@ class PUM_Admin_Assets {
 
 		if ( wp_script_is( 'pum-mci-admin' ) && class_exists( 'PUM_MCI' ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ) ) {
 			wp_dequeue_script( 'pum-mci-admin' );
-			//wp_enqueue_script( 'pum-mci-admin', PUM_MCI::$URL . '/assets/js/pum-mailchimp-integration-admin' . self::$suffix . '.js', array( 'jquery', 'popup-maker-admin' ), null, true );
 		}
-
-
 	}
 
 	/**
@@ -61,7 +58,29 @@ class PUM_Admin_Assets {
 	 */
 	public static function register_admin_scripts() {
 
+		$admin_vars = apply_filters( 'pum_admin_vars', apply_filters( 'pum_admin_var', array(
+			'post_id'          => ! empty( $_GET['post'] ) ? intval( $_GET['post'] ) : null,
+			'default_provider' => pum_get_option( 'newsletter_default_provider', 'none' ),
+			'homeurl'          => home_url(),
+			'I10n'             => array(
+				'preview_popup'                   => __( 'Preview', 'popup-maker' ),
+				'add'                             => __( 'Add', 'popup-maker' ),
+				'save'                            => __( 'Save', 'popup-maker' ),
+				'update'                          => __( 'Update', 'popup-maker' ),
+				'insert'                          => __( 'Insert', 'popup-maker' ),
+				'cancel'                          => __( 'Cancel', 'popup-maker' ),
+				'confirm_delete_trigger'          => __( "Are you sure you want to delete this trigger?", 'popup-maker' ),
+				'confirm_delete_cookie'           => __( "Are you sure you want to delete this cookie?", 'popup-maker' ),
+				'no_cookie'                       => __( 'None', 'popup-maker' ),
+				'confirm_count_reset'             => __( 'Are you sure you want to reset the open count?', 'popup-maker' ),
+				'shortcode_ui_button_tooltip'     => __( 'Popup Maker Shortcodes', 'popup-maker' ),
+				'error_loading_shortcode_preview' => __( 'There was an error in generating the preview', 'popup-maker' ),
+			),
+		) ) );
+
 		wp_register_script( 'pum-admin-general', self::$js_url . 'admin-general' . self::$suffix . '.js', array( 'jquery', 'wp-color-picker', 'jquery-ui-slider', 'wp-util' ), Popup_Maker::$VER, true );
+		wp_localize_script( 'pum-admin-general', 'pum_admin_vars', $admin_vars );
+
 		wp_register_script( 'pum-admin-batch', self::$js_url . 'admin-batch' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-marketing', self::$js_url . 'admin-marketing' . self::$suffix . '.js', null, Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-popup-editor', self::$js_url . 'admin-popup-editor' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
@@ -72,6 +91,7 @@ class PUM_Admin_Assets {
 
 		// @deprecated handle. Currently loads empty file and admin-general as dependency.
 		wp_register_script( 'popup-maker-admin', self::$js_url . 'admin-deprecated' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
+		wp_localize_script( 'pum-admin-general', 'pum_admin', $admin_vars );
 
 		wp_enqueue_script( 'pum-admin-marketing' );
 
@@ -102,30 +122,6 @@ class PUM_Admin_Assets {
 	 */
 	public static function maybe_localize_and_templates() {
 		if ( wp_script_is( 'pum-admin-general' ) || wp_script_is( 'popup-maker-admin' ) ) {
-			$admin_vars = apply_filters( 'pum_admin_vars', apply_filters( 'pum_admin_var', array(
-				'post_id'          => ! empty( $_GET['post'] ) ? intval( $_GET['post'] ) : null,
-				'default_provider' => pum_get_option( 'newsletter_default_provider', 'none' ),
-				'homeurl'          => home_url(),
-				'I10n'             => array(
-					'preview_popup'                   => __( 'Preview', 'popup-maker' ),
-					'add'                             => __( 'Add', 'popup-maker' ),
-					'save'                            => __( 'Save', 'popup-maker' ),
-					'update'                          => __( 'Update', 'popup-maker' ),
-					'insert'                          => __( 'Insert', 'popup-maker' ),
-					'cancel'                          => __( 'Cancel', 'popup-maker' ),
-					'confirm_delete_trigger'          => __( "Are you sure you want to delete this trigger?", 'popup-maker' ),
-					'confirm_delete_cookie'           => __( "Are you sure you want to delete this cookie?", 'popup-maker' ),
-					'no_cookie'                       => __( 'None', 'popup-maker' ),
-					'confirm_count_reset'             => __( 'Are you sure you want to reset the open count?', 'popup-maker' ),
-					'shortcode_ui_button_tooltip'     => __( 'Popup Maker Shortcodes', 'popup-maker' ),
-					'error_loading_shortcode_preview' => __( 'There was an error in generating the preview', 'popup-maker' ),
-				),
-			) ) );
-
-			wp_localize_script( 'pum-admin-general', 'pum_admin_vars', $admin_vars );
-			// @deprecated.
-			wp_localize_script( 'pum-admin-general', 'pum_admin', $admin_vars );
-
 			// Register Templates.
 			PUM_Admin_Templates::init();
 		}
