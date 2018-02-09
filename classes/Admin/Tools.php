@@ -468,7 +468,7 @@ class PUM_Admin_Tools {
 	 *
 	 * @since       1.3
 	 */
-	function betas_display() {
+	public static function betas_display() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
