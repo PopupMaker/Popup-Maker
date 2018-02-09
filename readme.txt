@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.8
-Stable tag: 1.6.6
+Stable tag: 1.6.7
 License: GNU Version 3 or Any Later Version
 
 Create any popup imaginable! Customize your popups from head-to-toe and give your site more utility, usability, and conversions.
@@ -21,7 +21,7 @@ Customize every facet of your popups, from theme and position, to targeting and 
 
 Easily create [EU cookie notices](https://ninjaforms.com/eu-cookie-notices-ninja-forms/), optin popups, slide-ins, modal forms & more.
 
-Learn tips and tricks, and create cool popups using guides found on our [Blog](https://wppopupmaker.com/blog/?utm_campaign=Reamde&utm_source=readme-description&utm_medium=text-link)!
+Learn tips and tricks, and create cool popups using guides found on our [Blog](https://wppopupmaker.com/blog/?utm_campaign=Readme&utm_source=readme-description&utm_medium=text-link)!
 
 https://www.youtube.com/watch?v=MAf85_oax4g
 
@@ -138,6 +138,8 @@ Lastly we now have include our extendable subscription forms right in the free v
 * Improvement: Popup Trigger shortcode can now use custom popup IDs.
 
 = v1.6.7 - ?? =
+* Fix: Typo in JS event name prevented forceFocus for popups.
+* Fix: JS errors when Marionette JS library on page without Ninja Forms.
 * Fix: WPML missing variable errors.
 
 = v1.6.6 - 07/29/2017 =

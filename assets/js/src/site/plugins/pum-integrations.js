@@ -8,7 +8,7 @@
         pumNFController = false;
 
     /** Ninja Forms Support */
-    if (typeof Marionette !== 'undefined' || typeof nfRadio !== 'undefined') {
+    if (typeof Marionette !== 'undefined' && typeof nfRadio !== 'undefined') {
         pumNFController = Marionette.Object.extend({
             initialize: function () {
                 this.listenTo(nfRadio.channel('forms'), 'submit:response', this.popupMaker)

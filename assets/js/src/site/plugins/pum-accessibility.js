@@ -84,7 +84,7 @@ var PUM_Accessibility;
             $top_level_elements.attr('aria-hidden', 'true');
 
             // Accessibility: Add focus check that prevents tabbing outside of modal.
-            $(document).on('focus.pum_accessibility', PUM_Accessibility.forceFocus);
+            $(document).one('focusin.pum_accessibility', PUM_Accessibility.forceFocus);
 
             // Accessibility: Focus on the modal.
             PUM_Accessibility.setFocusToFirstItem();
@@ -118,7 +118,7 @@ var PUM_Accessibility;
             currentModal = null;
 
             // Accessibility: Removes the force focus check.
-            $(document).off('focus.pum_accessibility');
+            $(document).off('focusin.pum_accessibility');
         })
 
         .on('pumSetupClose', '.pum', function () {
