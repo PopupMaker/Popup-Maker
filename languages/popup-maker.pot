@@ -94,59 +94,59 @@ msgstr ""
 msgid "You do not have permission to import data"
 msgstr ""
 
-#: classes/Admin/Assets.php:110
+#: classes/Admin/Assets.php:66
 msgid "Preview"
 msgstr ""
 
-#: classes/Admin/Assets.php:111, classes/Admin/Helpers.php:355, classes/Admin/Templates.php:517, classes/Admin/Templates.php:688
+#: classes/Admin/Assets.php:67, classes/Admin/Helpers.php:355, classes/Admin/Templates.php:517, classes/Admin/Templates.php:688
 msgid "Add"
 msgstr ""
 
-#: classes/Admin/Assets.php:112, classes/Admin/Settings.php:372, classes/Admin/Settings.php:397, classes/Admin/Tools.php:86, classes/Admin/Tools.php:504, includes/integrations/class-pum-gravity-forms.php:171
+#: classes/Admin/Assets.php:68, classes/Admin/Settings.php:372, classes/Admin/Settings.php:397, classes/Admin/Tools.php:86, classes/Admin/Tools.php:504, includes/integrations/class-pum-gravity-forms.php:171
 msgid "Save"
 msgstr ""
 
-#: classes/Admin/Assets.php:113
+#: classes/Admin/Assets.php:69
 msgid "Update"
 msgstr ""
 
-#: classes/Admin/Assets.php:114, classes/Admin/Shortcode/UI.php:88
+#: classes/Admin/Assets.php:70, classes/Admin/Shortcode/UI.php:88
 msgid "Insert"
 msgstr ""
 
-#: classes/Admin/Assets.php:115, classes/Admin/Helpers.php:353, classes/Admin/Shortcode/UI.php:89
+#: classes/Admin/Assets.php:71, classes/Admin/Helpers.php:353, classes/Admin/Shortcode/UI.php:89
 msgid "Cancel"
 msgstr ""
 
-#: classes/Admin/Assets.php:116
+#: classes/Admin/Assets.php:72
 msgid "Are you sure you want to delete this trigger?"
 msgstr ""
 
-#: classes/Admin/Assets.php:117
+#: classes/Admin/Assets.php:73
 msgid "Are you sure you want to delete this cookie?"
 msgstr ""
 
-#: classes/Admin/Assets.php:118, classes/Admin/Popups.php:475, classes/Admin/Settings.php:220, classes/Shortcode/Subscribe.php:107, classes/Shortcode/Subscribe.php:118, classes/Shortcode/Subscribe.php:274, includes/input-options.php:26, includes/input-options.php:115
+#: classes/Admin/Assets.php:74, classes/Admin/Popups.php:475, classes/Admin/Settings.php:220, classes/Shortcode/Subscribe.php:107, classes/Shortcode/Subscribe.php:118, classes/Shortcode/Subscribe.php:274, includes/input-options.php:26, includes/input-options.php:115
 msgid "None"
 msgstr ""
 
-#: classes/Admin/Assets.php:119
+#: classes/Admin/Assets.php:75
 msgid "Are you sure you want to reset the open count?"
 msgstr ""
 
-#: classes/Admin/Assets.php:120, classes/Admin/Shortcode/UI.php:90
+#: classes/Admin/Assets.php:76, classes/Admin/Shortcode/UI.php:90
 msgid "Popup Maker Shortcodes"
 msgstr ""
 
-#: classes/Admin/Assets.php:121, classes/Admin/Shortcode/UI.php:91
+#: classes/Admin/Assets.php:77, classes/Admin/Shortcode/UI.php:91
 msgid "There was an error in generating the preview"
 msgstr ""
 
-#: classes/Admin/Assets.php:135
+#: classes/Admin/Assets.php:131
 msgid "Your all set, the upgrades completed successfully!"
 msgstr ""
 
-#: classes/Admin/Assets.php:136
+#: classes/Admin/Assets.php:132
 msgid "We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser."
 msgstr ""
 
