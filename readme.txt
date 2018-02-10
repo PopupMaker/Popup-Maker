@@ -108,6 +108,10 @@ Noticeably there are a lot of interface changes with this version as we simplifi
 
 Lastly we now have include our extendable subscription forms right in the free version. We currently don't provide support for mail/service providers in the free version, but have opened up our form API in the hopes that 3rd party developers will help us fill that gap. Don't fret though, submissions are stored in a custom table for retroactive syncing to lists or export (not yet available).
 
+* Feature: Subscriber forms now included without a paid extension.
+  * Provider API for easily extending forms to work with 3rd party providers.
+  * New shortcode with tons of options built in.
+  * Stores subscribers into a new custom table for import into your favorite system at a later time.
 * Feature: Front end asset overhaul, now uses cached static assets.
   * All front end assets now combined and minified into  single js & css file.
   * Custom styles are now saved along with all core & extension styles eliminating inline style blocks.
@@ -117,25 +121,41 @@ Lastly we now have include our extendable subscription forms right in the free v
 * Feature: Support for nearly any form, including non ajax forms.
   * Helper functions to integrate your 3rd party form plugins quickly.
   * Show thank you popups, set cookies & close popups with a delay after success (requires code).
-  * Auto retrigger popup after refresh from a form submission inside that popup.
+  * Automatically reopen popup forms after refresh from a form submission.
+* Improvement: Lots of text, label & description changes to be more intuitive.
+* Improvement: Better 3rd party plugin support including page builders:
+  * Popup post type is now public.
+  * Better support for 3rd party shortcodes which require extra assets loaded (JS/CSS).
+* Improvement: Adding trigger now gives optional choices to create a cookie, rather than being automatic.
 * Improvement: New Popup Settings tabbed interface to help make settings more intuitive & easy to find on one screen.
   * Now all popup settings are stored in a single meta key reducing DB clutter.
+* Improvement: New Popup Maker Settings tabbed interface to help make settings more intuitive & easy to find on one screen.
 * Improvement: New Popup preview mode.
 * Improvement: Better page builder support by changing popup post type arg for public to true.
-* Improvement: Resource reduction & optmization.
-  * Added class autoloading.
-  * Greatly simplified code base & internal apis.
-  * Converted many internal apis to use passive loading.
+* Improvement: Resource reduction & optimization.
+  * Added class autoloader for core and extensions.
+  * Greatly simplified code base & internal API structures.
+  * Converted many internal APIs to use passive loading.
   * Added internal caching.
-* Improvement: Migrated all admin forms to use the [WPJSF](https://github.com/danieliser/WP-JS-Form-Sample-Plugin) lib for easier maintanance and quicker updates.
-* Improvement: Multiple improvments to smart select fields (jQuery select2) including:
+* Improvement: Integrated [WPJSF](https://github.com/danieliser/WP-JS-Form-Sample-Plugin) lib for easier maintenance and quicker updates of our admin forms.
+* Improvement: Various improvements to smart select fields (jQuery select2) including:
   * Allow multiple page/post selections without reopening/searching again.
   * Properly highlights & shows selected items after save/reload.
   * Paginated/scroll based loading of more results over ajax.
-  * Now shows list of recent "items" immeditaly upon clicking the field rather than requiring search.
+  * Now shows list of recent "items" immediately upon clicking the field rather than requiring search.
 * Improvement: Admin asset handling
-  * Modularized admin assets for easier debugging & maintanance.
+  * Modularized admin assets for easier debugging & maintenance.
 * Improvement: Popup Trigger shortcode can now use custom popup IDs.
+* Improvement: Added new batch processing system for upgrades and other processes.
+* Improvement: Removed a lot of old code.
+* Improvement: Rebuilt Shortcode UI that should be more reliable.
+* Improvement: Addressed most all PHP 7 notices.
+* Improvement: iOS scrolling issue fixes.
+* Improvement: Added support for KingComposer.
+* Tweak: Support for subdirectory sites having their own sitewide cookies.
+* Fix: Incorrect BuddyPress condition labels
+* Fix: Bug when WPML isn't yet available.
+
 
 = v1.6.7 - ?? =
 * Fix: Typo in JS event name prevented forceFocus for popups.
