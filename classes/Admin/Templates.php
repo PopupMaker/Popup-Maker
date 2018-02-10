@@ -542,7 +542,7 @@ class PUM_Admin_Templates {
 
 				<p><?php _e( 'By default, this popup can display on every page of your site. Accept the plugin default, or target the popup display using Standard or Advanced Targeting Conditions.', 'popup-maker' ); ?></p>
 
-				<p><?php printf( __( 'Use the %s button to check for the inverse of your chosen condition.', 'popup-maker' ), '<i style="font-size: 1.25em;" class="dashicons dashicons-warning"></i>' ); ?></p>
+				<p><?php printf( __( 'Click the %s button to set the opposite of your chosen condition. When the button background turns red, a negative condition is active.', 'popup-maker' ), '<i style="font-size: 1.25em;" class="dashicons dashicons-warning"></i>' ); ?></p>
 
 				<section class="pum-alert-box" style="display:none"></section>
 				<div class="facet-groups condition-groups">
