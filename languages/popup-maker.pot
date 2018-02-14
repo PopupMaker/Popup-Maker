@@ -22,13 +22,13 @@ msgid_plural "%s items were successfully processed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: classes/Abstract/Upgrade/Popups.php:135
+#: classes/Abstract/Upgrade/Popups.php:138
 msgid "Updating %d popup for v%s compatibility."
 msgid_plural "Updating %d popups for v%s compatibility."
 msgstr[0] ""
 msgstr[1] ""
 
-#: classes/Abstract/Upgrade/Popups.php:141
+#: classes/Abstract/Upgrade/Popups.php:144
 msgid "%s popup was updated successfully."
 msgid_plural "%s popups were updated successfully."
 msgstr[0] ""
@@ -158,7 +158,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: classes/Admin/Pages.php:51, classes/Admin/Pages.php:144, classes/Admin/Templates.php:414, classes/Admin/Templates.php:637, classes/Site/Assets.php:200, includes/admin/admin-setup.php:24
+#: classes/Admin/Pages.php:51, classes/Admin/Pages.php:144, classes/Admin/Templates.php:414, classes/Admin/Templates.php:637, classes/Site/Assets.php:212, includes/admin/admin-setup.php:24
 msgid "Settings"
 msgstr ""
 
@@ -250,7 +250,7 @@ msgstr ""
 msgid "Display"
 msgstr ""
 
-#: classes/Admin/Popups.php:283, classes/Admin/Popups.php:299, classes/Site/Assets.php:201
+#: classes/Admin/Popups.php:283, classes/Admin/Popups.php:299, classes/Site/Assets.php:213
 msgid "Triggers"
 msgstr ""
 
@@ -262,7 +262,7 @@ msgstr ""
 msgid "General Settings"
 msgstr ""
 
-#: classes/Admin/Popups.php:302, classes/Site/Assets.php:204
+#: classes/Admin/Popups.php:302, classes/Site/Assets.php:216
 msgid "Conditions"
 msgstr ""
 
@@ -1705,83 +1705,83 @@ msgstr ""
 msgid "Subscription Form Placeholder"
 msgstr ""
 
-#: classes/Site/Assets.php:189, classes/Types.php:22, includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/integrations/class-pum-gravity-forms.php:53, includes/modules/admin-bar.php:414
+#: classes/Site/Assets.php:201, classes/Types.php:22, includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/integrations/class-pum-gravity-forms.php:53, includes/modules/admin-bar.php:414
 msgid "Popup Maker"
 msgstr ""
 
-#: classes/Site/Assets.php:189
+#: classes/Site/Assets.php:201
 msgid "Debug Mode Enabled"
 msgstr ""
 
-#: classes/Site/Assets.php:190
+#: classes/Site/Assets.php:202
 msgid "Debug started at:"
 msgstr ""
 
-#: classes/Site/Assets.php:191
+#: classes/Site/Assets.php:203
 msgid "For more information on how to use this information visit %s"
 msgstr ""
 
-#: classes/Site/Assets.php:192
+#: classes/Site/Assets.php:204
 msgid "Global Information"
 msgstr ""
 
-#: classes/Site/Assets.php:193
+#: classes/Site/Assets.php:205
 msgid "Localized variables"
 msgstr ""
 
-#: classes/Site/Assets.php:194
+#: classes/Site/Assets.php:206
 msgid "Popups Initializing"
 msgstr ""
 
-#: classes/Site/Assets.php:195
+#: classes/Site/Assets.php:207
 msgid "Popups Initialized"
 msgstr ""
 
-#: classes/Site/Assets.php:196
+#: classes/Site/Assets.php:208
 msgid "Popup: #"
 msgstr ""
 
-#: classes/Site/Assets.php:197
+#: classes/Site/Assets.php:209
 msgid "Theme ID: "
 msgstr ""
 
-#: classes/Site/Assets.php:198
+#: classes/Site/Assets.php:210
 msgid "Method Call:"
 msgstr ""
 
-#: classes/Site/Assets.php:199
+#: classes/Site/Assets.php:211
 msgid "Method Arguments:"
 msgstr ""
 
-#: classes/Site/Assets.php:202
+#: classes/Site/Assets.php:214
 msgid "Cookies"
 msgstr ""
 
-#: classes/Site/Assets.php:203
+#: classes/Site/Assets.php:215
 msgid "Delay:"
 msgstr ""
 
-#: classes/Site/Assets.php:205
+#: classes/Site/Assets.php:217
 msgid "Cookie:"
 msgstr ""
 
-#: classes/Site/Assets.php:206
+#: classes/Site/Assets.php:218
 msgid "Settings:"
 msgstr ""
 
-#: classes/Site/Assets.php:207
+#: classes/Site/Assets.php:219
 msgid "Selector:"
 msgstr ""
 
-#: classes/Site/Assets.php:208
+#: classes/Site/Assets.php:220
 msgid "Mobile Disabled:"
 msgstr ""
 
-#: classes/Site/Assets.php:209
+#: classes/Site/Assets.php:221
 msgid "Tablet Disabled:"
 msgstr ""
 
-#: classes/Site/Assets.php:210
+#: classes/Site/Assets.php:222
 msgid "Event: %s"
 msgstr ""
 
@@ -2443,31 +2443,31 @@ msgstr ""
 msgid "Ninja Form Success"
 msgstr ""
 
-#: includes/integrations/class-pum-woocommerce-integration.php:33
+#: includes/integrations/class-pum-woocommerce-integration.php:32
 msgid "All WooCommerce"
 msgstr ""
 
-#: includes/integrations/class-pum-woocommerce-integration.php:40
+#: includes/integrations/class-pum-woocommerce-integration.php:37
 msgid "Shop Page"
 msgstr ""
 
-#: includes/integrations/class-pum-woocommerce-integration.php:47
+#: includes/integrations/class-pum-woocommerce-integration.php:42
 msgid "Cart Page"
 msgstr ""
 
-#: includes/integrations/class-pum-woocommerce-integration.php:54
+#: includes/integrations/class-pum-woocommerce-integration.php:47
 msgid "Checkout Page"
 msgstr ""
 
-#: includes/integrations/class-pum-woocommerce-integration.php:61
+#: includes/integrations/class-pum-woocommerce-integration.php:52
 msgid "Account Page"
 msgstr ""
 
-#: includes/integrations/class-pum-woocommerce-integration.php:69
+#: includes/integrations/class-pum-woocommerce-integration.php:58
 msgid "Is Endpoint"
 msgstr ""
 
-#: includes/integrations/class-pum-woocommerce-integration.php:73
+#: includes/integrations/class-pum-woocommerce-integration.php:61
 msgid "Selected Endpoints"
 msgstr ""
 

@@ -434,7 +434,17 @@ class PUM_Conditions {
 		$conditions = apply_filters( 'pum_registered_conditions', $conditions );
 
 		// @deprecated filter.
-		$conditions = apply_filters( 'pum_get_conditions', $conditions );
+		$old_conditions = apply_filters( 'pum_get_conditions', array() );
+
+		foreach ( $old_conditions as $id => $condition ) {
+			if ( ! empty( $condition['labels'] ) && ! empty( $condition['labels']['name'] ) ) {
+				$condition['name'] = $condition['labels']['name'];
+				unset( $condition['labels'] );
+			}
+			if ( ! isset( $conditions[ $id ] ) ) {
+				$conditions[ $id ] = $condition;
+			}
+		}
 
 		$this->add_conditions( $conditions );
 	}

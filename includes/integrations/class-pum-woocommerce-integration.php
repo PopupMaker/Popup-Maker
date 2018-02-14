@@ -9,7 +9,7 @@ class PUM_Woocommerce_Integration {
 
 	public static function init() {
 		if ( function_exists( 'WC' ) || class_exists( 'WooCommerce' ) ) {
-			add_filter( 'pum_get_conditions', array( __CLASS__, 'get_conditions' ) );
+			add_filter( 'pum_registered_conditions', array( __CLASS__, 'register_conditions' ) );
 			add_filter( 'pum_condition_sort_order', array( __CLASS__, 'condition_sort_order' ) );
 		}
 	}
@@ -24,55 +24,43 @@ class PUM_Woocommerce_Integration {
 		return in_array( true, $results );
 	}
 
-	public static function get_conditions( $conditions = array() ) {
+	public static function register_conditions( $conditions = array() ) {
 
 		// Add Additional Conditions
 		$conditions['is_woocommerce']  = array(
 			'group'    => __( 'WooCommerce', 'woocommerce' ),
-			'labels'   => array(
-				'name' => __( 'All WooCommerce', 'popup-maker' ),
-			),
+			'name'     => __( 'All WooCommerce', 'popup-maker' ),
 			'callback' => 'is_woocommerce',
 		);
 		$conditions['is_shop']         = array(
 			'group'    => __( 'WooCommerce', 'woocommerce' ),
-			'labels'   => array(
-				'name' => __( 'Shop Page', 'popup-maker' ),
-			),
+			'name'     => __( 'Shop Page', 'popup-maker' ),
 			'callback' => 'is_shop',
 		);
 		$conditions['is_cart']         = array(
 			'group'    => __( 'WooCommerce', 'woocommerce' ),
-			'labels'   => array(
-				'name' => __( 'Cart Page', 'popup-maker' ),
-			),
+			'name'     => __( 'Cart Page', 'popup-maker' ),
 			'callback' => 'is_cart',
 		);
 		$conditions['is_checkout']     = array(
 			'group'    => __( 'WooCommerce', 'woocommerce' ),
-			'labels'   => array(
-				'name' => __( 'Checkout Page', 'popup-maker' ),
-			),
+			'name'     => __( 'Checkout Page', 'popup-maker' ),
 			'callback' => 'is_checkout',
 		);
 		$conditions['is_account_page'] = array(
 			'group'    => __( 'WooCommerce', 'woocommerce' ),
-			'labels'   => array(
-				'name' => __( 'Account Page', 'popup-maker' ),
-			),
+			'name'     => __( 'Account Page', 'popup-maker' ),
 			'callback' => 'is_account_page',
 		);
 
 		$conditions['is_wc_endpoint_url'] = array(
 			'group'    => __( 'WooCommerce', 'woocommerce' ),
-			'labels'   => array(
-				'name' => __( 'Is Endpoint', 'popup-maker' ),
-			),
+			'name'     => __( 'Is Endpoint', 'popup-maker' ),
 			'fields'   => array(
 				'selected' => array(
 					'placeholder' => __( 'Selected Endpoints', 'popup-maker' ),
 					'type'        => 'select',
-					'select2' => true,
+					'select2'     => true,
 					'multiple'    => true,
 					'as_array'    => true,
 					'options'     => array(
