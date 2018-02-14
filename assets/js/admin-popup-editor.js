@@ -568,6 +568,7 @@ var cookies;
                 $editor = $this.parents('.pum-popup-cookie-editor'),
                 event = $this.val(),
                 values = {
+                    indes: $editor.find('table.list-table tbody tr').length,
                     name: 'pum-' + $('#post_ID').val()
                 };
 
@@ -654,6 +655,7 @@ var cookies;
             var $editor = current_editor,
                 event = $('#popup_cookie_add_event').val(),
                 values = {
+                    index: $editor.find('table.list-table tbody tr').length,
                     name: 'pum-' + $('#post_ID').val(),
                     path: '1'
                 };
@@ -688,6 +690,10 @@ var cookies;
                         trigger_settings.cookie_name = trigger_settings.cookie_name.replace('add_new', values.cookie_settings.name);
                     } else {
                         trigger_settings.cookie_name[trigger_settings.cookie_name.indexOf('add_new')] = values.cookie_settings.name;
+                        trigger_settings.cookie_name = trigger_settings.cookie_name.filter(function(element, index, array) {
+                            return element in this ? false : this[element] = true;
+                        }, {});
+                        debugger;
                     }
 
                     $trigger.val(JSON.stringify(trigger_settings));
