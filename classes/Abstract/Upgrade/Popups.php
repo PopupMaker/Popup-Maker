@@ -80,6 +80,9 @@ abstract class PUM_Abstract_Upgrade_Popups extends PUM_Abstract_Upgrade implemen
 	}
 
 
+	/**
+	 * @return array
+	 */
 	public function custom_query_args() {
 		return array();
 	}

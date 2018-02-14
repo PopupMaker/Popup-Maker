@@ -116,4 +116,17 @@ class PUM_Logging {
 	public function clear_log() {
 		@unlink( $this->file );
 	}
+
+	/**
+	 * @param      $function
+	 * @param      $version
+	 * @param null $replacement
+	 */
+	public function log_deprecated_notice( $function, $version, $replacement = null ) {
+		ob_start();
+		_deprecated_function( $function, $version, $replacement );
+		$notice = ob_get_clean();
+
+		$this->log( $notice );
+	}
 }
