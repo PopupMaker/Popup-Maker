@@ -72,9 +72,21 @@ class PUM_Site_Assets {
 		add_action( 'pum_preload_popup', array( __CLASS__, 'enqueue_popup_assets' ) );
 		add_filter( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_page_assets' ) );
 
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'fix_broken_extension_scripts' ), 100 );
+
 		// Allow forcing assets to load.
 		add_action( 'wp_head', array( __CLASS__, 'check_force_script_loading' ) );
 	}
+
+	public static function fix_broken_extension_scripts() {
+		if ( wp_script_is( 'pum_aweber_integration_js' ) && class_exists( 'PUM_Aweber_Integration' ) && defined( 'PUM_AWEBER_INTEGRATION_VER' ) && version_compare( PUM_AWEBER_INTEGRATION_VER, '1.1.0', '<' ) ) {
+			wp_dequeue_script( 'pum_aweber_integration_js' );
+			wp_dequeue_style( 'pum_aweber_integration_css' );
+			wp_dequeue_script( 'pum_newsletter_script' );
+			wp_dequeue_style( 'pum-newsletter-styles' );
+		}
+	}
+
 
 	/**
 	 * Checks the current page content for the newsletter shortcode.
@@ -221,6 +233,11 @@ class PUM_Site_Assets {
 		}
 	}
 
+	/**
+	 * Gets public settings for each popup for a global JS variable.
+	 *
+	 * @return array
+	 */
 	public static function get_popup_settings() {
 		$loaded = PUM_Site_Popups::get_loaded_popups();
 
