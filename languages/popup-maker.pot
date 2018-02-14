@@ -126,7 +126,7 @@ msgstr ""
 msgid "Are you sure you want to delete this cookie?"
 msgstr ""
 
-#: classes/Admin/Assets.php:74, classes/Admin/Popups.php:475, classes/Admin/Settings.php:220, classes/Shortcode/Subscribe.php:107, classes/Shortcode/Subscribe.php:118, classes/Shortcode/Subscribe.php:274, includes/input-options.php:26, includes/input-options.php:115
+#: classes/Admin/Assets.php:74, classes/Admin/Popups.php:482, classes/Admin/Settings.php:220, classes/Shortcode/Subscribe.php:107, classes/Shortcode/Subscribe.php:118, classes/Shortcode/Subscribe.php:274, includes/input-options.php:26, includes/input-options.php:115
 msgid "None"
 msgstr ""
 
@@ -150,11 +150,11 @@ msgstr ""
 msgid "We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser."
 msgstr ""
 
-#: classes/Admin/Helpers.php:199, classes/Admin/Popups.php:491, classes/Admin/Popups.php:659, classes/Admin/Popups.php:741, classes/Shortcode/Popup.php:205, includes/class-popmake-fields.php:175, includes/integrations/class-pum-cf7.php:168, includes/integrations/class-pum-gravity-forms.php:163
+#: classes/Admin/Helpers.php:199, classes/Admin/Popups.php:498, classes/Admin/Popups.php:666, classes/Admin/Popups.php:748, classes/Shortcode/Popup.php:205, includes/class-popmake-fields.php:175, includes/integrations/class-pum-cf7.php:168, includes/integrations/class-pum-gravity-forms.php:163
 msgid "ms"
 msgstr ""
 
-#: classes/Admin/Helpers.php:370, classes/Admin/Popups.php:282, classes/Admin/Popups.php:646, classes/Admin/Templates.php:334, classes/Shortcode/Popup.php:50, templates/popup.php:44
+#: classes/Admin/Helpers.php:370, classes/Admin/Popups.php:289, classes/Admin/Popups.php:653, classes/Admin/Templates.php:334, classes/Shortcode/Popup.php:50, templates/popup.php:44
 msgid "Close"
 msgstr ""
 
@@ -190,11 +190,11 @@ msgstr ""
 msgid "All Themes"
 msgstr ""
 
-#: classes/Admin/Pages.php:139, classes/Admin/Popups.php:1007, classes/Conditions.php:110
+#: classes/Admin/Pages.php:139, classes/Admin/Popups.php:1014, classes/Conditions.php:110
 msgid "Categories"
 msgstr ""
 
-#: classes/Admin/Pages.php:140, classes/Admin/Popups.php:1003, classes/Conditions.php:111
+#: classes/Admin/Pages.php:140, classes/Admin/Popups.php:1010, classes/Conditions.php:111
 msgid "Tags"
 msgstr ""
 
@@ -202,7 +202,7 @@ msgstr ""
 msgid "Popup"
 msgstr ""
 
-#: classes/Admin/Popups.php:63, classes/Admin/Popups.php:373, classes/Shortcode/Popup.php:86, classes/Types.php:45, classes/Types.php:158
+#: classes/Admin/Popups.php:63, classes/Admin/Popups.php:380, classes/Shortcode/Popup.php:86, classes/Types.php:45, classes/Types.php:158
 msgid "Popup Theme"
 msgstr ""
 
@@ -226,444 +226,444 @@ msgstr ""
 msgid "Display a title inside the popup container. May be left empty."
 msgstr ""
 
-#: classes/Admin/Popups.php:107
+#: classes/Admin/Popups.php:113
 msgid "Required"
 msgstr ""
 
-#: classes/Admin/Popups.php:107
+#: classes/Admin/Popups.php:113
 msgid "Register a popup name. The CSS class ‘popmake-{popup-name}’ can be used to set a trigger to display a popup."
 msgstr ""
 
-#: classes/Admin/Popups.php:115, includes/integrations/class-pum-cf7.php:117, includes/integrations/class-pum-cf7.php:131, includes/integrations/class-pum-gravity-forms.php:121
+#: classes/Admin/Popups.php:122, includes/integrations/class-pum-cf7.php:117, includes/integrations/class-pum-cf7.php:131, includes/integrations/class-pum-gravity-forms.php:121
 msgid "Popup Settings"
 msgstr ""
 
-#: classes/Admin/Popups.php:116
+#: classes/Admin/Popups.php:123
 msgid "Analytics"
 msgstr ""
 
-#: classes/Admin/Popups.php:280, classes/Admin/Settings.php:432, classes/Admin/Settings.php:455, classes/Admin/Settings.php:458, classes/Conditions.php:107, classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:157, classes/Shortcode.php:151, classes/Shortcode.php:163, classes/Shortcode.php:176, classes/Shortcode/Popup.php:46, classes/Shortcode/Subscribe.php:60, classes/Shortcode/Subscribe.php:79, classes/Triggers.php:261, includes/class-popmake-fields.php:57
+#: classes/Admin/Popups.php:287, classes/Admin/Settings.php:432, classes/Admin/Settings.php:455, classes/Admin/Settings.php:458, classes/Conditions.php:107, classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:157, classes/Shortcode.php:151, classes/Shortcode.php:163, classes/Shortcode.php:176, classes/Shortcode/Popup.php:46, classes/Shortcode/Subscribe.php:60, classes/Shortcode/Subscribe.php:79, classes/Triggers.php:261, includes/class-popmake-fields.php:57
 msgid "General"
 msgstr ""
 
-#: classes/Admin/Popups.php:281, classes/Shortcode/Popup.php:47
+#: classes/Admin/Popups.php:288, classes/Shortcode/Popup.php:47
 msgid "Display"
 msgstr ""
 
-#: classes/Admin/Popups.php:283, classes/Admin/Popups.php:299, classes/Site/Assets.php:213
+#: classes/Admin/Popups.php:290, classes/Admin/Popups.php:306, classes/Site/Assets.php:213
 msgid "Triggers"
 msgstr ""
 
-#: classes/Admin/Popups.php:284
+#: classes/Admin/Popups.php:291
 msgid "Targeting"
 msgstr ""
 
-#: classes/Admin/Popups.php:296
+#: classes/Admin/Popups.php:303
 msgid "General Settings"
 msgstr ""
 
-#: classes/Admin/Popups.php:302, classes/Site/Assets.php:216
+#: classes/Admin/Popups.php:309, classes/Site/Assets.php:216
 msgid "Conditions"
 msgstr ""
 
-#: classes/Admin/Popups.php:305, classes/Shortcode/Subscribe.php:82
+#: classes/Admin/Popups.php:312, classes/Shortcode/Subscribe.php:82
 msgid "Appearance"
 msgstr ""
 
-#: classes/Admin/Popups.php:306, classes/Admin/Popups.php:382, classes/Shortcode/Popup.php:103, includes/admin/themes/metabox-close-fields.php:156, includes/admin/themes/metabox-title-fields.php:31, includes/class-popmake-popup-theme-fields.php:395
+#: classes/Admin/Popups.php:313, classes/Admin/Popups.php:389, classes/Shortcode/Popup.php:103, includes/admin/themes/metabox-close-fields.php:156, includes/admin/themes/metabox-title-fields.php:31, includes/class-popmake-popup-theme-fields.php:395
 msgid "Size"
 msgstr ""
 
-#: classes/Admin/Popups.php:307, classes/Shortcode/Popup.php:49
+#: classes/Admin/Popups.php:314, classes/Shortcode/Popup.php:49
 msgid "Animation"
 msgstr ""
 
-#: classes/Admin/Popups.php:308, classes/Shortcode/Popup.php:48, includes/admin/themes/metabox-close-fields.php:99
+#: classes/Admin/Popups.php:315, classes/Shortcode/Popup.php:48, includes/admin/themes/metabox-close-fields.php:99
 msgid "Position"
 msgstr ""
 
-#: classes/Admin/Popups.php:309, classes/Cookies.php:158, classes/Triggers.php:263
+#: classes/Admin/Popups.php:316, classes/Cookies.php:158, classes/Triggers.php:263
 msgid "Advanced"
 msgstr ""
 
-#: classes/Admin/Popups.php:312
+#: classes/Admin/Popups.php:319
 msgid "Button"
 msgstr ""
 
-#: classes/Admin/Popups.php:313
+#: classes/Admin/Popups.php:320
 msgid "Alternate Methods"
 msgstr ""
 
-#: classes/Admin/Popups.php:341
+#: classes/Admin/Popups.php:348
 msgid "Disable this popup on mobile devices."
 msgstr ""
 
-#: classes/Admin/Popups.php:346
+#: classes/Admin/Popups.php:353
 msgid "Disable this popup on tablet devices."
 msgstr ""
 
-#: classes/Admin/Popups.php:374
+#: classes/Admin/Popups.php:381
 msgid "Choose a theme for this popup."
 msgstr ""
 
-#: classes/Admin/Popups.php:374
+#: classes/Admin/Popups.php:381
 msgid "Customize This Theme"
 msgstr ""
 
-#: classes/Admin/Popups.php:383, classes/Shortcode/Popup.php:104
+#: classes/Admin/Popups.php:390, classes/Shortcode/Popup.php:104
 msgid "Select the size of the popup."
 msgstr ""
 
-#: classes/Admin/Popups.php:388
+#: classes/Admin/Popups.php:395
 msgid "Responsive Sizes"
 msgstr ""
 
-#: classes/Admin/Popups.php:389, includes/input-options.php:96
+#: classes/Admin/Popups.php:396, includes/input-options.php:96
 msgid "Nano - 10%"
 msgstr ""
 
-#: classes/Admin/Popups.php:390, includes/input-options.php:97
+#: classes/Admin/Popups.php:397, includes/input-options.php:97
 msgid "Micro - 20%"
 msgstr ""
 
-#: classes/Admin/Popups.php:391, includes/input-options.php:98
+#: classes/Admin/Popups.php:398, includes/input-options.php:98
 msgid "Tiny - 30%"
 msgstr ""
 
-#: classes/Admin/Popups.php:392, includes/input-options.php:99
+#: classes/Admin/Popups.php:399, includes/input-options.php:99
 msgid "Small - 40%"
 msgstr ""
 
-#: classes/Admin/Popups.php:393, includes/input-options.php:100
+#: classes/Admin/Popups.php:400, includes/input-options.php:100
 msgid "Medium - 60%"
 msgstr ""
 
-#: classes/Admin/Popups.php:394, includes/input-options.php:101
+#: classes/Admin/Popups.php:401, includes/input-options.php:101
 msgid "Normal - 70%"
 msgstr ""
 
-#: classes/Admin/Popups.php:395, includes/input-options.php:102
+#: classes/Admin/Popups.php:402, includes/input-options.php:102
 msgid "Large - 80%"
 msgstr ""
 
-#: classes/Admin/Popups.php:396, includes/input-options.php:103
+#: classes/Admin/Popups.php:403, includes/input-options.php:103
 msgid "X Large - 95%"
 msgstr ""
 
-#: classes/Admin/Popups.php:398
+#: classes/Admin/Popups.php:405
 msgid "Other Sizes"
 msgstr ""
 
-#: classes/Admin/Popups.php:399, includes/input-options.php:105
+#: classes/Admin/Popups.php:406, includes/input-options.php:105
 msgid "Auto"
 msgstr ""
 
-#: classes/Admin/Popups.php:400, classes/Shortcode/PopupTrigger.php:79, includes/input-options.php:106
+#: classes/Admin/Popups.php:407, classes/Shortcode/PopupTrigger.php:79, includes/input-options.php:106
 msgid "Custom"
 msgstr ""
 
-#: classes/Admin/Popups.php:405
+#: classes/Admin/Popups.php:412
 msgid "Min Width"
 msgstr ""
 
-#: classes/Admin/Popups.php:406
+#: classes/Admin/Popups.php:413
 msgid "Set a minimum width for the popup."
 msgstr ""
 
-#: classes/Admin/Popups.php:415
+#: classes/Admin/Popups.php:422
 msgid "Max Width"
 msgstr ""
 
-#: classes/Admin/Popups.php:416
+#: classes/Admin/Popups.php:423
 msgid "Set a maximum width for the popup."
 msgstr ""
 
-#: classes/Admin/Popups.php:425, classes/Shortcode/Popup.php:111, includes/admin/themes/metabox-close-fields.php:71, includes/class-popmake-popup-theme-fields.php:321
+#: classes/Admin/Popups.php:432, classes/Shortcode/Popup.php:111, includes/admin/themes/metabox-close-fields.php:71, includes/class-popmake-popup-theme-fields.php:321
 msgid "Width"
 msgstr ""
 
-#: classes/Admin/Popups.php:426
+#: classes/Admin/Popups.php:433
 msgid "Set a custom width for the popup."
 msgstr ""
 
-#: classes/Admin/Popups.php:435
+#: classes/Admin/Popups.php:442
 msgid "Auto Adjusted Height"
 msgstr ""
 
-#: classes/Admin/Popups.php:436
+#: classes/Admin/Popups.php:443
 msgid "Checking this option will set height to fit the content."
 msgstr ""
 
-#: classes/Admin/Popups.php:445, classes/Shortcode/Popup.php:122, includes/admin/themes/metabox-close-fields.php:62, includes/class-popmake-popup-theme-fields.php:311
+#: classes/Admin/Popups.php:452, classes/Shortcode/Popup.php:122, includes/admin/themes/metabox-close-fields.php:62, includes/class-popmake-popup-theme-fields.php:311
 msgid "Height"
 msgstr ""
 
-#: classes/Admin/Popups.php:446
+#: classes/Admin/Popups.php:453
 msgid "Set a custom height for the popup."
 msgstr ""
 
-#: classes/Admin/Popups.php:456
+#: classes/Admin/Popups.php:463
 msgid "Scrollable Content"
 msgstr ""
 
-#: classes/Admin/Popups.php:457
+#: classes/Admin/Popups.php:464
 msgid "Checking this option will add a scroll bar to your content."
 msgstr ""
 
-#: classes/Admin/Popups.php:469, classes/Shortcode/Popup.php:189
+#: classes/Admin/Popups.php:476, classes/Shortcode/Popup.php:189
 msgid "Animation Type"
 msgstr ""
 
-#: classes/Admin/Popups.php:470, classes/Shortcode/Popup.php:190
+#: classes/Admin/Popups.php:477, classes/Shortcode/Popup.php:190
 msgid "Select an animation type for your popup."
 msgstr ""
 
-#: classes/Admin/Popups.php:476, includes/input-options.php:116
+#: classes/Admin/Popups.php:483, includes/input-options.php:116
 msgid "Slide"
 msgstr ""
 
-#: classes/Admin/Popups.php:477, includes/input-options.php:117
+#: classes/Admin/Popups.php:484, includes/input-options.php:117
 msgid "Fade"
 msgstr ""
 
-#: classes/Admin/Popups.php:478, includes/input-options.php:118
+#: classes/Admin/Popups.php:485, includes/input-options.php:118
 msgid "Fade and Slide"
 msgstr ""
 
-#: classes/Admin/Popups.php:479, includes/input-options.php:119
+#: classes/Admin/Popups.php:486, includes/input-options.php:119
 msgid "Grow"
 msgstr ""
 
-#: classes/Admin/Popups.php:480, includes/input-options.php:120
+#: classes/Admin/Popups.php:487, includes/input-options.php:120
 msgid "Grow and Slide"
 msgstr ""
 
-#: classes/Admin/Popups.php:484, classes/Shortcode/Popup.php:197
+#: classes/Admin/Popups.php:491, classes/Shortcode/Popup.php:197
 msgid "Animation Speed"
 msgstr ""
 
-#: classes/Admin/Popups.php:485, classes/Shortcode/Popup.php:198
+#: classes/Admin/Popups.php:492, classes/Shortcode/Popup.php:198
 msgid "Set the animation speed for the popup."
 msgstr ""
 
-#: classes/Admin/Popups.php:498, classes/Shortcode/Popup.php:208
+#: classes/Admin/Popups.php:505, classes/Shortcode/Popup.php:208
 msgid "Animation Origin"
 msgstr ""
 
-#: classes/Admin/Popups.php:499, classes/Shortcode/Popup.php:209
+#: classes/Admin/Popups.php:506, classes/Shortcode/Popup.php:209
 msgid "Choose where the animation will begin."
 msgstr ""
 
-#: classes/Admin/Popups.php:503, classes/Admin/Popups.php:543, classes/Admin/Popups.php:544, classes/Shortcode/Popup.php:143, classes/Shortcode/Popup.php:144, includes/admin/themes/metabox-close-fields.php:103, includes/class-popmake-popup-theme-fields.php:339, includes/input-options.php:129
+#: classes/Admin/Popups.php:510, classes/Admin/Popups.php:550, classes/Admin/Popups.php:551, classes/Shortcode/Popup.php:143, classes/Shortcode/Popup.php:144, includes/admin/themes/metabox-close-fields.php:103, includes/class-popmake-popup-theme-fields.php:339, includes/input-options.php:129
 msgid "Top"
 msgstr ""
 
-#: classes/Admin/Popups.php:504, classes/Admin/Popups.php:571, classes/Admin/Popups.php:572, classes/Shortcode/Popup.php:165, classes/Shortcode/Popup.php:166, classes/Shortcode/Subscribe.php:262, includes/admin/themes/metabox-close-fields.php:112, includes/class-popmake-popup-theme-fields.php:349, includes/input-options.php:85, includes/input-options.php:130
+#: classes/Admin/Popups.php:511, classes/Admin/Popups.php:578, classes/Admin/Popups.php:579, classes/Shortcode/Popup.php:165, classes/Shortcode/Popup.php:166, classes/Shortcode/Subscribe.php:262, includes/admin/themes/metabox-close-fields.php:112, includes/class-popmake-popup-theme-fields.php:349, includes/input-options.php:85, includes/input-options.php:130
 msgid "Left"
 msgstr ""
 
-#: classes/Admin/Popups.php:505, classes/Admin/Popups.php:557, classes/Admin/Popups.php:558, classes/Shortcode/Popup.php:154, classes/Shortcode/Popup.php:155, includes/admin/themes/metabox-close-fields.php:121, includes/class-popmake-popup-theme-fields.php:359, includes/input-options.php:131
+#: classes/Admin/Popups.php:512, classes/Admin/Popups.php:564, classes/Admin/Popups.php:565, classes/Shortcode/Popup.php:154, classes/Shortcode/Popup.php:155, includes/admin/themes/metabox-close-fields.php:121, includes/class-popmake-popup-theme-fields.php:359, includes/input-options.php:131
 msgid "Bottom"
 msgstr ""
 
-#: classes/Admin/Popups.php:506, classes/Admin/Popups.php:585, classes/Admin/Popups.php:586, classes/Shortcode/Popup.php:176, classes/Shortcode/Popup.php:177, classes/Shortcode/Subscribe.php:264, includes/admin/themes/metabox-close-fields.php:130, includes/class-popmake-popup-theme-fields.php:369, includes/input-options.php:87, includes/input-options.php:132
+#: classes/Admin/Popups.php:513, classes/Admin/Popups.php:592, classes/Admin/Popups.php:593, classes/Shortcode/Popup.php:176, classes/Shortcode/Popup.php:177, classes/Shortcode/Subscribe.php:264, includes/admin/themes/metabox-close-fields.php:130, includes/class-popmake-popup-theme-fields.php:369, includes/input-options.php:87, includes/input-options.php:132
 msgid "Right"
 msgstr ""
 
-#: classes/Admin/Popups.php:507, classes/Admin/Popups.php:531, includes/input-options.php:133, includes/input-options.php:150, includes/input-options.php:167
+#: classes/Admin/Popups.php:514, classes/Admin/Popups.php:538, includes/input-options.php:133, includes/input-options.php:150, includes/input-options.php:167
 msgid "Top Left"
 msgstr ""
 
-#: classes/Admin/Popups.php:508, classes/Admin/Popups.php:532, includes/input-options.php:134, includes/input-options.php:151
+#: classes/Admin/Popups.php:515, classes/Admin/Popups.php:539, includes/input-options.php:134, includes/input-options.php:151
 msgid "Top Center"
 msgstr ""
 
-#: classes/Admin/Popups.php:509, classes/Admin/Popups.php:533, includes/input-options.php:135, includes/input-options.php:152, includes/input-options.php:168
+#: classes/Admin/Popups.php:516, classes/Admin/Popups.php:540, includes/input-options.php:135, includes/input-options.php:152, includes/input-options.php:168
 msgid "Top Right"
 msgstr ""
 
-#: classes/Admin/Popups.php:510, classes/Admin/Popups.php:534, includes/input-options.php:136, includes/input-options.php:153
+#: classes/Admin/Popups.php:517, classes/Admin/Popups.php:541, includes/input-options.php:136, includes/input-options.php:153
 msgid "Middle Left"
 msgstr ""
 
-#: classes/Admin/Popups.php:511, classes/Admin/Popups.php:535, includes/input-options.php:137, includes/input-options.php:154
+#: classes/Admin/Popups.php:518, classes/Admin/Popups.php:542, includes/input-options.php:137, includes/input-options.php:154
 msgid "Middle Center"
 msgstr ""
 
-#: classes/Admin/Popups.php:512, classes/Admin/Popups.php:536, includes/input-options.php:138, includes/input-options.php:155
+#: classes/Admin/Popups.php:519, classes/Admin/Popups.php:543, includes/input-options.php:138, includes/input-options.php:155
 msgid "Middle Right"
 msgstr ""
 
-#: classes/Admin/Popups.php:513, classes/Admin/Popups.php:537, includes/input-options.php:139, includes/input-options.php:156, includes/input-options.php:169
+#: classes/Admin/Popups.php:520, classes/Admin/Popups.php:544, includes/input-options.php:139, includes/input-options.php:156, includes/input-options.php:169
 msgid "Bottom Left"
 msgstr ""
 
-#: classes/Admin/Popups.php:514, classes/Admin/Popups.php:538, includes/input-options.php:140, includes/input-options.php:157
+#: classes/Admin/Popups.php:521, classes/Admin/Popups.php:545, includes/input-options.php:140, includes/input-options.php:157
 msgid "Bottom Center"
 msgstr ""
 
-#: classes/Admin/Popups.php:515, classes/Admin/Popups.php:539, includes/input-options.php:141, includes/input-options.php:158, includes/input-options.php:170
+#: classes/Admin/Popups.php:522, classes/Admin/Popups.php:546, includes/input-options.php:141, includes/input-options.php:158, includes/input-options.php:170
 msgid "Bottom Right"
 msgstr ""
 
-#: classes/Admin/Popups.php:525, classes/Shortcode/Popup.php:135, includes/admin/themes/metabox-close-fields.php:85, includes/class-popmake-popup-theme-fields.php:331
+#: classes/Admin/Popups.php:532, classes/Shortcode/Popup.php:135, includes/admin/themes/metabox-close-fields.php:85, includes/class-popmake-popup-theme-fields.php:331
 msgid "Location"
 msgstr ""
 
-#: classes/Admin/Popups.php:526, classes/Shortcode/Popup.php:136
+#: classes/Admin/Popups.php:533, classes/Shortcode/Popup.php:136
 msgid "Choose where the popup will be displayed."
 msgstr ""
 
-#: classes/Admin/Popups.php:544, classes/Admin/Popups.php:558, classes/Admin/Popups.php:572, classes/Admin/Popups.php:586, classes/Shortcode/Popup.php:144, classes/Shortcode/Popup.php:155, classes/Shortcode/Popup.php:166, classes/Shortcode/Popup.php:177
+#: classes/Admin/Popups.php:551, classes/Admin/Popups.php:565, classes/Admin/Popups.php:579, classes/Admin/Popups.php:593, classes/Shortcode/Popup.php:144, classes/Shortcode/Popup.php:155, classes/Shortcode/Popup.php:166, classes/Shortcode/Popup.php:177
 msgctxt "Screen Edge: top, bottom"
 msgid "Distance from the %s edge of the screen."
 msgstr ""
 
-#: classes/Admin/Popups.php:599
+#: classes/Admin/Popups.php:606
 msgid "Position from Trigger"
 msgstr ""
 
-#: classes/Admin/Popups.php:600
+#: classes/Admin/Popups.php:607
 msgid "This will position the popup in relation to the %sClick Trigger%s."
 msgstr ""
 
-#: classes/Admin/Popups.php:606
+#: classes/Admin/Popups.php:613
 msgid "Fixed Postioning"
 msgstr ""
 
-#: classes/Admin/Popups.php:607
+#: classes/Admin/Popups.php:614
 msgid "Checking this sets the positioning of the popup to fixed."
 msgstr ""
 
-#: classes/Admin/Popups.php:614, classes/Shortcode/Popup.php:96
+#: classes/Admin/Popups.php:621, classes/Shortcode/Popup.php:96
 msgid "Disable Overlay"
 msgstr ""
 
-#: classes/Admin/Popups.php:615, classes/Shortcode/Popup.php:97
+#: classes/Admin/Popups.php:622, classes/Shortcode/Popup.php:97
 msgid "Checking this will disable and hide the overlay for this popup."
 msgstr ""
 
-#: classes/Admin/Popups.php:620
+#: classes/Admin/Popups.php:627
 msgid "Stackable"
 msgstr ""
 
-#: classes/Admin/Popups.php:621
+#: classes/Admin/Popups.php:628
 msgid "This enables other popups to remain open."
 msgstr ""
 
-#: classes/Admin/Popups.php:626
+#: classes/Admin/Popups.php:633
 msgid "Disable Repositioning"
 msgstr ""
 
-#: classes/Admin/Popups.php:627
+#: classes/Admin/Popups.php:634
 msgid "This will disable automatic repositioning of the popup on window resizing."
 msgstr ""
 
-#: classes/Admin/Popups.php:632
+#: classes/Admin/Popups.php:639
 msgid "Popup Z-Index"
 msgstr ""
 
-#: classes/Admin/Popups.php:633
+#: classes/Admin/Popups.php:640
 msgid "Change the z-index layer level for the popup."
 msgstr ""
 
-#: classes/Admin/Popups.php:645
+#: classes/Admin/Popups.php:652
 msgid "Close Text"
 msgstr ""
 
-#: classes/Admin/Popups.php:647
+#: classes/Admin/Popups.php:654
 msgid "Override the default close text."
 msgstr ""
 
-#: classes/Admin/Popups.php:652
+#: classes/Admin/Popups.php:659
 msgid "Close Button Delay"
 msgstr ""
 
-#: classes/Admin/Popups.php:653
+#: classes/Admin/Popups.php:660
 msgid "This delays the display of the close button."
 msgstr ""
 
-#: classes/Admin/Popups.php:665, classes/Shortcode/Popup.php:218
+#: classes/Admin/Popups.php:672, classes/Shortcode/Popup.php:218
 msgid "Click Overlay to Close"
 msgstr ""
 
-#: classes/Admin/Popups.php:666, classes/Shortcode/Popup.php:219
+#: classes/Admin/Popups.php:673, classes/Shortcode/Popup.php:219
 msgid "Checking this will cause popup to close when user clicks on overlay."
 msgstr ""
 
-#: classes/Admin/Popups.php:671
+#: classes/Admin/Popups.php:678
 msgid "Press ESC to Close"
 msgstr ""
 
-#: classes/Admin/Popups.php:672
+#: classes/Admin/Popups.php:679
 msgid "Checking this will cause popup to close when user presses ESC key."
 msgstr ""
 
-#: classes/Admin/Popups.php:677
+#: classes/Admin/Popups.php:684
 msgid "Press F4 to Close"
 msgstr ""
 
-#: classes/Admin/Popups.php:678
+#: classes/Admin/Popups.php:685
 msgid "Checking this will cause popup to close when user presses F4 key."
 msgstr ""
 
-#: classes/Admin/Popups.php:887, classes/Admin/Popups.php:992
+#: classes/Admin/Popups.php:894, classes/Admin/Popups.php:999
 msgid "Opens"
 msgstr ""
 
-#: classes/Admin/Popups.php:891, classes/Admin/Popups.php:993
+#: classes/Admin/Popups.php:898, classes/Admin/Popups.php:1000
 msgid "Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:896, classes/Admin/Popups.php:994
+#: classes/Admin/Popups.php:903, classes/Admin/Popups.php:1001
 msgid "Conversion Rate"
 msgstr ""
 
-#: classes/Admin/Popups.php:904
+#: classes/Admin/Popups.php:911
 msgid "Reset Counts"
 msgstr ""
 
-#: classes/Admin/Popups.php:908
+#: classes/Admin/Popups.php:915
 msgid "Last Reset"
 msgstr ""
 
-#: classes/Admin/Popups.php:910
+#: classes/Admin/Popups.php:917
 msgid "Previous Opens"
 msgstr ""
 
-#: classes/Admin/Popups.php:912
+#: classes/Admin/Popups.php:919
 msgid "Previous Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:914
+#: classes/Admin/Popups.php:921
 msgid "Lifetime Opens"
 msgstr ""
 
-#: classes/Admin/Popups.php:916
+#: classes/Admin/Popups.php:923
 msgid "Lifetime Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:989, classes/Admin/Templates.php:636, classes/Shortcode/Subscribe.php:165, classes/Shortcode/Subscribe.php:219
+#: classes/Admin/Popups.php:996, classes/Admin/Templates.php:636, classes/Shortcode/Subscribe.php:165, classes/Shortcode/Subscribe.php:219
 msgid "Name"
 msgstr ""
 
-#: classes/Admin/Popups.php:990
+#: classes/Admin/Popups.php:997
 msgid "Title"
 msgstr ""
 
-#: classes/Admin/Popups.php:991
+#: classes/Admin/Popups.php:998
 msgid "CSS Classes"
 msgstr ""
 
-#: classes/Admin/Popups.php:1066
+#: classes/Admin/Popups.php:1073
 msgid "N/A"
 msgstr ""
 
-#: classes/Admin/Popups.php:1152
+#: classes/Admin/Popups.php:1159
 msgid "Show all categories"
 msgstr ""
 
-#: classes/Admin/Popups.php:1165
+#: classes/Admin/Popups.php:1172
 msgid "Show all tags"
 msgstr ""
 

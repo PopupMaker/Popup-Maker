@@ -103,9 +103,16 @@ class PUM_Admin_Popups {
 	 * Renders contextual help for title.
 	 */
 	public static function popup_post_title_contextual_message() {
-		?>
-		<p class="pum-desc"><?php echo '(' . __( 'Required', 'popup-maker' ) . ') ' . __( 'Register a popup name. The CSS class ‘popmake-{popup-name}’ can be used to set a trigger to display a popup.', 'popup-maker' ); ?></p>
-		<?php
+		global $post, $pagenow, $typenow;
+
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		if ( 'popup' == $typenow && in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) ) { ?>
+			<p class="pum-desc"><?php echo '(' . __( 'Required', 'popup-maker' ) . ') ' . __( 'Register a popup name. The CSS class ‘popmake-{popup-name}’ can be used to set a trigger to display a popup.', 'popup-maker' ); ?></p>
+			<?php
+		}
 	}
 
 	/**
