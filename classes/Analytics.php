@@ -51,13 +51,11 @@ class PUM_Analytics {
 			return;
 		}
 
-		$event = $args['event'];
-
-
+		$event = sanitize_text_field( $args['event'] );
 
 		$popup = pum_get_popup( $args['pid'] );
 
-		if ( ! pum_is_popup( $popup ) ) {
+		if ( ! pum_is_popup( $popup ) || ! in_array( $event, apply_filters( 'pum_analytics_valid_events', array( 'open', 'conversion' ) ) ) ) {
 			return;
 		}
 
