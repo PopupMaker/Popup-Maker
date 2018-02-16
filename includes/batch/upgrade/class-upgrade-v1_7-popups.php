@@ -27,8 +27,6 @@ class PUM_Upgrade_v1_7_Popups extends PUM_Abstract_Upgrade_Popups {
 	 * Process needed upgrades on each popup.
 	 *
 	 * @param int $popup_id
-	 *
-	 * @return int $popup_id
 	 */
 	public function process_popup( $popup_id = 0 ) {
 
@@ -51,8 +49,6 @@ class PUM_Upgrade_v1_7_Popups extends PUM_Abstract_Upgrade_Popups {
 			 */
 			$popup->update_meta( 'data_version', 3 );
 		}
-
-		return $popup_id;
 	}
 
 }
