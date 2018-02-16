@@ -110,7 +110,8 @@ abstract class PUM_Abstract_Upgrade_Popups extends PUM_Abstract_Upgrade implemen
 		$updated = array();
 
 		foreach ( $popups as $popup_id ) {
-			$updated[] = $this->process_popup( $popup_id );
+			$this->process_popup();
+			$updated[] = $popup_id;
 		}
 
 		// Deduplicate.
@@ -156,8 +157,6 @@ abstract class PUM_Abstract_Upgrade_Popups extends PUM_Abstract_Upgrade implemen
 	 * Process needed upgrades on each popup.
 	 *
 	 * @param int $popup_id
-	 *
-	 * @return int $popup_id
 	 */
 	abstract public function process_popup( $popup_id = 0 );
 }
