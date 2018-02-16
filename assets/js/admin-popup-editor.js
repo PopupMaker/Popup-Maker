@@ -693,7 +693,6 @@ var cookies;
                         trigger_settings.cookie_name = trigger_settings.cookie_name.filter(function(element, index, array) {
                             return element in this ? false : this[element] = true;
                         }, {});
-                        debugger;
                     }
 
                     $trigger.val(JSON.stringify(trigger_settings));
