@@ -22,13 +22,13 @@ msgid_plural "%s items were successfully processed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: classes/Abstract/Upgrade/Popups.php:138
+#: classes/Abstract/Upgrade/Popups.php:139
 msgid "Updating %d popup for v%s compatibility."
 msgid_plural "Updating %d popups for v%s compatibility."
 msgstr[0] ""
 msgstr[1] ""
 
-#: classes/Abstract/Upgrade/Popups.php:144
+#: classes/Abstract/Upgrade/Popups.php:145
 msgid "%s popup was updated successfully."
 msgid_plural "%s popups were updated successfully."
 msgstr[0] ""
@@ -1097,11 +1097,11 @@ msgstr ""
 msgid "Get updates for pre-release versions of %s"
 msgstr ""
 
-#: classes/Analytics.php:142
+#: classes/Analytics.php:140
 msgid "Event Type"
 msgstr ""
 
-#: classes/Analytics.php:147, classes/Shortcode/Subscribe.php:312, includes/integrations/ninja-forms/Actions/OpenPopup.php:42
+#: classes/Analytics.php:145, classes/Shortcode/Subscribe.php:312, includes/integrations/ninja-forms/Actions/OpenPopup.php:42
 msgid "Popup ID"
 msgstr ""
 
