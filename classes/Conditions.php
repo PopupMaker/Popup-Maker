@@ -306,7 +306,7 @@ class PUM_Conditions {
 							'select2'  => true,
 							'multiple' => true,
 							'as_array' => true,
-							'options'  => array_flip( array_merge( array( 'default' => __( 'Default', 'popup-maker' ) ), $templates ) ),
+							'options'  => array_merge( array( 'default' => __( 'Default', 'popup-maker' ) ), $templates ),
 						),
 					),
 					'callback' => array( 'PUM_ConditionCallbacks', 'post_type' ),
