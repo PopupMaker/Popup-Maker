@@ -536,13 +536,13 @@ class PUM_Admin_Templates {
 			<div class="facet-builder <# if (data.groups && data.groups.length) { print('has-conditions'); } #>">
 				<p>
 					<strong>
-						<?php _e( 'These conditions determine when this popup will be display.', 'popup-maker' ); ?><?php printf( '%2$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%3$s', __( 'Learn more about conditions', 'popup-maker' ), '<a href="http://docs.wppopupmaker.com/article/140-conditions?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=conditions-intro" target="_blank">', '</a>' ); ?>
+						<?php _e( 'Conditions determine when a popup will display. Learn more: ', 'popup-maker' ); ?><?php printf( '%2$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%3$s', __( 'Learn more about conditions', 'popup-maker' ), '<a href="http://docs.wppopupmaker.com/article/351-popup-settings-box-targeting-option-settings?page-popup-editor=&utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_content=targeting-option-settings" target="_blank">', '</a>' ); ?>
 					</strong>
 				</p>
 
-				<p><?php _e( 'When users visit your site, the plugin will check the viewed content/page against your selection below and determine if this popup should be shown.', 'popup-maker' ); ?></p>
+				<p><?php _e( 'By default, this popup can display on every page of your site. Accept the plugin default, or target the popup display using Standard or Advanced Targeting Conditions.', 'popup-maker' ); ?></p>
 
-				<p><?php printf( __( 'Use the %s button to check for the inverse of your chosen condition.', 'popup-maker' ), '<i style="font-size: 1.25em;" class="dashicons dashicons-warning"></i>' ); ?></p>
+				<p><?php printf( __( 'Click the %s button to set the opposite of your chosen condition. When the button background turns red, a negative condition is active.', 'popup-maker' ), '<i style="font-size: 1.25em;" class="dashicons dashicons-warning"></i>' ); ?></p>
 
 				<section class="pum-alert-box" style="display:none"></section>
 				<div class="facet-groups condition-groups">
