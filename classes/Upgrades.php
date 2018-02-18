@@ -427,6 +427,9 @@ class PUM_Upgrades {
 				// Once all calculations have finished, run cleanup.
 				$upgrade->finish();
 
+				// Set the upgrade complete.
+				pum_set_upgrade_complete( $upgrade_id );
+
 				if ( $this->has_uncomplete_upgrades() ) {
 					// Since the other was complete return the next (now current) upgrade_id.
 					$response_data['next'] = $this->get_current_upgrade_id();

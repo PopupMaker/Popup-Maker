@@ -35,8 +35,6 @@ abstract class PUM_Abstract_Upgrade extends PUM_Abstract_Batch_Process {
 	 * Defines logic to execute once batch processing is complete.
 	 */
 	public function finish() {
-		pum_set_upgrade_complete( $this->batch_id );
-
 		/**
 		 * Clear the doing upgrade flag to prevent issues later.
 		 */
