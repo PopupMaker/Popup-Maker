@@ -459,7 +459,7 @@ abstract class PUM_Shortcode {
 		}
 
 		$fields = PUM_Admin_Helpers::parse_tab_fields( $fields, array(
-			'has_subtabs' => true,
+			'has_subtabs' => $this->version >= 2,
 			'name' => 'attrs[%s]',
 		) );
 

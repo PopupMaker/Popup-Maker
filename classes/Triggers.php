@@ -179,7 +179,25 @@ class PUM_Triggers {
 		) );
 
 		// @deprecated filter.
-		$triggers = apply_filters( 'pum_get_triggers', $triggers );
+		$old_triggers = apply_filters( 'pum_get_triggers', array() );
+
+		foreach ( $old_triggers as $type => $trigger ) {
+			if ( isset( $triggers[ $type ] ) ) {
+				continue;
+			}
+
+			if ( ! empty( $trigger['fields'] ) ) {
+				foreach ( $trigger['fields'] as $tab_id => $tab_fields ) {
+					foreach ( $tab_fields as $field_id => $field ) {
+						if ( ! empty( $field['options'] ) ) {
+							$trigger['fields'][ $tab_id ][ $field_id ]['options'] = array_flip( $trigger['fields'][ $tab_id ][ $field_id ]['options'] );
+						}
+					}
+				}
+			}
+
+			$triggers[ $type ] = $trigger;
+		}
 
 		$this->add_triggers( $triggers );
 	}
