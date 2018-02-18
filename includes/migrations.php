@@ -39,7 +39,7 @@ function pum_passive_popups_enabled() {
 		}
 	}
 
-	return $popup_count > apply_filters( 'pum_passive_popups_enabled_max_count', 10 );
+	return $popup_count > apply_filters( 'pum_passive_popups_enabled_max_count', 5 );
 }
 
 /**
