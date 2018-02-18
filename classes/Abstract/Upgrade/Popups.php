@@ -12,9 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.7.0
  *
- * @see PUM_Abstract_Upgrade
- * @see PUM_Interface_Batch_PrefetchProcess
- * @see PUM_Interface_Upgrade_Posts
+ * @see   PUM_Abstract_Upgrade
+ * @see   PUM_Interface_Batch_PrefetchProcess
+ * @see   PUM_Interface_Upgrade_Posts
  */
 abstract class PUM_Abstract_Upgrade_Popups extends PUM_Abstract_Upgrade implements PUM_Interface_Upgrade_Posts {
 
@@ -32,7 +32,8 @@ abstract class PUM_Abstract_Upgrade_Popups extends PUM_Abstract_Upgrade implemen
 	 */
 	public $per_step = 1;
 
-	public function init( $data = null ) {}
+	public function init( $data = null ) {
+	}
 
 	public function pre_fetch() {
 		$total_to_migrate = $this->get_total_count();
@@ -72,8 +73,8 @@ abstract class PUM_Abstract_Upgrade_Popups extends PUM_Abstract_Upgrade implemen
 	public function query_args( $args = array() ) {
 
 		$defaults = wp_parse_args( $this->custom_query_args(), array(
-			'post_status'    => 'any',
-			'post_type'      => 'popup',
+			'post_status' => array( 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ),
+			'post_type'   => 'popup',
 		) );
 
 		return wp_parse_args( $args, $defaults );
@@ -110,7 +111,7 @@ abstract class PUM_Abstract_Upgrade_Popups extends PUM_Abstract_Upgrade implemen
 		$updated = array();
 
 		foreach ( $popups as $popup_id ) {
-			$this->process_popup();
+			$this->process_popup( $popup_id );
 			$updated[] = $popup_id;
 		}
 
