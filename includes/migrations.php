@@ -24,10 +24,10 @@ function pum_passive_popups_enabled() {
 		if ( $popup_count === false ) {
 
 			$popups = get_posts( array(
-				'post_status'    => 'any',
+				'post_status'    => array( 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ),
 				'post_type'      => 'popup',
 				'fields'         => 'ids',
-				'posts_per_page' => -1,
+				'posts_per_page' => - 1,
 				'orderby'        => 'ID',
 				'order'          => 'ASC',
 			) );
