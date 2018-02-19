@@ -190,7 +190,7 @@ class PUM_Admin_Popups {
 	 * @return mixed
 	 */
 	public static function deprecated_meta_field_groups() {
-		return apply_filters( 'popmake_popup_meta_field_groups', array() );
+		return apply_filters( 'popmake_popup_meta_field_groups', array( 'display', 'close' ) );
 	}
 
 	/**
@@ -256,6 +256,7 @@ class PUM_Admin_Popups {
 				delete_post_meta( $post_id, $field );
 			}
 		}
+
 
 		do_action( 'pum_save_popup', $post_id, $post );
 	}
