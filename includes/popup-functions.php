@@ -342,7 +342,7 @@ function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default
  * @return mixed array|string
  */
 function popmake_get_popup_meta_group( $group, $popup_id = null, $key = null, $default = null ) {
-	if ( ! $popup_id ) {
+	if ( ! $popup_id || $group === 'secure_logout') {
 		$popup_id = popmake_get_the_popup_ID();
 	}
 
