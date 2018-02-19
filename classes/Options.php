@@ -132,12 +132,18 @@ class PUM_Options {
 	 *
 	 * @return bool
 	 */
-	public static function update_all( $options = array() ) {
-		$did_update = update_option( self:: $_prefix . 'settings', $options );
+	public static function update_all( $new_options = array() ) {
+		// First let's grab the current settings
+		$options = get_option( self:: $_prefix . 'settings' );
+
+		// Lets merge options that may exist previously that are not existing now.
+		$new_options = wp_parse_args( $new_options,$options);
+
+		$did_update = update_option( self:: $_prefix . 'settings', $new_options );
 
 		// If it updated, let's update the global variable
 		if ( $did_update ) {
-			self::$_data = $options;
+			self::$_data = $new_options;
 		}
 
 		return $did_update;
