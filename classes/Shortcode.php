@@ -110,7 +110,7 @@ abstract class PUM_Shortcode {
 	/**
 	 * Shortcode handler
 	 *
-	 * @param  array $atts shortcode attributes
+	 * @param  array  $atts    shortcode attributes
 	 * @param  string $content shortcode content
 	 *
 	 * @return string
@@ -126,7 +126,7 @@ abstract class PUM_Shortcode {
 	public function _subtabs() {
 		$subtabs = $this->version >= 2 && method_exists( $this, 'subtabs' ) ? $this->subtabs() : false;
 
-		foreach( $this->_tabs() as $tab_id => $tab_label ) {
+		foreach ( $this->_tabs() as $tab_id => $tab_label ) {
 			if ( empty( $subtabs[ $tab_id ] ) || ! is_array( $subtabs[ $tab_id ] ) ) {
 				$subtabs[ $tab_id ] = array(
 					'main' => $tab_label,
@@ -142,7 +142,7 @@ abstract class PUM_Shortcode {
 	 *
 	 * @deprecated 1.7.0 Use $this->tabs() instead.
 	 *
-	 * @todo Once all shortcodes are v2+ remove $this->sections()
+	 * @todo       Once all shortcodes are v2+ remove $this->sections()
 	 *
 	 * @return array
 	 */
@@ -217,8 +217,8 @@ abstract class PUM_Shortcode {
 	public function render_template() {
 		if ( $this->version >= 2 && $this->get_template() !== false ) {
 			echo '<script type="text/html" id="tmpl-pum-shortcode-view-' . $this->tag() . '">';
-				$this->style_block();
-				$this->template();
+			$this->style_block();
+			$this->template();
 			echo '</script>';
 		} else {
 			/** @deprecated, here in case shortcode doesn't yet have the new $this->template() method. */
@@ -270,7 +270,7 @@ abstract class PUM_Shortcode {
 
 		$styles = ob_get_clean();
 
-		return ! empty( $styles ) ? $styles: false;
+		return ! empty( $styles ) ? $styles : false;
 	}
 
 	/**
@@ -391,7 +391,7 @@ abstract class PUM_Shortcode {
 		 * Register UI for your shortcode
 		 *
 		 * @param string $shortcode_tag
-		 * @param array $ui_args
+		 * @param array  $ui_args
 		 */
 		if ( function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
 			shortcode_ui_register_for_shortcode( $this->tag(), $shortcode_ui_args );
@@ -460,23 +460,22 @@ abstract class PUM_Shortcode {
 
 		$fields = PUM_Admin_Helpers::parse_tab_fields( $fields, array(
 			'has_subtabs' => $this->version >= 2,
-			'name' => 'attrs[%s]',
+			'name'        => 'attrs[%s]',
 		) );
 
-		foreach( $fields as $tab_id => $tab_sections ) {
-			foreach( $tab_sections as $section_id => $section_fields ) {
-				foreach ( $section_fields as $field_id => $field ) {
+		if ( $this->version < 2 ) {
+			foreach ( $fields as $tab_id => $tab_fields ) {
+				foreach ( $tab_fields as $field_id => $field ) {
 					/**
 					 * Apply field compatibility fixes for shortcodes still on v1.
 					 */
-					if ( $this->version < 2 ) {
-						if ( ! empty( $field['type'] ) && in_array( $field['type'], array( 'select', 'postselect', 'radio', 'multicheck' ) ) ) {
-							$fields[ $tab_id ][ $section_id ][ $field_id ]['options'] = ! empty( $field['options'] ) ? array_flip( $field['options'] ) : array();
-						}
+					if ( ! empty( $field['type'] ) && in_array( $field['type'], array( 'select', 'postselect', 'radio', 'multicheck' ) ) ) {
+						$fields[ $tab_id ][ $field_id ]['options'] = ! empty( $field['options'] ) ? array_flip( $field['options'] ) : array();
 					}
 				}
 			}
 		}
+
 
 		return $fields;
 	}
