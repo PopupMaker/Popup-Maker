@@ -300,6 +300,20 @@ class PUM_Model_Popup extends PUM_Model_Post {
 				$group_values[ $old_key ] = $this->get_setting( $new_key );
 			}
 
+			$deprecated_values = popmake_get_popup_meta_group( $group, $this->ID );
+
+			if ( ! empty( $deprecated_values ) ) {
+				foreach( $deprecated_values as $old_key => $value ) {
+
+					if ( ! isset( $group_values[ $old_key ] ) ) {
+						$group_values[ $old_key ] = $value;
+					}
+
+				}
+			}
+
+
+
 			$this->$group = $group_values;
 		}
 
@@ -310,6 +324,10 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		}
 
 		$value = isset ( $values[ $key ] ) ? $values[ $key ] : null;
+
+		if ( ! isset( $value ) ) {
+			$value = $this->get_meta( "popup_{$group}_{$key}" );
+		}
 
 		return apply_filters( "pum_popup_get_{$group}_" . $key, $value, $this->ID );
 	}
