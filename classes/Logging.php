@@ -123,9 +123,11 @@ class PUM_Logging {
 	 * @param null $replacement
 	 */
 	public function log_deprecated_notice( $function, $version, $replacement = null ) {
-		ob_start();
-		_deprecated_function( $function, $version, $replacement );
-		$notice = ob_get_clean();
+		if ( ! is_null( $replacement ) ) {
+			$notice = sprintf( '%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.', $function, $version, $replacement );
+		} else {
+			$notice = sprintf( '%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.', $function, $version );
+		}
 
 		$this->log( $notice );
 	}
