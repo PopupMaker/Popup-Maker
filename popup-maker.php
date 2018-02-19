@@ -349,13 +349,25 @@ class Popup_Maker {
 		PUM_Admin::init();
 		PUM_Upgrades::instance();
 		PUM_Previews::init();
-		PUM_Newsletters::init();
 		PUM_Integrations::init();
 
 		PUM_Shortcode_Popup::init();
 		PUM_Shortcode_PopupTrigger::init();
 		PUM_Shortcode_PopupClose::init();
-		PUM_Shortcode_Subscribe::init();
+
+		// TODO Once PUM-Aweber has been updated properly for a few months remove these if checks.
+		// TODO Consider adding notice to update aweber.
+		if ( ! function_exists( 'is_plugin_active')) {
+			/**
+			 * Detect plugin.
+			 */
+			include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+		}
+
+		if ( ! is_plugin_active( 'pum-aweber-integration/pum-aweber-integration.php' ) ) {
+			PUM_Newsletters::init();
+			PUM_Shortcode_Subscribe::init();
+		}
 	}
 
 	/**
@@ -414,7 +426,7 @@ add_action( 'plugins_loaded', 'popmake_initialize' );
  *
  * Example: <?php $popmake = PopMake(); ?>
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
  * @return object The one true Popup_Maker Instance

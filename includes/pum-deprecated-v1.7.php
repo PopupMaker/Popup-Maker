@@ -50,10 +50,37 @@ function popmake_enqueue_scripts( $popup_id = null ) {
 		}
 	}
 }
+
 add_action( 'popmake_preload_popup', 'popmake_enqueue_scripts' );
 # endregion Ations
 
 # region Filters
+
+/**
+ * Process deprecated filters.
+ *
+ * @param $settings
+ * @param $popup_id
+ *
+ * @return mixed
+ */
+function pum_deprecated_popmake_settings_extensions_sanitize_filter( $settings = array() ) {
+	if ( has_filter( 'popmake_settings_extensions_sanitize' ) ) {
+		PUM_Logging::instance()->log_deprecated_notice( 'filter:popmake_settings_extensions_sanitize', '1.7.0', 'filter:pum_settings_sanitize' );
+		/**
+		 * @deprecated 1.7
+		 *
+		 * @param array $settings
+		 * @param int   $popup_id
+		 */
+		$settings = apply_filters( 'popmake_settings_extensions_sanitize', $settings );
+	}
+
+	return $settings;
+}
+
+add_filter( 'pum_sanitize_settings', 'pum_deprecated_popmake_settings_extensions_sanitize_filter' );
+
 
 /**
  * Process deprecated filters.
@@ -152,6 +179,7 @@ function pum_deprecated_get_the_popup_theme_filter( $theme_id, $popup_id ) {
 
 	return $theme_id;
 }
+
 add_filter( 'pum_popup_get_theme_id', 'pum_deprecated_get_the_popup_theme_filter', 10, 2 );
 
 /**
@@ -176,6 +204,7 @@ function pum_deprecated_get_the_popup_classes_filter( $classes, $popup_id ) {
 
 	return $classes;
 }
+
 add_filter( 'pum_popup_container_classes', 'pum_deprecated_get_the_popup_classes_filter', 10, 2 );
 
 
@@ -201,6 +230,7 @@ function pum_deprecated_pum_popup_get_classes_filter( $classes, $popup_id ) {
 
 	return $classes;
 }
+
 add_filter( 'pum_popup_classes', 'pum_deprecated_pum_popup_get_classes_filter', 10, 2 );
 
 /**
@@ -225,6 +255,7 @@ function pum_deprecated_get_the_popup_data_attr_filter( $data_attr, $popup_id ) 
 
 	return $data_attr;
 }
+
 add_filter( 'pum_popup_data_attr', 'pum_deprecated_get_the_popup_data_attr_filter', 10, 2 );
 
 /**
@@ -249,6 +280,7 @@ function pum_deprecated_show_close_button_filter( $show, $popup_id ) {
 
 	return $show;
 }
+
 add_filter( 'pum_popup_show_close_button', 'pum_deprecated_show_close_button_filter', 10, 2 );
 # endregion Filters
 

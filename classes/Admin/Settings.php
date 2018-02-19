@@ -72,6 +72,8 @@ class PUM_Admin_Settings {
 
 			$settings = self::sanitize_settings( $_POST['pum_settings'] );
 
+			$settings = apply_filters( 'pum_sanitize_settings', $settings );
+
 			if ( PUM_Options::update_all( $settings ) ) {
 				self::$notices[] = array(
 					'type'    => 'success',
