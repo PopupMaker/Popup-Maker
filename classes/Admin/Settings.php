@@ -208,11 +208,17 @@ class PUM_Admin_Settings {
 		static $fields;
 
 		if ( ! isset( $fields ) ) {
-			$fields = apply_filters( 'pum_settings_fields', array(
-				'general'       => array(
+
+
+			$fields = array(
+				'general' => array(
 					'main' => array(),
 				),
-				'subscriptions' => array(
+			);
+
+			// TODO Remove or move externally of this location later.
+			if ( ! ( class_exists( 'PUM_MCI' ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ) ) ) {
+				$fields['subscriptions'] = array(
 					'main' => apply_filters( 'pum_newsletter_settings', array(
 						'newsletter_default_provider'        => array(
 							'label'   => __( 'Default Newsletter Provider', 'popup-maker' ),
@@ -260,14 +266,17 @@ class PUM_Admin_Settings {
 						),
 
 					) ),
-				),
-				'extensions'    => array(
+				);
+			}
+
+			$fields = array_merge( $fields, array(
+				'extensions' => array(
 					'main' => array(),
 				),
-				'licenses'      => array(
+				'licenses'   => array(
 					'main' => array(),
 				),
-				'misc'          => array(
+				'misc'       => array(
 					'main'   => array(
 						'disabled_admin_bar'                   => array(
 							'type'  => 'checkbox',
@@ -329,9 +338,11 @@ class PUM_Admin_Settings {
 				),
 			) );
 
+			$fields = apply_filters( 'pum_settings_fields', $fields );
+
 			$fields = PUM_Admin_Helpers::parse_tab_fields( $fields, array(
 				'has_subtabs' => true,
-				'name' => 'pum_settings[%s]',
+				'name'        => 'pum_settings[%s]',
 			) );
 		}
 

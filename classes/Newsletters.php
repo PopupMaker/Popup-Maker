@@ -15,14 +15,34 @@ class PUM_Newsletters {
 	public static $errors;
 
 	public static function init() {
+		add_action( 'plugins_loaded', array( __CLASS__, 'delayed_init' ), - 100 );
+	}
+
+	public static function delayed_init() {
+		// TODO Once PUM-Aweber has been updated properly for a few months remove these if checks.
+		// TODO Consider adding notice to update aweber.
+
+		// Checks for single very specific versions.
+		if ( in_array( true, array(
+			class_exists( 'PUM_Aweber_Integration' ) && defined( 'PUM_AWEBER_INTEGRATION_VER' ) && version_compare( PUM_AWEBER_INTEGRATION_VER, '1.1.0', '<' ),
+			class_exists( 'PUM_MailChimp_Integration' ) && defined( 'PUM_MAILCHIMP_INTEGRATION_VER' ) && PUM_MAILCHIMP_INTEGRATION_VER,
+			class_exists( 'PUM_MCI' ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ),
+		) ) ) {
+			return;
+		}
+
+		require_once Popup_Maker::$DIR . 'includes/functions/newsletter.php';
+
+		do_action( 'pum_newsletter_init' );
+
+		PUM_Shortcode_Subscribe::init();
+
 		add_action( 'wp_ajax_pum_sub_form', array( __CLASS__, 'ajax_request' ) );
 		add_action( 'wp_ajax_nopriv_pum_sub_form', array( __CLASS__, 'ajax_request' ) );
 
 		add_filter( 'pum_sub_form_sanitization', array( __CLASS__, 'sanitization' ), 0 );
 		add_filter( 'pum_sub_form_validation', array( __CLASS__, 'validation' ), 0, 2 );
 		add_action( 'pum_sub_form_success', array( __CLASS__, 'record_submission' ), 0 );
-
-		do_action( 'pum_newsletter_init' );
 	}
 
 	/**
@@ -77,7 +97,7 @@ class PUM_Newsletters {
 	 *
 	 * Optionally pass extra data to send back to front end.
 	 *
-	 * @param $errors WP_Error
+	 * @param       $errors WP_Error
 	 * @param array $extra_response_args
 	 */
 	public static function send_errors( WP_Error $errors, $extra_response_args = array() ) {
@@ -213,7 +233,7 @@ class PUM_Newsletters {
 	 * Provides basic field validation.
 	 *
 	 * @param WP_Error $errors
-	 * @param array $values
+	 * @param array    $values
 	 *
 	 * @return WP_Error
 	 */

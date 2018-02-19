@@ -28,6 +28,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function pum_autoloader( $class ) {
 
+	if ( strncmp( 'PUM_Newsletter_', $class, strlen( 'PUM_Newsletter_' ) ) === 0 && class_exists( 'PUM_MCI' ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ) ) {
+		return;
+	}
+
 	$pum_autoloaders = apply_filters( 'pum_autoloaders', array(
 		array(
 			'prefix' => 'PUM_',
@@ -219,7 +223,6 @@ class Popup_Maker {
 		/** General Functions */
 		require_once self::$DIR . 'includes/functions/cache.php';
 		require_once self::$DIR . 'includes/functions/options.php';
-		require_once self::$DIR . 'includes/functions/newsletter.php';
 		require_once self::$DIR . 'includes/functions/upgrades.php';
 		require_once self::$DIR . 'includes/functions/developers.php';
 		require_once self::$DIR . 'includes/migrations.php';
@@ -348,26 +351,13 @@ class Popup_Maker {
 		PUM_Site::init();
 		PUM_Admin::init();
 		PUM_Upgrades::instance();
+		PUM_Newsletters::init();
 		PUM_Previews::init();
 		PUM_Integrations::init();
 
 		PUM_Shortcode_Popup::init();
 		PUM_Shortcode_PopupTrigger::init();
 		PUM_Shortcode_PopupClose::init();
-
-		// TODO Once PUM-Aweber has been updated properly for a few months remove these if checks.
-		// TODO Consider adding notice to update aweber.
-		if ( ! function_exists( 'is_plugin_active')) {
-			/**
-			 * Detect plugin.
-			 */
-			include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-		}
-
-		if ( ! is_plugin_active( 'pum-aweber-integration/pum-aweber-integration.php' ) ) {
-			PUM_Newsletters::init();
-			PUM_Shortcode_Subscribe::init();
-		}
 	}
 
 	/**

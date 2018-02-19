@@ -79,7 +79,7 @@ class PUM_Site_Assets {
 	}
 
 	public static function fix_broken_extension_scripts() {
-		if ( ! did_action( 'pum_newsletter_init' ) && wp_script_is( 'pum_aweber_integration_js' ) && class_exists( 'PUM_Aweber_Integration' ) && defined( 'PUM_AWEBER_INTEGRATION_VER' ) && version_compare( PUM_AWEBER_INTEGRATION_VER, '1.1.0', '<' ) ) {
+		if ( wp_script_is( 'pum_aweber_integration_js' ) && class_exists( 'PUM_Aweber_Integration' ) && defined( 'PUM_AWEBER_INTEGRATION_VER' ) && version_compare( PUM_AWEBER_INTEGRATION_VER, '1.1.0', '<' ) ) {
 			wp_dequeue_script( 'pum_aweber_integration_js' );
 			wp_dequeue_style( 'pum_aweber_integration_css' );
 			wp_dequeue_script( 'pum_newsletter_script' );
@@ -90,7 +90,30 @@ class PUM_Site_Assets {
 				'jquery',
 				'popup-maker-site',
 			), false, true );
+
 		}
+
+		$mc_ver_test = in_array( true, array(
+			class_exists( 'PUM_MailChimp_Integration' ) && defined( 'PUM_MAILCHIMP_INTEGRATION_VER' ) && PUM_MAILCHIMP_INTEGRATION_VER,
+			class_exists( 'PUM_MCI' ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ),
+		) );
+
+		if ( wp_script_is( 'pum_aweber_integration_js' ) && $mc_ver_test ) {
+			wp_dequeue_script( 'pum_mailchimp_integration_admin_js' );
+			wp_dequeue_style( 'pum_mailchimp_integration_admin_css' );
+			wp_dequeue_script( 'pum-mci' );
+			wp_dequeue_style( 'pum-mci' );
+			wp_dequeue_script( 'pum-newsletter-site' );
+			wp_dequeue_style( 'pum-newsletter-site' );
+
+			wp_enqueue_style( 'pum-newsletter-site', PUM_NEWSLETTER_URL . 'assets/css/pum-newsletter-site' . self::$suffix . '.css', null, PUM_NEWSLETTER_VERSION );
+			wp_enqueue_script( 'pum-newsletter-site', PUM_NEWSLETTER_URL . 'assets/js/pum-newsletter-site' . self::$suffix . '.js', array( 'jquery' ), PUM_NEWSLETTER_VERSION, true );
+			wp_localize_script( 'pum-newsletter-site', 'pum_sub_vars', array(
+				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				'message_position' => 'top',
+			) );
+		}
+
 	}
 
 
