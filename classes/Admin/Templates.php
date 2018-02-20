@@ -536,16 +536,17 @@ class PUM_Admin_Templates {
 			<div class="facet-builder <# if (data.groups && data.groups.length) { print('has-conditions'); } #>">
 				<p>
 					<strong>
-						<?php _e( 'Conditions determine when a popup will display. Learn more: ', 'popup-maker' ); ?>
+						<?php _e( 'Conditions determine when a popup will display. ', 'popup-maker' ); ?>
 
-                        <?php printf( '%2$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%3$s',
-                            __( 'Learn more about Targeting option settings.', 'popup-maker' ),
+                        <?php printf( '%2$s%3$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%4$s',
+                            __( 'popup-settings-targeting-option-tab', 'popup-maker' ),
+                            __( 'Learn more: ', 'popup-maker' ),
                             '<a href="http://docs.wppopupmaker.com/article/351-popup-settings-box-targeting-option-settings?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=targeting-option-settings" target="_blank">',
                             '</a>' ); ?>
 					</strong>
 				</p>
 
-				<p><?php _e( 'By default, this popup can display on every page of your site. Accept the plugin default, or target the popup display using Standard or Advanced Targeting Conditions.', 'popup-maker' ); ?></p>
+				<p><?php _e( 'By default, this popup is available to display on every page of your site. Accept the plugin default, or target the popup display below using Standard or Advanced Targeting Conditions.', 'popup-maker' ); ?></p>
 
 				<p><?php printf( __( 'Click the %s button below to set the opposite of your chosen condition.  When the button background color is red, a negative condition is active.', 'popup-maker' ), '<i style="font-size: 1.25em;" class="dashicons dashicons-warning"></i>' ); ?></p>
 
