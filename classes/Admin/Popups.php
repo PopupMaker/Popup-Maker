@@ -801,6 +801,10 @@ class PUM_Admin_Popups {
 		foreach ( $settings as $key => $value ) {
 			$field = self::get_field( $key );
 
+			if ( is_string( $value ) ) {
+				$settings[ $key ] = sanitize_text_field( $value );
+			}
+
 			if ( $field ) {
 				switch ( $field['type'] ) {
 					case 'measure':

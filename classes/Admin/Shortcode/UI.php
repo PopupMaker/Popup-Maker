@@ -146,8 +146,8 @@ class PUM_Admin_Shortcode_UI {
 
 		check_ajax_referer( 'pum-shortcode-ui-nonce', 'nonce' );
 
-		$tag       = ! empty( $_REQUEST['tag'] ) ? $_REQUEST['tag'] : false;
-		$shortcode = ! empty( $_REQUEST['shortcode'] ) ? stripslashes( $_REQUEST['shortcode'] ) : null;
+		$tag       = ! empty( $_REQUEST['tag'] ) ? sanitize_key( $_REQUEST['tag'] ) : false;
+		$shortcode = ! empty( $_REQUEST['shortcode'] ) ? stripslashes( sanitize_text_field( $_REQUEST['shortcode'] ) ) : null;
 		$post_id   = isset( $_REQUEST['post_id'] ) ? intval( $_REQUEST['post_id'] ) : null;
 
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {

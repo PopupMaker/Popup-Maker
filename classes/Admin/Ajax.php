@@ -22,13 +22,15 @@ class PUM_Admin_Ajax {
 			'total_count' => 0,
 		);
 
-		switch ( $_REQUEST['object_type'] ) {
+		$object_type = sanitize_text_field( $_REQUEST['object_type'] );
+
+		switch ( $object_type ) {
 			case 'post_type':
-				$post_type = ! empty( $_REQUEST['object_key'] ) ? $_REQUEST['object_key'] : 'post';
+				$post_type = ! empty( $_REQUEST['object_key'] ) ? sanitize_text_field( $_REQUEST['object_key'] ) : 'post';
 
 				if ( ! empty( $_REQUEST['include'] ) ) {
 					$query = PUM_Helpers::post_type_selectlist( $post_type, array(
-						'post__in' => ! empty( $_REQUEST['include'] ) ? wp_parse_id_list( (array) $_REQUEST['include'] ) : null,
+						'post__in' => ! empty( $_REQUEST['include'] ) ? wp_parse_id_list( (array) sanitize_text_field( $_REQUEST['include'] ) ) : null,
 					), true );
 
 					foreach ( $query['items'] as $name => $id ) {
@@ -39,7 +41,7 @@ class PUM_Admin_Ajax {
 					}
 				} else {
 					$query = PUM_Helpers::post_type_selectlist( $post_type, array(
-						's'              => ! empty( $_REQUEST['s'] ) ? $_REQUEST['s'] : null,
+						's'              => ! empty( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : null,
 						'paged'          => ! empty( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : null,
 						'posts_per_page' => 10,
 					), true );
@@ -55,11 +57,11 @@ class PUM_Admin_Ajax {
 				}
 				break;
 			case 'taxonomy':
-				$taxonomy = ! empty( $_REQUEST['object_key'] ) ? $_REQUEST['object_key'] : 'category';
+				$taxonomy = ! empty( $_REQUEST['object_key'] ) ? sanitize_text_field( $_REQUEST['object_key'] ) : 'category';
 
 				if ( ! empty( $_REQUEST['include'] ) ) {
 					$query = PUM_Helpers::taxonomy_selectlist( $taxonomy, array(
-						'include' => ! empty( $_REQUEST['include'] ) ? wp_parse_id_list( (array) $_REQUEST['include'] ) : null,
+						'include' => ! empty( $_REQUEST['include'] ) ? wp_parse_id_list( (array) sanitize_text_field( $_REQUEST['include'] ) ) : null,
 					), true );
 
 					foreach ( $query['items'] as $name => $id ) {
@@ -70,7 +72,7 @@ class PUM_Admin_Ajax {
 					}
 				} else {
 					$query = PUM_Helpers::taxonomy_selectlist( $taxonomy, array(
-						'search' => ! empty( $_REQUEST['s'] ) ? $_REQUEST['s'] : '',
+						'search' => ! empty( $_REQUEST['s'] ) ? sanitize_text_field($_REQUEST['s'] ) : '',
 						'paged'  => ! empty( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : null,
 						'number' => 10,
 					), true );

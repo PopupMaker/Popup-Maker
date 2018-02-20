@@ -136,8 +136,10 @@ class PUM_Admin_Settings {
 
 			if ( $field ) {
 
-				// Sanitize every value.
-				$value = sanitize_text_field( $value );
+				// Sanitize every string value.
+				if ( is_string( $value ) ) {
+					$settings[ $key ] = sanitize_text_field( $value );
+				}
 
 				switch ( $field['type'] ) {
 					default:
