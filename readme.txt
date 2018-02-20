@@ -1,15 +1,15 @@
-=== Popup Maker - Best Rated ===
+=== Popup Maker - Popup Forms, Optins & More ===
 Contributors: danieliser, wppopupmaker, yogaman5020
 Author URI: https://wppopupmaker.com/?utm_source=readme-header&utm_campaign=Readme&utm_medium=author-uri
 Plugin URI: https://wppopupmaker.com/?utm_capmaign=Readme&utm_source=readme-header&utm_medium=plugin-uri
 Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
-Tested up to: 4.8
+Tested up to: 4.9.4
 Stable tag: 1.6.6
 License: GNU Version 3 or Any Later Version
 
-Create any popup imaginable! Customize your popups from head-to-toe and give your site more utility, usability, and conversions.
+Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
 
 == Description ==
 
@@ -113,7 +113,7 @@ Lastly we now have include our extendable subscription forms right in the free v
   * New shortcode with tons of options built in.
   * Stores subscribers into a new custom table for import into your favorite system at a later time.
 * Feature: Front end asset overhaul, now uses cached static assets.
-  * All front end assets now combined and minified into  single js & css file.
+  * All front end assets now combined into single js & css file.
   * Custom styles are now saved along with all core & extension styles eliminating inline style blocks.
   * Reduction of footprint means massively improved loading performance.
   * Dynamic file creation allows for some awesome upcoming features.
