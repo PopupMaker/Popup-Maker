@@ -539,7 +539,7 @@ class PUM_Admin_Templates {
 						<?php _e( 'Conditions determine when a popup will display. ', 'popup-maker' ); ?>
 
                         <?php printf( '%2$s%3$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%4$s',
-                            __( 'popup-settings-targeting-option-tab', 'popup-maker' ),
+                            __( 'Targeting option tab doclink.', 'popup-maker' ),
                             __( 'Learn more: ', 'popup-maker' ),
                             '<a href="http://docs.wppopupmaker.com/article/351-popup-settings-box-targeting-option-settings?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=targeting-option-settings" target="_blank">',
                             '</a>' ); ?>
