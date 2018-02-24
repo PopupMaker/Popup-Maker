@@ -70,12 +70,14 @@ class PUM_Newsletters {
 		// Process the submission and pass the $response array as a reference variable so data can be added..
 		do_action_ref_array( 'pum_sub_form_submission', array( $values, &$response, &self::$errors ) );
 
-		$success = ! self::$errors->get_error_code() ? 'success' : self::$errors->get_error_code() == 'already_subscribed' ? 'already_subscribed' : false;
+		$error_code = self::$errors->get_error_code();
+
+		$success = empty( $error_code ) ? 'success' : ( $error_code == 'already_subscribed' ? 'already_subscribed' : false );
 
 		if ( ! $success ) {
 			do_action( 'pum_sub_form_errors', $values, self::$errors );
 
-			switch ( self::$errors->get_error_code() ) {
+			switch ( $error_code ) {
 				case 'api_errors':
 					$response['message'] = pum_get_newsletter_provider_message( $values['provider'], 'error', $values );
 					break;
