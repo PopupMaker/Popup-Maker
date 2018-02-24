@@ -43,32 +43,35 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 
 	public function fields() {
 		return array(
-			'options' => array(
-				'tag'        => array(
-					'label'       => __( 'HTML Tag', 'popup-maker' ),
-					'placeholder' => __( 'HTML Tag', 'popup-maker' ) . ': button, span etc',
-					'desc'        => __( 'The HTML tag used for this element.', 'popup-maker' ),
-					'type'        => 'text',
-					'std'         => 'button',
-					'priority'    => 10,
-					'required'    => true,
-				),
-				'classes'    => array(
-					'label'       => __( 'CSS Class', 'popup-maker' ),
-					'placeholder' => 'my-custom-class',
-					'type'        => 'text',
-					'desc'        => __( 'Add additional classes for styling.', 'popup-maker' ),
-					'priority'    => 15,
-					'std'         => '',
-				),
-				'do_default' => array(
-					'type'     => 'checkbox',
-					'label'    => __( 'Do not prevent the default click functionality.', 'popup-maker' ),
-					'desc'     => __( 'This prevents us from disabling the browsers default action when a close button is clicked. It can be used to allow a link to a file to both close a popup and still download the file.', 'popup-maker' ),
-					'priority' => 20,
-					'std'      => false,
-				),
+			'general' => array(
+				'main' => array(
+					'tag'        => array(
+						'label'       => __( 'HTML Tag', 'popup-maker' ),
+						'placeholder' => __( 'HTML Tag', 'popup-maker' ) . ': button, span etc',
+						'desc'        => __( 'The HTML tag used for this element.', 'popup-maker' ),
+						'type'        => 'text',
+						'std'         => 'button',
+						'required'    => true,
+					),
 
+				),
+			),
+			'options' => array(
+				'main' => array(
+					'classes'    => array(
+						'label'       => __( 'CSS Class', 'popup-maker' ),
+						'placeholder' => 'my-custom-class',
+						'type'        => 'text',
+						'desc'        => __( 'Add additional classes for styling.', 'popup-maker' ),
+						'std'         => '',
+					),
+					'do_default' => array(
+						'type'     => 'checkbox',
+						'label'    => __( 'Do not prevent the default click functionality.', 'popup-maker' ),
+						'desc'     => __( 'This prevents us from disabling the browsers default action when a close button is clicked. It can be used to allow a link to a file to both close a popup and still download the file.', 'popup-maker' ),
+						'std'      => false,
+					),
+				),
 			),
 		);
 	}
@@ -96,7 +99,7 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 	/**
 	 * Shortcode handler
 	 *
-	 * @param  array $atts shortcode attributes
+	 * @param  array  $atts    shortcode attributes
 	 * @param  string $content shortcode content
 	 *
 	 * @return string
@@ -112,7 +115,7 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 	}
 
 	public function template() { ?>
-			<{{{attrs.tag}}} class="pum-close  popmake-close <# if (typeof attrs.classes !== 'undefined') print(attrs.classes); #>">{{{attrs._inner_content}}}</{{{attrs.tag}}}><?php
+		<{{{attrs.tag}}} class="pum-close  popmake-close <# if (typeof attrs.classes !== 'undefined') print(attrs.classes); #>">{{{attrs._inner_content}}}</{{{attrs.tag}}}><?php
 	}
 
 }

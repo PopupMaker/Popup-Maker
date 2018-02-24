@@ -695,7 +695,7 @@ class PUM_Admin_Popups {
 
 				foreach ( $sections as $section_id => $fields ) {
 
-					if ( self::is_field( $fields ) ) {
+					if ( PUM_Admin_Helpers::is_field( $fields ) ) {
 						// Allow for flat tabs with no sections.
 						$section_id = 'main';
 						$fields     = array(
@@ -704,7 +704,7 @@ class PUM_Admin_Popups {
 					}
 
 					foreach ( $fields as $field_id => $field ) {
-						if ( ! is_array( $field ) || ! self::is_field( $field ) ) {
+						if ( ! is_array( $field ) || ! PUM_Admin_Helpers::is_field( $field ) ) {
 							continue;
 						}
 
@@ -774,7 +774,7 @@ class PUM_Admin_Popups {
 
 		foreach ( $tabs as $tab => $sections ) {
 
-			if ( self::is_field( $sections ) ) {
+			if ( PUM_Admin_Helpers::is_field( $sections ) ) {
 				$sections = array(
 					'main' => array(
 						$tab => $sections,
@@ -840,36 +840,6 @@ class PUM_Admin_Popups {
 		}
 
 		return $defaults;
-	}
-
-	/**
-	 * Checks if an array is a field.
-	 *
-	 * @param array $array
-	 *
-	 * @return bool
-	 */
-	public static function is_field( $array = array() ) {
-		$field_tests = array(
-			isset( $array['id'] ),
-			isset( $array['label'] ),
-			isset( $array['type'] ),
-			isset( $array['options'] ),
-			isset( $array['desc'] ),
-		);
-
-		return in_array( true, $field_tests );
-	}
-
-	/**
-	 * Checks if an array is a section.
-	 *
-	 * @param array $array
-	 *
-	 * @return bool
-	 */
-	public static function is_section( $array = array() ) {
-		return ! self::is_field( $array );
 	}
 
 	/**

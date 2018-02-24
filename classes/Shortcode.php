@@ -476,7 +476,6 @@ abstract class PUM_Shortcode {
 			}
 		}
 
-
 		return $fields;
 	}
 

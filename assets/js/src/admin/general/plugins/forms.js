@@ -164,11 +164,11 @@
             }
 
             var field_tests = [
-                data.id !== undefined,
                 data.label !== undefined,
                 data.type !== undefined,
                 data.options !== undefined,
-                data.desc !== undefined
+                data.desc !== undefined,
+                data.content !== undefined
             ];
 
             return field_tests.indexOf(true) >= 0;

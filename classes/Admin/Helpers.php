@@ -204,7 +204,7 @@ class PUM_Admin_Helpers {
 				'em'  => 'em',
 				'rem' => 'rem',
 			),
-			'priority'       => null,
+			'priority'       => 10,
 			'doclink'        => '',
 			'button_type'    => 'submit',
 			'class'          => '',
@@ -239,6 +239,7 @@ class PUM_Admin_Helpers {
 
 					$fields[ $tab_id ][ $section_id ] = self::parse_fields( $section_fields, $args['name'] );
 				}
+
 			}
 		} else {
 			foreach ( $fields as $tab_id => $tab_fields ) {
@@ -288,8 +289,27 @@ class PUM_Admin_Helpers {
 			}
 		}
 
+		uasort( $fields, array( __CLASS__, 'sort_by_priority' ) );
+
 		return $fields;
 	}
+
+	/**
+	 * Sort array by priority value
+	 *
+	 * @param $a
+	 * @param $b
+	 *
+	 * @return int
+	 */
+	public static function sort_by_priority( $a, $b ) {
+		if ( ! isset( $a['priority'] ) || ! isset( $b['priority'] ) || $a['priority'] === $b['priority'] ) {
+			return 0;
+		}
+
+		return ( $a['priority'] < $b['priority'] ) ? - 1 : 1;
+	}
+
 
 	/**
 	 * @param $array
@@ -318,11 +338,11 @@ class PUM_Admin_Helpers {
 	 */
 	public static function is_field( $array = array() ) {
 		$field_tests = array(
-			isset( $array['id'] ),
 			isset( $array['label'] ),
 			isset( $array['type'] ),
 			isset( $array['options'] ),
 			isset( $array['desc'] ),
+			isset( $array['content'] ),
 		);
 
 		return in_array( true, $field_tests );

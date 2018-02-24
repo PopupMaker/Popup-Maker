@@ -67,54 +67,58 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	public function fields() {
 		return array(
 			'general' => array(
-				'id'        => array(
-					'label'       => __( 'Targeted Popup', 'popup-maker' ),
-					'placeholder' => __( 'Choose a Popup', 'popup-maker' ),
-					'desc'        => __( 'Choose which popup will be targeted by this trigger.', 'popup-maker' ),
-					'type'        => 'select',
-					'post_type'   => 'popup',
-					'priority'    => 5,
-					'required'    => true,
-					'options'     => array_merge( PUM_Helpers::popup_selectlist(), array(
-						'custom' => __( 'Custom', 'popup-maker' ),
-					) ),
-					'std'         => 0,
-				),
-				'custom_id' => array(
-					'label'        => __( 'Custom Popup ID', 'popup-maker' ),
-					'type'         => 'text',
-					'dependencies' => array(
-						'id' => 'custom',
+				'main' => array(
+					'id'        => array(
+						'label'       => __( 'Targeted Popup', 'popup-maker' ),
+						'placeholder' => __( 'Choose a Popup', 'popup-maker' ),
+						'desc'        => __( 'Choose which popup will be targeted by this trigger.', 'popup-maker' ),
+						'type'        => 'select',
+						'post_type'   => 'popup',
+						'priority'    => 5,
+						'required'    => true,
+						'options'     => array_merge( PUM_Helpers::popup_selectlist(), array(
+							'custom' => __( 'Custom', 'popup-maker' ),
+						) ),
+						'std'         => 0,
 					),
-					'std'          => '',
+					'custom_id' => array(
+						'label'        => __( 'Custom Popup ID', 'popup-maker' ),
+						'type'         => 'text',
+						'dependencies' => array(
+							'id' => 'custom',
+						),
+						'std'          => '',
+					),
 				),
 			),
 			'options' => array(
-				'tag'        => array(
-					'label'       => __( 'HTML Tag', 'popup-maker' ),
-					'placeholder' => __( 'HTML Tags: button, span etc.', 'popup-maker' ),
-					'desc'        => __( 'The HTML tag used to generate the trigger and wrap your text.', 'popup-maker' ),
-					'type'        => 'text',
-					'std'         => 'button',
-					'priority'    => 10,
-					'required'    => true,
-				),
-				'classes'    => array(
-					'label'       => __( 'CSS Class', 'popup-maker' ),
-					'placeholder' => __( 'CSS Class', 'popup-maker' ),
-					'type'        => 'text',
-					'desc'        => __( 'Add additional classes for styling.', 'popup-maker' ),
-					'priority'    => 15,
-					'std'         => '',
-				),
-				'do_default' => array(
-					'type'     => 'checkbox',
-					'label'    => __( 'Do not prevent the default click functionality.', 'popup-maker' ),
-					'desc'     => __( 'This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file.', 'popup-maker' ),
-					'priority' => 20,
-					'std'      => false,
-				),
+				'main' => array(
+					'tag'        => array(
+						'label'       => __( 'HTML Tag', 'popup-maker' ),
+						'placeholder' => __( 'HTML Tags: button, span etc.', 'popup-maker' ),
+						'desc'        => __( 'The HTML tag used to generate the trigger and wrap your text.', 'popup-maker' ),
+						'type'        => 'text',
+						'std'         => 'button',
+						'priority'    => 10,
+						'required'    => true,
+					),
+					'classes'    => array(
+						'label'       => __( 'CSS Class', 'popup-maker' ),
+						'placeholder' => __( 'CSS Class', 'popup-maker' ),
+						'type'        => 'text',
+						'desc'        => __( 'Add additional classes for styling.', 'popup-maker' ),
+						'priority'    => 15,
+						'std'         => '',
+					),
+					'do_default' => array(
+						'type'     => 'checkbox',
+						'label'    => __( 'Do not prevent the default click functionality.', 'popup-maker' ),
+						'desc'     => __( 'This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file.', 'popup-maker' ),
+						'priority' => 20,
+						'std'      => false,
+					),
 
+				),
 			),
 		);
 	}
@@ -122,7 +126,7 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	/**
 	 * Shortcode handler
 	 *
-	 * @param  array $atts shortcode attributes
+	 * @param  array  $atts    shortcode attributes
 	 * @param  string $content shortcode content
 	 *
 	 * @return string
