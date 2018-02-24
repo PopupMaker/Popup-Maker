@@ -76,9 +76,9 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 						'post_type'   => 'popup',
 						'priority'    => 5,
 						'required'    => true,
-						'options'     => array_merge( PUM_Helpers::popup_selectlist(), array(
+						'options'     => PUM_Helpers::popup_selectlist() + array(
 							'custom' => __( 'Custom', 'popup-maker' ),
-						) ),
+						),
 						'std'         => 0,
 					),
 					'custom_id' => array(

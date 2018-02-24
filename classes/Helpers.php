@@ -170,7 +170,9 @@ class PUM_Helpers {
 		$popups = PUM_Popups::get_all();
 
 		foreach ( $popups->posts as $popup ) {
-			$popup_list[ $popup->ID ] = $popup->post_title;
+			if ( in_array( $popup->post_status, array( 'publish' ) ) ) {
+				$popup_list[ (string) $popup->ID ] = $popup->post_title;
+			}
 		}
 
 		return $popup_list;
