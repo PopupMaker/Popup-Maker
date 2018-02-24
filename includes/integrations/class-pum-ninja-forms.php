@@ -77,7 +77,7 @@ if ( version_compare( get_option( 'ninja_forms_version', '0.0.0' ), '3.0', '<' )
 
 			add_filter( 'ninja_forms_register_actions', array( $this, 'register_actions' ) );
 
-			add_filter( 'pum_get_cookies', array( $this, 'register_cookies' ) );
+			add_filter( 'pum_registered_cookies', array( $this, 'register_cookies' ) );
 		}
 
 		/**
