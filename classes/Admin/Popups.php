@@ -337,6 +337,24 @@ class PUM_Admin_Popups {
 				'general'   => apply_filters( 'pum_popup_general_settings_fields', array(
 					'main' => array(),
 				) ),
+				'triggers'  => apply_filters( 'pum_popup_triggers_settings_fields', array(
+					'main' => array(
+						'triggers'   => array(
+							'type'     => 'triggers',
+							'std'      => array(),
+							'priority' => 10,
+						),
+						'separator1' => array(
+							'type'    => 'separator',
+							'private' => true,
+						),
+						'cookies'    => array(
+							'type'     => 'cookies',
+							'std'      => array(),
+							'priority' => 20,
+						),
+					),
+				) ),
 				'targeting' => apply_filters( 'pum_popup_targeting_settings_fields', array(
 					'main' => array(
 						'conditions'        => array(
@@ -353,24 +371,6 @@ class PUM_Admin_Popups {
 						'disable_on_tablet' => array(
 							'label'    => __( 'Disable this popup on tablet devices.', 'popup-maker' ),
 							'type'     => 'checkbox',
-							'priority' => 20,
-						),
-					),
-				) ),
-				'triggers'  => apply_filters( 'pum_popup_triggers_settings_fields', array(
-					'main' => array(
-						'triggers'   => array(
-							'type'     => 'triggers',
-							'std'      => array(),
-							'priority' => 10,
-						),
-						'separator1' => array(
-							'type'    => 'separator',
-							'private' => true,
-						),
-						'cookies'    => array(
-							'type'     => 'cookies',
-							'std'      => array(),
 							'priority' => 20,
 						),
 					),
