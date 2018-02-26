@@ -562,7 +562,7 @@ class PUM_Admin_Templates {
 					#>
 				</div>
 				<div class="no-facet-groups">
-					<label for="pum-first-condition"><?php _e( 'Choose a condition to target where to display your popup.', 'popup-maker' ); ?></label>
+					<label for="pum-first-condition"><?php _e( 'Choose a condition to target where or when to display your popup.', 'popup-maker' ); ?></label>
 					<div class="facet-target">
 						<button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
 							<input type="checkbox" id="pum-first-facet-operand" value="1"/>
