@@ -536,7 +536,7 @@ class PUM_Admin_Templates {
 			<div class="facet-builder <# if (data.groups && data.groups.length) { print('has-conditions'); } #>">
 				<p>
 					<strong>
-						<?php _e( 'Conditions determine when a popup will display. ', 'popup-maker' ); ?>
+						<?php _e( 'Conditions determine where or when a popup will display. ', 'popup-maker' ); ?>
 
                         <?php printf( '%2$s%3$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%4$s',
                             __( 'Targeting option tab doclink.', 'popup-maker' ),
