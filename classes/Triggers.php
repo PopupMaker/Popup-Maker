@@ -87,9 +87,11 @@ class PUM_Triggers {
 			}
 
 			// Add cookie fields for all triggers automatically.
-			$trigger['fields']['general'] = array_merge( $trigger['fields']['general'], $this->cookie_fields() );
+			if ( empty( $trigger['fields']['general']['cookie_name'] ) ) {
+				$trigger['fields']['general'] = array_merge( $trigger['fields']['general'], $this->cookie_fields() );
+			}
 
-			$this->triggers[ $trigger['id'] ] = $trigger;
+			$this->triggers[ $trigger['id'] ] = apply_filters( 'pum_trigger', $trigger );
 		}
 
 		return;
