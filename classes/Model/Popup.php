@@ -225,6 +225,22 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	}
 
 	/**
+	 * @param $event
+	 *
+	 * @return bool
+	 */
+	public function has_cookie( $event ) {
+		$cookies = $this->get_triggers();
+
+		foreach ( $cookies as $cookie ) {
+			if ( $cookie['event'] == $event ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	/**
 	 * @return array
 	 */
 	public function get_triggers() {
@@ -253,6 +269,23 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		}
 
 		return apply_filters( 'pum_popup_get_triggers', $triggers, $this->ID );
+	}
+
+	/**
+	 * @param $type
+	 *
+	 * @return bool
+	 */
+	public function has_trigger( $type ) {
+		$triggers = $this->get_triggers();
+
+		foreach ( $triggers as $trigger ) {
+			if ( $trigger['type'] == $type ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
