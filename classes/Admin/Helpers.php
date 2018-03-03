@@ -338,11 +338,8 @@ class PUM_Admin_Helpers {
 	 */
 	public static function is_field( $array = array() ) {
 		$field_tests = array(
-			isset( $array['label'] ),
-			isset( $array['type'] ),
-			isset( $array['options'] ),
-			isset( $array['desc'] ),
-			isset( $array['content'] ),
+			! isset( $array['type'] ) && ( isset( $array['label'] ) || isset( $array['desc'] ) ),
+			isset( $array['type'] ) && is_string( $array['type'] ),
 		);
 
 		return in_array( true, $field_tests );

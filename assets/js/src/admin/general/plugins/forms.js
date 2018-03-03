@@ -164,11 +164,8 @@
             }
 
             var field_tests = [
-                data.label !== undefined,
-                data.type !== undefined,
-                data.options !== undefined,
-                data.desc !== undefined,
-                data.content !== undefined
+                data.type === undefined && ( data.label !== undefined || data.desc !== undefined ),
+                data.type !== undefined && typeof data.type === 'string'
             ];
 
             return field_tests.indexOf(true) >= 0;
