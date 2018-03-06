@@ -165,10 +165,10 @@ class PUM_Helpers {
 
 	}
 
-	public static function popup_selectlist() {
+	public static function popup_selectlist( $args = array() ) {
 		$popup_list = array();
 
-		$popups = PUM_Popups::get_all();
+		$popups = PUM_Popups::query( $args );
 
 		foreach ( $popups->posts as $popup ) {
 			if ( in_array( $popup->post_status, array( 'publish' ) ) ) {

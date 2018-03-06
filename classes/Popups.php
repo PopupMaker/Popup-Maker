@@ -35,13 +35,19 @@ class PUM_Popups {
 		static $query;
 
 		if ( ! isset( $query ) ) {
-			$query = new WP_Query( array(
-				'post_type'      => 'popup',
-				'posts_per_page' => - 1,
-			) );
+			$query = self::query();
 		}
 
 		return $query;
+	}
+
+	public static function query( $args = array() ) {
+		$args = wp_parse_args( $args, array(
+			'post_type'      => 'popup',
+			'posts_per_page' => - 1,
+		) );
+
+		return new WP_Query( $args );
 	}
 
 }

@@ -14,6 +14,7 @@
                     current = $this.data('current') || $this.val(),
                     object_type = $this.data('objecttype'),
                     object_key = $this.data('objectkey'),
+                    object_excludes = $this.data('objectexcludes') || null,
                     options = {
                         width: '100%',
                         multiple: false,
@@ -36,7 +37,8 @@
                                     paged: params.page,
                                     action: "pum_object_search",
                                     object_type: object_type,
-                                    object_key: object_key
+                                    object_key: object_key,
+                                    exclude: object_excludes
                                 };
                             },
                             processResults: function (data, params) {
@@ -88,6 +90,7 @@
                             action: "pum_object_search",
                             object_type: object_type,
                             object_key: object_key,
+                            exclude: object_excludes,
                             include: current && current.length ? (typeof current === 'string' || typeof current === 'number') ? [current] : current : null
                         },
                         dataType: "json",

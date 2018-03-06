@@ -65,6 +65,12 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	 * @return array
 	 */
 	public function fields() {
+		$select_args = array();
+
+		if ( isset( $_GET['post'] ) && is_int( (int) $_GET['post'] ) && isset( $_GET['action'] ) && $_GET['action'] == 'edit' ) {
+			$select_args['post__not_in'] = wp_parse_id_list( array( get_the_ID(), $_GET['post'] ) );
+		}
+
 		return array(
 			'general' => array(
 				'main' => array(
@@ -76,9 +82,9 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 						'post_type'   => 'popup',
 						'priority'    => 5,
 						'required'    => true,
-						'options'     => PUM_Helpers::popup_selectlist() + array(
-							'custom' => __( 'Custom', 'popup-maker' ),
-						),
+						'options'     => PUM_Helpers::popup_selectlist( $select_args ) + array(
+								'custom' => __( 'Custom', 'popup-maker' ),
+							),
 						'std'         => 0,
 					),
 					'custom_id' => array(

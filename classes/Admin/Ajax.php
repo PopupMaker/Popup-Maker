@@ -29,6 +29,11 @@ class PUM_Admin_Ajax {
 				$post_type = ! empty( $_REQUEST['object_key'] ) ? sanitize_text_field( $_REQUEST['object_key'] ) : 'post';
 
 				$include = ! empty( $_REQUEST['include'] ) ? wp_parse_id_list( $_REQUEST['include'] ) : null;
+				$exclude = ! empty( $_REQUEST['exclude'] ) ? wp_parse_id_list( $_REQUEST['exclude'] ) : null;
+
+				if ( ! empty( $include ) && ! empty( $exclude ) ) {
+					$exclude = array_merge( $include, $exclude );
+				}
 
 				if ( $include ) {
 					$include_query = PUM_Helpers::post_type_selectlist_query( $post_type, array(
@@ -48,7 +53,7 @@ class PUM_Admin_Ajax {
 				$query = PUM_Helpers::post_type_selectlist_query( $post_type, array(
 					's'              => ! empty( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : null,
 					'paged'          => ! empty( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : null,
-					'post__not_in'   => $include,
+					'post__not_in'   => $exclude,
 					'posts_per_page' => 10,
 				), true );
 
@@ -66,6 +71,11 @@ class PUM_Admin_Ajax {
 				$taxonomy = ! empty( $_REQUEST['object_key'] ) ? sanitize_text_field( $_REQUEST['object_key'] ) : 'category';
 
 				$include = ! empty( $_REQUEST['include'] ) ? wp_parse_id_list( $_REQUEST['include'] ) : null;
+				$exclude = ! empty( $_REQUEST['exclude'] ) ? wp_parse_id_list( $_REQUEST['exclude'] ) : null;
+
+				if ( ! empty( $include ) && ! empty( $exclude ) ) {
+					$exclude = array_merge( $include, $exclude );
+				}
 
 				if ( $include ) {
 					$include_query = PUM_Helpers::taxonomy_selectlist_query( $taxonomy, array(
@@ -85,7 +95,7 @@ class PUM_Admin_Ajax {
 				$query = PUM_Helpers::taxonomy_selectlist_query( $taxonomy, array(
 					'search'  => ! empty( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : null,
 					'paged'   => ! empty( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : null,
-					'exclude' => $include,
+					'exclude' => $exclude,
 					'number'  => 10,
 				), true );
 
