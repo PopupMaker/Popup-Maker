@@ -32,9 +32,9 @@ class PUM_Helpers {
 	/**
 	 * Sort nested arrays with various options.
 	 *
-	 * @param array $array
+	 * @param array  $array
 	 * @param string $type
-	 * @param bool $reverse
+	 * @param bool   $reverse
 	 *
 	 * @return array
 	 */
@@ -60,7 +60,7 @@ class PUM_Helpers {
 		return array_map( array( __CLASS__, 'sort_array_by_key' ), $array, $type, $reverse );
 	}
 
-	public static function post_type_selectlist( $post_type, $args = array(), $include_total = false ) {
+	public static function post_type_selectlist_query( $post_type, $args = array(), $include_total = false ) {
 
 		$args = wp_parse_args( $args, array(
 			'posts_per_page'         => 10,
@@ -89,7 +89,7 @@ class PUM_Helpers {
 
 			$posts = array();
 			foreach ( $query->posts as $post ) {
-				$posts[ $post->post_title ] = $post->ID;
+				$posts[ $post->ID ] = $post->post_title;
 			}
 
 			$results = array(
@@ -105,7 +105,7 @@ class PUM_Helpers {
 		return ! $include_total ? $results['items'] : $results;
 	}
 
-	public static function taxonomy_selectlist( $taxonomies = array(), $args = array(), $include_total = false ) {
+	public static function taxonomy_selectlist_query( $taxonomies = array(), $args = array(), $include_total = false ) {
 		if ( empty ( $taxonomies ) ) {
 			$taxonomies = array( 'category' );
 		}
@@ -115,6 +115,7 @@ class PUM_Helpers {
 			'number'     => 10,
 			'search'     => '',
 			'include'    => null,
+			'exclude'    => null,
 			'offset'     => 0,
 			'page'       => null,
 		) );
@@ -132,7 +133,7 @@ class PUM_Helpers {
 			$terms = array();
 
 			foreach ( get_terms( $taxonomies, $args ) as $term ) {
-				$terms[ $term->name ] = $term->term_id;
+				$terms[ $term->term_id ] = $term->name;
 			}
 
 			$total_args = $args;
