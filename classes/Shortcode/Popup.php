@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PUM_Shortcode_Popup extends PUM_Shortcode {
 
+	public $version = 2;
+
 	public $has_content = true;
 
 	public $inner_content_priority = 15;
@@ -38,10 +40,13 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 	}
 
 	public function post_types() {
-		return array( 'post', 'page' );
+		return array();
 	}
 
-	public function sections() {
+	/**
+	 * @return array
+	 */
+	public function tabs() {
 		return array(
 			'general'   => __( 'General', 'popup-maker' ),
 			'display'   => __( 'Display', 'popup-maker' ),
@@ -49,6 +54,29 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 			'animation' => __( 'Animation', 'popup-maker' ),
 			'close'     => __( 'Close', 'popup-maker' ),
 		);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function subtabs() {
+		return apply_filters( 'pum_sub_form_shortcode_subtabs', array(
+			'general'   => array(
+				'main' => __( 'General', 'popup-maker' ),
+			),
+			'display'   => array(
+				'main' => __( 'Display', 'popup-maker' ),
+			),
+			'position'  => array(
+				'main' => __( 'Position', 'popup-maker' ),
+			),
+			'animation' => array(
+				'main' => __( 'Animation', 'popup-maker' ),
+			),
+			'close'     => array(
+				'main' => __( 'Close', 'popup-maker' ),
+			),
+		) );
 	}
 
 	public function get_popup_themes() {
@@ -65,161 +93,171 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 
 	public function fields() {
 		return array(
-			'general' => array(
-				'id'    => array(
-					'label'       => __( 'Unique Popup ID', 'popup-maker' ),
-					'placeholder' => __( '`offer`, `more-info`', 'popup-maker' ),
-					'desc'        => __( 'Used in popup triggers to target this popup', 'popup-maker' ),
-					'priority'    => 5,
-					'required'    => true,
-				),
-				'title' => array(
-					'label'       => __( 'Popup Title', 'popup-maker' ),
-					'placeholder' => __( 'Enter popup title text,', 'popup-maker' ),
-					'desc'        => __( 'This will be displayed above the content. Leave it empty to disable it.', 'popup-maker' ),
-					'priority'    => 10,
+			'general'   => array(
+				'main' => array(
+					'id'    => array(
+						'label'       => __( 'Unique Popup ID', 'popup-maker' ),
+						'placeholder' => __( '`offer`, `more-info`', 'popup-maker' ),
+						'desc'        => __( 'Used in popup triggers to target this popup', 'popup-maker' ),
+						'priority'    => 5,
+						'required'    => true,
+					),
+					'title' => array(
+						'label'       => __( 'Popup Title', 'popup-maker' ),
+						'placeholder' => __( 'Enter popup title text,', 'popup-maker' ),
+						'desc'        => __( 'This will be displayed above the content. Leave it empty to disable it.', 'popup-maker' ),
+						'priority'    => 10,
+					),
 				),
 			),
-			'display' => array(
-				'theme_id'         => array(
-					'type'        => 'select',
-					'label'       => __( 'Popup Theme', 'popup-maker' ),
-					'placeholder' => __( 'Choose a theme,', 'popup-maker' ),
-					'desc'        => __( 'Choose which popup theme will be used.', 'popup-maker' ),
-					'std'         => popmake_get_default_popup_theme(),
-					'select2'     => true,
-					'options'     => $this->get_popup_themes(),
-					'required'    => true,
-					'priority'    => 5,
-				),
-				'overlay_disabled' => array(
-					'label'       => __( 'Disable Overlay', 'popup-maker' ),
-					'description' => __( 'Checking this will disable and hide the overlay for this popup.', 'popup-maker' ),
-					'type'        => 'checkbox',
-					'std'         => false,
-					'priority'    => 10,
-				),
-				'size'                      => array(
-					'label'       => __( 'Size', 'popup-maker' ),
-					'description' => __( 'Select the size of the popup.', 'popup-maker' ),
-					'type'        => 'select',
-					'std'         => 'small',
-					'options'     => array_flip( apply_filters( 'popmake_popup_display_size_options', array() ) ),
-					'priority'    => 15,
-				),
-				'width'            => array(
-					'label'    => __( 'Width', 'popup-maker' ),
-					'priority'    => 20,
-				),
-				'width_unit'       => array(
-					'label'       => __( 'Width Unit', 'popup-maker' ),
-					'type'        => 'select',
-					'std'         => 'px',
-					'options'     => array_flip( apply_filters( 'popmake_size_unit_options', array() ) ),
-					'priority'    => 25,
-				),
-				'height'           => array(
-					'label'    => __( 'Height', 'popup-maker' ),
-					'priority'    => 30,
-				),
-				'height_unit'       => array(
-					'label'       => __( 'Height Unit', 'popup-maker' ),
-					'type'        => 'select',
-					'std'         => 'px',
-					'options'     => array_flip( apply_filters( 'popmake_size_unit_options', array() ) ),
-					'priority'    => 35,
+			'display'   => array(
+				'main' => array(
+					'theme_id'         => array(
+						'type'        => 'select',
+						'label'       => __( 'Popup Theme', 'popup-maker' ),
+						'placeholder' => __( 'Choose a theme,', 'popup-maker' ),
+						'desc'        => __( 'Choose which popup theme will be used.', 'popup-maker' ),
+						'std'         => popmake_get_default_popup_theme(),
+						'select2'     => true,
+						'options'     => $this->get_popup_themes(),
+						'required'    => true,
+						'priority'    => 5,
+					),
+					'overlay_disabled' => array(
+						'label'       => __( 'Disable Overlay', 'popup-maker' ),
+						'description' => __( 'Checking this will disable and hide the overlay for this popup.', 'popup-maker' ),
+						'type'        => 'checkbox',
+						'std'         => false,
+						'priority'    => 10,
+					),
+					'size'             => array(
+						'label'       => __( 'Size', 'popup-maker' ),
+						'description' => __( 'Select the size of the popup.', 'popup-maker' ),
+						'type'        => 'select',
+						'std'         => 'small',
+						'options'     => array_flip( apply_filters( 'popmake_popup_display_size_options', array() ) ),
+						'priority'    => 15,
+					),
+					'width'            => array(
+						'label'    => __( 'Width', 'popup-maker' ),
+						'priority' => 20,
+					),
+					'width_unit'       => array(
+						'label'    => __( 'Width Unit', 'popup-maker' ),
+						'type'     => 'select',
+						'std'      => 'px',
+						'options'  => array_flip( apply_filters( 'popmake_size_unit_options', array() ) ),
+						'priority' => 25,
+					),
+					'height'           => array(
+						'label'    => __( 'Height', 'popup-maker' ),
+						'priority' => 30,
+					),
+					'height_unit'      => array(
+						'label'    => __( 'Height Unit', 'popup-maker' ),
+						'type'     => 'select',
+						'std'      => 'px',
+						'options'  => array_flip( apply_filters( 'popmake_size_unit_options', array() ) ),
+						'priority' => 35,
+					),
 				),
 			),
 			'position'  => array(
-				'location'        => array(
-					'label'       => __( 'Location', 'popup-maker' ),
-					'description' => __( 'Choose where the popup will be displayed.', 'popup-maker' ),
-					'type'        => 'select',
-					'std'         => 'center top',
-					'priority'    => 4,
-					'options'     => array_flip( apply_filters( 'popmake_popup_display_location_options', array() ) ),
-				),
-				'position_top'    => array(
-					'label'       => __( 'Top', 'popup-maker' ),
-					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Top', 'popup-maker' ) ) ),
-					'type'        => 'rangeslider',
-					'std'         => 100,
-					'priority'    => 10,
-					'step'        => 1,
-					'min'         => 0,
-					'max'         => 500,
-					'unit'        => 'px',
-				),
-				'position_bottom' => array(
-					'label'       => __( 'Bottom', 'popup-maker' ),
-					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Bottom', 'popup-maker' ) ) ),
-					'type'        => 'rangeslider',
-					'std'         => 0,
-					'priority'    => 10,
-					'step'        => 1,
-					'min'         => 0,
-					'max'         => 500,
-					'unit'        => 'px',
-				),
-				'position_left'   => array(
-					'label'       => __( 'Left', 'popup-maker' ),
-					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Left', 'popup-maker' ) ) ),
-					'type'        => 'rangeslider',
-					'std'         => 0,
-					'priority'    => 10,
-					'step'        => 1,
-					'min'         => 0,
-					'max'         => 500,
-					'unit'        => 'px',
-				),
-				'position_right'  => array(
-					'label'       => __( 'Right', 'popup-maker' ),
-					'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Right', 'popup-maker' ) ) ),
-					'type'        => 'rangeslider',
-					'std'         => 0,
-					'priority'    => 10,
-					'step'        => 1,
-					'min'         => 0,
-					'max'         => 500,
-					'unit'        => 'px',
+				'main' => array(
+					'location'        => array(
+						'label'       => __( 'Location', 'popup-maker' ),
+						'description' => __( 'Choose where the popup will be displayed.', 'popup-maker' ),
+						'type'        => 'select',
+						'std'         => 'center top',
+						'priority'    => 4,
+						'options'     => array_flip( apply_filters( 'popmake_popup_display_location_options', array() ) ),
+					),
+					'position_top'    => array(
+						'label'       => __( 'Top', 'popup-maker' ),
+						'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Top', 'popup-maker' ) ) ),
+						'type'        => 'rangeslider',
+						'std'         => 100,
+						'priority'    => 10,
+						'step'        => 1,
+						'min'         => 0,
+						'max'         => 500,
+						'unit'        => 'px',
+					),
+					'position_bottom' => array(
+						'label'       => __( 'Bottom', 'popup-maker' ),
+						'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Bottom', 'popup-maker' ) ) ),
+						'type'        => 'rangeslider',
+						'std'         => 0,
+						'priority'    => 10,
+						'step'        => 1,
+						'min'         => 0,
+						'max'         => 500,
+						'unit'        => 'px',
+					),
+					'position_left'   => array(
+						'label'       => __( 'Left', 'popup-maker' ),
+						'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Left', 'popup-maker' ) ) ),
+						'type'        => 'rangeslider',
+						'std'         => 0,
+						'priority'    => 10,
+						'step'        => 1,
+						'min'         => 0,
+						'max'         => 500,
+						'unit'        => 'px',
+					),
+					'position_right'  => array(
+						'label'       => __( 'Right', 'popup-maker' ),
+						'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Right', 'popup-maker' ) ) ),
+						'type'        => 'rangeslider',
+						'std'         => 0,
+						'priority'    => 10,
+						'step'        => 1,
+						'min'         => 0,
+						'max'         => 500,
+						'unit'        => 'px',
+					),
 				),
 			),
 			'animation' => array(
-				'animation_type'            => array(
-					'label'       => __( 'Animation Type', 'popup-maker' ),
-					'description' => __( 'Select an animation type for your popup.', 'popup-maker' ),
-					'type'        => 'select',
-					'std'         => 'fade',
-					'priority'    => 5,
-					'options'     => array_flip( apply_filters( 'popmake_popup_display_animation_type_options', array() ) ),
-				),
-				'animation_speed'           => array(
-					'label'       => __( 'Animation Speed', 'popup-maker' ),
-					'description' => __( 'Set the animation speed for the popup.', 'popup-maker' ),
-					'type'        => 'rangeslider',
-					'std'         => 350,
-					'priority'    => 10,
-					'step'        => 10,
-					'min'         => 50,
-					'max'         => 1000,
-					'unit'        => __( 'ms', 'popup-maker' ),
-				),
-				'animation_origin'          => array(
-					'label'       => __( 'Animation Origin', 'popup-maker' ),
-					'description' => __( 'Choose where the animation will begin.', 'popup-maker' ),
-					'type'        => 'select',
-					'std'         => 'center top',
-					'priority'    => 15,
-					'options'     => array_flip(apply_filters( 'popmake_popup_display_animation_origin_options', array() )),
+				'main' => array(
+					'animation_type'   => array(
+						'label'       => __( 'Animation Type', 'popup-maker' ),
+						'description' => __( 'Select an animation type for your popup.', 'popup-maker' ),
+						'type'        => 'select',
+						'std'         => 'fade',
+						'priority'    => 5,
+						'options'     => array_flip( apply_filters( 'popmake_popup_display_animation_type_options', array() ) ),
+					),
+					'animation_speed'  => array(
+						'label'       => __( 'Animation Speed', 'popup-maker' ),
+						'description' => __( 'Set the animation speed for the popup.', 'popup-maker' ),
+						'type'        => 'rangeslider',
+						'std'         => 350,
+						'priority'    => 10,
+						'step'        => 10,
+						'min'         => 50,
+						'max'         => 1000,
+						'unit'        => __( 'ms', 'popup-maker' ),
+					),
+					'animation_origin' => array(
+						'label'       => __( 'Animation Origin', 'popup-maker' ),
+						'description' => __( 'Choose where the animation will begin.', 'popup-maker' ),
+						'type'        => 'select',
+						'std'         => 'center top',
+						'priority'    => 15,
+						'options'     => array_flip( apply_filters( 'popmake_popup_display_animation_origin_options', array() ) ),
+					),
 				),
 			),
 			'close'     => array(
-				'overlay_click' => array(
-					'label'       => __( 'Click Overlay to Close', 'popup-maker' ),
-					'description' => __( 'Checking this will cause popup to close when user clicks on overlay.', 'popup-maker' ),
-					'type'        => 'checkbox',
-					'std'         => false,
-					'priority'    => 5,
+				'main' => array(
+					'overlay_click' => array(
+						'label'       => __( 'Click Overlay to Close', 'popup-maker' ),
+						'description' => __( 'Checking this will cause popup to close when user clicks on overlay.', 'popup-maker' ),
+						'type'        => 'checkbox',
+						'std'         => false,
+						'priority'    => 5,
+					),
 				),
 			),
 		);
@@ -313,7 +351,10 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 	}
 
 	public function template() { ?>
-			<?php _e( 'Popup', 'popup-maker' ); ?>: ID "{{attrs.id}}"<?php
+		<p class="pum-sub-form-desc">
+			<?php _e( 'Popup', 'popup-maker' ); ?>: ID "{{attrs.id}}"
+		</p>
+		<?php
 	}
 
 }
