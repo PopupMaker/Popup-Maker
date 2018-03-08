@@ -53,6 +53,10 @@ class PUM_Newsletters {
 
 		$values = isset( $_REQUEST['values'] ) ? $_REQUEST['values'] : array();
 
+		if ( empty( $values['popup_id'] ) && ! empty( $values['pum_form_popup_id'] ) ) {
+			$values['popup_id'] = absint( $values['pum_form_popup_id'] );
+		}
+
 		do_action( 'pum_sub_form_ajax_override', $values );
 
 		// Allow sanitization & manipulation of form values prior to usage.
