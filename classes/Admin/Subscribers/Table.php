@@ -56,12 +56,14 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 		// check and process any actions such as bulk actions.
 		$this->handle_table_actions();
 
-		$limit = $this->get_items_per_page( 'subscribers_per_page' );
+		$limit = $this->get_items_per_page( 'pum_subscribers_per_page' );
 
 		$query_args = array(
-			's'     => isset( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : null,
-			'limit' => $limit,
-			'page'  => $this->get_pagenum(),
+			's'       => isset( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : null,
+			'limit'   => $limit,
+			'page'    => $this->get_pagenum(),
+			'orderby' => isset( $_REQUEST['orderby'] ) ? sanitize_text_field( $_REQUEST['orderby'] ) : null,
+			'order'   => isset( $_REQUEST['order'] ) ? sanitize_text_field( $_REQUEST['order'] ) : null,
 		);
 
 		$this->items = PUM_DB_Subscribers::instance()->query( $query_args, 'ARRAY_A' );
@@ -84,14 +86,14 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 */
 	public function get_columns() {
 		return apply_filters( 'pum_subscribers_table_columns', array(
-			'cb'            => '<input type="checkbox" />', // to display the checkbox.
-			'ID'            => 'ID',
-			'email'         => __( 'Email', 'popup-maker' ),
-			'fname'         => __( 'First Name', 'popup-maker' ),
-			'lname'         => __( 'Last Name', 'popup-maker' ),
-			'popup_id'      => __( 'Popup ID', 'popup-maker' ),
-			'user_id'       => __( 'User ID', 'popup-maker' ),
-			'created' => _x( 'Subscribed On', 'column name', 'popup-maker' ),
+			'cb'       => '<input type="checkbox" />', // to display the checkbox.
+			'email'    => __( 'Email', 'popup-maker' ),
+			'name'     => __( 'Full Name', 'popup-maker' ),
+			'fname'    => __( 'First Name', 'popup-maker' ),
+			'lname'    => __( 'Last Name', 'popup-maker' ),
+			'popup_id' => __( 'Popup ID', 'popup-maker' ),
+			'user_id'  => __( 'User ID', 'popup-maker' ),
+			'created'  => _x( 'Subscribed On', 'column name', 'popup-maker' ),
 		) );
 	}
 
@@ -108,12 +110,11 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return apply_filters( 'pum_subscribers_table_columns', array(
-			'ID'            => array( 'ID', true ),
-			'email'         => 'email',
-			'fname'         => 'fname',
-			'lname'         => 'lname',
-			'popup_id'      => 'popup_id',
-			'created' => 'created',
+			'email'    => 'email',
+			'fname'    => 'fname',
+			'lname'    => 'lname',
+			'popup_id' => 'popup_id',
+			'created'  => 'created',
 		) );
 	}
 
@@ -123,7 +124,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 * @return string The name of the primary column.
 	 */
 	protected function get_primary_column_name() {
-		return 'ID';
+		return 'email';
 	}
 
 
@@ -144,15 +145,10 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
-			case 'email':
-			case 'fname':
-			case 'ID':
-				return $item[$column_name];
 			default:
 				return $item[ $column_name ];
 		}
 	}
-
 
 	/**
 	 * Get value for checkbox column.
@@ -164,8 +160,91 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 * @return string Text to be placed inside the column <td>.
 	 */
 	protected function column_cb( $item ) {
-		return sprintf( '<label class="screen-reader-text" for="subscriber_' . $item['ID'] . '">' . sprintf( __( 'Select %s' ), $item['fname'] . ' ' . $item['lname'] ) . '</label>' . "<input type='checkbox' name='users[]' id='subscriber_{$item['ID']}' value='{$item['ID']}' />" );
+		$label = sprintf( '<label class="screen-reader-text" for="subscriber_%d">%s</label>', $item['ID'], sprintf( __( 'Select %s' ), $item['name'] ) );
+
+		$input = sprintf( '<input type="checkbox" name="%1$s[]" id="subscriber_%2$d" value="%2$d" />', $this->_args['singular'], $item['ID'] );
+
+		return sprintf( '%s%s', $label, $input );
 	}
+
+	/** ************************************************************************
+	 * Recommended. This is a custom column method and is responsible for what
+	 * is rendered in any column with a name/slug of 'title'. Every time the class
+	 * needs to render a column, it first looks for a method named
+	 * column_{$column_title} - if it exists, that method is run. If it doesn't
+	 * exist, column_default() is called instead.
+	 *
+	 * This example also illustrates how to implement rollover actions. Actions
+	 * should be an associative array formatted as 'slug'=>'link html' - and you
+	 * will need to generate the URLs yourself. You could even ensure the links
+	 *
+	 *
+	 * @see WP_List_Table::::single_row_columns()
+	 *
+	 * @param array $item A singular item (one full row's worth of data)
+	 *
+	 * @return string Text to be placed inside the column <td> (movie title only)
+	 **************************************************************************/
+	function column_email( $item ) {
+
+		$url = add_query_arg( array(
+			'page'       => $_REQUEST['page'],
+			'subscriber' => $item['ID'],
+		) );
+
+		$edit_url = add_query_arg( array(
+			'action' => 'edit',
+		), $url );
+
+		$delete_url = add_query_arg( array(
+			'action' => 'delete',
+		), $url );
+
+		//Build row actions
+		$actions = array(
+			//'edit'   => sprintf( '<a href="%s">Edit</a>', $edit_url ),
+			'delete' => sprintf( '<a href="%s">Delete</a>', $delete_url ),
+		);
+
+		//Return the title contents
+		return sprintf( '%1$s <span style="color:silver">(id:%2$s)</span>%3$s', /*$1%s*/
+			$item['email'], /*$2%s*/
+			$item['ID'], /*$3%s*/
+			$this->row_actions( $actions ) );
+	}
+
+
+	/** ************************************************************************
+	 * Recommended. This is a custom column method and is responsible for what
+	 * is rendered in any column with a name/slug of 'title'. Every time the class
+	 * needs to render a column, it first looks for a method named
+	 * column_{$column_title} - if it exists, that method is run. If it doesn't
+	 * exist, column_default() is called instead.
+	 *
+	 * This example also illustrates how to implement rollover actions. Actions
+	 * should be an associative array formatted as 'slug'=>'link html' - and you
+	 * will need to generate the URLs yourself. You could even ensure the links
+	 *
+	 *
+	 * @see WP_List_Table::::single_row_columns()
+	 *
+	 * @param array $item A singular item (one full row's worth of data)
+	 *
+	 * @return string Text to be placed inside the column <td> (movie title only)
+	 **************************************************************************/
+	function column_name( $item ) {
+		$user_id = $item['user_id'] > 0 ? absint( $item['user_id'] ) : null;
+
+		if ( $user_id ) {
+			$url = admin_url( "user-edit.php?user_id=$user_id" );
+
+			//Return the title contents
+			return sprintf( '%s<br/><small style="color:silver">(%s: <a href="%s">#%s</a>)</small>', $item['name'], __( 'User ID', 'popup-maker' ), $url, $item['user_id'] );
+		} else {
+			return $item['name'];
+		}
+	}
+
 
 	/**
 	 * Returns an associative array containing the bulk action
@@ -180,12 +259,11 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 		 * action and action2 are set based on the triggers above or below the table
 		 */
 		$actions = array(
-			'bulk-delete' => __( 'Delete Subscribers', 'popup-maker' ),
+			'bulk-delete' => __( 'Delete', 'popup-maker' ),
 		);
 
 		return $actions;
 	}
-
 
 	/**
 	 * Process actions triggered by the user
@@ -194,6 +272,11 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 *
 	 */
 	public function handle_table_actions() {
+
+		//Detect when a bulk action is being triggered...
+		if( 'delete'=== $this->current_action() ) {
+			wp_die('Items deleted (or they would be if we had items to delete)!');
+		}
 
 		/*
 		 * Note: Table bulk_actions can be identified by checking $_REQUEST['action'] and $_REQUEST['action2']

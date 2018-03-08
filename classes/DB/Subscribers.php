@@ -111,11 +111,13 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		global $wpdb;
 
 		$args = wp_parse_args( $args, array(
-			'fields' => '*',
-			'page'   => null,
-			'limit'  => null,
-			'offset' => null,
-			's'      => null,
+			'fields'  => '*',
+			'page'    => null,
+			'limit'   => null,
+			'offset'  => null,
+			's'       => null,
+			'orderby' => null,
+			'order'   => null,
 		) );
 
 		$columns = $this->get_columns();
@@ -141,29 +143,42 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 
 			$search = wp_unslash( trim( $args['s'] ) );
 
-			$where .= ' AND (';
 
-			$first_field = true;
+			$search_where = array();
 
 			foreach ( $columns as $key => $type ) {
 				if ( in_array( $key, $fields ) ) {
-					if ( $type == '%s' ) {
-						$values[] = $search;
-						$where    .= ( ! $first_field ? ' OR ' : '' ) . "$key LIKE '%%s%'";
-					} elseif ( is_numeric( $search ) ) {
-						$values[] = $search;
-						$where    .= ( ! $first_field ? ' OR ' : '' ) . "$key LIKE '%%d%'";
+					if ( $type == '%s' || ( $type == '%d' && is_numeric( $search ) ) ) {
+						$values[]       = '%' . $search . '%';
+						$search_where[] = "`$key` LIKE '%s'";
 					}
-
 				}
 			}
 
-			$where .= ')';
+			if ( ! empty( $search_where ) ) {
+				$where .= ' AND (' . join( ' OR ', $search_where ) . ')';
+			}
 		}
 
 		$select_fields = implode( '`, `', $fields );
 
 		$query = "SELECT `$select_fields` FROM {$this->table_name()} $where";
+
+		if ( ! empty( $args['orderby'] ) ) {
+			$query .= " ORDER BY `" . wp_unslash( trim( $args['orderby'] ) ) . '`';
+
+			switch ( $args['order'] ) {
+				case 'asc':
+				case 'ASC':
+					$query .= " ASC";
+					break;
+				case 'desc':
+				case 'DESC':
+				default:
+					$query .= " DESC";
+					break;
+			}
+		}
 
 		if ( ! empty( $args['limit'] ) ) {
 			$query .= " LIMIT " . absint( $args['limit'] );
@@ -192,7 +207,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 	public function total_rows( $args ) {
 		$args['limit']  = null;
 		$args['offset'] = null;
-		$args['page'] = null;
+		$args['page']   = null;
 
 		$results = $this->query( $args );
 
