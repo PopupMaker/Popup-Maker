@@ -47,6 +47,11 @@ class PUM_Admin_Pages {
 	public static function register_pages() {
 
 		$admin_pages = apply_filters( 'pum_admin_pages', array(
+			'subscribers' => array(
+				'page_title'  => __( 'Subscribers', 'popup-maker' ),
+				'capability'  => 'manage_options',
+				'callback'    => array( 'PUM_Admin_Subscribers', 'page' ),
+			),
 			'settings'   => array(
 				'page_title'  => __( 'Settings', 'popup-maker' ),
 				'capability'  => 'manage_options',

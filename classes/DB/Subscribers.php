@@ -105,4 +105,97 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 
 		update_option( $this->table_name . '_db_version', $this->version );
 	}
+
+
+	public function query( $args = array(), $return_type = 'OBJECT' ) {
+		global $wpdb;
+
+		$args = wp_parse_args( $args, array(
+			'fields' => '*',
+			'page'   => null,
+			'limit'  => null,
+			'offset' => null,
+			's'      => null,
+		) );
+
+		$columns = $this->get_columns();
+
+		$where  = "WHERE 1=1";
+		$values = array();
+		$fields = $args['fields'];
+
+		if ( $fields == '*' ) {
+			$fields = array_keys( $columns );
+		} else {
+			$fields = explode( ',', $args['fields'] );
+			$fields = array_map( 'trim', $fields );
+			$fields = array_map( 'sanitize_text_field', $fields );
+		}
+
+		// Pagination.
+		if ( $args['page'] >= 1 ) {
+			$args['offset'] = ( $args['page'] * $args['limit'] ) - $args['limit'];
+		}
+
+		if ( $args['s'] && ! empty( $args['s'] ) ) {
+
+			$search = wp_unslash( trim( $args['s'] ) );
+
+			$where .= ' AND (';
+
+			$first_field = true;
+
+			foreach ( $columns as $key => $type ) {
+				if ( in_array( $key, $fields ) ) {
+					if ( $type == '%s' ) {
+						$values[] = $search;
+						$where    .= ( ! $first_field ? ' OR ' : '' ) . "$key LIKE '%%s%'";
+					} elseif ( is_numeric( $search ) ) {
+						$values[] = $search;
+						$where    .= ( ! $first_field ? ' OR ' : '' ) . "$key LIKE '%%d%'";
+					}
+
+				}
+			}
+
+			$where .= ')';
+		}
+
+		$select_fields = implode( '`, `', $fields );
+
+		$query = "SELECT `$select_fields` FROM {$this->table_name()} $where";
+
+		if ( ! empty( $args['limit'] ) ) {
+			$query .= " LIMIT " . absint( $args['limit'] );
+		}
+
+		if ( ! empty( $args['offset'] ) ) {
+			$query .= " OFFSET " . absint( $args['offset'] );
+		}
+
+		if ( strpos( $query, '%s' ) || strpos( $query, '%d' ) ) {
+			$query = $wpdb->prepare( $query, $values );
+		}
+
+		if ( $return_type != 'model' ) {
+			$results = $wpdb->get_results( $query, $return_type );
+		}
+
+		return $results;
+	}
+
+	/**
+	 * @param $args
+	 *
+	 * @return int
+	 */
+	public function total_rows( $args ) {
+		$args['limit']  = null;
+		$args['offset'] = null;
+		$args['page'] = null;
+
+		$results = $this->query( $args );
+
+		return $results ? count( $results ) : 0;
+	}
 }

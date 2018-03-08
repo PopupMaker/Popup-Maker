@@ -120,6 +120,17 @@ function pum_is_submenu_page( $key = null ) {
 }
 
 /**
+ * Determines whether the current admin page is the subscriptions page.
+ *
+ * @since 1.7.0
+ *
+ * @return bool
+ */
+function pum_is_subscriptions_page() {
+	return pum_is_submenu_page( 'subscriptions' );
+}
+
+/**
  * Determines whether the current admin page is the extensions page.
  *
  * @since 1.7.0
