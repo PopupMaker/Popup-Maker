@@ -91,8 +91,8 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 			'name'     => __( 'Full Name', 'popup-maker' ),
 			'fname'    => __( 'First Name', 'popup-maker' ),
 			'lname'    => __( 'Last Name', 'popup-maker' ),
-			'popup_id' => __( 'Popup ID', 'popup-maker' ),
-			'user_id'  => __( 'User ID', 'popup-maker' ),
+			'popup_id' => __( 'Popup', 'popup-maker' ),
+			//'user_id'  => __( 'User ID', 'popup-maker' ),
 			'created'  => _x( 'Subscribed On', 'column name', 'popup-maker' ),
 		) );
 	}
@@ -145,6 +145,8 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
+			case 'created':
+				return date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item[ $column_name ] ) );
 			default:
 				return $item[ $column_name ];
 		}
@@ -247,6 +249,40 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	}
 
 
+	/** ************************************************************************
+	 * Recommended. This is a custom column method and is responsible for what
+	 * is rendered in any column with a name/slug of 'title'. Every time the class
+	 * needs to render a column, it first looks for a method named
+	 * column_{$column_title} - if it exists, that method is run. If it doesn't
+	 * exist, column_default() is called instead.
+	 *
+	 * This example also illustrates how to implement rollover actions. Actions
+	 * should be an associative array formatted as 'slug'=>'link html' - and you
+	 * will need to generate the URLs yourself. You could even ensure the links
+	 *
+	 *
+	 * @see WP_List_Table::::single_row_columns()
+	 *
+	 * @param array $item A singular item (one full row's worth of data)
+	 *
+	 * @return string Text to be placed inside the column <td> (movie title only)
+	 **************************************************************************/
+	function column_popup_id( $item ) {
+		$popup_id = $item['popup_id'] > 0 ? absint( $item['popup_id'] ) : null;
+
+		if ( $popup_id ) {
+			$url = admin_url( "post.php?post={$popup_id}&action=edit" );
+
+			$popup = pum_get_popup( $popup_id );
+
+			//Return the title contents
+			return sprintf( '%s<br/><small style="color:silver">(%s: <a href="%s">#%s</a>)</small>', $popup->post_title, __( 'ID', 'popup-maker' ), $url, $item['popup_id'] );
+		} else {
+			return __( 'N/A', 'popup-maker' );
+		}
+	}
+
+
 	/**
 	 * Returns an associative array containing the bulk action
 	 *
@@ -276,7 +312,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 
 		//Detect when a bulk action is being triggered...
 		$action1 = $this->current_action();
-		
+
 		if ( in_array( $action1, array( 'delete', 'bulk-delete' ) ) ) {
 
 			// verify the nonce.
@@ -307,7 +343,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 						) );
 					} else {
 						$succeeded = count( array_filter( $status ) );
-						$failed = count( $subscribers ) - $succeeded;
+						$failed    = count( $subscribers ) - $succeeded;
 
 						if ( count( $subscribers ) == 1 ) {
 							wp_die( __( 'Deleting subscriber failed.', 'popup-maker' ), __( 'Error', 'popup-maker' ), array(
