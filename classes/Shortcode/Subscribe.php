@@ -97,6 +97,12 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	 * @return array
 	 */
 	public function fields() {
+		$select_args = array();
+
+		if ( isset( $_GET['post'] ) && is_int( (int) $_GET['post'] ) && isset( $_GET['action'] ) && $_GET['action'] == 'edit' ) {
+			$select_args['post__not_in'] = wp_parse_id_list( array( get_the_ID(), $_GET['post'] ) );
+		}
+
 		$fields = apply_filters( 'pum_sub_form_shortcode_fields', array(
 			'general' => array(
 				'main' => array(
@@ -313,7 +319,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						'type'         => 'select',
 						'options'      => array(
 							                  0 => __( 'Select a popup', 'popup-maker' ),
-						                  ) + PUM_Helpers::popup_selectlist(),
+						                  ) + PUM_Helpers::popup_selectlist( $select_args ),
 						'std'          => 0,
 						'dependencies' => array(
 							'openpopup' => true,
