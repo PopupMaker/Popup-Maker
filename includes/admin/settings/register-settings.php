@@ -3,10 +3,10 @@
  * Register Settings
  *
  * @package        POPMAKE
- * @subpackage  Admin/Settings
- * @copyright   Copyright (c) 2014, Daniel Iser
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since        3
+ * @subpackage     Admin/Settings
+ * @copyright      Copyright (c) 2014, Daniel Iser
+ * @license        http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since          3
  */
 
 // Exit if accessed directly
@@ -23,7 +23,7 @@ add_action( 'popmake_output_pum_styles', 'popmake_output_pum_styles' );
 /**
  * Merge old deprecated settings from extensions into the new settings API.
  *
- * @since 1.7.0
+ * @since      1.7.0
  * @deprecated 1.7.0
  *
  * @param array $tabs
@@ -78,11 +78,11 @@ function pum_merge_deprecated_settings_fields( $tabs = array() ) {
  *
  * Looks to see if the specified setting exists, returns default if not
  *
- * @since 1.0
+ * @since       1.0
  * @deprecated  1.7.0
  *
  * @param string $key
- * @param bool $default
+ * @param bool   $default
  *
  * @return mixed
  */
@@ -95,7 +95,7 @@ function popmake_get_option( $key = '', $default = false ) {
  *
  * Retrieves all plugin settings
  *
- * @since 1.0.0
+ * @since      1.0.0
  * @deprecated 1.7.0
  *
  * @return array $settings
@@ -107,7 +107,7 @@ function popmake_get_settings() {
 /**
  * Add all settings sections and fields
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  */
 function popmake_register_settings() {
@@ -148,7 +148,7 @@ function popmake_register_settings() {
 /**
  * Retrieve the array of plugin settings
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
  * @return array
@@ -177,7 +177,7 @@ function popmake_get_registered_settings() {
  *
  * On large sites this can be expensive, so only load if on the settings page or $force is set to true
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
  * @param bool $force Force the pages to be loaded even if not on settings
@@ -209,7 +209,7 @@ function popmake_get_pages( $force = false ) {
  * Adds a settings error (for the updated message)
  * At some point this will validate input
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
  * @param array $input The value inputted in the field
@@ -273,7 +273,7 @@ function popmake_settings_sanitize( $input = array() ) {
 /**
  * Sanitize text fields
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
  * @param array $input The field value
@@ -288,7 +288,7 @@ function popmake_sanitize_text_field( $input ) {
 /**
  * Retrieve settings tabs
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
  * @return array $tabs
@@ -303,7 +303,7 @@ function popmake_get_settings_tabs() {
  *
  * Renders the header.
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
  * @param array $args Arguments passed by the setting
@@ -320,7 +320,7 @@ function popmake_section_callback( $args ) {
  *
  * Renders the header.
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
  * @param array $args Arguments passed by the setting
@@ -334,12 +334,12 @@ function popmake_header_callback( $args ) {
  *
  * Renders checkboxes.
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
- * @global $popmake_options array of all the POPMAKE Options
+ * @global      $popmake_options array of all the POPMAKE Options
  *
- * @param array $args Arguments passed by the setting
+ * @param array $args            Arguments passed by the setting
  */
 function popmake_checkbox_callback( $args ) {
 	global $popmake_options;
@@ -356,12 +356,12 @@ function popmake_checkbox_callback( $args ) {
  *
  * Renders multiple checkboxes.
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
- * @global $popmake_options array of all the POPMAKE Options
+ * @global      $popmake_options array of all the POPMAKE Options
  *
- * @param array $args Arguments passed by the setting
+ * @param array $args            Arguments passed by the setting
  */
 function popmake_multicheck_callback( $args ) {
 	global $popmake_options;
@@ -385,12 +385,12 @@ function popmake_multicheck_callback( $args ) {
  *
  * Renders radio boxes.
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
- * @global $popmake_options array of all the POPMAKE Options
+ * @global      $popmake_options array of all the POPMAKE Options
  *
- * @param array $args Arguments passed by the setting
+ * @param array $args            Arguments passed by the setting
  */
 function popmake_radio_callback( $args ) {
 	global $popmake_options;
@@ -416,12 +416,12 @@ function popmake_radio_callback( $args ) {
  *
  * Renders text fields.
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
- * @global $popmake_options array of all the POPMAKE Options
+ * @global      $popmake_options array of all the POPMAKE Options
  *
- * @param array $args Arguments passed by the setting
+ * @param array $args            Arguments passed by the setting
  */
 function popmake_text_callback( $args ) {
 	global $popmake_options;
@@ -444,12 +444,12 @@ function popmake_text_callback( $args ) {
  *
  * Renders number fields.
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
- * @global $popmake_options array of all the POPMAKE Options
+ * @global      $popmake_options array of all the POPMAKE Options
  *
- * @param array $args Arguments passed by the setting
+ * @param array $args            Arguments passed by the setting
  */
 function popmake_number_callback( $args ) {
 	global $popmake_options;
@@ -476,12 +476,12 @@ function popmake_number_callback( $args ) {
  *
  * Renders textarea fields.
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
- * @global $popmake_options array of all the POPMAKE Options
+ * @global      $popmake_options array of all the POPMAKE Options
  *
- * @param array $args Arguments passed by the setting
+ * @param array $args            Arguments passed by the setting
  */
 function popmake_textarea_callback( $args ) {
 	global $popmake_options;
@@ -503,12 +503,12 @@ function popmake_textarea_callback( $args ) {
  *
  * Renders password fields.
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
- * @global $popmake_options array of all the POPMAKE Options
+ * @global      $popmake_options array of all the POPMAKE Options
  *
- * @param array $args Arguments passed by the setting
+ * @param array $args            Arguments passed by the setting
  */
 function popmake_password_callback( $args ) {
 	global $popmake_options;
@@ -531,7 +531,7 @@ function popmake_password_callback( $args ) {
  *
  * If a function is missing for settings callbacks alert the user.
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
  * @param array $args Arguments passed by the setting
@@ -545,12 +545,12 @@ function popmake_missing_callback( $args ) {
  *
  * Renders select fields.
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
- * @global $popmake_options array of all the POPMAKE Options
+ * @global      $popmake_options array of all the POPMAKE Options
  *
- * @param array $args Arguments passed by the setting
+ * @param array $args            Arguments passed by the setting
  */
 function popmake_select_callback( $args ) {
 	global $popmake_options;
@@ -579,12 +579,12 @@ function popmake_select_callback( $args ) {
  *
  * Renders color select fields.
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
- * @global $popmake_options array of all the POPMAKE Options
+ * @global      $popmake_options array of all the POPMAKE Options
  *
- * @param array $args Arguments passed by the setting
+ * @param array $args            Arguments passed by the setting
  */
 function popmake_color_select_callback( $args ) {
 	global $popmake_options;
@@ -613,13 +613,13 @@ function popmake_color_select_callback( $args ) {
  *
  * Renders rich editor fields.
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
- * @global $popmake_options array of all the POPMAKE Options
- * @global $wp_version WordPress Version
+ * @global      $popmake_options array of all the POPMAKE Options
+ * @global      $wp_version      WordPress Version
  *
- * @param array $args Arguments passed by the setting
+ * @param array $args            Arguments passed by the setting
  */
 function popmake_rich_editor_callback( $args ) {
 	global $popmake_options, $wp_version;
@@ -653,12 +653,12 @@ function popmake_rich_editor_callback( $args ) {
  *
  * Renders upload fields.
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
- * @global $popmake_options array of all the POPMAKE Options
+ * @global      $popmake_options array of all the POPMAKE Options
  *
- * @param array $args Arguments passed by the setting
+ * @param array $args            Arguments passed by the setting
  */
 function popmake_upload_callback( $args ) {
 	global $popmake_options;
@@ -682,12 +682,12 @@ function popmake_upload_callback( $args ) {
  *
  * Renders color picker fields.
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
- * @global $popmake_options array of all the POPMAKE Options
+ * @global      $popmake_options array of all the POPMAKE Options
  *
- * @param array $args Arguments passed by the setting
+ * @param array $args            Arguments passed by the setting
  */
 function popmake_color_callback( $args ) {
 	global $popmake_options;
@@ -712,7 +712,7 @@ function popmake_color_callback( $args ) {
  *
  * Renders descriptive text onto the settings field.
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
  * @param array $args Arguments passed by the setting
@@ -724,12 +724,12 @@ function popmake_descriptive_text_callback( $args ) {
 /**
  * Registers the license field callback for Software Licensing
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
- * @global $popmake_options array of all the POPMAKE Options
+ * @global      $popmake_options array of all the POPMAKE Options
  *
- * @param array $args Arguments passed by the setting
+ * @param array $args            Arguments passed by the setting
  */
 if ( ! function_exists( 'popmake_license_key_callback' ) ) {
 	/**
@@ -929,7 +929,7 @@ function popmake_sanitize_key( $key ) {
 	/**
 	 * Filter a sanitized key string.
 	 *
-	 * @param string $key Sanitized key.
+	 * @param string $key     Sanitized key.
 	 * @param string $raw_key The key prior to sanitization.
 	 */
 	return apply_filters( 'popmake_sanitize_key', $key, $raw_key );
@@ -981,7 +981,7 @@ function popmake_sanitize_license_key_field( $new, $key ) {
  *
  * Adds a do_action() hook in place of the field
  *
- * @since 1.0
+ * @since      1.0
  * @deprecated 1.7.0
  *
  * @param array $args Arguments passed by the setting
@@ -1007,7 +1007,7 @@ function popmake_output_pum_styles() {
 		<h4><?php _e( 'Core Styles', 'popup-maker' ); ?></h4>
 		<textarea wrap="off" style="white-space: pre; width: 100%;">
 /* Popup Maker Core Styles */
-			<?php include POPMAKE_DIR . 'assets/css/site.min.css'; ?>
+<?php echo file_get_contents( Popup_Maker::$DIR . 'assets/css/site' . self::$suffix . '.css' ); ?>
 		</textarea>
 
 		<h4><?php _e( 'User Theme Styles', 'popup-maker' ); ?></h4>

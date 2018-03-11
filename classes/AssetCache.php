@@ -145,12 +145,8 @@ class PUM_AssetCache {
 	 * @return string
 	 */
 	public static function generate_js() {
-		ob_start();
-
-		// Include core styles so we can eliminate another stylesheet.
-		include Popup_Maker::$DIR . 'assets/js/site' . self::$suffix . '.js';
-
-		$core_js = ob_get_clean();
+		// Load core scripts so we can eliminate another stylesheet.
+		$core_js = file_get_contents( Popup_Maker::$DIR . 'assets/js/site' . self::$suffix . '.js' );
 
 		/**
 		 *  0 Core
@@ -240,12 +236,8 @@ class PUM_AssetCache {
 	 * @return string
 	 */
 	public static function generate_css() {
-		ob_start();
-
 		// Include core styles so we can eliminate another stylesheet.
-		include Popup_Maker::$DIR . 'assets/css/site' . self::$suffix . '.css';
-
-		$core_css = ob_get_clean();
+		$core_css = file_get_contents(Popup_Maker::$DIR . 'assets/css/site' . self::$suffix . '.css' );
 
 		// Reset ob.
 		ob_start();
@@ -300,7 +292,7 @@ class PUM_AssetCache {
 
 				if ( ! empty( $popup_css ) ) {
 					$css[ 'popup-' . $query->post->ID ] = array(
-						'content' => $popup_css,
+						'content'  => $popup_css,
 						'priority' => 11,
 					);
 				}
