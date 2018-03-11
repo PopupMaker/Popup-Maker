@@ -1007,7 +1007,7 @@ function popmake_output_pum_styles() {
 		<h4><?php _e( 'Core Styles', 'popup-maker' ); ?></h4>
 		<textarea wrap="off" style="white-space: pre; width: 100%;">
 /* Popup Maker Core Styles */
-<?php echo file_get_contents( Popup_Maker::$DIR . 'assets/css/site' . self::$suffix . '.css' ); ?>
+<?php echo file_get_contents( Popup_Maker::$DIR . 'assets/css/site' . PUM_Site_Assets::$suffix . '.css' ); ?>
 		</textarea>
 
 		<h4><?php _e( 'User Theme Styles', 'popup-maker' ); ?></h4>
