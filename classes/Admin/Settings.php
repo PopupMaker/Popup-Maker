@@ -131,6 +131,21 @@ class PUM_Admin_Settings {
 	 */
 	public static function sanitize_settings( $settings = array() ) {
 
+		$fields = self::fields();
+
+		$fields = PUM_Admin_Helpers::flatten_fields_array( $fields );
+
+		foreach ( $fields as $field_id => $field ) {
+			switch ( $field['type'] ) {
+				case 'checkbox':
+
+					if ( ! isset( $settings[ $field_id ] ) ) {
+						$settings[ $field_id ] = false;
+					}
+					break;
+			}
+		}
+
 		foreach ( $settings as $key => $value ) {
 			$field = self::get_field( $key );
 
@@ -145,6 +160,7 @@ class PUM_Admin_Settings {
 					default:
 						$settings[ $key ] = is_string( $value ) ? trim( $value ) : $value;
 						break;
+
 
 					case 'measure':
 						$settings[ $key ] .= $settings[ $key . '_unit' ];
