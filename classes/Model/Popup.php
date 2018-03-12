@@ -587,7 +587,9 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	public function close_text() {
 		$text = $this->get_setting( 'close_text', '&#215;' );
 
-		if ( empty( $text ) && ! empty( $theme_text = popmake_get_popup_theme_close( $this->get_theme_id(), 'text', false ) ) ) {
+		$theme_text = popmake_get_popup_theme_close( $this->get_theme_id(), 'text', false );
+
+		if ( empty( $text ) && ! empty( $theme_text ) ) {
 			$text = $theme_text;
 		}
 
