@@ -79,11 +79,23 @@
              * @returns {*}
              */
             getShortcodeValues: function () {
-                if (typeof this.shortcode === 'undefined' || typeof this.shortcode.attrs === 'undefined') {
+                if (typeof this.shortcode === 'undefined' || typeof this.shortcode.attrs === 'undefined' ) {
                     return {};
                 }
 
-                return _.extend({}, this.shortcode.attrs.named || {});
+                var values = {};
+
+                if (typeof this.shortcode.attrs.named !== 'undefined') {
+                    values = _.extend(values, this.shortcode.attrs.named || {});
+                }
+
+                if (typeof this.shortcode.attrs.numeric !== 'undefined') {
+                    for(var i=0; i < this.shortcode.attrs.numeric.length; i++) {
+                        values[this.shortcode.attrs.numeric[i]] = true;
+                    }
+                }
+
+                return values;
             },
             /**
              * Get shortcode raw content.

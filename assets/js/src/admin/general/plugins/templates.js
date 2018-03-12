@@ -282,8 +282,22 @@
                     }
                     break;
                 case 'checkbox':
-                    if (parseInt(data.value, 10) === 1) {
-                        data.meta.checked = true;
+
+                    switch (typeof data.value) {
+                    case 'boolean':
+                        if (data.value) {
+                            data.meta.checked = true;
+                        }
+                        break;
+                    case 'string':
+                        if (data.value === 'true' || data.value === 'yes' || data.value === '1') {
+                            data.meta.checked = true;
+                        }
+                        break;
+                    case 'number':
+                        if (parseInt(data.value, 10) === 1 || parseInt(data.value, 10) > 0) {
+                            data.meta.checked = true;
+                        }
                     }
                     break;
                 case 'rangeslider':
