@@ -16,8 +16,21 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PUM_Admin_Shortcode_UI {
 
+	private static $initialized = false;
+
+	/**
+	 * Here for backward compatibility with 3rd party plugins.
+	 *
+	 * @deprecated 1.7.0
+	 */
+	public static function instance() {
+		self::init();
+	}
+
 	public static function init() {
-		add_action( 'admin_init', array( __CLASS__, 'init_editor' ), 20 );
+		if ( ! self::$initialized ) {
+			add_action( 'admin_init', array( __CLASS__, 'init_editor' ), 20 );
+		}
 	}
 
 	/**
