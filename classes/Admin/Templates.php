@@ -401,8 +401,9 @@ class PUM_Admin_Templates {
 
 				<p>
 					<strong>
-						<?php _e( 'Triggers cause a popup to open. Learn more: ', 'popup-maker' ); ?>
-						<a href="<?php echo esc_url( 'http://docs.wppopupmaker.com/article/350-popup-settings-box-triggers-option-settings?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=triggers-option-settings' ); ?>" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
+						<?php _e( 'Triggers cause a popup to open.', 'popup-maker' ); ?>
+						<a href="<?php echo esc_url( 'http://docs.wppopupmaker.com/article/350-popup-settings-box-triggers-option-settings?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=triggers-option-settings' ); ?>" target="_blank"
+						   class="pum-doclink dashicons dashicons-editor-help" title="<?php esc_attr_e( sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Triggers', 'popup-maker' ) ) ); ?>"></a>
 					</strong>
 				</p>
 
@@ -536,19 +537,17 @@ class PUM_Admin_Templates {
 			<div class="facet-builder <# if (data.groups && data.groups.length) { print('has-conditions'); } #>">
 				<p>
 					<strong>
-						<?php _e( 'Conditions determine where or when a popup will display. ', 'popup-maker' ); ?>
+						<?php _e( 'Conditions allow you to show your popup to a targeted segment of your sites users.', 'popup-maker' ); ?>
 
-                        <?php printf( '%2$s%3$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%4$s',
-                            __( 'Targeting option tab doclink.', 'popup-maker' ),
-                            __( 'Learn more: ', 'popup-maker' ),
-                            '<a href="http://docs.wppopupmaker.com/article/351-popup-settings-box-targeting-option-settings?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=targeting-option-settings" target="_blank">',
-                            '</a>' ); ?>
+						<?php printf( '%2$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%3$s', sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Targeting Conditions', 'popup-maker' ) ), '<a href="http://docs.wppopupmaker.com/article/351-popup-settings-box-targeting-option-settings?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=targeting-option-settings" target="_blank">', '</a>' ); ?>
 					</strong>
 				</p>
 
-				<p><?php _e( 'By default, this popup is available to display on every page of your site. Accept the plugin default, or target the popup display below using Standard or Advanced Targeting Conditions.', 'popup-maker' ); ?></p>
-
-				<p><?php printf( __( 'Click the %s button below to set the opposite of your chosen condition.  When the button background color is red, a negative condition is active.', 'popup-maker' ), '<i style="font-size: 1.25em;" class="dashicons dashicons-warning"></i>' ); ?></p>
+				<ul class="ul-disc">
+					<li><?php _e( 'By default, this popup will be loaded on every page of your site for all users.', 'popup-maker' ); ?></li>
+					<li><?php _e( 'Target the popup to a specific segment by adding conditions below.', 'popup-maker' ); ?></li>
+					<li><?php printf( __( 'Click the %s button for any condition to check the opposite of the chosen condition. The button will turn red %s when active.', 'popup-maker' ), '<i style="font-size: 1em; width: 1em; height: 1em; line-height:1.5em;" class="dashicons dashicons-warning"></i>', '<i style="width: 1em; height: 1em; font-size: 1em; line-height:1.5em; color:#a00;" class="dashicons dashicons-warning"></i>' ); ?></li>
+				</ul>
 
 				<section class="pum-alert-box" style="display:none"></section>
 				<div class="facet-groups condition-groups">
@@ -562,7 +561,7 @@ class PUM_Admin_Templates {
 					#>
 				</div>
 				<div class="no-facet-groups">
-					<label for="pum-first-condition"><?php _e( 'Choose a condition to target where or when to display your popup.', 'popup-maker' ); ?></label>
+					<label for="pum-first-condition"><?php _e( 'Choose a condition to target your popup to specific content or various other segments.', 'popup-maker' ); ?></label>
 					<div class="facet-target">
 						<button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
 							<input type="checkbox" id="pum-first-facet-operand" value="1"/>
@@ -630,8 +629,9 @@ class PUM_Admin_Templates {
 
 				<p>
 					<strong>
-						<?php _e( 'Cookies control the repeat display of a popup. Learn more:', 'popup-maker' ); ?>
-						<a href="<?php echo esc_url( 'http://docs.wppopupmaker.com/article/358-popup-settings-box-cookies-option-settings?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=popup-settings-box-cookies-option-settings' ); ?>" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
+						<?php _e( 'Cookies control the repeat display of a popup.', 'popup-maker' ); ?>
+						<a href="<?php echo esc_url( 'http://docs.wppopupmaker.com/article/358-popup-settings-box-cookies-option-settings?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=popup-settings-box-cookies-option-settings' ); ?>"
+						   target="_blank" class="pum-doclink dashicons dashicons-editor-help" title="<?php esc_attr_e( sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Cookies', 'popup-maker' ) ) ); ?>"></a>
 					</strong>
 				</p>
 
