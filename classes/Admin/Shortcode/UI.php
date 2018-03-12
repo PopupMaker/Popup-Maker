@@ -30,6 +30,7 @@ class PUM_Admin_Shortcode_UI {
 	public static function init() {
 		if ( ! self::$initialized ) {
 			add_action( 'admin_init', array( __CLASS__, 'init_editor' ), 20 );
+			self::$initialized = true;
 		}
 	}
 

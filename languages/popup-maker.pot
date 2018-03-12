@@ -110,11 +110,11 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: classes/Admin/Assets.php:70, classes/Admin/Shortcode/UI.php:88
+#: classes/Admin/Assets.php:70, classes/Admin/Shortcode/UI.php:101
 msgid "Insert"
 msgstr ""
 
-#: classes/Admin/Assets.php:71, classes/Admin/Helpers.php:370, classes/Admin/Shortcode/UI.php:89
+#: classes/Admin/Assets.php:71, classes/Admin/Helpers.php:370, classes/Admin/Shortcode/UI.php:102
 msgid "Cancel"
 msgstr ""
 
@@ -134,11 +134,11 @@ msgstr ""
 msgid "Are you sure you want to reset the open count?"
 msgstr ""
 
-#: classes/Admin/Assets.php:76, classes/Admin/Shortcode/UI.php:90
+#: classes/Admin/Assets.php:76, classes/Admin/Shortcode/UI.php:103
 msgid "Popup Maker Shortcodes"
 msgstr ""
 
-#: classes/Admin/Assets.php:77, classes/Admin/Shortcode/UI.php:91
+#: classes/Admin/Assets.php:77, classes/Admin/Shortcode/UI.php:104
 msgid "There was an error in generating the preview"
 msgstr ""
 
@@ -863,7 +863,7 @@ msgstr ""
 msgid "Assets"
 msgstr ""
 
-#: classes/Admin/Shortcode/UI.php:154
+#: classes/Admin/Shortcode/UI.php:167
 msgid "You do not have access to preview this post."
 msgstr ""
 
