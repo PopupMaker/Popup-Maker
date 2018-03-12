@@ -68,7 +68,7 @@ class PUM_Upgrades {
 		// Add Upgrade tab to Tools page when upgrades available.
 		add_filter( 'pum_tools_tabs', array( $this, 'tools_page_tabs' ) );
 		// Render tools page upgrade tab content.
-		add_action( 'pum_tools_page_tab_upgrades', array( __CLASS__, 'tools_page_tab_content' ) );
+		add_action( 'pum_tools_page_tab_upgrades', array( $this, 'tools_page_tab_content' ) );
 		// Ajax upgrade handler.
 		add_action( 'wp_ajax_pum_process_upgrade_request', array( $this, 'process_upgrade_request' ) );
 	}
