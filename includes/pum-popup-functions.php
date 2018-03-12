@@ -25,7 +25,13 @@ function pum_popup( $popup_id = null ) {
  * @return string
  */
 function pum_get_popup_title( $popup_id = null ) {
-	return pum_get_popup( $popup_id )->get_title();
+	$popup = pum_get_popup( $popup_id );
+
+	if ( ! pum_is_popup( $popup ) ) {
+		return "";
+	}
+
+	return $popup->get_title();
 }
 
 /**
@@ -36,7 +42,13 @@ function pum_get_popup_title( $popup_id = null ) {
  * @return array
  */
 function pum_get_popup_triggers( $popup_id = null ) {
-	return pum_get_popup( $popup_id )->get_triggers();
+	$popup = pum_get_popup( $popup_id );
+
+	if ( ! pum_is_popup( $popup ) ) {
+		return array();
+	}
+
+	return $popup->get_triggers();
 }
 
 /**
@@ -47,7 +59,13 @@ function pum_get_popup_triggers( $popup_id = null ) {
  * @return array
  */
 function pum_get_popup_cookies( $popup_id = null ) {
-	return pum_get_popup( $popup_id )->get_cookies();
+	$popup = pum_get_popup( $popup_id );
+
+	if ( ! pum_is_popup( $popup ) ) {
+		return array();
+	}
+
+	return $popup->get_cookies();
 }
 
 /**
@@ -56,5 +74,11 @@ function pum_get_popup_cookies( $popup_id = null ) {
  * @return bool
  */
 function pum_is_popup_loadable( $popup_id = null ) {
-	return pum_get_popup( $popup_id )->is_loadable();
+	$popup = pum_get_popup( $popup_id );
+
+	if ( ! pum_is_popup( $popup ) ) {
+		return false;
+	}
+
+	return $popup->is_loadable();
 }
