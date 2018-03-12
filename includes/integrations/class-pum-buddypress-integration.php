@@ -31,73 +31,55 @@ class PUM_BuddyPress_Integration {
 		// Add Additional Conditions
 		$conditions['is_buddypress'] = array(
 			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'labels'   => array(
-				'name' => __( 'BP: Is a BuddyPress Page', 'popup-maker' ),
-			),
+			'name'     => __( 'BP: Is a BuddyPress Page', 'popup-maker' ),
 			'callback' => 'is_buddypress',
 		);
 
 		$conditions['bp_is_user'] = array(
 			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'labels'   => array(
-				'name' => __( 'BP: Is User Page', 'popup-maker' ),
-			),
+			'name'     => __( 'BP: Is User Page', 'popup-maker' ),
 			'callback' => 'bp_is_user',
 		);
 
 		$conditions['bp_is_group'] = array(
 			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'labels'   => array(
-				'name' => __( 'BP: Is Group Page', 'popup-maker' ),
-			),
+			'name'     => __( 'BP: Is Group Page', 'popup-maker' ),
 			'callback' => 'bp_is_group',
 		);
 
 		$conditions['bp_is_user_messages'] = array(
 			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'labels'   => array(
-				'name' => __( 'BP: Is User Messages Page', 'popup-maker' ),
-			),
+			'name'     => __( 'BP: Is User Messages Page', 'popup-maker' ),
 			'callback' => 'bp_is_user_messages',
 		);
 
 		$conditions['bp_is_activation_page'] = array(
 			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'labels'   => array(
-				'name' => __( 'BP: Is Activation Page', 'popup-maker' ),
-			),
+			'name'     => __( 'BP: Is Activation Page', 'popup-maker' ),
 			'callback' => 'bp_is_activation_page',
 		);
 
 		$conditions['bp_is_register_page'] = array(
 			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'labels'   => array(
-				'name' => __( 'BP: Is Register Page', 'popup-maker' ),
-			),
+			'name'     => __( 'BP: Is Register Page', 'popup-maker' ),
 			'callback' => 'bp_is_register_page',
 		);
 
 		$conditions['bp_is_item_admin'] = array(
 			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'labels'   => array(
-				'name' => __( 'BP: Is Item Admin', 'popup-maker' ),
-			),
+			'name'     => __( 'BP: Is Item Admin', 'popup-maker' ),
 			'callback' => 'bp_is_item_admin',
 		);
 
 		$conditions['bp_is_item_mod'] = array(
 			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'labels'   => array(
-				'name' => __( 'BP: Is Item Mod', 'popup-maker' ),
-			),
+			'name'     => __( 'BP: Is Item Mod', 'popup-maker' ),
 			'callback' => 'bp_is_item_mod',
 		);
 
 		$conditions['bp_is_directory'] = array(
 			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'labels'   => array(
-				'name' => __( 'BP: Is Directory', 'popup-maker' ),
-			),
+			'name'     => __( 'BP: Is Directory', 'popup-maker' ),
 			'callback' => 'bp_is_directory',
 		);
 
@@ -109,9 +91,7 @@ class PUM_BuddyPress_Integration {
 
 		$conditions['bp_is_current_component'] = array(
 			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'labels'   => array(
-				'name' => __( 'BP: Is Current Component', 'popup-maker' ),
-			),
+			'name'     => __( 'BP: Is Current Component', 'popup-maker' ),
 			'fields'   => array(
 				'selected' => array(
 					'type'     => 'select',
@@ -127,13 +107,11 @@ class PUM_BuddyPress_Integration {
 
 		$conditions['bp_is_current_action'] = array(
 			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'labels'   => array(
-				'name' => __( 'BP: Is Current Action', 'popup-maker' ),
-			),
+			'name'     => __( 'BP: Is Current Action', 'popup-maker' ),
 			'fields'   => array(
 				'selected' => array(
-					'type'     => 'text',
-					'label'    => __( 'Which actions?' ),
+					'type'  => 'text',
+					'label' => __( 'Which actions?' ),
 				),
 			),
 			'callback' => array( __CLASS__, 'bp_is_current_action' ),
@@ -141,13 +119,11 @@ class PUM_BuddyPress_Integration {
 
 		$conditions['bp_is_action_variable'] = array(
 			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'labels'   => array(
-				'name' => __( 'BP: Is Action Variable', 'popup-maker' ),
-			),
+			'name'     => __( 'BP: Is Action Variable', 'popup-maker' ),
 			'fields'   => array(
 				'selected' => array(
-					'type'     => 'text',
-					'label'    => __( 'Which action variables?' ),
+					'type'  => 'text',
+					'label' => __( 'Which action variables?' ),
 				),
 			),
 			'callback' => array( __CLASS__, 'bp_is_action_variable' ),

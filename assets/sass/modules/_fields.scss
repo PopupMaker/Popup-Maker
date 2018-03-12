@@ -1,0 +1,626 @@
+/*!******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
+
+$plugin_prefix: 'plugin' !default;
+$custom_select2_selector: 'select2' !default;
+
+.#{$plugin_prefix}-desc {
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+[data-#{$plugin_prefix}-dependencies] {
+  display: none;
+}
+
+.#{$plugin_prefix}-field {
+  position: relative;
+
+  margin-bottom: 1em;
+
+  > label {
+    display: block;
+    font-weight: bold;
+  }
+
+  .#{$plugin_prefix}-doclink {
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+}
+
+/**
+ * Sections
+ */
+.#{$plugin_prefix}-field-section {
+
+}
+
+/**
+ * Heading & separator fields
+ */
+.#{$plugin_prefix}-field-heading,
+.#{$plugin_prefix}-field-separator {
+  h3 {
+    // font-size: 1.2em;
+    // margin-top: 0;
+    // margin-bottom: 0;
+  }
+
+  h3 + .#{$plugin_prefix}-desc {
+    // margin-top: -1em !important;
+  }
+
+  hr {
+    // margin-bottom: 2em;
+  }
+
+  label,
+  .#{$plugin_prefix}-desc {
+    display: none !important;
+  }
+
+  h3 + hr {
+    // margin-top: 1em; // Reset
+    // margin-bottom: 2em;
+  }
+
+  hr + h3 {
+    // margin-top: 1em; // Reset to wp default.
+    // margin-bottom: 1em; // Reset to wp default.
+  }
+}
+
+.#{$plugin_prefix}-field-hidden {
+  display: none;
+}
+
+.#{$plugin_prefix}-field-editor {
+  #insert-media-button {
+    display: none;
+  }
+}
+
+/**
+ * Select fields
+ */
+.#{$plugin_prefix}-field-select {
+  option.bold {
+    font-weight: bold;
+    font-size: 1.125em;
+  }
+}
+
+/**
+ * Checkbox fields
+ */
+.#{$plugin_prefix}-field-checkbox {
+  position: relative;
+
+  label {
+    margin-left: 1.5em;
+    // display: block;
+    // font-size: 1.1em;
+
+    &.#{$plugin_prefix}-desc {
+      display: inline;
+      font-weight: inherit;
+      font-size: inherit;
+      margin: 0 0 1em;
+    }
+  }
+
+  input[type="checkbox"] {
+    position: absolute;
+    top: .25em;
+  }
+}
+
+/**
+ * Multicheck & Radio fields
+ */
+.#{$plugin_prefix}-field-multicheck,
+.#{$plugin_prefix}-field-radio {
+  // margin: 0 0 1em;
+
+  input, label {
+    line-height: 1em;
+  }
+
+  label {
+    margin-bottom: 4px;
+  }
+
+  input[type="radio"] {
+    display: inline-block;
+    margin-right: .25em;
+  }
+
+  input + label {
+    font-weight: normal;
+    display: inline-block !important;
+  }
+
+  label:first-child {
+    font-weight: bold;
+    margin: 0 0 10px;
+    // display: block;
+  }
+
+  > p.#{$plugin_prefix}-desc {
+    margin: 0 0 .5em;
+  }
+
+  .pum-field-mulitcheck-list,
+  .pum-field-radio-list{
+    margin: 0;
+  }
+
+}
+
+/**
+ * Range & range slider fields
+ */
+.#{$plugin_prefix}-field-range,
+.#{$plugin_prefix}-field-rangeslider {
+  input[type="range"] {
+    vertical-align: middle;
+  }
+
+  .#{$plugin_prefix}-range-manual {
+    padding-right: 25px;
+    text-align: right;
+    width: 80px;
+  }
+
+  .range-value-unit,
+  .#{$plugin_prefix}-range-value-unit {
+    position: relative;
+    display: inline-block;
+    margin-left: -30px;
+    margin-right: 10px;
+    width: 20px;
+    text-align: left;
+    top: .125em;
+  }
+}
+
+/**
+ * Image fields
+ */
+.#{$plugin_prefix}-image-field {
+  .#{$plugin_prefix}-image-field .#{$plugin_prefix}-image-select,
+  &.#{$plugin_prefix}-image-empty .#{$plugin_prefix}-image-preview {
+    display: none;
+  }
+
+  &.#{$plugin_prefix}-image-empty .#{$plugin_prefix}-image-select {
+    display: block;
+  }
+
+  .#{$plugin_prefix}-image-preview-img {
+    float: left;
+    line-height: 0;
+    margin: 5px 0;
+  }
+
+  .#{$plugin_prefix}-image-preview-img img {
+    max-width: 60px;
+  }
+
+  .#{$plugin_prefix}-image-preview select {
+    margin: 8px 0 8px 10px;
+    width: 200px;
+  }
+
+  .#{$plugin_prefix}-image-edit {
+    margin: 0 0 0 11px;
+  }
+
+  .#{$plugin_prefix}-image-replace,
+  .#{$plugin_prefix}-image-remove {
+    margin: 0 0 0 8px;
+  }
+}
+
+/**
+ * Conditions field
+ */
+.#{$plugin_prefix}-field-conditions {
+
+  .facet-builder {
+
+    p {
+      margin: 0 0 1em;
+    }
+    a {
+      text-decoration: none;
+    }
+
+    .facet-groups {
+
+      display: none;
+
+      .facet-group-wrap {
+
+        .facet-group {
+          box-shadow: 0 1px 0 #ccc;
+          color: #555;
+          border: 1px solid #ccc;
+          background: #f7f7f7;
+        }
+
+        &:last-child .and,
+        .add-or {
+          em,
+          a,
+          button {
+            color: #0073aa;
+            cursor: pointer;
+
+            &::before {
+              content: "+ ";
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+    .facet-list {
+    }
+
+    .facet {
+      position: relative;
+      padding: 12px 30px 6px 10px;
+      border-bottom: 1px solid #e1e1e1;
+      border-top: 1px solid #fff;
+
+      &:first-child {
+        border-top: 0;
+
+        .or {
+          display: none;
+        }
+      }
+
+      &::before,
+      &::after {
+        display: table;
+        content: "";
+        line-height: 0;
+      }
+
+      &::after {
+        clear: both;
+      }
+
+    }
+
+    .#{$plugin_prefix}-field {
+      margin-bottom: 0.5em;
+    }
+
+    .facet-col {
+      float: left;
+      margin-right: 20px;
+      padding-bottom: 6px;
+      position: relative;
+      min-width: 175px;
+
+      select,
+      input {
+        margin: 0;
+        max-width: 100%;
+      }
+    }
+
+    .facet-target {
+
+      position: relative;
+      max-width: 240px;
+
+      * {
+        box-sizing: border-box;
+      }
+
+      select,
+      .#{$custom_select2_selector}-container .#{$custom_select2_selector}-selection {
+        padding-left: 28px;
+
+        // Rendered Option
+        .#{$custom_select2_selector}-selection__rendered {
+          padding-left: 3px;
+        }
+
+      }
+
+      .#{$plugin_prefix}-not-operand {
+        cursor: pointer;
+        position: absolute;
+        left: 2px;
+        top: 2px;
+        z-index: 10;
+        //width: 23px;
+        line-height: 24px;
+        height: 25px;
+
+        //padding: 0;
+        background: #f7f7f7;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        border-right: 1px solid #ddd;
+        text-align: center;
+
+        span {
+          font-size: 1.25em;
+        }
+
+        &::before {
+          color: #555;
+          font-size: 16px;
+          line-height: 24px;
+        }
+
+        input[type="checkbox"] {
+          display: none;
+        }
+
+        &:focus {
+          outline: none;
+          border: 1px solid #5b9dd9;
+          box-shadow: 0 0 2px rgba(30, 140, 190, 0.8);
+        }
+
+      }
+
+      &.not-operand-checked {
+
+        .#{$plugin_prefix}-not-operand {
+          span,
+          &::before {
+            color: #a00;
+
+          }
+        }
+
+        select,
+        .#{$custom_select2_selector}-container .#{$custom_select2_selector}-selection {
+          //padding-left: 58px;
+        }
+
+      }
+
+      .#{$custom_select2_selector}-container-active {
+        .#{$custom_select2_selector}-choices,
+        .#{$custom_select2_selector}-single {
+          border-color: #5b9dd9;
+          box-shadow: 0 0 2px rgba(30, 140, 190, 0.8);
+        }
+      }
+
+    }
+
+    .facet-actions {
+      position: absolute;
+      right: 6px;
+      top: 18px;
+
+      button {
+        border: 0;
+        padding: 0;
+        background: none;
+        margin-left: 5px;
+      }
+    }
+
+    .dashicons-plus-alt,
+    .dashicons-dismiss {
+      color: #999;
+    }
+
+    /* + AND + OR link stylings */
+    .or {
+      color: #484848;
+      font-weight: 500;
+      margin-left: -21px;
+      left: 50%;
+      position: absolute;
+      top: -6px;
+      font-style: normal;
+      line-height: 10px;
+      text-transform: uppercase;
+    }
+
+    .add-or {
+      border-top: 1px solid #fff;
+      text-align: center;
+
+      > .add {
+        left: -6.5px;
+        position: relative;
+        top: -9px;
+      }
+    }
+
+    .and {
+      border-bottom: 1px dashed #e1e1e1;
+      margin: .5em 0 1.7em;
+      text-align: center;
+    }
+
+    .or,
+    .add-or > .add {
+      background: #f7f7f7;
+      font-size: 1.1em;
+      padding: 0 10px;
+    }
+
+    .and, .add-or {
+      em,
+      a,
+      button,
+      label {
+        background: #fff;
+        font-size: 1.1em;
+        font-style: normal;
+        margin: 0 10px;
+        padding: 0 10px;
+        position: relative;
+        top: 9px;
+        text-transform: uppercase;
+        box-shadow: none;
+        color: #484848;
+        cursor: default;
+        border: 0;
+
+      }
+
+      em {
+        color: #484848;
+      }
+    }
+
+  }
+
+  .no-facet-groups {
+    display: block;
+    .facet-target {
+      max-width: 100%;
+    }
+  }
+
+  /* Conditionals */
+  .has-conditions {
+
+    .facet-groups {
+      display: block;
+    }
+
+    .no-facet-groups {
+      display: none;
+    }
+
+  }
+
+  .#{$plugin_prefix}-field-select2 {
+    select {
+      width: 100% !important;
+    }
+  }
+
+}
+
+/**
+ * License fields.
+ */
+.#{$plugin_prefix}-field-license_key {
+  background: #fafafa;
+  padding: 14px;
+  border-top: 2px solid #999;
+  border-bottom: 2px solid #999;
+  margin: 0 -14px 14px;
+
+  p {
+    font-size: 13px;
+    margin-top: 0;
+  }
+
+  a {
+    color: #444;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+
+  span.pum-license-status {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  .#{$plugin_prefix}-license-messages {
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &.#{$plugin_prefix}-license-expires-soon-notice {
+    //background-color: #00a0d2;
+    //color: #fff;
+    //border-color: #00a0d2;
+    border-color: #dc3232;
+  }
+
+  &.#{$plugin_prefix}-license-valid-notice {
+    //background-color: #60c560;
+    border-color: #46b450;
+    //color: #fff;
+    .pum-license-status {
+      color: #46b450;
+    }
+  }
+
+  &.#{$plugin_prefix}-license-inactive-notice {
+    //background-color: #0073aa;
+    border-color: #0073aa;
+    //color: #fff;
+  }
+
+  &.#{$plugin_prefix}-license-expiration-date-notice {
+
+  }
+
+  &.#{$plugin_prefix}-license-expired-notice {
+    background-color: #e24e4e;
+    color: #fff;
+    border-color: #dc3232;
+  }
+
+  &.#{$plugin_prefix}-license-error-notice,
+  &.#{$plugin_prefix}-license-missing-notice,
+  &.#{$plugin_prefix}-license-invalid-notice,
+  &.#{$plugin_prefix}-license-site_inactive-notice,
+  &.#{$plugin_prefix}-license-item_name_mismatch-notice {
+    background-color: #ffebcd;
+    border-color: #dc3232;
+  }
+
+  &.#{$plugin_prefix}-license-expired-notice {
+    a {
+      color: #fff;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+}
+
+/**
+ * Link fields.
+ */
+.#{$plugin_prefix}-field-link {
+  input {
+    margin-right: 24px;
+    display: block;
+  }
+
+  button.dashicons {
+    float: right;
+    width: 1.5em;
+    height: 1.5em;
+    line-height: 1;
+    padding: 0;
+    font-size: 16px;
+    vertical-align: sub;
+    margin-top: 1px;
+    box-shadow: 0 0 0 #cccccc;
+  }
+}

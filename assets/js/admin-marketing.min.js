@@ -1,0 +1,1 @@
+!function(n){"use strict";window.PUM_Admin=window.PUM_Admin||{},n(document).ready(function(){n('a[href="edit.php?post_type=popup&page=pum-extensions"]').css({color:"#a0d468"})})}(jQuery);

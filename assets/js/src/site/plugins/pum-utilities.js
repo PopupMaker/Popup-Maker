@@ -5,14 +5,47 @@
 (function ($, document, undefined) {
     "use strict";
 
-    var root = this,
-        inputTypes = 'color,date,datetime,datetime-local,email,hidden,month,number,password,range,search,tel,text,time,url,week'.split(','),
+    var inputTypes = 'color,date,datetime,datetime-local,email,hidden,month,number,password,range,search,tel,text,time,url,week'.split(','),
         inputNodes = 'select,textarea'.split(','),
         rName = /\[([^\]]*)\]/g;
 
-    // ugly hack for IE7-8
-    function isInArray(array, needle) {
-        return $.inArray(needle, array) !== -1;
+    /**
+     * Polyfill for IE < 9
+     */
+    if (!Array.prototype.indexOf) {
+        Array.prototype.indexOf = function (searchElement /*, fromIndex */) {
+            "use strict";
+
+            if (this === void 0 || this === null)
+                throw new TypeError();
+
+            var t = Object(this);
+            var len = t.length >>> 0;
+            if (len === 0)
+                return -1;
+
+            var n = 0;
+            if (arguments.length > 0) {
+                n = Number(arguments[1]);
+                if (n !== n) // shortcut for verifying if it's NaN
+                    n = 0;
+                else if (n !== 0 && n !== (1 / 0) && n !== -(1 / 0))
+                    n = (n > 0 || -1) * Math.floor(Math.abs(n));
+            }
+
+            if (n >= len)
+                return -1;
+
+            var k = n >= 0
+                ? n
+                : Math.max(len - Math.abs(n), 0);
+
+            for (; k < len; k++) {
+                if (k in t && t[k] === searchElement)
+                    return k;
+            }
+            return -1;
+        };
     }
 
     function storeValue(container, parsedName, value) {
@@ -38,6 +71,40 @@
     }
 
     $.fn.popmake.utilities = {
+        scrollTo: function (target, callback) {
+            var $target = $(target) || $();
+
+            if (!$target.length) {
+                return;
+            }
+
+            $('html, body').animate({
+                scrollTop: $target.offset().top - 100
+            }, 1000, 'swing', function () {
+                // Find the first :input that isn't a button or hidden type.
+                var $input = $target.find(':input:not([type="button"]):not([type="hidden"]):not(button)').eq(0);
+
+                if ($input.hasClass('wp-editor-area')) {
+                    tinyMCE.execCommand('mceFocus', false, $input.attr('id'));
+                } else {
+                    $input.focus();
+                }
+
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            });
+        },
+        /**
+         * In Array tester function. Similar to PHP's in_array()
+
+         * @param needle
+         * @param array
+         * @returns {boolean}
+         */
+        inArray: function (needle, array) {
+            return !!~array.indexOf(needle);
+        },
         convert_hex: function (hex, opacity) {
             hex = hex.replace('#', '');
             var r = parseInt(hex.substring(0, 2), 16),
@@ -140,7 +207,7 @@
                             return fail;
                         }
                         return new Date(match[1], parseInt(match[3], 10) - 1, match[5],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     case '.':
                         // YYYY.M.D is not parsed by strtotime()
                         return fail;
@@ -150,7 +217,7 @@
                             return fail;
                         }
                         return new Date(match[1], parseInt(match[3], 10) - 1, match[5],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     }
                 } else if (match[5] > 1901) {
                     switch (match[2]) {
@@ -160,21 +227,21 @@
                             return fail;
                         }
                         return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     case '.':
                         // D.M.YYYY
                         if (match[3] > 12 || match[1] > 31) {
                             return fail;
                         }
                         return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     case '/':
                         // M/D/YYYY
                         if (match[1] > 12 || match[3] > 31) {
                             return fail;
                         }
                         return new Date(match[5], parseInt(match[1], 10) - 1, match[3],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     }
                 } else {
                     switch (match[2]) {
@@ -185,7 +252,7 @@
                         }
                         year = match[1] >= 0 && match[1] <= 38 ? +match[1] + 2000 : match[1];
                         return new Date(year, parseInt(match[3], 10) - 1, match[5],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     case '.':
                         // D.M.YY or H.MM.SS
                         if (match[5] >= 70) { // D.M.YY
@@ -193,7 +260,7 @@
                                 return fail;
                             }
                             return new Date(match[5], parseInt(match[3], 10) - 1, match[1],
-                                    match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                         }
                         if (match[5] < 60 && !match[6]) { // H.MM.SS
                             if (match[1] > 23 || match[3] > 59) {
@@ -201,7 +268,7 @@
                             }
                             today = new Date();
                             return new Date(today.getFullYear(), today.getMonth(), today.getDate(),
-                                    match[1] || 0, match[3] || 0, match[5] || 0, match[9] || 0) / 1000;
+                                match[1] || 0, match[3] || 0, match[5] || 0, match[9] || 0) / 1000;
                         }
                         return fail; // invalid format, cannot be parsed
                     case '/':
@@ -211,7 +278,7 @@
                         }
                         year = match[5] >= 0 && match[5] <= 38 ? +match[5] + 2000 : match[5];
                         return new Date(year, parseInt(match[1], 10) - 1, match[3],
-                                match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
+                            match[6] || 0, match[7] || 0, match[8] || 0, match[9] || 0) / 1000;
                     case ':':
                         // HH:MM:SS
                         if (match[1] > 23 || match[3] > 59 || match[5] > 59) {
@@ -219,7 +286,7 @@
                         }
                         today = new Date();
                         return new Date(today.getFullYear(), today.getMonth(), today.getDate(),
-                                match[1] || 0, match[3] || 0, match[5] || 0) / 1000;
+                            match[1] || 0, match[3] || 0, match[5] || 0) / 1000;
                     }
                 }
             }
@@ -309,57 +376,61 @@
             return (date.getTime() / 1000);
         },
         serializeObject: function (options) {
-        $.extend({}, options);
+            $.extend({}, options);
 
-        var values = {},
-            settings = $.extend(true, {
-                include: [],
-                exclude: [],
-                includeByClass: ''
-            }, options);
+            var values = {},
+                settings = $.extend(true, {
+                    include: [],
+                    exclude: [],
+                    includeByClass: ''
+                }, options);
 
-        this.find(':input').each(function () {
+            this.find(':input').each(function () {
 
-            var parsedName;
+                var parsedName;
 
-            // Apply simple checks and filters
-            if (!this.name || this.disabled ||
-                isInArray(settings.exclude, this.name) ||
-                (settings.include.length && !isInArray(settings.include, this.name)) ||
-                this.className.indexOf(settings.includeByClass) === -1) {
-                return;
-            }
-
-            // Parse complex names
-            // JS RegExp doesn't support "positive look behind" :( that's why so weird parsing is used
-            parsedName = this.name.replace(rName, '[$1').split('[');
-            if (!parsedName[0]) {
-                return;
-            }
-
-            if (this.checked ||
-                isInArray(inputTypes, this.type) ||
-                isInArray(inputNodes, this.nodeName.toLowerCase())) {
-
-                // Simulate control with a complex name (i.e. `some[]`)
-                // as it handled in the same way as Checkboxes should
-                if (this.type === 'checkbox') {
-                    parsedName.push('');
+                // Apply simple checks and filters
+                if (!this.name || this.disabled ||
+                    window.PUM.utilities.inArray(this.name, settings.exclude) ||
+                    (settings.include.length && !window.PUM.utilities.inArray(this.name, settings.include)) ||
+                    this.className.indexOf(settings.includeByClass) === -1) {
+                    return;
                 }
 
-                // jQuery.val() is used to simplify of getting values
-                // from the custom controls (which follow jQuery .val() API) and Multiple Select
-                storeValue(values, parsedName, $(this).val());
-            }
-        });
+                // Parse complex names
+                // JS RegExp doesn't support "positive look behind" :( that's why so weird parsing is used
+                parsedName = this.name.replace(rName, '[$1').split('[');
+                if (!parsedName[0]) {
+                    return;
+                }
 
-        return values;
-    }
+                if (this.checked ||
+                    window.PUM.utilities.inArray(this.type, inputTypes) ||
+                    window.PUM.utilities.inArray(this.nodeName.toLowerCase(), inputNodes)) {
+
+                    // Simulate control with a complex name (i.e. `some[]`)
+                    // as it handled in the same way as Checkboxes should
+                    if (this.type === 'checkbox') {
+                        parsedName.push('');
+                    }
+
+                    // jQuery.val() is used to simplify of getting values
+                    // from the custom controls (which follow jQuery .val() API) and Multiple Select
+                    storeValue(values, parsedName, $(this).val());
+                }
+            });
+
+            return values;
+        }
     };
 
     $.fn.pumSerializeObject = $.fn.popmake.utilities.serializeObject;
 
     // Deprecated fix. utilies was renamed because of typo.
     $.fn.popmake.utilies = $.fn.popmake.utilities;
+
+    window.PUM = window.PUM || {};
+    window.PUM.utilities = window.PUM.utilities || {};
+    window.PUM.utilities = $.extend(window.PUM.utilities, $.fn.popmake.utilities);
 
 }(jQuery, document));

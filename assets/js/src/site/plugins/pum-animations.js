@@ -9,7 +9,7 @@
         // Method calling logic
         var settings = PUM.getPopup(this).popmake('getSettings');
 
-        if (settings.meta.display.overlay_disabled) {
+        if (settings.overlay_disabled) {
             return $.fn.popmake.overlay_animations.none.apply(this, [duration, callback]);
         }
 
@@ -42,21 +42,21 @@
             $popup.popmake('getContainer').show(0);
 
             $popup.popmake('animate_overlay', 'none', 0, function () {
-                    // Fire user passed callback.
-                    if (callback !== undefined) {
-                        callback();
-                        // TODO Test this new method. Then remove the above.
-                        //callback.apply(this);
-                    }
-                });
+                // Fire user passed callback.
+                if (callback !== undefined) {
+                    callback();
+                    // TODO Test this new method. Then remove the above.
+                    //callback.apply(this);
+                }
+            });
             return this;
         },
         slide: function (callback) {
             var $popup = PUM.getPopup(this).show(0).css({opacity: 0}),
                 $container = $popup.popmake('getContainer').show(0).css({opacity: 0}),
                 settings = $popup.popmake('getSettings'),
-                speed = settings.meta.display.animation_speed / 2,
-                start = $popup.popmake('animation_origin', settings.meta.display.animation_origin);
+                speed = settings.animation_speed / 2,
+                start = $popup.popmake('animation_origin', settings.animation_origin);
 
             $container
                 .position(start)
@@ -82,7 +82,7 @@
             var $popup = PUM.getPopup(this),
                 $container = $popup.popmake('getContainer'),
                 settings = $popup.popmake('getSettings'),
-                speed = settings.meta.display.animation_speed / 2;
+                speed = settings.animation_speed / 2;
 
             $container
                 .show(0)
@@ -104,8 +104,8 @@
             var $popup = PUM.getPopup(this).show(0).css({opacity: 0}),
                 $container = $popup.popmake('getContainer').show(0).css({opacity: 0}),
                 settings = $popup.popmake('getSettings'),
-                speed = settings.meta.display.animation_speed / 2,
-                start = $popup.popmake('animation_origin', settings.meta.display.animation_origin);
+                speed = settings.animation_speed / 2,
+                start = $popup.popmake('animation_origin', settings.animation_origin);
 
             $container.position(start);
 

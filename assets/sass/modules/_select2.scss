@@ -1,0 +1,188 @@
+/*!******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ *
+ * The bulk of this is to style jquery select2 to better
+ * resemble the default WP dashboard inputs.
+ ******************************************************************************/
+
+$plugin_prefix: 'plugin' !default;
+$custom_select2_selector: 'select2' !default;
+
+.#{$plugin_prefix}-field-select2 {
+  position: relative;
+
+  .#{$custom_select2_selector}-container {
+    box-sizing: border-box;
+
+    display: inline-block;
+    margin: 0;
+    position: relative;
+    vertical-align: middle;
+
+    @import "../vendor/select2/single";
+    @import "../vendor/select2/multiple";
+  }
+
+  @import "../vendor/select2/dropdown";
+
+  .#{$custom_select2_selector}-close-mask {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    min-height: 100%;
+    min-width: 100%;
+    height: auto;
+    width: auto;
+    opacity: 0;
+    z-index: 99;
+
+    // styles required for IE to work
+    background-color: #fff;
+    filter: alpha(opacity=0);
+  }
+
+  .#{$custom_select2_selector}-hidden-accessible {
+    border: 0 !important;
+    clip: rect(0 0 0 0) !important;
+    height: 1px !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    position: absolute !important;
+    width: 1px !important;
+  }
+
+  @import "../vendor/select2/theme/default/layout";
+  @import "../vendor/select2/theme/classic/layout";
+
+  > .#{$custom_select2_selector}-container--below.#{$custom_select2_selector}-container--open + .#{$custom_select2_selector}-container--open,
+  > .#{$custom_select2_selector}-container--below.#{$custom_select2_selector}-container--open + .#{$plugin_prefix}-desc + .#{$custom_select2_selector}-container--open {
+    position: absolute !important;
+  }
+
+  // All Select2 Containers - Wraps Both Selectbox & Dropdown Elements
+  .#{$custom_select2_selector}-container {
+
+    // Selectbox
+    .#{$custom_select2_selector}-selection {
+      margin: 1px;
+      font-size: 14px;
+      border-radius: 0;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.07);
+      border-color: #ddd;
+      transition: 0.05s border-color ease-in-out;
+
+    }
+
+    &.#{$custom_select2_selector}-container--focus {
+      .#{$custom_select2_selector}-selection {
+        outline: none;
+        border-color: #5b9dd9;
+        box-shadow: 0 0 2px rgba(30, 140, 190, 0.8);
+      }
+    }
+
+    // Single Select
+    .#{$custom_select2_selector}-selection--single {
+
+      // Rendered Option
+      .#{$custom_select2_selector}-selection__rendered {
+        //padding-left: 0;
+      }
+
+    }
+
+    // Multiple Select
+    .#{$custom_select2_selector}-selection--multiple {
+      overflow-y: auto;
+      max-height: 150px;
+      min-height: 28px;
+      line-height: 16px;
+      font-size: 12px;
+
+      .#{$custom_select2_selector}-selection__clear {
+        margin-right: 3px;
+      }
+
+      .#{$custom_select2_selector}-selection__rendered {
+
+      }
+
+      .#{$custom_select2_selector}-search--inline {
+        margin: 0;
+        // Search Field
+        .#{$custom_select2_selector}-search__field {
+          border-color: #ddd;
+          padding: 3px 5px 0;
+          min-width: 5em;
+          width: 100% !important;
+        }
+      }
+
+      .#{$custom_select2_selector}-selection__choice {
+        margin-top: 4px;
+        margin-bottom: 0;
+      }
+
+    }
+
+    // Dropdown
+    .#{$custom_select2_selector}-dropdown {
+      margin: 0 1px;
+      border-color: #ddd;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07);
+      // Compensate for the margin applied to the Selectbox.
+      max-width: calc(100% - 4px);
+      position: relative;
+
+      // Search Field
+      .#{$custom_select2_selector}-search__field {
+        border-color: #ddd;
+        padding: 3px 5px;
+        min-width: 5em;
+      }
+
+      // Results
+      .#{$custom_select2_selector}-results {
+
+        // Each result set. Can be nested.
+        .#{$custom_select2_selector}-results__option {
+          padding: 3px 6px;
+          margin: 0;
+
+          &[aria-selected=true] {
+          }
+
+        }
+        .#{$custom_select2_selector}-results__option[role=group] {
+          padding: 3px 0 0;
+
+          .#{$custom_select2_selector}-results__group {
+            padding: 0 6px;
+          }
+        }
+
+        .#{$custom_select2_selector}-results__options--nested {
+          padding: 3px 6px 0;
+        }
+
+        // Hover
+        .#{$custom_select2_selector}-results__option--highlighted {
+          background: #3e86d0;
+        }
+
+      }
+
+    }
+
+  }
+
+  .#{$custom_select2_selector}-container + .#{$custom_select2_selector}-container--open {
+    top: inherit !important;
+  }
+
+}

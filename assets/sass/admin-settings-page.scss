@@ -1,0 +1,96 @@
+/*!******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
+
+.wrap-licenses {
+  .form-table,
+  thead,
+  tbody,
+  tfoot,
+  tr,
+  td,
+  th,
+  caption {
+    display: block;
+  }
+  .form-table tr {
+    float: left;
+    margin: 0 15px 15px 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    width: 30.5%;
+    max-width: 350px;
+    padding: 14px;
+    min-height: 220px;
+    position: relative;
+    box-sizing: border-box;
+  }
+  .form-table th {
+    background: #f9f9f9;
+    padding: 14px;
+    border-bottom: 1px solid #ccc;
+    margin: -14px -14px 20px;
+    width: 100%;
+  }
+  .form-table td {
+    padding: 0;
+  }
+  td input.regular-text {
+    margin: 0 0 8px;
+    width: 100%;
+  }
+  .popmake-license-data[class*="popmake-license-"] {
+    position: absolute;
+    background: #fafafa;
+    padding: 14px;
+    border-top: 1px solid #eee;
+    margin: 20px -14px -14px;
+    min-height: 67px;
+    width: 100%;
+    bottom: 14px;
+    box-sizing: border-box;
+  }
+  .popmake-license-data[class*="popmake-license-"] a {
+    color: #444;
+  }
+  .popmake-license-data[class*="popmake-license-"] a:hover {
+    text-decoration: none;
+  }
+  .popmake-license-data.license-expires-soon-notice {
+    background-color: #00a0d2;
+    color: #fff;
+    border-color: #00a0d2;
+  }
+  .popmake-license-data.popmake-license-valid {
+
+  }
+  .popmake-license-data.popmake-license-expired {
+    background-color: #e24e4e;
+    color: #fff;
+    border-color: #e24e4e;
+  }
+  .popmake-license-data.popmake-license-error,
+  .popmake-license-data.popmake-license-missing,
+  .popmake-license-data.popmake-license-invalid,
+  .popmake-license-data.popmake-license-site_inactive,
+  .popmake-license-data.popmake-license-item_name_mismatch {
+    background-color: #ffebcd;
+    border-color: #ffebcd;
+  }
+  .popmake-license-data p {
+    font-size: 13px;
+    margin-top: 0;
+  }
+  .popmake-license-data.license-expires-soon-notice a,
+  .popmake-license-data.popmake-license-expired a {
+    color: #fff;
+  }
+  .popmake-license-data.license-expires-soon-notice a:hover,
+  .popmake-license-data.popmake-license-expired a:hover {
+    text-decoration: none;
+  }
+  p.submit {
+    clear: both;
+  }
+
+}

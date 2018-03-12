@@ -1,214 +1,247 @@
 <?php
-/**
- * Admin Pages
- *
- * @package        POPMAKE
- * @subpackage    Admin/Pages
- * @copyright    Copyright (c) 2014, Daniel Iser
- * @license        http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since        1.0
- */
+/*******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
 
-// Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Creates the admin submenu pages under the Popup Maker menu and assigns their
- * links to global variables
+ * Gets the current admin screen post type.
  *
- * @since 1.0
- * @global $popmake_popup_themes_page
- * @global $popmake_settings_page
- * @global $popmake_extensions_page
- * @return void
+ * @return bool|string
  */
-function popmake_admin_submenu_pages() {
-	global $popmake_settings_page, $popmake_tools_page, $popmake_extensions_page;
-
-	$popmake_settings_page = add_submenu_page( 'edit.php?post_type=popup', __( 'Settings', 'popup-maker' ), __( 'Settings', 'popup-maker' ), apply_filters( 'popmake_admin_submenu_settings_capability', 'manage_options' ), 'pum-settings', 'popmake_settings_page' );
-
-	$popmake_tools_page = add_submenu_page( 'edit.php?post_type=popup', __( 'Tools', 'popup-maker' ), __( 'Tools', 'popup-maker' ), apply_filters( 'popmake_admin_submenu_tools_capability', 'manage_options' ), 'pum-tools', 'popmake_tools_page' );
-
-	$popmake_extensions_page = add_submenu_page( 'edit.php?post_type=popup', __( 'Extend', 'popup-maker' ), __( 'Extend', 'popup-maker' ), apply_filters( 'popmake_admin_submenu_extensions_capability', 'edit_posts' ), 'pum-extensions', 'popmake_extensions_page' );
-
-	$popmake_support_page = add_submenu_page( 'edit.php?post_type=popup', __( 'Help & Support', 'popup-maker' ), __( 'Help & Support', 'popup-maker' ), apply_filters( 'popmake_admin_submenu_extensions_capability', 'edit_posts' ), 'pum-support', 'pum_settings_page' );
-
-	$popmake_appearance_themes_page = add_theme_page( __( 'Popup Themes', 'popup-maker' ), __( 'Popup Themes', 'popup-maker' ), 'edit_posts', 'edit.php?post_type=popup_theme' );
-}
-
-add_action( 'admin_menu', 'popmake_admin_submenu_pages' );
-
-/**
- * Submenu filter function. Tested with Wordpress 4.1.1
- * Sort and order submenu positions to match our custom order.
- *
- * @since 1.4
- */
-function pum_reorder_admin_submenu() {
-	global $submenu;
-
-	if ( isset( $submenu['edit.php?post_type=popup'] ) ) {
-		// Sort the menu according to your preferences
-		usort( $submenu['edit.php?post_type=popup'], 'pum_reorder_submenu_array' );
-	}
-}
-
-add_action( 'admin_head', 'pum_reorder_admin_submenu' );
-
-
-/**
- * Reorders the submenu by title.
- *
- * Forces $first_pages to load in order at the beginning of the menu
- * and $last_pages to load in order at the end. All remaining menu items will
- * go out in generic order.
- *
- * @since 1.4
- *
- * @param $a
- * @param $b
- *
- * @return int
- */
-function pum_reorder_submenu_array( $a, $b ) {
-	$first_pages = apply_filters( 'pum_admin_submenu_first_pages', array(
-		__( 'All Popups', 'popup-maker' ),
-		__( 'Add New', 'popup-maker' ),
-		__( 'All Themes', 'popup-maker' ),
-		__( 'Categories', 'popup-maker' ),
-		__( 'Tags', 'popup-maker' ),
-	) );
-	$last_pages  = apply_filters( 'pum_admin_submenu_last_pages', array(
-		__( 'Extend', 'popup-maker' ),
-		__( 'Settings', 'popup-maker' ),
-		__( 'Tools', 'popup-maker' ),
-		__( 'Support Forum', 'freemius' ),
-		__( 'Account', 'freemius' ),
-		__( 'Contact Us', 'freemius' ),
-		__( 'Help & Support', 'popup-maker' ),
-	) );
-
-	$a_val = strip_tags( $a[0], false );
-	$b_val = strip_tags( $b[0], false );
-
-	// Sort First Page Keys.
-	if ( in_array( $a_val, $first_pages ) && ! in_array( $b_val, $first_pages ) ) {
-		return - 1;
-	} elseif ( ! in_array( $a_val, $first_pages ) && in_array( $b_val, $first_pages ) ) {
-		return 1;
-	} elseif ( in_array( $a_val, $first_pages ) && in_array( $b_val, $first_pages ) ) {
-		$a_key = array_search( $a_val, $first_pages );
-		$b_key = array_search( $b_val, $first_pages );
-
-		return ( $a_key < $b_key ) ? - 1 : 1;
+function pum_typenow() {
+	if ( ! empty ( $GLOBALS['typenow'] ) ) {
+		return $GLOBALS['typenow'];
 	}
 
-	// Sort Last Page Keys.
-	if ( in_array( $a_val, $last_pages ) && ! in_array( $b_val, $last_pages ) ) {
-		return 1;
-	} elseif ( ! in_array( $a_val, $last_pages ) && in_array( $b_val, $last_pages ) ) {
-		return - 1;
-	} elseif ( in_array( $a_val, $last_pages ) && in_array( $b_val, $last_pages ) ) {
-		$a_key = array_search( $a_val, $last_pages );
-		$b_key = array_search( $b_val, $last_pages );
+	// when editing pages, $typenow isn't set until later!
+	// try to pick it up from the query string
+	if ( ! empty( $_GET['post_type'] ) ) {
+		return sanitize_text_field( $_GET['post_type'] );
+	} elseif ( ! empty( $_GET['post'] ) ) {
+		$post = get_post( $_GET['post'] );
 
-		return ( $a_key < $b_key ) ? - 1 : 1;
+		return $post->post_type;
+	} elseif ( ! empty( $_POST['post_ID'] ) ) {
+		$post = get_post( $_POST['post_ID'] );
+
+		return $post->post_type;
 	}
 
-	// Sort remaining keys
-	return $a > $b ? 1 : - 1;
+	return false;
 }
 
-
 /**
- *  Determines whether the current admin page is an POPMAKE admin page.
+ *  Determines whether the current page is an popup maker admin page.
  *
- *  Only works after the `wp_loaded` hook, & most effective
- *  starting on `admin_menu` hook.
+ * @since 1.7.0
  *
- * @since 1.0
- * @return bool True if POPMAKE admin page.
+ * @return bool
  */
-function popmake_is_admin_page() {
-	global $pagenow, $typenow, $popmake_popup_themes_page, $popmake_settings_page, $popmake_tools_page, $popmake_extensions_page;
-
+function pum_is_admin_page() {
 	if ( ! is_admin() || ! did_action( 'wp_loaded' ) ) {
 		return false;
 	}
 
-	// when editing pages, $typenow isn't set until later!
-	if ( empty( $typenow ) ) {
-		// try to pick it up from the query string
-		if ( ! empty( $_GET['post'] ) ) {
-			$post    = get_post( $_GET['post'] );
-			$typenow = $post->post_type;
-		} // try to pick it up from the quick edit AJAX post
-		elseif ( ! empty( $_POST['post_ID'] ) ) {
-			$post    = get_post( $_POST['post_ID'] );
-			$typenow = $post->post_type;
-		}
-	}
+	$typenow = pum_typenow();
 
-	if ( 'popup' == $typenow || 'popup_theme' == $typenow ) {
-		return true;
-	}
+	$tests = array(
+		'popup' == $typenow,
+		'popup_theme' == $typenow,
+		! empty( $GLOBALS['hook_suffix'] ) && in_array( $GLOBALS['hook_suffix'], PUM_Admin_Pages::$pages ),
+	);
 
-	$popmake_admin_pages = apply_filters( 'popmake_admin_pages', array(
-		$popmake_popup_themes_page,
-		$popmake_settings_page,
-		$popmake_tools_page,
-		$popmake_extensions_page,
-	) );
-
-	// TODO Replace this whole function using the global $hook_suffix which is what add_submenu_page returns.
-	if ( in_array( $pagenow, $popmake_admin_pages ) ) {
-		return true;
-	} else {
-		return false;
-	}
+	return in_array( true, $tests );
 }
 
+/**
+ * Determines whether the current admin page is the popup editor.
+ *
+ * @since 1.7.0
+ *
+ * @return bool
+ */
+function pum_is_popup_editor() {
+	global $pagenow;
+
+	$tests = array(
+		is_admin(),
+		popmake_is_admin_page(),
+		'popup' == pum_typenow(),
+		in_array( $pagenow, array( 'post-new.php', 'post.php' ) ),
+	);
+
+	return ! in_array( false, $tests );
+}
 
 /**
- *  Determines whether the current admin page is an POPMAKE admin popup page.
+ * Determines whether the current admin page is the popup theme editor.
  *
+ * @since 1.7.0
+ *
+ * @return bool
+ */
+function pum_is_popup_theme_editor() {
+	global $pagenow;
+
+	$tests = array(
+		is_admin(),
+		popmake_is_admin_page(),
+		'popup_theme' == pum_typenow(),
+		in_array( $pagenow, array( 'post-new.php', 'post.php' ) ),
+	);
+
+	return ! in_array( false, $tests );
+}
+
+/**
+ * Determines whether the current admin page is the extensions page.
+ *
+ * @since 1.7.0
+ *
+ * @param null|string $key
+ *
+ * @return bool
+ */
+function pum_is_submenu_page( $key = null ) {
+	$tests = array(
+		is_admin(),
+		popmake_is_admin_page(),
+		! pum_is_popup_editor(),
+		! pum_is_popup_theme_editor(),
+		$key && ! empty( $GLOBALS['hook_suffix'] ) ? $GLOBALS['hook_suffix'] == PUM_Admin_Pages::get_page( $key ) : true,
+		! isset( $key ) && ! empty( $GLOBALS['hook_suffix'] ) ? in_array( $GLOBALS['hook_suffix'], PUM_Admin_Pages::$pages ) : true,
+	);
+
+	return ! in_array( false, $tests );
+}
+
+/**
+ * Determines whether the current admin page is the subscriptions page.
+ *
+ * @since 1.7.0
+ *
+ * @return bool
+ */
+function pum_is_subscriptions_page() {
+	return pum_is_submenu_page( 'subscriptions' );
+}
+
+/**
+ * Determines whether the current admin page is the extensions page.
+ *
+ * @since 1.7.0
+ *
+ * @return bool
+ */
+function pum_is_extensions_page() {
+	return pum_is_submenu_page( 'extensions' );
+}
+
+/**
+ * Determines whether the current admin page is the settings page.
+ *
+ * @since 1.7.0
+ *
+ * @return bool
+ */
+function pum_is_settings_page() {
+	return pum_is_submenu_page( 'settings' );
+}
+
+/**
+ * Determines whether the current admin page is the tools page.
+ *
+ * @since 1.7.0
+ *
+ * @return bool
+ */
+function pum_is_tools_page() {
+	return pum_is_submenu_page( 'tools' );
+}
+
+/**
+ * Determines whether the current admin page is the support page.
+ *
+ * @since 1.7.0
+ *
+ * @return bool
+ */
+function pum_is_support_page() {
+	return pum_is_submenu_page( 'support' );
+}
+
+/**
+ *  Determines whether the current admin page is an POPMAKE admin page.
+ *
+ * @deprecated 1.7.0 Use pum_is_admin_page instead.
  *
  * @since 1.0
- * @return bool True if POPMAKE admin popup page.
+ *
+ * @return bool True if POPMAKE admin page.
+ */
+function popmake_is_admin_page() {
+	return pum_is_admin_page();
+}
+
+/**
+ * Determines whether the current admin page is an admin popup page.
+ *
+ * @deprecated 1.7.0
+ *
+ * @since 1.0
+ *
+ * @return bool
  */
 function popmake_is_admin_popup_page() {
-	global $pagenow, $typenow;
-
-	if ( ! is_admin() || ! popmake_is_admin_page() ) {
-		return false;
-	}
-
-	if ( 'popup' == $typenow && in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) ) {
-		return true;
-	} else {
-		return false;
-	}
+	return pum_is_popup_editor();
 }
 
 /**
- *  Determines whether the current admin page is an POPMAKE admin theme page.
+ * Determines whether the current admin page is an admin theme page.
  *
+ * @deprecated 1.7.0 Use pum_is_popup_theme_editor
  *
  * @since 1.0
- * @return bool True if POPMAKE admin theme page.
+ *
+ * @return bool
  */
 function popmake_is_admin_popup_theme_page() {
-	global $pagenow, $typenow;
+	return pum_is_popup_theme_editor();
+}
 
-	if ( ! is_admin() || ! popmake_is_admin_page() ) {
-		return false;
+/**
+ * Generates an Popup Maker admin URL based on the given type.
+ *
+ * @since 1.7.0
+ *
+ * @param string $type       Optional. Type of admin URL. Accepts 'tools', 'settings'. Default empty
+ * @param array  $query_args Optional. Query arguments to append to the admin URL. Default empty array.
+ *
+ * @return string Constructed admin URL.
+ */
+function pum_admin_url( $type = '', $query_args = array() ) {
+	$page = '';
+
+	$whitelist = PUM_Admin_Pages::$pages;
+
+	if ( in_array( $type, $whitelist, true ) ) {
+		$page = "pum-{$type}";
 	}
 
-	if ( 'popup_theme' == $typenow && in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) ) {
-		return true;
-	} else {
-		return false;
-	}
+	$admin_query_args = array_merge( array( 'page' => $page ), $query_args );
+
+	$url = add_query_arg( $admin_query_args, admin_url( 'edit.php?post_type=popup' ) );
+
+	/**
+	 * Filters the Popup Maker admin URL.
+	 *
+	 * @param string $url        Admin URL.
+	 * @param string $type       Admin URL type.
+	 * @param array  $query_args Query arguments originally passed to pum_admin_url().
+	 */
+	return apply_filters( 'pum_admin_url', $url, $type, $query_args );
 }

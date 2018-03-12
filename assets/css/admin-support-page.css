@@ -1,0 +1,34 @@
+/*!******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
+.popmake-support-links {
+  list-style: none;
+}
+
+.popmake-support-links li {
+  margin-bottom: 10px;
+}
+
+.popmake-support-links a {
+  color: #20252b;
+  font-size: 1.25em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.popmake-support-links a span {
+  margin-left: 10px;
+}
+
+.popmake-support-links a img {
+  top: 6px;
+  position: relative;
+  min-width: 24px;
+  max-width: 24px;
+  min-height: 24px;
+  max-height: 24px;
+}
+
+/*# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYWRtaW4tc3VwcG9ydC1wYWdlLmNzcyIsInNvdXJjZXMiOlsiYWRtaW4tc3VwcG9ydC1wYWdlLnNjc3MiXSwic291cmNlc0NvbnRlbnQiOlsiLyohKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqXG4gKiBDb3B5cmlnaHQgKGMpIDIwMTcsIFdQIFBvcHVwIE1ha2VyXG4gKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqL1xuXG4ucG9wbWFrZS1zdXBwb3J0LWxpbmtzIHtcbiAgbGlzdC1zdHlsZTogbm9uZTtcbiAgbGkge1xuICAgIG1hcmdpbi1ib3R0b206IDEwcHg7XG4gIH1cblxuICBhIHtcbiAgICBjb2xvcjogIzIwMjUyYjtcbiAgICBmb250LXNpemU6IDEuMjVlbTtcbiAgICB0ZXh0LXRyYW5zZm9ybTogdXBwZXJjYXNlO1xuICAgIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcbiAgICBzcGFuIHtcbiAgICAgIG1hcmdpbi1sZWZ0OiAxMHB4O1xuICAgIH1cblxuICAgIGltZyB7XG4gICAgICB0b3A6IDZweDtcbiAgICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgICAgIG1pbi13aWR0aDogMjRweDtcbiAgICAgIG1heC13aWR0aDogMjRweDtcbiAgICAgIG1pbi1oZWlnaHQ6IDI0cHg7XG4gICAgICBtYXgtaGVpZ2h0OiAyNHB4O1xuICAgIH1cbiAgfVxuXG59XG4iXSwibWFwcGluZ3MiOiJBQUFBOztnRkFFZ0Y7QUFFaEYsQUFBQSxzQkFBc0IsQ0FBQztFQUNyQixVQUFVLEVBQUUsSUFBSztDQXdCbEI7O0FBekJELEFBRUUsc0JBRm9CLENBRXBCLEVBQUUsQ0FBQztFQUNELGFBQWEsRUFBRSxJQUFLO0NBQ3JCOztBQUpILEFBTUUsc0JBTm9CLENBTXBCLENBQUMsQ0FBQztFQUNBLEtBQUssRUFBRSxPQUFRO0VBQ2YsU0FBUyxFQUFFLE1BQU87RUFDbEIsY0FBYyxFQUFFLFNBQVU7RUFDMUIsZUFBZSxFQUFFLElBQUs7Q0FhdkI7O0FBdkJILEFBV0ksc0JBWGtCLENBTXBCLENBQUMsQ0FLQyxJQUFJLENBQUM7RUFDSCxXQUFXLEVBQUUsSUFBSztDQUNuQjs7QUFiTCxBQWVJLHNCQWZrQixDQU1wQixDQUFDLENBU0MsR0FBRyxDQUFDO0VBQ0YsR0FBRyxFQUFFLEdBQUk7RUFDVCxRQUFRLEVBQUUsUUFBUztFQUNuQixTQUFTLEVBQUUsSUFBSztFQUNoQixTQUFTLEVBQUUsSUFBSztFQUNoQixVQUFVLEVBQUUsSUFBSztFQUNqQixVQUFVLEVBQUUsSUFBSztDQUNsQiIsIm5hbWVzIjpbXX0= */
+
+/*# sourceMappingURL=admin-support-page.css.map */

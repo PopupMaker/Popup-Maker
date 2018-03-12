@@ -7,9 +7,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class PUM {
 
-	const VER = '1.6.7';
+	const VER = '1.7.0-rc.1';
 
-	const DB_VER = 6;
+	const DB_VER = 7;
 
 	const API_URL = 'https://wppopupmaker.com/?edd_action=';
 

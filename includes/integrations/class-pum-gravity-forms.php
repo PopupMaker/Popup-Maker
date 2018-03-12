@@ -160,7 +160,7 @@ class PUM_Gravity_Forms_Integation {
                             <label for="gforms-pum-closedelay"><?php _e( 'Delay', 'popup-maker' ); ?></label>
                         </th>
                         <td>
-                            <input type="number" id="gforms-pum-closedelay" min="0" step="500" name="gforms-pum[closedelay]" style="width: 100px;" value="<?php esc_attr_e( $settings['closedelay'] ); ?>" /><?php _e( 'ms', 'popup-maker' ); ?>
+                            <input type="number" id="gforms-pum-closedelay" min="0" step="1" name="gforms-pum[closedelay]" style="width: 100px;" value="<?php esc_attr_e( $settings['closedelay'] ); ?>" /><?php _e( 'seconds', 'popup-maker' ); ?>
                         </td>
                     </tr>
                 </table>

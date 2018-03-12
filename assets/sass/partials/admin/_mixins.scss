@@ -1,0 +1,76 @@
+/*!******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
+
+@mixin table-alignments() {
+  thead, tbody {
+    th, td {
+      text-align: center;
+
+      &:first-child {
+        text-align: left;
+      }
+
+      &:last-child {
+        text-align: right;
+      }
+    }
+  }
+
+  tbody {
+    th, td {
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+  }
+
+}
+
+@mixin add-more-table-lists() {
+  .pum-add-new, .add-new {
+    float: right;
+  }
+
+  .list-table {
+    display: none !important;
+
+    @include table-alignments();
+  }
+
+  span.edit {
+    cursor: pointer;
+    color: #0073aa;
+    text-decoration: underline;
+  }
+
+  .list-item-actions {
+    i {
+      cursor: pointer;
+    }
+  }
+
+  .no-list-items {
+    display: block;
+    select {
+      max-width: 100%;
+    }
+  }
+
+  &.has-list-items {
+
+    .list-table {
+      display: block !important;;
+    }
+
+    .no-list-items {
+      display: none !important;;
+    }
+
+  }
+
+}

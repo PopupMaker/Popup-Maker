@@ -1,13 +1,14 @@
-//@import 'partials/popmake_styles';
+/* Animations */
+@import 'partials/site/animations';
+/* Popup Core Styles */
 @import 'partials/pum_styles';
+/* PM Forms */
+@import 'partials/site/form/general';
+@import 'partials/site/form/alignments';
+@import 'partials/site/form/layout/standard';
+@import 'partials/site/form/layout/inline';
+@import 'partials/site/form/layout/block';
+@import 'partials/site/form/style/default';
+@import 'partials/site/form/sub_form';
+/* 3rd Party Plugin Compatibility Fixes */
 @import 'partials/compatibility';
-
-/* NF DatePicker Fix */
-.pika-single {
-  z-index: 19999999999;
-}
-
-/** Backward Compatibility */
-.popmake-close {
-  cursor: pointer;
-}

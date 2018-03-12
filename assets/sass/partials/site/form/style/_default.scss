@@ -1,0 +1,28 @@
+/*
+ * Form Styles
+ */
+/*!******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
+
+.pum-form--style-default {
+  label {
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  input[type=text],
+  input[type=email] {
+    background-color: #f8f7f7;
+    margin-bottom: 5px;
+    font-size: 14px;
+    padding: 10px 8px;
+  }
+
+  button {
+    font-size: 18px;
+    margin: 10px 0 0;
+    padding: 10px 5px;
+    cursor: pointer;
+  }
+}

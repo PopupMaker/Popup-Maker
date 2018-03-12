@@ -23,7 +23,7 @@ function popmake_popup_theme_title_meta_box_field_description( $popup_theme_id )
 					<label for="popup_theme_title_font_color"><?php _e( 'Color', 'popup-maker' ); ?></label>
 				</th>
 				<td>
-					<input type="text" name="popup_theme_title_font_color" id="popup_theme_title_font_color" value="<?php esc_attr_e( popmake_get_popup_theme_title( $popup_theme_id, 'font_color' ) ) ?>" class="color-picker"/>
+					<input type="text" name="popup_theme_title_font_color" id="popup_theme_title_font_color" value="<?php esc_attr_e( popmake_get_popup_theme_title( $popup_theme_id, 'font_color' ) ) ?>" class="pum-color-picker"/>
 				</td>
 			</tr>
 			<tr>
@@ -35,7 +35,7 @@ function popmake_popup_theme_title_meta_box_field_description( $popup_theme_id )
 					       value="<?php esc_attr_e( popmake_get_popup_theme_title( $popup_theme_id, 'font_size' ) ) ?>"
 					       name="popup_theme_title_font_size"
 					       id="popup_theme_title_font_size"
-					       class="popmake-range-manual"
+					       class="pum-range-manual popmake-range-manual"
 					       step="<?php esc_html_e( apply_filters( 'popmake_popup_theme_step_title_font_size', 1 ) ); ?>"
 					       min="<?php esc_html_e( apply_filters( 'popmake_popup_theme_min_title_font_size', 8 ) ); ?>"
 					       max="<?php esc_html_e( apply_filters( 'popmake_popup_theme_max_title_font_size', 32 ) ); ?>"
@@ -52,7 +52,7 @@ function popmake_popup_theme_title_meta_box_field_description( $popup_theme_id )
 					       value="<?php esc_attr_e( popmake_get_popup_theme_title( $popup_theme_id, 'line_height' ) ) ?>"
 					       name="popup_theme_title_line_height"
 					       id="popup_theme_title_line_height"
-					       class="popmake-range-manual"
+					       class="pum-range-manual popmake-range-manual"
 					       step="<?php esc_html_e( apply_filters( 'popmake_popup_theme_step_title_line_height', 1 ) ); ?>"
 					       min="<?php esc_html_e( apply_filters( 'popmake_popup_theme_min_title_line_height', 8 ) ); ?>"
 					       max="<?php esc_html_e( apply_filters( 'popmake_popup_theme_max_title_line_height', 32 ) ); ?>"
@@ -139,7 +139,7 @@ function popmake_popup_theme_title_meta_box_field_description( $popup_theme_id )
 				       value="<?php esc_attr_e( popmake_get_popup_theme_title( $popup_theme_id, 'textshadow_horizontal' ) ) ?>"
 				       name="popup_theme_title_textshadow_horizontal"
 				       id="popup_theme_title_textshadow_horizontal"
-				       class="popmake-range-manual"
+				       class="pum-range-manual popmake-range-manual"
 				       step="<?php esc_html_e( apply_filters( 'popmake_popup_theme_step_title_textshadow_horizontal', 1 ) ); ?>"
 				       min="<?php esc_html_e( apply_filters( 'popmake_popup_theme_min_title_textshadow_horizontal', - 50 ) ); ?>"
 				       max="<?php esc_html_e( apply_filters( 'popmake_popup_theme_max_title_textshadow_horizontal', 50 ) ); ?>"
@@ -156,7 +156,7 @@ function popmake_popup_theme_title_meta_box_field_description( $popup_theme_id )
 				       value="<?php esc_attr_e( popmake_get_popup_theme_title( $popup_theme_id, 'textshadow_vertical' ) ) ?>"
 				       name="popup_theme_title_textshadow_vertical"
 				       id="popup_theme_title_textshadow_vertical"
-				       class="popmake-range-manual"
+				       class="pum-range-manual popmake-range-manual"
 				       step="<?php esc_html_e( apply_filters( 'popmake_popup_theme_step_title_textshadow_vertical', 1 ) ); ?>"
 				       min="<?php esc_html_e( apply_filters( 'popmake_popup_theme_min_title_textshadow_vertical', - 50 ) ); ?>"
 				       max="<?php esc_html_e( apply_filters( 'popmake_popup_theme_max_title_textshadow_vertical', 50 ) ); ?>"
@@ -173,7 +173,7 @@ function popmake_popup_theme_title_meta_box_field_description( $popup_theme_id )
 				       value="<?php esc_attr_e( popmake_get_popup_theme_title( $popup_theme_id, 'textshadow_blur' ) ) ?>"
 				       name="popup_theme_title_textshadow_blur"
 				       id="popup_theme_title_textshadow_blur"
-				       class="popmake-range-manual"
+				       class="pum-range-manual popmake-range-manual"
 				       step="<?php esc_html_e( apply_filters( 'popmake_popup_theme_step_title_textshadow_blur', 1 ) ); ?>"
 				       min="<?php esc_html_e( apply_filters( 'popmake_popup_theme_min_title_textshadow_blur', 0 ) ); ?>"
 				       max="<?php esc_html_e( apply_filters( 'popmake_popup_theme_max_title_textshadow_blur', 100 ) ); ?>"
@@ -186,7 +186,7 @@ function popmake_popup_theme_title_meta_box_field_description( $popup_theme_id )
 				<label for="popup_theme_title_textshadow_color"><?php _e( 'Color', 'popup-maker' ); ?></label>
 			</th>
 			<td>
-				<input type="text" name="popup_theme_title_textshadow_color" id="popup_theme_title_textshadow_color" value="<?php esc_attr_e( popmake_get_popup_theme_title( $popup_theme_id, 'textshadow_color' ) ) ?>" class="color-picker textshadow-color"/>
+				<input type="text" name="popup_theme_title_textshadow_color" id="popup_theme_title_textshadow_color" value="<?php esc_attr_e( popmake_get_popup_theme_title( $popup_theme_id, 'textshadow_color' ) ) ?>" class="pum-color-picker textshadow-color"/>
 			</td>
 		</tr>
 		<tr>
@@ -198,7 +198,7 @@ function popmake_popup_theme_title_meta_box_field_description( $popup_theme_id )
 				       value="<?php esc_attr_e( popmake_get_popup_theme_title( $popup_theme_id, 'textshadow_opacity' ) ) ?>"
 				       name="popup_theme_title_textshadow_opacity"
 				       id="popup_theme_title_textshadow_opacity"
-				       class="popmake-range-manual"
+				       class="pum-range-manual popmake-range-manual"
 				       step="1"
 				       min="0"
 				       max="100"

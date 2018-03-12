@@ -2,7 +2,7 @@
 	/**
 	 * @package     Freemius
 	 * @copyright   Copyright (c) 2015, Freemius, Inc.
-	 * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+	 * @license     https://www.gnu.org/licenses/gpl-3.0.html GNU General Public License Version 3
 	 * @since       1.0.3
 	 */
 
@@ -12,12 +12,11 @@
 
 	/**
 	 * @var array $VARS
-	 */
-	$slug = $VARS['slug'];
-	/**
 	 * @var Freemius
 	 */
-	$fs = freemius( $slug );
+	$fs = freemius( $VARS['id'] );
+
+	$slug = $fs->get_slug();
 
 	$open_addon_slug = fs_request_get( 'slug' );
 
@@ -29,17 +28,21 @@
 	$addons = $fs->get_addons();
 
 	$has_addons = ( is_array( $addons ) && 0 < count( $addons ) );
+
+	$has_tabs = $fs->_add_tabs_before_content();
 ?>
-	<div id="fs_addons" class="wrap">
-		<h2><?php printf( fs_text( 'add-ons-for-x', $slug ), $fs->get_plugin_name() ) ?></h2>
+	<div id="fs_addons" class="wrap fs-section">
+		<?php if ( ! $has_tabs ) : ?>
+		<h2><?php echo esc_html( sprintf( fs_text_inline( 'Add Ons for %s', 'add-ons-for-x', $slug ), $fs->get_plugin_name() ) ) ?></h2>
+		<?php endif ?>
 
 		<div id="poststuff">
 			<?php if ( ! $has_addons ) : ?>
-				<h3><?php printf(
+				<h3><?php echo esc_html( sprintf(
 						'%s... %s',
-						fs_text( 'oops', $slug ),
-						fs_text( 'add-ons-missing', $slug )
-					) ?></h3>
+						fs_text_x_inline( 'Oops', 'exclamation', 'oops', $slug ),
+						fs_text_inline( 'We could\'nt load the add-ons list. It\'s probably an issue on our side, please try to come back in few minutes.', 'add-ons-missing', $slug )
+					) ) ?></h3>
 			<?php endif ?>
 			<ul class="fs-cards-list">
 				<?php if ( $has_addons ) : ?>
@@ -47,32 +50,43 @@
 						<?php
 						$open_addon = ( $open_addon || ( $open_addon_slug === $addon->slug ) );
 
-						$price        = 0;
-						$plan         = null;
-						$plans_result = $fs->get_api_site_or_plugin_scope()->get( "/addons/{$addon->id}/plans.json" );
-						if ( ! isset( $plans_result->error ) ) {
-							$plans = $plans_result->plans;
+						$price     = 0;
+						$has_trial = false;
+						$has_free_plan = false;
+						$has_paid_plan = false;
+
+						$result    = $fs->get_api_plugin_scope()->get( "/addons/{$addon->id}/pricing.json?type=visible" );
+						if ( ! isset( $result->error ) ) {
+							$plans = $result->plans;
+
 							if ( is_array( $plans ) && 0 < count( $plans ) ) {
-								$plan           = new FS_Plugin_Plan( $plans[0] );
-								$pricing_result = $fs->get_api_site_or_plugin_scope()->get( "/addons/{$addon->id}/plans/{$plan->id}/pricing.json" );
-								if ( ! isset( $pricing_result->error ) ) {
-									// Update plan's pricing.
-									$plan->pricing = $pricing_result->pricing;
+								foreach ( $plans as $plan ) {
+									if ( ! isset( $plan->pricing ) ||
+									     ! is_array( $plan->pricing ) ||
+									     0 == count( $plan->pricing )
+									) {
+										// No pricing means a free plan.
+										$has_free_plan = true;
+										continue;
+									}
 
-									if ( is_array( $plan->pricing ) && 0 < count( $plan->pricing ) ) {
-										$min_price = 999999;
-										foreach ( $plan->pricing as $pricing ) {
-											if ( ! is_null( $pricing->annual_price ) && $pricing->annual_price > 0 ) {
-												$min_price = min( $min_price, $pricing->annual_price );
-											} else if ( ! is_null( $pricing->monthly_price ) && $pricing->monthly_price > 0 ) {
-												$min_price = min( $min_price, 12 * $pricing->monthly_price );
-											}
-										}
 
-										if ( $min_price < 999999 ) {
-											$price = $min_price;
+									$has_paid_plan = true;
+									$has_trial     = $has_trial || ( is_numeric( $plan->trial_period ) && ( $plan->trial_period > 0 ) );
+
+									$min_price = 999999;
+									foreach ( $plan->pricing as $pricing ) {
+										if ( ! is_null( $pricing->annual_price ) && $pricing->annual_price > 0 ) {
+											$min_price = min( $min_price, $pricing->annual_price );
+										} else if ( ! is_null( $pricing->monthly_price ) && $pricing->monthly_price > 0 ) {
+											$min_price = min( $min_price, 12 * $pricing->monthly_price );
 										}
 									}
+
+									if ( $min_price < 999999 ) {
+										$price = $min_price;
+									}
+
 								}
 							}
 						}
@@ -82,7 +96,7 @@
 								echo sprintf( '<a href="%s" class="thickbox fs-overlay" aria-label="%s" data-title="%s"></a>',
 									esc_url( network_admin_url( 'plugin-install.php?tab=plugin-information&parent_plugin_id=' . $fs->get_id() . '&plugin=' . $addon->slug .
 									                            '&TB_iframe=true&width=600&height=550' ) ),
-									esc_attr( sprintf( fs_text( 'more-information-about-x', $slug ), $addon->title ) ),
+									esc_attr( sprintf( fs_text_inline( 'More information about %s', 'more-information-about-x', $slug ), $addon->title ) ),
 									esc_attr( $addon->title )
 								);
 							?>
@@ -101,14 +115,24 @@
 								<ul>
 									<li class="fs-card-banner"
 									    style="background-image: url('<?php echo $addon->info->card_banner_url ?>');"></li>
-<!--									<li class="fs-tag"></li>-->
+									<!-- <li class="fs-tag"></li> -->
 									<li class="fs-title"><?php echo $addon->title ?></li>
 									<li class="fs-offer">
 									<span
-										class="fs-price"><?php echo ( 0 == $price ) ? fs_text( 'free', $slug ) : ('$' . number_format( $price, 2 ) . ($plan->has_trial() ? ' - ' . fs_text('trial', $slug) : '')) ?></span>
+										class="fs-price"><?php
+											$descriptors = array();
+
+											if ($has_free_plan)
+												$descriptors[] = fs_text_inline( 'Free', 'free', $slug );
+											if ($has_paid_plan && $price > 0)
+												$descriptors[] = '$' . number_format( $price, 2 );
+											if ($has_trial)
+												$descriptors[] = fs_text_x_inline( 'Trial', 'trial period',  'trial', $slug );
+
+											echo implode(' - ', $descriptors) ?></span>
 									</li>
 									<li class="fs-description"><?php echo ! empty( $addon->info->short_description ) ? $addon->info->short_description : 'SHORT DESCRIPTION' ?></li>
-									<li class="fs-cta"><a class="button"><?php fs_echo( 'view-details', $slug ) ?></a></li>
+									<li class="fs-cta"><a class="button"><?php fs_esc_html_echo_inline( 'View details', 'view-details', $slug ) ?></a></li>
 								</ul>
 							</div>
 						</li>
@@ -155,11 +179,15 @@
 		})(jQuery);
 	</script>
 <?php
+	if ( $has_tabs ) {
+		$fs->_add_tabs_after_content();
+	}
+
 	$params = array(
 		'page'           => 'addons',
 		'module_id'      => $fs->get_id(),
+		'module_type'    => $fs->get_module_type(),
 		'module_slug'    => $slug,
 		'module_version' => $fs->get_plugin_version(),
 	);
 	fs_require_template( 'powered-by.php', $params );
-?>

@@ -354,8 +354,12 @@ class PUM_Admin_Upgrades {
      */
     public function get_pum_db_ver() {
 
-        // this is the current database schema version number
-        $pum_db_ver = pum_get_db_ver();
+    	static $pum_db_ver;
+
+    	if ( ! isset( $pum_db_ver ) ) {
+		    // this is the current database schema version number
+		    $pum_db_ver = pum_get_db_ver();
+	    }
 
         if ( ! $pum_db_ver ) {
             $this->set_pum_db_ver();

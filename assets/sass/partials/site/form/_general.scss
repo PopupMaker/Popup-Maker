@@ -1,0 +1,88 @@
+/*!******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
+
+.pum-form {
+  margin: 0 auto 16px;
+}
+
+.pum-form--loading {
+  opacity: 0.5;
+}
+
+.pum-form__field {
+  margin-bottom: 1em;
+
+  label {
+    font-weight: bold;
+  }
+
+  select,
+  input[type="date"] {
+    margin: 0 auto;
+    font-size: 18px;
+    line-height: 26px;
+    text-align: center;
+    padding: 3px;
+    vertical-align: middle;
+  }
+
+  select {
+    padding: 5px 3px;
+  }
+}
+
+.pum-form__loader {
+  font-size: 2em;
+  animation-duration: 0.75s;
+  animation-iteration-count: infinite;
+  animation-name: rotate-forever;
+  animation-timing-function: linear;
+  height: .75em;
+  width: .75em;
+  border: 0.25em solid rgba(0, 0, 0, 0.5);
+  border-right-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.pum-form__submit {
+  position: relative;
+
+  .pum-form__loader {
+    margin-left: .5em;
+    border: 0.25em solid rgba(255, 255, 255, 0.5);
+    border-right-color: transparent;
+  }
+}
+
+.pum-form__messages {
+  display: none;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  margin-bottom: .5em;
+  padding: 1em;
+  position: relative;
+}
+
+.pum-form__message {
+  margin-bottom: .5em;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.pum-form__message--error {
+  color: red !important;
+  border-color: red;
+}
+
+.pum-form__message--success {
+  color: green !important;
+  border-color: green;
+}
+
+.pum-form--loading {
+  opacity: 0.5;
+}
+

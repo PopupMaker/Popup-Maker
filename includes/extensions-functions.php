@@ -5,6 +5,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+function pum_enabled_extensions() {
+	static $enabled_extensions;
+
+	if ( ! isset( $enabled_extensions ) ) {
+		$enabled_extensions = apply_filters( 'pum_enabled_extensions', array() );
+	}
+
+	return $enabled_extensions;
+}
+
+function pum_extension_enabled( $extension = '' ) {
+	$enabled_extensions = pum_enabled_extensions();
+
+	return ! empty( $extension ) && in_array( $extension, $enabled_extensions );
+}
+
 function popmake_available_extensions() {
 	$json_data = file_get_contents( POPMAKE_DIR . 'includes/extension-list.json' );
 

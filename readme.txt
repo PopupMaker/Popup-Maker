@@ -1,15 +1,15 @@
-=== Popup Maker™ - Best Rated ===
-Contributors: danieliser, wppopupmaker, waltmesser, yogaman5020
+=== Popup Maker - Popup Forms, Optins & More ===
+Contributors: danieliser, wppopupmaker, yogaman5020
 Author URI: https://wppopupmaker.com/?utm_source=readme-header&utm_campaign=Readme&utm_medium=author-uri
 Plugin URI: https://wppopupmaker.com/?utm_capmaign=Readme&utm_source=readme-header&utm_medium=plugin-uri
 Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
-Tested up to: 4.8
-Stable tag: 1.6.7
+Tested up to: 4.9.4
+Stable tag: 1.6.6
 License: GNU Version 3 or Any Later Version
 
-Create any popup imaginable! Customize your popups from head-to-toe and give your site more utility, usability, and conversions.
+Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
 
 == Description ==
 
@@ -68,6 +68,16 @@ Using [Cookies](http://docs.wppopupmaker.com/article/148-cookies?utm_medium=text
 = What do I do if I just want a popup to show on a certain page/post/etc? =
 Check out [Conditions](http://docs.wppopupmaker.com/article/140-conditions?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_content=target-certain-pages)
 
+= How do I make it work with my 3rd party forms? =
+Beginning with Popup Maker v1.7 we now support most forms by default. We do this by adding a hidden field using JavaScript to any form inserted in a popup. This field contains the popup ID.
+
+When we detect that ID in PHP we que up that popup to reopen immediately after refresh to show errors or success messages.
+
+= How do I take advantage of the success actions Popup Maker provides for 3rd party forms? =
+We have built in support for the most popular form plugins. But if we don't then we have a few helper functions that allow you to take full advantage of our success actions and setting cookies.
+
+This link contains AJAX (JavaScript) & Non-AJAX (PHP) based solutions which you can hack with your forms hooks & events. https://gist.github.com/danieliser/0060112b18b6013f2683653236b02439
+
 = Why aren't my popups opening/working? =
 
 There are several common causes for this which include:
@@ -90,6 +100,62 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+
+= v1.7.0 - ??/??/2017 =
+This was one of our biggest updates to date in terms of improving existing functionality, reducing maintenance and the time it takes to implement new features in the future.
+
+Noticeably there are a lot of interface changes with this version as we simplified from having many meta boxes in the popup editor to a new single panel interface.
+
+Lastly we now have include our extendable subscription forms right in the free version. We currently don't provide support for mail/service providers in the free version, but have opened up our form API in the hopes that 3rd party developers will help us fill that gap. Don't fret though, submissions are stored in a custom table for retroactive syncing to lists or export (not yet available).
+
+* Feature: Subscriber forms now included without a paid extension.
+  * Provider API for easily extending forms to work with 3rd party providers.
+  * New shortcode with tons of options built in.
+  * Stores subscribers into a new custom table for import into your favorite system at a later time.
+* Feature: Front end asset overhaul, now uses cached static assets.
+  * All front end assets now combined into single js & css file.
+  * Custom styles are now saved along with all core & extension styles eliminating inline style blocks.
+  * Reduction of footprint means massively improved loading performance.
+  * Dynamic file creation allows for some awesome upcoming features.
+  * Now completely compatible with plugins like Autoptimize (Thanks Frank).
+* Feature: Support for nearly any form, including non ajax forms.
+  * Helper functions to integrate your 3rd party form plugins quickly.
+  * Show thank you popups, set cookies & close popups with a delay after success (requires code).
+  * Automatically reopen popup forms after refresh from a form submission.
+* Improvement: Lots of text, label & description changes to be more intuitive.
+* Improvement: Better 3rd party plugin support including page builders:
+  * Popup post type is now public.
+  * Better support for 3rd party shortcodes which require extra assets loaded (JS/CSS).
+* Improvement: Adding trigger now gives optional choices to create a cookie, rather than being automatic.
+* Improvement: New Popup Settings tabbed interface to help make settings more intuitive & easy to find on one screen.
+  * Now all popup settings are stored in a single meta key reducing DB clutter.
+* Improvement: New Popup Maker Settings tabbed interface to help make settings more intuitive & easy to find on one screen.
+* Improvement: New Popup preview mode.
+* Improvement: Better page builder support by changing popup post type arg for public to true.
+* Improvement: Resource reduction & optimization.
+  * Added class autoloader for core and extensions.
+  * Greatly simplified code base & internal API structures.
+  * Converted many internal APIs to use passive loading.
+  * Added internal caching.
+* Improvement: Integrated [WPJSF](https://github.com/danieliser/WP-JS-Form-Sample-Plugin) lib for easier maintenance and quicker updates of our admin forms.
+* Improvement: Various improvements to smart select fields (jQuery select2) including:
+  * Allow multiple page/post selections without reopening/searching again.
+  * Properly highlights & shows selected items after save/reload.
+  * Paginated/scroll based loading of more results over ajax.
+  * Now shows list of recent "items" immediately upon clicking the field rather than requiring search.
+* Improvement: Admin asset handling
+  * Modularized admin assets for easier debugging & maintenance.
+* Improvement: Popup Trigger shortcode can now use custom popup IDs.
+* Improvement: Added new batch processing system for upgrades and other processes.
+* Improvement: Removed a lot of old code.
+* Improvement: Rebuilt Shortcode UI that should be more reliable.
+* Improvement: Addressed most all PHP 7 notices.
+* Improvement: iOS scrolling issue fixes.
+* Improvement: Added support for KingComposer.
+* Tweak: Support for subdirectory sites having their own sitewide cookies.
+* Fix: Incorrect BuddyPress condition labels
+* Fix: Bug when WPML isn't yet available.
+
 
 = v1.6.7 - ?? =
 * Fix: Typo in JS event name prevented forceFocus for popups.

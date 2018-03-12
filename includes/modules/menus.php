@@ -39,7 +39,7 @@ class PUM_Modules_Menu {
 				'name' => __( 'Disable Popups Menu Editor', 'popup-maker' ),
 				'desc' => sprintf(
 					_x( 'Use this if there is a conflict with your theme or another plugin in the nav menu editor. %sSee Details%s', '%s represent opening and closing link html', 'popup-maker' ),
-					'<a href="https://wordpress.org/support/topic/overrides-other-menu-functions/#post-8945399" target="_blank">',
+					'<a href="http://docs.wppopupmaker.com/article/297-popup-maker-is-overwriting-my-menu-editor-functions-how-can-i-fix-this" target="_blank">',
 					'</a>'
 				),
 				'type' => 'checkbox',
@@ -188,10 +188,7 @@ class PUM_Modules_Menu {
 
 			$popups = array();
 
-			$query = new WP_Query( array(
-				'post_type'      => 'popup',
-				'posts_per_page' => - 1,
-			) );
+			$query = PUM_Popups::get_all();
 
 			if ( $query->have_posts() ) {
 				while ( $query->have_posts() ) : $query->next_post();

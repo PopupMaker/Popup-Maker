@@ -2,7 +2,14 @@
     "use strict";
 
     // Used for Mobile Detect when needed.
-    var md;
+    var _md,
+        md = function () {
+            if (_md === undefined) {
+                _md = new MobileDetect(window.navigator.userAgent);
+            }
+
+            return _md;
+        };
 
     $.extend($.fn.popmake.methods, {
         checkConditions: function () {
@@ -16,27 +23,19 @@
                 group,
                 condition;
 
-            if (settings.mobile_disabled !== undefined && settings.mobile_disabled) {
-                if (typeof md !== 'object') {
-                    md = new MobileDetect(window.navigator.userAgent);
-                }
-
-                if (md.phone()) {
+            if (settings.disable_on_mobile) {
+                if (md().phone()) {
                     return false;
                 }
             }
 
-            if (settings.tablet_disabled !== undefined && settings.tablet_disabled) {
-                if (typeof md !== 'object') {
-                    md = new MobileDetect(window.navigator.userAgent);
-                }
-
-                if (md.tablet()) {
+            if (settings.disable_on_tablet) {
+                if (md().tablet()) {
                     return false;
                 }
             }
 
-            if (settings.conditions !== undefined && settings.conditions.length) {
+            if (settings.conditions.length) {
 
                 // All Groups Must Return True. Break if any is false and set loadable to false.
                 for (g = 0; settings.conditions.length > g; g++) {
@@ -78,31 +77,30 @@
 
             return loadable;
         },
-        checkCondition: function (settings) {
-            var condition = settings.target || null,
+        checkCondition: function (condition) {
+            var target = condition.target || null,
+                settings = condition.settings || condition,
                 check;
 
-            if ( ! condition ) {
+            if (!target) {
                 console.warn('Condition type not set.');
                 return false;
             }
 
+            // TODO once all extensions updated and in circulation for v1.7, change the below to pass settings, not condition.
+
             // Method calling logic
-            if ($.fn.popmake.conditions[condition]) {
-                return $.fn.popmake.conditions[condition].apply(this, [settings]);
+            if ($.fn.popmake.conditions[target]) {
+                return $.fn.popmake.conditions[target].apply(this, [condition]);
             }
             if (window.console) {
-                console.warn('Condition ' + condition + ' does not exist.');
+                console.warn('Condition ' + target + ' does not exist.');
                 return true;
             }
         }
     });
 
 
-    $.fn.popmake.conditions = {
-        device_is_mobile: function (settings) {
-            return md.mobile();
-        }
-    };
+    $.fn.popmake.conditions = {};
 
 }(jQuery, document));

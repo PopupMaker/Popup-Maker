@@ -5,36 +5,56 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+
+/**
+ * Returns a popup object.
+ *
+ * @deprecated 1.7
+ *
+ * @param null $popup_id
+ *
+ * @return false|PUM_Model_Popup
+ */
+function pum_popup( $popup_id = null ) {
+	return pum_get_popup( $popup_id );
+}
+
 /**
  * @param null $popup_id
  *
- * @return PUM_Popup|false
+ * @return string
  */
-function pum_popup( $popup_id = null ) {
-	if ( ! $popup_id && isset( $GLOBALS['popup'] ) && is_a( $GLOBALS['popup'], 'PUM_Popup' ) ) {
-		$popup = $GLOBALS['popup'];
-	} else {
-		$popup = new PUM_Popup( $popup_id );
-	}
-	return apply_filters( 'pum_popup', $popup, $popup_id );
-}
-
 function pum_get_popup_title( $popup_id = null ) {
-	return pum_popup( $popup_id )->get_title();
+	return pum_get_popup( $popup_id )->get_title();
 }
 
+/**
+ * @deprecated 1.7.0
+ *
+ * @param null $popup_id
+ *
+ * @return array
+ */
 function pum_get_popup_triggers( $popup_id = null ) {
-	return pum_popup( $popup_id )->get_triggers();
+	return pum_get_popup( $popup_id )->get_triggers();
 }
 
+/**
+ * @deprecated 1.7.0
+ *
+ * @param null $popup_id
+ *
+ * @return array
+ */
 function pum_get_popup_cookies( $popup_id = null ) {
-	return pum_popup( $popup_id )->get_cookies();
+	return pum_get_popup( $popup_id )->get_cookies();
 }
 
-function pum_get_popup_conditions( $popup_id = null ) {
-	return pum_popup( $popup_id )->get_conditions();
-}
-
+/**
+ * @param null $popup_id
+ *
+ * @return bool
+ */
 function pum_is_popup_loadable( $popup_id = null ) {
-	return pum_popup( $popup_id )->is_loadable();
+	return pum_get_popup( $popup_id )->is_loadable();
 }

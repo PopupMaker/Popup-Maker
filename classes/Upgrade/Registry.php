@@ -1,0 +1,149 @@
+<?php
+/*******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Implements a registry for core upgrade routines.
+ *
+ * @since 1.7.0
+ *
+ * @see PUM_Batch_Process_Registry
+ */
+class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
+
+	/**
+	 * @var string Currently installed version.
+	 */
+	public $version;
+
+	/**
+	 * @var string Upgraded from version.
+	 */
+	public $upgraded_from;
+
+	/**
+	 * @var string Initially installed version.
+	 */
+	public $initial_version;
+
+	/**
+	 * @var PUM_Upgrade_Registry
+	 */
+	public static $instance;
+
+	/**
+	 * @return PUM_Upgrade_Registry
+	 */
+	public static function instance() {
+		if ( ! isset( self::$instance ) ) {
+			self::$instance = new self();
+			add_action( 'admin_init', array( self::$instance, 'init' ), - 9999 );
+		}
+
+		return self::$instance;
+	}
+
+
+	/**
+	 * Initializes the upgrade registry.
+	 */
+	public function init() {
+		$this->version         = get_option( 'pum_ver' );
+		$this->initial_version = get_option( 'pum_initial_version' );
+		$this->upgraded_from   = get_option( 'pum_ver_upgraded_from' );
+
+		$this->register_upgrades();
+
+		/**
+		 * Fires during instantiation of the batch processing registry.
+		 *
+		 * @param PUM_Upgrade_Registry $this PUM_Abstract_Registry instance.
+		 */
+		do_action( 'pum_upgrade_process_init', $this );
+	}
+
+	/**
+	 * Registers upgrade routines.
+	 *
+	 * @see PUM_Upgrades::add_routine()
+	 */
+	private function register_upgrades() {
+		// v1.7 Upgrades
+		$this->add_upgrade( 'core-v1_7-popups', array(
+			'rules' => array(
+				version_compare( $this->initial_version, '1.7', '<' ),
+			),
+			'class' => 'PUM_Upgrade_v1_7_Popups',
+			'file'  => Popup_Maker::$DIR . 'includes/batch/upgrade/class-upgrade-v1_7-popups.php',
+		) );
+
+		$this->add_upgrade( 'core-v1_7-settings', array(
+			'rules' => array(
+				version_compare( $this->initial_version, '1.7', '<' ),
+			),
+			'class' => 'PUM_Upgrade_v1_7_Settings',
+			'file'  => Popup_Maker::$DIR . 'includes/batch/upgrade/class-upgrade-v1_7-settings.php',
+		) );
+
+		/**
+		 * Fires during instantiation of the batch processing registry.
+		 *
+		 * @param PUM_Upgrade_Registry $this PUM_Abstract_Registry instance.
+		 */
+		do_action( 'pum_register_upgrades', $this );
+	}
+
+
+	/**
+	 * Adds an upgrade to the registry.
+	 *
+	 * @param int $upgrade_id upgrade ID.
+	 * @param array $attributes {
+	 *     Upgrade attributes.
+	 *
+	 * @type string $class upgrade handler class.
+	 * @type string $file upgrade handler class file.
+	 * }
+	 *
+	 * @return true Always true.
+	 */
+	public function add_upgrade( $upgrade_id, $attributes ) {
+		$attributes = wp_parse_args( $attributes, array(
+			'rules' => array(),
+			'class' => '',
+			'file'  => '',
+		) );
+
+		// Log an error if it's too late to register the process.
+		if ( did_action( 'pum_upgrade_process_init' ) ) {
+			PUM_Logging::instance()->log( sprintf( 'The %s upgrade process was registered too late. Registrations must occur while/before <code>pum_upgrade_process_init</code> fires.', esc_html( $upgrade_id ) ) );
+			return false;
+		}
+
+		return $this->register_process( $upgrade_id, $attributes );
+	}
+
+	/**
+	 * Removes an upgrade from the registry by ID.
+	 *
+	 * @param string $upgrade_id upgrade ID.
+	 */
+	public function remove_upgrade( $upgrade_id ) {
+		parent::remove_process( $upgrade_id );
+	}
+
+	/**
+	 * Retrieves registered upgrades.
+	 *
+	 * @return array The list of registered upgrades.
+	 */
+	public function get_upgrades() {
+		return parent::get_items();
+	}
+
+}

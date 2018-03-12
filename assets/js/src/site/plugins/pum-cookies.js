@@ -20,7 +20,7 @@
                 settings.name,
                 true,
                 settings.session ? null : settings.time,
-                settings.path ? '/' : null
+                settings.path ? pum_vars.home_url || '/' : null
             );
             pum.hooks.doAction('popmake.setCookie', settings);
         },
@@ -28,21 +28,21 @@
             var i,
                 ret = false;
 
-            if (settings.cookie === undefined || settings.cookie.name === undefined || settings.cookie.name === null) {
+            if (settings.cookie_name === undefined || settings.cookie_name === null || settings.cookie_name === '') {
                 return false;
             }
 
-            switch (typeof settings.cookie.name) {
+            switch (typeof settings.cookie_name) {
             case 'object':
             case 'array':
-                for (i = 0; settings.cookie.name.length > i; i += 1) {
-                    if ($.pm_cookie(settings.cookie.name[i]) !== undefined) {
+                for (i = 0; settings.cookie_name.length > i; i += 1) {
+                    if ($.pm_cookie(settings.cookie_name[i]) !== undefined) {
                         ret = true;
                     }
                 }
                 break;
             case 'string':
-                if ($.pm_cookie(settings.cookie.name) !== undefined) {
+                if ($.pm_cookie(settings.cookie_name) !== undefined) {
                     ret = true;
                 }
                 break;
@@ -81,6 +81,23 @@
                 $popup.popmake('setCookie', settings);
             });
         },
+        pum_sub_form_success: function (settings) {
+            var $popup = PUM.getPopup(this);
+            $popup.find('form.pum-sub-form').on('success', function () {
+                $popup.popmake('setCookie', settings);
+            });
+        },
+        /**
+         * @deprecated 1.7.0
+         *
+         * @param settings
+         */
+        pum_sub_form_already_subscribed: function (settings) {
+            var $popup = PUM.getPopup(this);
+            $popup.find('form.pum-sub-form').on('success', function () {
+                $popup.popmake('setCookie', settings);
+            });
+        },
         ninja_form_success: function (settings) {
             return $.fn.popmake.cookies.form_success.apply(this, arguments);
         },
@@ -95,13 +112,13 @@
     // Register All Cookies for a Popup
     $(document)
         .on('pumInit', '.pum', function () {
-            var $popup   = PUM.getPopup(this),
+            var $popup = PUM.getPopup(this),
                 settings = $popup.popmake('getSettings'),
-                cookies  = settings.cookies,
-                cookie   = null,
+                cookies = settings.cookies || [],
+                cookie = null,
                 i;
 
-            if (cookies !== undefined && cookies.length) {
+            if (cookies.length) {
                 for (i = 0; cookies.length > i; i += 1) {
                     cookie = cookies[i];
                     $popup.popmake('addCookie', cookie.event, cookie.settings);

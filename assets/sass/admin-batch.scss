@@ -1,0 +1,260 @@
+/*!******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
+
+@mixin progress-bar-colors($color) {
+  .pum-batch-progress {
+    progress[value] {
+      background-color: $color;
+      /* Of all IE, only IE10 supports progress element that too partially. It only allows to change the background-color of the progress value using the 'color' attribute. */
+      color: $color;
+
+      &::-moz-progress-value,
+      &::-ms-progress-value,
+      &::progress-value {
+        background-color: $color;
+      }
+
+      // Firefox - ie styles must be entirely separate or it busts Webkit styles.
+      &::-webkit-progress-value {
+        background-color: $color;
+      }
+    }
+
+    progress:not([value]) {
+      background-color: $color;
+    }
+  }
+}
+
+.pum-batch-form {
+
+  .spinner {
+    margin: 4px 10px 8px;
+    position: relative;
+    float: none;
+  }
+
+  .pum-upgrade-messages {
+    overflow: auto;
+    max-height: 200px;
+    margin-bottom: 10px;
+    padding-right: 10px;
+  }
+}
+
+.pum-batch-progress {
+  //Animation
+  $progress-determinate-time: .15s;
+  $progress-indeterminate-time: .15s;
+
+  // PROGRESS STYLE
+  progress {
+    position: relative;
+    width: 100%;
+    height: 20px;
+    display: block;
+    border-radius: 0;
+    background-color: #ddd;
+    background-clip: padding-box;
+    overflow: hidden;
+    margin: 0 auto;
+
+    &::-moz-progress-bar,
+    &::-ms-progress-bar,
+    &::progress-bar {
+      // Firefox - ie styles must be entirely separate or it busts Webkit styles.
+      background-color: #ddd;
+    }
+
+    &::-webkit-progress-bar {
+      background-color: #ddd;
+      // box-shadow: 0 2px 3px rgba(0, 0, 0, .5) inset;
+    }
+
+    &[value] {
+      /* Get rid of the default appearance */
+      -webkit-appearance: none;
+      /* This unfortunately leaves a trail of border behind in Firefox and Opera. We can remove that by setting the border to none. */
+      border: none;
+      /* Although firefox doesn't provide any additional pseudo class to style the progress element container, any style applied here works on the container. */
+      background-color: royalblue;
+      // border-radius: 3px;
+      // box-shadow: 0 2px 3px rgba(0,0,0,.5) inset;
+
+      /* Of all IE, only IE10 supports progress element that too partially. It only allows to change the background-color of the progress value using the 'color' attribute. */
+      color: royalblue;
+
+      margin: 0 0 10px;
+
+      &::-moz-progress-value,
+      &::-ms-progress-value,
+      &::progress-value {
+        background-color: royalblue;
+        border-radius: 3px;
+        transition: width $progress-determinate-time cubic-bezier(0, 0, 1, -0.12);
+      }
+
+      // Firefox - ie styles must be entirely separate or it busts Webkit styles.
+      &::-webkit-progress-value {
+        background-color: royalblue;
+        border-radius: 3px;
+        transition: width $progress-determinate-time cubic-bezier(0, 0, 1, -0.12);
+
+        // background-size: 35px 20px, 100% 100%, 100% 100%;
+
+        /* Let's animate this */
+        animation: animate-stripes 5s linear infinite;
+
+        /*
+        &::after {
+          content: '';
+          position: absolute;
+
+          width: 5px;
+          height: 5px;
+          top: 7px;
+          right: 7px;
+
+          background-color: white;
+          border-radius: 100%;
+        }
+        */
+
+      }
+    }
+
+    &:not([value]) {
+      background-color: royalblue;
+      position: relative;
+
+      &:before {
+        content: '';
+        position: absolute;
+        background-color: inherit;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        will-change: left, right;
+        animation: indeterminate $progress-indeterminate-time cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+        background-color: inherit;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        will-change: left, right;
+        animation: indeterminate-short $progress-indeterminate-time cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+        animation-delay: 1.15s;
+      }
+    }
+  }
+
+  @keyframes indeterminate {
+    0% {
+      left: -35%;
+      right: 100%;
+    }
+    60% {
+      left: 100%;
+      right: -90%;
+    }
+    100% {
+      left: 100%;
+      right: -90%;
+    }
+  }
+
+  @keyframes indeterminate-short {
+    0% {
+      left: -200%;
+      right: 100%;
+    }
+    60% {
+      left: 107%;
+      right: -8%;
+    }
+    100% {
+      left: 107%;
+      right: -8%;
+    }
+  }
+
+  @keyframes animate-stripes {
+    100% {
+      background-position: -100px 0;
+    }
+  }
+
+  /* Fallback technique styles */
+  .progress-bar {
+    background-color: whiteSmoke;
+    border-radius: 3px;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, .5) inset;
+
+    /* Dimensions should be similar to the parent progress element. */
+    width: 100%;
+    height: 20px;
+  }
+
+  .progress-bar span {
+    background-color: royalblue;
+    border-radius: 3px;
+
+    display: block;
+    text-indent: -9999px;
+  }
+
+}
+
+.admin-color-fresh {
+  @include progress-bar-colors(#0073aa);
+}
+
+.admin-color-light {
+  @include progress-bar-colors(#888);
+}
+
+.admin-color-blue {
+  @include progress-bar-colors(#096484);
+}
+
+.admin-color-coffee {
+  @include progress-bar-colors(#c7a589);
+}
+
+.admin-color-ectoplasm {
+  @include progress-bar-colors(#a3b745);
+}
+
+.admin-color-midnight {
+  @include progress-bar-colors(#e14d43);
+}
+
+.admin-color-sunrise {
+  @include progress-bar-colors(#dd823b);
+}
+
+.pum-batch-progress {
+  display: none;
+
+  progress, .pum-upgrade-message-textarea {
+    display: none;
+  }
+
+  &.pum-batch-progress--active {
+    display: block;
+
+    progress.active {
+      display: block;
+    }
+
+    .pum-upgrade-message-textarea--active {
+      display: block;
+    }
+  }
+
+}
