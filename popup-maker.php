@@ -278,7 +278,7 @@ class Popup_Maker {
 
 		// Upgrades
 		if ( is_admin() ) {
-			require_once self::$DIR . 'includes/admin/class-pum-admin-upgrades.php';
+			//require_once self::$DIR . 'includes/admin/class-pum-admin-upgrades.php';
 		}
 
 		// Deprecated Code

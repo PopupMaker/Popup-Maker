@@ -156,7 +156,7 @@ class PUM_Upgrades {
 	 * Displays upgrade notices.
 	 */
 	public function upgrade_notices() {
-		if ( ! $this->has_uncomplete_upgrades() ) {
+		if ( ! $this->has_uncomplete_upgrades() || ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
