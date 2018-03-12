@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.4
-Stable tag: 1.6.6
+Stable tag: 1.7.0
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -101,7 +101,7 @@ There are several common causes for this which include:
 
 == Changelog ==
 
-= v1.7.0 - ??/??/2017 =
+= v1.7.0 - 03/12/2017 =
 This was one of our biggest updates to date in terms of improving existing functionality, reducing maintenance and the time it takes to implement new features in the future.
 
 Noticeably there are a lot of interface changes with this version as we simplified from having many meta boxes in the popup editor to a new single panel interface.
@@ -157,7 +157,7 @@ Lastly we now have include our extendable subscription forms right in the free v
 * Fix: Bug when WPML isn't yet available.
 
 
-= v1.6.7 - ?? =
+= v1.6.7 - Rolled into v1.7.0 =
 * Fix: Typo in JS event name prevented forceFocus for popups.
 * Fix: JS errors when Marionette JS library on page without Ninja Forms.
 * Fix: WPML missing variable errors.
