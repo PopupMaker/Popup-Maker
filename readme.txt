@@ -101,6 +101,10 @@ There are several common causes for this which include:
 
 == Changelog ==
 
+= v1.7.1 - 03/12/2017 =
+* Fix: Empty value errors.
+* Fix: Missing function for 3rd party plugin backward compatibility (Elementor).
+
 = v1.7.0 - 03/12/2017 =
 This was one of our biggest updates to date in terms of improving existing functionality, reducing maintenance and the time it takes to implement new features in the future.
 
