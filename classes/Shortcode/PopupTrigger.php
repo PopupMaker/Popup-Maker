@@ -157,7 +157,7 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	 *
 	 * @return array
 	 */
-	public function shortcode_atts( $atts ) {
+	public function shortcode_atts( $atts = array() ) {
 		$atts = parent::shortcode_atts( $atts );
 
 		if ( $atts['id'] == 'custom' ) {
