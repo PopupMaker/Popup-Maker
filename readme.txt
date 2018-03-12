@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.4
-Stable tag: 1.7.4
+Stable tag: 1.7.5
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -100,6 +100,9 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+
+= v1.7.5 - 03/12/2017 =
+* Fix: Sticky Popup Maker settings checkboxes that wouldn't uncheck after save.
 
 = v1.7.4 - 03/12/2017 =
 * Fix: Invalid method declaration error introduced by v1.7.2 patch to Shortcode core class.
