@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.4
-Stable tag: 1.7.2
+Stable tag: 1.7.3
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -100,6 +100,13 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+
+= v1.7.4 - 03/12/2017 =
+* Fix: Invalid method declaration error introduced by v1.7.2 patch to Shortcode core class.
+
+= v1.7.3 - 03/12/2017 =
+* Fix: Error due to usage of __CLASS__ rather than $this.
+* Fix: Edge case where function returns can't be used inside empty().
 
 = v1.7.2 - 03/12/2017 =
 * Fix: Initialization variable wasn't set to true early enough.
