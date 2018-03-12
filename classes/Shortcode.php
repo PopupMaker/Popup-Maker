@@ -188,7 +188,7 @@ abstract class PUM_Shortcode {
 	 *
 	 * @return array
 	 */
-	public function shortcode_atts( $atts = array() ) {
+	public function shortcode_atts( $atts ) {
 		if ( ! is_array( $atts ) ) {
 			$atts = array();
 		}

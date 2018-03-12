@@ -494,7 +494,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	 *
 	 * @return array
 	 */
-	public function shortcode_atts( $atts = array() ) {
+	public function shortcode_atts( $atts ) {
 		$atts = parent::shortcode_atts( $atts );
 
 		if ( empty( $atts['provider'] ) ) {
