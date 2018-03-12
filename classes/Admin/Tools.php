@@ -280,7 +280,7 @@ class PUM_Admin_Tools {
 
 		// Must-use plugins
 		$muplugins = get_mu_plugins();
-		if ( count( $muplugins > 0 ) ) {
+		if ( $muplugins && count( $muplugins ) ) {
 			$return .= "\n" . '-- Must-Use Plugins' . "\n\n";
 
 			foreach ( $muplugins as $plugin => $plugin_data ) {
