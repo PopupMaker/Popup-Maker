@@ -410,7 +410,7 @@ class PUM_Upgrades {
 			$upgrade->pre_fetch();
 		}
 
-		/** @var int|string|\WP_Error $step */
+		/** @var int|string|WP_Error $step */
 		$step = $upgrade->process_step();
 
 		if ( ! is_wp_error( $step ) ) {

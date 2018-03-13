@@ -51,4 +51,3 @@ class PUM_Popups {
 	}
 
 }
-

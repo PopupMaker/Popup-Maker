@@ -214,6 +214,8 @@ class Popup_Maker {
 	 */
 	private function includes() {
 
+		require_once self::$DIR . 'includes/compat.php';
+
 		// Initialize global options
 		PUM_Options::init();
 

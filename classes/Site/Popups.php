@@ -18,7 +18,7 @@ class PUM_Site_Popups {
 	public static $current;
 
 	/**
-	 * @var \WP_Query|null
+	 * @var WP_Query|null
 	 */
 	public static $loaded;
 
@@ -65,8 +65,8 @@ class PUM_Site_Popups {
 	 * @return null|WP_Query
 	 */
 	public static function get_loaded_popups() {
-		if ( ! self::$loaded instanceof \WP_Query ) {
-			self::$loaded        = new \WP_Query();
+		if ( ! self::$loaded instanceof WP_Query ) {
+			self::$loaded        = new WP_Query();
 			self::$loaded->posts = array();
 		}
 

@@ -58,7 +58,7 @@ function pum_is_popup( $popup ) {
 /**
  * @param $popup_id
  *
- * @return array|null|\WP_Post
+ * @return array|null|WP_Post
  */
 function popmake_get_popup( $popup_id ) {
 	if ( ! $popup_id ) {
@@ -849,7 +849,7 @@ function popmake_popup_is_loadable( $popup_id ) {
 
 
 /**
- * @return \WP_Query
+ * @return WP_Query
  */
 function get_all_popups() {
 	$query = PUM_Popups::get_all();

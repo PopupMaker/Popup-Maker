@@ -80,7 +80,7 @@ class PUM_AssetCache {
 
 			global $wp_filesystem;
 
-			/** @var \WP_Filesystem_Base $wp_filesystem */
+			/** @var WP_Filesystem_Base $wp_filesystem */
 			$wp_filesystem->mkdir( self::$cache_dir );
 		}
 
@@ -224,7 +224,7 @@ class PUM_AssetCache {
 
 		WP_Filesystem();
 
-		/** @var \WP_Filesystem_Base $wp_filesystem */
+		/** @var WP_Filesystem_Base $wp_filesystem */
 		global $wp_filesystem;
 
 		return $wp_filesystem->put_contents( $file, $contents, FS_CHMOD_FILE );

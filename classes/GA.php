@@ -79,7 +79,7 @@ class PUM_GA {
 	 *
 	 * @param null $data
 	 *
-	 * @return array|bool|\WP_Error
+	 * @return array|bool|WP_Error
 	 */
 	public static function fire_hit( $data = null ) {
 		if ( $data ) {

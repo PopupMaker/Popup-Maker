@@ -26,7 +26,7 @@ abstract class PUM_Abstract_Upgrade_Settings extends PUM_Abstract_Upgrade {
 	/**
 	 * Executes a single step in the batch process.
 	 *
-	 * @return int|string|\WP_Error Next step number, 'done', or a WP_Error object.
+	 * @return int|string|WP_Error Next step number, 'done', or a WP_Error object.
 	 */
 	public function process_step() {
 

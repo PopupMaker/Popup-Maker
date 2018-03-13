@@ -97,15 +97,15 @@ class PUM_Analytics {
 	}
 
 	/**
-	 * @param \WP_REST_Request $request
+	 * @param WP_REST_Request $request
 	 *
-	 * @return \WP_Error|mixed
+	 * @return WP_Error|mixed
 	 */
-	public static function analytics_endpoint( \WP_REST_Request $request ) {
+	public static function analytics_endpoint( WP_REST_Request $request ) {
 		$args = $request->get_params();
 
 		if ( ! $args || empty( $args['pid'] ) ) {
-			return new \WP_Error( 'missing_params', __( 'Missing Parameters.' ), array( 'status' => 404 ) );
+			return new WP_Error( 'missing_params', __( 'Missing Parameters.' ), array( 'status' => 404 ) );
 		}
 
 		self::track( $args );

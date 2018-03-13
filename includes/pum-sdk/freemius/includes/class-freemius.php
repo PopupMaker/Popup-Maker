@@ -2377,7 +2377,7 @@
 		 * @author Vova Feldman (@svovaf)
 		 * @since  1.1.7.4
 		 *
-		 * @return \WP_User
+		 * @return WP_User
 		 */
 		static function _get_current_wp_user() {
 			self::require_pluggable_essentials();

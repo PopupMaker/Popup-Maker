@@ -674,7 +674,7 @@ if ( !isset($info->error) ) {
 		 *
 		 * @param string       $source        Path to upgrade/zip-file-name.tmp/subdirectory/.
 		 * @param string       $remote_source Path to upgrade/zip-file-name.tmp.
-		 * @param \WP_Upgrader $upgrader      Instance of the upgrader which installs the plugin.
+		 * @param WP_Upgrader $upgrader      Instance of the upgrader which installs the plugin.
 		 *
 		 * @return string|WP_Error
 		 */

@@ -197,7 +197,7 @@ class PUM_Admin_Ajax {
 			$process->pre_fetch();
 		}
 
-		/** @var int|string|\WP_Error $step */
+		/** @var int|string|WP_Error $step */
 		$step = $process->process_step();
 
 		if ( is_wp_error( $step ) ) {
