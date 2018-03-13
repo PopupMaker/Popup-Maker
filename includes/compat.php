@@ -101,8 +101,6 @@ if ( ! function_exists( 'current_action' ) ) {
 	}
 }
 
-$test = 1;
-
 if ( ! function_exists( 'get_called_class' ) ) {
 	function get_called_class( $bt = false, $l = 1 ) {
 		if ( ! $bt ) {
