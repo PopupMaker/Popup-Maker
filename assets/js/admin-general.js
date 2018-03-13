@@ -7576,8 +7576,8 @@ function pumChecked(val1, val2, print) {
     };
 
     if (typeof $.fn !== "undefined") {
-        $.fn.pumSerializeObject = $.fn.serializeObject = FormSerializer.serializeObject;
-        $.fn.pumSerializeJSON = $.fn.serializeJSON = FormSerializer.serializeJSON;
+        $.fn.pumSerializeObject = FormSerializer.serializeObject;
+        $.fn.pumSerializeJSON = FormSerializer.serializeJSON;
     }
 
     exports.FormSerializer = FormSerializer;
