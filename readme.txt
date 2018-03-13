@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.4
-Stable tag: 1.7.6
+Stable tag: 1.7.7
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -101,24 +101,33 @@ There are several common causes for this which include:
 
 == Changelog ==
 
-= v1.7.5 - 03/12/2017 =
+= v1.7.7 - 03/13/2018 =
+* Fix: Removed jQuery.serializeJSON functionality which was unused and causing conflicts with WooCommerce.
+* Fix: SSL Issues due to not specifying protocol.
+* Fix: Error caused by invalid popup object being used in function.
+* Fix: PHP 5.2 compatibility issue.
+
+= v1.7.6 - 03/12/2018 =
+* Fix: Undid previous changes from 1.7.1 and reworked in a new way to be backward compatible with existing extensions.
+
+= v1.7.5 - 03/12/2018 =
 * Fix: Sticky Popup Maker settings checkboxes that wouldn't uncheck after save.
 
-= v1.7.4 - 03/12/2017 =
+= v1.7.4 - 03/12/2018 =
 * Fix: Invalid method declaration error introduced by v1.7.2 patch to Shortcode core class.
 
-= v1.7.3 - 03/12/2017 =
+= v1.7.3 - 03/12/2018 =
 * Fix: Error due to usage of __CLASS__ rather than $this.
 * Fix: Edge case where function returns can't be used inside empty().
 
-= v1.7.2 - 03/12/2017 =
+= v1.7.2 - 03/12/2018 =
 * Fix: Initialization variable wasn't set to true early enough.
 
-= v1.7.1 - 03/12/2017 =
+= v1.7.1 - 03/12/2018 =
 * Fix: Empty value errors.
 * Fix: Missing function for 3rd party plugin backward compatibility (Elementor).
 
-= v1.7.0 - 03/12/2017 =
+= v1.7.0 - 03/12/2018 =
 This was one of our biggest updates to date in terms of improving existing functionality, reducing maintenance and the time it takes to implement new features in the future.
 
 Noticeably there are a lot of interface changes with this version as we simplified from having many meta boxes in the popup editor to a new single panel interface.
