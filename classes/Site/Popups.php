@@ -105,6 +105,9 @@ class PUM_Site_Popups {
 		}
 	}
 
+	/**
+	 * @param $popup PUM_Model_Popup
+	 */
 	public static function preload_popup( $popup ) {
 		// Add to the $loaded_ids list.
 		self::$loaded_ids[] = $popup->ID;
@@ -118,6 +121,9 @@ class PUM_Site_Popups {
 		ob_start();
 		do_shortcode( $popup->post_content );
 		ob_clean();
+
+		# TODO cache this content for later in case of double rendering causing breakage.
+		# TODO Use this content during rendering as well.
 
 		// Fire off preload action.
 		do_action( 'pum_preload_popup', $popup->ID );
