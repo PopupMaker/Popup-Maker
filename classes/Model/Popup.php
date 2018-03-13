@@ -97,7 +97,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	public function get_title() {
 		$title = $this->get_meta( 'popup_title' );
 
-		return apply_filters( 'pum_popup_get_title', $title, $this->ID );
+		return (string) apply_filters( 'pum_popup_get_title', $title, $this->ID );
 	}
 
 	/**
