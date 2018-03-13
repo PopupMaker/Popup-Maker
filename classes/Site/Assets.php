@@ -54,8 +54,7 @@ class PUM_Site_Assets {
 	 * Initialize
 	 */
 	public static function init() {
-		$upload_dir      = wp_upload_dir();
-		self::$cache_url = trailingslashit( $upload_dir['baseurl'] ) . 'pum';
+		self::$cache_url = PUM_Helpers::upload_dir_url( 'pum' );
 		self::$debug     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
 		self::$suffix    = self::$debug ? '' : '.min';
 		self::$js_url    = Popup_Maker::$URL . 'assets/js/';

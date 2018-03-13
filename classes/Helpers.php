@@ -12,6 +12,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class PUM_Helpers {
 
+	public static function upload_dir_url( $path = '' ) {
+		$upload_dir = wp_upload_dir();
+		$upload_dir = $upload_dir['baseurl'];
+		$upload_dir = preg_replace( '/^https?:/', '', $upload_dir );
+
+		if ( ! empty ( $path ) ) {
+			$upload_dir = trailingslashit( $upload_dir ) . $path;
+		}
+
+		return $upload_dir;
+	}
+
 	/**
 	 * Sort array by priority value
 	 *
