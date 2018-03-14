@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.4
-Stable tag: 1.7.8
+Stable tag: 1.7.9
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -100,6 +100,11 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+
+= v1.7.9 - 03/14/2018 =
+* Improvement: Replaced usage of pumSerializeForm with pumSerializeObject which is more reliable.
+* Fix: Bug where deprecated directory reference causes popup html not to render properly breaking popups that should have worked otherwise.
+* Fix: Bug where checkbox defaults continuously applied making it impossible to uncheck them.
 
 = v1.7.8 - 03/13/2018 =
 * Improvement: Added output buffering to early calls to do_shortcode to prevent premature output in the head.
