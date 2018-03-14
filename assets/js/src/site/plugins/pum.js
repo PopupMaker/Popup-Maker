@@ -304,7 +304,7 @@ var PUM;
                 settings = $popup.popmake('getSettings');
 
             // Add For non built in close buttons and backward compatibility.
-            $close.add($('.popmake-close, .pum-close', $popup).not($close));
+            $close = $close.add($('.popmake-close, .pum-close', $popup).not($close));
 
             // TODO: Move to a global $(document).on type bind. Possibly look for an inactive class to fail on.
             $close
