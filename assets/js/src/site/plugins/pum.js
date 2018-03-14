@@ -362,7 +362,7 @@ var PUM;
                     $container = $popup.popmake('getContainer'),
                     $close = $popup.popmake('getClose');
 
-                $close.add($('.popmake-close, .pum-close', $popup).not($close));
+                $close = $close.add($('.popmake-close, .pum-close', $popup).not($close));
 
                 $popup.trigger('pumBeforeClose');
 
