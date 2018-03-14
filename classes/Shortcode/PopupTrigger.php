@@ -104,7 +104,7 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 						'placeholder' => __( 'HTML Tags: button, span etc.', 'popup-maker' ),
 						'desc'        => __( 'The HTML tag used to generate the trigger and wrap your text.', 'popup-maker' ),
 						'type'        => 'text',
-						'std'         => 'button',
+						'std'         => '',
 						'priority'    => 10,
 						'required'    => true,
 					),
@@ -159,6 +159,10 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	 */
 	public function shortcode_atts( $atts ) {
 		$atts = parent::shortcode_atts( $atts );
+
+		if ( empty( $atts['tag'] ) ) {
+			$atts['tag'] = 'span';
+		}
 
 		if ( $atts['id'] == 'custom' ) {
 			$atts['id'] = $atts['custom_id'];
