@@ -231,7 +231,7 @@
 
             if (cookie_name instanceof Array) {
                 cookie_text = cookie_name.join(', ');
-            } else if (cookie_name !== null) {
+            } else if (cookie_name !== null && cookie_name !== undefined && cookie_name !== '') {
                 cookie_text = cookie_name;
             }
             return cookie_text;
@@ -315,7 +315,7 @@
             triggers.template.form(type, values, function (event) {
                 var $form = $(this),
                     type = $form.find('input#type').val(),
-                    values = $form.pumSerializeForm(),
+                    values = $form.pumSerializeObject(),
                     index = parseInt(values.index);
 
                 event.preventDefault();
@@ -364,7 +364,7 @@
                 var $form = $(this),
                     type = $form.find('input#type').val(),
                     index = $form.find('input#index').val(),
-                    values = $form.pumSerializeForm();
+                    values = $form.pumSerializeObject();
 
                 // Set Current Editor.
                 PUM_Admin.triggers.current_editor = $editor;
@@ -428,7 +428,7 @@
             triggers.template.form(type, values, function (event) {
                 var $form = $(this),
                     type = $form.find('input#type').val(),
-                    values = $form.pumSerializeForm(),
+                    values = $form.pumSerializeObject(),
                     index = parseInt(values.index);
 
                 // Set Current Editor.

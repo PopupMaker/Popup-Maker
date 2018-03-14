@@ -284,7 +284,7 @@ var cookies;
                 var $form = $(this),
                     event = $form.find('input#event').val(),
                     index = $form.find('input#index').val(),
-                    values = $form.pumSerializeForm();
+                    values = $form.pumSerializeObject();
 
                 e.preventDefault();
 
@@ -322,7 +322,7 @@ var cookies;
                 var $form = $(this),
                     event = $form.find('input#event').val(),
                     index = $form.find('input#index').val(),
-                    values = $form.pumSerializeForm();
+                    values = $form.pumSerializeObject();
 
                 e.preventDefault();
 
@@ -370,7 +370,7 @@ var cookies;
                 var $form = $(this),
                     event = $form.find('input#event').val(),
                     index = $form.find('input#index').val(),
-                    values = $form.pumSerializeForm();
+                    values = $form.pumSerializeObject();
 
                 e.preventDefault();
 

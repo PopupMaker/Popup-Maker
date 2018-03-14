@@ -93,7 +93,7 @@
                 var options = [],
                     data = $.extend(true, {}, PUM_Admin.models.field(args));
 
-                if ((data.value === null || data.value === false) && args.std !== undefined) {
+                if (args.std !== undefined && args.type !== 'checkbox' && (data.value === null || data.value === false)) {
                     data.value = args.std;
                 }
 
@@ -282,8 +282,15 @@
                     }
                     break;
                 case 'checkbox':
-
                     switch (typeof data.value) {
+                    case 'object':
+                        if (Array.isArray(data.value) &&  data.value.length === 1 && data.value[0].toString() === '1')  {
+                            data.value = true;
+                            data.meta.checked = true;
+                        } else {
+
+                        }
+                        break;
                     case 'boolean':
                         if (data.value) {
                             data.meta.checked = true;
