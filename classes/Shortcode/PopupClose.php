@@ -50,7 +50,7 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 						'placeholder' => __( 'HTML Tag', 'popup-maker' ) . ': button, span etc',
 						'desc'        => __( 'The HTML tag used for this element.', 'popup-maker' ),
 						'type'        => 'text',
-						'std'         => 'button',
+						'std'         => '',
 						'required'    => true,
 					),
 
@@ -69,7 +69,6 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 						'type'     => 'checkbox',
 						'label'    => __( 'Do not prevent the default click functionality.', 'popup-maker' ),
 						'desc'     => __( 'This prevents us from disabling the browsers default action when a close button is clicked. It can be used to allow a link to a file to both close a popup and still download the file.', 'popup-maker' ),
-						'std'      => false,
 					),
 				),
 			),
@@ -87,6 +86,10 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 	 */
 	public function shortcode_atts( $atts ) {
 		$atts = parent::shortcode_atts( $atts );
+
+		if ( empty( $atts[''] ) ) {
+			$atts['tag'] = 'span';
+		}
 
 		if ( ! empty( $atts['class'] ) ) {
 			$atts['classes'] .= ' ' . $atts['class'];
@@ -107,9 +110,11 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 	public function handler( $atts, $content = null ) {
 		$atts = $this->shortcode_atts( $atts );
 
-		$return = '<' . $atts['tag'] . ' class="pum-close  popmake-close' . ' ' . $atts['classes'] . '" data-do-default="' . esc_attr( $atts['do_default'] ) . '">';
+		$do_default = $atts['do_default'] ? " data-do-default='" . esc_attr( $atts['do_default'] ) . "'" : '';
+
+		$return = "<{$atts['tag']} class='pum-close popmake-close {$atts['classes']}' {$do_default}>";
 		$return .= do_shortcode( $content );
-		$return .= '</' . $atts['tag'] . '>';
+		$return .= "</{$atts['tag']}>";
 
 		return $return;
 	}
