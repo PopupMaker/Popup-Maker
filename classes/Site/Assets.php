@@ -209,6 +209,10 @@ class PUM_Site_Assets {
 	 */
 	public static function localize_scripts() {
 		if ( wp_script_is( 'popup-maker-site' ) ) {
+
+			$site_home_path = parse_url( home_url() );
+			$site_home_path = isset( $site_home_path['path'] ) ? $site_home_path['path'] : '/';
+
 			wp_localize_script( 'popup-maker-site', 'pum_vars', apply_filters( 'pum_vars', array(
 				'version'          => Popup_Maker::$VER,
 				'ajaxurl'          => admin_url( 'admin-ajax.php' ),
@@ -218,7 +222,7 @@ class PUM_Site_Assets {
 				'debug_mode'       => Popup_Maker::debug_mode(),
 				'popups'           => self::get_popup_settings(),
 				'disable_tracking' => popmake_get_option( 'disable_popup_open_tracking' ),
-				'home_url'         => home_url(),
+				'home_url'         => trailingslashit( $site_home_path ),
 				'message_position' => 'top',
 			) ) );
 
