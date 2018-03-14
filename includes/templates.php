@@ -16,15 +16,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Returns the path to the Popup Maker templates directory
  */
 function popmake_get_templates_dir() {
-	$deprecated = ! pum_is_v1_4_compatible() ? 'deprecated/' : '';
-	return POPMAKE_DIR . $deprecated . 'templates';
+	//$deprecated = ! pum_is_v1_4_compatible() ? 'deprecated/' : '';
+	return Popup_Maker::$DIR . 'templates';
 }
 
 /**
  * Returns the URL to the Popup Maker templates directory
  */
 function popmake_get_templates_url() {
-	return POPMAKE_URL . 'templates';
+	return Popup_Maker::$URL . 'templates';
 }
 
 /**
