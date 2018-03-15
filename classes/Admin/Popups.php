@@ -540,7 +540,7 @@ class PUM_Admin_Popups {
 								'center top'    => __( 'Top Center', 'popup-maker' ),
 								'right top'     => __( 'Top Right', 'popup-maker' ),
 								'left center'   => __( 'Middle Left', 'popup-maker' ),
-								'center '       => __( 'Middle Center', 'popup-maker' ),
+								'center'       => __( 'Middle Center', 'popup-maker' ),
 								'right center'  => __( 'Middle Right', 'popup-maker' ),
 								'left bottom'   => __( 'Bottom Left', 'popup-maker' ),
 								'center bottom' => __( 'Bottom Center', 'popup-maker' ),

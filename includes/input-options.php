@@ -151,7 +151,7 @@ function popmake_core_popup_display_location_options( $options ) {
 		__( 'Top Center', 'popup-maker' )    => 'center top',
 		__( 'Top Right', 'popup-maker' )     => 'right top',
 		__( 'Middle Left', 'popup-maker' )   => 'left center',
-		__( 'Middle Center', 'popup-maker' ) => 'center ',
+		__( 'Middle Center', 'popup-maker' ) => 'center',
 		__( 'Middle Right', 'popup-maker' )  => 'right center',
 		__( 'Bottom Left', 'popup-maker' )   => 'left bottom',
 		__( 'Bottom Center', 'popup-maker' ) => 'center bottom',
