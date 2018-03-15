@@ -443,7 +443,6 @@ class PUM_Admin_Popups {
 							'label'        => __( 'Auto Adjusted Height', 'popup-maker' ),
 							'desc'         => __( 'Checking this option will set height to fit the content.', 'popup-maker' ),
 							'type'         => 'checkbox',
-							'std'          => false,
 							'priority'     => 50,
 							'dependencies' => array(
 								'size' => 'custom',
@@ -457,7 +456,7 @@ class PUM_Admin_Popups {
 							'priority'     => 60,
 							'dependencies' => array(
 								'size'               => 'custom',
-								'custom_height_auto' => true,
+								'custom_height_auto' => false,
 							),
 						),
 						'scrollable_content'   => array(
@@ -468,7 +467,7 @@ class PUM_Admin_Popups {
 							'priority'     => 70,
 							'dependencies' => array(
 								'size'               => 'custom',
-								'custom_height_auto' => true,
+								'custom_height_auto' => false,
 							),
 						),
 					),
