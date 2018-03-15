@@ -12,6 +12,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class PUM_Helpers {
 
+	public static function do_shortcode( $shortcode_text = '' ) {
+		ob_start();
+
+		$content = do_shortcode( $shortcode_text );
+
+		$ob_content = ob_get_clean();
+
+		if ( ! empty( $ob_content ) ) {
+			$content .= $ob_content;
+		}
+
+		return $content;
+	}
+
 	public static function upload_dir_url( $path = '' ) {
 		$upload_dir = wp_upload_dir();
 		$upload_dir = $upload_dir['baseurl'];

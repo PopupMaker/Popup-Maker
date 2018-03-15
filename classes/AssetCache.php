@@ -168,7 +168,7 @@ class PUM_AssetCache {
 				PUM_Site_Popups::current_popup( $query->post );
 
 				// Preprocess the content for shortcodes that need to enqueue their own assets.
-				do_shortcode( $query->post->post_content );
+				PUM_Helpers::do_shortcode( $query->post->post_content );
 
 				ob_start();
 
@@ -281,7 +281,7 @@ class PUM_AssetCache {
 				PUM_Site_Popups::current_popup( $query->post );
 
 				// Preprocess the content for shortcodes that need to enqueue their own assets.
-				do_shortcode( $query->post->post_content );
+				PUM_Helpers::do_shortcode( $query->post->post_content );
 
 				ob_start();
 

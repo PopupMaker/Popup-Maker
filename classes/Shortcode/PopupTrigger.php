@@ -142,7 +142,7 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 
 
 		$return = '<' . $atts['tag'] . ' class="pum-trigger  popmake-' . $atts['id'] . ' ' . $atts['classes'] . '"  data-do-default="' . esc_attr( $atts['do_default'] ) . '">';
-		$return .= do_shortcode( $content );
+		$return .= PUM_Helpers::do_shortcode( $content );
 		$return .= '</' . $atts['tag'] . '>';
 
 		return $return;

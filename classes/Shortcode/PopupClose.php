@@ -113,7 +113,7 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 		$do_default = $atts['do_default'] ? " data-do-default='" . esc_attr( $atts['do_default'] ) . "'" : '';
 
 		$return = "<{$atts['tag']} class='pum-close popmake-close {$atts['classes']}' {$do_default}>";
-		$return .= do_shortcode( $content );
+		$return .= PUM_Helpers::do_shortcode( $content );
 		$return .= "</{$atts['tag']}>";
 
 		return $return;

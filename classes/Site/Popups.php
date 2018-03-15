@@ -118,9 +118,7 @@ class PUM_Site_Popups {
 
 		// Preprocess the content for shortcodes that need to enqueue their own assets.
 
-		ob_start();
-		do_shortcode( $popup->post_content );
-		ob_clean();
+		PUM_Helpers::do_shortcode( $popup->post_content );
 
 		# TODO cache this content for later in case of double rendering causing breakage.
 		# TODO Use this content during rendering as well.

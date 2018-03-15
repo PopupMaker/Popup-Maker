@@ -184,9 +184,8 @@ class PUM_Admin_Shortcode_UI {
 			setup_postdata( $post );
 		}
 
-
 		/** @var string $content Rendered shortcode content. */
-		$content = do_shortcode( $shortcode );
+		$content = PUM_Helpers::do_shortcode( $shortcode );
 
 		/** If no matching tag or $content wasn't rendered die. */
 		if ( ! $shortcode_object || $content == $shortcode ) {
