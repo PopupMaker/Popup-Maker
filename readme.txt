@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.4
-Stable tag: 1.7.10
+Stable tag: 1.7.11
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -100,6 +100,10 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+= v1.7.11 - 03/14/2018 =
+* Fix: Bug where Middle Center option wouldn't stay selected after saving.
+* Fix: Bug with incorrect field dependency for custom height & scrollable options.
+
 = v1.7.10 - 03/14/2018 =
 * Improvement: Further improved compatibility with shortcodes that echo/print rather than return content.
 * Fix: Bug where cookies wouldn't always be set in Edge & Safari due to cookie path including the root url.
