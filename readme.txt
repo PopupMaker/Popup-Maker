@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.4
-Stable tag: 1.7.9
+Stable tag: 1.7.10
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -100,6 +100,12 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+= v1.7.10 - 03/14/2018 =
+* Improvement: Further improved compatibility with shortcodes that echo/print rather than return content.
+* Fix: Bug where cookies wouldn't always be set in Edge & Safari due to cookie path including the root url.
+* Fix: Bug that changed the default tag for popup_trigger & popup_close shortcodes.
+* Fix: Bug where extra close buttons didn't always work correctly.
+* Fix: Removal of deprecated function that triggered warnings in PHP 7.2.
 
 = v1.7.9 - 03/14/2018 =
 * Improvement: Replaced usage of pumSerializeForm with pumSerializeObject which is more reliable.
