@@ -9,7 +9,6 @@ class PUM_Types {
 		add_action( 'init', array( __CLASS__, 'register_post_types' ), 1 );
 		add_action( 'init', array( __CLASS__, 'register_taxonomies' ), 0 );
 		add_filter( 'post_updated_messages', array( __CLASS__, 'updated_messages' ) );
-
 	}
 
 	/**
@@ -27,6 +26,7 @@ class PUM_Types {
 				'publicly_queryable'  => false,
 				'query_var'           => false,
 				'exclude_from_search' => true,
+				'show_in_nav_menus'   => false,
 				'show_ui'             => true,
 				'menu_icon'           => POPMAKE_URL . '/assets/images/admin/dashboard-icon.png',
 				'menu_position'       => 20.292892729,
