@@ -333,6 +333,10 @@ class PUM_Admin_Settings {
 							'type'  => 'checkbox',
 							'label' => __( 'Disable Popup Maker caching', 'popup-maker' ),
 						),
+						'disable_shortcode_ui'                 => array(
+							'type'  => 'checkbox',
+							'label' => __( 'Disable the Popup Maker shortcode button', 'popup-maker' ),
+						),
 					),
 					'assets' => array(
 						'disable_google_font_loading'     => array(
