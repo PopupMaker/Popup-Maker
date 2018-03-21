@@ -127,6 +127,26 @@ class PUM_Gravity_Forms_Integation {
             <form id="popup_settings_edit_form" method="post">
 
                 <table class="form-table gforms_form_settings">
+	                <tr>
+		                <th scope="row">
+			                <label for="gforms-pum-closepopup"><?php _e( 'Close Popup', 'popup-maker' ); ?></label>
+		                </th>
+		                <td>
+			                <input type="checkbox" id="gforms-pum-closepopup" name="gforms-pum[closepopup]" value="true" <?php checked( $settings['closepopup'], true ); ?> />
+		                </td>
+	                </tr>
+	                <tr id="gforms-pum-closedelay-wrapper">
+		                <th scope="row">
+			                <label for="gforms-pum-closedelay"><?php _e( 'Delay', 'popup-maker' ); ?></label>
+		                </th>
+		                <td>
+			                <?php if ( strlen( $settings['closedelay'] ) >= 3 ) {
+				                $settings['closedelay'] = $settings['closedelay'] / 1000;
+			                } ?>
+
+			                <input type="number" id="gforms-pum-closedelay" min="0" step="1" name="gforms-pum[closedelay]" style="width: 100px;" value="<?php esc_attr_e( $settings['closedelay'] ); ?>" /><?php _e( 'seconds', 'popup-maker' ); ?>
+		                </td>
+	                </tr>
                     <tr>
                         <th scope="row">
                             <label for="gforms-pum-openpopup"><?php _e( 'Open Popup', 'popup-maker' ); ?></label>
@@ -145,22 +165,6 @@ class PUM_Gravity_Forms_Integation {
                                     <option value="<?php esc_attr_e( $option['value'] ); ?>" <?php selected( $settings['openpopup_id'], $option['value'] ); ?>><?php echo $option['label']; ?></option>
 								<?php } ?>
                             </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            <label for="gforms-pum-closepopup"><?php _e( 'Close Popup', 'popup-maker' ); ?></label>
-                        </th>
-                        <td>
-                            <input type="checkbox" id="gforms-pum-closepopup" name="gforms-pum[closepopup]" value="true" <?php checked( $settings['closepopup'], true ); ?> />
-                        </td>
-                    </tr>
-                    <tr id="gforms-pum-closedelay-wrapper">
-                        <th scope="row">
-                            <label for="gforms-pum-closedelay"><?php _e( 'Delay', 'popup-maker' ); ?></label>
-                        </th>
-                        <td>
-                            <input type="number" id="gforms-pum-closedelay" min="0" step="1" name="gforms-pum[closedelay]" style="width: 100px;" value="<?php esc_attr_e( $settings['closedelay'] ); ?>" /><?php _e( 'seconds', 'popup-maker' ); ?>
                         </td>
                     </tr>
                 </table>

@@ -133,6 +133,26 @@ class PUM_CF7_Integration {
         <table class="form-table">
             <tbody>
             <tr>
+	            <th scope="row">
+		            <label for="wpcf7-pum-closepopup"><?php _e( 'Close Popup', 'popup-maker' ); ?></label>
+	            </th>
+	            <td>
+		            <input type="checkbox" id="wpcf7-pum-closepopup" name="wpcf7-pum[closepopup]" value="true" <?php checked( $settings['closepopup'], true ); ?> />
+	            </td>
+            </tr>
+            <tr id="wpcf7-pum-closedelay-wrapper">
+	            <th scope="row">
+		            <label for="wpcf7-pum-closedelay"><?php _e( 'Delay', 'popup-maker' ); ?></label>
+	            </th>
+	            <td>
+		            <?php if ( strlen( $settings['closedelay'] ) >= 3 ) {
+			            $settings['closedelay'] = $settings['closedelay'] / 1000;
+		            } ?>
+
+		            <input type="number" id="wpcf7-pum-closedelay" min="0" step="1" name="wpcf7-pum[closedelay]" style="width: 100px;" value="<?php esc_attr_e( $settings['closedelay'] ); ?>" /><?php _e( 'seconds', 'popup-maker' ); ?>
+	            </td>
+            </tr>
+            <tr>
                 <th scope="row">
                     <label for="wpcf7-pum-openpopup"><?php _e( 'Open Popup', 'popup-maker' ); ?></label>
                 </th>
@@ -152,22 +172,7 @@ class PUM_CF7_Integration {
                     </select>
                 </td>
             </tr>
-            <tr>
-                <th scope="row">
-                    <label for="wpcf7-pum-closepopup"><?php _e( 'Close Popup', 'popup-maker' ); ?></label>
-                </th>
-                <td>
-                    <input type="checkbox" id="wpcf7-pum-closepopup" name="wpcf7-pum[closepopup]" value="true" <?php checked( $settings['closepopup'], true ); ?> />
-                </td>
-            </tr>
-            <tr id="wpcf7-pum-closedelay-wrapper">
-                <th scope="row">
-                    <label for="wpcf7-pum-closedelay"><?php _e( 'Delay', 'popup-maker' ); ?></label>
-                </th>
-                <td>
-                    <input type="number" id="wpcf7-pum-closedelay" min="0" step="500" name="wpcf7-pum[closedelay]" style="width: 100px;" value="<?php esc_attr_e( $settings['closedelay'] ); ?>" /><?php _e( 'ms', 'popup-maker' ); ?>
-                </td>
-            </tr>
+
             </tbody>
         </table>
         <script>

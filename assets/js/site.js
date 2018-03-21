@@ -2558,6 +2558,9 @@ var pum_debug_mode = false,
                     settings.openpopup_id = settings.openpopup ? parseInt(response.data.actions.openpopup) : 0;
                     settings.closepopup = 'undefined' !== typeof response.data.actions.closepopup;
                     settings.closedelay = settings.closepopup ? parseInt(response.data.actions.closepopup) : 0;
+                    if (settings.closepopup && response.data.actions.closedelay) {
+                        settings.closedelay = parseInt(response.data.actions.closedelay);
+                    }
                 }
 
                 window.PUM.forms.success($form, settings);
@@ -2583,6 +2586,10 @@ var pum_debug_mode = false,
                     return;
                 }
 
+                if (typeof settings === 'object' && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
+                    settings['closedelay'] = settings.closedelay / 1000;
+                }
+
                 gFormSettings[form_id] = settings;
             });
         })
@@ -2598,6 +2605,10 @@ var pum_debug_mode = false,
             var $form = $(event.target),
                 $settings = $form.find('input.wpcf7-pum'),
                 settings = $settings.length ? JSON.parse($settings.val()) : false;
+
+            if (typeof settings === 'object' && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
+                settings['closedelay'] = settings.closedelay / 1000;
+            }
 
             window.PUM.forms.success($form, settings);
         });

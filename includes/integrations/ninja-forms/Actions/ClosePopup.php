@@ -40,7 +40,7 @@ final class NF_PUM_Actions_ClosePopup extends NF_Abstracts_Action {
 				'name'        => 'close_delay',
 				'type'        => 'number',
 				'group'       => 'primary',
-				'label'       => __( 'Delay', 'popup-maker' ),
+				'label'       => __( 'Delay', 'popup-maker' ) . ' (' . __( 'seconds', 'popup-maker' ) . ')',
 				'placeholder' => '',
 				'width'       => 'full',
 				'value'       => __( '0', 'popup-maker' ),
@@ -61,11 +61,18 @@ final class NF_PUM_Actions_ClosePopup extends NF_Abstracts_Action {
 	public function process( $action_settings, $form_id, $data ) {
 
 		if ( ! isset( $data['actions'] ) || ! isset( $data['actions']['closepopup'] ) ) {
-			$data['actions']['closepopup'] = 0;
+			$data['actions']['closepopup'] = true;
 		}
 
 		if ( isset( $action_settings['close_delay'] ) ) {
-			$data['actions']['closepopup'] = intval( $action_settings['close_delay'] );
+
+			$data['actions']['closedelay'] = intval( $action_settings['close_delay'] );
+
+			if ( strlen( $data['actions']['closedelay'] ) >= 3 ) {
+				$data['actions']['closedelay'] = $data['actions']['closedelay'] / 1000;
+			}
+
+			$data['actions']['closepopup'] = $data['actions']['closedelay'];
 		}
 
 		return $data;
