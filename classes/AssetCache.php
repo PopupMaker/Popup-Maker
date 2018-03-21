@@ -237,7 +237,7 @@ class PUM_AssetCache {
 	 */
 	public static function generate_css() {
 		// Include core styles so we can eliminate another stylesheet.
-		$core_css = file_get_contents(Popup_Maker::$DIR . 'assets/css/site' . self::$suffix . '.css' );
+		$core_css = file_get_contents( Popup_Maker::$DIR . 'assets/css/site' . self::$suffix . '.css' );
 
 		// Reset ob.
 		ob_start();
@@ -267,40 +267,15 @@ class PUM_AssetCache {
 				'content'  => self::generate_popup_theme_styles(),
 				'priority' => 1,
 			),
+			'popups' => array(
+				'content'  => self::generate_popup_styles(),
+				'priority' => 15,
+			),
 			'custom' => array(
 				'content'  => $custom_css,
-				'priority' => 10,
+				'priority' => 20,
 			),
 		);
-
-		$query = PUM_Popups::get_all();
-
-		if ( $query->have_posts() ) {
-			while ( $query->have_posts() ) : $query->next_post();
-				// Set this popup as the global $current.
-				PUM_Site_Popups::current_popup( $query->post );
-
-				// Preprocess the content for shortcodes that need to enqueue their own assets.
-				PUM_Helpers::do_shortcode( $query->post->post_content );
-
-				ob_start();
-
-				// Allow per popup CSS additions.
-				do_action( 'pum_generate_popup_css', $query->post->ID );
-
-				$popup_css = ob_get_clean();
-
-				if ( ! empty( $popup_css ) ) {
-					$css[ 'popup-' . $query->post->ID ] = array(
-						'content'  => $popup_css,
-						'priority' => 11,
-					);
-				}
-			endwhile;
-
-			// Clear the global $current.
-			PUM_Site_Popups::current_popup( null );
-		}
 
 		$css = apply_filters( 'pum_generated_css', $css );
 
@@ -326,6 +301,45 @@ class PUM_AssetCache {
 	}
 
 	/**
+	 * @return string
+	 */
+	public static function generate_popup_styles() {
+		$query = PUM_Popups::get_all();
+
+		$popup_css = '';
+
+		if ( $query->have_posts() ) {
+			while ( $query->have_posts() ) : $query->next_post();
+				// Set this popup as the global $current.
+				PUM_Site_Popups::current_popup( $query->post );
+
+				// Preprocess the content for shortcodes that need to enqueue their own assets.
+				PUM_Helpers::do_shortcode( $query->post->post_content );
+
+				$popup = pum_get_popup( $query->post->ID );
+
+				ob_start();
+
+				if ( $popup->get_setting( 'zindex', false ) ) {
+					$zindex = absint( $popup->get_setting( 'zindex' ) );
+					echo "#pum-{$popup->ID} .pum-container {z-index: $zindex}\r\n";
+				}
+
+				// Allow per popup CSS additions.
+				do_action( 'pum_generate_popup_css', $query->post->ID );
+
+				$popup_css .= ob_get_clean();
+
+			endwhile;
+
+			// Clear the global $current.
+			PUM_Site_Popups::current_popup( null );
+		}
+
+		return $popup_css;
+	}
+
+	/**
 	 * Used when asset cache is not enabled.
 	 *
 	 * @return string
@@ -334,6 +348,8 @@ class PUM_AssetCache {
 		ob_start();
 
 		echo self::generate_popup_theme_styles();
+
+		echo self::generate_popup_styles();
 
 		// Render any extra styles globally added.
 		if ( ! empty( $GLOBALS['pum_extra_styles'] ) ) {
