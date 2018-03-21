@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.4
-Stable tag: 1.7.11
+Stable tag: 1.7.12
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -100,6 +100,16 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+
+= v1.7.12 - 03/21/2018 =
+* Improvement: Added option to disable the shortcode ui.
+* Tweak: Removed private popup type links from the nav menu editor.
+* Fix: Bug with long term cached assets causing JS errors on nginx servers.
+* Fix: Bug with support for custom popup z-index setting.
+* Fix: Bug where NF loaded before Popup Maker and form actions were missing.
+* Fix: Bugs in close delay settings for form integrations. Was in ms but needed to be in seconds.
+* Fix: Bug where Yoast SEO plugin shows popups in the xml sitemaps and showing Yoast metabox on popup editor.
+
 = v1.7.11 - 03/14/2018 =
 * Fix: Bug where Middle Center option wouldn't stay selected after saving.
 * Fix: Bug with incorrect field dependency for custom height & scrollable options.
