@@ -9,6 +9,8 @@ class PUM_Types {
 		add_action( 'init', array( __CLASS__, 'register_post_types' ), 1 );
 		add_action( 'init', array( __CLASS__, 'register_taxonomies' ), 0 );
 		add_filter( 'post_updated_messages', array( __CLASS__, 'updated_messages' ) );
+
+		add_filter( 'wpseo_accessible_post_types', array( __CLASS__, 'yoast_sitemap_fix' ) );
 	}
 
 	/**
@@ -37,6 +39,11 @@ class PUM_Types {
 					'author',
 				) ),
 			) );
+
+			// Temporary Yoast Fixes
+			if ( is_admin() && isset( $_GET['page'] ) && $_GET['page'] === 'wpseo_titles' ) {
+				$popup_args['public'] = false;
+			}
 
 			register_post_type( 'popup', apply_filters( 'pum_popup_post_type_args', $popup_args ) );
 		}
@@ -163,6 +170,19 @@ class PUM_Types {
 		}
 
 		return $messages;
+	}
+
+	/**
+	 * Remove popups from accessible post type list in Yoast.
+	 *
+	 * @param array $post_types
+	 *
+	 * @return array
+	 */
+	public static function yoast_sitemap_fix( $post_types = array() ) {
+		unset( $post_types['popup'] );
+
+		return $post_types;
 	}
 
 
