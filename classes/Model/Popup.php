@@ -434,7 +434,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		) as $key => $value ) {
 			$temp = isset( $display[ $key ] ) ? $display[ $key ] : false;
 
-			if ( $temp ) {
+			if ( $temp && is_string( $temp ) ) {
 				$display[ $key ] = preg_replace('/\D/', '', $temp );
 				$display[ $key . '_unit' ] = str_replace( $display[ $key ], '', $temp );
 			}
