@@ -1,6 +1,11 @@
 (function ($, tinymce) {
     "use strict";
 
+    // Failsafe in case variables were not properly declared on page.
+    if (typeof pum_shortcode_ui_vars === 'undefined') {
+        return;
+    }
+
     tinymce.PluginManager.add('pum_shortcodes', function (editor) {
         var shortcodes = pum_shortcode_ui_vars.shortcodes || {},
             menuItems = [];
