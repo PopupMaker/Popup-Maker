@@ -41,6 +41,13 @@ class PUM_Upgrades {
 	private $initial_version;
 
 	/**
+	 * Popup Maker db version.
+	 *
+	 * @var    string
+	 */
+	private $db_version;
+
+	/**
 	 * Gets everything going with a singleton instance.
 	 *
 	 * @return PUM_Upgrades
@@ -80,6 +87,7 @@ class PUM_Upgrades {
 		$this->version       = get_option( 'pum_ver' );
 		$this->upgraded_from = get_option( 'pum_ver_upgraded_from' );
 		$this->initial_version = get_option( 'pum_initial_version' );
+		$this->db_version = get_option( 'pum_db_ver' );
 
 		/**
 		 * If no version set check if a deprecated one exists.
@@ -94,7 +102,7 @@ class PUM_Upgrades {
 		/**
 		 * Back fill the initial version with the oldest version we can detect.
 		 */
-		if ( ! get_option( 'pum_initial_version' ) ) {
+		if ( ! $this->initial_version ) {
 
 			$oldest_known = Popup_Maker::$VER;
 
@@ -122,6 +130,8 @@ class PUM_Upgrades {
 			update_option( 'pum_initial_version', $oldest_known );
 		}
 
+
+
 		if ( version_compare( $this->version, Popup_Maker::$VER, '<' ) ) {
 			// Allow processing of small core upgrades
 			do_action( 'pum_update_core_version', $this->version );
@@ -131,6 +141,25 @@ class PUM_Upgrades {
 			update_option( 'pum_ver', Popup_Maker::$VER );
 			$this->upgraded_from = $this->version;
 			$this->version       = Popup_Maker::$VER;
+		}
+
+
+		// If no current db version, but prior install detected, set db version correctly.
+		if ( ! $this->db_version ) {
+			if ( $this->upgraded_from ) {
+				if ( version_compare( $this->upgraded_from, '1.3.0', '<' ) ) {
+					$this->db_version = 1;
+				} else {
+					$this->db_version = 2;
+				}
+			} else {
+				$this->db_version = Popup_Maker::$DB_VER;
+			}
+			add_option( 'pum_db_ver', $this->db_version );
+		}
+
+		if ( $this->db_version < Popup_Maker::$DB_VER ) {
+			update_option( 'pum_db_ver', $this->db_version );
 		}
 	}
 
