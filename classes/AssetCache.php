@@ -322,7 +322,7 @@ class PUM_AssetCache {
 
 				if ( $popup->get_setting( 'zindex', false ) ) {
 					$zindex = absint( $popup->get_setting( 'zindex' ) );
-					echo "#pum-{$popup->ID} .pum-container {z-index: $zindex}\r\n";
+					echo "#pum-{$popup->ID} {z-index: $zindex}\r\n";
 				}
 
 				// Allow per popup CSS additions.
