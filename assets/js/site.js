@@ -1145,7 +1145,14 @@ var PUM_Analytics;
     var _md,
         md = function () {
             if (_md === undefined) {
-                _md = new MobileDetect(window.navigator.userAgent);
+                _md = typeof MobileDetect !== 'undefined' ? new MobileDetect(window.navigator.userAgent) : {
+                    phone: function () {
+                        return false;
+                    },
+                    tablet: function() {
+                        return false;
+                    }
+                };
             }
 
             return _md;
