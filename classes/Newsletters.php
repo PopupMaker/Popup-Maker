@@ -14,6 +14,8 @@ class PUM_Newsletters {
 	 */
 	public static $errors;
 
+	public static $disabled = false;
+
 	public static function init() {
 		add_action( 'plugins_loaded', array( __CLASS__, 'delayed_init' ), - 100 );
 	}
@@ -22,12 +24,14 @@ class PUM_Newsletters {
 		// TODO Once PUM-Aweber has been updated properly for a few months remove these if checks.
 		// TODO Consider adding notice to update aweber.
 
-		// Checks for single very specific versions.
-		if ( in_array( true, array(
+		self::$disabled = in_array( true, array(
 			class_exists( 'PUM_Aweber_Integration' ) && defined( 'PUM_AWEBER_INTEGRATION_VER' ) && version_compare( PUM_AWEBER_INTEGRATION_VER, '1.1.0', '<' ),
 			class_exists( 'PUM_MailChimp_Integration' ) && defined( 'PUM_MAILCHIMP_INTEGRATION_VER' ) && PUM_MAILCHIMP_INTEGRATION_VER,
 			class_exists( 'PUM_MCI' ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ),
-		) ) ) {
+		) );
+
+		// Checks for single very specific versions.
+		if ( self::$disabled ) {
 			return;
 		}
 

@@ -100,6 +100,13 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+= v1.7.13 - 03/??/2018 =
+* Tweak: Added fallback methods for conditions using MobileDetect to prevent errors when for whatever reason it was not loaded properly.
+* Tweak: Added value type check to prevent errors in popup data.
+* Fix: Bug that caused issues with MC extensions JS loading properly.
+* Fix: Added fail-safe in case variables were not properly declared on page for mce-buttons.js.
+* Fix: Set a deprecated option on new installs for backward compatibility issues.
+* Fix: Selector correction in z-index setting application.
 
 = v1.7.12 - 03/21/2018 =
 * Improvement: Added option to disable the shortcode ui.

@@ -13,8 +13,10 @@
      * Checks shortcode editor provider field and hides/shows the appropriate subtab for that provider.
      */
     function check_provider() {
+        debugger;
+
         var $provider = $('#pum-shortcode-editor-pum_sub_form #provider'),
-            provider = $provider.val() !== '' ? $provider.val() : pum_admin_vars.default_provider,
+            provider = $provider.val() !== '' && $provider.val() !== 'none' ? $provider.val() : pum_admin_vars.default_provider,
             $provider_tabs = $('.pum-modal-content .tabs .tab a[href^="#pum-shortcode-editor-pum_sub_form_provider_"]'),
             $provider_contents = $('[id^="pum-shortcode-editor-pum_sub_form_provider_"]'),
             $selected_tab = $provider_tabs.filter('[href="#pum-shortcode-editor-pum_sub_form_provider_' + provider + '"]'),

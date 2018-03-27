@@ -2627,6 +2627,10 @@ var pum_debug_mode = false,
 (function ($) {
     'use strict';
 
+    if (pum_vars && pum_vars.core_sub_forms_enabled !== undefined && !pum_vars.core_sub_forms_enabled) {
+        return;
+    }
+
     window.PUM = window.PUM || {};
     window.PUM.newsletter = window.PUM.newsletter || {};
 

@@ -108,7 +108,7 @@ class PUM_Site_Assets {
 			wp_enqueue_style( 'pum-newsletter-site', PUM_NEWSLETTER_URL . 'assets/css/pum-newsletter-site' . self::$suffix . '.css', null, PUM_NEWSLETTER_VERSION );
 			wp_enqueue_script( 'pum-newsletter-site', PUM_NEWSLETTER_URL . 'assets/js/pum-newsletter-site' . self::$suffix . '.js', array( 'jquery' ), PUM_NEWSLETTER_VERSION, true );
 			wp_localize_script( 'pum-newsletter-site', 'pum_sub_vars', array(
-				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				'ajaxurl'          => admin_url( 'admin-ajax.php' ),
 				'message_position' => 'top',
 			) );
 		}
@@ -214,16 +214,17 @@ class PUM_Site_Assets {
 			$site_home_path = isset( $site_home_path['path'] ) ? $site_home_path['path'] : '/';
 
 			wp_localize_script( 'popup-maker-site', 'pum_vars', apply_filters( 'pum_vars', array(
-				'version'          => Popup_Maker::$VER,
-				'ajaxurl'          => admin_url( 'admin-ajax.php' ),
-				'restapi'          => function_exists( 'rest_url' ) ? esc_url_raw( rest_url( 'pum/v1' ) ) : false,
-				'rest_nonce'       => is_user_logged_in() ? wp_create_nonce( 'wp_rest' ) : null,
-				'default_theme'    => (string) popmake_get_default_popup_theme(),
-				'debug_mode'       => Popup_Maker::debug_mode(),
-				'popups'           => self::get_popup_settings(),
-				'disable_tracking' => popmake_get_option( 'disable_popup_open_tracking' ),
-				'home_url'         => trailingslashit( $site_home_path ),
-				'message_position' => 'top',
+				'version'                => Popup_Maker::$VER,
+				'ajaxurl'                => admin_url( 'admin-ajax.php' ),
+				'restapi'                => function_exists( 'rest_url' ) ? esc_url_raw( rest_url( 'pum/v1' ) ) : false,
+				'rest_nonce'             => is_user_logged_in() ? wp_create_nonce( 'wp_rest' ) : null,
+				'default_theme'          => (string) popmake_get_default_popup_theme(),
+				'debug_mode'             => Popup_Maker::debug_mode(),
+				'popups'                 => self::get_popup_settings(),
+				'disable_tracking'       => popmake_get_option( 'disable_popup_open_tracking' ),
+				'home_url'               => trailingslashit( $site_home_path ),
+				'message_position'       => 'top',
+				'core_sub_forms_enabled' => ! PUM_Newsletters::$disabled,
 			) ) );
 
 			// TODO Remove all trace usages of these in JS so they can be removed.

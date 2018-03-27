@@ -48,7 +48,7 @@ class PUM_Admin_Assets {
 
 	public static function fix_broken_extension_scripts() {
 
-		if ( wp_script_is( 'pum-mci-admin' ) && class_exists( 'PUM_MCI' ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ) ) {
+		if ( wp_script_is( 'pum-mci-admin' ) && class_exists( 'PUM_MCI' ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ) && ! pum_is_settings_page() ) {
 			wp_dequeue_script( 'pum-mci-admin' );
 		}
 	}
