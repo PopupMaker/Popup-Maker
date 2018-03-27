@@ -8,12 +8,12 @@ var PUM_Accessibility;
     var $top_level_elements,
         focusableElementsString = "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]",
         previouslyFocused,
-        currentModal;
+        currentModal
 
     PUM_Accessibility = {
         // Accessibility: Checks focus events to ensure they stay inside the modal.
         forceFocus: function (e) {
-            if (currentModal && !$.contains(currentModal, e.target)) {
+            if (currentModal && currentModal.length && !currentModal[0].contains(e.target)) {
                 e.stopPropagation();
                 PUM_Accessibility.setFocusToFirstItem();
             }
@@ -83,7 +83,7 @@ var PUM_Accessibility;
             $top_level_elements = $('body > *').filter(':visible').not(currentModal);
             $top_level_elements.attr('aria-hidden', 'true');
 
-            // Accessibility: Add focus check that prevents tabbing outside of modal.
+            // Accessibility: Add focus check first time focus changes after popup opens that prevents tabbing outside of modal.
             $(document).one('focusin.pum_accessibility', PUM_Accessibility.forceFocus);
 
             // Accessibility: Focus on the modal.
