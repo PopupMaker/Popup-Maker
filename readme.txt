@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.4
-Stable tag: 1.7.12
+Stable tag: 1.7.13
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -100,9 +100,10 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
-= v1.7.13 - 03/??/2018 =
+= v1.7.13 - 03/27/2018 =
 * Tweak: Added fallback methods for conditions using MobileDetect to prevent errors when for whatever reason it was not loaded properly.
 * Tweak: Added value type check to prevent errors in popup data.
+* Fix: Bug with accessibility forced focus when there is a link in the popup, causing the close button to focus the link before closing.
 * Fix: Bug that caused issues with MC extensions JS loading properly.
 * Fix: Added fail-safe in case variables were not properly declared on page for mce-buttons.js.
 * Fix: Set a deprecated option on new installs for backward compatibility issues.

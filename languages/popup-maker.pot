@@ -54,23 +54,23 @@ msgid_plural "%s popup themes were updated successfully."
 msgstr[0] ""
 msgstr[1] ""
 
-#: classes/Admin/Ajax.php:126, classes/Admin/Ajax.php:293, classes/Upgrades.php:362
+#: classes/Admin/Ajax.php:126, classes/Admin/Ajax.php:293, classes/Upgrades.php:391
 msgid "A batch process ID must be present to continue."
 msgstr ""
 
-#: classes/Admin/Ajax.php:133, classes/Upgrades.php:369
+#: classes/Admin/Ajax.php:133, classes/Upgrades.php:398
 msgid "You do not have permission to initiate this request. Contact an administrator for more information."
 msgstr ""
 
-#: classes/Admin/Ajax.php:142, classes/Admin/Ajax.php:302, classes/Upgrades.php:388
+#: classes/Admin/Ajax.php:142, classes/Admin/Ajax.php:302, classes/Upgrades.php:417
 msgid "%s is an invalid batch process ID."
 msgstr ""
 
-#: classes/Admin/Ajax.php:151, classes/Admin/Ajax.php:311, classes/Upgrades.php:495
+#: classes/Admin/Ajax.php:151, classes/Admin/Ajax.php:311, classes/Upgrades.php:524
 msgid "An invalid file path is registered for the %1$s batch process handler."
 msgstr ""
 
-#: classes/Admin/Ajax.php:159, classes/Admin/Ajax.php:319, classes/Upgrades.php:501
+#: classes/Admin/Ajax.php:159, classes/Admin/Ajax.php:319, classes/Upgrades.php:530
 msgid "%1$s is an invalid handler for the %2$s batch process. Please try again."
 msgstr ""
 
@@ -162,7 +162,7 @@ msgstr ""
 msgid "Subscribers"
 msgstr ""
 
-#: classes/Admin/Pages.php:56, classes/Admin/Pages.php:149, classes/Admin/Templates.php:415, classes/Admin/Templates.php:643, classes/Site/Assets.php:245, includes/admin/admin-setup.php:24
+#: classes/Admin/Pages.php:56, classes/Admin/Pages.php:149, classes/Admin/Templates.php:415, classes/Admin/Templates.php:643, classes/Site/Assets.php:246, includes/admin/admin-setup.php:24
 msgid "Settings"
 msgstr ""
 
@@ -254,7 +254,7 @@ msgstr ""
 msgid "Display"
 msgstr ""
 
-#: classes/Admin/Popups.php:291, classes/Admin/Popups.php:307, classes/Admin/Templates.php:406, classes/Site/Assets.php:246
+#: classes/Admin/Popups.php:291, classes/Admin/Popups.php:307, classes/Admin/Templates.php:406, classes/Site/Assets.php:247
 msgid "Triggers"
 msgstr ""
 
@@ -266,7 +266,7 @@ msgstr ""
 msgid "General Settings"
 msgstr ""
 
-#: classes/Admin/Popups.php:310, classes/Site/Assets.php:249
+#: classes/Admin/Popups.php:310, classes/Site/Assets.php:250
 msgid "Conditions"
 msgstr ""
 
@@ -1124,7 +1124,7 @@ msgstr ""
 msgid "Cookies control the repeat display of a popup."
 msgstr ""
 
-#: classes/Admin/Templates.php:634, classes/Site/Assets.php:247
+#: classes/Admin/Templates.php:634, classes/Site/Assets.php:248
 msgid "Cookies"
 msgstr ""
 
@@ -1784,79 +1784,79 @@ msgstr ""
 msgid "Subscription Form Placeholder"
 msgstr ""
 
-#: classes/Site/Assets.php:234, classes/Types.php:23, includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/integrations/class-pum-gravity-forms.php:53, includes/modules/admin-bar.php:414
+#: classes/Site/Assets.php:235, classes/Types.php:23, includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/integrations/class-pum-gravity-forms.php:53, includes/modules/admin-bar.php:414
 msgid "Popup Maker"
 msgstr ""
 
-#: classes/Site/Assets.php:234
+#: classes/Site/Assets.php:235
 msgid "Debug Mode Enabled"
 msgstr ""
 
-#: classes/Site/Assets.php:235
+#: classes/Site/Assets.php:236
 msgid "Debug started at:"
 msgstr ""
 
-#: classes/Site/Assets.php:236
+#: classes/Site/Assets.php:237
 msgid "For more information on how to use this information visit %s"
 msgstr ""
 
-#: classes/Site/Assets.php:237
+#: classes/Site/Assets.php:238
 msgid "Global Information"
 msgstr ""
 
-#: classes/Site/Assets.php:238
+#: classes/Site/Assets.php:239
 msgid "Localized variables"
 msgstr ""
 
-#: classes/Site/Assets.php:239
+#: classes/Site/Assets.php:240
 msgid "Popups Initializing"
 msgstr ""
 
-#: classes/Site/Assets.php:240
+#: classes/Site/Assets.php:241
 msgid "Popups Initialized"
 msgstr ""
 
-#: classes/Site/Assets.php:241
+#: classes/Site/Assets.php:242
 msgid "Popup: #"
 msgstr ""
 
-#: classes/Site/Assets.php:242
+#: classes/Site/Assets.php:243
 msgid "Theme ID: "
 msgstr ""
 
-#: classes/Site/Assets.php:243
+#: classes/Site/Assets.php:244
 msgid "Method Call:"
 msgstr ""
 
-#: classes/Site/Assets.php:244
+#: classes/Site/Assets.php:245
 msgid "Method Arguments:"
 msgstr ""
 
-#: classes/Site/Assets.php:248
+#: classes/Site/Assets.php:249
 msgid "Delay:"
 msgstr ""
 
-#: classes/Site/Assets.php:250
+#: classes/Site/Assets.php:251
 msgid "Cookie:"
 msgstr ""
 
-#: classes/Site/Assets.php:251
+#: classes/Site/Assets.php:252
 msgid "Settings:"
 msgstr ""
 
-#: classes/Site/Assets.php:252
+#: classes/Site/Assets.php:253
 msgid "Selector:"
 msgstr ""
 
-#: classes/Site/Assets.php:253
+#: classes/Site/Assets.php:254
 msgid "Mobile Disabled:"
 msgstr ""
 
-#: classes/Site/Assets.php:254
+#: classes/Site/Assets.php:255
 msgid "Tablet Disabled:"
 msgstr ""
 
-#: classes/Site/Assets.php:255
+#: classes/Site/Assets.php:256
 msgid "Event: %s"
 msgstr ""
 
@@ -1973,31 +1973,31 @@ msgctxt "Post Type Singular: Popup, Theme"
 msgid "%1$s submitted."
 msgstr ""
 
-#: classes/Upgrades.php:184
+#: classes/Upgrades.php:213
 msgid "Your database needs to be upgraded following the latest Popup Maker or Popup Maker extension update."
 msgstr ""
 
-#: classes/Upgrades.php:186
+#: classes/Upgrades.php:215
 msgid "Popup Maker needs to complete a database upgrade that was previously started."
 msgstr ""
 
-#: classes/Upgrades.php:207
+#: classes/Upgrades.php:236
 msgid "This can sometimes take a few minutes, are you ready to begin?"
 msgstr ""
 
-#: classes/Upgrades.php:210
+#: classes/Upgrades.php:239
 msgid "Finish Upgrades"
 msgstr ""
 
-#: classes/Upgrades.php:210
+#: classes/Upgrades.php:239
 msgid "Process Upgrades"
 msgstr ""
 
-#: classes/Upgrades.php:521
+#: classes/Upgrades.php:550
 msgid "Upgrades"
 msgstr ""
 
-#: classes/Upgrades.php:532
+#: classes/Upgrades.php:561
 msgid "No upgrades currently required."
 msgstr ""
 
