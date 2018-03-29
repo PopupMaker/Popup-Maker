@@ -389,7 +389,11 @@ var PUM;
             if (settings.close_on_overlay_click) {
                 $popup.on('pumAfterOpen', function () {
                     $(document).on('click.pumCloseOverlay', function (e) {
-                        if(!$(e.target).closest('.pum-container').length) {
+                        debugger;
+                        var $target = $(e.target),
+                            $container = $target.closest('.pum-container');
+
+                        if (!$container.length) {
                             $.fn.popmake.last_close_trigger = 'Overlay Click';
                             $popup.popmake('close');
                         }
@@ -397,7 +401,7 @@ var PUM;
                 });
 
                 $popup.on('pumAfterClose', function () {
-                   $(document).off('click.pumCloseOverlay');
+                    $(document).off('click.pumCloseOverlay');
                 });
             }
 
