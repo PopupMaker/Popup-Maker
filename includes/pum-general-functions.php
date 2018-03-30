@@ -33,7 +33,7 @@ function pum_get_db_ver() {
  * @return bool
  */
 function pum_is_v1_4_compatible() {
-	return pum_get_db_ver() >= 6;
+	return true;
 }
 
 /**
