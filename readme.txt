@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.4
-Stable tag: 1.7.13
+Stable tag: 1.7.14
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -100,6 +100,12 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+= v1.7.14 - 03/28/2018 =
+* Fix: Obscure PHP error caused by method from interface was marked abstract in an abstract class inheriting the interface.
+* Fix: Bug when jquery cookie is called from another plugin.
+* Fix: Bug where form submit button triggered popup close when overlay click to close was enabled.
+* Fix: Typo in previous patch for db_var not being updated properly.
+
 = v1.7.13 - 03/27/2018 =
 * Tweak: Added fallback methods for conditions using MobileDetect to prevent errors when for whatever reason it was not loaded properly.
 * Tweak: Added value type check to prevent errors in popup data.

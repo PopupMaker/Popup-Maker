@@ -16,7 +16,7 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: classes/Abstract/Batch/Process.php:117
+#: classes/Abstract/Batch/Process.php:121
 msgid "%s item was successfully processed."
 msgid_plural "%s items were successfully processed."
 msgstr[0] ""
