@@ -75,9 +75,13 @@ abstract class PUM_Abstract_Batch_Process implements PUM_Interface_Batch_Process
 	}
 
 	/**
-	 * Processes a single step (batch).
+	 * Executes a single step in the batch process.
+	 *
+	 * @return int|string|WP_Error Next step number, 'done', or a WP_Error object.
 	 */
-	abstract public function process_step();
+	public function process_step() {
+		return 'done';
+	}
 
 	/**
 	 * Retrieves the calculated completion percentage.

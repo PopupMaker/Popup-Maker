@@ -23,6 +23,8 @@ interface PUM_Interface_Batch_Process {
 
 	/**
 	 * Processes a single step (batch).
+	 *
+	 * @return int|string|WP_Error Next step number, 'done', or a WP_Error object.
 	 */
 	public function process_step();
 
