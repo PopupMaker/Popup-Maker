@@ -227,7 +227,7 @@ class PUM_AssetCache {
 		/** @var WP_Filesystem_Base $wp_filesystem */
 		global $wp_filesystem;
 
-		return $wp_filesystem->put_contents( $file, $contents, FS_CHMOD_FILE );
+		return $wp_filesystem->put_contents( $file, $contents, defined('FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : false );
 	}
 
 	/**
