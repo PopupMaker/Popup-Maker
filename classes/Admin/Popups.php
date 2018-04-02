@@ -89,7 +89,7 @@ class PUM_Admin_Popups {
 					<label class="screen-reader-text" id="popup-title-prompt-text" for="popup-title">
 						<?php _e( 'Popup Title (appears on front end inside the popup container)', 'popup-maker' ); ?>
 					</label>
-					<input tabindex="2" name="popup_title" size="30" value="<?php esc_attr_e( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php _e( 'Popup Title (appears on front end inside the popup container)', 'popup-maker' ); ?>"/>
+					<input tabindex="2" name="popup_title" size="30" value="<?php esc_attr_e( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php _e( 'Popup Title (appears on front end inside the popup container)', 'popup-maker' ); ?>" />
 					<p class="pum-desc"><?php echo '(' . __( 'Optional', 'popup-maker' ) . ') ' . __( 'Display a title inside the popup container. May be left empty.', 'popup-maker' ); ?></p>
 				</div>
 				<div class="inside"></div>
@@ -147,7 +147,7 @@ class PUM_Admin_Popups {
 		wp_enqueue_script( 'popup-maker-admin' );
 		?>
 		<script type="text/javascript">
-            window.pum_popup_settings_editor = <?php echo json_encode( array(
+            window.pum_popup_settings_editor = <?php echo json_encode( apply_filters( 'pum_popup_settings_editor_var', array(
 				'form_args'             => array(
 					'id'       => 'pum-popup-settings',
 					'tabs'     => self::tabs(),
@@ -159,7 +159,7 @@ class PUM_Admin_Popups {
 				'triggers'              => PUM_Triggers::instance()->get_triggers(),
 				'cookies'               => PUM_Cookies::instance()->get_cookies(),
 				'current_values'        => self::parse_values( $settings ),
-			) ); ?>;
+			) ) ); ?>;
 		</script>
 
 		<div id="pum-popup-settings-container" class="pum-popup-settings-container"></div><?php
@@ -179,6 +179,7 @@ class PUM_Admin_Popups {
 				$fields[] = 'popup_' . $group . '_' . $field;
 			}
 		}
+
 		return apply_filters( 'popmake_popup_meta_fields', $fields );
 	}
 
@@ -257,7 +258,6 @@ class PUM_Admin_Popups {
 			}
 		}
 
-
 		do_action( 'pum_save_popup', $post_id, $post );
 	}
 
@@ -284,7 +284,7 @@ class PUM_Admin_Popups {
 	 * @return array
 	 */
 	public static function tabs() {
-		return apply_filters( 'pum_popup_settings_box_tabs', array(
+		return apply_filters( 'pum_popup_settings_tabs', array(
 			'general'   => __( 'General', 'popup-maker' ),
 			'display'   => __( 'Display', 'popup-maker' ),
 			'close'     => __( 'Close', 'popup-maker' ),
@@ -299,7 +299,7 @@ class PUM_Admin_Popups {
 	 * @return array
 	 */
 	public static function sections() {
-		return apply_filters( 'pum_popup_settings_box_tabs', array(
+		return apply_filters( 'pum_popup_settings_sections', array(
 			'general'   => array(
 				'main' => __( 'General Settings', 'popup-maker' ),
 			),
@@ -539,7 +539,7 @@ class PUM_Admin_Popups {
 								'center top'    => __( 'Top Center', 'popup-maker' ),
 								'right top'     => __( 'Top Right', 'popup-maker' ),
 								'left center'   => __( 'Middle Left', 'popup-maker' ),
-								'center'       => __( 'Middle Center', 'popup-maker' ),
+								'center'        => __( 'Middle Center', 'popup-maker' ),
 								'right center'  => __( 'Middle Right', 'popup-maker' ),
 								'left bottom'   => __( 'Bottom Left', 'popup-maker' ),
 								'center bottom' => __( 'Bottom Center', 'popup-maker' ),
@@ -868,11 +868,13 @@ class PUM_Admin_Popups {
 						<td><?php _e( 'Opens', 'popup-maker' ); ?></td>
 						<td><?php echo $opens; ?></td>
 					</tr>
-					<tr>
-						<td><?php _e( 'Conversions', 'popup-maker' ); ?></td>
-						<td><?php echo $conversions; ?></td>
-					</tr>
-					<?php if ( $conversion_rate ) : ?>
+					<?php if ( $conversion_rate > 0 ) : ?>
+						<tr>
+							<td><?php _e( 'Conversions', 'popup-maker' ); ?></td>
+							<td><?php echo $conversions; ?></td>
+						</tr>
+					<?php endif; ?>
+					<?php if ( $conversion_rate > 0 ) : ?>
 						<tr>
 							<td><?php _e( 'Conversion Rate', 'popup-maker' ); ?></td>
 							<td><?php echo round( $conversion_rate, 2 ); ?>%</td>
@@ -880,21 +882,25 @@ class PUM_Admin_Popups {
 					<?php endif; ?>
 					<tr class="separator">
 						<td colspan="2">
-							<label>
-								<input type="checkbox" name="popup_reset_counts" id="popup_reset_counts" value="1"/>
+							<label> <input type="checkbox" name="popup_reset_counts" id="popup_reset_counts" value="1" />
 								<?php _e( 'Reset Counts', 'popup-maker' ); ?>
 							</label>
-							<?php if ( ( $reset = $popup->get_last_count_reset() ) ) : ?><br/>
+							<?php if ( ( $reset = $popup->get_last_count_reset() ) ) : ?><br />
 								<small>
 									<strong><?php _e( 'Last Reset', 'popup-maker' ); ?>:</strong> <?php echo date( 'm-d-Y H:i', $reset['timestamp'] ); ?>
-									<br/>
-									<strong><?php _e( 'Previous Opens', 'popup-maker' ); ?>:</strong> <?php echo $reset['opens']; ?>
-									<br/>
-									<strong><?php _e( 'Previous Conversions', 'popup-maker' ); ?>:</strong> <?php echo $reset['conversions']; ?>
-									<br/>
-									<strong><?php _e( 'Lifetime Opens', 'popup-maker' ); ?>:</strong> <?php echo $popup->get_event_count( 'open', 'total' ); ?>
-									<br/>
-									<strong><?php _e( 'Lifetime Conversions', 'popup-maker' ); ?>:</strong> <?php echo $popup->get_event_count( 'conversion', 'total' ); ?>
+									<br /> <strong><?php _e( 'Previous Opens', 'popup-maker' ); ?>:</strong> <?php echo $reset['opens']; ?>
+
+									<?php if ( $reset['conversions'] > 0 ) : ?>
+										<br />
+										<strong><?php _e( 'Previous Conversions', 'popup-maker' ); ?>:</strong> <?php echo $reset['conversions']; ?>
+									<?php endif; ?>
+
+									<br /> <strong><?php _e( 'Lifetime Opens', 'popup-maker' ); ?>:</strong> <?php echo $popup->get_event_count( 'open', 'total' ); ?>
+
+									<?php if ( $popup->get_event_count( 'conversion', 'total' ) > 0 ) : ?>
+										<br />
+										<strong><?php _e( 'Lifetime Conversions', 'popup-maker' ); ?>:</strong> <?php echo $popup->get_event_count( 'conversion', 'total' ); ?>
+									<?php endif; ?>
 								</small>
 							<?php endif; ?>
 						</td>
