@@ -1012,7 +1012,7 @@ function popmake_output_pum_styles() {
 
 		<h4><?php _e( 'User Theme Styles', 'popup-maker' ); ?></h4>
 		<textarea wrap="off"
-		          style="white-space: pre; width: 100%; min-height: 200px;"><?php echo PUM_AssetCache::generate_popup_theme_styles(); ?></textarea>
+		          style="white-space: pre; width: 100%; min-height: 200px;"><?php echo PUM_AssetCache::generate_font_imports() . PUM_AssetCache::generate_popup_theme_styles(); ?></textarea>
 	</div>
 
 	<?php
