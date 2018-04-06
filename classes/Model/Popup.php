@@ -124,7 +124,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 */
 	public function get_settings( $force = false ) {
 		if ( ! isset( $this->settings ) || $force ) {
-			$this->settings = $this->get_meta( 'popup_settings', true, $force );
+			$this->settings = $this->get_meta( 'popup_settings' );
 
 			if ( ! is_array( $this->settings ) ) {
 				$this->settings = array();

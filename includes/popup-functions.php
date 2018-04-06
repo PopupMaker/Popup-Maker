@@ -33,13 +33,12 @@ function pum_get_popup_id( $popup_id = 0 ) {
  * @since 1.7.0
  *
  * @param int $popup_id
- * @param bool $autoload Autoload post meta.
  * @param bool $force Clears cached instance and refreshes.
  *
  * @return PUM_Model_Popup|false
  */
-function pum_get_popup( $popup_id = 0, $autoload = true, $force = false ) {
-	return PUM_Model_Popup::instance( pum_get_popup_id( $popup_id ), $autoload, $force );
+function pum_get_popup( $popup_id = 0, $force = false ) {
+	return PUM_Model_Popup::instance( pum_get_popup_id( $popup_id ), $force );
 }
 
 /**

@@ -7,6 +7,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class PUM_Model_Post
+ */
 abstract class PUM_Model_Post {
 
 	/**
@@ -16,6 +19,9 @@ abstract class PUM_Model_Post {
 	 */
 	public $version = 1;
 
+	/**
+	 * @var array
+	 */
 	public static $instances = array();
 
 	/**
@@ -27,38 +33,99 @@ abstract class PUM_Model_Post {
 	 * Declare the default properities in WP_Post as we can't extend it
 	 */
 	public $post_author = 0;
+	/**
+	 * @var string
+	 */
 	public $post_date = '0000-00-00 00:00:00';
+	/**
+	 * @var string
+	 */
 	public $post_date_gmt = '0000-00-00 00:00:00';
+	/**
+	 * @var string
+	 */
 	public $post_content = '';
+	/**
+	 * @var string
+	 */
 	public $post_title = '';
+	/**
+	 * @var string
+	 */
 	public $post_excerpt = '';
+	/**
+	 * @var string
+	 */
 	public $post_status = 'publish';
+	/**
+	 * @var string
+	 */
 	public $comment_status = 'open';
+	/**
+	 * @var string
+	 */
 	public $ping_status = 'open';
+	/**
+	 * @var string
+	 */
 	public $post_password = '';
+	/**
+	 * @var string
+	 */
 	public $post_name = '';
+	/**
+	 * @var string
+	 */
 	public $post_type = '';
+	/**
+	 * @var string
+	 */
 	public $to_ping = '';
+	/**
+	 * @var string
+	 */
 	public $pinged = '';
+	/**
+	 * @var string
+	 */
 	public $post_modified = '0000-00-00 00:00:00';
+	/**
+	 * @var string
+	 */
 	public $post_modified_gmt = '0000-00-00 00:00:00';
+	/**
+	 * @var string
+	 */
 	public $post_content_filtered = '';
+	/**
+	 * @var int
+	 */
 	public $post_parent = 0;
+	/**
+	 * @var string
+	 */
 	public $guid = '';
+	/**
+	 * @var int
+	 */
 	public $menu_order = 0;
+	/**
+	 * @var string
+	 */
 	public $post_mime_type = '';
+	/**
+	 * @var int
+	 */
 	public $comment_count = 0;
+	/**
+	 * @var
+	 */
 	public $filter;
 
 	/**
 	 * @var WP_Post
 	 */
 	public $post;
-
-	/**
-	 * The post meta array.
-	 */
-	public $meta;
 
 	/**
 	 * The required post type of the object.
@@ -78,20 +145,19 @@ abstract class PUM_Model_Post {
 	/**
 	 * Get things going
 	 *
-	 * @param int $post
-	 * @param bool $autoload_meta
+	 * @param int   $post
 	 * @param array $_args
 	 *
 	 * @internal param bool $_id
 	 */
-	public function __construct( $post = null, $autoload_meta = true, $_args = array() ) {
+	public function __construct( $post = null, $_args = array() ) {
 		if ( ! isset( $post ) ) {
 			$post = new WP_Post( $this );
 		} elseif ( ! is_a( $post, 'WP_Post' ) ) {
 			$post = WP_Post::get_instance( $post );
 		}
 
-		$this->_setup( $post, $autoload_meta );
+		$this->_setup( $post );
 
 		return $this;
 	}
@@ -100,9 +166,8 @@ abstract class PUM_Model_Post {
 	 * Given the post data, let's set the variables
 	 *
 	 * @param  object $post The Post Object
-	 * @param bool $autoload_meta
 	 */
-	protected function _setup( $post, $autoload_meta = true ) {
+	protected function _setup( $post ) {
 		if ( ! is_object( $post ) || ! is_a( $post, 'WP_Post' ) ) {
 			$this->valid = false;
 
@@ -127,64 +192,22 @@ abstract class PUM_Model_Post {
 			$this->$key = $value;
 		}
 
-		if ( $autoload_meta ) {
-			$this->get_post_meta( true );
-		}
-
 		$this->setup();
 	}
 
 	/**
-	 * Set/get the post meta for this object
 	 *
-	 * The $force parameter is in place to prevent hitting the database each time the method is called
-	 * when we already have what we need in $this->meta
-	 *
-	 * @link    https://developer.wordpress.org/reference/functions/get_post_meta
-	 *
-	 * @param bool $force Whether to force load the post meta (helpful if $this->meta is already an array).
-	 *
-	 * @return array
 	 */
-	public function get_post_meta( $force = false ) {
-		# make sure we have an ID
-		if ( ! $this->ID ) {
-			return array();
-		}
-		# if $this->meta is already an array
-		if ( is_array( $this->meta ) ) {
-
-			# return the array if we're not forcing the post meta to load
-			if ( ! $force ) {
-				return $this->meta;
-			}
-		} # if $this->meta isn't an array yet, initialize it as one
-		else {
-			$this->meta = array();
-		}
-		# get all post meta for the post
-		$post_meta = get_post_meta( $this->ID );
-		# if we found nothing
-		if ( ! $post_meta ) {
-			return $this->meta;
-		}
-		# loop through and clean up singleton arrays
-		foreach ( $post_meta as $k => $v ) {
-			# need to grab the first item if it's a single value
-			if ( count( $v ) == 1 ) {
-				$this->meta[ $k ] = maybe_unserialize( $v[0] );
-			} # or store them all if there are multiple
-			else {
-				$this->meta[ $k ] = array_map( 'maybe_unserialize', $v );
-			}
-		}
-
-		return $this->meta;
-	}
-
 	public function setup() {
 	}
 
+	/**
+	 * @param array $post_arr
+	 * @param array $meta
+	 * @param bool  $return_object
+	 *
+	 * @return bool|int|\PUM_Model_Post|\WP_Error
+	 */
 	public static function insert( $post_arr = array(), $meta = array(), $return_object = true ) {
 
 		$id = wp_insert_post( $post_arr );
@@ -205,14 +228,13 @@ abstract class PUM_Model_Post {
 	/**
 	 * Retrieve WP_Post instance.
 	 *
-	 * @param int $post_id Post ID.
-	 * @param bool $autoload_meta
+	 * @param int  $post_id Post ID.
 	 * @param bool $force
 	 *
 	 * @return bool|PUM_Model_Post $post
 	 * @internal param string $class
 	 */
-	public static function instance( $post_id, $autoload_meta = true, $force = false ) {
+	public static function instance( $post_id, $force = false ) {
 
 		// `model_post` passed to pum_cache_* will be appended with pum_ and stores a unique object for each post ID in any valid model.
 		$cache_group = self::get_cache_group();
@@ -233,7 +255,7 @@ abstract class PUM_Model_Post {
 			/**
 			 * @var PUM_Model_Post $post
 			 */
-			$post = new $class( $_post, $autoload_meta );
+			$post = new $class( $_post );
 
 			if ( ! $post->is_valid() ) {
 				// Post isn't correct post type for the called class. Do not cache it.
@@ -253,16 +275,25 @@ abstract class PUM_Model_Post {
 		return str_replace( 'pum_', '', strtolower( get_called_class() ) );
 	}
 
+	/**
+	 *
+	 */
 	public function update_cache() {
 		$cache_group = self::get_cache_group();
 		pum_cache_set( $this->ID, $this, $cache_group );
 	}
 
+	/**
+	 *
+	 */
 	public function clean_cache() {
 		$cache_group = self::get_cache_group();
 		pum_cache_delete( $this->ID, $cache_group );
 	}
 
+	/**
+	 *
+	 */
 	public static function clear_cache() {
 		$cache_group = self::get_cache_group();
 		pum_cache_delete_group( $cache_group );
@@ -295,12 +326,9 @@ abstract class PUM_Model_Post {
 	 *        )
 	 *    }
 	 *
-	 * @param    bool $autoload_post_meta Used when constructing the class instance
-	 *
 	 * @return    array
-	 * @since    1.0.0
 	 */
-	public static function get_by( $args, $autoload_post_meta = true ) {
+	public static function get_by( $args ) {
 		$defaults = array(
 			'posts_per_page' => - 1,
 			'meta_relation'  => 'OR',
@@ -335,18 +363,17 @@ abstract class PUM_Model_Post {
 
 		unset( $args['meta'], $args['meta_relation'] );
 
-		return self::get( $args, $autoload_post_meta );
+		return self::get( $args );
 	}
 
 	/**
 	 * Get an array of new instances of this class (or an extension class), as a wrapper for a new WP_Query
 	 *
 	 * @param    array $wp_query_args Arguments to use for the WP_Query
-	 * @param    bool $autoload_post_meta Used when constructing the class instance
 	 *
 	 * @return    array
 	 */
-	public static function get( $wp_query_args, $autoload_post_meta = true ) {
+	public static function get( $wp_query_args ) {
 		$class = get_called_class();
 
 		$defaults = array(
@@ -360,8 +387,7 @@ abstract class PUM_Model_Post {
 		$out = array();
 
 		foreach ( $query->posts as $post ) {
-
-			$out[] = new $class( $post, $autoload_post_meta );
+			$out[] = new $class( $post );
 		}
 
 		return $out;
@@ -370,14 +396,12 @@ abstract class PUM_Model_Post {
 	/**
 	 * Get an array of new instances of this class (or an extension class), as a wrapper for a new WP_Query
 	 *
-	 * @param    array $wp_query_args Arguments to use for the WP_Query
-	 * @param    bool $autoload_post_meta Used when constructing the class instance
+	 * @param    array $wp_query_args      Arguments to use for the WP_Query
 	 *
 	 * @return    WP_Query
-	 * @since    1.0.0
 	 */
-	public static function query( $wp_query_args, $autoload_post_meta = true ) {
-		$class= get_called_class();
+	public static function query( $wp_query_args ) {
+		$class = get_called_class();
 
 		$defaults = array(
 			'posts_per_page' => - 1,
@@ -388,17 +412,14 @@ abstract class PUM_Model_Post {
 		$query = new WP_Query( $wp_query_args );
 
 		foreach ( $query->posts as $key => $post ) {
-			$query->posts[ $key ] = new $class( $post, $autoload_post_meta );
+			$query->posts[ $key ] = new $class( $post );
 		}
 
 		return $query;
 	}
 
-
 	/**
 	 * Magic __get function to dispatch a call to retrieve a private property
-	 *
-	 * @since 1.0.0
 	 *
 	 * @param $key
 	 *
@@ -412,7 +433,7 @@ abstract class PUM_Model_Post {
 
 		} else {
 
-			$meta = get_post_meta( $this->ID, $key, true );
+			$meta = $this->get_meta( $key, true );
 
 			if ( $meta ) {
 				return $meta;
@@ -434,13 +455,12 @@ abstract class PUM_Model_Post {
 	}
 
 	/**
-	 * @param $key
+	 * @param      $key
 	 * @param bool $single
-	 * @param bool $force
 	 *
 	 * @return mixed|false
 	 */
-	public function get_meta( $key, $single = true, $force = false ) {
+	public function get_meta( $key, $single = true ) {
 		/**
 		 * Checks for remapped meta values. This allows easily adding compatibility layers in the object meta.
 		 */
@@ -448,35 +468,26 @@ abstract class PUM_Model_Post {
 			return $remapped_value;
 		}
 
-		if ( ! isset ( $this->meta[ $key ] ) || $force ) {
-			$this->meta[ $key ] = get_post_meta( $this->ID, $key, $single );
-
-			$this->update_cache();
-		}
-
-		return isset( $this->meta[ $key ] ) ? $this->meta[ $key ] : false;
+		return get_post_meta( $this->ID, $key, $single );
 	}
 
+	/**
+	 * @param $key
+	 * @param $value
+	 *
+	 * @return bool|int
+	 */
 	public function update_meta( $key, $value ) {
-		$updated = update_post_meta( $this->ID, $key, $value );
-
-		if ( $updated ) {
-			$this->meta[ $key ] = $value;
-			$this->update_cache();
-		}
-
-		return $updated;
+		return update_post_meta( $this->ID, $key, $value );
 	}
 
+	/**
+	 * @param $key
+	 *
+	 * @return bool
+	 */
 	public function delete_meta( $key ) {
-		$deleted = delete_post_meta( $this->ID, $key );
-
-		if ( $deleted ) {
-			unset( $this->meta[ $key ] );
-			$this->update_cache();
-		}
-
-		return $deleted;
+		return delete_post_meta( $this->ID, $key );
 	}
 
 	/**
@@ -506,17 +517,23 @@ abstract class PUM_Model_Post {
 	 */
 	public function author() {
 		if ( ! isset( $this->_author ) ) {
-			$this->_author = PUM_User::instance( $this->author_id() );
+			$this->_author = PUM_Model_User::instance( $this->author_id() );
 		}
 
 		return $this->_author;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function author_id() {
 		return get_post_field( 'post_author', $this->ID );
 	}
 
-	public function save( $save_meta = false ) {
+	/**
+	 *
+	 */
+	public function save() {
 		$current  = $this->to_array();
 		$original = $this->post->to_array();
 
@@ -535,15 +552,11 @@ abstract class PUM_Model_Post {
 			$updated = wp_update_post( $new );
 
 			if ( $updated ) {
-				foreach( $new as $key => $value ) {
+				foreach ( $new as $key => $value ) {
 					$this->post->$key = $value;
 				}
 				$this->update_cache();
 			}
-		}
-
-		if ( $save_meta ) {
-			// TODO Implement this with a single query using $wpdb.
 		}
 	}
 
@@ -594,6 +607,10 @@ abstract class PUM_Model_Post {
 
 	}
 
+	/**
+	 * @param      $key
+	 * @param bool $value
+	 */
 	public function set( $key, $value = false ) {
 
 	}
