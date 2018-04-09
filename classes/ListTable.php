@@ -727,6 +727,11 @@ class PUM_ListTable {
 		$output = '<span class="displaying-num">' . sprintf( _n( '%s item', '%s items', $total_items ), number_format_i18n( $total_items ) ) . '</span>';
 
 		$current = $this->get_pagenum();
+
+		if ( ! function_exists( 'wp_removable_query_args') ) {
+			require_once Popup_Maker::$DIR . 'includes/compatibility/function-wp_removable_query_args.php';
+		}
+
 		$removable_query_args = wp_removable_query_args();
 
 		$current_url = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
