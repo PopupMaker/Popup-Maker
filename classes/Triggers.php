@@ -146,7 +146,7 @@ class PUM_Triggers {
 							'label'       => __( 'Extra CSS Selectors', 'popup-maker' ),
 							'desc'        => __( 'For more than one selector, separate by comma (,)', 'popup-maker' ) . '<br /><strong>eg:  </strong>' . __( ' .class-here, .class-2-here, #button_id', 'popup-maker' ),
 							'placeholder' => __( '.class-here', 'popup-maker' ),
-							'doclink'     => 'http://docs.wppopupmaker.com/article/147-getting-css-selectors?utm_source=plugin-popup-editor=&utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_content=extra-selectors',
+							'doclink'     => 'https://docs.wppopupmaker.com/article/147-getting-css-selectors?utm_source=plugin-popup-editor=&utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_content=extra-selectors',
 						),
 					),
 					'advanced' => array(

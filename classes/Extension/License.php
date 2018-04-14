@@ -200,7 +200,7 @@ class PUM_Extension_License {
 			return;
 		}
 
-		echo '<p>' . sprintf( __( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please %srenew your license%s.', 'popup-maker' ), '<a href="http://docs.wppopupmaker.com/article/177-license-renewal?utm_medium=license-help-text&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab" target="_blank">', '</a>' ) . '</p>';
+		echo '<p>' . sprintf( __( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please %srenew your license%s.', 'popup-maker' ), '<a href="https://docs.wppopupmaker.com/article/177-license-renewal?utm_medium=license-help-text&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab" target="_blank">', '</a>' ) . '</p>';
 
 		$has_ran                           = true;
 		$pum_temp_license_help_text_global = true;

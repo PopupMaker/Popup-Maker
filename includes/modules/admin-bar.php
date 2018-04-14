@@ -505,7 +505,7 @@ class PUM_Modules_Admin_Bar {
 			$wp_admin_bar->add_node( array(
 				'id'     => 'no-popups-loaded',
 				'title'  => __( 'No Popups Loaded', 'popup-maker' ) . '<strong style="color:#fff; margin-left: 5px;">?</strong>',
-				'href'   => 'http://docs.wppopupmaker.com/article/265-my-popup-wont-work-how-can-i-fix-it?utm_capmaign=Self+Help&utm_source=No+Popups&utm_medium=Admin+Bar',
+				'href'   => 'https://docs.wppopupmaker.com/article/265-my-popup-wont-work-how-can-i-fix-it?utm_capmaign=Self+Help&utm_source=No+Popups&utm_medium=Admin+Bar',
 				'parent' => 'popups',
 				'meta'   => array(
 					'target' => '_blank',

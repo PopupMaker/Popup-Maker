@@ -37,7 +37,7 @@ function popmake_support_meta_box_links() {
 	?>
 	<ul class="popmake-support-links">
 		<li>
-			<a href="http://docs.wppopupmaker.com/?utm_medium=support-sidebar&utm_campaign=ContextualHelp&utm_source=<?php echo $source; ?>&utm_content=documentation">
+			<a href="https://docs.wppopupmaker.com/?utm_medium=support-sidebar&utm_campaign=ContextualHelp&utm_source=<?php echo $source; ?>&utm_content=documentation">
 				<img src="<?php echo POPMAKE_URL; ?>/assets/images/support-pane-docs-icon.png" />
 				<span><?php _e( 'Documentation', 'popup-maker' ); ?></span>
 			</a>

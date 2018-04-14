@@ -402,7 +402,7 @@ class PUM_Admin_Templates {
 				<p>
 					<strong>
 						<?php _e( 'Triggers cause a popup to open.', 'popup-maker' ); ?>
-						<a href="<?php echo esc_url( 'http://docs.wppopupmaker.com/article/350-popup-settings-box-triggers-option-settings?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=triggers-option-settings' ); ?>" target="_blank"
+						<a href="<?php echo esc_url( 'https://docs.wppopupmaker.com/article/350-popup-settings-box-triggers-option-settings?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=triggers-option-settings' ); ?>" target="_blank"
 						   class="pum-doclink dashicons dashicons-editor-help" title="<?php esc_attr_e( sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Triggers', 'popup-maker' ) ) ); ?>"></a>
 					</strong>
 				</p>
@@ -539,7 +539,7 @@ class PUM_Admin_Templates {
 					<strong>
 						<?php _e( 'Conditions allow you to show your popup to a targeted segment of your sites users.', 'popup-maker' ); ?>
 
-						<?php printf( '%2$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%3$s', sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Targeting Conditions', 'popup-maker' ) ), '<a href="http://docs.wppopupmaker.com/article/351-popup-settings-box-targeting-option-settings?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=targeting-option-settings" target="_blank">', '</a>' ); ?>
+						<?php printf( '%2$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%3$s', sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Targeting Conditions', 'popup-maker' ) ), '<a href="https://docs.wppopupmaker.com/article/351-popup-settings-box-targeting-option-settings?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=targeting-option-settings" target="_blank">', '</a>' ); ?>
 					</strong>
 				</p>
 
@@ -630,7 +630,7 @@ class PUM_Admin_Templates {
 				<p>
 					<strong>
 						<?php _e( 'Cookies control the repeat display of a popup.', 'popup-maker' ); ?>
-						<a href="<?php echo esc_url( 'http://docs.wppopupmaker.com/article/358-popup-settings-box-cookies-option-settings?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=popup-settings-box-cookies-option-settings' ); ?>"
+						<a href="<?php echo esc_url( 'https://docs.wppopupmaker.com/article/358-popup-settings-box-cookies-option-settings?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=popup-settings-box-cookies-option-settings' ); ?>"
 						   target="_blank" class="pum-doclink dashicons dashicons-editor-help" title="<?php esc_attr_e( sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Cookies', 'popup-maker' ) ) ); ?>"></a>
 					</strong>
 				</p>
