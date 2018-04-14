@@ -6450,7 +6450,7 @@
 
                     // If no required values found bail early.
                     if (typeof required === 'undefined' || required === null) {
-                        $dependent.hide();
+                        $dependent.removeClass('pum-dependencies-met').hide(0);
                         // Effectively breaks the .each for this $dependent and hides it.
                         return false;
                     }
@@ -6494,13 +6494,13 @@
                     if (matched) {
                         count++;
                     } else {
-                        $dependent.hide();
+                        $dependent.removeClass('pum-dependencies-met').hide(0);
                         // Effectively breaks the .each for this $dependent and hides it.
                         return false;
                     }
 
                     if (count === requiredCount) {
-                        $dependent.show();
+                        $dependent.addClass('pum-dependencies-met').show(0);
                     }
                 });
             });
@@ -7776,7 +7776,7 @@ function pumChecked(val1, val2, print) {
                             if (typeof label !== 'object') {
 
                                 if (data.value !== null) {
-                                    if (data.multiple && ((typeof data.value === 'string' && data.value == value) || (typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1))) {
+                                    if (data.multiple && ((typeof data.value === 'string' && data.value == value) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1) || (!Array.isArray(data.value) && typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined))) {
                                         selected = 'selected';
                                     } else if (!data.multiple && data.value == value) {
                                         selected = 'selected';
@@ -7804,7 +7804,7 @@ function pumChecked(val1, val2, print) {
                                     var selected = false;
 
                                     if (data.value !== null) {
-                                        if (data.multiple && ((typeof data.value === 'string' && data.value == value) || (typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1))) {
+                                        if (data.multiple && ((typeof data.value === 'string' && data.value == value) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1) || (!Array.isArray(data.value) && typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined))) {
                                             selected = 'selected';
                                         } else if (!data.multiple && data.value == value) {
                                             selected = 'selected';
@@ -7897,6 +7897,8 @@ function pumChecked(val1, val2, print) {
                             data.value = [];
                         }
 
+                        debugger;
+
                         if (typeof data.value === 'string' && data.value.indexOf(',')) {
                             data.value = data.value.split(',');
                         }
@@ -7912,7 +7914,7 @@ function pumChecked(val1, val2, print) {
                                     label: label,
                                     value: value,
                                     meta: {
-                                        checked: (typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1)
+                                        checked: (Array.isArray(data.value) && data.value.indexOf(value) !== -1) || (!Array.isArray(data.value) && typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined)
                                     }
                                 })
                             );
@@ -7925,7 +7927,7 @@ function pumChecked(val1, val2, print) {
                 case 'checkbox':
                     switch (typeof data.value) {
                     case 'object':
-                        if (Array.isArray(data.value) &&  data.value.length === 1 && data.value[0].toString() === '1')  {
+                        if (Array.isArray(data.value) && data.value.length === 1 && data.value[0].toString() === '1') {
                             data.value = true;
                             data.meta.checked = true;
                         } else {

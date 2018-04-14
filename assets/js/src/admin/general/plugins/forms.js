@@ -100,7 +100,7 @@
 
                     // If no required values found bail early.
                     if (typeof required === 'undefined' || required === null) {
-                        $dependent.hide();
+                        $dependent.removeClass('pum-dependencies-met').hide(0);
                         // Effectively breaks the .each for this $dependent and hides it.
                         return false;
                     }
@@ -144,13 +144,13 @@
                     if (matched) {
                         count++;
                     } else {
-                        $dependent.hide();
+                        $dependent.removeClass('pum-dependencies-met').hide(0);
                         // Effectively breaks the .each for this $dependent and hides it.
                         return false;
                     }
 
                     if (count === requiredCount) {
-                        $dependent.show();
+                        $dependent.addClass('pum-dependencies-met').show(0);
                     }
                 });
             });
