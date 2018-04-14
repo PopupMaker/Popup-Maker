@@ -4,7 +4,7 @@
 /*!******************************************************************************
  * Copyright (c) 2017, WP Popup Maker
  ******************************************************************************/
-.no-button{border:0;padding:0;background:0 0;cursor:pointer}.no-button.link-button{color:#0073aa}.no-button.link-button:hover{color:#00a0d2}.no-button.delete-button{color:#a00}.no-button.delete-button:hover{color:red}
+.no-button{border:0;padding:0;background:0 0;cursor:pointer}.no-button.link-button{color:#0073aa}.no-button.link-button:hover{color:#00a0d2}.no-button.delete-button{color:#a00}.no-button.delete-button:hover{color:red}.pum-half{width:47.5%;max-width:47.5%;margin-right:5%;display:inline-block}.pum-half.pum-dependencies-met{display:inline-block!important}.pum-half>*{max-width:100%}.pum-half input,.pum-half select,.pum-half textarea{max-width:100%;width:auto}.pum-last{margin-right:0!important}
 /*!******************************************************************************
  * Copyright (c) 2017, WP Popup Maker
  ******************************************************************************/

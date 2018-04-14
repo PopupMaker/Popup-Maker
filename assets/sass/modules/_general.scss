@@ -22,3 +22,30 @@
     }
   }
 }
+
+
+.pum-half {
+  width: 47.5%;
+  max-width: 47.5%;
+  margin-right: 5%;
+  display: inline-block;
+
+
+  &.pum-dependencies-met {
+    display: inline-block!important;
+  }
+
+  > * {
+    max-width: 100%;
+  }
+
+  input, textarea, select {
+    max-width: 100%;
+    width: auto;
+  }
+
+}
+
+.pum-last {
+  margin-right:0!important;
+}
