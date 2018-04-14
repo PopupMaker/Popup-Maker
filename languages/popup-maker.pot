@@ -194,11 +194,11 @@ msgstr ""
 msgid "All Themes"
 msgstr ""
 
-#: classes/Admin/Pages.php:144, classes/Admin/Popups.php:988, classes/Conditions.php:110
+#: classes/Admin/Pages.php:144, classes/Admin/Popups.php:994, classes/Conditions.php:110
 msgid "Categories"
 msgstr ""
 
-#: classes/Admin/Pages.php:145, classes/Admin/Popups.php:984, classes/Conditions.php:111
+#: classes/Admin/Pages.php:145, classes/Admin/Popups.php:990, classes/Conditions.php:111
 msgid "Tags"
 msgstr ""
 
@@ -611,23 +611,23 @@ msgstr ""
 msgid "Checking this will cause popup to close when user presses F4 key."
 msgstr ""
 
-#: classes/Admin/Popups.php:868, classes/Admin/Popups.php:973
+#: classes/Admin/Popups.php:868, classes/Admin/Popups.php:979
 msgid "Opens"
 msgstr ""
 
-#: classes/Admin/Popups.php:872, classes/Admin/Popups.php:974
+#: classes/Admin/Popups.php:873, classes/Admin/Popups.php:980
 msgid "Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:877, classes/Admin/Popups.php:975
+#: classes/Admin/Popups.php:879, classes/Admin/Popups.php:981
 msgid "Conversion Rate"
 msgstr ""
 
-#: classes/Admin/Popups.php:885
+#: classes/Admin/Popups.php:886
 msgid "Reset Counts"
 msgstr ""
 
-#: classes/Admin/Popups.php:889
+#: classes/Admin/Popups.php:890
 msgid "Last Reset"
 msgstr ""
 
@@ -635,39 +635,39 @@ msgstr ""
 msgid "Previous Opens"
 msgstr ""
 
-#: classes/Admin/Popups.php:893
+#: classes/Admin/Popups.php:895
 msgid "Previous Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:895
+#: classes/Admin/Popups.php:898
 msgid "Lifetime Opens"
 msgstr ""
 
-#: classes/Admin/Popups.php:897
+#: classes/Admin/Popups.php:902
 msgid "Lifetime Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:970, classes/Admin/Templates.php:642, classes/Shortcode/Subscribe.php:171, classes/Shortcode/Subscribe.php:225
+#: classes/Admin/Popups.php:976, classes/Admin/Templates.php:642, classes/Shortcode/Subscribe.php:171, classes/Shortcode/Subscribe.php:225
 msgid "Name"
 msgstr ""
 
-#: classes/Admin/Popups.php:971
+#: classes/Admin/Popups.php:977
 msgid "Title"
 msgstr ""
 
-#: classes/Admin/Popups.php:972
+#: classes/Admin/Popups.php:978
 msgid "CSS Classes"
 msgstr ""
 
-#: classes/Admin/Popups.php:1047, classes/Admin/Subscribers/Table.php:281
+#: classes/Admin/Popups.php:1053, classes/Admin/Subscribers/Table.php:281
 msgid "N/A"
 msgstr ""
 
-#: classes/Admin/Popups.php:1133
+#: classes/Admin/Popups.php:1139
 msgid "Show all categories"
 msgstr ""
 
-#: classes/Admin/Popups.php:1146
+#: classes/Admin/Popups.php:1152
 msgid "Show all tags"
 msgstr ""
 

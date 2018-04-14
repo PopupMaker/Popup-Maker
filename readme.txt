@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.4
-Stable tag: 1.7.14
+Stable tag: 1.7.15
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -57,16 +57,16 @@ If you are enjoying this wonderful project, [please rate & review it](https://wp
 == Frequently Asked Questions ==
 
 = Where is your documentation? =
-Our documentation is located [here](http://docs.wppopupmaker.com?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_content=where-are-docs)
+Our documentation is located [here](https://docs.wppopupmaker.com?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_content=where-are-docs)
 
 = How do I open a popup? =
-Using [Triggers](http://docs.wppopupmaker.com/article/141-triggers-cookies?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_content=open-a-popup)
+Using [Triggers](https://docs.wppopupmaker.com/article/141-triggers-cookies?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_content=open-a-popup)
 
 = How do I stop popups from opening repeatedly? =
-Using [Cookies](http://docs.wppopupmaker.com/article/148-cookies?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_content=stop-opening-repeatedly)
+Using [Cookies](https://docs.wppopupmaker.com/article/148-cookies?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_content=stop-opening-repeatedly)
 
 = What do I do if I just want a popup to show on a certain page/post/etc? =
-Check out [Conditions](http://docs.wppopupmaker.com/article/140-conditions?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_content=target-certain-pages)
+Check out [Conditions](https://docs.wppopupmaker.com/article/140-conditions?utm_medium=text-doclink&utm_campaign=Readme&utm_source=readme-faq&utm_content=target-certain-pages)
 
 = How do I make it work with my 3rd party forms? =
 Beginning with Popup Maker v1.7 we now support most forms by default. We do this by adding a hidden field using JavaScript to any form inserted in a popup. This field contains the popup ID.
@@ -100,6 +100,14 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+= v1.7.15 - 04/14/2018 =
+* Improvement: Removed metadata from object models to reduce cache size as WordPress already has them cached.
+* Tweak: Added new filter and corrected typo in existing ones for extension integrations.
+* Fix: Bug for potentially missing variable.
+* Fix: Bug when using WordPress older than v4.4 and viewing the subscribers table.
+* Fix: Bug where google fonts didn't always get loaded correctly.
+* Fix: Missing styles from Advanced Theme Builder due to misordering.
+
 = v1.7.14 - 03/28/2018 =
 * Fix: Obscure PHP error caused by method from interface was marked abstract in an abstract class inheriting the interface.
 * Fix: Bug when jquery cookie is called from another plugin.
