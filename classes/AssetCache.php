@@ -239,19 +239,6 @@ class PUM_AssetCache {
 		// Include core styles so we can eliminate another stylesheet.
 		$core_css = file_get_contents( Popup_Maker::$DIR . 'assets/css/site' . self::$suffix . '.css' );
 
-		// Reset ob.
-		ob_start();
-
-		// Render any extra styles globally added.
-		if ( ! empty( $GLOBALS['pum_extra_styles'] ) ) {
-			echo $GLOBALS['pum_extra_styles'];
-		}
-
-		// Allows rendering extra css via action.
-		do_action( 'pum_styles' );
-
-		$custom_css = ob_get_clean();
-
 		/**
 		 *  0 Core
 		 *  1 Popup Themes
@@ -276,7 +263,7 @@ class PUM_AssetCache {
 				'priority' => 15,
 			),
 			'custom' => array(
-				'content'  => $custom_css,
+				'content'  => self::custom_css(),
 				'priority' => 20,
 			),
 		);
@@ -300,8 +287,6 @@ class PUM_AssetCache {
 		}
 
 		return $css_code;
-
-
 	}
 
 	/**
@@ -355,6 +340,24 @@ class PUM_AssetCache {
 		echo self::generate_popup_theme_styles();
 
 		echo self::generate_popup_styles();
+
+		// Render any extra styles globally added.
+		if ( ! empty( $GLOBALS['pum_extra_styles'] ) ) {
+			echo $GLOBALS['pum_extra_styles'];
+		}
+
+		// Allows rendering extra css via action.
+		do_action( 'pum_styles' );
+
+		return ob_get_clean();
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function custom_css() {
+		// Reset ob.
+		ob_start();
 
 		// Render any extra styles globally added.
 		if ( ! empty( $GLOBALS['pum_extra_styles'] ) ) {
