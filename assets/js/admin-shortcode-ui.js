@@ -13,8 +13,6 @@
      * Checks shortcode editor provider field and hides/shows the appropriate subtab for that provider.
      */
     function check_provider() {
-        debugger;
-
         var $provider = $('#pum-shortcode-editor-pum_sub_form #provider'),
             provider = $provider.val() !== '' && $provider.val() !== 'none' ? $provider.val() : pum_admin_vars.default_provider,
             $provider_tabs = $('.pum-modal-content .tabs .tab a[href^="#pum-shortcode-editor-pum_sub_form_provider_"]'),
@@ -71,6 +69,10 @@
 
 (function ($) {
     "use strict";
+
+    if (window.pum_shortcode_ui_vars === undefined) {
+        return;
+    }
 
     var I10n = pum_shortcode_ui_vars.I10n || {
             error_loading_shortcode_preview: '',
@@ -324,8 +326,23 @@
                     event.preventDefault();
 
                     var $form = $(this),
-                        values = $form.pumSerializeObject(),
-                        content = self.formatShortcode(values.attrs);
+                        values = $form.pumSerializeObject().attrs,
+
+                        content;
+
+                    for (var key in values) {
+                        if (!values.hasOwnProperty(key)) {
+                            continue;
+                        }
+
+                        // Clean measurement fields.
+                        if (values.hasOwnProperty(key+"_unit")) {
+                            values[key] += values[key+"_unit"];
+                            delete values[key+"_unit"];
+                        }
+                    }
+
+                    content = self.formatShortcode(values);
 
                     if (typeof callback === 'function') {
                         callback(content);

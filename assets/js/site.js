@@ -389,7 +389,6 @@ var PUM;
             if (settings.close_on_overlay_click) {
                 $popup.on('pumAfterOpen', function () {
                     $(document).on('click.pumCloseOverlay', function (e) {
-                        debugger;
                         var $target = $(e.target),
                             $container = $target.closest('.pum-container');
 
