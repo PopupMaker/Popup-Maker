@@ -180,6 +180,23 @@ var PUM;
             if (typeof callback === 'function') {
                 callback();
             }
+        },
+        getClickTriggerSelector: function (el, trigger_settings) {
+            var $popup = PUM.getPopup(el),
+                settings = PUM.getSettings(el),
+                trigger_selectors = [
+                '.popmake-' + settings.id,
+                '.popmake-' + decodeURIComponent(settings.slug),
+                'a[href$="#popmake-' + settings.id + '"]'
+            ];
+
+            if (trigger_settings.extra_selectors && trigger_settings.extra_selectors !== '') {
+                trigger_selectors.push(trigger_settings.extra_selectors);
+            }
+
+            trigger_selectors = pum.hooks.applyFilters('pum.trigger.click_open.selectors', trigger_selectors, trigger_settings, $popup);
+
+            return trigger_selectors.join(', ');
         }
     };
 

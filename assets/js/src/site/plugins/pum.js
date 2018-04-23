@@ -131,8 +131,52 @@ var PUM;
             if (typeof callback === 'function') {
                 callback();
             }
+        },
+        getClickTriggerSelector: function (el, trigger_settings) {
+            var $popup = PUM.getPopup(el),
+                settings = PUM.getSettings(el),
+                trigger_selectors = [
+                '.popmake-' + settings.id,
+                '.popmake-' + decodeURIComponent(settings.slug),
+                'a[href$="#popmake-' + settings.id + '"]'
+            ];
+
+            if (trigger_settings.extra_selectors && trigger_settings.extra_selectors !== '') {
+                trigger_selectors.push(trigger_settings.extra_selectors);
+            }
+
+            trigger_selectors = pum.hooks.applyFilters('pum.trigger.click_open.selectors', trigger_selectors, trigger_settings, $popup);
+
+            return trigger_selectors.join(', ');
+        },
+        disableClickTriggers: function (el, trigger_settings) {
+            if (el === undefined) {
+                // disable all triggers. Not available yet.
+                return;
+            }
+
+            if (trigger_settings !== undefined) {
+                var selector = PUM.getClickTriggerSelector(el, trigger_settings);
+                $(selector).removeClass('pum-trigger');
+                $(document).off('click.pumTrigger click.popmakeOpen', selector)
+            } else {
+                var triggers = PUM.getSetting(el, 'triggers', []);
+                if (triggers.length) {
+                    for (var i = 0; triggers.length > i; i++) {
+                        // If this isn't an explicitly allowed click trigger type skip it.
+                        if (pum.hooks.applyFilters('pum.disableClickTriggers.clickTriggerTypes', ['click_open']).indexOf(triggers[i].type) === -1) {
+                            continue;
+                        }
+
+                        var selector = PUM.getClickTriggerSelector(el, triggers[i].settings);
+                        $(selector).removeClass('pum-trigger');
+                        $(document).off('click.pumTrigger click.popmakeOpen', selector)
+                    }
+                }
+            }
         }
-    };
+
+};
 
     $.fn.popmake = function (method) {
         // Method calling logic
