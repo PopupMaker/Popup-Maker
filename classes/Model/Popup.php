@@ -257,7 +257,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 				}
 			}
 
-			if ( ! $has_click_trigger ) {
+			if ( ! $has_click_trigger && apply_filters( 'pum_add_default_click_trigger', true, $this->ID ) ) {
 				$triggers[] = array(
 					'type'     => 'click_open',
 					'settings' => array(
