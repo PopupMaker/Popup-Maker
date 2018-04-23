@@ -194,6 +194,9 @@ abstract class PUM_Shortcode {
 		}
 
 		foreach( $atts  as $key => $value ) {
+			/**
+			 * Fix for truthy & value-less arguments such as [shortcode argument]
+			 */
 			if ( is_int( $key ) ) {
 				unset( $atts[ $key ] );
 				$atts[ $value ] = true;
@@ -289,9 +292,7 @@ abstract class PUM_Shortcode {
 	 *
 	 * @todo Once all shortcodes have been updated to use template over _template make this abstract.
 	 */
-	public function template_styles() {
-		return false;
-	}
+	public function template_styles() {}
 
 	/**
 	 * @deprecated 1.7.0 use template_styles() instead.
