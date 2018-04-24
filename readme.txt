@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.4
-Stable tag: 1.7.15
+Stable tag: 1.7.16
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -100,6 +100,13 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+= v1.7.16 - 04/24/2018 =
+* Tweak: Removed debug code.
+* Fix: Issue with valueless shortcode attributes not processing properly.
+* Fix: Issues where our scripts loaded before Ninja Forms scripts did and our integration didn't initialize.
+* Dev: Added helper function to return array of shortcodes and data in usable format from any content.
+* Dev: Added support for measure fields for shortcodes.
+
 = v1.7.15 - 04/14/2018 =
 * Improvement: Removed metadata from object models to reduce cache size as WordPress already has them cached.
 * Tweak: Added new filter and corrected typo in existing ones for extension integrations.
@@ -179,7 +186,7 @@ There are several common causes for this which include:
 * Fix: Missing function for 3rd party plugin backward compatibility (Elementor).
 
 = v1.7.0 - 03/12/2018 =
-This was one of our biggest updates to date in terms of improving existing functionality, reducing maintenance and the time it takes to implement new features in the future.
+This was a monster update, our largest to date in terms of improving existing functionality, reducing maintenance and the time it takes to implement new features in the future.
 
 Noticeably there are a lot of interface changes with this version as we simplified from having many meta boxes in the popup editor to a new single panel interface.
 
