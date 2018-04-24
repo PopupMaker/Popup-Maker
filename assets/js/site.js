@@ -197,8 +197,35 @@ var PUM;
             trigger_selectors = pum.hooks.applyFilters('pum.trigger.click_open.selectors', trigger_selectors, trigger_settings, $popup);
 
             return trigger_selectors.join(', ');
+        },
+        disableClickTriggers: function (el, trigger_settings) {
+            if (el === undefined) {
+                // disable all triggers. Not available yet.
+                return;
+            }
+
+            if (trigger_settings !== undefined) {
+                var selector = PUM.getClickTriggerSelector(el, trigger_settings);
+                $(selector).removeClass('pum-trigger');
+                $(document).off('click.pumTrigger click.popmakeOpen', selector)
+            } else {
+                var triggers = PUM.getSetting(el, 'triggers', []);
+                if (triggers.length) {
+                    for (var i = 0; triggers.length > i; i++) {
+                        // If this isn't an explicitly allowed click trigger type skip it.
+                        if (pum.hooks.applyFilters('pum.disableClickTriggers.clickTriggerTypes', ['click_open']).indexOf(triggers[i].type) === -1) {
+                            continue;
+                        }
+
+                        var selector = PUM.getClickTriggerSelector(el, triggers[i].settings);
+                        $(selector).removeClass('pum-trigger');
+                        $(document).off('click.pumTrigger click.popmakeOpen', selector)
+                    }
+                }
+            }
         }
-    };
+
+};
 
     $.fn.popmake = function (method) {
         // Method calling logic
@@ -2566,38 +2593,47 @@ var pum_debug_mode = false,
     var gFormSettings = {},
         pumNFController = false;
 
-    /** Ninja Forms Support */
-    if (typeof Marionette !== 'undefined' && typeof nfRadio !== 'undefined') {
-        pumNFController = Marionette.Object.extend({
-            initialize: function () {
-                this.listenTo(nfRadio.channel('forms'), 'submit:response', this.popupMaker)
-            },
-            popupMaker: function (response, textStatus, jqXHR, formID) {
-                var $form = $('#nf-form-' + formID + '-cont'),
-                    settings = {};
+    debugger;
 
-                if (response.errors.length) {
-                    return;
-                }
+    function initialize_nf_support() {
+        /** Ninja Forms Support */
+        if (typeof Marionette !== 'undefined' && typeof nfRadio !== 'undefined') {
+            pumNFController = Marionette.Object.extend({
+                initialize: function () {
+                    this.listenTo(nfRadio.channel('forms'), 'submit:response', this.popupMaker)
+                },
+                popupMaker: function (response, textStatus, jqXHR, formID) {
+                    var $form = $('#nf-form-' + formID + '-cont'),
+                        settings = {};
 
-                if ('undefined' !== typeof response.data.actions) {
-                    settings.openpopup = 'undefined' !== typeof response.data.actions.openpopup;
-                    settings.openpopup_id = settings.openpopup ? parseInt(response.data.actions.openpopup) : 0;
-                    settings.closepopup = 'undefined' !== typeof response.data.actions.closepopup;
-                    settings.closedelay = settings.closepopup ? parseInt(response.data.actions.closepopup) : 0;
-                    if (settings.closepopup && response.data.actions.closedelay) {
-                        settings.closedelay = parseInt(response.data.actions.closedelay);
+                    if (response.errors.length) {
+                        return;
                     }
-                }
 
-                window.PUM.forms.success($form, settings);
-            }
-        });
+                    if ('undefined' !== typeof response.data.actions) {
+                        settings.openpopup = 'undefined' !== typeof response.data.actions.openpopup;
+                        settings.openpopup_id = settings.openpopup ? parseInt(response.data.actions.openpopup) : 0;
+                        settings.closepopup = 'undefined' !== typeof response.data.actions.closepopup;
+                        settings.closedelay = settings.closepopup ? parseInt(response.data.actions.closepopup) : 0;
+                        if (settings.closepopup && response.data.actions.closedelay) {
+                            settings.closedelay = parseInt(response.data.actions.closedelay);
+                        }
+                    }
+
+                    window.PUM.forms.success($form, settings);
+                }
+            });
+        }
     }
+
 
     $(document)
         .ready(function () {
             /** Ninja Forms Support */
+            if (pumNFController === false) {
+                initialize_nf_support();
+            }
+
             if (pumNFController !== false) {
                 new pumNFController();
             }
