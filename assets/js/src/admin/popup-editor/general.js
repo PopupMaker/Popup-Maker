@@ -22,6 +22,7 @@
                 values = pum_popup_settings_editor.current_values || {};
 
             if ($container.length) {
+                $container.find('.pum-no-js').hide();
                 PUM_Admin.forms.render(args, values, $container);
             }
 

@@ -411,7 +411,11 @@ class PUM_Admin_Settings {
 
 				<h1><?php _e( 'Popup Maker Settings', 'popup-maker' ); ?></h1>
 
-				<div id="pum-settings-container" class="pum-settings-container"></div>
+				<div id="pum-settings-container" class="pum-settings-container">
+					<div class="pum-no-js" style="padding: 0 12px;">
+						<p><?php printf( __( 'If you are seeing this, the most likely cause is that there are Javascript errors on this page. %sView troubleshooting guide%s', 'popup-maker' ), '<a href="https://docs.wppopupmaker.com/article/373-checking-for-javascript-errors" target="_blank">', '</a>' ); ?></p>
+					</div>
+				</div>
 
 				<script type="text/javascript">
                     window.pum_settings_editor = <?php echo json_encode( apply_filters( 'pum_settings_editor_args', array(
