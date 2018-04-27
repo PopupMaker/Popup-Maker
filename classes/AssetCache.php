@@ -51,12 +51,13 @@ class PUM_AssetCache {
 			self::$js_url    = self::$asset_url . 'js/';
 			self::$css_url   = self::$asset_url . 'css/';
 
-			add_action( 'pum_extension_updated', array( __CLASS__, 'regenerate_cache' ) );
-			add_action( 'pum_extension_deactivated', array( __CLASS__, 'regenerate_cache' ) );
-			add_action( 'pum_extension_activated', array( __CLASS__, 'regenerate_cache' ) );
-			add_action( 'pum_regenerate_asset_cache', array( __CLASS__, 'regenerate_cache' ) );
-			add_action( 'pum_save_popup', array( __CLASS__, 'regenerate_cache' ) );
-			add_action( 'popmake_save_popup_theme', array( __CLASS__, 'regenerate_cache' ) );
+			add_action( 'pum_extension_updated', array( __CLASS__, 'reset_cache' ) );
+			add_action( 'pum_extension_deactivated', array( __CLASS__, 'reset_cache' ) );
+			add_action( 'pum_extension_activated', array( __CLASS__, 'reset_cache' ) );
+			add_action( 'pum_regenerate_asset_cache', array( __CLASS__, 'reset_cache' ) );
+			add_action( 'pum_save_popup', array( __CLASS__, 'reset_cache' ) );
+			add_action( 'popmake_save_popup_theme', array( __CLASS__, 'reset_cache' ) );
+			add_action( 'pum_update_core_version', array( __CLASS__, 'reset_cache' ) );
 
 			// Prevent reinitialization.
 			self::$initialized = true;
