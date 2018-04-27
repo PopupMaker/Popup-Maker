@@ -7,8 +7,6 @@
     var gFormSettings = {},
         pumNFController = false;
 
-    debugger;
-
     function initialize_nf_support() {
         /** Ninja Forms Support */
         if (typeof Marionette !== 'undefined' && typeof nfRadio !== 'undefined') {
