@@ -151,6 +151,28 @@
     "package": "",
     "download_link": "",
     "image": "https:\/\/wppopupmaker.com\/wp-content\/uploads\/edd\/2015\/12\/Aweber-Integration.png",
-    "excerpt": "With this extension, you can now easily and quickly add a sign up form to your popups to add users to your mailing list in MailChimp."
+    "excerpt": "With this extension, you can now easily and quickly add a sign up form to your popups to add users to your mailing list in Aweber."
+  },
+  {
+    "new_version": "1.1.0",
+    "name": "Scheduling",
+    "slug": "scheduling",
+    "url": "https:\/\/wppopupmaker.com\/extensions\/scheduling\/?changelog=1",
+    "homepage": "https:\/\/wppopupmaker.com\/extensions\/scheduling\/",
+    "package": "",
+    "download_link": "",
+    "image": "https:\/\/wppopupmaker.com\/wp-content\/uploads\/edd\/2016\/12\/scheduling.png",
+    "excerpt": "Add scheduling options to your popups. With multiple schedule types, you can precisely schedule your popups in just a few minutes."
+  },
+  {
+    "new_version": "1.0.0",
+    "name": "Videos",
+    "slug": "videos",
+    "url": "https:\/\/wppopupmaker.com\/extensions\/videos\/?changelog=1",
+    "homepage": "https:\/\/wppopupmaker.com\/extensions\/videos\/",
+    "package": "",
+    "download_link": "",
+    "image": "https:\/\/wppopupmaker.com\/wp-content\/uploads\/edd\/2017\/03\/video-popups.jpg",
+    "excerpt": "Create the ultimate WordPress Video Popup for your marketing videos in minutes - customize your player, control video play\/pause commands, and much more."
   }
 ]
