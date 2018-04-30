@@ -186,8 +186,8 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	public function get_message( $code ) {
 		$post_type = get_post_type_object( $this->post_type );
 		$labels = get_post_type_labels( $post_type );
-		$singular = strtolower( $labels['singular_name'] );
-		$plural = strtolower( $labels['name'] );
+		$singular = strtolower( $labels->singular_name );
+		$plural = strtolower( $labels->name );
 
 		switch ( $code ) {
 
