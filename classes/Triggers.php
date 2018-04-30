@@ -180,6 +180,13 @@ class PUM_Triggers {
 
 		) );
 
+		foreach( $triggers as $key => $trigger ) {
+			$triggers[ $key ]['fields'] = PUM_Admin_Helpers::parse_tab_fields( $triggers[ $key ]['fields'], array(
+				'has_subtabs' => false,
+				'name'        => '%s',
+			) );
+		}
+
 		// @deprecated filter.
 		$old_triggers = apply_filters( 'pum_get_triggers', array() );
 

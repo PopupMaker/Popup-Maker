@@ -744,6 +744,18 @@ var cookies;
             return trigger;
         },
         parseValues: function (values, type) {
+            for (var key in values) {
+                if (!values.hasOwnProperty(key)) {
+                    continue;
+                }
+
+                // Clean measurement fields.
+                if (values.hasOwnProperty(key + "_unit")) {
+                    values[key] += values[key + "_unit"];
+                    delete values[key + "_unit"];
+                }
+            }
+
             return values;
         },
         select_list: function () {
@@ -1022,6 +1034,7 @@ var cookies;
                 var $form = $(this),
                     type = $form.find('input#type').val(),
                     values = $form.pumSerializeObject(),
+                    trigger_settings = triggers.parseValues(values.trigger_settings || {}),
                     index = parseInt(values.index);
 
                 event.preventDefault();
@@ -1033,12 +1046,12 @@ var cookies;
                 triggers.rows.add($editor, {
                     index: index,
                     type: type,
-                    settings: values.trigger_settings
+                    settings: trigger_settings
                 });
 
                 PUM_Admin.modals.closeAll();
 
-                if (values.trigger_settings.cookie_name !== undefined && values.trigger_settings.cookie_name !== null && (values.trigger_settings.cookie_name === 'add_new' || values.trigger_settings.cookie_name.indexOf('add_new') >= 0)) {
+                if (trigger_settings.cookie_name !== undefined && trigger_settings.cookie_name !== null && (trigger_settings.cookie_name === 'add_new' || trigger_settings.cookie_name.indexOf('add_new') >= 0)) {
                     PUM_Admin.triggers.new_cookie = values.index;
                     $('#pum-popup-settings-container .pum-popup-cookie-editor button.pum-add-new').trigger('click');
                 }
@@ -1070,7 +1083,9 @@ var cookies;
                 var $form = $(this),
                     type = $form.find('input#type').val(),
                     index = $form.find('input#index').val(),
-                    values = $form.pumSerializeObject();
+                    values = $form.pumSerializeObject(),
+                    trigger_settings = triggers.parseValues(values.trigger_settings || {});
+
 
                 // Set Current Editor.
                 PUM_Admin.triggers.current_editor = $editor;
@@ -1084,12 +1099,12 @@ var cookies;
                 triggers.rows.add($editor, {
                     index: index,
                     type: type,
-                    settings: values.trigger_settings
+                    settings: trigger_settings
                 });
 
                 PUM_Admin.modals.closeAll();
 
-                if (values.trigger_settings.cookie_name !== undefined && values.trigger_settings.cookie_name !== null && (values.trigger_settings.cookie_name === 'add_new' || values.trigger_settings.cookie_name.indexOf('add_new') >= 0)) {
+                if (trigger_settings.cookie_name !== undefined && trigger_settings.cookie_name !== null && (trigger_settings.cookie_name === 'add_new' || trigger_settings.cookie_name.indexOf('add_new') >= 0)) {
                     PUM_Admin.triggers.new_cookie = values.index;
                     $('#pum-popup-settings-container .pum-popup-cookie-editor button.pum-add-new').trigger('click');
                 }
@@ -1135,6 +1150,7 @@ var cookies;
                 var $form = $(this),
                     type = $form.find('input#type').val(),
                     values = $form.pumSerializeObject(),
+                    trigger_settings = triggers.parseValues(values.trigger_settings || {}),
                     index = parseInt(values.index);
 
                 // Set Current Editor.
@@ -1149,12 +1165,12 @@ var cookies;
                 triggers.rows.add($editor, {
                     index: index,
                     type: type,
-                    settings: values.trigger_settings
+                    settings: trigger_settings
                 });
 
                 PUM_Admin.modals.closeAll();
 
-                if (values.trigger_settings.cookie_name !== undefined && values.trigger_settings.cookie_name !== null && (values.trigger_settings.cookie_name === 'add_new' || values.trigger_settings.cookie_name.indexOf('add_new') >= 0)) {
+                if (trigger_settings.cookie_name !== undefined && trigger_settings.cookie_name !== null && (trigger_settings.cookie_name === 'add_new' || trigger_settings.cookie_name.indexOf('add_new') >= 0)) {
                     PUM_Admin.triggers.new_cookie = values.index;
                     $('#pum-popup-settings-container .pum-popup-cookie-editor button.pum-add-new').trigger('click');
                 }
