@@ -199,7 +199,7 @@ class PUM_Integrations {
 		/**
 		 * If submission exists for this popup remove auto open triggers and add an admin_debug trigger to reshow the popup.
 		 */
-		if ( $form_popup_id && $popup_id == $form_popup_id ) {
+		if ( ( empty( $settings['disable_form_reopen'] ) || ! $settings['disable_form_reopen'] ) && $form_popup_id && $popup_id == $form_popup_id ) {
 			$triggers = ! empty( $settings['triggers'] ) ? $settings['triggers'] : array();
 
 			foreach ( $triggers as $key => $trigger ) {

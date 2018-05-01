@@ -309,7 +309,8 @@ class PUM_Admin_Popups {
 				'main' => __( 'General Settings', 'popup-maker' ),
 			),
 			'triggers'  => array(
-				'main' => __( 'Triggers', 'popup-maker' ),
+				'main' => __( 'Triggers & Cookies', 'popup-maker' ),
+				'advanced'  => __( 'Advanced', 'popup-maker' ),
 			),
 			'targeting' => array(
 				'main' => __( 'Conditions', 'popup-maker' ),
@@ -357,6 +358,13 @@ class PUM_Admin_Popups {
 							'type'     => 'cookies',
 							'std'      => array(),
 							'priority' => 20,
+						),
+					),
+					'advanced' => array(
+						'disable_form_reopen' => array(
+							'label'    => __( 'Disable automatic re-triggering of popup after non-ajax form submission.', 'popup-maker' ),
+							'type'     => 'checkbox',
+							'priority' => 10,
 						),
 					),
 				) ),
@@ -644,10 +652,10 @@ class PUM_Admin_Popups {
 							'label'    => __( 'Popup Z-Index', 'popup-maker' ),
 							'desc'     => __( 'Change the z-index layer level for the popup.', 'popup-maker' ),
 							'type'     => 'number',
-							'std'      => 1999999999,
-							'priority' => 40,
 							'min'      => 999,
 							'max'      => 2147483647,
+							'std'      => 1999999999,
+							'priority' => 40,
 						),
 					),
 				) ),

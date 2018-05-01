@@ -33,6 +33,7 @@
     $('.pum').on('pumInit', function () {
         var $popup = PUM.getPopup(this),
             popupID = PUM.getSetting($popup, 'id'),
+            enableFormReopen
             $forms = $popup.find('form');
 
         /**
