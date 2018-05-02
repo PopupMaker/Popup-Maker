@@ -359,7 +359,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 		foreach ( $tabs as $tab_id => $tab ) {
 			if ( strpos( $tab_id, 'provider_' ) === 0 ) {
-				PUM_Admin_Helpers::move_item( $sorted_tabs, $tab_id, 'down', 'general' );
+				PUM_Utils_Array::move_item( $sorted_tabs, $tab_id, 'down', 'general' );
 			}
 		}
 

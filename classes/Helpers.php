@@ -52,6 +52,7 @@ class PUM_Helpers {
 
 		return $shortcodes;
 	}
+
 	public static function upload_dir_url( $path = '' ) {
 		$upload_dir = wp_upload_dir();
 		$upload_dir = $upload_dir['baseurl'];
@@ -67,22 +68,24 @@ class PUM_Helpers {
 	/**
 	 * Sort array by priority value
 	 *
+	 * @deprecated 1.7.20
+	 * @see        PUM_Utils_Array::sort_by_priority instead.
+	 *
 	 * @param $a
 	 * @param $b
 	 *
 	 * @return int
 	 */
 	public static function sort_by_priority( $a, $b ) {
-		if ( ! isset( $a['priority'] ) || ! isset( $b['priority'] ) || $a['priority'] === $b['priority'] ) {
-			return 0;
-		}
-
-		return ( $a['priority'] < $b['priority'] ) ? - 1 : 1;
+		return PUM_Utils_Array::sort_by_priority( $a, $b );
 	}
 
 
 	/**
 	 * Sort nested arrays with various options.
+	 *
+	 * @deprecated 1.7.20
+	 * @see        PUM_Utils_Array::sort instead.
 	 *
 	 * @param array  $array
 	 * @param string $type
@@ -91,25 +94,7 @@ class PUM_Helpers {
 	 * @return array
 	 */
 	public static function sort_array( $array = array(), $type = 'key', $reverse = false ) {
-		if ( ! is_array( $array ) ) {
-			return $array;
-		}
-
-		switch ( $type ) {
-			case 'key':
-				if ( ! $reverse ) {
-					ksort( $array );
-				} else {
-					krsort( $array );
-				}
-				break;
-
-			case 'natural':
-				natsort( $array );
-				break;
-		}
-
-		return array_map( array( __CLASS__, 'sort_array_by_key' ), $array, $type, $reverse );
+		return PUM_Utils_Array::sort( $array, $type, $reverse );
 	}
 
 	public static function post_type_selectlist_query( $post_type, $args = array(), $include_total = false ) {

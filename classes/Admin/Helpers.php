@@ -13,24 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Admin_Helpers {
 
 	/**
-	 *
-	 * PUM_Admin_Helpers::move_item($arr, 'move me', 'up'); //move it one up
-	 * PUM_Admin_Helpers::move_item($arr, 'move me', 'down'); //move it one down
-	 * PUM_Admin_Helpers::move_item($arr, 'move me', 'top'); //move it to top
-	 * PUM_Admin_Helpers::move_item($arr, 'move me', 'bottom'); //move it to bottom
-	 *
-	 * PUM_Admin_Helpers::move_item($arr, 'move me', -1); //move it one up
-	 * PUM_Admin_Helpers::move_item($arr, 'move me', 1); //move it one down
-	 * PUM_Admin_Helpers::move_item($arr, 'move me', 2); //move it two down
-	 *
-	 * PUM_Admin_Helpers::move_item($arr, 'move me', 'up', 'b'); //move it before ['b']
-	 * PUM_Admin_Helpers::move_item($arr, 'move me', -1, 'b'); //move it before ['b']
-	 * PUM_Admin_Helpers::move_item($arr, 'move me', 'down', 'b'); //move it after ['b']
-	 * PUM_Admin_Helpers::move_item($arr, 'move me', 1, 'b'); //move it after ['b']
-	 * PUM_Admin_Helpers::move_item($arr, 'move me', 2, 'b'); //move it two positions after ['b']
-	 *
-	 * Special syntax, to swap two elements:
-	 * PUM_Admin_Helpers::move_item($arr, 'a', 0, 'd'); //Swap ['a'] with ['d']
+	 * @deprecated 1.7.20
+	 * @see        PUM_Helper_Array::move_item
 	 *
 	 * @param array       $ref_arr
 	 * @param string      $key1
@@ -40,82 +24,40 @@ class PUM_Admin_Helpers {
 	 * @return bool
 	 */
 	public static function move_item( &$ref_arr, $key1, $move, $key2 = null ) {
-		$arr = $ref_arr;
-
-		if ( $key2 == null ) {
-			$key2 = $key1;
-		}
-
-		if ( ! isset( $arr[ $key1 ] ) || ! isset( $arr[ $key2 ] ) ) {
-			return false;
-		}
-
-		$i = 0;
-		foreach ( $arr as &$val ) {
-			$val = array( 'sort' => ( ++ $i * 10 ), 'val' => $val );
-		}
-
-		if ( is_numeric( $move ) ) {
-			if ( $move == 0 && $key1 == $key2 ) {
-				return true;
-			} elseif ( $move == 0 ) {
-				$tmp                  = $arr[ $key1 ]['sort'];
-				$arr[ $key1 ]['sort'] = $arr[ $key2 ]['sort'];
-				$arr[ $key2 ]['sort'] = $tmp;
-			} else {
-				$arr[ $key1 ]['sort'] = $arr[ $key2 ]['sort'] + ( $move * 10 + ( $key1 == $key2 ? ( $move < 0 ? - 5 : 5 ) : 0 ) );
-			}
-		} else {
-			switch ( $move ) {
-				case 'up':
-					$arr[ $key1 ]['sort'] = $arr[ $key2 ]['sort'] - ( $key1 == $key2 ? 15 : 5 );
-					break;
-				case 'down':
-					$arr[ $key1 ]['sort'] = $arr[ $key2 ]['sort'] + ( $key1 == $key2 ? 15 : 5 );
-					break;
-				case 'top':
-					$arr[ $key1 ]['sort'] = 5;
-					break;
-				case 'bottom':
-					$arr[ $key1 ]['sort'] = $i * 10 + 5;
-					break;
-				default:
-					return false;
-			}
-		}
-
-		uasort( $arr, array( __CLASS__, 'sort_by_sort' ) );
-
-		foreach ( $arr as &$val ) {
-			$val = $val['val'];
-		}
-
-		$ref_arr = $arr;
-
-		return true;
+		return PUM_Utils_Array::move_item( $ref_arr, $key1, $move, $key2 );
 	}
 
 	/**
+	 * @deprecated 1.7.20
+	 * @see        PUM_Helper_Array::remove_keys_starting_with
+	 *
 	 * @param array $array
 	 * @param bool  $string
 	 *
 	 * @return array
 	 */
 	public static function remove_keys_starting_with( $array, $string = false ) {
-
-		foreach ( $array as $key => $value ) {
-			if ( strpos( $key, $string ) === 0 ) {
-				unset( $array[ $key ] );
-			}
-		}
-
-		return $array;
+		return PUM_Utils_Array::remove_keys_starting_with( $array, $string );
 	}
 
+	/**
+	 * @deprecated 1.7.20
+	 * @see        PUM_Helper_Array::sort_by_sort
+	 *
+	 * @param array $a
+	 * @param array  $b
+	 *
+	 * @return array
+	 */
 	public static function sort_by_sort( $a, $b ) {
-		return $a['sort'] > $b['sort'];
+		return PUM_Utils_Array::sort_by_sort( $a, $b );
 	}
 
+	/**
+	 * @param array $fields
+	 *
+	 * @return array
+	 */
 	public static function get_field_defaults( $fields = array() ) {
 		$defaults = array();
 
@@ -125,6 +67,21 @@ class PUM_Admin_Helpers {
 
 		return $defaults;
 
+	}
+
+	/**
+	 * @deprecated 1.7.20
+	 * @see        PUM_Utils_Array::from_object instead.
+	 *
+	 * @param $array
+	 * @param $old_key
+	 * @param $new_key
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	public static function replace_key( $array, $old_key, $new_key ) {
+		return PUM_Utils_Array::replace_key( $array, $old_key, $new_key );
 	}
 
 	/**
@@ -267,7 +224,7 @@ class PUM_Admin_Helpers {
 				// Remap old settings.
 				if ( is_numeric( $field_id ) && ! empty( $field['id'] ) ) {
 					try {
-						$fields = self::replace_key( $fields, $field_id, $field['id'] );
+						$fields = PUM_Utils_Array::replace_key( $fields, $field_id, $field['id'] );
 					} catch ( Exception $e ) {
 					}
 
@@ -289,7 +246,7 @@ class PUM_Admin_Helpers {
 			}
 		}
 
-		uasort( $fields, array( __CLASS__, 'sort_by_priority' ) );
+		uasort( $fields, array( 'PUM_Utils_Array', 'sort_by_priority' ) );
 
 		return $fields;
 	}
@@ -297,37 +254,17 @@ class PUM_Admin_Helpers {
 	/**
 	 * Sort array by priority value
 	 *
+	 * @deprecated 1.7.20
+	 * @see        PUM_Utils_Array::sort_by_priority instead.
+	 *
 	 * @param $a
 	 * @param $b
 	 *
 	 * @return int
 	 */
 	public static function sort_by_priority( $a, $b ) {
-		if ( ! isset( $a['priority'] ) || ! isset( $b['priority'] ) || $a['priority'] === $b['priority'] ) {
-			return 0;
-		}
-
-		return ( $a['priority'] < $b['priority'] ) ? - 1 : 1;
+		return PUM_Utils_Array::sort_by_priority( $a, $b );
 	}
-
-
-	/**
-	 * @param $array
-	 * @param $old_key
-	 * @param $new_key
-	 *
-	 * @return array
-	 * @throws \Exception
-	 */
-	public static function replace_key( $array, $old_key, $new_key ) {
-		$keys = array_keys( $array );
-		if ( false === $index = array_search( $old_key, $keys, true ) ) {
-			throw new Exception( sprintf( 'Key "%s" does not exit', $old_key ) );
-		}
-		$keys[ $index ] = $new_key;
-		return array_combine( $keys, array_values( $array ) );
-	}
-
 
 	/**
 	 * Checks if an array is a field.
@@ -356,8 +293,9 @@ class PUM_Admin_Helpers {
 		return ! self::is_field( $array );
 	}
 
-
 	/**
+	 * @deprecated 1.7.0
+	 *
 	 * @param array $args
 	 */
 	public static function modal( $args = array() ) {
@@ -373,7 +311,7 @@ class PUM_Admin_Helpers {
 		) );
 		?>
 		<div id="<?php echo $args['id']; ?>" class="pum-modal-background <?php esc_attr_e( $args['class'] ); ?>" role="dialog" aria-hidden="true" aria-labelledby="<?php echo $args['id']; ?>-title"
-		     <?php if ( '' != $args['description'] ) { ?>aria-describedby="<?php echo $args['id']; ?>-description"<?php } ?>>
+			<?php if ( '' != $args['description'] ) { ?>aria-describedby="<?php echo $args['id']; ?>-description"<?php } ?>>
 
 			<div class="pum-modal-wrap">
 
@@ -417,23 +355,15 @@ class PUM_Admin_Helpers {
 	}
 
 	/**
+	 * @deprecated 1.7.20
+	 * @see        PUM_Utils_Array::from_object instead.
+	 *
 	 * @param $obj
 	 *
 	 * @return array
 	 */
 	public static function object_to_array( $obj ) {
-		if ( is_object( $obj ) ) {
-			$obj = (array) $obj;
-		}
-		if ( is_array( $obj ) ) {
-			$new = array();
-			foreach ( $obj as $key => $val ) {
-				$new[ $key ] = PUM_Admin_Helpers::object_to_array( $val );
-			}
-		} else {
-			$new = $obj;
-		}
-		return $new;
+		return PUM_Utils_Array::from_object( $obj );
 	}
 
 }
