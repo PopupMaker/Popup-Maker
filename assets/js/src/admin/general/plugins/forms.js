@@ -111,10 +111,10 @@
 
                     if ($wrapper.hasClass('pum-field-multicheck')) {
                         value = [];
-                        $wrapper.find(':checkbox:checked').each(function(i){
+                        $wrapper.find(':checkbox:checked').each(function (i) {
                             value[i] = $(this).val();
 
-                            if (typeof value[i] === 'string' && !isNaN(parseInt(value[i])) ) {
+                            if (typeof value[i] === 'string' && !isNaN(parseInt(value[i]))) {
                                 value[i] = parseInt(value[i]);
                             }
 
@@ -129,7 +129,7 @@
                     } else if ($wrapper.hasClass('pum-field-multicheck')) {
                         if (Array.isArray(required)) {
                             matched = false;
-                            for(var i=0;i < required.length; i++) {
+                            for (var i = 0; i < required.length; i++) {
                                 if (value.indexOf(required[i]) !== -1) {
                                     matched = true;
                                 }
@@ -164,11 +164,89 @@
             }
 
             var field_tests = [
-                data.type === undefined && ( data.label !== undefined || data.desc !== undefined ),
+                data.type === undefined && (data.label !== undefined || data.desc !== undefined),
                 data.type !== undefined && typeof data.type === 'string'
             ];
 
             return field_tests.indexOf(true) >= 0;
+        },
+        flattenFields: function (data) {
+            var form_fields = {},
+                tabs = data.tabs || {},
+                sections = data.sections || {},
+                fields = data.fields || {};
+
+            if (Object.keys(tabs).length && Object.keys(sections).length) {
+                // Loop Tabs
+                _.each(fields, function (subTabs, tabID) {
+
+                    // If not a valid tab or no subsections skip it.
+                    if (typeof subTabs !== 'object' || !Object.keys(subTabs).length) {
+                        return;
+                    }
+
+                    // Loop Tab Sections
+                    _.each(subTabs, function (subTabFields, subTabID) {
+
+                        // If not a valid subtab or no fields skip it.
+                        if (typeof subTabFields !== 'object' || !Object.keys(subTabFields).length) {
+                            return;
+                        }
+
+                        // Move single fields into the main subtab.
+                        if (forms.is_field(subTabFields)) {
+                            var newSubTabFields = {};
+                            newSubTabFields[subTabID] = subTabFields;
+                            subTabID = 'main';
+                            subTabFields = newSubTabFields;
+                        }
+
+                        // Loop Tab Section Fields
+                        _.each(subTabFields, function (field) {
+                            // Store the field by id for easy lookup later.
+                            form_fields[field.id] = field;
+                        });
+                    });
+                });
+            }
+            else if (Object.keys(tabs).length) {
+                // Loop Tabs
+                _.each(fields, function (tabFields, tabID) {
+
+                    // If not a valid tab or no subsections skip it.
+                    if (typeof tabFields !== 'object' || !Object.keys(tabFields).length) {
+                        return;
+                    }
+
+                    // Loop Tab Fields
+                    _.each(tabFields, function (field) {
+                        // Store the field by id for easy lookup later.
+                        form_fields[field.id] = field;
+                    });
+                });
+            }
+            else if (Object.keys(sections).length) {
+
+                // Loop Sections
+                _.each(fields, function (sectionFields, sectionID) {
+                    // Loop Tab Section Fields
+                    _.each(sectionFields, function (field) {
+                        // Store the field by id for easy lookup later.
+                        form_fields[field.id] = field;
+                    });
+                });
+            }
+            else {
+                fields = forms.parseFields(fields, values);
+
+                // Replace the array with rendered fields.
+                _.each(fields, function (field) {
+                    // Store the field by id for easy lookup later.
+                    form_fields[field.id] = field;
+                });
+            }
+
+            return form_fields;
         },
         parseFields: function (fields, values) {
 
@@ -411,6 +489,41 @@
 
             return form;
 
+        },
+        parseValues: function (values, fields) {
+            fields = fields || false
+
+            if (!fields) {
+                return values;
+            }
+
+            debugger;
+
+            for (var key in fields) {
+                if (!fields.hasOwnProperty(key)) {
+                    continue;
+                }
+
+                // Measure field value corrections.
+                if (values.hasOwnProperty(key + "_unit")) {
+                    values[key] += values[key + "_unit"];
+                    delete values[key + "_unit"];
+                }
+
+                // If the value key is empty and a checkbox set it to false. Then return.
+                if (typeof values[key] === 'undefined') {
+                    if (fields[key].type === 'checkbox') {
+                        values[key] = false;
+                    }
+                    continue;
+                }
+
+                if (fields[key].allow_html && !PUM_Admin.utils.htmlencoder.hasEncoded(values[key])) {
+                    values[key] = PUM_Admin.utils.htmlencoder.htmlEncode(values[key]);
+                }
+            }
+
+            return values;
         }
     };
 
