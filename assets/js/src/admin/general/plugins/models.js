@@ -20,6 +20,7 @@
                 dependencies: "",
                 value: null,
                 select2: false,
+                allow_html: false,
                 multiple: false,
                 as_array: false,
                 options: [],
