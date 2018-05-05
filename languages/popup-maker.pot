@@ -86,7 +86,7 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: classes/Admin/Assets.php:67, classes/Admin/Helpers.php:372, classes/Admin/Templates.php:518, classes/Admin/Templates.php:694
+#: classes/Admin/Assets.php:67, classes/Admin/Helpers.php:308, classes/Admin/Templates.php:518, classes/Admin/Templates.php:694
 msgid "Add"
 msgstr ""
 
@@ -102,7 +102,7 @@ msgstr ""
 msgid "Insert"
 msgstr ""
 
-#: classes/Admin/Assets.php:71, classes/Admin/Helpers.php:370, classes/Admin/Shortcode/UI.php:103
+#: classes/Admin/Assets.php:71, classes/Admin/Helpers.php:306, classes/Admin/Shortcode/UI.php:103
 msgid "Cancel"
 msgstr ""
 
@@ -138,11 +138,11 @@ msgstr ""
 msgid "We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser."
 msgstr ""
 
-#: classes/Admin/Helpers.php:199, classes/Admin/Popups.php:511, classes/Admin/Popups.php:679, classes/Admin/Popups.php:761, classes/Shortcode/Popup.php:240, includes/class-popmake-fields.php:175
+#: classes/Admin/Helpers.php:169, classes/Admin/Popups.php:511, classes/Admin/Popups.php:679, classes/Admin/Popups.php:761, classes/Shortcode/Popup.php:240, includes/class-popmake-fields.php:175
 msgid "ms"
 msgstr ""
 
-#: classes/Admin/Helpers.php:387, classes/Admin/Popups.php:295, classes/Admin/Popups.php:666, classes/Admin/Templates.php:334, classes/Shortcode/Popup.php:55, classes/Shortcode/Popup.php:77, templates/popup.php:44
+#: classes/Admin/Helpers.php:323, classes/Admin/Popups.php:295, classes/Admin/Popups.php:666, classes/Admin/Templates.php:334, classes/Shortcode/Popup.php:55, classes/Shortcode/Popup.php:77, templates/popup.php:44
 msgid "Close"
 msgstr ""
 

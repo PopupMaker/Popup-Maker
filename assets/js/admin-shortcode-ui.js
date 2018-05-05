@@ -326,21 +326,8 @@
                     event.preventDefault();
 
                     var $form = $(this),
-                        values = $form.pumSerializeObject().attrs,
-
+                        values = PUM_Admin.forms.parseValues($form.pumSerializeObject().attrs, PUM_Admin.forms.flattenFields(data)),
                         content;
-
-                    for (var key in values) {
-                        if (!values.hasOwnProperty(key)) {
-                            continue;
-                        }
-
-                        // Clean measurement fields.
-                        if (values.hasOwnProperty(key+"_unit")) {
-                            values[key] += values[key+"_unit"];
-                            delete values[key+"_unit"];
-                        }
-                    }
 
                     content = self.formatShortcode(values);
 
