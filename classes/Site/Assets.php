@@ -173,6 +173,7 @@ class PUM_Site_Assets {
 
 		wp_register_script( 'mobile-detect', self::$js_url . 'mobile-detect' . self::$suffix . '.js', null, '1.3.3', true );
 		wp_register_script( 'jquery-cookie', self::$js_url . 'jquery.cookie' . self::$suffix . '.js', array('jquery'), '1.4.1', true );
+		wp_register_script( 'iframe-resizer', self::$js_url . 'iframeResizer' . self::$suffix . '.js', array( 'jquery' ) );
 
 		if ( PUM_AssetCache::writeable() ) {
 			$cached = get_option( 'pum-has-cached-js' );
