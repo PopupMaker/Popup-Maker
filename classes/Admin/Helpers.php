@@ -12,6 +12,50 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PUM_Admin_Helpers {
 
+
+	/**
+	 * @param array $args
+	 *
+	 * @return array
+	 */
+	public static function post_type_dropdown_options( $args = array(), $compare = 'and' ) {
+		$args = wp_parse_args( $args, array(
+			'public'              => null,
+			'publicly_queryable'  => null,
+			'exclude_from_search' => null,
+			'show_ui'             => null,
+			'capability_type'     => null,
+			'hierarchical'        => null,
+			'menu_position'       => null,
+			'menu_icon'           => null,
+			'permalink_epmask'    => null,
+			'rewrite'             => null,
+			'query_var'           => null,
+			'_builtin'            => null,
+		) );
+
+		foreach( $args as $key => $value ) {
+			if ( $value === null ) {
+				unset( $args[ $key ] );
+			}
+		}
+
+		$options = array();
+
+		foreach ( get_post_types( $args, 'objects', $compare ) as $post_type ) {
+			if ( in_array( $post_type->name, array( 'revision', 'nav_menu_item', 'custom_css', 'customize_changeset', 'oembed_cache', 'popup_theme', 'nf_sub' ) ) ) {
+				// continue;
+			}
+
+			$labels = get_post_type_labels( $post_type );
+
+			$options[ esc_attr( $post_type->name ) ] = esc_html( $labels->name );
+		}
+
+		return $options;
+	}
+
+
 	/**
 	 * @deprecated 1.7.20
 	 * @see        PUM_Helper_Array::move_item
