@@ -195,5 +195,12 @@ $plugin_prefix: 'plugin' !default;
       }
     }
   }
+}
 
+#pum-settings_extensions .pum-tabs-container[data-tab-count="1"].horizontal-tabs > ul.tabs {
+  display: block!important;
+}
+
+#pum-settings_extensions .pum-tabs-container[data-tab-count="1"].sub-tabs > .tab-content {
+  padding-top: 16px!important;
 }
