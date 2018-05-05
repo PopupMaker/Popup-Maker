@@ -102,12 +102,12 @@ class PUM_Utils_Array {
 	 * Pluck all array keys beginning with string.
 	 *
 	 * @param array $array
-	 * @param bool  $string
+	 * @param bool|string|array  $strings
 	 *
 	 * @return array
 	 */
-	public static function pluck_keys_starting_with( $array, $string = false ) {
-		$to_be_removed = self::remove_keys_starting_with( $array, $string );
+	public static function pluck_keys_starting_with( $array, $strings = array() ) {
+		$to_be_removed = self::remove_keys_starting_with( $array, $strings );
 
 		return array_diff_key( $array, $to_be_removed );
 	}
@@ -116,12 +116,12 @@ class PUM_Utils_Array {
 	 * Pluck all array keys ending with string.
 	 *
 	 * @param array $array
-	 * @param bool  $string
+	 * @param bool|string|array  $strings
 	 *
 	 * @return array
 	 */
-	public static function pluck_keys_ending_with( $array, $string = false ) {
-		$to_be_removed = self::remove_keys_ending_with( $array, $string );
+	public static function pluck_keys_ending_with( $array, $strings = array() ) {
+		$to_be_removed = self::remove_keys_ending_with( $array, $strings );
 
 		return array_diff_key( $array, $to_be_removed );
 	}
@@ -130,12 +130,12 @@ class PUM_Utils_Array {
 	 * Pluck all array keys ending with string.
 	 *
 	 * @param array $array
-	 * @param bool  $string
+	 * @param bool|string|array  $strings
 	 *
 	 * @return array
 	 */
-	public static function pluck_keys_containing( $array, $string = false ) {
-		$to_be_removed = self::remove_keys_containing( $array, $string );
+	public static function pluck_keys_containing( $array, $strings = array() ) {
+		$to_be_removed = self::remove_keys_containing( $array, $strings );
 
 		return array_diff_key( $array, $to_be_removed );
 	}
@@ -144,19 +144,24 @@ class PUM_Utils_Array {
 	 * Remove all array keys beginning with string.
 	 *
 	 * @param array $array
-	 * @param bool  $string
+	 * @param bool|string|array  $strings
 	 *
 	 * @return array
 	 */
-	public static function remove_keys_starting_with( $array, $string = false ) {
-
-		if ( ! $string ) {
+	public static function remove_keys_starting_with( $array, $strings = array() ) {
+		if ( ! $strings ) {
 			return $array;
 		}
 
+		if ( ! is_array( $strings ) ) {
+			$strings = array( $strings );
+		}
+
 		foreach ( $array as $key => $value ) {
-			if ( strpos( $key, $string ) === 0 ) {
-				unset( $array[ $key ] );
+			foreach( $strings as $string ) {
+				if ( strpos( $key, $string ) === 0 ) {
+					unset( $array[ $key ] );
+				}
 			}
 		}
 
@@ -167,20 +172,26 @@ class PUM_Utils_Array {
 	 * Remove all array keys ending with string.
 	 *
 	 * @param array $array
-	 * @param bool  $string
+	 * @param bool|string|array  $strings
 	 *
 	 * @return array
 	 */
-	public static function remove_keys_ending_with( $array, $string = false ) {
-		$length = strlen( $string );
-
-		if ( ! $string || $length === 0 ) {
+	public static function remove_keys_ending_with( $array, $strings = array() ) {
+		if ( ! $strings ) {
 			return $array;
 		}
 
+		if ( ! is_array( $strings ) ) {
+			$strings = array( $strings );
+		}
+
 		foreach ( $array as $key => $value ) {
-			if ( substr( $key, -$length ) === $string ) {
-				unset( $array[ $key ] );
+			foreach( $strings as $string ) {
+				$length = strlen( $string );
+
+				if ( substr( $key, -$length ) === $string ) {
+					unset( $array[ $key ] );
+				}
 			}
 		}
 
@@ -191,19 +202,25 @@ class PUM_Utils_Array {
 	 * Remove all array keys containing string.
 	 *
 	 * @param array $array
-	 * @param bool  $string
+	 * @param bool|string|array  $strings
 	 *
 	 * @return array
 	 */
-	public static function remove_keys_containing( $array, $string = false ) {
+	public static function remove_keys_containing( $array, $strings = array() ) {
 
-		if ( ! $string ) {
+		if ( ! $strings ) {
 			return $array;
 		}
 
+		if ( ! is_array( $strings ) ) {
+			$strings = array( $strings );
+		}
+
 		foreach ( $array as $key => $value ) {
-			if ( strpos( $key, $string ) >= 0 ) {
-				unset( $array[ $key ] );
+			foreach( $strings as $string ) {
+				if ( strpos( $key, $string ) !== false ) {
+					unset( $array[ $key ] );
+				}
 			}
 		}
 
