@@ -270,10 +270,10 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	function column_popup_id( $item ) {
 		$popup_id = $item['popup_id'] > 0 ? absint( $item['popup_id'] ) : null;
 
-		if ( $popup_id ) {
-			$url = admin_url( "post.php?post={$popup_id}&action=edit" );
+		$popup = pum_get_popup( $popup_id );
 
-			$popup = pum_get_popup( $popup_id );
+		if ( $popup_id && pum_is_popup( $popup ) ) {
+			$url = admin_url( "post.php?post={$popup_id}&action=edit" );;
 
 			//Return the title contents
 			return sprintf( '%s<br/><small style="color:silver">(%s: <a href="%s">#%s</a>)</small>', $popup->post_title, __( 'ID', 'popup-maker' ), $url, $item['popup_id'] );
