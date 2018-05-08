@@ -356,6 +356,7 @@ class Popup_Maker {
 		PUM_Newsletters::init();
 		PUM_Previews::init();
 		PUM_Integrations::init();
+		PUM_Privacy::init();
 
 		PUM_Shortcode_Popup::init();
 		PUM_Shortcode_PopupTrigger::init();
