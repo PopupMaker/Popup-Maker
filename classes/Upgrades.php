@@ -172,13 +172,6 @@ class PUM_Upgrades {
 			'class' => 'PUM_Upgrade_v1_7_Settings',
 			'file'  => Popup_Maker::$DIR . 'includes/batch/upgrade/class-upgrade-v1_7-settings.php',
 		) );
-
-		/**
-		 * Fires during instantiation of the batch processing registry.
-		 *
-		 * @param PUM_Upgrade_Registry $this PUM_Abstract_Registry instance.
-		 */
-		do_action( 'pum_register_upgrades', $this );
 	}
 
 	/**
