@@ -24,28 +24,28 @@ class PUM_Upgrades {
 	 *
 	 * @var    string
 	 */
-	private $version;
+	public static $version;
 
 	/**
 	 * Popup Maker upgraded from version.
 	 *
 	 * @var    string
 	 */
-	private $upgraded_from;
+	public static $upgraded_from;
 
 	/**
 	 * Popup Maker initial version.
 	 *
 	 * @var    string
-	 */
-	private $initial_version;
+	 */	
+	public static $initial_version;
 
 	/**
 	 * Popup Maker db version.
 	 *
 	 * @var    string
 	 */
-	private $db_version;
+	public static $db_version;
 
 	/**
 	 * Gets everything going with a singleton instance.
@@ -65,7 +65,7 @@ class PUM_Upgrades {
 	 */
 	public function __construct() {
 		// Update stored plugin version info.
-		$this->update_plugin_version();
+		self::update_plugin_version();
 
 		// Initiate the upgrade registry. Must be done after versions update for proper comparisons.
 		PUM_Upgrade_Registry::instance();
@@ -78,40 +78,42 @@ class PUM_Upgrades {
 		add_action( 'pum_tools_page_tab_upgrades', array( $this, 'tools_page_tab_content' ) );
 		// Ajax upgrade handler.
 		add_action( 'wp_ajax_pum_process_upgrade_request', array( $this, 'process_upgrade_request' ) );
+		// Register core upgrades.
+		add_action( 'pum_register_upgrades', array( $this, 'register_processes' ) );
 	}
 
 	/**
 	 * Update version info.
 	 */
-	public function update_plugin_version() {
-		$this->version         = get_option( 'pum_ver' );
-		$this->upgraded_from   = get_option( 'pum_ver_upgraded_from' );
-		$this->initial_version = get_option( 'pum_initial_version' );
-		$this->db_version      = get_option( 'pum_db_ver' );
+	public static function update_plugin_version() {
+		self::$version         = get_option( 'pum_ver' );
+		self::$upgraded_from   = get_option( 'pum_ver_upgraded_from' );
+		self::$initial_version = get_option( 'pum_initial_version' );
+		self::$db_version      = get_option( 'pum_db_ver' );
 
 		/**
 		 * If no version set check if a deprecated one exists.
 		 */
-		if ( empty( $this->version ) ) {
+		if ( empty( self::$version ) ) {
 			$deprecated_ver = get_site_option( 'popmake_version' );
 
 			// set to the deprecated version or last version that didn't have the version option set
-			$this->version = $deprecated_ver ? $deprecated_ver : Popup_Maker::$VER; // Since we had versioning in v1 if there isn't one stored its a new install.
+			self::$version = $deprecated_ver ? $deprecated_ver : Popup_Maker::$VER; // Since we had versioning in v1 if there isn't one stored its a new install.
 		}
 
 		/**
 		 * Back fill the initial version with the oldest version we can detect.
 		 */
-		if ( ! $this->initial_version ) {
+		if ( ! self::$initial_version ) {
 
 			$oldest_known = Popup_Maker::$VER;
 
-			if ( $this->version && version_compare( $this->version, $oldest_known, '<' ) ) {
-				$oldest_known = $this->version;
+			if ( self::$version && version_compare( self::$version, $oldest_known, '<' ) ) {
+				$oldest_known = self::$version;
 			}
 
-			if ( $this->upgraded_from && version_compare( $this->upgraded_from, $oldest_known, '<' ) ) {
-				$oldest_known = $this->upgraded_from;
+			if ( self::$upgraded_from && version_compare( self::$upgraded_from, $oldest_known, '<' ) ) {
+				$oldest_known = self::$upgraded_from;
 			}
 
 			$deprecated_ver = get_site_option( 'popmake_version' );
@@ -124,43 +126,59 @@ class PUM_Upgrades {
 				$oldest_known = $dep_upgraded_from;
 			}
 
-			$this->initial_version = $oldest_known;
+			self::$initial_version = $oldest_known;
 
 			// Only set this value if it doesn't exist.
 			update_option( 'pum_initial_version', $oldest_known );
 		}
 
-
-		if ( version_compare( $this->version, Popup_Maker::$VER, '<' ) ) {
+		if ( version_compare( self::$version, Popup_Maker::$VER, '<' ) ) {
 			// Allow processing of small core upgrades
-			do_action( 'pum_update_core_version', $this->version );
+			do_action( 'pum_update_core_version', self::$version );
 
 			// Save Upgraded From option
-			update_option( 'pum_ver_upgraded_from', $this->version );
+			update_option( 'pum_ver_upgraded_from', self::$version );
 			update_option( 'pum_ver', Popup_Maker::$VER );
-			$this->upgraded_from = $this->version;
-			$this->version       = Popup_Maker::$VER;
+			self::$upgraded_from = self::$version;
+			self::$version       = Popup_Maker::$VER;
 		}
-
 
 		// If no current db version, but prior install detected, set db version correctly.
-		if ( ! $this->db_version ) {
-			if ( $this->upgraded_from ) {
-				if ( version_compare( $this->upgraded_from, '1.3.0', '<' ) ) {
-					$this->db_version = 1;
-				} else {
-					$this->db_version = 2;
-				}
-			} else {
-				$this->db_version = Popup_Maker::$DB_VER;
-			}
-			add_option( 'pum_db_ver', $this->db_version );
-		}
 
-		if ( $this->db_version < Popup_Maker::$DB_VER ) {
-			$this->db_version = Popup_Maker::$DB_VER;
-			update_option( 'pum_db_ver', $this->db_version );
+		// Here for backward compatibility.
+		if ( ! self::$db_version || self::$db_version < Popup_Maker::$DB_VER ) {
+			self::$db_version = Popup_Maker::$DB_VER;
+			update_option( 'pum_db_ver', self::$db_version );
 		}
+	}
+
+	/**
+	 * @param PUM_Upgrade_Registry $registry
+	 */
+	public function register_processes( PUM_Upgrade_Registry $registry ) {
+		// v1.7 Upgrades
+		$registry->add_upgrade( 'core-v1_7-popups', array(
+			'rules' => array(
+				version_compare( self::$initial_version, '1.7', '<' ),
+			),
+			'class' => 'PUM_Upgrade_v1_7_Popups',
+			'file'  => Popup_Maker::$DIR . 'includes/batch/upgrade/class-upgrade-v1_7-popups.php',
+		) );
+
+		$registry->add_upgrade( 'core-v1_7-settings', array(
+			'rules' => array(
+				version_compare( self::$initial_version, '1.7', '<' ),
+			),
+			'class' => 'PUM_Upgrade_v1_7_Settings',
+			'file'  => Popup_Maker::$DIR . 'includes/batch/upgrade/class-upgrade-v1_7-settings.php',
+		) );
+
+		/**
+		 * Fires during instantiation of the batch processing registry.
+		 *
+		 * @param PUM_Upgrade_Registry $this PUM_Abstract_Registry instance.
+		 */
+		do_action( 'pum_register_upgrades', $this );
 	}
 
 	/**
@@ -325,9 +343,6 @@ class PUM_Upgrades {
 	 * @return array The array of completed upgrades
 	 */
 	public function get_completed_upgrades() {
-		// TODO REMOVE THIS TEST CODE
-		// delete_option( 'pum_completed_upgrades' );
-
 		return get_option( 'pum_completed_upgrades', array() );
 	}
 

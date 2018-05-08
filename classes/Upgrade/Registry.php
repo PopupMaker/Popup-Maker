@@ -53,10 +53,6 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 	 * Initializes the upgrade registry.
 	 */
 	public function init() {
-		$this->version         = get_option( 'pum_ver' );
-		$this->initial_version = get_option( 'pum_initial_version' );
-		$this->upgraded_from   = get_option( 'pum_ver_upgraded_from' );
-
 		$this->register_upgrades();
 
 		/**
@@ -73,25 +69,8 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 	 * @see PUM_Upgrades::add_routine()
 	 */
 	private function register_upgrades() {
-		// v1.7 Upgrades
-		$this->add_upgrade( 'core-v1_7-popups', array(
-			'rules' => array(
-				version_compare( $this->initial_version, '1.7', '<' ),
-			),
-			'class' => 'PUM_Upgrade_v1_7_Popups',
-			'file'  => Popup_Maker::$DIR . 'includes/batch/upgrade/class-upgrade-v1_7-popups.php',
-		) );
-
-		$this->add_upgrade( 'core-v1_7-settings', array(
-			'rules' => array(
-				version_compare( $this->initial_version, '1.7', '<' ),
-			),
-			'class' => 'PUM_Upgrade_v1_7_Settings',
-			'file'  => Popup_Maker::$DIR . 'includes/batch/upgrade/class-upgrade-v1_7-settings.php',
-		) );
-
 		/**
-		 * Fires during instantiation of the batch processing registry.
+		 * Fires during instantiation of the batch processing registry allowing proper registration of upgrades.
 		 *
 		 * @param PUM_Upgrade_Registry $this PUM_Abstract_Registry instance.
 		 */
