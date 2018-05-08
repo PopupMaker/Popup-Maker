@@ -15,6 +15,7 @@ class PUM_Privacy {
 
 	public static function init() {
 		add_filter( 'wp_privacy_personal_data_exporters', array( __CLASS__, 'register_exporter' ), 10 );
+		add_filter( 'wp_privacy_personal_data_erasers', array( __CLASS__, 'register_erasers' ), 10 );
 	}
 
 	/**
@@ -30,6 +31,24 @@ class PUM_Privacy {
 		$exporters[] = array(
 			'exporter_friendly_name' => __( 'Popup Maker Subscribe Form' ),
 			'callback'               => array( __CLASS__, 'exporter' ),
+		);
+
+		return $exporters;
+	}
+
+	/**
+	 * Register erasers for Popup Maker Optin Form Subscriber Data.
+	 *
+	 * @see https://github.com/allendav/wp-privacy-requests/blob/master/EXPORT.md
+	 *
+	 * @param $exporters
+	 *
+	 * @return array
+	 */
+	public static function register_erasers( $exporters ) {
+		$exporters[] = array(
+			'eraser_friendly_name' => __( 'Popup Maker Subscribe Form' ),
+			'callback'             => array( __CLASS__, 'exporter' ),
 		);
 
 		return $exporters;
@@ -170,6 +189,78 @@ class PUM_Privacy {
 		return array(
 			'data' => $export_items,
 			'done' => $done,
+		);
+	}
+
+
+	/**
+	 * Eraser for Popup Maker Optin Form Subscriber Data.
+	 *
+	 * @see https://github.com/allendav/wp-privacy-requests/blob/master/EXPORT.md
+	 *
+	 * @param     $email_address
+	 * @param int $page
+	 *
+	 * @return array
+	 */
+	public static function eraser( $email_address, $page = 1 ) {
+		if ( empty( $email_address ) ) {
+			return array(
+				'items_removed'  => false,
+				'items_retained' => false,
+				'messages'       => array(),
+				'done'           => true,
+			);
+		}
+
+		$messages       = array();
+		$items_removed  = false;
+		$items_retained = false;
+
+		$number = 500; // Limit us to avoid timing out
+		$page   = (int) $page;
+
+		$subscribers = PUM_DB_Subscribers::instance()->query( array(
+			's'       => $email_address,
+			'page'    => $page,
+			'limit'   => $number,
+			'orderby' => 'ID',
+			'order'   => 'ASC',
+		), 'ARRAY_A' );
+
+		foreach ( (array) $subscribers as $subscriber ) {
+			if ( $subscriber['email'] == $email_address ) {
+
+				// Data should not be deleted if the user was left subscribed to a service provider.
+				$unsubscribed = apply_filters( 'pum_privacy_eraser_subscriber_was_unsubscribed', true, $email_address, $subscriber );
+
+				if ( $unsubscribed ) {
+
+					$deleted = PUM_DB_Subscribers::instance()->delete( $subscriber['ID'] );
+
+					if ( $deleted ) {
+						$items_removed = true;
+					} else {
+						$items_retained = true;
+						$messages[] = __( 'Subscription information was not removed. A database error may have occurred during deletion.','popup-maker' );
+					}
+				} else {
+					$items_retained = true;
+					$messages[] = __( 'Subscription information was not removed. This may occur when no immediate confirmation is received during our attempt to unsubscribe you from our mailing list.','popup-maker' );
+				}
+
+			}
+
+		}
+
+		// Tell core if we have more comments to work on still
+		$done = count( $subscribers ) < $number;
+
+		return array(
+			'items_removed'  => $items_removed,
+			'items_retained' => $items_retained,
+			'messages'       => $messages,
+			'done'           => $done,
 		);
 	}
 }

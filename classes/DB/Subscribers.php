@@ -106,6 +106,10 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		update_option( $this->table_name . '_db_version', $this->version );
 	}
 
+	public function get_by_email( $email = '' ) {
+
+	}
+
 
 	public function query( $args = array(), $return_type = 'OBJECT' ) {
 		global $wpdb;
@@ -142,7 +146,6 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		if ( $args['s'] && ! empty( $args['s'] ) ) {
 
 			$search = wp_unslash( trim( $args['s'] ) );
-
 
 			$search_where = array();
 
