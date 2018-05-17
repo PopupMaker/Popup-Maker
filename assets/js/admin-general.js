@@ -6450,7 +6450,7 @@
 
                     // If no required values found bail early.
                     if (typeof required === 'undefined' || required === null) {
-                        $dependent.removeClass('pum-dependencies-met').hide(0);
+                        $dependent.removeClass('pum-dependencies-met').hide(0).trigger('pumFormDependencyUnmet');
                         // Effectively breaks the .each for this $dependent and hides it.
                         return false;
                     }
@@ -6494,13 +6494,13 @@
                     if (matched) {
                         count++;
                     } else {
-                        $dependent.removeClass('pum-dependencies-met').hide(0);
+                        $dependent.removeClass('pum-dependencies-met').hide(0).trigger('pumFormDependencyUnmet');
                         // Effectively breaks the .each for this $dependent and hides it.
                         return false;
                     }
 
                     if (count === requiredCount) {
-                        $dependent.addClass('pum-dependencies-met').show(0);
+                        $dependent.addClass('pum-dependencies-met').show(0).trigger('pumFormDependencyMet');
                     }
                 });
             });
@@ -6981,6 +6981,52 @@ function pumChecked(val1, val2, print) {
     return checked;
 }
 
+(function ($) {
+    var current_link_field;
+    //var wpActiveEditor = true;
+
+    $(document)
+        .on('click', '.pum-field-link button', function (event) {
+            var $input = $(this).next().select(),
+                id = $input.attr('id');
+
+            current_link_field = $input;
+
+            wpLink.open(id, $input.val(), ""); //open the link popup
+
+            JPCC.selectors('#wp-link-wrap').removeClass('has-text-field');
+            JPCC.selectors('#wp-link-target').hide();
+            JPCC.selectors('#pum-restriction-editor', true).hide();
+            return false;
+        })
+        .on('click', '#wp-link-submit, #wp-link-cancel button, #wp-link-close', function (event) {
+            var linkAtts = wpLink.getAttrs();
+
+            // If not for our fields then ignore it.
+            if (current_link_field === undefined || !current_link_field) {
+                return;
+            }
+
+            // If not the close buttons then its the save button.
+            if (event.target.id === 'wp-link-submit') {
+                current_link_field.val(linkAtts.href);
+            }
+
+            wpLink.textarea = current_link_field;
+            wpLink.close();
+
+            // Clear the current_link_field
+            current_link_field = false;
+
+            // Show our editor
+            JPCC.selectors('#pum-restriction-editor').show();
+
+            //trap any other events
+            event.preventDefault ? event.preventDefault() : event.returnValue = false;
+            event.stopPropagation();
+            return false;
+        });
+}(jQuery));
 /*******************************************************************************
  * Copyright (c) 2017, WP Popup Maker
  ******************************************************************************/
@@ -7874,6 +7920,13 @@ function pumChecked(val1, val2, print) {
                     data.desc = PUM_Admin.templates.renderInline(data.dynamic_desc, data);
                 }
 
+                if (data.allow_html) {
+                    data.classes.push('pum-field-' + data.type + '--html');
+                    if ( typeof data.value === 'string' && data.value !== '' && PUM_Admin.utils.htmlencoder.hasEncoded(data.value)) {
+                        data.value = PUM_Admin.utils.htmlencoder.htmlDecode(data.value);
+                    }
+                }
+
                 switch (args.type) {
                 case 'select':
                 case 'objectselect':
@@ -8073,13 +8126,6 @@ function pumChecked(val1, val2, print) {
                 case 'textarea':
                     data.meta.cols = data.cols;
                     data.meta.rows = data.rows;
-
-                    if (data.allow_html) {
-                        data.classes.push('pum-field-textarea--html');
-                        if ( typeof data.value === 'string' && data.value !== '' && PUM_Admin.utils.htmlencoder.hasEncoded(data.value)) {
-                            data.value = PUM_Admin.utils.htmlencoder.htmlDecode(data.value);
-                        }
-                    }
                     break;
                 case 'measure':
                     if (typeof data.value === 'string' && data.value !== '') {
