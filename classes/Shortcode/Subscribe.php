@@ -59,6 +59,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 		$tabs = array(
 			'general' => __( 'General', 'popup-maker' ),
 			'form'    => __( 'Form', 'popup-maker' ),
+			'privacy' => __( 'Privacy', 'popup-maker' ),
 			'actions' => __( 'Actions', 'popup-maker' ),
 		);
 
@@ -78,11 +79,15 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 			'general' => array(
 				'main' => __( 'General', 'popup-maker' ),
 			),
+			'privacy' => array(
+				'main' => __( 'General', 'popup-maker' ),
+			),
 			'form'    => array(
 				'appearance'   => __( 'Appearance', 'popup-maker' ),
 				'fields'       => __( 'Fields', 'popup-maker' ),
 				'labels'       => __( 'Labels', 'popup-maker' ),
 				'placeholders' => __( 'Placeholders', 'popup-maker' ),
+				'privacy'      => __( 'Privacy', 'popup-maker' ),
 			),
 			'actions' => array(
 				'popup'    => __( 'Popup', 'popup-maker' ),
@@ -102,6 +107,12 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 		if ( isset( $_GET['post'] ) && is_int( (int) $_GET['post'] ) && isset( $_GET['action'] ) && $_GET['action'] == 'edit' ) {
 			$select_args['post__not_in'] = wp_parse_id_list( array( get_the_ID(), $_GET['post'] ) );
 		}
+
+		$privacy_always_enabled = pum_get_option( 'privacy_consent_always_enabled', 'no' ) == 'yes';
+
+		$privacy_enabled_dependency = array(
+			'privacy_consent_enabled' => 'yes',
+		);
 
 		$fields = apply_filters( 'pum_sub_form_shortcode_fields', array(
 			'general' => array(
@@ -292,6 +303,79 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 					),
 				),
 			),
+			'privacy' => array(
+				'main' => array(
+					'privacy_consent_enabled'      => array(
+						'label'   => __( 'Enabled', 'popup-maker' ),
+						'desc'    => __( 'When enabled, the successful completion will result in normal success actions, but if they do not opt-in no records will be made.', 'popup-maker' ),
+						'type'    => $privacy_always_enabled ? 'hidden' : 'select',
+						'options' => array(
+							'yes' => __( 'Yes', 'popup-maker' ),
+							'no'  => __( 'No', 'popup-maker' ),
+						),
+						'std'     => 'yes',
+						'value'   => $privacy_always_enabled ? 'yes' : null,
+						'private' => true,
+					),
+					'privacy_consent_label'        => array(
+						'label'        => __( 'Consent Field Label', 'popup-maker' ),
+						'type'         => 'text',
+						'std'          => pum_get_option( 'default_privacy_consent_label', __( 'Notify me about related content and special offers.', 'popup-maker' ) ),
+						'private'      => true,
+						'dependencies' => $privacy_enabled_dependency,
+					),
+					'privacy_consent_type'         => array(
+						'label'        => __( 'Field Type', 'popup-maker' ),
+						'desc'         => __( 'Radio forces the user to make a choice, often resulting in more optins.', 'popup-maker' ),
+						'type'         => 'select',
+						'options'      => array(
+							'radio'    => __( 'Radio', 'popup-maker' ),
+							'checkbox' => __( 'Checkbox', 'popup-maker' ),
+						),
+						'std'          => pum_get_option( 'default_privacy_consent_type', 'radio' ),
+						'private'      => true,
+						'dependencies' => $privacy_enabled_dependency,
+					),
+					'privacy_consent_radio_layout' => array(
+						'label'        => __( 'Consent Radio Layout', 'popup-maker' ),
+						'type'         => 'select',
+						'options'      => array(
+							'inline'  => __( 'Inline', 'popup-maker' ),
+							'stacked' => __( 'Stacked', 'popup-maker' ),
+						),
+						'std'          => pum_get_option( 'default_privacy_consent_radio_layout', 'inline' ),
+						'private'      => true,
+						'dependencies' => array_merge( $privacy_enabled_dependency, array(
+							'privacy_consent_type' => 'radio',
+						) ),
+					),
+					'privacy_consent_yes_label'    => array(
+						'label'        => __( 'Consent Yes Label', 'popup-maker' ),
+						'type'         => 'text',
+						'std'          => pum_get_option( 'default_privacy_consent_yes_label', __( 'Yes', 'popup-maker' ) ),
+						'private'      => true,
+						'dependencies' => array_merge( $privacy_enabled_dependency, array(
+							'privacy_consent_type' => 'radio',
+						) ),
+					),
+					'privacy_consent_no_label'     => array(
+						'label'        => __( 'Consent No Label', 'popup-maker' ),
+						'type'         => 'text',
+						'std'          => pum_get_option( 'default_privacy_consent_no_label', __( 'No', 'popup-maker' ) ),
+						'private'      => true,
+						'dependencies' => array_merge( $privacy_enabled_dependency, array(
+							'privacy_consent_type' => 'radio',
+						) ),
+					),
+					'privacy_usage_text'           => array(
+						'label'        => __( 'Consent Usage Text', 'popup-maker' ),
+						'desc'         => function_exists( 'get_privacy_policy_url' ) ? sprintf( __( 'You can use %1$s%2$s to insert a link to your privacy policy. To customize the link text use %1$s:Link Text%2$s', 'popup-maker' ), '{{privacy_link', '}}' ) : '',
+						'type'         => 'text',
+						'std'          => pum_get_option( 'default_privacy_usage_text', __( 'If you opt in above we use this information send related content, discounts and other special offers.', 'popup-maker' ) ),
+						'dependencies' => $privacy_enabled_dependency,
+					),
+				),
+			),
 			'actions' => array(
 				'popup'    => array(
 					'closepopup'   => array(
@@ -419,7 +503,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							<?php if ( ! $atts['disable_labels'] ) : ?>
 								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_name']; ?></label>
 							<?php endif; ?>
-							<input type="text" name="name" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_name'] ); ?>"/>
+							<input type="text" name="name" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_name'] ); ?>" />
 						</div>
 
 						<?php
@@ -431,7 +515,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							<?php if ( ! $atts['disable_labels'] ) : ?>
 								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_fname']; ?></label>
 							<?php endif; ?>
-							<input type="text" name="fname" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_fname'] ); ?>"/>
+							<input type="text" name="fname" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_fname'] ); ?>" />
 						</div>
 
 						<?php
@@ -443,14 +527,14 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							<?php if ( ! $atts['disable_labels'] ) : ?>
 								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_fname']; ?></label>
 							<?php endif; ?>
-							<input type="text" name="fname" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_fname'] ); ?>"/>
+							<input type="text" name="fname" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_fname'] ); ?>" />
 						</div>
 
 						<div class="pum-form__field  pum-form__field--lname  pum-sub-form-field  pum-sub-form-field--lname">
 							<?php if ( ! $atts['disable_labels'] ) : ?>
 								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_lname']; ?></label>
 							<?php endif; ?>
-							<input type="text" name="lname" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_lname'] ); ?>"/>
+							<input type="text" name="lname" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_lname'] ); ?>" />
 						</div>
 
 						<?php
@@ -463,14 +547,59 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 				<?php if ( ! $atts['disable_labels'] ) : ?>
 					<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_email']; ?></label>
 				<?php endif; ?>
-				<input type="email" name="email" required placeholder="<?php esc_attr_e( $atts['placeholder_email'] ); ?>"/>
+				<input type="email" name="email" required placeholder="<?php esc_attr_e( $atts['placeholder_email'] ); ?>" />
 			</div>
 
 			<?php do_action( 'pum_sub_form_fields', $atts ); ?>
 
 			<?php do_action( 'pum_newsletter_fields', $atts ); ?>
 
-			<input type="hidden" name="provider" value="<?php echo $atts['provider']; ?>"/>
+			<input type="hidden" name="provider" value="<?php echo $atts['provider']; ?>" />
+
+			<?php if ( $atts['privacy_consent_enabled'] == 'yes' ) : ?>
+				<?php $consent_text = trim( $atts['privacy_consent_label'] ); ?>
+
+				<div class="pum-form__field  pum-form__field--<?php echo esc_attr( $atts['privacy_consent_type']  ); ?>  pum-form__field--consent  pum-sub-form-field">
+					<?php switch ( $atts['privacy_consent_type'] ) {
+						case 'checkbox': ?>
+							<label class="pum-form__label  pum-sub-form-label">
+								<input type="checkbox" value="yes" name="consent" /> <?php echo wp_kses( $consent_text, array() ); ?>
+							</label>
+							<?php
+							break;
+						case 'radio': ?>
+							<?php if ( ! empty( $consent_text ) ) : ?>
+								<label class="pum-form__label  pum-sub-form-label"><?php echo wp_kses( $consent_text, array() ); ?></label>
+							<?php endif; ?>
+							<div class="pum-form__consent-radios  pum-form__consent-radios--<?php echo esc_attr( $atts['privacy_consent_radio_layout'] ); ?>">
+								<label class="pum-form__label  pum-sub-form-label">
+									<input type="radio" value="yes" name="consent" /> <?php echo wp_kses( $atts['privacy_consent_yes_label'], array() ); ?>
+								</label>
+								<label class="pum-form__label  pum-sub-form-label">
+									<input type="radio" value="no" name="consent" /> <?php echo wp_kses( $atts['privacy_consent_no_label'], array() ); ?>
+								</label>
+							</div>
+							<?php
+							break;
+					}
+
+					if ( ! empty( $atts['privacy_usage_text'] ) ) :
+						$usage_text = trim( $atts['privacy_usage_text'] );
+
+						if ( strpos( $usage_text, '{{privacy_link' ) !== false && function_exists( 'get_privacy_policy_url' ) && get_privacy_policy_url() !== '' ) {
+							preg_match_all( "/{{privacy_link:?(.*)}}/", $usage_text, $matches );
+
+							$link = '<a href="' . get_privacy_policy_url() . '" target="_blank">%s</a>';
+
+							foreach( $matches[0] as $key => $value ) {
+								$usage_text = str_replace( $matches[0][ $key ], sprintf( $link, $matches[1][ $key ] ), $usage_text );
+							}
+						}
+						?>
+						<p><small><?php echo wp_kses( $usage_text, array( 'a' => array( 'target' => true, 'href' => true ) ) ); ?></small></p>
+					<?php endif; ?>
+				</div>
+			<?php endif; ?>
 
 			<div class="pum-form__field  pum-form__field--submit  pum-sub-form-field  pum-sub-form-field--submit">
 				<button class="pum-form__submit  pum-sub-form-submit"><?php echo $atts['label_submit']; ?></button>

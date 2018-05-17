@@ -255,12 +255,6 @@ class PUM_Admin_Settings {
 							'type'  => 'text',
 							'std'   => __( 'You have been subscribed!', 'popup-maker' ),
 						),
-						'default_double_opt_in_success'      => array(
-							'label' => __( 'Invalid Email Message', 'popup-maker' ),
-							'desc'  => __( 'Message to show user when an invalid email is entered.', 'popup-maker' ),
-							'type'  => 'text',
-							'std'   => __( 'Please check your email and confirm your subscription.', 'popup-maker' ),
-						),
 						'default_empty_email_message'        => array(
 							'label' => __( 'Empty Email Message', 'popup-maker' ),
 							'desc'  => __( 'Message to show user when no email is entered.', 'popup-maker' ),
@@ -285,7 +279,6 @@ class PUM_Admin_Settings {
 							'type'  => 'text',
 							'std'   => __( 'You are already a subscriber.', 'popup-maker' ),
 						),
-
 					) ),
 				);
 			}
@@ -297,7 +290,81 @@ class PUM_Admin_Settings {
 				'licenses'   => array(
 					'main' => array(),
 				),
-				'misc'       => array(
+				'privacy'    => array(
+					'main'  => array(
+						'disable_popup_open_tracking' => array(
+							'type'  => 'checkbox',
+							'label' => __( 'Disables popup open tracking?', 'popup-maker' ),
+							'desc'  => __( 'This will disable the built in analytics functionality.', 'popup-maker' ),
+						),
+					),
+					'forms' => array(
+						'forms_disclaimer'                     => array(
+							'type'    => 'html',
+							'content' => "<strong>" . __( 'Disclaimer', 'popup-maker' ) . ":</strong> " . __( 'These settings only pertain to usage of the Popup Maker built in subscription form shortcode, not 3rd party form plugins.', 'popup-maker' ),
+						),
+						'privacy_consent_always_enabled'       => array(
+							'label'   => __( 'Always enable consent field on subscription forms.', 'popup-maker' ),
+							'type'    => 'select',
+							'options' => array(
+								'yes' => __( 'Yes', 'popup-maker' ),
+								'no'  => __( 'No', 'popup-maker' ),
+							),
+							'std'     => 'yes',
+						),
+						'default_privacy_consent_label'        => array(
+							'label' => __( 'Consent Text', 'popup-maker' ),
+							'type'  => 'text',
+							'std'   => __( 'Notify me about related content and special offers.', 'popup-maker' ),
+						),
+						'default_privacy_consent_type'         => array(
+							'label'   => __( 'Consent Field Type', 'popup-maker' ),
+							'desc'    => __( 'Radio forces the user to make a choice, often resulting in more opt-ins.', 'popup-maker' ),
+							'type'    => 'select',
+							'options' => array(
+								'radio'    => __( 'Radio', 'popup-maker' ),
+								'checkbox' => __( 'Checkbox', 'popup-maker' ),
+							),
+							'std'     => 'radio',
+						),
+						'default_privacy_consent_radio_layout' => array(
+							'label'        => __( 'Consent Radio Layout', 'popup-maker' ),
+							'type'         => 'select',
+							'options'      => array(
+								'inline'  => __( 'Inline', 'popup-maker' ),
+								'stacked' => __( 'Stacked', 'popup-maker' ),
+							),
+							'std'          => __( 'Yes', 'popup-maker' ),
+							'dependencies' => array(
+								'default_privacy_consent_type' => 'radio',
+							),
+						),
+						'default_privacy_consent_yes_label'    => array(
+							'label'        => __( 'Consent Yes Label', 'popup-maker' ),
+							'type'         => 'text',
+							'std'          => __( 'Yes', 'popup-maker' ),
+							'dependencies' => array(
+								'default_privacy_consent_type' => 'radio',
+							),
+						),
+						'default_privacy_consent_no_label'     => array(
+							'label'        => __( 'Consent No Label', 'popup-maker' ),
+							'type'         => 'text',
+							'std'          => __( 'No', 'popup-maker' ),
+							'dependencies' => array(
+								'default_privacy_consent_type' => 'radio',
+							),
+						),
+						'default_privacy_usage_text'           => array(
+							'label' => __( 'Consent Usage Text', 'popup-maker' ),
+							'desc'  => function_exists( 'get_privacy_policy_url' ) ? sprintf( __( 'You can use %1$%2$s to insert a link to your privacy policy. To customize the link text use %1$s:Link Text%2$s', 'popup-maker' ), '{{privacy_link', '}}' ) : '',
+							'type'  => 'text',
+							'std'   => __( 'If you opt in above we use this information send related content, discounts and other special offers.', 'popup-maker' ),
+						),
+					),
+				),
+
+				'misc' => array(
 					'main'   => array(
 						'disabled_admin_bar'                   => array(
 							'type'  => 'checkbox',
@@ -313,11 +380,6 @@ class PUM_Admin_Settings {
 							'type'  => 'checkbox',
 							'label' => __( 'Enable Easy Modal v2 Compatibility Mode', 'popup-maker' ),
 							'desc'  => __( 'This will automatically make any eModal classes you have added to your site launch the appropriate Popup after import.', 'popup-maker' ),
-						),
-						'disable_popup_open_tracking'          => array(
-							'type'  => 'checkbox',
-							'label' => __( 'Disables popup open tracking?', 'popup-maker' ),
-							'desc'  => __( 'This will disable the built in analytics functionality.', 'popup-maker' ),
 						),
 						'disable_admin_support_widget'         => array(
 							'type'  => 'checkbox',
@@ -475,6 +537,7 @@ class PUM_Admin_Settings {
 				'subscriptions' => __( 'Subscriptions', 'popup-maker' ),
 				'extensions'    => __( 'Extensions', 'popup-maker' ),
 				'licenses'      => __( 'Licenses', 'popup-maker' ),
+				'privacy'       => __( 'Privacy', 'popup-maker' ),
 				'misc'          => __( 'Misc', 'popup-maker' ),
 			) );
 
@@ -504,6 +567,10 @@ class PUM_Admin_Settings {
 			),
 			'licenses'      => array(
 				'main' => __( 'Licenses', 'popup-maker' ),
+			),
+			'privacy'       => array(
+				'main'  => __( 'General', 'popup-maker' ),
+				'forms' => __( 'Subscription Forms', 'popup-maker' ),
 			),
 			'misc'          => array(
 				'main'   => __( 'Misc', 'popup-maker' ),
