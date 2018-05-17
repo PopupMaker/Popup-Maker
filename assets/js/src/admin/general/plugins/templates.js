@@ -119,6 +119,13 @@
                     data.desc = PUM_Admin.templates.renderInline(data.dynamic_desc, data);
                 }
 
+                if (data.allow_html) {
+                    data.classes.push('pum-field-' + data.type + '--html');
+                    if ( typeof data.value === 'string' && data.value !== '' && PUM_Admin.utils.htmlencoder.hasEncoded(data.value)) {
+                        data.value = PUM_Admin.utils.htmlencoder.htmlDecode(data.value);
+                    }
+                }
+
                 switch (args.type) {
                 case 'select':
                 case 'objectselect':
@@ -318,13 +325,6 @@
                 case 'textarea':
                     data.meta.cols = data.cols;
                     data.meta.rows = data.rows;
-
-                    if (data.allow_html) {
-                        data.classes.push('pum-field-textarea--html');
-                        if ( typeof data.value === 'string' && data.value !== '' && PUM_Admin.utils.htmlencoder.hasEncoded(data.value)) {
-                            data.value = PUM_Admin.utils.htmlencoder.htmlDecode(data.value);
-                        }
-                    }
                     break;
                 case 'measure':
                     if (typeof data.value === 'string' && data.value !== '') {
