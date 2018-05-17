@@ -1,0 +1,64 @@
+/*!******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
+
+.pum-form__field--consent {
+  text-align: left;
+
+  &.pum-form__field--checkbox {
+    label {
+      display: inline-block;
+      vertical-align: middle;
+
+      input {
+        display: inline-block;
+        width: inherit;
+        margin: 0;
+        vertical-align: middle;
+      }
+    }
+
+  }
+
+  &.pum-form__field--radio {
+
+    .pum-form__consent-radios {
+
+      &.pum-form__consent-radios--inline {
+        label {
+          display: inline-block;
+          vertical-align: middle;
+
+          input {
+            display: inline-block;
+            width: inherit;
+            margin: 0;
+            vertical-align: middle;
+          }
+        }
+
+        label + label {
+          margin-left: 1em;
+        }
+
+      }
+
+      &.pum-form__consent-radios--stacked {
+
+        label {
+          display: block;
+          vertical-align: middle;
+
+          input {
+            display: inline-block;
+            width: inherit;
+            margin: 0;
+            vertical-align: middle;
+          }
+        }
+      }
+
+    }
+
+  }
+}
