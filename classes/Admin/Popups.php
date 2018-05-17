@@ -869,8 +869,8 @@ class PUM_Admin_Popups {
 
 			<?php
 			$opens           = $popup->get_event_count( 'open', 'current' );
-			$conversions     = $popup->get_event_count( 'conversion', 'current' );
-			$conversion_rate = $opens > 0 && $opens >= $conversions ? $conversions / $opens * 100 : false;
+			//$conversions     = $popup->get_event_count( 'conversion', 'current' );
+			//$conversion_rate = $opens > 0 && $opens >= $conversions ? $conversions / $opens * 100 : false;
 			?>
 
 			<div id="pum-popup-analytics" class="pum-popup-analytics">
@@ -881,18 +881,18 @@ class PUM_Admin_Popups {
 						<td><?php _e( 'Opens', 'popup-maker' ); ?></td>
 						<td><?php echo $opens; ?></td>
 					</tr>
-					<?php if ( $conversion_rate > 0 ) : ?>
+					<?php /* if ( $conversion_rate > 0 ) : ?>
 						<tr>
 							<td><?php _e( 'Conversions', 'popup-maker' ); ?></td>
 							<td><?php echo $conversions; ?></td>
 						</tr>
-					<?php endif; ?>
-					<?php if ( $conversion_rate > 0 ) : ?>
+					<?php endif; */ ?>
+					<?php /* if ( $conversion_rate > 0 ) : ?>
 						<tr>
 							<td><?php _e( 'Conversion Rate', 'popup-maker' ); ?></td>
 							<td><?php echo round( $conversion_rate, 2 ); ?>%</td>
 						</tr>
-					<?php endif; ?>
+					<?php endif; */ ?>
 					<tr class="separator">
 						<td colspan="2">
 							<label> <input type="checkbox" name="popup_reset_counts" id="popup_reset_counts" value="1" />
@@ -903,17 +903,17 @@ class PUM_Admin_Popups {
 									<strong><?php _e( 'Last Reset', 'popup-maker' ); ?>:</strong> <?php echo date( 'm-d-Y H:i', $reset['timestamp'] ); ?>
 									<br /> <strong><?php _e( 'Previous Opens', 'popup-maker' ); ?>:</strong> <?php echo $reset['opens']; ?>
 
-									<?php if ( $reset['conversions'] > 0 ) : ?>
+									<?php /* if ( $reset['conversions'] > 0 ) : ?>
 										<br />
 										<strong><?php _e( 'Previous Conversions', 'popup-maker' ); ?>:</strong> <?php echo $reset['conversions']; ?>
-									<?php endif; ?>
+									<?php endif; */ ?>
 
 									<br /> <strong><?php _e( 'Lifetime Opens', 'popup-maker' ); ?>:</strong> <?php echo $popup->get_event_count( 'open', 'total' ); ?>
 
-									<?php if ( $popup->get_event_count( 'conversion', 'total' ) > 0 ) : ?>
+									<?php /* if ( $popup->get_event_count( 'conversion', 'total' ) > 0 ) : ?>
 										<br />
 										<strong><?php _e( 'Lifetime Conversions', 'popup-maker' ); ?>:</strong> <?php echo $popup->get_event_count( 'conversion', 'total' ); ?>
-									<?php endif; ?>
+									<?php endif; */  ?>
 								</small>
 							<?php endif; ?>
 						</td>
@@ -990,8 +990,8 @@ class PUM_Admin_Popups {
 			'popup_title'     => __( 'Title', 'popup-maker' ),
 			'class'           => __( 'CSS Classes', 'popup-maker' ),
 			'opens'           => __( 'Opens', 'popup-maker' ),
-			'conversions'     => __( 'Conversions', 'popup-maker' ),
-			'conversion_rate' => __( 'Conversion Rate', 'popup-maker' ),
+			//'conversions'     => __( 'Conversions', 'popup-maker' ),
+			//'conversion_rate' => __( 'Conversion Rate', 'popup-maker' ),
 		);
 
 		// Add the date column preventing our own translation
@@ -1054,7 +1054,9 @@ class PUM_Admin_Popups {
 						echo $popup->get_event_count( 'open' );
 					}
 					break;
-				case 'conversions':
+
+				/*
+				 case 'conversions':
 					if ( ! pum_extension_enabled( 'popup-analytics' ) ) {
 						echo $popup->get_event_count( 'conversion' );
 					}
@@ -1066,6 +1068,7 @@ class PUM_Admin_Popups {
 					$conversion_rate = $views > 0 && $views >= $conversions ? $conversions / $views * 100 : __( 'N/A', 'popup-maker' );
 					echo round( $conversion_rate, 2 ) . '%';
 					break;
+				*/
 			}
 		}
 	}
@@ -1080,7 +1083,7 @@ class PUM_Admin_Popups {
 	public static function sortable_columns( $columns ) {
 		$columns['popup_title'] = 'popup_title';
 		$columns['opens']       = 'opens';
-		$columns['conversions'] = 'conversions';
+		// $columns['conversions'] = 'conversions';
 
 		return $columns;
 	}
@@ -1112,6 +1115,7 @@ class PUM_Admin_Popups {
 							) );
 						}
 						break;
+					/*
 					case 'conversions':
 						if ( ! pum_extension_enabled( 'popup-analytics' ) ) {
 							$vars = array_merge( $vars, array(
@@ -1120,6 +1124,7 @@ class PUM_Admin_Popups {
 							) );
 						}
 						break;
+					*/
 				}
 			}
 		}
