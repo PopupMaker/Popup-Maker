@@ -279,6 +279,12 @@ class PUM_Admin_Settings {
 							'type'  => 'text',
 							'std'   => __( 'You are already a subscriber.', 'popup-maker' ),
 						),
+						'default_consent_required_message' => array(
+							'label' => __( 'Consent Required Message', 'popup-maker' ),
+							'desc'  => __( 'Message to show user who is already subscribed.', 'popup-maker' ),
+							'type'  => 'text',
+							'std'   => __( 'You must agree to continue.', 'popup-maker' ),
+						),
 					) ),
 				);
 			}
@@ -313,19 +319,34 @@ class PUM_Admin_Settings {
 							'std'     => 'yes',
 						),
 						'default_privacy_consent_label'        => array(
-							'label' => __( 'Consent Text', 'popup-maker' ),
-							'type'  => 'text',
-							'std'   => __( 'Notify me about related content and special offers.', 'popup-maker' ),
+							'label'        => __( 'Consent Text', 'popup-maker' ),
+							'type'         => 'text',
+							'std'          => __( 'Notify me about related content and special offers.', 'popup-maker' ),
+							'dependencies' => array(
+								'privacy_consent_always_enabled' => 'yes',
+							),
 						),
 						'default_privacy_consent_type'         => array(
-							'label'   => __( 'Consent Field Type', 'popup-maker' ),
-							'desc'    => __( 'Radio forces the user to make a choice, often resulting in more opt-ins.', 'popup-maker' ),
-							'type'    => 'select',
-							'options' => array(
+							'label'        => __( 'Consent Field Type', 'popup-maker' ),
+							'desc'         => __( 'Radio forces the user to make a choice, often resulting in more opt-ins.', 'popup-maker' ),
+							'type'         => 'select',
+							'options'      => array(
 								'radio'    => __( 'Radio', 'popup-maker' ),
 								'checkbox' => __( 'Checkbox', 'popup-maker' ),
 							),
-							'std'     => 'radio',
+							'std'          => 'radio',
+							'dependencies' => array(
+								'privacy_consent_always_enabled' => 'yes',
+							),
+						),
+						'default_privacy_consent_required'             => array(
+							'label'        => __( 'Consent Required', 'popup-maker' ),
+							'type'         => 'checkbox',
+							'std'          => pum_get_option( 'default_privacy_consent_required' ),
+							'private'      => true,
+							'dependencies' => array(
+								'privacy_consent_always_enabled' => 'yes',
+							),
 						),
 						'default_privacy_consent_radio_layout' => array(
 							'label'        => __( 'Consent Radio Layout', 'popup-maker' ),
@@ -336,7 +357,8 @@ class PUM_Admin_Settings {
 							),
 							'std'          => __( 'Yes', 'popup-maker' ),
 							'dependencies' => array(
-								'default_privacy_consent_type' => 'radio',
+								'privacy_consent_always_enabled' => 'yes',
+								'default_privacy_consent_type'   => 'radio',
 							),
 						),
 						'default_privacy_consent_yes_label'    => array(
@@ -344,7 +366,8 @@ class PUM_Admin_Settings {
 							'type'         => 'text',
 							'std'          => __( 'Yes', 'popup-maker' ),
 							'dependencies' => array(
-								'default_privacy_consent_type' => 'radio',
+								'privacy_consent_always_enabled' => 'yes',
+								'default_privacy_consent_type'   => 'radio',
 							),
 						),
 						'default_privacy_consent_no_label'     => array(
@@ -352,7 +375,8 @@ class PUM_Admin_Settings {
 							'type'         => 'text',
 							'std'          => __( 'No', 'popup-maker' ),
 							'dependencies' => array(
-								'default_privacy_consent_type' => 'radio',
+								'privacy_consent_always_enabled' => 'yes',
+								'default_privacy_consent_type'   => 'radio',
 							),
 						),
 						'default_privacy_usage_text'           => array(
@@ -360,7 +384,9 @@ class PUM_Admin_Settings {
 							'desc'  => function_exists( 'get_privacy_policy_url' ) ? sprintf( __( 'You can use %1$%2$s to insert a link to your privacy policy. To customize the link text use %1$s:Link Text%2$s', 'popup-maker' ), '{{privacy_link', '}}' ) : '',
 							'type'  => 'text',
 							'std'   => __( 'If you opt in above we use this information send related content, discounts and other special offers.', 'popup-maker' ),
-						),
+							'dependencies' => array(
+								'privacy_consent_always_enabled' => 'yes',
+							),						),
 					),
 				),
 
