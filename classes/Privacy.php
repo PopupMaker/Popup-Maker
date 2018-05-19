@@ -207,7 +207,14 @@ class PUM_Privacy {
 								'value' => $field_value,
 							);
 							break;
+						case 'consent':
+							$data[] = array(
+								'name'  => __( 'Provided Consent', 'popup-maker' ),
+								'value' => ucfirst( $field_value ),
+							);
+							break;
 						case 'values':
+						case 'consent_args':
 							$values = maybe_unserialize( $field_value );
 
 							foreach ( (array) $values as $key => $value ) {
@@ -226,6 +233,23 @@ class PUM_Privacy {
 										if ( ! empty( $providers[ $value ] ) ) {
 											$label = $providers[ $value ]->name;
 										}
+										break;
+									case 'required':
+										$label = __( 'Consent Required', 'popup-maker' );
+										break;
+									case 'text':
+										$label = __( 'Consent Text', 'popup-maker' );
+										break;
+									case 'name':
+									case 'lname':
+									case 'email':
+									case 'fname':
+									case 'list_id':
+									case 'popup_id':
+									case 'email_hash':
+									case 'pum_form_popup_id':
+									case 'mc_args':
+										// Leave these values out.
 										break;
 								}
 
