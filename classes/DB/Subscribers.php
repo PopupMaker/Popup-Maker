@@ -22,7 +22,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 	/**
 	 * The version of our database table
 	 */
-	public $version = 1;
+	public $version = 2;
 
 	/**
 	 * The name of the primary column
@@ -34,17 +34,19 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 	 */
 	public function get_columns() {
 		return array(
-			'ID'         => '%d',
-			'uuid'       => '%s',
-			'popup_id'   => '%d',
-			'email_hash' => '%s',
-			'email'      => '%s',
-			'name'       => '%s',
-			'fname'      => '%s',
-			'lname'      => '%s',
-			'values'     => '%s',
-			'user_id'    => '%d',
-			'created'    => '%s',
+			'ID'           => '%d',
+			'uuid'         => '%s',
+			'popup_id'     => '%d',
+			'email_hash'   => '%s',
+			'email'        => '%s',
+			'name'         => '%s',
+			'fname'        => '%s',
+			'lname'        => '%s',
+			'values'       => '%s',
+			'user_id'      => '%d',
+			'consent_args' => '%s',
+			'consent'      => '%s',
+			'created'      => '%s',
 		);
 	}
 
@@ -53,24 +55,24 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 	 */
 	public function get_column_defaults() {
 		return array(
-			'uuid'       => '',
-			'popup_id'   => 0,
-			'email_hash' => '',
-			'email'      => '',
-			'name'       => '',
-			'fname'      => '',
-			'lname'      => '',
-			'values'     => '',
-			'user_id'    => 0,
-			'created'    => current_time( 'mysql', 0 ),
+			'uuid'         => '',
+			'popup_id'     => 0,
+			'email_hash'   => '',
+			'email'        => '',
+			'name'         => '',
+			'fname'        => '',
+			'lname'        => '',
+			'values'       => '',
+			'user_id'      => 0,
+			'consent_args' => '',
+			'consent'      => 'no',
+			'created'      => current_time( 'mysql', 0 ),
 		);
+
 	}
 
 	/**
 	 * Create the table
-	 *
-	 * @access  public
-	 * @since   2.0
 	 */
 	public function create_table() {
 
@@ -93,6 +95,8 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 			`lname` VARCHAR(255) NOT NULL,
 			`values` LONGTEXT NOT NULL,
 			`uuid` VARCHAR(255) NOT NULL,
+			`consent` VARCHAR(255) NOT NULL,
+			`consent_args` LONGTEXT NOT NULL,
 			`created` DATETIME NOT NULL,
 		  PRIMARY KEY (ID),
 		  KEY email (email),
