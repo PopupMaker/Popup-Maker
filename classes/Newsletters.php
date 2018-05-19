@@ -166,14 +166,16 @@ class PUM_Newsletters {
 	 */
 	public static function record_submission( $values = array() ) {
 		$data = wp_parse_args( $values, array(
-			'uuid'       => self::uuid(),
-			'user_id'    => get_current_user_id(),
-			'popup_id'   => 0,
-			'email_hash' => '',
-			'email'      => '',
-			'name'       => '',
-			'fname'      => '',
-			'lname'      => '',
+			'uuid'         => self::uuid(),
+			'user_id'      => get_current_user_id(),
+			'popup_id'     => 0,
+			'email_hash'   => '',
+			'email'        => '',
+			'name'         => '',
+			'fname'        => '',
+			'lname'        => '',
+			'consent'      => 'no',
+			'consent_args' => '',
 		) );
 
 		$data['values'] = maybe_serialize( $values );
@@ -209,10 +211,32 @@ class PUM_Newsletters {
 	 */
 	public static function sanitization( $values = array() ) {
 		$values = wp_parse_args( $values, array(
-			'provider' => pum_get_option( 'newsletter_default_provider', 'none' ),
+			'provider'     => pum_get_option( 'newsletter_default_provider', 'none' ),
+			'consent'      => 'no',
+			'consent_args' => array(),
 		) );
 
 		$values['provider'] = sanitize_text_field( $values['provider'] );
+
+		$values['provider'] = sanitize_text_field( $values['provider'] );
+
+		$consent_args = ! empty( $values['consent_args'] ) ? (array) json_decode( stripslashes( $values['consent_args'] ) ) : array();
+
+		$values['consent_args'] = wp_parse_args( $consent_args, array(
+			'enabled'  => 'no',
+			'required' => false,
+			'text'     => '',
+		) );
+
+		// Anonymize the data if they didn't consent and privacy is enabled.
+		if ( $values['consent_args']['enabled'] === 'yes' && ! $values['consent_args']['required'] && $values['consent'] === 'no' ) {
+			$values['uuid']    = '';
+			$values['user_id'] = 0;
+			$values['name'] = '';
+			$values['fname'] = '';
+			$values['lname'] = '';
+			$values['email']   = wp_privacy_anonymize_data( 'email', $values['email'] );
+		}
 
 		// Split name into fname & lname or vice versa.
 		if ( isset( $values['name'] ) ) {
@@ -252,6 +276,10 @@ class PUM_Newsletters {
 			$errors->add( 'empty_email', pum_get_newsletter_provider_message( $values['provider'], 'empty_email', $values ), 'email' );
 		} elseif ( ! is_email( $values["email"] ) ) {
 			$errors->add( 'invalid_email', pum_get_newsletter_provider_message( $values['provider'], 'invalid_email', $values ), 'email' );
+		}
+
+		if ( $values['consent_args']['enabled'] === 'yes' && $values['consent_args']['required'] && $values['consent'] === 'no' ) {
+			$errors->add( 'consent_required', pum_get_newsletter_provider_message( $values['provider'], 'consent_required', $values ), 'consent' );
 		}
 
 		return $errors;

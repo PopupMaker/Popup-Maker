@@ -57,6 +57,7 @@ function pum_get_newsletter_default_messages( $context = null ) {
 		'already_subscribed'    => pum_get_option('default_already_subscribed_message',__( 'You are already a subscriber.', 'popup-maker' ) ),
 		'empty_email'           => pum_get_option('default_empty_email_message',__( 'Please enter a valid email.', 'popup-maker' ) ),
 		'invalid_email'         => pum_get_option('default_invalid_email_message',__( 'Email provided is not a valid email address.', 'popup-maker' ) ),
+		'consent_required'      => pum_get_option('default_consent_required_message',__( 'Email provided is not a valid email address.', 'popup-maker' ) ),
 	);
 
 	if ( $context ) {
