@@ -109,7 +109,7 @@ class PUM_Admin_Ajax {
 				$results['total_count'] += $query['total_count'];
 				break;
 		}
-		echo json_encode( $results );
+		echo PUM_Utils_Array::safe_json_encode( $results );
 		die();
 	}
 

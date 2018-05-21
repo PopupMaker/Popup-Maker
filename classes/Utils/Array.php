@@ -101,8 +101,8 @@ class PUM_Utils_Array {
 	/**
 	 * Pluck all array keys beginning with string.
 	 *
-	 * @param array $array
-	 * @param bool|string|array  $strings
+	 * @param array             $array
+	 * @param bool|string|array $strings
 	 *
 	 * @return array
 	 */
@@ -115,8 +115,8 @@ class PUM_Utils_Array {
 	/**
 	 * Pluck all array keys ending with string.
 	 *
-	 * @param array $array
-	 * @param bool|string|array  $strings
+	 * @param array             $array
+	 * @param bool|string|array $strings
 	 *
 	 * @return array
 	 */
@@ -129,8 +129,8 @@ class PUM_Utils_Array {
 	/**
 	 * Pluck all array keys ending with string.
 	 *
-	 * @param array $array
-	 * @param bool|string|array  $strings
+	 * @param array             $array
+	 * @param bool|string|array $strings
 	 *
 	 * @return array
 	 */
@@ -143,8 +143,8 @@ class PUM_Utils_Array {
 	/**
 	 * Remove all array keys beginning with string.
 	 *
-	 * @param array $array
-	 * @param bool|string|array  $strings
+	 * @param array             $array
+	 * @param bool|string|array $strings
 	 *
 	 * @return array
 	 */
@@ -158,7 +158,7 @@ class PUM_Utils_Array {
 		}
 
 		foreach ( $array as $key => $value ) {
-			foreach( $strings as $string ) {
+			foreach ( $strings as $string ) {
 				if ( strpos( $key, $string ) === 0 ) {
 					unset( $array[ $key ] );
 				}
@@ -171,8 +171,8 @@ class PUM_Utils_Array {
 	/**
 	 * Remove all array keys ending with string.
 	 *
-	 * @param array $array
-	 * @param bool|string|array  $strings
+	 * @param array             $array
+	 * @param bool|string|array $strings
 	 *
 	 * @return array
 	 */
@@ -186,10 +186,10 @@ class PUM_Utils_Array {
 		}
 
 		foreach ( $array as $key => $value ) {
-			foreach( $strings as $string ) {
+			foreach ( $strings as $string ) {
 				$length = strlen( $string );
 
-				if ( substr( $key, -$length ) === $string ) {
+				if ( substr( $key, - $length ) === $string ) {
 					unset( $array[ $key ] );
 				}
 			}
@@ -201,8 +201,8 @@ class PUM_Utils_Array {
 	/**
 	 * Remove all array keys containing string.
 	 *
-	 * @param array $array
-	 * @param bool|string|array  $strings
+	 * @param array             $array
+	 * @param bool|string|array $strings
 	 *
 	 * @return array
 	 */
@@ -217,7 +217,7 @@ class PUM_Utils_Array {
 		}
 
 		foreach ( $array as $key => $value ) {
-			foreach( $strings as $string ) {
+			foreach ( $strings as $string ) {
 				if ( strpos( $key, $string ) !== false ) {
 					unset( $array[ $key ] );
 				}
@@ -325,5 +325,53 @@ class PUM_Utils_Array {
 		return $new;
 	}
 
+	/**
+	 * Ensures proper encoding for strings before json_encode is used.
+	 *
+	 * @param array|string $data
+	 *
+	 * @return mixed|string
+	 */
+	public static function safe_json_encode( $data = array() ) {
+		return wp_json_encode( self:: make_safe_for_json_encode( $data ) );
+	}
+
+	/**
+	 * json_encode only accepts valid UTF8 characters,  thus we need to properly convert translations and other data to proper utf.
+	 *
+	 * This function does that recursively.
+	 *
+	 * @param array|string $data
+	 *
+	 * @return array|string
+	 */
+	public static function make_safe_for_json_encode( $data = array() ) {
+		if ( is_scalar( $data ) ) {
+			return html_entity_decode( (string) $data, ENT_QUOTES, 'UTF-8' );
+		}
+
+		foreach ( (array) $data as $key => $value ) {
+			if ( is_scalar( $value ) ) {
+				$data[ $key ] = html_entity_decode( (string) $value, ENT_QUOTES, 'UTF-8' );
+			} elseif ( is_array( $value ) ) {
+				$data[ $key ] = self::make_safe_for_json_encode( $value );
+			}
+		}
+
+		return $data;
+	}
+
+
+	public static function utf8_encode_recursive( $d ) {
+		if ( is_array( $d ) ) {
+			foreach ( $d as $k => $v ) {
+				$d[ $k ] = self::utf8_encode_recursive( $v );
+			}
+		} else if ( is_string( $d ) ) {
+			return utf8_encode( $d );
+		}
+
+		return $d;
+	}
 }
 

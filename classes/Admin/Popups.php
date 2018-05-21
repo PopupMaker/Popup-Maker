@@ -147,7 +147,7 @@ class PUM_Admin_Popups {
 		wp_enqueue_script( 'popup-maker-admin' );
 		?>
 		<script type="text/javascript">
-            window.pum_popup_settings_editor = <?php echo json_encode( apply_filters( 'pum_popup_settings_editor_var', array(
+            window.pum_popup_settings_editor = <?php echo PUM_Utils_Array::safe_json_encode( apply_filters( 'pum_popup_settings_editor_var', array(
 				'form_args'             => array(
 					'id'       => 'pum-popup-settings',
 					'tabs'     => self::tabs(),

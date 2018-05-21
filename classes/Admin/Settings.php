@@ -506,7 +506,7 @@ class PUM_Admin_Settings {
 				</div>
 
 				<script type="text/javascript">
-                    window.pum_settings_editor = <?php echo json_encode( apply_filters( 'pum_settings_editor_args', array(
+                    window.pum_settings_editor = <?php echo PUM_Utils_Array::safe_json_encode( apply_filters( 'pum_settings_editor_args', array(
 						'form_args'      => array(
 							'id'       => 'pum-settings',
 							'tabs'     => self::tabs(),

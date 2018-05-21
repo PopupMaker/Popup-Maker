@@ -472,7 +472,7 @@ class PUM_Extension_Updater {
 
 		$data = array(
 			'timeout' => strtotime( '+3 hours', current_time( 'timestamp' ) ),
-			'value'   => json_encode( $value )
+			'value'   => PUM_Utils_Array::safe_json_encode( $value )
 		);
 
 		update_option( $cache_key, $data );

@@ -62,7 +62,7 @@ class PUM_Ajax {
 	 */
 	public static function serve_json( $data = 0 ) {
 		header( 'Content-Type: application/json' );
-		echo json_encode( $data );
+		echo PUM_Utils_Array::safe_json_encode( $data );
 		exit;
 	}
 

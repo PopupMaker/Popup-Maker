@@ -1307,7 +1307,7 @@ class PUM_ListTable {
 			$response['total_pages_i18n'] = number_format_i18n( $this->_pagination_args['total_pages'] );
 		}
 
-		die( wp_json_encode( $response ) );
+		die( PUM_Utils_Array::safe_json_encode( $response ) );
 	}
 
 	/**
@@ -1323,6 +1323,6 @@ class PUM_ListTable {
 			)
 		);
 
-		printf( "<script type='text/javascript'>list_args = %s;</script>\n", wp_json_encode( $args ) );
+		printf( "<script type='text/javascript'>list_args = %s;</script>\n", PUM_Utils_Array::safe_json_encode( $args ) );
 	}
 }

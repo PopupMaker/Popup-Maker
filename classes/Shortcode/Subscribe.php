@@ -492,7 +492,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 		) ); ?>
 
 
-		<form class="<?php esc_attr_e( $classes ); ?>" data-settings="<?php esc_attr_e( json_encode( $data_attr ) ); ?>">
+		<form class="<?php esc_attr_e( $classes ); ?>" data-settings="<?php esc_attr_e( PUM_Utils_Array::safe_json_encode( $data_attr ) ); ?>">
 
 			<?php do_action( 'pum_sub_form_before', $atts ); ?>
 
@@ -572,7 +572,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 				);
 				?>
 
-				<input type="hidden" name="consent_args" value="<?php echo esc_attr( json_encode( $consent_args ) ); ?>" />
+				<input type="hidden" name="consent_args" value="<?php echo esc_attr( PUM_Utils_Array::safe_json_encode( $consent_args ) ); ?>" />
 
 				<div class="pum-form__field  pum-form__field--<?php echo esc_attr( $atts['privacy_consent_type'] ); ?>  pum-form__field--consent  pum-sub-form-field">
 					<?php switch ( $atts['privacy_consent_type'] ) {
