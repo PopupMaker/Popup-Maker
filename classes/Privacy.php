@@ -50,9 +50,10 @@ class PUM_Privacy {
 			<h3><?php _e( 'Subscription forms', 'popup-maker' ); ?></h3>
 			<p class="privacy-policy-tutorial"><?php _e( 'Popup Maker subscription forms are not enabled by default.', 'popup-maker' ); ?></p>
 			<p class="privacy-policy-tutorial"><?php _e( 'If you have used them in your popups to collect email subscribers, use this subsection to note what personal data is captured when someone submits a subscription form, and how long you keep it.', 'popup-maker' ); ?></p>
-			<p class="privacy-policy-tutorial"><?php _e( 'For example, you may note that you keep form submissions for a ongoing marketing purposes.', 'popup-maker' ); ?></p>
-			<p><?php echo $suggested_text . __( 'If you submit an subscription form on our site you will be opting in for us to save your name, email address and other relevant information. These subscriptions are so we can notify you about related content, discounts & other special offers.', 'popup-maker' ); ?></p>
-			<p><?php _e( 'These subscriptions are so we can notify you about related content, discounts & other special offers.', 'popup-maker' ); ?></p> <p><?php _e( 'You can opt our or unsubscribe at any time in the future by clicking link in the bottom of any email.', 'popup-maker' ); ?></p>
+			<p class="privacy-policy-tutorial"><?php _e( 'For example, you may note that you keep form submissions for ongoing marketing purposes.', 'popup-maker' ); ?></p>
+			<p><?php echo $suggested_text . __( 'If you submit a subscription form on our site you will be opting in for us to save your name, email address and other relevant information.', 'popup-maker' ); ?></p>
+			<p><?php _e( 'These subscriptions are used to notify you about related content, discounts & other special offers.', 'popup-maker' ); ?></p>
+			<p><?php _e( 'You can opt our or unsubscribe at any time in the future by clicking link in the bottom of any email.', 'popup-maker' ); ?></p>
 
 			<h3><?php _e( 'Cookies', 'popup-maker' ); ?></h3>
 			<p class="privacy-policy-tutorial"><?php _e( 'Popup Maker uses cookies for most popups. The primary function is to prevent your users from being annoyed by seeing the same popup repeatedly.', 'popup-maker' ); ?></p>
