@@ -55,6 +55,7 @@ class PUM_AssetCache {
 			add_action( 'pum_extension_deactivated', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_extension_activated', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_regenerate_asset_cache', array( __CLASS__, 'reset_cache' ) );
+			add_action( 'pum_save_settings', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_save_popup', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'popmake_save_popup_theme', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_update_core_version', array( __CLASS__, 'reset_cache' ) );
@@ -228,7 +229,7 @@ class PUM_AssetCache {
 		/** @var WP_Filesystem_Base $wp_filesystem */
 		global $wp_filesystem;
 
-		return $wp_filesystem->put_contents( $file, $contents, defined('FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : false );
+		return $wp_filesystem->put_contents( $file, $contents, defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : false );
 	}
 
 	/**
@@ -248,22 +249,22 @@ class PUM_AssetCache {
 		 */
 		$css = array(
 			'imports' => array(
-				'content' => self::generate_font_imports(),
-				'priority' => -1,
+				'content'  => self::generate_font_imports(),
+				'priority' => - 1,
 			),
-			'core'   => array(
+			'core'    => array(
 				'content'  => $core_css,
 				'priority' => 0,
 			),
-			'themes' => array(
+			'themes'  => array(
 				'content'  => self::generate_popup_theme_styles(),
 				'priority' => 1,
 			),
-			'popups' => array(
+			'popups'  => array(
 				'content'  => self::generate_popup_styles(),
 				'priority' => 15,
 			),
-			'custom' => array(
+			'custom'  => array(
 				'content'  => self::custom_css(),
 				'priority' => 20,
 			),
