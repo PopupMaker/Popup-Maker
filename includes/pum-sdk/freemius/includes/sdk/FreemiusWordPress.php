@@ -390,9 +390,11 @@
 
 			$resource = explode( '?', $pCanonizedPath );
 
-			// Disable the 'Expect: 100-continue' behaviour. This causes cURL to wait
-			// for 2 seconds if the server does not support this header.
-			$pWPRemoteArgs['headers']['Expect'] = '';
+            if ( FS_SDK__HAS_CURL ) {
+                // Disable the 'Expect: 100-continue' behaviour. This causes cURL to wait
+                // for 2 seconds if the server does not support this header.
+                $pWPRemoteArgs['headers']['Expect'] = '';
+            }
 
 			if ( 'https' === substr( strtolower( $request_url ), 0, 5 ) ) {
 				$pWPRemoteArgs['sslverify'] = false;
@@ -587,7 +589,7 @@
 		#----------------------------------------------------------------------------------
 
 		/**
-		 * @param WP_Error $pError
+		 * @param \WP_Error $pError
 		 *
 		 * @return bool
 		 */
