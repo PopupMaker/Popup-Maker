@@ -41,7 +41,7 @@ class PUM_ConditionCallbacks {
 
 			case 'ID':
 			case 'selected':
-				if ( self::is_post_type( $post_type ) && in_array( $post->ID, wp_parse_id_list( $selected ) ) ) {
+				if ( self::is_post_type( $post_type ) && is_singular( $post_type ) && in_array( $post->ID, wp_parse_id_list( $selected ) ) ) {
 					return true;
 				}
 				break;
