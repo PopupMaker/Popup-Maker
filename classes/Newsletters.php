@@ -235,7 +235,7 @@ class PUM_Newsletters {
 			$values['name'] = '';
 			$values['fname'] = '';
 			$values['lname'] = '';
-			$values['email']   = wp_privacy_anonymize_data( 'email', $values['email'] );
+			$values['email']   = function_exists( 'wp_privacy_anonymize_data' ) ? wp_privacy_anonymize_data( 'email', $values['email'] ) : 'deleted@site.invalid';
 		}
 
 		// Split name into fname & lname or vice versa.
