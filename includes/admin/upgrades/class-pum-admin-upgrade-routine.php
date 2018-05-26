@@ -56,7 +56,7 @@ class PUM_Admin_Upgrade_Routine {
 		$upgrades->step_up();
 
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			echo PUM_Utils_Array::safe_json_encode( array(
+			echo wp_json_encode( array(
 				'status' => sprintf( __( 'Step %d of approximately %d running', 'popup-maker' ), $upgrades->get_arg( 'step' ), $upgrades->get_arg( 'steps' ) ),
 				'next'   => $upgrades->get_args(),
 			) );
@@ -87,7 +87,7 @@ class PUM_Admin_Upgrade_Routine {
 				$upgrades->set_arg( 'completed', 0 );
 				$upgrades->set_arg( 'pum-upgrade', $next_routine );
 
-				echo PUM_Utils_Array::safe_json_encode( array(
+				echo wp_json_encode( array(
 					'status' => sprintf( '<strong>%s</strong>', $upgrades->get_upgrade( $next_routine ) ),
 					'next'   => $upgrades->get_args(),
 				) );

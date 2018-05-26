@@ -70,7 +70,7 @@ function pum_popup_data_attr( $popup_id = null ) {
 		return;
 	}
 
-	echo 'data-popmake="' . esc_attr( PUM_Utils_Array::safe_json_encode( $popup->get_data_attr() ) ) . '"';
+	echo 'data-popmake="' . esc_attr( wp_json_encode( $popup->get_data_attr() ) ) . '"';
 }
 
 

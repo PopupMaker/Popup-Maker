@@ -625,7 +625,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 			'js_only'  => null,
 		) );
 
-		$cache_key = hash( 'md5', PUM_Utils_Array::safe_json_encode( $filters ) );
+		$cache_key = hash( 'md5', json_encode( $filters ) );
 
 		// Check if these exclusion filters have already been applied and prevent extra processing.
 		$conditions = isset( $this->conditions_filtered[ $cache_key ] ) ? $this->conditions_filtered[ $cache_key ] : false;

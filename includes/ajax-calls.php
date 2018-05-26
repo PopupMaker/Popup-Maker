@@ -19,7 +19,7 @@ function popmake_optin_ajax_call() {
 		$response['success'] = true;
 	}
 	$response['new_nonce'] = wp_create_nonce( POPMAKE_NONCE );
-	echo PUM_Utils_Array::safe_json_encode( $response );
+	echo wp_json_encode( $response );
 	die();
 }
 
@@ -41,7 +41,7 @@ function popmake_popup_preview_content_ajax_call() {
 	header( "Cache-Control: no-cache, must-revalidate" );
 	header( "Pragma: no-cache" );
 	header( "Content-type: text/x-json" );
-	echo PUM_Utils_Array::safe_json_encode( $response );
+	echo wp_json_encode( $response );
 	die();
 }
 

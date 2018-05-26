@@ -54,7 +54,7 @@ class PUM_CF7_Integration {
 	public static function form_elements( $elements ) {
 		$form = wpcf7_get_current_contact_form();
 
-		$settings = PUM_Utils_Array::safe_json_encode( self::form_options( $form->id() ) );
+		$settings = wp_json_encode( self::form_options( $form->id() ) );
 
 		return $elements . "<input type='hidden' class='wpcf7-pum' value='$settings' />";
 	}

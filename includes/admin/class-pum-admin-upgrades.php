@@ -294,7 +294,7 @@ class PUM_Admin_Upgrades {
         $this->process_upgrades();
 
         if ( DOING_AJAX ) {
-            echo PUM_Utils_Array::safe_json_encode( array(
+            echo wp_json_encode( array(
                     'complete'  => true,
                     'status'    => sprintf(
                             '<strong>%s</strong><br/>%s',
@@ -659,7 +659,7 @@ class PUM_Admin_Upgrades {
 
                     $(document).ready(function () {
                         // Trigger upgrades on page load
-                        next_step(<?php echo PUM_Utils_Array::safe_json_encode( $this->get_args() ); ?>);
+                        next_step(<?php echo wp_json_encode( $this->get_args() ); ?>);
                         update_status('<?php printf( '<strong>%s</strong>', $this->get_upgrade( $this->get_arg( 'pum-upgrade' ) ) ); ?>');
                     });
                 }(jQuery, document));

@@ -277,7 +277,7 @@ function popmake_clean_popup_data_attr( $data_attr ) {
  * @param int $popup_id
  */
 function popmake_the_popup_data_attr( $popup_id = null ) {
-	echo 'data-popmake="' . esc_attr( PUM_Utils_Array::safe_json_encode( popmake_get_the_popup_data_attr( $popup_id ) ) ) . '"';
+	echo 'data-popmake="' . esc_attr( wp_json_encode( popmake_get_the_popup_data_attr( $popup_id ) ) ) . '"';
 }
 
 /**

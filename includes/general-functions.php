@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! function_exists( 'maybe_json_attr' ) ) {
 	function maybe_json_attr( $value, $encode = false ) {
 		if ( is_object( $value ) || is_array( $value ) ) {
-			return $encode ? htmlspecialchars( PUM_Utils_Array::safe_json_encode( $value ) ) : PUM_Utils_Array::safe_json_encode( $value );
+			return $encode ? htmlspecialchars( wp_json_encode( $value ) ) : wp_json_encode( $value );
 		}
 		return $value;
 	}
