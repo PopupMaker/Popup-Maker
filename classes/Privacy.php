@@ -369,19 +369,33 @@ class PUM_Privacy {
 	 * @return array
 	 */
 	public static function get_all_cookies() {
-		$popups  = PUM_Popups::get_all()->posts;
+		$popups  = PUM_Popups::get_all();
 		$cookies = array();
-		foreach ( $popups as $popup ) {
-			$popup = pum_get_popup( $popup->ID );
 
-			$pcookies = $popup->get_setting( 'cookies', array() );
-			if ( ! empty( $pcookies ) ) {
-				foreach ( $pcookies as $cookie ) {
-					if ( ! empty ( $cookie['settings']['name'] ) ) {
-						$cookies[ $cookie['settings']['name'] ] = $cookie['settings']['name'];
+		if ( $popups->have_posts() ) {
+			while ( $popups->have_posts() ) : $popups->next_post();
+				// Set this popup as the global $current.
+				PUM_Site_Popups::current_popup( $popups->post );
+
+				$popup = pum_get_popup( $popups->post->ID );
+
+				if ( ! pum_is_popup( $popup ) ) {
+					continue;
+				}
+
+				$pcookies = $popup->get_setting( 'cookies', array() );
+
+				if ( ! empty( $pcookies ) ) {
+					foreach ( $pcookies as $cookie ) {
+						if ( ! empty ( $cookie['settings']['name'] ) ) {
+							$cookies[ $cookie['settings']['name'] ] = $cookie['settings']['name'];
+						}
 					}
 				}
-			}
+			endwhile;
+
+			// Clear the global $current.
+			PUM_Site_Popups::current_popup( null );
 		}
 
 		return apply_filters( 'pum_privacy_get_all_cookies', $cookies );

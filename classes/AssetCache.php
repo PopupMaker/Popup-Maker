@@ -321,7 +321,7 @@ class PUM_AssetCache {
 				}
 
 				// Allow per popup CSS additions.
-				do_action( 'pum_generate_popup_css', $query->post->ID );
+				do_action( 'pum_generate_popup_css', $popup->ID );
 
 				$popup_css .= ob_get_clean();
 
