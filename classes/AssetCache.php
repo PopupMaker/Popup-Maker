@@ -309,6 +309,10 @@ class PUM_AssetCache {
 
 				$popup = pum_get_popup( $query->post->ID );
 
+				if ( ! pum_is_popup( $popup ) ) {
+					continue;
+				}
+
 				ob_start();
 
 				if ( $popup->get_setting( 'zindex', false ) ) {
