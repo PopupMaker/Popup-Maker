@@ -350,11 +350,13 @@ class PUM_Utils_Array {
 			return html_entity_decode( (string) $data, ENT_QUOTES, 'UTF-8' );
 		}
 
-		foreach ( (array) $data as $key => $value ) {
-			if ( is_scalar( $value ) ) {
-				$data[ $key ] = html_entity_decode( (string) $value, ENT_QUOTES, 'UTF-8' );
-			} elseif ( is_array( $value ) ) {
-				$data[ $key ] = self::make_safe_for_json_encode( $value );
+		if ( is_array( $data ) ) {
+			foreach ( (array) $data as $key => $value ) {
+				if ( is_scalar( $value ) ) {
+					$data[ $key ] = html_entity_decode( (string) $value, ENT_QUOTES, 'UTF-8' );
+				} elseif ( is_array( $value ) ) {
+					$data[ $key ] = self::make_safe_for_json_encode( $value );
+				}
 			}
 		}
 
