@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.6
-Stable tag: 1.7.21
+Stable tag: 1.7.22
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -100,6 +100,12 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+
+= v1.7.22 - 05/25/2018 =
+* Tweak: Updated Freemius library for GDPR optin support.
+* Improvement: Made all popup loops more reliable.
+* Fix: Error where objects were processed incorrectly.
+* Fix: "Uncaught Error: Call to a member function get_setting() on boolean in /popup-maker/classes/AssetCache.php:314"
 
 = v1.7.21 - 05/24/2018 =
 * Tweak: Clear asset cache on settings save.

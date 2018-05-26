@@ -6981,52 +6981,6 @@ function pumChecked(val1, val2, print) {
     return checked;
 }
 
-(function ($) {
-    var current_link_field;
-    //var wpActiveEditor = true;
-
-    $(document)
-        .on('click', '.pum-field-link button', function (event) {
-            var $input = $(this).next().select(),
-                id = $input.attr('id');
-
-            current_link_field = $input;
-
-            wpLink.open(id, $input.val(), ""); //open the link popup
-
-            JPCC.selectors('#wp-link-wrap').removeClass('has-text-field');
-            JPCC.selectors('#wp-link-target').hide();
-            JPCC.selectors('#pum-restriction-editor', true).hide();
-            return false;
-        })
-        .on('click', '#wp-link-submit, #wp-link-cancel button, #wp-link-close', function (event) {
-            var linkAtts = wpLink.getAttrs();
-
-            // If not for our fields then ignore it.
-            if (current_link_field === undefined || !current_link_field) {
-                return;
-            }
-
-            // If not the close buttons then its the save button.
-            if (event.target.id === 'wp-link-submit') {
-                current_link_field.val(linkAtts.href);
-            }
-
-            wpLink.textarea = current_link_field;
-            wpLink.close();
-
-            // Clear the current_link_field
-            current_link_field = false;
-
-            // Show our editor
-            JPCC.selectors('#pum-restriction-editor').show();
-
-            //trap any other events
-            event.preventDefault ? event.preventDefault() : event.returnValue = false;
-            event.stopPropagation();
-            return false;
-        });
-}(jQuery));
 /*******************************************************************************
  * Copyright (c) 2017, WP Popup Maker
  ******************************************************************************/
