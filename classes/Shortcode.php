@@ -325,6 +325,10 @@ abstract class PUM_Shortcode {
 	 */
 	public function register_shortcode_ui() {
 
+		if ( ! is_admin() || ! function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
+			return;
+		}
+
 		$shortcode_ui_args = array(
 			'label'         => $this->label(),
 			'listItemImage' => $this->icon(),
@@ -341,63 +345,60 @@ abstract class PUM_Shortcode {
 			$shortcode_ui_args['inner_content'] = $this->inner_content_labels();
 		}
 
-		$fields = $this->_fields();
+		$fields = PUM_Admin_Helpers::flatten_fields_array( $this->_fields() );
 
 		if ( count( $fields ) ) {
+			foreach ( $fields as $field_id => $field ) {
 
-			foreach ( $fields as $section_id => $section_fields ) {
-				foreach ( $section_fields as $field_id => $field ) {
+				// Don't register inner content fields.
+				if ( '_inner_content' == $field_id ) {
+					continue;
+				}
 
-					if ( '_inner_content' == $field_id ) {
-						continue;
-					}
+				//text, checkbox, textarea, radio, select, email, url, number, date, attachment, color, post_select
+				switch ( $field['type'] ) {
+					case 'select':
+						$shortcode_ui_args['attrs'][] = array(
+							'label'   => esc_html( $field['label'] ),
+							'attr'    => $field_id,
+							'type'    => 'select',
+							'options' => $field['options'],
+						);
+						break;
 
-					//text, checkbox, textarea, radio, select, email, url, number, date, attachment, color, post_select
-					switch ( $field['type'] ) {
-						case 'select':
-							$shortcode_ui_args['attrs'][] = array(
-								'label'   => esc_html( $field['label'] ),
-								'attr'    => $field_id,
-								'type'    => 'select',
-								'options' => $field['options'],
-							);
+					case 'postselect':
+					case 'objectselect':
+						if ( empty( $field['post_type'] ) ) {
 							break;
+						}
+						$shortcode_ui_args['attrs'][] = array(
+							'label'   => esc_html( $field['label'] ),
+							'attr'    => $field_id,
+							'type'    => 'post_select',
+							'options' => isset( $field['options'] ) ? $field['options'] : array(),
+							'query'   => array( 'post_type' => $field['post_type'] ),
+						);
+						break;
 
-						case 'postselect':
-						case 'objectselect':
-							if ( empty( $field['post_type'] ) ) {
-								break;
-							}
-							$shortcode_ui_args['attrs'][] = array(
-								'label'   => esc_html( $field['label'] ),
-								'attr'    => $field_id,
-								'type'    => 'post_select',
-								'options' => isset( $field['options'] ) ? $field['options'] : array(),
-								'query'   => array( 'post_type' => $field['post_type'] ),
-							);
-							break;
+					case 'taxonomyselect':
+						break;
 
-						case 'taxonomyselect':
-							break;
-
-						case 'text';
-						default:
-							$shortcode_ui_args['attrs'][] = array(
-								'label' => $field['label'],
-								'attr'  => $field_id,
-								'type'  => 'text',
-								'value' => ! empty( $field['std'] ) ? $field['std'] : '',
-								//'encode' => true,
-								'meta'  => array(
-									'placeholder' => $field['placeholder'],
-								),
-							);
-							break;
-					}
+					case 'text';
+					default:
+						$shortcode_ui_args['attrs'][] = array(
+							'label' => $field['label'],
+							'attr'  => $field_id,
+							'type'  => 'text',
+							'value' => ! empty( $field['std'] ) ? $field['std'] : '',
+							//'encode' => true,
+							'meta'  => array(
+								'placeholder' => $field['placeholder'],
+							),
+						);
+						break;
 				}
 			}
 		}
-
 
 		/**
 		 * Register UI for your shortcode
@@ -405,9 +406,7 @@ abstract class PUM_Shortcode {
 		 * @param string $shortcode_tag
 		 * @param array  $ui_args
 		 */
-		if ( function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
-			shortcode_ui_register_for_shortcode( $this->tag(), $shortcode_ui_args );
-		}
+		shortcode_ui_register_for_shortcode( $this->tag(), $shortcode_ui_args );
 	}
 
 	/**
