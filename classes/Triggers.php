@@ -180,7 +180,7 @@ class PUM_Triggers {
 
 		) );
 
-		foreach( $triggers as $key => $trigger ) {
+		foreach ( $triggers as $key => $trigger ) {
 			$triggers[ $key ]['fields'] = PUM_Admin_Helpers::parse_tab_fields( $triggers[ $key ]['fields'], array(
 				'has_subtabs' => false,
 				'name'        => '%s',
@@ -263,6 +263,7 @@ class PUM_Triggers {
 			'desc'     => __( 'Choose which cookies will disable this trigger?', 'popup-maker' ),
 			'type'     => 'select',
 			'multiple' => true,
+			'as_array' => true,
 			'select2'  => true,
 			'priority' => 99,
 			'options'  => array(
