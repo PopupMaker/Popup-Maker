@@ -221,9 +221,9 @@ class PUM_Upgrades {
 		<p class="pum-upgrade-notice">
 			<?php
 			if ( empty( $resume_upgrade ) ) {
-				_e( 'Your database needs to be upgraded following the latest Popup Maker or Popup Maker extension update.', 'popup-maker' );
+				_e( 'Changes in the latest version of Popup Maker or a PM extension require changes your settings to ensure everything continues to work correctly.', 'popup-maker' );
 			} else {
-				_e( 'Popup Maker needs to complete a database upgrade that was previously started.', 'popup-maker' );
+				_e( 'Popup Maker needs to complete a the update of your settings that was previously started.', 'popup-maker' );
 			} ?>
 		</p>
 		<?php
@@ -246,8 +246,9 @@ class PUM_Upgrades {
 
 		<form method="post" class="pum-form  pum-batch-form  pum-upgrade-form" data-ays="<?php _e( 'This can sometimes take a few minutes, are you ready to begin?', 'popup-maker' ); ?>" data-upgrade_id="<?php echo $args['upgrade_id']; ?>" data-step="<?php echo (int) $args['step']; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'pum_upgrade_ajax_nonce' ) ); ?>">
 
+			<p><small><?php _e( 'The button below will do process these changes automatically for you.', 'popup-maker' ); ?></small></p>
 			<div class="pum-field  pum-field-button  pum-field-submit">
-				<?php submit_button( ! empty( $resume_upgrade ) ? __( 'Finish Upgrades', 'popup-maker' ) : __( 'Process Upgrades', 'popup-maker' ), 'secondary', 'submit', false ); ?>
+				<?php submit_button( ! empty( $resume_upgrade ) ? __( 'Finish Upgrades', 'popup-maker' ) : __( 'Process Changes', 'popup-maker' ), 'secondary', 'submit', false ); ?>
 			</div>
 
 			<div class="pum-batch-progress">
