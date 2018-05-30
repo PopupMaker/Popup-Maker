@@ -66,7 +66,7 @@ class PUM_Options {
 	 * Looks to see if the specified setting exists, returns default if not
 	 *
 	 * @param string $key
-	 * @param bool $default
+	 * @param bool   $default
 	 *
 	 * @return mixed
 	 */
@@ -86,7 +86,7 @@ class PUM_Options {
 	 * Warning: Passing in an empty, false or null string value will remove
 	 *          the key from the _options array.
 	 *
-	 * @param string $key The Key to update
+	 * @param string          $key   The Key to update
 	 * @param string|bool|int $value The value to set the key to
 	 *
 	 * @return boolean True if updated, false if not.
@@ -137,7 +137,7 @@ class PUM_Options {
 		$options = get_option( self:: $_prefix . 'settings' );
 
 		// Lets merge options that may exist previously that are not existing now.
-		$new_options = wp_parse_args( $new_options,$options);
+		$new_options = wp_parse_args( $new_options, $options );
 
 		$did_update = update_option( self:: $_prefix . 'settings', $new_options );
 
@@ -199,7 +199,7 @@ class PUM_Options {
 		$options = get_option( self:: $_prefix . 'settings' );
 
 		// Remove each key/value pair.
-		foreach( $keys as $key ) {
+		foreach ( $keys as $key ) {
 			if ( isset( $options[ $key ] ) ) {
 				unset( $options[ $key ] );
 			}
@@ -227,7 +227,10 @@ class PUM_Options {
 		$options = self::get_all();
 
 		foreach ( $remap_array as $key => $new_key ) {
-			$options[ $new_key ] = self::get( $key, false );
+			$value = self::get( $key, false );
+			if ( ! empty( $value ) ) {
+				$options[ $new_key ] = $value;
+			}
 			unset( $options[ $key ] );
 		}
 
