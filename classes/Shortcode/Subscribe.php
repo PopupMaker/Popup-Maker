@@ -326,6 +326,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 					),
 					'privacy_consent_required'        => array(
 						'label'        => __( 'Consent Required', 'popup-maker' ),
+						'desc'        => __( 'Note: Requiring consent may not be compliant with GDPR for all situations. Be sure to do your research or check with legal council.', 'popup-maker' ),
 						'type'         => 'checkbox',
 						'std'          => pum_get_option( 'default_privacy_consent_required' ),
 						'private'      => true,
