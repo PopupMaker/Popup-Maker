@@ -106,8 +106,6 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		) $charset_collate;";
 
 		dbDelta( $sql );
-
-		update_option( $this->table_name . '_db_version', $this->version );
 	}
 
 	public function get_by_email( $email = '' ) {

@@ -40,10 +40,10 @@ abstract class PUM_Abstract_Database {
 		if ( ! $current_db_version || $current_db_version < $this->version ) {
 			// Install the table.
 			@$this->create_table();
-		}
 
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->table_name()'" ) != $this->table_name() ) {
-			@$this->create_table();
+			if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->table_name'" ) == $this->table_name ) {
+				update_option( $this->table_name . '_db_version', $this->version );
+			}
 		}
 	}
 
