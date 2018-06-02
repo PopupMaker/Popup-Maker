@@ -86,10 +86,10 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 
 		$sql = "CREATE TABLE " . $this->table_name() . " (
 			`ID` BIGINT(20) NOT NULL AUTO_INCREMENT,
-			`email_hash` VARCHAR(255) NOT NULL,
+			`email_hash` VARCHAR(32) NOT NULL,
 			`popup_id` BIGINT(20) NOT NULL,
 			`user_id` BIGINT(20) NOT NULL,
-			`email` VARCHAR(255) NOT NULL,
+			`email` VARCHAR(191) NOT NULL,
 			`name` VARCHAR(255) NOT NULL,
 			`fname` VARCHAR(255) NOT NULL,
 			`lname` VARCHAR(255) NOT NULL,
