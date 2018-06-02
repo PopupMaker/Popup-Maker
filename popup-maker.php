@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function pum_autoloader( $class ) {
 
-	if ( strncmp( 'PUM_Newsletter_', $class, strlen( 'PUM_Newsletter_' ) ) === 0 && class_exists( 'PUM_MCI' ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ) ) {
+	if ( strncmp( 'PUM_Newsletter_', $class, strlen( 'PUM_Newsletter_' ) ) === 0 && class_exists( 'PUM_MCI' ) && ! empty( PUM_MCI::$VER ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ) ) {
 		return;
 	}
 
@@ -93,7 +93,7 @@ class Popup_Maker {
 	/**
 	 * @var string Plugin Version
 	 */
-	public static $VER = '1.7.22';
+	public static $VER = '1.7.23';
 
 	/**
 	 * @var int DB Version
