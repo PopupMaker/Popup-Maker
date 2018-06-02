@@ -101,6 +101,13 @@ There are several common causes for this which include:
 
 == Changelog ==
 
+= v1.7.23 - 05/31/2018 =
+* Improvement: Converted cookie privacy info to tabular rendering.
+* Tweak: Improved update notice text.
+* Fix: Issues with subscriber table not being created. Thanks @jnorell
+* Fix: Bug not allowing more than one cookie for a trigger.
+* Fix: Undefined index errors in shortcake/shortcode-ui integration.
+
 = v1.7.22 - 05/25/2018 =
 * Tweak: Updated Freemius library for GDPR optin support.
 * Improvement: Made all popup loops more reliable.
