@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.6
-Stable tag: 1.7.22
+Stable tag: 1.7.23
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -101,7 +101,7 @@ There are several common causes for this which include:
 
 == Changelog ==
 
-= v1.7.23 - 05/31/2018 =
+= v1.7.23 - 06/04/2018 =
 * Improvement: Converted cookie privacy info to tabular rendering.
 * Tweak: Improved update notice text.
 * Fix: Issues with subscriber table not being created. Thanks @jnorell
