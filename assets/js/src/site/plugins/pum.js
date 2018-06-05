@@ -6,6 +6,26 @@ var PUM;
 (function ($, document, undefined) {
     "use strict";
 
+    window.pum_vars = window.pum_vars || {
+        // TODO Add defaults.
+        default_theme: '0',
+        home_url: '/',
+        version: 1.7,
+        ajaxurl: '',
+        restapi: false,
+        rest_nonce: null,
+        debug_mode: false,
+        disable_tracking: true,
+        message_position: 'top',
+        core_sub_forms_enabled: true,
+        popups: []
+    };
+
+    window.pum_popups = window.pum_popups || [];
+
+    // Backward compatibility fill.
+    window.pum_vars.popups = window.pum_popups;
+
     function isInt(value) {
         return !isNaN(value) && parseInt(Number(value)) === parseInt(value) && !isNaN(parseInt(value, 10));
     }
@@ -136,10 +156,10 @@ var PUM;
             var $popup = PUM.getPopup(el),
                 settings = PUM.getSettings(el),
                 trigger_selectors = [
-                '.popmake-' + settings.id,
-                '.popmake-' + decodeURIComponent(settings.slug),
-                'a[href$="#popmake-' + settings.id + '"]'
-            ];
+                    '.popmake-' + settings.id,
+                    '.popmake-' + decodeURIComponent(settings.slug),
+                    'a[href$="#popmake-' + settings.id + '"]'
+                ];
 
             if (trigger_settings.extra_selectors && trigger_settings.extra_selectors !== '') {
                 trigger_selectors.push(trigger_settings.extra_selectors);
@@ -176,7 +196,7 @@ var PUM;
             }
         }
 
-};
+    };
 
     $.fn.popmake = function (method) {
         // Method calling logic
@@ -242,7 +262,7 @@ var PUM;
         },
         getSettings: function () {
             var $popup = PUM.getPopup(this);
-            return $.extend(true, {}, $.fn.popmake.defaults, $popup.data('popmake') || {}, pum_vars.popups[$popup.attr('id')] || {});
+            return $.extend(true, {}, $.fn.popmake.defaults, $popup.data('popmake') || {}, pum_popups[$popup.attr('id')] || {});
         },
         state: function (test) {
             var $popup = PUM.getPopup(this);

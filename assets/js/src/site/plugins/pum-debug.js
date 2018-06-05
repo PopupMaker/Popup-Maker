@@ -17,7 +17,32 @@ var pum_debug_mode = false,
 
         var inited = false,
             current_popup_event = false,
-            vars = window.pum_debug_vars || {};
+            vars = window.pum_debug_vars || {
+                'debug_mode_enabled': 'Popup Maker: Debug Mode Enabled',
+                'debug_started_at': 'Debug started at:',
+                'debug_more_info': 'For more information on how to use this information visit https://docs.wppopupmaker.com/?utm_medium=js-debug-info&utm_campaign=ContextualHelp&utm_source=browser-console&utm_content=more-info',
+                'global_info': 'Global Information',
+                'localized_vars': 'Localized variables',
+                'popups_initializing': 'Popups Initializing',
+                'popups_initialized': 'Popups Initialized',
+                'single_popup_label': 'Popup: #',
+                'theme_id': 'Theme ID: ',
+                'label_method_call': 'Method Call:',
+                'label_method_args': 'Method Arguments:',
+                'label_popup_settings': 'Settings',
+                'label_triggers': 'Triggers',
+                'label_cookies': 'Cookies',
+                'label_delay': 'Delay:',
+                'label_conditions': 'Conditions',
+                'label_cookie': 'Cookie:',
+                'label_settings': 'Settings:',
+                'label_selector': 'Selector:',
+                'label_mobile_disabled': 'Mobile Disabled:',
+                'label_tablet_disabled': 'Tablet Disabled:',
+                'label_event': 'Event: %s',
+                'triggers': [],
+                'cookies': []
+            };
 
         pum_debug = {
             odump: function (o) {
