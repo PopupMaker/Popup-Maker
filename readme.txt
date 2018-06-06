@@ -1,12 +1,12 @@
 === Popup Maker - Popup Forms, Optins & More ===
-Contributors: danieliser, wppopupmaker, yogaman5020
+Contributors: danieliser, wppopupmaker
 Author URI: https://wppopupmaker.com/?utm_source=readme-header&utm_campaign=Readme&utm_medium=author-uri
 Plugin URI: https://wppopupmaker.com/?utm_capmaign=Readme&utm_source=readme-header&utm_medium=plugin-uri
 Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.6
-Stable tag: 1.7.24
+Stable tag: 1.7.25
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -100,6 +100,11 @@ There are several common causes for this which include:
 9. Create any popup imaginable using our color pickers and sliders!
 
 == Changelog ==
+
+= v1.7.25 - 06/??/2018 =
+* Tweak: Localized most variables earlier to prevent errors. Added in default values in case they do not get rendered to prevent fatal JS errors.
+* Fix: Tweaked extension activation class to be compatible with PHP 5.2.
+* Fix: Bug where boolean scalar values were changed to "" for json_encode.
 
 = v1.7.24 - 06/04/2018 =
 * Tweak: Updated subscriber table for existing sites that failed to add it properly before.
