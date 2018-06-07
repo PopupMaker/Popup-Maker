@@ -225,6 +225,7 @@ class PUM_Site_Assets {
 			'home_url'               => trailingslashit( $site_home_path ),
 			'message_position'       => 'top',
 			'core_sub_forms_enabled' => ! PUM_Newsletters::$disabled,
+			'popups'                 => array(),
 		) ) );
 
 		// TODO Remove all trace usages of these in JS so they can be removed.
