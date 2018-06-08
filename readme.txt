@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.6
-Stable tag: 1.7.25
+Stable tag: 1.7.26
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -101,7 +101,10 @@ There are several common causes for this which include:
 
 == Changelog ==
 
-= v1.7.25 - 06/??/2018 =
+= v1.7.26 - 06/07/2018 =
+* Add empty popups array to prevent errors due to page caching.
+
+= v1.7.25 - 06/05/2018 =
 * Tweak: Localized most variables earlier to prevent errors. Added in default values in case they do not get rendered to prevent fatal JS errors.
 * Fix: Tweaked extension activation class to be compatible with PHP 5.2.
 * Fix: Bug where boolean scalar values were changed to "" for json_encode.

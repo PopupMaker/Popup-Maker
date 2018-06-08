@@ -150,7 +150,7 @@ msgstr ""
 msgid "Subscribers"
 msgstr ""
 
-#: classes/Admin/Pages.php:56, classes/Admin/Pages.php:149, classes/Admin/Templates.php:415, classes/Admin/Templates.php:643, classes/Site/Assets.php:246, includes/admin/admin-setup.php:24
+#: classes/Admin/Pages.php:56, classes/Admin/Pages.php:149, classes/Admin/Templates.php:415, classes/Admin/Templates.php:643, classes/Site/Assets.php:247, includes/admin/admin-setup.php:24
 msgid "Settings"
 msgstr ""
 
@@ -246,7 +246,7 @@ msgstr ""
 msgid "Display"
 msgstr ""
 
-#: classes/Admin/Popups.php:296, classes/Admin/Templates.php:406, classes/Site/Assets.php:247
+#: classes/Admin/Popups.php:296, classes/Admin/Templates.php:406, classes/Site/Assets.php:248
 msgid "Triggers"
 msgstr ""
 
@@ -266,7 +266,7 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: classes/Admin/Popups.php:316, classes/Site/Assets.php:250
+#: classes/Admin/Popups.php:316, classes/Site/Assets.php:251
 msgid "Conditions"
 msgstr ""
 
@@ -1216,7 +1216,7 @@ msgstr ""
 msgid "Cookies control the repeat display of a popup."
 msgstr ""
 
-#: classes/Admin/Templates.php:634, classes/Privacy.php:57, classes/Site/Assets.php:248
+#: classes/Admin/Templates.php:634, classes/Privacy.php:57, classes/Site/Assets.php:249
 msgid "Cookies"
 msgstr ""
 
@@ -1592,7 +1592,7 @@ msgstr ""
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: classes/Privacy.php:28, classes/Site/Assets.php:235, classes/Types.php:23, includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/integrations/class-pum-gravity-forms.php:53, includes/modules/admin-bar.php:414
+#: classes/Privacy.php:28, classes/Site/Assets.php:236, classes/Types.php:23, includes/admin/class-pum-admin-upgrades.php:110, includes/admin/class-pum-admin-upgrades.php:111, includes/admin/class-pum-admin-upgrades.php:256, includes/integrations/class-pum-gravity-forms.php:53, includes/modules/admin-bar.php:414
 msgid "Popup Maker"
 msgstr ""
 
@@ -2036,75 +2036,75 @@ msgstr ""
 msgid "Subscription Form Placeholder"
 msgstr ""
 
-#: classes/Site/Assets.php:235
+#: classes/Site/Assets.php:236
 msgid "Debug Mode Enabled"
 msgstr ""
 
-#: classes/Site/Assets.php:236
+#: classes/Site/Assets.php:237
 msgid "Debug started at:"
 msgstr ""
 
-#: classes/Site/Assets.php:237
+#: classes/Site/Assets.php:238
 msgid "For more information on how to use this information visit %s"
 msgstr ""
 
-#: classes/Site/Assets.php:238
+#: classes/Site/Assets.php:239
 msgid "Global Information"
 msgstr ""
 
-#: classes/Site/Assets.php:239
+#: classes/Site/Assets.php:240
 msgid "Localized variables"
 msgstr ""
 
-#: classes/Site/Assets.php:240
+#: classes/Site/Assets.php:241
 msgid "Popups Initializing"
 msgstr ""
 
-#: classes/Site/Assets.php:241
+#: classes/Site/Assets.php:242
 msgid "Popups Initialized"
 msgstr ""
 
-#: classes/Site/Assets.php:242
+#: classes/Site/Assets.php:243
 msgid "Popup: #"
 msgstr ""
 
-#: classes/Site/Assets.php:243
+#: classes/Site/Assets.php:244
 msgid "Theme ID: "
 msgstr ""
 
-#: classes/Site/Assets.php:244
+#: classes/Site/Assets.php:245
 msgid "Method Call:"
 msgstr ""
 
-#: classes/Site/Assets.php:245
+#: classes/Site/Assets.php:246
 msgid "Method Arguments:"
 msgstr ""
 
-#: classes/Site/Assets.php:249
+#: classes/Site/Assets.php:250
 msgid "Delay:"
 msgstr ""
 
-#: classes/Site/Assets.php:251
+#: classes/Site/Assets.php:252
 msgid "Cookie:"
 msgstr ""
 
-#: classes/Site/Assets.php:252
+#: classes/Site/Assets.php:253
 msgid "Settings:"
 msgstr ""
 
-#: classes/Site/Assets.php:253
+#: classes/Site/Assets.php:254
 msgid "Selector:"
 msgstr ""
 
-#: classes/Site/Assets.php:254
+#: classes/Site/Assets.php:255
 msgid "Mobile Disabled:"
 msgstr ""
 
-#: classes/Site/Assets.php:255
+#: classes/Site/Assets.php:256
 msgid "Tablet Disabled:"
 msgstr ""
 
-#: classes/Site/Assets.php:256
+#: classes/Site/Assets.php:257
 msgid "Event: %s"
 msgstr ""
 
