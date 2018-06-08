@@ -311,7 +311,11 @@ var PUM;
         },
         getSettings: function () {
             var $popup = PUM.getPopup(this);
-            return $.extend(true, {}, $.fn.popmake.defaults, $popup.data('popmake') || {}, pum_popups[$popup.attr('id')] || {});
+            return $.extend(true,
+                {},
+                $.fn.popmake.defaults,
+                $popup.data('popmake') || {},
+                typeof pum_popups === 'object' && typeof pum_popups[$popup.attr('id')] !== 'undefined' ? pum_popups[$popup.attr('id')] : {});
         },
         state: function (test) {
             var $popup = PUM.getPopup(this);
