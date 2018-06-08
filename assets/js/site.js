@@ -67,10 +67,10 @@ var PUM;
         disable_tracking: true,
         message_position: 'top',
         core_sub_forms_enabled: true,
-        popups: []
+        popups: {}
     };
 
-    window.pum_popups = window.pum_popups || [];
+    window.pum_popups = window.pum_popups || {};
 
     // Backward compatibility fill.
     window.pum_vars.popups = window.pum_popups;
@@ -311,11 +311,7 @@ var PUM;
         },
         getSettings: function () {
             var $popup = PUM.getPopup(this);
-            return $.extend(true,
-                {},
-                $.fn.popmake.defaults,
-                $popup.data('popmake') || {},
-                typeof pum_popups === 'object' && typeof pum_popups[$popup.attr('id')] !== 'undefined' ? pum_popups[$popup.attr('id')] : {});
+            return $.extend(true, {}, $.fn.popmake.defaults, $popup.data('popmake') || {}, typeof pum_popups === 'object' && typeof pum_popups[$popup.attr('id')] !== 'undefined' ? pum_popups[$popup.attr('id')] : {});
         },
         state: function (test) {
             var $popup = PUM.getPopup(this);
