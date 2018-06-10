@@ -34,12 +34,15 @@ function pum_get_newsletter_provider( $provider_id ) {
  */
 function pum_get_newsletter_provider_message( $provider_id, $context, $values = array() ) {
 	$provider = pum_get_newsletter_provider( $provider_id );
+	$default = pum_get_newsletter_default_messages( $context );
 
 	if ( ! $provider ) {
-		return pum_get_newsletter_default_messages( $context );
+		return $default;
 	}
 
-	return $provider->get_message( $context, $values );
+	$message = $provider->get_message( $context, $values );
+
+	return ! empty( $message ) ? $message : $default;
 }
 
 /**

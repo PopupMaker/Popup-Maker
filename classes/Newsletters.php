@@ -220,9 +220,16 @@ class PUM_Newsletters {
 
 		$values['provider'] = sanitize_text_field( $values['provider'] );
 
-		$consent_args = ! empty( $values['consent_args'] ) ? (array) json_decode( stripslashes( $values['consent_args'] ) ) : array();
+		if( ! is_array( $values['consent_args'] ) ) {
+			if ( strpos( $values['consent_args'], '\"' ) >= 0 ) {
+				$values['consent_args'] = stripslashes( $values["consent_args"] );
+			}
 
-		$values['consent_args'] = wp_parse_args( $consent_args, array(
+			$values['consent_args'] = (array) json_decode( $values['consent_args'] );
+		}
+
+
+		$values['consent_args'] = wp_parse_args( $values['consent_args'], array(
 			'enabled'  => 'no',
 			'required' => false,
 			'text'     => '',
