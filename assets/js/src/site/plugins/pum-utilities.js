@@ -424,7 +424,7 @@
         }
     };
 
-    $.fn.pumSerializeObject = $.fn.popmake.utilities.serializeObject;
+    //$.fn.pumSerializeObject = $.fn.popmake.utilities.serializeObject;
 
     // Deprecated fix. utilies was renamed because of typo.
     $.fn.popmake.utilies = $.fn.popmake.utilities;
