@@ -703,7 +703,7 @@ msgstr ""
 msgid "Message to show user when successfuly subscribed."
 msgstr ""
 
-#: classes/Admin/Settings.php:258, includes/functions/newsletter.php:54
+#: classes/Admin/Settings.php:258, includes/functions/newsletter.php:57
 msgid "You have been subscribed!"
 msgstr ""
 
@@ -715,7 +715,7 @@ msgstr ""
 msgid "Message to show user when no email is entered."
 msgstr ""
 
-#: classes/Admin/Settings.php:264, includes/functions/newsletter.php:58
+#: classes/Admin/Settings.php:264, includes/functions/newsletter.php:61
 msgid "Please enter a valid email."
 msgstr ""
 
@@ -727,7 +727,7 @@ msgstr ""
 msgid "Message to show user when an invalid email is entered."
 msgstr ""
 
-#: classes/Admin/Settings.php:270, includes/functions/newsletter.php:59, includes/functions/newsletter.php:60
+#: classes/Admin/Settings.php:270, includes/functions/newsletter.php:62, includes/functions/newsletter.php:63
 msgid "Email provided is not a valid email address."
 msgstr ""
 
@@ -739,7 +739,7 @@ msgstr ""
 msgid "Message to show user when an error has occurred."
 msgstr ""
 
-#: classes/Admin/Settings.php:276, includes/functions/newsletter.php:56
+#: classes/Admin/Settings.php:276, includes/functions/newsletter.php:59
 msgid "Error occurred when subscribing. Please try again."
 msgstr ""
 
@@ -751,7 +751,7 @@ msgstr ""
 msgid "Message to show user who is already subscribed."
 msgstr ""
 
-#: classes/Admin/Settings.php:282, includes/functions/newsletter.php:57
+#: classes/Admin/Settings.php:282, includes/functions/newsletter.php:60
 msgid "You are already a subscriber."
 msgstr ""
 
@@ -2622,7 +2622,7 @@ msgstr ""
 msgid "Choose a corner radius for your close button."
 msgstr ""
 
-#: includes/functions/newsletter.php:55
+#: includes/functions/newsletter.php:58
 msgid "Please check your email and confirm your subscription."
 msgstr ""
 
