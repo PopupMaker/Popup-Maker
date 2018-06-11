@@ -44,6 +44,7 @@ class PUM_Privacy {
 			<p class="privacy-policy-tutorial"><?php _e( 'Hello,', 'popup-maker' ); ?></p> <p class="privacy-policy-tutorial"><?php _e( 'This information serves as a guide on what sections need to be modified due to usage of Popup Maker and its extensions.', 'popup-maker' ); ?></p>
 			<p class="privacy-policy-tutorial"><?php _e( 'You should include the information below in the correct sections of you privacy policy.', 'popup-maker' ); ?></p>
 			<p class="privacy-policy-tutorial"><strong> <?php _e( 'Disclaimer:', 'popup-maker' ); ?></strong> <?php _e( 'This information is only for guidance and not to be considered as legal advice.', 'popup-maker' ); ?></p>
+			<p class="privacy-policy-tutorial"><strong> <?php _e( 'Note:', 'popup-maker' ); ?></strong> <?php _e( 'Some of the information below is dynamically generated, such as cookies. If you add or change popups you will see those additions or changes below and will need to update your policy accordingly.', 'popup-maker' ); ?></p>
 
 			<h2><?php _e( 'What personal data we collect and why we collect it', 'popup-maker' ); ?></h2>
 
