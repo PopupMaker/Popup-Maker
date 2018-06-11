@@ -32,6 +32,11 @@ class PUM_AssetCache {
 	public static $css_url;
 
 	/**
+	 * @var bool
+	 */
+	public static $disabled = true;
+
+	/**
 	 * @var
 	 */
 	public static $debug;
@@ -50,6 +55,7 @@ class PUM_AssetCache {
 			self::$asset_url = Popup_Maker::$URL . 'assets/';
 			self::$js_url    = self::$asset_url . 'js/';
 			self::$css_url   = self::$asset_url . 'css/';
+			self::$disabled  = pum_get_option( 'disable_asset_caching', false );
 
 			add_action( 'pum_extension_updated', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_extension_deactivated', array( __CLASS__, 'reset_cache' ) );
@@ -66,11 +72,25 @@ class PUM_AssetCache {
 	}
 
 	/**
+	 * Checks if Asset caching is possible and enabled.
+	 *
+	 * @return bool
+	 */
+	public static function enabled() {
+		return self::writeable() && ! self::$disabled;
+	}
+
+	/**
 	 * Is the cache directory writeable?
 	 *
 	 * @return bool
 	 */
 	public static function writeable() {
+		// TODO Remove this once all extensions have been thoroughly updated with time to get them to users.
+		if ( self::$disabled ) {
+			return false;
+		}
+
 		// Check and create cachedir
 		if ( ! is_dir( self::$cache_dir ) ) {
 
