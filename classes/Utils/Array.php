@@ -305,6 +305,28 @@ class PUM_Utils_Array {
 	}
 
 	/**
+	 * Converts 'false' & 'true' string values in any array to proper boolean values.
+	 *
+	 * @param array|mixed $data
+	 *
+	 * @return array|mixed
+	 */
+	public static function fix_json_boolean_values( $data ) {
+
+		if ( is_array( $data ) ) {
+			foreach ( (array) $data as $key => $value ) {
+				if ( is_string( $value ) && in_array( $value, array( 'true', 'false' ) ) ) {
+					$data[ $key ] = json_decode( $value );
+				} elseif ( is_array( $value ) ) {
+					$data[ $key ] = self::fix_json_boolean_values( $value );
+				}
+			}
+		}
+
+		return $data;
+	}
+
+	/**
 	 * @param $obj
 	 *
 	 * @return array
@@ -362,7 +384,6 @@ class PUM_Utils_Array {
 
 		return $data;
 	}
-
 
 	public static function utf8_encode_recursive( $d ) {
 		if ( is_array( $d ) ) {

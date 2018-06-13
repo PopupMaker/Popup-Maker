@@ -61,6 +61,9 @@ class PUM_Newsletters {
 			$values['popup_id'] = absint( $values['pum_form_popup_id'] );
 		}
 
+		// Clean JSON passed values.
+		$values = PUM_Utils_Array::fix_json_boolean_values( $values );
+
 		do_action( 'pum_sub_form_ajax_override', $values );
 
 		// Allow sanitization & manipulation of form values prior to usage.
@@ -220,7 +223,7 @@ class PUM_Newsletters {
 
 		$values['provider'] = sanitize_text_field( $values['provider'] );
 
-		if( ! is_array( $values['consent_args'] ) ) {
+		if( ! empty( $values['consent_args'] ) && is_string( $values['consent_args'] ) ) {
 			if ( strpos( $values['consent_args'], '\"' ) >= 0 ) {
 				$values['consent_args'] = stripslashes( $values["consent_args"] );
 			}
@@ -234,6 +237,7 @@ class PUM_Newsletters {
 			'required' => false,
 			'text'     => '',
 		) );
+
 
 		// Anonymize the data if they didn't consent and privacy is enabled.
 		if ( $values['consent_args']['enabled'] === 'yes' && ! $values['consent_args']['required'] && $values['consent'] === 'no' ) {
