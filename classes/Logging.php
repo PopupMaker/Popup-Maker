@@ -18,12 +18,17 @@ class PUM_Logging {
 	/**
 	 * @var string
 	 */
-	private $filename   = '';
+	private $filename = '';
 
 	/**
 	 * @var string
 	 */
-	private $file       ='';
+	private $file = '';
+
+	/**
+	 * @var string
+	 */
+	private $content;
 
 	/**
 	 * @var PUM_Logging
@@ -52,12 +57,17 @@ class PUM_Logging {
 	 * Get things started
 	 */
 	public function init() {
-		$upload_dir       = wp_upload_dir( null, false );
-		$this->filename   = 'pum-debug.log';
-		$this->file       = trailingslashit( $upload_dir['basedir'] ) . $this->filename;
+		$upload_dir     = wp_upload_dir( null, false );
+		$this->filename = 'pum-debug.log';
+		$this->file     = trailingslashit( $upload_dir['basedir'] ) . $this->filename;
 
 		if ( ! is_writeable( $upload_dir['basedir'] ) ) {
 			$this->is_writable = false;
+		}
+
+		// Truncate long log files.
+		if ( file_exists( $this->file ) && filesize( $this->file ) >= 1048576 ) {
+			$this->truncate_log();
 		}
 	}
 
@@ -72,11 +82,26 @@ class PUM_Logging {
 
 	/**
 	 * Log message to file
+	 *
+	 * @param string $message
 	 */
 	public function log( $message = '' ) {
-		$message = date( 'Y-n-d H:i:s' ) . ' - ' . $message . "\r\n";
-		$this->write_to_log( $message );
+		$this->write_to_log( date( 'Y-n-d H:i:s' ) . ' - ' . $message );
+	}
 
+	/**
+	 * Log unique message to file.
+	 *
+	 * @param string $message
+	 */
+	public function log_unique( $message = '' ) {
+		$contents = $this->get_file();
+
+		if ( strpos( $contents, $message ) !== false ) {
+			return;
+		}
+
+		$this->log( $message );
 	}
 
 	/**
@@ -85,33 +110,78 @@ class PUM_Logging {
 	 * @return string
 	 */
 	protected function get_file() {
-		$file = '';
 
-		if ( @file_exists( $this->file ) ) {
-			if ( ! is_writeable( $this->file ) ) {
-				$this->is_writable = false;
+		if ( ! isset( $this->content ) ) {
+			$this->content = '';
+
+			if ( @file_exists( $this->file ) ) {
+				if ( ! is_writeable( $this->file ) ) {
+					$this->is_writable = false;
+				}
+
+				$this->content = @file_get_contents( $this->file );
+			} else {
+				@file_put_contents( $this->file, '' );
+				@chmod( $this->file, 0664 );
 			}
-
-			$file = @file_get_contents( $this->file );
-		} else {
-			@file_put_contents( $this->file, '' );
-			@chmod( $this->file, 0664 );
 		}
 
-		return $file;
+		return $this->content;
 	}
 
 	/**
 	 * Write the log message
+	 *
+	 * @param string $message
 	 */
 	protected function write_to_log( $message = '' ) {
-		$file = $this->get_file();
-		$file .= $message;
-		@file_put_contents( $this->file, $file );
+		$file_contents = $this->get_file();
+
+		$length = strlen( "\r\n" );
+
+		// If it doesn't end with a new line, add one.
+		if ( substr( $file_contents, - $length ) !== "\r\n" ) {
+			$file_contents .= "\r\n";
+		}
+
+		$file_contents .= $message;
+
+		$this->content = $file_contents;
+		$this->save_logs();
 	}
 
 	/**
-	 * Write the log message
+	 * Save the current contents to file.
+	 */
+	public function save_logs() {
+		@file_put_contents( $this->file, $this->content );
+	}
+
+	/**
+	 * Get a line count.
+	 *
+	 * @return int
+	 */
+	public function count_lines() {
+		$file  = $this->get_file();
+		$lines = explode( "\r\n", $file );
+
+		return count( $lines );
+	}
+
+	/**
+	 * Truncates a log file to maximum of 250 lines.
+	 */
+	public function truncate_log() {
+		$content       = $this->get_file();
+		$lines         = explode( "\r\n", $content );
+		$lines         = array_slice( $lines, 0, 250 ); //50 is how many lines you want to keep
+		$this->content = implode( "\r\n", $lines );
+		$this->save_logs();
+	}
+
+	/**
+	 * Delete the log file.
 	 */
 	public function clear_log() {
 		@unlink( $this->file );
@@ -129,6 +199,6 @@ class PUM_Logging {
 			$notice = sprintf( '%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.', $function, $version );
 		}
 
-		$this->log( $notice );
+		$this->log_unique( $notice );
 	}
 }
