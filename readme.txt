@@ -101,6 +101,10 @@ There are several common causes for this which include:
 
 == Changelog ==
 
+= v1.7.30 - 07/??/2018 =
+* Improvement: Further added methods to log unique messages only once.
+* Fix: Issues with log files growing too large. Max file size of 1MB and auto truncate to 250 lines now.
+
 = v1.7.29 - 06/13/2018 =
 * Improvement: Added new enabled() method for the PUM_AssetCache class that checks both is writable and not disabled.
 * Improvement: Added option to disable just asset caching. This should help in the case your server is blocking the use of our JS from the /uploads/ folder with a 403 error.
