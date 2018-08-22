@@ -79,7 +79,7 @@ class PUM_ConditionCallbacks {
 				}
 				break;
 
-			case 'templates':
+			case 'template':
 				if ( is_page() && is_page_template( $selected ) ) {
 					return true;
 				}
