@@ -383,7 +383,7 @@ class PUM_Admin_Settings {
 						),
 						'default_privacy_usage_text'           => array(
 							'label'        => __( 'Consent Usage Text', 'popup-maker' ),
-							'desc'         => function_exists( 'get_privacy_policy_url' ) ? sprintf( __( 'You can use %1$%2$s to insert a link to your privacy policy. To customize the link text use %1$s:Link Text%2$s', 'popup-maker' ), '{{privacy_link', '}}' ) : '',
+							'desc'         => function_exists( 'get_privacy_policy_url' ) ? sprintf( __( 'You can use %1$s%2$s to insert a link to your privacy policy. To customize the link text use %1$s:Link Text%2$s', 'popup-maker' ), '{{privacy_link', '}}' ) : '',
 							'type'         => 'text',
 							'std'          => __( 'If you opt in above we use this information send related content, discounts and other special offers.', 'popup-maker' ),
 							'dependencies' => array(
