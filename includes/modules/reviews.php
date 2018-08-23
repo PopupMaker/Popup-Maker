@@ -216,7 +216,7 @@ class PUM_Modules_Reviews {
 	 * @param null $group
 	 * @param null $code
 	 *
-	 * @return bool|mixed|void
+	 * @return bool|mixed
 	 */
 	public static function triggers( $group = null, $code = null ) {
 		static $triggers;

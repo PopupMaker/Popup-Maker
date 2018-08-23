@@ -37,7 +37,7 @@ class PUM_Upgrades {
 	 * Popup Maker initial version.
 	 *
 	 * @var    string
-	 */	
+	 */
 	public static $initial_version;
 
 	/**
@@ -46,6 +46,13 @@ class PUM_Upgrades {
 	 * @var    string
 	 */
 	public static $db_version;
+
+	/**
+	 * Popup Maker install date.
+	 *
+	 * @var    string
+	 */
+	public static $installed_on;
 
 	/**
 	 * Gets everything going with a singleton instance.
@@ -90,6 +97,7 @@ class PUM_Upgrades {
 		self::$upgraded_from   = get_option( 'pum_ver_upgraded_from' );
 		self::$initial_version = get_option( 'pum_initial_version' );
 		self::$db_version      = get_option( 'pum_db_ver' );
+		self::$installed_on    = get_option( 'pum_installed_on' );
 
 		/**
 		 * If no version set check if a deprecated one exists.
@@ -144,11 +152,26 @@ class PUM_Upgrades {
 		}
 
 		// If no current db version, but prior install detected, set db version correctly.
-
 		// Here for backward compatibility.
 		if ( ! self::$db_version || self::$db_version < Popup_Maker::$DB_VER ) {
 			self::$db_version = Popup_Maker::$DB_VER;
 			update_option( 'pum_db_ver', self::$db_version );
+		}
+
+		/**
+		 * Back fill the initial version with the oldest version we can detect.
+		 */
+		if ( ! self::$installed_on ) {
+			$installed_on = current_time( 'mysql' );
+
+			$review_installed_on = get_option( 'pum_reviews_installed_on' );
+			if ( ! empty( $review_installed_on ) ) {
+				$installed_on = $review_installed_on;
+			}
+
+			self::$installed_on = $installed_on;
+
+			update_option( 'pum_installed_on', self::$installed_on );
 		}
 	}
 
@@ -246,7 +269,9 @@ class PUM_Upgrades {
 
 		<form method="post" class="pum-form  pum-batch-form  pum-upgrade-form" data-ays="<?php _e( 'This can sometimes take a few minutes, are you ready to begin?', 'popup-maker' ); ?>" data-upgrade_id="<?php echo $args['upgrade_id']; ?>" data-step="<?php echo (int) $args['step']; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'pum_upgrade_ajax_nonce' ) ); ?>">
 
-			<p><small><?php _e( 'The button below will do process these changes automatically for you.', 'popup-maker' ); ?></small></p>
+			<p>
+				<small><?php _e( 'The button below will do process these changes automatically for you.', 'popup-maker' ); ?></small>
+			</p>
 			<div class="pum-field  pum-field-button  pum-field-submit">
 				<?php submit_button( ! empty( $resume_upgrade ) ? __( 'Finish Upgrades', 'popup-maker' ) : __( 'Process Changes', 'popup-maker' ), 'secondary', 'submit', false ); ?>
 			</div>
