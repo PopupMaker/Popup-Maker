@@ -996,23 +996,26 @@ function popmake_hook_callback( $args ) {
  *
  */
 function popmake_output_pum_styles() {
+
+	ob_start();
+	echo '/* Popup Maker Core Styles */';
+	echo file_get_contents( Popup_Maker::$DIR . 'assets/css/site' . PUM_Site_Assets::$suffix . '.css' );
+	$core_styles = ob_get_clean();
+
+	$theme_styles = PUM_AssetCache::generate_font_imports() . PUM_AssetCache::generate_popup_theme_styles();
+
 	ob_start();
 
 	?>
-	<button type="button" id="show_pum_styles"
-	        onclick="jQuery('#pum_style_output').slideDown();jQuery(this).hide();"><?php _e( 'Show Popup Maker CSS', 'popup-maker' ); ?></button>
+	<button type="button" id="show_pum_styles" onclick="jQuery('#pum_style_output').slideDown();jQuery(this).hide();"><?php _e( 'Show Popup Maker CSS', 'popup-maker' ); ?></button>
 	<p class="pum-desc desc">Use this to quickly copy Popup Maker's CSS to your own stylesheet.</p>
 
 	<div id="pum_style_output" style="display:none;">
 		<h4><?php _e( 'Core Styles', 'popup-maker' ); ?></h4>
-		<textarea wrap="off" style="white-space: pre; width: 100%;">
-/* Popup Maker Core Styles */
-<?php echo file_get_contents( Popup_Maker::$DIR . 'assets/css/site' . PUM_Site_Assets::$suffix . '.css' ); ?>
-		</textarea>
+		<textarea wrap="off" style="white-space: pre; width: 100%;" readonly="readonly"><?php echo $core_styles; ?></textarea>
 
 		<h4><?php _e( 'User Theme Styles', 'popup-maker' ); ?></h4>
-		<textarea wrap="off"
-		          style="white-space: pre; width: 100%; min-height: 200px;"><?php echo PUM_AssetCache::generate_font_imports() . PUM_AssetCache::generate_popup_theme_styles(); ?></textarea>
+		<textarea wrap="off" style="white-space: pre; width: 100%; min-height: 200px;" readonly="readonly"><?php echo $theme_styles; ?></textarea>
 	</div>
 
 	<?php
