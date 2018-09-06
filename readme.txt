@@ -6,7 +6,7 @@ Donate link:
 Tags: marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 3.6
 Tested up to: 4.9.6
-Stable tag: 1.7.29
+Stable tag: 1.7.30
 License: GNU Version 3 or Any Later Version
 
 Everything you need to create unique user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
@@ -101,9 +101,15 @@ There are several common causes for this which include:
 
 == Changelog ==
 
-= v1.7.30 - 07/??/2018 =
+= v1.7.30 - 09/06/2018 =
 * Improvement: Further added methods to log unique messages only once.
+* Tweak: Remove usage of Freemius.
+* Fix: Added option to disable popups accessibility functionality to resolve some issues with focus trapping.
 * Fix: Issues with log files growing too large. Max file size of 1MB and auto truncate to 250 lines now.
+* Fix: Typo causing issues with Page Template condition.
+* Fix: Typo in privacy link example text.
+* Fix: Typo pointing to incorrect internal method call in new has_cookie method.
+* Fix: Issues with fields not being readonly.
 
 = v1.7.29 - 06/13/2018 =
 * Improvement: Added new enabled() method for the PUM_AssetCache class that checks both is writable and not disabled.
@@ -434,8 +440,8 @@ Lastly we now have include our extendable subscription forms right in the free v
 * Tweak: Added CSS override for Ninja Forms datepickers to properly layer them above popups.
 
 = v1.4.20 - 10/13/2016 =
-* Feature: Added [Ninja Forms](https://wppopupmaker.com/grab/ninjaforms?utm_source=readme-changelog&utm_medium=text-link&utm_campaign=Readme&utm_content=ninja-forms-features) success actions for opening & closing popups.
-* Feature: Added new cookie event for successful submission of a [Ninja Forms](https://wppopupmaker.com/grab/ninjaforms) form.
+* Feature: Added [Ninja Forms](https://wppopupmaker.com/grab/ninja-forms?utm_source=readme-changelog&utm_medium=text-link&utm_campaign=Readme&utm_content=ninja-forms-features) success actions for opening & closing popups.
+* Feature: Added new cookie event for successful submission of a [Ninja Forms](https://wppopupmaker.com/grab/ninja-forms) form.
 * Improvement: Added wp.hooks JS library, allowing actions & filters via our plugin JS.
 * Tweaks: Added various admin css tweaks.
 
