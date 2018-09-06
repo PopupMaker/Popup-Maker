@@ -8,7 +8,8 @@ var PUM_Accessibility;
     var $top_level_elements,
         focusableElementsString = "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]",
         previouslyFocused,
-        currentModal
+        currentModal,
+        selector = '.pum:not(.pum-accessibility-disabled)';
 
     PUM_Accessibility = {
         // Accessibility: Checks focus events to ensure they stay inside the modal.
@@ -54,7 +55,7 @@ var PUM_Accessibility;
     };
 
     $(document)
-        .on('pumInit', '.pum', function () {
+        .on('pumInit', selector, function () {
             PUM.getPopup(this).find('[tabindex]').each(function () {
                 var $this = $(this);
                 $this
@@ -63,9 +64,7 @@ var PUM_Accessibility;
 
             });
         })
-
-
-        .on('pumBeforeOpen', '.pum', function () {
+        .on('pumBeforeOpen', selector, function () {
             var $popup = PUM.getPopup(this),
                 $focused = $(':focus');
 
@@ -89,15 +88,13 @@ var PUM_Accessibility;
             // Accessibility: Focus on the modal.
             PUM_Accessibility.setFocusToFirstItem();
         })
-        .on('pumAfterOpen', '.pum', function () {
+        .on('pumAfterOpen', selector, function () {
 
         })
-
-
-        .on('pumBeforeClose', '.pum', function () {
+        .on('pumBeforeClose', selector, function () {
 
         })
-        .on('pumAfterClose', '.pum', function () {
+        .on('pumAfterClose', selector, function () {
             var $popup = PUM.getPopup(this);
 
             $popup
@@ -121,19 +118,19 @@ var PUM_Accessibility;
             $(document).off('focusin.pum_accessibility');
         })
 
-        .on('pumSetupClose', '.pum', function () {
+        .on('pumSetupClose', selector, function () {
 
         })
 
-        .on('pumOpenPrevented', '.pum', function () {
+        .on('pumOpenPrevented', selector, function () {
 
         })
 
-        .on('pumClosePrevented', '.pum', function () {
+        .on('pumClosePrevented', selector, function () {
 
         })
 
-        .on('pumBeforeReposition', '.pum', function () {
+        .on('pumBeforeReposition', selector, function () {
 
         });
 

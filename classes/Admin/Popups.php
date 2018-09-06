@@ -295,6 +295,7 @@ class PUM_Admin_Popups {
 			'close'     => __( 'Close', 'popup-maker' ),
 			'triggers'  => __( 'Triggers', 'popup-maker' ),
 			'targeting' => __( 'Targeting', 'popup-maker' ),
+			'advanced' => __( 'Advanced', 'popup-maker' ),
 		) );
 	}
 
@@ -310,7 +311,6 @@ class PUM_Admin_Popups {
 			),
 			'triggers'  => array(
 				'main' => __( 'Triggers & Cookies', 'popup-maker' ),
-				'advanced'  => __( 'Advanced', 'popup-maker' ),
 			),
 			'targeting' => array(
 				'main' => __( 'Conditions', 'popup-maker' ),
@@ -325,6 +325,9 @@ class PUM_Admin_Popups {
 			'close'     => array(
 				'button'            => __( 'Button', 'popup-maker' ),
 				'alternate_methods' => __( 'Alternate Methods', 'popup-maker' ),
+			),
+			'advanced'  => array(
+				'main' => __( 'Advanced', 'popup-maker' ),
 			),
 		) );
 	}
@@ -344,7 +347,7 @@ class PUM_Admin_Popups {
 					'main' => array(),
 				) ),
 				'triggers'  => apply_filters( 'pum_popup_triggers_settings_fields', array(
-					'main' => array(
+					'main'     => array(
 						'triggers'   => array(
 							'type'     => 'triggers',
 							'std'      => array(),
@@ -358,13 +361,6 @@ class PUM_Admin_Popups {
 							'type'     => 'cookies',
 							'std'      => array(),
 							'priority' => 20,
-						),
-					),
-					'advanced' => array(
-						'disable_form_reopen' => array(
-							'label'    => __( 'Disable automatic re-triggering of popup after non-ajax form submission.', 'popup-maker' ),
-							'type'     => 'checkbox',
-							'priority' => 10,
 						),
 					),
 				) ),
@@ -701,6 +697,21 @@ class PUM_Admin_Popups {
 						),
 					),
 				) ),
+				'advanced'   => apply_filters( 'pum_popup_advanced_settings_fields', array(
+					'main' => array(
+						'disable_form_reopen' => array(
+							'label'    => __( 'Disable automatic re-triggering of popup after non-ajax form submission.', 'popup-maker' ),
+							'type'     => 'checkbox',
+							'priority' => 10,
+						),
+						'disable_accessibility' => array(
+							'label'    => __( 'Disable accessibility features.', 'popup-maker' ),
+							'desc'    => __( 'This includes trapping the tab key & focus inside popup while open, force focus the first element when popup open, and refocus last click trigger when closed.', 'popup-maker' ),
+							'type'     => 'checkbox',
+							'priority' => 10,
+						),
+					),
+				) ),
 			) );
 
 			foreach ( $tabs as $tab_id => $sections ) {
@@ -868,7 +879,7 @@ class PUM_Admin_Popups {
 			<?php do_action( 'pum_popup_analytics_metabox_before', $post->ID ); ?>
 
 			<?php
-			$opens           = $popup->get_event_count( 'open', 'current' );
+			$opens = $popup->get_event_count( 'open', 'current' );
 			//$conversions     = $popup->get_event_count( 'conversion', 'current' );
 			//$conversion_rate = $opens > 0 && $opens >= $conversions ? $conversions / $opens * 100 : false;
 			?>
@@ -913,7 +924,7 @@ class PUM_Admin_Popups {
 									<?php /* if ( $popup->get_event_count( 'conversion', 'total' ) > 0 ) : ?>
 										<br />
 										<strong><?php _e( 'Lifetime Conversions', 'popup-maker' ); ?>:</strong> <?php echo $popup->get_event_count( 'conversion', 'total' ); ?>
-									<?php endif; */  ?>
+									<?php endif; */ ?>
 								</small>
 							<?php endif; ?>
 						</td>
@@ -985,11 +996,11 @@ class PUM_Admin_Popups {
 	 */
 	public static function dashboard_columns( $_columns ) {
 		$columns = array(
-			'cb'              => '<input type="checkbox"/>',
-			'title'           => __( 'Name', 'popup-maker' ),
-			'popup_title'     => __( 'Title', 'popup-maker' ),
-			'class'           => __( 'CSS Classes', 'popup-maker' ),
-			'opens'           => __( 'Opens', 'popup-maker' ),
+			'cb'          => '<input type="checkbox"/>',
+			'title'       => __( 'Name', 'popup-maker' ),
+			'popup_title' => __( 'Title', 'popup-maker' ),
+			'class'       => __( 'CSS Classes', 'popup-maker' ),
+			'opens'       => __( 'Opens', 'popup-maker' ),
 			//'conversions'     => __( 'Conversions', 'popup-maker' ),
 			//'conversion_rate' => __( 'Conversion Rate', 'popup-maker' ),
 		);
@@ -1083,6 +1094,7 @@ class PUM_Admin_Popups {
 	public static function sortable_columns( $columns ) {
 		$columns['popup_title'] = 'popup_title';
 		$columns['opens']       = 'opens';
+
 		// $columns['conversions'] = 'conversions';
 
 		return $columns;

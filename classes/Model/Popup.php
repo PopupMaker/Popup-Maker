@@ -525,6 +525,10 @@ class PUM_Model_Popup extends PUM_Model_Post {
 			$classes['overlay'][] = 'pum-overlay-disabled';
 		}
 
+		if ( $this->get_setting( 'disable_accessibility' ) ) {
+			$classes['overlay'][] = 'pum-accessibility-disabled';
+		}
+
 		// Add a class for each trigger type.
 		foreach ( $this->get_triggers() as $trigger ) {
 			if ( ! in_array( $trigger['type'], $classes['overlay'] ) ) {
