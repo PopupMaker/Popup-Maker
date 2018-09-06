@@ -610,7 +610,7 @@ var PUM;
 
             // TODO: Remove the add class and migrate the trigger to the $popup with pum prefix.
             $container
-                .addClass('custom-position')
+                .addClass('pum-custom-position')
                 .position(reposition)
                 .trigger('popmakeAfterReposition');
 
