@@ -120,6 +120,9 @@ var PUM;
         getCookie: function (cookie_name) {
             return $.pm_cookie(cookie_name);
         },
+        getJSONCookie: function (cookie_name) {
+            return $.pm_cookie_json(cookie_name);
+        },
         setCookie: function (el, settings) {
             var $popup = PUM.getPopup(el);
 
