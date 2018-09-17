@@ -238,9 +238,7 @@ class PUM_Admin_Popups {
 		$title = ! empty ( $_POST['popup_title'] ) ? trim( sanitize_text_field( $_POST['popup_title'] ) ) : '';
 		$popup->update_meta( 'popup_title', $title );
 
-		$settings = ! empty( $_POST['popup_settings'] ) ? $_POST['popup_settings'] : array();
-
-		$settings = wp_parse_args( $settings, self::defaults() );
+		$settings = ! empty( $_POST['popup_settings'] ) ? $_POST['popup_settings'] : self::defaults();
 
 		// Sanitize JSON values.
 		$settings['conditions'] = isset( $settings['conditions'] ) ? self::sanitize_meta( $settings['conditions'] ) : array();
@@ -295,7 +293,7 @@ class PUM_Admin_Popups {
 			'close'     => __( 'Close', 'popup-maker' ),
 			'triggers'  => __( 'Triggers', 'popup-maker' ),
 			'targeting' => __( 'Targeting', 'popup-maker' ),
-			'advanced' => __( 'Advanced', 'popup-maker' ),
+			'advanced'  => __( 'Advanced', 'popup-maker' ),
 		) );
 	}
 
@@ -347,7 +345,7 @@ class PUM_Admin_Popups {
 					'main' => array(),
 				) ),
 				'triggers'  => apply_filters( 'pum_popup_triggers_settings_fields', array(
-					'main'     => array(
+					'main' => array(
 						'triggers'   => array(
 							'type'     => 'triggers',
 							'std'      => array(),
@@ -449,13 +447,11 @@ class PUM_Admin_Popups {
 							),
 						),
 						'custom_height_auto'   => array(
-							'label'        => __( 'Auto Adjusted Height', 'popup-maker' ),
-							'desc'         => __( 'Checking this option will set height to fit the content.', 'popup-maker' ),
-							'type'         => 'checkbox',
-							'priority'     => 50,
-							'dependencies' => array(
-								'size' => 'custom',
-							),
+							'label'    => __( 'Auto Adjusted Height', 'popup-maker' ),
+							'desc'     => __( 'Checking this option will set height to fit the content.', 'popup-maker' ),
+							'type'     => 'checkbox',
+							'priority' => 50,
+							'std'      => true,
 						),
 						'custom_height'        => array(
 							'label'        => __( 'Height', 'popup-maker' ),
@@ -464,7 +460,6 @@ class PUM_Admin_Popups {
 							'std'          => '380px',
 							'priority'     => 60,
 							'dependencies' => array(
-								'size'               => 'custom',
 								'custom_height_auto' => false,
 							),
 						),
@@ -475,7 +470,17 @@ class PUM_Admin_Popups {
 							'std'          => false,
 							'priority'     => 70,
 							'dependencies' => array(
-								'size'               => 'custom',
+								'custom_height_auto' => false,
+							),
+						),
+						'scrollable_title'     => array(
+							'label'        => __( 'Scroll Title with Content?', 'popup-maker' ),
+							'desc'         => __( 'Checking this option will also scroll the title with your content.', 'popup-maker' ),
+							'type'         => 'checkbox',
+							'std'          => false,
+							'priority'     => 80,
+							'dependencies' => array(
+								'scrollable_content' => true,
 								'custom_height_auto' => false,
 							),
 						),
@@ -697,16 +702,16 @@ class PUM_Admin_Popups {
 						),
 					),
 				) ),
-				'advanced'   => apply_filters( 'pum_popup_advanced_settings_fields', array(
+				'advanced'  => apply_filters( 'pum_popup_advanced_settings_fields', array(
 					'main' => array(
-						'disable_form_reopen' => array(
+						'disable_form_reopen'   => array(
 							'label'    => __( 'Disable automatic re-triggering of popup after non-ajax form submission.', 'popup-maker' ),
 							'type'     => 'checkbox',
 							'priority' => 10,
 						),
 						'disable_accessibility' => array(
 							'label'    => __( 'Disable accessibility features.', 'popup-maker' ),
-							'desc'    => __( 'This includes trapping the tab key & focus inside popup while open, force focus the first element when popup open, and refocus last click trigger when closed.', 'popup-maker' ),
+							'desc'     => __( 'This includes trapping the tab key & focus inside popup while open, force focus the first element when popup open, and refocus last click trigger when closed.', 'popup-maker' ),
 							'type'     => 'checkbox',
 							'priority' => 10,
 						),
@@ -855,9 +860,7 @@ class PUM_Admin_Popups {
 		foreach ( $tabs as $tab_id => $sections ) {
 			foreach ( $sections as $section_id => $fields ) {
 				foreach ( $fields as $key => $field ) {
-					if ( $field['type'] == 'checkbox' ) {
-						$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : ( $field['type'] == 'checkbox' ? false : null );
-					}
+					$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : ( $field['type'] == 'checkbox' ? false : null );
 				}
 			}
 		}

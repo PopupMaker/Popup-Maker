@@ -586,19 +586,20 @@ var PUM;
                 $container.css({opacity: 0}).show(0);
             }
 
-            if (settings.position_fixed) {
-                $container.addClass('fixed');
-            }
+            // REMOVE This
+            debugger;
+
+            $container.css({
+                height: settings.custom_height_auto ? 'auto' : settings.custom_height
+            });
 
             if (settings.size === 'custom') {
                 $container.css({
-                    width: settings.custom_width,
-                    height: settings.custom_height_auto ? 'auto' : settings.custom_height
+                    width: settings.custom_width
                 });
             } else {
                 if (settings.size !== 'auto') {
                     $container
-                        .addClass('responsive')
                         .css({
                             minWidth: settings.responsive_min_width !== '' ? settings.responsive_min_width : 'auto',
                             maxWidth: settings.responsive_max_width !== '' ? settings.responsive_max_width : 'auto'

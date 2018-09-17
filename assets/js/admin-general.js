@@ -7848,6 +7848,10 @@ function pumChecked(val1, val2, print) {
                 var options = [],
                     data = $.extend(true, {}, PUM_Admin.models.field(args));
 
+                if ( args.type === 'checkbox' ) {
+                    debugger;
+                }
+
                 if (args.std !== undefined && args.type !== 'checkbox' && (data.value === null || data.value === false)) {
                     data.value = args.std;
                 }
