@@ -434,6 +434,12 @@ class PUM_Admin_Settings {
 							'type'  => 'checkbox',
 							'label' => __( 'Disable the Popup Maker shortcode button', 'popup-maker' ),
 						),
+						'complete_uninstall'                   => array(
+							'type'     => 'checkbox',
+							'label'    => __( 'Complete Uninstall?', 'popup-maker' ),
+							'desc'    => __( 'Check this to completely uninstall all Popup Maker data on deactivation.', 'popup-maker' ),
+							'priority' => 1000,
+						),
 					),
 					'assets' => array(
 						'disable_google_font_loading'     => array(
