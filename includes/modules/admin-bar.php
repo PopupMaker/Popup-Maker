@@ -468,7 +468,7 @@ class PUM_Modules_Admin_Bar {
 					'parent' => $node_id,
 				) );
 
-				if ( pum_popup( $popup->ID )->has_conditions( array( 'js_only' => true ) ) ) {
+				if ( pum_get_popup( $popup->ID )->has_conditions( array( 'js_only' => true ) ) ) {
 					$wp_admin_bar->add_node( array(
 						'id'     => $node_id . '-conditions',
 						'title'  => __( 'Check Conditions', 'popup-maker' ),

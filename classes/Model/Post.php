@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class PUM_Model_Post
  */
-abstract class PUM_Model_Post {
+class PUM_Model_Post {
 
 	/**
 	 * Used for compatibility testing.

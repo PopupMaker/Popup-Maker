@@ -31,7 +31,7 @@ class PUM_CF7_Integration {
 	 * @param $popup_id
 	 */
 	public static function preload( $popup_id ) {
-		$popup = pum_popup( $popup_id );
+		$popup = pum_get_popup( $popup_id );
 
 		if ( has_shortcode( $popup->post_content, 'contact-form-7' ) ) {
 			if ( function_exists( 'wpcf7_enqueue_scripts' ) ) {

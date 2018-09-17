@@ -222,6 +222,8 @@ class Popup_Maker {
 		/** @deprecated 1.7.0 */
 		require_once self::$DIR . 'includes/admin/settings/register-settings.php';
 
+		require_once self::$DIR . 'includes/functions.php';
+
 		/** General Functions */
 		require_once self::$DIR . 'includes/functions/cache.php';
 		require_once self::$DIR . 'includes/functions/options.php';
@@ -267,7 +269,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/class-pum-form.php';
 
 		// Functions
-		require_once self::$DIR . 'includes/pum-popup-functions.php';
 		require_once self::$DIR . 'includes/pum-template-functions.php';
 		require_once self::$DIR . 'includes/pum-general-functions.php';
 		require_once self::$DIR . 'includes/pum-misc-functions.php';

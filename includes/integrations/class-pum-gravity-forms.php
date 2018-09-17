@@ -32,7 +32,7 @@ class PUM_Gravity_Forms_Integation {
 
 	public static function preload( $popup_id ) {
 		if ( function_exists( 'gravity_form_enqueue_scripts' ) ) {
-			$popup = pum_popup( $popup_id );
+			$popup = pum_get_popup( $popup_id );
 
 			if ( has_shortcode( $popup->post_content, 'gravityform' ) ) {
 				$regex = "/\[gravityform.*id=[\'\"]?([0-9]*)[\'\"]?.*/";

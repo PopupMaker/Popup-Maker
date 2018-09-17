@@ -19,17 +19,17 @@ abstract class PUM_Abstract_Registry {
 	 *
 	 * @var    array
 	 */
-	private $items = array();
+	protected $items = array();
 
 	/**
 	 * Adds an item to the registry.
 	 *
-	 * @param int    $item_id   Item ID.
-	 * @param array  $attributes {
-	 *     Item attributes.
+	 * @param int                $item_id    Item ID.
+	 * @param array|object|mixed $attributes {
+	 *                                       Item attributes.
 	 *
-	 *     @type string $class Item handler class.
-	 *     @type string $file  Item handler class file.
+	 * @type string              $class      Item handler class.
+	 * @type string              $file       Item handler class file.
 	 * }
 	 *
 	 * @return true Always true.
@@ -62,6 +62,7 @@ abstract class PUM_Abstract_Registry {
 		if ( array_key_exists( $item_id, $this->items ) ) {
 			return $this->items[ $item_id ];
 		}
+
 		return false;
 	}
 

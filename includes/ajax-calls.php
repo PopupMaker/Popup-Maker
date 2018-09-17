@@ -31,7 +31,6 @@ function popmake_popup_preview_content_ajax_call() {
 	// Check our nonce and make sure it's correct.
 	check_ajax_referer( POPMAKE_NONCE, POPMAKE_NONCE );
 	if ( isset( $_REQUEST['popup_content'] ) ) {
-		remove_filter( 'the_popup_content', 'popmake_popup_content_container', 10000 );
 		$response['content'] = stripslashes( apply_filters( 'the_popup_content', $_REQUEST['popup_content'], $_REQUEST['popup_id'] ) );
 		$response['success'] = true;
 	}
