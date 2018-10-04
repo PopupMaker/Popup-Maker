@@ -3,33 +3,25 @@
  * Copyright (c) 2018, WP Popup Maker
  ******************************************************************************/
 
-namespace ForumWP\Repository;
-
-use Exception;
-use ForumWP\Abstracts\Repository\Posts;
-use InvalidArgumentException;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Class Forums
- *
- * @package ForumWP\Repository
+ * Class Themes
  */
-class Popups extends Posts {
+class PUM_Repository_Themes extends PUM_Abstract_Repository_Posts {
 
 	/**
 	 * @var string
 	 */
-	protected $model = '\ForumWP\Model\Forum';
+	protected $model = 'PUM_Model_Theme';
 
 	/**
 	 * @return string
 	 */
 	protected function get_post_type() {
-		return forumwp_get_forum_post_type();
+		return 'popup_theme';
 	}
 
 	/**
@@ -61,43 +53,15 @@ class Popups extends Posts {
 			);
 		}
 
-		if ( isset( $args['forums'] ) ) {
+		if ( isset( $args['themes'] ) ) {
 			/**
-			 * If Looking for specific forums. No need for filtering.
+			 * If Looking for specific themes. No need for filtering.
 			 */
-			$args['post__in'] = wp_parse_id_list( $args['forums'] );
+			$args['post__in'] = wp_parse_id_list( $args['themes'] );
 
-			unset( $args['forums'] );
+			unset( $args['themes'] );
 		} elseif ( empty( $args['post__in'] ) ) {
 
-			/**
-			 * If Looking for specific forums. No need for filtering.
-			 */
-			$type = isset( $args['type'] ) ? $args['type'] : '';
-			unset( $args['type'] );
-
-			// Types or false
-			$types = null;
-
-			if ( $type == 'all' ) {
-				$types = array( 'forum', 'category' );
-			} elseif ( $type != '' ) {
-				$types = (array) $type;
-			}
-
-			// Type Meta Query
-			if ( isset( $types ) ) {
-				$args['meta_query'][] = array(
-					'key'     => '_forumwp_type',
-					'value'   => $types,
-					'compare' => 'IN',
-				);
-			}
-
-			// Forums to get per page
-			if ( ! isset( $args['posts_per_page'] ) ) {
-				$args['posts_per_page'] = forumwp_get_option( 'forums_per_page', 20 );
-			}
 		}
 
 		/**
@@ -137,7 +101,7 @@ class Popups extends Posts {
 	/**
 	 * @param int $id
 	 *
-	 * @return \ForumWP\Model\Forum|\WP_Post
+	 * @return PUM_Model_Theme|WP_Post
 	 * @throws \InvalidArgumentException
 	 */
 	public function get_item( $id ) {
@@ -147,7 +111,7 @@ class Popups extends Posts {
 	/**
 	 * @param array $args
 	 *
-	 * @return \ForumWP\Model\Forum[]|\WP_Post[]
+	 * @return PUM_Model_Theme[]|WP_Post[]
 	 */
 	public function get_items( $args = array() ) {
 		return parent::get_items( $args );
@@ -156,7 +120,7 @@ class Popups extends Posts {
 	/**
 	 * @param array $data
 	 *
-	 * @return \ForumWP\Model\Forum|\WP_Post
+	 * @return PUM_Model_Theme|WP_Post
 	 * @throws InvalidArgumentException
 	 */
 	public function create_item( $data ) {
@@ -167,7 +131,7 @@ class Popups extends Posts {
 	 * @param int   $id
 	 * @param array $data
 	 *
-	 * @return \ForumWP\Model\Forum|\WP_Post
+	 * @return PUM_Model_Theme|WP_Post
 	 * @throws Exception
 	 */
 	public function update_item( $id, $data ) {
