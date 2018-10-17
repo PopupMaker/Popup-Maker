@@ -100,7 +100,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 
 		// Log an error if it's too late to register the process.
 		if ( did_action( 'pum_upgrade_process_init' ) ) {
-			PUM_Logging::instance()->log( sprintf( 'The %s upgrade process was registered too late. Registrations must occur while/before <code>pum_upgrade_process_init</code> fires.', esc_html( $upgrade_id ) ) );
+			PUM_Utils_Logging::instance()->log( sprintf( 'The %s upgrade process was registered too late. Registrations must occur while/before <code>pum_upgrade_process_init</code> fires.', esc_html( $upgrade_id ) ) );
 			return false;
 		}
 

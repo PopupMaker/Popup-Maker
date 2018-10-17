@@ -1,4 +1,8 @@
 <?php
+/*******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
+
 // Exit if accessed directly
 
 /*******************************************************************************
@@ -17,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function pum_deprecated_save_popup_action( $post_id, $post ) {
 	if ( has_action( 'popmake_save_popup' ) ) {
-		PUM_Logging::instance()->log_deprecated_notice( 'popmake_save_popup', '1.4', 'pum_save_popup' );
+		PUM_Utils_Logging::instance()->log_deprecated_notice( 'popmake_save_popup', '1.4', 'pum_save_popup' );
 		/**
 		 * Calls old save action.
 		 *
@@ -44,7 +48,7 @@ add_action( 'pum_save_popup', 'pum_deprecated_save_popup_action', 10, 2 );
  */
 function pum_deprecated_popup_is_loadable_filter( $loadable, $popup_id ) {
 	if ( has_filter( 'popmake_popup_is_loadable' ) ) {
-		PUM_Logging::instance()->log_deprecated_notice( 'popmake_popup_is_loadable', '1.4', 'pum_popup_is_loadable' );
+		PUM_Utils_Logging::instance()->log_deprecated_notice( 'popmake_popup_is_loadable', '1.4', 'pum_popup_is_loadable' );
 		/**
 		 * Calls old filter.
 		 *

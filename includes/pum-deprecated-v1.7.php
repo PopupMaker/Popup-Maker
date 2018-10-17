@@ -1,4 +1,8 @@
 <?php
+/*******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
+
 // Exit if accessed directly
 
 /*******************************************************************************
@@ -66,7 +70,7 @@ add_action( 'popmake_preload_popup', 'popmake_enqueue_scripts' );
  */
 function pum_deprecated_popmake_settings_extensions_sanitize_filter( $settings = array() ) {
 	if ( has_filter( 'popmake_settings_extensions_sanitize' ) ) {
-		PUM_Logging::instance()->log_deprecated_notice( 'filter:popmake_settings_extensions_sanitize', '1.7.0', 'filter:pum_settings_sanitize' );
+		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:popmake_settings_extensions_sanitize', '1.7.0', 'filter:pum_settings_sanitize' );
 		/**
 		 * @deprecated 1.7
 		 *
@@ -92,7 +96,7 @@ add_filter( 'pum_sanitize_settings', 'pum_deprecated_popmake_settings_extensions
  */
 function pum_deprecated_get_the_popup_title_filter( $title, $popup_id ) {
 	if ( has_filter( 'popmake_get_the_popup_title' ) ) {
-		PUM_Logging::instance()->log_deprecated_notice( 'filter:popmake_get_the_popup_title', '1.7.0', 'filter:pum_popup_get_title' );
+		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:popmake_get_the_popup_title', '1.7.0', 'filter:pum_popup_get_title' );
 		/**
 		 * @deprecated 1.7
 		 *
@@ -117,7 +121,7 @@ add_filter( 'pum_popup_get_title', 'pum_deprecated_get_the_popup_title_filter', 
  */
 function pum_deprecated_get_the_popup_content_filter( $content, $popup_id ) {
 	if ( has_filter( 'the_popup_content' ) ) {
-		PUM_Logging::instance()->log_deprecated_notice( 'filter:the_popup_content', '1.7.0', 'filter:pum_popup_content' );
+		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:the_popup_content', '1.7.0', 'filter:pum_popup_content' );
 		/**
 		 * @deprecated 1.7
 		 *
@@ -142,7 +146,7 @@ add_filter( 'pum_popup_content', 'pum_deprecated_get_the_popup_content_filter', 
  */
 function pum_deprecated_pum_popup_get_data_attr_filter( $data_attr = array(), $popup_id ) {
 	if ( has_filter( 'pum_popup_get_data_attr' ) ) {
-		PUM_Logging::instance()->log_deprecated_notice( 'filter:pum_popup_get_data_attr', '1.7.0', 'filter:pum_popup_data_attr' );
+		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:pum_popup_get_data_attr', '1.7.0', 'filter:pum_popup_data_attr' );
 		/**
 		 * @deprecated 1.7
 		 *
@@ -167,7 +171,7 @@ add_filter( 'pum_popup_data_attr', 'pum_deprecated_pum_popup_get_data_attr_filte
  */
 function pum_deprecated_get_the_popup_theme_filter( $theme_id, $popup_id ) {
 	if ( has_filter( 'popmake_get_the_popup_theme' ) ) {
-		PUM_Logging::instance()->log_deprecated_notice( 'filter:popmake_get_the_popup_theme', '1.7.0', 'filter:pum_popup_get_theme_id' );
+		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:popmake_get_the_popup_theme', '1.7.0', 'filter:pum_popup_get_theme_id' );
 		/**
 		 * @deprecated 1.7
 		 *
@@ -192,7 +196,7 @@ add_filter( 'pum_popup_get_theme_id', 'pum_deprecated_get_the_popup_theme_filter
  */
 function pum_deprecated_get_the_popup_classes_filter( $classes, $popup_id ) {
 	if ( has_filter( 'popmake_get_the_popup_classes' ) ) {
-		PUM_Logging::instance()->log_deprecated_notice( 'filter:popmake_get_the_popup_classes', '1.7.0', 'filter:pum_popup_container_classes' );
+		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:popmake_get_the_popup_classes', '1.7.0', 'filter:pum_popup_container_classes' );
 		/**
 		 * @deprecated 1.7
 		 *
@@ -218,7 +222,7 @@ add_filter( 'pum_popup_container_classes', 'pum_deprecated_get_the_popup_classes
  */
 function pum_deprecated_pum_popup_get_classes_filter( $classes, $popup_id ) {
 	if ( has_filter( 'pum_popup_get_classes' ) ) {
-		PUM_Logging::instance()->log_deprecated_notice( 'filter:pum_popup_get_classes', '1.7.0', 'filter:pum_popup_container_classes' );
+		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:pum_popup_get_classes', '1.7.0', 'filter:pum_popup_container_classes' );
 		/**
 		 * @deprecated 1.7
 		 *
@@ -243,7 +247,7 @@ add_filter( 'pum_popup_classes', 'pum_deprecated_pum_popup_get_classes_filter', 
  */
 function pum_deprecated_get_the_popup_data_attr_filter( $data_attr, $popup_id ) {
 	if ( has_filter( 'popmake_get_the_popup_data_attr' ) ) {
-		PUM_Logging::instance()->log_deprecated_notice( 'filter:popmake_get_the_popup_data_attr', '1.7.0', 'filter:pum_popup_data_attr' );
+		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:popmake_get_the_popup_data_attr', '1.7.0', 'filter:pum_popup_data_attr' );
 		/**
 		 * @deprecated 1.7
 		 *
@@ -268,7 +272,7 @@ add_filter( 'pum_popup_data_attr', 'pum_deprecated_get_the_popup_data_attr_filte
  */
 function pum_deprecated_show_close_button_filter( $show, $popup_id ) {
 	if ( has_filter( 'popmake_show_close_button' ) ) {
-		PUM_Logging::instance()->log_deprecated_notice( 'filter:popmake_show_close_button', '1.7.0', 'filter:pum_popup_show_close_button' );
+		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:popmake_show_close_button', '1.7.0', 'filter:pum_popup_show_close_button' );
 		/**
 		 * @deprecated 1.7
 		 *
