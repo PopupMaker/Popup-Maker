@@ -46,7 +46,7 @@ class PUM_Utils_Array {
 			return sanitize_text_field( $var );
 		}
 
-		return array_map( '\Popup Maker\Utils\Arrays::sanitize', (array) $var );
+		return array_map( array( __CLASS__, 'sanitize' ), (array) $var );
 	}
 
 	/**
