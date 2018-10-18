@@ -164,8 +164,6 @@ class Popup_Maker {
 			define( 'POPMAKE', self::$FILE );
 		}
 
-		pum_get_option();
-
 		if ( ! defined( 'POPMAKE_NAME' ) ) {
 			define( 'POPMAKE_NAME', self::$NAME );
 		}
