@@ -134,6 +134,26 @@ class Popup_Maker {
 	public static $DEBUG_MODE = false;
 
 	/**
+	 * @var PUM_Repository_Popups
+	 */
+	public $popups;
+
+	/**
+	 * @var PUM_Repository_Themes
+	 */
+	public $themes;
+
+	/**
+	 * @var null|PUM_Model_Popup
+	 */
+	public $current_popup;
+
+	/**
+	 * @var null|PUM_Model_Theme
+	 */
+	public $current_theme;
+
+	/**
 	 * @var Popup_Maker The one true Popup_Maker
 	 */
 	private static $instance;
@@ -220,12 +240,23 @@ class Popup_Maker {
 
 		require_once self::$DIR . 'includes/functions.php';
 
+
 		/** General Functions */
 		require_once self::$DIR . 'includes/functions/cache.php';
 		require_once self::$DIR . 'includes/functions/options.php';
 		require_once self::$DIR . 'includes/functions/upgrades.php';
 		require_once self::$DIR . 'includes/functions/developers.php';
 		require_once self::$DIR . 'includes/migrations.php';
+
+		/** Popup functions */
+		require_once self::$DIR . 'includes/popups/conditionals.php';
+		require_once self::$DIR . 'includes/popups/getters.php';
+		require_once self::$DIR . 'includes/popups/queries.php';
+
+		/** Popup Theme functions */
+		require_once self::$DIR . 'includes/themes/conditionals.php';
+		require_once self::$DIR . 'includes/themes/getters.php';
+		require_once self::$DIR . 'includes/themes/queries.php';
 
 		// TODO Find another place for these admin functions so this can be put in its correct place.
 		require_once self::$DIR . 'includes/admin/admin-pages.php';
@@ -345,6 +376,9 @@ class Popup_Maker {
 	}
 
 	public function init() {
+		$this->popups = new PUM_Repository_Popups();
+		$this->themes = new PUM_Repository_Themes();
+
 		PUM_Types::init();
 		PUM_AssetCache::init();
 		PUM_Site::init();
@@ -434,7 +468,21 @@ add_action( 'plugins_loaded', 'popmake_initialize' );
  *
  * @return object The one true Popup_Maker Instance
  */
-
 function PopMake() {
+	return Popup_Maker::instance();
+}
+
+/**
+ * The main function responsible for returning the one true Popup_Maker
+ * Instance to functions everywhere.
+ *
+ * Use this function like you would a global variable, except without needing
+ * to declare the global.
+ *
+ * @since      1.8.0
+ *
+ * @return object The one true Popup_Maker Instance
+ */
+function pum() {
 	return Popup_Maker::instance();
 }

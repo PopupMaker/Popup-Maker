@@ -397,7 +397,7 @@ class PUM_Privacy {
 		if ( $popups->have_posts() ) {
 			while ( $popups->have_posts() ) : $popups->next_post();
 				// Set this popup as the global $current.
-				PUM_Site_Popups::current_popup( $popups->post );
+				pum()->current_popup = $popups->post;
 
 				$popup = pum_get_popup( $popups->post->ID );
 
@@ -433,7 +433,7 @@ class PUM_Privacy {
 			endwhile;
 
 			// Clear the global $current.
-			PUM_Site_Popups::current_popup( null );
+			pum()->current_popup = null;
 		}
 
 		return apply_filters( 'pum_privacy_get_all_cookies', $cookies );

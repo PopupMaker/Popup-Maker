@@ -187,7 +187,7 @@ class PUM_AssetCache {
 		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) : $query->next_post();
 				// Set this popup as the global $current.
-				PUM_Site_Popups::current_popup( $query->post );
+				pum()->current_popup = $query->post;
 
 				// Preprocess the content for shortcodes that need to enqueue their own assets.
 				PUM_Helpers::do_shortcode( $query->post->post_content );
@@ -207,7 +207,7 @@ class PUM_AssetCache {
 			endwhile;
 
 			// Clear the global $current.
-			PUM_Site_Popups::current_popup( null );
+			pum()->current_popup = null;
 		}
 
 		$js = apply_filters( 'pum_generated_js', $js );
@@ -322,7 +322,7 @@ class PUM_AssetCache {
 		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) : $query->next_post();
 				// Set this popup as the global $current.
-				PUM_Site_Popups::current_popup( $query->post );
+				pum()->current_popup = $query->post;
 
 				// Preprocess the content for shortcodes that need to enqueue their own assets.
 				PUM_Helpers::do_shortcode( $query->post->post_content );
@@ -348,7 +348,7 @@ class PUM_AssetCache {
 			endwhile;
 
 			// Clear the global $current.
-			PUM_Site_Popups::current_popup( null );
+			pum()->current_popup = null;
 		}
 
 		return $popup_css;

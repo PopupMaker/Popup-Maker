@@ -14,6 +14,8 @@ class PUM_Site_Popups {
 
 	/**
 	 * @var PUM_Popup|null
+	 *
+	 * @deprecated 1.8.0
 	 */
 	public static $current;
 
@@ -44,6 +46,8 @@ class PUM_Site_Popups {
 	/**
 	 * Returns the current popup.
 	 *
+	 * @deprecated 1.8.0
+	 *
 	 * @param bool|object|null $new_popup
 	 *
 	 * @return null|PUM_Popup
@@ -52,11 +56,11 @@ class PUM_Site_Popups {
 		global $popup;
 
 		if ( $new_popup !== false ) {
-			self::$current = $new_popup;
+			pum()->current_popup = $new_popup;
 			$popup         = $new_popup;
 		}
 
-		return self::$current;
+		return pum()->current_popup;
 	}
 
 	/**
@@ -91,7 +95,7 @@ class PUM_Site_Popups {
 			while ( $query->have_posts() ) : $query->next_post();
 
 				// Set this popup as the global $current.
-				self::current_popup( $query->post );
+				pum()->current_theme = $query->post;
 
 				// If the popup is loadable (passes conditions) load it.
 				if ( pum_is_popup_loadable( $query->post->ID ) ) {
@@ -101,7 +105,7 @@ class PUM_Site_Popups {
 			endwhile;
 
 			// Clear the global $current.
-			self::current_popup( null );
+			pum()->current_popup = null;
 		}
 	}
 
@@ -138,10 +142,10 @@ class PUM_Site_Popups {
 			$query = new WP_Query( $args1 );
 			if ( $query->have_posts() ) {
 				while ( $query->have_posts() ) : $query->next_post();
-					self::current_popup( $query->post );
+					pum()->current_popup =$query->post;
 					self::preload_popup( $query->post );
 				endwhile;
-				self::current_popup( null );
+				pum()->current_popup = null;
 			}
 		}
 
@@ -157,10 +161,10 @@ class PUM_Site_Popups {
 
 		if ( $loaded->have_posts() ) {
 			while ( $loaded->have_posts() ) : $loaded->next_post();
-				self::current_popup( $loaded->post );
+				pum()->current_popup = $loaded->post;
 				popmake_get_template_part( 'popup' );
 			endwhile;
-			self::current_popup( null );
+			pum()->current_popup = null;
 		}
 	}
 

@@ -8,9 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class Popups
- *
- * @package ForumWP\Repository
+ * Class PUM_Repository_Popups
  */
 class PUM_Repository_Popups extends PUM_Abstract_Repository_Posts {
 
@@ -24,17 +22,6 @@ class PUM_Repository_Popups extends PUM_Abstract_Repository_Posts {
 	 */
 	protected function get_post_type() {
 		return 'popup';
-	}
-
-	/**
-	 * Returns an array of enforced query args that can't be over ridden, such as post type.
-	 *
-	 * @return array
-	 */
-	public function default_strict_query_args() {
-		return array(
-			'post_type' => $this->get_post_type(),
-		);
 	}
 
 	/**

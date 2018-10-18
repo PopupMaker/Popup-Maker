@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Interface between WP_Query and our data needs. Essentially a query factory.
  */
-abstract class PUM_Abstract_Repository_Posts extends PUM_Abstract_Pattern_Singleton implements PUM_Interface_Repository {
+abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository {
 
 	/**
 	 * WordPress query object.
@@ -61,7 +61,9 @@ abstract class PUM_Abstract_Repository_Posts extends PUM_Abstract_Pattern_Single
 	 * @return array
 	 */
 	protected function default_strict_query_args() {
-		return array();
+		return array(
+			'post_type' => $this->get_post_type(),
+		);
 	}
 
 	/**

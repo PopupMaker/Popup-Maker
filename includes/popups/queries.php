@@ -10,8 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get a popup model instance.
  *
- * @since 1.8.0
- *
  * @param int $popup_id
  *
  * @return PUM_Model_Popup
@@ -22,7 +20,7 @@ function pum_get_popup( $popup_id = 0 ) {
 	}
 
 	try {
-		return PUM_Repository_Popups::instance()->get_item( $popup_id );
+		return pum()->popups->get_item( $popup_id );
 	} catch ( InvalidArgumentException $e ) {
 		// Return empty object
 		return new PUM_Model_Popup( $popup_id );
@@ -37,7 +35,7 @@ function pum_get_popup( $popup_id = 0 ) {
  * @return PUM_Model_Popup[]
  */
 function pum_get_popups( $args = array() ) {
-	return PUM_Repository_Popups::instance()->get_items( $args );
+	return pum()->popups->get_items( $args );
 }
 
 /**
@@ -52,5 +50,5 @@ function pum_count_popups( $args = array() ) {
 		'post_status' => 'publish',
 	) );
 
-	return PUM_Repository_Popups::instance()->count_items( $args );
+	return pum()->popups->count_items( $args );
 }

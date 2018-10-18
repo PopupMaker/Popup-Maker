@@ -25,17 +25,6 @@ class PUM_Repository_Themes extends PUM_Abstract_Repository_Posts {
 	}
 
 	/**
-	 * Returns an array of enforced query args that can't be over ridden, such as post type.
-	 *
-	 * @return array
-	 */
-	public function default_strict_query_args() {
-		return array(
-			'post_type' => $this->get_post_type(),
-		);
-	}
-
-	/**
 	 * Build the args for WP Query.
 	 *
 	 * @param array $args

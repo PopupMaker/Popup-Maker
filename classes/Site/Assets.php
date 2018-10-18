@@ -292,17 +292,17 @@ class PUM_Site_Assets {
 
 		$settings = array();
 
-		$current_popup = PUM_Site_Popups::current_popup();
+		$current_popup = pum()->current_popup;
 
 		if ( $loaded->have_posts() ) {
 			while ( $loaded->have_posts() ) : $loaded->next_post();
-				PUM_Site_Popups::current_popup( $loaded->post );
+				pum()->current_popup = $loaded->post;
 				$popup = pum_get_popup( $loaded->post->ID );
 				// Set the key to the CSS id of this popup for easy lookup.
 				$settings[ 'pum-' . $popup->ID ] = $popup->get_public_settings();
 			endwhile;
 
-			PUM_Site_Popups::current_popup( $current_popup );
+			pum()->current_popup = $current_popup;
 		}
 
 		return $settings;
