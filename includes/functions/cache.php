@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return bool
  */
 function pum_cache_add( $key, $data, $group = '' ) {
-	return PUM_Cache::add( $key, $data, $group );
+	return PUM_Utils_Cache::add( $key, $data, $group );
 }
 
 /**
@@ -30,7 +30,7 @@ function pum_cache_add( $key, $data, $group = '' ) {
  * @return bool
  */
 function pum_cache_set( $key, $data, $group = '' ) {
-	return PUM_Cache::set( $key, $data, $group );
+	return PUM_Utils_Cache::set( $key, $data, $group );
 }
 
 /**
@@ -43,7 +43,7 @@ function pum_cache_set( $key, $data, $group = '' ) {
  * @return bool
  */
 function pum_cache_replace( $key, $data, $group = '' ) {
-	return PUM_Cache::replace( $key, $data, $group );
+	return PUM_Utils_Cache::replace( $key, $data, $group );
 }
 
 /**
@@ -57,7 +57,7 @@ function pum_cache_replace( $key, $data, $group = '' ) {
  * @return bool|mixed
  */
 function pum_cache_get( $key, $group = '', $force = false, &$found = null ) {
-	return PUM_Cache::get( $key, $group, $force, $found );
+	return PUM_Utils_Cache::get( $key, $group, $force, $found );
 }
 
 /**
@@ -69,7 +69,7 @@ function pum_cache_get( $key, $group = '', $force = false, &$found = null ) {
  * @return bool
  */
 function pum_cache_delete( $key, $group = '' ) {
-	return PUM_Cache::delete( $key, $group );
+	return PUM_Utils_Cache::delete( $key, $group );
 }
 
 /**
@@ -80,7 +80,7 @@ function pum_cache_delete( $key, $group = '' ) {
  * @return bool
  */
 function pum_cache_delete_group( $group = '' ) {
-	return PUM_Cache::delete_group( $group );
+	return PUM_Utils_Cache::delete_group( $group );
 }
 
 /**
@@ -93,7 +93,7 @@ function pum_cache_delete_group( $group = '' ) {
  * @return bool|false|int
  */
 function pum_cache_incr( $key, $offset = 1, $group = '' ) {
-	return PUM_Cache::incr( $key, $offset, $group );
+	return PUM_Utils_Cache::incr( $key, $offset, $group );
 }
 
 /**
@@ -106,7 +106,7 @@ function pum_cache_incr( $key, $offset = 1, $group = '' ) {
  * @return bool|false|int
  */
 function pum_cache_decr( $key, $offset = 1, $group = '' ) {
-	return PUM_Cache::decr( $key, $offset, $group );
+	return PUM_Utils_Cache::decr( $key, $offset, $group );
 }
 
 /**
