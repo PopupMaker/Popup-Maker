@@ -12,14 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.7.0
  *
- * @see PUM_Upgrades::set_upgrade_complete
+ * @see PUM_Utils_Upgrades::set_upgrade_complete
  *
  * @param  string $upgrade_id The action to add to the competed upgrades array
  *
  * @return bool If the function was successfully added
  */
 function pum_set_upgrade_complete( $upgrade_id = '' ) {
-	return PUM_Upgrades::instance()->set_upgrade_complete( $upgrade_id );
+	return PUM_Utils_Upgrades::instance()->set_upgrade_complete( $upgrade_id );
 }
 
 /**
@@ -30,7 +30,7 @@ function pum_set_upgrade_complete( $upgrade_id = '' ) {
  * @return array The array of completed upgrades
  */
 function pum_get_completed_upgrades() {
-	return PUM_Upgrades::instance()->get_completed_upgrades();
+	return PUM_Utils_Upgrades::instance()->get_completed_upgrades();
 }
 
 /**
@@ -43,7 +43,7 @@ function pum_get_completed_upgrades() {
  * @return bool  If the action has been added to the completed actions array
  */
 function pum_has_completed_upgrade( $upgrade_id = '' ) {
-	return PUM_Upgrades::instance()->has_completed_upgrade( $upgrade_id );
+	return PUM_Utils_Upgrades::instance()->has_completed_upgrade( $upgrade_id );
 }
 
 

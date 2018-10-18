@@ -1,14 +1,8 @@
 <?php
 
-/**
- * Upgrade Functions
- *
- * @package     PUM
- * @subpackage  Admin/Upgrades
- * @copyright   Copyright (c) 2016, Daniel Iser
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.4
- */
+/*******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -348,7 +342,7 @@ class PUM_Admin_Upgrades {
     /**
      * Gets the pum_db_ver or sets and returns the correct one.
      *
-     * @see PUM_Upgrades::set_pum_db_ver()
+     * @see PUM_Utils_Upgrades::set_pum_db_ver()
      *
      * return $pum_db_ver
      */

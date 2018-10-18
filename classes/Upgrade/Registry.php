@@ -66,7 +66,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 	/**
 	 * Registers upgrade routines.
 	 *
-	 * @see PUM_Upgrades::add_routine()
+	 * @see PUM_Utils_Upgrades::add_routine()
 	 */
 	private function register_upgrades() {
 		/**

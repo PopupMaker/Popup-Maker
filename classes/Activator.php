@@ -1,4 +1,7 @@
 <?php
+/*******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -105,7 +108,7 @@ class PUM_Activator {
 		add_option( 'pum_version', Popup_Maker::$VER );
 
 		// Updates stored values for versioning.
-		PUM_Upgrades::update_plugin_version();
+		PUM_Utils_Upgrades::update_plugin_version();
 
 		// Add a temporary option that will fire a hookable action on next load.
 		set_transient( '_popmake_installed', true, 30 );

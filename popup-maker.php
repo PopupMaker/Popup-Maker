@@ -343,7 +343,7 @@ class Popup_Maker {
 		PUM_AssetCache::init();
 		PUM_Site::init();
 		PUM_Admin::init();
-		PUM_Upgrades::instance();
+		PUM_Utils_Upgrades::instance();
 		PUM_Newsletters::init();
 		PUM_Previews::init();
 		PUM_Integrations::init();

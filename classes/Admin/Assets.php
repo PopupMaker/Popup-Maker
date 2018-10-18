@@ -95,7 +95,7 @@ class PUM_Admin_Assets {
 
 		wp_enqueue_script( 'pum-admin-marketing' );
 
-		if ( PUM_Upgrades::instance()->has_uncomplete_upgrades() ) {
+		if ( PUM_Utils_Upgrades::instance()->has_uncomplete_upgrades() ) {
 			wp_enqueue_script( 'pum-admin-batch' );
 		}
 
@@ -152,7 +152,7 @@ class PUM_Admin_Assets {
 		// @deprecated handle. Currently loads empty file and admin-general as dependency.
 		wp_register_style( 'popup-maker-admin', self::$css_url . 'admin-deprecated' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
 
-		if ( PUM_Upgrades::instance()->has_uncomplete_upgrades() ) {
+		if ( PUM_Utils_Upgrades::instance()->has_uncomplete_upgrades() ) {
 			wp_enqueue_style( 'pum-admin-batch' );
 		}
 
