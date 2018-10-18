@@ -1,7 +1,19 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
- ******************************************************************************/
+/**
+ * Plugin Name: Popup Maker
+ * Plugin URI: https://wppopupmaker.com/?utm_campaign=PluginInfo&utm_source=plugin-header&utm_medium=plugin-uri
+ * Description: Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
+ * Author: WP Popup Maker
+ * Version: 1.7.30
+ * Author URI: https://wppopupmaker.com/?utm_campaign=PluginInfo&utm_source=plugin-header&utm_medium=author-uri
+ * Text Domain: popup-maker
+ *
+ * @package     POPMAKE
+ * @category    Core
+ * @author      Daniel Iser
+ * @copyright   Copyright (c) 2016, Wizard Internet Solutions
+ * @since       1.0
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
