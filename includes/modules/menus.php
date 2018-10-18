@@ -1,4 +1,7 @@
 <?php
+/*******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -18,7 +21,7 @@ class PUM_Modules_Menu {
 	public static function init() {
 		add_filter( 'popmake_settings_misc', array( __CLASS__, 'settings' ) );
 
-		if ( PUM_Options::get( 'disabled_menu_editor', false ) ) {
+		if ( PUM_Utils_Options::get( 'disabled_menu_editor', false ) ) {
 			return;
 		}
 		

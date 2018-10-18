@@ -177,7 +177,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 * @return array $values
 	 */
 	public function process_form_sanitization( $values = array() ) {
-		if ( $this->id !== $values['provider'] && ( 'none' === $values['provider'] && PUM_Options::get( 'newsletter_default_provider' ) !== $this->id ) ) {
+		if ( $this->id !== $values['provider'] && ( 'none' === $values['provider'] && PUM_Utils_Options::get( 'newsletter_default_provider' ) !== $this->id ) ) {
 			return $values;
 		}
 
@@ -193,7 +193,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 * @return WP_Error
 	 */
 	public function process_form_validation( WP_Error $errors, $values = array() ) {
-		if ( $this->id !== $values['provider'] && ( 'none' === $values['provider'] && PUM_Options::get( 'newsletter_default_provider' ) !== $this->id ) ) {
+		if ( $this->id !== $values['provider'] && ( 'none' === $values['provider'] && PUM_Utils_Options::get( 'newsletter_default_provider' ) !== $this->id ) ) {
 			return $errors;
 		}
 
@@ -208,7 +208,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 * @param WP_Error $errors        Errors object.
 	 */
 	public function process_form_submission( $values, &$json_response, WP_Error &$errors ) {
-		if ( $this->id !== $values['provider'] && ( 'none' === $values['provider'] && PUM_Options::get( 'newsletter_default_provider' ) !== $this->id ) ) {
+		if ( $this->id !== $values['provider'] && ( 'none' === $values['provider'] && PUM_Utils_Options::get( 'newsletter_default_provider' ) !== $this->id ) ) {
 			return;
 		}
 
@@ -318,7 +318,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 * @return string
 	 */
 	public function get_message( $context, $values = array() ) {
-		$message = PUM_Options::get( "{$this->opt_prefix}{$context}_message", '' );
+		$message = PUM_Utils_Options::get( "{$this->opt_prefix}{$context}_message", '' );
 
 		if ( empty( $message ) ) {
 			$message = $this->default_messages( $context );

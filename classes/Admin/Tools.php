@@ -444,9 +444,9 @@ class PUM_Admin_Tools {
 				__CLASS__,
 				'enabled_betas_sanitize_value',
 			), $_POST['enabled_betas'] ) );
-			PUM_Options::update( 'enabled_betas', $enabled_betas );
+			PUM_Utils_Options::update( 'enabled_betas', $enabled_betas );
 		} else {
-			PUM_Options::delete( 'enabled_betas' );
+			PUM_Utils_Options::delete( 'enabled_betas' );
 		}
 	}
 
@@ -519,7 +519,7 @@ class PUM_Admin_Tools {
 	 * @return      bool True if enabled, false otherwise
 	 */
 	public static function extension_has_beta_support( $slug ) {
-		$enabled_betas = PUM_Options::get( 'enabled_betas', array() );
+		$enabled_betas = PUM_Utils_Options::get( 'enabled_betas', array() );
 		$return        = false;
 
 		if ( array_key_exists( $slug, $enabled_betas ) ) {

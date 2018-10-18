@@ -1,19 +1,7 @@
 <?php
-/**
- * Plugin Name: Popup Maker
- * Plugin URI: https://wppopupmaker.com/?utm_campaign=PluginInfo&utm_source=plugin-header&utm_medium=plugin-uri
- * Description: Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
- * Author: WP Popup Maker
- * Version: 1.7.30
- * Author URI: https://wppopupmaker.com/?utm_campaign=PluginInfo&utm_source=plugin-header&utm_medium=author-uri
- * Text Domain: popup-maker
- *
- * @package     POPMAKE
- * @category    Core
- * @author      Daniel Iser
- * @copyright   Copyright (c) 2016, Wizard Internet Solutions
- * @since       1.0
- */
+/*******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -168,13 +156,15 @@ class Popup_Maker {
 		self::$URL  = plugins_url( '/', __FILE__ );
 		self::$FILE = __FILE__;
 
-		if ( isset( $_GET['pum_debug'] ) || PUM_Options::get( 'debug_mode', false ) ) {
+		if ( isset( $_GET['pum_debug'] ) || PUM_Utils_Options::get( 'debug_mode', false ) ) {
 			self::$DEBUG_MODE = true;
 		}
 
 		if ( ! defined( 'POPMAKE' ) ) {
 			define( 'POPMAKE', self::$FILE );
 		}
+
+		pum_get_option();
 
 		if ( ! defined( 'POPMAKE_NAME' ) ) {
 			define( 'POPMAKE_NAME', self::$NAME );
@@ -217,7 +207,7 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/compat.php';
 
 		// Initialize global options
-		PUM_Options::init();
+		PUM_Utils_Options::init();
 
 		/** @deprecated 1.7.0 */
 		require_once self::$DIR . 'includes/admin/settings/register-settings.php';

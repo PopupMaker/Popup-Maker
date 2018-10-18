@@ -74,7 +74,7 @@ class PUM_Admin_Settings {
 
 			$settings = apply_filters( 'pum_sanitize_settings', $settings );
 
-			if ( PUM_Options::update_all( $settings ) ) {
+			if ( PUM_Utils_Options::update_all( $settings ) ) {
 				self::$notices[] = array(
 					'type'    => 'success',
 					'message' => __( 'Settings saved successfully!', 'popup-maker' ),
@@ -169,7 +169,7 @@ class PUM_Admin_Settings {
 						break;
 
 					case 'license_key':
-						$old = PUM_Options::get( $key );
+						$old = PUM_Utils_Options::get( $key );
 						$new = trim( $value );
 
 						if ( $old && $old != $new ) {
@@ -496,7 +496,7 @@ class PUM_Admin_Settings {
 	 */
 	public static function page() {
 
-		$settings = PUM_Options::get_all();
+		$settings = PUM_Utils_Options::get_all();
 
 		if ( empty( $settings ) ) {
 			$settings = self::defaults();

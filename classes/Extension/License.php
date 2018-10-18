@@ -55,7 +55,7 @@ class PUM_Extension_License {
 
 		$this->item_shortname = 'popmake_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
 		$this->version        = $_version;
-		$this->license        = trim( PUM_Options::get( $this->item_shortname . '_license_key', '' ) );
+		$this->license        = trim( PUM_Utils_Options::get( $this->item_shortname . '_license_key', '' ) );
 		$this->author         = $_author;
 		$this->api_url        = is_null( $_api_url ) ? $this->api_url : $_api_url;
 
@@ -66,7 +66,7 @@ class PUM_Extension_License {
 		 * user having to reactive their license.
 		 */
 		if ( ! empty( $_optname ) ) {
-			$opt = PUM_Options::get( $_optname );
+			$opt = PUM_Utils_Options::get( $_optname );
 
 			if ( isset( $opt ) && empty( $this->license ) ) {
 				$this->license = trim( $opt );

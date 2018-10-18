@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 function pum_get_options() {
-	return PUM_Options::get_all();
+	return PUM_Utils_Options::get_all();
 }
 
 /**
@@ -25,7 +25,7 @@ function pum_get_options() {
  * @return mixed
  */
 function pum_get_option( $key, $default = false ) {
-	return PUM_Options::get( $key, $default );
+	return PUM_Utils_Options::get( $key, $default );
 }
 
 /**
@@ -37,7 +37,7 @@ function pum_get_option( $key, $default = false ) {
  * @return bool
  */
 function pum_update_option( $key = '', $value = false ) {
-	return PUM_Options::update( $key, $value );
+	return PUM_Utils_Options::update( $key, $value );
 }
 
 /**
@@ -48,7 +48,7 @@ function pum_update_option( $key = '', $value = false ) {
  * @return bool
  */
 function pum_merge_options( $new_options = array() ){
-	return PUM_Options::merge( $new_options );
+	return PUM_Utils_Options::merge( $new_options );
 }
 
 /**
@@ -59,7 +59,7 @@ function pum_merge_options( $new_options = array() ){
  * @return bool
  */
 function pum_delete_option( $key = '' ) {
-	return PUM_Options::delete( $key );
+	return PUM_Utils_Options::delete( $key );
 }
 
 /**
@@ -70,7 +70,7 @@ function pum_delete_option( $key = '' ) {
  * @return bool
  */
 function pum_delete_options( $keys = array() ) {
-	return PUM_Options::delete( $keys );
+	return PUM_Utils_Options::delete( $keys );
 }
 
 /**
@@ -81,7 +81,7 @@ function pum_delete_options( $keys = array() ) {
  * @return bool
  */
 function pum_remap_options( $remap_array = array() ) {
-	return PUM_Options::remap_keys( $remap_array );
+	return PUM_Utils_Options::remap_keys( $remap_array );
 }
 
 

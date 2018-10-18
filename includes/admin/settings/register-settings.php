@@ -1,13 +1,7 @@
 <?php
-/**
- * Register Settings
- *
- * @package        POPMAKE
- * @subpackage     Admin/Settings
- * @copyright      Copyright (c) 2014, Daniel Iser
- * @license        http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since          3
- */
+/*******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -87,7 +81,7 @@ function pum_merge_deprecated_settings_fields( $tabs = array() ) {
  * @return mixed
  */
 function popmake_get_option( $key = '', $default = false ) {
-	return PUM_Options::get( $key, $default );
+	return PUM_Utils_Options::get( $key, $default );
 }
 
 /**
@@ -101,7 +95,7 @@ function popmake_get_option( $key = '', $default = false ) {
  * @return array $settings
  */
 function popmake_get_settings() {
-	return PUM_Options::get_all();
+	return PUM_Utils_Options::get_all();
 }
 
 /**
@@ -736,7 +730,7 @@ if ( ! function_exists( 'popmake_license_key_callback' ) ) {
 	 * @param $args
 	 */
 	function popmake_license_key_callback( $args ) {
-		$current_key = PUM_Options::get( $args['id'] );
+		$current_key = PUM_Utils_Options::get( $args['id'] );
 
 		$messages = array();
 		$license  = get_option( $args['options']['is_valid_license_option'] );
@@ -966,9 +960,9 @@ function popmake_sanitize_html_class( $class = '' ) {
  * @return mixed
  */
 function popmake_sanitize_license_key_field( $new, $key ) {
-	$old = PUM_Options::get( $key );
+	$old = PUM_Utils_Options::get( $key );
 	if ( $old && $old != $new ) {
-		PUM_Options::delete( $key ); // new license has been entered, so must reactivate
+		PUM_Utils_Options::delete( $key ); // new license has been entered, so must reactivate
 		delete_option( str_replace( '_license_key', '_license_active', $key ) );
 	}
 
