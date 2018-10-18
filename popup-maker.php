@@ -8,18 +8,14 @@
  * Author URI: https://wppopupmaker.com/?utm_campaign=PluginInfo&utm_source=plugin-header&utm_medium=author-uri
  * Text Domain: popup-maker
  *
- * @package     POPMAKE
- * @category    Core
  * @author      Daniel Iser
- * @copyright   Copyright (c) 2016, Wizard Internet Solutions
- * @since       1.0
+ * @copyright   Copyright (c) 2018, Wizard Internet Solutions
  */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
 
 /**
  * Class Autoloader
