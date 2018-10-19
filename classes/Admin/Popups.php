@@ -132,7 +132,7 @@ class PUM_Admin_Popups {
 		$popup = pum_get_popup( $post->ID );
 
 		// Get the meta directly rather than from cached object.
-		$settings = $popup->get_settings( true );
+		$settings = $popup->get_settings();
 
 		if ( empty( $settings ) ) {
 			$settings = self::defaults();

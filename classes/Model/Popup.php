@@ -10,23 +10,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class PUM_Model_Popup
  *
+ *
  * @since 1.4
  */
-class PUM_Model_Popup extends PUM_Model_Post {
-
-	#region Properties
+class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 
 	/** @var string */
 	protected $required_post_type = 'popup';
-
-	/** @var array */
-	public $cookies;
-
-	/** @var array */
-	public $triggers;
-
-	/** @var array */
-	public $conditions;
 
 	/** @var array */
 	public $conditions_filtered = array();
@@ -40,10 +30,12 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	/** @var int */
 	public $theme_id;
 
-	/** @var array */
-	public $settings;
-
-	/** @var string */
+	/**
+	 * @var string
+	 *
+	 * @deprecated  1.8.0 Was used in PUM ALM extension, needs time to get those changes published.
+	 * @toberemoved v1.9.0
+	 */
 	public $content;
 
 	/** @var bool */
@@ -56,7 +48,8 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * 2 - v1.4.0
 	 * 3 - v1.7.0
 	 *
-	 * @var int */
+	 * @var int
+	 */
 	public $model_version = 3;
 
 	/**
@@ -66,26 +59,9 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * 2 - v1.4.0
 	 * 3 - v1.7.0
 	 *
-	 * @var int */
+	 * @var int
+	 */
 	public $data_version;
-
-	# TODO Remove these once no longer needed.
-
-	/**
-	 * @var array
-	 * @deprecated 1.7.0
-	 */
-	public $display;
-
-	/**
-	 * @var array
-	 * @deprecated 1.7.0
-	 */
-	public $close;
-
-	#endregion Properties
-
-	#region General
 
 	/**
 	 * Returns the title of a popup.
@@ -95,9 +71,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * @return string
 	 */
 	public function get_title() {
-		$title = $this->get_meta( 'popup_title' );
-
-		return (string) apply_filters( 'pum_popup_get_title', $title, $this->ID );
+		return (string) apply_filters( 'pum_popup_get_title', (string) $this->get_meta( 'popup_title' ), $this->ID );
 	}
 
 	/**
@@ -108,36 +82,32 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * @return string
 	 */
 	public function get_content() {
-		return $this->content = apply_filters( 'pum_popup_content', $this->post_content, $this->ID );
+		/** @deprecated 1.8.0 */
+		$this->content = $this->post_content;
+
+		return apply_filters( 'pum_popup_content', $this->post_content, $this->ID );
 	}
-
-	#endregion General
-
-	#region Settings
 
 	/**
 	 * Returns array of all popup settings.
 	 *
-	 * @param bool $force
-	 *
 	 * @return array
 	 */
-	public function get_settings( $force = false ) {
-		if ( ! isset( $this->settings ) || $force ) {
-			$this->settings = $this->get_meta( 'popup_settings' );
+	public function get_settings() {
+		$settings = $this->get_meta( 'popup_settings' );
 
-			if ( ! is_array( $this->settings ) ) {
-				$this->settings = array();
-			}
+		if ( ! is_array( $settings ) ) {
+			$settings = array();
 		}
 
-		return apply_filters( 'pum_popup_settings', $this->settings, $this->ID );
+		// Review: the above should be removed and replaced with a hooked filter here to supply defaults when $settings === false.
+		return apply_filters( 'pum_popup_settings', $settings, $this->ID );
 	}
 
 	/**
 	 * Returns a specific popup setting with optional default value when not found.
 	 *
-	 * @param $key
+	 * @param      $key
 	 * @param bool $default
 	 *
 	 * @return bool|mixed
@@ -150,12 +120,12 @@ class PUM_Model_Popup extends PUM_Model_Post {
 
 	/**
 	 * @param string $key
-	 * @param mixed $value
+	 * @param mixed  $value
 	 *
 	 * @return bool|int
 	 */
 	public function update_setting( $key, $value ) {
-		$settings = $this->get_settings( true );
+		$settings = $this->get_settings();
 
 		// TODO Once fields have been merged into the model itself, add automatic validation here.
 		$settings[ $key ] = $value;
@@ -169,7 +139,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * @return bool|int
 	 */
 	public function update_settings( $merge_settings = array() ) {
-		$settings = $this->get_settings( true );
+		$settings = $this->get_settings();
 
 		// TODO Once fields have been merged into the model itself, add automatic validation here.
 		foreach ( $merge_settings as $key => $value ) {
@@ -209,19 +179,11 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		return apply_filters( 'pum_popup_get_public_settings', $settings, $this );
 	}
 
-	#endregion Settings
-
-	#region Data Getters
-
 	/**
 	 * @return array
 	 */
 	public function get_cookies() {
-		$cookies = $this->get_setting( 'cookies', array() );
-
-		$this->cookies = $cookies;
-
-		return apply_filters( 'pum_popup_get_cookies', $cookies, $this->ID );
+		return apply_filters( 'pum_popup_get_cookies', $this->get_setting( 'cookies', array() ), $this->ID );
 	}
 
 	/**
@@ -230,9 +192,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 * @return bool
 	 */
 	public function has_cookie( $event ) {
-		$cookies = $this->get_cookies();
-
-		foreach ( $cookies as $cookie ) {
+		foreach ( (array) $this->get_cookies() as $cookie ) {
 			if ( $cookie['event'] == $event ) {
 				return true;
 			}
@@ -240,12 +200,12 @@ class PUM_Model_Popup extends PUM_Model_Post {
 
 		return false;
 	}
+
 	/**
 	 * @return array
 	 */
 	public function get_triggers() {
 		$triggers = $this->get_setting( 'triggers', array() );
-		$this->triggers = $triggers;
 
 		// Automatically add click trigger when on the front end.
 		if ( ! is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
@@ -309,7 +269,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	/**
 	 * Retrieve settings in the form of deprecated grouped arrays.
 	 *
-	 * @param $group
+	 * @param      $group
 	 * @param null $key
 	 *
 	 * @return mixed
@@ -336,7 +296,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 			$deprecated_values = popmake_get_popup_meta_group( $group, $this->ID );
 
 			if ( ! empty( $deprecated_values ) ) {
-				foreach( $deprecated_values as $old_key => $value ) {
+				foreach ( $deprecated_values as $old_key => $value ) {
 
 					if ( ! isset( $group_values[ $old_key ] ) ) {
 						$group_values[ $old_key ] = $value;
@@ -344,7 +304,6 @@ class PUM_Model_Popup extends PUM_Model_Post {
 
 				}
 			}
-
 
 
 			$this->$group = $group_values;
@@ -426,16 +385,18 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	public function get_display( $key = null ) {
 		$display = $this->_dep_get_settings_group( 'display', $key );
 
-		foreach( array(
-			'responsive_min_width',
-			'responsive_max_width',
-			'custom_width',
-			'custom_height',
-		) as $key => $value ) {
+		foreach (
+			array(
+				'responsive_min_width',
+				'responsive_max_width',
+				'custom_width',
+				'custom_height',
+			) as $key => $value
+		) {
 			$temp = isset( $display[ $key ] ) ? $display[ $key ] : false;
 
 			if ( $temp && is_string( $temp ) ) {
-				$display[ $key ] = preg_replace('/\D/', '', $temp );
+				$display[ $key ]           = preg_replace( '/\D/', '', $temp );
 				$display[ $key . '_unit' ] = str_replace( $display[ $key ], '', $temp );
 			}
 		}
@@ -677,15 +638,15 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	 */
 	public function parse_condition( $condition ) {
 		$condition = wp_parse_args( $condition, array(
-			'target' => '',
+			'target'      => '',
 			'not_operand' => false,
-			'settings' => array(),
+			'settings'    => array(),
 		) );
 
 		$condition['not_operand'] = (bool) $condition['not_operand'];
 
 		/** Backward compatibility layer */
-		foreach( $condition['settings'] as $key => $value ) {
+		foreach ( $condition['settings'] as $key => $value ) {
 			$condition[ $key ] = $value;
 		}
 
@@ -694,7 +655,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 	}
 
 	/**
-	 * @param $condition
+	 * @param       $condition
 	 * @param array $filters
 	 *
 	 * @return bool
@@ -980,8 +941,6 @@ class PUM_Model_Popup extends PUM_Model_Post {
 			$this->update_meta( 'popup_' . $keys[0] . '_count', 0 );
 			$this->update_meta( 'popup_last_' . $keys[1], 0 );
 		}
-
-		$this->update_cache();
 	}
 
 	/**
@@ -1022,22 +981,27 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		return ( float ) $a['timestamp'] < ( float ) $b['timestamp'];
 	}
 
-	#endregion Analytics
+	/**
+	 * @param $post WP_Post
+	 */
+	public function setup( $post ) {
+		parent::setup( $post );
 
-	#region Migration
+		if ( ! $this->is_valid() ) {
+			return;
+		}
 
-	public function setup() {
-
+		// REVIEW Does this need to be here or somewhere else like get_meta/get_setting?
 		if ( ! isset( $this->data_version ) ) {
 			$this->data_version = (int) $this->get_meta( 'data_version' );
 
 			if ( ! $this->data_version ) {
-				$theme = $this->get_meta( 'popup_theme' );
+				$theme            = $this->get_meta( 'popup_theme' );
 				$display_settings = $this->get_meta( 'popup_display' );
 
 				// If there are existing settings set the data version to 2 so they can be updated.
 				// Otherwise set to the current version as this is a new popup.
-				$is_v2  = ( ! empty( $display_settings ) && is_array( $display_settings ) ) || $theme > 0;
+				$is_v2              = ( ! empty( $display_settings ) && is_array( $display_settings ) ) || $theme > 0;
 				$this->data_version = $is_v2 ? 2 : $this->model_version;
 
 				$this->update_meta( 'data_version', $this->data_version );
@@ -1050,9 +1014,7 @@ class PUM_Model_Popup extends PUM_Model_Post {
 			 */
 			$this->passive_migration();
 		}
-
 	}
-
 
 	/**
 	 * Allows for passive migration routines based on the current data version.
@@ -1075,6 +1037,11 @@ class PUM_Model_Popup extends PUM_Model_Post {
 		$this->doing_passive_migration = false;
 	}
 
-	#endregion Migration
+	/**
+	 * @deprecated 1.7.0 Still used in several extension migration routines, so needs to stay for now.
+	 */
+	public function save() {
+		return pum()->popups->update_itme( $this->ID, $this->to_array() );
+	}
 }
 

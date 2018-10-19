@@ -121,7 +121,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * @param int $id
 	 *
-	 * @return WP_Post|PUM_Model_Post
+	 * @return WP_Post|PUM_Abstract_Model_Post
 	 * @throws \InvalidArgumentException
 	 */
 	public function get_item( $id ) {
@@ -136,7 +136,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 * @param $field
 	 * @param $value
 	 *
-	 * @return PUM_Model_Post|\WP_Post
+	 * @return PUM_Abstract_Model_Post|\WP_Post
 	 */
 	public function get_item_by( $field, $value ) {
 		global $wpdb;
@@ -162,7 +162,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * @param array $args
 	 *
-	 * @return WP_Post[]|PUM_Model_Post[]
+	 * @return WP_Post[]|PUM_Abstract_Model_Post[]
 	 */
 	public function get_items( $args = array() ) {
 		/** Reset default strict query args. */
@@ -236,7 +236,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * @param array $data
 	 *
-	 * @return WP_Post|PUM_Model_Post
+	 * @return WP_Post|PUM_Abstract_Model_Post
 	 * @throws InvalidArgumentException
 	 */
 	public function create_item( $data ) {
@@ -268,14 +268,14 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 * @param int   $id
 	 * @param array $data
 	 *
-	 * @return WP_Post|PUM_Model_Post
+	 * @return WP_Post|PUM_Abstract_Model_Post
 	 * @throws Exception
 	 */
 	public function update_item( $id, $data ) {
 
 		$this->assert_data( $data );
 
-		/** @var WP_Post|PUM_Model_Post $original */
+		/** @var WP_Post|PUM_Abstract_Model_Post $original */
 		$original = $this->get_item( $id );
 
 		$post_update = array();
@@ -312,7 +312,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * @param $post
 	 *
-	 * @return WP_Post|PUM_Model_Post
+	 * @return WP_Post|PUM_Abstract_Model_Post
 	 */
 	protected function get_model( $post ) {
 		/**

@@ -67,12 +67,14 @@ function pum_popup_migration_2( &$popup ) {
 		}
 	}
 
+	$settings = $popup->get_settings();
+
 	/**
 	 * Migrate popup theme selection.
 	 */
 	$theme = $popup->get_meta( 'popup_theme' );
 	if ( ! empty( $theme ) && is_numeric( $theme ) ) {
-		$popup->settings['theme_id'] = absint( $theme );
+		$settings['theme_id'] = absint( $theme );
 		$changed                     = true;
 		$delete_meta[]               = 'popup_theme';
 	}
@@ -87,7 +89,7 @@ function pum_popup_migration_2( &$popup ) {
 		// Foreach old key, save the value under popup settings for the new key.
 		foreach ( $keys as $old_key => $new_key ) {
 			if ( isset( $display[ $old_key ] ) && ! empty( $display[ $old_key ] ) ) {
-				$popup->settings[ $new_key ] = $display[ $old_key ];
+				$settings[ $new_key ] = $display[ $old_key ];
 				$changed                     = true;
 				unset( $display[ $old_key ] );
 
@@ -97,7 +99,7 @@ function pum_popup_migration_2( &$popup ) {
 						'custom_width',
 						'custom_height',
 					) ) && isset( $display[ $old_key . '_unit' ] ) ) {
-					$popup->settings[ $new_key ] .= $display[ $old_key . '_unit' ];
+					$settings[ $new_key ] .= $display[ $old_key . '_unit' ];
 					unset( $display[ $old_key . '_unit' ] );
 				}
 			}
@@ -121,7 +123,7 @@ function pum_popup_migration_2( &$popup ) {
 		// Foreach old key, save the value under popup settings for the new key.
 		foreach ( $keys as $old_key => $new_key ) {
 			if ( isset( $close[ $old_key ] ) ) {
-				$popup->settings[ $new_key ] = $close[ $old_key ];
+				$settings[ $new_key ] = $close[ $old_key ];
 				$changed                     = true;
 				unset( $close[ $old_key ] );
 			}
@@ -140,7 +142,7 @@ function pum_popup_migration_2( &$popup ) {
 	 */
 	$triggers = $popup->get_meta( 'popup_triggers' );
 	if ( ! empty( $triggers ) && is_array( $triggers ) ) {
-		$triggers = ! empty( $popup->settings['triggers'] ) && is_array( $popup->settings['triggers'] ) ? array_merge( $popup->settings['triggers'], $triggers ) : $triggers;
+		$triggers = ! empty( $settings['triggers'] ) && is_array( $settings['triggers'] ) ? array_merge( $settings['triggers'], $triggers ) : $triggers;
 
 		foreach ( $triggers as $key => $trigger ) {
 			if ( isset( $trigger['settings']['cookie']['name'] ) ) {
@@ -149,7 +151,7 @@ function pum_popup_migration_2( &$popup ) {
 			}
 		}
 
-		$popup->settings['triggers'] = $triggers;
+		$settings['triggers'] = $triggers;
 		$changed                     = true;
 
 		$delete_meta[] = 'popup_triggers';
@@ -160,8 +162,8 @@ function pum_popup_migration_2( &$popup ) {
 	 */
 	$cookies = $popup->get_meta( 'popup_cookies' );
 	if ( ! empty( $cookies ) && is_array( $cookies ) ) {
-		$cookies                    = ! empty( $popup->settings['cookies'] ) && is_array( $popup->settings['cookies'] ) ? array_merge( $popup->settings['cookies'], $cookies ) : $cookies;
-		$popup->settings['cookies'] = $cookies;
+		$cookies                    = ! empty( $settings['cookies'] ) && is_array( $settings['cookies'] ) ? array_merge( $settings['cookies'], $cookies ) : $cookies;
+		$settings['cookies'] = $cookies;
 		$changed                    = true;
 		$delete_meta[]              = 'popup_cookies';
 	}
@@ -171,7 +173,7 @@ function pum_popup_migration_2( &$popup ) {
 	 */
 	$conditions = $popup->get_meta( 'popup_conditions' );
 	if ( ! empty( $conditions ) && is_array( $conditions ) ) {
-		$conditions = ! empty( $popup->settings['conditions'] ) && is_array( $popup->settings['conditions'] ) ? array_merge( $popup->settings['conditions'], $conditions ) : $conditions;
+		$conditions = ! empty( $settings['conditions'] ) && is_array( $settings['conditions'] ) ? array_merge( $settings['conditions'], $conditions ) : $conditions;
 
 		foreach ( $conditions as $cg_key => $group ) {
 			if ( ! empty( $group ) ) {
@@ -204,7 +206,7 @@ function pum_popup_migration_2( &$popup ) {
 			}
 		}
 
-		$popup->settings['conditions'] = $conditions;
+		$settings['conditions'] = $conditions;
 		$changed                       = true;
 		$delete_meta[]                 = 'popup_conditions';
 	}
@@ -214,7 +216,7 @@ function pum_popup_migration_2( &$popup ) {
 	 */
 	$mobile_disabled = $popup->get_meta( 'popup_mobile_disabled' );
 	if ( ! empty( $mobile_disabled ) ) {
-		$popup->settings['disable_on_mobile'] = (bool) ( $mobile_disabled );
+		$settings['disable_on_mobile'] = (bool) ( $mobile_disabled );
 		$changed                              = true;
 		$delete_meta[]                        = 'popup_mobile_disabled';
 	}
@@ -224,7 +226,7 @@ function pum_popup_migration_2( &$popup ) {
 	 */
 	$tablet_disabled = $popup->get_meta( 'popup_tablet_disabled' );
 	if ( ! empty( $tablet_disabled ) ) {
-		$popup->settings['disable_on_tablet'] = (bool) ( $tablet_disabled );
+		$settings['disable_on_tablet'] = (bool) ( $tablet_disabled );
 		$changed                              = true;
 		$delete_meta[]                        = 'popup_tablet_disabled';
 	}
@@ -251,7 +253,7 @@ function pum_popup_migration_2( &$popup ) {
 	 * Save only if something changed.
 	 */
 	if ( $changed ) {
-		$popup->update_meta( 'popup_settings', $popup->settings );
+		$popup->update_meta( 'popup_settings', $settings );
 	}
 
 	/**

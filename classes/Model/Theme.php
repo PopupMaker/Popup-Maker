@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.7
  */
-class PUM_Model_Theme extends PUM_Model_Post {
+class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 
 	#region Properties
 

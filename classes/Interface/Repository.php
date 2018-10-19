@@ -19,7 +19,7 @@ interface PUM_Interface_Repository {
 	/**
 	 * @param int $id
 	 *
-	 * @return WP_Post|PUM_Model_Post
+	 * @return WP_Post|PUM_Abstract_Model_Post
 	 */
 	public function get_item( $id );
 
@@ -33,14 +33,14 @@ interface PUM_Interface_Repository {
 	/**
 	 * @param $args
 	 *
-	 * @return WP_Post[||PUM_Model_Post[]
+	 * @return WP_Post[||PUM_Abstract_Model_Post[]
 	 */
 	public function get_items( $args );
 
 	/**
 	 * @param array $data
 	 *
-	 * @return WP_Post|PUM_Model_Post
+	 * @return WP_Post|PUM_Abstract_Model_Post
 	 */
 	public function create_item( $data );
 
@@ -48,7 +48,7 @@ interface PUM_Interface_Repository {
 	 * @param int   $id
 	 * @param array $data
 	 *
-	 * @return WP_Post|PUM_Model_Post
+	 * @return WP_Post|PUM_Abstract_Model_Post
 	 */
 	public function update_item( $id, $data );
 
