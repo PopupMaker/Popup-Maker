@@ -63,6 +63,20 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 */
 	public $data_version;
 
+	# TODO Remove these once no longer needed.
+
+	/**
+	 * @var array
+	 * @deprecated 1.7.0
+	 */
+	public $display;
+
+	/**
+	 * @var array
+	 * @deprecated 1.7.0
+	 */
+	public $close;
+
 	/**
 	 * Returns the title of a popup.
 	 *
