@@ -21,15 +21,6 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	/** @var array */
 	public $conditions_filtered = array();
 
-	/** @var array */
-	public $data_attr;
-
-	/** @var string */
-	public $title;
-
-	/** @var int */
-	public $theme_id;
-
 	/**
 	 * @var string
 	 *
@@ -276,10 +267,6 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		return (int) apply_filters( 'pum_popup_get_theme_id', $theme_id, $this->ID );
 	}
 
-	#endregion Data Getters
-
-	#region Deprecated Getters
-
 	/**
 	 * Retrieve settings in the form of deprecated grouped arrays.
 	 *
@@ -288,7 +275,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 *
 	 * @return mixed
 	 */
-	public function _dep_get_settings_group( $group, $key = null ) {
+	protected function _dep_get_settings_group( $group, $key = null ) {
 		if ( ! $this->$group ) {
 			/**
 			 * Remap old meta settings to new settings location for v1.7. This acts as a passive migration when needed.
@@ -431,10 +418,6 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		return $this->_dep_get_settings_group( 'close', $key );
 	}
 
-	#endregion Deprecated Getters
-
-	#region Templating & Rendering
-
 	/**
 	 * Returns array of classes for this popup.
 	 *
@@ -530,6 +513,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 *
 	 * @uses filter `pum_popup_get_data_attr`
 	 *
+	 * @deprecated 1.8.0
+	 *
 	 * @return array
 	 */
 	public function get_data_attr() {
@@ -585,10 +570,6 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	public function show_close_button() {
 		return (bool) apply_filters( 'pum_popup_show_close_button', true, $this->ID );
 	}
-
-	#endregion Templating & Rendering
-
-	#region Conditions
 
 	/**
 	 * Get the popups conditions.
@@ -822,9 +803,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @return bool
 	 */
 	public function mobile_disabled() {
-		$mobile_disabled = $this->get_setting( 'disable_on_mobile' );
-
-		return (bool) apply_filters( 'pum_popup_mobile_disabled', $mobile_disabled, $this->ID );
+		return (bool) apply_filters( 'pum_popup_mobile_disabled', $this->get_setting( 'disable_on_mobile' ), $this->ID );
 	}
 
 	/**
@@ -833,14 +812,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @return bool
 	 */
 	public function tablet_disabled() {
-		$tablet_disabled = $this->get_setting( 'disable_on_tablet' );
-
-		return (bool) apply_filters( 'pum_popup_tablet_disabled', $tablet_disabled, $this->ID );
+		return (bool) apply_filters( 'pum_popup_tablet_disabled', (bool) $this->get_setting( 'disable_on_tablet' ), $this->ID );
 	}
-
-	#endregion Conditions
-
-	#region Analytics
 
 	/**
 	 * Get a popups event count.
