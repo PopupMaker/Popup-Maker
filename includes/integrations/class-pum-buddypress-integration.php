@@ -86,7 +86,7 @@ class PUM_BuddyPress_Integration {
 		$components = array();
 
 		foreach ( $bp->active_components as $component => $key ) {
-			$components[ ucfirst( $component ) ] = $component;
+			$components[ $component ] = ucfirst( $component );
 		}
 
 		$conditions['bp_is_current_component'] = array(
