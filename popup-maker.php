@@ -319,20 +319,18 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/pum-deprecated-v1.4.php';
 		require_once self::$DIR . 'includes/pum-deprecated-v1.7.php';
 
-		if ( is_admin() ) {
-			require_once self::$DIR . 'includes/admin/admin-setup.php';
-			require_once self::$DIR . 'includes/admin/admin-functions.php';
-			require_once self::$DIR . 'includes/admin/themes/metabox.php';
-			require_once self::$DIR . 'includes/admin/themes/metabox-close-fields.php';
-			require_once self::$DIR . 'includes/admin/themes/metabox-container-fields.php';
-			require_once self::$DIR . 'includes/admin/themes/metabox-content-fields.php';
-			require_once self::$DIR . 'includes/admin/themes/metabox-overlay-fields.php';
-			require_once self::$DIR . 'includes/admin/themes/metabox-title-fields.php';
-			require_once self::$DIR . 'includes/admin/themes/metabox-preview.php';
-			require_once self::$DIR . 'includes/admin/extensions/extensions-page.php';
-			require_once self::$DIR . 'includes/admin/pages/support.php';
-			require_once self::$DIR . 'includes/admin/metabox-support.php';
-		}
+		require_once self::$DIR . 'includes/admin/admin-setup.php';
+		require_once self::$DIR . 'includes/admin/admin-functions.php';
+		require_once self::$DIR . 'includes/admin/themes/metabox.php';
+		require_once self::$DIR . 'includes/admin/themes/metabox-close-fields.php';
+		require_once self::$DIR . 'includes/admin/themes/metabox-container-fields.php';
+		require_once self::$DIR . 'includes/admin/themes/metabox-content-fields.php';
+		require_once self::$DIR . 'includes/admin/themes/metabox-overlay-fields.php';
+		require_once self::$DIR . 'includes/admin/themes/metabox-title-fields.php';
+		require_once self::$DIR . 'includes/admin/themes/metabox-preview.php';
+		require_once self::$DIR . 'includes/admin/extensions/extensions-page.php';
+		require_once self::$DIR . 'includes/admin/pages/support.php';
+		require_once self::$DIR . 'includes/admin/metabox-support.php';
 
 		require_once self::$DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
 		require_once self::$DIR . 'includes/integrations/class-pum-buddypress-integration.php';
