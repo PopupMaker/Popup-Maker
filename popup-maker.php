@@ -253,6 +253,7 @@ class Popup_Maker {
 
 		/** Popup functions */
 		require_once self::$DIR . 'includes/popups/conditionals.php';
+		require_once self::$DIR . 'includes/popups/deprecated.php';
 		require_once self::$DIR . 'includes/popups/getters.php';
 		require_once self::$DIR . 'includes/popups/queries.php';
 
