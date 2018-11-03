@@ -33,6 +33,7 @@ class PUM_Admin_Popups {
 		// Process meta saving.
 		add_action( 'save_post', array( __CLASS__, 'save' ), 10, 2 );
 
+
 		// Set the slug properly on save.
 		add_filter( 'wp_insert_post_data', array( __CLASS__, 'set_slug' ), 99, 2 );
 
@@ -78,6 +79,10 @@ class PUM_Admin_Popups {
 	public static function title_meta_field() {
 		global $post, $pagenow, $typenow;
 
+		if ( has_blocks( $post ) || ( function_exists( 'use_block_editor_for_post' ) && use_block_editor_for_post( $post ) ) ) {
+			return;
+		}
+
 		if ( ! is_admin() ) {
 			return;
 		}
@@ -104,6 +109,10 @@ class PUM_Admin_Popups {
 	 */
 	public static function popup_post_title_contextual_message() {
 		global $post, $pagenow, $typenow;
+
+		if ( has_blocks( $post ) || ( function_exists( 'use_block_editor_for_post' ) && use_block_editor_for_post( $post ) ) ) {
+			return;
+		}
 
 		if ( ! is_admin() ) {
 			return;
@@ -295,7 +304,7 @@ class PUM_Admin_Popups {
 			'close'     => __( 'Close', 'popup-maker' ),
 			'triggers'  => __( 'Triggers', 'popup-maker' ),
 			'targeting' => __( 'Targeting', 'popup-maker' ),
-			'advanced' => __( 'Advanced', 'popup-maker' ),
+			'advanced'  => __( 'Advanced', 'popup-maker' ),
 		) );
 	}
 
@@ -347,7 +356,7 @@ class PUM_Admin_Popups {
 					'main' => array(),
 				) ),
 				'triggers'  => apply_filters( 'pum_popup_triggers_settings_fields', array(
-					'main'     => array(
+					'main' => array(
 						'triggers'   => array(
 							'type'     => 'triggers',
 							'std'      => array(),
@@ -697,16 +706,16 @@ class PUM_Admin_Popups {
 						),
 					),
 				) ),
-				'advanced'   => apply_filters( 'pum_popup_advanced_settings_fields', array(
+				'advanced'  => apply_filters( 'pum_popup_advanced_settings_fields', array(
 					'main' => array(
-						'disable_form_reopen' => array(
+						'disable_form_reopen'   => array(
 							'label'    => __( 'Disable automatic re-triggering of popup after non-ajax form submission.', 'popup-maker' ),
 							'type'     => 'checkbox',
 							'priority' => 10,
 						),
 						'disable_accessibility' => array(
 							'label'    => __( 'Disable accessibility features.', 'popup-maker' ),
-							'desc'    => __( 'This includes trapping the tab key & focus inside popup while open, force focus the first element when popup open, and refocus last click trigger when closed.', 'popup-maker' ),
+							'desc'     => __( 'This includes trapping the tab key & focus inside popup while open, force focus the first element when popup open, and refocus last click trigger when closed.', 'popup-maker' ),
 							'type'     => 'checkbox',
 							'priority' => 10,
 						),
