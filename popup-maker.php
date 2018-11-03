@@ -288,7 +288,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/class-popmake-fields.php';
 		require_once self::$DIR . 'includes/class-popmake-popup-fields.php';
 		require_once self::$DIR . 'includes/class-popmake-popup-theme-fields.php';
-		require_once self::$DIR . 'includes/popup-functions.php';
 
 
 		/**

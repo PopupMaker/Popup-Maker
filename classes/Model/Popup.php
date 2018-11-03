@@ -530,7 +530,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 				'display'    => $this->get_display(),
 				'close'      => $this->get_close(),
 				// Added here for backward compatibility in extensions.
-				'click_open' => popmake_get_popup_click_open( $this->ID ),
+				'click_open' => popmake_get_popup_meta( 'click_open', $this->ID ),
 			),
 		);
 
