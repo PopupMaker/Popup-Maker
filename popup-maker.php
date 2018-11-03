@@ -293,7 +293,6 @@ class Popup_Maker {
 		/**
 		 * v1.4 Additions
 		 */
-		require_once self::$DIR . 'includes/class-pum.php';
 		require_once self::$DIR . 'includes/class-pum-popup-query.php';
 		require_once self::$DIR . 'includes/class-pum-fields.php';
 		require_once self::$DIR . 'includes/class-pum-form.php';
