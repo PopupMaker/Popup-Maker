@@ -16,10 +16,10 @@ class PUM_Admin_Themes {
 	 * Hook the initialize method to the WP init action.
 	 */
 	public static function init() {
-		// Regitster Metaboxes
+		/** Regitster Metaboxes */
 		add_action( 'add_meta_boxes', array( __CLASS__, 'meta_box' ) );
 
-		// Process meta saving.
+		/** Process meta saving. */
 		add_action( 'save_post', array( __CLASS__, 'save' ), 10, 2 );
 	}
 
@@ -31,7 +31,7 @@ class PUM_Admin_Themes {
 		add_meta_box( 'pum_theme_settings', __( 'Theme Settings', 'popup-maker' ), array( __CLASS__, 'render_settings_meta_box' ), 'popup_theme', 'normal', 'high' );
 
 		/** Preview Window **/
-		add_meta_box( 'pum_theme_preview', __( 'Theme Preview', 'popup-maker' ), array( __CLASS__, 'render_preview_meta_box' ), 'popup_theme', 'side', 'low' );
+		add_meta_box( 'pum_theme_preview', __( 'Theme Preview', 'popup-maker' ), array( __CLASS__, 'render_preview_meta_box' ), 'popup_theme', 'side', 'high' );
 	}
 
 	/**
@@ -54,18 +54,28 @@ class PUM_Admin_Themes {
 		?>
 		<script type="text/javascript">
             window.pum_theme_settings_editor = <?php echo PUM_Utils_Array::safe_json_encode( apply_filters( 'pum_theme_settings_editor_var', array(
-				'form_args'             => array(
+				'form_args'      => array(
 					'id'       => 'pum-theme-settings',
 					'tabs'     => self::tabs(),
 					'sections' => self::sections(),
 					'fields'   => self::fields(),
 				),
-				'conditions'            => PUM_Conditions::instance()->get_conditions(),
-				'conditions_selectlist' => PUM_Conditions::instance()->dropdown_list(),
-				'triggers'              => PUM_Triggers::instance()->get_triggers(),
-				'cookies'               => PUM_Cookies::instance()->get_cookies(),
-				'current_values'        => self::parse_values( $settings ),
+				'current_values' => self::parse_values( $settings ),
 			) ) ); ?>;
+
+            jQuery(document)
+                .ready(function () {
+                    jQuery(this).trigger('pum_init');
+
+                    var $container = jQuery('#pum-theme-settings-container'),
+                        args = pum_theme_settings_editor.form_args || {},
+                        values = pum_theme_settings_editor.current_values || {};
+
+                    if ($container.length) {
+                        $container.find('.pum-no-js').hide();
+                        PUM_Admin.forms.render(args, values, $container);
+                    }
+                });
 		</script>
 
 		<div id="pum-theme-settings-container" class="pum-theme-settings-container">
@@ -205,7 +215,7 @@ class PUM_Admin_Themes {
 	 */
 	public static function process_deprecated_saves( $post_id, $post ) {
 
-		$field_prefix = Popmake_Popup_Theme_Fields::instance()->field_prefix;
+		$field_prefix = 'popup_theme_';
 
 		$old_fields = (array) apply_filters( 'popmake_popup_theme_fields', array() );
 
@@ -292,14 +302,21 @@ class PUM_Admin_Themes {
 				'boxshadow'  => __( 'Drop Shadow', 'popup-maker' ),
 			),
 			'title'     => array(
-				'typography' => __( 'Text', 'popup-maker' ),
-				'textshadow' => __( 'Drop Shadow', 'popup-maker' ),
+				'typography' => __( 'Typography', 'popup-maker' ),
+				'textshadow' => __( 'Text Shadow', 'popup-maker' ),
 			),
 			'content'   => array(
 				'typography' => __( 'Text', 'popup-maker' ),
 			),
 			'close'     => array(
-				'main' => __( 'Close', 'popup-maker' ),
+				'main'       => __( 'Close', 'popup-maker' ),
+				'size'       => __( 'Size', 'popup-maker' ),
+				'position'   => __( 'Position', 'popup-maker' ),
+				'background' => __( 'Background', 'popup-maker' ),
+				'border'     => __( 'Border', 'popup-maker' ),
+				'boxshadow'  => __( 'Drop Shadow', 'popup-maker' ),
+				'typography' => __( 'Typography', 'popup-maker' ),
+				'textshadow' => __( 'Text Shadow', 'popup-maker' ),
 			),
 			'advanced'  => array(
 				'main' => __( 'Advanced', 'popup-maker' ),
@@ -395,12 +412,7 @@ class PUM_Admin_Themes {
 
 			$fields = apply_filters( 'pum_theme_settings_fields', array(
 				'general'   => apply_filters( 'pum_popup_general_settings_fields', array(
-					'main' => array(
-						'description' => array(
-							'type'    => 'html',
-							'content' => '<p>' . __( 'Theme the overlay behind the popups.', 'popup-maker' ) . '</p>' . '<p>' . __( 'Theme the container inside the popups.', 'popup-maker' ) . '</p>',
-						),
-					),
+					'main' => array(),
 				) ),
 				'overlay'   => apply_filters( 'pum_popup_overlay_settings_fields', array(
 					'background' => array(
@@ -409,7 +421,7 @@ class PUM_Admin_Themes {
 							'desc'     => __( 'Choose the overlay color.', 'popup-maker' ),
 							'type'     => 'color',
 							'std'      => '#ffffff',
-							'priority' => 1,
+							'priority' => 10,
 						),
 						'overlay_background_opacity' => array(
 							'label'        => __( 'Opacity', 'popup-maker' ),
@@ -421,20 +433,30 @@ class PUM_Admin_Themes {
 							'min'          => 0,
 							'max'          => 100,
 							'unit'         => '%',
-							'priority'     => 2,
+							'priority'     => 20,
 						),
 					),
 				) ),
 				'container' => apply_filters( 'pum_popup_container_settings_fields', array(
 					'main'       => array(
-						'container_padding' => array(
+						'container_padding'       => array(
 							'label'    => __( 'Padding', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 18,
-							'priority' => 3,
+							'priority' => 10,
 							'step'     => 1,
 							'min'      => 1,
 							'max'      => 100,
+							'unit'     => 'px',
+						),
+						'container_border_radius' => array(
+							'label'    => __( 'Border Radius', 'popup-maker' ),
+							'type'     => 'rangeslider',
+							'std'      => 0,
+							'priority' => 20,
+							'step'     => 1,
+							'min'      => 1,
+							'max'      => 80,
 							'unit'     => 'px',
 						),
 					),
@@ -443,14 +465,14 @@ class PUM_Admin_Themes {
 							'label'    => __( 'Color', 'popup-maker' ),
 							'type'     => 'color',
 							'std'      => '#f9f9f9',
-							'priority' => 2,
+							'priority' => 10,
 						),
 						'container_background_opacity' => array(
 							'label'        => __( 'Opacity', 'popup-maker' ),
 							'type'         => 'rangeslider',
 							'force_minmax' => true,
 							'std'          => 100,
-							'priority'     => 3,
+							'priority'     => 20,
 							'step'         => 1,
 							'min'          => 0,
 							'max'          => 100,
@@ -458,65 +480,60 @@ class PUM_Admin_Themes {
 						),
 					),
 					'border'     => array(
-						'container_border_radius' => array(
-							'label'       => __( 'Radius', 'popup-maker' ),
-							'description' => __( 'Choose a corner radius for your container button.', 'popup-maker' ),
-							'type'        => 'rangeslider',
-							'std'         => 0,
-							'priority'    => 6,
-							'step'        => 1,
-							'min'         => 1,
-							'max'         => 80,
-							'unit'        => 'px',
-						),
-						'container_border_style'  => array(
+						'container_border_style' => array(
 							'label'       => __( 'Style', 'popup-maker' ),
 							'description' => __( 'Choose a border style for your container button.', 'popup-maker' ),
 							'type'        => 'select',
 							'std'         => 'none',
-							'priority'    => 7,
+							'priority'    => 10,
 							'options'     => $border_style_options,
 						),
-						'container_border_color'  => array(
+						'container_border_color' => array(
 							'label'        => __( 'Color', 'popup-maker' ),
 							'type'         => 'color',
 							'std'          => '#000000',
-							'priority'     => 6,
+							'priority'     => 20,
 							'dependencies' => array(
-								'container_border_style' => PUM_Utils_Array::remove_keys( $border_style_options, array( 'none' ) ),
+								'container_border_style' => array_keys( PUM_Utils_Array::remove_keys( $border_style_options, array( 'none' ) ) ),
 							),
 						),
-						'container_border_width'  => array(
+						'container_border_width' => array(
 							'label'        => __( 'Thickness', 'popup-maker' ),
 							'type'         => 'rangeslider',
 							'std'          => 1,
-							'priority'     => 9,
+							'priority'     => 30,
 							'step'         => 1,
 							'min'          => 1,
 							'max'          => 5,
 							'unit'         => 'px',
 							'dependencies' => array(
-								'container_border_style' => PUM_Utils_Array::remove_keys( $border_style_options, array( 'none' ) ),
+								'container_border_style' => array_keys( PUM_Utils_Array::remove_keys( $border_style_options, array( 'none' ) ) ),
 							),
 						),
 					),
 					'boxshadow'  => array(
-						'container_boxshadow_inset'      => array(
-							'label'       => __( 'Inset', 'popup-maker' ),
-							'description' => __( 'Set the box shadow to inset (inner shadow).', 'popup-maker' ),
-							'type'        => 'select',
-							'std'         => 'no',
-							'priority'    => 10,
-							'options'     => array(
-								'no'  => __( 'No', 'popup-maker' ),
-								'yes' => __( 'Yes', 'popup-maker' ),
-							),
+						'container_boxshadow_color'      => array(
+							'label'    => __( 'Color', 'popup-maker' ),
+							'type'     => 'color',
+							'std'      => '#020202',
+							'priority' => 10,
+						),
+						'container_boxshadow_opacity'    => array(
+							'label'        => __( 'Opacity', 'popup-maker' ),
+							'type'         => 'rangeslider',
+							'std'          => 23,
+							'priority'     => 20,
+							'step'         => 1,
+							'min'          => 0,
+							'max'          => 100,
+							'force_minmax' => true,
+							'unit'         => '%',
 						),
 						'container_boxshadow_horizontal' => array(
 							'label'    => __( 'Horizontal Position', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 1,
-							'priority' => 11,
+							'priority' => 30,
 							'step'     => 1,
 							'min'      => - 50,
 							'max'      => 50,
@@ -526,7 +543,7 @@ class PUM_Admin_Themes {
 							'label'    => __( 'Vertical Position', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 1,
-							'priority' => 12,
+							'priority' => 40,
 							'step'     => 1,
 							'min'      => - 50,
 							'max'      => 50,
@@ -536,7 +553,7 @@ class PUM_Admin_Themes {
 							'label'    => __( 'Blur Radius', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 3,
-							'priority' => 13,
+							'priority' => 50,
 							'step'     => 1,
 							'min'      => 0,
 							'max'      => 100,
@@ -546,28 +563,22 @@ class PUM_Admin_Themes {
 							'label'    => __( 'Spread', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 0,
-							'priority' => 14,
+							'priority' => 60,
 							'step'     => 1,
 							'min'      => - 100,
 							'max'      => 100,
 							'unit'     => 'px',
 						),
-						'container_boxshadow_color'      => array(
-							'label'    => __( 'Color', 'popup-maker' ),
-							'type'     => 'color',
-							'std'      => '#020202',
-							'priority' => 13,
-						),
-						'container_boxshadow_opacity'    => array(
-							'label'        => __( 'Opacity', 'popup-maker' ),
-							'type'         => 'rangeslider',
-							'std'          => 23,
-							'priority'     => 14,
-							'step'         => 1,
-							'min'          => 0,
-							'max'          => 100,
-							'force_minmax' => true,
-							'unit'         => '%',
+						'container_boxshadow_inset'      => array(
+							'label'       => __( 'Inset', 'popup-maker' ),
+							'description' => __( 'Set the box shadow to inset (inner shadow).', 'popup-maker' ),
+							'type'        => 'select',
+							'std'         => 'no',
+							'priority'    => 70,
+							'options'     => array(
+								'no'  => __( 'No', 'popup-maker' ),
+								'yes' => __( 'Yes', 'popup-maker' ),
+							),
 						),
 					),
 				) ),
@@ -577,70 +588,95 @@ class PUM_Admin_Themes {
 							'label'    => __( 'Color', 'popup-maker' ),
 							'type'     => 'color',
 							'std'      => '#000000',
-							'priority' => 15,
-						),
-						'title_line_height' => array(
-							'label'    => __( 'Line Height', 'popup-maker' ),
-							'type'     => 'rangeslider',
-							'std'      => 36,
-							'priority' => 2,
-							'step'     => 1,
-							'min'      => 8,
-							'max'      => 54,
-							'unit'     => 'px',
+							'priority' => 10,
 						),
 						'title_font_size'   => array(
-							'label'    => __( 'Spread', 'popup-maker' ),
+							'label'    => __( 'Font Size', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 32,
-							'priority' => 3,
+							'priority' => 20,
 							'step'     => 1,
 							'min'      => 8,
 							'max'      => 48,
 							'unit'     => 'px',
 						),
+						'title_line_height' => array(
+							'label'    => __( 'Line Height', 'popup-maker' ),
+							'type'     => 'rangeslider',
+							'std'      => 36,
+							'priority' => 30,
+							'step'     => 1,
+							'min'      => 8,
+							'max'      => 54,
+							'unit'     => 'px',
+						),
 						'title_font_family' => array(
-							'label'    => __( 'Family', 'popup-maker' ),
+							'label'    => __( 'Font Family', 'popup-maker' ),
 							'type'     => 'select',
+							'select2'  => true,
 							'std'      => 'inherit',
-							'priority' => 4,
+							'priority' => 40,
 							'options'  => $font_family_options,
 						),
 						'title_font_weight' => array(
-							'label'    => __( 'Weight', 'popup-maker' ),
-							'type'     => 'select',
-							'std'      => 'inherit',
-							'priority' => 5,
-							'options'  => $font_weight_options,
+							'label'        => __( 'Font Weight', 'popup-maker' ),
+							'type'         => 'select',
+							'std'          => 'inherit',
+							'priority'     => 50,
+							'options'      => $font_weight_options,
+							'dependencies' => array(
+								'title_font_family' => array_keys( PUM_Utils_Array::remove_keys( $font_family_options, array( 'inherit' ) ) ),
+							),
 						),
 						'title_font_style'  => array(
-							'label'    => __( 'Style', 'popup-maker' ),
-							'type'     => 'select',
-							'std'      => 'normal',
-							'priority' => 6,
-							'options'  => array(
+							'label'        => __( 'Style', 'popup-maker' ),
+							'type'         => 'select',
+							'std'          => 'normal',
+							'priority'     => 60,
+							'options'      => array(
 								''       => __( 'Normal', 'popup-maker' ),
 								'italic' => __( 'Italic', 'popup-maker' ),
 							),
+							'dependencies' => array(
+								'title_font_family' => array_keys( PUM_Utils_Array::remove_keys( $font_family_options, array( 'inherit' ) ) ),
+							),
 						),
 						'title_text_align'  => array(
-							'label'    => __( 'Align', 'popup-maker' ),
+							'label'    => __( 'Alignment', 'popup-maker' ),
 							'type'     => 'select',
 							'std'      => 'left',
-							'priority' => 7,
+							'priority' => 70,
 							'options'  => array(
-								'left'   => __( 'Left', 'popup-maker' ),
-								'center' => __( 'Center', 'popup-maker' ),
-								'right'  => __( 'Right', 'popup-maker' ),
+								'left'    => __( 'Left', 'popup-maker' ),
+								'center'  => __( 'Center', 'popup-maker' ),
+								'right'   => __( 'Right', 'popup-maker' ),
+								'justify' => __( 'Justify', 'popup-maker' ),
 							),
 						),
 					),
 					'textshadow' => array(
+						'title_textshadow_color'      => array(
+							'label'    => __( 'Color', 'popup-maker' ),
+							'type'     => 'color',
+							'std'      => '#020202',
+							'priority' => 10,
+						),
+						'title_textshadow_opacity'    => array(
+							'label'        => __( 'Opacity', 'popup-maker' ),
+							'type'         => 'rangeslider',
+							'std'          => 23,
+							'priority'     => 20,
+							'step'         => 1,
+							'min'          => 0,
+							'max'          => 100,
+							'force_minmax' => true,
+							'unit'         => '%',
+						),
 						'title_textshadow_horizontal' => array(
 							'label'    => __( 'Horizontal Position', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 0,
-							'priority' => 8,
+							'priority' => 30,
 							'step'     => 1,
 							'min'      => - 50,
 							'max'      => 50,
@@ -650,7 +686,7 @@ class PUM_Admin_Themes {
 							'label'    => __( 'Vertical Position', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 0,
-							'priority' => 9,
+							'priority' => 40,
 							'step'     => 1,
 							'min'      => - 50,
 							'max'      => 50,
@@ -660,28 +696,11 @@ class PUM_Admin_Themes {
 							'label'    => __( 'Blur Radius', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 0,
-							'priority' => 10,
+							'priority' => 50,
 							'step'     => 1,
 							'min'      => 0,
 							'max'      => 100,
 							'unit'     => 'px',
-						),
-						'title_textshadow_color'      => array(
-							'label'    => __( 'Color', 'popup-maker' ),
-							'type'     => 'color',
-							'std'      => '#020202',
-							'priority' => 25,
-						),
-						'title_textshadow_opacity'    => array(
-							'label'        => __( 'Opacity', 'popup-maker' ),
-							'type'         => 'rangeslider',
-							'std'          => 23,
-							'priority'     => 12,
-							'step'         => 1,
-							'min'          => 0,
-							'max'          => 100,
-							'force_minmax' => true,
-							'unit'         => '%',
 						),
 					),
 				) ),
@@ -691,80 +710,101 @@ class PUM_Admin_Themes {
 							'label'    => __( 'Color', 'popup-maker' ),
 							'type'     => 'color',
 							'std'      => '#8c8c8c',
-							'priority' => 1,
+							'priority' => 10,
 						),
 						'content_font_family' => array(
-							'label'    => __( 'Family', 'popup-maker' ),
+							'label'    => __( 'Font Family', 'popup-maker' ),
 							'type'     => 'select',
+							'select2'  => true,
 							'std'      => 'inherit',
-							'priority' => 4,
+							'priority' => 20,
 							'options'  => $font_family_options,
 						),
 						'content_font_weight' => array(
-							'label'    => __( 'Weight', 'popup-maker' ),
-							'type'     => 'select',
-							'std'      => 'inherit',
-							'priority' => 5,
-							'options'  => $font_weight_options,
+							'label'        => __( 'Font Weight', 'popup-maker' ),
+							'type'         => 'select',
+							'std'          => 'inherit',
+							'priority'     => 30,
+							'options'      => $font_weight_options,
+							'dependencies' => array(
+								'content_font_family' => array_keys( PUM_Utils_Array::remove_keys( $font_family_options, array( 'inherit' ) ) ),
+							),
 						),
 						'content_font_style'  => array(
-							'label'    => __( 'Style', 'popup-maker' ),
-							'type'     => 'select',
-							'std'      => 'inherit',
-							'priority' => 6,
-							'options'  => array(
+							'label'        => __( 'Style', 'popup-maker' ),
+							'type'         => 'select',
+							'std'          => 'inherit',
+							'priority'     => 40,
+							'options'      => array(
 								''       => __( 'Normal', 'popup-maker' ),
 								'italic' => __( 'Italic', 'popup-maker' ),
 							),
+							'dependencies' => array(
+								'content_font_family' => array_keys( PUM_Utils_Array::remove_keys( $font_family_options, array( 'inherit' ) ) ),
+							),
 						),
-
 					),
 				) ),
 				'close'     => apply_filters( 'pum_popup_close_settings_fields', array(
 					'main'       => array(
-						'close_text'               => array(
-							'label'       => __( 'Text', 'popup-maker' ),
+						'close_text' => array(
+							'label'       => __( 'Close Text', 'popup-maker' ),
 							'placeholder' => __( 'CLOSE', 'popup-maker' ),
 							'description' => __( 'Enter the close button text.', 'popup-maker' ),
 							'std'         => __( 'CLOSE', 'popup-maker' ),
-							'priority'    => 1,
+							'priority'    => 10,
 						),
-						'close_padding'            => array(
+					),
+					'size'       => array(
+						'close_padding'       => array(
 							'label'    => __( 'Padding', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 8,
-							'priority' => 2,
+							'priority' => 10,
 							'step'     => 1,
 							'min'      => 0,
 							'max'      => 100,
 							'unit'     => 'px',
 						),
-						'close_height'             => array(
+						'close_height'        => array(
 							'label'    => __( 'Height', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 0,
-							'priority' => 2,
+							'priority' => 20,
 							'step'     => 1,
 							'min'      => 0,
 							'max'      => 100,
 							'unit'     => 'px',
 						),
-						'close_width'              => array(
+						'close_width'         => array(
 							'label'    => __( 'Width', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 0,
-							'priority' => 2,
+							'priority' => 30,
 							'step'     => 1,
 							'min'      => 0,
 							'max'      => 100,
 							'unit'     => 'px',
 						),
-						'close_location'           => array(
+						'close_border_radius' => array(
+							'label'       => __( 'Border Radius', 'popup-maker' ),
+							'description' => __( 'Choose a corner radius for your close button.', 'popup-maker' ),
+							'type'        => 'rangeslider',
+							'std'         => 0,
+							'priority'    => 40,
+							'step'        => 1,
+							'min'         => 1,
+							'max'         => 28,
+							'unit'        => 'px',
+						),
+					),
+					'position'   => array(
+						'close_location'        => array(
 							'label'       => __( 'Location', 'popup-maker' ),
 							'description' => __( 'Choose which corner the close button will be positioned.', 'popup-maker' ),
 							'type'        => 'select',
 							'std'         => 'topright',
-							'priority'    => 7,
+							'priority'    => 10,
 							'options'     => array(
 								'topleft'     => __( 'Top Left', 'popup-maker' ),
 								'topright'    => __( 'Top Right', 'popup-maker' ),
@@ -772,57 +812,71 @@ class PUM_Admin_Themes {
 								'bottomright' => __( 'Bottom Right', 'popup-maker' ),
 							),
 						),
-						'close_position_top'       => array(
-							'label'    => __( 'Top', 'popup-maker' ),
-							'type'     => 'rangeslider',
-							'std'      => 0,
-							'priority' => 2,
-							'step'     => 1,
-							'min'      => - 100,
-							'max'      => 100,
-							'unit'     => 'px',
+						'close_position_top'    => array(
+							'label'        => __( 'Top', 'popup-maker' ),
+							'type'         => 'rangeslider',
+							'std'          => 0,
+							'priority'     => 20,
+							'step'         => 1,
+							'min'          => - 100,
+							'max'          => 100,
+							'unit'         => 'px',
+							'dependencies' => array(
+								'close_location' => array( 'topleft', 'topright' ),
+							),
 						),
-						'close_position_left'      => array(
-							'label'    => __( 'Left', 'popup-maker' ),
-							'type'     => 'rangeslider',
-							'std'      => 0,
-							'priority' => 2,
-							'step'     => 1,
-							'min'      => - 100,
-							'max'      => 100,
-							'unit'     => 'px',
+						'close_position_left'   => array(
+							'label'        => __( 'Left', 'popup-maker' ),
+							'type'         => 'rangeslider',
+							'std'          => 0,
+							'priority'     => 30,
+							'step'         => 1,
+							'min'          => - 100,
+							'max'          => 100,
+							'unit'         => 'px',
+							'dependencies' => array(
+								'close_location' => array( 'topleft', 'bottomleft' ),
+							),
 						),
-						'close_position_bottom'    => array(
-							'label'    => __( 'Bottom', 'popup-maker' ),
-							'type'     => 'rangeslider',
-							'std'      => 0,
-							'priority' => 2,
-							'step'     => 1,
-							'min'      => - 100,
-							'max'      => 100,
-							'unit'     => 'px',
+						'close_position_bottom' => array(
+							'label'        => __( 'Bottom', 'popup-maker' ),
+							'type'         => 'rangeslider',
+							'std'          => 0,
+							'priority'     => 40,
+							'step'         => 1,
+							'min'          => - 100,
+							'max'          => 100,
+							'unit'         => 'px',
+							'dependencies' => array(
+								'close_location' => array( 'bottomleft', 'bottomright' ),
+							),
 						),
-						'close_position_right'     => array(
-							'label'    => __( 'Right', 'popup-maker' ),
-							'type'     => 'rangeslider',
-							'std'      => 0,
-							'priority' => 2,
-							'step'     => 1,
-							'min'      => - 100,
-							'max'      => 100,
-							'unit'     => 'px',
+						'close_position_right'  => array(
+							'label'        => __( 'Right', 'popup-maker' ),
+							'type'         => 'rangeslider',
+							'std'          => 0,
+							'priority'     => 50,
+							'step'         => 1,
+							'min'          => - 100,
+							'max'          => 100,
+							'unit'         => 'px',
+							'dependencies' => array(
+								'close_location' => array( 'topright', 'bottomright' ),
+							),
 						),
+					),
+					'background' => array(
 						'close_background_color'   => array(
 							'label'    => __( 'Color', 'popup-maker' ),
 							'type'     => 'color',
 							'std'      => '#00b7cd',
-							'priority' => 16,
+							'priority' => 10,
 						),
 						'close_background_opacity' => array(
 							'label'        => __( 'Opacity', 'popup-maker' ),
 							'type'         => 'rangeslider',
 							'std'          => 100,
-							'priority'     => 17,
+							'priority'     => 20,
 							'step'         => 1,
 							'min'          => 0,
 							'max'          => 100,
@@ -831,111 +885,119 @@ class PUM_Admin_Themes {
 						),
 					),
 					'typography' => array(
-						'close_line_height' => array(
-							'label'    => __( 'Line Height', 'popup-maker' ),
-							'type'     => 'rangeslider',
-							'std'      => 36,
-							'priority' => 2,
-							'step'     => 1,
-							'min'      => 8,
-							'max'      => 54,
-							'unit'     => 'px',
-						),
 						'close_font_color'  => array(
 							'label'    => __( 'Color', 'popup-maker' ),
 							'type'     => 'color',
 							'std'      => '#ffffff',
-							'priority' => 11,
+							'priority' => 10,
 						),
 						'close_font_size'   => array(
-							'label'    => __( 'Size', 'popup-maker' ),
+							'label'    => __( 'Font Size', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 12,
-							'priority' => 3,
+							'priority' => 20,
 							'step'     => 1,
 							'min'      => 8,
 							'max'      => 32,
 							'unit'     => 'px',
 						),
+						'close_line_height' => array(
+							'label'    => __( 'Line Height', 'popup-maker' ),
+							'type'     => 'rangeslider',
+							'std'      => 36,
+							'priority' => 30,
+							'step'     => 1,
+							'min'      => 8,
+							'max'      => 54,
+							'unit'     => 'px',
+						),
 						'close_font_family' => array(
-							'label'    => __( 'Family', 'popup-maker' ),
+							'label'    => __( 'Font Family', 'popup-maker' ),
 							'type'     => 'select',
+							'select2'  => true,
 							'std'      => 'inherit',
-							'priority' => 4,
+							'priority' => 40,
 							'options'  => $font_family_options,
 						),
 						'close_font_weight' => array(
-							'label'    => __( 'Weight', 'popup-maker' ),
-							'type'     => 'select',
-							'std'      => 'inherit',
-							'priority' => 5,
-							'options'  => $font_weight_options,
+							'label'        => __( 'Font Weight', 'popup-maker' ),
+							'type'         => 'select',
+							'std'          => 'inherit',
+							'priority'     => 50,
+							'options'      => $font_weight_options,
+							'dependencies' => array(
+								'close_font_family' => array_keys( PUM_Utils_Array::remove_keys( $font_family_options, array( 'inherit' ) ) ),
+							),
 						),
 						'close_font_style'  => array(
-							'label'    => __( 'Style', 'popup-maker' ),
-							'type'     => 'select',
-							'std'      => 'inherit',
-							'priority' => 6,
-							'options'  => array(
+							'label'        => __( 'Style', 'popup-maker' ),
+							'type'         => 'select',
+							'std'          => 'inherit',
+							'priority'     => 60,
+							'options'      => array(
 								''       => __( 'Normal', 'popup-maker' ),
 								'italic' => __( 'Italic', 'popup-maker' ),
+							),
+							'dependencies' => array(
+								'close_font_family' => array_keys( PUM_Utils_Array::remove_keys( $font_family_options, array( 'inherit' ) ) ),
 							),
 						),
 					),
 					'border'     => array(
-						'close_border_radius' => array(
-							'label'       => __( 'Radius', 'popup-maker' ),
-							'description' => __( 'Choose a corner radius for your close button.', 'popup-maker' ),
-							'type'        => 'rangeslider',
-							'std'         => 0,
-							'priority'    => 6,
-							'step'        => 1,
-							'min'         => 1,
-							'max'         => 28,
-							'unit'        => 'px',
-						),
-						'close_border_style'  => array(
+						'close_border_style' => array(
 							'label'       => __( 'Style', 'popup-maker' ),
 							'description' => __( 'Choose a border style for your close button.', 'popup-maker' ),
 							'type'        => 'select',
 							'std'         => 'none',
-							'priority'    => 7,
+							'priority'    => 10,
 							'options'     => $border_style_options,
 						),
-						'close_border_color'  => array(
-							'label'    => __( 'Color', 'popup-maker' ),
-							'type'     => 'color',
-							'std'      => '#ffffff',
-							'priority' => 6,
+						'close_border_color' => array(
+							'label'        => __( 'Color', 'popup-maker' ),
+							'type'         => 'color',
+							'std'          => '#ffffff',
+							'priority'     => 20,
+							'dependencies' => array(
+								'close_border_style' => array_keys( PUM_Utils_Array::remove_keys( $border_style_options, array( 'none' ) ) ),
+							),
 						),
-						'close_border_width'  => array(
-							'label'    => __( 'Thickness', 'popup-maker' ),
-							'type'     => 'rangeslider',
-							'std'      => 1,
-							'priority' => 9,
-							'step'     => 1,
-							'min'      => 1,
-							'max'      => 5,
-							'unit'     => 'px',
+						'close_border_width' => array(
+							'label'        => __( 'Thickness', 'popup-maker' ),
+							'type'         => 'rangeslider',
+							'std'          => 1,
+							'priority'     => 30,
+							'step'         => 1,
+							'min'          => 1,
+							'max'          => 5,
+							'unit'         => 'px',
+							'dependencies' => array(
+								'close_border_style' => array_keys( PUM_Utils_Array::remove_keys( $border_style_options, array( 'none' ) ) ),
+							),
 						),
 					),
 					'boxshadow'  => array(
-						'close_boxshadow_inset'      => array(
-							'label'       => __( 'Inset', 'popup-maker' ),
-							'description' => __( 'Set the box shadow to inset (inner shadow).', 'popup-maker' ),
-							'type'        => 'select',
-							'std'         => 'no',
-							'priority'    => 10,
-							'options'     => array(
-								'no'  => __( 'No', 'popup-maker' ),
-								'yes' => __( 'Yes', 'popup-maker' ),
-							),
+						'close_boxshadow_color'      => array(
+							'label'    => __( 'Color', 'popup-maker' ),
+							'type'     => 'color',
+							'std'      => '#020202',
+							'priority' => 10,
+						),
+						'close_boxshadow_opacity'    => array(
+							'label'        => __( 'Opacity', 'popup-maker' ),
+							'type'         => 'rangeslider',
+							'std'          => 23,
+							'priority'     => 20,
+							'step'         => 1,
+							'min'          => 0,
+							'max'          => 100,
+							'unit'         => '%',
+							'force_minmax' => true,
 						),
 						'close_boxshadow_horizontal' => array(
 							'label'    => __( 'Horizontal Position', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 1,
-							'priority' => 11,
+							'priority' => 30,
 							'step'     => 1,
 							'min'      => - 50,
 							'max'      => 50,
@@ -945,7 +1007,7 @@ class PUM_Admin_Themes {
 							'label'    => __( 'Vertical Position', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 1,
-							'priority' => 12,
+							'priority' => 40,
 							'step'     => 1,
 							'min'      => - 50,
 							'max'      => 50,
@@ -955,7 +1017,7 @@ class PUM_Admin_Themes {
 							'label'    => __( 'Blur Radius', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 3,
-							'priority' => 13,
+							'priority' => 50,
 							'step'     => 1,
 							'min'      => 0,
 							'max'      => 100,
@@ -965,36 +1027,47 @@ class PUM_Admin_Themes {
 							'label'    => __( 'Spread', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 0,
-							'priority' => 14,
+							'priority' => 60,
 							'step'     => 1,
 							'min'      => - 100,
 							'max'      => 100,
 							'unit'     => 'px',
 						),
-						'close_boxshadow_color'      => array(
-							'label'    => __( 'Color', 'popup-maker' ),
-							'type'     => 'color',
-							'std'      => '#020202',
-							'priority' => 24,
-						),
-						'close_boxshadow_opacity'    => array(
-							'label'        => __( 'Opacity', 'popup-maker' ),
-							'type'         => 'rangeslider',
-							'std'          => 23,
-							'priority'     => 28,
-							'step'         => 1,
-							'min'          => 0,
-							'max'          => 100,
-							'unit'         => '%',
-							'force_minmax' => true,
+						'close_boxshadow_inset'      => array(
+							'label'       => __( 'Inset', 'popup-maker' ),
+							'description' => __( 'Set the box shadow to inset (inner shadow).', 'popup-maker' ),
+							'type'        => 'select',
+							'std'         => 'no',
+							'priority'    => 70,
+							'options'     => array(
+								'no'  => __( 'No', 'popup-maker' ),
+								'yes' => __( 'Yes', 'popup-maker' ),
+							),
 						),
 					),
 					'textshadow' => array(
+						'close_textshadow_color'      => array(
+							'label'    => __( 'Color', 'popup-maker' ),
+							'type'     => 'color',
+							'std'      => '#000000',
+							'priority' => 10,
+						),
+						'close_textshadow_opacity'    => array(
+							'label'        => __( 'Opacity', 'popup-maker' ),
+							'type'         => 'rangeslider',
+							'std'          => 23,
+							'priority'     => 20,
+							'step'         => 1,
+							'min'          => 0,
+							'max'          => 100,
+							'force_minmax' => true,
+							'unit'         => '%',
+						),
 						'close_textshadow_horizontal' => array(
 							'label'    => __( 'Horizontal Position', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 0,
-							'priority' => 8,
+							'priority' => 30,
 							'step'     => 1,
 							'min'      => - 50,
 							'max'      => 50,
@@ -1004,7 +1077,7 @@ class PUM_Admin_Themes {
 							'label'    => __( 'Vertical Position', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 0,
-							'priority' => 9,
+							'priority' => 40,
 							'step'     => 1,
 							'min'      => - 50,
 							'max'      => 50,
@@ -1014,28 +1087,11 @@ class PUM_Admin_Themes {
 							'label'    => __( 'Blur Radius', 'popup-maker' ),
 							'type'     => 'rangeslider',
 							'std'      => 0,
-							'priority' => 10,
+							'priority' => 50,
 							'step'     => 1,
 							'min'      => 0,
 							'max'      => 100,
 							'unit'     => 'px',
-						),
-						'close_textshadow_color'      => array(
-							'label'    => __( 'Color', 'popup-maker' ),
-							'type'     => 'color',
-							'std'      => '#000000',
-							'priority' => 29,
-						),
-						'close_textshadow_opacity'    => array(
-							'label'        => __( 'Opacity', 'popup-maker' ),
-							'type'         => 'rangeslider',
-							'std'          => 23,
-							'priority'     => 34,
-							'step'         => 1,
-							'min'          => 0,
-							'max'          => 100,
-							'force_minmax' => true,
-							'unit'         => '%',
 						),
 					),
 				) ),
