@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class PUM_Model_Theme
  *
- * @since 1.7
+ * @since 1.8
  */
 class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 
@@ -27,17 +27,19 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 * The current model version.
 	 *
 	 * 1 - v1.0.0
-	 * 2 - v1.8.0
+	 * 2 - v1.3.0
+	 * 3 - v1.8.0
 	 *
 	 * @var int
 	 */
-	public $model_version = 2;
+	public $model_version = 3;
 
 	/**
 	 * The version of the data currently stored for the current item.
 	 *
 	 * 1 - v1.0.0
-	 * 2 - v1.8.0
+	 * 2 - v1.3.0
+	 * 3 - v1.8.0
 	 *
 	 * @var int
 	 */
@@ -79,9 +81,8 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 * @return bool|int
 	 */
 	public function update_setting( $key, $value ) {
-		$settings = $this->get_settings( true );
+		$settings = $this->get_settings();
 
-		// TODO Once fields have been merged into the model itself, add automatic validation here.
 		$settings[ $key ] = $value;
 
 		return $this->update_meta( 'popup_theme_settings', $settings );
@@ -93,9 +94,8 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 * @return bool|int
 	 */
 	public function update_settings( $merge_settings = array() ) {
-		$settings = $this->get_settings( true );
+		$settings = $this->get_settings();
 
-		// TODO Once fields have been merged into the model itself, add automatic validation here.
 		foreach ( $merge_settings as $key => $value ) {
 			$settings[ $key ] = $value;
 		}
@@ -206,37 +206,44 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		);
 
 		return isset( $remapped_meta_settings_keys[ $group ] ) ? $remapped_meta_settings_keys[ $group ] : array();
-
-
 	}
 
-	public function setup() {
+	/**
+	 * @param $post WP_Post
+	 */
+	public function setup( $post ) {
+		parent::setup( $post );
 
+		if ( ! $this->is_valid() ) {
+			return;
+		}
+
+		// REVIEW Does this need to be here or somewhere else like get_meta/get_setting?
 		if ( ! isset( $this->data_version ) ) {
 			$this->data_version = (int) $this->get_meta( 'data_version' );
 
-//			if ( ! $this->data_version ) {
-//				$theme = $this->get_meta( 'popup_theme' );
-//				$display_settings = $this->get_meta( 'popup_display' );
-//
-//				// If there are existing settings set the data version to 2 so they can be updated.
-//				// Otherwise set to the current version as this is a new popup.
-//				$is_v2  = ( ! empty( $display_settings ) && is_array( $display_settings ) ) || $theme > 0;
-//				$this->data_version = $is_v2 ? 2 : $this->model_version;
-//
-//				$this->update_meta( 'data_version', $this->data_version );
-//			}
+			if ( ! $this->data_version ) {
+				$theme_overlay_v1 = $this->get_meta( 'popup_theme_overlay_background_color' );
+				$theme_overlay_v2 = $this->get_meta( 'popup_theme_overlay' );
+
+				$is_v2 = ( ! empty( $theme_overlay_v2 ) && is_array( $theme_overlay_v2 ) );
+				$is_v1 = ! $is_v2 && ( ! empty( $theme_overlay_v1 ) && is_array( $theme_overlay_v1 ) );
+
+				// If there are existing settings set the data version to 1/2 so they can be updated.
+				// Otherwise set to the current version as this is a new popup.
+				$this->data_version = $is_v2 ? 2 : ( $is_v1 ? 1 : $this->model_version );
+
+				$this->update_meta( 'data_version', $this->data_version );
+			}
 		}
 
-//		if ( $this->data_version < $this->model_version && pum_passive_popups_enabled() ) {
-//			/**
-//			 * Process passive settings migration as each popup is loaded. The will only run each migration routine once for each popup.
-//			 */
-//			$this->passive_migration();
-//		}
-
+		if ( $this->data_version < $this->model_version && pum_passive_popups_enabled() ) {
+			/**
+			 * Process passive settings migration as each popup is loaded. The will only run each migration routine once for each popup.
+			 */
+			$this->passive_migration();
+		}
 	}
-
 
 	/**
 	 * Allows for passive migration routines based on the current data version.

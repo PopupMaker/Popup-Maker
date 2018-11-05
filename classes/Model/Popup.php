@@ -10,7 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class PUM_Model_Popup
  *
- *
  * @since 1.4
  */
 class PUM_Model_Popup extends PUM_Abstract_Model_Post {
