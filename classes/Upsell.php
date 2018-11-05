@@ -72,7 +72,7 @@ class PUM_Upsell {
 		$fields[ $key ]['fi_promotion'] = array(
 			'type'     => 'html',
 			'content'  => $html,
-			'priority' => 0,
+			'priority' => 999,
 		);
 
 		return $fields;

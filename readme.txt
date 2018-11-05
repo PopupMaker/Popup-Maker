@@ -101,6 +101,10 @@ There are several common causes for this which include:
 
 == Changelog ==
 
+= v1.8.0 - TBD =
+* Feature: New popup theme settings:
+  * New close button positions top center, bottom center, middle left & middle right.
+
 = v1.7.30 - 09/06/2018 =
 * Improvement: Further added methods to log unique messages only once.
 * Tweak: Remove usage of Freemius.
