@@ -174,7 +174,6 @@ class PUM_Utils_Fields {
 		}
 
 		return $fields;
-
 	}
 
 	/**
@@ -267,7 +266,7 @@ class PUM_Utils_Fields {
 				 * Check if function exists and load that.
 				 */
 				$function_name = "pum_{$type}_callback";
-			}  else {
+			} else {
 				/**
 				 * No method exists, lets notify them the field type doesn't exist.
 				 */
@@ -315,12 +314,39 @@ class PUM_Utils_Fields {
 	}
 
 	/**
-	 * @param      $args
-	 * @param null $value
+	 * Sanitizes an array of field values.
 	 *
-	 * @return mixed|null|void
+	 * @param $fields
+	 * @param $values
+	 *
+	 * @return mixed
 	 */
-	public static function sanitize_field( $args, $value = null ) {
+	public static function sanitize_fields( $values, $fields = array() ) {
+
+		foreach ( $values as $key => $value ) {
+			if ( is_string( $value ) ) {
+				$values[ $key ] = sanitize_text_field( $value );
+			}
+
+			$field = self::get_field( $fields, $key );
+
+			if ( $field ) {
+				$values[ $key ] = self::sanitize_field( $field, $value );
+			}
+		}
+
+		return $values;
+	}
+
+	/**
+	 * @param array $args
+	 * @param mixed $value
+	 * @param array $fields
+	 * @param array $values
+	 *
+	 * @return mixed|null
+	 */
+	public static function sanitize_field( $args, $value = null, $fields = array(), $values = array() ) {
 
 		// If no type default to text.
 		$type = ! empty( $args['type'] ) ? $args['type'] : 'text';
@@ -329,19 +355,17 @@ class PUM_Utils_Fields {
 		 * Check if any actions hooked to this type of field and load run those.
 		 */
 		if ( has_filter( "pum_{$type}_sanitize" ) ) {
-			$value = apply_filters( "pum_{$type}_sanitize", $value, $args );
+			$value = apply_filters( "pum_{$type}_sanitize", $value, $args, $fields, $values );
 		} else {
 			/**
 			 * Check if override or custom function exists and load that.
 			 */
 			if ( function_exists( "pum_{$type}_sanitize" ) ) {
 				$function_name = "pum_{$type}_sanitize";
-			}
-			/**
+			} /**
 			 * Check if core method exists and load that.
-			 */
-			elseif ( method_exists( 'PUM_Utils_Sanitize', $type . '_sanitize' ) ) {
-				$function_name = array( 'PUM_Utils_Sanitize', $type . '_sanitize' );
+			 */ elseif ( method_exists( 'PUM_Utils_Sanitize', $type ) ) {
+				$function_name = array( 'PUM_Utils_Sanitize', $type );
 			} else {
 				$function_name = null;
 			}
@@ -350,12 +374,12 @@ class PUM_Utils_Fields {
 				/**
 				 * Call the determined method, passing the field args & $value to the callback.
 				 */
-				$value = call_user_func_array( $function_name, array( $value, $args ) );
+				$value = call_user_func_array( $function_name, array( $value, $args, $fields, $values ) );
 			}
 
 		}
 
-		$value = apply_filters( 'pum_settings_sanitize', $value, $args );
+		$value = apply_filters( 'pum_settings_sanitize', $value, $args, $fields, $values );
 
 		return $value;
 	}

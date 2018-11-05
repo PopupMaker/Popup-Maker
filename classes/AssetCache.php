@@ -63,7 +63,7 @@ class PUM_AssetCache {
 			add_action( 'pum_regenerate_asset_cache', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_save_settings', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_save_popup', array( __CLASS__, 'reset_cache' ) );
-			add_action( 'popmake_save_popup_theme', array( __CLASS__, 'reset_cache' ) );
+			add_action( 'pum_save_theme', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_update_core_version', array( __CLASS__, 'reset_cache' ) );
 
 			// Prevent reinitialization.

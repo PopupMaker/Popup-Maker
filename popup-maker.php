@@ -287,8 +287,6 @@ class Popup_Maker {
 		// Phasing Out
 		require_once self::$DIR . 'includes/class-popmake-fields.php';
 		require_once self::$DIR . 'includes/class-popmake-popup-fields.php';
-		require_once self::$DIR . 'includes/class-popmake-popup-theme-fields.php';
-
 
 		/**
 		 * v1.4 Additions
@@ -320,13 +318,6 @@ class Popup_Maker {
 
 		require_once self::$DIR . 'includes/admin/admin-setup.php';
 		require_once self::$DIR . 'includes/admin/admin-functions.php';
-		require_once self::$DIR . 'includes/admin/themes/metabox.php';
-		require_once self::$DIR . 'includes/admin/themes/metabox-close-fields.php';
-		require_once self::$DIR . 'includes/admin/themes/metabox-container-fields.php';
-		require_once self::$DIR . 'includes/admin/themes/metabox-content-fields.php';
-		require_once self::$DIR . 'includes/admin/themes/metabox-overlay-fields.php';
-		require_once self::$DIR . 'includes/admin/themes/metabox-title-fields.php';
-		require_once self::$DIR . 'includes/admin/themes/metabox-preview.php';
 		require_once self::$DIR . 'includes/admin/extensions/extensions-page.php';
 		require_once self::$DIR . 'includes/admin/pages/support.php';
 		require_once self::$DIR . 'includes/admin/metabox-support.php';

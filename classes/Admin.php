@@ -9,6 +9,7 @@ class PUM_Admin {
 		PUM_Admin_Ajax::init();
 		PUM_Admin_Assets::init();
 		PUM_Admin_Popups::init();
+		PUM_Admin_Themes::init();
 		PUM_Admin_Subscribers::init();
 		PUM_Admin_Settings::init();
 		PUM_Admin_Tools::init();
