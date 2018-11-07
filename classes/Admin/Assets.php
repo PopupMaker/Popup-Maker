@@ -105,7 +105,7 @@ class PUM_Admin_Assets {
 
 		if ( pum_is_popup_theme_editor() ) {
 			wp_enqueue_script( 'pum-admin-theme-editor' );
-			wp_localize_script( 'pum-admin-theme-editor', 'popmake_google_fonts', popmake_get_google_webfonts_list() );
+			wp_localize_script( 'pum-admin-theme-editor', 'pum_google_fonts', PUM_Integration_GoogleFonts::fetch_fonts() );
 		}
 
 		if ( pum_is_settings_page() ) {

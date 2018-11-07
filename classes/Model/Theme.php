@@ -104,6 +104,43 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Returns array of all google font variations used for this theme.
+	 *
+	 * @return array
+	 */
+	public function get_google_fonts_used() {
+		$fonts_used = array();
+
+		$settings = $this->get_settings();
+
+		$google_fonts = PUM_Integration_GoogleFonts::fetch_fonts();
+
+		if ( ! empty( $settings['title_font_family'] ) && is_string( $settings['title_font_family'] ) && array_key_exists( $settings['title_font_family'], $google_fonts ) ) {
+			$variant = $settings['title_font_weight'] != 'normal' ? $settings['title_font_weight'] : '';
+			if ( $settings['title_font_style'] == 'italic' ) {
+				$variant .= 'italic';
+			}
+			$fonts_used[ $settings['title_font_family'] ][ $variant ] = $variant;
+		}
+		if ( ! empty( $settings['content_font_family'] ) && is_string( $settings['content_font_family'] ) && array_key_exists( $settings['content_font_family'], $google_fonts ) ) {
+			$variant = $settings['content_font_weight'] != 'normal' ? $settings['content_font_weight'] : '';
+			if ( $settings['content_font_style'] == 'italic' ) {
+				$variant .= 'italic';
+			}
+			$fonts_used[ $settings['content_font_family'] ][ $variant ] = $variant;
+		}
+		if ( ! empty( $settings['close_font_family'] ) && is_string( $settings['close_font_family'] ) && array_key_exists( $settings['close_font_family'], $google_fonts ) ) {
+			$variant = $settings['close_font_weight'] != 'normal' ? $settings['close_font_weight'] : '';
+			if ( $settings['close_font_style'] == 'italic' ) {
+				$variant .= 'italic';
+			}
+			$fonts_used[ $settings['close_font_family'] ][ $variant ] = $variant;
+		}
+
+		return $fonts_used;
+	}
+
+	/**
 	 * Retrieve settings in the form of deprecated grouped arrays.
 	 *
 	 * @param      $group

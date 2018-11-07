@@ -407,7 +407,7 @@ class PUM_AssetCache {
 		$google_fonts = array();
 
 		foreach ( popmake_get_all_popup_themes() as $theme ) {
-			$google_fonts = array_merge( $google_fonts, popmake_get_popup_theme_google_fonts( $theme->ID ) );
+			$google_fonts = array_merge( $google_fonts, pum_get_theme($theme->ID )->get_google_fonts_used() );
 		}
 
 		if ( ! empty( $google_fonts ) && ! pum_get_option( 'disable_google_font_loading', false ) ) {

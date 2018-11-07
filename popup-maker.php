@@ -268,7 +268,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/actions.php';
 		require_once self::$DIR . 'includes/class-popmake-cron.php';
 		require_once self::$DIR . 'includes/defaults.php';
-		require_once self::$DIR . 'includes/google-fonts.php';
 		require_once self::$DIR . 'includes/general-functions.php';
 		require_once self::$DIR . 'includes/extensions-functions.php';
 		require_once self::$DIR . 'includes/input-options.php';
@@ -278,7 +277,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/ajax-calls.php';
 
 		require_once self::$DIR . 'includes/importer/easy-modal-v2.php';
-		require_once self::$DIR . 'includes/integrations/google-fonts.php';
 
 		require_once self::$DIR . 'includes/templates.php';
 		require_once self::$DIR . 'includes/load-popups.php';
