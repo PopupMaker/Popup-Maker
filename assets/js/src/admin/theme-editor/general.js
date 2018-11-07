@@ -324,19 +324,3 @@
             PUM_Admin.themeEditor.refresh_preview();
         });
 }(jQuery));
-
-/**
- * This needs to be preserved for backward compatibility.
- *
- * @deprecated 1.8.0
- * @remove 1.9.0
- */
-var PopMakeAdmin;
-(function () {
-    "use strict";
-    PopMakeAdmin = {
-        update_theme: function () {
-            return PUM_Admin.themeEditor.refresh_preview();
-        }
-    };
-}());
