@@ -6320,7 +6320,7 @@
             $(this).parents('.wp-picker-active').find('input.pum-color-picker').trigger('change');
 
             // TODO Remove this.
-            setTimeout(PopMakeAdmin.update_theme, 500);
+            setTimeout(PUM_Admin.themeEditor.refresh_preview, 500);
         })
         .on('colorchange', function (event, ui) {
             var $input = $(event.target),
@@ -6343,7 +6343,7 @@
 
             // TODO Remove this.
             if ($('form#post input#post_type').val() === 'popup_theme') {
-                PopMakeAdmin.update_theme();
+                PUM_Admin.themeEditor.refresh_preview();
             }
         })
         .on('pum_init', colorpicker.init);
@@ -8076,6 +8076,7 @@ function pumChecked(val1, val2, print) {
                     data.meta.step = data.step;
                     data.meta.min = data.min;
                     data.meta.max = data.max;
+                    data.meta['data-force-minmax'] = data.force_minmax.toString();
                     break;
                 case 'textarea':
                     data.meta.cols = data.cols;
