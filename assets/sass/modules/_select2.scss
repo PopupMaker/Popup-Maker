@@ -5,13 +5,13 @@
  * resemble the default WP dashboard inputs.
  ******************************************************************************/
 
-$plugin_prefix: 'plugin' !default;
-$custom_select2_selector: 'select2' !default;
+$plugin-prefix: 'plugin' !default;
+$custom-select2-selector: 'select2' !default;
 
-.#{$plugin_prefix}-field-select2 {
+.#{$plugin-prefix}-field-select2 {
   position: relative;
 
-  .#{$custom_select2_selector}-container {
+  .#{$custom-select2-selector}-container {
     box-sizing: border-box;
 
     display: inline-block;
@@ -25,7 +25,7 @@ $custom_select2_selector: 'select2' !default;
 
   @import "../vendor/select2/dropdown";
 
-  .#{$custom_select2_selector}-close-mask {
+  .#{$custom-select2-selector}-close-mask {
     border: 0;
     margin: 0;
     padding: 0;
@@ -45,7 +45,7 @@ $custom_select2_selector: 'select2' !default;
     filter: alpha(opacity=0);
   }
 
-  .#{$custom_select2_selector}-hidden-accessible {
+  .#{$custom-select2-selector}-hidden-accessible {
     border: 0 !important;
     clip: rect(0 0 0 0) !important;
     height: 1px !important;
@@ -59,16 +59,16 @@ $custom_select2_selector: 'select2' !default;
   @import "../vendor/select2/theme/default/layout";
   @import "../vendor/select2/theme/classic/layout";
 
-  > .#{$custom_select2_selector}-container--below.#{$custom_select2_selector}-container--open + .#{$custom_select2_selector}-container--open,
-  > .#{$custom_select2_selector}-container--below.#{$custom_select2_selector}-container--open + .#{$plugin_prefix}-desc + .#{$custom_select2_selector}-container--open {
+  > .#{$custom-select2-selector}-container--below.#{$custom-select2-selector}-container--open + .#{$custom-select2-selector}-container--open,
+  > .#{$custom-select2-selector}-container--below.#{$custom-select2-selector}-container--open + .#{$plugin-prefix}-desc + .#{$custom-select2-selector}-container--open {
     position: absolute !important;
   }
 
   // All Select2 Containers - Wraps Both Selectbox & Dropdown Elements
-  .#{$custom_select2_selector}-container {
+  .#{$custom-select2-selector}-container {
 
     // Selectbox
-    .#{$custom_select2_selector}-selection {
+    .#{$custom-select2-selector}-selection {
       margin: 1px;
       font-size: 14px;
       border-radius: 0;
@@ -78,8 +78,8 @@ $custom_select2_selector: 'select2' !default;
 
     }
 
-    &.#{$custom_select2_selector}-container--focus {
-      .#{$custom_select2_selector}-selection {
+    &.#{$custom-select2-selector}-container--focus {
+      .#{$custom-select2-selector}-selection {
         outline: none;
         border-color: #5b9dd9;
         box-shadow: 0 0 2px rgba(30, 140, 190, 0.8);
@@ -87,35 +87,35 @@ $custom_select2_selector: 'select2' !default;
     }
 
     // Single Select
-    .#{$custom_select2_selector}-selection--single {
+    .#{$custom-select2-selector}-selection--single {
 
       // Rendered Option
-      .#{$custom_select2_selector}-selection__rendered {
+      .#{$custom-select2-selector}-selection__rendered {
         //padding-left: 0;
       }
 
     }
 
     // Multiple Select
-    .#{$custom_select2_selector}-selection--multiple {
+    .#{$custom-select2-selector}-selection--multiple {
       overflow-y: auto;
       max-height: 150px;
       min-height: 28px;
       line-height: 16px;
       font-size: 12px;
 
-      .#{$custom_select2_selector}-selection__clear {
+      .#{$custom-select2-selector}-selection__clear {
         margin-right: 3px;
       }
 
-      .#{$custom_select2_selector}-selection__rendered {
+      .#{$custom-select2-selector}-selection__rendered {
 
       }
 
-      .#{$custom_select2_selector}-search--inline {
+      .#{$custom-select2-selector}-search--inline {
         margin: 0;
         // Search Field
-        .#{$custom_select2_selector}-search__field {
+        .#{$custom-select2-selector}-search__field {
           border-color: #ddd;
           padding: 3px 5px 0;
           min-width: 5em;
@@ -123,7 +123,7 @@ $custom_select2_selector: 'select2' !default;
         }
       }
 
-      .#{$custom_select2_selector}-selection__choice {
+      .#{$custom-select2-selector}-selection__choice {
         margin-top: 4px;
         margin-bottom: 0;
       }
@@ -131,7 +131,7 @@ $custom_select2_selector: 'select2' !default;
     }
 
     // Dropdown
-    .#{$custom_select2_selector}-dropdown {
+    .#{$custom-select2-selector}-dropdown {
       margin: 0 1px;
       border-color: #ddd;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07);
@@ -140,17 +140,17 @@ $custom_select2_selector: 'select2' !default;
       position: relative;
 
       // Search Field
-      .#{$custom_select2_selector}-search__field {
+      .#{$custom-select2-selector}-search__field {
         border-color: #ddd;
         padding: 3px 5px;
         min-width: 5em;
       }
 
       // Results
-      .#{$custom_select2_selector}-results {
+      .#{$custom-select2-selector}-results {
 
         // Each result set. Can be nested.
-        .#{$custom_select2_selector}-results__option {
+        .#{$custom-select2-selector}-results__option {
           padding: 3px 6px;
           margin: 0;
 
@@ -158,20 +158,20 @@ $custom_select2_selector: 'select2' !default;
           }
 
         }
-        .#{$custom_select2_selector}-results__option[role=group] {
+        .#{$custom-select2-selector}-results__option[role=group] {
           padding: 3px 0 0;
 
-          .#{$custom_select2_selector}-results__group {
+          .#{$custom-select2-selector}-results__group {
             padding: 0 6px;
           }
         }
 
-        .#{$custom_select2_selector}-results__options--nested {
+        .#{$custom-select2-selector}-results__options--nested {
           padding: 3px 6px 0;
         }
 
         // Hover
-        .#{$custom_select2_selector}-results__option--highlighted {
+        .#{$custom-select2-selector}-results__option--highlighted {
           background: #3e86d0;
         }
 
@@ -181,7 +181,7 @@ $custom_select2_selector: 'select2' !default;
 
   }
 
-  .#{$custom_select2_selector}-container + .#{$custom_select2_selector}-container--open {
+  .#{$custom-select2-selector}-container + .#{$custom-select2-selector}-container--open {
     top: inherit !important;
   }
 

@@ -197,7 +197,7 @@
 
 }
 
-&.pum-overlay-disabled {
+.pum-overlay.pum-overlay-disabled {
   visibility: hidden;
 
   &::-webkit-scrollbar {

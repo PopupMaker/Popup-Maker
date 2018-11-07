@@ -2,6 +2,8 @@
  * Copyright (c) 2018, WP Popup Maker
  ******************************************************************************/
 
+$royalblue: #4169e1;
+
 @mixin progress-bar-colors($color) {
   .pum-batch-progress {
     progress[value] {
@@ -30,15 +32,15 @@
 .pum-batch-form {
 
   .spinner {
+    float: none;
     margin: 4px 10px 8px;
     position: relative;
-    float: none;
   }
 
   .pum-upgrade-messages {
-    overflow: auto;
-    max-height: 200px;
     margin-bottom: 10px;
+    max-height: 200px;
+    overflow: auto;
     padding-right: 10px;
   }
 }
@@ -50,15 +52,15 @@
 
   // PROGRESS STYLE
   progress {
+    background-clip: padding-box;
+    background-color: #ddd;
+    border-radius: 0;
+    display: block;
+    height: 20px;
+    margin: 0 auto;
+    overflow: hidden;
     position: relative;
     width: 100%;
-    height: 20px;
-    display: block;
-    border-radius: 0;
-    background-color: #ddd;
-    background-clip: padding-box;
-    overflow: hidden;
-    margin: 0 auto;
 
     &::-moz-progress-bar,
     &::-ms-progress-bar,
@@ -75,29 +77,29 @@
     &[value] {
       /* Get rid of the default appearance */
       -webkit-appearance: none;
+
+      /* Although firefox doesn't provide any additional pseudo class to style the progress element container, any style applied here works on the container. */
+      background-color: $royalblue;
+
       /* This unfortunately leaves a trail of border behind in Firefox and Opera. We can remove that by setting the border to none. */
       border: none;
-      /* Although firefox doesn't provide any additional pseudo class to style the progress element container, any style applied here works on the container. */
-      background-color: royalblue;
-      // border-radius: 3px;
-      // box-shadow: 0 2px 3px rgba(0,0,0,.5) inset;
 
       /* Of all IE, only IE10 supports progress element that too partially. It only allows to change the background-color of the progress value using the 'color' attribute. */
-      color: royalblue;
+      color: $royalblue;
 
       margin: 0 0 10px;
 
       &::-moz-progress-value,
       &::-ms-progress-value,
       &::progress-value {
-        background-color: royalblue;
+        background-color: $royalblue;
         border-radius: 3px;
         transition: width $progress-determinate-time cubic-bezier(0, 0, 1, -0.12);
       }
 
       // Firefox - ie styles must be entirely separate or it busts Webkit styles.
       &::-webkit-progress-value {
-        background-color: royalblue;
+        background-color: $royalblue;
         border-radius: 3px;
         transition: width $progress-determinate-time cubic-bezier(0, 0, 1, -0.12);
 
@@ -125,30 +127,30 @@
     }
 
     &:not([value]) {
-      background-color: royalblue;
+      background-color: $royalblue;
       position: relative;
 
       &:before {
-        content: '';
-        position: absolute;
-        background-color: inherit;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        will-change: left, right;
         animation: indeterminate $progress-indeterminate-time cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+        background-color: inherit;
+        bottom: 0;
+        content: '';
+        left: 0;
+        position: absolute;
+        top: 0;
+        will-change: left, right;
       }
 
       &:after {
-        content: '';
-        position: absolute;
-        background-color: inherit;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        will-change: left, right;
         animation: indeterminate-short $progress-indeterminate-time cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
         animation-delay: 1.15s;
+        background-color: inherit;
+        bottom: 0;
+        content: '';
+        left: 0;
+        position: absolute;
+        top: 0;
+        will-change: left, right;
       }
     }
   }
@@ -196,14 +198,13 @@
     box-shadow: 0 2px 3px rgba(0, 0, 0, .5) inset;
 
     /* Dimensions should be similar to the parent progress element. */
-    width: 100%;
     height: 20px;
+    width: 100%;
   }
 
   .progress-bar span {
-    background-color: royalblue;
+    background-color: $royalblue;
     border-radius: 3px;
-
     display: block;
     text-indent: -9999px;
   }

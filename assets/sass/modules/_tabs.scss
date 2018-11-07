@@ -3,9 +3,9 @@
  ******************************************************************************/
 
 $tab-color: #E4E4E4 !default;
-$plugin_prefix: 'plugin' !default;
+$plugin-prefix: 'plugin' !default;
 
-.#{$plugin_prefix}-tabs-container {
+.#{$plugin-prefix}-tabs-container {
   box-sizing: border-box;
 
   > * {
@@ -173,7 +173,7 @@ $plugin_prefix: 'plugin' !default;
     > .tab-content {
       padding: 16px 0 0;
 
-      .#{$plugin_prefix}-field:first-child {
+      .#{$plugin-prefix}-field:first-child {
         h3 {
           margin-top: 0;
         }
