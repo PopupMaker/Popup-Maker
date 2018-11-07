@@ -321,6 +321,7 @@
                     data.meta.step = data.step;
                     data.meta.min = data.min;
                     data.meta.max = data.max;
+                    data.meta['data-force-minmax'] = data.force_minmax.toString();
                     break;
                 case 'textarea':
                     data.meta.cols = data.cols;
