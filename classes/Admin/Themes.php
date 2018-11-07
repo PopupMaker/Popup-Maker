@@ -62,20 +62,6 @@ class PUM_Admin_Themes {
 				),
 				'current_values' => self::parse_values( $settings ),
 			) ) ); ?>;
-
-            jQuery(document)
-                .ready(function () {
-                    jQuery(this).trigger('pum_init');
-
-                    var $container = jQuery('#pum-theme-settings-container'),
-                        args = pum_theme_settings_editor.form_args || {},
-                        values = pum_theme_settings_editor.current_values || {};
-
-                    if ($container.length) {
-                        $container.find('.pum-no-js').hide();
-                        PUM_Admin.forms.render(args, values, $container);
-                    }
-                });
 		</script>
 
 		<div id="pum-theme-settings-container" class="pum-theme-settings-container">
@@ -90,28 +76,31 @@ class PUM_Admin_Themes {
 	 *
 	 */
 	public static function render_preview_meta_box() {
-		// REWRITE This is overdue.
+		global $post;
+
+		$theme = pum_get_theme( $post->ID );
 
 		?>
-		<div class="empreview">
-			<div id="PopMake-Preview">
-				<div class="example-popup-overlay"></div>
-				<div class="example-popup">
-					<div class="title"><?php _e( 'Title Text', 'popup-maker' ); ?></div>
-					<div class="content">
-						<?php do_action( 'popmake_example_popup_content' ); ?>
-					</div>
-					<a class="close-popup">&#215;</a>
+
+		<div class="pum-theme-preview">
+			<div class="pum-popup-overlay"></div>
+			<div class="pum-popup-container">
+				<div class="pum-popup-title"><?php _e( 'Title Text', 'popup-maker' ); ?></div>
+				<div class="pum-popup-content">
+					<?php echo apply_filters( 'pum_example_popup_content', '<p>Suspendisse ipsum eros, tincidunt sed commodo ut, viverra vitae ipsum. Etiam non porta neque. Pellentesque nulla elit, aliquam in ullamcorper at, bibendum sed eros. Morbi non sapien tellus, ac vestibulum eros. In hac habitasse platea dictumst. Nulla vestibulum, diam vel porttitor placerat, eros tortor ultrices lectus, eget faucibus arcu justo eget massa. Maecenas id tellus vitae justo posuere hendrerit aliquet ut dolor.</p>' ); ?>
 				</div>
-				<p class="pum-desc"><?php
-					$tips = array(
-						__( 'If you move this theme preview to the bottom of your sidebar here it will follow you down the page?', 'popup-maker' ),
-						__( 'Clicking on an element in this theme preview will take you to its relevant settings in the editor?', 'popup-maker' ),
-					);
-					$key  = array_rand( $tips, 1 ); ?>
-					<i class="dashicons dashicons-info"></i> <?php echo '<strong>' . __( 'Did you know:', 'popup-maker' ) . '</strong>  ' . $tips[ $key ]; ?>
-				</p>
+				<button type="button" class="pum-popup-close" aria-label="<?php _e( 'Close', 'popup-maker' ); ?>">
+					<?php echo $theme->get_setting( 'close_text', '&#215;' ); ?>
+				</button>
 			</div>
+			<p class="pum-desc"><?php
+				$tips = array(
+					__( 'If you move this theme preview to the bottom of your sidebar here it will follow you down the page?', 'popup-maker' ),
+					__( 'Clicking on an element in this theme preview will take you to its relevant settings in the editor?', 'popup-maker' ),
+				);
+				$key  = array_rand( $tips, 1 ); ?>
+				<i class="dashicons dashicons-info"></i> <?php echo '<strong>' . __( 'Did you know:', 'popup-maker' ) . '</strong>  ' . $tips[ $key ]; ?>
+			</p>
 		</div>
 
 		<?php
@@ -358,14 +347,16 @@ class PUM_Admin_Themes {
 	 */
 	public static function font_family_options() {
 		$fonts = array(
-			'inherit'         => __( 'Use Your Themes', 'popup-maker' ),
-			'Sans-Serif'      => 'Sans-Serif',
-			'Tahoma'          => 'Tahoma',
-			'Georgia'         => 'Georgia',
-			'Comic Sans MS'   => 'Comic Sans MS',
-			'Arial'           => 'Arial',
-			'Lucida Grande'   => 'Lucida Grande',
-			'Times New Roman' => 'Times New Roman',
+			'inherit'                           => __( 'Use Your Themes', 'popup-maker' ),
+			__( 'System Fonts', 'popup-maker' ) => array(
+				'Sans-Serif'      => 'Sans-Serif',
+				'Tahoma'          => 'Tahoma',
+				'Georgia'         => 'Georgia',
+				'Comic Sans MS'   => 'Comic Sans MS',
+				'Arial'           => 'Arial',
+				'Lucida Grande'   => 'Lucida Grande',
+				'Times New Roman' => 'Times New Roman',
+			),
 		);
 
 		/** @deprecated 1.8.0 This filter is no longer in use */
@@ -373,24 +364,23 @@ class PUM_Admin_Themes {
 
 		$fonts = array_merge( $fonts, array_flip( $old_fonts ) );
 
-		return apply_filters( 'pum_theme_size_unit_options', $fonts );
+		return apply_filters( 'pum_theme_font_family_options', $fonts );
 	}
 
 	/**
 	 * @return mixed
 	 */
 	public static function font_weight_options() {
-		return apply_filters( 'pum_theme_size_unit_options', array(
-			''     => __( 'Normal', 'popup-maker' ),
-			'100 ' => '100',
-			'200 ' => '200',
-			'300 ' => '300',
-			'400 ' => '400',
-			'500 ' => '500',
-			'600 ' => '600',
-			'700 ' => '700',
-			'800 ' => '800',
-			'900 ' => '900',
+		return apply_filters( 'pum_theme_font_weight_options', array(
+			100       => 100,
+			200       => 200,
+			300       => 300,
+			400       => __( 'Normal', 'popup-maker' ) . ' (400)',
+			500       => 500,
+			600       => 600,
+			700       => __( 'Bold', 'popup-maker' ) . ' (700)',
+			800       => 800,
+			900       => 900,
 		) );
 	}
 
@@ -615,26 +605,20 @@ class PUM_Admin_Themes {
 							'options'  => $font_family_options,
 						),
 						'title_font_weight' => array(
-							'label'        => __( 'Font Weight', 'popup-maker' ),
-							'type'         => 'select',
-							'std'          => 'inherit',
-							'priority'     => 50,
-							'options'      => $font_weight_options,
-							'dependencies' => array(
-								'title_font_family' => array_keys( PUM_Utils_Array::remove_keys( $font_family_options, array( 'inherit' ) ) ),
-							),
+							'label'    => __( 'Font Weight', 'popup-maker' ),
+							'type'     => 'select',
+							'std'      => 400,
+							'priority' => 50,
+							'options'  => $font_weight_options,
 						),
 						'title_font_style'  => array(
-							'label'        => __( 'Style', 'popup-maker' ),
-							'type'         => 'select',
-							'std'          => 'normal',
-							'priority'     => 60,
-							'options'      => array(
+							'label'    => __( 'Style', 'popup-maker' ),
+							'type'     => 'select',
+							'std'      => 'normal',
+							'priority' => 60,
+							'options'  => array(
 								''       => __( 'Normal', 'popup-maker' ),
 								'italic' => __( 'Italic', 'popup-maker' ),
-							),
-							'dependencies' => array(
-								'title_font_family' => array_keys( PUM_Utils_Array::remove_keys( $font_family_options, array( 'inherit' ) ) ),
 							),
 						),
 						'title_text_align'  => array(
@@ -717,26 +701,20 @@ class PUM_Admin_Themes {
 							'options'  => $font_family_options,
 						),
 						'content_font_weight' => array(
-							'label'        => __( 'Font Weight', 'popup-maker' ),
-							'type'         => 'select',
-							'std'          => 'inherit',
-							'priority'     => 30,
-							'options'      => $font_weight_options,
-							'dependencies' => array(
-								'content_font_family' => array_keys( PUM_Utils_Array::remove_keys( $font_family_options, array( 'inherit' ) ) ),
-							),
+							'label'    => __( 'Font Weight', 'popup-maker' ),
+							'type'     => 'select',
+							'std'      => 400,
+							'priority' => 30,
+							'options'  => $font_weight_options,
 						),
 						'content_font_style'  => array(
-							'label'        => __( 'Style', 'popup-maker' ),
-							'type'         => 'select',
-							'std'          => 'inherit',
-							'priority'     => 40,
-							'options'      => array(
+							'label'    => __( 'Style', 'popup-maker' ),
+							'type'     => 'select',
+							'std'      => 'inherit',
+							'priority' => 40,
+							'options'  => array(
 								''       => __( 'Normal', 'popup-maker' ),
 								'italic' => __( 'Italic', 'popup-maker' ),
-							),
-							'dependencies' => array(
-								'content_font_family' => array_keys( PUM_Utils_Array::remove_keys( $font_family_options, array( 'inherit' ) ) ),
 							),
 						),
 					),
@@ -923,26 +901,20 @@ class PUM_Admin_Themes {
 							'options'  => $font_family_options,
 						),
 						'close_font_weight' => array(
-							'label'        => __( 'Font Weight', 'popup-maker' ),
-							'type'         => 'select',
-							'std'          => 'inherit',
-							'priority'     => 50,
-							'options'      => $font_weight_options,
-							'dependencies' => array(
-								'close_font_family' => array_keys( PUM_Utils_Array::remove_keys( $font_family_options, array( 'inherit' ) ) ),
-							),
+							'label'    => __( 'Font Weight', 'popup-maker' ),
+							'type'     => 'select',
+							'std'      => 400,
+							'priority' => 50,
+							'options'  => $font_weight_options,
 						),
 						'close_font_style'  => array(
-							'label'        => __( 'Style', 'popup-maker' ),
-							'type'         => 'select',
-							'std'          => 'inherit',
-							'priority'     => 60,
-							'options'      => array(
+							'label'    => __( 'Style', 'popup-maker' ),
+							'type'     => 'select',
+							'std'      => 'inherit',
+							'priority' => 60,
+							'options'  => array(
 								''       => __( 'Normal', 'popup-maker' ),
 								'italic' => __( 'Italic', 'popup-maker' ),
-							),
-							'dependencies' => array(
-								'close_font_family' => array_keys( PUM_Utils_Array::remove_keys( $font_family_options, array( 'inherit' ) ) ),
 							),
 						),
 					),

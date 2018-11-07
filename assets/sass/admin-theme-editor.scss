@@ -1,16 +1,16 @@
 /*!******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2018, WP Popup Maker
  ******************************************************************************/
 
 // Reset
-.example-popup-overlay,
-.example-popup-overlay .example-popup,
-.pum-overlay .title,
-.pum-overlay .content,
-.example-popup-overlay .close-popup,
-.example-popup-overlay .close-popupclose-popup:hover,
-.example-popup-overlay .close-popup:focus,
-.example-popup-overlay .close-popup:active {
+.pum-popup-overlay,
+.pum-popup-overlay .pum-popup-container,
+.pum-overlay .pum-popup-title,
+.pum-overlay .pum-popup-content,
+.pum-popup-overlay .pum-popup-close,
+.pum-popup-overlay .pum-popup-closeclose-popup:hover,
+.pum-popup-overlay .pum-popup-close:focus,
+.pum-popup-overlay .pum-popup-close:active {
   background: none;
   border: none;
   bottom: auto;
@@ -45,42 +45,43 @@
   z-index: auto;
 }
 
-.example-popup,
-.example-popup:before,
-.example-popup:after,
-.example-popup *,
-.example-popup *:before,
-.example-popup *:after {
+.pum-popup-container,
+.pum-popup-container:before,
+.pum-popup-container:after,
+.pum-popup-container *,
+.pum-popup-container *:before,
+.pum-popup-container *:after {
   box-sizing: border-box;
 }
 
-#popmake_popup_theme_preview {
+#pum_theme_preview {
   z-index: 100;
 
   .inside {
     margin-top: 0;
     padding: 0;
-    background: url(http://s.wordpress.com/mshots/v1/http://www.wordpress.org) no-repeat center top;
+    background: url(https://s.wordpress.com/mshots/v1/https://www.wordpress.org) no-repeat center top;
+    background-size: cover;
   }
 
-  .empreview {
-    padding: 30px 20px;
+  .pum-theme-preview {
+    padding: 50px 20px;
     position: relative;
   }
+
+
+  .pum-popup-overlay,
+  .pum-popup-container,
+  .pum-popup-title,
+  .pum-popup-content,
+  .pum-popup-close {
+    cursor: pointer;
+  }
 }
 
-#popmake-preview {
-  position: fixed;
-  z-index: 9999999 !important;
-}
+.pum-theme-preview {
 
-#popmake-overlay {
-  z-index: 9999998 !important;
-}
-
-.empreview {
-
-  .example-popup-overlay {
+  .pum-popup-overlay {
     position: absolute;
     display: block;
     width: 100%;
@@ -90,7 +91,7 @@
   }
 
   .pum-desc,
-  .example-popup {
+  .pum-popup-container {
     display: block;
     position: relative;
     width: 95%;
@@ -99,7 +100,7 @@
     font-size: 16px;
     z-index: 99;
 
-    .close-popup {
+    .pum-popup-close {
       text-decoration: none;
       text-align: center;
       line-height: 1;
