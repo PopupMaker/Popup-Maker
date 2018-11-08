@@ -274,7 +274,8 @@
                     top: '50%',
                     right: right + 'px',
                     transform: 'translateY(-50%)'
-                });                break;
+                });
+                break;
 
             case "bottomleft":
                 $close.css({
