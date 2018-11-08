@@ -225,36 +225,31 @@ function package() {
 package.description = "Generates a release package with the current version from package.json";
 
 function sass_watcher() {
-    var watcher = gulp.watch(path.join(sass_src_path, '/*.s+(a|c)ss'));
-    watcher.on('all', gulp.parallel('css'));
+    $fn.saneWatch(path.join(sass_src_path, '/*.s+(a|c)ss'), {debounce: 300}, gulp.parallel('css'));
 }
 
 sass_watcher.description = "Starts a scss/sass file watcher.";
 
 function js_admin_watcher() {
-    var watcher = gulp.watch(path.join(admin_script_src_path, '/**/*.js'));
-    watcher.on('all', gulp.parallel('js_admin'));
+    $fn.saneWatch(path.join(admin_script_src_path, '/**/*.js'), {debounce: 300}, gulp.parallel('js_admin'));
 }
 
 js_admin_watcher.description = "Starts admin Javascript file watcher.";
 
 function js_site_watcher() {
-    var watcher = gulp.watch(path.join(site_script_src_path, '/**/*.js'));
-    watcher.on('all', gulp.parallel('js_site'));
+    $fn.saneWatch(path.join(site_script_src_path, '/**/*.js'), {debounce: 300}, gulp.parallel('js_site'));
 }
 
 js_site_watcher.description = "Starts site Javascript file watcher.";
 
 function js_other_watcher() {
-    var watcher = gulp.watch([path.join(script_src_path, '*.js')]);
-    watcher.on('all', gulp.parallel('js_other'));
+    $fn.saneWatch(path.join(script_src_path, '*.js'), {debounce: 300}, gulp.parallel('js_other'));
 }
 
 js_other_watcher.description = "Starts 3rd party Javascript file watcher.";
 
 function langpack_watcher() {
-    var watcher = gulp.watch('**/*.php');
-    watcher.on('all', gulp.parallel('langpack'));
+    $fn.saneWatch('**/*.php', {debounce: 300}, gulp.parallel('langpack'));
 }
 
 langpack_watcher.description = "Starts langpack php file watcher.";
