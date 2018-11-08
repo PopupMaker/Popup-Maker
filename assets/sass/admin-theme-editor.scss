@@ -54,8 +54,20 @@
   box-sizing: border-box;
 }
 
+
+
+#pum_theme_settings {
+  .inside {
+    padding: 0;
+    margin: 0;
+  }
+
+  .wp-picker-container {
+    display: inline-block;
+  }
+}
+
 #pum_theme_preview {
-  z-index: 100;
 
   .inside {
     margin-top: 0;
@@ -68,7 +80,6 @@
     padding: 50px 20px;
     position: relative;
   }
-
 
   .pum-popup-overlay,
   .pum-popup-container,
@@ -108,6 +119,7 @@
       font-weight: bold;
       cursor: pointer;
       min-width: 1em;
+      z-index: 9999999;
     }
   }
 
@@ -119,6 +131,7 @@
     box-shadow: 0 2px 2px;
     padding: .75em;
     font-size: 11px;
+    z-index: 10;
 
     .dashicons {
       font-size: 16px;

@@ -14,7 +14,8 @@
                     },
                     clear: function (event) {
                         $(event.target).prev().trigger('colorchange').wpColorPicker('close');
-                    }
+                    },
+                    hide: true
                 });
         }
     };
@@ -26,32 +27,19 @@
     $(document)
         .on('click', '.iris-palette', function () {
             $(this).parents('.wp-picker-active').find('input.pum-color-picker').trigger('change');
-
-            // TODO Remove this.
-            setTimeout(PUM_Admin.themeEditor.refresh_preview, 500);
         })
         .on('colorchange', function (event, ui) {
             var $input = $(event.target),
-                $opacity = $input.parents('tr').next('tr.background-opacity'),
                 color = '';
 
             if (ui !== undefined && ui.color !== undefined) {
                 color = ui.color.toString();
             }
 
-            if ($input.hasClass('background-color')) {
-                if (typeof color === 'string' && color.length) {
-                    $opacity.show();
-                } else {
-                    $opacity.hide();
-                }
-            }
+            $input.val(color).trigger('change');
 
-            $input.val(color);
-
-            // TODO Remove this.
             if ($('form#post input#post_type').val() === 'popup_theme') {
-                PUM_Admin.themeEditor.refresh_preview();
+                PUM_Admin.utils.debounce(PUM_Admin.themeEditor.refresh_preview, 100);
             }
         })
         .on('pum_init', colorpicker.init);

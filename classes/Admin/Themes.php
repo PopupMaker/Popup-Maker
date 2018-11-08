@@ -175,7 +175,7 @@ class PUM_Admin_Themes {
 			return;
 		}
 
-		$popup = pum_get_popup( $post_id );
+		$theme = pum_get_theme( $post_id );
 
 		$settings = ! empty( $_POST['theme_settings'] ) ? $_POST['theme_settings'] : array();
 
@@ -186,7 +186,8 @@ class PUM_Admin_Themes {
 		// Sanitize form values.
 		$settings = PUM_Utils_Fields::sanitize_fields( $settings, self::fields() );
 
-		$popup->update_meta( 'theme_settings', $settings );
+		//$theme->update_meta( 'popup_theme_settings', $settings );
+		$theme->update_settings( $settings );
 
 		// If this is a built in theme and the user has modified it set a key so that we know not to make automatic upgrades to it in the future.
 		if ( get_post_meta( $post_id, '_pum_built_in', true ) !== false ) {

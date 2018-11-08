@@ -359,6 +359,11 @@
                         data.units = options;
                     }
                     break;
+                case 'color':
+                    if ( typeof data.value === 'string' && data.value !== '') {
+                        data.meta['data-default-color'] = data.value;
+                    }
+                    break;
                 case 'license_key':
 
                     data.value = $.extend({
