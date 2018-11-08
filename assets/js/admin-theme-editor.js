@@ -46,7 +46,6 @@
                 font,
                 i;
 
-
             // Google Font Chosen
             if (pum_google_fonts[chosen_font] !== undefined) {
 
@@ -116,14 +115,54 @@
                 PUM_Admin.themeEditor.update_font_options($(this).attr('id').replace('_font_family', ''));
             });
         },
+        update_loaded_font(prefix) {
+            var $font_family_select = $('select[id="' + prefix + '_font_family"]'),
+                $font_weight_select = $('select[id="' + prefix + '_font_weight"]'),
+                $font_style_select = $('select[id="' + prefix + '_font_style"]'),
+                chosen_font = $font_family_select.val(),
+                chosen_weight = $font_weight_select.val(),
+                chosen_style = $font_style_select.val(),
+                $link = $('link#pum-' + prefix + 'google-font'),
+                $new_link = $('<link id="pum-' + prefix + 'google-font" rel="stylesheet" type="text/css">'),
+                url;
+
+            if (typeof pum_google_fonts[chosen_font] !== 'undefined') {
+                url = "//fonts.googleapis.com/css?family=" + chosen_font;
+
+                if (chosen_weight !== 'normal') {
+                    url += ":" + chosen_weight;
+                }
+
+                if (chosen_style === 'italic') {
+                    if (url.indexOf(':') === -1) {
+                        url += ":";
+                    }
+                    url += "italic";
+                }
+
+                $new_link.attr('href', url);
+
+                if ($link.length) {
+                    if ($link.attr('href') !== url) {
+                        $link.replaceWith($new_link);
+                    }
+                } else {
+                    $('body').append($new_link);
+                }
+            } else {
+                $link.remove();
+            }
+
+        },
+        update_loaded_fonts() {
+            return $('select[id$="_font_family"]').each(function () {
+                PUM_Admin.themeEditor.update_loaded_font($(this).attr('id').replace('_font_family', ''));
+            });
+        },
         refresh_preview: function () {
-            var form_values = $('#pum-theme-settings-container').pumSerializeObject(),
-                theme = form_values.theme_settings,
-                i;
+            var form_values = $('#pum-theme-settings-container').pumSerializeObject();
 
-            debugger;
-
-            this.restyle_preview(theme);
+            PUM_Admin.themeEditor.restyle_preview(form_values.theme_settings);
         },
         restyle_preview: function (theme) {
             var $overlay = $('.pum-popup-overlay'),
@@ -133,55 +172,9 @@
                 $close = $('.pum-popup-close', $container),
                 container_inset = theme.container_boxshadow_inset === 'yes' ? 'inset ' : '',
                 close_inset = theme.close_boxshadow_inset === 'yes' ? 'inset ' : '',
-                link;
+                top, left, right, bottom;
 
-            if (pum_google_fonts[theme.title_font_family] !== undefined) {
-
-                link = "//fonts.googleapis.com/css?family=" + theme.title_font_family;
-
-                if (theme.title_font_weight !== 'normal') {
-                    link += ":" + theme.title_font_weight;
-                }
-                if (theme.title_font_style === 'italic') {
-                    if (link.indexOf(':') === -1) {
-                        link += ":";
-                    }
-                    link += "italic";
-                }
-                $('body').append('<link href="' + link + '" rel="stylesheet" type="text/css">');
-            }
-
-            if (pum_google_fonts[theme.content_font_family] !== undefined) {
-
-                link = "//fonts.googleapis.com/css?family=" + theme.content_font_family;
-
-                if (theme.content_font_weight !== 'normal') {
-                    link += ":" + theme.content_font_weight;
-                }
-                if (theme.content_font_style === 'italic') {
-                    if (link.indexOf(':') === -1) {
-                        link += ":";
-                    }
-                    link += "italic";
-                }
-                $('body').append('<link href="' + link + '" rel="stylesheet" type="text/css">');
-            }
-
-            if (pum_google_fonts[theme.close_font_family] !== undefined) {
-
-                link = "//fonts.googleapis.com/css?family=" + theme.close_font_family;
-
-                if (theme.close_font_weight !== 'normal') {
-                    link += ":" + theme.close_font_weight;
-                }
-                if (theme.close_font_style === 'italic') {
-                    if (link.indexOf(':') === -1) {
-                        link += ":";
-                    }
-                    link += "italic";
-                }
-                $('body').append('<link href="' + link + '" rel="stylesheet" type="text/css">');
-            }
+            PUM_Admin.themeEditor.update_loaded_fonts();
 
             $overlay.removeAttr('style').css({
                 backgroundColor: window.PUM_Admin.utils.convert_hex(theme.overlay_background_color, theme.overlay_background_opacity)
@@ -213,6 +206,7 @@
                 fontWeight: theme.content_font_weight
             });
             $close.html(theme.close_text).removeAttr('style').css({
+                position: theme.close_position_outside ? 'fixed' : 'absolute',
                 padding: theme.close_padding + 'px',
                 height: theme.close_height > 0 ? theme.close_height + 'px' : 'auto',
                 width: theme.close_width > 0 ? theme.close_width + 'px' : 'auto',
@@ -230,29 +224,81 @@
                 boxShadow: close_inset + theme.close_boxshadow_horizontal + 'px ' + theme.close_boxshadow_vertical + 'px ' + theme.close_boxshadow_blur + 'px ' + theme.close_boxshadow_spread + 'px ' + window.PUM_Admin.utils.convert_hex(theme.close_boxshadow_color, theme.close_boxshadow_opacity),
                 textShadow: theme.close_textshadow_horizontal + 'px ' + theme.close_textshadow_vertical + 'px ' + theme.close_textshadow_blur + 'px ' + window.PUM_Admin.utils.convert_hex(theme.close_textshadow_color, theme.close_textshadow_opacity)
             });
+
+
+            top = theme.close_position_top + (theme.close_position_outside ? $('#wpadminbar').outerHeight() : 0);
+            left = theme.close_position_left + (theme.close_position_outside ? $('#adminmenuwrap').outerWidth() : 0);
+            right = theme.close_position_right;
+            bottom = theme.close_position_bottom;
+
+
             switch (theme.close_location) {
+
+
             case "topleft":
                 $close.css({
-                    top: theme.close_position_top + 'px',
-                    left: theme.close_position_left + 'px'
+                    top: top + 'px',
+                    left: left + 'px'
                 });
                 break;
+
+            case "topcenter":
+                $close.css({
+                    top: top + 'px',
+                    left: '50%',
+                    transform: 'translateX(-50%)'
+                    // left: 0,
+                    // right: 0,
+                    // left: 0,
+                    // margin: 'auto'
+                });
+                break;
+
             case "topright":
                 $close.css({
-                    top: theme.close_position_top + 'px',
-                    right: theme.close_position_right + 'px'
+                    top: top + 'px',
+                    right: right + 'px'
                 });
                 break;
+
+            case 'middleleft':
+                $close.css({
+                    top: '50%',
+                    left: left + 'px',
+                    transform: 'translateY(-50%)'
+                });
+                break;
+
+            case 'middleright':
+                $close.css({
+                    top: '50%',
+                    right: right + 'px',
+                    transform: 'translateY(-50%)'
+                });                break;
+
             case "bottomleft":
                 $close.css({
-                    bottom: theme.close_position_bottom + 'px',
-                    left: theme.close_position_left + 'px'
+                    bottom: bottom + 'px',
+                    left: left + 'px'
                 });
                 break;
+
+            case "bottomcenter":
+                $close.css({
+                    bottom: bottom + 'px',
+                    left: '50%',
+                    transform: 'translateX(-50%)'
+                    // left: 0,
+                    // right: 0,
+                    // left: 0,
+                    // margin: 'auto'
+                });
+                break;
+
             case "bottomright":
                 $close.css({
-                    bottom: theme.close_position_bottom + 'px',
-                    right: theme.close_position_right + 'px'
+                    bottom: bottom + 'px',
+                    right: right + 'px'
                 });
                 break;
             }
@@ -320,7 +366,7 @@
         /**
          * Trigger preview update after any field change.
          */
-        .on('change input focusout', 'select, input', function () {
+        .on('change colorchange input focusout', 'select, input', function () {
             PUM_Admin.themeEditor.refresh_preview();
         });
 }(jQuery));

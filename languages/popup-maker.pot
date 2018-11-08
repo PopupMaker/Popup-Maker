@@ -23,7 +23,7 @@ msgstr ""
 msgid "Popup ID"
 msgstr ""
 
-#: classes/Conditions.php:107, classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:157, classes/Shortcode.php:151, classes/Shortcode.php:163, classes/Shortcode.php:176, classes/Triggers.php:289, includes/class-popmake-fields.php:57, classes/Admin/Popups.php:301, classes/Admin/Settings.php:582, classes/Admin/Settings.php:606, classes/Admin/Settings.php:609, classes/Admin/Settings.php:618, classes/Admin/Themes.php:264, classes/Admin/Themes.php:282, classes/Admin/Themes.php:301, classes/Shortcode/Popup.php:51, classes/Shortcode/Popup.php:65, classes/Shortcode/Subscribe.php:60, classes/Shortcode/Subscribe.php:80, classes/Shortcode/Subscribe.php:83
+#: classes/Conditions.php:107, classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:157, classes/Shortcode.php:151, classes/Shortcode.php:163, classes/Shortcode.php:176, classes/Triggers.php:289, includes/class-popmake-fields.php:57, classes/Admin/Popups.php:301, classes/Admin/Settings.php:582, classes/Admin/Settings.php:606, classes/Admin/Settings.php:609, classes/Admin/Settings.php:618, classes/Admin/Themes.php:265, classes/Admin/Themes.php:283, classes/Admin/Themes.php:302, classes/Shortcode/Popup.php:51, classes/Shortcode/Popup.php:65, classes/Shortcode/Subscribe.php:60, classes/Shortcode/Subscribe.php:80, classes/Shortcode/Subscribe.php:83
 msgid "General"
 msgstr ""
 
@@ -175,7 +175,7 @@ msgstr ""
 msgid "Sessions"
 msgstr ""
 
-#: classes/Cookies.php:158, classes/Triggers.php:291, classes/Admin/Popups.php:306, classes/Admin/Popups.php:331, classes/Admin/Popups.php:338, classes/Admin/Themes.php:270, classes/Admin/Themes.php:311
+#: classes/Cookies.php:158, classes/Triggers.php:291, classes/Admin/Popups.php:306, classes/Admin/Popups.php:331, classes/Admin/Popups.php:338, classes/Admin/Themes.php:271, classes/Admin/Themes.php:312
 msgid "Advanced"
 msgstr ""
 
@@ -637,7 +637,7 @@ msgstr ""
 msgid "CLOSE"
 msgstr ""
 
-#: includes/input-options.php:29, classes/Admin/Themes.php:375, classes/Admin/Themes.php:621, classes/Admin/Themes.php:717, classes/Admin/Themes.php:917
+#: includes/input-options.php:29, classes/Admin/Themes.php:379, classes/Admin/Themes.php:621, classes/Admin/Themes.php:717, classes/Admin/Themes.php:917
 msgid "Normal"
 msgstr ""
 
@@ -705,7 +705,7 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
-#: includes/input-options.php:69, classes/Admin/Assets.php:74, classes/Admin/Popups.php:499, classes/Admin/Settings.php:251, classes/Admin/Themes.php:321, classes/Shortcode/Subscribe.php:124, classes/Shortcode/Subscribe.php:135, classes/Shortcode/Subscribe.php:291
+#: includes/input-options.php:69, classes/Admin/Assets.php:74, classes/Admin/Popups.php:499, classes/Admin/Settings.php:251, classes/Admin/Themes.php:322, classes/Shortcode/Subscribe.php:124, classes/Shortcode/Subscribe.php:135, classes/Shortcode/Subscribe.php:291
 msgid "None"
 msgstr ""
 
@@ -813,7 +813,7 @@ msgstr ""
 msgid "Framed Border"
 msgstr ""
 
-#: templates/popup.php:44, classes/Admin/Helpers.php:369, classes/Admin/Popups.php:303, classes/Admin/Popups.php:670, classes/Admin/Templates.php:334, classes/Admin/Themes.php:92, classes/Admin/Themes.php:269, classes/Shortcode/Popup.php:55, classes/Shortcode/Popup.php:77
+#: templates/popup.php:44, classes/Admin/Helpers.php:369, classes/Admin/Popups.php:303, classes/Admin/Popups.php:670, classes/Admin/Templates.php:334, classes/Admin/Themes.php:92, classes/Admin/Themes.php:270, classes/Shortcode/Popup.php:55, classes/Shortcode/Popup.php:77
 msgid "Close"
 msgstr ""
 
@@ -985,7 +985,7 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-#: classes/Admin/Popups.php:328, classes/Admin/Popups.php:407, classes/Admin/Themes.php:302, classes/Shortcode/Popup.php:134
+#: classes/Admin/Popups.php:328, classes/Admin/Popups.php:407, classes/Admin/Themes.php:303, classes/Shortcode/Popup.php:134
 msgid "Size"
 msgstr ""
 
@@ -993,7 +993,7 @@ msgstr ""
 msgid "Animation"
 msgstr ""
 
-#: classes/Admin/Popups.php:330, classes/Admin/Themes.php:303, classes/Shortcode/Popup.php:53, classes/Shortcode/Popup.php:71
+#: classes/Admin/Popups.php:330, classes/Admin/Themes.php:304, classes/Shortcode/Popup.php:53, classes/Shortcode/Popup.php:71
 msgid "Position"
 msgstr ""
 
@@ -1238,7 +1238,7 @@ msgstr ""
 msgid "Lifetime Opens"
 msgstr ""
 
-#: classes/Admin/Popups.php:1009, classes/Admin/Themes.php:267
+#: classes/Admin/Popups.php:1009, classes/Admin/Themes.php:268
 msgid "Title"
 msgstr ""
 
@@ -1768,80 +1768,84 @@ msgstr ""
 msgid "Did you know:"
 msgstr ""
 
-#: classes/Admin/Themes.php:265
+#: classes/Admin/Themes.php:266
 msgid "Overlay"
 msgstr ""
 
-#: classes/Admin/Themes.php:266, classes/Admin/Themes.php:288
+#: classes/Admin/Themes.php:267, classes/Admin/Themes.php:289
 msgid "Container"
 msgstr ""
 
-#: classes/Admin/Themes.php:268, classes/Shortcode/Popup.php:37, classes/Shortcode/PopupClose.php:35
+#: classes/Admin/Themes.php:269, classes/Shortcode/Popup.php:37, classes/Shortcode/PopupClose.php:35
 msgid "Content"
 msgstr ""
 
-#: classes/Admin/Themes.php:285, classes/Admin/Themes.php:289, classes/Admin/Themes.php:304
+#: classes/Admin/Themes.php:286, classes/Admin/Themes.php:290, classes/Admin/Themes.php:305
 msgid "Background"
 msgstr ""
 
-#: classes/Admin/Themes.php:290, classes/Admin/Themes.php:305
+#: classes/Admin/Themes.php:291, classes/Admin/Themes.php:306
 msgid "Border"
 msgstr ""
 
-#: classes/Admin/Themes.php:291, classes/Admin/Themes.php:306
+#: classes/Admin/Themes.php:292, classes/Admin/Themes.php:307
 msgid "Drop Shadow"
 msgstr ""
 
-#: classes/Admin/Themes.php:294, classes/Admin/Themes.php:307
+#: classes/Admin/Themes.php:295, classes/Admin/Themes.php:308
 msgid "Font"
 msgstr ""
 
-#: classes/Admin/Themes.php:295, classes/Admin/Themes.php:308
+#: classes/Admin/Themes.php:296, classes/Admin/Themes.php:309
 msgid "Text Shadow"
 msgstr ""
 
-#: classes/Admin/Themes.php:298
+#: classes/Admin/Themes.php:299
 msgid "Text"
 msgstr ""
 
-#: classes/Admin/Themes.php:322
+#: classes/Admin/Themes.php:323
 msgid "Solid"
 msgstr ""
 
-#: classes/Admin/Themes.php:323
+#: classes/Admin/Themes.php:324
 msgid "Dotted"
 msgstr ""
 
-#: classes/Admin/Themes.php:324
+#: classes/Admin/Themes.php:325
 msgid "Dashed"
 msgstr ""
 
-#: classes/Admin/Themes.php:325
+#: classes/Admin/Themes.php:326
 msgid "Double"
 msgstr ""
 
-#: classes/Admin/Themes.php:326
+#: classes/Admin/Themes.php:327
 msgid "Groove"
 msgstr ""
 
-#: classes/Admin/Themes.php:327, classes/Admin/Themes.php:561, classes/Admin/Themes.php:1012
+#: classes/Admin/Themes.php:328, classes/Admin/Themes.php:561, classes/Admin/Themes.php:1012
 msgid "Inset (inner shadow)"
 msgstr ""
 
-#: classes/Admin/Themes.php:328
+#: classes/Admin/Themes.php:329
 msgid "Outset"
 msgstr ""
 
-#: classes/Admin/Themes.php:329
+#: classes/Admin/Themes.php:330
 msgid "Ridge"
 msgstr ""
 
-#: classes/Admin/Themes.php:350
+#: classes/Admin/Themes.php:351
 msgid "Use Your Themes"
 msgstr ""
 
-#: classes/Admin/Themes.php:351
+#: classes/Admin/Themes.php:352
 msgid "System Fonts"
+msgstr ""
+
+#: classes/Admin/Themes.php:382
+msgid "Bold"
 msgstr ""
 
 #: classes/Admin/Themes.php:411, classes/Admin/Themes.php:454, classes/Admin/Themes.php:480, classes/Admin/Themes.php:504, classes/Admin/Themes.php:575, classes/Admin/Themes.php:640, classes/Admin/Themes.php:691, classes/Admin/Themes.php:852, classes/Admin/Themes.php:871, classes/Admin/Themes.php:931, classes/Admin/Themes.php:955, classes/Admin/Themes.php:1024
