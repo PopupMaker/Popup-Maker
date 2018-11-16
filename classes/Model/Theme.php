@@ -140,6 +140,122 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		return $fonts_used;
 	}
 
+	public function get_generated_styles() {
+
+		$styles = array(
+			'overlay'   => array(),
+			'container' => array(),
+			'title'     => array(),
+			'content'   => array(),
+			'close'     => array(),
+		);
+
+		/*
+		 * Overlay Styles
+		 */
+		if ( ! empty( $this->get_setting( 'overlay_background_color' ) ) ) {
+			$styles['overlay']['background-color'] = PUM_Utils_CSS::hex2rgba( $this->get_setting( 'overlay_background_color' ), $this->get_setting( 'overlay_background_opacity' ) );
+		}
+
+		/*
+		 * Container Styles
+		 */
+		$styles['container'] = array(
+			'padding'       => "{$this->get_setting('container_padding')}px",
+			'border-radius' => "{$this->get_setting('container_border_radius')}px",
+			'border'        => PUM_Utils_CSS::border_style( $this->get_setting( 'container_border_width' ), $this->get_setting( 'container_border_style' ), $this->get_setting( 'container_border_color' ) ),
+			'box-shadow'    => PUM_Utils_CSS::box_shadow_style( $this->get_setting( 'container_boxshadow_horizontal' ), $this->get_setting( 'container_boxshadow_vertical' ), $this->get_setting( 'container_boxshadow_blur' ), $this->get_setting( 'container_boxshadow_spread' ), $this->get_setting( 'container_boxshadow_color' ), $this->get_setting( 'container_boxshadow_opacity' ), $this->get_setting( 'container_boxshadow_inset' ) ),
+		);
+
+		if ( ! empty( $this->get_setting( 'container_background_color' ) ) ) {
+			$styles['container']['background-color'] = PUM_Utils_CSS::hex2rgba( $this->get_setting( 'container_background_color' ), $this->get_setting( 'container_background_opacity' ) );
+		}
+
+		/*
+		 * Title Styles
+		 */
+		$styles['title'] = array(
+			'color'       => $this->get_setting( 'title_font_color' ),
+			'text-align'  => $this->get_setting( 'title_text_align' ),
+			'text-shadow' => PUM_Utils_CSS::text_shadow_style( $this->get_setting( 'title_textshadow_horizontal' ), $this->get_setting( 'title_textshadow_vertical' ), $this->get_setting( 'title_textshadow_blur' ), $this->get_setting( 'title_textshadow_color' ), $this->get_setting( 'title_textshadow_opacity' ) ),
+			'font-family' => $this->get_setting( 'title_font_family' ),
+			'font-weight' => $this->get_setting( 'title_font_weight' ),
+			'font-size'   => "{$this->get_setting( 'title_font_size' )}px",
+			'font-style'  => $this->get_setting( 'title_font_style' ),
+			'line-height' => "{$this->get_setting( 'title_line_height' )}px",
+		);
+
+		/*
+		 * Content Styles
+		 */
+		$styles['content'] = array(
+			'color'       => $this->get_setting( 'content_font_color' ),
+			'font-family' => $this->get_setting( 'content_font_family' ),
+			'font-weight' => $this->get_setting( 'content_font_weight' ),
+			'font-style'  => $this->get_setting( 'content_font_style' ),
+		);
+
+		/*
+		 * Close Styles
+		 */
+		$styles['close'] = array(
+			'height'        => empty( $this->get_setting( 'close_height' ) ) || $this->get_setting( 'close_height' ) <= 0 ? 'auto' : "{$this->get_setting('close_height')}px",
+			'width'         => empty( $this->get_setting( 'close_width' ) ) || $this->get_setting( 'close_width' ) <= 0 ? 'auto' : "{$this->get_setting('close_width')}px",
+			'left'          => 'auto',
+			'right'         => 'auto',
+			'bottom'        => 'auto',
+			'top'           => 'auto',
+			'padding'       => "{$this->get_setting('close_padding')}px",
+			'color'         => $this->get_setting( 'close_font_color' ),
+			'font-family'   => $this->get_setting( 'close_font_family' ),
+			'font-weight'   => $this->get_setting( 'close_font_weight' ),
+			'font-size'     => "{$this->get_setting('close_font_size')}px",
+			'font-style'    => $this->get_setting( 'close_font_style' ),
+			'line-height'   => "{$this->get_setting('close_line_height')}px",
+			'border'        => PUM_Utils_CSS::border_style( $this->get_setting( 'close_border_width' ), $this->get_setting( 'close_border_style' ), $this->get_setting( 'close_border_color' ) ),
+			'border-radius' => "{$this->get_setting('close_border_radius')}px",
+			'box-shadow'    => PUM_Utils_CSS::box_shadow_style( $this->get_setting( 'close_boxshadow_horizontal' ), $this->get_setting( 'close_boxshadow_vertical' ), $this->get_setting( 'close_boxshadow_blur' ), $this->get_setting( 'close_boxshadow_spread' ), $this->get_setting( 'close_boxshadow_color' ), $this->get_setting( 'close_boxshadow_opacity' ), $this->get_setting( 'close_boxshadow_inset' ) ),
+			'text-shadow'   => PUM_Utils_CSS::text_shadow_style( $this->get_setting( 'close_textshadow_horizontal' ), $this->get_setting( 'close_textshadow_vertical' ), $this->get_setting( 'close_textshadow_blur' ), $this->get_setting( 'close_textshadow_color' ), $this->get_setting( 'close_textshadow_opacity' ) ),
+		);
+
+		if ( ! empty( $this->get_setting( 'close_background_color' ) ) ) {
+			$styles['close']['background-color'] = PUM_Utils_CSS::hex2rgba( $this->get_setting( 'close_background_color' ), $this->get_setting( 'close_background_opacity' ) );
+		}
+
+		switch ( $this->get_setting( 'close_location' ) ) {
+			case "topleft":
+				$styles['close']['top']  = "{$this->get_setting('close_position_top')}px";
+				$styles['close']['left'] = "{$this->get_setting('close_position_left')}px";
+				break;
+			case "topright":
+				$styles['close']['top']   = "{$this->get_setting('close_position_top')}px";
+				$styles['close']['right'] = "{$this->get_setting('close_position_right')}px";
+				break;
+			case "bottomleft":
+				$styles['close']['bottom'] = "{$this->get_setting('close_position_bottom')}px";
+				$styles['close']['left']   = "{$this->get_setting('close_position_left')}px";
+				break;
+			case "bottomright":
+				$styles['close']['bottom'] = "{$this->get_setting('close_position_bottom')}px";
+				$styles['close']['right']  = "{$this->get_setting('close_position_right')}px";
+				break;
+		}
+
+		$theme = array(
+			'overlay'   => $this->_dep_get_settings_group( 'overlay' ),
+			'container' => $this->_dep_get_settings_group( 'container' ),
+			'title'     => $this->_dep_get_settings_group( 'title' ),
+			'content'   => $this->_dep_get_settings_group( 'content' ),
+			'close'     => $this->_dep_get_settings_group( 'close' ),
+		);
+
+		/** @deprecated 1.8.0 filter */
+		$styles = apply_filters( 'popmake_generate_theme_styles', $styles, $this->ID, $theme );
+
+		return apply_filters( 'pum_theme_get_generated_styles', $styles, $this->ID );
+	}
+
+
 	/**
 	 * Retrieve settings in the form of deprecated grouped arrays.
 	 *

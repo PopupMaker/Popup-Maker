@@ -243,7 +243,6 @@ class Popup_Maker {
 
 		require_once self::$DIR . 'includes/functions.php';
 
-
 		/** General Functions */
 		require_once self::$DIR . 'includes/functions/cache.php';
 		require_once self::$DIR . 'includes/functions/options.php';
@@ -259,8 +258,23 @@ class Popup_Maker {
 
 		/** Popup Theme functions */
 		require_once self::$DIR . 'includes/themes/conditionals.php';
+		require_once self::$DIR . 'includes/themes/deprecated.php';
 		require_once self::$DIR . 'includes/themes/getters.php';
 		require_once self::$DIR . 'includes/themes/queries.php';
+		require_once self::$DIR . 'includes/themes/template.php';
+
+		/** Deprecated functionality */
+		require_once self::$DIR . 'includes/deprecated-functions.php';
+
+
+
+
+		// Old Stuff.
+
+
+
+
+
 
 		// TODO Find another place for these admin functions so this can be put in its correct place.
 		require_once self::$DIR . 'includes/admin/admin-pages.php';
@@ -273,7 +287,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/input-options.php';
 		require_once self::$DIR . 'includes/theme-functions.php';
 		require_once self::$DIR . 'includes/misc-functions.php';
-		require_once self::$DIR . 'includes/css-functions.php';
 		require_once self::$DIR . 'includes/ajax-calls.php';
 
 		require_once self::$DIR . 'includes/importer/easy-modal-v2.php';

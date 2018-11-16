@@ -31,12 +31,12 @@ function pum_get_theme_id( $theme_id = 0 ) {
  *
  * @return string
  */
-function pum_get_theme_name( $theme_id = 0 ) {
+function pum_get_theme_generated_styles( $theme_id = 0 ) {
 	$theme = pum_get_theme( $theme_id );
 
 	if ( ! pum_is_theme_object( $theme ) ) {
 		return "";
 	}
 
-	return $theme->get_title();
+	return $theme->get_generated_styles();
 }
