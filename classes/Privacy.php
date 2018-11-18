@@ -44,7 +44,8 @@ class PUM_Privacy {
 			<p class="privacy-policy-tutorial"><?php _e( 'Hello,', 'popup-maker' ); ?></p> <p class="privacy-policy-tutorial"><?php _e( 'This information serves as a guide on what sections need to be modified due to usage of Popup Maker and its extensions.', 'popup-maker' ); ?></p>
 			<p class="privacy-policy-tutorial"><?php _e( 'You should include the information below in the correct sections of you privacy policy.', 'popup-maker' ); ?></p>
 			<p class="privacy-policy-tutorial"><strong> <?php _e( 'Disclaimer:', 'popup-maker' ); ?></strong> <?php _e( 'This information is only for guidance and not to be considered as legal advice.', 'popup-maker' ); ?></p>
-			<p class="privacy-policy-tutorial"><strong> <?php _e( 'Note:', 'popup-maker' ); ?></strong> <?php _e( 'Some of the information below is dynamically generated, such as cookies. If you add or change popups you will see those additions or changes below and will need to update your policy accordingly.', 'popup-maker' ); ?></p>
+			<p class="privacy-policy-tutorial"><strong> <?php _e( 'Note:', 'popup-maker' ); ?></strong> <?php _e( 'Some of the information below is dynamically generated, such as cookies. If you add or change popups you will see those additions or changes below and will need to update your policy accordingly.', 'popup-maker' ); ?>
+			</p>
 
 			<h2><?php _e( 'What personal data we collect and why we collect it', 'popup-maker' ); ?></h2>
 
@@ -391,24 +392,25 @@ class PUM_Privacy {
 	 * @return array
 	 */
 	public static function get_all_cookies() {
-		$popups  = PUM_Popups::get_all();
 		$cookies = array();
 
-		if ( $popups->have_posts() ) {
-			while ( $popups->have_posts() ) : $popups->next_post();
-				// Set this popup as the global $current.
-				pum()->current_popup = $popups->post;
+		$popups  = pum_get_all_popups();
 
-				$popup = pum_get_popup( $popups->post->ID );
+		if ( ! empty( $popups ) ) {
+
+			foreach ( $popups as $popup ) {
 
 				if ( ! pum_is_popup( $popup ) ) {
 					continue;
 				}
 
-				$pcookies = $popup->get_setting( 'cookies', array() );
+				// Set this popup as the global $current.
+				pum()->current_popup = $popup;
+				
+				$popup_cookies = $popup->get_setting( 'cookies', array() );
 
-				if ( ! empty( $pcookies ) ) {
-					foreach ( $pcookies as $cookie ) {
+				if ( ! empty( $popup_cookies ) ) {
+					foreach ( $popup_cookies as $cookie ) {
 						if ( ! empty ( $cookie['settings']['name'] ) ) {
 							$current_time = 0;
 							if ( ! empty( $cookies[ $cookie['settings']['name'] ] ) ) {
@@ -430,7 +432,7 @@ class PUM_Privacy {
 						}
 					}
 				}
-			endwhile;
+			}
 
 			// Clear the global $current.
 			pum()->current_popup = null;

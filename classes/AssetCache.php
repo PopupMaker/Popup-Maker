@@ -182,32 +182,33 @@ class PUM_AssetCache {
 			),
 		);
 
-		$query = PUM_Popups::get_all();
+		$popups = pum_get_all_popups();
 
-		if ( $query->have_posts() ) {
-			while ( $query->have_posts() ) : $query->next_post();
+		if ( ! empty( $popups ) ) {
+			foreach ( $popups as $popup ) {
 				// Set this popup as the global $current.
-				pum()->current_popup = $query->post;
+				pum()->current_popup = $popup;
 
 				// Preprocess the content for shortcodes that need to enqueue their own assets.
-				PUM_Helpers::do_shortcode( $query->post->post_content );
+				PUM_Helpers::do_shortcode( $popup->post_content );
 
 				ob_start();
 
 				// Allow per popup JS additions.
-				do_action( 'pum_generate_popup_js', $query->post->ID );
+				do_action( 'pum_generate_popup_js', $popup->ID );
 
 				$popup_js = ob_get_clean();
 
 				if ( ! empty( $popup_js ) ) {
-					$js[ 'popup-' . $query->post->ID ] = array(
+					$js[ 'popup-' . $popup->ID ] = array(
 						'content' => $popup_js,
 					);
 				}
-			endwhile;
+			}
 
 			// Clear the global $current.
 			pum()->current_popup = null;
+
 		}
 
 		$js = apply_filters( 'pum_generated_js', $js );
@@ -315,19 +316,20 @@ class PUM_AssetCache {
 	 * @return string
 	 */
 	public static function generate_popup_styles() {
-		$query = PUM_Popups::get_all();
-
 		$popup_css = '';
 
-		if ( $query->have_posts() ) {
-			while ( $query->have_posts() ) : $query->next_post();
+		$popups = pum_get_all_popups();
+
+		if ( ! empty( $popups ) ) {
+
+			foreach ( $popups as $popup ) {
 				// Set this popup as the global $current.
-				pum()->current_popup = $query->post;
+				pum()->current_popup = $popup;
 
 				// Preprocess the content for shortcodes that need to enqueue their own assets.
-				PUM_Helpers::do_shortcode( $query->post->post_content );
+				PUM_Helpers::do_shortcode( $popup->post_content );
 
-				$popup = pum_get_popup( $query->post->ID );
+				$popup = pum_get_popup( $popup->ID );
 
 				if ( ! pum_is_popup( $popup ) ) {
 					continue;
@@ -345,10 +347,11 @@ class PUM_AssetCache {
 
 				$popup_css .= ob_get_clean();
 
-			endwhile;
+			}
 
 			// Clear the global $current.
 			pum()->current_popup = null;
+
 		}
 
 		return $popup_css;
@@ -407,7 +410,7 @@ class PUM_AssetCache {
 		$google_fonts = array();
 
 		foreach ( popmake_get_all_popup_themes() as $theme ) {
-			$google_fonts = array_merge( $google_fonts, pum_get_theme($theme->ID )->get_google_fonts_used() );
+			$google_fonts = array_merge( $google_fonts, pum_get_theme( $theme->ID )->get_google_fonts_used() );
 		}
 
 		if ( ! empty( $google_fonts ) && ! pum_get_option( 'disable_google_font_loading', false ) ) {

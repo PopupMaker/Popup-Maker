@@ -57,7 +57,7 @@ class PUM_Site_Popups {
 
 		if ( $new_popup !== false ) {
 			pum()->current_popup = $new_popup;
-			$popup         = $new_popup;
+			$popup               = $new_popup;
 		}
 
 		return pum()->current_popup;
@@ -88,25 +88,27 @@ class PUM_Site_Popups {
 			return;
 		}
 
-		// TODO Replace this with PUM_Popup::query when available.
-		$query = PUM_Popups::get_all();
 
-		if ( $query->have_posts() ) {
-			while ( $query->have_posts() ) : $query->next_post();
+		$popups = pum_get_all_popups();
 
+		if ( ! empty( $popups ) ) {
+
+			foreach ( $popups as $popup ) {
 				// Set this popup as the global $current.
-				pum()->current_theme = $query->post;
+				pum()->current_theme = $popup;
 
 				// If the popup is loadable (passes conditions) load it.
-				if ( pum_is_popup_loadable( $query->post->ID ) ) {
-					self::preload_popup( $query->post );
+				if ( pum_is_popup_loadable( $popup->ID ) ) {
+					self::preload_popup( $popup );
 				}
 
-			endwhile;
+			}
 
 			// Clear the global $current.
 			pum()->current_popup = null;
+
 		}
+
 	}
 
 	/**
@@ -133,6 +135,7 @@ class PUM_Site_Popups {
 		do_action( 'popmake_preload_popup', $popup->ID );
 	}
 
+	// REWRITE THIS
 	public static function load_popup( $id ) {
 		if ( did_action( 'wp_head' ) && ! in_array( $id, self::$loaded_ids ) ) {
 			$args1 = array(
@@ -142,7 +145,7 @@ class PUM_Site_Popups {
 			$query = new WP_Query( $args1 );
 			if ( $query->have_posts() ) {
 				while ( $query->have_posts() ) : $query->next_post();
-					pum()->current_popup =$query->post;
+					pum()->current_popup = $query->post;
 					self::preload_popup( $query->post );
 				endwhile;
 				pum()->current_popup = null;

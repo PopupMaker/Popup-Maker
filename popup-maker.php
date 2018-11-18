@@ -483,7 +483,7 @@ function PopMake() {
  *
  * @since      1.8.0
  *
- * @return object The one true Popup_Maker Instance
+ * @return Popup_Maker
  */
 function pum() {
 	return Popup_Maker::instance();
