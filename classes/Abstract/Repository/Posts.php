@@ -43,6 +43,10 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 		$this->reset_strict_query_args();
 	}
 
+	public function __construct() {
+		$this->init();
+	}
+
 	/**
 	 * @return array
 	 */
