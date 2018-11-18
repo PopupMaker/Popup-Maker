@@ -178,7 +178,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 		$this->query->query( $args );
 
 		/** @var array $posts */
-		$posts = $this->query->posts;
+		$posts = (array) $this->query->posts;
 
 		/**
 		 * Only convert to models if the model set is valid and not the WP_Post default.
