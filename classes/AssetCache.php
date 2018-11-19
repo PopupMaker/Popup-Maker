@@ -445,7 +445,7 @@ class PUM_AssetCache {
 		$styles = '';
 
 		foreach ( popmake_get_all_popup_themes() as $theme ) {
-			$theme_styles = pum_render_theme_styles( $theme->ID );
+			$theme_styles = pum_get_rendered_theme_styles( $theme->ID );
 
 			if ( $theme_styles != '' ) {
 				$styles .= "/* Popup Theme " . $theme->ID . ": " . $theme->post_title . " */\r\n";

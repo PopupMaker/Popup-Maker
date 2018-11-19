@@ -12,45 +12,50 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return string
  */
-function pum_render_theme_styles( $theme_id ) {
+function pum_get_rendered_theme_styles( $theme_id ) {
 	$styles = '';
 
-	$theme_data = get_post( $theme_id );
-	$slug       = $theme_data->post_name != $theme_id ? $theme_data->post_name : false;
+	$theme = pum_get_theme( $theme_id );
 
+	$slug = $theme->post_name;
 
-	$theme_styles = pum_get_theme_generated_styles( $theme_id );
+	$theme_styles = $theme->get_generated_styles();
 
 	if ( empty( $theme_styles ) ) {
-		return '';
+		return $styles;
 	}
 
 	foreach ( $theme_styles as $element => $rules ) {
 		switch ( $element ) {
+
 			case 'overlay':
 				$rule = ".pum-theme-{$theme_id}";
 				if ( $slug ) {
 					$rule .= ", .pum-theme-{$slug}";
 				}
 				break;
+
 			case 'container':
 				$rule = ".pum-theme-{$theme_id} .pum-container";
 				if ( $slug ) {
 					$rule .= ", .pum-theme-{$slug} .pum-container";
 				}
 				break;
+
 			case 'close':
 				$rule = ".pum-theme-{$theme_id} .pum-content + .pum-close";
 				if ( $slug ) {
 					$rule .= ", .pum-theme-{$slug} .pum-content + .pum-close";
 				}
 				break;
+
 			default:
 				$rule = ".pum-theme-{$theme_id} .pum-{$element}";
 				if ( $slug ) {
 					$rule .= ", .pum-theme-{$slug} .pum-{$element}";
 				}
 				break;
+
 		}
 
 		$rule_set = $sep = '';

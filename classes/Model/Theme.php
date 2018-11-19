@@ -140,6 +140,9 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		return $fonts_used;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function get_generated_styles() {
 
 		$styles = array(
@@ -250,9 +253,9 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		);
 
 		/** @deprecated 1.8.0 filter */
-		$styles = apply_filters( 'popmake_generate_theme_styles', $styles, $this->ID, $theme );
+		$styles = (array) apply_filters( 'popmake_generate_theme_styles', (array) $styles, $this->ID, $theme );
 
-		return apply_filters( 'pum_theme_get_generated_styles', $styles, $this->ID );
+		return (array) apply_filters( 'pum_theme_get_generated_styles', (array) $styles, $this->ID );
 	}
 
 

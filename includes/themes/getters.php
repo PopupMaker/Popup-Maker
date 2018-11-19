@@ -29,13 +29,13 @@ function pum_get_theme_id( $theme_id = 0 ) {
 /**
  * @param int $theme_id
  *
- * @return string
+ * @return array
  */
 function pum_get_theme_generated_styles( $theme_id = 0 ) {
 	$theme = pum_get_theme( $theme_id );
 
 	if ( ! pum_is_theme_object( $theme ) ) {
-		return "";
+		return array();
 	}
 
 	return $theme->get_generated_styles();
