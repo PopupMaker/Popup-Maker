@@ -248,11 +248,11 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/functions/options.php';
 		require_once self::$DIR . 'includes/functions/upgrades.php';
 		require_once self::$DIR . 'includes/functions/developers.php';
-		require_once self::$DIR . 'includes/migrations.php';
 
 		/** Popup functions */
 		require_once self::$DIR . 'includes/popups/conditionals.php';
 		require_once self::$DIR . 'includes/popups/deprecated.php';
+		require_once self::$DIR . 'includes/popups/migrations.php';
 		require_once self::$DIR . 'includes/popups/getters.php';
 		require_once self::$DIR . 'includes/popups/queries.php';
 
@@ -260,6 +260,7 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/themes/conditionals.php';
 		require_once self::$DIR . 'includes/themes/deprecated.php';
 		require_once self::$DIR . 'includes/themes/getters.php';
+		require_once self::$DIR . 'includes/themes/migrations.php';
 		require_once self::$DIR . 'includes/themes/queries.php';
 		require_once self::$DIR . 'includes/themes/template.php';
 

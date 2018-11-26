@@ -10,7 +10,7 @@
  *
  * @return bool
  */
-function pum_passive_popups_enabled() {
+function pum_passive_popup_upgrades_enabled() {
 	/** @var int $popup_count */
 	static $popup_count;
 
@@ -22,20 +22,11 @@ function pum_passive_popups_enabled() {
 		$popup_count = get_transient( 'pum_popup_count' );
 
 		if ( $popup_count === false ) {
-
-			$popups = get_posts( array(
+			$popup_count = pum_count_popups( array(
 				'post_status'    => array( 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ),
-				'post_type'      => 'popup',
-				'fields'         => 'ids',
-				'posts_per_page' => - 1,
-				'orderby'        => 'ID',
-				'order'          => 'ASC',
 			) );
 
-			$popup_count = ! empty( $popups ) ? count( $popups ) : 0;
-
 			set_transient( 'pum_popup_count', $popup_count, HOUR_IN_SECONDS * 24 );
-
 		}
 	}
 

@@ -324,40 +324,80 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 */
 	public function remapped_meta_settings_keys( $group ) {
 		$remapped_meta_settings_keys = array(
-			'display' => array(
-				'stackable'                 => 'stackable',
-				'overlay_disabled'          => 'overlay_disabled',
-				'scrollable_content'        => 'scrollable_content',
-				'disable_reposition'        => 'disable_reposition',
-				'size'                      => 'size',
-				'responsive_min_width'      => 'responsive_min_width',
-				'responsive_min_width_unit' => 'responsive_min_width_unit',
-				'responsive_max_width'      => 'responsive_max_width',
-				'responsive_max_width_unit' => 'responsive_max_width_unit',
-				'custom_width'              => 'custom_width',
-				'custom_width_unit'         => 'custom_width_unit',
-				'custom_height'             => 'custom_height',
-				'custom_height_unit'        => 'custom_height_unit',
-				'custom_height_auto'        => 'custom_height_auto',
-				'location'                  => 'location',
-				'position_from_trigger'     => 'position_from_trigger',
-				'position_top'              => 'position_top',
-				'position_left'             => 'position_left',
-				'position_bottom'           => 'position_bottom',
-				'position_right'            => 'position_right',
-				'position_fixed'            => 'position_fixed',
-				'animation_type'            => 'animation_type',
-				'animation_speed'           => 'animation_speed',
-				'animation_origin'          => 'animation_origin',
-				'overlay_zindex'            => 'overlay_zindex',
-				'zindex'                    => 'zindex',
+			'overlay'   => array(
+				'background_color'   => 'overlay_background_color',
+				'background_opacity' => 'overlay_background_opacity',
 			),
-			'close'   => array(
-				'text'          => 'close_text',
-				'button_delay'  => 'close_button_delay',
-				'overlay_click' => 'close_on_overlay_click',
-				'esc_press'     => 'close_on_esc_press',
-				'f4_press'      => 'close_on_f4_press',
+			'container' => array(
+				'padding'              => 'container_padding',
+				'background_color'     => 'container_background_color',
+				'background_opacity'   => 'container_background_opacity',
+				'border_style'         => 'container_border_style',
+				'border_color'         => 'container_border_color',
+				'border_width'         => 'container_border_width',
+				'border_radius'        => 'container_border_radius',
+				'boxshadow_inset'      => 'container_boxshadow_inset',
+				'boxshadow_horizontal' => 'container_boxshadow_horizontal',
+				'boxshadow_vertical'   => 'container_boxshadow_vertical',
+				'boxshadow_blur'       => 'container_boxshadow_blur',
+				'boxshadow_spread'     => 'container_boxshadow_spread',
+				'boxshadow_color'      => 'container_boxshadow_color',
+				'boxshadow_opacity'    => 'container_boxshadow_opacity',
+			),
+			'title'     => array(
+				'font_color'            => 'title_font_color',
+				'line_height'           => 'title_line_height',
+				'font_size'             => 'title_font_size',
+				'font_family'           => 'title_font_family',
+				'font_weight'           => 'title_font_weight',
+				'font_style'            => 'title_font_style',
+				'text_align'            => 'title_text_align',
+				'textshadow_horizontal' => 'title_textshadow_horizontal',
+				'textshadow_vertical'   => 'title_textshadow_vertical',
+				'textshadow_blur'       => 'title_textshadow_blur',
+				'textshadow_color'      => 'title_textshadow_color',
+				'textshadow_opacity'    => 'title_textshadow_opacity',
+			),
+			'content'   => array(
+				'font_color'  => 'content_font_color',
+				'font_family' => 'content_font_family',
+				'font_weight' => 'content_font_weight',
+				'font_style'  => 'content_font_style',
+			),
+			'close'     => array(
+				'text'                  => 'close_text',
+				'location'              => 'close_location',
+				'position_top'          => 'close_position_top',
+				'position_left'         => 'close_position_left',
+				'position_bottom'       => 'close_position_bottom',
+				'position_right'        => 'close_position_right',
+				'padding'               => 'close_padding',
+				'height'                => 'close_height',
+				'width'                 => 'close_width',
+				'background_color'      => 'close_background_color',
+				'background_opacity'    => 'close_background_opacity',
+				'font_color'            => 'close_font_color',
+				'line_height'           => 'close_line_height',
+				'font_size'             => 'close_font_size',
+				'font_family'           => 'close_font_family',
+				'font_weight'           => 'close_font_weight',
+				'font_style'            => 'close_font_style',
+				'border_style'          => 'close_border_style',
+				'border_color'          => 'close_border_color',
+				'border_width'          => 'close_border_width',
+				'border_radius'         => 'close_border_radius',
+				'boxshadow_inset'       => 'close_boxshadow_inset',
+				'boxshadow_horizontal'  => 'close_boxshadow_horizontal',
+				'boxshadow_vertical'    => 'close_boxshadow_vertical',
+				'boxshadow_blur'        => 'close_boxshadow_blur',
+				'boxshadow_spread'      => 'close_boxshadow_spread',
+				'boxshadow_color'       => 'close_boxshadow_color',
+				'boxshadow_opacity'     => 'close_boxshadow_opacity',
+				'textshadow_horizontal' => 'close_textshadow_horizontal',
+				'textshadow_vertical'   => 'close_textshadow_vertical',
+				'textshadow_blur'       => 'close_textshadow_blur',
+				'textshadow_color'      => 'close_textshadow_color',
+				'textshadow_opacity'    => 'close_textshadow_opacity',
 			),
 		);
 
@@ -374,7 +414,6 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 			return;
 		}
 
-		// REVIEW Does this need to be here or somewhere else like get_meta/get_setting?
 		if ( ! isset( $this->data_version ) ) {
 			$this->data_version = (int) $this->get_meta( 'data_version' );
 
@@ -393,7 +432,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 			}
 		}
 
-		if ( $this->data_version < $this->model_version && pum_passive_popups_enabled() ) {
+		if ( $this->data_version < $this->model_version && pum_passive_theme_upgrades_enabled() ) {
 			/**
 			 * Process passive settings migration as each popup is loaded. The will only run each migration routine once for each popup.
 			 */
@@ -408,6 +447,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		$this->doing_passive_migration = true;
 
 		for ( $i = $this->data_version; $this->data_version < $this->model_version; $i ++ ) {
+			// Process migration for current version. ex. current version is 2, runs pum_theme_passive_migration_2.
 			do_action_ref_array( 'pum_theme_passive_migration_' . $this->data_version, array( &$this ) );
 			$this->data_version ++;
 
