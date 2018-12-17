@@ -244,20 +244,21 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 				break;
 		}
 
-		$theme = array(
+		/** @deprecated 1.8.0 filter */
+		$styles = (array) apply_filters( 'popmake_generate_theme_styles', (array) $styles, $this->ID, $this->get_deprecated_settings() );
+
+		return (array) apply_filters( 'pum_theme_get_generated_styles', (array) $styles, $this->ID );
+	}
+
+	public function get_deprecated_settings() {
+		return array(
 			'overlay'   => $this->_dep_get_settings_group( 'overlay' ),
 			'container' => $this->_dep_get_settings_group( 'container' ),
 			'title'     => $this->_dep_get_settings_group( 'title' ),
 			'content'   => $this->_dep_get_settings_group( 'content' ),
 			'close'     => $this->_dep_get_settings_group( 'close' ),
 		);
-
-		/** @deprecated 1.8.0 filter */
-		$styles = (array) apply_filters( 'popmake_generate_theme_styles', (array) $styles, $this->ID, $theme );
-
-		return (array) apply_filters( 'pum_theme_get_generated_styles', (array) $styles, $this->ID );
 	}
-
 
 	/**
 	 * Retrieve settings in the form of deprecated grouped arrays.
@@ -268,7 +269,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 * @return mixed
 	 */
 	public function _dep_get_settings_group( $group, $key = null ) {
-		if ( ! $this->$group ) {
+		if ( ! isset( $this->$group ) ) {
 			/**
 			 * Remap old meta settings to new settings location for v1.7. This acts as a passive migration when needed.
 			 */
@@ -405,7 +406,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	}
 
 	/**
-	 * @param $post WP_Post
+	 * @param WP_Post $post
 	 */
 	public function setup( $post ) {
 		parent::setup( $post );
