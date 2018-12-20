@@ -58,7 +58,11 @@ function pum_cleanup_post_meta_keys( $post_id = 0, $keys_to_delete = array() ) {
 	 */
 	if ( ! empty( $keys_to_delete ) ) {
 		global $wpdb;
-		$query = $wpdb->prepare( "DELETE FROM `$wpdb->postmeta` WHERE `post_id` = %d AND `meta_key` IN (%s)", $post_id, "'" . implode( "','", $keys_to_delete ) . "'" );
+
+		$keys_to_delete = array_map( 'esc_sql', (array) $keys_to_delete );
+		$meta_keys = implode( "','", $keys_to_delete );
+
+		$query = $wpdb->prepare( "DELETE FROM `$wpdb->postmeta` WHERE `post_id` = %d AND `meta_key` IN ('{$meta_keys}')", $post_id );
 
 		$wpdb->query( $query );
 
