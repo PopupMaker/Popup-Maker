@@ -105,7 +105,7 @@ function pum_theme_migration_2( &$theme ) {
 
 			// Foreach old key, save the value under popup settings for the new key.
 			foreach ( $keys as $old_key => $new_key ) {
-				if ( isset( $element_data[ $old_key ] ) && ! empty( $element_data[ $old_key ] ) ) {
+				if ( isset( $element_data[ $old_key ] ) ) {
 					$settings[ $new_key ] = $element_data[ $old_key ];
 					$changed              = true;
 					unset( $element_data[ $old_key ] );

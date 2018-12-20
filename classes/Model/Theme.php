@@ -231,8 +231,6 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		$right  = "{$this->get_setting('close_position_right')}px";
 		$bottom = "{$this->get_setting('close_position_bottom')}px";
 
-		// TODO Need to add a html.admin-bar #pum-theme-1 .pum-close top + 43px rule for each popup theme with position outside active.
-
 		switch ( $this->get_setting( 'close_location' ) ) {
 			case "topleft":
 				$styles['close']['top']  = $top;
@@ -443,6 +441,10 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 			return;
 		}
 
+		if ( $this->ID === 5 ) {
+			$test = '1';
+		}
+
 		if ( ! isset( $this->data_version ) ) {
 			$this->data_version = (int) $this->get_meta( 'data_version' );
 
@@ -450,8 +452,8 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 				$theme_overlay_v1 = $this->get_meta( 'popup_theme_overlay_background_color' );
 				$theme_overlay_v2 = $this->get_meta( 'popup_theme_overlay' );
 
-				$is_v2 = ( ! empty( $theme_overlay_v2 ) && is_array( $theme_overlay_v2 ) );
-				$is_v1 = ! $is_v2 && ( ! empty( $theme_overlay_v1 ) && is_array( $theme_overlay_v1 ) );
+				$is_v2 = ! empty( $theme_overlay_v2 ) && is_array( $theme_overlay_v2 );
+				$is_v1 = ! $is_v2 && ! empty( $theme_overlay_v1 );
 
 				// If there are existing settings set the data version to 1/2 so they can be updated.
 				// Otherwise set to the current version as this is a new popup.
