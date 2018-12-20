@@ -45,7 +45,13 @@ class PUM_Utils_Fields {
 		$defaults = array();
 
 		foreach ( $fields as $field_id => $field ) {
-			$defaults[ $field_id ] = isset( $field['std'] ) ? $field['std'] : 'checkbox' === $field['type'] ? null : false;
+			switch( $field['type'] ) {
+				case 'checkbox':
+					$defaults[ $field_id ] = ! empty( $field['std'] ) ? $field['std'] : false;
+					break;
+				default:
+					$defaults[ $field_id ] = ! empty( $field['std'] ) ? $field['std'] : null;
+			}
 		}
 
 		return $defaults;
