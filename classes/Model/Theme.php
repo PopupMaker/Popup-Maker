@@ -202,6 +202,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		 * Close Styles
 		 */
 		$styles['close'] = array(
+			'position'      => $this->get_setting( 'close_position_outside' ) ? 'fixed' : 'absolute',
 			'height'        => empty( $this->get_setting( 'close_height' ) ) || $this->get_setting( 'close_height' ) <= 0 ? 'auto' : "{$this->get_setting('close_height')}px",
 			'width'         => empty( $this->get_setting( 'close_width' ) ) || $this->get_setting( 'close_width' ) <= 0 ? 'auto' : "{$this->get_setting('close_width')}px",
 			'left'          => 'auto',
@@ -225,22 +226,49 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 			$styles['close']['background-color'] = PUM_Utils_CSS::hex2rgba( $this->get_setting( 'close_background_color' ), $this->get_setting( 'close_background_opacity' ) );
 		}
 
+		$top    = "{$this->get_setting('close_position_top')}px";
+		$left   = "{$this->get_setting('close_position_left')}px";
+		$right  = "{$this->get_setting('close_position_right')}px";
+		$bottom = "{$this->get_setting('close_position_bottom')}px";
+
+		// TODO Need to add a html.admin-bar #pum-theme-1 .pum-close top + 43px rule for each popup theme with position outside active.
+
 		switch ( $this->get_setting( 'close_location' ) ) {
 			case "topleft":
-				$styles['close']['top']  = "{$this->get_setting('close_position_top')}px";
-				$styles['close']['left'] = "{$this->get_setting('close_position_left')}px";
+				$styles['close']['top']  = $top;
+				$styles['close']['left'] = $left;
+				break;
+			case "topcenter":
+				$styles['close']['top']       = $top;
+				$styles['close']['left']      =  "50%";
+				$styles['close']['transform'] = "translateX(-50%)";
 				break;
 			case "topright":
-				$styles['close']['top']   = "{$this->get_setting('close_position_top')}px";
-				$styles['close']['right'] = "{$this->get_setting('close_position_right')}px";
+				$styles['close']['top']   = $top;
+				$styles['close']['right'] = $right;
+				break;
+			case 'middleleft':
+				$styles['close']['top']       = "50%";
+				$styles['close']['left']      = $left;
+				$styles['close']['transform'] = "translateX(-50%)";
+				break;
+			case 'middleright':
+				$styles['close']['top']       = "50%";
+				$styles['close']['right']     = $right;
+				$styles['close']['transform'] = "translateX(-50%)";
 				break;
 			case "bottomleft":
-				$styles['close']['bottom'] = "{$this->get_setting('close_position_bottom')}px";
-				$styles['close']['left']   = "{$this->get_setting('close_position_left')}px";
+				$styles['close']['bottom'] = $bottom;
+				$styles['close']['left']   = $left;
+				break;
+			case "bottomcenter":
+				$styles['close']['bottom']    = $bottom;
+				$styles['close']['left']      = "50%";
+				$styles['close']['transform'] = "translateX(-50%)";
 				break;
 			case "bottomright":
-				$styles['close']['bottom'] = "{$this->get_setting('close_position_bottom')}px";
-				$styles['close']['right']  = "{$this->get_setting('close_position_right')}px";
+				$styles['close']['bottom'] = $bottom;
+				$styles['close']['right']  = $right;
 				break;
 		}
 

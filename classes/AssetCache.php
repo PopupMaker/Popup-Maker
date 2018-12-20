@@ -444,7 +444,10 @@ class PUM_AssetCache {
 	public static function generate_popup_theme_styles() {
 		$styles = '';
 
-		foreach ( popmake_get_all_popup_themes() as $theme ) {
+		$themes = pum_get_all_themes();
+
+		foreach ( $themes as $theme ) {
+
 			$theme_styles = pum_get_rendered_theme_styles( $theme->ID );
 
 			if ( $theme_styles != '' ) {
