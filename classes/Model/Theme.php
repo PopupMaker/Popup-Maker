@@ -116,22 +116,22 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		$google_fonts = PUM_Integration_GoogleFonts::fetch_fonts();
 
 		if ( ! empty( $settings['title_font_family'] ) && is_string( $settings['title_font_family'] ) && array_key_exists( $settings['title_font_family'], $google_fonts ) ) {
-			$variant = $settings['title_font_weight'] != 'normal' ? $settings['title_font_weight'] : '';
-			if ( $settings['title_font_style'] == 'italic' ) {
+			$variant = ! empty( $settings['title_font_weight'] ) && $settings['title_font_weight'] != 'normal' ? $settings['title_font_weight'] : '';
+			if ( isset( $settings['title_font_style'] ) && $settings['title_font_style'] == 'italic' ) {
 				$variant .= 'italic';
 			}
 			$fonts_used[ $settings['title_font_family'] ][ $variant ] = $variant;
 		}
 		if ( ! empty( $settings['content_font_family'] ) && is_string( $settings['content_font_family'] ) && array_key_exists( $settings['content_font_family'], $google_fonts ) ) {
-			$variant = $settings['content_font_weight'] != 'normal' ? $settings['content_font_weight'] : '';
-			if ( $settings['content_font_style'] == 'italic' ) {
+			$variant = ! empty( $settings['content_font_weight'] ) && $settings['content_font_weight'] != 'normal' ? $settings['content_font_weight'] : '';
+			if ( isset( $settings['content_font_style'] ) && $settings['content_font_style'] == 'italic' ) {
 				$variant .= 'italic';
 			}
 			$fonts_used[ $settings['content_font_family'] ][ $variant ] = $variant;
 		}
 		if ( ! empty( $settings['close_font_family'] ) && is_string( $settings['close_font_family'] ) && array_key_exists( $settings['close_font_family'], $google_fonts ) ) {
-			$variant = $settings['close_font_weight'] != 'normal' ? $settings['close_font_weight'] : '';
-			if ( $settings['close_font_style'] == 'italic' ) {
+			$variant = ! empty( $settings['close_font_weight'] ) && $settings['close_font_weight'] != 'normal' ? $settings['close_font_weight'] : '';
+			if ( isset( $settings['close_font_style'] ) && $settings['close_font_style'] == 'italic' ) {
 				$variant .= 'italic';
 			}
 			$fonts_used[ $settings['close_font_family'] ][ $variant ] = $variant;
