@@ -238,7 +238,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 				break;
 			case "topcenter":
 				$styles['close']['top']       = $top;
-				$styles['close']['left']      =  "50%";
+				$styles['close']['left']      = "50%";
 				$styles['close']['transform'] = "translateX(-50%)";
 				break;
 			case "topright":
@@ -452,12 +452,15 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 				$theme_overlay_v1 = $this->get_meta( 'popup_theme_overlay_background_color' );
 				$theme_overlay_v2 = $this->get_meta( 'popup_theme_overlay' );
 
-				$is_v2 = ! empty( $theme_overlay_v2 ) && is_array( $theme_overlay_v2 );
-				$is_v1 = ! $is_v2 && ! empty( $theme_overlay_v1 );
-
 				// If there are existing settings set the data version to 1/2 so they can be updated.
 				// Otherwise set to the current version as this is a new popup.
-				$this->data_version = $is_v2 ? 2 : ( $is_v1 ? 1 : $this->model_version );
+				if ( ! empty( $theme_overlay_v1 ) ) {
+					$this->data_version = 1;
+				} else if ( ! empty( $theme_overlay_v2 ) && is_array( $theme_overlay_v2 ) ) {
+					$this->data_version = 2;
+				} else {
+					$this->data_version = $this->model_version;
+				}
 
 				$this->update_meta( 'data_version', $this->data_version );
 			}
