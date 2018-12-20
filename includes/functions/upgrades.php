@@ -46,4 +46,23 @@ function pum_has_completed_upgrade( $upgrade_id = '' ) {
 	return PUM_Utils_Upgrades::instance()->has_completed_upgrade( $upgrade_id );
 }
 
+/**
+ * Clean up postmeta by removing all keys from the given post_id.
+ *
+ * @param int   $post_id
+ * @param array $keys_to_delete
+ */
+function pum_cleanup_post_meta_keys( $post_id = 0, $keys_to_delete = array() ) {
+	/**
+	 * Clean up automatically.
+	 */
+	if ( ! empty( $keys_to_delete ) ) {
+		global $wpdb;
+		$query = $wpdb->prepare( "DELETE FROM `$wpdb->postmeta` WHERE `post_id` = %d AND `meta_key` IN (%s)", $post_id, "'" . implode( "','", $keys_to_delete ) . "'" );
 
+		$wpdb->query( $query );
+
+		wp_cache_delete( $post_id, 'post_meta' );
+	}
+
+}
