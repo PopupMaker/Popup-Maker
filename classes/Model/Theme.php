@@ -287,7 +287,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 				$group_values[ $old_key ] = $this->get_setting( $new_key );
 			}
 
-			$deprecated_values = popmake_get_popup_theme_meta_group( $group, $this->ID );
+			$deprecated_values = pum_get_theme_v1_meta( $group, $this->ID );
 
 			if ( ! empty( $deprecated_values ) ) {
 				foreach ( $deprecated_values as $old_key => $value ) {
