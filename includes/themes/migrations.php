@@ -34,6 +34,44 @@ function pum_passive_theme_upgrades_enabled() {
 }
 
 /**
+ * Upgrade popup data to model v2.
+ *
+ * @since 1.8.0
+ *
+ * @param PUM_Model_Theme $theme
+ */
+function pum_theme_migration_1( &$theme ) {
+
+	$delete_meta = array( 'popup_theme_defaults_set' );
+
+	// Used to merge with existing values to ensure data integrity.
+	$meta_defaults = pum_get_theme_v2_meta_defaults();
+
+	foreach ( array_keys( $meta_defaults ) as $group ) {
+		// Get old data.
+		$v1_meta_values = pum_get_theme_v1_meta( $group, $theme->ID );
+
+		// Merge defaults.
+		$values = wp_parse_args( $v1_meta_values, $meta_defaults[ $group ] );
+
+		// Update meta storage.
+		$theme->update_meta( "popup_theme_{$group}", $values );
+
+		// Loop over all fields which were merged and mark their meta keys for deletion.
+		foreach ( $v1_meta_values as $old_meta_key => $old_meta_value ) {
+			$delete_meta[] = "popup_theme_{$group}_{$old_meta_key}";
+		}
+	}
+
+	/**
+	 * Clean up automatically.
+	 */
+	pum_cleanup_post_meta_keys( $theme->ID, $delete_meta );
+}
+
+add_action( 'pum_theme_passive_migration_1', 'pum_theme_migration_1' );
+
+/**
  * Upgrade popup data to model v3.
  *
  * @since 1.8.0
@@ -94,11 +132,7 @@ function pum_theme_migration_2( &$theme ) {
 	/**
 	 * Clean up automatically.
 	 */
-	if ( ! empty( $delete_meta ) ) {
-		foreach ( $delete_meta as $key ) {
-			//$theme->delete_meta( $key );
-		}
-	}
+	pum_cleanup_post_meta_keys( $theme->ID, $delete_meta );
 }
 
 add_action( 'pum_theme_passive_migration_2', 'pum_theme_migration_2' );
