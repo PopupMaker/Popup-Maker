@@ -104,6 +104,7 @@ There are several common causes for this which include:
 = v1.8.0 - 01/??/2019 =
 * Feature: Added support for Gutenberg editor when creating popups.
 * Fix: Condition options for BuddyPress integration had values & labels switched.
+* Fix: Bug with Gravity Forms Personal Data menu item missing.
 
 = v1.7.30 - 09/06/2018 =
 * Improvement: Further added methods to log unique messages only once.

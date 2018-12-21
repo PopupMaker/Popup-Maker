@@ -48,7 +48,7 @@ class PUM_Gravity_Forms_Integation {
 
 
 	public static function settings_menu( $setting_tabs ) {
-		$setting_tabs['40'] = array(
+		$setting_tabs['998.002'] = array(
 			'name'  => 'popup-maker',
 			'label' => __( 'Popup Maker', 'popup-maker' ),
 		);
