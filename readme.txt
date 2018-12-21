@@ -101,7 +101,8 @@ There are several common causes for this which include:
 
 == Changelog ==
 
-= v1.7.31 - ??/??/2018 =
+= v1.8.0 - 01/??/2019 =
+* Feature: Added support for Gutenberg editor when creating popups.
 * Fix: Condition options for BuddyPress integration had values & labels switched.
 
 = v1.7.30 - 09/06/2018 =
