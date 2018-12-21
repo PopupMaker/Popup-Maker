@@ -105,6 +105,8 @@ There are several common causes for this which include:
 * Feature: New popup theme settings:
   * New close button positions top center, bottom center, middle left & middle right.
   * New option to position close button outside of popup.
+* Feature: Added support for Gutenberg editor when creating popups.
+* Fix: Condition options for BuddyPress integration had values & labels switched.
 
 = v1.7.30 - 09/06/2018 =
 * Improvement: Further added methods to log unique messages only once.
