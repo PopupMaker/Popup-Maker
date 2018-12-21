@@ -14,4 +14,15 @@
     /* Fix for pum-schedules js error. Remove once updated. */
     window.PUMTriggers.new_schedule = -1;
 
+    /**
+     * This needs to be preserved for backward compatibility.
+     *
+     * @deprecated 1.8.0
+     * @remove 1.9.0
+     */
+    window.PopMakeAdmin = {
+        update_theme: function () {
+            return PUM_Admin.themeEditor.refresh_preview();
+        }
+    };
 }(jQuery));

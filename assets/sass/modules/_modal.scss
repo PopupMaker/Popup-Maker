@@ -1,6 +1,6 @@
-$plugin_prefix: 'plugin' !default;
+$plugin-prefix: 'plugin' !default;
 
-.#{$plugin_prefix}-modal-background {
+.#{$plugin-prefix}-modal-background {
 
   &, &:before, &:after,
   & *, & *:before, & *:after {
@@ -21,7 +21,7 @@ $plugin_prefix: 'plugin' !default;
   z-index: 100100;
   overflow-y: scroll;
 
-  .#{$plugin_prefix}-modal-wrap {
+  .#{$plugin-prefix}-modal-wrap {
     position: absolute;
     top: 60px;
     margin-bottom: 60px;
@@ -43,7 +43,7 @@ $plugin_prefix: 'plugin' !default;
     }
   }
 
-  .#{$plugin_prefix}-modal-header {
+  .#{$plugin-prefix}-modal-header {
     position: absolute;
     top: 0;
     right: 0;
@@ -56,7 +56,7 @@ $plugin_prefix: 'plugin' !default;
     background: #fcfcfc;
     border-bottom: 1px solid #dfdfdf;
 
-    .#{$plugin_prefix}-modal-close {
+    .#{$plugin-prefix}-modal-close {
       position: absolute;
       top: 0;
       right: 0;
@@ -83,7 +83,7 @@ $plugin_prefix: 'plugin' !default;
 
   }
 
-  .#{$plugin_prefix}-modal-content {
+  .#{$plugin-prefix}-modal-content {
     padding: 52px 16px 60px;
 
     div.error {
@@ -101,7 +101,7 @@ $plugin_prefix: 'plugin' !default;
     }
   }
 
-  .#{$plugin_prefix}-modal-footer {
+  .#{$plugin-prefix}-modal-footer {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -137,7 +137,7 @@ $plugin_prefix: 'plugin' !default;
       }
     }
 
-    .#{$plugin_prefix}-submit {
+    .#{$plugin-prefix}-submit {
       line-height: 23px;
       float: right;
 
@@ -157,7 +157,7 @@ $plugin_prefix: 'plugin' !default;
 
   &.tabbed-content {
 
-    .#{$plugin_prefix}-modal-content {
+    .#{$plugin-prefix}-modal-content {
       padding: 36px 0 44px;
     }
   }

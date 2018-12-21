@@ -10,7 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class PUM_Model_Popup
  *
- *
  * @since 1.4
  */
 class PUM_Model_Popup extends PUM_Abstract_Model_Post {
@@ -530,7 +529,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 				'display'    => $this->get_display(),
 				'close'      => $this->get_close(),
 				// Added here for backward compatibility in extensions.
-				'click_open' => popmake_get_popup_click_open( $this->ID ),
+				'click_open' => popmake_get_popup_meta( 'click_open', $this->ID ),
 			),
 		);
 
@@ -551,7 +550,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	public function close_text() {
 		$text = $this->get_setting( 'close_text', '&#215;' );
 
-		$theme_text = popmake_get_popup_theme_close( $this->get_theme_id(), 'text', false );
+		$theme = pum_get_theme( $this->get_theme_id() );
+		$theme_text = $theme->get_setting( 'close_text' );
 
 		if ( empty( $text ) && ! empty( $theme_text ) ) {
 			$text = $theme_text;
@@ -995,7 +995,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			}
 		}
 
-		if ( $this->data_version < $this->model_version && pum_passive_popups_enabled() ) {
+		if ( $this->data_version < $this->model_version && pum_passive_popup_upgrades_enabled() ) {
 			/**
 			 * Process passive settings migration as each popup is loaded. The will only run each migration routine once for each popup.
 			 */

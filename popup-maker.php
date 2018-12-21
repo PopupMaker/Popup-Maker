@@ -243,24 +243,39 @@ class Popup_Maker {
 
 		require_once self::$DIR . 'includes/functions.php';
 
-
 		/** General Functions */
 		require_once self::$DIR . 'includes/functions/cache.php';
 		require_once self::$DIR . 'includes/functions/options.php';
 		require_once self::$DIR . 'includes/functions/upgrades.php';
 		require_once self::$DIR . 'includes/functions/developers.php';
-		require_once self::$DIR . 'includes/migrations.php';
 
 		/** Popup functions */
 		require_once self::$DIR . 'includes/popups/conditionals.php';
 		require_once self::$DIR . 'includes/popups/deprecated.php';
+		require_once self::$DIR . 'includes/popups/migrations.php';
 		require_once self::$DIR . 'includes/popups/getters.php';
 		require_once self::$DIR . 'includes/popups/queries.php';
 
 		/** Popup Theme functions */
 		require_once self::$DIR . 'includes/themes/conditionals.php';
+		require_once self::$DIR . 'includes/themes/deprecated.php';
 		require_once self::$DIR . 'includes/themes/getters.php';
+		require_once self::$DIR . 'includes/themes/migrations.php';
 		require_once self::$DIR . 'includes/themes/queries.php';
+		require_once self::$DIR . 'includes/themes/template.php';
+
+		/** Deprecated functionality */
+		require_once self::$DIR . 'includes/deprecated-functions.php';
+
+
+
+
+		// Old Stuff.
+
+
+
+
+
 
 		// TODO Find another place for these admin functions so this can be put in its correct place.
 		require_once self::$DIR . 'includes/admin/admin-pages.php';
@@ -268,17 +283,14 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/actions.php';
 		require_once self::$DIR . 'includes/class-popmake-cron.php';
 		require_once self::$DIR . 'includes/defaults.php';
-		require_once self::$DIR . 'includes/google-fonts.php';
 		require_once self::$DIR . 'includes/general-functions.php';
 		require_once self::$DIR . 'includes/extensions-functions.php';
 		require_once self::$DIR . 'includes/input-options.php';
 		require_once self::$DIR . 'includes/theme-functions.php';
 		require_once self::$DIR . 'includes/misc-functions.php';
-		require_once self::$DIR . 'includes/css-functions.php';
 		require_once self::$DIR . 'includes/ajax-calls.php';
 
 		require_once self::$DIR . 'includes/importer/easy-modal-v2.php';
-		require_once self::$DIR . 'includes/integrations/google-fonts.php';
 
 		require_once self::$DIR . 'includes/templates.php';
 		require_once self::$DIR . 'includes/load-popups.php';
@@ -287,14 +299,10 @@ class Popup_Maker {
 		// Phasing Out
 		require_once self::$DIR . 'includes/class-popmake-fields.php';
 		require_once self::$DIR . 'includes/class-popmake-popup-fields.php';
-		require_once self::$DIR . 'includes/class-popmake-popup-theme-fields.php';
-		require_once self::$DIR . 'includes/popup-functions.php';
-
 
 		/**
 		 * v1.4 Additions
 		 */
-		require_once self::$DIR . 'includes/class-pum.php';
 		require_once self::$DIR . 'includes/class-pum-popup-query.php';
 		require_once self::$DIR . 'includes/class-pum-fields.php';
 		require_once self::$DIR . 'includes/class-pum-form.php';
@@ -322,13 +330,6 @@ class Popup_Maker {
 
 		require_once self::$DIR . 'includes/admin/admin-setup.php';
 		require_once self::$DIR . 'includes/admin/admin-functions.php';
-		require_once self::$DIR . 'includes/admin/themes/metabox.php';
-		require_once self::$DIR . 'includes/admin/themes/metabox-close-fields.php';
-		require_once self::$DIR . 'includes/admin/themes/metabox-container-fields.php';
-		require_once self::$DIR . 'includes/admin/themes/metabox-content-fields.php';
-		require_once self::$DIR . 'includes/admin/themes/metabox-overlay-fields.php';
-		require_once self::$DIR . 'includes/admin/themes/metabox-title-fields.php';
-		require_once self::$DIR . 'includes/admin/themes/metabox-preview.php';
 		require_once self::$DIR . 'includes/admin/extensions/extensions-page.php';
 		require_once self::$DIR . 'includes/admin/pages/support.php';
 		require_once self::$DIR . 'includes/admin/metabox-support.php';
@@ -483,7 +484,7 @@ function PopMake() {
  *
  * @since      1.8.0
  *
- * @return object The one true Popup_Maker Instance
+ * @return Popup_Maker
  */
 function pum() {
 	return Popup_Maker::instance();

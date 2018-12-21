@@ -31,6 +31,12 @@ class PUM_Popups {
 	}
 
 
+	/**
+	 * @deprecated 1.8.0
+	 * @remove 1.9.0
+	 *
+	 * @return \WP_Query
+	 */
 	public static function get_all() {
 		static $query;
 
@@ -41,6 +47,12 @@ class PUM_Popups {
 		return $query;
 	}
 
+	/**
+	 * @deprecated 1.8.0
+	 * @remove 1.9.0
+	 *
+	 * @return \WP_Query
+	 */
 	public static function query( $args = array() ) {
 		$args = wp_parse_args( $args, array(
 			'post_type'      => 'popup',

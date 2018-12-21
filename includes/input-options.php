@@ -8,6 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// TODO LEFT OFF HERE!! MOVE THESE INTO  <-- Themes <--
+
 add_filter( 'popmake_size_unit_options', 'popmake_core_size_unit_options', 10 );
 function popmake_core_size_unit_options( $options ) {
 	return array_merge( $options, array(
@@ -19,54 +21,6 @@ function popmake_core_size_unit_options( $options ) {
 	) );
 }
 
-add_filter( 'popmake_border_style_options', 'popmake_core_border_style_options', 10 );
-function popmake_core_border_style_options( $options ) {
-	return array_merge( $options, array(
-		// option => value
-		__( 'None', 'popup-maker' )   => 'none',
-		__( 'Solid', 'popup-maker' )  => 'solid',
-		__( 'Dotted', 'popup-maker' ) => 'dotted',
-		__( 'Dashed', 'popup-maker' ) => 'dashed',
-		__( 'Double', 'popup-maker' ) => 'double',
-		__( 'Groove', 'popup-maker' ) => 'groove',
-		__( 'Inset', 'popup-maker' )  => 'inset',
-		__( 'Outset', 'popup-maker' ) => 'outset',
-		__( 'Ridge', 'popup-maker' )  => 'ridge',
-	) );
-}
-
-
-add_filter( 'popmake_font_family_options', 'popmake_core_font_family_options', 10 );
-function popmake_core_font_family_options( $options ) {
-	return array_merge( $options, array(
-		// option => value
-		__( 'Use Your Themes', 'popup-maker' ) => 'inherit',
-		'Sans-Serif'                           => 'Sans-Serif',
-		'Tahoma'                               => 'Tahoma',
-		'Georgia'                              => 'Georgia',
-		'Comic Sans MS'                        => 'Comic Sans MS',
-		'Arial'                                => 'Arial',
-		'Lucida Grande'                        => 'Lucida Grande',
-		'Times New Roman'                      => 'Times New Roman',
-	) );
-}
-
-
-add_filter( 'popmake_font_weight_options', 'popmake_core_font_weight_options', 10 );
-function popmake_core_font_weight_options( $options ) {
-	return array_merge( $options, array(
-		__( 'Normal', 'popup-maker' ) => '',
-		'100 '                        => '100',
-		'200 '                        => '200',
-		'300 '                        => '300',
-		'400 '                        => '400',
-		'500 '                        => '500',
-		'600 '                        => '600',
-		'700 '                        => '700',
-		'800 '                        => '800',
-		'900 '                        => '900',
-	) );
-}
 
 
 add_filter( 'popmake_font_style_options', 'popmake_core_font_style_options', 10 );

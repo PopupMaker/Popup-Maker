@@ -78,7 +78,7 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 				$_conditions = $conditions = array();
 
 				// Convert Conditions
-				$targeting_conditions = popmake_get_popup_targeting_condition( $popup->ID );
+				$targeting_conditions = popmake_get_popup_meta_group( 'targeting_condition', $popup->ID );
 
 				if ( empty( $targeting_conditions ) ) {
 					if ( $popup->post_status == 'publish' ) {

@@ -72,7 +72,6 @@ class PUM_Admin_Popups {
 		return $title;
 	}
 
-
 	/**
 	 * Renders the popup title meta field.
 	 */

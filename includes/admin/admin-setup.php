@@ -33,37 +33,3 @@ function popmake_plugin_action_links( $links, $file ) {
 }
 
 add_filter( 'plugin_action_links', 'popmake_plugin_action_links', 10, 2 );
-
-
-function popmake_admin_header() {
-	if ( popmake_is_admin_page() ) {
-		do_action( 'popmake_admin_header' );
-	}
-}
-
-add_action( 'admin_header', 'popmake_admin_header' );
-
-
-function popmake_admin_footer() {
-	if ( popmake_is_admin_page() ) {
-		do_action( 'popmake_admin_footer' );
-	}
-}
-
-add_action( 'admin_print_footer_scripts', 'popmake_admin_footer', 1000 );
-
-
-function popmake_admin_popup_preview() {
-	echo do_shortcode( '[popup id="preview" title="' . __( 'A Popup Preview', 'popup-maker' ) . '"]' . popmake_get_default_example_popup_content() . '[/popup]' );
-	echo '<div id="popmake-overlay" class="popmake-overlay"></div>';
-}
-
-
-function popmake_post_submitbox_misc_actions() {
-	global $post;
-	if ( $post && in_array( $post->post_type, array( 'popup', 'popup_theme' ) ) ) : ?>
-		<a href="#" id="trigger-popmake-preview" class="popmake-preview button button-large"><span class="dashicons dashicons-visibility"></span></a><?php
-	endif;
-}
-
-//add_action( 'post_submitbox_start', 'popmake_post_submitbox_misc_actions', 100 );

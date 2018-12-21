@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Popup Maker Extension Activation Handler Class
  *
- * @version       2.0
+ * @version       2.1
  */
 class PUM_Extension_Activator {
 
@@ -102,15 +102,11 @@ class PUM_Extension_Activator {
 		$this->extension_version     = $this->get_static_prop( $class_name, 'VER' );
 		$this->required_core_version = $this->get_static_prop( $class_name, 'REQUIRED_CORE_VER' );
 
-		$plugins = get_plugins();
+		$popup_maker_data = get_plugin_data( WP_PLUGIN_DIR . '/popup-maker/popup-maker.php', false, false );
 
-		// Is Popup Maker installed?
-		foreach ( $plugins as $plugin_path => $plugin ) {
-			if ( $plugin['Name'] == 'Popup Maker' ) {
-				$this->core_installed = true;
-				$this->core_path      = $plugin_path;
-				break;
-			}
+		if ( $popup_maker_data['Name'] == 'Popup Maker' ) {
+			$this->core_installed = true;
+			$this->core_path      = 'popup-maker/popup-maker.php';
 		}
 	}
 

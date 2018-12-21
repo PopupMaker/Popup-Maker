@@ -2,29 +2,32 @@
  * Copyright (c) 2017, WP Popup Maker
  ******************************************************************************/
 
+$wpblue: #20252b;
+
 .popmake-support-links {
   list-style: none;
+
   li {
     margin-bottom: 10px;
   }
 
   a {
-    color: #20252b;
+    color: $wpblue;
     font-size: 1.25em;
-    text-transform: uppercase;
     text-decoration: none;
+    text-transform: uppercase;
+
     span {
       margin-left: 10px;
     }
 
     img {
-      top: 6px;
-      position: relative;
-      min-width: 24px;
+      max-height: 24px;
       max-width: 24px;
       min-height: 24px;
-      max-height: 24px;
+      min-width: 24px;
+      position: relative;
+      top: 6px;
     }
   }
-
 }
