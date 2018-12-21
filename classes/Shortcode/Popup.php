@@ -79,18 +79,6 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 		) );
 	}
 
-	public function get_popup_themes() {
-		$themes = popmake_get_all_popup_themes();
-
-		$popup_themes = array();
-
-		foreach ( $themes as $theme ) {
-			$popup_themes[ $theme->ID ] = $theme->post_title;
-		}
-
-		return $popup_themes;
-	}
-
 	public function fields() {
 		return array(
 			'general'   => array(
@@ -119,7 +107,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 						'desc'        => __( 'Choose which popup theme will be used.', 'popup-maker' ),
 						'std'         => popmake_get_default_popup_theme(),
 						'select2'     => true,
-						'options'     => $this->get_popup_themes(),
+						'options'      => PUM_Helpers::popup_theme_selectlist(),
 						'required'    => true,
 						'priority'    => 5,
 					),

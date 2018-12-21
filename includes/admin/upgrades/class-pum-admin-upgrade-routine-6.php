@@ -123,7 +123,7 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 	public static function setup_valid_themes() {
 		PUM_Admin_Upgrade_Routine_6::$valid_themes = array();
 
-		foreach ( popmake_get_all_popup_themes() as $theme ) {
+		foreach ( pum_get_all_themes() as $theme ) {
 			PUM_Admin_Upgrade_Routine_6::$valid_themes[ $theme->ID ] = $theme;
 			if ( popmake_get_default_popup_theme() == $theme->ID ) {
 				PUM_Admin_Upgrade_Routine_6::$default_theme = $theme->ID;

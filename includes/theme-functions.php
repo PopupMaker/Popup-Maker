@@ -35,22 +35,3 @@ function popmake_get_default_popup_theme() {
 }
 
 
-function popmake_get_all_popup_themes() {
-	static $themes;
-
-	if ( ! $themes ) {
-		$query = new WP_Query( array(
-			'post_type'              => 'popup_theme',
-			'post_status'            => 'publish',
-			'posts_per_page'         => - 1,
-			// Performance Optimization.
-			'update_post_term_cache' => false,
-			'no_found_rows'          => true,
-		) );
-
-		$themes = $query->posts;
-	}
-
-	return $themes;
-}
-

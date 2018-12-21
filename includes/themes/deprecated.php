@@ -355,7 +355,7 @@ function popmake_get_popup_theme_data_attr( $theme_id = 0 ) {
  * @return mixed
  */
 function popmake_get_popup_themes_data() {
-	$themes = popmake_get_all_popup_themes();
+	$themes = pum_get_all_themes();
 
 	$popmake_themes = array();
 
@@ -452,4 +452,13 @@ function popmake_popup_theme_content_defaults() {
  */
 function popmake_popup_theme_close_defaults() {
 	return pum_get_theme_v2_meta_defaults( 'close' );
+}
+
+/**
+ * @deprecated 1.8.0
+ *
+ * @return \PUM_Model_Theme[]
+ */
+function popmake_get_all_popup_themes() {
+	return pum_get_all_themes();
 }

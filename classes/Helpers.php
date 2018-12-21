@@ -194,7 +194,7 @@ class PUM_Helpers {
 
 		$themes = array();
 
-		foreach ( popmake_get_all_popup_themes() as $theme ) {
+		foreach ( pum_get_all_themes() as $theme ) {
 			$themes[ $theme->ID ] = $theme->post_title;
 		}
 
