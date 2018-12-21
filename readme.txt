@@ -101,6 +101,9 @@ There are several common causes for this which include:
 
 == Changelog ==
 
+= v1.7.31 - ??/??/2018 =
+* Fix: Condition options for BuddyPress integration had values & labels switched.
+
 = v1.7.30 - 09/06/2018 =
 * Improvement: Further added methods to log unique messages only once.
 * Tweak: Remove usage of Freemius.
