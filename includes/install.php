@@ -14,35 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * Install Default Theme
- *
- * Installs the default theme and updates the option.
- *
- * @since 1.0
- * @return void
- */
-function popmake_install_default_theme() {
-	$default_theme = @wp_insert_post(
-		array(
-			'post_title'     => __( 'Default Theme', 'popup-maker' ),
-			'post_status'    => 'publish',
-			'post_author'    => 1,
-			'post_type'      => 'popup_theme',
-			'comment_status' => 'closed',
-			'meta_input' => array(
-				'_pum_built_in' => 'default-theme',
-				'_pum_default_theme' => true
-			),
-		)
-	);
-	foreach ( popmake_get_popup_theme_default_meta() as $meta_key => $meta_value ) {
-		update_post_meta( $default_theme, $meta_key, $meta_value );
-	}
-	update_option( 'popmake_default_theme', $default_theme );
-	pum_force_theme_css_refresh();
-}
-
 
 /**
  * Post-installation

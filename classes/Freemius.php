@@ -273,7 +273,7 @@ class PUM_Freemius {
 
 			// WP Install Info
 			'url'              => get_site_url(),
-			'version'          => PUM::VER, // Plugin Version
+			'version'          => Popup_Maker::$VER, // Plugin Version
 			'wp_version'       => get_bloginfo( 'version' ), // WP Version
 			'theme'            => $theme,
 			'active_plugins'   => $active_plugins,
@@ -306,7 +306,7 @@ class PUM_Freemius {
 			'httpversion' => '1.1',
 			'blocking'    => false,
 			'body'        => $data,
-			'user-agent'  => 'POPMAKE/' . PUM::VER . '; ' . get_site_url(),
+			'user-agent'  => 'POPMAKE/' . Popup_Maker::$VER . '; ' . get_site_url(),
 		) );
 
 		return $response;

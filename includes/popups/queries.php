@@ -39,6 +39,19 @@ function pum_get_popups( $args = array() ) {
 }
 
 /**
+ * Queries popups and returns them in a specific format.
+ *
+ * @param array $args
+ *
+ * @return PUM_Model_Popup[]
+ */
+function pum_get_all_popups( $args = array() ) {
+	$args['posts_per_page'] = -1;
+
+	return pum_get_popups( $args );
+}
+
+/**
  * Gets a count popups with specified args.
  *
  * @param array $args

@@ -205,10 +205,10 @@ class PUM_Helpers {
 	public static function popup_selectlist( $args = array() ) {
 		$popup_list = array();
 
-		$popups = PUM_Popups::query( $args );
+		$popups = pum_get_all_popups( $args );
 
-		foreach ( $popups->posts as $popup ) {
-			if ( in_array( $popup->post_status, array( 'publish' ) ) ) {
+		foreach ( $popups as $popup ) {
+			if ( $popup->is_published() ) {
 				$popup_list[ (string) $popup->ID ] = $popup->post_title;
 			}
 		}

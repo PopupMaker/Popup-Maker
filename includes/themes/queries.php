@@ -39,6 +39,19 @@ function pum_get_themes( $args = array() ) {
 }
 
 /**
+ * Queries themes and returns them in a specific format.
+ *
+ * @param array $args
+ *
+ * @return PUM_Model_Theme[]
+ */
+function pum_get_all_themes( $args = array() ) {
+	$args['posts_per_page'] = -1;
+
+	return pum_get_themes( $args );
+}
+
+/**
  * Gets a count themes with specified args.
  *
  * @param array $args

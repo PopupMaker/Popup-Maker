@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 function pum_initialize_deprecated() {
 
-	for( $i = 0; $i <= PUM::DB_VER; $i ++ ) {
+	for( $i = 0; $i <= Popup_Maker::$DB_VER; $i ++ ) {
 		$filename = POPMAKE_DIR . 'includes/deprecated/v' . $i . '.php';
 		if ( file_exists( $filename ) ) {
 			require_once $filename;

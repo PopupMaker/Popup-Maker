@@ -395,6 +395,11 @@ class PUM_Admin_Settings {
 
 				'misc' => array(
 					'main'   => array(
+						'google_fonts_api_key'                 => array(
+							'type'  => 'text',
+							'label' => __( 'Google Fonts API Key', 'popup-maker' ),
+							'desc'  => __( 'Enter your own Google Fonts API key to always get the latest fonts available.' ),
+						),
 						'disabled_admin_bar'                   => array(
 							'type'  => 'checkbox',
 							'label' => __( 'Disable Popups Admin Bar', 'popup-maker' ),
@@ -437,7 +442,7 @@ class PUM_Admin_Settings {
 						'complete_uninstall'                   => array(
 							'type'     => 'checkbox',
 							'label'    => __( 'Complete Uninstall?', 'popup-maker' ),
-							'desc'    => __( 'Check this to completely uninstall all Popup Maker data on deactivation.', 'popup-maker' ),
+							'desc'     => __( 'Check this to completely uninstall all Popup Maker data on deactivation.', 'popup-maker' ),
 							'priority' => 1000,
 						),
 					),
