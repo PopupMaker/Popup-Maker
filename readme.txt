@@ -108,6 +108,7 @@ There are several common causes for this which include:
 * Feature: Added support for Gutenberg editor when creating popups.
 * Fix: Condition options for BuddyPress integration had values & labels switched.
 * Fix: Bug with Gravity Forms Personal Data menu item missing.
+* Fix: iOS Click overlay close not working.
 
 = v1.7.30 - 09/06/2018 =
 * Improvement: Further added methods to log unique messages only once.

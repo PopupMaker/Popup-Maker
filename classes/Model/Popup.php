@@ -486,6 +486,10 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			$classes['overlay'][] = 'pum-accessibility-disabled';
 		}
 
+		if ( $this->get_setting( 'close_on_overlay_click' ) ) {
+			$classes['overlay'][] = 'pum-click-to-close';
+		}
+
 		// Add a class for each trigger type.
 		foreach ( $this->get_triggers() as $trigger ) {
 			if ( ! in_array( $trigger['type'], $classes['overlay'] ) ) {

@@ -209,6 +209,11 @@
   }
 }
 
+.pum-overlay.pum-click-to-close {
+  /* Hack for iOS devices so they properly treat it as a clickable element */
+  cursor: pointer;
+}
+
 html.pum-open {
 
   &.pum-open-overlay {
