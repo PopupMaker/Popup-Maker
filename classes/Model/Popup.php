@@ -261,7 +261,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 */
 	public function get_theme_id() {
 		// TODO replace usage of popmake_get_default_popup_theme.
-		$theme_id = $this->get_setting( 'theme_id', popmake_get_default_popup_theme() );
+		$theme_id = $this->get_setting( 'theme_id', pum_get_default_theme_id() );
 
 		return (int) apply_filters( 'pum_popup_get_theme_id', $theme_id, $this->ID );
 	}

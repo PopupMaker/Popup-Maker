@@ -236,12 +236,12 @@ class PUM_Admin_Settings {
 			$fields = array(
 				'general' => array(
 					'main' => array(
-						'default_theme'        => array(
+						'default_theme_id'        => array(
 							'label'     => __( 'Default Popup Theme', 'popup-maker' ),
 							'dynamic_desc' => sprintf( '%1$s<br/><a id="edit_theme_link" href="%3$s">%2$s</a>', __( 'Choose the default theme used for new popups', 'popup-maker' ), __( 'Customize This Theme', 'popup-maker' ), admin_url( "post.php?action=edit&post={{data.value}}" ) ),
 							'type'         => 'select',
 							'options'      => PUM_Helpers::popup_theme_selectlist(),
-							'std'          => popmake_get_default_popup_theme(),
+							'std'          => pum_get_default_theme_id(),
 						),
 						'google_fonts_api_key' => array(
 							'type'  => 'text',

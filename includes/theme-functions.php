@@ -14,24 +14,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Returns the default theme_id from global settings.
+ *
+ * Returns false if none set.
+ *
+ * @since 1.8.0
+ *
+ * @return int|false
+ */
+function pum_get_default_theme_id() {
+	$default_theme_id = pum_get_option( 'default_theme_id' );
 
-function popmake_get_default_popup_theme() {
-	static $default_theme = null;
+	if ( false === $default_theme_id ) {
+		$default_theme_id = get_option( 'popmake_default_theme' );
 
-	if ( $default_theme === null ) {
-		$default_theme = get_option( 'popmake_default_theme' );
-	}
+		if ( false === $default_theme_id ) {
+			if ( ! function_exists( 'popmake_install_default_theme' ) ) {
+				include_once POPMAKE_DIR . 'includes/install.php';
+			}
 
-	if ( ! $default_theme ) {
-		if ( ! function_exists( 'popmake_install_default_theme' ) ) {
-			include_once POPMAKE_DIR . 'includes/install.php';
+			$default_theme_id = pum_install_default_theme();
+			pum_update_option( 'default_theme_id', $default_theme_id );
 		}
-		popmake_install_default_theme();
-		$default_theme = get_option( 'popmake_default_theme' );
-		pum_force_theme_css_refresh();
 	}
 
-	return $default_theme;
+	$theme = absint( $default_theme_id ) ? pum_get_theme( $default_theme_id ) : false;
+
+	return $theme && pum_is_theme( $theme ) ? $theme->ID : false;
 }
-
-

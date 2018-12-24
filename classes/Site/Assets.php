@@ -219,7 +219,7 @@ class PUM_Site_Assets {
 			'ajaxurl'                => admin_url( 'admin-ajax.php' ),
 			'restapi'                => function_exists( 'rest_url' ) ? esc_url_raw( rest_url( 'pum/v1' ) ) : false,
 			'rest_nonce'             => is_user_logged_in() ? wp_create_nonce( 'wp_rest' ) : null,
-			'default_theme'          => (string) popmake_get_default_popup_theme(),
+			'default_theme'          => (string) pum_get_default_theme_id(),
 			'debug_mode'             => Popup_Maker::debug_mode(),
 			'disable_tracking'       => popmake_get_option( 'disable_popup_open_tracking' ),
 			'home_url'               => trailingslashit( $site_home_path ),

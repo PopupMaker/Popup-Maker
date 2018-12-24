@@ -113,7 +113,7 @@ class PUM_Activator {
 		// Add a temporary option that will fire a hookable action on next load.
 		set_transient( '_popmake_installed', true, 30 );
 
-		popmake_get_default_popup_theme();
+		pum_get_default_theme_id();
 		pum_install_built_in_themes();
 
 	}

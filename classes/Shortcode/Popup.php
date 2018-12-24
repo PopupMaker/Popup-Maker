@@ -105,7 +105,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 						'label'       => __( 'Popup Theme', 'popup-maker' ),
 						'placeholder' => __( 'Choose a theme,', 'popup-maker' ),
 						'desc'        => __( 'Choose which popup theme will be used.', 'popup-maker' ),
-						'std'         => popmake_get_default_popup_theme(),
+						'std'         => pum_get_default_theme_id(),
 						'select2'     => true,
 						'options'      => PUM_Helpers::popup_theme_selectlist(),
 						'required'    => true,
@@ -300,7 +300,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 
 		// Get Theme ID
 		if ( ! $atts['theme_id'] ) {
-			$atts['theme_id'] = $atts['theme'] ? $atts['theme'] : popmake_get_default_popup_theme();
+			$atts['theme_id'] = $atts['theme'] ? $atts['theme'] : pum_get_default_theme_id();
 		}
 
 		// Theme ID

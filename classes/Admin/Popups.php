@@ -399,7 +399,7 @@ class PUM_Admin_Popups {
 							'dynamic_desc' => sprintf( '%1$s<br/><a id="edit_theme_link" href="%3$s">%2$s</a>', __( 'Choose a theme for this popup.', 'popup-maker' ), __( 'Customize This Theme', 'popup-maker' ), admin_url( "post.php?action=edit&post={{data.value}}" ) ),
 							'type'         => 'select',
 							'options'      => PUM_Helpers::popup_theme_selectlist(),
-							'std'          => popmake_get_default_popup_theme(),
+							'std'          => pum_get_default_theme_id(),
 						),
 					),
 					'size'      => array(

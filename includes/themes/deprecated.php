@@ -462,3 +462,12 @@ function popmake_popup_theme_close_defaults() {
 function popmake_get_all_popup_themes() {
 	return pum_get_all_themes();
 }
+
+/**
+ * @deprecated 1.8.0
+ *
+ * @return false|int
+ */
+function popmake_get_default_popup_theme() {
+	return pum_get_default_theme_id();
+}
