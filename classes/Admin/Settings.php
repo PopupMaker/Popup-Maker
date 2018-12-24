@@ -423,11 +423,6 @@ class PUM_Admin_Settings {
 							'label' => __( 'Enable Easy Modal v2 Compatibility Mode', 'popup-maker' ),
 							'desc'  => __( 'This will automatically make any eModal classes you have added to your site launch the appropriate Popup after import.', 'popup-maker' ),
 						),
-						'disable_admin_support_widget'         => array(
-							'type'  => 'checkbox',
-							'label' => __( 'Hide Admin Support Widget', 'popup-maker' ),
-							'desc'  => __( 'This will hide the support widget on all popup maker admin pages.', 'popup-maker' ),
-						),
 						'disable_popup_category_tag'           => array(
 							'type'  => 'checkbox',
 							'label' => __( 'Disable categories & tags?', 'popup-maker' ),
