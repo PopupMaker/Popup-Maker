@@ -106,6 +106,7 @@ There are several common causes for this which include:
   * New close button positions top center, bottom center, middle left & middle right.
   * New option to position close button outside of popup.
 * Feature: Added support for Gutenberg editor when creating popups.
+* Improvement: Add constant to disable logging.
 * Fix: Condition options for BuddyPress integration had values & labels switched.
 * Fix: Bug with Gravity Forms Personal Data menu item missing.
 * Fix: iOS Click overlay close not working.

@@ -135,6 +135,12 @@ class PUM_Utils_Logging {
 	 * @param string $message
 	 */
 	protected function write_to_log( $message = '' ) {
+
+		// Disable logging by adding define( 'PUM_DISABLE_LOGGING', true );
+		if ( defined( 'PUM_DISABLE_LOGGING' ) && PUM_DISABLE_LOGGING ) {
+			return;
+		}
+
 		$file_contents = $this->get_file();
 
 		$length = strlen( "\r\n" );
