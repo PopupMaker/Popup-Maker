@@ -77,9 +77,10 @@ class PUM_AssetCache {
 	 * @return bool
 	 */
 	public static function enabled() {
-		if (defined( 'PUM_ASSET_CACHE' ) && !PUM_ASSET_CACHE) {
+		if ( defined( 'PUM_ASSET_CACHE' ) && ! PUM_ASSET_CACHE ) {
 			return false;
 		}
+
 		return self::writeable() && ! self::$disabled;
 	}
 
