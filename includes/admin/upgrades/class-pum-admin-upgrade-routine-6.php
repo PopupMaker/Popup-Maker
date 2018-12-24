@@ -64,7 +64,7 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 		pum_install_built_in_themes();
 
 		// Refresh CSS transients
-		pum_force_theme_css_refresh();
+		pum_reset_assets();
 
 		// Set the correct total.
 		if ( $total <= 1 ) {

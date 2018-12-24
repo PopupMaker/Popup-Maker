@@ -41,7 +41,7 @@ function popmake_install_default_theme() {
 		) );
 
 	update_option( 'popmake_default_theme', $default_theme );
-	pum_force_theme_css_refresh();
+	pum_reset_assets();
 }
 
 function pum_install_built_in_themes( $network_wide = false ) {
@@ -125,7 +125,7 @@ function pum_install_built_in_themes( $network_wide = false ) {
 	}
 
 	if ( $new_theme_installed ) {
-		pum_force_theme_css_refresh();
+		pum_reset_assets();
 		update_option( '_pum_installed_themes', $installed_themes );
 	}
 

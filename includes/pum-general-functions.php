@@ -37,8 +37,13 @@ function pum_is_v1_4_compatible() {
 }
 
 /**
- * Deletes the theme css transient forcing it to refresh.
+ * Resets both asset cached files & transient CSS storage to be regenerated.
+ *
+ * @since 1.8.0
  */
-function pum_force_theme_css_refresh() {
+function pum_reset_assets() {
+	// Reset/regenerate asset cache.
+	PUM_AssetCache::reset_cache();
+	// Reset/regenerate stored theme CSS styles.
 	delete_transient( 'popmake_theme_styles' );
 }

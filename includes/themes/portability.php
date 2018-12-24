@@ -19,7 +19,7 @@ function pum_install_theme( $name, $settings = null, $extra_meta = array() ) {
 		) ),
 	) );
 
-	pum_force_theme_css_refresh();
+	pum_reset_assets();
 
 	return $new_theme_id;
 

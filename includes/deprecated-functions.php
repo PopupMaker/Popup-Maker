@@ -9,6 +9,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Deletes the theme css transient forcing it to refresh.
+ *
+ * @deprecated 1.8.0 Use pum_reset_assets()
+ */
+function pum_force_theme_css_refresh() {
+	pum_reset_assets();
+}
+
+/**
  * @deprecated 1.8.0
  *
  * @param $hex
