@@ -107,6 +107,7 @@ There are several common causes for this which include:
   * New option to position close button outside of popup.
 * Feature: Added support for Gutenberg editor when creating popups.
 * Improvement: Add constant to disable logging.
+* Improvement: Added complete uninstall option.
 * Tweak: Removed option setting to 'Hide Admin Support Widget' which is no longer relevant.
 * Fix: Condition options for BuddyPress integration had values & labels switched.
 * Fix: Bug with Gravity Forms Personal Data menu item missing.
