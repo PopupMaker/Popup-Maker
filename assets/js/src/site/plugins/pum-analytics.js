@@ -51,7 +51,7 @@ var PUM_Analytics;
         /**
          * Track opens for popups.
          */
-            .on('pumAfterOpen.core_analytics', 'body > .pum', function () {
+            .on('pumAfterOpen.core_analytics', '.pum', function () {
                 var $popup = PUM.getPopup(this),
                     data = {
                         pid: parseInt($popup.popmake('getSettings').id, 10) || null
