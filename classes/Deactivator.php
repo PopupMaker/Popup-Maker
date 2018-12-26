@@ -41,6 +41,11 @@ class PUM_Deactivator {
 
 			$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'popmake%' OR option_name LIKE '_pum_%' OR option_name LIKE 'pum_%' OR option_name LIKE 'popup_analytics_%'" );
 
+			// Reset JS/CSS assets for regeneration.
+			pum_reset_assets();
+
+			// # TODO Delete AssetCache files and folder.
+
 			do_action( 'pum_uninstall' );
 		}
 	}

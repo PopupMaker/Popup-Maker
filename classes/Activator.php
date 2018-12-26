@@ -116,6 +116,8 @@ class PUM_Activator {
 		pum_get_default_theme_id();
 		pum_install_built_in_themes();
 
+		// Reset JS/CSS assets for regeneration.
+		pum_reset_assets();
 	}
 
 }

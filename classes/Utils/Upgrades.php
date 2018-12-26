@@ -152,6 +152,9 @@ class PUM_Utils_Upgrades {
 			update_option( 'pum_ver', Popup_Maker::$VER );
 			self::$upgraded_from = self::$version;
 			self::$version       = Popup_Maker::$VER;
+
+			// Reset JS/CSS assets for regeneration.
+			pum_reset_assets();
 		}
 
 		// If no current db version, but prior install detected, set db version correctly.
