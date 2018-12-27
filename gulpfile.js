@@ -174,7 +174,17 @@ function css() {
         .pipe($fn.filter('**/*.css')) // Filtering stream to only css files
         .pipe($fn.combineMq()) // Combines Media Queries
         .pipe($fn.rename({suffix: '.min'}))
-        .pipe(cleanCSS())
+        .pipe(cleanCSS({
+            level: {
+                1: {
+                    specialComments: false
+                },
+                2: {
+                    all: true
+                }
+            }
+
+        }))
         .pipe(gulp.dest(css_output_path));
 }
 
