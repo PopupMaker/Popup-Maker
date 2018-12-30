@@ -8,6 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Return array of subtabs.
  *
+ * @since 1.8.0
+ *
  * @return mixed
  */
 function pum_extensions_page_subtabs() {
@@ -20,6 +22,8 @@ function pum_extensions_page_subtabs() {
 
 /**
  * Return array of form plugins that integrate well with Popup Maker
+ *
+ * @since 1.8.0
  *
  * @return array
  */
@@ -60,6 +64,8 @@ function pum_extensions_page_form_plugins() {
 /**
  * Return array of other plugins that integrate with Popup Maker
  *
+ * @since 1.8.0
+ *
  * @return array
  */
 function pum_extensions_page_other_plugins() {
@@ -68,6 +74,8 @@ function pum_extensions_page_other_plugins() {
 
 /**
  * Return array of Popup Maker extensions.
+ *
+ * @since 1.8.0
  *
  * @return array|mixed|object
  */
@@ -79,6 +87,8 @@ function pum_extensions_page_available_extensions() {
 
 /**
  * Render extension page subtabs.
+ *
+ * @since 1.8.0
  */
 function pum_render_extensions_page_subtabs() {
 	$sub_tabs      = pum_extensions_page_subtabs();
@@ -140,6 +150,8 @@ function pum_render_extensions_page_subtabs() {
 
 /**
  * Render extension tab extensions list.
+ *
+ * @since 1.8.0
  */
 function pum_render_extensions_page_extension_list() {
 	// Set a new campaign for tracking purposes
@@ -257,6 +269,8 @@ function pum_render_extensions_page_extension_list() {
 
 /**
  * Render extensions tab form list.
+ *
+ * @since 1.8.0
  */
 function pum_render_extensions_page_forms_list() {
 	// Set a new campaign for tracking purposes
@@ -301,7 +315,6 @@ function pum_render_extensions_page_forms_list() {
  *
  * @access       private
  * @since        1.0
- * @return      void
  */
 function popmake_extensions_page() {
 	// Set a new campaign for tracking purposes
