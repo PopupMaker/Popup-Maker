@@ -72,3 +72,15 @@ $tab-color: #E4E4E4;
     }
   }
 }
+
+.edit-php.post-type-popup .wrap .nav-tab-wrapper .page-title-action,
+.edit-php.post-type-popup_theme .wrap .nav-tab-wrapper .page-title-action,
+.popup_page_pum-extensions .wrap .nav-tab-wrapper .page-title-action {
+  top: 7px;
+  margin-left: 5px;
+
+  @media only screen and (min-width: 0px) and (max-width: 783px) {
+    display: none!important;
+  }
+
+}
