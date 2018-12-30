@@ -111,11 +111,6 @@ function pum_render_extensions_page_subtabs() {
 
 			$active = $active_tab == $tab_id ? 'current' : '';
 
-			echo '<li class="' . $tab_id . '">';
-			echo '<a href="' . esc_url( $tab_url ) . '" class="' . $active . '">';
-			echo esc_html( $tab_name );
-			echo '</a>';
-
 			$count = null;
 
 			switch ( $tab_id ) {
@@ -129,6 +124,16 @@ function pum_render_extensions_page_subtabs() {
 					$count = count( $other_plugins );
 					break;
 			}
+
+			if ( ! $count && empty( $active ) ) {
+				continue;
+			}
+
+			echo '<li class="' . $tab_id . '">';
+			echo '<a href="' . esc_url( $tab_url ) . '" class="' . $active . '">';
+			echo esc_html( $tab_name );
+			echo '</a>';
+
 
 			if ( isset( $count ) ) {
 				echo ' <span class="count">(' . $count . ')</span>';
@@ -160,7 +165,7 @@ function pum_render_extensions_page_extension_list() {
 
 	?>
 
-	<p><?php _e( 'These extensions <strong>add extra functionality</strong> to your popups.', 'popup-maker' ); ?></p>
+	<h4><?php _e( 'These extensions add extra functionality to your popups.', 'popup-maker' ); ?></h4>
 
 	<ul class="extensions-available">
 		<?php
@@ -280,7 +285,7 @@ function pum_render_extensions_page_forms_list() {
 
 	?>
 
-	<p><?php _e( 'These plugins should work in popups with no extra setup.', 'popup-maker' ); ?></p>
+	<h4><?php _e( 'These form plugins work in our popups out of the box.', 'popup-maker' ); ?></h4>
 
 	<ul class="extensions-available">
 		<?php
@@ -323,15 +328,15 @@ function popmake_extensions_page() {
 	$active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $sub_tabs ) ? $_GET['tab'] : 'extensions';
 
 	?>
-	<div class="wrap"><h1><?php _e( 'Extend Popup Maker', 'popup-maker' ) ?></h1>
+	<div class="wrap">
 	<?php PUM_Upsell::display_addon_tabs(); ?>
 	<div id="poststuff">
 	<div id="post-body" class="metabox-holder">
 		<div id="post-body-content">
-			<h2 class="section-heading">
+			<h1 class="section-heading">
 				<?php _e( 'Extensions & Integrations for Popup Maker', 'popup-maker' ) ?>
 				&nbsp;&nbsp;<a href="https://wppopupmaker.com/extensions/?utm_source=plugin-extension-page&utm_medium=text-link&utm_campaign=<?php echo $campaign; ?>&utm_content=browse-all" class="button-primary" title="<?php _e( 'Browse All Extensions', 'popup-maker' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'popup-maker' ); ?></a>
-			</h2 class="section-heading">
+			</h1>
 
 			<div class="pum-add-ons-view-wrapper">
 				<?php pum_render_extensions_page_subtabs(); ?>

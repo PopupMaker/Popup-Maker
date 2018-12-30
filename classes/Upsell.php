@@ -39,6 +39,27 @@ class PUM_Upsell {
 		$theme_labels = PUM_Types::post_type_labels( __( 'Popup Theme', 'popup-maker' ), __( 'Popup Themes', 'popup-maker' ) );
 
 		?>
+
+
+		<style>
+			.wrap h1.wp-heading-inline,
+			.wrap h1.wp-heading-inline + a.page-title-action {
+				display: none;
+			}
+
+			.edit-php.post-type-popup .wrap .nav-tab-wrapper .page-title-action,.edit-php.post-type-popup_theme .wrap .nav-tab-wrapper .page-title-action,.popup_page_pum-extensions .wrap .nav-tab-wrapper .page-title-action {
+				top: 7px;
+				margin-left: 5px
+			}
+
+			@media only screen and (min-width: 0px) and (max-width:783px) {
+				.edit-php.post-type-popup .wrap .nav-tab-wrapper .page-title-action,.edit-php.post-type-popup_theme .wrap .nav-tab-wrapper .page-title-action,.popup_page_pum-extensions .wrap .nav-tab-wrapper .page-title-action {
+					display:none!important
+				}
+			}
+		</style>
+
+
 		<h2 class="nav-tab-wrapper">
 			<?php
 			$tabs = array(
@@ -83,19 +104,6 @@ class PUM_Upsell {
 			}
 			?>
 
-			<style>
-				.edit-php.post-type-popup .wrap .nav-tab-wrapper .page-title-action,.edit-php.post-type-popup_theme .wrap .nav-tab-wrapper .page-title-action,.popup_page_pum-extensions .wrap .nav-tab-wrapper .page-title-action {
-					top: 7px;
-					margin-left: 5px
-				}
-
-				@media only screen and (min-width: 0px) and (max-width:783px) {
-					.edit-php.post-type-popup .wrap .nav-tab-wrapper .page-title-action,.edit-php.post-type-popup_theme .wrap .nav-tab-wrapper .page-title-action,.popup_page_pum-extensions .wrap .nav-tab-wrapper .page-title-action {
-						display:none!important
-					}
-				}
-			</style>
-
 			<a href="<?php echo admin_url( 'post-new.php?post_type=popup' ); ?>" class="page-title-action">
 				<?php echo $popup_labels['add_new_item']; ?>
 			</a>
@@ -104,7 +112,6 @@ class PUM_Upsell {
 				<?php echo $theme_labels['add_new_item']; ?>
 			</a>
 		</h2>
-		<br />
 		<?php
 	}
 
