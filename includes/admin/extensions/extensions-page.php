@@ -318,9 +318,9 @@ function pum_render_extensions_page_forms_list() {
  */
 function popmake_extensions_page() {
 	// Set a new campaign for tracking purposes
-	$campaign = isset( $_GET['view'] ) && strtolower( $_GET['view'] ) === 'integrations' ? 'PUMIntegrationsPage' : 'PUMExtensionsPage';
-	$sub_tabs      = pum_extensions_page_subtabs();
-	$active_tab    = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $sub_tabs ) ? $_GET['tab'] : 'extensions';
+	$campaign   = isset( $_GET['view'] ) && strtolower( $_GET['view'] ) === 'integrations' ? 'PUMIntegrationsPage' : 'PUMExtensionsPage';
+	$sub_tabs   = pum_extensions_page_subtabs();
+	$active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $sub_tabs ) ? $_GET['tab'] : 'extensions';
 
 	?>
 	<div class="wrap"><h1><?php _e( 'Extend Popup Maker', 'popup-maker' ) ?></h1>
