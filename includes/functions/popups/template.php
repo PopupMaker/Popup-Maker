@@ -1,6 +1,15 @@
 <?php
+/*******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
 
 /**
+ * Render the popup ID
+ *
  * @param null|int $popup_id
  */
 function pum_popup_ID( $popup_id = null ) {
@@ -14,6 +23,8 @@ function pum_popup_ID( $popup_id = null ) {
 }
 
 /**
+ * Render the popup title.
+ *
  * @param null|int $popup_id
  */
 function pum_popup_title( $popup_id = null ) {
@@ -21,6 +32,8 @@ function pum_popup_title( $popup_id = null ) {
 }
 
 /**
+ * Render the popup content.
+ *
  * @param null|int $popup_id
  */
 function pum_popup_content( $popup_id = null ) {
@@ -34,19 +47,8 @@ function pum_popup_content( $popup_id = null ) {
 }
 
 /**
- * @param null|int $popup_id
- */
-function pum_popup_theme_id( $popup_id = null ) {
-	$popup = pum_get_popup( $popup_id );
-
-	if ( ! pum_is_popup( $popup ) ) {
-		return;
-	}
-
-	echo $popup->get_theme_id();
-}
-
-/**
+ * Render the chose popup elements classes.
+ *
  * @param null   $popup_id
  * @param string $element
  */
@@ -61,6 +63,8 @@ function pum_popup_classes( $popup_id = null, $element = 'overlay' ) {
 }
 
 /**
+ * Render the popups data attribute.
+ *
  * @param null|int $popup_id
  */
 function pum_popup_data_attr( $popup_id = null ) {
@@ -75,6 +79,8 @@ function pum_popup_data_attr( $popup_id = null ) {
 
 
 /**
+ * Render the popup close button text.
+ *
  * @param null|int $popup_id
  */
 function pum_popup_close_text( $popup_id = null ) {
@@ -85,26 +91,4 @@ function pum_popup_close_text( $popup_id = null ) {
 	}
 
 	echo esc_html( $popup->close_text() );
-}
-
-
-/**
- * Conditional Template Tags.
- */
-
-/**
- * Returns true if the close button should be shown.
- *
- * @param null|int $popup_id
- *
- * @return bool
- */
-function pum_show_close_button( $popup_id = null ) {
-	$popup = pum_get_popup( $popup_id );
-
-	if ( ! pum_is_popup( $popup ) ) {
-		return true;
-	}
-
-	return $popup->show_close_button();
 }

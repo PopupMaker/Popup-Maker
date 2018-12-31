@@ -15,11 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return bool
  */
 function pum_is_popup( $popup ) {
-	return is_object( $popup ) && is_numeric( $popup->ID ) && $popup->is_valid();
+	return pum_is_popup_object( $popup ) && $popup->ID > 0 && $popup->is_valid();
 }
 
 /**
- * Tests a given value to see if its a valid Forum model.
+ * Tests a given value to see if its a valid Popup model.
  *
  * @param PUM_Model_Popup|mixed $popup
  *
@@ -42,4 +42,21 @@ function pum_is_popup_loadable( $popup_id = 0 ) {
 	}
 
 	return $popup->is_loadable();
+}
+
+/**
+ * Returns true if the close button should be shown.
+ *
+ * @param null|int $popup_id
+ *
+ * @return bool
+ */
+function pum_show_close_button( $popup_id = null ) {
+	$popup = pum_get_popup( $popup_id );
+
+	if ( ! pum_is_popup( $popup ) ) {
+		return true;
+	}
+
+	return $popup->show_close_button();
 }

@@ -276,7 +276,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/class-pum-form.php';
 
 		// Functions
-		require_once self::$DIR . 'includes/pum-template-functions.php';
 		require_once self::$DIR . 'includes/pum-template-hooks.php';
 
 		// Modules
