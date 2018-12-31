@@ -84,3 +84,21 @@ function popmake_get_box_shadow_style( $horizontal = 0, $vertical = 0, $blur = 0
 function popmake_get_text_shadow_style( $horizontal = 0, $vertical = 0, $blur = 0, $hex = '#000000', $opacity = 50 ) {
 	return PUM_Utils_CSS::text_shadow_style( $horizontal, $vertical, $blur, $hex, $opacity );
 }
+
+/**
+ * @deprecated 1.8.0
+ *
+ * @param $id
+ */
+function pum_load_popup( $id ) {
+	PUM_Site_Popups::load_popup( $id );
+};
+
+/**
+ * @deprecated 1.7.0 Use pum_load_popup
+ *
+ * @param $id
+ */
+function popmake_enqueue_popup( $id ) {
+	pum_load_popup( $id );
+}
