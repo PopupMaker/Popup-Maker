@@ -137,6 +137,11 @@ class Popup_Maker {
 	public static $DEBUG_MODE = false;
 
 	/**
+	 * @var PUM_Utils_Cron
+	 */
+	public $cron;
+
+	/**
 	 * @var PUM_Repository_Popups
 	 */
 	public $popups;
@@ -281,7 +286,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/admin/admin-pages.php';
 
 		require_once self::$DIR . 'includes/actions.php';
-		require_once self::$DIR . 'includes/class-popmake-cron.php';
 		require_once self::$DIR . 'includes/defaults.php';
 		require_once self::$DIR . 'includes/general-functions.php';
 		require_once self::$DIR . 'includes/extensions-functions.php';
@@ -294,7 +298,6 @@ class Popup_Maker {
 
 		require_once self::$DIR . 'includes/templates.php';
 		require_once self::$DIR . 'includes/load-popups.php';
-		require_once self::$DIR . 'includes/license-handler.php';
 
 		// Phasing Out
 		require_once self::$DIR . 'includes/class-popmake-fields.php';
@@ -379,6 +382,7 @@ class Popup_Maker {
 	}
 
 	public function init() {
+		$this->cron = new PUM_Utils_Cron;
 		$this->popups = new PUM_Repository_Popups();
 		$this->themes = new PUM_Repository_Themes();
 
