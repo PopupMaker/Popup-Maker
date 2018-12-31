@@ -236,8 +236,8 @@ class PUM_Admin_Settings {
 			$fields = array(
 				'general' => array(
 					'main' => array(
-						'default_theme_id'        => array(
-							'label'     => __( 'Default Popup Theme', 'popup-maker' ),
+						'default_theme_id'     => array(
+							'label'        => __( 'Default Popup Theme', 'popup-maker' ),
 							'dynamic_desc' => sprintf( '%1$s<br/><a id="edit_theme_link" href="%3$s">%2$s</a>', __( 'Choose the default theme used for new popups', 'popup-maker' ), __( 'Customize This Theme', 'popup-maker' ), admin_url( "post.php?action=edit&post={{data.value}}" ) ),
 							'type'         => 'select',
 							'options'      => PUM_Helpers::popup_theme_selectlist(),
@@ -468,7 +468,7 @@ class PUM_Admin_Settings {
 						'output_pum_styles'               => array(
 							'id'      => 'output_pum_styles',
 							'type'    => 'html',
-							'content' => popmake_output_pum_styles(),
+							'content' => self::field_pum_styles(),
 						),
 					),
 				),
@@ -484,6 +484,41 @@ class PUM_Admin_Settings {
 
 		return $fields;
 	}
+
+	/**
+	 * @return string
+	 */
+	public static function field_pum_styles() {
+		$core_styles = file_get_contents( Popup_Maker::$DIR . 'assets/css/site' . PUM_Site_Assets::$suffix . '.css' );
+
+		$user_styles = PUM_AssetCache::generate_font_imports() . PUM_AssetCache::generate_popup_theme_styles() . PUM_AssetCache::generate_popup_styles();
+
+		ob_start();
+
+		?>
+		<button type="button" id="show_pum_styles" onclick="jQuery('#pum_style_output').slideDown();jQuery(this).hide();"><?php _e( 'Show Popup Maker CSS', 'popup-maker' ); ?></button>
+		<p class="pum-desc desc"><?php __( "Use this to quickly copy Popup Maker's CSS to your own stylesheet.", 'popup-maker' ); ?></p>
+
+		<div id="pum_style_output" style="display:none;">
+			<label for="pum_core_styles"><?php _e( 'Core Styles', 'popup-maker' ); ?></label>
+			<br />
+
+			<textarea id="pum_core_styles" wrap="off" style="white-space: pre; width: 100%;" readonly="readonly"><?php echo $core_styles; ?></textarea>
+
+			<br />
+			<br />
+
+			<label for="pum_generated_styles"><?php _e( 'Generated Popup & Popup Theme Styles', 'popup-maker' ); ?></label>
+			<br />
+
+			<textarea id="pum_generated_styles" wrap="off" style="white-space: pre; width: 100%; min-height: 200px;" readonly="readonly"><?php echo $user_styles; ?></textarea>
+		</div>
+
+		<?php
+
+		return ob_get_clean();
+	}
+
 
 	/**
 	 * @return array
@@ -550,6 +585,7 @@ class PUM_Admin_Settings {
 				<button class="button-primary bottom right"><?php _e( 'Save', 'popup-maker' ); ?></button>
 
 			</form>
+
 		</div>
 
 		<?php

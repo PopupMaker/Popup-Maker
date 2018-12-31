@@ -243,51 +243,17 @@ class Popup_Maker {
 		// Initialize global options
 		PUM_Utils_Options::init();
 
-		/** @deprecated 1.7.0 */
-		require_once self::$DIR . 'includes/admin/settings/register-settings.php';
-
+		/** Loads most of our core functions */
 		require_once self::$DIR . 'includes/functions.php';
 
-		/** General Functions */
-		require_once self::$DIR . 'includes/functions/cache.php';
-		require_once self::$DIR . 'includes/functions/options.php';
-		require_once self::$DIR . 'includes/functions/upgrades.php';
-		require_once self::$DIR . 'includes/functions/developers.php';
-
-		/** Popup functions */
-		require_once self::$DIR . 'includes/popups/conditionals.php';
-		require_once self::$DIR . 'includes/popups/deprecated.php';
-		require_once self::$DIR . 'includes/popups/migrations.php';
-		require_once self::$DIR . 'includes/popups/getters.php';
-		require_once self::$DIR . 'includes/popups/queries.php';
-
-		/** Popup Theme functions */
-		require_once self::$DIR . 'includes/themes/conditionals.php';
-		require_once self::$DIR . 'includes/themes/deprecated.php';
-		require_once self::$DIR . 'includes/themes/getters.php';
-		require_once self::$DIR . 'includes/themes/migrations.php';
-		require_once self::$DIR . 'includes/themes/queries.php';
-		require_once self::$DIR . 'includes/themes/template.php';
-
 		/** Deprecated functionality */
-		require_once self::$DIR . 'includes/deprecated-functions.php';
-
-
-
+		require_once self::$DIR . 'includes/functions-backcompat.php';
+		require_once self::$DIR . 'includes/functions-deprecated.php';
+		require_once self::$DIR . 'includes/deprecated-classes.php';
 
 		// Old Stuff.
-
-
-
-
-
-
-		// TODO Find another place for these admin functions so this can be put in its correct place.
-		require_once self::$DIR . 'includes/admin/admin-pages.php';
-
 		require_once self::$DIR . 'includes/actions.php';
 		require_once self::$DIR . 'includes/defaults.php';
-		require_once self::$DIR . 'includes/general-functions.php';
 		require_once self::$DIR . 'includes/extensions-functions.php';
 		require_once self::$DIR . 'includes/input-options.php';
 		require_once self::$DIR . 'includes/theme-functions.php';
@@ -311,8 +277,6 @@ class Popup_Maker {
 
 		// Functions
 		require_once self::$DIR . 'includes/pum-template-functions.php';
-		require_once self::$DIR . 'includes/pum-general-functions.php';
-		require_once self::$DIR . 'includes/pum-misc-functions.php';
 		require_once self::$DIR . 'includes/pum-template-hooks.php';
 
 		// Modules
@@ -330,12 +294,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/pum-deprecated-v1.4.php';
 		require_once self::$DIR . 'includes/pum-deprecated-v1.7.php';
 
-		require_once self::$DIR . 'includes/admin/admin-setup.php';
-		require_once self::$DIR . 'includes/admin/admin-functions.php';
-		require_once self::$DIR . 'includes/admin/extensions/extensions-page.php';
-		require_once self::$DIR . 'includes/admin/pages/support.php';
-		require_once self::$DIR . 'includes/admin/metabox-support.php';
-
 		require_once self::$DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
 		require_once self::$DIR . 'includes/integrations/class-pum-buddypress-integration.php';
 
@@ -349,7 +307,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/integrations/class-pum-wpml.php';
 
 		require_once self::$DIR . 'includes/pum-install-functions.php';
-		require_once self::$DIR . 'includes/install.php';
 	}
 
 	/**

@@ -111,7 +111,8 @@ class PUM_Activator {
 		PUM_Utils_Upgrades::update_plugin_version();
 
 		// Add a temporary option that will fire a hookable action on next load.
-		set_transient( '_popmake_installed', true, 30 );
+		set_transient( '_pum_freshly_installed', true, 60 );
+		set_transient( '_pum_installed', true, 604800 );
 
 		pum_get_default_theme_id();
 		pum_install_built_in_themes();

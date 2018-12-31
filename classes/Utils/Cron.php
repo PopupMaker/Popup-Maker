@@ -3,6 +3,9 @@
  * Copyright (c) 2018, WP Popup Maker
  ******************************************************************************/
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Class PUM_Utils_Cron

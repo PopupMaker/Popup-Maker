@@ -7,6 +7,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-require_once 'popups/queries.php';
-require_once 'popups/conditionals.php';
-require_once 'popups/getters.php';
+/** General Functions */
+require_once 'functions/cache.php';
+require_once 'functions/developers.php';
+require_once 'functions/general.php';
+require_once 'functions/newsletter.php';
+require_once 'functions/options.php';
+require_once 'functions/upgrades.php';
+
+/** Admin Functions */
+require_once 'functions/admin/conditionals.php';
+require_once 'functions/admin/general.php';
+
+/** Popup functions */
+require_once 'functions/popups/conditionals.php';
+require_once 'functions/popups/deprecated.php';
+require_once 'functions/popups/getters.php';
+require_once 'functions/popups/migrations.php';
+require_once 'functions/popups/queries.php';
+
+/** Popup Theme functions */
+require_once 'functions/themes/conditionals.php';
+require_once 'functions/themes/deprecated.php';
+require_once 'functions/themes/getters.php';
+require_once 'functions/themes/migrations.php';
+require_once 'functions/themes/portability.php';
+require_once 'functions/themes/queries.php';
+require_once 'functions/themes/template.php';

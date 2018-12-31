@@ -3,6 +3,13 @@
  * Copyright (c) 2018, WP Popup Maker
  ******************************************************************************/
 
+/**
+ * @param       $name
+ * @param null  $settings
+ * @param array $extra_meta
+ *
+ * @return int|\WP_Error
+ */
 function pum_install_theme( $name, $settings = null, $extra_meta = array() ) {
 	if ( ! isset( $settings ) ) {
 		$settings = PUM_Admin_Themes::defaults();
@@ -25,6 +32,11 @@ function pum_install_theme( $name, $settings = null, $extra_meta = array() ) {
 
 }
 
+/**
+ * @param $hash
+ *
+ * @return mixed
+ */
 function pum_import_theme_from_repo( $hash ) {
 	$theme_data = array(
 		'name'            => __( 'Imported Theme', 'popup-maker' ),
