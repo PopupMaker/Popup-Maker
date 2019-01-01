@@ -15,21 +15,19 @@ class PUM_WPML_Integration {
 	 *
 	 */
 	public static function init() {
-		if ( defined( 'ICL_SITEPRESS_VERSION' ) && ICL_SITEPRESS_VERSION ) {
-			add_action( 'icl_make_duplicate', array( __CLASS__, 'duplicate_post' ), 10, 4 );
-			/*
-			add_filter( 'pum_popup', array( __CLASS__, 'pum_popup' ), 10, 2 );
-			TODO Further testing of this filter may prove 80+% of the following unneeded.
-			*/
-			add_filter( 'pum_popup_get_display', array( __CLASS__, 'popup_get_display' ), 10, 2 );
-			add_filter( 'pum_popup_get_close', array( __CLASS__, 'popup_get_close' ), 10, 2 );
-			add_filter( 'pum_popup_get_triggers', array( __CLASS__, 'popup_get_triggers' ), 10, 2 );
-			add_filter( 'pum_popup_get_cookies', array( __CLASS__, 'popup_get_cookies' ), 10, 2 );
-			add_filter( 'pum_popup_get_conditions', array( __CLASS__, 'popup_get_conditions' ), 10, 2 );
-			add_filter( 'pum_popup_get_theme_id', array( __CLASS__, 'popup_get_theme_id' ), 10, 2 );
-			add_filter( 'pum_popup_mobile_disabled', array( __CLASS__, 'popup_mobile_disabled' ), 10, 2 );
-			add_filter( 'pum_popup_tablet_disabled', array( __CLASS__, 'popup_tablet_disabled' ), 10, 2 );
-		}
+		add_action( 'icl_make_duplicate', array( __CLASS__, 'duplicate_post' ), 10, 4 );
+		/*
+		add_filter( 'pum_popup', array( __CLASS__, 'pum_popup' ), 10, 2 );
+		TODO Further testing of this filter may prove 80+% of the following unneeded.
+		*/
+		add_filter( 'pum_popup_get_display', array( __CLASS__, 'popup_get_display' ), 10, 2 );
+		add_filter( 'pum_popup_get_close', array( __CLASS__, 'popup_get_close' ), 10, 2 );
+		add_filter( 'pum_popup_get_triggers', array( __CLASS__, 'popup_get_triggers' ), 10, 2 );
+		add_filter( 'pum_popup_get_cookies', array( __CLASS__, 'popup_get_cookies' ), 10, 2 );
+		add_filter( 'pum_popup_get_conditions', array( __CLASS__, 'popup_get_conditions' ), 10, 2 );
+		add_filter( 'pum_popup_get_theme_id', array( __CLASS__, 'popup_get_theme_id' ), 10, 2 );
+		add_filter( 'pum_popup_mobile_disabled', array( __CLASS__, 'popup_mobile_disabled' ), 10, 2 );
+		add_filter( 'pum_popup_tablet_disabled', array( __CLASS__, 'popup_tablet_disabled' ), 10, 2 );
 	}
 
 	/**
@@ -366,5 +364,3 @@ class PUM_WPML_Integration {
 	}
 
 }
-
-add_action( 'init', 'PUM_WPML_Integration::init' );

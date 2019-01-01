@@ -74,11 +74,6 @@ class PUM_Activator {
 			return;
 		}
 
-		// Get the Version Data Set.
-		if ( ! class_exists( 'PUM_Admin_Upgrades' ) ) {
-			require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-upgrades.php';
-		}
-
 		// Running on a single blog
 
 		self::activate_site();

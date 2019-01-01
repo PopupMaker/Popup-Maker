@@ -8,10 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Woocommerce_Integration {
 
 	public static function init() {
-		if ( function_exists( 'WC' ) || class_exists( 'WooCommerce' ) ) {
-			add_filter( 'pum_registered_conditions', array( __CLASS__, 'register_conditions' ) );
-			add_filter( 'pum_condition_sort_order', array( __CLASS__, 'condition_sort_order' ) );
-		}
+		add_filter( 'pum_registered_conditions', array( __CLASS__, 'register_conditions' ) );
+		add_filter( 'pum_condition_sort_order', array( __CLASS__, 'condition_sort_order' ) );
 	}
 
 	public static function is_wc_endpoint_url( $settings = array() ) {
@@ -89,4 +87,3 @@ class PUM_Woocommerce_Integration {
 
 }
 
-add_action( 'init', 'PUM_Woocommerce_Integration::init' );

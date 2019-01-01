@@ -7,6 +7,7 @@ class PUM_Site {
 		PUM_Site_Popups::init();
 		PUM_Analytics::init();
 
+		add_action( 'init', array( __CLASS__, 'actions' ) );
 		/**
 		 * @since 1.4 hooks & filters
 		 */
@@ -21,5 +22,22 @@ class PUM_Site {
 		add_filter( 'pum_popup_content', 'force_balance_tags', 10 );
 		add_filter( 'pum_popup_content', 'do_shortcode', 11 );
 		add_filter( 'pum_popup_content', 'capital_P_dangit', 11 );
+	}
+
+	/**
+	 * Hooks Popup Maker actions, when present in the $_GET superglobal. Every popmake_action
+	 * present in $_GET is called using WordPress's do_action function. These
+	 * functions are called on init.
+	 */
+	public static function actions() {
+		if ( isset( $_GET['popmake_action'] ) ) {
+			do_action( 'popmake_' . $_GET['popmake_action'], $_GET );
+		} else if ( isset( $_POST['popmake_action'] ) ) {
+			do_action( 'popmake_' . $_POST['popmake_action'], $_POST );
+		} else if ( isset( $_GET['pum_action'] ) ) {
+			do_action( 'pum_' . $_GET['pum_action'], $_GET );
+		} else if ( isset( $_POST['pum_action'] ) ) {
+			do_action( 'pum_' . $_POST['pum_action'], $_POST );
+		}
 	}
 }

@@ -252,10 +252,8 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/deprecated-classes.php';
 
 		// Old Stuff.
-		require_once self::$DIR . 'includes/actions.php';
 		require_once self::$DIR . 'includes/defaults.php';
 		require_once self::$DIR . 'includes/input-options.php';
-		require_once self::$DIR . 'includes/ajax-calls.php';
 
 		require_once self::$DIR . 'includes/importer/easy-modal-v2.php';
 
@@ -273,18 +271,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/modules/menus.php';
 		require_once self::$DIR . 'includes/modules/admin-bar.php';
 		require_once self::$DIR . 'includes/modules/reviews.php';
-
-		require_once self::$DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
-		require_once self::$DIR . 'includes/integrations/class-pum-buddypress-integration.php';
-
-		// Ninja Forms Integration
-		require_once self::$DIR . 'includes/integrations/class-pum-ninja-forms.php';
-		// CF7 Forms Integration
-		require_once self::$DIR . 'includes/integrations/class-pum-cf7.php';
-		// Gravity Forms Integration
-		require_once self::$DIR . 'includes/integrations/class-pum-gravity-forms.php';
-		// WPML Integration
-		require_once self::$DIR . 'includes/integrations/class-pum-wpml.php';
 
 		require_once self::$DIR . 'includes/pum-install-functions.php';
 	}

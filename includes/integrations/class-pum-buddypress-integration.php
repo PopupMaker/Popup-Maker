@@ -17,10 +17,8 @@ class PUM_BuddyPress_Integration {
 	 *
 	 */
 	public static function init() {
-		if ( function_exists( 'buddypress' ) || class_exists( 'BuddyPress' ) ) {
-			add_filter( 'pum_get_conditions', array( __CLASS__, 'get_conditions' ) );
-			add_filter( 'pum_condition_sort_order', array( __CLASS__, 'condition_sort_order' ) );
-		}
+		add_filter( 'pum_registered_conditions', array( __CLASS__, 'registered_conditions' ) );
+		add_filter( 'pum_condition_sort_order', array( __CLASS__, 'condition_sort_order' ) );
 	}
 
 	/**
@@ -28,63 +26,113 @@ class PUM_BuddyPress_Integration {
 	 *
 	 * @return array
 	 */
-	public static function get_conditions( $conditions = array() ) {
+	public static function registered_conditions( $conditions = array() ) {
+
+		$conditions = array_merge( $conditions, array(
+			// Add Additional Conditions
+			'is_buddypress' => array(
+				'group'    => __( 'BuddyPress', 'buddypress' ),
+				'name'     => __( 'BP: Is a BuddyPress Page', 'popup-maker-buddypress-integration' ),
+				'callback' => 'is_buddypress',
+			),
+
+			'bp_is_user' => array(
+				'group'    => __( 'BuddyPress', 'buddypress' ),
+				'name'     => __( 'BP: Is User Page', 'popup-maker-buddypress-integration' ),
+				'callback' => 'bp_is_user',
+			),
+
+			'bp_is_group' => array(
+				'group'    => __( 'BuddyPress', 'buddypress' ),
+				'name'     => __( 'BP: Is Group Page', 'popup-maker-buddypress-integration' ),
+				'callback' => 'bp_is_group',
+			),
+
+			'bp_is_user_messages' => array(
+				'group'    => __( 'BuddyPress', 'buddypress' ),
+				'name'     => __( 'BP: Is User Messages Page', 'popup-maker-buddypress-integration' ),
+				'callback' => 'bp_is_user_messages',
+			),
+
+			'bp_is_activation_page' => array(
+				'group'    => __( 'BuddyPress', 'buddypress' ),
+				'name'     => __( 'BP: Is Activation Page', 'popup-maker-buddypress-integration' ),
+				'callback' => 'bp_is_activation_page',
+			),
+
+			'bp_is_register_page' => array(
+				'group'    => __( 'BuddyPress', 'buddypress' ),
+				'name'     => __( 'BP: Is Register Page', 'popup-maker-buddypress-integration' ),
+				'callback' => 'bp_is_register_page',
+			),
+
+			'bp_is_item_admin' => array(
+				'group'    => __( 'BuddyPress', 'buddypress' ),
+				'name'     => __( 'BP: Is Item Admin', 'popup-maker-buddypress-integration' ),
+				'callback' => 'bp_is_item_admin',
+			),
+
+			'bp_is_item_mod' => array(
+				'group'    => __( 'BuddyPress', 'buddypress' ),
+				'name'     => __( 'BP: Is Item Mod', 'popup-maker-buddypress-integration' ),
+				'callback' => 'bp_is_item_mod',
+			),
+
+			'bp_is_directory'         => array(
+				'group'    => __( 'BuddyPress', 'buddypress' ),
+				'name'     => __( 'BP: Is Directory', 'popup-maker-buddypress-integration' ),
+				'callback' => 'bp_is_directory',
+			),
+			'bp_is_current_component' => array(
+				'group'    => __( 'BuddyPress', 'buddypress' ),
+				'name'     => __( 'BP: Is Current Component', 'popup-maker-buddypress-integration' ),
+				'fields'   => array(
+					'selected' => array(
+						'type'     => 'select',
+						'multiple' => true,
+						'as_array' => true,
+						'select2'  => true,
+						'options'  => self::component_option_list(),
+						'label'    => __( 'Which components?' ),
+					),
+				),
+				'callback' => array( __CLASS__, 'bp_is_current_component' ),
+			),
+
+			'bp_is_current_action' => array(
+				'group'    => __( 'BuddyPress', 'buddypress' ),
+				'name'     => __( 'BP: Is Current Action', 'popup-maker-buddypress-integration' ),
+				'fields'   => array(
+					'selected' => array(
+						'type'  => 'text',
+						'label' => __( 'Which actions?' ),
+					),
+				),
+				'callback' => array( __CLASS__, 'bp_is_current_action' ),
+			),
+
+			'bp_is_action_variable' => array(
+				'group'    => __( 'BuddyPress', 'buddypress' ),
+				'name'     => __( 'BP: Is Action Variable', 'popup-maker-buddypress-integration' ),
+				'fields'   => array(
+					'selected' => array(
+						'type'  => 'text',
+						'label' => __( 'Which action variables?' ),
+					),
+				),
+				'callback' => array( __CLASS__, 'bp_is_action_variable' ),
+			),
+
+		) );
+
+		return $conditions;
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function component_option_list() {
 		global $bp;
-
-		// Add Additional Conditions
-		$conditions['is_buddypress'] = array(
-			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'name'     => __( 'BP: Is a BuddyPress Page', 'popup-maker' ),
-			'callback' => 'is_buddypress',
-		);
-
-		$conditions['bp_is_user'] = array(
-			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'name'     => __( 'BP: Is User Page', 'popup-maker' ),
-			'callback' => 'bp_is_user',
-		);
-
-		$conditions['bp_is_group'] = array(
-			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'name'     => __( 'BP: Is Group Page', 'popup-maker' ),
-			'callback' => 'bp_is_group',
-		);
-
-		$conditions['bp_is_user_messages'] = array(
-			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'name'     => __( 'BP: Is User Messages Page', 'popup-maker' ),
-			'callback' => 'bp_is_user_messages',
-		);
-
-		$conditions['bp_is_activation_page'] = array(
-			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'name'     => __( 'BP: Is Activation Page', 'popup-maker' ),
-			'callback' => 'bp_is_activation_page',
-		);
-
-		$conditions['bp_is_register_page'] = array(
-			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'name'     => __( 'BP: Is Register Page', 'popup-maker' ),
-			'callback' => 'bp_is_register_page',
-		);
-
-		$conditions['bp_is_item_admin'] = array(
-			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'name'     => __( 'BP: Is Item Admin', 'popup-maker' ),
-			'callback' => 'bp_is_item_admin',
-		);
-
-		$conditions['bp_is_item_mod'] = array(
-			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'name'     => __( 'BP: Is Item Mod', 'popup-maker' ),
-			'callback' => 'bp_is_item_mod',
-		);
-
-		$conditions['bp_is_directory'] = array(
-			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'name'     => __( 'BP: Is Directory', 'popup-maker' ),
-			'callback' => 'bp_is_directory',
-		);
 
 		$components = array();
 
@@ -92,47 +140,7 @@ class PUM_BuddyPress_Integration {
 			$components[ $component ] = ucfirst( $component );
 		}
 
-		$conditions['bp_is_current_component'] = array(
-			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'name'     => __( 'BP: Is Current Component', 'popup-maker' ),
-			'fields'   => array(
-				'selected' => array(
-					'type'     => 'select',
-					'multiple' => true,
-					'as_array' => true,
-					'select2'  => true,
-					'options'  => $components,
-					'label'    => __( 'Which components?' ),
-				),
-			),
-			'callback' => array( __CLASS__, 'bp_is_current_component' ),
-		);
-
-		$conditions['bp_is_current_action'] = array(
-			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'name'     => __( 'BP: Is Current Action', 'popup-maker' ),
-			'fields'   => array(
-				'selected' => array(
-					'type'  => 'text',
-					'label' => __( 'Which actions?' ),
-				),
-			),
-			'callback' => array( __CLASS__, 'bp_is_current_action' ),
-		);
-
-		$conditions['bp_is_action_variable'] = array(
-			'group'    => __( 'BuddyPress', 'buddypress' ),
-			'name'     => __( 'BP: Is Action Variable', 'popup-maker' ),
-			'fields'   => array(
-				'selected' => array(
-					'type'  => 'text',
-					'label' => __( 'Which action variables?' ),
-				),
-			),
-			'callback' => array( __CLASS__, 'bp_is_action_variable' ),
-		);
-
-		return $conditions;
+		return $components;
 	}
 
 	/**
@@ -238,5 +246,3 @@ class PUM_BuddyPress_Integration {
 	}
 
 }
-
-add_action( 'init', 'PUM_BuddyPress_Integration::init' );

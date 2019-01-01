@@ -365,4 +365,79 @@ function popmake_get_template_part( $slug, $name = null, $load = true ) {
 	}
 }
 
+/**
+ * Theme Overlay Metabox
+ *
+ * Extensions (as well as the core plugin) can add items to the theme overlay
+ * configuration metabox via the `popmake_popup_theme_overlay_meta_box_fields` action.
+ *
+ * @since 1.0
+ * @deprecated 1.8.0
+ */
+function popmake_render_popup_theme_overlay_meta_box() {
+	if ( ! has_action( 'popmake_popup_theme_overlay_meta_box_fields' ) ) {
+		return;
+	}
+
+	global $post;
+	wp_nonce_field( basename( __FILE__ ), 'popmake_popup_theme_meta_box_nonce' ); ?>
+	<input type="hidden" name="popup_theme_defaults_set" value="true"/>
+	<div id="popmake_popup_theme_overlay_fields" class="popmake_meta_table_wrap">
+	<table class="form-table">
+		<tbody>
+		<?php do_action( 'popmake_popup_theme_overlay_meta_box_fields', $post->ID ); ?>
+		</tbody>
+	</table>
+	</div><?php
+}
+
+/**
+ * Theme Container Metabox
+ *
+ * Extensions (as well as the core plugin) can add items to the theme container
+ * configuration metabox via the `popmake_popup_theme_container_meta_box_fields` action.
+ *
+ * @since 1.0
+ * @deprecated 1.8.0
+ */
+function popmake_render_popup_theme_container_meta_box() {
+	if ( ! has_action( 'popmake_popup_theme_container_meta_box_fields' ) ) {
+		return;
+	}
+
+	global $post; ?>
+	<div id="popmake_popup_theme_container_fields" class="popmake_meta_table_wrap">
+	<table class="form-table">
+		<tbody>
+		<?php do_action( 'popmake_popup_theme_container_meta_box_fields', $post->ID ); ?>
+		</tbody>
+	</table>
+	</div><?php
+}
+
+/**
+ * Theme Close Metabox
+ *
+ * Extensions (as well as the core plugin) can add items to the popup close
+ * configuration metabox via the `popmake_popup_theme_close_meta_box_fields` action.
+ *
+ * @since 1.0
+ * @deprecated 1.8.0
+ */
+function popmake_render_popup_theme_close_meta_box() {
+	if ( ! has_action( 'popmake_popup_theme_close_meta_box_fields' ) ) {
+		return;
+	}
+
+	global $post; ?>
+	<div id="popmake_popup_theme_close_fields" class="popmake_meta_table_wrap">
+	<table class="form-table">
+		<tbody>
+		<?php do_action( 'popmake_popup_theme_close_meta_box_fields', $post->ID ); ?>
+		</tbody>
+	</table>
+	</div><?php
+}
+
+
 #endregion
