@@ -57,6 +57,7 @@ var PUM_Analytics;
                         pid: parseInt($popup.popmake('getSettings').id, 10) || null
                     };
 
+                // Shortcode popups use negative numbers, and single-popup (preview mode) shouldn't be tracked.
                 if (data.pid > 0 && !$('body').hasClass('single-popup')) {
                     PUM_Analytics.beacon(data);
                 }

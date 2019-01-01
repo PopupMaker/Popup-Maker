@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Render the popup ID
  *
- * @param null|int $popup_id
+ * @param null|int|string $popup_id
  */
 function pum_popup_ID( $popup_id = null ) {
 	$popup = pum_get_popup( $popup_id );

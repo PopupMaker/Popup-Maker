@@ -68,6 +68,22 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	public $close;
 
 	/**
+	 * Used to hackishly insert settings for generated popups not stored in DB. (Shortcodes).
+	 *
+	 * @var array
+	 * @since 1.8.0
+	 */
+	public $settings = null;
+
+	/**
+	 * Used to hackishly insert title for generated popups not stored in DB. (Shortcodes).
+	 *
+	 * @var string
+	 * @since 1.8.0
+	 */
+	public $title = null;
+
+	/**
 	 * Returns the title of a popup.
 	 *
 	 * @uses filter `pum_popup_get_title`
@@ -75,7 +91,9 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @return string
 	 */
 	public function get_title() {
-		return (string) apply_filters( 'pum_popup_get_title', (string) $this->get_meta( 'popup_title' ), $this->ID );
+		$title = isset( $this->title ) ? $this->title : $this->get_meta( 'popup_title' );
+
+		return (string) apply_filters( 'pum_popup_get_title', (string) $title, $this->ID );
 	}
 
 	/**
@@ -98,7 +116,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @return array
 	 */
 	public function get_settings() {
-		$settings = $this->get_meta( 'popup_settings' );
+		// This hack is here to allow creating popups on the fly without saved meta.
+		$settings = isset( $this->settings ) ? $this->settings : $this->get_meta( 'popup_settings' );
 
 		if ( ! is_array( $settings ) ) {
 			$settings = array();

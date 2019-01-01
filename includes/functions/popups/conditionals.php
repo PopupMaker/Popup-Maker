@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return bool
  */
 function pum_is_popup( $popup ) {
-	return pum_is_popup_object( $popup ) && $popup->ID > 0 && $popup->is_valid();
+	return pum_is_popup_object( $popup ) && $popup->is_valid();
 }
 
 /**
