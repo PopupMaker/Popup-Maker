@@ -262,8 +262,6 @@ class Popup_Maker {
 
 		require_once self::$DIR . 'includes/importer/easy-modal-v2.php';
 
-		require_once self::$DIR . 'includes/templates.php';
-
 		// Phasing Out
 		require_once self::$DIR . 'includes/class-popmake-fields.php';
 		require_once self::$DIR . 'includes/class-popmake-popup-fields.php';

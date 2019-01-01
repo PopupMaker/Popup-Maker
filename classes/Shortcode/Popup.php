@@ -333,7 +333,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 		);
 
 		ob_start();
-		popmake_get_template_part( 'popup' );
+		pum_get_template_part( 'popup' );
 
 		return ob_get_clean();
 	}

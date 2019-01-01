@@ -165,7 +165,7 @@ class PUM_Site_Popups {
 		if ( $loaded->have_posts() ) {
 			while ( $loaded->have_posts() ) : $loaded->next_post();
 				pum()->current_popup = $loaded->post;
-				popmake_get_template_part( 'popup' );
+				pum_get_template_part( 'popup' );
 			endwhile;
 			pum()->current_popup = null;
 		}

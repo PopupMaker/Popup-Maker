@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** Utility Functions */
 require_once 'functions/utils/cache.php';
 require_once 'functions/utils/options.php';
+require_once 'functions/utils/template.php';
 require_once 'functions/utils/upgrades.php';
 
 /** General Functions */
@@ -27,6 +28,7 @@ require_once 'functions/popups/deprecated.php';
 require_once 'functions/popups/getters.php';
 require_once 'functions/popups/migrations.php';
 require_once 'functions/popups/queries.php';
+require_once 'functions/popups/template.php';
 
 /** Popup Theme functions */
 require_once 'functions/themes/conditionals.php';

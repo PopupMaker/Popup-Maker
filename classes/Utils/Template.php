@@ -18,11 +18,18 @@ class PUM_Utils_Template {
 	public static function paths() {
 		$template_dir = apply_filters( 'pum_template_path', 'popup-maker' );
 
+		$old_template_dir = apply_filters( 'popmake_templates_dir', 'popmake_templates' );
+
 		$file_paths = apply_filters( 'pum_template_paths', array(
 			1   => trailingslashit( get_stylesheet_directory() ) . $template_dir,
+			2   => trailingslashit( get_stylesheet_directory() ) . $old_template_dir,
 			10  => trailingslashit( get_template_directory() ) . $template_dir,
+			11  => trailingslashit( get_template_directory() ) . $old_template_dir,
 			100 => Popup_Maker::$DIR . 'templates',
 		) );
+
+		/* @deprecated 1.8.9 */
+		$file_paths = apply_filters( 'popmake_template_paths', $file_paths );
 
 		// sort the file paths based on priority
 		ksort( $file_paths, SORT_NUMERIC );
@@ -115,6 +122,9 @@ class PUM_Utils_Template {
 		// Allow template parts to be filtered
 		$templates = apply_filters( 'pum_locate_template_part', $templates, $slug, $name );
 
+		/* @deprecated 1.8.0 */
+		$templates = apply_filters( 'popmake_get_template_part', $templates, $slug, $name );
+
 		// Return the part that is found
 		return self::locate( $templates, $load, false );
 	}
@@ -171,6 +181,9 @@ class PUM_Utils_Template {
 		ob_start();
 
 		do_action( 'pum_before_template_part', $template, $slug, $name, $args );
+
+		/* @deprecated 1.8.0 */
+		do_action( 'get_template_part_' . $slug, $slug, $name );
 
 		self::render( $template, $args );
 

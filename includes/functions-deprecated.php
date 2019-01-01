@@ -269,4 +269,23 @@ function pum_load_popup( $id ) {
 	PUM_Site_Popups::load_popup( $id );
 };
 
+/**
+ * Retrieves a template part
+ *
+ * @deprecated 1.8.0 Use pum_get_template_part instead.
+ *
+ * @param string      $slug
+ * @param null|string $name
+ * @param bool        $load
+ *
+ * @return string
+ */
+function popmake_get_template_part( $slug, $name = null, $load = true ) {
+	if ( $load ) {
+		return pum_get_template_part( $slug, $name );
+	} else {
+		return PUM_Utils_Template::locate_part( $slug, $name, false );
+	}
+}
+
 #endregion
