@@ -306,6 +306,8 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 		$post->post_name      = $atts['id']; // append random number to avoid clash
 		$post->post_type      = 'popup';
 		$post->filter         = 'raw'; // important!
+		$post->data_version   = 3;
+		$post->mock           = true;
 
 		// Convert to WP_Post object
 		$wp_post = new WP_Post( $post );

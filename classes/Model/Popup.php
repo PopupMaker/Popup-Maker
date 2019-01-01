@@ -84,6 +84,28 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	public $title = null;
 
 	/**
+	 * Used to hackishly change the model to prevent queries. (Shortcodes).
+	 *
+	 * @var string
+	 * @since 1.8.0
+	 */
+	public $mock = false;
+
+	/**
+	 * @param      $key
+	 * @param bool $single
+	 *
+	 * @return mixed|false
+	 */
+	public function get_meta( $key, $single = true ) {
+		if ( $this->mock ) {
+			return false;
+		}
+
+		return parent::get_meta( $key, $single );
+	}
+
+	/**
 	 * Returns the title of a popup.
 	 *
 	 * @uses filter `pum_popup_get_title`
@@ -294,6 +316,10 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @return mixed
 	 */
 	protected function _dep_get_settings_group( $group, $key = null ) {
+		if ( $this->mock ) {
+			return array();
+		}
+
 		if ( ! $this->$group ) {
 			/**
 			 * Remap old meta settings to new settings location for v1.7. This acts as a passive migration when needed.
@@ -533,9 +559,13 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 *
 	 * @deprecated 1.8.0
 	 *
-	 * @return array
+	 * @return array|bool
 	 */
 	public function get_data_attr() {
+		if ( $this->mock ) {
+			return false;
+		}
+
 		$data_attr = array(
 			'id'              => $this->ID,
 			'slug'            => $this->post_name,
