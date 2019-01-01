@@ -88,7 +88,6 @@ class PUM_Site_Popups {
 			return;
 		}
 
-
 		$popups = pum_get_all_popups();
 
 		if ( ! empty( $popups ) ) {
@@ -107,6 +106,10 @@ class PUM_Site_Popups {
 			// Clear the global $current.
 			pum()->current_popup = null;
 
+			if ( count( self::$loaded_ids ) ) {
+				// Preload themes if popups are found to be loadable.
+				pum_get_all_themes();
+			}
 		}
 
 	}

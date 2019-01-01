@@ -240,7 +240,7 @@ class PUM_Admin_Settings {
 							'label'        => __( 'Default Popup Theme', 'popup-maker' ),
 							'dynamic_desc' => sprintf( '%1$s<br/><a id="edit_theme_link" href="%3$s">%2$s</a>', __( 'Choose the default theme used for new popups', 'popup-maker' ), __( 'Customize This Theme', 'popup-maker' ), admin_url( "post.php?action=edit&post={{data.value}}" ) ),
 							'type'         => 'select',
-							'options'      => PUM_Helpers::popup_theme_selectlist(),
+							'options'      => pum_is_settings_page() ? PUM_Helpers::popup_theme_selectlist() : null,
 							'std'          => pum_get_default_theme_id(),
 						),
 						'google_fonts_api_key' => array(

@@ -107,7 +107,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 						'desc'        => __( 'Choose which popup theme will be used.', 'popup-maker' ),
 						'std'         => pum_get_default_theme_id(),
 						'select2'     => true,
-						'options'     => PUM_Helpers::popup_theme_selectlist(),
+						'options'     => pum_is_settings_page() ? PUM_Helpers::popup_theme_selectlist() : null,
 						'required'    => true,
 						'priority'    => 5,
 					),
