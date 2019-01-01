@@ -18,6 +18,36 @@ function pum_get_db_ver() {
 }
 
 /**
+ * Returns the default theme_id from global settings.
+ *
+ * Returns false if none set.
+ *
+ * @since 1.8.0
+ *
+ * @return int|false
+ */
+function pum_get_default_theme_id() {
+	$default_theme_id = pum_get_option( 'default_theme_id' );
+
+	if ( false === $default_theme_id ) {
+		$default_theme_id = get_option( 'popmake_default_theme' );
+
+		if ( false === $default_theme_id ) {
+			if ( ! function_exists( 'popmake_install_default_theme' ) ) {
+				include_once POPMAKE_DIR . 'includes/install.php';
+			}
+
+			$default_theme_id = pum_install_default_theme();
+			pum_update_option( 'default_theme_id', $default_theme_id );
+		}
+	}
+
+	$theme = absint( $default_theme_id ) ? pum_get_theme( $default_theme_id ) : false;
+
+	return $theme && pum_is_theme( $theme ) ? $theme->ID : false;
+}
+
+/**
  * Resets both asset cached files & transient CSS storage to be regenerated.
  *
  * @since 1.8.0
@@ -29,21 +59,14 @@ function pum_reset_assets() {
 	delete_transient( 'popmake_theme_styles' );
 }
 
-if ( ! function_exists( 'maybe_json_attr' ) ) {
-	function maybe_json_attr( $value, $encode = false ) {
-		if ( is_object( $value ) || is_array( $value ) ) {
-			return $encode ? htmlspecialchars( wp_json_encode( $value ) ) : wp_json_encode( $value );
-		}
-		return $value;
-	}
-}
-
 /**
  * Returns array key from dot notated array key..
  *
  * @since 1.0
  *
- * @param string $a is the array you are searching.
+ * @deprecated 1.8.0
+ *
+ * @param array $a is the array you are searching.
  * @param string $path is the dot notated path.
  * @param string $default is the default returned if key empty or not found.
  *

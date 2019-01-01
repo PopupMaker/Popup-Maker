@@ -256,8 +256,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/defaults.php';
 		require_once self::$DIR . 'includes/extensions-functions.php';
 		require_once self::$DIR . 'includes/input-options.php';
-		require_once self::$DIR . 'includes/theme-functions.php';
-		require_once self::$DIR . 'includes/misc-functions.php';
 		require_once self::$DIR . 'includes/ajax-calls.php';
 
 		require_once self::$DIR . 'includes/importer/easy-modal-v2.php';
@@ -272,9 +270,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/class-pum-popup-query.php';
 		require_once self::$DIR . 'includes/class-pum-fields.php';
 		require_once self::$DIR . 'includes/class-pum-form.php';
-
-		// Functions
-		require_once self::$DIR . 'includes/pum-template-hooks.php';
 
 		// Modules
 		require_once self::$DIR . 'includes/modules/menus.php';

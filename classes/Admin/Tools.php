@@ -7,8 +7,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-function pum_extension_has_beta_support() {}
-
 /**
  * Class PUM_Admin_Tools
  */
@@ -202,7 +200,7 @@ class PUM_Admin_Tools {
 		}
 
 		// Try to identify the hosting provider
-		$host = popmake_get_host();
+		$host = self::get_host();
 
 		$return = '### Begin System Info ###' . "\n\n";
 
@@ -387,6 +385,44 @@ class PUM_Admin_Tools {
 		$return .= "\n" . '### End System Info ###';
 
 		return $return;
+	}
+
+	/**
+	 * Get user host
+	 *
+	 * Returns the webhost this site is using if possible
+	 *
+	 * @since 1.3.0
+	 *
+	 * @return mixed string $host if detected, false otherwise
+	 */
+	public static function get_host() {
+		if( defined( 'WPE_APIKEY' ) ) {
+			return 'WP Engine';
+		} elseif( defined( 'PAGELYBIN' ) ) {
+			return 'Pagely';
+		} elseif( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
+			return 'ICDSoft';
+		} elseif( DB_HOST == 'mysqlv5' ) {
+			return 'NetworkSolutions';
+		} elseif( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
+			return 'iPage';
+		} elseif( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
+			return 'IPower';
+		} elseif( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
+			return 'MediaTemple Grid';
+		} elseif( strpos( DB_HOST, '.pair.com' ) !== false ) {
+			return 'pair Networks';
+		} elseif( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
+			return 'Rackspace Cloud';
+		} elseif( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
+			return 'SysFix.eu Power Hosting';
+		} elseif( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
+			return 'Flywheel';
+		} else {
+			// Adding a general fallback for data gathering
+			return 'DBH: ' . DB_HOST . ', SRV: ' . $_SERVER['SERVER_NAME'];
+		}
 	}
 
 	/**

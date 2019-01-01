@@ -17,6 +17,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 */
 class PopMake_License extends PUM_Extension_License {}
 
+/**
+ * PopupMaker_Plugin_Updater
+ *
+ * @deprecated 1.5.0 Use PUM_Extension_Updater.
+ */
+class PopupMaker_Plugin_Updater  extends PUM_Extension_Updater {}
 
 /**
  * Popmake_Cron Class

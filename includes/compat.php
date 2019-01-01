@@ -224,3 +224,12 @@ if ( ! function_exists( 'boolval' ) ) {
 		return ( bool ) $val;
 	}
 }
+
+if ( ! function_exists( 'maybe_json_attr' ) ) {
+	function maybe_json_attr( $value, $encode = false ) {
+		if ( is_object( $value ) || is_array( $value ) ) {
+			return $encode ? htmlspecialchars( wp_json_encode( $value ) ) : wp_json_encode( $value );
+		}
+		return $value;
+	}
+}

@@ -7,16 +7,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-/** Utility Functions */
-require_once 'functions/utils/cache.php';
-require_once 'functions/utils/options.php';
-require_once 'functions/utils/template.php';
-require_once 'functions/utils/upgrades.php';
-
 /** General Functions */
 require_once 'functions/developers.php';
 require_once 'functions/general.php';
 require_once 'functions/newsletter.php';
+
+/** Utility Functions */
+require_once 'functions/utils/cache.php';
+require_once 'functions/utils/format.php';
+require_once 'functions/utils/options.php';
+require_once 'functions/utils/template.php';
+require_once 'functions/utils/upgrades.php';
 
 /** Admin Functions */
 require_once 'functions/admin/conditionals.php';
