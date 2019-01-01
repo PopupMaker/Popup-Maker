@@ -42,9 +42,7 @@ function pum_get_default_theme_id() {
 		}
 	}
 
-	$theme = absint( $default_theme_id ) ? pum_get_theme( $default_theme_id ) : false;
-
-	return $theme && pum_is_theme( $theme ) ? $theme->ID : false;
+	return absint( $default_theme_id );
 }
 
 /**
