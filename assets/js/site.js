@@ -943,6 +943,7 @@ var PUM_Analytics;
                         pid: parseInt($popup.popmake('getSettings').id, 10) || null
                     };
 
+                // Shortcode popups use negative numbers, and single-popup (preview mode) shouldn't be tracked.
                 if (data.pid > 0 && !$('body').hasClass('single-popup')) {
                     PUM_Analytics.beacon(data);
                 }
@@ -1003,8 +1004,8 @@ var PUM_Analytics;
             return this;
         },
         slide: function (callback) {
-            var $popup = PUM.getPopup(this).show(0).css({opacity: 0}),
-                $container = $popup.popmake('getContainer').show(0).css({opacity: 0}),
+            var $popup = PUM.getPopup(this).css({opacity: 0}).show(0),
+                $container = $popup.popmake('getContainer').css({opacity: 0}).show(0),
                 settings = $popup.popmake('getSettings'),
                 speed = settings.animation_speed / 2,
                 start = $popup.popmake('animation_origin', settings.animation_origin);
@@ -1013,31 +1014,25 @@ var PUM_Analytics;
                 .position(start)
                 .css({opacity: 1});
 
-            $popup
-                .css({opacity: 1})
-                .popmake('animate_overlay', 'fade', speed, function () {
-                    $container.popmake('reposition', function (position) {
-                        $container.animate(position, speed, 'swing', function () {
-                            // Fire user passed callback.
-                            if (callback !== undefined) {
-                                callback();
-                                // TODO Test this new method. Then remove the above.
-                                //callback.apply(this);
-                            }
-                        });
+            $popup.popmake('animate_overlay', 'fade', speed, function () {
+                $container.popmake('reposition', function (position) {
+                    $container.animate(position, speed, 'swing', function () {
+                        // Fire user passed callback.
+                        if (callback !== undefined) {
+                            callback();
+                            // TODO Test this new method. Then remove the above.
+                            //callback.apply(this);
+                        }
                     });
                 });
+            });
             return this;
         },
         fade: function (callback) {
-            var $popup = PUM.getPopup(this),
-                $container = $popup.popmake('getContainer'),
+            var $popup = PUM.getPopup(this).css({opacity: 0}).show(0),
+                $container = $popup.popmake('getContainer').css({opacity: 0}).show(0),
                 settings = $popup.popmake('getSettings'),
                 speed = settings.animation_speed / 2;
-
-            $container
-                .show(0)
-                .css({opacity: 0});
 
             $popup.popmake('animate_overlay', 'fade', speed, function () {
                 $container.animate({opacity: 1}, speed, 'swing', function () {
@@ -1052,8 +1047,8 @@ var PUM_Analytics;
             return this;
         },
         fadeAndSlide: function (callback) {
-            var $popup = PUM.getPopup(this).show(0).css({opacity: 0}),
-                $container = $popup.popmake('getContainer').show(0).css({opacity: 0}),
+            var $popup = PUM.getPopup(this).css({opacity: 0}).show(0),
+                $container = $popup.popmake('getContainer').css({opacity: 0}).show(0),
                 settings = $popup.popmake('getSettings'),
                 speed = settings.animation_speed / 2,
                 start = $popup.popmake('animation_origin', settings.animation_origin);
@@ -1061,8 +1056,6 @@ var PUM_Analytics;
             $container.position(start);
 
             $popup
-                .hide()
-                .css({opacity: 1})
                 .popmake('animate_overlay', 'fade', speed, function () {
                     $container.popmake('reposition', function (position) {
 
@@ -1102,7 +1095,7 @@ var PUM_Analytics;
             PUM.getPopup(this).show(duration, callback);
         },
         fade: function (duration, callback) {
-            PUM.getPopup(this).fadeIn(duration, callback);
+            PUM.getPopup(this).animate({opacity: 1}, duration, 'swing', callback);
         },
         slide: function (duration, callback) {
             PUM.getPopup(this).slideDown(duration, callback);
