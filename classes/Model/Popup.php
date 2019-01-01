@@ -439,8 +439,6 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	/**
 	 * Returns array of classes for this popup.
 	 *
-	 * @uses filter `pum_popup_get_classes`
-	 *
 	 * @param string $element The key or html element identifier.
 	 *
 	 * @return array $classes
@@ -532,8 +530,6 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 
 	/**
 	 * Returns array for data attribute of this popup.
-	 *
-	 * @uses filter `pum_popup_get_data_attr`
 	 *
 	 * @deprecated 1.8.0
 	 *

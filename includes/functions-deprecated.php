@@ -59,7 +59,29 @@ function popmake_get_settings() {
  * @deprecated 1.7.0
  */
 function pum_settings_page() {
-	pum_support_page();
+	PUM_Admin_Settings::page();
+}
+
+/**
+ * @deprecated 1.7.0
+ *
+ * @param string $string
+ *
+ * @return string
+ */
+function popmake_get_label_singular( $string = '' ) {
+	return '';
+}
+
+/**
+ * @deprecated 1.7.0
+ *
+ * @param string $string
+ *
+ * @return string
+ */
+function popmake_get_label_plural( $string = '' ) {
+	return '';
 }
 
 /**
@@ -131,7 +153,7 @@ function popmake_is_admin_popup_theme_page() {
  * @deprecated 1.7.0
  */
 function popmake_output_pum_styles() {
-	return pum_custom_settings_field_pum_styles();
+	return '';
 }
 
 /**
@@ -162,6 +184,61 @@ function popmake_get_pages( $force = false ) {
 	}
 
 	return $pages_options;
+}
+
+/**
+ * Returns the cookie fields used for cookie options.
+ *
+ * @deprecated 1.7.0 Use PUM_Cookies::instance()->cookie_fields() instead.
+ *
+ * @return array
+ */
+function pum_get_cookie_fields() {
+	return PUM_Cookies::instance()->cookie_fields();
+}
+
+/**
+ * Returns an array of args for registering coo0kies.
+ *
+ * @deprecated 1.7.0 Use PUM_Cookies::instance()->cookie_fields() instead.
+ *
+ * @return array
+ */
+function pum_get_cookies() {
+	return PUM_Cookies::instance()->get_cookies();
+}
+
+/**
+ * Returns the cookie fields used for trigger options.
+ *
+ * @deprecated v1.7.0 Use PUM_Triggers::instance()->cookie_fields() instead.
+ *
+ * @return array
+ */
+function pum_trigger_cookie_fields() {
+	return PUM_Triggers::instance()->cookie_fields();
+}
+
+/**
+ * Returns the cookie field used for trigger options.
+ *
+ * @deprecated v1.7.0 Use PUM_Triggers::instance()->cookie_field() instead.
+ *
+ * @return array
+ */
+function pum_trigger_cookie_field() {
+	return PUM_Triggers::instance()->cookie_field();
+}
+
+/**
+ * Returns an array of section labels for all triggers.
+ *
+ * @deprecated v1.7.0 Use PUM_Triggers::instance()->get_tabs() instead.
+ *
+ * @return array
+ */
+function pum_get_trigger_section_labels() {
+	return PUM_Triggers::instance()->get_tabs();
 }
 
 #endregion

@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /** General Functions */
 require_once 'functions/developers.php';
+require_once 'functions/extensions.php';
 require_once 'functions/general.php';
 require_once 'functions/newsletter.php';
 

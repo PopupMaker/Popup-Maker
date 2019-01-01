@@ -34,3 +34,45 @@ class PopupMaker_Plugin_Updater  extends PUM_Extension_Updater {}
  */
 class Popmake_Cron  extends PUM_Utils_Cron {}
 
+/**
+ * Class PUM_Popup_Query
+ *
+ * @deprecated 1.8.0
+ */
+class PUM_Popup_Query {
+
+	/**
+	 * The args to pass to the pum_get_popups() query
+	 *
+	 * @var array
+	 * @access public
+	 */
+	public $args = array();
+
+	/**
+	 * Default query arguments.
+	 *
+	 * Not all of these are valid arguments that can be passed to WP_Query. The ones that are not, are modified before
+	 * the query is run to convert them to the proper syntax.
+	 *
+	 * @param array $args The array of arguments that can be passed in and used for setting up this popup query.
+	 */
+	public function __construct( $args = array() ) {
+		$this->args = $args;
+	}
+
+	/**
+	 * Retrieve popups.
+	 *
+	 * The query can be modified in two ways; either the action before the
+	 * query is run, or the filter on the arguments (existing mainly for backwards
+	 * compatibility).
+	 *
+	 * @access public
+	 * @return object
+	 */
+	public function get_popups() {
+		return pum_get_popups( $this->args );
+	}
+
+}

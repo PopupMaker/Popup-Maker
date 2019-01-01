@@ -254,7 +254,6 @@ class Popup_Maker {
 		// Old Stuff.
 		require_once self::$DIR . 'includes/actions.php';
 		require_once self::$DIR . 'includes/defaults.php';
-		require_once self::$DIR . 'includes/extensions-functions.php';
 		require_once self::$DIR . 'includes/input-options.php';
 		require_once self::$DIR . 'includes/ajax-calls.php';
 
@@ -267,7 +266,6 @@ class Popup_Maker {
 		/**
 		 * v1.4 Additions
 		 */
-		require_once self::$DIR . 'includes/class-pum-popup-query.php';
 		require_once self::$DIR . 'includes/class-pum-fields.php';
 		require_once self::$DIR . 'includes/class-pum-form.php';
 
@@ -275,16 +273,6 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/modules/menus.php';
 		require_once self::$DIR . 'includes/modules/admin-bar.php';
 		require_once self::$DIR . 'includes/modules/reviews.php';
-
-		// Upgrades
-		if ( is_admin() ) {
-			//require_once self::$DIR . 'includes/admin/class-pum-admin-upgrades.php';
-		}
-
-		// Deprecated Code
-		require_once self::$DIR . 'includes/pum-deprecated.php';
-		require_once self::$DIR . 'includes/pum-deprecated-v1.4.php';
-		require_once self::$DIR . 'includes/pum-deprecated-v1.7.php';
 
 		require_once self::$DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
 		require_once self::$DIR . 'includes/integrations/class-pum-buddypress-integration.php';

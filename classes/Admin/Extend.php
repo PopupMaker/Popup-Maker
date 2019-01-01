@@ -135,7 +135,7 @@ class PUM_Admin_Extend {
 	 * @return array|mixed|object
 	 */
 	public static function available_extensions() {
-		$json_data = file_get_contents( POPMAKE_DIR . 'includes/extension-list.json' );
+		$json_data = file_get_contents( Popup_Maker::$DIR . 'includes/extension-list.json' );
 
 		return json_decode( $json_data, true );
 	}
@@ -246,7 +246,7 @@ class PUM_Admin_Extend {
 			//			$installed_plugins[ $key ]            = $installed_plugin;
 			//		}
 
-			$existing_extension_images = pum_extensions_with_local_image();
+			$existing_extension_images = self::extensions_with_local_image();
 
 			if ( ! empty( $extensions ) ) {
 
@@ -362,6 +362,26 @@ class PUM_Admin_Extend {
 		<?php
 	}
 
-
+	/**
+	 * @return array
+	 */
+	public static function extensions_with_local_image() {
+		return apply_filters( 'pum_extensions_with_local_image', array(
+			'core-extensions-bundle',
+			'aweber-integration',
+			'mailchimp-integration',
+			'remote-content',
+			'scroll-triggered-popups',
+			'popup-analytics',
+			'forced-interaction',
+			'age-verification-modals',
+			'advanced-theme-builder',
+			'exit-intent-popups',
+			'ajax-login-modals',
+			'advanced-targeting-conditions',
+			'secure-idle-user-logout',
+			'terms-conditions-popups',
+		) );
+	}
 
 }
