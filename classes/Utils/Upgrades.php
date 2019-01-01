@@ -155,6 +155,8 @@ class PUM_Utils_Upgrades {
 
 			// Reset JS/CSS assets for regeneration.
 			pum_reset_assets();
+		} else if ( ! self::$upgraded_from ) {
+			update_option( 'pum_ver_upgraded_from', '0.0.0' );
 		}
 
 		// If no current db version, but prior install detected, set db version correctly.
