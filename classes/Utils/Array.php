@@ -317,7 +317,11 @@ class PUM_Utils_Array {
 				break;
 
 			case 'priority':
-				uasort( $array, array( __CLASS__, 'sort_by_priority' ) );
+				if ( ! $reverse ) {
+					uasort( $array, array( __CLASS__, 'sort_by_priority' ) );
+				} else {
+					uasort( $array, array( __CLASS__, 'rsort_by_priority' ) );
+				}
 				break;
 		}
 
@@ -348,6 +352,22 @@ class PUM_Utils_Array {
 		}
 
 		return ( $a['priority'] < $b['priority'] ) ? - 1 : 1;
+	}
+
+	/**
+	 * Sort array in reverse by priority value
+	 *
+	 * @param $a
+	 * @param $b
+	 *
+	 * @return int
+	 */
+	public static function rsort_by_priority( $a, $b ) {
+		if ( ! isset( $a['pri'] ) || ! isset( $b['pri'] ) || $a['pri'] === $b['pri'] ) {
+			return 0;
+		}
+
+		return ( $a['pri'] < $b['pri'] ) ? 1 : - 1;
 	}
 
 	/**
