@@ -235,7 +235,7 @@ function package() {
 package.description = "Generates a release package with the current version from package.json";
 
 function sass_watcher() {
-    $fn.saneWatch(path.join(sass_src_path, '/*.s+(a|c)ss'), {debounce: 300}, gulp.parallel('css'));
+    $fn.saneWatch(path.join(sass_src_path, '/**/*.s+(a|c)ss'), {debounce: 300}, gulp.parallel('css'));
 }
 
 sass_watcher.description = "Starts a scss/sass file watcher.";
