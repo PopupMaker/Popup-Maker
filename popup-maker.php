@@ -250,6 +250,7 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/functions-backcompat.php';
 		require_once self::$DIR . 'includes/functions-deprecated.php';
 		require_once self::$DIR . 'includes/deprecated-classes.php';
+		require_once self::$DIR . 'includes/integrations.php';
 
 		// Old Stuff.
 		require_once self::$DIR . 'includes/defaults.php';
