@@ -27,12 +27,24 @@
 .pum-alert {
   position: relative;
   padding: 0 12px;
-  border-left: 4px solid #fff;
+  border-left: 4px solid #ccc;
   background: #fff;
-  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+}
+
+.pum-alert.pum-alert__success {
+  border-left-color: #46b450;
+}
+
+.pum-alert.pum-alert__info {
+  border-left-color: #00a0d2;
 }
 
 .pum-alert.pum-alert__warning {
+  border-left-color: #ffb900;
+}
+
+.pum-alert.pum-alert__error {
   border-left-color: #dc3232;
 }
 
@@ -81,11 +93,13 @@
     -ms-flex: 0 0 45px;
     flex: 0 0 45px;
   }
+
   &.dismiss {
     &:focus, &:hover {
       background: 0 0;
     }
   }
+
   &.restore {
     &:focus, &:hover {
       background: 0 0;
@@ -113,6 +127,7 @@
   overflow: hidden;
   font-weight: 600;
   font-style: italic;
+
   &:after {
     display: inline-block;
     width: 100%;

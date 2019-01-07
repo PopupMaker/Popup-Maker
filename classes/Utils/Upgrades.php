@@ -78,7 +78,7 @@ class PUM_Utils_Upgrades {
 		self::update_plugin_version();
 
 		// Render upgrade admin notices.
-		add_action( 'admin_notices', array( $this, 'upgrade_notices' ) );
+		add_filter( 'pum_alert_list', array( $this, 'upgrade_alert' ) );
 		// Add Upgrade tab to Tools page when upgrades available.
 		add_filter( 'pum_tools_tabs', array( $this, 'tools_page_tabs' ) );
 		// Render tools page upgrade tab content.
@@ -155,8 +155,10 @@ class PUM_Utils_Upgrades {
 
 			// Reset JS/CSS assets for regeneration.
 			pum_reset_assets();
-		} else if ( ! self::$upgraded_from ) {
-			update_option( 'pum_ver_upgraded_from', '0.0.0' );
+		} else if ( ! self::$upgraded_from || self::$upgraded_from === 'false' ) {
+			// Here to prevent constant extra queries.
+			self::$upgraded_from = '0.0.0';
+			update_option( 'pum_ver_upgraded_from', self::$upgraded_from );
 		}
 
 		// If no current db version, but prior install detected, set db version correctly.
@@ -187,6 +189,7 @@ class PUM_Utils_Upgrades {
 	 * @param PUM_Upgrade_Registry $registry
 	 */
 	public function register_processes( PUM_Upgrade_Registry $registry ) {
+
 		// v1.7 Upgrades
 		$registry->add_upgrade( 'core-v1_7-popups', array(
 			'rules' => array(
@@ -242,6 +245,38 @@ class PUM_Utils_Upgrades {
 		<?php
 	}
 
+
+	/**
+	 * @param array $alerts
+	 *
+	 * @return array
+	 */
+	public function upgrade_alert( $alerts = array() ) {
+		if ( ! $this->has_uncomplete_upgrades() || ! current_user_can( 'manage_options' ) ) {
+			return $alerts;
+		}
+
+		// Enqueue admin JS for the batch processor.
+		wp_enqueue_script( 'pum-admin-batch' );
+		wp_enqueue_style( 'pum-admin-batch' );
+
+		ob_start();
+		$this->render_upgrade_notice();
+		$this->render_form();
+		$html = ob_get_clean();
+
+		$alerts[] = array(
+				'code'     => 'upgrades_required',
+				'type'     => 'warning',
+				'html'  => $html,
+				'priority' => 1000,
+				'dismissible' => false,
+				'global' => true,
+			);
+
+		return $alerts;
+	}
+
 	/**
 	 * Renders the upgrade notification message.
 	 *
@@ -251,8 +286,9 @@ class PUM_Utils_Upgrades {
 		$resume_upgrade = $this->maybe_resume_upgrade(); ?>
 		<p class="pum-upgrade-notice">
 			<?php
-			if ( empty( $resume_upgrade ) ) {
-				_e( 'Changes in the latest version of Popup Maker or a Popup Maker addon require changes your settings to ensure everything continues to work correctly.', 'popup-maker' );
+			if ( empty( $resume_upgrade ) ) {?>
+				<strong><?php _e( 'The latest version of Popup Maker requires changes to the Popup Maker settings saved on your site.', 'popup-maker' );?></strong>
+				<?php
 			} else {
 				_e( 'Popup Maker needs to complete a the update of your settings that was previously started.', 'popup-maker' );
 			} ?>

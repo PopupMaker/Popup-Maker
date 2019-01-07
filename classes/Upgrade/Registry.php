@@ -42,7 +42,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self();
-			add_action( 'admin_init', array( self::$instance, 'init' ), - 9999 );
+			add_action( 'init', array( self::$instance, 'init' ), -9999 );
 		}
 
 		return self::$instance;
