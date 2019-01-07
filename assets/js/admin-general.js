@@ -6829,7 +6829,7 @@
 
         },
         parseValues: function (values, fields) {
-            fields = fields || false
+            fields = fields || false;
 
             if (!fields) {
                 return values;
