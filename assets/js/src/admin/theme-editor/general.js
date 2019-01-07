@@ -115,7 +115,7 @@
                 PUM_Admin.themeEditor.update_font_options($(this).attr('id').replace('_font_family', ''));
             });
         },
-        update_loaded_font(prefix) {
+        update_loaded_font: function (prefix) {
             var $font_family_select = $('select[id="' + prefix + '_font_family"]'),
                 $font_weight_select = $('select[id="' + prefix + '_font_weight"]'),
                 $font_style_select = $('select[id="' + prefix + '_font_style"]'),
@@ -154,7 +154,7 @@
             }
 
         },
-        update_loaded_fonts() {
+        update_loaded_fonts: function () {
             return $('select[id$="_font_family"]').each(function () {
                 PUM_Admin.themeEditor.update_loaded_font($(this).attr('id').replace('_font_family', ''));
             });
@@ -367,7 +367,7 @@
         /**
          * Trigger preview update after any field change.
          */
-        .on('change colorchange input focusout', 'select, input', function () {
+        .on('change colorchange input focusout', '.pum-field select, .pum-field input', function () {
             PUM_Admin.themeEditor.refresh_preview();
         });
 }(jQuery));
