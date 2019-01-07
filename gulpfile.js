@@ -202,7 +202,7 @@ function clean_css() {
 clean_css.description = "Purge css build files.";
 
 function clean_build() {
-    return gulp.src('build/**', {read: false, allowEmpty: true})
+    return gulp.src('./build/**/*.*', {read: false, allowEmpty: true})
         .pipe($fn.plumber(plumberErrorHandler))
         .pipe($fn.clean());
 }
