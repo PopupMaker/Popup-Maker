@@ -367,7 +367,7 @@
         /**
          * Trigger preview update after any field change.
          */
-        .on('change colorchange input focusout', 'select, input', function () {
+        .on('change colorchange input focusout', '.pum-field select, .pum-field input', function () {
             PUM_Admin.themeEditor.refresh_preview();
         });
 }(jQuery));
