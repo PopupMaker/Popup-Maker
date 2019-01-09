@@ -179,7 +179,7 @@ class Popup_Maker {
 			self::$instance = new Popup_Maker;
 			self::$instance->setup_constants();
 			self::$instance->includes();
-			self::$instance->load_textdomain();
+			add_action( 'init', array( self::$instance, 'load_textdomain' ) );
 			self::$instance->init();
 		}
 
@@ -284,8 +284,8 @@ class Popup_Maker {
 	 */
 	public function load_textdomain() {
 		// Set filter for plugin's languages directory
-		$popmake_lang_dir = dirname( plugin_basename( POPMAKE ) ) . '/languages/';
-		$popmake_lang_dir = apply_filters( 'popmake_languages_directory', $popmake_lang_dir );
+		$lang_dir = apply_filters( 'pum_lang_dir', dirname( plugin_basename( POPMAKE ) ) . '/languages/' );
+		$lang_dir = apply_filters( 'popmake_languages_directory', $lang_dir );
 
 		// Traditional WordPress plugin locale filter
 		$locale = apply_filters( 'plugin_locale', get_locale(), 'popup-maker' );
@@ -303,7 +303,7 @@ class Popup_Maker {
 			load_textdomain( 'popup-maker', $mofile_local );
 		} else {
 			// Load the default language files
-			load_plugin_textdomain( 'popup-maker', false, $popmake_lang_dir );
+			load_plugin_textdomain( 'popup-maker', false, $lang_dir );
 		}
 	}
 

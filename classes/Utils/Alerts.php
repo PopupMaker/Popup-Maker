@@ -21,6 +21,7 @@ class PUM_Utils_Alerts {
 		add_action( 'wp_ajax_pum_alerts_action', array( __CLASS__, 'ajax_handler' ) );
 		add_filter( 'pum_alert_list', array( __CLASS__, 'whats_new_alerts' ), 0 );
 		add_filter( 'pum_alert_list', array( __CLASS__, 'integration_alerts' ), 5 );
+		add_filter( 'pum_alert_list', array( __CLASS__, 'translation_request' ), 10 );
 		add_action( 'admin_menu', array( __CLASS__, 'append_alert_count' ), 999 );
 
 	}
@@ -52,6 +53,183 @@ class PUM_Utils_Alerts {
 	 *
 	 * @return array
 	 */
+	public static function translation_request( $alerts = array() ) {
+
+		$version = explode( '.', Popup_Maker::$VER );
+		// Get only the major.minor version exclude the point releases.
+		$version = $version[0] . '.' . $version[1];
+
+		$code = 'translation_request_' . $version;
+
+		// Bail Early if they have already dismissed.
+		if ( self::has_dismissed_alert( $code ) ) {
+			return $alerts;
+		}
+
+		// Get locales based on the HTTP accept language header.
+		$locales_from_header = PUM_Utils_I10n::get_http_locales();
+
+		// Abort early if no locales in header.
+		if ( empty( $locales_from_header ) ) {
+			return $alerts;
+		}
+
+		// Get acceptable non EN WordPress locales based on the HTTP accept language header.
+		// Used when the current locale is EN only I believe.
+		$non_en_locales_from_header = PUM_Utils_I10n::get_non_en_accepted_wp_locales_from_header();
+
+		// If no additional languages are supported abort
+		if ( empty( $non_en_locales_from_header ) ) {
+			return $alerts;
+		}
+
+		/**
+		 * Assume all at this point are possible polyglots.
+		 *
+		 * Viewing in English!
+		 * -- Translation available in one additional language!
+		 * ---- Show notice that there other language is available and we need help translating.
+		 * -- Translation available in more than one language!
+		 * ---- Show notice that their other languages are available and need help translating.
+		 * -- Translation not available!
+		 * ---- Show notice that plugin is not translated and we need help.
+		 * Else If translation for their language(s) exists, but isn't up to date!
+		 * -- Show notice that their language is available, but out of date and need help translating.
+		 * Else If translations for their language doesn't exist!
+		 * -- Show notice that plugin is not translated and we need help.
+		 */
+		$current_locale      = function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
+
+		// Get the active language packs of the plugin.
+		$translation_status = PUM_Utils_I10n::translation_status();
+		// Retrieve all the WordPress locales in which the plugin is translated.
+		$locales_with_translations         = wp_list_pluck( $translation_status, 'language' );
+		$locale_translation_versions         = wp_list_pluck( $translation_status, 'version' );
+
+		// Suggests existing langpacks
+		$suggested_locales_with_langpack   = array_values( array_intersect( $non_en_locales_from_header, $locales_with_translations ) );
+		$current_locale_is_suggested  = in_array( $current_locale, $suggested_locales_with_langpack );
+		$current_locale_is_translated = in_array( $current_locale, $locales_with_translations );
+
+		// Last chance to abort early before querying all available languages.
+		// We abort here if the user is already using a translated language that is up to date!
+		if ( $current_locale_is_suggested && $current_locale_is_translated && version_compare( $locale_translation_versions[ $current_locale ], Popup_Maker::$VER, '>=' ) ) {
+			return $alerts;
+		}
+
+		// Retrieve all the WordPress locales.
+		$locales_supported_by_wordpress = PUM_Utils_I10n::available_locales();
+
+		// Get the native language names of the locales.
+		$suggest_translated_locale_names = array();
+		foreach ( $suggested_locales_with_langpack as $locale ) {
+			$suggest_translated_locale_names[ $locale ] = $locales_supported_by_wordpress[ $locale ]['native_name'];
+		}
+
+		$suggest_string = '';
+
+		// If we get this far, they clearly have multiple language available
+		// If current locale is english but they have others available, they are likely polyglots.
+		$currently_in_english = strpos( $current_locale, 'en' ) === 0;
+
+		// Currently in English.
+		if ( $currently_in_english ) {
+
+			// Only one locale suggestion.
+			if ( 1 === count( $suggest_translated_locale_names ) ) {
+				$language = current( $suggest_translated_locale_names );
+
+				$suggest_string = sprintf(
+					/* translators: %s: native language name. */
+					__( 'This plugin is also available in %1$s. <a href="%2$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ),
+					$language,
+					esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
+				);
+
+			// Multiple locale suggestions.
+			} elseif ( ! empty( $suggest_translated_locale_names ) ) {
+				$primary_language = current( $suggest_translated_locale_names );
+				array_shift( $suggest_translated_locale_names );
+
+				$other_suggest = '';
+				foreach ( $suggest_translated_locale_names as $language ) {
+					$other_suggest .= $language . ', ';
+				}
+
+				$suggest_string = sprintf(
+					/* translators: 1: native language name, 2: other native language names, comma separated */
+					__( 'This plugin is also available in %1$s (also: %2$s). <a href="%3$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ),
+					$primary_language,
+					trim( $other_suggest, ' ,' ),
+					esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
+				);
+
+			// Non-English locale in header, no translations.
+			} elseif ( ! empty( $non_en_locales_from_header ) ) {
+
+				if ( 1 === count( $non_en_locales_from_header ) ) {
+					$locale = reset( $non_en_locales_from_header );
+
+					$suggest_string = sprintf(
+					/* translators: 1: native language name, 2: URL to translate.wordpress.org */
+						__( 'This plugin is not translated into %1$s yet. <a href="%2$s" target="_blank">Help translate it!</a>', 'popup-maker' ),
+						$locales_supported_by_wordpress[ $locale ]['native_name'],
+						esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
+					);
+				} else {
+					$primary_locale = reset( $non_en_locales_from_header );
+					$primary_language = $locales_supported_by_wordpress[ $primary_locale ]['native_name'];
+					array_shift( $non_en_locales_from_header );
+
+					$other_suggest = '';
+					foreach ( $non_en_locales_from_header as $locale ) {
+						$other_suggest .= $locales_supported_by_wordpress[ $locale ]['native_name'] . ', ';
+					}
+
+					$suggest_string = sprintf(
+						/* translators: 1: native language name, 2: other native language names, comma separated */
+						__( 'This plugin is also available in %1$s (also: %2$s). <a href="%3$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ),
+						$primary_language,
+						trim( $other_suggest, ' ,' ),
+						esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
+					);
+				}
+			}
+
+		// The plugin has no translation for the current locale.
+		} elseif ( ! $current_locale_is_suggested && ! $current_locale_is_translated ) {
+			$suggest_string = sprintf(
+				__( 'This plugin is not translated into %1$s yet. <a href="%2$s" target="_blank">Help translate it!</a>', 'popup-maker' ),
+				$locales_supported_by_wordpress[ $current_locale ]['native_name'],
+				esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
+			);
+		// The plugin has translations for current locale, but they are out of date.
+		} elseif ( $current_locale_is_suggested && $current_locale_is_translated && version_compare( $locale_translation_versions[ $current_locale ], Popup_Maker::$VER, '<' ) ) {
+			$suggest_string = sprintf(
+				/* translators: %s: native language name. */
+				__( 'This plugin\'s translation for %1$s is out of date. <a href="%2$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ),
+				$locales_supported_by_wordpress[ $current_locale ]['native_name'],
+				esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
+			);
+		}
+
+
+		if ( ! empty( $suggest_string ) ) {
+			$alerts[] = array(
+				'code'    => $code,
+				'message' => $suggest_string,
+				'type'    => 'info',
+			);
+		}
+
+		return $alerts;
+	}
+
+	/**
+	 * @param array $alerts
+	 *
+	 * @return array
+	 */
 	public static function whats_new_alerts( $alerts = array() ) {
 
 		$upgraded_from = PUM_Utils_Upgrades::$upgraded_from;
@@ -62,12 +240,15 @@ class PUM_Utils_Alerts {
 				$alerts[] = array(
 					'code'     => 'whats_new_1_8_0',
 					'type'     => 'success',
-					'message'  => sprintf( '<strong>' . __( 'See whats new in v%s - (%sview all changes%s)', 'popup-maker' ) . '</strong>', '1.8.0', '<a href="'. add_query_arg( array( 'tab' => 'plugin-information', 'plugin' => 'popup-maker', 'section' => 'changelog', 'TB_iframe' => true, 'width' => 722, 'height' => 949 ), admin_url( 'plugin-install.php' ) ) .'" target="_blank">', '</a>' ),
-					'html'     => "<ul class='ul-disc'>" .
-					              "<li>" . 'Added support for Gutenberg editor when creating popups.' . "</li>" .
-							      "<li>" . 'New close button positions: top center, bottom center, middle left & middle right.' . "</li>" .
-					              "<li>" . 'New option to position close button outside of popup.' . "</li>" .
-					              "</ul>",
+					'message'  => sprintf( '<strong>' . __( 'See whats new in v%s - (%sview all changes%s)', 'popup-maker' ) . '</strong>', '1.8.0', '<a href="' . add_query_arg( array(
+							'tab'       => 'plugin-information',
+							'plugin'    => 'popup-maker',
+							'section'   => 'changelog',
+							'TB_iframe' => true,
+							'width'     => 722,
+							'height'    => 949,
+						), admin_url( 'plugin-install.php' ) ) . '" target="_blank">', '</a>' ),
+					'html'     => "<ul class='ul-disc'>" . "<li>" . 'Added support for Gutenberg editor when creating popups.' . "</li>" . "<li>" . 'New close button positions: top center, bottom center, middle left & middle right.' . "</li>" . "<li>" . 'New option to position close button outside of popup.' . "</li>" . "</ul>",
 					'priority' => 100,
 				);
 			}
@@ -167,63 +348,9 @@ class PUM_Utils_Alerts {
 
 		?>
 
-		<style>
-
-			.pum-alerts {
-				clear: both;
-				top: 10px;
-				margin-right: 20px !important;
-			}
-
-			.popup_page_pum-extensions .pum-alerts {
-				top: 0;
-			}
-
-			.pum-alert-holder {
-				display: flex;
-				margin-bottom: .8em;
-			}
-
-			.pum-alert p {
-			}
-
-			.pum-alerts img.logo {
-				width: 25px;
-				margin: -2px 5px -2px 0;
-			}
-
-			.pum-alert {
-				width: 100%;
-				padding: 0 12px;
-				border-left: 4px solid #fff;
-				background: #fff;
-				box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
-			}
-
-			.pum-alerts .button.dismiss, .pum-alerts .button.restore {
-				width: 45px;
-				height: 45px;
-				margin-left: 10px;
-				padding: 0;
-				outline: 0;
-				line-height: inherit;
-				cursor: pointer;
-				-ms-flex: 0 0 45px;
-				flex: 0 0 45px;
-			}
-
-			.screen-reader-text {
-				overflow: hidden;
-				clip: rect(1px, 1px, 1px, 1px);
-				position: absolute !important;
-				width: 1px;
-				height: 1px;
-				padding: 0;
-				border: 0;
-				word-wrap: normal !important;
-				clip-path: inset(50%);
-			}
-		</style>
+		<script type="text/javascript">
+            window.pum_alerts_nonce = '<?php echo wp_create_nonce( 'pum_alerts_action' ); ?>';
+		</script>
 
 		<div class="pum-alerts">
 
@@ -263,54 +390,6 @@ class PUM_Utils_Alerts {
 
 		</div>
 
-		<script type="text/javascript">
-            (function ($) {
-                function dismiss(alert, reason) {
-                    $.ajax({
-                        method: "POST",
-                        dataType: "json",
-                        url: ajaxurl,
-                        data: {
-                            action: 'pum_alerts_action',
-                            nonce: '<?php echo wp_create_nonce( 'pum_alerts_action' ); ?>',
-                            code: alert.data('code')
-                        }
-                    });
-                }
-
-                var $alerts = $('.pum-alerts'),
-                    count = <?php echo $count; ?>,
-                    $notice_counts = $('.pum-alert-count');
-
-
-                $(document)
-                    .on('click', '.pum-alert-holder .pum-dismiss', function () {
-                        var $this = $(this),
-                            alert = $this.parents('.pum-alert-holder');
-
-                        count--;
-
-                        $notice_counts.text(count);
-
-                        alert.fadeTo(100, 0, function () {
-                            alert.slideUp(100, function () {
-                                alert.remove();
-
-                                if ($alerts.find('.pum-alert-holder').length === 0) {
-                                    $alerts.slideUp(100, function () {
-                                        $alerts.remove();
-                                    });
-
-                                    $('#menu-posts-popup .wp-menu-name .update-plugins').fadeOut();
-                                }
-                            });
-                        });
-
-                        dismiss(alert);
-                    });
-            }(jQuery));
-		</script>
-
 		<?php
 	}
 
@@ -344,12 +423,10 @@ class PUM_Utils_Alerts {
 
 		$alerts = array();
 
-		$dismissed = self::dismissed_alerts();
-
 		foreach ( $alert_list as $alert ) {
 
-			// Remove dismissed alerts.
-			if ( in_array( $alert['code'], $dismissed ) ) {
+			// Ignore dismissed alerts.
+			if ( self::has_dismissed_alert( $alert['code'] ) ) {
 				continue;
 			}
 
@@ -395,6 +472,17 @@ class PUM_Utils_Alerts {
 		} catch ( Exception $e ) {
 			wp_send_json_error( $e );
 		}
+	}
+
+	/**
+	 * @param string $code
+	 *
+	 * @return bool
+	 */
+	public static function has_dismissed_alert( $code = '' ) {
+		$dimissed_alerts = self::dismissed_alerts();
+
+		return in_array( $code, $dimissed_alerts );
 	}
 
 	/**
