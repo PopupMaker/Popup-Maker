@@ -287,28 +287,28 @@ class Popup_Maker {
 		$lang_dir = apply_filters( 'pum_lang_dir', dirname( plugin_basename( POPMAKE ) ) . '/languages/' );
 		$lang_dir = apply_filters( 'popmake_languages_directory', $lang_dir );
 
-		// Traditional WordPress plugin locale filter
-		$locale = apply_filters( 'plugin_locale', get_locale(), 'popup-maker' );
-		$mofile = sprintf( '%1$s-%2$s.mo', 'popup-maker', $locale );
+		// Try to load Langpacks first, if they are not available fallback to local files.
+		if ( ! load_plugin_textdomain( 'popup-maker', false, $lang_dir ) ) {
+			// Traditional WordPress plugin locale filter
+			$locale = apply_filters( 'plugin_locale', get_locale(), 'popup-maker' );
+			$mofile = sprintf( '%1$s-%2$s.mo', 'popup-maker', $locale );
 
-		// Setup paths to current locale file
-		$mofile_local  = $popmake_lang_dir . $mofile;
-		$mofile_global = WP_LANG_DIR . '/popup-maker/' . $mofile;
+			// Setup paths to current locale file
+			$mofile_local  = $lang_dir . $mofile;
+			$mofile_global = WP_LANG_DIR . '/popup-maker/' . $mofile;
 
-		if ( file_exists( $mofile_global ) ) {
-			// Look in global /wp-content/languages/popup-maker folder
-			load_textdomain( 'popup-maker', $mofile_global );
-		} elseif ( file_exists( $mofile_local ) ) {
-			// Look in local /wp-content/plugins/popup-maker/languages/ folder
-			load_textdomain( 'popup-maker', $mofile_local );
-		} else {
-			// Load the default language files
-			load_plugin_textdomain( 'popup-maker', false, $lang_dir );
+			if ( file_exists( $mofile_global ) ) {
+				// Look in global /wp-content/languages/popup-maker folder
+				load_textdomain( 'popup-maker', $mofile_global );
+			} elseif ( file_exists( $mofile_local ) ) {
+				// Look in local /wp-content/plugins/popup-maker/languages/ folder
+				load_textdomain( 'popup-maker', $mofile_local );
+			}
 		}
 	}
 
 	public function init() {
-		$this->cron = new PUM_Utils_Cron;
+		$this->cron   = new PUM_Utils_Cron;
 		$this->popups = new PUM_Repository_Popups();
 		$this->themes = new PUM_Repository_Themes();
 
