@@ -46,6 +46,24 @@ function pum_get_default_theme_id() {
 }
 
 /**
+ * @param string $path
+ *
+ * @return string
+ */
+function pum_asset_path( $path = '' ) {
+	return Popup_Maker::$DIR . 'assets/' . ltrim( $path,'/' );
+}
+
+/**
+ * @param string $path
+ *
+ * @return string
+ */
+function pum_asset_url( $path = '' ) {
+	return Popup_Maker::$URL . 'assets/' . ltrim( $path,'/' );
+}
+
+/**
  * Resets both asset cached files & transient CSS storage to be regenerated.
  *
  * @since 1.8.0
