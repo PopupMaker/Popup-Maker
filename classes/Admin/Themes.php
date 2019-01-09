@@ -405,7 +405,7 @@ class PUM_Admin_Themes {
 				'general'   => apply_filters( 'pum_popup_general_settings_fields', array(
 					'main' => array(),
 				) ),
-				'overlay'   => apply_filters( 'pum_popup_overlay_settings_fields', array(
+				'overlay'   => apply_filters( 'pum_theme_overlay_settings_fields', array(
 					'background' => array(
 						'overlay_background_color'   => array(
 							'label'    => __( 'Color', 'popup-maker' ),
@@ -426,7 +426,7 @@ class PUM_Admin_Themes {
 						),
 					),
 				) ),
-				'container' => apply_filters( 'pum_popup_container_settings_fields', array(
+				'container' => apply_filters( 'pum_theme_container_settings_fields', array(
 					'main'       => array(
 						'container_padding'       => array(
 							'label'    => __( 'Padding', 'popup-maker' ),
@@ -569,7 +569,7 @@ class PUM_Admin_Themes {
 						),
 					),
 				) ),
-				'title'     => apply_filters( 'pum_popup_title_settings_fields', array(
+				'title'     => apply_filters( 'pum_theme_title_settings_fields', array(
 					'typography' => array(
 						'title_font_color'  => array(
 							'label'    => __( 'Color', 'popup-maker' ),
@@ -685,7 +685,7 @@ class PUM_Admin_Themes {
 						),
 					),
 				) ),
-				'content'   => apply_filters( 'pum_popup_content_settings_fields', array(
+				'content'   => apply_filters( 'pum_theme_content_settings_fields', array(
 					'typography' => array(
 						'content_font_color'  => array(
 							'label'    => __( 'Color', 'popup-maker' ),
@@ -720,7 +720,7 @@ class PUM_Admin_Themes {
 						),
 					),
 				) ),
-				'close'     => apply_filters( 'pum_popup_close_settings_fields', array(
+				'close'     => apply_filters( 'pum_theme_close_settings_fields', array(
 					'main'       => array(
 						'close_text'             => array(
 							'label'       => __( 'Close Button Text', 'popup-maker' ),
@@ -1069,7 +1069,7 @@ class PUM_Admin_Themes {
 						),
 					),
 				) ),
-				'advanced'  => apply_filters( 'pum_popup_advanced_settings_fields', array(
+				'advanced'  => apply_filters( 'pum_theme_advanced_settings_fields', array(
 					'main' => array(),
 				) ),
 			) );
