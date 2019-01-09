@@ -100,17 +100,10 @@ class PUM_Site_Popups {
 				if ( pum_is_popup_loadable( $popup->ID ) ) {
 					self::preload_popup( $popup );
 				}
-
 			}
 
 			// Clear the global $current.
 			pum()->current_popup = null;
-
-			// REVIEW This may be overkill. Consider if assets are cached, no all theme query is needed?
-			if ( count( self::$loaded_ids ) ) {
-				// Preload themes if popups are found to be loadable.
-				pum_get_all_themes();
-			}
 		}
 
 	}
