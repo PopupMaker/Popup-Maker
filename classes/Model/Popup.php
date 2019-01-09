@@ -170,25 +170,41 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @return bool|int
 	 */
 	public function update_setting( $key, $value ) {
-		$settings = $this->get_settings();
-
 		// TODO Once fields have been merged into the model itself, add automatic validation here.
-		$settings[ $key ] = $value;
+		$new_settings = array( $key => $value );
 
-		return $this->update_meta( 'popup_settings', $settings );
+		return $this->update_settings( $new_settings, true );
 	}
 
 	/**
-	 * @param array $merge_settings
+	 * @param array $new_settings
+	 * @param bool  $merge
 	 *
 	 * @return bool|int
 	 */
-	public function update_settings( $merge_settings = array() ) {
+	public function update_settings( $new_settings = array(), $merge = true ) {
 		$settings = $this->get_settings();
 
 		// TODO Once fields have been merged into the model itself, add automatic validation here.
-		foreach ( $merge_settings as $key => $value ) {
-			$settings[ $key ] = $value;
+		if ( $merge ) {
+			foreach ( $new_settings as $key => $value ) {
+				$settings[ $key ] = $value;
+			}
+		} else {
+			$settings = $new_settings;
+		}
+
+		if ( empty( $settings['theme_id'] ) ) {
+			$settings['theme_id'] = pum_get_default_theme_id();
+		}
+
+		if ( empty( $settings['theme_slug'] ) ) {
+			$settings['theme_slug'] = get_post_field( 'post_name', $settings['theme_id'] );
+		}
+
+		if ( empty( $settings['theme_close_text'] ) ) {
+			$theme                  = pum_get_theme( $this->get_theme_id() );
+			$settings['theme_close_text'] = $theme->get_setting( 'close_text' );
 		}
 
 		return $this->update_meta( 'popup_settings', $settings );
@@ -463,6 +479,39 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Returns the slug for a theme. Used for CSS classes.
+	 *
+	 * @return string
+	 */
+	private function get_theme_slug() {
+		$theme_slug = $this->get_setting( 'theme_slug' );
+
+		if ( false === $theme_slug ) {
+			$theme_slug = get_post_field( 'post_name', $this->get_theme_id() );
+			$this->update_setting( 'theme_slug', $theme_slug );
+		}
+
+		return $theme_slug;
+	}
+
+	/**
+	 * Returns the slug for a theme. Used for CSS classes.
+	 *
+	 * @return string
+	 */
+	private function get_theme_close_text() {
+		$theme_close_text = $this->get_setting( 'theme_close_text' );
+
+		if ( false === $theme_close_text ) {
+			$theme            = pum_get_theme( $this->get_theme_id() );
+			$theme_close_text = $theme->get_setting( 'close_text' );
+			$this->update_setting( 'theme_close_text', $theme_close_text );
+		}
+
+		return $theme_close_text;
+	}
+
+	/**
 	 * Returns array of classes for this popup.
 	 *
 	 * @param string $element The key or html element identifier.
@@ -475,7 +524,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 				'pum',
 				'pum-overlay',
 				'pum-theme-' . $this->get_theme_id(),
-				'pum-theme-' . get_post_field( 'post_name', $this->get_theme_id() ),
+				'pum-theme-' . $this->get_theme_slug(),
 				'popmake-overlay', // Backward Compatibility
 			),
 			'container' => array(
@@ -597,10 +646,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @return string
 	 */
 	public function close_text() {
-		$text = $this->get_setting( 'close_text', '&#215;' );
-
-		$theme = pum_get_theme( $this->get_theme_id() );
-		$theme_text = $theme->get_setting( 'close_text' );
+		$text       = $this->get_setting( 'close_text', '&#215;' );
+		$theme_text = $this->get_theme_close_text();
 
 		if ( empty( $text ) && ! empty( $theme_text ) ) {
 			$text = $theme_text;
