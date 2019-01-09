@@ -333,7 +333,7 @@ class PUM_Utils_Alerts {
 
 			<?php foreach ( $alerts as $alert ) : ?>
 
-				<div class="pum-alert-holder" data-code="<?php echo $alert['code']; ?>" class="<?php echo $alert['dismissible'] ? 'is-dismissible' : ''; ?>">
+				<div class="pum-alert-holder" data-code="<?php echo $alert['code']; ?>" class="<?php echo $alert['dismissible'] ? 'is-dismissible' : ''; ?>" data-dismissible="<?php esc_attr_e( $alert['dismissible'] ); ?>">
 
 					<div class="pum-alert <?php echo $alert['type'] != '' ? 'pum-alert__' . $alert['type'] : ''; ?>">
 
@@ -406,6 +406,7 @@ class PUM_Utils_Alerts {
 				'priority'    => 10,
 				'message'     => '',
 				'type'        => 'info',
+				'html'        => '',
 				'dismissible' => true,
 				'global'      => false,
 			) );
@@ -424,7 +425,8 @@ class PUM_Utils_Alerts {
 	 */
 	public static function ajax_handler() {
 		$args = wp_parse_args( $_REQUEST, array(
-			'code' => '',
+			'code'    => '',
+			'expires' => '',
 		) );
 
 		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'pum_alerts_action' ) ) {
@@ -432,9 +434,8 @@ class PUM_Utils_Alerts {
 		}
 
 		try {
-
-			$dismissed_alerts   = self::dismissed_alerts();
-			$dismissed_alerts[] = $args['code'];
+			$dismissed_alerts                  = self::dismissed_alerts();
+			$dismissed_alerts[ $args['code'] ] = ! empty( $args['expires'] ) ? strtotime( '+' . $args['expires'] ) : true;
 
 			$user_id = get_current_user_id();
 			update_user_meta( $user_id, '_pum_dismissed_alerts', $dismissed_alerts );
@@ -453,7 +454,14 @@ class PUM_Utils_Alerts {
 	public static function has_dismissed_alert( $code = '' ) {
 		$dimissed_alerts = self::dismissed_alerts();
 
-		return in_array( $code, $dimissed_alerts );
+		$alert_dismissed = array_key_exists( $code, $dimissed_alerts );
+
+		// If the alert was dismissed and has a non true type value, it is an expiry time.
+		if ( $alert_dismissed && true !== $dimissed_alerts[ $code ] ) {
+			return strtotime( 'now' ) < $dimissed_alerts[ $code ];
+		}
+
+		return $alert_dismissed;
 	}
 
 	/**
@@ -466,8 +474,9 @@ class PUM_Utils_Alerts {
 
 		$dismissed_alerts = get_user_meta( $user_id, '_pum_dismissed_alerts', true );
 
-		if ( ! $dismissed_alerts ) {
+		if ( ! is_array( $dismissed_alerts ) ) {
 			$dismissed_alerts = array();
+			update_user_meta( $user_id, '_pum_dismissed_alerts', $dismissed_alerts );
 		}
 
 		return $dismissed_alerts;

@@ -6297,6 +6297,9 @@
     "use strict";
 
     function dismissAlert($alert) {
+        var dismissible = $alert.data('dismissible'),
+            expires = dismissible === '1' || dismissible === 1 || dismissible === true ? null: dismissible;
+
         $.ajax({
             method: "POST",
             dataType: "json",
@@ -6304,7 +6307,8 @@
             data: {
                 action: 'pum_alerts_action',
                 nonce: window.pum_alerts_nonce,
-                code: $alert.data('code')
+                code: $alert.data('code'),
+                expires: expires
             }
         });
     }
