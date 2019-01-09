@@ -406,6 +406,13 @@ class PUM_Utils_Upgrades {
 	 * @return array The array of completed upgrades
 	 */
 	public function get_completed_upgrades() {
+		$completed_upgrades = get_option( 'pum_completed_upgrades' );
+
+		if ( $completed_upgrades === false ) {
+			$completed_upgrades = array();
+			update_option( 'pum_completed_upgrades', $completed_upgrades );
+		}
+
 		return get_option( 'pum_completed_upgrades', array() );
 	}
 
