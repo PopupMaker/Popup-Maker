@@ -259,7 +259,7 @@ class PUM_Admin_Popups {
 
 		$settings = self::sanitize_settings( $settings );
 
-		$popup->update_meta( 'popup_settings', $settings );
+		$popup->update_settings( $settings, false );
 
 		// TODO Remove this and all other code here. This should be clean and all code more compartmentalized.
 		foreach ( self::deprecated_meta_fields() as $field ) {
@@ -398,7 +398,7 @@ class PUM_Admin_Popups {
 							'label'        => __( 'Popup Theme', 'popup-maker' ),
 							'dynamic_desc' => sprintf( '%1$s<br/><a id="edit_theme_link" href="%3$s">%2$s</a>', __( 'Choose a theme for this popup.', 'popup-maker' ), __( 'Customize This Theme', 'popup-maker' ), admin_url( "post.php?action=edit&post={{data.value}}" ) ),
 							'type'         => 'select',
-							'options'      => pum_is_settings_page() ? PUM_Helpers::popup_theme_selectlist() : null,
+							'options'      => pum_is_popup_editor() ? PUM_Helpers::popup_theme_selectlist() : null,
 							'std'          => pum_get_default_theme_id(),
 						),
 					),

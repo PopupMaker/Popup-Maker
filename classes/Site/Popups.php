@@ -100,16 +100,10 @@ class PUM_Site_Popups {
 				if ( pum_is_popup_loadable( $popup->ID ) ) {
 					self::preload_popup( $popup );
 				}
-
 			}
 
 			// Clear the global $current.
 			pum()->current_popup = null;
-
-			if ( count( self::$loaded_ids ) ) {
-				// Preload themes if popups are found to be loadable.
-				pum_get_all_themes();
-			}
 		}
 
 	}

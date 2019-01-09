@@ -105,9 +105,10 @@ class PUM_Activator {
 		// Updates stored values for versioning.
 		PUM_Utils_Upgrades::update_plugin_version();
 
-		// Add a temporary option that will fire a hookable action on next load.
-		set_transient( '_pum_freshly_installed', true, 60 );
-		set_transient( '_pum_installed', true, 604800 );
+		// We used transients before, but since the check for this option runs every admin page load it means 2 queries after its cleared.
+		// To prevent that we flipped it, now we delete the following option, and check for it.
+		// If its missing then we know its a fresh install.
+		delete_option( '_pum_installed' );
 
 		pum_get_default_theme_id();
 		pum_install_built_in_themes();

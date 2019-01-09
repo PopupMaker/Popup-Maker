@@ -154,7 +154,7 @@ $custom-select2-selector: 'select2' !default;
   }
 
   .pum-field-mulitcheck-list,
-  .pum-field-radio-list{
+  .pum-field-radio-list {
     margin: 0;
   }
 
@@ -184,6 +184,15 @@ $custom-select2-selector: 'select2' !default;
     width: 20px;
     text-align: left;
     top: .125em;
+  }
+}
+
+/**
+ * Image fields
+ */
+.#{$plugin-prefix}-field-color {
+  .wp-color-result-text {
+    line-height: 23px;
   }
 }
 
@@ -235,6 +244,7 @@ $custom-select2-selector: 'select2' !default;
     p {
       margin: 0 0 1em;
     }
+
     a {
       text-decoration: none;
     }
@@ -490,6 +500,7 @@ $custom-select2-selector: 'select2' !default;
 
   .no-facet-groups {
     display: block;
+
     .facet-target {
       max-width: 100%;
     }

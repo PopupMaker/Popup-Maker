@@ -317,7 +317,11 @@ class PUM_Utils_Array {
 				break;
 
 			case 'priority':
-				uasort( $array, array( __CLASS__, 'sort_by_priority' ) );
+				if ( ! $reverse ) {
+					uasort( $array, array( __CLASS__, 'sort_by_priority' ) );
+				} else {
+					uasort( $array, array( __CLASS__, 'rsort_by_priority' ) );
+				}
 				break;
 		}
 
@@ -343,11 +347,33 @@ class PUM_Utils_Array {
 	 * @return int
 	 */
 	public static function sort_by_priority( $a, $b ) {
-		if ( ! isset( $a['priority'] ) || ! isset( $b['priority'] ) || $a['priority'] === $b['priority'] ) {
+		$pri_a = isset( $a['pri'] ) ? $a['pri'] : ( isset( $a['priority'] ) ? $a['priority'] : false );
+		$pri_b = isset( $b['pri'] ) ? $b['pri'] : ( isset( $b['priority'] ) ? $b['priority'] : false );
+
+		if ( ! $pri_a || ! $pri_b || $pri_a === $pri_b ) {
 			return 0;
 		}
 
-		return ( $a['priority'] < $b['priority'] ) ? - 1 : 1;
+		return ( $pri_a < $pri_b ) ? - 1 : 1;
+	}
+
+	/**
+	 * Sort array in reverse by priority value
+	 *
+	 * @param $a
+	 * @param $b
+	 *
+	 * @return int
+	 */
+	public static function rsort_by_priority( $a, $b ) {
+		$pri_a = isset( $a['pri'] ) ? $a['pri'] : ( isset( $a['priority'] ) ? $a['priority'] : false );
+		$pri_b = isset( $b['pri'] ) ? $b['pri'] : ( isset( $b['priority'] ) ? $b['priority'] : false );
+
+		if ( ! $pri_a || ! $pri_b || $pri_a === $pri_b ) {
+			return 0;
+		}
+
+		return ( $pri_a < $pri_b ) ? 1 : - 1;
 	}
 
 	/**

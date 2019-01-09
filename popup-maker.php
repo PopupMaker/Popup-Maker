@@ -1,12 +1,15 @@
 <?php
 /**
- * Plugin Name: Popup Maker
- * Plugin URI: https://wppopupmaker.com/?utm_campaign=PluginInfo&utm_source=plugin-header&utm_medium=plugin-uri
- * Description: Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
- * Author: WP Popup Maker
- * Version: 1.7.30
- * Author URI: https://wppopupmaker.com/?utm_campaign=PluginInfo&utm_source=plugin-header&utm_medium=author-uri
- * Text Domain: popup-maker
+ * Plugin Name:  Popup Maker
+ * Plugin URI:   https://wppopupmaker.com/?utm_campaign=PluginInfo&utm_source=plugin-header&utm_medium=plugin-uri
+ * Description:  Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
+ * Version:      1.7.30
+ * Author:       WP Popup Maker
+ * Author URI:   https://wppopupmaker.com/?utm_campaign=PluginInfo&utm_source=plugin-header&utm_medium=author-uri
+ * License:      GPL2 or later
+ * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain:  popup-maker
+ * Domain Path:  /languages/
  *
  * @package     POPMAKE
  * @category    Core
@@ -176,7 +179,7 @@ class Popup_Maker {
 			self::$instance = new Popup_Maker;
 			self::$instance->setup_constants();
 			self::$instance->includes();
-			self::$instance->load_textdomain();
+			add_action( 'init', array( self::$instance, 'load_textdomain' ) );
 			self::$instance->init();
 		}
 
@@ -250,6 +253,7 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/functions-backcompat.php';
 		require_once self::$DIR . 'includes/functions-deprecated.php';
 		require_once self::$DIR . 'includes/deprecated-classes.php';
+		require_once self::$DIR . 'includes/integrations.php';
 
 		// Old Stuff.
 		require_once self::$DIR . 'includes/defaults.php';
@@ -280,31 +284,31 @@ class Popup_Maker {
 	 */
 	public function load_textdomain() {
 		// Set filter for plugin's languages directory
-		$popmake_lang_dir = dirname( plugin_basename( POPMAKE ) ) . '/languages/';
-		$popmake_lang_dir = apply_filters( 'popmake_languages_directory', $popmake_lang_dir );
+		$lang_dir = apply_filters( 'pum_lang_dir', dirname( plugin_basename( POPMAKE ) ) . '/languages/' );
+		$lang_dir = apply_filters( 'popmake_languages_directory', $lang_dir );
 
-		// Traditional WordPress plugin locale filter
-		$locale = apply_filters( 'plugin_locale', get_locale(), 'popup-maker' );
-		$mofile = sprintf( '%1$s-%2$s.mo', 'popup-maker', $locale );
+		// Try to load Langpacks first, if they are not available fallback to local files.
+		if ( ! load_plugin_textdomain( 'popup-maker', false, $lang_dir ) ) {
+			// Traditional WordPress plugin locale filter
+			$locale = apply_filters( 'plugin_locale', get_locale(), 'popup-maker' );
+			$mofile = sprintf( '%1$s-%2$s.mo', 'popup-maker', $locale );
 
-		// Setup paths to current locale file
-		$mofile_local  = $popmake_lang_dir . $mofile;
-		$mofile_global = WP_LANG_DIR . '/popup-maker/' . $mofile;
+			// Setup paths to current locale file
+			$mofile_local  = $lang_dir . $mofile;
+			$mofile_global = WP_LANG_DIR . '/popup-maker/' . $mofile;
 
-		if ( file_exists( $mofile_global ) ) {
-			// Look in global /wp-content/languages/popup-maker folder
-			load_textdomain( 'popup-maker', $mofile_global );
-		} elseif ( file_exists( $mofile_local ) ) {
-			// Look in local /wp-content/plugins/popup-maker/languages/ folder
-			load_textdomain( 'popup-maker', $mofile_local );
-		} else {
-			// Load the default language files
-			load_plugin_textdomain( 'popup-maker', false, $popmake_lang_dir );
+			if ( file_exists( $mofile_global ) ) {
+				// Look in global /wp-content/languages/popup-maker folder
+				load_textdomain( 'popup-maker', $mofile_global );
+			} elseif ( file_exists( $mofile_local ) ) {
+				// Look in local /wp-content/plugins/popup-maker/languages/ folder
+				load_textdomain( 'popup-maker', $mofile_local );
+			}
 		}
 	}
 
 	public function init() {
-		$this->cron = new PUM_Utils_Cron;
+		$this->cron   = new PUM_Utils_Cron;
 		$this->popups = new PUM_Repository_Popups();
 		$this->themes = new PUM_Repository_Themes();
 
@@ -317,6 +321,8 @@ class Popup_Maker {
 		PUM_Previews::init();
 		PUM_Integrations::init();
 		PUM_Privacy::init();
+
+		PUM_Utils_Alerts::init();
 
 		PUM_Shortcode_Popup::init();
 		PUM_Shortcode_PopupTrigger::init();

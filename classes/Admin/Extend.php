@@ -25,6 +25,7 @@ class PUM_Admin_Extend {
 
 		?>
 		<div class="wrap">
+		<hr class="wp-header-end">
 		<?php PUM_Upsell::display_addon_tabs(); ?>
 		<div id="poststuff">
 			<div id="post-body" class="metabox-holder">

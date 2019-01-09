@@ -52,8 +52,8 @@ class PUM_Admin {
 
 		if ( $file == plugin_basename( POPMAKE ) ) {
 			$plugin_action_links = apply_filters( 'pum_plugin_action_links', array(
-				'extend' => '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-extensions' ) . '">' . __( 'Integrations', 'popup-maker' ) . '</a>',
-				'settings'   => '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-settings' ) . '">' . __( 'Settings', 'popup-maker' ) . '</a>',
+				'extend'   => '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-extensions' ) . '">' . __( 'Integrations', 'popup-maker' ) . '</a>',
+				'settings' => '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-settings' ) . '">' . __( 'Settings', 'popup-maker' ) . '</a>',
 			) );
 
 			foreach ( $plugin_action_links as $link ) {
@@ -79,13 +79,13 @@ class PUM_Admin {
 			return;
 		}
 
+		$already_installed = get_option( '_pum_installed' );
+
 		// Exit if not in admin or the transient doesn't exist
-		if ( false === get_transient( '_pum_installed' ) ) {
-			return;
+		if ( false === $already_installed ) {
+			do_action( 'pum_after_install' );
+
+			update_option( '_pum_installed', true );
 		}
-
-		// TODO Delete transient after neccessary actions perfromed.
-
-		do_action( 'pum_after_install' );
 	}
 }
