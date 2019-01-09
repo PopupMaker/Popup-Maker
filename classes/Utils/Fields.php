@@ -215,7 +215,7 @@ class PUM_Utils_Fields {
 			}
 		}
 
-		uasort( $fields, array( 'PUM_Utils_Array', 'sort_by_priority' ) );
+		$fields = PUM_Utils_Array::sort( $fields, 'priority' );
 
 		return $fields;
 	}

@@ -350,7 +350,7 @@ class PUM_Utils_Array {
 		$pri_a = isset( $a['pri'] ) ? $a['pri'] : ( isset( $a['priority'] ) ? $a['priority'] : false );
 		$pri_b = isset( $b['pri'] ) ? $b['pri'] : ( isset( $b['priority'] ) ? $b['priority'] : false );
 
-		if ( ! $pri_a || ! $pri_b || $pri_a === $pri_b ) {
+		if ( ! is_numeric( $pri_a ) || ! is_numeric( $pri_b ) || $pri_a === $pri_b ) {
 			return 0;
 		}
 
@@ -369,7 +369,7 @@ class PUM_Utils_Array {
 		$pri_a = isset( $a['pri'] ) ? $a['pri'] : ( isset( $a['priority'] ) ? $a['priority'] : false );
 		$pri_b = isset( $b['pri'] ) ? $b['pri'] : ( isset( $b['priority'] ) ? $b['priority'] : false );
 
-		if ( ! $pri_a || ! $pri_b || $pri_a === $pri_b ) {
+		if ( ! is_numeric( $pri_a ) || ! is_numeric( $pri_b ) || $pri_a === $pri_b ) {
 			return 0;
 		}
 
