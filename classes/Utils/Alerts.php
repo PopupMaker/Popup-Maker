@@ -16,14 +16,12 @@ class PUM_Utils_Alerts {
 	 *
 	 */
 	public static function init() {
-
 		add_action( 'admin_init', array( __CLASS__, 'hooks' ) );
 		add_action( 'wp_ajax_pum_alerts_action', array( __CLASS__, 'ajax_handler' ) );
 		add_filter( 'pum_alert_list', array( __CLASS__, 'whats_new_alerts' ), 0 );
 		add_filter( 'pum_alert_list', array( __CLASS__, 'integration_alerts' ), 5 );
 		add_filter( 'pum_alert_list', array( __CLASS__, 'translation_request' ), 10 );
 		add_action( 'admin_menu', array( __CLASS__, 'append_alert_count' ), 999 );
-
 	}
 
 	/**
@@ -98,18 +96,18 @@ class PUM_Utils_Alerts {
 		 * Else If translations for their language doesn't exist!
 		 * -- Show notice that plugin is not translated and we need help.
 		 */
-		$current_locale      = function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
+		$current_locale = function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
 
 		// Get the active language packs of the plugin.
 		$translation_status = PUM_Utils_I10n::translation_status();
 		// Retrieve all the WordPress locales in which the plugin is translated.
-		$locales_with_translations         = wp_list_pluck( $translation_status, 'language' );
-		$locale_translation_versions         = wp_list_pluck( $translation_status, 'version' );
+		$locales_with_translations   = wp_list_pluck( $translation_status, 'language' );
+		$locale_translation_versions = wp_list_pluck( $translation_status, 'version' );
 
 		// Suggests existing langpacks
-		$suggested_locales_with_langpack   = array_values( array_intersect( $non_en_locales_from_header, $locales_with_translations ) );
-		$current_locale_is_suggested  = in_array( $current_locale, $suggested_locales_with_langpack );
-		$current_locale_is_translated = in_array( $current_locale, $locales_with_translations );
+		$suggested_locales_with_langpack = array_values( array_intersect( $non_en_locales_from_header, $locales_with_translations ) );
+		$current_locale_is_suggested     = in_array( $current_locale, $suggested_locales_with_langpack );
+		$current_locale_is_translated    = in_array( $current_locale, $locales_with_translations );
 
 		// Last chance to abort early before querying all available languages.
 		// We abort here if the user is already using a translated language that is up to date!
@@ -139,14 +137,10 @@ class PUM_Utils_Alerts {
 			if ( 1 === count( $suggest_translated_locale_names ) ) {
 				$language = current( $suggest_translated_locale_names );
 
-				$suggest_string = sprintf(
-					/* translators: %s: native language name. */
-					__( 'This plugin is also available in %1$s. <a href="%2$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ),
-					$language,
-					esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
-				);
+				$suggest_string = sprintf( /* translators: %s: native language name. */
+					__( 'This plugin is also available in %1$s. <a href="%2$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ), $language, esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' ) );
 
-			// Multiple locale suggestions.
+				// Multiple locale suggestions.
 			} elseif ( ! empty( $suggest_translated_locale_names ) ) {
 				$primary_language = current( $suggest_translated_locale_names );
 				array_shift( $suggest_translated_locale_names );
@@ -156,28 +150,19 @@ class PUM_Utils_Alerts {
 					$other_suggest .= $language . ', ';
 				}
 
-				$suggest_string = sprintf(
-					/* translators: 1: native language name, 2: other native language names, comma separated */
-					__( 'This plugin is also available in %1$s (also: %2$s). <a href="%3$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ),
-					$primary_language,
-					trim( $other_suggest, ' ,' ),
-					esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
-				);
+				$suggest_string = sprintf( /* translators: 1: native language name, 2: other native language names, comma separated */
+					__( 'This plugin is also available in %1$s (also: %2$s). <a href="%3$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ), $primary_language, trim( $other_suggest, ' ,' ), esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' ) );
 
-			// Non-English locale in header, no translations.
+				// Non-English locale in header, no translations.
 			} elseif ( ! empty( $non_en_locales_from_header ) ) {
 
 				if ( 1 === count( $non_en_locales_from_header ) ) {
 					$locale = reset( $non_en_locales_from_header );
 
-					$suggest_string = sprintf(
-					/* translators: 1: native language name, 2: URL to translate.wordpress.org */
-						__( 'This plugin is not translated into %1$s yet. <a href="%2$s" target="_blank">Help translate it!</a>', 'popup-maker' ),
-						$locales_supported_by_wordpress[ $locale ]['native_name'],
-						esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
-					);
+					$suggest_string = sprintf( /* translators: 1: native language name, 2: URL to translate.wordpress.org */
+						__( 'This plugin is not translated into %1$s yet. <a href="%2$s" target="_blank">Help translate it!</a>', 'popup-maker' ), $locales_supported_by_wordpress[ $locale ]['native_name'], esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' ) );
 				} else {
-					$primary_locale = reset( $non_en_locales_from_header );
+					$primary_locale   = reset( $non_en_locales_from_header );
 					$primary_language = $locales_supported_by_wordpress[ $primary_locale ]['native_name'];
 					array_shift( $non_en_locales_from_header );
 
@@ -186,31 +171,18 @@ class PUM_Utils_Alerts {
 						$other_suggest .= $locales_supported_by_wordpress[ $locale ]['native_name'] . ', ';
 					}
 
-					$suggest_string = sprintf(
-						/* translators: 1: native language name, 2: other native language names, comma separated */
-						__( 'This plugin is also available in %1$s (also: %2$s). <a href="%3$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ),
-						$primary_language,
-						trim( $other_suggest, ' ,' ),
-						esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
-					);
+					$suggest_string = sprintf( /* translators: 1: native language name, 2: other native language names, comma separated */
+						__( 'This plugin is also available in %1$s (also: %2$s). <a href="%3$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ), $primary_language, trim( $other_suggest, ' ,' ), esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' ) );
 				}
 			}
 
-		// The plugin has no translation for the current locale.
+			// The plugin has no translation for the current locale.
 		} elseif ( ! $current_locale_is_suggested && ! $current_locale_is_translated ) {
-			$suggest_string = sprintf(
-				__( 'This plugin is not translated into %1$s yet. <a href="%2$s" target="_blank">Help translate it!</a>', 'popup-maker' ),
-				$locales_supported_by_wordpress[ $current_locale ]['native_name'],
-				esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
-			);
-		// The plugin has translations for current locale, but they are out of date.
+			$suggest_string = sprintf( __( 'This plugin is not translated into %1$s yet. <a href="%2$s" target="_blank">Help translate it!</a>', 'popup-maker' ), $locales_supported_by_wordpress[ $current_locale ]['native_name'], esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' ) );
+			// The plugin has translations for current locale, but they are out of date.
 		} elseif ( $current_locale_is_suggested && $current_locale_is_translated && version_compare( $locale_translation_versions[ $current_locale ], Popup_Maker::$VER, '<' ) ) {
-			$suggest_string = sprintf(
-				/* translators: %s: native language name. */
-				__( 'This plugin\'s translation for %1$s is out of date. <a href="%2$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ),
-				$locales_supported_by_wordpress[ $current_locale ]['native_name'],
-				esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
-			);
+			$suggest_string = sprintf( /* translators: %s: native language name. */
+				__( 'This plugin\'s translation for %1$s is out of date. <a href="%2$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ), $locales_supported_by_wordpress[ $current_locale ]['native_name'], esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' ) );
 		}
 
 
@@ -344,7 +316,6 @@ class PUM_Utils_Alerts {
 
 		wp_enqueue_script( 'pum-admin-general' );
 		wp_enqueue_style( 'pum-admin-general' );
-
 
 		?>
 
