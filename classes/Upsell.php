@@ -50,7 +50,7 @@ class PUM_Upsell {
 	 */
 	public static function theme_promotional_fields( $tabs = array() ) {
 
-		if ( ! pum_extension_enabled( 'advanced-theme-builder' ) ) {
+		if ( ! pum_extension_enabled( 'advanced-theme-builder' ) && ! class_exists( 'PUM_ATB' ) ) {
 			foreach( array( 'overlay', 'container', 'close' ) as $tab ) {
 				/* translators: %s url to product page. */
 				$message = __( 'Want to use <a href="%s" target="_blank">background images</a>?', 'popup-maker' );
