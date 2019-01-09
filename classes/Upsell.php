@@ -6,11 +6,65 @@ class PUM_Upsell {
 	public static function init() {
 		add_filter( 'views_edit-popup', array( __CLASS__, 'addon_tabs' ), 10, 1 );
 		add_filter( 'views_edit-popup_theme', array( __CLASS__, 'addon_tabs' ), 10, 1 );
+		add_filter( 'pum_popup_settings_fields', array( __CLASS__, 'popup_promotional_fields' ) );
+		add_filter( 'pum_theme_settings_fields', array( __CLASS__, 'theme_promotional_fields' ) );
+	}
 
-		add_filter( 'pum_popup_close_settings_fields', array( __CLASS__, 'fi_promotion1' ) );
-		add_filter( 'pum_popup_close_settings_fields', array( __CLASS__, 'fi_promotion2' ) );
-		add_filter( 'pum_popup_targeting_settings_fields', array( __CLASS__, 'atc_promotion' ) );
-		add_filter( 'pum_theme_overlay_settings_fields', array( __CLASS__, 'atb_promotion' ) );
+	/**
+	 * @param array $tabs
+	 *
+	 * @return array
+	 */
+	public static function popup_promotional_fields( $tabs = array() ) {
+		if ( ! pum_extension_enabled( 'forced-interaction' ) ) {
+			/* translators: %s url to product page. */
+			$message = sprintf( __( 'Want to disable the close button? Check out <a href="%s" target="_blank">Forced Interaction</a>!', 'popup-maker' ), 'https://wppopupmaker.com/extensions/forced-interaction/?utm_source=plugin-theme-editor&utm_medium=text-link&utm_campaign=Upsell&utm_content=close-button-settings' );
+
+			$tabs['close']['button']['fi_promotion'] = $tabs['close']['alternate_methods']['fi_promotion'] = array(
+				'type'     => 'html',
+				'content'  => '<img src="' . pum_asset_url( 'images/upsell-icon-forced-interaction.png' ) . '" />' . $message,
+				'priority' => 999,
+				'class'    => 'pum-upgrade-tip',
+			);
+		}
+
+		if ( ! pum_extension_enabled( 'advanced-targeting-conditions' ) ) {
+			/* translators: %s url to product page. */
+			$message = sprintf( __( 'Need more <a href="%s" target="_blank">advanced targeting</a> options?', 'popup-maker' ), 'https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_campaign=Upsell&utm_source=plugin-popup-editor&utm_medium=text-link&utm_content=conditions-editor' );
+
+			$tabs['targeting']['main']['atc_promotion'] = array(
+				'type'     => 'html',
+				'content'  => '<img src="' . pum_asset_url( 'images/logo.png' ) . '" height="28" />' . $message,
+				'priority' => 999,
+				'class'    => 'pum-upgrade-tip',
+			);
+		}
+
+		return $tabs;
+	}
+
+	/**
+	 * @param array $tabs
+	 *
+	 * @return array
+	 */
+	public static function theme_promotional_fields( $tabs = array() ) {
+
+		if ( ! pum_extension_enabled( 'advanced-theme-builder' ) ) {
+			foreach( array( 'overlay', 'container', 'close' ) as $tab ) {
+				/* translators: %s url to product page. */
+				$message = __( 'Want to use <a href="%s" target="_blank">background images</a>?', 'popup-maker' );
+
+				$tabs[ $tab ]['background']['atc_promotion'] = array(
+					'type'     => 'html',
+					'content'  => '<img src="' . pum_asset_url( 'images/upsell-icon-advanted-theme-builder.png' ) . '" height="28" />' . sprintf( $message, 'https://wppopupmaker.com/extensions/advanced-theme-builder/?utm_campaign=Upsell&utm_source=plugin-theme-editor&utm_medium=text-link&utm_content=' . $tab . '-settings' ),
+					'priority' => 999,
+					'class'    => 'pum-upgrade-tip',
+				);
+			}
+		}
+
+		return $tabs;
 	}
 
 	/**
@@ -47,14 +101,14 @@ class PUM_Upsell {
 				display: none;
 			}
 
-			.edit-php.post-type-popup .wrap .nav-tab-wrapper .page-title-action,.edit-php.post-type-popup_theme .wrap .nav-tab-wrapper .page-title-action,.popup_page_pum-extensions .wrap .nav-tab-wrapper .page-title-action {
+			.edit-php.post-type-popup .wrap .nav-tab-wrapper .page-title-action, .edit-php.post-type-popup_theme .wrap .nav-tab-wrapper .page-title-action, .popup_page_pum-extensions .wrap .nav-tab-wrapper .page-title-action {
 				top: 7px;
 				margin-left: 5px
 			}
 
-			@media only screen and (min-width: 0px) and (max-width:783px) {
-				.edit-php.post-type-popup .wrap .nav-tab-wrapper .page-title-action,.edit-php.post-type-popup_theme .wrap .nav-tab-wrapper .page-title-action,.popup_page_pum-extensions .wrap .nav-tab-wrapper .page-title-action {
-					display:none!important
+			@media only screen and (min-width: 0px) and (max-width: 783px) {
+				.edit-php.post-type-popup .wrap .nav-tab-wrapper .page-title-action, .edit-php.post-type-popup_theme .wrap .nav-tab-wrapper .page-title-action, .popup_page_pum-extensions .wrap .nav-tab-wrapper .page-title-action {
+					display: none !important
 				}
 			}
 		</style>
@@ -113,152 +167,6 @@ class PUM_Upsell {
 			</a>
 		</h2>
 		<?php
-	}
-
-	/**
-	 * @param $fields
-	 *
-	 * @return mixed
-	 */
-	public static function fi_promotion1( $fields ) {
-		if ( pum_extension_enabled( 'forced-interaction' ) ) {
-			return $fields;
-		}
-
-		ob_start();
-
-		?>
-
-		<div class="pum-upgrade-tip">
-			<img src="<?php echo Popup_Maker::$URL; ?>/assets/images/upsell-icon-forced-interaction.png" />
-			<?php printf( _x( 'Want to disable the close button? Check out %sForced Interaction%s!', '%s represent the opening & closing link html', 'popup-maker' ), '<a href="https://wppopupmaker.com/extensions/forced-interaction/?utm_source=plugin-theme-editor&utm_medium=text-link&utm_campaign=Upsell&utm_content=close-button-settings" target="_blank">', '</a>' ); ?>
-		</div>
-
-		<?php
-
-		$html = ob_get_clean();
-
-		$key = key( $fields );
-
-		$fields[ $key ]['fi_promotion'] = array(
-			'type'     => 'html',
-			'content'  => $html,
-			'priority' => 30,
-		);
-
-		return $fields;
-	}
-
-	/**
-	 * @param $fields
-	 *
-	 * @return mixed
-	 */
-	public static function fi_promotion2( $fields ) {
-		if ( pum_extension_enabled( 'forced-interaction' ) ) {
-			return $fields;
-		}
-
-		ob_start();
-
-		?>
-
-		<div class="pum-upgrade-tip">
-			<img src="<?php echo Popup_Maker::$URL; ?>/assets/images/upsell-icon-forced-interaction.png" />
-			<?php printf( _x( 'Want to disable the close button? Check out %sForced Interaction%s!', '%s represent the opening & closing link html', 'popup-maker' ), '<a href="https://wppopupmaker.com/extensions/forced-interaction/?utm_source=plugin-theme-editor&utm_medium=text-link&utm_campaign=Upsell&utm_content=close-button-settings" target="_blank">', '</a>' ); ?>
-		</div>
-
-		<?php
-
-		$html = ob_get_clean();
-
-		$key = key( $fields );
-
-		$fields[ $key ]['fi_promotion'] = array(
-			'type'     => 'html',
-			'content'  => $html,
-			'priority' => 999,
-		);
-
-		return $fields;
-	}
-
-	public static function atc_promotion( $fields ) {
-		if ( pum_extension_enabled( 'advanced-targeting-conditions' ) ) {
-			return $fields;
-		}
-
-		ob_start();
-
-		?>
-
-		<div class="pum-upgrade-tip">
-			<img src="<?php echo Popup_Maker::$URL; ?>/assets/images/logo.png" height="28" />
-			<?php printf( __( 'Need more %sadvanced targeting%s options?', 'popup-maker' ), '<a href="https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_campaign=Upsell&utm_source=plugin-popup-editor&utm_medium=text-link&utm_content=conditions-editor" target="_blank">', '</a>' ); ?>
-		</div>
-
-		<?php
-
-		$html = ob_get_clean();
-		$key  = key( $fields );
-
-
-		$fields[ $key ]['atc_promotion'] = array(
-			'type'     => 'html',
-			'content'  => $html,
-			'priority' => 30,
-		);
-
-		return $fields;
-	}
-
-	public static function atb_promotion( $fields ) {
-		if ( pum_extension_enabled( 'advanced-theme-builder' ) ) {
-			return $fields;
-		}
-
-		$tab    = 'general';
-		$subtab = 'background';
-		$pri    = 0;
-
-		switch ( current_filter() ) {
-			case 'pum_theme_overlay_settings_fields':
-				$tab = 'overlay';
-				break;
-			case 'pum_theme_container_settings_fields':
-				$tab = 'container';
-				break;
-			case 'pum_theme_title_settings_fields':
-				$tab = 'title';
-				break;
-			case 'pum_theme_content_settings_fields':
-				$tab = 'content';
-				break;
-			case 'pum_theme_close_settings_fields':
-				$tab = 'close';
-				break;
-		}
-
-		ob_start();
-
-		?>
-
-		<div class="pum-upgrade-tip">
-			<img src="<?php echo Popup_Maker::$URL; ?>/assets/images/upsell-icon-advanted-theme-builder.png" height="28" />
-			<?php printf( __( 'Want to use %sbackground images%s?', 'popup-maker' ), '<a href="https://wppopupmaker.com/extensions/advanced-theme-builder/?utm_campaign=Upsell&utm_source=plugin-theme-editor&utm_medium=text-link&utm_content=' . $tab . '-settings" target="_blank">', '</a>' ); ?>
-		</div>
-
-		<?php
-
-		$html = ob_get_clean();
-
-		$fields[ $tab ][ $subtab ]['atb_promotion'] = array(
-			'type'     => 'html',
-			'content'  => $html,
-			'priority' => $pri,
-		);
-
-		return $fields;
 	}
 
 }
