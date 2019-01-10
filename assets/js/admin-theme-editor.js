@@ -160,9 +160,21 @@
             });
         },
         refresh_preview: function () {
-            var form_values = $('#pum-theme-settings-container').pumSerializeObject();
+            var form_values = $('#pum-theme-settings-container').pumSerializeObject(),
+                theme_settings = form_values.theme_settings;
 
-            PUM_Admin.themeEditor.restyle_preview(form_values.theme_settings);
+            // Remap deprecated settings so they work.
+            // Remove this after ATB updated.
+            if (typeof window.PUM_ATB !== 'undefined') {
+                delete form_values.theme_settings;
+
+                for (var old_setting in form_values) {
+                    if (form_values.hasOwnProperty(old_setting))
+                    theme_settings[old_setting.replace('popup_theme_','')] = form_values[old_setting];
+                }
+            }
+
+            PUM_Admin.themeEditor.restyle_preview(theme_settings);
         },
         restyle_preview: function (theme) {
             var $overlay = $('.pum-popup-overlay'),

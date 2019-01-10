@@ -237,12 +237,18 @@ function pum_get_theme_v2_meta_group( $meta_group, $theme_id = null, $option_key
 		return false;
 	}
 
+	$group_meta = ! empty( $theme_meta[ $meta_group ] ) ? $theme_meta[ $meta_group ] : false;
+
+	if ( ! $group_meta ) {
+		return $default;
+	}
+
 	if ( isset( $option_key ) ) {
-		$value = isset( $theme_meta[ $option_key ] ) ? $theme_meta[ $option_key ] : $default;
+		$value = isset( $group_meta[ $option_key ] ) ? $group_meta[ $option_key ] : $default;
 
 		return apply_filters( "popmake_get_popup_theme_{$meta_group}_$option_key", $value, $theme_id );
 	} else {
-		return apply_filters( "popmake_get_popup_theme_{$meta_group}", $theme_meta, $theme_id );
+		return apply_filters( "popmake_get_popup_theme_{$meta_group}", $group_meta, $theme_id );
 	}
 }
 

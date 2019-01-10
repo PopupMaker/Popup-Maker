@@ -80,16 +80,23 @@ class PUM_Admin_Themes {
 
 		$theme = pum_get_theme( $post->ID );
 
+		$deprecated_atb_enabled = class_exists( 'PUM_ATB' ) && ! pum_extension_enabled( 'advanced-theme-builder' );
+
+		// Remove this div after PUM ATC updated properly
+		if ( $deprecated_atb_enabled ) {
+			echo '<div id="PopMake-Preview">';
+		}
+
 		?>
 
 		<div class="pum-theme-preview">
-			<div class="pum-popup-overlay"></div>
-			<div class="pum-popup-container">
+			<div class="pum-popup-overlay <?php echo $deprecated_atb_enabled ? 'example-popup-overlay' : '';?>"></div>
+			<div class="pum-popup-container <?php echo $deprecated_atb_enabled ? 'example-popup' : '';?>">
 				<div class="pum-popup-title"><?php _e( 'Title Text', 'popup-maker' ); ?></div>
 				<div class="pum-popup-content">
 					<?php echo apply_filters( 'pum_example_popup_content', '<p>Suspendisse ipsum eros, tincidunt sed commodo ut, viverra vitae ipsum. Etiam non porta neque. Pellentesque nulla elit, aliquam in ullamcorper at, bibendum sed eros. Morbi non sapien tellus, ac vestibulum eros. In hac habitasse platea dictumst. Nulla vestibulum, diam vel porttitor placerat, eros tortor ultrices lectus, eget faucibus arcu justo eget massa. Maecenas id tellus vitae justo posuere hendrerit aliquet ut dolor.</p>' ); ?>
 				</div>
-				<button type="button" class="pum-popup-close" aria-label="<?php _e( 'Close', 'popup-maker' ); ?>">
+				<button type="button" class="pum-popup-close <?php echo $deprecated_atb_enabled ? 'close-popup' : '';?>" aria-label="<?php _e( 'Close', 'popup-maker' ); ?>">
 					<?php echo $theme->get_setting( 'close_text', '&#215;' ); ?>
 				</button>
 			</div>
@@ -104,6 +111,10 @@ class PUM_Admin_Themes {
 		</div>
 
 		<?php
+		// Remove this div after PUM ATC updated properly
+		if ( $deprecated_atb_enabled ) {
+			echo '</div>';
+		}
 	}
 
 	/**
@@ -207,7 +218,13 @@ class PUM_Admin_Themes {
 
 		$field_prefix = 'popup_theme_';
 
-		$old_fields = (array) apply_filters( 'popmake_popup_theme_fields', array() );
+		$old_fields = (array) apply_filters( 'popmake_popup_theme_fields', array(
+			'overlay'   => array(),
+			'container' => array(),
+			'title'     => array(),
+			'content'   => array(),
+			'close'     => array(),
+		) );
 
 		foreach ( $old_fields as $section => $fields ) {
 			$section_prefix = "{$field_prefix}{$section}";
@@ -373,15 +390,15 @@ class PUM_Admin_Themes {
 	 */
 	public static function font_weight_options() {
 		return apply_filters( 'pum_theme_font_weight_options', array(
-			100       => 100,
-			200       => 200,
-			300       => 300,
-			400       => __( 'Normal', 'popup-maker' ) . ' (400)',
-			500       => 500,
-			600       => 600,
-			700       => __( 'Bold', 'popup-maker' ) . ' (700)',
-			800       => 800,
-			900       => 900,
+			100 => 100,
+			200 => 200,
+			300 => 300,
+			400 => __( 'Normal', 'popup-maker' ) . ' (400)',
+			500 => 500,
+			600 => 600,
+			700 => __( 'Bold', 'popup-maker' ) . ' (700)',
+			800 => 800,
+			900 => 900,
 		) );
 	}
 
@@ -391,7 +408,6 @@ class PUM_Admin_Themes {
 	 * @return mixed
 	 */
 	public static function fields() {
-
 		static $fields;
 
 		if ( ! isset( $fields ) ) {
@@ -1074,6 +1090,8 @@ class PUM_Admin_Themes {
 				) ),
 			) );
 
+			$fields = self::append_deprecated_fields( $fields );
+
 			$fields = PUM_Utils_Fields::parse_tab_fields( $fields, array(
 				'has_sections' => true,
 				'name'         => 'theme_settings[%s]',
@@ -1082,6 +1100,86 @@ class PUM_Admin_Themes {
 		}
 
 		return $fields;
+	}
+
+	public static function append_deprecated_fields( $fields = array() ) {
+		global $post;
+
+		if ( class_exists( 'PUM_ATB' ) && has_action( 'popmake_popup_theme_overlay_meta_box_fields' ) ) {
+			ob_start();
+
+			do_action( 'popmake_popup_theme_overlay_meta_box_fields', $post->ID );
+
+			$content = self::fix_deprecated_fields( ob_get_clean() );
+
+			$fields['overlay']['background']['deprecated_fields'] = array(
+				'type'     => 'html',
+				'content'  => $content,
+				'priority' => 999,
+			);
+
+			// Remove duplicate fields.
+			unset( $fields['overlay']['background']['overlay_background_color'] );
+			unset( $fields['overlay']['background']['overlay_background_opacity'] );
+		}
+
+		if ( class_exists( 'PUM_ATB' ) && has_action( 'popmake_popup_theme_container_meta_box_fields' ) ) {
+			ob_start();
+
+			do_action( 'popmake_popup_theme_container_meta_box_fields', $post->ID );
+
+			$content = self::fix_deprecated_fields( ob_get_clean() );
+
+			$fields['container']['background']['deprecated_fields'] = array(
+				'type'     => 'html',
+				'content'  => $content,
+				'priority' => 999,
+			);
+
+			// Remove duplicate fields.
+			unset( $fields['container']['background']['container_background_color'] );
+			unset( $fields['container']['background']['container_background_opacity'] );
+		}
+
+		if ( class_exists( 'PUM_ATB' ) && has_action( 'popmake_popup_theme_close_meta_box_fields' ) ) {
+			ob_start();
+
+			do_action( 'popmake_popup_theme_close_meta_box_fields', $post->ID );
+
+			$content = self::fix_deprecated_fields( ob_get_clean() );
+
+			$fields['close']['background']['deprecated_fields'] = array(
+				'type'     => 'html',
+				'content'  => $content,
+				'priority' => 999,
+			);
+
+			// Remove duplicate fields.
+			unset( $fields['close']['background']['close_background_color'] );
+			unset( $fields['close']['background']['close_background_opacity'] );
+		}
+
+		return $fields;
+	}
+
+	public static function fix_deprecated_fields( $content = '' ) {
+
+		// Remove "Background" heading.
+		$content = str_replace( '<tr class="title-divider">
+			<th colspan="2">
+				<h3 class="title">Background</h3>
+			</th>
+		</tr>', '', $content );
+
+		// Fix broken opacity fields.
+		$content = str_replace( array( 'class="bg_opacity"','class="bg_overlay_opacity"') ,  array('class="bg_opacity pum-field-rangeslider"','class="bg_overlay_opacity pum-field-rangeslider"'), $content );
+
+		// TEMPORARY. REMOVE THIS
+		$content = '<table class="form-table"><tbody>' . $content . '</tbody></table>';
+
+		return $content;
+
+
 	}
 
 	/**
