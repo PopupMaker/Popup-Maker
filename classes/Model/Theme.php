@@ -446,7 +446,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		}
 
 		if ( ! isset( $this->data_version ) ) {
-			$this->data_version = (int) $this->get_meta( 'data_version' );
+			$this->data_version = (int) $this->get_meta( 'popup_theme_data_version' );
 
 			if ( ! $this->data_version ) {
 				$theme_overlay_v1 = $this->get_meta( 'popup_theme_overlay_background_color' );
@@ -462,7 +462,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 					$this->data_version = $this->model_version;
 				}
 
-				$this->update_meta( 'data_version', $this->data_version );
+				$this->update_meta( 'popup_theme_data_version', $this->data_version );
 			}
 		}
 
@@ -488,7 +488,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 			/**
 			 * Update the themes data version.
 			 */
-			$this->update_meta( 'data_version', $this->data_version );
+			$this->update_meta( 'popup_theme_data_version', $this->data_version );
 		}
 
 		do_action_ref_array( 'pum_theme_passive_migration', array( &$this, $this->data_version ) );
