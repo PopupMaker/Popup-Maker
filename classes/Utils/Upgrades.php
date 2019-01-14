@@ -206,6 +206,60 @@ class PUM_Utils_Upgrades {
 			'class' => 'PUM_Upgrade_v1_7_Settings',
 			'file'  => Popup_Maker::$DIR . 'includes/batch/upgrade/class-upgrade-v1_7-settings.php',
 		) );
+
+		$registry->add_upgrade( 'core-v1_8-themes', array(
+			'rules' => array(
+				$this->needs_v1_8_theme_upgrade(),
+			),
+			'class' => 'PUM_Upgrade_v1_8_Themes',
+			'file'  => Popup_Maker::$DIR . 'includes/batch/upgrade/class-upgrade-v1_8-themes.php',
+		) );
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function needs_v1_8_theme_upgrade() {
+		if ( pum_has_completed_upgrade( 'core-v1_8-themes' ) ) {
+			//return false;
+		}
+
+		$needs_upgrade = get_transient( 'pum_needs_1_8_theme_upgrades' );
+
+		if ( $needs_upgrade === false ) {
+			$query = new WP_Query( array(
+				'post_type'  => 'popup_theme',
+				'post_status' => 'any',
+				'fields'     => 'ids',
+				'meta_query' => array(
+					'relation' => 'OR',
+					array(
+						'key'     => 'popup_theme_data_version',
+						'compare' => 'NOT EXISTS',
+						'value'   => 'deprecated', // Here for WP 3.9 or less.
+					),
+					array(
+						'key'     => 'popup_theme_data_version',
+						'compare' => '<',
+						'value'   => 3,
+					),
+				),
+			) );
+
+			$needs_upgrade = $query->post_count;
+		}
+
+		if ( $needs_upgrade <= 0 ) {
+			pum_set_upgrade_complete( 'core-v1_8-themes' );
+			delete_transient( 'pum_needs_1_8_theme_upgrades' );
+
+			return false;
+		}
+
+		set_transient( 'pum_needs_1_8_theme_upgrades', $needs_upgrade );
+
+		return (bool) $needs_upgrade;
+
 	}
 
 	/**
@@ -266,13 +320,13 @@ class PUM_Utils_Upgrades {
 		$html = ob_get_clean();
 
 		$alerts[] = array(
-				'code'     => 'upgrades_required',
-				'type'     => 'warning',
-				'html'  => $html,
-				'priority' => 1000,
-				'dismissible' => false,
-				'global' => true,
-			);
+			'code'        => 'upgrades_required',
+			'type'        => 'warning',
+			'html'        => $html,
+			'priority'    => 1000,
+			'dismissible' => false,
+			'global'      => true,
+		);
 
 		return $alerts;
 	}
@@ -286,8 +340,8 @@ class PUM_Utils_Upgrades {
 		$resume_upgrade = $this->maybe_resume_upgrade(); ?>
 		<p class="pum-upgrade-notice">
 			<?php
-			if ( empty( $resume_upgrade ) ) {?>
-				<strong><?php _e( 'The latest version of Popup Maker requires changes to the Popup Maker settings saved on your site.', 'popup-maker' );?></strong>
+			if ( empty( $resume_upgrade ) ) { ?>
+				<strong><?php _e( 'The latest version of Popup Maker requires changes to the Popup Maker settings saved on your site.', 'popup-maker' ); ?></strong>
 				<?php
 			} else {
 				_e( 'Popup Maker needs to complete a the update of your settings that was previously started.', 'popup-maker' );
@@ -313,10 +367,10 @@ class PUM_Utils_Upgrades {
 
 		<form method="post" class="pum-form  pum-batch-form  pum-upgrade-form" data-ays="<?php _e( 'This can sometimes take a few minutes, are you ready to begin?', 'popup-maker' ); ?>" data-upgrade_id="<?php echo $args['upgrade_id']; ?>" data-step="<?php echo (int) $args['step']; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'pum_upgrade_ajax_nonce' ) ); ?>">
 
-			<p>
-				<small><?php _e( 'The button below will do process these changes automatically for you.', 'popup-maker' ); ?></small>
-			</p>
 			<div class="pum-field  pum-field-button  pum-field-submit">
+				<p>
+					<small><?php _e( 'The button below will do process these changes automatically for you.', 'popup-maker' ); ?></small>
+				</p>
 				<?php submit_button( ! empty( $resume_upgrade ) ? __( 'Finish Upgrades', 'popup-maker' ) : __( 'Process Changes', 'popup-maker' ), 'secondary', 'submit', false ); ?>
 			</div>
 
