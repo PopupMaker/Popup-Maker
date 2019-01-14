@@ -33,12 +33,11 @@ function pum_get_default_theme_id() {
 		$default_theme_id = get_option( 'popmake_default_theme' );
 
 		if ( false === $default_theme_id ) {
-			if ( ! function_exists( 'popmake_install_default_theme' ) ) {
-				include_once POPMAKE_DIR . 'includes/install.php';
-			}
-
 			$default_theme_id = pum_install_default_theme();
-			pum_update_option( 'default_theme_id', $default_theme_id );
+			if ( pum_update_option( 'default_theme_id', $default_theme_id ) ) {
+				// Self cleanup old version.
+				delete_option( 'popmake_default_theme' );
+			}
 		}
 	}
 

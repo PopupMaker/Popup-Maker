@@ -245,6 +245,36 @@ function pum_get_trigger_section_labels() {
 
 #region Deprecated 1.8.0
 
+
+/**
+ * Install Default Theme
+ *
+ * Installs the default theme and updates the option.
+ *
+ * @since 1.0
+ * @deprecated 1.8.0
+ */
+function popmake_install_default_theme() {
+	$defaults = PUM_Admin_Themes::defaults();
+
+	$default_theme = @wp_insert_post( array(
+		'post_title'     => __( 'Default Theme', 'popup-maker' ),
+		'post_status'    => 'publish',
+		'post_author'    => 1,
+		'post_type'      => 'popup_theme',
+		'comment_status' => 'closed',
+		'meta_input'     => array(
+			'_pum_built_in'        => 'default-theme',
+			'_pum_default_theme'   => true,
+			'popup_theme_settings' => $defaults,
+			'popup_theme_data_ver' => 3,
+		),
+	) );
+
+	update_option( 'popmake_default_theme', $default_theme );
+	pum_reset_assets();
+}
+
 /**
  * Checks if the db_ver is v1.4 compatible.
  *
