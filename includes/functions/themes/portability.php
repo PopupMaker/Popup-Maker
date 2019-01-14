@@ -44,7 +44,7 @@ function pum_import_theme_from_repo( $hash ) {
 		'original_author' => 'Daniel',
 	);
 
-	return pum_intall_theme( $theme_data['name'], $theme_data['settings'], array(
+	return pum_install_theme( $theme_data['name'], $theme_data['settings'], array(
 		'_pum_theme_repo_hash'   => $hash,
 		'_pum_theme_repo_author' => $theme_data['original_author'],
 	) );
@@ -59,7 +59,8 @@ function pum_import_theme_from_repo( $hash ) {
  */
 function pum_install_default_theme() {
 	return pum_install_theme( __( 'Default Theme', 'popup-maker' ), null, array(
-		'_pum_built_in'      => 'default-theme',
-		'_pum_default_theme' => true,
+		'_pum_built_in'        => 'default-theme',
+		'_pum_default_theme'   => true,
+		'popup_theme_data_ver' => 3,
 	) );
 }
