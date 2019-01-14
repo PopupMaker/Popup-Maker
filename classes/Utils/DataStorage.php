@@ -28,7 +28,7 @@ class PUM_Utils_DataStorage {
 		$value = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = '%s'", $key ) );
 
 		if ( empty( $value ) && ! is_null( $default ) ) {
-			$value = $default;
+			return $default;
 		}
 
 		return empty( $value ) ? false : maybe_unserialize( $value );

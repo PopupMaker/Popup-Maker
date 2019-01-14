@@ -6347,6 +6347,17 @@
         $notice_counts = $('.pum-alert-count'),
         count = parseInt($notice_counts.eq(0).text());
 
+    function checkRemoveAlerts() {
+        if ($alerts.find('.pum-alert-holder').length === 0) {
+            $alerts.slideUp(100, function () {
+                $alerts.remove();
+            });
+
+            $('#menu-posts-popup .wp-menu-name .update-plugins').fadeOut();
+        }
+
+    }
+
     function removeAlert($alert) {
         count--;
 
@@ -6356,18 +6367,13 @@
             $alert.slideUp(100, function () {
                 $alert.remove();
 
-                if ($alerts.find('.pum-alert-holder').length === 0) {
-                    $alerts.slideUp(100, function () {
-                        $alerts.remove();
-                    });
-
-                    $('#menu-posts-popup .wp-menu-name .update-plugins').fadeOut();
-                }
+                checkRemoveAlerts();
             });
         });
     }
 
     $(document)
+        .on('pumDismissAlert', checkRemoveAlerts)
         .on('click', '.pum-alert-holder .pum-dismiss', function () {
             var $this = $(this),
                 $alert = $this.parents('.pum-alert-holder'),

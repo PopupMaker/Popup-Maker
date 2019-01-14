@@ -44,12 +44,12 @@
                 }
             },
             complete: function ($form) {
-                var $notice = $form.parents('.notice');
+                var $alert = $form.parents('.pum-alert');
 
                 $form.find('.pum-field-submit, progress').hide();
                 $('p.pum-upgrade-notice').hide();
-                $notice.removeClass('notice-info').addClass('notice-success  notice-alt');
-                $notice.prepend('<h2>' + pum_batch_vars.complete + '</h2>')
+                $alert.removeClass('pum-alert__warning').addClass('pum-alert__success');
+                $alert.prepend('<h2>' + pum_batch_vars.complete + '</h2>');
             },
             action: 'pum_process_batch_request',
             /**
@@ -119,173 +119,6 @@
                 });
             }
         },
-        batch_import = $.extend({}, batch, {
-            action: 'pum_process_batch_import',
-            before_submit: function (arr, $form) {
-                var $import_form = $('.pum-batch-import-form').find('.pum-batch-progress').parent().parent(),
-                    notice_wrap = $import_form.find('.notice-wrap');
-
-                $form.find('.notice-wrap').remove();
-                $form.append('<div class="notice-wrap"><span class="spinner is-active"></span><div class="pum-batch-progress"><div></div>');
-
-                // Check whether client browser fully supports all File API.
-                if (window.File && window.FileReader && window.FileList && window.Blob) {
-
-                    // HTML5 File API is supported by browser
-
-                } else {
-                    $import_form.find('.button-disabled').removeClass('button-disabled');
-
-                    // Error for older unsupported browsers that doesn't support HTML5 File API.
-                    notice_wrap.html('<div class="update error"><p>' + pum_batch_vars.unsupported_browser + '</p></div>');
-                    return false;
-
-                }
-
-            },
-            success: function (responseText, statusText, xhr, $form) {
-                console.log($form);
-            },
-            complete: function (xhr) {
-
-                var response = jQuery.parseJSON(xhr.responseText),
-                    self = this;
-
-                if (response.success) {
-
-                    // Select only the current form.
-                    var $form = $('.pum-batch-import-form .notice-wrap').parent(),
-                        select = $form.find('select.pum-import-csv-column'),
-                        options = '',
-                        selectName, field, tableRow,
-                        columns = response.data.columns.sort(function (a, b) {
-                            if (a < b) return -1;
-                            if (a > b) return 1;
-                            return 0;
-                        });
-
-                    $form.find('.pum-import-file-wrap, .notice-wrap').remove();
-                    $form.find('.pum-import-options').slideDown();
-
-                    $.each(select, function (selectKey, selectValue) {
-                        var $currentSelect = $(this);
-
-                        selectName = $(selectValue).attr('name');
-
-                        $.each(columns, function (columnKey, columnValue) {
-                            var processedColumnValue = columnValue.toLowerCase().replace(/ /g, '_'),
-                                columnRegex = new RegExp("\\[" + processedColumnValue + "\\]"),
-                                selected = selectName.length && selectName.match(columnRegex) ? ' selected="selected"' : false;
-
-                            if (selected) {
-                                // Update the preview if there's a first-row value.
-                                $currentSelect.parent().next().html(false !== response.data.first_row[columnValue] ? response.data.first_row[columnValue] : '');
-                            }
-
-                            // If the column matches a select, auto-map it. Boom.
-                            options += '<option value="' + columnValue + '"' + selected + '>' + columnValue + '</option>';
-                        });
-
-                        // Add the options markup to the select.
-                        $currentSelect.append(options);
-
-                        // Reset options.
-                        options = '';
-                    });
-
-                    select.on('change', function () {
-                        var $this = $(this),
-                            val = $this.val(),
-                            html = '';
-
-                        if (val && false !== response.data.first_row[val]) {
-                            html = response.data.first_row[val];
-                        }
-
-                        $this.parent().next().html(html);
-                    });
-
-                    $('body').on('click', '.pum-import-proceed', function (event) {
-
-                        event.preventDefault();
-
-                        // Validate for required fields.
-                        if ($form.data('required')) {
-                            var required = $form.data('required'),
-                                requiredFields = [];
-
-                            if (required.indexOf(',')) {
-                                requiredFields = required.split(',');
-                            } else {
-                                requiredFields = [required];
-                            }
-
-                            var triggerValidation = false;
-
-                            $.each(requiredFields, function (key, value) {
-                                field = $("select[name='pum-import-field[" + value + "]']");
-                                tableRow = field.parent().parent();
-
-                                // Remove the validation class if this is a repeat click.
-                                tableRow.removeClass('pum-required-import-field');
-
-                                // If nothing is mapped, trigger validation.
-                                if (field.val() === '') {
-                                    triggerValidation = true;
-
-                                    tableRow.addClass('pum-required-import-field');
-                                    field.parent().next().html(pum_batch_vars.import_field_required);
-                                }
-                            });
-
-                            // If validation has been triggered, bail from submitting the form.
-                            if (triggerValidation) {
-                                return;
-                            }
-
-                        }
-
-                        $form.find('.notice-wrap').remove();
-
-                        // Add the spinner.
-                        $(this).parent().append('<span class="spinner is-active"></span>');
-
-                        $form.append('<div class="notice-wrap"><div class="pum-batch-progress"><div></div>');
-
-                        response.data.mapping = $form.serialize();
-                        response.data.form = $form.serializeAssoc();
-
-                        batch.process_step(1, response.data);
-                    });
-
-                } else {
-
-                    self.error(xhr);
-
-                }
-
-            },
-            error: function (xhr) {
-
-                // Something went wrong. This will display error on form
-                var response = jQuery.parseJSON(xhr.responseText),
-                    import_form = $('.pum-batch-import-form').find('.pum-batch-progress').parent().parent(),
-                    notice_wrap = import_form.find('.notice-wrap');
-
-                import_form.find('.button-disabled').removeClass('button-disabled');
-
-                if (response.data.error) {
-
-                    notice_wrap.html('<div class="update error"><p>' + response.data.error + '</p></div>');
-
-                } else {
-
-                    notice_wrap.remove();
-
-                }
-            }
-
-        }),
         batch_upgrades = $.extend(true, {}, batch, {
             action: 'pum_process_upgrade_request',
             /**
@@ -380,7 +213,6 @@
     // Import this module.
     window.PUM_Admin = window.PUM_Admin || {};
     window.PUM_Admin.batch = batch;
-    window.PUM_Admin.batch_import = batch_import;
     window.PUM_Admin.batch_upgrades = batch_upgrades;
 
     /**
@@ -442,24 +274,6 @@
 
         })
         .ready(function () {
-            // Handle multiple importers on the same screen.
-            $('.pum-batch-import-form').each(function () {
-                var $this = $(this);
-
-                $this.ajaxForm({
-                    beforeSubmit: batch_import.before_submit,
-                    complete: batch_import.complete,
-                    dataType: 'json',
-                    error: batch_import.error,
-                    data: {
-                        action: batch_import.action,
-                        batch_id: $this.data('batch_id'),
-                        nonce: $this.data('nonce')
-                    },
-                    url: ajaxurl,
-                    resetForm: true
-                });
-            });
         });
 
 }(jQuery));
@@ -514,14 +328,12 @@ jQuery(document).ready(function ($) {
                         else
                             v[$.count(v)] = value;
                         this.add(tmp[1], v);
-                    }
-                    else if (typeof value === 'object') {
+                    } else if (typeof value === 'object') {
                         if (typeof this.aa[name] !== 'object') {
                             this.aa[name] = {};
                         }
                         this.aa[name] = $.arrayMerge(this.aa[name], value);
-                    }
-                    else {
+                    } else {
                         this.aa[name] = value;
                     }
                 }

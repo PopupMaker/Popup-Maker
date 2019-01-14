@@ -80,7 +80,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	public function pre_fetch() {
 		$total_to_migrate = $this->get_total_count();
 
-		if ( false === $total_to_migrate ) {
+		if ( ! $total_to_migrate ) {
 			$posts = $this->get_posts( array(
 				'fields'         => 'ids',
 				'posts_per_page' => - 1,
@@ -226,7 +226,10 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	protected function get_post_ids() {
 		if ( ! isset( $this->post_ids ) || ! $this->post_ids ) {
 			$this->post_ids =  PUM_DataStorage::get( "{$this->batch_id}_post_ids", false );
-			$this->post_ids = wp_parse_id_list( $this->post_ids );
+
+			if ( is_array( $this->post_ids ) ) {
+				$this->post_ids = wp_parse_id_list( $this->post_ids );
+			}
 		}
 
 		return $this->post_ids;
@@ -259,8 +262,8 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 */
 	protected function get_completed_post_ids() {
 		if ( ! isset( $this->completed_post_ids ) || ! $this->completed_post_ids ) {
-			$this->completed_post_ids =  PUM_DataStorage::get( "{$this->batch_id}_completed_post_ids", array() );
-			$this->completed_post_ids = wp_parse_id_list( $this->completed_post_ids );
+			$completed_post_ids =  PUM_DataStorage::get( "{$this->batch_id}_completed_post_ids", array() );
+			$this->completed_post_ids = wp_parse_id_list( $completed_post_ids );
 		}
 
 		return $this->completed_post_ids;
@@ -272,7 +275,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 * @param array $completed_post_ids Full list of post_ids to be processed.
 	 */
 	protected function set_completed_post_ids( $completed_post_ids = array() ) {
-		$this->completed_post_ids = $completed_post_ids;
+		$this->completed_post_ids = wp_parse_id_list( $completed_post_ids );
 
 		PUM_DataStorage::write( "{$this->batch_id}_completed_post_ids", $completed_post_ids );
 	}
