@@ -39,7 +39,7 @@ class PUM_Types {
 					'revisions',
 					'author',
 				) ),
-				//'show_in_rest'        => true, // Adds support for Gutenberg currently.
+				'show_in_rest'        => pum_get_option( 'gutenberg_support_enabled', false ), // Adds support for Gutenberg currently.
 			) );
 
 			// Temporary Yoast Fixes

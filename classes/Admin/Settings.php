@@ -236,14 +236,19 @@ class PUM_Admin_Settings {
 			$fields = array(
 				'general' => array(
 					'main' => array(
-						'default_theme_id'     => array(
+						'default_theme_id'          => array(
 							'label'        => __( 'Default Popup Theme', 'popup-maker' ),
 							'dynamic_desc' => sprintf( '%1$s<br/><a id="edit_theme_link" href="%3$s">%2$s</a>', __( 'Choose the default theme used for new popups', 'popup-maker' ), __( 'Customize This Theme', 'popup-maker' ), admin_url( "post.php?action=edit&post={{data.value}}" ) ),
 							'type'         => 'select',
 							'options'      => pum_is_settings_page() ? PUM_Helpers::popup_theme_selectlist() : null,
 							'std'          => pum_get_default_theme_id(),
 						),
-						'google_fonts_api_key' => array(
+						'gutenberg_support_enabled' => array(
+							'label' => __( 'Enable Gutenberg Support', 'popup-maker' ),
+							'desc'  => __( 'Enable experimental Gutenberg support for the popup editor.', 'popup-maker' ),
+							'type'  => 'checkbox',
+						),
+						'google_fonts_api_key'      => array(
 							'type'  => 'text',
 							'label' => __( 'Google Fonts API Key', 'popup-maker' ),
 							'desc'  => __( 'Enter your own Google Fonts API key to always get the latest fonts available.', 'popup-maker' ),
@@ -500,16 +505,13 @@ class PUM_Admin_Settings {
 		<p class="pum-desc desc"><?php __( "Use this to quickly copy Popup Maker's CSS to your own stylesheet.", 'popup-maker' ); ?></p>
 
 		<div id="pum_style_output" style="display:none;">
-			<label for="pum_core_styles"><?php _e( 'Core Styles', 'popup-maker' ); ?></label>
-			<br />
+			<label for="pum_core_styles"><?php _e( 'Core Styles', 'popup-maker' ); ?></label> <br />
 
 			<textarea id="pum_core_styles" wrap="off" style="white-space: pre; width: 100%;" readonly="readonly"><?php echo $core_styles; ?></textarea>
 
-			<br />
-			<br />
+			<br /> <br />
 
-			<label for="pum_generated_styles"><?php _e( 'Generated Popup & Popup Theme Styles', 'popup-maker' ); ?></label>
-			<br />
+			<label for="pum_generated_styles"><?php _e( 'Generated Popup & Popup Theme Styles', 'popup-maker' ); ?></label> <br />
 
 			<textarea id="pum_generated_styles" wrap="off" style="white-space: pre; width: 100%; min-height: 200px;" readonly="readonly"><?php echo $user_styles; ?></textarea>
 		</div>

@@ -220,7 +220,7 @@ class PUM_Utils_Alerts {
 							'width'     => 722,
 							'height'    => 949,
 						), admin_url( 'plugin-install.php' ) ) . '" target="_blank">', '</a>' ),
-					'html'     => "<ul class='ul-disc'>" . "<li>" . 'Added support for Gutenberg editor when creating popups.' . "</li>" . "<li>" . 'New close button positions: top center, bottom center, middle left & middle right.' . "</li>" . "<li>" . 'New option to position close button outside of popup.' . "</li>" . "</ul>",
+					'html'     => "<ul class='ul-disc'>" . "<li>" . 'Added option to enable Gutenberg editor when creating popups.' . "</li>" . "<li>" . 'New close button positions: top center, bottom center, middle left & middle right.' . "</li>" . "<li>" . 'New option to position close button outside of popup.' . "</li>" . "</ul>",
 					'priority' => 100,
 				);
 			}
