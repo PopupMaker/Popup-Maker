@@ -48,8 +48,7 @@ class PUM_AssetCache {
 	 */
 	public static function init() {
 		if ( ! self::$initialized ) {
-			$upload_dir      = wp_upload_dir();
-			self::$cache_dir = trailingslashit( $upload_dir['basedir'] ) . 'pum';
+			self::$cache_dir = self::get_cache_dir();
 			self::$debug     = Popup_Maker::debug_mode() || ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
 			self::$suffix    = self::$debug ? '' : '.min';
 			self::$asset_url = Popup_Maker::$URL . 'assets/';
@@ -96,7 +95,7 @@ class PUM_AssetCache {
 		}
 
 		// Check and create cachedir
-		if ( ! is_dir( self::$cache_dir ) ) {
+		if ( ! is_dir( self::get_cache_dir() ) ) {
 
 			if ( ! function_exists( 'WP_Filesystem' ) ) {
 				require_once( ABSPATH . 'wp-admin/includes/file.php' );
@@ -107,10 +106,10 @@ class PUM_AssetCache {
 			global $wp_filesystem;
 
 			/** @var WP_Filesystem_Base $wp_filesystem */
-			$wp_filesystem->mkdir( self::$cache_dir );
+			$wp_filesystem->mkdir( self::get_cache_dir() );
 		}
 
-		return is_writable( self::$cache_dir ) && ! isset( $_POST['wp_customize'] );
+		return is_writable( self::get_cache_dir() ) && ! isset( $_POST['wp_customize'] );
 	}
 
 	/**
@@ -122,16 +121,61 @@ class PUM_AssetCache {
 	}
 
 	/**
+	 * Gets the directory caching should be stored in.
+	 *
+	 * Accounts for various adblock bypass options.
+	 *
+	 * @return array|string
+	 */
+	public static function get_cache_dir() {
+		$wp_upload_dir = wp_upload_dir();
+
+		$upload_dir = $wp_upload_dir['basedir'];
+
+		if ( ! pum_get_option( 'bypass_adblockers', false ) ) {
+			return trailingslashit( $upload_dir ) . 'pum';
+		}
+
+		return $upload_dir;
+	}
+
+	/**
+	 * @param $filename
+	 *
+	 * @return string
+	 */
+	public static function generate_cache_filename( $filename ) {
+
+		if ( ! pum_get_option( 'bypass_adblockers', false ) ) {
+			global $blog_id;
+			$is_multisite = ( is_multisite() ) ? '-' . $blog_id : '';
+
+			return $filename . $is_multisite;
+		}
+
+		$site_url = get_site_url();
+
+		switch ( pum_get_option( 'adblock_bypass_url_method', 'random' ) ) {
+			case 'random':
+				$filename = md5( $site_url . $filename );
+				break;
+			case 'custom':
+				$filename = preg_replace( '/[^a-z0-9]+/', '-', pum_get_option( 'adblock_bypass_custom_filename', 'pm-' . $filename ) );
+
+				break;
+		}
+
+		return $filename;
+	}
+
+	/**
 	 * Generate JS cache file.
 	 */
 	public static function cache_js() {
-		global $blog_id;
-		$is_multisite = ( is_multisite() ) ? '-' . $blog_id : '';
-
-		$js_file = self::$cache_dir . '/pum-site-scripts' . $is_multisite . '.js';
+		$js_file = self::get_cache_dir() . '/' . self::generate_cache_filename( 'pum-site-scripts' ) . '.js';
 
 		$js = "/**\n";
-		$js .= " * Do not touch this file! This file created by PHP\n";
+		$js .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
 		$js .= " * Last modifiyed time: " . date( 'M d Y, h:s:i' ) . "\n";
 		$js .= " */\n\n\n";
 		$js .= self::generate_js();
@@ -147,13 +191,10 @@ class PUM_AssetCache {
 	 * Generate CSS cache file.
 	 */
 	public static function cache_css() {
-		global $blog_id;
-		$is_multisite = ( is_multisite() ) ? '-' . $blog_id : '';
-
-		$css_file = self::$cache_dir . '/pum-site-styles' . $is_multisite . '.css';
+		$css_file = self::get_cache_dir() . '/' . self::generate_cache_filename( 'pum-site-styles' ) . '.css';
 
 		$css = "/**\n";
-		$css .= " * Do not touch this file! This file created by PHP\n";
+		$css .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
 		$css .= " * Last modifiyed time: " . date( 'M d Y, h:s:i' ) . "\n";
 		$css .= " */\n\n\n";
 		$css .= self::generate_css();

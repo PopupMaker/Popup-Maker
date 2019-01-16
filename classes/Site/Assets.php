@@ -54,7 +54,7 @@ class PUM_Site_Assets {
 	 * Initialize
 	 */
 	public static function init() {
-		self::$cache_url = PUM_Helpers::upload_dir_url( 'pum' );
+		self::$cache_url = self::get_cache_dir_url();
 		self::$debug     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
 		self::$suffix    = self::$debug ? '' : '.min';
 		self::$js_url    = Popup_Maker::$URL . 'assets/js/';
@@ -115,6 +115,23 @@ class PUM_Site_Assets {
 
 	}
 
+
+	/**
+	 * Gets the directory caching should be stored in.
+	 *
+	 * Accounts for various adblock bypass options.
+	 *
+	 * @return array|string
+	 */
+	public static function get_cache_dir_url() {
+		$upload_dir = PUM_Helpers::upload_dir_url();
+
+		if ( ! pum_get_option( 'bypass_adblockers', false ) ) {
+			return trailingslashit( $upload_dir ) . 'pum';
+		}
+
+		return $upload_dir;
+	}
 
 	/**
 	 * Checks the current page content for the newsletter shortcode.
@@ -182,11 +199,8 @@ class PUM_Site_Assets {
 				$cached = get_option( 'pum-has-cached-js' );
 			}
 
-			// check for multisite
-			global $blog_id;
-			$is_multisite = ( is_multisite() ) ? '-' . $blog_id : '';
 
-			wp_register_script( 'popup-maker-site', self::$cache_url . '/pum-site-scripts' . $is_multisite . '.js?defer&generated=' . $cached, array(
+			wp_register_script( 'popup-maker-site', self::get_cache_dir_url() . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-scripts' ) . '.js?defer&generated=' . $cached, array(
 				'jquery',
 				'jquery-ui-core',
 				'jquery-ui-position',
@@ -322,11 +336,7 @@ class PUM_Site_Assets {
 				$cached = get_option( 'pum-has-cached-css' );
 			}
 
-			// check for multisite
-			global $blog_id;
-			$is_multisite = ( is_multisite() ) ? '-' . $blog_id : '';
-
-			wp_register_style( 'popup-maker-site', self::$cache_url . '/pum-site-styles' . $is_multisite . '.css?generated=' . $cached, array(), Popup_Maker::$VER );
+			wp_register_style( 'popup-maker-site', self::get_cache_dir_url() . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-styles' ) . '.css?generated=' . $cached, array(), Popup_Maker::$VER );
 		} else {
 			wp_register_style( 'popup-maker-site', self::$css_url . 'site' . self::$suffix . '.css', array(), Popup_Maker::$VER );
 			self::inline_styles();

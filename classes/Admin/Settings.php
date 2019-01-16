@@ -413,6 +413,34 @@ class PUM_Admin_Settings {
 
 				'misc' => array(
 					'main'   => array(
+
+						'bypass_adblockers'                    => array(
+							'label' => __( 'Try to bypass ad blockers.', 'popup-maker' ),
+							'type'  => 'checkbox',
+						),
+						'adblock_bypass_url_method'            => array(
+							'label'        => __( 'Ad blocker: File Name Method', 'popup-maker' ),
+							'desc'         => __( 'This will help generate unique filenames for our JavaScript bypassing most ad blockers.', 'popup-maker' ),
+							'type'         => 'select',
+							'options'      => array(
+								'random' => __( 'Random File Names', 'popup-maker' ),
+								'custom' => __( 'Custom File Names', 'popup-maker' ),
+							),
+							'std'          => 'random',
+							'dependencies' => array(
+								'bypass_adblockers' => true,
+							),
+						),
+						'adblock_bypass_custom_filename'       => array(
+							'type'         => 'text',
+							'placeholder'  => 'my-awesome-popups',
+							'label'        => __( 'Ad blocker: Custom File Name', 'popup-maker' ),
+							'desc'         => __( 'A custom & recognizable file name to use for our assets.', 'popup-maker' ),
+							'dependencies' => array(
+								'bypass_adblockers'         => true,
+								'adblock_bypass_url_method' => 'custom',
+							),
+						),
 						'disabled_admin_bar'                   => array(
 							'type'  => 'checkbox',
 							'label' => __( 'Disable Popups Admin Bar', 'popup-maker' ),
