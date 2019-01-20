@@ -369,7 +369,7 @@ class PUM_Utils_Upgrades {
 
 			<div class="pum-field  pum-field-button  pum-field-submit">
 				<p>
-					<small><?php _e( 'The button below will do process these changes automatically for you.', 'popup-maker' ); ?></small>
+					<small><?php _e( 'The button below will process these changes automatically for you.', 'popup-maker' ); ?></small>
 				</p>
 				<?php submit_button( ! empty( $resume_upgrade ) ? __( 'Finish Upgrades', 'popup-maker' ) : __( 'Process Changes', 'popup-maker' ), 'secondary', 'submit', false ); ?>
 			</div>
