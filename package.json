@@ -15,6 +15,11 @@
     "url": "https://github.com/PopupMaker/Popup-Maker/issues"
   },
   "homepage": "https://github.com/PopupMaker/Popup-Maker#readme",
+  "dependencies": {
+    "gulp-clean-css": "^3.10.0",
+    "gulp-sane-watch": "^2.0.6",
+    "gulp-scss-lint": "^0.7.1"
+  },
   "devDependencies": {
     "gulp": "^4.0.0",
     "gulp-autoprefixer": "^6.0.0",
@@ -32,7 +37,6 @@
     "gulp-order": "^1.2.0",
     "gulp-plumber": "^1.1.0",
     "gulp-rename": "^1.2.2",
-    "gulp-sane-watch": "^2.0.6",
     "gulp-sass": "^4.0.2",
     "gulp-sass-lint": "^1.4.0",
     "gulp-sort": "^2.0.0",
@@ -43,7 +47,7 @@
     "gulp-zip": "^4.2.0",
     "jshint": "^2.9.1",
     "merge-stream": "^1.0.1",
-    "run-sequence": "^2.2.1",
-    "notify-send": "^0.1.2"
+    "notify-send": "^0.1.2",
+    "run-sequence": "^2.2.1"
   }
 }
