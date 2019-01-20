@@ -221,7 +221,7 @@ class PUM_Utils_Upgrades {
 	 */
 	public function needs_v1_8_theme_upgrade() {
 		if ( pum_has_completed_upgrade( 'core-v1_8-themes' ) ) {
-			//return false;
+			return false;
 		}
 
 		$needs_upgrade = get_transient( 'pum_needs_1_8_theme_upgrades' );

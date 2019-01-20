@@ -267,7 +267,7 @@ function popmake_install_default_theme() {
 			'_pum_built_in'        => 'default-theme',
 			'_pum_default_theme'   => true,
 			'popup_theme_settings' => $defaults,
-			'popup_theme_data_ver' => 3,
+			'popup_theme_data_version' => 3,
 		),
 	) );
 

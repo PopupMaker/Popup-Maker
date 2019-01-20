@@ -61,6 +61,6 @@ function pum_install_default_theme() {
 	return pum_install_theme( __( 'Default Theme', 'popup-maker' ), null, array(
 		'_pum_built_in'        => 'default-theme',
 		'_pum_default_theme'   => true,
-		'popup_theme_data_ver' => 3,
+		'popup_theme_data_version' => 3,
 	) );
 }
