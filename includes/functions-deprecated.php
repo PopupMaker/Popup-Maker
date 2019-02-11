@@ -139,7 +139,7 @@ function popmake_is_admin_popup_page() {
 /**
  * Determines whether the current admin page is an admin theme page.
  *
- * @deprecated 1.7.0 Use pum_is_popup_theme_editor
+ * @deprecated 1.7.0 @see pum_is_popup_theme_editor
  *
  * @since 1.0
  *

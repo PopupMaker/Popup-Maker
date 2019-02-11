@@ -503,6 +503,8 @@ class PUM_AssetCache {
 
 		$styles = apply_filters( 'popmake_theme_styles', $styles );
 
+		$styles = apply_filters( 'pum_generate_popup_theme_styles', $styles );
+
 		return $styles;
 	}
 
