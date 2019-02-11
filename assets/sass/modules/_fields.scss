@@ -199,27 +199,33 @@ $custom-select2-selector: 'select2' !default;
 /**
  * Image fields
  */
-.#{$plugin-prefix}-image-field {
-  .#{$plugin-prefix}-image-field .#{$plugin-prefix}-image-select,
-  &.#{$plugin-prefix}-image-empty .#{$plugin-prefix}-image-preview {
-    display: none;
-  }
+.#{$plugin-prefix}-field-image {
 
-  &.#{$plugin-prefix}-image-empty .#{$plugin-prefix}-image-select {
-    display: block;
+  .#{$plugin-prefix}-image-field {
+
+    .#{$plugin-prefix}-image-select,
+    &.#{$plugin-prefix}-image-empty .#{$plugin-prefix}-image-preview {
+      display: none;
+    }
+
+    &.#{$plugin-prefix}-image-empty .#{$plugin-prefix}-image-select {
+      display: block;
+    }
   }
 
   .#{$plugin-prefix}-image-preview-img {
     float: left;
     line-height: 0;
     margin: 5px 0;
+
+    img {
+      max-width: 60px;
+      width: auto;
+      height: auto;
+    }
   }
 
-  .#{$plugin-prefix}-image-preview-img img {
-    max-width: 60px;
-  }
-
-  .#{$plugin-prefix}-image-preview select {
+  select.pum-image-field__size {
     margin: 8px 0 8px 10px;
     width: 200px;
   }
@@ -232,6 +238,7 @@ $custom-select2-selector: 'select2' !default;
   .#{$plugin-prefix}-image-remove {
     margin: 0 0 0 8px;
   }
+
 }
 
 /**
