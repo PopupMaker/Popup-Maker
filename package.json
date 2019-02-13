@@ -1,53 +1,70 @@
 {
   "name": "popup-maker",
-  "version": "1.8.0-beta.1",
+  "version": "1.8.0-beta.3333",
   "description": "WordPress Popup Plugin",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "private": true,
+  "license": "GPL-2.0-or-later",
+  "main": "webpack.config.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PopupMaker/Popup-Maker.git"
+    "url": "https://github.com/PopupMaker/Popup-Maker/"
   },
-  "author": "WP Popup Maker",
-  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/PopupMaker/Popup-Maker/issues"
   },
-  "homepage": "https://github.com/PopupMaker/Popup-Maker#readme",
+  "homepage": "https://wppopupmaker.com",
+  "engines": {
+    "node": ">=8.0.0",
+    "npm": ">=6.0.0",
+    "yarn": ">=1.12.0"
+  },
+  "babel": {
+    "presets": [
+      "@wordpress/babel-preset-default"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:@wordpress/eslint-plugin/recommended"
+    ]
+  },
   "dependencies": {
-    "gulp-clean-css": "^3.10.0",
-    "gulp-sane-watch": "^2.0.6",
-    "gulp-scss-lint": "^0.7.1"
+    "iframe-resizer": "^3.6.5",
+    "mobile-detect": "^1.4.3"
   },
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@wordpress/babel-preset-default": "^3.0.2",
+    "@wordpress/browserslist-config": "^2.2.3",
+    "@wordpress/eslint-plugin": "^1.0.1",
+    "babel-loader": "^8.0.5",
+    "copy-webpack-plugin": "^4.6.0",
+    "cross-env": "^5.2.0",
+    "del": "^3.0.0",
+    "eslint": "^5.13.0",
     "gulp": "^4.0.0",
     "gulp-autoprefixer": "^6.0.0",
-    "gulp-clean": "^0.4.0",
-    "gulp-combine-mq": "^0.4.0",
-    "gulp-concat": "^2.6.0",
-    "gulp-csso": "^3.0.1",
-    "gulp-filter": "^5.1.0",
-    "gulp-git": "^2.0.0",
-    "gulp-ignore": "^2.0.1",
-    "gulp-jshint": "^2.0.0",
-    "gulp-livereload": "^4.0.0",
-    "gulp-load-plugins": "^1.2.0",
+    "gulp-clean-css": "^4.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-load-plugins": "^1.5.0",
     "gulp-notify": "^3.2.0",
     "gulp-order": "^1.2.0",
-    "gulp-plumber": "^1.1.0",
-    "gulp-rename": "^1.2.2",
+    "gulp-plumber": "^1.2.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-sane-watch": "^3.0.0",
     "gulp-sass": "^4.0.2",
-    "gulp-sass-lint": "^1.4.0",
-    "gulp-sort": "^2.0.0",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.1",
-    "gulp-watch": "^5.0.1",
-    "gulp-wp-pot": "^2.3.2",
+    "gulp-wp-pot": "^2.3.3",
     "gulp-zip": "^4.2.0",
-    "jshint": "^2.9.1",
     "merge-stream": "^1.0.1",
-    "notify-send": "^0.1.2",
-    "run-sequence": "^2.2.1"
+    "uglify-es": "^3.3.9",
+    "uglifyjs-webpack-plugin": "^2.1.1",
+    "unminified-webpack-plugin": "^2.0.0",
+    "webpack": "^4.29.3",
+    "webpack-cli": "^3.2.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
