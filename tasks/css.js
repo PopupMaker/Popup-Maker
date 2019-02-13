@@ -12,6 +12,7 @@ const gulp = require('gulp'),
 function css() {
 	return gulp
 		.src(path.join(config.root.dev, config.css.dev, '/*.s+(a|c)ss'))
+		.pipe($fn.rename({prefix: 'pum-'}))
 		.pipe($fn.sourcemaps.init())
 		.pipe($fn.plumber({errorHandler: $fn.notify.onError('Error: <%= error.message %>')}))
 		.pipe($fn.sass({
@@ -24,10 +25,9 @@ function css() {
 		.pipe($fn.autoprefixer({
 			browsers: ['last 3 version'],
 		}))
+		.pipe($fn.sourcemaps.write('.'))
 		.pipe(gulp.dest(cssPath))
-
-
-
+		.pipe($fn.filter('**/*.css'))
 		.pipe($fn.rename({suffix: '.min'}))
 		.pipe($fn.cleanCss({
 			level: {
@@ -39,7 +39,6 @@ function css() {
 				}
 			}
 		}))
-		.pipe($fn.sourcemaps.write())
 		.pipe(gulp.dest(cssPath));
 }
 
@@ -48,6 +47,7 @@ css.description = "Build css assets from sass.";
 function cssrtl() {
 	return gulp
 		.src(path.join(config.root.dev, config.css.dev, '/*.s+(a|c)ss'))
+		.pipe($fn.rename({prefix: 'pum-'}))
 		.pipe($fn.sourcemaps.init())
 		.pipe($fn.plumber({errorHandler: $fn.notify.onError('Error: <%= error.message %>')}))
 		.pipe($fn.sass({
@@ -62,7 +62,9 @@ function cssrtl() {
 		.pipe($fn.autoprefixer({
 			browsers: ['last 3 version'],
 		}))
+		.pipe($fn.sourcemaps.write('.'))
 		.pipe(gulp.dest(cssPath))
+		.pipe($fn.filter('**/*.css'))
 		.pipe($fn.rename({suffix: '.min'}))
 		.pipe($fn.cleanCss({
 			level: {
@@ -74,11 +76,10 @@ function cssrtl() {
 				}
 			}
 		}))
-		.pipe($fn.sourcemaps.write())
 		.pipe(gulp.dest(cssPath));
 }
 
-cssrtl.description = "Build css assets from sass.";
+cssrtl.description = "Build css assets from sass in RTL.";
 
 gulp.task(css);
 gulp.task(cssrtl);

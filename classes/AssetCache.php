@@ -305,7 +305,7 @@ class PUM_AssetCache {
 	 */
 	public static function generate_css() {
 		// Include core styles so we can eliminate another stylesheet.
-		$core_css = file_get_contents( Popup_Maker::$DIR . 'assets/css/site' . self::$suffix . '.css' );
+		$core_css = file_get_contents( Popup_Maker::$DIR . 'assets/css/pum-site' . (is_rtl() ? '-rtl' : '') . self::$suffix . '.css' );
 
 		/**
 		 *  0 Core

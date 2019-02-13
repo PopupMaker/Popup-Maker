@@ -55,14 +55,14 @@ function js_admin() {
 js_admin.description = "Build admin Javascript assets.";
 
 function js_site() {
-	return gulp.src([path.join(jsDevPath, '/**/*.js')], {allowEmpty: true})
+	return gulp.src([path.join(jsDevPath,'site','/**/*.js')], {allowEmpty: true})
 		.pipe($fn.plumber({errorHandler: $fn.notify.onError('Error: <%= error.message %>')}))
 		.pipe($fn.order([
 			"plugins/compatibility.js",
 			"plugins/pum.js",
 			"plugins/**/*.js",
 			'general.js'
-		], {base: jsDevPath}))
+		]))
 		.pipe($fn.concat('site.js'))
 		.pipe(gulp.dest(jsDistPath))
 		.pipe($fn.uglify())
