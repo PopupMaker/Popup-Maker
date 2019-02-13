@@ -24,7 +24,44 @@ function css() {
 		.pipe($fn.autoprefixer({
 			browsers: ['last 3 version'],
 		}))
+		.pipe(gulp.dest(cssPath))
+
+
+
+		.pipe($fn.rename({suffix: '.min'}))
+		.pipe($fn.cleanCss({
+			level: {
+				1: {
+					specialComments: false
+				},
+				2: {
+					all: true
+				}
+			}
+		}))
 		.pipe($fn.sourcemaps.write())
+		.pipe(gulp.dest(cssPath));
+}
+
+css.description = "Build css assets from sass.";
+
+function cssrtl() {
+	return gulp
+		.src(path.join(config.root.dev, config.css.dev, '/*.s+(a|c)ss'))
+		.pipe($fn.sourcemaps.init())
+		.pipe($fn.plumber({errorHandler: $fn.notify.onError('Error: <%= error.message %>')}))
+		.pipe($fn.sass({
+			includePaths: [config.modules.node, config.modules.bower],
+			sourceMap: true,
+			errLogToConsole: true,
+			outputStyle: 'expanded',
+			precision: 10
+		}))
+		.pipe($fn.rtlcss())
+		.pipe($fn.rename({suffix: '-rtl'}))
+		.pipe($fn.autoprefixer({
+			browsers: ['last 3 version'],
+		}))
 		.pipe(gulp.dest(cssPath))
 		.pipe($fn.rename({suffix: '.min'}))
 		.pipe($fn.cleanCss({
@@ -37,9 +74,11 @@ function css() {
 				}
 			}
 		}))
+		.pipe($fn.sourcemaps.write())
 		.pipe(gulp.dest(cssPath));
 }
 
-css.description = "Build css assets from sass.";
+cssrtl.description = "Build css assets from sass.";
 
 gulp.task(css);
+gulp.task(cssrtl);

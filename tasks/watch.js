@@ -13,7 +13,7 @@ const gulp = require('gulp'),
 	srcPath = path.join(config.root.dev, config.js.dev);
 
 function sass_watcher() {
-	$fn.saneWatch(path.join(srcPath, '/**/*.s+(a|c)ss'), {debounce: 300}, gulp.parallel('css'));
+	$fn.saneWatch(path.join(srcPath, '/**/*.s+(a|c)ss'), {debounce: 300}, gulp.parallel('css', 'cssrtl'));
 }
 
 sass_watcher.description = "Starts a scss/sass file watcher.";
