@@ -1,0 +1,16 @@
+{
+  "boss": true,
+  "curly": true,
+  "eqeqeq": true,
+  "immed": true,
+  "noarg": true,
+  "quotmark": "single",
+  "undef": true,
+  "unused": true,
+  "browser": true,
+  "globals": {
+    "jQuery": false,
+    "pum_vars": false,
+    "pum_admin_vars": false
+  }
+}
