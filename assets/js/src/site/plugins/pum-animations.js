@@ -62,7 +62,9 @@
                 .position(start)
                 .css({opacity: 1});
 
-            $popup.popmake('animate_overlay', 'fade', speed, function () {
+            $popup
+                .css({opacity: 1})
+                .popmake('animate_overlay', 'fade', speed, function () {
                 $container.popmake('reposition', function (position) {
                     $container.animate(position, speed, 'swing', function () {
                         // Fire user passed callback.
@@ -77,7 +79,7 @@
             return this;
         },
         fade: function (callback) {
-            var $popup = PUM.getPopup(this).css({opacity: 0}).show(0),
+            var $popup = PUM.getPopup(this),
                 $container = $popup.popmake('getContainer').css({opacity: 0}).show(0),
                 settings = $popup.popmake('getSettings'),
                 speed = settings.animation_speed / 2;
@@ -104,6 +106,8 @@
             $container.position(start);
 
             $popup
+                .hide()
+                .css({opacity: 1})
                 .popmake('animate_overlay', 'fade', speed, function () {
                     $container.popmake('reposition', function (position) {
 
