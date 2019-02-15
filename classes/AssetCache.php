@@ -128,7 +128,7 @@ class PUM_AssetCache {
 
 		$js = "/**\n";
 		$js .= " * Do not touch this file! This file created by PHP\n";
-		$js .= " * Last modifiyed time: " . date( 'M d Y, h:s:i' ) . "\n";
+		$js .= " * Last modified time: " . date( 'M d Y, h:s:i' ) . "\n";
 		$js .= " */\n\n\n";
 		$js .= self::generate_js();
 
@@ -150,7 +150,7 @@ class PUM_AssetCache {
 
 		$css = "/**\n";
 		$css .= " * Do not touch this file! This file created by PHP\n";
-		$css .= " * Last modifiyed time: " . date( 'M d Y, h:s:i' ) . "\n";
+		$css .= " * Last modified time: " . date( 'M d Y, h:s:i' ) . "\n";
 		$css .= " */\n\n\n";
 		$css .= self::generate_css();
 
