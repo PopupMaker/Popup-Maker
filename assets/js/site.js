@@ -991,34 +991,56 @@ var PUM_Analytics;
             var $popup = PUM.getPopup(this);
 
             // Ensure the container is visible immediately.
-            $popup.popmake('getContainer').show(0);
+            $popup.popmake('getContainer').css({opacity: 1, display: "block"}),
 
-            $popup.popmake('animate_overlay', 'none', 0, function () {
-                // Fire user passed callback.
-                if (callback !== undefined) {
-                    callback();
-                    // TODO Test this new method. Then remove the above.
-                    //callback.apply(this);
-                }
-            });
+                $popup.popmake('animate_overlay', 'none', 0, function () {
+                    // Fire user passed callback.
+                    if (callback !== undefined) {
+                        callback();
+                        // TODO Test this new method. Then remove the above.
+                        //callback.apply(this);
+                    }
+                });
             return this;
         },
         slide: function (callback) {
-            var $popup = PUM.getPopup(this).css({opacity: 0}).show(0),
-                $container = $popup.popmake('getContainer').css({opacity: 0}).show(0),
+            var $popup = PUM.getPopup(this),
+                $container = $popup.popmake('getContainer'),
                 settings = $popup.popmake('getSettings'),
                 speed = settings.animation_speed / 2,
                 start = $popup.popmake('animation_origin', settings.animation_origin);
 
-            $container
+            // Make the overlay and container visible so they can be positioned & sized prior to display.
+            $popup.css({display: "block"});
+            // Position the opaque container offscreen then update its opacity.
+            $container.css({display: "block"})
                 .position(start)
                 .css({opacity: 1});
 
             $popup
-                .css({opacity: 1})
                 .popmake('animate_overlay', 'fade', speed, function () {
-                $container.popmake('reposition', function (position) {
-                    $container.animate(position, speed, 'swing', function () {
+                    $container.popmake('reposition', function (position) {
+                        $container.animate(position, speed, 'swing', function () {
+                            // Fire user passed callback.
+                            if (callback !== undefined) {
+                                callback();
+                                // TODO Test this new method. Then remove the above.
+                                //callback.apply(this);
+                            }
+                        });
+                    });
+                });
+            return this;
+        },
+        fade: function (callback) {
+            var $popup = PUM.getPopup(this),
+                $container = $popup.popmake('getContainer').css({opacity: 0, display: "block"}),
+                settings = $popup.popmake('getSettings'),
+                speed = settings.animation_speed / 2;
+
+            $popup
+                .popmake('animate_overlay', 'fade', speed, function () {
+                    $container.animate({opacity: 1}, speed, 'swing', function () {
                         // Fire user passed callback.
                         if (callback !== undefined) {
                             callback();
@@ -1027,42 +1049,25 @@ var PUM_Analytics;
                         }
                     });
                 });
-            });
-            return this;
-        },
-        fade: function (callback) {
-            var $popup = PUM.getPopup(this),
-                $container = $popup.popmake('getContainer').css({opacity: 0}).show(0),
-                settings = $popup.popmake('getSettings'),
-                speed = settings.animation_speed / 2;
-
-            $popup.popmake('animate_overlay', 'fade', speed, function () {
-                $container.animate({opacity: 1}, speed, 'swing', function () {
-                    // Fire user passed callback.
-                    if (callback !== undefined) {
-                        callback();
-                        // TODO Test this new method. Then remove the above.
-                        //callback.apply(this);
-                    }
-                });
-            });
             return this;
         },
         fadeAndSlide: function (callback) {
-            var $popup = PUM.getPopup(this).css({opacity: 0}).show(0),
-                $container = $popup.popmake('getContainer').css({opacity: 0}).show(0),
+            var $popup = PUM.getPopup(this),
+                $container = $popup.popmake('getContainer'),
                 settings = $popup.popmake('getSettings'),
                 speed = settings.animation_speed / 2,
                 start = $popup.popmake('animation_origin', settings.animation_origin);
 
-            $container.position(start);
+            // Make the overlay and container visible so they can be positioned & sized prior to display.
+            $popup.css({display: "block"});
+            // Position the opaque container offscreen then update its opacity.
+            $container.css({display: "block"})
+                .position(start);
 
             $popup
-                .hide()
-                .css({opacity: 1})
                 .popmake('animate_overlay', 'fade', speed, function () {
                     $container.popmake('reposition', function (position) {
-
+                        $container.css({opacity: 0});
                         position.opacity = 1;
                         $container.animate(position, speed, 'swing', function () {
                             // Fire user passed callback.
@@ -1096,10 +1101,16 @@ var PUM_Analytics;
 
     $.fn.popmake.overlay_animations = {
         none: function (duration, callback) {
-            PUM.getPopup(this).show(duration, callback);
+            PUM.getPopup(this).css({opacity: 1, display: "block"});
+
+            if (typeof callback === "function") {
+                callback();
+            }
         },
         fade: function (duration, callback) {
-            PUM.getPopup(this).animate({opacity: 1}, duration, 'swing', callback);
+            PUM.getPopup(this)
+                .css({opacity: 0, display: "block"})
+                .animate({opacity: 1}, duration, 'swing', callback);
         },
         slide: function (duration, callback) {
             PUM.getPopup(this).slideDown(duration, callback);
