@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Note for wordpress.org admins. This is not called in the free hosted version and is simply used for hooking in addons to one update system rather than including it in each plugin.
  *
  * @author Easy Digital Downloads
- * @version 1.6.17
+ * @version 1.6.18
  */
 class PUM_Extension_Updater {
 
@@ -127,6 +127,9 @@ class PUM_Extension_Updater {
 			if ( version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
 				$_transient_data->response[ $this->name ] = $version_info;
+
+				// Make sure the plugin property is set to the plugin's name/location. See issue 1463 on Software Licensing's GitHub repo.
+				$_transient_data->response[ $this->name ]->plugin = $this->name;
 
 			}
 
@@ -323,6 +326,10 @@ class PUM_Extension_Updater {
 			$_data->icons = $this->convert_object_to_array( $_data->icons );
 		}
 
+		if( ! isset( $_data->plugin ) ) {
+			$_data->plugin = $this->name;
+		}
+
 		return $_data;
 	}
 
@@ -379,6 +386,8 @@ class PUM_Extension_Updater {
 
 		global $wp_version, $edd_plugin_url_available;
 
+		$verify_ssl = $this->verify_ssl();
+
 		// Do a quick status check on this domain if we haven't already checked it.
 		$store_hash = md5( $this->api_url );
 		if ( ! is_array( $edd_plugin_url_available ) || ! isset( $edd_plugin_url_available[ $store_hash ] ) ) {
@@ -392,7 +401,7 @@ class PUM_Extension_Updater {
 				$edd_plugin_url_available[ $store_hash ] = false;
 			} else {
 				$test_url = $scheme . '://' . $host . $port;
-				$response = wp_remote_get( $test_url, array( 'timeout' => $this->health_check_timeout, 'sslverify' => true ) );
+				$response = wp_remote_get( $test_url, array( 'timeout' => $this->health_check_timeout, 'sslverify' => $verify_ssl ) );
 				$edd_plugin_url_available[ $store_hash ] = is_wp_error( $response ) ? false : true;
 			}
 		}
@@ -423,7 +432,6 @@ class PUM_Extension_Updater {
 			'beta'       => ! empty( $data['beta'] ),
 		);
 
-		$verify_ssl = $this->verify_ssl();
 		$request    = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => $verify_ssl, 'body' => $api_params ) );
 
 		if ( ! is_wp_error( $request ) ) {
