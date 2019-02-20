@@ -248,12 +248,12 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 			case 'middleleft':
 				$styles['close']['top']       = "50%";
 				$styles['close']['left']      = $left;
-				$styles['close']['transform'] = "translateX(-50%)";
+				$styles['close']['transform'] = "translate(0, -50%)";
 				break;
 			case 'middleright':
 				$styles['close']['top']       = "50%";
 				$styles['close']['right']     = $right;
-				$styles['close']['transform'] = "translateX(-50%)";
+				$styles['close']['transform'] = "translate(0, -50%)";
 				break;
 			case "bottomleft":
 				$styles['close']['bottom'] = $bottom;
