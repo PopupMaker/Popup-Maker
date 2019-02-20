@@ -202,11 +202,6 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			$settings['theme_slug'] = get_post_field( 'post_name', $settings['theme_id'] );
 		}
 
-		if ( empty( $settings['theme_close_text'] ) ) {
-			$theme                  = pum_get_theme( $this->get_theme_id() );
-			$settings['theme_close_text'] = $theme->get_setting( 'close_text' );
-		}
-
 		return $this->update_meta( 'popup_settings', $settings );
 	}
 
@@ -495,23 +490,6 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
-	 * Returns the slug for a theme. Used for CSS classes.
-	 *
-	 * @return string
-	 */
-	private function get_theme_close_text() {
-		$theme_close_text = $this->get_setting( 'theme_close_text' );
-
-		if ( false === $theme_close_text ) {
-			$theme            = pum_get_theme( $this->get_theme_id() );
-			$theme_close_text = $theme->get_setting( 'close_text' );
-			$this->update_setting( 'theme_close_text', $theme_close_text );
-		}
-
-		return $theme_close_text;
-	}
-
-	/**
 	 * Returns array of classes for this popup.
 	 *
 	 * @param string $element The key or html element identifier.
@@ -647,7 +625,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 */
 	public function close_text() {
 		$text       = $this->get_setting( 'close_text', '&#215;' );
-		$theme_text = $this->get_theme_close_text();
+		$theme_text = pum_get_theme_close_text( $this->get_theme_id() );
 
 		if ( empty( $text ) && ! empty( $theme_text ) ) {
 			$text = $theme_text;
