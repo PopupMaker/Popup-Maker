@@ -1,6 +1,6 @@
 {
   "name": "popup-maker",
-  "version": "1.8.0-beta.1",
+  "version": "1.8.0",
   "description": "WordPress Popup Plugin",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,14 +16,12 @@
   },
   "homepage": "https://github.com/PopupMaker/Popup-Maker#readme",
   "dependencies": {
-    "gulp-clean-css": "^3.10.0",
-    "gulp-sane-watch": "^2.0.6",
-    "gulp-scss-lint": "^0.7.1"
   },
   "devDependencies": {
     "gulp": "^4.0.0",
     "gulp-autoprefixer": "^6.0.0",
     "gulp-clean": "^0.4.0",
+    "gulp-clean-css": "^3.10.0",
     "gulp-combine-mq": "^0.4.0",
     "gulp-concat": "^2.6.0",
     "gulp-csso": "^3.0.1",
@@ -37,8 +35,10 @@
     "gulp-order": "^1.2.0",
     "gulp-plumber": "^1.1.0",
     "gulp-rename": "^1.2.2",
+    "gulp-sane-watch": "^2.0.6",
     "gulp-sass": "^4.0.2",
     "gulp-sass-lint": "^1.4.0",
+    "gulp-scss-lint": "^0.7.1",
     "gulp-sort": "^2.0.0",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.1",

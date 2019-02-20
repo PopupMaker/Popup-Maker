@@ -5,9 +5,9 @@ Plugin URI: https://wppopupmaker.com/?utm_capmaign=Readme&utm_source=readme-head
 Donate link:
 Tags:  marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 4.1
-Tested up to: 5.0.3
+Tested up to: 5.1
 Requires PHP: 5.2.17
-Stable tag: 1.7.30
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,14 +103,17 @@ There are several common causes for this which include:
 
 == Changelog ==
 
-= v1.8.0 - TBD =
+= v1.8.0 - 02/20/2019 =
 * Feature: New popup theme settings:
   * New close button positions top center, bottom center, middle left & middle right.
   * New option to position close button outside of popup.
-* Feature: Added support for Gutenberg editor when creating popups.
 * Improvement: Add constant to disable logging.
 * Improvement: Added complete uninstall option.
+* Improvement: Added limited experimental support for Gutenberg editor when creating popups. Complete support in the works.
+* Improvement: Added new unified alerts interface on PM dash pages. This will keep you up to date on required migration changes, new features & more.
+* Improvement: Added new translation request for detected polyglot admins when their language doesn't have an updated Language Pack.
 * Tweak: Removed option setting to 'Hide Admin Support Widget' which is no longer relevant.
+* Tweak: Add constant to disable logging.
 * Fix: Condition options for BuddyPress integration had values & labels switched.
 * Fix: Bug with Gravity Forms Personal Data menu item missing.
 * Fix: iOS Click overlay close not working.
