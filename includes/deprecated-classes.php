@@ -76,3 +76,15 @@ class PUM_Popup_Query {
 	}
 
 }
+
+/**
+ * Class PUM
+ *
+ * @deprecated 1.8.0 - Don't use this. Use Popup_Maker instead.
+ */
+class PUM {
+	const DB_VER = null;
+	const VER = null;
+	static $DB_VER = null;
+	static $VER = null;
+}
