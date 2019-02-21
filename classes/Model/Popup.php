@@ -1104,5 +1104,17 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	public function save() {
 		return pum()->popups->update_itme( $this->ID, $this->to_array() );
 	}
+
+	/**
+	 * @deprecated 1.8.0 Only here to prevent possible errors.
+	 *
+	 * @param      $id
+	 * @param bool $force
+	 *
+	 * @return \PUM_Model_Popup
+	 */
+	public static function instance( $id, $force = false ) {
+		return pum_get_popup( $id );
+	}
 }
 
