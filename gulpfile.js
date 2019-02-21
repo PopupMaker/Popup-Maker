@@ -28,7 +28,7 @@ function getFolders(dir) {
 }
 
 function langpack() {
-    return gulp.src(['**/*.php', '!build/**/*.*'], {allowEmpty: true})
+    return gulp.src(['**/*.php', '!build/**/*.*', '!node_modules/**/*.*', '!vendor/**/*.*'], {allowEmpty: true})
         .pipe($fn.plumber(plumberErrorHandler))
         .pipe($fn.sort())
         .pipe($fn.wpPot({

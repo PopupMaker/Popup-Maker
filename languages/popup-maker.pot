@@ -243,51 +243,51 @@ msgstr ""
 msgid "Your license key expired on %s. Please %srenew your license key%s."
 msgstr ""
 
-#: classes/Licensing.php:97
+#: classes/Licensing.php:98
 msgid "Your license key has been disabled. Please %scontact support%s for more information."
 msgstr ""
 
-#: classes/Licensing.php:100
+#: classes/Licensing.php:101
 msgid "Invalid license. Please %svisit your account page%s and verify it."
 msgstr ""
 
-#: classes/Licensing.php:104
+#: classes/Licensing.php:105
 msgid "Your %s is not active for this URL. Please %svisit your account page%s to manage your license key URLs."
 msgstr ""
 
-#: classes/Licensing.php:107
+#: classes/Licensing.php:108
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: classes/Licensing.php:110
+#: classes/Licensing.php:111
 msgid "Your license key has reached its activation limit. %sView possible upgrades%s now."
 msgstr ""
 
-#: classes/Licensing.php:113
+#: classes/Licensing.php:114
 msgid "The key you entered belongs to a bundle, please use the product specific license key."
 msgstr ""
 
-#: classes/Licensing.php:116
+#: classes/Licensing.php:117
 msgid "unknown_error"
 msgstr ""
 
-#: classes/Licensing.php:117
+#: classes/Licensing.php:118
 msgid "There was an error with this license key: %s. Please %scontact our support team%s."
 msgstr ""
 
-#: classes/Licensing.php:130
+#: classes/Licensing.php:131
 msgid "License key never expires."
 msgstr ""
 
-#: classes/Licensing.php:132
+#: classes/Licensing.php:133
 msgid "Your license key expires soon! It expires on %s. %sRenew your license key%s."
 msgstr ""
 
-#: classes/Licensing.php:134
+#: classes/Licensing.php:135
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: classes/Licensing.php:141
+#: classes/Licensing.php:142
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
@@ -2110,19 +2110,19 @@ msgstr ""
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
-#: classes/Extension/Updater.php:232
+#: classes/Extension/Updater.php:235
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
 msgstr ""
 
-#: classes/Extension/Updater.php:240
+#: classes/Extension/Updater.php:243
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s."
 msgstr ""
 
-#: classes/Extension/Updater.php:473
+#: classes/Extension/Updater.php:481
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: classes/Extension/Updater.php:473, includes/admin/class-pum-admin-upgrades.php:274, classes/Admin/Subscribers/Table.php:349, classes/Admin/Subscribers/Table.php:355, classes/Admin/Subscribers/Table.php:364, classes/Admin/Subscribers/Table.php:430, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50
+#: classes/Extension/Updater.php:481, includes/admin/class-pum-admin-upgrades.php:274, classes/Admin/Subscribers/Table.php:349, classes/Admin/Subscribers/Table.php:355, classes/Admin/Subscribers/Table.php:364, classes/Admin/Subscribers/Table.php:430, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50
 msgid "Error"
 msgstr ""
 
