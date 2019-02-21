@@ -208,7 +208,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 		$this->set_strict_query_arg( 'posts_per_page', 1 );
 
 		/** We don't use  $this->query here to avoid returning count queries via $this->>get_last_query(); */
-		$query = new WP_Query( $this->build_wp_query_args( $args ) );
+		$query = new WP_Query( $this->_build_wp_query_args( $args ) );
 
 		return (int) $query->found_posts;
 	}

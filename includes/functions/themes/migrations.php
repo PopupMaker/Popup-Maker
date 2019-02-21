@@ -26,11 +26,11 @@ function pum_passive_theme_upgrades_enabled() {
 				'post_status' => array( 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ),
 			) );
 
-			set_transient( 'pum_theme_count', $theme_count, HOUR_IN_SECONDS * 24 );
+			set_transient( 'pum_theme_count', $theme_count, MINUTE_IN_SECONDS );
 		}
 	}
 
-	return pum_is_popup_theme_editor() || $theme_count <= apply_filters( 'pum_passive_themes_enabled_max_count', 5 );
+	return pum_is_popup_theme_editor() || $theme_count <= apply_filters( 'pum_passive_themes_enabled_max_count', 10 );
 }
 
 /**
@@ -51,16 +51,22 @@ function pum_theme_migration_1( &$theme ) {
 		// Get old data.
 		$v1_meta_values = pum_get_theme_v1_meta( $group, $theme->ID );
 
+		// Loop over all fields which were merged and mark their meta keys for deletion.
+		foreach ( $v1_meta_values as $old_meta_key => $old_meta_value ) {
+			$delete_meta[] = "popup_theme_{$group}_{$old_meta_key}";
+		}
+
+		$existing_v2_meta = $theme->get_meta( "popup_theme_{$group}" );
+
+		if ( ! empty( $existing_v2_meta ) ) {
+			continue;
+		}
+
 		// Merge defaults.
 		$values = wp_parse_args( $v1_meta_values, $meta_defaults[ $group ] );
 
 		// Update meta storage.
 		$theme->update_meta( "popup_theme_{$group}", $values );
-
-		// Loop over all fields which were merged and mark their meta keys for deletion.
-		foreach ( $v1_meta_values as $old_meta_key => $old_meta_value ) {
-			$delete_meta[] = "popup_theme_{$group}_{$old_meta_key}";
-		}
 	}
 
 	/**
