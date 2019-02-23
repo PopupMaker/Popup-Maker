@@ -156,7 +156,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		/*
 		 * Overlay Styles
 		 */
-		if ( ! empty( $this->get_setting( 'overlay_background_color' ) ) ) {
+		if ( $this->get_setting( 'overlay_background_color' ) ) {
 			$styles['overlay']['background-color'] = PUM_Utils_CSS::hex2rgba( $this->get_setting( 'overlay_background_color' ), $this->get_setting( 'overlay_background_opacity' ) );
 		}
 
@@ -170,7 +170,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 			'box-shadow'    => PUM_Utils_CSS::box_shadow_style( $this->get_setting( 'container_boxshadow_horizontal' ), $this->get_setting( 'container_boxshadow_vertical' ), $this->get_setting( 'container_boxshadow_blur' ), $this->get_setting( 'container_boxshadow_spread' ), $this->get_setting( 'container_boxshadow_color' ), $this->get_setting( 'container_boxshadow_opacity' ), $this->get_setting( 'container_boxshadow_inset' ) ),
 		);
 
-		if ( ! empty( $this->get_setting( 'container_background_color' ) ) ) {
+		if ( $this->get_setting( 'container_background_color' ) ) {
 			$styles['container']['background-color'] = PUM_Utils_CSS::hex2rgba( $this->get_setting( 'container_background_color' ), $this->get_setting( 'container_background_opacity' ) );
 		}
 
@@ -203,8 +203,8 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		 */
 		$styles['close'] = array(
 			'position'      => $this->get_setting( 'close_position_outside' ) ? 'fixed' : 'absolute',
-			'height'        => empty( $this->get_setting( 'close_height' ) ) || $this->get_setting( 'close_height' ) <= 0 ? 'auto' : "{$this->get_setting('close_height')}px",
-			'width'         => empty( $this->get_setting( 'close_width' ) ) || $this->get_setting( 'close_width' ) <= 0 ? 'auto' : "{$this->get_setting('close_width')}px",
+			'height'        => ! $this->get_setting( 'close_height' ) || $this->get_setting( 'close_height' ) <= 0 ? 'auto' : "{$this->get_setting('close_height')}px",
+			'width'         => ! $this->get_setting( 'close_width' ) || $this->get_setting( 'close_width' ) <= 0 ? 'auto' : "{$this->get_setting('close_width')}px",
 			'left'          => 'auto',
 			'right'         => 'auto',
 			'bottom'        => 'auto',
@@ -222,7 +222,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 			'text-shadow'   => PUM_Utils_CSS::text_shadow_style( $this->get_setting( 'close_textshadow_horizontal' ), $this->get_setting( 'close_textshadow_vertical' ), $this->get_setting( 'close_textshadow_blur' ), $this->get_setting( 'close_textshadow_color' ), $this->get_setting( 'close_textshadow_opacity' ) ),
 		);
 
-		if ( ! empty( $this->get_setting( 'close_background_color' ) ) ) {
+		if ( $this->get_setting( 'close_background_color' ) ) {
 			$styles['close']['background-color'] = PUM_Utils_CSS::hex2rgba( $this->get_setting( 'close_background_color' ), $this->get_setting( 'close_background_opacity' ) );
 		}
 
