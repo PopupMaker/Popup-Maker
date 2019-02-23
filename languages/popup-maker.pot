@@ -2631,6 +2631,54 @@ msgstr ""
 msgid "Please check your email and confirm your subscription."
 msgstr ""
 
+#: includes/integrations/class-pum-buddypress-integration.php:35
+msgid "BP: Is a BuddyPress Page"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:41
+msgid "BP: Is User Page"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:47
+msgid "BP: Is Group Page"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:53
+msgid "BP: Is User Messages Page"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:59
+msgid "BP: Is Activation Page"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:65
+msgid "BP: Is Register Page"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:71
+msgid "BP: Is Item Admin"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:77
+msgid "BP: Is Item Mod"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:83
+msgid "BP: Is Directory"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:88
+msgid "BP: Is Current Component"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:104
+msgid "BP: Is Current Action"
+msgstr ""
+
+#: includes/integrations/class-pum-buddypress-integration.php:116
+msgid "BP: Is Action Variable"
+msgstr ""
+
 #: includes/integrations/class-pum-cf7.php:97
 msgid "Contact Form 7 Success"
 msgstr ""
