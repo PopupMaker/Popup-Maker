@@ -103,6 +103,9 @@ There are several common causes for this which include:
 
 == Changelog ==
 
+= v1.8.2 - 02/23/2019 =
+* Fix: Bug on older versions of PHP due to usage of [] rather than array().
+
 = v1.8.1 - 02/22/2019 =
 * Fix: Error on older versions of PHP when calling get_plugin_data on a plugin that wasn't installed.
 * Fix: "Fatal error: Can not use method return value in write context" on older versions of PHP.
