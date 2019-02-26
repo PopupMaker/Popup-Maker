@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, advertising, conversion, responsive popu
 Requires at least: 4.1
 Tested up to: 5.1
 Requires PHP: 5.2.17
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,7 +103,7 @@ There are several common causes for this which include:
 
 == Changelog ==
 
-= v1.8.2 - 02/23/2019 =
+= v1.8.2 - 02/25/2019 =
 * Fix: Bug on older versions of PHP due to usage of [] rather than array().
 
 = v1.8.1 - 02/22/2019 =
