@@ -23,6 +23,10 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
+#: classes/Admin.php:61
+msgid "Translate"
+msgstr ""
+
 #: classes/Analytics.php:140
 msgid "Event Type"
 msgstr ""
