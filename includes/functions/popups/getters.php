@@ -40,3 +40,20 @@ function pum_get_popup_title( $popup_id = 0 ) {
 
 	return $popup->get_title();
 }
+
+/**
+ * @deprecated 1.8.0
+ *
+ * @param int $popup_id
+ *
+ * @return array
+ */
+function pum_get_popup_triggers( $popup_id = 0 ) {
+	$popup = pum_get_popup( $popup_id );
+
+	if ( ! pum_is_popup_object( $popup ) ) {
+		return array();
+	}
+
+	return $popup->get_triggers();
+}
