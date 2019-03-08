@@ -1,3 +1,7 @@
+= v1.8.4 - ??/??/???? =
+* Improvement: Added content caching in the head to prevent second call to do_shortcode in the footer.
+* Improvement: Added runtime model caching to reduce memory usage.
+
 = v1.8.3 - 02/27/2019 =
 * Fix: Added back deprecated function that got truncated previously.
 
