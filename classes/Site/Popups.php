@@ -27,6 +27,11 @@ class PUM_Site_Popups {
 	/**
 	 * @var array
 	 */
+	public static $cached_content = array();
+
+	/**
+	 * @var array
+	 */
 	public static $loaded_ids = array();
 
 	/**
@@ -109,7 +114,7 @@ class PUM_Site_Popups {
 	}
 
 	/**
-	 * @param $popup PUM_Model_Popup
+	 * @param PUM_Model_Popup $popup
 	 */
 	public static function preload_popup( $popup ) {
 		// Add to the $loaded_ids list.
@@ -120,11 +125,7 @@ class PUM_Site_Popups {
 		self::$loaded->post_count ++;
 
 		// Preprocess the content for shortcodes that need to enqueue their own assets.
-
-		PUM_Helpers::do_shortcode( $popup->post_content );
-
-		# TODO cache this content for later in case of double rendering causing breakage.
-		# TODO Use this content during rendering as well.
+		self::$cached_content[ $popup->ID ] = PUM_Helpers::do_shortcode( $popup->get_content() );
 
 		// Fire off preload action.
 		do_action( 'pum_preload_popup', $popup->ID );
@@ -166,6 +167,15 @@ class PUM_Site_Popups {
 			endwhile;
 			pum()->current_popup = null;
 		}
+	}
+
+	/**
+	 * @param $popup_id
+	 *
+	 * @return string|bool
+	 */
+	public static function get_cache_content( $popup_id ) {
+		return isset( self::$cached_content[ $popup_id ] ) ? self::$cached_content[ $popup_id ] : false;
 	}
 
 }

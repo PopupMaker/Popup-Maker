@@ -43,7 +43,9 @@ function pum_popup_content( $popup_id = null ) {
 		return;
 	}
 
-	echo $popup->get_content();
+	$cached_content = PUM_Site_Popups::get_cache_content( $popup_id );
+
+	echo false !== $cached_content ? $cached_content : $popup->get_content();
 }
 
 /**
