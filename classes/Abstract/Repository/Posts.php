@@ -26,7 +26,10 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 *
 	 * @var array
 	 */
-	protected $cache = array();
+	protected $cache = array(
+		'objects' => array(),
+		'queries' => array(),
+	);
 
 	/**
 	 * @var string
@@ -171,6 +174,15 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	}
 
 	/**
+	 * @param $args
+	 *
+	 * @return string
+	 */
+	protected function get_args_hash( $args ) {
+		return md5( serialize( $args ) );
+	}
+
+	/**
 	 * @param array $args
 	 *
 	 * @return WP_Post[]|PUM_Abstract_Model_Post[]
@@ -181,15 +193,22 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 
 		$args = $this->_build_wp_query_args( $args );
 
-		/**
-		 * Initialize a new query and return it.
-		 *
-		 * This also keeps the query cached for potential later usage via $this->get_last_query();
-		 */
-		$this->query->query( $args );
+		$hash = $this->get_args_hash( $args );
+
+		if ( ! isset( $this->cache['queries'][ $hash ] ) ) {
+			/**
+			 * Initialize a new query and return it.
+			 *
+			 * This also keeps the query cached for potential later usage via $this->get_last_query();
+			 */
+			$this->query->query( $args );
+
+			$this->cache['queries'][ $hash ] = (array) $this->query->posts;
+
+		}
 
 		/** @var array $posts */
-		$posts = (array) $this->query->posts;
+		$posts = $this->cache['queries'][ $hash ];
 
 		/**
 		 * Only convert to models if the model set is valid and not the WP_Post default.
@@ -335,7 +354,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 * @return bool
 	 */
 	protected function cached_model_exists( $post ) {
-		return isset( $this->cache[ $post->ID] ) && $this->get_post_hash( $post ) === $this->cache[ $post->ID ]['hash'];
+		return isset( $this->cache['objects'][ $post->ID ] ) && $this->get_post_hash( $post ) === $this->cache['objects'][ $post->ID ]['hash'];
 	}
 
 	/**
@@ -357,13 +376,13 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 		if ( ! $this->cached_model_exists( $post ) ) {
 			$object = new $model( $post );
 
-			$this->cache[ $post->ID ] = array(
+			$this->cache['objects'][ $post->ID ] = array(
 				'object' => $object,
 				'hash' => $this->get_post_hash( $post )
 			);
 		}
 
-		return $this->cache[ $post->ID ]['object'];
+		return $this->cache['objects'][ $post->ID ]['object'];
 	}
 
 	/**
