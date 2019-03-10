@@ -51,7 +51,7 @@ class PUM_Upsell {
 	public static function theme_promotional_fields( $tabs = array() ) {
 
 		if ( ! pum_extension_enabled( 'advanced-theme-builder' ) && ! class_exists( 'PUM_ATB' ) ) {
-			foreach( array( 'overlay', 'container', 'close' ) as $tab ) {
+			foreach ( array( 'overlay', 'container', 'close' ) as $tab ) {
 				/* translators: %s url to product page. */
 				$message = __( 'Want to use <a href="%s" target="_blank">background images</a>?', 'popup-maker' );
 
@@ -95,26 +95,26 @@ class PUM_Upsell {
 		?>
 
 
-		<style>
-			.wrap h1.wp-heading-inline,
-			.wrap h1.wp-heading-inline + a.page-title-action {
-				display: none;
-			}
+        <style>
+            .wrap h1.wp-heading-inline,
+            .wrap h1.wp-heading-inline + a.page-title-action {
+                display: none;
+            }
 
-			.edit-php.post-type-popup .wrap .nav-tab-wrapper .page-title-action, .edit-php.post-type-popup_theme .wrap .nav-tab-wrapper .page-title-action, .popup_page_pum-extensions .wrap .nav-tab-wrapper .page-title-action {
-				top: 7px;
-				margin-left: 5px
-			}
+            .edit-php.post-type-popup .wrap .nav-tab-wrapper .page-title-action, .edit-php.post-type-popup_theme .wrap .nav-tab-wrapper .page-title-action, .popup_page_pum-extensions .wrap .nav-tab-wrapper .page-title-action {
+                top: 7px;
+                margin-left: 5px
+            }
 
-			@media only screen and (min-width: 0px) and (max-width: 783px) {
-				.edit-php.post-type-popup .wrap .nav-tab-wrapper .page-title-action, .edit-php.post-type-popup_theme .wrap .nav-tab-wrapper .page-title-action, .popup_page_pum-extensions .wrap .nav-tab-wrapper .page-title-action {
-					display: none !important
-				}
-			}
-		</style>
+            @media only screen and (min-width: 0px) and (max-width: 783px) {
+                .edit-php.post-type-popup .wrap .nav-tab-wrapper .page-title-action, .edit-php.post-type-popup_theme .wrap .nav-tab-wrapper .page-title-action, .popup_page_pum-extensions .wrap .nav-tab-wrapper .page-title-action {
+                    display: none !important
+                }
+            }
+        </style>
 
 
-		<h2 class="nav-tab-wrapper">
+        <h2 class="nav-tab-wrapper">
 			<?php
 			$tabs = array(
 				'popups'       => array(
@@ -126,7 +126,7 @@ class PUM_Upsell {
 					'url'  => admin_url( 'edit.php?post_type=popup_theme' ),
 				),
 				'integrations' => array(
-					'name' => __( 'Addons and Integrations', 'popup-maker' ),
+					'name' => __( 'Addons and Integrations', 'popup-maker' ) . PUM_Admin_Extend::append_unseen_count(),
 					'url'  => admin_url( 'edit.php?post_type=popup&page=pum-extensions&view=integrations' ),
 				),
 			);
@@ -153,19 +153,19 @@ class PUM_Upsell {
 				$active = $active_tab == $tab_id ? ' nav-tab-active' : '';
 
 				echo '<a href="' . esc_url( $tab['url'] ) . '" class="nav-tab' . $active . '">';
-				echo esc_html( $tab['name'] );
+				echo $tab['name'];
 				echo '</a>';
 			}
 			?>
 
-			<a href="<?php echo admin_url( 'post-new.php?post_type=popup' ); ?>" class="page-title-action">
+            <a href="<?php echo admin_url( 'post-new.php?post_type=popup' ); ?>" class="page-title-action">
 				<?php echo $popup_labels['add_new_item']; ?>
-			</a>
+            </a>
 
-			<a href="<?php echo admin_url( 'post-new.php?post_type=popup_theme' ); ?>" class="page-title-action">
+            <a href="<?php echo admin_url( 'post-new.php?post_type=popup_theme' ); ?>" class="page-title-action">
 				<?php echo $theme_labels['add_new_item']; ?>
-			</a>
-		</h2>
+            </a>
+        </h2>
 		<?php
 	}
 
