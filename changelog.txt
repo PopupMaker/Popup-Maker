@@ -368,7 +368,7 @@ Lastly we now have include our extendable subscription forms right in the free v
 
 = v1.4.20 - 10/13/2016 =
 * Feature: Added [Ninja Forms](https://wppopupmaker.com/grab/ninja-forms?utm_source=readme-changelog&utm_medium=text-link&utm_campaign=Readme&utm_content=ninja-forms-features) success actions for opening & closing popups.
-* Feature: Added new cookie event for successful submission of a [Ninja Forms](https://wppopupmaker.com/grab/ninja-forms) form.
+* Feature: Added new cookie event for successful submission of a [Ninja Forms](https://wppopupmaker.com/recommends/ninja-forms) form.
 * Improvement: Added wp.hooks JS library, allowing actions & filters via our plugin JS.
 * Tweaks: Added various admin css tweaks.
 
