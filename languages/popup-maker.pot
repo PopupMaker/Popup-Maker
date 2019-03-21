@@ -19,7 +19,7 @@ msgstr ""
 msgid "Integrations"
 msgstr ""
 
-#: classes/Admin.php:56, classes/Admin/Pages.php:56, classes/Admin/Pages.php:149, classes/Admin/Templates.php:415, classes/Admin/Templates.php:643, classes/Site/Assets.php:261
+#: classes/Admin.php:56, classes/Admin/Pages.php:57, classes/Admin/Pages.php:150, classes/Admin/Templates.php:415, classes/Admin/Templates.php:643, classes/Site/Assets.php:261
 msgid "Settings"
 msgstr ""
 
@@ -47,11 +47,11 @@ msgstr ""
 msgid "Posts"
 msgstr ""
 
-#: classes/Conditions.php:110, classes/Admin/Pages.php:144, classes/Admin/Popups.php:1026
+#: classes/Conditions.php:110, classes/Admin/Pages.php:145, classes/Admin/Popups.php:1026
 msgid "Categories"
 msgstr ""
 
-#: classes/Conditions.php:111, classes/Admin/Pages.php:145, classes/Admin/Popups.php:1022
+#: classes/Conditions.php:111, classes/Admin/Pages.php:146, classes/Admin/Popups.php:1022
 msgid "Tags"
 msgstr ""
 
@@ -555,7 +555,7 @@ msgstr ""
 msgid "Popup Theme"
 msgstr ""
 
-#: classes/Types.php:54, classes/Types.php:56, classes/Upsell.php:93, classes/Admin/Pages.php:106, classes/Admin/Pages.php:106
+#: classes/Types.php:54, classes/Types.php:56, classes/Upsell.php:93, classes/Admin/Pages.php:107, classes/Admin/Pages.php:107
 msgid "Popup Themes"
 msgstr ""
 
@@ -827,23 +827,23 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: classes/Admin/Ajax.php:126, classes/Utils/Upgrades.php:530
+#: classes/Admin/Ajax.php:126, classes/Utils/Upgrades.php:532
 msgid "A batch process ID must be present to continue."
 msgstr ""
 
-#: classes/Admin/Ajax.php:133, classes/Utils/Upgrades.php:537
+#: classes/Admin/Ajax.php:133, classes/Utils/Upgrades.php:539
 msgid "You do not have permission to initiate this request. Contact an administrator for more information."
 msgstr ""
 
-#: classes/Admin/Ajax.php:142, classes/Utils/Upgrades.php:556
+#: classes/Admin/Ajax.php:142, classes/Utils/Upgrades.php:558
 msgid "%s is an invalid batch process ID."
 msgstr ""
 
-#: classes/Admin/Ajax.php:151, classes/Utils/Upgrades.php:663
+#: classes/Admin/Ajax.php:151, classes/Utils/Upgrades.php:665
 msgid "An invalid file path is registered for the %1$s batch process handler."
 msgstr ""
 
-#: classes/Admin/Ajax.php:159, classes/Utils/Upgrades.php:669
+#: classes/Admin/Ajax.php:159, classes/Utils/Upgrades.php:671
 msgid "%1$s is an invalid handler for the %2$s batch process. Please try again."
 msgstr ""
 
@@ -899,99 +899,115 @@ msgstr ""
 msgid "We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser."
 msgstr ""
 
-#: classes/Admin/Extend.php:34
-msgid "Extensions & Integrations for Popup Maker"
-msgstr ""
-
-#: classes/Admin/Extend.php:35, classes/Admin/Extend.php:35, classes/Admin/Extend.php:55, classes/Admin/Extend.php:55
-msgid "Browse All Extensions"
-msgstr ""
-
-#: classes/Admin/Extend.php:79
+#: classes/Admin/Extend.php:121
 msgid "Premium Extensions"
 msgstr ""
 
-#: classes/Admin/Extend.php:80
+#: classes/Admin/Extend.php:122
 msgid "Forms"
 msgstr ""
 
-#: classes/Admin/Extend.php:81
+#: classes/Admin/Extend.php:123
+msgid "Page Builders"
+msgstr ""
+
+#: classes/Admin/Extend.php:124
 msgid "Other"
 msgstr ""
 
-#: classes/Admin/Extend.php:94
+#: classes/Admin/Extend.php:148
 msgid "Gravity Forms"
 msgstr ""
 
-#: classes/Admin/Extend.php:96
+#: classes/Admin/Extend.php:150
 msgid "Gravity Forms is one of the most popular form building plugins."
 msgstr ""
 
-#: classes/Admin/Extend.php:100
+#: classes/Admin/Extend.php:154
 msgid "Contact Form 7"
 msgstr ""
 
-#: classes/Admin/Extend.php:102
+#: classes/Admin/Extend.php:156
 msgid "CF7 is one of the most downloaded plugins on the WordPress repo. Make simple forms with ease and plenty of free addons available."
 msgstr ""
 
-#: classes/Admin/Extend.php:106
+#: classes/Admin/Extend.php:160
 msgid "Quiz & Survey Master"
 msgstr ""
 
-#: classes/Admin/Extend.php:108
+#: classes/Admin/Extend.php:162
 msgid "If you need more from your forms data look no further, QSM is all about the statistics & collective data, something other form plugins neglect."
 msgstr ""
 
-#: classes/Admin/Extend.php:116
+#: classes/Admin/Extend.php:170
 msgid "Ninja Forms"
 msgstr ""
 
-#: classes/Admin/Extend.php:118
+#: classes/Admin/Extend.php:172
 msgid "Ninja Forms has fast become the most extensible form plugin available. Build super custom forms and integrate with your favorite services."
 msgstr ""
 
-#: classes/Admin/Extend.php:220
-msgid "These extensions add extra functionality to your popups."
+#: classes/Admin/Extend.php:187
+msgid "Beaver Builder"
 msgstr ""
 
-#: classes/Admin/Extend.php:280
-msgid "Get this Extension"
+#: classes/Admin/Extend.php:189
+msgid "Easily insert saved templates into your popups for a one of a kind popup design."
 msgstr ""
 
-#: classes/Admin/Extend.php:338
+#: classes/Admin/Extend.php:226
+msgid "Extensions & Integrations for Popup Maker"
+msgstr ""
+
+#: classes/Admin/Extend.php:227, classes/Admin/Extend.php:227, classes/Admin/Extend.php:249, classes/Admin/Extend.php:249
+msgid "Browse All Extensions"
+msgstr ""
+
+#: classes/Admin/Extend.php:365
 msgid "These form plugins work in our popups out of the box."
 msgstr ""
 
-#: classes/Admin/Extend.php:355
+#: classes/Admin/Extend.php:384, classes/Admin/Extend.php:427
 msgid "Check it out"
 msgstr ""
 
-#: classes/Admin/Pages.php:51, classes/Admin/Subscribers.php:30
+#: classes/Admin/Extend.php:407
+msgid "These page builder plugins work in our popups out of the box."
+msgstr ""
+
+#: classes/Admin/Extend.php:449
+msgid "These extensions add extra functionality to your popups."
+msgstr ""
+
+#: classes/Admin/Extend.php:509
+msgid "Get this Extension"
+msgstr ""
+
+#: classes/Admin/Pages.php:52, classes/Admin/Subscribers.php:30
 msgid "Subscribers"
 msgstr ""
 
-#: classes/Admin/Pages.php:61, classes/Admin/Pages.php:148
+#: classes/Admin/Pages.php:62, classes/Admin/Pages.php:149
 msgid "Extend"
 msgstr ""
 
-#: classes/Admin/Pages.php:66, classes/Admin/Pages.php:154
+#: classes/Admin/Pages.php:67, classes/Admin/Pages.php:155
 msgid "Help & Support"
 msgstr ""
 
-#: classes/Admin/Pages.php:71, classes/Admin/Pages.php:150, includes/modules/admin-bar.php:525
+#: classes/Admin/Pages.php:72, classes/Admin/Pages.php:151, includes/modules/admin-bar.php:525
 msgid "Tools"
 msgstr ""
 
-#: classes/Admin/Pages.php:141
+#: classes/Admin/Pages.php:142
 msgid "All Popups"
 msgstr ""
 
-#: classes/Admin/Pages.php:142
+#: classes/Admin/Pages.php:143
 msgid "Add New"
 msgstr ""
 
-#: classes/Admin/Pages.php:143
+#: classes/Admin/Pages.php:144
 msgid "All Themes"
 msgstr ""
 
@@ -2559,35 +2575,35 @@ msgstr ""
 msgid "%sw"
 msgstr ""
 
-#: classes/Utils/Upgrades.php:344
+#: classes/Utils/Upgrades.php:346
 msgid "The latest version of Popup Maker requires changes to the Popup Maker settings saved on your site."
 msgstr ""
 
-#: classes/Utils/Upgrades.php:347
+#: classes/Utils/Upgrades.php:349
 msgid "Popup Maker needs to complete a the update of your settings that was previously started."
 msgstr ""
 
-#: classes/Utils/Upgrades.php:368
+#: classes/Utils/Upgrades.php:370
 msgid "This can sometimes take a few minutes, are you ready to begin?"
 msgstr ""
 
-#: classes/Utils/Upgrades.php:372
+#: classes/Utils/Upgrades.php:374
 msgid "The button below will process these changes automatically for you."
 msgstr ""
 
-#: classes/Utils/Upgrades.php:374
+#: classes/Utils/Upgrades.php:376
 msgid "Finish Upgrades"
 msgstr ""
 
-#: classes/Utils/Upgrades.php:374
+#: classes/Utils/Upgrades.php:376
 msgid "Process Changes"
 msgstr ""
 
-#: classes/Utils/Upgrades.php:689
+#: classes/Utils/Upgrades.php:691
 msgid "Upgrades"
 msgstr ""
 
-#: classes/Utils/Upgrades.php:700
+#: classes/Utils/Upgrades.php:702
 msgid "No upgrades currently required."
 msgstr ""
 
@@ -2822,6 +2838,14 @@ msgid "%s item was successfully processed."
 msgid_plural "%s items were successfully processed."
 msgstr[0] ""
 msgstr[1] ""
+
+#: classes/Abstract/Repository/Posts.php:143
+msgid "No %s found with id %d."
+msgstr ""
+
+#: classes/Abstract/Repository/Posts.php:161
+msgid "No user found with %s %s."
+msgstr ""
 
 #: classes/Abstract/Upgrade/Posts.php:197
 msgid "Updating %d %2$s."
