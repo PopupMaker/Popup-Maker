@@ -4,18 +4,18 @@ sudo: false
 dist: trusty
 
 php:
-- 5.4
-- 5.5
-- 5.6
-- 7.0
-- 7.1
-- 7.2
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+  - 7.1
+  - 7.2
 
 env:
-- WP_VERSION=latest WP_MULTISITE=0
-- WP_VERSION=4.9.9 WP_MULTISITE=0
-- WP_VERSION=4.8.8 WP_MULTISITE=0
-- WP_VERSION=4.7.12 WP_MULTISITE=0
+  - WP_VERSION=latest WP_MULTISITE=0
+  - WP_VERSION=4.9.9 WP_MULTISITE=0
+  - WP_VERSION=4.8.8 WP_MULTISITE=0
+  - WP_VERSION=4.7.12 WP_MULTISITE=0
 
 matrix:
   include:
@@ -38,8 +38,8 @@ before_script:
   - composer install
 
 script:
-- phpenv config-rm xdebug.ini
-- vendor/bin/phpunit
+  - phpenv config-rm xdebug.ini
+  - vendor/bin/phpunit
 
 branches:
   only:
