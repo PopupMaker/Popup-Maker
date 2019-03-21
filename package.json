@@ -1,10 +1,10 @@
 {
   "name": "popup-maker",
-  "version": "1.8.0-beta.1",
+  "version": "1.9.0-beta.1",
   "description": "WordPress Popup Plugin",
   "private": true,
   "license": "GPL-2.0-or-later",
-  "main": "webpack.config.js",
+  "main": "gulpfile.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/PopupMaker/Popup-Maker/"
@@ -14,8 +14,8 @@
   },
   "homepage": "https://wppopupmaker.com",
   "engines": {
-    "node": ">=8.0.0",
-    "npm": ">=6.0.0",
+    "node": ">=11.12.0",
+    "npm": ">=6.9.0",
     "yarn": ">=1.12.0"
   },
   "babel": {
@@ -29,19 +29,19 @@
     ]
   },
   "dependencies": {
-    "iframe-resizer": "^3.6.5",
+    "iframe-resizer": "^4.0.4",
     "mobile-detect": "^1.4.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@wordpress/babel-preset-default": "^3.0.2",
-    "@wordpress/browserslist-config": "^2.2.3",
-    "@wordpress/eslint-plugin": "^1.0.1",
+    "@babel/core": "^7.4.0",
+    "@wordpress/babel-preset-default": "^4.1.0",
+    "@wordpress/browserslist-config": "^2.3.0",
+    "@wordpress/eslint-plugin": "^2.1.0",
     "babel-loader": "^8.0.5",
-    "copy-webpack-plugin": "^4.6.0",
+    "copy-webpack-plugin": "^5.0.1",
     "cross-env": "^5.2.0",
-    "del": "^3.0.0",
-    "eslint": "^5.13.0",
+    "del": "^4.0.0",
+    "eslint": "^5.15.3",
     "gulp": "^4.0.0",
     "gulp-autoprefixer": "^6.0.0",
     "gulp-clean-css": "^4.0.0",
@@ -55,16 +55,18 @@
     "gulp-rtlcss": "^1.3.0",
     "gulp-sane-watch": "^3.0.0",
     "gulp-sass": "^4.0.2",
-    "gulp-sourcemaps": "^2.6.4",
-    "gulp-uglify": "^3.0.1",
-    "gulp-wp-pot": "^2.3.3",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-uglify": "^3.0.2",
+    "gulp-util": "^3.0.8",
+    "gulp-wp-pot": "^2.3.4",
     "gulp-zip": "^4.2.0",
     "merge-stream": "^1.0.1",
+    "require-dir": "^1.2.0",
     "uglify-es": "^3.3.9",
-    "uglifyjs-webpack-plugin": "^2.1.1",
+    "uglifyjs-webpack-plugin": "^2.1.2",
     "unminified-webpack-plugin": "^2.0.0",
-    "webpack": "^4.29.3",
-    "webpack-cli": "^3.2.3"
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
