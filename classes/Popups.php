@@ -26,7 +26,7 @@ class PUM_Popups {
 		add_filter( 'pum_popup_content', 'shortcode_unautop', 10 );
 		add_filter( 'pum_popup_content', 'prepend_attachment', 10 );
 		add_filter( 'pum_popup_content', 'force_balance_tags', 10 );
-		add_filter( 'pum_popup_content', 'do_shortcode', 11 );
+		add_filter( 'pum_popup_content', array( 'PUM_Helpers', 'do_shortcode' ), 11 );
 		add_filter( 'pum_popup_content', 'capital_P_dangit', 11 );
 	}
 

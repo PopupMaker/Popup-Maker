@@ -43,7 +43,7 @@ class PUM_Helpers {
 						// Filter numeric keys as they are valueless/truthy attributes.
 						if ( is_numeric( $attr_name ) ) {
 							$shortcodes[ $key ]['atts'][ $attr_value ] = true;
-							unset( $shortcodes[ $key ]['atts'] );
+							unset( $shortcodes[ $key ]['atts'][ $attr_name ] );
 						}
 					}
 				}

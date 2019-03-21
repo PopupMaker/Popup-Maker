@@ -158,7 +158,7 @@ class PUM_Utils_I10n {
 		if ( preg_match_all( "/$locale_re/i", $_SERVER['HTTP_ACCEPT_LANGUAGE'], $matches ) ) {
 			return $matches[0];
 		} else {
-			return [];
+			return array();
 		}
 	}
 

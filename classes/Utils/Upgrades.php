@@ -110,6 +110,8 @@ class PUM_Utils_Upgrades {
 
 			// set to the deprecated version or last version that didn't have the version option set
 			self::$version = $deprecated_ver ? $deprecated_ver : Popup_Maker::$VER; // Since we had versioning in v1 if there isn't one stored its a new install.
+
+			update_option( 'pum_ver', self::$version );
 		}
 
 		/**

@@ -55,7 +55,7 @@
 						$has_free_plan = false;
 						$has_paid_plan = false;
 
-						$result    = $fs->get_api_plugin_scope()->get( "/addons/{$addon->id}/pricing.json?type=visible" );
+						$result    = $fs->get_api_plugin_scope()->get( $fs->add_show_pending( "/addons/{$addon->id}/pricing.json?type=visible" ) );
 						if ( ! isset( $result->error ) ) {
 							$plans = $result->plans;
 
@@ -89,12 +89,16 @@
 
 								}
 							}
+
+							if ( ! $has_paid_plan && ! $has_free_plan ) {
+							    continue;
+                            }
 						}
 						?>
 						<li class="fs-card fs-addon" data-slug="<?php echo $addon->slug ?>">
 							<?php
 								echo sprintf( '<a href="%s" class="thickbox fs-overlay" aria-label="%s" data-title="%s"></a>',
-									esc_url( network_admin_url( 'plugin-install.php?tab=plugin-information&parent_plugin_id=' . $fs->get_id() . '&plugin=' . $addon->slug .
+									esc_url( network_admin_url( 'plugin-install.php?fs_allow_updater_and_dialog=true&tab=plugin-information&parent_plugin_id=' . $fs->get_id() . '&plugin=' . $addon->slug .
 									                            '&TB_iframe=true&width=600&height=550' ) ),
 									esc_attr( sprintf( fs_text_inline( 'More information about %s', 'more-information-about-x', $slug ), $addon->title ) ),
 									esc_attr( $addon->title )

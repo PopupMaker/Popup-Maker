@@ -29,6 +29,13 @@
          * @since 1.1.8.1
          */
         private $_update_details;
+        /**
+         * @var array
+         * @since 2.1.2
+         */
+        private $_translation_updates;
+
+        private static $_upgrade_basename = null;
 
         #--------------------------------------------------------------------------------
         #region Singleton
@@ -77,25 +84,25 @@
 
             $this->add_transient_filters();
 
-            if ( ! $this->_fs->has_active_valid_license() ) {
-                /**
-                 * If user has the premium plugin's code but do NOT have an active license,
-                 * encourage him to upgrade by showing that there's a new release, but instead
-                 * of showing an update link, show upgrade link to the pricing page.
-                 *
-                 * @since 1.1.6
-                 *
-                 */
-                // WP 2.9+
-                add_action( "after_plugin_row_{$this->_fs->get_plugin_basename()}", array(
-                    &$this,
-                    'catch_plugin_update_row'
-                ), 9 );
-                add_action( "after_plugin_row_{$this->_fs->get_plugin_basename()}", array(
-                    &$this,
-                    'edit_and_echo_plugin_update_row'
-                ), 11, 2 );
-            }
+            /**
+             * If user has the premium plugin's code but do NOT have an active license,
+             * encourage him to upgrade by showing that there's a new release, but instead
+             * of showing an update link, show upgrade link to the pricing page.
+             *
+             * @since 1.1.6
+             *
+             */
+            // WP 2.9+
+            add_action( "after_plugin_row_{$this->_fs->get_plugin_basename()}", array(
+                &$this,
+                'catch_plugin_update_row'
+            ), 9 );
+            add_action( "after_plugin_row_{$this->_fs->get_plugin_basename()}", array(
+                &$this,
+                'edit_and_echo_plugin_update_row'
+            ), 11, 2 );
+
+            add_action( 'admin_head', array( &$this, 'catch_plugin_information_dialog_contents' ) );
 
             if ( ! WP_FS__IS_PRODUCTION_MODE ) {
                 add_filter( 'http_request_host_is_external', array(
@@ -105,14 +112,86 @@
             }
 
             if ( $this->_fs->is_premium() ) {
-                if ( $this->is_correct_folder_name() ) {
+                if ( ! $this->is_correct_folder_name() ) {
                     add_filter( 'upgrader_post_install', array( &$this, '_maybe_update_folder_name' ), 10, 3 );
                 }
 
-                if ( ! $this->_fs->has_active_valid_license() ) {
+                add_filter( 'upgrader_pre_install', array( 'FS_Plugin_Updater', '_store_basename_for_source_adjustment' ), 1, 2 );
+                add_filter( 'upgrader_source_selection', array( 'FS_Plugin_Updater', '_maybe_adjust_source_dir' ), 1, 3 );
+
+                if ( ! $this->_fs->has_any_active_valid_license() ) {
                     add_filter( 'wp_prepare_themes_for_js', array( &$this, 'change_theme_update_info_html' ), 10, 1 );
                 }
             }
+        }
+
+        /**
+         * @author Leo Fajardo (@leorw)
+         * @since 2.1.4
+         */
+        function catch_plugin_information_dialog_contents() {
+            if (
+                'plugin-information' !== fs_request_get( 'tab', false ) ||
+                $this->_fs->get_slug() !== fs_request_get( 'plugin', false )
+            ) {
+                return;
+            }
+
+            add_action( 'admin_footer', array( &$this, 'edit_and_echo_plugin_information_dialog_contents' ), 0, 1 );
+
+            ob_start();
+        }
+
+        /**
+         * @author Leo Fajardo (@leorw)
+         * @since 2.1.4
+         *
+         * @param string $hook_suffix
+         */
+        function edit_and_echo_plugin_information_dialog_contents( $hook_suffix ) {
+            if (
+                'plugin-information' !== fs_request_get( 'tab', false ) ||
+                $this->_fs->get_slug() !== fs_request_get( 'plugin', false )
+            ) {
+                return;
+            }
+
+            $license = $this->_fs->_get_license();
+
+            $subscription = ( is_object( $license ) && ! $license->is_lifetime() ) ?
+                $this->_fs->_get_subscription( $license->id ) :
+                null;
+
+            $contents = ob_get_clean();
+
+            /**
+             * Replace the plugin information dialog's "Install Update Now" button's text and URL. If there's a license,
+             * the text will be "Renew license" and will link to the checkout page with the license's billing cycle
+             * and quota. If there's no license, the text will be "Buy license" and will link to the pricing page.
+             */
+            $contents = preg_replace(
+                '/(.+\<a.+)(id="plugin_update_from_iframe")(.+href=")([^\s]+)(".+\>)(.+)(\<\/a.+)/is',
+                is_object( $license ) ?
+                    sprintf(
+                        '$1$3%s$5%s$7',
+                        $this->_fs->checkout_url(
+                            is_object( $subscription ) ?
+                                ( 1 == $subscription->billing_cycle ? WP_FS__PERIOD_MONTHLY : WP_FS__PERIOD_ANNUALLY ) :
+                                WP_FS__PERIOD_LIFETIME,
+                            false,
+                            array( 'licenses' => $license->quota )
+                        ),
+                        fs_text_inline( 'Renew license', 'renew-license', $this->_fs->get_slug() )
+                    ) :
+                    sprintf(
+                        '$1$3%s$5%s$7',
+                        $this->_fs->pricing_url(),
+                        fs_text_inline( 'Buy license', 'buy-license', $this->_fs->get_slug() )
+                    ),
+                $contents
+            );
+
+            echo $contents;
         }
 
         /**
@@ -178,15 +257,57 @@
 
             $r = $current->response[ $file ];
 
-            $plugin_update_row = preg_replace(
-                '/(\<div.+>)(.+)(\<a.+\<a.+)\<\/div\>/is',
-                '$1 $2 ' . sprintf(
-                    $this->_fs->get_text_inline( '%sRenew your license now%s to access version %s security & feature updates, and support.', 'renew-license-now' ),
-                    '<a href="' . $this->_fs->pricing_url() . '">', '</a>',
-                    $r->new_version ) .
-                '$4',
-                $plugin_update_row
-            );
+            if ( ! $this->_fs->has_any_active_valid_license() ) {
+                /**
+                 * Turn the "new version" text into a link that opens the plugin information dialog when clicked and
+                 * make the "View version x details" text link to the checkout page instead of opening the plugin
+                 * information dialog when clicked.
+                 *
+                 * Sample input:
+                 *      There is a new version of Awesome Plugin available. <a href="...>View version x.y.z details</a> or <a href="...>update now</a>.
+                 * Output:
+                 *      There is a <a href="...>new version</a> of Awesome Plugin available. <a href="...>Buy a license now</a> to access version x.y.z security & feature updates, and support.
+                 *
+                 * @author Leo Fajardo (@leorw)
+                 */
+                $plugin_update_row = preg_replace(
+                    '/(\<div.+>)(.+)(\<a.+href="([^\s]+)"([^\<]+)\>.+\<a.+)(\<\/div\>)/is',
+                    (
+                        '$1' .
+                        sprintf(
+                            fs_text_inline( 'There is a %s of %s available.', 'new-version-available', $this->_fs->get_slug() ),
+                            sprintf(
+                                '<a href="$4"%s>%s</a>',
+                                '$5',
+                                fs_text_inline( 'new version', 'new-version', $this->_fs->get_slug() )
+                            ),
+                            $this->_fs->get_plugin_title()
+                        ) .
+                        ' ' .
+                        $this->_fs->version_upgrade_checkout_link( $r->new_version ) .
+                        '$6'
+                    ),
+                    $plugin_update_row
+                );
+            }
+
+            if (
+                $this->_fs->is_plugin() &&
+                isset( $r->upgrade_notice ) &&
+                strlen( trim( $r->upgrade_notice ) ) > 0
+            ) {
+                $slug = $this->_fs->get_slug();
+
+                $upgrade_notice_html = sprintf(
+                    '<p class="notice fs-upgrade-notice fs-slug-%1s fs-type-%2s" data-slug="%1s" data-type="%2s"><strong>%3s</strong> %4s</p>',
+                    $slug,
+                    $this->_fs->get_module_type(),
+                    fs_text_inline( 'Important Upgrade Notice:', 'upgrade_notice', $slug ),
+                    esc_html( $r->upgrade_notice )
+                );
+
+                $plugin_update_row = str_replace( '</div>', '</div>' . $upgrade_notice_html, $plugin_update_row );
+            }
 
             echo $plugin_update_row;
         }
@@ -215,10 +336,7 @@
 
             $prepared_themes[ $theme_basename ]['update'] = preg_replace(
                 '/(\<p.+>)(.+)(\<a.+\<a.+)\.(.+\<\/p\>)/is',
-                '$1 $2 ' . sprintf(
-                    $this->_fs->get_text_inline( '%sRenew your license now%s to access version %s security & feature updates, and support.', 'renew-license-now' ),
-                    '<a href="' . $this->_fs->pricing_url() . '">', '</a>',
-                    $themes_update->response[ $theme_basename ]['new_version'] ) .
+                '$1 $2 ' . $this->_fs->version_upgrade_checkout_link( $themes_update->response[ $theme_basename ]['new_version'] ) .
                 '$4',
                 $prepared_themes[ $theme_basename ]['update']
             );
@@ -298,7 +416,8 @@
                 $new_version = $this->_fs->get_update(
                     false,
                     fs_request_get_bool( 'force-check' ),
-                    WP_FS__TIME_24_HOURS_IN_SEC / 24
+                    WP_FS__TIME_24_HOURS_IN_SEC / 24,
+                    $this->_fs->get_plugin_version()
                 );
 
                 $this->_update_details = false;
@@ -322,6 +441,46 @@
                 $transient_data->response[ $this->_fs->get_plugin_basename() ] = $this->_fs->is_plugin() ?
                     $this->_update_details :
                     (array) $this->_update_details;
+            }
+
+            $slug = $this->_fs->get_slug();
+
+            if ( $this->_fs->is_org_repo_compliant() && $this->_fs->is_freemium() ) {
+                if ( ! isset( $this->_translation_updates ) ) {
+                    $this->_translation_updates = array();
+
+                    if ( current_user_can( 'update_languages' ) ) {
+                        $translation_updates = $this->fetch_wp_org_module_translation_updates( $module_type, $slug );
+                        if ( ! empty( $translation_updates ) ) {
+                            $this->_translation_updates = $translation_updates;
+                        }
+                    }
+                }
+
+                if ( ! empty( $this->_translation_updates ) ) {
+                    $all_translation_updates = ( isset( $transient_data->translations ) && is_array( $transient_data->translations ) ) ?
+                        $transient_data->translations :
+                        array();
+
+                    $current_plugin_translation_updates_map = array();
+                    foreach ( $all_translation_updates as $key => $translation_update ) {
+                        if ( $module_type === ( $translation_update['type'] . 's' ) && $slug === $translation_update['slug'] ) {
+                            $current_plugin_translation_updates_map[ $translation_update['language'] ] = $translation_update;
+                            unset( $all_translation_updates[ $key ] );
+                        }
+                    }
+
+                    foreach ( $this->_translation_updates as $translation_update ) {
+                        $lang = $translation_update['language'];
+                        if ( ! isset( $current_plugin_translation_updates_map[ $lang ] ) ||
+                            version_compare( $translation_update['version'], $current_plugin_translation_updates_map[ $lang ]['version'], '>' )
+                        ) {
+                            $current_plugin_translation_updates_map[ $lang ] = $translation_update;
+                        }
+                    }
+
+                    $transient_data->translations = array_merge( $all_translation_updates, array_values( $current_plugin_translation_updates_map ) );
+                }
             }
 
             return $transient_data;
@@ -354,6 +513,18 @@
 //                    '2x'      => $icon,
                     'default' => $icon,
                 );
+            }
+
+            if ( $this->_fs->is_premium() ) {
+                $latest_tag = $this->_fs->_fetch_latest_version( $this->_fs->get_id(), false );
+
+                if (
+                    isset( $latest_tag->readme ) &&
+                    isset( $latest_tag->readme->upgrade_notice ) &&
+                    ! empty( $latest_tag->readme->upgrade_notice )
+                ) {
+                    $update->upgrade_notice = $latest_tag->readme->upgrade_notice;
+                }
             }
 
             $update->{$this->_fs->get_module_type()} = $this->_fs->get_plugin_basename();
@@ -509,6 +680,138 @@
         }
 
         /**
+         * Fetches module translation updates from wordpress.org.
+         *
+         * @author Leo Fajardo (@leorw)
+         * @since  2.1.2
+         *
+         * @param string $module_type
+         * @param string $slug
+         *
+         * @return array|null
+         */
+        private function fetch_wp_org_module_translation_updates( $module_type, $slug ) {
+            $plugin_data = $this->_fs->get_plugin_data();
+
+            $locales = array_values( get_available_languages() );
+            $locales = apply_filters( "{$module_type}_update_check_locales", $locales );
+            $locales = array_unique( $locales );
+
+            $plugin_basename = $this->_fs->get_plugin_basename();
+            if ( 'themes' === $module_type ) {
+                $plugin_basename = $slug;
+            }
+
+            global $wp_version;
+
+            $request_args = array(
+                'timeout' => 15,
+                'body'    => array(
+                    "{$module_type}" => json_encode(
+                        array(
+                            "{$module_type}" => array(
+                                $plugin_basename => array(
+                                    'Name'   => trim( str_replace( $this->_fs->get_plugin()->premium_suffix, '', $plugin_data['Name'] ) ),
+                                    'Author' => $plugin_data['Author'],
+                                )
+                            )
+                        )
+                    ),
+                    'translations'    => json_encode( $this->get_installed_translations( $module_type, $slug ) ),
+                    'locale'          => json_encode( $locales )
+                ),
+                'user-agent' => ( 'WordPress/' . $wp_version . '; ' . home_url( '/' ) )
+            );
+
+            $url = "http://api.wordpress.org/{$module_type}/update-check/1.1/";
+            if ( $ssl = wp_http_supports( array( 'ssl' ) ) ) {
+                $url = set_url_scheme( $url, 'https' );
+            }
+
+            $raw_response = Freemius::safe_remote_post(
+                $url,
+                $request_args,
+                WP_FS__TIME_24_HOURS_IN_SEC,
+                WP_FS__TIME_12_HOURS_IN_SEC,
+                false
+            );
+
+            if ( is_wp_error( $raw_response ) ) {
+                return null;
+            }
+
+            $response = json_decode( wp_remote_retrieve_body( $raw_response ), true );
+
+            if ( ! is_array( $response ) ) {
+                return null;
+            }
+
+            if ( ! isset( $response['translations'] ) || empty( $response['translations'] ) ) {
+                return null;
+            }
+
+            return $response['translations'];
+        }
+
+        /**
+         * @author Leo Fajardo (@leorw)
+         * @since 2.1.2
+         *
+         * @param string $module_type
+         * @param string $slug
+         *
+         * @return array
+         */
+        private function get_installed_translations( $module_type, $slug ) {
+            if ( function_exists( 'wp_get_installed_translations' ) ) {
+                return wp_get_installed_translations( $module_type );
+            }
+
+            $dir = "/{$module_type}";
+
+            if ( ! is_dir( WP_LANG_DIR . $dir ) )
+                return array();
+
+            $files = scandir( WP_LANG_DIR . $dir );
+            if ( ! $files )
+                return array();
+
+            $language_data = array();
+
+            foreach ( $files as $file ) {
+                if ( 0 !== strpos( $file, $slug ) ) {
+                    continue;
+                }
+
+                if ( '.' === $file[0] || is_dir( WP_LANG_DIR . "{$dir}/{$file}" ) ) {
+                    continue;
+                }
+
+                if ( substr( $file, -3 ) !== '.po' ) {
+                    continue;
+                }
+
+                if ( ! preg_match( '/(?:(.+)-)?([a-z]{2,3}(?:_[A-Z]{2})?(?:_[a-z0-9]+)?).po/', $file, $match ) ) {
+                    continue;
+                }
+
+                if ( ! in_array( substr( $file, 0, -3 ) . '.mo', $files ) )  {
+                    continue;
+                }
+
+                list( , $textdomain, $language ) = $match;
+
+                if ( '' === $textdomain ) {
+                    $textdomain = 'default';
+                }
+
+                $language_data[ $textdomain ][ $language ] = wp_get_pomo_file_data( WP_LANG_DIR . "{$dir}/{$file}" );
+            }
+
+            return $language_data;
+        }
+
+        /**
          * Updates information on the "View version x.x details" page with custom data.
          *
          * @author Vova Feldman (@svovaf)
@@ -571,11 +874,13 @@ if ( !isset($info->error) ) {
 }*/
             }
 
+            $plugin_version = $this->_fs->get_plugin_version();
+
             // Get plugin's newest update.
-            $new_version = $this->get_latest_download_details( $is_addon ? $addon->id : false );
+            $new_version = $this->get_latest_download_details( $is_addon ? $addon->id : false, $plugin_version );
 
             if ( ! is_object( $new_version ) || empty( $new_version->version ) ) {
-                $data->version = $this->_fs->get_plugin_version();
+                $data->version = $plugin_version;
             } else {
                 if ( $is_addon ) {
                     $data->name    = $addon->title . ' ' . $this->_fs->get_text_inline( 'Add-On', 'addon' );
@@ -592,6 +897,52 @@ if ( !isset($info->error) ) {
 
                 $data->version       = $new_version->version;
                 $data->download_link = $new_version->url;
+
+                if ( isset( $new_version->readme ) && is_object( $new_version->readme ) ) {
+                    $new_version_readme_data = $new_version->readme;
+                    if ( isset( $new_version_readme_data->sections ) ) {
+                        $new_version_readme_data->sections = (array) $new_version_readme_data->sections;
+                    } else {
+                        $new_version_readme_data->sections = array();
+                    }
+
+                    if ( isset( $data->sections ) ) {
+                        if ( isset( $data->sections['screenshots'] ) ) {
+                            $new_version_readme_data->sections['screenshots'] = $data->sections['screenshots'];
+                        }
+
+                        if ( isset( $data->sections['reviews'] ) ) {
+                            $new_version_readme_data->sections['reviews'] = $data->sections['reviews'];
+                        }
+                    }
+
+                    if ( isset( $new_version_readme_data->banners ) ) {
+                        $new_version_readme_data->banners = (array) $new_version_readme_data->banners;
+                    } else if ( isset( $data->banners ) ) {
+                        $new_version_readme_data->banners = $data->banners;
+                    }
+
+                    $wp_org_sections = array(
+                        'author',
+                        'author_profile',
+                        'rating',
+                        'ratings',
+                        'num_ratings',
+                        'support_threads',
+                        'support_threads_resolved',
+                        'active_installs',
+                        'added',
+                        'homepage'
+                    );
+
+                    foreach ( $wp_org_sections as $wp_org_section ) {
+                        if ( isset( $data->{$wp_org_section} ) ) {
+                            $new_version_readme_data->{$wp_org_section} = $data->{$wp_org_section};
+                        }
+                    }
+
+                    $data = $new_version_readme_data;
+                }
             }
 
             return $data;
@@ -602,11 +953,13 @@ if ( !isset($info->error) ) {
          * @since  1.2.1.7
          *
          * @param number|bool $addon_id
+         * @param bool|string $newer_than   Since 2.2.1
+         * @param bool|string $fetch_readme Since 2.2.1
          *
          * @return object
          */
-        private function get_latest_download_details( $addon_id = false ) {
-            return $this->_fs->_fetch_latest_version( $addon_id );
+        private function get_latest_download_details( $addon_id = false, $newer_than = false, $fetch_readme = true ) {
+            return $this->_fs->_fetch_latest_version( $addon_id, true, WP_FS__TIME_24_HOURS_IN_SEC, $newer_than, $fetch_readme );
         }
 
         /**
@@ -616,16 +969,10 @@ if ( !isset($info->error) ) {
          * @author Vova Feldman (@svovaf)
          * @since  1.2.1.6
          *
-         * @param string $basename Current plugin's basename.
-         *
          * @return bool
          */
-        private function is_correct_folder_name( $basename = '' ) {
-            if ( empty( $basename ) ) {
-                $basename = $this->_fs->get_plugin_basename();
-            }
-
-            return ( $this->_fs->get_target_folder_name() != trim( dirname( $basename ), '/\\' ) );
+        private function is_correct_folder_name() {
+            return ( $this->_fs->get_target_folder_name() == trim( dirname( $this->_fs->get_plugin_basename() ), '/\\' ) );
         }
 
         /**
@@ -661,7 +1008,7 @@ if ( !isset($info->error) ) {
                     $filename = basename( $basename );
 
                     $new_basename = plugin_basename(
-                        trailingslashit( $this->_fs->get_slug() . ( $this->_fs->is_premium() ? '-premium' : '' ) ) .
+                        trailingslashit( $this->_fs->is_premium() ? $this->_fs->get_premium_slug() : $this->_fs->get_slug() ) .
                         $filename
                     );
 
@@ -729,14 +1076,16 @@ if ( !isset($info->error) ) {
                     );
                 }
 
-                $slug  = $addon->slug;
-                $title = $addon->title . ' ' . $this->_fs->get_text_inline( 'Add-On', 'addon' );
+                $slug          = $addon->slug;
+                $premium_slug  = $addon->premium_slug;
+                $title         = $addon->title . ' ' . $this->_fs->get_text_inline( 'Add-On', 'addon' );
 
                 $is_addon = true;
             } else {
-                $slug  = $this->_fs->get_slug();
-                $title = $this->_fs->get_plugin_title() .
-                         ( $this->_fs->is_addon() ? ' ' . $this->_fs->get_text_inline( 'Add-On', 'addon' ) : '' );
+                $slug          = $this->_fs->get_slug();
+                $premium_slug  = $this->_fs->get_premium_slug();
+                $title         = $this->_fs->get_plugin_title() .
+                                 ( $this->_fs->is_addon() ? ' ' . $this->_fs->get_text_inline( 'Add-On', 'addon' ) : '' );
             }
 
             if ( $this->is_premium_plugin_active( $plugin_id ) ) {
@@ -749,8 +1098,8 @@ if ( !isset($info->error) ) {
                 );
             }
 
-            $latest_version = $this->get_latest_download_details( $plugin_id );
-            $target_folder  = "{$slug}-premium";
+            $latest_version = $this->get_latest_download_details( $plugin_id, false, false );
+            $target_folder  = $premium_slug;
 
             // Prep variables for Plugin_Installer_Skin class.
             $extra         = array();
@@ -789,11 +1138,11 @@ if ( !isset($info->error) ) {
             $upgrader = new Plugin_Upgrader( $skin );
 
             // Perform the action and install the plugin from the $source urldecode().
-            add_filter( 'upgrader_source_selection', array( &$this, '_maybe_adjust_source_dir' ), 1, 3 );
+            add_filter( 'upgrader_source_selection', array( 'FS_Plugin_Updater', '_maybe_adjust_source_dir' ), 1, 3 );
 
             $install_result = $upgrader->install( $source );
 
-            remove_filter( 'upgrader_source_selection', array( &$this, '_maybe_adjust_source_dir' ), 1 );
+            remove_filter( 'upgrader_source_selection', array( 'FS_Plugin_Updater', '_maybe_adjust_source_dir' ), 1 );
 
             if ( is_wp_error( $install_result ) ) {
                 return array(
@@ -884,6 +1233,29 @@ if ( !isset($info->error) ) {
         }
 
         /**
+         * Store the basename since it's not always available in the `_maybe_adjust_source_dir` method below.
+         *
+         * @author Leo Fajardo (@leorw)
+         * @since 2.2.1
+         *
+         * @param bool|WP_Error $response   Response.
+         * @param array         $hook_extra Extra arguments passed to hooked filters.
+         *
+         * @return bool|WP_Error
+         */
+        static function _store_basename_for_source_adjustment( $response, $hook_extra ) {
+            if ( isset( $hook_extra['plugin'] ) ) {
+                self::$_upgrade_basename = $hook_extra['plugin'];
+            } else if ( isset( $hook_extra['theme'] ) ) {
+                self::$_upgrade_basename = $hook_extra['theme'];
+            } else {
+                self::$_upgrade_basename = null;
+            }
+
+            return $response;
+        }
+
+        /**
          * Adjust the plugin directory name if necessary.
          * Assumes plugin has a folder (not a single file plugin).
          *
@@ -894,6 +1266,7 @@ if ( !isset($info->error) ) {
          *
          * @author Vova Feldman
          * @since  1.2.1.7
+         * @since  2.2.1 The method was converted to static since when the admin update bulk products via the Updates section, the logic applies the `upgrader_source_selection` filter for every product that is being updated.
          *
          * @param string       $source        Path to upgrade/zip-file-name.tmp/subdirectory/.
          * @param string       $remote_source Path to upgrade/zip-file-name.tmp.
@@ -901,13 +1274,64 @@ if ( !isset($info->error) ) {
          *
          * @return string|WP_Error
          */
-        function _maybe_adjust_source_dir( $source, $remote_source, $upgrader ) {
+        static function _maybe_adjust_source_dir( $source, $remote_source, $upgrader ) {
             if ( ! is_object( $GLOBALS['wp_filesystem'] ) ) {
                 return $source;
             }
 
+            $basename = self::$_upgrade_basename;
+            $is_theme = false;
+
             // Figure out what the slug is supposed to be.
-            $desired_slug = $upgrader->skin->options['extra']['slug'];
+            if ( isset( $upgrader->skin->options['extra'] ) ) {
+                // Set by the auto-install logic.
+                $desired_slug = $upgrader->skin->options['extra']['slug'];
+            } else if ( ! empty( $basename ) ) {
+                /**
+                 * If it doesn't end with ".php", it's a theme.
+                 *
+                 * @author Leo Fajardo (@leorw)
+                 * @since 2.2.1
+                 */
+                $is_theme = ( ! fs_ends_with( $basename, '.php' ) );
+
+                $desired_slug = ( ! $is_theme ) ?
+                    dirname( $basename ) :
+                    // Theme slug
+                    $basename;
+            } else {
+                // Can't figure out the desired slug, stop the execution.
+                return $source;
+            }
+
+            if ( is_multisite() ) {
+                /**
+                 * If we are running in a multisite environment and the product is not network activated,
+                 * the instance will not exist anyway. Therefore, try to update the source if necessary
+                 * regardless if the Freemius instance of the product exists or not.
+                 *
+                 * @author Vova Feldman
+                 */
+            } else if ( ! empty( $basename ) ) {
+                $fs = Freemius::get_instance_by_file(
+                    $basename,
+                    $is_theme ?
+                        WP_FS__MODULE_TYPE_THEME :
+                        WP_FS__MODULE_TYPE_PLUGIN
+                );
+
+                if ( ! is_object( $fs ) ) {
+                    /**
+                     * If the Freemius instance does not exist on a non-multisite network environment, it means that:
+                     *  1. The product is not powered by Freemius; OR
+                     *  2. The product is not activated, therefore, we don't mind if after the update the folder name will change.
+                     *
+                     * @author Leo Fajardo (@leorw)
+                     * @since  2.2.1
+                     */
+                    return $source;
+                }
+            }
 
             $subdir_name = untrailingslashit( str_replace( trailingslashit( $remote_source ), '', $source ) );
 
@@ -917,15 +1341,16 @@ if ( !isset($info->error) ) {
 
                 if ( true === $GLOBALS['wp_filesystem']->move( $from_path, $to_path ) ) {
                     return trailingslashit( $to_path );
-                } else {
-                    return new WP_Error(
-                        'rename_failed',
-                        $this->_fs->get_text_inline( 'The remote plugin package does not contain a folder with the desired slug and renaming did not work.', 'module-package-rename-failure' ),
-                        array(
-                            'found'    => $subdir_name,
-                            'expected' => $desired_slug
-                        ) );
                 }
+
+                return new WP_Error(
+                    'rename_failed',
+                    fs_text_inline( 'The remote plugin package does not contain a folder with the desired slug and renaming did not work.', 'module-package-rename-failure' ),
+                    array(
+                        'found'    => $subdir_name,
+                        'expected' => $desired_slug
+                    )
+                );
             }
 
             return $source;

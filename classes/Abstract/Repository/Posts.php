@@ -22,6 +22,16 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	protected $query;
 
 	/**
+	 * Array of hydrated object models.
+	 *
+	 * @var array
+	 */
+	protected $cache = array(
+		'objects' => array(),
+		'queries' => array(),
+	);
+
+	/**
 	 * @var string
 	 */
 	protected $model;
@@ -130,10 +140,10 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 */
 	public function get_item( $id ) {
 		if ( ! $this->has_item( $id ) ) {
-			throw new InvalidArgumentException( sprintf( __( 'No %s found with id %d.', 'forumwp' ), $this->get_post_type(), $id ) );
+			throw new InvalidArgumentException( sprintf( __( 'No %s found with id %d.', 'popup-maker' ), $this->get_post_type(), $id ) );
 		}
 
-		return $this->get_model( get_post( $id ) );
+		return $this->get_model( $id );
 	}
 
 	/**
@@ -148,10 +158,10 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 		$id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE %s = %s", $field, $value ) );
 
 		if ( ! $id || ! $this->has_item( $id ) ) {
-			throw new InvalidArgumentException( sprintf( __( 'No user found with %s %s.', 'forumwp' ), $field, $value ) );
+			throw new InvalidArgumentException( sprintf( __( 'No user found with %s %s.', 'popup-maker' ), $field, $value ) );
 		}
 
-		return $this->get_model( get_post( $id ) );
+		return $this->get_model( $id );
 	}
 
 	/**
@@ -161,6 +171,15 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 */
 	public function has_item( $id ) {
 		return get_post_type( $id ) === $this->get_post_type();
+	}
+
+	/**
+	 * @param $args
+	 *
+	 * @return string
+	 */
+	protected function get_args_hash( $args ) {
+		return md5( serialize( $args ) );
 	}
 
 	/**
@@ -174,15 +193,22 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 
 		$args = $this->_build_wp_query_args( $args );
 
-		/**
-		 * Initialize a new query and return it.
-		 *
-		 * This also keeps the query cached for potential later usage via $this->get_last_query();
-		 */
-		$this->query->query( $args );
+		$hash = $this->get_args_hash( $args );
+
+		if ( ! isset( $this->cache['queries'][ $hash ] ) ) {
+			/**
+			 * Initialize a new query and return it.
+			 *
+			 * This also keeps the query cached for potential later usage via $this->get_last_query();
+			 */
+			$this->query->query( $args );
+
+			$this->cache['queries'][ $hash ] = (array) $this->query->posts;
+
+		}
 
 		/** @var array $posts */
-		$posts = (array) $this->query->posts;
+		$posts = $this->cache['queries'][ $hash ];
 
 		/**
 		 * Only convert to models if the model set is valid and not the WP_Post default.
@@ -208,7 +234,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 		$this->set_strict_query_arg( 'posts_per_page', 1 );
 
 		/** We don't use  $this->query here to avoid returning count queries via $this->>get_last_query(); */
-		$query = new WP_Query( $this->build_wp_query_args( $args ) );
+		$query = new WP_Query( $this->_build_wp_query_args( $args ) );
 
 		return (int) $query->found_posts;
 	}
@@ -316,18 +342,47 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * @param $post
 	 *
+	 * @return string
+	 */
+	protected function get_post_hash( $post ) {
+		return md5( serialize( $post ) );
+	}
+
+	/**
+	 * @param $post
+	 *
+	 * @return bool
+	 */
+	protected function cached_model_exists( $post ) {
+		return isset( $this->cache['objects'][ $post->ID ] ) && $this->get_post_hash( $post ) === $this->cache['objects'][ $post->ID ]['hash'];
+	}
+
+	/**
+	 * @param int|WP_Post $id
+	 *
 	 * @return WP_Post|PUM_Abstract_Model_Post
 	 */
-	protected function get_model( $post ) {
+	protected function get_model( $id ) {
+		$post = is_a( $id, 'WP_Post' ) ? $id : get_post( $id );
+
 		/**
 		 * Only convert to models if the model set is valid and not the WP_Post default.
 		 */
 		$model = $this->model;
-		if ( isset( $model ) && $model !== 'WP_Post' && class_exists( $model ) && ! is_a( $post, $model ) ) {
-			$post = new $model( $post );
+		if ( ! $model || 'WP_Post' === $model || ! class_exists( $model ) || is_a( $post, $model ) ) {
+			return $post;
 		}
 
-		return $post;
+		if ( ! $this->cached_model_exists( $post ) ) {
+			$object = new $model( $post );
+
+			$this->cache['objects'][ $post->ID ] = array(
+				'object' => $object,
+				'hash' => $this->get_post_hash( $post )
+			);
+		}
+
+		return $this->cache['objects'][ $post->ID ]['object'];
 	}
 
 	/**

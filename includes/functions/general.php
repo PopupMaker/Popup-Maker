@@ -45,6 +45,61 @@ function pum_get_default_theme_id() {
 }
 
 /**
+ * Gets the cache close_text of a theme from wp_options to prevent un-needed queries on the front end.
+ *
+ * @since 1.8.0
+ *
+ * @param int $theme_id
+ *
+ * @return string
+ */
+function pum_get_theme_close_text( $theme_id = 0 ) {
+	$close_texts = pum_get_all_themes_close_text();
+
+	return isset( $close_texts[ $theme_id ] ) ? $close_texts[ $theme_id ] : '';
+}
+
+/**
+ * Gets the cache of theme close text from wp_options to prevent un-needed queries on the front end.
+ *
+ * @since 1.8.0
+ *
+ * @return array|mixed
+ */
+function pum_get_all_themes_close_text() {
+	$all_themes_close_text = get_option( 'pum_all_theme_close_text_cache' );
+
+	if ( false === $all_themes_close_text ) {
+		$all_themes_close_text = pum_update_all_themes_close_text_cache();
+	}
+
+	return $all_themes_close_text;
+}
+
+/**
+ * Updates the cache of theme close text to prevent un-needed queries on the front end.
+ *
+ * @since 1.8.0
+ *
+ * @return array
+ */
+function pum_update_all_themes_close_text_cache() {
+	$all_themes_close_text = array();
+
+	$themes = pum_get_all_themes();
+
+	foreach( $themes as $theme ) {
+		$all_themes_close_text[ $theme->ID ] = $theme->get_setting( 'close_text', '' );
+	}
+
+	update_option( 'pum_all_theme_close_text_cache', $all_themes_close_text );
+
+	return $all_themes_close_text;
+}
+
+add_action( 'pum_save_theme', 'pum_update_all_themes_close_text_cache', 100 );
+
+/**
  * @param string $path
  *
  * @return string

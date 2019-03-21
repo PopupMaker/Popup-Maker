@@ -220,7 +220,7 @@ class PUM_Utils_Alerts {
 							'width'     => 722,
 							'height'    => 949,
 						), admin_url( 'plugin-install.php' ) ) . '" target="_blank">', '</a>' ),
-					'html'     => "<ul class='ul-disc'>" . "<li>" . 'Added option to enable Gutenberg editor when creating popups.' . "</li>" . "<li>" . 'New close button positions: top center, bottom center, middle left & middle right.' . "</li>" . "<li>" . 'New option to position close button outside of popup.' . "</li>" . "</ul>",
+					'html'     => "<ul class='ul-disc'>" . "<li>" . 'New UX for the Popup Theme editor.' . "</li>" . "<li>" . 'New close button positions: top center, bottom center, middle left & middle right.' . "</li>" . "<li>" . 'New option to position close button outside of popup.' . "</li>" . "</ul>",
 					'priority' => 100,
 				);
 			}
@@ -253,9 +253,9 @@ class PUM_Utils_Alerts {
 			if ( $integration['conditions'] ) {
 
 				$path        = "{$integration['slug']}/{$integration['slug']}.php";
-				$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $path, false, false );
+				$plugin_data = file_exists( WP_PLUGIN_DIR . '/' . $path ) ? get_plugin_data( WP_PLUGIN_DIR . '/' . $path, false, false ) : false;
 
-				$installed = $plugin_data['Name'] === $integration['name'];
+				$installed = $plugin_data && ! empty( $plugin_data['Name'] ) && $plugin_data['Name'] === $integration['name'];
 
 				$text = $installed ? __( 'activate it now', 'popup-maker' ) : __( 'install it now', 'popup-maker' );
 				$url  = $installed ? esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $path ), 'activate-plugin_' . $path ) ) : esc_url( wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=popup-maker-buddypress-integration' ), 'install-plugin_popup-maker-buddypress-integration' ) );

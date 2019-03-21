@@ -32,60 +32,60 @@ class PUM_BuddyPress_Integration {
 			// Add Additional Conditions
 			'is_buddypress' => array(
 				'group'    => __( 'BuddyPress', 'buddypress' ),
-				'name'     => __( 'BP: Is a BuddyPress Page', 'popup-maker-buddypress-integration' ),
+				'name'     => __( 'BP: Is a BuddyPress Page', 'popup-maker' ),
 				'callback' => 'is_buddypress',
 			),
 
 			'bp_is_user' => array(
 				'group'    => __( 'BuddyPress', 'buddypress' ),
-				'name'     => __( 'BP: Is User Page', 'popup-maker-buddypress-integration' ),
+				'name'     => __( 'BP: Is User Page', 'popup-maker' ),
 				'callback' => 'bp_is_user',
 			),
 
 			'bp_is_group' => array(
 				'group'    => __( 'BuddyPress', 'buddypress' ),
-				'name'     => __( 'BP: Is Group Page', 'popup-maker-buddypress-integration' ),
+				'name'     => __( 'BP: Is Group Page', 'popup-maker' ),
 				'callback' => 'bp_is_group',
 			),
 
 			'bp_is_user_messages' => array(
 				'group'    => __( 'BuddyPress', 'buddypress' ),
-				'name'     => __( 'BP: Is User Messages Page', 'popup-maker-buddypress-integration' ),
+				'name'     => __( 'BP: Is User Messages Page', 'popup-maker' ),
 				'callback' => 'bp_is_user_messages',
 			),
 
 			'bp_is_activation_page' => array(
 				'group'    => __( 'BuddyPress', 'buddypress' ),
-				'name'     => __( 'BP: Is Activation Page', 'popup-maker-buddypress-integration' ),
+				'name'     => __( 'BP: Is Activation Page', 'popup-maker' ),
 				'callback' => 'bp_is_activation_page',
 			),
 
 			'bp_is_register_page' => array(
 				'group'    => __( 'BuddyPress', 'buddypress' ),
-				'name'     => __( 'BP: Is Register Page', 'popup-maker-buddypress-integration' ),
+				'name'     => __( 'BP: Is Register Page', 'popup-maker' ),
 				'callback' => 'bp_is_register_page',
 			),
 
 			'bp_is_item_admin' => array(
 				'group'    => __( 'BuddyPress', 'buddypress' ),
-				'name'     => __( 'BP: Is Item Admin', 'popup-maker-buddypress-integration' ),
+				'name'     => __( 'BP: Is Item Admin', 'popup-maker' ),
 				'callback' => 'bp_is_item_admin',
 			),
 
 			'bp_is_item_mod' => array(
 				'group'    => __( 'BuddyPress', 'buddypress' ),
-				'name'     => __( 'BP: Is Item Mod', 'popup-maker-buddypress-integration' ),
+				'name'     => __( 'BP: Is Item Mod', 'popup-maker' ),
 				'callback' => 'bp_is_item_mod',
 			),
 
 			'bp_is_directory'         => array(
 				'group'    => __( 'BuddyPress', 'buddypress' ),
-				'name'     => __( 'BP: Is Directory', 'popup-maker-buddypress-integration' ),
+				'name'     => __( 'BP: Is Directory', 'popup-maker' ),
 				'callback' => 'bp_is_directory',
 			),
 			'bp_is_current_component' => array(
 				'group'    => __( 'BuddyPress', 'buddypress' ),
-				'name'     => __( 'BP: Is Current Component', 'popup-maker-buddypress-integration' ),
+				'name'     => __( 'BP: Is Current Component', 'popup-maker' ),
 				'fields'   => array(
 					'selected' => array(
 						'type'     => 'select',
@@ -101,7 +101,7 @@ class PUM_BuddyPress_Integration {
 
 			'bp_is_current_action' => array(
 				'group'    => __( 'BuddyPress', 'buddypress' ),
-				'name'     => __( 'BP: Is Current Action', 'popup-maker-buddypress-integration' ),
+				'name'     => __( 'BP: Is Current Action', 'popup-maker' ),
 				'fields'   => array(
 					'selected' => array(
 						'type'  => 'text',
@@ -113,7 +113,7 @@ class PUM_BuddyPress_Integration {
 
 			'bp_is_action_variable' => array(
 				'group'    => __( 'BuddyPress', 'buddypress' ),
-				'name'     => __( 'BP: Is Action Variable', 'popup-maker-buddypress-integration' ),
+				'name'     => __( 'BP: Is Action Variable', 'popup-maker' ),
 				'fields'   => array(
 					'selected' => array(
 						'type'  => 'text',
