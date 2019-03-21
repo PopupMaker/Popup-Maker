@@ -111,8 +111,8 @@
   -o-transition: all .15s ease-in-out;
   transition: all .15s ease-in-out;
   /**
-  * Use border-box for all popup content. Providing more precise sizing.
-  */
+    * Use border-box for all popup content. Providing more precise sizing.
+    */
 }
 
 .pum-overlay.pum-preview, .pum-overlay.pum-form-submission-detected {
@@ -209,6 +209,7 @@
   cursor: pointer;
   min-width: 1em;
   z-index: 2;
+  background-color: transparent;
 }
 
 .pum-container .pum-content + .pum-close > span {

@@ -115,10 +115,10 @@
   text-align: center;
   line-height: 1;
   position: absolute;
-  font-weight: bold;
   cursor: pointer;
   min-width: 1em;
   z-index: 9999999;
+  background-color: transparent;
 }
 
 .pum-theme-preview .pum-desc {
