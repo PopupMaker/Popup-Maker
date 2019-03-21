@@ -72,21 +72,9 @@ function js_site() {
 
 js_site.description = "Build site Javascript assets.";
 
-function js_other() {
-	return gulp.src(path.join(jsDevPath, '*.js'), {allowEmpty: true})
-		.pipe($fn.plumber({errorHandler: $fn.notify.onError('Error: <%= error.message %>')}))
-		.pipe(gulp.dest(jsDistPath))
-		.pipe($fn.uglify())
-		.pipe($fn.rename({extname: '.min.js'}))
-		.pipe(gulp.dest(jsDistPath));
-}
-
-js_other.description = "Build 3rd party Javascript assets.";
-
 gulp.task(js_admin);
 gulp.task(js_site);
-gulp.task(js_other);
-gulp.task('js', gulp.parallel(['webpack', 'js_admin', 'js_site', 'js_other']));
+gulp.task('js', gulp.parallel(['webpack', 'js_admin', 'js_site']));
 
 let js = gulp.task('js');
 

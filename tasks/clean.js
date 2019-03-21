@@ -57,11 +57,10 @@ clean_package.description = "Purge packaged release zip file.";
 gulp.task(clean_langpack);
 gulp.task(clean_js_site);
 gulp.task(clean_js_admin);
-gulp.task(clean_js_other);
 gulp.task(clean_css);
 gulp.task(clean_build);
 gulp.task(clean_package);
-gulp.task('clean_js', gulp.parallel(['clean_js_site', 'clean_js_admin', 'clean_js_other']));
+gulp.task('clean_js', gulp.parallel(['clean_js_site', 'clean_js_admin']));
 gulp.task('clean_all', gulp.parallel(['clean_js', 'clean_css', 'clean_langpack', 'clean_build', 'clean_package']));
 
 let clean_js = gulp.task('clean_js'),

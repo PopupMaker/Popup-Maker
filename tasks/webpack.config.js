@@ -10,6 +10,7 @@ const mode = require('./lib/mode');
 const JS_DEV = path.resolve(config.root.dev, config.js.dev);
 const JS_DIST = path.resolve(config.root.dist, config.js.dist);
 const UglifyJS = require('uglify-es');
+const UglifyJsPlugin = require( 'uglifyjs-webpack-plugin' );
 const UnminifiedWebpackPlugin = require('unminified-webpack-plugin');
 
 const adminPages = [
@@ -94,6 +95,7 @@ const webpackConfig = {
 				transform: (content) => minifyJs(content),
 			},
 		]),
+		new UglifyJsPlugin(),
 		new UnminifiedWebpackPlugin()
 	]
 };
