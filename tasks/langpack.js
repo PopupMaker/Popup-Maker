@@ -7,7 +7,7 @@ const gulp = require('gulp'),
 	pkg = require('../package.json');
 
 function langpack() {
-	return gulp.src(['**/*.php', '!build/**/*.*'], {allowEmpty: true})
+	return gulp.src(['**/*.php', '!build/**/*.*', '!node_modules/**/*.*', '!vendor/**/*.*'], {allowEmpty: true})
 		.pipe($fn.plumber({errorHandler: $fn.notify.onError('Error: <%= error.message %>')}))
 		.pipe($fn.wpPot({
 			domain: pkg.name,
