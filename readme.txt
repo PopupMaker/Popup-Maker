@@ -96,4 +96,4 @@ There are several common causes for this, check [this guide for help](https://do
 
 == Changelog ==
 
-View our [changelog](https://plugins.svn.wordpress.org/popup-maker/trunk/changelog.txt) for up-to-date information on what has been going on with the development of Popup Maker.
+View our [changelog](https://plugins.svn.wordpress.org/popup-maker/trunk/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
