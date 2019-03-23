@@ -125,7 +125,7 @@ class PUM_Site_Popups {
 		self::$loaded->post_count ++;
 
 		// Preprocess the content for shortcodes that need to enqueue their own assets.
-		self::$cached_content[ $popup->ID ] = PUM_Helpers::do_shortcode( $popup->get_content() );
+		self::$cached_content[ $popup->ID ] = $popup->get_content();
 
 		// Fire off preload action.
 		do_action( 'pum_preload_popup', $popup->ID );
