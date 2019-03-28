@@ -31,11 +31,11 @@ interface PUM_Interface_Repository {
 	public function has_item( $id );
 
 	/**
-	 * @param $args
+	 * @param array $args
 	 *
 	 * @return WP_Post[||PUM_Abstract_Model_Post[]
 	 */
-	public function get_items( $args );
+	public function get_items( $args = array() );
 
 	/**
 	 * @param array $data
