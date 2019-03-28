@@ -1102,7 +1102,11 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @deprecated 1.7.0 Still used in several extension migration routines, so needs to stay for now.
 	 */
 	public function save() {
-		return pum()->popups->update_itme( $this->ID, $this->to_array() );
+		try {
+			pum()->popups->update_item( $this->ID, $this->to_array() );
+		} catch ( Exception $e ) {
+			return;
+		}
 	}
 
 	/**
