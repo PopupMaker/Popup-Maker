@@ -95,7 +95,7 @@ class Popup_Maker {
 	/**
 	 * @var string Plugin Version
 	 */
-	public static $VER = '1.8.3';
+	public static $VER = '1.8.4';
 
 	/**
 	 * @var int DB Version
@@ -253,6 +253,7 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/functions-backcompat.php';
 		require_once self::$DIR . 'includes/functions-deprecated.php';
 		require_once self::$DIR . 'includes/deprecated-classes.php';
+		require_once self::$DIR . 'includes/deprecated-filters.php';
 		require_once self::$DIR . 'includes/integrations.php';
 
 		// Old Stuff.
