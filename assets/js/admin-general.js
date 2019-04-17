@@ -6928,7 +6928,7 @@
 
         },
         parseValues: function (values, fields) {
-            fields = fields || false
+            fields = fields || false;
 
             if (!fields) {
                 return values;
@@ -7259,6 +7259,7 @@ function pumChecked(val1, val2, print) {
                 std: null,
                 min: 0,
                 max: 50,
+                force_minmax: false,
                 step: 1,
                 unit: 'px',
                 units: {},

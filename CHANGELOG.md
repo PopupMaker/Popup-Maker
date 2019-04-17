@@ -1,3 +1,10 @@
+= v1.8.5 - 04/17/2019 =
+* Tweak: Removed unused settings.
+* Fix: Typo in method name that would generate errors in some extension migration routines.
+* Fix: Issue when using class="" in our Popup Trigger shortcode would not get converted to classes on the element.
+* Fix: Bug in JS due to missing default value.
+* Fix: Bug older extensions caused by deprecated filter not getting loaded properly.
+
 = v1.8.4 - 03/21/2019 =
 * Improvement: Added content caching in the head to prevent second call to do_shortcode in the footer.
 * Improvement: Added runtime model caching to reduce memory usage.

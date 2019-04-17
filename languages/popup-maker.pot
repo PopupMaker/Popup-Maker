@@ -35,7 +35,7 @@ msgstr ""
 msgid "Popup ID"
 msgstr ""
 
-#: classes/Conditions.php:107, classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:157, classes/Shortcode.php:151, classes/Shortcode.php:163, classes/Shortcode.php:176, classes/Triggers.php:289, includes/class-popmake-fields.php:57, classes/Admin/Popups.php:301, classes/Admin/Settings.php:651, classes/Admin/Settings.php:675, classes/Admin/Settings.php:678, classes/Admin/Settings.php:687, classes/Admin/Themes.php:282, classes/Admin/Themes.php:300, classes/Admin/Themes.php:319, classes/Shortcode/Popup.php:51, classes/Shortcode/Popup.php:65, classes/Shortcode/Subscribe.php:60, classes/Shortcode/Subscribe.php:80, classes/Shortcode/Subscribe.php:83
+#: classes/Conditions.php:107, classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:157, classes/Shortcode.php:151, classes/Shortcode.php:163, classes/Shortcode.php:176, classes/Triggers.php:289, includes/class-popmake-fields.php:57, classes/Admin/Popups.php:301, classes/Admin/Settings.php:646, classes/Admin/Settings.php:670, classes/Admin/Settings.php:673, classes/Admin/Settings.php:682, classes/Admin/Themes.php:282, classes/Admin/Themes.php:300, classes/Admin/Themes.php:319, classes/Shortcode/Popup.php:51, classes/Shortcode/Popup.php:65, classes/Shortcode/Subscribe.php:60, classes/Shortcode/Subscribe.php:80, classes/Shortcode/Subscribe.php:83
 msgid "General"
 msgstr ""
 
@@ -507,11 +507,11 @@ msgstr ""
 msgid ".class-here"
 msgstr ""
 
-#: classes/Triggers.php:155, classes/Shortcode/PopupClose.php:70, classes/Shortcode/PopupTrigger.php:121
+#: classes/Triggers.php:155, classes/Shortcode/PopupClose.php:70, classes/Shortcode/PopupTrigger.php:124
 msgid "Do not prevent the default click functionality."
 msgstr ""
 
-#: classes/Triggers.php:156, classes/Shortcode/PopupTrigger.php:122
+#: classes/Triggers.php:156, classes/Shortcode/PopupTrigger.php:125
 msgid "This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file."
 msgstr ""
 
@@ -855,7 +855,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: classes/Admin/Assets.php:68, classes/Admin/Settings.php:586, classes/Admin/Settings.php:615, classes/Admin/Tools.php:84, classes/Admin/Tools.php:540, includes/integrations/class-pum-gravity-forms.php:173
+#: classes/Admin/Assets.php:68, classes/Admin/Settings.php:581, classes/Admin/Settings.php:610, classes/Admin/Tools.php:84, classes/Admin/Tools.php:540, includes/integrations/class-pum-gravity-forms.php:173
 msgid "Save"
 msgstr ""
 
@@ -1043,7 +1043,7 @@ msgstr ""
 msgid "Popup Settings"
 msgstr ""
 
-#: classes/Admin/Popups.php:175, classes/Admin/Settings.php:592, classes/Admin/Themes.php:69
+#: classes/Admin/Popups.php:175, classes/Admin/Settings.php:587, classes/Admin/Themes.php:69
 msgid "If you are seeing this, the page is still loading or there are Javascript errors on this page. %sView troubleshooting guide%s"
 msgstr ""
 
@@ -1597,106 +1597,98 @@ msgid "This will disable the popup tags & categories."
 msgstr ""
 
 #: classes/Admin/Settings.php:466
-msgid "Disable object caching"
-msgstr ""
-
-#: classes/Admin/Settings.php:467
-msgid "If you are seeing issues with settings not saving or popups not rendering changes immediately, try this option."
-msgstr ""
-
-#: classes/Admin/Settings.php:471
 msgid "Disable asset caching."
 msgstr ""
 
-#: classes/Admin/Settings.php:472
+#: classes/Admin/Settings.php:467
 msgid "By default Popup Maker caches a single JS & CSS file in your Uploads folder. These files include core, extension & user customized styles & scripts in a single set of files."
 msgstr ""
 
-#: classes/Admin/Settings.php:476
+#: classes/Admin/Settings.php:471
 msgid "Disable the Popup Maker shortcode button"
 msgstr ""
 
-#: classes/Admin/Settings.php:480
+#: classes/Admin/Settings.php:475
 msgid "Complete Uninstall?"
 msgstr ""
 
-#: classes/Admin/Settings.php:481
+#: classes/Admin/Settings.php:476
 msgid "Check this to completely uninstall all Popup Maker data on deactivation."
 msgstr ""
 
-#: classes/Admin/Settings.php:488
+#: classes/Admin/Settings.php:483
 msgid "'Don't Load Google Fonts"
 msgstr ""
 
-#: classes/Admin/Settings.php:489
+#: classes/Admin/Settings.php:484
 msgid "Check this disable loading of google fonts, useful if the fonts you chose are already loaded with your theme."
 msgstr ""
 
-#: classes/Admin/Settings.php:493
+#: classes/Admin/Settings.php:488
 msgid "Don't load Popup Maker core stylesheet."
 msgstr ""
 
-#: classes/Admin/Settings.php:494
+#: classes/Admin/Settings.php:489
 msgid "Check this if you have copied the Popup Maker core styles to your own stylesheet or are using custom styles."
 msgstr ""
 
-#: classes/Admin/Settings.php:498
+#: classes/Admin/Settings.php:493
 msgid "Don't load popup theme styles to the head."
 msgstr ""
 
-#: classes/Admin/Settings.php:499
+#: classes/Admin/Settings.php:494
 msgid "Check this if you have copied the popup theme styles to your own stylesheet or are using custom styles."
 msgstr ""
 
-#: classes/Admin/Settings.php:532
+#: classes/Admin/Settings.php:527
 msgid "Show Popup Maker CSS"
 msgstr ""
 
-#: classes/Admin/Settings.php:533
+#: classes/Admin/Settings.php:528
 msgid "Use this to quickly copy Popup Maker's CSS to your own stylesheet."
 msgstr ""
 
-#: classes/Admin/Settings.php:536
+#: classes/Admin/Settings.php:531
 msgid "Core Styles"
 msgstr ""
 
-#: classes/Admin/Settings.php:542
+#: classes/Admin/Settings.php:537
 msgid "Generated Popup & Popup Theme Styles"
 msgstr ""
 
-#: classes/Admin/Settings.php:588
+#: classes/Admin/Settings.php:583
 msgid "Popup Maker Settings"
 msgstr ""
 
-#: classes/Admin/Settings.php:652
+#: classes/Admin/Settings.php:647
 msgid "Subscriptions"
 msgstr ""
 
-#: classes/Admin/Settings.php:653
+#: classes/Admin/Settings.php:648
 msgid "Extensions"
 msgstr ""
 
-#: classes/Admin/Settings.php:654, classes/Admin/Settings.php:684
+#: classes/Admin/Settings.php:649, classes/Admin/Settings.php:679
 msgid "Licenses"
 msgstr ""
 
-#: classes/Admin/Settings.php:655, classes/Shortcode/Subscribe.php:62, classes/Shortcode/Subscribe.php:90
+#: classes/Admin/Settings.php:650, classes/Shortcode/Subscribe.php:62, classes/Shortcode/Subscribe.php:90
 msgid "Privacy"
 msgstr ""
 
-#: classes/Admin/Settings.php:656, classes/Admin/Settings.php:691
+#: classes/Admin/Settings.php:651, classes/Admin/Settings.php:686
 msgid "Misc"
 msgstr ""
 
-#: classes/Admin/Settings.php:681
+#: classes/Admin/Settings.php:676
 msgid "Extension Settings"
 msgstr ""
 
-#: classes/Admin/Settings.php:688
+#: classes/Admin/Settings.php:683
 msgid "Subscription Forms"
 msgstr ""
 
-#: classes/Admin/Settings.php:692
+#: classes/Admin/Settings.php:687
 msgid "Assets"
 msgstr ""
 
