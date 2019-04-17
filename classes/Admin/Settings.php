@@ -461,11 +461,6 @@ class PUM_Admin_Settings {
 							'label' => __( 'Disable categories & tags?', 'popup-maker' ),
 							'desc'  => __( 'This will disable the popup tags & categories.', 'popup-maker' ),
 						),
-						'disable_cache'                        => array(
-							'type'  => 'checkbox',
-							'label' => __( 'Disable object caching', 'popup-maker' ),
-							'desc'  => __( 'If you are seeing issues with settings not saving or popups not rendering changes immediately, try this option.', 'popup-maker' ),
-						),
 						'disable_asset_caching'                => array(
 							'type'  => 'checkbox',
 							'label' => __( 'Disable asset caching.', 'popup-maker' ),
