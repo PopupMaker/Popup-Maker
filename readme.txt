@@ -1,5 +1,5 @@
 === Popup Maker - Popup Forms, Optins & More ===
-Contributors: danieliser, wppopupmaker
+Contributors: danieliser, codeatlantic
 Author URI: https://wppopupmaker.com/?utm_source=readme-header&utm_campaign=Readme&utm_medium=author-uri
 Plugin URI: https://wppopupmaker.com/?utm_capmaign=Readme&utm_source=readme-header&utm_medium=plugin-uri
 Donate link:

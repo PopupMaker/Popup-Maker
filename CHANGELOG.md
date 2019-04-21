@@ -1,3 +1,6 @@
+= v1.8.6 - ??/??/???? =
+* Fix: Added function exists check to prevent errors on WP 4.1
+
 = v1.8.5 - 04/17/2019 =
 * Tweak: Removed unused settings.
 * Fix: Typo in method name that would generate errors in some extension migration routines.
