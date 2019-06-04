@@ -29,12 +29,26 @@
   "build": {
     "files": "./**/*.*",
     "ignore": [
+      "./bin/**",
       "./build/**",
       "./release/**",
+      "./tasks/**",
       "./node_modules/**",
+      "./vendor/**",
+      "./assets/js/src/**",
+      "./.browserslistrc",
+      "./.editorconfig",
+      "./.eslintignore",
+      "./.gitattributes",
+      "./.gitignore",
+      "./.jshintrc",
+      "./.scrutinizer.yml",
+      "./apigen.neon",
+      "./composer.json",
       "./gulpfile.js",
       "./package.json",
-      "./assets/js/src/**"
+      "./package-lock.json",
+      "./phpci.yml"
     ]
   }
 }
