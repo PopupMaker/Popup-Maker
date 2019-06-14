@@ -157,6 +157,21 @@ function popmake_resolve( array $a, $path, $default = null ) {
 }
 
 /**
+ * Returns $_POST key.
+ *
+ * @since 1.0
+ *
+ * @param string $name is the key you are looking for. Can use dot notation for arrays such as my_meta.field1 which will resolve to $_POST['my_meta']['field1'].
+ *
+ * @return mixed results of lookup
+ */
+function popmake_post( $name, $do_stripslashes = true ) {
+	$value = popmake_resolve( $_POST, $name, false );
+
+	return $do_stripslashes ? stripslashes_deep( $value ) : $value;
+}
+
+/**
  * Checks whether function is disabled.
  *
  * @since 1.4
