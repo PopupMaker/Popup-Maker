@@ -43,13 +43,21 @@ class PUM_Modules_Admin_Bar {
 	 * @return bool
 	 */
 	public static function should_render() {
-		return is_user_logged_in() && ! is_admin() && is_admin_bar_showing() && ! pum_get_option( 'disabled_admin_bar' ) && ( current_user_can( 'edit_others_posts' ) || current_user_can( 'manage_options' ) );
+		$tests = [
+			is_user_logged_in(),
+			! is_admin(),
+			is_admin_bar_showing(),
+			! pum_get_option( 'disabled_admin_bar' ),
+			( current_user_can( 'edit_others_posts' ) || current_user_can( 'manage_options' ) ),
+		];
+
+		return ! in_array( false, $tests );
 	}
 
 	/**
 	 * Render admin bar scripts & styles if the toolbar button should show.
-     *
-     * TODO move this to external assets & use wp_enqueue_*
+	 *
+	 * TODO move this to external assets & use wp_enqueue_*
 	 */
 	public static function admin_bar_styles() {
 
@@ -427,7 +435,7 @@ class PUM_Modules_Admin_Bar {
 	 */
 	public static function toolbar_links( $wp_admin_bar ) {
 
-		if ( self::should_render() ) {
+		if ( ! self::should_render() ) {
 			return;
 		}
 
