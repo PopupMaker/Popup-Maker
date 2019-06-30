@@ -99,7 +99,7 @@ class PUM_Site_Popups {
 
 			foreach ( $popups as $popup ) {
 				// Set this popup as the global $current.
-				pum()->current_theme = $popup;
+				pum()->current_popup = $popup;
 
 				// If the popup is loadable (passes conditions) load it.
 				if ( pum_is_popup_loadable( $popup->ID ) ) {
