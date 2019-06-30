@@ -14,13 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return int
  */
-function pum_get_popup_id( $popup_id = 0 ) {
-	if ( ! empty( $popup_id ) && is_numeric( $popup_id ) ) {
-		$_popup_id = $popup_id;
-	} elseif ( is_object( pum()->current_popup ) && is_numeric( pum()->current_popup->ID ) ) {
+function pum_get_popup_id( $popup_id = null ) {
+	if ( null === $popup_id && pum_is_popup( pum()->current_popup ) ) {
 		$_popup_id = pum()->current_popup->ID;
 	} else {
-		$_popup_id = 0;
+		$_popup_id = ! empty( $popup_id ) && is_numeric( $popup_id ) ? $popup_id : 0;
 	}
 
 	return (int) apply_filters( 'pum_get_popup_id', (int) $_popup_id, $popup_id );
@@ -42,11 +40,11 @@ function pum_get_popup_title( $popup_id = 0 ) {
 }
 
 /**
- * @deprecated 1.8.0
- *
  * @param int $popup_id
  *
  * @return array
+ * @deprecated 1.8.0
+ *
  */
 function pum_get_popup_triggers( $popup_id = 0 ) {
 	$popup = pum_get_popup( $popup_id );
