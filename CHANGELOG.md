@@ -1,3 +1,8 @@
+### v1.8.7 - 06/29/2019
+* Tweak: Restricted the admin toolbar to only show under strict circumstances.
+* Tweak: Updated available WooCommerce endpoints in our targeting conditions
+* Fix: Issue with instance based shortcodes when asset caching was enabled but running on every request.
+
 ### v1.8.6 - 05/05/2019
 * Fix: Typo in GDPR eraser that could sometimes result in errors when processing GDPR requests
 * Fix: Added function exists check to prevent errors on WP 4.1

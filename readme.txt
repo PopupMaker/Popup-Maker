@@ -5,9 +5,9 @@ Plugin URI: https://wppopupmaker.com/?utm_capmaign=Readme&utm_source=readme-head
 Donate link:
 Tags:  marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 4.1
-Tested up to: 5.2
+Tested up to: 5.3
 Requires PHP: 5.2.17
-Stable tag: 1.8.6
+Stable tag: 1.8.7
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,7 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
-= v1.8.6 - 05/05/2019 =
-* Fix: Typo in GDPR eraser that could sometimes result in errors when processing GDPR requests
-* Fix: Added function exists check to prevent errors on WP 4.1
+= v1.8.7 - 06/29/2019 =
+* Tweak: Restricted the admin toolbar to only show under strict circumstances.
+* Tweak: Updated available WooCommerce endpoints in our targeting conditions
+* Fix: Issue with instance based shortcodes when asset caching was enabled but running on every request.
