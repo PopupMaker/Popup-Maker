@@ -899,87 +899,87 @@ msgstr ""
 msgid "We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser."
 msgstr ""
 
-#: classes/Admin/Extend.php:121
+#: classes/Admin/Extend.php:120
 msgid "Premium Extensions"
 msgstr ""
 
-#: classes/Admin/Extend.php:122
+#: classes/Admin/Extend.php:121
 msgid "Forms"
 msgstr ""
 
-#: classes/Admin/Extend.php:123
+#: classes/Admin/Extend.php:122
 msgid "Page Builders"
 msgstr ""
 
-#: classes/Admin/Extend.php:124
+#: classes/Admin/Extend.php:123
 msgid "Other"
 msgstr ""
 
-#: classes/Admin/Extend.php:148
+#: classes/Admin/Extend.php:147
 msgid "Gravity Forms"
 msgstr ""
 
-#: classes/Admin/Extend.php:150
+#: classes/Admin/Extend.php:149
 msgid "Gravity Forms is one of the most popular form building plugins."
 msgstr ""
 
-#: classes/Admin/Extend.php:154
+#: classes/Admin/Extend.php:153
 msgid "Contact Form 7"
 msgstr ""
 
-#: classes/Admin/Extend.php:156
+#: classes/Admin/Extend.php:155
 msgid "CF7 is one of the most downloaded plugins on the WordPress repo. Make simple forms with ease and plenty of free addons available."
 msgstr ""
 
-#: classes/Admin/Extend.php:160
+#: classes/Admin/Extend.php:159
 msgid "Quiz & Survey Master"
 msgstr ""
 
-#: classes/Admin/Extend.php:162
+#: classes/Admin/Extend.php:161
 msgid "If you need more from your forms data look no further, QSM is all about the statistics & collective data, something other form plugins neglect."
 msgstr ""
 
-#: classes/Admin/Extend.php:170
+#: classes/Admin/Extend.php:169
 msgid "Ninja Forms"
 msgstr ""
 
-#: classes/Admin/Extend.php:172
+#: classes/Admin/Extend.php:171
 msgid "Ninja Forms has fast become the most extensible form plugin available. Build super custom forms and integrate with your favorite services."
 msgstr ""
 
-#: classes/Admin/Extend.php:187
+#: classes/Admin/Extend.php:186
 msgid "Beaver Builder"
 msgstr ""
 
-#: classes/Admin/Extend.php:189
+#: classes/Admin/Extend.php:188
 msgid "Easily insert saved templates into your popups for a one of a kind popup design."
 msgstr ""
 
-#: classes/Admin/Extend.php:226
+#: classes/Admin/Extend.php:225
 msgid "Extensions & Integrations for Popup Maker"
 msgstr ""
 
-#: classes/Admin/Extend.php:227, classes/Admin/Extend.php:227, classes/Admin/Extend.php:249, classes/Admin/Extend.php:249
+#: classes/Admin/Extend.php:226, classes/Admin/Extend.php:226, classes/Admin/Extend.php:248, classes/Admin/Extend.php:248
 msgid "Browse All Extensions"
 msgstr ""
 
-#: classes/Admin/Extend.php:365
+#: classes/Admin/Extend.php:364
 msgid "These form plugins work in our popups out of the box."
 msgstr ""
 
-#: classes/Admin/Extend.php:384, classes/Admin/Extend.php:427
+#: classes/Admin/Extend.php:383, classes/Admin/Extend.php:426
 msgid "Check it out"
 msgstr ""
 
-#: classes/Admin/Extend.php:407
+#: classes/Admin/Extend.php:406
 msgid "These page builder plugins work in our popups out of the box."
 msgstr ""
 
-#: classes/Admin/Extend.php:449
+#: classes/Admin/Extend.php:448
 msgid "These extensions add extra functionality to your popups."
 msgstr ""
 
-#: classes/Admin/Extend.php:509
+#: classes/Admin/Extend.php:508
 msgid "Get this Extension"
 msgstr ""
 

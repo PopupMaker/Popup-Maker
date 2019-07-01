@@ -1,3 +1,6 @@
+### v1.8.8 - 06/30/2019
+* Fix: Bug where red alert icons didn't go away when visiting the tabs from the "Extend" menu.
+
 ### v1.8.7 - 06/29/2019
 * Tweak: Restricted the admin toolbar to only show under strict circumstances.
 * Tweak: Updated available WooCommerce endpoints in our targeting conditions
