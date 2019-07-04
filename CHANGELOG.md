@@ -1,3 +1,6 @@
+### v1.8.9 - 07/04/2019
+* Fix: Issue where popup titles wouldn't render.
+
 ### v1.8.8 - 06/30/2019
 * Fix: Bug where red alert icons didn't go away when visiting the tabs from the "Extend" menu.
 
