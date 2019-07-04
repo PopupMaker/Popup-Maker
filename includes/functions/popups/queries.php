@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return PUM_Model_Popup
  */
 function pum_get_popup( $popup_id = null ) {
-	if ( null === $popup_id && pum_is_popup( pum()->current_popup ) ) {
+	if ( ( is_null( $popup_id ) || 0 === $popup_id ) && pum_is_popup( pum()->current_popup ) ) {
 		return pum()->current_popup;
 	}
 
