@@ -43,13 +43,13 @@ class PUM_Modules_Admin_Bar {
 	 * @return bool
 	 */
 	public static function should_render() {
-		$tests = [
+		$tests = array(
 			is_user_logged_in(),
 			! is_admin(),
 			is_admin_bar_showing(),
 			! pum_get_option( 'disabled_admin_bar' ),
 			( current_user_can( 'edit_others_posts' ) || current_user_can( 'manage_options' ) ),
-		];
+		);
 
 		return ! in_array( false, $tests );
 	}
