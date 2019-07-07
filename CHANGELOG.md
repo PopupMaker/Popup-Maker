@@ -1,3 +1,6 @@
+### v1.8.10 - 07/06/2019
+* Fix: PHP backward compatibility issue due to short array syntax usage.
+
 ### v1.8.9 - 07/04/2019
 * Fix: Issue where popup titles wouldn't render.
 

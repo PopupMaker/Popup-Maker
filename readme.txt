@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, advertising, conversion, responsive popu
 Requires at least: 4.1
 Tested up to: 5.3
 Requires PHP: 5.2.17
-Stable tag: 1.8.9
+Stable tag: 1.8.10
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,9 @@ There are several common causes for this, check [this guide for help](https://do
 == Changelog ==
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
+
+= v1.8.10 - 07/06/2019 =
+* Fix: PHP backward compatibility issue due to short array syntax usage.
 
 = v1.8.9 - 07/04/2019 =
 * Fix: Issue where popup titles wouldn't render.
