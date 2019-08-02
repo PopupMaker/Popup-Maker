@@ -6934,8 +6934,6 @@
                 return values;
             }
 
-            debugger;
-
             for (var key in fields) {
                 if (!fields.hasOwnProperty(key)) {
                     continue;
@@ -7669,11 +7667,25 @@ function pumChecked(val1, val2, print) {
 
         function makeObject(root, value) {
 
-            var keys = root.match(patterns.key), k;
+            var keys = root.match(patterns.key), k,
+                field = document.querySelector('[name="' + root + '"]'),
+                type = false;
 
-            try {
-                value = JSON.parse(value);
-            } catch (Error) {
+            if ("INPUT" === field.tagName) {
+                type = field.type;
+            } else {
+                if ("SELECT" === field.tagName) {
+                    type = 'select';
+                } else if ("TEXTAREA" === field.tagName) {
+                    type = 'textarea';
+                }
+            }
+
+            if (['textarea', 'text'].indexOf(type) >= 0) {
+                try {
+                    value = JSON.parse(value);
+                } catch (Error) {
+                }
             }
 
             // nest, nest, ..., nest
@@ -7706,7 +7718,12 @@ function pumChecked(val1, val2, print) {
         }
 
         function encode(pair) {
+
+            console.log(pair);
+
             switch ($('[name="' + pair.name + '"]', $form).attr("type")) {
+
+
             case "checkbox":
                 return pair.value === "1" ? true : pair.value;
             default:
@@ -8105,8 +8122,6 @@ function pumChecked(val1, val2, print) {
                         if (data.value === false || data.value === null) {
                             data.value = [];
                         }
-
-                        debugger;
 
                         if (typeof data.value === 'string' && data.value.indexOf(',')) {
                             data.value = data.value.split(',');
