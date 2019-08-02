@@ -263,8 +263,6 @@
                             data.value = [];
                         }
 
-                        debugger;
-
                         if (typeof data.value === 'string' && data.value.indexOf(',')) {
                             data.value = data.value.split(',');
                         }
