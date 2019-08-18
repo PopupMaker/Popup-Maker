@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, advertising, conversion, responsive popu
 Requires at least: 4.1
 Tested up to: 5.3
 Requires PHP: 5.2.17
-Stable tag: 1.8.10
+Stable tag: 1.8.11
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,9 +98,10 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
-= v1.8.11 - ??/??/2019 =
+= v1.8.11 - 08/18/2019 =
 * Improvement: Trigger window resize event when popups open to fix issues with some sliders & JS sized content.
 * Fix: Updated form value processing to prevent some edge cases where string values were converted to Infinity.
+* Fix: Custom "already subscribed" messages in MailChimp integration were not working correctly.
 
 = v1.8.10 - 07/06/2019 =
 * Fix: PHP backward compatibility issue due to short array syntax usage.

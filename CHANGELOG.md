@@ -1,3 +1,8 @@
+### v1.8.11 - 08/18/2019
+* Improvement: Trigger window resize event when popups open to fix issues with some sliders & JS sized content.
+* Fix: Updated form value processing to prevent some edge cases where string values were converted to Infinity.
+* Fix: Custom "already subscribed" messages in MailChimp integration were not working correctly.
+
 ### v1.8.10 - 07/06/2019
 * Fix: PHP backward compatibility issue due to short array syntax usage.
 
