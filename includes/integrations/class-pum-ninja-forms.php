@@ -184,4 +184,4 @@ function pum_nf_should_init() {
 	NF_PUM();
 }
 
-add_action( 'plugins_loaded', 'pum_nf_should_init', 0 );
+add_action( 'init', 'pum_nf_should_init', 0 );
