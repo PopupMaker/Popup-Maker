@@ -207,8 +207,7 @@ function popmake_emodal_v2_import() {
 
 
 function popmake_emodal_init() {
-	global $popmake_options;
-	if ( isset( $popmake_options['enable_easy_modal_compatibility_mode'] ) && ! empty( $popmake_options['enable_easy_modal_compatibility_mode'] ) ) {
+	if ( pum_get_option( 'enable_easy_modal_compatibility_mode' ) ) {
 		if ( ! shortcode_exists( 'modal' ) ) {
 			add_shortcode( 'modal', 'popmake_emodal_shortcode_modal' );
 		}
