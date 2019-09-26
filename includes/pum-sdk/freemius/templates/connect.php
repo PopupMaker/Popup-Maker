@@ -40,10 +40,12 @@
 
 	$freemius_site_www = 'https://freemius.com';
 
-	$freemius_site_url = $freemius_site_www . '/' . ( $fs->is_premium() ?
-			'wordpress/' :
-			// Insights platform information.
-			'wordpress/usage-tracking/' . $fs->get_id() . "/{$slug}/" );
+	$freemius_usage_tracking_url = $freemius_site_www . '/wordpress/usage-tracking/' . $fs->get_id() . "/{$slug}/";
+	$freemius_plugin_terms_url   = $freemius_site_www . '/terms/' . $fs->get_id() . "/{$slug}/";
+
+	$freemius_site_url = $fs->is_premium() ?
+		$freemius_site_www :
+		$freemius_usage_tracking_url;
 
 	if ( $fs->is_premium() ) {
 		$freemius_site_url .= '?' . http_build_query( array(
@@ -253,6 +255,17 @@
 					<a class="show-license-resend-modal show-license-resend-modal-<?php echo $fs->get_unique_affix() ?>"
 					   href="#"><?php fs_esc_html_echo_inline( "Can't find your license key?", 'cant-find-license-key', $slug ); ?></a>
 				</div>
+
+				<?php
+				/**
+				 * Allows developers to include custom HTML after the license input container.
+				 *
+				 * @author Vova Feldman
+				 * @since 2.1.2
+				 */
+				 $fs->do_action( 'connect/after_license_input' );
+				?>
+
                 <?php
                     $send_updates_text = sprintf(
                         '%s<span class="action-description"> - %s</span>',
@@ -414,7 +427,7 @@
 			<a href="https://freemius.com/privacy/" target="_blank"
 			   tabindex="1"><?php fs_esc_html_echo_inline( 'Privacy Policy', 'privacy-policy', $slug ) ?></a>
 			&nbsp;&nbsp;-&nbsp;&nbsp;
-			<a href="<?php echo $freemius_site_www ?>/terms/" target="_blank" tabindex="1"><?php fs_echo_inline( 'Terms of Service', 'tos', $slug ) ?></a>
+			<a href="<?php echo $require_license_key ? $freemius_plugin_terms_url : $freemius_usage_tracking_url ?>" target="_blank" tabindex="1"><?php $require_license_key ? fs_echo_inline( 'License Agreement', 'license-agreement', $slug ) : fs_echo_inline( 'Terms of Service', 'tos', $slug ) ?></a>
 		</div>
 	</div>
 	<?php
@@ -718,11 +731,14 @@
 								// Redirect to the "Account" page and sync the license.
 								window.location.href = resultObj.next_page;
 							} else {
+								resetLoadingMode();
+
 								// Show error.
 								$('.fs-content').prepend('<p class="fs-error">' + (resultObj.error.message ?  resultObj.error.message : resultObj.error) + '</p>');
-
-								resetLoadingMode();
 							}
+						},
+						error: function () {
+							resetLoadingMode();
 						}
 					});
 

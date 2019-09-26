@@ -326,6 +326,7 @@
                     event.preventDefault();
 
                     var $form = $(this),
+                        raw_values = $form.pumSerializeObject(),
                         values = PUM_Admin.forms.parseValues($form.pumSerializeObject().attrs, PUM_Admin.forms.flattenFields(data)),
                         content;
 

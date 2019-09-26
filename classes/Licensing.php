@@ -93,6 +93,7 @@ class PUM_Licensing {
 					case 'expired' :
 						$messages[] = sprintf( __( 'Your license key expired on %s. Please %srenew your license key%s.', 'popup-maker' ), date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), '<a target="_blank" href="https://wppopupmaker.com/checkout/?edd_license_key=' . $key . '&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_medium=expired&utm_content=pum_license">', '</a>' );
 						break;
+					case 'disabled' :
 					case 'revoked' :
 						$messages[] = sprintf( __( 'Your license key has been disabled. Please %scontact support%s for more information.', 'popup-maker' ), '<a target="_blank" href="https://wppopupmaker.com/support/?utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_content=pum_license&utm_medium=revoked">', '</a>' );
 						break;

@@ -33,6 +33,7 @@ class PUM_Admin_Popups {
 		// Process meta saving.
 		add_action( 'save_post', array( __CLASS__, 'save' ), 10, 2 );
 
+
 		// Set the slug properly on save.
 		add_filter( 'wp_insert_post_data', array( __CLASS__, 'set_slug' ), 99, 2 );
 
@@ -71,12 +72,15 @@ class PUM_Admin_Popups {
 		return $title;
 	}
 
-
 	/**
 	 * Renders the popup title meta field.
 	 */
 	public static function title_meta_field() {
 		global $post, $pagenow, $typenow;
+
+		if ( has_blocks( $post ) || ( function_exists( 'use_block_editor_for_post' ) && use_block_editor_for_post( $post ) ) ) {
+			return;
+		}
 
 		if ( ! is_admin() ) {
 			return;
@@ -105,6 +109,10 @@ class PUM_Admin_Popups {
 	public static function popup_post_title_contextual_message() {
 		global $post, $pagenow, $typenow;
 
+		if ( has_blocks( $post ) || ( function_exists( 'use_block_editor_for_post' ) && use_block_editor_for_post( $post ) ) ) {
+			return;
+		}
+
 		if ( ! is_admin() ) {
 			return;
 		}
@@ -129,10 +137,10 @@ class PUM_Admin_Popups {
 	public static function render_settings_meta_box() {
 		global $post;
 
-		$popup = pum_get_popup( $post->ID, true );
+		$popup = pum_get_popup( $post->ID );
 
 		// Get the meta directly rather than from cached object.
-		$settings = $popup->get_settings( true );
+		$settings = $popup->get_settings();
 
 		if ( empty( $settings ) ) {
 			$settings = self::defaults();
@@ -251,7 +259,7 @@ class PUM_Admin_Popups {
 
 		$settings = self::sanitize_settings( $settings );
 
-		$popup->update_meta( 'popup_settings', $settings );
+		$popup->update_settings( $settings, false );
 
 		// TODO Remove this and all other code here. This should be clean and all code more compartmentalized.
 		foreach ( self::deprecated_meta_fields() as $field ) {
@@ -295,7 +303,7 @@ class PUM_Admin_Popups {
 			'close'     => __( 'Close', 'popup-maker' ),
 			'triggers'  => __( 'Triggers', 'popup-maker' ),
 			'targeting' => __( 'Targeting', 'popup-maker' ),
-			'advanced' => __( 'Advanced', 'popup-maker' ),
+			'advanced'  => __( 'Advanced', 'popup-maker' ),
 		) );
 	}
 
@@ -347,7 +355,7 @@ class PUM_Admin_Popups {
 					'main' => array(),
 				) ),
 				'triggers'  => apply_filters( 'pum_popup_triggers_settings_fields', array(
-					'main'     => array(
+					'main' => array(
 						'triggers'   => array(
 							'type'     => 'triggers',
 							'std'      => array(),
@@ -390,8 +398,8 @@ class PUM_Admin_Popups {
 							'label'        => __( 'Popup Theme', 'popup-maker' ),
 							'dynamic_desc' => sprintf( '%1$s<br/><a id="edit_theme_link" href="%3$s">%2$s</a>', __( 'Choose a theme for this popup.', 'popup-maker' ), __( 'Customize This Theme', 'popup-maker' ), admin_url( "post.php?action=edit&post={{data.value}}" ) ),
 							'type'         => 'select',
-							'options'      => PUM_Helpers::popup_theme_selectlist(),
-							'std'          => popmake_get_default_popup_theme(),
+							'options'      => pum_is_popup_editor() ? PUM_Helpers::popup_theme_selectlist() : null,
+							'std'          => pum_get_default_theme_id(),
 						),
 					),
 					'size'      => array(
@@ -697,16 +705,16 @@ class PUM_Admin_Popups {
 						),
 					),
 				) ),
-				'advanced'   => apply_filters( 'pum_popup_advanced_settings_fields', array(
+				'advanced'  => apply_filters( 'pum_popup_advanced_settings_fields', array(
 					'main' => array(
-						'disable_form_reopen' => array(
+						'disable_form_reopen'   => array(
 							'label'    => __( 'Disable automatic re-triggering of popup after non-ajax form submission.', 'popup-maker' ),
 							'type'     => 'checkbox',
 							'priority' => 10,
 						),
 						'disable_accessibility' => array(
 							'label'    => __( 'Disable accessibility features.', 'popup-maker' ),
-							'desc'    => __( 'This includes trapping the tab key & focus inside popup while open, force focus the first element when popup open, and refocus last click trigger when closed.', 'popup-maker' ),
+							'desc'     => __( 'This includes trapping the tab key & focus inside popup while open, force focus the first element when popup open, and refocus last click trigger when closed.', 'popup-maker' ),
 							'type'     => 'checkbox',
 							'priority' => 10,
 						),

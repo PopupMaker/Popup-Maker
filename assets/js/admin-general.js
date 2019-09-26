@@ -6296,6 +6296,105 @@
 (function ($) {
     "use strict";
 
+    function dismissAlert($alert) {
+        var dismissible = $alert.data('dismissible'),
+            expires = dismissible === '1' || dismissible === 1 || dismissible === true ? null: dismissible;
+
+        $.ajax({
+            method: "POST",
+            dataType: "json",
+            url: ajaxurl,
+            data: {
+                action: 'pum_alerts_action',
+                nonce: window.pum_alerts_nonce,
+                code: $alert.data('code'),
+                expires: expires
+            }
+        });
+    }
+
+    function dismissReviewRequest(reason) {
+        $.ajax({
+            method: "POST",
+            dataType: "json",
+            url: ajaxurl,
+            data: {
+                action: 'pum_review_action',
+                nonce: window.pum_review_nonce,
+                group: window.pum_review_trigger.group,
+                code: window.pum_review_trigger.code,
+                pri: window.pum_review_trigger.pri,
+                reason: reason
+            }
+        });
+
+        if (typeof window.pum_review_api_url !== 'undefined') {
+            $.ajax({
+                method: "POST",
+                dataType: "json",
+                url: window.pum_review_api_url,
+                data: {
+                    trigger_group: window.pum_review_trigger.group,
+                    trigger_code: window.pum_review_trigger.code,
+                    reason: reason,
+                    uuid: window.pum_review_uuid || null
+                }
+            });
+        }
+    }
+
+    var $alerts = $('.pum-alerts'),
+        $notice_counts = $('.pum-alert-count'),
+        count = parseInt($notice_counts.eq(0).text());
+
+    function checkRemoveAlerts() {
+        if ($alerts.find('.pum-alert-holder').length === 0) {
+            $alerts.slideUp(100, function () {
+                $alerts.remove();
+            });
+
+            $('#menu-posts-popup .wp-menu-name .update-plugins').fadeOut();
+        }
+
+    }
+
+    function removeAlert($alert) {
+        count--;
+
+        $notice_counts.text(count);
+
+        $alert.fadeTo(100, 0, function () {
+            $alert.slideUp(100, function () {
+                $alert.remove();
+
+                checkRemoveAlerts();
+            });
+        });
+    }
+
+    $(document)
+        .on('pumDismissAlert', checkRemoveAlerts)
+        .on('click', '.pum-alert-holder .pum-dismiss', function () {
+            var $this = $(this),
+                $alert = $this.parents('.pum-alert-holder'),
+                reason = $this.data('reason') || 'maybe_later';
+
+            if ( 'review_request' !== $alert.data('code')) {
+                dismissAlert($alert);
+            } else {
+                dismissReviewRequest(reason);
+            }
+
+            removeAlert($alert);
+
+        });
+}(jQuery));
+/*******************************************************************************
+ * Copyright (c) 2017, WP Popup Maker
+ ******************************************************************************/
+(function ($) {
+    "use strict";
+
     var colorpicker = {
         init: function () {
             $('.pum-color-picker').filter(':not(.pum-color-picker-initialized)')
@@ -6306,7 +6405,8 @@
                     },
                     clear: function (event) {
                         $(event.target).prev().trigger('colorchange').wpColorPicker('close');
-                    }
+                    },
+                    hide: true
                 });
         }
     };
@@ -6318,32 +6418,19 @@
     $(document)
         .on('click', '.iris-palette', function () {
             $(this).parents('.wp-picker-active').find('input.pum-color-picker').trigger('change');
-
-            // TODO Remove this.
-            setTimeout(PopMakeAdmin.update_theme, 500);
         })
         .on('colorchange', function (event, ui) {
             var $input = $(event.target),
-                $opacity = $input.parents('tr').next('tr.background-opacity'),
                 color = '';
 
             if (ui !== undefined && ui.color !== undefined) {
                 color = ui.color.toString();
             }
 
-            if ($input.hasClass('background-color')) {
-                if (typeof color === 'string' && color.length) {
-                    $opacity.show();
-                } else {
-                    $opacity.hide();
-                }
-            }
+            $input.val(color).trigger('change');
 
-            $input.val(color);
-
-            // TODO Remove this.
             if ($('form#post input#post_type').val() === 'popup_theme') {
-                PopMakeAdmin.update_theme();
+                PUM_Admin.utils.debounce(PUM_Admin.themeEditor.refresh_preview, 100);
             }
         })
         .on('pum_init', colorpicker.init);
@@ -6841,13 +6928,11 @@
 
         },
         parseValues: function (values, fields) {
-            fields = fields || false
+            fields = fields || false;
 
             if (!fields) {
                 return values;
             }
-
-            debugger;
 
             for (var key in fields) {
                 if (!fields.hasOwnProperty(key)) {
@@ -7172,6 +7257,7 @@ function pumChecked(val1, val2, print) {
                 std: null,
                 min: 0,
                 max: 50,
+                force_minmax: false,
                 step: 1,
                 unit: 'px',
                 units: {},
@@ -7581,11 +7667,25 @@ function pumChecked(val1, val2, print) {
 
         function makeObject(root, value) {
 
-            var keys = root.match(patterns.key), k;
+            var keys = root.match(patterns.key), k,
+                field = document.querySelector('[name="' + root + '"]'),
+                type = false;
 
-            try {
-                value = JSON.parse(value);
-            } catch (Error) {
+            if ("INPUT" === field.tagName) {
+                type = field.type;
+            } else {
+                if ("SELECT" === field.tagName) {
+                    type = 'select';
+                } else if ("TEXTAREA" === field.tagName) {
+                    type = 'textarea';
+                }
+            }
+
+            if (['textarea', 'text'].indexOf(type) >= 0) {
+                try {
+                    value = JSON.parse(value);
+                } catch (Error) {
+                }
             }
 
             // nest, nest, ..., nest
@@ -7618,7 +7718,12 @@ function pumChecked(val1, val2, print) {
         }
 
         function encode(pair) {
+
+            console.log(pair);
+
             switch ($('[name="' + pair.name + '"]', $form).attr("type")) {
+
+
             case "checkbox":
                 return pair.value === "1" ? true : pair.value;
             default:
@@ -8018,8 +8123,6 @@ function pumChecked(val1, val2, print) {
                             data.value = [];
                         }
 
-                        debugger;
-
                         if (typeof data.value === 'string' && data.value.indexOf(',')) {
                             data.value = data.value.split(',');
                         }
@@ -8076,6 +8179,7 @@ function pumChecked(val1, val2, print) {
                     data.meta.step = data.step;
                     data.meta.min = data.min;
                     data.meta.max = data.max;
+                    data.meta['data-force-minmax'] = data.force_minmax.toString();
                     break;
                 case 'textarea':
                     data.meta.cols = data.cols;
@@ -8111,6 +8215,11 @@ function pumChecked(val1, val2, print) {
                         });
 
                         data.units = options;
+                    }
+                    break;
+                case 'color':
+                    if ( typeof data.value === 'string' && data.value !== '') {
+                        data.meta['data-default-color'] = data.value;
                     }
                     break;
                 case 'license_key':

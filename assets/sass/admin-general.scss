@@ -2,8 +2,8 @@
  * Copyright (c) 2017, WP Popup Maker
  ******************************************************************************/
 
-$plugin_prefix: 'pum';
-$custom_select2_selector: 'pumselect2';
+$plugin-prefix: 'pum';
+$custom-select2-selector: 'pumselect2';
 $tab-color: #E4E4E4;
 
 // Shared modules.
@@ -12,6 +12,7 @@ $tab-color: #E4E4E4;
 @import 'modules/select2';
 @import 'modules/tabs';
 @import 'modules/modal';
+@import 'modules/alerts';
 
 @import 'partials/admin/mixins';
 @import 'partials/admin/fields';
@@ -71,4 +72,16 @@ $tab-color: #E4E4E4;
       margin-left: 5px;
     }
   }
+}
+
+.edit-php.post-type-popup .wrap .nav-tab-wrapper .page-title-action,
+.edit-php.post-type-popup_theme .wrap .nav-tab-wrapper .page-title-action,
+.popup_page_pum-extensions .wrap .nav-tab-wrapper .page-title-action {
+  top: 7px;
+  margin-left: 5px;
+
+  @media only screen and (min-width: 0px) and (max-width: 783px) {
+    display: none!important;
+  }
+
 }

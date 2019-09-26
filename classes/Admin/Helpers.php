@@ -290,7 +290,7 @@ class PUM_Admin_Helpers {
 			}
 		}
 
-		uasort( $fields, array( 'PUM_Utils_Array', 'sort_by_priority' ) );
+		$fields = PUM_Utils_Array::sort( $fields, 'priority' );
 
 		return $fields;
 	}

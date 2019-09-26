@@ -29,6 +29,7 @@
                 std: null,
                 min: 0,
                 max: 50,
+                force_minmax: false,
                 step: 1,
                 unit: 'px',
                 units: {},

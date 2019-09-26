@@ -116,6 +116,9 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 						'priority'    => 15,
 						'std'         => '',
 					),
+					'class' => array(
+					    'type' => 'hidden',
+                    ),
 					'do_default' => array(
 						'type'     => 'checkbox',
 						'label'    => __( 'Do not prevent the default click functionality.', 'popup-maker' ),

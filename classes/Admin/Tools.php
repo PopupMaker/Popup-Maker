@@ -7,8 +7,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-function pum_extension_has_beta_support() {}
-
 /**
  * Class PUM_Admin_Tools
  */
@@ -202,7 +200,7 @@ class PUM_Admin_Tools {
 		}
 
 		// Try to identify the hosting provider
-		$host = popmake_get_host();
+		$host = self::get_host();
 
 		$return = '### Begin System Info ###' . "\n\n";
 
@@ -390,6 +388,44 @@ class PUM_Admin_Tools {
 	}
 
 	/**
+	 * Get user host
+	 *
+	 * Returns the webhost this site is using if possible
+	 *
+	 * @since 1.3.0
+	 *
+	 * @return mixed string $host if detected, false otherwise
+	 */
+	public static function get_host() {
+		if( defined( 'WPE_APIKEY' ) ) {
+			return 'WP Engine';
+		} elseif( defined( 'PAGELYBIN' ) ) {
+			return 'Pagely';
+		} elseif( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
+			return 'ICDSoft';
+		} elseif( DB_HOST == 'mysqlv5' ) {
+			return 'NetworkSolutions';
+		} elseif( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
+			return 'iPage';
+		} elseif( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
+			return 'IPower';
+		} elseif( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
+			return 'MediaTemple Grid';
+		} elseif( strpos( DB_HOST, '.pair.com' ) !== false ) {
+			return 'pair Networks';
+		} elseif( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
+			return 'Rackspace Cloud';
+		} elseif( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
+			return 'SysFix.eu Power Hosting';
+		} elseif( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
+			return 'Flywheel';
+		} else {
+			// Adding a general fallback for data gathering
+			return 'DBH: ' . DB_HOST . ', SRV: ' . $_SERVER['SERVER_NAME'];
+		}
+	}
+
+	/**
 	 * Generates a System Info download file
 	 *
 	 * @since       1.5
@@ -444,9 +480,9 @@ class PUM_Admin_Tools {
 				__CLASS__,
 				'enabled_betas_sanitize_value',
 			), $_POST['enabled_betas'] ) );
-			PUM_Options::update( 'enabled_betas', $enabled_betas );
+			PUM_Utils_Options::update( 'enabled_betas', $enabled_betas );
 		} else {
-			PUM_Options::delete( 'enabled_betas' );
+			PUM_Utils_Options::delete( 'enabled_betas' );
 		}
 	}
 
@@ -519,7 +555,7 @@ class PUM_Admin_Tools {
 	 * @return      bool True if enabled, false otherwise
 	 */
 	public static function extension_has_beta_support( $slug ) {
-		$enabled_betas = PUM_Options::get( 'enabled_betas', array() );
+		$enabled_betas = PUM_Utils_Options::get( 'enabled_betas', array() );
 		$return        = false;
 
 		if ( array_key_exists( $slug, $enabled_betas ) ) {

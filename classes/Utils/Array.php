@@ -15,6 +15,41 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Utils_Array {
 
 	/**
+	 * Filters out null values.
+	 *
+	 * @param array $array
+	 *
+	 * @return array
+	 */
+	public static function filter_null( $array = array() ) {
+		return array_filter( $array, array( __CLASS__, '_filter_null' ) );
+	}
+
+	/**
+	 * @param null $val
+	 *
+	 * @return bool
+	 */
+	public static function _filter_null( $val = null ) {
+		return isset( $val );
+	}
+
+	/**
+	 * Clean variables using sanitize_text_field.
+	 *
+	 * @param $var
+	 *
+	 * @return array|string
+	 */
+	public static function sanitize( $var ) {
+		if ( is_string( $var ) ) {
+			return sanitize_text_field( $var );
+		}
+
+		return array_map( array( __CLASS__, 'sanitize' ), (array) $var );
+	}
+
+	/**
 	 * Helper function to move or swap array keys in various ways.
 	 *
 	 * PUM_Utils_Array::move_item($arr, 'move me', 'up'); //move it one up
@@ -228,6 +263,33 @@ class PUM_Utils_Array {
 	}
 
 	/**
+	 * Remove all array keys containing string.
+	 *
+	 * @param array        $array
+	 * @param string|array $keys
+	 *
+	 * @return array
+	 */
+	public static function remove_keys( $array, $keys = array() ) {
+
+		if ( empty( $keys ) ) {
+			return $array;
+		}
+
+		if ( is_string( $keys ) ) {
+			$keys = array( $keys );
+		}
+
+		foreach ( (array) $keys as $key ) {
+			if ( is_string( $key ) && array_key_exists( $key, $array ) ) {
+				unset( $array[ $key ] );
+			}
+		}
+
+		return $array;
+	}
+
+	/**
 	 * Sort nested arrays with various options.
 	 *
 	 * @param array  $array
@@ -253,9 +315,17 @@ class PUM_Utils_Array {
 			case 'natural':
 				natsort( $array );
 				break;
+
+			case 'priority':
+				if ( ! $reverse ) {
+					uasort( $array, array( __CLASS__, 'sort_by_priority' ) );
+				} else {
+					uasort( $array, array( __CLASS__, 'rsort_by_priority' ) );
+				}
+				break;
 		}
 
-		return array_map( array( __CLASS__, 'sort_array_by_key' ), $array, $type, $reverse );
+		return $array;
 	}
 
 	/**
@@ -277,11 +347,33 @@ class PUM_Utils_Array {
 	 * @return int
 	 */
 	public static function sort_by_priority( $a, $b ) {
-		if ( ! isset( $a['priority'] ) || ! isset( $b['priority'] ) || $a['priority'] === $b['priority'] ) {
+		$pri_a = isset( $a['pri'] ) ? $a['pri'] : ( isset( $a['priority'] ) ? $a['priority'] : false );
+		$pri_b = isset( $b['pri'] ) ? $b['pri'] : ( isset( $b['priority'] ) ? $b['priority'] : false );
+
+		if ( ! is_numeric( $pri_a ) || ! is_numeric( $pri_b ) || $pri_a === $pri_b ) {
 			return 0;
 		}
 
-		return ( $a['priority'] < $b['priority'] ) ? - 1 : 1;
+		return ( $pri_a < $pri_b ) ? - 1 : 1;
+	}
+
+	/**
+	 * Sort array in reverse by priority value
+	 *
+	 * @param $a
+	 * @param $b
+	 *
+	 * @return int
+	 */
+	public static function rsort_by_priority( $a, $b ) {
+		$pri_a = isset( $a['pri'] ) ? $a['pri'] : ( isset( $a['priority'] ) ? $a['priority'] : false );
+		$pri_b = isset( $b['pri'] ) ? $b['pri'] : ( isset( $b['priority'] ) ? $b['priority'] : false );
+
+		if ( ! is_numeric( $pri_a ) || ! is_numeric( $pri_b ) || $pri_a === $pri_b ) {
+			return 0;
+		}
+
+		return ( $pri_a < $pri_b ) ? 1 : - 1;
 	}
 
 	/**
@@ -292,12 +384,11 @@ class PUM_Utils_Array {
 	 * @param $new_key
 	 *
 	 * @return array
-	 * @throws \Exception
 	 */
 	public static function replace_key( $array, $old_key, $new_key ) {
 		$keys = array_keys( $array );
 		if ( false === $index = array_search( $old_key, $keys, true ) ) {
-			throw new Exception( sprintf( 'Key "%s" does not exit', $old_key ) );
+			//throw new \Exception( sprintf( 'Key "%s" does not exit', $old_key ) );
 		}
 		$keys[ $index ] = $new_key;
 
@@ -348,6 +439,25 @@ class PUM_Utils_Array {
 	}
 
 	/**
+	 * @param $array
+	 *
+	 * @return array
+	 */
+	public static function safe_json_decode( $array ) {
+		if ( ! empty( $array ) && is_string( $array ) ) {
+			if ( strpos( $array, '\"' ) >= 0 ) {
+				$array = stripslashes( $array );
+			}
+
+			$array = json_decode( $array );
+			$array = self::from_object( $array );
+			$array = self::fix_json_boolean_values( $array );
+		}
+
+		return (array) $array;
+	}
+
+	/**
 	 * Ensures proper encoding for strings before json_encode is used.
 	 *
 	 * @param array|string $data
@@ -385,6 +495,11 @@ class PUM_Utils_Array {
 		return $data;
 	}
 
+	/**
+	 * @param $d
+	 *
+	 * @return array|string
+	 */
 	public static function utf8_encode_recursive( $d ) {
 		if ( is_array( $d ) ) {
 			foreach ( $d as $k => $v ) {
@@ -395,6 +510,21 @@ class PUM_Utils_Array {
 		}
 
 		return $d;
+	}
+
+
+	/**
+	 * @param      $value
+	 * @param bool $encode
+	 *
+	 * @return string
+	 */
+	public static function maybe_json_attr( $value, $encode = false ) {
+		if ( is_object( $value ) || is_array( $value ) ) {
+			return $encode ? htmlspecialchars( json_encode( $value ) ) : json_encode( $value );
+		}
+
+		return $value;
 	}
 }
 

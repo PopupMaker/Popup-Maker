@@ -42,7 +42,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self();
-			add_action( 'admin_init', array( self::$instance, 'init' ), - 9999 );
+			add_action( 'init', array( self::$instance, 'init' ), -9999 );
 		}
 
 		return self::$instance;
@@ -66,7 +66,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 	/**
 	 * Registers upgrade routines.
 	 *
-	 * @see PUM_Upgrades::add_routine()
+	 * @see PUM_Utils_Upgrades::add_routine()
 	 */
 	private function register_upgrades() {
 		/**
@@ -100,7 +100,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 
 		// Log an error if it's too late to register the process.
 		if ( did_action( 'pum_upgrade_process_init' ) ) {
-			PUM_Logging::instance()->log( sprintf( 'The %s upgrade process was registered too late. Registrations must occur while/before <code>pum_upgrade_process_init</code> fires.', esc_html( $upgrade_id ) ) );
+			PUM_Utils_Logging::instance()->log( sprintf( 'The %s upgrade process was registered too late. Registrations must occur while/before <code>pum_upgrade_process_init</code> fires.', esc_html( $upgrade_id ) ) );
 			return false;
 		}
 

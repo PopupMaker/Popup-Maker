@@ -1,14 +1,8 @@
 <?php
 
-/**
- * Upgrade Functions
- *
- * @package     PUM
- * @subpackage  Admin/Upgrades
- * @copyright   Copyright (c) 2016, Daniel Iser
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.4
- */
+/*******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -62,7 +56,7 @@ class PUM_Admin_Upgrades {
         $this->required_cap = apply_filters( 'pum_upgrade_required_cap', 'manage_options' );
 
         // bail if this plugin data doesn't need updating
-        if ( pum_get_db_ver() >= PUM::DB_VER ) {
+        if ( pum_get_db_ver() >= Popup_Maker::$DB_VER ) {
             return;
         }
 
@@ -83,15 +77,15 @@ class PUM_Admin_Upgrades {
 
             $deprecated_ver = get_site_option( 'popmake_version', false );
 
-            $current_ver = $deprecated_ver ? $deprecated_ver : PUM::VER;
-            add_option( 'pum_ver', PUM::VER );
+            $current_ver = $deprecated_ver ? $deprecated_ver : Popup_Maker::$VER;
+            add_option( 'pum_ver', Popup_Maker::$VER );
 
         }
 
-        if ( version_compare( $current_ver, PUM::VER, '<' ) ) {
+        if ( version_compare( $current_ver, Popup_Maker::$VER, '<' ) ) {
             // Save Upgraded From option
             update_option( 'pum_ver_upgraded_from', $current_ver );
-            update_option( 'pum_ver', PUM::VER );
+            update_option( 'pum_ver', Popup_Maker::$VER );
         }
 
     }
@@ -288,7 +282,7 @@ class PUM_Admin_Upgrades {
             update_option( 'pum_ver_upgraded_from', $current_ver );
         }
 
-        update_option( 'pum_ver', PUM::VER );
+        update_option( 'pum_ver', Popup_Maker::$VER );
 
         // Process DB Upgrades
         $this->process_upgrades();
@@ -338,7 +332,7 @@ class PUM_Admin_Upgrades {
                     $current_db_ver = 2;
                 }
             } else {
-                $current_db_ver = PUM::DB_VER;
+                $current_db_ver = Popup_Maker::$DB_VER;
             }
             add_option( 'pum_db_ver', $current_db_ver );
         }
@@ -348,7 +342,7 @@ class PUM_Admin_Upgrades {
     /**
      * Gets the pum_db_ver or sets and returns the correct one.
      *
-     * @see PUM_Upgrades::set_pum_db_ver()
+     * @see PUM_Utils_Upgrades::set_pum_db_ver()
      *
      * return $pum_db_ver
      */
@@ -377,7 +371,7 @@ class PUM_Admin_Upgrades {
     public function process_upgrades() {
 
         // this is the target version that we need to reach
-        $target_db_ver = PUM::DB_VER;
+        $target_db_ver = Popup_Maker::$DB_VER;
 
         // this is the current database schema version number
         $current_db_ver = $this->get_pum_db_ver();
@@ -423,7 +417,7 @@ class PUM_Admin_Upgrades {
     public function get_upgrades() {
 
         // this is the target version that we need to reach
-        $target_db_ver = PUM::DB_VER;
+        $target_db_ver = Popup_Maker::$DB_VER;
 
         // this is the current database schema version number
         $current_db_ver = $this->get_pum_db_ver();

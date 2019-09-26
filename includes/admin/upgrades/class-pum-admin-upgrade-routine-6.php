@@ -64,7 +64,7 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 		pum_install_built_in_themes();
 
 		// Refresh CSS transients
-		pum_force_theme_css_refresh();
+		pum_reset_assets();
 
 		// Set the correct total.
 		if ( $total <= 1 ) {
@@ -76,13 +76,12 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 			$upgrades->set_arg( 'total', $total );
 		}
 
-		$popups = new PUM_Popup_Query( array(
+		$popups = pum_get_popups( array(
 			'number' => $upgrades->get_arg( 'number' ),
 			'page'   => $upgrades->get_arg( 'step' ),
 			'status' => array( 'any', 'trash', 'auto-draft' ),
 			'order'  => 'ASC',
 		) );
-		$popups = $popups->get_popups();
 
 		PUM_Admin_Upgrade_Routine_6::setup_valid_themes();
 
@@ -123,9 +122,9 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 	public static function setup_valid_themes() {
 		PUM_Admin_Upgrade_Routine_6::$valid_themes = array();
 
-		foreach ( popmake_get_all_popup_themes() as $theme ) {
+		foreach ( pum_get_all_themes() as $theme ) {
 			PUM_Admin_Upgrade_Routine_6::$valid_themes[ $theme->ID ] = $theme;
-			if ( popmake_get_default_popup_theme() == $theme->ID ) {
+			if ( pum_get_default_theme_id() == $theme->ID ) {
 				PUM_Admin_Upgrade_Routine_6::$default_theme = $theme->ID;
 			}
 		}

@@ -79,18 +79,6 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 		) );
 	}
 
-	public function get_popup_themes() {
-		$themes = popmake_get_all_popup_themes();
-
-		$popup_themes = array();
-
-		foreach ( $themes as $theme ) {
-			$popup_themes[ $theme->ID ] = $theme->post_title;
-		}
-
-		return $popup_themes;
-	}
-
 	public function fields() {
 		return array(
 			'general'   => array(
@@ -117,9 +105,9 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 						'label'       => __( 'Popup Theme', 'popup-maker' ),
 						'placeholder' => __( 'Choose a theme,', 'popup-maker' ),
 						'desc'        => __( 'Choose which popup theme will be used.', 'popup-maker' ),
-						'std'         => popmake_get_default_popup_theme(),
+						'std'         => pum_get_default_theme_id(),
 						'select2'     => true,
-						'options'     => $this->get_popup_themes(),
+						'options'     => pum_is_settings_page() ? PUM_Helpers::popup_theme_selectlist() : null,
 						'required'    => true,
 						'priority'    => 5,
 					),
@@ -295,8 +283,8 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 			'position_right'  => 0,
 			'position_fixed'  => 0,
 
-			'animation_type'   => "slide",
-			'animation_speed'  => 350,
+			'animation_type'   => "fade",
+			'animation_speed'  => 1000,
 			'animation_origin' => 'top',
 
 			'overlay_click' => 0,
@@ -304,56 +292,90 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 		) ), $atts, 'popup' );
 
 		// We need to fake a popup using the PUM_Popup data model.
-		$popup = new PUM_Popup;
+		$post_id              = rand( - 99999, - 1 ); // negative ID, to avoid clash with a valid post
+		$post                 = new stdClass();
+		$post->ID             = $post_id;
+		$post->post_author    = 1;
+		$post->post_date      = current_time( 'mysql' );
+		$post->post_date_gmt  = current_time( 'mysql', 1 );
+		$post->post_title     = $atts['title'];
+		$post->post_content   = $content;
+		$post->post_status    = 'publish';
+		$post->comment_status = 'closed';
+		$post->ping_status    = 'closed';
+		$post->post_name      = $atts['id']; // append random number to avoid clash
+		$post->post_type      = 'popup';
+		$post->filter         = 'raw'; // important!
+		$post->data_version   = 3;
+		$post->mock           = true;
 
-		$popup->ID           = $atts['id'];
-		$popup->title        = $atts['title'];
-		$popup->post_content = $content;
+		// Convert to WP_Post object
+		$wp_post = new WP_Post( $post );
+
+		// Add the fake post to the cache
+		wp_cache_add( $post_id, $wp_post, 'posts' );
+
+		$popup = new PUM_Model_Popup( $wp_post );
 
 		// Get Theme ID
 		if ( ! $atts['theme_id'] ) {
-			$atts['theme_id'] = $atts['theme'] ? $atts['theme'] : popmake_get_default_popup_theme();
+			$atts['theme_id'] = $atts['theme'] ? $atts['theme'] : pum_get_default_theme_id();
 		}
 
-		// Theme ID
-		$popup->theme_id = $atts['theme_id'];
+		$popup->title    = $atts['title'];
+		$popup->settings = array_merge( PUM_Admin_Popups::defaults(), array(
+			'disable_analytics'      => true,
+			'theme_id'               => $atts['theme_id'],
+			'size'                   => $atts['size'],
+			'overlay_disabled'       => $atts['overlay_disabled'],
+			'custom_width'           => $atts['width'],
+			'custom_width_unit'      => $atts['width_unit'],
+			'custom_height'          => $atts['height'],
+			'custom_height_unit'     => $atts['height_unit'],
+			'custom_height_auto'     => $atts['width'] > 0 ? 0 : 1,
+			'location'               => $atts['location'],
+			'position_top'           => $atts['position_top'],
+			'position_left'          => $atts['position_left'],
+			'position_bottom'        => $atts['position_bottom'],
+			'position_right'         => $atts['position_right'],
+			'position_fixed'         => $atts['position_fixed'],
+			'animation_type'         => $atts['animation_type'],
+			'animation_speed'        => $atts['animation_speed'],
+			'animation_origin'       => $atts['animation_origin'],
+			'close_on_overlay_click' => $atts['overlay_click'],
+			'close_on_esc_press'     => $atts['esc_press'],
+			'triggers'               => array(
+				array(
+					'type'     => 'click_open',
+					'settings' => array(
+						'extra_selectors' => '#popmake-' . $atts['id'],
+					),
+				),
+			),
+		) );
 
-		// Display Meta
-		$popup->display = array(
-			'size'               => $atts['size'],
-			'overlay_disabled'   => $atts['overlay_disabled'],
-			'custom_width'       => $atts['width'],
-			'custom_width_unit'  => $atts['width_unit'],
-			'custom_height'      => $atts['height'],
-			'custom_height_unit' => $atts['height_unit'],
-			'custom_height_auto' => $atts['width'] > 0 ? 0 : 1,
-			'location'           => $atts['location'],
-			'position_top'       => $atts['position_top'],
-			'position_left'      => $atts['position_left'],
-			'position_bottom'    => $atts['position_bottom'],
-			'position_right'     => $atts['position_right'],
-			'position_fixed'     => $atts['position_fixed'],
-			'animation_type'     => $atts['animation_type'],
-			'animation_speed'    => $atts['animation_speed'],
-			'animation_origin'   => $atts['animation_origin'],
-		);
+		$current_global_popup = pum()->current_popup;
 
-		// Close Meta
-		$popup->close = array(
-			'overlay_click' => $atts['overlay_click'],
-			'esc_press'     => $atts['esc_press'],
-		);
+		pum()->current_popup = $popup;
 
-		ob_start();
-		popmake_get_template_part( 'popup' );
+		$return = pum_get_template_part( 'popup' );
 
-		return ob_get_clean();
+		// Small hack to move popup to body.
+		$return .= "<script type='text/javascript' id='pum-move-popup-" . $post_id . "'>jQuery(document).ready(function () {
+				 jQuery('#pum-" . $post_id . "').appendTo('body');
+				 window.pum_vars.popups[ 'pum-" . $popup->ID . "' ] = " . PUM_Utils_Array::safe_json_encode( $popup->get_public_settings() ) . ";
+				 window.pum_popups[ 'pum-" . $popup->ID . "' ] = " . PUM_Utils_Array::safe_json_encode( $popup->get_public_settings() ) . ";
+				 jQuery('#pum-move-popup-" . $post_id . "').remove();
+		});</script>";
+
+		pum()->current_popup = $current_global_popup;
+
+		return $return;
 	}
 
 	public function template() { ?>
 		<p class="pum-sub-form-desc">
-			<?php _e( 'Popup', 'popup-maker' ); ?>: ID "{{attrs.id}}"
-		</p>
+			<?php _e( 'Popup', 'popup-maker' ); ?>: ID "{{attrs.id}}" </p>
 		<?php
 	}
 

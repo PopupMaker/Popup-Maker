@@ -43,7 +43,7 @@ class PUM_Helpers {
 						// Filter numeric keys as they are valueless/truthy attributes.
 						if ( is_numeric( $attr_name ) ) {
 							$shortcodes[ $key ]['atts'][ $attr_value ] = true;
-							unset( $shortcodes[ $key ]['atts'] );
+							unset( $shortcodes[ $key ]['atts'][ $attr_name ] );
 						}
 					}
 				}
@@ -194,7 +194,7 @@ class PUM_Helpers {
 
 		$themes = array();
 
-		foreach ( popmake_get_all_popup_themes() as $theme ) {
+		foreach ( pum_get_all_themes() as $theme ) {
 			$themes[ $theme->ID ] = $theme->post_title;
 		}
 
@@ -205,10 +205,10 @@ class PUM_Helpers {
 	public static function popup_selectlist( $args = array() ) {
 		$popup_list = array();
 
-		$popups = PUM_Popups::query( $args );
+		$popups = pum_get_all_popups( $args );
 
-		foreach ( $popups->posts as $popup ) {
-			if ( in_array( $popup->post_status, array( 'publish' ) ) ) {
+		foreach ( $popups as $popup ) {
+			if ( $popup->is_published() ) {
 				$popup_list[ (string) $popup->ID ] = $popup->post_title;
 			}
 		}

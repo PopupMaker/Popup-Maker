@@ -263,8 +263,6 @@
                             data.value = [];
                         }
 
-                        debugger;
-
                         if (typeof data.value === 'string' && data.value.indexOf(',')) {
                             data.value = data.value.split(',');
                         }
@@ -321,6 +319,7 @@
                     data.meta.step = data.step;
                     data.meta.min = data.min;
                     data.meta.max = data.max;
+                    data.meta['data-force-minmax'] = data.force_minmax.toString();
                     break;
                 case 'textarea':
                     data.meta.cols = data.cols;
@@ -356,6 +355,11 @@
                         });
 
                         data.units = options;
+                    }
+                    break;
+                case 'color':
+                    if ( typeof data.value === 'string' && data.value !== '') {
+                        data.meta['data-default-color'] = data.value;
                     }
                     break;
                 case 'license_key':

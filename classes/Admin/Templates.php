@@ -112,7 +112,7 @@ class PUM_Admin_Templates {
 				<# _.each(data.options, function(option, key) { #>
 				<li>
 					<input type="checkbox" id="{{data.id}}_{{key}}" name="{{data.name}}[{{option.value}}]" value="{{option.value}}" {{{option.meta}}}/>
-					<label for="{{data.id}}_{{key}}">{{option.label}}</label>
+					<label for="{{data.id}}_{{key}}">{{{option.label}}}</label>
 				</li>
 				<# }); #>
 			</ul>
@@ -191,7 +191,7 @@ class PUM_Admin_Templates {
 		</script>
 
 		<script type="text/html" id="tmpl-pum-field-license_key">
-			<input class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value.key}}" {{{data.meta}}}/>
+			<input class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value.key}}" autocomplete="off" {{{data.meta}}}/>
 
 			<# if (data.value.key !== '') { #>
 			<?php wp_nonce_field( 'pum_license_activation', 'pum_license_activation_nonce' ); ?>

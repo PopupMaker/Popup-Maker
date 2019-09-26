@@ -134,3 +134,129 @@ if ( ! function_exists( 'get_term_name' ) ) {
 		return $term->name;
 	}
 }
+
+// For WP versions before 3.6
+if ( ! function_exists( 'has_shortcode' ) ) {
+	function has_shortcode( $content, $tag ) {
+		if ( false === strpos( $content, '[' ) ) {
+			return false;
+		}
+
+		if ( shortcode_exists( $tag ) ) {
+			preg_match_all( '/' . get_shortcode_regex() . '/s', $content, $matches, PREG_SET_ORDER );
+			if ( empty( $matches ) ) {
+				return false;
+			}
+
+			foreach ( $matches as $shortcode ) {
+				if ( $tag === $shortcode[2] ) {
+					return true;
+				} elseif ( ! empty( $shortcode[5] ) && has_shortcode( $shortcode[5], $tag ) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+}
+
+if ( ! function_exists( 'shortcode_exists' ) ) {
+	function shortcode_exists( $tag ) {
+		global $shortcode_tags;
+
+		return array_key_exists( $tag, $shortcode_tags );
+	}
+}
+
+/**
+ * Deprecated PHP v5.3 functions.
+ */
+if ( ! function_exists( 'array_replace_recursive' ) ) {
+	function array_replace_recursive( $array, $array1 ) {
+		// handle the arguments, merge one by one
+		$args  = func_get_args();
+		$array = $args[0];
+		if ( ! is_array( $array ) ) {
+			return $array;
+		}
+		for ( $i = 1; $i < count( $args ); $i ++ ) {
+			if ( is_array( $args[ $i ] ) ) {
+				$array = recurse( $array, $args[ $i ] );
+			}
+		}
+
+		return $array;
+	}
+}
+
+if ( ! function_exists( 'recurse' ) ) {
+	function recurse( $array, $array1 ) {
+		foreach ( $array1 as $key => $value ) {
+			// create new key in $array, if it is empty or not an array
+			if ( ! isset( $array[ $key ] ) || ( isset( $array[ $key ] ) && ! is_array( $array[ $key ] ) ) ) {
+				$array[ $key ] = array();
+			}
+
+			// overwrite the value in the base array
+			if ( is_array( $value ) ) {
+				$value = recurse( $array[ $key ], $value );
+			}
+			$array[ $key ] = $value;
+		}
+
+		return $array;
+	}
+}
+
+if ( ! function_exists( 'write_log' ) ) {
+	function write_log( $log ) {
+		if ( is_array( $log ) || is_object( $log ) ) {
+			error_log( print_r( $log, true ) );
+		} else {
+			error_log( $log );
+		}
+	}
+}
+
+if ( ! function_exists( 'boolval' ) ) {
+	function boolval( $val ) {
+		return ( bool ) $val;
+	}
+}
+
+if ( ! function_exists( 'maybe_json_attr' ) ) {
+	function maybe_json_attr( $value, $encode = false ) {
+		if ( is_object( $value ) || is_array( $value ) ) {
+			return $encode ? htmlspecialchars( wp_json_encode( $value ) ) : wp_json_encode( $value );
+		}
+		return $value;
+	}
+}
+
+if ( ! function_exists( 'has_blocks' ) ) {
+	/**
+	 * Determine whether a post or content string has blocks.
+	 *
+	 * This test optimizes for performance rather than strict accuracy, detecting
+	 * the pattern of a block but not validating its structure. For strict accuracy,
+	 * you should use the block parser on post content.
+	 *
+	 * @since 5.0.0
+	 * @see parse_blocks()
+	 *
+	 * @param int|string|WP_Post|null $post Optional. Post content, post ID, or post object. Defaults to global $post.
+	 * @return bool Whether the post has blocks.
+	 */
+	function has_blocks( $post = null ) {
+		if ( ! is_string( $post ) ) {
+			$wp_post = get_post( $post );
+			if ( $wp_post instanceof WP_Post ) {
+				$post = $wp_post->post_content;
+			}
+		}
+
+		return false !== strpos( (string) $post, '<!-- wp:' );
+	}
+
+}

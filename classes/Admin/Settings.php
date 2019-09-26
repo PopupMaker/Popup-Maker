@@ -74,7 +74,7 @@ class PUM_Admin_Settings {
 
 			$settings = apply_filters( 'pum_sanitize_settings', $settings );
 
-			if ( PUM_Options::update_all( $settings ) ) {
+			if ( PUM_Utils_Options::update_all( $settings ) ) {
 				self::$notices[] = array(
 					'type'    => 'success',
 					'message' => __( 'Settings saved successfully!', 'popup-maker' ),
@@ -169,7 +169,7 @@ class PUM_Admin_Settings {
 						break;
 
 					case 'license_key':
-						$old = PUM_Options::get( $key );
+						$old = PUM_Utils_Options::get( $key );
 						$new = trim( $value );
 
 						if ( $old && $old != $new ) {
@@ -235,7 +235,25 @@ class PUM_Admin_Settings {
 
 			$fields = array(
 				'general' => array(
-					'main' => array(),
+					'main' => array(
+						'default_theme_id'          => array(
+							'label'        => __( 'Default Popup Theme', 'popup-maker' ),
+							'dynamic_desc' => sprintf( '%1$s<br/><a id="edit_theme_link" href="%3$s">%2$s</a>', __( 'Choose the default theme used for new popups', 'popup-maker' ), __( 'Customize This Theme', 'popup-maker' ), admin_url( "post.php?action=edit&post={{data.value}}" ) ),
+							'type'         => 'select',
+							'options'      => pum_is_settings_page() ? PUM_Helpers::popup_theme_selectlist() : null,
+							'std'          => pum_get_default_theme_id(),
+						),
+						'gutenberg_support_enabled' => array(
+							'label' => __( 'Enable Gutenberg Support', 'popup-maker' ),
+							'desc'  => __( 'Enable experimental Gutenberg support for the popup editor.', 'popup-maker' ),
+							'type'  => 'checkbox',
+						),
+						'google_fonts_api_key'      => array(
+							'type'  => 'text',
+							'label' => __( 'Google Fonts API Key', 'popup-maker' ),
+							'desc'  => __( 'Enter your own Google Fonts API key to always get the latest fonts available.', 'popup-maker' ),
+						),
+					),
 				),
 			);
 
@@ -395,6 +413,34 @@ class PUM_Admin_Settings {
 
 				'misc' => array(
 					'main'   => array(
+
+						'bypass_adblockers'                    => array(
+							'label' => __( 'Try to bypass ad blockers.', 'popup-maker' ),
+							'type'  => 'checkbox',
+						),
+						'adblock_bypass_url_method'            => array(
+							'label'        => __( 'Ad blocker: File Name Method', 'popup-maker' ),
+							'desc'         => __( 'This will help generate unique filenames for our JavaScript bypassing most ad blockers.', 'popup-maker' ),
+							'type'         => 'select',
+							'options'      => array(
+								'random' => __( 'Random File Names', 'popup-maker' ),
+								'custom' => __( 'Custom File Names', 'popup-maker' ),
+							),
+							'std'          => 'random',
+							'dependencies' => array(
+								'bypass_adblockers' => true,
+							),
+						),
+						'adblock_bypass_custom_filename'       => array(
+							'type'         => 'text',
+							'placeholder'  => 'my-awesome-popups',
+							'label'        => __( 'Ad blocker: Custom File Name', 'popup-maker' ),
+							'desc'         => __( 'A custom & recognizable file name to use for our assets.', 'popup-maker' ),
+							'dependencies' => array(
+								'bypass_adblockers'         => true,
+								'adblock_bypass_url_method' => 'custom',
+							),
+						),
 						'disabled_admin_bar'                   => array(
 							'type'  => 'checkbox',
 							'label' => __( 'Disable Popups Admin Bar', 'popup-maker' ),
@@ -410,20 +456,10 @@ class PUM_Admin_Settings {
 							'label' => __( 'Enable Easy Modal v2 Compatibility Mode', 'popup-maker' ),
 							'desc'  => __( 'This will automatically make any eModal classes you have added to your site launch the appropriate Popup after import.', 'popup-maker' ),
 						),
-						'disable_admin_support_widget'         => array(
-							'type'  => 'checkbox',
-							'label' => __( 'Hide Admin Support Widget', 'popup-maker' ),
-							'desc'  => __( 'This will hide the support widget on all popup maker admin pages.', 'popup-maker' ),
-						),
 						'disable_popup_category_tag'           => array(
 							'type'  => 'checkbox',
 							'label' => __( 'Disable categories & tags?', 'popup-maker' ),
 							'desc'  => __( 'This will disable the popup tags & categories.', 'popup-maker' ),
-						),
-						'disable_cache'                        => array(
-							'type'  => 'checkbox',
-							'label' => __( 'Disable object caching', 'popup-maker' ),
-							'desc'  => __( 'If you are seeing issues with settings not saving or popups not rendering changes immediately, try this option.', 'popup-maker' ),
 						),
 						'disable_asset_caching'                => array(
 							'type'  => 'checkbox',
@@ -433,6 +469,12 @@ class PUM_Admin_Settings {
 						'disable_shortcode_ui'                 => array(
 							'type'  => 'checkbox',
 							'label' => __( 'Disable the Popup Maker shortcode button', 'popup-maker' ),
+						),
+						'complete_uninstall'                   => array(
+							'type'     => 'checkbox',
+							'label'    => __( 'Complete Uninstall?', 'popup-maker' ),
+							'desc'     => __( 'Check this to completely uninstall all Popup Maker data on deactivation.', 'popup-maker' ),
+							'priority' => 1000,
 						),
 					),
 					'assets' => array(
@@ -454,7 +496,7 @@ class PUM_Admin_Settings {
 						'output_pum_styles'               => array(
 							'id'      => 'output_pum_styles',
 							'type'    => 'html',
-							'content' => popmake_output_pum_styles(),
+							'content' => self::field_pum_styles(),
 						),
 					),
 				),
@@ -470,6 +512,38 @@ class PUM_Admin_Settings {
 
 		return $fields;
 	}
+
+	/**
+	 * @return string
+	 */
+	public static function field_pum_styles() {
+		$core_styles = file_get_contents( Popup_Maker::$DIR . 'assets/css/site' . PUM_Site_Assets::$suffix . '.css' );
+
+		$user_styles = PUM_AssetCache::generate_font_imports() . PUM_AssetCache::generate_popup_theme_styles() . PUM_AssetCache::generate_popup_styles();
+
+		ob_start();
+
+		?>
+		<button type="button" id="show_pum_styles" onclick="jQuery('#pum_style_output').slideDown();jQuery(this).hide();"><?php _e( 'Show Popup Maker CSS', 'popup-maker' ); ?></button>
+		<p class="pum-desc desc"><?php __( "Use this to quickly copy Popup Maker's CSS to your own stylesheet.", 'popup-maker' ); ?></p>
+
+		<div id="pum_style_output" style="display:none;">
+			<label for="pum_core_styles"><?php _e( 'Core Styles', 'popup-maker' ); ?></label> <br />
+
+			<textarea id="pum_core_styles" wrap="off" style="white-space: pre; width: 100%;" readonly="readonly"><?php echo $core_styles; ?></textarea>
+
+			<br /> <br />
+
+			<label for="pum_generated_styles"><?php _e( 'Generated Popup & Popup Theme Styles', 'popup-maker' ); ?></label> <br />
+
+			<textarea id="pum_generated_styles" wrap="off" style="white-space: pre; width: 100%; min-height: 200px;" readonly="readonly"><?php echo $user_styles; ?></textarea>
+		</div>
+
+		<?php
+
+		return ob_get_clean();
+	}
+
 
 	/**
 	 * @return array
@@ -490,7 +564,7 @@ class PUM_Admin_Settings {
 	 */
 	public static function page() {
 
-		$settings = PUM_Options::get_all();
+		$settings = PUM_Utils_Options::get_all();
 
 		if ( empty( $settings ) ) {
 			$settings = self::defaults();
@@ -536,6 +610,7 @@ class PUM_Admin_Settings {
 				<button class="button-primary bottom right"><?php _e( 'Save', 'popup-maker' ); ?></button>
 
 			</form>
+
 		</div>
 
 		<?php

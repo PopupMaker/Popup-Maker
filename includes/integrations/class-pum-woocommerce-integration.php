@@ -8,10 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Woocommerce_Integration {
 
 	public static function init() {
-		if ( function_exists( 'WC' ) || class_exists( 'WooCommerce' ) ) {
-			add_filter( 'pum_registered_conditions', array( __CLASS__, 'register_conditions' ) );
-			add_filter( 'pum_condition_sort_order', array( __CLASS__, 'condition_sort_order' ) );
-		}
+		add_filter( 'pum_registered_conditions', array( __CLASS__, 'register_conditions' ) );
+		add_filter( 'pum_condition_sort_order', array( __CLASS__, 'condition_sort_order' ) );
 	}
 
 	public static function is_wc_endpoint_url( $settings = array() ) {
@@ -64,14 +62,20 @@ class PUM_Woocommerce_Integration {
 					'multiple'    => true,
 					'as_array'    => true,
 					'options'     => array(
-						'order-pay'          => 'order-pay',
-						'order-received'     => 'order-received',
-						'view-order'         => 'view-order',
-						'edit-account'       => 'edit-account',
-						'edit-address'       => 'edit-address',
-						'lost-password'      => 'lost-password',
-						'customer-logout'    => 'customer-logout',
-						'add-payment-method' => 'add-payment-method',
+						'order-pay'                  => 'order-pay',
+						'order-received'             => 'order-received',
+						// My account actions.
+						'orders'                     => 'orders',
+						'view-order'                 => 'view-order',
+						'downloads'                  => 'downloads',
+						'edit-account'               => 'edit-account',
+						'edit-address'               => 'edit-address',
+						'payment-methods'            => 'payment-methods',
+						'lost-password'              => 'lost-password',
+						'customer-logout'            => 'customer-logout',
+						'add-payment-method'         => 'add-payment-method',
+						'delete-payment-method'      => 'delete-payment-method',
+						'set-default-payment-method' => 'set-default-payment-method',
 					),
 				),
 			),
@@ -89,4 +93,3 @@ class PUM_Woocommerce_Integration {
 
 }
 
-add_action( 'init', 'PUM_Woocommerce_Integration::init' );

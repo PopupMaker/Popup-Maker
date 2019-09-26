@@ -2,19 +2,19 @@
  * Copyright (c) 2017, WP Popup Maker
  ******************************************************************************/
 
-$plugin_prefix: 'plugin' !default;
-$custom_select2_selector: 'select2' !default;
+$plugin-prefix: 'plugin' !default;
+$custom-select2-selector: 'select2' !default;
 
-.#{$plugin_prefix}-desc {
+.#{$plugin-prefix}-desc {
   margin-top: 4px;
   margin-bottom: 0;
 }
 
-[data-#{$plugin_prefix}-dependencies] {
+[data-#{$plugin-prefix}-dependencies] {
   display: none;
 }
 
-.#{$plugin_prefix}-field {
+.#{$plugin-prefix}-field {
   position: relative;
 
   margin-bottom: 1em;
@@ -24,7 +24,7 @@ $custom_select2_selector: 'select2' !default;
     font-weight: bold;
   }
 
-  .#{$plugin_prefix}-doclink {
+  .#{$plugin-prefix}-doclink {
     font-size: 16px;
     line-height: 20px;
   }
@@ -34,22 +34,22 @@ $custom_select2_selector: 'select2' !default;
 /**
  * Sections
  */
-.#{$plugin_prefix}-field-section {
+.#{$plugin-prefix}-field-section {
 
 }
 
 /**
  * Heading & separator fields
  */
-.#{$plugin_prefix}-field-heading,
-.#{$plugin_prefix}-field-separator {
+.#{$plugin-prefix}-field-heading,
+.#{$plugin-prefix}-field-separator {
   h3 {
     // font-size: 1.2em;
     // margin-top: 0;
     // margin-bottom: 0;
   }
 
-  h3 + .#{$plugin_prefix}-desc {
+  h3 + .#{$plugin-prefix}-desc {
     // margin-top: -1em !important;
   }
 
@@ -58,7 +58,7 @@ $custom_select2_selector: 'select2' !default;
   }
 
   label,
-  .#{$plugin_prefix}-desc {
+  .#{$plugin-prefix}-desc {
     display: none !important;
   }
 
@@ -73,11 +73,11 @@ $custom_select2_selector: 'select2' !default;
   }
 }
 
-.#{$plugin_prefix}-field-hidden {
+.#{$plugin-prefix}-field-hidden {
   display: none;
 }
 
-.#{$plugin_prefix}-field-editor {
+.#{$plugin-prefix}-field-editor {
   #insert-media-button {
     display: none;
   }
@@ -86,7 +86,7 @@ $custom_select2_selector: 'select2' !default;
 /**
  * Select fields
  */
-.#{$plugin_prefix}-field-select {
+.#{$plugin-prefix}-field-select {
   option.bold {
     font-weight: bold;
     font-size: 1.125em;
@@ -96,7 +96,7 @@ $custom_select2_selector: 'select2' !default;
 /**
  * Checkbox fields
  */
-.#{$plugin_prefix}-field-checkbox {
+.#{$plugin-prefix}-field-checkbox {
   position: relative;
 
   label {
@@ -104,7 +104,7 @@ $custom_select2_selector: 'select2' !default;
     // display: block;
     // font-size: 1.1em;
 
-    &.#{$plugin_prefix}-desc {
+    &.#{$plugin-prefix}-desc {
       display: inline;
       font-weight: inherit;
       font-size: inherit;
@@ -121,8 +121,8 @@ $custom_select2_selector: 'select2' !default;
 /**
  * Multicheck & Radio fields
  */
-.#{$plugin_prefix}-field-multicheck,
-.#{$plugin_prefix}-field-radio {
+.#{$plugin-prefix}-field-multicheck,
+.#{$plugin-prefix}-field-radio {
   // margin: 0 0 1em;
 
   input, label {
@@ -149,12 +149,12 @@ $custom_select2_selector: 'select2' !default;
     // display: block;
   }
 
-  > p.#{$plugin_prefix}-desc {
+  > p.#{$plugin-prefix}-desc {
     margin: 0 0 .5em;
   }
 
   .pum-field-mulitcheck-list,
-  .pum-field-radio-list{
+  .pum-field-radio-list {
     margin: 0;
   }
 
@@ -163,20 +163,20 @@ $custom_select2_selector: 'select2' !default;
 /**
  * Range & range slider fields
  */
-.#{$plugin_prefix}-field-range,
-.#{$plugin_prefix}-field-rangeslider {
+.#{$plugin-prefix}-field-range,
+.#{$plugin-prefix}-field-rangeslider {
   input[type="range"] {
     vertical-align: middle;
   }
 
-  .#{$plugin_prefix}-range-manual {
+  .#{$plugin-prefix}-range-manual {
     padding-right: 25px;
     text-align: right;
     width: 80px;
   }
 
   .range-value-unit,
-  .#{$plugin_prefix}-range-value-unit {
+  .#{$plugin-prefix}-range-value-unit {
     position: relative;
     display: inline-block;
     margin-left: -30px;
@@ -190,51 +190,68 @@ $custom_select2_selector: 'select2' !default;
 /**
  * Image fields
  */
-.#{$plugin_prefix}-image-field {
-  .#{$plugin_prefix}-image-field .#{$plugin_prefix}-image-select,
-  &.#{$plugin_prefix}-image-empty .#{$plugin_prefix}-image-preview {
-    display: none;
+.#{$plugin-prefix}-field-color {
+  .wp-color-result-text {
+    line-height: 23px;
+  }
+}
+
+/**
+ * Image fields
+ */
+.#{$plugin-prefix}-field-image {
+
+  .#{$plugin-prefix}-image-field {
+
+    .#{$plugin-prefix}-image-select,
+    &.#{$plugin-prefix}-image-empty .#{$plugin-prefix}-image-preview {
+      display: none;
+    }
+
+    &.#{$plugin-prefix}-image-empty .#{$plugin-prefix}-image-select {
+      display: block;
+    }
   }
 
-  &.#{$plugin_prefix}-image-empty .#{$plugin_prefix}-image-select {
-    display: block;
-  }
-
-  .#{$plugin_prefix}-image-preview-img {
+  .#{$plugin-prefix}-image-preview-img {
     float: left;
     line-height: 0;
     margin: 5px 0;
+
+    img {
+      max-width: 60px;
+      width: auto;
+      height: auto;
+    }
   }
 
-  .#{$plugin_prefix}-image-preview-img img {
-    max-width: 60px;
-  }
-
-  .#{$plugin_prefix}-image-preview select {
+  select.pum-image-field__size {
     margin: 8px 0 8px 10px;
     width: 200px;
   }
 
-  .#{$plugin_prefix}-image-edit {
+  .#{$plugin-prefix}-image-edit {
     margin: 0 0 0 11px;
   }
 
-  .#{$plugin_prefix}-image-replace,
-  .#{$plugin_prefix}-image-remove {
+  .#{$plugin-prefix}-image-replace,
+  .#{$plugin-prefix}-image-remove {
     margin: 0 0 0 8px;
   }
+
 }
 
 /**
  * Conditions field
  */
-.#{$plugin_prefix}-field-conditions {
+.#{$plugin-prefix}-field-conditions {
 
   .facet-builder {
 
     p {
       margin: 0 0 1em;
     }
+
     a {
       text-decoration: none;
     }
@@ -302,7 +319,7 @@ $custom_select2_selector: 'select2' !default;
 
     }
 
-    .#{$plugin_prefix}-field {
+    .#{$plugin-prefix}-field {
       margin-bottom: 0.5em;
     }
 
@@ -330,17 +347,17 @@ $custom_select2_selector: 'select2' !default;
       }
 
       select,
-      .#{$custom_select2_selector}-container .#{$custom_select2_selector}-selection {
+      .#{$custom-select2-selector}-container .#{$custom-select2-selector}-selection {
         padding-left: 28px;
 
         // Rendered Option
-        .#{$custom_select2_selector}-selection__rendered {
+        .#{$custom-select2-selector}-selection__rendered {
           padding-left: 3px;
         }
 
       }
 
-      .#{$plugin_prefix}-not-operand {
+      .#{$plugin-prefix}-not-operand {
         cursor: pointer;
         position: absolute;
         left: 2px;
@@ -381,7 +398,7 @@ $custom_select2_selector: 'select2' !default;
 
       &.not-operand-checked {
 
-        .#{$plugin_prefix}-not-operand {
+        .#{$plugin-prefix}-not-operand {
           span,
           &::before {
             color: #a00;
@@ -390,15 +407,15 @@ $custom_select2_selector: 'select2' !default;
         }
 
         select,
-        .#{$custom_select2_selector}-container .#{$custom_select2_selector}-selection {
+        .#{$custom-select2-selector}-container .#{$custom-select2-selector}-selection {
           //padding-left: 58px;
         }
 
       }
 
-      .#{$custom_select2_selector}-container-active {
-        .#{$custom_select2_selector}-choices,
-        .#{$custom_select2_selector}-single {
+      .#{$custom-select2-selector}-container-active {
+        .#{$custom-select2-selector}-choices,
+        .#{$custom-select2-selector}-single {
           border-color: #5b9dd9;
           box-shadow: 0 0 2px rgba(30, 140, 190, 0.8);
         }
@@ -490,6 +507,7 @@ $custom_select2_selector: 'select2' !default;
 
   .no-facet-groups {
     display: block;
+
     .facet-target {
       max-width: 100%;
     }
@@ -508,7 +526,7 @@ $custom_select2_selector: 'select2' !default;
 
   }
 
-  .#{$plugin_prefix}-field-select2 {
+  .#{$plugin-prefix}-field-select2 {
     select {
       width: 100% !important;
     }
@@ -519,7 +537,7 @@ $custom_select2_selector: 'select2' !default;
 /**
  * License fields.
  */
-.#{$plugin_prefix}-field-license_key {
+.#{$plugin-prefix}-field-license_key {
   background: #fafafa;
   padding: 14px;
   border-top: 2px solid #999;
@@ -544,20 +562,20 @@ $custom_select2_selector: 'select2' !default;
     margin-right: 5px;
   }
 
-  .#{$plugin_prefix}-license-messages {
+  .#{$plugin-prefix}-license-messages {
     p:last-child {
       margin-bottom: 0;
     }
   }
 
-  &.#{$plugin_prefix}-license-expires-soon-notice {
+  &.#{$plugin-prefix}-license-expires-soon-notice {
     //background-color: #00a0d2;
     //color: #fff;
     //border-color: #00a0d2;
     border-color: #dc3232;
   }
 
-  &.#{$plugin_prefix}-license-valid-notice {
+  &.#{$plugin-prefix}-license-valid-notice {
     //background-color: #60c560;
     border-color: #46b450;
     //color: #fff;
@@ -566,32 +584,32 @@ $custom_select2_selector: 'select2' !default;
     }
   }
 
-  &.#{$plugin_prefix}-license-inactive-notice {
+  &.#{$plugin-prefix}-license-inactive-notice {
     //background-color: #0073aa;
     border-color: #0073aa;
     //color: #fff;
   }
 
-  &.#{$plugin_prefix}-license-expiration-date-notice {
+  &.#{$plugin-prefix}-license-expiration-date-notice {
 
   }
 
-  &.#{$plugin_prefix}-license-expired-notice {
+  &.#{$plugin-prefix}-license-expired-notice {
     background-color: #e24e4e;
     color: #fff;
     border-color: #dc3232;
   }
 
-  &.#{$plugin_prefix}-license-error-notice,
-  &.#{$plugin_prefix}-license-missing-notice,
-  &.#{$plugin_prefix}-license-invalid-notice,
-  &.#{$plugin_prefix}-license-site_inactive-notice,
-  &.#{$plugin_prefix}-license-item_name_mismatch-notice {
+  &.#{$plugin-prefix}-license-error-notice,
+  &.#{$plugin-prefix}-license-missing-notice,
+  &.#{$plugin-prefix}-license-invalid-notice,
+  &.#{$plugin-prefix}-license-site_inactive-notice,
+  &.#{$plugin-prefix}-license-item_name_mismatch-notice {
     background-color: #ffebcd;
     border-color: #dc3232;
   }
 
-  &.#{$plugin_prefix}-license-expired-notice {
+  &.#{$plugin-prefix}-license-expired-notice {
     a {
       color: #fff;
 
@@ -606,7 +624,7 @@ $custom_select2_selector: 'select2' !default;
 /**
  * Link fields.
  */
-.#{$plugin_prefix}-field-link {
+.#{$plugin-prefix}-field-link {
   input {
     margin-right: 24px;
     display: block;

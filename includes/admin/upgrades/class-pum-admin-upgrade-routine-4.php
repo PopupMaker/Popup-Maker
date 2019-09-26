@@ -63,13 +63,12 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 			$upgrades->set_arg( 'total', $total );
 		}
 
-		$popups = new PUM_Popup_Query( array(
+		$popups = pum_get_popups( array(
 			'number' => $upgrades->get_arg( 'number' ),
 			'page'   => $upgrades->get_arg( 'step' ),
 			'status' => array( 'any', 'trash', 'auto-draft' ),
 			'order'  => 'ASC',
 		) );
-		$popups = $popups->get_popups();
 
 		if ( $popups ) {
 
@@ -78,7 +77,7 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 				$_conditions = $conditions = array();
 
 				// Convert Conditions
-				$targeting_conditions = popmake_get_popup_targeting_condition( $popup->ID );
+				$targeting_conditions = popmake_get_popup_meta_group( 'targeting_condition', $popup->ID );
 
 				if ( empty( $targeting_conditions ) ) {
 					if ( $popup->post_status == 'publish' ) {

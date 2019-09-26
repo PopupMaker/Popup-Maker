@@ -64,7 +64,7 @@
         function _get_addon_info_filter( $data, $action = '', $args = null ) {
             $this->_logger->entrance();
 
-            $parent_plugin_id = fs_request_get( 'parent_plugin_id', false );
+            $parent_plugin_id = fs_request_get( 'parent_plugin_id', $this->_fs->get_id() );
 
             if ( $this->_fs->get_id() != $parent_plugin_id ||
                  ( 'plugin_information' !== $action ) ||
@@ -101,7 +101,7 @@
             $has_features = false;
             $plans        = false;
 
-            $result = $this->_fs->get_api_plugin_scope()->get( "/addons/{$selected_addon->id}/pricing.json?type=visible" );
+            $result = $this->_fs->get_api_plugin_scope()->get( $this->_fs->add_show_pending( "/addons/{$selected_addon->id}/pricing.json?type=visible" ) );
 
             if ( ! isset( $result->error ) ) {
                 $plans = $result->plans;
@@ -142,6 +142,8 @@
                 }
             }
 
+            $latest = null;
+
             if ( ! $has_paid_plan && $selected_addon->is_wp_org_compliant ) {
                 $repo_data = FS_Plugin_Updater::_fetch_plugin_info_from_repository(
                     'plugin_information', (object) array(
@@ -165,11 +167,33 @@
                     // Plugin is missing, not on Freemius nor WP.org.
                     $data->wp_org_missing = true;
                 }
+
+                $data->fs_missing = ( ! $has_free_plan || $data->wp_org_missing );
             } else {
                 $data->wp_org_missing = false;
 
+                $current_addon_version = false;
+                if ( $this->_fs->is_addon_activated( $selected_addon->id ) ) {
+                    $current_addon_version = $this->_fs->get_addon_instance( $selected_addon->id )->get_plugin_version();
+                } else if ( $this->_fs->is_addon_installed( $selected_addon->id ) ) {
+                    $addon_plugin_data = get_plugin_data(
+                        ( WP_PLUGIN_DIR . '/' . $this->_fs->get_addon_basename( $selected_addon->id ) ),
+                        false,
+                        false
+                    );
+
+                    if ( ! empty( $addon_plugin_data ) ) {
+                        $current_addon_version = $addon_plugin_data['Version'];
+                    }
+                }
+
                 // Fetch latest version from Freemius.
-                $latest = $this->_fs->_fetch_latest_version( $selected_addon->id );
+                $latest = $this->_fs->_fetch_latest_version(
+                    $selected_addon->id,
+                    true,
+                    WP_FS__TIME_24_HOURS_IN_SEC,
+                    $current_addon_version
+                );
 
                 if ( $has_paid_plan ) {
                     $data->checkout_link = $this->_fs->checkout_url();
@@ -183,12 +207,7 @@
 
                 // Fetch as much as possible info from local files.
                 $plugin_local_data = $this->_fs->get_plugin_data();
-                $data->name        = $selected_addon->title;
                 $data->author      = $plugin_local_data['Author'];
-                $view_vars         = array( 'plugin' => $selected_addon );
-                $data->sections    = array(
-                    'description' => fs_get_template( '/plugin-info/description.php', $view_vars ),
-                );
 
                 if ( ! empty( $selected_addon->info->banner_url ) ) {
                     $data->banners = array(
@@ -206,7 +225,7 @@
 
                 if ( is_object( $latest ) ) {
                     $data->version      = $latest->version;
-                    $data->last_updated = ! is_null( $latest->updated ) ? $latest->updated : $latest->created;
+                    $data->last_updated = $latest->created;
                     $data->requires     = $latest->requires_platform_version;
                     $data->tested       = $latest->tested_up_to_version;
                 } else {
@@ -216,6 +235,20 @@
                     // Add message to developer to deploy the plugin through Freemius.
                 }
             }
+
+            $data->name = $selected_addon->title;
+            $view_vars  = array( 'plugin' => $selected_addon );
+
+            if ( is_object( $latest ) && isset( $latest->readme ) && is_object( $latest->readme ) ) {
+                $latest_version_readme_data = $latest->readme;
+                if ( isset( $latest_version_readme_data->sections ) ) {
+                    $data->sections = (array) $latest_version_readme_data->sections;
+                } else {
+                    $data->sections = array();
+                }
+            }
+
+            $data->sections['description'] = fs_get_template( '/plugin-info/description.php', $view_vars );
 
             if ( $has_pricing ) {
                 // Add plans to data.
@@ -950,7 +983,7 @@
                                 </li>
                                 <?php
                             }
-                            if ( ! empty( $api->slug ) && empty( $api->is_wp_org_compliant ) ) {
+                            if ( ! empty( $api->slug ) && true == $api->is_wp_org_compliant ) {
                                 ?>
                                 <li><a target="_blank"
                                        href="https://wordpress.org/plugins/<?php echo $api->slug; ?>/"><?php fs_esc_html_echo_inline( 'WordPress.org Plugin Page', 'wp-org-plugin-page', $api->slug ) ?>
@@ -1094,7 +1127,7 @@
             echo "</div>\n"; // #plugin-information-scrollable
             echo "<div id='$tab-footer'>\n";
 
-            if ( ! empty( $api->checkout_link ) ) {
+            if ( $api->has_paid_plan && ! empty( $api->checkout_link ) ) {
                 echo $this->get_checkout_cta( $api );
             }
 

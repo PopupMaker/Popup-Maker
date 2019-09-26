@@ -17,20 +17,15 @@ class PUM_Popups {
 	 * Hook the initialize method to the WP init action.
 	 */
 	public static function init() {
-		add_filter( 'pum_popup_content', array( $GLOBALS['wp_embed'], 'run_shortcode' ), 8 );
-		add_filter( 'pum_popup_content', array( $GLOBALS['wp_embed'], 'autoembed' ), 8 );
-		add_filter( 'pum_popup_content', 'wptexturize', 10 );
-		add_filter( 'pum_popup_content', 'convert_smilies', 10 );
-		add_filter( 'pum_popup_content', 'convert_chars', 10 );
-		add_filter( 'pum_popup_content', 'wpautop', 10 );
-		add_filter( 'pum_popup_content', 'shortcode_unautop', 10 );
-		add_filter( 'pum_popup_content', 'prepend_attachment', 10 );
-		add_filter( 'pum_popup_content', 'force_balance_tags', 10 );
-		add_filter( 'pum_popup_content', 'do_shortcode', 11 );
-		add_filter( 'pum_popup_content', 'capital_P_dangit', 11 );
 	}
 
 
+	/**
+	 * @deprecated 1.8.0
+	 * @remove 1.9.0
+	 *
+	 * @return \WP_Query
+	 */
 	public static function get_all() {
 		static $query;
 
@@ -41,6 +36,12 @@ class PUM_Popups {
 		return $query;
 	}
 
+	/**
+	 * @deprecated 1.8.0
+	 * @remove 1.9.0
+	 *
+	 * @return \WP_Query
+	 */
 	public static function query( $args = array() ) {
 		$args = wp_parse_args( $args, array(
 			'post_type'      => 'popup',

@@ -1,4 +1,7 @@
 <?php
+/*******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -71,11 +74,6 @@ class PUM_Activator {
 			return;
 		}
 
-		// Get the Version Data Set.
-		if ( ! class_exists( 'PUM_Admin_Upgrades' ) ) {
-			require_once POPMAKE_DIR . 'includes/admin/class-pum-admin-upgrades.php';
-		}
-
 		// Running on a single blog
 
 		self::activate_site();
@@ -105,14 +103,18 @@ class PUM_Activator {
 		add_option( 'pum_version', Popup_Maker::$VER );
 
 		// Updates stored values for versioning.
-		PUM_Upgrades::update_plugin_version();
+		PUM_Utils_Upgrades::update_plugin_version();
 
-		// Add a temporary option that will fire a hookable action on next load.
-		set_transient( '_popmake_installed', true, 30 );
+		// We used transients before, but since the check for this option runs every admin page load it means 2 queries after its cleared.
+		// To prevent that we flipped it, now we delete the following option, and check for it.
+		// If its missing then we know its a fresh install.
+		delete_option( '_pum_installed' );
 
-		popmake_get_default_popup_theme();
+		pum_get_default_theme_id();
 		pum_install_built_in_themes();
 
+		// Reset JS/CSS assets for regeneration.
+		pum_reset_assets();
 	}
 
 }

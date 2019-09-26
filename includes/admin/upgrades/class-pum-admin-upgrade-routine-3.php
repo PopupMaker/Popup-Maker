@@ -63,13 +63,12 @@ final class PUM_Admin_Upgrade_Routine_3 extends PUM_Admin_Upgrade_Routine {
 			$upgrades->set_arg( 'total', $total );
 		}
 
-		$popups = new PUM_Popup_Query( array(
+		$popups = pum_get_popups( array(
 			'number' => $upgrades->get_arg( 'number' ),
 			'page'   => $upgrades->get_arg( 'step' ),
 			'status' => array( 'any', 'trash', 'auto-draft' ),
 			'order'  => 'ASC',
 		) );
-		$popups = $popups->get_popups();
 
 		if ( $popups ) {
 
@@ -79,7 +78,7 @@ final class PUM_Admin_Upgrade_Routine_3 extends PUM_Admin_Upgrade_Routine {
 
 
 				// Convert Click Open Triggers.
-				$click_open  = popmake_get_popup_click_open( $popup->ID );
+				$click_open = popmake_get_popup_meta_group( 'click_open', $popup->ID );
 				$_triggers[] = array(
 					'type'     => 'click_open',
 					'settings' => array(
@@ -91,7 +90,7 @@ final class PUM_Admin_Upgrade_Routine_3 extends PUM_Admin_Upgrade_Routine {
 				);
 
 				// If auto open enabled create a new trigger.
-				$auto_open = popmake_get_popup_auto_open( $popup->ID );
+				$auto_open = popmake_get_popup_meta_group( 'auto_open', $popup->ID );
 				if ( isset( $auto_open['enabled'] ) && $auto_open['enabled'] ) {
 
 					// Set the new cookie name.
@@ -179,5 +178,19 @@ final class PUM_Admin_Upgrade_Routine_3 extends PUM_Admin_Upgrade_Routine {
 
 		PUM_Admin_Upgrade_Routine_3::done();
 
+	}
+
+	/**
+	 * Returns the auto open meta of a popup.
+	 *
+	 * @since 1.1.0
+	 * @deprecated 1.4
+	 *
+	 * @param int $popup_id ID number of the popup to retrieve a auto open meta for
+	 *
+	 * @return mixed array|string of the popup auto open meta
+	 */
+	public static function get_auto_open( $popup_id = null, $key = null, $default = null ) {
+		return popmake_get_popup_meta( 'auto_open', $popup_id, $key, $default );
 	}
 }

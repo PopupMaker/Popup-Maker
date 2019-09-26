@@ -5,15 +5,15 @@
 .popup_page_pum-extensions {
   #poststuff {
     .section-heading {
-      font-size: 2em;
-      font-weight: normal;
+      font-size: 18px;
       padding: 0;
     }
   }
 }
 
 .extensions-available {
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
 
   img {
     width: 100%;
@@ -29,13 +29,42 @@
     border: 1px solid #ccc;
     background: #fff;
     vertical-align: top;
-    width: 280px;
-    margin: 0 20px 20px 0;
-    display: inline;
-    float: left;
-    -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
-    -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+    width: 23.5%;
+    margin: 0 2% 20px 0;
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+
+    &:nth-child(4n+0) {
+      margin-right: 0;
+    }
+
+    @media only screen and (max-width: 360px) {
+      display: block;
+      width: 100%;
+      margin-right: 0;
+    }
+    @media only screen and (min-width: 361px) and (max-width: 768px) {
+      width: 49%;
+
+      &:nth-child(4n+0) {
+        margin-right: 2%;
+      }
+
+      &:nth-child(2n+0) {
+        margin-right: 0;
+      }
+    }
+    @media only screen and (min-width: 769px) and (max-width: 980px) {
+      width: 32%;
+
+      &:nth-child(4n+0) {
+        margin-right: 2%;
+      }
+
+      &:nth-child(3n+0) {
+        margin-right: 0;
+      }
+    }
+
 
     > .action-links {
       text-align: center;
@@ -58,17 +87,6 @@
       }
     }
 
-    @media only screen and (max-width: 360px) {
-      display: block;
-      margin: 0 0 10px;
-      width: 100%;
-    }
-    @media only screen and (min-width: 361px) and (max-width: 768px) {
-      width: 320px;
-    }
-    @media only screen and (min-width: 769px) and (max-width: 980px) {
-      width: 240px;
-    }
   }
 
   h3 {

@@ -38,6 +38,8 @@ class PUM_Integrations {
 		add_filter( 'pum_popup_post_type_args', array( __CLASS__, 'popup_post_type_args' ) );
 		add_filter( 'pum_generated_css', array( __CLASS__, 'generated_css' ) );
 		add_filter( 'pum_popup_settings', array( __CLASS__, 'popup_settings' ), 10, 2 );
+
+		PUM_Integration_GoogleFonts::init();
 	}
 
 	/**

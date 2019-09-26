@@ -1,92 +1,23 @@
-/**
- * Popup Maker v1.4
- */
-
-
-var PopMakeAdmin;
-(function ($, document, undefined) {
+/*******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
+/* global PUM_Admin, jQuery, pum_google_fonts, pum_theme_settings_editor */
+(function ($) {
     "use strict";
 
     window.PUM_Admin = window.PUM_Admin || {};
 
-    var $document = $(document);
+    window.pum_theme_settings_editor = window.pum_theme_settings_editor || {
+        form_args: {},
+        current_values: {}
+    };
 
-    PopMakeAdmin = {
-        theme_page_listeners: function () {
-            var self = this;
-
-            $('.empreview .example-popup-overlay, .empreview .example-popup, .empreview .title, .empreview .content, .empreview .close-popup').css('cursor', 'pointer');
-            $(document)
-                .on('click', '.empreview .example-popup-overlay, .empreview .example-popup, .empreview .title, .empreview .content, .empreview .close-popup', function (event) {
-                    var $this = $(this),
-                        clicked_class = $this.attr('class'),
-                        pos = 0;
-
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    switch (clicked_class) {
-                    case 'example-popup-overlay':
-                        pos = $('#popmake_popup_theme_overlay').offset().top;
-                        break;
-                    case 'example-popup':
-                        pos = $('#popmake_popup_theme_container').offset().top;
-                        break;
-                    case 'title':
-                        pos = $('#popmake_popup_theme_title').offset().top;
-                        break;
-                    case 'content':
-                        pos = $('#popmake_popup_theme_content').offset().top;
-                        break;
-                    case 'close-popup':
-                        pos = $('#popmake_popup_theme_close').offset().top;
-                        break;
-                    }
-
-                    $("html, body").animate({
-                        scrollTop: pos + 'px'
-                    });
-                })
-                .on('change', 'select.font-family', function () {
-                    $('select.font-weight option, select.font-style option', $(this).parents('table')).prop('selected', false);
-                    self.update_font_selectboxes();
-                })
-                .on('change', 'select.font-weight, select.font-style', function () {
-                    self.update_font_selectboxes();
-                })
-                .on('change input focusout', 'select, input', function () {
-                    self.update_theme();
-                })
-                .on('change', 'select.border-style', function () {
-                    var $this = $(this);
-                    if ($this.val() === 'none') {
-                        $this.parents('table').find('.border-options').hide();
-                    } else {
-                        $this.parents('table').find('.border-options').show();
-                    }
-                })
-                .on('change', '#popup_theme_close_location', function () {
-                    var $this = $(this),
-                        table = $this.parents('table');
-                    $('tr.topleft, tr.topright, tr.bottomleft, tr.bottomright', table).hide();
-                    $('tr.' + $this.val(), table).show();
-                });
-        },
-        update_theme: function () {
-            var form_values = $("[name^='popup_theme_']").serializeArray(),
-                theme = {},
-                i;
-            for (i = 0; form_values.length > i; i += 1) {
-                if (form_values[i].name.indexOf('popup_theme_') === 0) {
-                    theme[form_values[i].name.replace('popup_theme_', '')] = form_values[i].value;
-                }
-            }
-            this.retheme_popup(theme);
-        },
-        theme_preview_scroll: function () {
-            var $preview = $('#popmake-theme-editor .empreview, body.post-type-popup_theme form#post #popmake_popup_theme_preview'),
+    PUM_Admin.themeEditor = {
+        preview_fixed_scroll: function () {
+            var $preview = $('#pum_theme_preview'),
                 $parent = $preview.parent(),
                 startscroll = $preview.offset().top - 50;
+
             $(window).on('scroll', function () {
                 if ($('> .postbox:visible', $parent).index($preview) === ($('> .postbox:visible', $parent).length - 1) && $(window).scrollTop() >= startscroll) {
                     $preview.css({
@@ -101,173 +32,161 @@ var PopMakeAdmin;
                 }
             });
         },
-        update_font_selectboxes: function () {
-            return $('select.font-family').each(function () {
-                var $this = $(this),
-                    $font_weight = $this.parents('table').find('select.font-weight'),
-                    $font_style = $this.parents('table').find('select.font-style'),
-                    $font_weight_options = $font_weight.find('option'),
-                    $font_style_options = $font_style.find('option'),
-                    font,
-                    i;
+        update_font_options: function (prefix) {
+            var $font_family_select = $('select[id="' + prefix + '_font_family"]'),
+                $font_weight_select = $('select[id="' + prefix + '_font_weight"]'),
+                $font_style_select = $('select[id="' + prefix + '_font_style"]'),
+                $font_weight_options = $font_weight_select.find('option'),
+                $font_style_options = $font_style_select.find('option'),
+                font_weights = [400, 300, 700, 100, 200, 500, 600, 800, 900],
+                font_styles = ['', 'italic'],
+                chosen_font = $font_family_select.val(),
+                chosen_weight = $font_weight_select.val(),
+                chosen_style = $font_style_select.val(),
+                font,
+                i;
 
+            // Google Font Chosen
+            if (pum_google_fonts[chosen_font] !== undefined) {
 
-                // Google Font Chosen
-                if (popmake_google_fonts[$this.val()] !== undefined) {
-                    font = popmake_google_fonts[$this.val()];
+                font = pum_google_fonts[chosen_font];
 
-                    $font_weight_options.hide();
-                    $font_style_options.hide();
+                $font_weight_options.prop('disabled', true);
+                $font_style_options.prop('disabled', true);
 
-                    if (font.variants.length) {
-                        for (i = 0; font.variants.length > i; i += 1) {
-                            if (font.variants[i] === 'regular') {
-                                $('option[value=""]', $font_weight).show();
-                                $('option[value=""]', $font_style).show();
-                            } else {
-                                if (font.variants[i].indexOf('italic') >= 0) {
-
-                                    $('option[value="italic"]', $font_style).show();
-                                }
-                                $('option[value="' + parseInt(font.variants[i], 10) + '"]', $font_weight).show();
+                if (font.variants.length) {
+                    for (i = 0; font.variants.length > i; i += 1) {
+                        if (font.variants[i] === 'regular') {
+                            $('option[value="400"]', $font_weight_select).prop('disabled', false);
+                            $('option[value=""]', $font_style_select).prop('disabled', false);
+                        } else {
+                            if (font.variants[i].indexOf('italic') >= 0) {
+                                $('option[value="italic"]', $font_style_select).prop('disabled', false);
                             }
+                            $('option[value="' + parseInt(font.variants[i], 10) + '"]', $font_weight_select).prop('disabled', false);
                         }
                     }
-                    // Standard Font Chosen
-                } else {
-                    $font_weight_options.show();
-                    $font_style_options.show();
                 }
+                // Standard Font Chosen
+            } else {
+                $font_weight_options.prop('disabled', false);
+                $font_style_options.prop('disabled', false);
+            }
 
-                $font_weight.parents('tr:first').show();
-                if ($font_weight.find('option:visible').length <= 1) {
-                    $font_weight.parents('tr:first').hide();
-                } else {
-                    $font_weight.parents('tr:first').show();
+            if (chosen_weight === '' || $font_weight_options.filter('[value="' + chosen_weight + '"]').is(':disabled')) {
+                for (i = 0; font_weights.length > i; i += 1) {
+                    if (!$font_weight_options.filter('[value="' + font_weights[i] + '"]').is(':disabled')) {
+                        $font_weight_select.val(font_weights[i]);
+                        break;
+                    }
                 }
+            }
 
-                $font_style.parents('tr:first').show();
-                if ($font_style.find('option:visible').length <= 1) {
-                    $font_style.parents('tr:first').hide();
-                } else {
-                    $font_style.parents('tr:first').show();
+            if ($font_style_options.filter('[value="' + chosen_style + '"]').is(':disabled')) {
+                for (i = 0; font_styles.length > i; i += 1) {
+                    if (!$font_style_options.filter('[value="' + font_styles[i] + '"]').is(':disabled')) {
+                        $font_style_select.val(font_styles[i]);
+                        break;
+                    }
                 }
-            });
-        },
-        convert_theme_for_preview: function (theme) {
-            return;
-            //$.fn.popmake.themes[popmake_default_theme] = window.PUM_Admin.utilities.convert_meta_to_object(theme);
-        },
-        initialize_theme_page: function () {
-            $('#popup-titlediv').insertAfter('#titlediv');
+            }
 
-            var self = this,
-                table = $('#popup_theme_close_location').parents('table');
-            self.update_theme();
-            self.theme_page_listeners();
-            self.theme_preview_scroll();
-            self.update_font_selectboxes();
+            // Update Select2 if enabled.
+            $font_family_select.trigger('change.select2');
+            $font_weight_select.trigger('change.select2');
+            $font_family_select.trigger('change.select2');
 
-            $(document)
-                .on('click', '.popmake-preview', function (e) {
-                    e.preventDefault();
-                    $('#popmake-preview, #popmake-overlay').css({visibility: "visible"}).show();
-                })
-                .on('click', '.popmake-close', function () {
-                    $('#popmake-preview, #popmake-overlay').hide();
-                });
+            $font_weight_select = $font_weight_select.parents('.pum-field');
+            if ($font_weight_options.filter(':not(:disabled)').length > 1) {
+                $font_weight_select.show();
+            } else {
+                $font_weight_select.hide();
+            }
 
-            $('select.border-style').each(function () {
-                var $this = $(this);
-                if ($this.val() === 'none') {
-                    $this.parents('table').find('.border-options').hide();
-                } else {
-                    $this.parents('table').find('.border-options').show();
-                }
-            });
-
-            $('.pum-color-picker.background-color').each(function () {
-                var $this = $(this);
-                if ($this.val() === '') {
-                    $this.parents('table').find('.background-opacity').hide();
-                } else {
-                    $this.parents('table').find('.background-opacity').show();
-                }
-            });
-
-            $('tr.topleft, tr.topright, tr.bottomleft, tr.bottomright', table).hide();
-            switch ($('#popup_theme_close_location').val()) {
-            case "topleft":
-                $('tr.topleft', table).show();
-                break;
-            case "topright":
-                $('tr.topright', table).show();
-                break;
-            case "bottomleft":
-                $('tr.bottomleft', table).show();
-                break;
-            case "bottomright":
-                $('tr.bottomright', table).show();
-                break;
+            $font_family_select = $font_style_select.parents('.pum-field');
+            if ($font_style_options.filter(':not(:disabled)').length > 1) {
+                $font_family_select.show();
+            } else {
+                $font_family_select.hide();
             }
         },
-        retheme_popup: function (theme) {
-            var $overlay = $('.empreview .example-popup-overlay, #popmake-overlay'),
-                $container = $('.empreview .example-popup, #popmake-preview'),
-                $title = $('.title, .popmake-title', $container),
-                $content = $('.content, .popmake-content', $container),
-                $close = $('.close-popup, .popmake-close', $container),
+        update_font_selectboxes: function () {
+            return $('select[id$="_font_family"]').each(function () {
+                PUM_Admin.themeEditor.update_font_options($(this).attr('id').replace('_font_family', ''));
+            });
+        },
+        update_loaded_font: function (prefix) {
+            var $font_family_select = $('select[id="' + prefix + '_font_family"]'),
+                $font_weight_select = $('select[id="' + prefix + '_font_weight"]'),
+                $font_style_select = $('select[id="' + prefix + '_font_style"]'),
+                chosen_font = $font_family_select.val(),
+                chosen_weight = $font_weight_select.val(),
+                chosen_style = $font_style_select.val(),
+                $link = $('link#pum-' + prefix + 'google-font'),
+                $new_link = $('<link id="pum-' + prefix + 'google-font" rel="stylesheet" type="text/css">'),
+                url;
+
+            if (typeof pum_google_fonts[chosen_font] !== 'undefined') {
+                url = "//fonts.googleapis.com/css?family=" + chosen_font;
+
+                if (chosen_weight !== 'normal') {
+                    url += ":" + chosen_weight;
+                }
+
+                if (chosen_style === 'italic') {
+                    if (url.indexOf(':') === -1) {
+                        url += ":";
+                    }
+                    url += "italic";
+                }
+
+                $new_link.attr('href', url);
+
+                if ($link.length) {
+                    if ($link.attr('href') !== url) {
+                        $link.replaceWith($new_link);
+                    }
+                } else {
+                    $('body').append($new_link);
+                }
+            } else {
+                $link.remove();
+            }
+
+        },
+        update_loaded_fonts: function() {
+            return $('select[id$="_font_family"]').each(function () {
+                PUM_Admin.themeEditor.update_loaded_font($(this).attr('id').replace('_font_family', ''));
+            });
+        },
+        refresh_preview: function () {
+            var form_values = $('#pum-theme-settings-container').pumSerializeObject(),
+                theme_settings = form_values.theme_settings;
+
+            // Remap deprecated settings so they work.
+            // Remove this after ATB updated.
+            if (typeof window.PUM_ATB !== 'undefined') {
+                delete form_values.theme_settings;
+
+                for (var old_setting in form_values) {
+                    if (form_values.hasOwnProperty(old_setting))
+                    theme_settings[old_setting.replace('popup_theme_','')] = form_values[old_setting];
+                }
+            }
+
+            PUM_Admin.themeEditor.restyle_preview(theme_settings);
+        },
+        restyle_preview: function (theme) {
+            var $overlay = $('.pum-popup-overlay'),
+                $container = $('.pum-popup-container'),
+                $title = $('.pum-popup-title', $container),
+                $content = $('.pum-popup-content', $container),
+                $close = $('.pum-popup-close', $container),
                 container_inset = theme.container_boxshadow_inset === 'yes' ? 'inset ' : '',
                 close_inset = theme.close_boxshadow_inset === 'yes' ? 'inset ' : '',
-                link;
+                top, left, right, bottom;
 
-            this.convert_theme_for_preview(theme);
-
-            if (popmake_google_fonts[theme.title_font_family] !== undefined) {
-
-                link = "//fonts.googleapis.com/css?family=" + theme.title_font_family;
-
-                if (theme.title_font_weight !== 'normal') {
-                    link += ":" + theme.title_font_weight;
-                }
-                if (theme.title_font_style === 'italic') {
-                    if (link.indexOf(':') === -1) {
-                        link += ":";
-                    }
-                    link += "italic";
-                }
-                $('body').append('<link href="' + link + '" rel="stylesheet" type="text/css">');
-            }
-            if (popmake_google_fonts[theme.content_font_family] !== undefined) {
-
-                link = "//fonts.googleapis.com/css?family=" + theme.content_font_family;
-
-                if (theme.content_font_weight !== 'normal') {
-                    link += ":" + theme.content_font_weight;
-                }
-                if (theme.content_font_style === 'italic') {
-                    if (link.indexOf(':') === -1) {
-                        link += ":";
-                    }
-                    link += "italic";
-                }
-                $('body').append('<link href="' + link + '" rel="stylesheet" type="text/css">');
-            }
-            if (popmake_google_fonts[theme.close_font_family] !== undefined) {
-
-                link = "//fonts.googleapis.com/css?family=" + theme.close_font_family;
-
-                if (theme.close_font_weight !== 'normal') {
-                    link += ":" + theme.close_font_weight;
-                }
-                if (theme.close_font_style === 'italic') {
-                    if (link.indexOf(':') === -1) {
-                        link += ":";
-                    }
-                    link += "italic";
-                }
-                $('body').append('<link href="' + link + '" rel="stylesheet" type="text/css">');
-            }
+            PUM_Admin.themeEditor.update_loaded_fonts();
 
             $overlay.removeAttr('style').css({
                 backgroundColor: window.PUM_Admin.utils.convert_hex(theme.overlay_background_color, theme.overlay_background_opacity)
@@ -299,6 +218,7 @@ var PopMakeAdmin;
                 fontWeight: theme.content_font_weight
             });
             $close.html(theme.close_text).removeAttr('style').css({
+                position: theme.close_position_outside ? 'fixed' : 'absolute',
                 padding: theme.close_padding + 'px',
                 height: theme.close_height > 0 ? theme.close_height + 'px' : 'auto',
                 width: theme.close_width > 0 ? theme.close_width + 'px' : 'auto',
@@ -316,49 +236,150 @@ var PopMakeAdmin;
                 boxShadow: close_inset + theme.close_boxshadow_horizontal + 'px ' + theme.close_boxshadow_vertical + 'px ' + theme.close_boxshadow_blur + 'px ' + theme.close_boxshadow_spread + 'px ' + window.PUM_Admin.utils.convert_hex(theme.close_boxshadow_color, theme.close_boxshadow_opacity),
                 textShadow: theme.close_textshadow_horizontal + 'px ' + theme.close_textshadow_vertical + 'px ' + theme.close_textshadow_blur + 'px ' + window.PUM_Admin.utils.convert_hex(theme.close_textshadow_color, theme.close_textshadow_opacity)
             });
+
+
+            top = theme.close_position_top + (theme.close_position_outside ? $('#wpadminbar').outerHeight() : 0);
+            left = theme.close_position_left + (theme.close_position_outside ? $('#adminmenuwrap').outerWidth() : 0);
+            right = theme.close_position_right;
+            bottom = theme.close_position_bottom;
+
+
             switch (theme.close_location) {
+
+
             case "topleft":
                 $close.css({
-                    top: theme.close_position_top + 'px',
-                    left: theme.close_position_left + 'px'
+                    top: top + 'px',
+                    left: left + 'px'
                 });
                 break;
+
+            case "topcenter":
+                $close.css({
+                    top: top + 'px',
+                    left: '50%',
+                    transform: 'translateX(-50%)'
+                    // left: 0,
+                    // right: 0,
+                    // left: 0,
+                    // margin: 'auto'
+                });
+                break;
+
             case "topright":
                 $close.css({
-                    top: theme.close_position_top + 'px',
-                    right: theme.close_position_right + 'px'
+                    top: top + 'px',
+                    right: right + 'px'
                 });
                 break;
+
+            case 'middleleft':
+                $close.css({
+                    top: '50%',
+                    left: left + 'px',
+                    transform: 'translateY(-50%)'
+                });
+                break;
+
+            case 'middleright':
+                $close.css({
+                    top: '50%',
+                    right: right + 'px',
+                    transform: 'translateY(-50%)'
+                });
+                break;
+
             case "bottomleft":
                 $close.css({
-                    bottom: theme.close_position_bottom + 'px',
-                    left: theme.close_position_left + 'px'
+                    bottom: bottom + 'px',
+                    left: left + 'px'
                 });
                 break;
+
+            case "bottomcenter":
+                $close.css({
+                    bottom: bottom + 'px',
+                    left: '50%',
+                    transform: 'translateX(-50%)'
+                    // left: 0,
+                    // right: 0,
+                    // left: 0,
+                    // margin: 'auto'
+                });
+                break;
+
             case "bottomright":
                 $close.css({
-                    bottom: theme.close_position_bottom + 'px',
-                    right: theme.close_position_right + 'px'
+                    bottom: bottom + 'px',
+                    right: right + 'px'
                 });
                 break;
             }
-            $(document).trigger('popmake-admin-retheme', [theme]);
-        }
 
+            /** @deprecated 1.8.0 */
+            $(document).trigger('popmake-admin-retheme', [theme]);
+
+            $(document).trigger('pumRestylePreview', [theme]);
+        }
     };
 
-    $('.popmake-range-manual').addClass('pum-range-manual').parent('td').addClass('pum-field').addClass('pum-field-rangeslider');
-    $('.range-value-unit').addClass('pum-range-value-unit');
+    $(document)
+        .ready(function () {
+            $(this).trigger('pum_init');
 
+            var $container = $('#pum-theme-settings-container'),
+                args = pum_theme_settings_editor.form_args || {},
+                values = pum_theme_settings_editor.current_values || {};
 
-    $document.ready(function () {
+            if ($container.length) {
+                $container.find('.pum-no-js').hide();
+                PUM_Admin.forms.render(args, values, $container);
+            }
 
-        PopMakeAdmin.initialize_theme_page();
-        $document.trigger('pum_init');
+            PUM_Admin.themeEditor.preview_fixed_scroll();
+            PUM_Admin.themeEditor.refresh_preview();
+        })
+        .on('change', 'select[id$="_font_family"]', function () {
+            var prefix = $(this).attr('id').replace('_font_family', '');
 
-        // TODO Can't figure out why this is needed, but it looks stupid otherwise when the first condition field defaults to something other than the placeholder.
-        $('#pum-first-condition, #pum-first-trigger, #pum-first-cookie')
-            .val(null)
-            .trigger('change');
-    });
-}(jQuery, document));
+            PUM_Admin.themeEditor.update_font_options(prefix);
+        })
+        /**
+         * Change to the appropriate tab when an element is clicked. IE click the close button in preview and trigger the close tab.
+         */
+        .on('click', '.pum-popup-overlay, .pum-popup-container, .pum-popup-title, .pum-popup-content, .pum-popup-close', function (event) {
+            var $this = $(this),
+                clicked_class = $this.attr('class');
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            switch (clicked_class) {
+            case 'pum-popup-overlay':
+                $('a[href="#pum-theme-settings_overlay"]')[0].click();
+                break;
+            case 'pum-popup-container':
+                $('a[href="#pum-theme-settings_container"]')[0].click();
+                break;
+            case 'pum-popup-title':
+                $('a[href="#pum-theme-settings_title"]')[0].click();
+                break;
+            case 'pum-popup-content':
+                $('a[href="#pum-theme-settings_content"]')[0].click();
+                break;
+            case 'pum-popup-close':
+                $('a[href="#pum-theme-settings_close"]')[0].click();
+                break;
+            }
+
+            $("html, body").animate({
+                scrollTop: ($('#pum_theme_settings').offset().top - 40) + 'px'
+            });
+        })
+        /**
+         * Trigger preview update after any field change.
+         */
+        .on('change colorchange input focusout', '.pum-field select, .pum-field input', function () {
+            PUM_Admin.themeEditor.refresh_preview();
+        });
+}(jQuery));

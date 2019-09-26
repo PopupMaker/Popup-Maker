@@ -353,6 +353,8 @@ var PUM;
 
                     $popup.trigger('pumAfterOpen');
 
+                    $(window).trigger('resize');
+
                     $.fn.popmake.last_open_popup = $popup;
 
                     // Fire user passed callback.

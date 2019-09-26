@@ -41,7 +41,7 @@ class PUM_Upgrade_v1_7_Settings extends PUM_Abstract_Upgrade_Settings {
 		 * Save only if something changed.
 		 */
 		if ( $changed ) {
-			PUM_Options::update_all( $settings );
+			PUM_Utils_Options::update_all( $settings );
 		}
 	}
 

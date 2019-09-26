@@ -1,4 +1,7 @@
 <?php
+/*******************************************************************************
+ * Copyright (c) 2018, WP Popup Maker
+ ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -18,10 +21,10 @@ class PUM_Modules_Menu {
 	public static function init() {
 		add_filter( 'popmake_settings_misc', array( __CLASS__, 'settings' ) );
 
-		if ( PUM_Options::get( 'disabled_menu_editor', false ) ) {
+		if ( PUM_Utils_Options::get( 'disabled_menu_editor', false ) ) {
 			return;
 		}
-		
+
 		// Merge Menu Item Options
 		add_filter( 'wp_setup_nav_menu_item', array( __CLASS__, 'merge_item_data' ) );
 		// Admin Menu Editor
@@ -182,24 +185,23 @@ class PUM_Modules_Menu {
 	 */
 	public static function popup_list() {
 
-		static $popups;
+		static $popup_list;
 
-		if ( ! isset( $popups ) ) {
+		if ( ! isset( $popup_list ) ) {
 
-			$popups = array();
+			$popup_list = array();
 
-			$query = PUM_Popups::get_all();
+			$popups = pum_get_all_popups();
 
-			if ( $query->have_posts() ) {
-				while ( $query->have_posts() ) : $query->next_post();
-					$popups[ $query->post->ID ] = $query->post->post_title;
-				endwhile;
-
+			if ( ! empty( $popups ) ) {
+				foreach ( $popups as $popup ) {
+					$popup_list[ $popup->ID ] = $popup->post_title;
+				}
 			}
 
 		}
 
-		return $popups;
+		return $popup_list;
 	}
 
 	/**

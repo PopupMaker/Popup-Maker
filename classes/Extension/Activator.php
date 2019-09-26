@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Popup Maker Extension Activation Handler Class
  *
- * @version       1.1.0
+ * @version       2.1
  */
 class PUM_Extension_Activator {
 
@@ -38,6 +38,11 @@ class PUM_Extension_Activator {
 	public $extension_version;
 
 	/**
+	 * @var bool|string
+	 */
+	public $extension_wp_repo = false;
+
+	/**
 	 * @var string
 	 */
 	public $extension_file;
@@ -55,7 +60,7 @@ class PUM_Extension_Activator {
 	 * @param $class_name
 	 * @param $prop_name
 	 *
-	 * @return bool|mixed
+	 * @return null|mixed
 	 */
 	public function get_static_prop( $class_name, $prop_name ) {
 		if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
@@ -64,11 +69,11 @@ class PUM_Extension_Activator {
 
 				return $class->getStaticPropertyValue( $prop_name );
 			} catch ( ReflectionException $e ) {
-				return false;
+				return null;
 			}
 		}
 
-		return $class_name::$$prop_name;
+		return property_exists( $class_name, $prop_name ) ? $class_name::$$prop_name : null;
 	}
 
 	/**
@@ -83,8 +88,8 @@ class PUM_Extension_Activator {
 		// Validate extension class is valid.
 		if ( in_array( false, array(
 			class_exists( $class_name ),
-			property_exists( $class_name, 'REQUIRED_CORE_VER' ),
 			property_exists( $class_name, 'NAME' ),
+			property_exists( $class_name, 'REQUIRED_CORE_VER' ),
 			method_exists( $class_name, 'instance' ),
 		) ) ) {
 			return;
@@ -92,19 +97,16 @@ class PUM_Extension_Activator {
 
 		$this->extension_class_name  = $class_name;
 		$this->extension_id          = $this->get_static_prop( $class_name, 'ID' );
+		$this->extension_wp_repo     = $this->get_static_prop( $class_name, 'WP_REPO' );
 		$this->extension_name        = $this->get_static_prop( $class_name, 'NAME' );
 		$this->extension_version     = $this->get_static_prop( $class_name, 'VER' );
 		$this->required_core_version = $this->get_static_prop( $class_name, 'REQUIRED_CORE_VER' );
 
-		$plugins = get_plugins();
+		$popup_maker_data = get_plugin_data( WP_PLUGIN_DIR . '/popup-maker/popup-maker.php', false, false );
 
-		// Is Popup Maker installed?
-		foreach ( $plugins as $plugin_path => $plugin ) {
-			if ( $plugin['Name'] == 'Popup Maker' ) {
-				$this->core_installed = true;
-				$this->core_path      = $plugin_path;
-				break;
-			}
+		if ( $popup_maker_data['Name'] == 'Popup Maker' ) {
+			$this->core_installed = true;
+			$this->core_path      = 'popup-maker/popup-maker.php';
 		}
 	}
 
@@ -122,7 +124,6 @@ class PUM_Extension_Activator {
 
 		return 'active';
 	}
-
 
 	/**
 	 * Process plugin deactivation
@@ -144,8 +145,8 @@ class PUM_Extension_Activator {
 			$plugin_slug          = explode( '/', plugin_basename( $this->extension_file ), 2 );
 			$this->extension_slug = str_replace( array( 'popup-maker-', 'pum-' ), '', $plugin_slug[0] );
 
-			// Handle licensing
-			if ( class_exists( 'PUM_Extension_License' ) ) {
+			// Handle licensing for extensions with valid ID & not wp repo extensions.
+			if ( $this->extension_id > 0 && ! $this->extension_wp_repo && class_exists( 'PUM_Extension_License' ) ) {
 				new PUM_Extension_License( $this->extension_file, $this->extension_name, $this->extension_version, 'WP Popup Maker', null, null, $this->extension_id );
 			}
 
@@ -162,19 +163,19 @@ class PUM_Extension_Activator {
 			case 'not_activated':
 				$url  = esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $this->core_path ), 'activate-plugin_' . $this->core_path ) );
 				$link = '<a href="' . $url . '">' . __( 'activate it' ) . '</a>';
-				echo '<div class="error"><p>' . $this->extension_name . sprintf( __( ' requires Popup Maker! Please %s to continue!' ), $link ) . '</p></div>';
+				echo '<div class="error"><p>' . sprintf( __( 'The plugin "%s" requires %s! Please %s to continue!' ), $this->extension_name, '<strong>' . __( 'Popup Maker' ) . '</strong>', $link ) . '</p></div>';
 
 				break;
 			case 'not_updated':
 				$url  = esc_url( wp_nonce_url( admin_url( 'update.php?action=upgrade-plugin&plugin=' . $this->core_path ), 'upgrade-plugin_' . $this->core_path ) );
 				$link = '<a href="' . $url . '">' . __( 'update it' ) . '</a>';
-				echo '<div class="error"><p>' . $this->extension_name . sprintf( __( ' requires Popup Maker v%s or higher! Please %s to continue!' ), $this->required_core_version, $link ) . '</p></div>';
+				echo '<div class="error"><p>' . sprintf( __( 'The plugin "%s" requires %s v%s or higher! Please %s to continue!' ), $this->extension_name, '<strong>' . __( 'Popup Maker' ) . '</strong>', '<strong>' . $this->required_core_version . '</strong>', $link ) . '</p></div>';
 
 				break;
 			case 'not_installed':
 				$url  = esc_url( wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=popup-maker' ), 'install-plugin_popup-maker' ) );
 				$link = '<a href="' . $url . '">' . __( 'install it' ) . '</a>';
-				echo '<div class="error"><p>' . $this->extension_name . sprintf( __( ' requires Popup Maker! Please %s to continue!' ), $link ) . '</p></div>';
+				echo '<div class="error"><p>' . sprintf( __( 'The plugin "%s" requires %s! Please %s to continue!' ), $this->extension_name, '<strong>' . __( 'Popup Maker' ) . '</strong>', $link ) . '</p></div>';
 
 				break;
 			case 'active':

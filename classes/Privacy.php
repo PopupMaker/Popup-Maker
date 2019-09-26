@@ -17,6 +17,11 @@ class PUM_Privacy {
 		add_filter( 'wp_privacy_personal_data_exporters', array( __CLASS__, 'register_exporter' ), 10 );
 		add_filter( 'wp_privacy_personal_data_erasers', array( __CLASS__, 'register_erasers' ), 10 );
 		add_action( 'admin_init', array( __CLASS__, 'privacy_policy_content' ), 20 );
+		add_action( 'pum_save_popup', array( __CLASS__, 'clear_cookie_list' ) );
+	}
+
+	public static function clear_cookie_list() {
+		delete_option( 'pum_privacy_cookie_list' );
 	}
 
 	/**
@@ -44,7 +49,8 @@ class PUM_Privacy {
 			<p class="privacy-policy-tutorial"><?php _e( 'Hello,', 'popup-maker' ); ?></p> <p class="privacy-policy-tutorial"><?php _e( 'This information serves as a guide on what sections need to be modified due to usage of Popup Maker and its extensions.', 'popup-maker' ); ?></p>
 			<p class="privacy-policy-tutorial"><?php _e( 'You should include the information below in the correct sections of you privacy policy.', 'popup-maker' ); ?></p>
 			<p class="privacy-policy-tutorial"><strong> <?php _e( 'Disclaimer:', 'popup-maker' ); ?></strong> <?php _e( 'This information is only for guidance and not to be considered as legal advice.', 'popup-maker' ); ?></p>
-			<p class="privacy-policy-tutorial"><strong> <?php _e( 'Note:', 'popup-maker' ); ?></strong> <?php _e( 'Some of the information below is dynamically generated, such as cookies. If you add or change popups you will see those additions or changes below and will need to update your policy accordingly.', 'popup-maker' ); ?></p>
+			<p class="privacy-policy-tutorial"><strong> <?php _e( 'Note:', 'popup-maker' ); ?></strong> <?php _e( 'Some of the information below is dynamically generated, such as cookies. If you add or change popups you will see those additions or changes below and will need to update your policy accordingly.', 'popup-maker' ); ?>
+			</p>
 
 			<h2><?php _e( 'What personal data we collect and why we collect it', 'popup-maker' ); ?></h2>
 
@@ -147,7 +153,7 @@ class PUM_Privacy {
 	public static function register_erasers( $exporters ) {
 		$exporters[] = array(
 			'eraser_friendly_name' => __( 'Popup Maker Subscribe Form' ),
-			'callback'             => array( __CLASS__, 'exporter' ),
+			'callback'             => array( __CLASS__, 'eraser' ),
 		);
 
 		return $exporters;
@@ -391,49 +397,60 @@ class PUM_Privacy {
 	 * @return array
 	 */
 	public static function get_all_cookies() {
-		$popups  = PUM_Popups::get_all();
-		$cookies = array();
+		$cookie_list = get_option( 'pum_privacy_cookie_list' );
+		$cookies = ! empty( $cookie_list['cookies'] ) ? $cookie_list['cookies'] : array();
 
-		if ( $popups->have_posts() ) {
-			while ( $popups->have_posts() ) : $popups->next_post();
-				// Set this popup as the global $current.
-				PUM_Site_Popups::current_popup( $popups->post );
+		if ( false === $cookie_list || ! isset( $cookie_list['timestamp'] ) || strtotime('-7 days' ) > $cookie_list['timestamp'] ) {
+			$popups = pum_get_all_popups();
 
-				$popup = pum_get_popup( $popups->post->ID );
+			if ( ! empty( $popups ) ) {
 
-				if ( ! pum_is_popup( $popup ) ) {
-					continue;
-				}
+				foreach ( $popups as $popup ) {
 
-				$pcookies = $popup->get_setting( 'cookies', array() );
+					if ( ! pum_is_popup( $popup ) ) {
+						continue;
+					}
 
-				if ( ! empty( $pcookies ) ) {
-					foreach ( $pcookies as $cookie ) {
-						if ( ! empty ( $cookie['settings']['name'] ) ) {
-							$current_time = 0;
-							if ( ! empty( $cookies[ $cookie['settings']['name'] ] ) ) {
-								$current_time = strtotime( '+' . $cookies[ $cookie['settings']['name'] ]['time'] );
-							}
+					// Set this popup as the global $current.
+					pum()->current_popup = $popup;
 
-							if ( empty( $cookies[ $cookie['settings']['name'] ] ) ) {
-								$cookies[ $cookie['settings']['name'] ] = array(
-									'label' => __( 'Cookie used to prevent popup from displaying repeatedly.', 'popup-maker' ),
-									'name'  => $cookie['settings']['name'],
-									'time'  => $cookie['settings']['time'],
-								);
-							}
+					$popup_cookies = $popup->get_setting( 'cookies', array() );
 
-							$new_time = strtotime( '+' . $cookie['settings']['time'] );
-							if ( $new_time > $current_time ) {
-								$cookies[ $cookie['settings']['name'] ]['time'] = $cookie['settings']['time'];
+					if ( ! empty( $popup_cookies ) ) {
+						foreach ( $popup_cookies as $cookie ) {
+							if ( ! empty ( $cookie['settings']['name'] ) ) {
+								$current_time = 0;
+								if ( ! empty( $cookies[ $cookie['settings']['name'] ] ) ) {
+									$current_time = strtotime( '+' . $cookies[ $cookie['settings']['name'] ]['time'] );
+								}
+
+								if ( empty( $cookies[ $cookie['settings']['name'] ] ) ) {
+									$cookies[ $cookie['settings']['name'] ] = array(
+										'label' => __( 'Cookie used to prevent popup from displaying repeatedly.', 'popup-maker' ),
+										'name'  => $cookie['settings']['name'],
+										'time'  => $cookie['settings']['time'],
+									);
+								}
+
+								$new_time = strtotime( '+' . $cookie['settings']['time'] );
+								if ( $new_time > $current_time ) {
+									$cookies[ $cookie['settings']['name'] ]['time'] = $cookie['settings']['time'];
+								}
 							}
 						}
 					}
 				}
-			endwhile;
 
-			// Clear the global $current.
-			PUM_Site_Popups::current_popup( null );
+				// Clear the global $current.
+				pum()->current_popup = null;
+
+			}
+
+			// Update cookie list so we don't have to regenerate it every page load.
+			update_option( 'pum_privacy_cookie_list', array(
+				'cookies'   => $cookies,
+				'timestamp' => strtotime( 'now' ),
+			) );
 		}
 
 		return apply_filters( 'pum_privacy_get_all_cookies', $cookies );

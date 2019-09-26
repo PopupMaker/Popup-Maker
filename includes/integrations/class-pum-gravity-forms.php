@@ -3,15 +3,13 @@
 class PUM_Gravity_Forms_Integation {
 
 	public static function init() {
-		if ( class_exists( 'RGForms' ) ) {
-			add_filter( 'gform_form_settings_menu', array( __CLASS__, 'settings_menu' ) );
-			add_action( 'gform_form_settings_page_popup-maker', array( __CLASS__, 'render_settings_page' ) );
-			add_filter( 'pum_get_cookies', array( __CLASS__, 'register_cookies' ) );
-			add_filter( 'gform_get_form_filter', array( __CLASS__, 'get_form' ), 10, 2 );
-			add_action( 'popmake_preload_popup', array( __CLASS__, 'preload' ) );
-			add_action( 'popmake_popup_before_inner', array( __CLASS__, 'force_ajax' ) );
-			add_action( 'popmake_popup_after_inner', array( __CLASS__, 'force_ajax' ) );
-		}
+		add_filter( 'gform_form_settings_menu', array( __CLASS__, 'settings_menu' ) );
+		add_action( 'gform_form_settings_page_popup-maker', array( __CLASS__, 'render_settings_page' ) );
+		add_filter( 'pum_get_cookies', array( __CLASS__, 'register_cookies' ) );
+		add_filter( 'gform_get_form_filter', array( __CLASS__, 'get_form' ), 10, 2 );
+		add_action( 'popmake_preload_popup', array( __CLASS__, 'preload' ) );
+		add_action( 'popmake_popup_before_inner', array( __CLASS__, 'force_ajax' ) );
+		add_action( 'popmake_popup_after_inner', array( __CLASS__, 'force_ajax' ) );
 	}
 
 	public static function force_ajax() {
@@ -32,7 +30,7 @@ class PUM_Gravity_Forms_Integation {
 
 	public static function preload( $popup_id ) {
 		if ( function_exists( 'gravity_form_enqueue_scripts' ) ) {
-			$popup = pum_popup( $popup_id );
+			$popup = pum_get_popup( $popup_id );
 
 			if ( has_shortcode( $popup->post_content, 'gravityform' ) ) {
 				$regex = "/\[gravityform.*id=[\'\"]?([0-9]*)[\'\"]?.*/";
@@ -48,7 +46,7 @@ class PUM_Gravity_Forms_Integation {
 
 
 	public static function settings_menu( $setting_tabs ) {
-		$setting_tabs['40'] = array(
+		$setting_tabs['998.002'] = array(
 			'name'  => 'popup-maker',
 			'label' => __( 'Popup Maker', 'popup-maker' ),
 		);
@@ -275,8 +273,6 @@ class PUM_Gravity_Forms_Integation {
 	}
 
 }
-
-add_action( 'init', 'PUM_Gravity_Forms_Integation::init' );
 
 /**
  *

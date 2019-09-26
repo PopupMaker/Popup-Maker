@@ -22,7 +22,8 @@ class PUM_Modules_Reviews {
 	 *
 	 */
 	public static function init() {
-		add_action( 'init', array( __CLASS__, 'hooks' ) );
+		//add_action( 'init', array( __CLASS__, 'hooks' ) );
+		add_filter( 'pum_alert_list', array( __CLASS__, 'review_alert') );
 		add_action( 'wp_ajax_pum_review_action', array( __CLASS__, 'ajax_handler' ) );
 	}
 
@@ -64,6 +65,8 @@ class PUM_Modules_Reviews {
 			'pri'    => self::get_current_trigger( 'pri' ),
 			'reason' => 'maybe_later',
 		) );
+
+
 
 		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'pum_review_action' ) ) {
 			wp_send_json_error();
@@ -224,7 +227,7 @@ class PUM_Modules_Reviews {
 		if ( ! isset( $triggers ) ) {
 
 			$time_message = __( 'Hi there! You\'ve been using Popup Maker on your site for %s - I hope it\'s been helpful. If you\'re enjoying my plugin, would you mind rating it 5-stars to help spread the word?', 'popup-maker' );
-			$triggers = array(
+			$triggers     = array(
 				'time_installed' => array(
 					'triggers' => array(
 						'one_week'     => array(
@@ -261,7 +264,7 @@ class PUM_Modules_Reviews {
 				),
 			);
 
-			$pri = 10;
+			$pri          = 10;
 			$open_message = __( 'Hi there! You\'ve recently hit %s popup views on your site – that’s awesome!! If you\'d like to celebrate this milestone, rate Popup Maker 5-stars to help spread the word!', 'popup-maker' );
 			foreach ( array( 50, 100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000 ) as $num ) {
 				$triggers['open_count']['triggers'][ $num . '_opens' ] = array(
@@ -299,7 +302,72 @@ class PUM_Modules_Reviews {
 	}
 
 	/**
+	 * Register alert when review request is available.
+	 *
+	 * @param array $alerts
+	 *
+	 * @return array
+	 */
+	public static function review_alert( $alerts = array() ) {
+		if ( self::hide_notices() ) {
+			return $alerts;
+		}
+
+		$trigger = self::get_current_trigger();
+
+		// Used to anonymously distinguish unique site+user combinations in terms of effectiveness of each trigger.
+		$uuid = wp_hash( home_url() . '-' . get_current_user_id() );
+
+		ob_start();
+
+		?>
+
+		<script type="text/javascript">
+            window.pum_review_nonce = '<?php echo wp_create_nonce( 'pum_review_action' ); ?>';
+            window.pum_review_api_url = '<?php echo self::$api_url; ?>';
+            window.pum_review_uuid = '<?php echo $uuid; ?>';
+            window.pum_review_trigger = {
+                group: '<?php echo self::get_trigger_group(); ?>',
+                code: '<?php echo self::get_trigger_code(); ?>',
+                pri: '<?php echo self::get_current_trigger( 'pri' ); ?>'
+            };
+		</script>
+
+		<ul>
+			<li>
+				<a class="pum-dismiss" target="_blank" href="<?php echo $trigger['link']; ?>>" data-reason="am_now"> <strong><?php _e( 'Ok, you deserve it', 'popup-maker' ); ?></strong> </a>
+			</li>
+			<li>
+				<a href="#" class="pum-dismiss" data-reason="maybe_later">
+					<?php _e( 'Nope, maybe later', 'popup-maker' ); ?>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="pum-dismiss" data-reason="already_did">
+					<?php _e( 'I already did', 'popup-maker' ); ?>
+				</a>
+			</li>
+		</ul>
+
+		<?php
+
+		$html = ob_get_clean();
+
+		$alerts[] = array(
+			'code'    => 'review_request',
+			'message' => '<strong>' . $trigger['message'] . '<br />~ danieliser' . '</strong>',
+			'html'    => $html,
+			'type'    => 'success',
+		);
+
+		return $alerts;
+	}
+
+
+	/**
 	 * Render admin notices if available.
+	 *
+	 * @deprecated 1.8.0
 	 */
 	public static function admin_notices() {
 		if ( self::hide_notices() ) {

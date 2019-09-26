@@ -51,12 +51,13 @@ var PUM_Analytics;
         /**
          * Track opens for popups.
          */
-            .on('pumAfterOpen.core_analytics', 'body > .pum', function () {
+            .on('pumAfterOpen.core_analytics', '.pum', function () {
                 var $popup = PUM.getPopup(this),
                     data = {
                         pid: parseInt($popup.popmake('getSettings').id, 10) || null
                     };
 
+                // Shortcode popups use negative numbers, and single-popup (preview mode) shouldn't be tracked.
                 if (data.pid > 0 && !$('body').hasClass('single-popup')) {
                     PUM_Analytics.beacon(data);
                 }

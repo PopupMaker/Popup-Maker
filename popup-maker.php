@@ -1,17 +1,20 @@
 <?php
 /**
- * Plugin Name: Popup Maker
- * Plugin URI: https://wppopupmaker.com/?utm_campaign=PluginInfo&utm_source=plugin-header&utm_medium=plugin-uri
- * Description: Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
- * Author: WP Popup Maker
- * Version: 1.7.30
- * Author URI: https://wppopupmaker.com/?utm_campaign=PluginInfo&utm_source=plugin-header&utm_medium=author-uri
- * Text Domain: popup-maker
+ * Plugin Name:  Popup Maker
+ * Plugin URI:   https://wppopupmaker.com/?utm_campaign=PluginInfo&utm_source=plugin-header&utm_medium=plugin-uri
+ * Description:  Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
+ * Version:      1.8.11
+ * Author:       WP Popup Maker
+ * Author URI:   https://wppopupmaker.com/?utm_campaign=PluginInfo&utm_source=plugin-header&utm_medium=author-uri
+ * License:      GPL2 or later
+ * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain:  popup-maker
+ * Domain Path:  /languages/
  *
  * @package     POPMAKE
  * @category    Core
  * @author      Daniel Iser
- * @copyright   Copyright (c) 2016, Wizard Internet Solutions
+ * @copyright   Copyright (c) 2018, Wizard Internet Solutions
  * @since       1.0
  */
 
@@ -19,7 +22,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
 
 /**
  * Class Autoloader
@@ -93,7 +95,7 @@ class Popup_Maker {
 	/**
 	 * @var string Plugin Version
 	 */
-	public static $VER = '1.7.30';
+	public static $VER = '1.8.11';
 
 	/**
 	 * @var int DB Version
@@ -138,6 +140,31 @@ class Popup_Maker {
 	public static $DEBUG_MODE = false;
 
 	/**
+	 * @var PUM_Utils_Cron
+	 */
+	public $cron;
+
+	/**
+	 * @var PUM_Repository_Popups
+	 */
+	public $popups;
+
+	/**
+	 * @var PUM_Repository_Themes
+	 */
+	public $themes;
+
+	/**
+	 * @var null|PUM_Model_Popup
+	 */
+	public $current_popup;
+
+	/**
+	 * @var null|PUM_Model_Theme
+	 */
+	public $current_theme;
+
+	/**
 	 * @var Popup_Maker The one true Popup_Maker
 	 */
 	private static $instance;
@@ -152,7 +179,7 @@ class Popup_Maker {
 			self::$instance = new Popup_Maker;
 			self::$instance->setup_constants();
 			self::$instance->includes();
-			self::$instance->load_textdomain();
+			add_action( 'init', array( self::$instance, 'load_textdomain' ) );
 			self::$instance->init();
 		}
 
@@ -168,7 +195,7 @@ class Popup_Maker {
 		self::$URL  = plugins_url( '/', __FILE__ );
 		self::$FILE = __FILE__;
 
-		if ( isset( $_GET['pum_debug'] ) || PUM_Options::get( 'debug_mode', false ) ) {
+		if ( isset( $_GET['pum_debug'] ) || PUM_Utils_Options::get( 'debug_mode', false ) ) {
 			self::$DEBUG_MODE = true;
 		}
 
@@ -217,106 +244,40 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/compat.php';
 
 		// Initialize global options
-		PUM_Options::init();
+		PUM_Utils_Options::init();
 
-		/** @deprecated 1.7.0 */
-		require_once self::$DIR . 'includes/admin/settings/register-settings.php';
+		/** Loads most of our core functions */
+		require_once self::$DIR . 'includes/functions.php';
 
-		/** General Functions */
-		require_once self::$DIR . 'includes/functions/cache.php';
-		require_once self::$DIR . 'includes/functions/options.php';
-		require_once self::$DIR . 'includes/functions/upgrades.php';
-		require_once self::$DIR . 'includes/functions/developers.php';
-		require_once self::$DIR . 'includes/migrations.php';
+		/** Deprecated functionality */
+		require_once self::$DIR . 'includes/functions-backcompat.php';
+		require_once self::$DIR . 'includes/functions-deprecated.php';
+		require_once self::$DIR . 'includes/deprecated-classes.php';
+		require_once self::$DIR . 'includes/deprecated-filters.php';
+		require_once self::$DIR . 'includes/integrations.php';
 
-		// TODO Find another place for these admin functions so this can be put in its correct place.
-		require_once self::$DIR . 'includes/admin/admin-pages.php';
-
-		require_once self::$DIR . 'includes/actions.php';
-		require_once self::$DIR . 'includes/class-popmake-cron.php';
+		// Old Stuff.
 		require_once self::$DIR . 'includes/defaults.php';
-		require_once self::$DIR . 'includes/google-fonts.php';
-		require_once self::$DIR . 'includes/general-functions.php';
-		require_once self::$DIR . 'includes/extensions-functions.php';
 		require_once self::$DIR . 'includes/input-options.php';
-		require_once self::$DIR . 'includes/theme-functions.php';
-		require_once self::$DIR . 'includes/misc-functions.php';
-		require_once self::$DIR . 'includes/css-functions.php';
-		require_once self::$DIR . 'includes/ajax-calls.php';
 
 		require_once self::$DIR . 'includes/importer/easy-modal-v2.php';
-		require_once self::$DIR . 'includes/integrations/google-fonts.php';
-
-		require_once self::$DIR . 'includes/templates.php';
-		require_once self::$DIR . 'includes/load-popups.php';
-		require_once self::$DIR . 'includes/license-handler.php';
 
 		// Phasing Out
 		require_once self::$DIR . 'includes/class-popmake-fields.php';
 		require_once self::$DIR . 'includes/class-popmake-popup-fields.php';
-		require_once self::$DIR . 'includes/class-popmake-popup-theme-fields.php';
-		require_once self::$DIR . 'includes/popup-functions.php';
-
 
 		/**
 		 * v1.4 Additions
 		 */
-		require_once self::$DIR . 'includes/class-pum.php';
-		require_once self::$DIR . 'includes/class-pum-popup-query.php';
 		require_once self::$DIR . 'includes/class-pum-fields.php';
 		require_once self::$DIR . 'includes/class-pum-form.php';
-
-		// Functions
-		require_once self::$DIR . 'includes/pum-popup-functions.php';
-		require_once self::$DIR . 'includes/pum-template-functions.php';
-		require_once self::$DIR . 'includes/pum-general-functions.php';
-		require_once self::$DIR . 'includes/pum-misc-functions.php';
-		require_once self::$DIR . 'includes/pum-template-hooks.php';
 
 		// Modules
 		require_once self::$DIR . 'includes/modules/menus.php';
 		require_once self::$DIR . 'includes/modules/admin-bar.php';
 		require_once self::$DIR . 'includes/modules/reviews.php';
 
-		// Upgrades
-		if ( is_admin() ) {
-			//require_once self::$DIR . 'includes/admin/class-pum-admin-upgrades.php';
-		}
-
-		// Deprecated Code
-		require_once self::$DIR . 'includes/pum-deprecated.php';
-		require_once self::$DIR . 'includes/pum-deprecated-v1.4.php';
-		require_once self::$DIR . 'includes/pum-deprecated-v1.7.php';
-
-		if ( is_admin() ) {
-			require_once self::$DIR . 'includes/admin/admin-setup.php';
-			require_once self::$DIR . 'includes/admin/admin-functions.php';
-			require_once self::$DIR . 'includes/admin/themes/metabox.php';
-			require_once self::$DIR . 'includes/admin/themes/metabox-close-fields.php';
-			require_once self::$DIR . 'includes/admin/themes/metabox-container-fields.php';
-			require_once self::$DIR . 'includes/admin/themes/metabox-content-fields.php';
-			require_once self::$DIR . 'includes/admin/themes/metabox-overlay-fields.php';
-			require_once self::$DIR . 'includes/admin/themes/metabox-title-fields.php';
-			require_once self::$DIR . 'includes/admin/themes/metabox-preview.php';
-			require_once self::$DIR . 'includes/admin/extensions/extensions-page.php';
-			require_once self::$DIR . 'includes/admin/pages/support.php';
-			require_once self::$DIR . 'includes/admin/metabox-support.php';
-		}
-
-		require_once self::$DIR . 'includes/integrations/class-pum-woocommerce-integration.php';
-		require_once self::$DIR . 'includes/integrations/class-pum-buddypress-integration.php';
-
-		// Ninja Forms Integration
-		require_once self::$DIR . 'includes/integrations/class-pum-ninja-forms.php';
-		// CF7 Forms Integration
-		require_once self::$DIR . 'includes/integrations/class-pum-cf7.php';
-		// Gravity Forms Integration
-		require_once self::$DIR . 'includes/integrations/class-pum-gravity-forms.php';
-		// WPML Integration
-		require_once self::$DIR . 'includes/integrations/class-pum-wpml.php';
-
 		require_once self::$DIR . 'includes/pum-install-functions.php';
-		require_once self::$DIR . 'includes/install.php';
 	}
 
 	/**
@@ -324,39 +285,45 @@ class Popup_Maker {
 	 */
 	public function load_textdomain() {
 		// Set filter for plugin's languages directory
-		$popmake_lang_dir = dirname( plugin_basename( POPMAKE ) ) . '/languages/';
-		$popmake_lang_dir = apply_filters( 'popmake_languages_directory', $popmake_lang_dir );
+		$lang_dir = apply_filters( 'pum_lang_dir', dirname( plugin_basename( POPMAKE ) ) . '/languages/' );
+		$lang_dir = apply_filters( 'popmake_languages_directory', $lang_dir );
 
-		// Traditional WordPress plugin locale filter
-		$locale = apply_filters( 'plugin_locale', get_locale(), 'popup-maker' );
-		$mofile = sprintf( '%1$s-%2$s.mo', 'popup-maker', $locale );
+		// Try to load Langpacks first, if they are not available fallback to local files.
+		if ( ! load_plugin_textdomain( 'popup-maker', false, $lang_dir ) ) {
+			// Traditional WordPress plugin locale filter
+			$locale = apply_filters( 'plugin_locale', get_locale(), 'popup-maker' );
+			$mofile = sprintf( '%1$s-%2$s.mo', 'popup-maker', $locale );
 
-		// Setup paths to current locale file
-		$mofile_local  = $popmake_lang_dir . $mofile;
-		$mofile_global = WP_LANG_DIR . '/popup-maker/' . $mofile;
+			// Setup paths to current locale file
+			$mofile_local  = $lang_dir . $mofile;
+			$mofile_global = WP_LANG_DIR . '/popup-maker/' . $mofile;
 
-		if ( file_exists( $mofile_global ) ) {
-			// Look in global /wp-content/languages/popup-maker folder
-			load_textdomain( 'popup-maker', $mofile_global );
-		} elseif ( file_exists( $mofile_local ) ) {
-			// Look in local /wp-content/plugins/popup-maker/languages/ folder
-			load_textdomain( 'popup-maker', $mofile_local );
-		} else {
-			// Load the default language files
-			load_plugin_textdomain( 'popup-maker', false, $popmake_lang_dir );
+			if ( file_exists( $mofile_global ) ) {
+				// Look in global /wp-content/languages/popup-maker folder
+				load_textdomain( 'popup-maker', $mofile_global );
+			} elseif ( file_exists( $mofile_local ) ) {
+				// Look in local /wp-content/plugins/popup-maker/languages/ folder
+				load_textdomain( 'popup-maker', $mofile_local );
+			}
 		}
 	}
 
 	public function init() {
+		$this->cron   = new PUM_Utils_Cron;
+		$this->popups = new PUM_Repository_Popups();
+		$this->themes = new PUM_Repository_Themes();
+
 		PUM_Types::init();
 		PUM_AssetCache::init();
 		PUM_Site::init();
 		PUM_Admin::init();
-		PUM_Upgrades::instance();
+		PUM_Utils_Upgrades::instance();
 		PUM_Newsletters::init();
 		PUM_Previews::init();
 		PUM_Integrations::init();
 		PUM_Privacy::init();
+
+		PUM_Utils_Alerts::init();
 
 		PUM_Shortcode_Popup::init();
 		PUM_Shortcode_PopupTrigger::init();
@@ -367,6 +334,7 @@ class Popup_Maker {
 		 * If no test has been performed we initialize Freemius one last time to check optin status.
 		 */
 		$has_opted_in = get_option( 'pum_previously_opted_using_freemius' );
+
 		if ( false === $has_opted_in ) {
 			PUM_Freemius::instance();
 			update_option( 'pum_previously_opted_using_freemius', PUM_Freemius::instance()->fs()->is_registered() ? 1 : 0 );
@@ -437,7 +405,21 @@ add_action( 'plugins_loaded', 'popmake_initialize' );
  *
  * @return object The one true Popup_Maker Instance
  */
-
 function PopMake() {
+	return Popup_Maker::instance();
+}
+
+/**
+ * The main function responsible for returning the one true Popup_Maker
+ * Instance to functions everywhere.
+ *
+ * Use this function like you would a global variable, except without needing
+ * to declare the global.
+ *
+ * @since      1.8.0
+ *
+ * @return Popup_Maker
+ */
+function pum() {
 	return Popup_Maker::instance();
 }
