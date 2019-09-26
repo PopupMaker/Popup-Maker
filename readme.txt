@@ -99,7 +99,8 @@ There are several common causes for this, check [this guide for help](https://do
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
 = v1.8.12 - 09/??/2019 =
-* Improvement: Changed hook that we initialize Ninja Forms on sot that it can be disabled from theme functions.php.
+* Improvement: Changed hook that we initialize Ninja Forms on so that it can be disabled from theme functions.php.
+* Improvement: Don't load CF7 scripts if they are forced off.
 
 = v1.8.11 - 08/18/2019 =
 * Improvement: Trigger window resize event when popups open to fix issues with some sliders & JS sized content.
