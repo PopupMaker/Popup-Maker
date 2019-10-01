@@ -102,6 +102,7 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 * Improvement: Changed hook that we initialize Ninja Forms on so that it can be disabled from theme functions.php.
 * Improvement: Don't load CF7 scripts if they are forced off.
 * Improvement: Fixed some old options checks that were always being detected as true resulting in minor performance improvements.
+* Tweak: Added nonce to the system info file download available under Popup Maker -> Tools and simplified the pum_actions system.
 
 = v1.8.11 - 08/18/2019 =
 * Improvement: Trigger window resize event when popups open to fix issues with some sliders & JS sized content.
