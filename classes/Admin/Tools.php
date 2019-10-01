@@ -430,7 +430,7 @@ class PUM_Admin_Tools {
 	 * @since       1.5
 	 */
 	public static function popup_sysinfo() {
-		if ( ! wp_verify_nonce( $_POST['pum_popup_sysinfo_nonce'], 'pum_popup_sysinfo_nonce' ) ) {
+		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) || ! wp_verify_nonce( $_POST['pum_popup_sysinfo_nonce'], 'pum_popup_sysinfo_nonce' ) ) {
 			return;
 		}
 
