@@ -23,10 +23,10 @@ class PUM_Admin_Tools {
 	public static function init() {
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
 		add_action( 'admin_init', array( __CLASS__, 'emodal_process_import' ) );
-		add_action( 'popmake_save_enabled_betas', array( __CLASS__, 'save_enabled_betas' ) );
+		add_action( 'pum_save_enabled_betas', array( __CLASS__, 'save_enabled_betas' ) );
 		add_action( 'pum_tools_page_tab_import', array( __CLASS__, 'emodal_v2_import_button' ) );
 		add_action( 'pum_tools_page_tab_system_info', array( __CLASS__, 'sysinfo_display' ) );
-		add_action( 'popmake_popup_sysinfo', array( __CLASS__, 'sysinfo_download' ) );
+		add_action( 'pum_popup_sysinfo', array( __CLASS__, 'popup_sysinfo' ) );
 		add_action( 'pum_tools_page_tab_betas', array( __CLASS__, 'betas_display' ) );
 	}
 
@@ -128,9 +128,9 @@ class PUM_Admin_Tools {
 			$tabs = apply_filters( 'popmake_tools_tabs', $tabs );
 		}
 
-		if ( count( self::get_beta_enabled_extensions() ) == 0 ) {
-			//unset( $tabs['betas'] );
-		}
+		/*if ( count( self::get_beta_enabled_extensions() ) == 0 ) {
+			unset( $tabs['betas'] );
+		}*/
 
 		return $tabs;
 	}
@@ -165,7 +165,8 @@ class PUM_Admin_Tools {
         <form action="" method="post">
 			<textarea style="min-height: 350px; width: 100%; display: block;" readonly="readonly" onclick="this.focus(); this.select()" id="system-info-textarea" name="popmake-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'popup-maker' ); ?>"><?php echo self::sysinfo_text(); ?></textarea>
             <p class="submit">
-                <input type="hidden" name="popmake_action" value="popup_sysinfo" />
+                <input type="hidden" name="pum_action" value="popup_sysinfo" />
+	            <?php wp_nonce_field( 'pum_popup_sysinfo_nonce', 'pum_popup_sysinfo_nonce' ); ?>
 				<?php submit_button( 'Download System Info File', 'primary', 'popmake-download-sysinfo', false ); ?>
             </p>
         </form>
@@ -428,7 +429,11 @@ class PUM_Admin_Tools {
 	 *
 	 * @since       1.5
 	 */
-	public static function sysinfo_download() {
+	public static function popup_sysinfo() {
+		if ( ! wp_verify_nonce( $_POST['pum_popup_sysinfo_nonce'], 'pum_popup_sysinfo_nonce' ) ) {
+			return;
+		}
+
 		nocache_headers();
 
 		header( 'Content-Type: text/plain' );
@@ -531,7 +536,7 @@ class PUM_Admin_Tools {
 					<?php endforeach; ?>
                     </tbody>
                 </table>
-                <input type="hidden" name="popmake_action" value="save_enabled_betas" />
+                <input type="hidden" name="pum_action" value="save_enabled_betas" />
 				<?php wp_nonce_field( 'pum_save_betas_nonce', 'pum_save_betas_nonce' ); ?>
 				<?php submit_button( __( 'Save', 'popup-maker' ), 'secondary', 'submit', false ); ?>
             </div>
