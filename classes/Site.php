@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class PUM_Site
+ */
 class PUM_Site {
 
 	public static function init() {
@@ -34,14 +37,22 @@ class PUM_Site {
 	 * functions are called on init.
 	 */
 	public static function actions() {
-		if ( isset( $_GET['popmake_action'] ) ) {
-			do_action( 'popmake_' . $_GET['popmake_action'], $_GET );
-		} else if ( isset( $_POST['popmake_action'] ) ) {
-			do_action( 'popmake_' . $_POST['popmake_action'], $_POST );
-		} else if ( isset( $_GET['pum_action'] ) ) {
-			do_action( 'pum_' . $_GET['pum_action'], $_GET );
-		} else if ( isset( $_POST['pum_action'] ) ) {
-			do_action( 'pum_' . $_POST['pum_action'], $_POST );
+		if ( empty( $_REQUEST['pum_action'] ) ) {
+			return;
 		}
+
+		$valid_actions = apply_filters( 'pum_valid_request_actions', array(
+			'popup_sysinfo',
+			'save_enabled_betas',
+			'download_batch_export',
+		) );
+
+		$action = sanitize_text_field( $_REQUEST['pum_action'] );
+
+		if ( ! in_array( $action, $valid_actions ) || ! has_action( 'pum_' . $action ) ) {
+			return;
+		}
+
+		do_action( 'pum_' . $action, $_REQUEST );
 	}
 }
