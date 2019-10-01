@@ -523,7 +523,7 @@ msgstr ""
 msgid "Time Delay Settings"
 msgstr ""
 
-#: classes/Triggers.php:164, classes/Triggers.php:169, classes/Shortcode/Subscribe.php:394, includes/integrations/class-pum-cf7.php:143, includes/integrations/class-pum-gravity-forms.php:138, includes/integrations/ninja-forms/Actions/ClosePopup.php:43
+#: classes/Triggers.php:164, classes/Triggers.php:169, classes/Shortcode/Subscribe.php:394, includes/integrations/class-pum-cf7.php:147, includes/integrations/class-pum-gravity-forms.php:138, includes/integrations/ninja-forms/Actions/ClosePopup.php:43
 msgid "Delay"
 msgstr ""
 
@@ -543,7 +543,7 @@ msgstr ""
 msgid "Cookie"
 msgstr ""
 
-#: classes/Types.php:21, classes/Types.php:167, classes/Upsell.php:92, classes/Admin/Popups.php:64, classes/Shortcode/Popup.php:28, classes/Shortcode/Popup.php:378, classes/Shortcode/Subscribe.php:93, includes/integrations/class-pum-cf7.php:163, includes/integrations/class-pum-gravity-forms.php:158, includes/modules/menus.php:55, classes/Admin/Subscribers/Table.php:94
+#: classes/Types.php:21, classes/Types.php:167, classes/Upsell.php:92, classes/Admin/Popups.php:64, classes/Shortcode/Popup.php:28, classes/Shortcode/Popup.php:378, classes/Shortcode/Subscribe.php:93, includes/integrations/class-pum-cf7.php:167, includes/integrations/class-pum-gravity-forms.php:158, includes/modules/menus.php:55, classes/Admin/Subscribers/Table.php:94
 msgid "Popup"
 msgstr ""
 
@@ -855,7 +855,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: classes/Admin/Assets.php:68, classes/Admin/Settings.php:581, classes/Admin/Settings.php:610, classes/Admin/Tools.php:84, classes/Admin/Tools.php:540, includes/integrations/class-pum-gravity-forms.php:173
+#: classes/Admin/Assets.php:68, classes/Admin/Settings.php:581, classes/Admin/Settings.php:610, classes/Admin/Tools.php:84, classes/Admin/Tools.php:541, includes/integrations/class-pum-gravity-forms.php:173
 msgid "Save"
 msgstr ""
 
@@ -1039,7 +1039,7 @@ msgstr ""
 msgid "Register a popup name. The CSS class ‘popmake-{popup-name}’ can be used to set a trigger to display a popup."
 msgstr ""
 
-#: classes/Admin/Popups.php:130, includes/integrations/class-pum-cf7.php:115, includes/integrations/class-pum-cf7.php:129, includes/integrations/class-pum-gravity-forms.php:119
+#: classes/Admin/Popups.php:130, includes/integrations/class-pum-cf7.php:119, includes/integrations/class-pum-cf7.php:133, includes/integrations/class-pum-gravity-forms.php:119
 msgid "Popup Settings"
 msgstr ""
 
@@ -2086,23 +2086,23 @@ msgstr ""
 msgid "Import / Export"
 msgstr ""
 
-#: classes/Admin/Tools.php:168
+#: classes/Admin/Tools.php:166
 msgid "To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac)."
 msgstr ""
 
-#: classes/Admin/Tools.php:448
+#: classes/Admin/Tools.php:451
 msgid "Import From Easy Modal v2"
 msgstr ""
 
-#: classes/Admin/Tools.php:518
+#: classes/Admin/Tools.php:521
 msgid "Enable Beta Versions"
 msgstr ""
 
-#: classes/Admin/Tools.php:520
+#: classes/Admin/Tools.php:523
 msgid "Checking any of the below checkboxes will opt you in to receive pre-release update notifications. You can opt-out at any time. Pre-release updates do not install automatically, you will still have the opportunity to ignore update notifications."
 msgstr ""
 
-#: classes/Admin/Tools.php:532
+#: classes/Admin/Tools.php:533
 msgid "Get updates for pre-release versions of %s"
 msgstr ""
 
@@ -2394,15 +2394,15 @@ msgstr ""
 msgid "Radio forces the user to make a choice, often resulting in more optins."
 msgstr ""
 
-#: classes/Shortcode/Subscribe.php:390, includes/integrations/class-pum-cf7.php:135, includes/integrations/class-pum-gravity-forms.php:130, includes/modules/admin-bar.php:493, includes/integrations/ninja-forms/Actions/ClosePopup.php:36
+#: classes/Shortcode/Subscribe.php:390, includes/integrations/class-pum-cf7.php:139, includes/integrations/class-pum-gravity-forms.php:130, includes/modules/admin-bar.php:493, includes/integrations/ninja-forms/Actions/ClosePopup.php:36
 msgid "Close Popup"
 msgstr ""
 
-#: classes/Shortcode/Subscribe.php:406, includes/integrations/class-pum-cf7.php:155, includes/integrations/class-pum-gravity-forms.php:150, includes/modules/admin-bar.php:483, includes/integrations/ninja-forms/Actions/OpenPopup.php:35
+#: classes/Shortcode/Subscribe.php:406, includes/integrations/class-pum-cf7.php:159, includes/integrations/class-pum-gravity-forms.php:150, includes/modules/admin-bar.php:483, includes/integrations/ninja-forms/Actions/OpenPopup.php:35
 msgid "Open Popup"
 msgstr ""
 
-#: classes/Shortcode/Subscribe.php:413, includes/integrations/class-pum-cf7.php:218, includes/integrations/class-pum-gravity-forms.php:228, includes/integrations/ninja-forms/Actions/OpenPopup.php:78
+#: classes/Shortcode/Subscribe.php:413, includes/integrations/class-pum-cf7.php:222, includes/integrations/class-pum-gravity-forms.php:228, includes/integrations/ninja-forms/Actions/OpenPopup.php:78
 msgid "Select a popup"
 msgstr ""
 
@@ -2691,15 +2691,15 @@ msgstr ""
 msgid "BP: Is Action Variable"
 msgstr ""
 
-#: includes/integrations/class-pum-cf7.php:97
+#: includes/integrations/class-pum-cf7.php:101
 msgid "Contact Form 7 Success"
 msgstr ""
 
-#: includes/integrations/class-pum-cf7.php:130
+#: includes/integrations/class-pum-cf7.php:134
 msgid "These settings control popups after successful form submissions."
 msgstr ""
 
-#: includes/integrations/class-pum-cf7.php:150, includes/integrations/class-pum-gravity-forms.php:145, includes/integrations/ninja-forms/Actions/ClosePopup.php:43
+#: includes/integrations/class-pum-cf7.php:154, includes/integrations/class-pum-gravity-forms.php:145, includes/integrations/ninja-forms/Actions/ClosePopup.php:43
 msgid "seconds"
 msgstr ""
 
