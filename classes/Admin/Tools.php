@@ -163,7 +163,7 @@ class PUM_Admin_Tools {
 	 */
 	public static function sysinfo_display() { ?>
         <form action="" method="post">
-			<textarea style="min-height: 350px; width: 100%; display: block;" readonly="readonly" onclick="this.focus(); this.select()" id="system-info-textarea" name="popmake-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'popup-maker' ); ?>"><?php echo self::sysinfo_text(); ?></textarea>
+			<textarea style="min-height: 350px; width: 100%; display: block;" readonly="readonly" onclick="this.focus(); this.select()" id="system-info-textarea" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'popup-maker' ); ?>"><?php echo self::sysinfo_text(); ?></textarea>
             <p class="submit">
                 <input type="hidden" name="pum_action" value="popup_sysinfo" />
 	            <?php wp_nonce_field( 'pum_popup_sysinfo_nonce', 'pum_popup_sysinfo_nonce' ); ?>
@@ -439,7 +439,7 @@ class PUM_Admin_Tools {
 		header( 'Content-Type: text/plain' );
 		header( 'Content-Disposition: attachment; filename="popmake-system-info.txt"' );
 
-		echo wp_strip_all_tags( $_POST['popmake-sysinfo'] );
+		echo self::sysinfo_text();
 		exit;
 	}
 
