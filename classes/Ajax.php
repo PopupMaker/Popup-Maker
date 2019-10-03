@@ -6,7 +6,7 @@
  * @package     PUM
  * @subpackage  PUM/includes
  * @author      Daniel Iser <danieliser@wizardinternetsolutions.com>
- * @copyright   Copyright (c) 2016, Daniel Iser
+ * @copyright   Copyright (c) 2019, Code Atlantic LLC
  * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
  */
 

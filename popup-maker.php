@@ -12,10 +12,8 @@
  * Domain Path:  /languages/
  *
  * @package     POPMAKE
- * @category    Core
  * @author      Daniel Iser
- * @copyright   Copyright (c) 2018, Wizard Internet Solutions
- * @since       1.0
+ * @copyright   Copyright (c) 2019, Code Atlantic LLC
  */
 
 // Exit if accessed directly

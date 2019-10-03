@@ -6291,7 +6291,7 @@
     return pumselect2;
 }));
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
     "use strict";
@@ -6390,7 +6390,7 @@
         });
 }(jQuery));
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
     "use strict";
@@ -6436,7 +6436,7 @@
         .on('pum_init', colorpicker.init);
 }(jQuery));
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 (function ($) {
@@ -7067,7 +7067,7 @@ function pumChecked(val1, val2, print) {
 }
 
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
     "use strict";
@@ -7227,7 +7227,7 @@ function pumChecked(val1, val2, print) {
 
 }(jQuery));
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
     "use strict";
@@ -7273,7 +7273,7 @@ function pumChecked(val1, val2, print) {
     window.PUM_Admin.models = models;
 }(jQuery));
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
     'use strict';
@@ -7412,7 +7412,7 @@ function pumChecked(val1, val2, print) {
 
 }(jQuery));
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
     "use strict";
@@ -7804,7 +7804,7 @@ function pumChecked(val1, val2, print) {
     return FormSerializer;
 }));
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
     "use strict";
@@ -7859,7 +7859,7 @@ function pumChecked(val1, val2, print) {
         });
 }(jQuery));
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
     "use strict";
@@ -8291,7 +8291,7 @@ function pumChecked(val1, val2, print) {
     window.PUM_Admin.templates = templates;
 }(window.jQuery));
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
     "use strict";

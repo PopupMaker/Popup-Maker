@@ -4,7 +4,7 @@
  *
  * @package  POPMAKE_EMODAL
  * @subpackage  Functions/Import
- * @copyright   Copyright (c) 2014, Daniel Iser
+ * @copyright   Copyright (c) 2019, Code Atlantic LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since   1.0
  */

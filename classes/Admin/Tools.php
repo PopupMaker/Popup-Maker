@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -276,7 +276,7 @@ class PUM_Admin_Tools {
 		$return = apply_filters( 'popmake_sysinfo_after_popmake_config', $return );
 
 		// Must-use plugins
-		$muplugins = get_mu_plugins();
+		$muplugins = function_exists( 'get_mu_plugins' ) ? get_mu_plugins() : array();
 		if ( $muplugins && count( $muplugins ) ) {
 			$return .= "\n" . '-- Must-Use Plugins' . "\n\n";
 
