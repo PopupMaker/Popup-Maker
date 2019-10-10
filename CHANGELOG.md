@@ -1,4 +1,4 @@
-### v1.8.13 - 10/03/2019
+### v1.8.13 - 10/11/2019
 * Tweak: Added cap check to ensure only authorized users can access support debug text file. @Credit goes to Ilias Dimopoulos from Neurosoft S.A , RedyOps Team.
 
 ### v1.8.12 - 10/01/2019

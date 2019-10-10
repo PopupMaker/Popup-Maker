@@ -98,7 +98,7 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
-= v1.8.13 - 10/??/2019 =
+= v1.8.13 - 10/10/2019 =
 * Tweak: Added cap check to ensure only authorized users can access support debug text file. @Credit goes to Ilias Dimopoulos from Neurosoft S.A , RedyOps Team.
 
 = v1.8.12 - 10/01/2019 =
