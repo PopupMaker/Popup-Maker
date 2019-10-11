@@ -46,7 +46,7 @@ final class NF_PUM {
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof NF_PUM ) ) {
-			spl_autoload_register( array( self, 'autoloader' ) );
+			spl_autoload_register( array( self::class, 'autoloader' ) );
 
 			self::$instance = new NF_PUM();
 
