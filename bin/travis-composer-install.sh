@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "TRAVIS PHP VERSION $1";
+
 # https://stackoverflow.com/a/24067243
 function version_gt() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"; }
 
