@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# https://stackoverflow.com/a/24067243
 function version_gt() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"; }
 
-if [ TRAVIS_PHP_VERSION = 7 ] || version_gt TRAVIS_PHP_VERSION 7; then
-     COMPOSER=composer-travis-php7.json composer install
+if [ $1 = 7 ] || version_gt $1 7; then
+    echo "composer install composer-travis-php7.json";
+    #COMPOSER=composer-travis-php7.json composer install
 else
-    COMPOSER=composer-travis-php5.json composer install
+    echo "composer install composer-travis-php5.json";
+    #COMPOSER=composer-travis-php5.json composer install
 fi
