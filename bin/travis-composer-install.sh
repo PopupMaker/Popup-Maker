@@ -7,8 +7,8 @@ function version_gt() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$
 
 if [ $1 = 7 ] || version_gt $1 7; then
     echo "composer install composer-travis-php7.json";
-    #COMPOSER=composer-travis-php7.json composer install
+    COMPOSER=composer-travis-php7.json composer install
 else
     echo "composer install composer-travis-php5.json";
-    #COMPOSER=composer-travis-php5.json composer install
+    COMPOSER=composer-travis-php5.json composer install
 fi
