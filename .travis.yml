@@ -39,7 +39,7 @@ before_script:
 
 script:
   - phpenv config-rm xdebug.ini
-  - vendor/bin/phpunit
+  - vendor/bin/phpunit tests/
 
 branches:
   only:
