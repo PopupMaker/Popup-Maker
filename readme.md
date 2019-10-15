@@ -32,7 +32,7 @@ This is a WordPress plugin that is hosted on the WordPress.org SVN repo.
 There is not currently any automated deployment. Instead, once a release is published on GitHub, that release is manually uploaded to the SVN.
 
 ## Contributing
-Community made feature requests, patches, localizations, bug reports, and contributions are always welcome and are crucial to ensure User Menus continues to grow.
+Community made feature requests, patches, localizations, bug reports, and contributions are always welcome and are crucial to ensure Popup Maker continues to grow.
 
 When contributing please ensure you follow the guidelines below so that we can keep on top of things.
 
@@ -61,4 +61,4 @@ See also [the list of contributors](https://github.com/PopupMaker/Popup-Maker/gr
 This project is licensed under the GPLv2 License.
 
 ## Support
-This is a developer's portal for User Menus and **should not** be used for support. Please [create a support ticket here](https://wordpress.org/support/plugin/popup-maker/).
+This is a developer's portal for Popup Maker and **should not** be used for support. Please [create a support ticket here](https://wordpress.org/support/plugin/popup-maker/).
