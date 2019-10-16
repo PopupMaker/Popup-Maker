@@ -17,7 +17,7 @@ Everything you need to create unique popup user experiences. Insert forms & othe
 
 = Best WordPress Popup Plugin =
 
-Popup Maker™ is the **best popup plugin WordPress** has to offer. It is extremely versatile & flexible. Bend it to create any type of popup, modal or content overlay for your WordPress website.
+[Popup Maker™](https://wppopupmaker.com) is the **best popup plugin WordPress** has to offer. It is extremely versatile & flexible. Bend it to create any type of popup, modal, or content overlay for your WordPress website.
 
 Customize every facet of your popups, from theme and position, to targeting and cookies.
 
@@ -25,7 +25,7 @@ Easily create [EU cookie notices](https://ninjaforms.com/eu-cookie-notices-ninja
 
 Learn popup tips and tricks, and create cool popups using guides found on our [Blog](https://wppopupmaker.com/blog/?utm_campaign=Readme&utm_source=readme-description&utm_medium=text-link)!
 
-https://www.youtube.com/watch?v=MAf85_oax4g
+https://www.youtube.com/watch?v=PomnMganMVM
 
 Follow this plugin on [GitHub](https://github.com/PopupMaker/Popup-Maker) and [Twitter](https://twitter.com/wppopupmaker)!
 
@@ -55,6 +55,26 @@ If you are enjoying this wonderful popup plugin, [please rate & review it](https
 > + [Age Verification Modals](https://wppopupmaker.com/extensions/age-verification-modals/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Upsell&utm_content=age-verification-modals "Age Verification Modals") - Verify the age of your users before allowing them to view pages or click buttons/links.
 > + [Popup Analytics](https://wppopupmaker.com/extensions/popup-analytics/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Upsell&utm_content=popup-analytics "Popup Analytics")
 > + [Advanced Targeting Conditions](https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Upsell&utm_content=advanced-targeting-conditions "Advanced Targeting Conditions")
+
+= Created by Code Atlantic =
+
+Popup Maker is built by the [Code Atlantic][codeatlantic] team. We create high-quality WordPress plugins that help you grow your WordPress sites.
+
+Check out some of our most popular plugins:
+
+* [User Menus][usermenus] - Show Or Hide Menu Items For Different Users
+* [Ahoy][ahoy] - Automated Marketing Messages for WordPress
+* [Content Control][contentcontrol] - Restrict Access to Pages and Posts
+
+**Requires WordPress 3.6 and PHP 5.3**
+
+[codeatlantic]: https://code-atlantic.com "Code Atlantic - High Quality WordPress Plugins"
+
+[usermenus]: https://wordpress.org/plugins/user-menus/ "Show Or Hide Menu Items For Different Users"
+
+[ahoy]: https://useahoy.com "Automated Marketing Messages for WordPress"
+
+[contentcontrol]: https://wordpress.org/plugins/content-control/ "Control Who Can Access Content"
 
 == Frequently Asked Questions ==
 
