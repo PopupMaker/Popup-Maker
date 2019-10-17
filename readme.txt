@@ -26,7 +26,8 @@ Create unlimited popups of every type you need and customize every facet of each
 
  = Trusted by many people just like you! =
  Popup Maker is used on over 400,000 websites and has received over 3,000 5-star reviews just like this one:
-> = Great product – best I’ve used! =
+
+> **Great product – best I’ve used!**
 > "I’ve tried many different popup programs, but I must say I find this one the best!" ~[@jessefjosserand](https://wordpress.org/support/topic/great-product-best-ive-used/)
 
 = What's Included for Free: =
@@ -43,7 +44,7 @@ Create unlimited popups of every type you need and customize every facet of each
 * **Auto Open Triggers** allows you to set a **timed delay**, then the popup will display according to your preference.
 * Trove of options to customize the look of your popup using our unique **Theme Editor**. Change colors, shadows, fonts, paddings, and much, much more.
 
-> = Great plugin, everything I needed =
+> **Great plugin, everything I needed**
 > "Really nice plugin, simple to use, responsive, a good catch !" ~[@lemmmy](https://wordpress.org/support/topic/great-plugin-everything-i-needed/)
 
 = Enhance Your WordPress Popups Using Our Premium Features =
@@ -54,8 +55,6 @@ Create unlimited popups of every type you need and customize every facet of each
 * [Popup Analytics](https://wppopupmaker.com/extensions/popup-analytics/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Upsell&utm_content=popup-analytics "Popup Analytics")
 * [Advanced Targeting Conditions](https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_source=readme-description&utm_medium=text-link&utm_campaign=Upsell&utm_content=advanced-targeting-conditions "Advanced Targeting Conditions")
 * And [many more](https://wppopupmaker.com/extensions/)!
-
-Learn popup tips and tricks, and create cool popups using guides found on our [Blog](https://wppopupmaker.com/blog/?utm_campaign=Readme&utm_source=readme-description&utm_medium=text-link)!
 
 Follow this plugin on [GitHub](https://github.com/PopupMaker/Popup-Maker) and [Twitter](https://twitter.com/wppopupmaker)!
 
