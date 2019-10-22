@@ -42,7 +42,7 @@ final class NF_PUM_Actions_OpenPopup extends NF_Abstracts_Action
 				'label' => __( 'Popup ID', 'popup-maker' ),
 				'placeholder' => '',
 				'width' => 'full',
-				'options' => $this->get_popup_list(),
+				'options' => isset( $_GET['page'] ) && 'ninja-forms' === $_GET['page'] && ! empty( $_GET['form_id'] ) ? $this->get_popup_list() : array(),
 			),
 		);
 
