@@ -46,7 +46,7 @@ final class NF_PUM {
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof NF_PUM ) ) {
-			spl_autoload_register( array( self::class, 'autoloader' ) );
+			spl_autoload_register( array( __CLASS__, 'autoloader' ) );
 
 			self::$instance = new NF_PUM();
 
@@ -65,7 +65,7 @@ final class NF_PUM {
 
 	/**
 	 * Register Actions
-	 * 
+	 *
 	 * Register custom form actions to integrate with popups.
 	 */
 	public function register_actions() {
@@ -155,7 +155,7 @@ function NF_PUM() {
 }
 
 /**
- * 
+ *
  */
 function pum_nf_should_init() {
 	if ( ! class_exists( 'Ninja_Forms' ) ) {
