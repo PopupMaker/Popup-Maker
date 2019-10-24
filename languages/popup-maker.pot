@@ -2707,7 +2707,7 @@ msgstr ""
 msgid "Gravity Form Success"
 msgstr ""
 
-#: includes/integrations/class-pum-ninja-forms.php:98
+#: includes/integrations/class-pum-ninja-forms.php:83
 msgid "Ninja Form Success"
 msgstr ""
 

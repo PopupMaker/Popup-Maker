@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, advertising, conversion, responsive popu
 Requires at least: 4.1
 Tested up to: 5.3
 Requires PHP: 5.2.17
-Stable tag: 1.8.13
+Stable tag: 1.8.14
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,7 +27,7 @@ https://www.youtube.com/watch?v=PomnMganMVM
 Create unlimited popups of every type you need and customize every facet of each of your popups from theme and position, to targeting and cookies.
 
  = Trusted by many people just like you! =
- Popup Maker is used on over 400,000 websites and has received over 3,100 5-star reviews just like this one:
+Popup Maker is used on over 400,000 websites and has received over 3,100 5-star reviews just like this one:
 
 > **Great product – best I’ve used!**
 > "I’ve tried many different popup programs, but I must say I find this one the best!" ~[@jessefjosserand](https://wordpress.org/support/topic/great-product-best-ive-used/)
@@ -125,8 +125,9 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
-= v1.8.14 - 10/??/2019 =
-* Updated nav menu editor walker class for adding custom fields to further improve compatibility.
+= v1.8.14 - 10/24/2019 =
+* Improvement: Updated nav menu editor walker class for adding custom fields to further improve compatibility.
+* Fix: Ninja Forms popup actions missing.
 
 = v1.8.13 - 10/10/2019 =
 * Tweak: Added cap check to ensure only authorized users can access support debug text file. @Credit goes to Ilias Dimopoulos from Neurosoft S.A , RedyOps Team.
