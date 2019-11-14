@@ -224,6 +224,7 @@ class PUM_Extension_License {
 			'edd_action' => 'activate_license',
 			'license'    => $license,
 			'item_name'  => urlencode( $this->item_name ),
+			'item_id'    => $this->item_id,
 			'url'        => home_url(),
 		);
 
