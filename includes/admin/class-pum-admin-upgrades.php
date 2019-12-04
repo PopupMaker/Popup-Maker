@@ -106,9 +106,7 @@ class PUM_Admin_Upgrades {
                 'manage_network_plugins',
                 'popup-maker',
                 '',
-                'data:image/svg+xml;base64,' . base64_encode('Fixed. Just so you can see the enhancement in doing this, here's the icon with various admin color schemes/themes.
-
-')
+                pum_get_svg_icon( true )
             );
             $parent = 'popup-maker';
         }
