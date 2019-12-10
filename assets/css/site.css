@@ -133,6 +133,11 @@
   z-index: 1999999999;
 }
 
+.edit-post-visual-editor .block-editor-block-list__layout {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
 .pum-container.pum-responsive {
   left: 50%;
   margin-left: -47.5%;

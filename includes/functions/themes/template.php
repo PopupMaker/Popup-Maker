@@ -34,13 +34,16 @@ function pum_get_rendered_theme_styles( $theme_id ) {
 
 			case 'overlay':
 				$css_selector = ".pum-theme-{$theme_id}";
+                $css_selector .= ", .pum-theme-{$theme_id} .edit-post-visual-editor";
 				if ( $slug ) {
 					$css_selector .= ", .pum-theme-{$slug}";
 				}
 				break;
 
 			case 'container':
-				$css_selector = ".pum-theme-{$theme_id} .pum-container";
+                $css_selector = ".pum-theme-{$theme_id} .pum-container";
+                // Used to style the block editor based on chosen theme.
+                $css_selector .= ", .pum-theme-{$theme_id} .edit-post-visual-editor .block-editor-block-list__layout";
 				if ( $slug ) {
 					$css_selector .= ", .pum-theme-{$slug} .pum-container";
 				}
@@ -54,6 +57,17 @@ function pum_get_rendered_theme_styles( $theme_id ) {
 					$admin_bar_selector .= ", body.admin-bar .pum-theme-{$slug} .pum-content + .pum-close";
 				}
 				break;
+
+            case 'title':
+                $css_selector = ".pum-theme-{$theme_id} .pum-{$element}";
+                // Used to style blocks that have the popup title style applied.
+                $css_selector .= ", .pum-theme-{$theme_id} .is-style-popup-title";
+                if ( $slug ) {
+                    $css_selector .= ", .pum-theme-{$slug} .pum-{$element}";
+                    // Used to style blocks that have the popup title style applied.
+                    $css_selector .= ", .pum-theme-{$slug} .is-style-popup-title";
+                }
+                break;
 
 			default:
 				$css_selector = ".pum-theme-{$theme_id} .pum-{$element}";
