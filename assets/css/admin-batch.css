@@ -53,7 +53,8 @@
 .pum-batch-progress progress[value]::-moz-progress-value, .pum-batch-progress progress[value]::-ms-progress-value, .pum-batch-progress progress[value]::progress-value {
   background-color: #4169e1;
   border-radius: 3px;
-  -webkit-transition: width 0.15s cubic-bezier(0, 0, 1, -0.12);
+    -moz-transition: width 0.15s cubic-bezier(0, 0, 1, -0.12);
+    -ms-transition: width 0.15s cubic-bezier(0, 0, 1, -0.12);
   transition: width 0.15s cubic-bezier(0, 0, 1, -0.12);
 }
 
