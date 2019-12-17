@@ -218,7 +218,7 @@ class PUM_CF7_Integration {
 	public static function get_popup_list() {
 		$popup_list = array(
 			array(
-				'value' => '',
+				'value' => 0,
 				'label' => __( 'Select a popup', 'popup-maker' ),
 			),
 		);
