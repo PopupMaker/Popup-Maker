@@ -161,7 +161,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 			foreach ( $columns as $key => $type ) {
 				if ( in_array( $key, $fields ) ) {
 					if ( $type == '%s' || ( $type == '%d' && is_numeric( $search ) ) ) {
-						$values[]       = '%' . $search . '%';
+						$values[]       = '%' . $wpdb->esc_like( $search ) . '%';
 						$search_where[] = "`$key` LIKE '%s'";
 					}
 				}
@@ -175,7 +175,8 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		$query .= " $where";
 
 		if ( ! empty( $args['orderby'] ) ) {
-			$query .= " ORDER BY `" . wp_unslash( trim( $args['orderby'] ) ) . '`';
+			$query    .= " ORDER BY %s";
+			$values[] = wp_unslash( trim( $args['orderby'] ) );
 
 			switch ( $args['order'] ) {
 				case 'asc':
@@ -191,7 +192,8 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		}
 
 		if ( ! empty( $args['limit'] ) ) {
-			$query .= " LIMIT " . absint( $args['limit'] );
+			$query    .= " LIMIT %d";
+			$values[] = absint( $args['limit'] );
 		}
 
 		// Pagination.
@@ -200,7 +202,8 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		}
 
 		if ( ! empty( $args['offset'] ) ) {
-			$query .= " OFFSET " . absint( $args['offset'] );
+			$query    .= " OFFSET %d";
+			$values[] = absint( $args['offset'] );
 		}
 
 		if ( strpos( $query, '%s' ) || strpos( $query, '%d' ) ) {
