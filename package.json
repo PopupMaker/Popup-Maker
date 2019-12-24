@@ -5,6 +5,7 @@
   "private": true,
   "license": "GPL-2.0-or-later",
   "main": "gulpfile.js",
+  "author": "Code Atlantic LLC",
   "repository": {
     "type": "git",
     "url": "https://github.com/PopupMaker/Popup-Maker/"
