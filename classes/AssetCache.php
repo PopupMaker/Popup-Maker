@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 
@@ -176,7 +176,7 @@ class PUM_AssetCache {
 
 		$js = "/**\n";
 		$js .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
-		$js .= " * Last modifiyed time: " . date( 'M d Y, h:s:i' ) . "\n";
+		$js .= " * Last modified time: " . date( 'M d Y, h:s:i' ) . "\n";
 		$js .= " */\n\n\n";
 		$js .= self::generate_js();
 
@@ -195,7 +195,7 @@ class PUM_AssetCache {
 
 		$css = "/**\n";
 		$css .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
-		$css .= " * Last modifiyed time: " . date( 'M d Y, h:s:i' ) . "\n";
+		$css .= " * Last modified time: " . date( 'M d Y, h:s:i' ) . "\n";
 		$css .= " */\n\n\n";
 		$css .= self::generate_css();
 
@@ -235,7 +235,7 @@ class PUM_AssetCache {
 				pum()->current_popup = $popup;
 
 				// Preprocess the content for shortcodes that need to enqueue their own assets.
-				PUM_Helpers::do_shortcode( $popup->post_content );
+				// PUM_Helpers::do_shortcode( $popup->post_content );
 
 				ob_start();
 
@@ -372,7 +372,7 @@ class PUM_AssetCache {
 				pum()->current_popup = $popup;
 
 				// Preprocess the content for shortcodes that need to enqueue their own assets.
-				PUM_Helpers::do_shortcode( $popup->post_content );
+				// PUM_Helpers::do_shortcode( $popup->post_content );
 
 				$popup = pum_get_popup( $popup->ID );
 

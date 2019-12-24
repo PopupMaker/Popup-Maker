@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -112,7 +112,7 @@ class PUM_Admin_Templates {
 				<# _.each(data.options, function(option, key) { #>
 				<li>
 					<input type="checkbox" id="{{data.id}}_{{key}}" name="{{data.name}}[{{option.value}}]" value="{{option.value}}" {{{option.meta}}}/>
-					<label for="{{data.id}}_{{key}}">{{option.label}}</label>
+					<label for="{{data.id}}_{{key}}">{{{option.label}}}</label>
 				</li>
 				<# }); #>
 			</ul>

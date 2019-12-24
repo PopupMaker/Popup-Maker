@@ -4,7 +4,7 @@
  *
  * @package     PUM\SDK\ActivationHandler
  * @since       1.0.0
- * @copyright	Copyright (c) 2016, WP Popup Maker
+ * @copyright	Copyright (c) 2019, Code Atlantic LLC
  */
 
 

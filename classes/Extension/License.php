@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -224,6 +224,7 @@ class PUM_Extension_License {
 			'edd_action' => 'activate_license',
 			'license'    => $license,
 			'item_name'  => urlencode( $this->item_name ),
+			'item_id'    => $this->item_id,
 			'url'        => home_url(),
 		);
 

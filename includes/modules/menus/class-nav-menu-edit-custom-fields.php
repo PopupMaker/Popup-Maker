@@ -38,8 +38,9 @@ class Walker_Nav_Menu_Edit_Custom_Fields extends Walker_Nav_Menu_Edit {
 	 */
 	public function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
 		$item_output = '';
-		parent::start_el( $item_output, $item, $depth, $args, $id = 0 );
-		$output .= preg_replace( '/(<p[^>]+class="[^"]*field-description(?:.|\n)*?<\/p>)/', "$1 \r\n " . $this->get_custom_fields( $item, $depth, $args ), $item_output, 1 );
+		$output      .= parent::start_el( $item_output, $item, $depth, $args, $id );
+		// NOTE: Check this regex on major WP version updates!
+		$output .= preg_replace( '/(?=<fieldset[^>]+class="[^"]*field-move)/', $this->get_custom_fields( $item, $depth, $args ), $item_output );
 	}
 
 

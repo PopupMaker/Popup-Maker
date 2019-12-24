@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -23,10 +23,10 @@ class PUM_Admin_Tools {
 	public static function init() {
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
 		add_action( 'admin_init', array( __CLASS__, 'emodal_process_import' ) );
-		add_action( 'popmake_save_enabled_betas', array( __CLASS__, 'save_enabled_betas' ) );
+		add_action( 'pum_save_enabled_betas', array( __CLASS__, 'save_enabled_betas' ) );
 		add_action( 'pum_tools_page_tab_import', array( __CLASS__, 'emodal_v2_import_button' ) );
 		add_action( 'pum_tools_page_tab_system_info', array( __CLASS__, 'sysinfo_display' ) );
-		add_action( 'popmake_popup_sysinfo', array( __CLASS__, 'sysinfo_download' ) );
+		add_action( 'pum_popup_sysinfo', array( __CLASS__, 'popup_sysinfo' ) );
 		add_action( 'pum_tools_page_tab_betas', array( __CLASS__, 'betas_display' ) );
 	}
 
@@ -38,9 +38,9 @@ class PUM_Admin_Tools {
 	public static function notices() {
 
 		if ( isset( $_GET['imported'] ) ) { ?>
-			<div class="updated">
-				<p><?php _e( 'Successfully Imported your themes &amp; modals from Easy Modal.' ); ?></p>
-			</div>
+            <div class="updated">
+                <p><?php _e( 'Successfully Imported your themes &amp; modals from Easy Modal.' ); ?></p>
+            </div>
 			<?php
 		}
 
@@ -56,12 +56,12 @@ class PUM_Admin_Tools {
 
 		if ( ! empty( self::$notices ) ) {
 			foreach ( self::$notices as $notice ) { ?>
-				<div class="notice notice-<?php esc_attr_e( $notice['type'] ); ?> is-dismissible">
-					<p><strong><?php esc_html_e( $notice['message'] ); ?></strong></p>
-					<button type="button" class="notice-dismiss">
-						<span class="screen-reader-text"><?php _e( 'Dismiss this notice.', 'popup-maker' ); ?></span>
-					</button>
-				</div>
+                <div class="notice notice-<?php esc_attr_e( $notice['type'] ); ?> is-dismissible">
+                    <p><strong><?php esc_html_e( $notice['message'] ); ?></strong></p>
+                    <button type="button" class="notice-dismiss">
+                        <span class="screen-reader-text"><?php _e( 'Dismiss this notice.', 'popup-maker' ); ?></span>
+                    </button>
+                </div>
 			<?php }
 		}
 	}
@@ -75,17 +75,17 @@ class PUM_Admin_Tools {
 
 		?>
 
-		<div class="wrap">
+        <div class="wrap">
 
-			<form id="pum-tools" method="post" action="">
+            <form id="pum-tools" method="post" action="">
 
 				<?php wp_nonce_field( basename( __FILE__ ), 'pum_tools_nonce' ); ?>
 
-				<button class="right top button-primary"><?php _e( 'Save', 'popup-maker' ); ?></button>
+                <button class="right top button-primary"><?php _e( 'Save', 'popup-maker' ); ?></button>
 
-				<h1><?php _e( 'Popup Maker Tools', 'popup-maker' ); ?></h1>
+                <h1><?php _e( 'Popup Maker Tools', 'popup-maker' ); ?></h1>
 
-				<h2 id="popmake-tabs" class="nav-tab-wrapper"><?php
+                <h2 id="popmake-tabs" class="nav-tab-wrapper"><?php
 					foreach ( self::tabs() as $tab_id => $tab_name ) {
 						$tab_url = add_query_arg( array(
 							'tools-updated' => false,
@@ -94,16 +94,16 @@ class PUM_Admin_Tools {
 
 						printf( '<a href="%s" title="%s" class="nav-tab %s">%s</a>', esc_url( $tab_url ), esc_attr( $tab_name ), $active_tab == $tab_id ? ' nav-tab-active' : '', esc_html( $tab_name ) );
 					} ?>
-				</h2>
+                </h2>
 
-				<div id="tab_container">
+                <div id="tab_container">
 					<?php do_action( 'pum_tools_page_tab_' . $active_tab ); ?>
 
 					<?php do_action( 'popmake_tools_page_tab_' . $active_tab ); ?>
-				</div>
+                </div>
 
-			</form>
-		</div>
+            </form>
+        </div>
 		<?php
 	}
 
@@ -111,8 +111,8 @@ class PUM_Admin_Tools {
 	/**
 	 * Tabs & labels
 	 *
-	 * @since 1.0
 	 * @return array $tabs
+	 * @since 1.0
 	 */
 	public static function tabs() {
 		static $tabs;
@@ -128,9 +128,9 @@ class PUM_Admin_Tools {
 			$tabs = apply_filters( 'popmake_tools_tabs', $tabs );
 		}
 
-		if ( count( self::get_beta_enabled_extensions() ) == 0 ) {
-			//unset( $tabs['betas'] );
-		}
+		/*if ( count( self::get_beta_enabled_extensions() ) == 0 ) {
+			unset( $tabs['betas'] );
+		}*/
 
 		return $tabs;
 	}
@@ -140,8 +140,8 @@ class PUM_Admin_Tools {
 	 *
 	 * Extensions should be added as 'extension-slug' => 'Extension Name'
 	 *
-	 * @since       1.5
 	 * @return      array $extensions The array of extensions
+	 * @since       1.5
 	 */
 	public static function get_beta_enabled_extensions() {
 		return apply_filters( 'pum_beta_enabled_extensions', array() );
@@ -162,24 +162,23 @@ class PUM_Admin_Tools {
 	 * @since       1.3.0
 	 */
 	public static function sysinfo_display() { ?>
-		<form action="" method="post">
-			<textarea style="min-height: 350px; width: 100%; display: block;" readonly="readonly"
-			          onclick="this.focus(); this.select()" id="system-info-textarea" name="popmake-sysinfo"
-			          title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'popup-maker' ); ?>"><?php echo self::sysinfo_text(); ?></textarea>
-			<p class="submit">
-				<input type="hidden" name="popmake_action" value="popup_sysinfo"/>
+        <form action="" method="post">
+			<textarea style="min-height: 350px; width: 100%; display: block;" readonly="readonly" onclick="this.focus(); this.select()" id="system-info-textarea" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'popup-maker' ); ?>"><?php echo self::sysinfo_text(); ?></textarea>
+            <p class="submit">
+                <input type="hidden" name="pum_action" value="popup_sysinfo" />
+	            <?php wp_nonce_field( 'pum_popup_sysinfo_nonce', 'pum_popup_sysinfo_nonce' ); ?>
 				<?php submit_button( 'Download System Info File', 'primary', 'popmake-download-sysinfo', false ); ?>
-			</p>
-		</form>
+            </p>
+        </form>
 		<?php
 	}
 
 	/**
 	 * Get system info
 	 *
+	 * @return      string $return A string containing the info to output
 	 * @since       1.5
 	 *
-	 * @return      string $return A string containing the info to output
 	 */
 	public static function sysinfo_text() {
 		global $wpdb;
@@ -277,7 +276,7 @@ class PUM_Admin_Tools {
 		$return = apply_filters( 'popmake_sysinfo_after_popmake_config', $return );
 
 		// Must-use plugins
-		$muplugins = get_mu_plugins();
+		$muplugins = function_exists( 'get_mu_plugins' ) ? get_mu_plugins() : array();
 		if ( $muplugins && count( $muplugins ) ) {
 			$return .= "\n" . '-- Must-Use Plugins' . "\n\n";
 
@@ -392,32 +391,32 @@ class PUM_Admin_Tools {
 	 *
 	 * Returns the webhost this site is using if possible
 	 *
+	 * @return mixed string $host if detected, false otherwise
 	 * @since 1.3.0
 	 *
-	 * @return mixed string $host if detected, false otherwise
 	 */
 	public static function get_host() {
-		if( defined( 'WPE_APIKEY' ) ) {
+		if ( defined( 'WPE_APIKEY' ) ) {
 			return 'WP Engine';
-		} elseif( defined( 'PAGELYBIN' ) ) {
+		} elseif ( defined( 'PAGELYBIN' ) ) {
 			return 'Pagely';
-		} elseif( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
+		} elseif ( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
 			return 'ICDSoft';
-		} elseif( DB_HOST == 'mysqlv5' ) {
+		} elseif ( DB_HOST == 'mysqlv5' ) {
 			return 'NetworkSolutions';
-		} elseif( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
+		} elseif ( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
 			return 'iPage';
-		} elseif( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
+		} elseif ( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
 			return 'IPower';
-		} elseif( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
+		} elseif ( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
 			return 'MediaTemple Grid';
-		} elseif( strpos( DB_HOST, '.pair.com' ) !== false ) {
+		} elseif ( strpos( DB_HOST, '.pair.com' ) !== false ) {
 			return 'pair Networks';
-		} elseif( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
+		} elseif ( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
 			return 'Rackspace Cloud';
-		} elseif( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
+		} elseif ( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
 			return 'SysFix.eu Power Hosting';
-		} elseif( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
+		} elseif ( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
 			return 'Flywheel';
 		} else {
 			// Adding a general fallback for data gathering
@@ -430,13 +429,17 @@ class PUM_Admin_Tools {
 	 *
 	 * @since       1.5
 	 */
-	public static function sysinfo_download() {
+	public static function popup_sysinfo() {
+		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) || ! wp_verify_nonce( $_POST['pum_popup_sysinfo_nonce'], 'pum_popup_sysinfo_nonce' ) ) {
+			return;
+		}
+
 		nocache_headers();
 
 		header( 'Content-Type: text/plain' );
 		header( 'Content-Disposition: attachment; filename="popmake-system-info.txt"' );
 
-		echo wp_strip_all_tags( $_POST['popmake-sysinfo'] );
+		echo self::sysinfo_text();
 		exit;
 	}
 
@@ -444,9 +447,9 @@ class PUM_Admin_Tools {
 	 * Add a button to import easy modal data.
 	 */
 	public static function emodal_v2_import_button() { ?>
-		<button id="popmake_emodal_v2_import" name="popmake_emodal_v2_import" class="button button-large">
+        <button id="popmake_emodal_v2_import" name="popmake_emodal_v2_import" class="button button-large">
 			<?php _e( 'Import From Easy Modal v2', 'popup-maker' ); ?>
-		</button>
+        </button>
 		<?php
 	}
 
@@ -489,11 +492,11 @@ class PUM_Admin_Tools {
 	/**
 	 * Sanitize the supported beta values by making them booleans
 	 *
-	 * @since 1.5
-	 *
 	 * @param mixed $value The value being sent in, determining if beta support is enabled.
 	 *
 	 * @return bool
+	 * @since 1.5
+	 *
 	 */
 	public static function enabled_betas_sanitize_value( $value ) {
 		return filter_var( $value, FILTER_VALIDATE_BOOLEAN );
@@ -514,32 +517,30 @@ class PUM_Admin_Tools {
 		do_action( 'pum_tools_betas_before' );
 		?>
 
-		<div class="postbox pum-beta-support">
-			<h3><span><?php _e( 'Enable Beta Versions', 'popup-maker' ); ?></span></h3>
-			<div class="inside">
-				<p><?php _e( 'Checking any of the below checkboxes will opt you in to receive pre-release update notifications. You can opt-out at any time. Pre-release updates do not install automatically, you will still have the opportunity to ignore update notifications.', 'popup-maker' ); ?></p>
-				<table class="form-table pum-beta-support">
-					<tbody>
+        <div class="postbox pum-beta-support">
+            <h3><span><?php _e( 'Enable Beta Versions', 'popup-maker' ); ?></span></h3>
+            <div class="inside">
+                <p><?php _e( 'Checking any of the below checkboxes will opt you in to receive pre-release update notifications. You can opt-out at any time. Pre-release updates do not install automatically, you will still have the opportunity to ignore update notifications.', 'popup-maker' ); ?></p>
+                <table class="form-table pum-beta-support">
+                    <tbody>
 					<?php foreach ( $has_beta as $slug => $product ) : ?>
-						<tr>
+                        <tr>
 							<?php $checked = self::extension_has_beta_support( $slug ); ?>
-							<th scope="row"><?php echo esc_html( $product ); ?></th>
-							<td>
-								<input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]"
-								       id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo checked( $checked, true, false ); ?>
-								       value="1"/>
-								<label
-									for="enabled_betas[<?php echo esc_attr( $slug ); ?>]"><?php printf( __( 'Get updates for pre-release versions of %s', 'popup-maker' ), $product ); ?></label>
-							</td>
-						</tr>
+                            <th scope="row"><?php echo esc_html( $product ); ?></th>
+                            <td>
+                                <input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]" id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo checked( $checked, true, false ); ?>
+                                       value="1" />
+                                <label for="enabled_betas[<?php echo esc_attr( $slug ); ?>]"><?php printf( __( 'Get updates for pre-release versions of %s', 'popup-maker' ), $product ); ?></label>
+                            </td>
+                        </tr>
 					<?php endforeach; ?>
-					</tbody>
-				</table>
-				<input type="hidden" name="popmake_action" value="save_enabled_betas"/>
+                    </tbody>
+                </table>
+                <input type="hidden" name="pum_action" value="save_enabled_betas" />
 				<?php wp_nonce_field( 'pum_save_betas_nonce', 'pum_save_betas_nonce' ); ?>
 				<?php submit_button( __( 'Save', 'popup-maker' ), 'secondary', 'submit', false ); ?>
-			</div>
-		</div>
+            </div>
+        </div>
 
 		<?php
 		do_action( 'pum_tools_betas_after' );
@@ -548,11 +549,11 @@ class PUM_Admin_Tools {
 	/**
 	 * Check if a given extensions has beta support enabled
 	 *
-	 * @since       1.5
-	 *
-	 * @param       string $slug The slug of the extension to check
+	 * @param string $slug The slug of the extension to check
 	 *
 	 * @return      bool True if enabled, false otherwise
+	 * @since       1.5
+	 *
 	 */
 	public static function extension_has_beta_support( $slug ) {
 		$enabled_betas = PUM_Utils_Options::get( 'enabled_betas', array() );

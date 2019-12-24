@@ -402,6 +402,8 @@ var PUM;
 
                     $popup.trigger('pumAfterOpen');
 
+                    $(window).trigger('resize');
+
                     $.fn.popmake.last_open_popup = $popup;
 
                     // Fire user passed callback.
@@ -2100,7 +2102,7 @@ var pum_debug_mode = false,
 
 }(jQuery, document));
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
     "use strict";
@@ -2638,7 +2640,7 @@ var pum_debug_mode = false,
 
 })(window);
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
     "use strict";
@@ -2729,7 +2731,7 @@ var pum_debug_mode = false,
 
 }(jQuery));
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
     'use strict';
@@ -3369,7 +3371,7 @@ var pum_debug_mode = false,
 
 }(jQuery, document));
 /*******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function (root, factory) {
 
@@ -3534,12 +3536,12 @@ var pum_debug_mode = false,
 }));
 /**
  * Initialize Popup Maker.
- * Version 1.7
+ * Version 1.8
  */
 (function ($, document, undefined) {
     "use strict";
     // Defines the current version.
-    $.fn.popmake.version = 1.7;
+    $.fn.popmake.version = 1.8;
 
     // Stores the last open popup.
     $.fn.popmake.last_open_popup = null;
@@ -3573,7 +3575,7 @@ var pum_debug_mode = false,
          * If there are forms in the popup add a hidden field for use in retriggering the popup on reload.
          */
         if ($forms.length) {
-            $forms.prepend('<input type="hidden" name="pum_form_popup_id" value="' + popupID + '" />');
+            $forms.append('<input type="hidden" name="pum_form_popup_id" value="' + popupID + '" />');
         }
     });
 

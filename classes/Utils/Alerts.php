@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2019, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -342,7 +342,7 @@ class PUM_Utils_Alerts {
 						<?php endif; ?>
 
 						<?php if ( ! empty( $alert['html'] ) ) : ?>
-							<?php echo wp_encode_emoji( $alert['html'] ); ?>
+							<?php echo function_exists( 'wp_encode_emoji' ) ? wp_encode_emoji( $alert['html'] ) : $alert['html']; ?>
 						<?php endif; ?>
 
 					</div>

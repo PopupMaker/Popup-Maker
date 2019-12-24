@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -13,13 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param null|int|string $popup_id
  */
 function pum_popup_ID( $popup_id = null ) {
-	$popup = pum_get_popup( $popup_id );
-
-	if ( ! pum_is_popup( $popup ) ) {
-		return;
-	}
-
-	echo $popup->ID;
+	echo pum_get_popup_id( $popup_id );
 }
 
 /**
@@ -43,7 +37,7 @@ function pum_popup_content( $popup_id = null ) {
 		return;
 	}
 
-	$cached_content = PUM_Site_Popups::get_cache_content( $popup_id );
+	$cached_content = PUM_Site_Popups::get_cache_content( $popup->ID );
 
 	echo false !== $cached_content ? $cached_content : $popup->get_content();
 }

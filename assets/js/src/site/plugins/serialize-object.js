@@ -1,25 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function (root, factory) {
 
-    // AMD
-    if (typeof define === "function" && define.amd) {
-        define(["exports", "jquery"], function (exports, $) {
-            return factory(exports, $);
-        });
-    }
-
-    // CommonJS
-    else if (typeof exports !== "undefined") {
-        var $ = require("jquery");
-        factory(exports, $);
-    }
-
     // Browser
-    else {
-        factory(root, (root.jQuery || root.Zepto || root.ender || root.$));
-    }
+    factory(root, (root.jQuery || root.Zepto || root.ender || root.$));
 
 }(this, function (exports, $) {
 

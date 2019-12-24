@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -27,36 +27,63 @@ class PUM_Modules_Admin_Bar {
 	 * Renders the admin debug bar when PUM Debug is enabled.
 	 */
 	public static function show_debug_bar() {
-		if ( current_user_can( 'manage_options' ) && Popup_Maker::debug_mode() ) {
+		if ( self::should_render() && Popup_Maker::debug_mode() ) {
 			show_admin_bar( true );
 		}
 	}
 
+	/**
+	 * Returns true only if all of the following are true:
+	 * - User is logged in.
+	 * - Not in WP Admin.
+	 * - The admin bar is showing.
+	 * - PUM Admin bar is not disabled.
+	 * - Current user can edit others posts or manage options.
+	 *
+	 * @return bool
+	 */
+	public static function should_render() {
+		$tests = array(
+			is_user_logged_in(),
+			! is_admin(),
+			is_admin_bar_showing(),
+			! pum_get_option( 'disabled_admin_bar' ),
+			( current_user_can( 'edit_others_posts' ) || current_user_can( 'manage_options' ) ),
+		);
+
+		return ! in_array( false, $tests );
+	}
+
+	/**
+	 * Render admin bar scripts & styles if the toolbar button should show.
+	 *
+	 * TODO move this to external assets & use wp_enqueue_*
+	 */
 	public static function admin_bar_styles() {
 
-		if ( is_admin() || ! is_admin_bar_showing() || PUM_Utils_Options::get( 'disabled_admin_bar', false ) ) {
+		if ( ! self::should_render() ) {
 			return;
 		} ?>
 
-		<style id="pum-admin-bar-styles">
-			/* Layer admin bar over popups. */
-			#wpadminbar {
-				z-index: 999999999999;
-			}
+        <style id="pum-admin-bar-styles">
+            /* Layer admin bar over popups. */
+            #wpadminbar {
+                z-index: 999999999999;
+            }
 
-			#wp-admin-bar-popup-maker > .ab-item::before {
-				background: url("<?php echo POPMAKE_URL; ?>/assets/images/admin/icon-info-21x21.png") center center no-repeat transparent !important;
-				top: 3px;
-				content: "";
-				width: 20px;
-				height: 20px;
-			}
+            #wp-admin-bar-popup-maker > .ab-item::before {
+                background: url("<?php echo POPMAKE_URL; ?>/assets/images/admin/icon-info-21x21.png") center center no-repeat transparent !important;
+                top: 3px;
+                content: "";
+                width: 20px;
+                height: 20px;
+            }
 
-			#wp-admin-bar-popup-maker:hover > .ab-item::before {
-				background-image: url("<?php echo POPMAKE_URL; ?>/assets/images/admin/icon-info-21x21.png") !important;
-			}
-		</style>
-		<script id="pum-admin-bar-tools" type="text/javascript">
+            #wp-admin-bar-popup-maker:hover > .ab-item::before {
+                background-image: url("<?php echo POPMAKE_URL; ?>/assets/images/admin/icon-info-21x21.png") !important;
+            }
+        </style>
+        <script id="pum-admin-bar-tools" type="text/javascript">
             /**
              * CssSelectorGenerator
              */
@@ -387,7 +414,7 @@ class PUM_Modules_Admin_Bar {
 
                     $(document).one('click', function (event) {
                         // get reference to the element user clicked on
-                        var element  = event.target,
+                        var element = event.target,
                             // get unique CSS selector for that element
                             selector = selector_generator.getSelector(element);
 
@@ -398,17 +425,17 @@ class PUM_Modules_Admin_Bar {
                     });
                 });
             }(jQuery));
-		</script><?php
+        </script><?php
 	}
 
 	/**
 	 * Add additional toolbar menu items to the front end.
 	 *
-	 * @param $wp_admin_bar
+	 * @param WP_Admin_Bar $wp_admin_bar
 	 */
 	public static function toolbar_links( $wp_admin_bar ) {
 
-		if ( is_admin() || ! is_admin_bar_showing() || PUM_Utils_Options::get( 'disabled_admin_bar', false ) ) {
+		if ( ! self::should_render() ) {
 			return;
 		}
 
@@ -539,6 +566,9 @@ class PUM_Modules_Admin_Bar {
 
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function loaded_popups() {
 		static $popups;
 

@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -460,11 +460,6 @@ class PUM_Admin_Settings {
 							'type'  => 'checkbox',
 							'label' => __( 'Disable categories & tags?', 'popup-maker' ),
 							'desc'  => __( 'This will disable the popup tags & categories.', 'popup-maker' ),
-						),
-						'disable_cache'                        => array(
-							'type'  => 'checkbox',
-							'label' => __( 'Disable object caching', 'popup-maker' ),
-							'desc'  => __( 'If you are seeing issues with settings not saving or popups not rendering changes immediately, try this option.', 'popup-maker' ),
 						),
 						'disable_asset_caching'                => array(
 							'type'  => 'checkbox',

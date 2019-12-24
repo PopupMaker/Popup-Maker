@@ -3,8 +3,8 @@
  * Plugin Name:  Popup Maker
  * Plugin URI:   https://wppopupmaker.com/?utm_campaign=PluginInfo&utm_source=plugin-header&utm_medium=plugin-uri
  * Description:  Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
- * Version:      1.8.4
- * Author:       WP Popup Maker
+ * Version:      1.8.14
+ * Author:       Popup Maker
  * Author URI:   https://wppopupmaker.com/?utm_campaign=PluginInfo&utm_source=plugin-header&utm_medium=author-uri
  * License:      GPL2 or later
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
@@ -12,10 +12,8 @@
  * Domain Path:  /languages/
  *
  * @package     POPMAKE
- * @category    Core
  * @author      Daniel Iser
- * @copyright   Copyright (c) 2018, Wizard Internet Solutions
- * @since       1.0
+ * @copyright   Copyright (c) 2019, Code Atlantic LLC
  */
 
 // Exit if accessed directly
@@ -95,7 +93,7 @@ class Popup_Maker {
 	/**
 	 * @var string Plugin Version
 	 */
-	public static $VER = '1.8.3';
+	public static $VER = '1.8.14';
 
 	/**
 	 * @var int DB Version
@@ -253,6 +251,7 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/functions-backcompat.php';
 		require_once self::$DIR . 'includes/functions-deprecated.php';
 		require_once self::$DIR . 'includes/deprecated-classes.php';
+		require_once self::$DIR . 'includes/deprecated-filters.php';
 		require_once self::$DIR . 'includes/integrations.php';
 
 		// Old Stuff.

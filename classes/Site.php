@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class PUM_Site
+ */
 class PUM_Site {
 
 	public static function init() {
@@ -20,7 +23,11 @@ class PUM_Site {
 		add_filter( 'pum_popup_content', 'shortcode_unautop', 10 );
 		add_filter( 'pum_popup_content', 'prepend_attachment', 10 );
 		add_filter( 'pum_popup_content', 'force_balance_tags', 10 );
-		add_filter( 'pum_popup_content', 'do_shortcode', 11 );
+		if ( pum_get_option( 'disable_shortcode_compatibility_mode' ) ) {
+			add_filter( 'pum_popup_content', 'do_shortcode', 11 );
+		} else {
+			add_filter( 'pum_popup_content', array( 'PUM_Helpers', 'do_shortcode' ), 11 );
+		}
 		add_filter( 'pum_popup_content', 'capital_P_dangit', 11 );
 	}
 
@@ -30,14 +37,22 @@ class PUM_Site {
 	 * functions are called on init.
 	 */
 	public static function actions() {
-		if ( isset( $_GET['popmake_action'] ) ) {
-			do_action( 'popmake_' . $_GET['popmake_action'], $_GET );
-		} else if ( isset( $_POST['popmake_action'] ) ) {
-			do_action( 'popmake_' . $_POST['popmake_action'], $_POST );
-		} else if ( isset( $_GET['pum_action'] ) ) {
-			do_action( 'pum_' . $_GET['pum_action'], $_GET );
-		} else if ( isset( $_POST['pum_action'] ) ) {
-			do_action( 'pum_' . $_POST['pum_action'], $_POST );
+		if ( empty( $_REQUEST['pum_action'] ) ) {
+			return;
 		}
+
+		$valid_actions = apply_filters( 'pum_valid_request_actions', array(
+			'popup_sysinfo',
+			'save_enabled_betas',
+			'download_batch_export',
+		) );
+
+		$action = sanitize_text_field( $_REQUEST['pum_action'] );
+
+		if ( ! in_array( $action, $valid_actions ) || ! has_action( 'pum_' . $action ) ) {
+			return;
+		}
+
+		do_action( 'pum_' . $action, $_REQUEST );
 	}
 }

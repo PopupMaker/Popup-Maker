@@ -46,46 +46,31 @@ final class NF_PUM {
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof NF_PUM ) ) {
+			spl_autoload_register( array( __CLASS__, 'autoloader' ) );
+
 			self::$instance = new NF_PUM();
 
 			self::$dir = plugin_dir_path( __FILE__ );
 
 			self::$url = plugin_dir_url( __FILE__ );
-
-			/*
-			 * Register our autoloader
-			 */
-			spl_autoload_register( array( self::$instance, 'autoloader' ) );
 		}
 
 		return self::$instance;
 	}
 
 	public function __construct() {
-		add_filter( 'ninja_forms_register_fields', array( $this, 'register_fields' ) );
-
-		add_filter( 'ninja_forms_register_actions', array( $this, 'register_actions' ) );
-
+		$this->register_actions();
 		add_filter( 'pum_registered_cookies', array( $this, 'register_cookies' ) );
 	}
 
 	/**
-	 * Optional. If your extension creates a new field interaction or display template...
+	 * Register Actions
+	 *
+	 * Register custom form actions to integrate with popups.
 	 */
-	public function register_fields( $actions ) {
-		//$actions['popup-maker'] = new NF_PUM_Fields_PUMExample();
-
-		return $actions;
-	}
-
-	/**
-	 * Optional. If your extension processes or alters form submission data on a per form basis...
-	 */
-	public function register_actions( $actions ) {
-		$actions['closepopup'] = new NF_PUM_Actions_ClosePopup();
-		$actions['openpopup'] = new NF_PUM_Actions_OpenPopup();
-
-		return $actions;
+	public function register_actions() {
+		Ninja_Forms()->actions['closepopup'] = new NF_PUM_Actions_ClosePopup();
+		Ninja_Forms()->actions['openpopup'] = new NF_PUM_Actions_OpenPopup();
 	}
 
 
@@ -109,7 +94,7 @@ final class NF_PUM {
 	 * Optional methods for convenience.
 	 */
 
-	public function autoloader( $class_name ) {
+	public static function autoloader( $class_name ) {
 		if ( class_exists( $class_name ) ) {
 			return;
 		}
@@ -170,7 +155,7 @@ function NF_PUM() {
 }
 
 /**
- * 
+ *
  */
 function pum_nf_should_init() {
 	if ( ! class_exists( 'Ninja_Forms' ) ) {
@@ -184,4 +169,4 @@ function pum_nf_should_init() {
 	NF_PUM();
 }
 
-add_action( 'plugins_loaded', 'pum_nf_should_init', 0 );
+add_action( 'init', 'pum_nf_should_init', 0 );

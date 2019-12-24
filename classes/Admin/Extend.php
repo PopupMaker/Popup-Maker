@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -35,8 +35,7 @@ class PUM_Admin_Extend {
 	 * @return string|null
 	 */
 	public static function append_unseen_count() {
-
-	    $is_integration_page = isset( $_GET['post_type'] ) && $_GET['post_type'] === 'popup' && isset( $_GET['page'] ) && $_GET['page'] === 'pum-extensions' && isset( $_GET['view'] ) && $_GET['view'] === 'integrations';
+	    $is_integration_page = isset( $_GET['post_type'] ) && $_GET['post_type'] === 'popup' && isset( $_GET['page'] ) && $_GET['page'] === 'pum-extensions';
 	    $active_tab    = isset( $_GET['tab'] ) ? $_GET['tab'] : 'extensions';
 
         if ( $is_integration_page ) {

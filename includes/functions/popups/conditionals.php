@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -34,7 +34,7 @@ function pum_is_popup_object( $popup ) {
  *
  * @return bool
  */
-function pum_is_popup_loadable( $popup_id = 0 ) {
+function pum_is_popup_loadable( $popup_id = null ) {
 	$popup = pum_get_popup( $popup_id );
 
 	if ( ! pum_is_popup_object( $popup ) ) {

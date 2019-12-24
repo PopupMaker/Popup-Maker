@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
 
@@ -64,7 +64,7 @@
 
 }(jQuery));
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 (function ($) {
@@ -326,6 +326,7 @@
                     event.preventDefault();
 
                     var $form = $(this),
+                        raw_values = $form.pumSerializeObject(),
                         values = PUM_Admin.forms.parseValues($form.pumSerializeObject().attrs, PUM_Admin.forms.flattenFields(data)),
                         content;
 

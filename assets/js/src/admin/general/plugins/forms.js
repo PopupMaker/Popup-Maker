@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 (function ($) {
@@ -491,13 +491,11 @@
 
         },
         parseValues: function (values, fields) {
-            fields = fields || false
+            fields = fields || false;
 
             if (!fields) {
                 return values;
             }
-
-            debugger;
 
             for (var key in fields) {
                 if (!fields.hasOwnProperty(key)) {

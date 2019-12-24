@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 class PUM_Site_Assets {
@@ -246,32 +246,34 @@ class PUM_Site_Assets {
 		// @deprecated 1.4 Use pum_vars instead.
 		wp_localize_script( 'popup-maker-site', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
 
-		wp_localize_script( 'popup-maker-site', 'pum_debug_vars', apply_filters( 'pum_debug_vars', array(
-			'debug_mode_enabled'    => __( 'Popup Maker', 'popup-maker' ) . ': ' . __( 'Debug Mode Enabled', 'popup-maker' ),
-			'debug_started_at'      => __( 'Debug started at:', 'popup-maker' ),
-			'debug_more_info'       => sprintf( __( 'For more information on how to use this information visit %s', 'popup-maker' ), 'https://docs.wppopupmaker.com/?utm_medium=js-debug-info&utm_campaign=ContextualHelp&utm_source=browser-console&utm_content=more-info' ),
-			'global_info'           => __( 'Global Information', 'popup-maker' ),
-			'localized_vars'        => __( 'Localized variables', 'popup-maker' ),
-			'popups_initializing'   => __( 'Popups Initializing', 'popup-maker' ),
-			'popups_initialized'    => __( 'Popups Initialized', 'popup-maker' ),
-			'single_popup_label'    => __( 'Popup: #', 'popup-maker' ),
-			'theme_id'              => __( 'Theme ID: ', 'popup-maker' ),
-			'label_method_call'     => __( 'Method Call:', 'popup-maker' ),
-			'label_method_args'     => __( 'Method Arguments:', 'popup-maker' ),
-			'label_popup_settings'  => __( 'Settings', 'popup-maker' ),
-			'label_triggers'        => __( 'Triggers', 'popup-maker' ),
-			'label_cookies'         => __( 'Cookies', 'popup-maker' ),
-			'label_delay'           => __( 'Delay:', 'popup-maker' ),
-			'label_conditions'      => __( 'Conditions', 'popup-maker' ),
-			'label_cookie'          => __( 'Cookie:', 'popup-maker' ),
-			'label_settings'        => __( 'Settings:', 'popup-maker' ),
-			'label_selector'        => __( 'Selector:', 'popup-maker' ),
-			'label_mobile_disabled' => __( 'Mobile Disabled:', 'popup-maker' ),
-			'label_tablet_disabled' => __( 'Tablet Disabled:', 'popup-maker' ),
-			'label_event'           => __( 'Event: %s', 'popup-maker' ),
-			'triggers'              => PUM_Triggers::instance()->dropdown_list(),
-			'cookies'               => PUM_Cookies::instance()->dropdown_list(),
-		) ) );
+		if ( Popup_Maker::debug_mode() || isset( $_GET['pum_debug'] ) ) {
+			wp_localize_script( 'popup-maker-site', 'pum_debug_vars', apply_filters( 'pum_debug_vars', array(
+				'debug_mode_enabled'    => __( 'Popup Maker', 'popup-maker' ) . ': ' . __( 'Debug Mode Enabled', 'popup-maker' ),
+				'debug_started_at'      => __( 'Debug started at:', 'popup-maker' ),
+				'debug_more_info'       => sprintf( __( 'For more information on how to use this information visit %s', 'popup-maker' ), 'https://docs.wppopupmaker.com/?utm_medium=js-debug-info&utm_campaign=ContextualHelp&utm_source=browser-console&utm_content=more-info' ),
+				'global_info'           => __( 'Global Information', 'popup-maker' ),
+				'localized_vars'        => __( 'Localized variables', 'popup-maker' ),
+				'popups_initializing'   => __( 'Popups Initializing', 'popup-maker' ),
+				'popups_initialized'    => __( 'Popups Initialized', 'popup-maker' ),
+				'single_popup_label'    => __( 'Popup: #', 'popup-maker' ),
+				'theme_id'              => __( 'Theme ID: ', 'popup-maker' ),
+				'label_method_call'     => __( 'Method Call:', 'popup-maker' ),
+				'label_method_args'     => __( 'Method Arguments:', 'popup-maker' ),
+				'label_popup_settings'  => __( 'Settings', 'popup-maker' ),
+				'label_triggers'        => __( 'Triggers', 'popup-maker' ),
+				'label_cookies'         => __( 'Cookies', 'popup-maker' ),
+				'label_delay'           => __( 'Delay:', 'popup-maker' ),
+				'label_conditions'      => __( 'Conditions', 'popup-maker' ),
+				'label_cookie'          => __( 'Cookie:', 'popup-maker' ),
+				'label_settings'        => __( 'Settings:', 'popup-maker' ),
+				'label_selector'        => __( 'Selector:', 'popup-maker' ),
+				'label_mobile_disabled' => __( 'Mobile Disabled:', 'popup-maker' ),
+				'label_tablet_disabled' => __( 'Tablet Disabled:', 'popup-maker' ),
+				'label_event'           => __( 'Event: %s', 'popup-maker' ),
+				'triggers'              => PUM_Triggers::instance()->dropdown_list(),
+				'cookies'               => PUM_Cookies::instance()->dropdown_list(),
+			) ) );
+		}
 
 		/* Here for backward compatibility. */
 		wp_localize_script( 'popup-maker-site', 'pum_sub_vars', array(

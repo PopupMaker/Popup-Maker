@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -51,11 +51,11 @@ class PUM_Site_Popups {
 	/**
 	 * Returns the current popup.
 	 *
-	 * @deprecated 1.8.0
-	 *
 	 * @param bool|object|null $new_popup
 	 *
 	 * @return null|PUM_Popup
+	 *
+	 * @deprecated 1.8.0
 	 */
 	public static function current_popup( $new_popup = false ) {
 		global $popup;
@@ -99,7 +99,7 @@ class PUM_Site_Popups {
 
 			foreach ( $popups as $popup ) {
 				// Set this popup as the global $current.
-				pum()->current_theme = $popup;
+				pum()->current_popup = $popup;
 
 				// If the popup is loadable (passes conditions) load it.
 				if ( pum_is_popup_loadable( $popup->ID ) ) {
@@ -125,7 +125,7 @@ class PUM_Site_Popups {
 		self::$loaded->post_count ++;
 
 		// Preprocess the content for shortcodes that need to enqueue their own assets.
-		self::$cached_content[ $popup->ID ] = PUM_Helpers::do_shortcode( $popup->get_content() );
+		self::$cached_content[ $popup->ID ] = $popup->get_content();
 
 		// Fire off preload action.
 		do_action( 'pum_preload_popup', $popup->ID );

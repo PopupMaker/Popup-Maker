@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
     "use strict";
@@ -262,8 +262,6 @@
                         if (data.value === false || data.value === null) {
                             data.value = [];
                         }
-
-                        debugger;
 
                         if (typeof data.value === 'string' && data.value.indexOf(',')) {
                             data.value = data.value.split(',');

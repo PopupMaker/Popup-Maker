@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
     "use strict";
@@ -29,6 +29,7 @@
                 std: null,
                 min: 0,
                 max: 50,
+                force_minmax: false,
                 step: 1,
                 unit: 'px',
                 units: {},

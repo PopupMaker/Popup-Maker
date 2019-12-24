@@ -4,7 +4,7 @@
  *
  * @package  POPMAKE_EMODAL
  * @subpackage  Functions/Import
- * @copyright   Copyright (c) 2014, Daniel Iser
+ * @copyright   Copyright (c) 2019, Code Atlantic LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since   1.0
  */
@@ -207,12 +207,11 @@ function popmake_emodal_v2_import() {
 
 
 function popmake_emodal_init() {
-	global $popmake_options;
-	if ( isset( $popmake_options['enable_easy_modal_compatibility_mode'] ) ) {
+	if ( pum_get_option( 'enable_easy_modal_compatibility_mode' ) ) {
 		if ( ! shortcode_exists( 'modal' ) ) {
 			add_shortcode( 'modal', 'popmake_emodal_shortcode_modal' );
 		}
-		add_filter( 'popmake_get_the_popup_data_attr', 'popmake_emodal_get_the_popup_data_attr', 10, 2 );
+		add_filter( 'pum_popup_data_attr', 'popmake_emodal_get_the_popup_data_attr', 10, 2 );
 		add_filter( 'popmake_shortcode_popup_default_atts', 'popmake_emodal_shortcode_popup_default_atts', 10, 2 );
 		add_filter( 'popmake_shortcode_data_attr', 'popmake_emodal_shortcode_data_attr', 10, 2 );
 

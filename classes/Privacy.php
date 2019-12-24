@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -153,7 +153,7 @@ class PUM_Privacy {
 	public static function register_erasers( $exporters ) {
 		$exporters[] = array(
 			'eraser_friendly_name' => __( 'Popup Maker Subscribe Form' ),
-			'callback'             => array( __CLASS__, 'exporter' ),
+			'callback'             => array( __CLASS__, 'eraser' ),
 		);
 
 		return $exporters;

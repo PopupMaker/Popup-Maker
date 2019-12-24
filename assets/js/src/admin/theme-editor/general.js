@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 /* global PUM_Admin, jQuery, pum_google_fonts, pum_theme_settings_editor */
 (function ($) {
