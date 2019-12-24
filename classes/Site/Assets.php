@@ -188,8 +188,8 @@ class PUM_Site_Assets {
 	public static function register_scripts() {
 		self::$scripts_registered = true;
 
-		wp_register_script( 'mobile-detect', self::$js_url . 'mobile-detect' . self::$suffix . '.js', null, '1.3.3', true );
-		wp_register_script( 'iframe-resizer', self::$js_url . 'iframeResizer' . self::$suffix . '.js', array( 'jquery' ) );
+		wp_register_script( 'mobile-detect', self::$js_url . 'vendor/mobile-detect.min.js', null, '1.3.3', true );
+		wp_register_script( 'iframe-resizer', self::$js_url . 'vendor/iframeResizer.min.js', array( 'jquery' ) );
 
 		if ( PUM_AssetCache::enabled() ) {
 			$cached = get_option( 'pum-has-cached-js' );
@@ -313,7 +313,7 @@ class PUM_Site_Assets {
 		if ( $loaded->have_posts() ) {
 			while ( $loaded->have_posts() ) : $loaded->next_post();
 				pum()->current_popup = $loaded->post;
-				$popup = pum_get_popup( $loaded->post->ID );
+				$popup               = pum_get_popup( $loaded->post->ID );
 				// Set the key to the CSS id of this popup for easy lookup.
 				$settings[ 'pum-' . $popup->ID ] = $popup->get_public_settings();
 			endwhile;
@@ -340,7 +340,7 @@ class PUM_Site_Assets {
 
 			wp_register_style( 'popup-maker-site', self::get_cache_dir_url() . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-styles' ) . '.css?generated=' . $cached, array(), Popup_Maker::$VER );
 		} else {
-			wp_register_style( 'popup-maker-site', self::$css_url . 'site' . self::$suffix . '.css', array(), Popup_Maker::$VER );
+			wp_register_style( 'popup-maker-site', self::$css_url . 'pum-site' . ( is_rtl() ? '-rtl' : '' ) . self::$suffix . '.css', array(), Popup_Maker::$VER );
 			self::inline_styles();
 		}
 	}

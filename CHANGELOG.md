@@ -1,4 +1,5 @@
 ### Unreleased Changes
+* Improvement: Added RTL CSS support.
 
 ### v1.8.14 - 10/24/2019
 * Improvement: Updated nav menu editor walker class for adding custom fields to further improve compatibility.
