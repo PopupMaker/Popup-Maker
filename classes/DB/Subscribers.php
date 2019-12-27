@@ -210,11 +210,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 			$query = $wpdb->prepare( $query, $values );
 		}
 
-		if ( $return_type != 'model' ) {
-			$results = $wpdb->get_results( $query, $return_type );
-		}
-
-		return $results;
+		return $wpdb->get_results( $query, $return_type );
 	}
 
 	/**
