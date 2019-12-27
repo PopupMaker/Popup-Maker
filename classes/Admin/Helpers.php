@@ -106,7 +106,11 @@ class PUM_Admin_Helpers {
 		$defaults = array();
 
 		foreach ( $fields as $field_id => $field ) {
-			$defaults[ $field_id ] = isset( $field['std'] ) ? $field['std'] : 'checkbox' === $field['type'] ? null : false;
+			if ( isset( $field['std'] ) ) {
+				$defaults[ $field_id ] = $field['std'];
+			} else {
+				$defaults[ $field_id ] = 'checkbox' === $field['type'] ? null : false;
+			}
 		}
 
 		return $defaults;
@@ -122,7 +126,7 @@ class PUM_Admin_Helpers {
 	 * @param $new_key
 	 *
 	 * @return array
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function replace_key( $array, $old_key, $new_key ) {
 		return PUM_Utils_Array::replace_key( $array, $old_key, $new_key );
