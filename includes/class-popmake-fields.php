@@ -583,7 +583,7 @@ class Popmake_Fields {
 	 *
 	 * @param array $values
 	 *
-	 * @return string $input Sanitized value
+	 * @return array|mixed $input Sanitized value
 	 * @internal param array $input The value inputted in the field
 	 *
 	 */
@@ -593,7 +593,7 @@ class Popmake_Fields {
 
 		foreach ( $this->get_all_fields() as $section => $fields ) {
 			foreach ( $fields as $field ) {
-				$value = isset( $settings[ $section ][ $field['id'] ] ) ? $settings[ $section ][ $field['id'] ] : null;
+				$value = isset( $values[ $section ][ $field['id'] ] ) ? $values[ $section ][ $field['id'] ] : null;
 
 				$value = $this->sanitize_field( $field, $value );
 
