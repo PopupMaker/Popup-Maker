@@ -19,6 +19,11 @@ class PUM_Triggers {
 	public static $instance;
 
 	/**
+	 * @var bool
+	 */
+	public $preload_posts = false;
+
+	/**
 	 * @var array
 	 */
 	public $triggers;
@@ -36,6 +41,7 @@ class PUM_Triggers {
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self;
+			self::$instance->preload_posts = pum_is_popup_editor();
 		}
 
 		return self::$instance;
@@ -227,12 +233,12 @@ class PUM_Triggers {
 						'form' => [
 							'type'    => 'select',
 							'label'   => __( 'Form', 'popup-maker' ),
-							'options' => array_merge( [
+							'options' => $this->preload_posts ? array_merge( [
 								'any'                              => __( 'Any Supported Form*', 'popup-maker' ),
 								__( 'Popup Maker', 'popup-maker' ) => [
 									'pumsubform' => __( 'Subscription Form', 'popup-maker' ),
 								],
-							], $this->generate_options_for_integrated_forms() ),
+							], $this->generate_options_for_integrated_forms() ) : array(),
 						],
 						'delay' => array(
 							'type'  => 'rangeslider',
