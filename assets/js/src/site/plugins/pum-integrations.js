@@ -4,40 +4,30 @@
 (function ($) {
     "use strict";
 
-    var gFormSettings = {},
-        pumNFController = false;
+	window.PUM = window.PUM || {};
+	window.PUM.integrations = window.PUM.integrations || {};
 
-    function initialize_nf_support() {
-        /** Ninja Forms Support */
-        if (typeof Marionette !== 'undefined' && typeof nfRadio !== 'undefined') {
-            pumNFController = Marionette.Object.extend({
-                initialize: function () {
-                    this.listenTo(nfRadio.channel('forms'), 'submit:response', this.popupMaker)
-                },
-                popupMaker: function (response, textStatus, jqXHR, formID) {
-                    var $form = $('#nf-form-' + formID + '-cont'),
-                        settings = {};
+	$.extend(window.PUM.integrations, {
+		formSubmission: function (form, args) {
+			var $popup = PUM.getPopup(form);
 
-                    if (response.errors.length) {
-                        return;
-                    }
+			args = $.extend({
+				popup: $popup,
+				formProvider: null,
+				formID: null,
+				formKey: null
+			}, args);
 
-                    if ('undefined' !== typeof response.data.actions) {
-                        settings.openpopup = 'undefined' !== typeof response.data.actions.openpopup;
-                        settings.openpopup_id = settings.openpopup ? parseInt(response.data.actions.openpopup) : 0;
-                        settings.closepopup = 'undefined' !== typeof response.data.actions.closepopup;
-                        settings.closedelay = settings.closepopup ? parseInt(response.data.actions.closepopup) : 0;
-                        if (settings.closepopup && response.data.actions.closedelay) {
-                            settings.closedelay = parseInt(response.data.actions.closedelay);
-                        }
-                    }
+			if ($popup.length) {
+				// Should this be here. It is the only thing not replicated by a new form trigger & cookie.
+				// $popup.trigger('pumFormSuccess');
+			}
 
-                    window.PUM.forms.success($form, settings);
-                }
-            });
-        }
-    }
+			window.PUM.hooks.doAction('pum.integration.form.success', form, args );
+		}
+	});
 
+    var gFormSettings = {};
 
     $(document)
         .ready(function () {
