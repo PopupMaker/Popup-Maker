@@ -28,7 +28,7 @@ class PUM_Integrations {
 		self::$integrations = [
 			'ninjaforms'     => new PUM_Integration_Form_NinjaForms,
 			'gravityforms'   => new PUM_Integration_Form_GravityForms,
-//			'contactform7'   => new PUM_Integration_Form_ContactForm7,
+			'contactform7'   => new PUM_Integration_Form_ContactForm7,
 //			'calderaforms'   => new PUM_Integration_Form_CalderaForms,
 			'kingcomposer'   => new PUM_Integration_Builder_KingComposer,
 			'visualcomposer' => new PUM_Integration_Builder_VisualComposer,
@@ -285,12 +285,6 @@ class PUM_Integrations {
 			if ( $integration->enabled() && method_exists( $integration, 'custom_styles' ) ) {
 				$css = $integration->custom_styles( $css );
 			}
-		}
-
-		// TODO Move this to Integration object class.
-		if ( self::enabled( 'calderaforms' ) ) {
-			// puts the google places autocomplete dropdown results above the bootstrap modal 1050 zindex.
-			$css['calderaforms'] = array( 'content' => ".pac-container { z-index: 2000000000 !important; }\n" );
 		}
 
 		return $css;

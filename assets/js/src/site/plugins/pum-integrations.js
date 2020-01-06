@@ -27,18 +27,4 @@
 		}
 	});
 
-    $(document)
-        /** Contact Form 7 Support */
-        .on('wpcf7:mailsent', '.wpcf7', function (event) {
-            var $form = $(event.target),
-                $settings = $form.find('input.wpcf7-pum'),
-                settings = $settings.length ? JSON.parse($settings.val()) : false;
-
-            if (typeof settings === 'object' && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
-                settings['closedelay'] = settings.closedelay / 1000;
-            }
-
-            window.PUM.forms.success($form, settings);
-        });
-
-}(jQuery));
+}(window.jQuery));
