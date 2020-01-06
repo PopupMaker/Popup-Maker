@@ -69,6 +69,10 @@ class PUM_Triggers {
 				'fields'          => array(),
 			) );
 
+			if ( empty ( $trigger['modal_title'] ) && ! empty( $trigger['name'] ) ) {
+				$trigger['modal_title'] = sprintf( _x( '%s Trigger Settings', 'trigger settings modal title', 'popup-maker' ), $trigger['name'] );
+			}
+
 			// Here for backward compatibility to merge in labels properly.
 			$labels         = $this->get_labels();
 			$trigger_labels = isset( $labels[ $trigger['id'] ] ) ? $labels[ $trigger['id'] ] : array();
@@ -120,15 +124,53 @@ class PUM_Triggers {
 	}
 
 	/**
-	 * @deprecated
-	 *
-	 * @param null  $trigger
+	 * @param null $trigger
 	 * @param array $settings
 	 *
 	 * @return array
+	 * @deprecated
+	 *
 	 */
 	public function validate_trigger( $trigger = null, $settings = array() ) {
 		return $settings;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function get_form_type_options() {
+		return array_merge( [
+			'pumsubform' => __( 'Popup Maker', 'popup-maker' ) . ' - ' . __( 'Subscription Form', 'popup-maker' ),
+		], PUM_Integrations::get_enabled_forms_selectlist() );
+	}
+
+	/**
+	 * @return array
+	 */
+	public function generate_options_for_integrated_forms() {
+		$enabled_form_integrations = PUM_Integrations::get_enabled_form_integrations();
+
+		$options = [];
+
+		foreach ( $enabled_form_integrations as $integration ) {
+			switch ( $integration->key ) {
+				default:
+					$group_options = [
+						$integration->key . '_any' => sprintf( __( 'Any %s Form', 'popup-maker' ), $integration->label() ),
+					];
+
+					foreach ( $integration->get_form_selectlist() as $formID => $formLabel ) {
+						// ex. ninjaforms_1, contactform7_55
+						$group_options[ $integration->key . '_' . $formID ] = $formLabel;
+					}
+
+					$options[ $integration->label() ] = $group_options;
+
+					break;
+			}
+		}
+
+		return $options;
 	}
 
 	/**
@@ -136,7 +178,7 @@ class PUM_Triggers {
 	 */
 	public function register_triggers() {
 		$triggers = apply_filters( 'pum_registered_triggers', array(
-			'click_open' => array(
+			'click_open'      => array(
 				'name'            => __( 'Click Open', 'popup-maker' ),
 				'modal_title'     => __( 'Click Trigger Settings', 'popup-maker' ),
 				'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Extra Selectors', 'popup-maker' ), '{{data.extra_selectors}}' ),
@@ -158,7 +200,7 @@ class PUM_Triggers {
 					),
 				),
 			),
-			'auto_open'  => array(
+			'auto_open'       => array(
 				'name'            => __( 'Time Delay / Auto Open', 'popup-maker' ),
 				'modal_title'     => __( 'Time Delay Settings', 'popup-maker' ),
 				'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Delay', 'popup-maker' ), '{{data.delay}}' ),
@@ -177,6 +219,34 @@ class PUM_Triggers {
 					),
 				),
 			),
+			'form_submission' => [
+				'name'            => __( 'Form Submission', 'popup-maker' ),
+				//'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Form', 'popup-maker' ), '' ),
+				'fields'          => [
+					'general' => [
+						'form' => [
+							'type'    => 'select',
+							'label'   => __( 'Form', 'popup-maker' ),
+							'options' => array_merge( [
+								'any'                              => __( 'Any Supported Form*', 'popup-maker' ),
+								__( 'Popup Maker', 'popup-maker' ) => [
+									'pumsubform' => __( 'Subscription Form', 'popup-maker' ),
+								],
+							], $this->generate_options_for_integrated_forms() ),
+						],
+						'delay' => array(
+							'type'  => 'rangeslider',
+							'label' => __( 'Delay', 'popup-maker' ),
+							'desc'  => __( 'The delay before the popup will open in milliseconds.', 'popup-maker' ),
+							'std'   => 0,
+							'min'   => 0,
+							'max'   => 10000,
+							'step'  => 500,
+							'unit'  => 'ms',
+						),
+					],
+				],
+			],
 
 		) );
 
@@ -228,9 +298,9 @@ class PUM_Triggers {
 	/**
 	 * Returns the cookie fields used for trigger options.
 	 *
+	 * @return array
 	 * @uses filter pum_trigger_cookie_fields
 	 *
-	 * @return array
 	 */
 	public function cookie_fields() {
 
@@ -247,9 +317,9 @@ class PUM_Triggers {
 	/**
 	 * Returns the cookie field used for trigger options.
 	 *
+	 * @return array
 	 * @uses filter pum_trigger_cookie_field
 	 *
-	 * @return array
 	 */
 	public function cookie_field() {
 

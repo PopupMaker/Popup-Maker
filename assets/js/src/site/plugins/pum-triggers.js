@@ -100,6 +100,57 @@
                 $popup.popmake('open');
             });
         },
+		form_submission: function (settings) {
+			var $popup = PUM.getPopup(this);
+
+			settings = $.extend({
+				form: '',
+				delay: 0
+			}, settings);
+
+			var onSuccess = function () {
+				setTimeout(function () {
+					// If the popup is already open return.
+					if ($popup.popmake('state', 'isOpen')) {
+						return;
+					}
+
+					// If cookie exists or conditions fail return.
+					if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
+						return;
+					}
+
+					// Set the global last open trigger to the a text description of the trigger.
+					$.fn.popmake.last_open_trigger = 'Form Submission';
+
+					// Open the popup.
+					$popup.popmake('open');
+				}, settings.delay);
+			};
+
+			// Listen for integrated form submissions.
+			PUM.hooks.addAction('pum.integration.form.success', function(form, args) {
+				if (!settings.form.length) {
+					return;
+				}
+
+				// Check if the submitted form matches trigger requirements.
+				var checks = [
+					'any' === settings.form,
+					// ex. ninjaforms_any
+					args.formProvider + '_any' === settings.form,
+					// ex. ninjaforms_1
+					args.formProvider + '_' + args.formID === settings.form,
+					// ex. {provider}_{id}
+					args.formKey === settings.form
+				];
+
+				// If any check is true, trigger the popup.
+				if ( -1 !== checks.indexOf(true) ) {
+					onSuccess();
+				}
+			});
+		},
         admin_debug: function () {
             PUM.getPopup(this).popmake('open');
         }
