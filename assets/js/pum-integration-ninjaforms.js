@@ -97,6 +97,7 @@
  * Copyright (c) 2020, WP Popup Maker
  ******************************************************************************/
 {
+  var formProvider = 'ninjaforms';
   var $ = window.jQuery;
   var pumNFController = false;
 
@@ -117,12 +118,11 @@
           }
 
           window.PUM.integrations.formSubmission(form, {
-            formProvider: 'ninjaforms',
+            formProvider: formProvider,
             formID: formID,
-            formKey: 'ninjaforms' + '_' + formID,
+            formKey: formProvider + '_' + formID,
             response: response
-          });
-          debugger; // Listen for older popup actions applied directly to the form.
+          }); // Listen for older popup actions applied directly to the form.
 
           if ('undefined' !== typeof response.data.actions) {
             settings.openpopup = 'undefined' !== typeof response.data.actions.openpopup;

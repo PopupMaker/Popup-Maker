@@ -3,6 +3,7 @@
  ******************************************************************************/
 
 {
+	const formProvider = 'ninjaforms';
 	const $ = window.jQuery;
 	let pumNFController = false;
 
@@ -23,9 +24,9 @@
 					}
 
 					window.PUM.integrations.formSubmission(form, {
-						formProvider: 'ninjaforms',
+						formProvider: formProvider,
 						formID: formID,
-						formKey: 'ninjaforms' + '_' + formID,
+						formKey: formProvider + '_' + formID,
 						response: response,
 					});
 
