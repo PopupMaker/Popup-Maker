@@ -31,15 +31,6 @@
 
     $(document)
         .ready(function () {
-            /** Ninja Forms Support */
-            if (pumNFController === false) {
-                initialize_nf_support();
-            }
-
-            if (pumNFController !== false) {
-                new pumNFController();
-            }
-
             /** Gravity Forms Support */
             $('.gform_wrapper > form').each(function () {
                 var $form = $(this),

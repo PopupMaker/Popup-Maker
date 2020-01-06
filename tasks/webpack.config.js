@@ -42,6 +42,7 @@ const webpackConfig = {
 			return memo;
 		}, {}),
 		{
+			'pum-integration-ninjaforms': `${JS_DEV}/integration/ninjaforms.js`,
 			'pum-admin-deprecated': `${JS_DEV}/admin/deprecated.js`,
 			'popup-maker-easy-modal-importer-site': `${JS_DEV}/popup-maker-easy-modal-importer-site.js`,
 			'mce-buttons': `${JS_DEV}/mce-buttons.js`
