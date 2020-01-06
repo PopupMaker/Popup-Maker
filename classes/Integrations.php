@@ -45,6 +45,7 @@ class PUM_Integrations {
 		add_action( 'init', array( __CLASS__, 'wp_init_late' ), 99 );
 		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
 		add_filter( 'pum_popup_post_type_args', array( __CLASS__, 'popup_post_type_args' ) );
+		add_filter( 'pum_generated_js', array( __CLASS__, 'generated_js' ) );
 		add_filter( 'pum_generated_css', array( __CLASS__, 'generated_css' ) );
 		add_filter( 'pum_popup_settings', array( __CLASS__, 'popup_settings' ), 10, 2 );
 
@@ -256,6 +257,22 @@ class PUM_Integrations {
 		return $args;
 	}
 
+
+	/**
+	 * @param array $js
+	 *
+	 * @return array
+	 */
+	public static function generated_js( $js = [] ) {
+
+		foreach( self::$integrations as $integration ) {
+			if ( $integration->enabled() && method_exists( $integration, 'custom_scripts' ) ) {
+				$js = $integration->custom_scripts( $js );
+			}
+		}
+
+		return $js;
+	}
 
 	/**
 	 * @param array $css
