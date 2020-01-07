@@ -29,7 +29,7 @@ class PUM_Integrations {
 			'ninjaforms'     => new PUM_Integration_Form_NinjaForms,
 			'gravityforms'   => new PUM_Integration_Form_GravityForms,
 			'contactform7'   => new PUM_Integration_Form_ContactForm7,
-//			'calderaforms'   => new PUM_Integration_Form_CalderaForms,
+			'calderaforms'   => new PUM_Integration_Form_CalderaForms,
 			'kingcomposer'   => new PUM_Integration_Builder_KingComposer,
 			'visualcomposer' => new PUM_Integration_Builder_VisualComposer,
 		];
