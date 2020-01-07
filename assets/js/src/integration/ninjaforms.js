@@ -14,23 +14,33 @@
 				initialize: function () {
 					this.listenTo(nfRadio.channel('forms'), 'submit:response', this.popupMaker)
 				},
-				popupMaker: function (response, textStatus, jqXHR, formId) {
-					const form = document.getElementById('#nf-form-' + formId + '-cont'),
-						$form = $(form),
+				popupMaker: function (response, textStatus, jqXHR, formIdentifier) {
+					const $form = $('#nf-form-' + formIdentifier + '-cont'),
+						[formId, formInstanceId = null] = formIdentifier.split('_'),
 						settings = {};
 
+					// Bail if submission failed.
 					if (response.errors.length) {
 						return;
 					}
 
-					window.PUM.integrations.formSubmission(form, {
+					// All the magic happens here.
+					window.PUM.integrations.formSubmission($form, {
 						formProvider,
 						formId,
-						formKey: formProvider + '_' + formId,
-						response: response,
+						formInstanceId,
+						extras: {
+							response
+						}
 					});
 
-					// Listen for older popup actions applied directly to the form.
+					/**
+					 * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
+					 *
+					 * Listen for older popup actions applied directly to the form.
+					 *
+					 * This is here for backward compatibility with form actions prior to v1.9.
+					 */
 					if ('undefined' !== typeof response.data.actions) {
 						settings.openpopup = 'undefined' !== typeof response.data.actions.openpopup;
 						settings.openpopup_id = settings.openpopup ? parseInt(response.data.actions.openpopup) : 0;
@@ -42,7 +52,7 @@
 					}
 
 					// Nothing should happen if older action settings not applied
-					// except triggering of pumFormSuccess event.
+					// except triggering of pumFormSuccess event for old cookie method.
 					window.PUM.forms.success($form, settings);
 				}
 			});
@@ -53,5 +63,4 @@
 	};
 
 	$(document).ready(initialize_nf_support);
-
 }
