@@ -18,13 +18,13 @@
 			args = $.extend({
 				popup: $popup,
 				formProvider: null,
-				formID: null,
+				formId: null,
 				formInstanceId: null,
 				formKey: null
 			}, args);
 
 			// Generate unique formKey identifier.
-			args.formKey = [args.formProvider, args.formID, args.formInstanceId].filter(filterNull).join('_');
+			args.formKey = [args.formProvider, args.formId, args.formInstanceId].filter(filterNull).join('_');
 
 			if ($popup.length) {
 				// Should this be here. It is the only thing not replicated by a new form trigger & cookie.

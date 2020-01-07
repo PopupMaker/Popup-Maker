@@ -14,8 +14,8 @@
 				initialize: function () {
 					this.listenTo(nfRadio.channel('forms'), 'submit:response', this.popupMaker)
 				},
-				popupMaker: function (response, textStatus, jqXHR, formID) {
-					const form = document.getElementById('#nf-form-' + formID + '-cont'),
+				popupMaker: function (response, textStatus, jqXHR, formId) {
+					const form = document.getElementById('#nf-form-' + formId + '-cont'),
 						$form = $(form),
 						settings = {};
 
@@ -24,9 +24,9 @@
 					}
 
 					window.PUM.integrations.formSubmission(form, {
-						formProvider: formProvider,
-						formID: formID,
-						formKey: formProvider + '_' + formID,
+						formProvider,
+						formId,
+						formKey: formProvider + '_' + formId,
 						response: response,
 					});
 

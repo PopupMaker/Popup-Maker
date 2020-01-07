@@ -165,9 +165,9 @@ class PUM_Triggers {
 						$integration->key . '_any' => sprintf( __( 'Any %s Form', 'popup-maker' ), $integration->label() ),
 					];
 
-					foreach ( $integration->get_form_selectlist() as $formID => $formLabel ) {
+					foreach ( $integration->get_form_selectlist() as $formId => $formLabel ) {
 						// ex. ninjaforms_1, contactform7_55
-						$group_options[ $integration->key . '_' . $formID ] = $formLabel;
+						$group_options[ $integration->key . '_' . $formId ] = $formLabel;
 					}
 
 					$options[ $integration->label() ] = $group_options;

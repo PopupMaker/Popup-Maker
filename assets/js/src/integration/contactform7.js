@@ -9,13 +9,13 @@
 	$(document).on('wpcf7:mailsent', '.wpcf7', function (event) {
 		const form = event.target,
 			$form = $(form),
-			formID = $(form).find('input[name="_wpcf7"]').val();
+			formId = $(form).find('input[name="_wpcf7"]').val();
 
 		// All the magic happens here.
 		window.PUM.integrations.formSubmission(form, {
-			formProvider: formProvider,
-			formID: formID,
-			formKey: formProvider + '_' + formID
+			formProvider,
+			formId,
+			formKey: formProvider + '_' + formId
 		});
 
 		/**

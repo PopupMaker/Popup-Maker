@@ -9,14 +9,14 @@
 
 
 	$(document)
-		.on('gform_confirmation_loaded', function (event, formID) {
-			const form = $('#gform_confirmation_wrapper_' + formID + ',#gforms_confirmation_message_' + formID)[0];
+		.on('gform_confirmation_loaded', function (event, formId) {
+			const form = $('#gform_confirmation_wrapper_' + formId + ',#gforms_confirmation_message_' + formId)[0];
 
 			// All the magic happens here.
 			window.PUM.integrations.formSubmission(form, {
-				formProvider: formProvider,
-				formID: formID,
-				formKey: formProvider + '_' + formID
+				formProvider,
+				formId,
+				formKey: formProvider + '_' + formId
 			});
 
 			/**
@@ -24,8 +24,8 @@
 			 *
 			 * @deprecated 1.9.0
 			 */
-			const settings = gFormSettings[formID] || {};
-			window.PUM.forms.success(form, gFormSettings[formID] || {});
+			const settings = gFormSettings[formId] || {};
+			window.PUM.forms.success(form, gFormSettings[formId] || {});
 		})
 		/**
 		 * This is still needed for backward compatibility.
@@ -35,7 +35,7 @@
 		.ready(function () {
 			$('.gform_wrapper > form').each(function () {
 				const $form = $(this),
-					form_id = $form.attr('id').replace('gform_', ''),
+					formId = $form.attr('id').replace('gform_', ''),
 					$settings = $form.find('input.gforms-pum'),
 					settings = $settings.length ? JSON.parse($settings.val()) : false;
 
@@ -47,7 +47,7 @@
 					settings['closedelay'] = settings.closedelay / 1000;
 				}
 
-				gFormSettings[form_id] = settings;
+				gFormSettings[formId] = settings;
 			});
 		});
 }

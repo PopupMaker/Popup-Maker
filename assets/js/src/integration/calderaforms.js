@@ -16,7 +16,7 @@
 			// All the magic happens here.
 			window.PUM.integrations.formSubmission($form[0], {
 				formProvider,
-				formID: formId,
+				formId,
 				formInstanceId,
 				extras: {
 					state: window.cfstate.hasOwnProperty( formId ) ? window.cfstate[formId] : null
