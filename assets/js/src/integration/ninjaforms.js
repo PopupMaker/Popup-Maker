@@ -7,7 +7,7 @@
 	const $ = window.jQuery;
 	let pumNFController = false;
 
-	initialize_nf_support = () => {
+	const initialize_nf_support = () => {
 		/** Ninja Forms Support */
 		if (typeof Marionette !== 'undefined' && typeof nfRadio !== 'undefined' && false === pumNFController) {
 			pumNFController = Marionette.Object.extend({
