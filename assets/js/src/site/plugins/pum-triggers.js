@@ -105,6 +105,7 @@
 
 			settings = $.extend({
 				form: '',
+				formInstanceId: '',
 				delay: 0
 			}, settings);
 
@@ -129,24 +130,32 @@
 			};
 
 			// Listen for integrated form submissions.
-			PUM.hooks.addAction('pum.integration.form.success', function(form, args) {
+			PUM.hooks.addAction('pum.integration.form.success', function (form, args) {
 				if (!settings.form.length) {
 					return;
 				}
 
+				var lookingFor = settings.form;
+				var instanceId = '' === settings.formInstanceId ? settings.formInstanceId : false;
 				// Check if the submitted form matches trigger requirements.
 				var checks = [
-					'any' === settings.form,
-					// ex. ninjaforms_any
-					args.formProvider + '_any' === settings.form,
-					// ex. ninjaforms_1
-					args.formProvider + '_' + args.formID === settings.form,
-					// ex. {provider}_{id}
-					args.formKey === settings.form
+					// Any supported form.
+					lookingFor === 'any',
+
+					// Any provider form. ex. `ninjaforms_any`
+					lookingFor === args.formProvider + '_any',
+
+					// Specific provider form with or without instance ID. ex. `ninjaforms_1` or `ninjaforms_1_*`
+					// Only run this test if not checking for a specific instanceId.
+					!instanceId && new RegExp('^' + lookingFor + '(_[\d]*)?').test(args.formKey),
+
+					// Specific provider form with specific instance ID. ex `ninjaforms_1_1` or `calderaforms_jbakrhwkhg_1`
+					// Only run this test if we are checking for specific instanceId.
+					!!instanceId && lookingFor + '_' + instanceId === args.formKey
 				];
 
 				// If any check is true, trigger the popup.
-				if ( -1 !== checks.indexOf(true) ) {
+				if (-1 !== checks.indexOf(true)) {
 					onSuccess();
 				}
 			});
