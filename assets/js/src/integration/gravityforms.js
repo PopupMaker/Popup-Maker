@@ -10,27 +10,31 @@
 
 	$(document)
 		.on('gform_confirmation_loaded', function (event, formId) {
-			const form = $('#gform_confirmation_wrapper_' + formId + ',#gforms_confirmation_message_' + formId)[0];
+			const $form = $('#gform_confirmation_wrapper_' + formId + ',#gforms_confirmation_message_' + formId)[0];
 
 			// All the magic happens here.
-			window.PUM.integrations.formSubmission(form, {
+			window.PUM.integrations.formSubmission($form, {
 				formProvider,
 				formId,
-				formKey: formProvider + '_' + formId
 			});
 
 			/**
+			 * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
+			 *
 			 * Listen for older popup actions applied directly to the form.
 			 *
-			 * @deprecated 1.9.0
+			 * This is here for backward compatibility with form actions prior to v1.9.
 			 */
-			const settings = gFormSettings[formId] || {};
-			window.PUM.forms.success(form, gFormSettings[formId] || {});
+			// Nothing should happen if older action settings not applied
+			// except triggering of pumFormSuccess event for old cookie method.
+			window.PUM.forms.success($form, gFormSettings[formId] || {});
 		})
 		/**
-		 * This is still needed for backward compatibility.
+		 * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
 		 *
-		 * @deprecated 1.9.0
+		 * Listen for older popup actions applied directly to the form.
+		 *
+		 * This is here for backward compatibility with form actions prior to v1.9.
 		 */
 		.ready(function () {
 			$('.gform_wrapper > form').each(function () {
