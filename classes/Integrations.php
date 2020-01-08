@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Integrations {
 
 	/**
-	 * @var PUM_Abstract_Integration|PUM_Abstract_Integration_Form[]
+	 * @var PUM_Abstract_Integration[]|PUM_Abstract_Integration_Form[]
 	 */
 	public static $integrations = array();
 
@@ -25,14 +25,16 @@ class PUM_Integrations {
 	public static $form_success;
 
 	public static function init() {
-		self::$integrations = [
+		self::$integrations = apply_filters( 'pum_integrations', [
+			// Forms
 			'ninjaforms'     => new PUM_Integration_Form_NinjaForms,
 			'gravityforms'   => new PUM_Integration_Form_GravityForms,
 			'contactform7'   => new PUM_Integration_Form_ContactForm7,
 			'calderaforms'   => new PUM_Integration_Form_CalderaForms,
+			// Builders
 			'kingcomposer'   => new PUM_Integration_Builder_KingComposer,
 			'visualcomposer' => new PUM_Integration_Builder_VisualComposer,
-		];
+		] );
 
 		self::$preload_posts = isset( $_GET['page'] ) && $_GET['page'] == 'pum-settings';
 
@@ -50,7 +52,6 @@ class PUM_Integrations {
 		add_filter( 'pum_popup_settings', array( __CLASS__, 'popup_settings' ), 10, 2 );
 
 		PUM_Integration_GoogleFonts::init();
-
 	}
 
 	/**
@@ -136,7 +137,6 @@ class PUM_Integrations {
 		return $integration->get_form( $id );
 	}
 
-
 	/**
 	 * @param $key
 	 *
@@ -161,14 +161,16 @@ class PUM_Integrations {
 	 */
 	public static function settings_fields( $fields = array() ) {
 
-		foreach ( self::$integrations as $key => $enabled ) {
-			if ( ! $enabled ) {
+		foreach ( self::$integrations as $key => $integration ) {
+			if ( ! ( $integration instanceof PUM_Interface_Integration_Settings ) || ! $integration->enabled() ) {
 				continue;
 			}
 
-			switch ( $key ) {
-
-			}
+			// TODO LEFT OFF HERE.
+			// TODO Could this be done via add_filter( 'pum_settings_fields', array( $integration, 'append_fields' ) );
+			// TODO If so, do we do it inside the __construct for the PUM_Abstract_Integration, or the Integration_{Provider} class itself.
+			// TODO Alternatively do we simply loop over all enabled providers during self::init() and add the filters/hooks there instead.
+			$fields = $integration->append_fields( $fields );
 		}
 
 		return $fields;
