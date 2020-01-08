@@ -142,44 +142,6 @@ class PUM_Triggers {
 	}
 
 	/**
-	 * @return array
-	 */
-	public function get_form_type_options() {
-		return array_merge( [
-			'pumsubform' => __( 'Popup Maker', 'popup-maker' ) . ' - ' . __( 'Subscription Form', 'popup-maker' ),
-		], PUM_Integrations::get_enabled_forms_selectlist() );
-	}
-
-	/**
-	 * @return array
-	 */
-	public function generate_options_for_integrated_forms() {
-		$enabled_form_integrations = PUM_Integrations::get_enabled_form_integrations();
-
-		$options = [];
-
-		foreach ( $enabled_form_integrations as $integration ) {
-			switch ( $integration->key ) {
-				default:
-					$group_options = [
-						$integration->key . '_any' => sprintf( __( 'Any %s Form', 'popup-maker' ), $integration->label() ),
-					];
-
-					foreach ( $integration->get_form_selectlist() as $formId => $formLabel ) {
-						// ex. ninjaforms_1, contactform7_55
-						$group_options[ $integration->key . '_' . $formId ] = $formLabel;
-					}
-
-					$options[ $integration->label() ] = $group_options;
-
-					break;
-			}
-		}
-
-		return $options;
-	}
-
-	/**
 	 * Registers all known triggers when called.
 	 */
 	public function register_triggers() {
@@ -238,7 +200,7 @@ class PUM_Triggers {
 								__( 'Popup Maker', 'popup-maker' ) => [
 									'pumsubform' => __( 'Subscription Form', 'popup-maker' ),
 								],
-							], $this->generate_options_for_integrated_forms() ) : array(),
+							], PUM_Integrations::get_integrated_forms_selectlist() ) : array(),
 						],
 						'delay' => array(
 							'type'  => 'rangeslider',

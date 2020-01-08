@@ -32,6 +32,28 @@
 			}
 
 			window.PUM.hooks.doAction('pum.integration.form.success', form, args);
+		},
+		checkFormKeyMatches: function (formIdentifier, formInstanceId, submittedFormArgs) {
+			formInstanceId = '' === formInstanceId ? formInstanceId : false;
+			// Check if the submitted form matches trigger requirements.
+			var checks = [
+				// Any supported form.
+				formIdentifier === 'any',
+
+				// Any provider form. ex. `ninjaforms_any`
+				formIdentifier === submittedFormArgs.formProvider + '_any',
+
+				// Specific provider form with or without instance ID. ex. `ninjaforms_1` or `ninjaforms_1_*`
+				// Only run this test if not checking for a specific instanceId.
+				!formInstanceId && new RegExp('^' + formIdentifier + '(_[\d]*)?').test(submittedFormArgs.formKey),
+
+				// Specific provider form with specific instance ID. ex `ninjaforms_1_1` or `calderaforms_jbakrhwkhg_1`
+				// Only run this test if we are checking for specific instanceId.
+				!!formInstanceId && formIdentifier + '_' + formInstanceId === submittedFormArgs.formKey
+			];
+
+			// If any check is true, set the cookie.
+			return -1 !== checks.indexOf(true);
 		}
 	});
 

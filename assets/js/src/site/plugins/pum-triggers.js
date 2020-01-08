@@ -135,27 +135,7 @@
 					return;
 				}
 
-				var lookingFor = settings.form;
-				var instanceId = '' === settings.formInstanceId ? settings.formInstanceId : false;
-				// Check if the submitted form matches trigger requirements.
-				var checks = [
-					// Any supported form.
-					lookingFor === 'any',
-
-					// Any provider form. ex. `ninjaforms_any`
-					lookingFor === args.formProvider + '_any',
-
-					// Specific provider form with or without instance ID. ex. `ninjaforms_1` or `ninjaforms_1_*`
-					// Only run this test if not checking for a specific instanceId.
-					!instanceId && new RegExp('^' + lookingFor + '(_[\d]*)?').test(args.formKey),
-
-					// Specific provider form with specific instance ID. ex `ninjaforms_1_1` or `calderaforms_jbakrhwkhg_1`
-					// Only run this test if we are checking for specific instanceId.
-					!!instanceId && lookingFor + '_' + instanceId === args.formKey
-				];
-
-				// If any check is true, trigger the popup.
-				if (-1 !== checks.indexOf(true)) {
+				if (PUM.integrations.checkFormKeyMatches(settings.form, settings.formInstanceId, args)) {
 					onSuccess();
 				}
 			});
