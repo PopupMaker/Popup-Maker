@@ -133,6 +133,11 @@ class PUM_Cookies {
 				$cookie['fields'] = $this->cookie_fields();
 			}
 
+			$cookie['fields'] = PUM_Admin_Helpers::parse_tab_fields( $cookie['fields'], array(
+				'has_subtabs' => false,
+				'name'        => '%s',
+			) );
+
 			$this->cookies[ $cookie['id'] ] = $cookie;
 		}
 
