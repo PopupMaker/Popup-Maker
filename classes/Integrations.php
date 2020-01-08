@@ -373,4 +373,35 @@ class PUM_Integrations {
 		return $vars;
 	}
 
+	/**
+	 * Returns array of options for a select field to select an integrated form.
+	 *
+	 * @return array
+	 */
+	public static function get_integrated_forms_selectlist() {
+		$enabled_form_integrations = PUM_Integrations::get_enabled_form_integrations();
+
+		$options = [];
+
+		foreach ( $enabled_form_integrations as $integration ) {
+			switch ( $integration->key ) {
+				default:
+					$group_options = [
+						$integration->key . '_any' => sprintf( __( 'Any %s Form', 'popup-maker' ), $integration->label() ),
+					];
+
+					foreach ( $integration->get_form_selectlist() as $formId => $formLabel ) {
+						// ex. ninjaforms_1, contactform7_55
+						$group_options[ $integration->key . '_' . $formId ] = $formLabel;
+					}
+
+					$options[ $integration->label() ] = $group_options;
+
+					break;
+			}
+		}
+
+		return $options;
+	}
+
 }
