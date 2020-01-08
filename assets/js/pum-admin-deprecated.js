@@ -94,7 +94,7 @@
 /***/ (function(module, exports) {
 
 /*******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
   window.PUMModals = window.PUM_Admin.modals;

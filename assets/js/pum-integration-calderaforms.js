@@ -105,24 +105,39 @@ __webpack_require__.r(__webpack_exports__);
 {
   var formProvider = 'calderaforms';
   var $ = window.jQuery;
-  $(document).on('cf.form.submit', function (event, data) {
-    //data.$form is a jQuery object for the form that just submitted.
-    var $form = data.$form; //get the form that is submiting's ID attribute
+  var $form;
+  /**
+   * This function is run before every CF Ajax call to store the form being submitted.
+   *
+   * @param event
+   * @param obj
+   */
 
-    var _$form$attr$split = $form.attr('id').split('_'),
-        _$form$attr$split2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_$form$attr$split, 2),
-        formId = _$form$attr$split2[0],
-        formInstanceId = _$form$attr$split2[1]; // All the magic happens here.
+  var beforeAjax = function beforeAjax(event, obj) {
+    return $form = obj.$form;
+  };
+
+  $(document).on('cf.ajax.request', beforeAjax) // After all requests
+  .on('cf.submission', function (event, obj) {
+    // Only if status of request is complete|success.
+    if ("complete" === obj.data.status || "success" === obj.data.status) {
+      //get the form that is submiting's ID attribute
+      var _$form$attr$split = $form.attr('id').split('_'),
+          _$form$attr$split2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_$form$attr$split, 2),
+          formId = _$form$attr$split2[0],
+          _$form$attr$split2$ = _$form$attr$split2[1],
+          formInstanceId = _$form$attr$split2$ === void 0 ? null : _$form$attr$split2$; // All the magic happens here.
 
 
-    window.PUM.integrations.formSubmission($form[0], {
-      formProvider: formProvider,
-      formID: formId,
-      formInstanceId: formInstanceId,
-      extras: {
-        state: window.cfstate.hasOwnProperty(formId) ? window.cfstate[formId] : null
-      }
-    });
+      window.PUM.integrations.formSubmission($form, {
+        formProvider: formProvider,
+        formId: formId,
+        formInstanceId: formInstanceId,
+        extras: {
+          state: window.cfstate.hasOwnProperty(formId) ? window.cfstate[formId] : null
+        }
+      });
+    }
   });
 }
 

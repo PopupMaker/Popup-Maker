@@ -105,17 +105,26 @@ __webpack_require__.r(__webpack_exports__);
 {
   var formProvider = 'contactform7';
   var $ = window.jQuery;
-  $(document).on('wpcf7:mailsent', '.wpcf7', function (event) {
-    var form = event.target,
-        $form = $(form),
-        formID = $(form).find('input[name="_wpcf7"]').val(); // All the magic happens here.
+  $(document).on('wpcf7:mailsent', '.wpcf7', function (event, details) {
+    var $form = $(this),
+        formId = $form.find('input[name="_wpcf7"]').val(),
+        // Converts string like wpcf7-f190-p2-o11 and reduces it to simply 11, the last o11 is the instance ID.
+    // More accurate way of doing it in case things change in the future, this version filters out all but the o param.
+    // formInstanceId = .split('-').filter((string) => string.indexOf('o') === 0)[0].replace('o','');
+    // Simpler version that simply splits and pops the last item in the array. This requires it always be the last.
+    formInstanceId = $form.attr('id').split('-').pop().replace('o', ''); // All the magic happens here.
 
-    window.PUM.integrations.formSubmission(form, {
+    window.PUM.integrations.formSubmission($form, {
       formProvider: formProvider,
-      formID: formID,
-      formKey: formProvider + '_' + formID
+      formId: formId,
+      formInstanceId: formInstanceId,
+      extras: {
+        details: details
+      }
     });
     /**
+     * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
+     *
      * Listen for older popup actions applied directly to the form.
      *
      * This is here for backward compatibility with form actions prior to v1.9.
@@ -126,7 +135,9 @@ __webpack_require__.r(__webpack_exports__);
 
     if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) === 'object' && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
       settings['closedelay'] = settings.closedelay / 1000;
-    }
+    } // Nothing should happen if older action settings not applied
+    // except triggering of pumFormSuccess event for old cookie method.
+
 
     window.PUM.forms.success($form, settings);
   });
