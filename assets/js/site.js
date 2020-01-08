@@ -2637,99 +2637,50 @@ var pum_debug_mode = false,
 
     window.pum = window.pum || {};
     window.pum.hooks = window.pum.hooks || new EventManager();
+	window.PUM = window.PUM || {};
+	window.PUM.hooks = window.pum.hooks;
 
 })(window);
+
 /*******************************************************************************
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
-    "use strict";
+	"use strict";
 
-    var gFormSettings = {},
-        pumNFController = false;
+	window.PUM = window.PUM || {};
+	window.PUM.integrations = window.PUM.integrations || {};
 
-    function initialize_nf_support() {
-        /** Ninja Forms Support */
-        if (typeof Marionette !== 'undefined' && typeof nfRadio !== 'undefined') {
-            pumNFController = Marionette.Object.extend({
-                initialize: function () {
-                    this.listenTo(nfRadio.channel('forms'), 'submit:response', this.popupMaker)
-                },
-                popupMaker: function (response, textStatus, jqXHR, formID) {
-                    var $form = $('#nf-form-' + formID + '-cont'),
-                        settings = {};
+	function filterNull(x) {
+		return x;
+	}
 
-                    if (response.errors.length) {
-                        return;
-                    }
+	$.extend(window.PUM.integrations, {
+		formSubmission: function (form, args) {
+			var $popup = PUM.getPopup(form);
 
-                    if ('undefined' !== typeof response.data.actions) {
-                        settings.openpopup = 'undefined' !== typeof response.data.actions.openpopup;
-                        settings.openpopup_id = settings.openpopup ? parseInt(response.data.actions.openpopup) : 0;
-                        settings.closepopup = 'undefined' !== typeof response.data.actions.closepopup;
-                        settings.closedelay = settings.closepopup ? parseInt(response.data.actions.closepopup) : 0;
-                        if (settings.closepopup && response.data.actions.closedelay) {
-                            settings.closedelay = parseInt(response.data.actions.closedelay);
-                        }
-                    }
+			args = $.extend({
+				popup: $popup,
+				formProvider: null,
+				formId: null,
+				formInstanceId: null,
+				formKey: null
+			}, args);
 
-                    window.PUM.forms.success($form, settings);
-                }
-            });
-        }
-    }
+			// Generate unique formKey identifier.
+			args.formKey = [args.formProvider, args.formId, args.formInstanceId].filter(filterNull).join('_');
 
+			if ($popup.length) {
+				// Should this be here. It is the only thing not replicated by a new form trigger & cookie.
+				// $popup.trigger('pumFormSuccess');
+			}
 
-    $(document)
-        .ready(function () {
-            /** Ninja Forms Support */
-            if (pumNFController === false) {
-                initialize_nf_support();
-            }
+			window.PUM.hooks.doAction('pum.integration.form.success', form, args);
+		}
+	});
 
-            if (pumNFController !== false) {
-                new pumNFController();
-            }
+}(window.jQuery));
 
-            /** Gravity Forms Support */
-            $('.gform_wrapper > form').each(function () {
-                var $form = $(this),
-                    form_id = $form.attr('id').replace('gform_', ''),
-                    $settings = $form.find('input.gforms-pum'),
-                    settings = $settings.length ? JSON.parse($settings.val()) : false;
-
-                if (!settings || typeof settings !== 'object') {
-                    return;
-                }
-
-                if (typeof settings === 'object' && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
-                    settings['closedelay'] = settings.closedelay / 1000;
-                }
-
-                gFormSettings[form_id] = settings;
-            });
-        })
-        /** Gravity Forms Support */
-        .on('gform_confirmation_loaded', function (event, form_id) {
-            var $form = $('#gform_confirmation_wrapper_' + form_id + ',#gforms_confirmation_message_' + form_id),
-                settings = gFormSettings[form_id] || false;
-
-            window.PUM.forms.success($form, settings);
-        })
-        /** Contact Form 7 Support */
-        .on('wpcf7:mailsent', '.wpcf7', function (event) {
-            var $form = $(event.target),
-                $settings = $form.find('input.wpcf7-pum'),
-                settings = $settings.length ? JSON.parse($settings.val()) : false;
-
-            if (typeof settings === 'object' && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
-                settings['closedelay'] = settings.closedelay / 1000;
-            }
-
-            window.PUM.forms.success($form, settings);
-        });
-
-}(jQuery));
 /*******************************************************************************
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
@@ -2911,6 +2862,66 @@ var pum_debug_mode = false,
                 $popup.popmake('open');
             });
         },
+		form_submission: function (settings) {
+			var $popup = PUM.getPopup(this);
+
+			settings = $.extend({
+				form: '',
+				formInstanceId: '',
+				delay: 0
+			}, settings);
+
+			var onSuccess = function () {
+				setTimeout(function () {
+					// If the popup is already open return.
+					if ($popup.popmake('state', 'isOpen')) {
+						return;
+					}
+
+					// If cookie exists or conditions fail return.
+					if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
+						return;
+					}
+
+					// Set the global last open trigger to the a text description of the trigger.
+					$.fn.popmake.last_open_trigger = 'Form Submission';
+
+					// Open the popup.
+					$popup.popmake('open');
+				}, settings.delay);
+			};
+
+			// Listen for integrated form submissions.
+			PUM.hooks.addAction('pum.integration.form.success', function (form, args) {
+				if (!settings.form.length) {
+					return;
+				}
+
+				var lookingFor = settings.form;
+				var instanceId = '' === settings.formInstanceId ? settings.formInstanceId : false;
+				// Check if the submitted form matches trigger requirements.
+				var checks = [
+					// Any supported form.
+					lookingFor === 'any',
+
+					// Any provider form. ex. `ninjaforms_any`
+					lookingFor === args.formProvider + '_any',
+
+					// Specific provider form with or without instance ID. ex. `ninjaforms_1` or `ninjaforms_1_*`
+					// Only run this test if not checking for a specific instanceId.
+					!instanceId && new RegExp('^' + lookingFor + '(_[\d]*)?').test(args.formKey),
+
+					// Specific provider form with specific instance ID. ex `ninjaforms_1_1` or `calderaforms_jbakrhwkhg_1`
+					// Only run this test if we are checking for specific instanceId.
+					!!instanceId && lookingFor + '_' + instanceId === args.formKey
+				];
+
+				// If any check is true, trigger the popup.
+				if (-1 !== checks.indexOf(true)) {
+					onSuccess();
+				}
+			});
+		},
         admin_debug: function () {
             PUM.getPopup(this).popmake('open');
         }
@@ -2934,6 +2945,7 @@ var pum_debug_mode = false,
         });
 
 }(jQuery, document));
+
 /**
  * Defines the core $.popmake.utilites methods.
  * Version 1.4
@@ -3375,23 +3387,8 @@ var pum_debug_mode = false,
  ******************************************************************************/
 (function (root, factory) {
 
-    // AMD
-    if (typeof define === "function" && define.amd) {
-        define(["exports", "jquery"], function (exports, $) {
-            return factory(exports, $);
-        });
-    }
-
-    // CommonJS
-    else if (typeof exports !== "undefined") {
-        var $ = require("jquery");
-        factory(exports, $);
-    }
-
     // Browser
-    else {
-        factory(root, (root.jQuery || root.Zepto || root.ender || root.$));
-    }
+    factory(root, (root.jQuery || root.Zepto || root.ender || root.$));
 
 }(this, function (exports, $) {
 

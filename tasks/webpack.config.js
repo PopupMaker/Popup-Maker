@@ -42,6 +42,10 @@ const webpackConfig = {
 			return memo;
 		}, {}),
 		{
+			'pum-integration-calderaforms': `${JS_DEV}/integration/calderaforms.js`,
+			'pum-integration-contactform7': `${JS_DEV}/integration/contactform7.js`,
+			'pum-integration-gravityforms': `${JS_DEV}/integration/gravityforms.js`,
+			'pum-integration-ninjaforms': `${JS_DEV}/integration/ninjaforms.js`,
 			'pum-admin-deprecated': `${JS_DEV}/admin/deprecated.js`,
 			'popup-maker-easy-modal-importer-site': `${JS_DEV}/popup-maker-easy-modal-importer-site.js`,
 			'mce-buttons': `${JS_DEV}/mce-buttons.js`

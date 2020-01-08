@@ -81,46 +81,92 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/admin/deprecated.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/contactform7.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./assets/js/src/admin/deprecated.js":
-/*!*******************************************!*\
-  !*** ./assets/js/src/admin/deprecated.js ***!
-  \*******************************************/
+/***/ "./assets/js/src/integration/contactform7.js":
+/*!***************************************************!*\
+  !*** ./assets/js/src/integration/contactform7.js ***!
+  \***************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/typeof.js");
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/*******************************************************************************
+ * Copyright (c) 2020, WP Popup Maker
+ ******************************************************************************/
+{
+  var formProvider = 'contactform7';
+  var $ = window.jQuery;
+  $(document).on('wpcf7:mailsent', '.wpcf7', function (event, details) {
+    var $form = $(this),
+        formId = $form.find('input[name="_wpcf7"]').val(),
+        // Converts string like wpcf7-f190-p2-o11 and reduces it to simply 11, the last o11 is the instance ID.
+    // More accurate way of doing it in case things change in the future, this version filters out all but the o param.
+    // formInstanceId = .split('-').filter((string) => string.indexOf('o') === 0)[0].replace('o','');
+    // Simpler version that simply splits and pops the last item in the array. This requires it always be the last.
+    formInstanceId = $form.attr('id').split('-').pop().replace('o', ''); // All the magic happens here.
+
+    window.PUM.integrations.formSubmission($form, {
+      formProvider: formProvider,
+      formId: formId,
+      formInstanceId: formInstanceId,
+      extras: {
+        details: details
+      }
+    });
+    /**
+     * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
+     *
+     * Listen for older popup actions applied directly to the form.
+     *
+     * This is here for backward compatibility with form actions prior to v1.9.
+     */
+
+    var $settings = $form.find('input.wpcf7-pum'),
+        settings = $settings.length ? JSON.parse($settings.val()) : false;
+
+    if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) === 'object' && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
+      settings['closedelay'] = settings.closedelay / 1000;
+    } // Nothing should happen if older action settings not applied
+    // except triggering of pumFormSuccess event for old cookie method.
+
+
+    window.PUM.forms.success($form, settings);
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/typeof.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/typeof.js ***!
+  \*******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
-(function ($) {
-  window.PUMModals = window.PUM_Admin.modals;
-  window.PUMColorPickers = window.PUM_Admin.colorpicker;
-  window.PUM_Templates = window.PUM_Admin.templates;
-  window.PUMUtils = window.PUM_Admin.utils;
-  /** Specific fixes for extensions that may break or need updating. */
+function _typeof(obj) {
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    module.exports = _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    module.exports = _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
 
-  window.PUMTriggers = window.PUM_Admin.triggers || {};
-  window.PUMCookies = window.PUM_Admin.cookies || {};
-  /* Fix for pum-schedules js error. Remove once updated. */
+  return _typeof(obj);
+}
 
-  window.PUMTriggers.new_schedule = -1;
-  /**
-   * This needs to be preserved for backward compatibility.
-   *
-   * @deprecated 1.8.0
-   * @remove 1.9.0
-   */
-
-  window.PopMakeAdmin = {
-    update_theme: function update_theme() {
-      return PUM_Admin.themeEditor.refresh_preview();
-    }
-  };
-})(jQuery);
+module.exports = _typeof;
 
 /***/ })
 

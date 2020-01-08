@@ -100,6 +100,66 @@
                 $popup.popmake('open');
             });
         },
+		form_submission: function (settings) {
+			var $popup = PUM.getPopup(this);
+
+			settings = $.extend({
+				form: '',
+				formInstanceId: '',
+				delay: 0
+			}, settings);
+
+			var onSuccess = function () {
+				setTimeout(function () {
+					// If the popup is already open return.
+					if ($popup.popmake('state', 'isOpen')) {
+						return;
+					}
+
+					// If cookie exists or conditions fail return.
+					if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
+						return;
+					}
+
+					// Set the global last open trigger to the a text description of the trigger.
+					$.fn.popmake.last_open_trigger = 'Form Submission';
+
+					// Open the popup.
+					$popup.popmake('open');
+				}, settings.delay);
+			};
+
+			// Listen for integrated form submissions.
+			PUM.hooks.addAction('pum.integration.form.success', function (form, args) {
+				if (!settings.form.length) {
+					return;
+				}
+
+				var lookingFor = settings.form;
+				var instanceId = '' === settings.formInstanceId ? settings.formInstanceId : false;
+				// Check if the submitted form matches trigger requirements.
+				var checks = [
+					// Any supported form.
+					lookingFor === 'any',
+
+					// Any provider form. ex. `ninjaforms_any`
+					lookingFor === args.formProvider + '_any',
+
+					// Specific provider form with or without instance ID. ex. `ninjaforms_1` or `ninjaforms_1_*`
+					// Only run this test if not checking for a specific instanceId.
+					!instanceId && new RegExp('^' + lookingFor + '(_[\d]*)?').test(args.formKey),
+
+					// Specific provider form with specific instance ID. ex `ninjaforms_1_1` or `calderaforms_jbakrhwkhg_1`
+					// Only run this test if we are checking for specific instanceId.
+					!!instanceId && lookingFor + '_' + instanceId === args.formKey
+				];
+
+				// If any check is true, trigger the popup.
+				if (-1 !== checks.indexOf(true)) {
+					onSuccess();
+				}
+			});
+		},
         admin_debug: function () {
             PUM.getPopup(this).popmake('open');
         }
