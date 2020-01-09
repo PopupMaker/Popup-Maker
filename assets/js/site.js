@@ -473,6 +473,19 @@ var PUM;
                 });
             }
 
+            if (settings.close_on_form_submission) {
+				PUM.hooks.addAction('pum.integration.form.success', function (form, args) {
+					// If this is the same popup the form was submitted in.
+					// Alternatively we can compare their IDs
+					if (args.popup && args.popup[0] === $popup[0]) {
+						setTimeout(function () {
+							$.fn.popmake.last_close_trigger = 'Form Submission';
+							$popup.popmake('close');
+						}, settings.close_on_form_submission_delay || 0);
+					}
+				});
+			}
+
             $popup.trigger('pumSetupClose');
 
             return this;
@@ -748,6 +761,7 @@ var PUM;
     };
 
 }(jQuery, document));
+
 /**
  * Defines the core $.popmake binds.
  * Version 1.4
@@ -1574,6 +1588,24 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
                 $popup.popmake('setCookie', settings);
             });
         },
+		form_submission: function (settings) {
+			var $popup = PUM.getPopup(this);
+
+			settings = $.extend({
+				form: '',
+				formInstanceId: ''
+			}, settings);
+
+			PUM.hooks.addAction('pum.integration.form.success', function (form, args) {
+				if (!settings.form.length) {
+					return;
+				}
+
+				if (PUM.integrations.checkFormKeyMatches(settings.form, settings.formInstanceId, args)) {
+					$popup.popmake('setCookie', settings);
+				}
+			});
+		},
         manual: function (settings) {
             var $popup = PUM.getPopup(this);
             $popup.on('pumSetCookie', function () {
@@ -1632,6 +1664,7 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
         });
 
 }(jQuery, document));
+
 var pum_debug_mode = false,
     pum_debug;
 (function ($, pum_vars) {
@@ -2012,6 +2045,8 @@ var pum_debug_mode = false,
         stackable: false,
         disable_reposition: false,
         close_on_overlay_click: false,
+		close_on_form_submission: false,
+		close_on_form_submission_delay: 0,
         close_on_esc_press: false,
         close_on_f4_press: false,
         disable_on_mobile: false,
@@ -2101,6 +2136,7 @@ var pum_debug_mode = false,
     };
 
 }(jQuery, document));
+
 /*******************************************************************************
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
@@ -2676,6 +2712,28 @@ var pum_debug_mode = false,
 			}
 
 			window.PUM.hooks.doAction('pum.integration.form.success', form, args);
+		},
+		checkFormKeyMatches: function (formIdentifier, formInstanceId, submittedFormArgs) {
+			formInstanceId = '' === formInstanceId ? formInstanceId : false;
+			// Check if the submitted form matches trigger requirements.
+			var checks = [
+				// Any supported form.
+				formIdentifier === 'any',
+
+				// Any provider form. ex. `ninjaforms_any`
+				formIdentifier === submittedFormArgs.formProvider + '_any',
+
+				// Specific provider form with or without instance ID. ex. `ninjaforms_1` or `ninjaforms_1_*`
+				// Only run this test if not checking for a specific instanceId.
+				!formInstanceId && new RegExp('^' + formIdentifier + '(_[\d]*)?').test(submittedFormArgs.formKey),
+
+				// Specific provider form with specific instance ID. ex `ninjaforms_1_1` or `calderaforms_jbakrhwkhg_1`
+				// Only run this test if we are checking for specific instanceId.
+				!!formInstanceId && formIdentifier + '_' + formInstanceId === submittedFormArgs.formKey
+			];
+
+			// If any check is true, set the cookie.
+			return -1 !== checks.indexOf(true);
 		}
 	});
 
@@ -2897,27 +2955,7 @@ var pum_debug_mode = false,
 					return;
 				}
 
-				var lookingFor = settings.form;
-				var instanceId = '' === settings.formInstanceId ? settings.formInstanceId : false;
-				// Check if the submitted form matches trigger requirements.
-				var checks = [
-					// Any supported form.
-					lookingFor === 'any',
-
-					// Any provider form. ex. `ninjaforms_any`
-					lookingFor === args.formProvider + '_any',
-
-					// Specific provider form with or without instance ID. ex. `ninjaforms_1` or `ninjaforms_1_*`
-					// Only run this test if not checking for a specific instanceId.
-					!instanceId && new RegExp('^' + lookingFor + '(_[\d]*)?').test(args.formKey),
-
-					// Specific provider form with specific instance ID. ex `ninjaforms_1_1` or `calderaforms_jbakrhwkhg_1`
-					// Only run this test if we are checking for specific instanceId.
-					!!instanceId && lookingFor + '_' + instanceId === args.formKey
-				];
-
-				// If any check is true, trigger the popup.
-				if (-1 !== checks.indexOf(true)) {
+				if (PUM.integrations.checkFormKeyMatches(settings.form, settings.formInstanceId, args)) {
 					onSuccess();
 				}
 			});
