@@ -90,7 +90,7 @@ class PUM_Admin_Assets {
 		wp_register_script( 'iframe-resizer', self::$js_url . 'vendor/iframeResizer.min.js', array( 'jquery' ) );
 
 		// @deprecated handle. Currently loads empty file and admin-general as dependency.
-		wp_register_script( 'popup-maker-admin', self::$js_url . 'admin-deprecated' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
+		wp_register_script( 'popup-maker-admin', self::$js_url . 'pum-admin-deprecated' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
 		wp_localize_script( 'pum-admin-general', 'pum_admin', $admin_vars );
 
 		wp_enqueue_script( 'pum-admin-marketing' );
