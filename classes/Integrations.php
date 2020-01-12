@@ -292,7 +292,6 @@ class PUM_Integrations {
 		return $css;
 	}
 
-
 	/**
 	 * Modify popup settings.
 	 *
@@ -339,6 +338,8 @@ class PUM_Integrations {
 
 	/**
 	 * Add various extra global pum_vars js values.
+	 *
+	 * Primarily used to pass form success options for custom integrations and custom code.
 	 *
 	 * @param array $vars
 	 *
