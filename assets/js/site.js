@@ -2692,21 +2692,34 @@ var pum_debug_mode = false,
 	}
 
 	$.extend(window.PUM.integrations, {
-		formSubmission: function (form, args) {
-			var $popup = PUM.getPopup(form);
+		init: function () {
+			if ("undefined" !== typeof pum_vars.form_submission) {
+				var submission = pum_vars.form_submission;
 
+				// Declare these are not AJAX submissions.
+				submission.ajax = false;
+
+				// Initialize the popup var based on passed popup ID.
+				submission.popup = submission.popupId > 0 ? PUM.getPopup(submission.popupId) : null;
+
+				PUM.integrations.formSubmission(null, submission);
+			}
+		},
+		formSubmission: function (form, args) {
 			args = $.extend({
-				popup: $popup,
+				popup: PUM.getPopup(form),
 				formProvider: null,
 				formId: null,
 				formInstanceId: null,
-				formKey: null
+				formKey: null,
+				ajax: false, // Allows detecting submissions that may have already been counted.
+				tracked: false
 			}, args);
 
 			// Generate unique formKey identifier.
-			args.formKey = [args.formProvider, args.formId, args.formInstanceId].filter(filterNull).join('_');
+			args.formKey = args.formKey || [args.formProvider, args.formId, args.formInstanceId].filter(filterNull).join('_');
 
-			if ($popup.length) {
+			if (args.popup && args.popup.length) {
 				// Should this be here. It is the only thing not replicated by a new form trigger & cookie.
 				// $popup.trigger('pumFormSuccess');
 			}
@@ -2736,6 +2749,7 @@ var pum_debug_mode = false,
 			return -1 !== checks.indexOf(true);
 		}
 	});
+
 
 }(window.jQuery));
 
@@ -3596,6 +3610,9 @@ var pum_debug_mode = false,
 
             PUM.forms.success(pum_vars.form_success.popup_id, pum_vars.form_success.settings);
         }
+
+        // Initiate integrations.
+        PUM.integrations.init();
     });
 
     /**

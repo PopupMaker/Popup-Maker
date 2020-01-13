@@ -13,19 +13,16 @@
 
 	$.extend(window.PUM.integrations, {
 		init: function () {
-			if ("undefined" !== typeof pum_vars.form_submissions) {
-				var i = 0,
-					count = pum_vars.form_submissions.length,
-					submission;
+			if ("undefined" !== typeof pum_vars.form_submission) {
+				var submission = pum_vars.form_submission;
 
-				for (i; i < count; i++) {
-					submission = pum_vars.form_submissions[i];
+				// Declare these are not AJAX submissions.
+				submission.ajax = false;
 
-					// Initialize the popup var based on passed popup ID.
-					submission.popup = submission.popupId > 0 ? PUM.getPopup(submission.popupId) : null;
+				// Initialize the popup var based on passed popup ID.
+				submission.popup = submission.popupId > 0 ? PUM.getPopup(submission.popupId) : null;
 
-					PUM.integrations.formSubmission(null, submission);
-				}
+				PUM.integrations.formSubmission(null, submission);
 			}
 		},
 		formSubmission: function (form, args) {
@@ -34,7 +31,9 @@
 				formProvider: null,
 				formId: null,
 				formInstanceId: null,
-				formKey: null
+				formKey: null,
+				ajax: false, // Allows detecting submissions that may have already been counted.
+				tracked: false
 			}, args);
 
 			// Generate unique formKey identifier.
