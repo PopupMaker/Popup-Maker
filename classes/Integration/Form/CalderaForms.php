@@ -10,6 +10,10 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	 */
 	public $key = 'calderaforms';
 
+	public function __construct() {
+		add_action( 'caldera_forms_submit_complete', array( $this, 'on_success' ) );
+	}
+
 	/**
 	 * @return string
 	 */
@@ -56,12 +60,14 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
-	 * @param callable $callback
-	 *
-	 * @return void
+	 * @param array $form
 	 */
-	public function on_success( $callback ) {
-		// TODO: Implement on_success() method.
+	public function on_success( $form ) {
+		pum_integrated_form_submission( [
+			'popup_id'      => isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false,
+			'form_provider' => $this->key,
+			'form_id'       => $form['ID'],
+		] );
 	}
 
 	/**

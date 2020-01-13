@@ -10,6 +10,10 @@ class PUM_Integration_Form_ContactForm7 extends PUM_Abstract_Integration_Form {
 	 */
 	public $key = 'contactform7';
 
+	public function __construct() {
+		add_action( 'wpcf7_mail_sent', array( $this, 'on_success' ), 1 );
+	}
+
 	/**
 	 * @return string
 	 */
@@ -58,8 +62,15 @@ class PUM_Integration_Form_ContactForm7 extends PUM_Abstract_Integration_Form {
 		return $form_selectlist;
 	}
 
-	public function on_success( $callback ) {
-		// TODO: Implement on_success() method.
+	/**
+	 * @param WPCF7_ContactForm $cfdata
+	 */
+	public function on_success( $cfdata ) {
+		pum_integrated_form_submission( [
+			'popup_id'      => isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false,
+			'form_provider' => $this->key,
+			'form_id'       => $cfdata->id(),
+		] );
 	}
 
 	/**

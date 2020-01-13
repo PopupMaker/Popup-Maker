@@ -10,6 +10,10 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 	 */
 	public $key = 'gravityforms';
 
+	public function __construct() {
+		add_action( 'gform_after_submission', array( $this, 'on_success' ), 10, 2 );
+	}
+
 	/**
 	 * @return string
 	 */
@@ -56,8 +60,16 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 	}
 
 
-	public function on_success( $callback ) {
-		// TODO: Implement on_success() method.
+	/**
+	 * @param $entry
+	 * @param $form
+	 */
+	public function on_success( $entry, $form ) {
+		pum_integrated_form_submission( [
+			'popup_id'      => isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false,
+			'form_provider' => $this->key,
+			'form_id'       => $form['id'],
+		] );
 	}
 
 	/**

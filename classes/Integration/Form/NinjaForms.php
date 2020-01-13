@@ -10,6 +10,11 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	 */
 	public $key = 'ninjaforms';
 
+	public function __construct() {
+		add_action( 'ninja_forms_pre_process',  array( $this, 'on_success_v2' ) );
+		add_action( 'ninja_forms_after_submission',  array( $this, 'on_success_v3' ) );
+	}
+
 	/**
 	 * @return string
 	 */
@@ -55,8 +60,27 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 		return $form_selectlist;
 	}
 
-	public function on_success( $callback ) {
-		// TODO: Implement on_success() method.
+	/**
+	 * @global $ninja_forms_processing
+	 */
+	public function on_success_v2() {
+		global $ninja_forms_processing;
+		pum_integrated_form_submission( [
+			'popup_id'      => isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false,
+			'form_provider' => $this->key,
+			'form_id'       => $ninja_forms_processing->get_form_ID(),
+		] );
+	}
+
+	/**
+	 * @param $form_data
+	 */
+	public function on_success_v3( $form_data ) {
+		pum_integrated_form_submission( [
+			'popup_id'      => isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false,
+			'form_provider' => $this->key,
+			'form_id'       => $form_data['form_id'],
+		] );
 	}
 
 	/**

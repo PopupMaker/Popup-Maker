@@ -28,15 +28,6 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	abstract public function get_form_selectlist();
 
 	/**
-	 * @param callable $callback
-	 *
-	 * @return void
-	 */
-	public function on_success( $callback ) {
-	}
-
-
-	/**
 	 * @param array $js
 	 *
 	 * @return array

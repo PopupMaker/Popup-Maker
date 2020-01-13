@@ -23,17 +23,6 @@ interface PUM_Interface_Integration_Form extends PUM_Interface_Integration {
 	public function get_form_selectlist();
 
 	/**
-	 * Hooks a callback into the proper success events.
-	 *
-	 * This only applies for form submissions that didn't use JS/AJAX
-	 *
-	 * @param callable $callback
-	 *
-	 * @return mixed
-	 */
-	public function on_success( $callback );
-
-	/**
 	 * @param array $js
 	 *
 	 * @return array
