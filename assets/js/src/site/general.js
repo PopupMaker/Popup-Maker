@@ -25,6 +25,9 @@
 
             PUM.forms.success(pum_vars.form_success.popup_id, pum_vars.form_success.settings);
         }
+
+        // Initiate integrations.
+        PUM.integrations.init();
     });
 
     /**

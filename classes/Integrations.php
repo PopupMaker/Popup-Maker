@@ -24,6 +24,8 @@ class PUM_Integrations {
 
 	public static $form_success;
 
+	public static $form_submissions = [];
+
 	public static function init() {
 		self::$integrations = apply_filters( 'pum_integrations', [
 			// Forms
@@ -369,6 +371,21 @@ class PUM_Integrations {
 			}
 
 			$vars['form_success'] = self::$form_success;
+		}
+
+		if ( ! empty( self::$form_submissions ) ) {
+			$vars['form_submissions'] = [];
+
+			// Remap values from PHP underscore_case to JS camelCase
+			foreach ( self::$form_submissions as $submission ) {
+				$vars['form_submissions'][] = [
+					'formProvider'   => $submission['form_provider'],
+					'formId'         => $submission['form_id'],
+					'formInstanceId' => $submission['form_instance_id'],
+					'popupId'        => $submission['popup_id'],
+					'extras'         => isset ( $submission['extras'] ) ? $submission['extras'] : null,
+				];
+			}
 		}
 
 		return $vars;

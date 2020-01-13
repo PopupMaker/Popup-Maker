@@ -29,3 +29,21 @@ function pum_trigger_popup_form_success( $popup_id = null, $settings = array() )
 		);
 	}
 }
+
+/**
+ * @param array $args {
+ *     	An array of parameters that customize the way the parser works.
+ *		@var string $form_provider
+ * 		@type string|int $form_id
+ *	 	@type string|int $form_instance_id
+ * 		@type string|int $popup_id
+ * }
+ */
+function pum_integrated_form_submission( $args = [] ) {
+	PUM_Integrations::$form_submissions[] = wp_parse_args( $args, [
+		'popup_id'         => null,
+		'form_provider'    => null,
+		'form_id'          => null,
+		'form_instance_id' => null,
+	] );
+}
