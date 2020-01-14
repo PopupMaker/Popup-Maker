@@ -101,7 +101,10 @@ class PUM_AssetCache {
 				require_once( ABSPATH . 'wp-admin/includes/file.php' );
 			}
 
-			WP_Filesystem();
+			$results = WP_Filesystem();
+			if ( true !== $results ) {
+				return false;
+			}
 
 			global $wp_filesystem;
 
