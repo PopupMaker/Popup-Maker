@@ -25,6 +25,20 @@
 				PUM.integrations.formSubmission(null, submission);
 			}
 		},
+		/**
+		 * This hook fires after any integrated form is submitted successfully.
+		 *
+		 * It does not matter if the form is in a popup or not.
+		 *
+		 * @since 1.9.0
+		 *
+		 * @param {Object} form JavaScript DOM node or jQuery object for the form submitted
+		 * @param {Object} args {
+		 *     @type {string} formProvider Such as gravityforms or ninjaforms
+		 *     @type {string|int} formId Usually an integer ID number such as 1
+		 *     @type {int} formInstanceId Not all form plugins support this.
+		 * }
+		 */
 		formSubmission: function (form, args) {
 			args = $.extend({
 				popup: PUM.getPopup(form),
@@ -40,10 +54,28 @@
 			args.formKey = args.formKey || [args.formProvider, args.formId, args.formInstanceId].filter(filterNull).join('_');
 
 			if (args.popup && args.popup.length) {
+				args.popupId = PUM.getSetting(args.popup, 'id');
 				// Should this be here. It is the only thing not replicated by a new form trigger & cookie.
 				// $popup.trigger('pumFormSuccess');
 			}
 
+			/**
+			 * This hook fires after any integrated form is submitted successfully.
+			 *
+			 * It does not matter if the form is in a popup or not.
+			 *
+			 * @since 1.9.0
+			 *
+			 * @param {Object} form JavaScript DOM node or jQuery object for the form submitted
+			 * @param {Object} args {
+			 *     @type {string} formProvider Such as gravityforms or ninjaforms
+			 *     @type {string|int} formId Usually an integer ID number such as 1
+			 *     @type {int} formInstanceId Not all form plugins support this.
+			 *     @type {string} formKey Concatenation of provider, ID & Instance ID.
+			 *     @type {int} popupId The ID of the popup the form was in.
+			 *     @type {Object} popup Usable jQuery object for the popup.
+			 * }
+			 */
 			window.PUM.hooks.doAction('pum.integration.form.success', form, args);
 		},
 		checkFormKeyMatches: function (formIdentifier, formInstanceId, submittedFormArgs) {
