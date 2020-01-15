@@ -1,5 +1,12 @@
 ### Unreleased Changes
+* Feature: New Form Submission Trigger with option to choose specific forms for integrated forms.
+* Feature: New Form Submission cookie event with option to choose specific forms.
+* Feature: New Close on Form Submission with optional delay.
+* Feature: WP Forms integration.
+* Feature: Caldera Forms integration.
+* Feature: MailChimp for WordPress integration
 * Improvement: Added RTL CSS support.
+* Improvement: Simplified form integration apis.
 
 ### v1.8.14 - 10/24/2019
 * Improvement: Updated nav menu editor walker class for adding custom fields to further improve compatibility.
