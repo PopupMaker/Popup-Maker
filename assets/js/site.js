@@ -2712,7 +2712,7 @@ var pum_debug_mode = false,
 				formId: null,
 				formInstanceId: null,
 				formKey: null,
-				ajax: false, // Allows detecting submissions that may have already been counted.
+				ajax: true, // Allows detecting submissions that may have already been counted.
 				tracked: false
 			}, args);
 

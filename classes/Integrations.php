@@ -33,6 +33,7 @@ class PUM_Integrations {
 			'gravityforms'   => new PUM_Integration_Form_GravityForms,
 			'contactform7'   => new PUM_Integration_Form_ContactForm7,
 			'calderaforms'   => new PUM_Integration_Form_CalderaForms,
+			'wpforms'        => new PUM_Integration_Form_WPForms,
 			// Builders
 			'kingcomposer'   => new PUM_Integration_Builder_KingComposer,
 			'visualcomposer' => new PUM_Integration_Builder_VisualComposer,
