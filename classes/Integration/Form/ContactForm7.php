@@ -106,7 +106,7 @@ class PUM_Integration_Form_ContactForm7 extends PUM_Abstract_Integration_Form {
 	 */
 	public function custom_scripts( $js = [] ) {
 		$js[ $this->key ] = [
-			'content'  => file_get_contents( Popup_Maker::$DIR . 'assets/js/pum-integration-contactform7.js' ),
+			'content'  => file_get_contents( Popup_Maker::$DIR . 'assets/js/pum-integration-' . $this->key . PUM_Site_Assets::$suffix . '.js' ),
 			'priority' => 8,
 		];
 

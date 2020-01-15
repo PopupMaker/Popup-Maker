@@ -78,7 +78,7 @@ class PUM_Integration_Form_MC4WP extends PUM_Abstract_Integration_Form {
 	 */
 	public function custom_scripts( $js = [] ) {
 		$js[ $this->key ] = [
-			'content'  => file_get_contents( Popup_Maker::$DIR . 'assets/js/pum-integration-mc4wp.js' ),
+			'content'  => file_get_contents( Popup_Maker::$DIR . 'assets/js/pum-integration-' . $this->key . PUM_Site_Assets::$suffix . '.js' ),
 			'priority' => 8,
 		];
 

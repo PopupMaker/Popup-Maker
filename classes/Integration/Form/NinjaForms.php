@@ -11,8 +11,8 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	public $key = 'ninjaforms';
 
 	public function __construct() {
-		add_action( 'ninja_forms_pre_process',  array( $this, 'on_success_v2' ) );
-		add_action( 'ninja_forms_after_submission',  array( $this, 'on_success_v3' ) );
+		add_action( 'ninja_forms_pre_process', array( $this, 'on_success_v2' ) );
+		add_action( 'ninja_forms_after_submission', array( $this, 'on_success_v3' ) );
 	}
 
 	/**
@@ -89,8 +89,8 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	 * @return array
 	 */
 	public function custom_scripts( $js = [] ) {
-		$js['ninjaforms'] = [
-			'content'  => file_get_contents( Popup_Maker::$DIR . 'assets/js/pum-integration-ninjaforms.js' ),
+		$js[ $this->key ] = [
+			'content'  => file_get_contents( Popup_Maker::$DIR . 'assets/js/pum-integration-' . $this->key . PUM_Site_Assets::$suffix . '.js' ),
 			'priority' => 8,
 		];
 
