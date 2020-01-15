@@ -33,6 +33,7 @@ class PUM_Integrations {
 			'gravityforms'   => new PUM_Integration_Form_GravityForms,
 			'contactform7'   => new PUM_Integration_Form_ContactForm7,
 			'calderaforms'   => new PUM_Integration_Form_CalderaForms,
+			'mc4wp'          => new PUM_Integration_Form_MC4WP,
 			'wpforms'        => new PUM_Integration_Form_WPForms,
 			// Builders
 			'kingcomposer'   => new PUM_Integration_Builder_KingComposer,
@@ -325,11 +326,7 @@ class PUM_Integrations {
 			// Form reopen was not marked disable.
 			empty( $settings['disable_form_reopen'] ) || ! $settings['disable_form_reopen'],
 			// Close on form submission is disbaled, or has a timer larger than 0.
-			(
-				empty( $settings['close_on_form_submission'] ) ||
-				! $settings['close_on_form_submission'] ||
-				( $settings['close_on_form_submission'] && $settings['close_on_form_submission_delay'] > 0 )
-			),
+			( empty( $settings['close_on_form_submission'] ) || ! $settings['close_on_form_submission'] || ( $settings['close_on_form_submission'] && $settings['close_on_form_submission_delay'] > 0 ) ),
 		];
 
 		/**
