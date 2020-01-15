@@ -69,6 +69,24 @@
                 $popup.popmake('setCookie', settings);
             });
         },
+		form_submission: function (settings) {
+			var $popup = PUM.getPopup(this);
+
+			settings = $.extend({
+				form: '',
+				formInstanceId: ''
+			}, settings);
+
+			PUM.hooks.addAction('pum.integration.form.success', function (form, args) {
+				if (!settings.form.length) {
+					return;
+				}
+
+				if (PUM.integrations.checkFormKeyMatches(settings.form, settings.formInstanceId, args)) {
+					$popup.popmake('setCookie', settings);
+				}
+			});
+		},
         manual: function (settings) {
             var $popup = PUM.getPopup(this);
             $popup.on('pumSetCookie', function () {

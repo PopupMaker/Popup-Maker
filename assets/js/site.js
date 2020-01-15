@@ -473,6 +473,19 @@ var PUM;
                 });
             }
 
+            if (settings.close_on_form_submission) {
+				PUM.hooks.addAction('pum.integration.form.success', function (form, args) {
+					// If this is the same popup the form was submitted in.
+					// Alternatively we can compare their IDs
+					if (args.popup && args.popup[0] === $popup[0]) {
+						setTimeout(function () {
+							$.fn.popmake.last_close_trigger = 'Form Submission';
+							$popup.popmake('close');
+						}, settings.close_on_form_submission_delay || 0);
+					}
+				});
+			}
+
             $popup.trigger('pumSetupClose');
 
             return this;
@@ -748,6 +761,7 @@ var PUM;
     };
 
 }(jQuery, document));
+
 /**
  * Defines the core $.popmake binds.
  * Version 1.4
@@ -1574,6 +1588,24 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
                 $popup.popmake('setCookie', settings);
             });
         },
+		form_submission: function (settings) {
+			var $popup = PUM.getPopup(this);
+
+			settings = $.extend({
+				form: '',
+				formInstanceId: ''
+			}, settings);
+
+			PUM.hooks.addAction('pum.integration.form.success', function (form, args) {
+				if (!settings.form.length) {
+					return;
+				}
+
+				if (PUM.integrations.checkFormKeyMatches(settings.form, settings.formInstanceId, args)) {
+					$popup.popmake('setCookie', settings);
+				}
+			});
+		},
         manual: function (settings) {
             var $popup = PUM.getPopup(this);
             $popup.on('pumSetCookie', function () {
@@ -1632,6 +1664,7 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
         });
 
 }(jQuery, document));
+
 var pum_debug_mode = false,
     pum_debug;
 (function ($, pum_vars) {
@@ -2012,6 +2045,8 @@ var pum_debug_mode = false,
         stackable: false,
         disable_reposition: false,
         close_on_overlay_click: false,
+		close_on_form_submission: false,
+		close_on_form_submission_delay: 0,
         close_on_esc_press: false,
         close_on_f4_press: false,
         disable_on_mobile: false,
@@ -2101,6 +2136,7 @@ var pum_debug_mode = false,
     };
 
 }(jQuery, document));
+
 /*******************************************************************************
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
@@ -2637,99 +2673,86 @@ var pum_debug_mode = false,
 
     window.pum = window.pum || {};
     window.pum.hooks = window.pum.hooks || new EventManager();
+	window.PUM = window.PUM || {};
+	window.PUM.hooks = window.pum.hooks;
 
 })(window);
+
 /*******************************************************************************
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 (function ($) {
-    "use strict";
+	"use strict";
 
-    var gFormSettings = {},
-        pumNFController = false;
+	window.PUM = window.PUM || {};
+	window.PUM.integrations = window.PUM.integrations || {};
 
-    function initialize_nf_support() {
-        /** Ninja Forms Support */
-        if (typeof Marionette !== 'undefined' && typeof nfRadio !== 'undefined') {
-            pumNFController = Marionette.Object.extend({
-                initialize: function () {
-                    this.listenTo(nfRadio.channel('forms'), 'submit:response', this.popupMaker)
-                },
-                popupMaker: function (response, textStatus, jqXHR, formID) {
-                    var $form = $('#nf-form-' + formID + '-cont'),
-                        settings = {};
+	function filterNull(x) {
+		return x;
+	}
 
-                    if (response.errors.length) {
-                        return;
-                    }
+	$.extend(window.PUM.integrations, {
+		init: function () {
+			if ("undefined" !== typeof pum_vars.form_submission) {
+				var submission = pum_vars.form_submission;
 
-                    if ('undefined' !== typeof response.data.actions) {
-                        settings.openpopup = 'undefined' !== typeof response.data.actions.openpopup;
-                        settings.openpopup_id = settings.openpopup ? parseInt(response.data.actions.openpopup) : 0;
-                        settings.closepopup = 'undefined' !== typeof response.data.actions.closepopup;
-                        settings.closedelay = settings.closepopup ? parseInt(response.data.actions.closepopup) : 0;
-                        if (settings.closepopup && response.data.actions.closedelay) {
-                            settings.closedelay = parseInt(response.data.actions.closedelay);
-                        }
-                    }
+				// Declare these are not AJAX submissions.
+				submission.ajax = false;
 
-                    window.PUM.forms.success($form, settings);
-                }
-            });
-        }
-    }
+				// Initialize the popup var based on passed popup ID.
+				submission.popup = submission.popupId > 0 ? PUM.getPopup(submission.popupId) : null;
+
+				PUM.integrations.formSubmission(null, submission);
+			}
+		},
+		formSubmission: function (form, args) {
+			args = $.extend({
+				popup: PUM.getPopup(form),
+				formProvider: null,
+				formId: null,
+				formInstanceId: null,
+				formKey: null,
+				ajax: true, // Allows detecting submissions that may have already been counted.
+				tracked: false
+			}, args);
+
+			// Generate unique formKey identifier.
+			args.formKey = args.formKey || [args.formProvider, args.formId, args.formInstanceId].filter(filterNull).join('_');
+
+			if (args.popup && args.popup.length) {
+				// Should this be here. It is the only thing not replicated by a new form trigger & cookie.
+				// $popup.trigger('pumFormSuccess');
+			}
+
+			window.PUM.hooks.doAction('pum.integration.form.success', form, args);
+		},
+		checkFormKeyMatches: function (formIdentifier, formInstanceId, submittedFormArgs) {
+			formInstanceId = '' === formInstanceId ? formInstanceId : false;
+			// Check if the submitted form matches trigger requirements.
+			var checks = [
+				// Any supported form.
+				formIdentifier === 'any',
+
+				// Any provider form. ex. `ninjaforms_any`
+				formIdentifier === submittedFormArgs.formProvider + '_any',
+
+				// Specific provider form with or without instance ID. ex. `ninjaforms_1` or `ninjaforms_1_*`
+				// Only run this test if not checking for a specific instanceId.
+				!formInstanceId && new RegExp('^' + formIdentifier + '(_[\d]*)?').test(submittedFormArgs.formKey),
+
+				// Specific provider form with specific instance ID. ex `ninjaforms_1_1` or `calderaforms_jbakrhwkhg_1`
+				// Only run this test if we are checking for specific instanceId.
+				!!formInstanceId && formIdentifier + '_' + formInstanceId === submittedFormArgs.formKey
+			];
+
+			// If any check is true, set the cookie.
+			return -1 !== checks.indexOf(true);
+		}
+	});
 
 
-    $(document)
-        .ready(function () {
-            /** Ninja Forms Support */
-            if (pumNFController === false) {
-                initialize_nf_support();
-            }
+}(window.jQuery));
 
-            if (pumNFController !== false) {
-                new pumNFController();
-            }
-
-            /** Gravity Forms Support */
-            $('.gform_wrapper > form').each(function () {
-                var $form = $(this),
-                    form_id = $form.attr('id').replace('gform_', ''),
-                    $settings = $form.find('input.gforms-pum'),
-                    settings = $settings.length ? JSON.parse($settings.val()) : false;
-
-                if (!settings || typeof settings !== 'object') {
-                    return;
-                }
-
-                if (typeof settings === 'object' && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
-                    settings['closedelay'] = settings.closedelay / 1000;
-                }
-
-                gFormSettings[form_id] = settings;
-            });
-        })
-        /** Gravity Forms Support */
-        .on('gform_confirmation_loaded', function (event, form_id) {
-            var $form = $('#gform_confirmation_wrapper_' + form_id + ',#gforms_confirmation_message_' + form_id),
-                settings = gFormSettings[form_id] || false;
-
-            window.PUM.forms.success($form, settings);
-        })
-        /** Contact Form 7 Support */
-        .on('wpcf7:mailsent', '.wpcf7', function (event) {
-            var $form = $(event.target),
-                $settings = $form.find('input.wpcf7-pum'),
-                settings = $settings.length ? JSON.parse($settings.val()) : false;
-
-            if (typeof settings === 'object' && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
-                settings['closedelay'] = settings.closedelay / 1000;
-            }
-
-            window.PUM.forms.success($form, settings);
-        });
-
-}(jQuery));
 /*******************************************************************************
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
@@ -2911,6 +2934,46 @@ var pum_debug_mode = false,
                 $popup.popmake('open');
             });
         },
+		form_submission: function (settings) {
+			var $popup = PUM.getPopup(this);
+
+			settings = $.extend({
+				form: '',
+				formInstanceId: '',
+				delay: 0
+			}, settings);
+
+			var onSuccess = function () {
+				setTimeout(function () {
+					// If the popup is already open return.
+					if ($popup.popmake('state', 'isOpen')) {
+						return;
+					}
+
+					// If cookie exists or conditions fail return.
+					if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
+						return;
+					}
+
+					// Set the global last open trigger to the a text description of the trigger.
+					$.fn.popmake.last_open_trigger = 'Form Submission';
+
+					// Open the popup.
+					$popup.popmake('open');
+				}, settings.delay);
+			};
+
+			// Listen for integrated form submissions.
+			PUM.hooks.addAction('pum.integration.form.success', function (form, args) {
+				if (!settings.form.length) {
+					return;
+				}
+
+				if (PUM.integrations.checkFormKeyMatches(settings.form, settings.formInstanceId, args)) {
+					onSuccess();
+				}
+			});
+		},
         admin_debug: function () {
             PUM.getPopup(this).popmake('open');
         }
@@ -2934,6 +2997,7 @@ var pum_debug_mode = false,
         });
 
 }(jQuery, document));
+
 /**
  * Defines the core $.popmake.utilites methods.
  * Version 1.4
@@ -3375,23 +3439,8 @@ var pum_debug_mode = false,
  ******************************************************************************/
 (function (root, factory) {
 
-    // AMD
-    if (typeof define === "function" && define.amd) {
-        define(["exports", "jquery"], function (exports, $) {
-            return factory(exports, $);
-        });
-    }
-
-    // CommonJS
-    else if (typeof exports !== "undefined") {
-        var $ = require("jquery");
-        factory(exports, $);
-    }
-
     // Browser
-    else {
-        factory(root, (root.jQuery || root.Zepto || root.ender || root.$));
-    }
+    factory(root, (root.jQuery || root.Zepto || root.ender || root.$));
 
 }(this, function (exports, $) {
 
@@ -3561,6 +3610,9 @@ var pum_debug_mode = false,
 
             PUM.forms.success(pum_vars.form_success.popup_id, pum_vars.form_success.settings);
         }
+
+        // Initiate integrations.
+        PUM.integrations.init();
     });
 
     /**

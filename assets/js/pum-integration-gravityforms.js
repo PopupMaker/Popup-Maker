@@ -81,46 +81,101 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/admin/deprecated.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/gravityforms.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./assets/js/src/admin/deprecated.js":
-/*!*******************************************!*\
-  !*** ./assets/js/src/admin/deprecated.js ***!
-  \*******************************************/
+/***/ "./assets/js/src/integration/gravityforms.js":
+/*!***************************************************!*\
+  !*** ./assets/js/src/integration/gravityforms.js ***!
+  \***************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/typeof.js");
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/*******************************************************************************
+ * Copyright (c) 2020, WP Popup Maker
+ ******************************************************************************/
+{
+  var formProvider = 'gravityforms';
+  var $ = window.jQuery;
+  var gFormSettings = {};
+  $(document).on('gform_confirmation_loaded', function (event, formId) {
+    var $form = $('#gform_confirmation_wrapper_' + formId + ',#gforms_confirmation_message_' + formId)[0]; // All the magic happens here.
+
+    window.PUM.integrations.formSubmission($form, {
+      formProvider: formProvider,
+      formId: formId
+    });
+    /**
+     * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
+     *
+     * Listen for older popup actions applied directly to the form.
+     *
+     * This is here for backward compatibility with form actions prior to v1.9.
+     */
+    // Nothing should happen if older action settings not applied
+    // except triggering of pumFormSuccess event for old cookie method.
+
+    window.PUM.forms.success($form, gFormSettings[formId] || {});
+  })
+  /**
+   * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
+   *
+   * Listen for older popup actions applied directly to the form.
+   *
+   * This is here for backward compatibility with form actions prior to v1.9.
+   */
+  .ready(function () {
+    $('.gform_wrapper > form').each(function () {
+      var $form = $(this),
+          formId = $form.attr('id').replace('gform_', ''),
+          $settings = $form.find('input.gforms-pum'),
+          settings = $settings.length ? JSON.parse($settings.val()) : false;
+
+      if (!settings || _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) !== 'object') {
+        return;
+      }
+
+      if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) === 'object' && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
+        settings['closedelay'] = settings.closedelay / 1000;
+      }
+
+      gFormSettings[formId] = settings;
+    });
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/typeof.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/typeof.js ***!
+  \*******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
-(function ($) {
-  window.PUMModals = window.PUM_Admin.modals;
-  window.PUMColorPickers = window.PUM_Admin.colorpicker;
-  window.PUM_Templates = window.PUM_Admin.templates;
-  window.PUMUtils = window.PUM_Admin.utils;
-  /** Specific fixes for extensions that may break or need updating. */
+function _typeof(obj) {
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    module.exports = _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    module.exports = _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
 
-  window.PUMTriggers = window.PUM_Admin.triggers || {};
-  window.PUMCookies = window.PUM_Admin.cookies || {};
-  /* Fix for pum-schedules js error. Remove once updated. */
+  return _typeof(obj);
+}
 
-  window.PUMTriggers.new_schedule = -1;
-  /**
-   * This needs to be preserved for backward compatibility.
-   *
-   * @deprecated 1.8.0
-   * @remove 1.9.0
-   */
-
-  window.PopMakeAdmin = {
-    update_theme: function update_theme() {
-      return PUM_Admin.themeEditor.refresh_preview();
-    }
-  };
-})(jQuery);
+module.exports = _typeof;
 
 /***/ })
 

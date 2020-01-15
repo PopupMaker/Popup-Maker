@@ -81,46 +81,36 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/admin/deprecated.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/wpforms.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./assets/js/src/admin/deprecated.js":
-/*!*******************************************!*\
-  !*** ./assets/js/src/admin/deprecated.js ***!
-  \*******************************************/
+/***/ "./assets/js/src/integration/wpforms.js":
+/*!**********************************************!*\
+  !*** ./assets/js/src/integration/wpforms.js ***!
+  \**********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
+ * Copyright (c) 2020, WP Popup Maker
  ******************************************************************************/
-(function ($) {
-  window.PUMModals = window.PUM_Admin.modals;
-  window.PUMColorPickers = window.PUM_Admin.colorpicker;
-  window.PUM_Templates = window.PUM_Admin.templates;
-  window.PUMUtils = window.PUM_Admin.utils;
-  /** Specific fixes for extensions that may break or need updating. */
+{
+  var formProvider = 'wpforms';
+  var $ = window.jQuery;
+  $(document).on('wpformsAjaxSubmitSuccess', '.wpforms-ajax-form', function (event, details) {
+    var $form = $(this),
+        formId = $form.data('formid'),
+        formInstanceId = $('form#' + $form.attr('id')).index($form) + 1; // All the magic happens here.
 
-  window.PUMTriggers = window.PUM_Admin.triggers || {};
-  window.PUMCookies = window.PUM_Admin.cookies || {};
-  /* Fix for pum-schedules js error. Remove once updated. */
-
-  window.PUMTriggers.new_schedule = -1;
-  /**
-   * This needs to be preserved for backward compatibility.
-   *
-   * @deprecated 1.8.0
-   * @remove 1.9.0
-   */
-
-  window.PopMakeAdmin = {
-    update_theme: function update_theme() {
-      return PUM_Admin.themeEditor.refresh_preview();
-    }
-  };
-})(jQuery);
+    window.PUM.integrations.formSubmission($form, {
+      formProvider: formProvider,
+      formId: formId,
+      formInstanceId: formInstanceId
+    });
+  });
+}
 
 /***/ })
 

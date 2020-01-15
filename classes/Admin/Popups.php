@@ -332,6 +332,7 @@ class PUM_Admin_Popups {
 			),
 			'close'     => array(
 				'button'            => __( 'Button', 'popup-maker' ),
+				'forms'             => __( 'Form Submission', 'popup-maker' ),
 				'alternate_methods' => __( 'Alternate Methods', 'popup-maker' ),
 			),
 			'advanced'  => array(
@@ -684,6 +685,26 @@ class PUM_Admin_Popups {
 							'priority' => 20,
 						),
 					),
+					'forms' => [
+						'close_on_form_submission'          => [
+							'label' => __( 'Close on Form Submission', 'popup-maker' ),
+							'desc'  => __( 'Close the popup automatically after integrated form plugin submissions.', 'popup-maker' ),
+							'type'  => 'checkbox',
+						],
+						'close_on_form_submission_delay'    => [
+							'type'         => 'rangeslider',
+							'label'        => __( 'Delay', 'popup-maker' ),
+							'desc'         => __( 'The delay before the popup will close after submission (in milliseconds).', 'popup-maker' ),
+							'std'          => 0,
+							'min'          => 0,
+							'max'          => 10000,
+							'step'         => 500,
+							'unit'         => 'ms',
+							'dependencies' => [
+								'close_on_form_submission' => true,
+							],
+						],
+					],
 					'alternate_methods' => array(
 						'close_on_overlay_click' => array(
 							'label'    => __( 'Click Overlay to Close', 'popup-maker' ),
@@ -966,7 +987,7 @@ class PUM_Admin_Popups {
 						if ( is_object( $value ) || is_array( $value ) ) {
 							$meta[ $key ] = PUM_Admin_Helpers::object_to_array( $value );
 						}
-					} catch ( \Exception $e ) {
+					} catch ( Exception $e ) {
 					};
 				}
 
