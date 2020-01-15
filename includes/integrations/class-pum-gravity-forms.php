@@ -142,7 +142,7 @@ class PUM_Gravity_Forms_Integation {
 				                $settings['closedelay'] = $settings['closedelay'] / 1000;
 			                } ?>
 
-			                <input type="number" id="gforms-pum-closedelay" min="0" step="1" name="gforms-pum[closedelay]" style="width: 100px;" value="<?php esc_attr_e( $settings['closedelay'] ); ?>" /><?php _e( 'seconds', 'popup-maker' ); ?>
+			                <input type="number" id="gforms-pum-closedelay" min="0" step="1" name="gforms-pum[closedelay]" style="width: 100px;" value="<?php echo esc_attr( $settings['closedelay'] ); ?>" /><?php _e( 'seconds', 'popup-maker' ); ?>
 		                </td>
 	                </tr>
                     <tr>
@@ -160,7 +160,7 @@ class PUM_Gravity_Forms_Integation {
                         <td>
                             <select id="gforms-pum-openpopup_id" name="gforms-pum[openpopup_id]">
 								<?php foreach ( self::get_popup_list() as $option ) { ?>
-                                    <option value="<?php esc_attr_e( $option['value'] ); ?>" <?php selected( $settings['openpopup_id'], $option['value'] ); ?>><?php echo $option['label']; ?></option>
+                                    <option value="<?php echo esc_attr( $option['value'] ); ?>" <?php selected( $settings['openpopup_id'], $option['value'] ); ?>><?php echo $option['label']; ?></option>
 								<?php } ?>
                             </select>
                         </td>

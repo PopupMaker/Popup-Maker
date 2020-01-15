@@ -369,18 +369,18 @@ class PUM_Admin_Extend {
 			$i = 1;
 
 			foreach ( $form_plugins as $plugin ) : ?>
-                <li class="available-extension-inner <?php esc_attr_e( $plugin['slug'] ); ?>">
+                <li class="available-extension-inner <?php echo esc_attr( $plugin['slug'] ); ?>">
                     <h3>
-                        <a target="_blank" href="<?php esc_attr_e( $plugin['url'] ); ?>?utm_campaign=<?php echo $campaign; ?>&utm_source=plugin-extend-page&utm_medium=form-banner&utm_content=<?php echo $plugin['slug']; ?>">
+                        <a target="_blank" href="<?php echo esc_attr( $plugin['url'] ); ?>?utm_campaign=<?php echo $campaign; ?>&utm_source=plugin-extend-page&utm_medium=form-banner&utm_content=<?php echo $plugin['slug']; ?>">
 							<?php echo esc_html( $plugin['name'] ); ?>
                         </a>
                     </h3>
-                    <img alt="<?php echo esc_html( $plugin['name'] ); ?>" class="extension-thumbnail" src="<?php esc_attr_e( POPMAKE_URL . '/assets/images/plugins/' . $plugin['slug'] . '.png' ) ?>" />
+                    <img alt="<?php echo esc_html( $plugin['name'] ); ?>" class="extension-thumbnail" src="<?php echo esc_attr( POPMAKE_URL . '/assets/images/plugins/' . $plugin['slug'] . '.png' ) ?>" />
 
                     <p><?php echo esc_html( $plugin['desc'] ); ?></p>
 
                     <span class="action-links">
-					<a class="button" target="_blank" href="<?php echo esc_url( $plugin['url'] ); ?>"><?php _e( 'Check it out', 'popup-maker' ); ?></a>
+					<a class="button" target="_blank" href="<?php echo esc_attr( $plugin['url'] ); ?>"><?php _e( 'Check it out', 'popup-maker' ); ?></a>
 				</span>
                 </li>
 				<?php
@@ -411,19 +411,19 @@ class PUM_Admin_Extend {
 			$i = 1;
 
 			foreach ( $page_builder_plugins as $plugin ) : ?>
-                <li class="available-extension-inner <?php esc_attr_e( $plugin['slug'] ); ?>">
+                <li class="available-extension-inner <?php echo esc_attr( $plugin['slug'] ); ?>">
                     <h3>
-                        <a target="_blank" href="<?php esc_attr_e( $plugin['url'] ); ?>?utm_campaign=<?php echo $campaign; ?>&utm_source=plugin-extend-page&utm_medium=page-builder-banner&utm_content=<?php echo $plugin['slug']; ?>">
-							<?php esc_html_e( $plugin['name'] ) ?>
+                        <a target="_blank" href="<?php echo esc_attr( $plugin['url'] ); ?>?utm_campaign=<?php echo $campaign; ?>&utm_source=plugin-extend-page&utm_medium=page-builder-banner&utm_content=<?php echo $plugin['slug']; ?>">
+							<?php echo esc_html( $plugin['name'] ) ?>
                         </a>
                     </h3>
 
-                    <img class="extension-thumbnail" src="<?php esc_attr_e( POPMAKE_URL . '/assets/images/plugins/' . $plugin['slug'] . '.png' ) ?>" />
+                    <img class="extension-thumbnail" src="<?php echo esc_attr( POPMAKE_URL . '/assets/images/plugins/' . $plugin['slug'] . '.png' ) ?>" />
 
-                    <p><?php esc_html_e( $plugin['desc'] ); ?></p>
+                    <p><?php echo esc_html( $plugin['desc'] ); ?></p>
 
                     <span class="action-links">
-					<a class="button" target="_blank" href="<?php echo esc_url( $plugin['url'] ); ?>"><?php _e( 'Check it out', 'popup-maker' ); ?></a>
+					<a class="button" target="_blank" href="<?php echo esc_attr( $plugin['url'] ); ?>"><?php _e( 'Check it out', 'popup-maker' ); ?></a>
 				</span>
                 </li>
 				<?php
@@ -493,19 +493,19 @@ class PUM_Admin_Extend {
 				$i = 0;
 
 				foreach ( $extensions as $extension ) : ?>
-                    <li class="available-extension-inner <?php esc_attr_e( $extension['slug'] ); ?>">
+                    <li class="available-extension-inner <?php echo esc_attr( $extension['slug'] ); ?>">
                         <h3>
-                            <a target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=extension-title-<?php echo $i; ?>&utm_campaign=<?php echo $campaign; ?>&utm_content=<?php esc_attr_e( urlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>">
-								<?php esc_html_e( $extension['name'] ) ?>
+                            <a target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=extension-title-<?php echo $i; ?>&utm_campaign=<?php echo $campaign; ?>&utm_content=<?php echo esc_attr( urlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>">
+								<?php echo esc_html( $extension['name'] ) ?>
                             </a>
                         </h3>
 						<?php $image = in_array( $extension['slug'], $existing_extension_images ) ? POPMAKE_URL . '/assets/images/extensions/' . $extension['slug'] . '.png' : $extension['image']; ?>
-                        <img class="extension-thumbnail" src="<?php esc_attr_e( $image ) ?>" />
+                        <img class="extension-thumbnail" src="<?php echo esc_attr( $image ) ?>" />
 
-                        <p><?php esc_html_e( $extension['excerpt'] ); ?></p>
+                        <p><?php echo esc_html( $extension['excerpt'] ); ?></p>
 
                         <span class="action-links">
-						<a class="button" target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=extension-button-<?php echo $i; ?>&utm_campaign=<?php echo $campaign; ?>&utm_content=<?php esc_attr_e( urlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>"><?php _e( 'Get this Extension', 'popup-maker' ); ?></a>
+						<a class="button" target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=extension-button-<?php echo $i; ?>&utm_campaign=<?php echo $campaign; ?>&utm_content=<?php echo esc_attr( urlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>"><?php _e( 'Get this Extension', 'popup-maker' ); ?></a>
 					</span>
 
                         <!--					--><?php
