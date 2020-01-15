@@ -182,7 +182,7 @@ class PUM_Fields extends Popmake_Fields {
 		<?php if ( ! empty( $args['options'] ) ) {
 			foreach ( $args['options'] as $label => $option ) {
 			    $selected = ( ! $multiple && $option == $value ) || ( $multiple && in_array( $option, $value ) ); ?>
-				<option value="<?php echo esc_attr( $option ); ?>" <?php selected( 1, $selected ); ?>><?php esc_html( $label ); ?></option><?php
+				<option value="<?php echo esc_attr( $option ); ?>" <?php selected( 1, $selected ); ?>><?php echo esc_html( $label ); ?></option><?php
 			}
 		} ?>
 		</select><?php
@@ -243,8 +243,8 @@ class PUM_Fields extends Popmake_Fields {
 				) );
 
 				$checked = isset( $values[ $key ] ); ?>
-				<input name="<?php echo esc_attr( $args['name'] ); ?>[<?php echo esc_attr( $key ); ?>]" id="<?php echo esc_attr( $args['id'] . '_' . $key ); ?>" type="checkbox" value="<?php esc_html( $option ); ?>" <?php checked( true, $checked ); ?> <?php if ( $option['disabled'] ) { echo 'disabled="disabled"'; } ?> <?php if ( $option['required'] ) { echo 'required'; } ?> />&nbsp;
-				<label for="<?php echo esc_attr( $args['id']. '_' . $key ); ?>"><?php esc_html( $option['label'] ); ?></label><br/><?php
+				<input name="<?php echo esc_attr( $args['name'] ); ?>[<?php echo esc_attr( $key ); ?>]" id="<?php echo esc_attr( $args['id'] . '_' . $key ); ?>" type="checkbox" value="<?php echo esc_html( $option ); ?>" <?php checked( true, $checked ); ?> <?php if ( $option['disabled'] ) { echo 'disabled="disabled"'; } ?> <?php if ( $option['required'] ) { echo 'required'; } ?> />&nbsp;
+				<label for="<?php echo esc_attr( $args['id']. '_' . $key ); ?>"><?php echo esc_html( $option['label'] ); ?></label><br/><?php
 			}
 		}
 
@@ -404,7 +404,7 @@ class PUM_Fields extends Popmake_Fields {
             <?php if ( ! empty( $args['options'] ) ) {
                 foreach ( $args['options'] as $label => $option ) {
                     $selected = ( $multiple && in_array( $option, $value ) ) || ( ! $multiple && $option == $value ); ?>
-                    <option value="<?php echo esc_attr( $option ); ?>" <?php selected( 1, $selected ); ?>><?php esc_html( $label ); ?></option><?php
+                    <option value="<?php echo esc_attr( $option ); ?>" <?php selected( 1, $selected ); ?>><?php echo esc_html( $label ); ?></option><?php
                 }
             } ?>
 		</select><?php
@@ -477,7 +477,7 @@ class PUM_Fields extends Popmake_Fields {
 			   <?php if ( $args['required'] ) { echo 'required'; } ?>
 			   data-force-minmax="<?php echo esc_attr( $args['force_minmax'] ); ?>"
 			/>
-		<span class="range-value-unit regular-text"><?php esc_html( $args['unit'] ); ?></span><?php
+		<span class="range-value-unit regular-text"><?php echo esc_html( $args['unit'] ); ?></span><?php
 
 		$this->field_description( $args );
 
@@ -640,7 +640,7 @@ class PUM_Fields extends Popmake_Fields {
 		<?php if ( ! empty( $args['options'] ) ) {
 			foreach ( $args['options'] as $label => $option ) { ?>
 				<option value="<?php echo esc_attr( $option ); ?>" {{pumSelected(data.<?php echo esc_attr( $args['templ_name'] ); ?>, '<?php echo $option; ?>', true)}}>
-					<?php esc_html( $label ); ?>
+					<?php echo esc_html( $label ); ?>
 				</option><?php
 			}
 		} ?>
@@ -696,7 +696,7 @@ class PUM_Fields extends Popmake_Fields {
 			<?php if ( ! empty( $args['options'] ) ) {
 				foreach ( $args['options'] as $label => $option ) { ?>
 					<option value="<?php echo esc_attr( $option ); ?>" {{pumSelected(data[templ_name], '<?php echo $option; ?>', true)}}>
-						<?php esc_html( $label ); ?>
+						<?php echo esc_html( $label ); ?>
 					</option><?php
 				}
 			} ?>
@@ -752,8 +752,8 @@ class PUM_Fields extends Popmake_Fields {
 						checked.<?php echo esc_attr( $option ); ?> = false;
 					} #>
 
-					<input name="<?php echo esc_attr( $args['name'] ); ?>[<?php echo esc_attr( $option ); ?>]" id="<?php echo esc_attr( $args['id'] ); ?>_<?php echo esc_attr( $option ); ?>" type="checkbox" value="<?php esc_html( $option ); ?>" {{pumChecked(checked.<?php echo esc_attr( $option ); ?>, '<?php echo $option; ?>', true)}} />&nbsp;
-					<label for="<?php echo esc_attr( $args['id'] ); ?>_<?php echo esc_attr( $option ); ?>"><?php esc_html( $label ); ?></label><br/><?php
+					<input name="<?php echo esc_attr( $args['name'] ); ?>[<?php echo esc_attr( $option ); ?>]" id="<?php echo esc_attr( $args['id'] ); ?>_<?php echo esc_attr( $option ); ?>" type="checkbox" value="<?php echo esc_html( $option ); ?>" {{pumChecked(checked.<?php echo esc_attr( $option ); ?>, '<?php echo $option; ?>', true)}} />&nbsp;
+					<label for="<?php echo esc_attr( $args['id'] ); ?>_<?php echo esc_attr( $option ); ?>"><?php echo esc_html( $label ); ?></label><br/><?php
 				}
 			}
 
