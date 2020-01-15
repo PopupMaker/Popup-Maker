@@ -269,7 +269,7 @@ class PUM_Integrations {
 	 */
 	public static function generated_js( $js = [] ) {
 
-		foreach( self::$integrations as $integration ) {
+		foreach ( self::$integrations as $integration ) {
 			if ( $integration->enabled() && method_exists( $integration, 'custom_scripts' ) ) {
 				$js = $integration->custom_scripts( $js );
 			}
@@ -285,7 +285,7 @@ class PUM_Integrations {
 	 */
 	public static function generated_css( $css = array() ) {
 
-		foreach( self::$integrations as $integration ) {
+		foreach ( self::$integrations as $integration ) {
 			if ( $integration->enabled() && method_exists( $integration, 'custom_styles' ) ) {
 				$css = $integration->custom_styles( $css );
 			}
@@ -298,11 +298,11 @@ class PUM_Integrations {
 	 * Modify popup settings.
 	 *
 	 * @param array $settings
-	 * @param $popup_id
+	 * @param int $popup_id
 	 *
 	 * @return array
 	 */
-	public static function popup_settings( $settings = array(), $popup_id ) {
+	public static function popup_settings( $settings, $popup_id ) {
 
 		if ( is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 			return $settings;
@@ -317,10 +317,24 @@ class PUM_Integrations {
 			$form_popup_id = isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false;
 		}
 
+		// Should it reopen? Only if all of the following are true.
+		$should_reopen = [
+			// Form popup was submitted and matches this popup.
+			$form_popup_id && $popup_id == $form_popup_id,
+			// Form reopen was not marked disable.
+			empty( $settings['disable_form_reopen'] ) || ! $settings['disable_form_reopen'],
+			// Close on form submission is disbaled, or has a timer larger than 0.
+			(
+				empty( $settings['close_on_form_submission'] ) ||
+				! $settings['close_on_form_submission'] ||
+				( $settings['close_on_form_submission'] && $settings['close_on_form_submission_delay'] > 0 )
+			),
+		];
+
 		/**
 		 * If submission exists for this popup remove auto open triggers and add an admin_debug trigger to reshow the popup.
 		 */
-		if ( ( empty( $settings['disable_form_reopen'] ) || ! $settings['disable_form_reopen'] ) && $form_popup_id && $popup_id == $form_popup_id ) {
+		if ( ! in_array( false, $should_reopen ) ) {
 			$triggers = ! empty( $settings['triggers'] ) ? $settings['triggers'] : array();
 
 			foreach ( $triggers as $key => $trigger ) {
