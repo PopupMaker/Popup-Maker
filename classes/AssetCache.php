@@ -94,6 +94,8 @@ class PUM_AssetCache {
 			return false;
 		}
 
+		global $wp_filesystem;
+
 		// Check and create cachedir
 		if ( ! is_dir( self::get_cache_dir() ) ) {
 
@@ -102,11 +104,17 @@ class PUM_AssetCache {
 			}
 
 			$results = WP_Filesystem();
+
+			// If filesystem has an error, log to our logging system and then return false.
 			if ( true !== $results ) {
+				if ( is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->has_errors() ) {
+					$error = $wp_filesystem->errors->get_error_message();
+					PUM_Utils_Logging::instance()->log( sprintf( 'Cannot make cache directory due to filesystem error. Error given: %s', esc_html( $error ) ) );
+				} else {
+					PUM_Utils_Logging::instance()->log( 'Cannot make cache directory due to unknown filesystem error.' );
+				}
 				return false;
 			}
-
-			global $wp_filesystem;
 
 			/** @var WP_Filesystem_Base $wp_filesystem */
 			$wp_filesystem->mkdir( self::get_cache_dir() );
