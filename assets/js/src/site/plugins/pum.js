@@ -424,6 +424,19 @@ var PUM;
                 });
             }
 
+            if (settings.close_on_form_submission) {
+				PUM.hooks.addAction('pum.integration.form.success', function (form, args) {
+					// If this is the same popup the form was submitted in.
+					// Alternatively we can compare their IDs
+					if (args.popup && args.popup[0] === $popup[0]) {
+						setTimeout(function () {
+							$.fn.popmake.last_close_trigger = 'Form Submission';
+							$popup.popmake('close');
+						}, settings.close_on_form_submission_delay || 0);
+					}
+				});
+			}
+
             $popup.trigger('pumSetupClose');
 
             return this;

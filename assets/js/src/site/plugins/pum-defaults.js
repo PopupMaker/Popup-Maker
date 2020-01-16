@@ -22,6 +22,8 @@
         stackable: false,
         disable_reposition: false,
         close_on_overlay_click: false,
+		close_on_form_submission: false,
+		close_on_form_submission_delay: 0,
         close_on_esc_press: false,
         close_on_f4_press: false,
         disable_on_mobile: false,

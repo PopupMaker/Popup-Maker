@@ -31,7 +31,7 @@ class PUM_Types {
 				'exclude_from_search' => true,
 				'show_in_nav_menus'   => false,
 				'show_ui'             => true,
-				'menu_icon'           => POPMAKE_URL . '/assets/images/admin/dashboard-icon.png',
+				'menu_icon'           => pum_get_svg_icon( true ),
 				'menu_position'       => 20.292892729,
 				'supports'            => apply_filters( 'popmake_popup_supports', array(
 					'title',

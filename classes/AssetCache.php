@@ -229,6 +229,7 @@ class PUM_AssetCache {
 		/**
 		 *  0 Core
 		 *  5 Extensions
+		 *  8 Integrations
 		 * 10 Per Popup JS
 		 */
 		$js = array(

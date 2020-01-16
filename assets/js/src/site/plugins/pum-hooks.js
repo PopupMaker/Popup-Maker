@@ -244,5 +244,7 @@
 
     window.pum = window.pum || {};
     window.pum.hooks = window.pum.hooks || new EventManager();
+	window.PUM = window.PUM || {};
+	window.PUM.hooks = window.pum.hooks;
 
 })(window);
