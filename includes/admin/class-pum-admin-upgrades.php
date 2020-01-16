@@ -106,7 +106,7 @@ class PUM_Admin_Upgrades {
                 'manage_network_plugins',
                 'popup-maker',
                 '',
-                POPMAKE_URL . '/assets/images/admin/dashboard-icon.png'
+                pum_get_svg_icon( true )
             );
             $parent = 'popup-maker';
         }
