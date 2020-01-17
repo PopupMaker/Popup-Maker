@@ -36,7 +36,8 @@ class PUM_Admin_Ajax {
 
 				if ( ! empty( $include ) ) {
 					$include_query = PUM_Helpers::post_type_selectlist_query( $post_type, array(
-						'post__in' => $include,
+						'post__in'       => $include,
+						'posts_per_page' => - 1,
 					), true );
 
 					foreach ( $include_query['items'] as $id => $name ) {
@@ -72,6 +73,7 @@ class PUM_Admin_Ajax {
 				if ( ! empty( $include ) ) {
 					$include_query = PUM_Helpers::taxonomy_selectlist_query( $taxonomy, array(
 						'include' => $include,
+						'number'  => 0,
 					), true );
 
 					foreach ( $include_query['items'] as $id => $name ) {
@@ -107,6 +109,7 @@ class PUM_Admin_Ajax {
 					$include_query = PUM_Helpers::user_selectlist_query( array(
 						'role'    => $user_role,
 						'include' => $include,
+						'number'  => - 1,
 					), true );
 
 					foreach ( $include_query['items'] as $id => $name ) {
