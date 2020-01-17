@@ -132,6 +132,25 @@ class PUM_Admin_Popups {
 	}
 
 	/**
+	 * Ensures integrity of values.
+	 *
+	 * @param array $values
+	 *
+	 * @return array
+	 */
+	public static function parse_values( $values = [] ) {
+		$defaults = self::defaults();
+
+		if ( empty( $values ) ) {
+			return $defaults;
+		}
+
+		$values = self::fill_missing_defaults( $values );
+
+		return $values;
+	}
+
+	/**
 	 * Render the settings meta box wrapper and JS vars.
 	 */
 	public static function render_settings_meta_box() {
@@ -140,16 +159,7 @@ class PUM_Admin_Popups {
 		$popup = pum_get_popup( $post->ID );
 
 		// Get the meta directly rather than from cached object.
-		$settings = $popup->get_settings();
-
-		if ( empty( $settings ) ) {
-			$settings = self::defaults();
-		}
-
-		// Do settings migration on the fly and then self clean for a passive migration?
-
-		// $settings['conditions'] = get_post_meta( $post->ID, 'popup_conditions', true );
-		//$settings['triggers'] = get_post_meta( $post->ID, 'popup_triggers', true );
+		$settings = self::parse_values( $popup->get_settings() );
 
 		wp_nonce_field( basename( __FILE__ ), 'pum_popup_settings_nonce' );
 		wp_enqueue_script( 'popup-maker-admin' );
@@ -166,7 +176,7 @@ class PUM_Admin_Popups {
 				'conditions_selectlist' => PUM_Conditions::instance()->dropdown_list(),
 				'triggers'              => PUM_Triggers::instance()->get_triggers(),
 				'cookies'               => PUM_Cookies::instance()->get_cookies(),
-				'current_values'        => self::parse_values( $settings ),
+				'current_values'        => self::render_form_values( $settings ),
 			) ) ); ?>;
 		</script>
 
@@ -248,8 +258,6 @@ class PUM_Admin_Popups {
 
 		$settings = ! empty( $_POST['popup_settings'] ) ? $_POST['popup_settings'] : array();
 
-		$settings = wp_parse_args( $settings, self::defaults() );
-
 		// Sanitize JSON values.
 		$settings['conditions'] = isset( $settings['conditions'] ) ? self::sanitize_meta( $settings['conditions'] ) : array();
 		$settings['triggers']   = isset( $settings['triggers'] ) ? self::sanitize_meta( $settings['triggers'] ) : array();
@@ -258,6 +266,7 @@ class PUM_Admin_Popups {
 		$settings = apply_filters( 'pum_popup_setting_pre_save', $settings, $post->ID );
 
 		$settings = self::sanitize_settings( $settings );
+		$settings = self::parse_values( $settings );
 
 		$popup->update_settings( $settings, false );
 
@@ -274,8 +283,16 @@ class PUM_Admin_Popups {
 		do_action( 'pum_save_popup', $post_id, $post );
 	}
 
-	public static function parse_values( $settings ) {
-
+	/**
+	 * Parse & prepare values for form rendering.
+	 *
+	 * Add additional data for license_key fields, split the measure fields etc.
+	 *
+	 * @param $settings
+	 *
+	 * @return mixed
+	 */
+	public static function render_form_values( $settings ) {
 		foreach ( $settings as $key => $value ) {
 			$field = self::get_field( $key );
 
@@ -847,23 +864,53 @@ class PUM_Admin_Popups {
 		return false;
 	}
 
+	/**
+	 * Sanitizes fields after submission.
+	 *
+	 * Also handles pre save manipulations for some field types (measure/license).
+	 *
+	 * @param array $settings
+	 *
+	 * @return array
+	 */
 	public static function sanitize_settings( $settings = array() ) {
 
+		$fields = self::fields();
+		$fields = PUM_Admin_Helpers::flatten_fields_array( $fields );
+
+		foreach ( $fields as $field_id => $field ) {
+			switch ( $field['type'] ) {
+				case 'checkbox':
+
+					if ( ! isset( $settings[ $field_id ] ) ) {
+						$settings[ $field_id ] = false;
+					}
+					break;
+			}
+		}
 
 		foreach ( $settings as $key => $value ) {
 			$field = self::get_field( $key );
 
-			if ( is_string( $value ) ) {
-				$settings[ $key ] = sanitize_text_field( $value );
-			}
-
 			if ( $field ) {
+
+				// Sanitize every string value.
+				if ( is_string( $value ) ) {
+					$settings[ $key ] = sanitize_text_field( $value );
+				}
+
 				switch ( $field['type'] ) {
+					default:
+						$settings[ $key ] = is_string( $value ) ? trim( $value ) : $value;
+						break;
+
+
 					case 'measure':
 						$settings[ $key ] .= $settings[ $key . '_unit' ];
 						break;
 				}
 			} else {
+				// Some custom field types include multiple additional fields that do not need to be saved, strip out any non-whitelisted fields.
 				unset( $settings[ $key ] );
 			}
 
@@ -892,6 +939,32 @@ class PUM_Admin_Popups {
 		}
 
 		return $defaults;
+	}
+
+	/**
+	 * Fills default settings only when missing.
+	 *
+	 * Excludes checkbox type fields where a false value is represented by the field being unset.
+	 *
+	 * @param array $settings
+	 *
+	 * @return array
+	 */
+	public static function fill_missing_defaults( $settings = [] ) {
+		$excluded_field_types = [ 'checkbox', 'multicheck' ];
+
+		$defaults = self::defaults();
+		foreach ( $defaults as $field_id => $default_value ) {
+			$field = self::get_field( $field_id );
+			if ( isset( $settings[ $field_id ] ) || in_array( $field['type'], $excluded_field_types ) ) {
+				continue;
+			}
+
+			$settings[ $field_id ] = $default_value;
+		}
+
+		return $settings;
+
 	}
 
 	/**
@@ -988,7 +1061,7 @@ class PUM_Admin_Popups {
 							$meta[ $key ] = PUM_Admin_Helpers::object_to_array( $value );
 						}
 					} catch ( Exception $e ) {
-					};
+					}
 				}
 
 			}
