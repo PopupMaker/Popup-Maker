@@ -6,6 +6,7 @@
 * Feature: Caldera Forms integration.
 * Feature: MailChimp for WordPress integration
 * Improvement: Various changes to ensure PHP 7.4 compatibility.
+* Improvement: Minimum PHP version updated to v5.6 to match WP core.
 * Improvement: Simplified form integration interfaces to more easily support additional form plugins or custom integrations. Includes full AJAX & non-AJAX form support.
 * Improvement: Added RTL CSS support.
 * Improvement: Added new SVG admin menu icon which plays well with custom admin color schemes. Thanks @KZeni (Kurt Zenisek)

@@ -6,7 +6,7 @@ Donate link:
 Tags:  marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 4.1
 Tested up to: 5.3
-Requires PHP: 5.2.17
+Requires PHP: 5.6
 Stable tag: 1.8.14
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html

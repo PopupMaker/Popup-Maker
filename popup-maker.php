@@ -108,7 +108,7 @@ class Popup_Maker {
 	/**
 	 * @var string
 	 */
-	public static $MIN_PHP_VER = '5.2.17';
+	public static $MIN_PHP_VER = '5.6';
 
 	/**
 	 * @var string
