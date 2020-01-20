@@ -108,7 +108,7 @@ class Popup_Maker {
 	/**
 	 * @var string
 	 */
-	public static $MIN_PHP_VER = '5.2.17';
+	public static $MIN_PHP_VER = '5.6';
 
 	/**
 	 * @var string
@@ -359,21 +359,46 @@ class Popup_Maker {
 }
 
 /**
- * Initialize the plugin.
+ * The main function responsible for returning the one true Popup_Maker
+ * Instance to functions everywhere.
+ *
+ * Use this function like you would a global variable, except without needing
+ * to declare the global.
+ *
+ * @return Popup_Maker
+ * @since      1.8.0
+ *
  */
-Popup_Maker::instance();
+function pum() {
+	return Popup_Maker::instance();
+}
 
 /**
- * The code that runs during plugin activation.
- * This action is documented in classes/Activator.php
+ * Initialize Popup Maker if requirements are met.
  */
-register_activation_hook( __FILE__, array( 'PUM_Activator', 'activate' ) );
+function pum_init() {
+	if ( ! PUM_Install::meets_activation_requirements() ) {
+		require_once 'includes/failsafes.php';
+		add_action( 'admin_notices', array( 'PUM_Install', 'activation_failure_admin_notice' ) );
+		return;
+	}
 
-/**
- * The code that runs during plugin deactivation.
- * This action is documented in classes/Deactivator.php
- */
-register_deactivation_hook( __FILE__, array( 'PUM_Deactivator', 'deactivate' ) );
+	// Get Popup Maker
+	pum();
+
+	add_action( 'plugins_loaded', 'popmake_initialize' );
+}
+
+// Get Popup Maker running
+add_action( 'plugins_loaded', 'pum_init', 9 );
+
+// Ensure plugin & environment compatibility.
+register_activation_hook( __FILE__, array( 'PUM_Install', 'activation_check' ) );
+
+// Register activation, deactivation & uninstall hooks.
+register_activation_hook( __FILE__, array( 'PUM_Install', 'activate_plugin' ) );
+register_deactivation_hook( __FILE__, array( 'PUM_Install', 'deactivate_plugin' ) );
+register_uninstall_hook( __FILE__, array( 'PUM_Install', 'uninstall_plugin' ) );
 
 /**
  * @deprecated 1.7.0
@@ -387,8 +412,6 @@ function popmake_initialize() {
 	do_action( 'popmake_initialize' );
 }
 
-add_action( 'plugins_loaded', 'popmake_initialize' );
-
 /**
  * The main function responsible for returning the one true Popup_Maker
  * Instance to functions everywhere.
@@ -398,26 +421,11 @@ add_action( 'plugins_loaded', 'popmake_initialize' );
  *
  * Example: <?php $popmake = PopMake(); ?>
  *
- * @since      1.0
+ * @return object The one true Popup_Maker Instance
  * @deprecated 1.7.0
  *
- * @return object The one true Popup_Maker Instance
+ * @since      1.0
  */
 function PopMake() {
-	return Popup_Maker::instance();
-}
-
-/**
- * The main function responsible for returning the one true Popup_Maker
- * Instance to functions everywhere.
- *
- * Use this function like you would a global variable, except without needing
- * to declare the global.
- *
- * @since      1.8.0
- *
- * @return Popup_Maker
- */
-function pum() {
 	return Popup_Maker::instance();
 }
