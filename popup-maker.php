@@ -378,6 +378,7 @@ function pum() {
  */
 function pum_init() {
 	if ( ! PUM_Install::meets_activation_requirements() ) {
+		require_once 'includes/failsafes.php';
 		add_action( 'admin_notices', array( 'PUM_Install', 'activation_failure_admin_notice' ) );
 		return;
 	}
