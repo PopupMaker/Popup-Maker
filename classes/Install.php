@@ -83,13 +83,7 @@ class PUM_Install {
 	 */
 	public static function activate_site() {
 
-		// Setup the Popup & Theme Custom Post Type
-		PUM_Types::register_post_types();
-
-		// Setup the Popup Taxonomies
-		PUM_Types::register_taxonomies( true );
-
-
+		// Add default values where needed.
 		$options = array_merge( get_option( 'popmake_settings', array() ), array(
 			'disable_popup_category_tag' => 1,
 		) );
@@ -99,8 +93,16 @@ class PUM_Install {
 
 		add_option( 'pum_version', Popup_Maker::$VER );
 
+		pum();
+
+		// Setup the Popup & Theme Custom Post Type
+//		PUM_Types::register_post_types();
+
+		// Setup the Popup Taxonomies
+//		PUM_Types::register_taxonomies( true );
+
 		// Updates stored values for versioning.
-		PUM_Utils_Upgrades::update_plugin_version();
+//		PUM_Utils_Upgrades::update_plugin_version();
 
 		// We used transients before, but since the check for this option runs every admin page load it means 2 queries after its cleared.
 		// To prevent that we flipped it, now we delete the following option, and check for it.
