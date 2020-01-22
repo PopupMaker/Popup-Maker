@@ -3,6 +3,9 @@
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 class PUM_AssetCache {
 
