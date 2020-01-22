@@ -65,6 +65,11 @@ class PUM_AssetCache {
 			add_action( 'pum_save_theme', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_update_core_version', array( __CLASS__, 'reset_cache' ) );
 
+			if ( null === get_option( 'pum_files_writeable', null ) ) {
+				add_option( 'pum_files_writeable', true );
+				pum_reset_assets();
+			}
+
 			// Prevent reinitialization.
 			self::$initialized = true;
 		}
@@ -94,6 +99,10 @@ class PUM_AssetCache {
 			return false;
 		}
 
+		if ( true !== get_option( 'pum_files_writeable', true ) ) {
+			return false;
+		}
+
 		global $wp_filesystem;
 
 		// Check and create cachedir
@@ -107,6 +116,7 @@ class PUM_AssetCache {
 
 			// If filesystem has an error, log to our logging system and then return false.
 			if ( true !== $results ) {
+				update_option( 'pum_files_writeable', false );
 				if ( is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->has_errors() ) {
 					$error = $wp_filesystem->errors->get_error_message();
 					PUM_Utils_Logging::instance()->log( sprintf( 'Cannot make cache directory due to filesystem error. Error given: %s', esc_html( $error ) ) );
