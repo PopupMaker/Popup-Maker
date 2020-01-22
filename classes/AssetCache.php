@@ -611,12 +611,4 @@ class PUM_AssetCache {
 			}
 		}
 	}
-
-	/**
-	 * @param $theme_id
-	 */
-	public static function generate_popup_theme_style( $theme_id ) {
-	}
-
-
 }
