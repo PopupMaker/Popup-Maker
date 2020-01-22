@@ -114,27 +114,27 @@ class PUM_AssetCache {
 
 		global $wp_filesystem;
 
+		if ( ! function_exists( 'WP_Filesystem' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+		}
+
+		$results = WP_Filesystem();
+
+		if ( true !== $results ) {
+			// Prevents this from running again and set to show the admin notice.
+			update_option( 'pum_files_writeable', false );
+			update_option( '_pum_writeable_notice_dismissed', false );
+			if ( ! is_null( $results ) && is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->has_errors() ) {
+				$error = $wp_filesystem->errors->get_error_message();
+				PUM_Utils_Logging::instance()->log( sprintf( 'Cache directory is not writeable due to filesystem error. Error given: %s', esc_html( $error ) ) );
+			} else {
+				PUM_Utils_Logging::instance()->log( 'Cache directory is not writeable due to incorrect filesystem method.' );
+			}
+			return false;
+		}
+
 		// Checks and create cachedir.
 		if ( ! is_dir( self::get_cache_dir() ) ) {
-
-			if ( ! function_exists( 'WP_Filesystem' ) ) {
-				require_once( ABSPATH . 'wp-admin/includes/file.php' );
-			}
-
-			$results = WP_Filesystem();
-
-			if ( true !== $results ) {
-				// Prevents this from running again and set to show the admin notice.
-				update_option( 'pum_files_writeable', false );
-				update_option( '_pum_writeable_notice_dismissed', false );
-				if ( ! is_null( $results ) && is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->has_errors() ) {
-					$error = $wp_filesystem->errors->get_error_message();
-					PUM_Utils_Logging::instance()->log( sprintf( 'Cannot make cache directory due to filesystem error. Error given: %s', esc_html( $error ) ) );
-				} else {
-					PUM_Utils_Logging::instance()->log( 'Cannot make cache directory due to incorrect filesystem method.' );
-				}
-				return false;
-			}
 
 			/** @var WP_Filesystem_Base $wp_filesystem */
 			$wp_filesystem->mkdir( self::get_cache_dir() );
