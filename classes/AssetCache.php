@@ -107,7 +107,7 @@ class PUM_AssetCache {
 			return false;
 		}
 
-		if ( true !== get_option( 'pum_files_writeable', true ) ) {
+		if ( true != get_option( 'pum_files_writeable', true ) ) {
 			return false;
 		}
 
@@ -553,7 +553,7 @@ class PUM_AssetCache {
 	 * @since 1.9.0
 	 */
 	public static function admin_notices() {
-		if ( true === get_option( 'pum_files_writeable', true ) ) {
+		if ( true == get_option( 'pum_files_writeable', true ) || true == get_option( '_pum_writeable_notice_dismissed', true ) ) {
 			return;
 		}
 
@@ -561,36 +561,61 @@ class PUM_AssetCache {
 		$dismiss_url  = add_query_arg( 'pum_writeable_notice_check', 'dismiss' );
 		?>
 		<style>
-			.pum-notice p {
-				margin-bottom: 0;
+			.pum-notice .pum-notice-message {
+				display: flex;
+				flex-direction: column;
+				margin: 0.5em 0;
+				align-items: center;
 			}
-
-			.pum-notice img.logo {
-				float: right;
-				margin-left: 10px;
-				width: 128px;
+			.pum-notice div.pum-notice-message img {
+				display: none;
+				max-height: 60px;
+				height: 100%;
 				padding: 0.25em;
+				margin-left: 10px;
 				border: 1px solid #ccc;
 			}
-			.pum-notice div {
+			.pum-notice div.pum-notice-actions {
 				display: flex;
-				flex-direction: row;
+				flex-direction: column;
+				margin-bottom: 10px;
 			}
-			.pum-notice div a {
-				display: block;
-				margin-left: 10px;
+			.pum-notice div.pum-notice-actions a.button-secondary {
+				margin-bottom: 10px;
+			}
+			@media screen and (min-width:500px) {
+				.pum-notice .pum-notice-message {
+					flex-direction: row;
+				}
+				.pum-notice div.pum-notice-message img {
+					display: block;
+					width: 15%;
+				}
+			}
+			@media screen and (min-width:700px) {
+				.pum-notice div.pum-notice-message img {
+					width: 10%;
+				}
+				.pum-notice div.pum-notice-actions {
+					flex-direction: row;
+				}
+				.pum-notice div.pum-notice-actions a.button-secondary:not(:first-child) {
+					margin-left: 10px;
+				}
 			}
 		</style>
-		<div class="notice notice-error is-dismissible pum-notice">
-			<p>
-				<img class="logo" src="<?php echo POPMAKE_URL; ?>/assets/images/icon-256x256.jpg" />
-				<?php
-				esc_html_e( 'Popup Maker detected an issue with your file system and is unable to create cache for 
+		<div class="notice notice-error pum-notice">
+			<div class="pum-notice-message">
+				<p>
+					<?php
+					esc_html_e( 'Popup Maker detected an issue with your file system and is unable to create cache for 
 				the styling and settings. This may lead to suboptimal performance. Please check your filesystem and 
 				hosting provide to ensure Popup Maker can create and write to cache files.', 'popup-maker' );
-				?>
-			</p>
-			<div>
+					?>
+				</p>
+				<img class="logo" src="<?php echo POPMAKE_URL; ?>/assets/images/icon-256x256.jpg" />
+			</div>
+			<div class="pum-notice-actions">
 				<a href="<?php echo esc_attr( $undo_url ); ?>" class="button-secondary"><?php esc_html_e( 'Try to create cache again', 'popup-maker' ); ?></a>
 				<a href="<?php echo esc_attr( $dismiss_url ); ?>" class="button-secondary"><?php esc_html_e( 'Keep current method', 'popup-maker' ); ?></a>
 				<a href="#" class="button-secondary"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a>
