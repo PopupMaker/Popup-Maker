@@ -70,6 +70,11 @@ class PUM_AssetCache {
 				pum_reset_assets();
 			}
 
+			if ( is_admin() && current_user_can( 'edit_posts' ) ) {
+				add_action( 'admin_init', array( __CLASS__, 'admin_notice_check' ) );
+				add_action( 'admin_notices', array( __CLASS__, 'admin_notices' ) );
+			}
+
 			// Prevent reinitialization.
 			self::$initialized = true;
 		}
@@ -537,6 +542,74 @@ class PUM_AssetCache {
 	public static function reset_cache() {
 		update_option( 'pum-has-cached-css', false );
 		update_option( 'pum-has-cached-js', false );
+	}
+
+	/**
+	 * Displays admin notice if the files are not writeable.
+	 *
+	 * @since 1.9.0
+	 */
+	public static function admin_notices() {
+		if ( true === get_option( 'pum_files_writeable', true ) ) {
+			return;
+		}
+
+		$undo_url     = add_query_arg( 'pum_writeable_notice_check', 'undo' );
+		$dismiss_url  = add_query_arg( 'pum_writeable_notice_check', 'dismiss' );
+		?>
+		<style>
+			.pum-notice p {
+				margin-bottom: 0;
+			}
+
+			.pum-notice img.logo {
+				float: right;
+				margin-left: 10px;
+				width: 128px;
+				padding: 0.25em;
+				border: 1px solid #ccc;
+			}
+			.pum-notice div {
+				display: flex;
+				flex-direction: row;
+			}
+			.pum-notice div a {
+				display: block;
+				margin-left: 10px;
+			}
+		</style>
+		<div class="notice notice-error is-dismissible pum-notice">
+			<p>
+				<img class="logo" src="<?php echo POPMAKE_URL; ?>/assets/images/icon-256x256.jpg" />
+				<?php
+				esc_html_e( 'Popup Maker detected an issue with your file system and is unable to create cache for 
+				the styling and settings. This may lead to suboptimal performance. Please check your filesystem and 
+				hosting provide to ensure Popup Maker can create and write to cache files.', 'popup-maker' );
+				?>
+			</p>
+			<div>
+				<a href="<?php echo esc_attr( $undo_url ); ?>" class="button-secondary"><?php esc_html_e( 'Try to create cache again', 'popup-maker' ); ?></a>
+				<a href="<?php echo esc_attr( $dismiss_url ); ?>" class="button-secondary"><?php esc_html_e( 'Keep current method', 'popup-maker' ); ?></a>
+				<a href="#" class="button-secondary"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Checks if any options have been clicked from admin notices.
+	 *
+	 * @since 1.9.0
+	 */
+	public static function admin_notice_check() {
+		if ( isset( $_GET['pum_writeable_notice_check'] ) ) {
+			// If either dismiss or try again button is clicked, hide the admin notice.
+			update_option( '_pum_writeable_notice_dismissed', true );
+			if ( 'undo' === $_GET['pum_writeable_notice_check'] ) {
+				// If try again is clicked, remove flag.
+				update_option( 'pum_files_writeable', true );
+			}
+		}
 	}
 
 	/**
