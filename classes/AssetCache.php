@@ -70,6 +70,7 @@ class PUM_AssetCache {
 
 			if ( null === get_option( 'pum_files_writeable', null ) ) {
 				add_option( 'pum_files_writeable', true );
+				add_option( '_pum_writeable_notice_dismissed', true );
 				pum_reset_assets();
 			}
 
@@ -554,7 +555,7 @@ class PUM_AssetCache {
 	 * @since 1.9.0
 	 */
 	public static function admin_notices() {
-		if ( ! self::should_show_notice() ) {
+		if ( self::should_not_show_notice() ) {
 			return;
 		}
 
@@ -645,9 +646,9 @@ class PUM_AssetCache {
 	 * Whether or not we should show admin notice
 	 *
 	 * @since 1.9.0
-	 * @return bool True if notice should be shown
+	 * @return bool True if notice should not be shown
 	 */
-	public static function should_show_notice() {
+	public static function should_not_show_notice() {
 		return true == get_option( 'pum_files_writeable', true ) || true == get_option( '_pum_writeable_notice_dismissed', true );
 	}
 }
