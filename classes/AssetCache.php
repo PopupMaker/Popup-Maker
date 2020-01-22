@@ -99,21 +99,21 @@ class PUM_AssetCache {
 	/**
 	 * Is the cache directory writeable?
 	 *
-	 * @return bool
+	 * @return bool True if directory is writeable
 	 */
 	public static function writeable() {
-		// TODO Remove this once all extensions have been thoroughly updated with time to get them to users.
 		if ( self::$disabled ) {
 			return false;
 		}
 
+		// If we have already determined files to not be writeable, go ahead and return.
 		if ( true != get_option( 'pum_files_writeable', true ) ) {
 			return false;
 		}
 
 		global $wp_filesystem;
 
-		// Check and create cachedir
+		// Checks and create cachedir.
 		if ( ! is_dir( self::get_cache_dir() ) ) {
 
 			if ( ! function_exists( 'WP_Filesystem' ) ) {
@@ -122,14 +122,15 @@ class PUM_AssetCache {
 
 			$results = WP_Filesystem();
 
-			// If filesystem has an error, log to our logging system and then return false.
 			if ( true !== $results ) {
+				// Prevents this from running again and set to show the admin notice.
 				update_option( 'pum_files_writeable', false );
-				if ( is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->has_errors() ) {
+				update_option( '_pum_writeable_notice_dismissed', false );
+				if ( ! is_null( $results ) && is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->has_errors() ) {
 					$error = $wp_filesystem->errors->get_error_message();
 					PUM_Utils_Logging::instance()->log( sprintf( 'Cannot make cache directory due to filesystem error. Error given: %s', esc_html( $error ) ) );
 				} else {
-					PUM_Utils_Logging::instance()->log( 'Cannot make cache directory due to unknown filesystem error.' );
+					PUM_Utils_Logging::instance()->log( 'Cannot make cache directory due to incorrect filesystem method.' );
 				}
 				return false;
 			}
@@ -553,7 +554,7 @@ class PUM_AssetCache {
 	 * @since 1.9.0
 	 */
 	public static function admin_notices() {
-		if ( true == get_option( 'pum_files_writeable', true ) || true == get_option( '_pum_writeable_notice_dismissed', true ) ) {
+		if ( ! self::should_show_notice() ) {
 			return;
 		}
 
@@ -638,5 +639,15 @@ class PUM_AssetCache {
 				update_option( 'pum_files_writeable', true );
 			}
 		}
+	}
+
+	/**
+	 * Whether or not we should show admin notice
+	 *
+	 * @since 1.9.0
+	 * @return bool True if notice should be shown
+	 */
+	public static function should_show_notice() {
+		return true == get_option( 'pum_files_writeable', true ) || true == get_option( '_pum_writeable_notice_dismissed', true );
 	}
 }
