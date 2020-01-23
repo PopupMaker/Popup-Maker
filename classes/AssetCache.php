@@ -569,7 +569,7 @@ class PUM_AssetCache {
 		<ul>
 			<li><a href="<?php echo esc_attr( $undo_url ); ?>" class="button-secondary"><?php esc_html_e( 'Try to create cache again', 'popup-maker' ); ?></a></li>
 			<li><a href="<?php echo esc_attr( $dismiss_url ); ?>" class="button-secondary"><?php esc_html_e( 'Keep current method', 'popup-maker' ); ?></a></li>
-			<li><a href="#" class="button-secondary"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a></li>
+			<li><a href="https://docs.wppopupmaker.com/article/521-debugging-filesystem-errors?utm_source=filesystem-error-alert&utm_medium=inline-doclink&utm_campaign=filesystem-error" class="button-secondary"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a></li>
 		</ul>
 		<?php
 		$html = ob_get_clean();
@@ -597,6 +597,8 @@ class PUM_AssetCache {
 			if ( 'undo' === $_GET['pum_writeable_notice_check'] ) {
 				// If try again is clicked, remove flag.
 				update_option( 'pum_files_writeable', true );
+			} else {
+				pum_update_option( 'disable_asset_cache', true );
 			}
 		}
 	}
