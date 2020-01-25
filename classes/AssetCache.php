@@ -568,7 +568,7 @@ class PUM_AssetCache {
 		?>
 		<ul>
 			<li><a href="<?php echo esc_attr( $undo_url ); ?>"><strong><?php esc_html_e( 'Try to create cache again', 'popup-maker' ); ?></strong></a></li>
-			<li><a href="<?php echo esc_attr( $dismiss_url ); ?>"><?php esc_html_e( 'Keep current method', 'popup-maker' ); ?></a></li>
+			<li><a href="<?php echo esc_attr( $dismiss_url ); ?>" class="pum-dismiss"><?php esc_html_e( 'Keep current method', 'popup-maker' ); ?></a></li>
 			<li><a href="https://docs.wppopupmaker.com/article/521-debugging-filesystem-errors?utm_source=filesystem-error-alert&utm_medium=inline-doclink&utm_campaign=filesystem-error" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a></li>
 		</ul>
 		<?php
@@ -579,7 +579,7 @@ class PUM_AssetCache {
 			'message'     => esc_html__( "Popup Maker detected an issue with your file system's ability and is unable to create & save cached assets for your popup styling and settings. This may lead to suboptimal performance. Please check your filesystem and contact your hosting provide to ensure Popup Maker can create and write to cache files.", 'popup-maker' ),
 			'html'        => $html,
 			'priority'    => 1000,
-			'dismissible' => false,
+			'dismissible' => '2 weeks',
 			'global'      => true,
 		);
 		return $alerts;
@@ -598,7 +598,7 @@ class PUM_AssetCache {
 				// If try again is clicked, remove flag.
 				update_option( 'pum_files_writeable', true );
 			} else {
-				pum_update_option( 'disable_asset_cache', true );
+				pum_update_option( 'disable_asset_caching', true );
 			}
 		}
 	}
