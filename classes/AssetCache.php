@@ -76,7 +76,7 @@ class PUM_AssetCache {
 			}
 
 			if ( is_admin() && current_user_can( 'edit_posts' ) ) {
-				add_action( 'admin_init', array( __CLASS__, 'admin_notice_check' ) );
+				add_action( 'init', array( __CLASS__, 'admin_notice_check' ) );
 			}
 
 			// Prevent reinitialization.
@@ -567,9 +567,9 @@ class PUM_AssetCache {
 		ob_start();
 		?>
 		<ul>
-			<li><a href="<?php echo esc_attr( $undo_url ); ?>" class="button-primary"><?php esc_html_e( 'Try to create cache again', 'popup-maker' ); ?></a></li>
-			<li><a href="<?php echo esc_attr( $dismiss_url ); ?>" class="button-secondary"><?php esc_html_e( 'Keep current method', 'popup-maker' ); ?></a></li>
-			<li><a href="https://docs.wppopupmaker.com/article/521-debugging-filesystem-errors?utm_source=filesystem-error-alert&utm_medium=inline-doclink&utm_campaign=filesystem-error" class="button-secondary"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a></li>
+			<li><a href="<?php echo esc_attr( $undo_url ); ?>"><strong><?php esc_html_e( 'Try to create cache again', 'popup-maker' ); ?></strong></a></li>
+			<li><a href="<?php echo esc_attr( $dismiss_url ); ?>"><?php esc_html_e( 'Keep current method', 'popup-maker' ); ?></a></li>
+			<li><a href="https://docs.wppopupmaker.com/article/521-debugging-filesystem-errors?utm_source=filesystem-error-alert&utm_medium=inline-doclink&utm_campaign=filesystem-error" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a></li>
 		</ul>
 		<?php
 		$html = ob_get_clean();
