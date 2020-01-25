@@ -6450,15 +6450,15 @@
          * dependencies should look like this:
          *
          * {
-                 *   field_name_1: value, // Select, radio etc.
-                 *   field_name_2: true // Checkbox
-                 * }
+         *   field_name_1: value, // Select, radio etc.
+         *   field_name_2: true // Checkbox
+         * }
          *
          * Support for Multiple possible values of one field
          *
          * {
-                 *   field_name_1: [ value_1, value_2 ]
-                 * }
+         *   field_name_1: [ value_1, value_2 ]
+         * }
          *
          */
         checkDependencies: function ($dependent_fields) {
@@ -6822,8 +6822,7 @@
                 if (Object.keys(maintabs.tabs).length) {
                     form = PUM_Admin.templates.tabs(maintabs);
                 }
-            }
-            else if (Object.keys(data.tabs).length) {
+            } else if (Object.keys(data.tabs).length) {
                 container_classes.push('tabbed-content');
 
                 // Loop Tabs
@@ -6869,8 +6868,7 @@
                 if (Object.keys(maintabs.tabs).length) {
                     form = PUM_Admin.templates.tabs(maintabs);
                 }
-            }
-            else if (Object.keys(data.sections).length) {
+            } else if (Object.keys(data.sections).length) {
 
                 // Loop Sections
                 _.each(data.fields, function (sectionFields, sectionID) {
@@ -6897,8 +6895,7 @@
                         fields: section
                     });
                 });
-            }
-            else {
+            } else {
                 data.fields = forms.parseFields(data.fields, values);
 
                 // Replace the array with rendered fields.
@@ -7030,6 +7027,7 @@
         });
 
 }(jQuery));
+
 function pumSelected(val1, val2, print) {
     "use strict";
 
