@@ -5,7 +5,7 @@
 * Feature: WP Forms integration.
 * Feature: Caldera Forms integration.
 * Feature: MailChimp for WordPress integration
-* Improvement: Enhanced asset cache to identify issues with a site's filesystem
+* Improvement: Enhanced asset cache to identify issues with a site's filesystem.
 * Improvement: Various changes to ensure PHP 7.4 compatibility.
 * Improvement: Minimum PHP version updated to v5.6 to match WP core.
 * Improvement: Simplified form integration interfaces to more easily support additional form plugins or custom integrations. Includes full AJAX & non-AJAX form support.
@@ -14,6 +14,7 @@
 * Improvement: Simplified form integration apis.
 * Improvement: Various performance improvements.
 * Tweak: Remove unnecessary usage of esc_attr_e causing extra translation calls.
+* Fix: Bug when accept language header is not supplied causes undefined index notice.
 * Fix: Error caused by invalid post ID returned by CF7 when saving new forms.
 * Fix: Bug when selecting more than 10 items in targeting rule post/page select fields.
 
