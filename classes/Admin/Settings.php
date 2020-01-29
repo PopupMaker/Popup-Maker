@@ -472,8 +472,8 @@ class PUM_Admin_Settings {
 						),
 						'complete_uninstall'                   => array(
 							'type'     => 'checkbox',
-							'label'    => __( 'Complete Uninstall?', 'popup-maker' ),
-							'desc'     => __( 'Check this to completely uninstall all Popup Maker data on deactivation.', 'popup-maker' ),
+							'label'    => __( 'Delete all Popup Maker data on deactivation', 'popup-maker' ),
+							'desc'     => __( 'Check this to completely uninstall Popup Maker.', 'popup-maker' ),
 							'priority' => 1000,
 						),
 					),
