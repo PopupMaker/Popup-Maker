@@ -5,6 +5,7 @@
 * Feature: WP Forms integration.
 * Feature: Caldera Forms integration.
 * Feature: MailChimp for WordPress integration
+* Improvement: Enhanced asset cache to identify issues with a site's filesystem
 * Improvement: Various changes to ensure PHP 7.4 compatibility.
 * Improvement: Minimum PHP version updated to v5.6 to match WP core.
 * Improvement: Simplified form integration interfaces to more easily support additional form plugins or custom integrations. Includes full AJAX & non-AJAX form support.
