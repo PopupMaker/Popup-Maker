@@ -149,9 +149,9 @@ class PUM_Admin_Pages {
 			__( 'Extend', 'popup-maker' ),
 			__( 'Settings', 'popup-maker' ),
 			__( 'Tools', 'popup-maker' ),
-			__( 'Support Forum', 'freemius' ),
-			__( 'Account', 'freemius' ),
-			__( 'Contact Us', 'freemius' ),
+			__( 'Support Forum', 'popup-maker' ),
+			__( 'Account', 'popup-maker' ),
+			__( 'Contact Us', 'popup-maker' ),
 			__( 'Help & Support', 'popup-maker' ),
 		) );
 
