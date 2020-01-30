@@ -244,8 +244,8 @@ class PUM_Admin_Settings {
 							'std'          => pum_get_default_theme_id(),
 						),
 						'gutenberg_support_enabled' => array(
-							'label' => __( 'Enable Gutenberg Support', 'popup-maker' ),
-							'desc'  => __( 'Enable experimental Gutenberg support for the popup editor.', 'popup-maker' ),
+							'label' => __( 'Enable Block Editor Support', 'popup-maker' ),
+							'desc'  => __( 'Enable experimental support for using the block editor to edit popups.', 'popup-maker' ),
 							'type'  => 'checkbox',
 						),
 						'google_fonts_api_key'      => array(
