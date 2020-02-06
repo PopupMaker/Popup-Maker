@@ -43,7 +43,7 @@ function pum_get_rendered_theme_styles( $theme_id ) {
 			case 'container':
                 $css_selector = ".pum-theme-{$theme_id} .pum-container";
                 // Used to style the block editor based on chosen theme.
-                $css_selector .= ", .pum-theme-{$theme_id} .edit-post-visual-editor .block-editor-block-list__layout";
+                $css_selector .= ", .pum-theme-{$theme_id} .edit-post-visual-editor *:not(.block-editor-inner-blocks) > .block-editor-block-list__layout";
 				if ( $slug ) {
 					$css_selector .= ", .pum-theme-{$slug} .pum-container";
 				}
