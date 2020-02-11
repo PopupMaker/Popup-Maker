@@ -84,7 +84,7 @@ class PUM_Cookies {
 				'name'   => __( 'Form Submission', 'popup-maker' ),
 				'fields' => array_merge_recursive( $this->cookie_fields(), [
 					'general' => [
-						'form' => [
+						'form'          => [
 							'type'    => 'select',
 							'label'   => __( 'Form', 'popup-maker' ),
 							'options' => $this->preload_posts ? array_merge( [
@@ -94,6 +94,7 @@ class PUM_Cookies {
 								],
 							], PUM_Integrations::get_integrated_forms_selectlist() ) : array(),
 							'pri'     => - 1,
+							'std'     => 'any',
 						],
 					],
 				] ),
@@ -191,9 +192,9 @@ class PUM_Cookies {
 	/**
 	 * Returns the cookie fields used for cookie options.
 	 *
-	 * @uses filter pum_get_cookie_fields
-	 *
 	 * @return array
+	 *
+	 * @uses filter pum_get_cookie_fields
 	 *
 	 */
 	public function cookie_fields() {
@@ -259,12 +260,12 @@ class PUM_Cookies {
 	}
 
 	/**
-	 * @deprecated
-	 *
-	 * @param null $cookie
+	 * @param null  $cookie
 	 * @param array $settings
 	 *
 	 * @return array
+	 * @deprecated
+	 *
 	 */
 	public function validate_cookie( $cookie = null, $settings = array() ) {
 		return $settings;
