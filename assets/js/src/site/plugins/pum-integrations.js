@@ -85,6 +85,9 @@
 				// Any supported form.
 				formIdentifier === 'any',
 
+				// Checks for PM core sub form submissions.
+				'pumsubform' === formIdentifier && 'pumsubform' === submittedFormArgs.formProvider,
+
 				// Any provider form. ex. `ninjaforms_any`
 				formIdentifier === submittedFormArgs.formProvider + '_any',
 
@@ -95,10 +98,38 @@
 				// Specific provider form with specific instance ID. ex `ninjaforms_1_1` or `calderaforms_jbakrhwkhg_1`
 				// Only run this test if we are checking for specific instanceId.
 				!!formInstanceId && formIdentifier + '_' + formInstanceId === submittedFormArgs.formKey
-			];
-
+			],
 			// If any check is true, set the cookie.
-			return -1 !== checks.indexOf(true);
+			matchFound = -1 !== checks.indexOf(true);
+
+			/**
+			 * This filter is applied when checking if a form match was found.
+			 *
+			 * It is used for comparing user selected form identifiers with submitted forms.
+			 *
+			 * @since 1.9.0
+			 *
+			 * @param {boolean} matchFound A boolean determining whether a match was found.
+			 * @param {Object} args {
+			 *		@type {string} formIdentifier gravityforms_any or ninjaforms_1
+			 *		@type {int} formInstanceId Not all form plugins support this.
+			 *		@type {Object} submittedFormArgs{
+			 *			@type {string} formProvider Such as gravityforms or ninjaforms
+			 * 			@type {string|int} formId Usually an integer ID number such as 1
+			 *			@type {int} formInstanceId Not all form plugins support this.
+			 *			@type {string} formKey Concatenation of provider, ID & Instance ID.
+			 *			@type {int} popupId The ID of the popup the form was in.
+			 *			@type {Object} popup Usable jQuery object for the popup.
+			 *		}
+			 * }
+			 *
+			 * @returns {boolean}
+			 */
+			return window.PUM.hooks.applyFilters('pum.integration.checkFormKeyMatches', matchFound, {
+				formIdentifier: formIdentifier,
+				formInstanceId: formInstanceId,
+				submittedFormArgs: submittedFormArgs
+			} );
 		}
 	});
 
