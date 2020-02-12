@@ -1,4 +1,7 @@
 ### Unreleased Changes
+
+
+### v1.9.0 - 02/11/2020
 * Feature: New Form Submission trigger with option to choose specific forms for integrated forms.
 * Feature: New Form Submission cookie event with option to choose specific forms.
 * Feature: New Close on Form Submission with optional delay.

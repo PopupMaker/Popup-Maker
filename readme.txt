@@ -125,7 +125,7 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
-= v1.9.0 - TBD =
+= v1.9.0 - 02/11/2020 =
 * Feature: New Form Submission trigger with option to choose specific forms for integrated forms.
 * Feature: New Form Submission cookie event with option to choose specific forms.
 * Feature: New Close on Form Submission with optional delay.
