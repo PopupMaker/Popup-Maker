@@ -64,8 +64,7 @@
   -webkit-transition: width 0.15s cubic-bezier(0, 0, 1, -0.12);
   transition: width 0.15s cubic-bezier(0, 0, 1, -0.12);
   /* Let's animate this */
-  -webkit-animation: animate-stripes 5s linear infinite;
-          animation: animate-stripes 5s linear infinite;
+  animation: animate-stripes 5s linear infinite;
   /*
         &::after {
           content: '';
@@ -88,8 +87,7 @@
 }
 
 .pum-batch-progress progress:not([value]):before {
-  -webkit-animation: indeterminate 0.15s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
-          animation: indeterminate 0.15s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+  animation: indeterminate 0.15s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
   background-color: inherit;
   bottom: 0;
   content: '';
@@ -100,10 +98,8 @@
 }
 
 .pum-batch-progress progress:not([value]):after {
-  -webkit-animation: indeterminate-short 0.15s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
-          animation: indeterminate-short 0.15s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
-  -webkit-animation-delay: 1.15s;
-          animation-delay: 1.15s;
+  animation: indeterminate-short 0.15s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+  animation-delay: 1.15s;
   background-color: inherit;
   bottom: 0;
   content: '';
@@ -111,21 +107,6 @@
   position: absolute;
   top: 0;
   will-change: left, right;
-}
-
-@-webkit-keyframes indeterminate {
-  0% {
-    right: -35%;
-    left: 100%;
-  }
-  60% {
-    right: 100%;
-    left: -90%;
-  }
-  100% {
-    right: 100%;
-    left: -90%;
-  }
 }
 
 @keyframes indeterminate {
@@ -140,21 +121,6 @@
   100% {
     right: 100%;
     left: -90%;
-  }
-}
-
-@-webkit-keyframes indeterminate-short {
-  0% {
-    right: -200%;
-    left: 100%;
-  }
-  60% {
-    right: 107%;
-    left: -8%;
-  }
-  100% {
-    right: 107%;
-    left: -8%;
   }
 }
 
@@ -173,12 +139,6 @@
   }
 }
 
-@-webkit-keyframes animate-stripes {
-  100% {
-    background-position: -100px 0;
-  }
-}
-
 @keyframes animate-stripes {
   100% {
     background-position: -100px 0;
@@ -188,8 +148,7 @@
 .pum-batch-progress .progress-bar {
   background-color: whiteSmoke;
   border-radius: 3px;
-  -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5) inset;
-          box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5) inset;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5) inset;
   /* Dimensions should be similar to the parent progress element. */
   height: 20px;
   width: 100%;

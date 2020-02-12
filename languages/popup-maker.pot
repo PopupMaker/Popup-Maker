@@ -51,7 +51,7 @@ msgstr ""
 msgid "Popup Maker detected an issue with your file system's ability and is unable to create & save cached assets for your popup styling and settings. This may lead to suboptimal performance. Please check your filesystem and contact your hosting provide to ensure Popup Maker can create and write to cache files."
 msgstr ""
 
-#: classes/Conditions.php:107, classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:186, classes/Shortcode.php:151, classes/Shortcode.php:163, classes/Shortcode.php:176, classes/Triggers.php:327, includes/class-popmake-fields.php:57, classes/Admin/Popups.php:318, classes/Admin/Settings.php:646, classes/Admin/Settings.php:670, classes/Admin/Settings.php:673, classes/Admin/Settings.php:682, classes/Admin/Themes.php:330, classes/Admin/Themes.php:348, classes/Admin/Themes.php:367, classes/Shortcode/Popup.php:51, classes/Shortcode/Popup.php:65, classes/Shortcode/Subscribe.php:60, classes/Shortcode/Subscribe.php:80, classes/Shortcode/Subscribe.php:83
+#: classes/Conditions.php:107, classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:192, classes/Shortcode.php:151, classes/Shortcode.php:163, classes/Shortcode.php:176, classes/Triggers.php:328, includes/class-popmake-fields.php:57, classes/Admin/Popups.php:318, classes/Admin/Settings.php:646, classes/Admin/Settings.php:670, classes/Admin/Settings.php:673, classes/Admin/Settings.php:682, classes/Admin/Themes.php:330, classes/Admin/Themes.php:348, classes/Admin/Themes.php:367, classes/Shortcode/Popup.php:51, classes/Shortcode/Popup.php:65, classes/Shortcode/Subscribe.php:60, classes/Shortcode/Subscribe.php:80, classes/Shortcode/Subscribe.php:83
 msgid "General"
 msgstr ""
 
@@ -203,79 +203,83 @@ msgstr ""
 msgid "Subscription Form"
 msgstr ""
 
-#: classes/Cookies.php:102
-msgid "Subscription Form: Successful"
-msgstr ""
-
-#: classes/Cookies.php:105
-msgid "Subscription Form: Already Subscribed"
+#: classes/Cookies.php:101
+msgid "Only in this popup"
 msgstr ""
 
 #: classes/Cookies.php:108
+msgid "Subscription Form: Successful"
+msgstr ""
+
+#: classes/Cookies.php:111
+msgid "Subscription Form: Already Subscribed"
+msgstr ""
+
+#: classes/Cookies.php:114
 msgid "Manual JavaScript"
 msgstr ""
 
-#: classes/Cookies.php:139
+#: classes/Cookies.php:145
 msgid "Cookie Settings"
 msgstr ""
 
-#: classes/Cookies.php:140
+#: classes/Cookies.php:146
 msgid "Sessions"
 msgstr ""
 
-#: classes/Cookies.php:187, classes/Triggers.php:329, classes/Admin/Popups.php:323, classes/Admin/Popups.php:348, classes/Admin/Popups.php:356, classes/Admin/Themes.php:336, classes/Admin/Themes.php:377
+#: classes/Cookies.php:193, classes/Triggers.php:330, classes/Admin/Popups.php:323, classes/Admin/Popups.php:348, classes/Admin/Popups.php:356, classes/Admin/Themes.php:336, classes/Admin/Themes.php:377
 msgid "Advanced"
 msgstr ""
 
-#: classes/Cookies.php:203, classes/Privacy.php:75, classes/Triggers.php:300
+#: classes/Cookies.php:209, classes/Privacy.php:75, classes/Triggers.php:301
 msgid "Cookie Name"
 msgstr ""
 
-#: classes/Cookies.php:204
+#: classes/Cookies.php:210
 msgid "Cookie Name ex. popmaker-123"
 msgstr ""
 
-#: classes/Cookies.php:205
+#: classes/Cookies.php:211
 msgid "The name that will be used when checking for or saving this cookie."
 msgstr ""
 
-#: classes/Cookies.php:210
+#: classes/Cookies.php:216
 msgid "Cookie Time"
 msgstr ""
 
-#: classes/Cookies.php:211
+#: classes/Cookies.php:217
 msgid "364 days 23 hours 59 minutes 59 seconds"
 msgstr ""
 
-#: classes/Cookies.php:212
+#: classes/Cookies.php:218
 msgid "Enter a plain english time before cookie expires."
 msgstr ""
 
-#: classes/Cookies.php:219
+#: classes/Cookies.php:225
 msgid "Use Session Cookie?"
 msgstr ""
 
-#: classes/Cookies.php:220
+#: classes/Cookies.php:226
 msgid "Session cookies expire when the user closes their browser."
 msgstr ""
 
-#: classes/Cookies.php:220
+#: classes/Cookies.php:226
 msgid "%sNote%s: Modern browsers that reopen your last browser session's tabs do not properly clear session cookies"
 msgstr ""
 
-#: classes/Cookies.php:226
+#: classes/Cookies.php:232
 msgid "Sitewide Cookie"
 msgstr ""
 
-#: classes/Cookies.php:227
+#: classes/Cookies.php:233
 msgid "This will prevent the popup from triggering on all pages until the cookie expires."
 msgstr ""
 
-#: classes/Cookies.php:233
+#: classes/Cookies.php:239
 msgid "Cookie Key"
 msgstr ""
 
-#: classes/Cookies.php:234
+#: classes/Cookies.php:240
 msgid "Changing this will cause all existing cookies to be invalid."
 msgstr ""
 
@@ -572,23 +576,23 @@ msgstr ""
 msgid "Time Delay Settings"
 msgstr ""
 
-#: classes/Triggers.php:174, classes/Triggers.php:179, classes/Triggers.php:207, classes/Admin/Popups.php:713, classes/Shortcode/Subscribe.php:394, includes/integrations/class-pum-cf7.php:147, includes/integrations/class-pum-gravity-forms.php:138, includes/integrations/ninja-forms/Actions/ClosePopup.php:43
+#: classes/Triggers.php:174, classes/Triggers.php:179, classes/Triggers.php:208, classes/Admin/Popups.php:713, classes/Shortcode/Subscribe.php:394, includes/integrations/class-pum-cf7.php:147, includes/integrations/class-pum-gravity-forms.php:138, includes/integrations/ninja-forms/Actions/ClosePopup.php:43
 msgid "Delay"
 msgstr ""
 
-#: classes/Triggers.php:180, classes/Triggers.php:208
+#: classes/Triggers.php:180, classes/Triggers.php:209
 msgid "The delay before the popup will open in milliseconds."
 msgstr ""
 
-#: classes/Triggers.php:301
+#: classes/Triggers.php:302
 msgid "Choose which cookies will disable this trigger?"
 msgstr ""
 
-#: classes/Triggers.php:308, classes/Admin/Templates.php:628
+#: classes/Triggers.php:309, classes/Admin/Templates.php:628
 msgid "Add New Cookie"
 msgstr ""
 
-#: classes/Triggers.php:328, classes/Admin/Templates.php:414
+#: classes/Triggers.php:329, classes/Admin/Templates.php:414
 msgid "Cookie"
 msgstr ""
 

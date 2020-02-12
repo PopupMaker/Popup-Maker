@@ -1588,24 +1588,30 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
                 $popup.popmake('setCookie', settings);
             });
         },
-		form_submission: function (settings) {
-			var $popup = PUM.getPopup(this);
+        form_submission: function ( settings ) {
+            var $popup = PUM.getPopup( this );
 
-			settings = $.extend({
-				form: '',
-				formInstanceId: ''
-			}, settings);
+            settings = $.extend( {
+                form: '',
+                formInstanceId: '',
+                only_in_popup: false,
+            }, settings );
 
-			PUM.hooks.addAction('pum.integration.form.success', function (form, args) {
-				if (!settings.form.length) {
-					return;
-				}
+            PUM.hooks.addAction( 'pum.integration.form.success', function ( form, args ) {
+                if ( ! settings.form.length ) {
+                    return;
+                }
 
-				if (PUM.integrations.checkFormKeyMatches(settings.form, settings.formInstanceId, args)) {
-					$popup.popmake('setCookie', settings);
-				}
-			});
-		},
+                if ( PUM.integrations.checkFormKeyMatches( settings.form, settings.formInstanceId, args ) ) {
+                    if (
+                        ( settings.only_in_popup && PUM.getPopup( form ).length && PUM.getPopup( form ).is( $popup ) ) ||
+                        ! settings.only_in_popup
+                    ) {
+                        $popup.popmake( 'setCookie', settings );
+                    }
+                }
+            } );
+        },
         manual: function (settings) {
             var $popup = PUM.getPopup(this);
             $popup.on('pumSetCookie', function () {

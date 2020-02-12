@@ -106,8 +106,7 @@
   background-color: #fff;
   width: auto;
   z-index: 999;
-  -webkit-box-shadow: 1px 1px 5px -1px;
-          box-shadow: 1px 1px 5px -1px;
+  box-shadow: 1px 1px 5px -1px;
   border: 1px solid rgba(0, 0, 0, 0.25);
   min-width: 125px;
 }

@@ -7,11 +7,8 @@
 }
 
 .extensions-available {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 
 .extensions-available img {
@@ -24,15 +21,13 @@
 }
 
 .extensions-available li {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   border: 1px solid #ccc;
   background: #fff;
   vertical-align: top;
   width: 23.5%;
   margin: 0 0 20px 2%;
-  -webkit-box-shadow: -1px 1px 4px rgba(0, 0, 0, 0.25);
-          box-shadow: -1px 1px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: -1px 1px 4px rgba(0, 0, 0, 0.25);
 }
 
 .extensions-available li:nth-child(4n+0) {
@@ -85,11 +80,7 @@
   font-weight: bold;
   height: auto;
   position: relative;
-  -webkit-transition: -webkit-transform .5s;
-  transition: -webkit-transform .5s;
-  -o-transition: transform .5s;
   transition: transform .5s;
-  transition: transform .5s, -webkit-transform .5s;
 }
 
 .extensions-available li > .action-links .button.install {

@@ -49,8 +49,7 @@
 .pum-popup-container *,
 .pum-popup-container *:before,
 .pum-popup-container *:after {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 /**
@@ -122,13 +121,11 @@
 }
 
 .pum-theme-preview .pum-desc {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   margin: 10px auto 0;
   background-color: #fff;
   border: 1px solid;
-  -webkit-box-shadow: 0 2px 2px;
-          box-shadow: 0 2px 2px;
+  box-shadow: 0 2px 2px;
   padding: .75em;
   font-size: 11px;
   z-index: 10;
