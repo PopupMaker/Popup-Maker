@@ -1,5 +1,5 @@
 /*!******************************************************************************
- * Copyright (c) 2017, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 .wrap-licenses .form-table,
 .wrap-licenses thead,
@@ -22,8 +22,7 @@
   padding: 14px;
   min-height: 220px;
   position: relative;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .wrap-licenses .form-table th {
@@ -52,8 +51,7 @@
   min-height: 67px;
   width: 100%;
   bottom: 14px;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .wrap-licenses .popmake-license-data[class*="popmake-license-"] a {

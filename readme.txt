@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, advertising, conversion, responsive popu
 Requires at least: 4.1
 Tested up to: 5.3
 Requires PHP: 5.6
-Stable tag: 1.8.14
+Stable tag: 1.9.0
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -125,34 +125,22 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
-= v1.8.14 - 10/24/2019 =
-* Improvement: Updated nav menu editor walker class for adding custom fields to further improve compatibility.
-* Fix: Ninja Forms popup actions missing.
-
-= v1.8.13 - 10/10/2019 =
-* Tweak: Added cap check to ensure only authorized users can access support debug text file. @Credit goes to Ilias Dimopoulos from Neurosoft S.A , RedyOps Team.
-
-= v1.8.12 - 10/01/2019 =
-* Improvement: Changed hook that we initialize Ninja Forms on so that it can be disabled from theme functions.php.
-* Improvement: Don't load CF7 scripts if they are forced off.
-* Improvement: Fixed some old options checks that were always being detected as true resulting in minor performance improvements.
-* Tweak: Added nonce to the system info file download available under Popup Maker -> Tools and simplified the pum_actions system. @Credit goes to Ilias Dimopoulos from Neurosoft S.A , RedyOps Team.
-
-= v1.8.11 - 08/18/2019 =
-* Improvement: Trigger window resize event when popups open to fix issues with some sliders & JS sized content.
-* Fix: Updated form value processing to prevent some edge cases where string values were converted to Infinity.
-* Fix: Custom "already subscribed" messages in MailChimp integration were not working correctly.
-
-= v1.8.10 - 07/06/2019 =
-* Fix: PHP backward compatibility issue due to short array syntax usage.
-
-= v1.8.9 - 07/04/2019 =
-* Fix: Issue where popup titles wouldn't render.
-
-= v1.8.8 - 06/30/2019 =
-* Fix: Bug where red alert icons didn't go away when visiting the tabs from the "Extend" menu.
-
-= v1.8.7 - 06/29/2019 =
-* Tweak: Restricted the admin toolbar to only show under strict circumstances.
-* Tweak: Updated available WooCommerce endpoints in our targeting conditions
-* Fix: Issue with instance based shortcodes when asset caching was enabled but running on every request.
+= v1.9.0 - 02/11/2020 =
+* Feature: New Form Submission trigger with option to choose specific forms for integrated forms.
+* Feature: New Form Submission cookie event with option to choose specific forms.
+* Feature: New Close on Form Submission with optional delay.
+* Feature: WP Forms integration.
+* Feature: Caldera Forms integration.
+* Feature: MailChimp for WordPress integration
+* Improvement: Enhanced asset cache to identify issues with a site's filesystem.
+* Improvement: Various changes to ensure PHP 7.4 compatibility.
+* Improvement: Minimum PHP version updated to v5.6 to match WP core.
+* Improvement: Simplified form integration interfaces to more easily support additional form plugins or custom integrations. Includes full AJAX & non-AJAX form support.
+* Improvement: Added RTL CSS support.
+* Improvement: Added new SVG admin menu icon which plays well with custom admin color schemes. Thanks @KZeni (Kurt Zenisek)
+* Improvement: Simplified form integration apis.
+* Improvement: Various performance improvements.
+* Tweak: Remove unnecessary usage of esc_attr_e causing extra translation calls.
+* Fix: Bug when accept language header is not supplied causes undefined index notice.
+* Fix: Error caused by invalid post ID returned by CF7 when saving new forms.
+* Fix: Bug when selecting more than 10 items in targeting rule post/page select fields.

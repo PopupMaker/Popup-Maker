@@ -97,7 +97,7 @@ class PUM_Site_Assets {
 			class_exists( 'PUM_MCI' ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ),
 		) );
 
-		if ( wp_script_is( 'pum_aweber_integration_js' ) && $mc_ver_test ) {
+		if ( $mc_ver_test ) {
 			wp_dequeue_script( 'pum_mailchimp_integration_admin_js' );
 			wp_dequeue_style( 'pum_mailchimp_integration_admin_css' );
 			wp_dequeue_script( 'pum-mci' );

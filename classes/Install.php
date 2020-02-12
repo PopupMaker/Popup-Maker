@@ -137,7 +137,7 @@ class PUM_Install {
 
 			// Delete all popups and associated meta.
 			$wpdb->query( "DELETE a,b,c FROM $wpdb->posts a LEFT JOIN $wpdb->term_relationships b ON (a.ID = b.object_id) LEFT JOIN $wpdb->postmeta c ON (a.ID = c.post_id) WHERE a.post_type IN ('popup', 'popup_theme')" );
-			$wpdb->query( "DELETE FROM $wpdb->post_meta WHERE meta_key LIKE 'popup_%'" );
+			$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key LIKE 'popup_%'" );
 
 			/** Delete All the Taxonomies */
 			foreach ( array( 'popup_category', 'popup_tag', ) as $taxonomy ) {

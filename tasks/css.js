@@ -22,9 +22,7 @@ function css() {
 			outputStyle: 'expanded',
 			precision: 10
 		}))
-		.pipe($fn.autoprefixer({
-			browsers: ['last 3 version'],
-		}))
+		.pipe($fn.autoprefixer())
 		.pipe($fn.sourcemaps.write('.'))
 		.pipe(gulp.dest(cssPath))
 		.pipe($fn.filter('**/*.css'))
@@ -59,9 +57,7 @@ function cssrtl() {
 		}))
 		.pipe($fn.rtlcss())
 		.pipe($fn.rename({suffix: '-rtl'}))
-		.pipe($fn.autoprefixer({
-			browsers: ['last 3 version'],
-		}))
+		.pipe($fn.autoprefixer())
 		.pipe($fn.sourcemaps.write('.'))
 		.pipe(gulp.dest(cssPath))
 		.pipe($fn.filter('**/*.css'))

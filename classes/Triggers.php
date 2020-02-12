@@ -40,7 +40,7 @@ class PUM_Triggers {
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
-			self::$instance = new self;
+			self::$instance                = new self;
 			self::$instance->preload_posts = pum_is_popup_editor();
 		}
 
@@ -130,7 +130,7 @@ class PUM_Triggers {
 	}
 
 	/**
-	 * @param null $trigger
+	 * @param null  $trigger
 	 * @param array $settings
 	 *
 	 * @return array
@@ -188,11 +188,11 @@ class PUM_Triggers {
 				),
 			),
 			'form_submission' => [
-				'name'            => __( 'Form Submission', 'popup-maker' ),
+				'name'   => __( 'Form Submission', 'popup-maker' ),
 				//'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Form', 'popup-maker' ), '' ),
-				'fields'          => [
+				'fields' => [
 					'general' => [
-						'form' => [
+						'form'  => [
 							'type'    => 'select',
 							'label'   => __( 'Form', 'popup-maker' ),
 							'options' => $this->preload_posts ? array_merge( [
@@ -201,6 +201,7 @@ class PUM_Triggers {
 									'pumsubform' => __( 'Subscription Form', 'popup-maker' ),
 								],
 							], PUM_Integrations::get_integrated_forms_selectlist() ) : array(),
+							'std'     => 'any',
 						],
 						'delay' => array(
 							'type'  => 'rangeslider',
