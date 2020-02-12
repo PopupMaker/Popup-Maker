@@ -238,7 +238,7 @@ class PUM_Admin_Extend {
 							} elseif ( 'page-builders' === $active_tab ) {
 								self::render_page_builders_list();
 							} elseif ( 'other' === $active_tab ) {
-
+								self::render_other_list();
 							} else { ?>
 
 								<?php self::render_extension_list(); ?>
@@ -430,6 +430,42 @@ class PUM_Admin_Extend {
 				$i ++;
 			endforeach; ?>
         </ul>
+
+
+		<?php
+	}
+
+	/**
+	 * Renders extensions tab other plugins list.
+	 *
+	 * @since 1.10.0
+	 */
+	public static function render_other_list() {
+		$recommended_plugins = self::other_plugins();
+		?>
+		<h4><?php _e( 'These plugins work great alongside our popups!', 'popup-maker' ); ?></h4>
+
+		<ul class="extensions-available">
+			<?php
+			foreach ( $recommended_plugins as $plugin ) : ?>
+				<li class="available-extension-inner <?php echo esc_attr( $plugin['slug'] ); ?>">
+					<h3>
+						<a target="_blank" href="<?php echo esc_attr( $plugin['url'] ); ?>">
+							<?php echo esc_html( $plugin['name'] ) ?>
+						</a>
+					</h3>
+
+					<img class="extension-thumbnail" src="<?php echo esc_attr( POPMAKE_URL . '/assets/images/plugins/' . $plugin['slug'] . '.png' ) ?>" />
+
+					<p><?php echo esc_html( $plugin['desc'] ); ?></p>
+
+					<span class="action-links">
+					<a class="button" target="_blank" href="<?php echo esc_attr( $plugin['url'] ); ?>"><?php _e( 'Check it out', 'popup-maker' ); ?></a>
+				</span>
+				</li>
+				<?php
+			endforeach; ?>
+		</ul>
 
 
 		<?php

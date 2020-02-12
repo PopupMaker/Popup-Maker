@@ -57,7 +57,11 @@ class PUM_AssetCache {
 			self::$asset_url = Popup_Maker::$URL . 'assets/';
 			self::$js_url    = self::$asset_url . 'js/';
 			self::$css_url   = self::$asset_url . 'css/';
-			self::$disabled  = pum_get_option( 'disable_asset_caching', false );
+			if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
+				self::$disabled = true;
+			} else {
+				self::$disabled  = pum_get_option( 'disable_asset_caching', false );
+			}
 
 			add_action( 'pum_extension_updated', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_extension_deactivated', array( __CLASS__, 'reset_cache' ) );
@@ -159,15 +163,23 @@ class PUM_AssetCache {
 	 * @return array|string
 	 */
 	public static function get_cache_dir() {
-		$wp_upload_dir = wp_upload_dir();
-
-		$upload_dir = $wp_upload_dir['basedir'];
-
-		if ( ! pum_get_option( 'bypass_adblockers', false ) ) {
-			return trailingslashit( $upload_dir ) . 'pum';
+		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
+			$wp_upload_dir = wp_upload_dir( null, false, false );
+		} else {
+			$wp_upload_dir = wp_upload_dir();
 		}
 
-		return $upload_dir;
+		if ( ! empty( $upload_dir['basedir'] ) ) {
+			$upload_dir = $wp_upload_dir['basedir'];
+
+			if ( ! pum_get_option( 'bypass_adblockers', false ) ) {
+				return trailingslashit( $upload_dir ) . 'pum';
+			}
+
+			return $upload_dir;
+		} else {
+			// What to return here???
+		}
 	}
 
 	/**
