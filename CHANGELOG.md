@@ -1,5 +1,5 @@
 ### Unreleased Changes
-
+* Fix: JS error when MailChimp for WordPress was active but no forms on the page.
 
 ### v1.9.0 - 02/11/2020
 * Feature: New Form Submission trigger with option to choose specific forms for integrated forms.

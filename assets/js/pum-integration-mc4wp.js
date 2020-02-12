@@ -100,20 +100,23 @@
   var formProvider = 'mc4wp';
   var $ = window.jQuery;
   $(document).ready(function () {
-    mc4wp.forms.on('success', function (form, data) {
-      var $form = $(form.element),
-          formId = form.id,
-          formInstanceId = $('.mc4wp-form-' + form.id).index($form) + 1; // All the magic happens here.
+    if (mc4wp !== undefined) {
+      mc4wp.forms.on('success', function (form, data) {
+        var $form = $(form.element),
+            formId = form.id,
+            formInstanceId = $('.mc4wp-form-' + form.id).index($form) + 1; // All the magic happens here.
 
-      window.PUM.integrations.formSubmission($form, {
-        formProvider: formProvider,
-        formId: formId,
-        formInstanceId: formInstanceId,
-        extras: {
-          data: data
-        }
+        window.PUM.integrations.formSubmission($form, {
+          formProvider: formProvider,
+          formId: formId,
+          formInstanceId: formInstanceId,
+          extras: {
+            form: form,
+            data: data
+          }
+        });
       });
-    });
+    }
   });
 }
 

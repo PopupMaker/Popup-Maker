@@ -125,6 +125,9 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
+= v1.9.1 - 02/12/2020 =
+* Fix: JS error when MailChimp for WordPress was active but no forms on the page.
+
 = v1.9.0 - 02/11/2020 =
 * Feature: New Form Submission trigger with option to choose specific forms for integrated forms.
 * Feature: New Form Submission cookie event with option to choose specific forms.
