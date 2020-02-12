@@ -526,5 +526,28 @@ class PUM_Utils_Array {
 
 		return $value;
 	}
+
+	/**
+	 * Remaps array keys.
+	 *
+	 * @param array $array an array values.
+	 * @param array $remap_array an array of $old_key => $new_key values.
+	 *
+	 * @return array
+	 */
+	public static function remap_keys( $array, $remap_array = [] ) {
+
+		foreach ( $remap_array as $old_key => $new_key ) {
+			$value = isset( $array[ $old_key ] ) ? $array[ $old_key ] : false;
+
+			if ( ! empty( $value ) ) {
+				$array[ $new_key ] = $value;
+			}
+
+			unset( $array[ $old_key ] );
+		}
+
+		return $array;
+	}
 }
 

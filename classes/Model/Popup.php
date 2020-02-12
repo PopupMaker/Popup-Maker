@@ -138,15 +138,19 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @return array
 	 */
 	public function get_settings() {
-		// This hack is here to allow creating popups on the fly without saved meta.
-		$settings = isset( $this->settings ) ? $this->settings : $this->get_meta( 'popup_settings' );
+		if ( ! isset( $this->settings ) ) {
+			// This hack is here to allow creating popups on the fly without saved meta.
+			$settings = isset( $this->settings ) ? $this->settings : $this->get_meta( 'popup_settings' );
 
-		if ( ! is_array( $settings ) ) {
-			$settings = array();
+			if ( ! is_array( $settings ) ) {
+				$settings = array();
+			}
+
+			// Review: the above should be removed and replaced with a hooked filter here to supply defaults when $settings === false.
+			$this->settings = apply_filters( 'pum_popup_settings', $settings, $this->ID );
 		}
 
-		// Review: the above should be removed and replaced with a hooked filter here to supply defaults when $settings === false.
-		return apply_filters( 'pum_popup_settings', $settings, $this->ID );
+		return $this->settings;
 	}
 
 	/**
@@ -215,6 +219,12 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 
 		foreach ( $settings as $key => $value ) {
 			$field = PUM_Admin_Popups::get_field( $key );
+
+			if ( false === $field && ! empty( $value ) )  {
+				// This is a value set programatically, not by a defined field. ex theme_slug
+				$settings[ $key ] = $value;
+				continue;
+			}
 
 			if ( $field['private'] ) {
 				unset( $settings[ $key ] );
@@ -945,7 +955,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		$current = $this->get_event_count( $event );
 		if ( ! $current ) {
 			$current = 0;
-		};
+		}
 		$current = $current + 1;
 
 		// Set the total count since creation.
@@ -1115,7 +1125,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @param      $id
 	 * @param bool $force
 	 *
-	 * @return \PUM_Model_Popup
+	 * @return PUM_Model_Popup
 	 */
 	public static function instance( $id, $force = false ) {
 		return pum_get_popup( $id );

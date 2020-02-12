@@ -130,8 +130,6 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 
 		$columns = $this->get_columns();
 
-		$where  = "WHERE 1=1";
-		$values = array();
 		$fields = $args['fields'];
 
 		if ( $fields == '*' ) {
@@ -142,11 +140,18 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 			$fields = array_map( 'sanitize_text_field', $fields );
 		}
 
-		// Pagination.
-		if ( $args['page'] >= 1 ) {
-			$args['offset'] = ( $args['page'] * $args['limit'] ) - $args['limit'];
-		}
+		$select_fields = implode( '`, `', $fields );
 
+		// Begin building query.
+		$query = "SELECT `$select_fields` FROM {$this->table_name()}";
+
+		// Set up $values array for wpdb::prepare
+		$values = array();
+
+		// Define an empty WHERE clause to start from.
+		$where = "WHERE 1=1";
+
+		// Build search query.
 		if ( $args['s'] && ! empty( $args['s'] ) ) {
 
 			$search = wp_unslash( trim( $args['s'] ) );
@@ -156,7 +161,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 			foreach ( $columns as $key => $type ) {
 				if ( in_array( $key, $fields ) ) {
 					if ( $type == '%s' || ( $type == '%d' && is_numeric( $search ) ) ) {
-						$values[]       = '%' . $search . '%';
+						$values[]       = '%' . $wpdb->esc_like( $search ) . '%';
 						$search_where[] = "`$key` LIKE '%s'";
 					}
 				}
@@ -167,12 +172,11 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 			}
 		}
 
-		$select_fields = implode( '`, `', $fields );
-
-		$query = "SELECT `$select_fields` FROM {$this->table_name()} $where";
+		$query .= " $where";
 
 		if ( ! empty( $args['orderby'] ) ) {
-			$query .= " ORDER BY `" . wp_unslash( trim( $args['orderby'] ) ) . '`';
+			$query    .= " ORDER BY %s";
+			$values[] = wp_unslash( trim( $args['orderby'] ) );
 
 			switch ( $args['order'] ) {
 				case 'asc':
@@ -188,22 +192,25 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		}
 
 		if ( ! empty( $args['limit'] ) ) {
-			$query .= " LIMIT " . absint( $args['limit'] );
+			$query    .= " LIMIT %d";
+			$values[] = absint( $args['limit'] );
+		}
+
+		// Pagination.
+		if ( $args['page'] >= 1 ) {
+			$args['offset'] = ( $args['page'] * $args['limit'] ) - $args['limit'];
 		}
 
 		if ( ! empty( $args['offset'] ) ) {
-			$query .= " OFFSET " . absint( $args['offset'] );
+			$query    .= " OFFSET %d";
+			$values[] = absint( $args['offset'] );
 		}
 
 		if ( strpos( $query, '%s' ) || strpos( $query, '%d' ) ) {
 			$query = $wpdb->prepare( $query, $values );
 		}
 
-		if ( $return_type != 'model' ) {
-			$results = $wpdb->get_results( $query, $return_type );
-		}
-
-		return $results;
+		return $wpdb->get_results( $query, $return_type );
 	}
 
 	/**

@@ -87,10 +87,10 @@ class PUM_Admin_Assets {
 		wp_register_script( 'pum-admin-theme-editor', self::$js_url . 'admin-theme-editor' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-settings-page', self::$js_url . 'admin-settings-page' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-shortcode-ui', self::$js_url . 'admin-shortcode-ui' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
-		wp_register_script( 'iframe-resizer', self::$js_url . 'iframeResizer' . self::$suffix . '.js', array( 'jquery' ) );
+		wp_register_script( 'iframe-resizer', self::$js_url . 'vendor/iframeResizer.min.js', array( 'jquery' ) );
 
 		// @deprecated handle. Currently loads empty file and admin-general as dependency.
-		wp_register_script( 'popup-maker-admin', self::$js_url . 'admin-deprecated' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
+		wp_register_script( 'popup-maker-admin', self::$js_url . 'pum-admin-deprecated' . self::$suffix . '.js', array( 'pum-admin-general' ), Popup_Maker::$VER, true );
 		wp_localize_script( 'pum-admin-general', 'pum_admin', $admin_vars );
 
 		wp_enqueue_script( 'pum-admin-marketing' );
@@ -139,18 +139,19 @@ class PUM_Admin_Assets {
 	 * Load Admin Styles
 	 */
 	public static function register_admin_styles() {
+		$suffix = ( is_rtl() ? '-rtl' : '' ) . self::$suffix;
 
-		wp_register_style( 'pum-admin-general', self::$css_url . 'admin-general' . self::$suffix . '.css', array( 'dashicons', 'wp-color-picker' ), Popup_Maker::$VER );
-		wp_register_style( 'pum-admin-batch', self::$css_url . 'admin-batch' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
-		wp_register_style( 'pum-admin-popup-editor', self::$css_url . 'admin-popup-editor' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
-		wp_register_style( 'pum-admin-theme-editor', self::$css_url . 'admin-theme-editor' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
-		wp_register_style( 'pum-admin-extensions-page', self::$css_url . 'admin-extensions-page' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
-		wp_register_style( 'pum-admin-settings-page', self::$css_url . 'admin-settings-page' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
-		wp_register_style( 'pum-admin-support-page', self::$css_url . 'admin-support-page' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
-		wp_register_style( 'pum-admin-shortcode-ui', self::$css_url . 'admin-shortcode-ui' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
+		wp_register_style( 'pum-admin-general', self::$css_url . 'pum-admin-general' . $suffix . '.css', array( 'dashicons', 'wp-color-picker' ), Popup_Maker::$VER );
+		wp_register_style( 'pum-admin-batch', self::$css_url . 'pum-admin-batch' . $suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
+		wp_register_style( 'pum-admin-popup-editor', self::$css_url . 'pum-admin-popup-editor' . $suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
+		wp_register_style( 'pum-admin-theme-editor', self::$css_url . 'pum-admin-theme-editor' . $suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
+		wp_register_style( 'pum-admin-extensions-page', self::$css_url . 'pum-admin-extensions-page' . $suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
+		wp_register_style( 'pum-admin-settings-page', self::$css_url . 'pum-admin-settings-page' . $suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
+		wp_register_style( 'pum-admin-support-page', self::$css_url . 'pum-admin-support-page' . $suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
+		wp_register_style( 'pum-admin-shortcode-ui', self::$css_url . 'pum-admin-shortcode-ui' . $suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
 
 		// @deprecated handle. Currently loads empty file and admin-general as dependency.
-		wp_register_style( 'popup-maker-admin', self::$css_url . 'admin-deprecated' . self::$suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
+		wp_register_style( 'popup-maker-admin', self::$css_url . 'pum-admin-deprecated' . $suffix . '.css', array( 'pum-admin-general' ), Popup_Maker::$VER );
 
 		if ( PUM_Utils_Upgrades::instance()->has_uncomplete_upgrades() ) {
 			wp_enqueue_style( 'pum-admin-batch' );

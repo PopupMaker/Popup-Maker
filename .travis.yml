@@ -1,0 +1,50 @@
+language: php
+
+sudo: false
+dist: trusty
+
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+  - 7.2
+  - 7.3
+  - 7.4
+
+env:
+  - WP_VERSION=latest WP_MULTISITE=0
+  - WP_VERSION=5.2 WP_MULTISITE=0
+  - WP_VERSION=5.1 WP_MULTISITE=0
+  - WP_VERSION=4.9.9 WP_MULTISITE=0
+  - WP_VERSION=4.8.8 WP_MULTISITE=0
+  - WP_VERSION=4.7.12 WP_MULTISITE=0
+
+matrix:
+  include:
+    - php: 7.1
+      env: WP_VERSION=latest WP_MULTISITE=0
+    - php: 7.1
+      env: WP_VERSION=4.9 WP_MULTISITE=0
+    - php: 5.6
+      env: WP_VERSION=latest WP_MULTISITE=1
+    - php: 7.4
+      env: WP_VERSION=latest WP_MULTISITE=0
+      dist: precise
+
+before_script:
+  - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  - composer install
+
+script:
+  - phpenv config-rm xdebug.ini
+  - vendor/bin/phpunit
+
+branches:
+  only:
+    - master
+    - /^release\/.*$/
+
+notifications:
+  slack:
+    secure:

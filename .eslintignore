@@ -1,0 +1,7 @@
+node_modules
+vendor
+public
+release
+build
+assets/js/*.js
+assets/js/*.js.map

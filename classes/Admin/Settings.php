@@ -45,7 +45,7 @@ class PUM_Admin_Settings {
 
 		if ( ! empty( self::$notices ) ) {
 			foreach ( self::$notices as $notice ) { ?>
-				<div class="notice notice-<?php esc_attr_e( $notice['type'] ); ?> is-dismissible">
+				<div class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> is-dismissible">
 					<p><strong><?php esc_html_e( $notice['message'] ); ?></strong></p>
 					<button type="button" class="notice-dismiss">
 						<span class="screen-reader-text"><?php _e( 'Dismiss this notice.', 'popup-maker' ); ?></span>
@@ -517,7 +517,7 @@ class PUM_Admin_Settings {
 	 * @return string
 	 */
 	public static function field_pum_styles() {
-		$core_styles = file_get_contents( Popup_Maker::$DIR . 'assets/css/site' . PUM_Site_Assets::$suffix . '.css' );
+		$core_styles = file_get_contents( Popup_Maker::$DIR . 'assets/css/pum-site' . (is_rtl() ? '-rtl' : '') . PUM_Site_Assets::$suffix . '.css' );
 
 		$user_styles = PUM_AssetCache::generate_font_imports() . PUM_AssetCache::generate_popup_theme_styles() . PUM_AssetCache::generate_popup_styles();
 

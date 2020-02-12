@@ -97,7 +97,7 @@ class PUM_Site_Assets {
 			class_exists( 'PUM_MCI' ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ),
 		) );
 
-		if ( wp_script_is( 'pum_aweber_integration_js' ) && $mc_ver_test ) {
+		if ( $mc_ver_test ) {
 			wp_dequeue_script( 'pum_mailchimp_integration_admin_js' );
 			wp_dequeue_style( 'pum_mailchimp_integration_admin_css' );
 			wp_dequeue_script( 'pum-mci' );
@@ -188,8 +188,8 @@ class PUM_Site_Assets {
 	public static function register_scripts() {
 		self::$scripts_registered = true;
 
-		wp_register_script( 'mobile-detect', self::$js_url . 'mobile-detect' . self::$suffix . '.js', null, '1.3.3', true );
-		wp_register_script( 'iframe-resizer', self::$js_url . 'iframeResizer' . self::$suffix . '.js', array( 'jquery' ) );
+		wp_register_script( 'mobile-detect', self::$js_url . 'vendor/mobile-detect.min.js', null, '1.3.3', true );
+		wp_register_script( 'iframe-resizer', self::$js_url . 'vendor/iframeResizer.min.js', array( 'jquery' ) );
 
 		if ( PUM_AssetCache::enabled() ) {
 			$cached = get_option( 'pum-has-cached-js' );
@@ -246,32 +246,34 @@ class PUM_Site_Assets {
 		// @deprecated 1.4 Use pum_vars instead.
 		wp_localize_script( 'popup-maker-site', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
 
-		wp_localize_script( 'popup-maker-site', 'pum_debug_vars', apply_filters( 'pum_debug_vars', array(
-			'debug_mode_enabled'    => __( 'Popup Maker', 'popup-maker' ) . ': ' . __( 'Debug Mode Enabled', 'popup-maker' ),
-			'debug_started_at'      => __( 'Debug started at:', 'popup-maker' ),
-			'debug_more_info'       => sprintf( __( 'For more information on how to use this information visit %s', 'popup-maker' ), 'https://docs.wppopupmaker.com/?utm_medium=js-debug-info&utm_campaign=ContextualHelp&utm_source=browser-console&utm_content=more-info' ),
-			'global_info'           => __( 'Global Information', 'popup-maker' ),
-			'localized_vars'        => __( 'Localized variables', 'popup-maker' ),
-			'popups_initializing'   => __( 'Popups Initializing', 'popup-maker' ),
-			'popups_initialized'    => __( 'Popups Initialized', 'popup-maker' ),
-			'single_popup_label'    => __( 'Popup: #', 'popup-maker' ),
-			'theme_id'              => __( 'Theme ID: ', 'popup-maker' ),
-			'label_method_call'     => __( 'Method Call:', 'popup-maker' ),
-			'label_method_args'     => __( 'Method Arguments:', 'popup-maker' ),
-			'label_popup_settings'  => __( 'Settings', 'popup-maker' ),
-			'label_triggers'        => __( 'Triggers', 'popup-maker' ),
-			'label_cookies'         => __( 'Cookies', 'popup-maker' ),
-			'label_delay'           => __( 'Delay:', 'popup-maker' ),
-			'label_conditions'      => __( 'Conditions', 'popup-maker' ),
-			'label_cookie'          => __( 'Cookie:', 'popup-maker' ),
-			'label_settings'        => __( 'Settings:', 'popup-maker' ),
-			'label_selector'        => __( 'Selector:', 'popup-maker' ),
-			'label_mobile_disabled' => __( 'Mobile Disabled:', 'popup-maker' ),
-			'label_tablet_disabled' => __( 'Tablet Disabled:', 'popup-maker' ),
-			'label_event'           => __( 'Event: %s', 'popup-maker' ),
-			'triggers'              => PUM_Triggers::instance()->dropdown_list(),
-			'cookies'               => PUM_Cookies::instance()->dropdown_list(),
-		) ) );
+		if ( Popup_Maker::debug_mode() || isset( $_GET['pum_debug'] ) ) {
+			wp_localize_script( 'popup-maker-site', 'pum_debug_vars', apply_filters( 'pum_debug_vars', array(
+				'debug_mode_enabled'    => __( 'Popup Maker', 'popup-maker' ) . ': ' . __( 'Debug Mode Enabled', 'popup-maker' ),
+				'debug_started_at'      => __( 'Debug started at:', 'popup-maker' ),
+				'debug_more_info'       => sprintf( __( 'For more information on how to use this information visit %s', 'popup-maker' ), 'https://docs.wppopupmaker.com/?utm_medium=js-debug-info&utm_campaign=ContextualHelp&utm_source=browser-console&utm_content=more-info' ),
+				'global_info'           => __( 'Global Information', 'popup-maker' ),
+				'localized_vars'        => __( 'Localized variables', 'popup-maker' ),
+				'popups_initializing'   => __( 'Popups Initializing', 'popup-maker' ),
+				'popups_initialized'    => __( 'Popups Initialized', 'popup-maker' ),
+				'single_popup_label'    => __( 'Popup: #', 'popup-maker' ),
+				'theme_id'              => __( 'Theme ID: ', 'popup-maker' ),
+				'label_method_call'     => __( 'Method Call:', 'popup-maker' ),
+				'label_method_args'     => __( 'Method Arguments:', 'popup-maker' ),
+				'label_popup_settings'  => __( 'Settings', 'popup-maker' ),
+				'label_triggers'        => __( 'Triggers', 'popup-maker' ),
+				'label_cookies'         => __( 'Cookies', 'popup-maker' ),
+				'label_delay'           => __( 'Delay:', 'popup-maker' ),
+				'label_conditions'      => __( 'Conditions', 'popup-maker' ),
+				'label_cookie'          => __( 'Cookie:', 'popup-maker' ),
+				'label_settings'        => __( 'Settings:', 'popup-maker' ),
+				'label_selector'        => __( 'Selector:', 'popup-maker' ),
+				'label_mobile_disabled' => __( 'Mobile Disabled:', 'popup-maker' ),
+				'label_tablet_disabled' => __( 'Tablet Disabled:', 'popup-maker' ),
+				'label_event'           => __( 'Event: %s', 'popup-maker' ),
+				'triggers'              => PUM_Triggers::instance()->dropdown_list(),
+				'cookies'               => PUM_Cookies::instance()->dropdown_list(),
+			) ) );
+		}
 
 		/* Here for backward compatibility. */
 		wp_localize_script( 'popup-maker-site', 'pum_sub_vars', array(
@@ -311,7 +313,7 @@ class PUM_Site_Assets {
 		if ( $loaded->have_posts() ) {
 			while ( $loaded->have_posts() ) : $loaded->next_post();
 				pum()->current_popup = $loaded->post;
-				$popup = pum_get_popup( $loaded->post->ID );
+				$popup               = pum_get_popup( $loaded->post->ID );
 				// Set the key to the CSS id of this popup for easy lookup.
 				$settings[ 'pum-' . $popup->ID ] = $popup->get_public_settings();
 			endwhile;
@@ -338,7 +340,7 @@ class PUM_Site_Assets {
 
 			wp_register_style( 'popup-maker-site', self::get_cache_dir_url() . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-styles' ) . '.css?generated=' . $cached, array(), Popup_Maker::$VER );
 		} else {
-			wp_register_style( 'popup-maker-site', self::$css_url . 'site' . self::$suffix . '.css', array(), Popup_Maker::$VER );
+			wp_register_style( 'popup-maker-site', self::$css_url . 'pum-site' . ( is_rtl() ? '-rtl' : '' ) . self::$suffix . '.css', array(), Popup_Maker::$VER );
 			self::inline_styles();
 		}
 	}

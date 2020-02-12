@@ -23,7 +23,7 @@ class PUM_Modules_Reviews {
 	 */
 	public static function init() {
 		//add_action( 'init', array( __CLASS__, 'hooks' ) );
-		add_filter( 'pum_alert_list', array( __CLASS__, 'review_alert') );
+		add_filter( 'pum_alert_list', array( __CLASS__, 'review_alert' ) );
 		add_action( 'wp_ajax_pum_review_action', array( __CLASS__, 'ajax_handler' ) );
 	}
 
@@ -65,7 +65,6 @@ class PUM_Modules_Reviews {
 			'pri'    => self::get_current_trigger( 'pri' ),
 			'reason' => 'maybe_later',
 		) );
-
 
 
 		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'pum_review_action' ) ) {
@@ -295,7 +294,11 @@ class PUM_Modules_Reviews {
 				return false;
 			}
 
-			return ! isset( $code ) ? $triggers[ $group ] : isset( $triggers[ $group ]['triggers'][ $code ] ) ? $triggers[ $group ]['triggers'][ $code ] : false;
+			if ( ! isset( $code ) ) {
+				return $triggers[ $group ];
+			} else {
+				return isset( $triggers[ $group ]['triggers'][ $code ] ) ? $triggers[ $group ]['triggers'][ $code ] : false;
+			}
 		}
 
 		return $triggers;
@@ -323,14 +326,14 @@ class PUM_Modules_Reviews {
 		?>
 
 		<script type="text/javascript">
-            window.pum_review_nonce = '<?php echo wp_create_nonce( 'pum_review_action' ); ?>';
-            window.pum_review_api_url = '<?php echo self::$api_url; ?>';
-            window.pum_review_uuid = '<?php echo $uuid; ?>';
-            window.pum_review_trigger = {
-                group: '<?php echo self::get_trigger_group(); ?>',
-                code: '<?php echo self::get_trigger_code(); ?>',
-                pri: '<?php echo self::get_current_trigger( 'pri' ); ?>'
-            };
+			window.pum_review_nonce = '<?php echo wp_create_nonce( 'pum_review_action' ); ?>';
+			window.pum_review_api_url = '<?php echo self::$api_url; ?>';
+			window.pum_review_uuid = '<?php echo $uuid; ?>';
+			window.pum_review_trigger = {
+				group: '<?php echo self::get_trigger_group(); ?>',
+				code: '<?php echo self::get_trigger_code(); ?>',
+				pri: '<?php echo self::get_current_trigger( 'pri' ); ?>'
+			};
 		</script>
 
 		<ul>
@@ -374,9 +377,9 @@ class PUM_Modules_Reviews {
 			return;
 		}
 
-		$group  = self::get_trigger_group();
-		$code   = self::get_trigger_code();
-		$pri    = self::get_current_trigger( 'pri' );
+		$group   = self::get_trigger_group();
+		$code    = self::get_trigger_code();
+		$pri     = self::get_current_trigger( 'pri' );
 		$trigger = self::get_current_trigger();
 
 		// Used to anonymously distinguish unique site+user combinations in terms of effectiveness of each trigger.

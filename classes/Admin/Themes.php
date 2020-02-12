@@ -35,6 +35,76 @@ class PUM_Admin_Themes {
 	}
 
 	/**
+	 * Ensures integrity of values.
+	 *
+	 * @param array $values
+	 *
+	 * @return array
+	 */
+	public static function parse_values( $values = [] ) {
+		$defaults = self::defaults();
+
+		if ( empty( $values ) ) {
+			return $defaults;
+		}
+
+		$values = self::fill_missing_defaults( $values );
+
+		return $values;
+	}
+
+	/**
+	 * Fills default settings only when missing.
+	 *
+	 * Excludes checkbox type fields where a false value is represented by the field being unset.
+	 *
+	 * @param array $settings
+	 *
+	 * @return array
+	 */
+	public static function fill_missing_defaults( $settings = [] ) {
+		$excluded_field_types = [ 'checkbox', 'multicheck' ];
+
+		$defaults = self::defaults();
+		foreach ( $defaults as $field_id => $default_value ) {
+			$field = PUM_Utils_Fields::get_field( self::fields(), $field_id );
+			if ( isset( $settings[ $field_id ] ) || in_array( $field['type'], $excluded_field_types ) ) {
+				continue;
+			}
+
+			$settings[ $field_id ] = $default_value;
+		}
+
+		return $settings;
+
+	}
+
+	/**
+	 * Parse & prepare values for form rendering.
+	 *
+	 * Add additional data for license_key fields, split the measure fields etc.
+	 *
+	 * @param $settings
+	 *
+	 * @return mixed
+	 */
+	public static function render_form_values( $settings ) {
+		foreach ( $settings as $key => $value ) {
+			$field = PUM_Utils_Fields::get_field( self::fields(), $key );
+
+
+			if ( $field ) {
+				switch ( $field['type'] ) {
+					case 'measure':
+						break;
+				}
+			}
+		}
+
+		return $settings;
+	}
+
+	/**
 	 * Render the settings meta box wrapper and JS vars.
 	 */
 	public static function render_settings_meta_box() {
@@ -43,11 +113,7 @@ class PUM_Admin_Themes {
 		$theme = pum_get_theme( $post->ID );
 
 		// Get the meta directly rather than from cached object.
-		$settings = $theme->get_settings();
-
-		if ( empty( $settings ) ) {
-			$settings = self::defaults();
-		}
+		$settings = self::parse_values( $theme->get_settings() );
 
 		wp_nonce_field( basename( __FILE__ ), 'pum_theme_settings_nonce' );
 		wp_enqueue_script( 'popup-maker-admin' );
@@ -60,7 +126,7 @@ class PUM_Admin_Themes {
 					'sections' => self::sections(),
 					'fields'   => self::fields(),
 				),
-				'current_values' => self::parse_values( $settings ),
+				'current_values' => self::render_form_values( $settings ),
 			) ) ); ?>;
 		</script>
 
@@ -197,6 +263,9 @@ class PUM_Admin_Themes {
 		// Sanitize form values.
 		$settings = PUM_Utils_Fields::sanitize_fields( $settings, self::fields() );
 
+		// Ensure data integrity.
+		$settings = self::parse_values( $settings );
+
 		//$theme->update_meta( 'popup_theme_settings', $settings );
 		$theme->update_settings( $settings );
 
@@ -249,27 +318,6 @@ class PUM_Admin_Themes {
 				delete_post_meta( $post_id, $field );
 			}
 		}
-	}
-
-	/**
-	 * @param $settings
-	 *
-	 * @return mixed
-	 */
-	public static function parse_values( $settings ) {
-
-		foreach ( $settings as $key => $value ) {
-			$field = PUM_Utils_Fields::get_field( self::fields(), $key );
-
-			if ( $field ) {
-				switch ( $field['type'] ) {
-					case 'measure':
-						break;
-				}
-			}
-		}
-
-		return $settings;
 	}
 
 	/**

@@ -1,0 +1,32 @@
+/*!******************************************************************************
+ * Copyright (c) 2019, Code Atlantic LLC
+ ******************************************************************************/
+.popmake-support-links {
+  list-style: none;
+}
+
+.popmake-support-links li {
+  margin-bottom: 10px;
+}
+
+.popmake-support-links a {
+  color: #20252b;
+  font-size: 1.25em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.popmake-support-links a span {
+  margin-left: 10px;
+}
+
+.popmake-support-links a img {
+  max-height: 24px;
+  max-width: 24px;
+  min-height: 24px;
+  min-width: 24px;
+  position: relative;
+  top: 6px;
+}
+
+/*# sourceMappingURL=pum-admin-support-page.css.map */

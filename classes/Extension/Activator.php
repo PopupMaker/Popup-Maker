@@ -147,7 +147,7 @@ class PUM_Extension_Activator {
 
 			// Handle licensing for extensions with valid ID & not wp repo extensions.
 			if ( $this->extension_id > 0 && ! $this->extension_wp_repo && class_exists( 'PUM_Extension_License' ) ) {
-				new PUM_Extension_License( $this->extension_file, $this->extension_name, $this->extension_version, 'WP Popup Maker', null, null, $this->extension_id );
+				new PUM_Extension_License( $this->extension_file, $this->extension_name, $this->extension_version, 'Popup Maker', null, null, $this->extension_id );
 			}
 
 			add_filter( 'pum_enabled_extensions', array( $this, 'enabled_extensions' ) );

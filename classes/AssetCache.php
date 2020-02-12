@@ -3,6 +3,9 @@
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 class PUM_AssetCache {
 
@@ -64,6 +67,17 @@ class PUM_AssetCache {
 			add_action( 'pum_save_popup', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_save_theme', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_update_core_version', array( __CLASS__, 'reset_cache' ) );
+			add_filter( 'pum_alert_list', array( __CLASS__, 'cache_alert' ) );
+
+			if ( null === get_option( 'pum_files_writeable', null ) ) {
+				add_option( 'pum_files_writeable', true );
+				add_option( '_pum_writeable_notice_dismissed', true );
+				pum_reset_assets();
+			}
+
+			if ( is_admin() && current_user_can( 'edit_posts' ) ) {
+				add_action( 'init', array( __CLASS__, 'admin_notice_check' ) );
+			}
 
 			// Prevent reinitialization.
 			self::$initialized = true;
@@ -86,24 +100,41 @@ class PUM_AssetCache {
 	/**
 	 * Is the cache directory writeable?
 	 *
-	 * @return bool
+	 * @return bool True if directory is writeable
 	 */
 	public static function writeable() {
-		// TODO Remove this once all extensions have been thoroughly updated with time to get them to users.
 		if ( self::$disabled ) {
 			return false;
 		}
 
-		// Check and create cachedir
-		if ( ! is_dir( self::get_cache_dir() ) ) {
+		// If we have already determined files to not be writeable, go ahead and return.
+		if ( true != get_option( 'pum_files_writeable', true ) ) {
+			return false;
+		}
 
-			if ( ! function_exists( 'WP_Filesystem' ) ) {
-				require_once( ABSPATH . 'wp-admin/includes/file.php' );
+		global $wp_filesystem;
+
+		if ( ! function_exists( 'WP_Filesystem' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+		}
+
+		$results = WP_Filesystem();
+
+		if ( true !== $results ) {
+			// Prevents this from running again and set to show the admin notice.
+			update_option( 'pum_files_writeable', false );
+			update_option( '_pum_writeable_notice_dismissed', false );
+			if ( ! is_null( $results ) && is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->has_errors() ) {
+				$error = $wp_filesystem->errors->get_error_message();
+				PUM_Utils_Logging::instance()->log( sprintf( 'Cache directory is not writeable due to filesystem error. Error given: %s', esc_html( $error ) ) );
+			} else {
+				PUM_Utils_Logging::instance()->log( 'Cache directory is not writeable due to incorrect filesystem method.' );
 			}
+			return false;
+		}
 
-			WP_Filesystem();
-
-			global $wp_filesystem;
+		// Checks and create cachedir.
+		if ( ! is_dir( self::get_cache_dir() ) ) {
 
 			/** @var WP_Filesystem_Base $wp_filesystem */
 			$wp_filesystem->mkdir( self::get_cache_dir() );
@@ -218,6 +249,7 @@ class PUM_AssetCache {
 		/**
 		 *  0 Core
 		 *  5 Extensions
+		 *  8 Integrations
 		 * 10 Per Popup JS
 		 */
 		$js = array(
@@ -305,7 +337,7 @@ class PUM_AssetCache {
 	 */
 	public static function generate_css() {
 		// Include core styles so we can eliminate another stylesheet.
-		$core_css = file_get_contents( Popup_Maker::$DIR . 'assets/css/site' . self::$suffix . '.css' );
+		$core_css = file_get_contents( Popup_Maker::$DIR . 'assets/css/pum-site' . (is_rtl() ? '-rtl' : '') . self::$suffix . '.css' );
 
 		/**
 		 *  0 Core
@@ -518,10 +550,66 @@ class PUM_AssetCache {
 	}
 
 	/**
-	 * @param $theme_id
+	 * Adds admin notice if the files are not writeable.
+	 *
+	 * @param array $alerts The alerts currently in the alert system.
+	 * @return array Alerts for the alert system.
+	 * @since 1.9.0
 	 */
-	public static function generate_popup_theme_style( $theme_id ) {
+	public static function cache_alert( $alerts ) {
+		if ( self::should_not_show_alert() ) {
+			return $alerts;
+		}
+
+		$undo_url     = add_query_arg( 'pum_writeable_notice_check', 'undo' );
+		$dismiss_url  = add_query_arg( 'pum_writeable_notice_check', 'dismiss' );
+
+		ob_start();
+		?>
+		<ul>
+			<li><a href="<?php echo esc_attr( $undo_url ); ?>"><strong><?php esc_html_e( 'Try to create cache again', 'popup-maker' ); ?></strong></a></li>
+			<li><a href="<?php echo esc_attr( $dismiss_url ); ?>" class="pum-dismiss"><?php esc_html_e( 'Keep current method', 'popup-maker' ); ?></a></li>
+			<li><a href="https://docs.wppopupmaker.com/article/521-debugging-filesystem-errors?utm_source=filesystem-error-alert&utm_medium=inline-doclink&utm_campaign=filesystem-error" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a></li>
+		</ul>
+		<?php
+		$html = ob_get_clean();
+		$alerts[] = array(
+			'code'        => 'pum_writeable_notice',
+			'type'        => 'warning',
+			'message'     => esc_html__( "Popup Maker detected an issue with your file system's ability and is unable to create & save cached assets for your popup styling and settings. This may lead to suboptimal performance. Please check your filesystem and contact your hosting provide to ensure Popup Maker can create and write to cache files.", 'popup-maker' ),
+			'html'        => $html,
+			'priority'    => 1000,
+			'dismissible' => '2 weeks',
+			'global'      => true,
+		);
+		return $alerts;
 	}
 
+	/**
+	 * Checks if any options have been clicked from admin notices.
+	 *
+	 * @since 1.9.0
+	 */
+	public static function admin_notice_check() {
+		if ( isset( $_GET['pum_writeable_notice_check'] ) ) {
+			// If either dismiss or try again button is clicked, hide the admin notice.
+			update_option( '_pum_writeable_notice_dismissed', true );
+			if ( 'undo' === $_GET['pum_writeable_notice_check'] ) {
+				// If try again is clicked, remove flag.
+				update_option( 'pum_files_writeable', true );
+			} else {
+				pum_update_option( 'disable_asset_caching', true );
+			}
+		}
+	}
 
+	/**
+	 * Whether or not we should show admin notice
+	 *
+	 * @since 1.9.0
+	 * @return bool True if notice should not be shown
+	 */
+	public static function should_not_show_alert() {
+		return true == get_option( 'pum_files_writeable', true ) || true == get_option( '_pum_writeable_notice_dismissed', true );
+	}
 }

@@ -68,13 +68,13 @@ class PUM_Helpers {
 	/**
 	 * Sort array by priority value
 	 *
-	 * @deprecated 1.7.20
-	 * @see        PUM_Utils_Array::sort_by_priority instead.
-	 *
 	 * @param $a
 	 * @param $b
 	 *
 	 * @return int
+	 * @see        PUM_Utils_Array::sort_by_priority instead.
+	 *
+	 * @deprecated 1.7.20
 	 */
 	public static function sort_by_priority( $a, $b ) {
 		return PUM_Utils_Array::sort_by_priority( $a, $b );
@@ -84,14 +84,14 @@ class PUM_Helpers {
 	/**
 	 * Sort nested arrays with various options.
 	 *
+	 * @param array $array
+	 * @param string $type
+	 * @param bool $reverse
+	 *
+	 * @return array
 	 * @deprecated 1.7.20
 	 * @see        PUM_Utils_Array::sort instead.
 	 *
-	 * @param array  $array
-	 * @param string $type
-	 * @param bool   $reverse
-	 *
-	 * @return array
 	 */
 	public static function sort_array( $array = array(), $type = 'key', $reverse = false ) {
 		return PUM_Utils_Array::sort( $array, $type, $reverse );
@@ -180,6 +180,47 @@ class PUM_Helpers {
 			$results = array(
 				'items'       => $terms,
 				'total_count' => $include_total ? wp_count_terms( $taxonomies, $total_args ) : null,
+			);
+
+			$queries[ $key ] = $results;
+		} else {
+			$results = $queries[ $key ];
+		}
+
+		return ! $include_total ? $results['items'] : $results;
+	}
+
+
+	/**
+	 * @param array $args
+	 * @param bool $include_total
+	 *
+	 * @return array|mixed
+	 */
+	public static function user_selectlist_query( $args = array(), $include_total = false ) {
+
+		$args = wp_parse_args( $args, array(
+			'role'        => null,
+			'count_total' => ! $include_total ? true : false,
+		) );
+
+		// Query Caching.
+		static $queries = array();
+
+		$key = md5( serialize( $args ) );
+
+		if ( ! isset( $queries[ $key ] ) ) {
+			$query = new WP_User_Query( $args );
+
+			$users = array();
+			foreach ( $query->get_results() as $user ) {
+				/** @var WP_User $user */
+				$users[ $user->ID ] = $user->display_name;
+			}
+
+			$results = array(
+				'items'       => $users,
+				'total_count' => $query->get_total(),
 			);
 
 			$queries[ $key ] = $results;

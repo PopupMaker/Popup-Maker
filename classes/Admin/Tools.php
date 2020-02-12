@@ -56,7 +56,7 @@ class PUM_Admin_Tools {
 
 		if ( ! empty( self::$notices ) ) {
 			foreach ( self::$notices as $notice ) { ?>
-                <div class="notice notice-<?php esc_attr_e( $notice['type'] ); ?> is-dismissible">
+                <div class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> is-dismissible">
                     <p><strong><?php esc_html_e( $notice['message'] ); ?></strong></p>
                     <button type="button" class="notice-dismiss">
                         <span class="screen-reader-text"><?php _e( 'Dismiss this notice.', 'popup-maker' ); ?></span>

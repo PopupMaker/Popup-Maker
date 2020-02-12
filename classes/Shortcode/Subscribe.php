@@ -493,7 +493,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 		) ); ?>
 
 
-		<form class="<?php esc_attr_e( $classes ); ?>" data-settings="<?php esc_attr_e( PUM_Utils_Array::safe_json_encode( $data_attr ) ); ?>">
+		<form class="<?php echo esc_attr( $classes ); ?>" data-settings="<?php echo esc_attr( PUM_Utils_Array::safe_json_encode( $data_attr ) ); ?>">
 
 			<?php do_action( 'pum_sub_form_before', $atts ); ?>
 
@@ -511,7 +511,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							<?php if ( ! $atts['disable_labels'] ) : ?>
 								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_name']; ?></label>
 							<?php endif; ?>
-							<input type="text" name="name" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_name'] ); ?>" />
+							<input type="text" name="name" <?php echo $required; ?> placeholder="<?php echo esc_attr( $atts['placeholder_name'] ); ?>" />
 						</div>
 
 						<?php
@@ -523,7 +523,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							<?php if ( ! $atts['disable_labels'] ) : ?>
 								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_fname']; ?></label>
 							<?php endif; ?>
-							<input type="text" name="fname" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_fname'] ); ?>" />
+							<input type="text" name="fname" <?php echo $required; ?> placeholder="<?php echo esc_attr( $atts['placeholder_fname'] ); ?>" />
 						</div>
 
 						<?php
@@ -535,14 +535,14 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							<?php if ( ! $atts['disable_labels'] ) : ?>
 								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_fname']; ?></label>
 							<?php endif; ?>
-							<input type="text" name="fname" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_fname'] ); ?>" />
+							<input type="text" name="fname" <?php echo $required; ?> placeholder="<?php echo esc_attr( $atts['placeholder_fname'] ); ?>" />
 						</div>
 
 						<div class="pum-form__field  pum-form__field--lname  pum-sub-form-field  pum-sub-form-field--lname">
 							<?php if ( ! $atts['disable_labels'] ) : ?>
 								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_lname']; ?></label>
 							<?php endif; ?>
-							<input type="text" name="lname" <?php echo $required; ?> placeholder="<?php esc_attr_e( $atts['placeholder_lname'] ); ?>" />
+							<input type="text" name="lname" <?php echo $required; ?> placeholder="<?php echo esc_attr( $atts['placeholder_lname'] ); ?>" />
 						</div>
 
 						<?php
@@ -555,7 +555,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 				<?php if ( ! $atts['disable_labels'] ) : ?>
 					<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_email']; ?></label>
 				<?php endif; ?>
-				<input type="email" name="email" required placeholder="<?php esc_attr_e( $atts['placeholder_email'] ); ?>" />
+				<input type="email" name="email" required placeholder="<?php echo esc_attr( $atts['placeholder_email'] ); ?>" />
 			</div>
 
 			<?php do_action( 'pum_sub_form_fields', $atts ); ?>

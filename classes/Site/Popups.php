@@ -51,11 +51,11 @@ class PUM_Site_Popups {
 	/**
 	 * Returns the current popup.
 	 *
-	 * @deprecated 1.8.0
-	 *
 	 * @param bool|object|null $new_popup
 	 *
 	 * @return null|PUM_Popup
+	 *
+	 * @deprecated 1.8.0
 	 */
 	public static function current_popup( $new_popup = false ) {
 		global $popup;

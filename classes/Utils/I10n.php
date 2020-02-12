@@ -155,7 +155,7 @@ class PUM_Utils_I10n {
 		$locale_part_re = '[a-z]{2,}';
 		$locale_re      = "($locale_part_re(\-$locale_part_re)?)";
 
-		if ( preg_match_all( "/$locale_re/i", $_SERVER['HTTP_ACCEPT_LANGUAGE'], $matches ) ) {
+		if ( preg_match_all( "/$locale_re/i", isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '', $matches ) ) {
 			return $matches[0];
 		} else {
 			return array();

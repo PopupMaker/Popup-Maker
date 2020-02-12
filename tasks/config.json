@@ -1,0 +1,54 @@
+{
+  "root": {
+    "dir": "./",
+    "dev": "./assets",
+    "dist": "./assets",
+    "release": "./release",
+    "build": "./build"
+  },
+  "css": {
+    "dev": "sass",
+    "dist": "css",
+    "parts": "parts",
+    "extensions": "*.+(css|scss)",
+    "uncss": false
+  },
+  "js": {
+    "dev": "js/src",
+    "dist": "js",
+    "parts": "modules",
+    "extensions": [
+      ".json",
+      ".js"
+    ]
+  },
+  "modules": {
+    "node": "./node_modules",
+    "bower": "./bower_components"
+  },
+  "build": {
+    "files": "./**/*.*",
+    "ignore": [
+      "./bin/**",
+      "./build/**",
+      "./release/**",
+      "./tasks/**",
+      "./node_modules/**",
+      "./vendor/**",
+      "./assets/js/src/**",
+      "./.browserslistrc",
+      "./.editorconfig",
+      "./.eslintignore",
+      "./.gitattributes",
+      "./.gitignore",
+      "./.jshintrc",
+      "./.scrutinizer.yml",
+      "./apigen.neon",
+      "./composer.json",
+      "./gulpfile.js",
+      "./package.json",
+      "./package-lock.json",
+      "./phpci.yml"
+    ]
+  }
+}

@@ -7,23 +7,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class PUM_Integrations
+ */
 class PUM_Integrations {
 
+	/**
+	 * @var PUM_Abstract_Integration[]|PUM_Abstract_Integration_Form[]
+	 */
 	public static $integrations = array();
 
+	/**
+	 * @var bool
+	 */
 	public static $preload_posts = false;
 
 	public static $form_success;
 
+	public static $form_submission;
+
 	public static function init() {
-		self::$integrations = array(
-			'calderaforms'   => defined( 'CFCORE_VER' ) && CFCORE_VER,
-			'nf'             => class_exists( 'Ninja_Forms' ) && ! ( version_compare( get_option( 'ninja_forms_version', '0.0.0' ), '3.0', '<' ) || get_option( 'ninja_forms_load_deprecated', false ) ),
-			'gf'             => class_exists( 'RGForms' ),
-			'cf7'            => class_exists( 'WPCF7' ) || ( defined( 'WPCF7_VERSION' ) && WPCF7_VERSION ),
-			'kingcomposer'   => class_exists( 'KingComposer' ) || defined( 'KC_VERSION' ),
-			'visualcomposer' => defined( 'WPB_VC_VERSION' ) || defined( 'FL_BUILDER_VERSION' ),
-		);
+		self::$integrations = apply_filters( 'pum_integrations', [
+			// Forms
+			'ninjaforms'     => new PUM_Integration_Form_NinjaForms,
+			'gravityforms'   => new PUM_Integration_Form_GravityForms,
+			'contactform7'   => new PUM_Integration_Form_ContactForm7,
+			'calderaforms'   => new PUM_Integration_Form_CalderaForms,
+			'mc4wp'          => new PUM_Integration_Form_MC4WP,
+			'wpforms'        => new PUM_Integration_Form_WPForms,
+			// Builders
+			'kingcomposer'   => new PUM_Integration_Builder_KingComposer,
+			'visualcomposer' => new PUM_Integration_Builder_VisualComposer,
+		] );
 
 		self::$preload_posts = isset( $_GET['page'] ) && $_GET['page'] == 'pum-settings';
 
@@ -36,10 +51,109 @@ class PUM_Integrations {
 		add_action( 'init', array( __CLASS__, 'wp_init_late' ), 99 );
 		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
 		add_filter( 'pum_popup_post_type_args', array( __CLASS__, 'popup_post_type_args' ) );
+		add_filter( 'pum_generated_js', array( __CLASS__, 'generated_js' ) );
 		add_filter( 'pum_generated_css', array( __CLASS__, 'generated_css' ) );
 		add_filter( 'pum_popup_settings', array( __CLASS__, 'popup_settings' ), 10, 2 );
 
 		PUM_Integration_GoogleFonts::init();
+	}
+
+	/**
+	 * Checks if a 3rd party integration should be enabled.
+	 *
+	 * @param $key
+	 *
+	 * @return bool
+	 */
+	public static function enabled( $key ) {
+		return (bool) isset( self::$integrations[ $key ] ) && self::$integrations[ $key ]->enabled();
+	}
+
+	/**
+	 * @return PUM_Abstract_Integration_Form[]
+	 */
+	public static function get_enabled_form_integrations() {
+		$enabled_forms = [];
+
+		foreach ( self::$integrations as $object ) {
+			if ( $object instanceof PUM_Abstract_Integration_Form && $object->enabled() ) {
+				$enabled_forms[ $object->key ] = $object;
+			}
+		}
+
+		return $enabled_forms;
+	}
+
+	/**
+	 * Returns an array of value=>labels for select fields containing enabled form plugin integrations.
+	 *
+	 * @return array
+	 */
+	public static function get_enabled_forms_selectlist() {
+		$enabled_form_integrations = self::get_enabled_form_integrations();
+
+		$form_types = [];
+
+		foreach ( $enabled_form_integrations as $key => $object ) {
+			$form_types[ $key ] = $object->label();
+		}
+
+		return $form_types;
+	}
+
+	/**
+	 * @param $key
+	 *
+	 * @return bool|PUM_Abstract_Integration|PUM_Abstract_Integration_Form
+	 */
+	public static function get_integration_info( $key ) {
+		return isset( self::$integrations[ $key ] ) ? self::$integrations[ $key ] : false;
+	}
+
+	/**
+	 * @param string $key
+	 *
+	 * @return array
+	 */
+	public static function get_form_provider_forms( $key ) {
+		$integration = self::get_integration_info( $key );
+
+		if ( ! ( $integration instanceof PUM_Abstract_Integration_Form ) || ! $integration->enabled() ) {
+			return [];
+		}
+
+		return $integration->get_forms();
+	}
+
+	/**
+	 * @param $key
+	 * @param $id
+	 *
+	 * @return array|mixed
+	 */
+	public static function get_form_provider_form( $key, $id ) {
+		$integration = self::get_integration_info( $key );
+
+		if ( ! ( $integration instanceof PUM_Abstract_Integration_Form ) || ! $integration->enabled() ) {
+			return [];
+		}
+
+		return $integration->get_form( $id );
+	}
+
+	/**
+	 * @param $key
+	 *
+	 * @return array
+	 */
+	public static function get_form_provider_forms_selectlist( $key ) {
+		$integration = self::get_integration_info( $key );
+
+		if ( ! ( $integration instanceof PUM_Abstract_Integration_Form ) || ! $integration->enabled() ) {
+			return [];
+		}
+
+		return $integration->get_form_selectlist();
 	}
 
 	/**
@@ -51,14 +165,16 @@ class PUM_Integrations {
 	 */
 	public static function settings_fields( $fields = array() ) {
 
-		foreach ( self::$integrations as $key => $enabled ) {
-			if ( ! $enabled ) {
+		foreach ( self::$integrations as $key => $integration ) {
+			if ( ! ( $integration instanceof PUM_Interface_Integration_Settings ) || ! $integration->enabled() ) {
 				continue;
 			}
 
-			switch ( $key ) {
-
-			}
+			// TODO LEFT OFF HERE.
+			// TODO Could this be done via add_filter( 'pum_settings_fields', array( $integration, 'append_fields' ) );
+			// TODO If so, do we do it inside the __construct for the PUM_Abstract_Integration, or the Integration_{Provider} class itself.
+			// TODO Alternatively do we simply loop over all enabled providers during self::init() and add the filters/hooks there instead.
+			$fields = $integration->append_fields( $fields );
 		}
 
 		return $fields;
@@ -107,17 +223,6 @@ class PUM_Integrations {
 	}
 
 	/**
-	 * Checks if a 3rd party integration should be enabled.
-	 *
-	 * @param $tag
-	 *
-	 * @return bool
-	 */
-	public static function enabled( $tag ) {
-		return (bool) isset( self::$integrations[ $tag ] ) && self::$integrations[ $tag ];
-	}
-
-	/**
 	 * Runs during admin_init
 	 */
 	public static function admin_init() {
@@ -160,30 +265,46 @@ class PUM_Integrations {
 
 
 	/**
+	 * @param array $js
+	 *
+	 * @return array
+	 */
+	public static function generated_js( $js = [] ) {
+
+		foreach ( self::$integrations as $integration ) {
+			if ( $integration->enabled() && method_exists( $integration, 'custom_scripts' ) ) {
+				$js = $integration->custom_scripts( $js );
+			}
+		}
+
+		return $js;
+	}
+
+	/**
 	 * @param array $css
 	 *
 	 * @return array $css
 	 */
 	public static function generated_css( $css = array() ) {
 
-		if ( self::enabled( 'calderaforms' ) ) {
-			// puts the google places autocomplete dropdown results above the bootstrap modal 1050 zindex.
-			$css['calderaforms'] = array( 'content' => ".pac-container { z-index: 2000000000 !important; }\n" );
+		foreach ( self::$integrations as $integration ) {
+			if ( $integration->enabled() && method_exists( $integration, 'custom_styles' ) ) {
+				$css = $integration->custom_styles( $css );
+			}
 		}
 
 		return $css;
 	}
 
-
 	/**
 	 * Modify popup settings.
 	 *
 	 * @param array $settings
-	 * @param $popup_id
+	 * @param int $popup_id
 	 *
 	 * @return array
 	 */
-	public static function popup_settings( $settings = array(), $popup_id ) {
+	public static function popup_settings( $settings, $popup_id ) {
 
 		if ( is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 			return $settings;
@@ -198,10 +319,20 @@ class PUM_Integrations {
 			$form_popup_id = isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false;
 		}
 
+		// Should it reopen? Only if all of the following are true.
+		$should_reopen = [
+			// Form popup was submitted and matches this popup.
+			$form_popup_id && $popup_id == $form_popup_id,
+			// Form reopen was not marked disable.
+			empty( $settings['disable_form_reopen'] ) || ! $settings['disable_form_reopen'],
+			// Close on form submission is disbaled, or has a timer larger than 0.
+			( empty( $settings['close_on_form_submission'] ) || ! $settings['close_on_form_submission'] || ( $settings['close_on_form_submission'] && $settings['close_on_form_submission_delay'] > 0 ) ),
+		];
+
 		/**
 		 * If submission exists for this popup remove auto open triggers and add an admin_debug trigger to reshow the popup.
 		 */
-		if ( ( empty( $settings['disable_form_reopen'] ) || ! $settings['disable_form_reopen'] ) && $form_popup_id && $popup_id == $form_popup_id ) {
+		if ( ! in_array( false, $should_reopen ) ) {
 			$triggers = ! empty( $settings['triggers'] ) ? $settings['triggers'] : array();
 
 			foreach ( $triggers as $key => $trigger ) {
@@ -221,6 +352,8 @@ class PUM_Integrations {
 
 	/**
 	 * Add various extra global pum_vars js values.
+	 *
+	 * Primarily used to pass form success options for custom integrations and custom code.
 	 *
 	 * @param array $vars
 	 *
@@ -252,7 +385,48 @@ class PUM_Integrations {
 			$vars['form_success'] = self::$form_success;
 		}
 
+		if ( ! empty( self::$form_submission ) ) {
+			// Remap values from PHP underscore_case to JS camelCase
+			$vars['form_submission'] = PUM_Utils_Array::remap_keys( self::$form_submission, [
+				'form_provider'    => 'formProvider',
+				'form_id'          => 'formId',
+				'form_instance_id' => 'formInstanceId',
+				'popup_id'         => 'popupId',
+			] );
+		}
+
 		return $vars;
+	}
+
+	/**
+	 * Returns array of options for a select field to select an integrated form.
+	 *
+	 * @return array
+	 */
+	public static function get_integrated_forms_selectlist() {
+		$enabled_form_integrations = PUM_Integrations::get_enabled_form_integrations();
+
+		$options = [];
+
+		foreach ( $enabled_form_integrations as $integration ) {
+			switch ( $integration->key ) {
+				default:
+					$group_options = [
+						$integration->key . '_any' => sprintf( __( 'Any %s Form', 'popup-maker' ), $integration->label() ),
+					];
+
+					foreach ( $integration->get_form_selectlist() as $formId => $formLabel ) {
+						// ex. ninjaforms_1, contactform7_55
+						$group_options[ $integration->key . '_' . $formId ] = $formLabel;
+					}
+
+					$options[ $integration->label() ] = $group_options;
+
+					break;
+			}
+		}
+
+		return $options;
 	}
 
 }

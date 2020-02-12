@@ -23,21 +23,21 @@ class PUM_Admin_Ajax {
 		);
 
 		$object_type = sanitize_text_field( $_REQUEST['object_type'] );
+		$include     = ! empty( $_REQUEST['include'] ) ? wp_parse_id_list( $_REQUEST['include'] ) : [];
+		$exclude     = ! empty( $_REQUEST['exclude'] ) ? wp_parse_id_list( $_REQUEST['exclude'] ) : [];
+
+		if ( ! empty( $include ) ) {
+			$exclude = array_merge( $include, $exclude );
+		}
 
 		switch ( $object_type ) {
 			case 'post_type':
 				$post_type = ! empty( $_REQUEST['object_key'] ) ? sanitize_text_field( $_REQUEST['object_key'] ) : 'post';
 
-				$include = ! empty( $_REQUEST['include'] ) ? wp_parse_id_list( $_REQUEST['include'] ) : null;
-				$exclude = ! empty( $_REQUEST['exclude'] ) ? wp_parse_id_list( $_REQUEST['exclude'] ) : null;
-
-				if ( ! empty( $include ) && ! empty( $exclude ) ) {
-					$exclude = array_merge( $include, $exclude );
-				}
-
-				if ( $include ) {
+				if ( ! empty( $include ) ) {
 					$include_query = PUM_Helpers::post_type_selectlist_query( $post_type, array(
-						'post__in' => $include,
+						'post__in'       => $include,
+						'posts_per_page' => - 1,
 					), true );
 
 					foreach ( $include_query['items'] as $id => $name ) {
@@ -47,7 +47,7 @@ class PUM_Admin_Ajax {
 						);
 					}
 
-					$results['total_count'] += $include_query['total_count'];
+					$results['total_count'] += (int) $include_query['total_count'];
 				}
 
 				$query = PUM_Helpers::post_type_selectlist_query( $post_type, array(
@@ -64,22 +64,16 @@ class PUM_Admin_Ajax {
 					);
 				}
 
-				$results['total_count'] += $query['total_count'];
-
+				$results['total_count'] += (int) $query['total_count'];
 				break;
+
 			case 'taxonomy':
 				$taxonomy = ! empty( $_REQUEST['object_key'] ) ? sanitize_text_field( $_REQUEST['object_key'] ) : 'category';
 
-				$include = ! empty( $_REQUEST['include'] ) ? wp_parse_id_list( $_REQUEST['include'] ) : null;
-				$exclude = ! empty( $_REQUEST['exclude'] ) ? wp_parse_id_list( $_REQUEST['exclude'] ) : null;
-
-				if ( ! empty( $include ) && ! empty( $exclude ) ) {
-					$exclude = array_merge( $include, $exclude );
-				}
-
-				if ( $include ) {
+				if ( ! empty( $include ) ) {
 					$include_query = PUM_Helpers::taxonomy_selectlist_query( $taxonomy, array(
 						'include' => $include,
+						'number'  => 0,
 					), true );
 
 					foreach ( $include_query['items'] as $id => $name ) {
@@ -89,7 +83,7 @@ class PUM_Admin_Ajax {
 						);
 					}
 
-					$results['total_count'] += $include_query['total_count'];
+					$results['total_count'] += (int) $include_query['total_count'];
 				}
 
 				$query = PUM_Helpers::taxonomy_selectlist_query( $taxonomy, array(
@@ -106,9 +100,50 @@ class PUM_Admin_Ajax {
 					);
 				}
 
-				$results['total_count'] += $query['total_count'];
+				$results['total_count'] += (int) $query['total_count'];
+				break;
+			case 'user':
+				$user_role = ! empty( $_REQUEST['object_key'] ) ? $_REQUEST['object_key'] : null;
+
+				if ( ! empty( $include ) ) {
+					$include_query = PUM_Helpers::user_selectlist_query( array(
+						'role'    => $user_role,
+						'include' => $include,
+						'number'  => - 1,
+					), true );
+
+					foreach ( $include_query['items'] as $id => $name ) {
+						$results['items'][] = array(
+							'id'   => $id,
+							'text' => $name,
+						);
+					}
+
+					$results['total_count'] += (int) $include_query['total_count'];
+				}
+
+				$query = PUM_Helpers::user_selectlist_query( array(
+					'role'    => $user_role,
+					'search'  => ! empty( $_REQUEST['s'] ) ? '*' . $_REQUEST['s'] . '*' : null,
+					'paged'   => ! empty( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : null,
+					'exclude' => $exclude,
+					'number'  => 10,
+				), true );
+
+				foreach ( $query['items'] as $id => $name ) {
+					$results['items'][] = array(
+						'id'   => $id,
+						'text' => $name,
+					);
+				}
+
+				$results['total_count'] += (int) $query['total_count'];
 				break;
 		}
+
+		// Take out keys which were only used to deduplicate.
+		$results['items'] = array_values( $results['items'] );
+
 		echo PUM_Utils_Array::safe_json_encode( $results );
 		die();
 	}

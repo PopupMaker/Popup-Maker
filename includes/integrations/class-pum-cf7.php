@@ -151,7 +151,7 @@ class PUM_CF7_Integration {
 			            $settings['closedelay'] = $settings['closedelay'] / 1000;
 		            } ?>
 
-		            <input type="number" id="wpcf7-pum-closedelay" min="0" step="1" name="wpcf7-pum[closedelay]" style="width: 100px;" value="<?php esc_attr_e( $settings['closedelay'] ); ?>" /><?php _e( 'seconds', 'popup-maker' ); ?>
+		            <input type="number" id="wpcf7-pum-closedelay" min="0" step="1" name="wpcf7-pum[closedelay]" style="width: 100px;" value="<?php echo esc_attr( $settings['closedelay'] ); ?>" /><?php _e( 'seconds', 'popup-maker' ); ?>
 	            </td>
             </tr>
             <tr>
@@ -169,7 +169,7 @@ class PUM_CF7_Integration {
                 <td>
                     <select id="wpcf7-pum-openpopup_id" name="wpcf7-pum[openpopup_id]">
 						<?php foreach ( self::get_popup_list() as $option ) { ?>
-                            <option value="<?php esc_attr_e( $option['value'] ); ?>" <?php selected( $settings['openpopup_id'], $option['value'] ); ?>><?php echo $option['label']; ?></option>
+                            <option value="<?php echo esc_attr( $option['value'] ); ?>" <?php selected( $settings['openpopup_id'], $option['value'] ); ?>><?php echo $option['label']; ?></option>
 						<?php } ?>
                     </select>
                 </td>
@@ -218,7 +218,7 @@ class PUM_CF7_Integration {
 	public static function get_popup_list() {
 		$popup_list = array(
 			array(
-				'value' => '',
+				'value' => 0,
 				'label' => __( 'Select a popup', 'popup-maker' ),
 			),
 		);

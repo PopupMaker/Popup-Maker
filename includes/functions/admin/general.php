@@ -21,17 +21,13 @@ function pum_typenow() {
 	// try to pick it up from the query string
 	if ( ! empty( $_GET['post_type'] ) ) {
 		return sanitize_text_field( $_GET['post_type'] );
-	} elseif ( ! empty( $_GET['post'] ) ) {
+	} elseif ( ! empty( $_GET['post'] ) && $_GET['post'] > 0 ) {
 		$post = get_post( $_GET['post'] );
-
-		return $post->post_type;
-	} elseif ( ! empty( $_POST['post_ID'] ) ) {
+	} elseif ( ! empty( $_POST['post_ID'] ) && $_POST['post_ID'] > 0 ) {
 		$post = get_post( $_POST['post_ID'] );
-
-		return $post->post_type;
 	}
 
-	return false;
+	return isset( $post ) && is_object( $post ) && $post->ID > 0 ? $post->post_type : false;
 }
 
 /**

@@ -472,7 +472,7 @@ class Popmake_Fields {
 	 */
 	public function field_before( $args = array() ) {
 		$classes = is_array( $args ) ? $this->field_classes( $args ) : ( is_string( $args ) ? $args : '' );
-		?><div class="<?php esc_attr_e( $classes ); ?>"><?php
+		?><div class="<?php echo esc_attr( $classes ); ?>"><?php
 	}
 
 	/**
@@ -519,7 +519,7 @@ class Popmake_Fields {
 
 	public function field_description( $args ) {
 		if ( $args['desc'] != '' ) { ?>
-			<p class="pum-desc"><?php esc_html_e( $args['desc'] ); ?></p><?php
+			<p class="pum-desc"><?php echo esc_html( $args['desc'] ); ?></p><?php
 		}
 /*
 		if ( $args['doclink'] != '' ) { ?>
@@ -530,8 +530,8 @@ class Popmake_Fields {
 
 	public function field_label( $args ) {
 		if ( ! empty( $args['label'] ) ) { ?>
-			<label for="<?php esc_attr_e( $args['id'] ); ?>"><?php
-				esc_html_e( $args['label'] );
+			<label for="<?php echo esc_attr( $args['id'] ); ?>"><?php
+				echo esc_html( $args['label'] );
 				if ( $args['doclink'] != '' ) { ?>
 					<a href="<?php echo esc_url( $args['doclink'] ); ?>" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a><?php
 				} ?>
@@ -583,7 +583,7 @@ class Popmake_Fields {
 	 *
 	 * @param array $values
 	 *
-	 * @return string $input Sanitized value
+	 * @return array|mixed $input Sanitized value
 	 * @internal param array $input The value inputted in the field
 	 *
 	 */
@@ -593,7 +593,7 @@ class Popmake_Fields {
 
 		foreach ( $this->get_all_fields() as $section => $fields ) {
 			foreach ( $fields as $field ) {
-				$value = isset( $settings[ $section ][ $field['id'] ] ) ? $settings[ $section ][ $field['id'] ] : null;
+				$value = isset( $values[ $section ][ $field['id'] ] ) ? $values[ $section ][ $field['id'] ] : null;
 
 				$value = $this->sanitize_field( $field, $value );
 

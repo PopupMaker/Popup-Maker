@@ -18,6 +18,11 @@ class PUM_Cookies {
 	public static $instance;
 
 	/**
+	 * @var bool
+	 */
+	public $preload_posts = false;
+
+	/**
 	 * @var array
 	 */
 	public $cookies;
@@ -35,7 +40,8 @@ class PUM_Cookies {
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
-			self::$instance = new self;
+			self::$instance                = new self;
+			self::$instance->preload_posts = pum_is_popup_editor();
 		}
 
 		return self::$instance;
@@ -68,19 +74,43 @@ class PUM_Cookies {
 	 */
 	public function register_cookies() {
 		$cookies = apply_filters( 'pum_registered_cookies', array(
-			'on_popup_close' => array(
+			'on_popup_close'                  => array(
 				'name' => __( 'On Popup Close', 'popup-maker' ),
 			),
-			'on_popup_open'  => array(
+			'on_popup_open'                   => array(
 				'name' => __( 'On Popup Open', 'popup-maker' ),
 			),
-			'pum_sub_form_success'             => array(
+			'form_submission'                 => [
+				'name'   => __( 'Form Submission', 'popup-maker' ),
+				'fields' => array_merge_recursive( $this->cookie_fields(), [
+					'general' => [
+						'form'          => [
+							'type'    => 'select',
+							'label'   => __( 'Form', 'popup-maker' ),
+							'options' => $this->preload_posts ? array_merge( [
+								'any'                              => __( 'Any Supported Form*', 'popup-maker' ),
+								__( 'Popup Maker', 'popup-maker' ) => [
+									'pumsubform' => __( 'Subscription Form', 'popup-maker' ),
+								],
+							], PUM_Integrations::get_integrated_forms_selectlist() ) : array(),
+							'pri'     => - 1,
+							'std'     => 'any',
+						],
+						'only_in_popup' => [
+							'type'  => 'checkbox',
+							'label' => __( 'Only in this popup', 'popup-maker' ),
+							'std'   => '1',
+						],
+					],
+				] ),
+			],
+			'pum_sub_form_success'            => array(
 				'name' => __( 'Subscription Form: Successful', 'popup-maker' ),
 			),
 			'pum_sub_form_already_subscribed' => array(
 				'name' => __( 'Subscription Form: Already Subscribed', 'popup-maker' ),
 			),
-			'manual'         => array(
+			'manual'                          => array(
 				'name' => __( 'Manual JavaScript', 'popup-maker' ),
 			),
 		) );
@@ -133,6 +163,11 @@ class PUM_Cookies {
 				$cookie['fields'] = $this->cookie_fields();
 			}
 
+			$cookie['fields'] = PUM_Admin_Helpers::parse_tab_fields( $cookie['fields'], array(
+				'has_subtabs' => false,
+				'name'        => '%s',
+			) );
+
 			$this->cookies[ $cookie['id'] ] = $cookie;
 		}
 
@@ -162,9 +197,9 @@ class PUM_Cookies {
 	/**
 	 * Returns the cookie fields used for cookie options.
 	 *
-	 * @uses filter pum_get_cookie_fields
-	 *
 	 * @return array
+	 *
+	 * @uses filter pum_get_cookie_fields
 	 *
 	 */
 	public function cookie_fields() {
@@ -230,12 +265,12 @@ class PUM_Cookies {
 	}
 
 	/**
-	 * @deprecated
-	 *
-	 * @param null $cookie
+	 * @param null  $cookie
 	 * @param array $settings
 	 *
 	 * @return array
+	 * @deprecated
+	 *
 	 */
 	public function validate_cookie( $cookie = null, $settings = array() ) {
 		return $settings;

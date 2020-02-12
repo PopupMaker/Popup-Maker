@@ -19,6 +19,11 @@ class PUM_Triggers {
 	public static $instance;
 
 	/**
+	 * @var bool
+	 */
+	public $preload_posts = false;
+
+	/**
 	 * @var array
 	 */
 	public $triggers;
@@ -35,7 +40,8 @@ class PUM_Triggers {
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
-			self::$instance = new self;
+			self::$instance                = new self;
+			self::$instance->preload_posts = pum_is_popup_editor();
 		}
 
 		return self::$instance;
@@ -68,6 +74,10 @@ class PUM_Triggers {
 				'tabs'            => $this->get_tabs(),
 				'fields'          => array(),
 			) );
+
+			if ( empty ( $trigger['modal_title'] ) && ! empty( $trigger['name'] ) ) {
+				$trigger['modal_title'] = sprintf( _x( '%s Trigger Settings', 'trigger settings modal title', 'popup-maker' ), $trigger['name'] );
+			}
 
 			// Here for backward compatibility to merge in labels properly.
 			$labels         = $this->get_labels();
@@ -120,12 +130,12 @@ class PUM_Triggers {
 	}
 
 	/**
-	 * @deprecated
-	 *
 	 * @param null  $trigger
 	 * @param array $settings
 	 *
 	 * @return array
+	 * @deprecated
+	 *
 	 */
 	public function validate_trigger( $trigger = null, $settings = array() ) {
 		return $settings;
@@ -136,7 +146,7 @@ class PUM_Triggers {
 	 */
 	public function register_triggers() {
 		$triggers = apply_filters( 'pum_registered_triggers', array(
-			'click_open' => array(
+			'click_open'      => array(
 				'name'            => __( 'Click Open', 'popup-maker' ),
 				'modal_title'     => __( 'Click Trigger Settings', 'popup-maker' ),
 				'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Extra Selectors', 'popup-maker' ), '{{data.extra_selectors}}' ),
@@ -158,7 +168,7 @@ class PUM_Triggers {
 					),
 				),
 			),
-			'auto_open'  => array(
+			'auto_open'       => array(
 				'name'            => __( 'Time Delay / Auto Open', 'popup-maker' ),
 				'modal_title'     => __( 'Time Delay Settings', 'popup-maker' ),
 				'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Delay', 'popup-maker' ), '{{data.delay}}' ),
@@ -177,6 +187,35 @@ class PUM_Triggers {
 					),
 				),
 			),
+			'form_submission' => [
+				'name'   => __( 'Form Submission', 'popup-maker' ),
+				//'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Form', 'popup-maker' ), '' ),
+				'fields' => [
+					'general' => [
+						'form'  => [
+							'type'    => 'select',
+							'label'   => __( 'Form', 'popup-maker' ),
+							'options' => $this->preload_posts ? array_merge( [
+								'any'                              => __( 'Any Supported Form*', 'popup-maker' ),
+								__( 'Popup Maker', 'popup-maker' ) => [
+									'pumsubform' => __( 'Subscription Form', 'popup-maker' ),
+								],
+							], PUM_Integrations::get_integrated_forms_selectlist() ) : array(),
+							'std'     => 'any',
+						],
+						'delay' => array(
+							'type'  => 'rangeslider',
+							'label' => __( 'Delay', 'popup-maker' ),
+							'desc'  => __( 'The delay before the popup will open in milliseconds.', 'popup-maker' ),
+							'std'   => 0,
+							'min'   => 0,
+							'max'   => 10000,
+							'step'  => 500,
+							'unit'  => 'ms',
+						),
+					],
+				],
+			],
 
 		) );
 
@@ -228,9 +267,9 @@ class PUM_Triggers {
 	/**
 	 * Returns the cookie fields used for trigger options.
 	 *
+	 * @return array
 	 * @uses filter pum_trigger_cookie_fields
 	 *
-	 * @return array
 	 */
 	public function cookie_fields() {
 
@@ -247,9 +286,9 @@ class PUM_Triggers {
 	/**
 	 * Returns the cookie field used for trigger options.
 	 *
+	 * @return array
 	 * @uses filter pum_trigger_cookie_field
 	 *
-	 * @return array
 	 */
 	public function cookie_field() {
 

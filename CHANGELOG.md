@@ -1,5 +1,26 @@
 ### Unreleased Changes
 
+
+### v1.9.0 - 02/11/2020
+* Feature: New Form Submission trigger with option to choose specific forms for integrated forms.
+* Feature: New Form Submission cookie event with option to choose specific forms.
+* Feature: New Close on Form Submission with optional delay.
+* Feature: WP Forms integration.
+* Feature: Caldera Forms integration.
+* Feature: MailChimp for WordPress integration
+* Improvement: Enhanced asset cache to identify issues with a site's filesystem.
+* Improvement: Various changes to ensure PHP 7.4 compatibility.
+* Improvement: Minimum PHP version updated to v5.6 to match WP core.
+* Improvement: Simplified form integration interfaces to more easily support additional form plugins or custom integrations. Includes full AJAX & non-AJAX form support.
+* Improvement: Added RTL CSS support.
+* Improvement: Added new SVG admin menu icon which plays well with custom admin color schemes. Thanks @KZeni (Kurt Zenisek)
+* Improvement: Simplified form integration apis.
+* Improvement: Various performance improvements.
+* Tweak: Remove unnecessary usage of esc_attr_e causing extra translation calls.
+* Fix: Bug when accept language header is not supplied causes undefined index notice.
+* Fix: Error caused by invalid post ID returned by CF7 when saving new forms.
+* Fix: Bug when selecting more than 10 items in targeting rule post/page select fields.
+
 ### v1.8.14 - 10/24/2019
 * Improvement: Updated nav menu editor walker class for adding custom fields to further improve compatibility.
 * Fix: Ninja Forms popup actions missing.
