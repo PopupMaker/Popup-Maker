@@ -96,6 +96,11 @@ class PUM_Cookies {
 							'pri'     => - 1,
 							'std'     => 'any',
 						],
+						'only_in_popup' => [
+							'type'  => 'checkbox',
+							'label' => __( 'Only in this popup', 'popup-maker' ),
+							'std'   => '1',
+						],
 					],
 				] ),
 			],
