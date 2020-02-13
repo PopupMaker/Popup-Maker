@@ -245,6 +245,12 @@ var PUM;
                     .data('popmake', settings)
                     .trigger('pumInit');
 
+				// Sets up our audio (currently local test audio) and stores it onto the popup.
+                const audio = new Audio('http://example.local/wp-content/uploads/2020/02/when.mp3');
+				audio.addEventListener('canplaythrough', () => {
+					$popup.data('popAudio', audio);
+				});
+
                 return this;
             });
         },
@@ -364,6 +370,14 @@ var PUM;
                         //callback.apply(this);
                     }
                 });
+
+			// If the audio hasn't loaded yet, it wouldn't have been added to the popup.
+            if ( 'undefined' !== typeof $popup.data('popAudio') ) {
+				$popup.data('popAudio').play()
+					.catch((reason) => {
+						console.warn(`Sound was not able to play when popup opened. Reason: ${reason}.`);
+					});
+			}
 
             return this;
         },
