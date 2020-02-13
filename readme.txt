@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, advertising, conversion, responsive popu
 Requires at least: 4.1
 Tested up to: 5.3
 Requires PHP: 5.6
-Stable tag: 1.9.0
+Stable tag: 1.9.1
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -125,7 +125,7 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
-= v1.9.1 - 02/12/2020 =
+= v1.9.1 - 02/13/2020 =
 * Fix: JS error when MailChimp for WordPress was active but no forms on the page.
 
 = v1.9.0 - 02/11/2020 =

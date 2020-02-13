@@ -1,4 +1,6 @@
 ### Unreleased Changes
+
+### v1.9.1 - 02/13/2020
 * Fix: JS error when MailChimp for WordPress was active but no forms on the page.
 
 ### v1.9.0 - 02/11/2020
