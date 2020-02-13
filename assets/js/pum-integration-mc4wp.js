@@ -100,7 +100,7 @@
   var formProvider = 'mc4wp';
   var $ = window.jQuery;
   $(document).ready(function () {
-    if (mc4wp !== undefined) {
+    if (typeof mc4wp !== 'undefined') {
       mc4wp.forms.on('success', function (form, data) {
         var $form = $(form.element),
             formId = form.id,

@@ -7,7 +7,7 @@
 	const $ = window.jQuery;
 
 	$( document ).ready( () => {
-		if ( mc4wp !== undefined ) {
+		if ( typeof mc4wp !== 'undefined' ) {
 			mc4wp.forms.on( 'success', function ( form, data ) {
 				const $form = $( form.element ),
 					formId = form.id,
