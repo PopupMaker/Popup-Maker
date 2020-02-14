@@ -788,6 +788,7 @@ class PUM_Admin_Themes {
 					'main'       => array(
 						'close_text'             => array(
 							'label'       => __( 'Close Button Text', 'popup-maker' ),
+							'desc'        => __( 'To use a Font Awesome icon instead of text, enter the CSS classes such as "fas fa-camera".', 'popup-maker' ),
 							'placeholder' => __( 'CLOSE', 'popup-maker' ),
 							'std'         => __( 'CLOSE', 'popup-maker' ),
 							'priority'    => 10,
