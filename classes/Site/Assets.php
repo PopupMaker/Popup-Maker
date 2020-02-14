@@ -333,7 +333,7 @@ class PUM_Site_Assets {
 	public static function register_styles() {
 		self::$styles_registered = true;
 
-		if ( PUM_AssetCache::enabled() && self::$cache_url ) {
+		if ( PUM_AssetCache::enabled() && false !== self::$cache_url ) {
 			$cached = get_option( 'pum-has-cached-css' );
 
 			if ( ! $cached || self::$debug ) {
