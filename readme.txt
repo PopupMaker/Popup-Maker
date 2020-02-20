@@ -36,7 +36,7 @@ Popup Maker is used on over 400,000 websites and has received over 3,100 5-star 
 
 * This popup plugin has limitless potential with no restrictions. If you can’t get the functionality you’re after, we’ll be happy to help you! Just ask at [https://wppopupmaker.com/support/](https://wppopupmaker.com/support/).
 * Slide Out Popups, Banner Bars, Floating Sticky Popups, Notification Popups, Loading Screen Popups, Video Lightboxes, and Opt-In Form Popups.
-* Our popups support the most popular form building plugins available: Ninja Forms, Gravity Forms, Contact Form 7, & More.
+* Our popups support the most popular form building plugins available: Ninja Forms, Gravity Forms, Contact Form 7 (CF7), Caldera Forms, WP Forms, Mailchimp for WordPress (MC4WP), & More.
 * We support every list building form, including but not limited to: MailChimp, AWeber, InfusionSoft, GetResponse, Constant Contact, Mail Poet, Mad Mimi, Hubspot, and Emma.
 * Use our unique **Popup Editor** to build any content you can imagine inside of our popups, plus control popup sizing, position, animation, and so much more.
 * **Conditions** allow you to target exactly who will (and will not) see your popups. Target any WordPress content such as: posts, pages, and 26 more!
