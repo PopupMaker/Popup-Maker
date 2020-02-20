@@ -53,6 +53,77 @@ class PUM_Helpers {
 		return $shortcodes;
 	}
 
+	/**
+	 * Gets the uploads directory path
+	 *
+	 * @since 1.10
+	 * @param string $path A path to append to end of upload directory URL.
+	 * @return bool|string The uploads directory path or false on failure
+	 */
+	public static function get_upload_dir_path( $path = '' ) {
+		$upload_dir = self::get_upload_dir();
+		if ( false !== $upload_dir && isset( $upload_dir['basedir'] ) ) {
+			$dir = $upload_dir['basedir'];
+			if ( ! empty( $path ) ) {
+				$dir = trailingslashit( $dir ) . $path;
+			}
+			return $dir;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Gets the uploads directory URL
+	 *
+	 * @since 1.10
+	 * @param string $path A path to append to end of upload directory URL.
+	 * @return bool|string The uploads directory URL or false on failure
+	 */
+	public static function get_upload_dir_url( $path = '' ) {
+		$upload_dir = self::get_upload_dir();
+		if ( false !== $upload_dir && isset( $upload_dir['baseurl'] ) ) {
+			$url = preg_replace( '/^https?:/', '', $upload_dir['baseurl'] );
+			if ( null === $url ) {
+				return false;
+			}
+			if ( ! empty( $path ) ) {
+				$url = trailingslashit( $url ) . $path;
+			}
+			return $url;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Gets the Uploads directory
+	 *
+	 * @since 1.10
+	 * @return bool|array An associated array with baseurl and basedir or false on failure
+	 */
+	public static function get_upload_dir() {
+		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
+			$wp_upload_dir = wp_get_upload_dir();
+		} else {
+			$wp_upload_dir = wp_upload_dir();
+		}
+
+		if ( isset( $wp_upload_dir['error'] ) ) {
+			if ( false !== $wp_upload_dir['error'] ) {
+				PUM_Utils_Logging::instance()->log( sprintf( 'Getting uploads directory failed. Error given: %s', esc_html( $wp_upload_dir['error'] ) ) );
+			} else {
+				PUM_Utils_Logging::instance()->log( 'Getting uploads directory failed due to unknown reason.' );
+			}
+			return false;
+		} else {
+			return $wp_upload_dir;
+		}
+	}
+
+	/**
+	 * @deprecated Use get_upload_dir_url instead.
+	 */
 	public static function upload_dir_url( $path = '' ) {
 		$upload_dir = wp_upload_dir();
 		$upload_dir = $upload_dir['baseurl'];

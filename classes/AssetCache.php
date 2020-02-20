@@ -138,13 +138,13 @@ class PUM_AssetCache {
 		}
 
 		// Checks and create cachedir.
-		if ( ! is_dir( self::get_cache_dir() ) ) {
+		if ( false !== self::$cache_dir && ! is_dir( self::$cache_dir ) ) {
 
 			/** @var WP_Filesystem_Base $wp_filesystem */
-			$wp_filesystem->mkdir( self::get_cache_dir() );
+			$wp_filesystem->mkdir( self::$cache_dir );
 		}
 
-		return is_writable( self::get_cache_dir() ) && ! isset( $_POST['wp_customize'] );
+		return false !== self::$cache_dir && is_writable( self::$cache_dir ) && ! isset( $_POST['wp_customize'] );
 	}
 
 	/**
@@ -163,23 +163,16 @@ class PUM_AssetCache {
 	 * @return array|string
 	 */
 	public static function get_cache_dir() {
-		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
-			$wp_upload_dir = wp_upload_dir( null, false, false );
-		} else {
-			$wp_upload_dir = wp_upload_dir();
+		$upload_dir = PUM_Helpers::get_upload_dir_path();
+		if ( false === $upload_dir ) {
+			return false;
 		}
 
-		if ( ! empty( $upload_dir['basedir'] ) ) {
-			$upload_dir = $wp_upload_dir['basedir'];
-
-			if ( ! pum_get_option( 'bypass_adblockers', false ) ) {
-				return trailingslashit( $upload_dir ) . 'pum';
-			}
-
-			return $upload_dir;
-		} else {
-			// What to return here???
+		if ( ! pum_get_option( 'bypass_adblockers', false ) ) {
+			return trailingslashit( $upload_dir ) . 'pum';
 		}
+
+		return $upload_dir;
 	}
 
 	/**
@@ -215,7 +208,10 @@ class PUM_AssetCache {
 	 * Generate JS cache file.
 	 */
 	public static function cache_js() {
-		$js_file = self::get_cache_dir() . '/' . self::generate_cache_filename( 'pum-site-scripts' ) . '.js';
+		if ( false === self::$cache_dir ) {
+			return;
+		}
+		$js_file = trailingslashit( self::$cache_dir ) . self::generate_cache_filename( 'pum-site-scripts' ) . '.js';
 
 		$js = "/**\n";
 		$js .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
@@ -234,7 +230,10 @@ class PUM_AssetCache {
 	 * Generate CSS cache file.
 	 */
 	public static function cache_css() {
-		$css_file = self::get_cache_dir() . '/' . self::generate_cache_filename( 'pum-site-styles' ) . '.css';
+		if ( false === self::$cache_dir ) {
+			return;
+		}
+		$css_file = trailingslashit( self::$cache_dir ) . self::generate_cache_filename( 'pum-site-styles' ) . '.css';
 
 		$css = "/**\n";
 		$css .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";

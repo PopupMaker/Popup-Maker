@@ -121,10 +121,13 @@ class PUM_Site_Assets {
 	 *
 	 * Accounts for various adblock bypass options.
 	 *
-	 * @return array|string
+	 * @return bool|string
 	 */
 	public static function get_cache_dir_url() {
-		$upload_dir = PUM_Helpers::upload_dir_url();
+		$upload_dir = PUM_Helpers::get_upload_dir_url();
+		if ( false === $upload_dir ) {
+			return false;
+		}
 
 		if ( ! pum_get_option( 'bypass_adblockers', false ) ) {
 			return trailingslashit( $upload_dir ) . 'pum';
@@ -191,7 +194,7 @@ class PUM_Site_Assets {
 		wp_register_script( 'mobile-detect', self::$js_url . 'vendor/mobile-detect.min.js', null, '1.3.3', true );
 		wp_register_script( 'iframe-resizer', self::$js_url . 'vendor/iframeResizer.min.js', array( 'jquery' ) );
 
-		if ( PUM_AssetCache::enabled() ) {
+		if ( PUM_AssetCache::enabled() && false !== self::$cache_url ) {
 			$cached = get_option( 'pum-has-cached-js' );
 
 			if ( ! $cached || self::$debug ) {
@@ -200,7 +203,7 @@ class PUM_Site_Assets {
 			}
 
 
-			wp_register_script( 'popup-maker-site', self::get_cache_dir_url() . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-scripts' ) . '.js?defer&generated=' . $cached, array(
+			wp_register_script( 'popup-maker-site', self::$cache_url . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-scripts' ) . '.js?defer&generated=' . $cached, array(
 				'jquery',
 				'jquery-ui-core',
 				'jquery-ui-position',
@@ -330,7 +333,7 @@ class PUM_Site_Assets {
 	public static function register_styles() {
 		self::$styles_registered = true;
 
-		if ( PUM_AssetCache::enabled() ) {
+		if ( PUM_AssetCache::enabled() && false !== self::$cache_url ) {
 			$cached = get_option( 'pum-has-cached-css' );
 
 			if ( ! $cached || self::$debug ) {
@@ -338,7 +341,7 @@ class PUM_Site_Assets {
 				$cached = get_option( 'pum-has-cached-css' );
 			}
 
-			wp_register_style( 'popup-maker-site', self::get_cache_dir_url() . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-styles' ) . '.css?generated=' . $cached, array(), Popup_Maker::$VER );
+			wp_register_style( 'popup-maker-site', self::$cache_url . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-styles' ) . '.css?generated=' . $cached, array(), Popup_Maker::$VER );
 		} else {
 			wp_register_style( 'popup-maker-site', self::$css_url . 'pum-site' . ( is_rtl() ? '-rtl' : '' ) . self::$suffix . '.css', array(), Popup_Maker::$VER );
 			self::inline_styles();
