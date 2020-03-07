@@ -38,6 +38,7 @@ class PUM_Integrations {
 			// Builders
 			'kingcomposer'   => new PUM_Integration_Builder_KingComposer,
 			'visualcomposer' => new PUM_Integration_Builder_VisualComposer,
+			'beaverbuilder'  => new PUM_Integration_Builder_BeaverBuilder,
 		] );
 
 		self::$preload_posts = isset( $_GET['page'] ) && $_GET['page'] == 'pum-settings';
