@@ -686,7 +686,7 @@ class PUM_Admin_Popups {
 						'close_text'         => array(
 							'label'       => __( 'Close Text', 'popup-maker' ),
 							'placeholder' => __( 'Close', 'popup-maker' ),
-							'desc'        => __( 'Override the default close text.', 'popup-maker' ),
+							'desc'        => __( 'Override the default close text. To use a Font Awesome icon instead of text, enter the CSS classes such as "fas fa-camera".', 'popup-maker' ),
 							'priority'    => 10,
 							'private'     => true,
 						),
