@@ -344,6 +344,7 @@ class PUM_Admin_Popups {
 				'main'      => __( 'Appearance', 'popup-maker' ),
 				'size'      => __( 'Size', 'popup-maker' ),
 				'animation' => __( 'Animation', 'popup-maker' ),
+				'sound'     => __( 'Sounds', 'popup-maker' ),
 				'position'  => __( 'Position', 'popup-maker' ),
 				'advanced'  => __( 'Advanced', 'popup-maker' ),
 			),
@@ -559,6 +560,18 @@ class PUM_Admin_Popups {
 							'priority'     => 30,
 							'dependencies' => array(
 								'animation_type' => array( 'slide', 'fadeAndSlide', 'grow', 'growAndSlide' ),
+							),
+						),
+					),
+					'sound' => array(
+						'open_sound'   => array(
+							'label'    => __( 'Opening Sound', 'popup-maker' ),
+							'desc'     => __( 'Select a sound to play when the popup opens.', 'popup-maker' ),
+							'type'     => 'select',
+							'std'      => 'none',
+							'priority' => 10,
+							'options'  => array(
+								'none'         => __( 'None', 'popup-maker' ),
 							),
 						),
 					),
