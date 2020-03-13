@@ -245,11 +245,17 @@ var PUM;
                     .data('popmake', settings)
                     .trigger('pumInit');
 
-				// Sets up our audio (currently local test audio) and stores it onto the popup.
-                const audio = new Audio('http://example.local/wp-content/uploads/2020/02/when.mp3');
-				audio.addEventListener('canplaythrough', () => {
-					$popup.data('popAudio', audio);
-				});
+                // If our opening sound setting is not set to None...
+                if ( 'none' !== settings.open_sound ) {
+					// ... then set up our audio. Once loaded, add to popup data.
+					const audio = new Audio( settings.open_sound );
+					audio.addEventListener('canplaythrough', () => {
+						$popup.data('popAudio', audio);
+					});
+
+					// In case our audio loaded faster than us attaching the event listener.
+					audio.load();
+				}
 
                 return this;
             });
