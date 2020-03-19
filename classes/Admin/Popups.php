@@ -571,7 +571,18 @@ class PUM_Admin_Popups {
 							'std'      => 'none',
 							'priority' => 10,
 							'options'  => array(
-								'none'         => __( 'None', 'popup-maker' ),
+								'none'   => __( 'None', 'popup-maker' ),
+								'custom' => __( 'Custom Sound', 'popup-maker' ),
+							),
+						),
+						'custom_sound'   => array(
+							'label'    => __( 'Custom Sound URL', 'popup-maker' ),
+							'desc'     => __( 'Enter URL to sound file.', 'popup-maker' ),
+							'type'     => 'text',
+							'std'      => '',
+							'priority' => 10,
+							'dependencies' => array(
+								'open_sound' => array( 'custom' ),
 							),
 						),
 					),
