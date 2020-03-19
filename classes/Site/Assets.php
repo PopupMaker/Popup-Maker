@@ -230,6 +230,7 @@ class PUM_Site_Assets {
 
 		wp_localize_script( 'popup-maker-site', 'pum_vars', apply_filters( 'pum_vars', array(
 			'version'                => Popup_Maker::$VER,
+			'pm_dir_url'             => Popup_Maker::$URL,
 			'ajaxurl'                => admin_url( 'admin-ajax.php' ),
 			'restapi'                => function_exists( 'rest_url' ) ? esc_url_raw( rest_url( 'pum/v1' ) ) : false,
 			'rest_nonce'             => is_user_logged_in() ? wp_create_nonce( 'wp_rest' ) : null,
