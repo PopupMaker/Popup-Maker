@@ -248,9 +248,12 @@ var PUM;
                 // If our opening sound setting is not set to None...
                 if ( 'none' !== settings.open_sound ) {
 					// ... then set up our audio. Once loaded, add to popup data.
-					const audio = new Audio( settings.open_sound );
+					const audio = 'custom' !== settings.open_sound ? new Audio( settings.open_sound ) : new Audio( settings.custom_sound );
 					audio.addEventListener('canplaythrough', () => {
 						$popup.data('popAudio', audio);
+					});
+					audio.addEventListener('error', () => {
+						console.warn( 'Error occurred when trying to load Popup opening sound.' );
 					});
 
 					// In case our audio loaded faster than us attaching the event listener.
