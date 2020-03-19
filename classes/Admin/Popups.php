@@ -571,8 +571,13 @@ class PUM_Admin_Popups {
 							'std'      => 'none',
 							'priority' => 10,
 							'options'  => array(
-								'none'   => __( 'None', 'popup-maker' ),
-								'custom' => __( 'Custom Sound', 'popup-maker' ),
+								'none'       => __( 'None', 'popup-maker' ),
+								'beep'       => __( 'Beep', 'popup-maker' ),
+								'beep_two'   => __( 'Beep 2', 'popup-maker' ),
+								'beep_up'    => __( 'Beep Up', 'popup-maker' ),
+								'chimes'     => __( 'Chimes', 'popup-maker' ),
+								'correct'    => __( 'Correct', 'popup-maker' ),
+								'custom'     => __( 'Custom Sound', 'popup-maker' ),
 							),
 						),
 						'custom_sound'   => array(
