@@ -11,6 +11,7 @@ var PUM;
         default_theme: '0',
         home_url: '/',
         version: 1.7,
+		pm_dir_url: '',
         ajaxurl: '',
         restapi: false,
         rest_nonce: null,
@@ -248,7 +249,7 @@ var PUM;
                 // If our opening sound setting is not set to None...
                 if ( 'none' !== settings.open_sound ) {
 					// ... then set up our audio. Once loaded, add to popup data.
-					const audio = 'custom' !== settings.open_sound ? new Audio( settings.open_sound ) : new Audio( settings.custom_sound );
+					const audio = 'custom' !== settings.open_sound ? new Audio( pum_vars.pm_dir_url + '/assets/sounds/' + settings.open_sound ) : new Audio( settings.custom_sound );
 					audio.addEventListener('canplaythrough', () => {
 						$popup.data('popAudio', audio);
 					});
