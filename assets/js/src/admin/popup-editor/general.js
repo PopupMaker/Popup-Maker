@@ -61,10 +61,25 @@
 				if ( Array.from(e.target.classList).includes('popup-type') || Array.from(e.target.parentElement.classList).includes('popup-type') ) {
 					const $container = $( '#pum-popup-settings-container' );
 					if ( 1 === $container.length ) {
+						// Temporarily hardcoded object for testing...
+						const popupTypes = {
+							'center-popup': {
+								'size': 'medium',
+								'location': 'center'
+							},
+							'left-bottom-notice': {
+								'size': 'tiny',
+								'animation_type': 'slide',
+								'animation_origin': 'left bottom',
+								'location': 'left bottom',
+							}
+						};
 						const popupType = e.target.dataset.popupType || e.target.parentElement.dataset.popupType || '';
+						const presetValues = popupTypes.hasOwnProperty(popupType) ? popupTypes[ popupType ] : {};
 						const args = pum_popup_settings_editor.form_args || {};
+						const originalValues = pum_popup_settings_editor.current_values || {};
 						const currentValues = $container.pumSerializeObject();
-						const newValues = Object.assign( {}, pum_popup_settings_editor.current_values || {}, currentValues.popup_settings, {'location': 'center', 'size': 'medium', 'open_sound': 'custom'} );
+						const newValues = Object.assign( {}, originalValues, currentValues.popup_settings, presetValues );
 						PUM_Admin.forms.render(args, newValues, $container);
 					}
 				}
