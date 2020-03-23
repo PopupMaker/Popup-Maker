@@ -61,6 +61,7 @@
 				if ( Array.from(e.target.classList).includes('popup-type') || Array.from(e.target.parentElement.classList).includes('popup-type') ) {
 					const $container = $( '#pum-popup-settings-container' );
 					if ( 1 === $container.length ) {
+						const popupType = e.target.dataset.popupType || e.target.parentElement.dataset.popupType || '';
 						const args = pum_popup_settings_editor.form_args || {};
 						const currentValues = $container.pumSerializeObject();
 						const newValues = Object.assign( {}, pum_popup_settings_editor.current_values || {}, currentValues.popup_settings, {'location': 'center', 'size': 'medium', 'open_sound': 'custom'} );

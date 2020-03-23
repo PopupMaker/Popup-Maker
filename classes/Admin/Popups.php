@@ -418,6 +418,14 @@ class PUM_Admin_Popups {
 							'type'    => 'html',
 							'content' => '<p>Select one of the types below to get started! Once selected, you can adjust the display settings using the tabs above.</p>'
 						),
+						'type_section' => array(
+							'type'    => 'section',
+							'classes' => 'popup-types',
+							'fields'  => array(
+								'<div class="popup-type" data-popup-type="center-popup"><p>Center Popup</p></div>',
+								'<div class="popup-type" data-popup-type="left-bottom-notice"><p>Left Bottom Notice</p></div>',
+							),
+						),
 					),
 					'main'      => array(
 						'theme_id' => array(
