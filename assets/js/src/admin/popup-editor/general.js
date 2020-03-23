@@ -56,6 +56,18 @@
 					}
 				}
 			});
+
+			document.querySelector( '#pum-popup-settings-container' ).addEventListener( 'click', function(e) {
+				if ( 'popup-type' === e.target.id ) {
+					const $container = $( '#pum-popup-settings-container' );
+					if ( 1 === $container.length ) {
+						const args = pum_popup_settings_editor.form_args || {};
+						const currentValues = $container.pumSerializeObject();
+						const newValues = Object.assign( {}, pum_popup_settings_editor.current_values || {}, currentValues.popup_settings, {'location': 'center', 'size': 'medium', 'open_sound': 'custom'} );
+						PUM_Admin.forms.render(args, newValues, $container);
+					}
+				}
+			});
         })
         .on('keydown', '#popup-title', function (event) {
             var keyCode = event.keyCode || event.which;
