@@ -58,7 +58,7 @@
 			});
 
 			document.querySelector( '#pum-popup-settings-container' ).addEventListener( 'click', function(e) {
-				if ( 'popup-type' === e.target.id ) {
+				if ( Array.from(e.target.classList).includes('popup-type') || Array.from(e.target.parentElement.classList).includes('popup-type') ) {
 					const $container = $( '#pum-popup-settings-container' );
 					if ( 1 === $container.length ) {
 						const args = pum_popup_settings_editor.form_args || {};
