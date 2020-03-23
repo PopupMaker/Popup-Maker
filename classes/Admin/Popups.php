@@ -341,6 +341,7 @@ class PUM_Admin_Popups {
 				'main' => __( 'Conditions', 'popup-maker' ),
 			),
 			'display'   => array(
+				'preset'    => __( 'Types', 'popup-maker' ),
 				'main'      => __( 'Appearance', 'popup-maker' ),
 				'size'      => __( 'Size', 'popup-maker' ),
 				'animation' => __( 'Animation', 'popup-maker' ),
@@ -412,6 +413,12 @@ class PUM_Admin_Popups {
 					),
 				) ),
 				'display'   => apply_filters( 'pum_popup_display_settings_fields', array(
+					'preset'    => array(
+						'explain' => array(
+							'type'    => 'html',
+							'content' => '<p>Select one of the types below to get started! Once selected, you can adjust the display settings using the tabs above.</p>'
+						),
+					),
 					'main'      => array(
 						'theme_id' => array(
 							'label'        => __( 'Popup Theme', 'popup-maker' ),
