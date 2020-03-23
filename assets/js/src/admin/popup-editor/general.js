@@ -37,6 +37,25 @@
             $('#pum-first-condition, #pum-first-trigger, #pum-first-cookie')
                 .val(null)
                 .trigger('change');
+
+            // Add event handler to detect when opening sound is change and play the sound to allow admin to preview it.
+			document.querySelector( '#pum-popup-settings-container' ).addEventListener( 'change', function(e) {
+				if ( 'open_sound' === e.target.id ) {
+					// Only play if the sound selected is not None or Custom.
+					if ( ! ['none', 'custom'].includes( e.target.value ) ) {
+						const audio = new Audio( pum_admin_vars.pm_dir_url + '/assets/sounds/' + e.target.value );
+						audio.addEventListener( 'canplaythrough', function() {
+							this.play()
+								.catch(function( reason ) {
+									console.warn(`Sound was not able to play when selected. Reason: ${reason}.`);
+								});
+						});
+						audio.addEventListener( 'error', function() {
+							console.warn( 'Error occurred when trying to load popup opening sound.' );
+						});
+					}
+				}
+			});
         })
         .on('keydown', '#popup-title', function (event) {
             var keyCode = event.keyCode || event.which;

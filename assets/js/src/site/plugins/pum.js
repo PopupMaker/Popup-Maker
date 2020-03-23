@@ -11,6 +11,7 @@ var PUM;
         default_theme: '0',
         home_url: '/',
         version: 1.7,
+		pm_dir_url: '',
         ajaxurl: '',
         restapi: false,
         rest_nonce: null,
@@ -245,6 +246,21 @@ var PUM;
                     .data('popmake', settings)
                     .trigger('pumInit');
 
+                // If our opening sound setting is not set to None...
+                if ( 'none' !== settings.open_sound ) {
+					// ... then set up our audio. Once loaded, add to popup data.
+					const audio = 'custom' !== settings.open_sound ? new Audio( pum_vars.pm_dir_url + '/assets/sounds/' + settings.open_sound ) : new Audio( settings.custom_sound );
+					audio.addEventListener('canplaythrough', () => {
+						$popup.data('popAudio', audio);
+					});
+					audio.addEventListener('error', () => {
+						console.warn( 'Error occurred when trying to load Popup opening sound.' );
+					});
+
+					// In case our audio loaded faster than us attaching the event listener.
+					audio.load();
+				}
+
                 return this;
             });
         },
@@ -364,6 +380,14 @@ var PUM;
                         //callback.apply(this);
                     }
                 });
+
+			// If the audio hasn't loaded yet, it wouldn't have been added to the popup.
+            if ( 'undefined' !== typeof $popup.data('popAudio') ) {
+				$popup.data('popAudio').play()
+					.catch((reason) => {
+						console.warn(`Sound was not able to play when popup opened. Reason: ${reason}.`);
+					});
+			}
 
             return this;
         },

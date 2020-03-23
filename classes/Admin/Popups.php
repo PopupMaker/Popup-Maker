@@ -344,6 +344,7 @@ class PUM_Admin_Popups {
 				'main'      => __( 'Appearance', 'popup-maker' ),
 				'size'      => __( 'Size', 'popup-maker' ),
 				'animation' => __( 'Animation', 'popup-maker' ),
+				'sound'     => __( 'Sounds', 'popup-maker' ),
 				'position'  => __( 'Position', 'popup-maker' ),
 				'advanced'  => __( 'Advanced', 'popup-maker' ),
 			),
@@ -559,6 +560,34 @@ class PUM_Admin_Popups {
 							'priority'     => 30,
 							'dependencies' => array(
 								'animation_type' => array( 'slide', 'fadeAndSlide', 'grow', 'growAndSlide' ),
+							),
+						),
+					),
+					'sound' => array(
+						'open_sound'   => array(
+							'label'    => __( 'Opening Sound', 'popup-maker' ),
+							'desc'     => __( 'Select a sound to play when the popup opens.', 'popup-maker' ),
+							'type'     => 'select',
+							'std'      => 'none',
+							'priority' => 10,
+							'options'  => array(
+								'none'         => __( 'None', 'popup-maker' ),
+								'beep.mp3'     => __( 'Beep', 'popup-maker' ),
+								'beep-two.mp3' => __( 'Beep 2', 'popup-maker' ),
+								'beep-up.mp3'  => __( 'Beep Up', 'popup-maker' ),
+								'chimes.mp3'   => __( 'Chimes', 'popup-maker' ),
+								'correct.mp3'  => __( 'Correct', 'popup-maker' ),
+								'custom'       => __( 'Custom Sound', 'popup-maker' ),
+							),
+						),
+						'custom_sound'   => array(
+							'label'    => __( 'Custom Sound URL', 'popup-maker' ),
+							'desc'     => __( 'Enter URL to sound file.', 'popup-maker' ),
+							'type'     => 'text',
+							'std'      => '',
+							'priority' => 10,
+							'dependencies' => array(
+								'open_sound' => array( 'custom' ),
 							),
 						),
 					),
