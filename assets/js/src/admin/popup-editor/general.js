@@ -59,19 +59,49 @@
 
 			document.querySelector( '#pum-popup-settings-container' ).addEventListener( 'click', function(e) {
 				if ( Array.from(e.target.classList).includes('popup-type') || Array.from(e.target.parentElement.classList).includes('popup-type') ) {
-					const $container = $( '#pum-popup-settings-container' );
+					const $container = jQuery( '#pum-popup-settings-container' );
 					if ( 1 === $container.length ) {
 						// Temporarily hardcoded object for testing...
 						const popupTypes = {
 							'center-popup': {
 								'size': 'medium',
-								'location': 'center'
+								'responsive_min_width': '0%',
+								'responsive_max_width': '100%',
+								'animation_type': 'fade',
+								'animation_speed': 350,
+								'location': 'center',
+								'overlay_disabled': false,
+								'stackable': false,
+								'disable_reposition': false,
 							},
 							'left-bottom-notice': {
 								'size': 'tiny',
+								'responsive_min_width': '0%',
+								'responsive_max_width': '100%',
 								'animation_type': 'slide',
+								'animation_speed': 500,
 								'animation_origin': 'left bottom',
 								'location': 'left bottom',
+								'position_bottom': 10,
+								'position_left': 10,
+								'position_fixed': true,
+								'overlay_disabled': true,
+								'stackable': false,
+								'disable_reposition': false,
+							},
+							'top-bar': {
+								'size': 'custom',
+								'custom_width': '100%',
+								'custom_height_auto': true,
+								'animation_type': 'fadeAndSlide',
+								'animation_speed': 300,
+								'animation_origin': 'center top',
+								'location': 'center top',
+								'position_top': 0,
+								'position_fixed': true,
+								'overlay_disabled': true,
+								'stackable': false,
+								'disable_reposition': false,
 							}
 						};
 						const popupType = e.target.dataset.popupType || e.target.parentElement.dataset.popupType || '';
