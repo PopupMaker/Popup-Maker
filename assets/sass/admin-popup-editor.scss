@@ -13,12 +13,22 @@ Display Switcher
 	width: 100%;
 
 	.popup-type {
+		background-color: #9ab927;
+		color: #000;
 		margin-bottom: 20px;
 		height: 50px;
 		align-items: center;
 		justify-content: center;
 		display: flex;
-		box-shadow: 2px 2px 2px black;
+		box-shadow: 1px 1px 1px black;
+		transition: all 0.3s ease 0s;
+
+		&:hover {
+			background-color: #b9279a;
+			color: #fff;
+			cursor: pointer;
+			transform: scale(1.1);
+		}
 	}
 }
 
