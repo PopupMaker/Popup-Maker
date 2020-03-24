@@ -86,7 +86,7 @@
 								'position_left': 10,
 								'position_fixed': true,
 								'overlay_disabled': true,
-								'stackable': false,
+								'stackable': true,
 								'disable_reposition': false,
 							},
 							'top-bar': {
@@ -100,7 +100,22 @@
 								'position_top': 0,
 								'position_fixed': true,
 								'overlay_disabled': true,
-								'stackable': false,
+								'stackable': true,
+								'disable_reposition': false,
+							},
+							'right-bottom-slidein': {
+								'size': 'custom',
+								'custom_width': '300px',
+								'custom_height_auto': true,
+								'animation_type': 'slide',
+								'animation_speed': 500,
+								'animation_origin': 'right bottom',
+								'location': 'right bottom',
+								'position_bottom': 10,
+								'position_right': 10,
+								'position_fixed': true,
+								'overlay_disabled': true,
+								'stackable': true,
 								'disable_reposition': false,
 							}
 						};

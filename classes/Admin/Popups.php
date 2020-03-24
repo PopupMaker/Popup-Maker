@@ -423,6 +423,7 @@ class PUM_Admin_Popups {
 							'classes' => 'popup-types',
 							'fields'  => array(
 								'<div class="popup-type" data-popup-type="center-popup"><p>Center Popup</p></div>',
+								'<div class="popup-type" data-popup-type="right-bottom-slidein"><p>Right Bottom Slide-in</p></div>',
 								'<div class="popup-type" data-popup-type="top-bar"><p>Top Bar</p></div>',
 								'<div class="popup-type" data-popup-type="left-bottom-notice"><p>Left Bottom Notice</p></div>',
 							),
