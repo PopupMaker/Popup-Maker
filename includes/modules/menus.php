@@ -67,14 +67,20 @@ class PUM_Modules_Menu {
 	public static function nav_menu_walker( $walker ) {
 		global $wp_version;
 
-		if ( doing_filter( 'plugins_loaded' ) ) {
+		$bail_early = [
+			// WP 5.4 adds support for custom fields, no need to do this hack at all.
+			version_compare( $wp_version, '5.4', '>=' ),
+			// not sure about this one, was part of the original solution.
+			doing_filter( 'plugins_loaded' ),
+			// No need if its already loaded by another plugin.
+			$walker === 'Walker_Nav_Menu_Edit_Custom_Fields',
+		];
+
+		if ( in_array( true, $bail_early ) ) {
 			return $walker;
 		}
 
-		if ( $walker == 'Walker_Nav_Menu_Edit_Custom_Fields' ) {
-			return $walker;
-		}
-
+		// Load custom nav menu walker class for custom field compatibility.
 		if ( ! class_exists( 'Walker_Nav_Menu_Edit_Custom_Fields' ) ) {
 			if ( version_compare( $wp_version, '3.6', '>=' ) ) {
 				require_once POPMAKE_DIR . '/includes/modules/menus/class-nav-menu-edit-custom-fields.php';
