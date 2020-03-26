@@ -1,16 +1,5 @@
 [
   {
-    "new_version": "",
-    "name": "Core Extensions Bundle",
-    "slug": "core-extensions-bundle",
-    "url": "https:\/\/wppopupmaker.com\/extensions\/core-extensions-bundle\/?changelog=1",
-    "homepage": "https:\/\/wppopupmaker.com\/extensions\/core-extensions-bundle\/",
-    "package": "",
-    "download_link": "",
-    "image": "https:\/\/wppopupmaker.com\/wp-content\/uploads\/edd\/2015\/08\/Core-Extension-Bundle.png",
-    "excerpt": "Save Big & Get access to all core Popup Maker extensions + all future extensions by purchasing our massively discounted extensions bundle."
-  },
-  {
     "new_version": "1.1.0",
     "name": "Exit Intent Popups",
     "slug": "exit-intent-popups",
