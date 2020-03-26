@@ -5,9 +5,9 @@ Plugin URI: https://wppopupmaker.com/?utm_capmaign=Readme&utm_source=readme-head
 Donate link:
 Tags:  marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
 Requires at least: 4.1
-Tested up to: 5.3
+Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 1.9.1
+Stable tag: 1.9.2
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,6 +124,9 @@ There are several common causes for this, check [this guide for help](https://do
 == Changelog ==
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
+
+= v1.9.2 - 03/26/2020 =
+* Tweak: Add support for WP 5.4's new method of adding custom fields to the nav menu editor.
 
 = v1.9.1 - 02/13/2020 =
 * Fix: JS error when MailChimp for WordPress was active but no forms on the page.

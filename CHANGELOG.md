@@ -1,5 +1,8 @@
 ### Unreleased Changes
 
+### v1.9.2 - 03/26/2020
+* Tweak: Add support for WP 5.4's new method of adding custom fields to the nav menu editor.
+
 ### v1.9.1 - 02/13/2020
 * Fix: JS error when MailChimp for WordPress was active but no forms on the page.
 
