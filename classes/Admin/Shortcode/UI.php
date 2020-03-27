@@ -80,7 +80,12 @@ class PUM_Admin_Shortcode_UI {
 	 */
 	public static function mce_buttons( $buttons ) {
 		// Enqueue scripts when editor is detected.
-		self::enqueue_scripts();
+
+		if ( ! did_action( 'admin_enqueue_scripts' ) ) {
+			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ), 120 ); // 120 because core styles are registered at 100 for some reason.
+		} else {
+			self::enqueue_scripts();
+		}
 
 		array_push( $buttons, 'pum_shortcodes' );
 
