@@ -137,6 +137,31 @@
 
     // Register All Cookies for a Popup
     $(document)
+        .ready(function () {
+            var $cookies = $('.pum-cookie');
+
+            $cookies.each(function () {
+                var $cookie = $(this),
+                    index = $cookies.index($cookie),
+                    args = $cookie.data('cookie-args');
+
+                if ( ! $cookie.data('only-onscreen') ) {
+                    setCookie(args);
+                } else {
+                    if ( $cookie.isInViewport() && $cookie.is(':visible') ) {
+                        setCookie(args);
+                    } else {
+                        $(window).on('scroll.pum-cookie-' + index, $.fn.popmake.utilities.throttle(function(event) {
+                            if ( $cookie.isInViewport() && $cookie.is(':visible') ) {
+                                setCookie(args);
+
+                                $(window).off('scroll.pum-cookie-' + index );
+                            }
+                        }, 100));
+                    }
+                }
+            })
+        })
         .on('pumInit', '.pum', function () {
             var $popup = PUM.getPopup(this),
                 settings = $popup.popmake('getSettings'),
