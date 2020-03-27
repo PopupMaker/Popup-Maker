@@ -81,7 +81,7 @@ class PUM_Shortcode_PopupCookie extends PUM_Shortcode {
 		$args = [
 			'name' => $atts['name'],
 			'time' => $atts['expires'],
-			'path' => $atts['sitewide'] ? '/' : '',
+			'path' => $atts['sitewide'],
 		];
 
 		$onscreen = 'data-only-onscreen="' . ( $atts['only_onscreen'] ? 1 : 0 ) . '"';
