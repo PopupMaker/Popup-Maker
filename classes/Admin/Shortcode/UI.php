@@ -124,14 +124,15 @@ class PUM_Admin_Shortcode_UI {
 		$shortcodes = array();
 
 		foreach ( PUM_Shortcodes::instance()->get_shortcodes() as $tag => $shortcode ) {
+
+			$post_types = apply_filters( 'pum_shortcode_post_types', $shortcode->post_types(), $shortcode );
+
 			/**
 			 * @var $shortcode PUM_Shortcode
 			 */
-			if ( ! in_array( $type, apply_filters( 'pum_shortcode_post_types', $shortcode->post_types(), $shortcode ) ) ) {
+			if ( ! in_array( '*', $post_types ) && ! in_array( $type, $post_types ) ) {
 				continue;
 			}
-
-
 
 			$shortcodes[ $tag ] = array(
 				'version'        => $shortcode->version,
