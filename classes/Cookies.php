@@ -112,6 +112,7 @@ class PUM_Cookies {
 			),
 			'manual'                          => array(
 				'name' => __( 'Manual JavaScript', 'popup-maker' ),
+				'settings_column' => '<pre><code>[popup_cookie name="{{data.name}}" expires="{{data.time}}" sitewide="{{data.path ? 1 : 0}}"]</code></pre>',
 			),
 		) );
 
