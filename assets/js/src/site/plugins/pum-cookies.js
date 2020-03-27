@@ -1,6 +1,16 @@
 (function ($, document, undefined) {
     "use strict";
 
+    var setCookie = function (settings) {
+        $.pm_cookie(
+            settings.name,
+            true,
+            settings.session ? null : settings.time,
+            settings.path ? pum_vars.home_url || '/' : null
+        );
+        pum.hooks.doAction('popmake.setCookie', settings);
+    };
+
     $.extend($.fn.popmake.methods, {
         addCookie: function (type) {
             // Method calling logic
@@ -15,15 +25,7 @@
             }
             return this;
         },
-        setCookie: function (settings) {
-            $.pm_cookie(
-                settings.name,
-                true,
-                settings.session ? null : settings.time,
-                settings.path ? pum_vars.home_url || '/' : null
-            );
-            pum.hooks.doAction('popmake.setCookie', settings);
-        },
+        setCookie: setCookie,
         checkCookies: function (settings) {
             var i,
                 ret = false;
