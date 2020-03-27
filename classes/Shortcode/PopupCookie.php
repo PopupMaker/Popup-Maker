@@ -44,7 +44,7 @@ class PUM_Shortcode_PopupCookie extends PUM_Shortcode {
 						'desc'        => __( 'The name that will be used when checking for or saving this cookie.', 'popup-maker' ),
 						'std'         => '',
 					],
-					'time'          => [
+					'expires'          => [
 						'label'       => __( 'Cookie Time', 'popup-maker' ),
 						'placeholder' => __( '364 days 23 hours 59 minutes 59 seconds', 'popup-maker' ),
 						'desc'        => __( 'Enter a plain english time before cookie expires.', 'popup-maker' ),
@@ -80,7 +80,7 @@ class PUM_Shortcode_PopupCookie extends PUM_Shortcode {
 
 		$args = [
 			'name' => $atts['name'],
-			'expires' => $atts['expires'],
+			'time' => $atts['expires'],
 			'path' => $atts['sitewide'] ? '/' : '',
 		];
 
