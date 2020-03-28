@@ -247,7 +247,7 @@ var PUM;
                     .trigger('pumInit');
 
                 // If our opening sound setting is not set to None...
-                if ( 'none' !== settings.open_sound ) {
+                if ( settings.open_sound && 'none' !== settings.open_sound ) {
 					// ... then set up our audio. Once loaded, add to popup data.
 					const audio = 'custom' !== settings.open_sound ? new Audio( pum_vars.pm_dir_url + '/assets/sounds/' + settings.open_sound ) : new Audio( settings.custom_sound );
 					audio.addEventListener('canplaythrough', () => {
