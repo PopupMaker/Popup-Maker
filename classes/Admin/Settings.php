@@ -443,7 +443,7 @@ class PUM_Admin_Settings {
 						),
 						'adjust_body_padding'   => array(
 							'type'    => 'checkbox',
-							'label'   => __( 'Adjust the padding added to the body when popups are shown with an overlay.', 'popup-maker' ),
+							'label'   => __( 'Adjust the right padding added to the body when popups are shown with an overlay.', 'popup-maker' ),
 							'doclink' => 'https://docs.wppopupmaker.com/article/314-why-does-my-site-shift-jump-or-skip-when-a-popup-is-triggered',
 						),
 						'body_padding_override' => array(
