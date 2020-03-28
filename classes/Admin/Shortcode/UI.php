@@ -92,7 +92,7 @@ class PUM_Admin_Shortcode_UI {
 	 */
 	public static function enqueue_scripts() {
 		// Register editor styles.
-		add_editor_style( PUM_Admin_Assets::$css_url . 'admin-editor-styles' . PUM_Admin_Assets::$suffix . '.css' );
+		add_editor_style( PUM_Admin_Assets::$css_url . 'pum-admin-editor-styles' . PUM_Admin_Assets::$suffix . '.css' );
 
 		wp_enqueue_style( 'pum-admin-shortcode-ui' );
 		wp_enqueue_script( 'pum-admin-shortcode-ui' );
