@@ -1,4 +1,5 @@
 ### Unreleased Changes
+* Tweak: Add option to disable or adjust the padding-right added to body.
 
 ### v1.9.2 - 03/26/2020
 * Tweak: Add support for WP 5.4's new method of adding custom fields to the nav menu editor.
