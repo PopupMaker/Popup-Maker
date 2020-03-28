@@ -126,6 +126,7 @@
 						const currentValues = $container.pumSerializeObject();
 						const newValues = Object.assign( {}, originalValues, currentValues.popup_settings, presetValues );
 						PUM_Admin.forms.render(args, newValues, $container);
+						document.querySelector( 'a[href="#pum-popup-settings_display"]' ).click();
 					}
 				}
 			});
