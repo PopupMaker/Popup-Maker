@@ -73,6 +73,8 @@ class PUM_AssetCache {
 			add_action( 'pum_update_core_version', array( __CLASS__, 'reset_cache' ) );
 			add_filter( 'pum_alert_list', array( __CLASS__, 'cache_alert' ) );
 
+			add_action( 'pum_styles', array( __CLASS__, 'global_custom_styles' ) );
+
 			if ( null === get_option( 'pum_files_writeable', null ) ) {
 				add_option( 'pum_files_writeable', true );
 				add_option( '_pum_writeable_notice_dismissed', true );
@@ -398,6 +400,14 @@ class PUM_AssetCache {
 		}
 
 		return $css_code;
+	}
+
+	public static function global_custom_styles() {
+
+		if ( pum_get_option( 'adjust_body_padding' ) ) {
+			echo "html.pum-open.pum-open-overlay.pum-open-scrollable body > *[aria-hidden] { padding-right: " . pum_get_option( 'body_padding_override', '15px' ) . "!important; }";
+		}
+
 	}
 
 	/**
