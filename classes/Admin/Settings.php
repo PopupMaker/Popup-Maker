@@ -441,6 +441,20 @@ class PUM_Admin_Settings {
 								'adblock_bypass_url_method' => 'custom',
 							),
 						),
+						'adjust_body_padding'   => array(
+							'type'    => 'checkbox',
+							'label'   => __( 'Adjust the right padding added to the body when popups are shown with an overlay.', 'popup-maker' ),
+							'doclink' => 'https://docs.wppopupmaker.com/article/314-why-does-my-site-shift-jump-or-skip-when-a-popup-is-triggered',
+						),
+						'body_padding_override' => array(
+							'type'         => 'text',
+							'placeholder'  => '15px',
+							'label'        => __( 'Body Padding Override', 'popup-maker' ),
+							'dependencies' => array(
+								'adjust_body_padding' => true,
+							),
+							'std'          => '15px',
+						),
 						'disabled_admin_bar'                   => array(
 							'type'  => 'checkbox',
 							'label' => __( 'Disable Popups Admin Bar', 'popup-maker' ),
@@ -788,7 +802,7 @@ class PUM_Admin_Settings {
 					try {
 						$value = json_decode( stripslashes( $value ) );
 					} catch ( Exception $e ) {
-					};
+					}
 				}
 
 				$meta[ $key ] = PUM_Admin_Helpers::object_to_array( $value );
