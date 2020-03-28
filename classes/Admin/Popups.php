@@ -341,7 +341,7 @@ class PUM_Admin_Popups {
 				'main' => __( 'Conditions', 'popup-maker' ),
 			),
 			'display'   => array(
-				'preset'    => __( 'Types', 'popup-maker' ),
+				'preset'    => __( 'Display Presets', 'popup-maker' ),
 				'main'      => __( 'Appearance', 'popup-maker' ),
 				'size'      => __( 'Size', 'popup-maker' ),
 				'animation' => __( 'Animation', 'popup-maker' ),
