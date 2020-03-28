@@ -43,7 +43,7 @@
 				if ( 'open_sound' === e.target.id ) {
 					// Only play if the sound selected is not None or Custom.
 					var notThese = ['none', 'custom'];
-					if ( notThese.indexOf( e.target.value ) !== -1 ) {
+					if ( notThese.indexOf( e.target.value ) === -1 ) {
 						var audio = new Audio( pum_admin_vars.pm_dir_url + '/assets/sounds/' + e.target.value );
 						audio.addEventListener( 'canplaythrough', function() {
 							this.play()
