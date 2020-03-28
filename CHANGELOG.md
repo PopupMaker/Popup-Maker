@@ -1,4 +1,5 @@
 ### Unreleased Changes
+* Feature: Insert customizable [popup_cookie] shortcode on thank you pages when using non-integrated forms. 
 
 ### v1.9.2 - 03/26/2020
 * Tweak: Add support for WP 5.4's new method of adding custom fields to the nav menu editor.
