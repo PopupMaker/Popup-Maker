@@ -47,6 +47,22 @@
 		$container.css(cssResets);
 	}
 
+    function overlayAnimationSpeed(settings) {
+        if (settings.overlay_disabled) {
+            return 0;
+        }
+
+        return settings.animation_speed / 2;
+    }
+
+    function containerAnimationSpeed(settings) {
+        if (settings.overlay_disabled) {
+            return parseInt(settings.animation_speed );
+        }
+
+        return settings.animation_speed / 2;
+    }
+
     /**
      * All animations should.
      *
@@ -88,7 +104,6 @@
             var $popup = PUM.getPopup( this ),
                 $container = $popup.popmake( 'getContainer' ),
                 settings = $popup.popmake( 'getSettings' ),
-                speed = settings.animation_speed / 2,
                 start = $popup.popmake( 'animation_origin', settings.animation_origin );
 
             // Step 1. Reset popup styles.
@@ -98,9 +113,9 @@
             $container.position( start );
 
             // Step 3. Animate the popup.
-            $popup.popmake( 'animate_overlay', 'fade', speed, function () {
+            $popup.popmake( 'animate_overlay', 'fade', overlayAnimationSpeed(settings), function () {
                 $container.popmake( 'reposition', function ( position ) {
-                    $container.animate( position, speed, 'swing', function () {
+                    $container.animate( position, containerAnimationSpeed(settings), 'swing', function () {
                         // Fire user passed callback.
                         if ( callback !== undefined ) {
                             callback();
@@ -115,12 +130,10 @@
         fade: function (callback) {
             var $popup = PUM.getPopup(this),
                 $container = $popup.popmake('getContainer').css({opacity: 0, display: "block"}),
-                settings = $popup.popmake('getSettings'),
-                speed = settings.animation_speed / 2;
+                settings = $popup.popmake('getSettings');
 
-            $popup
-                .popmake('animate_overlay', 'fade', speed, function () {
-                    $container.animate({opacity: 1}, speed, 'swing', function () {
+            $popup.popmake('animate_overlay', 'fade', overlayAnimationSpeed(settings), function () {
+                    $container.animate({opacity: 1}, containerAnimationSpeed(settings), 'swing', function () {
                         // Fire user passed callback.
                         if (callback !== undefined) {
                             callback();
@@ -135,7 +148,6 @@
             var $popup = PUM.getPopup(this),
                 $container = $popup.popmake('getContainer'),
                 settings = $popup.popmake('getSettings'),
-                speed = settings.animation_speed / 2,
                 start = $popup.popmake('animation_origin', settings.animation_origin);
 
             // Make the overlay and container visible so they can be positioned & sized prior to display.
@@ -145,11 +157,11 @@
                 .position(start);
 
             $popup
-                .popmake('animate_overlay', 'fade', speed, function () {
+                .popmake('animate_overlay', 'fade', overlayAnimationSpeed(settings), function () {
                     $container.popmake('reposition', function (position) {
                         $container.css({opacity: 0});
                         position.opacity = 1;
-                        $container.animate(position, speed, 'swing', function () {
+                        $container.animate(position, containerAnimationSpeed(settings), 'swing', function () {
                             // Fire user passed callback.
                             if (callback !== undefined) {
                                 callback();
