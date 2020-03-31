@@ -34,6 +34,39 @@
         return this;
     };
 
+    /**
+     * Resets animation & position properties prior to opening/reopening the popup.
+     *
+     * @param $popup
+     */
+	function popupCssReset( $popup ) {
+		var $container = $popup.popmake( 'getContainer' ),
+			cssResets = { display: '', opacity: '' };
+
+		$popup.css(cssResets);
+		$container.css(cssResets);
+	}
+
+    /**
+     * All animations should.
+     *
+     * 1. Reset Popup CSS styles. Defaults are as follows:
+     * - opacity: 1
+     * - display: "none"
+     * - left, top, right, bottom: set to final position (where animation ends).
+     *
+     * 2. Prepare the popup for animation. Examples include:
+     * - a. Static positioned animations like fade might set display: "block" & opacity: 0.
+     * - b. Moving animations such as slide might set display: "block" & opacity: 0 so that
+     *      positioning can be accurately calculated, then set opacity: 1 before the animation begins.
+     *
+     * 3. Animate the overlay using `$popup.popmake( 'animate_overlay', type, speed, callback);`
+     *
+     * 4. Animate the container.
+     * - a. Moving animations can use $container.popmake( 'reposition', callback ); The callback
+     *      accepts a position argument for where you should animate to.
+     * - b. This usually takes place inside the callback for the overlay callback or after it.
+     */
     $.fn.popmake.animations = {
         none: function (callback) {
             var $popup = PUM.getPopup(this);
