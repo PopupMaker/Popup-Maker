@@ -129,9 +129,17 @@
         },
         fade: function (callback) {
             var $popup = PUM.getPopup(this),
-                $container = $popup.popmake('getContainer').css({opacity: 0, display: "block"}),
+                $container = $popup.popmake('getContainer'),
                 settings = $popup.popmake('getSettings');
 
+            // Step 1. Reset popup styles.
+            popupCssReset( $popup );
+
+            // Step 2. Hide each element to be faded in.
+            $popup.css({opacity: 0, display: "block"});
+            $container.css({opacity: 0, display: "block"});
+
+            // Step 3. Animate the popup.
             $popup.popmake('animate_overlay', 'fade', overlayAnimationSpeed(settings), function () {
                     $container.animate({opacity: 1}, containerAnimationSpeed(settings), 'swing', function () {
                         // Fire user passed callback.
