@@ -100,7 +100,7 @@
             });
             return this;
         },
-        slide: function (callback) {
+        slide: function ( callback ) {
             var $popup = PUM.getPopup( this ),
                 $container = $popup.popmake( 'getContainer' ),
                 settings = $popup.popmake( 'getSettings' ),
@@ -113,9 +113,9 @@
             $container.position( start );
 
             // Step 3. Animate the popup.
-            $popup.popmake( 'animate_overlay', 'fade', overlayAnimationSpeed(settings), function () {
+            $popup.popmake( 'animate_overlay', 'fade', overlayAnimationSpeed( settings ), function () {
                 $container.popmake( 'reposition', function ( position ) {
-                    $container.animate( position, containerAnimationSpeed(settings), 'swing', function () {
+                    $container.animate( position, containerAnimationSpeed( settings ), 'swing', function () {
                         // Fire user passed callback.
                         if ( callback !== undefined ) {
                             callback();
@@ -127,29 +127,29 @@
             } );
             return this;
         },
-        fade: function (callback) {
-            var $popup = PUM.getPopup(this),
-                $container = $popup.popmake('getContainer'),
-                settings = $popup.popmake('getSettings');
+        fade: function ( callback ) {
+            var $popup = PUM.getPopup( this ),
+                $container = $popup.popmake( 'getContainer' ),
+                settings = $popup.popmake( 'getSettings' );
 
             // Step 1. Reset popup styles.
             popupCssReset( $popup );
 
             // Step 2. Hide each element to be faded in.
-            $popup.css({opacity: 0, display: "block"});
-            $container.css({opacity: 0, display: "block"});
+            $popup.css( { opacity: 0, display: 'block' } );
+            $container.css( { opacity: 0, display: 'block' } );
 
             // Step 3. Animate the popup.
-            $popup.popmake('animate_overlay', 'fade', overlayAnimationSpeed(settings), function () {
-                    $container.animate({opacity: 1}, containerAnimationSpeed(settings), 'swing', function () {
-                        // Fire user passed callback.
-                        if (callback !== undefined) {
-                            callback();
-                            // TODO Test this new method. Then remove the above.
-                            //callback.apply(this);
-                        }
-                    });
-                });
+            $popup.popmake( 'animate_overlay', 'fade', overlayAnimationSpeed( settings ), function () {
+                $container.animate( { opacity: 1 }, containerAnimationSpeed( settings ), 'swing', function () {
+                    // Fire user passed callback.
+                    if ( callback !== undefined ) {
+                        callback();
+                        // TODO Test this new method. Then remove the above.
+                        //callback.apply(this);
+                    }
+                } );
+            } );
             return this;
         },
         fadeAndSlide: function (callback) {
