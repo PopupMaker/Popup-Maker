@@ -72,16 +72,16 @@
             var $popup = PUM.getPopup(this);
 
             // Ensure the container is visible immediately.
-            $popup.popmake('getContainer').css({opacity: 1, display: "block"}),
+            $popup.popmake('getContainer').css({opacity: 1, display: "block"});
 
-                $popup.popmake('animate_overlay', 'none', 0, function () {
-                    // Fire user passed callback.
-                    if (callback !== undefined) {
-                        callback();
-                        // TODO Test this new method. Then remove the above.
-                        //callback.apply(this);
-                    }
-                });
+            $popup.popmake('animate_overlay', 'none', 0, function () {
+                // Fire user passed callback.
+                if (callback !== undefined) {
+                    callback();
+                    // TODO Test this new method. Then remove the above.
+                    //callback.apply(this);
+                }
+            });
             return this;
         },
         slide: function (callback) {
