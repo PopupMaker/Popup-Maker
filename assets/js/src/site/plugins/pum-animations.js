@@ -85,11 +85,11 @@
             return this;
         },
         slide: function (callback) {
-            var $popup = PUM.getPopup(this),
-                $container = $popup.popmake('getContainer'),
-                settings = $popup.popmake('getSettings'),
+            var $popup = PUM.getPopup( this ),
+                $container = $popup.popmake( 'getContainer' ),
+                settings = $popup.popmake( 'getSettings' ),
                 speed = settings.animation_speed / 2,
-                start = $popup.popmake('animation_origin', settings.animation_origin);
+                start = $popup.popmake( 'animation_origin', settings.animation_origin );
 
             // Step 1. Reset popup styles.
             popupCssReset( $popup );
