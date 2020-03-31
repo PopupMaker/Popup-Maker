@@ -91,26 +91,25 @@
                 speed = settings.animation_speed / 2,
                 start = $popup.popmake('animation_origin', settings.animation_origin);
 
-            // Make the overlay and container visible so they can be positioned & sized prior to display.
-            $popup.css({display: "block"});
-            // Position the opaque container offscreen then update its opacity.
-            $container.css({display: "block"})
-                .position(start)
-                .css({opacity: 1});
+            // Step 1. Reset popup styles.
+            popupCssReset( $popup );
 
-            $popup
-                .popmake('animate_overlay', 'fade', speed, function () {
-                    $container.popmake('reposition', function (position) {
-                        $container.animate(position, speed, 'swing', function () {
-                            // Fire user passed callback.
-                            if (callback !== undefined) {
-                                callback();
-                                // TODO Test this new method. Then remove the above.
-                                //callback.apply(this);
-                            }
-                        });
-                    });
-                });
+            // Step 2. Position the container offscreen.
+            $container.position( start );
+
+            // Step 3. Animate the popup.
+            $popup.popmake( 'animate_overlay', 'fade', speed, function () {
+                $container.popmake( 'reposition', function ( position ) {
+                    $container.animate( position, speed, 'swing', function () {
+                        // Fire user passed callback.
+                        if ( callback !== undefined ) {
+                            callback();
+                            // TODO Test this new method. Then remove the above.
+                            //allback.apply(this);
+                        }
+                    } );
+                } );
+            } );
             return this;
         },
         fade: function (callback) {
