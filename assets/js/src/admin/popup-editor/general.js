@@ -120,13 +120,27 @@
 							}
 						};
 						var popupType = e.target.dataset.popupType || e.target.parentElement.dataset.popupType || '';
+
+						// Gather our values needed for creating new settings object.
 						var presetValues = popupTypes.hasOwnProperty( popupType ) ? popupTypes[ popupType ] : {};
 						var args = pum_popup_settings_editor.form_args || {};
 						var originalValues = pum_popup_settings_editor.current_values || {};
 						var currentValues = $container.pumSerializeObject();
 						var newValues = Object.assign( {}, originalValues, currentValues.popup_settings, presetValues );
+
+						// Re-render form using updated settings.
 						PUM_Admin.forms.render( args, newValues, $container );
+
+						// Click to 'Display' so they don't jump to 'Targeting' tab upon render.
 						document.querySelector( 'a[href="#pum-popup-settings_display"]' ).click();
+
+						// Adds a notice into 'Display Presets' tab telling admin the settings have been applied.
+						var notice = document.createElement( 'div' );
+						notice.classList.add( 'notice','updated' );
+						notice.insertBefore( document.createElement('p'), notice.firstChild );
+						notice.firstChild.innerText = 'Display settings have been updated with the ' + popupType + ' preset';
+						var parent = document.querySelector( '#pum-popup-settings-display-subtabs_preset' );
+						parent.insertBefore( notice, parent.firstChild );
 					}
 				}
 			});
