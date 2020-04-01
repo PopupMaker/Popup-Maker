@@ -59,10 +59,10 @@
 
 			document.querySelector( '#pum-popup-settings-container' ).addEventListener( 'click', function(e) {
 				if ( Array.from(e.target.classList).includes('popup-type') || Array.from(e.target.parentElement.classList).includes('popup-type') ) {
-					const $container = jQuery( '#pum-popup-settings-container' );
+					var $container = jQuery( '#pum-popup-settings-container' );
 					if ( 1 === $container.length ) {
 						// Temporarily hardcoded object for testing...
-						const popupTypes = {
+						var popupTypes = {
 							'center-popup': {
 								'size': 'medium',
 								'responsive_min_width': '0%',
@@ -119,13 +119,13 @@
 								'disable_reposition': false,
 							}
 						};
-						const popupType = e.target.dataset.popupType || e.target.parentElement.dataset.popupType || '';
-						const presetValues = popupTypes.hasOwnProperty(popupType) ? popupTypes[ popupType ] : {};
-						const args = pum_popup_settings_editor.form_args || {};
-						const originalValues = pum_popup_settings_editor.current_values || {};
-						const currentValues = $container.pumSerializeObject();
-						const newValues = Object.assign( {}, originalValues, currentValues.popup_settings, presetValues );
-						PUM_Admin.forms.render(args, newValues, $container);
+						var popupType = e.target.dataset.popupType || e.target.parentElement.dataset.popupType || '';
+						var presetValues = popupTypes.hasOwnProperty(popupType) ? popupTypes[ popupType ] : {};
+						var args = pum_popup_settings_editor.form_args || {};
+						var originalValues = pum_popup_settings_editor.current_values || {};
+						var currentValues = $container.pumSerializeObject();
+						var newValues = Object.assign( {}, originalValues, currentValues.popup_settings, presetValues );
+						PUM_Admin.forms.render( args, newValues, $container );
 						document.querySelector( 'a[href="#pum-popup-settings_display"]' ).click();
 					}
 				}
