@@ -58,10 +58,10 @@
 			});
 
 			document.querySelector( '#pum-popup-settings-container' ).addEventListener( 'click', function(e) {
-				if ( Array.from(e.target.classList).includes('popup-type') || Array.from(e.target.parentElement.classList).includes('popup-type') ) {
+				if ( Array.from( e.target.classList ).includes( 'popup-type' ) || Array.from( e.target.parentElement.classList ).includes( 'popup-type' ) ) {
 					var $container = jQuery( '#pum-popup-settings-container' );
 					if ( 1 === $container.length ) {
-						// Temporarily hardcoded object for testing...
+						// Our initial presets. As we add more, consider creating JSON import system and moving to there.
 						var popupTypes = {
 							'center-popup': {
 								'size': 'medium',
@@ -120,7 +120,7 @@
 							}
 						};
 						var popupType = e.target.dataset.popupType || e.target.parentElement.dataset.popupType || '';
-						var presetValues = popupTypes.hasOwnProperty(popupType) ? popupTypes[ popupType ] : {};
+						var presetValues = popupTypes.hasOwnProperty( popupType ) ? popupTypes[ popupType ] : {};
 						var args = pum_popup_settings_editor.form_args || {};
 						var originalValues = pum_popup_settings_editor.current_values || {};
 						var currentValues = $container.pumSerializeObject();
