@@ -158,28 +158,33 @@
                 settings = $popup.popmake('getSettings'),
                 start = $popup.popmake('animation_origin', settings.animation_origin);
 
-            // Make the overlay and container visible so they can be positioned & sized prior to display.
-            $popup.css({display: "block"});
-            // Position the opaque container offscreen then update its opacity.
-            $container.css({display: "block"})
-                .position(start);
+            // Step 1. Reset popup styles.
+            popupCssReset( $popup );
 
-            $popup
-                .popmake('animate_overlay', 'fade', overlayAnimationSpeed(settings), function () {
-                    $container.popmake('reposition', function (position) {
-                        $container.css({opacity: 0});
-                        position.opacity = 1;
-                        $container.animate(position, containerAnimationSpeed(settings), 'swing', function () {
-                            // Fire user passed callback.
-                            if (callback !== undefined) {
-                                callback();
-                                // TODO Test this new method. Then remove the above.
-                                //callback.apply(this);
-                            }
-                        });
+            // Step 2. Hide each element to be faded in. display: "block" is neccessary for accurate positioning based on popup size.
+            $popup.css({display: "block", opacity: 0});
+            $container.css({display: "block", opacity: 0});
 
+            // Step 3. Position the container offscreen.
+            $container.position( start );
+
+            // Step 4. Animate the popup.
+            $popup.popmake('animate_overlay', 'fade', overlayAnimationSpeed(settings), function () {
+                $container.popmake('reposition', function (position) {
+                    // Add opacity to the animation properties.
+                    position.opacity = 1;
+                    // Animate the fade & slide.
+                    $container.animate(position, containerAnimationSpeed(settings), 'swing', function () {
+                        // Fire user passed callback.
+                        if (callback !== undefined) {
+                            callback();
+                            // TODO Test this new method. Then remove the above.
+                            //callback.apply(this);
+                        }
                     });
+
                 });
+            });
             return this;
         },
         /**
