@@ -152,39 +152,39 @@
             } );
             return this;
         },
-        fadeAndSlide: function (callback) {
-            var $popup = PUM.getPopup(this),
-                $container = $popup.popmake('getContainer'),
-                settings = $popup.popmake('getSettings'),
-                start = $popup.popmake('animation_origin', settings.animation_origin);
+        fadeAndSlide: function ( callback ) {
+            var $popup = PUM.getPopup( this ),
+                $container = $popup.popmake( 'getContainer' ),
+                settings = $popup.popmake( 'getSettings' ),
+                start = $popup.popmake( 'animation_origin', settings.animation_origin );
 
             // Step 1. Reset popup styles.
             popupCssReset( $popup );
 
             // Step 2. Hide each element to be faded in. display: "block" is neccessary for accurate positioning based on popup size.
-            $popup.css({display: "block", opacity: 0});
-            $container.css({display: "block", opacity: 0});
+            $popup.css( { display: 'block', opacity: 0 } );
+            $container.css( { display: 'block', opacity: 0 } );
 
             // Step 3. Position the container offscreen.
             $container.position( start );
 
             // Step 4. Animate the popup.
-            $popup.popmake('animate_overlay', 'fade', overlayAnimationSpeed(settings), function () {
-                $container.popmake('reposition', function (position) {
+            $popup.popmake( 'animate_overlay', 'fade', overlayAnimationSpeed( settings ), function () {
+                $container.popmake( 'reposition', function ( position ) {
                     // Add opacity to the animation properties.
                     position.opacity = 1;
                     // Animate the fade & slide.
-                    $container.animate(position, containerAnimationSpeed(settings), 'swing', function () {
+                    $container.animate( position, containerAnimationSpeed( settings ), 'swing', function () {
                         // Fire user passed callback.
-                        if (callback !== undefined) {
+                        if ( callback !== undefined ) {
                             callback();
                             // TODO Test this new method. Then remove the above.
                             //callback.apply(this);
                         }
-                    });
+                    } );
 
-                });
-            });
+                } );
+            } );
             return this;
         },
         /**
