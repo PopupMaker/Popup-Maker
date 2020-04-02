@@ -346,8 +346,13 @@ class PUM_AssetCache {
 		global $wp_filesystem;
 
 		$results = $wp_filesystem->put_contents( $file, $contents, defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : false );
-		$status = self::is_file_accessible( $filename );
-		return true;
+		if ( true === $results && self::is_file_accessible( $filename ) ) {
+			return true;
+		} else {
+			update_option( 'pum_files_writeable', false );
+			update_option( '_pum_writeable_notice_dismissed', false );
+			return false;
+		}
 	}
 
 	/**
