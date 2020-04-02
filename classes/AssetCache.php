@@ -346,9 +346,12 @@ class PUM_AssetCache {
 		global $wp_filesystem;
 
 		$results = $wp_filesystem->put_contents( $file, $contents, defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : false );
+
+		// If the file is generated and is accessible...
 		if ( true === $results && self::is_file_accessible( $filename ) ) {
 			return true;
 		} else {
+			// ... else, let's set our flags to prevent cache running again for now.
 			update_option( 'pum_files_writeable', false );
 			update_option( '_pum_writeable_notice_dismissed', false );
 			return false;
@@ -657,13 +660,19 @@ class PUM_AssetCache {
 			return false;
 		}
 		$cache_url = PUM_Helpers::get_cache_dir_url();
-		$results = wp_remote_get( $cache_url . '/' . $filename );
+		$results   = wp_remote_get( $cache_url . '/' . $filename );
+
+		// If it returned a WP_Error, let's log its error message.
 		if ( is_wp_error( $results ) ) {
 			$error = $results->get_error_message();
 			PUM_Utils_Logging::instance()->log( sprintf( 'Cannot access cache file when tested. Error given: %s', esc_html( $error ) ) );
 		}
+
+		// If it returned valid array...
 		if ( is_array( $results ) && isset( $results['response'] ) ) {
 			$status_code = $results['response']['code'];
+
+			// ... then, check if it's a valid status code. Only if it is a valid 2XX code, will this method return true.
 			if ( false !== $status_code && ( 200 <= $status_code && 300 >= $status_code ) ) {
 				return true;
 			} else {
