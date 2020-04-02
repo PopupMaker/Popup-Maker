@@ -8152,8 +8152,6 @@ function pumChecked(val1, val2, print) {
                         if (Array.isArray(data.value) && data.value.length === 1 && data.value[0].toString() === '1') {
                             data.value = true;
                             data.meta.checked = true;
-                        } else {
-
                         }
                         break;
                     case 'boolean':
