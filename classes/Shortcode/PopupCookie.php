@@ -84,6 +84,9 @@ class PUM_Shortcode_PopupCookie extends PUM_Shortcode {
 			'path' => $atts['sitewide'],
 		];
 
+		// This shortcode requires our scripts, but can be used on pages where no popups exist.
+		wp_enqueue_script( 'popup-maker-site' );
+
 		$onscreen = 'data-only-onscreen="' . ( $atts['only_onscreen'] ? 1 : 0 ) . '"';
 
 		return "<div class='pum-cookie' data-cookie-args='" . json_encode( $args ) . "' $onscreen />";
