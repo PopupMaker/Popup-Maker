@@ -654,6 +654,7 @@ var PUM;
                 .trigger('popmakeAfterReposition');
 
             if (location === 'center' && $container[0].offsetTop < 0) {
+                // Admin bar is 32px high, with a 10px margin that is 42
                 $container.css({top: $('body').hasClass('admin-bar') ? 42 : 10});
             }
 
