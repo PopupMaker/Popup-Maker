@@ -1,6 +1,7 @@
 ### Unreleased Changes
 * Feature: New Font Awesome support added to close button text setting.
 * Feature: New opening sound setting to have a sound played when a popup is opened.
+* Feature: Insert customizable [popup_cookie] shortcode on thank you pages when using non-integrated forms. 
 * Tweak: Add option to disable or adjust the padding-right added to body.
 * Tweak: Remove Freemius integration from Popup Maker.
 * Fix: Typo in admin editor css path.
