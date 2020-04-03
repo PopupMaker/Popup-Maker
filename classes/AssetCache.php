@@ -660,12 +660,17 @@ class PUM_AssetCache {
 			return false;
 		}
 		$cache_url = PUM_Helpers::get_cache_dir_url();
-		$results   = wp_remote_get( $cache_url . '/' . $filename );
+		if ( false === $cache_url ) {
+			PUM_Utils_Logging::instance()->log( 'Cannot access cache file when tested. Cache URL returned false.' );
+		}
+		$protocol  = is_ssl() ? 'https:' : 'http:';
+		$file      = $protocol . $cache_url . '/' . $filename;
+		$results   = wp_remote_get( $file  );
 
 		// If it returned a WP_Error, let's log its error message.
 		if ( is_wp_error( $results ) ) {
 			$error = $results->get_error_message();
-			PUM_Utils_Logging::instance()->log( sprintf( 'Cannot access cache file when tested. Error given: %s', esc_html( $error ) ) );
+			PUM_Utils_Logging::instance()->log( sprintf( 'Cannot access cache file when tested. Tested file: %s Error given: %s', esc_html( $file ), esc_html( $error ) ) );
 		}
 
 		// If it returned valid array...
