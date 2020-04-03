@@ -653,6 +653,10 @@ var PUM;
                 .position(reposition)
                 .trigger('popmakeAfterReposition');
 
+            if (location === 'center' && $container[0].offsetTop < 0) {
+                $container.css({top: $('body').hasClass('admin-bar') ? 42 : 10});
+            }
+
             if (opacity.overlay) {
                 $popup.css({opacity: opacity.overlay}).hide(0);
             }
