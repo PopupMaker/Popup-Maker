@@ -111,7 +111,7 @@ class PUM_Cookies {
 				'name' => __( 'Subscription Form: Already Subscribed', 'popup-maker' ),
 			),
 			'manual'                          => array(
-				'name' => __( 'Manual JavaScript', 'popup-maker' ),
+				'name' => __( 'Manual', 'popup-maker' ),
 				'settings_column' => '<pre><code>[popup_cookie name="{{data.name}}" expires="{{data.time}}" sitewide="{{data.path ? 1 : 0}}"]</code></pre>',
 			),
 		) );
