@@ -154,12 +154,6 @@ class PUM_Admin_Extend {
 				'url'  => 'https://wppopupmaker.com/recoomends/contact-form-7',
 				'desc' => __( 'CF7 is one of the most downloaded plugins on the WordPress repo. Make simple forms with ease and plenty of free addons available.', 'popup-maker' ),
 			),
-			array(
-				'slug' => 'quiz-survey-master',
-				'name' => __( 'Quiz & Survey Master', 'popup-maker' ),
-				'url'  => 'https://wppopupmaker.com/recommends/quiz-survey-master',
-				'desc' => __( 'If you need more from your forms data look no further, QSM is all about the statistics & collective data, something other form plugins neglect.', 'popup-maker' ),
-			),
 		);
 
 		shuffle( $form_plugins );
