@@ -1,5 +1,16 @@
 [
   {
+    "new_version": "1.0.0",
+    "name": "WooCommerce Pro",
+    "slug": "woocommerce-pro",
+    "url": "https:\/\/wppopupmaker.com\/extensions\/woocommerce-pro\/?changelog=1",
+    "homepage": "https:\/\/wppopupmaker.com\/extensions\/woocommerce-pro\/",
+    "package": "",
+    "download_link": "",
+    "image": "https:\/\/wppopupmaker.com\/wp-content\/uploads\/2017\/03\/core-bundle.jpg",
+    "excerpt": "Take your WooCommerce store's performance to the next level by creating upsell and cross-sell popups and more with our advanced conditions and triggers."
+  },
+  {
     "new_version": "1.1.0",
     "name": "Exit Intent Popups",
     "slug": "exit-intent-popups",
