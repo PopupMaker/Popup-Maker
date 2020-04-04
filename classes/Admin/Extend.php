@@ -154,6 +154,24 @@ class PUM_Admin_Extend {
 				'url'  => 'https://wppopupmaker.com/recoomends/contact-form-7',
 				'desc' => __( 'CF7 is one of the most downloaded plugins on the WordPress repo. Make simple forms with ease and plenty of free addons available.', 'popup-maker' ),
 			),
+			array(
+				'slug' => 'mc4wp',
+				'name' => __( 'MailChimp For WordPress', 'popup-maker' ),
+				'url'  => 'https://wppopupmaker.com/recommends/mailchimp-for-wordpress',
+				'desc' => __( 'Allowing your visitors to subscribe to your newsletter should be easy. With this plugin, it finally is.', 'popup-maker' ),
+			),
+			array(
+				'slug' => 'caldera-forms',
+				'name' => __( 'Caldera Forms', 'popup-maker' ),
+				'url'  => 'https://wppopupmaker.com/recommends/caldera-forms',
+				'desc' => __( 'Responsive form builder for contact forms, user registration and login forms, Mailchimp, PayPal Express and more.', 'popup-maker' ),
+			),
+			array(
+				'slug' => 'wp-forms',
+				'name' => __( 'WP Forms', 'popup-maker' ),
+				'url'  => 'https://wppopupmaker.com/recommends/wp-forms',
+				'desc' => __( 'Drag & Drop online form builder that helps you create beautiful contact forms with just a few clicks.', 'popup-maker' ),
+			),
 		);
 
 		shuffle( $form_plugins );
