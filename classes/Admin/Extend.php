@@ -212,7 +212,24 @@ class PUM_Admin_Extend {
 	 * @return array
 	 */
 	public static function other_plugins() {
-		return array();
+		$other_plugins = array(
+			array(
+				'slug' => 'user-menus',
+				'name' => __( 'User Menus', 'popup-maker' ),
+				'url'  => 'https://wppopupmaker.com/recommends/user-menus',
+				'desc' => __( "Show/hide menu items to logged in users, logged out users or specific user roles. Display logged in user details in menu. Add a logout link to menu.", 'popup-maker' ),
+			),
+			array(
+				'slug' => 'content-control',
+				'name' => __( 'Content Control', 'popup-maker' ),
+				'url'  => 'https://wppopupmaker.com/recommends/content-control',
+				'desc' => __( "	Restrict content to logged in/out users or specific user roles. Restrict access to certain parts of a page/post. Control the visibility of widgets.", 'popup-maker' ),
+			),
+		);
+
+		shuffle( $other_plugins );
+
+		return apply_filters( 'pum_extend_page_other_plugins', $other_plugins );
 	}
 
 	/**
