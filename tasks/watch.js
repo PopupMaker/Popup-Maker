@@ -13,7 +13,7 @@ const gulp = require('gulp'),
 	srcPath = path.join(config.root.dev, config.js.dev);
 
 function sass_watcher() {
-	$fn.saneWatch(path.join(srcPath, '/**/*.s+(a|c)ss'), {debounce: 300}, gulp.parallel('css', 'cssrtl'));
+	$fn.saneWatch(path.join(path.join(config.root.dev, config.css.dev), '/**/*.s+(a|c)ss'), {debounce: 300}, gulp.parallel('css', 'cssrtl'));
 }
 
 sass_watcher.description = "Starts a scss/sass file watcher.";
@@ -29,12 +29,6 @@ function js_site_watcher() {
 }
 
 js_site_watcher.description = "Starts site Javascript file watcher.";
-
-function js_other_watcher() {
-	$fn.saneWatch(path.join(srcPath, '*.js'), {debounce: 300}, gulp.parallel('js_other'));
-}
-
-js_other_watcher.description = "Starts 3rd party Javascript file watcher.";
 
 function langpack_watcher() {
 	$fn.saneWatch('**/*.php', {debounce: 300}, gulp.parallel('langpack'));
