@@ -522,10 +522,6 @@ class PUM_Admin_Extend {
 					$extensions[ $ext['slug'] ] = $ext;
 				}
 
-				// Set core bundle to be first item listed.
-				// TODO Replace this with a full width banner instead.
-				$extensions = array_merge( array( 'core-extensions-bundle' => $extensions['core-extensions-bundle'] ), $extensions );
-
 				$i = 0;
 
 				foreach ( $extensions as $extension ) : ?>
