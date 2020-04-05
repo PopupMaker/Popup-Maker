@@ -42,12 +42,13 @@
 			document.querySelector( '#pum-popup-settings-container' ).addEventListener( 'change', function(e) {
 				if ( 'open_sound' === e.target.id ) {
 					// Only play if the sound selected is not None or Custom.
-					if ( ! ['none', 'custom'].includes( e.target.value ) ) {
-						const audio = new Audio( pum_admin_vars.pm_dir_url + '/assets/sounds/' + e.target.value );
+					var notThese = ['none', 'custom'];
+					if ( notThese.indexOf( e.target.value ) === -1 ) {
+						var audio = new Audio( pum_admin_vars.pm_dir_url + '/assets/sounds/' + e.target.value );
 						audio.addEventListener( 'canplaythrough', function() {
 							this.play()
 								.catch(function( reason ) {
-									console.warn(`Sound was not able to play when selected. Reason: ${reason}.`);
+									console.warn('Sound was not able to play when selected. Reason: ' + reason );
 								});
 						});
 						audio.addEventListener( 'error', function() {

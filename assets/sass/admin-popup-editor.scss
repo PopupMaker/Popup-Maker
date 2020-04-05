@@ -236,3 +236,26 @@ Misc
   }
 
 }
+
+
+/***********
+Manual Cookie Shortcode
+***********/
+
+pre.manual-cookie-shortcode {
+  overflow: hidden;
+  max-width: 20vw;
+  max-height: 1.7em;
+  margin: 0;
+
+  code {
+    overflow-x: scroll;
+    display: block;
+    padding: 2px 16px 1px;
+    margin: 0px -17px;
+
+    &::before, &::after {
+      content: " ";
+    }
+  }
+}

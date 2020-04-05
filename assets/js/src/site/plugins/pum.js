@@ -247,13 +247,13 @@ var PUM;
                     .trigger('pumInit');
 
                 // If our opening sound setting is not set to None...
-                if ( 'none' !== settings.open_sound ) {
+                if ( settings.open_sound && 'none' !== settings.open_sound ) {
 					// ... then set up our audio. Once loaded, add to popup data.
-					const audio = 'custom' !== settings.open_sound ? new Audio( pum_vars.pm_dir_url + '/assets/sounds/' + settings.open_sound ) : new Audio( settings.custom_sound );
-					audio.addEventListener('canplaythrough', () => {
+					var audio = 'custom' !== settings.open_sound ? new Audio( pum_vars.pm_dir_url + '/assets/sounds/' + settings.open_sound ) : new Audio( settings.custom_sound );
+					audio.addEventListener('canplaythrough', function() {
 						$popup.data('popAudio', audio);
 					});
-					audio.addEventListener('error', () => {
+					audio.addEventListener('error', function() {
 						console.warn( 'Error occurred when trying to load Popup opening sound.' );
 					});
 
@@ -384,8 +384,8 @@ var PUM;
 			// If the audio hasn't loaded yet, it wouldn't have been added to the popup.
             if ( 'undefined' !== typeof $popup.data('popAudio') ) {
 				$popup.data('popAudio').play()
-					.catch((reason) => {
-						console.warn(`Sound was not able to play when popup opened. Reason: ${reason}.`);
+					.catch(function(reason) {
+						console.warn('Sound was not able to play when popup opened. Reason: ' + reason);
 					});
 			}
 
@@ -652,6 +652,10 @@ var PUM;
                 .addClass('custom-position')
                 .position(reposition)
                 .trigger('popmakeAfterReposition');
+
+            if (location === 'center' && $container[0].offsetTop < 0) {
+                $container.css({top: $('body').hasClass('admin-bar') ? 42 : 10});
+            }
 
             if (opacity.overlay) {
                 $popup.css({opacity: opacity.overlay}).hide(0);

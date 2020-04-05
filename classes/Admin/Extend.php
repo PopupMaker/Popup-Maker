@@ -155,10 +155,22 @@ class PUM_Admin_Extend {
 				'desc' => __( 'CF7 is one of the most downloaded plugins on the WordPress repo. Make simple forms with ease and plenty of free addons available.', 'popup-maker' ),
 			),
 			array(
-				'slug' => 'quiz-survey-master',
-				'name' => __( 'Quiz & Survey Master', 'popup-maker' ),
-				'url'  => 'https://wppopupmaker.com/recommends/quiz-survey-master',
-				'desc' => __( 'If you need more from your forms data look no further, QSM is all about the statistics & collective data, something other form plugins neglect.', 'popup-maker' ),
+				'slug' => 'mc4wp',
+				'name' => __( 'MailChimp For WordPress', 'popup-maker' ),
+				'url'  => 'https://wppopupmaker.com/recommends/mailchimp-for-wordpress',
+				'desc' => __( 'Allowing your visitors to subscribe to your newsletter should be easy. With this plugin, it finally is.', 'popup-maker' ),
+			),
+			array(
+				'slug' => 'caldera-forms',
+				'name' => __( 'Caldera Forms', 'popup-maker' ),
+				'url'  => 'https://wppopupmaker.com/recommends/caldera-forms',
+				'desc' => __( 'Responsive form builder for contact forms, user registration and login forms, Mailchimp, PayPal Express and more.', 'popup-maker' ),
+			),
+			array(
+				'slug' => 'wp-forms',
+				'name' => __( 'WP Forms', 'popup-maker' ),
+				'url'  => 'https://wppopupmaker.com/recommends/wp-forms',
+				'desc' => __( 'Drag & Drop online form builder that helps you create beautiful contact forms with just a few clicks.', 'popup-maker' ),
 			),
 		);
 
@@ -200,7 +212,24 @@ class PUM_Admin_Extend {
 	 * @return array
 	 */
 	public static function other_plugins() {
-		return array();
+		$other_plugins = array(
+			array(
+				'slug' => 'user-menus',
+				'name' => __( 'User Menus', 'popup-maker' ),
+				'url'  => 'https://wppopupmaker.com/recommends/user-menus',
+				'desc' => __( "Show/hide menu items to logged in users, logged out users or specific user roles. Display logged in user details in menu. Add a logout link to menu.", 'popup-maker' ),
+			),
+			array(
+				'slug' => 'content-control',
+				'name' => __( 'Content Control', 'popup-maker' ),
+				'url'  => 'https://wppopupmaker.com/recommends/content-control',
+				'desc' => __( "	Restrict content to logged in/out users or specific user roles. Restrict access to certain parts of a page/post. Control the visibility of widgets.", 'popup-maker' ),
+			),
+		);
+
+		shuffle( $other_plugins );
+
+		return apply_filters( 'pum_extend_page_other_plugins', $other_plugins );
 	}
 
 	/**
@@ -521,10 +550,6 @@ class PUM_Admin_Extend {
 					unset( $extensions[ $key ] );
 					$extensions[ $ext['slug'] ] = $ext;
 				}
-
-				// Set core bundle to be first item listed.
-				// TODO Replace this with a full width banner instead.
-				$extensions = array_merge( array( 'core-extensions-bundle' => $extensions['core-extensions-bundle'] ), $extensions );
 
 				$i = 0;
 
