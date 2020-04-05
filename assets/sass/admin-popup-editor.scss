@@ -2,6 +2,84 @@
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
+/***********
+Display Switcher
+***********/
+
+#pum-popup-settings-container .popup-types {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 100%;
+
+	@media screen and (min-width: 600px) {
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+
+	.popup-type {
+		margin: 0 1.5% 20px;
+		transition: transform 0.1s ease 0s;
+		cursor:pointer;
+
+		@media screen and (min-width: 600px) and (max-width: 1279px) {
+			width: 47%;
+
+			&:nth-child(2n+1) {
+				margin-left: 0; // First column in each row
+			}
+
+			&:nth-child(2n+2) {
+				margin-right: 0; // Last Column in each row
+			}
+		}
+
+
+		@media screen and (min-width: 1280px) and (max-width: 1365px) {
+			width: 30%;
+
+			&:nth-child(3n+1) {
+				margin-left: 0; // First column in each row
+			}
+
+			&:nth-child(3n+3) {
+				margin-right: 0; // Last Column in each row
+			}
+		}
+
+		@media screen and (min-width: 1366px) {
+			width: 22.75%;
+
+			&:nth-child(4n+1) {
+				margin-left: 0; // First column in each row
+			}
+
+			&:nth-child(4n+4) {
+				margin-right: 0; // Last Column in each row
+			}
+		}
+
+		&:hover {
+				transform: scale(1.1); // Intentional ?
+		}
+
+		img {
+			max-width: 100%;
+			height: auto;
+		}
+
+		button {
+			width: 100%;
+		}
+	}
+}
+
+
+
+/***********
+Misc
+***********/
+
 #wp-admin-bar-view {
   display: none;
 }
@@ -157,6 +235,11 @@
   }
 
 }
+
+
+/***********
+Manual Cookie Shortcode
+***********/
 
 pre.manual-cookie-shortcode {
   overflow: hidden;

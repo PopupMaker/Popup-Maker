@@ -341,6 +341,7 @@ class PUM_Admin_Popups {
 				'main' => __( 'Conditions', 'popup-maker' ),
 			),
 			'display'   => array(
+				'preset'    => __( 'Display Presets', 'popup-maker' ),
 				'main'      => __( 'Appearance', 'popup-maker' ),
 				'size'      => __( 'Size', 'popup-maker' ),
 				'animation' => __( 'Animation', 'popup-maker' ),
@@ -412,6 +413,22 @@ class PUM_Admin_Popups {
 					),
 				) ),
 				'display'   => apply_filters( 'pum_popup_display_settings_fields', array(
+					'preset'    => array(
+						'explain' => array(
+							'type'    => 'html',
+							'content' => '<p>Select one of the types below to get started! Once selected, you can adjust the display settings using the tabs above.</p>'
+						),
+						'type_section' => array(
+							'type'    => 'section',
+							'classes' => 'popup-types',
+							'fields'  => array(
+								'<div class="popup-type" data-popup-type="center-popup"><img src="' . Popup_Maker::$URL  . 'assets/images/admin/display-switcher/center-popup.png" alt="' . __( 'Center Popup', 'popup-maker' ) . '"/><button class="button">' . __( 'Center Popup', 'popup-maker' ) . '</button></div>',
+								'<div class="popup-type" data-popup-type="right-bottom-slidein"><img src="' . Popup_Maker::$URL  . 'assets/images/admin/display-switcher/right-bottom-slidein.png" alt="' . __( 'Right Bottom Slide-in', 'popup-maker' ) . '"/><button class="button">' . __( 'Right Bottom Slide-in', 'popup-maker' ) . '</button></div>',
+								'<div class="popup-type" data-popup-type="top-bar"><img src="' . Popup_Maker::$URL  . 'assets/images/admin/display-switcher/top-bar.png" alt="' . __( 'Top Bar', 'popup-maker' ) . '"/><button class="button">' . __( 'Top Bar', 'popup-maker' ) . '</button></div>',
+								'<div class="popup-type" data-popup-type="left-bottom-notice"><img src="' . Popup_Maker::$URL  . 'assets/images/admin/display-switcher/left-bottom-notice.png" alt="' . __( 'Left Bottom Notice', 'popup-maker' ) . '"/><button class="button">' . __( 'Left Bottom Notice', 'popup-maker' ) . '</button></div>',
+							),
+						),
+					),
 					'main'      => array(
 						'theme_id' => array(
 							'label'        => __( 'Popup Theme', 'popup-maker' ),
