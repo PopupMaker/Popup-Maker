@@ -12,50 +12,70 @@ Display Switcher
 	justify-content: space-between;
 	width: 100%;
 
+	@media screen and (min-width: 600px) {
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+
 	.popup-type {
-		background-color: #f3f5f6;
-		border: 1px solid #0071a1;
-		color: #0071a1;
-		border-radius: 2px;
-		font-size: 13px;
-		font-weight: 600;
-		margin-bottom: 20px;
-		align-items: center;
-		justify-content: center;
-		display: flex;
-		transition: transform 0.2s ease 0s;
-		cursor: pointer;
+		margin: 0 1.5% 20px;
+		transition: transform 0.1s ease 0s;
+		cursor:pointer;
+
+		@media screen and (min-width: 600px) and (max-width: 1279px) {
+			width: 47%;
+
+			&:nth-child(2n+1) {
+				margin-left: 0; // First column in each row
+			}
+
+			&:nth-child(2n+2) {
+				margin-right: 0; // Last Column in each row
+			}
+		}
+
+
+		@media screen and (min-width: 1280px) and (max-width: 1365px) {
+			width: 30%;
+
+			&:nth-child(3n+1) {
+				margin-left: 0; // First column in each row
+			}
+
+			&:nth-child(3n+3) {
+				margin-right: 0; // Last Column in each row
+			}
+		}
+
+		@media screen and (min-width: 1366px) {
+			width: 22.75%;
+
+			&:nth-child(4n+1) {
+				margin-left: 0; // First column in each row
+			}
+
+			&:nth-child(4n+4) {
+				margin-right: 0; // Last Column in each row
+			}
+		}
 
 		&:hover {
-			background-color: #f1f1f1;
-			border-color: #016087;
-			color: #016087;
-			transform: scale(1.1);
+				transform: scale(1.1); // Intentional ?
 		}
 
 		img {
+			max-width: 100%;
+			height: auto;
+		}
+
+		button {
+			font-weight: 600; // Intentional?
 			width: 100%;
-			border-bottom: 1px solid #0071a1;
-		}
-
-		p {
-			padding: 4px 8px;
-			margin: 0;
-			color: #0071a1;
 		}
 	}
 }
 
-@media screen and (min-width: 600px) {
-	#pum-popup-settings-container .popup-types {
-		flex-direction: row;
-		flex-wrap: wrap;
 
-		.popup-type {
-			width: 30%;
-		}
-	}
-}
 
 /***********
 Misc
