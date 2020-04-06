@@ -54,6 +54,26 @@ class PUM_Helpers {
 	}
 
 	/**
+	 * Gets the directory caching should be stored in.
+	 *
+	 * Accounts for various adblock bypass options.
+	 *
+	 * @return bool|string
+	 */
+	public static function get_cache_dir_url() {
+		$upload_dir = self::get_upload_dir_url();
+		if ( false === $upload_dir ) {
+			return false;
+		}
+
+		if ( ! pum_get_option( 'bypass_adblockers', false ) ) {
+			return trailingslashit( $upload_dir ) . 'pum';
+		}
+
+		return $upload_dir;
+	}
+
+	/**
 	 * Gets the uploads directory path
 	 *
 	 * @since 1.10

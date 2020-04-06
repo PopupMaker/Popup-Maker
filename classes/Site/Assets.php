@@ -54,7 +54,7 @@ class PUM_Site_Assets {
 	 * Initialize
 	 */
 	public static function init() {
-		self::$cache_url = self::get_cache_dir_url();
+		self::$cache_url = PUM_Helpers::get_cache_dir_url();
 		self::$debug     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
 		self::$suffix    = self::$debug ? '' : '.min';
 		self::$js_url    = Popup_Maker::$URL . 'assets/js/';
@@ -113,27 +113,6 @@ class PUM_Site_Assets {
 			) );
 		}
 
-	}
-
-
-	/**
-	 * Gets the directory caching should be stored in.
-	 *
-	 * Accounts for various adblock bypass options.
-	 *
-	 * @return bool|string
-	 */
-	public static function get_cache_dir_url() {
-		$upload_dir = PUM_Helpers::get_upload_dir_url();
-		if ( false === $upload_dir ) {
-			return false;
-		}
-
-		if ( ! pum_get_option( 'bypass_adblockers', false ) ) {
-			return trailingslashit( $upload_dir ) . 'pum';
-		}
-
-		return $upload_dir;
 	}
 
 	/**
