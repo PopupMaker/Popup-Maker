@@ -57,7 +57,11 @@ class PUM_AssetCache {
 			self::$asset_url = Popup_Maker::$URL . 'assets/';
 			self::$js_url    = self::$asset_url . 'js/';
 			self::$css_url   = self::$asset_url . 'css/';
-			self::$disabled  = pum_get_option( 'disable_asset_caching', false );
+			if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
+				self::$disabled = true;
+			} else {
+				self::$disabled  = pum_get_option( 'disable_asset_caching', false );
+			}
 
 			add_action( 'pum_extension_updated', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_extension_deactivated', array( __CLASS__, 'reset_cache' ) );
@@ -68,6 +72,8 @@ class PUM_AssetCache {
 			add_action( 'pum_save_theme', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_update_core_version', array( __CLASS__, 'reset_cache' ) );
 			add_filter( 'pum_alert_list', array( __CLASS__, 'cache_alert' ) );
+
+			add_action( 'pum_styles', array( __CLASS__, 'global_custom_styles' ) );
 
 			if ( null === get_option( 'pum_files_writeable', null ) ) {
 				add_option( 'pum_files_writeable', true );
@@ -134,13 +140,13 @@ class PUM_AssetCache {
 		}
 
 		// Checks and create cachedir.
-		if ( ! is_dir( self::get_cache_dir() ) ) {
+		if ( false !== self::$cache_dir && ! is_dir( self::$cache_dir ) ) {
 
 			/** @var WP_Filesystem_Base $wp_filesystem */
-			$wp_filesystem->mkdir( self::get_cache_dir() );
+			$wp_filesystem->mkdir( self::$cache_dir );
 		}
 
-		return is_writable( self::get_cache_dir() ) && ! isset( $_POST['wp_customize'] );
+		return false !== self::$cache_dir && is_writable( self::$cache_dir ) && ! isset( $_POST['wp_customize'] );
 	}
 
 	/**
@@ -159,9 +165,10 @@ class PUM_AssetCache {
 	 * @return array|string
 	 */
 	public static function get_cache_dir() {
-		$wp_upload_dir = wp_upload_dir();
-
-		$upload_dir = $wp_upload_dir['basedir'];
+		$upload_dir = PUM_Helpers::get_upload_dir_path();
+		if ( false === $upload_dir ) {
+			return false;
+		}
 
 		if ( ! pum_get_option( 'bypass_adblockers', false ) ) {
 			return trailingslashit( $upload_dir ) . 'pum';
@@ -203,7 +210,10 @@ class PUM_AssetCache {
 	 * Generate JS cache file.
 	 */
 	public static function cache_js() {
-		$js_file = self::get_cache_dir() . '/' . self::generate_cache_filename( 'pum-site-scripts' ) . '.js';
+		if ( false === self::$cache_dir ) {
+			return;
+		}
+		$js_file = trailingslashit( self::$cache_dir ) . self::generate_cache_filename( 'pum-site-scripts' ) . '.js';
 
 		$js = "/**\n";
 		$js .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
@@ -222,7 +232,10 @@ class PUM_AssetCache {
 	 * Generate CSS cache file.
 	 */
 	public static function cache_css() {
-		$css_file = self::get_cache_dir() . '/' . self::generate_cache_filename( 'pum-site-styles' ) . '.css';
+		if ( false === self::$cache_dir ) {
+			return;
+		}
+		$css_file = trailingslashit( self::$cache_dir ) . self::generate_cache_filename( 'pum-site-styles' ) . '.css';
 
 		$css = "/**\n";
 		$css .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
@@ -387,6 +400,14 @@ class PUM_AssetCache {
 		}
 
 		return $css_code;
+	}
+
+	public static function global_custom_styles() {
+
+		if ( pum_get_option( 'adjust_body_padding' ) ) {
+			echo "html.pum-open.pum-open-overlay.pum-open-scrollable body > *[aria-hidden] { padding-right: " . pum_get_option( 'body_padding_override', '15px' ) . "!important; }";
+		}
+
 	}
 
 	/**

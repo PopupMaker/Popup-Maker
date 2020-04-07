@@ -1,10 +1,25 @@
 ### Unreleased Changes
+* Feature: New Font Awesome support added to close button text setting.
+* Feature: New opening sound setting to have a sound played when a popup is opened.
+* Feature: Insert customizable [popup_cookie] shortcode on thank you pages when using non-integrated forms. 
+* Tweak: Add option to disable or adjust the padding-right added to body.
+* Tweak: Remove Freemius integration from Popup Maker.
+* Fix: Typo in admin editor css path.
+
+### v1.9.2 - 03/26/2020
+* Tweak: Add support for WP 5.4's new method of adding custom fields to the nav menu editor.
+
+### v1.9.1 - 02/13/2020
+* Fix: JS error when MailChimp for WordPress was active but no forms on the page.
+
+### v1.9.0 - 02/11/2020
 * Feature: New Form Submission trigger with option to choose specific forms for integrated forms.
 * Feature: New Form Submission cookie event with option to choose specific forms.
 * Feature: New Close on Form Submission with optional delay.
 * Feature: WP Forms integration.
 * Feature: Caldera Forms integration.
 * Feature: MailChimp for WordPress integration
+* Improvement: Enhanced asset cache to identify issues with a site's filesystem.
 * Improvement: Various changes to ensure PHP 7.4 compatibility.
 * Improvement: Minimum PHP version updated to v5.6 to match WP core.
 * Improvement: Simplified form integration interfaces to more easily support additional form plugins or custom integrations. Includes full AJAX & non-AJAX form support.
@@ -13,6 +28,7 @@
 * Improvement: Simplified form integration apis.
 * Improvement: Various performance improvements.
 * Tweak: Remove unnecessary usage of esc_attr_e causing extra translation calls.
+* Fix: Bug when accept language header is not supplied causes undefined index notice.
 * Fix: Error caused by invalid post ID returned by CF7 when saving new forms.
 * Fix: Bug when selecting more than 10 items in targeting rule post/page select fields.
 

@@ -1,6 +1,16 @@
 (function ($, document, undefined) {
     "use strict";
 
+    var setCookie = function (settings) {
+        $.pm_cookie(
+            settings.name,
+            true,
+            settings.session ? null : settings.time,
+            settings.path ? pum_vars.home_url || '/' : null
+        );
+        pum.hooks.doAction('popmake.setCookie', settings);
+    };
+
     $.extend($.fn.popmake.methods, {
         addCookie: function (type) {
             // Method calling logic
@@ -15,15 +25,7 @@
             }
             return this;
         },
-        setCookie: function (settings) {
-            $.pm_cookie(
-                settings.name,
-                true,
-                settings.session ? null : settings.time,
-                settings.path ? pum_vars.home_url || '/' : null
-            );
-            pum.hooks.doAction('popmake.setCookie', settings);
-        },
+        setCookie: setCookie,
         checkCookies: function (settings) {
             var i,
                 ret = false;
@@ -69,24 +71,30 @@
                 $popup.popmake('setCookie', settings);
             });
         },
-		form_submission: function (settings) {
-			var $popup = PUM.getPopup(this);
+        form_submission: function ( settings ) {
+            var $popup = PUM.getPopup( this );
 
-			settings = $.extend({
-				form: '',
-				formInstanceId: ''
-			}, settings);
+            settings = $.extend( {
+                form: '',
+                formInstanceId: '',
+                only_in_popup: false,
+            }, settings );
 
-			PUM.hooks.addAction('pum.integration.form.success', function (form, args) {
-				if (!settings.form.length) {
-					return;
-				}
+            PUM.hooks.addAction( 'pum.integration.form.success', function ( form, args ) {
+                if ( ! settings.form.length ) {
+                    return;
+                }
 
-				if (PUM.integrations.checkFormKeyMatches(settings.form, settings.formInstanceId, args)) {
-					$popup.popmake('setCookie', settings);
-				}
-			});
-		},
+                if ( PUM.integrations.checkFormKeyMatches( settings.form, settings.formInstanceId, args ) ) {
+                    if (
+                        ( settings.only_in_popup && PUM.getPopup( form ).length && PUM.getPopup( form ).is( $popup ) ) ||
+                        ! settings.only_in_popup
+                    ) {
+                        $popup.popmake( 'setCookie', settings );
+                    }
+                }
+            } );
+        },
         manual: function (settings) {
             var $popup = PUM.getPopup(this);
             $popup.on('pumSetCookie', function () {
@@ -129,6 +137,34 @@
 
     // Register All Cookies for a Popup
     $(document)
+        .ready(function () {
+            var $cookies = $('.pum-cookie');
+
+            $cookies.each(function () {
+                var $cookie = $(this),
+                    index = $cookies.index($cookie),
+                    args = $cookie.data('cookie-args');
+
+                // If only-onscreen not set or false, set the cookie immediately.
+                if ( ! $cookie.data('only-onscreen') ) {
+                    setCookie(args);
+                } else {
+                    // If the element is visible on page load, set the cookie.
+                    if ( $cookie.isInViewport() && $cookie.is(':visible') ) {
+                        setCookie(args);
+                    } else {
+                        // Add a throttled scroll listener, when its in view, set the cookie.
+                        $(window).on('scroll.pum-cookie-' + index, $.fn.popmake.utilities.throttle(function(event) {
+                            if ( $cookie.isInViewport() && $cookie.is(':visible') ) {
+                                setCookie(args);
+
+                                $(window).off('scroll.pum-cookie-' + index );
+                            }
+                        }, 100));
+                    }
+                }
+            })
+        })
         .on('pumInit', '.pum', function () {
             var $popup = PUM.getPopup(this),
                 settings = $popup.popmake('getSettings'),

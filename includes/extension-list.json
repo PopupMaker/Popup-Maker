@@ -1,14 +1,14 @@
 [
   {
-    "new_version": "",
-    "name": "Core Extensions Bundle",
-    "slug": "core-extensions-bundle",
-    "url": "https:\/\/wppopupmaker.com\/extensions\/core-extensions-bundle\/?changelog=1",
-    "homepage": "https:\/\/wppopupmaker.com\/extensions\/core-extensions-bundle\/",
+    "new_version": "1.0.0",
+    "name": "WooCommerce Pro",
+    "slug": "woocommerce-pro",
+    "url": "https:\/\/wppopupmaker.com\/extensions\/woocommerce-pro\/?changelog=1",
+    "homepage": "https:\/\/wppopupmaker.com\/extensions\/woocommerce-pro\/",
     "package": "",
     "download_link": "",
-    "image": "https:\/\/wppopupmaker.com\/wp-content\/uploads\/edd\/2015\/08\/Core-Extension-Bundle.png",
-    "excerpt": "Save Big & Get access to all core Popup Maker extensions + all future extensions by purchasing our massively discounted extensions bundle."
+    "image": "https:\/\/wppopupmaker.com\/wp-content\/uploads\/2017\/03\/core-bundle.jpg",
+    "excerpt": "Take your WooCommerce store's performance to the next level by creating upsell and cross-sell popups and more with our advanced conditions and triggers."
   },
   {
     "new_version": "1.1.0",

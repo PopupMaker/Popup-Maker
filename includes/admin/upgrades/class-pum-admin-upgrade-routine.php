@@ -92,8 +92,6 @@ class PUM_Admin_Upgrade_Routine {
 					'next'   => $upgrades->get_args(),
 				) );
 				exit;
-			} else {
-
 			}
 		}
 

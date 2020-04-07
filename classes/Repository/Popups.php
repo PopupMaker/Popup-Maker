@@ -49,8 +49,6 @@ class PUM_Repository_Popups extends PUM_Abstract_Repository_Posts {
 			$args['post__in'] = wp_parse_id_list( $args['popups'] );
 
 			unset( $args['popups'] );
-		} elseif ( empty( $args['post__in'] ) ) {
-
 		}
 
 		/**

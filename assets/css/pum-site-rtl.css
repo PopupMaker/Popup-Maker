@@ -1,47 +1,22 @@
 /* Animations */
 /*!******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
-@-webkit-keyframes rotate-forever {
-  0% {
-    -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(-360deg);
-            transform: rotate(-360deg);
-  }
-}
 @keyframes rotate-forever {
   0% {
-    -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
-    -webkit-transform: rotate(-360deg);
-            transform: rotate(-360deg);
-  }
-}
-
-@-webkit-keyframes spinner-loader {
-  0% {
-    -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(-360deg);
-            transform: rotate(-360deg);
+    transform: rotate(-360deg);
   }
 }
 
 @keyframes spinner-loader {
   0% {
-    -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
-    -webkit-transform: rotate(-360deg);
-            transform: rotate(-360deg);
+    transform: rotate(-360deg);
   }
 }
 
@@ -107,8 +82,6 @@
   overflow: auto;
   overflow: initial;
   display: none;
-  -webkit-transition: all .15s ease-in-out;
-  -o-transition: all .15s ease-in-out;
   transition: all .15s ease-in-out;
   /**
     * Use border-box for all popup content. Providing more precise sizing.
@@ -121,7 +94,6 @@
 
 .pum-overlay, .pum-overlay:before, .pum-overlay:after,
 .pum-overlay *, .pum-overlay *:before, .pum-overlay *:after {
-  -webkit-box-sizing: border-box;
   /* Safari/Chrome, other WebKit */
   /* Firefox, other Gecko */
   box-sizing: border-box;
@@ -273,7 +245,7 @@ html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-act
 
 /* PM Forms */
 /*!******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 .pum-form {
   margin: 0 auto 16px;
@@ -307,14 +279,10 @@ html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-act
 
 .pum-form__loader {
   font-size: 2em;
-  -webkit-animation-duration: 0.75s;
-          animation-duration: 0.75s;
-  -webkit-animation-iteration-count: infinite;
-          animation-iteration-count: infinite;
-  -webkit-animation-name: rotate-forever;
-          animation-name: rotate-forever;
-  -webkit-animation-timing-function: linear;
-          animation-timing-function: linear;
+  animation-duration: 0.75s;
+  animation-iteration-count: infinite;
+  animation-name: rotate-forever;
+  animation-timing-function: linear;
   height: .75em;
   width: .75em;
   border: 0.25em solid rgba(0, 0, 0, 0.5);
@@ -364,7 +332,7 @@ html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-act
 }
 
 /*!******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 .pum-alignment-left {
   text-align: right;
@@ -394,7 +362,7 @@ html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-act
 }
 
 /*!******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 .pum-form--layout-standard .pum-form__field > label {
   margin-bottom: .25em;
@@ -402,14 +370,14 @@ html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-act
 }
 
 /*!******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 .pum-form--layout-inline .pum-form__field {
   display: inline-block;
 }
 
 /*!******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 .pum-form--layout-block .pum-form__field,
 .pum-form--layout-block div, .pum-form--layout-block input, .pum-form--layout-block button {
@@ -421,7 +389,7 @@ html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-act
  * Form Styles
  */
 /*!******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 .pum-form--style-default label {
   font-size: 14px;
@@ -444,7 +412,7 @@ html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-act
 }
 
 /*!******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 .pum-sub-form {
   /* :not(:required) hides this rule from IE9 and below */
@@ -465,11 +433,9 @@ html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-act
 }
 
 .pum-sub-form .spinner-loader:not(:required) {
-  -webkit-animation: spinner-loader 1500ms infinite linear;
-          animation: spinner-loader 1500ms infinite linear;
+  animation: spinner-loader 1500ms infinite linear;
   border-radius: 0.5em;
-  -webkit-box-shadow: rgba(0, 0, 51, 0.3) -1.5em 0 0 0, rgba(0, 0, 51, 0.3) -1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) 0 1.5em 0 0, rgba(0, 0, 51, 0.3) 1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) 1.5em 0 0 0, rgba(0, 0, 51, 0.3) 1.1em -1.1em 0 0, rgba(0, 0, 51, 0.3) 0 -1.5em 0 0, rgba(0, 0, 51, 0.3) -1.1em -1.1em 0 0;
-          box-shadow: rgba(0, 0, 51, 0.3) -1.5em 0 0 0, rgba(0, 0, 51, 0.3) -1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) 0 1.5em 0 0, rgba(0, 0, 51, 0.3) 1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) 1.5em 0 0 0, rgba(0, 0, 51, 0.3) 1.1em -1.1em 0 0, rgba(0, 0, 51, 0.3) 0 -1.5em 0 0, rgba(0, 0, 51, 0.3) -1.1em -1.1em 0 0;
+  box-shadow: rgba(0, 0, 51, 0.3) -1.5em 0 0 0, rgba(0, 0, 51, 0.3) -1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) 0 1.5em 0 0, rgba(0, 0, 51, 0.3) 1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) 1.5em 0 0 0, rgba(0, 0, 51, 0.3) 1.1em -1.1em 0 0, rgba(0, 0, 51, 0.3) 0 -1.5em 0 0, rgba(0, 0, 51, 0.3) -1.1em -1.1em 0 0;
   display: inline-block;
   font-size: 10px;
   width: 1em;
@@ -480,7 +446,7 @@ html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-act
 }
 
 /*!******************************************************************************
- * Copyright (c) 2018, WP Popup Maker
+ * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 .pum-form__field--consent {
   text-align: right;

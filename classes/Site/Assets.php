@@ -97,7 +97,7 @@ class PUM_Site_Assets {
 			class_exists( 'PUM_MCI' ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ),
 		) );
 
-		if ( wp_script_is( 'pum_aweber_integration_js' ) && $mc_ver_test ) {
+		if ( $mc_ver_test ) {
 			wp_dequeue_script( 'pum_mailchimp_integration_admin_js' );
 			wp_dequeue_style( 'pum_mailchimp_integration_admin_css' );
 			wp_dequeue_script( 'pum-mci' );
@@ -121,10 +121,13 @@ class PUM_Site_Assets {
 	 *
 	 * Accounts for various adblock bypass options.
 	 *
-	 * @return array|string
+	 * @return bool|string
 	 */
 	public static function get_cache_dir_url() {
-		$upload_dir = PUM_Helpers::upload_dir_url();
+		$upload_dir = PUM_Helpers::get_upload_dir_url();
+		if ( false === $upload_dir ) {
+			return false;
+		}
 
 		if ( ! pum_get_option( 'bypass_adblockers', false ) ) {
 			return trailingslashit( $upload_dir ) . 'pum';
@@ -191,7 +194,7 @@ class PUM_Site_Assets {
 		wp_register_script( 'mobile-detect', self::$js_url . 'vendor/mobile-detect.min.js', null, '1.3.3', true );
 		wp_register_script( 'iframe-resizer', self::$js_url . 'vendor/iframeResizer.min.js', array( 'jquery' ) );
 
-		if ( PUM_AssetCache::enabled() ) {
+		if ( PUM_AssetCache::enabled() && false !== self::$cache_url ) {
 			$cached = get_option( 'pum-has-cached-js' );
 
 			if ( ! $cached || self::$debug ) {
@@ -200,7 +203,7 @@ class PUM_Site_Assets {
 			}
 
 
-			wp_register_script( 'popup-maker-site', self::get_cache_dir_url() . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-scripts' ) . '.js?defer&generated=' . $cached, array(
+			wp_register_script( 'popup-maker-site', self::$cache_url . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-scripts' ) . '.js?defer&generated=' . $cached, array(
 				'jquery',
 				'jquery-ui-core',
 				'jquery-ui-position',
@@ -230,6 +233,7 @@ class PUM_Site_Assets {
 
 		wp_localize_script( 'popup-maker-site', 'pum_vars', apply_filters( 'pum_vars', array(
 			'version'                => Popup_Maker::$VER,
+			'pm_dir_url'             => Popup_Maker::$URL,
 			'ajaxurl'                => admin_url( 'admin-ajax.php' ),
 			'restapi'                => function_exists( 'rest_url' ) ? esc_url_raw( rest_url( 'pum/v1' ) ) : false,
 			'rest_nonce'             => is_user_logged_in() ? wp_create_nonce( 'wp_rest' ) : null,
@@ -330,7 +334,7 @@ class PUM_Site_Assets {
 	public static function register_styles() {
 		self::$styles_registered = true;
 
-		if ( PUM_AssetCache::enabled() ) {
+		if ( PUM_AssetCache::enabled() && false !== self::$cache_url ) {
 			$cached = get_option( 'pum-has-cached-css' );
 
 			if ( ! $cached || self::$debug ) {
@@ -338,7 +342,7 @@ class PUM_Site_Assets {
 				$cached = get_option( 'pum-has-cached-css' );
 			}
 
-			wp_register_style( 'popup-maker-site', self::get_cache_dir_url() . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-styles' ) . '.css?generated=' . $cached, array(), Popup_Maker::$VER );
+			wp_register_style( 'popup-maker-site', self::$cache_url . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-styles' ) . '.css?generated=' . $cached, array(), Popup_Maker::$VER );
 		} else {
 			wp_register_style( 'popup-maker-site', self::$css_url . 'pum-site' . ( is_rtl() ? '-rtl' : '' ) . self::$suffix . '.css', array(), Popup_Maker::$VER );
 			self::inline_styles();

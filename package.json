@@ -1,6 +1,6 @@
 {
   "name": "popup-maker",
-  "version": "1.9.0-beta.1",
+  "version": "1.9.2",
   "description": "WordPress Popup Plugin",
   "homepage": "https://wppopupmaker.com",
   "author": "Code Atlantic LLC",
@@ -65,7 +65,7 @@
   "notes": {
     "@babel/core": "^7.4.0",
     "@wordpress/babel-preset-default": "^4.1.0",
-    "@wordpress/browserslist-config": "^2.3.0",
+    "@wordpress/browserslist-config": "^2.6.0",
     "@wordpress/eslint-plugin": "^2.1.0",
     "@wordpress/scripts": "^6.2.0",
     "babel-loader": "^8.0.5",

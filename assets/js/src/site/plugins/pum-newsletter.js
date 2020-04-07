@@ -48,8 +48,24 @@
     $(document)
         .on('submit', 'form.pum-sub-form', window.PUM.newsletter.form.submit)
         .on('success', 'form.pum-sub-form', function (event, data) {
-            var $form = $(event.target),
-                settings = $form.data('settings') || {};
+            var $form = $( event.target ),
+                settings = $form.data( 'settings' ) || {},
+                values = $form.pumSerializeObject(),
+                popup = PUM.getPopup($form),
+                formId = PUM.getSetting(popup, 'id'),
+                formInstanceId = $( 'form.pum-sub-form', popup).index( $form ) + 1;
+
+            // All the magic happens here.
+            window.PUM.integrations.formSubmission( $form, {
+                formProvider: 'pumsubform',
+                formId: formId,
+                formInstanceId: formInstanceId,
+                extras: {
+                    data: data,
+                    values: values,
+                    settings: settings
+                }
+            } );
 
             $form
                 .trigger('pumNewsletterSuccess', [data])
