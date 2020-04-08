@@ -38,7 +38,7 @@ class PUM_Admin_BlockEditor {
 	 * @since 1.10.0
 	 */
 	public static function register_editor_assets() {
-		$build_path = 'build/block-editor/';
+		$build_path = 'dist/block-editor/';
 
 		$script_path       = $build_path . 'block-editor.js';
 		$script_asset_path = $build_path . 'block-editor.asset.php';
@@ -69,7 +69,7 @@ class PUM_Admin_BlockEditor {
 	 * Register assets for individual block styles
 	 */
 	public static function register_block_assets() {
-		$build_path = 'build/block-editor/';
+		$build_path = 'dist/block-editor/';
 		$block_styles_path       = $build_path . 'block-styles.css';
 		$block_styles_asset_path = $build_path . 'block-styles.asset.php';
 		$block_styles_asset      = file_exists( Popup_Maker::$DIR . $block_styles_asset_path ) ? require( Popup_Maker::$DIR . $block_styles_asset_path ) : array( 'dependencies' => array(), 'version' => Popup_Maker::$VER );
