@@ -78,7 +78,7 @@ js_site.description = "Build site Javascript assets.";
 
 gulp.task(js_admin);
 gulp.task(js_site);
-gulp.task('js', gulp.parallel(['webpack', 'js_admin', 'js_site']));
+gulp.task('js', gulp.parallel(['webpack', 'webpack:blockEditor', 'js_admin', 'js_site']));
 
 let js = gulp.task('js');
 
