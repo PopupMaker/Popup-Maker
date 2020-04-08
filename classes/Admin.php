@@ -6,6 +6,7 @@
 class PUM_Admin {
 
 	public static function init() {
+		PUM_Admin_BlockEditor::init();
 		PUM_Admin_Pages::init();
 		PUM_Admin_Ajax::init();
 		PUM_Admin_Assets::init();
