@@ -466,7 +466,7 @@ class PUM_Admin_Themes {
 			$font_weight_options  = self::font_weight_options();
 
 			$fields = apply_filters( 'pum_theme_settings_fields', array(
-				'general'   => apply_filters( 'pum_popup_general_settings_fields', array(
+				'general'   => apply_filters( 'pum_theme_general_settings_fields', array(
 					'main' => array(),
 				) ),
 				'overlay'   => apply_filters( 'pum_theme_overlay_settings_fields', array(
