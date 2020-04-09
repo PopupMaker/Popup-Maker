@@ -302,4 +302,120 @@ abstract class PUM_Abstract_Database {
 
 	}
 
+
+	public function query( $args = array(), $return_type = 'OBJECT' ) {
+		global $wpdb;
+
+		$args = wp_parse_args( $args, array(
+			'fields'  => '*',
+			'page'    => null,
+			'limit'   => null,
+			'offset'  => null,
+			's'       => null,
+			'orderby' => null,
+			'order'   => null,
+		) );
+
+		$columns = $this->get_columns();
+
+		$fields = $args['fields'];
+
+		if ( $fields == '*' ) {
+			$fields = array_keys( $columns );
+		} else {
+			$fields = explode( ',', $args['fields'] );
+			$fields = array_map( 'trim', $fields );
+			$fields = array_map( 'sanitize_text_field', $fields );
+		}
+
+		$select_fields = implode( '`, `', $fields );
+
+		// Begin building query.
+		$query = "SELECT `$select_fields` FROM {$this->table_name()}";
+
+		// Set up $values array for wpdb::prepare
+		$values = array();
+
+		// Define an empty WHERE clause to start from.
+		$where = "WHERE 1=1";
+
+		// Build search query.
+		if ( $args['s'] && ! empty( $args['s'] ) ) {
+
+			$search = wp_unslash( trim( $args['s'] ) );
+
+			$search_where = array();
+
+			foreach ( $columns as $key => $type ) {
+				if ( in_array( $key, $fields ) ) {
+					if ( $type == '%s' || ( $type == '%d' && is_numeric( $search ) ) ) {
+						$values[]       = '%' . $wpdb->esc_like( $search ) . '%';
+						$search_where[] = "`$key` LIKE '%s'";
+					}
+				}
+			}
+
+			if ( ! empty( $search_where ) ) {
+				$where .= ' AND (' . join( ' OR ', $search_where ) . ')';
+			}
+		}
+
+		$query .= " $where";
+
+		if ( ! empty( $args['orderby'] ) ) {
+			$query    .= " ORDER BY %s";
+			$values[] = wp_unslash( trim( $args['orderby'] ) );
+
+			switch ( $args['order'] ) {
+				case 'asc':
+				case 'ASC':
+					$query .= " ASC";
+					break;
+				case 'desc':
+				case 'DESC':
+				default:
+					$query .= " DESC";
+					break;
+			}
+		}
+
+		if ( ! empty( $args['limit'] ) ) {
+			$query    .= " LIMIT %d";
+			$values[] = absint( $args['limit'] );
+		}
+
+		// Pagination.
+		if ( $args['page'] >= 1 ) {
+			$args['offset'] = ( $args['page'] * $args['limit'] ) - $args['limit'];
+		}
+
+		if ( ! empty( $args['offset'] ) ) {
+			$query    .= " OFFSET %d";
+			$values[] = absint( $args['offset'] );
+		}
+
+		if ( strpos( $query, '%s' ) || strpos( $query, '%d' ) ) {
+			$query = $wpdb->prepare( $query, $values );
+		}
+
+		return $wpdb->get_results( $query, $return_type );
+	}
+
+	/**
+	 * Queries for total rows
+	 *
+	 * @param $args
+	 *
+	 * @return int
+	 */
+	public function total_rows( $args ) {
+		// TODO REVIEW this can probably be done more efficiently. Look at how we do it for DB models.
+		$args['limit']  = null;
+		$args['offset'] = null;
+		$args['page']   = null;
+
+		$results = $this->query( $args );
+
+		return $results ? count( $results ) : 0;
+	}
 }
