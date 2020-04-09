@@ -44,9 +44,15 @@ class PUM_Analytics {
 	}
 
 	/**
-	 * @param $args
+	 * Track an event.
+	 *
+	 * This is called by various methods including the ajax & rest api requests.
+	 *
+	 * Can be used externally such as after purchase tracking.
+	 *
+	 * @param array $args
 	 */
-	public static function track( $args ) {
+	public static function track( $args = array() ) {
 		if ( empty ( $args['pid'] ) || $args['pid'] <= 0 ) {
 			return;
 		}
@@ -64,11 +70,12 @@ class PUM_Analytics {
 		if ( has_action( 'pum_analytics_' . $event ) ) {
 			do_action( 'pum_analytics_' . $event, $popup->ID, $args );
 		}
-
 	}
 
 	/**
+	 * Process ajax requests.
 	 *
+	 * Only used when WP-JSON Restful API is not available.
 	 */
 	public static function ajax_request() {
 
