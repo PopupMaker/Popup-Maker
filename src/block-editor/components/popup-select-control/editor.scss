@@ -1,0 +1,43 @@
+@import "./node_modules/@wordpress/base-styles/colors";
+@import "./node_modules/@wordpress/base-styles/variables";
+@import "./node_modules/@wordpress/base-styles/mixins";
+@import "./node_modules/@wordpress/base-styles/breakpoints";
+@import "./node_modules/@wordpress/base-styles/animations";
+@import "./node_modules/@wordpress/base-styles/z-index";
+
+// Link input
+$input-padding: 8px;
+$input-size: 300px;
+
+//.block-editor-popup-select-input,
+.components-popover .block-editor-popup-select-input {
+	flex-grow: 1;
+	position: relative;
+	padding: 1px;
+
+	.components-base-control__field {
+		margin-bottom: 0;
+	}
+
+	input[type="text"],
+	select {
+		width: 100%;
+
+		@include break-small() {
+			width: $input-size;
+		}
+		border: none;
+		border-radius: 0;
+
+		/* Fonts smaller than 16px causes mobile safari to zoom. */
+		font-size: $mobile-text-min-font-size;
+
+		@include break-small {
+			font-size: $default-font-size;
+		}
+
+		&::-ms-clear {
+			display: none;
+		}
+	}
+}

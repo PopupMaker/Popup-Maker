@@ -1,6 +1,8 @@
-build
-node_modules
-release
-vendor
-composer.lock
-package-lock.json
+/build
+/node_modules
+/release
+/vendor
+/composer.lock
+/package-lock.json
+/yarn.lock
+/yarn-error.log
