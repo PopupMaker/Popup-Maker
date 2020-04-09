@@ -131,7 +131,7 @@ class PUM_Analytics {
 		$version   = 1;
 		$namespace = 'pum/v' . $version;
 
-		register_rest_route( $namespace, 'analytics', array(
+		register_rest_route( $namespace, 'analytics', apply_filters( 'pum_analytics_rest_route_args', array(
 			'methods'  => 'GET',
 			'callback' => array( __CLASS__, 'analytics_endpoint' ),
 			'args'     => array(
@@ -148,7 +148,7 @@ class PUM_Analytics {
 					'sanitize_callback'   => 'absint',
 				),
 			),
-		) );
+		) ) );
 	}
 
 	/**
