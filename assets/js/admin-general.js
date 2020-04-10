@@ -8286,6 +8286,7 @@ function pumChecked(val1, val2, print) {
     window.PUM_Admin = window.PUM_Admin || {};
     window.PUM_Admin.templates = templates;
 }(window.jQuery));
+
 /*******************************************************************************
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
