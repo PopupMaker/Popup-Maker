@@ -126,7 +126,7 @@ There are several common causes for this, check [this guide for help](https://do
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
 ### v1.10.0 - TBD
-* Feature: Display presets for top bar, bottom right slide-ins, full screen popups & bottom left notifications make it simple to get common setups done much quicker
+* Feature: Display presets for top bar, bottom right slide-ins, full-screen popups & bottom left notifications to make it simple to get common setups done much quicker
 * Feature: Popup Trigger inline text format for the block editor.
 * Feature: Turn any block in Gutenberg block editor into a popup trigger.
 * Feature: Font Awesome support added to close button text setting.
@@ -135,10 +135,10 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 * Tweak: Add option to disable or adjust the padding-right added to body.
 * Tweak: Remove Freemius integration from Popup Maker.
 * Improvement: Detect file permission issues with Asset Caching functionality.
-* Fix: Prevent popups from going off screen when using center position for a tall popup.
+* Fix: Prevent popups from going off the screen when using center position for a tall popup.
 * Fix: Bug in slide animation origin positioning for bottom or right origins.
 * Fix: Bug where Middle Center caused tall popups to hang off the screen on small screens.
-* Fix: Typo in admin editor css path.
+* Fix: Typo in admin editor CSS path.
 * Fix: Bug on fresh installs where default theme's close position is wrong.
 
 = v1.9.2 - 03/26/2020 =
