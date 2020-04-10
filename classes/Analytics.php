@@ -17,13 +17,22 @@ class PUM_Analytics {
 	 *
 	 */
 	public static function init() {
-		if ( pum_get_option( 'disable_analytics' ) || popmake_get_option( 'disable_popup_open_tracking' ) ) {
+		if ( ! self::analytics_enabled() ) {
 			return;
 		}
 
 		add_action( 'rest_api_init', array( __CLASS__, 'register_endpoints' ) );
 		add_action( 'wp_ajax_pum_analytics', array( __CLASS__, 'ajax_request' ) );
 		add_action( 'wp_ajax_nopriv_pum_analytics', array( __CLASS__, 'ajax_request' ) );
+	}
+
+	/**
+	 * @return bool
+	 */
+	public static function analytics_enabled() {
+		$disabled = pum_get_option( 'disable_analytics' ) || popmake_get_option( 'disable_popup_open_tracking' );
+
+		return (bool) apply_filters( 'pum_analytics_enabled', ! $disabled );
 	}
 
 	/**
