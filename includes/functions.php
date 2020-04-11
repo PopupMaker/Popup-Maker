@@ -17,6 +17,7 @@ require_once 'functions/newsletter.php';
 require_once 'functions/utils/cache.php';
 require_once 'functions/utils/format.php';
 require_once 'functions/utils/options.php';
+require_once 'functions/utils/scheduled-actions.php';
 require_once 'functions/utils/template.php';
 require_once 'functions/utils/upgrades.php';
 
