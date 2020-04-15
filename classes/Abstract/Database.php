@@ -41,7 +41,7 @@ abstract class PUM_Abstract_Database {
 			// Install the table.
 			@$this->create_table();
 
-			if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->table_name'" ) == $this->table_name ) {
+			if ( $wpdb->get_var( "SHOW TABLES LIKE '{$this->table_name()}'" ) == $this->table_name() ) {
 				update_option( $this->table_name . '_db_version', $this->version );
 			}
 		}
@@ -54,6 +54,7 @@ abstract class PUM_Abstract_Database {
 
 	/**
 	 * @return static
+	 * @throws \Exception
 	 */
 	public static function instance() {
 		$class = get_called_class();
@@ -75,9 +76,53 @@ abstract class PUM_Abstract_Database {
 	public function get( $row_id ) {
 		global $wpdb;
 
-		return $wpdb->get_row( "SELECT * FROM {$this->table_name()} WHERE $this->primary_key = $row_id LIMIT 1;" );
+		return $this->prepare_result( $wpdb->get_row( "SELECT * FROM {$this->table_name()} WHERE $this->primary_key = $row_id LIMIT 1;" ) );
 	}
 
+	/**
+	 * @param object|array $result
+	 * @param string       $return_type
+	 *
+	 * @return object|array
+	 */
+	public function prepare_result( $result, $return_type = "OBJECT" ) {
+		switch ( $return_type ) {
+			case 'OBJECT':
+			case 'OBJECT_K':
+				$vars = get_object_vars( $result );
+				foreach ( $vars as $key => $value ) {
+					$result->$key = maybe_unserialize( $value );
+				}
+				break;
+
+			case 'ARRAY_A':
+				foreach ( $result as $key => $value ) {
+					$result[ $key ] = maybe_unserialize( $value );
+				}
+				break;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * @param array|object[] $results
+	 * @param string         $return_type
+	 *
+	 * @return mixed
+	 */
+	public function prepare_results( $results, $return_type = 'OBJECT' ) {
+
+		foreach ( $results as $key => $result ) {
+			$results[ $key ] = $this->prepare_result( $result, $return_type );
+		}
+
+		return $results;
+	}
+
+	/**
+	 * @return string
+	 */
 	public function table_name() {
 		global $wpdb;
 
@@ -95,7 +140,7 @@ abstract class PUM_Abstract_Database {
 	public function get_by( $column, $row_id ) {
 		global $wpdb;
 
-		return $wpdb->get_row( "SELECT * FROM {$this->table_name()} WHERE $column = '$row_id' LIMIT 1;" );
+		return $this->prepare_result( $wpdb->get_row( "SELECT * FROM {$this->table_name()} WHERE $column = '$row_id' LIMIT 1;" ) );
 	}
 
 	/**
@@ -130,7 +175,7 @@ abstract class PUM_Abstract_Database {
 	/**
 	 * Insert a new row
 	 *
-	 * @param $data
+	 * @param        $data
 	 * @param string $type
 	 *
 	 * @return  int
@@ -190,8 +235,8 @@ abstract class PUM_Abstract_Database {
 	/**
 	 * Update a row
 	 *
-	 * @param $row_id
-	 * @param array $data
+	 * @param        $row_id
+	 * @param array  $data
 	 * @param string $where
 	 *
 	 * @return  bool
@@ -279,7 +324,7 @@ abstract class PUM_Abstract_Database {
 	/**
 	 * Prepare query.
 	 *
-	 * @param $query
+	 * @param       $query
 	 * @param array $args
 	 *
 	 * @return string
@@ -398,7 +443,7 @@ abstract class PUM_Abstract_Database {
 			$query = $wpdb->prepare( $query, $values );
 		}
 
-		return $wpdb->get_results( $query, $return_type );
+		return $this->prepare_results( $wpdb->get_results( $query, $return_type ), $return_type );
 	}
 
 	/**
