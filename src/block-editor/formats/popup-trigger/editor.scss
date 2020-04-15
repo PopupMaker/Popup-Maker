@@ -1,0 +1,23 @@
+.popup-trigger[data-popup-id] {
+	border-bottom: 1px dashed #9aba27;
+}
+
+.popup-trigger[data-popup-id]::after {
+	/*background: url("/wp-content/plugins/popup-maker/assets/images/logo.png") bottom center no-repeat;*/
+	background: url(/wp-content/plugins/popup-maker/assets/images/logo.png) bottom center no-repeat;
+	display: inline-block;
+	width: 0.9em;
+	height: 0.9em;
+	content: " ";
+	position: relative;
+	background-size: contain;
+	margin-left: 2px;
+	vertical-align: text-top;
+	pointer-events: none;
+	touch-action: none;
+}
+
+.components-dropdown-menu__menu .components-dropdown-menu__menu-item:not(:disabled):not([aria-disabled="true"]):not(.is-default).is-active > svg.popup-trigger-button-svg,
+.components-dropdown-menu__menu .components-menu-item:not(:disabled):not([aria-disabled="true"]):not(.is-default).is-active > svg.popup-trigger-button-svg {
+	background: #ededed;
+}

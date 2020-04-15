@@ -26,3 +26,5 @@ contributors.md
 # Packages
 /packages/*
 !/packages/README.md
+
+/yarn-error.log

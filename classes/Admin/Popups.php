@@ -66,7 +66,7 @@ class PUM_Admin_Popups {
 		}
 
 		if ( 'popup' == $screen->post_type ) {
-			$title = __( 'Popup Name (appears under "Name" column on "All Popups" screen', 'popup-maker' );
+			$title = __( 'Popup Name', 'popup-maker' );
 		}
 
 		return $title;
