@@ -91,13 +91,17 @@ abstract class PUM_Abstract_Database {
 			case 'OBJECT_K':
 				$vars = get_object_vars( $result );
 				foreach ( $vars as $key => $value ) {
-					$result->$key = maybe_unserialize( $value );
+					if ( is_string( $value ) ) {
+						$result->$key = maybe_unserialize( $value );
+					}
 				}
 				break;
 
 			case 'ARRAY_A':
 				foreach ( $result as $key => $value ) {
-					$result[ $key ] = maybe_unserialize( $value );
+					if ( is_string( $value ) ) {
+						$result[ $key ] = maybe_unserialize( $value );
+					}
 				}
 				break;
 		}
