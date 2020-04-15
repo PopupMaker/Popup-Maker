@@ -269,6 +269,12 @@ abstract class PUM_Abstract_Database {
 		// White list columns
 		$data = array_intersect_key( $data, $column_formats );
 
+		foreach ( $data as $key => $value ) {
+			if ( is_array( $value ) ) {
+				$data[ $key ] = maybe_serialize( $value );
+			}
+		}
+
 		// Reorder $column_formats to match the order of columns given in $data
 		$data_keys      = array_keys( $data );
 		$column_formats = array_merge( array_flip( $data_keys ), $column_formats );
