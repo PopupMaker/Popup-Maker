@@ -18,12 +18,12 @@ var PUM_Analytics;
             var beacon = new Image(),
                 url = rest_enabled ? pum_vars.restapi : pum_vars.ajaxurl,
                 opts = {
-                    route: '/analytics/',
-                    data: $.extend({
+                    route: pum.hooks.applyFilters( 'pum.analyticsBeaconRoute', '/analytics/' ),
+                    data: pum.hooks.applyFilters( 'pum.AnalyticsBeaconData', $.extend({
                         event: 'open',
                         pid: null,
                         _cache: (+(new Date()))
-                    }, data),
+                    }, data) ),
                     callback: typeof callback === 'function' ? callback : function () {
                     }
                 };
