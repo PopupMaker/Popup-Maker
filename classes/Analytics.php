@@ -66,6 +66,9 @@ class PUM_Analytics {
 			return;
 		}
 
+//		$uuid = isset( $_COOKIE['__pum'] ) ? sanitize_text_field( $_COOKIE['__pum'] ) : false;
+//		$session = $uuid && isset( $_COOKIE[ $uuid ] ) ? PUM_Utils_Array::safe_json_decode( $_COOKIE[ $uuid ] ) : false;
+
 		$event = sanitize_text_field( $args['event'] );
 
 		$popup = pum_get_popup( $args['pid'] );
