@@ -132,6 +132,20 @@
 						var args = pum_popup_settings_editor.form_args || {};
 						var originalValues = pum_popup_settings_editor.current_values || {};
 						var currentValues = $container.pumSerializeObject();
+
+						// pumSerializeObject returns the trigger/cookie settings as strings instead of objects.
+						// Cycle through each trigger and cookie and convert to objects.
+						if ( currentValues.popup_settings.triggers ) {
+							for ( var i = 0; i < currentValues.popup_settings.triggers.length; i++ ) {
+								currentValues.popup_settings.triggers[i].settings = JSON.parse( currentValues.popup_settings.triggers[i].settings );
+							}
+						}
+						if ( currentValues.popup_settings.cookies ) {
+							for ( var j = 0; j < currentValues.popup_settings.cookies.length; j++ ) {
+								currentValues.popup_settings.cookies[j].settings = JSON.parse( currentValues.popup_settings.cookies[j].settings );
+							}
+						}
+
 						var newValues = Object.assign( {}, originalValues, currentValues.popup_settings, presetValues );
 
 						// Re-render form using updated settings.

@@ -665,7 +665,10 @@ class PUM_AssetCache {
 		}
 		$protocol  = is_ssl() ? 'https:' : 'http:';
 		$file      = $protocol . $cache_url . '/' . $filename;
-		$results   = wp_remote_get( $file  );
+		$results   = wp_remote_request( $file, array(
+			'method'    => 'HEAD',
+			'sslverify' => false,
+		));
 
 		// If it returned a WP_Error, let's log its error message.
 		if ( is_wp_error( $results ) ) {
@@ -678,7 +681,7 @@ class PUM_AssetCache {
 			$status_code = $results['response']['code'];
 
 			// ... then, check if it's a valid status code. Only if it is a valid 2XX code, will this method return true.
-			if ( false !== $status_code && ( 200 <= $status_code && 300 >= $status_code ) ) {
+			if ( false !== $status_code && ( 200 <= $status_code && 300 > $status_code ) ) {
 				return true;
 			} else {
 				PUM_Utils_Logging::instance()->log( sprintf( 'Cannot access cache file when tested. Status code received was: %s', esc_html( $status_code ) ) );
