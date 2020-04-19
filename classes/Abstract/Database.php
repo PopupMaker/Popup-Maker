@@ -355,7 +355,13 @@ abstract class PUM_Abstract_Database {
 	}
 
 
-	public function query( $args = array(), $return_type = 'OBJECT' ) {
+	/**
+	 * @param array  $args
+	 * @param string $return_type
+	 *
+	 * @return array|mixed|object[]
+	 */
+	public function query( $args = array(), $return_type = OBJECT ) {
 		global $wpdb;
 
 		$args = wp_parse_args( $args, array(
