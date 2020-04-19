@@ -81,29 +81,27 @@ abstract class PUM_Abstract_Database {
 
 	/**
 	 * @param object|array $result
-	 * @param string       $return_type
 	 *
 	 * @return object|array
 	 */
-	public function prepare_result( $result, $return_type = "OBJECT" ) {
-		switch ( $return_type ) {
-			case 'OBJECT':
-			case 'OBJECT_K':
-				$vars = get_object_vars( $result );
-				foreach ( $vars as $key => $value ) {
-					if ( is_string( $value ) ) {
-						$result->$key = maybe_unserialize( $value );
-					}
-				}
-				break;
+	public function prepare_result( $result ) {
+		if ( ! $result || ( ! is_array( $result ) && ! is_object( $result ) ) ) {
+			return $result;
+		}
 
-			case 'ARRAY_A':
-				foreach ( $result as $key => $value ) {
-					if ( is_string( $value ) ) {
-						$result[ $key ] = maybe_unserialize( $value );
-					}
+		if ( is_object( $result ) ) {
+			$vars = get_object_vars( $result );
+			foreach ( $vars as $key => $value ) {
+				if ( is_string( $value ) ) {
+					$result->$key = maybe_unserialize( $value );
 				}
-				break;
+			}
+		} elseif ( is_array( $result ) ) {
+			foreach ( $result as $key => $value ) {
+				if ( is_string( $value ) ) {
+					$result[ $key ] = maybe_unserialize( $value );
+				}
+			}
 		}
 
 		return $result;
@@ -111,14 +109,13 @@ abstract class PUM_Abstract_Database {
 
 	/**
 	 * @param array|object[] $results
-	 * @param string         $return_type
 	 *
 	 * @return mixed
 	 */
-	public function prepare_results( $results, $return_type = 'OBJECT' ) {
+	public function prepare_results( $results ) {
 
 		foreach ( $results as $key => $result ) {
-			$results[ $key ] = $this->prepare_result( $result, $return_type );
+			$results[ $key ] = $this->prepare_result( $result );
 		}
 
 		return $results;
@@ -453,7 +450,7 @@ abstract class PUM_Abstract_Database {
 			$query = $wpdb->prepare( $query, $values );
 		}
 
-		return $this->prepare_results( $wpdb->get_results( $query, $return_type ), $return_type );
+		return $this->prepare_results( $wpdb->get_results( $query, $return_type ) );
 	}
 
 	/**
