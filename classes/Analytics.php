@@ -41,12 +41,10 @@ class PUM_Analytics {
 	 * @return mixed
 	 */
 	public static function event_keys( $event ) {
-		$keys = array( $event, $event . 'ed' );
+		$keys = array( $event, rtrim( $event, 'e' ) . 'ed' );
 
-		switch ( $event ) {
-			case 'conversion':
-				$keys[1] = 'conversion';
-				break;
+		if ( 'conversion' === $event ) {
+			$keys[1] = 'conversion';
 		}
 
 		return apply_filters( 'pum_analytics_event_keys', $keys, $event );
