@@ -82,6 +82,8 @@ class PUM_Analytics {
 		if ( has_action( 'pum_analytics_' . $event ) ) {
 			do_action( 'pum_analytics_' . $event, $popup->ID, $args );
 		}
+
+		do_action( 'pum_analytics_event', $args );
 	}
 
 	/**
