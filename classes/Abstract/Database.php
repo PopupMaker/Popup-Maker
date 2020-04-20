@@ -35,16 +35,53 @@ abstract class PUM_Abstract_Database {
 	public function __construct() {
 		global $wpdb;
 
-		$current_db_version = get_option( $this->table_name . '_db_version' );
+		$current_db_version = $this->get_installed_version();
 
 		if ( ! $current_db_version || $current_db_version < $this->version ) {
 			// Install the table.
 			@$this->create_table();
 
 			if ( $wpdb->get_var( "SHOW TABLES LIKE '{$this->table_name()}'" ) == $this->table_name() ) {
-				update_option( $this->table_name . '_db_version', $this->version );
+				$this->update_db_version();
 			}
 		}
+	}
+
+	/**
+	 * Gets db version from new or old source.
+	 *
+	 * @return float
+	 */
+	public function get_installed_version() {
+		// Get list of all current db table versions.
+		$db_versions = get_option( 'pum_db_versions', [] );
+
+		// #1 If it exists in new pum_db_vers[] option, move on.
+		if ( isset( $db_versions[ $this->table_name ] ) ) {
+			return (float) $db_versions[ $this->table_name ];
+		}
+
+		// #2 Else look for old key, if exists, migrate and delete.
+		$db_version_old_key = get_option( $this->table_name . '_db_version' );
+
+		if ( $db_version_old_key ) {
+			if ( $db_version_old_key > 0 ) {
+				$db_versions[ $this->table_name ] = (float) $db_version_old_key;
+				update_option( 'pum_db_versions', $db_versions );
+			}
+
+			delete_option( $this->table_name . '_db_version' );
+		}
+
+		return (float) $db_version_old_key;
+	}
+
+	public function update_db_version() {
+		// Get list of all current db table versions.
+		$db_versions = get_option( 'pum_db_versions', [] );
+
+		$db_versions[ $this->table_name ] = (float) $this->version;
+		update_option( 'pum_db_versions', $db_versions );
 	}
 
 	/**
