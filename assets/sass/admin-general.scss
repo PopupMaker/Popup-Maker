@@ -19,6 +19,61 @@ $tab-color: #E4E4E4;
 @import 'partials/admin/marketing';
 @import 'partials/admin/deprecated';
 
+.pum-flex-row {
+  display: flex;
+
+  .pum-flex-column {
+    flex: 1;
+
+    &.pum-flex-quarter {
+      width: 25%;
+
+      &:nth-child(4n+1) {
+        padding-left: 0;
+      }
+
+      &:nth-child(4n+4) {
+        padding-right: 0;
+      }
+    }
+
+    &.pum-flex-third {
+      width: 33.333%;
+
+      &:nth-child(3n+1) {
+        padding-left: 0;
+      }
+
+      &:nth-child(3n+3) {
+        padding-right: 0;
+      }
+    }
+
+    &.pum-flex-half {
+      width: 50%;
+
+      &:nth-child(2n+1) {
+        padding-left: 0;
+      }
+
+      &:nth-child(2n+2) {
+        padding-right: 0;
+      }
+    }
+
+    &.pum-flex-three-quarter {
+      width: 75%;
+    }
+
+    padding: 1%;
+
+    label, input {
+      display: block;
+      width: 100%;
+    }
+  }
+}
+
 .pum-tabbed-form {
   .pum-field {
     position: relative;
