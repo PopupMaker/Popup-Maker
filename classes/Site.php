@@ -19,6 +19,8 @@ class PUM_Site {
 	 * Hook core filters into `pum_popup_content`.
 	 */
 	public static function add_core_content_filters() {
+		global $wp_version;
+
 		/**
 		 * Copied from wp-includes/class-wp-embed.php:32:40
 		 *
@@ -47,7 +49,9 @@ class PUM_Site {
 		 * @since 1.10.0
 		 * @sinceWP 5.4
 		 */
-		add_filter( 'pum_popup_content', [ __CLASS__, 'do_blocks' ], 9 );
+		if ( version_compare( $wp_version, '5.0.0', '>=' ) ) {
+			add_filter( 'pum_popup_content', [ __CLASS__, 'do_blocks' ], 9 );
+		}
 		add_filter( 'pum_popup_content', 'wptexturize' );
 		add_filter( 'pum_popup_content', 'convert_smilies', 20 );
 		add_filter( 'pum_popup_content', 'wpautop' );
@@ -70,7 +74,8 @@ class PUM_Site {
 	/**
 	 * Parses dynamic blocks out of `post_content` and re-renders them.
 	 *
-	 * @since 5.0.0
+	 * @since 1.10.0
+	 * @sinceWP 5.0.0
 	 *
 	 * @param string $content Post content.
 	 * @return string Updated post content.
@@ -99,7 +104,8 @@ class PUM_Site {
 	 *
 	 * @access private
 	 *
-	 * @since 5.0.0
+	 * @since 1.10.0
+	 * @sinceWP 5.0.0
 	 *
 	 * @param string $content The post content running through this filter.
 	 * @return string The unmodified content.
