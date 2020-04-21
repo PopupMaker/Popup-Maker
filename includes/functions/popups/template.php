@@ -89,7 +89,7 @@ function pum_popup_close_text( $popup_id = null ) {
 	$close_text = $popup->close_text();
 
 	// If the close text is a font awesome icon (E.g. "fas fa-camera"), add the icon instead of the text.
-	if ( preg_match( "/^fa[srldb]\s.+/i", $close_text ) ) {
+	if ( preg_match( "/^fa[srldb]?\s.+/i", $close_text ) ) {
 		echo '<i class="' . esc_attr( $close_text ) . '"></i>';
 	} else {
 		echo esc_html( $close_text );

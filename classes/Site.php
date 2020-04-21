@@ -19,6 +19,8 @@ class PUM_Site {
 	 * Hook core filters into `pum_popup_content`.
 	 */
 	public static function add_core_content_filters() {
+		global $wp_version;
+
 		/**
 		 * Copied from wp-includes/class-wp-embed.php:32:40
 		 *
@@ -47,7 +49,9 @@ class PUM_Site {
 		 * @since 1.10.0
 		 * @sinceWP 5.4
 		 */
-		add_filter( 'pum_popup_content', [ __CLASS__, 'do_blocks' ], 9 );
+		if ( version_compare( $wp_version, '5.0.0', '>=' ) ) {
+			add_filter( 'pum_popup_content', [ __CLASS__, 'do_blocks' ], 9 );
+		}
 		add_filter( 'pum_popup_content', 'wptexturize' );
 		add_filter( 'pum_popup_content', 'convert_smilies', 20 );
 		add_filter( 'pum_popup_content', 'wpautop' );
@@ -70,7 +74,8 @@ class PUM_Site {
 	/**
 	 * Parses dynamic blocks out of `post_content` and re-renders them.
 	 *
-	 * @since 5.0.0
+	 * @since 1.10.0
+	 * @sinceWP 5.0.0
 	 *
 	 * @param string $content Post content.
 	 * @return string Updated post content.
@@ -94,21 +99,22 @@ class PUM_Site {
 	}
 
 	/**
-	 * If do_blocks() needs to remove wpautop() from the `the_content` filter, this re-adds it afterwards,
-	 * for subsequent `the_content` usage.
+	 * If do_blocks() needs to remove wpautop() from the `pum_popup_content` filter, this re-adds it afterwards,
+	 * for subsequent `pum_popup_content` usage.
 	 *
 	 * @access private
 	 *
-	 * @since 5.0.0
+	 * @since 1.10.0
+	 * @sinceWP 5.0.0
 	 *
 	 * @param string $content The post content running through this filter.
 	 * @return string The unmodified content.
 	 */
 	public static function _restore_wpautop_hook( $content ) {
-		$current_priority = has_filter( 'the_content', [ __CLASS__, '_restore_wpautop_hook' ] );
+		$current_priority = has_filter( 'pum_popup_content', [ __CLASS__, '_restore_wpautop_hook' ] );
 
-		add_filter( 'the_content', 'wpautop', $current_priority - 1 );
-		remove_filter( 'the_content', [ __CLASS__, '_restore_wpautop_hook' ], $current_priority );
+		add_filter( 'pum_popup_content', 'wpautop', $current_priority - 1 );
+		remove_filter( 'pum_popup_content', [ __CLASS__, '_restore_wpautop_hook' ], $current_priority );
 
 		return $content;
 	}

@@ -29,7 +29,7 @@
   "build": {
     "files": "./**/*.*",
     "ignore": [
-      "./packages/",
+      "./packages/**",
       "./bin/**",
       "./build/**",
       "./release/**",
