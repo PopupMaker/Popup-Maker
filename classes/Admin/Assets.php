@@ -60,6 +60,7 @@ class PUM_Admin_Assets {
 
 		$admin_vars = apply_filters( 'pum_admin_vars', apply_filters( 'pum_admin_var', array(
 			'post_id'          => ! empty( $_GET['post'] ) ? intval( $_GET['post'] ) : null,
+			'pm_dir_url'       => Popup_Maker::$URL,
 			'default_provider' => pum_get_option( 'newsletter_default_provider', 'none' ),
 			'homeurl'          => home_url(),
 			'I10n'             => array(

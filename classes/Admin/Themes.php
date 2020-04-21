@@ -466,7 +466,7 @@ class PUM_Admin_Themes {
 			$font_weight_options  = self::font_weight_options();
 
 			$fields = apply_filters( 'pum_theme_settings_fields', array(
-				'general'   => apply_filters( 'pum_popup_general_settings_fields', array(
+				'general'   => apply_filters( 'pum_theme_general_settings_fields', array(
 					'main' => array(),
 				) ),
 				'overlay'   => apply_filters( 'pum_theme_overlay_settings_fields', array(
@@ -788,6 +788,7 @@ class PUM_Admin_Themes {
 					'main'       => array(
 						'close_text'             => array(
 							'label'       => __( 'Close Button Text', 'popup-maker' ),
+							'desc'        => __( 'To use a Font Awesome icon instead of text, enter the CSS classes such as "fas fa-camera".', 'popup-maker' ),
 							'placeholder' => __( 'CLOSE', 'popup-maker' ),
 							'std'         => __( 'CLOSE', 'popup-maker' ),
 							'priority'    => 10,

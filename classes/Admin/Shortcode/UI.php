@@ -80,7 +80,12 @@ class PUM_Admin_Shortcode_UI {
 	 */
 	public static function mce_buttons( $buttons ) {
 		// Enqueue scripts when editor is detected.
-		self::enqueue_scripts();
+
+		if ( ! did_action( 'admin_enqueue_scripts' ) ) {
+			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ), 120 ); // 120 because core styles are registered at 100 for some reason.
+		} else {
+			self::enqueue_scripts();
+		}
 
 		array_push( $buttons, 'pum_shortcodes' );
 
@@ -92,7 +97,7 @@ class PUM_Admin_Shortcode_UI {
 	 */
 	public static function enqueue_scripts() {
 		// Register editor styles.
-		add_editor_style( PUM_Admin_Assets::$css_url . 'admin-editor-styles' . PUM_Admin_Assets::$suffix . '.css' );
+		add_editor_style( PUM_Admin_Assets::$css_url . 'pum-admin-editor-styles' . PUM_Admin_Assets::$suffix . '.css' );
 
 		wp_enqueue_style( 'pum-admin-shortcode-ui' );
 		wp_enqueue_script( 'pum-admin-shortcode-ui' );
@@ -119,14 +124,15 @@ class PUM_Admin_Shortcode_UI {
 		$shortcodes = array();
 
 		foreach ( PUM_Shortcodes::instance()->get_shortcodes() as $tag => $shortcode ) {
+
+			$post_types = apply_filters( 'pum_shortcode_post_types', $shortcode->post_types(), $shortcode );
+
 			/**
 			 * @var $shortcode PUM_Shortcode
 			 */
-			if ( ! in_array( $type, apply_filters( 'pum_shortcode_post_types', $shortcode->post_types(), $shortcode ) ) ) {
+			if ( ! in_array( '*', $post_types ) && ! in_array( $type, $post_types ) ) {
 				continue;
 			}
-
-
 
 			$shortcodes[ $tag ] = array(
 				'version'        => $shortcode->version,

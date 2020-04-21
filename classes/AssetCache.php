@@ -57,7 +57,11 @@ class PUM_AssetCache {
 			self::$asset_url = Popup_Maker::$URL . 'assets/';
 			self::$js_url    = self::$asset_url . 'js/';
 			self::$css_url   = self::$asset_url . 'css/';
-			self::$disabled  = pum_get_option( 'disable_asset_caching', false );
+			if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
+				self::$disabled = true;
+			} else {
+				self::$disabled  = pum_get_option( 'disable_asset_caching', false );
+			}
 
 			add_action( 'pum_extension_updated', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_extension_deactivated', array( __CLASS__, 'reset_cache' ) );
@@ -68,6 +72,8 @@ class PUM_AssetCache {
 			add_action( 'pum_save_theme', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_update_core_version', array( __CLASS__, 'reset_cache' ) );
 			add_filter( 'pum_alert_list', array( __CLASS__, 'cache_alert' ) );
+
+			add_action( 'pum_styles', array( __CLASS__, 'global_custom_styles' ) );
 
 			if ( null === get_option( 'pum_files_writeable', null ) ) {
 				add_option( 'pum_files_writeable', true );
@@ -134,13 +140,13 @@ class PUM_AssetCache {
 		}
 
 		// Checks and create cachedir.
-		if ( ! is_dir( self::get_cache_dir() ) ) {
+		if ( false !== self::$cache_dir && ! is_dir( self::$cache_dir ) ) {
 
 			/** @var WP_Filesystem_Base $wp_filesystem */
-			$wp_filesystem->mkdir( self::get_cache_dir() );
+			$wp_filesystem->mkdir( self::$cache_dir );
 		}
 
-		return is_writable( self::get_cache_dir() ) && ! isset( $_POST['wp_customize'] );
+		return false !== self::$cache_dir && is_writable( self::$cache_dir ) && ! isset( $_POST['wp_customize'] );
 	}
 
 	/**
@@ -159,9 +165,10 @@ class PUM_AssetCache {
 	 * @return array|string
 	 */
 	public static function get_cache_dir() {
-		$wp_upload_dir = wp_upload_dir();
-
-		$upload_dir = $wp_upload_dir['basedir'];
+		$upload_dir = PUM_Helpers::get_upload_dir_path();
+		if ( false === $upload_dir ) {
+			return false;
+		}
 
 		if ( ! pum_get_option( 'bypass_adblockers', false ) ) {
 			return trailingslashit( $upload_dir ) . 'pum';
@@ -203,7 +210,10 @@ class PUM_AssetCache {
 	 * Generate JS cache file.
 	 */
 	public static function cache_js() {
-		$js_file = self::get_cache_dir() . '/' . self::generate_cache_filename( 'pum-site-scripts' ) . '.js';
+		if ( false === self::$cache_dir ) {
+			return;
+		}
+		$js_file = self::generate_cache_filename( 'pum-site-scripts' ) . '.js';
 
 		$js = "/**\n";
 		$js .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
@@ -222,7 +232,10 @@ class PUM_AssetCache {
 	 * Generate CSS cache file.
 	 */
 	public static function cache_css() {
-		$css_file = self::get_cache_dir() . '/' . self::generate_cache_filename( 'pum-site-styles' ) . '.css';
+		if ( false === self::$cache_dir ) {
+			return;
+		}
+		$css_file = self::generate_cache_filename( 'pum-site-styles' ) . '.css';
 
 		$css = "/**\n";
 		$css .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
@@ -312,22 +325,37 @@ class PUM_AssetCache {
 	/**
 	 * Cache file contents.
 	 *
-	 * @param $file
-	 * @param $contents
+	 * @param string $filename Filename of file to generate.
+	 * @param string $contents Contents to put into file.
 	 *
 	 * @return bool
 	 */
-	public static function cache_file( $file, $contents ) {
+	public static function cache_file( $filename, $contents ) {
+		if ( false === self::$cache_dir ) {
+			return false;
+		}
 		if ( ! function_exists( 'WP_Filesystem' ) ) {
 			require_once( ABSPATH . 'wp-admin/includes/file.php' );
 		}
+
+		$file = trailingslashit( self::$cache_dir ) . $filename;
 
 		WP_Filesystem();
 
 		/** @var WP_Filesystem_Base $wp_filesystem */
 		global $wp_filesystem;
 
-		return $wp_filesystem->put_contents( $file, $contents, defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : false );
+		$results = $wp_filesystem->put_contents( $file, $contents, defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : false );
+
+		// If the file is generated and is accessible...
+		if ( true === $results && self::is_file_accessible( $filename ) ) {
+			return true;
+		} else {
+			// ... else, let's set our flags to prevent cache running again for now.
+			update_option( 'pum_files_writeable', false );
+			update_option( '_pum_writeable_notice_dismissed', false );
+			return false;
+		}
 	}
 
 	/**
@@ -387,6 +415,14 @@ class PUM_AssetCache {
 		}
 
 		return $css_code;
+	}
+
+	public static function global_custom_styles() {
+
+		if ( pum_get_option( 'adjust_body_padding' ) ) {
+			echo "html.pum-open.pum-open-overlay.pum-open-scrollable body > *[aria-hidden] { padding-right: " . pum_get_option( 'body_padding_override', '15px' ) . "!important; }";
+		}
+
 	}
 
 	/**
@@ -611,5 +647,46 @@ class PUM_AssetCache {
 	 */
 	public static function should_not_show_alert() {
 		return true == get_option( 'pum_files_writeable', true ) || true == get_option( '_pum_writeable_notice_dismissed', true );
+	}
+
+	/**
+	 * Tests whether the file is accessible and returns 200 status code
+	 *
+	 * @param string $filename Filename of cache file to test.
+	 * @return bool True if file exists and is accessible
+	 */
+	private static function is_file_accessible( $filename ) {
+		if ( ! $filename || empty( $filename ) || ! is_string( $filename ) ) {
+			return false;
+		}
+		$cache_url = PUM_Helpers::get_cache_dir_url();
+		if ( false === $cache_url ) {
+			PUM_Utils_Logging::instance()->log( 'Cannot access cache file when tested. Cache URL returned false.' );
+		}
+		$protocol  = is_ssl() ? 'https:' : 'http:';
+		$file      = $protocol . $cache_url . '/' . $filename;
+		$results   = wp_remote_request( $file, array(
+			'method'    => 'HEAD',
+			'sslverify' => false,
+		));
+
+		// If it returned a WP_Error, let's log its error message.
+		if ( is_wp_error( $results ) ) {
+			$error = $results->get_error_message();
+			PUM_Utils_Logging::instance()->log( sprintf( 'Cannot access cache file when tested. Tested file: %s Error given: %s', esc_html( $file ), esc_html( $error ) ) );
+		}
+
+		// If it returned valid array...
+		if ( is_array( $results ) && isset( $results['response'] ) ) {
+			$status_code = $results['response']['code'];
+
+			// ... then, check if it's a valid status code. Only if it is a valid 2XX code, will this method return true.
+			if ( false !== $status_code && ( 200 <= $status_code && 300 > $status_code ) ) {
+				return true;
+			} else {
+				PUM_Utils_Logging::instance()->log( sprintf( 'Cannot access cache file when tested. Status code received was: %s', esc_html( $status_code ) ) );
+			}
+		}
+		return false;
 	}
 }

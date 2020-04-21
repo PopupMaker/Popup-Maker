@@ -49,8 +49,6 @@ class PUM_Repository_Themes extends PUM_Abstract_Repository_Posts {
 			$args['post__in'] = wp_parse_id_list( $args['themes'] );
 
 			unset( $args['themes'] );
-		} elseif ( empty( $args['post__in'] ) ) {
-
 		}
 
 		/**

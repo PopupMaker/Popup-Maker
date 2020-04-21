@@ -35,7 +35,6 @@ class PUM_Utils_Fields {
 		return static::get_field_default_values( $fields );
 	}
 
-
 	/**
 	 * @param array $fields
 	 *
@@ -50,12 +49,11 @@ class PUM_Utils_Fields {
 					$defaults[ $field_id ] = ! empty( $field['std'] ) ? $field['std'] : false;
 					break;
 				default:
-					$defaults[ $field_id ] = ! empty( $field['std'] ) ? $field['std'] : null;
+					$defaults[ $field_id ] = isset( $field['std'] ) ? $field['std'] : null;
 			}
 		}
 
 		return $defaults;
-
 	}
 
 	/**
@@ -199,7 +197,7 @@ class PUM_Utils_Fields {
 				if ( is_numeric( $field_id ) && ! empty( $field['id'] ) ) {
 					try {
 						$fields = PUM_Utils_Array::replace_key( $fields, $field_id, $field['id'] );
-					} catch ( \Exception $e ) {
+					} catch ( Exception $e ) {
 					}
 
 					$field_id = $field['id'];

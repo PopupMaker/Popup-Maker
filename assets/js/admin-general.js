@@ -8152,8 +8152,6 @@ function pumChecked(val1, val2, print) {
                         if (Array.isArray(data.value) && data.value.length === 1 && data.value[0].toString() === '1') {
                             data.value = true;
                             data.meta.checked = true;
-                        } else {
-
                         }
                         break;
                     case 'boolean':
@@ -8288,6 +8286,7 @@ function pumChecked(val1, val2, print) {
     window.PUM_Admin = window.PUM_Admin || {};
     window.PUM_Admin.templates = templates;
 }(window.jQuery));
+
 /*******************************************************************************
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
