@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, advertising, conversion, responsive popu
 Requires at least: 4.1
 Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 1.10.0
+Stable tag: 1.10.1
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,6 +124,11 @@ There are several common causes for this, check [this guide for help](https://do
 == Changelog ==
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
+
+= v1.10.1 - 04/21/2020 =
+* Fix: Typo in filter name caused extra p tags.
+* Fix: Add wp version check to prevent calling block functions on older versions or classicpress.
+* Fix: Font Awesome support now works for v4 fonts.
 
 = v1.10.0 - 04/20/2020 =
 * Feature: Display presets for top bar, bottom right slide-ins, full-screen popups & bottom left notifications to make it simple to get common setups done much quicker
