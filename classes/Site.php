@@ -94,8 +94,8 @@ class PUM_Site {
 	}
 
 	/**
-	 * If do_blocks() needs to remove wpautop() from the `the_content` filter, this re-adds it afterwards,
-	 * for subsequent `the_content` usage.
+	 * If do_blocks() needs to remove wpautop() from the `pum_popup_content` filter, this re-adds it afterwards,
+	 * for subsequent `pum_popup_content` usage.
 	 *
 	 * @access private
 	 *
@@ -105,10 +105,10 @@ class PUM_Site {
 	 * @return string The unmodified content.
 	 */
 	public static function _restore_wpautop_hook( $content ) {
-		$current_priority = has_filter( 'the_content', [ __CLASS__, '_restore_wpautop_hook' ] );
+		$current_priority = has_filter( 'pum_popup_content', [ __CLASS__, '_restore_wpautop_hook' ] );
 
-		add_filter( 'the_content', 'wpautop', $current_priority - 1 );
-		remove_filter( 'the_content', [ __CLASS__, '_restore_wpautop_hook' ], $current_priority );
+		add_filter( 'pum_popup_content', 'wpautop', $current_priority - 1 );
+		remove_filter( 'pum_popup_content', [ __CLASS__, '_restore_wpautop_hook' ], $current_priority );
 
 		return $content;
 	}
