@@ -1,6 +1,81 @@
 /*!******************************************************************************
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
+/***********
+Display Switcher
+***********/
+#pum-popup-settings-container .popup-types {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}
+
+@media screen and (min-width: 600px) {
+  #pum-popup-settings-container .popup-types {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+#pum-popup-settings-container .popup-types .popup-type {
+  margin: 0 1.5% 20px;
+  transition: transform 0.1s ease 0s;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 600px) and (max-width: 1279px) {
+  #pum-popup-settings-container .popup-types .popup-type {
+    width: 47%;
+  }
+  #pum-popup-settings-container .popup-types .popup-type:nth-child(2n+1) {
+    margin-right: 0;
+  }
+  #pum-popup-settings-container .popup-types .popup-type:nth-child(2n+2) {
+    margin-left: 0;
+  }
+}
+
+@media screen and (min-width: 1280px) and (max-width: 1365px) {
+  #pum-popup-settings-container .popup-types .popup-type {
+    width: 30%;
+  }
+  #pum-popup-settings-container .popup-types .popup-type:nth-child(3n+1) {
+    margin-right: 0;
+  }
+  #pum-popup-settings-container .popup-types .popup-type:nth-child(3n+3) {
+    margin-left: 0;
+  }
+}
+
+@media screen and (min-width: 1366px) {
+  #pum-popup-settings-container .popup-types .popup-type {
+    width: 22.75%;
+  }
+  #pum-popup-settings-container .popup-types .popup-type:nth-child(4n+1) {
+    margin-right: 0;
+  }
+  #pum-popup-settings-container .popup-types .popup-type:nth-child(4n+4) {
+    margin-left: 0;
+  }
+}
+
+#pum-popup-settings-container .popup-types .popup-type:hover {
+  transform: scale(1.1);
+}
+
+#pum-popup-settings-container .popup-types .popup-type img {
+  max-width: 100%;
+  height: auto;
+}
+
+#pum-popup-settings-container .popup-types .popup-type button {
+  width: 100%;
+}
+
+/***********
+Misc
+***********/
 #wp-admin-bar-view {
   display: none;
 }
@@ -135,6 +210,27 @@
 
 .pum-click-selector-presets.open ul {
   display: block;
+}
+
+/***********
+Manual Cookie Shortcode
+***********/
+pre.manual-cookie-shortcode {
+  overflow: hidden;
+  max-width: 20vw;
+  max-height: 1.7em;
+  margin: 0;
+}
+
+pre.manual-cookie-shortcode code {
+  overflow-x: scroll;
+  display: block;
+  padding: 2px 16px 1px;
+  margin: 0px -17px;
+}
+
+pre.manual-cookie-shortcode code::before, pre.manual-cookie-shortcode code::after {
+  content: " ";
 }
 
 /*# sourceMappingURL=pum-admin-popup-editor-rtl.css.map */

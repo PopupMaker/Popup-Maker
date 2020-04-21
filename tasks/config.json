@@ -29,6 +29,7 @@
   "build": {
     "files": "./**/*.*",
     "ignore": [
+      "./packages/",
       "./bin/**",
       "./build/**",
       "./release/**",
@@ -36,6 +37,8 @@
       "./node_modules/**",
       "./vendor/**",
       "./assets/js/src/**",
+      "./src/**",
+      "./assets/sass/**",
       "./.browserslistrc",
       "./.editorconfig",
       "./.eslintignore",
@@ -45,10 +48,15 @@
       "./.scrutinizer.yml",
       "./apigen.neon",
       "./composer.json",
+      "./composer.lock",
+      "./labels.json",
+      "./readme.md",
       "./gulpfile.js",
       "./package.json",
       "./package-lock.json",
-      "./phpci.yml"
+      "./phpci.yml",
+      "./yarn.lock",
+      "./yarn-error.log"
     ]
   }
 }
