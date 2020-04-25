@@ -89,7 +89,7 @@ class PUM_Shortcode_PopupCookie extends PUM_Shortcode {
 
 		$onscreen = 'data-only-onscreen="' . ( $atts['only_onscreen'] ? 1 : 0 ) . '"';
 
-		return "<div class='pum-cookie' data-cookie-args='" . json_encode( $args ) . "' $onscreen />";
+		return "<div class='pum-cookie' data-cookie-args='" . json_encode( $args ) . "' $onscreen></div>";
 	}
 
 	public function template() { ?>
