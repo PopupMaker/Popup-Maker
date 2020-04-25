@@ -1,4 +1,5 @@
 ### Unreleased Changes
+* Fix: Missing closing div in new [popup_cookie] shortcode.
 
 ### v1.10.1 - 04/21/2020
 * Fix: Typo in filter name caused extra p tags.
