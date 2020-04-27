@@ -71,15 +71,12 @@ Popup Maker is built by the [Code Atlantic][codeatlantic] team. We create high-q
 Check out some of our most popular plugins:
 
 * [User Menus][usermenus] - Show Or Hide Menu Items For Different Users
-* [Ahoy][ahoy] - Automated Marketing Messages for WordPress
 * [Content Control][contentcontrol] - Restrict Access to Pages and Posts
 
 
 [codeatlantic]: https://code-atlantic.com "Code Atlantic - High Quality WordPress Plugins"
 
 [usermenus]: https://wordpress.org/plugins/user-menus/ "Show Or Hide Menu Items For Different Users"
-
-[ahoy]: https://useahoy.com "Automated Marketing Messages for WordPress"
 
 [contentcontrol]: https://wordpress.org/plugins/content-control/ "Control Who Can Access Content"
 
