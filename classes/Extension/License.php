@@ -349,8 +349,8 @@ class PUM_Extension_License {
 
 		static $showed_invalid_message;
 
-		// If no license, user can't manage it, or we already showed this alert abort.
-		if ( empty( $this->license ) || ! current_user_can( 'manage_options' ) || $showed_invalid_message ) {
+		// If user can't manage it, or we already showed this alert abort.
+		if (  ! current_user_can( 'manage_options' ) || $showed_invalid_message ) {
 			return $alerts;
 		}
 
@@ -361,10 +361,13 @@ class PUM_Extension_License {
 			}
 		}
 
-		$license = get_option( $this->item_shortname . '_license_active' );
+		// If this license key is not empty, check if it's valid
+		if ( ! empty( $this->license ) ) {
+			$license = get_option( $this->item_shortname . '_license_active' );
 
-		if ( ! is_object( $license ) || 'valid' === $license->license ) {
-			return $alerts;
+			if ( ! is_object( $license ) || 'valid' === $license->license ) {
+				return $alerts;
+			}
 		}
 
 		$showed_invalid_message = true;
