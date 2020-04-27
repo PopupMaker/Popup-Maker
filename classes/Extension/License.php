@@ -38,11 +38,12 @@ class PUM_Extension_License {
 	 * Class constructor
 	 *
 	 * @param string $_file
-	 * @param string $_item
+	 * @param string $_item_name
 	 * @param string $_version
 	 * @param string $_author
 	 * @param string $_optname
 	 * @param string $_api_url
+	 * @param int    $_item_id
 	 */
 	function __construct( $_file, $_item_name, $_version, $_author, $_optname = null, $_api_url = null, $_item_id = null ) {
 		$this->file      = $_file;
@@ -345,6 +346,12 @@ class PUM_Extension_License {
 
 	}
 
+	/**
+	 * Adds an alert to the Popup Maker notification area when the license is invalid, expired, or empty
+	 *
+	 * @param array $alerts The existing alerts from the pum_alert_list filter
+	 * @return array Our modified array of alerts
+	 */
 	public function alerts( $alerts = array() ) {
 
 		static $showed_invalid_message;
