@@ -10,7 +10,7 @@
     // Stores the last open popup.
     $.fn.popmake.last_open_popup = null;
 
-    $(document).ready(function () {
+    window.PUM.init = function () {
         $('.pum').popmake();
         $(document).trigger('pumInitialized');
 
@@ -28,7 +28,9 @@
 
         // Initiate integrations.
         PUM.integrations.init();
-    });
+    };
+
+    $(document).on('ready.pumInit', PUM.init);
 
     /**
      * Add hidden field to all popup forms.

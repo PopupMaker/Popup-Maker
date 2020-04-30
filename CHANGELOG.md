@@ -1,6 +1,12 @@
 ### Unreleased Changes
+* Fix: Missing closing div in new [popup_cookie] shortcode.
 
-### v1.10.0 - TBD
+### v1.10.1 - 04/21/2020
+* Fix: Typo in filter name caused extra p tags.
+* Fix: Add wp version check to prevent calling block functions on older versions or classicpress.
+* Fix: Font Awesome support now works for v4 fonts.
+
+### v1.10.0 - 04/20/2020
 * Feature: Display presets for top bar, bottom right slide-ins, full-screen popups & bottom left notifications to make it simple to get common setups done much quicker
 * Feature: Popup Trigger inline text format for the block editor.   
 * Feature: Turn any block in Gutenberg block editor into a popup trigger.
