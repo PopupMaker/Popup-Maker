@@ -19,11 +19,11 @@ var PUM_Analytics;
                 url = rest_enabled ? pum_vars.restapi : pum_vars.ajaxurl,
                 opts = {
                     route: pum.hooks.applyFilters( 'pum.analyticsBeaconRoute', '/analytics/' ),
-                    data: pum.hooks.applyFilters( 'pum.AnalyticsBeaconData', $.extend({
+                    data: pum.hooks.applyFilters( 'pum.AnalyticsBeaconData', $.extend( true, {
                         event: 'open',
                         pid: null,
                         _cache: (+(new Date()))
-                    }, data) ),
+                    }, data ) ),
                     callback: typeof callback === 'function' ? callback : function () {
                     }
                 };
