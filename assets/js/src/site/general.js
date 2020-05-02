@@ -30,7 +30,9 @@
         PUM.integrations.init();
     };
 
-    $(document).on('ready.pumInit', PUM.init);
+    $(document).ready(function () {
+        PUM.hooks.applyFilters('pum.initHandler', PUM.init).call();
+    });
 
     /**
      * Add hidden field to all popup forms.
