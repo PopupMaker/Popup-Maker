@@ -174,8 +174,20 @@ class PUM_Utils_Array {
 	/**
 	 * Pluck all array keys ending with string.
 	 *
+	 * @param array    $array
+	 * @param string[] $keys
+	 *
+	 * @return array
+	 */
+	public static function pluck( $array, $keys = [] ) {
+		return self::pluck_keys_containing( $array, $keys );
+	}
+
+	/**
+	 * Pluck all array keys ending with string.
+	 *
 	 * @param array             $array
-	 * @param bool|string|array $strings
+	 * @param string[] $strings
 	 *
 	 * @return array
 	 */
@@ -189,7 +201,7 @@ class PUM_Utils_Array {
 	 * Remove all array keys beginning with string.
 	 *
 	 * @param array             $array
-	 * @param bool|string|array $strings
+	 * @param string[] $strings
 	 *
 	 * @return array
 	 */
