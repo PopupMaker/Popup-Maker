@@ -38,11 +38,12 @@ class PUM_Extension_License {
 	 * Class constructor
 	 *
 	 * @param string $_file
-	 * @param string $_item
+	 * @param string $_item_name
 	 * @param string $_version
 	 * @param string $_author
 	 * @param string $_optname
 	 * @param string $_api_url
+	 * @param int    $_item_id
 	 */
 	function __construct( $_file, $_item_name, $_version, $_author, $_optname = null, $_api_url = null, $_item_id = null ) {
 		$this->file      = $_file;
@@ -345,12 +346,18 @@ class PUM_Extension_License {
 
 	}
 
+	/**
+	 * Adds an alert to the Popup Maker notification area when the license is invalid, expired, or empty
+	 *
+	 * @param array $alerts The existing alerts from the pum_alert_list filter
+	 * @return array Our modified array of alerts
+	 */
 	public function alerts( $alerts = array() ) {
 
 		static $showed_invalid_message;
 
-		// If no license, user can't manage it, or we already showed this alert abort.
-		if ( empty( $this->license ) || ! current_user_can( 'manage_options' ) || $showed_invalid_message ) {
+		// If user can't manage it, or we already showed this alert abort.
+		if (  ! current_user_can( 'manage_options' ) || $showed_invalid_message ) {
 			return $alerts;
 		}
 
@@ -361,10 +368,13 @@ class PUM_Extension_License {
 			}
 		}
 
-		$license = get_option( $this->item_shortname . '_license_active' );
+		// If this license key is not empty, check if it's valid
+		if ( ! empty( $this->license ) ) {
+			$license = get_option( $this->item_shortname . '_license_active' );
 
-		if ( ! is_object( $license ) || 'valid' === $license->license ) {
-			return $alerts;
+			if ( ! is_object( $license ) || 'valid' === $license->license ) {
+				return $alerts;
+			}
 		}
 
 		$showed_invalid_message = true;
