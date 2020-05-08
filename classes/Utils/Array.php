@@ -172,6 +172,30 @@ class PUM_Utils_Array {
 	}
 
 	/**
+	 * @param array $array
+	 * @param array $allowed_keys
+	 *
+	 * @return array
+	 */
+	public static function allowed_keys( $array, $allowed_keys = [] ) {
+		return array_intersect_key( $array, array_flip( $allowed_keys ) );
+	}
+
+	/**
+	 * This works exactly the same as wp_parse_args, except we remove unused keys for sanitization.
+	 *
+	 * @param array $array
+	 * @param array $allowed_args Array of key=>defaultValue pairs for each allowed argument.
+	 *
+	 * @return array
+	 */
+	public static function parse_allowed_args( $array, $default_allowed_args = [] ) {
+		$array = wp_parse_args( $array, $default_allowed_args );
+
+		return self::allowed_keys( $array, array_keys( $default_allowed_args ) );
+	}
+
+	/**
 	 * Pluck all array keys ending with string.
 	 *
 	 * @param array    $array
@@ -186,7 +210,7 @@ class PUM_Utils_Array {
 	/**
 	 * Pluck all array keys ending with string.
 	 *
-	 * @param array             $array
+	 * @param array    $array
 	 * @param string[] $strings
 	 *
 	 * @return array
@@ -200,7 +224,7 @@ class PUM_Utils_Array {
 	/**
 	 * Remove all array keys beginning with string.
 	 *
-	 * @param array             $array
+	 * @param array    $array
 	 * @param string[] $strings
 	 *
 	 * @return array
