@@ -26,7 +26,7 @@ $tab-color: #E4E4E4;
     flex: 1;
 
     &.pum-flex-quarter {
-      width: 25%;
+      max-width: 25%!important;
 
       &:nth-child(4n+1) {
         padding-left: 0;
@@ -38,7 +38,7 @@ $tab-color: #E4E4E4;
     }
 
     &.pum-flex-third {
-      width: 33.333%;
+      max-width: 33.333%!important;
 
       &:nth-child(3n+1) {
         padding-left: 0;
@@ -50,7 +50,7 @@ $tab-color: #E4E4E4;
     }
 
     &.pum-flex-half {
-      width: 50%;
+      max-width: 50%!important;
 
       &:nth-child(2n+1) {
         padding-left: 0;
@@ -62,7 +62,7 @@ $tab-color: #E4E4E4;
     }
 
     &.pum-flex-three-quarter {
-      width: 75%;
+      max-width: 75%!important;
     }
 
     padding: 1%;
