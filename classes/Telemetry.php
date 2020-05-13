@@ -126,4 +126,16 @@ class PUM_Telemetry {
 
 		return $response;
 	}
+
+	public function is_localhost() {
+
+		if ( defined( 'WP_FS__IS_LOCALHOST_FOR_SERVER' ) ) {
+			return WP_FS__IS_LOCALHOST_FOR_SERVER;
+		}
+
+		$url = network_site_url( '/' );
+
+		return stristr( $url, 'dev' ) !== false || stristr( $url, 'localhost' ) !== false || stristr( $url, ':8888' ) !== false;
+
+	}
 }
