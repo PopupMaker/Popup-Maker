@@ -17,10 +17,28 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PUM_Telemetry {
 
+	public static function init() {
+		add_action( 'pum_daily_scheduled_events', array( __CLASS__, 'track_check' ) );
+	}
+
 	/**
-	 * @return array
+	 * Prepares and sends data, if it is time to do so
+	 * @since 1.11.0
 	 */
-	public function setup_data() {
+	public static function track_check() {
+		if ( self::is_time_to_send() ) {
+			$data = self::setup_data();
+			self::send_data( $data );
+			set_transient( 'pum_tracking_last_send', true, 6 * DAY_IN_SECONDS );
+		}
+	}
+
+	/**
+	 * Prepares telemetry data to be sent
+	 * @return array
+	 * @since 1.11.0
+	 */
+	public static function setup_data() {
 		global $wpdb;
 
 		// Retrieve current theme info
@@ -70,7 +88,7 @@ class PUM_Telemetry {
 			// Server Info
 			'php_version'      => phpversion(),
 			'mysql_version'    => $wpdb->db_version(),
-			'is_localhost'     => $this->is_localhost(),
+			'is_localhost'     => self::is_localhost(),
 
 			// WP Install Info
 			'url'              => get_site_url(),
@@ -95,8 +113,8 @@ class PUM_Telemetry {
 	 * @param array $data Telemetry data to send.
 	 * @sice 1.11.0
 	 */
-	public function send_data( $data = array() ) {
-		$this->api_call( 'check_in', $data );
+	public static function send_data( $data = array() ) {
+		self::api_call( 'check_in', $data );
 	}
 
 	/**
@@ -107,7 +125,7 @@ class PUM_Telemetry {
 	 * @return array|bool False if WP Error. Otherwise, array response from wp_remote_post.
 	 * @since 1.11.0
 	 */
-	public function api_call( $action = '', $data = array() ) {
+	public static function api_call( $action = '', $data = array() ) {
 		$response = wp_remote_post( 'https://api.wppopupmaker.com/wp-json/pmapi/v1/' . $action, array(
 			'method'      => 'POST',
 			'timeout'     => 20,
@@ -127,14 +145,26 @@ class PUM_Telemetry {
 		return $response;
 	}
 
-	public function is_localhost() {
-
-		if ( defined( 'WP_FS__IS_LOCALHOST_FOR_SERVER' ) ) {
-			return WP_FS__IS_LOCALHOST_FOR_SERVER;
+	/**
+	 * Determines if it is time to send telemetry data.
+	 * @return bool True if it is time.
+	 * @since 1.11.0
+	 */
+	public static function is_time_to_send() {
+		// Send a maximum of once per week
+		if ( get_transient( 'pum_tracking_last_send' ) ) {
+			return false;
 		}
+		return true;
+	}
 
+	/**
+	 * Determines if the site is in a local environment
+	 * @return bool True for local
+	 * @since 1.11.0
+	 */
+	public static function is_localhost() {
 		$url = network_site_url( '/' );
-
 		return stristr( $url, 'dev' ) !== false || stristr( $url, 'localhost' ) !== false || stristr( $url, ':8888' ) !== false;
 
 	}
