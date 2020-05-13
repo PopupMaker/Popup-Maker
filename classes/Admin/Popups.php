@@ -91,10 +91,10 @@ class PUM_Admin_Popups {
 			<div id="popup-titlediv" class="pum-form">
 				<div id="popup-titlewrap">
 					<label class="screen-reader-text" id="popup-title-prompt-text" for="popup-title">
-						<?php _e( 'Popup Title (appears on front end inside the popup container)', 'popup-maker' ); ?>
+						<?php _e( 'Popup Title', 'popup-maker' ); ?>
 					</label>
-					<input tabindex="2" name="popup_title" size="30" value="<?php echo esc_attr( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php _e( 'Popup Title (appears on front end inside the popup container)', 'popup-maker' ); ?>" />
-					<p class="pum-desc"><?php echo '(' . __( 'Optional', 'popup-maker' ) . ') ' . __( 'Display a title inside the popup container. May be left empty.', 'popup-maker' ); ?></p>
+					<input tabindex="2" name="popup_title" size="30" value="<?php echo esc_attr( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php _e( 'Popup Title', 'popup-maker' ); ?>" />
+					<p class="pum-desc"><?php echo '(' . __( 'Optional', 'popup-maker' ) . ') ' . __( 'Shown as headline inside the popup. Can be left blank.', 'popup-maker' ); ?></p>
 				</div>
 				<div class="inside"></div>
 			</div>
@@ -118,7 +118,7 @@ class PUM_Admin_Popups {
 		}
 
 		if ( 'popup' == $typenow && in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) ) { ?>
-			<p class="pum-desc"><?php echo '(' . __( 'Required', 'popup-maker' ) . ') ' . __( 'Register a popup name. The CSS class ‘popmake-{popup-name}’ can be used to set a trigger to display a popup.', 'popup-maker' ); ?></p>
+			<p class="pum-desc"><?php echo '(' . __( 'Required', 'popup-maker' ) . ') ' . __( 'For your use only. Never shown to site visitors.', 'popup-maker' ); ?></p>
 			<?php
 		}
 	}
