@@ -76,7 +76,7 @@ class PUM_Telemetry {
 		}
 
 		// Aggregates important settings across all popups.
-		$popups     = pum_get_all_popups();
+		$all_popups = pum_get_all_popups();
 		$triggers   = array();
 		$cookies    = array();
 		$conditions = array();
@@ -85,7 +85,7 @@ class PUM_Telemetry {
 		$sounds     = array();
 
 		// Cycle through each popup
-		foreach ( $popups as $popup ) {
+		foreach ( $all_popups as $popup ) {
 			$settings = $popup->get_settings();
 
 			// Cycle through each trigger to count the number of unique triggers.
@@ -139,11 +139,11 @@ class PUM_Telemetry {
 			}
 		}
 
-		$user = PUM_Freemius::instance()->fs->get_user();
+		//$user = PUM_Freemius::instance()->fs->get_user();
 
 		$args = array(
 			// UID
-			'uid'              => md5( strtolower( ! empty( $user->email ) ? $user->email : '' ) ),
+			//'uid'              => md5( strtolower( ! empty( $user->email ) ? $user->email : '' ) ),
 
 			// Language Info
 			'language'         => get_bloginfo( 'language' ), // Language
