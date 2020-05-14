@@ -102,6 +102,22 @@ class PUM_Telemetry {
 			'popups'           => $popups,
 			'popup_themes'     => $popup_themes,
 			'open_count'       => get_option( 'pum_total_open_count', 0 ),
+
+			// Popup Maker Settings
+			'block_editor_enabled'   => '',
+			'bypass_ad_blockers'     => '',
+			'disable_taxonimies'     => '',
+			'disable_asset_cache'    => '',
+			'disable_open_tracking'  => '',
+			'default_email_provider' => '',
+
+			// Aggregate Popup Settings
+			// Triggers used
+			// Cookie types used
+			// Conditions used
+			// Position location's used
+			// Size used
+			// Opening sounds used
 		);
 
 		return $args;
