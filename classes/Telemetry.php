@@ -104,12 +104,12 @@ class PUM_Telemetry {
 			'open_count'       => get_option( 'pum_total_open_count', 0 ),
 
 			// Popup Maker Settings
-			'block_editor_enabled'   => '',
-			'bypass_ad_blockers'     => '',
-			'disable_taxonimies'     => '',
-			'disable_asset_cache'    => '',
-			'disable_open_tracking'  => '',
-			'default_email_provider' => '',
+			'block_editor_enabled'   => pum_get_option( 'gutenberg_support_enabled' ),
+			'bypass_ad_blockers'     => pum_get_option( 'bypass_adblockers' ),
+			'disable_taxonimies'     => pum_get_option( 'disable_popup_category_tag' ),
+			'disable_asset_cache'    => pum_get_option( 'disable_asset_caching' ),
+			'disable_open_tracking'  => pum_get_option( 'disable_popup_open_tracking' ),
+			'default_email_provider' => pum_get_option( 'newsletter_default_provider', 'none' ),
 
 			// Aggregate Popup Settings
 			// Triggers used
