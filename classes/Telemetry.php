@@ -75,6 +75,70 @@ class PUM_Telemetry {
 			$popup_themes += $status;
 		}
 
+		// Aggregates important settings across all popups.
+		$popups     = pum_get_all_popups();
+		$triggers   = array();
+		$cookies    = array();
+		$conditions = array();
+		$location   = array();
+		$sizes      = array();
+		$sounds     = array();
+
+		// Cycle through each popup
+		foreach ( $popups as $popup ) {
+			$settings = $popup->get_settings();
+
+			// Cycle through each trigger to count the number of unique triggers.
+			foreach ( $settings['triggers'] as $trigger ) {
+				if ( isset( $triggers[ $trigger['type'] ] ) ) {
+					$triggers[ $trigger['type'] ] += 1;
+				} else {
+					$triggers[ $trigger['type'] ] = 1;
+				}
+			}
+
+			// Cycle through each cookie to count the number of unique cookie.
+			foreach ( $settings['cookies'] as $cookie ) {
+				if ( isset( $cookies[ $cookie['event'] ] ) ) {
+					$cookies[ $cookie['event'] ] += 1;
+				} else {
+					$cookies[ $cookie['event'] ] = 1;
+				}
+			}
+
+			// Cycle through each condition to count the number of unique condition.
+			foreach ( $settings['conditions'] as $condition ) {
+				foreach ( $condition as $target ) {
+					if ( isset( $cookies[ $target['target'] ] ) ) {
+						$conditions[ $target['target'] ] += 1;
+					} else {
+						$conditions[ $target['target'] ] = 1;
+					}
+				}
+			}
+
+			// Add locations setting.
+			if ( isset( $location[ $settings['location'] ] ) ) {
+				$location[ $settings['location'] ] += 1;
+			} else {
+				$location[ $settings['location'] ] = 1;
+			}
+
+			// Add size setting.
+			if ( isset( $sizes[ $settings['size'] ] ) ) {
+				$sizes[ $settings['size'] ] += 1;
+			} else {
+				$sizes[ $settings['size'] ] = 1;
+			}
+
+			// Add opening sound setting.
+			if ( isset( $sounds[ $settings['open_sound'] ] ) ) {
+				$sounds[ $settings['open_sound'] ] += 1;
+			} else {
+				$sounds[ $settings['open_sound'] ] = 1;
+			}
+		}
+
 		$user = PUM_Freemius::instance()->fs->get_user();
 
 		$args = array(
@@ -112,12 +176,12 @@ class PUM_Telemetry {
 			'default_email_provider' => pum_get_option( 'newsletter_default_provider', 'none' ),
 
 			// Aggregate Popup Settings
-			// Triggers used
-			// Cookie types used
-			// Conditions used
-			// Position location's used
-			// Size used
-			// Opening sounds used
+			'triggers'   => $triggers,
+			'cookies'    => $cookies,
+			'conditions' => $conditions,
+			'locations'  => $location,
+			'sizes'      => $sizes,
+			'sounds'     => $sounds,
 		);
 
 		return $args;
