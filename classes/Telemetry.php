@@ -237,7 +237,7 @@ class PUM_Telemetry {
 	 * @since 1.11.0
 	 */
 	public static function optin_alert( $alerts ) {
-		if ( self::should_not_show_alert() ) {
+		if ( ! self::should_show_alert() ) {
 			return $alerts;
 		}
 
@@ -279,6 +279,16 @@ class PUM_Telemetry {
 	}
 
 	/**
+	 * Whether or not we should show optin alert
+	 *
+	 * @since 1.11.0
+	 * @return bool True if alert should be shown
+	 */
+	public static function should_show_alert() {
+		return false === self::has_opted_in() && false == get_option( '_pum_telemetry_notice_dismissed', false );
+	}
+
+	/**
 	 * Determines if it is time to send telemetry data.
 	 * @return bool True if it is time.
 	 * @since 1.11.0
@@ -286,7 +296,7 @@ class PUM_Telemetry {
 	public static function is_time_to_send() {
 
 		// Only send if admin has opted in.
-		if ( ! pum_get_option( 'INSERTOPTIONHERE', false ) ) {
+		if ( ! self::has_opted_in() ) {
 			return false;
 		}
 
@@ -295,6 +305,16 @@ class PUM_Telemetry {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Wrapper to check if site has opted into telemetry
+	 *
+	 * @return bool True if has opted into telemetry
+	 * @since 1.11.0
+	 */
+	public static function has_opted_in() {
+		return false !== pum_get_option( 'INSERTOPTIONHERE', false );
 	}
 
 	/**
