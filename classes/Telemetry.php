@@ -255,11 +255,11 @@ class PUM_Telemetry {
 		$html = ob_get_clean();
 		$alerts[] = array(
 			'code'        => 'pum_telemetry_notice',
-			'type'        => 'warning',
+			'type'        => 'info',
 			'message'     => esc_html__( "Allow Popup Maker to track this plugin's usage and help us make this plugin better? No user data is sent to our servers. No sensitive data is tracked.", 'popup-maker' ),
 			'html'        => $html,
-			'priority'    => 1000,
-			'dismissible' => '2 weeks',
+			'priority'    => 10,
+			'dismissible' => true,
 			'global'      => false,
 		);
 		return $alerts;
