@@ -19,7 +19,7 @@ class PUM_Telemetry {
 
 	public static function init() {
 		add_action( 'pum_daily_scheduled_events', array( __CLASS__, 'track_check' ) );
-		if ( is_admin() && current_user_can( 'edit_posts' ) ) {
+		if ( is_admin() && current_user_can( 'manage_options' ) ) {
 			add_filter( 'pum_alert_list', array( __CLASS__, 'optin_alert' ) );
 			add_action( 'init', array( __CLASS__, 'optin_alert_check' ) );
 		}
@@ -285,7 +285,7 @@ class PUM_Telemetry {
 	 * @return bool True if alert should be shown
 	 */
 	public static function should_show_alert() {
-		return false === self::has_opted_in() && false == get_option( '_pum_telemetry_notice_dismissed', false );
+		return false === self::has_opted_in() && current_user_can( 'manage_options' ) && false == get_option( '_pum_telemetry_notice_dismissed', false );
 	}
 
 	/**
