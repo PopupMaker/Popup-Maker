@@ -143,11 +143,9 @@ class PUM_Telemetry {
 			}
 		}
 
-		//$user = PUM_Freemius::instance()->fs->get_user();
-
 		$args = array(
 			// UID
-			//'uid'              => md5( strtolower( ! empty( $user->email ) ? $user->email : '' ) ),
+			'uid'              => self::get_uuid(),
 
 			// Language Info
 			'language'         => get_bloginfo( 'language' ), // Language
@@ -241,14 +239,13 @@ class PUM_Telemetry {
 			return $alerts;
 		}
 
-		$optin_url     = add_query_arg( 'pum_optin_check', 'optin' );
-		$optout_url    = add_query_arg( 'pum_optin_check', 'optout' );
+		$optin_url = add_query_arg( 'pum_optin_check', 'optin' );
 
 		ob_start();
 		?>
 		<ul>
 			<li><a href="<?php echo esc_attr( $optin_url ); ?>"><strong><?php esc_html_e( 'Allow', 'popup-maker' ); ?></strong></a></li>
-			<li><a href="<?php echo esc_attr( $optout_url ); ?>" class="pum-dismiss"><?php esc_html_e( 'Do not allow', 'popup-maker' ); ?></a></li>
+			<li><a href="#" class="pum-dismiss"><?php esc_html_e( 'Do not allow', 'popup-maker' ); ?></a></li>
 			<li><a href="#" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a></li>
 		</ul>
 		<?php
@@ -326,5 +323,31 @@ class PUM_Telemetry {
 		$url = network_site_url( '/' );
 		return stristr( $url, 'dev' ) !== false || stristr( $url, 'localhost' ) !== false || stristr( $url, ':8888' ) !== false;
 
+	}
+
+	/**
+	 * Generates a new UUID for this site.
+	 *
+	 * @return string
+	 * @since 1.11.0
+	 */
+	public static function add_uuid() {
+		$uuid = md5( strtolower( get_site_url() . get_bloginfo( 'admin_email' ) ) );
+		add_option( 'pum_site_uuid', $uuid );
+		return $uuid;
+	}
+
+	/**
+	 * Retrieves the site UUID
+	 *
+	 * @return string
+	 * @since 1.11.0
+	 */
+	public static function get_uuid() {
+		$uuid = get_option( 'pum_site_uuid', false );
+		if ( false === $uuid ) {
+			$uuid = self::add_uuid();
+		}
+		return $uuid;
 	}
 }
