@@ -273,7 +273,7 @@ class PUM_Telemetry {
 	public static function optin_alert_check() {
 		if ( isset( $_GET['pum_optin_check'] ) ) {
 			if ( 'optin' === $_GET['pum_optin_check'] ) {
-				pum_update_option( 'INSERTOPTIONHERE', true );
+				pum_update_option( 'telemetry', true );
 			}
 		}
 	}
@@ -314,7 +314,7 @@ class PUM_Telemetry {
 	 * @since 1.11.0
 	 */
 	public static function has_opted_in() {
-		return false !== pum_get_option( 'INSERTOPTIONHERE', false );
+		return false !== pum_get_option( 'telemetry', false );
 	}
 
 	/**
