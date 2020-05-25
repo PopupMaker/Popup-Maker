@@ -19,6 +19,10 @@ class PUM_Telemetry {
 
 	public static function init() {
 		add_action( 'pum_daily_scheduled_events', array( __CLASS__, 'track_check' ) );
+		if ( is_admin() && current_user_can( 'edit_posts' ) ) {
+			add_filter( 'pum_alert_list', array( __CLASS__, 'optin_alert' ) );
+			add_action( 'init', array( __CLASS__, 'optin_alert_check' ) );
+		}
 	}
 
 	/**
@@ -226,12 +230,67 @@ class PUM_Telemetry {
 	}
 
 	/**
+	 * Adds admin notice if we haven't asked before.
+	 *
+	 * @param array $alerts The alerts currently in the alert system.
+	 * @return array Alerts for the alert system.
+	 * @since 1.11.0
+	 */
+	public static function optin_alert( $alerts ) {
+		if ( self::should_not_show_alert() ) {
+			return $alerts;
+		}
+
+		$optin_url     = add_query_arg( 'pum_optin_check', 'optin' );
+		$optout_url    = add_query_arg( 'pum_optin_check', 'optout' );
+
+		ob_start();
+		?>
+		<ul>
+			<li><a href="<?php echo esc_attr( $optin_url ); ?>"><strong><?php esc_html_e( 'Allow', 'popup-maker' ); ?></strong></a></li>
+			<li><a href="<?php echo esc_attr( $optout_url ); ?>" class="pum-dismiss"><?php esc_html_e( 'Do not allow', 'popup-maker' ); ?></a></li>
+			<li><a href="#" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a></li>
+		</ul>
+		<?php
+		$html = ob_get_clean();
+		$alerts[] = array(
+			'code'        => 'pum_telemetry_notice',
+			'type'        => 'warning',
+			'message'     => esc_html__( "Allow Popup Maker to track this plugin's usage and help us make this plugin better? No user data is sent to our servers. No sensitive data is tracked.", 'popup-maker' ),
+			'html'        => $html,
+			'priority'    => 1000,
+			'dismissible' => '2 weeks',
+			'global'      => false,
+		);
+		return $alerts;
+	}
+
+	/**
+	 * Checks if any options have been clicked from admin notices.
+	 *
+	 * @since 1.11.0
+	 */
+	public static function optin_alert_check() {
+		if ( isset( $_GET['pum_optin_check'] ) ) {
+			if ( 'optin' === $_GET['pum_optin_check'] ) {
+				pum_update_option( 'INSERTOPTIONHERE', true );
+			}
+		}
+	}
+
+	/**
 	 * Determines if it is time to send telemetry data.
 	 * @return bool True if it is time.
 	 * @since 1.11.0
 	 */
 	public static function is_time_to_send() {
-		// Send a maximum of once per week
+
+		// Only send if admin has opted in.
+		if ( ! pum_get_option( 'INSERTOPTIONHERE', false ) ) {
+			return false;
+		}
+
+		// Send a maximum of once per week.
 		if ( get_transient( 'pum_tracking_last_send' ) ) {
 			return false;
 		}
