@@ -190,13 +190,23 @@ class PUM_Telemetry {
 	}
 
 	/**
-	 * Simple wrapper for sending check_in data
+	 * Sends check_in data
 	 *
 	 * @param array $data Telemetry data to send.
-	 * @sice 1.11.0
+	 * @since 1.11.0
 	 */
 	public static function send_data( $data = array() ) {
 		self::api_call( 'check_in', $data );
+	}
+
+	/**
+	 * Sends new opt-in data
+	 *
+	 * @param string $email The email to subscribe to our email list.
+	 * @since 1.11.0
+	 */
+	public static function opt_into_marketing( $email ) {
+		self::api_call( 'new_opt_in', array( 'email' => $email ) );
 	}
 
 	/**
