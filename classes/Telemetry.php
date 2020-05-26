@@ -342,7 +342,7 @@ class PUM_Telemetry {
 	 * @since 1.11.0
 	 */
 	public static function add_uuid() {
-		$uuid = md5( strtolower( get_site_url() . get_bloginfo( 'admin_email' ) ) );
+		$uuid = wp_hash( strtolower( get_site_url() . '-' . get_bloginfo( 'admin_email' ) ) );
 		add_option( 'pum_site_uuid', $uuid );
 		return $uuid;
 	}
