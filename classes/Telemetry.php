@@ -200,16 +200,6 @@ class PUM_Telemetry {
 	}
 
 	/**
-	 * Sends new opt-in data
-	 *
-	 * @param string $email The email to subscribe to our email list.
-	 * @since 1.11.0
-	 */
-	public static function opt_into_marketing( $email ) {
-		self::api_call( 'new_opt_in', array( 'email' => $email ) );
-	}
-
-	/**
 	 * Makes HTTP request to our API endpoint
 	 *
 	 * @param string $action The specific endpoint in our API.
@@ -342,7 +332,7 @@ class PUM_Telemetry {
 	 * @since 1.11.0
 	 */
 	public static function add_uuid() {
-		$uuid = wp_hash( strtolower( get_site_url() . '-' . get_bloginfo( 'admin_email' ) ) );
+		$uuid = wp_generate_uuid4();
 		add_option( 'pum_site_uuid', $uuid );
 		return $uuid;
 	}
@@ -355,7 +345,7 @@ class PUM_Telemetry {
 	 */
 	public static function get_uuid() {
 		$uuid = get_option( 'pum_site_uuid', false );
-		if ( false === $uuid ) {
+		if ( false === $uuid || ! wp_is_uuid( $uuid ) ) {
 			$uuid = self::add_uuid();
 		}
 		return $uuid;
