@@ -246,7 +246,7 @@ class PUM_Telemetry {
 		<ul>
 			<li><a href="<?php echo esc_attr( $optin_url ); ?>"><strong><?php esc_html_e( 'Allow', 'popup-maker' ); ?></strong></a></li>
 			<li><a href="#" class="pum-dismiss"><?php esc_html_e( 'Do not allow', 'popup-maker' ); ?></a></li>
-			<li><a href="#" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a></li>
+			<li><a href="https://docs.wppopupmaker.com/article/528-the-data-the-popup-maker-plugin-collects" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a></li>
 		</ul>
 		<?php
 		$html = ob_get_clean();

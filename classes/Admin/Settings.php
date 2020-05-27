@@ -257,7 +257,7 @@ class PUM_Admin_Settings {
 							'type'  => 'checkbox',
 							'label' => __( 'Allow usage tracking?', 'popup-maker' ),
 							'desc'  => __( "Allow Popup Maker to track this plugin's usage and help us make this plugin better? No user data is sent to our servers. No sensitive data is tracked.", 'popup-maker' ) .
-									' <a href="#">' . __( 'Learn more', 'popup-maker' ) . '</a>',
+									' <a href="https://docs.wppopupmaker.com/article/528-the-data-the-popup-maker-plugin-collects">' . __( 'Learn more', 'popup-maker' ) . '</a>',
 						),
 					),
 				),
