@@ -333,7 +333,7 @@ class PUM_Telemetry {
 	 */
 	public static function add_uuid() {
 		$uuid = wp_generate_uuid4();
-		add_option( 'pum_site_uuid', $uuid );
+		update_option( 'pum_site_uuid', $uuid );
 		return $uuid;
 	}
 
