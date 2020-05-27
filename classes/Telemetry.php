@@ -208,7 +208,7 @@ class PUM_Telemetry {
 	 * @since 1.11.0
 	 */
 	public static function api_call( $action = '', $data = array() ) {
-		$response = wp_remote_post( 'https://api.wppopupmaker.com/wp-json/pmapi/v1/' . $action, array(
+		$response = wp_remote_post( 'https://api.wppopupmaker.com/wp-json/pmapi/v2/' . $action, array(
 			'method'      => 'POST',
 			'timeout'     => 20,
 			'redirection' => 5,
