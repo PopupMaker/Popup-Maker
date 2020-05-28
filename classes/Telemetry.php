@@ -277,7 +277,7 @@ class PUM_Telemetry {
 	 * @return bool True if alert should be shown
 	 */
 	public static function should_show_alert() {
-		return false === self::has_opted_in() && current_user_can( 'manage_options' ) && false === get_option( '_pum_telemetry_notice_dismissed', false );
+		return false === self::has_opted_in() && current_user_can( 'manage_options' );
 	}
 
 	/**
