@@ -113,7 +113,7 @@ class PUM_Telemetry {
 			// Cycle through each condition to count the number of unique condition.
 			foreach ( $settings['conditions'] as $condition ) {
 				foreach ( $condition as $target ) {
-					if ( isset( $cookies[ $target['target'] ] ) ) {
+					if ( isset( $conditions[ $target['target'] ] ) ) {
 						$conditions[ $target['target'] ] += 1;
 					} else {
 						$conditions[ $target['target'] ] = 1;
