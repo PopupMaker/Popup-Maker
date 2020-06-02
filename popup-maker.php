@@ -327,6 +327,8 @@ class Popup_Maker {
 		PUM_Shortcode_PopupTrigger::init();
 		PUM_Shortcode_PopupClose::init();
 		PUM_Shortcode_PopupCookie::init();
+
+		PUM_Telemetry::init();
 	}
 
 	/**
