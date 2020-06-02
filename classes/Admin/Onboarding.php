@@ -115,7 +115,7 @@ class PUM_Admin_Onboarding {
 			'options' => array(
 				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
 					__( 'Popup Content' ,'popup-maker'),
-					__( 'Add content into your popup here.','popup-maker')
+					__( 'Add content for your popup here.','popup-maker')
 				),
 				'position' => array( 'edge' => 'bottom', 'align' => 'center' )
 			)
@@ -125,7 +125,7 @@ class PUM_Admin_Onboarding {
 			'options' => array(
 				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
 					__( 'Popup Triggers' ,'popup-maker'),
-					__( 'Set what causes the popup to open with triggers.','popup-maker')
+					__( 'Use triggers to set what causes the popup to open.','popup-maker')
 				),
 				'position' => array( 'edge' => 'left', 'align' => 'center' )
 			)
@@ -135,7 +135,7 @@ class PUM_Admin_Onboarding {
 			'options' => array(
 				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
 					__( 'Popup Targeting' ,'popup-maker'),
-					__( 'Set where on your site the popup should loaded and who to show the popup to.','popup-maker')
+					__( 'Use targeting to set where on your site the popup should load and who to show the popup to.','popup-maker')
 				),
 				'position' => array( 'edge' => 'left', 'align' => 'center'  )
 			)
@@ -145,7 +145,7 @@ class PUM_Admin_Onboarding {
 			'options' => array(
 				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
 					__( 'Popup Display' ,'popup-maker'),
-					__( 'Set where on the screen the popup appears and what it looks like.','popup-maker')
+					__( 'Use display settings to set where on the screen the popup appears and what it looks like.','popup-maker')
 				),
 				'position' => array( 'edge' => 'left', 'align' => 'center'  )
 			)
