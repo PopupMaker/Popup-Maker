@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Admin_Onboarding {
 
 	public static function init() {
+		add_filter( 'pum_admin_pointers-popup', array( __CLASS__, 'popup_editor_main_tour' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'set_up_pointers' ) );
 	}
 
@@ -63,7 +64,7 @@ class PUM_Admin_Onboarding {
 		wp_enqueue_style( 'wp-pointer' );
 
 		// Add pointers script to queue. Add custom script.
-		wp_enqueue_script( 'pum-pointer', plugins_url( 'js/admin-pointer.js', POPMAKE_DIR ), array( 'wp-pointer' ) );
+		wp_enqueue_script( 'pum-pointer', Popup_Maker::$URL . 'assets/js/admin-pointer.js', array( 'pum-admin-popup-editor', 'wp-pointer' ) );
 
 		// Add pointer options to script.
 		wp_localize_script( 'pum-pointer', 'pumPointers', $valid_pointers );
@@ -87,6 +88,37 @@ class PUM_Admin_Onboarding {
 			return array();
 		}
 
+		return $pointers;
+	}
+
+	/**
+	 * Appends our main tour for the popup editor to pointers.
+	 *
+	 * @param array $pointers
+	 * @return array $pointers
+	 * @since 1.11.0
+	 */
+	public static function popup_editor_main_tour( $pointers ) {
+		$pointers['popup-editor-1'] = array(
+			'target' => '#wp-content-editor-container',
+			'options' => array(
+				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
+					__( 'Popup Content' ,'popup-maker'),
+					__( 'Add content into your popup here.','popup-maker')
+				),
+				'position' => array( 'edge' => 'bottom', 'align' => 'middle' )
+			)
+		);
+		$pointers['popup-editor-2'] = array(
+			'target' => 'a[href="#pum-popup-settings_triggers"]',
+			'options' => array(
+				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
+					__( 'Popup Triggers' ,'popup-maker'),
+					__( 'Set what causes the popup to open with triggers.','popup-maker')
+				),
+				'position' => array( 'edge' => 'left', 'align' => 'middle' )
+			)
+		);
 		return $pointers;
 	}
 

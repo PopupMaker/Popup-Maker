@@ -4,7 +4,7 @@
 (function ($) {
 	window.pumPointers = window.pumPointers || {};
 	function open_pointer( id ) {
-		var pointer = pumPointers[i];
+		var pointer = pumPointers.pointers[id];
 		var options = $.extend( pointer.options, {
 			close: function() {
 				$.post( ajaxurl, {
@@ -17,6 +17,6 @@
 		$(pointer.target).pointer( options ).pointer('open');
 	}
 	$(document).ready( function($) {
-		open_pointer(Object.keys(pumPointers)[0])
+		open_pointer( 0 );
 	});
 }(jQuery));
