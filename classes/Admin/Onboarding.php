@@ -131,34 +131,40 @@ class PUM_Admin_Onboarding {
 			)
 		);
 		$pointers['popup-editor-3'] = array(
-			'target' => 'a[href="#pum-popup-settings_triggers"]',
+			'target' => 'a[href="#pum-popup-settings_targeting"]',
 			'options' => array(
 				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
-					__( 'Popup Triggers' ,'popup-maker'),
-					__( 'Set what causes the popup to open with triggers.','popup-maker')
+					__( 'Popup Targeting' ,'popup-maker'),
+					__( 'Set where on your site the popup should loaded and who to show the popup to.','popup-maker')
 				),
-				'position' => array( 'edge' => 'left' )
+				'position' => array( 'edge' => 'left', 'align' => 'center'  )
 			)
 		);
 		$pointers['popup-editor-4'] = array(
-			'target' => 'a[href="#pum-popup-settings_triggers"]',
+			'target' => 'a[href="#pum-popup-settings_display"]',
 			'options' => array(
 				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
-					__( 'Popup Triggers' ,'popup-maker'),
-					__( 'Set what causes the popup to open with triggers.','popup-maker')
+					__( 'Popup Display' ,'popup-maker'),
+					__( 'Set where on the screen the popup appears and what it looks like.','popup-maker')
 				),
-				'position' => array( 'edge' => 'left' )
+				'position' => array( 'edge' => 'left', 'align' => 'center'  )
 			)
 		);
 		$pointers['popup-editor-5'] = array(
-			'target' => 'a[href="#pum-popup-settings_triggers"]',
+			'target' => 'select#theme_id',
 			'options' => array(
 				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
-					__( 'Popup Triggers' ,'popup-maker'),
-					__( 'Set what causes the popup to open with triggers.','popup-maker')
+					__( 'Popup Theme' ,'popup-maker'),
+					__( 'Choose the overall theme for the popup which controls the colors, spacing, and fonts of the popup.','popup-maker')
 				),
-				'position' => array( 'edge' => 'left' )
-			)
+				'position' => array( 'edge' => 'bottom', 'align' => 'left'  )
+			),
+			'pre' => array(
+				'clicks' => array(
+					'a[href="#pum-popup-settings_display"]',
+					'a[href="#pum-popup-settings-display-subtabs_main"]',
+				),
+			),
 		);
 		return $pointers;
 	}
