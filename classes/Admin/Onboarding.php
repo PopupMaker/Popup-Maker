@@ -106,6 +106,7 @@ class PUM_Admin_Onboarding {
 		 * The optional align is used as the first parameter in both "at" and "my".
 		 *
 		 * @see https://github.com/WordPress/WordPress/blob/master/wp-includes/js/wp-pointer.js#L295
+		 * @see https://jqueryui.com/position/
 		 */
 
 
