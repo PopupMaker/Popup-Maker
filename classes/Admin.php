@@ -17,6 +17,7 @@ class PUM_Admin {
 		PUM_Admin_Tools::init();
 		PUM_Admin_Shortcode_UI::init();
 		PUM_Upsell::init();
+		PUM_Admin_Onboarding::init();
 
 		add_filter( 'user_has_cap', array( __CLASS__, 'prevent_default_theme_deletion' ), 10, 3 );
 		add_filter( 'plugin_action_links', array( __CLASS__, 'plugin_action_links' ), 10, 2 );
