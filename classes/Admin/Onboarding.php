@@ -13,6 +13,7 @@ class PUM_Admin_Onboarding {
 
 	public static function init() {
 		add_filter( 'pum_admin_pointers-popup', array( __CLASS__, 'popup_editor_main_tour' ) );
+		add_filter( 'pum_admin_pointers-edit-popup', array( __CLASS__, 'all_popups_main_tour' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'set_up_pointers' ) );
 	}
 
@@ -64,7 +65,7 @@ class PUM_Admin_Onboarding {
 		wp_enqueue_style( 'wp-pointer' );
 
 		// Add pointers script to queue. Add custom script.
-		wp_enqueue_script( 'pum-pointer', Popup_Maker::$URL . 'assets/js/admin-pointer.js', array( 'pum-admin-popup-editor', 'wp-pointer' ) );
+		wp_enqueue_script( 'pum-pointer', Popup_Maker::$URL . 'assets/js/admin-pointer.js', array( 'wp-pointer' ) );
 
 		// Add pointer options to script.
 		wp_localize_script( 'pum-pointer', 'pumPointers', $valid_pointers );
@@ -99,6 +100,15 @@ class PUM_Admin_Onboarding {
 	 * @since 1.11.0
 	 */
 	public static function popup_editor_main_tour( $pointers ) {
+		/**
+		 * For the position, the 'edge' is used as the second parameter
+		 * in jQuery's "at" with the opposite in jQuery's "my".
+		 * The optional align is used as the first parameter in both "at" and "my".
+		 *
+		 * @see https://github.com/WordPress/WordPress/blob/master/wp-includes/js/wp-pointer.js#L295
+		 */
+
+
 		$pointers['popup-editor-1'] = array(
 			'target' => '#wp-content-editor-container',
 			'options' => array(
@@ -106,7 +116,7 @@ class PUM_Admin_Onboarding {
 					__( 'Popup Content' ,'popup-maker'),
 					__( 'Add content into your popup here.','popup-maker')
 				),
-				'position' => array( 'edge' => 'bottom', 'align' => 'middle' )
+				'position' => array( 'edge' => 'bottom', 'align' => 'center' )
 			)
 		);
 		$pointers['popup-editor-2'] = array(
@@ -116,9 +126,61 @@ class PUM_Admin_Onboarding {
 					__( 'Popup Triggers' ,'popup-maker'),
 					__( 'Set what causes the popup to open with triggers.','popup-maker')
 				),
-				'position' => array( 'edge' => 'left', 'align' => 'middle' )
+				'position' => array( 'edge' => 'left', 'align' => 'center' )
 			)
 		);
+		$pointers['popup-editor-3'] = array(
+			'target' => 'a[href="#pum-popup-settings_triggers"]',
+			'options' => array(
+				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
+					__( 'Popup Triggers' ,'popup-maker'),
+					__( 'Set what causes the popup to open with triggers.','popup-maker')
+				),
+				'position' => array( 'edge' => 'left' )
+			)
+		);
+		$pointers['popup-editor-4'] = array(
+			'target' => 'a[href="#pum-popup-settings_triggers"]',
+			'options' => array(
+				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
+					__( 'Popup Triggers' ,'popup-maker'),
+					__( 'Set what causes the popup to open with triggers.','popup-maker')
+				),
+				'position' => array( 'edge' => 'left' )
+			)
+		);
+		$pointers['popup-editor-5'] = array(
+			'target' => 'a[href="#pum-popup-settings_triggers"]',
+			'options' => array(
+				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
+					__( 'Popup Triggers' ,'popup-maker'),
+					__( 'Set what causes the popup to open with triggers.','popup-maker')
+				),
+				'position' => array( 'edge' => 'left' )
+			)
+		);
+		return $pointers;
+	}
+
+	/**
+	 * Appends our main tour for the All Popups page.
+	 *
+	 * @param array $pointers
+	 * @return array $pointers
+	 * @since 1.11.0
+	 */
+	public static function all_popups_main_tour( $pointers ) {
+		$pointers['all-popups-1'] = array(
+			'target'  => 'h2.nav-tab-wrapper a:nth-child(4)',
+			'options' => array(
+				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
+					__( 'Welcome to Popup Maker!', 'popup-maker' ),
+					__( 'Click the "Add New Popup" button to create your first popup.', 'popup-maker' )
+				),
+				'position' => array( 'edge' => 'top' )
+			)
+		);
+
 		return $pointers;
 	}
 
