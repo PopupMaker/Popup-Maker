@@ -1,5 +1,6 @@
 ### Unreleased Changes
 * Fix: Shortcode popup_close tag attribute not functioning properly.
+* Tweak: Ensure all admin pages have visible page headings.
 * Tweak: Simplify name and title fields in popup editor.
 * Tweak: Add popup ID to quick links on All Popups.
 * Tweak: Move CSS and JS for our admin bar node to external file.
