@@ -96,7 +96,6 @@ class PUM_Upsell {
 
 
         <style>
-            .wrap h1.wp-heading-inline,
             .wrap h1.wp-heading-inline + a.page-title-action {
                 display: none;
             }
