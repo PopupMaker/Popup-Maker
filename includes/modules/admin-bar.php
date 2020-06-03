@@ -212,8 +212,9 @@ class PUM_Modules_Admin_Bar {
 	 * @since 1.11.0
 	 */
 	public static function enqueue_files() {
-		wp_enqueue_script( 'pum-admin-bar', Popup_Maker::$URL . 'assets/js/admin-bar.js', array( 'jquery' ) );
-		wp_enqueue_style( 'pum-admin-bar-style', Popup_Maker::$URL . 'assets/css/pum-admin-bar.css');
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		wp_enqueue_script( 'pum-admin-bar', Popup_Maker::$URL . 'assets/js/admin-bar' . $suffix .'.js', array( 'jquery' ) );
+		wp_enqueue_style( 'pum-admin-bar-style', Popup_Maker::$URL . 'assets/css/pum-admin-bar' . $suffix .'.css');
 
 		$admin_bar_text = array(
 			'instructions' => __( 'After clicking ok, click the element you want a selector for.', 'popup-maker' ),
