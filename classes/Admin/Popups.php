@@ -43,6 +43,7 @@ class PUM_Admin_Popups {
 		add_filter( 'manage_edit-popup_sortable_columns', array( __CLASS__, 'sortable_columns' ) );
 		add_action( 'load-edit.php', array( __CLASS__, 'load' ), 9999 );
 		add_action( 'restrict_manage_posts', array( __CLASS__, 'add_popup_filters' ), 100 );
+		add_filter( 'post_row_actions', array( __CLASS__, 'add_id_row_actions' ), 2, 100 );
 	}
 
 	/**
@@ -1143,6 +1144,7 @@ class PUM_Admin_Popups {
 	 *  Post Type List Table
 	 */
 	public static function dashboard_columns( $_columns ) {
+		wp_enqueue_style( 'pum-admin-general' );
 		$columns = array(
 			'cb'          => '<input type="checkbox"/>',
 			'title'       => __( 'Name', 'popup-maker' ),
@@ -1337,6 +1339,22 @@ class PUM_Admin_Popups {
 			}
 		}
 
+	}
+
+	/**
+	 * Prepends Popup ID to the action row on All Popups
+	 * @param array $actions The row actions.
+	 * @param $post The post
+	 *
+	 * @return array The new actions.
+	 */
+	public static function add_id_row_actions( $actions, $post ) {
+		// Only adjust if we are dealing with our popups.
+		if ( 'popup' === $post->post_type ) {
+			return array_merge( array( 'id' => 'ID: ' . $post->ID ), $actions );
+		}
+
+		return $actions;
 	}
 
 }
