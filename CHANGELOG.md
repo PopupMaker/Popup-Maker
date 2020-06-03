@@ -1,4 +1,7 @@
 ### Unreleased Changes
+* Tweak: Simplify name and title fields in popup editor.
+* Tweak: Adds popup ID to quick links on All Popups.
+* Tweak: Adds our new optional telemetry system.
 
 ### v1.10.1 - 04/21/2020
 * Fix: Typo in filter name caused extra p tags.
