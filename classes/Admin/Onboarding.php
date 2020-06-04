@@ -109,8 +109,17 @@ class PUM_Admin_Onboarding {
 		 * @see https://jqueryui.com/position/
 		 */
 
-
 		$pointers['popup-editor-1'] = array(
+			'target' => '#title',
+			'options' => array(
+				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
+					__( 'Popup Name' ,'popup-maker'),
+					__( 'Name your popup so you can find it later. Site visitors will not see this.','popup-maker')
+				),
+				'position' => array( 'edge' => 'top', 'align' => 'center' )
+			)
+		);
+		$pointers['popup-editor-2'] = array(
 			'target' => '#wp-content-editor-container',
 			'options' => array(
 				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
@@ -120,42 +129,42 @@ class PUM_Admin_Onboarding {
 				'position' => array( 'edge' => 'bottom', 'align' => 'center' )
 			)
 		);
-		$pointers['popup-editor-2'] = array(
+		$pointers['popup-editor-3'] = array(
 			'target' => 'a[href="#pum-popup-settings_triggers"]',
 			'options' => array(
 				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
 					__( 'Popup Triggers' ,'popup-maker'),
-					__( 'Use triggers to set what causes the popup to open.','popup-maker')
+					__( 'Use triggers to choose  what causes the popup to open.','popup-maker')
 				),
 				'position' => array( 'edge' => 'left', 'align' => 'center' )
 			)
 		);
-		$pointers['popup-editor-3'] = array(
+		$pointers['popup-editor-4'] = array(
 			'target' => 'a[href="#pum-popup-settings_targeting"]',
 			'options' => array(
 				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
 					__( 'Popup Targeting' ,'popup-maker'),
-					__( 'Use targeting to set where on your site the popup should load and who to show the popup to.','popup-maker')
-				),
-				'position' => array( 'edge' => 'left', 'align' => 'center'  )
-			)
-		);
-		$pointers['popup-editor-4'] = array(
-			'target' => 'a[href="#pum-popup-settings_display"]',
-			'options' => array(
-				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
-					__( 'Popup Display' ,'popup-maker'),
-					__( 'Use display settings to set where on the screen the popup appears and what it looks like.','popup-maker')
+					__( 'Use targeting to choose where on your site the popup should load and who to show the popup to.','popup-maker')
 				),
 				'position' => array( 'edge' => 'left', 'align' => 'center'  )
 			)
 		);
 		$pointers['popup-editor-5'] = array(
+			'target' => 'a[href="#pum-popup-settings_display"]',
+			'options' => array(
+				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
+					__( 'Popup Display' ,'popup-maker'),
+					__( 'Use display settings to choose where on the screen the popup appears and what it looks like.','popup-maker')
+				),
+				'position' => array( 'edge' => 'left', 'align' => 'center'  )
+			)
+		);
+		$pointers['popup-editor-6'] = array(
 			'target' => 'select#theme_id',
 			'options' => array(
 				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
 					__( 'Popup Theme' ,'popup-maker'),
-					__( 'Choose the overall theme for the popup which controls the colors, spacing, and fonts of the popup.','popup-maker')
+					__( 'Choose the popup theme which controls the visual appearance of your popup including; colors, spacing, and fonts.','popup-maker')
 				),
 				'position' => array( 'edge' => 'bottom', 'align' => 'left'  )
 			),
