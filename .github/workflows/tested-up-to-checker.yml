@@ -1,0 +1,16 @@
+name: "WordPress version checker"
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  wordpress-version-checker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: WordPress version checker
+        uses: skaut/wordpress-version-checker@v1.0.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
