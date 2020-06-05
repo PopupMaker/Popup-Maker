@@ -2,7 +2,10 @@
  * Handles pointers throughout Popup Maker.
  */
 (function ($) {
-	window.pumPointers = window.pumPointers || {};
+	window.pumPointers = window.pumPointers || {
+		pointers: []
+	};
+	window.skipTour = false;
 	function open_pointer( id ) {
 		id = parseInt( id );
 		var pointer = pumPointers.pointers[id];
@@ -32,14 +35,34 @@
 				});
 
 				// If we have other pointers left in tour, open the next.
-				if ( id !== pumPointers.pointers.length - 1 ) {
+				if ( false === skipTour && id !== pumPointers.pointers.length - 1 ) {
 					open_pointer( id + 1 );
 				}
 			},
 			buttons: function( event, t ) {
-				var $btn_next  = $( '<button class="button">Next</button>' );
-				var $btn_complete  = $( '<button class="button">Thanks!</button>' );
+				var $btn_skip = $( '<button class="button" style="margin-right: 10px;">Skip tour</button>');
+				var $btn_next  = $( '<button class="button button-primary">Next</button>' );
+				var $btn_complete  = $( '<button class="button button-primary">Thanks!</button>' );
 				var $wrapper = $( '<div class=\"pum-pointer-buttons\" />' );
+				$btn_skip.bind( 'click.point', function(e) {
+					e.preventDefault();
+					skipTour = true;
+					t.element.pointer('close');
+					for (var i = 0; i < pumPointers.pointers.length; i++) {
+						/**
+						 * If the user has never dismissed pointers before, there is a chance
+						 * their user meta key hasn't been set yet. If we fire too many of these
+						 * at once, WordPress will rewrite itself a few times causing not all
+						 * to be dismissed.
+ 						 */
+						setTimeout(function(i) {
+							$.post( ajaxurl, {
+								pointer: pumPointers.pointers[i].pointer_id,
+								action: 'dismiss-wp-pointer'
+							});
+						}, ( i * 500 ) + 1, i );
+					}
+				});
 				$btn_next.bind( 'click.pointer', function(e) {
 					e.preventDefault();
 					t.element.pointer('close');
@@ -48,6 +71,12 @@
 					e.preventDefault();
 					t.element.pointer('close');
 				});
+
+				// If this is the first pointer of a tour...
+				if ( 1 !== pumPointers.pointers.length && 0 === id ) {
+					// ... then show a skip tour button.
+					$wrapper.append( $btn_skip );
+				}
 
 				// If this is the last pointer in tour...
 				if ( id === pumPointers.pointers.length - 1 ) {
@@ -75,7 +104,9 @@
 		 * JS files as dependencies as we these pointers could be loaded on any admin screen.
 		 */
 		setTimeout(function() {
-			open_pointer( 0 );
+			if ( 0 < pumPointers.pointers.length ) {
+				open_pointer( 0 );
+			}
 		}, 1000)
 	});
 }(jQuery));
