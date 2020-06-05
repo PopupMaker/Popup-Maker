@@ -159,9 +159,14 @@
     }
 
     .pum-title {
+		margin-bottom: 1em;
     }
 
     .pum-content {
+
+		> :first-child {
+			margin-top: 0;
+		}
 
         > :last-child {
             margin-bottom: 0;
