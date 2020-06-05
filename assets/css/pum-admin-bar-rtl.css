@@ -1,0 +1,18 @@
+/* Layer admin bar over popups. */
+#wpadminbar {
+  z-index: 999999999999;
+}
+
+#wp-admin-bar-popup-maker > .ab-item::before {
+  background: url("/wp-content/plugins/popup-maker/assets/images/admin/icon-info-21x21.png") center center no-repeat transparent !important;
+  top: 3px;
+  content: "";
+  width: 20px;
+  height: 20px;
+}
+
+#wp-admin-bar-popup-maker:hover > .ab-item::before {
+  background-image: url("/wp-content/plugins/popup-maker/assets/images/admin/icon-info-21x21.png") !important;
+}
+
+/*# sourceMappingURL=pum-admin-bar-rtl.css.map */
