@@ -18,6 +18,7 @@ const allowedDirectories = [
     'batch',
     'general',
     'marketing',
+	'pointer',
     'popup-editor',
     'settings-page',
     'shortcode-ui',
