@@ -1,5 +1,8 @@
 ### Unreleased Changes
+* Feature: New guided tour of popup editor for first time users.
 * Fix: Shortcode popup_close tag attribute not functioning properly.
+* Tweak: Change popup_close tag setting to use a drop-down for more easily selecting which tag to use.
+* Tweak: Improve explanation of cookies in new trigger modal.
 * Tweak: Ensure all admin pages have visible page headings.
 * Tweak: Simplify name and title fields in popup editor.
 * Tweak: Add popup ID to quick links on All Popups.
