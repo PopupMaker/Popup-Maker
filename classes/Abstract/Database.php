@@ -45,6 +45,8 @@ abstract class PUM_Abstract_Database {
 				$this->update_db_version();
 			}
 		}
+
+		$wpdb->{$this->table_name} = $this->table_name();
 	}
 
 	/**
@@ -390,7 +392,6 @@ abstract class PUM_Abstract_Database {
 		return $query;
 
 	}
-
 
 	/**
 	 * @param array  $args
