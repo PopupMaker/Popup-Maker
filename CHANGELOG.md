@@ -1,5 +1,6 @@
 ### Unreleased Changes
 * Feature: New guided tour of popup editor for first time users.
+* Feature: New href attribute on the popup_close shortcode for when setting the shortcode to use the `a` tag.
 * Fix: Shortcode popup_close tag attribute not functioning properly.
 * Tweak: Change popup_close tag setting to use a drop-down for more easily selecting which tag to use.
 * Tweak: Improve explanation of cookies in new trigger modal.
