@@ -53,7 +53,7 @@ class PUM_Site_Popups {
 	 *
 	 * @param bool|object|null $new_popup
 	 *
-	 * @return null|PUM_Popup
+	 * @return null|PUM_Model_Popup
 	 *
 	 * @deprecated 1.8.0
 	 */
@@ -93,7 +93,7 @@ class PUM_Site_Popups {
 			return;
 		}
 
-		$popups = pum_get_all_popups();
+			$popups = pum_get_all_popups( [ 'post_status' => [ 'published', 'private' ] ] );
 
 		if ( ! empty( $popups ) ) {
 
