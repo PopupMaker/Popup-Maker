@@ -18,7 +18,21 @@ Everything you need to create unique popup user experiences. Insert forms & othe
 = Create Effective Popups For WordPress =
 [Popup Maker](https://wppopupmaker.com)™ is the **best popup plugin WordPress** has to offer. It is incredibly versatile & flexible. Bend it to create any type of popup, modal, or content overlay for your WordPress website.
 
-Easily create email opt-in popups, contact form popups, Coronavirus/COVID-19 announcements, [EU cookie notices](https://ninjaforms.com/eu-cookie-notices-ninja-forms/), slide-ins, & more. Check out some examples in our video below:
+> **Great plugin! Got the job done**
+> "Love how easy it was to make popups with this!" ~[Zac Gordon](https://wordpress.org/support/topic/great-plugin-got-the-job-done/)
+
+With Popup Maker, you can create popups such as:
+
+* Email opt-in popups,
+* Content upgrade popups,
+* Popups to greet visitors from ProductHunt,
+* Contact form popups,
+* Coronavirus/COVID-19 announcements,
+* [EU cookie notices](https://ninjaforms.com/eu-cookie-notices-ninja-forms/),
+* Slide-ins,
+* & more.
+
+Check out some examples in our video below:
 
 https://www.youtube.com/watch?v=PomnMganMVM
 
