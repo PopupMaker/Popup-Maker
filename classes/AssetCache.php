@@ -657,6 +657,7 @@ class PUM_AssetCache {
 	 */
 	private static function is_file_accessible( $filename ) {
 		if ( ! $filename || empty( $filename ) || ! is_string( $filename ) ) {
+			PUM_Utils_Logging::instance()->log( 'Cannot check if file is accessible. Filename passed: ' . print_r( $filename, true ) );
 			return false;
 		}
 		$cache_url = PUM_Helpers::get_cache_dir_url();

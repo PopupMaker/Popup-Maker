@@ -49,8 +49,17 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 						'label'       => __( 'HTML Tag', 'popup-maker' ),
 						'placeholder' => __( 'HTML Tag', 'popup-maker' ) . ': button, span etc',
 						'desc'        => __( 'The HTML tag used for this element.', 'popup-maker' ),
-						'type'        => 'text',
-						'std'         => '',
+						'type'         => 'select',
+						'options'      => array(
+							'a'      => 'a',
+							'button' => 'button',
+							'div'    => 'div',
+							'img'    => 'img',
+							'li'     => 'li',
+							'p'      => 'p',
+							'span'   => 'span',
+						),
+						'std'         => 'span',
 						'required'    => true,
 					),
 
@@ -87,7 +96,7 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 	public function shortcode_atts( $atts ) {
 		$atts = parent::shortcode_atts( $atts );
 
-		if ( empty( $atts[''] ) ) {
+		if ( empty( $atts['tag'] ) ) {
 			$atts['tag'] = 'span';
 		}
 

@@ -19,6 +19,10 @@ $tab-color: #E4E4E4;
 @import 'partials/admin/marketing';
 @import 'partials/admin/deprecated';
 
+.wp-list-table .type-popup .row-actions {
+	color: #999999;
+}
+
 .pum-flex-row {
   display: flex;
 

@@ -169,6 +169,14 @@
   margin-right: inherit;
 }
 
+.pum-container .pum-title {
+  margin-bottom: 0.5em;
+}
+
+.pum-container .pum-content > :first-child {
+  margin-top: 0;
+}
+
 .pum-container .pum-content > :last-child {
   margin-bottom: 0;
 }

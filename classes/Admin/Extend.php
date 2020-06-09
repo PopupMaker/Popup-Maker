@@ -245,20 +245,17 @@ class PUM_Admin_Extend {
 
 		?>
         <div class="wrap">
-            <hr class="wp-header-end">
+			<h1><?php _e( 'Extensions & Integrations for Popup Maker', 'popup-maker' ) ?></h1>
 			<?php PUM_Upsell::display_addon_tabs(); ?>
             <div id="poststuff">
                 <div id="post-body" class="metabox-holder">
                     <div id="post-body-content">
-                        <h1 class="section-heading">
-							<?php _e( 'Extensions & Integrations for Popup Maker', 'popup-maker' ) ?>
-                            &nbsp;&nbsp;<a href="https://wppopupmaker.com/extensions/?utm_source=plugin-extension-page&utm_medium=text-link&utm_campaign=<?php echo $campaign; ?>&utm_content=browse-all" class="button-primary" title="<?php _e( 'Browse All Extensions', 'popup-maker' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'popup-maker' ); ?></a>
-                        </h1>
-
                         <div class="pum-add-ons-view-wrapper">
 							<?php self::render_subtabs(); ?>
                         </div>
 
+						<br class="clear" />
+						<a href="https://wppopupmaker.com/extensions/?utm_source=plugin-extension-page&utm_medium=text-link&utm_campaign=<?php echo $campaign; ?>&utm_content=browse-all" class="button-primary" title="<?php _e( 'Browse All Extensions', 'popup-maker' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'popup-maker' ); ?></a>
                         <br class="clear" />
 
                         <div class="pum-tabs-container">

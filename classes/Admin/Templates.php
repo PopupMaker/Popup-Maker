@@ -495,17 +495,24 @@ class PUM_Admin_Templates {
 						'id'    => 'popup_trigger_add_cookie',
 						'name'  => "",
 						'type'  => 'checkbox',
-						'label' => __( 'Would you like to set up a cookie as well?', 'popup-maker' ),
+						'std'   => true,
+						'label' => __( 'Prevent popup from showing to visitor again using a cookie?', 'popup-maker' ),
+						'meta'  => array('checked' => 'checked')
 					),
 					'popup_trigger_add_cookie_event' => array(
 						'id'           => 'popup_trigger_add_cookie_event',
 						'name'         => "",
 						'type'         => 'select',
-						'label'        => __( 'When will the cookie be set?', 'popup-maker' ),
+						'label'        => __( 'Stop showing popup once visitor takes this action:', 'popup-maker' ),
 						'options'      => PUM_Cookies::instance()->dropdown_list(),
 						'dependencies' => array(
 							'popup_trigger_add_cookie' => true,
 						),
+					),
+					'popup_trigger_add_cookie_info' => array(
+						'id'      => 'popup_trigger_add_cookie_info',
+						'type'    => 'html',
+						'content' => '<p>Learn more about <a href="https://docs.wppopupmaker.com/article/358-popup-settings-box-cookies-option-settings">how Popup Maker cookies work</a>.</p>'
 					),
 				),
 			) ); ?>,

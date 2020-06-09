@@ -1,5 +1,14 @@
 ### Unreleased Changes
+* Feature: New guided tour of popup editor for first time users.
+* Tweak: Change popup_close tag setting to use a drop-down for more easily selecting which tag to use.
+* Tweak: Improve explanation of cookies in new trigger modal.
+* Tweak: Ensure all admin pages have visible page headings.
+* Tweak: Simplify name and title fields in popup editor.
+* Tweak: Add popup ID to quick links on All Popups.
+* Tweak: Move CSS and JS for our admin bar node to external file.
+* Tweak: Add our new optional telemetry system.
 * Fix: Missing closing div in new [popup_cookie] shortcode.
+* Fix: Shortcode popup_close tag attribute not functioning properly.
 
 ### v1.10.1 - 04/21/2020
 * Fix: Typo in filter name caused extra p tags.

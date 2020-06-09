@@ -14,9 +14,11 @@ const gulp = require('gulp'),
     jsDevPath = path.join(config.root.dev, config.js.dev);
 
 const allowedDirectories = [
+	'bar',
     'batch',
     'general',
     'marketing',
+	'pointer',
     'popup-editor',
     'settings-page',
     'shortcode-ui',

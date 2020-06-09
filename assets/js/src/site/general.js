@@ -11,6 +11,7 @@
     $.fn.popmake.last_open_popup = null;
 
     window.PUM.init = function () {
+        console.log('init popups ✔');
         $('.pum').popmake();
         $(document).trigger('pumInitialized');
 
@@ -31,7 +32,11 @@
     };
 
     $(document).ready(function () {
-        PUM.hooks.applyFilters('pum.initHandler', PUM.init).call();
+        // TODO can this be moved outside doc.ready since we are awaiting our own promises first?
+        var initHandler = PUM.hooks.applyFilters('pum.initHandler', PUM.init);
+        var initPromises = PUM.hooks.applyFilters('pum.initPromises', []);
+
+        Promise.all(initPromises).then(initHandler);
     });
 
     /**
