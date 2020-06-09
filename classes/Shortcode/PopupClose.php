@@ -47,7 +47,6 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 				'main' => array(
 					'tag'        => array(
 						'label'       => __( 'HTML Tag', 'popup-maker' ),
-						'placeholder' => __( 'HTML Tag', 'popup-maker' ) . ': button, span etc',
 						'desc'        => __( 'The HTML tag used for this element.', 'popup-maker' ),
 						'type'         => 'select',
 						'options'      => array(
@@ -61,6 +60,17 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 						),
 						'std'         => 'span',
 						'required'    => true,
+					),
+					'href'   => array(
+						'label'        => __( 'Value for href', 'popup-maker' ),
+						'placeholder'  => '#',
+						'desc'         => __( 'Enter the href value for your link.', 'popup-maker' ),
+						'type'         => 'text',
+						'std'          => '',
+						'priority'     => 10,
+						'dependencies' => array(
+							'tag' => array( 'a' ),
+						),
 					),
 
 				),
@@ -100,6 +110,10 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 			$atts['tag'] = 'span';
 		}
 
+		if ( empty( $atts['href'] ) ) {
+			$atts['href'] = '#';
+		}
+
 		if ( ! empty( $atts['class'] ) ) {
 			$atts['classes'] .= ' ' . $atts['class'];
 			unset( $atts['class'] );
@@ -121,7 +135,9 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 
 		$do_default = $atts['do_default'] ? " data-do-default='" . esc_attr( $atts['do_default'] ) . "'" : '';
 
-		$return = "<{$atts['tag']} class='pum-close popmake-close {$atts['classes']}' {$do_default}>";
+		$href = 'a' === $atts['tag'] ? "href='{$atts['href']}'" : '';
+
+		$return = "<{$atts['tag']} $href class='pum-close popmake-close {$atts['classes']}' {$do_default}>";
 		$return .= PUM_Helpers::do_shortcode( $content );
 		$return .= "</{$atts['tag']}>";
 
