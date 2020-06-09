@@ -1,4 +1,4 @@
-### Unreleased Changes
+### v1.10.2 - 06/09/2020
 * Fix: Popup Settings not working when WP Forms is active without forms
 * Fix: Missing closing div in new [popup_cookie] shortcode.
 
