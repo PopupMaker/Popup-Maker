@@ -17,7 +17,7 @@ class PUM_Analytics {
 	 *
 	 */
 	public static function init() {
-		if ( pum_get_option( 'disable_analytics' ) || popmake_get_option( 'disable_popup_open_tracking' ) ) {
+		if ( ! self::analytics_enabled() ) {
 			return;
 		}
 
@@ -27,29 +27,45 @@ class PUM_Analytics {
 	}
 
 	/**
+	 * @return bool
+	 */
+	public static function analytics_enabled() {
+		$disabled = pum_get_option( 'disable_analytics' ) || popmake_get_option( 'disable_popup_open_tracking' );
+
+		return (bool) apply_filters( 'pum_analytics_enabled', ! $disabled );
+	}
+
+	/**
 	 * @param $event
 	 *
 	 * @return mixed
 	 */
 	public static function event_keys( $event ) {
-		$keys = array( $event, $event . 'ed' );
+		$keys = array( $event, rtrim( $event, 'e' ) . 'ed' );
 
-		switch ( $event ) {
-			case 'conversion':
-				$keys[1] = 'conversion';
-				break;
+		if ( 'conversion' === $event ) {
+			$keys[1] = 'conversion';
 		}
 
 		return apply_filters( 'pum_analytics_event_keys', $keys, $event );
 	}
 
 	/**
-	 * @param $args
+	 * Track an event.
+	 *
+	 * This is called by various methods including the ajax & rest api requests.
+	 *
+	 * Can be used externally such as after purchase tracking.
+	 *
+	 * @param array $args
 	 */
-	public static function track( $args ) {
+	public static function track( $args = array() ) {
 		if ( empty ( $args['pid'] ) || $args['pid'] <= 0 ) {
 			return;
 		}
+
+//		$uuid = isset( $_COOKIE['__pum'] ) ? sanitize_text_field( $_COOKIE['__pum'] ) : false;
+//		$session = $uuid && isset( $_COOKIE[ $uuid ] ) ? PUM_Utils_Array::safe_json_decode( $_COOKIE[ $uuid ] ) : false;
 
 		$event = sanitize_text_field( $args['event'] );
 
@@ -65,10 +81,13 @@ class PUM_Analytics {
 			do_action( 'pum_analytics_' . $event, $popup->ID, $args );
 		}
 
+		do_action( 'pum_analytics_event', $args );
 	}
 
 	/**
+	 * Process ajax requests.
 	 *
+	 * Only used when WP-JSON Restful API is not available.
 	 */
 	public static function ajax_request() {
 
@@ -131,7 +150,7 @@ class PUM_Analytics {
 		$version   = 1;
 		$namespace = 'pum/v' . $version;
 
-		register_rest_route( $namespace, 'analytics', array(
+		register_rest_route( $namespace, 'analytics', apply_filters( 'pum_analytics_rest_route_args', array(
 			'methods'  => 'GET',
 			'callback' => array( __CLASS__, 'analytics_endpoint' ),
 			'args'     => array(
@@ -148,7 +167,7 @@ class PUM_Analytics {
 					'sanitize_callback'   => 'absint',
 				),
 			),
-		) );
+		) ) );
 	}
 
 	/**

@@ -23,6 +23,61 @@ $tab-color: #E4E4E4;
 	color: #999999;
 }
 
+.pum-flex-row {
+  display: flex;
+
+  .pum-flex-column {
+    flex: 1;
+
+    &.pum-flex-quarter {
+      max-width: 25%!important;
+
+      &:nth-child(4n+1) {
+        padding-left: 0;
+      }
+
+      &:nth-child(4n+4) {
+        padding-right: 0;
+      }
+    }
+
+    &.pum-flex-third {
+      max-width: 33.333%!important;
+
+      &:nth-child(3n+1) {
+        padding-left: 0;
+      }
+
+      &:nth-child(3n+3) {
+        padding-right: 0;
+      }
+    }
+
+    &.pum-flex-half {
+      max-width: 50%!important;
+
+      &:nth-child(2n+1) {
+        padding-left: 0;
+      }
+
+      &:nth-child(2n+2) {
+        padding-right: 0;
+      }
+    }
+
+    &.pum-flex-three-quarter {
+      max-width: 75%!important;
+    }
+
+    padding: 1%;
+
+    label, input {
+      display: block;
+      width: 100%;
+    }
+  }
+}
+
 .pum-tabbed-form {
   .pum-field {
     position: relative;

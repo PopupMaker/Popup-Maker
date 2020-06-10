@@ -61,14 +61,17 @@ class PUM_Utils_Array {
 	 * PUM_Utils_Array::move_item($arr, 'move me', 1); //move it one down
 	 * PUM_Utils_Array::move_item($arr, 'move me', 2); //move it two down
 	 *
+	 * PUM_Utils_Array::move_item($arr, 'move me', 'before', 'b'); //move it before ['b']
 	 * PUM_Utils_Array::move_item($arr, 'move me', 'up', 'b'); //move it before ['b']
 	 * PUM_Utils_Array::move_item($arr, 'move me', -1, 'b'); //move it before ['b']
+	 * PUM_Utils_Array::move_item($arr, 'move me', 'after', 'b'); //move it after ['b']
 	 * PUM_Utils_Array::move_item($arr, 'move me', 'down', 'b'); //move it after ['b']
 	 * PUM_Utils_Array::move_item($arr, 'move me', 1, 'b'); //move it after ['b']
 	 * PUM_Utils_Array::move_item($arr, 'move me', 2, 'b'); //move it two positions after ['b']
 	 *
 	 * Special syntax, to swap two elements:
 	 * PUM_Utils_Array::move_item($arr, 'a', 0, 'd'); //Swap ['a'] with ['d']
+	 * PUM_Utils_Array::move_item($arr, 'a', 'swap', 'd'); //Swap ['a'] with ['d']
 	 *
 	 * @param array       $ref_arr
 	 * @param string      $key1
@@ -93,6 +96,11 @@ class PUM_Utils_Array {
 			$val = array( 'sort' => ( ++ $i * 10 ), 'val' => $val );
 		}
 
+		// Add a quick keyword `swap` to make syntax simpler to remember.
+		if ( 'swap' === $move ) {
+			$move = 0;
+		}
+
 		if ( is_numeric( $move ) ) {
 			if ( $move == 0 && $key1 == $key2 ) {
 				return true;
@@ -106,9 +114,11 @@ class PUM_Utils_Array {
 		} else {
 			switch ( $move ) {
 				case 'up':
+				case 'before':
 					$arr[ $key1 ]['sort'] = $arr[ $key2 ]['sort'] - ( $key1 == $key2 ? 15 : 5 );
 					break;
 				case 'down':
+				case 'after':
 					$arr[ $key1 ]['sort'] = $arr[ $key2 ]['sort'] + ( $key1 == $key2 ? 15 : 5 );
 					break;
 				case 'top':
@@ -162,10 +172,46 @@ class PUM_Utils_Array {
 	}
 
 	/**
+	 * @param array $array
+	 * @param array $allowed_keys
+	 *
+	 * @return array
+	 */
+	public static function allowed_keys( $array, $allowed_keys = [] ) {
+		return array_intersect_key( $array, array_flip( $allowed_keys ) );
+	}
+
+	/**
+	 * This works exactly the same as wp_parse_args, except we remove unused keys for sanitization.
+	 *
+	 * @param array $array
+	 * @param array $allowed_args Array of key=>defaultValue pairs for each allowed argument.
+	 *
+	 * @return array
+	 */
+	public static function parse_allowed_args( $array, $default_allowed_args = [] ) {
+		$array = wp_parse_args( $array, $default_allowed_args );
+
+		return self::allowed_keys( $array, array_keys( $default_allowed_args ) );
+	}
+
+	/**
 	 * Pluck all array keys ending with string.
 	 *
-	 * @param array             $array
-	 * @param bool|string|array $strings
+	 * @param array    $array
+	 * @param string[] $keys
+	 *
+	 * @return array
+	 */
+	public static function pluck( $array, $keys = [] ) {
+		return self::pluck_keys_containing( $array, $keys );
+	}
+
+	/**
+	 * Pluck all array keys ending with string.
+	 *
+	 * @param array    $array
+	 * @param string[] $strings
 	 *
 	 * @return array
 	 */
@@ -178,8 +224,8 @@ class PUM_Utils_Array {
 	/**
 	 * Remove all array keys beginning with string.
 	 *
-	 * @param array             $array
-	 * @param bool|string|array $strings
+	 * @param array    $array
+	 * @param string[] $strings
 	 *
 	 * @return array
 	 */
@@ -530,7 +576,7 @@ class PUM_Utils_Array {
 	/**
 	 * Remaps array keys.
 	 *
-	 * @param array $array an array values.
+	 * @param array $array       an array values.
 	 * @param array $remap_array an array of $old_key => $new_key values.
 	 *
 	 * @return array

@@ -10,6 +10,8 @@
 * Tweak: Add popup ID to quick links on All Popups.
 * Tweak: Move CSS and JS for our admin bar node to external file.
 * Tweak: Add our new optional telemetry system.
+* Fix: Missing closing div in new [popup_cookie] shortcode.
+* Fix: Shortcode popup_close tag attribute not functioning properly.
 
 ### v1.10.1 - 04/21/2020
 * Fix: Typo in filter name caused extra p tags.
