@@ -42,11 +42,6 @@
       "@wordpress/babel-preset-default"
     ]
   },
-  "eslintConfig": {
-    "extends": [
-      "plugin:@wordpress/eslint-plugin/recommended"
-    ]
-  },
   "dependencies": {
     "iframe-resizer": "^4.2.10",
     "mobile-detect": "^1.4.4"
