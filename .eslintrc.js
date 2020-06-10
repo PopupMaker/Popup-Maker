@@ -1,7 +1,6 @@
 module.exports = {
 	"extends": [
-		"plugin:@wordpress/eslint-plugin/esnext",
-    	"plugin:@wordpress/eslint-plugin/custom"
+		"plugin:@wordpress/eslint-plugin/recommended-with-formatting",
 	],
 	'overrides': [
 		{
