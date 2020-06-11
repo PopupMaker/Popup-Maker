@@ -135,7 +135,7 @@ msgctxt "condition: taxonomy plural label ie. Category IDs"
 msgid "%s IDs: 128, 129"
 msgstr ""
 
-#: classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:193, classes/Shortcode.php:151, classes/Shortcode.php:163, classes/Shortcode.php:176, classes/Triggers.php:328, classes/Admin/Popups.php:318, classes/Admin/Settings.php:660, classes/Admin/Settings.php:684, classes/Admin/Settings.php:687, classes/Admin/Settings.php:696, classes/Admin/Themes.php:330, classes/Admin/Themes.php:348, classes/Admin/Themes.php:367, classes/Shortcode/Popup.php:51, classes/Shortcode/Popup.php:65, classes/Shortcode/Subscribe.php:60, classes/Shortcode/Subscribe.php:80, classes/Shortcode/Subscribe.php:83
+#: classes/Conditions.php:409, classes/Conditions.php:423, classes/Conditions.php:429, classes/Cookies.php:193, classes/Shortcode.php:151, classes/Shortcode.php:163, classes/Shortcode.php:176, classes/Triggers.php:328, includes/class-popmake-fields.php:57, classes/Admin/Popups.php:318, classes/Admin/Settings.php:660, classes/Admin/Settings.php:684, classes/Admin/Settings.php:687, classes/Admin/Settings.php:696, classes/Admin/Themes.php:330, classes/Admin/Themes.php:348, classes/Admin/Themes.php:367, classes/Shortcode/Popup.php:51, classes/Shortcode/Popup.php:65, classes/Shortcode/Subscribe.php:60, classes/Shortcode/Subscribe.php:80, classes/Shortcode/Subscribe.php:83
 msgid "General"
 msgstr ""
 
@@ -173,6 +173,14 @@ msgstr ""
 
 #: classes/Cookies.php:89, classes/Triggers.php:197, classes/Shortcode/Subscribe.php:61
 msgid "Form"
+msgstr ""
+
+#: classes/Cookies.php:91, classes/Triggers.php:199
+msgid "Any Supported Form*"
+msgstr ""
+
+#: classes/Cookies.php:93, classes/Triggers.php:201, classes/Shortcode/Subscribe.php:38
+msgid "Subscription Form"
 msgstr ""
 
 #: classes/Cookies.php:101
@@ -267,6 +275,22 @@ msgstr ""
 msgid "Any %s Form"
 msgstr ""
 
+#: classes/Licensing.php:142
+msgid "To receive updates, please enter your valid %s license key."
+msgstr ""
+
+#: classes/Licensing.php:135
+msgid "Your license key expires on %s."
+msgstr ""
+
+#: classes/Licensing.php:133
+msgid "Your license key expires soon! It expires on %s. %sRenew your license key%s."
+msgstr ""
+
+#: classes/Licensing.php:131
+msgid "License key never expires."
+msgstr ""
+
 #: classes/Licensing.php:94
 msgid "Your license key expired on %s. Please %srenew your license key%s."
 msgstr ""
@@ -295,12 +319,20 @@ msgstr ""
 msgid "The key you entered belongs to a bundle, please use the product specific license key."
 msgstr ""
 
+#: classes/Licensing.php:117
+msgid "unknown_error"
+msgstr ""
+
 #: classes/Licensing.php:118
 msgid "There was an error with this license key: %s. Please %scontact our support team%s."
 msgstr ""
 
-#: classes/Privacy.php:33, classes/Types.php:23, classes/Site/Assets.php:234, includes/integrations/class-pum-gravity-forms.php:51, includes/modules/admin-bar.php:444
+#: classes/Privacy.php:33, classes/Types.php:23, classes/Site/Assets.php:234, classes/Utils/Alerts.php:329, includes/admin/class-pum-admin-upgrades.php:250, includes/integrations/class-pum-gravity-forms.php:51, includes/modules/admin-bar.php:444
 msgid "Popup Maker"
+msgstr ""
+
+#: classes/Privacy.php:45
+msgid "Suggested text:"
 msgstr ""
 
 #: classes/Privacy.php:49
@@ -463,6 +495,14 @@ msgstr ""
 msgid "Date Subscribed"
 msgstr ""
 
+#: classes/Privacy.php:378
+msgid "Subscription information was not removed. This may occur when no immediate confirmation is received during our attempt to unsubscribe you from our mailing list."
+msgstr ""
+
+#: classes/Privacy.php:374
+msgid "Subscription information was not removed. A database error may have occurred during deletion."
+msgstr ""
+
 #: classes/Privacy.php:429
 msgid "Cookie used to prevent popup from displaying repeatedly."
 msgstr ""
@@ -540,7 +580,7 @@ msgstr ""
 msgid "Cookie"
 msgstr ""
 
-#: classes/Types.php:21, classes/Types.php:167, classes/Upsell.php:92, classes/Shortcode/Popup.php:28, classes/Shortcode/Popup.php:378, classes/Shortcode/Subscribe.php:93, includes/integrations/class-pum-cf7.php:167, includes/integrations/class-pum-gravity-forms.php:158, includes/modules/menus.php:55, classes/Admin/Subscribers/Table.php:94
+#: classes/Types.php:21, classes/Types.php:167, classes/Upsell.php:92, classes/Admin/Popups.php:64, classes/Shortcode/Popup.php:28, classes/Shortcode/Popup.php:378, classes/Shortcode/Subscribe.php:93, includes/integrations/class-pum-cf7.php:167, includes/integrations/class-pum-gravity-forms.php:158, includes/modules/menus.php:55, classes/Admin/Subscribers/Table.php:94
 msgid "Popup"
 msgstr ""
 
@@ -548,7 +588,7 @@ msgstr ""
 msgid "Popups"
 msgstr ""
 
-#: classes/Types.php:54, classes/Types.php:168, classes/Upsell.php:93, classes/Admin/Popups.php:434, classes/Shortcode/Popup.php:105
+#: classes/Types.php:54, classes/Types.php:168, classes/Upsell.php:93, classes/Admin/Popups.php:64, classes/Admin/Popups.php:434, classes/Shortcode/Popup.php:105
 msgid "Popup Theme"
 msgstr ""
 
@@ -684,7 +724,7 @@ msgstr ""
 msgid "%s is an invalid batch process ID."
 msgstr ""
 
-#: classes/Admin/Ajax.php:186
+#: classes/Admin/Ajax.php:186, classes/Utils/Upgrades.php:665
 msgid "An invalid file path is registered for the %1$s batch process handler."
 msgstr ""
 
@@ -840,7 +880,7 @@ msgstr ""
 msgid "Extensions & Integrations for Popup Maker"
 msgstr ""
 
-#: classes/Admin/Extend.php:255, classes/Admin/Extend.php:255
+#: classes/Admin/Extend.php:255, classes/Admin/Extend.php:255, classes/Admin/Extend.php:277, classes/Admin/Extend.php:277
 msgid "Browse All Extensions"
 msgstr ""
 
@@ -1425,6 +1465,10 @@ msgstr ""
 msgid "Dismiss this notice."
 msgstr ""
 
+#: classes/Admin/Settings.php:87
+msgid "There must have been an error, settings not saved successfully!"
+msgstr ""
+
 #: classes/Admin/Settings.php:80
 msgid "Settings saved successfully!"
 msgstr ""
@@ -1599,6 +1643,10 @@ msgstr ""
 
 #: classes/Admin/Settings.php:403, classes/Shortcode/Subscribe.php:379
 msgid "Consent Usage Text"
+msgstr ""
+
+#: classes/Admin/Settings.php:404, classes/Shortcode/Subscribe.php:380
+msgid "You can use %1$s%2$s to insert a link to your privacy policy. To customize the link text use %1$s:Link Text%2$s"
 msgstr ""
 
 #: classes/Admin/Settings.php:406, classes/Shortcode/Subscribe.php:382
@@ -2211,6 +2259,10 @@ msgstr ""
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
+#: classes/Extension/Updater.php:243
+msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s."
+msgstr ""
+
 #: classes/Extension/Updater.php:235
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
 msgstr ""
@@ -2219,7 +2271,7 @@ msgstr ""
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: classes/Extension/Updater.php:481, includes/admin/class-pum-admin-upgrades.php:274, classes/Admin/Subscribers/Table.php:430, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50
+#: classes/Extension/Updater.php:481, includes/admin/class-pum-admin-upgrades.php:274, classes/Admin/Subscribers/Table.php:355, classes/Admin/Subscribers/Table.php:349, classes/Admin/Subscribers/Table.php:364, classes/Admin/Subscribers/Table.php:430, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50
 msgid "Error"
 msgstr ""
 
@@ -2349,10 +2401,6 @@ msgstr ""
 
 #: classes/Shortcode/PopupTrigger.php:105
 msgid "The HTML tag used to generate the trigger and wrap your text."
-msgstr ""
-
-#: classes/Shortcode/Subscribe.php:38
-msgid "Subscription Form"
 msgstr ""
 
 #: classes/Shortcode/Subscribe.php:45
@@ -2592,12 +2640,32 @@ msgid "Event: %s"
 msgstr ""
 
 #. translators: %s: native language name.
+#: classes/Utils/Alerts.php:185
+msgid "This plugin's translation for %1$s is out of date. <a href=\"%2$s\" target=\"_blank\">Help improve the translation!</a>"
+msgstr ""
+
+#: classes/Utils/Alerts.php:181, classes/Utils/Alerts.php:163
+msgid "This plugin is not translated into %1$s yet. <a href=\"%2$s\" target=\"_blank\">Help translate it!</a>"
+msgstr ""
+
+#: classes/Utils/Alerts.php:175, classes/Utils/Alerts.php:154
+msgid "This plugin is also available in %1$s (also: %2$s). <a href=\"%3$s\" target=\"_blank\">Help improve the translation!</a>"
+msgstr ""
+
 #: classes/Utils/Alerts.php:141
 msgid "This plugin is also available in %1$s. <a href=\"%2$s\" target=\"_blank\">Help improve the translation!</a>"
 msgstr ""
 
 #: classes/Utils/Alerts.php:215
 msgid "See whats new in v%s - (%sview all changes%s)"
+msgstr ""
+
+#: classes/Utils/Alerts.php:260
+msgid "activate it now"
+msgstr ""
+
+#: classes/Utils/Alerts.php:260
+msgid "install it now"
 msgstr ""
 
 #: classes/Utils/Alerts.php:265
@@ -2620,8 +2688,28 @@ msgstr ""
 msgid "Once Weekly"
 msgstr ""
 
+#: classes/Utils/Format.php:111
+msgid "%sw"
+msgstr ""
+
+#: classes/Utils/Format.php:105
+msgid "%sd"
+msgstr ""
+
+#: classes/Utils/Format.php:99
+msgid "%shr"
+msgstr ""
+
+#: classes/Utils/Format.php:93
+msgid "%smin"
+msgstr ""
+
 #: classes/Utils/Format.php:87
 msgid "%ss"
+msgstr ""
+
+#: classes/Utils/Upgrades.php:349
+msgid "Popup Maker needs to complete a the update of your settings that was previously started."
 msgstr ""
 
 #: classes/Utils/Upgrades.php:346
@@ -2636,6 +2724,14 @@ msgstr ""
 msgid "The button below will process these changes automatically for you."
 msgstr ""
 
+#: classes/Utils/Upgrades.php:376
+msgid "Finish Upgrades"
+msgstr ""
+
+#: classes/Utils/Upgrades.php:376
+msgid "Process Changes"
+msgstr ""
+
 #: classes/Utils/Upgrades.php:691
 msgid "Upgrades"
 msgstr ""
@@ -2646,6 +2742,18 @@ msgstr ""
 
 #: includes/admin/class-pum-admin-upgrades.php:117, includes/admin/class-pum-admin-upgrades.php:118
 msgid "Popup Maker Upgrades"
+msgstr ""
+
+#: includes/admin/class-pum-admin-upgrades.php:251
+msgid "Important"
+msgstr ""
+
+#: includes/admin/class-pum-admin-upgrades.php:252
+msgid "Database upgrades required."
+msgstr ""
+
+#: includes/admin/class-pum-admin-upgrades.php:254
+msgid "Please click %shere%s to complete these changes now."
 msgstr ""
 
 #: includes/admin/class-pum-admin-upgrades.php:242
@@ -2781,6 +2889,10 @@ msgctxt "JS alert for CSS get selector tool"
 msgid "Selector"
 msgstr ""
 
+#: includes/modules/admin-bar.php:537
+msgid "No Popups Loaded"
+msgstr ""
+
 #: includes/modules/admin-bar.php:504
 msgid "Check Conditions"
 msgstr ""
@@ -2789,7 +2901,7 @@ msgstr ""
 msgid "Reset Cookies"
 msgstr ""
 
-#: includes/modules/admin-bar.php:517
+#: includes/modules/admin-bar.php:517, classes/Admin/Subscribers/Table.php:340
 msgid "Success"
 msgstr ""
 
@@ -2850,11 +2962,23 @@ msgstr ""
 msgid "I already did"
 msgstr ""
 
+#: includes/pum-sdk/class-pum-extension-activation.php:50
+msgid "This plugin"
+msgstr ""
+
 #: classes/Abstract/Batch/Process.php:121
 msgid "%s item was successfully processed."
 msgid_plural "%s items were successfully processed."
 msgstr[0] ""
 msgstr[1] ""
+
+#: classes/Abstract/Repository/Posts.php:143
+msgid "No %s found with id %d."
+msgstr ""
+
+#: classes/Abstract/Repository/Posts.php:161
+msgid "No user found with %s %s."
+msgstr ""
 
 #: classes/Abstract/Upgrade/Posts.php:197
 msgid "Updating %d %2$s."
@@ -2893,8 +3017,30 @@ msgstr ""
 msgid "User ID"
 msgstr ""
 
+#: classes/Admin/Subscribers/Table.php:281
+msgid "N/A"
+msgstr ""
+
 #: classes/Admin/Subscribers/Table.php:299
 msgid "Delete"
+msgstr ""
+
+#: classes/Admin/Subscribers/Table.php:355
+msgid "%d Subscribers deleted, %d failed"
+msgstr ""
+
+#: classes/Admin/Subscribers/Table.php:349
+msgid "Deleting subscriber failed."
+msgstr ""
+
+#: classes/Admin/Subscribers/Table.php:340
+msgid "Subscriber deleted!"
+msgid_plural "%d Subscribers deleted!"
+msgstr[0] ""
+msgstr[1] ""
+
+#: classes/Admin/Subscribers/Table.php:364
+msgid "Uh oh, the subscribers was not deleted successfully!"
 msgstr ""
 
 #: classes/Admin/Subscribers/Table.php:430
