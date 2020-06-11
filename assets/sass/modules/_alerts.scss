@@ -72,15 +72,18 @@
 
   .button {
     &.dismiss, &.restore {
-      width: 45px;
-      height: 45px;
-      margin-left: 10px;
-      padding: 0;
-      outline: 0;
-      line-height: inherit;
-      cursor: pointer;
-      -ms-flex: 0 0 45px;
-      flex: 0 0 45px;
+		width: 45px;
+		height: 45px;
+		margin-left: 10px;
+		padding: 0;
+		outline: 0;
+		line-height: inherit;
+		cursor: pointer;
+		-ms-flex: 0 0 45px;
+		flex: 0 0 45px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 
       .dashicons {
         width: 24px;

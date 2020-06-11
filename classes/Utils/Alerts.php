@@ -22,6 +22,8 @@ class PUM_Utils_Alerts {
 		add_filter( 'pum_alert_list', array( __CLASS__, 'integration_alerts' ), 5 );
 		add_filter( 'pum_alert_list', array( __CLASS__, 'translation_request' ), 10 );
 		add_action( 'admin_menu', array( __CLASS__, 'append_alert_count' ), 999 );
+
+		self::php_handler();
 	}
 
 	/**
@@ -317,10 +319,11 @@ class PUM_Utils_Alerts {
 		wp_enqueue_script( 'pum-admin-general' );
 		wp_enqueue_style( 'pum-admin-general' );
 
+		$nonce = wp_create_nonce( 'pum_alerts_action' );
 		?>
 
 		<script type="text/javascript">
-            window.pum_alerts_nonce = '<?php echo wp_create_nonce( 'pum_alerts_action' ); ?>';
+            window.pum_alerts_nonce = '<?php echo $nonce ?>';
 		</script>
 
 		<div class="pum-alerts">
@@ -331,7 +334,13 @@ class PUM_Utils_Alerts {
 
 			<p><?php __( 'Check out the following notifications from Popup Maker.', 'popup-maker' ); ?></p>
 
-			<?php foreach ( $alerts as $alert ) : ?>
+			<?php foreach ( $alerts as $alert ) {
+				$dismiss_url = add_query_arg( array(
+					'nonce'             => $nonce,
+					'code'              => $alert['code'],
+					'pum_dismiss_alert' => 'dismiss',
+				));
+				?>
 
 				<div class="pum-alert-holder" data-code="<?php echo $alert['code']; ?>" class="<?php echo $alert['dismissible'] ? 'is-dismissible' : ''; ?>" data-dismissible="<?php echo esc_attr( $alert['dismissible'] ); ?>">
 
@@ -347,12 +356,16 @@ class PUM_Utils_Alerts {
 
 						<?php if ( ! empty( $alert['actions'] ) && is_array( $alert['actions'] ) ) : ?>
 							<ul>
-								<?php foreach ( $alerts['actions'] as $action ) {
+								<?php foreach ( $alert['actions'] as $action ) {
 									if ( 'link' === $action['type'] ) {
 										$url = $action['href'];
 										$attributes = 'target="_blank" rel="noreferrer noopener"';
 									} else {
-										$url = add_query_arg( 'pum_dismiss_alert', $action['action'] );;
+										$url = add_query_arg( array(
+											'nonce'             => $nonce,
+											'code'              => $alert['code'],
+											'pum_dismiss_alert' => $action['action'],
+										));
 										$attributes = 'class="pum-dismiss"';
 									}
 									?>
@@ -365,15 +378,15 @@ class PUM_Utils_Alerts {
 
 					<?php if ( $alert['dismissible'] ) : ?>
 
-						<button type="button" class="button dismiss pum-dismiss">
+						<a href="<?php echo esc_url( $dismiss_url ); ?>" class="button dismiss pum-dismiss">
 							<span class="screen-reader-text"><?php _e( 'Dismiss this item.', 'popup-maker' ); ?></span> <span class="dashicons dashicons-no-alt"></span>
-						</button>
+						</a>
 
 					<?php endif; ?>
 
 				</div>
 
-			<?php endforeach; ?>
+			<?php } ?>
 
 		</div>
 
@@ -437,7 +450,7 @@ class PUM_Utils_Alerts {
 
 
 	/**
-	 *
+	 * Handles if alert was dismissed AJAX
 	 */
 	public static function ajax_handler() {
 		$args = wp_parse_args( $_REQUEST, array(
@@ -460,6 +473,35 @@ class PUM_Utils_Alerts {
 		} catch ( Exception $e ) {
 			wp_send_json_error( $e );
 		}
+	}
+
+	/**
+	 * Handles if alert was dismissed by page reload instead of AJAX
+	 *
+	 * @since 1.11.0
+	 */
+	public static function php_handler() {
+		if ( ! isset( $_REQUEST['pum_dismiss_alert'] ) ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'pum_alerts_action' ) ) {
+			return;
+		}
+
+		if ( 'dismiss' === $_REQUEST['pum_dismiss_alert'] ) {
+			try {
+				$dismissed_alerts                  = self::dismissed_alerts();
+				$dismissed_alerts[ $_REQUEST['code'] ] = ! empty( $args['expires'] ) ? strtotime( '+' . $args['expires'] ) : true;
+
+				$user_id = get_current_user_id();
+				update_user_meta( $user_id, '_pum_dismissed_alerts', $dismissed_alerts );
+			} catch ( Exception $e ) {
+				wp_send_json_error( $e );
+			}
+		}
+
+		do_action( 'pum_alert_dismissed', $_REQUEST['code'], $_REQUEST['pum_dismiss_alert'] );
 	}
 
 	/**
