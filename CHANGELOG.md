@@ -10,6 +10,9 @@
 * Tweak: Add popup ID to quick links on All Popups.
 * Tweak: Move CSS and JS for our admin bar node to external file.
 * Tweak: Add our new optional telemetry system.
+
+### v1.10.2 - 06/09/2020
+* Fix: Popup Settings not working when WP Forms is active without forms
 * Fix: Missing closing div in new [popup_cookie] shortcode.
 * Fix: Shortcode popup_close tag attribute not functioning properly.
 
