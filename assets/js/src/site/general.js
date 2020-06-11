@@ -10,7 +10,8 @@
     // Stores the last open popup.
     $.fn.popmake.last_open_popup = null;
 
-    $(document).ready(function () {
+    window.PUM.init = function () {
+        console.log('init popups ✔');
         $('.pum').popmake();
         $(document).trigger('pumInitialized');
 
@@ -28,7 +29,16 @@
 
         // Initiate integrations.
         PUM.integrations.init();
+    };
+
+    $(document).ready(function () {
+        // TODO can this be moved outside doc.ready since we are awaiting our own promises first?
+        var initHandler = PUM.hooks.applyFilters('pum.initHandler', PUM.init);
+        var initPromises = PUM.hooks.applyFilters('pum.initPromises', []);
+
+        Promise.all(initPromises).then(initHandler);
     });
+
 
     /**
      * Add hidden field to all popup forms.

@@ -52,8 +52,10 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 
 		$forms = $this->get_forms();
 
-		foreach ( $forms as $form ) {
-			$form_selectlist[ $form->ID ] = $form->post_title;
+		if ( is_array( $forms ) ) {
+			foreach ( $forms as $form ) {
+				$form_selectlist[ $form->ID ] = $form->post_title;
+			}
 		}
 
 		return $form_selectlist;
