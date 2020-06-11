@@ -11,7 +11,7 @@ const gulp = require('gulp'),
 
 function css() {
 	return gulp
-		.src(path.join(config.root.dev, config.css.dev, '/*.s+(a|c)ss'))
+		.src('assets/sass/*.s+(a|c)ss')
 		.pipe($fn.rename({prefix: 'pum-'}))
 		.pipe($fn.sourcemaps.init())
 		.pipe($fn.plumber({errorHandler: $fn.notify.onError('Error: <%= error.message %>')}))
