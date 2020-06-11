@@ -345,6 +345,22 @@ class PUM_Utils_Alerts {
 							<?php echo function_exists( 'wp_encode_emoji' ) ? wp_encode_emoji( $alert['html'] ) : $alert['html']; ?>
 						<?php endif; ?>
 
+						<?php if ( ! empty( $alert['actions'] ) && is_array( $alert['actions'] ) ) : ?>
+							<ul>
+								<?php foreach ( $alerts['actions'] as $action ) {
+									if ( 'link' === $action['type'] ) {
+										$url = $action['href'];
+										$attributes = 'target="_blank" rel="noreferrer noopener"';
+									} else {
+										$url = add_query_arg( 'pum_dismiss_alert', $action['action'] );;
+										$attributes = 'class="pum-dismiss"';
+									}
+									?>
+									<li><a href="<?php echo esc_url($url); ?>" <?php echo $attributes; ?><?php echo esc_html( $action['text'] ); ?></a></li>
+								<?php } ?>
+							</ul>
+						<?php endif; ?>
+
 					</div>
 
 					<?php if ( $alert['dismissible'] ) : ?>
