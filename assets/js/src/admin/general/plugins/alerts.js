@@ -4,6 +4,10 @@
 (function($) {
 	"use strict";
 
+	var $alerts = $(".pum-alerts"),
+		$noticeCounts = $(".pum-alert-count"),
+		count = parseInt($noticeCounts.eq(0).text());
+
 	function dismissAlert($alert, alertAction) {
 		var dismissible = $alert.data("dismissible"),
 			expires =
@@ -55,10 +59,6 @@
 		}
 	}
 
-	var $alerts = $(".pum-alerts"),
-		$notice_counts = $(".pum-alert-count"),
-		count = parseInt($notice_counts.eq(0).text());
-
 	function checkRemoveAlerts() {
 		if ($alerts.find(".pum-alert-holder").length === 0) {
 			$alerts.slideUp(100, function() {
@@ -72,7 +72,7 @@
 	function removeAlert($alert) {
 		count--;
 
-		$notice_counts.text(count);
+		$noticeCounts.text(count);
 
 		$alert.fadeTo(100, 0, function() {
 			$alert.slideUp(100, function() {
