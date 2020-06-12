@@ -4,7 +4,7 @@
 (function ($) {
     "use strict";
 
-    function dismissAlert($alert) {
+    function dismissAlert($alert, alertAction) {
         var dismissible = $alert.data('dismissible'),
             expires = dismissible === '1' || dismissible === 1 || dismissible === true ? null: dismissible;
 
@@ -16,7 +16,8 @@
                 action: 'pum_alerts_action',
                 nonce: window.pum_alerts_nonce,
                 code: $alert.data('code'),
-                expires: expires
+                expires: expires,
+	            pum_dismiss_alert: alertAction,
             }
         });
     }
@@ -85,10 +86,11 @@
         .on('click', '.pum-alert-holder .pum-dismiss', function () {
             var $this = $(this),
                 $alert = $this.parents('.pum-alert-holder'),
-                reason = $this.data('reason') || 'maybe_later';
+                reason = $this.data('reason') || 'maybe_later',
+                alertAction = $(this).data('action') || '';
 
             if ( 'review_request' !== $alert.data('code')) {
-                dismissAlert($alert);
+                dismissAlert($alert, alertAction);
             } else {
                 dismissReviewRequest(reason);
             }
