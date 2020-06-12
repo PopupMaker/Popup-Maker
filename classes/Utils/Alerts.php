@@ -335,7 +335,7 @@ class PUM_Utils_Alerts {
 			<p><?php __( 'Check out the following notifications from Popup Maker.', 'popup-maker' ); ?></p>
 
 			<?php foreach ( $alerts as $alert ) {
-				$expires = 1 == $alert['dismissible'] ? $alert['dismissible'] : null;
+				$expires = 1 == $alert['dismissible'] ? $alert['dismissible'] : '';
 				$dismiss_url = add_query_arg( array(
 					'nonce'             => $nonce,
 					'code'              => $alert['code'],
@@ -460,22 +460,17 @@ class PUM_Utils_Alerts {
 			'code'              => '',
 			'expires'           => '',
 			'pum_dismiss_alert' => '',
-		) );
+		));
 
 		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'pum_alerts_action' ) ) {
 			wp_send_json_error();
 		}
 
-		try {
-			$dismissed_alerts                  = self::dismissed_alerts();
-			$dismissed_alerts[ $args['code'] ] = ! empty( $args['expires'] ) ? strtotime( '+' . $args['expires'] ) : true;
-
-			$user_id = get_current_user_id();
-			update_user_meta( $user_id, '_pum_dismissed_alerts', $dismissed_alerts );
+		$results = self::action_handler( $args['code'], $args['pum_dismiss_alert'], $args['expires'] );
+		if ( true === $results ) {
 			wp_send_json_success();
-
-		} catch ( Exception $e ) {
-			wp_send_json_error( $e );
+		} else {
+			wp_send_json_error();
 		}
 	}
 
@@ -499,19 +494,38 @@ class PUM_Utils_Alerts {
 			'pum_dismiss_alert' => '',
 		));
 
-		if ( 'dismiss' === $args['pum_dismiss_alert'] ) {
+		self::action_handler( $args['code'], $args['pum_dismiss_alert'], $args['expires'] );
+	}
+
+	/**
+	 * Handles the action taken on the alert.
+	 *
+	 * @param string $code The specific alert.
+	 * @param string $action Which action was taken
+	 * @param string $expires When the dismissal expires, if any.
+	 *
+	 * @return bool
+	 * @uses PUM_Utils_Logging::instance
+	 * @uses PUM_Utils_Logging::log
+	 * @since 1.11.0
+	 */
+	public static function action_handler( $code, $action, $expires ) {
+		if ( empty( $action ) || 'dismiss' === $action ) {
 			try {
-				$dismissed_alerts                  = self::dismissed_alerts();
-				$dismissed_alerts[ $args['code'] ] = ! empty( $args['expires'] ) ? strtotime( '+' . $args['expires'] ) : true;
+				$dismissed_alerts          = self::dismissed_alerts();
+				$dismissed_alerts[ $code ] = ! empty( $expires ) ? strtotime( '+' . $expires ) : true;
 
 				$user_id = get_current_user_id();
 				update_user_meta( $user_id, '_pum_dismissed_alerts', $dismissed_alerts );
+				return true;
+
 			} catch ( Exception $e ) {
-				wp_send_json_error( $e );
+				PUM_Utils_Logging::instance()->log( 'Error dismissing alert. Exception: ' . $e->getMessage() );
+				return false;
 			}
 		}
 
-		do_action( 'pum_alert_dismissed', $args['code'], $args['pum_dismiss_alert'] );
+		do_action( 'pum_alert_dismissed', $code, $action );
 	}
 
 	/**
