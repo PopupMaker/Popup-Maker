@@ -85,11 +85,14 @@
 
 	$(document)
 		.on("pumDismissAlert", checkRemoveAlerts)
-		.on("click", ".pum-alert-holder .pum-dismiss", function() {
+		.on("click", ".pum-alert-holder .pum-dismiss", function(event) {
 			var $this = $(this),
 				$alert = $this.parents(".pum-alert-holder"),
 				reason = $this.data("reason") || "maybe_later",
 				alertAction = $(this).data("action") || "dismiss";
+
+			// Prevent the PHP alert handler from also processing this.
+			event.preventDefault();
 
 			if ("review_request" !== $alert.data("code")) {
 				dismissAlert($alert, alertAction);
