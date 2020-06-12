@@ -359,6 +359,7 @@ class PUM_Utils_Alerts {
 						<?php if ( ! empty( $alert['actions'] ) && is_array( $alert['actions'] ) ) : ?>
 							<ul>
 								<?php foreach ( $alert['actions'] as $action ) {
+									$link_text = ! empty( $action['primary'] ) && true === $action['primary'] ? '<strong>' . esc_html($action['text']) . '</strong>' : esc_html($action['text']);
 									if ( 'link' === $action['type'] ) {
 										$url = $action['href'];
 										$attributes = 'target="_blank" rel="noreferrer noopener"';
@@ -372,7 +373,7 @@ class PUM_Utils_Alerts {
 										$attributes = 'class="pum-dismiss"';
 									}
 									?>
-									<li><a data-action="<?php echo esc_attr($action['action']); ?>" href="<?php echo esc_url($url); ?>" <?php echo $attributes; ?><?php echo esc_html( $action['text'] ); ?></a></li>
+									<li><a data-action="<?php echo esc_attr($action['action']); ?>" href="<?php echo esc_url($url); ?>" <?php echo $attributes; ?><?php echo $link_text; ?></a></li>
 								<?php } ?>
 							</ul>
 						<?php endif; ?>
