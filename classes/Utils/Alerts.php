@@ -335,7 +335,7 @@ class PUM_Utils_Alerts {
 			<p><?php __( 'Check out the following notifications from Popup Maker.', 'popup-maker' ); ?></p>
 
 			<?php foreach ( $alerts as $alert ) {
-				$expires = 1 == $alert['dismissible'] ? $alert['dismissible'] : '';
+				$expires = 1 == $alert['dismissible'] ? '' :  $alert['dismissible'];
 				$dismiss_url = add_query_arg( array(
 					'nonce'             => $nonce,
 					'code'              => $alert['code'],
