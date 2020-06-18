@@ -372,7 +372,7 @@ class PUM_Utils_Alerts {
 										$attributes = 'class="pum-dismiss"';
 									}
 									?>
-									<li><a data-action="<?php echo esc_attr($action['action']); ?>" href="<?php echo esc_url($url); ?>" <?php echo $attributes; ?><?php echo $link_text; ?></a></li>
+									<li><a data-action="<?php echo esc_attr($action['action']); ?>" href="<?php echo esc_url($url); ?>" <?php echo $attributes; ?> ><?php echo $link_text; ?></a></li>
 								<?php } ?>
 							</ul>
 						<?php endif; ?>
