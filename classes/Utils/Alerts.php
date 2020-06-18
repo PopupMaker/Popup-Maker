@@ -17,13 +17,12 @@ class PUM_Utils_Alerts {
 	 */
 	public static function init() {
 		add_action( 'admin_init', array( __CLASS__, 'hooks' ) );
+		add_action( 'admin_init', array( __CLASS__, 'php_handler' ) );
 		add_action( 'wp_ajax_pum_alerts_action', array( __CLASS__, 'ajax_handler' ) );
 		add_filter( 'pum_alert_list', array( __CLASS__, 'whats_new_alerts' ), 0 );
 		add_filter( 'pum_alert_list', array( __CLASS__, 'integration_alerts' ), 5 );
 		add_filter( 'pum_alert_list', array( __CLASS__, 'translation_request' ), 10 );
 		add_action( 'admin_menu', array( __CLASS__, 'append_alert_count' ), 999 );
-
-		self::php_handler();
 	}
 
 	/**
