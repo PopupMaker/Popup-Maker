@@ -6,7 +6,10 @@ Feel free to browse the code and make suggestions/requests. Thanks!
 ## Getting Started
 
 ### Downloading And Using As A Plugin
-To use this plugin, this repo can be downloaded as a zip and installed as-is as a WordPress plugin. Once installed and activated, Go to wp-admin > Popup Maker > Add Popup to create your first popup.
+To use this plugin, you must download from [the releases page](https://github.com/PopupMaker/Popup-Maker/releases). With each release, there is an attached zip, named something similar to `popup-maker_v1.10.2.zip
+`. Download the appropriate zip file and then upload into your WordPress site as a normal plugin. 
+
+Once installed and activated, Go to wp-admin > Popup Maker > Add Popup to create your first popup.
 
 ### Getting Set Up For Development
 In order to begin development on Popup Maker, please refer to our [Setting up your local environment](https://github.com/PopupMaker/Popup-Maker/wiki/Setting-up-your-local-environment) wiki page.
