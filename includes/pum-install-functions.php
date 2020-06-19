@@ -14,6 +14,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Enqueues our install theme function on wp_loaded if Popup Maker core was updated.
+ *
+ * @since 1.11.0
+ */
+function pum_install_new_themes_on_update() {
+	add_action( 'wp_loaded', 'pum_install_built_in_themes' );
+}
+
+add_action( 'pum_update_core_version', 'pum_install_new_themes_on_update' );
+
 
 /**
  * @param bool $network_wide
@@ -96,5 +107,3 @@ function pum_install_built_in_themes( $network_wide = false ) {
 	}
 
 }
-
-add_action( 'pum_update_core_version', 'pum_install_built_in_themes' );
