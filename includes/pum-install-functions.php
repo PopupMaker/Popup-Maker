@@ -96,3 +96,5 @@ function pum_install_built_in_themes( $network_wide = false ) {
 	}
 
 }
+
+add_action( 'pum_update_core_version', 'pum_install_built_in_themes' );
