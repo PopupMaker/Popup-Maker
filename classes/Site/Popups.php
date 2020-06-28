@@ -93,7 +93,7 @@ class PUM_Site_Popups {
 			return;
 		}
 
-			$popups = pum_get_all_popups( [ 'post_status' => [ 'published', 'private' ] ] );
+			$popups = pum_get_all_popups( [ 'post_status' => [ 'publish', 'private' ] ] );
 
 		if ( ! empty( $popups ) ) {
 
