@@ -6,19 +6,20 @@ Feel free to browse the code and make suggestions/requests. Thanks!
 ## Getting Started
 
 ### Downloading And Using As A Plugin
-To use this plugin, this repo can be downloaded as a zip and installed as-is as a WordPress plugin. Once installed and activated, Go to wp-admin > Popup Maker > Add Popup to create your first popup.
+To use this plugin, you must download from [the releases page](https://github.com/PopupMaker/Popup-Maker/releases). With each release, there is an attached zip, named something similar to `popup-maker_v1.10.2.zip
+`. Download the appropriate zip file and then upload into your WordPress site as a normal plugin. 
+
+Once installed and activated, Go to wp-admin > Popup Maker > Add Popup to create your first popup.
 
 ### Getting Set Up For Development
-#### Prerequisites
-In order to run our Gulp tasks, you will need Node.js and NPM installed. To do so, you can [follow the NPM documentation's guide](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
-If you have not used NPM before, you can [refer to this beginner's guide to NPM](https://www.sitepoint.com/beginners-guide-node-package-manager/).
-
-This plugin uses a series of [Gulp](https://gulpjs.com) tasks to clean and prepare builds. To get started, run `npm install` to get the necessary gulp dependencies.
+In order to begin development on Popup Maker, please refer to our [Setting up your local environment](https://github.com/PopupMaker/Popup-Maker/wiki/Setting-up-your-local-environment) wiki page.
 
 #### Gulp Tasks
 As normal, we have our gulp tasks in the gulpfile.js file.
 
-Task info coming soon....
+To build the css files, run `gulp css`.
+
+To build the js files, run `gulp js`. 
 
 ## Built With
 * [SASS](https://sass-lang.com) - The CSS pre-processor we use. We use the SCSS syntax.

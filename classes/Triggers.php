@@ -152,6 +152,10 @@ class PUM_Triggers {
 				'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Extra Selectors', 'popup-maker' ), '{{data.extra_selectors}}' ),
 				'fields'          => array(
 					'general'  => array(
+						'click_info' => array(
+							'type'  => 'html',
+							'content' => '<p>' . __( "Adding the class 'popmake-{popup-name}' to an element will trigger it to be opened once clicked. Additionally you can add additional CSS selectors below.", 'popup-maker' ) . '</p>',
+						),
 						'extra_selectors' => array(
 							'label'       => __( 'Extra CSS Selectors', 'popup-maker' ),
 							'desc'        => __( 'For more than one selector, separate by comma (,)', 'popup-maker' ) . '<br /><strong>eg:  </strong>' . __( ' .class-here, .class-2-here, #button_id', 'popup-maker' ),

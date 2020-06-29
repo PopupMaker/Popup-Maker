@@ -47,13 +47,40 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 				'main' => array(
 					'tag'        => array(
 						'label'       => __( 'HTML Tag', 'popup-maker' ),
-						'placeholder' => __( 'HTML Tag', 'popup-maker' ) . ': button, span etc',
 						'desc'        => __( 'The HTML tag used for this element.', 'popup-maker' ),
-						'type'        => 'text',
-						'std'         => '',
+						'type'         => 'select',
+						'options'      => array(
+							'a'      => 'a',
+							'button' => 'button',
+							'div'    => 'div',
+							'img'    => 'img',
+							'li'     => 'li',
+							'p'      => 'p',
+							'span'   => 'span',
+						),
+						'std'         => 'span',
 						'required'    => true,
 					),
-
+					'href'   => array(
+						'label'        => __( 'Value for href', 'popup-maker' ),
+						'placeholder'  => '#',
+						'desc'         => __( 'Enter the href value for your link. Leave blank if you do not want this link to take the visitor to a different page.', 'popup-maker' ),
+						'type'         => 'text',
+						'std'          => '',
+						'dependencies' => array(
+							'tag' => array( 'a' ),
+						),
+					),
+					'target'   => array(
+						'label'        => __( 'Target for the element', 'popup-maker' ),
+						'placeholder'  => '',
+						'desc'         => __( 'Enter the target value for your link. Can be left blank.', 'popup-maker' ),
+						'type'         => 'text',
+						'std'          => '',
+						'dependencies' => array(
+							'tag' => array( 'a' ),
+						),
+					),
 				),
 			),
 			'options' => array(
@@ -87,8 +114,12 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 	public function shortcode_atts( $atts ) {
 		$atts = parent::shortcode_atts( $atts );
 
-		if ( empty( $atts[''] ) ) {
+		if ( empty( $atts['tag'] ) ) {
 			$atts['tag'] = 'span';
+		}
+
+		if ( empty( $atts['href'] ) ) {
+			$atts['href'] = '#';
 		}
 
 		if ( ! empty( $atts['class'] ) ) {
@@ -112,7 +143,11 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 
 		$do_default = $atts['do_default'] ? " data-do-default='" . esc_attr( $atts['do_default'] ) . "'" : '';
 
-		$return = "<{$atts['tag']} class='pum-close popmake-close {$atts['classes']}' {$do_default}>";
+		// Sets up our href and target, if the tag is an `a`.
+		$href   = 'a' === $atts['tag'] ? "href='{$atts['href']}'" : '';
+		$target = 'a' === $atts['tag'] && ! empty( $atts['target'] ) ? "target='{$atts['target']}'" : '';
+
+		$return = "<{$atts['tag']} $href $target class='pum-close popmake-close {$atts['classes']}' {$do_default}>";
 		$return .= PUM_Helpers::do_shortcode( $content );
 		$return .= "</{$atts['tag']}>";
 

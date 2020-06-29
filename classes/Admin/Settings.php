@@ -253,6 +253,12 @@ class PUM_Admin_Settings {
 							'label' => __( 'Google Fonts API Key', 'popup-maker' ),
 							'desc'  => __( 'Enter your own Google Fonts API key to always get the latest fonts available.', 'popup-maker' ),
 						),
+						'telemetry'      => array(
+							'type'  => 'checkbox',
+							'label' => __( 'Allow usage tracking?', 'popup-maker' ),
+							'desc'  => __( "Allow Popup Maker to track this plugin's usage and help us make this plugin better? No user data is sent to our servers. No sensitive data is tracked.", 'popup-maker' ) .
+									' <a href="https://docs.wppopupmaker.com/article/528-the-data-the-popup-maker-plugin-collects">' . __( 'Learn more', 'popup-maker' ) . '</a>',
+						),
 					),
 				),
 			);

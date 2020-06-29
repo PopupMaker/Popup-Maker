@@ -1,8 +1,30 @@
-/build
-/node_modules
-/release
-/vendor
-/composer.lock
-/package-lock.json
-/yarn.lock
+# Editors
+project.xml
+project.properties
+/nbproject/private/
+.buildpath
+.project
+.settings*
+.idea
+.vscode
+*.sublime-project
+*.sublime-workspace
+.sublimelinterrc
+
+# Gulp / Build
+/build/
+/node_modules/
+/release/
+
+# Logs
+/logs
+
+# Composer
+/vendor/
+contributors.md
+
+# Packages
+/packages/*
+!/packages/README.md
+
 /yarn-error.log

@@ -43,6 +43,7 @@ class PUM_Admin_Popups {
 		add_filter( 'manage_edit-popup_sortable_columns', array( __CLASS__, 'sortable_columns' ) );
 		add_action( 'load-edit.php', array( __CLASS__, 'load' ), 9999 );
 		add_action( 'restrict_manage_posts', array( __CLASS__, 'add_popup_filters' ), 100 );
+		add_filter( 'post_row_actions', array( __CLASS__, 'add_id_row_actions' ), 2, 100 );
 	}
 
 	/**
@@ -91,10 +92,10 @@ class PUM_Admin_Popups {
 			<div id="popup-titlediv" class="pum-form">
 				<div id="popup-titlewrap">
 					<label class="screen-reader-text" id="popup-title-prompt-text" for="popup-title">
-						<?php _e( 'Popup Title (appears on front end inside the popup container)', 'popup-maker' ); ?>
+						<?php _e( 'Popup Title', 'popup-maker' ); ?>
 					</label>
-					<input tabindex="2" name="popup_title" size="30" value="<?php echo esc_attr( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php _e( 'Popup Title (appears on front end inside the popup container)', 'popup-maker' ); ?>" />
-					<p class="pum-desc"><?php echo '(' . __( 'Optional', 'popup-maker' ) . ') ' . __( 'Display a title inside the popup container. May be left empty.', 'popup-maker' ); ?></p>
+					<input tabindex="2" name="popup_title" size="30" value="<?php echo esc_attr( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php _e( 'Popup Title', 'popup-maker' ); ?>" />
+					<p class="pum-desc"><?php echo '(' . __( 'Optional', 'popup-maker' ) . ') ' . __( 'Shown as headline inside the popup. Can be left blank.', 'popup-maker' ); ?></p>
 				</div>
 				<div class="inside"></div>
 			</div>
@@ -118,7 +119,7 @@ class PUM_Admin_Popups {
 		}
 
 		if ( 'popup' == $typenow && in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) ) { ?>
-			<p class="pum-desc"><?php echo '(' . __( 'Required', 'popup-maker' ) . ') ' . __( 'Register a popup name. The CSS class ‘popmake-{popup-name}’ can be used to set a trigger to display a popup.', 'popup-maker' ); ?></p>
+			<p class="pum-desc"><?php echo '(' . __( 'Required', 'popup-maker' ) . ') ' . __( 'Enter a name to help you remember what this popup is about. Only you will see this.', 'popup-maker' ); ?></p>
 			<?php
 		}
 	}
@@ -1143,6 +1144,7 @@ class PUM_Admin_Popups {
 	 *  Post Type List Table
 	 */
 	public static function dashboard_columns( $_columns ) {
+		wp_enqueue_style( 'pum-admin-general' );
 		$columns = array(
 			'cb'          => '<input type="checkbox"/>',
 			'title'       => __( 'Name', 'popup-maker' ),
@@ -1337,6 +1339,22 @@ class PUM_Admin_Popups {
 			}
 		}
 
+	}
+
+	/**
+	 * Prepends Popup ID to the action row on All Popups
+	 * @param array $actions The row actions.
+	 * @param $post The post
+	 *
+	 * @return array The new actions.
+	 */
+	public static function add_id_row_actions( $actions, $post ) {
+		// Only adjust if we are dealing with our popups.
+		if ( 'popup' === $post->post_type ) {
+			return array_merge( array( 'id' => 'ID: ' . $post->ID ), $actions );
+		}
+
+		return $actions;
 	}
 
 }

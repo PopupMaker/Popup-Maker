@@ -39,7 +39,6 @@
         Promise.all(initPromises).then(initHandler);
     });
 
-
     /**
      * Add hidden field to all popup forms.
      */
