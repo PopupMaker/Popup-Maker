@@ -8,3 +8,6 @@ about: Suggest an idea for this project.
 
 ## Use case
 <!-- Describe why this feature is needed -->
+
+## Example screenshots (if any)
+<!-- If you have seen this feature or created this feature elsewhere, please include screenshots to help us visualize the feature. -->
