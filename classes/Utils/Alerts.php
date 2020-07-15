@@ -17,6 +17,7 @@ class PUM_Utils_Alerts {
 	 */
 	public static function init() {
 		add_action( 'admin_init', array( __CLASS__, 'hooks' ) );
+		add_action( 'admin_init', array( __CLASS__, 'php_handler' ) );
 		add_action( 'wp_ajax_pum_alerts_action', array( __CLASS__, 'ajax_handler' ) );
 		add_filter( 'pum_alert_list', array( __CLASS__, 'whats_new_alerts' ), 0 );
 		add_filter( 'pum_alert_list', array( __CLASS__, 'integration_alerts' ), 5 );
@@ -317,10 +318,11 @@ class PUM_Utils_Alerts {
 		wp_enqueue_script( 'pum-admin-general' );
 		wp_enqueue_style( 'pum-admin-general' );
 
+		$nonce = wp_create_nonce( 'pum_alerts_action' );
 		?>
 
 		<script type="text/javascript">
-            window.pum_alerts_nonce = '<?php echo wp_create_nonce( 'pum_alerts_action' ); ?>';
+            window.pum_alerts_nonce = '<?php echo $nonce ?>';
 		</script>
 
 		<div class="pum-alerts">
@@ -331,7 +333,15 @@ class PUM_Utils_Alerts {
 
 			<p><?php __( 'Check out the following notifications from Popup Maker.', 'popup-maker' ); ?></p>
 
-			<?php foreach ( $alerts as $alert ) : ?>
+			<?php foreach ( $alerts as $alert ) {
+				$expires = 1 == $alert['dismissible'] ? '' :  $alert['dismissible'];
+				$dismiss_url = add_query_arg( array(
+					'nonce'             => $nonce,
+					'code'              => $alert['code'],
+					'pum_dismiss_alert' => 'dismiss',
+					'expires'           => $expires,
+				));
+				?>
 
 				<div class="pum-alert-holder" data-code="<?php echo $alert['code']; ?>" class="<?php echo $alert['dismissible'] ? 'is-dismissible' : ''; ?>" data-dismissible="<?php echo esc_attr( $alert['dismissible'] ); ?>">
 
@@ -345,19 +355,41 @@ class PUM_Utils_Alerts {
 							<?php echo function_exists( 'wp_encode_emoji' ) ? wp_encode_emoji( $alert['html'] ) : $alert['html']; ?>
 						<?php endif; ?>
 
+						<?php if ( ! empty( $alert['actions'] ) && is_array( $alert['actions'] ) ) : ?>
+							<ul>
+								<?php foreach ( $alert['actions'] as $action ) {
+									$link_text = ! empty( $action['primary'] ) && true === $action['primary'] ? '<strong>' . esc_html($action['text']) . '</strong>' : esc_html($action['text']);
+									if ( 'link' === $action['type'] ) {
+										$url = $action['href'];
+										$attributes = 'target="_blank" rel="noreferrer noopener"';
+									} else {
+										$url = add_query_arg( array(
+											'nonce'             => $nonce,
+											'code'              => $alert['code'],
+											'pum_dismiss_alert' => $action['action'],
+											'expires'           => $expires,
+										));
+										$attributes = 'class="pum-dismiss"';
+									}
+									?>
+									<li><a data-action="<?php echo esc_attr($action['action']); ?>" href="<?php echo esc_url($url); ?>" <?php echo $attributes; ?> ><?php echo $link_text; ?></a></li>
+								<?php } ?>
+							</ul>
+						<?php endif; ?>
+
 					</div>
 
 					<?php if ( $alert['dismissible'] ) : ?>
 
-						<button type="button" class="button dismiss pum-dismiss">
+						<a href="<?php echo esc_url( $dismiss_url ); ?>" data-action="dismiss" class="button dismiss pum-dismiss">
 							<span class="screen-reader-text"><?php _e( 'Dismiss this item.', 'popup-maker' ); ?></span> <span class="dashicons dashicons-no-alt"></span>
-						</button>
+						</a>
 
 					<?php endif; ?>
 
 				</div>
 
-			<?php endforeach; ?>
+			<?php } ?>
 
 		</div>
 
@@ -421,29 +453,79 @@ class PUM_Utils_Alerts {
 
 
 	/**
-	 *
+	 * Handles if alert was dismissed AJAX
 	 */
 	public static function ajax_handler() {
 		$args = wp_parse_args( $_REQUEST, array(
-			'code'    => '',
-			'expires' => '',
-		) );
+			'code'              => '',
+			'expires'           => '',
+			'pum_dismiss_alert' => '',
+		));
 
 		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'pum_alerts_action' ) ) {
 			wp_send_json_error();
 		}
 
-		try {
-			$dismissed_alerts                  = self::dismissed_alerts();
-			$dismissed_alerts[ $args['code'] ] = ! empty( $args['expires'] ) ? strtotime( '+' . $args['expires'] ) : true;
-
-			$user_id = get_current_user_id();
-			update_user_meta( $user_id, '_pum_dismissed_alerts', $dismissed_alerts );
+		$results = self::action_handler( $args['code'], $args['pum_dismiss_alert'], $args['expires'] );
+		if ( true === $results ) {
 			wp_send_json_success();
-
-		} catch ( Exception $e ) {
-			wp_send_json_error( $e );
+		} else {
+			wp_send_json_error();
 		}
+	}
+
+	/**
+	 * Handles if alert was dismissed by page reload instead of AJAX
+	 *
+	 * @since 1.11.0
+	 */
+	public static function php_handler() {
+		if ( ! isset( $_REQUEST['pum_dismiss_alert'] ) ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'pum_alerts_action' ) ) {
+			return;
+		}
+
+		$args = wp_parse_args( $_REQUEST, array(
+			'code'              => '',
+			'expires'           => '',
+			'pum_dismiss_alert' => '',
+		));
+
+		self::action_handler( $args['code'], $args['pum_dismiss_alert'], $args['expires'] );
+	}
+
+	/**
+	 * Handles the action taken on the alert.
+	 *
+	 * @param string $code The specific alert.
+	 * @param string $action Which action was taken
+	 * @param string $expires When the dismissal expires, if any.
+	 *
+	 * @return bool
+	 * @uses PUM_Utils_Logging::instance
+	 * @uses PUM_Utils_Logging::log
+	 * @since 1.11.0
+	 */
+	public static function action_handler( $code, $action, $expires ) {
+		if ( empty( $action ) || 'dismiss' === $action ) {
+			try {
+				$dismissed_alerts          = self::dismissed_alerts();
+				$dismissed_alerts[ $code ] = ! empty( $expires ) ? strtotime( '+' . $expires ) : true;
+
+				$user_id = get_current_user_id();
+				update_user_meta( $user_id, '_pum_dismissed_alerts', $dismissed_alerts );
+				return true;
+
+			} catch ( Exception $e ) {
+				PUM_Utils_Logging::instance()->log( 'Error dismissing alert. Exception: ' . $e->getMessage() );
+				return false;
+			}
+		}
+
+		do_action( 'pum_alert_dismissed', $code, $action );
 	}
 
 	/**

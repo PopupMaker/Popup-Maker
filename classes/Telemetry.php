@@ -21,7 +21,7 @@ class PUM_Telemetry {
 		add_action( 'pum_daily_scheduled_events', array( __CLASS__, 'track_check' ) );
 		if ( is_admin() && current_user_can( 'manage_options' ) ) {
 			add_filter( 'pum_alert_list', array( __CLASS__, 'optin_alert' ) );
-			add_action( 'init', array( __CLASS__, 'optin_alert_check' ) );
+			add_action( 'pum_alert_dismissed', array( __CLASS__, 'optin_alert_check' ), 10, 2 );
 		}
 	}
 
@@ -234,25 +234,34 @@ class PUM_Telemetry {
 			return $alerts;
 		}
 
-		$optin_url = add_query_arg( 'pum_optin_check', 'optin' );
-
-		ob_start();
-		?>
-		<ul>
-			<li><a href="<?php echo esc_attr( $optin_url ); ?>"><strong><?php esc_html_e( 'Allow', 'popup-maker' ); ?></strong></a></li>
-			<li><a href="#" class="pum-dismiss"><?php esc_html_e( 'Do not allow', 'popup-maker' ); ?></a></li>
-			<li><a href="https://docs.wppopupmaker.com/article/528-the-data-the-popup-maker-plugin-collects" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a></li>
-		</ul>
-		<?php
-		$html = ob_get_clean();
 		$alerts[] = array(
 			'code'        => 'pum_telemetry_notice',
 			'type'        => 'info',
 			'message'     => esc_html__( "Allow Popup Maker to track this plugin's usage and help us make this plugin better? No user data is sent to our servers. No sensitive data is tracked.", 'popup-maker' ),
-			'html'        => $html,
 			'priority'    => 10,
 			'dismissible' => true,
 			'global'      => false,
+			'actions'     => array(
+				array(
+					'primary' => true,
+					'type'    => 'action',
+					'action'  => 'pum_optin_check_allow',
+					'text'    => __( 'Allow', 'popup-maker' ),
+				),
+				array(
+					'primary' => false,
+					'type'    => 'action',
+					'action'  => 'dismiss',
+					'text'    => __( 'Do not allow', 'popup-maker' ),
+				),
+				array(
+					'primary' => false,
+					'type'    => 'link',
+					'action'  => '',
+					'href'    => 'https://docs.wppopupmaker.com/article/528-the-data-the-popup-maker-plugin-collects',
+					'text'    => __( 'Learn more', 'popup-maker' ),
+				),
+			),
 		);
 		return $alerts;
 	}
@@ -260,11 +269,14 @@ class PUM_Telemetry {
 	/**
 	 * Checks if any options have been clicked from admin notices.
 	 *
+	 * @param string $code
+	 * @param string $action
+	 *
 	 * @since 1.11.0
 	 */
-	public static function optin_alert_check() {
-		if ( isset( $_GET['pum_optin_check'] ) ) {
-			if ( 'optin' === $_GET['pum_optin_check'] ) {
+	public static function optin_alert_check( $code, $action ) {
+		if ( 'pum_telemetry_notice' === $code ) {
+			if ( 'pum_optin_check_allow' === $action ) {
 				pum_update_option( 'telemetry', true );
 			}
 		}

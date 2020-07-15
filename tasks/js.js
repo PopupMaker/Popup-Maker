@@ -43,8 +43,8 @@ function js_admin() {
             return gulp.src(path.join(adminJsDevPath, folder, '/**/*.js'), {allowEmpty: true})
                 .pipe($fn.plumber({errorHandler: $fn.notify.onError('Error: <%= error.message %>')}))
                 .pipe($fn.order([
-                    "vendor/**/*.js",
-                    "plugins/**/*.js",
+                    "**/**/*.js",
+                    "**/**/*.js",
                     'general.js'
                 ], {base: path.join(adminJsDevPath, folder)}))
                 // concat into foldername.js
@@ -64,9 +64,9 @@ function js_site() {
     return gulp.src([path.join(jsDevPath, 'site', '/**/*.js')], {allowEmpty: true})
         .pipe($fn.plumber({errorHandler: $fn.notify.onError('Error: <%= error.message %>')}))
         .pipe($fn.order([
-            "plugins/compatibility.js",
-            "plugins/pum.js",
-            "plugins/**/*.js",
+            "**/compatibility.js",
+            "**/pum.js",
+            "**/**/*.js",
             'general.js'
         ]))
         .pipe($fn.concat('site.js'))
