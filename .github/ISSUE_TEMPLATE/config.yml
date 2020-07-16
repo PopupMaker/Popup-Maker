@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+    - name: Popup Maker Support Forums
+      url: https://wordpress.org/support/plugin/popup-maker/
+      about: Please ask for support here.
+    - name: Popup Maker Documentation
+      url: https://docs.wppopupmaker.com
+      about: Please review our documentation.

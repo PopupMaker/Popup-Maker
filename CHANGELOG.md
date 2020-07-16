@@ -1,4 +1,4 @@
-### Unreleased Changes
+### v1.11.0 - 06/25/2020
 * Feature: Add new floating bar theme.
 * Feature: New guided tour of popup editor for first time users.
 * Feature: New href attribute on the popup_close shortcode for when setting the shortcode to use the `a` tag.
