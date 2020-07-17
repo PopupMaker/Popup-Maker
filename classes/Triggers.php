@@ -154,7 +154,7 @@ class PUM_Triggers {
 					'general'  => array(
 						'click_info' => array(
 							'type'  => 'html',
-							'content' => '<p>' . __( "Adding the class 'popmake-{popup-name}' to an element will trigger it to be opened once clicked. Additionally you can add additional CSS selectors below.", 'popup-maker' ) . '</p>',
+							'content' => '<p>' . __( "Adding the class 'popmake-{popup-ID}' to an element will trigger it to be opened once clicked. Additionally you can add additional CSS selectors below.", 'popup-maker' ) . '</p>',
 						),
 						'extra_selectors' => array(
 							'label'       => __( 'Extra CSS Selectors', 'popup-maker' ),
