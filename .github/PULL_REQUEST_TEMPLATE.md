@@ -20,6 +20,7 @@ Issue:
 ## Checklist:
 - [ ] My code has been tested in the latest version of WordPress.
 - [ ] My code does not have any warnings from ESLint.
+- [ ] My code does not have any warnings from StyleLint.
 - [ ] My code follows the WordPress code style.
 - [ ] My code follows the accessibility standards. <!-- Guidelines: https://developer.wordpress.org/coding-standards/wordpress-coding-standards/accessibility/ -->
 - [ ] All new functions and classes have code documentation.
