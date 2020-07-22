@@ -7,7 +7,7 @@
 	const $ = window.jQuery;
 
 	$(document).on("wpcf7mailsent", function(event, details) {
-		var formId = event.detail.contactFormId,
+		const formId = event.detail.contactFormId,
 			$form = $(event.target),
 			// Converts string like wpcf7-f190-p2-o11 and reduces it to simply 11, the last o11 is the instance ID.
 			// More accurate way of doing it in case things change in the future, this version filters out all but the o param.
