@@ -1,3 +1,6 @@
+### v1.11.1 - 07/22/2020
+* Fix: Form submission cookies no longer set with Contact Form 7 5.2 
+
 ### v1.11.0 - 06/25/2020
 * Feature: Add new floating bar theme.
 * Feature: New guided tour of popup editor for first time users.
