@@ -18,6 +18,10 @@ class PUM_Admin_Popups {
 	 * Hook the initialize method to the WP init action.
 	 */
 	public static function init() {
+
+		// Adds ID to top of popup editor.
+		add_action( 'edit_form_top', array( __CLASS__, 'add_popup_id' ) );
+
 		// Change title to popup name.
 		add_filter( 'enter_title_here', array( __CLASS__, '_default_title' ) );
 
@@ -27,7 +31,7 @@ class PUM_Admin_Popups {
 		// Add Contextual help to post_name field.
 		add_action( 'edit_form_before_permalink', array( __CLASS__, 'popup_post_title_contextual_message' ) );
 
-		// Regitster Metaboxes
+		// Register Metaboxes.
 		add_action( 'add_meta_boxes', array( __CLASS__, 'meta_box' ) );
 
 		// Process meta saving.
@@ -47,10 +51,23 @@ class PUM_Admin_Popups {
 	}
 
 	/**
+	 * Adds the Popup ID right under the "Edit Popup" heading
+	 *
+	 * @param WP_Post $post Post object.
+	 * @since 1.12.0
+	 */
+	public static function add_popup_id( $post ) {
+		if ( 'popup' === $post->post_type ) {
+			?>
+			<p style="margin:0;font-size:12px;">ID: <?php echo esc_html( $post->ID ); ?></p>
+			<?php
+		}
+	}
+
+	/**
 	 * Change default "Enter title here" input
 	 *
-	 * @param string $title Default title placeholder text
-	 *
+	 * @param string $title Default title placeholder text.
 	 * @return string $title New placeholder text
 	 */
 	public static function _default_title( $title ) {
@@ -61,12 +78,12 @@ class PUM_Admin_Popups {
 
 		$screen = get_current_screen();
 
-		if ( 'popup_theme' == $screen->post_type ) {
-			$label = $screen->post_type == 'popup' ? __( 'Popup', 'popup-maker' ) : __( 'Popup Theme', 'popup-maker' );
-			$title = sprintf( __( '%s Name', 'popup-maker' ), $label );
+		if ( 'popup_theme' === $screen->post_type ) {
+			$label = 'popup' === $screen->post_type ? __( 'Popup', 'popup-maker' ) : __( 'Popup Theme', 'popup-maker' );
+			$title = sprintf( '%s Name', $label );
 		}
 
-		if ( 'popup' == $screen->post_type ) {
+		if ( $screen->post_type === 'popup' ) {
 			$title = __( 'Popup Name', 'popup-maker' );
 		}
 
