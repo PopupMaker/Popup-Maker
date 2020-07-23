@@ -83,7 +83,7 @@ class PUM_Admin_Popups {
 			$title = sprintf( '%s Name', $label );
 		}
 
-		if ( $screen->post_type === 'popup' ) {
+		if ( 'popup' === $screen->post_type ) {
 			$title = __( 'Popup Name', 'popup-maker' );
 		}
 
@@ -109,10 +109,10 @@ class PUM_Admin_Popups {
 			<div id="popup-titlediv" class="pum-form">
 				<div id="popup-titlewrap">
 					<label class="screen-reader-text" id="popup-title-prompt-text" for="popup-title">
-						<?php _e( 'Popup Title', 'popup-maker' ); ?>
+						<?php esc_html_e( 'Popup Title', 'popup-maker' ); ?>
 					</label>
-					<input tabindex="2" name="popup_title" size="30" value="<?php echo esc_attr( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php _e( 'Popup Title', 'popup-maker' ); ?>" />
-					<p class="pum-desc"><?php echo '(' . __( 'Optional', 'popup-maker' ) . ') ' . __( 'Shown as headline inside the popup. Can be left blank.', 'popup-maker' ); ?></p>
+					<input tabindex="2" name="popup_title" size="30" value="<?php echo esc_attr( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php esc_html_e( 'Popup Title', 'popup-maker' ); ?>" />
+					<p class="pum-desc"><?php echo '(' . esc_html__( 'Optional', 'popup-maker' ) . ') ' . esc_html__( 'Shown as headline inside the popup. Can be left blank.', 'popup-maker' ); ?></p>
 				</div>
 				<div class="inside"></div>
 			</div>
@@ -136,7 +136,7 @@ class PUM_Admin_Popups {
 		}
 
 		if ( 'popup' == $typenow && in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) ) { ?>
-			<p class="pum-desc"><?php echo '(' . __( 'Required', 'popup-maker' ) . ') ' . __( 'Enter a name to help you remember what this popup is about. Only you will see this.', 'popup-maker' ); ?></p>
+			<p class="pum-desc"><?php echo '(' . esc_html__( 'Required', 'popup-maker' ) . ') ' . esc_html__( 'Enter a name to help you remember what this popup is about. Only you will see this.', 'popup-maker' ); ?></p>
 			<?php
 		}
 	}
@@ -152,11 +152,10 @@ class PUM_Admin_Popups {
 	/**
 	 * Ensures integrity of values.
 	 *
-	 * @param array $values
-	 *
+	 * @param array $values Array of settings.
 	 * @return array
 	 */
-	public static function parse_values( $values = [] ) {
+	public static function parse_values( $values = array() ) {
 		$defaults = self::defaults();
 
 		if ( empty( $values ) ) {
@@ -200,7 +199,7 @@ class PUM_Admin_Popups {
 
 		<div id="pum-popup-settings-container" class="pum-popup-settings-container">
 			<div class="pum-no-js" style="padding: 0 12px;">
-				<p><?php printf( __( 'If you are seeing this, the page is still loading or there are Javascript errors on this page. %sView troubleshooting guide%s', 'popup-maker' ), '<a href="https://docs.wppopupmaker.com/article/373-checking-for-javascript-errors" target="_blank">', '</a>' ); ?></p>
+				<p><?php printf( esc_html__( 'If you are seeing this, the page is still loading or there are Javascript errors on this page. %sView troubleshooting guide%s', 'popup-maker' ), '<a href="https://docs.wppopupmaker.com/article/373-checking-for-javascript-errors" target="_blank">', '</a>' ); ?></p>
 			</div>
 		</div>
 		<?php
