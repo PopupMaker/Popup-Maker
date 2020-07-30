@@ -72,6 +72,16 @@ class PUM_Utils_Logging {
 	}
 
 	/**
+	 * Retrieves the url to the file
+	 *
+	 * @returns string
+	 * @since 1.12.0
+	 */
+	public function get_file_url() {
+		return PUM_Helpers::get_upload_dir_url( $this->filename );
+	}
+
+	/**
 	 * Retrieve the log data
 	 *
 	 * @return string
