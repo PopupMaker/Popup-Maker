@@ -72,7 +72,7 @@ class PUM_Admin_Tools {
 	public static function page() {
 
 		$active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], self::tabs() ) ? $_GET['tab'] : 'system_info';
-
+		wp_enqueue_style( 'pum-admin-general' );
 		?>
 
         <div class="wrap">
@@ -230,9 +230,9 @@ class PUM_Admin_Tools {
 	public static function errorlog_display() {
 		?>
 		<h2>Error Log</h2>
-		<textarea style="min-height: 350px; width: 100%; display: block;" readonly="readonly" id="error-log-textarea">
-
-		</textarea>
+		<div id="log-viewer">
+			<pre><?php echo esc_html( self::display_error_log() ); ?></pre>
+		</div>
 		<?php
 	}
 
@@ -592,5 +592,13 @@ class PUM_Admin_Tools {
 		return $return;
 	}
 
-
+	/**
+	 * Retrieves error log and prepares it for displaying
+	 *
+	 * @uses PUM_Utils_Logging::get_log()
+	 * @since 1.12.0
+	 */
+	public static function display_error_log() {
+		return PUM_Utils_Logging::instance()->get_log();
+	}
 }
