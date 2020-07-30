@@ -233,6 +233,7 @@ class PUM_Admin_Tools {
 		<div id="log-viewer">
 			<pre><?php echo esc_html( self::display_error_log() ); ?></pre>
 		</div>
+		<a target="_blank" rel="noreferrer noopener" href="<?php echo esc_url( PUM_Utils_Logging::instance()->get_file_url() ); ?>" download="pum-debug.log" class="button button-primary button-with-icon"><i class="dashicons dashicons-download"></i>Download Error Log</a>
 		<?php
 	}
 
