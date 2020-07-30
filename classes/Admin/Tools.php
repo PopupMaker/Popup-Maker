@@ -23,11 +23,12 @@ class PUM_Admin_Tools {
 	public static function init() {
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
 		add_action( 'admin_init', array( __CLASS__, 'emodal_process_import' ) );
-		add_action( 'pum_save_enabled_betas', array( __CLASS__, 'save_enabled_betas' ) );
-		add_action( 'pum_tools_page_tab_import', array( __CLASS__, 'emodal_v2_import_button' ) );
-		add_action( 'pum_tools_page_tab_system_info', array( __CLASS__, 'sysinfo_display' ) );
-		add_action( 'pum_popup_sysinfo', array( __CLASS__, 'popup_sysinfo' ) );
 		add_action( 'pum_tools_page_tab_betas', array( __CLASS__, 'betas_display' ) );
+		add_action( 'pum_tools_page_tab_system_info', array( __CLASS__, 'sysinfo_display' ) );
+		add_action( 'pum_tools_page_tab_error_log', array( __CLASS__, 'errorlog_display' ) );
+		add_action( 'pum_tools_page_tab_import', array( __CLASS__, 'import_display' ) );
+		add_action( 'pum_save_enabled_betas', array( __CLASS__, 'save_enabled_betas' ) );
+		add_action( 'pum_popup_sysinfo', array( __CLASS__, 'popup_sysinfo' ) );
 	}
 
 	/**
@@ -227,8 +228,38 @@ class PUM_Admin_Tools {
 	 * @since 1.12.0
 	 */
 	public static function errorlog_display() {
+		?>
+		<h2>Error Log</h2>
+		<textarea style="min-height: 350px; width: 100%; display: block;" readonly="readonly" id="error-log-textarea">
 
+		</textarea>
+		<?php
 	}
+
+	/**
+	 * Displays the contents for the Import tab
+	 *
+	 * @since 1.12.0
+	 */
+	public static function import_display() {
+		?>
+		<h2>Using Easy Modal?</h2>
+		<p>Click this button to import popups from the Easy Modal plugin.</p>
+		<button id="popmake_emodal_v2_import" name="popmake_emodal_v2_import" class="button button-large">
+			<?php _e( 'Import From Easy Modal v2', 'popup-maker' ); ?>
+		</button>
+		<?php
+	}
+
+	/**
+	 * Add a button to import easy modal data.
+	 *
+	 * @deprecated
+	 */
+	public static function emodal_v2_import_button() {
+		self::import_display();
+	}
+
 
 	/**
 	 * Get system info
@@ -491,19 +522,6 @@ class PUM_Admin_Tools {
 
 		echo self::sysinfo_text();
 		exit;
-	}
-
-	/**
-	 * Add a button to import easy modal data.
-	 */
-	public static function emodal_v2_import_button() {
-		?>
-		<h2>Using Easy Modal?</h2>
-		<p>Click this button to import popups from the Easy Modal plugin.</p>
-        <button id="popmake_emodal_v2_import" name="popmake_emodal_v2_import" class="button button-large">
-			<?php _e( 'Import From Easy Modal v2', 'popup-maker' ); ?>
-        </button>
-		<?php
 	}
 
 	/**
