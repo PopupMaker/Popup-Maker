@@ -26,11 +26,17 @@ Styles for our log viewers
 	border: 1px solid #e5e5e5;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	padding: 5px 20px;
+	margin-bottom: 20px;
 }
 
 #log-viewer pre {
 	font-family: monospace;
 	white-space: pre-wrap;
+}
+
+.button-with-icon {
+	display: inline-flex;
+	align-items: center;
 }
 
 .wp-list-table .type-popup .row-actions {
