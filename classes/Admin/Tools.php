@@ -160,6 +160,50 @@ class PUM_Admin_Tools {
 	}
 
 	/**
+	 * Display beta opt-ins
+	 *
+	 * @since       1.3
+	 */
+	public static function betas_display() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$has_beta = self::get_beta_enabled_extensions();
+
+		do_action( 'pum_tools_betas_before' );
+		?>
+
+		<div class="postbox pum-beta-support">
+			<h3><span><?php _e( 'Enable Beta Versions', 'popup-maker' ); ?></span></h3>
+			<div class="inside">
+				<p><?php _e( 'Checking any of the below checkboxes will opt you in to receive pre-release update notifications. You can opt-out at any time. Pre-release updates do not install automatically, you will still have the opportunity to ignore update notifications.', 'popup-maker' ); ?></p>
+				<table class="form-table pum-beta-support">
+					<tbody>
+					<?php foreach ( $has_beta as $slug => $product ) : ?>
+						<tr>
+							<?php $checked = self::extension_has_beta_support( $slug ); ?>
+							<th scope="row"><?php echo esc_html( $product ); ?></th>
+							<td>
+								<input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]" id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo checked( $checked, true, false ); ?>
+									   value="1" />
+								<label for="enabled_betas[<?php echo esc_attr( $slug ); ?>]"><?php printf( __( 'Get updates for pre-release versions of %s', 'popup-maker' ), $product ); ?></label>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+					</tbody>
+				</table>
+				<input type="hidden" name="pum_action" value="save_enabled_betas" />
+				<?php wp_nonce_field( 'pum_save_betas_nonce', 'pum_save_betas_nonce' ); ?>
+				<?php submit_button( __( 'Save', 'popup-maker' ), 'secondary', 'submit', false ); ?>
+			</div>
+		</div>
+
+		<?php
+		do_action( 'pum_tools_betas_after' );
+	}
+
+	/**
 	 * Display the system info tab
 	 *
 	 * @since       1.3.0
@@ -175,6 +219,15 @@ class PUM_Admin_Tools {
 			</p>
 		</form>
 		<?php
+	}
+
+	/**
+	 * Displays the contents of the Error Log tab
+	 *
+	 * @since 1.12.0
+	 */
+	public static function errorlog_display() {
+
 	}
 
 	/**
@@ -445,6 +498,8 @@ class PUM_Admin_Tools {
 	 */
 	public static function emodal_v2_import_button() {
 		?>
+		<h2>Using Easy Modal?</h2>
+		<p>Click this button to import popups from the Easy Modal plugin.</p>
         <button id="popmake_emodal_v2_import" name="popmake_emodal_v2_import" class="button button-large">
 			<?php _e( 'Import From Easy Modal v2', 'popup-maker' ); ?>
         </button>
@@ -497,50 +552,6 @@ class PUM_Admin_Tools {
 	 */
 	public static function enabled_betas_sanitize_value( $value ) {
 		return filter_var( $value, FILTER_VALIDATE_BOOLEAN );
-	}
-
-	/**
-	 * Display beta opt-ins
-	 *
-	 * @since       1.3
-	 */
-	public static function betas_display() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
-
-		$has_beta = self::get_beta_enabled_extensions();
-
-		do_action( 'pum_tools_betas_before' );
-		?>
-
-        <div class="postbox pum-beta-support">
-            <h3><span><?php _e( 'Enable Beta Versions', 'popup-maker' ); ?></span></h3>
-            <div class="inside">
-                <p><?php _e( 'Checking any of the below checkboxes will opt you in to receive pre-release update notifications. You can opt-out at any time. Pre-release updates do not install automatically, you will still have the opportunity to ignore update notifications.', 'popup-maker' ); ?></p>
-                <table class="form-table pum-beta-support">
-                    <tbody>
-					<?php foreach ( $has_beta as $slug => $product ) : ?>
-                        <tr>
-							<?php $checked = self::extension_has_beta_support( $slug ); ?>
-                            <th scope="row"><?php echo esc_html( $product ); ?></th>
-                            <td>
-                                <input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]" id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo checked( $checked, true, false ); ?>
-                                       value="1" />
-                                <label for="enabled_betas[<?php echo esc_attr( $slug ); ?>]"><?php printf( __( 'Get updates for pre-release versions of %s', 'popup-maker' ), $product ); ?></label>
-                            </td>
-                        </tr>
-					<?php endforeach; ?>
-                    </tbody>
-                </table>
-                <input type="hidden" name="pum_action" value="save_enabled_betas" />
-				<?php wp_nonce_field( 'pum_save_betas_nonce', 'pum_save_betas_nonce' ); ?>
-				<?php submit_button( __( 'Save', 'popup-maker' ), 'secondary', 'submit', false ); ?>
-            </div>
-        </div>
-
-		<?php
-		do_action( 'pum_tools_betas_after' );
 	}
 
 	/**
