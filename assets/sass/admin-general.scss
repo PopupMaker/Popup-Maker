@@ -26,7 +26,7 @@ Styles for our log viewers
 	border: 1px solid #e5e5e5;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	padding: 5px 20px;
-	margin-bottom: 20px;
+	margin: 20px 0;
 }
 
 #log-viewer pre {
@@ -34,7 +34,7 @@ Styles for our log viewers
 	white-space: pre-wrap;
 }
 
-.button-with-icon {
+.wp-core-ui .button-with-icon {
 	display: inline-flex;
 	align-items: center;
 }
