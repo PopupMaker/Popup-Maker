@@ -29,6 +29,7 @@ class PUM_Admin_Tools {
 		add_action( 'pum_tools_page_tab_import', array( __CLASS__, 'import_display' ) );
 		add_action( 'pum_save_enabled_betas', array( __CLASS__, 'save_enabled_betas' ) );
 		add_action( 'pum_popup_sysinfo', array( __CLASS__, 'popup_sysinfo' ) );
+		add_action( 'pum_empty_error_log', array( __CLASS__, 'error_log_empty' ) );
 	}
 
 	/**
@@ -231,6 +232,11 @@ class PUM_Admin_Tools {
 		?>
 		<h2>Error Log</h2>
 		<a target="_blank" rel="noreferrer noopener" href="<?php echo esc_url( PUM_Utils_Logging::instance()->get_file_url() ); ?>" download="pum-debug.log" class="button button-primary button-with-icon"><i class="dashicons dashicons-download"></i>Download Error Log</a>
+		<form action="" method="POST">
+			<input type="hidden" name="pum_action" value="empty_error_log" />
+			<?php wp_nonce_field( 'pum_popup_empty_log_nonce', 'pum_popup_empty_log_nonce' ); ?>
+			<?php submit_button( 'Empty Error Log', '', 'popmake-download-sysinfo', false ); ?>
+		</form>
 		<div id="log-viewer">
 			<pre><?php echo esc_html( self::display_error_log() ); ?></pre>
 		</div>
@@ -523,6 +529,18 @@ class PUM_Admin_Tools {
 
 		echo self::sysinfo_text();
 		exit;
+	}
+
+	/**
+	 * Empties error log when user clicks on button
+	 *
+	 * @since 1.12.0
+	 */
+	public static function error_log_empty() {
+		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) || ! wp_verify_nonce( $_POST['pum_popup_empty_log_nonce'], 'pum_popup_empty_log_nonce' ) ) {
+			return;
+		}
+		PUM_Utils_Logging::instance()->clear_log();
 	}
 
 	/**
