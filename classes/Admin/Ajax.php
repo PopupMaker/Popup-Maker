@@ -190,42 +190,52 @@ class PUM_Admin_Ajax {
 		$batch_id = isset( $_REQUEST['batch_id'] ) ? sanitize_key( $_REQUEST['batch_id'] ) : false;
 
 		if ( ! $batch_id ) {
-			wp_send_json_error( array(
-				'error' => __( 'A batch process ID must be present to continue.', 'popup-maker' ),
-			) );
+			wp_send_json_error(
+				array(
+					'error' => __( 'A batch process ID must be present to continue.', 'popup-maker' ),
+				)
+			);
 		}
 
 		// Nonce.
 		if ( ! isset( $_REQUEST['nonce'] ) || ( isset( $_REQUEST['nonce'] ) && false === wp_verify_nonce( $_REQUEST['nonce'], "{$batch_id}_step_nonce" ) ) ) {
-			wp_send_json_error( array(
-				'error' => __( 'You do not have permission to initiate this request. Contact an administrator for more information.', 'popup-maker' ),
-			) );
+			wp_send_json_error(
+				array(
+					'error' => __( 'You do not have permission to initiate this request. Contact an administrator for more information.', 'popup-maker' ),
+				)
+			);
 		}
 
 		// Attempt to retrieve the batch attributes from memory.
 		$batch = PUM_Batch_Process_Registry::instance()->get( $batch_id );
 
-		if ( $batch === false ) {
-			wp_send_json_error( array(
-				'error' => sprintf( __( '%s is an invalid batch process ID.', 'popup-maker' ), esc_html( $_REQUEST['batch_id'] ) ),
-			) );
+		if ( false === $batch ) {
+			wp_send_json_error(
+				array(
+					'error' => sprintf( __( '%s is an invalid batch process ID.', 'popup-maker' ), esc_html( $_REQUEST['batch_id'] ) ),
+				)
+			);
 		}
 
 		$class      = isset( $batch['class'] ) ? sanitize_text_field( $batch['class'] ) : '';
 		$class_file = isset( $batch['file'] ) ? $batch['file'] : '';
 
 		if ( empty( $class_file ) || ! file_exists( $class_file ) ) {
-			wp_send_json_error( array(
-				'error' => sprintf( __( 'An invalid file path is registered for the %1$s batch process handler.', 'popup-maker' ), "<code>{$batch_id}</code>" ),
-			) );
+			wp_send_json_error(
+				array(
+					'error' => sprintf( __( 'An invalid file path is registered for the %1$s batch process handler.', 'popup-maker' ), "<code>{$batch_id}</code>" ),
+				)
+			);
 		} else {
 			require_once $class_file;
 		}
 
 		if ( empty( $class ) || ! class_exists( $class ) ) {
-			wp_send_json_error( array(
-				'error' => sprintf( __( '%1$s is an invalid handler for the %2$s batch process. Please try again.', 'popup-maker' ), "<code>{$class}</code>", "<code>{$batch_id}</code>" ),
-			) );
+			wp_send_json_error(
+				array(
+					'error' => sprintf( __( '%1$s is an invalid handler for the %2$s batch process. Please try again.', 'popup-maker' ), "<code>{$class}</code>", "<code>{$batch_id}</code>" ),
+				)
+			);
 		}
 
 		$step = sanitize_text_field( $_REQUEST['step'] );
@@ -288,12 +298,15 @@ class PUM_Admin_Ajax {
 				if ( method_exists( $process, 'can_export' ) ) {
 
 					if ( ! $process->is_empty ) {
-						$response_data['url'] = pum_admin_url( 'tools', array(
-							'step'       => $step,
-							'nonce'      => wp_create_nonce( 'pum-batch-export' ),
-							'batch_id'   => $batch_id,
-							'pum_action' => 'download_batch_export',
-						) );
+						$response_data['url'] = pum_admin_url(
+							'tools',
+							array(
+								'step'       => $step,
+								'nonce'      => wp_create_nonce( 'pum-batch-export' ),
+								'batch_id'   => $batch_id,
+								'pum_action' => 'download_batch_export',
+							)
+						);
 					}
 				}
 
