@@ -1,21 +1,32 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/*************************************************
+ * Copyright (c) 2020, Code Atlantic LLC
+ *************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 
+/**
+ * Handles some of our AJAX requests including post/taxonomy search from conditions
+ */
 class PUM_Admin_Ajax {
 
+	/**
+	 * Hooks our methods into AJAX actions.
+	 * Hooks our methods into AJAX actions.
+	 */
 	public static function init() {
 		add_action( 'wp_ajax_pum_object_search', array( __CLASS__, 'object_search' ) );
 		add_action( 'wp_ajax_pum_process_batch_request', array( __CLASS__, 'process_batch_request' ) );
-		// add_action( 'wp_ajax_pum_process_batch_import', array( __CLASS__, 'process_batch_import' ) );
 	}
 
+	/**
+	 * Searches posts, taxonomies, and users
+	 *
+	 * Uses passed array with keys of object_type, object_key, include, exclude. Echos our results as JSON.
+	 */
 	public static function object_search() {
 		$results = array(
 			'items'       => array(),
@@ -35,32 +46,40 @@ class PUM_Admin_Ajax {
 				$post_type = ! empty( $_REQUEST['object_key'] ) ? sanitize_text_field( $_REQUEST['object_key'] ) : 'post';
 
 				if ( ! empty( $include ) ) {
-					$include_query = PUM_Helpers::post_type_selectlist_query( $post_type, array(
-						'post__in'       => $include,
-						'posts_per_page' => - 1,
-					), true );
+					$include_query = PUM_Helpers::post_type_selectlist_query(
+						$post_type,
+						array(
+							'post__in'       => $include,
+							'posts_per_page' => - 1,
+						),
+						true
+					);
 
 					foreach ( $include_query['items'] as $id => $name ) {
 						$results['items'][] = array(
 							'id'   => $id,
-							'text' => $name,
+							'text' => "$name (ID: $id)",
 						);
 					}
 
 					$results['total_count'] += (int) $include_query['total_count'];
 				}
 
-				$query = PUM_Helpers::post_type_selectlist_query( $post_type, array(
-					's'              => ! empty( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : null,
-					'paged'          => ! empty( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : null,
-					'post__not_in'   => $exclude,
-					'posts_per_page' => 10,
-				), true );
+				$query = PUM_Helpers::post_type_selectlist_query(
+					$post_type,
+					array(
+						's'              => ! empty( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : null,
+						'paged'          => ! empty( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : null,
+						'post__not_in'   => $exclude,
+						'posts_per_page' => 10,
+					),
+					true
+				);
 
 				foreach ( $query['items'] as $id => $name ) {
 					$results['items'][] = array(
 						'id'   => $id,
-						'text' => $name,
+						'text' => "$name (ID: $id)",
 					);
 				}
 
@@ -71,32 +90,40 @@ class PUM_Admin_Ajax {
 				$taxonomy = ! empty( $_REQUEST['object_key'] ) ? sanitize_text_field( $_REQUEST['object_key'] ) : 'category';
 
 				if ( ! empty( $include ) ) {
-					$include_query = PUM_Helpers::taxonomy_selectlist_query( $taxonomy, array(
-						'include' => $include,
-						'number'  => 0,
-					), true );
+					$include_query = PUM_Helpers::taxonomy_selectlist_query(
+						$taxonomy,
+						array(
+							'include' => $include,
+							'number'  => 0,
+						),
+						true
+					);
 
 					foreach ( $include_query['items'] as $id => $name ) {
 						$results['items'][] = array(
 							'id'   => $id,
-							'text' => $name,
+							'text' => "$name (ID: $id)",
 						);
 					}
 
 					$results['total_count'] += (int) $include_query['total_count'];
 				}
 
-				$query = PUM_Helpers::taxonomy_selectlist_query( $taxonomy, array(
-					'search'  => ! empty( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : null,
-					'paged'   => ! empty( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : null,
-					'exclude' => $exclude,
-					'number'  => 10,
-				), true );
+				$query = PUM_Helpers::taxonomy_selectlist_query(
+					$taxonomy,
+					array(
+						'search'  => ! empty( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : null,
+						'paged'   => ! empty( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : null,
+						'exclude' => $exclude,
+						'number'  => 10,
+					),
+					true
+				);
 
 				foreach ( $query['items'] as $id => $name ) {
 					$results['items'][] = array(
 						'id'   => $id,
-						'text' => $name,
+						'text' => "$name (ID: $id)",
 					);
 				}
 
@@ -106,34 +133,40 @@ class PUM_Admin_Ajax {
 				$user_role = ! empty( $_REQUEST['object_key'] ) ? $_REQUEST['object_key'] : null;
 
 				if ( ! empty( $include ) ) {
-					$include_query = PUM_Helpers::user_selectlist_query( array(
-						'role'    => $user_role,
-						'include' => $include,
-						'number'  => - 1,
-					), true );
+					$include_query = PUM_Helpers::user_selectlist_query(
+						array(
+							'role'    => $user_role,
+							'include' => $include,
+							'number'  => - 1,
+						),
+						true
+					);
 
 					foreach ( $include_query['items'] as $id => $name ) {
 						$results['items'][] = array(
 							'id'   => $id,
-							'text' => $name,
+							'text' => "$name (ID: $id)",
 						);
 					}
 
 					$results['total_count'] += (int) $include_query['total_count'];
 				}
 
-				$query = PUM_Helpers::user_selectlist_query( array(
-					'role'    => $user_role,
-					'search'  => ! empty( $_REQUEST['s'] ) ? '*' . $_REQUEST['s'] . '*' : null,
-					'paged'   => ! empty( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : null,
-					'exclude' => $exclude,
-					'number'  => 10,
-				), true );
+				$query = PUM_Helpers::user_selectlist_query(
+					array(
+						'role'    => $user_role,
+						'search'  => ! empty( $_REQUEST['s'] ) ? '*' . $_REQUEST['s'] . '*' : null,
+						'paged'   => ! empty( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : null,
+						'exclude' => $exclude,
+						'number'  => 10,
+					),
+					true
+				);
 
 				foreach ( $query['items'] as $id => $name ) {
 					$results['items'][] = array(
 						'id'   => $id,
-						'text' => $name,
+						'text' => "$name (ID: $id)",
 					);
 				}
 
