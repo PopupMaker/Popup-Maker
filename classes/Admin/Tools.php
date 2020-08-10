@@ -235,7 +235,7 @@ class PUM_Admin_Tools {
 		<form action="" method="POST">
 			<input type="hidden" name="pum_action" value="empty_error_log" />
 			<?php wp_nonce_field( 'pum_popup_empty_log_nonce', 'pum_popup_empty_log_nonce' ); ?>
-			<?php submit_button( 'Empty Error Log', '', 'popmake-download-sysinfo', false ); ?>
+			<?php submit_button( 'Empty Error Log', '', 'popmake-empty-log', false ); ?>
 		</form>
 		<div id="log-viewer">
 			<pre><?php echo esc_html( self::display_error_log() ); ?></pre>
