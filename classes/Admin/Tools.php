@@ -26,6 +26,7 @@ class PUM_Admin_Tools {
 		add_action( 'pum_tools_page_tab_betas', array( __CLASS__, 'betas_display' ) );
 		add_action( 'pum_tools_page_tab_system_info', array( __CLASS__, 'sysinfo_display' ) );
 		add_action( 'pum_tools_page_tab_error_log', array( __CLASS__, 'errorlog_display' ) );
+		add_action( 'pum_tools_page_tab_action_scheduler', array( __CLASS__, 'action_scheduler_display' ) );
 		add_action( 'pum_tools_page_tab_import', array( __CLASS__, 'import_display' ) );
 		add_action( 'pum_save_enabled_betas', array( __CLASS__, 'save_enabled_betas' ) );
 		add_action( 'pum_popup_sysinfo', array( __CLASS__, 'popup_sysinfo' ) );
@@ -122,10 +123,11 @@ class PUM_Admin_Tools {
 			$tabs = apply_filters(
 				'pum_tools_tabs',
 				array(
-					'betas'       => __( 'Beta Versions', 'popup-maker' ),
-					'system_info' => __( 'System Info', 'popup-maker' ),
-					'error_log'   => __( 'Error Log', 'popup-maker' ),
-					'import'      => __( 'Import / Export', 'popup-maker' ),
+					'betas'            => __( 'Beta Versions', 'popup-maker' ),
+					'system_info'      => __( 'System Info', 'popup-maker' ),
+					'error_log'        => __( 'Error Log', 'popup-maker' ),
+					'action_scheduler' => __( 'Scheduled Actions', 'popup-maker' ),
+					'import'           => __( 'Import / Export', 'popup-maker' ),
 				)
 			);
 
@@ -241,6 +243,19 @@ class PUM_Admin_Tools {
 			<pre><?php echo esc_html( self::display_error_log() ); ?></pre>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Displays the content for the Scheduled Actions tab.
+	 *
+	 * @uses ActionScheduler_AdminView::render_admin_ui()
+	 * @since 1.12.0
+	 */
+	public static function action_scheduler_display() {
+		if ( class_exists( 'ActionScheduler_AdminView' ) ) {
+			$test = new ActionScheduler_AdminView();
+			$test->render_admin_ui();
+		}
 	}
 
 	/**
