@@ -149,6 +149,9 @@ class PUM_Install {
 
 			$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'popmake%' OR option_name LIKE '_pum_%' OR option_name LIKE 'pum_%' OR option_name LIKE 'popup_analytics_%'" );
 
+			// Delete all Popup Maker related user meta.
+			$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE '_pum_%' OR meta_key lIKE 'pum_%'" );
+
 			// Reset JS/CSS assets for regeneration.
 			pum_reset_assets();
 
