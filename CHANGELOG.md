@@ -1,3 +1,6 @@
+### v1.11.2 - 08/12/2020
+* Fix: `wp_make_content_images_responsive` is deprecated, use `wp_filter_content_tags()` instead
+
 ### v1.11.1 - 07/22/2020
 * Fix: Form submission cookies no longer set with Contact Form 7 5.2 
 
