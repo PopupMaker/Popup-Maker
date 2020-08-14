@@ -136,8 +136,9 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
-= v1.11.2 - 08/12/2020 =
+= v1.11.2 - 08/14/2020 =
 * Fix: `wp_make_content_images_responsive` is deprecated, use `wp_filter_content_tags()` instead
+* Fix: IE 11 does not support JS Promises
 
 = v1.11.1 - 07/22/2020 =
 * Fix: Form submission cookies no longer set with Contact Form 7 5.2
