@@ -702,7 +702,7 @@ class PUM_Admin_Popups {
 						),
 						'position_from_trigger' => array(
 							'label'    => __( 'Position from Trigger', 'popup-maker' ),
-							'desc'     => sprintf( __( 'This will position the popup in relation to the %sClick Trigger%s.', 'popup-maker' ), '<a target="_blank" href="https://docs.wppopupmaker.com/article/144-trigger-click-open?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=position-from-trigger">', '</a>' ),
+							'desc'     => sprintf( __( 'This will position the popup in relation to the %sClick Trigger%s.', 'popup-maker' ), '<a target="_blank" href="https://docs.wppopupmaker.com/article/395-trigger-click-open-overview-methods?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=position-from-trigger">', '</a>' ),
 							'type'     => 'checkbox',
 							'std'      => false,
 							'priority' => 40,
