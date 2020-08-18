@@ -1,3 +1,11 @@
+### v1.11.2 - 08/17/2020
+* Fix: `wp_make_content_images_responsive` is deprecated, use `wp_filter_content_tags()` instead
+* Fix: IE 11 does not support JS Promises
+* Fix: Missing permission_callback on REST endpoint
+
+### v1.11.1 - 07/22/2020
+* Fix: Form submission cookies no longer set with Contact Form 7 5.2 
+
 ### v1.11.0 - 06/25/2020
 * Feature: Add new floating bar theme.
 * Feature: New guided tour of popup editor for first time users.
