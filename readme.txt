@@ -123,14 +123,16 @@ There are several common causes for this, check [this guide for help](https://do
 
 == Screenshots ==
 
-1. Create and edit an infinite number of unique popups to get any job done.
-2. Use our popup editor to customize every facet of your popup completely.
-3. Use the display settings in the popup editor and choose from an abundance of options, including responsive sizes and animation types!
-4. Add triggers to your popups to determine what causes it to open. Our free triggers include: Click Open and Auto Open.
-5. Choose from many conditions to target exactly who will (and will not) see your popups.
-6. Prevent your popups from being annoying to users by using cookies to disable them once they have been viewed.
-7. Create and edit an unlimited number of popup themes for every situation.
-8. Use the theme editor to choose from over 60 options and theme every element of your popup: Background Overlay, Popup Container, Close Button, Google Fonts, and much more.
+1. Example popup using our built-in Ninja Forms integration
+2. Example popup
+3. Example popup using our WooCommerce extension to make a popup appear when a product is added to their cart.
+4. Create and edit an infinite number of unique popups to get any job done.
+5. Use our popup editor to customize every facet of your popup completely.
+6. Add triggers to your popups to determine what causes it to open. Our free triggers include: Click Open and Auto Open.
+7. Choose from many conditions to target exactly who will (and will not) see your popups.
+8. Prevent your popups from being annoying to users by using cookies to disable them once they have been viewed.
+9. Create and edit an unlimited number of popup themes for every situation.
+10. Use the theme editor to choose from over 60 options and theme every element of your popup: Background Overlay, Popup Container, Close Button, Google Fonts, and much more.
 
 == Changelog ==
 
