@@ -26,19 +26,26 @@ class PUM_Integrations {
 
 	public static $form_submission;
 
+	/**
+	 * Initializes all form plugin and page builder integrations.
+	 */
 	public static function init() {
-		self::$integrations = apply_filters( 'pum_integrations', [
-			// Forms
-			'ninjaforms'     => new PUM_Integration_Form_NinjaForms,
-			'gravityforms'   => new PUM_Integration_Form_GravityForms,
-			'contactform7'   => new PUM_Integration_Form_ContactForm7,
-			'calderaforms'   => new PUM_Integration_Form_CalderaForms,
-			'mc4wp'          => new PUM_Integration_Form_MC4WP,
-			'wpforms'        => new PUM_Integration_Form_WPForms,
-			// Builders
-			'kingcomposer'   => new PUM_Integration_Builder_KingComposer,
-			'visualcomposer' => new PUM_Integration_Builder_VisualComposer,
-		] );
+		self::$integrations = apply_filters(
+			'pum_integrations',
+			[
+				// Forms.
+				'ninjaforms'      => new PUM_Integration_Form_NinjaForms(),
+				'gravityforms'    => new PUM_Integration_Form_GravityForms(),
+				'contactform7'    => new PUM_Integration_Form_ContactForm7(),
+				'calderaforms'    => new PUM_Integration_Form_CalderaForms(),
+				'mc4wp'           => new PUM_Integration_Form_MC4WP(),
+				'wpforms'         => new PUM_Integration_Form_WPForms(),
+				'formidableforms' => new PUM_Integration_Form_FormidableForms(),
+				// Builders.
+				'kingcomposer'    => new PUM_Integration_Builder_KingComposer(),
+				'visualcomposer'  => new PUM_Integration_Builder_VisualComposer(),
+			]
+		);
 
 		self::$preload_posts = isset( $_GET['page'] ) && $_GET['page'] == 'pum-settings';
 
