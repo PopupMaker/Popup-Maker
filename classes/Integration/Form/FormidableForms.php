@@ -116,8 +116,7 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	/**
 	 * Load custom styles for hacking some elements specifically inside popups, such as datepickers.
 	 *
-	 * @param array $css
-	 *
+	 * @param array $css All CSS enqueued for the popup.
 	 * @return array
 	 */
 	public function custom_styles( $css = [] ) {
