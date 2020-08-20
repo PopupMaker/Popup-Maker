@@ -5,6 +5,8 @@
 
 /**
  * Handles the integration with Formidable Forms (https://wordpress.org/plugins/formidable/)
+ *
+ * @since 1.12
  */
 class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form {
 
@@ -54,54 +56,52 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	/**
 	 * Return a single form by ID.
 	 *
-	 * @param string $id
-	 *
+	 * @param string $id The ID of the form.
 	 * @return mixed
 	 */
 	public function get_form( $id ) {
-		return FrmForm::getOne( $id );
+		return FrmForm::getOne( intval( $id ) );
 	}
 
 	/**
 	 * Returns an array of options for a select list.
+	 * Should be in the format of $formId => $formLabel.
 	 *
-	 * Should be in the format of $formId => $formLabel
-	 *
-	 * @return array
+	 * @return array The array of options
 	 */
 	public function get_form_selectlist() {
-//		$form_selectlist = [];
-//
-//		$forms = $this->get_forms();
-//
-//		foreach ( $forms as $form ) {
-//			$form_selectlist[ $form->ID ] = $form->post_title;
-//		}
-//
-//		return $form_selectlist;
+		$form_selectlist = [];
+
+		$forms = $this->get_forms();
+
+		foreach ( $forms as $form ) {
+			$form_selectlist[ $form->ID ] = $form->name;
+		}
+
+		return $form_selectlist;
 	}
 
 	/**
 	 * Hooks in a success functions specific to this provider for non AJAX submission handling.
 	 *
-	 * @param WPCF7_ContactForm $cfdata
+	 * @param int $entry_id The ID of the entry added.
+	 * @param int $form_id The ID of the form.
 	 */
-	public function on_success( $cfdata ) {
-//		/**
-//		 * @see pum_integrated_form_submission
-//		 */
-//		pum_integrated_form_submission( [
-//			'popup_id'      => isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false,
-//			'form_provider' => $this->key,
-//			'form_id'       => $cfdata->id(),
-//		] );
+	public function on_success( $entry_id, $form_id ) {
+		// @see pum_integrated_form_submission
+		pum_integrated_form_submission(
+			[
+				'popup_id'      => isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false,
+				'form_provider' => $this->key,
+				'form_id'       => $form_id,
+			]
+		);
 	}
 
 	/**
 	 * Load a custom script file to handle AJAX based submissions or other integrations with Popup Maker frontend.
 	 *
-	 * @param array $js
-	 *
+	 * @param array $js All JS to be enqueued for popup.
 	 * @return array
 	 */
 	public function custom_scripts( $js = [] ) {
