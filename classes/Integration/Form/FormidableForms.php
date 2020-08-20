@@ -3,6 +3,9 @@
  * Copyright (c) 2020, Popup Maker
  ************************************/
 
+/**
+ * Handles the integration with Formidable Forms (https://wordpress.org/plugins/formidable/)
+ */
 class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form {
 
 	/**
@@ -18,7 +21,7 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	 * Could be used for other initiations as well where needed.
 	 */
 	public function __construct() {
-		//add_action( '', array( $this, 'on_success' ), 1 );
+		add_action( 'frm_after_create_entry', array( $this, 'on_success' ), 1 );
 	}
 
 	/**
@@ -36,7 +39,7 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	 * @return bool
 	 */
 	public function enabled() {
-		//return class_exists( 'WPCF7' ) || ( defined( 'WPCF7_VERSION' ) && WPCF7_VERSION );
+		return class_exists( 'FrmEntry' );
 	}
 
 	/**
@@ -45,10 +48,7 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	 * @return array
 	 */
 	public function get_forms() {
-//		return get_posts( [
-//			'post_type'      => 'wpcf7_contact_form',
-//			'posts_per_page' => - 1,
-//		] );
+		return FrmForm::getAll();
 	}
 
 	/**
@@ -59,7 +59,7 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	 * @return mixed
 	 */
 	public function get_form( $id ) {
-//		return get_post( $id );
+		return FrmForm::getOne( $id );
 	}
 
 	/**
