@@ -23,7 +23,7 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	 * Could be used for other initiations as well where needed.
 	 */
 	public function __construct() {
-		add_action( 'frm_after_create_entry', array( $this, 'on_success' ), 1 );
+		add_action( 'frm_after_create_entry', array( $this, 'on_success' ), 1, 2 );
 	}
 
 	/**
@@ -75,7 +75,7 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 		$forms = $this->get_forms();
 
 		foreach ( $forms as $form ) {
-			$form_selectlist[ $form->ID ] = $form->name;
+			$form_selectlist[ $form->id ] = $form->name;
 		}
 
 		return $form_selectlist;
