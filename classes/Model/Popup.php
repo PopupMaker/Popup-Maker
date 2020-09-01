@@ -220,15 +220,15 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		foreach ( $settings as $key => $value ) {
 			$field = PUM_Admin_Popups::get_field( $key );
 
-			if ( false === $field && ! empty( $value ) )  {
-				// This is a value set programatically, not by a defined field. ex theme_slug
+			if ( false === $field && isset( $value ) ) {
+				// This is a value set programatically, not by a defined field. ex theme_slug.
 				$settings[ $key ] = $value;
 				continue;
 			}
 
 			if ( $field['private'] ) {
 				unset( $settings[ $key ] );
-			} elseif ( $field['type'] == 'checkbox' ) {
+			} elseif ( 'checkbox' === $field['type'] ) {
 				$settings[ $key ] = (bool) $value;
 			}
 		}
