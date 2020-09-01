@@ -76,6 +76,19 @@
 					}
 				});
 
+			// Dynamically switches example click trigger from popup-{popup-id} to using real ID.
+			$(document).on("pum_init", function() {
+				$("#pum-default-click-trigger-class:not(.pum-click-trigger-initialized)").each(function() {
+					$(this)
+						.addClass("pum-click-trigger-initialized")
+						.text(
+							new URLSearchParams(window.location.search).get(
+								"post"
+							)
+						);
+				});
+			});
+
 			document
 				.querySelector("#pum-popup-settings-container")
 				.addEventListener("click", function(e) {
