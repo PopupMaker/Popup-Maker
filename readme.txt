@@ -3,7 +3,7 @@ Contributors: danieliser, codeatlantic
 Author URI: https://wppopupmaker.com/?utm_source=readme-header&utm_campaign=Readme&utm_medium=author-uri
 Plugin URI: https://wppopupmaker.com/?utm_capmaign=Readme&utm_source=readme-header&utm_medium=plugin-uri
 Donate link:
-Tags:  marketing, popup, popups, optin, advertising, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, conversion, modal
+Tags:  marketing, popup, popups, optin, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, modal
 Requires at least: 4.1
 Tested up to: 5.5
 Requires PHP: 5.6
@@ -25,11 +25,13 @@ With Popup Maker, you can create popups such as:
 
 * Email opt-in popups,
 * Content upgrade popups,
-* Popups to greet visitors from ProductHunt,
+* Lead gen popups,
 * Contact form popups,
 * Coronavirus/COVID-19 announcements,
 * [EU cookie notices](https://ninjaforms.com/eu-cookie-notices-ninja-forms/),
-* Slide-ins,
+* Popups to greet visitors from ProductHunt (premium version required),
+* WooCommerce upsell popups (premium version required),
+* WooCommerce cross-sell popups (premium version required),
 * & more.
 
 Check out some examples in our video below:
