@@ -22,6 +22,21 @@ var cookies;
 
                 return cookie;
             },
+	        getCookieDefaults: function(event) {
+		        var cookie = cookies.get_cookie(event);
+		        var defaultSettings = {};
+		        for (var tab in cookie.fields) {
+			        if (cookie.fields.hasOwnProperty(tab)) {
+				        for (var setting in cookie.fields[tab]) {
+							if (cookie.fields[tab].hasOwnProperty(setting)) {
+						        defaultSettings[setting] = cookie.fields[tab][setting].std;
+					        }
+				        }
+			        }
+		        }
+		        defaultSettings.name = 'pum-' + $('#post_ID').val();
+		        return defaultSettings;
+	        },
             parseFields: function (cookie) {
                 _.each(cookie.fields, function (fields, tabID) {
                     _.each(fields, function (field, fieldID) {
@@ -95,13 +110,11 @@ var cookies;
              * @param args
              */
             insertCookie: function ($editor, args) {
+            	var defaultSettings = cookies.getCookieDefaults(args.event);
                 args = $.extend(true, {}, {
                     event: 'on_popup_close',
-                    settings: {
-                        name: name || 'pum-' + $('#post_ID').val()
-                    }
+                    settings: defaultSettings
                 }, args);
-
                 cookies.rows.add($editor, args);
             },
             template: {
