@@ -387,7 +387,7 @@ class PUM_Admin_Extend {
 
 		?>
 
-        <h4><?php _e( 'These form plugins work in our popups out of the box.', 'popup-maker' ); ?></h4>
+        <h2><?php _e( 'These form plugins work in our popups out of the box.', 'popup-maker' ); ?></h2>
 
         <ul class="extensions-available">
 			<?php
@@ -429,7 +429,7 @@ class PUM_Admin_Extend {
 
 		?>
 
-        <h4><?php _e( 'These page builder plugins work in our popups out of the box.', 'popup-maker' ); ?></h4>
+        <h2><?php _e( 'These page builder plugins work in our popups out of the box.', 'popup-maker' ); ?></h2>
 
         <ul class="extensions-available">
 			<?php
@@ -469,7 +469,7 @@ class PUM_Admin_Extend {
 	public static function render_other_list() {
 		$recommended_plugins = self::other_plugins();
 		?>
-		<h4><?php _e( 'These plugins work great alongside our popups!', 'popup-maker' ); ?></h4>
+		<h2><?php _e( 'These plugins work great alongside our popups!', 'popup-maker' ); ?></h2>
 
 		<ul class="extensions-available">
 			<?php
@@ -507,7 +507,7 @@ class PUM_Admin_Extend {
 
 		?>
 
-        <h4><?php _e( 'These extensions add extra functionality to your popups.', 'popup-maker' ); ?></h4>
+        <h2><?php _e( 'Extend Popup Maker with additional premium features', 'popup-maker' ); ?></h2>
 
         <ul class="extensions-available">
 			<?php
