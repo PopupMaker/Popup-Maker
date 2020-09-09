@@ -88,6 +88,13 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	 * @param int $form_id The ID of the form.
 	 */
 	public function on_success( $entry_id, $form_id ) {
+
+		// Determine if form has AJAX submission enabled. Only do our form submission method if AJAX is not enabled.
+		$form = $this->get_form( intval( $form_id ) );
+		if ( isset( $form->options['ajax_submit'] ) && true == $form->options['ajax_submit'] ) {
+			return;
+		}
+
 		// @see pum_integrated_form_submission
 		pum_integrated_form_submission(
 			[
