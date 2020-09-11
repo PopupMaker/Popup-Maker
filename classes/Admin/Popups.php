@@ -1221,9 +1221,10 @@ class PUM_Admin_Popups {
 					} else {
 						$active = intval( $active );
 					}
+					$nonce = wp_create_nonce( "pum_save_active_state_{$popup->ID}" );
 					?>
 					<label for="pum-active-toggle-<?php echo esc_attr( $popup->ID ); ?>" aria-label="Switch to activate popup"></label>
-					<input id="pum-active-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( 1, $active ); ?> class="pum-active-toggle-button" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
+					<input id="pum-active-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( 1, $active ); ?> class="pum-active-toggle-button" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
 					<?php
 					break;
 				case 'popup_category':

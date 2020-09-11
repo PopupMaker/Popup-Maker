@@ -29,10 +29,6 @@ class PUM_Admin_Ajax {
 	 * @since 1.12.0
 	 */
 	public static function save_popup_active_state() {
-		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'pum_save_active_state' ) ) {
-			wp_send_json_error();
-		}
-
 		$args = wp_parse_args(
 			$_REQUEST,
 			array(
@@ -51,6 +47,11 @@ class PUM_Admin_Ajax {
 		$active = intval( $args['active'] );
 		if ( ! in_array( $active, array( 0, 1 ), true ) ) {
 			wp_send_json_error( 'Invalid active state provided.' );
+		}
+
+		// Verify the nonce.
+		if ( ! wp_verify_nonce( $_REQUEST['nonce'], "pum_save_active_state_$popup_id" ) ) {
+			wp_send_json_error();
 		}
 
 		// Get our popup and previous value.

@@ -8,8 +8,9 @@
 	 *
 	 * @param {number} popupID The ID for the popup.
 	 * @param {number} activeState 1 for active, 0 for inactive.
+	 * @param {string} nonce The nonce for the action.
 	 */
-	function changeActiveState(popupID, activeState) {
+	function changeActiveState(popupID, activeState, nonce) {
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -17,7 +18,7 @@
 			url: ajaxurl,
 			data: {
 				action: "pum_save_active_state",
-				nonce: "",
+				nonce: nonce,
 				popupID: popupID,
 				active: activeState
 			}
@@ -32,7 +33,11 @@
 			if (true === e.target.checked) {
 				newState = 1;
 			}
-			changeActiveState($button.data("popup-id"), newState);
+			changeActiveState(
+				$button.data("popup-id"),
+				newState,
+				$button.data("nonce")
+			);
 		});
 	});
 })(jQuery);
