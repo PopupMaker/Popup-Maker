@@ -20,6 +20,57 @@ class PUM_Admin_Ajax {
 	public static function init() {
 		add_action( 'wp_ajax_pum_object_search', array( __CLASS__, 'object_search' ) );
 		add_action( 'wp_ajax_pum_process_batch_request', array( __CLASS__, 'process_batch_request' ) );
+		add_action( 'wp_ajax_pum_save_active_state', array( __CLASS__, 'save_popup_active_state' ) );
+	}
+
+	/**
+	 * Sets the active meta field to on or off
+	 *
+	 * @since 1.12.0
+	 */
+	public static function save_popup_active_state() {
+		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'pum_save_active_state' ) ) {
+			wp_send_json_error();
+		}
+
+		$args = wp_parse_args(
+			$_REQUEST,
+			array(
+				'popup_id' => 0,
+				'active'   => 1,
+			)
+		);
+
+		// Ensures Popup ID is an int and not 0.
+		$popup_id = intval( $args['popup_id'] );
+		if ( 0 === $popup_id ) {
+			wp_send_json_error( 'Invalid popup ID provided.' );
+		}
+
+		// Ensures active state is 0 or 1.
+		$active = intval( $args['active'] );
+		if ( ! in_array( $active, array( 0, 1 ), true ) ) {
+			wp_send_json_error( 'Invalid active state provided.' );
+		}
+
+		// Get our popup and previous value.
+		$popup    = pum_get_popup( $popup_id );
+		$previous = $popup->get_meta( 'active ' );
+
+		// If value is the same, bail now.
+		if ( $previous === $active ) {
+			wp_send_json_success();
+		}
+
+		// Update our value.
+		$results = $popup->update_meta( 'active', $active );
+
+		if ( false === $results ) {
+			wp_send_json_error( 'Error updating active state.' );
+			PUM_Utils_Logging::instance()->log( "Error updating active state. Previous value: $previous. New value: $active" );
+		} else {
+			wp_send_json_success();
+		}
 	}
 
 	/**
