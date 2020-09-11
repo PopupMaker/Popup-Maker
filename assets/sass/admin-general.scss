@@ -50,8 +50,9 @@ Styles for toggle buttons
 		right: 0;
 		bottom: 0;
 		background-color: #fff;
-		transition: background-color 0.4s;
+		transition: background-color 0.2s ease;
 		border-radius: 9px;
+		border: 1px solid #1e1e1e;
 
 		&::before {
 			position: absolute;
@@ -60,8 +61,8 @@ Styles for toggle buttons
 			width: 14px;
 			left: 2px;
 			bottom: 1px;
-			background-color: #000;
-			transition: 0.4s;
+			background-color: #1e1e1e;
+			transition: 0.2s ease;
 			border-radius: 50%;
 		}
 	}
@@ -76,11 +77,11 @@ Styles for toggle buttons
 		}
 
 		&:checked + label {
-			background-color: #fff;
+			background-color: #9ab927;
 		}
 
 		&:checked + label::before {
-			background-color: #9ab927;
+			background-color: #fff;
 			transform: translateX(15px);
 		}
 	}
