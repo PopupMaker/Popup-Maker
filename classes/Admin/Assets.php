@@ -100,6 +100,10 @@ class PUM_Admin_Assets {
 			wp_enqueue_script( 'pum-admin-batch' );
 		}
 
+		if ( pum_is_all_popups_page() ) {
+			wp_enqueue_script( 'pum-admin-general' );
+		}
+
 		if ( pum_is_popup_editor() ) {
 			wp_enqueue_script( 'pum-admin-popup-editor' );
 		}
