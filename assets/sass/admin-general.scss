@@ -49,18 +49,18 @@ Styles for toggle buttons
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background-color: #ccc;
-		transition: 0.4s;
+		background-color: #fff;
+		transition: background-color 0.4s;
 		border-radius: 9px;
 
 		&::before {
 			position: absolute;
 			content: "";
-			height: 16px;
-			width: 16px;
+			height: 14px;
+			width: 14px;
 			left: 2px;
 			bottom: 1px;
-			background-color: #fff;
+			background-color: #000;
 			transition: 0.4s;
 			border-radius: 50%;
 		}
@@ -72,11 +72,11 @@ Styles for toggle buttons
 		height: 0;
 
 		&:focus + label {
-			box-shadow: 0 0 1px #2196f3;
+			box-shadow: 2px 2px 7px #2196f3;
 		}
 
 		&:checked + label {
-			background-color: #a8cb29;
+			background-color: #fff;
 		}
 
 		&:checked + label::before {
