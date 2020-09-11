@@ -38,7 +38,7 @@ class PUM_Admin_Ajax {
 		);
 
 		// Ensures Popup ID is an int and not 0.
-		$popup_id = intval( $args['popup_id'] );
+		$popup_id = intval( $args['popupID'] );
 		if ( 0 === $popup_id ) {
 			wp_send_json_error( 'Invalid popup ID provided.' );
 		}

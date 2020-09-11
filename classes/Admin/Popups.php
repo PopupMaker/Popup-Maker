@@ -1216,7 +1216,7 @@ class PUM_Admin_Popups {
 					break;
 				case 'active':
 					$active = $popup->get_meta( 'active' );
-					if ( empty( $active ) ) {
+					if ( '' === $active ) {
 						$active = 1;
 					} else {
 						$active = intval( $active );
