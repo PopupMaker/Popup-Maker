@@ -48,6 +48,35 @@ class PUM_Admin_Popups {
 		add_action( 'load-edit.php', array( __CLASS__, 'load' ), 9999 );
 		add_action( 'restrict_manage_posts', array( __CLASS__, 'add_popup_filters' ), 100 );
 		add_filter( 'post_row_actions', array( __CLASS__, 'add_id_row_actions' ), 2, 100 );
+
+		add_action( 'post_submitbox_misc_actions', array( __CLASS__, 'add_active_toggle_editor' ), 10, 1 );
+	}
+
+	/**
+	 * Adds our active state toggle to the "Publish" meta box.
+	 *
+	 * @since 1.12
+	 * @param WP_POST $post The current post (i.e. the popup).
+	 */
+	public static function add_active_toggle_editor( $post ) {
+		$popup = pum_get_popup( $post->ID );
+		$active = $popup->get_meta( 'active' );
+		if ( '' === $active ) {
+			$active = 1;
+		} else {
+			$active = intval( $active );
+		}
+		$nonce = wp_create_nonce( "pum_save_active_state_{$popup->ID}" );
+		?>
+		<div class="misc-pub-section" style="display:flex;">
+			<span style="font-weight: bold; margin-right: 10px;"><?php echo 1 === $active ? 'Active' : 'Inactive'; ?> </span>
+			<div class="pum-toggle-button">
+				<input id="pum-active-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( 1, $active ); ?> class="pum-active-toggle-button" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
+				<label for="pum-active-toggle-<?php echo esc_attr( $popup->ID ); ?>" aria-label="Switch to activate popup"></label>
+			</div>
+		</div>
+
+		<?php
 	}
 
 	/**
