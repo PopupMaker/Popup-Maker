@@ -1215,7 +1215,16 @@ class PUM_Admin_Popups {
 					echo esc_html( $popup->get_title() );
 					break;
 				case 'active':
-					echo '<button>Active</button>';
+					$active = $popup->get_meta( 'active' );
+					if ( empty( $active ) ) {
+						$active = 1;
+					} else {
+						$active = intval( $active );
+					}
+					?>
+					<label for="pum-active-toggle-<?php echo esc_attr( $popup->ID ); ?>" aria-label="Switch to activate popup"></label>
+					<input id="pum-active-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( 1, $active ); ?> class="pum-active-toggle-button" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
+					<?php
 					break;
 				case 'popup_category':
 					echo get_the_term_list( $post_id, 'popup_category', '', ', ', '' );

@@ -25,16 +25,14 @@
 	}
 
 	$(function() {
-		$(".pum-active-toggle-button").on("click", function(e) {
+		$(".pum-active-toggle-button").on("change", function(e) {
 			e.preventDefault();
 			var $button = $(this);
-			var currentState = $button.data("active-state");
-			var newState = 1;
-			if (1 === parseInt(currentState)) {
-				newState = 0;
+			var newState = 0;
+			if (true === e.target.checked) {
+				newState = 1;
 			}
 			changeActiveState($button.data("popup-id"), newState);
-			$button.data("active-state", newState);
 		});
 	});
 })(jQuery);

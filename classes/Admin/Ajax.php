@@ -55,7 +55,7 @@ class PUM_Admin_Ajax {
 
 		// Get our popup and previous value.
 		$popup    = pum_get_popup( $popup_id );
-		$previous = $popup->get_meta( 'active ' );
+		$previous = $popup->get_meta( 'active' );
 
 		// If value is the same, bail now.
 		if ( $previous === $active ) {
@@ -67,7 +67,7 @@ class PUM_Admin_Ajax {
 
 		if ( false === $results ) {
 			wp_send_json_error( 'Error updating active state.' );
-			PUM_Utils_Logging::instance()->log( "Error updating active state. Previous value: $previous. New value: $active" );
+			PUM_Utils_Logging::instance()->log( "Error updating active state on $popup_id. Previous value: $previous. New value: $active" );
 		} else {
 			wp_send_json_success();
 		}
