@@ -1164,6 +1164,7 @@ class PUM_Admin_Popups {
 		$columns = array(
 			'cb'          => '<input type="checkbox"/>',
 			'title'       => __( 'Name', 'popup-maker' ),
+			'active'      => __( 'Active', 'popup-maker' ),
 			'popup_title' => __( 'Title', 'popup-maker' ),
 			'class'       => __( 'CSS Classes', 'popup-maker' ),
 			'opens'       => __( 'Opens', 'popup-maker' ),
@@ -1171,7 +1172,7 @@ class PUM_Admin_Popups {
 			//'conversion_rate' => __( 'Conversion Rate', 'popup-maker' ),
 		);
 
-		// Add the date column preventing our own translation
+		// Add the date column preventing our own translation.
 		if ( ! empty( $_columns['date'] ) ) {
 			$columns['date'] = $_columns['date'];
 		}
@@ -1212,6 +1213,9 @@ class PUM_Admin_Popups {
 			switch ( $column_name ) {
 				case 'popup_title':
 					echo esc_html( $popup->get_title() );
+					break;
+				case 'active':
+					echo '<button>Active</button>';
 					break;
 				case 'popup_category':
 					echo get_the_term_list( $post_id, 'popup_category', '', ', ', '' );
