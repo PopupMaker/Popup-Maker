@@ -39,8 +39,8 @@ Styles for toggle buttons
 ************/
 .pum-toggle-button {
 	position: relative;
-	width: 60px;
-	height: 34px;
+	width: 36px;
+	height: 18px;
 
 	label {
 		position: absolute;
@@ -51,15 +51,15 @@ Styles for toggle buttons
 		bottom: 0;
 		background-color: #ccc;
 		transition: 0.4s;
-		border-radius: 34px;
+		border-radius: 9px;
 
 		&::before {
 			position: absolute;
 			content: "";
-			height: 26px;
-			width: 26px;
-			left: 4px;
-			bottom: 4px;
+			height: 16px;
+			width: 16px;
+			left: 2px;
+			bottom: 1px;
 			background-color: #fff;
 			transition: 0.4s;
 			border-radius: 50%;
@@ -81,7 +81,7 @@ Styles for toggle buttons
 
 		&:checked + label::before {
 			background-color: #9ab927;
-			transform: translateX(26px);
+			transform: translateX(15px);
 		}
 	}
 }
