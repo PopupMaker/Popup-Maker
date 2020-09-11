@@ -36,8 +36,8 @@ class PUM_Admin_Ajax {
 		$args = wp_parse_args(
 			$_REQUEST,
 			array(
-				'popup_id' => 0,
-				'active'   => 1,
+				'popupID' => 0,
+				'active'  => 1,
 			)
 		);
 
