@@ -34,6 +34,58 @@ Styles for our log viewers
 	white-space: pre-wrap;
 }
 
+/************
+Styles for toggle buttons
+************/
+.pum-toggle-button {
+	position: relative;
+	width: 60px;
+	height: 34px;
+
+	label {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #ccc;
+		transition: 0.4s;
+		border-radius: 34px;
+
+		&::before {
+			position: absolute;
+			content: "";
+			height: 26px;
+			width: 26px;
+			left: 4px;
+			bottom: 4px;
+			background-color: #fff;
+			transition: 0.4s;
+			border-radius: 50%;
+		}
+	}
+
+	input {
+		opacity: 0;
+		width: 0;
+		height: 0;
+
+		&:focus + label {
+			box-shadow: 0 0 1px #2196f3;
+		}
+
+		&:checked + label {
+			background-color: #a8cb29;
+		}
+
+		&:checked + label::before {
+			background-color: #9ab927;
+			transform: translateX(26px);
+		}
+	}
+}
+
 .wp-core-ui .button-with-icon {
 	display: inline-flex;
 	align-items: center;
