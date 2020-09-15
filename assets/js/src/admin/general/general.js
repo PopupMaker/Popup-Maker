@@ -4,36 +4,36 @@
 
 (function($) {
 	/**
-	 * Changes the current active state of supplied popup
+	 * Changes the current enabled state of supplied popup
 	 *
 	 * @param {number} popupID The ID for the popup.
-	 * @param {number} activeState 1 for active, 0 for inactive.
+	 * @param {number} enabledState 1 for active, 0 for inactive.
 	 * @param {string} nonce The nonce for the action.
 	 */
-	function changeActiveState(popupID, activeState, nonce) {
+	function changeEnabledState(popupID, enabledState, nonce) {
 		$.ajax({
 			type: "POST",
 			dataType: "json",
 			// eslint-disable-next-line no-undef
 			url: ajaxurl,
 			data: {
-				action: "pum_save_active_state",
+				action: "pum_save_enabled_state",
 				nonce: nonce,
 				popupID: popupID,
-				active: activeState
+				enabled: enabledState
 			}
 		});
 	}
 
 	$(function() {
-		$(".pum-active-toggle-button").on("change", function(e) {
+		$(".pum-enabled-toggle-button").on("change", function(e) {
 			e.preventDefault();
 			var $button = $(this);
 			var newState = 0;
 			if (true === e.target.checked) {
 				newState = 1;
 			}
-			changeActiveState(
+			changeEnabledState(
 				$button.data("popup-id"),
 				newState,
 				$button.data("nonce")

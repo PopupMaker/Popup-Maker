@@ -49,30 +49,30 @@ class PUM_Admin_Popups {
 		add_action( 'restrict_manage_posts', array( __CLASS__, 'add_popup_filters' ), 100 );
 		add_filter( 'post_row_actions', array( __CLASS__, 'add_id_row_actions' ), 2, 100 );
 
-		add_action( 'post_submitbox_misc_actions', array( __CLASS__, 'add_active_toggle_editor' ), 10, 1 );
+		add_action( 'post_submitbox_misc_actions', array( __CLASS__, 'add_enabled_toggle_editor' ), 10, 1 );
 	}
 
 	/**
-	 * Adds our active state toggle to the "Publish" meta box.
+	 * Adds our enabled state toggle to the "Publish" meta box.
 	 *
 	 * @since 1.12
 	 * @param WP_POST $post The current post (i.e. the popup).
 	 */
-	public static function add_active_toggle_editor( $post ) {
-		$popup = pum_get_popup( $post->ID );
-		$active = $popup->get_meta( 'active' );
-		if ( '' === $active ) {
-			$active = 1;
+	public static function add_enabled_toggle_editor( $post ) {
+		$popup   = pum_get_popup( $post->ID );
+		$enabled = $popup->get_meta( 'enabled' );
+		if ( '' === $enabled ) {
+			$enabled = 1;
 		} else {
-			$active = intval( $active );
+			$enabled = intval( $enabled );
 		}
-		$nonce = wp_create_nonce( "pum_save_active_state_{$popup->ID}" );
+		$nonce = wp_create_nonce( "pum_save_enabled_state_{$popup->ID}" );
 		?>
 		<div class="misc-pub-section" style="display:flex;">
-			<span style="font-weight: bold; margin-right: 10px;"><?php echo 1 === $active ? 'Active' : 'Inactive'; ?> </span>
+			<span style="font-weight: bold; margin-right: 10px;">Popup Enabled </span>
 			<div class="pum-toggle-button">
-				<input id="pum-active-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( 1, $active ); ?> class="pum-active-toggle-button" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
-				<label for="pum-active-toggle-<?php echo esc_attr( $popup->ID ); ?>" aria-label="Switch to activate popup"></label>
+				<input id="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( 1, $enabled ); ?> class="pum-enabled-toggle-button" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
+				<label for="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" aria-label="Switch to enable popup"></label>
 			</div>
 		</div>
 
@@ -1193,7 +1193,7 @@ class PUM_Admin_Popups {
 		$columns = array(
 			'cb'          => '<input type="checkbox"/>',
 			'title'       => __( 'Name', 'popup-maker' ),
-			'active'      => __( 'Active', 'popup-maker' ),
+			'enabled'     => __( 'Enabled', 'popup-maker' ),
 			'popup_title' => __( 'Title', 'popup-maker' ),
 			'class'       => __( 'CSS Classes', 'popup-maker' ),
 			'opens'       => __( 'Opens', 'popup-maker' ),
@@ -1243,18 +1243,18 @@ class PUM_Admin_Popups {
 				case 'popup_title':
 					echo esc_html( $popup->get_title() );
 					break;
-				case 'active':
-					$active = $popup->get_meta( 'active' );
-					if ( '' === $active ) {
-						$active = 1;
+				case 'enabled':
+					$enabled = $popup->get_meta( 'enabled' );
+					if ( '' === $enabled ) {
+						$enabled = 1;
 					} else {
-						$active = intval( $active );
+						$enabled = intval( $enabled );
 					}
-					$nonce = wp_create_nonce( "pum_save_active_state_{$popup->ID}" );
+					$nonce = wp_create_nonce( "pum_save_enabled_state_{$popup->ID}" );
 					?>
 					<div class="pum-toggle-button">
-						<input id="pum-active-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( 1, $active ); ?> class="pum-active-toggle-button" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
-						<label for="pum-active-toggle-<?php echo esc_attr( $popup->ID ); ?>" aria-label="Switch to activate popup"></label>
+						<input id="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( 1, $enabled ); ?> class="pum-enabled-toggle-button" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
+						<label for="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" aria-label="Switch to enable popup"></label>
 					</div>
 					<?php
 					break;

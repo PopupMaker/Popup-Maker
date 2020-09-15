@@ -826,9 +826,9 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			// Published/private
 		}
 
-		// If popup is not active, this popup is not loadable.
-		$active = $this->get_meta( 'active' );
-		if ( false === $active || '0' === $active ) {
+		// If popup is not enabled, this popup is not loadable.
+		$enabled = $this->get_meta( 'enabled' );
+		if ( false === $enabled || '0' === $enabled ) {
 			return false;
 		}
 

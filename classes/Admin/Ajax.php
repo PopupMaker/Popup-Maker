@@ -20,15 +20,15 @@ class PUM_Admin_Ajax {
 	public static function init() {
 		add_action( 'wp_ajax_pum_object_search', array( __CLASS__, 'object_search' ) );
 		add_action( 'wp_ajax_pum_process_batch_request', array( __CLASS__, 'process_batch_request' ) );
-		add_action( 'wp_ajax_pum_save_active_state', array( __CLASS__, 'save_popup_active_state' ) );
+		add_action( 'wp_ajax_pum_save_enabled_state', array( __CLASS__, 'save_popup_enabled_state' ) );
 	}
 
 	/**
-	 * Sets the active meta field to on or off
+	 * Sets the enabled meta field to on or off
 	 *
 	 * @since 1.12.0
 	 */
-	public static function save_popup_active_state() {
+	public static function save_popup_enabled_state() {
 		$args = wp_parse_args(
 			$_REQUEST,
 			array(
@@ -44,31 +44,31 @@ class PUM_Admin_Ajax {
 		}
 
 		// Ensures active state is 0 or 1.
-		$active = intval( $args['active'] );
-		if ( ! in_array( $active, array( 0, 1 ), true ) ) {
-			wp_send_json_error( 'Invalid active state provided.' );
+		$enabled = intval( $args['enabled'] );
+		if ( ! in_array( $enabled, array( 0, 1 ), true ) ) {
+			wp_send_json_error( 'Invalid enabled state provided.' );
 		}
 
 		// Verify the nonce.
-		if ( ! wp_verify_nonce( $_REQUEST['nonce'], "pum_save_active_state_$popup_id" ) ) {
+		if ( ! wp_verify_nonce( $_REQUEST['nonce'], "pum_save_enabled_state_$popup_id" ) ) {
 			wp_send_json_error();
 		}
 
 		// Get our popup and previous value.
 		$popup    = pum_get_popup( $popup_id );
-		$previous = $popup->get_meta( 'active' );
+		$previous = $popup->get_meta( 'enabled' );
 
 		// If value is the same, bail now.
-		if ( $previous === $active ) {
+		if ( $previous === $enabled ) {
 			wp_send_json_success();
 		}
 
 		// Update our value.
-		$results = $popup->update_meta( 'active', $active );
+		$results = $popup->update_meta( 'enabled', $enabled );
 
 		if ( false === $results ) {
-			wp_send_json_error( 'Error updating active state.' );
-			PUM_Utils_Logging::instance()->log( "Error updating active state on $popup_id. Previous value: $previous. New value: $active" );
+			wp_send_json_error( 'Error updating enabled state.' );
+			PUM_Utils_Logging::instance()->log( "Error updating enabled state on $popup_id. Previous value: $previous. New value: $enabled" );
 		} else {
 			wp_send_json_success();
 		}
