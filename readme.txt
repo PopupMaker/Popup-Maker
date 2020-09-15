@@ -26,6 +26,7 @@ With Popup Maker, you can create popups such as:
 * Email opt-in popups,
 * Content upgrade popups,
 * Lead gen popups,
+* Ecommerce popups,
 * Contact form popups,
 * Coronavirus/COVID-19 announcements,
 * [EU cookie notices](https://ninjaforms.com/eu-cookie-notices-ninja-forms/),
@@ -125,6 +126,15 @@ Check out some of our most popular plugins:
 [contentcontrol]: https://wordpress.org/plugins/content-control/ "Control Who Can Access Content"
 
 == Frequently Asked Questions ==
+
+= What are some ways popups can increase my WooCommerce store's sales and revenues? =
+Many people don't consider popups when trying to find ways to increase conversion rates and revenue on their WooCommerce site but they are actually very effective.
+
+Some popups we have seen work well for ecommerce sites include:
+
+* Cross-sell popups - recommending a companion product when viewing or adding a product to their cart
+* Upsell popups - recommending a higher-tier product when viewing or adding a product to their cart
+* Cart abandonment popups - offering discounts or support when someone is about to leave the checkout page
 
 = Where is your documentation? =
 You can find our documentation over on [our docs site](https://docs.wppopupmaker.com?utm_campaign=readme&utm_medium=referral&utm_source=readme-faqs&utm_content=documentation)
