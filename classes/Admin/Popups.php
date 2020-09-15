@@ -59,6 +59,9 @@ class PUM_Admin_Popups {
 	 * @param WP_POST $post The current post (i.e. the popup).
 	 */
 	public static function add_enabled_toggle_editor( $post ) {
+		if ( 'publish' !== $post->post_status || 'popup' !== $post->post_type ) {
+			return;
+		}
 		$popup   = pum_get_popup( $post->ID );
 		$enabled = $popup->get_meta( 'enabled' );
 		if ( '' === $enabled ) {
@@ -1227,10 +1230,10 @@ class PUM_Admin_Popups {
 	 * @param int    $post_id     (Post) ID
 	 */
 	public static function render_columns( $column_name, $post_id ) {
-		if ( get_post_type( $post_id ) == 'popup' ) {
+		$post = get_post( $post_id );
+		if ( 'popup' === $post->post_type ) {
 
 			$popup = pum_get_popup( $post_id );
-			//setup_postdata( $popup );
 
 			/**
 			 * Uncomment if need to check for permissions on certain columns.
@@ -1244,19 +1247,25 @@ class PUM_Admin_Popups {
 					echo esc_html( $popup->get_title() );
 					break;
 				case 'enabled':
-					$enabled = $popup->get_meta( 'enabled' );
-					if ( '' === $enabled ) {
-						$enabled = 1;
+					if ( 'publish' === $post->post_status ) {
+						$enabled = $popup->get_meta( 'enabled' );
+						if ( '' === $enabled ) {
+							$enabled = 1;
+						} else {
+							$enabled = intval( $enabled );
+						}
+						$nonce = wp_create_nonce( "pum_save_enabled_state_{$popup->ID}" );
+						?>
+						<div class="pum-toggle-button">
+							<input id="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( 1, $enabled ); ?> class="pum-enabled-toggle-button" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
+							<label for="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" aria-label="Switch to enable popup"></label>
+						</div>
+						<?php
 					} else {
-						$enabled = intval( $enabled );
+						?>
+						<p>Popup not published</p>
+						<?php
 					}
-					$nonce = wp_create_nonce( "pum_save_enabled_state_{$popup->ID}" );
-					?>
-					<div class="pum-toggle-button">
-						<input id="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( 1, $enabled ); ?> class="pum-enabled-toggle-button" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
-						<label for="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" aria-label="Switch to enable popup"></label>
-					</div>
-					<?php
 					break;
 				case 'popup_category':
 					echo get_the_term_list( $post_id, 'popup_category', '', ', ', '' );
