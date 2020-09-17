@@ -86,7 +86,7 @@ class PUM_Admin_Popups {
 	public static function add_popup_id( $post ) {
 		if ( 'popup' === $post->post_type ) {
 			?>
-			<p style="margin:0;font-size:12px;">ID: <?php echo esc_html( $post->ID ); ?></p>
+			<p style="margin:0;font-size:12px;">ID: <span id="popup-id" data-popup-id="<?php echo esc_attr( $post->ID ); ?>"><?php echo esc_html( $post->ID ); ?></span></p>
 			<?php
 		}
 	}
