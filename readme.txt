@@ -178,6 +178,21 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
+= v1.12.0 - 09/17/2020 =
+* Feature: Add the ability to turn on/off popups [Issue #544](https://github.com/PopupMaker/Popup-Maker/issues/544)
+* Feature: Formidable Forms integration [Issue #750](https://github.com/PopupMaker/Popup-Maker/issues/750)
+* Feature: New error log tab for viewing, downloading, and emptying the error log [Issue #575](https://github.com/PopupMaker/Popup-Maker/issues/575)
+* Feature: New minimal popup theme for use with content created by page builders [Issue #759](https://github.com/PopupMaker/Popup-Maker/issues/759)
+* Feature: Can now target WooCommerce "Subscriptions" account page. Thanks @bydrewpaul [Issue #849](https://github.com/PopupMaker/Popup-Maker/issues/849)
+* Feature: Can now view all scheduled actions on the "Tools" page [Issue #859](https://github.com/PopupMaker/Popup-Maker/issues/859)
+* Improvement: Add popup ID to the top of the popup editor [Issue #583](https://github.com/PopupMaker/Popup-Maker/issues/583)
+* Improvement: Show default click trigger classes in trigger editor [Issue #584](https://github.com/PopupMaker/Popup-Maker/issues/584)
+* Improvement: Show post ID in postselect drop-downs [Issue #660](https://github.com/PopupMaker/Popup-Maker/issues/660)
+* Improvement: Label older form triggers/cookies as deprecated (or similar) [Issue #874](https://github.com/PopupMaker/Popup-Maker/issues/874)
+* Fix: Form submission cookie not automatically setting "form" key [Issue #866](https://github.com/PopupMaker/Popup-Maker/issues/866)
+* Fix: Trying to access 'private' key when the field is false error [Issue #873](https://github.com/PopupMaker/Popup-Maker/issues/873)
+* Fix: _pum_subscribers table fails to create on MySQL 8.0.19+ due to VALUES keyword [Issue #876](https://github.com/PopupMaker/Popup-Maker/issues/876)
+
 = v1.11.2 - 08/17/2020 =
 * Fix: `wp_make_content_images_responsive` is deprecated, use `wp_filter_content_tags()` instead
 * Fix: IE 11 does not support JS Promises
@@ -198,29 +213,3 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 * Tweak: Add popup ID to quick links on All Popups.
 * Tweak: Move CSS and JS for our admin bar node to external file.
 * Tweak: Add our new optional telemetry system.
-
-= v1.10.2 - 06/09/2020 =
-* Fix: Popup Settings not working when WP Forms is active without forms
-* Fix: Missing closing div in new [popup_cookie] shortcode.
-
-= v1.10.1 - 04/21/2020 =
-* Fix: Typo in filter name caused extra p tags.
-* Fix: Add wp version check to prevent calling block functions on older versions or classicpress.
-* Fix: Font Awesome support now works for v4 fonts.
-
-= v1.10.0 - 04/20/2020 =
-* Feature: Display presets for top bar, bottom right slide-ins, full-screen popups & bottom left notifications to make it simple to get common setups done much quicker
-* Feature: Popup Trigger inline text format for the block editor.
-* Feature: Turn any block in Gutenberg block editor into a popup trigger.
-* Feature: Font Awesome support added to close button text setting.
-* Feature: Play a sound when a popup is opened. Choose from 5 included sounds or upload your own.
-* Feature: Insert customizable [popup_cookie] shortcode on thank you pages when using non-integrated forms.
-* Tweak: Add option to disable or adjust the padding-right added to body.
-* Tweak: Remove Freemius integration from Popup Maker.
-* Improvement: Detect file permission issues with Asset Caching functionality.
-* Improvement: Update popup content filters to match core, including responsive image handling.
-* Fix: Prevent popups from going off the screen when using center position for a tall popup.
-* Fix: Bug in slide animation origin positioning for bottom or right origins.
-* Fix: Bug where Middle Center caused tall popups to hang off the screen on small screens.
-* Fix: Typo in admin editor CSS path.
-* Fix: Bug on fresh installs where default theme's close position is wrong.
