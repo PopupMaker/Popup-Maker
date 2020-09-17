@@ -63,18 +63,13 @@ class PUM_Admin_Popups {
 			return;
 		}
 		$popup   = pum_get_popup( $post->ID );
-		$enabled = $popup->get_meta( 'enabled' );
-		if ( '' === $enabled ) {
-			$enabled = 1;
-		} else {
-			$enabled = intval( $enabled );
-		}
-		$nonce = wp_create_nonce( "pum_save_enabled_state_{$popup->ID}" );
+		$enabled = $popup->is_enabled();
+		$nonce   = wp_create_nonce( "pum_save_enabled_state_{$popup->ID}" );
 		?>
 		<div class="misc-pub-section" style="display:flex;">
 			<span style="font-weight: bold; margin-right: 10px;">Popup Enabled </span>
 			<div class="pum-toggle-button">
-				<input id="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( 1, $enabled ); ?> class="pum-enabled-toggle-button" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
+				<input id="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( true, $enabled ); ?> class="pum-enabled-toggle-button" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
 				<label for="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" aria-label="Switch to enable popup"></label>
 			</div>
 		</div>
@@ -1248,16 +1243,11 @@ class PUM_Admin_Popups {
 					break;
 				case 'enabled':
 					if ( 'publish' === $post->post_status ) {
-						$enabled = $popup->get_meta( 'enabled' );
-						if ( '' === $enabled ) {
-							$enabled = 1;
-						} else {
-							$enabled = intval( $enabled );
-						}
-						$nonce = wp_create_nonce( "pum_save_enabled_state_{$popup->ID}" );
+						$enabled = $popup->is_enabled();
+						$nonce   = wp_create_nonce( "pum_save_enabled_state_{$popup->ID}" );
 						?>
 						<div class="pum-toggle-button">
-							<input id="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( 1, $enabled ); ?> class="pum-enabled-toggle-button" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
+							<input id="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( true, $enabled ); ?> class="pum-enabled-toggle-button" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
 							<label for="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" aria-label="Switch to enable popup"></label>
 						</div>
 						<?php

@@ -812,6 +812,39 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Retrieves the 'enabled' meta key and returns true if popup is enabled
+	 *
+	 * @since 1.12
+	 * @return bool True if enabled
+	 */
+	public function is_enabled() {
+		$enabled = $this->get_meta( 'enabled' );
+
+		// Post ID not valid.
+		if ( false === $enabled ) {
+			return false;
+		}
+
+		// If the key is missing...
+		if ( '' === $enabled ) {
+			// Set it to enabled.
+			$enabled = 1;
+			$this->update_meta( 'enabled', $enabled );
+		} else {
+			// Else, load it in.
+			$enabled = intval( $enabled );
+			if ( ! in_array( $enabled, array( 0, 1 ), true ) ) {
+				$enabled = 1;
+			}
+		}
+		if ( 1 === $enabled ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Returns whether or not the popup is visible in the loop.
 	 *
 	 * @return bool
@@ -827,8 +860,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		}
 
 		// If popup is not enabled, this popup is not loadable.
-		$enabled = $this->get_meta( 'enabled' );
-		if ( false === $enabled || '0' === $enabled ) {
+		if ( ! $this->is_enabled() ) {
 			return false;
 		}
 
