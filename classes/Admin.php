@@ -22,6 +22,7 @@ class PUM_Admin {
 		add_filter( 'user_has_cap', array( __CLASS__, 'prevent_default_theme_deletion' ), 10, 3 );
 		add_filter( 'plugin_action_links', array( __CLASS__, 'plugin_action_links' ), 10, 2 );
 		add_action( 'admin_init', array( __CLASS__, 'after_install' ) );
+		add_action( 'admin_head', array( __CLASS__, 'clean_ui' ) );
 	}
 
 	/**
@@ -93,6 +94,24 @@ class PUM_Admin {
 			do_action( 'pum_after_install' );
 
 			update_option( '_pum_installed', true );
+		}
+	}
+
+	/**
+	 * Cleans the UI area within our admin pages
+	 *
+	 * @since 1.12
+	 */
+	public static function clean_ui() {
+		// Elementor shows an upsell notice for their popup builder targeting only our admin area. This removes that.
+		if ( class_exists( 'Elementor\Plugin' ) && class_exists( 'Elementor\Core\Admin\Admin' ) && pum_is_admin_page() ) {
+			$instance = Elementor\Plugin::instance();
+			if ( isset( $instance->admin ) && is_a( $instance->admin, '\Elementor\Core\Admin\Admin' ) && method_exists( $instance->admin, 'get_component' ) ) {
+				$notices = $instance->admin->get_component( 'admin-notices' );
+				if ( false !== $notices && is_a( $notices, '\Elementor\Core\Admin\Admin_Notices' ) ) {
+					remove_action( 'admin_notices', array( $notices, 'admin_notices' ), 20 );
+				}
+			}
 		}
 	}
 }
