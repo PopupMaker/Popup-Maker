@@ -22,7 +22,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 	/**
 	 * The version of our database table
 	 */
-	public $version = 3.1;
+	public $version = 20200917;
 
 	/**
 	 * The name of the primary column
