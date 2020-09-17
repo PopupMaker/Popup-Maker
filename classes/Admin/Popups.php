@@ -48,6 +48,33 @@ class PUM_Admin_Popups {
 		add_action( 'load-edit.php', array( __CLASS__, 'load' ), 9999 );
 		add_action( 'restrict_manage_posts', array( __CLASS__, 'add_popup_filters' ), 100 );
 		add_filter( 'post_row_actions', array( __CLASS__, 'add_id_row_actions' ), 2, 100 );
+
+		add_action( 'post_submitbox_misc_actions', array( __CLASS__, 'add_enabled_toggle_editor' ), 10, 1 );
+	}
+
+	/**
+	 * Adds our enabled state toggle to the "Publish" meta box.
+	 *
+	 * @since 1.12
+	 * @param WP_POST $post The current post (i.e. the popup).
+	 */
+	public static function add_enabled_toggle_editor( $post ) {
+		if ( 'publish' !== $post->post_status || 'popup' !== $post->post_type ) {
+			return;
+		}
+		$popup   = pum_get_popup( $post->ID );
+		$enabled = $popup->is_enabled();
+		$nonce   = wp_create_nonce( "pum_save_enabled_state_{$popup->ID}" );
+		?>
+		<div class="misc-pub-section" style="display:flex;">
+			<span style="font-weight: bold; margin-right: 10px;">Popup Enabled </span>
+			<div class="pum-toggle-button">
+				<input id="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( true, $enabled ); ?> class="pum-enabled-toggle-button" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
+				<label for="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" aria-label="Switch to enable popup"></label>
+			</div>
+		</div>
+
+		<?php
 	}
 
 	/**
@@ -1164,6 +1191,7 @@ class PUM_Admin_Popups {
 		$columns = array(
 			'cb'          => '<input type="checkbox"/>',
 			'title'       => __( 'Name', 'popup-maker' ),
+			'enabled'     => __( 'Enabled', 'popup-maker' ),
 			'popup_title' => __( 'Title', 'popup-maker' ),
 			'class'       => __( 'CSS Classes', 'popup-maker' ),
 			'opens'       => __( 'Opens', 'popup-maker' ),
@@ -1171,7 +1199,7 @@ class PUM_Admin_Popups {
 			//'conversion_rate' => __( 'Conversion Rate', 'popup-maker' ),
 		);
 
-		// Add the date column preventing our own translation
+		// Add the date column preventing our own translation.
 		if ( ! empty( $_columns['date'] ) ) {
 			$columns['date'] = $_columns['date'];
 		}
@@ -1197,10 +1225,10 @@ class PUM_Admin_Popups {
 	 * @param int    $post_id     (Post) ID
 	 */
 	public static function render_columns( $column_name, $post_id ) {
-		if ( get_post_type( $post_id ) == 'popup' ) {
+		$post = get_post( $post_id );
+		if ( 'popup' === $post->post_type ) {
 
 			$popup = pum_get_popup( $post_id );
-			//setup_postdata( $popup );
 
 			/**
 			 * Uncomment if need to check for permissions on certain columns.
@@ -1212,6 +1240,22 @@ class PUM_Admin_Popups {
 			switch ( $column_name ) {
 				case 'popup_title':
 					echo esc_html( $popup->get_title() );
+					break;
+				case 'enabled':
+					if ( 'publish' === $post->post_status ) {
+						$enabled = $popup->is_enabled();
+						$nonce   = wp_create_nonce( "pum_save_enabled_state_{$popup->ID}" );
+						?>
+						<div class="pum-toggle-button">
+							<input id="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( true, $enabled ); ?> class="pum-enabled-toggle-button" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
+							<label for="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" aria-label="Switch to enable popup"></label>
+						</div>
+						<?php
+					} else {
+						?>
+						<p>Popup not published</p>
+						<?php
+					}
 					break;
 				case 'popup_category':
 					echo get_the_term_list( $post_id, 'popup_category', '', ', ', '' );
