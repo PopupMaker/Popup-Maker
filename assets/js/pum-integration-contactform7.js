@@ -99,20 +99,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
 
 
-/*******************************************************************************
- * Copyright (c) 2020, WP Popup Maker
- ******************************************************************************/
+/**************************************
+ * Copyright (c) 2020, Popup Maker
+ *************************************/
 {
-  var formProvider = 'contactform7';
+  var formProvider = "contactform7";
   var $ = window.jQuery;
-  $(document).on('wpcf7:mailsent', '.wpcf7', function (event, details) {
-    var $form = $(this),
-        formId = $form.find('input[name="_wpcf7"]').val(),
+  $(document).on("wpcf7mailsent", function (event, details) {
+    var formId = event.detail.contactFormId,
+        $form = $(event.target),
         // Converts string like wpcf7-f190-p2-o11 and reduces it to simply 11, the last o11 is the instance ID.
     // More accurate way of doing it in case things change in the future, this version filters out all but the o param.
     // formInstanceId = .split('-').filter((string) => string.indexOf('o') === 0)[0].replace('o','');
     // Simpler version that simply splits and pops the last item in the array. This requires it always be the last.
-    formInstanceId = $form.attr('id').split('-').pop().replace('o', ''); // All the magic happens here.
+    formInstanceId = event.detail.id.split("-").pop().replace("o", ""); // All the magic happens here.
 
     window.PUM.integrations.formSubmission($form, {
       formProvider: formProvider,
@@ -130,11 +130,11 @@ __webpack_require__.r(__webpack_exports__);
      * This is here for backward compatibility with form actions prior to v1.9.
      */
 
-    var $settings = $form.find('input.wpcf7-pum'),
+    var $settings = $form.find("input.wpcf7-pum"),
         settings = $settings.length ? JSON.parse($settings.val()) : false;
 
-    if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) === 'object' && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
-      settings['closedelay'] = settings.closedelay / 1000;
+    if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) === "object" && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
+      settings.closedelay = settings.closedelay / 1000;
     } // Nothing should happen if older action settings not applied
     // except triggering of pumFormSuccess event for old cookie method.
 
