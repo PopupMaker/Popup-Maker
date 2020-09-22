@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, conversion, responsive popups, promotion
 Requires at least: 4.1
 Tested up to: 5.5
 Requires PHP: 5.6
-Stable tag: 1.12.0-beta-1
+Stable tag: 1.12.0
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -178,7 +178,7 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
-= v1.12.0 - 09/17/2020 =
+= v1.12.0 - 09/25/2020 =
 * Feature: Add the ability to turn on/off popups [Issue #544](https://github.com/PopupMaker/Popup-Maker/issues/544)
 * Feature: Formidable Forms integration [Issue #750](https://github.com/PopupMaker/Popup-Maker/issues/750)
 * Feature: New error log tab for viewing, downloading, and emptying the error log [Issue #575](https://github.com/PopupMaker/Popup-Maker/issues/575)
