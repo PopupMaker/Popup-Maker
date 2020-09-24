@@ -1,3 +1,2502 @@
+/********************************************
+ * Copyright (c) 2020, Code Atlantic LLC
+ ********************************************/
+
+(function($) {
+	/**
+	 * Changes the current enabled state of supplied popup
+	 *
+	 * @param {number} popupID The ID for the popup.
+	 * @param {number} enabledState 1 for active, 0 for inactive.
+	 * @param {string} nonce The nonce for the action.
+	 */
+	function changeEnabledState(popupID, enabledState, nonce) {
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			// eslint-disable-next-line no-undef
+			url: ajaxurl,
+			data: {
+				action: "pum_save_enabled_state",
+				nonce: nonce,
+				popupID: popupID,
+				enabled: enabledState
+			}
+		});
+	}
+
+	$(function() {
+		$(".pum-enabled-toggle-button").on("change", function(e) {
+			e.preventDefault();
+			var $button = $(this);
+			var newState = 0;
+			if (true === e.target.checked) {
+				newState = 1;
+			}
+			changeEnabledState(
+				$button.data("popup-id"),
+				newState,
+				$button.data("nonce")
+			);
+		});
+	});
+})(jQuery);
+
+/*******************************************************************************
+ * Copyright (c) 2019, Code Atlantic LLC
+ ******************************************************************************/
+(function($) {
+	"use strict";
+
+	var $alerts = $(".pum-alerts"),
+		$noticeCounts = $(".pum-alert-count"),
+		count = parseInt($noticeCounts.eq(0).text());
+
+	function dismissAlert($alert, alertAction) {
+		var dismissible = $alert.data("dismissible"),
+			expires =
+				dismissible === "1" || dismissible === 1 || dismissible === true
+					? null
+					: dismissible;
+
+		$.ajax({
+			method: "POST",
+			dataType: "json",
+			url: ajaxurl,
+			data: {
+				action: "pum_alerts_action",
+				nonce: window.pum_alerts_nonce,
+				code: $alert.data("code"),
+				expires: expires,
+				pum_dismiss_alert: alertAction
+			}
+		});
+	}
+
+	function dismissReviewRequest(reason) {
+		$.ajax({
+			method: "POST",
+			dataType: "json",
+			url: ajaxurl,
+			data: {
+				action: "pum_review_action",
+				nonce: window.pum_review_nonce,
+				group: window.pum_review_trigger.group,
+				code: window.pum_review_trigger.code,
+				pri: window.pum_review_trigger.pri,
+				reason: reason
+			}
+		});
+
+		if (typeof window.pum_review_api_url !== "undefined") {
+			$.ajax({
+				method: "POST",
+				dataType: "json",
+				url: window.pum_review_api_url,
+				data: {
+					trigger_group: window.pum_review_trigger.group,
+					trigger_code: window.pum_review_trigger.code,
+					reason: reason,
+					uuid: window.pum_review_uuid || null
+				}
+			});
+		}
+	}
+
+	function checkRemoveAlerts() {
+		if ($alerts.find(".pum-alert-holder").length === 0) {
+			$alerts.slideUp(100, function() {
+				$alerts.remove();
+			});
+
+			$("#menu-posts-popup .wp-menu-name .update-plugins").fadeOut();
+		}
+	}
+
+	function removeAlert($alert) {
+		count--;
+
+		$noticeCounts.text(count);
+
+		$alert.fadeTo(100, 0, function() {
+			$alert.slideUp(100, function() {
+				$alert.remove();
+
+				checkRemoveAlerts();
+			});
+		});
+	}
+
+	$(document)
+		.on("pumDismissAlert", checkRemoveAlerts)
+		.on("click", ".pum-alert-holder .pum-dismiss", function(event) {
+			var $this = $(this),
+				$alert = $this.parents(".pum-alert-holder"),
+				reason = $this.data("reason") || "maybe_later",
+				alertAction = $(this).data("action") || "dismiss";
+
+			// Prevent the PHP alert handler from also processing this.
+			event.preventDefault();
+
+			if ("review_request" !== $alert.data("code")) {
+				dismissAlert($alert, alertAction);
+			} else {
+				dismissReviewRequest(reason);
+			}
+
+			removeAlert($alert);
+		});
+})(jQuery);
+
+/*******************************************************************************
+ * Copyright (c) 2019, Code Atlantic LLC
+ ******************************************************************************/
+(function ($) {
+    "use strict";
+
+    var colorpicker = {
+        init: function () {
+            $('.pum-color-picker').filter(':not(.pum-color-picker-initialized)')
+                .addClass('pum-color-picker-initialized')
+                .wpColorPicker({
+                    change: function (event, ui) {
+                        $(event.target).trigger('colorchange', ui);
+                    },
+                    clear: function (event) {
+                        $(event.target).prev().trigger('colorchange').wpColorPicker('close');
+                    },
+                    hide: true
+                });
+        }
+    };
+
+    // Import this module.
+    window.PUM_Admin = window.PUM_Admin || {};
+    window.PUM_Admin.colorpicker = colorpicker;
+
+    $(document)
+        .on('click', '.iris-palette', function () {
+            $(this).parents('.wp-picker-active').find('input.pum-color-picker').trigger('change');
+        })
+        .on('colorchange', function (event, ui) {
+            var $input = $(event.target),
+                color = '';
+
+            if (ui !== undefined && ui.color !== undefined) {
+                color = ui.color.toString();
+            }
+
+            $input.val(color).trigger('change');
+
+            if ($('form#post input#post_type').val() === 'popup_theme') {
+                PUM_Admin.utils.debounce(PUM_Admin.themeEditor.refresh_preview, 100);
+            }
+        })
+        .on('pum_init', colorpicker.init);
+}(jQuery));
+/*******************************************************************************
+ * Copyright (c) 2019, Code Atlantic LLC
+ ******************************************************************************/
+
+(function ($) {
+    "use strict";
+
+    var forms = {
+        init: function () {
+            forms.checkDependencies();
+        },
+        /**
+         * dependencies should look like this:
+         *
+         * {
+         *   field_name_1: value, // Select, radio etc.
+         *   field_name_2: true // Checkbox
+         * }
+         *
+         * Support for Multiple possible values of one field
+         *
+         * {
+         *   field_name_1: [ value_1, value_2 ]
+         * }
+         *
+         */
+        checkDependencies: function ($dependent_fields) {
+            var _fields = $($dependent_fields);
+
+            // If no fields passed, only do those not already initialized.
+            $dependent_fields = _fields.length ? _fields : $("[data-pum-dependencies]:not([data-pum-processed-dependencies])");
+
+            $dependent_fields.each(function () {
+                var $dependent = $(this),
+                    dependentID = $dependent.data('id'),
+                    // The dependency object for this field.
+                    dependencies = $dependent.data("pum-processed-dependencies") || {},
+                    // Total number of fields this :input is dependent on.
+                    requiredCount = Object.keys(dependencies).length,
+                    // Current count of fields this :input matched properly.
+                    count = 0,
+                    // An array of fields this :input is dependent on.
+                    dependentFields = $dependent.data("pum-dependent-fields"),
+                    // Early declarations.
+                    key;
+
+                // Clean up & pre-process dependencies so we don't need to rebuild each time.
+                if (!$dependent.data("pum-processed-dependencies")) {
+                    dependencies = $dependent.data("pum-dependencies");
+                    if (typeof dependencies === 'string') {
+                        dependencies = JSON.parse(dependencies);
+                    }
+
+                    // Convert each key to an array of acceptable values.
+                    for (key in dependencies) {
+                        if (dependencies.hasOwnProperty(key)) {
+                            if (typeof dependencies[key] === "string") {
+                                // Leave boolean values alone as they are for checkboxes or checking if an input has any value.
+
+                                if (dependencies[key].indexOf(',') !== -1) {
+                                    dependencies[key] = dependencies[key].split(',');
+                                } else {
+                                    dependencies[key] = [dependencies[key]];
+                                }
+                            } else if (typeof dependencies[key] === "number") {
+                                dependencies[key] = [dependencies[key]];
+                            }
+                        }
+                    }
+
+                    // Update cache & counts.
+                    requiredCount = Object.keys(dependencies).length;
+                    $dependent.data("pum-processed-dependencies", dependencies).attr("data-pum-processed-dependencies", dependencies);
+                }
+
+                if (!dependentFields) {
+                    dependentFields = $.map(dependencies, function (value, index) {
+                        var $wrapper = $('.pum-field[data-id="' + index + '"]');
+
+                        return $wrapper.length ? $wrapper.eq(0) : null;
+                    });
+
+                    $dependent.data("pum-dependent-fields", dependentFields);
+                }
+
+                $(dependentFields).each(function () {
+                    var $wrapper = $(this),
+                        $field = $wrapper.find(':input:first'),
+                        id = $wrapper.data("id"),
+                        value = $field.val(),
+                        required = dependencies[id],
+                        matched,
+                        // Used for limiting the fields that get updated when this field is changed.
+                        all_this_fields_dependents = $wrapper.data('pum-field-dependents') || [];
+
+                    if (all_this_fields_dependents.indexOf(dependentID) === -1) {
+                        all_this_fields_dependents.push(dependentID);
+                        $wrapper.data('pum-field-dependents', all_this_fields_dependents);
+                    }
+
+                    // If no required values found bail early.
+                    if (typeof required === 'undefined' || required === null) {
+                        $dependent.removeClass('pum-dependencies-met').hide(0).trigger('pumFormDependencyUnmet');
+                        // Effectively breaks the .each for this $dependent and hides it.
+                        return false;
+                    }
+
+                    if ($wrapper.hasClass('pum-field-radio')) {
+                        value = $wrapper.find(':input:checked').val();
+                    }
+
+                    if ($wrapper.hasClass('pum-field-multicheck')) {
+                        value = [];
+                        $wrapper.find(':checkbox:checked').each(function (i) {
+                            value[i] = $(this).val();
+
+                            if (typeof value[i] === 'string' && !isNaN(parseInt(value[i]))) {
+                                value[i] = parseInt(value[i]);
+                            }
+
+                        });
+                    }
+
+                    // Check if the value matches required values.
+                    if ($wrapper.hasClass('pum-field-select') || $wrapper.hasClass('pum-field-radio')) {
+                        matched = required && required.indexOf(value) !== -1;
+                    } else if ($wrapper.hasClass('pum-field-checkbox')) {
+                        matched = required === $field.is(':checked');
+                    } else if ($wrapper.hasClass('pum-field-multicheck')) {
+                        if (Array.isArray(required)) {
+                            matched = false;
+                            for (var i = 0; i < required.length; i++) {
+                                if (value.indexOf(required[i]) !== -1) {
+                                    matched = true;
+                                }
+                            }
+                        } else {
+                            matched = value.indexOf(required) !== -1;
+                        }
+                    } else {
+                        matched = Array.isArray(required) ? required.indexOf(value) !== -1 : required == value;
+                    }
+
+                    if (matched) {
+                        count++;
+                    } else {
+                        $dependent.removeClass('pum-dependencies-met').hide(0).trigger('pumFormDependencyUnmet');
+                        // Effectively breaks the .each for this $dependent and hides it.
+                        return false;
+                    }
+
+                    if (count === requiredCount) {
+                        $dependent.addClass('pum-dependencies-met').show(0).trigger('pumFormDependencyMet');
+                    }
+                });
+            });
+        },
+        form_check: function () {
+            $(document).trigger('pum_form_check');
+        },
+        is_field: function (data) {
+            if (typeof data !== 'object') {
+                return false;
+            }
+
+            var field_tests = [
+                data.type === undefined && (data.label !== undefined || data.desc !== undefined),
+                data.type !== undefined && typeof data.type === 'string'
+            ];
+
+            return field_tests.indexOf(true) >= 0;
+        },
+        flattenFields: function (data) {
+            var form_fields = {},
+                tabs = data.tabs || {},
+                sections = data.sections || {},
+                fields = data.fields || {};
+
+            if (Object.keys(tabs).length && Object.keys(sections).length) {
+                // Loop Tabs
+                _.each(fields, function (subTabs, tabID) {
+
+                    // If not a valid tab or no subsections skip it.
+                    if (typeof subTabs !== 'object' || !Object.keys(subTabs).length) {
+                        return;
+                    }
+
+                    // Loop Tab Sections
+                    _.each(subTabs, function (subTabFields, subTabID) {
+
+                        // If not a valid subtab or no fields skip it.
+                        if (typeof subTabFields !== 'object' || !Object.keys(subTabFields).length) {
+                            return;
+                        }
+
+                        // Move single fields into the main subtab.
+                        if (forms.is_field(subTabFields)) {
+                            var newSubTabFields = {};
+                            newSubTabFields[subTabID] = subTabFields;
+                            subTabID = 'main';
+                            subTabFields = newSubTabFields;
+                        }
+
+                        // Loop Tab Section Fields
+                        _.each(subTabFields, function (field) {
+                            // Store the field by id for easy lookup later.
+                            form_fields[field.id] = field;
+                        });
+                    });
+                });
+            }
+            else if (Object.keys(tabs).length) {
+                // Loop Tabs
+                _.each(fields, function (tabFields, tabID) {
+
+                    // If not a valid tab or no subsections skip it.
+                    if (typeof tabFields !== 'object' || !Object.keys(tabFields).length) {
+                        return;
+                    }
+
+                    // Loop Tab Fields
+                    _.each(tabFields, function (field) {
+                        // Store the field by id for easy lookup later.
+                        form_fields[field.id] = field;
+                    });
+                });
+            }
+            else if (Object.keys(sections).length) {
+
+                // Loop Sections
+                _.each(fields, function (sectionFields, sectionID) {
+                    // Loop Tab Section Fields
+                    _.each(sectionFields, function (field) {
+                        // Store the field by id for easy lookup later.
+                        form_fields[field.id] = field;
+                    });
+                });
+            }
+            else {
+                fields = forms.parseFields(fields, values);
+
+                // Replace the array with rendered fields.
+                _.each(fields, function (field) {
+                    // Store the field by id for easy lookup later.
+                    form_fields[field.id] = field;
+                });
+            }
+
+            return form_fields;
+        },
+        parseFields: function (fields, values) {
+
+            values = values || {};
+
+            _.each(fields, function (field, fieldID) {
+
+                fields[fieldID] = PUM_Admin.models.field(field);
+
+                if (typeof fields[fieldID].meta !== 'object') {
+                    fields[fieldID].meta = {};
+                }
+
+                if (undefined !== values[fieldID]) {
+                    fields[fieldID].value = values[fieldID];
+                }
+
+                if (fields[fieldID].id === '') {
+                    fields[fieldID].id = fieldID;
+                }
+            });
+
+            return fields;
+        },
+        renderTab: function () {
+
+        },
+        renderSection: function () {
+
+        },
+        render: function (args, values, $container) {
+            var form,
+                sections = {},
+                section = [],
+                form_fields = {},
+                data = $.extend(true, {
+                    id: "",
+                    tabs: {},
+                    sections: {},
+                    fields: {},
+                    maintabs: {},
+                    subtabs: {}
+                }, args),
+                maintabs = $.extend({
+                    id: data.id,
+                    classes: [],
+                    tabs: {},
+                    vertical: true,
+                    form: true,
+                    meta: {
+                        'data-min-height': 250
+                    }
+                }, data.maintabs),
+                subtabs = $.extend({
+                    classes: ['link-tabs', 'sub-tabs'],
+                    tabs: {}
+                }, data.subtabs),
+                container_classes = ['pum-dynamic-form'];
+
+            values = values || {};
+
+            if (Object.keys(data.tabs).length && Object.keys(data.sections).length) {
+                container_classes.push('tabbed-content');
+
+                // Loop Tabs
+                _.each(data.fields, function (subTabs, tabID) {
+
+                    // If not a valid tab or no subsections skip it.
+                    if (typeof subTabs !== 'object' || !Object.keys(subTabs).length) {
+                        return;
+                    }
+
+                    // Define this tab.
+                    if (undefined === maintabs.tabs[tabID]) {
+                        maintabs.tabs[tabID] = {
+                            label: data.tabs[tabID],
+                            content: ''
+                        };
+                    }
+
+                    // Define the sub tabs model.
+                    subtabs = $.extend(subtabs, {
+                        id: data.id + '-' + tabID + '-subtabs',
+                        tabs: {}
+                    });
+
+                    // Loop Tab Sections
+                    _.each(subTabs, function (subTabFields, subTabID) {
+
+                        // If not a valid subtab or no fields skip it.
+                        if (typeof subTabFields !== 'object' || !Object.keys(subTabFields).length) {
+                            return;
+                        }
+
+                        // Move single fields into the main subtab.
+                        if (forms.is_field(subTabFields)) {
+                            var newSubTabFields = {};
+                            newSubTabFields[subTabID] = subTabFields;
+                            subTabID = 'main';
+                            subTabFields = newSubTabFields;
+                        }
+
+                        // Define this subtab model.
+                        if (undefined === subtabs.tabs[subTabID]) {
+                            subtabs.tabs[subTabID] = {
+                                label: data.sections[tabID][subTabID],
+                                content: ''
+                            };
+                        }
+
+                        subTabFields = forms.parseFields(subTabFields, values);
+
+                        // Loop Tab Section Fields
+                        _.each(subTabFields, function (field) {
+                            // Store the field by id for easy lookup later.
+                            form_fields[field.id] = field;
+
+                            // Push rendered fields into the subtab content.
+                            subtabs.tabs[subTabID].content += PUM_Admin.templates.field(field);
+                        });
+
+                        // Remove any empty tabs.
+                        if ("" === subtabs.tabs[subTabID].content) {
+                            delete subtabs.tabs[subTabID];
+                        }
+                    });
+
+                    // If there are subtabs, then render them into the main tabs content, otherwise remove this main tab.
+                    if (Object.keys(subtabs.tabs).length) {
+                        maintabs.tabs[tabID].content = PUM_Admin.templates.tabs(subtabs);
+                    } else {
+                        delete maintabs.tabs[tabID];
+                    }
+                });
+
+                if (Object.keys(maintabs.tabs).length) {
+                    form = PUM_Admin.templates.tabs(maintabs);
+                }
+            } else if (Object.keys(data.tabs).length) {
+                container_classes.push('tabbed-content');
+
+                // Loop Tabs
+                _.each(data.fields, function (tabFields, tabID) {
+
+                    // If not a valid tab or no subsections skip it.
+                    if (typeof tabFields !== 'object' || !Object.keys(tabFields).length) {
+                        return;
+                    }
+
+                    // Define this tab.
+                    if (undefined === maintabs.tabs[tabID]) {
+                        maintabs.tabs[tabID] = {
+                            label: data.tabs[tabID],
+                            content: ''
+                        };
+                    }
+
+                    section = [];
+
+                    tabFields = forms.parseFields(tabFields, values);
+
+                    // Loop Tab Fields
+                    _.each(tabFields, function (field) {
+                        // Store the field by id for easy lookup later.
+                        form_fields[field.id] = field;
+
+                        // Push rendered fields into the subtab content.
+                        section.push(PUM_Admin.templates.field(field));
+                    });
+
+                    // Push rendered tab into the tab.
+                    if (section.length) {
+                        // Push rendered sub tabs into the main tabs if not empty.
+                        maintabs.tabs[tabID].content = PUM_Admin.templates.section({
+                            fields: section
+                        });
+                    } else {
+                        delete (maintabs.tabs[tabID]);
+                    }
+                });
+
+                if (Object.keys(maintabs.tabs).length) {
+                    form = PUM_Admin.templates.tabs(maintabs);
+                }
+            } else if (Object.keys(data.sections).length) {
+
+                // Loop Sections
+                _.each(data.fields, function (sectionFields, sectionID) {
+                    section = [];
+
+                    section.push(PUM_Admin.templates.field({
+                        type: 'heading',
+                        desc: data.sections[sectionID] || ''
+                    }));
+
+                    sectionFields = forms.parseFields(sectionFields, values);
+
+                    // Loop Tab Section Fields
+                    _.each(sectionFields, function (field) {
+                        // Store the field by id for easy lookup later.
+                        form_fields[field.id] = field;
+
+                        // Push rendered fields into the section.
+                        section.push(PUM_Admin.templates.field(field));
+                    });
+
+                    // Push rendered sections into the form.
+                    form += PUM_Admin.templates.section({
+                        fields: section
+                    });
+                });
+            } else {
+                data.fields = forms.parseFields(data.fields, values);
+
+                // Replace the array with rendered fields.
+                _.each(data.fields, function (field) {
+                    // Store the field by id for easy lookup later.
+                    form_fields[field.id] = field;
+
+                    // Push rendered fields into the section.
+                    section.push(PUM_Admin.templates.field(field));
+                });
+
+                // Render the section.
+                form = PUM_Admin.templates.section({
+                    fields: section
+                });
+            }
+
+            if ($container !== undefined && $container.length) {
+                $container
+                    .addClass(container_classes.join('  '))
+                    .data('form_fields', form_fields)
+                    .html(form)
+                    .trigger('pum_init');
+            }
+
+            return form;
+
+        },
+        parseValues: function (values, fields) {
+            fields = fields || false;
+
+            if (!fields) {
+                return values;
+            }
+
+            for (var key in fields) {
+                if (!fields.hasOwnProperty(key)) {
+                    continue;
+                }
+
+                // Measure field value corrections.
+                if (values.hasOwnProperty(key + "_unit")) {
+                    values[key] += values[key + "_unit"];
+                    delete values[key + "_unit"];
+                }
+
+                // If the value key is empty and a checkbox set it to false. Then return.
+                if (typeof values[key] === 'undefined') {
+                    if (fields[key].type === 'checkbox') {
+                        values[key] = false;
+                    }
+                    continue;
+                }
+
+                if (fields[key].allow_html && !PUM_Admin.utils.htmlencoder.hasEncoded(values[key])) {
+                    values[key] = PUM_Admin.utils.htmlencoder.htmlEncode(values[key]);
+                }
+            }
+
+            return values;
+        }
+    };
+
+    // Import this module.
+    window.PUM_Admin = window.PUM_Admin || {};
+    window.PUM_Admin.forms = forms;
+
+    $(document)
+        .on('pum_init  pum_form_check', function () {
+            PUM_Admin.forms.init();
+        })
+        .on('pumFieldChanged', '.pum-field', function () {
+            var $wrapper = $(this),
+                dependent_field_ids = $wrapper.data('pum-field-dependents') || [],
+                $fields_with_dependencies = $(),
+                i;
+
+            if (!dependent_field_ids || dependent_field_ids.length <= 0) {
+                return;
+            }
+
+            for (i = 0; i < dependent_field_ids.length; i++) {
+                $fields_with_dependencies = $fields_with_dependencies.add('.pum-field[data-id="' + dependent_field_ids[i] + '"]');
+            }
+
+            PUM_Admin.forms.checkDependencies($fields_with_dependencies);
+        })
+        .on('pumFieldChanged', '.pum-field-dynamic-desc', function () {
+            var $this = $(this),
+                $input = $this.find(':input'),
+                $container = $this.parents('.pum-dynamic-form:first'),
+                val = $input.val(),
+                form_fields = $container.data('form_fields') || {},
+                field = form_fields[$this.data('id')] || {},
+                $desc = $this.find('.pum-desc'),
+                desc = $this.data('pum-dynamic-desc');
+
+            switch (field.type) {
+            case 'radio':
+                val = $this.find(':input:checked').val();
+                break;
+            }
+
+            field.value = val;
+
+            if (desc && desc.length) {
+                $desc.html(PUM_Admin.templates.renderInline(desc, field));
+            }
+        })
+        .on('change', '.pum-field-select select', function () {
+            $(this).parents('.pum-field').trigger('pumFieldChanged');
+        })
+        .on('click', '.pum-field-checkbox input', function () {
+            $(this).parents('.pum-field').trigger('pumFieldChanged');
+        })
+        .on('click', '.pum-field-multicheck input', function () {
+            $(this).parents('.pum-field').trigger('pumFieldChanged');
+        })
+        .on('click', '.pum-field-radio input', function (event) {
+            var $this = $(this),
+                $selected = $this.parents('li'),
+                $wrapper = $this.parents('.pum-field');
+
+            $wrapper.trigger('pumFieldChanged');
+
+            $wrapper.find('li.pum-selected').removeClass('pum-selected');
+
+            $selected.addClass('pum-selected');
+        });
+
+}(jQuery));
+
+function pumSelected(val1, val2, print) {
+    "use strict";
+
+    var selected = false;
+    if (typeof val1 === 'object' && typeof val2 === 'string' && jQuery.inArray(val2, val1) !== -1) {
+        selected = true;
+    } else if (typeof val2 === 'object' && typeof val1 === 'string' && jQuery.inArray(val1, val2) !== -1) {
+        selected = true;
+    } else if (val1 === val2) {
+        selected = true;
+    }
+
+    if (print !== undefined && print) {
+        return selected ? ' selected="selected"' : '';
+    }
+    return selected;
+}
+
+function pumChecked(val1, val2, print) {
+    "use strict";
+
+    var checked = false;
+    if (typeof val1 === 'object' && typeof val2 === 'string' && jQuery.inArray(val2, val1) !== -1) {
+        checked = true;
+    } else if (typeof val2 === 'object' && typeof val1 === 'string' && jQuery.inArray(val1, val2) !== -1) {
+        checked = true;
+    } else if (val1 === val2) {
+        checked = true;
+    }
+
+    if (print !== undefined && print) {
+        return checked ? ' checked="checked"' : '';
+    }
+    return checked;
+}
+
+/*******************************************************************************
+ * Copyright (c) 2019, Code Atlantic LLC
+ ******************************************************************************/
+(function ($) {
+    "use strict";
+
+    var $html = $('html'),
+        $document = $(document),
+        $top_level_elements,
+        focusableElementsString = "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]",
+        previouslyFocused,
+        modals = {
+            _current: null,
+            // Accessibility: Checks focus events to ensure they stay inside the modal.
+            forceFocus: function (event) {
+                if (PUM_Admin.modals._current && !PUM_Admin.modals._current.contains(event.target)) {
+                    event.stopPropagation();
+                    PUM_Admin.modals._current.focus();
+                }
+            },
+            trapEscapeKey: function (e) {
+                if (e.keyCode === 27) {
+                    PUM_Admin.modals.closeAll();
+                    e.preventDefault();
+                }
+            },
+            trapTabKey: function (e) {
+                // if tab or shift-tab pressed
+                if (e.keyCode === 9) {
+                    // get list of focusable items
+                    var focusableItems = PUM_Admin.modals._current.find('*').filter(focusableElementsString).filter(':visible'),
+                        // get currently focused item
+                        focusedItem = $(':focus'),
+                        // get the number of focusable items
+                        numberOfFocusableItems = focusableItems.length,
+                        // get the index of the currently focused item
+                        focusedItemIndex = focusableItems.index(focusedItem);
+
+                    if (e.shiftKey) {
+                        //back tab
+                        // if focused on first item and user preses back-tab, go to the last focusable item
+                        if (focusedItemIndex === 0) {
+                            focusableItems.get(numberOfFocusableItems - 1).focus();
+                            e.preventDefault();
+                        }
+                    } else {
+                        //forward tab
+                        // if focused on the last item and user preses tab, go to the first focusable item
+                        if (focusedItemIndex === numberOfFocusableItems - 1) {
+                            focusableItems.get(0).focus();
+                            e.preventDefault();
+                        }
+                    }
+                }
+            },
+            setFocusToFirstItem: function () {
+                // set focus to first focusable item
+                PUM_Admin.modals._current.find('.pum-modal-content *').filter(focusableElementsString).filter(':visible').first().focus();
+            },
+            closeAll: function (callback) {
+                $('.pum-modal-background')
+                    .off('keydown.pum_modal')
+                    .hide(0, function () {
+                        $('html').css({overflow: 'visible', width: 'auto'});
+
+                        if ($top_level_elements) {
+                            $top_level_elements.attr('aria-hidden', 'false');
+                            $top_level_elements = null;
+                        }
+
+                        // Accessibility: Focus back on the previously focused element.
+                        if (previouslyFocused.length) {
+                            previouslyFocused.focus();
+                        }
+
+                        // Accessibility: Clears the PUM_Admin.modals._current var.
+                        PUM_Admin.modals._current = null;
+
+                        // Accessibility: Removes the force focus check.
+                        $document.off('focus.pum_modal');
+                        if (undefined !== callback) {
+                            callback();
+                        }
+                    })
+                    .attr('aria-hidden', 'true');
+
+            },
+            show: function (modal, callback) {
+                $('.pum-modal-background')
+                    .off('keydown.pum_modal')
+                    .hide(0)
+                    .attr('aria-hidden', 'true');
+
+                $html
+                    .data('origwidth', $html.innerWidth())
+                    .css({overflow: 'hidden', 'width': $html.innerWidth()});
+
+                // Accessibility: Sets the previous focus element.
+
+                var $focused = $(':focus');
+                if (!$focused.parents('.pum-modal-wrap').length) {
+                    previouslyFocused = $focused;
+                }
+
+                // Accessibility: Sets the current modal for focus checks.
+                PUM_Admin.modals._current = $(modal);
+
+                // Accessibility: Close on esc press.
+                PUM_Admin.modals._current
+                    .on('keydown.pum_modal', function (e) {
+                        PUM_Admin.modals.trapEscapeKey(e);
+                        PUM_Admin.modals.trapTabKey(e);
+                    })
+                    .show(0, function () {
+                        $top_level_elements = $('body > *').filter(':visible').not(PUM_Admin.modals._current);
+                        $top_level_elements.attr('aria-hidden', 'true');
+
+                        PUM_Admin.modals._current
+                            .trigger('pum_init')
+                            // Accessibility: Add focus check that prevents tabbing outside of modal.
+                            .on('focus.pum_modal', PUM_Admin.modals.forceFocus);
+
+                        // Accessibility: Focus on the modal.
+                        PUM_Admin.modals.setFocusToFirstItem();
+
+                        if (undefined !== callback) {
+                            callback();
+                        }
+                    })
+                    .attr('aria-hidden', 'false');
+
+            },
+            remove: function (modal) {
+                $(modal).remove();
+            },
+            replace: function (modal, replacement) {
+                PUM_Admin.modals.remove($.trim(modal));
+                $('body').append($.trim(replacement));
+            },
+            reload: function (modal, replacement, callback) {
+                PUM_Admin.modals.replace(modal, replacement);
+                PUM_Admin.modals.show(modal, callback);
+                $(modal).trigger('pum_init');
+            }
+        };
+
+    // Import this module.
+    window.PUM_Admin = window.PUM_Admin || {};
+    window.PUM_Admin.modals = modals;
+
+    $(document).on('click', '.pum-modal-background, .pum-modal-wrap .cancel, .pum-modal-wrap .pum-modal-close', function (e) {
+        var $target = $(e.target);
+        if (/*$target.hasClass('pum-modal-background') || */$target.hasClass('cancel') || $target.hasClass('pum-modal-close') || $target.hasClass('submitdelete')) {
+            PUM_Admin.modals.closeAll();
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+
+}(jQuery));
+/*******************************************************************************
+ * Copyright (c) 2019, Code Atlantic LLC
+ ******************************************************************************/
+(function ($) {
+    "use strict";
+
+    var models = {
+        field: function (args) {
+            return $.extend(true, {}, {
+                type: 'text',
+                id: '',
+                id_prefix: '',
+                name: '',
+                label: null,
+                placeholder: '',
+                desc: null,
+                dynamic_desc: null,
+                size: 'regular',
+                classes: [],
+                dependencies: "",
+                value: null,
+                select2: false,
+                allow_html: false,
+                multiple: false,
+                as_array: false,
+                options: [],
+                object_type: null,
+                object_key: null,
+                std: null,
+                min: 0,
+                max: 50,
+                force_minmax: false,
+                step: 1,
+                unit: 'px',
+                units: {},
+                required: false,
+                desc_position: 'bottom',
+                meta: {}
+            }, args);
+        }
+    };
+
+    // Import this module.
+    window.PUM_Admin = window.PUM_Admin || {};
+    window.PUM_Admin.models = models;
+}(jQuery));
+/*******************************************************************************
+ * Copyright (c) 2019, Code Atlantic LLC
+ ******************************************************************************/
+(function ($) {
+    'use strict';
+    var rangesliders = {
+        cloneables: {
+            slider: $('<input type="range" class="pum-range-slider" />'),
+            plus: $('<button type="button" class="pum-range-plus">+</button>'),
+            minus: $('<button type="button" class="pum-range-minus">-</button>')
+        },
+        init: function () {
+            $('.pum-field-rangeslider:not(.pum-rangeslider-initialized)').each(function () {
+                var $this = $(this).addClass('pum-rangeslider-initialized'),
+                    $input = $this.find('input.pum-range-manual'),
+                    $slider = rangesliders.cloneables.slider.clone(),
+                    $plus = rangesliders.cloneables.plus.clone(),
+                    $minus = rangesliders.cloneables.minus.clone(),
+                    settings = {
+                        force: $input.data('force-minmax'),
+                        min: parseInt($input.attr('min'), 10) || 0,
+                        max: parseInt($input.attr('max'), 10) || 100,
+                        step: parseInt($input.attr('step'), 10) || 1,
+                        value: parseInt($input.attr('value'), 10) || 0
+                    };
+
+                if (settings.force && settings.value > settings.max) {
+                    settings.value = settings.max;
+                    $input.val(settings.value);
+                }
+
+                $slider.prop({
+                    min: settings.min || 0,
+                    max: (settings.force || (settings.max && settings.max > settings.value)) ? settings.max : settings.value *
+                        1.5,
+                    step: settings.step || settings.value * 1.5 / 100,
+                    value: settings.value
+                }).on('change input', function () {
+                    $input.trigger('input');
+                });
+
+                $input.next().after($minus, $plus);
+                $input.before($slider);
+
+            });
+        }
+    };
+
+    // Import this module.
+    window.PUM_Admin = window.PUM_Admin || {};
+    window.PUM_Admin.rangesliders = rangesliders;
+
+    $(document)
+        .on('pum_init', PUM_Admin.rangesliders.init)
+        /**
+         * Updates the input field when the slider is used.
+         */
+        .on('input', '.pum-field-rangeslider.pum-rangeslider-initialized .pum-range-slider', function () {
+            var $slider = $(this);
+            $slider.siblings('.pum-range-manual').val($slider.val());
+        })
+        /**
+         * Update sliders value, min, & max when manual entry is detected.
+         */
+        .on('change', '.pum-range-manual', function () {
+            var $input = $(this),
+                max = parseInt($input.prop('max'), 0),
+                min = parseInt($input.prop('min'), 0),
+                step = parseInt($input.prop('step'), 0),
+                force = $input.data('force-minmax'),
+                value = parseInt($input.val(), 0),
+                $slider = $input.prev();
+
+            if (isNaN(value)) {
+                value = $slider.val();
+            }
+
+            if (force && value > max) {
+                value = max;
+            } else if (force && value < min) {
+                value = min;
+            }
+
+            $input.val(value).trigger('input');
+
+            $slider.prop({
+                'max': force || (max && max > value) ? max : value * 1.5,
+                'step': step || value * 1.5 / 100,
+                'value': value
+            });
+        })
+        .on('click', '.pum-range-plus', function (event) {
+            var $input = $(this).siblings('.pum-range-manual'),
+                max = parseInt($input.prop('max'), 0),
+                step = parseInt($input.prop('step'), 0),
+                force = $input.data('force-minmax'),
+                value = parseInt($input.val(), 0),
+                $slider = $input.prev();
+
+            event.preventDefault();
+
+            value += step;
+
+            if (isNaN(value)) {
+                value = $slider.val();
+            }
+
+            if (force && value > max) {
+                value = max;
+            }
+
+            $input.val(value).trigger('input');
+            $slider.val(value);
+        })
+        .on('click', '.pum-range-minus', function (event) {
+            var $input = $(this).siblings('.pum-range-manual'),
+                min = parseInt($input.prop('min'), 0),
+                step = parseInt($input.prop('step'), 0),
+                force = $input.data('force-minmax'),
+                value = parseInt($input.val(), 0),
+                $slider = $input.prev();
+
+            event.preventDefault();
+
+            value -= step;
+
+            if (isNaN(value)) {
+                value = $slider.val();
+            }
+
+            if (force && value < min) {
+                value = min;
+            }
+
+            $input.val(value).trigger('input');
+            $slider.val(value);
+        });
+
+}(jQuery));
+/*******************************************************************************
+ * Copyright (c) 2019, Code Atlantic LLC
+ ******************************************************************************/
+(function ($) {
+    "use strict";
+
+    // Here because some plugins load additional copies, big no-no. This is the best we can do.
+    $.fn.pumselect2 = $.fn.pumselect2 || $.fn.select2;
+
+    var select2 = {
+        init: function () {
+            $('.pum-field-select2 select').filter(':not(.pumselect2-initialized)').each(function () {
+                var $this = $(this),
+                    current = $this.data('current') || $this.val(),
+                    object_type = $this.data('objecttype'),
+                    object_key = $this.data('objectkey'),
+                    object_excludes = $this.data('objectexcludes') || null,
+                    options = {
+                        width: '100%',
+                        multiple: false,
+                        dropdownParent: $this.parent()
+                    };
+
+                if ($this.attr('multiple')) {
+                    options.multiple = true;
+                }
+
+                if (object_type && object_key) {
+                    options = $.extend(options, {
+                        ajax: {
+                            url: ajaxurl,
+                            dataType: 'json',
+                            delay: 250,
+                            data: function (params) {
+                                return {
+                                    s: params.term, // search term
+                                    paged: params.page,
+                                    action: "pum_object_search",
+                                    object_type: object_type,
+                                    object_key: object_key,
+                                    exclude: object_excludes
+                                };
+                            },
+                            processResults: function (data, params) {
+                                // parse the results into the format expected by Select2
+                                // since we are using custom formatting functions we do not need to
+                                // alter the remote JSON data, except to indicate that infinite
+                                // scrolling can be used
+                                params.page = params.page || 1;
+
+                                return {
+                                    results: data.items,
+                                    pagination: {
+                                        more: (params.page * 10) < data.total_count
+                                    }
+                                };
+                            },
+                            cache: true
+                        },
+                        cache: true,
+                        escapeMarkup: function (markup) {
+                            return markup;
+                        }, // let our custom formatter work
+                        maximumInputLength: 20,
+                        closeOnSelect: !options.multiple,
+                        templateResult: PUM_Admin.select2.formatObject,
+                        templateSelection: PUM_Admin.select2.formatObjectSelection
+                    });
+                }
+
+                $this
+                    .addClass('pumselect2-initialized')
+                    .pumselect2(options);
+
+                if (current !== null && current !== undefined) {
+
+                    if (options.multiple && 'object' !== typeof current && current !== "") {
+                        current = [current];
+                    } else if (!options.multiple && current === '') {
+                        current = null;
+                    }
+                } else {
+                    current = null;
+                }
+
+                if (object_type && object_key && current !== null && (typeof current === 'number' || current.length)) {
+                    $.ajax({
+                        url: ajaxurl,
+                        data: {
+                            action: "pum_object_search",
+                            object_type: object_type,
+                            object_key: object_key,
+                            exclude: object_excludes,
+                            include: current && current.length ? (typeof current === 'string' || typeof current === 'number') ? [current] : current : null
+                        },
+                        dataType: "json",
+                        success: function (data) {
+                            $.each(data.items, function (key, item) {
+                                // Add any option that doesn't already exist
+                                if (!$this.find('option[value="' + item.id + '"]').length) {
+                                    $this.prepend('<option value="' + item.id + '">' + item.text + '</option>');
+                                }
+                            });
+                            // Update the options
+                            $this.val(current).trigger('change');
+                        }
+                    });
+                } else if (current && ((options.multiple && current.length) || (!options.multiple && current !== ""))) {
+                    $this.val(current).trigger('change');
+                } else if (current === null) {
+                    $this.val(current).trigger('change');
+                }
+            });
+        },
+        formatObject: function (object) {
+            return object.text;
+        },
+        formatObjectSelection: function (object) {
+            return object.text || object.text;
+        }
+    };
+
+    // Import this module.
+    window.PUM_Admin = window.PUM_Admin || {};
+    window.PUM_Admin.select2 = select2;
+
+    $(document)
+        .on('pum_init', function () {
+            PUM_Admin.select2.init();
+        });
+}(jQuery));
+/*
+ * $$ Selector Cache
+ * Cache your selectors, without messy code.
+ * @author Stephen Kamenar
+ */
+(function ($, undefined) {
+    // '#a': $('#a')
+    if (typeof window.$$ === 'function') {
+        return;
+    }
+
+    var cache = {},
+        cacheByContext = {}, // '#context': (a cache object for the element)
+        tmp, tmp2; // Here for performance/minification
+
+    window.$$ = function (selector, context) {
+        if (context) {
+            if (tmp = context.selector) {
+                context = tmp;
+            }
+
+            // tmp2 is contextCache
+            tmp2 = cacheByContext[context];
+
+            if (tmp2 === undefined) {
+                tmp2 = cacheByContext[context] = {};
+            }
+
+            tmp = tmp2[selector];
+
+            if (tmp !== undefined) {
+                return tmp;
+            }
+
+            return tmp2[selector] = $(selector, $$(context));
+        }
+
+        tmp = cache[selector];
+
+        if (tmp !== undefined) {
+            return tmp;
+        }
+
+        return cache[selector] = $(selector);
+    };
+
+    window.$$clear = function (selector, context) {
+        if (context) {
+            if (tmp = context.selector) {
+                context = tmp;
+            }
+
+            if (selector && (tmp = cacheByContext[context])) {
+                tmp[selector] = undefined;
+            }
+
+            cacheByContext[context] = undefined;
+        } else {
+            if (selector) {
+                cache[selector] = undefined;
+                cacheByContext[selector] = undefined;
+            } else {
+                cache = {};
+                cacheByContext = {};
+            }
+        }
+    };
+
+    window.$$fresh = function (selector, context) {
+        $$clear(selector, context);
+        return $$(selector, context);
+    };
+
+}(jQuery));
+/**
+ * jQuery serializeObject
+ * @copyright 2014, macek <paulmacek@gmail.com>
+ * @link https://github.com/macek/jquery-serialize-object
+ * @license BSD
+ * @version 2.5.0
+ */
+(function (root, factory) {
+
+    // AMD
+    if (typeof define === "function" && define.amd) {
+        define(["exports", "jquery"], function (exports, $) {
+            return factory(exports, $);
+        });
+    }
+
+    // CommonJS
+    else if (typeof exports !== "undefined") {
+        var $ = require("jquery");
+        factory(exports, $);
+    }
+
+    // Browser
+    else {
+        factory(root, (root.jQuery || root.Zepto || root.ender || root.$));
+    }
+
+}(this, function (exports, $) {
+
+    var patterns = {
+        validate: /^[a-z_][a-z0-9_]*(?:\[(?:\d*|[a-z0-9_]+)\])*$/i,
+        key: /[a-z0-9_]+|(?=\[\])/gi,
+        push: /^$/,
+        fixed: /^\d+$/,
+        named: /^[a-z0-9_]+$/i
+    };
+
+    function FormSerializer(helper, $form) {
+
+        // private variables
+        var data = {},
+            pushes = {};
+
+        // private API
+        function build(base, key, value) {
+            base[key] = value;
+            return base;
+        }
+
+        function makeObject(root, value) {
+
+            var keys = root.match(patterns.key), k,
+                field = document.querySelector('[name="' + root + '"]'),
+                type = false;
+
+            if ("INPUT" === field.tagName) {
+                type = field.type;
+            } else {
+                if ("SELECT" === field.tagName) {
+                    type = 'select';
+                } else if ("TEXTAREA" === field.tagName) {
+                    type = 'textarea';
+                }
+            }
+
+            if (['textarea', 'text'].indexOf(type) >= 0) {
+                try {
+                    value = JSON.parse(value);
+                } catch (Error) {
+                }
+            }
+
+            // nest, nest, ..., nest
+            while ((k = keys.pop()) !== undefined) {
+                // foo[]
+                if (patterns.push.test(k)) {
+                    var idx = incrementPush(root.replace(/\[\]$/, ''));
+                    value = build([], idx, value);
+                }
+
+                // foo[n]
+                else if (patterns.fixed.test(k)) {
+                    value = build([], k, value);
+                }
+
+                // foo; foo[bar]
+                else if (patterns.named.test(k)) {
+                    value = build({}, k, value);
+                }
+            }
+
+            return value;
+        }
+
+        function incrementPush(key) {
+            if (pushes[key] === undefined) {
+                pushes[key] = 0;
+            }
+            return pushes[key]++;
+        }
+
+        function encode(pair) {
+
+            console.log(pair);
+
+            switch ($('[name="' + pair.name + '"]', $form).attr("type")) {
+
+
+            case "checkbox":
+                return pair.value === "1" ? true : pair.value;
+            default:
+                return pair.value;
+            }
+        }
+
+        function addPair(pair) {
+            if (!patterns.validate.test(pair.name)) return this;
+            var obj = makeObject(pair.name, encode(pair));
+
+            data = helper.extend(true, data, obj);
+            return this;
+        }
+
+        function addPairs(pairs) {
+            if (!helper.isArray(pairs)) {
+                throw new Error("formSerializer.addPairs expects an Array");
+            }
+            for (var i = 0, len = pairs.length; i < len; i++) {
+                this.addPair(pairs[i]);
+            }
+            return this;
+        }
+
+        function serialize() {
+            return data;
+        }
+
+        function serializeJSON() {
+            return JSON.stringify(serialize());
+        }
+
+        // public API
+        this.addPair = addPair;
+        this.addPairs = addPairs;
+        this.serialize = serialize;
+        this.serializeJSON = serializeJSON;
+    }
+
+    FormSerializer.patterns = patterns;
+
+    FormSerializer.serializeObject = function serializeObject() {
+        var serialized;
+
+        if (this.is('form')) {
+            serialized = this.serializeArray();
+        } else {
+            serialized = this.find(':input').serializeArray();
+        }
+
+        return new FormSerializer($, this)
+            .addPairs(serialized)
+            .serialize();
+    };
+
+    FormSerializer.serializeJSON = function serializeJSON() {
+        var serialized;
+
+        if (this.is('form')) {
+            serialized = this.serializeArray();
+        } else {
+            serialized = this.find(':input').serializeArray();
+        }
+
+        return new FormSerializer($, this)
+            .addPairs(serialized)
+            .serializeJSON();
+    };
+
+    if (typeof $.fn !== "undefined") {
+        $.fn.pumSerializeObject = FormSerializer.serializeObject;
+        $.fn.pumSerializeJSON = FormSerializer.serializeJSON;
+    }
+
+    exports.FormSerializer = FormSerializer;
+
+    return FormSerializer;
+}));
+/*******************************************************************************
+ * Copyright (c) 2019, Code Atlantic LLC
+ ******************************************************************************/
+(function ($) {
+    "use strict";
+    var tabs = {
+        init: function () {
+            $('.pum-tabs-container').filter(':not(.pum-tabs-initialized)').each(function () {
+                var $this = $(this).addClass('pum-tabs-initialized'),
+                    $tabList = $this.find('> ul.tabs'),
+                    $firstTab = $tabList.find('> li:first'),
+                    forceMinHeight = $this.data('min-height');
+
+                if ($this.hasClass('vertical-tabs')) {
+                    var minHeight = forceMinHeight && forceMinHeight > 0 ? forceMinHeight : $tabList.eq(0).outerHeight(true);
+
+                    $this.css({
+                        minHeight: minHeight + 'px'
+                    });
+
+                    if ($this.parent().innerHeight < minHeight) {
+                        $this.parent().css({
+                            minHeight: minHeight + 'px'
+                        });
+                    }
+                }
+
+                // Trigger first tab.
+                $firstTab.trigger('click');
+            });
+        }
+    };
+
+    // Import this module.
+    window.PUM_Admin = window.PUM_Admin || {};
+    window.PUM_Admin.tabs = tabs;
+
+    $(document)
+        .on('pum_init', PUM_Admin.tabs.init)
+        .on('click', '.pum-tabs-initialized li.tab', function (e) {
+            var $this = $(this),
+                $container = $this.parents('.pum-tabs-container:first'),
+                $tabs = $container.find('> ul.tabs > li.tab'),
+                $tab_contents = $container.find('> div.tab-content'),
+                link = $this.find('a').attr('href');
+
+            $tabs.removeClass('active');
+            $tab_contents.removeClass('active');
+
+            $this.addClass('active');
+            $container.find('> div.tab-content' + link).addClass('active');
+
+            e.preventDefault();
+        });
+}(jQuery));
+/*******************************************************************************
+ * Copyright (c) 2019, Code Atlantic LLC
+ ******************************************************************************/
+(function ($) {
+    "use strict";
+    var I10n = pum_admin_vars.I10n,
+        templates = {
+            render: function (template, data) {
+                var _template = wp.template(template);
+
+                data = data || {};
+
+                if (data.classes !== undefined && Array.isArray(data.classes)) {
+                    data.classes = data.classes.join(' ');
+                }
+
+                // Prepare the meta data for templates.
+                data = PUM_Admin.templates.prepareMeta(data);
+
+                return _template(data);
+            },
+            renderInline: function (content, data) {
+                var options = {
+                        evaluate: /<#([\s\S]+?)#>/g,
+                        interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
+                        escape: /\{\{([^\}]+?)\}\}(?!\})/g,
+                        variable: 'data'
+                    },
+                    template = _.template(content, null, options);
+
+                return template(data);
+            },
+            shortcode: function (args) {
+                var data = $.extend(true, {}, {
+                        tag: '',
+                        meta: {},
+                        has_content: false,
+                        content: ''
+                    }, args),
+                    template = data.has_content ? 'pum-shortcode-w-content' : 'pum-shortcode';
+
+                return PUM_Admin.templates.render(template, data);
+            },
+            modal: function (args) {
+                var data = $.extend(true, {}, {
+                    id: '',
+                    title: '',
+                    description: '',
+                    classes: '',
+                    save_button: I10n.save,
+                    cancel_button: I10n.cancel,
+                    content: ''
+                }, args);
+
+                return PUM_Admin.templates.render('pum-modal', data);
+            },
+            tabs: function (data) {
+                data = $.extend(true, {}, {
+                    id: '',
+                    vertical: false,
+                    form: false,
+                    classes: [],
+                    tabs: {},
+                    meta: {}
+                }, data);
+
+                if (typeof data.classes === 'string') {
+                    data.classes = [data.classes];
+                }
+
+                if (data.form) {
+                    data.classes.push('pum-tabbed-form');
+                }
+
+                data.meta['data-tab-count'] = Object.keys(data.tabs).length;
+
+                data.classes.push(data.vertical ? 'vertical-tabs' : 'horizontal-tabs');
+
+                data.classes = data.classes.join('  ');
+
+                return PUM_Admin.templates.render('pum-tabs', data);
+            },
+            section: function (args) {
+                var data = $.extend(true, {}, {
+                    classes: [],
+                    fields: []
+                }, args);
+
+
+                return PUM_Admin.templates.render('pum-field-section', data);
+            },
+            fieldArgs: function (args) {
+                var options = [],
+                    data = $.extend(true, {}, PUM_Admin.models.field(args));
+
+                if (args.std !== undefined && args.type !== 'checkbox' && (data.value === null || data.value === false)) {
+                    data.value = args.std;
+                }
+
+                if ('string' === typeof data.classes) {
+                    data.classes = data.classes.split(' ');
+                }
+
+                if (args.class !== undefined) {
+                    data.classes.push(args.class);
+                }
+
+                if (args.dependencies !== undefined && typeof args.dependencies === 'object') {
+                    data.dependencies = JSON.stringify(args.dependencies);
+                }
+
+                if (data.required) {
+                    data.meta.required = true;
+                    data.classes.push('pum-required');
+                }
+
+                if (typeof data.dynamic_desc === 'string' && data.dynamic_desc.length) {
+                    data.classes.push('pum-field-dynamic-desc');
+                    data.desc = PUM_Admin.templates.renderInline(data.dynamic_desc, data);
+                }
+
+                if (data.allow_html) {
+                    data.classes.push('pum-field-' + data.type + '--html');
+                    if ( typeof data.value === 'string' && data.value !== '' && PUM_Admin.utils.htmlencoder.hasEncoded(data.value)) {
+                        data.value = PUM_Admin.utils.htmlencoder.htmlDecode(data.value);
+                    }
+                }
+
+                switch (args.type) {
+                case 'select':
+                case 'objectselect':
+                case 'postselect':
+                case 'taxonomyselect':
+                    if (data.options !== undefined) {
+                        _.each(data.options, function (label, value) {
+                            var selected = false,
+                                optgroup,
+                                optgroup_options;
+
+                            // Check if the label is an object. If so this is a optgroup and the label is sub options array.
+                            // NOTE: The value in the case its an optgroup is the optgroup label.
+                            if (typeof label !== 'object') {
+
+                                if (data.value !== null) {
+                                    if (data.multiple && ((typeof data.value === 'string' && data.value == value) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1) || (!Array.isArray(data.value) && typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined))) {
+                                        selected = 'selected';
+                                    } else if (!data.multiple && data.value == value) {
+                                        selected = 'selected';
+                                    }
+                                }
+
+                                options.push(
+                                    PUM_Admin.templates.prepareMeta({
+                                        label: label,
+                                        value: value,
+                                        meta: {
+                                            selected: selected
+                                        }
+                                    })
+                                );
+
+                            } else {
+                                // Process Option Groups
+
+                                // Swap label & value due to group labels being used as keys.
+                                optgroup = value;
+                                optgroup_options = [];
+
+                                _.each(label, function (label, value) {
+                                    var selected = false;
+
+                                    if (data.value !== null) {
+                                        if (data.multiple && ((typeof data.value === 'string' && data.value == value) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1) || (!Array.isArray(data.value) && typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined))) {
+                                            selected = 'selected';
+                                        } else if (!data.multiple && data.value == value) {
+                                            selected = 'selected';
+                                        }
+                                    }
+                                    optgroup_options.push(
+                                        PUM_Admin.templates.prepareMeta({
+                                            label: label,
+                                            value: value,
+                                            meta: {
+                                                selected: selected
+                                            }
+                                        })
+                                    );
+
+                                });
+
+                                options.push({
+                                    label: optgroup,
+                                    options: optgroup_options
+                                });
+
+                            }
+
+                        });
+
+                        data.options = options;
+
+                    }
+
+                    if (data.multiple) {
+
+                        data.meta.multiple = true;
+
+                        if (data.as_array) {
+                            data.name += '[]';
+                        }
+
+                        if (!data.value || !data.value.length) {
+                            data.value = [];
+                        }
+
+                        if (typeof data.value === 'string') {
+                            data.value = [data.value];
+                        }
+
+                    }
+
+                    if (args.type !== 'select') {
+                        data.select2 = true;
+                        data.classes.push('pum-field-objectselect');
+                        data.classes.push(args.type === 'postselect' ? 'pum-field-postselect' : 'pum-field-taxonomyselect');
+                        data.meta['data-objecttype'] = args.type === 'postselect' ? 'post_type' : 'taxonomy';
+                        data.meta['data-objectkey'] = args.type === 'postselect' ? args.post_type : args.taxonomy;
+                        data.meta['data-current'] = typeof data.value === 'object' || Array.isArray(data.value) ? JSON.stringify(data.value) : data.value;
+                    }
+
+                    if (data.select2) {
+                        data.classes.push('pum-field-select2');
+
+                        if (data.placeholder) {
+                            data.meta['data-placeholder'] = data.placeholder;
+                        }
+                    }
+
+                    break;
+                case 'radio':
+                    if (data.options !== undefined) {
+                        _.each(data.options, function (label, value) {
+
+                            options.push(
+                                PUM_Admin.templates.prepareMeta({
+                                    label: label,
+                                    value: value,
+                                    meta: {
+                                        checked: data.value === value
+                                    }
+                                })
+                            );
+
+                        });
+
+                        data.options = options;
+                    }
+                    break;
+                case 'multicheck':
+                    if (data.options !== undefined) {
+
+                        if (data.value === false || data.value === null) {
+                            data.value = [];
+                        }
+
+                        if (typeof data.value === 'string' && data.value.indexOf(',')) {
+                            data.value = data.value.split(',');
+                        }
+
+                        if (data.as_array) {
+                            data.name += '[]';
+                        }
+
+                        _.each(data.options, function (label, value) {
+
+                            options.push(
+                                PUM_Admin.templates.prepareMeta({
+                                    label: label,
+                                    value: value,
+                                    meta: {
+                                        checked: (Array.isArray(data.value) && data.value.indexOf(value) !== -1) || (!Array.isArray(data.value) && typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined)
+                                    }
+                                })
+                            );
+
+                        });
+
+                        data.options = options;
+                    }
+                    break;
+                case 'checkbox':
+                    switch (typeof data.value) {
+                    case 'object':
+                        if (Array.isArray(data.value) && data.value.length === 1 && data.value[0].toString() === '1') {
+                            data.value = true;
+                            data.meta.checked = true;
+                        }
+                        break;
+                    case 'boolean':
+                        if (data.value) {
+                            data.meta.checked = true;
+                        }
+                        break;
+                    case 'string':
+                        if (data.value === 'true' || data.value === 'yes' || data.value === '1') {
+                            data.meta.checked = true;
+                        }
+                        break;
+                    case 'number':
+                        if (parseInt(data.value, 10) === 1 || parseInt(data.value, 10) > 0) {
+                            data.meta.checked = true;
+                        }
+                    }
+                    break;
+                case 'rangeslider':
+                    // data.meta.readonly = true;
+                    data.meta.step = data.step;
+                    data.meta.min = data.min;
+                    data.meta.max = data.max;
+                    data.meta['data-force-minmax'] = data.force_minmax.toString();
+                    break;
+                case 'textarea':
+                    data.meta.cols = data.cols;
+                    data.meta.rows = data.rows;
+                    break;
+                case 'measure':
+                    if (typeof data.value === 'string' && data.value !== '') {
+                        data.number = parseInt(data.value);
+                        data.unitValue = data.value.replace(data.number, "");
+                        data.value = data.number;
+                    } else {
+                        data.unitValue = null;
+                    }
+
+                    if (data.units !== undefined) {
+                        _.each(data.units, function (label, value) {
+                            var selected = false;
+
+                            if (data.unitValue == value) {
+                                selected = 'selected';
+                            }
+
+                            options.push(
+                                PUM_Admin.templates.prepareMeta({
+                                    label: label,
+                                    value: value,
+                                    meta: {
+                                        selected: selected
+                                    }
+                                })
+                            );
+
+                        });
+
+                        data.units = options;
+                    }
+                    break;
+                case 'color':
+                    if ( typeof data.value === 'string' && data.value !== '') {
+                        data.meta['data-default-color'] = data.value;
+                    }
+                    break;
+                case 'license_key':
+
+                    data.value = $.extend({
+                        key: '',
+                        license: {},
+                        messages: [],
+                        status: 'empty',
+                        expires: false,
+                        classes: false
+                    }, data.value);
+
+                    data.classes.push('pum-license-' + data.value.status + '-notice');
+
+                    if (data.value.classes) {
+                        data.classes.push(data.value.classes);
+                    }
+                    break;
+                }
+
+                return data;
+            },
+            field: function (args) {
+                var fieldTemplate,
+                    data = PUM_Admin.templates.fieldArgs(args);
+
+                fieldTemplate = 'pum-field-' + data.type;
+
+                if (data.type === 'objectselfect' || data.type === 'postselect' || data.type === 'taxonomyselect') {
+                    fieldTemplate = 'pum-field-select';
+                }
+
+                if (!$('#tmpl-' + fieldTemplate).length) {
+                    console.warn('No field template found for type:' + data.type + ' fieldID: ' + data.id);
+                    return '';
+                }
+
+                data.field = PUM_Admin.templates.render(fieldTemplate, data);
+
+                return PUM_Admin.templates.render('pum-field-wrapper', data);
+            },
+            prepareMeta: function (data) {
+                // Convert meta JSON to attribute string.
+                var _meta = [],
+                    key;
+
+                for (key in data.meta) {
+                    if (data.meta.hasOwnProperty(key)) {
+                        // Boolean attributes can only require attribute key, not value.
+                        if ('boolean' === typeof data.meta[key]) {
+                            // Only set truthy boolean attributes.
+                            if (data.meta[key]) {
+                                _meta.push(_.escape(key));
+                            }
+                        } else {
+                            _meta.push(_.escape(key) + '="' + _.escape(data.meta[key]) + '"');
+                        }
+                    }
+                }
+
+                data.meta = _meta.join(' ');
+                return data;
+            }
+        };
+
+    // Import this module.
+    window.PUM_Admin = window.PUM_Admin || {};
+    window.PUM_Admin.templates = templates;
+}(window.jQuery));
+
+/*******************************************************************************
+ * Copyright (c) 2019, Code Atlantic LLC
+ ******************************************************************************/
+(function ($) {
+    "use strict";
+
+    String.prototype.capitalize = function () {
+        return this.charAt(0).toUpperCase() + this.slice(1);
+    };
+
+    var root = this,
+        inputTypes = 'color,date,datetime,datetime-local,email,hidden,month,number,password,range,search,tel,text,time,url,week'.split(','),
+        inputNodes = 'select,textarea'.split(','),
+        rName = /\[([^\]]*)\]/g;
+
+    // ugly hack for IE7-8
+    function isInArray(array, needle) {
+        return $.inArray(needle, array) !== -1;
+    }
+
+    function storeValue(container, parsedName, value) {
+
+        var part = parsedName[0];
+
+        if (parsedName.length > 1) {
+            if (!container[part]) {
+                // If the next part is eq to '' it means we are processing complex name (i.e. `some[]`)
+                // for this case we need to use Array instead of an Object for the index increment purpose
+                container[part] = parsedName[1] ? {} : [];
+            }
+            storeValue(container[part], parsedName.slice(1), value);
+        } else {
+
+            // Increment Array index for `some[]` case
+            if (!part) {
+                part = container.length;
+            }
+
+            container[part] = value;
+        }
+    }
+
+    /**
+     * A Javascript object to encode and/or decode html characters using HTML or Numeric entities that handles double or partial encoding
+     * Author: R Reid
+     * source: http://www.strictly-software.com/htmlencode
+     * Licences: GPL, The MIT License (MIT)
+     * Copyright: (c) 2011 Robert Reid - Strictly-Software.com
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+     *
+     * Revision:
+     *  2011-07-14, Jacques-Yves Bleau:
+     *       - fixed conversion error with capitalized accentuated characters
+     *       + converted arr1 and arr2 to object property to remove redundancy
+     *
+     * Revision:
+     *  2011-11-10, Ce-Yi Hio:
+     *       - fixed conversion error with a number of capitalized entity characters
+     *
+     * Revision:
+     *  2011-11-10, Rob Reid:
+     *		 - changed array format
+     *
+     * Revision:
+     *  2012-09-23, Alex Oss:
+     *		 - replaced string concatonation in numEncode with string builder, push and join for peformance with ammendments by Rob Reid
+     */
+
+    var Encoder = {
+
+        // When encoding do we convert characters into html or numerical entities
+        EncodeType : "entity",  // entity OR numerical
+
+        isEmpty : function(val){
+            if(val){
+                return ((val===null) || val.length==0 || /^\s+$/.test(val));
+            }else{
+                return true;
+            }
+        },
+
+        // arrays for conversion from HTML Entities to Numerical values
+        arr1: ['&nbsp;','&iexcl;','&cent;','&pound;','&curren;','&yen;','&brvbar;','&sect;','&uml;','&copy;','&ordf;','&laquo;','&not;','&shy;','&reg;','&macr;','&deg;','&plusmn;','&sup2;','&sup3;','&acute;','&micro;','&para;','&middot;','&cedil;','&sup1;','&ordm;','&raquo;','&frac14;','&frac12;','&frac34;','&iquest;','&Agrave;','&Aacute;','&Acirc;','&Atilde;','&Auml;','&Aring;','&AElig;','&Ccedil;','&Egrave;','&Eacute;','&Ecirc;','&Euml;','&Igrave;','&Iacute;','&Icirc;','&Iuml;','&ETH;','&Ntilde;','&Ograve;','&Oacute;','&Ocirc;','&Otilde;','&Ouml;','&times;','&Oslash;','&Ugrave;','&Uacute;','&Ucirc;','&Uuml;','&Yacute;','&THORN;','&szlig;','&agrave;','&aacute;','&acirc;','&atilde;','&auml;','&aring;','&aelig;','&ccedil;','&egrave;','&eacute;','&ecirc;','&euml;','&igrave;','&iacute;','&icirc;','&iuml;','&eth;','&ntilde;','&ograve;','&oacute;','&ocirc;','&otilde;','&ouml;','&divide;','&oslash;','&ugrave;','&uacute;','&ucirc;','&uuml;','&yacute;','&thorn;','&yuml;','&quot;','&amp;','&lt;','&gt;','&OElig;','&oelig;','&Scaron;','&scaron;','&Yuml;','&circ;','&tilde;','&ensp;','&emsp;','&thinsp;','&zwnj;','&zwj;','&lrm;','&rlm;','&ndash;','&mdash;','&lsquo;','&rsquo;','&sbquo;','&ldquo;','&rdquo;','&bdquo;','&dagger;','&Dagger;','&permil;','&lsaquo;','&rsaquo;','&euro;','&fnof;','&Alpha;','&Beta;','&Gamma;','&Delta;','&Epsilon;','&Zeta;','&Eta;','&Theta;','&Iota;','&Kappa;','&Lambda;','&Mu;','&Nu;','&Xi;','&Omicron;','&Pi;','&Rho;','&Sigma;','&Tau;','&Upsilon;','&Phi;','&Chi;','&Psi;','&Omega;','&alpha;','&beta;','&gamma;','&delta;','&epsilon;','&zeta;','&eta;','&theta;','&iota;','&kappa;','&lambda;','&mu;','&nu;','&xi;','&omicron;','&pi;','&rho;','&sigmaf;','&sigma;','&tau;','&upsilon;','&phi;','&chi;','&psi;','&omega;','&thetasym;','&upsih;','&piv;','&bull;','&hellip;','&prime;','&Prime;','&oline;','&frasl;','&weierp;','&image;','&real;','&trade;','&alefsym;','&larr;','&uarr;','&rarr;','&darr;','&harr;','&crarr;','&lArr;','&uArr;','&rArr;','&dArr;','&hArr;','&forall;','&part;','&exist;','&empty;','&nabla;','&isin;','&notin;','&ni;','&prod;','&sum;','&minus;','&lowast;','&radic;','&prop;','&infin;','&ang;','&and;','&or;','&cap;','&cup;','&int;','&there4;','&sim;','&cong;','&asymp;','&ne;','&equiv;','&le;','&ge;','&sub;','&sup;','&nsub;','&sube;','&supe;','&oplus;','&otimes;','&perp;','&sdot;','&lceil;','&rceil;','&lfloor;','&rfloor;','&lang;','&rang;','&loz;','&spades;','&clubs;','&hearts;','&diams;'],
+        arr2: ['&#160;','&#161;','&#162;','&#163;','&#164;','&#165;','&#166;','&#167;','&#168;','&#169;','&#170;','&#171;','&#172;','&#173;','&#174;','&#175;','&#176;','&#177;','&#178;','&#179;','&#180;','&#181;','&#182;','&#183;','&#184;','&#185;','&#186;','&#187;','&#188;','&#189;','&#190;','&#191;','&#192;','&#193;','&#194;','&#195;','&#196;','&#197;','&#198;','&#199;','&#200;','&#201;','&#202;','&#203;','&#204;','&#205;','&#206;','&#207;','&#208;','&#209;','&#210;','&#211;','&#212;','&#213;','&#214;','&#215;','&#216;','&#217;','&#218;','&#219;','&#220;','&#221;','&#222;','&#223;','&#224;','&#225;','&#226;','&#227;','&#228;','&#229;','&#230;','&#231;','&#232;','&#233;','&#234;','&#235;','&#236;','&#237;','&#238;','&#239;','&#240;','&#241;','&#242;','&#243;','&#244;','&#245;','&#246;','&#247;','&#248;','&#249;','&#250;','&#251;','&#252;','&#253;','&#254;','&#255;','&#34;','&#38;','&#60;','&#62;','&#338;','&#339;','&#352;','&#353;','&#376;','&#710;','&#732;','&#8194;','&#8195;','&#8201;','&#8204;','&#8205;','&#8206;','&#8207;','&#8211;','&#8212;','&#8216;','&#8217;','&#8218;','&#8220;','&#8221;','&#8222;','&#8224;','&#8225;','&#8240;','&#8249;','&#8250;','&#8364;','&#402;','&#913;','&#914;','&#915;','&#916;','&#917;','&#918;','&#919;','&#920;','&#921;','&#922;','&#923;','&#924;','&#925;','&#926;','&#927;','&#928;','&#929;','&#931;','&#932;','&#933;','&#934;','&#935;','&#936;','&#937;','&#945;','&#946;','&#947;','&#948;','&#949;','&#950;','&#951;','&#952;','&#953;','&#954;','&#955;','&#956;','&#957;','&#958;','&#959;','&#960;','&#961;','&#962;','&#963;','&#964;','&#965;','&#966;','&#967;','&#968;','&#969;','&#977;','&#978;','&#982;','&#8226;','&#8230;','&#8242;','&#8243;','&#8254;','&#8260;','&#8472;','&#8465;','&#8476;','&#8482;','&#8501;','&#8592;','&#8593;','&#8594;','&#8595;','&#8596;','&#8629;','&#8656;','&#8657;','&#8658;','&#8659;','&#8660;','&#8704;','&#8706;','&#8707;','&#8709;','&#8711;','&#8712;','&#8713;','&#8715;','&#8719;','&#8721;','&#8722;','&#8727;','&#8730;','&#8733;','&#8734;','&#8736;','&#8743;','&#8744;','&#8745;','&#8746;','&#8747;','&#8756;','&#8764;','&#8773;','&#8776;','&#8800;','&#8801;','&#8804;','&#8805;','&#8834;','&#8835;','&#8836;','&#8838;','&#8839;','&#8853;','&#8855;','&#8869;','&#8901;','&#8968;','&#8969;','&#8970;','&#8971;','&#9001;','&#9002;','&#9674;','&#9824;','&#9827;','&#9829;','&#9830;'],
+
+        // Convert HTML entities into numerical entities
+        HTML2Numerical : function(s){
+            return this.swapArrayVals(s,this.arr1,this.arr2);
+        },
+
+        // Convert Numerical entities into HTML entities
+        NumericalToHTML : function(s){
+            return this.swapArrayVals(s,this.arr2,this.arr1);
+        },
+
+
+        // Numerically encodes all unicode characters
+        numEncode : function(s){
+            if(this.isEmpty(s)) return "";
+
+            var a = [],
+                l = s.length;
+
+            for (var i=0;i<l;i++){
+                var c = s.charAt(i);
+                if (c < " " || c > "~"){
+                    a.push("&#");
+                    a.push(c.charCodeAt()); //numeric value of code point
+                    a.push(";");
+                }else{
+                    a.push(c);
+                }
+            }
+
+            return a.join("");
+        },
+
+        // HTML Decode numerical and HTML entities back to original values
+        htmlDecode : function(s){
+
+            var c,m,d = s;
+
+            if(this.isEmpty(d)) return "";
+
+            // convert HTML entites back to numerical entites first
+            d = this.HTML2Numerical(d);
+
+            // look for numerical entities &#34;
+            var arr=d.match(/&#[0-9]{1,5};/g);
+
+            // if no matches found in string then skip
+            if(arr!=null){
+                for(var x=0;x<arr.length;x++){
+                    m = arr[x];
+                    c = m.substring(2,m.length-1); //get numeric part which is refernce to unicode character
+                    // if its a valid number we can decode
+                    if(c >= -32768 && c <= 65535){
+                        // decode every single match within string
+                        d = d.replace(m, String.fromCharCode(c));
+                    }else{
+                        d = d.replace(m, ""); //invalid so replace with nada
+                    }
+                }
+            }
+
+            return d;
+        },
+
+        // encode an input string into either numerical or HTML entities
+        htmlEncode : function(s,dbl){
+
+            if(this.isEmpty(s)) return "";
+
+            // do we allow double encoding? E.g will &amp; be turned into &amp;amp;
+            dbl = dbl || false; //default to prevent double encoding
+
+            // if allowing double encoding we do ampersands first
+            if(dbl){
+                if(this.EncodeType=="numerical"){
+                    s = s.replace(/&/g, "&#38;");
+                }else{
+                    s = s.replace(/&/g, "&amp;");
+                }
+            }
+
+            // convert the xss chars to numerical entities ' " < >
+            s = this.XSSEncode(s,false);
+
+            if(this.EncodeType=="numerical" || !dbl){
+                // Now call function that will convert any HTML entities to numerical codes
+                s = this.HTML2Numerical(s);
+            }
+
+            // Now encode all chars above 127 e.g unicode
+            s = this.numEncode(s);
+
+            // now we know anything that needs to be encoded has been converted to numerical entities we
+            // can encode any ampersands & that are not part of encoded entities
+            // to handle the fact that I need to do a negative check and handle multiple ampersands &&&
+            // I am going to use a placeholder
+
+            // if we don't want double encoded entities we ignore the & in existing entities
+            if(!dbl){
+                s = s.replace(/&#/g,"##AMPHASH##");
+
+                if(this.EncodeType=="numerical"){
+                    s = s.replace(/&/g, "&#38;");
+                }else{
+                    s = s.replace(/&/g, "&amp;");
+                }
+
+                s = s.replace(/##AMPHASH##/g,"&#");
+            }
+
+            // replace any malformed entities
+            s = s.replace(/&#\d*([^\d;]|$)/g, "$1");
+
+            if(!dbl){
+                // safety check to correct any double encoded &amp;
+                s = this.correctEncoding(s);
+            }
+
+            // now do we need to convert our numerical encoded string into entities
+            if(this.EncodeType=="entity"){
+                s = this.NumericalToHTML(s);
+            }
+
+            return s;
+        },
+
+        // Encodes the basic 4 characters used to malform HTML in XSS hacks
+        XSSEncode : function(s,en){
+            if(!this.isEmpty(s)){
+                en = en || true;
+                // do we convert to numerical or html entity?
+                if(en){
+                    s = s.replace(/\'/g,"&#39;"); //no HTML equivalent as &apos is not cross browser supported
+                    s = s.replace(/\"/g,"&quot;");
+                    s = s.replace(/</g,"&lt;");
+                    s = s.replace(/>/g,"&gt;");
+                }else{
+                    s = s.replace(/\'/g,"&#39;"); //no HTML equivalent as &apos is not cross browser supported
+                    s = s.replace(/\"/g,"&#34;");
+                    s = s.replace(/</g,"&#60;");
+                    s = s.replace(/>/g,"&#62;");
+                }
+                return s;
+            }else{
+                return "";
+            }
+        },
+
+        // returns true if a string contains html or numerical encoded entities
+        hasEncoded : function(s){
+            if(/&#[0-9]{1,5};/g.test(s)){
+                return true;
+            }else if(/&[A-Z]{2,6};/gi.test(s)){
+                return true;
+            }else{
+                return false;
+            }
+        },
+
+        // will remove any unicode characters
+        stripUnicode : function(s){
+            return s.replace(/[^\x20-\x7E]/g,"");
+
+        },
+
+        // corrects any double encoded &amp; entities e.g &amp;amp;
+        correctEncoding : function(s){
+            return s.replace(/(&amp;)(amp;)+/,"$1");
+        },
+
+
+        // Function to loop through an array swaping each item with the value from another array e.g swap HTML entities with Numericals
+        swapArrayVals : function(s,arr1,arr2){
+            if(this.isEmpty(s)) return "";
+            var re;
+            if(arr1 && arr2){
+                //ShowDebug("in swapArrayVals arr1.length = " + arr1.length + " arr2.length = " + arr2.length)
+                // array lengths must match
+                if(arr1.length == arr2.length){
+                    for(var x=0,i=arr1.length;x<i;x++){
+                        re = new RegExp(arr1[x], 'g');
+                        s = s.replace(re,arr2[x]); //swap arr1 item with matching item from arr2
+                    }
+                }
+            }
+            return s;
+        },
+
+        inArray : function( item, arr ) {
+            for ( var i = 0, x = arr.length; i < x; i++ ){
+                if ( arr[i] === item ){
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+    };
+
+    Encoder.EncodeType = "entity";
+
+    var utils = {
+        htmlencoder: Encoder,
+        convert_meta_to_object: function (data) {
+            var converted_data = {},
+                element,
+                property,
+                key;
+
+            for (key in data) {
+                if (data.hasOwnProperty(key)) {
+                    element = key.split(/_(.+)?/)[0];
+                    property = key.split(/_(.+)?/)[1];
+                    if (converted_data[element] === undefined) {
+                        converted_data[element] = {};
+                    }
+                    converted_data[element][property] = data[key];
+                }
+            }
+            return converted_data;
+        },
+        object_to_array: function (object) {
+            var array = [],
+                i;
+
+            // Convert facets to array (JSON.stringify breaks arrays).
+            if (typeof object === 'object') {
+                for (i in object) {
+                    array.push(object[i]);
+                }
+                object = array;
+            }
+
+            return object;
+        },
+        checked: function (val1, val2, print) {
+            var checked = false;
+            if (typeof val1 === 'object' && typeof val2 === 'string' && jQuery.inArray(val2, val1) !== -1) {
+                checked = true;
+            } else if (typeof val2 === 'object' && typeof val1 === 'string' && jQuery.inArray(val1, val2) !== -1) {
+                checked = true;
+            } else if (val1 === val2) {
+                checked = true;
+            } else if (val1 == val2) {
+                checked = true;
+            }
+
+            if (print !== undefined && print) {
+                return checked ? ' checked="checked"' : '';
+            }
+            return checked;
+        },
+        selected: function (val1, val2, print) {
+            var selected = false;
+            if (typeof val1 === 'object' && typeof val2 === 'string' && jQuery.inArray(val2, val1) !== -1) {
+                selected = true;
+            } else if (typeof val2 === 'object' && typeof val1 === 'string' && jQuery.inArray(val1, val2) !== -1) {
+                selected = true;
+            } else if (val1 === val2) {
+                selected = true;
+            }
+
+            if (print !== undefined && print) {
+                return selected ? ' selected="selected"' : '';
+            }
+            return selected;
+        },
+        convert_hex: function (hex, opacity) {
+            if (undefined === hex) {
+                return '';
+            }
+            if (undefined === opacity) {
+                opacity = 100;
+            }
+
+            hex = hex.replace('#', '');
+            var r = parseInt(hex.substring(0, 2), 16),
+                g = parseInt(hex.substring(2, 4), 16),
+                b = parseInt(hex.substring(4, 6), 16),
+                result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity / 100 + ')';
+            return result;
+        },
+        debounce: function (callback, threshold) {
+            var timeout;
+            return function () {
+                var context = this, params = arguments;
+                window.clearTimeout(timeout);
+                timeout = window.setTimeout(function () {
+                    callback.apply(context, params);
+                }, threshold);
+            };
+        },
+        throttle: function (callback, threshold) {
+            var suppress = false,
+                clear = function () {
+                    suppress = false;
+                };
+            return function () {
+                if (!suppress) {
+                    callback();
+                    window.setTimeout(clear, threshold);
+                    suppress = true;
+                }
+            };
+        },
+        serializeForm: function (options) {
+            $.extend({}, options);
+
+            var values = {},
+                settings = $.extend(true, {
+                    include: [],
+                    exclude: [],
+                    includeByClass: ''
+                }, options);
+
+            this.find(':input').each(function () {
+
+                var parsedName;
+
+                // Apply simple checks and filters
+                if (!this.name || this.disabled ||
+                    isInArray(settings.exclude, this.name) ||
+                    (settings.include.length && !isInArray(settings.include, this.name)) ||
+                    this.className.indexOf(settings.includeByClass) === -1) {
+                    return;
+                }
+
+                // Parse complex names
+                // JS RegExp doesn't support "positive look behind" :( that's why so weird parsing is used
+                parsedName = this.name.replace(rName, '[$1').split('[');
+                if (!parsedName[0]) {
+                    return;
+                }
+
+                if (this.checked ||
+                    isInArray(inputTypes, this.type) ||
+                    isInArray(inputNodes, this.nodeName.toLowerCase())) {
+
+                    // Simulate control with a complex name (i.e. `some[]`)
+                    // as it handled in the same way as Checkboxes should
+                    if (this.type === 'checkbox') {
+                        parsedName.push('');
+                    }
+
+                    // jQuery.val() is used to simplify of getting values
+                    // from the custom controls (which follow jQuery .val() API) and Multiple Select
+                    storeValue(values, parsedName, $(this).val());
+                }
+            });
+
+            return values;
+        }
+
+    };
+
+    // Import this module.
+    window.PUM_Admin = window.PUM_Admin || {};
+    window.PUM_Admin.utils = utils;
+
+    // @deprecated 1.7.0 Here for backward compatibility.
+    window.PUMUtils = utils;
+
+    $.fn.pumSerializeForm = utils.serializeForm;
+}(jQuery));
 /* jshint ignore:start */
 /*!
  * Select2 4.0.2
@@ -6290,2451 +8789,3 @@
     // Return the Select2 instance for anyone who is importing it.
     return pumselect2;
 }));
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
-(function ($) {
-    "use strict";
-
-    function dismissAlert($alert) {
-        var dismissible = $alert.data('dismissible'),
-            expires = dismissible === '1' || dismissible === 1 || dismissible === true ? null: dismissible;
-
-        $.ajax({
-            method: "POST",
-            dataType: "json",
-            url: ajaxurl,
-            data: {
-                action: 'pum_alerts_action',
-                nonce: window.pum_alerts_nonce,
-                code: $alert.data('code'),
-                expires: expires
-            }
-        });
-    }
-
-    function dismissReviewRequest(reason) {
-        $.ajax({
-            method: "POST",
-            dataType: "json",
-            url: ajaxurl,
-            data: {
-                action: 'pum_review_action',
-                nonce: window.pum_review_nonce,
-                group: window.pum_review_trigger.group,
-                code: window.pum_review_trigger.code,
-                pri: window.pum_review_trigger.pri,
-                reason: reason
-            }
-        });
-
-        if (typeof window.pum_review_api_url !== 'undefined') {
-            $.ajax({
-                method: "POST",
-                dataType: "json",
-                url: window.pum_review_api_url,
-                data: {
-                    trigger_group: window.pum_review_trigger.group,
-                    trigger_code: window.pum_review_trigger.code,
-                    reason: reason,
-                    uuid: window.pum_review_uuid || null
-                }
-            });
-        }
-    }
-
-    var $alerts = $('.pum-alerts'),
-        $notice_counts = $('.pum-alert-count'),
-        count = parseInt($notice_counts.eq(0).text());
-
-    function checkRemoveAlerts() {
-        if ($alerts.find('.pum-alert-holder').length === 0) {
-            $alerts.slideUp(100, function () {
-                $alerts.remove();
-            });
-
-            $('#menu-posts-popup .wp-menu-name .update-plugins').fadeOut();
-        }
-
-    }
-
-    function removeAlert($alert) {
-        count--;
-
-        $notice_counts.text(count);
-
-        $alert.fadeTo(100, 0, function () {
-            $alert.slideUp(100, function () {
-                $alert.remove();
-
-                checkRemoveAlerts();
-            });
-        });
-    }
-
-    $(document)
-        .on('pumDismissAlert', checkRemoveAlerts)
-        .on('click', '.pum-alert-holder .pum-dismiss', function () {
-            var $this = $(this),
-                $alert = $this.parents('.pum-alert-holder'),
-                reason = $this.data('reason') || 'maybe_later';
-
-            if ( 'review_request' !== $alert.data('code')) {
-                dismissAlert($alert);
-            } else {
-                dismissReviewRequest(reason);
-            }
-
-            removeAlert($alert);
-
-        });
-}(jQuery));
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
-(function ($) {
-    "use strict";
-
-    var colorpicker = {
-        init: function () {
-            $('.pum-color-picker').filter(':not(.pum-color-picker-initialized)')
-                .addClass('pum-color-picker-initialized')
-                .wpColorPicker({
-                    change: function (event, ui) {
-                        $(event.target).trigger('colorchange', ui);
-                    },
-                    clear: function (event) {
-                        $(event.target).prev().trigger('colorchange').wpColorPicker('close');
-                    },
-                    hide: true
-                });
-        }
-    };
-
-    // Import this module.
-    window.PUM_Admin = window.PUM_Admin || {};
-    window.PUM_Admin.colorpicker = colorpicker;
-
-    $(document)
-        .on('click', '.iris-palette', function () {
-            $(this).parents('.wp-picker-active').find('input.pum-color-picker').trigger('change');
-        })
-        .on('colorchange', function (event, ui) {
-            var $input = $(event.target),
-                color = '';
-
-            if (ui !== undefined && ui.color !== undefined) {
-                color = ui.color.toString();
-            }
-
-            $input.val(color).trigger('change');
-
-            if ($('form#post input#post_type').val() === 'popup_theme') {
-                PUM_Admin.utils.debounce(PUM_Admin.themeEditor.refresh_preview, 100);
-            }
-        })
-        .on('pum_init', colorpicker.init);
-}(jQuery));
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
-
-(function ($) {
-    "use strict";
-
-    var forms = {
-        init: function () {
-            forms.checkDependencies();
-        },
-        /**
-         * dependencies should look like this:
-         *
-         * {
-         *   field_name_1: value, // Select, radio etc.
-         *   field_name_2: true // Checkbox
-         * }
-         *
-         * Support for Multiple possible values of one field
-         *
-         * {
-         *   field_name_1: [ value_1, value_2 ]
-         * }
-         *
-         */
-        checkDependencies: function ($dependent_fields) {
-            var _fields = $($dependent_fields);
-
-            // If no fields passed, only do those not already initialized.
-            $dependent_fields = _fields.length ? _fields : $("[data-pum-dependencies]:not([data-pum-processed-dependencies])");
-
-            $dependent_fields.each(function () {
-                var $dependent = $(this),
-                    dependentID = $dependent.data('id'),
-                    // The dependency object for this field.
-                    dependencies = $dependent.data("pum-processed-dependencies") || {},
-                    // Total number of fields this :input is dependent on.
-                    requiredCount = Object.keys(dependencies).length,
-                    // Current count of fields this :input matched properly.
-                    count = 0,
-                    // An array of fields this :input is dependent on.
-                    dependentFields = $dependent.data("pum-dependent-fields"),
-                    // Early declarations.
-                    key;
-
-                // Clean up & pre-process dependencies so we don't need to rebuild each time.
-                if (!$dependent.data("pum-processed-dependencies")) {
-                    dependencies = $dependent.data("pum-dependencies");
-                    if (typeof dependencies === 'string') {
-                        dependencies = JSON.parse(dependencies);
-                    }
-
-                    // Convert each key to an array of acceptable values.
-                    for (key in dependencies) {
-                        if (dependencies.hasOwnProperty(key)) {
-                            if (typeof dependencies[key] === "string") {
-                                // Leave boolean values alone as they are for checkboxes or checking if an input has any value.
-
-                                if (dependencies[key].indexOf(',') !== -1) {
-                                    dependencies[key] = dependencies[key].split(',');
-                                } else {
-                                    dependencies[key] = [dependencies[key]];
-                                }
-                            } else if (typeof dependencies[key] === "number") {
-                                dependencies[key] = [dependencies[key]];
-                            }
-                        }
-                    }
-
-                    // Update cache & counts.
-                    requiredCount = Object.keys(dependencies).length;
-                    $dependent.data("pum-processed-dependencies", dependencies).attr("data-pum-processed-dependencies", dependencies);
-                }
-
-                if (!dependentFields) {
-                    dependentFields = $.map(dependencies, function (value, index) {
-                        var $wrapper = $('.pum-field[data-id="' + index + '"]');
-
-                        return $wrapper.length ? $wrapper.eq(0) : null;
-                    });
-
-                    $dependent.data("pum-dependent-fields", dependentFields);
-                }
-
-                $(dependentFields).each(function () {
-                    var $wrapper = $(this),
-                        $field = $wrapper.find(':input:first'),
-                        id = $wrapper.data("id"),
-                        value = $field.val(),
-                        required = dependencies[id],
-                        matched,
-                        // Used for limiting the fields that get updated when this field is changed.
-                        all_this_fields_dependents = $wrapper.data('pum-field-dependents') || [];
-
-                    if (all_this_fields_dependents.indexOf(dependentID) === -1) {
-                        all_this_fields_dependents.push(dependentID);
-                        $wrapper.data('pum-field-dependents', all_this_fields_dependents);
-                    }
-
-                    // If no required values found bail early.
-                    if (typeof required === 'undefined' || required === null) {
-                        $dependent.removeClass('pum-dependencies-met').hide(0).trigger('pumFormDependencyUnmet');
-                        // Effectively breaks the .each for this $dependent and hides it.
-                        return false;
-                    }
-
-                    if ($wrapper.hasClass('pum-field-radio')) {
-                        value = $wrapper.find(':input:checked').val();
-                    }
-
-                    if ($wrapper.hasClass('pum-field-multicheck')) {
-                        value = [];
-                        $wrapper.find(':checkbox:checked').each(function (i) {
-                            value[i] = $(this).val();
-
-                            if (typeof value[i] === 'string' && !isNaN(parseInt(value[i]))) {
-                                value[i] = parseInt(value[i]);
-                            }
-
-                        });
-                    }
-
-                    // Check if the value matches required values.
-                    if ($wrapper.hasClass('pum-field-select') || $wrapper.hasClass('pum-field-radio')) {
-                        matched = required && required.indexOf(value) !== -1;
-                    } else if ($wrapper.hasClass('pum-field-checkbox')) {
-                        matched = required === $field.is(':checked');
-                    } else if ($wrapper.hasClass('pum-field-multicheck')) {
-                        if (Array.isArray(required)) {
-                            matched = false;
-                            for (var i = 0; i < required.length; i++) {
-                                if (value.indexOf(required[i]) !== -1) {
-                                    matched = true;
-                                }
-                            }
-                        } else {
-                            matched = value.indexOf(required) !== -1;
-                        }
-                    } else {
-                        matched = Array.isArray(required) ? required.indexOf(value) !== -1 : required == value;
-                    }
-
-                    if (matched) {
-                        count++;
-                    } else {
-                        $dependent.removeClass('pum-dependencies-met').hide(0).trigger('pumFormDependencyUnmet');
-                        // Effectively breaks the .each for this $dependent and hides it.
-                        return false;
-                    }
-
-                    if (count === requiredCount) {
-                        $dependent.addClass('pum-dependencies-met').show(0).trigger('pumFormDependencyMet');
-                    }
-                });
-            });
-        },
-        form_check: function () {
-            $(document).trigger('pum_form_check');
-        },
-        is_field: function (data) {
-            if (typeof data !== 'object') {
-                return false;
-            }
-
-            var field_tests = [
-                data.type === undefined && (data.label !== undefined || data.desc !== undefined),
-                data.type !== undefined && typeof data.type === 'string'
-            ];
-
-            return field_tests.indexOf(true) >= 0;
-        },
-        flattenFields: function (data) {
-            var form_fields = {},
-                tabs = data.tabs || {},
-                sections = data.sections || {},
-                fields = data.fields || {};
-
-            if (Object.keys(tabs).length && Object.keys(sections).length) {
-                // Loop Tabs
-                _.each(fields, function (subTabs, tabID) {
-
-                    // If not a valid tab or no subsections skip it.
-                    if (typeof subTabs !== 'object' || !Object.keys(subTabs).length) {
-                        return;
-                    }
-
-                    // Loop Tab Sections
-                    _.each(subTabs, function (subTabFields, subTabID) {
-
-                        // If not a valid subtab or no fields skip it.
-                        if (typeof subTabFields !== 'object' || !Object.keys(subTabFields).length) {
-                            return;
-                        }
-
-                        // Move single fields into the main subtab.
-                        if (forms.is_field(subTabFields)) {
-                            var newSubTabFields = {};
-                            newSubTabFields[subTabID] = subTabFields;
-                            subTabID = 'main';
-                            subTabFields = newSubTabFields;
-                        }
-
-                        // Loop Tab Section Fields
-                        _.each(subTabFields, function (field) {
-                            // Store the field by id for easy lookup later.
-                            form_fields[field.id] = field;
-                        });
-                    });
-                });
-            }
-            else if (Object.keys(tabs).length) {
-                // Loop Tabs
-                _.each(fields, function (tabFields, tabID) {
-
-                    // If not a valid tab or no subsections skip it.
-                    if (typeof tabFields !== 'object' || !Object.keys(tabFields).length) {
-                        return;
-                    }
-
-                    // Loop Tab Fields
-                    _.each(tabFields, function (field) {
-                        // Store the field by id for easy lookup later.
-                        form_fields[field.id] = field;
-                    });
-                });
-            }
-            else if (Object.keys(sections).length) {
-
-                // Loop Sections
-                _.each(fields, function (sectionFields, sectionID) {
-                    // Loop Tab Section Fields
-                    _.each(sectionFields, function (field) {
-                        // Store the field by id for easy lookup later.
-                        form_fields[field.id] = field;
-                    });
-                });
-            }
-            else {
-                fields = forms.parseFields(fields, values);
-
-                // Replace the array with rendered fields.
-                _.each(fields, function (field) {
-                    // Store the field by id for easy lookup later.
-                    form_fields[field.id] = field;
-                });
-            }
-
-            return form_fields;
-        },
-        parseFields: function (fields, values) {
-
-            values = values || {};
-
-            _.each(fields, function (field, fieldID) {
-
-                fields[fieldID] = PUM_Admin.models.field(field);
-
-                if (typeof fields[fieldID].meta !== 'object') {
-                    fields[fieldID].meta = {};
-                }
-
-                if (undefined !== values[fieldID]) {
-                    fields[fieldID].value = values[fieldID];
-                }
-
-                if (fields[fieldID].id === '') {
-                    fields[fieldID].id = fieldID;
-                }
-            });
-
-            return fields;
-        },
-        renderTab: function () {
-
-        },
-        renderSection: function () {
-
-        },
-        render: function (args, values, $container) {
-            var form,
-                sections = {},
-                section = [],
-                form_fields = {},
-                data = $.extend(true, {
-                    id: "",
-                    tabs: {},
-                    sections: {},
-                    fields: {},
-                    maintabs: {},
-                    subtabs: {}
-                }, args),
-                maintabs = $.extend({
-                    id: data.id,
-                    classes: [],
-                    tabs: {},
-                    vertical: true,
-                    form: true,
-                    meta: {
-                        'data-min-height': 250
-                    }
-                }, data.maintabs),
-                subtabs = $.extend({
-                    classes: ['link-tabs', 'sub-tabs'],
-                    tabs: {}
-                }, data.subtabs),
-                container_classes = ['pum-dynamic-form'];
-
-            values = values || {};
-
-            if (Object.keys(data.tabs).length && Object.keys(data.sections).length) {
-                container_classes.push('tabbed-content');
-
-                // Loop Tabs
-                _.each(data.fields, function (subTabs, tabID) {
-
-                    // If not a valid tab or no subsections skip it.
-                    if (typeof subTabs !== 'object' || !Object.keys(subTabs).length) {
-                        return;
-                    }
-
-                    // Define this tab.
-                    if (undefined === maintabs.tabs[tabID]) {
-                        maintabs.tabs[tabID] = {
-                            label: data.tabs[tabID],
-                            content: ''
-                        };
-                    }
-
-                    // Define the sub tabs model.
-                    subtabs = $.extend(subtabs, {
-                        id: data.id + '-' + tabID + '-subtabs',
-                        tabs: {}
-                    });
-
-                    // Loop Tab Sections
-                    _.each(subTabs, function (subTabFields, subTabID) {
-
-                        // If not a valid subtab or no fields skip it.
-                        if (typeof subTabFields !== 'object' || !Object.keys(subTabFields).length) {
-                            return;
-                        }
-
-                        // Move single fields into the main subtab.
-                        if (forms.is_field(subTabFields)) {
-                            var newSubTabFields = {};
-                            newSubTabFields[subTabID] = subTabFields;
-                            subTabID = 'main';
-                            subTabFields = newSubTabFields;
-                        }
-
-                        // Define this subtab model.
-                        if (undefined === subtabs.tabs[subTabID]) {
-                            subtabs.tabs[subTabID] = {
-                                label: data.sections[tabID][subTabID],
-                                content: ''
-                            };
-                        }
-
-                        subTabFields = forms.parseFields(subTabFields, values);
-
-                        // Loop Tab Section Fields
-                        _.each(subTabFields, function (field) {
-                            // Store the field by id for easy lookup later.
-                            form_fields[field.id] = field;
-
-                            // Push rendered fields into the subtab content.
-                            subtabs.tabs[subTabID].content += PUM_Admin.templates.field(field);
-                        });
-
-                        // Remove any empty tabs.
-                        if ("" === subtabs.tabs[subTabID].content) {
-                            delete subtabs.tabs[subTabID];
-                        }
-                    });
-
-                    // If there are subtabs, then render them into the main tabs content, otherwise remove this main tab.
-                    if (Object.keys(subtabs.tabs).length) {
-                        maintabs.tabs[tabID].content = PUM_Admin.templates.tabs(subtabs);
-                    } else {
-                        delete maintabs.tabs[tabID];
-                    }
-                });
-
-                if (Object.keys(maintabs.tabs).length) {
-                    form = PUM_Admin.templates.tabs(maintabs);
-                }
-            } else if (Object.keys(data.tabs).length) {
-                container_classes.push('tabbed-content');
-
-                // Loop Tabs
-                _.each(data.fields, function (tabFields, tabID) {
-
-                    // If not a valid tab or no subsections skip it.
-                    if (typeof tabFields !== 'object' || !Object.keys(tabFields).length) {
-                        return;
-                    }
-
-                    // Define this tab.
-                    if (undefined === maintabs.tabs[tabID]) {
-                        maintabs.tabs[tabID] = {
-                            label: data.tabs[tabID],
-                            content: ''
-                        };
-                    }
-
-                    section = [];
-
-                    tabFields = forms.parseFields(tabFields, values);
-
-                    // Loop Tab Fields
-                    _.each(tabFields, function (field) {
-                        // Store the field by id for easy lookup later.
-                        form_fields[field.id] = field;
-
-                        // Push rendered fields into the subtab content.
-                        section.push(PUM_Admin.templates.field(field));
-                    });
-
-                    // Push rendered tab into the tab.
-                    if (section.length) {
-                        // Push rendered sub tabs into the main tabs if not empty.
-                        maintabs.tabs[tabID].content = PUM_Admin.templates.section({
-                            fields: section
-                        });
-                    } else {
-                        delete (maintabs.tabs[tabID]);
-                    }
-                });
-
-                if (Object.keys(maintabs.tabs).length) {
-                    form = PUM_Admin.templates.tabs(maintabs);
-                }
-            } else if (Object.keys(data.sections).length) {
-
-                // Loop Sections
-                _.each(data.fields, function (sectionFields, sectionID) {
-                    section = [];
-
-                    section.push(PUM_Admin.templates.field({
-                        type: 'heading',
-                        desc: data.sections[sectionID] || ''
-                    }));
-
-                    sectionFields = forms.parseFields(sectionFields, values);
-
-                    // Loop Tab Section Fields
-                    _.each(sectionFields, function (field) {
-                        // Store the field by id for easy lookup later.
-                        form_fields[field.id] = field;
-
-                        // Push rendered fields into the section.
-                        section.push(PUM_Admin.templates.field(field));
-                    });
-
-                    // Push rendered sections into the form.
-                    form += PUM_Admin.templates.section({
-                        fields: section
-                    });
-                });
-            } else {
-                data.fields = forms.parseFields(data.fields, values);
-
-                // Replace the array with rendered fields.
-                _.each(data.fields, function (field) {
-                    // Store the field by id for easy lookup later.
-                    form_fields[field.id] = field;
-
-                    // Push rendered fields into the section.
-                    section.push(PUM_Admin.templates.field(field));
-                });
-
-                // Render the section.
-                form = PUM_Admin.templates.section({
-                    fields: section
-                });
-            }
-
-            if ($container !== undefined && $container.length) {
-                $container
-                    .addClass(container_classes.join('  '))
-                    .data('form_fields', form_fields)
-                    .html(form)
-                    .trigger('pum_init');
-            }
-
-            return form;
-
-        },
-        parseValues: function (values, fields) {
-            fields = fields || false;
-
-            if (!fields) {
-                return values;
-            }
-
-            for (var key in fields) {
-                if (!fields.hasOwnProperty(key)) {
-                    continue;
-                }
-
-                // Measure field value corrections.
-                if (values.hasOwnProperty(key + "_unit")) {
-                    values[key] += values[key + "_unit"];
-                    delete values[key + "_unit"];
-                }
-
-                // If the value key is empty and a checkbox set it to false. Then return.
-                if (typeof values[key] === 'undefined') {
-                    if (fields[key].type === 'checkbox') {
-                        values[key] = false;
-                    }
-                    continue;
-                }
-
-                if (fields[key].allow_html && !PUM_Admin.utils.htmlencoder.hasEncoded(values[key])) {
-                    values[key] = PUM_Admin.utils.htmlencoder.htmlEncode(values[key]);
-                }
-            }
-
-            return values;
-        }
-    };
-
-    // Import this module.
-    window.PUM_Admin = window.PUM_Admin || {};
-    window.PUM_Admin.forms = forms;
-
-    $(document)
-        .on('pum_init  pum_form_check', function () {
-            PUM_Admin.forms.init();
-        })
-        .on('pumFieldChanged', '.pum-field', function () {
-            var $wrapper = $(this),
-                dependent_field_ids = $wrapper.data('pum-field-dependents') || [],
-                $fields_with_dependencies = $(),
-                i;
-
-            if (!dependent_field_ids || dependent_field_ids.length <= 0) {
-                return;
-            }
-
-            for (i = 0; i < dependent_field_ids.length; i++) {
-                $fields_with_dependencies = $fields_with_dependencies.add('.pum-field[data-id="' + dependent_field_ids[i] + '"]');
-            }
-
-            PUM_Admin.forms.checkDependencies($fields_with_dependencies);
-        })
-        .on('pumFieldChanged', '.pum-field-dynamic-desc', function () {
-            var $this = $(this),
-                $input = $this.find(':input'),
-                $container = $this.parents('.pum-dynamic-form:first'),
-                val = $input.val(),
-                form_fields = $container.data('form_fields') || {},
-                field = form_fields[$this.data('id')] || {},
-                $desc = $this.find('.pum-desc'),
-                desc = $this.data('pum-dynamic-desc');
-
-            switch (field.type) {
-            case 'radio':
-                val = $this.find(':input:checked').val();
-                break;
-            }
-
-            field.value = val;
-
-            if (desc && desc.length) {
-                $desc.html(PUM_Admin.templates.renderInline(desc, field));
-            }
-        })
-        .on('change', '.pum-field-select select', function () {
-            $(this).parents('.pum-field').trigger('pumFieldChanged');
-        })
-        .on('click', '.pum-field-checkbox input', function () {
-            $(this).parents('.pum-field').trigger('pumFieldChanged');
-        })
-        .on('click', '.pum-field-multicheck input', function () {
-            $(this).parents('.pum-field').trigger('pumFieldChanged');
-        })
-        .on('click', '.pum-field-radio input', function (event) {
-            var $this = $(this),
-                $selected = $this.parents('li'),
-                $wrapper = $this.parents('.pum-field');
-
-            $wrapper.trigger('pumFieldChanged');
-
-            $wrapper.find('li.pum-selected').removeClass('pum-selected');
-
-            $selected.addClass('pum-selected');
-        });
-
-}(jQuery));
-
-function pumSelected(val1, val2, print) {
-    "use strict";
-
-    var selected = false;
-    if (typeof val1 === 'object' && typeof val2 === 'string' && jQuery.inArray(val2, val1) !== -1) {
-        selected = true;
-    } else if (typeof val2 === 'object' && typeof val1 === 'string' && jQuery.inArray(val1, val2) !== -1) {
-        selected = true;
-    } else if (val1 === val2) {
-        selected = true;
-    }
-
-    if (print !== undefined && print) {
-        return selected ? ' selected="selected"' : '';
-    }
-    return selected;
-}
-
-function pumChecked(val1, val2, print) {
-    "use strict";
-
-    var checked = false;
-    if (typeof val1 === 'object' && typeof val2 === 'string' && jQuery.inArray(val2, val1) !== -1) {
-        checked = true;
-    } else if (typeof val2 === 'object' && typeof val1 === 'string' && jQuery.inArray(val1, val2) !== -1) {
-        checked = true;
-    } else if (val1 === val2) {
-        checked = true;
-    }
-
-    if (print !== undefined && print) {
-        return checked ? ' checked="checked"' : '';
-    }
-    return checked;
-}
-
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
-(function ($) {
-    "use strict";
-
-    var $html = $('html'),
-        $document = $(document),
-        $top_level_elements,
-        focusableElementsString = "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]",
-        previouslyFocused,
-        modals = {
-            _current: null,
-            // Accessibility: Checks focus events to ensure they stay inside the modal.
-            forceFocus: function (event) {
-                if (PUM_Admin.modals._current && !PUM_Admin.modals._current.contains(event.target)) {
-                    event.stopPropagation();
-                    PUM_Admin.modals._current.focus();
-                }
-            },
-            trapEscapeKey: function (e) {
-                if (e.keyCode === 27) {
-                    PUM_Admin.modals.closeAll();
-                    e.preventDefault();
-                }
-            },
-            trapTabKey: function (e) {
-                // if tab or shift-tab pressed
-                if (e.keyCode === 9) {
-                    // get list of focusable items
-                    var focusableItems = PUM_Admin.modals._current.find('*').filter(focusableElementsString).filter(':visible'),
-                        // get currently focused item
-                        focusedItem = $(':focus'),
-                        // get the number of focusable items
-                        numberOfFocusableItems = focusableItems.length,
-                        // get the index of the currently focused item
-                        focusedItemIndex = focusableItems.index(focusedItem);
-
-                    if (e.shiftKey) {
-                        //back tab
-                        // if focused on first item and user preses back-tab, go to the last focusable item
-                        if (focusedItemIndex === 0) {
-                            focusableItems.get(numberOfFocusableItems - 1).focus();
-                            e.preventDefault();
-                        }
-                    } else {
-                        //forward tab
-                        // if focused on the last item and user preses tab, go to the first focusable item
-                        if (focusedItemIndex === numberOfFocusableItems - 1) {
-                            focusableItems.get(0).focus();
-                            e.preventDefault();
-                        }
-                    }
-                }
-            },
-            setFocusToFirstItem: function () {
-                // set focus to first focusable item
-                PUM_Admin.modals._current.find('.pum-modal-content *').filter(focusableElementsString).filter(':visible').first().focus();
-            },
-            closeAll: function (callback) {
-                $('.pum-modal-background')
-                    .off('keydown.pum_modal')
-                    .hide(0, function () {
-                        $('html').css({overflow: 'visible', width: 'auto'});
-
-                        if ($top_level_elements) {
-                            $top_level_elements.attr('aria-hidden', 'false');
-                            $top_level_elements = null;
-                        }
-
-                        // Accessibility: Focus back on the previously focused element.
-                        if (previouslyFocused.length) {
-                            previouslyFocused.focus();
-                        }
-
-                        // Accessibility: Clears the PUM_Admin.modals._current var.
-                        PUM_Admin.modals._current = null;
-
-                        // Accessibility: Removes the force focus check.
-                        $document.off('focus.pum_modal');
-                        if (undefined !== callback) {
-                            callback();
-                        }
-                    })
-                    .attr('aria-hidden', 'true');
-
-            },
-            show: function (modal, callback) {
-                $('.pum-modal-background')
-                    .off('keydown.pum_modal')
-                    .hide(0)
-                    .attr('aria-hidden', 'true');
-
-                $html
-                    .data('origwidth', $html.innerWidth())
-                    .css({overflow: 'hidden', 'width': $html.innerWidth()});
-
-                // Accessibility: Sets the previous focus element.
-
-                var $focused = $(':focus');
-                if (!$focused.parents('.pum-modal-wrap').length) {
-                    previouslyFocused = $focused;
-                }
-
-                // Accessibility: Sets the current modal for focus checks.
-                PUM_Admin.modals._current = $(modal);
-
-                // Accessibility: Close on esc press.
-                PUM_Admin.modals._current
-                    .on('keydown.pum_modal', function (e) {
-                        PUM_Admin.modals.trapEscapeKey(e);
-                        PUM_Admin.modals.trapTabKey(e);
-                    })
-                    .show(0, function () {
-                        $top_level_elements = $('body > *').filter(':visible').not(PUM_Admin.modals._current);
-                        $top_level_elements.attr('aria-hidden', 'true');
-
-                        PUM_Admin.modals._current
-                            .trigger('pum_init')
-                            // Accessibility: Add focus check that prevents tabbing outside of modal.
-                            .on('focus.pum_modal', PUM_Admin.modals.forceFocus);
-
-                        // Accessibility: Focus on the modal.
-                        PUM_Admin.modals.setFocusToFirstItem();
-
-                        if (undefined !== callback) {
-                            callback();
-                        }
-                    })
-                    .attr('aria-hidden', 'false');
-
-            },
-            remove: function (modal) {
-                $(modal).remove();
-            },
-            replace: function (modal, replacement) {
-                PUM_Admin.modals.remove($.trim(modal));
-                $('body').append($.trim(replacement));
-            },
-            reload: function (modal, replacement, callback) {
-                PUM_Admin.modals.replace(modal, replacement);
-                PUM_Admin.modals.show(modal, callback);
-                $(modal).trigger('pum_init');
-            }
-        };
-
-    // Import this module.
-    window.PUM_Admin = window.PUM_Admin || {};
-    window.PUM_Admin.modals = modals;
-
-    $(document).on('click', '.pum-modal-background, .pum-modal-wrap .cancel, .pum-modal-wrap .pum-modal-close', function (e) {
-        var $target = $(e.target);
-        if (/*$target.hasClass('pum-modal-background') || */$target.hasClass('cancel') || $target.hasClass('pum-modal-close') || $target.hasClass('submitdelete')) {
-            PUM_Admin.modals.closeAll();
-            e.preventDefault();
-            e.stopPropagation();
-        }
-    });
-
-}(jQuery));
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
-(function ($) {
-    "use strict";
-
-    var models = {
-        field: function (args) {
-            return $.extend(true, {}, {
-                type: 'text',
-                id: '',
-                id_prefix: '',
-                name: '',
-                label: null,
-                placeholder: '',
-                desc: null,
-                dynamic_desc: null,
-                size: 'regular',
-                classes: [],
-                dependencies: "",
-                value: null,
-                select2: false,
-                allow_html: false,
-                multiple: false,
-                as_array: false,
-                options: [],
-                object_type: null,
-                object_key: null,
-                std: null,
-                min: 0,
-                max: 50,
-                force_minmax: false,
-                step: 1,
-                unit: 'px',
-                units: {},
-                required: false,
-                desc_position: 'bottom',
-                meta: {}
-            }, args);
-        }
-    };
-
-    // Import this module.
-    window.PUM_Admin = window.PUM_Admin || {};
-    window.PUM_Admin.models = models;
-}(jQuery));
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
-(function ($) {
-    'use strict';
-    var rangesliders = {
-        cloneables: {
-            slider: $('<input type="range" class="pum-range-slider" />'),
-            plus: $('<button type="button" class="pum-range-plus">+</button>'),
-            minus: $('<button type="button" class="pum-range-minus">-</button>')
-        },
-        init: function () {
-            $('.pum-field-rangeslider:not(.pum-rangeslider-initialized)').each(function () {
-                var $this = $(this).addClass('pum-rangeslider-initialized'),
-                    $input = $this.find('input.pum-range-manual'),
-                    $slider = rangesliders.cloneables.slider.clone(),
-                    $plus = rangesliders.cloneables.plus.clone(),
-                    $minus = rangesliders.cloneables.minus.clone(),
-                    settings = {
-                        force: $input.data('force-minmax'),
-                        min: parseInt($input.attr('min'), 10) || 0,
-                        max: parseInt($input.attr('max'), 10) || 100,
-                        step: parseInt($input.attr('step'), 10) || 1,
-                        value: parseInt($input.attr('value'), 10) || 0
-                    };
-
-                if (settings.force && settings.value > settings.max) {
-                    settings.value = settings.max;
-                    $input.val(settings.value);
-                }
-
-                $slider.prop({
-                    min: settings.min || 0,
-                    max: (settings.force || (settings.max && settings.max > settings.value)) ? settings.max : settings.value *
-                        1.5,
-                    step: settings.step || settings.value * 1.5 / 100,
-                    value: settings.value
-                }).on('change input', function () {
-                    $input.trigger('input');
-                });
-
-                $input.next().after($minus, $plus);
-                $input.before($slider);
-
-            });
-        }
-    };
-
-    // Import this module.
-    window.PUM_Admin = window.PUM_Admin || {};
-    window.PUM_Admin.rangesliders = rangesliders;
-
-    $(document)
-        .on('pum_init', PUM_Admin.rangesliders.init)
-        /**
-         * Updates the input field when the slider is used.
-         */
-        .on('input', '.pum-field-rangeslider.pum-rangeslider-initialized .pum-range-slider', function () {
-            var $slider = $(this);
-            $slider.siblings('.pum-range-manual').val($slider.val());
-        })
-        /**
-         * Update sliders value, min, & max when manual entry is detected.
-         */
-        .on('change', '.pum-range-manual', function () {
-            var $input = $(this),
-                max = parseInt($input.prop('max'), 0),
-                min = parseInt($input.prop('min'), 0),
-                step = parseInt($input.prop('step'), 0),
-                force = $input.data('force-minmax'),
-                value = parseInt($input.val(), 0),
-                $slider = $input.prev();
-
-            if (isNaN(value)) {
-                value = $slider.val();
-            }
-
-            if (force && value > max) {
-                value = max;
-            } else if (force && value < min) {
-                value = min;
-            }
-
-            $input.val(value).trigger('input');
-
-            $slider.prop({
-                'max': force || (max && max > value) ? max : value * 1.5,
-                'step': step || value * 1.5 / 100,
-                'value': value
-            });
-        })
-        .on('click', '.pum-range-plus', function (event) {
-            var $input = $(this).siblings('.pum-range-manual'),
-                max = parseInt($input.prop('max'), 0),
-                step = parseInt($input.prop('step'), 0),
-                force = $input.data('force-minmax'),
-                value = parseInt($input.val(), 0),
-                $slider = $input.prev();
-
-            event.preventDefault();
-
-            value += step;
-
-            if (isNaN(value)) {
-                value = $slider.val();
-            }
-
-            if (force && value > max) {
-                value = max;
-            }
-
-            $input.val(value).trigger('input');
-            $slider.val(value);
-        })
-        .on('click', '.pum-range-minus', function (event) {
-            var $input = $(this).siblings('.pum-range-manual'),
-                min = parseInt($input.prop('min'), 0),
-                step = parseInt($input.prop('step'), 0),
-                force = $input.data('force-minmax'),
-                value = parseInt($input.val(), 0),
-                $slider = $input.prev();
-
-            event.preventDefault();
-
-            value -= step;
-
-            if (isNaN(value)) {
-                value = $slider.val();
-            }
-
-            if (force && value < min) {
-                value = min;
-            }
-
-            $input.val(value).trigger('input');
-            $slider.val(value);
-        });
-
-}(jQuery));
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
-(function ($) {
-    "use strict";
-
-    // Here because some plugins load additional copies, big no-no. This is the best we can do.
-    $.fn.pumselect2 = $.fn.pumselect2 || $.fn.select2;
-
-    var select2 = {
-        init: function () {
-            $('.pum-field-select2 select').filter(':not(.pumselect2-initialized)').each(function () {
-                var $this = $(this),
-                    current = $this.data('current') || $this.val(),
-                    object_type = $this.data('objecttype'),
-                    object_key = $this.data('objectkey'),
-                    object_excludes = $this.data('objectexcludes') || null,
-                    options = {
-                        width: '100%',
-                        multiple: false,
-                        dropdownParent: $this.parent()
-                    };
-
-                if ($this.attr('multiple')) {
-                    options.multiple = true;
-                }
-
-                if (object_type && object_key) {
-                    options = $.extend(options, {
-                        ajax: {
-                            url: ajaxurl,
-                            dataType: 'json',
-                            delay: 250,
-                            data: function (params) {
-                                return {
-                                    s: params.term, // search term
-                                    paged: params.page,
-                                    action: "pum_object_search",
-                                    object_type: object_type,
-                                    object_key: object_key,
-                                    exclude: object_excludes
-                                };
-                            },
-                            processResults: function (data, params) {
-                                // parse the results into the format expected by Select2
-                                // since we are using custom formatting functions we do not need to
-                                // alter the remote JSON data, except to indicate that infinite
-                                // scrolling can be used
-                                params.page = params.page || 1;
-
-                                return {
-                                    results: data.items,
-                                    pagination: {
-                                        more: (params.page * 10) < data.total_count
-                                    }
-                                };
-                            },
-                            cache: true
-                        },
-                        cache: true,
-                        escapeMarkup: function (markup) {
-                            return markup;
-                        }, // let our custom formatter work
-                        maximumInputLength: 20,
-                        closeOnSelect: !options.multiple,
-                        templateResult: PUM_Admin.select2.formatObject,
-                        templateSelection: PUM_Admin.select2.formatObjectSelection
-                    });
-                }
-
-                $this
-                    .addClass('pumselect2-initialized')
-                    .pumselect2(options);
-
-                if (current !== null && current !== undefined) {
-
-                    if (options.multiple && 'object' !== typeof current && current !== "") {
-                        current = [current];
-                    } else if (!options.multiple && current === '') {
-                        current = null;
-                    }
-                } else {
-                    current = null;
-                }
-
-                if (object_type && object_key && current !== null && (typeof current === 'number' || current.length)) {
-                    $.ajax({
-                        url: ajaxurl,
-                        data: {
-                            action: "pum_object_search",
-                            object_type: object_type,
-                            object_key: object_key,
-                            exclude: object_excludes,
-                            include: current && current.length ? (typeof current === 'string' || typeof current === 'number') ? [current] : current : null
-                        },
-                        dataType: "json",
-                        success: function (data) {
-                            $.each(data.items, function (key, item) {
-                                // Add any option that doesn't already exist
-                                if (!$this.find('option[value="' + item.id + '"]').length) {
-                                    $this.prepend('<option value="' + item.id + '">' + item.text + '</option>');
-                                }
-                            });
-                            // Update the options
-                            $this.val(current).trigger('change');
-                        }
-                    });
-                } else if (current && ((options.multiple && current.length) || (!options.multiple && current !== ""))) {
-                    $this.val(current).trigger('change');
-                } else if (current === null) {
-                    $this.val(current).trigger('change');
-                }
-            });
-        },
-        formatObject: function (object) {
-            return object.text;
-        },
-        formatObjectSelection: function (object) {
-            return object.text || object.text;
-        }
-    };
-
-    // Import this module.
-    window.PUM_Admin = window.PUM_Admin || {};
-    window.PUM_Admin.select2 = select2;
-
-    $(document)
-        .on('pum_init', function () {
-            PUM_Admin.select2.init();
-        });
-}(jQuery));
-/*
- * $$ Selector Cache
- * Cache your selectors, without messy code.
- * @author Stephen Kamenar
- */
-(function ($, undefined) {
-    // '#a': $('#a')
-    if (typeof window.$$ === 'function') {
-        return;
-    }
-
-    var cache = {},
-        cacheByContext = {}, // '#context': (a cache object for the element)
-        tmp, tmp2; // Here for performance/minification
-
-    window.$$ = function (selector, context) {
-        if (context) {
-            if (tmp = context.selector) {
-                context = tmp;
-            }
-
-            // tmp2 is contextCache
-            tmp2 = cacheByContext[context];
-
-            if (tmp2 === undefined) {
-                tmp2 = cacheByContext[context] = {};
-            }
-
-            tmp = tmp2[selector];
-
-            if (tmp !== undefined) {
-                return tmp;
-            }
-
-            return tmp2[selector] = $(selector, $$(context));
-        }
-
-        tmp = cache[selector];
-
-        if (tmp !== undefined) {
-            return tmp;
-        }
-
-        return cache[selector] = $(selector);
-    };
-
-    window.$$clear = function (selector, context) {
-        if (context) {
-            if (tmp = context.selector) {
-                context = tmp;
-            }
-
-            if (selector && (tmp = cacheByContext[context])) {
-                tmp[selector] = undefined;
-            }
-
-            cacheByContext[context] = undefined;
-        } else {
-            if (selector) {
-                cache[selector] = undefined;
-                cacheByContext[selector] = undefined;
-            } else {
-                cache = {};
-                cacheByContext = {};
-            }
-        }
-    };
-
-    window.$$fresh = function (selector, context) {
-        $$clear(selector, context);
-        return $$(selector, context);
-    };
-
-}(jQuery));
-/**
- * jQuery serializeObject
- * @copyright 2014, macek <paulmacek@gmail.com>
- * @link https://github.com/macek/jquery-serialize-object
- * @license BSD
- * @version 2.5.0
- */
-(function (root, factory) {
-
-    // AMD
-    if (typeof define === "function" && define.amd) {
-        define(["exports", "jquery"], function (exports, $) {
-            return factory(exports, $);
-        });
-    }
-
-    // CommonJS
-    else if (typeof exports !== "undefined") {
-        var $ = require("jquery");
-        factory(exports, $);
-    }
-
-    // Browser
-    else {
-        factory(root, (root.jQuery || root.Zepto || root.ender || root.$));
-    }
-
-}(this, function (exports, $) {
-
-    var patterns = {
-        validate: /^[a-z_][a-z0-9_]*(?:\[(?:\d*|[a-z0-9_]+)\])*$/i,
-        key: /[a-z0-9_]+|(?=\[\])/gi,
-        push: /^$/,
-        fixed: /^\d+$/,
-        named: /^[a-z0-9_]+$/i
-    };
-
-    function FormSerializer(helper, $form) {
-
-        // private variables
-        var data = {},
-            pushes = {};
-
-        // private API
-        function build(base, key, value) {
-            base[key] = value;
-            return base;
-        }
-
-        function makeObject(root, value) {
-
-            var keys = root.match(patterns.key), k,
-                field = document.querySelector('[name="' + root + '"]'),
-                type = false;
-
-            if ("INPUT" === field.tagName) {
-                type = field.type;
-            } else {
-                if ("SELECT" === field.tagName) {
-                    type = 'select';
-                } else if ("TEXTAREA" === field.tagName) {
-                    type = 'textarea';
-                }
-            }
-
-            if (['textarea', 'text'].indexOf(type) >= 0) {
-                try {
-                    value = JSON.parse(value);
-                } catch (Error) {
-                }
-            }
-
-            // nest, nest, ..., nest
-            while ((k = keys.pop()) !== undefined) {
-                // foo[]
-                if (patterns.push.test(k)) {
-                    var idx = incrementPush(root.replace(/\[\]$/, ''));
-                    value = build([], idx, value);
-                }
-
-                // foo[n]
-                else if (patterns.fixed.test(k)) {
-                    value = build([], k, value);
-                }
-
-                // foo; foo[bar]
-                else if (patterns.named.test(k)) {
-                    value = build({}, k, value);
-                }
-            }
-
-            return value;
-        }
-
-        function incrementPush(key) {
-            if (pushes[key] === undefined) {
-                pushes[key] = 0;
-            }
-            return pushes[key]++;
-        }
-
-        function encode(pair) {
-
-            console.log(pair);
-
-            switch ($('[name="' + pair.name + '"]', $form).attr("type")) {
-
-
-            case "checkbox":
-                return pair.value === "1" ? true : pair.value;
-            default:
-                return pair.value;
-            }
-        }
-
-        function addPair(pair) {
-            if (!patterns.validate.test(pair.name)) return this;
-            var obj = makeObject(pair.name, encode(pair));
-
-            data = helper.extend(true, data, obj);
-            return this;
-        }
-
-        function addPairs(pairs) {
-            if (!helper.isArray(pairs)) {
-                throw new Error("formSerializer.addPairs expects an Array");
-            }
-            for (var i = 0, len = pairs.length; i < len; i++) {
-                this.addPair(pairs[i]);
-            }
-            return this;
-        }
-
-        function serialize() {
-            return data;
-        }
-
-        function serializeJSON() {
-            return JSON.stringify(serialize());
-        }
-
-        // public API
-        this.addPair = addPair;
-        this.addPairs = addPairs;
-        this.serialize = serialize;
-        this.serializeJSON = serializeJSON;
-    }
-
-    FormSerializer.patterns = patterns;
-
-    FormSerializer.serializeObject = function serializeObject() {
-        var serialized;
-
-        if (this.is('form')) {
-            serialized = this.serializeArray();
-        } else {
-            serialized = this.find(':input').serializeArray();
-        }
-
-        return new FormSerializer($, this)
-            .addPairs(serialized)
-            .serialize();
-    };
-
-    FormSerializer.serializeJSON = function serializeJSON() {
-        var serialized;
-
-        if (this.is('form')) {
-            serialized = this.serializeArray();
-        } else {
-            serialized = this.find(':input').serializeArray();
-        }
-
-        return new FormSerializer($, this)
-            .addPairs(serialized)
-            .serializeJSON();
-    };
-
-    if (typeof $.fn !== "undefined") {
-        $.fn.pumSerializeObject = FormSerializer.serializeObject;
-        $.fn.pumSerializeJSON = FormSerializer.serializeJSON;
-    }
-
-    exports.FormSerializer = FormSerializer;
-
-    return FormSerializer;
-}));
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
-(function ($) {
-    "use strict";
-    var tabs = {
-        init: function () {
-            $('.pum-tabs-container').filter(':not(.pum-tabs-initialized)').each(function () {
-                var $this = $(this).addClass('pum-tabs-initialized'),
-                    $tabList = $this.find('> ul.tabs'),
-                    $firstTab = $tabList.find('> li:first'),
-                    forceMinHeight = $this.data('min-height');
-
-                if ($this.hasClass('vertical-tabs')) {
-                    var minHeight = forceMinHeight && forceMinHeight > 0 ? forceMinHeight : $tabList.eq(0).outerHeight(true);
-
-                    $this.css({
-                        minHeight: minHeight + 'px'
-                    });
-
-                    if ($this.parent().innerHeight < minHeight) {
-                        $this.parent().css({
-                            minHeight: minHeight + 'px'
-                        });
-                    }
-                }
-
-                // Trigger first tab.
-                $firstTab.trigger('click');
-            });
-        }
-    };
-
-    // Import this module.
-    window.PUM_Admin = window.PUM_Admin || {};
-    window.PUM_Admin.tabs = tabs;
-
-    $(document)
-        .on('pum_init', PUM_Admin.tabs.init)
-        .on('click', '.pum-tabs-initialized li.tab', function (e) {
-            var $this = $(this),
-                $container = $this.parents('.pum-tabs-container:first'),
-                $tabs = $container.find('> ul.tabs > li.tab'),
-                $tab_contents = $container.find('> div.tab-content'),
-                link = $this.find('a').attr('href');
-
-            $tabs.removeClass('active');
-            $tab_contents.removeClass('active');
-
-            $this.addClass('active');
-            $container.find('> div.tab-content' + link).addClass('active');
-
-            e.preventDefault();
-        });
-}(jQuery));
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
-(function ($) {
-    "use strict";
-    var I10n = pum_admin_vars.I10n,
-        templates = {
-            render: function (template, data) {
-                var _template = wp.template(template);
-
-                data = data || {};
-
-                if (data.classes !== undefined && Array.isArray(data.classes)) {
-                    data.classes = data.classes.join(' ');
-                }
-
-                // Prepare the meta data for templates.
-                data = PUM_Admin.templates.prepareMeta(data);
-
-                return _template(data);
-            },
-            renderInline: function (content, data) {
-                var options = {
-                        evaluate: /<#([\s\S]+?)#>/g,
-                        interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
-                        escape: /\{\{([^\}]+?)\}\}(?!\})/g,
-                        variable: 'data'
-                    },
-                    template = _.template(content, null, options);
-
-                return template(data);
-            },
-            shortcode: function (args) {
-                var data = $.extend(true, {}, {
-                        tag: '',
-                        meta: {},
-                        has_content: false,
-                        content: ''
-                    }, args),
-                    template = data.has_content ? 'pum-shortcode-w-content' : 'pum-shortcode';
-
-                return PUM_Admin.templates.render(template, data);
-            },
-            modal: function (args) {
-                var data = $.extend(true, {}, {
-                    id: '',
-                    title: '',
-                    description: '',
-                    classes: '',
-                    save_button: I10n.save,
-                    cancel_button: I10n.cancel,
-                    content: ''
-                }, args);
-
-                return PUM_Admin.templates.render('pum-modal', data);
-            },
-            tabs: function (data) {
-                data = $.extend(true, {}, {
-                    id: '',
-                    vertical: false,
-                    form: false,
-                    classes: [],
-                    tabs: {},
-                    meta: {}
-                }, data);
-
-                if (typeof data.classes === 'string') {
-                    data.classes = [data.classes];
-                }
-
-                if (data.form) {
-                    data.classes.push('pum-tabbed-form');
-                }
-
-                data.meta['data-tab-count'] = Object.keys(data.tabs).length;
-
-                data.classes.push(data.vertical ? 'vertical-tabs' : 'horizontal-tabs');
-
-                data.classes = data.classes.join('  ');
-
-                return PUM_Admin.templates.render('pum-tabs', data);
-            },
-            section: function (args) {
-                var data = $.extend(true, {}, {
-                    classes: [],
-                    fields: []
-                }, args);
-
-
-                return PUM_Admin.templates.render('pum-field-section', data);
-            },
-            fieldArgs: function (args) {
-                var options = [],
-                    data = $.extend(true, {}, PUM_Admin.models.field(args));
-
-                if (args.std !== undefined && args.type !== 'checkbox' && (data.value === null || data.value === false)) {
-                    data.value = args.std;
-                }
-
-                if ('string' === typeof data.classes) {
-                    data.classes = data.classes.split(' ');
-                }
-
-                if (args.class !== undefined) {
-                    data.classes.push(args.class);
-                }
-
-                if (args.dependencies !== undefined && typeof args.dependencies === 'object') {
-                    data.dependencies = JSON.stringify(args.dependencies);
-                }
-
-                if (data.required) {
-                    data.meta.required = true;
-                    data.classes.push('pum-required');
-                }
-
-                if (typeof data.dynamic_desc === 'string' && data.dynamic_desc.length) {
-                    data.classes.push('pum-field-dynamic-desc');
-                    data.desc = PUM_Admin.templates.renderInline(data.dynamic_desc, data);
-                }
-
-                if (data.allow_html) {
-                    data.classes.push('pum-field-' + data.type + '--html');
-                    if ( typeof data.value === 'string' && data.value !== '' && PUM_Admin.utils.htmlencoder.hasEncoded(data.value)) {
-                        data.value = PUM_Admin.utils.htmlencoder.htmlDecode(data.value);
-                    }
-                }
-
-                switch (args.type) {
-                case 'select':
-                case 'objectselect':
-                case 'postselect':
-                case 'taxonomyselect':
-                    if (data.options !== undefined) {
-                        _.each(data.options, function (label, value) {
-                            var selected = false,
-                                optgroup,
-                                optgroup_options;
-
-                            // Check if the label is an object. If so this is a optgroup and the label is sub options array.
-                            // NOTE: The value in the case its an optgroup is the optgroup label.
-                            if (typeof label !== 'object') {
-
-                                if (data.value !== null) {
-                                    if (data.multiple && ((typeof data.value === 'string' && data.value == value) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1) || (!Array.isArray(data.value) && typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined))) {
-                                        selected = 'selected';
-                                    } else if (!data.multiple && data.value == value) {
-                                        selected = 'selected';
-                                    }
-                                }
-
-                                options.push(
-                                    PUM_Admin.templates.prepareMeta({
-                                        label: label,
-                                        value: value,
-                                        meta: {
-                                            selected: selected
-                                        }
-                                    })
-                                );
-
-                            } else {
-                                // Process Option Groups
-
-                                // Swap label & value due to group labels being used as keys.
-                                optgroup = value;
-                                optgroup_options = [];
-
-                                _.each(label, function (label, value) {
-                                    var selected = false;
-
-                                    if (data.value !== null) {
-                                        if (data.multiple && ((typeof data.value === 'string' && data.value == value) || (Array.isArray(data.value) && data.value.indexOf(value) !== -1) || (!Array.isArray(data.value) && typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined))) {
-                                            selected = 'selected';
-                                        } else if (!data.multiple && data.value == value) {
-                                            selected = 'selected';
-                                        }
-                                    }
-                                    optgroup_options.push(
-                                        PUM_Admin.templates.prepareMeta({
-                                            label: label,
-                                            value: value,
-                                            meta: {
-                                                selected: selected
-                                            }
-                                        })
-                                    );
-
-                                });
-
-                                options.push({
-                                    label: optgroup,
-                                    options: optgroup_options
-                                });
-
-                            }
-
-                        });
-
-                        data.options = options;
-
-                    }
-
-                    if (data.multiple) {
-
-                        data.meta.multiple = true;
-
-                        if (data.as_array) {
-                            data.name += '[]';
-                        }
-
-                        if (!data.value || !data.value.length) {
-                            data.value = [];
-                        }
-
-                        if (typeof data.value === 'string') {
-                            data.value = [data.value];
-                        }
-
-                    }
-
-                    if (args.type !== 'select') {
-                        data.select2 = true;
-                        data.classes.push('pum-field-objectselect');
-                        data.classes.push(args.type === 'postselect' ? 'pum-field-postselect' : 'pum-field-taxonomyselect');
-                        data.meta['data-objecttype'] = args.type === 'postselect' ? 'post_type' : 'taxonomy';
-                        data.meta['data-objectkey'] = args.type === 'postselect' ? args.post_type : args.taxonomy;
-                        data.meta['data-current'] = typeof data.value === 'object' || Array.isArray(data.value) ? JSON.stringify(data.value) : data.value;
-                    }
-
-                    if (data.select2) {
-                        data.classes.push('pum-field-select2');
-
-                        if (data.placeholder) {
-                            data.meta['data-placeholder'] = data.placeholder;
-                        }
-                    }
-
-                    break;
-                case 'radio':
-                    if (data.options !== undefined) {
-                        _.each(data.options, function (label, value) {
-
-                            options.push(
-                                PUM_Admin.templates.prepareMeta({
-                                    label: label,
-                                    value: value,
-                                    meta: {
-                                        checked: data.value === value
-                                    }
-                                })
-                            );
-
-                        });
-
-                        data.options = options;
-                    }
-                    break;
-                case 'multicheck':
-                    if (data.options !== undefined) {
-
-                        if (data.value === false || data.value === null) {
-                            data.value = [];
-                        }
-
-                        if (typeof data.value === 'string' && data.value.indexOf(',')) {
-                            data.value = data.value.split(',');
-                        }
-
-                        if (data.as_array) {
-                            data.name += '[]';
-                        }
-
-                        _.each(data.options, function (label, value) {
-
-                            options.push(
-                                PUM_Admin.templates.prepareMeta({
-                                    label: label,
-                                    value: value,
-                                    meta: {
-                                        checked: (Array.isArray(data.value) && data.value.indexOf(value) !== -1) || (!Array.isArray(data.value) && typeof data.value === 'object' && Object.keys(data.value).length && data.value[value] !== undefined)
-                                    }
-                                })
-                            );
-
-                        });
-
-                        data.options = options;
-                    }
-                    break;
-                case 'checkbox':
-                    switch (typeof data.value) {
-                    case 'object':
-                        if (Array.isArray(data.value) && data.value.length === 1 && data.value[0].toString() === '1') {
-                            data.value = true;
-                            data.meta.checked = true;
-                        }
-                        break;
-                    case 'boolean':
-                        if (data.value) {
-                            data.meta.checked = true;
-                        }
-                        break;
-                    case 'string':
-                        if (data.value === 'true' || data.value === 'yes' || data.value === '1') {
-                            data.meta.checked = true;
-                        }
-                        break;
-                    case 'number':
-                        if (parseInt(data.value, 10) === 1 || parseInt(data.value, 10) > 0) {
-                            data.meta.checked = true;
-                        }
-                    }
-                    break;
-                case 'rangeslider':
-                    // data.meta.readonly = true;
-                    data.meta.step = data.step;
-                    data.meta.min = data.min;
-                    data.meta.max = data.max;
-                    data.meta['data-force-minmax'] = data.force_minmax.toString();
-                    break;
-                case 'textarea':
-                    data.meta.cols = data.cols;
-                    data.meta.rows = data.rows;
-                    break;
-                case 'measure':
-                    if (typeof data.value === 'string' && data.value !== '') {
-                        data.number = parseInt(data.value);
-                        data.unitValue = data.value.replace(data.number, "");
-                        data.value = data.number;
-                    } else {
-                        data.unitValue = null;
-                    }
-
-                    if (data.units !== undefined) {
-                        _.each(data.units, function (label, value) {
-                            var selected = false;
-
-                            if (data.unitValue == value) {
-                                selected = 'selected';
-                            }
-
-                            options.push(
-                                PUM_Admin.templates.prepareMeta({
-                                    label: label,
-                                    value: value,
-                                    meta: {
-                                        selected: selected
-                                    }
-                                })
-                            );
-
-                        });
-
-                        data.units = options;
-                    }
-                    break;
-                case 'color':
-                    if ( typeof data.value === 'string' && data.value !== '') {
-                        data.meta['data-default-color'] = data.value;
-                    }
-                    break;
-                case 'license_key':
-
-                    data.value = $.extend({
-                        key: '',
-                        license: {},
-                        messages: [],
-                        status: 'empty',
-                        expires: false,
-                        classes: false
-                    }, data.value);
-
-                    data.classes.push('pum-license-' + data.value.status + '-notice');
-
-                    if (data.value.classes) {
-                        data.classes.push(data.value.classes);
-                    }
-                    break;
-                }
-
-                return data;
-            },
-            field: function (args) {
-                var fieldTemplate,
-                    data = PUM_Admin.templates.fieldArgs(args);
-
-                fieldTemplate = 'pum-field-' + data.type;
-
-                if (data.type === 'objectselfect' || data.type === 'postselect' || data.type === 'taxonomyselect') {
-                    fieldTemplate = 'pum-field-select';
-                }
-
-                if (!$('#tmpl-' + fieldTemplate).length) {
-                    console.warn('No field template found for type:' + data.type + ' fieldID: ' + data.id);
-                    return '';
-                }
-
-                data.field = PUM_Admin.templates.render(fieldTemplate, data);
-
-                return PUM_Admin.templates.render('pum-field-wrapper', data);
-            },
-            prepareMeta: function (data) {
-                // Convert meta JSON to attribute string.
-                var _meta = [],
-                    key;
-
-                for (key in data.meta) {
-                    if (data.meta.hasOwnProperty(key)) {
-                        // Boolean attributes can only require attribute key, not value.
-                        if ('boolean' === typeof data.meta[key]) {
-                            // Only set truthy boolean attributes.
-                            if (data.meta[key]) {
-                                _meta.push(_.escape(key));
-                            }
-                        } else {
-                            _meta.push(_.escape(key) + '="' + _.escape(data.meta[key]) + '"');
-                        }
-                    }
-                }
-
-                data.meta = _meta.join(' ');
-                return data;
-            }
-        };
-
-    // Import this module.
-    window.PUM_Admin = window.PUM_Admin || {};
-    window.PUM_Admin.templates = templates;
-}(window.jQuery));
-
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
-(function ($) {
-    "use strict";
-
-    String.prototype.capitalize = function () {
-        return this.charAt(0).toUpperCase() + this.slice(1);
-    };
-
-    var root = this,
-        inputTypes = 'color,date,datetime,datetime-local,email,hidden,month,number,password,range,search,tel,text,time,url,week'.split(','),
-        inputNodes = 'select,textarea'.split(','),
-        rName = /\[([^\]]*)\]/g;
-
-    // ugly hack for IE7-8
-    function isInArray(array, needle) {
-        return $.inArray(needle, array) !== -1;
-    }
-
-    function storeValue(container, parsedName, value) {
-
-        var part = parsedName[0];
-
-        if (parsedName.length > 1) {
-            if (!container[part]) {
-                // If the next part is eq to '' it means we are processing complex name (i.e. `some[]`)
-                // for this case we need to use Array instead of an Object for the index increment purpose
-                container[part] = parsedName[1] ? {} : [];
-            }
-            storeValue(container[part], parsedName.slice(1), value);
-        } else {
-
-            // Increment Array index for `some[]` case
-            if (!part) {
-                part = container.length;
-            }
-
-            container[part] = value;
-        }
-    }
-
-    /**
-     * A Javascript object to encode and/or decode html characters using HTML or Numeric entities that handles double or partial encoding
-     * Author: R Reid
-     * source: http://www.strictly-software.com/htmlencode
-     * Licences: GPL, The MIT License (MIT)
-     * Copyright: (c) 2011 Robert Reid - Strictly-Software.com
-     *
-     * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-     *
-     * Revision:
-     *  2011-07-14, Jacques-Yves Bleau:
-     *       - fixed conversion error with capitalized accentuated characters
-     *       + converted arr1 and arr2 to object property to remove redundancy
-     *
-     * Revision:
-     *  2011-11-10, Ce-Yi Hio:
-     *       - fixed conversion error with a number of capitalized entity characters
-     *
-     * Revision:
-     *  2011-11-10, Rob Reid:
-     *		 - changed array format
-     *
-     * Revision:
-     *  2012-09-23, Alex Oss:
-     *		 - replaced string concatonation in numEncode with string builder, push and join for peformance with ammendments by Rob Reid
-     */
-
-    var Encoder = {
-
-        // When encoding do we convert characters into html or numerical entities
-        EncodeType : "entity",  // entity OR numerical
-
-        isEmpty : function(val){
-            if(val){
-                return ((val===null) || val.length==0 || /^\s+$/.test(val));
-            }else{
-                return true;
-            }
-        },
-
-        // arrays for conversion from HTML Entities to Numerical values
-        arr1: ['&nbsp;','&iexcl;','&cent;','&pound;','&curren;','&yen;','&brvbar;','&sect;','&uml;','&copy;','&ordf;','&laquo;','&not;','&shy;','&reg;','&macr;','&deg;','&plusmn;','&sup2;','&sup3;','&acute;','&micro;','&para;','&middot;','&cedil;','&sup1;','&ordm;','&raquo;','&frac14;','&frac12;','&frac34;','&iquest;','&Agrave;','&Aacute;','&Acirc;','&Atilde;','&Auml;','&Aring;','&AElig;','&Ccedil;','&Egrave;','&Eacute;','&Ecirc;','&Euml;','&Igrave;','&Iacute;','&Icirc;','&Iuml;','&ETH;','&Ntilde;','&Ograve;','&Oacute;','&Ocirc;','&Otilde;','&Ouml;','&times;','&Oslash;','&Ugrave;','&Uacute;','&Ucirc;','&Uuml;','&Yacute;','&THORN;','&szlig;','&agrave;','&aacute;','&acirc;','&atilde;','&auml;','&aring;','&aelig;','&ccedil;','&egrave;','&eacute;','&ecirc;','&euml;','&igrave;','&iacute;','&icirc;','&iuml;','&eth;','&ntilde;','&ograve;','&oacute;','&ocirc;','&otilde;','&ouml;','&divide;','&oslash;','&ugrave;','&uacute;','&ucirc;','&uuml;','&yacute;','&thorn;','&yuml;','&quot;','&amp;','&lt;','&gt;','&OElig;','&oelig;','&Scaron;','&scaron;','&Yuml;','&circ;','&tilde;','&ensp;','&emsp;','&thinsp;','&zwnj;','&zwj;','&lrm;','&rlm;','&ndash;','&mdash;','&lsquo;','&rsquo;','&sbquo;','&ldquo;','&rdquo;','&bdquo;','&dagger;','&Dagger;','&permil;','&lsaquo;','&rsaquo;','&euro;','&fnof;','&Alpha;','&Beta;','&Gamma;','&Delta;','&Epsilon;','&Zeta;','&Eta;','&Theta;','&Iota;','&Kappa;','&Lambda;','&Mu;','&Nu;','&Xi;','&Omicron;','&Pi;','&Rho;','&Sigma;','&Tau;','&Upsilon;','&Phi;','&Chi;','&Psi;','&Omega;','&alpha;','&beta;','&gamma;','&delta;','&epsilon;','&zeta;','&eta;','&theta;','&iota;','&kappa;','&lambda;','&mu;','&nu;','&xi;','&omicron;','&pi;','&rho;','&sigmaf;','&sigma;','&tau;','&upsilon;','&phi;','&chi;','&psi;','&omega;','&thetasym;','&upsih;','&piv;','&bull;','&hellip;','&prime;','&Prime;','&oline;','&frasl;','&weierp;','&image;','&real;','&trade;','&alefsym;','&larr;','&uarr;','&rarr;','&darr;','&harr;','&crarr;','&lArr;','&uArr;','&rArr;','&dArr;','&hArr;','&forall;','&part;','&exist;','&empty;','&nabla;','&isin;','&notin;','&ni;','&prod;','&sum;','&minus;','&lowast;','&radic;','&prop;','&infin;','&ang;','&and;','&or;','&cap;','&cup;','&int;','&there4;','&sim;','&cong;','&asymp;','&ne;','&equiv;','&le;','&ge;','&sub;','&sup;','&nsub;','&sube;','&supe;','&oplus;','&otimes;','&perp;','&sdot;','&lceil;','&rceil;','&lfloor;','&rfloor;','&lang;','&rang;','&loz;','&spades;','&clubs;','&hearts;','&diams;'],
-        arr2: ['&#160;','&#161;','&#162;','&#163;','&#164;','&#165;','&#166;','&#167;','&#168;','&#169;','&#170;','&#171;','&#172;','&#173;','&#174;','&#175;','&#176;','&#177;','&#178;','&#179;','&#180;','&#181;','&#182;','&#183;','&#184;','&#185;','&#186;','&#187;','&#188;','&#189;','&#190;','&#191;','&#192;','&#193;','&#194;','&#195;','&#196;','&#197;','&#198;','&#199;','&#200;','&#201;','&#202;','&#203;','&#204;','&#205;','&#206;','&#207;','&#208;','&#209;','&#210;','&#211;','&#212;','&#213;','&#214;','&#215;','&#216;','&#217;','&#218;','&#219;','&#220;','&#221;','&#222;','&#223;','&#224;','&#225;','&#226;','&#227;','&#228;','&#229;','&#230;','&#231;','&#232;','&#233;','&#234;','&#235;','&#236;','&#237;','&#238;','&#239;','&#240;','&#241;','&#242;','&#243;','&#244;','&#245;','&#246;','&#247;','&#248;','&#249;','&#250;','&#251;','&#252;','&#253;','&#254;','&#255;','&#34;','&#38;','&#60;','&#62;','&#338;','&#339;','&#352;','&#353;','&#376;','&#710;','&#732;','&#8194;','&#8195;','&#8201;','&#8204;','&#8205;','&#8206;','&#8207;','&#8211;','&#8212;','&#8216;','&#8217;','&#8218;','&#8220;','&#8221;','&#8222;','&#8224;','&#8225;','&#8240;','&#8249;','&#8250;','&#8364;','&#402;','&#913;','&#914;','&#915;','&#916;','&#917;','&#918;','&#919;','&#920;','&#921;','&#922;','&#923;','&#924;','&#925;','&#926;','&#927;','&#928;','&#929;','&#931;','&#932;','&#933;','&#934;','&#935;','&#936;','&#937;','&#945;','&#946;','&#947;','&#948;','&#949;','&#950;','&#951;','&#952;','&#953;','&#954;','&#955;','&#956;','&#957;','&#958;','&#959;','&#960;','&#961;','&#962;','&#963;','&#964;','&#965;','&#966;','&#967;','&#968;','&#969;','&#977;','&#978;','&#982;','&#8226;','&#8230;','&#8242;','&#8243;','&#8254;','&#8260;','&#8472;','&#8465;','&#8476;','&#8482;','&#8501;','&#8592;','&#8593;','&#8594;','&#8595;','&#8596;','&#8629;','&#8656;','&#8657;','&#8658;','&#8659;','&#8660;','&#8704;','&#8706;','&#8707;','&#8709;','&#8711;','&#8712;','&#8713;','&#8715;','&#8719;','&#8721;','&#8722;','&#8727;','&#8730;','&#8733;','&#8734;','&#8736;','&#8743;','&#8744;','&#8745;','&#8746;','&#8747;','&#8756;','&#8764;','&#8773;','&#8776;','&#8800;','&#8801;','&#8804;','&#8805;','&#8834;','&#8835;','&#8836;','&#8838;','&#8839;','&#8853;','&#8855;','&#8869;','&#8901;','&#8968;','&#8969;','&#8970;','&#8971;','&#9001;','&#9002;','&#9674;','&#9824;','&#9827;','&#9829;','&#9830;'],
-
-        // Convert HTML entities into numerical entities
-        HTML2Numerical : function(s){
-            return this.swapArrayVals(s,this.arr1,this.arr2);
-        },
-
-        // Convert Numerical entities into HTML entities
-        NumericalToHTML : function(s){
-            return this.swapArrayVals(s,this.arr2,this.arr1);
-        },
-
-
-        // Numerically encodes all unicode characters
-        numEncode : function(s){
-            if(this.isEmpty(s)) return "";
-
-            var a = [],
-                l = s.length;
-
-            for (var i=0;i<l;i++){
-                var c = s.charAt(i);
-                if (c < " " || c > "~"){
-                    a.push("&#");
-                    a.push(c.charCodeAt()); //numeric value of code point
-                    a.push(";");
-                }else{
-                    a.push(c);
-                }
-            }
-
-            return a.join("");
-        },
-
-        // HTML Decode numerical and HTML entities back to original values
-        htmlDecode : function(s){
-
-            var c,m,d = s;
-
-            if(this.isEmpty(d)) return "";
-
-            // convert HTML entites back to numerical entites first
-            d = this.HTML2Numerical(d);
-
-            // look for numerical entities &#34;
-            var arr=d.match(/&#[0-9]{1,5};/g);
-
-            // if no matches found in string then skip
-            if(arr!=null){
-                for(var x=0;x<arr.length;x++){
-                    m = arr[x];
-                    c = m.substring(2,m.length-1); //get numeric part which is refernce to unicode character
-                    // if its a valid number we can decode
-                    if(c >= -32768 && c <= 65535){
-                        // decode every single match within string
-                        d = d.replace(m, String.fromCharCode(c));
-                    }else{
-                        d = d.replace(m, ""); //invalid so replace with nada
-                    }
-                }
-            }
-
-            return d;
-        },
-
-        // encode an input string into either numerical or HTML entities
-        htmlEncode : function(s,dbl){
-
-            if(this.isEmpty(s)) return "";
-
-            // do we allow double encoding? E.g will &amp; be turned into &amp;amp;
-            dbl = dbl || false; //default to prevent double encoding
-
-            // if allowing double encoding we do ampersands first
-            if(dbl){
-                if(this.EncodeType=="numerical"){
-                    s = s.replace(/&/g, "&#38;");
-                }else{
-                    s = s.replace(/&/g, "&amp;");
-                }
-            }
-
-            // convert the xss chars to numerical entities ' " < >
-            s = this.XSSEncode(s,false);
-
-            if(this.EncodeType=="numerical" || !dbl){
-                // Now call function that will convert any HTML entities to numerical codes
-                s = this.HTML2Numerical(s);
-            }
-
-            // Now encode all chars above 127 e.g unicode
-            s = this.numEncode(s);
-
-            // now we know anything that needs to be encoded has been converted to numerical entities we
-            // can encode any ampersands & that are not part of encoded entities
-            // to handle the fact that I need to do a negative check and handle multiple ampersands &&&
-            // I am going to use a placeholder
-
-            // if we don't want double encoded entities we ignore the & in existing entities
-            if(!dbl){
-                s = s.replace(/&#/g,"##AMPHASH##");
-
-                if(this.EncodeType=="numerical"){
-                    s = s.replace(/&/g, "&#38;");
-                }else{
-                    s = s.replace(/&/g, "&amp;");
-                }
-
-                s = s.replace(/##AMPHASH##/g,"&#");
-            }
-
-            // replace any malformed entities
-            s = s.replace(/&#\d*([^\d;]|$)/g, "$1");
-
-            if(!dbl){
-                // safety check to correct any double encoded &amp;
-                s = this.correctEncoding(s);
-            }
-
-            // now do we need to convert our numerical encoded string into entities
-            if(this.EncodeType=="entity"){
-                s = this.NumericalToHTML(s);
-            }
-
-            return s;
-        },
-
-        // Encodes the basic 4 characters used to malform HTML in XSS hacks
-        XSSEncode : function(s,en){
-            if(!this.isEmpty(s)){
-                en = en || true;
-                // do we convert to numerical or html entity?
-                if(en){
-                    s = s.replace(/\'/g,"&#39;"); //no HTML equivalent as &apos is not cross browser supported
-                    s = s.replace(/\"/g,"&quot;");
-                    s = s.replace(/</g,"&lt;");
-                    s = s.replace(/>/g,"&gt;");
-                }else{
-                    s = s.replace(/\'/g,"&#39;"); //no HTML equivalent as &apos is not cross browser supported
-                    s = s.replace(/\"/g,"&#34;");
-                    s = s.replace(/</g,"&#60;");
-                    s = s.replace(/>/g,"&#62;");
-                }
-                return s;
-            }else{
-                return "";
-            }
-        },
-
-        // returns true if a string contains html or numerical encoded entities
-        hasEncoded : function(s){
-            if(/&#[0-9]{1,5};/g.test(s)){
-                return true;
-            }else if(/&[A-Z]{2,6};/gi.test(s)){
-                return true;
-            }else{
-                return false;
-            }
-        },
-
-        // will remove any unicode characters
-        stripUnicode : function(s){
-            return s.replace(/[^\x20-\x7E]/g,"");
-
-        },
-
-        // corrects any double encoded &amp; entities e.g &amp;amp;
-        correctEncoding : function(s){
-            return s.replace(/(&amp;)(amp;)+/,"$1");
-        },
-
-
-        // Function to loop through an array swaping each item with the value from another array e.g swap HTML entities with Numericals
-        swapArrayVals : function(s,arr1,arr2){
-            if(this.isEmpty(s)) return "";
-            var re;
-            if(arr1 && arr2){
-                //ShowDebug("in swapArrayVals arr1.length = " + arr1.length + " arr2.length = " + arr2.length)
-                // array lengths must match
-                if(arr1.length == arr2.length){
-                    for(var x=0,i=arr1.length;x<i;x++){
-                        re = new RegExp(arr1[x], 'g');
-                        s = s.replace(re,arr2[x]); //swap arr1 item with matching item from arr2
-                    }
-                }
-            }
-            return s;
-        },
-
-        inArray : function( item, arr ) {
-            for ( var i = 0, x = arr.length; i < x; i++ ){
-                if ( arr[i] === item ){
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-    };
-
-    Encoder.EncodeType = "entity";
-
-    var utils = {
-        htmlencoder: Encoder,
-        convert_meta_to_object: function (data) {
-            var converted_data = {},
-                element,
-                property,
-                key;
-
-            for (key in data) {
-                if (data.hasOwnProperty(key)) {
-                    element = key.split(/_(.+)?/)[0];
-                    property = key.split(/_(.+)?/)[1];
-                    if (converted_data[element] === undefined) {
-                        converted_data[element] = {};
-                    }
-                    converted_data[element][property] = data[key];
-                }
-            }
-            return converted_data;
-        },
-        object_to_array: function (object) {
-            var array = [],
-                i;
-
-            // Convert facets to array (JSON.stringify breaks arrays).
-            if (typeof object === 'object') {
-                for (i in object) {
-                    array.push(object[i]);
-                }
-                object = array;
-            }
-
-            return object;
-        },
-        checked: function (val1, val2, print) {
-            var checked = false;
-            if (typeof val1 === 'object' && typeof val2 === 'string' && jQuery.inArray(val2, val1) !== -1) {
-                checked = true;
-            } else if (typeof val2 === 'object' && typeof val1 === 'string' && jQuery.inArray(val1, val2) !== -1) {
-                checked = true;
-            } else if (val1 === val2) {
-                checked = true;
-            } else if (val1 == val2) {
-                checked = true;
-            }
-
-            if (print !== undefined && print) {
-                return checked ? ' checked="checked"' : '';
-            }
-            return checked;
-        },
-        selected: function (val1, val2, print) {
-            var selected = false;
-            if (typeof val1 === 'object' && typeof val2 === 'string' && jQuery.inArray(val2, val1) !== -1) {
-                selected = true;
-            } else if (typeof val2 === 'object' && typeof val1 === 'string' && jQuery.inArray(val1, val2) !== -1) {
-                selected = true;
-            } else if (val1 === val2) {
-                selected = true;
-            }
-
-            if (print !== undefined && print) {
-                return selected ? ' selected="selected"' : '';
-            }
-            return selected;
-        },
-        convert_hex: function (hex, opacity) {
-            if (undefined === hex) {
-                return '';
-            }
-            if (undefined === opacity) {
-                opacity = 100;
-            }
-
-            hex = hex.replace('#', '');
-            var r = parseInt(hex.substring(0, 2), 16),
-                g = parseInt(hex.substring(2, 4), 16),
-                b = parseInt(hex.substring(4, 6), 16),
-                result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity / 100 + ')';
-            return result;
-        },
-        debounce: function (callback, threshold) {
-            var timeout;
-            return function () {
-                var context = this, params = arguments;
-                window.clearTimeout(timeout);
-                timeout = window.setTimeout(function () {
-                    callback.apply(context, params);
-                }, threshold);
-            };
-        },
-        throttle: function (callback, threshold) {
-            var suppress = false,
-                clear = function () {
-                    suppress = false;
-                };
-            return function () {
-                if (!suppress) {
-                    callback();
-                    window.setTimeout(clear, threshold);
-                    suppress = true;
-                }
-            };
-        },
-        serializeForm: function (options) {
-            $.extend({}, options);
-
-            var values = {},
-                settings = $.extend(true, {
-                    include: [],
-                    exclude: [],
-                    includeByClass: ''
-                }, options);
-
-            this.find(':input').each(function () {
-
-                var parsedName;
-
-                // Apply simple checks and filters
-                if (!this.name || this.disabled ||
-                    isInArray(settings.exclude, this.name) ||
-                    (settings.include.length && !isInArray(settings.include, this.name)) ||
-                    this.className.indexOf(settings.includeByClass) === -1) {
-                    return;
-                }
-
-                // Parse complex names
-                // JS RegExp doesn't support "positive look behind" :( that's why so weird parsing is used
-                parsedName = this.name.replace(rName, '[$1').split('[');
-                if (!parsedName[0]) {
-                    return;
-                }
-
-                if (this.checked ||
-                    isInArray(inputTypes, this.type) ||
-                    isInArray(inputNodes, this.nodeName.toLowerCase())) {
-
-                    // Simulate control with a complex name (i.e. `some[]`)
-                    // as it handled in the same way as Checkboxes should
-                    if (this.type === 'checkbox') {
-                        parsedName.push('');
-                    }
-
-                    // jQuery.val() is used to simplify of getting values
-                    // from the custom controls (which follow jQuery .val() API) and Multiple Select
-                    storeValue(values, parsedName, $(this).val());
-                }
-            });
-
-            return values;
-        }
-
-    };
-
-    // Import this module.
-    window.PUM_Admin = window.PUM_Admin || {};
-    window.PUM_Admin.utils = utils;
-
-    // @deprecated 1.7.0 Here for backward compatibility.
-    window.PUMUtils = utils;
-
-    $.fn.pumSerializeForm = utils.serializeForm;
-}(jQuery));

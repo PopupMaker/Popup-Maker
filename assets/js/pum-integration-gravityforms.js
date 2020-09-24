@@ -99,15 +99,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
 
 
-/*******************************************************************************
- * Copyright (c) 2020, WP Popup Maker
- ******************************************************************************/
+/***************************************
+ * Copyright (c) 2020, Popup Maker
+ ***************************************/
 {
-  var formProvider = 'gravityforms';
+  var formProvider = "gravityforms";
   var $ = window.jQuery;
   var gFormSettings = {};
-  $(document).on('gform_confirmation_loaded', function (event, formId) {
-    var $form = $('#gform_confirmation_wrapper_' + formId + ',#gforms_confirmation_message_' + formId)[0]; // All the magic happens here.
+  $(document).on("gform_confirmation_loaded", function (event, formId) {
+    var $form = $("#gform_confirmation_wrapper_" + formId + ",#gforms_confirmation_message_" + formId)[0]; // All the magic happens here.
 
     window.PUM.integrations.formSubmission($form, {
       formProvider: formProvider,
@@ -133,18 +133,18 @@ __webpack_require__.r(__webpack_exports__);
    * This is here for backward compatibility with form actions prior to v1.9.
    */
   .ready(function () {
-    $('.gform_wrapper > form').each(function () {
+    $(".gform_wrapper > form").each(function () {
       var $form = $(this),
-          formId = $form.attr('id').replace('gform_', ''),
-          $settings = $form.find('input.gforms-pum'),
+          formId = $form.attr("id").replace("gform_", ""),
+          $settings = $form.find("input.gforms-pum"),
           settings = $settings.length ? JSON.parse($settings.val()) : false;
 
-      if (!settings || _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) !== 'object') {
+      if (!settings || _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) !== "object") {
         return;
       }
 
-      if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) === 'object' && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
-        settings['closedelay'] = settings.closedelay / 1000;
+      if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) === "object" && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
+        settings.closedelay = settings.closedelay / 1000;
       }
 
       gFormSettings[formId] = settings;

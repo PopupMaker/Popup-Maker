@@ -30,6 +30,25 @@ function pum_is_admin_page() {
 	return in_array( true, $tests );
 }
 
+
+/**
+ * Determines whether the current admin page is the All Popups page.
+ *
+ * @since 1.12
+ * @return bool True if current page is All Popups page.
+ */
+function pum_is_all_popups_page() {
+	$screen = get_current_screen();
+
+	$tests = array(
+		pum_is_admin_page(),
+		'edit-popup' === $screen->id,
+		pum_typenow() === 'popup',
+	);
+
+	return ! in_array( false, $tests, true );
+}
+
 /**
  * Determines whether the current admin page is the popup editor.
  *

@@ -22,7 +22,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 	/**
 	 * The version of our database table
 	 */
-	public $version = 3.1;
+	public $version = 20200917;
 
 	/**
 	 * The name of the primary column
@@ -42,7 +42,6 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 			'name'         => '%s',
 			'fname'        => '%s',
 			'lname'        => '%s',
-			'values'       => '%s',
 			'user_id'      => '%d',
 			'consent_args' => '%s',
 			'consent'      => '%s',
@@ -62,7 +61,6 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 			'name'         => '',
 			'fname'        => '',
 			'lname'        => '',
-			'values'       => '',
 			'user_id'      => 0,
 			'consent_args' => '',
 			'consent'      => 'no',
@@ -103,7 +101,6 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 			name varchar(255) NOT NULL,
 			fname varchar(255) NOT NULL,
 			lname varchar(255) NOT NULL,
-			values longtext NOT NULL,
 			uuid varchar(255) NOT NULL,
 			consent varchar(255) NOT NULL,
 			consent_args longtext NOT NULL,

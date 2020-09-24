@@ -151,9 +151,10 @@ class PUM_Analytics {
 		$namespace = 'pum/v' . $version;
 
 		register_rest_route( $namespace, 'analytics', apply_filters( 'pum_analytics_rest_route_args', array(
-			'methods'  => 'GET',
-			'callback' => array( __CLASS__, 'analytics_endpoint' ),
-			'args'     => array(
+			'methods'             => 'GET',
+			'callback'            => array( __CLASS__, 'analytics_endpoint' ),
+			'permission_callback' => '__return_true',
+			'args'                => array(
 				'event' => array(
 					'required'    => true,
 					'description' => __( 'Event Type', 'popup-maker' ),

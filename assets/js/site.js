@@ -804,6 +804,66 @@ var PUM;
 }(jQuery, document));
 
 /**
+ * Initialize Popup Maker.
+ * Version 1.8
+ */
+(function ($, document, undefined) {
+    "use strict";
+    // Defines the current version.
+    $.fn.popmake.version = 1.8;
+
+    // Stores the last open popup.
+    $.fn.popmake.last_open_popup = null;
+
+    window.PUM.init = function () {
+        console.log('init popups ✔');
+        $('.pum').popmake();
+        $(document).trigger('pumInitialized');
+
+        /**
+         * Process php based form submissions when the form_success args are passed.
+         */
+        if (typeof pum_vars.form_success === 'object') {
+            pum_vars.form_success = $.extend({
+                popup_id: null,
+                settings: {}
+            });
+
+            PUM.forms.success(pum_vars.form_success.popup_id, pum_vars.form_success.settings);
+        }
+
+        // Initiate integrations.
+        PUM.integrations.init();
+    };
+
+    $(document).ready(function () {
+        // TODO can this be moved outside doc.ready since we are awaiting our own promises first?
+        var initHandler = PUM.hooks.applyFilters('pum.initHandler', PUM.init);
+        var initPromises = PUM.hooks.applyFilters('pum.initPromises', []);
+
+        Promise.all(initPromises).then(initHandler);
+    });
+
+    /**
+     * Add hidden field to all popup forms.
+     */
+    $('.pum').on('pumInit', function () {
+        var $popup = PUM.getPopup(this),
+            popupID = PUM.getSetting($popup, 'id'),
+            $forms = $popup.find('form');
+
+        /**
+         * If there are forms in the popup add a hidden field for use in retriggering the popup on reload.
+         */
+        if ($forms.length) {
+            $forms.append('<input type="hidden" name="pum_form_popup_id" value="' + popupID + '" />');
+        }
+    });
+
+
+}(jQuery));
+
+/**
  * Defines the core $.popmake binds.
  * Version 1.4
  */
@@ -961,12 +1021,12 @@ var PUM_Analytics;
             var beacon = new Image(),
                 url = rest_enabled ? pum_vars.restapi : pum_vars.ajaxurl,
                 opts = {
-                    route: '/analytics/',
-                    data: $.extend({
+                    route: pum.hooks.applyFilters( 'pum.analyticsBeaconRoute', '/analytics/' ),
+                    data: pum.hooks.applyFilters( 'pum.AnalyticsBeaconData', $.extend( true, {
                         event: 'open',
                         pid: null,
                         _cache: (+(new Date()))
-                    }, data),
+                    }, data ) ),
                     callback: typeof callback === 'function' ? callback : function () {
                     }
                 };
@@ -3796,63 +3856,304 @@ var pum_debug_mode = false,
 
     return FormSerializer;
 }));
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(factory());
+}(this, (function () { 'use strict';
+
 /**
- * Initialize Popup Maker.
- * Version 1.8
+ * @this {Promise}
  */
-(function ($, document, undefined) {
-    "use strict";
-    // Defines the current version.
-    $.fn.popmake.version = 1.8;
+function finallyConstructor(callback) {
+  var constructor = this.constructor;
+  return this.then(
+    function(value) {
+      // @ts-ignore
+      return constructor.resolve(callback()).then(function() {
+        return value;
+      });
+    },
+    function(reason) {
+      // @ts-ignore
+      return constructor.resolve(callback()).then(function() {
+        // @ts-ignore
+        return constructor.reject(reason);
+      });
+    }
+  );
+}
 
-    // Stores the last open popup.
-    $.fn.popmake.last_open_popup = null;
+// Store setTimeout reference so promise-polyfill will be unaffected by
+// other code modifying setTimeout (like sinon.useFakeTimers())
+var setTimeoutFunc = setTimeout;
 
-    window.PUM.init = function () {
-        console.log('init popups ✔');
-        $('.pum').popmake();
-        $(document).trigger('pumInitialized');
+function isArray(x) {
+  return Boolean(x && typeof x.length !== 'undefined');
+}
 
-        /**
-         * Process php based form submissions when the form_success args are passed.
-         */
-        if (typeof pum_vars.form_success === 'object') {
-            pum_vars.form_success = $.extend({
-                popup_id: null,
-                settings: {}
-            });
+function noop() {}
 
-            PUM.forms.success(pum_vars.form_success.popup_id, pum_vars.form_success.settings);
-        }
+// Polyfill for Function.prototype.bind
+function bind(fn, thisArg) {
+  return function() {
+    fn.apply(thisArg, arguments);
+  };
+}
 
-        // Initiate integrations.
-        PUM.integrations.init();
-    };
+/**
+ * @constructor
+ * @param {Function} fn
+ */
+function Promise(fn) {
+  if (!(this instanceof Promise))
+    throw new TypeError('Promises must be constructed via new');
+  if (typeof fn !== 'function') throw new TypeError('not a function');
+  /** @type {!number} */
+  this._state = 0;
+  /** @type {!boolean} */
+  this._handled = false;
+  /** @type {Promise|undefined} */
+  this._value = undefined;
+  /** @type {!Array<!Function>} */
+  this._deferreds = [];
 
-    $(document).ready(function () {
-        // TODO can this be moved outside doc.ready since we are awaiting our own promises first?
-        var initHandler = PUM.hooks.applyFilters('pum.initHandler', PUM.init);
-        var initPromises = PUM.hooks.applyFilters('pum.initPromises', []);
+  doResolve(fn, this);
+}
 
-        Promise.all(initPromises).then(initHandler);
+function handle(self, deferred) {
+  while (self._state === 3) {
+    self = self._value;
+  }
+  if (self._state === 0) {
+    self._deferreds.push(deferred);
+    return;
+  }
+  self._handled = true;
+  Promise._immediateFn(function() {
+    var cb = self._state === 1 ? deferred.onFulfilled : deferred.onRejected;
+    if (cb === null) {
+      (self._state === 1 ? resolve : reject)(deferred.promise, self._value);
+      return;
+    }
+    var ret;
+    try {
+      ret = cb(self._value);
+    } catch (e) {
+      reject(deferred.promise, e);
+      return;
+    }
+    resolve(deferred.promise, ret);
+  });
+}
+
+function resolve(self, newValue) {
+  try {
+    // Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
+    if (newValue === self)
+      throw new TypeError('A promise cannot be resolved with itself.');
+    if (
+      newValue &&
+      (typeof newValue === 'object' || typeof newValue === 'function')
+    ) {
+      var then = newValue.then;
+      if (newValue instanceof Promise) {
+        self._state = 3;
+        self._value = newValue;
+        finale(self);
+        return;
+      } else if (typeof then === 'function') {
+        doResolve(bind(then, newValue), self);
+        return;
+      }
+    }
+    self._state = 1;
+    self._value = newValue;
+    finale(self);
+  } catch (e) {
+    reject(self, e);
+  }
+}
+
+function reject(self, newValue) {
+  self._state = 2;
+  self._value = newValue;
+  finale(self);
+}
+
+function finale(self) {
+  if (self._state === 2 && self._deferreds.length === 0) {
+    Promise._immediateFn(function() {
+      if (!self._handled) {
+        Promise._unhandledRejectionFn(self._value);
+      }
     });
+  }
 
+  for (var i = 0, len = self._deferreds.length; i < len; i++) {
+    handle(self, self._deferreds[i]);
+  }
+  self._deferreds = null;
+}
 
-    /**
-     * Add hidden field to all popup forms.
-     */
-    $('.pum').on('pumInit', function () {
-        var $popup = PUM.getPopup(this),
-            popupID = PUM.getSetting($popup, 'id'),
-            $forms = $popup.find('form');
+/**
+ * @constructor
+ */
+function Handler(onFulfilled, onRejected, promise) {
+  this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null;
+  this.onRejected = typeof onRejected === 'function' ? onRejected : null;
+  this.promise = promise;
+}
 
-        /**
-         * If there are forms in the popup add a hidden field for use in retriggering the popup on reload.
-         */
-        if ($forms.length) {
-            $forms.append('<input type="hidden" name="pum_form_popup_id" value="' + popupID + '" />');
+/**
+ * Take a potentially misbehaving resolver function and make sure
+ * onFulfilled and onRejected are only called once.
+ *
+ * Makes no guarantees about asynchrony.
+ */
+function doResolve(fn, self) {
+  var done = false;
+  try {
+    fn(
+      function(value) {
+        if (done) return;
+        done = true;
+        resolve(self, value);
+      },
+      function(reason) {
+        if (done) return;
+        done = true;
+        reject(self, reason);
+      }
+    );
+  } catch (ex) {
+    if (done) return;
+    done = true;
+    reject(self, ex);
+  }
+}
+
+Promise.prototype['catch'] = function(onRejected) {
+  return this.then(null, onRejected);
+};
+
+Promise.prototype.then = function(onFulfilled, onRejected) {
+  // @ts-ignore
+  var prom = new this.constructor(noop);
+
+  handle(this, new Handler(onFulfilled, onRejected, prom));
+  return prom;
+};
+
+Promise.prototype['finally'] = finallyConstructor;
+
+Promise.all = function(arr) {
+  return new Promise(function(resolve, reject) {
+    if (!isArray(arr)) {
+      return reject(new TypeError('Promise.all accepts an array'));
+    }
+
+    var args = Array.prototype.slice.call(arr);
+    if (args.length === 0) return resolve([]);
+    var remaining = args.length;
+
+    function res(i, val) {
+      try {
+        if (val && (typeof val === 'object' || typeof val === 'function')) {
+          var then = val.then;
+          if (typeof then === 'function') {
+            then.call(
+              val,
+              function(val) {
+                res(i, val);
+              },
+              reject
+            );
+            return;
+          }
         }
-    });
+        args[i] = val;
+        if (--remaining === 0) {
+          resolve(args);
+        }
+      } catch (ex) {
+        reject(ex);
+      }
+    }
 
+    for (var i = 0; i < args.length; i++) {
+      res(i, args[i]);
+    }
+  });
+};
 
-}(jQuery));
+Promise.resolve = function(value) {
+  if (value && typeof value === 'object' && value.constructor === Promise) {
+    return value;
+  }
+
+  return new Promise(function(resolve) {
+    resolve(value);
+  });
+};
+
+Promise.reject = function(value) {
+  return new Promise(function(resolve, reject) {
+    reject(value);
+  });
+};
+
+Promise.race = function(arr) {
+  return new Promise(function(resolve, reject) {
+    if (!isArray(arr)) {
+      return reject(new TypeError('Promise.race accepts an array'));
+    }
+
+    for (var i = 0, len = arr.length; i < len; i++) {
+      Promise.resolve(arr[i]).then(resolve, reject);
+    }
+  });
+};
+
+// Use polyfill for setImmediate for performance gains
+Promise._immediateFn =
+  // @ts-ignore
+  (typeof setImmediate === 'function' &&
+    function(fn) {
+      // @ts-ignore
+      setImmediate(fn);
+    }) ||
+  function(fn) {
+    setTimeoutFunc(fn, 0);
+  };
+
+Promise._unhandledRejectionFn = function _unhandledRejectionFn(err) {
+  if (typeof console !== 'undefined' && console) {
+    console.warn('Possible Unhandled Promise Rejection:', err); // eslint-disable-line no-console
+  }
+};
+
+/** @suppress {undefinedVars} */
+var globalNS = (function() {
+  // the only reliable means to get the global object is
+  // `Function('return this')()`
+  // However, this causes CSP violations in Chrome apps.
+  if (typeof self !== 'undefined') {
+    return self;
+  }
+  if (typeof window !== 'undefined') {
+    return window;
+  }
+  if (typeof global !== 'undefined') {
+    return global;
+  }
+  throw new Error('unable to locate global object');
+})();
+
+if (!('Promise' in globalNS)) {
+  globalNS['Promise'] = Promise;
+} else if (!globalNS.Promise.prototype['finally']) {
+  globalNS.Promise.prototype['finally'] = finallyConstructor;
+}
+
+})));

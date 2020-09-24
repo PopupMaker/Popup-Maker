@@ -100,7 +100,7 @@ class PUM_Gravity_Forms_Integation {
 	public static function register_cookies( $cookies = array() ) {
 		$cookies['gforms_form_success'] = array(
 			'labels' => array(
-				'name' => __( 'Gravity Form Success', 'popup-maker' ),
+				'name' => __( 'Gravity Form Success (deprecated. Use Form Submission instead.)', 'popup-maker' ),
 			),
 			'fields' => pum_get_cookie_fields(),
 		);

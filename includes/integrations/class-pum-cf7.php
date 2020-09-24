@@ -98,7 +98,7 @@ class PUM_CF7_Integration {
 	public static function register_cookies( $cookies = array() ) {
 		$cookies['cf7_form_success'] = array(
 			'labels' => array(
-				'name' => __( 'Contact Form 7 Success', 'popup-maker' ),
+				'name' => __( 'Contact Form 7 Success (deprecated. Use Form Submission instead.)', 'popup-maker' ),
 			),
 			'fields' => pum_get_cookie_fields(),
 		);

@@ -4,7 +4,7 @@
 }
 
 #wp-admin-bar-popup-maker > .ab-item::before {
-  background: url("/wp-content/plugins/popup-maker/assets/images/admin/icon-info-21x21.png") center center no-repeat transparent !important;
+  background: url(/wp-content/plugins/popup-maker/assets/images/admin/icon-info-21x21.png) center center no-repeat transparent !important;
   top: 3px;
   content: "";
   width: 20px;
@@ -12,7 +12,7 @@
 }
 
 #wp-admin-bar-popup-maker:hover > .ab-item::before {
-  background-image: url("/wp-content/plugins/popup-maker/assets/images/admin/icon-info-21x21.png") !important;
+  background-image: url(/wp-content/plugins/popup-maker/assets/images/admin/icon-info-21x21.png) !important;
 }
 
 /*# sourceMappingURL=pum-admin-bar-rtl.css.map */
