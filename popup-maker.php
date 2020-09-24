@@ -113,7 +113,7 @@ class Popup_Maker {
 	/**
 	 * @var string
 	 */
-	public static $MIN_WP_VER = '4.1';
+	public static $MIN_WP_VER = '4.9';
 
 	/**
 	 * @var string Plugin URL
