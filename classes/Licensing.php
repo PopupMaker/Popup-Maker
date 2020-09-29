@@ -98,17 +98,17 @@ class PUM_Licensing {
 						$messages[] = sprintf( __( 'Your license key has been disabled. Please %scontact support%s for more information.', 'popup-maker' ), '<a target="_blank" href="https://wppopupmaker.com/support/?utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_content=pum_license&utm_medium=revoked">', '</a>' );
 						break;
 					case 'missing' :
-						$messages[] = sprintf( __( 'Invalid license. Please %svisit your account page%s and verify it.', 'popup-maker' ), '<a target="_blank" href="https://wppopupmaker.com/account/?tab=licenses&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_content=pum_license&utm_medium=missing">', '</a>' );
+						$messages[] = sprintf( __( 'Invalid license. Please %svisit your account page%s and verify it.', 'popup-maker' ), '<a target="_blank" href="https://wppopupmaker.com/your-account/license-keys/?utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_content=pum_license&utm_medium=missing">', '</a>' );
 						break;
 					case 'invalid' :
 					case 'site_inactive' :
-						$messages[] = sprintf( __( 'Your %s is not active for this URL. Please %svisit your account page%s to manage your license key URLs.', 'popup-maker' ), Popup_Maker::$NAME, '<a target="_blank" href="https://wppopupmaker.com/account/?tab=licenses&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_content=pum_license&utm_medium=invalid">', '</a>' );
+						$messages[] = sprintf( __( 'Your %s is not active for this URL. Please %svisit your account page%s to manage your license key URLs.', 'popup-maker' ), Popup_Maker::$NAME, '<a target="_blank" href="https://wppopupmaker.com/your-account/license-keys/?utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_content=pum_license&utm_medium=invalid">', '</a>' );
 						break;
 					case 'item_name_mismatch' :
 						$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'popup-maker' ), Popup_Maker::$NAME );
 						break;
 					case 'no_activations_left':
-						$messages[] = sprintf( __( 'Your license key has reached its activation limit. %sView possible upgrades%s now.', 'popup-maker' ), '<a target="_blank" href="https://wppopupmaker.com/account/?tab=licenses&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_content=pum_license&utm_medium=no-activations-left">', '</a>' );
+						$messages[] = sprintf( __( 'Your license key has reached its activation limit. %sView possible upgrades%s now.', 'popup-maker' ), '<a target="_blank" href="https://wppopupmaker.com/your-account/license-keys/?utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_content=pum_license&utm_medium=no-activations-left">', '</a>' );
 						break;
 					case 'license_not_activable':
 						$messages[] = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'popup-maker' );

@@ -190,8 +190,6 @@ class PUM_Newsletters {
 			'consent_args' => '',
 		) );
 
-		$data['values'] = maybe_serialize( $values );
-
 		$subscriber_id = PUM_DB_Subscribers::instance()->insert( $data );
 
 		if ( is_user_logged_in() && $subscriber_id ) {

@@ -1,10 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/*********************************************
+ * Copyright (c) 2020, Code Atlantic LLC
+ ********************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
-	// Exit if accessed directly
+	// Exit if accessed directly.
 	exit;
 }
 
@@ -29,18 +29,20 @@ class PUM_Triggers {
 	public $triggers;
 
 	/**
-	 *
+	 * Initializes the triggers.
 	 */
 	public static function init() {
 		self::instance();
 	}
 
 	/**
+	 * Creates the triggers instance.
+	 *
 	 * @return PUM_Triggers
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
-			self::$instance                = new self;
+			self::$instance                = new self();
 			self::$instance->preload_posts = pum_is_popup_editor();
 		}
 
@@ -48,7 +50,10 @@ class PUM_Triggers {
 	}
 
 	/**
-	 * @param array $triggers
+	 * Adds an array of triggers to the initialized triggers.
+	 *
+	 * @param array $triggers The array of triggers to add.
+	 * @uses PUM_Triggers::add_trigger()
 	 */
 	public function add_triggers( $triggers = array() ) {
 		foreach ( $triggers as $key => $trigger ) {
@@ -61,21 +66,26 @@ class PUM_Triggers {
 	}
 
 	/**
-	 * @param array $trigger
+	 * Initializes a single trigger
+	 *
+	 * @param array $trigger The trigger array.
 	 */
 	public function add_trigger( $trigger = array() ) {
-		if ( ! empty( $trigger['id'] ) && ! isset ( $this->triggers[ $trigger['id'] ] ) ) {
-			$trigger = wp_parse_args( $trigger, array(
-				'id'              => '',
-				'name'            => '',
-				'modal_title'     => '',
-				'settings_column' => '',
-				'priority'        => 10,
-				'tabs'            => $this->get_tabs(),
-				'fields'          => array(),
-			) );
+		if ( ! empty( $trigger['id'] ) && ! isset( $this->triggers[ $trigger['id'] ] ) ) {
+			$trigger = wp_parse_args(
+				$trigger,
+				array(
+					'id'              => '',
+					'name'            => '',
+					'modal_title'     => '',
+					'settings_column' => '',
+					'priority'        => 10,
+					'tabs'            => $this->get_tabs(),
+					'fields'          => array(),
+				)
+			);
 
-			if ( empty ( $trigger['modal_title'] ) && ! empty( $trigger['name'] ) ) {
+			if ( empty( $trigger['modal_title'] ) && ! empty( $trigger['name'] ) ) {
 				$trigger['modal_title'] = sprintf( _x( '%s Trigger Settings', 'trigger settings modal title', 'popup-maker' ), $trigger['name'] );
 			}
 
@@ -91,7 +101,7 @@ class PUM_Triggers {
 				}
 			}
 
-			// Remove cookie fields
+			// Remove cookie fields.
 			if ( ! empty( $trigger['fields']['cookie'] ) ) {
 				unset( $trigger['fields']['cookie'] );
 			}
@@ -103,12 +113,12 @@ class PUM_Triggers {
 
 			$this->triggers[ $trigger['id'] ] = apply_filters( 'pum_trigger', $trigger );
 		}
-
-		return;
 	}
 
 	/**
-	 * @return array
+	 * Retrieves all initialized triggers.
+	 *
+	 * @return array The triggers
 	 */
 	public function get_triggers() {
 		if ( ! isset( $this->triggers ) ) {
@@ -119,9 +129,10 @@ class PUM_Triggers {
 	}
 
 	/**
-	 * @param null $trigger
+	 * Retrieves a single trigger by the trigger key
 	 *
-	 * @return mixed|null
+	 * @param string|null $trigger The key for the trigger.
+	 * @return mixed|null The trigger array or null if none found
 	 */
 	public function get_trigger( $trigger = null ) {
 		$triggers = $this->get_triggers();
@@ -143,91 +154,101 @@ class PUM_Triggers {
 
 	/**
 	 * Registers all known triggers when called.
+	 *
+	 * @uses PUM_Triggers::add_triggers()
 	 */
 	public function register_triggers() {
-		$triggers = apply_filters( 'pum_registered_triggers', array(
-			'click_open'      => array(
-				'name'            => __( 'Click Open', 'popup-maker' ),
-				'modal_title'     => __( 'Click Trigger Settings', 'popup-maker' ),
-				'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Extra Selectors', 'popup-maker' ), '{{data.extra_selectors}}' ),
-				'fields'          => array(
-					'general'  => array(
-						'click_info' => array(
-							'type'  => 'html',
-							'content' => '<p>' . __( "Adding the class 'popmake-{popup-name}' to an element will trigger it to be opened once clicked. Additionally you can add additional CSS selectors below.", 'popup-maker' ) . '</p>',
+		$triggers = apply_filters(
+			'pum_registered_triggers',
+			array(
+				'click_open'      => array(
+					'name'            => __( 'Click Open', 'popup-maker' ),
+					'modal_title'     => __( 'Click Trigger Settings', 'popup-maker' ),
+					'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Extra Selectors', 'popup-maker' ), '{{data.extra_selectors}}' ),
+					'fields'          => array(
+						'general'  => array(
+							'click_info'      => array(
+								'type'    => 'html',
+								'content' => '<p>' . __( 'Adding the class "popmake-<span id="pum-default-click-trigger-class">{popup-ID}</span>" to an element will trigger it to be opened once clicked. Additionally you can add additional CSS selectors below.', 'popup-maker' ) . '</p>',
+							),
+							'extra_selectors' => array(
+								'label'       => __( 'Extra CSS Selectors', 'popup-maker' ),
+								'desc'        => __( 'For more than one selector, separate by comma (,)', 'popup-maker' ) . '<br /><strong>eg:  </strong>' . __( ' .class-here, .class-2-here, #button_id', 'popup-maker' ),
+								'placeholder' => __( '.class-here', 'popup-maker' ),
+								'doclink'     => 'https://docs.wppopupmaker.com/article/147-getting-css-selectors?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=extra-selectors',
+							),
 						),
-						'extra_selectors' => array(
-							'label'       => __( 'Extra CSS Selectors', 'popup-maker' ),
-							'desc'        => __( 'For more than one selector, separate by comma (,)', 'popup-maker' ) . '<br /><strong>eg:  </strong>' . __( ' .class-here, .class-2-here, #button_id', 'popup-maker' ),
-							'placeholder' => __( '.class-here', 'popup-maker' ),
-							'doclink'     => 'https://docs.wppopupmaker.com/article/147-getting-css-selectors?utm_source=plugin-popup-editor=&utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_content=extra-selectors',
-						),
-					),
-					'advanced' => array(
-						'do_default' => array(
-							'type'  => 'checkbox',
-							'label' => __( 'Do not prevent the default click functionality.', 'popup-maker' ),
-							'desc'  => __( 'This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file.', 'popup-maker' ),
-						),
-					),
-				),
-			),
-			'auto_open'       => array(
-				'name'            => __( 'Time Delay / Auto Open', 'popup-maker' ),
-				'modal_title'     => __( 'Time Delay Settings', 'popup-maker' ),
-				'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Delay', 'popup-maker' ), '{{data.delay}}' ),
-				'fields'          => array(
-					'general' => array(
-						'delay' => array(
-							'type'  => 'rangeslider',
-							'label' => __( 'Delay', 'popup-maker' ),
-							'desc'  => __( 'The delay before the popup will open in milliseconds.', 'popup-maker' ),
-							'std'   => 500,
-							'min'   => 0,
-							'max'   => 10000,
-							'step'  => 500,
-							'unit'  => 'ms',
+						'advanced' => array(
+							'do_default' => array(
+								'type'  => 'checkbox',
+								'label' => __( 'Do not prevent the default click functionality.', 'popup-maker' ),
+								'desc'  => __( 'This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file.', 'popup-maker' ),
+							),
 						),
 					),
 				),
-			),
-			'form_submission' => [
-				'name'   => __( 'Form Submission', 'popup-maker' ),
-				//'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Form', 'popup-maker' ), '' ),
-				'fields' => [
-					'general' => [
-						'form'  => [
-							'type'    => 'select',
-							'label'   => __( 'Form', 'popup-maker' ),
-							'options' => $this->preload_posts ? array_merge( [
-								'any'                              => __( 'Any Supported Form*', 'popup-maker' ),
-								__( 'Popup Maker', 'popup-maker' ) => [
-									'pumsubform' => __( 'Subscription Form', 'popup-maker' ),
-								],
-							], PUM_Integrations::get_integrated_forms_selectlist() ) : array(),
-							'std'     => 'any',
-						],
-						'delay' => array(
-							'type'  => 'rangeslider',
-							'label' => __( 'Delay', 'popup-maker' ),
-							'desc'  => __( 'The delay before the popup will open in milliseconds.', 'popup-maker' ),
-							'std'   => 0,
-							'min'   => 0,
-							'max'   => 10000,
-							'step'  => 500,
-							'unit'  => 'ms',
+				'auto_open'       => array(
+					'name'            => __( 'Time Delay / Auto Open', 'popup-maker' ),
+					'modal_title'     => __( 'Time Delay Settings', 'popup-maker' ),
+					'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Delay', 'popup-maker' ), '{{data.delay}}' ),
+					'fields'          => array(
+						'general' => array(
+							'delay' => array(
+								'type'  => 'rangeslider',
+								'label' => __( 'Delay', 'popup-maker' ),
+								'desc'  => __( 'The delay before the popup will open in milliseconds.', 'popup-maker' ),
+								'std'   => 500,
+								'min'   => 0,
+								'max'   => 10000,
+								'step'  => 500,
+								'unit'  => 'ms',
+							),
 						),
-					],
-				],
-			],
-
-		) );
+					),
+				),
+				'form_submission' => array(
+					'name'   => __( 'Form Submission', 'popup-maker' ),
+					//'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Form', 'popup-maker' ), '' ),
+					'fields' => array(
+						'general' => array(
+							'form'  => array(
+								'type'    => 'select',
+								'label'   => __( 'Form', 'popup-maker' ),
+								'options' => $this->preload_posts ? array_merge(
+									array(
+										'any' => __( 'Any Supported Form*', 'popup-maker' ),
+										__( 'Popup Maker', 'popup-maker' ) => array(
+											'pumsubform' => __( 'Subscription Form', 'popup-maker' ),
+										),
+									),
+									PUM_Integrations::get_integrated_forms_selectlist()
+								) : array(),
+								'std'     => 'any',
+							),
+							'delay' => array(
+								'type'  => 'rangeslider',
+								'label' => __( 'Delay', 'popup-maker' ),
+								'desc'  => __( 'The delay before the popup will open in milliseconds.', 'popup-maker' ),
+								'std'   => 0,
+								'min'   => 0,
+								'max'   => 10000,
+								'step'  => 500,
+								'unit'  => 'ms',
+							),
+						),
+					),
+				),
+			)
+		);
 
 		foreach ( $triggers as $key => $trigger ) {
-			$triggers[ $key ]['fields'] = PUM_Admin_Helpers::parse_tab_fields( $triggers[ $key ]['fields'], array(
-				'has_subtabs' => false,
-				'name'        => '%s',
-			) );
+			$triggers[ $key ]['fields'] = PUM_Admin_Helpers::parse_tab_fields(
+				$triggers[ $key ]['fields'],
+				array(
+					'has_subtabs' => false,
+					'name'        => '%s',
+				)
+			);
 		}
 
 		// @deprecated filter.
@@ -255,7 +276,9 @@ class PUM_Triggers {
 	}
 
 	/**
-	 * @return array
+	 * Prepares an array to create a dropdown list of triggers
+	 *
+	 * @return array An array of triggers with ID as key and name as value
 	 */
 	public function dropdown_list() {
 		$_triggers = $this->get_triggers();
@@ -273,7 +296,6 @@ class PUM_Triggers {
 	 *
 	 * @return array
 	 * @uses filter pum_trigger_cookie_fields
-	 *
 	 */
 	public function cookie_fields() {
 
@@ -282,9 +304,12 @@ class PUM_Triggers {
 		 *
 		 * @param array $fields The list of trigger cookie fields.
 		 */
-		return apply_filters( 'pum_trigger_cookie_fields', array(
-			'cookie_name' => $this->cookie_field(),
-		) );
+		return apply_filters(
+			'pum_trigger_cookie_fields',
+			array(
+				'cookie_name' => $this->cookie_field(),
+			)
+		);
 	}
 
 	/**
@@ -292,7 +317,6 @@ class PUM_Triggers {
 	 *
 	 * @return array
 	 * @uses filter pum_trigger_cookie_field
-	 *
 	 */
 	public function cookie_field() {
 
@@ -301,18 +325,21 @@ class PUM_Triggers {
 		 *
 		 * @param array $fields The list of trigger cookie field.
 		 */
-		return apply_filters( 'pum_trigger_cookie_field', array(
-			'label'    => __( 'Cookie Name', 'popup-maker' ),
-			'desc'     => __( 'Choose which cookies will disable this trigger?', 'popup-maker' ),
-			'type'     => 'select',
-			'multiple' => true,
-			'as_array' => true,
-			'select2'  => true,
-			'priority' => 99,
-			'options'  => array(
-				'add_new' => __( 'Add New Cookie', 'popup-maker' ),
-			),
-		) );
+		return apply_filters(
+			'pum_trigger_cookie_field',
+			array(
+				'label'    => __( 'Cookie Name', 'popup-maker' ),
+				'desc'     => __( 'Choose which cookies will disable this trigger?', 'popup-maker' ),
+				'type'     => 'select',
+				'multiple' => true,
+				'as_array' => true,
+				'select2'  => true,
+				'priority' => 99,
+				'options'  => array(
+					'add_new' => __( 'Add New Cookie', 'popup-maker' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -328,11 +355,14 @@ class PUM_Triggers {
 		 *
 		 * @param array $to_do The list of trigger section labels.
 		 */
-		return apply_filters( 'pum_get_trigger_tabs', array(
-			'general'  => __( 'General', 'popup-maker' ),
-			'cookie'   => __( 'Cookie', 'popup-maker' ),
-			'advanced' => __( 'Advanced', 'popup-maker' ),
-		) );
+		return apply_filters(
+			'pum_get_trigger_tabs',
+			array(
+				'general'  => __( 'General', 'popup-maker' ),
+				'cookie'   => __( 'Cookie', 'popup-maker' ),
+				'advanced' => __( 'Advanced', 'popup-maker' ),
+			)
+		);
 	}
 
 	/**

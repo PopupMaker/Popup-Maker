@@ -1,0 +1,6 @@
+node_modules
+vendor
+public
+release
+build
+assets/css/*.css

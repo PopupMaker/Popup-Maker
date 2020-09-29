@@ -1,11 +1,6 @@
 /*!******************************************************************************
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
-.popup_page_pum-extensions #poststuff .section-heading {
-  font-size: 18px;
-  padding: 0;
-}
-
 .extensions-available {
   display: flex;
   flex-wrap: wrap;

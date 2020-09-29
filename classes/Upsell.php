@@ -83,7 +83,7 @@ class PUM_Upsell {
 	}
 
 	/**
-	 * Displays the tabs for 'Popups', 'Popup Themes' and 'Addons and Integrations'
+	 * Displays the tabs for 'Popups', 'Popup Themes' and 'Extensions and Integrations'
 	 *
 	 * @since 1.8.0
 	 */
@@ -125,7 +125,7 @@ class PUM_Upsell {
 					'url'  => admin_url( 'edit.php?post_type=popup_theme' ),
 				),
 				'integrations' => array(
-					'name' => __( 'Addons and Integrations', 'popup-maker' ) . PUM_Admin_Extend::append_unseen_count(),
+					'name' => __( 'Extensions and Integrations', 'popup-maker' ) . PUM_Admin_Extend::append_unseen_count(),
 					'url'  => admin_url( 'edit.php?post_type=popup&page=pum-extensions&view=integrations' ),
 				),
 			);

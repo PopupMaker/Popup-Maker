@@ -133,11 +133,15 @@ class PUM_Site {
 			return;
 		}
 
-		$valid_actions = apply_filters( 'pum_valid_request_actions', array(
-			'popup_sysinfo',
-			'save_enabled_betas',
-			'download_batch_export',
-		) );
+		$valid_actions = apply_filters(
+			'pum_valid_request_actions',
+			array(
+				'popup_sysinfo',
+				'save_enabled_betas',
+				'download_batch_export',
+				'empty_error_log',
+			)
+		);
 
 		$action = sanitize_text_field( $_REQUEST['pum_action'] );
 

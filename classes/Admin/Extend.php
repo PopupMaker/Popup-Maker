@@ -1,7 +1,7 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/********************************************
+ * Copyright (c) 2020, Code Atlantic LLC
+ *******************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Admin_Extend {
 
 	/**
-	 *
+	 * Appends the unseen count to the Admin Menu.
 	 */
 	public static function append_count_to_menu_item() {
 		global $submenu;
@@ -32,15 +32,17 @@ class PUM_Admin_Extend {
 	}
 
 	/**
+	 * Returns HTML for the unseen count for the number of extensions, forms, etc... that have not been seen by user.
+	 *
 	 * @return string|null
 	 */
 	public static function append_unseen_count() {
 	    $is_integration_page = isset( $_GET['post_type'] ) && $_GET['post_type'] === 'popup' && isset( $_GET['page'] ) && $_GET['page'] === 'pum-extensions';
 	    $active_tab    = isset( $_GET['tab'] ) ? $_GET['tab'] : 'extensions';
 
-        if ( $is_integration_page ) {
-            self::mark_extensions_viewed( $active_tab );
-        }
+		if ( $is_integration_page ) {
+			self::mark_extensions_viewed( $active_tab );
+		}
 
 		$count = 0;
 
@@ -62,7 +64,7 @@ class PUM_Admin_Extend {
 		foreach ( self::actual_extension_counts() as $subtab => $count ) {
 			if ( ! isset( $viewed[ $subtab ] ) ) {
 				$unseen[ $subtab ] = $count;
-			} else if ( $viewed[ $subtab ] < $count ) {
+			} elseif ( $viewed[ $subtab ] < $count ) {
 				$unseen[ $subtab ] = $count - $viewed[ $subtab ];
 			}
 		}
@@ -116,12 +118,15 @@ class PUM_Admin_Extend {
 	 * @return mixed
 	 */
 	public static function subtabs() {
-		return apply_filters( 'pum_extend_subtabs', array(
-			'extensions' => __( 'Premium Extensions', 'popup-maker' ),
-			'forms'      => __( 'Forms', 'popup-maker' ),
-			'page-builders'      => __( 'Page Builders', 'popup-maker' ),
-			'other'      => __( 'Other', 'popup-maker' ),
-		) );
+		return apply_filters(
+			'pum_extend_subtabs',
+			array(
+				'extensions'    => __( 'Premium Extensions', 'popup-maker' ),
+				'forms'         => __( 'Forms', 'popup-maker' ),
+				'page-builders' => __( 'Page Builders', 'popup-maker' ),
+				'other'         => __( 'Other', 'popup-maker' ),
+			)
+		);
 	}
 
 	/**
@@ -176,12 +181,15 @@ class PUM_Admin_Extend {
 
 		shuffle( $form_plugins );
 
-		array_unshift( $form_plugins, array(
-			'slug' => 'ninja-forms',
-			'name' => __( 'Ninja Forms', 'popup-maker' ),
-			'url'  => 'https://wppopupmaker.com/recommends/ninja-forms',
-			'desc' => __( 'Ninja Forms has fast become the most extensible form plugin available. Build super custom forms and integrate with your favorite services.', 'popup-maker' ),
-		) );
+		array_unshift(
+			$form_plugins,
+			array(
+				'slug' => 'ninja-forms',
+				'name' => __( 'Ninja Forms', 'popup-maker' ),
+				'url'  => 'https://wppopupmaker.com/recommends/ninja-forms',
+				'desc' => __( 'Ninja Forms has fast become the most extensible form plugin available. Build super custom forms and integrate with your favorite services.', 'popup-maker' ),
+			)
+		);
 
 		return apply_filters( 'pum_extend_form_plugins', $form_plugins );
 	}
@@ -197,7 +205,7 @@ class PUM_Admin_Extend {
 				'slug' => 'beaver-builder',
 				'name' => __( 'Beaver Builder', 'popup-maker' ),
 				'url'  => 'https://wppopupmaker.com/recommends/beaver-builder',
-				'desc' => __( "Easily insert saved templates into your popups for a one of a kind popup design.", 'popup-maker' ),
+				'desc' => __( 'Easily insert saved templates into your popups for a one of a kind popup design.', 'popup-maker' ),
 			),
 		);
 
@@ -387,7 +395,7 @@ class PUM_Admin_Extend {
 
 		?>
 
-        <h4><?php _e( 'These form plugins work in our popups out of the box.', 'popup-maker' ); ?></h4>
+        <h2><?php _e( 'These form plugins work in our popups out of the box', 'popup-maker' ); ?></h2>
 
         <ul class="extensions-available">
 			<?php
@@ -429,7 +437,7 @@ class PUM_Admin_Extend {
 
 		?>
 
-        <h4><?php _e( 'These page builder plugins work in our popups out of the box.', 'popup-maker' ); ?></h4>
+        <h2><?php _e( 'These page builder plugins work in our popups out of the box', 'popup-maker' ); ?></h2>
 
         <ul class="extensions-available">
 			<?php
@@ -469,7 +477,7 @@ class PUM_Admin_Extend {
 	public static function render_other_list() {
 		$recommended_plugins = self::other_plugins();
 		?>
-		<h4><?php _e( 'These plugins work great alongside our popups!', 'popup-maker' ); ?></h4>
+		<h2><?php _e( 'These plugins work great alongside our popups', 'popup-maker' ); ?></h2>
 
 		<ul class="extensions-available">
 			<?php
@@ -507,7 +515,7 @@ class PUM_Admin_Extend {
 
 		?>
 
-        <h4><?php _e( 'These extensions add extra functionality to your popups.', 'popup-maker' ); ?></h4>
+        <h2><?php _e( 'Extend Popup Maker with additional premium features', 'popup-maker' ); ?></h2>
 
         <ul class="extensions-available">
 			<?php

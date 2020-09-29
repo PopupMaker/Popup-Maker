@@ -80,7 +80,7 @@ final class NF_PUM {
 	public function register_cookies( $cookies ) {
 		$cookies['ninja_form_success'] = array(
 			'labels' => array(
-				'name' => __( 'Ninja Form Success', 'popup-maker' ),
+				'name' => __( 'Ninja Form Success (deprecated. Use Form Submission instead.)', 'popup-maker' ),
 			),
 			'fields' => pum_get_cookie_fields(),
 		);

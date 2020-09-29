@@ -220,15 +220,15 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		foreach ( $settings as $key => $value ) {
 			$field = PUM_Admin_Popups::get_field( $key );
 
-			if ( false === $field && ! empty( $value ) )  {
-				// This is a value set programatically, not by a defined field. ex theme_slug
+			if ( false === $field && isset( $value ) ) {
+				// This is a value set programatically, not by a defined field. ex theme_slug.
 				$settings[ $key ] = $value;
 				continue;
 			}
 
 			if ( $field['private'] ) {
 				unset( $settings[ $key ] );
-			} elseif ( $field['type'] == 'checkbox' ) {
+			} elseif ( 'checkbox' === $field['type'] ) {
 				$settings[ $key ] = (bool) $value;
 			}
 		}
@@ -812,6 +812,39 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Retrieves the 'enabled' meta key and returns true if popup is enabled
+	 *
+	 * @since 1.12
+	 * @return bool True if enabled
+	 */
+	public function is_enabled() {
+		$enabled = $this->get_meta( 'enabled' );
+
+		// Post ID not valid.
+		if ( false === $enabled ) {
+			return false;
+		}
+
+		// If the key is missing...
+		if ( '' === $enabled ) {
+			// Set it to enabled.
+			$enabled = 1;
+			$this->update_meta( 'enabled', $enabled );
+		} else {
+			// Else, load it in.
+			$enabled = intval( $enabled );
+			if ( ! in_array( $enabled, array( 0, 1 ), true ) ) {
+				$enabled = 1;
+			}
+		}
+		if ( 1 === $enabled ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Returns whether or not the popup is visible in the loop.
 	 *
 	 * @return bool
@@ -824,6 +857,11 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		if ( ! $this->ID ) {
 			return false;
 			// Published/private
+		}
+
+		// If popup is not enabled, this popup is not loadable.
+		if ( ! $this->is_enabled() ) {
+			return false;
 		}
 
 		$filters = array( 'php_only' => true );

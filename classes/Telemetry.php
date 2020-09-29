@@ -4,7 +4,7 @@
  ******************************************************************************/
 
 if ( ! defined( 'ABSPATH' ) ) {
-	// Exit if accessed directly
+	// Exit if accessed directly.
 	exit;
 }
 
@@ -17,6 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PUM_Telemetry {
 
+	/**
+	 * Initialization method
+	 */
 	public static function init() {
 		add_action( 'pum_daily_scheduled_events', array( __CLASS__, 'track_check' ) );
 		if ( is_admin() && current_user_can( 'manage_options' ) ) {
@@ -27,6 +30,7 @@ class PUM_Telemetry {
 
 	/**
 	 * Prepares and sends data, if it is time to do so
+	 *
 	 * @since 1.11.0
 	 */
 	public static function track_check() {
@@ -39,17 +43,18 @@ class PUM_Telemetry {
 
 	/**
 	 * Prepares telemetry data to be sent
+	 *
 	 * @return array
 	 * @since 1.11.0
 	 */
 	public static function setup_data() {
 		global $wpdb;
 
-		// Retrieve current theme info
+		// Retrieve current theme info.
 		$theme_data = wp_get_theme();
 		$theme      = $theme_data->Name . ' ' . $theme_data->Version;
 
-		// Retrieve current plugin information
+		// Retrieve current plugin information.
 		if ( ! function_exists( 'get_plugins' ) ) {
 			include ABSPATH . '/wp-admin/includes/plugin.php';
 		}
@@ -59,7 +64,7 @@ class PUM_Telemetry {
 
 		foreach ( $plugins as $key => $plugin ) {
 			if ( in_array( $plugin, $active_plugins ) ) {
-				// Remove active plugins from list so we can show active and inactive separately
+				// Remove active plugins from list so we can show active and inactive separately.
 				unset( $plugins[ $key ] );
 			}
 		}
@@ -83,7 +88,7 @@ class PUM_Telemetry {
 		$sizes      = array();
 		$sounds     = array();
 
-		// Cycle through each popup
+		// Cycle through each popup.
 		foreach ( $all_popups as $popup ) {
 			$settings = $popup->get_settings();
 
@@ -138,33 +143,33 @@ class PUM_Telemetry {
 			}
 		}
 
-		$args = array(
-			// UID
-			'uid'              => self::get_uuid(),
+		return array(
+			// UID.
+			'uid'                    => self::get_uuid(),
 
-			// Language Info
-			'language'         => get_bloginfo( 'language' ), // Language
-			'charset'          => get_bloginfo( 'charset' ), // Character Set
+			// Language Info.
+			'language'               => get_bloginfo( 'language' ),
+			'charset'                => get_bloginfo( 'charset' ),
 
-			// Server Info
-			'php_version'      => phpversion(),
-			'mysql_version'    => $wpdb->db_version(),
-			'is_localhost'     => self::is_localhost(),
+			// Server Info.
+			'php_version'            => phpversion(),
+			'mysql_version'          => $wpdb->db_version(),
+			'is_localhost'           => self::is_localhost(),
 
-			// WP Install Info
-			'url'              => get_site_url(),
-			'version'          => Popup_Maker::$VER, // Plugin Version
-			'wp_version'       => get_bloginfo( 'version' ), // WP Version
-			'theme'            => $theme,
-			'active_plugins'   => $active_plugins,
-			'inactive_plugins' => array_values( $plugins ),
+			// WP Install Info.
+			'url'                    => get_site_url(),
+			'version'                => Popup_Maker::$VER,
+			'wp_version'             => get_bloginfo( 'version' ),
+			'theme'                  => $theme,
+			'active_plugins'         => $active_plugins,
+			'inactive_plugins'       => array_values( $plugins ),
 
-			// Popup Metrics
-			'popups'           => $popups,
-			'popup_themes'     => $popup_themes,
-			'open_count'       => get_option( 'pum_total_open_count', 0 ),
+			// Popup Metrics.
+			'popups'                 => $popups,
+			'popup_themes'           => $popup_themes,
+			'open_count'             => get_option( 'pum_total_open_count', 0 ),
 
-			// Popup Maker Settings
+			// Popup Maker Settings.
 			'block_editor_enabled'   => pum_get_option( 'gutenberg_support_enabled' ),
 			'bypass_ad_blockers'     => pum_get_option( 'bypass_adblockers' ),
 			'disable_taxonimies'     => pum_get_option( 'disable_popup_category_tag' ),
@@ -172,16 +177,14 @@ class PUM_Telemetry {
 			'disable_open_tracking'  => pum_get_option( 'disable_popup_open_tracking' ),
 			'default_email_provider' => pum_get_option( 'newsletter_default_provider', 'none' ),
 
-			// Aggregate Popup Settings
-			'triggers'   => $triggers,
-			'cookies'    => $cookies,
-			'conditions' => $conditions,
-			'locations'  => $location,
-			'sizes'      => $sizes,
-			'sounds'     => $sounds,
+			// Aggregate Popup Settings.
+			'triggers'               => $triggers,
+			'cookies'                => $cookies,
+			'conditions'             => $conditions,
+			'locations'              => $location,
+			'sizes'                  => $sizes,
+			'sounds'                 => $sounds,
 		);
-
-		return $args;
 	}
 
 	/**
@@ -198,20 +201,23 @@ class PUM_Telemetry {
 	 * Makes HTTP request to our API endpoint
 	 *
 	 * @param string $action The specific endpoint in our API.
-	 * @param array $data Any data to send in the body.
+	 * @param array  $data Any data to send in the body.
 	 * @return array|bool False if WP Error. Otherwise, array response from wp_remote_post.
 	 * @since 1.11.0
 	 */
 	public static function api_call( $action = '', $data = array() ) {
-		$response = wp_remote_post( 'https://api.wppopupmaker.com/wp-json/pmapi/v2/' . $action, array(
-			'method'      => 'POST',
-			'timeout'     => 20,
-			'redirection' => 5,
-			'httpversion' => '1.1',
-			'blocking'    => false,
-			'body'        => $data,
-			'user-agent'  => 'POPMAKE/' . Popup_Maker::$VER . '; ' . get_site_url(),
-		));
+		$response = wp_remote_post(
+			'https://api.wppopupmaker.com/wp-json/pmapi/v2/' . $action,
+			array(
+				'method'      => 'POST',
+				'timeout'     => 20,
+				'redirection' => 5,
+				'httpversion' => '1.1',
+				'blocking'    => false,
+				'body'        => $data,
+				'user-agent'  => 'POPMAKE/' . Popup_Maker::$VER . '; ' . get_site_url(),
+			)
+		);
 
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
@@ -269,8 +275,8 @@ class PUM_Telemetry {
 	/**
 	 * Checks if any options have been clicked from admin notices.
 	 *
-	 * @param string $code
-	 * @param string $action
+	 * @param string $code The code for the alert.
+	 * @param string $action Action taken on the alert.
 	 *
 	 * @since 1.11.0
 	 */
@@ -294,6 +300,7 @@ class PUM_Telemetry {
 
 	/**
 	 * Determines if it is time to send telemetry data.
+	 *
 	 * @return bool True if it is time.
 	 * @since 1.11.0
 	 */
@@ -323,6 +330,7 @@ class PUM_Telemetry {
 
 	/**
 	 * Determines if the site is in a local environment
+	 *
 	 * @return bool True for local
 	 * @since 1.11.0
 	 */

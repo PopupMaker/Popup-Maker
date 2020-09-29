@@ -44,6 +44,7 @@ const webpackConfig = {
 		{
 			'pum-integration-calderaforms': `${JS_DEV}/integration/calderaforms.js`,
 			'pum-integration-contactform7': `${JS_DEV}/integration/contactform7.js`,
+			'pum-integration-formidableforms': `${JS_DEV}/integration/formidableforms.js`,
 			'pum-integration-gravityforms': `${JS_DEV}/integration/gravityforms.js`,
 			'pum-integration-mc4wp': `${JS_DEV}/integration/mc4wp.js`,
 			'pum-integration-ninjaforms': `${JS_DEV}/integration/ninjaforms.js`,

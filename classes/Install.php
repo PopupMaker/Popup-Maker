@@ -1,9 +1,9 @@
 <?php
-/*******************************************************************************
+/********************************************
  * Copyright (c) 2020, Code Atlantic LLC.
- ******************************************************************************/
+ *******************************************/
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -46,7 +46,7 @@ class PUM_Install {
 
 		if ( is_multisite() && $network_wide ) {
 
-			$activated = get_site_option( 'pum_activated', [] );
+			$activated = get_site_option( 'pum_activated', array() );
 
 			$blog_ids = $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs}" );
 
@@ -58,7 +58,6 @@ class PUM_Install {
 				if ( ! pum_is_func_disabled( 'set_time_limit' ) ) {
 					@set_time_limit( 0 );
 				}
-
 			}
 
 			foreach ( $blog_ids as $blog_id ) {
@@ -79,30 +78,33 @@ class PUM_Install {
 	}
 
 	/**
-	 *
+	 * Installs the plugin
 	 */
 	public static function activate_site() {
 
 		// Add default values where needed.
-		$options = array_merge( get_option( 'popmake_settings', array() ), array(
-			'disable_popup_category_tag' => 1,
-		) );
+		$options = array_merge(
+			get_option( 'popmake_settings', array() ),
+				array(
+				'disable_popup_category_tag' => 1,
+			)
+		);
 
-		// Setup some default options
+		// Setup some default options.
 		add_option( 'popmake_settings', $options );
 
 		add_option( 'pum_version', Popup_Maker::$VER );
 
 		pum();
 
-		// Setup the Popup & Theme Custom Post Type
-//		PUM_Types::register_post_types();
+		// Setup the Popup & Theme Custom Post Type.
+		// PUM_Types::register_post_types();.
 
-		// Setup the Popup Taxonomies
-//		PUM_Types::register_taxonomies( true );
+		// Setup the Popup Taxonomies.
+		// PUM_Types::register_taxonomies( true );.
 
 		// Updates stored values for versioning.
-//		PUM_Utils_Upgrades::update_plugin_version();
+		// PUM_Utils_Upgrades::update_plugin_version();.
 
 		// We used transients before, but since the check for this option runs every admin page load it means 2 queries after its cleared.
 		// To prevent that we flipped it, now we delete the following option, and check for it.
@@ -125,6 +127,8 @@ class PUM_Install {
 	}
 
 	/**
+	 * Run when Popup Maker is deactivated. Completely deletes all data if complete_uninstall is set to true.
+	 *
 	 * @since    1.4
 	 */
 	public static function deactivate_site() {
@@ -140,14 +144,18 @@ class PUM_Install {
 			$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key LIKE 'popup_%'" );
 
 			/** Delete All the Taxonomies */
-			foreach ( array( 'popup_category', 'popup_tag', ) as $taxonomy ) {
-				// Prepare & excecute SQL, Delete Terms
+			foreach ( array( 'popup_category', 'popup_tag' ) as $taxonomy ) {
+				// Prepare & excecute SQL, Delete Terms.
 				$wpdb->get_results( $wpdb->prepare( "DELETE t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('%s')", $taxonomy ) );
-				// Delete Taxonomy
+
+				// Delete Taxonomy.
 				$wpdb->delete( $wpdb->term_taxonomy, array( 'taxonomy' => $taxonomy ), array( '%s' ) );
 			}
 
 			$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'popmake%' OR option_name LIKE '_pum_%' OR option_name LIKE 'pum_%' OR option_name LIKE 'popup_analytics_%'" );
+
+			// Delete all Popup Maker related user meta.
+			$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE '_pum_%' OR meta_key lIKE 'pum_%'" );
 
 			// Reset JS/CSS assets for regeneration.
 			pum_reset_assets();
@@ -211,7 +219,7 @@ class PUM_Install {
 	public static function activation_failure_admin_notice() {
 		?>
 		<div class="notice notice-error is-dismissible">
-			<p><?php echo self::get_activation_failure_notice(); ?></p>
+			<p><?php esc_html_e( self::get_activation_failure_notice() ); ?></p>
 		</div>
 		<?php
 	}

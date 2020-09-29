@@ -3,6 +3,9 @@ Everything you need to create unique popup user experiences. Insert forms & othe
 
 Feel free to browse the code and make suggestions/requests. Thanks!
 
+## Support
+This is a developer's portal for Popup Maker and **should not** be used for support. Please [create a support ticket here](https://wordpress.org/support/plugin/popup-maker/).
+
 ## Getting Started
 
 ### Downloading And Using As A Plugin
@@ -12,14 +15,9 @@ To use this plugin, you must download from [the releases page](https://github.co
 Once installed and activated, Go to wp-admin > Popup Maker > Add Popup to create your first popup.
 
 ### Getting Set Up For Development
-In order to begin development on Popup Maker, please refer to our [Setting up your local environment](https://github.com/PopupMaker/Popup-Maker/wiki/Setting-up-your-local-environment) wiki page.
-
-#### Gulp Tasks
-As normal, we have our gulp tasks in the gulpfile.js file.
-
-To build the css files, run `gulp css`.
-
-To build the js files, run `gulp js`. 
+In order to begin development on Popup Maker, please first refer to our [Contributing Guidelines](https://github.com/PopupMaker/Popup-Maker/blob/master/.github/CONTRIBUTING.md) for our coding style and commit style information.
+ 
+Then, move on to our [Setting up your local environment](https://github.com/PopupMaker/Popup-Maker/wiki/Setting-up-your-local-environment) wiki page.
 
 ## Built With
 * [SASS](https://sass-lang.com) - The CSS pre-processor we use. We use the SCSS syntax.
@@ -35,20 +33,7 @@ There is not currently any automated deployment. Instead, once a release is publ
 ## Contributing
 Community made feature requests, patches, localizations, bug reports, and contributions are always welcome and are crucial to ensure Popup Maker continues to grow.
 
-When contributing please ensure you follow the guidelines below so that we can keep on top of things.
-
-Please Note: GitHub is not intended for support based questions. For those, please use the [support forums](https://wordpress.org/support/plugin/popup-maker/).
-
-### Creating Issues
-* If you have any bugs or feature requests, please [create an issue](https://github.com/PopupMaker/Popup-Maker/issues/new)
-* For bug reports, please clearly describe the bug/issue and include steps on how to reproduce it
-* For feature requests, please clearly describe what you would like, how it would be used, and example screenshots (if possible)
-
-### Pull Requests
-* Ensure you stick to the [WordPress Coding Standards](https://codex.wordpress.org/WordPress_Coding_Standards)
-* When committing, reference your issue (if present) and include a note about the fix
-* Push the changes to your fork and submit a pull request to the 'master' branch of this repository
-* We are trying to ensure that every function is documented well and follows the standards set by phpDoc going forward
+When contributing please ensure you follow our [Contributor Guidelines](https://github.com/PopupMaker/Popup-Maker/blob/master/.github/CONTRIBUTING.md) so that we can keep on top of things.
 
 ## Versioning
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see [the releases in this repository](https://github.com/PopupMaker/Popup-Maker/releases).
@@ -60,6 +45,3 @@ See also [the list of contributors](https://github.com/PopupMaker/Popup-Maker/gr
 
 ## License
 This project is licensed under the GPLv2 License.
-
-## Support
-This is a developer's portal for Popup Maker and **should not** be used for support. Please [create a support ticket here](https://wordpress.org/support/plugin/popup-maker/).
