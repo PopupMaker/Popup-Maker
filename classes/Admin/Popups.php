@@ -1193,7 +1193,7 @@ class PUM_Admin_Popups {
 			'title'       => __( 'Name', 'popup-maker' ),
 			'enabled'     => __( 'Enabled', 'popup-maker' ),
 			'popup_title' => __( 'Title', 'popup-maker' ),
-			'class'       => __( 'CSS Classes', 'popup-maker' ),
+			'class'       => __( 'CSS Class', 'popup-maker' ),
 			'opens'       => __( 'Opens', 'popup-maker' ),
 			//'conversions'     => __( 'Conversions', 'popup-maker' ),
 			//'conversion_rate' => __( 'Conversion Rate', 'popup-maker' ),
@@ -1265,10 +1265,6 @@ class PUM_Admin_Popups {
 					break;
 				case 'class':
 					echo '<pre style="display:inline-block;margin:0;"><code>popmake-' . absint( $post_id ) . '</code></pre>';
-					if ( $popup->post_name != $popup->ID ) {
-						echo '|';
-						echo '<pre style="display:inline-block;margin:0;"><code>popmake-' . $popup->post_name . '</code></pre>';
-					}
 					break;
 				case 'opens':
 					if ( ! pum_extension_enabled( 'popup-analytics' ) ) {
