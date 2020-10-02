@@ -11,6 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PUM_Admin_Onboarding {
 
+	/**
+	 * Enqueues and sets up pointers across our admin pages.
+	 */
 	public static function init() {
 		add_filter( 'pum_admin_pointers-popup', array( __CLASS__, 'popup_editor_main_tour' ) );
 		add_filter( 'pum_admin_pointers-edit-popup', array( __CLASS__, 'all_popups_main_tour' ) );
@@ -52,8 +55,8 @@ class PUM_Admin_Onboarding {
 			if ( in_array( $pointer_id, $dismissed ) )
 				continue;
 
-			// Add the pointer to $valid_pointers array
-			$valid_pointers['pointers'][] =  $pointer;
+			// Add the pointer to $valid_pointers array.
+			$valid_pointers['pointers'][] = $pointer;
 		}
 
 		// Bail out if there are no pointers to display.
@@ -65,7 +68,7 @@ class PUM_Admin_Onboarding {
 		wp_enqueue_style( 'wp-pointer' );
 
 		// Add pointers script to queue. Add custom script.
-		wp_enqueue_script( 'pum-pointer', Popup_Maker::$URL . 'assets/js/admin-pointer.js', array( 'wp-pointer' ) );
+		wp_enqueue_script( 'pum-pointer', Popup_Maker::$URL . 'assets/js/admin-pointer.js', array( 'wp-pointer' ), Popup_Maker::$VER, true );
 
 		// Add pointer options to script.
 		wp_localize_script( 'pum-pointer', 'pumPointers', $valid_pointers );
@@ -194,6 +197,16 @@ class PUM_Admin_Onboarding {
 					__( 'Click the "Add New Popup" button to create your first popup.', 'popup-maker' )
 				),
 				'position' => array( 'edge' => 'top' )
+			)
+		);
+		$pointers['all-popups-2'] = array(
+			'target'  => '#screen-options-link-wrap #show-settings-link',
+			'options' => array(
+				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
+					__( 'Adjust Columns', 'popup-maker' ),
+					__( 'You can show or hide columns from the table on this page using the Screen Options. Popup Heading and Published Date are hidden by default.', 'popup-maker' )
+				),
+				'position' => array( 'edge' => 'top', 'align' => 'center' )
 			)
 		);
 
