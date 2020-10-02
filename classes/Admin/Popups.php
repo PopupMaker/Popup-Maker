@@ -45,6 +45,7 @@ class PUM_Admin_Popups {
 		add_filter( 'manage_edit-popup_columns', array( __CLASS__, 'dashboard_columns' ) );
 		add_action( 'manage_posts_custom_column', array( __CLASS__, 'render_columns' ), 10, 2 );
 		add_filter( 'manage_edit-popup_sortable_columns', array( __CLASS__, 'sortable_columns' ) );
+		add_filter( 'default_hidden_columns', array( __CLASS__, 'hide_columns' ), 10, 2 );
 		add_action( 'load-edit.php', array( __CLASS__, 'load' ), 9999 );
 		add_action( 'restrict_manage_posts', array( __CLASS__, 'add_popup_filters' ), 100 );
 		add_filter( 'post_row_actions', array( __CLASS__, 'add_id_row_actions' ), 2, 100 );
@@ -1288,6 +1289,21 @@ class PUM_Admin_Popups {
 				*/
 			}
 		}
+	}
+
+	/**
+	 * Hide some of our columns by default
+	 *
+	 * @param array     $hidden Array of IDs of columns hidden by default.
+	 * @param WP_Screen $screen WP_Screen object of the current screen.
+	 * @return array Updated $hidden
+	 */
+	public static function hide_columns( $hidden, $screen ) {
+		if ( isset( $screen->id ) && 'edit-popup' === $screen->id ) {
+			$hidden[] = 'popup_title';
+			$hidden[] = 'date';
+		}
+		return $hidden;
 	}
 
 	/**
