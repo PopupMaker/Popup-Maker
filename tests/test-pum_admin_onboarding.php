@@ -1,6 +1,6 @@
 <?php
 /**
- * Class TestOnboarding
+ * Class PUM_Admin_OnboardingTEST
  *
  * @package Popup_Maker
  */

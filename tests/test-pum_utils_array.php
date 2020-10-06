@@ -1,18 +1,18 @@
 <?php
 /**
- * Class TestOnboarding
+ * Class PUM_Utils_ArrayTest
  *
  * @package Popup_Maker
  */
 
 
 /**
- * Test methods within our PUM_Admin_Onboarding class
+ * Test methods within our PUM_Utils_Array class
  */
 class PUM_Utils_ArrayTest extends WP_UnitTestCase {
 
 	/**
-	 * Tests to make sure data returned from `all_popups_main_tour` is valid.
+	 * Tests to make sure data returned from `filter_null` is valid.
 	 */
 	public function test_filter_null() {
 		$test = [
