@@ -113,7 +113,7 @@ class PUM_Upsell {
         </style>
 
 
-        <h2 class="nav-tab-wrapper">
+        <nav class="nav-tab-wrapper">
 			<?php
 			$tabs = array(
 				'popups'       => array(
@@ -164,7 +164,7 @@ class PUM_Upsell {
             <a href="<?php echo admin_url( 'post-new.php?post_type=popup_theme' ); ?>" class="page-title-action">
 				<?php echo $theme_labels['add_new_item']; ?>
             </a>
-        </h2>
+        </nav>
 		<?php
 	}
 
