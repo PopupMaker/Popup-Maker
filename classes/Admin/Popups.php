@@ -1317,8 +1317,7 @@ class PUM_Admin_Popups {
 	public static function sortable_columns( $columns ) {
 		$columns['popup_title'] = 'popup_title';
 		$columns['opens']       = 'opens';
-
-		// $columns['conversions'] = 'conversions';
+		$columns['conversions'] = 'conversions';
 
 		return $columns;
 	}
@@ -1350,7 +1349,6 @@ class PUM_Admin_Popups {
 							) );
 						}
 						break;
-					/*
 					case 'conversions':
 						if ( ! pum_extension_enabled( 'popup-analytics' ) ) {
 							$vars = array_merge( $vars, array(
@@ -1359,7 +1357,6 @@ class PUM_Admin_Popups {
 							) );
 						}
 						break;
-					*/
 				}
 			}
 		}
