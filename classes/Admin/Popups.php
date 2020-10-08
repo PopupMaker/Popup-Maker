@@ -1269,21 +1269,24 @@ class PUM_Admin_Popups {
 					break;
 				case 'opens':
 					if ( ! pum_extension_enabled( 'popup-analytics' ) ) {
-						echo $popup->get_event_count( 'open' );
+						echo esc_html( $popup->get_event_count( 'open' ) );
 					}
 					break;
-
-				 case 'conversions':
+				case 'conversions':
 					if ( ! pum_extension_enabled( 'popup-analytics' ) ) {
-						echo $popup->get_event_count( 'conversion' );
+						echo esc_html( $popup->get_event_count( 'conversion' ) );
 					}
 					break;
 				case 'conversion_rate':
-					$views       = $popup->get_event_count( 'view', 'current' );
-					$conversions = $popup->get_event_count( 'conversion', 'current' );
+					$opens       = $popup->get_event_count( 'open' );
+					$conversions = $popup->get_event_count( 'conversion' );
 
-					$conversion_rate = $views > 0 && $views >= $conversions ? $conversions / $views * 100 : __( 'N/A', 'popup-maker' );
-					echo round( $conversion_rate, 2 ) . '%';
+					if ( $opens > 0 && $opens >= $conversions ) {
+						$conversion_rate = round( $conversions / $opens * 100, 2 );
+					} else {
+						$conversion_rate = 0;
+					}
+					echo esc_html( $conversion_rate . '%' );
 					break;
 			}
 		}
