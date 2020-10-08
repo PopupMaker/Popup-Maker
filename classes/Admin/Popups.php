@@ -1196,8 +1196,8 @@ class PUM_Admin_Popups {
 			'popup_title' => __( 'Title', 'popup-maker' ),
 			'class'       => __( 'CSS Class', 'popup-maker' ),
 			'opens'       => __( 'Opens', 'popup-maker' ),
-			//'conversions'     => __( 'Conversions', 'popup-maker' ),
-			//'conversion_rate' => __( 'Conversion Rate', 'popup-maker' ),
+			'conversions'     => __( 'Conversions', 'popup-maker' ),
+			'conversion_rate' => __( 'Conversion Rate', 'popup-maker' ),
 		);
 
 		// Add the date column preventing our own translation.
@@ -1273,7 +1273,6 @@ class PUM_Admin_Popups {
 					}
 					break;
 
-				/*
 				 case 'conversions':
 					if ( ! pum_extension_enabled( 'popup-analytics' ) ) {
 						echo $popup->get_event_count( 'conversion' );
@@ -1286,7 +1285,6 @@ class PUM_Admin_Popups {
 					$conversion_rate = $views > 0 && $views >= $conversions ? $conversions / $views * 100 : __( 'N/A', 'popup-maker' );
 					echo round( $conversion_rate, 2 ) . '%';
 					break;
-				*/
 			}
 		}
 	}
