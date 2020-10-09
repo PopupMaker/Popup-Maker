@@ -63,8 +63,20 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	 * @param array $form
 	 */
 	public function on_success( $form ) {
+		if ( ! isset( $_REQUEST['pum_form_popup_id'] ) ) {
+			return;
+		}
+
+		$popup_id = absint( $_REQUEST['pum_form_popup_id'] );
+		if ( 0 === $popup_id ) {
+			return;
+		}
+
+		$popup = pum_get_popup( $popup_id );
+		$popup->increase_event_count( 'conversion' );
+
 		pum_integrated_form_submission( [
-			'popup_id'      => isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false,
+			'popup_id'      => $popup_id,
 			'form_provider' => $this->key,
 			'form_id'       => $form['ID'],
 		] );
