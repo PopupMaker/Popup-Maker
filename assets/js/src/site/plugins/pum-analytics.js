@@ -80,12 +80,13 @@ var PUM_Analytics;
 				if (data.pid > 0 && !$("body").hasClass("single-popup")) {
 					PUM_Analytics.beacon(data);
 				}
-			})
-			/**
-			 * Track form submission conversions
-			 */
-			.on("pum.integration.form.success", function() {
-				var $popup = PUM.getPopup(this),
+			});
+		/**
+		 * Track form submission conversions
+		 */
+		$(function() {
+			PUM.hooks.addAction("pum.integration.form.success", function(form, args) {
+				var $popup = PUM.getPopup(form),
 					data = {
 						pid:
 							parseInt($popup.popmake("getSettings").id, 10) ||
@@ -94,9 +95,14 @@ var PUM_Analytics;
 					};
 
 				// Shortcode popups use negative numbers, and single-popup (preview mode) shouldn't be tracked.
-				if (data.pid > 0 && !$("body").hasClass("single-popup")) {
+				if (
+					$popup.length &&
+					data.pid > 0 &&
+					!$("body").hasClass("single-popup")
+				) {
 					PUM_Analytics.beacon(data);
 				}
 			});
+		});
 	}
 })(jQuery);
