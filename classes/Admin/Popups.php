@@ -1275,15 +1275,17 @@ class PUM_Admin_Popups {
 					}
 					break;
 				case 'conversion_rate':
-					$opens       = $popup->get_event_count( 'open' );
-					$conversions = $popup->get_event_count( 'conversion' );
+					if ( ! pum_extension_enabled( 'popup-analytics' ) ) {
+						$opens       = $popup->get_event_count( 'open' );
+						$conversions = $popup->get_event_count( 'conversion' );
 
-					if ( $opens > 0 && $opens >= $conversions ) {
-						$conversion_rate = round( $conversions / $opens * 100, 2 );
-					} else {
-						$conversion_rate = 0;
+						if ( $opens > 0 && $opens >= $conversions ) {
+							$conversion_rate = round( $conversions / $opens * 100, 2 );
+						} else {
+							$conversion_rate = 0;
+						}
+						echo esc_html( $conversion_rate . '%' );
 					}
-					echo esc_html( $conversion_rate . '%' );
 					break;
 			}
 		}
