@@ -70,16 +70,8 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	 * @param int $entry_id Entry ID. Will return 0 if entry storage is disabled or using WPForms Lite.
 	 */
 	public function on_success( $fields, $entry, $form_data, $entry_id ) {
-		if ( ! isset( $_REQUEST['pum_form_popup_id'] ) ) {
-			return;
-		}
-
-		$popup_id = absint( $_REQUEST['pum_form_popup_id'] );
-		if ( 0 === $popup_id ) {
-			return;
-		}
-
-		$popup = pum_get_popup( $popup_id );
+		$popup_id = isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false;
+		$popup    = pum_get_popup( $popup_id );
 		$popup->increase_event_count( 'conversion' );
 		pum_integrated_form_submission( [
 			'popup_id'      => $popup_id,
