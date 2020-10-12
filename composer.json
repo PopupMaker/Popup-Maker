@@ -30,5 +30,8 @@
         "woocommerce/action-scheduler"
       ]
     }
+  },
+  "scripts": {
+    "tests" : "vendor/bin/phpunit"
   }
 }
