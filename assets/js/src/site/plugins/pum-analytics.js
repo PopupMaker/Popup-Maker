@@ -85,7 +85,11 @@ var PUM_Analytics;
 		 * Track form submission conversions
 		 */
 		$(function() {
-			PUM.hooks.addAction("pum.integration.form.success", function(form, args) {
+			PUM.hooks.addAction("pum.integration.form.success", function(form, args ) {
+				// If the submission has already been counted in the backend, we can bail early.
+				if (args.ajax === false) {
+					return;
+				}
 				var $popup = PUM.getPopup(form),
 					data = {
 						pid:
