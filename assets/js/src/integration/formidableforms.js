@@ -10,7 +10,7 @@
 		const $form = $(form);
 		const formId = $form.find('input[name="form_id"]').val();
 		const $popup = PUM.getPopup(
-			$form.find('input[name="pum_form_popup_id "]').val()
+			$form.find('input[name="pum_form_popup_id"]').val()
 		);
 
 		// All the magic happens here.
