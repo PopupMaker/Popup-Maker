@@ -15,9 +15,53 @@ class PUM_Admin_Onboarding {
 	 * Enqueues and sets up pointers across our admin pages.
 	 */
 	public static function init() {
+		if ( is_admin() && current_user_can( 'manage_options' ) ) {
+			add_filter( 'pum_alert_list', array( __CLASS__, 'tips_alert' ) );
+		}
 		add_filter( 'pum_admin_pointers-popup', array( __CLASS__, 'popup_editor_main_tour' ) );
 		add_filter( 'pum_admin_pointers-edit-popup', array( __CLASS__, 'all_popups_main_tour' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'set_up_pointers' ) );
+	}
+
+	/**
+	 * Adds a 'tip' alert occasionally inside PM's admin area
+	 *
+	 * @param array $alerts The alerts currently in the alert system.
+	 * @return array Alerts for the alert system.
+	 * @since 1.13.0
+	 */
+	public static function tips_alert( $alerts ) {
+		if ( ! self::should_show_tip() ) {
+			return $alerts;
+		}
+
+		$tip = self::get_random_tip();
+
+		$alerts[] = array(
+			'code'        => 'pum_tip_alert',
+			'type'        => 'info',
+			'message'     => $tip['msg'],
+			'priority'    => 10,
+			'dismissible' => '1 month',
+			'global'      => false,
+			'actions'     => array(
+				array(
+					'primary' => true,
+					'type'    => 'link',
+					'action'  => '',
+					'href'    => $tip['link'],
+					'text'    => __( 'Learn more', 'popup-maker' ),
+				),
+				array(
+					'primary' => false,
+					'type'    => 'action',
+					'action'  => 'dismiss',
+					'text'    => __( 'Dismiss', 'popup-maker' ),
+				),
+			),
+		);
+
+		return $alerts;
 	}
 
 	/**
@@ -214,6 +258,24 @@ class PUM_Admin_Onboarding {
 	}
 
 	/**
+	 * Retrieves a random tip
+	 *
+	 * @return array An array containing tip
+	 * @since 1.13.0
+	 */
+	public static function get_random_tip() {
+		$tips = array(
+			array(
+				'msg'  => '',
+				'link' => '',
+			),
+		);
+
+		$random_tip = array_rand( $tips );
+		return $tips[ $random_tip ];
+	}
+
+	/**
 	 * Retrieves all dismissed pointers by user
 	 *
 	 * @param int|bool $user_id The ID of the user or false for current user.
@@ -235,8 +297,19 @@ class PUM_Admin_Onboarding {
 	}
 
 	/**
+	 * Whether or not we should show tip alert
+	 *
+	 * @return bool
+	 * @since 1.13.0
+	 */
+	public static function should_show_tip() {
+		return current_user_can( 'manage_options' );
+	}
+
+	/**
 	 * Ensures pointer is set up correctly.
-	 * @param array $pointer The pointer
+	 *
+	 * @param array $pointer The pointer.
 	 * @return bool
 	 * @since 1.11.0
 	 */

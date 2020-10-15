@@ -18,4 +18,25 @@ class PUM_Admin_OnboardingTEST extends WP_UnitTestCase {
 		$pointers = PUM_Admin_Onboarding::all_popups_main_tour( array() );
 		$this->assertIsArray( $pointers );
 	}
+
+	/**
+	 * Tests to make sure data returned from `tips_alert` is valid.
+	 */
+	public function test_tips_alert() {
+		$alerts = PUM_Admin_Onboarding::tips_alert( array() );
+		$this->assertIsArray( $alerts );
+	}
+
+	/**
+	 * Tests to make sure data returned from `get_random_tip` is valid.
+	 */
+	public function test_get_random_tip() {
+		$tip = PUM_Admin_Onboarding::get_random_tip();
+		$this->assertIsArray( $tip );
+
+		$this->assertCount( 2, $tip );
+
+		$this->assertArrayHasKey( 'msg', $tip );
+		$this->assertArrayHasKey( 'link', $tip );
+	}
 }
