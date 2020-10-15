@@ -266,8 +266,12 @@ class PUM_Admin_Onboarding {
 	public static function get_random_tip() {
 		$tips = array(
 			array(
-				'msg'  => '',
-				'link' => '',
+				'msg'  => 'Did you know: Popup Maker has a setting to let you try to bypass adblockers? Enabling it randomizes cache filenames and other endpoints to try to get around adblockers.',
+				'link' => 'http://localhost:10012/wp-admin/edit.php?post_type=popup&page=pum-settings#pum-settings_misc',
+			),
+			array(
+				'msg'  => "Want to use the block editor to create your popups? Enable it over on Popup Maker's settings page.",
+				'link' => 'http://localhost:10012/wp-admin/edit.php?post_type=popup&page=pum-settings',
 			),
 		);
 
