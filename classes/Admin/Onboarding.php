@@ -346,7 +346,7 @@ class PUM_Admin_Onboarding {
 	 * @since 1.13.0
 	 */
 	public static function should_show_tip() {
-		return current_user_can( 'manage_options' ) && ! self::has_turned_off_tips();
+		return current_user_can( 'manage_options' ) && strtotime( self::get_installed_on() . ' +3 days' ) < time() && ! self::has_turned_off_tips();
 	}
 
 	/**
@@ -357,6 +357,20 @@ class PUM_Admin_Onboarding {
 	 */
 	public static function has_turned_off_tips() {
 		return true === pum_get_option( 'disable_tips', false ) || 1 === intval( pum_get_option( 'disable_tips', false ) );
+	}
+
+	/**
+	 * Get the datetime string for when PM was installed.
+	 *
+	 * @return string
+	 * @since 1.13.0
+	 */
+	public static function get_installed_on() {
+		$installed_on = get_option( 'pum_installed_on', false );
+		if ( ! $installed_on ) {
+			$installed_on = current_time( 'mysql' );
+		}
+		return $installed_on;
 	}
 
 	/**
