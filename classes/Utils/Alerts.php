@@ -348,7 +348,7 @@ class PUM_Utils_Alerts {
 					<div class="pum-alert <?php echo '' !== $alert['type'] ? 'pum-alert__' . esc_attr( $alert['type'] ) : ''; ?>">
 
 						<?php if ( ! empty( $alert['message'] ) ) : ?>
-							<p><?php echo esc_html( $alert['message'] ); ?></p>
+							<p><?php echo $alert['message']; ?></p>
 						<?php endif; ?>
 
 						<?php if ( ! empty( $alert['html'] ) ) : ?>
