@@ -363,12 +363,12 @@ class PUM_Extension_License {
 
 		// If this alert is already in the list of alerts, abort.
 		foreach ( $alerts as $alert ) {
-			if ( $alert['code'] === 'license_not_valid' ) {
+			if ( 'license_not_valid' === $alert['code'] ) {
 				return $alerts;
 			}
 		}
 
-		// If this license key is not empty, check if it's valid
+		// If this license key is not empty, check if it's valid.
 		if ( ! empty( $this->license ) ) {
 			$license = get_option( $this->item_shortname . '_license_active' );
 
@@ -379,13 +379,23 @@ class PUM_Extension_License {
 
 		$showed_invalid_message = true;
 
-		$alerts[] = array(
-			'code'        => 'license_not_valid',
-			'message'     => sprintf( __( 'You have invalid or expired license keys for Popup Maker. Please go to the %sLicenses page%s to correct this issue.', 'popup-maker' ), '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=licenses' ) . '">', '</a>' ),
-			'type'        => 'error',
-			'dismissible' => '4 weeks',
-			'priority'    => 0,
-		);
+		if ( empty( $this->license ) ) {
+			$alerts[] = array(
+				'code'        => 'license_not_valid',
+				'message'     => sprintf( __( 'One or more of your extensions are missing license keys. You will not be able to receive updates until the extension has a valid license key entered. Please go to the %sLicenses page%s to add your license keys.', 'popup-maker' ), '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=licenses' ) . '">', '</a>' ),
+				'type'        => 'error',
+				'dismissible' => '4 weeks',
+				'priority'    => 0,
+			);
+		} else {
+			$alerts[] = array(
+				'code'        => 'license_not_valid',
+				'message'     => sprintf( __( 'You have invalid or expired license keys for Popup Maker. Please go to the %sLicenses page%s to correct this issue.', 'popup-maker' ), '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=licenses' ) . '">', '</a>' ),
+				'type'        => 'error',
+				'dismissible' => '4 weeks',
+				'priority'    => 0,
+			);
+		}
 
 		return $alerts;
 	}
