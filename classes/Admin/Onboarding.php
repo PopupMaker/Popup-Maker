@@ -17,6 +17,7 @@ class PUM_Admin_Onboarding {
 	public static function init() {
 		if ( is_admin() && current_user_can( 'manage_options' ) ) {
 			add_filter( 'pum_alert_list', array( __CLASS__, 'tips_alert' ) );
+			add_action( 'pum_alert_dismissed', array( __CLASS__, 'alert_handler' ), 10, 2 );
 		}
 		add_filter( 'pum_admin_pointers-popup', array( __CLASS__, 'popup_editor_main_tour' ) );
 		add_filter( 'pum_admin_pointers-edit-popup', array( __CLASS__, 'all_popups_main_tour' ) );
@@ -58,10 +59,31 @@ class PUM_Admin_Onboarding {
 					'action'  => 'dismiss',
 					'text'    => __( 'Dismiss', 'popup-maker' ),
 				),
+				array(
+					'primary' => false,
+					'type'    => 'action',
+					'action'  => 'disable_tips',
+					'text'    => __( 'Turn off these occasional tips', 'popup-maker' ),
+				),
 			),
 		);
 
 		return $alerts;
+	}
+
+	/**
+	 * Checks if any options have been clicked from admin notices.
+	 *
+	 * @param string $code The code for the alert.
+	 * @param string $action Action taken on the alert.
+	 * @since 1.13.0
+	 */
+	public static function alert_handler( $code, $action ) {
+		if ( 'pum_tip_alert' === $code ) {
+			if ( 'disable_tips' === $action ) {
+				pum_update_option( 'disable_tips', true );
+			}
+		}
 	}
 
 	/**
@@ -273,7 +295,24 @@ class PUM_Admin_Onboarding {
 				'msg'  => "Want to use the block editor to create your popups? Enable it over on Popup Maker's settings page.",
 				'link' => 'http://localhost:10012/wp-admin/edit.php?post_type=popup&page=pum-settings',
 			),
+			array(
+				'msg'  => 'Using the Popup Maker menu in your admin bar, you can open and close popups, check conditions, reseet cookies, and more!',
+				'link' => 'https://docs.wppopupmaker.com/article/300-the-popup-maker-admin-toolbar',
+			),
+			array(
+				'msg'  => "Did you know: You can easily customize your site's navigation to have a link open a popup by using the 'Trigger a Popup' option when editing your menus?",
+				'link' => 'https://docs.wppopupmaker.com/article/51-open-a-popup-from-a-wordpress-nav-menu',
+			),
 		);
+
+		if ( 7 < pum_count_popups() ) {
+			$tips[] = array(
+				array(
+					'msg'  => 'Want to organize your popups? Enable categories on the settings page to group similar popups together!',
+					'link' => 'http://localhost:10012/wp-admin/edit.php?post_type=popup&page=pum-settings',
+				),
+			);
+		}
 
 		$random_tip = array_rand( $tips );
 		return $tips[ $random_tip ];
@@ -303,11 +342,21 @@ class PUM_Admin_Onboarding {
 	/**
 	 * Whether or not we should show tip alert
 	 *
-	 * @return bool
+	 * @return bool True if the alert should be shown
 	 * @since 1.13.0
 	 */
 	public static function should_show_tip() {
-		return current_user_can( 'manage_options' );
+		return current_user_can( 'manage_options' ) && ! self::has_turned_off_tips();
+	}
+
+	/**
+	 * Checks to see if site has turned off PM tips
+	 *
+	 * @return bool True if site has disabled tips
+	 * @since 1.13.0
+	 */
+	public static function has_turned_off_tips() {
+		return true === pum_get_option( 'disable_tips', false ) || 1 === intval( pum_get_option( 'disable_tips', false ) );
 	}
 
 	/**
