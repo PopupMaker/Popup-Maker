@@ -39,4 +39,20 @@ class PUM_Admin_OnboardingTEST extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'msg', $tip );
 		$this->assertArrayHasKey( 'link', $tip );
 	}
+
+	/**
+	 * Tests to make sure data returned from `should_show_tip` is valid.
+	 */
+	public function test_should_show_tip() {
+		$result = PUM_Admin_Onboarding::should_show_tip();
+		$this->assertIsBool( $result );
+	}
+
+	/**
+	 * Tests to make sure data returned from `has_turned_off_tips` is valid.
+	 */
+	public function test_has_turned_off_tips() {
+		$result = PUM_Admin_Onboarding::has_turned_off_tips();
+		$this->assertIsBool( $result );
+	}
 }
