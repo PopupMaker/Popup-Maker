@@ -289,11 +289,11 @@ class PUM_Admin_Onboarding {
 		$tips = array(
 			array(
 				'msg'  => 'Did you know: Popup Maker has a setting to let you try to bypass adblockers? Enabling it randomizes cache filenames and other endpoints to try to get around adblockers.',
-				'link' => 'http://localhost:10012/wp-admin/edit.php?post_type=popup&page=pum-settings#pum-settings_misc',
+				'link' => admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=pum-settings_misc' ),
 			),
 			array(
 				'msg'  => "Want to use the block editor to create your popups? Enable it over on Popup Maker's settings page.",
-				'link' => 'http://localhost:10012/wp-admin/edit.php?post_type=popup&page=pum-settings',
+				'link' => admin_url( 'edit.php?post_type=popup&page=pum-settings' ),
 			),
 			array(
 				'msg'  => 'Using the Popup Maker menu in your admin bar, you can open and close popups, check conditions, reseet cookies, and more!',
@@ -309,7 +309,7 @@ class PUM_Admin_Onboarding {
 			$tips[] = array(
 				array(
 					'msg'  => 'Want to organize your popups? Enable categories on the settings page to group similar popups together!',
-					'link' => 'http://localhost:10012/wp-admin/edit.php?post_type=popup&page=pum-settings',
+					'link' => admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=pum-settings_misc' ),
 				),
 			);
 		}
