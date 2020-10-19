@@ -66,9 +66,11 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	public function on_success_v2() {
 		global $ninja_forms_processing;
 
-		$popup_id = isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false;
-		$popup    = pum_get_popup( $popup_id );
-		$popup->increase_event_count( 'conversion' );
+		if ( ! self::should_process_submission() ) {
+			return;
+		}
+		$popup_id = self::get_popup_id();
+		self::increase_conversion( $popup_id );
 
 		pum_integrated_form_submission( [
 			'popup_id'      => $popup_id,
@@ -81,17 +83,11 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	 * @param $form_data
 	 */
 	public function on_success_v3( $form_data ) {
-		if ( ! isset( $_REQUEST['pum_form_popup_id'] ) ) {
+		if ( ! self::should_process_submission() ) {
 			return;
 		}
-
-		$popup_id = absint( $_REQUEST['pum_form_popup_id'] );
-		if ( 0 === $popup_id ) {
-			return;
-		}
-
-		$popup = pum_get_popup( $popup_id );
-		$popup->increase_event_count( 'conversion' );
+		$popup_id = self::get_popup_id();
+		self::increase_conversion( $popup_id );
 		pum_integrated_form_submission( [
 			'popup_id'      => $popup_id,
 			'form_provider' => $this->key,
