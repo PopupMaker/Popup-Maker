@@ -490,6 +490,10 @@ class PUM_Admin_Settings {
 							'type'  => 'checkbox',
 							'label' => __( 'Disable the Popup Maker shortcode button', 'popup-maker' ),
 						),
+						'disable_tips'                 => array(
+							'type'  => 'checkbox',
+							'label' => __( 'Disable Popup Maker occasionally showing random tips to improve your popups.', 'popup-maker' ),
+						),
 						'complete_uninstall'                   => array(
 							'type'     => 'checkbox',
 							'label'    => __( 'Delete all Popup Maker data on deactivation', 'popup-maker' ),

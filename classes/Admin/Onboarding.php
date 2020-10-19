@@ -15,9 +15,75 @@ class PUM_Admin_Onboarding {
 	 * Enqueues and sets up pointers across our admin pages.
 	 */
 	public static function init() {
+		if ( is_admin() && current_user_can( 'manage_options' ) ) {
+			add_filter( 'pum_alert_list', array( __CLASS__, 'tips_alert' ) );
+			add_action( 'pum_alert_dismissed', array( __CLASS__, 'alert_handler' ), 10, 2 );
+		}
 		add_filter( 'pum_admin_pointers-popup', array( __CLASS__, 'popup_editor_main_tour' ) );
 		add_filter( 'pum_admin_pointers-edit-popup', array( __CLASS__, 'all_popups_main_tour' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'set_up_pointers' ) );
+	}
+
+	/**
+	 * Adds a 'tip' alert occasionally inside PM's admin area
+	 *
+	 * @param array $alerts The alerts currently in the alert system.
+	 * @return array Alerts for the alert system.
+	 * @since 1.13.0
+	 */
+	public static function tips_alert( $alerts ) {
+		if ( ! self::should_show_tip() ) {
+			return $alerts;
+		}
+
+		$tip = self::get_random_tip();
+
+		$alerts[] = array(
+			'code'        => 'pum_tip_alert',
+			'type'        => 'info',
+			'message'     => $tip['msg'],
+			'priority'    => 10,
+			'dismissible' => '1 month',
+			'global'      => false,
+			'actions'     => array(
+				array(
+					'primary' => true,
+					'type'    => 'link',
+					'action'  => '',
+					'href'    => $tip['link'],
+					'text'    => __( 'Learn more', 'popup-maker' ),
+				),
+				array(
+					'primary' => false,
+					'type'    => 'action',
+					'action'  => 'dismiss',
+					'text'    => __( 'Dismiss', 'popup-maker' ),
+				),
+				array(
+					'primary' => false,
+					'type'    => 'action',
+					'action'  => 'disable_tips',
+					'text'    => __( 'Turn off these occasional tips', 'popup-maker' ),
+				),
+			),
+		);
+
+		return $alerts;
+	}
+
+	/**
+	 * Checks if any options have been clicked from admin notices.
+	 *
+	 * @param string $code The code for the alert.
+	 * @param string $action Action taken on the alert.
+	 * @since 1.13.0
+	 */
+	public static function alert_handler( $code, $action ) {
+		if ( 'pum_tip_alert' === $code ) {
+			if ( 'disable_tips' === $action ) {
+				pum_update_option( 'disable_tips', true );
+			}
+		}
 	}
 
 	/**
@@ -214,6 +280,45 @@ class PUM_Admin_Onboarding {
 	}
 
 	/**
+	 * Retrieves a random tip
+	 *
+	 * @return array An array containing tip
+	 * @since 1.13.0
+	 */
+	public static function get_random_tip() {
+		$tips = array(
+			array(
+				'msg'  => 'Did you know: Popup Maker has a setting to let you try to bypass adblockers? Enabling it randomizes cache filenames and other endpoints to try to get around adblockers.',
+				'link' => admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=pum-settings_misc' ),
+			),
+			array(
+				'msg'  => "Want to use the block editor to create your popups? Enable it over on Popup Maker's settings page.",
+				'link' => admin_url( 'edit.php?post_type=popup&page=pum-settings' ),
+			),
+			array(
+				'msg'  => 'Using the Popup Maker menu in your admin bar, you can open and close popups, check conditions, reseet cookies, and more!',
+				'link' => 'https://docs.wppopupmaker.com/article/300-the-popup-maker-admin-toolbar',
+			),
+			array(
+				'msg'  => "Did you know: You can easily customize your site's navigation to have a link open a popup by using the 'Trigger a Popup' option when editing your menus?",
+				'link' => 'https://docs.wppopupmaker.com/article/51-open-a-popup-from-a-wordpress-nav-menu',
+			),
+		);
+
+		if ( 7 < pum_count_popups() ) {
+			$tips[] = array(
+				array(
+					'msg'  => 'Want to organize your popups? Enable categories on the settings page to group similar popups together!',
+					'link' => admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=pum-settings_misc' ),
+				),
+			);
+		}
+
+		$random_tip = array_rand( $tips );
+		return $tips[ $random_tip ];
+	}
+
+	/**
 	 * Retrieves all dismissed pointers by user
 	 *
 	 * @param int|bool $user_id The ID of the user or false for current user.
@@ -235,8 +340,43 @@ class PUM_Admin_Onboarding {
 	}
 
 	/**
+	 * Whether or not we should show tip alert
+	 *
+	 * @return bool True if the alert should be shown
+	 * @since 1.13.0
+	 */
+	public static function should_show_tip() {
+		return current_user_can( 'manage_options' ) && strtotime( self::get_installed_on() . ' +3 days' ) < time() && ! self::has_turned_off_tips();
+	}
+
+	/**
+	 * Checks to see if site has turned off PM tips
+	 *
+	 * @return bool True if site has disabled tips
+	 * @since 1.13.0
+	 */
+	public static function has_turned_off_tips() {
+		return true === pum_get_option( 'disable_tips', false ) || 1 === intval( pum_get_option( 'disable_tips', false ) );
+	}
+
+	/**
+	 * Get the datetime string for when PM was installed.
+	 *
+	 * @return string
+	 * @since 1.13.0
+	 */
+	public static function get_installed_on() {
+		$installed_on = get_option( 'pum_installed_on', false );
+		if ( ! $installed_on ) {
+			$installed_on = current_time( 'mysql' );
+		}
+		return $installed_on;
+	}
+
+	/**
 	 * Ensures pointer is set up correctly.
-	 * @param array $pointer The pointer
+	 *
+	 * @param array $pointer The pointer.
 	 * @return bool
 	 * @since 1.11.0
 	 */
