@@ -14,6 +14,7 @@ var PUM;
 		pm_dir_url: '',
         ajaxurl: '',
         restapi: false,
+	    analytics_api: false,
         rest_nonce: null,
         debug_mode: false,
         disable_tracking: true,
