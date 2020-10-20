@@ -23,6 +23,7 @@ class PUM_Analytics {
 		add_action( 'rest_api_init', array( __CLASS__, 'register_endpoints' ) );
 		add_action( 'wp_ajax_pum_analytics', array( __CLASS__, 'ajax_request' ) );
 		add_action( 'wp_ajax_nopriv_pum_analytics', array( __CLASS__, 'ajax_request' ) );
+		add_filter( 'pum_vars', array( __CLASS__, 'pum_vars' ) );
 	}
 
 	/**
