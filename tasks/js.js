@@ -61,26 +61,27 @@ function js_admin() {
 js_admin.description = "Build admin Javascript assets.";
 
 function js_site() {
-    return gulp.src([path.join(jsDevPath, 'site', '/**/*.js')], {allowEmpty: true})
+    return gulp.src([path.join(jsDevPath, 'site', '/**/*.js'), path.join(jsDistPath, 'pum-integration-*.js')], {allowEmpty: true})
         .pipe($fn.plumber({errorHandler: $fn.notify.onError('Error: <%= error.message %>')}))
         .pipe($fn.order([
             "**/compatibility.js",
             "**/pum.js",
             "**/**/*.js",
-            'general.js'
+            'general.js',
+	        'pum-integration-*.js'
         ]))
-        .pipe($fn.concat('site.js'))
-        .pipe(gulp.dest(jsDistPath))
-        .pipe($fn.uglify())
-        .pipe($fn.rename({extname: '.min.js'}))
-        .pipe(gulp.dest(jsDistPath));
+	    .pipe($fn.concat('site.js'))
+	    .pipe(gulp.dest(jsDistPath))
+	    .pipe($fn.uglify())
+	    .pipe($fn.rename({extname: '.min.js'}))
+	    .pipe(gulp.dest(jsDistPath));
 }
 
 js_site.description = "Build site Javascript assets.";
 
 gulp.task(js_admin);
 gulp.task(js_site);
-gulp.task('js', gulp.parallel(['webpack', 'webpack:blockEditor', 'js_admin', 'js_site']));
+gulp.task('js', gulp.series(gulp.parallel(['webpack', 'webpack:blockEditor']), gulp.parallel(['js_admin', 'js_site'])));
 
 let js = gulp.task('js');
 
