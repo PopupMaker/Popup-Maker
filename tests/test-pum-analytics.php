@@ -41,7 +41,7 @@ class PUM_AnalyticsTEST extends WP_UnitTestCase {
 		);
 		PUM_Analytics::track( $conversion );
 		$new_count = $popup->get_event_count( 'conversion' );
-		$this->assertEquals( 2, $new_count, 'Conversion tracking check' );
+		$this->assertEquals( 1, $new_count, 'Conversion tracking check' );
 	}
 
 	/**
