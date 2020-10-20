@@ -440,8 +440,8 @@ class PUM_Admin_Settings {
 						'adblock_bypass_custom_filename'       => array(
 							'type'         => 'text',
 							'placeholder'  => 'my-awesome-popups',
-							'label'        => __( 'Ad blocker: Custom File Name', 'popup-maker' ),
-							'desc'         => __( 'A custom & recognizable file name to use for our assets.', 'popup-maker' ),
+							'label'        => __( 'Ad blocker: Custom Name', 'popup-maker' ),
+							'desc'         => __( 'A custom & recognizable name to use for our assets.', 'popup-maker' ),
 							'dependencies' => array(
 								'bypass_adblockers'         => true,
 								'adblock_bypass_url_method' => 'custom',
