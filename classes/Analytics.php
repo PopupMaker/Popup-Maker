@@ -9,12 +9,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Controls the basic analytics methods for Popup Maker
- *
  */
 class PUM_Analytics {
 
 	/**
-	 *
+	 * Initializes analytics endpoints and data
 	 */
 	public static function init() {
 		if ( ! self::analytics_enabled() ) {
@@ -144,13 +143,13 @@ class PUM_Analytics {
 	}
 
 	/**
-	 *
+	 * Registers the analytics endpoints
 	 */
 	public static function register_endpoints() {
 		$version   = 1;
 		$namespace = 'pum/v' . $version;
 
-		register_rest_route( $namespace, 'analytics', apply_filters( 'pum_analytics_rest_route_args', array(
+		register_rest_route( $namespace, self::get_analytics_route(), apply_filters( 'pum_analytics_rest_route_args', array(
 			'methods'             => 'GET',
 			'callback'            => array( __CLASS__, 'analytics_endpoint' ),
 			'permission_callback' => '__return_true',
@@ -169,6 +168,43 @@ class PUM_Analytics {
 				),
 			),
 		) ) );
+	}
+
+	/**
+	 * Adds our analytics endpoint to pum_vars
+	 *
+	 * @param array $vars The current pum_vars.
+	 * @return array The updates pum_vars
+	 */
+	public static function pum_vars( $vars = array() ) {
+		$vars['analytics_route'] = self::get_analytics_route();
+		return $vars;
+	}
+
+	/**
+	 * Gets the analytics route
+	 *
+	 * If bypass adblockers is enabled, will return random or custom string. If not, returns 'analytics'.
+	 *
+	 * @return string The analytics route
+	 * @since 1.13.0
+	 */
+	public static function get_analytics_route() {
+		$route             = 'analytics';
+		$bypass_adblockers = pum_get_option( 'bypass_adblockers', false );
+		if ( true === $bypass_adblockers || 1 === intval( $bypass_adblockers ) ) {
+			switch ( pum_get_option( 'adblock_bypass_url_method', 'random' ) ) {
+				case 'custom':
+					$route = preg_replace( '/[^a-z0-9]+/', '-', pum_get_option( 'adblock_bypass_custom_filename', $route ) );
+					break;
+				case 'random':
+				default:
+					$site_url = get_site_url();
+					$route    = md5( $site_url . $route );
+					break;
+			}
+		}
+		return $route;
 	}
 
 	/**

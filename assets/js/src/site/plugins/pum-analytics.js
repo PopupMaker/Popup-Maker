@@ -22,7 +22,7 @@ var PUM_Analytics;
 				opts = {
 					route: pum.hooks.applyFilters(
 						"pum.analyticsBeaconRoute",
-						"/analytics/"
+						"/" + pum_vars.analytics_route + "/"
 					),
 					data: pum.hooks.applyFilters(
 						"pum.AnalyticsBeaconData",
