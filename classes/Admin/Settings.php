@@ -425,12 +425,12 @@ class PUM_Admin_Settings {
 							'type'  => 'checkbox',
 						),
 						'adblock_bypass_url_method'            => array(
-							'label'        => __( 'Ad blocker: File Name Method', 'popup-maker' ),
-							'desc'         => __( 'This will help generate unique filenames for our JavaScript bypassing most ad blockers.', 'popup-maker' ),
+							'label'        => __( 'Ad blocker: Naming method', 'popup-maker' ),
+							'desc'         => __( 'This will help generate unique names for our JavaScript files and the analytics routes.', 'popup-maker' ),
 							'type'         => 'select',
 							'options'      => array(
-								'random' => __( 'Random File Names', 'popup-maker' ),
-								'custom' => __( 'Custom File Names', 'popup-maker' ),
+								'random' => __( 'Randomize Names', 'popup-maker' ),
+								'custom' => __( 'Custom Names', 'popup-maker' ),
 							),
 							'std'          => 'random',
 							'dependencies' => array(
