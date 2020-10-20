@@ -77,7 +77,8 @@ function js_site() {
 		.src(
 			[
 				path.join(jsDevPath, "site", "/**/*.js"),
-				path.join(jsDistPath, "pum-integration-*.js")
+				path.join(jsDistPath, "pum-integration-*.js"),
+				"!" + path.join(jsDistPath, "pum-integration-*.min.js")
 			],
 			{ allowEmpty: true }
 		)
