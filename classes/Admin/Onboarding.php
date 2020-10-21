@@ -344,7 +344,7 @@ class PUM_Admin_Onboarding {
 	 * @since 1.13.0
 	 */
 	public static function should_show_tip() {
-		return current_user_can( 'manage_options' ) && strtotime( self::get_installed_on() . ' +3 days' ) < time() && ! self::has_turned_off_tips();
+		return pum_is_admin_page() && current_user_can( 'manage_options' ) && strtotime( self::get_installed_on() . ' +3 days' ) < time() && ! self::has_turned_off_tips();
 	}
 
 	/**
