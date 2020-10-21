@@ -12,17 +12,17 @@ var PUM_Analytics;
 	$.fn.popmake.conversion_trigger = null;
 
 	var rest_enabled = !!(
-		typeof pum_vars.restapi !== "undefined" && pum_vars.restapi
+		typeof pum_vars.analytics_api !== "undefined" && pum_vars.analytics_api
 	);
 
 	PUM_Analytics = {
 		beacon: function(data, callback) {
 			var beacon = new Image(),
-				url = rest_enabled ? pum_vars.restapi : pum_vars.ajaxurl,
+				url = rest_enabled ? pum_vars.analytics_api : pum_vars.ajaxurl,
 				opts = {
 					route: pum.hooks.applyFilters(
 						"pum.analyticsBeaconRoute",
-						"/analytics/"
+						"/" + pum_vars.analytics_route + "/"
 					),
 					data: pum.hooks.applyFilters(
 						"pum.AnalyticsBeaconData",
