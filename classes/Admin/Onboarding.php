@@ -307,10 +307,8 @@ class PUM_Admin_Onboarding {
 
 		if ( 7 < pum_count_popups() ) {
 			$tips[] = array(
-				array(
-					'msg'  => 'Want to organize your popups? Enable categories on the settings page to group similar popups together!',
-					'link' => admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=pum-settings_misc' ),
-				),
+				'msg'  => 'Want to organize your popups? Enable categories on the settings page to group similar popups together!',
+				'link' => admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=pum-settings_misc' ),
 			);
 		}
 
