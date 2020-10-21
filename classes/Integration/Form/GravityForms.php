@@ -68,6 +68,12 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 		if ( ! self::should_process_submission() ) {
 			return;
 		}
+
+		// This key is set when Gravity Forms is submitted via AJAX.
+		if ( isset( $_POST['gform_ajax'] ) || ! is_null( $_POST['gform_ajax'] ) ) {
+			return;
+		}
+
 		$popup_id = self::get_popup_id();
 		self::increase_conversion( $popup_id );
 
