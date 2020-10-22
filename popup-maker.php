@@ -11,8 +11,8 @@
  * Text Domain:  popup-maker
  * Domain Path:  /languages/
  *
- * @package     POPMAKE
- * @author      Daniel Iser
+ * @package     PopupMaker
+ * @author      Popup Maker
  * @copyright   Copyright (c) 2020, Code Atlantic LLC
  */
 
