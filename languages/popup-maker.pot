@@ -1151,27 +1151,27 @@ msgid "Try to bypass ad blockers."
 msgstr ""
 
 #: classes/Admin/Settings.php:428
-msgid "Ad blocker: File Name Method"
+msgid "Ad blocker: Naming method"
 msgstr ""
 
 #: classes/Admin/Settings.php:429
-msgid "This will help generate unique filenames for our JavaScript bypassing most ad blockers."
+msgid "This will help generate unique names for our JavaScript files and the analytics routes."
 msgstr ""
 
 #: classes/Admin/Settings.php:432
-msgid "Random File Names"
+msgid "Randomize Names"
 msgstr ""
 
 #: classes/Admin/Settings.php:433
-msgid "Custom File Names"
+msgid "Custom Names"
 msgstr ""
 
 #: classes/Admin/Settings.php:443
-msgid "Ad blocker: Custom File Name"
+msgid "Ad blocker: Custom Name"
 msgstr ""
 
 #: classes/Admin/Settings.php:444
-msgid "A custom & recognizable file name to use for our assets."
+msgid "A custom & recognizable name to use for our assets."
 msgstr ""
 
 #: classes/Admin/Settings.php:452
@@ -1831,11 +1831,11 @@ msgstr ""
 msgid "Import From Easy Modal v2"
 msgstr ""
 
-#: classes/Analytics.php:160
+#: classes/Analytics.php:157
 msgid "Event Type"
 msgstr ""
 
-#: classes/Analytics.php:165, classes/Shortcode/Subscribe.php:410, includes/integrations/ninja-forms/Actions/OpenPopup.php:42
+#: classes/Analytics.php:162, classes/Shortcode/Subscribe.php:410, includes/integrations/ninja-forms/Actions/OpenPopup.php:42
 msgid "Popup ID"
 msgstr ""
 
