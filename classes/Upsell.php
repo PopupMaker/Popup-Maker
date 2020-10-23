@@ -118,15 +118,15 @@ class PUM_Upsell {
 			<?php
 			$tabs = array(
 				'popups'       => array(
-					'name' => $popup_labels['name'],
+					'name' => esc_html( $popup_labels['name'] ),
 					'url'  => admin_url( 'edit.php?post_type=popup' ),
 				),
 				'themes'       => array(
-					'name' => $theme_labels['name'],
+					'name' => esc_html( $theme_labels['name'] ),
 					'url'  => admin_url( 'edit.php?post_type=popup_theme' ),
 				),
 				'integrations' => array(
-					'name' => __( 'Extensions and Integrations', 'popup-maker' ) . PUM_Admin_Extend::append_unseen_count(),
+					'name' => esc_html__( 'Extensions and Integrations', 'popup-maker' ) . PUM_Admin_Extend::append_unseen_count(),
 					'url'  => admin_url( 'edit.php?post_type=popup&page=pum-extensions&view=integrations' ),
 				),
 			);
@@ -154,7 +154,7 @@ class PUM_Upsell {
 				$active = $active_tab === $tab_id ? ' nav-tab-active' : '';
 				?>
 				<a href="<?php echo esc_url( $tab['url'] ); ?>" class="nav-tab<?php echo esc_attr( $active ); ?>">
-					<?php echo esc_html( $tab['name'] ); ?>
+					<?php echo $tab['name']; ?>
 				</a>
 				<?php
 			}
