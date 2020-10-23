@@ -164,8 +164,8 @@ class PUM_Admin_Onboarding {
 	/**
 	 * Appends our main tour for the popup editor to pointers.
 	 *
-	 * @param array $pointers
-	 * @return array $pointers
+	 * @param array $pointers The pointers added to the screen.
+	 * @return array $pointers The updated pointers array.
 	 * @since 1.11.0
 	 */
 	public static function popup_editor_main_tour( $pointers ) {
@@ -179,65 +179,65 @@ class PUM_Admin_Onboarding {
 		 */
 
 		$pointers['popup-editor-1'] = array(
-			'target' => '#title',
+			'target'  => '#title',
 			'options' => array(
-				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
+				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
 					__( 'Popup Name' ,'popup-maker'),
 					__( 'Name your popup so you can find it later. Site visitors will not see this.','popup-maker')
 				),
-				'position' => array( 'edge' => 'top', 'align' => 'center' )
+				'position' => array( 'edge' => 'top', 'align' => 'center' ),
 			)
 		);
 		$pointers['popup-editor-2'] = array(
-			'target' => '#wp-content-editor-container',
+			'target'  => '#wp-content-editor-container',
 			'options' => array(
-				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
+				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
 					__( 'Popup Content' ,'popup-maker'),
 					__( 'Add content for your popup here.','popup-maker')
 				),
-				'position' => array( 'edge' => 'bottom', 'align' => 'center' )
+				'position' => array( 'edge' => 'bottom', 'align' => 'center' ),
 			)
 		);
 		$pointers['popup-editor-3'] = array(
-			'target' => 'a[href="#pum-popup-settings_triggers"]',
+			'target'  => 'a[href="#pum-popup-settings_triggers"]',
 			'options' => array(
-				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
+				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
 					__( 'Popup Triggers' ,'popup-maker'),
 					__( 'Use triggers to choose  what causes the popup to open.','popup-maker')
 				),
-				'position' => array( 'edge' => 'left', 'align' => 'center' )
+				'position' => array( 'edge' => 'left', 'align' => 'center' ),
 			)
 		);
 		$pointers['popup-editor-4'] = array(
-			'target' => 'a[href="#pum-popup-settings_targeting"]',
+			'target'  => 'a[href="#pum-popup-settings_targeting"]',
 			'options' => array(
-				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
+				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
 					__( 'Popup Targeting' ,'popup-maker'),
 					__( 'Use targeting to choose where on your site the popup should load and who to show the popup to.','popup-maker')
 				),
-				'position' => array( 'edge' => 'left', 'align' => 'center'  )
+				'position' => array( 'edge' => 'left', 'align' => 'center'  ),
 			)
 		);
 		$pointers['popup-editor-5'] = array(
-			'target' => 'a[href="#pum-popup-settings_display"]',
+			'target'  => 'a[href="#pum-popup-settings_display"]',
 			'options' => array(
-				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
+				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
 					__( 'Popup Display' ,'popup-maker'),
 					__( 'Use display settings to choose where on the screen the popup appears and what it looks like.','popup-maker')
 				),
-				'position' => array( 'edge' => 'left', 'align' => 'center'  )
+				'position' => array( 'edge' => 'left', 'align' => 'center'  ),
 			)
 		);
 		$pointers['popup-editor-6'] = array(
-			'target' => 'select#theme_id',
+			'target'  => 'select#theme_id',
 			'options' => array(
-				'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
+				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
 					__( 'Popup Theme' ,'popup-maker'),
 					__( 'Choose the popup theme which controls the visual appearance of your popup including; colors, spacing, and fonts.','popup-maker')
 				),
-				'position' => array( 'edge' => 'bottom', 'align' => 'left'  )
+				'position' => array( 'edge' => 'bottom', 'align' => 'left'  ),
 			),
-			'pre' => array(
+			'pre'     => array(
 				'clicks' => array(
 					'a[href="#pum-popup-settings_display"]',
 					'a[href="#pum-popup-settings-display-subtabs_main"]',
@@ -250,19 +250,19 @@ class PUM_Admin_Onboarding {
 	/**
 	 * Appends our main tour for the All Popups page.
 	 *
-	 * @param array $pointers
-	 * @return array $pointers
+	 * @param array $pointers The pointers added to the screen.
+	 * @return array $pointers The updated pointers array.
 	 * @since 1.11.0
 	 */
 	public static function all_popups_main_tour( $pointers ) {
 		$pointers['all-popups-1'] = array(
-			'target'  => 'h2.nav-tab-wrapper a:nth-child(4)',
+			'target'  => 'nav.nav-tab-wrapper a:nth-child(4)',
 			'options' => array(
 				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
 					__( 'Welcome to Popup Maker!', 'popup-maker' ),
 					__( 'Click the "Add New Popup" button to create your first popup.', 'popup-maker' )
 				),
-				'position' => array( 'edge' => 'top' )
+				'position' => array( 'edge' => 'top' ),
 			)
 		);
 		$pointers['all-popups-2'] = array(
@@ -272,7 +272,7 @@ class PUM_Admin_Onboarding {
 					__( 'Adjust Columns', 'popup-maker' ),
 					__( 'You can show or hide columns from the table on this page using the Screen Options. Popup Heading and Published Date are hidden by default.', 'popup-maker' )
 				),
-				'position' => array( 'edge' => 'top', 'align' => 'center' )
+				'position' => array( 'edge' => 'top', 'align' => 'center' ),
 			)
 		);
 
