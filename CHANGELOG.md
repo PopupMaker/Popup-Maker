@@ -1,4 +1,4 @@
-### [v1.13.0 - 10/22/2020](https://github.com/PopupMaker/Popup-Maker/milestone/26)
+### [v1.13.0 - 10/30/2020](https://github.com/PopupMaker/Popup-Maker/milestone/26)
 * Feature: Conversion tracking [Issue #775](https://github.com/PopupMaker/Popup-Maker/issues/775)
 * Feature: Bypass adblockers for tracking opens and conversions [Issue #783](https://github.com/PopupMaker/Popup-Maker/issues/783)
 * Feature: Periodical suggestions to improve plugin usage [Issue #834](https://github.com/PopupMaker/Popup-Maker/issues/834)

@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, conversion, responsive popups, promotion
 Requires at least: 4.9
 Tested up to: 5.5
 Requires PHP: 5.6
-Stable tag: 1.13.0-beta
+Stable tag: 1.13.0
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -178,7 +178,7 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
-= [v1.13.0 - 10/22/2020](https://github.com/PopupMaker/Popup-Maker/milestone/26) =
+= [v1.13.0 - 10/30/2020](https://github.com/PopupMaker/Popup-Maker/milestone/26) =
 * Feature: Conversion tracking [Issue #775](https://github.com/PopupMaker/Popup-Maker/issues/775)
 * Feature: Bypass adblockers for tracking opens and conversions [Issue #783](https://github.com/PopupMaker/Popup-Maker/issues/783)
 * Feature: Periodical suggestions to improve plugin usage [Issue #834](https://github.com/PopupMaker/Popup-Maker/issues/834)
