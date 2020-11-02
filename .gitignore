@@ -16,6 +16,9 @@ project.properties
 /node_modules/
 /release/
 
+# Testing
+.phpunit.result.cache
+
 # Logs
 /logs
 

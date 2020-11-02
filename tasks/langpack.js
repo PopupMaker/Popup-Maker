@@ -1,10 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 2019, WP Popup Maker
- ******************************************************************************/
+/*********************************************
+ * Copyright (c) 2020, Popup Maker
+ ********************************************/
 
-const gulp = require('gulp'),
-	$fn = require('gulp-load-plugins')({camelize: true}),
-	pkg = require('../package.json');
+const gulp = require("gulp"),
+	$fn = require("gulp-load-plugins")({ camelize: true }),
+	pkg = require("../package.json");
 
 function langpack() {
 	return gulp.src(['**/*.php', '!build/**/*.*', '!node_modules/**/*.*', '!vendor/**/*.*'], {allowEmpty: true})
@@ -13,7 +13,7 @@ function langpack() {
 			domain: pkg.name,
 			package: pkg.description,
 			bugReport: 'https://wppopupmaker.com/support/',
-			team: 'WP Popup Maker <support@wppopupmaker.com>'
+			team: 'Popup Maker <support@wppopupmaker.com>'
 		}))
 		.pipe(gulp.dest('languages/' + pkg.name + '.pot'));
 }

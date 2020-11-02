@@ -95,10 +95,15 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 			return;
 		}
 
-		// @see pum_integrated_form_submission
+		if ( ! self::should_process_submission() ) {
+			return;
+		}
+		$popup_id = self::get_popup_id();
+		self::increase_conversion( $popup_id );
+
 		pum_integrated_form_submission(
 			[
-				'popup_id'      => isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false,
+				'popup_id'      => $popup_id,
 				'form_provider' => $this->key,
 				'form_id'       => $form_id,
 			]
@@ -112,11 +117,6 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	 * @return array
 	 */
 	public function custom_scripts( $js = [] ) {
-		$js[ $this->key ] = [
-			'content'  => file_get_contents( Popup_Maker::$DIR . 'assets/js/pum-integration-' . $this->key . PUM_Site_Assets::$suffix . '.js' ),
-			'priority' => 8,
-		];
-
 		return $js;
 	}
 

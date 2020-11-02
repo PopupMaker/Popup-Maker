@@ -425,12 +425,12 @@ class PUM_Admin_Settings {
 							'type'  => 'checkbox',
 						),
 						'adblock_bypass_url_method'            => array(
-							'label'        => __( 'Ad blocker: File Name Method', 'popup-maker' ),
-							'desc'         => __( 'This will help generate unique filenames for our JavaScript bypassing most ad blockers.', 'popup-maker' ),
+							'label'        => __( 'Ad blocker: Naming method', 'popup-maker' ),
+							'desc'         => __( 'This will help generate unique names for our JavaScript files and the analytics routes.', 'popup-maker' ),
 							'type'         => 'select',
 							'options'      => array(
-								'random' => __( 'Random File Names', 'popup-maker' ),
-								'custom' => __( 'Custom File Names', 'popup-maker' ),
+								'random' => __( 'Randomize Names', 'popup-maker' ),
+								'custom' => __( 'Custom Names', 'popup-maker' ),
 							),
 							'std'          => 'random',
 							'dependencies' => array(
@@ -440,8 +440,8 @@ class PUM_Admin_Settings {
 						'adblock_bypass_custom_filename'       => array(
 							'type'         => 'text',
 							'placeholder'  => 'my-awesome-popups',
-							'label'        => __( 'Ad blocker: Custom File Name', 'popup-maker' ),
-							'desc'         => __( 'A custom & recognizable file name to use for our assets.', 'popup-maker' ),
+							'label'        => __( 'Ad blocker: Custom Name', 'popup-maker' ),
+							'desc'         => __( 'A custom & recognizable name to use for our assets.', 'popup-maker' ),
 							'dependencies' => array(
 								'bypass_adblockers'         => true,
 								'adblock_bypass_url_method' => 'custom',
@@ -489,6 +489,10 @@ class PUM_Admin_Settings {
 						'disable_shortcode_ui'                 => array(
 							'type'  => 'checkbox',
 							'label' => __( 'Disable the Popup Maker shortcode button', 'popup-maker' ),
+						),
+						'disable_tips'                 => array(
+							'type'  => 'checkbox',
+							'label' => __( 'Disable Popup Maker occasionally showing random tips to improve your popups.', 'popup-maker' ),
 						),
 						'complete_uninstall'                   => array(
 							'type'     => 'checkbox',
