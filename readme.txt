@@ -11,7 +11,7 @@ Stable tag: 1.13.0
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
-Everything you need to create unique popup user experiences. Insert forms & other content from your favorite plugins to create custom responsive popups.
+Looking to boost your marketing and lead gen efforts? Using popups are a great way to increase your site's conversions!
 
 == Description ==
 
@@ -89,7 +89,7 @@ Already created a form in your email marketing service? Using our free version, 
 * Dictate the frequency at which users see your popups using **Cookies**, and edit how the cookies are created using Cookie Creation Events.
 
  = Trusted by many people just like you! =
-Popup Maker is used on over 500,000 websites and has received over 3,500 5-star reviews just like this one:
+Popup Maker is used on over 600,000 websites and has received over 3,900 5-star reviews just like this one:
 
 > **Great plugin, everything I needed**
 > "Really nice plugin, simple to use, responsive, a good catch !" ~[@lemmmy](https://wordpress.org/support/topic/great-plugin-everything-i-needed/)
@@ -147,11 +147,6 @@ Using "cookies", you can set up how long until the popup opens again, if ever. R
 
 = What do I do if I want a popup to show only on a certain page/post/etc? =
 Using "conditions", you can specify where the popup will be shown. Check out [our conditions documentation](https://docs.wppopupmaker.com/article/140-conditions?utm_campaign=readme&utm_medium=referral&utm_source=readme-faqs&utm_content=target-certain-pages)
-
-= How do I make it work with my 3rd party forms? =
-Beginning with Popup Maker v1.7, we now support most forms by default. We do this by adding a hidden field using JavaScript to any form inserted in a popup. This field contains the popup ID.
-
-When we detect that ID in PHP, we queue up that popup to reopen immediately after refresh to show errors or success messages.
 
 = How do I take advantage of the success actions Popup Maker provides for 3rd party forms? =
 We have built-in support for the most popular form plugins. But if we don't, then we have a few helper functions that allow you to take full advantage of our success actions and setting cookies.
