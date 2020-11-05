@@ -38,6 +38,7 @@
       "./assets/js/src/**",
       "./src/**",
       "./assets/sass/**",
+      "./tests/**",
       "./.browserslistrc",
       "./.editorconfig",
       "./.eslintignore",
@@ -51,9 +52,11 @@
       "./labels.json",
       "./readme.md",
       "./gulpfile.js",
+      "./npm-debug.log",
       "./package.json",
       "./package-lock.json",
       "./phpci.yml",
+      "./phpunit.xml.dist",
       "./yarn.lock",
       "./yarn-error.log"
     ]
