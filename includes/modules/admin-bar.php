@@ -171,6 +171,15 @@ class PUM_Modules_Admin_Bar {
 			) );
 		}
 
+		if ( current_user_can( 'edit_posts' ) ) {
+			$wp_admin_bar->add_node( array(
+				'id'     => 'all-popups',
+				'title'  => __( 'All Popups', 'popup-maker' ),
+				'href'   => admin_url( 'edit.php?post_type=popup' ),
+				'parent' => 'popup-maker',
+			) );
+		}
+
 		/**
 		 * Tools
 		 */
