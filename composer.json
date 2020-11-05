@@ -8,7 +8,7 @@
     "wp popup maker"
   ],
   "homepage": "https://wppopupmaker.com/",
-  "license": "GPL-2.0+",
+  "license": "GPL-2.0-or-later",
   "support": {
     "issues": "https://wppopupmaker.com/support"
   },
