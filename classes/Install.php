@@ -160,6 +160,9 @@ class PUM_Install {
 			// Delete subscribers table.
 			$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}pum_subscribers" );
 
+			// Delete error log.
+			PUM_Utils_Logging::instance()->clear_log();
+
 			// Reset JS/CSS assets for regeneration.
 			pum_reset_assets();
 
