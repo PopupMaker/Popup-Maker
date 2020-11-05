@@ -157,6 +157,9 @@ class PUM_Install {
 			// Delete all Popup Maker related user meta.
 			$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE '_pum_%' OR meta_key lIKE 'pum_%'" );
 
+			// Delete subscribers table.
+			$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}pum_subscribers" );
+
 			// Reset JS/CSS assets for regeneration.
 			pum_reset_assets();
 
