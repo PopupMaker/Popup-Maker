@@ -112,7 +112,8 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		  KEY email_hash (email_hash)
 		) $charset_collate;";
 
-		dbDelta( $sql );
+		$results = dbDelta( $sql );
+		PUM_Utils_Logging::instance()->log( 'Subscriber table results: ' . implode( ',', $results ) );
 
 		update_option( $this->table_name . '_db_version', $this->version );
 	}
