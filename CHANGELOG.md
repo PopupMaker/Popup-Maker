@@ -1,3 +1,6 @@
+### v1.13.1 - 11/4/2020
+* Fix: PHP error notice appears when submitting Gravity Forms without AJAX
+
 ### [v1.13.0 - 10/30/2020](https://github.com/PopupMaker/Popup-Maker/milestone/26)
 * Feature: Conversion tracking [Issue #775](https://github.com/PopupMaker/Popup-Maker/issues/775)
 * Feature: Bypass adblockers for tracking opens and conversions [Issue #783](https://github.com/PopupMaker/Popup-Maker/issues/783)
