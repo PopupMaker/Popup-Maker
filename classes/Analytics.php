@@ -9,12 +9,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Controls the basic analytics methods for Popup Maker
- *
  */
 class PUM_Analytics {
 
 	/**
-	 *
+	 * Initializes analytics endpoints and data
 	 */
 	public static function init() {
 		if ( ! self::analytics_enabled() ) {
@@ -24,6 +23,7 @@ class PUM_Analytics {
 		add_action( 'rest_api_init', array( __CLASS__, 'register_endpoints' ) );
 		add_action( 'wp_ajax_pum_analytics', array( __CLASS__, 'ajax_request' ) );
 		add_action( 'wp_ajax_nopriv_pum_analytics', array( __CLASS__, 'ajax_request' ) );
+		add_filter( 'pum_vars', array( __CLASS__, 'pum_vars' ) );
 	}
 
 	/**
@@ -144,13 +144,10 @@ class PUM_Analytics {
 	}
 
 	/**
-	 *
+	 * Registers the analytics endpoints
 	 */
 	public static function register_endpoints() {
-		$version   = 1;
-		$namespace = 'pum/v' . $version;
-
-		register_rest_route( $namespace, 'analytics', apply_filters( 'pum_analytics_rest_route_args', array(
+		register_rest_route( self::get_analytics_namespace(), self::get_analytics_route(), apply_filters( 'pum_analytics_rest_route_args', array(
 			'methods'             => 'GET',
 			'callback'            => array( __CLASS__, 'analytics_endpoint' ),
 			'permission_callback' => '__return_true',
@@ -169,6 +166,75 @@ class PUM_Analytics {
 				),
 			),
 		) ) );
+	}
+
+	/**
+	 * Adds our analytics endpoint to pum_vars
+	 *
+	 * @param array $vars The current pum_vars.
+	 * @return array The updates pum_vars
+	 */
+	public static function pum_vars( $vars = array() ) {
+		$vars['analytics_route'] = self::get_analytics_route();
+		if ( function_exists( 'rest_url' ) ) {
+			$vars['analytics_api'] = esc_url_raw( rest_url( self::get_analytics_namespace() ) );
+		} else {
+			$vars['analytics_api'] = false;
+		}
+		return $vars;
+	}
+
+	/**
+	 * Gets the analytics namespace
+	 *
+	 * If bypass adblockers is enabled, will return random or custom string. If not, returns 'pum/v1'.
+	 *
+	 * @return string The analytics namespce
+	 * @since 1.13.0
+	 */
+	public static function get_analytics_namespace() {
+		$version   = 1;
+		$namespace = self::customize_endpoint_value( 'pum' );
+		return "$namespace/v$version";
+	}
+
+	/**
+	 * Gets the analytics route
+	 *
+	 * If bypass adblockers is enabled, will return random or custom string. If not, returns 'analytics'.
+	 *
+	 * @return string The analytics route
+	 * @since 1.13.0
+	 */
+	public static function get_analytics_route() {
+		$route = 'analytics';
+		return self::customize_endpoint_value( $route );
+	}
+
+	/**
+	 * Customizes the endpoint value given to it
+	 *
+	 * If bypass adblockers is enabled, will return random or custom string. If not, returns the value given to it.
+	 *
+	 * @param string $value The value to, potentially, customize.
+	 * @return string
+	 * @since 1.13.0
+	 */
+	public static function customize_endpoint_value( $value = '' ) {
+		$bypass_adblockers = pum_get_option( 'bypass_adblockers', false );
+		if ( true === $bypass_adblockers || 1 === intval( $bypass_adblockers ) ) {
+			switch ( pum_get_option( 'adblock_bypass_url_method', 'random' ) ) {
+				case 'custom':
+					$value = preg_replace( '/[^a-z0-9]+/', '-', pum_get_option( 'adblock_bypass_custom_filename', $value ) );
+					break;
+				case 'random':
+				default:
+					$site_url = get_site_url();
+					$value    = md5( $site_url . $value );
+					break;
+			}
+		}
+		return $value;
 	}
 
 	/**

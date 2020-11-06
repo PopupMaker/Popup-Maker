@@ -65,8 +65,20 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 	 * @param $form
 	 */
 	public function on_success( $entry, $form ) {
+		if ( ! self::should_process_submission() ) {
+			return;
+		}
+
+		// This key is set when Gravity Forms is submitted via AJAX.
+		if ( isset( $_POST['gform_ajax'] ) || ! is_null( $_POST['gform_ajax'] ) ) {
+			return;
+		}
+
+		$popup_id = self::get_popup_id();
+		self::increase_conversion( $popup_id );
+
 		pum_integrated_form_submission( [
-			'popup_id'      => isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false,
+			'popup_id'      => $popup_id,
 			'form_provider' => $this->key,
 			'form_id'       => $form['id'],
 		] );
@@ -78,11 +90,6 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 	 * @return array
 	 */
 	public function custom_scripts( $js = [] ) {
-		$js[ $this->key ] = [
-			'content'  => file_get_contents( Popup_Maker::$DIR . 'assets/js/pum-integration-' . $this->key . PUM_Site_Assets::$suffix . '.js' ),
-			'priority' => 8,
-		];
-
 		return $js;
 	}
 

@@ -4,10 +4,10 @@ Author URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&ut
 Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=plugin-url
 Donate link:
 Tags:  marketing, popup, popups, optin, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, modal
-Requires at least: 4.1
+Requires at least: 4.9
 Tested up to: 5.5
 Requires PHP: 5.6
-Stable tag: 1.12.0
+Stable tag: 1.13.0
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -178,7 +178,20 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
-= v1.12.0 - 09/25/2020 =
+= [v1.13.0 - 10/30/2020](https://github.com/PopupMaker/Popup-Maker/milestone/26) =
+* Feature: Conversion tracking [Issue #775](https://github.com/PopupMaker/Popup-Maker/issues/775)
+* Feature: Bypass adblockers for tracking opens and conversions [Issue #783](https://github.com/PopupMaker/Popup-Maker/issues/783)
+* Feature: Periodical suggestions to improve plugin usage [Issue #834](https://github.com/PopupMaker/Popup-Maker/issues/834)
+* Improvement: Reduce clutter in All Popups table [Issue #878](https://github.com/PopupMaker/Popup-Maker/issues/878)
+* Improvement: Switch tab navigation to NAV elements instead of H2 [Issue #818](https://github.com/PopupMaker/Popup-Maker/issues/818)
+* Improvement: Set up PHPUnit for integration and unit tests [Issue #563](https://github.com/PopupMaker/Popup-Maker/issues/563)
+* Improvement: Continuously deploy readme and screenshot changes [Issue #827](https://github.com/PopupMaker/Popup-Maker/issues/827)
+* Fix: AJAX for Gravity Forms not setting cookies [Issue #706](https://github.com/PopupMaker/Popup-Maker/issues/706)
+* Fix: Disabling asset cache causes form integrations not to load their assets [Issue #755](https://github.com/PopupMaker/Popup-Maker/issues/755)
+* Fix: Form submission cookies are not being set for some form integrations [Issue #886](https://github.com/PopupMaker/Popup-Maker/issues/886)
+* Fix: Some form integrations are calling both AJAX and PHP submission handlers [Issue #887](https://github.com/PopupMaker/Popup-Maker/issues/887)
+
+= v1.12.0 - 09/29/2020 =
 * Feature: Add the ability to turn on/off popups [Issue #544](https://github.com/PopupMaker/Popup-Maker/issues/544)
 * Feature: Formidable Forms integration [Issue #750](https://github.com/PopupMaker/Popup-Maker/issues/750)
 * Feature: New error log tab for viewing, downloading, and emptying the error log [Issue #575](https://github.com/PopupMaker/Popup-Maker/issues/575)
@@ -192,24 +205,3 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 * Fix: Form submission cookie not automatically setting "form" key [Issue #866](https://github.com/PopupMaker/Popup-Maker/issues/866)
 * Fix: Trying to access 'private' key when the field is false error [Issue #873](https://github.com/PopupMaker/Popup-Maker/issues/873)
 * Fix: _pum_subscribers table fails to create on MySQL 8.0.19+ due to VALUES keyword [Issue #876](https://github.com/PopupMaker/Popup-Maker/issues/876)
-
-= v1.11.2 - 08/17/2020 =
-* Fix: `wp_make_content_images_responsive` is deprecated, use `wp_filter_content_tags()` instead
-* Fix: IE 11 does not support JS Promises
-* Fix: Missing permission_callback on REST endpoint
-
-= v1.11.1 - 07/22/2020 =
-* Fix: Form submission cookies no longer set with Contact Form 7 5.2
-
-= v1.11.0 - 06/25/2020 =
-* Feature: Add new floating bar theme.
-* Feature: New guided tour of popup editor for first time users.
-* Feature: New href attribute on the popup_close shortcode for when setting the shortcode to use the `a` tag.
-* Fix: Shortcode popup_close tag attribute not functioning properly.
-* Tweak: Change popup_close tag setting to use a drop-down for more easily selecting which tag to use.
-* Tweak: Improve explanation of cookies in new trigger modal.
-* Tweak: Ensure all admin pages have visible page headings.
-* Tweak: Simplify name and title fields in popup editor.
-* Tweak: Add popup ID to quick links on All Popups.
-* Tweak: Move CSS and JS for our admin bar node to external file.
-* Tweak: Add our new optional telemetry system.

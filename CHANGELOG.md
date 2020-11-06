@@ -1,4 +1,17 @@
-### v1.12.0 - 09/17/2020
+### [v1.13.0 - 10/30/2020](https://github.com/PopupMaker/Popup-Maker/milestone/26)
+* Feature: Conversion tracking [Issue #775](https://github.com/PopupMaker/Popup-Maker/issues/775)
+* Feature: Bypass adblockers for tracking opens and conversions [Issue #783](https://github.com/PopupMaker/Popup-Maker/issues/783)
+* Feature: Periodical suggestions to improve plugin usage [Issue #834](https://github.com/PopupMaker/Popup-Maker/issues/834)
+* Improvement: Reduce clutter in All Popups table [Issue #878](https://github.com/PopupMaker/Popup-Maker/issues/878)
+* Improvement: Switch tab navigation to NAV elements instead of H2 [Issue #818](https://github.com/PopupMaker/Popup-Maker/issues/818)
+* Improvement: Set up PHPUnit for integration and unit tests [Issue #563](https://github.com/PopupMaker/Popup-Maker/issues/563)
+* Improvement: Continuously deploy readme and screenshot changes [Issue #827](https://github.com/PopupMaker/Popup-Maker/issues/827)
+* Fix: AJAX for Gravity Forms not setting cookies [Issue #706](https://github.com/PopupMaker/Popup-Maker/issues/706)
+* Fix: Disabling asset cache causes form integrations not to load their assets [Issue #755](https://github.com/PopupMaker/Popup-Maker/issues/755)
+* Fix: Form submission cookies are not being set for some form integrations [Issue #886](https://github.com/PopupMaker/Popup-Maker/issues/886)
+* Fix: Some form integrations are calling both AJAX and PHP submission handlers [Issue #887](https://github.com/PopupMaker/Popup-Maker/issues/887)
+
+### v1.12.0 - 09/29/2020
 * Feature: Add the ability to turn on/off popups [Issue #544](https://github.com/PopupMaker/Popup-Maker/issues/544)
 * Feature: Formidable Forms integration [Issue #750](https://github.com/PopupMaker/Popup-Maker/issues/750)
 * Feature: New error log tab for viewing, downloading, and emptying the error log [Issue #575](https://github.com/PopupMaker/Popup-Maker/issues/575)

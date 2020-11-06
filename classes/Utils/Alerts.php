@@ -345,7 +345,7 @@ class PUM_Utils_Alerts {
 
 				<div class="pum-alert-holder" data-code="<?php echo $alert['code']; ?>" class="<?php echo $alert['dismissible'] ? 'is-dismissible' : ''; ?>" data-dismissible="<?php echo esc_attr( $alert['dismissible'] ); ?>">
 
-					<div class="pum-alert <?php echo $alert['type'] != '' ? 'pum-alert__' . $alert['type'] : ''; ?>">
+					<div class="pum-alert <?php echo '' !== $alert['type'] ? 'pum-alert__' . esc_attr( $alert['type'] ) : ''; ?>">
 
 						<?php if ( ! empty( $alert['message'] ) ) : ?>
 							<p><?php echo $alert['message']; ?></p>
@@ -357,10 +357,11 @@ class PUM_Utils_Alerts {
 
 						<?php if ( ! empty( $alert['actions'] ) && is_array( $alert['actions'] ) ) : ?>
 							<ul>
-								<?php foreach ( $alert['actions'] as $action ) {
-									$link_text = ! empty( $action['primary'] ) && true === $action['primary'] ? '<strong>' . esc_html($action['text']) . '</strong>' : esc_html($action['text']);
+								<?php
+								foreach ( $alert['actions'] as $action ) {
+									$link_text = ! empty( $action['primary'] ) && true === $action['primary'] ? '<strong>' . esc_html( $action['text'] ) . '</strong>' : esc_html( $action['text'] );
 									if ( 'link' === $action['type'] ) {
-										$url = $action['href'];
+										$url        = $action['href'];
 										$attributes = 'target="_blank" rel="noreferrer noopener"';
 									} else {
 										$url = add_query_arg( array(
@@ -369,10 +370,11 @@ class PUM_Utils_Alerts {
 											'pum_dismiss_alert' => $action['action'],
 											'expires'           => $expires,
 										));
+
 										$attributes = 'class="pum-dismiss"';
 									}
 									?>
-									<li><a data-action="<?php echo esc_attr($action['action']); ?>" href="<?php echo esc_url($url); ?>" <?php echo $attributes; ?> ><?php echo $link_text; ?></a></li>
+									<li><a data-action="<?php echo esc_attr( $action['action'] ); ?>" href="<?php echo esc_url( $url ); ?>" <?php echo $attributes; ?> ><?php echo $link_text; ?></a></li>
 								<?php } ?>
 							</ul>
 						<?php endif; ?>
