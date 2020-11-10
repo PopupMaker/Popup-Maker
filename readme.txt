@@ -15,7 +15,7 @@ Looking to boost your marketing and lead gen efforts? Using popups are a great w
 
 == Description ==
 
-= Create Effective Popups For WordPress =
+= Drive More Sales and Email List Opt-Ins Using Popups =
 [Popup Maker](https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=main-site-link)™ is the **best popup plugin WordPress** has to offer. It is incredibly versatile & flexible. Bend it to create any type of popup, modal, or content overlay for your WordPress website.
 
 > **Great plugin! Got the job done**
@@ -176,7 +176,7 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 = v1.13.1 - 11/4/2020 =
 * Fix: PHP error notice appears when submitting Gravity Forms without AJAX
 
-= [v1.13.0 - 10/30/2020](https://github.com/PopupMaker/Popup-Maker/milestone/26) =
+= v1.13.0 - 10/30/2020 =
 * Feature: Conversion tracking [Issue #775](https://github.com/PopupMaker/Popup-Maker/issues/775)
 * Feature: Bypass adblockers for tracking opens and conversions [Issue #783](https://github.com/PopupMaker/Popup-Maker/issues/783)
 * Feature: Periodical suggestions to improve plugin usage [Issue #834](https://github.com/PopupMaker/Popup-Maker/issues/834)
