@@ -10,9 +10,6 @@ jobs:
     build:
 
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                php-versions: [ '5.6', '7.0', '7.1', '7.2', '7.3' ]
 
         services:
             mysql:
@@ -24,7 +21,6 @@ jobs:
                     - 3306:3306
                 options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
-        name: PHPUnit test on ${{ matrix.php-versions }}
         steps:
             - name: Checkout
               uses: actions/checkout@v2
@@ -32,7 +28,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                php-version: ${{ matrix.php-versions }}
+                php-version: '7.4'
                 extension-csv: mbstring, intl
                 ini-values-csv: post_max_size=256M, short_open_tag=On
                 coverage: xdebug
