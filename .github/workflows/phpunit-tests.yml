@@ -40,7 +40,7 @@ jobs:
               run: composer install --prefer-dist --no-progress --no-suggest
 
             - name: Drop WP database, if already exists
-              run: mysqladmin -u root --password='password' --host=localhost --port=3306 --protocol=tcp drop wordpress_test
+              run: mysqladmin -u root --password='password' --host=localhost --port=3306 --protocol=tcp --force drop wordpress_test
 
             - name: Install WordPress
               run: bash bin/install-wp-tests.sh wordpress_test root 'password' localhost:3306
