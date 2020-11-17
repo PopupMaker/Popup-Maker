@@ -20,13 +20,12 @@ jobs:
               uses: actions/checkout@v2
 
             - name: Setup PHP
-                uses: shivammathur/setup-php@v1
-                with:
-                    php-version: ${{ matrix.php-versions }}
-                    extension-csv: mbstring, intl
-                    ini-values-csv: post_max_size=256M, short_open_tag=On
-                    coverage: xdebug
-                    pecl: false
+              uses: shivammathur/setup-php@v2
+              with:
+                php-version: ${{ matrix.php-versions }}
+                extension-csv: mbstring, intl
+                ini-values-csv: post_max_size=256M, short_open_tag=On
+                coverage: xdebug
 
             - name: Validate composer.json and composer.lock
               run: composer validate
