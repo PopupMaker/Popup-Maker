@@ -10,6 +10,13 @@ jobs:
     build:
 
         runs-on: ubuntu-latest
+        name: PHPUnit tests on PHP ${{ matrix.php-version }}
+        strategy:
+            matrix:
+                php-version: [ 7.2, 7.3, 7.4 ]
+
+        container:
+            image: junaidbhura/wp-tests:php-${{ matrix.php-version }}
 
         services:
             mysql:
@@ -21,14 +28,6 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v2
-
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                php-version: '7.4'
-                extension-csv: mbstring, intl
-                ini-values-csv: post_max_size=256M, short_open_tag=On
-                coverage: xdebug
 
             - name: Validate composer.json and composer.lock
               run: composer validate
