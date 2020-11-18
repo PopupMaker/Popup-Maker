@@ -28,17 +28,17 @@ class PUM_CallToActions {
 	/**
 	 * Holds array of registered $ctas.
 	 *
-	 * @var array
+	 * @var PUM_Interface_CallToAction[]
 	 */
 	private $calltoactions = [];
 
 	/**
-	 * Main PUM_Shortcodes Instance
+	 * Main PUM_CallToActions Instance
 	 *
-	 * @return PUM_Shortcodes
+	 * @return PUM_CallToActions
 	 */
 	public static function instance() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof PUM_Shortcodes ) ) {
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof PUM_CallToActions ) ) {
 			self::$instance = new self();
 		}
 
@@ -48,7 +48,7 @@ class PUM_CallToActions {
 	/**
 	 * Get all registered call to actions.
 	 *
-	 * @return array Array of conditions.
+	 * @return PUM_Interface_CallToAction[] Array of cta objects.
 	 */
 	public function get_all() {
 		if ( ! isset( $this->calltoactions ) ) {
@@ -94,6 +94,21 @@ class PUM_CallToActions {
 	 */
 	public function get( $key ) {
 		return isset( $this->calltoactions[ $key ] ) ? $this->calltoactions[ $key ] : false;
+	}
+
+	/**
+	 * Exports all call to actions to an array for use with generators such as JS or PHP.
+	 *
+	 * @return array
+	 */
+	public function to_array() {
+		$calltoactions = [];
+
+		foreach ( $this->get_all() as $key => $value ) {
+			$calltoactions[ $key ] = $value->to_array();
+		}
+
+		return $calltoactions;
 	}
 
 }

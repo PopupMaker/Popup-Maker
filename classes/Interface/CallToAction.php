@@ -44,4 +44,13 @@ interface PUM_Interface_CallToAction {
 	 */
 	public function fields();
 
+	/**
+	 * Returns an array that represents the cta.
+	 *
+	 * Used to pass configs to JavaScript.
+	 *
+	 * @return array
+	 */
+	public function to_array():
+
 }
