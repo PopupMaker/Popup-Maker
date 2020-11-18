@@ -48,13 +48,6 @@ class PUM_CallToAction_Link extends PUM_Abstract_CallToAction {
 		return [
 			'general'    => [
 				// TODO This might best be handled as block textarea or shortcode inner content.
-				'text'              => [
-					'type'         => 'text',
-					'label'        => __( 'Enter text for your call to action.', 'popup-maker' ),
-					'std'          => __( 'Learn more', 'popup-maker' ),
-					'dependencies' => [],
-					'priority'     => 1.1,
-				],
 				'link'              => [
 					'type'         => 'link',
 					'label'        => __( 'Enter a link for your call to action.', 'popup-maker' ),

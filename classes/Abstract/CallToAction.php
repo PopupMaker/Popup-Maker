@@ -81,8 +81,41 @@ abstract class PUM_Abstract_CallToAction implements PUM_Interface_CallToAction {
 	 *
 	 * @return array
 	 */
-	public function fields() {
+	protected function fields() {
 		return [];
+	}
+
+	/**
+	 * Get the built in base fields.
+	 *
+	 * @return array
+	 */
+	public function get_base_fields() {
+		$base_fields = apply_filters(
+			'pum_cta_base_fields',
+			[
+				'general' => [
+					'text' => [
+						'type'         => 'text',
+						'label'        => __( 'Enter text for your call to action.', 'popup-maker' ),
+						'std'          => __( 'Learn more', 'popup-maker' ),
+						'dependencies' => [],
+						'priority'     => 0.1,
+					],
+				],
+			]
+		);
+	}
+
+	/**
+	 * Get fields including the built in default fields.
+	 *
+	 * @param bool $with_base Whether to include the core base fields that every CTA uses.
+	 *
+	 * @return array
+	 */
+	public function get_fields( $with_base = false ) {
+		return $with_base ? array_merge( $this->get_base_fields(), $this->fields() ) : $this->fields();
 	}
 
 	/**
