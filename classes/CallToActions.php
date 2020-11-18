@@ -111,4 +111,19 @@ class PUM_CallToActions {
 		return $calltoactions;
 	}
 
+	/**
+	 * Generate an array containing a select list of key=>label.
+	 *
+	 * @return array
+	 */
+	public function get_select_list() {
+		$calltoactions = [];
+
+		foreach ( $this->get_all() as $key => $value ) {
+			$calltoactions[ $key ] = $value->label();
+		}
+
+		return $calltoactions;
+	}
+
 }
