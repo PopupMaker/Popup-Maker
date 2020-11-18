@@ -101,11 +101,11 @@ class PUM_CallToActions {
 	 *
 	 * @return array
 	 */
-	public function to_array() {
+	public function get_as_array() {
 		$calltoactions = [];
 
 		foreach ( $this->get_all() as $key => $value ) {
-			$calltoactions[ $key ] = $value->to_array();
+			$calltoactions[ $key ] = $value->as_array();
 		}
 
 		return $calltoactions;

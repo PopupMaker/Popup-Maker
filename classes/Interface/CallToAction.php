@@ -51,6 +51,6 @@ interface PUM_Interface_CallToAction {
 	 *
 	 * @return array
 	 */
-	public function to_array():
+	public function as_array();
 
 }
