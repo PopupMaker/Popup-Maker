@@ -71,7 +71,7 @@ abstract class PUM_Abstract_CallToAction implements PUM_Interface_CallToAction {
 	 * @return array
 	 */
 	public function parse_atts( $atts = [] ) {
-		$defaults = PUM_Utils_Fields::get_field_default_values( $this->fields() );
+		$defaults = PUM_Utils_Fields::get_form_default_values( $this->get_fields() );
 
 		return wp_parse_args( $atts, $defaults );
 	}
@@ -83,6 +83,15 @@ abstract class PUM_Abstract_CallToAction implements PUM_Interface_CallToAction {
 	 */
 	public function fields() {
 		return [];
+	}
+
+	/**
+	 * Get fields including the built in default fields.
+	 *
+	 * @return array
+	 */
+	public function get_fields() {
+		return $this->fields();
 	}
 
 	/**
