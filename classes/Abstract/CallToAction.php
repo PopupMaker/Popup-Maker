@@ -64,4 +64,25 @@ abstract class PUM_Abstract_CallToAction implements PUM_Interface_CallToAction {
 		return '';
 	}
 
+	/**
+	 * Parses user submitted options with missing defaults.
+	 *
+	 * @param array $atts User chosen options to be parsed.
+	 * @return array
+	 */
+	public function parse_atts( $atts = [] ) {
+		$defaults = PUM_Utils_Fields::get_field_default_values( $this->fields() );
+
+		return wp_parse_args( $atts, $defaults );
+	}
+
+	/**
+	 * Function that returns array of fields by group.
+	 *
+	 * @return array
+	 */
+	public function fields() {
+		return [];
+	}
+
 }

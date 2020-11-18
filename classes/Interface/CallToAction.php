@@ -37,4 +37,11 @@ interface PUM_Interface_CallToAction {
 	 */
 	public function render();
 
+	/**
+	 * Function that returns array of fields by group.
+	 *
+	 * @return array
+	 */
+	public function fields();
+
 }
