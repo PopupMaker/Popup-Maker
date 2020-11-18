@@ -147,10 +147,12 @@ abstract class PUM_Shortcode {
 	 * @return array
 	 */
 	public function sections() {
-		return array(
-			'general' => __( 'General', 'popup-maker' ),
-			'options' => __( 'Options', 'popup-maker' ),
-		);
+		return [
+			'general'    => __( 'General', 'popup-maker' ),
+			'options'    => __( 'Options', 'popup-maker' ),
+			'appearance' => __( 'Appearance', 'popup-maker' ),
+			'extra'      => __( 'Extra', 'popup-maker' ),
+		];
 	}
 
 	/**
@@ -159,10 +161,12 @@ abstract class PUM_Shortcode {
 	 * @return array
 	 */
 	public function tabs() {
-		return array(
-			'general' => __( 'General', 'popup-maker' ),
-			'options' => __( 'Options', 'popup-maker' ),
-		);
+		return [
+			'general'    => __( 'General', 'popup-maker' ),
+			'options'    => __( 'Options', 'popup-maker' ),
+			'appearance' => __( 'Appearance', 'popup-maker' ),
+			'extra'      => __( 'Extra', 'popup-maker' ),
+		];
 	}
 
 	/**
@@ -171,14 +175,20 @@ abstract class PUM_Shortcode {
 	 * @return array
 	 */
 	public function subtabs() {
-		return array(
-			'general' => array(
+		return [
+			'general' => [
 				'main' => __( 'General', 'popup-maker' ),
-			),
-			'options' => array(
+			],
+			'options' => [
 				'main' => __( 'Options', 'popup-maker' ),
-			),
-		);
+			],
+			'appearance' => [
+				'main' => __( 'Appearance', 'popup-maker' ),
+			],
+			'extra'  => [
+				'main' => __( 'Extra', 'popup-maker' ),
+			],
+		];
 	}
 
 	/**
