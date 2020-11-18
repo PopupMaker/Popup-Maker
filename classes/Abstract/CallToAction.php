@@ -85,4 +85,17 @@ abstract class PUM_Abstract_CallToAction implements PUM_Interface_CallToAction {
 		return [];
 	}
 
+	/**
+	 * Exports this to an array for use with generators such as JS or PHP.
+	 *
+	 * @return array
+	 */
+	public function as_array() {
+		return [
+			'key'     => $this->key(),
+			'label'   => $this->label(),
+			'fields'  => $this->fields(),
+			'version' => $this->version,
+		];
+	}
 }

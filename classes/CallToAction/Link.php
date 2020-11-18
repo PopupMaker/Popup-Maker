@@ -94,7 +94,7 @@ class PUM_CallToAction_Link extends PUM_Abstract_CallToAction {
 
 	/**
 	 * Output handler
-	 * 
+	 *
 	 * This will handle rendering for both shortcodes and blocks.
 	 *
 	 * @param  array  $atts    Array of options / attributes.
