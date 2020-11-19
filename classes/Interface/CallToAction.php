@@ -35,7 +35,7 @@ interface PUM_Interface_CallToAction {
 	 *
 	 * @return string
 	 */
-	public function render();
+	public function render( $atts = [] );
 
 	/**
 	 * Function that returns array of fields by group.
