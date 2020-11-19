@@ -72,7 +72,7 @@ class PUM_Utils_Fields {
 			} else {
 				foreach ( $tab_sections as $section_id => $section_fields ) {
 
-					if ( self::is_field( $tab_sections ) ) {
+					if ( self::is_field( $section_fields ) ) {
 						$fields[ $section_id ] = $section_fields;
 						continue;
 					}
