@@ -23,7 +23,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 	 *
 	 * @var bool
 	 */
-	public $has_content = true;
+	public $has_content = false;
 
 	/**
 	 * Enable ajax rendering.
@@ -73,17 +73,17 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		return __( 'Inserts a call to action.', 'popup-maker' );
 	}
 
-	/**
-	 * Labels for the inner content field.
-	 *
-	 * @return array
-	 */
-	public function inner_content_labels() {
-		return [
-			'label'       => __( 'Text', 'popup-maker' ),
-			'description' => __( 'Button or link text.', 'popup-maker' ),
-		];
-	}
+	// /**
+	// * Labels for the inner content field.
+	// *
+	// * @return array
+	// */
+	// public function inner_content_labels() {
+	// return [
+	// 'label'       => __( 'Text', 'popup-maker' ),
+	// 'description' => __( 'Button or link text.', 'popup-maker' ),
+	// ];
+	// }
 
 	/**
 	 * Post types this shortcode is enabled for.
@@ -100,6 +100,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 	 * @return array
 	 */
 	public function fields() {
+
 		// TODO This might best be handled as block textarea or shortcode inner content.
 		// CONSIDER renaming this to inner_content to replace the built in.
 
@@ -113,11 +114,43 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 						'std'      => 'link',
 						'priority' => 0,
 					],
-
+					'cta_text' => [
+						'type'     => 'text',
+						'label'    => __( 'Enter text for your call to action.', 'popup-maker' ),
+						'std'      => __( 'Learn more', 'popup-maker' ),
+						'priority' => 0.1,
+					],
 				],
 			],
 			'appearance' => [
-				'main' => [],
+				'main' => [
+					'element_type'    => [
+						'type'         => 'radio',
+						'label'        => __( 'Choose how this link appears.', 'popup-maker' ),
+						'options'      => [
+							'text'   => __( 'Text Link', 'popup-maker' ),
+							'button' => __( 'Button', 'popup-maker' ),
+						],
+						'std'          => 'button',
+						'priority'     => 1.1,
+					],
+					'element_classes' => [
+						'type'         => 'text',
+						'label'        => __( 'Additional CSS classes.', 'popup-maker' ),
+						'std'          => '',
+						'priority'     => 1.2,
+					],
+					'alignment'       => [
+						'type'    => 'select',
+						'label'   => __( 'Alignment', 'popup-maker' ),
+						'options' => [
+							'left'   => __( 'Left', 'popup-maker' ),
+							'right'  => __( 'Right', 'popup-maker' ),
+							'center' => __( 'Center', 'popup-maker' ),
+						],
+						'priority'     => 1.3,
+					],
+				],
 			],
 			'extra'      => [
 				'main' => [],
@@ -137,19 +170,11 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 			 *
 			 *  @var PUM_Abstract_CallToAction $callToAction
 			 */
-			$base_fields = $callToAction->get_base_fields();
-
-			foreach ( $base_fields as $tab => $tab_fields ) {
-				$fields[ $tab ]['main'] = array_merge( $fields[ $tab ]['main'], $tab_fields );
-			}
-
-			$cta_fields = $callToAction->get_fields();
-
-			foreach ( $cta_fields as $tab => $tab_fields ) {
+			foreach ( $callToAction->get_fields() as $tab => $tab_fields ) {
 
 				foreach ( $tab_fields as $field_id => $field ) {
 					// Set the fields dependencies to include the cta_type matching.
-					if ( ! is_array( $field['dependencies']['cta_type'] ) ) {
+					if ( ! isset( $field['dependencies']['cta_type'] ) || ! is_array( $field['dependencies']['cta_type'] ) ) {
 						$field['dependencies']['cta_type'] = [];
 					}
 
@@ -176,11 +201,27 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 	 * @return string
 	 */
 	public function handler( $atts, $content = null ) {
+		$atts = $this->shortcode_atts( $atts );
+
 		$cta_type = $atts['cta_type'];
 
 		$callToAction = $this->calltoactions->get( $cta_type );
 
-		return $callToAction ? $callToAction->render( $atts, $content ) : '';
-	}
+		$atts['cta_text'] = ! empty( $atts['cta_text'] ) ? $atts['cta_text'] : $content;
 
+		$cta_output = $callToAction ? $callToAction->render( $atts ) : '';
+
+		ob_start();
+		?>
+
+		<div style="text-align:<?php echo esc_attr( $atts['alignment'] ); ?>;" class="pum-cta-wrapper align-<?php echo esc_attr( $atts['alignment'] ); ?>">
+			<?php
+			/* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
+			echo $cta_output;
+			?>
+		</div>
+
+		<?php
+		return ob_get_clean();
+	}
 }

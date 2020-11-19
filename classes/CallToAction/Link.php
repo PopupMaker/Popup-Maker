@@ -62,26 +62,7 @@ class PUM_CallToAction_Link extends PUM_Abstract_CallToAction {
 					'priority'     => 1.3,
 				],
 			],
-			'appearance' => [
-				'element_type'    => [
-					'type'         => 'radio',
-					'label'        => __( 'Choose how this link appears.', 'popup-maker' ),
-					'options'      => [
-						'text'   => __( 'Text Link', 'popup-maker' ),
-						'button' => __( 'Button', 'popup-maker' ),
-					],
-					'std'          => 'button',
-					'dependencies' => [],
-					'priority'     => 1.1,
-				],
-				'element_classes' => [
-					'type'         => 'text',
-					'label'        => __( 'Enter text for your call to action.', 'popup-maker' ),
-					'std'          => __( 'Learn more', 'popup-maker' ),
-					'dependencies' => [],
-					'priority'     => 1.2,
-				],
-			],
+			'appearance' => [],
 		];
 	}
 
@@ -90,17 +71,16 @@ class PUM_CallToAction_Link extends PUM_Abstract_CallToAction {
 	 *
 	 * This will handle rendering for both shortcodes and blocks.
 	 *
-	 * @param  array  $atts    Array of options / attributes.
-	 * @param  string $content Inner content.
+	 * @param array $atts Array of options / attributes.
 	 *
 	 * @return string
 	 */
-	public function handler( $atts, $content = null ) {
+	public function render( $atts = [] ) {
 		$atts = $this->parse_atts( $atts );
 
 		$url     = $atts['link'];
 		$target  = $atts['link_target_blank'] ? '_blank' : '';
-		$text    = ! empty( $atts['text'] ) ? $atts['text'] : $content;
+		$text    = ! empty( $atts['cta_text'] ) ? $atts['cta_text'] : '';
 		$classes = array_merge(
 			[
 				'pum-cta',
