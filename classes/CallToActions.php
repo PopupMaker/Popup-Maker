@@ -30,7 +30,7 @@ class PUM_CallToActions {
 	 *
 	 * @var PUM_Interface_CallToAction[]
 	 */
-	private $calltoactions = [];
+	private $calltoactions;
 
 	/**
 	 * Main PUM_CallToActions Instance
@@ -93,7 +93,9 @@ class PUM_CallToActions {
 	 * @return bool|PUM_Interface_CallToAction
 	 */
 	public function get( $key ) {
-		return isset( $this->calltoactions[ $key ] ) ? $this->calltoactions[ $key ] : false;
+		$calltoactions = $this->get_all();
+
+		return isset( $calltoactions[ $key ] ) ? $calltoactions[ $key ] : false;
 	}
 
 	/**
