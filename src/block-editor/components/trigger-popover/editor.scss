@@ -1,4 +1,6 @@
-@import "../../../../node_modules/@wordpress/base-styles/variables";
+@import "~@wordpress/base-styles/mixins";
+@import "~@wordpress/base-styles/variables";
+@import "~@wordpress/base-styles/colors";
 
 @mixin button-style__active() {
 	outline: none;
@@ -23,7 +25,7 @@
 
 /** Copied from @wordpress/block-editor/src/components/url-popover/style.scss */
 .block-editor-popup-trigger-popover__additional-controls {
-	border-top: $border-width solid $light-gray-500;
+	border-top: $border-width solid $gray-600;
 }
 
 .block-editor-popup-trigger-popover__additional-controls > div[role="menu"] .components-icon-button:not(:disabled):not([aria-disabled="true"]):not(.is-default) > svg {
@@ -59,7 +61,7 @@
 
 	> svg {
 		padding: 5px;
-		border-radius: $radius-round-rectangle;
+		border-radius: $radius-round;
 		height: 30px;
 		width: 30px;
 	}
@@ -86,7 +88,7 @@
 
 	// Add a left divider to the toggle button.
 	border-radius: 0;
-	border-left: $border-width solid $light-gray-500;
+	border-left: $border-width solid $gray-600;
 	margin-left: 1px;
 
 	&[aria-expanded="true"] .dashicon {
@@ -97,7 +99,7 @@
 .block-editor-popup-trigger-popover__settings {
 	display: block;
 	padding: $grid-unit-20;
-	border-top: $border-width solid $light-gray-500;
+	border-top: $border-width solid $gray-600;
 
 	.components-base-control:last-child,
 	.components-base-control:last-child .components-base-control__field {
