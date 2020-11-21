@@ -47,7 +47,7 @@
     "mobile-detect": "^1.4.4"
   },
   "devDependencies": {
-    "@wordpress/base-styles": "^1.5.0",
+    "@wordpress/base-styles": "^3.2.0",
     "@wordpress/prettier-config": "^0.4.0",
     "@wordpress/scripts": "^12.5.0",
     "classnames": "^2.2.6",
