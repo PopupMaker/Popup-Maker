@@ -2,7 +2,7 @@ const webpackMerge = require( 'webpack-merge' );
 const defaultConfig = require( '../node_modules/@wordpress/scripts/config/webpack.config.js' );
 const path = require( 'path' );
 const postcssPresetEnv = require( 'postcss-preset-env' );
-const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
+// const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const IgnoreEmitPlugin = require( 'ignore-emit-webpack-plugin' );
 
 const production = process.env.NODE_ENV === '';
@@ -26,38 +26,38 @@ const config = webpackMerge.strategy(
 	output: {
 		path: path.resolve( process.cwd(), 'dist' ),
 	},
-	optimization: {
-		splitChunks: {
-			cacheGroups: {
-				editor: {
-					name: 'block-editor/block-editor-styles',
-					test: /editor\.(sc|sa|c)ss$/,
-					chunks: 'all',
-					enforce: true,
-				},
-				// style: {
-				// 	name: 'block-editor/block-styles',
-				// 	test: /style\.(sc|sa|c)ss$/,
-				// 	chunks: 'all',
-				// 	enforce: true,
-				// },
-				default: false,
-			},
-		},
-	},
+	// optimization: {
+	// 	splitChunks: {
+	// 		cacheGroups: {
+	// 			// editor: {
+	// 			// 	name: 'block-editor/block-editor-styles',
+	// 			// 	test: /editor\.(sc|sa|c)ss$/,
+	// 			// 	chunks: 'all',
+	// 			// 	enforce: true,
+	// 			// },
+	// 			// style: {
+	// 			// 	name: 'block-editor/block-styles',
+	// 			// 	test: /style\.(sc|sa|c)ss$/,
+	// 			// 	chunks: 'all',
+	// 			// 	enforce: true,
+	// 			// },
+	// 			default: false,
+	// 		},
+	// 	},
+	// },
 	module: {
 		rules: [
 			{
 				test: /\.(sc|sa|c)ss$/,
 				exclude: /node_modules/,
 				use: [
-					MiniCssExtractPlugin.loader,
-					{
-						loader: 'css-loader',
-						options: {
-							sourceMap: ! production,
-						},
-					},
+					// MiniCssExtractPlugin.loader,
+					// {
+					// 	loader: 'css-loader',
+					// 	options: {
+					// 		sourceMap: ! production,
+					// 	},
+					// },
 					{
 						loader: 'postcss-loader',
 						options: {
@@ -89,10 +89,10 @@ const config = webpackMerge.strategy(
 		],
 	},
 	plugins: [
-		new MiniCssExtractPlugin( {
-			filename: '[name].css',
-		} ),
-		new IgnoreEmitPlugin( [ /-styles.js$/, /-styles.min.js$/, /-styles.js.map$/ ]),
+		// new MiniCssExtractPlugin( {
+		// 	filename: '[name].css',
+		// } ),
+		new IgnoreEmitPlugin( [ /-styles.js$/, /-styles.min.js$/, /-styles.js.map$/ ] ),
 	],
 } );
 
