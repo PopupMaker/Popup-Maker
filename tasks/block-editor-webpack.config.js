@@ -35,23 +35,23 @@ const config = webpackMerge.strategy({
 	},
 	optimization: {
 		minimize: production, // Enable minification in production
-		splitChunks: {
-			cacheGroups: {
-				editor: {
-					name: 'block-editor/block-editor-styles',
-					test: /editor\.(sc|sa|c)ss$/,
-					chunks: 'all',
-					enforce: true,
-				},
-				// style: {
-				// 	name: 'block-editor/block-styles',
-				// 	test: /style\.(sc|sa|c)ss$/,
-				// 	chunks: 'all',
-				// 	enforce: true,
-				// },
-				default: false,
-			},
-		},
+	// 	splitChunks: {
+	// 		cacheGroups: {
+	// 			// editor: {
+	// 			// 	name: 'block-editor/block-editor-styles',
+	// 			// 	test: /editor\.(sc|sa|c)ss$/,
+	// 			// 	chunks: 'all',
+	// 			// 	enforce: true,
+	// 			// },
+	// 			// style: {
+	// 			// 	name: 'block-editor/block-styles',
+	// 			// 	test: /style\.(sc|sa|c)ss$/,
+	// 			// 	chunks: 'all',
+	// 			// 	enforce: true,
+	// 			// },
+	// 			default: false,
+	// 		},
+	// 	},
 	},
 	module: {
 		rules: [
@@ -98,14 +98,14 @@ const config = webpackMerge.strategy({
 		],
 	},
 	plugins: [
-		new MiniCssExtractPlugin({
-			filename: '[name].css',
-		}),
+		// new MiniCssExtractPlugin({
+		// 	filename: '[name].css',
+		// }),
 		new IgnoreEmitPlugin([
 			/-styles.js$/,
 			/-styles.min.js$/,
 			/-styles.js.map$/,
-		]),
+		] ),
 	],
 });
 
