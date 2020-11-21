@@ -1,13 +1,18 @@
 <?php
+/**
+ * Call To Action shortcode class.
+ *
+ * @since       1.14
+ * @package     PUM
+ * @copyright   Copyright (c) 2020, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Class PUM_Shortcode
- *
- * This is a base class for all popup maker & extension shortcodes.
+ * Class PUM_Shortcode_CallToAction
  */
 class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 
