@@ -1,3 +1,4 @@
+<<<<<<< HEAD:packages/block-editor/src/formats/popup-trigger/trigger-popover/editor.scss
 @import "@wordpress/base-styles/variables";
 @import "@wordpress/base-styles/colors.native";
 @import "@wordpress/base-styles/colors";
@@ -6,6 +7,11 @@
 @import "@wordpress/base-styles/breakpoints";
 @import "@wordpress/base-styles/animations";
 @import "@wordpress/base-styles/z-index";
+=======
+@import "~@wordpress/base-styles/mixins";
+@import "~@wordpress/base-styles/variables";
+@import "~@wordpress/base-styles/colors";
+>>>>>>> a5453087 (Update @wordpress/base-styles):src/block-editor/components/trigger-popover/editor.scss
 
 @mixin button-style__active() {
 	outline: none;
@@ -86,7 +92,7 @@ $input-size: 300px;
 
 /** Copied from @wordpress/block-editor/src/components/url-popover/style.scss */
 .block-editor-popup-trigger-popover__additional-controls {
-	border-top: $border-width solid $light-gray-500;
+	border-top: $border-width solid $gray-600;
 }
 
 .block-editor-popup-trigger-popover__additional-controls
@@ -130,7 +136,11 @@ $input-size: 300px;
 
 	> svg {
 		padding: 5px;
+<<<<<<< HEAD:packages/block-editor/src/formats/popup-trigger/trigger-popover/editor.scss
 		border-radius: $radius-large;
+=======
+		border-radius: $radius-round;
+>>>>>>> a5453087 (Update @wordpress/base-styles):src/block-editor/components/trigger-popover/editor.scss
 		height: 30px;
 		width: 30px;
 	}
@@ -157,7 +167,7 @@ $input-size: 300px;
 
 	// Add a left divider to the toggle button.
 	border-radius: 0;
-	border-left: $border-width solid $light-gray-500;
+	border-left: $border-width solid $gray-600;
 	margin-left: 1px;
 
 	&[aria-expanded="true"] .dashicon {
@@ -168,7 +178,7 @@ $input-size: 300px;
 .block-editor-popup-trigger-popover__settings {
 	display: block;
 	padding: $grid-unit-20;
-	border-top: $border-width solid $light-gray-500;
+	border-top: $border-width solid $gray-600;
 
 	.components-base-control:last-child,
 	.components-base-control:last-child .components-base-control__field {
