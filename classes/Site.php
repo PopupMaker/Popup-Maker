@@ -8,6 +8,7 @@ class PUM_Site {
 	public static function init() {
 		PUM_Site_Assets::init();
 		PUM_Site_Popups::init();
+		PUM_Site_CallToActions::init();
 		PUM_Analytics::init();
 
 		self::add_core_content_filters();
