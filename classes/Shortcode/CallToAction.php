@@ -78,18 +78,6 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		return __( 'Inserts a call to action.', 'popup-maker' );
 	}
 
-	// /**
-	// * Labels for the inner content field.
-	// *
-	// * @return array
-	// */
-	// public function inner_content_labels() {
-	// return [
-	// 'label'       => __( 'Text', 'popup-maker' ),
-	// 'description' => __( 'Button or link text.', 'popup-maker' ),
-	// ];
-	// }
-
 	/**
 	 * Post types this shortcode is enabled for.
 	 *
