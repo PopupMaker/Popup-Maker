@@ -130,30 +130,30 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 			'appearance' => [
 				'main' => [
 					'element_type'    => [
-						'type'         => 'radio',
-						'label'        => __( 'Choose how this link appears.', 'popup-maker' ),
-						'options'      => [
+						'type'     => 'radio',
+						'label'    => __( 'Choose how this link appears.', 'popup-maker' ),
+						'options'  => [
 							'text'   => __( 'Text Link', 'popup-maker' ),
 							'button' => __( 'Button', 'popup-maker' ),
 						],
-						'std'          => 'button',
-						'priority'     => 1.1,
+						'std'      => 'button',
+						'priority' => 1.1,
 					],
 					'element_classes' => [
-						'type'         => 'text',
-						'label'        => __( 'Additional CSS classes.', 'popup-maker' ),
-						'std'          => '',
-						'priority'     => 1.2,
+						'type'     => 'text',
+						'label'    => __( 'Additional CSS classes.', 'popup-maker' ),
+						'std'      => '',
+						'priority' => 1.2,
 					],
 					'alignment'       => [
-						'type'    => 'select',
-						'label'   => __( 'Alignment', 'popup-maker' ),
-						'options' => [
+						'type'     => 'select',
+						'label'    => __( 'Alignment', 'popup-maker' ),
+						'options'  => [
 							'left'   => __( 'Left', 'popup-maker' ),
 							'right'  => __( 'Right', 'popup-maker' ),
 							'center' => __( 'Center', 'popup-maker' ),
 						],
-						'priority'     => 1.3,
+						'priority' => 1.3,
 					],
 				],
 			],
@@ -209,12 +209,50 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		$atts = $this->shortcode_atts( $atts );
 
 		$cta_type = $atts['cta_type'];
+		$url      = $atts['url'];
+		$target   = $atts['link_target_blank'] ? '_blank' : '_self';
+		$text     = ! empty( $atts['cta_text'] ) ? $atts['cta_text'] : $content;
+		$token    = PUM_Site_CallToActions::generate_cta_token( pum_get_popup_id(), $cta_type, $text );
+		$classes  = array_merge(
+			[
+				'pum-cta',
+				'pum-cta--link',
+				'button' === $atts['element_type'] ? 'pum-cta--button' : null,
+
+			],
+			explode( ',', $atts['element_classes'] )
+		);
+
+		/**
+		 * If url is not a hash url, use redirect to accurately track conversions.
+		 *
+		 * Note this does not apply if links are #hash based or open in a new window.
+		 * In those cases JavaScript async methods of tracking will be used.
+		 */
+		if ( $url && ! $atts['link_target_blank'] && strpos( $url, '#' ) !== 0 ) {
+			$url = add_query_arg(
+				[
+					'pum_action' => 'redirect',
+					'pum_pid'    => pum_get_popup_id(),
+					'pum_token'  => $token,
+				]
+			);
+		}
 
 		$callToAction = $this->calltoactions->get( $cta_type );
 
-		$atts['cta_text'] = ! empty( $atts['cta_text'] ) ? $atts['cta_text'] : $content;
-
-		$cta_output = $callToAction ? $callToAction->render( $atts ) : '';
+		if ( ! method_exists( $callToAction, 'custom_renderer' ) ) {
+			$cta_content = sprintf(
+				"<a href='%s' class='%s' target='%s' data-pum-action='%s' rel='nofollow'>%s</a>",
+				esc_url_raw( $url ),
+				implode( ' ', array_filter( $classes ) ),
+				$target,
+				$cta_type,
+				$text
+			);
+		} else {
+			$cta_output = $callToAction ? $callToAction->render( $atts ) : '';
+		}
 
 		ob_start();
 		?>
@@ -222,11 +260,12 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		<div style="text-align:<?php echo esc_attr( $atts['alignment'] ); ?>;" class="pum-cta-wrapper align-<?php echo esc_attr( $atts['alignment'] ); ?>">
 			<?php
 			/* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
-			echo $cta_output;
+			echo $cta_content;
 			?>
 		</div>
 
 		<?php
 		return ob_get_clean();
+
 	}
 }
