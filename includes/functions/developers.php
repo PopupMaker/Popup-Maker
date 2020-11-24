@@ -78,7 +78,7 @@ function pum_track_conversion_event( $popup_id = 0, $args = [] ) {
 			$args,
 			[
 				'event' => 'conversion',
-				'mid'   => $popup_id,
+				'pid'   => $popup_id,
 			]
 		)
 	);
