@@ -47,19 +47,16 @@ class PUM_CallToAction_Link extends PUM_Abstract_CallToAction {
 	public function fields() {
 		return [
 			'general'    => [
-				// TODO This might best be handled as block textarea or shortcode inner content.
-				'link'              => [
-					'type'         => 'link',
-					'label'        => __( 'Enter a link for your call to action.', 'popup-maker' ),
-					'dependencies' => [],
-					'priority'     => 1.2,
+				'url'               => [
+					'type'     => 'link',
+					'label'    => __( 'Enter a link for your call to action.', 'popup-maker' ),
+					'priority' => 1.2,
 				],
 				// Will this be part of the link picker API?
 				'link_target_blank' => [
-					'type'         => 'checkbox',
-					'label'        => __( 'Open in a new tab.', 'popup-maker' ),
-					'dependencies' => [],
-					'priority'     => 1.3,
+					'type'     => 'checkbox',
+					'label'    => __( 'Open in a new tab.', 'popup-maker' ),
+					'priority' => 1.3,
 				],
 			],
 			'appearance' => [],
@@ -78,7 +75,7 @@ class PUM_CallToAction_Link extends PUM_Abstract_CallToAction {
 	public function render( $atts = [] ) {
 		$atts = $this->parse_atts( $atts );
 
-		$url     = $atts['link'];
+		$url     = $atts['url'];
 		$target  = $atts['link_target_blank'] ? '_blank' : '';
 		$text    = ! empty( $atts['cta_text'] ) ? $atts['cta_text'] : '';
 		$classes = array_merge(
