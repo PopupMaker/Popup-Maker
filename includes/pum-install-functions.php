@@ -9,9 +9,22 @@
  * @since       1.4
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
+
+/**
+ * Creates the example popups
+ *
+ * @since 1.14.0
+ */
+function pum_install_example_popups() {
+	$popup_id = wp_insert_post(
+		array(
+			'post_type' => 'popup',
+		)
+	);
 }
 
 /**
@@ -105,12 +118,10 @@ function pum_install_built_in_themes( $network_wide = false ) {
 
 			$new_theme_installed = true;
 		}
-
 	}
 
 	if ( $new_theme_installed ) {
 		pum_reset_assets();
 		update_option( '_pum_installed_themes', $installed_themes );
 	}
-
 }
