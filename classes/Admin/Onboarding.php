@@ -258,22 +258,55 @@ class PUM_Admin_Onboarding {
 		$pointers['all-popups-1'] = array(
 			'target'  => 'nav.nav-tab-wrapper a:nth-child(4)',
 			'options' => array(
-				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
+				'content'  => sprintf(
+					'<h3> %s </h3> <p> %s </p>',
 					__( 'Welcome to Popup Maker!', 'popup-maker' ),
 					__( 'Click the "Add New Popup" button to create your first popup.', 'popup-maker' )
 				),
 				'position' => array( 'edge' => 'top' ),
-			)
+			),
 		);
 		$pointers['all-popups-2'] = array(
+			'target'  => '.wp-list-table #the-list tr:first-child .column-enabled',
+			'options' => array(
+				'content'  => sprintf(
+					'<h3> %s </h3> <p> %s </p>',
+					__( 'Enable Popups', 'popup-maker' ),
+					__( 'You can enable or disable your popups at any time using this toggle.', 'popup-maker' )
+				),
+				'position' => array(
+					'edge'  => 'top',
+					'align' => 'left',
+				),
+			),
+		);
+		$pointers['all-popups-3'] = array(
+			'target'  => '.wp-list-table #the-list tr:first-child .column-conversions',
+			'options' => array(
+				'content'  => sprintf(
+					'<h3> %s </h3> <p> %s </p>',
+					__( 'Review Popup Metrics', 'popup-maker' ),
+					__( 'Popup Maker will automatically track opens and conversions so you can easily see which popups convert the best.', 'popup-maker' )
+				),
+				'position' => array(
+					'edge'  => 'top',
+					'align' => 'left',
+				),
+			),
+		);
+		$pointers['all-popups-4'] = array(
 			'target'  => '#screen-options-link-wrap #show-settings-link',
 			'options' => array(
-				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
+				'content'  => sprintf(
+					'<h3> %s </h3> <p> %s </p>',
 					__( 'Adjust Columns', 'popup-maker' ),
 					__( 'You can show or hide columns from the table on this page using the Screen Options. Popup Heading and Published Date are hidden by default.', 'popup-maker' )
 				),
-				'position' => array( 'edge' => 'top', 'align' => 'center' ),
-			)
+				'position' => array(
+					'edge'  => 'top',
+					'align' => 'center',
+				),
+			),
 		);
 
 		return $pointers;
