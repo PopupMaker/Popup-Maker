@@ -126,7 +126,7 @@ class PUM_Upsell {
 					'url'  => admin_url( 'edit.php?post_type=popup_theme' ),
 				),
 				'integrations' => array(
-					'name' => esc_html__( 'Extensions and Integrations', 'popup-maker' ) . PUM_Admin_Extend::append_unseen_count(),
+					'name' => esc_html__( 'Extensions and Integrations', 'popup-maker' ),
 					'url'  => admin_url( 'edit.php?post_type=popup&page=pum-extensions&view=integrations' ),
 				),
 			);
