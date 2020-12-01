@@ -363,9 +363,10 @@ class PUM_Admin_Onboarding {
 	 * @since 1.14.0
 	 */
 	public static function display_welcome_page() {
+		wp_enqueue_style( 'pum-admin-general' );
 		$gravatar_url = get_avatar_url( 'danieliser@wizardinternetsolutions.com' );
 		?>
-		<div>
+		<div class="pum-welcome-wrapper">
 			<div>
 				<h1>Welcome to Popup Maker!</h1>
 			</div>
@@ -384,8 +385,8 @@ class PUM_Admin_Onboarding {
 					<li>And much more!</li>
 				</ul>
 				<p>Feel free to reach out if we can help with anything. We look forward to helping you increase your site’s conversions!</p>
-				<div>
-					<img src="<?php echo esc_url( $gravatar_url ); ?>">
+				<div class="pum-welcome-signature">
+					<img src="<?php echo esc_url( $gravatar_url ); ?>" alt="Daniel Iser, founder of Popup Maker">
 					<p>~ Daniel and the Popup Maker team</p>
 				</div>
 			</div>
