@@ -124,10 +124,11 @@ class PUM_Site_CallToActions {
 	/**
 	 * Generate a unique token for each CTA.
 	 *
-	 * @param int    $post_id
-	 * @param string $cta_type
-	 * @param string $cta_text
-	 * @param array  $extras
+	 * @param int    $post_id Popup or post ID.
+	 * @param string $cta_type Type of CTA.
+	 * @param string $cta_text CTA text.
+	 * @param array  $extras Extra args to make the token unique.
+	 *
 	 * @return string
 	 */
 	public static function generate_cta_token( $post_id, $cta_type, $cta_text, $extras = [] ) {
