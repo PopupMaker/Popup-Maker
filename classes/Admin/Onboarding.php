@@ -22,6 +22,8 @@ class PUM_Admin_Onboarding {
 		add_filter( 'pum_admin_pointers-popup', array( __CLASS__, 'popup_editor_main_tour' ) );
 		add_filter( 'pum_admin_pointers-edit-popup', array( __CLASS__, 'all_popups_main_tour' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'set_up_pointers' ) );
+
+		add_action( 'admin_init', array( __CLASS__, 'welcome_redirect' ) );
 	}
 
 	/**
@@ -314,6 +316,33 @@ class PUM_Admin_Onboarding {
 
 		$random_tip = array_rand( $tips );
 		return $tips[ $random_tip ];
+	}
+
+	/**
+	 * Redirect to the welcome screen, if needed
+	 *
+	 * @since 1.14.0
+	 */
+	public static function welcome_redirect() {
+		// Redirect idea from Better Click To Tweet's welcome screen. Thanks Ben!
+		if ( get_transient( 'pum_activation_redirect' ) ) {
+			$do_redirect  = true;
+			$current_page = isset( $_GET['page'] ) ? wp_unslash( $_GET['page'] ) : false;
+			// Bailout redirect during these events.
+			if ( wp_doing_ajax() || is_network_admin() || ! current_user_can( 'manage_options' ) ) {
+				$do_redirect = false;
+			}
+			// Bailout redirect on these pages & events.
+			if ( '' === $current_page || isset( $_GET['activate-multi'] ) ) {
+				delete_transient( 'pum_activation_redirect' );
+				$do_redirect = false;
+			}
+			if ( $do_redirect ) {
+				delete_transient( 'pum_activation_redirect' );
+				wp_safe_redirect( '' );
+				exit;
+			}
+		}
 	}
 
 	/**
