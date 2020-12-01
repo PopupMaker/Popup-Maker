@@ -56,6 +56,17 @@ Styles for welcome screen
 	.pum-welcome-signature {
 		margin-top: 20px;
 		font-style: italic;
+		display: flex;
+		align-items: center;
+
+		img {
+			margin-right: 10px;
+			width: 60px;
+		}
+	}
+
+	.pum-welcome-cta {
+		margin-top: 30px;
 	}
 }
 

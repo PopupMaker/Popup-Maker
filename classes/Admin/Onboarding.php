@@ -365,7 +365,7 @@ class PUM_Admin_Onboarding {
 	 */
 	public static function display_welcome_page() {
 		wp_enqueue_style( 'pum-admin-general' );
-		$gravatar_url = get_avatar_url( 'danieliser@wizardinternetsolutions.com' );
+		$gravatar_url = get_avatar_url( 'danieliser@wizardinternetsolutions.com', array( 'size' => 60 ) );
 		?>
 		<div class="pum-welcome-wrapper">
 			<div>
@@ -391,7 +391,7 @@ class PUM_Admin_Onboarding {
 					<p>~ Daniel and the Popup Maker team</p>
 				</div>
 			</div>
-			<div>
+			<div class="pum-welcome-cta">
 				<a class="button button-primary" href="<?php echo esc_url( admin_url( 'post-new.php?post_type=popup' ) ); ?>">Create your first popup!</a>
 			</div>
 		</div>
