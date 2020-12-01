@@ -336,7 +336,7 @@ class PUM_Admin_Onboarding {
 				$do_redirect = false;
 			}
 			// Bailout redirect on these pages & events.
-			if ( '' === $current_page || isset( $_GET['activate-multi'] ) ) {
+			if ( 'pum-welcome' === $current_page || isset( $_GET['activate-multi'] ) ) {
 				delete_transient( 'pum_activation_redirect' );
 				$do_redirect = false;
 			}
