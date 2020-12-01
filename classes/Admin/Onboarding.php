@@ -24,6 +24,9 @@ class PUM_Admin_Onboarding {
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'set_up_pointers' ) );
 
 		add_action( 'admin_init', array( __CLASS__, 'welcome_redirect' ) );
+		if ( ! empty( $_GET['page'] ) && 'pum-welcome' === $_GET['page'] ) {
+			add_action( 'admin_menu', array( __CLASS__, 'set_up_welcome_page' ) );
+		}
 	}
 
 	/**
@@ -339,10 +342,19 @@ class PUM_Admin_Onboarding {
 			}
 			if ( $do_redirect ) {
 				delete_transient( 'pum_activation_redirect' );
-				wp_safe_redirect( '' );
+				wp_safe_redirect( admin_url( 'admin.php?page=pum-welcome' ) );
 				exit;
 			}
 		}
+	}
+
+	/**
+	 * Adds our welcome page to the dashboard
+	 *
+	 * @since 1.14.0
+	 */
+	public static function set_up_welcome_page() {
+		add_dashboard_page( '', '', 'manage_options', 'pum-welcome', '' );
 	}
 
 	/**
