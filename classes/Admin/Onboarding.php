@@ -354,7 +354,46 @@ class PUM_Admin_Onboarding {
 	 * @since 1.14.0
 	 */
 	public static function set_up_welcome_page() {
-		add_dashboard_page( '', '', 'manage_options', 'pum-welcome', '' );
+		add_dashboard_page( '', '', 'manage_options', 'pum-welcome', array( __CLASS__, 'display_welcome_page' ) );
+	}
+
+	/**
+	 * Displays the contents for the welcome page
+	 *
+	 * @since 1.14.0
+	 */
+	public static function display_welcome_page() {
+		$gravatar_url = get_avatar_url( 'danieliser@wizardinternetsolutions.com' );
+		?>
+		<div>
+			<div>
+				<h1>Welcome to Popup Maker!</h1>
+			</div>
+			<div>
+				<p>Popup Maker was created to help us create effective popups on our own WordPress sites to boost our conversions. Now, over 4 years later, the plugin is installed on <strong>over 600,000 websites and has over 3,900 5-star reviews</strong>.</p>
+				<p>There are a lot of ways you can use Popup Maker within your site including:</p>
+				<ul>
+					<li>Adding an auto-opening announcement popup</li>
+					<li>Growing your email list with opt-in or lead magnet popups</li>
+					<li>Increase order size by recommending products in a WooCommerce cross-sell popup</li>
+					<li>Adding a content upgrade to your blog posts</li>
+					<li>Greet a visitor from ProductHunt</li>
+					<li>Reduce cart abandonment on your WooCommerce checkout page</li>
+					<li>Adding post-sale WooCommerce surveys</li>
+					<li>Using scroll-triggered popups to ask a site visitor if they have any questions</li>
+					<li>And much more!</li>
+				</ul>
+				<p>Feel free to reach out if we can help with anything. We look forward to helping you increase your site’s conversions!</p>
+				<div>
+					<img src="<?php echo esc_url( $gravatar_url ); ?>">
+					<p>~ Daniel and the Popup Maker team</p>
+				</div>
+			</div>
+			<div>
+				<a class="button button-primary" href="<?php echo esc_url( admin_url( 'post-new.php?post_type=popup' ) ); ?>">Create your first popup!</a>
+			</div>
+		</div>
+		<?php
 	}
 
 	/**
