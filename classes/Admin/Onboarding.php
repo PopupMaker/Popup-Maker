@@ -342,6 +342,7 @@ class PUM_Admin_Onboarding {
 			}
 			if ( $do_redirect ) {
 				delete_transient( 'pum_activation_redirect' );
+				update_option( 'pum_seen_welcome', 1 );
 				wp_safe_redirect( admin_url( 'admin.php?page=pum-welcome' ) );
 				exit;
 			}

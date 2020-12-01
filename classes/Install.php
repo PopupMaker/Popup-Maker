@@ -111,8 +111,10 @@ class PUM_Install {
 		// If its missing then we know its a fresh install.
 		delete_option( '_pum_installed' );
 
-		// Used to redirect to onboarding activation screen.
-		set_transient( 'pum_activation_redirect', 1, 60 );
+		// Prepare to redirect to welcome screen, if not seen before.
+		if ( false === get_option( 'pum_seen_welcome' ) ) {
+			set_transient( 'pum_activation_redirect', 1, 60 );
+		}
 
 		pum_get_default_theme_id();
 		pum_install_built_in_themes();
