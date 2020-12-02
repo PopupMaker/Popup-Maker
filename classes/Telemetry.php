@@ -243,7 +243,7 @@ class PUM_Telemetry {
 		$alerts[] = array(
 			'code'        => 'pum_telemetry_notice',
 			'type'        => 'info',
-			'message'     => esc_html__( "Allow Popup Maker to track this plugin's usage and help us make this plugin better? No user data is sent to our servers. No sensitive data is tracked.", 'popup-maker' ),
+			'message'     => esc_html__( "We are constantly improving Popup Maker but that's difficult to do if we don't know how it's being used. Please allow data sharing so that we can receive a little information on how it is used. You can change this setting at any time on our Settings page. No user data is sent to our servers. No sensitive data is tracked.", 'popup-maker' ),
 			'priority'    => 10,
 			'dismissible' => true,
 			'global'      => false,
