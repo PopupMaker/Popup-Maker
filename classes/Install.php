@@ -113,6 +113,7 @@ class PUM_Install {
 
 		pum_get_default_theme_id();
 		pum_install_built_in_themes();
+		pum_install_example_popups();
 
 		// Reset JS/CSS assets for regeneration.
 		pum_reset_assets();
