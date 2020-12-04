@@ -46,9 +46,16 @@ class PUM_Admin_BlockEditor {
 		$script_url        = plugins_url( $script_path, Popup_Maker::$FILE );
 		wp_enqueue_script( 'popup-maker-block-editor', $script_url, array_merge( $script_asset['dependencies'], array( 'wp-edit-post' ) ), $script_asset['version'] );
 
-		wp_localize_script( 'popup-maker-block-editor', 'pum_block_editor_vars', [
-			'popups' => pum_get_all_popups(),
-		] );
+		wp_localize_script(
+			'popup-maker-block-editor',
+			'pum_block_editor_vars',
+			[
+				'popups'                        => pum_get_all_popups(),
+				'popup_trigger_excluded_blocks' => [
+					'core/nextpage',
+				],
+			]
+		);
 
 		$editor_styles_path       = $build_path . 'block-editor-styles.css';
 		$editor_styles_asset_path = $build_path . 'block-editor-styles.asset.php';
