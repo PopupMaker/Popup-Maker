@@ -19,6 +19,52 @@ $tab-color: #e4e4e4;
 @import "partials/admin/deprecated";
 
 /************
+Styles for upgrade notice bar
+************/
+
+#pum-header-temp {
+	margin: 0;
+	position: relative;
+	top: -1px;
+	left: 20px;
+	right: 20px;
+	z-index: 99;
+}
+
+#screen-meta-links .screen-meta-toggle {
+	position: absolute;
+	right: 20px;
+	top: auto;
+}
+
+@media screen and (max-width: 1023px) {
+
+	.pum-notice-bar {
+		display: none !important;
+	}
+}
+
+.pum-notice-bar {
+	background-color: #f6f6f6;
+	border-top: 3px solid #ad1b8e;
+	color: #777;
+	text-align: center;
+	position: relative;
+	padding: 7px;
+	margin: 0 auto -4px;
+	max-width: 1000px;
+	opacity: 1;
+	transition: all 0.3s ease-in-out;
+	max-height: 100px;
+	overflow: hidden;
+
+	a {
+		color: #9aba27;
+	}
+}
+
+
+/************
 Styles for our log viewers
 ************/
 #log-viewer {

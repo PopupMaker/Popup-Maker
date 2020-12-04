@@ -53,7 +53,7 @@ msgstr ""
 msgid "Integrations"
 msgstr ""
 
-#: classes/Admin.php:59, classes/Admin/Pages.php:57, classes/Admin/Pages.php:150, classes/Admin/Templates.php:415, classes/Admin/Templates.php:650, classes/Site/Assets.php:245
+#: classes/Admin.php:59, classes/Admin/Pages.php:56, classes/Admin/Pages.php:149, classes/Admin/Templates.php:415, classes/Admin/Templates.php:650, classes/Site/Assets.php:245
 msgid "Settings"
 msgstr ""
 
@@ -137,123 +137,123 @@ msgstr ""
 msgid "We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser."
 msgstr ""
 
-#: classes/Admin/Extend.php:124
+#: classes/Admin/Extend.php:50
 msgid "Premium Extensions"
 msgstr ""
 
-#: classes/Admin/Extend.php:125
+#: classes/Admin/Extend.php:51
 msgid "Forms"
 msgstr ""
 
-#: classes/Admin/Extend.php:126
+#: classes/Admin/Extend.php:52
 msgid "Page Builders"
 msgstr ""
 
-#: classes/Admin/Extend.php:127
+#: classes/Admin/Extend.php:53
 msgid "Other"
 msgstr ""
 
-#: classes/Admin/Extend.php:152
+#: classes/Admin/Extend.php:78
 msgid "Gravity Forms"
 msgstr ""
 
-#: classes/Admin/Extend.php:154
+#: classes/Admin/Extend.php:80
 msgid "Gravity Forms is one of the most popular form building plugins."
 msgstr ""
 
-#: classes/Admin/Extend.php:158
+#: classes/Admin/Extend.php:84
 msgid "Contact Form 7"
 msgstr ""
 
-#: classes/Admin/Extend.php:160
+#: classes/Admin/Extend.php:86
 msgid "CF7 is one of the most downloaded plugins on the WordPress repo. Make simple forms with ease and plenty of free addons available."
 msgstr ""
 
-#: classes/Admin/Extend.php:164
+#: classes/Admin/Extend.php:90
 msgid "MailChimp For WordPress"
 msgstr ""
 
-#: classes/Admin/Extend.php:166
+#: classes/Admin/Extend.php:92
 msgid "Allowing your visitors to subscribe to your newsletter should be easy. With this plugin, it finally is."
 msgstr ""
 
-#: classes/Admin/Extend.php:170
+#: classes/Admin/Extend.php:96
 msgid "Caldera Forms"
 msgstr ""
 
-#: classes/Admin/Extend.php:172
+#: classes/Admin/Extend.php:98
 msgid "Responsive form builder for contact forms, user registration and login forms, Mailchimp, PayPal Express and more."
 msgstr ""
 
-#: classes/Admin/Extend.php:176
+#: classes/Admin/Extend.php:102
 msgid "WP Forms"
 msgstr ""
 
-#: classes/Admin/Extend.php:178
+#: classes/Admin/Extend.php:104
 msgid "Drag & Drop online form builder that helps you create beautiful contact forms with just a few clicks."
 msgstr ""
 
-#: classes/Admin/Extend.php:188
+#: classes/Admin/Extend.php:114
 msgid "Ninja Forms"
 msgstr ""
 
-#: classes/Admin/Extend.php:190
+#: classes/Admin/Extend.php:116
 msgid "Ninja Forms has fast become the most extensible form plugin available. Build super custom forms and integrate with your favorite services."
 msgstr ""
 
-#: classes/Admin/Extend.php:206
+#: classes/Admin/Extend.php:132
 msgid "Beaver Builder"
 msgstr ""
 
-#: classes/Admin/Extend.php:208
+#: classes/Admin/Extend.php:134
 msgid "Easily insert saved templates into your popups for a one of a kind popup design."
 msgstr ""
 
-#: classes/Admin/Extend.php:226
+#: classes/Admin/Extend.php:152
 msgid "User Menus"
 msgstr ""
 
-#: classes/Admin/Extend.php:228
+#: classes/Admin/Extend.php:154
 msgid "Show/hide menu items to logged in users, logged out users or specific user roles. Display logged in user details in menu. Add a logout link to menu."
 msgstr ""
 
-#: classes/Admin/Extend.php:232
+#: classes/Admin/Extend.php:158
 msgid "Content Control"
 msgstr ""
 
-#: classes/Admin/Extend.php:234
+#: classes/Admin/Extend.php:160
 msgid "	Restrict content to logged in/out users or specific user roles. Restrict access to certain parts of a page/post. Control the visibility of widgets."
 msgstr ""
 
-#: classes/Admin/Extend.php:256
+#: classes/Admin/Extend.php:182
 msgid "Extensions & Integrations for Popup Maker"
 msgstr ""
 
-#: classes/Admin/Extend.php:266, classes/Admin/Extend.php:266, classes/Admin/Extend.php:282, classes/Admin/Extend.php:282
+#: classes/Admin/Extend.php:192, classes/Admin/Extend.php:192, classes/Admin/Extend.php:208, classes/Admin/Extend.php:208
 msgid "Browse All Extensions"
 msgstr ""
 
-#: classes/Admin/Extend.php:398
+#: classes/Admin/Extend.php:312
 msgid "These form plugins work in our popups out of the box"
 msgstr ""
 
-#: classes/Admin/Extend.php:417, classes/Admin/Extend.php:460, classes/Admin/Extend.php:497
+#: classes/Admin/Extend.php:331, classes/Admin/Extend.php:374, classes/Admin/Extend.php:411
 msgid "Check it out"
 msgstr ""
 
-#: classes/Admin/Extend.php:440
+#: classes/Admin/Extend.php:354
 msgid "These page builder plugins work in our popups out of the box"
 msgstr ""
 
-#: classes/Admin/Extend.php:480
+#: classes/Admin/Extend.php:394
 msgid "These plugins work great alongside our popups"
 msgstr ""
 
-#: classes/Admin/Extend.php:518
+#: classes/Admin/Extend.php:432
 msgid "Extend Popup Maker with additional premium features"
 msgstr ""
 
-#: classes/Admin/Extend.php:574
+#: classes/Admin/Extend.php:488
 msgid "Get this Extension"
 msgstr ""
 
@@ -325,71 +325,87 @@ msgstr ""
 msgid "Choose the popup theme which controls the visual appearance of your popup including; colors, spacing, and fonts."
 msgstr ""
 
-#: classes/Admin/Onboarding.php:262
+#: classes/Admin/Onboarding.php:263
 msgid "Welcome to Popup Maker!"
 msgstr ""
 
-#: classes/Admin/Onboarding.php:263
+#: classes/Admin/Onboarding.php:264
 msgid "Click the \"Add New Popup\" button to create your first popup."
 msgstr ""
 
-#: classes/Admin/Onboarding.php:272
+#: classes/Admin/Onboarding.php:274
+msgid "Enable Popups"
+msgstr ""
+
+#: classes/Admin/Onboarding.php:275
+msgid "You can enable or disable your popups at any time using this toggle."
+msgstr ""
+
+#: classes/Admin/Onboarding.php:288
+msgid "Review Popup Metrics"
+msgstr ""
+
+#: classes/Admin/Onboarding.php:289
+msgid "Popup Maker will automatically track opens and conversions so you can easily see which popups convert the best."
+msgstr ""
+
+#: classes/Admin/Onboarding.php:302
 msgid "Adjust Columns"
 msgstr ""
 
-#: classes/Admin/Onboarding.php:273
+#: classes/Admin/Onboarding.php:303
 msgid "You can show or hide columns from the table on this page using the Screen Options. Popup Heading and Published Date are hidden by default."
 msgstr ""
 
-#: classes/Admin/Pages.php:52, classes/Admin/Subscribers.php:30
+#: classes/Admin/Pages.php:51, classes/Admin/Subscribers.php:30
 msgid "Subscribers"
 msgstr ""
 
-#: classes/Admin/Pages.php:62, classes/Admin/Pages.php:149
+#: classes/Admin/Pages.php:61, classes/Admin/Pages.php:148
 msgid "Extend"
 msgstr ""
 
-#: classes/Admin/Pages.php:67, classes/Admin/Pages.php:155
+#: classes/Admin/Pages.php:66, classes/Admin/Pages.php:154
 msgid "Help & Support"
 msgstr ""
 
-#: classes/Admin/Pages.php:72, classes/Admin/Pages.php:151, includes/modules/admin-bar.php:192
+#: classes/Admin/Pages.php:71, classes/Admin/Pages.php:150, includes/modules/admin-bar.php:192
 msgid "Tools"
 msgstr ""
 
-#: classes/Admin/Pages.php:107, classes/Admin/Pages.php:107, classes/Types.php:54, classes/Types.php:56, classes/Upsell.php:98
+#: classes/Admin/Pages.php:106, classes/Admin/Pages.php:106, classes/Types.php:54, classes/Types.php:56, classes/Upsell.php:98
 msgid "Popup Themes"
 msgstr ""
 
-#: classes/Admin/Pages.php:142, includes/modules/admin-bar.php:175
+#: classes/Admin/Pages.php:141, includes/modules/admin-bar.php:175
 msgid "All Popups"
 msgstr ""
 
-#: classes/Admin/Pages.php:143
+#: classes/Admin/Pages.php:142
 msgid "Add New"
 msgstr ""
 
-#: classes/Admin/Pages.php:144
+#: classes/Admin/Pages.php:143
 msgid "All Themes"
 msgstr ""
 
-#: classes/Admin/Pages.php:145, classes/Admin/Popups.php:1210
+#: classes/Admin/Pages.php:144, classes/Admin/Popups.php:1210
 msgid "Categories"
 msgstr ""
 
-#: classes/Admin/Pages.php:146, classes/Admin/Popups.php:1206
+#: classes/Admin/Pages.php:145, classes/Admin/Popups.php:1206
 msgid "Tags"
 msgstr ""
 
-#: classes/Admin/Pages.php:152
+#: classes/Admin/Pages.php:151
 msgid "Support Forum"
 msgstr ""
 
-#: classes/Admin/Pages.php:153
+#: classes/Admin/Pages.php:152
 msgid "Account"
 msgstr ""
 
-#: classes/Admin/Pages.php:154
+#: classes/Admin/Pages.php:153
 msgid "Contact Us"
 msgstr ""
 
@@ -978,7 +994,7 @@ msgstr ""
 msgid "Allow usage tracking?"
 msgstr ""
 
-#: classes/Admin/Settings.php:259, classes/Telemetry.php:246
+#: classes/Admin/Settings.php:259
 msgid "Allow Popup Maker to track this plugin's usage and help us make this plugin better? No user data is sent to our servers. No sensitive data is tracked."
 msgstr ""
 
@@ -1239,7 +1255,7 @@ msgid "Check this to completely uninstall Popup Maker."
 msgstr ""
 
 #: classes/Admin/Settings.php:507
-msgid "'Don't Load Google Fonts"
+msgid "Don't Load Google Fonts"
 msgstr ""
 
 #: classes/Admin/Settings.php:508
@@ -2095,11 +2111,11 @@ msgstr ""
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: classes/Install.php:219
+#: classes/Install.php:220
 msgid "The %4$s %1$s %5$s plugin requires %2$s version %3$s or greater."
 msgstr ""
 
-#: classes/Install.php:248
+#: classes/Install.php:249
 msgid "Plugin Activation Error"
 msgstr ""
 
@@ -2683,6 +2699,10 @@ msgstr ""
 msgid "Event: %s"
 msgstr ""
 
+#: classes/Telemetry.php:246
+msgid "We are constantly improving Popup Maker but that's difficult to do if we don't know how it's being used. Please allow data sharing so that we can receive a little information on how it is used. You can change this setting at any time on our Settings page. No user data is sent to our servers. No sensitive data is tracked."
+msgstr ""
+
 #: classes/Telemetry.php:255
 msgid "Allow"
 msgstr ""
@@ -3191,31 +3211,31 @@ msgstr ""
 msgid "I already did"
 msgstr ""
 
-#: includes/pum-install-functions.php:38
+#: includes/pum-install-functions.php:62
 msgid "Light Box"
 msgstr ""
 
-#: includes/pum-install-functions.php:45
+#: includes/pum-install-functions.php:69
 msgid "Enterprise Blue"
 msgstr ""
 
-#: includes/pum-install-functions.php:52
+#: includes/pum-install-functions.php:76
 msgid "Hello Box"
 msgstr ""
 
-#: includes/pum-install-functions.php:59
+#: includes/pum-install-functions.php:83
 msgid "Cutting Edge"
 msgstr ""
 
-#: includes/pum-install-functions.php:66
+#: includes/pum-install-functions.php:90
 msgid "Framed Border"
 msgstr ""
 
-#: includes/pum-install-functions.php:73
+#: includes/pum-install-functions.php:97
 msgid "Floating Bar - Soft Blue"
 msgstr ""
 
-#: includes/pum-install-functions.php:80
+#: includes/pum-install-functions.php:104
 msgid "Content Only - For use with page builders or block editor"
 msgstr ""
 

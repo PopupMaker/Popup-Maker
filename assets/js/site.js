@@ -260,8 +260,37 @@ var PUM;
                     }
                 }
             }
-        }
+        },
+        actions: {
+			stopIframeVideosPlaying: function() {
+				var $popup = PUM.getPopup( this ),
+					$container = $popup.popmake( 'getContainer' );
 
+				if ( ! $popup.hasClass( 'pum-has-videos' ) ) {
+					// TODO: Move this to its own event binding to keep this method clean and simple.
+					$container
+						.find( 'iframe' )
+						.filter( '[src*="youtube"],[src*="vimeo"]' )
+						.each( function() {
+							var $iframe = $( this ),
+								src = $iframe.attr( 'src' ),
+								// Remove autoplay so video doesn't start playing again.
+								new_src = src.replace( 'autoplay=1', '1=1' );
+
+							if ( new_src !== src ) {
+								src = new_src;
+							}
+
+							$iframe.prop( 'src', src );
+						} );
+
+					// TODO: Move this to its own event binding to keep this method clean and simple.
+					$container.find( 'video' ).each( function() {
+						this.pause();
+					} );
+				}
+			},
+		}
     };
 
     $.fn.popmake = function (method) {
@@ -573,24 +602,6 @@ var PUM;
                             .removeClass('pum-active')
                             .trigger('pumAfterClose');
 
-                        // TODO: Move this to its own event binding to keep this method clean and simple.
-                        $container.find('iframe').filter('[src*="youtube"],[src*="vimeo"]').each(function () {
-                            var $iframe = $(this),
-                                src = $iframe.attr('src'),
-                                // Remove autoplay so video doesn't start playing again.
-                                new_src = src.replace('autoplay=1', '1=1');
-
-                            if (new_src !== src) {
-                                src = new_src;
-                            }
-
-                            $iframe.prop('src', src);
-                        });
-
-                        // TODO: Move this to its own event binding to keep this method clean and simple.
-                        $container.find('video').each(function () {
-                            this.pause();
-                        });
 
                         // Fire user passed callback.
                         if (callback !== undefined) {
@@ -2168,7 +2179,8 @@ module.exports = _unsupportedIterableToArray;
         if ($forms.length) {
             $forms.append('<input type="hidden" name="pum_form_popup_id" value="' + popupID + '" />');
         }
-    });
+    })
+    .on( 'pumAfterClose', window.PUM.actions.stopIframeVideosPlaying );
 
 
 }(jQuery));
