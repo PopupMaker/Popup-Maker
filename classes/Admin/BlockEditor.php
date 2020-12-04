@@ -52,10 +52,13 @@ class PUM_Admin_BlockEditor {
 		wp_localize_script(
 			'popup-maker-block-editor',
 			'pum_block_editor_vars',
-			[
-				'popups' => pum_get_all_popups(),
-				'ctas'   => PUM_CallToActions::instance()->get_as_array(),
-			]
+			apply_filters(
+				'pum_block_editor_vars',
+				[
+					'popups' => pum_get_all_popups(),
+					'ctas'   => PUM_CallToActions::instance()->get_as_array(),
+				]
+			)
 		);
 
 		$editor_styles_path       = $build_path . 'block-editor-styles.css';
