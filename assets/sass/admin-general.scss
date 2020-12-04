@@ -35,6 +35,42 @@ Styles for our log viewers
 }
 
 /************
+Styles for welcome screen
+************/
+.pum-welcome-wrapper {
+	margin: 0;
+	padding: 10px;
+	background-color: #fff;
+
+	@media only screen and (min-width: 600px) {
+		max-width: 500px;
+		margin: 40px auto 0;
+		padding: 40px 30px;
+	}
+
+	ul {
+		list-style: disc;
+		padding-left: 20px;
+	}
+
+	.pum-welcome-signature {
+		margin-top: 20px;
+		font-style: italic;
+		display: flex;
+		align-items: center;
+
+		img {
+			margin-right: 10px;
+			width: 60px;
+		}
+	}
+
+	.pum-welcome-cta {
+		margin-top: 30px;
+	}
+}
+
+/************
 Styles for toggle buttons
 ************/
 .pum-toggle-button {
