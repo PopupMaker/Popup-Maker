@@ -39,9 +39,6 @@
 				$button.data("nonce")
 			);
 		});
-		$("#screen-meta-links, #screen-meta")
-			.prependTo("#pum-header-temp")
-			.show();
 	});
 })(jQuery);
 

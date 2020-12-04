@@ -30,22 +30,23 @@ class PUM_Upsell {
 				'</a>'
 			);
 			?>
-			<div id="pum-header-temp"></div>
-			<div class="pum-notice-bar">
-				<span class="pum-notice-bar-message">
-					<?php
-					echo wp_kses(
-						$message,
-						array(
-							'a' => array(
-								'href'   => array(),
-								'rel'    => array(),
-								'target' => array(),
-							),
-						)
-					);
-					?>
-				</span>
+			<div class="pum-notice-bar-wrapper">
+				<div class="pum-notice-bar">
+					<span class="pum-notice-bar-message">
+						<?php
+						echo wp_kses(
+							$message,
+							array(
+								'a' => array(
+									'href'   => array(),
+									'rel'    => array(),
+									'target' => array(),
+								),
+							)
+						);
+						?>
+					</span>
+				</div>
 			</div>
 			<?php
 		}
