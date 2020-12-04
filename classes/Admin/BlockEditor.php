@@ -54,9 +54,9 @@ class PUM_Admin_BlockEditor {
 			'pum_block_editor_vars',
 			[
 				'popups'                        => pum_get_all_popups(),
-				'popup_trigger_excluded_blocks' => [
+				'popup_trigger_excluded_blocks' => apply_filters( 'pum_block_editor_popup_trigger_excluded_blocks', [
 					'core/nextpage',
-				],
+				] ),
 			]
 		);
 
