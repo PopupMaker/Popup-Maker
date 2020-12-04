@@ -250,7 +250,7 @@ class PUM_Admin_Settings {
 						),
 						'google_fonts_api_key'      => array(
 							'type'  => 'text',
-							'label' => __( 'Google Fonts API Key', 'popup-maker' ),
+							'label' => __( 'Google Fonts API Key *optional', 'popup-maker' ),
 							'desc'  => __( 'Enter your own Google Fonts API key to always get the latest fonts available.', 'popup-maker' ),
 						),
 						'telemetry'      => array(
