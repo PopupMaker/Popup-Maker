@@ -266,7 +266,7 @@ class PUM_Admin_Onboarding {
 				'content'  => sprintf(
 					'<h3> %s </h3> <p> %s </p>',
 					__( 'Welcome to Popup Maker!', 'popup-maker' ),
-					__( 'Click the "Add New Popup" button to create your first popup.', 'popup-maker' )
+					__( 'Click the "Create New Popup" button to create your first popup.', 'popup-maker' )
 				),
 				'position' => array( 'edge' => 'top' ),
 			),

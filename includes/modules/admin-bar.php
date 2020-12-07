@@ -178,7 +178,7 @@ class PUM_Modules_Admin_Bar {
 			) );
 			$wp_admin_bar->add_node( array(
 				'id'     => 'new-popups', // Just `new-popup` moves this to the top of the menu for some reason. Leave the `s` to keep it in the right place.
-				'title'  => __( 'Add New Popup', 'popup-maker' ),
+				'title'  => __( 'Create New Popup', 'popup-maker' ),
 				'href'   => admin_url( 'post-new.php?post_type=popup' ),
 				'parent' => 'popup-maker',
 			) );
