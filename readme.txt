@@ -177,6 +177,17 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
+= v1.14.0 - 12/15/2020 =
+* Improvement: Add a link to popups to admin bar [Issue #892](https://github.com/PopupMaker/Popup-Maker/issues/892)
+* Improvement: Add a link to create a new popup to admin bar [Issue #892](https://github.com/PopupMaker/Popup-Maker/issues/892)
+* Improvement: Add new welcome screen upon first activation [Issue #900](https://github.com/PopupMaker/Popup-Maker/issues/900)
+* Improvement: Create example popup upon install [Issue #857](https://github.com/PopupMaker/Popup-Maker/issues/857)
+* Improvement: Ensure subscribers table gets deleted if doing full deletion [Issue #895](https://github.com/PopupMaker/Popup-Maker/issues/895)
+* Improvement: Add logging for DB table management and creation [Issue #879](https://github.com/PopupMaker/Popup-Maker/issues/879)
+* Improvement: Set up continous integration for unit and integration tests [Issue #640](https://github.com/PopupMaker/Popup-Maker/issues/640)
+* Improvement: Add filter to exclude blocks with isAllowedForBlockType [Issue #835](https://github.com/PopupMaker/Popup-Maker/issues/835)
+* Fix: Backtick in settings page [Issue #904](https://github.com/PopupMaker/Popup-Maker/issues/904)
+
 = v1.13.1 - 11/4/2020 =
 * Fix: PHP error notice appears when submitting Gravity Forms without AJAX
 
