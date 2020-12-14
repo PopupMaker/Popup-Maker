@@ -2,6 +2,31 @@
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************/
 
+.upgrade-wrapper {
+	background-color: white;
+	margin: 1em 0;
+	padding: 2em 1em;
+
+	.upgrade-wrapper-hero {
+		font-size: 16px;
+
+		p {
+			font-size: 16px;
+			margin: 0;
+		}
+
+		ul {
+			margin: 0;
+			padding-left: 20px;
+			list-style: disc;
+		}
+	}
+
+	h2 {
+		font-size: 2em;
+	}
+}
+
 .extensions-available {
 	display: flex;
 	flex-wrap: wrap;

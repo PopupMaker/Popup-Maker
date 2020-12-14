@@ -28,34 +28,29 @@ class PUM_Admin_Extend {
 	 * Renders the support page contents.
 	 */
 	public static function page() {
-		// Set a new campaign for tracking purposes
-		$campaign   = 'PUMExtensionsPage';
-
 		?>
-        <div class="wrap">
-			<h1><?php _e( 'Extend Popup Maker with Additional Premium Features', 'popup-maker' ) ?></h1>
+		<div class="wrap">
+			<h1><?php _e( 'Upgrade', 'popup-maker' ) ?></h1>
 			<?php PUM_Upsell::display_addon_tabs(); ?>
-            <div id="poststuff">
-                <div id="post-body" class="metabox-holder">
-                    <div id="post-body-content">
-						<br class="clear" />
-						<a href="https://wppopupmaker.com/extensions/?utm_source=plugin-extension-page&utm_medium=text-link&utm_campaign=<?php echo $campaign; ?>&utm_content=browse-all" class="button-primary" title="<?php _e( 'Browse All Extensions', 'popup-maker' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'popup-maker' ); ?></a>
-                        <br class="clear" />
-
-						<div class="pum-tabs-container">
-							<?php self::render_extension_list(); ?>
-
-							<br class="clear" />
-
-							<a href="https://wppopupmaker.com/extensions/?utm_source=plugin-extension-page&utm_medium=text-link&utm_campaign=<?php echo $campaign; ?>&utm_content=browse-all-bottom" class="button-primary" title="<?php _e( 'Browse All Extensions', 'popup-maker' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'popup-maker' ); ?></a>
-
-							<br class="clear" /> <br class="clear" /> <br class="clear" />
-							<hr class="clear" /><br class="clear" />
-						</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+			<article class="upgrade-wrapper">
+				<section class="upgrade-wrapper-hero">
+					<h2>Drive Even More Opt-Ins and Sales With Our Premium Features</h2>
+					<p>Our premium plans give you more:</p>
+					<ul>
+						<li>Triggers - Scroll, Exit-intent, Add-to-cart, and more</li>
+						<li>Integrations - MailChimp, WooCommerce, and more</li>
+						<li>Conditions - Show popups to visitors from a certain site, from search engines, using certain browsers, who has viewed X pages, and more </li>
+						<li>And much more!</li>
+					</ul>
+					<a href="#" class="button button-primary">View pricing</a>
+				</section>
+				<section class="upgrade-wrapper-features">
+					<h2>Our Most Popular Premuium Features</h2>
+					<?php self::render_extension_list(); ?>
+					<a href="https://wppopupmaker.com/extensions/?utm_source=plugin-extension-page&utm_medium=text-link&utm_campaign=upsell&utm_content=browse-all-bottom" class="button-primary" title="<?php _e( 'See All Premium Features', 'popup-maker' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'popup-maker' ); ?></a>
+				</section>
+			</article>
+		</div>
 		<?php
 	}
 
