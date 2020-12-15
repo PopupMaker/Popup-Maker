@@ -1,0 +1,209 @@
+/*!******************************************************************************
+ * Copyright (c) 2020, Code Atlantic LLC.
+ ******************************************************************************/
+/**
+ * Colors
+ */
+/**
+ * Colors
+ */
+/**
+ * Fonts & basic variables.
+ */
+/**
+ * Grid System.
+ * https://make.wordpress.org/design/2019/10/31/proposal-a-consistent-spacing-system-for-wordpress/
+ */
+/**
+ * Dimensions.
+ */
+/**
+ * Shadows.
+ */
+/**
+ * Editor widths.
+ */
+/**
+ * Block UI.
+ */
+/**
+ * Border radii.
+ */
+/**
+ * Breakpoint mixins
+ */
+/**
+ * Long content fade mixin
+ *
+ * Creates a fading overlay to signify that the content is longer
+ * than the space allows.
+ */
+/**
+ * Focus styles.
+ */
+/**
+ * Applies editor left position to the selector passed as argument
+ */
+/**
+ * Styles that are reused verbatim in a few places
+ */
+/**
+ * Allows users to opt-out of animations via OS-level preferences.
+ */
+/**
+ * Reset default styles for JavaScript UI based pages.
+ * This is a WP-admin agnostic reset
+ */
+/**
+ * Reset the WP Admin page styles for Gutenberg-like pages.
+ */
+/**
+ * Breakpoints & Media Queries
+ */
+.components-popover .block-editor-popup-select-input {
+  flex-grow: 1;
+  position: relative;
+  padding: 1px; }
+  .components-popover .block-editor-popup-select-input .components-base-control__field {
+    margin-bottom: 0; }
+  .components-popover .block-editor-popup-select-input input[type="text"],
+  .components-popover .block-editor-popup-select-input select {
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    /* Fonts smaller than 16px causes mobile safari to zoom. */
+    font-size: 16px; }
+    @media (min-width: 600px) {
+      .components-popover .block-editor-popup-select-input input[type="text"],
+      .components-popover .block-editor-popup-select-input select {
+        width: 300px; } }
+    @media (min-width: 600px) {
+      .components-popover .block-editor-popup-select-input input[type="text"],
+      .components-popover .block-editor-popup-select-input select {
+        font-size: 13px; } }
+    .components-popover .block-editor-popup-select-input input[type="text"]::-ms-clear,
+    .components-popover .block-editor-popup-select-input select::-ms-clear {
+      display: none; }
+
+/**
+ * Colors
+ */
+/**
+ * Fonts & basic variables.
+ */
+/**
+ * Grid System.
+ * https://make.wordpress.org/design/2019/10/31/proposal-a-consistent-spacing-system-for-wordpress/
+ */
+/**
+ * Dimensions.
+ */
+/**
+ * Shadows.
+ */
+/**
+ * Editor widths.
+ */
+/**
+ * Block UI.
+ */
+/**
+ * Border radii.
+ */
+/** Copied from @wordpress/block-editor/src/components/url-popover/style.scss */
+.block-editor-popup-trigger-popover__additional-controls {
+  border-top: 1px solid #e2e4e7; }
+
+.block-editor-popup-trigger-popover__additional-controls > div[role="menu"] .components-icon-button:not(:disabled):not([aria-disabled="true"]):not(.is-default) > svg {
+  box-shadow: none; }
+
+.block-editor-popup-trigger-popover__additional-controls div[role="menu"] > .components-icon-button {
+  padding-left: 2px; }
+
+.block-editor-popup-trigger-popover .components-notice.is-dismissible {
+  margin: 0;
+  padding-right: 0; }
+  .block-editor-popup-trigger-popover .components-notice.is-dismissible .components-notice__content {
+    margin: 0; }
+
+.block-editor-popup-trigger-popover__row {
+  display: flex; }
+
+.block-editor-popup-trigger-popover__row > :not(.block-editor-popup-trigger-popover__settings-toggle) {
+  flex-grow: 1; }
+
+.block-editor-popup-trigger-popover .components-icon-button {
+  padding: 3px; }
+  .block-editor-popup-trigger-popover .components-icon-button > svg {
+    padding: 5px;
+    border-radius: 4px;
+    height: 30px;
+    width: 30px; }
+  .block-editor-popup-trigger-popover .components-icon-button:not(:disabled):not([aria-disabled="true"]):not(.is-default):hover {
+    box-shadow: none; }
+    .block-editor-popup-trigger-popover .components-icon-button:not(:disabled):not([aria-disabled="true"]):not(.is-default):hover > svg {
+      outline: none;
+      background-color: #fff;
+      color: #191e23;
+      box-shadow: inset 0 0 0 1px #ccd0d4, inset 0 0 0 2px #fff; }
+  .block-editor-popup-trigger-popover .components-icon-button:not(:disabled):focus {
+    box-shadow: none; }
+    .block-editor-popup-trigger-popover .components-icon-button:not(:disabled):focus > svg {
+      box-shadow: inset 0 0 0 1.5px theme(button), inset 0 0 0 4px #fff;
+      outline: 2px solid transparent; }
+
+.block-editor-popup-trigger-popover__settings-toggle {
+  flex-shrink: 0;
+  border-radius: 0;
+  border-left: 1px solid #e2e4e7;
+  margin-left: 1px; }
+  .block-editor-popup-trigger-popover__settings-toggle[aria-expanded="true"] .dashicon {
+    transform: rotate(180deg); }
+
+.block-editor-popup-trigger-popover__settings {
+  display: block;
+  padding: 16px;
+  border-top: 1px solid #e2e4e7; }
+  .block-editor-popup-trigger-popover__settings .components-base-control:last-child,
+  .block-editor-popup-trigger-popover__settings .components-base-control:last-child .components-base-control__field {
+    margin-bottom: 0; }
+
+.block-editor-popup-trigger-popover__popup-editor,
+.block-editor-popup-trigger-popover__popup-viewer {
+  display: flex; }
+
+.block-editor-popup-trigger-popover__popup-viewer-text {
+  margin: 7px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 150px;
+  max-width: 500px; }
+  .block-editor-popup-trigger-popover__popup-viewer-text.has-invalid-link {
+    color: #d94f4f; }
+
+.popup-trigger[data-popup-id] {
+  border-bottom: 1px dashed #9aba27; }
+
+.popup-trigger[data-popup-id]::after {
+  /*background: url("/wp-content/plugins/popup-maker/assets/images/logo.png") bottom center no-repeat;*/
+  background: url(/wp-content/plugins/popup-maker/assets/images/logo.png) bottom center no-repeat;
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  content: " ";
+  position: relative;
+  background-size: contain;
+  margin-left: 2px;
+  vertical-align: text-top;
+  pointer-events: none;
+  touch-action: none; }
+
+.components-dropdown-menu__menu .components-dropdown-menu__menu-item:not(:disabled):not([aria-disabled="true"]):not(.is-default).is-active > svg.popup-trigger-button-svg,
+.components-dropdown-menu__menu .components-menu-item:not(:disabled):not([aria-disabled="true"]):not(.is-default).is-active > svg.popup-trigger-button-svg {
+  background: #ededed; }
+
+
+/*# sourceMappingURL=block-editor-styles.css.map*/
