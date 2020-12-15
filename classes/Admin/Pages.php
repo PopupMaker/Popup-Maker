@@ -58,7 +58,7 @@ class PUM_Admin_Pages {
 				'callback'    => array( 'PUM_Admin_Settings', 'page' ),
 			),
 			'extensions' => array(
-				'page_title'  => __( 'Extend', 'popup-maker' ),
+				'page_title'  => __( 'Upgrade', 'popup-maker' ),
 				'capability'  => 'edit_posts',
 				'callback'    => array( 'PUM_Admin_Extend', 'page' ),
 			),
