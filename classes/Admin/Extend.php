@@ -42,12 +42,12 @@ class PUM_Admin_Extend {
 						<li>Conditions - Show popups to visitors from a certain site, from search engines, using certain browsers, who has viewed X pages, and more </li>
 						<li>And much more!</li>
 					</ul>
-					<a href="#" class="button button-primary">View pricing</a>
+					<a href="https://wppopupmaker.com/pricing/?utm_campaign=upsell&utm_medium=plugin&utm_source=plugin-extension-page&utm_content=hero-cta" class="button button-primary" target="_blank" rel="noreferrer noopener">View pricing</a>
 				</section>
 				<section class="upgrade-wrapper-features">
-					<h2>Our Most Popular Premuium Features</h2>
+					<h2>Our Most Popular Premium Features</h2>
 					<?php self::render_extension_list(); ?>
-					<a href="https://wppopupmaker.com/extensions/?utm_source=plugin-extension-page&utm_medium=text-link&utm_campaign=upsell&utm_content=browse-all-bottom" class="button-primary" title="<?php _e( 'See All Premium Features', 'popup-maker' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'popup-maker' ); ?></a>
+					<a href="https://wppopupmaker.com/extensions/?utm_campaign=upsell&utm_medium=plugin&utm_source=plugin-extension-page&utm_content=browse-all-bottom" class="button-primary" title="<?php _e( 'See All Premium Features', 'popup-maker' ); ?>" target="_blank" rel="noreferrer noopener"><?php _e( 'See All Premium Features', 'popup-maker' ); ?></a>
 				</section>
 			</article>
 		</div>
@@ -108,7 +108,7 @@ class PUM_Admin_Extend {
 				foreach ( $extensions as $extension ) : ?>
                     <li class="available-extension-inner <?php echo esc_attr( $extension['slug'] ); ?>">
                         <h3>
-                            <a target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=extension-title-<?php echo $i; ?>&utm_campaign=<?php echo $campaign; ?>&utm_content=<?php echo esc_attr( urlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>">
+                            <a target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=plugin&utm_campaign=upsell&utm_content=<?php echo esc_attr( urlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>-<?php echo esc_attr( $i ); ?>">
 								<?php echo esc_html( $extension['name'] ) ?>
                             </a>
                         </h3>
@@ -118,7 +118,7 @@ class PUM_Admin_Extend {
                         <p><?php echo esc_html( $extension['excerpt'] ); ?></p>
 
                         <span class="action-links">
-						<a class="button" target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=extension-button-<?php echo $i; ?>&utm_campaign=<?php echo $campaign; ?>&utm_content=<?php echo esc_attr( urlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>"><?php _e( 'Learn more', 'popup-maker' ); ?></a>
+						<a class="button" target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=plugin&utm_campaign=upsell&utm_content=<?php echo esc_attr( urlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>-<?php echo esc_attr( $i ); ?>"><?php _e( 'Learn more', 'popup-maker' ); ?></a>
 					</span>
 
                         <!--					--><?php
