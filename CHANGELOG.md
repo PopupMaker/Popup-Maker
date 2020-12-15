@@ -1,6 +1,6 @@
 # Popup Maker Changelog
 
-## [v1.14.0 - 12/15/2020](https://github.com/PopupMaker/Popup-Maker/milestone/29)
+## [v1.14.0 - 12/16/2020](https://github.com/PopupMaker/Popup-Maker/milestone/29)
 
 * Improvement: Add a link to popups to admin bar [Issue #892](https://github.com/PopupMaker/Popup-Maker/issues/892)
 * Improvement: Add a link to create a new popup to admin bar [Issue #892](https://github.com/PopupMaker/Popup-Maker/issues/892)
