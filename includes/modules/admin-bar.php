@@ -74,12 +74,10 @@ class PUM_Modules_Admin_Bar {
 			'parent' => false,
 		) );
 
-		$popups_url = current_user_can( 'edit_posts' ) ? admin_url( 'edit.php?post_type=popup' ) : '#';
-
 		$wp_admin_bar->add_node( array(
 			'id'     => 'popups',
 			'title'  => __( 'Popups', 'popup-maker' ),
-			'href'   => $popups_url,
+			'href'   => '#',
 			'parent' => 'popup-maker',
 		) );
 
@@ -168,6 +166,21 @@ class PUM_Modules_Admin_Bar {
 					'target' => '_blank',
 				),
 
+			) );
+		}
+
+		if ( current_user_can( 'edit_posts' ) ) {
+			$wp_admin_bar->add_node( array(
+				'id'     => 'all-popups',
+				'title'  => __( 'All Popups', 'popup-maker' ),
+				'href'   => admin_url( 'edit.php?post_type=popup' ),
+				'parent' => 'popup-maker',
+			) );
+			$wp_admin_bar->add_node( array(
+				'id'     => 'new-popups', // Just `new-popup` moves this to the top of the menu for some reason. Leave the `s` to keep it in the right place.
+				'title'  => __( 'Create New Popup', 'popup-maker' ),
+				'href'   => admin_url( 'post-new.php?post_type=popup' ),
+				'parent' => 'popup-maker',
 			) );
 		}
 

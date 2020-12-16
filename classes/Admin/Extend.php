@@ -13,80 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Admin_Extend {
 
 	/**
-	 * Appends the unseen count to the Admin Menu.
-	 */
-	public static function append_count_to_menu_item() {
-		global $submenu;
-
-		$count = self::append_unseen_count();
-
-		if ( empty( $count ) || ! isset( $submenu['edit.php?post_type=popup'] ) || empty( $submenu['edit.php?post_type=popup'] ) ) {
-			return;
-		}
-
-		foreach ( $submenu['edit.php?post_type=popup'] as $key => $item ) {
-			if ( $item[2] == 'pum-extensions' ) {
-				$submenu['edit.php?post_type=popup'][ $key ][0] .= $count;
-			}
-		}
-	}
-
-	/**
-	 * Returns HTML for the unseen count for the number of extensions, forms, etc... that have not been seen by user.
-	 *
-	 * @return string|null
-	 */
-	public static function append_unseen_count() {
-	    $is_integration_page = isset( $_GET['post_type'] ) && $_GET['post_type'] === 'popup' && isset( $_GET['page'] ) && $_GET['page'] === 'pum-extensions';
-	    $active_tab    = isset( $_GET['tab'] ) ? $_GET['tab'] : 'extensions';
-
-		if ( $is_integration_page ) {
-			self::mark_extensions_viewed( $active_tab );
-		}
-
-		$count = 0;
-
-		foreach ( self::unseen_extension_counts() as $subtab => $unseen_count ) {
-			$count = $count + $unseen_count;
-		}
-
-		return 0 === $count ? null : ' <span class="update-plugins count-' . $count . '"><span class="plugin-count pum-alert-count" aria-hidden="true">' . $count . '</span></span>';
-
-	}
-
-	/**
-	 * @return array
-	 */
-	protected static function unseen_extension_counts() {
-		$viewed = self::viewed_extension_counts();
-		$unseen = array();
-
-		foreach ( self::actual_extension_counts() as $subtab => $count ) {
-			if ( ! isset( $viewed[ $subtab ] ) ) {
-				$unseen[ $subtab ] = $count;
-			} elseif ( $viewed[ $subtab ] < $count ) {
-				$unseen[ $subtab ] = $count - $viewed[ $subtab ];
-			}
-		}
-
-		return $unseen;
-	}
-
-	/**
-	 * @return array|mixed|void
-	 */
-	protected static function viewed_extension_counts() {
-		$viewed = get_option( 'pum_extend_viewed_extensions' );
-
-		if ( false === $viewed ) {
-			$viewed = array();
-			update_option( 'pum_extend_viewed_extensions', array() );
-		}
-
-		return $viewed;
-	}
-
-	/**
 	 * @return array
 	 */
 	protected static function actual_extension_counts() {
@@ -298,7 +224,6 @@ class PUM_Admin_Extend {
 	 */
 	public static function render_subtabs() {
 		$actual_counts = self::actual_extension_counts();
-		$unseen_counts = self::unseen_extension_counts();
 		$sub_tabs      = self::subtabs();
 		$active_tab    = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $sub_tabs ) ? $_GET['tab'] : 'extensions';
 
@@ -336,12 +261,6 @@ class PUM_Admin_Extend {
 
 				$active = $active_tab == $tab_id ? 'current' : '';
 
-
-				$unseen_count = null;
-				if ( isset( $unseen_counts[ $tab_id ] ) && $unseen_counts[ $tab_id ] > 0 ) {
-					$unseen_count = $unseen_counts[ $tab_id ];
-				}
-
 				$count = null;
 				switch ( $tab_id ) {
 					case 'extensions':
@@ -368,11 +287,6 @@ class PUM_Admin_Extend {
 				if ( isset( $count ) ) {
 					echo ' <span class="count">(' . $count . ')</span>';
 				}
-
-				if ( isset( $unseen_count ) ) {
-					echo ' <span class="update-plugins count-' . $unseen_count . '"><span class="plugin-count pum-alert-count" aria-hidden="true">' . $unseen_count . '</span></span>';
-				}
-
 
 				echo '</li>';
 
@@ -638,22 +552,6 @@ class PUM_Admin_Extend {
 			'secure-idle-user-logout',
 			'terms-conditions-popups',
 		) );
-	}
-
-	/**
-	 * @param $subtab
-	 */
-	protected static function mark_extensions_viewed( $subtab ) {
-		$viewed = self::viewed_extension_counts();
-		$actual = self::actual_extension_counts();
-
-		if ( ! isset( $actual[ $subtab ] ) ) {
-			return;
-		}
-
-		$viewed[ $subtab ] = $actual[ $subtab ];
-
-		update_option( 'pum_extend_viewed_extensions', $viewed );
 	}
 
 }

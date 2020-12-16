@@ -250,7 +250,7 @@ class PUM_Admin_Settings {
 						),
 						'google_fonts_api_key'      => array(
 							'type'  => 'text',
-							'label' => __( 'Google Fonts API Key', 'popup-maker' ),
+							'label' => __( 'Google Fonts API Key *optional', 'popup-maker' ),
 							'desc'  => __( 'Enter your own Google Fonts API key to always get the latest fonts available.', 'popup-maker' ),
 						),
 						'telemetry'      => array(
@@ -504,7 +504,7 @@ class PUM_Admin_Settings {
 					'assets' => array(
 						'disable_google_font_loading'     => array(
 							'type'  => 'checkbox',
-							'label' => __( "'Don't Load Google Fonts", 'popup-maker' ),
+							'label' => __( "Don't Load Google Fonts", 'popup-maker' ),
 							'desc'  => __( 'Check this disable loading of google fonts, useful if the fonts you chose are already loaded with your theme.', 'popup-maker' ),
 						),
 						'disable_popup_maker_core_styles' => array(
@@ -601,11 +601,7 @@ class PUM_Admin_Settings {
 			<form id="pum-settings" method="post" action="">
 
 				<?php wp_nonce_field( basename( __FILE__ ), 'pum_settings_nonce' ); ?>
-
-				<button class="right top button-primary"><?php _e( 'Save', 'popup-maker' ); ?></button>
-
 				<h1><?php _e( 'Popup Maker Settings', 'popup-maker' ); ?></h1>
-
 				<div id="pum-settings-container" class="pum-settings-container">
 					<div class="pum-no-js" style="padding: 0 12px;">
 						<p><?php printf( __( 'If you are seeing this, the page is still loading or there are Javascript errors on this page. %sView troubleshooting guide%s', 'popup-maker' ), '<a href="https://docs.wppopupmaker.com/article/373-checking-for-javascript-errors" target="_blank">', '</a>' ); ?></p>
@@ -613,7 +609,7 @@ class PUM_Admin_Settings {
 				</div>
 
 				<script type="text/javascript">
-                    window.pum_settings_editor = <?php echo PUM_Utils_Array::safe_json_encode( apply_filters( 'pum_settings_editor_args', array(
+					window.pum_settings_editor = <?php echo PUM_Utils_Array::safe_json_encode( apply_filters( 'pum_settings_editor_args', array(
 						'form_args'      => array(
 							'id'       => 'pum-settings',
 							'tabs'     => self::tabs(),
@@ -631,7 +627,7 @@ class PUM_Admin_Settings {
 					) ) ); ?>;
 				</script>
 
-				<button class="button-primary bottom right"><?php _e( 'Save', 'popup-maker' ); ?></button>
+				<button class="button-primary bottom" style="margin-left: 156px;"><?php _e( 'Save', 'popup-maker' ); ?></button>
 
 			</form>
 

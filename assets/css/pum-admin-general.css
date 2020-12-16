@@ -2126,6 +2126,40 @@
 }
 
 /************
+Styles for upgrade notice bar
+************/
+@media screen and (max-width: 1023px) {
+  .pum-notice-bar {
+    display: none !important;
+  }
+}
+
+.pum-notice-bar-wrapper {
+  position: absolute;
+  z-index: 10;
+  visibility: hidden;
+  width: 50%;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+.pum-notice-bar-wrapper .pum-notice-bar {
+  display: flex;
+  justify-content: center;
+  background-color: #f6f6f6;
+  border-top: 3px solid #ad1b8e;
+  color: #777;
+  padding: 7px;
+  max-height: 100px;
+  visibility: visible;
+}
+
+.pum-notice-bar-wrapper .pum-notice-bar a {
+  color: #9aba27;
+}
+
+/************
 Styles for our log viewers
 ************/
 #log-viewer {
@@ -2139,6 +2173,44 @@ Styles for our log viewers
 #log-viewer pre {
   font-family: monospace;
   white-space: pre-wrap;
+}
+
+/************
+Styles for welcome screen
+************/
+.pum-welcome-wrapper {
+  margin: 0;
+  padding: 10px;
+  background-color: #fff;
+}
+
+@media only screen and (min-width: 600px) {
+  .pum-welcome-wrapper {
+    max-width: 500px;
+    margin: 40px auto 0;
+    padding: 40px 30px;
+  }
+}
+
+.pum-welcome-wrapper ul {
+  list-style: disc;
+  padding-left: 20px;
+}
+
+.pum-welcome-wrapper .pum-welcome-signature {
+  margin-top: 20px;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+}
+
+.pum-welcome-wrapper .pum-welcome-signature img {
+  margin-right: 10px;
+  width: 60px;
+}
+
+.pum-welcome-wrapper .pum-welcome-cta {
+  margin-top: 30px;
 }
 
 /************

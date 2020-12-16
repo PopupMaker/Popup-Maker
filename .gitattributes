@@ -1,3 +1,8 @@
+# Set default behaviour to automatically normalize line endings.
+* text eol=lf
+*.png binary
+*.jpg binary
+
 # Items to ignore when downloading a zip
 /.* export-ignore
 bin export-ignore
@@ -12,8 +17,6 @@ phpunit.* export-ignore
 README.md export-ignore
 tests export-ignore
 renovate.json export-ignore
-
-
 
 .browserslistrc export-ignore
 .editorconfig export-ignore

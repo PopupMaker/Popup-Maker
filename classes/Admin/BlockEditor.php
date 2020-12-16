@@ -22,7 +22,7 @@ class PUM_Admin_BlockEditor {
 		}
 
 		// TODO Test if this is needed in core or not.
-		add_action( 'enqueue_block_editor_assets', array( 'PUM_Site_Assets', 'register_styles' ) );
+		add_action( 'enqueue_block_editor_assets', [ 'PUM_Site_Assets', 'register_styles' ] );
 		add_action( 'enqueue_block_editor_assets', [ __CLASS__, 'register_editor_assets' ] );
 
 		// Here for future use.
@@ -42,18 +42,34 @@ class PUM_Admin_BlockEditor {
 
 		$script_path       = $build_path . 'block-editor.js';
 		$script_asset_path = $build_path . 'block-editor.asset.php';
-		$script_asset      = file_exists( Popup_Maker::$DIR . $script_asset_path ) ? require( Popup_Maker::$DIR . $script_asset_path ) : array( 'dependencies' => array(), 'version' => Popup_Maker::$VER );
+		$script_asset      = file_exists( Popup_Maker::$DIR . $script_asset_path ) ? require Popup_Maker::$DIR . $script_asset_path : [
+			'dependencies' => [],
+			'version'      => Popup_Maker::$VER,
+		];
 		$script_url        = plugins_url( $script_path, Popup_Maker::$FILE );
-		wp_enqueue_script( 'popup-maker-block-editor', $script_url, array_merge( $script_asset['dependencies'], array( 'wp-edit-post' ) ), $script_asset['version'] );
+		wp_enqueue_script( 'popup-maker-block-editor', $script_url, array_merge( $script_asset['dependencies'], [ 'wp-edit-post' ] ), $script_asset['version'] );
 
-		wp_localize_script( 'popup-maker-block-editor', 'pum_block_editor_vars', [
-			'popups' => pum_get_all_popups(),
-		] );
+		wp_localize_script(
+			'popup-maker-block-editor',
+			'pum_block_editor_vars',
+			[
+				'popups'                        => pum_get_all_popups(),
+				'popup_trigger_excluded_blocks' => apply_filters(
+					'pum_block_editor_popup_trigger_excluded_blocks',
+					[
+						'core/nextpage',
+					]
+				),
+			]
+		);
 
 		$editor_styles_path       = $build_path . 'block-editor-styles.css';
 		$editor_styles_asset_path = $build_path . 'block-editor-styles.asset.php';
-		$editor_styles_asset      = file_exists( Popup_Maker::$DIR . $editor_styles_asset_path ) ? require( Popup_Maker::$DIR . $editor_styles_asset_path ) : array( 'dependencies' => array(), 'version' => Popup_Maker::$VER );
-		wp_enqueue_style( 'popup-maker-block-editor', plugins_url( $editor_styles_path, Popup_Maker::$FILE ), array(), $editor_styles_asset['version'] );
+		$editor_styles_asset      = file_exists( Popup_Maker::$DIR . $editor_styles_asset_path ) ? require Popup_Maker::$DIR . $editor_styles_asset_path : [
+			'dependencies' => [],
+			'version'      => Popup_Maker::$VER,
+		];
+		wp_enqueue_style( 'popup-maker-block-editor', plugins_url( $editor_styles_path, Popup_Maker::$FILE ), [], $editor_styles_asset['version'] );
 
 		if ( function_exists( 'wp_set_script_translations' ) ) {
 			/**
@@ -69,10 +85,13 @@ class PUM_Admin_BlockEditor {
 	 * Register assets for individual block styles
 	 */
 	public static function register_block_assets() {
-		$build_path = 'dist/block-editor/';
+		$build_path              = 'dist/block-editor/';
 		$block_styles_path       = $build_path . 'block-styles.css';
 		$block_styles_asset_path = $build_path . 'block-styles.asset.php';
-		$block_styles_asset      = file_exists( Popup_Maker::$DIR . $block_styles_asset_path ) ? require( Popup_Maker::$DIR . $block_styles_asset_path ) : array( 'dependencies' => array(), 'version' => Popup_Maker::$VER );
-		wp_enqueue_style( 'popup-maker-block-styles', plugins_url( $block_styles_path, Popup_Maker::$FILE ), array(), $block_styles_asset['version'] );
+		$block_styles_asset      = file_exists( Popup_Maker::$DIR . $block_styles_asset_path ) ? require Popup_Maker::$DIR . $block_styles_asset_path : [
+			'dependencies' => [],
+			'version'      => Popup_Maker::$VER,
+		];
+		wp_enqueue_style( 'popup-maker-block-styles', plugins_url( $block_styles_path, Popup_Maker::$FILE ), [], $block_styles_asset['version'] );
 	}
 }

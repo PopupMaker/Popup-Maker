@@ -1,9 +1,10 @@
-/*!******************************************************************************
+/*!****************************************************
  * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+ ******************************************************/
 .extensions-available {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .extensions-available img {
@@ -20,20 +21,15 @@
   border: 1px solid #ccc;
   background: #fff;
   vertical-align: top;
-  width: 23.5%;
-  margin: 0 0 20px 2%;
+  width: 18%;
+  margin: 0 0 20px;
   box-shadow: -1px 1px 4px rgba(0, 0, 0, 0.25);
-}
-
-.extensions-available li:nth-child(4n+0) {
-  margin-left: 0;
 }
 
 @media only screen and (max-width: 360px) {
   .extensions-available li {
     display: block;
     width: 100%;
-    margin-left: 0;
   }
 }
 
@@ -41,23 +37,11 @@
   .extensions-available li {
     width: 49%;
   }
-  .extensions-available li:nth-child(4n+0) {
-    margin-left: 2%;
-  }
-  .extensions-available li:nth-child(2n+0) {
-    margin-left: 0;
-  }
 }
 
 @media only screen and (min-width: 769px) and (max-width: 980px) {
   .extensions-available li {
     width: 32%;
-  }
-  .extensions-available li:nth-child(4n+0) {
-    margin-left: 2%;
-  }
-  .extensions-available li:nth-child(3n+0) {
-    margin-left: 0;
   }
 }
 

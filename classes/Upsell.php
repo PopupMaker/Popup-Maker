@@ -13,6 +13,43 @@ class PUM_Upsell {
 		add_filter( 'views_edit-popup_theme', array( __CLASS__, 'addon_tabs' ), 10, 1 );
 		add_filter( 'pum_popup_settings_fields', array( __CLASS__, 'popup_promotional_fields' ) );
 		add_filter( 'pum_theme_settings_fields', array( __CLASS__, 'theme_promotional_fields' ) );
+		add_action( 'in_admin_header', array( __CLASS__, 'notice_bar_display' ) );
+	}
+
+	/**
+	 * Adds a small notice bar in PM admin areas when not using any extensions
+	 *
+	 * @since 1.14.0
+	 */
+	public static function notice_bar_display() {
+		if ( pum_is_all_popups_page() && 0 === count( pum_enabled_extensions() ) ) {
+			$message = sprintf(
+				/* translators: %s - Wraps ending in link to pricing page. */
+				esc_html__( 'You are using the free version of Popup Maker. To get even more value, consider %1$supgrading to our premium plans%2$s.', 'popup-maker' ),
+				'<a href="https://wppopupmaker.com/pricing/?utm_source=upsell-notice-bar&utm_medium=text-link&utm_campaign=upsell" target="_blank" rel="noopener noreferrer">',
+				'</a>'
+			);
+			?>
+			<div class="pum-notice-bar-wrapper">
+				<div class="pum-notice-bar">
+					<span class="pum-notice-bar-message">
+						<?php
+						echo wp_kses(
+							$message,
+							array(
+								'a' => array(
+									'href'   => array(),
+									'rel'    => array(),
+									'target' => array(),
+								),
+							)
+						);
+						?>
+					</span>
+				</div>
+			</div>
+			<?php
+		}
 	}
 
 	/**
@@ -24,7 +61,7 @@ class PUM_Upsell {
 	public static function popup_promotional_fields( $tabs = array() ) {
 		if ( ! pum_extension_enabled( 'forced-interaction' ) ) {
 			/* translators: %s url to product page. */
-			$message = sprintf( __( 'Want to disable the close button? Check out <a href="%s" target="_blank">Forced Interaction</a>!', 'popup-maker' ), 'https://wppopupmaker.com/extensions/forced-interaction/?utm_source=plugin-theme-editor&utm_medium=text-link&utm_campaign=Upsell&utm_content=close-button-settings' );
+			$message = sprintf( __( 'Want to disable the close button? Check out <a href="%s" target="_blank">Forced Interaction</a>!', 'popup-maker' ), 'https://wppopupmaker.com/extensions/forced-interaction/?utm_source=plugin-theme-editor&utm_medium=text-link&utm_campaign=upsell&utm_content=close-button-settings' );
 
 			$tabs['close']['button']['fi_promotion'] = $tabs['close']['forms']['fi_promotion'] = $tabs['close']['alternate_methods']['fi_promotion'] = array(
 				'type'     => 'html',
@@ -36,7 +73,7 @@ class PUM_Upsell {
 
 		if ( ! pum_extension_enabled( 'advanced-targeting-conditions' ) ) {
 			/* translators: %s url to product page. */
-			$message = sprintf( __( 'Need more <a href="%s" target="_blank">advanced targeting</a> options?', 'popup-maker' ), 'https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_campaign=Upsell&utm_source=plugin-popup-editor&utm_medium=text-link&utm_content=conditions-editor' );
+			$message = sprintf( __( 'Need more <a href="%s" target="_blank">advanced targeting</a> options?', 'popup-maker' ), 'https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_campaign=upsell&utm_source=plugin-popup-editor&utm_medium=text-link&utm_content=conditions-editor' );
 
 			$tabs['targeting']['main']['atc_promotion'] = array(
 				'type'     => 'html',
@@ -64,7 +101,7 @@ class PUM_Upsell {
 
 				$tabs[ $tab ]['background']['atc_promotion'] = array(
 					'type'     => 'html',
-					'content'  => '<img src="' . pum_asset_url( 'images/upsell-icon-advanted-theme-builder.png' ) . '" height="28" />' . sprintf( $message, 'https://wppopupmaker.com/extensions/advanced-theme-builder/?utm_campaign=Upsell&utm_source=plugin-theme-editor&utm_medium=text-link&utm_content=' . $tab . '-settings' ),
+					'content'  => '<img src="' . pum_asset_url( 'images/upsell-icon-advanted-theme-builder.png' ) . '" height="28" />' . sprintf( $message, 'https://wppopupmaker.com/extensions/advanced-theme-builder/?utm_campaign=upsell&utm_source=plugin-theme-editor&utm_medium=text-link&utm_content=' . $tab . '-settings' ),
 					'priority' => 999,
 					'class'    => 'pum-upgrade-tip',
 				);
@@ -126,7 +163,7 @@ class PUM_Upsell {
 					'url'  => admin_url( 'edit.php?post_type=popup_theme' ),
 				),
 				'integrations' => array(
-					'name' => esc_html__( 'Extensions and Integrations', 'popup-maker' ) . PUM_Admin_Extend::append_unseen_count(),
+					'name' => esc_html__( 'Extensions and Integrations', 'popup-maker' ),
 					'url'  => admin_url( 'edit.php?post_type=popup&page=pum-extensions&view=integrations' ),
 				),
 			);

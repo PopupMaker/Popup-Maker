@@ -243,7 +243,7 @@ class PUM_Telemetry {
 		$alerts[] = array(
 			'code'        => 'pum_telemetry_notice',
 			'type'        => 'info',
-			'message'     => esc_html__( "Allow Popup Maker to track this plugin's usage and help us make this plugin better? No user data is sent to our servers. No sensitive data is tracked.", 'popup-maker' ),
+			'message'     => esc_html__( "We are constantly improving Popup Maker but that's difficult to do if we don't know how it's being used. Please allow data sharing so that we can receive a little information on how it is used. You can change this setting at any time on our Settings page. No user data is sent to our servers. No sensitive data is tracked.", 'popup-maker' ),
 			'priority'    => 10,
 			'dismissible' => true,
 			'global'      => false,
@@ -295,7 +295,7 @@ class PUM_Telemetry {
 	 * @return bool True if alert should be shown
 	 */
 	public static function should_show_alert() {
-		return false === self::has_opted_in() && current_user_can( 'manage_options' );
+		return false === self::has_opted_in() && current_user_can( 'manage_options' ) && strtotime( self::get_installed_on() . ' +15 minutes' ) < time();
 	}
 
 	/**
@@ -326,6 +326,20 @@ class PUM_Telemetry {
 	 */
 	public static function has_opted_in() {
 		return false !== pum_get_option( 'telemetry', false );
+	}
+
+	/**
+	 * Get the datetime string for when PM was installed.
+	 *
+	 * @return string
+	 * @since 1.13.0
+	 */
+	public static function get_installed_on() {
+		$installed_on = get_option( 'pum_installed_on', false );
+		if ( ! $installed_on ) {
+			$installed_on = current_time( 'mysql' );
+		}
+		return $installed_on;
 	}
 
 	/**

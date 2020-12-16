@@ -3,11 +3,11 @@ Contributors: danieliser, codeatlantic
 Author URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=author-url
 Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=plugin-url
 Donate link:
-Tags:  marketing, popup, popups, optin, conversion, responsive popups, promotion, popover, pop-up, pop over, lightbox, modal
+Tags:  marketing, ecommerce, popup, popups, optin, conversion, promotion, pop-up, lightbox, modal
 Requires at least: 4.9
-Tested up to: 5.5
+Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 1.13.1
+Stable tag: 1.14.0
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,8 +15,8 @@ Looking to boost your marketing and lead gen efforts? Using popups are a great w
 
 == Description ==
 
-= Create Effective Popups For WordPress =
-[Popup Maker](https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=main-site-link)™ is the **best popup plugin WordPress** has to offer. It is incredibly versatile & flexible. Bend it to create any type of popup, modal, or content overlay for your WordPress website.
+= Drive More Sales and Email List Opt-Ins Using Popups =
+Create conversion-focused campaigns to grow your revenue and email list on your WordPress site with popups, slide-ins, banners, and more! [Popup Maker](https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=main-site-link)™ is the **best popup plugin WordPress** has to offer. It is incredibly versatile & flexible. Bend it to create any type of popup, modal, or content overlay for your WordPress website.
 
 > **Great plugin! Got the job done**
 > "Love how easy it was to make popups with this!" ~[Zac Gordon](https://wordpress.org/support/topic/great-plugin-got-the-job-done/)
@@ -127,6 +127,15 @@ Check out some of our most popular plugins:
 
 == Frequently Asked Questions ==
 
+= What are some ways I can use popups to grow my email list? =
+People who use Popup Maker to grow their email list have found many creative ways to do so. Some of the most common popups include:
+
+* Exit-intent popups - Asking for an opt-in when someone goes to leave your site, sometimes for a discount or PDF
+* Content upgrade popups - Provide more value from your blog posts by giving visitors more resources in exchange for their email address
+* White paper popups - Provide industry reports or other white papers using forms within a popup
+
+Even better, Popup Maker integrates with all the most popup form plugins so you can easily embed a form you have already created right into your popups!
+
 = What are some ways popups can increase my WooCommerce store's sales and revenues? =
 Many people don't consider popups when trying to find ways to increase conversion rates and revenue on their WooCommerce site but they are actually very effective.
 
@@ -148,11 +157,6 @@ Using "cookies", you can set up how long until the popup opens again, if ever. R
 = What do I do if I want a popup to show only on a certain page/post/etc? =
 Using "conditions", you can specify where the popup will be shown. Check out [our conditions documentation](https://docs.wppopupmaker.com/article/140-conditions?utm_campaign=readme&utm_medium=referral&utm_source=readme-faqs&utm_content=target-certain-pages)
 
-= How do I take advantage of the success actions Popup Maker provides for 3rd party forms? =
-We have built-in support for the most popular form plugins. But if we don't, then we have a few helper functions that allow you to take full advantage of our success actions and setting cookies.
-
-This link contains AJAX (JavaScript) & Non-AJAX (PHP) based solutions which you can hack with your forms hooks & events. https://gist.github.com/danieliser/0060112b18b6013f2683653236b02439
-
 = Why aren't my popups opening/working? =
 There are several common causes for this, check [this guide for help](https://docs.wppopupmaker.com/article/265-my-popup-wont-work-how-can-i-fix-it?utm_campaign=readme&utm_medium=referral&utm_source=readme-faqs&utm_content=popup-wont-open) resolving it.
 
@@ -173,10 +177,21 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
+= v1.14.0 - 12/16/2020 =
+* Improvement: Add a link to popups to admin bar [Issue #892](https://github.com/PopupMaker/Popup-Maker/issues/892)
+* Improvement: Add a link to create a new popup to admin bar [Issue #892](https://github.com/PopupMaker/Popup-Maker/issues/892)
+* Improvement: Add new welcome screen upon first activation [Issue #900](https://github.com/PopupMaker/Popup-Maker/issues/900)
+* Improvement: Create example popup upon install [Issue #857](https://github.com/PopupMaker/Popup-Maker/issues/857)
+* Improvement: Ensure subscribers table gets deleted if doing full deletion [Issue #895](https://github.com/PopupMaker/Popup-Maker/issues/895)
+* Improvement: Add logging for DB table management and creation [Issue #879](https://github.com/PopupMaker/Popup-Maker/issues/879)
+* Improvement: Set up continous integration for unit and integration tests [Issue #640](https://github.com/PopupMaker/Popup-Maker/issues/640)
+* Improvement: Add filter to exclude blocks with isAllowedForBlockType [Issue #835](https://github.com/PopupMaker/Popup-Maker/issues/835)
+* Fix: Backtick in settings page [Issue #904](https://github.com/PopupMaker/Popup-Maker/issues/904)
+
 = v1.13.1 - 11/4/2020 =
 * Fix: PHP error notice appears when submitting Gravity Forms without AJAX
 
-= [v1.13.0 - 10/30/2020](https://github.com/PopupMaker/Popup-Maker/milestone/26) =
+= v1.13.0 - 10/30/2020 =
 * Feature: Conversion tracking [Issue #775](https://github.com/PopupMaker/Popup-Maker/issues/775)
 * Feature: Bypass adblockers for tracking opens and conversions [Issue #783](https://github.com/PopupMaker/Popup-Maker/issues/783)
 * Feature: Periodical suggestions to improve plugin usage [Issue #834](https://github.com/PopupMaker/Popup-Maker/issues/834)

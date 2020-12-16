@@ -53,7 +53,8 @@
         if ($forms.length) {
             $forms.append('<input type="hidden" name="pum_form_popup_id" value="' + popupID + '" />');
         }
-    });
+    })
+    .on( 'pumAfterClose', window.PUM.actions.stopIframeVideosPlaying );
 
 
 }(jQuery));
