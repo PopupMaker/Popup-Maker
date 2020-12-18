@@ -135,11 +135,13 @@ class PUM_Telemetry {
 				$sizes[ $settings['size'] ] = 1;
 			}
 
-			// Add opening sound setting.
-			if ( isset( $sounds[ $settings['open_sound'] ] ) ) {
-				$sounds[ $settings['open_sound'] ] += 1;
-			} else {
-				$sounds[ $settings['open_sound'] ] = 1;
+			// Add opening sound setting, if that setting exists (i.e. if the popup was created or saved after the sound feature was added.)
+			if ( isset( $settings['open_sound'] ) ) {
+				if ( isset( $sounds[ $settings['open_sound'] ] ) ) {
+					$sounds[ $settings['open_sound'] ] += 1;
+				} else {
+					$sounds[ $settings['open_sound'] ] = 1;
+				}
 			}
 		}
 
