@@ -16,7 +16,9 @@ Looking to boost your marketing and lead gen efforts? Using popups are a great w
 == Description ==
 
 = Drive More Sales and Email List Opt-Ins Using Popups =
-Create conversion-focused campaigns to grow your revenue and email list on your WordPress site with popups, slide-ins, banners, and more! [Popup Maker](https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=main-site-link)™ is the **best popup plugin WordPress** has to offer. It is incredibly versatile & flexible. Bend it to create any type of popup, modal, or content overlay for your WordPress website.
+Create conversion-focused campaigns to grow your revenue and email list on your WordPress site with popups, slide-ins, banners, and more!
+
+[Popup Maker](https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=main-site-link)™ is the **best popup plugin WordPress** has to offer. It is incredibly versatile & flexible. Bend it to create any type of popup, modal, or content overlay for your WordPress website.
 
 > **Great plugin! Got the job done**
 > "Love how easy it was to make popups with this!" ~[Zac Gordon](https://wordpress.org/support/topic/great-plugin-got-the-job-done/)
@@ -131,7 +133,7 @@ Check out some of our most popular plugins:
 People who use Popup Maker to grow their email list have found many creative ways to do so. Some of the most common popups include:
 
 * Exit-intent popups - Asking for an opt-in when someone goes to leave your site, sometimes for a discount or PDF
-* Content upgrade popups - Provide more value from your blog posts by giving visitors more resources in exchange for their email address
+* Content upgrade popups - Provide more value from your blog posts by giving visitors more resources in exchange for their email address within an optin popup
 * White paper popups - Provide industry reports or other white papers using forms within a popup
 
 Even better, Popup Maker integrates with all the most popup form plugins so you can easily embed a form you have already created right into your popups!
