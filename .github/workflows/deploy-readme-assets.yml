@@ -12,7 +12,7 @@ jobs:
               uses: actions/checkout@master
 
             - name: Install ActionScheduler
-              run: composer install --prefer-dist --no-progress --no-suggest
+              run: composer install --prefer-dist --no-progress --no-dev
 
             - name: WordPress.org plugin asset/readme update
               uses: 10up/action-wordpress-plugin-asset-update@stable
