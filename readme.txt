@@ -1,4 +1,4 @@
-=== Popup Maker - Popup Forms, Opt-ins & More ===
+=== Popup Maker - Popup for opt-ins, lead gen, & more ===
 Contributors: danieliser, codeatlantic
 Author URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=author-url
 Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=plugin-url
