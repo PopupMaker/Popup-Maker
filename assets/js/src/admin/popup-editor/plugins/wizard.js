@@ -8,12 +8,12 @@
 				classes: "tabbed-content",
 				cancel_button: "Skip Wizard",
 				save_button: false,
-				content: "<div><label>Search</label><input type='text'><button type='button' class='template-selector'>Auto-open popup</button></div>"
+				content: "<div class='template-selectors'><p>Select a template for your popup to get started.</p><label style='display:block;font-size:16px;font-weight:bold;'>Search</label><input style='width:100%;' type='text'><button style='width:30%;min-height:50px;margin-right:5px;' type='button' class='template-selector'>Blank popup</button><button style='width:30%;min-height:50px;' type='button' class='template-selector'>Auto-open popup</button></div>"
 			})
 		);
 		$('#template-wizard').on( 'click', '.template-selector', function(e){
 			e.preventDefault();
-			PUM_Admin.modals.closeAll();
+			$('.template-selectors').replaceWith('<div class="spinner"></div>');
 			var $container = $(
 				"#pum-popup-settings-container"
 			);
@@ -45,6 +45,22 @@
 
 			// Re-render form using updated settings.
 			PUM_Admin.forms.render(args, newValues, $container);
+
+			PUM_Admin.modals.closeAll();
+			PUM_Admin.modals.reload(
+				"#template-wizard-success",
+				PUM_Admin.templates.modal({
+					id: 'template-wizard-success',
+					title: "Template Applied",
+					classes: "tabbed-content",
+					save_button: 'Thanks!',
+					content: "<div style='padding:10px 5px;'>Popup template has been applied! You can now edit your popup's content.</div>"
+				})
+			);
+			$('#template-wizard-success .pum-submit button').on( 'click', function(e){
+				e.preventDefault();
+				PUM_Admin.modals.closeAll();
+			});
 		});
 	});
 })(jQuery)
