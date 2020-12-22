@@ -132,7 +132,9 @@ class PUM_Site_Popups {
 		// Then, if we find any popups, let's preload it.
 		foreach ( $matches[1] as $popup_id ) {
 			$popup = pum_get_popup( $popup_id );
-			self::preload_popup( $popup );
+			if ( $popup->is_enabled() ) {
+				self::preload_popup( $popup );
+			}
 		}
 		return $content;
 	}
