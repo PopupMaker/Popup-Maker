@@ -448,9 +448,14 @@ class PUM_Admin_Settings {
 							),
 						),
 						'adjust_body_padding'   => array(
-							'type'    => 'checkbox',
-							'label'   => __( 'Adjust the right padding added to the body when popups are shown with an overlay.', 'popup-maker' ),
-							'doclink' => 'https://docs.wppopupmaker.com/article/314-why-does-my-site-shift-jump-or-skip-when-a-popup-is-triggered',
+							'type'  => 'checkbox',
+							'label' => __( 'Adjust the right padding added to the body when popups are shown with an overlay.', 'popup-maker' ),
+							'desc'  => sprintf(
+								/* translators: 1 & 2 are opening and closing HTML of the link around "Learn more" */
+								esc_html__( 'Use this if your popups "jump" or "shift" when opened. %1$sLearn more%2$s', 'popup-maker' ),
+								'<a target="_blank" rel="noreferrer noopener" href="https://docs.wppopupmaker.com/article/314-why-does-my-site-shift-jump-or-skip-when-a-popup-is-triggered?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=settings-page&utm_content=adjust-right-padding">',
+								'</a>'
+							),
 						),
 						'body_padding_override' => array(
 							'type'         => 'text',
