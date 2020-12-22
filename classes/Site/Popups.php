@@ -144,9 +144,11 @@ class PUM_Site_Popups {
 	 * @since 1.15
 	 */
 	public static function preload_popup_by_id_if_enabled( $popup_id ) {
-		$popup = pum_get_popup( $popup_id );
-		if ( $popup->is_enabled() ) {
-			self::preload_popup( $popup );
+		if ( ! in_array( $popup_id, self::$loaded_ids ) ) {
+			$popup = pum_get_popup( $popup_id );
+			if ( $popup->is_enabled() ) {
+				self::preload_popup( $popup );
+			}
 		}
 	}
 
