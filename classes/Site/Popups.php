@@ -120,6 +120,7 @@ class PUM_Site_Popups {
 	 *
 	 * @param string $content The content from the filter.
 	 * @return string The content.
+	 * @since 1.15
 	 */
 	public static function check_content_for_popups( $content ) {
 		/**
@@ -131,12 +132,22 @@ class PUM_Site_Popups {
 
 		// Then, if we find any popups, let's preload it.
 		foreach ( $matches[1] as $popup_id ) {
-			$popup = pum_get_popup( $popup_id );
-			if ( $popup->is_enabled() ) {
-				self::preload_popup( $popup );
-			}
+			self::preload_popup_by_id_if_enabled( $popup_id );
 		}
 		return $content;
+	}
+
+	/**
+	 * Preloads popup, if enabled
+	 *
+	 * @param int $popup_id The popup's ID.
+	 * @since 1.15
+	 */
+	public static function preload_popup_by_id_if_enabled( $popup_id ) {
+		$popup = pum_get_popup( $popup_id );
+		if ( $popup->is_enabled() ) {
+			self::preload_popup( $popup );
+		}
 	}
 
 	/**

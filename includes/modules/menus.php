@@ -115,10 +115,7 @@ class PUM_Modules_Menu {
 		}
 
 		if ( isset( $item->popup_id ) ) {
-			$popup = pum_get_popup( $item->popup_id );
-			if ( $popup->is_enabled() ) {
-				PUM_Site_Popups::preload_popup( $popup );
-			}
+			PUM_Site_Popups::preload_popup_by_id_if_enabled( $item->popup_id );
 			$item->classes[] = 'popmake-' . $item->popup_id;
 		}
 

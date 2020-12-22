@@ -146,10 +146,7 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 		$return .= PUM_Helpers::do_shortcode( $content );
 		$return .= '</' . $atts['tag'] . '>';
 
-		$popup = pum_get_popup( $atts['id'] );
-		if ( $popup->is_enabled() ) {
-			PUM_Site_Popups::preload_popup( $popup );
-		}
+		PUM_Site_Popups::preload_popup_by_id_if_enabled( $atts['id'] );
 
 		return $return;
 	}
