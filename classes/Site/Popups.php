@@ -123,17 +123,22 @@ class PUM_Site_Popups {
 	 * @since 1.15
 	 */
 	public static function check_content_for_popups( $content ) {
-		/**
-		 * We want to detect instances of popmake-### but only within classes and not in the actual text.
-		 * So, we check to make sure it is wrapped by quotes to make sure it's in the class="" attribute
-		 * but also allow for whitespace and characters in case there are classes before or after it.
-		 */
-		preg_match_all( '/[\'\"][\s\w\-\_]*?popmake-(\d+)[\s\w\-\_]*?[\'\"]/', $content, $matches );
 
-		// Then, if we find any popups, let's preload it.
-		foreach ( $matches[1] as $popup_id ) {
-			self::preload_popup_by_id_if_enabled( $popup_id );
+		// Only search for popups in the main query of a singular page.
+		if ( is_singular() && in_the_loop() && is_main_query() ) {
+			/**
+			 * We want to detect instances of popmake-### but only within classes and not in the actual text.
+			 * So, we check to make sure it is wrapped by quotes to make sure it's in the class="" attribute
+			 * but also allow for whitespace and characters in case there are classes before or after it.
+			 */
+			preg_match_all( '/[\'\"][\s\w\-\_]*?popmake-(\d+)[\s\w\-\_]*?[\'\"]/', $content, $matches );
+
+			// Then, if we find any popups, let's preload it.
+			foreach ( $matches[1] as $popup_id ) {
+				self::preload_popup_by_id_if_enabled( $popup_id );
+			}
 		}
+
 		return $content;
 	}
 
