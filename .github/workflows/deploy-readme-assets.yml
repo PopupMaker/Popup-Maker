@@ -10,6 +10,12 @@ jobs:
         steps:
             - name: Checkout master
               uses: actions/checkout@master
+              
+            - name: Setup PHP to use 7.4 with composer v2
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '7.4'
+                  tools: composer:v2
 
             - name: Install ActionScheduler
               run: composer install --prefer-dist --no-progress --no-dev

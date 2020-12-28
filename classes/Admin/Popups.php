@@ -1022,9 +1022,7 @@ class PUM_Admin_Popups {
 		foreach ( $tabs as $tab_id => $sections ) {
 			foreach ( $sections as $section_id => $fields ) {
 				foreach ( $fields as $key => $field ) {
-					if ( $field['type'] == 'checkbox' ) {
-						$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : ( $field['type'] == 'checkbox' ? false : null );
-					}
+					$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : ( $field['type'] == 'checkbox' ? false : null );
 				}
 			}
 		}

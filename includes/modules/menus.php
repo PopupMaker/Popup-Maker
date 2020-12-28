@@ -41,8 +41,8 @@ class PUM_Modules_Menu {
 				'id'   => 'disabled_menu_editor',
 				'name' => __( 'Disable Popups Menu Editor', 'popup-maker' ),
 				'desc' => sprintf(
-					_x( 'Use this if there is a conflict with your theme or another plugin in the nav menu editor. %sSee Details%s', '%s represent opening and closing link html', 'popup-maker' ),
-					'<a href="https://docs.wppopupmaker.com/article/297-popup-maker-is-overwriting-my-menu-editor-functions-how-can-i-fix-this" target="_blank">',
+					esc_html_x( 'Use this if there is a conflict with your theme or another plugin in the nav menu editor. %sLearn more%s', '%s represent opening and closing link html', 'popup-maker' ),
+					'<a href="https://docs.wppopupmaker.com/article/297-popup-maker-is-overwriting-my-menu-editor-functions-how-can-i-fix-this?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=settings-page&utm_content=disable-popup-menu-editor" target="_blank" rel="noreferrer noopener">',
 					'</a>'
 				),
 				'type' => 'checkbox',

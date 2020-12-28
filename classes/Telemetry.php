@@ -90,7 +90,7 @@ class PUM_Telemetry {
 
 		// Cycle through each popup.
 		foreach ( $all_popups as $popup ) {
-			$settings = $popup->get_settings();
+			$settings = PUM_Admin_Popups::parse_values( $popup->get_settings() );
 
 			// Cycle through each trigger to count the number of unique triggers.
 			foreach ( $settings['triggers'] as $trigger ) {
@@ -135,13 +135,11 @@ class PUM_Telemetry {
 				$sizes[ $settings['size'] ] = 1;
 			}
 
-			// Add opening sound setting, if that setting exists (i.e. if the popup was created or saved after the sound feature was added.)
-			if ( isset( $settings['open_sound'] ) ) {
-				if ( isset( $sounds[ $settings['open_sound'] ] ) ) {
-					$sounds[ $settings['open_sound'] ] += 1;
-				} else {
-					$sounds[ $settings['open_sound'] ] = 1;
-				}
+			// Add opening sound setting.
+			if ( isset( $sounds[ $settings['open_sound'] ] ) ) {
+				$sounds[ $settings['open_sound'] ] += 1;
+			} else {
+				$sounds[ $settings['open_sound'] ] = 1;
 			}
 		}
 
