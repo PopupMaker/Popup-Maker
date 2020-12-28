@@ -1,5 +1,9 @@
 # Popup Maker Changelog
 
+## [v1.15.0 - XX/XX/XXXX](https://github.com/PopupMaker/Popup-Maker/milestone/30)
+
+* Fix: pum-admin-bar Script Fails to Load [Issue 907](https://github.com/PopupMaker/Popup-Maker/issues/907) Thanks @fluxism!
+
 ## [v1.14.0 - 12/16/2020](https://github.com/PopupMaker/Popup-Maker/milestone/29)
 
 * Improvement: Add a link to popups to admin bar [Issue #892](https://github.com/PopupMaker/Popup-Maker/issues/892)
