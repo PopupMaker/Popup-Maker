@@ -1,6 +1,37 @@
 /*!****************************************************
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************/
+.upgrade-wrapper {
+  background-color: white;
+  margin: 1em 0;
+  padding: 3em 1em;
+}
+
+.upgrade-wrapper .upgrade-wrapper-hero {
+  font-size: 16px;
+  margin: 0 0 2em;
+}
+
+.upgrade-wrapper .upgrade-wrapper-hero p {
+  font-size: 16px;
+  margin: 0 0 0.3em;
+}
+
+.upgrade-wrapper .upgrade-wrapper-hero ul {
+  margin: 0;
+  padding-right: 20px;
+  list-style: disc;
+}
+
+.upgrade-wrapper .upgrade-wrapper-hero a {
+  margin: 0.5em 0 0;
+}
+
+.upgrade-wrapper h2 {
+  font-size: 2em;
+  margin: 0 0 0.5em;
+}
+
 .extensions-available {
   display: flex;
   flex-wrap: wrap;
