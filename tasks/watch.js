@@ -62,6 +62,7 @@ langpack_watcher.description = 'Starts langpack php file watcher.';
 gulp.task( sass_watcher );
 gulp.task( js_admin_watcher );
 gulp.task( js_site_watcher );
+gulp.task( webpack_block_editor_watcher );
 gulp.task( langpack_watcher );
 gulp.task( block_editor_watcher );
 gulp.task(
