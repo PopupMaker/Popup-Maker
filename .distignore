@@ -33,5 +33,5 @@ npm-debug.log
 package.json
 package-lock.json
 phpci.yml
-phpunit.xml
+phpunit.xml.dist
 yarn-lock.json
