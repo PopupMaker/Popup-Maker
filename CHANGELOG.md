@@ -4,6 +4,7 @@
 
 * Feature: Automatically enqueue popups when detected during page load [Issue 543](https://github.com/PopupMaker/Popup-Maker/issues/543)
 * Improvement: Improvements to 'Extend' page [Issue 913](https://github.com/PopupMaker/Popup-Maker/issues/913)
+* Improvement: Start working toward more consistent linking/documentation strategy
 * Fix: Popup defaults() method only returns default values for checkbox fields [Issue 927](https://github.com/PopupMaker/Popup-Maker/issues/927)
 * Fix: PUM_Telemetry triggers PHP warnings in (CLI) cron [Issue 919](https://github.com/PopupMaker/Popup-Maker/issues/919)
 * Fix: pum-admin-bar Script Fails to Load [Issue 907](https://github.com/PopupMaker/Popup-Maker/issues/907) Thanks @fluxism!
