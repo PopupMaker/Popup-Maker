@@ -37,12 +37,18 @@ class PUM_Site_CallToActions {
 		);
 
 		/* phpcs:disable WordPress.Security.NonceVerification.Recommended */
-		$action    = ! empty( $_GET['pum_action'] ) ? sanitize_key( $_GET['pum_action'] ) : '';
-		$popup_id  = ! empty( $_GET['pum_pid'] ) ? absint( $_GET['pum_pid'] ) : 0;
-		$cta_token = ! empty( $_GET['pum_token'] ) ? sanitize_text_field( wp_unslash( $_GET['pum_token'] ) ) : '';
+		$action    = ! empty( $_GET['action'] ) ? sanitize_key( $_GET['action'] ) : 'redirect';
+		$popup_id  = ! empty( $_GET['pid'] ) ? absint( $_GET['pid'] ) : 0;
+		$cta_token = ! empty( $_GET['cta'] ) ? sanitize_text_field( wp_unslash( $_GET['cta'] ) ) : '';
 		/* phpcs:enable WordPress.Security.NonceVerification.Recommended */
 
-		if ( ! in_array( $action, $valid_actions, true ) ) {
+		$checks = [
+			$popup_id > 0,
+			'' !== $cta_token,
+			in_array( $action, $valid_actions, true ),
+		];
+
+		if ( in_array( false, $checks, true ) ) {
 			return;
 		}
 
@@ -57,11 +63,20 @@ class PUM_Site_CallToActions {
 		/**
 		 * Determine how user edits popups and look for the correct CTA.
 		 */
-		if ( pum_get_option( 'gutenberg_support_enabled' ) && has_block( 'popup-maker/call-to-action', $popup->post_content ) ) {
-			/**
-			 * TODO FIND THE CORRECT BLOCK AND GET ITS ATTRIBUTES.
-			 */
-			$url = esc_url_raw( $popup->get_setting( 'cta_link', '#' ) );
+		if ( pum_get_option( 'gutenberg_support_enabled' ) && has_block( 'pum/call-to-action', $popup->post_content ) ) {
+			$blocks     = parse_blocks( $popup->post_content );
+			$cta_blocks = PUM_Utils_Blocks::find_blocks( $blocks, 'pum/call-to-action' );
+
+			$cta_block = false;
+
+			foreach ( $cta_blocks as $block ) {
+				if ( $cta_token === $block['attrs']['uuid'] ) {
+					$cta_block = $block;
+					break;
+				}
+			}
+
+			$cta = isset( $cta_block['attrs'] ) ? $cta_block['attrs'] : false;
 		} elseif ( has_shortcode( $popup->post_content, 'pum_cta' ) ) {
 			$cta_shortcodes = PUM_Utils_Shortcodes::find_shortcodes_in_content( $popup->post_content, 'pum_cta' );
 
@@ -85,7 +100,7 @@ class PUM_Site_CallToActions {
 			 *
 			 * Notes:
 			 * - Using limited number of attributes that should be mostly unique should prevent oddities for out of order arguments.
-			 * - We could ordercclass the args alphanumerically and then md5 them all, that might be more efficient and give more unique tokens.
+			 * - We could order class the args alphanumerically and then md5 them all, that might be more efficient and give more unique tokens.
 			 */
 			foreach ( $cta_shortcodes as $cta_shortcode ) {
 				$token = self::generate_cta_token( $popup_id, $cta_shortcode['atts']['cta_type'], $cta_shortcode['atts']['cta_text'] );
