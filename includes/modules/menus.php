@@ -118,6 +118,19 @@ class PUM_Modules_Menu {
 			$item->classes[] = 'popmake-' . $item->popup_id;
 		}
 
+		/**
+		 * Check menu item's classes for popmake-###. Do this after the above conditional to catch the class we add too.
+		 * Tested both using strpos followed by preg_match as well as just doing preg_match on all and this solution
+		 * was just a tiny bit faster. But, if a site has 100 menu items, that tiny difference will add up.
+		 */
+		foreach ( $item->classes as $class ) {
+			if ( strpos( $class, 'popmake-' ) !== false ) {
+				if ( 0 !== preg_match( '/popmake-(\d+)/', $class, $matches ) ) {
+					PUM_Site_Popups::preload_popup_by_id_if_enabled( $matches[1] );
+				}
+			}
+		}
+
 		return $item;
 	}
 
