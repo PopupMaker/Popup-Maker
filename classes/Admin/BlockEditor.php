@@ -24,9 +24,8 @@ class PUM_Admin_BlockEditor {
 		// TODO Test if this is needed in core or not.
 		add_action( 'enqueue_block_editor_assets', [ 'PUM_Site_Assets', 'register_styles' ] );
 		add_action( 'enqueue_block_editor_assets', [ __CLASS__, 'register_editor_assets' ] );
-
-		// Here for future use.
-		// add_action( 'enqueue_block_assets', [ __CLASS__, 'register_block_assets' ] );
+		add_action( 'enqueue_block_editor_assets', [ __CLASS__, 'register_block_assets' ] );
+		add_action( 'enqueue_block_assets', [ __CLASS__, 'register_block_assets' ] );
 	}
 
 	/**
