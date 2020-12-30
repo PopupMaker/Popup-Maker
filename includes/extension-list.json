@@ -1,6 +1,28 @@
 [
   {
     "new_version": "1.0.0",
+    "name": "EDD Pro",
+    "slug": "edd-pro",
+    "url": "https:\/\/wppopupmaker.com\/extensions\/edd-pro\/?changelog=1",
+    "homepage": "https:\/\/wppopupmaker.com\/extensions\/edd-pro\/",
+    "package": "",
+    "download_link": "",
+    "image": "https:\/\/wppopupmaker.com\/wp-content\/uploads\/edd\/2020\/11\/edd-featured-image.png",
+    "excerpt": "Running an Easy Digital Downloads store? Use this extension to create upsell popups, cross-sell popups, and more!"
+  },
+  {
+    "new_version": "1.0.0",
+    "name": "Geotargeting",
+    "slug": "geotargeting",
+    "url": "https:\/\/wppopupmaker.com\/extensions\/geotargeting\/?changelog=1",
+    "homepage": "https:\/\/wppopupmaker.com\/extensions\/geotargeting\/",
+    "package": "",
+    "download_link": "",
+    "image": "https:\/\/wppopupmaker.com\/wp-content\/uploads\/edd\/2020\/09\/geotargeting-featured-image-template.png",
+    "excerpt": "Target countries, regions, and postal codes with new geotargeting conditions."
+  },
+  {
+    "new_version": "1.0.0",
     "name": "WooCommerce Pro",
     "slug": "woocommerce-pro",
     "url": "https:\/\/wppopupmaker.com\/extensions\/woocommerce-pro\/?changelog=1",
