@@ -128,7 +128,7 @@ class PUM_Site_CallToActions {
 
 				$url = esc_url_raw( $cta['url'] );
 
-				wp_redirect( $url );
+				wp_safe_redirect( $url );
 				exit;
 			default:
 				do_action( 'pum_' . $action . '_action', $popup_id, $action );
@@ -148,9 +148,8 @@ class PUM_Site_CallToActions {
 	 */
 	public static function generate_cta_token( $post_id, $cta_type, $cta_text, $extras = [] ) {
 		ksort( $extras );
-		$extras = json_encode( $extras );
+		$extras = wp_json_encode( $extras );
 
 		return md5( "$post_id-$cta_type-$cta_text-$extras" );
-
 	}
 }
