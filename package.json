@@ -35,7 +35,8 @@
     "start": "wp-scripts start",
     "test:e2e": "wp-scripts test-e2e",
     "test:unit": "wp-scripts test-unit-js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch:block-editor": "gulp webpack_block_editor_watcher"
   },
   "babel": {
     "presets": [
@@ -47,7 +48,8 @@
     "mobile-detect": "^1.4.4"
   },
   "devDependencies": {
-    "@wordpress/base-styles": "^3.2.0",
+    "@wordpress/base-styles": "^3.3.0",
+    "@wordpress/block-library": "^2.26.6",
     "@wordpress/prettier-config": "^0.4.0",
     "@wordpress/scripts": "^12.5.0",
     "classnames": "^2.2.6",
@@ -79,6 +81,7 @@
     "ignore-emit-webpack-plugin": "^2.0.3",
     "merge-stream": "^1.0.1",
     "mini-css-extract-plugin": "^1.3.1",
+    "nanoid": "^3.1.20",
     "node-sass": "4.13.0",
     "path": "^0.12.7",
     "postcss-loader": "^3.0.0",
