@@ -20,7 +20,7 @@ const config = webpackMerge.strategy(
 	// Maps our buildList into a new object of { key: build.entry }.
 	entry: {
 		'block-editor/block-editor': path.resolve( process.cwd(), 'src', 'block-editor/index.js' ),
-		// 'block-editor/block-styles': path.resolve( process.cwd(), 'src', 'block-editor/style.scss' ),
+		'block-editor/block-styles': path.resolve( process.cwd(), 'src', 'block-editor/blocks/styles.scss' ),
 		'block-editor/block-editor-styles': path.resolve( process.cwd(), 'src', 'block-editor/editor.scss' ),
 	},
 	output: {
