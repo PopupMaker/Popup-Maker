@@ -23,7 +23,7 @@ const config = webpackMerge.strategy({
 			'src',
 			'block-editor/index.js'
 		),
-		// 'block-editor/block-styles': path.resolve( process.cwd(), 'src', 'block-editor/style.scss' ),
+		'block-editor/block-styles': path.resolve( process.cwd(), 'src', 'block-editor/blocks/styles.scss' ),
 		'block-editor/block-editor-styles': path.resolve(
 			process.cwd(),
 			'src',
