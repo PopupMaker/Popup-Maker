@@ -16,6 +16,8 @@ Once installed and activated, Go to wp-admin > Popup Maker > Add Popup to create
 
 ### Getting Set Up For Development
 In order to begin development on Popup Maker, please first refer to our [Contributing Guidelines](https://github.com/PopupMaker/Popup-Maker/blob/master/.github/CONTRIBUTING.md) for our coding style and commit style information.
+
+Then, visit our [GitHub repo wiki](https://github.com/PopupMaker/Popup-Maker/wiki) for basic concepts of how Popup Maker works and is structured.
  
 Then, move on to our [Setting up your local environment](https://github.com/PopupMaker/Popup-Maker/wiki/Setting-up-your-local-environment) wiki page.
 
