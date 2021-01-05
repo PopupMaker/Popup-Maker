@@ -71,6 +71,11 @@ class PUM_AssetCache {
 			add_action( 'pum_save_popup', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_save_theme', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_update_core_version', array( __CLASS__, 'reset_cache' ) );
+
+			if ( isset( $_GET['flush_popup_cache'] ) ) {
+				add_action( 'init', array( __CLASS__, 'reset_cache' ) );
+			}
+
 			add_filter( 'pum_alert_list', array( __CLASS__, 'cache_alert' ) );
 
 			add_action( 'pum_styles', array( __CLASS__, 'global_custom_styles' ) );
