@@ -222,7 +222,7 @@ class PUM_AssetCache {
 
 		$js = "/**\n";
 		$js .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
-		$js .= " * Last modified time: " . date( 'M d Y, h:s:i' ) . "\n";
+		$js .= " * Last modified time: " . date( 'M d Y, h:i:s' ) . "\n";
 		$js .= " */\n\n\n";
 		$js .= self::generate_js();
 
@@ -244,7 +244,7 @@ class PUM_AssetCache {
 
 		$css = "/**\n";
 		$css .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
-		$css .= " * Last modified time: " . date( 'M d Y, h:s:i' ) . "\n";
+		$css .= " * Last modified time: " . date( 'M d Y, h:i:s' ) . "\n";
 		$css .= " */\n\n\n";
 		$css .= self::generate_css();
 
