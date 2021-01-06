@@ -183,15 +183,6 @@ class PUM_Modules_Admin_Bar {
 			) );
 		}
 
-		$wp_admin_bar->add_node(
-			array(
-				'id'     => 'flush-popup-cache',
-				'title'  => __( 'Flush Popup Cache', 'popup-maker' ),
-				'href'   => add_query_arg( 'flush_popup_cache', 'yes' ),
-				'parent' => 'popup-maker',
-			)
-		);
-
 		/**
 		 * Tools
 		 */
@@ -201,6 +192,15 @@ class PUM_Modules_Admin_Bar {
 			'href'   => '#popup-maker-tools',
 			'parent' => 'popup-maker',
 		) );
+
+		$wp_admin_bar->add_node(
+			array(
+				'id'     => 'flush-popup-cache',
+				'title'  => __( 'Flush Popup Cache', 'popup-maker' ),
+				'href'   => add_query_arg( 'flush_popup_cache', 'yes' ),
+				'parent' => 'pum-tools',
+			)
+		);
 
 		/**
 		 * Get Selector
