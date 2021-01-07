@@ -233,7 +233,7 @@ class PUM_Site_Assets {
 			wp_localize_script( 'popup-maker-site', 'pum_debug_vars', apply_filters( 'pum_debug_vars', array(
 				'debug_mode_enabled'    => __( 'Popup Maker', 'popup-maker' ) . ': ' . __( 'Debug Mode Enabled', 'popup-maker' ),
 				'debug_started_at'      => __( 'Debug started at:', 'popup-maker' ),
-				'debug_more_info'       => sprintf( __( 'For more information on how to use this information visit %s', 'popup-maker' ), 'https://docs.wppopupmaker.com/?utm_medium=js-debug-info&utm_campaign=ContextualHelp&utm_source=browser-console&utm_content=more-info' ),
+				'debug_more_info'       => sprintf( __( 'For more information on how to use this information visit %s', 'popup-maker' ), 'https://docs.wppopupmaker.com/?utm_medium=js-debug-info&utm_campaign=contextual-help&utm_source=browser-console&utm_content=more-info' ),
 				'global_info'           => __( 'Global Information', 'popup-maker' ),
 				'localized_vars'        => __( 'Localized variables', 'popup-maker' ),
 				'popups_initializing'   => __( 'Popups Initializing', 'popup-maker' ),
@@ -276,7 +276,7 @@ class PUM_Site_Assets {
 			echo "<script type='text/javascript'>";
 			echo 'window.pum_popups = ' . PUM_Utils_Array::safe_json_encode( self::get_popup_settings() ) . ';';
 			// Backward compatibility fill.
-			echo 'window.pum_vars.popups = window.pum_popups;';
+			echo 'window.pum_vars = window.pum_vars || {}; window.pum_vars.popups = window.pum_popups;';
 			echo "</script>";
 		}
 	}

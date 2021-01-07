@@ -20,6 +20,7 @@ class PUM_Admin_BlockEditor {
 		if ( defined( 'PUM_BLOCK_PLAYGROUND' ) && version_compare( PUM_BLOCK_PLAYGROUND, self::$version, '>' ) ) {
 			return;
 		}
+
 		add_action( 'enqueue_block_editor_assets', [ 'PUM_Site_Assets', 'register_styles' ] );
 		add_action( 'enqueue_block_editor_assets', [ __CLASS__, 'register_editor_assets' ] );
 		add_action( 'enqueue_block_editor_assets', [ __CLASS__, 'register_block_assets' ] );
@@ -55,9 +56,15 @@ class PUM_Admin_BlockEditor {
 			apply_filters(
 				'pum_block_editor_vars',
 				[
-					'compat56' => version_compare( $wp_version, '5.6' ),
-					'popups'   => pum_get_all_popups(),
-					'ctas'     => PUM_CallToActions::instance()->get_as_array(),
+					'compat56'                      => version_compare( $wp_version, '5.6' ),
+					'popups'                        => pum_get_all_popups(),
+					'ctas'                          => PUM_CallToActions::instance()->get_as_array(),
+					'popup_trigger_excluded_blocks' => apply_filters(
+						'pum_block_editor_popup_trigger_excluded_blocks',
+						[
+							'core/nextpage',
+						]
+					),
 				]
 			)
 		);

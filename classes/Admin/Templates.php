@@ -546,7 +546,7 @@ class PUM_Admin_Templates {
 					<strong>
 						<?php _e( 'Conditions allow you to show your popup to a targeted segment of your sites users.', 'popup-maker' ); ?>
 
-						<?php printf( '%2$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%3$s', sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Targeting Conditions', 'popup-maker' ) ), '<a href="https://docs.wppopupmaker.com/article/351-popup-settings-box-targeting-option-settings?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=targeting-option-settings" target="_blank">', '</a>' ); ?>
+						<?php printf( '%2$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%3$s', sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Targeting Conditions', 'popup-maker' ) ), '<a href="https://docs.wppopupmaker.com/article/351-popup-settings-box-targeting-option-settings?utm_medium=inline-doclink&utm_campaign=contextual-help&utm_source=plugin-popup-editor&utm_content=targeting-option-settings" target="_blank">', '</a>' ); ?>
 					</strong>
 				</p>
 

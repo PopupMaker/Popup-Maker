@@ -42,6 +42,9 @@ class PUM_Site_Popups {
 		// Preload the $loaded query.
 		add_action( 'init', array( __CLASS__, 'get_loaded_popups' ) );
 
+		// Check content for popups.
+		add_filter( 'the_content', array( __CLASS__, 'check_content_for_popups' ) );
+
 		// TODO determine if the late priority is needed.
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'load_popups' ), 11 );
 
@@ -110,7 +113,48 @@ class PUM_Site_Popups {
 			// Clear the global $current.
 			pum()->current_popup = null;
 		}
+	}
 
+	/**
+	 * Checks post content to see if there are popups we need to automagically load
+	 *
+	 * @param string $content The content from the filter.
+	 * @return string The content.
+	 * @since 1.15
+	 */
+	public static function check_content_for_popups( $content ) {
+
+		// Only search for popups in the main query of a singular page.
+		if ( is_singular() && in_the_loop() && is_main_query() ) {
+			/**
+			 * We want to detect instances of popmake-### but only within classes and not in the actual text.
+			 * So, we check to make sure it is wrapped by quotes to make sure it's in the class="" attribute
+			 * but also allow for whitespace and characters in case there are classes before or after it.
+			 */
+			preg_match_all( '/[\'\"][\s\w\-\_]*?popmake-(\d+)[\s\w\-\_]*?[\'\"]/', $content, $matches );
+
+			// Then, if we find any popups, let's preload it.
+			foreach ( $matches[1] as $popup_id ) {
+				self::preload_popup_by_id_if_enabled( $popup_id );
+			}
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Preloads popup, if enabled
+	 *
+	 * @param int $popup_id The popup's ID.
+	 * @since 1.15
+	 */
+	public static function preload_popup_by_id_if_enabled( $popup_id ) {
+		if ( ! in_array( $popup_id, self::$loaded_ids ) ) {
+			$popup = pum_get_popup( $popup_id );
+			if ( $popup->is_enabled() ) {
+				self::preload_popup( $popup );
+			}
+		}
 	}
 
 	/**

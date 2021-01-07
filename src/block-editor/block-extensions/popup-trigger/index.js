@@ -24,7 +24,7 @@ import GearIcon from '../../icons/gears';
  * @type {Array}
  */
 const allowedBlocks = [];
-const excludedBlocks = [
+const excludedBlocks = pum_block_editor_vars.popup_trigger_excluded_blocks || [
 	'core/nextpage',
 ];
 
