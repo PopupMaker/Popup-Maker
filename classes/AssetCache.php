@@ -71,6 +71,11 @@ class PUM_AssetCache {
 			add_action( 'pum_save_popup', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_save_theme', array( __CLASS__, 'reset_cache' ) );
 			add_action( 'pum_update_core_version', array( __CLASS__, 'reset_cache' ) );
+
+			if ( isset( $_GET['flush_popup_cache'] ) ) {
+				add_action( 'init', array( __CLASS__, 'reset_cache' ) );
+			}
+
 			add_filter( 'pum_alert_list', array( __CLASS__, 'cache_alert' ) );
 
 			add_action( 'pum_styles', array( __CLASS__, 'global_custom_styles' ) );
@@ -217,7 +222,7 @@ class PUM_AssetCache {
 
 		$js = "/**\n";
 		$js .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
-		$js .= " * Last modified time: " . date( 'M d Y, h:s:i' ) . "\n";
+		$js .= " * Last modified time: " . date( 'M d Y, h:i:s' ) . "\n";
 		$js .= " */\n\n\n";
 		$js .= self::generate_js();
 
@@ -239,7 +244,7 @@ class PUM_AssetCache {
 
 		$css = "/**\n";
 		$css .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
-		$css .= " * Last modified time: " . date( 'M d Y, h:s:i' ) . "\n";
+		$css .= " * Last modified time: " . date( 'M d Y, h:i:s' ) . "\n";
 		$css .= " */\n\n\n";
 		$css .= self::generate_css();
 
