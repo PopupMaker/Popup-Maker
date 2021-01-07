@@ -15,7 +15,7 @@
   },
   "main": "gulpfile.js",
   "engines": {
-    "node": ">=12.14.0",
+    "node": ">=14.15.0",
     "npm": ">=6.13.0",
     "yarn": ">=1.12.0"
   },
@@ -82,7 +82,7 @@
     "merge-stream": "^1.0.1",
     "mini-css-extract-plugin": "^1.3.1",
     "nanoid": "^3.1.20",
-    "node-sass": "4.13.0",
+    "node-sass": "4.14.0",
     "path": "^0.12.7",
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.7.0",
