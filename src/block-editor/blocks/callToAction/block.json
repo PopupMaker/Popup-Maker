@@ -2,7 +2,7 @@
 	"apiVersion": 2,
 	"name": "pum/call-to-action",
 	"category": "design",
-	"parent": [ "pum/call-to-actions" ],
+	"parent": ["pum/call-to-actions"],
 	"attributes": {
 		"pid": {
 			"type": "number"
@@ -11,6 +11,9 @@
 			"type": "string"
 		},
 		"url": {
+			"type": "string"
+		},
+		"type": {
 			"type": "string"
 		},
 		"title": {
@@ -61,7 +64,7 @@
 	},
 	"supports": {
 		"anchor": false,
-		"align": [ "left", "center", "right", "full" ],
+		"align": ["left", "center", "right", "full"],
 		"alignWide": false,
 		"reusable": false,
 		"__experimentalSelector": ".pum-cta-button > a"
