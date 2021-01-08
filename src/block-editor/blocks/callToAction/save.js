@@ -24,6 +24,7 @@ export default function save( { attributes } ) {
 		text,
 		title,
 		url,
+		type,
 		uuid,
 		pid,
 	} = attributes;
@@ -60,8 +61,10 @@ export default function save( { attributes } ) {
 	// if it had already been assigned, for the sake of backward-compatibility.
 	// A title will no longer be assigned for new or updated button block links.
 
+	const wrapperClasses = [ 'pum-cta-wrapper' ];
+
 	return (
-		<div { ...useBlockProps.save() }>
+		<div { ...useBlockProps.save() } className={ wrapperClasses }>
 			<RichText.Content
 				tagName="a"
 				className={ buttonClasses }
@@ -71,6 +74,7 @@ export default function save( { attributes } ) {
 				value={ text }
 				target={ linkTarget }
 				rel={ rel }
+				data-pum-cta-type={ type }
 			/>
 		</div>
 	);

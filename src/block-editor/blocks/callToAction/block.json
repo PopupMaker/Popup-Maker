@@ -16,7 +16,8 @@
 			"selector": "a"
 		},
 		"type": {
-			"type": "string"
+			"type": "string",
+			"default": "link"
 		},
 		"url": {
 			"type": "string"

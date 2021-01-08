@@ -198,16 +198,19 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 	public function handler( $atts, $content = null ) {
 		$atts = $this->shortcode_atts( $atts );
 
-		$type    = $atts['type'];
-		$url     = $atts['url'];
-		$target  = $atts['linkTarget'] ? '_blank' : '_self';
-		$text    = ! empty( $atts['text'] ) ? $atts['text'] : $content;
-		$uuid    = PUM_Site_CallToActions::generate_cta_uuid( pum_get_popup_id(), $type, $text );
-		$classes = array_merge(
+		$type            = $atts['type'];
+		$url             = $atts['url'];
+		$target          = $atts['linkTarget'] ? '_blank' : '_self';
+		$text            = ! empty( $atts['text'] ) ? $atts['text'] : $content;
+		$align           = $atts['align'];
+		$uuid            = PUM_Site_CallToActions::generate_cta_uuid( pum_get_popup_id(), $type, $text );
+		$wrapper_classes = array_merge(
 			[
+				'pum-cta-wrapper',
 				'pum-cta',
 				'pum-cta--link',
-				'button' === $atts['element_type'] ? 'pum-cta--button' : null,
+				'align' . $align,
+				'text-only' === $atts['style'] ? 'pum-cta--button' : null,
 			]
 			// explode( ',', $atts['element_classes'] )
 		);
@@ -229,11 +232,14 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 
 		$callToAction = $this->calltoactions->get( $type );
 
+		/**
+		 * Check if CTA has a custom renderer method, if so use that, if not use the default link method.
+		 */
 		if ( ! property_exists( $callToAction, 'custom_renderer' ) || ! $callToAction->custom_renderer ) {
 			$cta_content = sprintf(
-				"<a href='%s' class='%s' target='%s' data-pum-action='%s' rel='nofollow'>%s</a>",
+				"<a href='%s' class='%s' target='%s' data-pum-cta-type='%s' rel='noreferrer noopener'>%s</a>",
 				esc_url_raw( $url ),
-				implode( ' ', array_filter( $classes ) ),
+				'pum-cta-button__link', // implode( ' ', array_filter( $classes ) ),
 				$target,
 				$type,
 				$text
@@ -245,7 +251,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		ob_start();
 		?>
 
-		<div style="text-align:<?php echo esc_attr( $atts['alignment'] ); ?>;" class="pum-cta-wrapper align-<?php echo esc_attr( $atts['alignment'] ); ?>">
+		<div class="<?php echo esc_attr( implode( ' ', array_filter( $wrapper_classes ) ) ); ?>">
 			<?php
 			/* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
 			echo $cta_content;
