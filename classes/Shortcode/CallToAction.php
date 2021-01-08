@@ -66,7 +66,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 	 * @return string
 	 */
 	public function label() {
-		return __( 'Popup Call to Action', 'popup-maker' );
+		return __( 'CTA Button', 'popup-maker' );
 	}
 
 	/**
@@ -75,7 +75,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 	 * @return string
 	 */
 	public function description() {
-		return __( 'Inserts a call to action.', 'popup-maker' );
+		return __( 'Insert a call to action to let users convert to a specific action.', 'popup-maker' );
 	}
 
 	/**
@@ -117,29 +117,31 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 			],
 			'appearance' => [
 				'main' => [
-					'element_type'    => [
+					'style' => [
 						'type'     => 'radio',
-						'label'    => __( 'Choose how this link appears.', 'popup-maker' ),
+						'label'    => __( 'Choose a style.', 'popup-maker' ),
 						'options'  => [
-							'text'   => __( 'Text Link', 'popup-maker' ),
-							'button' => __( 'Button', 'popup-maker' ),
+							'fill'      => __( 'Fill' ),
+							'outline'   => __( 'Outline' ),
+							'text-only' => __( 'Text Only', 'popup-maker' ),
 						],
 						'std'      => 'button',
 						'priority' => 1.1,
 					],
-					'element_classes' => [
-						'type'     => 'text',
-						'label'    => __( 'Additional CSS classes.', 'popup-maker' ),
-						'std'      => '',
-						'priority' => 1.2,
-					],
-					'alignment'       => [
+					// 'element_classes' => [
+					// 'type'     => 'text',
+					// 'label'    => __( 'Additional CSS classes.', 'popup-maker' ),
+					// 'std'      => '',
+					// 'priority' => 1.2,
+					// ],
+					'align' => [
 						'type'     => 'select',
 						'label'    => __( 'Alignment', 'popup-maker' ),
 						'options'  => [
 							'left'   => __( 'Left', 'popup-maker' ),
-							'right'  => __( 'Right', 'popup-maker' ),
 							'center' => __( 'Center', 'popup-maker' ),
+							'right'  => __( 'Right', 'popup-maker' ),
+							'full'   => __( 'Full', 'popup-maker' ),
 						],
 						'priority' => 1.3,
 					],
@@ -196,12 +198,12 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 	public function handler( $atts, $content = null ) {
 		$atts = $this->shortcode_atts( $atts );
 
-		$type = $atts['type'];
-		$url      = $atts['url'];
-		$target   = $atts['linkTarget'] ? '_blank' : '_self';
-		$text     = ! empty( $atts['text'] ) ? $atts['text'] : $content;
-		$token    = PUM_Site_CallToActions::generate_cta_token( pum_get_popup_id(), $type, $text );
-		$classes  = array_merge(
+		$type    = $atts['type'];
+		$url     = $atts['url'];
+		$target  = $atts['linkTarget'] ? '_blank' : '_self';
+		$text    = ! empty( $atts['text'] ) ? $atts['text'] : $content;
+		$uuid    = PUM_Site_CallToActions::generate_cta_uuid( pum_get_popup_id(), $type, $text );
+		$classes = array_merge(
 			[
 				'pum-cta',
 				'pum-cta--link',
@@ -220,9 +222,8 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		if ( $url && ! $atts['linkTarget'] && strpos( $url, '#' ) !== 0 ) {
 			$url = add_query_arg(
 				[
-					'pum_action' => 'redirect',
-					'pum_pid'    => pum_get_popup_id(),
-					'pum_token'  => $token,
+					'pid'  => pum_get_popup_id(),
+					'uuid' => $uuid,
 				]
 			);
 		}
