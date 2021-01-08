@@ -208,9 +208,8 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 				'pum-cta',
 				'pum-cta--link',
 				'button' === $atts['element_type'] ? 'pum-cta--button' : null,
-
-			],
-			explode( ',', $atts['element_classes'] )
+			]
+			// explode( ',', $atts['element_classes'] )
 		);
 
 		/**
