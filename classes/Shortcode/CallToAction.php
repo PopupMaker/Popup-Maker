@@ -66,7 +66,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 	 * @return string
 	 */
 	public function label() {
-		return __( 'Popup Call to Action', 'popup-maker' );
+		return __( 'CTA Button', 'popup-maker' );
 	}
 
 	/**
@@ -75,7 +75,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 	 * @return string
 	 */
 	public function description() {
-		return __( 'Inserts a call to action.', 'popup-maker' );
+		return __( 'Insert a call to action to let users convert to a specific action.', 'popup-maker' );
 	}
 
 	/**
@@ -100,14 +100,14 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		$fields = [
 			'general'    => [
 				'main' => [
-					'cta_type' => [
+					'type' => [
 						'type'     => 'select',
-						'label'    => __( 'Type of CTA', 'popup-maker' ),
+						'label'    => __( 'Which type of CTA would you like to use?', 'popup-maker' ),
 						'options'  => $this->calltoactions->get_select_list(),
 						'std'      => 'link',
 						'priority' => 0,
 					],
-					'cta_text' => [
+					'text' => [
 						'type'     => 'text',
 						'label'    => __( 'Enter text for your call to action.', 'popup-maker' ),
 						'std'      => __( 'Learn more', 'popup-maker' ),
@@ -117,29 +117,31 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 			],
 			'appearance' => [
 				'main' => [
-					'element_type'    => [
+					'style' => [
 						'type'     => 'radio',
-						'label'    => __( 'Choose how this link appears.', 'popup-maker' ),
+						'label'    => __( 'Choose a style.', 'popup-maker' ),
 						'options'  => [
-							'text'   => __( 'Text Link', 'popup-maker' ),
-							'button' => __( 'Button', 'popup-maker' ),
+							'fill'      => __( 'Fill', 'default' ),
+							'outline'   => __( 'Outline', 'default' ),
+							'text-only' => __( 'Text Only', 'popup-maker' ),
 						],
 						'std'      => 'button',
 						'priority' => 1.1,
 					],
-					'element_classes' => [
-						'type'     => 'text',
-						'label'    => __( 'Additional CSS classes.', 'popup-maker' ),
-						'std'      => '',
-						'priority' => 1.2,
-					],
-					'alignment'       => [
+					// 'element_classes' => [
+					// 'type'     => 'text',
+					// 'label'    => __( 'Additional CSS classes.', 'popup-maker' ),
+					// 'std'      => '',
+					// 'priority' => 1.2,
+					// ],
+					'align' => [
 						'type'     => 'select',
 						'label'    => __( 'Alignment', 'popup-maker' ),
 						'options'  => [
 							'left'   => __( 'Left', 'popup-maker' ),
-							'right'  => __( 'Right', 'popup-maker' ),
 							'center' => __( 'Center', 'popup-maker' ),
+							'right'  => __( 'Right', 'popup-maker' ),
+							'full'   => __( 'Full', 'popup-maker' ),
 						],
 						'priority' => 1.3,
 					],
@@ -166,13 +168,13 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 			foreach ( $callToAction->get_fields() as $tab => $tab_fields ) {
 
 				foreach ( $tab_fields as $field_id => $field ) {
-					// Set the fields dependencies to include the cta_type matching.
-					if ( ! isset( $field['dependencies']['cta_type'] ) || ! is_array( $field['dependencies']['cta_type'] ) ) {
-						$field['dependencies']['cta_type'] = [];
+					// Set the fields dependencies to include the type matching.
+					if ( ! isset( $field['dependencies']['type'] ) || ! is_array( $field['dependencies']['type'] ) ) {
+						$field['dependencies']['type'] = [];
 					}
 
-					// Set the fields dependencies to include the cta_type matching.
-					$field['dependencies']['cta_type'][] = $key;
+					// Set the fields dependencies to include the type matching.
+					$field['dependencies']['type'][] = $key;
 
 					// Add the field to the correct tab in the fields array.
 					$fields[ $tab ]['main'][ $field_id ] = $field;
@@ -196,19 +198,24 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 	public function handler( $atts, $content = null ) {
 		$atts = $this->shortcode_atts( $atts );
 
-		$cta_type = $atts['cta_type'];
-		$url      = $atts['url'];
-		$target   = $atts['link_target_blank'] ? '_blank' : '_self';
-		$text     = ! empty( $atts['cta_text'] ) ? $atts['cta_text'] : $content;
-		$token    = PUM_Site_CallToActions::generate_cta_token( pum_get_popup_id(), $cta_type, $text );
-		$classes  = array_merge(
+		$type            = $atts['type'];
+		$url             = $atts['url'];
+		$target          = $atts['linkTarget'] ? '_blank' : '_self';
+		$text            = ! empty( $atts['text'] ) ? $atts['text'] : $content;
+		$style           = $atts['style'];
+		$align           = $atts['align'];
+		$uuid            = PUM_Site_CallToActions::generate_cta_uuid( pum_get_popup_id(), $type, $text );
+		$wrapper_classes = array_merge(
 			[
+				'shortcode-pum-call-to-action',
+				'pum-cta-wrapper',
 				'pum-cta',
 				'pum-cta--link',
-				'button' === $atts['element_type'] ? 'pum-cta--button' : null,
-
-			],
-			explode( ',', $atts['element_classes'] )
+				'align' . $align,
+				'is-style-' . $style,
+				'text-only' === $atts['style'] ? 'pum-cta--button' : null,
+			]
+			// explode( ',', $atts['element_classes'] )
 		);
 
 		/**
@@ -217,35 +224,38 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		 * Note this does not apply if links are #hash based or open in a new window.
 		 * In those cases JavaScript async methods of tracking will be used.
 		 */
-		if ( $url && ! $atts['link_target_blank'] && strpos( $url, '#' ) !== 0 ) {
+		if ( $url && ! $atts['linkTarget'] && strpos( $url, '#' ) !== 0 ) {
 			$url = add_query_arg(
 				[
-					'pum_action' => 'redirect',
-					'pum_pid'    => pum_get_popup_id(),
-					'pum_token'  => $token,
+					'pid'  => pum_get_popup_id(),
+					'uuid' => $uuid,
 				]
 			);
 		}
 
-		$callToAction = $this->calltoactions->get( $cta_type );
+		$callToAction = $this->calltoactions->get( $type );
 
-		if ( ! method_exists( $callToAction, 'custom_renderer' ) ) {
+		/**
+		 * Check if CTA has a custom renderer method, if so use that, if not use the default link method.
+		 */
+		if ( ! property_exists( $callToAction, 'custom_renderer' ) || ! $callToAction->custom_renderer ) {
 			$cta_content = sprintf(
-				"<a href='%s' class='%s' target='%s' data-pum-action='%s' rel='nofollow'>%s</a>",
+				"<a href='%s' class='%s' target='%s' data-pum-cta-type='%s' rel='noreferrer noopener'>%s</a>",
 				esc_url_raw( $url ),
-				implode( ' ', array_filter( $classes ) ),
+				'pum-cta-button__link',
+				// implode( ' ', array_filter( $classes ) ),
 				$target,
-				$cta_type,
+				$type,
 				$text
 			);
 		} else {
-			$cta_output = $callToAction ? $callToAction->render( $atts ) : '';
+			$cta_content = $callToAction ? $callToAction->render( $atts ) : '';
 		}
 
 		ob_start();
 		?>
 
-		<div style="text-align:<?php echo esc_attr( $atts['alignment'] ); ?>;" class="pum-cta-wrapper align-<?php echo esc_attr( $atts['alignment'] ); ?>">
+		<div class="<?php echo esc_attr( implode( ' ', array_filter( $wrapper_classes ) ) ); ?>">
 			<?php
 			/* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
 			echo $cta_content;

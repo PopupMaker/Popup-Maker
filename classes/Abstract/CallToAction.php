@@ -31,6 +31,13 @@ abstract class PUM_Abstract_CallToAction implements PUM_Interface_CallToAction {
 	public $version = 1;
 
 	/**
+	 * Determines if the CTA uses a custom rendering method.
+	 *
+	 * @var boolean
+	 */
+	public $custom_renderer = false;
+
+	/**
 	 * Latest current version.
 	 *
 	 * @var int
