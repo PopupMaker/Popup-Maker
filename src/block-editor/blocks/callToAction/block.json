@@ -2,13 +2,22 @@
 	"apiVersion": 2,
 	"name": "pum/call-to-action",
 	"category": "design",
-	"parent": [ "pum/call-to-actions" ],
+	"parent": ["pum/call-to-actions"],
 	"attributes": {
 		"pid": {
 			"type": "number"
 		},
 		"uuid": {
 			"type": "string"
+		},
+		"text": {
+			"type": "string",
+			"source": "html",
+			"selector": "a"
+		},
+		"type": {
+			"type": "string",
+			"default": "link"
 		},
 		"url": {
 			"type": "string"
@@ -18,11 +27,6 @@
 			"source": "attribute",
 			"selector": "a",
 			"attribute": "title"
-		},
-		"text": {
-			"type": "string",
-			"source": "html",
-			"selector": "a"
 		},
 		"linkTarget": {
 			"type": "string",
@@ -61,7 +65,7 @@
 	},
 	"supports": {
 		"anchor": false,
-		"align": [ "left", "center", "right", "full" ],
+		"align": ["left", "center", "right", "full"],
 		"alignWide": false,
 		"reusable": false,
 		"__experimentalSelector": ".pum-cta-button > a"
