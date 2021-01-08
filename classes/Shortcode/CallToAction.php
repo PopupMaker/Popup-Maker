@@ -100,14 +100,14 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		$fields = [
 			'general'    => [
 				'main' => [
-					'cta_type' => [
+					'type' => [
 						'type'     => 'select',
 						'label'    => __( 'Type of CTA', 'popup-maker' ),
 						'options'  => $this->calltoactions->get_select_list(),
 						'std'      => 'link',
 						'priority' => 0,
 					],
-					'cta_text' => [
+					'text' => [
 						'type'     => 'text',
 						'label'    => __( 'Enter text for your call to action.', 'popup-maker' ),
 						'std'      => __( 'Learn more', 'popup-maker' ),
@@ -166,13 +166,13 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 			foreach ( $callToAction->get_fields() as $tab => $tab_fields ) {
 
 				foreach ( $tab_fields as $field_id => $field ) {
-					// Set the fields dependencies to include the cta_type matching.
-					if ( ! isset( $field['dependencies']['cta_type'] ) || ! is_array( $field['dependencies']['cta_type'] ) ) {
-						$field['dependencies']['cta_type'] = [];
+					// Set the fields dependencies to include the type matching.
+					if ( ! isset( $field['dependencies']['type'] ) || ! is_array( $field['dependencies']['type'] ) ) {
+						$field['dependencies']['type'] = [];
 					}
 
-					// Set the fields dependencies to include the cta_type matching.
-					$field['dependencies']['cta_type'][] = $key;
+					// Set the fields dependencies to include the type matching.
+					$field['dependencies']['type'][] = $key;
 
 					// Add the field to the correct tab in the fields array.
 					$fields[ $tab ]['main'][ $field_id ] = $field;
@@ -196,11 +196,11 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 	public function handler( $atts, $content = null ) {
 		$atts = $this->shortcode_atts( $atts );
 
-		$cta_type = $atts['cta_type'];
+		$type = $atts['type'];
 		$url      = $atts['url'];
-		$target   = $atts['link_target_blank'] ? '_blank' : '_self';
-		$text     = ! empty( $atts['cta_text'] ) ? $atts['cta_text'] : $content;
-		$token    = PUM_Site_CallToActions::generate_cta_token( pum_get_popup_id(), $cta_type, $text );
+		$target   = $atts['linkTarget'] ? '_blank' : '_self';
+		$text     = ! empty( $atts['text'] ) ? $atts['text'] : $content;
+		$token    = PUM_Site_CallToActions::generate_cta_token( pum_get_popup_id(), $type, $text );
 		$classes  = array_merge(
 			[
 				'pum-cta',
@@ -217,7 +217,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		 * Note this does not apply if links are #hash based or open in a new window.
 		 * In those cases JavaScript async methods of tracking will be used.
 		 */
-		if ( $url && ! $atts['link_target_blank'] && strpos( $url, '#' ) !== 0 ) {
+		if ( $url && ! $atts['linkTarget'] && strpos( $url, '#' ) !== 0 ) {
 			$url = add_query_arg(
 				[
 					'pum_action' => 'redirect',
@@ -227,7 +227,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 			);
 		}
 
-		$callToAction = $this->calltoactions->get( $cta_type );
+		$callToAction = $this->calltoactions->get( $type );
 
 		if ( ! method_exists( $callToAction, 'custom_renderer' ) ) {
 			$cta_content = sprintf(
@@ -235,7 +235,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 				esc_url_raw( $url ),
 				implode( ' ', array_filter( $classes ) ),
 				$target,
-				$cta_type,
+				$type,
 				$text
 			);
 		} else {

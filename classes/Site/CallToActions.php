@@ -103,7 +103,7 @@ class PUM_Site_CallToActions {
 			 * - We could order class the args alphanumerically and then md5 them all, that might be more efficient and give more unique tokens.
 			 */
 			foreach ( $cta_shortcodes as $cta_shortcode ) {
-				$token = self::generate_cta_token( $popup_id, $cta_shortcode['atts']['cta_type'], $cta_shortcode['atts']['cta_text'] );
+				$token = self::generate_cta_token( $popup_id, $cta_shortcode['atts']['type'], $cta_shortcode['atts']['text'] );
 				if ( $cta_token === $token ) {
 					$cta = $cta_shortcode['atts'];
 				}

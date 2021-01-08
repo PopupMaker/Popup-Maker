@@ -53,7 +53,7 @@ class PUM_CallToAction_Link extends PUM_Abstract_CallToAction {
 					'priority' => 1.2,
 				],
 				// Will this be part of the link picker API?
-				'link_target_blank' => [
+				'linkTarget' => [
 					'type'     => 'checkbox',
 					'label'    => __( 'Open in a new tab.', 'popup-maker' ),
 					'priority' => 1.3,
@@ -76,8 +76,8 @@ class PUM_CallToAction_Link extends PUM_Abstract_CallToAction {
 		$atts = $this->parse_atts( $atts );
 
 		$url     = $atts['url'];
-		$target  = $atts['link_target_blank'] ? '_blank' : '';
-		$text    = ! empty( $atts['cta_text'] ) ? $atts['cta_text'] : '';
+		$target  = $atts['linkTarget'] ? '_blank' : '';
+		$text    = ! empty( $atts['text'] ) ? $atts['text'] : '';
 		$classes = array_merge(
 			[
 				'pum-cta',
@@ -97,7 +97,7 @@ class PUM_CallToAction_Link extends PUM_Abstract_CallToAction {
 		?>
 		<a
 			class="pum-cta pum-cta--lin class='pum-cta pum-cta--link {{{'button' === attrs.element_type ? pum-cta--button}}} {{{attrs.element_classes}}}"
-			target="{{{attrs.link_target_blank ? '_blank' : ''}}}"
+			target="{{{attrs.linkTarget ? '_blank' : ''}}}"
 		>
 			{{{attrs.text || attrs._inner_content}}}
 		</a>
