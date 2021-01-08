@@ -230,7 +230,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 
 		$callToAction = $this->calltoactions->get( $type );
 
-		if ( ! method_exists( $callToAction, 'custom_renderer' ) ) {
+		if ( ! property_exists( $callToAction, 'custom_renderer' ) || ! $callToAction->custom_renderer ) {
 			$cta_content = sprintf(
 				"<a href='%s' class='%s' target='%s' data-pum-action='%s' rel='nofollow'>%s</a>",
 				esc_url_raw( $url ),
@@ -240,7 +240,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 				$text
 			);
 		} else {
-			$cta_output = $callToAction ? $callToAction->render( $atts ) : '';
+			$cta_content = $callToAction ? $callToAction->render( $atts ) : '';
 		}
 
 		ob_start();

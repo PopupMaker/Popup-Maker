@@ -63,31 +63,4 @@ class PUM_CallToAction_Link extends PUM_Abstract_CallToAction {
 		];
 	}
 
-	/**
-	 * Output handler
-	 *
-	 * This will handle rendering for both shortcodes and blocks.
-	 *
-	 * @param array $atts Array of options / attributes.
-	 *
-	 * @return string
-	 */
-	public function render( $atts = [] ) {
-		$atts = $this->parse_atts( $atts );
-
-		$url     = $atts['url'];
-		$target  = $atts['linkTarget'] ? '_blank' : '';
-		$text    = ! empty( $atts['text'] ) ? $atts['text'] : '';
-		$classes = array_merge(
-			[
-				'pum-cta',
-				'pum-cta--link',
-				'button' === $atts['element_type'] ? 'pum-cta--button' : null,
-			],
-			explode( ',', $atts['element_classes'] )
-		);
-
-		return sprintf( "<a href='%s' class='%s' target='%s'>%s</a>", $url, implode( ' ', array_filter( $classes ) ), $target, $text );
-	}
-
 }
