@@ -37,7 +37,6 @@ class PUM_Site_CallToActions {
 		);
 
 		/* phpcs:disable WordPress.Security.NonceVerification.Recommended */
-		$action   = ! empty( $_GET['action'] ) ? sanitize_key( $_GET['action'] ) : 'redirect';
 		$popup_id = ! empty( $_GET['pid'] ) ? absint( $_GET['pid'] ) : 0;
 		$cta_uuid = ! empty( $_GET['uuid'] ) ? sanitize_text_field( wp_unslash( $_GET['uuid'] ) ) : '';
 		/* phpcs:enable WordPress.Security.NonceVerification.Recommended */
@@ -45,7 +44,6 @@ class PUM_Site_CallToActions {
 		$checks = [
 			$popup_id > 0,
 			'' !== $cta_uuid,
-			in_array( $action, $valid_actions, true ),
 		];
 
 		if ( in_array( false, $checks, true ) ) {
@@ -122,8 +120,11 @@ class PUM_Site_CallToActions {
 			return;
 		}
 
-		switch ( $action ) {
-			case 'redirect':
+		switch ( $cta['type'] ) {
+			/**
+			 * Built-ins.
+			 */
+			case 'link':
 				/**
 				 * Track conversion with added value.
 				 */
@@ -133,8 +134,12 @@ class PUM_Site_CallToActions {
 
 				wp_safe_redirect( $url );
 				exit;
+
+			/**
+			 * Extension based handlers.
+			 */
 			default:
-				do_action( 'pum_' . $action . '_action', $popup_id, $action );
+				do_action( 'pum_cta_' . $cta['type'] . '_action', $popup_id, $cta['type'] );
 				break;
 		}
 	}
