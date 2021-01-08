@@ -43,7 +43,7 @@ export default function save( { attributes } ) {
 
 	const urlParams = {
 		pid: pid || wp.data.select( 'core/editor' ).getCurrentPostId(),
-		cta: uuid,
+		uuid,
 	};
 
 	const queryString = Object.keys( urlParams )

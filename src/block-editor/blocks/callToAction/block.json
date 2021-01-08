@@ -10,10 +10,15 @@
 		"uuid": {
 			"type": "string"
 		},
-		"url": {
-			"type": "string"
+		"text": {
+			"type": "string",
+			"source": "html",
+			"selector": "a"
 		},
 		"type": {
+			"type": "string"
+		},
+		"url": {
 			"type": "string"
 		},
 		"title": {
@@ -21,11 +26,6 @@
 			"source": "attribute",
 			"selector": "a",
 			"attribute": "title"
-		},
-		"text": {
-			"type": "string",
-			"source": "html",
-			"selector": "a"
 		},
 		"linkTarget": {
 			"type": "string",

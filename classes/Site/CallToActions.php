@@ -37,14 +37,14 @@ class PUM_Site_CallToActions {
 		);
 
 		/* phpcs:disable WordPress.Security.NonceVerification.Recommended */
-		$action    = ! empty( $_GET['action'] ) ? sanitize_key( $_GET['action'] ) : 'redirect';
-		$popup_id  = ! empty( $_GET['pid'] ) ? absint( $_GET['pid'] ) : 0;
-		$cta_token = ! empty( $_GET['cta'] ) ? sanitize_text_field( wp_unslash( $_GET['cta'] ) ) : '';
+		$action   = ! empty( $_GET['action'] ) ? sanitize_key( $_GET['action'] ) : 'redirect';
+		$popup_id = ! empty( $_GET['pid'] ) ? absint( $_GET['pid'] ) : 0;
+		$cta_uuid = ! empty( $_GET['uuid'] ) ? sanitize_text_field( wp_unslash( $_GET['uuid'] ) ) : '';
 		/* phpcs:enable WordPress.Security.NonceVerification.Recommended */
 
 		$checks = [
 			$popup_id > 0,
-			'' !== $cta_token,
+			'' !== $cta_uuid,
 			in_array( $action, $valid_actions, true ),
 		];
 
@@ -70,7 +70,7 @@ class PUM_Site_CallToActions {
 			$cta_block = false;
 
 			foreach ( $cta_blocks as $block ) {
-				if ( $cta_token === $block['attrs']['uuid'] ) {
+				if ( $cta_uuid === $block['attrs']['uuid'] ) {
 					$cta_block = $block;
 					break;
 				}
@@ -103,8 +103,11 @@ class PUM_Site_CallToActions {
 			 * - We could order class the args alphanumerically and then md5 them all, that might be more efficient and give more unique tokens.
 			 */
 			foreach ( $cta_shortcodes as $cta_shortcode ) {
-				$token = self::generate_cta_token( $popup_id, $cta_shortcode['atts']['type'], $cta_shortcode['atts']['text'] );
-				if ( $cta_token === $token ) {
+				$uuid = isset( $cta_shortcode['atts']['uuid'] ) ?
+						$cta_shortcode['atts']['uuid'] :
+						self::generate_cta_uuid( $popup_id, $cta_shortcode['atts']['type'], $cta_shortcode['atts']['text'] );
+
+				if ( $cta_uuid === $uuid ) {
 					$cta = $cta_shortcode['atts'];
 				}
 			}
@@ -146,10 +149,10 @@ class PUM_Site_CallToActions {
 	 *
 	 * @return string
 	 */
-	public static function generate_cta_token( $post_id, $cta_type, $cta_text, $extras = [] ) {
+	public static function generate_cta_uuid( $post_id, $cta_type, $cta_text, $extras = [] ) {
 		ksort( $extras );
 		$extras = wp_json_encode( $extras );
 
-		return md5( "$post_id-$cta_type-$cta_text-$extras" );
+		return substr( md5( "$post_id-$cta_type-$cta_text-$extras" ), 0, 10 );
 	}
 }
