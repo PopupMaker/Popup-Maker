@@ -7,7 +7,7 @@ Tags:  marketing, ecommerce, popup, popups, optin, conversion, promotion, pop-up
 Requires at least: 4.9
 Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 1.14.0
+Stable tag: 1.15.0
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,7 +179,7 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
-= v1.15.0 - XX/XX/XXXX =
+= v1.15.0 - 01/08/2021 =
 * Feature: Automatically enqueue popups when detected during page load [Issue 543](https://github.com/PopupMaker/Popup-Maker/issues/543)
 * Improvement: Improvements to 'Extend' page [Issue 913](https://github.com/PopupMaker/Popup-Maker/issues/913)
 * Improvement: Start working toward more consistent linking/documentation strategy

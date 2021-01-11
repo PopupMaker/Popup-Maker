@@ -1,6 +1,6 @@
 # Popup Maker Changelog
 
-## [v1.15.0 - XX/XX/XXXX](https://github.com/PopupMaker/Popup-Maker/milestone/30)
+## [v1.15.0 - 01/08/2021](https://github.com/PopupMaker/Popup-Maker/milestone/30)
 
 * Feature: Automatically enqueue popups when detected during page load [Issue 543](https://github.com/PopupMaker/Popup-Maker/issues/543)
 * Improvement: Improvements to 'Extend' page [Issue 913](https://github.com/PopupMaker/Popup-Maker/issues/913)
