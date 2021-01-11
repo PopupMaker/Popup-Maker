@@ -57,6 +57,11 @@
 /**
  * Reset the WP Admin page styles for Gutenberg-like pages.
  */
+:root {
+  --wp-admin-theme-color: #007cba;
+  --wp-admin-theme-color-darker-10: #006ba1;
+  --wp-admin-theme-color-darker-20: #005a87; }
+
 /**
  * Breakpoints & Media Queries
  */
@@ -149,7 +154,8 @@
   .block-editor-popup-trigger-popover .components-icon-button:not(:disabled):focus {
     box-shadow: none; }
     .block-editor-popup-trigger-popover .components-icon-button:not(:disabled):focus > svg {
-      box-shadow: inset 0 0 0 1.5px theme(button), inset 0 0 0 4px #fff;
+      box-shadow: inset 0 0 0 1.5px #007cba, inset 0 0 0 4px #fff;
+      box-shadow: inset 0 0 0 1.5px var(--wp-admin-theme-color), inset 0 0 0 4px #fff;
       outline: 2px solid transparent; }
 
 .block-editor-popup-trigger-popover__settings-toggle {
