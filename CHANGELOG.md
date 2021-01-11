@@ -1,6 +1,6 @@
 # Popup Maker Changelog
 
-## [v1.15.0 - 01/08/2021](https://github.com/PopupMaker/Popup-Maker/milestone/30)
+## [v1.15.0 - 01/12/2021](https://github.com/PopupMaker/Popup-Maker/milestone/30)
 
 * Feature: Automatically enqueue popups when detected during page load [Issue 543](https://github.com/PopupMaker/Popup-Maker/issues/543)
 * Improvement: Improvements to 'Extend' page [Issue 913](https://github.com/PopupMaker/Popup-Maker/issues/913)
@@ -9,6 +9,7 @@
 * Fix: PUM_Telemetry triggers PHP warnings in (CLI) cron [Issue 919](https://github.com/PopupMaker/Popup-Maker/issues/919)
 * Fix: pum-admin-bar Script Fails to Load [Issue 907](https://github.com/PopupMaker/Popup-Maker/issues/907) Thanks @fluxism!
 * Fix: JS error: Uncaught TypeError: Cannot set property 'popups' of undefined [Issue 635](https://github.com/PopupMaker/Popup-Maker/issues/635)
+* Fix: Undefined SCSS variable causing errors in building block components
 
 ## [v1.14.0 - 12/16/2020](https://github.com/PopupMaker/Popup-Maker/milestone/29)
 
