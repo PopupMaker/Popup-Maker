@@ -276,7 +276,7 @@ class PUM_Site_Assets {
 			echo "<script type='text/javascript'>";
 			echo 'window.pum_popups = ' . PUM_Utils_Array::safe_json_encode( self::get_popup_settings() ) . ';';
 			// Backward compatibility fill.
-			echo 'window.pum_vars.popups = window.pum_popups;';
+			echo 'window.pum_vars = window.pum_vars || {}; window.pum_vars.popups = window.pum_popups;';
 			echo "</script>";
 		}
 	}

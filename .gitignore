@@ -26,7 +26,6 @@ npm-debug.log
 # Composer
 /vendor/
 contributors.md
-composer.lock
 
 # Packages
 /packages/*

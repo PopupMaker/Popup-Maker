@@ -1,9 +1,8 @@
 ## Description
 <!-- Please describe what you have changed or added -->
 
-## Related Issue
 <!-- If this is a new feature or major change, you must link to an issue that explains use case. -->
-Issue:
+Related Issue:
 
 ## Types of changes
 <!-- What types of changes does your code introduce?  -->
@@ -12,12 +11,14 @@ Issue:
 <!-- if applicable -->
 
 ## This has been tested in the following browsers
+
 - [ ] Chrome
 - [ ] Firefox
 - [ ] Edge
 - [ ] Safari
 
-## Checklist:
+## Merge Checklist
+
 - [ ] This PR passes all automated checks (will appear once pull request is submitted)
 - [ ] My code has been tested in the latest version of WordPress.
 - [ ] My code does not have any warnings from ESLint.
