@@ -103,11 +103,12 @@ Need even more features? Popup Maker has over 20 premium features including:
 * [Popup Analytics](https://wppopupmaker.com/extensions/popup-analytics/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=popup-analytics)
 * [Advanced Targeting Conditions](https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=advanced-targeting-conditions)
 * [Forced Interaction](https://wppopupmaker.com/extensions/forced-interaction/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=forced-interaction)
+* [Scheduling](https://wppopupmaker.com/extensions/scheduling/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=scheduling)
 * And [many more](https://wppopupmaker.com/extensions/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=all-extensions)!
 
 Have questions? Check out [our documentation](https://docs.wppopupmaker.com?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=questions&utm_term=documentation) or [reach out to our support](https://wppopupmaker.com/support/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=questions&utm_term=support)!
 
-Follow this plugin on [GitHub](https://github.com/PopupMaker/Popup-Maker)!
+Want to contribute? We are [on GitHub](https://github.com/PopupMaker/Popup-Maker)!
 
 Would you like to help translate the **best WordPress popup plugin** into more languages? [Join our WP-Translations Community](https://translate.wordpress.org/projects/wp-plugins/popup-maker).
 
