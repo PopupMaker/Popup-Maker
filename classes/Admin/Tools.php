@@ -122,7 +122,6 @@ class PUM_Admin_Tools {
 				'pum_tools_tabs',
 				array(
 					'betas'            => __( 'Beta Versions', 'popup-maker' ),
-					'system_info'      => __( 'System Info', 'popup-maker' ),
 					'error_log'        => __( 'Error Log', 'popup-maker' ),
 					'action_scheduler' => __( 'Scheduled Actions', 'popup-maker' ),
 					'import'           => __( 'Import / Export', 'popup-maker' ),
