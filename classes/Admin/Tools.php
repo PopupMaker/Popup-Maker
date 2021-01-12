@@ -38,12 +38,11 @@ class PUM_Admin_Tools {
 
 		if ( isset( $_GET['imported'] ) ) {
 			?>
-            <div class="updated">
-                <p><?php _e( 'Successfully Imported your themes &amp; modals from Easy Modal.' ); ?></p>
-            </div>
+			<div class="updated">
+				<p><?php esc_html_e( 'Successfully Imported your themes &amp; modals from Easy Modal.' ); ?></p>
+			</div>
 			<?php
 		}
-
 
 		if ( isset( $_GET['success'] ) && get_option( 'pum_settings_admin_notice' ) ) {
 			self::$notices[] = array(
@@ -55,14 +54,16 @@ class PUM_Admin_Tools {
 		}
 
 		if ( ! empty( self::$notices ) ) {
-			foreach ( self::$notices as $notice ) { ?>
-                <div class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> is-dismissible">
-                    <p><strong><?php esc_html_e( $notice['message'] ); ?></strong></p>
-                    <button type="button" class="notice-dismiss">
-                        <span class="screen-reader-text"><?php _e( 'Dismiss this notice.', 'popup-maker' ); ?></span>
-                    </button>
-                </div>
-			<?php }
+			foreach ( self::$notices as $notice ) {
+				?>
+				<div class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> is-dismissible">
+					<p><strong><?php esc_html( $notice['message'] ); ?></strong></p>
+					<button type="button" class="notice-dismiss">
+						<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'popup-maker' ); ?></span>
+					</button>
+				</div>
+				<?php
+			}
 		}
 	}
 
@@ -75,35 +76,35 @@ class PUM_Admin_Tools {
 		wp_enqueue_style( 'pum-admin-general' );
 		?>
 
-        <div class="wrap">
-
-            <form id="pum-tools" method="post" action="">
-
+		<div class="wrap">
+			<form id="pum-tools" method="post" action="">
 				<?php wp_nonce_field( basename( __FILE__ ), 'pum_tools_nonce' ); ?>
 
-                <button class="right top button-primary"><?php _e( 'Save', 'popup-maker' ); ?></button>
+				<button class="right top button-primary"><?php esc_html_e( 'Save', 'popup-maker' ); ?></button>
+				<h1><?php esc_html_e( 'Popup Maker Tools', 'popup-maker' ); ?></h1>
 
-                <h1><?php _e( 'Popup Maker Tools', 'popup-maker' ); ?></h1>
-
-                <h2 id="popmake-tabs" class="nav-tab-wrapper"><?php
+				<h2 id="popmake-tabs" class="nav-tab-wrapper">
+					<?php
 					foreach ( self::tabs() as $tab_id => $tab_name ) {
-						$tab_url = add_query_arg( array(
-							'tools-updated' => false,
-							'tab'           => $tab_id,
-						) );
+						$tab_url = add_query_arg(
+							array(
+								'tools-updated' => false,
+								'tab'           => $tab_id,
+							)
+						);
 
 						printf( '<a href="%s" title="%s" class="nav-tab %s">%s</a>', esc_url( $tab_url ), esc_attr( $tab_name ), $active_tab == $tab_id ? ' nav-tab-active' : '', esc_html( $tab_name ) );
-					} ?>
-                </h2>
+					}
+					?>
+				</h2>
 
-                <div id="tab_container">
+				<div id="tab_container">
 					<?php do_action( 'pum_tools_page_tab_' . $active_tab ); ?>
-
 					<?php do_action( 'popmake_tools_page_tab_' . $active_tab ); ?>
-                </div>
+				</div>
 
-            </form>
-        </div>
+			</form>
+		</div>
 		<?php
 	}
 
@@ -131,10 +132,6 @@ class PUM_Admin_Tools {
 			/** @deprecated 1.7.0 */
 			$tabs = apply_filters( 'popmake_tools_tabs', $tabs );
 		}
-
-		/*if ( count( self::get_beta_enabled_extensions() ) == 0 ) {
-			unset( $tabs['betas'] );
-		}*/
 
 		return $tabs;
 	}
@@ -298,10 +295,15 @@ class PUM_Admin_Tools {
 		}
 
 		if ( ! empty( $_POST['enabled_betas'] ) ) {
-			$enabled_betas = array_filter( array_map( array(
-				__CLASS__,
-				'enabled_betas_sanitize_value',
-			), $_POST['enabled_betas'] ) );
+			$enabled_betas = array_filter(
+				array_map(
+					array(
+						__CLASS__,
+						'enabled_betas_sanitize_value',
+					),
+					$_POST['enabled_betas']
+				)
+			);
 			PUM_Utils_Options::update( 'enabled_betas', $enabled_betas );
 		} else {
 			PUM_Utils_Options::delete( 'enabled_betas' );
@@ -323,11 +325,10 @@ class PUM_Admin_Tools {
 	/**
 	 * Check if a given extensions has beta support enabled
 	 *
-	 * @param string $slug The slug of the extension to check
+	 * @param string $slug The slug of the extension to check.
 	 *
 	 * @return      bool True if enabled, false otherwise
 	 * @since       1.5
-	 *
 	 */
 	public static function extension_has_beta_support( $slug ) {
 		$enabled_betas = PUM_Utils_Options::get( 'enabled_betas', array() );
