@@ -292,12 +292,6 @@ class PUM_Admin_Tools {
 	public static function sysinfo_text() {
 		global $wpdb;
 
-		if ( ! class_exists( 'Browser' ) ) {
-			require_once POPMAKE_DIR . 'includes/libs/browser.php';
-		}
-
-		$browser = new Browser();
-
 		// Get theme info.
 		$theme_data = wp_get_theme();
 		$theme      = $theme_data->Name . ' ' . $theme_data->Version;
@@ -322,12 +316,6 @@ class PUM_Admin_Tools {
 
 			$return = apply_filters( 'popmake_sysinfo_after_host_info', $return );
 		}
-
-		// The local users' browser information, handled by the Browser class.
-		$return .= "\n" . '-- User Browser' . "\n\n";
-		$return .= $browser;
-
-		$return = apply_filters( 'popmake_sysinfo_after_user_browser', $return );
 
 		// WordPress configuration.
 		$return .= "\n" . '-- WordPress Configuration' . "\n\n";
