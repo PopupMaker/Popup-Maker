@@ -77,6 +77,7 @@ Already created a form in your email marketing service? Using our free version, 
 * AWeber
 * InfusionSoft
 * GetResponse
+* Convertkit
 * Constant Contact
 * Mail Poet
 * Mad Mimi
@@ -137,7 +138,7 @@ People who use Popup Maker to grow their email list have found many creative way
 * Content upgrade popups - Provide more value from your blog posts by giving visitors more resources in exchange for their email address within an optin popup
 * White paper popups - Provide industry reports or other white papers using forms within a popup
 
-Even better, Popup Maker integrates with all the most popup form plugins so you can easily embed a form you have already created right into your popups!
+Even better, Popup Maker integrates with all the most popular form plugins so you can easily embed a form you have already created right into your popups!
 
 = What are some ways popups can increase my WooCommerce store's sales and revenues? =
 Many people don't consider popups when trying to find ways to increase conversion rates and revenue on their WooCommerce site but they are actually very effective.
