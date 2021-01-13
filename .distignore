@@ -30,6 +30,7 @@ composer.lock
 gulpfile.js
 labels.json
 npm-debug.log
+readme.md
 package.json
 package-lock.json
 phpci.yml
