@@ -170,6 +170,7 @@ function ButtonEdit( props ) {
 	const {
 		pid,
 		uuid,
+		type,
 		borderRadius,
 		linkTarget,
 		placeholder,
@@ -213,6 +214,13 @@ function ButtonEdit( props ) {
 	const onSetLinkRel = useCallback(
 		( value ) => {
 			setAttributes( { rel: value } );
+		},
+		[ setAttributes ]
+	);
+
+	const onSetType = useCallback(
+		( value ) => {
+			setAttributes( { type: value } );
 		},
 		[ setAttributes ]
 	);
@@ -275,6 +283,8 @@ function ButtonEdit( props ) {
 					identifier="text"
 				/>
 			</div>
+
+			{ 'link' === type && (
 			<URLPicker
 				url={ url }
 				setAttributes={ setAttributes }
@@ -282,7 +292,25 @@ function ButtonEdit( props ) {
 				opensInNewTab={ linkTarget === '_blank' }
 				onToggleOpenInNewTab={ onToggleOpenInNewTab }
 			/>
+			) }
+
 			<InspectorControls>
+				<SelectControl
+					label={ __(
+						'Which type of CTA would you like to use?',
+						'popup-maker'
+					) }
+					options={ Object.values( callToActions ).map(
+						( { key: value, label } ) => {
+							return { label, value };
+						}
+					) }
+					onChange={ ( value ) => {
+						onSetType( value );
+					} }
+					value={ type }
+				/>
+
 				<BorderPanel
 					borderRadius={ borderRadius }
 					setAttributes={ setAttributes }
