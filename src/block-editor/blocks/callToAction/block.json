@@ -13,7 +13,8 @@
 		"text": {
 			"type": "string",
 			"source": "html",
-			"selector": "a"
+			"selector": "a",
+      "default": "Learn More!"
 		},
 		"type": {
 			"type": "string",
@@ -59,8 +60,7 @@
 			"type": "string"
 		},
 		"align": {
-			"type": "string",
-			"default": "center"
+			"type": "string"
 		}
 	},
 	"supports": {
