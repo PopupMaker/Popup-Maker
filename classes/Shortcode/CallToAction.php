@@ -102,7 +102,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 				'main' => [
 					'type' => [
 						'type'     => 'select',
-						'label'    => __( 'Type of CTA', 'popup-maker' ),
+						'label'    => __( 'Which type of CTA would you like to use?', 'popup-maker' ),
 						'options'  => $this->calltoactions->get_select_list(),
 						'std'      => 'link',
 						'priority' => 0,
@@ -121,8 +121,8 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 						'type'     => 'radio',
 						'label'    => __( 'Choose a style.', 'popup-maker' ),
 						'options'  => [
-							'fill'      => __( 'Fill' ),
-							'outline'   => __( 'Outline' ),
+							'fill'      => __( 'Fill', 'default' ),
+							'outline'   => __( 'Outline', 'default' ),
 							'text-only' => __( 'Text Only', 'popup-maker' ),
 						],
 						'std'      => 'button',
@@ -202,17 +202,20 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		$url             = $atts['url'];
 		$target          = $atts['linkTarget'] ? '_blank' : '_self';
 		$text            = ! empty( $atts['text'] ) ? $atts['text'] : $content;
+		$style           = $atts['style'];
 		$align           = $atts['align'];
 		$uuid            = PUM_Site_CallToActions::generate_cta_uuid( pum_get_popup_id(), $type, $text );
 		$wrapper_classes = array_merge(
 			[
+				'shortcode-pum-call-to-action',
 				'pum-cta-wrapper',
 				'pum-cta',
 				'pum-cta--link',
 				'align' . $align,
+				'is-style-' . $style,
 				'text-only' === $atts['style'] ? 'pum-cta--button' : null,
 			]
-			// explode( ',', $atts['element_classes'] )
+			// explode( ',', $atts['element_classes'] ).
 		);
 
 		/**
@@ -239,7 +242,8 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 			$cta_content = sprintf(
 				"<a href='%s' class='%s' target='%s' data-pum-cta-type='%s' rel='noreferrer noopener'>%s</a>",
 				esc_url_raw( $url ),
-				'pum-cta-button__link', // implode( ' ', array_filter( $classes ) ),
+				'pum-cta-button__link',
+				// implode( ' ', array_filter( $classes ) ),
 				$target,
 				$type,
 				$text
