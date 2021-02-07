@@ -215,7 +215,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 				'is-style-' . $style,
 				'text-only' === $atts['style'] ? 'pum-cta--button' : null,
 			]
-			// explode( ',', $atts['element_classes'] )
+			// explode( ',', $atts['element_classes'] ).
 		);
 
 		/**
