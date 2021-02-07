@@ -84,7 +84,7 @@ function URLPicker( {
 } ) {
 	const [ isURLPickerOpen, setIsURLPickerOpen ] = useState( false );
 	const urlIsSet = !! url;
-	const urlIsSetandSelected = urlIsSet && isSelected;
+	const urlIsSetAndSelected = urlIsSet && isSelected;
 	const openLinkControl = () => {
 		setIsURLPickerOpen( true );
 		return false; // prevents default behaviour for event
@@ -97,7 +97,7 @@ function URLPicker( {
 		} );
 		setIsURLPickerOpen( false );
 	};
-	const linkControl = ( isURLPickerOpen || urlIsSetandSelected ) && (
+	const linkControl = ( isURLPickerOpen || urlIsSetAndSelected ) && (
 		<Popover
 			position="bottom center"
 			onClose={ () => setIsURLPickerOpen( false ) }
@@ -131,7 +131,7 @@ function URLPicker( {
 							onClick={ openLinkControl }
 						/>
 					) }
-					{ urlIsSetandSelected && (
+					{ urlIsSetAndSelected && (
 						<ToolbarButton
 							name="link"
 							icon={ linkOff }
