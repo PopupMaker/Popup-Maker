@@ -21,12 +21,33 @@ import LogoIcon from '../../icons/logo';
 import edit from './edit';
 import metadata from './block.json';
 import save from './save';
+import { callToActions, getDefaults } from './utils';
 
 const { debounce } = _;
 
 metadata.attributes.text.default = __( 'Learn More!', 'popup-maker' );
 
 const { name, category, parent, attributes, supports } = metadata;
+
+const defaultVariation = applyFilters(
+	'pum/cta-block/defaultVariation',
+	'link'
+);
+
+// Generate list of variations from our Calls to Actions.
+const variations = callToActions.map( ( cta ) => {
+	const defaults = getDefaults( cta.key );
+	return {
+		name: cta.key,
+		title: cta.label,
+		isDefault: defaultVariation === cta.key,
+		attributes: {
+			...defaults,
+			type: cta.key,
+			className: 'pum-cta--' + cta.key,
+		},
+	};
+} );
 
 export { metadata, name };
 
@@ -65,14 +86,7 @@ export const settings = {
 			textColor: '#333333',
 		},
 	],
-	// variations: applyFilters( 'pum/cta-block/variations', [
-	// 	{
-	// 		name: 'blue',
-	// 		title: __( 'Blue Quote' ),
-	// 		isDefault: true,
-	// 		attributes: { className: 'is-style-blue-quote' },
-	// 	},
-	// ] ),
+	variations: applyFilters( 'pum/cta-block/variations', variations ),
 	edit,
 	save,
 	merge: ( a, { text = '' } ) => ( {
@@ -80,4 +94,3 @@ export const settings = {
 		text: ( a.text || '' ) + text,
 	} ),
 };
-
