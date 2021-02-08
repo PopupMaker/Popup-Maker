@@ -197,6 +197,9 @@ function ButtonEdit( props ) {
 				).length <= 1
 	);
 
+	/**
+	 * Check for missing or invalid attributes, correct them and update.
+	 */
 	useEffect( () => {
 		const update = {};
 
@@ -303,11 +306,9 @@ function ButtonEdit( props ) {
 						'Which type of CTA would you like to use?',
 						'popup-maker'
 					) }
-					options={ Object.values( callToActions ).map(
-						( { key: value, label } ) => {
-							return { label, value };
-						}
-					) }
+					options={ callToActions.map( ( { key: value, label } ) => {
+						return { label, value };
+					} ) }
 					onChange={ ( value ) => {
 						onSetType( value );
 					} }
