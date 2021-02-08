@@ -34,17 +34,33 @@ const defaultVariation = applyFilters(
 	'link'
 );
 
+const defaultDescription = __(
+	'Insert a call to action to let users convert to a specific action.',
+	'popup-maker'
+);
+
 // Generate list of variations from our Calls to Actions.
 const variations = callToActions.map( ( cta ) => {
 	const defaults = getDefaults( cta.key );
 	return {
 		name: cta.key,
 		title: cta.label,
+		description: cta.meta.variation_description || defaultDescription,
 		isDefault: defaultVariation === cta.key,
+		icon: cta.meta.variation_icon || LogoIcon,
 		attributes: {
 			...defaults,
 			type: cta.key,
 			className: 'pum-cta--' + cta.key,
+			text: cta.meta.variation_text_default || attributes.text.default,
+		},
+		example: {
+			attributes: {
+				className: 'is-style-fill',
+				backgroundColor: '#8eae1b',
+				textColor: '#ffffff',
+				//text: __( 'Call to Action', 'popup-maker' ),
+			},
 		},
 	};
 } );
@@ -54,10 +70,7 @@ export { metadata, name };
 export const settings = {
 	name,
 	title: __( 'CTA Button', 'popup-maker' ),
-	description: __(
-		'Insert a call to action to let users convert to a specific action.',
-		'popup-maker'
-	),
+	description: defaultDescription,
 	category,
 	//  parent,
 	icon: LogoIcon,

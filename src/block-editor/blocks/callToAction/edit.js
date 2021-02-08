@@ -37,7 +37,7 @@ import { useSelect } from '@wordpress/data';
 /**
  * Internal dependencies
  */
-import { callToActions } from './utils';
+import { getCta } from './utils';
 import ColorEdit from './color-edit';
 import getColorAndStyleProps from './color-props';
 
@@ -251,9 +251,10 @@ function ButtonEdit( props ) {
 	const colorProps = getColorAndStyleProps( attributes, colors, true );
 	const blockProps = useBlockProps();
 
+	const typeSettings = getCta( type );
+
 	return (
 		<>
-			<ColorEdit { ...props } />
 			<div { ...blockProps }>
 				<RichText
 					placeholder={ placeholder || __( 'Add text…' ) }
@@ -297,25 +298,9 @@ function ButtonEdit( props ) {
 			) }
 
 			<InspectorControls>
-				<SelectControl
-					label={ __(
-						'Which type of CTA would you like to use?',
-						'popup-maker'
-					) }
-					options={ callToActions.map( ( { key: value, label } ) => {
-						return { label, value };
-					} ) }
-					onChange={ ( value ) => {
-						onSetType( value );
-					} }
-					value={ type }
-				/>
-
-				<BorderPanel
-					borderRadius={ borderRadius }
-					setAttributes={ setAttributes }
-				/>
-				<PanelBody title={ __( 'Link settings' ) }>
+				<PanelBody
+					title={ sprintf( __( '%s settings' ), typeSettings.label ) }
+				>
 					<ToggleControl
 						label={ __( 'Open in new tab' ) }
 						onChange={ onToggleOpenInNewTab }
@@ -327,6 +312,12 @@ function ButtonEdit( props ) {
 						onChange={ onSetLinkRel }
 					/>
 				</PanelBody>
+
+				<BorderPanel
+					borderRadius={ borderRadius }
+					setAttributes={ setAttributes }
+				/>
+				<ColorEdit { ...props } />
 			</InspectorControls>
 		</>
 	);
