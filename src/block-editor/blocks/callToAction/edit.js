@@ -302,11 +302,9 @@ function ButtonEdit( props ) {
 						'Which type of CTA would you like to use?',
 						'popup-maker'
 					) }
-					options={ Object.values( callToActions ).map(
-						( { key: value, label } ) => {
-							return { label, value };
-						}
-					) }
+					options={ callToActions.map( ( { key: value, label } ) => {
+						return { label, value };
+					} ) }
 					onChange={ ( value ) => {
 						onSetType( value );
 					} }
