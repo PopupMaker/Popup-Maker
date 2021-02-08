@@ -24,6 +24,8 @@ import save from './save';
 
 const { debounce } = _;
 
+metadata.attributes.text.default = __( 'Learn More!', 'popup-maker' );
+
 const { name, category, parent, attributes, supports } = metadata;
 
 export { metadata, name };
