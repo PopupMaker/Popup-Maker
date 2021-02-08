@@ -8,7 +8,7 @@ const nanoid = customAlphabet( '1234567890abcdef', 10 );
 /**
  * WordPress dependencies
  */
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useState, useEffect } from '@wordpress/element';
 import {
 	KeyboardShortcuts,
@@ -39,7 +39,8 @@ import { useSelect } from '@wordpress/data';
 /**
  * Internal dependencies
  */
-import { callToActions } from './utils';
+import Fields from './../../components/fields';
+import { getCta } from './utils';
 import ColorEdit from './color-edit';
 import getColorAndStyleProps from './color-props';
 
@@ -255,9 +256,10 @@ function ButtonEdit( props ) {
 	const colorProps = getColorAndStyleProps( attributes, colors, true );
 	const blockProps = useBlockProps();
 
+	const typeSettings = getCta( type );
+
 	return (
 		<>
-			<ColorEdit { ...props } />
 			<div { ...blockProps }>
 				<RichText
 					placeholder={ placeholder || __( 'Add text…' ) }
@@ -301,25 +303,17 @@ function ButtonEdit( props ) {
 			) }
 
 			<InspectorControls>
-				<SelectControl
-					label={ __(
-						'Which type of CTA would you like to use?',
-						'popup-maker'
-					) }
-					options={ callToActions.map( ( { key: value, label } ) => {
-						return { label, value };
-					} ) }
-					onChange={ ( value ) => {
-						onSetType( value );
-					} }
-					value={ type }
-				/>
+				<PanelBody
+					title={ sprintf( __( '%s settings' ), typeSettings.label ) }
+				>
+					{
+						<Fields
+							fields={ typeSettings.fields }
+							values={ attributes }
+							setAttributes={ setAttributes }
+						/>
+					}
 
-				<BorderPanel
-					borderRadius={ borderRadius }
-					setAttributes={ setAttributes }
-				/>
-				<PanelBody title={ __( 'Link settings' ) }>
 					<ToggleControl
 						label={ __( 'Open in new tab' ) }
 						onChange={ onToggleOpenInNewTab }
@@ -331,6 +325,12 @@ function ButtonEdit( props ) {
 						onChange={ onSetLinkRel }
 					/>
 				</PanelBody>
+
+				<BorderPanel
+					borderRadius={ borderRadius }
+					setAttributes={ setAttributes }
+				/>
+				<ColorEdit { ...props } />
 			</InspectorControls>
 		</>
 	);

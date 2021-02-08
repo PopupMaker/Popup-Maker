@@ -76,6 +76,8 @@ class PUM_Admin_BlockEditor {
 						'pum_block_editor_popup_trigger_excluded_blocks',
 						[
 							'core/nextpage',
+							'pum/call-to-action',
+							'pum/call-to-actions',
 						]
 					),
 				]

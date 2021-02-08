@@ -24,6 +24,13 @@ abstract class PUM_Abstract_CallToAction implements PUM_Interface_CallToAction {
 	protected $key = '';
 
 	/**
+	 * Additional meta data to pass to the block editor.
+	 *
+	 * @var array
+	 */
+	protected $meta = [];
+
+	/**
 	 * Version  of the email provider implementation. Used for compatibility.
 	 *
 	 * @var int
@@ -93,6 +100,15 @@ abstract class PUM_Abstract_CallToAction implements PUM_Interface_CallToAction {
 	}
 
 	/**
+	 * Get meta.
+	 *
+	 * @return array
+	 */
+	public function meta() {
+		return $this->meta;
+	}
+
+	/**
 	 * Get fields including the built in default fields.
 	 *
 	 * @return array
@@ -112,6 +128,7 @@ abstract class PUM_Abstract_CallToAction implements PUM_Interface_CallToAction {
 			'label'   => $this->label(),
 			'fields'  => $this->fields(),
 			'version' => $this->version,
+			'meta'    => $this->meta(),
 		];
 	}
 }
