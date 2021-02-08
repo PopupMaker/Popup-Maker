@@ -13,7 +13,7 @@ const gulp = require( 'gulp' ),
 	srcPath = path.join( config.root.dev, config.js.dev );
 
 function sass_watcher() {
-	$fn.saneWatch( path.join( config.root.dev, config.css.dev , '/**/*.s+(a|c)ss' ), { debounce: 300 }, gulp.parallel( 'css', 'cssrtl' ) );
+	$fn.saneWatch( path.join( config.root.dev, config.css.dev, '/**/*.s+(a|c)ss' ), { debounce: 300 }, gulp.parallel( 'css', 'cssrtl' ) );
 }
 
 sass_watcher.description = 'Starts a scss/sass file watcher.';
@@ -30,7 +30,7 @@ function js_site_watcher() {
 js_site_watcher.description = 'Starts site Javascript file watcher.';
 
 function webpack_block_editor_watcher() {
-	$fn.saneWatch( path.join( config.root.dir, 'src/block-editor', '/**/*.js' ), { debounce: 300 }, gulp.parallel( 'webpack:blockEditor' ) );
+	$fn.saneWatch( path.join( config.root.dir, 'src/block-editor', '/**/*.j+(s|son)' ), { debounce: 300 }, gulp.parallel( 'webpack:blockEditor' ) );
 	$fn.saneWatch( path.join( config.root.dir, 'src/block-editor', '/**/*.s+(a|c)ss' ), { debounce: 300 }, gulp.parallel( 'webpack:blockEditor' ) );
 }
 
