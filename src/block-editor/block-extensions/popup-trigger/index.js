@@ -9,7 +9,13 @@ import classnames from 'classnames';
 import { __ } from '@wordpress/i18n';
 import { addFilter } from '@wordpress/hooks';
 import { InspectorControls } from '@wordpress/block-editor';
-import { Icon, Panel, PanelBody, PanelRow, Tooltip } from '@wordpress/components';
+import {
+	Icon,
+	Panel,
+	PanelBody,
+	PanelRow,
+	Tooltip,
+} from '@wordpress/components';
 import { createHigherOrderComponent } from '@wordpress/compose';
 
 /**
@@ -26,6 +32,8 @@ import GearIcon from '../../icons/gears';
 const allowedBlocks = [];
 const excludedBlocks = pum_block_editor_vars.popup_trigger_excluded_blocks || [
 	'core/nextpage',
+	'pum/call-to-action',
+	'pum/call-to-actions',
 ];
 
 function isAllowedForBlockType( name ) {
@@ -54,7 +62,10 @@ function isAllowedForBlockType( name ) {
 function addAttributes( settings ) {
 	//check if object exists for old Gutenberg version compatibility
 	//add allowedBlocks restriction
-	if ( typeof settings.attributes !== 'undefined' && isAllowedForBlockType( settings.name ) ) {
+	if (
+		typeof settings.attributes !== 'undefined' &&
+		isAllowedForBlockType( settings.name )
+	) {
 		settings.attributes = Object.assign( settings.attributes, {
 			openPopupId: {
 				type: 'string',
@@ -90,36 +101,61 @@ const withAdvancedControls = createHigherOrderComponent( ( BlockEdit ) => {
 								initialOpen={ false }
 							>
 								<PanelRow>
-									{ __( 'These settings allow you to control popups with this block.', 'popup-maker' ) }
+									{ __(
+										'These settings allow you to control popups with this block.',
+										'popup-maker'
+									) }
 								</PanelRow>
 								<PanelRow>
 									<PopupSelectControl
-										label={ <>
-											{ __( 'Open Popup', 'popup-maker' ) }
-											<Tooltip
-												position="top"
-												text={ __( 'This method does not work well with all block types.', 'popup-maker' ) }
-											>
-												<a href="https://docs.wppopupmaker.com/article/395-trigger-click-open-overview-methods" target="_blank" rel="noopener noreferrer">
-													<Icon
-														size="16"
-														icon="editor-help"
-														title={ __( 'Open documentation', 'popup-maker' ) }
-														style={ {
-															verticalAlign: 'middle',
-														} }
-													/>
-												</a>
-											</Tooltip>
-										</> }
+										label={
+											<>
+												{ __(
+													'Open Popup',
+													'popup-maker'
+												) }
+												<Tooltip
+													position="top"
+													text={ __(
+														'This method does not work well with all block types.',
+														'popup-maker'
+													) }
+												>
+													<a
+														href="https://docs.wppopupmaker.com/article/395-trigger-click-open-overview-methods"
+														target="_blank"
+														rel="noopener noreferrer"
+													>
+														<Icon
+															size="16"
+															icon="editor-help"
+															title={ __(
+																'Open documentation',
+																'popup-maker'
+															) }
+															style={ {
+																verticalAlign:
+																	'middle',
+															} }
+														/>
+													</a>
+												</Tooltip>
+											</>
+										}
 										value={ openPopupId }
-										onChange={ ( popupId ) => setAttributes( { openPopupId: popupId } ) }
-										help={ __( 'Open a popup when clicking this block', 'popup-maker' ) }
+										onChange={ ( popupId ) =>
+											setAttributes( {
+												openPopupId: popupId,
+											} )
+										}
+										help={ __(
+											'Open a popup when clicking this block',
+											'popup-maker'
+										) }
 									/>
 								</PanelRow>
 							</PanelBody>
 						</Panel>
-
 					</InspectorControls>
 				) }
 			</>
@@ -142,8 +178,15 @@ function applyTriggerClass( extraProps, blockType, attributes ) {
 	//check if attribute exists for old Gutenberg version compatibility
 	//add class only when visibleOnMobile = false
 	//add allowedBlocks restriction
-	if ( typeof openPopupId !== 'undefined' && openPopupId > 0 && isAllowedForBlockType( blockType.name ) ) {
-		extraProps.className = classnames( extraProps.className, 'popmake-' + openPopupId );
+	if (
+		typeof openPopupId !== 'undefined' &&
+		openPopupId > 0 &&
+		isAllowedForBlockType( blockType.name )
+	) {
+		extraProps.className = classnames(
+			extraProps.className,
+			'popmake-' + openPopupId
+		);
 	}
 
 	return extraProps;
@@ -154,17 +197,17 @@ function applyTriggerClass( extraProps, blockType, attributes ) {
 addFilter(
 	'blocks.registerBlockType',
 	'popup-maker/popup-trigger-attributes',
-	addAttributes,
+	addAttributes
 );
 
 addFilter(
 	'editor.BlockEdit',
 	'popup-maker/popup-trigger-advanced-control',
-	withAdvancedControls,
+	withAdvancedControls
 );
 
 addFilter(
 	'blocks.getSaveContent.extraProps',
 	'popup-maker/applyTriggerClass',
-	applyTriggerClass,
+	applyTriggerClass
 );
