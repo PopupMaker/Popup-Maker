@@ -15,6 +15,7 @@ import {
 	PanelBody,
 	RangeControl,
 	TextControl,
+	SelectControl,
 	ToggleControl,
 	ToolbarButton,
 	ToolbarGroup,
@@ -36,6 +37,7 @@ import { useSelect } from '@wordpress/data';
 /**
  * Internal dependencies
  */
+import { callToActions } from './utils';
 import ColorEdit from './color-edit';
 import getColorAndStyleProps from './color-props';
 
@@ -182,7 +184,6 @@ function ButtonEdit( props ) {
 	/**
 	 * The following chunk of code is for making sure all CTAs have unique uuids.
 	 */
-
 	const isIdUnique = useSelect(
 		( select ) =>
 			select( 'core/block-editor' )
@@ -193,6 +194,9 @@ function ButtonEdit( props ) {
 				).length <= 1
 	);
 
+	/**
+	 * Check for missing or invalid attributes, correct them and update.
+	 */
 	useEffect( () => {
 		const update = {};
 
@@ -201,9 +205,7 @@ function ButtonEdit( props ) {
 		}
 
 		if ( pid === undefined || ! pid || pid <= 0 ) {
-			update.pid = wp.data
-				.select( 'core/editor' )
-				.getCurrentPostId();
+			update.pid = wp.data.select( 'core/editor' ).getCurrentPostId();
 		}
 
 		if ( Object.keys( update ).length ) {
@@ -285,13 +287,13 @@ function ButtonEdit( props ) {
 			</div>
 
 			{ 'link' === type && (
-			<URLPicker
-				url={ url }
-				setAttributes={ setAttributes }
-				isSelected={ isSelected }
-				opensInNewTab={ linkTarget === '_blank' }
-				onToggleOpenInNewTab={ onToggleOpenInNewTab }
-			/>
+				<URLPicker
+					url={ url }
+					setAttributes={ setAttributes }
+					isSelected={ isSelected }
+					opensInNewTab={ linkTarget === '_blank' }
+					onToggleOpenInNewTab={ onToggleOpenInNewTab }
+				/>
 			) }
 
 			<InspectorControls>
