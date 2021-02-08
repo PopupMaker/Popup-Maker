@@ -29,6 +29,8 @@ const { popupTriggerExcludedBlocks } = window.popupMakerBlockEditor;
 const allowedBlocks: string[] = [];
 const excludedBlocks: string[] = popupTriggerExcludedBlocks || [
 	'core/nextpage',
+	'pum/call-to-action',
+	'pum/call-to-actions',
 ];
 
 function isAllowedForBlockType( name: string ) {
