@@ -39,7 +39,34 @@ const defaultDescription = __(
 	'popup-maker'
 );
 
-// Generate list of variations from our Calls to Actions.
+/**
+ * Map all CTA Fields to attribute types so they can save properly.
+ */
+callToActions.forEach( ( { fields } ) => {
+	Object.entries( fields ).forEach( ( [ fieldId, field ] ) => {
+		let type = 'string';
+
+		const number = [ 'number' ];
+		const string = [ 'text', 'color', 'url', 'select' ];
+		const object = [ 'multicheck', 'postselect', 'url' ];
+
+		if ( number.indexOf( field.type ) >= 0 ) {
+			type = 'number';
+		} else if ( string.indexOf( field.type ) >= 0 ) {
+			type = 'string';
+		} else if ( object.indexOf( field.type ) >= 0 ) {
+			type = 'object';
+		}
+
+		attributes[ fieldId ] = {
+			type,
+		};
+	} );
+} );
+
+/**
+ * Generate list of variations from our Calls to Actions.
+ */
 const variations = callToActions.map( ( cta ) => {
 	const defaults = getDefaults( cta.key );
 	return {
@@ -74,8 +101,8 @@ export const settings = {
 	category,
 	//  parent,
 	icon: LogoIcon,
-	attributes,
-	supports,
+	attributes: applyFilters( 'pum/cta-block/attributes', attributes ),
+	variations: applyFilters( 'pum/cta-block/variations', variations ),
 	keywords: applyFilters( 'pum/cta-block/keywords', [
 		__( 'link' ),
 		__( 'cta', 'popup-maker' ),
@@ -99,7 +126,7 @@ export const settings = {
 			textColor: '#333333',
 		},
 	],
-	variations: applyFilters( 'pum/cta-block/variations', variations ),
+	supports,
 	edit,
 	save,
 	merge: ( a, { text = '' } ) => ( {

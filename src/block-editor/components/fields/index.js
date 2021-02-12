@@ -56,7 +56,6 @@ export default class Fields extends Component {
 	 * @param {*} value New value for the field.
 	 */
 	onChangeInputValue( fieldId, value ) {
-		debugger;
 		if ( undefined !== this.props.setAttributes ) {
 			this.props.setAttributes( { [ fieldId ]: value } );
 		}
@@ -85,7 +84,6 @@ export default class Fields extends Component {
 			const type = field.type || false;
 			const value = this.getFieldValue( fieldId, field.std || null );
 			const onChange = ( newValue ) => {
-				console.log( fieldId, newValue, field, this.props );
 				this.onChangeInputValue( fieldId, newValue );
 			};
 
