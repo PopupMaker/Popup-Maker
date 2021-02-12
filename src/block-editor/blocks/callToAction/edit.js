@@ -8,7 +8,7 @@ const nanoid = customAlphabet( '1234567890abcdef', 10 );
 /**
  * WordPress dependencies
  */
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useState, useEffect } from '@wordpress/element';
 import {
 	KeyboardShortcuts,
@@ -37,6 +37,7 @@ import { useSelect } from '@wordpress/data';
 /**
  * Internal dependencies
  */
+import Fields from './../../components/fields';
 import { getCta } from './utils';
 import ColorEdit from './color-edit';
 import getColorAndStyleProps from './color-props';
@@ -301,6 +302,14 @@ function ButtonEdit( props ) {
 				<PanelBody
 					title={ sprintf( __( '%s settings' ), typeSettings.label ) }
 				>
+					{
+						<Fields
+							fields={ typeSettings.fields }
+							values={ attributes }
+							setAttributes={ setAttributes }
+						/>
+					}
+
 					<ToggleControl
 						label={ __( 'Open in new tab' ) }
 						onChange={ onToggleOpenInNewTab }
