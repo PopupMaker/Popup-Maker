@@ -413,8 +413,3 @@ function popmake_initialize() {
 function PopMake() {
 	return Popup_Maker::instance();
 }
-
-/**
- * This is currently here until we reorganize the plugin file structure to handle package loading & composer autoloading with failure notices.
- */
-require_once( plugin_dir_path( __FILE__ ) . '/packages/action-scheduler/action-scheduler.php' );
