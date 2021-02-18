@@ -23,7 +23,6 @@ const eslintConfig = {
     }
   },
   rules: {},
-
   overrides: [
     {
       // Turns off some of esnext rules for our assets JS until we migrate to babel or other.
