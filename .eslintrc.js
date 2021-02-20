@@ -38,7 +38,9 @@ const eslintConfig = {
         "no-useless-computed-key": "off",
         "no-useless-constructor": "off",
         "no-var": "off",
-        "object-shorthand": "off"
+        "object-shorthand": "off",
+		"wrap-iife": "off",
+		"camelcase": "any",
       }
     }
   ]
