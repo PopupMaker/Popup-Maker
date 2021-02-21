@@ -278,7 +278,7 @@ class PUM_Admin_Templates {
 
 		<script type="text/html" id="tmpl-pum-field-wrapper">
 			<div class="pum-field pum-field-{{data.type}} {{data.id}}-wrapper {{data.classes}}"
-			     data-id="{{data.id}}" <# print( data.dependencies !== '' ? "data-pum-dependencies='" + data.dependencies + "'" : ''); #> <# print( data.dynamic_desc !== '' ? "data-pum-dynamic-desc='" + data.dynamic_desc + "'" : ''); #>>
+			      data-id="{{data.id}}" <# print( data.dependencies !== '' ? "data-pum-dependencies='" + data.dependencies + "'" : ''); #> <# print( data.dynamic_desc !== '' ? "data-pum-dynamic-desc='" + data.dynamic_desc + "'" : ''); #>>
 			<# if (typeof data.label === 'string' && data.label.length > 0) { #>
 			<label for="{{data.id}}">
 				{{{data.label}}}
@@ -452,7 +452,7 @@ class PUM_Admin_Templates {
 				<td class="settings-column">{{{PUM_Admin.triggers.getSettingsDesc(data.type, data.settings)}}}</td>
 				<td class="list-item-actions">
 					<button type="button" class="edit dashicons dashicons-edit no-button" aria-label="<?php _e( 'Edit this trigger', 'popup-maker' ); ?>"></button>
-					<button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php _e( 'Delete` this trigger', 'popup-maker' ); ?>"></button>
+					<button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php _e( 'Delete this trigger', 'popup-maker' ); ?>"></button>
 				</td>
 			</tr>
 		</script>
