@@ -59,29 +59,17 @@ var PUM_Accessibility;
 			}
 		},
 		setFocusToFirstItem: function() {
-			// set focus to first focusable item
-			currentModal
+			var $firstEl = currentModal
 				.find( '.pum-container *' )
 				.filter( focusableElementsString )
 				.filter( ':visible' )
-				.filter( ':not(.pum-close)' )
-				.first()
-				.focus();
-		},
-	};
+				//.filter( ':not(.pum-close)' )
+				.first();
 
-	$( document )
-		.on( 'pumInit', selector, function() {
-			PUM.getPopup( this )
-				.find( '[tabindex]' )
-				.each( function() {
-					var $this = $( this );
-					$this
-						.data( 'tabindex', $this.attr( 'tabindex' ) )
-						.prop( 'tabindex', '0' );
-				} );
-		} )
-		.on( 'pumBeforeOpen', selector, function() {
+			// set focus to first focusable item
+			$firstEl.focus();
+		},
+		initiateFocusLock: function() {
 			var $popup = PUM.getPopup( this ),
 				$focused = $( ':focus' );
 
@@ -109,8 +97,22 @@ var PUM_Accessibility;
 
 			// Accessibility: Focus on the modal.
 			PUM_Accessibility.setFocusToFirstItem();
+		},
+	};
+
+	$( document )
+		.on( 'pumInit', selector, function() {
+			PUM.getPopup( this )
+				.find( '[tabindex]' )
+				.each( function() {
+					var $this = $( this );
+					$this
+						.data( 'tabindex', $this.attr( 'tabindex' ) )
+						.prop( 'tabindex', '0' );
+				} );
 		} )
-		.on( 'pumAfterOpen', selector, function() {} )
+		.on( 'pumBeforeOpen', selector, function() {} )
+		.on( 'pumAfterOpen', selector, PUM_Accessibility.initiateFocusLock )
 		.on( 'pumBeforeClose', selector, function() {} )
 		.on( 'pumAfterClose', selector, function() {
 			var $popup = PUM.getPopup( this );
