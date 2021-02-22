@@ -241,9 +241,9 @@ var cookies;
 							settings: {
 								name: '',
 								key: '',
-								session: false,
+								session: null,
+								path: null,
 								time: '30 days',
-								path: true,
 							},
 						},
 						args
