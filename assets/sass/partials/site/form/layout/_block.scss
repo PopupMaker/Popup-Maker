@@ -3,9 +3,11 @@
  ******************************************************************************/
 
 .pum-form--layout-block {
-  .pum-form__field,
-  div, input, button {
-    display: block;
-    width: 100%;
-  }
+	.pum-form__field,
+	div,
+	input,
+	button {
+		display: block;
+		width: 100%;
+	}
 }
