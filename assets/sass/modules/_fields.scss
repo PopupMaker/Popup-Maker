@@ -91,6 +91,32 @@ $custom-select2-selector: 'select2' !default;
 	}
 }
 
+.#{$plugin-prefix}-field-select2 {
+	.#{$plugin-prefix}select2-container {
+		&.#{$plugin-prefix}select2-container--below.#{$plugin-prefix}select2-container--open
+			+ .#{$plugin-prefix}select2-container--open {
+			top: 36px!important;
+		}
+
+		.#{$plugin-prefix}select2-selection--multiple
+			.#{$plugin-prefix}select2-search--inline
+			.#{$plugin-prefix}select2-search__field {
+			margin-top: 0;
+		}
+
+		.#{$plugin-prefix}select2-dropdown
+			.#{$plugin-prefix}select2-search__field {
+			// padding: 0 8px;
+		}
+	}
+
+	.#{$plugin-prefix}select2-container--default
+		.#{$plugin-prefix}select2-selection--single
+		.#{$plugin-prefix}select2-selection__arrow {
+		height: 30px !important;
+	}
+}
+
 /**
  * Checkbox fields
  */
@@ -112,7 +138,7 @@ $custom-select2-selector: 'select2' !default;
 
 	input[type='checkbox'] {
 		position: absolute;
-		top: 0.25em;
+		top: 5px;
 	}
 }
 
@@ -171,6 +197,22 @@ $custom-select2-selector: 'select2' !default;
 		padding-right: 25px;
 		text-align: right;
 		width: 80px;
+		vertical-align: middle;
+
+	}
+
+	.#{$plugin-prefix}-range-plus,
+	.#{$plugin-prefix}-range-minus {
+		// padding: 5px;
+		text-align: center;
+		height: 30px;
+		width: 30px;
+		font-size: 18px;
+		vertical-align: middle;
+	}
+
+	.#{$plugin-prefix}-range-plus {
+		margin-left: 5px;
 	}
 
 	.range-value-unit,
@@ -350,7 +392,7 @@ $custom-select2-selector: 'select2' !default;
 				z-index: 10;
 				//width: 23px;
 				line-height: 24px;
-				height: 25px;
+				height: 28px;
 
 				//padding: 0;
 				background: #f7f7f7;
