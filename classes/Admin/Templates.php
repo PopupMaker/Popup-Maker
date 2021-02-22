@@ -687,7 +687,7 @@ class PUM_Admin_Templates {
 				<td class="settings-column">{{{PUM_Admin.cookies.getSettingsDesc(data.event, data.settings)}}}</td>
 				<td class="list-item-actions">
 					<button type="button" class="edit dashicons dashicons-edit no-button" aria-label="<?php _e( 'Edit this cookie', 'popup-maker' ); ?>"></button>
-					<button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php _e( 'Delete` this cookie', 'popup-maker' ); ?>"></button>
+					<button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php _e( 'Delete this cookie', 'popup-maker' ); ?>"></button>
 				</td>
 			</tr>
 		</script>
