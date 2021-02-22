@@ -6,13 +6,17 @@
 #wp-admin-bar-popup-maker > .ab-item::before {
   background: url(/wp-content/plugins/popup-maker/assets/images/admin/icon-info-21x21.png) center center no-repeat transparent !important;
   top: 3px;
-  content: "";
+  content: '';
   width: 20px;
   height: 20px;
 }
 
 #wp-admin-bar-popup-maker:hover > .ab-item::before {
   background-image: url(/wp-content/plugins/popup-maker/assets/images/admin/icon-info-21x21.png) !important;
+}
+
+#wp-admin-bar-popup-maker li#wp-admin-bar-flush-popup-cache a {
+  color: #8c8 !important;
 }
 
 /*# sourceMappingURL=pum-admin-bar-rtl.css.map */

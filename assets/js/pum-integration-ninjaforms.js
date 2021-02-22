@@ -164,9 +164,10 @@ __webpack_require__.r(__webpack_exports__);
 
       new pumNFController();
     }
-  };
+  }; // Initiate when ready.
 
-  $(document).ready(initialize_nf_support);
+
+  $(initialize_nf_support);
 }
 
 /***/ }),
