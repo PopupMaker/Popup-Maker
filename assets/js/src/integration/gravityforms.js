@@ -32,7 +32,9 @@
 			// Nothing should happen if older action settings not applied
 			// except triggering of pumFormSuccess event for old cookie method.
 			window.PUM.forms.success($form, gFormSettings[formId] || {});
-		})
+		});
+
+
 		/**
 		 * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
 		 *
@@ -40,7 +42,7 @@
 		 *
 		 * This is here for backward compatibility with form actions prior to v1.9.
 		 */
-		.ready(function() {
+		$(function() {
 			$(".gform_wrapper > form").each(function() {
 				const $form = $(this),
 					formId = $form.attr("id").replace("gform_", ""),

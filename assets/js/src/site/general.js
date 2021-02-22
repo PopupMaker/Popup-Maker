@@ -31,7 +31,8 @@
         PUM.integrations.init();
     };
 
-    $(document).ready(function () {
+	// Initiate when ready.
+    $(function () {
         // TODO can this be moved outside doc.ready since we are awaiting our own promises first?
         var initHandler = PUM.hooks.applyFilters('pum.initHandler', PUM.init);
         var initPromises = PUM.hooks.applyFilters('pum.initPromises', []);

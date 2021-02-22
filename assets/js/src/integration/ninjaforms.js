@@ -62,5 +62,6 @@
 		}
 	};
 
-	$( document ).ready( initialize_nf_support );
+	// Initiate when ready.
+	$( initialize_nf_support );
 }

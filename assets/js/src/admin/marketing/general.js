@@ -6,7 +6,8 @@
 
 	window.PUM_Admin = window.PUM_Admin || {};
 
-	$(document).ready(function() {
+	// Initiate when ready.
+	$(function() {
 		$('a[href="edit.php?post_type=popup&page=pum-extensions"]').css({
 			color: "#a0d468"
 		});

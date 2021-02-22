@@ -12,7 +12,42 @@
 	};
 
 	$( document )
-		.ready( function() {
+		.on( 'keydown', '#popup-title', function( event ) {
+			var keyCode = event.keyCode || event.which;
+			if ( 9 === keyCode ) {
+				event.preventDefault();
+				$( '#title' ).focus();
+			}
+		} )
+		.on( 'keydown', '#title, #popup-title', function( event ) {
+			var keyCode = event.keyCode || event.which,
+				target;
+			if ( ! event.shiftKey && 9 === keyCode ) {
+				event.preventDefault();
+				target =
+					$( this ).attr( 'id' ) === 'title'
+						? '#popup-title'
+						: '#insert-media-button';
+				$( target ).focus();
+			}
+		} )
+		.on( 'keydown', '#popup-title, #insert-media-button', function(
+			event
+		) {
+			var keyCode = event.keyCode || event.which,
+				target;
+			if ( event.shiftKey && 9 === keyCode ) {
+				event.preventDefault();
+				target =
+					$( this ).attr( 'id' ) === 'popup-title'
+						? '#title'
+						: '#popup-title';
+				$( target ).focus();
+			}
+		} );
+
+		// Initiate when ready.
+		$( function() {
 			$( this ).trigger( 'pum_init' );
 
 			$( '#title' ).prop( 'required', true );
@@ -257,38 +292,5 @@
 						}
 					}
 				} );
-		} )
-		.on( 'keydown', '#popup-title', function( event ) {
-			var keyCode = event.keyCode || event.which;
-			if ( 9 === keyCode ) {
-				event.preventDefault();
-				$( '#title' ).focus();
-			}
-		} )
-		.on( 'keydown', '#title, #popup-title', function( event ) {
-			var keyCode = event.keyCode || event.which,
-				target;
-			if ( ! event.shiftKey && 9 === keyCode ) {
-				event.preventDefault();
-				target =
-					$( this ).attr( 'id' ) === 'title'
-						? '#popup-title'
-						: '#insert-media-button';
-				$( target ).focus();
-			}
-		} )
-		.on( 'keydown', '#popup-title, #insert-media-button', function(
-			event
-		) {
-			var keyCode = event.keyCode || event.which,
-				target;
-			if ( event.shiftKey && 9 === keyCode ) {
-				event.preventDefault();
-				target =
-					$( this ).attr( 'id' ) === 'popup-title'
-						? '#title'
-						: '#popup-title';
-				$( target ).focus();
-			}
 		} );
 } )( jQuery );

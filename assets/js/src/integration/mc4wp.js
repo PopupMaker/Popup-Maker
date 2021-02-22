@@ -6,7 +6,8 @@
 	const formProvider = 'mc4wp';
 	const $ = window.jQuery;
 
-	$( document ).ready( () => {
+	// Initiate when ready.
+	$( () => {
 		if ( typeof mc4wp !== 'undefined' ) {
 			mc4wp.forms.on( 'success', function ( form, data ) {
 				const $form = $( form.element ),

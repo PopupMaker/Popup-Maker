@@ -161,42 +161,6 @@
 
 	// Register All Cookies for a Popup
 	$( document )
-		.ready( function() {
-			var $cookies = $( '.pum-cookie' );
-
-			$cookies.each( function() {
-				var $cookie = $( this ),
-					index = $cookies.index( $cookie ),
-					args = $cookie.data( 'cookie-args' );
-
-				// If only-onscreen not set or false, set the cookie immediately.
-				if ( ! $cookie.data( 'only-onscreen' ) ) {
-					setCookie( args );
-				} else {
-					// If the element is visible on page load, set the cookie.
-					if ( $cookie.isInViewport() && $cookie.is( ':visible' ) ) {
-						setCookie( args );
-					} else {
-						// Add a throttled scroll listener, when its in view, set the cookie.
-						$( window ).on(
-							'scroll.pum-cookie-' + index,
-							$.fn.popmake.utilities.throttle( function( event ) {
-								if (
-									$cookie.isInViewport() &&
-									$cookie.is( ':visible' )
-								) {
-									setCookie( args );
-
-									$( window ).off(
-										'scroll.pum-cookie-' + index
-									);
-								}
-							}, 100 )
-						);
-					}
-				}
-			} );
-		} )
 		.on( 'pumInit', '.pum', function() {
 			var $popup = PUM.getPopup( this ),
 				settings = $popup.popmake( 'getSettings' ),
@@ -215,4 +179,42 @@
 				}
 			}
 		} );
+
+	// Initiate when ready.
+	$( function() {
+		var $cookies = $( '.pum-cookie' );
+
+		$cookies.each( function() {
+			var $cookie = $( this ),
+				index = $cookies.index( $cookie ),
+				args = $cookie.data( 'cookie-args' );
+
+			// If only-onscreen not set or false, set the cookie immediately.
+			if ( ! $cookie.data( 'only-onscreen' ) ) {
+				setCookie( args );
+			} else {
+				// If the element is visible on page load, set the cookie.
+				if ( $cookie.isInViewport() && $cookie.is( ':visible' ) ) {
+					setCookie( args );
+				} else {
+					// Add a throttled scroll listener, when its in view, set the cookie.
+					$( window ).on(
+						'scroll.pum-cookie-' + index,
+						$.fn.popmake.utilities.throttle( function( event ) {
+							if (
+								$cookie.isInViewport() &&
+								$cookie.is( ':visible' )
+							) {
+								setCookie( args );
+
+								$( window ).off(
+									'scroll.pum-cookie-' + index
+								);
+							}
+						}, 100 )
+					);
+				}
+			}
+		} );
+	} )
 } )( jQuery, document );
