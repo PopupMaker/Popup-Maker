@@ -9,6 +9,7 @@
 * Improvement: Updated admin form styles to match recent WP core changes. [Issue #707](https://github.com/PopupMaker/Popup-Maker/issues/707)
 * Fix: Bug preventing saving "Sitewide" cookie option unchecked. [Issue #642](https://github.com/PopupMaker/Popup-Maker/issues/642)
 * Fix: Removed Action Scheduler library due to edge case issues with no reasonable long term solutions. [Issue #853](https://github.com/PopupMaker/Popup-Maker/issues/853)
+* Fix: Added multiple sanity checks to code to prevent various edge cases resulting from improperly coded themes & plugins.
 
 ## [v1.15.0 - 01/12/2021](https://github.com/PopupMaker/Popup-Maker/milestone/30)
 
