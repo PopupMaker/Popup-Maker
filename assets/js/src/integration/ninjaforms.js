@@ -20,7 +20,7 @@
 						settings = {};
 
 					// Bail if submission failed.
-					if ( response.errors.length ) {
+					if ( response.errors && response.errors.length ) {
 						return;
 					}
 
