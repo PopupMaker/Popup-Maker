@@ -10,6 +10,7 @@
 * Fix: Bug preventing saving "Sitewide" cookie option unchecked. [Issue #642](https://github.com/PopupMaker/Popup-Maker/issues/642)
 * Fix: Removed Action Scheduler library due to edge case issues with no reasonable long term solutions. [Issue #853](https://github.com/PopupMaker/Popup-Maker/issues/853)
 * Fix: Added multiple sanity checks to code to prevent various edge cases resulting from improperly coded themes & plugins.
+* Fix: Update integration with Contact Form 7 due to breaking changes in their recent v5.4 update. [Issue #946](https://github.com/PopupMaker/Popup-Maker/issues/946)
 
 ## [v1.15.0 - 01/12/2021](https://github.com/PopupMaker/Popup-Maker/milestone/30)
 

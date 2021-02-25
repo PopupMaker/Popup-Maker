@@ -181,13 +181,14 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
-= v1.16.0 - 02/22/2021
+= v1.16.0 - 02/22/2021 =
 * Feature: Add 'flush popup cache' link in admin bar menu to quickly clear cached plugin JS & CSS files. [Issue #931](https://github.com/PopupMaker/Popup-Maker/issues/931)
 * Improvement: Remove 'Tools -> System Info' page, use WP Site Health page instead. [Issue #862](https://github.com/PopupMaker/Popup-Maker/issues/862)
 * Improvement: Accessibility forced focus can now focus main close button if nothing else is available. [Issue #943](https://github.com/PopupMaker/Popup-Maker/issues/943)
 * Improvement: Updated admin form styles to match recent WP core changes. [Issue #707](https://github.com/PopupMaker/Popup-Maker/issues/707)
 * Fix: Bug preventing saving "Sitewide" cookie option unchecked. [Issue #642](https://github.com/PopupMaker/Popup-Maker/issues/642)
 * Fix: Removed Action Scheduler library due to edge case issues with no reasonable long term solutions. [Issue #853](https://github.com/PopupMaker/Popup-Maker/issues/853)
+* Fix: Update integration with Contact Form 7 due to breaking changes in their recent v5.4 update. [Issue #946](https://github.com/PopupMaker/Popup-Maker/issues/946)
 
 = v1.15.0 - 01/12/2021 =
 * Feature: Automatically enqueue popups when detected during page load [Issue $543](https://github.com/PopupMaker/Popup-Maker/issues/543)
