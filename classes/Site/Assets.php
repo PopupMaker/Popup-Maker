@@ -225,10 +225,6 @@ class PUM_Site_Assets {
 			'popups'                 => array(),
 		) ) );
 
-		// TODO Remove all trace usages of these in JS so they can be removed.
-		// @deprecated 1.4 Use pum_vars instead.
-		wp_localize_script( 'popup-maker-site', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
-
 		if ( Popup_Maker::debug_mode() || isset( $_GET['pum_debug'] ) ) {
 			wp_localize_script( 'popup-maker-site', 'pum_debug_vars', apply_filters( 'pum_debug_vars', array(
 				'debug_mode_enabled'    => __( 'Popup Maker', 'popup-maker' ) . ': ' . __( 'Debug Mode Enabled', 'popup-maker' ),
