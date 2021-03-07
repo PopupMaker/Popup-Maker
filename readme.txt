@@ -186,6 +186,7 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 * Improvement: Remove 'Tools -> System Info' page, use WP Site Health page instead. [Issue #862](https://github.com/PopupMaker/Popup-Maker/issues/862)
 * Improvement: Accessibility forced focus can now focus main close button if nothing else is available. [Issue #943](https://github.com/PopupMaker/Popup-Maker/issues/943)
 * Improvement: Updated admin form styles to match recent WP core changes. [Issue #707](https://github.com/PopupMaker/Popup-Maker/issues/707)
+* Fix: Block previews failed to load for some 3rd party blocks. [Issue #868](https://github.com/PopupMaker/Popup-Maker/issues/868). Thanks @ndiego
 * Fix: Bug preventing saving "Sitewide" cookie option unchecked. [Issue #642](https://github.com/PopupMaker/Popup-Maker/issues/642)
 * Fix: Removed Action Scheduler library due to edge case issues with no reasonable long term solutions. [Issue #853](https://github.com/PopupMaker/Popup-Maker/issues/853)
 * Fix: Update integration with Contact Form 7 due to breaking changes in their recent v5.4 update. [Issue #946](https://github.com/PopupMaker/Popup-Maker/issues/946)
