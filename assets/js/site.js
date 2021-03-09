@@ -827,6 +827,9 @@ var PUM;
     // Stores the last open popup.
     $.fn.popmake.last_open_popup = null;
 
+	// Here for backward compatibility.
+	window.ajaxurl = window.pum_vars.ajaxurl;
+
     window.PUM.init = function () {
         console.log('init popups ✔');
         $('.pum').popmake();
@@ -4563,11 +4566,12 @@ __webpack_require__.r(__webpack_exports__);
   $(document).on("wpcf7mailsent", function (event, details) {
     var formId = event.detail.contactFormId,
         $form = $(event.target),
+        identifier = event.detail.id || event.detail.unitTag,
         // Converts string like wpcf7-f190-p2-o11 and reduces it to simply 11, the last o11 is the instance ID.
     // More accurate way of doing it in case things change in the future, this version filters out all but the o param.
     // formInstanceId = .split('-').filter((string) => string.indexOf('o') === 0)[0].replace('o','');
     // Simpler version that simply splits and pops the last item in the array. This requires it always be the last.
-    formInstanceId = event.detail.id.split("-").pop().replace("o", ""); // All the magic happens here.
+    formInstanceId = identifier.split("-").pop().replace("o", ""); // All the magic happens here.
 
     window.PUM.integrations.formSubmission($form, {
       formProvider: formProvider,
@@ -5185,7 +5189,7 @@ __webpack_require__.r(__webpack_exports__);
               settings = {}; // Bail if submission failed.
 
 
-          if (response.errors.length) {
+          if (response.errors && response.errors.length) {
             return;
           } // All the magic happens here.
 
@@ -5206,7 +5210,7 @@ __webpack_require__.r(__webpack_exports__);
            * This is here for backward compatibility with form actions prior to v1.9.
            */
 
-          if ('undefined' !== typeof response.data.actions) {
+          if (response.data && response.data.actions) {
             settings.openpopup = 'undefined' !== typeof response.data.actions.openpopup;
             settings.openpopup_id = settings.openpopup ? parseInt(response.data.actions.openpopup) : 0;
             settings.closepopup = 'undefined' !== typeof response.data.actions.closepopup;
