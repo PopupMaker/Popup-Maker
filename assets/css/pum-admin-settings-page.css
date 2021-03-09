@@ -42,7 +42,7 @@
   width: 100%;
 }
 
-.wrap-licenses .popmake-license-data[class*="popmake-license-"] {
+.wrap-licenses .popmake-license-data[class*='popmake-license-'] {
   position: absolute;
   background: #fafafa;
   padding: 14px;
@@ -54,11 +54,11 @@
   box-sizing: border-box;
 }
 
-.wrap-licenses .popmake-license-data[class*="popmake-license-"] a {
+.wrap-licenses .popmake-license-data[class*='popmake-license-'] a {
   color: #444;
 }
 
-.wrap-licenses .popmake-license-data[class*="popmake-license-"] a:hover {
+.wrap-licenses .popmake-license-data[class*='popmake-license-'] a:hover {
   text-decoration: none;
 }
 

@@ -2,28 +2,27 @@
  * Copyright (c) 2020, Code Atlantic LLC
  ************************************************************/
 
-$plugin-prefix: "pum";
-$custom-select2-selector: "pumselect2";
+$plugin-prefix: 'pum';
+$custom-select2-selector: 'pumselect2';
 $tab-color: #e4e4e4;
 
 // Shared modules.
-@import "modules/general";
-@import "modules/fields";
-@import "modules/select2";
-@import "modules/tabs";
-@import "modules/modal";
-@import "modules/alerts";
-@import "partials/admin/mixins";
-@import "partials/admin/fields";
-@import "partials/admin/marketing";
-@import "partials/admin/deprecated";
+@import 'modules/general';
+@import 'modules/fields';
+@import 'modules/select2';
+@import 'modules/tabs';
+@import 'modules/modal';
+@import 'modules/alerts';
+@import 'partials/admin/mixins';
+@import 'partials/admin/fields';
+@import 'partials/admin/marketing';
+@import 'partials/admin/deprecated';
 
 /************
 Styles for upgrade notice bar
 ************/
 
-@media screen and (max-width: 1023px) {
-
+@media screen and ( max-width: 1023px ) {
 	.pum-notice-bar {
 		display: none !important;
 	}
@@ -54,14 +53,13 @@ Styles for upgrade notice bar
 	}
 }
 
-
 /************
 Styles for our log viewers
 ************/
 #log-viewer {
 	background-color: #fff;
 	border: 1px solid #e5e5e5;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	box-shadow: 0 1px 1px rgba( 0, 0, 0, 0.04 );
 	padding: 5px 20px;
 	margin: 20px 0;
 }
@@ -79,7 +77,7 @@ Styles for welcome screen
 	padding: 10px;
 	background-color: #fff;
 
-	@media only screen and (min-width: 600px) {
+	@media only screen and ( min-width: 600px ) {
 		max-width: 500px;
 		margin: 40px auto 0;
 		padding: 40px 30px;
@@ -129,7 +127,7 @@ Styles for toggle buttons
 
 		&::before {
 			position: absolute;
-			content: "";
+			content: '';
 			height: 14px;
 			width: 14px;
 			left: 2px;
@@ -155,7 +153,7 @@ Styles for toggle buttons
 
 		&:checked + label::before {
 			background-color: #fff;
-			transform: translateX(15px);
+			transform: translateX( 15px );
 		}
 	}
 }
@@ -178,11 +176,11 @@ Styles for toggle buttons
 		&.pum-flex-quarter {
 			max-width: 25% !important;
 
-			&:nth-child(4n+1) {
+			&:nth-child( 4n + 1 ) {
 				padding-left: 0;
 			}
 
-			&:nth-child(4n+4) {
+			&:nth-child( 4n + 4 ) {
 				padding-right: 0;
 			}
 		}
@@ -190,11 +188,11 @@ Styles for toggle buttons
 		&.pum-flex-third {
 			max-width: 33.333% !important;
 
-			&:nth-child(3n+1) {
+			&:nth-child( 3n + 1 ) {
 				padding-left: 0;
 			}
 
-			&:nth-child(3n+3) {
+			&:nth-child( 3n + 3 ) {
 				padding-right: 0;
 			}
 		}
@@ -202,11 +200,11 @@ Styles for toggle buttons
 		&.pum-flex-half {
 			max-width: 50% !important;
 
-			&:nth-child(2n+1) {
+			&:nth-child( 2n + 1 ) {
 				padding-left: 0;
 			}
 
-			&:nth-child(2n+2) {
+			&:nth-child( 2n + 2 ) {
 				padding-right: 0;
 			}
 		}
@@ -226,7 +224,6 @@ Styles for toggle buttons
 }
 
 .pum-tabbed-form {
-
 	.pum-field {
 		position: relative;
 		margin: 0 0 24px;
@@ -261,9 +258,7 @@ Styles for toggle buttons
 	}
 
 	.pum-field.checkbox {
-
 		label {
-
 			&.pum-desc {
 				display: inline;
 				font-weight: inherit;
@@ -276,7 +271,7 @@ Styles for toggle buttons
 	.pum-required {
 		label::after {
 			color: #a00;
-			content: "*";
+			content: '*';
 			margin-left: 5px;
 		}
 	}
@@ -288,8 +283,7 @@ Styles for toggle buttons
 	top: 7px;
 	margin-left: 5px;
 
-	@media only screen and (min-width: 0px) and (max-width: 783px) {
+	@media only screen and ( min-width: 0px ) and ( max-width: 783px ) {
 		display: none !important;
 	}
-
 }

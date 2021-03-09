@@ -1,14 +1,27 @@
 # Popup Maker Changelog
 
+
+## [v1.16.0 - 03/09/2021](https://github.com/PopupMaker/Popup-Maker/milestone/31)
+
+* Feature: Add 'flush popup cache' link in admin bar menu [Issue #931](https://github.com/PopupMaker/Popup-Maker/issues/931)
+* Improvement: Remove 'Tools -> System Info' page, use WP Site Health page instead. [Issue #862](https://github.com/PopupMaker/Popup-Maker/issues/862)
+* Improvement: Accessibility forced focus can now focus main close button if nothing else is available. [Issue #943](https://github.com/PopupMaker/Popup-Maker/issues/943)
+* Improvement: Updated admin form styles to match recent WP core changes. [Issue #707](https://github.com/PopupMaker/Popup-Maker/issues/707)
+* Fix: Block previews failed to load for some 3rd party blocks. [Issue #868](https://github.com/PopupMaker/Popup-Maker/issues/868). Thanks @ndiego
+* Fix: Bug preventing saving "Sitewide" cookie option unchecked. [Issue #642](https://github.com/PopupMaker/Popup-Maker/issues/642)
+* Fix: Removed Action Scheduler library due to edge case issues with no reasonable long term solutions. [Issue #853](https://github.com/PopupMaker/Popup-Maker/issues/853)
+* Fix: Added multiple sanity checks to code to prevent various edge cases resulting from improperly coded themes & plugins.
+* Fix: Update integration with Contact Form 7 due to breaking changes in their recent v5.4 update. [Issue #946](https://github.com/PopupMaker/Popup-Maker/issues/946)
+
 ## [v1.15.0 - 01/12/2021](https://github.com/PopupMaker/Popup-Maker/milestone/30)
 
-* Feature: Automatically enqueue popups when detected during page load [Issue 543](https://github.com/PopupMaker/Popup-Maker/issues/543)
-* Improvement: Improvements to 'Extend' page [Issue 913](https://github.com/PopupMaker/Popup-Maker/issues/913)
+* Feature: Automatically enqueue popups when detected during page load [Issue #543](https://github.com/PopupMaker/Popup-Maker/issues/543)
+* Improvement: Improvements to 'Extend' page [Issue #913](https://github.com/PopupMaker/Popup-Maker/issues/913)
 * Improvement: Start working toward more consistent linking/documentation strategy
-* Fix: Popup defaults() method only returns default values for checkbox fields [Issue 927](https://github.com/PopupMaker/Popup-Maker/issues/927)
-* Fix: PUM_Telemetry triggers PHP warnings in (CLI) cron [Issue 919](https://github.com/PopupMaker/Popup-Maker/issues/919)
-* Fix: pum-admin-bar Script Fails to Load [Issue 907](https://github.com/PopupMaker/Popup-Maker/issues/907) Thanks @fluxism!
-* Fix: JS error: Uncaught TypeError: Cannot set property 'popups' of undefined [Issue 635](https://github.com/PopupMaker/Popup-Maker/issues/635)
+* Fix: Popup defaults() method only returns default values for checkbox fields [Issue #927](https://github.com/PopupMaker/Popup-Maker/issues/927)
+* Fix: PUM_Telemetry triggers PHP warnings in (CLI) cron [Issue #919](https://github.com/PopupMaker/Popup-Maker/issues/919)
+* Fix: pum-admin-bar Script Fails to Load [Issue #907](https://github.com/PopupMaker/Popup-Maker/issues/907) Thanks @fluxism!
+* Fix: JS error: Uncaught TypeError: Cannot set property 'popups' of undefined [Issue #635](https://github.com/PopupMaker/Popup-Maker/issues/635)
 * Fix: Undefined SCSS variable causing errors in building block components
 
 ## [v1.14.0 - 12/16/2020](https://github.com/PopupMaker/Popup-Maker/milestone/29)
@@ -65,7 +78,7 @@
 
 ## v1.11.1 - 07/22/2020
 
-* Fix: Form submission cookies no longer set with Contact Form 7 5.2 
+* Fix: Form submission cookies no longer set with Contact Form 7 5.2
 
 ## v1.11.0 - 06/25/2020
 
@@ -94,7 +107,7 @@
 
 ## v1.10.0 - 04/20/2020
 * Feature: Display presets for top bar, bottom right slide-ins, full-screen popups & bottom left notifications to make it simple to get common setups done much quicker
-* Feature: Popup Trigger inline text format for the block editor.   
+* Feature: Popup Trigger inline text format for the block editor.
 * Feature: Turn any block in Gutenberg block editor into a popup trigger.
 * Feature: Font Awesome support added to close button text setting.
 * Feature: Play a sound when a popup is opened. Choose from 5 included sounds or upload your own.

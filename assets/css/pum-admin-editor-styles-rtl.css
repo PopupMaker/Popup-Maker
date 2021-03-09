@@ -1,7 +1,7 @@
 /*!******************************************************************************
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
-.wpview-wrap[data-wpview-text^="%5Bpopup_trigger"] {
+.wpview-wrap[data-wpview-text^='%5Bpopup_trigger'] {
   display: inline-block;
 }
 

@@ -6,7 +6,8 @@
 
     window.PUM_Admin = window.PUM_Admin || {};
 
-    $(document).ready(function () {
+	// Initiate when ready.
+    $(function () {
         var $container = $('#pum-settings-container'),
             args = pum_settings_editor.form_args || {},
             values = pum_settings_editor.current_values || {};

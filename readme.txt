@@ -7,7 +7,7 @@ Tags:  marketing, ecommerce, popup, popups, optin, conversion, promotion, pop-up
 Requires at least: 4.9
 Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 1.15.0
+Stable tag: 1.16.0
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -181,14 +181,24 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
+= v1.16.0 - 03/09/2021 =
+* Feature: Add 'flush popup cache' link in admin bar menu to quickly clear cached plugin JS & CSS files. [Issue #931](https://github.com/PopupMaker/Popup-Maker/issues/931)
+* Improvement: Remove 'Tools -> System Info' page, use WP Site Health page instead. [Issue #862](https://github.com/PopupMaker/Popup-Maker/issues/862)
+* Improvement: Accessibility forced focus can now focus main close button if nothing else is available. [Issue #943](https://github.com/PopupMaker/Popup-Maker/issues/943)
+* Improvement: Updated admin form styles to match recent WP core changes. [Issue #707](https://github.com/PopupMaker/Popup-Maker/issues/707)
+* Fix: Block previews failed to load for some 3rd party blocks. [Issue #868](https://github.com/PopupMaker/Popup-Maker/issues/868). Thanks @ndiego
+* Fix: Bug preventing saving "Sitewide" cookie option unchecked. [Issue #642](https://github.com/PopupMaker/Popup-Maker/issues/642)
+* Fix: Removed Action Scheduler library due to edge case issues with no reasonable long term solutions. [Issue #853](https://github.com/PopupMaker/Popup-Maker/issues/853)
+* Fix: Update integration with Contact Form 7 due to breaking changes in their recent v5.4 update. [Issue #946](https://github.com/PopupMaker/Popup-Maker/issues/946)
+
 = v1.15.0 - 01/12/2021 =
-* Feature: Automatically enqueue popups when detected during page load [Issue 543](https://github.com/PopupMaker/Popup-Maker/issues/543)
-* Improvement: Improvements to 'Extend' page [Issue 913](https://github.com/PopupMaker/Popup-Maker/issues/913)
+* Feature: Automatically enqueue popups when detected during page load [Issue $543](https://github.com/PopupMaker/Popup-Maker/issues/543)
+* Improvement: Improvements to 'Extend' page [Issue $913](https://github.com/PopupMaker/Popup-Maker/issues/913)
 * Improvement: Start working toward more consistent linking/documentation strategy
-* Fix: Popup defaults() method only returns default values for checkbox fields [Issue 927](https://github.com/PopupMaker/Popup-Maker/issues/927)
-* Fix: PUM_Telemetry triggers PHP warnings in (CLI) cron [Issue 919](https://github.com/PopupMaker/Popup-Maker/issues/919)
-* Fix: pum-admin-bar Script Fails to Load [Issue 907](https://github.com/PopupMaker/Popup-Maker/issues/907) Thanks @fluxism!
-* Fix: JS error: Uncaught TypeError: Cannot set property 'popups' of undefined [Issue 635](https://github.com/PopupMaker/Popup-Maker/issues/635)
+* Fix: Popup defaults() method only returns default values for checkbox fields [Issue $927](https://github.com/PopupMaker/Popup-Maker/issues/927)
+* Fix: PUM_Telemetry triggers PHP warnings in (CLI) cron [Issue $919](https://github.com/PopupMaker/Popup-Maker/issues/919)
+* Fix: pum-admin-bar Script Fails to Load [Issue $907](https://github.com/PopupMaker/Popup-Maker/issues/907) Thanks @fluxism!
+* Fix: JS error: Uncaught TypeError: Cannot set property 'popups' of undefined [Issue $635](https://github.com/PopupMaker/Popup-Maker/issues/635)
 * Fix: Undefined SCSS variable causing errors in building block components
 
 = v1.14.0 - 12/16/2020 =

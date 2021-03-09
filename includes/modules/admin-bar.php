@@ -193,6 +193,15 @@ class PUM_Modules_Admin_Bar {
 			'parent' => 'popup-maker',
 		) );
 
+		$wp_admin_bar->add_node(
+			array(
+				'id'     => 'flush-popup-cache',
+				'title'  => __( 'Flush Popup Cache', 'popup-maker' ),
+				'href'   => add_query_arg( 'flush_popup_cache', 'yes' ),
+				'parent' => 'pum-tools',
+			)
+		);
+
 		/**
 		 * Get Selector
 		 */

@@ -25,6 +25,8 @@ class PUM_Admin_BlockEditor {
 		add_action( 'enqueue_block_editor_assets', [ 'PUM_Site_Assets', 'register_styles' ] );
 		add_action( 'enqueue_block_editor_assets', [ __CLASS__, 'register_editor_assets' ] );
 
+		add_action( 'wp_loaded', [ __CLASS__, 'add_attributes_to_registered_blocks' ], 999 );
+
 		// Here for future use.
 		// add_action( 'enqueue_block_assets', [ __CLASS__, 'register_block_assets' ] );
 	}
@@ -94,4 +96,28 @@ class PUM_Admin_BlockEditor {
 		];
 		wp_enqueue_style( 'popup-maker-block-styles', plugins_url( $block_styles_path, Popup_Maker::$FILE ), [], $block_styles_asset['version'] );
 	}
+
+	/**
+	 * This is needed to resolve an issue with blocks that use the
+	 * ServerSideRender component. Registering the attributes only in js
+	 * can cause an error message to appear. Registering the attributes in
+	 * PHP as well, seems to resolve the issue. Ideally, this bug will be
+	 * fixed in the future.
+	 *
+	 * Reference: https://github.com/WordPress/gutenberg/issues/16850
+	 *
+	 * @since 1.16.0
+	 */
+	public static function add_attributes_to_registered_blocks() {
+
+		$registered_blocks = WP_Block_Type_Registry::get_instance()->get_all_registered();
+
+		foreach ( $registered_blocks as $block ) {
+			$block->attributes['openPopupId'] = [
+				'type'    => 'string',
+				'default' => '',
+			];
+		}
+	}
+
 }

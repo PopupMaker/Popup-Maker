@@ -124,7 +124,7 @@ __webpack_require__.r(__webpack_exports__);
               settings = {}; // Bail if submission failed.
 
 
-          if (response.errors.length) {
+          if (response.errors && response.errors.length) {
             return;
           } // All the magic happens here.
 
@@ -145,7 +145,7 @@ __webpack_require__.r(__webpack_exports__);
            * This is here for backward compatibility with form actions prior to v1.9.
            */
 
-          if ('undefined' !== typeof response.data.actions) {
+          if (response.data && response.data.actions) {
             settings.openpopup = 'undefined' !== typeof response.data.actions.openpopup;
             settings.openpopup_id = settings.openpopup ? parseInt(response.data.actions.openpopup) : 0;
             settings.closepopup = 'undefined' !== typeof response.data.actions.closepopup;
@@ -164,9 +164,10 @@ __webpack_require__.r(__webpack_exports__);
 
       new pumNFController();
     }
-  };
+  }; // Initiate when ready.
 
-  $(document).ready(initialize_nf_support);
+
+  $(initialize_nf_support);
 }
 
 /***/ }),
