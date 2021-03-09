@@ -1,7 +1,7 @@
 # Popup Maker Changelog
 
 
-## [v1.16.0 - 02/22/2021](https://github.com/PopupMaker/Popup-Maker/milestone/31)
+## [v1.16.0 - 03/09/2021](https://github.com/PopupMaker/Popup-Maker/milestone/31)
 
 * Feature: Add 'flush popup cache' link in admin bar menu [Issue #931](https://github.com/PopupMaker/Popup-Maker/issues/931)
 * Improvement: Remove 'Tools -> System Info' page, use WP Site Health page instead. [Issue #862](https://github.com/PopupMaker/Popup-Maker/issues/862)
