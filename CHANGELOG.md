@@ -1,6 +1,6 @@
 # Popup Maker Changelog
 
-## Unreleased
+## v1.16.1 - 03/21/2021
 
 * Fix: WP <5.0 and ClassicPress saw errors in the admin for usage of WP_Block_Type_Registry. [Issue #995](https://github.com/PopupMaker/Popup-Maker/issues/995)
 
