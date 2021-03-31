@@ -1,6 +1,7 @@
-/.wordpress-org
 /.git
 /.github
+/.vscode
+/.wordpress-org
 /assets/js/src
 /assets/sass
 /bin
@@ -20,6 +21,8 @@
 .gitattributes
 .gitignore
 .jshintrc
+.phpcs.xml.dist
+.prettierrc.js
 .scrutinizer.yml
 .stylelintignore
 .stylelintrc.json
@@ -30,10 +33,10 @@ composer.lock
 gulpfile.js
 labels.json
 npm-debug.log
-readme.md
 package.json
 package-lock.json
 phpci.yml
 phpunit.xml.dist
+postcss.config.js
+readme.md
 yarn-lock.json
-/package/action-scheduler/lib/cron-expression/LICENSE
