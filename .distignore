@@ -28,6 +28,7 @@
 .stylelintrc.json
 .travis.yml
 apigen.neon
+CHANGELOG.md
 composer.json
 composer.lock
 gulpfile.js
