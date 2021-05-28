@@ -889,7 +889,7 @@ var PUM_Accessibility;
 	'use strict';
 	var $top_level_elements,
 		focusableElementsString =
-			'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]',
+            'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex="0"], *[contenteditable]',
 		previouslyFocused,
 		currentModal,
 		selector = '.pum:not(.pum-accessibility-disabled)';
@@ -944,12 +944,16 @@ var PUM_Accessibility;
 			var $firstEl = currentModal
 				.find( '.pum-container *' )
 				.filter( focusableElementsString )
+                .filter( ':not(.pum-content.popmake-content)' ) // filter this out so we can use it as the fallback.
 				.filter( ':visible' )
-				//.filter( ':not(.pum-close)' )
+				.filter( ':not(.pum-close)' ) // avoid focusing on close buttons
 				.first();
 
-			// set focus to first focusable item
-			$firstEl.focus();
+            // Set focus to first focusable item that's not a close button.
+            // If none, default focus to the pum-content element which should
+            // already havetabindex="0" set.
+            if ($firstEl.length) { $firstEl.focus(); }
+            else { $(".pum-content.popmake-content").focus(); }
 		},
 		initiateFocusLock: function() {
 			var $popup = PUM.getPopup( this ),
