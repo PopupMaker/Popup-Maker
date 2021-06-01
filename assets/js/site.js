@@ -952,8 +952,12 @@ var PUM_Accessibility;
             // Set focus to first focusable item that's not a close button.
             // If none, default focus to the pum-content element which should
             // already havetabindex="0" set.
-            if ($firstEl.length) { $firstEl.focus(); }
-            else { $(".pum-content.popmake-content").focus(); }
+            if ( $firstEl.length ) { 
+                $firstEl.focus(); 
+            }
+            else { 
+                $( '.pum-content.popmake-content' ).focus(); 
+            }
 		},
 		initiateFocusLock: function() {
 			var $popup = PUM.getPopup( this ),
