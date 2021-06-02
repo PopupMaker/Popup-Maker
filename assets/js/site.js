@@ -956,7 +956,9 @@ var PUM_Accessibility;
                 $firstEl.focus(); 
             }
             else { 
-                $( '.pum-content.popmake-content' ).focus(); 
+                currentModal
+                    .find( '.pum-content.popmake-content' )
+                    .focus(); 
             }
 		},
 		initiateFocusLock: function() {
