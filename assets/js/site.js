@@ -941,13 +941,27 @@ var PUM_Accessibility;
 			}
 		},
 		setFocusToFirstItem: function() {
-			var $firstEl = currentModal
-				.find( '.pum-container *' )
+            var container = currentModal.find( ' .pum-container' ),
+                content = container.find( '.pum-content.popmake-content' ),
+                scrollable = container.hasClass( 'pum-scrollable' ),
+			    $firstEl = container.find( '*' )
 				.filter( focusableElementsString )
                 .filter( ':not(.pum-content.popmake-content)' ) // filter this out so we can use it as the fallback.
 				.filter( ':visible' )
 				.filter( ':not(.pum-close)' ) // avoid focusing on close buttons
 				.first();
+
+            // If the content overflows the container or viewport, 
+            // then focus on the content div to avoid focusing on 
+            // something like a link at the very bottom. We also
+            // need to srcoll to the top of the content.
+            if ( ( content.height() > container.height() ) || 
+                 ( content.height() > $( window ).height() ) ||
+                 scrollable ) {
+                content.focus();
+                container.scrollTop(0);
+                return;
+            }
 
             // Set focus to first focusable item that's not a close button.
             // If none, default focus to the pum-content element which should
@@ -956,9 +970,7 @@ var PUM_Accessibility;
                 $firstEl.focus(); 
             }
             else { 
-                currentModal
-                    .find( '.pum-content.popmake-content' )
-                    .focus(); 
+                content.focus();           
             }
 		},
 		initiateFocusLock: function() {
