@@ -23,19 +23,24 @@ export default function save( { attributes } ) {
 		rel,
 		text,
 		title,
-		url,
 		type,
 		uuid,
 		pid,
 	} = attributes;
 	const colorProps = getColorAndStyleProps( attributes );
+
+	const wrapperClasses = classnames(
+		'pum-cta',
+		'pum-cta--' + type,
+		'pum-cta-wrapper'
+	);
+
 	const buttonClasses = classnames(
 		'pum-cta-button__link',
 		colorProps.className,
 		{
 			'no-border-radius': borderRadius === 0,
-		},
-		'custom-class'
+		}
 	);
 	const buttonStyle = {
 		borderRadius: borderRadius ? borderRadius + 'px' : undefined,
@@ -61,10 +66,8 @@ export default function save( { attributes } ) {
 	// if it had already been assigned, for the sake of backward-compatibility.
 	// A title will no longer be assigned for new or updated button block links.
 
-	const wrapperClasses = [ 'pum-cta-wrapper' ];
-
 	return (
-		<div { ...useBlockProps.save() } className={ wrapperClasses }>
+		<div { ...{ className: wrapperClasses, ...useBlockProps.save() } }>
 			<RichText.Content
 				tagName="a"
 				className={ buttonClasses }
