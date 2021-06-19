@@ -15,12 +15,15 @@ import {
 	PanelBody,
 	RangeControl,
 	TextControl,
+	SelectControl,
 	ToggleControl,
 	ToolbarButton,
 	ToolbarGroup,
 	Popover,
 } from '@wordpress/components';
 import {
+	RichTextShortcut,
+	RichTextToolbarButton,
 	BlockControls,
 	InspectorControls,
 	RichText,
@@ -36,6 +39,7 @@ import { useSelect } from '@wordpress/data';
 /**
  * Internal dependencies
  */
+import { callToActions } from './utils';
 import ColorEdit from './color-edit';
 import getColorAndStyleProps from './color-props';
 
@@ -84,7 +88,7 @@ function URLPicker( {
 } ) {
 	const [ isURLPickerOpen, setIsURLPickerOpen ] = useState( false );
 	const urlIsSet = !! url;
-	const urlIsSetandSelected = urlIsSet && isSelected;
+	const urlIsSetAndSelected = urlIsSet && isSelected;
 	const openLinkControl = () => {
 		setIsURLPickerOpen( true );
 		return false; // prevents default behaviour for event
@@ -97,7 +101,7 @@ function URLPicker( {
 		} );
 		setIsURLPickerOpen( false );
 	};
-	const linkControl = ( isURLPickerOpen || urlIsSetandSelected ) && (
+	const linkControl = ( isURLPickerOpen || urlIsSetAndSelected ) && (
 		<Popover
 			position="bottom center"
 			onClose={ () => setIsURLPickerOpen( false ) }
@@ -131,7 +135,7 @@ function URLPicker( {
 							onClick={ openLinkControl }
 						/>
 					) }
-					{ urlIsSetandSelected && (
+					{ urlIsSetAndSelected && (
 						<ToolbarButton
 							name="link"
 							icon={ linkOff }
@@ -170,6 +174,7 @@ function ButtonEdit( props ) {
 	const {
 		pid,
 		uuid,
+		type,
 		borderRadius,
 		linkTarget,
 		placeholder,
@@ -181,7 +186,7 @@ function ButtonEdit( props ) {
 	/**
 	 * The following chunk of code is for making sure all CTAs have unique uuids.
 	 */
-
+	// TODO starting here this needs to be reconciled with index.js
 	const isIdUnique = useSelect(
 		( select ) =>
 			select( 'core/block-editor' )
@@ -200,19 +205,25 @@ function ButtonEdit( props ) {
 		}
 
 		if ( pid === undefined || ! pid || pid <= 0 ) {
-			update.pid = wp.data
-				.select( 'core/editor' )
-				.getCurrentPostId();
+			update.pid = wp.data.select( 'core/editor' ).getCurrentPostId();
 		}
 
 		if ( Object.keys( update ).length ) {
 			setAttributes( update );
 		}
 	}, [ uuid, pid ] );
+	// TODO end here. See above ^^.
 
 	const onSetLinkRel = useCallback(
 		( value ) => {
 			setAttributes( { rel: value } );
+		},
+		[ setAttributes ]
+	);
+
+	const onSetType = useCallback(
+		( value ) => {
+			setAttributes( { type: value } );
 		},
 		[ setAttributes ]
 	);
@@ -275,14 +286,34 @@ function ButtonEdit( props ) {
 					identifier="text"
 				/>
 			</div>
-			<URLPicker
-				url={ url }
-				setAttributes={ setAttributes }
-				isSelected={ isSelected }
-				opensInNewTab={ linkTarget === '_blank' }
-				onToggleOpenInNewTab={ onToggleOpenInNewTab }
-			/>
+
+			{ 'link' === type && (
+				<URLPicker
+					url={ url }
+					setAttributes={ setAttributes }
+					isSelected={ isSelected }
+					opensInNewTab={ linkTarget === '_blank' }
+					onToggleOpenInNewTab={ onToggleOpenInNewTab }
+				/>
+			) }
+
 			<InspectorControls>
+				<SelectControl
+					label={ __(
+						'Which type of CTA would you like to use?',
+						'popup-maker'
+					) }
+					options={ Object.values( callToActions ).map(
+						( { key: value, label } ) => {
+							return { label, value };
+						}
+					) }
+					onChange={ ( value ) => {
+						onSetType( value );
+					} }
+					value={ type }
+				/>
+
 				<BorderPanel
 					borderRadius={ borderRadius }
 					setAttributes={ setAttributes }
