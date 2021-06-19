@@ -202,14 +202,17 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		$url             = $atts['url'];
 		$target          = $atts['linkTarget'] ? '_blank' : '_self';
 		$text            = ! empty( $atts['text'] ) ? $atts['text'] : $content;
+		$style           = $atts['style'];
 		$align           = $atts['align'];
 		$uuid            = PUM_Site_CallToActions::generate_cta_uuid( pum_get_popup_id(), $type, $text );
 		$wrapper_classes = array_merge(
 			[
+				'shortcode-pum-call-to-action',
 				'pum-cta-wrapper',
 				'pum-cta',
 				'pum-cta--link',
 				'align' . $align,
+				'is-style-' . $style,
 				'text-only' === $atts['style'] ? 'pum-cta--button' : null,
 			]
 			// explode( ',', $atts['element_classes'] )
