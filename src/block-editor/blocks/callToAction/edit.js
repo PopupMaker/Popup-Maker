@@ -22,8 +22,6 @@ import {
 	Popover,
 } from '@wordpress/components';
 import {
-	RichTextShortcut,
-	RichTextToolbarButton,
 	BlockControls,
 	InspectorControls,
 	RichText,
@@ -186,7 +184,7 @@ function ButtonEdit( props ) {
 	/**
 	 * The following chunk of code is for making sure all CTAs have unique uuids.
 	 */
-	// TODO starting here this needs to be reconciled with index.js
+	// TODO REVIEW starting here this needs to be reconciled with index.js
 	const isIdUnique = useSelect(
 		( select ) =>
 			select( 'core/block-editor' )
@@ -197,6 +195,9 @@ function ButtonEdit( props ) {
 				).length <= 1
 	);
 
+	/**
+	 * Check for missing or invalid attributes, correct them and update.
+	 */
 	useEffect( () => {
 		const update = {};
 
@@ -212,7 +213,7 @@ function ButtonEdit( props ) {
 			setAttributes( update );
 		}
 	}, [ uuid, pid ] );
-	// TODO end here. See above ^^.
+	// TODO REVIEW end here. See above ^^.
 
 	const onSetLinkRel = useCallback(
 		( value ) => {
