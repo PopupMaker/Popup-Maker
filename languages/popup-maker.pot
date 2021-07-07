@@ -1996,8 +1996,8 @@ msgstr ""
 msgid "Insert Preset"
 msgstr ""
 
-#: classes/Admin/Templates.php:490, classes/Admin/Templates.php:523
-msgid "Choose what type of trigger to add?"
+#: classes/Admin/Templates.php:490
+msgid "What kind of trigger do you want?"
 msgstr ""
 
 #: classes/Admin/Templates.php:499
@@ -2006,6 +2006,10 @@ msgstr ""
 
 #: classes/Admin/Templates.php:506
 msgid "Stop showing popup once visitor takes this action:"
+msgstr ""
+
+#: classes/Admin/Templates.php:523
+msgid "New Trigger"
 msgstr ""
 
 #: classes/Admin/Templates.php:547

@@ -29,6 +29,12 @@
   "build": {
     "files": "./**/*.*",
     "ignore": [
+      "./git/**",
+      "./github/**",
+      "./vscode/**",
+      "./wordpress-org/**",
+      
+
       "./bin/**",
       "./build/**",
       "./release/**",
@@ -40,13 +46,21 @@
       "./assets/sass/**",
       "./tests/**",
       "./.browserslistrc",
+      "./.distignore",
       "./.editorconfig",
       "./.eslintignore",
+      "./.eslintrc.js",
       "./.gitattributes",
       "./.gitignore",
       "./.jshintrc",
+      "./.phpcs.xml.dist",
+      "./.prettierrc.js",
       "./.scrutinizer.yml",
+      "./.stylelintignore",
+      "./.stylelintrc.json",
+      "./.travis.yml",
       "./apigen.neon",
+      "./CHANGELOG.md",
       "./composer.json",
       "./composer.lock",
       "./labels.json",
@@ -57,6 +71,7 @@
       "./package-lock.json",
       "./phpci.yml",
       "./phpunit.xml.dist",
+      "./postcss.config.js",
       "./yarn.lock",
       "./yarn-error.log"
     ]

@@ -487,7 +487,7 @@ class PUM_Admin_Templates {
 					'popup_trigger_add_type'         => array(
 						'id'      => 'popup_trigger_add_type',
 						'name'    => "",
-						'label'   => __( 'Choose what type of trigger to add?', 'popup-maker' ),
+						'label'   => __( 'What kind of trigger do you want?', 'popup-maker' ),
 						'type'    => 'select',
 						'options' => PUM_Triggers::instance()->dropdown_list(),
 					),
@@ -520,7 +520,7 @@ class PUM_Admin_Templates {
 
 			print(PUM_Admin.templates.modal({
 			id: 'pum_trigger_add_type_modal',
-			title: '<?php _e( 'Choose what type of trigger to add?', 'popup-maker' ); ?>',
+			title: '<?php _e( 'New Trigger', 'popup-maker' ); ?>',
 			content: content,
 			save_button: pum_admin_vars.I10n.add || '<?php __( 'Add', 'popup-maker' ); ?>'
 			}));

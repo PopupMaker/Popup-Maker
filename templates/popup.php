@@ -26,7 +26,7 @@
 		 * Render the content.
 		 */
 		?>
-		<div class="<?php pum_popup_classes( null, 'content' ); ?>">
+		<div class="<?php pum_popup_classes( null, 'content' ); ?>" <?php pum_popup_content_tabindex_attr(); ?>>
 			<?php pum_popup_content(); ?>
 		</div>
 

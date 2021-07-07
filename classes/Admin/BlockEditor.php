@@ -109,6 +109,11 @@ class PUM_Admin_BlockEditor {
 	 * @since 1.16.0
 	 */
 	public static function add_attributes_to_registered_blocks() {
+		global $wp_version;
+
+		if ( version_compare( $wp_version, '5.0' ) === -1 ) {
+			return;
+		}
 
 		$registered_blocks = WP_Block_Type_Registry::get_instance()->get_all_registered();
 

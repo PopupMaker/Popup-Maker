@@ -1,6 +1,6 @@
 {
   "name": "popup-maker",
-  "version": "1.16.0",
+  "version": "1.16.2",
   "description": "WordPress Popup Plugin",
   "homepage": "https://wppopupmaker.com",
   "author": "Code Atlantic LLC",
@@ -80,7 +80,7 @@
     "ignore-emit-webpack-plugin": "^2.0.2",
     "merge-stream": "^1.0.1",
     "mini-css-extract-plugin": "^0.9.0",
-    "node-sass": "4.13.0",
+    "node-sass": "4.13.1",
     "path": "^0.12.7",
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.7.0",
