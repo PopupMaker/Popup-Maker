@@ -889,7 +889,7 @@ var PUM_Accessibility;
 	'use strict';
 	var $top_level_elements,
 		focusableElementsString =
-            'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex="0"], *[contenteditable]',
+			'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]',
 		previouslyFocused,
 		currentModal,
 		selector = '.pum:not(.pum-accessibility-disabled)';
@@ -941,37 +941,15 @@ var PUM_Accessibility;
 			}
 		},
 		setFocusToFirstItem: function() {
-            var container = currentModal.find( ' .pum-container' ),
-                content = container.find( '.pum-content.popmake-content' ),
-                scrollable = container.hasClass( 'pum-scrollable' ),
-			    $firstEl = container.find( '*' )
+			var $firstEl = currentModal
+				.find( '.pum-container *' )
 				.filter( focusableElementsString )
-                .filter( ':not(.pum-content.popmake-content)' ) // filter this out so we can use it as the fallback.
 				.filter( ':visible' )
-				.filter( ':not(.pum-close)' ) // avoid focusing on close buttons
+				//.filter( ':not(.pum-close)' )
 				.first();
 
-            // If the content overflows the container or viewport, 
-            // then focus on the content div to avoid focusing on 
-            // something like a link at the very bottom. We also
-            // need to srcoll to the top of the content.
-            if ( ( content.height() > container.height() ) || 
-                 ( content.height() > $( window ).height() ) ||
-                 scrollable ) {
-                content.focus();
-                container.scrollTop(0);
-                return;
-            }
-
-            // Set focus to first focusable item that's not a close button.
-            // If none, default focus to the pum-content element which should
-            // already havetabindex="0" set.
-            if ( $firstEl.length ) { 
-                $firstEl.focus(); 
-            }
-            else { 
-                content.focus();           
-            }
+			// set focus to first focusable item
+			$firstEl.focus();
 		},
 		initiateFocusLock: function() {
 			var $popup = PUM.getPopup( this ),

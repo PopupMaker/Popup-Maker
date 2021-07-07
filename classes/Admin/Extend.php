@@ -184,6 +184,11 @@ class PUM_Admin_Extend {
 			'advanced-targeting-conditions',
 			'secure-idle-user-logout',
 			'terms-conditions-popups',
+			'videos',
+			'edd-pro',
+			'woocommerce-pro',
+			'geotargeting',
+			'scheduling',
 		) );
 	}
 
