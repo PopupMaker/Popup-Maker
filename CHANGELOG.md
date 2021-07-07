@@ -1,10 +1,11 @@
 # Popup Maker Changelog
 
-## Unreleased
-Improvement: All plugin images optimized for size. This only affects our admin pages.
-Improvement: Various label & text changes.
-Improvement: Improved focus when popups content is taller than screen and first focusable element is off screen.
-Fix: Focus trapping issue when no focusable elements within popup contents.
+## v1.16.2 - 07/07/2021
+* Improvement: All plugin images optimized for size. This only affects our admin pages.
+* Improvement: Various label & text changes.
+* Improvement: Improved focus when popups content is taller than screen and first focusable element is off screen.
+* Fix: Focus trapping issue when no focusable elements within popup contents.
+* Fix: Deprecated function parameter notices on PHP 8.
 
 ## v1.16.1 - 03/21/2021
 
