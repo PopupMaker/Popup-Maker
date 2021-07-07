@@ -98,8 +98,9 @@
  ******************************************************************************/
 {
   var formProvider = 'mc4wp';
-  var $ = window.jQuery;
-  $(document).ready(function () {
+  var $ = window.jQuery; // Initiate when ready.
+
+  $(function () {
     if (typeof mc4wp !== 'undefined') {
       mc4wp.forms.on('success', function (form, data) {
         var $form = $(form.element),

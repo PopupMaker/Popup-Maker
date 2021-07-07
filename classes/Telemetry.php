@@ -90,7 +90,7 @@ class PUM_Telemetry {
 
 		// Cycle through each popup.
 		foreach ( $all_popups as $popup ) {
-			$settings = $popup->get_settings();
+			$settings = PUM_Admin_Popups::parse_values( $popup->get_settings() );
 
 			// Cycle through each trigger to count the number of unique triggers.
 			foreach ( $settings['triggers'] as $trigger ) {

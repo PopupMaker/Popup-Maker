@@ -163,7 +163,7 @@ class PUM_Upsell {
 					'url'  => admin_url( 'edit.php?post_type=popup_theme' ),
 				),
 				'integrations' => array(
-					'name' => esc_html__( 'Extensions and Integrations', 'popup-maker' ),
+					'name' => esc_html__( 'Upgrade', 'popup-maker' ),
 					'url'  => admin_url( 'edit.php?post_type=popup&page=pum-extensions&view=integrations' ),
 				),
 			);

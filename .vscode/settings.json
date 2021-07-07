@@ -1,0 +1,4 @@
+{
+  "phpcs.standard": "~/.phpcs.xml.dist",
+  "phpcbf.standard": "~/.phpcs.xml.dist",
+}

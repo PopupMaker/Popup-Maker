@@ -4,112 +4,122 @@
  */
 
 var PUM_Analytics;
-(function($) {
-	"use strict";
+( function( $ ) {
+	'use strict';
 
 	$.fn.popmake.last_open_trigger = null;
 	$.fn.popmake.last_close_trigger = null;
 	$.fn.popmake.conversion_trigger = null;
 
-	var rest_enabled = !!(
-		typeof pum_vars.analytics_api !== "undefined" && pum_vars.analytics_api
+	var rest_enabled = !! (
+		typeof pum_vars.analytics_api !== 'undefined' && pum_vars.analytics_api
 	);
 
 	PUM_Analytics = {
-		beacon: function(data, callback) {
+		beacon: function( data, callback ) {
 			var beacon = new Image(),
 				url = rest_enabled ? pum_vars.analytics_api : pum_vars.ajaxurl,
 				opts = {
 					route: pum.hooks.applyFilters(
-						"pum.analyticsBeaconRoute",
-						"/" + pum_vars.analytics_route + "/"
+						'pum.analyticsBeaconRoute',
+						'/' + pum_vars.analytics_route + '/'
 					),
 					data: pum.hooks.applyFilters(
-						"pum.AnalyticsBeaconData",
+						'pum.AnalyticsBeaconData',
 						$.extend(
 							true,
 							{
-								event: "open",
+								event: 'open',
 								pid: null,
-								_cache: +new Date()
+								_cache: +new Date(),
 							},
 							data
 						)
 					),
 					callback:
-						typeof callback === "function"
+						typeof callback === 'function'
 							? callback
-							: function() {}
+							: function() {},
 				};
 
-			if (!rest_enabled) {
-				opts.data.action = "pum_analytics";
+			if ( ! rest_enabled ) {
+				opts.data.action = 'pum_analytics';
 			} else {
 				url += opts.route;
 			}
 
 			// Create a beacon if a url is provided
-			if (url) {
+			if ( url ) {
 				// Attach the event handlers to the image object
-				$(beacon).on("error success load done", opts.callback);
+				$( beacon ).on( 'error success load done', opts.callback );
 
 				// Attach the src for the script call
-				beacon.src = url + "?" + $.param(opts.data);
+				beacon.src = url + '?' + $.param( opts.data );
 			}
-		}
+		},
 	};
 
 	if (
-		typeof pum_vars.disable_tracking === "undefined" ||
-		!pum_vars.disable_tracking
+		typeof pum_vars.disable_tracking === 'undefined' ||
+		! pum_vars.disable_tracking
 	) {
 		// Only popups from the editor should fire analytics events.
-		$(document)
+		$( document )
 			/**
 			 * Track opens for popups.
 			 */
-			.on("pumAfterOpen.core_analytics", ".pum", function() {
-				var $popup = PUM.getPopup(this),
+			.on( 'pumAfterOpen.core_analytics', '.pum', function() {
+				var $popup = PUM.getPopup( this ),
 					data = {
 						pid:
-							parseInt($popup.popmake("getSettings").id, 10) ||
-							null
+							parseInt(
+								$popup.popmake( 'getSettings' ).id,
+								10
+							) || null,
 					};
 
 				// Shortcode popups use negative numbers, and single-popup (preview mode) shouldn't be tracked.
-				if (data.pid > 0 && !$("body").hasClass("single-popup")) {
-					PUM_Analytics.beacon(data);
+				if (
+					data.pid > 0 &&
+					! $( 'body' ).hasClass( 'single-popup' )
+				) {
+					PUM_Analytics.beacon( data );
 				}
-			});
+			} );
 		/**
 		 * Track form submission conversions
 		 */
-		$(function() {
-			PUM.hooks.addAction("pum.integration.form.success", function(
+		$( function() {
+			PUM.hooks.addAction( 'pum.integration.form.success', function(
 				form,
 				args
 			) {
 				// If the submission has already been counted in the backend, we can bail early.
-				if (args.ajax === false) {
+				if ( args.ajax === false ) {
 					return;
 				}
 
 				// If no popup is included in the args, we can bail early since we only record conversions within popups.
-				if (args.popup.length === 0) {
+				if ( args.popup.length === 0 ) {
 					return;
 				}
 				var data = {
 					pid:
-						parseInt(args.popup.popmake("getSettings").id, 10) ||
-						null,
-					event: "conversion"
+						parseInt(
+							args.popup.popmake( 'getSettings' ).id,
+							10
+						) || null,
+					event: 'conversion',
 				};
 
 				// Shortcode popups use negative numbers, and single-popup (preview mode) shouldn't be tracked.
-				if (data.pid > 0 && !$("body").hasClass("single-popup")) {
-					PUM_Analytics.beacon(data);
+				if (
+					data.pid > 0 &&
+					! $( 'body' ).hasClass( 'single-popup' )
+				) {
+					PUM_Analytics.beacon( data );
 				}
-			});
-		});
+			} );
+		} );
 	}
-})(jQuery);
+} )( jQuery );

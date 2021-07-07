@@ -82,7 +82,7 @@
   overflow: auto;
   overflow: initial;
   display: none;
-  transition: all .15s ease-in-out;
+  transition: all 0.15s ease-in-out;
   /**
     * Use border-box for all popup content. Providing more precise sizing.
     */
@@ -93,7 +93,9 @@
 }
 
 .pum-overlay, .pum-overlay:before, .pum-overlay:after,
-.pum-overlay *, .pum-overlay *:before, .pum-overlay *:after {
+.pum-overlay *,
+.pum-overlay *:before,
+.pum-overlay *:after {
   /* Safari/Chrome, other WebKit */
   /* Firefox, other Gecko */
   box-sizing: border-box;
@@ -272,7 +274,7 @@ html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-act
 }
 
 .pum-form__field select,
-.pum-form__field input[type="date"] {
+.pum-form__field input[type='date'] {
   margin: 0 auto;
   font-size: 18px;
   line-height: 26px;
@@ -291,8 +293,8 @@ html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-act
   animation-iteration-count: infinite;
   animation-name: rotate-forever;
   animation-timing-function: linear;
-  height: .75em;
-  width: .75em;
+  height: 0.75em;
+  width: 0.75em;
   border: 0.25em solid rgba(0, 0, 0, 0.5);
   border-right-color: transparent;
   border-radius: 50%;
@@ -304,7 +306,7 @@ html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-act
 }
 
 .pum-form__submit .pum-form__loader {
-  margin-left: .5em;
+  margin-left: 0.5em;
   border: 0.25em solid rgba(255, 255, 255, 0.5);
   border-right-color: transparent;
 }
@@ -312,13 +314,13 @@ html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-act
 .pum-form__messages {
   display: none;
   border: 1px solid rgba(0, 0, 0, 0.25);
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
   padding: 1em;
   position: relative;
 }
 
 .pum-form__message {
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
 }
 
 .pum-form__message:last-child {
@@ -373,7 +375,7 @@ html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-act
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 .pum-form--layout-standard .pum-form__field > label {
-  margin-bottom: .25em;
+  margin-bottom: 0.25em;
   display: block;
 }
 
@@ -388,7 +390,9 @@ html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-act
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 .pum-form--layout-block .pum-form__field,
-.pum-form--layout-block div, .pum-form--layout-block input, .pum-form--layout-block button {
+.pum-form--layout-block div,
+.pum-form--layout-block input,
+.pum-form--layout-block button {
   display: block;
   width: 100%;
 }
@@ -404,8 +408,8 @@ html.pum-open.pum-open-overlay-disabled.pum-open-scrollable .pum-overlay.pum-act
   font-weight: bold;
 }
 
-.pum-form--style-default input[type=text],
-.pum-form--style-default input[type=email] {
+.pum-form--style-default input[type='text'],
+.pum-form--style-default input[type='email'] {
   background-color: #f8f7f7;
   margin-bottom: 5px;
   font-size: 14px;

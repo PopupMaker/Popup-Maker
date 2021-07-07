@@ -278,7 +278,7 @@ class PUM_Admin_Templates {
 
 		<script type="text/html" id="tmpl-pum-field-wrapper">
 			<div class="pum-field pum-field-{{data.type}} {{data.id}}-wrapper {{data.classes}}"
-			     data-id="{{data.id}}" <# print( data.dependencies !== '' ? "data-pum-dependencies='" + data.dependencies + "'" : ''); #> <# print( data.dynamic_desc !== '' ? "data-pum-dynamic-desc='" + data.dynamic_desc + "'" : ''); #>>
+			      data-id="{{data.id}}" <# print( data.dependencies !== '' ? "data-pum-dependencies='" + data.dependencies + "'" : ''); #> <# print( data.dynamic_desc !== '' ? "data-pum-dynamic-desc='" + data.dynamic_desc + "'" : ''); #>>
 			<# if (typeof data.label === 'string' && data.label.length > 0) { #>
 			<label for="{{data.id}}">
 				{{{data.label}}}
@@ -452,7 +452,7 @@ class PUM_Admin_Templates {
 				<td class="settings-column">{{{PUM_Admin.triggers.getSettingsDesc(data.type, data.settings)}}}</td>
 				<td class="list-item-actions">
 					<button type="button" class="edit dashicons dashicons-edit no-button" aria-label="<?php _e( 'Edit this trigger', 'popup-maker' ); ?>"></button>
-					<button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php _e( 'Delete` this trigger', 'popup-maker' ); ?>"></button>
+					<button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php _e( 'Delete this trigger', 'popup-maker' ); ?>"></button>
 				</td>
 			</tr>
 		</script>
@@ -546,7 +546,7 @@ class PUM_Admin_Templates {
 					<strong>
 						<?php _e( 'Conditions allow you to show your popup to a targeted segment of your sites users.', 'popup-maker' ); ?>
 
-						<?php printf( '%2$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%3$s', sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Targeting Conditions', 'popup-maker' ) ), '<a href="https://docs.wppopupmaker.com/article/351-popup-settings-box-targeting-option-settings?utm_medium=inline-doclink&utm_campaign=ContextualHelp&utm_source=plugin-popup-editor&utm_content=targeting-option-settings" target="_blank">', '</a>' ); ?>
+						<?php printf( '%2$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%3$s', sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Targeting Conditions', 'popup-maker' ) ), '<a href="https://docs.wppopupmaker.com/article/351-popup-settings-box-targeting-option-settings?utm_medium=inline-doclink&utm_campaign=contextual-help&utm_source=plugin-popup-editor&utm_content=targeting-option-settings" target="_blank">', '</a>' ); ?>
 					</strong>
 				</p>
 
@@ -687,7 +687,7 @@ class PUM_Admin_Templates {
 				<td class="settings-column">{{{PUM_Admin.cookies.getSettingsDesc(data.event, data.settings)}}}</td>
 				<td class="list-item-actions">
 					<button type="button" class="edit dashicons dashicons-edit no-button" aria-label="<?php _e( 'Edit this cookie', 'popup-maker' ); ?>"></button>
-					<button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php _e( 'Delete` this cookie', 'popup-maker' ); ?>"></button>
+					<button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php _e( 'Delete this cookie', 'popup-maker' ); ?>"></button>
 				</td>
 			</tr>
 		</script>

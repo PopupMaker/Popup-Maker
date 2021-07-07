@@ -11,50 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Class PUM_Admin_Extend
  */
 class PUM_Admin_Extend {
-
-	/**
-	 * @return array
-	 */
-	protected static function actual_extension_counts() {
-		$actual = array();
-
-		foreach ( self::subtabs() as $subtab => $label ) {
-			switch ( $subtab ) {
-				case 'extensions':
-					$actual[ $subtab ] = count( self::available_extensions() );
-					break;
-				case 'forms':
-					$actual[ $subtab ] = count( self::form_plugins() );
-					break;
-				case 'page-builders':
-					$actual[ $subtab ] = count( self::page_builder_plugins() );
-					break;
-				case 'other':
-					$actual[ $subtab ] = count( self::other_plugins() );
-					break;
-			}
-		}
-
-		return $actual;
-	}
-
-	/**
-	 * Return array of subtabs.
-	 *
-	 * @return mixed
-	 */
-	public static function subtabs() {
-		return apply_filters(
-			'pum_extend_subtabs',
-			array(
-				'extensions'    => __( 'Premium Extensions', 'popup-maker' ),
-				'forms'         => __( 'Forms', 'popup-maker' ),
-				'page-builders' => __( 'Page Builders', 'popup-maker' ),
-				'other'         => __( 'Other', 'popup-maker' ),
-			)
-		);
-	}
-
 	/**
 	 * Return array of Popup Maker extensions.
 	 *
@@ -67,370 +23,47 @@ class PUM_Admin_Extend {
 	}
 
 	/**
-	 * Return array of form plugins that integrate well with Popup Maker
-	 *
-	 * @return array
-	 */
-	public static function form_plugins() {
-		$form_plugins = array(
-			array(
-				'slug' => 'gravity-forms',
-				'name' => __( 'Gravity Forms', 'popup-maker' ),
-				'url'  => 'https://wppopupmaker.com/recommends/gravity-forms',
-				'desc' => __( 'Gravity Forms is one of the most popular form building plugins.', 'popup-maker' ),
-			),
-			array(
-				'slug' => 'contact-form-7',
-				'name' => __( 'Contact Form 7', 'popup-maker' ),
-				'url'  => 'https://wppopupmaker.com/recoomends/contact-form-7',
-				'desc' => __( 'CF7 is one of the most downloaded plugins on the WordPress repo. Make simple forms with ease and plenty of free addons available.', 'popup-maker' ),
-			),
-			array(
-				'slug' => 'mc4wp',
-				'name' => __( 'MailChimp For WordPress', 'popup-maker' ),
-				'url'  => 'https://wppopupmaker.com/recommends/mailchimp-for-wordpress',
-				'desc' => __( 'Allowing your visitors to subscribe to your newsletter should be easy. With this plugin, it finally is.', 'popup-maker' ),
-			),
-			array(
-				'slug' => 'caldera-forms',
-				'name' => __( 'Caldera Forms', 'popup-maker' ),
-				'url'  => 'https://wppopupmaker.com/recommends/caldera-forms',
-				'desc' => __( 'Responsive form builder for contact forms, user registration and login forms, Mailchimp, PayPal Express and more.', 'popup-maker' ),
-			),
-			array(
-				'slug' => 'wp-forms',
-				'name' => __( 'WP Forms', 'popup-maker' ),
-				'url'  => 'https://wppopupmaker.com/recommends/wp-forms',
-				'desc' => __( 'Drag & Drop online form builder that helps you create beautiful contact forms with just a few clicks.', 'popup-maker' ),
-			),
-		);
-
-		shuffle( $form_plugins );
-
-		array_unshift(
-			$form_plugins,
-			array(
-				'slug' => 'ninja-forms',
-				'name' => __( 'Ninja Forms', 'popup-maker' ),
-				'url'  => 'https://wppopupmaker.com/recommends/ninja-forms',
-				'desc' => __( 'Ninja Forms has fast become the most extensible form plugin available. Build super custom forms and integrate with your favorite services.', 'popup-maker' ),
-			)
-		);
-
-		return apply_filters( 'pum_extend_form_plugins', $form_plugins );
-	}
-
-	/**
-	 * Return array of form plugins that integrate well with Popup Maker
-	 *
-	 * @return array
-	 */
-	public static function page_builder_plugins() {
-		$page_builder_plugins = array(
-			array(
-				'slug' => 'beaver-builder',
-				'name' => __( 'Beaver Builder', 'popup-maker' ),
-				'url'  => 'https://wppopupmaker.com/recommends/beaver-builder',
-				'desc' => __( 'Easily insert saved templates into your popups for a one of a kind popup design.', 'popup-maker' ),
-			),
-		);
-
-		shuffle( $page_builder_plugins );
-
-		return apply_filters( 'pum_extend_page_builder_plugins', $page_builder_plugins );
-	}
-
-	/**
-	 * Return array of other plugins that integrate with Popup Maker
-	 *
-	 * @return array
-	 */
-	public static function other_plugins() {
-		$other_plugins = array(
-			array(
-				'slug' => 'user-menus',
-				'name' => __( 'User Menus', 'popup-maker' ),
-				'url'  => 'https://wppopupmaker.com/recommends/user-menus',
-				'desc' => __( "Show/hide menu items to logged in users, logged out users or specific user roles. Display logged in user details in menu. Add a logout link to menu.", 'popup-maker' ),
-			),
-			array(
-				'slug' => 'content-control',
-				'name' => __( 'Content Control', 'popup-maker' ),
-				'url'  => 'https://wppopupmaker.com/recommends/content-control',
-				'desc' => __( "	Restrict content to logged in/out users or specific user roles. Restrict access to certain parts of a page/post. Control the visibility of widgets.", 'popup-maker' ),
-			),
-		);
-
-		shuffle( $other_plugins );
-
-		return apply_filters( 'pum_extend_page_other_plugins', $other_plugins );
-	}
-
-	/**
 	 * Support Page
 	 *
 	 * Renders the support page contents.
 	 */
 	public static function page() {
-		// Set a new campaign for tracking purposes
-		$campaign   = isset( $_GET['view'] ) && strtolower( $_GET['view'] ) === 'integrations' ? 'PUMIntegrationsPage' : 'PUMExtensionsPage';
-		$sub_tabs   = self::subtabs();
-		$active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $sub_tabs ) ? $_GET['tab'] : 'extensions';
-
 		?>
-        <div class="wrap">
-			<h1><?php _e( 'Extensions & Integrations for Popup Maker', 'popup-maker' ) ?></h1>
+		<div class="wrap">
+			<h1><?php _e( 'Upgrade', 'popup-maker' ) ?></h1>
 			<?php PUM_Upsell::display_addon_tabs(); ?>
-            <div id="poststuff">
-                <div id="post-body" class="metabox-holder">
-                    <div id="post-body-content">
-                        <div class="pum-add-ons-view-wrapper">
-							<?php self::render_subtabs(); ?>
-                        </div>
-
-						<br class="clear" />
-						<a href="https://wppopupmaker.com/extensions/?utm_source=plugin-extension-page&utm_medium=text-link&utm_campaign=<?php echo $campaign; ?>&utm_content=browse-all" class="button-primary" title="<?php _e( 'Browse All Extensions', 'popup-maker' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'popup-maker' ); ?></a>
-                        <br class="clear" />
-
-                        <div class="pum-tabs-container">
-							<?php if ( 'forms' === $active_tab ) {
-								self::render_forms_list();
-							} elseif ( 'page-builders' === $active_tab ) {
-								self::render_page_builders_list();
-							} elseif ( 'other' === $active_tab ) {
-								self::render_other_list();
-							} else { ?>
-
-								<?php self::render_extension_list(); ?>
-
-                                <br class="clear" />
-
-                                <a href="https://wppopupmaker.com/extensions/?utm_source=plugin-extension-page&utm_medium=text-link&utm_campaign=<?php echo $campaign; ?>&utm_content=browse-all-bottom" class="button-primary" title="<?php _e( 'Browse All Extensions', 'popup-maker' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'popup-maker' ); ?></a>
-
-                                <br class="clear" /> <br class="clear" /> <br class="clear" />
-                                <hr class="clear" /><br class="clear" />
-
-							<?php } ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+			<article class="upgrade-wrapper">
+				<section class="upgrade-wrapper-hero">
+					<h2>Drive Even More Opt-Ins and Sales With Our Premium Features</h2>
+					<p>Our premium plans give you more:</p>
+					<ul>
+						<li>Triggers - Scroll, Exit-intent, Add-to-cart, and more</li>
+						<li>Integrations - MailChimp, WooCommerce, and more</li>
+						<li>Conditions - Show popups to visitors from a certain site, from search engines, using certain browsers, who has viewed X pages, and more </li>
+						<li>And much more!</li>
+					</ul>
+					<a href="https://wppopupmaker.com/pricing/?utm_campaign=upsell&utm_medium=plugin&utm_source=plugin-extension-page&utm_content=hero-cta" class="button button-primary" target="_blank" rel="noreferrer noopener">View pricing</a>
+				</section>
+				<section class="upgrade-wrapper-features">
+					<h2>Our Most Popular Premium Features</h2>
+					<?php self::render_extension_list(); ?>
+					<a href="https://wppopupmaker.com/extensions/?utm_campaign=upsell&utm_medium=plugin&utm_source=plugin-extension-page&utm_content=browse-all-bottom" class="button-primary" title="<?php _e( 'See All Premium Features', 'popup-maker' ); ?>" target="_blank" rel="noreferrer noopener"><?php _e( 'See All Premium Features', 'popup-maker' ); ?></a>
+				</section>
+			</article>
+		</div>
 		<?php
 	}
 
-	/**
-	 * Render extension page subtabs.
-	 */
-	public static function render_subtabs() {
-		$actual_counts = self::actual_extension_counts();
-		$sub_tabs      = self::subtabs();
-		$active_tab    = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $sub_tabs ) ? $_GET['tab'] : 'extensions';
-
-		?>
-
-        <style>
-            .nav-tab-wrapper .update-plugins,
-            .subsubsub .update-plugins {
-                display: inline-block;
-                margin: 1px 0 0 2px;
-                padding: 0 5px;
-                min-width: 7px;
-                height: 17px;
-                border-radius: 11px;
-                background-color: #ca4a1f;
-                color: #fff;
-                font-size: 9px;
-                line-height: 17px;
-                text-align: center;
-                z-index: 26;
-            }
-        </style>
-
-        <ul class="subsubsub"><?php
-
-			$total_tabs = count( $sub_tabs );
-			$i          = 1;
-
-			foreach ( $sub_tabs as $tab_id => $tab_name ) {
-
-				$tab_url = add_query_arg( array(
-					'settings-updated' => false,
-					'tab'              => $tab_id,
-				) );
-
-				$active = $active_tab == $tab_id ? 'current' : '';
-
-				$count = null;
-				switch ( $tab_id ) {
-					case 'extensions':
-						$count = ( $actual_counts[ $tab_id ] - 1 ) . '+';
-						break;
-					default:
-						$count = $actual_counts[ $tab_id ];
-						break;
-				}
-
-				if ( ! $count && empty( $active ) ) {
-					continue;
-				}
-
-				if ( $i > 1 ) {
-					echo ' | ';
-				}
-
-				echo '<li class="' . $tab_id . '">';
-				echo '<a href="' . esc_url( $tab_url ) . '" class="' . $active . '">';
-				echo esc_html( $tab_name );
-				echo '</a>';
-
-				if ( isset( $count ) ) {
-					echo ' <span class="count">(' . $count . ')</span>';
-				}
-
-				echo '</li>';
-
-				$i ++;
-			}
-			?>
-        </ul>
-
-		<?php
-	}
-
-	/**
-	 * Render extensions tab form list.
-	 */
-	public static function render_forms_list() {
-		// Set a new campaign for tracking purposes
-		$campaign = isset( $_GET['view'] ) && strtolower( $_GET['view'] ) === 'integrations' ? 'PUMFormIntegrationsPage' : 'PUMExtensionsFormPage';
-
-		$form_plugins = self::form_plugins();
-
-		?>
-
-        <h2><?php _e( 'These form plugins work in our popups out of the box', 'popup-maker' ); ?></h2>
-
-        <ul class="extensions-available">
-			<?php
-
-			$i = 1;
-
-			foreach ( $form_plugins as $plugin ) : ?>
-                <li class="available-extension-inner <?php echo esc_attr( $plugin['slug'] ); ?>">
-                    <h3>
-                        <a target="_blank" href="<?php echo esc_attr( $plugin['url'] ); ?>?utm_campaign=<?php echo $campaign; ?>&utm_source=plugin-extend-page&utm_medium=form-banner&utm_content=<?php echo $plugin['slug']; ?>">
-							<?php echo esc_html( $plugin['name'] ); ?>
-                        </a>
-                    </h3>
-                    <img alt="<?php echo esc_html( $plugin['name'] ); ?>" class="extension-thumbnail" src="<?php echo esc_attr( POPMAKE_URL . '/assets/images/plugins/' . $plugin['slug'] . '.png' ) ?>" />
-
-                    <p><?php echo esc_html( $plugin['desc'] ); ?></p>
-
-                    <span class="action-links">
-					<a class="button" target="_blank" href="<?php echo esc_attr( $plugin['url'] ); ?>"><?php _e( 'Check it out', 'popup-maker' ); ?></a>
-				</span>
-                </li>
-				<?php
-				$i ++;
-			endforeach; ?>
-        </ul>
-
-
-		<?php
-	}
-
-	/**
-	 * Render extensions tab page_builder list.
-	 */
-	public static function render_page_builders_list() {
-		// Set a new campaign for tracking purposes
-		$campaign = isset( $_GET['view'] ) && strtolower( $_GET['view'] ) === 'integrations' ? 'PUMFormIntegrationsPage' : 'PUMExtensionsFormPage';
-
-		$page_builder_plugins = self::page_builder_plugins();
-
-		?>
-
-        <h2><?php _e( 'These page builder plugins work in our popups out of the box', 'popup-maker' ); ?></h2>
-
-        <ul class="extensions-available">
-			<?php
-
-			$i = 1;
-
-			foreach ( $page_builder_plugins as $plugin ) : ?>
-                <li class="available-extension-inner <?php echo esc_attr( $plugin['slug'] ); ?>">
-                    <h3>
-                        <a target="_blank" href="<?php echo esc_attr( $plugin['url'] ); ?>?utm_campaign=<?php echo $campaign; ?>&utm_source=plugin-extend-page&utm_medium=page-builder-banner&utm_content=<?php echo $plugin['slug']; ?>">
-							<?php echo esc_html( $plugin['name'] ) ?>
-                        </a>
-                    </h3>
-
-                    <img class="extension-thumbnail" src="<?php echo esc_attr( POPMAKE_URL . '/assets/images/plugins/' . $plugin['slug'] . '.png' ) ?>" />
-
-                    <p><?php echo esc_html( $plugin['desc'] ); ?></p>
-
-                    <span class="action-links">
-					<a class="button" target="_blank" href="<?php echo esc_attr( $plugin['url'] ); ?>"><?php _e( 'Check it out', 'popup-maker' ); ?></a>
-				</span>
-                </li>
-				<?php
-				$i ++;
-			endforeach; ?>
-        </ul>
-
-
-		<?php
-	}
-
-	/**
-	 * Renders extensions tab other plugins list.
-	 *
-	 * @since 1.10.0
-	 */
-	public static function render_other_list() {
-		$recommended_plugins = self::other_plugins();
-		?>
-		<h2><?php _e( 'These plugins work great alongside our popups', 'popup-maker' ); ?></h2>
-
-		<ul class="extensions-available">
-			<?php
-			foreach ( $recommended_plugins as $plugin ) : ?>
-				<li class="available-extension-inner <?php echo esc_attr( $plugin['slug'] ); ?>">
-					<h3>
-						<a target="_blank" href="<?php echo esc_attr( $plugin['url'] ); ?>">
-							<?php echo esc_html( $plugin['name'] ) ?>
-						</a>
-					</h3>
-
-					<img class="extension-thumbnail" src="<?php echo esc_attr( POPMAKE_URL . '/assets/images/plugins/' . $plugin['slug'] . '.png' ) ?>" />
-
-					<p><?php echo esc_html( $plugin['desc'] ); ?></p>
-
-					<span class="action-links">
-					<a class="button" target="_blank" href="<?php echo esc_attr( $plugin['url'] ); ?>"><?php _e( 'Check it out', 'popup-maker' ); ?></a>
-				</span>
-				</li>
-				<?php
-			endforeach; ?>
-		</ul>
-
-
-		<?php
-	}
 
 	/**
 	 * Render extension tab extensions list.
 	 */
 	public static function render_extension_list() {
 		// Set a new campaign for tracking purposes
-		$campaign   = isset( $_GET['view'] ) && strtolower( $_GET['view'] ) === 'integrations' ? 'PUMIntegrationsPage' : 'PUMExtensionsPage';
+		$campaign   = 'PUMExtensionsPage';
 		$extensions = self::available_extensions();
 
 		?>
-
-        <h2><?php _e( 'Extend Popup Maker with additional premium features', 'popup-maker' ); ?></h2>
-
         <ul class="extensions-available">
 			<?php
 			//		$plugins           = get_plugins();
@@ -475,7 +108,7 @@ class PUM_Admin_Extend {
 				foreach ( $extensions as $extension ) : ?>
                     <li class="available-extension-inner <?php echo esc_attr( $extension['slug'] ); ?>">
                         <h3>
-                            <a target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=extension-title-<?php echo $i; ?>&utm_campaign=<?php echo $campaign; ?>&utm_content=<?php echo esc_attr( urlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>">
+                            <a target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=plugin&utm_campaign=upsell&utm_content=<?php echo esc_attr( urlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>-<?php echo esc_attr( $i ); ?>">
 								<?php echo esc_html( $extension['name'] ) ?>
                             </a>
                         </h3>
@@ -485,7 +118,7 @@ class PUM_Admin_Extend {
                         <p><?php echo esc_html( $extension['excerpt'] ); ?></p>
 
                         <span class="action-links">
-						<a class="button" target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=extension-button-<?php echo $i; ?>&utm_campaign=<?php echo $campaign; ?>&utm_content=<?php echo esc_attr( urlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>"><?php _e( 'Get this Extension', 'popup-maker' ); ?></a>
+						<a class="button" target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=plugin&utm_campaign=upsell&utm_content=<?php echo esc_attr( urlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>-<?php echo esc_attr( $i ); ?>"><?php _e( 'Learn more', 'popup-maker' ); ?></a>
 					</span>
 
                         <!--					--><?php

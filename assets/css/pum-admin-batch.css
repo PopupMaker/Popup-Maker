@@ -291,7 +291,8 @@
   display: none;
 }
 
-.pum-batch-progress progress, .pum-batch-progress .pum-upgrade-message-textarea {
+.pum-batch-progress progress,
+.pum-batch-progress .pum-upgrade-message-textarea {
   display: none;
 }
 

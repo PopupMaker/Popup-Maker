@@ -3,11 +3,11 @@ Contributors: danieliser, codeatlantic
 Author URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=author-url
 Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=plugin-url
 Donate link:
-Tags:  marketing, ecommerce, popup, popups, optin, conversion, promotion, pop-up, lightbox, modal
+Tags:  marketing, ecommerce, popup, popups, optin, conversion, promotion, pop-up, lightbox, modal, popupmaker
 Requires at least: 4.9
 Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 1.14.0
+Stable tag: 1.16.0
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +77,7 @@ Already created a form in your email marketing service? Using our free version, 
 * AWeber
 * InfusionSoft
 * GetResponse
+* Convertkit
 * Constant Contact
 * Mail Poet
 * Mad Mimi
@@ -103,11 +104,12 @@ Need even more features? Popup Maker has over 20 premium features including:
 * [Popup Analytics](https://wppopupmaker.com/extensions/popup-analytics/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=popup-analytics)
 * [Advanced Targeting Conditions](https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=advanced-targeting-conditions)
 * [Forced Interaction](https://wppopupmaker.com/extensions/forced-interaction/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=forced-interaction)
+* [Scheduling](https://wppopupmaker.com/extensions/scheduling/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=scheduling)
 * And [many more](https://wppopupmaker.com/extensions/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=all-extensions)!
 
 Have questions? Check out [our documentation](https://docs.wppopupmaker.com?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=questions&utm_term=documentation) or [reach out to our support](https://wppopupmaker.com/support/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=questions&utm_term=support)!
 
-Follow this plugin on [GitHub](https://github.com/PopupMaker/Popup-Maker)!
+Want to contribute? We are [on GitHub](https://github.com/PopupMaker/Popup-Maker)!
 
 Would you like to help translate the **best WordPress popup plugin** into more languages? [Join our WP-Translations Community](https://translate.wordpress.org/projects/wp-plugins/popup-maker).
 
@@ -136,7 +138,7 @@ People who use Popup Maker to grow their email list have found many creative way
 * Content upgrade popups - Provide more value from your blog posts by giving visitors more resources in exchange for their email address within an optin popup
 * White paper popups - Provide industry reports or other white papers using forms within a popup
 
-Even better, Popup Maker integrates with all the most popup form plugins so you can easily embed a form you have already created right into your popups!
+Even better, Popup Maker integrates with all the most popular form plugins so you can easily embed a form you have already created right into your popups!
 
 = What are some ways popups can increase my WooCommerce store's sales and revenues? =
 Many people don't consider popups when trying to find ways to increase conversion rates and revenue on their WooCommerce site but they are actually very effective.
@@ -179,6 +181,26 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
+= v1.16.0 - 03/09/2021 =
+* Feature: Add 'flush popup cache' link in admin bar menu to quickly clear cached plugin JS & CSS files. [Issue #931](https://github.com/PopupMaker/Popup-Maker/issues/931)
+* Improvement: Remove 'Tools -> System Info' page, use WP Site Health page instead. [Issue #862](https://github.com/PopupMaker/Popup-Maker/issues/862)
+* Improvement: Accessibility forced focus can now focus main close button if nothing else is available. [Issue #943](https://github.com/PopupMaker/Popup-Maker/issues/943)
+* Improvement: Updated admin form styles to match recent WP core changes. [Issue #707](https://github.com/PopupMaker/Popup-Maker/issues/707)
+* Fix: Block previews failed to load for some 3rd party blocks. [Issue #868](https://github.com/PopupMaker/Popup-Maker/issues/868). Thanks @ndiego
+* Fix: Bug preventing saving "Sitewide" cookie option unchecked. [Issue #642](https://github.com/PopupMaker/Popup-Maker/issues/642)
+* Fix: Removed Action Scheduler library due to edge case issues with no reasonable long term solutions. [Issue #853](https://github.com/PopupMaker/Popup-Maker/issues/853)
+* Fix: Update integration with Contact Form 7 due to breaking changes in their recent v5.4 update. [Issue #946](https://github.com/PopupMaker/Popup-Maker/issues/946)
+
+= v1.15.0 - 01/12/2021 =
+* Feature: Automatically enqueue popups when detected during page load [Issue $543](https://github.com/PopupMaker/Popup-Maker/issues/543)
+* Improvement: Improvements to 'Extend' page [Issue $913](https://github.com/PopupMaker/Popup-Maker/issues/913)
+* Improvement: Start working toward more consistent linking/documentation strategy
+* Fix: Popup defaults() method only returns default values for checkbox fields [Issue $927](https://github.com/PopupMaker/Popup-Maker/issues/927)
+* Fix: PUM_Telemetry triggers PHP warnings in (CLI) cron [Issue $919](https://github.com/PopupMaker/Popup-Maker/issues/919)
+* Fix: pum-admin-bar Script Fails to Load [Issue $907](https://github.com/PopupMaker/Popup-Maker/issues/907) Thanks @fluxism!
+* Fix: JS error: Uncaught TypeError: Cannot set property 'popups' of undefined [Issue $635](https://github.com/PopupMaker/Popup-Maker/issues/635)
+* Fix: Undefined SCSS variable causing errors in building block components
+
 = v1.14.0 - 12/16/2020 =
 * Improvement: Add a link to popups to admin bar [Issue #892](https://github.com/PopupMaker/Popup-Maker/issues/892)
 * Improvement: Add a link to create a new popup to admin bar [Issue #892](https://github.com/PopupMaker/Popup-Maker/issues/892)
@@ -205,18 +227,3 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 * Fix: Disabling asset cache causes form integrations not to load their assets [Issue #755](https://github.com/PopupMaker/Popup-Maker/issues/755)
 * Fix: Form submission cookies are not being set for some form integrations [Issue #886](https://github.com/PopupMaker/Popup-Maker/issues/886)
 * Fix: Some form integrations are calling both AJAX and PHP submission handlers [Issue #887](https://github.com/PopupMaker/Popup-Maker/issues/887)
-
-= v1.12.0 - 09/29/2020 =
-* Feature: Add the ability to turn on/off popups [Issue #544](https://github.com/PopupMaker/Popup-Maker/issues/544)
-* Feature: Formidable Forms integration [Issue #750](https://github.com/PopupMaker/Popup-Maker/issues/750)
-* Feature: New error log tab for viewing, downloading, and emptying the error log [Issue #575](https://github.com/PopupMaker/Popup-Maker/issues/575)
-* Feature: New minimal popup theme for use with content created by page builders [Issue #759](https://github.com/PopupMaker/Popup-Maker/issues/759)
-* Feature: Can now target WooCommerce "Subscriptions" account page. Thanks @bydrewpaul [Issue #849](https://github.com/PopupMaker/Popup-Maker/issues/849)
-* Feature: Can now view all scheduled actions on the "Tools" page [Issue #859](https://github.com/PopupMaker/Popup-Maker/issues/859)
-* Improvement: Add popup ID to the top of the popup editor [Issue #583](https://github.com/PopupMaker/Popup-Maker/issues/583)
-* Improvement: Show default click trigger classes in trigger editor [Issue #584](https://github.com/PopupMaker/Popup-Maker/issues/584)
-* Improvement: Show post ID in postselect drop-downs [Issue #660](https://github.com/PopupMaker/Popup-Maker/issues/660)
-* Improvement: Label older form triggers/cookies as deprecated (or similar) [Issue #874](https://github.com/PopupMaker/Popup-Maker/issues/874)
-* Fix: Form submission cookie not automatically setting "form" key [Issue #866](https://github.com/PopupMaker/Popup-Maker/issues/866)
-* Fix: Trying to access 'private' key when the field is false error [Issue #873](https://github.com/PopupMaker/Popup-Maker/issues/873)
-* Fix: _pum_subscribers table fails to create on MySQL 8.0.19+ due to VALUES keyword [Issue #876](https://github.com/PopupMaker/Popup-Maker/issues/876)

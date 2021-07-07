@@ -136,7 +136,6 @@ class PUM_Site {
 		$valid_actions = apply_filters(
 			'pum_valid_request_actions',
 			array(
-				'popup_sysinfo',
 				'save_enabled_betas',
 				'download_batch_export',
 				'empty_error_log',

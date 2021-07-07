@@ -4,17 +4,17 @@
  ******************************************************************************/
 
 .pum-upgrade-tip {
-  color: #333;
-  line-height: 2em !important;
+	color: #333;
+	line-height: 2em !important;
 
-  &div {
-    margin-bottom: 15px;
-    display: block;
-    font-weight: bold;
-  }
+	&div {
+		margin-bottom: 15px;
+		display: block;
+		font-weight: bold;
+	}
 
-  img {
-    float: left;
-    margin-right: 15px;
-  }
+	img {
+		float: left;
+		margin-right: 15px;
+	}
 }
