@@ -1,5 +1,11 @@
 # Popup Maker Changelog
 
+## Unreleased
+Improvement: All plugin images optimized for size. This only affects our admin pages.
+Improvement: Various label & text changes.
+Improvement: Improved focus when popups content is taller than screen and first focusable element is off screen.
+Fix: Focus trapping issue when no focusable elements within popup contents.
+
 ## v1.16.1 - 03/21/2021
 
 * Fix: WP <5.0 and ClassicPress saw errors in the admin for usage of WP_Block_Type_Registry. [Issue #995](https://github.com/PopupMaker/Popup-Maker/issues/995)
