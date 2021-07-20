@@ -70,6 +70,10 @@
   z-index: 1;
 }
 
+.pum-content:focus {
+	outline: none !important;
+}
+
 .pum-overlay {
   position: fixed;
   height: 100%;
