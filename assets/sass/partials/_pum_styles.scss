@@ -164,6 +164,10 @@
 	}
 
 	.pum-content {
+		&:focus {
+			outline: none !important;
+		}
+
 		> :first-child {
 			margin-top: 0;
 		}
