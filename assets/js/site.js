@@ -1,63 +1,63 @@
 /**
  * Adds needed backward compatibility for older versions of jQuery
  */
-(function ($) {
-    "use strict";
-    if ($.fn.on === undefined) {
-        $.fn.on = function (types, sel, fn) {
-            return this.delegate(sel, types, fn);
-        };
-    }
-    if ($.fn.off === undefined) {
-        $.fn.off = function (types, sel, fn) {
-            return this.undelegate(sel, types, fn);
-        };
-    }
+( function( $ ) {
+	'use strict';
+	if ( $.fn.on === undefined ) {
+		$.fn.on = function( types, sel, fn ) {
+			return this.delegate( sel, types, fn );
+		};
+	}
+	if ( $.fn.off === undefined ) {
+		$.fn.off = function( types, sel, fn ) {
+			return this.undelegate( sel, types, fn );
+		};
+	}
 
-    if ($.fn.bindFirst === undefined) {
-        $.fn.bindFirst = function (which, handler) {
-            var $el = $(this),
-                events,
-                registered;
+	if ( $.fn.bindFirst === undefined ) {
+		$.fn.bindFirst = function( which, handler ) {
+			var $el = $( this ),
+				events,
+				registered;
 
-            $el.unbind(which, handler);
-            $el.bind(which, handler);
+			$el.unbind( which, handler );
+			$el.bind( which, handler );
 
-            events = $._data($el[0]).events;
-            registered = events[which];
-            registered.unshift(registered.pop());
+			events = $._data( $el[ 0 ] ).events;
+			registered = events[ which ];
+			registered.unshift( registered.pop() );
 
-            events[which] = registered;
-        };
-    }
+			events[ which ] = registered;
+		};
+	}
 
-    if ($.fn.outerHtml === undefined) {
-        $.fn.outerHtml = function () {
-            var $el = $(this).clone(),
-                $temp = $('<div/>').append($el);
+	if ( $.fn.outerHtml === undefined ) {
+		$.fn.outerHtml = function() {
+			var $el = $( this ).clone(),
+				$temp = $( '<div/>' ).append( $el );
 
-            return $temp.html();
-        };
-    }
+			return $temp.html();
+		};
+	}
 
-    if ($.fn.isInViewport === undefined) {
-        $.fn.isInViewport = function () {
-            var elementTop = $( this ).offset().top;
-            var elementBottom = elementTop + $( this ).outerHeight();
+	if ( $.fn.isInViewport === undefined ) {
+		$.fn.isInViewport = function() {
+			var elementTop = $( this ).offset().top;
+			var elementBottom = elementTop + $( this ).outerHeight();
 
-            var viewportTop = $( window ).scrollTop();
-            var viewportBottom = viewportTop + $( window ).height();
+			var viewportTop = $( window ).scrollTop();
+			var viewportBottom = viewportTop + $( window ).height();
 
-            return elementBottom > viewportTop && elementTop < viewportBottom;
-        };
-    }
+			return elementBottom > viewportTop && elementTop < viewportBottom;
+		};
+	}
 
-    if (Date.now === undefined) {
-        Date.now = function () {
-            return new Date().getTime();
-        };
-    }
-}(jQuery));
+	if ( Date.now === undefined ) {
+		Date.now = function() {
+			return new Date().getTime();
+		};
+	}
+} )( jQuery );
 
 /**
  * Defines the core $.popmake function which will load the proper methods.
@@ -260,8 +260,37 @@ var PUM;
                     }
                 }
             }
-        }
+        },
+        actions: {
+			stopIframeVideosPlaying: function() {
+				var $popup = PUM.getPopup( this ),
+					$container = $popup.popmake( 'getContainer' );
 
+				if ( ! $popup.hasClass( 'pum-has-videos' ) ) {
+					// TODO: Move this to its own event binding to keep this method clean and simple.
+					$container
+						.find( 'iframe' )
+						.filter( '[src*="youtube"],[src*="vimeo"]' )
+						.each( function() {
+							var $iframe = $( this ),
+								src = $iframe.attr( 'src' ),
+								// Remove autoplay so video doesn't start playing again.
+								new_src = src.replace( 'autoplay=1', '1=1' );
+
+							if ( new_src !== src ) {
+								src = new_src;
+							}
+
+							$iframe.prop( 'src', src );
+						} );
+
+					// TODO: Move this to its own event binding to keep this method clean and simple.
+					$container.find( 'video' ).each( function() {
+						this.pause();
+					} );
+				}
+			},
+		}
     };
 
     $.fn.popmake = function (method) {
@@ -573,24 +602,6 @@ var PUM;
                             .removeClass('pum-active')
                             .trigger('pumAfterClose');
 
-                        // TODO: Move this to its own event binding to keep this method clean and simple.
-                        $container.find('iframe').filter('[src*="youtube"],[src*="vimeo"]').each(function () {
-                            var $iframe = $(this),
-                                src = $iframe.attr('src'),
-                                // Remove autoplay so video doesn't start playing again.
-                                new_src = src.replace('autoplay=1', '1=1');
-
-                            if (new_src !== src) {
-                                src = new_src;
-                            }
-
-                            $iframe.prop('src', src);
-                        });
-
-                        // TODO: Move this to its own event binding to keep this method clean and simple.
-                        $container.find('video').each(function () {
-                            this.pause();
-                        });
 
                         // Fire user passed callback.
                         if (callback !== undefined) {
@@ -804,1315 +815,6 @@ var PUM;
 
 }(jQuery, document));
 
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/calderaforms.js");
-/******/ })
-/************************************************************************/
-/******/ ({
-
-/***/ "./assets/js/src/integration/calderaforms.js":
-/*!***************************************************!*\
-  !*** ./assets/js/src/integration/calderaforms.js ***!
-  \***************************************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
-
-
-/*******************************************************************************
- * Copyright (c) 2020, WP Popup Maker
- ******************************************************************************/
-{
-  var formProvider = 'calderaforms';
-  var $ = window.jQuery;
-  var $form;
-  /**
-   * This function is run before every CF Ajax call to store the form being submitted.
-   *
-   * @param event
-   * @param obj
-   */
-
-  var beforeAjax = function beforeAjax(event, obj) {
-    return $form = obj.$form;
-  };
-
-  $(document).on('cf.ajax.request', beforeAjax) // After all requests
-  .on('cf.submission', function (event, obj) {
-    // Only if status of request is complete|success.
-    if ('complete' === obj.data.status || 'success' === obj.data.status) {
-      //get the form that is submiting's ID attribute
-      var _$form$attr$split = $form.attr('id').split('_'),
-          _$form$attr$split2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_$form$attr$split, 2),
-          formId = _$form$attr$split2[0],
-          _$form$attr$split2$ = _$form$attr$split2[1],
-          formInstanceId = _$form$attr$split2$ === void 0 ? null : _$form$attr$split2$; // All the magic happens here.
-
-
-      window.PUM.integrations.formSubmission($form, {
-        formProvider: formProvider,
-        formId: formId,
-        formInstanceId: formInstanceId,
-        extras: {
-          state: window.cfstate.hasOwnProperty(formId) ? window.cfstate[formId] : null
-        }
-      });
-    }
-  });
-}
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/arrayLikeToArray.js ***!
-  \*****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-
-  return arr2;
-}
-
-module.exports = _arrayLikeToArray;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/arrayWithHoles.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-module.exports = _arrayWithHoles;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js ***!
-  \*********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-
-  return _arr;
-}
-
-module.exports = _iterableToArrayLimit;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/nonIterableRest.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/nonIterableRest.js ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-module.exports = _nonIterableRest;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/slicedToArray.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/slicedToArray.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var arrayWithHoles = __webpack_require__(/*! ./arrayWithHoles */ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js");
-
-var iterableToArrayLimit = __webpack_require__(/*! ./iterableToArrayLimit */ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js");
-
-var unsupportedIterableToArray = __webpack_require__(/*! ./unsupportedIterableToArray */ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js");
-
-var nonIterableRest = __webpack_require__(/*! ./nonIterableRest */ "./node_modules/@babel/runtime/helpers/nonIterableRest.js");
-
-function _slicedToArray(arr, i) {
-  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
-}
-
-module.exports = _slicedToArray;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":
-/*!***************************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js ***!
-  \***************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var arrayLikeToArray = __webpack_require__(/*! ./arrayLikeToArray */ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js");
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
-}
-
-module.exports = _unsupportedIterableToArray;
-
-/***/ })
-
-/******/ });
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/contactform7.js");
-/******/ })
-/************************************************************************/
-/******/ ({
-
-/***/ "./assets/js/src/integration/contactform7.js":
-/*!***************************************************!*\
-  !*** ./assets/js/src/integration/contactform7.js ***!
-  \***************************************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/typeof.js");
-/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
-
-
-/**************************************
- * Copyright (c) 2020, Popup Maker
- *************************************/
-{
-  var formProvider = "contactform7";
-  var $ = window.jQuery;
-  $(document).on("wpcf7mailsent", function (event, details) {
-    var formId = event.detail.contactFormId,
-        $form = $(event.target),
-        // Converts string like wpcf7-f190-p2-o11 and reduces it to simply 11, the last o11 is the instance ID.
-    // More accurate way of doing it in case things change in the future, this version filters out all but the o param.
-    // formInstanceId = .split('-').filter((string) => string.indexOf('o') === 0)[0].replace('o','');
-    // Simpler version that simply splits and pops the last item in the array. This requires it always be the last.
-    formInstanceId = event.detail.id.split("-").pop().replace("o", ""); // All the magic happens here.
-
-    window.PUM.integrations.formSubmission($form, {
-      formProvider: formProvider,
-      formId: formId,
-      formInstanceId: formInstanceId,
-      extras: {
-        details: details
-      }
-    });
-    /**
-     * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
-     *
-     * Listen for older popup actions applied directly to the form.
-     *
-     * This is here for backward compatibility with form actions prior to v1.9.
-     */
-
-    var $settings = $form.find("input.wpcf7-pum"),
-        settings = $settings.length ? JSON.parse($settings.val()) : false;
-
-    if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) === "object" && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
-      settings.closedelay = settings.closedelay / 1000;
-    } // Nothing should happen if older action settings not applied
-    // except triggering of pumFormSuccess event for old cookie method.
-
-
-    window.PUM.forms.success($form, settings);
-  });
-}
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/typeof.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/typeof.js ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function _typeof(obj) {
-  "@babel/helpers - typeof";
-
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    module.exports = _typeof = function _typeof(obj) {
-      return typeof obj;
-    };
-  } else {
-    module.exports = _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-  }
-
-  return _typeof(obj);
-}
-
-module.exports = _typeof;
-
-/***/ })
-
-/******/ });
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/formidableforms.js");
-/******/ })
-/************************************************************************/
-/******/ ({
-
-/***/ "./assets/js/src/integration/formidableforms.js":
-/*!******************************************************!*\
-  !*** ./assets/js/src/integration/formidableforms.js ***!
-  \******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/***********************************
- * Copyright (c) 2020, Popup Maker
- **********************************/
-{
-  var formProvider = "formidableforms";
-  var $ = window.jQuery;
-  $(document).on("frmFormComplete", function (event, form, response) {
-    var $form = $(form);
-    var formId = $form.find('input[name="form_id"]').val();
-    var $popup = PUM.getPopup($form.find('input[name="pum_form_popup_id"]').val()); // All the magic happens here.
-
-    window.PUM.integrations.formSubmission($form, {
-      popup: $popup,
-      formProvider: formProvider,
-      formId: formId,
-      extras: {
-        response: response
-      }
-    });
-  });
-}
-
-/***/ })
-
-/******/ });
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/gravityforms.js");
-/******/ })
-/************************************************************************/
-/******/ ({
-
-/***/ "./assets/js/src/integration/gravityforms.js":
-/*!***************************************************!*\
-  !*** ./assets/js/src/integration/gravityforms.js ***!
-  \***************************************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/typeof.js");
-/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
-
-
-/***************************************
- * Copyright (c) 2020, Popup Maker
- ***************************************/
-{
-  var formProvider = "gravityforms";
-  var $ = window.jQuery;
-  var gFormSettings = {};
-  $(document).on("gform_confirmation_loaded", function (event, formId) {
-    var $form = $("#gform_confirmation_wrapper_" + formId + ",#gforms_confirmation_message_" + formId)[0]; // All the magic happens here.
-
-    window.PUM.integrations.formSubmission($form, {
-      formProvider: formProvider,
-      formId: formId
-    });
-    /**
-     * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
-     *
-     * Listen for older popup actions applied directly to the form.
-     *
-     * This is here for backward compatibility with form actions prior to v1.9.
-     */
-    // Nothing should happen if older action settings not applied
-    // except triggering of pumFormSuccess event for old cookie method.
-
-    window.PUM.forms.success($form, gFormSettings[formId] || {});
-  })
-  /**
-   * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
-   *
-   * Listen for older popup actions applied directly to the form.
-   *
-   * This is here for backward compatibility with form actions prior to v1.9.
-   */
-  .ready(function () {
-    $(".gform_wrapper > form").each(function () {
-      var $form = $(this),
-          formId = $form.attr("id").replace("gform_", ""),
-          $settings = $form.find("input.gforms-pum"),
-          settings = $settings.length ? JSON.parse($settings.val()) : false;
-
-      if (!settings || _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) !== "object") {
-        return;
-      }
-
-      if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) === "object" && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
-        settings.closedelay = settings.closedelay / 1000;
-      }
-
-      gFormSettings[formId] = settings;
-    });
-  });
-}
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/typeof.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/typeof.js ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function _typeof(obj) {
-  "@babel/helpers - typeof";
-
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    module.exports = _typeof = function _typeof(obj) {
-      return typeof obj;
-    };
-  } else {
-    module.exports = _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-  }
-
-  return _typeof(obj);
-}
-
-module.exports = _typeof;
-
-/***/ })
-
-/******/ });
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/mc4wp.js");
-/******/ })
-/************************************************************************/
-/******/ ({
-
-/***/ "./assets/js/src/integration/mc4wp.js":
-/*!********************************************!*\
-  !*** ./assets/js/src/integration/mc4wp.js ***!
-  \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/*******************************************************************************
- * Copyright (c) 2020, WP Popup Maker
- ******************************************************************************/
-{
-  var formProvider = 'mc4wp';
-  var $ = window.jQuery;
-  $(document).ready(function () {
-    if (typeof mc4wp !== 'undefined') {
-      mc4wp.forms.on('success', function (form, data) {
-        var $form = $(form.element),
-            formId = form.id,
-            formInstanceId = $('.mc4wp-form-' + form.id).index($form) + 1; // All the magic happens here.
-
-        window.PUM.integrations.formSubmission($form, {
-          formProvider: formProvider,
-          formId: formId,
-          formInstanceId: formInstanceId,
-          extras: {
-            form: form,
-            data: data
-          }
-        });
-      });
-    }
-  });
-}
-
-/***/ })
-
-/******/ });
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/ninjaforms.js");
-/******/ })
-/************************************************************************/
-/******/ ({
-
-/***/ "./assets/js/src/integration/ninjaforms.js":
-/*!*************************************************!*\
-  !*** ./assets/js/src/integration/ninjaforms.js ***!
-  \*************************************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
-
-
-/*******************************************************************************
- * Copyright (c) 2020, WP Popup Maker
- ******************************************************************************/
-{
-  var formProvider = 'ninjaforms';
-  var $ = window.jQuery;
-  var pumNFController = false;
-
-  var initialize_nf_support = function initialize_nf_support() {
-    /** Ninja Forms Support */
-    if (typeof Marionette !== 'undefined' && typeof nfRadio !== 'undefined' && false === pumNFController) {
-      pumNFController = Marionette.Object.extend({
-        initialize: function initialize() {
-          this.listenTo(nfRadio.channel('forms'), 'submit:response', this.popupMaker);
-        },
-        popupMaker: function popupMaker(response, textStatus, jqXHR, formIdentifier) {
-          var $form = $('#nf-form-' + formIdentifier + '-cont'),
-              _formIdentifier$split = formIdentifier.split('_'),
-              _formIdentifier$split2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_formIdentifier$split, 2),
-              formId = _formIdentifier$split2[0],
-              _formIdentifier$split3 = _formIdentifier$split2[1],
-              formInstanceId = _formIdentifier$split3 === void 0 ? null : _formIdentifier$split3,
-              settings = {}; // Bail if submission failed.
-
-
-          if (response.errors.length) {
-            return;
-          } // All the magic happens here.
-
-
-          window.PUM.integrations.formSubmission($form, {
-            formProvider: formProvider,
-            formId: formId,
-            formInstanceId: formInstanceId,
-            extras: {
-              response: response
-            }
-          });
-          /**
-           * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
-           *
-           * Listen for older popup actions applied directly to the form.
-           *
-           * This is here for backward compatibility with form actions prior to v1.9.
-           */
-
-          if ('undefined' !== typeof response.data.actions) {
-            settings.openpopup = 'undefined' !== typeof response.data.actions.openpopup;
-            settings.openpopup_id = settings.openpopup ? parseInt(response.data.actions.openpopup) : 0;
-            settings.closepopup = 'undefined' !== typeof response.data.actions.closepopup;
-            settings.closedelay = settings.closepopup ? parseInt(response.data.actions.closepopup) : 0;
-
-            if (settings.closepopup && response.data.actions.closedelay) {
-              settings.closedelay = parseInt(response.data.actions.closedelay);
-            }
-          } // Nothing should happen if older action settings not applied
-          // except triggering of pumFormSuccess event for old cookie method.
-
-
-          window.PUM.forms.success($form, settings);
-        }
-      }); // Initialize it.
-
-      new pumNFController();
-    }
-  };
-
-  $(document).ready(initialize_nf_support);
-}
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/arrayLikeToArray.js ***!
-  \*****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-
-  return arr2;
-}
-
-module.exports = _arrayLikeToArray;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/arrayWithHoles.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-module.exports = _arrayWithHoles;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js ***!
-  \*********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-
-  return _arr;
-}
-
-module.exports = _iterableToArrayLimit;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/nonIterableRest.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/nonIterableRest.js ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-module.exports = _nonIterableRest;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/slicedToArray.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/slicedToArray.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var arrayWithHoles = __webpack_require__(/*! ./arrayWithHoles */ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js");
-
-var iterableToArrayLimit = __webpack_require__(/*! ./iterableToArrayLimit */ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js");
-
-var unsupportedIterableToArray = __webpack_require__(/*! ./unsupportedIterableToArray */ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js");
-
-var nonIterableRest = __webpack_require__(/*! ./nonIterableRest */ "./node_modules/@babel/runtime/helpers/nonIterableRest.js");
-
-function _slicedToArray(arr, i) {
-  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
-}
-
-module.exports = _slicedToArray;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":
-/*!***************************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js ***!
-  \***************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var arrayLikeToArray = __webpack_require__(/*! ./arrayLikeToArray */ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js");
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
-}
-
-module.exports = _unsupportedIterableToArray;
-
-/***/ })
-
-/******/ });
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/wpforms.js");
-/******/ })
-/************************************************************************/
-/******/ ({
-
-/***/ "./assets/js/src/integration/wpforms.js":
-/*!**********************************************!*\
-  !*** ./assets/js/src/integration/wpforms.js ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/*******************************************************************************
- * Copyright (c) 2020, WP Popup Maker
- ******************************************************************************/
-{
-  var formProvider = 'wpforms';
-  var $ = window.jQuery;
-  $(document).on('wpformsAjaxSubmitSuccess', '.wpforms-ajax-form', function (event, details) {
-    var $form = $(this),
-        formId = $form.data('formid'),
-        formInstanceId = $('form#' + $form.attr('id')).index($form) + 1; // All the magic happens here.
-
-    window.PUM.integrations.formSubmission($form, {
-      formProvider: formProvider,
-      formId: formId,
-      formInstanceId: formInstanceId
-    });
-  });
-}
-
-/***/ })
-
-/******/ });
 /**
  * Initialize Popup Maker.
  * Version 1.8
@@ -2124,6 +826,9 @@ module.exports = _unsupportedIterableToArray;
 
     // Stores the last open popup.
     $.fn.popmake.last_open_popup = null;
+
+	// Here for backward compatibility.
+	window.ajaxurl = window.pum_vars.ajaxurl;
 
     window.PUM.init = function () {
         console.log('init popups ✔');
@@ -2146,7 +851,8 @@ module.exports = _unsupportedIterableToArray;
         PUM.integrations.init();
     };
 
-    $(document).ready(function () {
+	// Initiate when ready.
+    $(function () {
         // TODO can this be moved outside doc.ready since we are awaiting our own promises first?
         var initHandler = PUM.hooks.applyFilters('pum.initHandler', PUM.init);
         var initPromises = PUM.hooks.applyFilters('pum.initPromises', []);
@@ -2168,7 +874,8 @@ module.exports = _unsupportedIterableToArray;
         if ($forms.length) {
             $forms.append('<input type="hidden" name="pum_form_popup_id" value="' + popupID + '" />');
         }
-    });
+    })
+    .on( 'pumAfterClose', window.PUM.actions.stopIframeVideosPlaying );
 
 
 }(jQuery));
@@ -2178,688 +885,777 @@ module.exports = _unsupportedIterableToArray;
  * Version 1.4
  */
 var PUM_Accessibility;
-(function ($, document, undefined) {
-    "use strict";
-    var $top_level_elements,
-        focusableElementsString = "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]",
-        previouslyFocused,
-        currentModal,
-        selector = '.pum:not(.pum-accessibility-disabled)';
+( function( $, document, undefined ) {
+	'use strict';
+	var $top_level_elements,
+		focusableElementsString =
+			'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]',
+		previouslyFocused,
+		currentModal,
+		selector = '.pum:not(.pum-accessibility-disabled)';
 
-    PUM_Accessibility = {
-        // Accessibility: Checks focus events to ensure they stay inside the modal.
-        forceFocus: function (e) {
-            if (currentModal && currentModal.length && !currentModal[0].contains(e.target)) {
-                e.stopPropagation();
-                PUM_Accessibility.setFocusToFirstItem();
-            }
-        },
-        trapTabKey: function (e) {
-            // if tab or shift-tab pressed
-            if (e.keyCode === 9) {
-                // get list of focusable items
-                var focusableItems = currentModal.find('.pum-container *').filter(focusableElementsString).filter(':visible'),
-                    // get currently focused item
-                    focusedItem = $(':focus'),
-                    // get the number of focusable items
-                    numberOfFocusableItems = focusableItems.length,
-                    // get the index of the currently focused item
-                    focusedItemIndex = focusableItems.index(focusedItem);
+	PUM_Accessibility = {
+		// Accessibility: Checks focus events to ensure they stay inside the modal.
+		forceFocus: function( e ) {
+			if (
+				currentModal &&
+				currentModal.length &&
+				! currentModal[ 0 ].contains( e.target )
+			) {
+				e.stopPropagation();
+				PUM_Accessibility.setFocusToFirstItem();
+			}
+		},
+		trapTabKey: function( e ) {
+			// if tab or shift-tab pressed
+			if ( e.keyCode === 9 ) {
+				// get list of focusable items
+				var focusableItems = currentModal
+						.find( '.pum-container *' )
+						.filter( focusableElementsString )
+						.filter( ':visible' ),
+					// get currently focused item
+					focusedItem = $( ':focus' ),
+					// get the number of focusable items
+					numberOfFocusableItems = focusableItems.length,
+					// get the index of the currently focused item
+					focusedItemIndex = focusableItems.index( focusedItem );
 
-                if (e.shiftKey) {
-                    //back tab
-                    // if focused on first item and user preses back-tab, go to the last focusable item
-                    if (focusedItemIndex === 0) {
-                        focusableItems.get(numberOfFocusableItems - 1).focus();
-                        e.preventDefault();
-                    }
-                } else {
-                    //forward tab
-                    // if focused on the last item and user preses tab, go to the first focusable item
-                    if (focusedItemIndex === numberOfFocusableItems - 1) {
-                        focusableItems.get(0).focus();
-                        e.preventDefault();
-                    }
-                }
-            }
-        },
-        setFocusToFirstItem: function () {
-            // set focus to first focusable item
-            currentModal.find('.pum-container *').filter(focusableElementsString).filter(':visible').filter(':not(.pum-close)').first().focus();
-        }
-    };
+				if ( e.shiftKey ) {
+					//back tab
+					// if focused on first item and user preses back-tab, go to the last focusable item
+					if ( focusedItemIndex === 0 ) {
+						focusableItems
+							.get( numberOfFocusableItems - 1 )
+							.focus();
+						e.preventDefault();
+					}
+				} else {
+					//forward tab
+					// if focused on the last item and user preses tab, go to the first focusable item
+					if ( focusedItemIndex === numberOfFocusableItems - 1 ) {
+						focusableItems.get( 0 ).focus();
+						e.preventDefault();
+					}
+				}
+			}
+		},
+		setFocusToFirstItem: function() {
+			var $firstEl = currentModal
+				.find( '.pum-container *' )
+				.filter( focusableElementsString )
+				.filter( ':visible' )
+				//.filter( ':not(.pum-close)' )
+				.first();
 
-    $(document)
-        .on('pumInit', selector, function () {
-            PUM.getPopup(this).find('[tabindex]').each(function () {
-                var $this = $(this);
-                $this
-                    .data('tabindex', $this.attr('tabindex'))
-                    .prop('tabindex', '0');
+			// set focus to first focusable item
+			$firstEl.focus();
+		},
+		initiateFocusLock: function() {
+			var $popup = PUM.getPopup( this ),
+				$focused = $( ':focus' );
 
-            });
-        })
-        .on('pumBeforeOpen', selector, function () {
-            var $popup = PUM.getPopup(this),
-                $focused = $(':focus');
+			// Accessibility: Sets the previous focus element.
+			if ( ! $popup.has( $focused ).length ) {
+				previouslyFocused = $focused;
+			}
 
-            // Accessibility: Sets the previous focus element.
-            if (!$popup.has($focused).length) {
-                previouslyFocused = $focused;
-            }
+			// Accessibility: Sets the current modal for focus checks.
+			currentModal = $popup
+				// Accessibility: Trap tab key.
+				.on( 'keydown.pum_accessibility', PUM_Accessibility.trapTabKey )
+				.attr( 'aria-hidden', 'false' );
 
-            // Accessibility: Sets the current modal for focus checks.
-            currentModal = $popup
-            // Accessibility: Trap tab key.
-                .on('keydown.pum_accessibility', PUM_Accessibility.trapTabKey)
-                .attr('aria-hidden', 'false');
+			$top_level_elements = $( 'body > *' )
+				.filter( ':visible' )
+				.not( currentModal );
+			$top_level_elements.attr( 'aria-hidden', 'true' );
 
-            $top_level_elements = $('body > *').filter(':visible').not(currentModal);
-            $top_level_elements.attr('aria-hidden', 'true');
+			// Accessibility: Add focus check first time focus changes after popup opens that prevents tabbing outside of modal.
+			$( document ).one(
+				'focusin.pum_accessibility',
+				PUM_Accessibility.forceFocus
+			);
 
-            // Accessibility: Add focus check first time focus changes after popup opens that prevents tabbing outside of modal.
-            $(document).one('focusin.pum_accessibility', PUM_Accessibility.forceFocus);
+			// Accessibility: Focus on the modal.
+			PUM_Accessibility.setFocusToFirstItem();
+		},
+	};
 
-            // Accessibility: Focus on the modal.
-            PUM_Accessibility.setFocusToFirstItem();
-        })
-        .on('pumAfterOpen', selector, function () {
+	$( document )
+		.on( 'pumInit', selector, function() {
+			PUM.getPopup( this )
+				.find( '[tabindex]' )
+				.each( function() {
+					var $this = $( this );
+					$this
+						.data( 'tabindex', $this.attr( 'tabindex' ) )
+						.prop( 'tabindex', '0' );
+				} );
+		} )
+		.on( 'pumBeforeOpen', selector, function() {} )
+		.on( 'pumAfterOpen', selector, PUM_Accessibility.initiateFocusLock )
+		.on( 'pumBeforeClose', selector, function() {} )
+		.on( 'pumAfterClose', selector, function() {
+			var $popup = PUM.getPopup( this );
 
-        })
-        .on('pumBeforeClose', selector, function () {
+			$popup
+				.off( 'keydown.pum_accessibility' )
+				.attr( 'aria-hidden', 'true' );
 
-        })
-        .on('pumAfterClose', selector, function () {
-            var $popup = PUM.getPopup(this);
+			if ( $top_level_elements ) {
+				$top_level_elements.attr( 'aria-hidden', 'false' );
+				$top_level_elements = null;
+			}
 
-            $popup
-                .off('keydown.pum_accessibility')
-                .attr('aria-hidden', 'true');
+			// Accessibility: Focus back on the previously focused element.
+			if ( previouslyFocused !== undefined && previouslyFocused.length ) {
+				previouslyFocused.focus();
+			}
 
-            if ($top_level_elements) {
-                $top_level_elements.attr('aria-hidden', 'false');
-                $top_level_elements = null;
-            }
+			// Accessibility: Clears the currentModal var.
+			currentModal = null;
 
-            // Accessibility: Focus back on the previously focused element.
-            if (previouslyFocused !== undefined && previouslyFocused.length) {
-                previouslyFocused.focus();
-            }
+			// Accessibility: Removes the force focus check.
+			$( document ).off( 'focusin.pum_accessibility' );
+		} )
+		.on( 'pumSetupClose', selector, function() {} )
+		.on( 'pumOpenPrevented', selector, function() {} )
+		.on( 'pumClosePrevented', selector, function() {} )
+		.on( 'pumBeforeReposition', selector, function() {} );
+} )( jQuery, document );
 
-            // Accessibility: Clears the currentModal var.
-            currentModal = null;
-
-            // Accessibility: Removes the force focus check.
-            $(document).off('focusin.pum_accessibility');
-        })
-
-        .on('pumSetupClose', selector, function () {
-
-        })
-
-        .on('pumOpenPrevented', selector, function () {
-
-        })
-
-        .on('pumClosePrevented', selector, function () {
-
-        })
-
-        .on('pumBeforeReposition', selector, function () {
-
-        });
-
-
-}(jQuery, document));
 /**
  * Defines the core pum analytics methods.
  * Version 1.4
  */
 
 var PUM_Analytics;
-(function($) {
-	"use strict";
+( function( $ ) {
+	'use strict';
 
 	$.fn.popmake.last_open_trigger = null;
 	$.fn.popmake.last_close_trigger = null;
 	$.fn.popmake.conversion_trigger = null;
 
-	var rest_enabled = !!(
-		typeof pum_vars.analytics_api !== "undefined" && pum_vars.analytics_api
+	var rest_enabled = !! (
+		typeof pum_vars.analytics_api !== 'undefined' && pum_vars.analytics_api
 	);
 
 	PUM_Analytics = {
-		beacon: function(data, callback) {
+		beacon: function( data, callback ) {
 			var beacon = new Image(),
 				url = rest_enabled ? pum_vars.analytics_api : pum_vars.ajaxurl,
 				opts = {
 					route: pum.hooks.applyFilters(
-						"pum.analyticsBeaconRoute",
-						"/" + pum_vars.analytics_route + "/"
+						'pum.analyticsBeaconRoute',
+						'/' + pum_vars.analytics_route + '/'
 					),
 					data: pum.hooks.applyFilters(
-						"pum.AnalyticsBeaconData",
+						'pum.AnalyticsBeaconData',
 						$.extend(
 							true,
 							{
-								event: "open",
+								event: 'open',
 								pid: null,
-								_cache: +new Date()
+								_cache: +new Date(),
 							},
 							data
 						)
 					),
 					callback:
-						typeof callback === "function"
+						typeof callback === 'function'
 							? callback
-							: function() {}
+							: function() {},
 				};
 
-			if (!rest_enabled) {
-				opts.data.action = "pum_analytics";
+			if ( ! rest_enabled ) {
+				opts.data.action = 'pum_analytics';
 			} else {
 				url += opts.route;
 			}
 
 			// Create a beacon if a url is provided
-			if (url) {
+			if ( url ) {
 				// Attach the event handlers to the image object
-				$(beacon).on("error success load done", opts.callback);
+				$( beacon ).on( 'error success load done', opts.callback );
 
 				// Attach the src for the script call
-				beacon.src = url + "?" + $.param(opts.data);
+				beacon.src = url + '?' + $.param( opts.data );
 			}
-		}
+		},
 	};
 
 	if (
-		typeof pum_vars.disable_tracking === "undefined" ||
-		!pum_vars.disable_tracking
+		typeof pum_vars.disable_tracking === 'undefined' ||
+		! pum_vars.disable_tracking
 	) {
 		// Only popups from the editor should fire analytics events.
-		$(document)
+		$( document )
 			/**
 			 * Track opens for popups.
 			 */
-			.on("pumAfterOpen.core_analytics", ".pum", function() {
-				var $popup = PUM.getPopup(this),
+			.on( 'pumAfterOpen.core_analytics', '.pum', function() {
+				var $popup = PUM.getPopup( this ),
 					data = {
 						pid:
-							parseInt($popup.popmake("getSettings").id, 10) ||
-							null
+							parseInt(
+								$popup.popmake( 'getSettings' ).id,
+								10
+							) || null,
 					};
 
 				// Shortcode popups use negative numbers, and single-popup (preview mode) shouldn't be tracked.
-				if (data.pid > 0 && !$("body").hasClass("single-popup")) {
-					PUM_Analytics.beacon(data);
+				if (
+					data.pid > 0 &&
+					! $( 'body' ).hasClass( 'single-popup' )
+				) {
+					PUM_Analytics.beacon( data );
 				}
-			});
+			} );
 		/**
 		 * Track form submission conversions
 		 */
-		$(function() {
-			PUM.hooks.addAction("pum.integration.form.success", function(
+		$( function() {
+			PUM.hooks.addAction( 'pum.integration.form.success', function(
 				form,
 				args
 			) {
 				// If the submission has already been counted in the backend, we can bail early.
-				if (args.ajax === false) {
+				if ( args.ajax === false ) {
 					return;
 				}
 
 				// If no popup is included in the args, we can bail early since we only record conversions within popups.
-				if (args.popup.length === 0) {
+				if ( args.popup.length === 0 ) {
 					return;
 				}
 				var data = {
 					pid:
-						parseInt(args.popup.popmake("getSettings").id, 10) ||
-						null,
-					event: "conversion"
+						parseInt(
+							args.popup.popmake( 'getSettings' ).id,
+							10
+						) || null,
+					event: 'conversion',
 				};
 
 				// Shortcode popups use negative numbers, and single-popup (preview mode) shouldn't be tracked.
-				if (data.pid > 0 && !$("body").hasClass("single-popup")) {
-					PUM_Analytics.beacon(data);
+				if (
+					data.pid > 0 &&
+					! $( 'body' ).hasClass( 'single-popup' )
+				) {
+					PUM_Analytics.beacon( data );
 				}
-			});
-		});
+			} );
+		} );
 	}
-})(jQuery);
+} )( jQuery );
 
 /**
  * Defines the core $.popmake animations.
  * Version 1.4
  */
-(function ($, document, undefined) {
-    "use strict";
+( function( $, document, undefined ) {
+	'use strict';
 
-    $.fn.popmake.methods.animate_overlay = function (style, duration, callback) {
-        // Method calling logic
-        var settings = PUM.getPopup(this).popmake('getSettings');
+	$.fn.popmake.methods.animate_overlay = function(
+		style,
+		duration,
+		callback
+	) {
+		// Method calling logic
+		var settings = PUM.getPopup( this ).popmake( 'getSettings' );
 
-        if (settings.overlay_disabled) {
-            return $.fn.popmake.overlay_animations.none.apply(this, [duration, callback]);
-        }
+		if ( settings.overlay_disabled ) {
+			return $.fn.popmake.overlay_animations.none.apply( this, [
+				duration,
+				callback,
+			] );
+		}
 
-        if ($.fn.popmake.overlay_animations[style]) {
-            return $.fn.popmake.overlay_animations[style].apply(this, [duration, callback]);
-        }
+		if ( $.fn.popmake.overlay_animations[ style ] ) {
+			return $.fn.popmake.overlay_animations[ style ].apply( this, [
+				duration,
+				callback,
+			] );
+		}
 
-        if (window.console) {
-            console.warn('Animation style ' + style + ' does not exist.');
-        }
-        return this;
-    };
+		if ( window.console ) {
+			console.warn( 'Animation style ' + style + ' does not exist.' );
+		}
+		return this;
+	};
 
-    $.fn.popmake.methods.animate = function (style) {
-        // Method calling logic
-        if ($.fn.popmake.animations[style]) {
-            return $.fn.popmake.animations[style].apply(this, Array.prototype.slice.call(arguments, 1));
-        }
-        if (window.console) {
-            console.warn('Animation style ' + style + ' does not exist.');
-        }
-        return this;
-    };
+	$.fn.popmake.methods.animate = function( style ) {
+		// Method calling logic
+		if ( $.fn.popmake.animations[ style ] ) {
+			return $.fn.popmake.animations[ style ].apply(
+				this,
+				Array.prototype.slice.call( arguments, 1 )
+			);
+		}
+		if ( window.console ) {
+			console.warn( 'Animation style ' + style + ' does not exist.' );
+		}
+		return this;
+	};
 
-    /**
-     * Resets animation & position properties prior to opening/reopening the popup.
-     *
-     * @param $popup
-     */
+	/**
+	 * Resets animation & position properties prior to opening/reopening the popup.
+	 *
+	 * @param $popup
+	 */
 	function popupCssReset( $popup ) {
 		var $container = $popup.popmake( 'getContainer' ),
 			cssResets = { display: '', opacity: '' };
 
-		$popup.css(cssResets);
-		$container.css(cssResets);
+		$popup.css( cssResets );
+		$container.css( cssResets );
 	}
 
-    function overlayAnimationSpeed(settings) {
-        if (settings.overlay_disabled) {
-            return 0;
-        }
+	function overlayAnimationSpeed( settings ) {
+		if ( settings.overlay_disabled ) {
+			return 0;
+		}
 
-        return settings.animation_speed / 2;
-    }
+		return settings.animation_speed / 2;
+	}
 
-    function containerAnimationSpeed(settings) {
-        if (settings.overlay_disabled) {
-            return parseInt(settings.animation_speed );
-        }
+	function containerAnimationSpeed( settings ) {
+		if ( settings.overlay_disabled ) {
+			return parseInt( settings.animation_speed );
+		}
 
-        return settings.animation_speed / 2;
-    }
+		return settings.animation_speed / 2;
+	}
 
-    /**
-     * All animations should.
-     *
-     * 1. Reset Popup CSS styles. Defaults are as follows:
-     * - opacity: 1
-     * - display: "none"
-     * - left, top, right, bottom: set to final position (where animation ends).
-     *
-     * 2. Prepare the popup for animation. Examples include:
-     * - a. Static positioned animations like fade might set display: "block" & opacity: 0.
-     * - b. Moving animations such as slide might set display: "block" & opacity: 0 so that
-     *      positioning can be accurately calculated, then set opacity: 1 before the animation begins.
-     *
-     * 3. Animate the overlay using `$popup.popmake( 'animate_overlay', type, speed, callback);`
-     *
-     * 4. Animate the container.
-     * - a. Moving animations can use $container.popmake( 'reposition', callback ); The callback
-     *      accepts a position argument for where you should animate to.
-     * - b. This usually takes place inside the callback for the overlay callback or after it.
-     */
-    $.fn.popmake.animations = {
-        none: function (callback) {
-            var $popup = PUM.getPopup(this);
+	/**
+	 * All animations should.
+	 *
+	 * 1. Reset Popup CSS styles. Defaults are as follows:
+	 * - opacity: 1
+	 * - display: "none"
+	 * - left, top, right, bottom: set to final position (where animation ends).
+	 *
+	 * 2. Prepare the popup for animation. Examples include:
+	 * - a. Static positioned animations like fade might set display: "block" & opacity: 0.
+	 * - b. Moving animations such as slide might set display: "block" & opacity: 0 so that
+	 *      positioning can be accurately calculated, then set opacity: 1 before the animation begins.
+	 *
+	 * 3. Animate the overlay using `$popup.popmake( 'animate_overlay', type, speed, callback);`
+	 *
+	 * 4. Animate the container.
+	 * - a. Moving animations can use $container.popmake( 'reposition', callback ); The callback
+	 *      accepts a position argument for where you should animate to.
+	 * - b. This usually takes place inside the callback for the overlay callback or after it.
+	 */
+	$.fn.popmake.animations = {
+		none: function( callback ) {
+			var $popup = PUM.getPopup( this );
 
-            // Ensure the container is visible immediately.
-            $popup.popmake('getContainer').css({opacity: 1, display: "block"});
+			// Ensure the container is visible immediately.
+			$popup
+				.popmake( 'getContainer' )
+				.css( { opacity: 1, display: 'block' } );
 
-            $popup.popmake('animate_overlay', 'none', 0, function () {
-                // Fire user passed callback.
-                if (callback !== undefined) {
-                    callback();
-                    // TODO Test this new method. Then remove the above.
-                    //callback.apply(this);
-                }
-            });
-            return this;
-        },
-        slide: function ( callback ) {
-            var $popup = PUM.getPopup( this ),
-                $container = $popup.popmake( 'getContainer' ),
-                settings = $popup.popmake( 'getSettings' ),
-                start = $popup.popmake( 'animation_origin', settings.animation_origin );
+			$popup.popmake( 'animate_overlay', 'none', 0, function() {
+				// Fire user passed callback.
+				if ( callback !== undefined ) {
+					callback();
+					// TODO Test this new method. Then remove the above.
+					//callback.apply(this);
+				}
+			} );
+			return this;
+		},
+		slide: function( callback ) {
+			var $popup = PUM.getPopup( this ),
+				$container = $popup.popmake( 'getContainer' ),
+				settings = $popup.popmake( 'getSettings' ),
+				start = $popup.popmake(
+					'animation_origin',
+					settings.animation_origin
+				);
 
-            // Step 1. Reset popup styles.
-            popupCssReset( $popup );
+			// Step 1. Reset popup styles.
+			popupCssReset( $popup );
 
-            // Step 2. Position the container offscreen.
-            $container.position( start );
+			// Step 2. Position the container offscreen.
+			$container.position( start );
 
-            // Step 3. Animate the popup.
-            $popup.popmake( 'animate_overlay', 'fade', overlayAnimationSpeed( settings ), function () {
-                $container.popmake( 'reposition', function ( position ) {
-                    $container.animate( position, containerAnimationSpeed( settings ), 'swing', function () {
-                        // Fire user passed callback.
-                        if ( callback !== undefined ) {
-                            callback();
-                            // TODO Test this new method. Then remove the above.
-                            //allback.apply(this);
-                        }
-                    } );
-                } );
-            } );
-            return this;
-        },
-        fade: function ( callback ) {
-            var $popup = PUM.getPopup( this ),
-                $container = $popup.popmake( 'getContainer' ),
-                settings = $popup.popmake( 'getSettings' );
+			// Step 3. Animate the popup.
+			$popup.popmake(
+				'animate_overlay',
+				'fade',
+				overlayAnimationSpeed( settings ),
+				function() {
+					$container.popmake( 'reposition', function( position ) {
+						$container.animate(
+							position,
+							containerAnimationSpeed( settings ),
+							'swing',
+							function() {
+								// Fire user passed callback.
+								if ( callback !== undefined ) {
+									callback();
+									// TODO Test this new method. Then remove the above.
+									//allback.apply(this);
+								}
+							}
+						);
+					} );
+				}
+			);
+			return this;
+		},
+		fade: function( callback ) {
+			var $popup = PUM.getPopup( this ),
+				$container = $popup.popmake( 'getContainer' ),
+				settings = $popup.popmake( 'getSettings' );
 
-            // Step 1. Reset popup styles.
-            popupCssReset( $popup );
+			// Step 1. Reset popup styles.
+			popupCssReset( $popup );
 
-            // Step 2. Hide each element to be faded in.
-            $popup.css( { opacity: 0, display: 'block' } );
-            $container.css( { opacity: 0, display: 'block' } );
+			// Step 2. Hide each element to be faded in.
+			$popup.css( { opacity: 0, display: 'block' } );
+			$container.css( { opacity: 0, display: 'block' } );
 
-            // Step 3. Animate the popup.
-            $popup.popmake( 'animate_overlay', 'fade', overlayAnimationSpeed( settings ), function () {
-                $container.animate( { opacity: 1 }, containerAnimationSpeed( settings ), 'swing', function () {
-                    // Fire user passed callback.
-                    if ( callback !== undefined ) {
-                        callback();
-                        // TODO Test this new method. Then remove the above.
-                        //callback.apply(this);
-                    }
-                } );
-            } );
-            return this;
-        },
-        fadeAndSlide: function ( callback ) {
-            var $popup = PUM.getPopup( this ),
-                $container = $popup.popmake( 'getContainer' ),
-                settings = $popup.popmake( 'getSettings' ),
-                start = $popup.popmake( 'animation_origin', settings.animation_origin );
+			// Step 3. Animate the popup.
+			$popup.popmake(
+				'animate_overlay',
+				'fade',
+				overlayAnimationSpeed( settings ),
+				function() {
+					$container.animate(
+						{ opacity: 1 },
+						containerAnimationSpeed( settings ),
+						'swing',
+						function() {
+							// Fire user passed callback.
+							if ( callback !== undefined ) {
+								callback();
+								// TODO Test this new method. Then remove the above.
+								//callback.apply(this);
+							}
+						}
+					);
+				}
+			);
+			return this;
+		},
+		fadeAndSlide: function( callback ) {
+			var $popup = PUM.getPopup( this ),
+				$container = $popup.popmake( 'getContainer' ),
+				settings = $popup.popmake( 'getSettings' ),
+				start = $popup.popmake(
+					'animation_origin',
+					settings.animation_origin
+				);
 
-            // Step 1. Reset popup styles.
-            popupCssReset( $popup );
+			// Step 1. Reset popup styles.
+			popupCssReset( $popup );
 
-            // Step 2. Hide each element to be faded in. display: "block" is neccessary for accurate positioning based on popup size.
-            $popup.css( { display: 'block', opacity: 0 } );
-            $container.css( { display: 'block', opacity: 0 } );
+			// Step 2. Hide each element to be faded in. display: "block" is neccessary for accurate positioning based on popup size.
+			$popup.css( { display: 'block', opacity: 0 } );
+			$container.css( { display: 'block', opacity: 0 } );
 
-            // Step 3. Position the container offscreen.
-            $container.position( start );
+			// Step 3. Position the container offscreen.
+			$container.position( start );
 
-            // Step 4. Animate the popup.
-            $popup.popmake( 'animate_overlay', 'fade', overlayAnimationSpeed( settings ), function () {
-                $container.popmake( 'reposition', function ( position ) {
-                    // Add opacity to the animation properties.
-                    position.opacity = 1;
-                    // Animate the fade & slide.
-                    $container.animate( position, containerAnimationSpeed( settings ), 'swing', function () {
-                        // Fire user passed callback.
-                        if ( callback !== undefined ) {
-                            callback();
-                            // TODO Test this new method. Then remove the above.
-                            //callback.apply(this);
-                        }
-                    } );
+			// Step 4. Animate the popup.
+			$popup.popmake(
+				'animate_overlay',
+				'fade',
+				overlayAnimationSpeed( settings ),
+				function() {
+					$container.popmake( 'reposition', function( position ) {
+						// Add opacity to the animation properties.
+						position.opacity = 1;
+						// Animate the fade & slide.
+						$container.animate(
+							position,
+							containerAnimationSpeed( settings ),
+							'swing',
+							function() {
+								// Fire user passed callback.
+								if ( callback !== undefined ) {
+									callback();
+									// TODO Test this new method. Then remove the above.
+									//callback.apply(this);
+								}
+							}
+						);
+					} );
+				}
+			);
+			return this;
+		},
+		/**
+		 * TODO: Remove these and let import script replace them.
+		 * @deprecated
+		 * @returns {$.fn.popmake.animations}
+		 */
+		grow: function( callback ) {
+			return $.fn.popmake.animations.fade.apply( this, arguments );
+		},
+		/**
+		 * @deprecated
+		 * @returns {$.fn.popmake.animations}
+		 */
+		growAndSlide: function( callback ) {
+			return $.fn.popmake.animations.fadeAndSlide.apply(
+				this,
+				arguments
+			);
+		},
+	};
 
-                } );
-            } );
-            return this;
-        },
-        /**
-         * TODO: Remove these and let import script replace them.
-         * @deprecated
-         * @returns {$.fn.popmake.animations}
-         */
-        grow: function (callback) {
-            return $.fn.popmake.animations.fade.apply(this, arguments);
-        },
-        /**
-         * @deprecated
-         * @returns {$.fn.popmake.animations}
-         */
-        growAndSlide: function (callback) {
-            return $.fn.popmake.animations.fadeAndSlide.apply(this, arguments);
-        }
-    };
+	$.fn.popmake.overlay_animations = {
+		none: function( duration, callback ) {
+			PUM.getPopup( this ).css( { opacity: 1, display: 'block' } );
 
-    $.fn.popmake.overlay_animations = {
-        none: function (duration, callback) {
-            PUM.getPopup(this).css({opacity: 1, display: "block"});
+			if ( typeof callback === 'function' ) {
+				callback();
+			}
+		},
+		fade: function( duration, callback ) {
+			PUM.getPopup( this )
+				.css( { opacity: 0, display: 'block' } )
+				.animate( { opacity: 1 }, duration, 'swing', callback );
+		},
+		slide: function( duration, callback ) {
+			PUM.getPopup( this ).slideDown( duration, callback );
+		},
+	};
+} )( jQuery, document );
 
-            if (typeof callback === "function") {
-                callback();
-            }
-        },
-        fade: function (duration, callback) {
-            PUM.getPopup(this)
-                .css({opacity: 0, display: "block"})
-                .animate({opacity: 1}, duration, 'swing', callback);
-        },
-        slide: function (duration, callback) {
-            PUM.getPopup(this).slideDown(duration, callback);
-        }
-    };
-
-}(jQuery, document));
 /**
  * Defines the core $.popmake binds.
  * Version 1.4
  */
-(function ($, document, undefined) {
-    "use strict";
+( function( $, document, undefined ) {
+	'use strict';
 
-    $(document)
-    // Backward Compatibility
-    // TODO: Add check for compatibility mode once available.
-        .on('pumInit', '.pum', function () {
-            $(this).popmake('getContainer').trigger('popmakeInit');
-        })
+	$( document )
+		// Backward Compatibility
+		// TODO: Add check for compatibility mode once available.
+		.on( 'pumInit', '.pum', function() {
+			$( this )
+				.popmake( 'getContainer' )
+				.trigger( 'popmakeInit' );
+		} )
 
+		/**
+		 * Fires the deprecated popmakeBeforeOpen event
+		 */
+		.on( 'pumBeforeOpen', '.pum', function() {
+			$( this )
+				.popmake( 'getContainer' )
+				.addClass( 'active' )
+				.trigger( 'popmakeBeforeOpen' );
+		} )
+		/**
+		 * Fires the deprecated popmakeAfterOpen event
+		 */
+		.on( 'pumAfterOpen', '.pum', function() {
+			$( this )
+				.popmake( 'getContainer' )
+				.trigger( 'popmakeAfterOpen' );
+		} )
 
-        /**
-         * Fires the deprecated popmakeBeforeOpen event
-         */
-        .on('pumBeforeOpen', '.pum', function () {
-            $(this).popmake('getContainer')
-                .addClass('active')
-                .trigger('popmakeBeforeOpen');
-        })
-        /**
-         * Fires the deprecated popmakeAfterOpen event
-         */
-        .on('pumAfterOpen', '.pum', function () {
-            $(this).popmake('getContainer').trigger('popmakeAfterOpen');
-        })
+		/**
+		 * Fires the deprecated popmakeBeforeClose event
+		 */
+		.on( 'pumBeforeClose', '.pum', function() {
+			$( this )
+				.popmake( 'getContainer' )
+				.trigger( 'popmakeBeforeClose' );
+		} )
+		/**
+		 * Fires the deprecated popmakeAfterClose event
+		 */
+		.on( 'pumAfterClose', '.pum', function() {
+			$( this )
+				.popmake( 'getContainer' )
+				.removeClass( 'active' )
+				.trigger( 'popmakeAfterClose' );
+		} )
 
+		/**
+		 * Fires the deprecated popmakeSetupClose event
+		 */
+		.on( 'pumSetupClose', '.pum', function() {
+			$( this )
+				.popmake( 'getContainer' )
+				.trigger( 'popmakeSetupClose' );
+		} )
 
-        /**
-         * Fires the deprecated popmakeBeforeClose event
-         */
-        .on('pumBeforeClose', '.pum', function () {
-            $(this).popmake('getContainer').trigger('popmakeBeforeClose');
-        })
-        /**
-         * Fires the deprecated popmakeAfterClose event
-         */
-        .on('pumAfterClose', '.pum', function () {
-            $(this).popmake('getContainer')
-                .removeClass('active')
-                .trigger('popmakeAfterClose');
-        })
+		/**
+		 * Removes the prevent open classes if they exist.
+		 */
+		.on( 'pumOpenPrevented', '.pum', function() {
+			$( this )
+				.popmake( 'getContainer' )
+				.removeClass( 'preventOpen' )
+				.removeClass( 'active' );
+		} )
+		/**
+		 * Removes the prevent close classes if they exist.
+		 */
+		.on( 'pumClosePrevented', '.pum', function() {
+			$( this )
+				.popmake( 'getContainer' )
+				.removeClass( 'preventClose' );
+		} )
 
+		/**
+		 * Fires the deprecated popmakeBeforeReposition event
+		 */
+		.on( 'pumBeforeReposition', '.pum', function() {
+			$( this )
+				.popmake( 'getContainer' )
+				.trigger( 'popmakeBeforeReposition' );
+		} );
+} )( jQuery, document );
 
-        /**
-         * Fires the deprecated popmakeSetupClose event
-         */
-        .on('pumSetupClose', '.pum', function () {
-            $(this).popmake('getContainer').trigger('popmakeSetupClose');
-        })
-
-
-        /**
-         * Removes the prevent open classes if they exist.
-         */
-        .on('pumOpenPrevented', '.pum', function () {
-            $(this).popmake('getContainer')
-                .removeClass('preventOpen')
-                .removeClass('active');
-        })
-        /**
-         * Removes the prevent close classes if they exist.
-         */
-        .on('pumClosePrevented', '.pum', function () {
-            $(this).popmake('getContainer')
-                .removeClass('preventClose');
-        })
-
-
-        /**
-         * Fires the deprecated popmakeBeforeReposition event
-         */
-        .on('pumBeforeReposition', '.pum', function () {
-            $(this).popmake('getContainer').trigger('popmakeBeforeReposition');
-        });
-
-
-}(jQuery, document));
 /**
  * Defines the core $.popmake callbacks.
  * Version 1.4
  */
-(function ($, document, undefined) {
-    "use strict";
+( function( $, document, undefined ) {
+	'use strict';
 
-    $.fn.popmake.callbacks = {
-        reposition_using: function (position) {
-            $(this).css(position);
-        }
-    };
+	$.fn.popmake.callbacks = {
+		reposition_using: function( position ) {
+			$( this ).css( position );
+		},
+	};
+} )( jQuery, document );
 
-}(jQuery, document));
-(function ($, document, undefined) {
-    "use strict";
+( function( $, document, undefined ) {
+	'use strict';
 
-    // Used for Mobile Detect when needed.
-    var _md,
-        md = function () {
-            if (_md === undefined) {
-                _md = typeof MobileDetect !== 'undefined' ? new MobileDetect(window.navigator.userAgent) : {
-                    phone: function () {
-                        return false;
-                    },
-                    tablet: function() {
-                        return false;
-                    }
-                };
-            }
+	// Used for Mobile Detect when needed.
+	var _md,
+		md = function() {
+			if ( _md === undefined ) {
+				_md =
+					typeof MobileDetect !== 'undefined'
+						? new MobileDetect( window.navigator.userAgent )
+						: {
+								phone: function() {
+									return false;
+								},
+								tablet: function() {
+									return false;
+								},
+						  };
+			}
 
-            return _md;
-        };
+			return _md;
+		};
 
-    $.extend($.fn.popmake.methods, {
-        checkConditions: function () {
-            var $popup = PUM.getPopup(this),
-                settings = $popup.popmake('getSettings'),
-                // Loadable defaults to true if no conditions. Making the popup available everywhere.
-                loadable = true,
-                group_check,
-                g,
-                c,
-                group,
-                condition;
+	$.extend( $.fn.popmake.methods, {
+		checkConditions: function() {
+			var $popup = PUM.getPopup( this ),
+				settings = $popup.popmake( 'getSettings' ),
+				// Loadable defaults to true if no conditions. Making the popup available everywhere.
+				loadable = true,
+				group_check,
+				g,
+				c,
+				group,
+				condition;
 
-            if (settings.disable_on_mobile) {
-                if (md().phone()) {
-                    return false;
-                }
-            }
+			if ( settings.disable_on_mobile ) {
+				if ( md().phone() ) {
+					return false;
+				}
+			}
 
-            if (settings.disable_on_tablet) {
-                if (md().tablet()) {
-                    return false;
-                }
-            }
+			if ( settings.disable_on_tablet ) {
+				if ( md().tablet() ) {
+					return false;
+				}
+			}
 
-            if (settings.conditions.length) {
+			if ( settings.conditions.length ) {
+				// All Groups Must Return True. Break if any is false and set loadable to false.
+				for ( g = 0; settings.conditions.length > g; g++ ) {
+					group = settings.conditions[ g ];
 
-                // All Groups Must Return True. Break if any is false and set loadable to false.
-                for (g = 0; settings.conditions.length > g; g++) {
+					// Groups are false until a condition proves true.
+					group_check = false;
 
-                    group = settings.conditions[g];
+					// At least one group condition must be true. Break this loop if any condition is true.
+					for ( c = 0; group.length > c; c++ ) {
+						condition = $.extend(
+							{},
+							{
+								not_operand: false,
+							},
+							group[ c ]
+						);
 
-                    // Groups are false until a condition proves true.
-                    group_check = false;
+						// If any condition passes, set group_check true and break.
+						if (
+							! condition.not_operand &&
+							$popup.popmake( 'checkCondition', condition )
+						) {
+							group_check = true;
+						} else if (
+							condition.not_operand &&
+							! $popup.popmake( 'checkCondition', condition )
+						) {
+							group_check = true;
+						}
 
-                    // At least one group condition must be true. Break this loop if any condition is true.
-                    for (c = 0; group.length > c; c++) {
+						$( this ).trigger( 'pumCheckingCondition', [
+							group_check,
+							condition,
+						] );
 
-                        condition = $.extend({}, {
-                            not_operand: false
-                        }, group[c]);
+						if ( group_check ) {
+							break;
+						}
+					}
 
-                        // If any condition passes, set group_check true and break.
-                        if (!condition.not_operand && $popup.popmake('checkCondition', condition)) {
-                            group_check = true;
-                        } else if (condition.not_operand && !$popup.popmake('checkCondition', condition)) {
-                            group_check = true;
-                        }
+					// If any group of conditions doesn't pass, popup is not loadable.
+					if ( ! group_check ) {
+						loadable = false;
+					}
+				}
+			}
 
-                        $(this).trigger('pumCheckingCondition', [group_check, condition]);
+			return loadable;
+		},
+		checkCondition: function( condition ) {
+			var target = condition.target || null,
+				settings = condition.settings || condition,
+				check;
 
-                        if (group_check) {
-                            break;
-                        }
-                    }
+			if ( ! target ) {
+				console.warn( 'Condition type not set.' );
+				return false;
+			}
 
-                    // If any group of conditions doesn't pass, popup is not loadable.
-                    if (!group_check) {
-                        loadable = false;
-                    }
+			// TODO once all extensions updated and in circulation for v1.7, change the below to pass settings, not condition.
 
-                }
+			// Method calling logic
+			if ( $.fn.popmake.conditions[ target ] ) {
+				return $.fn.popmake.conditions[ target ].apply( this, [
+					condition,
+				] );
+			}
+			if ( window.console ) {
+				console.warn( 'Condition ' + target + ' does not exist.' );
+				return true;
+			}
+		},
+	} );
 
-            }
-
-            return loadable;
-        },
-        checkCondition: function (condition) {
-            var target = condition.target || null,
-                settings = condition.settings || condition,
-                check;
-
-            if (!target) {
-                console.warn('Condition type not set.');
-                return false;
-            }
-
-            // TODO once all extensions updated and in circulation for v1.7, change the below to pass settings, not condition.
-
-            // Method calling logic
-            if ($.fn.popmake.conditions[target]) {
-                return $.fn.popmake.conditions[target].apply(this, [condition]);
-            }
-            if (window.console) {
-                console.warn('Condition ' + target + ' does not exist.');
-                return true;
-            }
-        }
-    });
-
-
-    $.fn.popmake.conditions = {};
-
-}(jQuery, document));
+	$.fn.popmake.conditions = {};
+} )( jQuery, document );
 
 /**
  * Defines the core $.popmake.cookie functions.
@@ -2868,272 +1664,311 @@ var PUM_Analytics;
  * Defines the pm_cookie & pm_remove_cookie global functions.
  */
 var pm_cookie, pm_cookie_json, pm_remove_cookie;
-(function ($) {
-    "use strict";
+( function( $ ) {
+	'use strict';
 
-    function cookie(converter) {
-        if (converter === undefined) {
-            converter = function () {
-            };
-        }
+	function cookie( converter ) {
+		if ( converter === undefined ) {
+			converter = function() {};
+		}
 
-        function api(key, value, attributes) {
-            var result,
-                expires = new Date();
-            if (typeof document === 'undefined') {
-                return;
-            }
+		function api( key, value, attributes ) {
+			var result,
+				expires = new Date();
+			if ( typeof document === 'undefined' ) {
+				return;
+			}
 
-            // Write
-            if (arguments.length > 1) {
-                attributes = $.extend({
-                    path: pum_vars.home_url
-                }, api.defaults, attributes);
+			// Write
+			if ( arguments.length > 1 ) {
+				attributes = $.extend(
+					{
+						path: pum_vars.home_url,
+					},
+					api.defaults,
+					attributes
+				);
 
-                switch (typeof attributes.expires) {
-                case 'number':
-                    expires.setMilliseconds(expires.getMilliseconds() + attributes.expires * 864e+5);
-                    attributes.expires = expires;
-                    break;
-                case 'string':
-                    expires.setTime($.fn.popmake.utilities.strtotime("+" + attributes.expires) * 1000);
-                    attributes.expires = expires;
-                    break;
-                }
+				switch ( typeof attributes.expires ) {
+					case 'number':
+						expires.setMilliseconds(
+							expires.getMilliseconds() +
+								attributes.expires * 864e5
+						);
+						attributes.expires = expires;
+						break;
+					case 'string':
+						expires.setTime(
+							$.fn.popmake.utilities.strtotime(
+								'+' + attributes.expires
+							) * 1000
+						);
+						attributes.expires = expires;
+						break;
+				}
 
-                try {
-                    result = JSON.stringify(value);
-                    if (/^[\{\[]/.test(result)) {
-                        value = result;
-                    }
-                } catch (e) {
-                }
+				try {
+					result = JSON.stringify( value );
+					if ( /^[\{\[]/.test( result ) ) {
+						value = result;
+					}
+				} catch ( e ) {}
 
-                if (!converter.write) {
-                    value = encodeURIComponent(String(value))
-                        .replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g, decodeURIComponent);
-                } else {
-                    value = converter.write(value, key);
-                }
+				if ( ! converter.write ) {
+					value = encodeURIComponent( String( value ) ).replace(
+						/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g,
+						decodeURIComponent
+					);
+				} else {
+					value = converter.write( value, key );
+				}
 
-                key = encodeURIComponent(String(key));
-                key = key.replace(/%(23|24|26|2B|5E|60|7C)/g, decodeURIComponent);
-                key = key.replace(/[\(\)]/g, escape);
+				key = encodeURIComponent( String( key ) );
+				key = key.replace(
+					/%(23|24|26|2B|5E|60|7C)/g,
+					decodeURIComponent
+				);
+				key = key.replace( /[\(\)]/g, escape );
 
-                return (document.cookie = [
-                    key, '=', value,
-                    attributes.expires ? '; expires=' + attributes.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
-                    attributes.path ? '; path=' + attributes.path : '',
-                    attributes.domain ? '; domain=' + attributes.domain : '',
-                    attributes.secure ? '; secure' : ''
-                ].join(''));
-            }
+				return ( document.cookie = [
+					key,
+					'=',
+					value,
+					attributes.expires
+						? '; expires=' + attributes.expires.toUTCString()
+						: '', // use expires attribute, max-age is not supported by IE
+					attributes.path ? '; path=' + attributes.path : '',
+					attributes.domain ? '; domain=' + attributes.domain : '',
+					attributes.secure ? '; secure' : '',
+				].join( '' ) );
+			}
 
-            // Read
+			// Read
 
-            if (!key) {
-                result = {};
-            }
+			if ( ! key ) {
+				result = {};
+			}
 
-            // To prevent the for loop in the first place assign an empty array
-            // in case there are no cookies at all. Also prevents odd result when
-            // calling "get()"
-            var cookies = document.cookie ? document.cookie.split('; ') : [];
-            var rdecode = /(%[0-9A-Z]{2})+/g;
-            var i = 0;
+			// To prevent the for loop in the first place assign an empty array
+			// in case there are no cookies at all. Also prevents odd result when
+			// calling "get()"
+			var cookies = document.cookie ? document.cookie.split( '; ' ) : [];
+			var rdecode = /(%[0-9A-Z]{2})+/g;
+			var i = 0;
 
-            for (; i < cookies.length; i++) {
-                var parts = cookies[i].split('=');
-                var cookie = parts.slice(1).join('=');
+			for ( ; i < cookies.length; i++ ) {
+				var parts = cookies[ i ].split( '=' );
+				var cookie = parts.slice( 1 ).join( '=' );
 
-                if (cookie.charAt(0) === '"') {
-                    cookie = cookie.slice(1, -1);
-                }
+				if ( cookie.charAt( 0 ) === '"' ) {
+					cookie = cookie.slice( 1, -1 );
+				}
 
-                try {
-                    var name = parts[0].replace(rdecode, decodeURIComponent);
-                    cookie = converter.read ?
-                        converter.read(cookie, name) : converter(cookie, name) ||
-                        cookie.replace(rdecode, decodeURIComponent);
+				try {
+					var name = parts[ 0 ].replace(
+						rdecode,
+						decodeURIComponent
+					);
+					cookie = converter.read
+						? converter.read( cookie, name )
+						: converter( cookie, name ) ||
+						  cookie.replace( rdecode, decodeURIComponent );
 
-                    if (this.json) {
-                        try {
-                            cookie = JSON.parse(cookie);
-                        } catch (e) {
-                        }
-                    }
+					if ( this.json ) {
+						try {
+							cookie = JSON.parse( cookie );
+						} catch ( e ) {}
+					}
 
-                    if (key === name) {
-                        result = cookie;
-                        break;
-                    }
+					if ( key === name ) {
+						result = cookie;
+						break;
+					}
 
-                    if (!key) {
-                        result[name] = cookie;
-                    }
-                } catch (e) {
-                }
-            }
+					if ( ! key ) {
+						result[ name ] = cookie;
+					}
+				} catch ( e ) {}
+			}
 
-            return result;
-        }
+			return result;
+		}
 
-        api.set = api;
-        api.get = function (key) {
-            return api.call(api, key);
-        };
-        api.getJSON = function () {
-            return api.apply({
-                json: true
-            }, [].slice.call(arguments));
-        };
-        api.defaults = {};
+		api.set = api;
+		api.get = function( key ) {
+			return api.call( api, key );
+		};
+		api.getJSON = function() {
+			return api.apply(
+				{
+					json: true,
+				},
+				[].slice.call( arguments )
+			);
+		};
+		api.defaults = {};
 
-        api.remove = function (key, attributes) {
-            // Clears keys with current path.
-            api(key, '', $.extend({}, attributes, {
-                expires: -1,
-                path: ''
-            }));
-            // Clears sitewide keys.
-            api(key, '', $.extend({}, attributes, {
-                expires: -1
-            }));
-        };
+		api.remove = function( key, attributes ) {
+			// Clears keys with current path.
+			api(
+				key,
+				'',
+				$.extend( {}, attributes, {
+					expires: -1,
+					path: '',
+				} )
+			);
+			// Clears sitewide keys.
+			api(
+				key,
+				'',
+				$.extend( {}, attributes, {
+					expires: -1,
+				} )
+			);
+		};
 
-        /**
-         * Polyfill for jQuery Cookie argument arrangement.
-         *
-         * @param key
-         * @param value
-         * @param attributes || expires (deprecated)
-         * @param path (deprecated)
-         * @returns {*}
-         */
-        api.process = function (key, value, attributes, path) {
-            if (arguments.length > 3 && typeof arguments[2] !== 'object' && value !== undefined) {
-                return api.apply(api, [key, value, {
-                    expires: attributes,
-                    path: path
-                }]);
-            } else {
-                return api.apply(api, [].slice.call(arguments, [0, 2]));
-            }
-        };
+		/**
+		 * Polyfill for jQuery Cookie argument arrangement.
+		 *
+		 * @param key
+		 * @param value
+		 * @param attributes || expires (deprecated)
+		 * @param path (deprecated)
+		 * @return {*}
+		 */
+		api.process = function( key, value, attributes, path ) {
+			if (
+				arguments.length > 3 &&
+				typeof arguments[ 2 ] !== 'object' &&
+				value !== undefined
+			) {
+				return api.apply( api, [
+					key,
+					value,
+					{
+						expires: attributes,
+						path: path,
+					},
+				] );
+			}
+			return api.apply( api, [].slice.call( arguments, [ 0, 2 ] ) );
+		};
 
-        api.withConverter = $.fn.popmake.cookie;
+		api.withConverter = $.fn.popmake.cookie;
 
-        return api;
-    }
+		return api;
+	}
 
-    $.extend($.fn.popmake, {
-        cookie: cookie()
-    });
+	$.extend( $.fn.popmake, {
+		cookie: cookie(),
+	} );
 
-    pm_cookie = $.pm_cookie = $.fn.popmake.cookie.process;
-    pm_cookie_json = $.pm_cookie_json = $.fn.popmake.cookie.getJSON;
-    pm_remove_cookie = $.pm_remove_cookie = $.fn.popmake.cookie.remove;
+	pm_cookie = $.pm_cookie = $.fn.popmake.cookie.process;
+	pm_cookie_json = $.pm_cookie_json = $.fn.popmake.cookie.getJSON;
+	pm_remove_cookie = $.pm_remove_cookie = $.fn.popmake.cookie.remove;
+} )( jQuery );
 
-}(jQuery));
-(function($, document, undefined) {
-	"use strict";
+( function( $, document, undefined ) {
+	'use strict';
 
-	var setCookie = function(settings) {
+	var setCookie = function( settings ) {
 		$.pm_cookie(
 			settings.name,
 			true,
 			settings.session ? null : settings.time,
-			settings.path ? pum_vars.home_url || "/" : null
+			settings.path ? pum_vars.home_url || '/' : null
 		);
-		pum.hooks.doAction("popmake.setCookie", settings);
+		pum.hooks.doAction( 'popmake.setCookie', settings );
 	};
 
-	$.extend($.fn.popmake.methods, {
-		addCookie: function(type) {
+	$.extend( $.fn.popmake.methods, {
+		addCookie: function( type ) {
 			// Method calling logic
 
-			pum.hooks.doAction("popmake.addCookie", arguments);
+			pum.hooks.doAction( 'popmake.addCookie', arguments );
 
-			if ($.fn.popmake.cookies[type]) {
-				return $.fn.popmake.cookies[type].apply(
+			if ( $.fn.popmake.cookies[ type ] ) {
+				return $.fn.popmake.cookies[ type ].apply(
 					this,
-					Array.prototype.slice.call(arguments, 1)
+					Array.prototype.slice.call( arguments, 1 )
 				);
 			}
-			if (window.console) {
-				console.warn("Cookie type " + type + " does not exist.");
+			if ( window.console ) {
+				console.warn( 'Cookie type ' + type + ' does not exist.' );
 			}
 			return this;
 		},
 		setCookie: setCookie,
-		checkCookies: function(settings) {
+		checkCookies: function( settings ) {
 			var i,
 				ret = false;
 
 			if (
 				settings.cookie_name === undefined ||
 				settings.cookie_name === null ||
-				settings.cookie_name === ""
+				settings.cookie_name === ''
 			) {
 				return false;
 			}
 
-			switch (typeof settings.cookie_name) {
-				case "object":
-				case "array":
-					for (i = 0; settings.cookie_name.length > i; i += 1) {
+			switch ( typeof settings.cookie_name ) {
+				case 'object':
+				case 'array':
+					for ( i = 0; settings.cookie_name.length > i; i += 1 ) {
 						if (
-							$.pm_cookie(settings.cookie_name[i]) !== undefined
+							$.pm_cookie( settings.cookie_name[ i ] ) !==
+							undefined
 						) {
 							ret = true;
 						}
 					}
 					break;
-				case "string":
-					if ($.pm_cookie(settings.cookie_name) !== undefined) {
+				case 'string':
+					if ( $.pm_cookie( settings.cookie_name ) !== undefined ) {
 						ret = true;
 					}
 					break;
 			}
 
-			pum.hooks.doAction("popmake.checkCookies", settings, ret);
+			pum.hooks.doAction( 'popmake.checkCookies', settings, ret );
 
 			return ret;
-		}
-	});
+		},
+	} );
 
 	$.fn.popmake.cookies = $.fn.popmake.cookies || {};
 
-	$.extend($.fn.popmake.cookies, {
-		on_popup_open: function(settings) {
-			var $popup = PUM.getPopup(this);
-			$popup.on("pumAfterOpen", function() {
-				$popup.popmake("setCookie", settings);
-			});
+	$.extend( $.fn.popmake.cookies, {
+		on_popup_open: function( settings ) {
+			var $popup = PUM.getPopup( this );
+			$popup.on( 'pumAfterOpen', function() {
+				$popup.popmake( 'setCookie', settings );
+			} );
 		},
-		on_popup_close: function(settings) {
-			var $popup = PUM.getPopup(this);
-			$popup.on("pumBeforeClose", function() {
-				$popup.popmake("setCookie", settings);
-			});
+		on_popup_close: function( settings ) {
+			var $popup = PUM.getPopup( this );
+			$popup.on( 'pumBeforeClose', function() {
+				$popup.popmake( 'setCookie', settings );
+			} );
 		},
-		form_submission: function(settings) {
-			var $popup = PUM.getPopup(this);
+		form_submission: function( settings ) {
+			var $popup = PUM.getPopup( this );
 
 			settings = $.extend(
 				{
-					form: "",
-					formInstanceId: "",
-					only_in_popup: false
+					form: '',
+					formInstanceId: '',
+					only_in_popup: false,
 				},
 				settings
 			);
 
-			PUM.hooks.addAction("pum.integration.form.success", function(
+			PUM.hooks.addAction( 'pum.integration.form.success', function(
 				form,
 				args
 			) {
-				if (!settings.form.length) {
+				if ( ! settings.form.length ) {
 					return;
 				}
 
@@ -3145,464 +1980,561 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
 					)
 				) {
 					if (
-						(settings.only_in_popup &&
+						( settings.only_in_popup &&
 							args.popup.length &&
-							args.popup.is($popup)) ||
-						!settings.only_in_popup
+							args.popup.is( $popup ) ) ||
+						! settings.only_in_popup
 					) {
-						$popup.popmake("setCookie", settings);
+						$popup.popmake( 'setCookie', settings );
 					}
 				}
-			});
+			} );
 		},
-		manual: function(settings) {
-			var $popup = PUM.getPopup(this);
-			$popup.on("pumSetCookie", function() {
-				$popup.popmake("setCookie", settings);
-			});
+		manual: function( settings ) {
+			var $popup = PUM.getPopup( this );
+			$popup.on( 'pumSetCookie', function() {
+				$popup.popmake( 'setCookie', settings );
+			} );
 		},
-		form_success: function(settings) {
-			var $popup = PUM.getPopup(this);
-			$popup.on("pumFormSuccess", function() {
-				$popup.popmake("setCookie", settings);
-			});
+		form_success: function( settings ) {
+			var $popup = PUM.getPopup( this );
+			$popup.on( 'pumFormSuccess', function() {
+				$popup.popmake( 'setCookie', settings );
+			} );
 		},
-		pum_sub_form_success: function(settings) {
-			var $popup = PUM.getPopup(this);
-			$popup.find("form.pum-sub-form").on("success", function() {
-				$popup.popmake("setCookie", settings);
-			});
+		pum_sub_form_success: function( settings ) {
+			var $popup = PUM.getPopup( this );
+			$popup.find( 'form.pum-sub-form' ).on( 'success', function() {
+				$popup.popmake( 'setCookie', settings );
+			} );
 		},
 		/**
 		 * @deprecated 1.7.0
 		 *
 		 * @param settings
 		 */
-		pum_sub_form_already_subscribed: function(settings) {
-			var $popup = PUM.getPopup(this);
-			$popup.find("form.pum-sub-form").on("success", function() {
-				$popup.popmake("setCookie", settings);
-			});
+		pum_sub_form_already_subscribed: function( settings ) {
+			var $popup = PUM.getPopup( this );
+			$popup.find( 'form.pum-sub-form' ).on( 'success', function() {
+				$popup.popmake( 'setCookie', settings );
+			} );
 		},
-		ninja_form_success: function(settings) {
-			return $.fn.popmake.cookies.form_success.apply(this, arguments);
+		ninja_form_success: function( settings ) {
+			return $.fn.popmake.cookies.form_success.apply( this, arguments );
 		},
-		cf7_form_success: function(settings) {
-			return $.fn.popmake.cookies.form_success.apply(this, arguments);
+		cf7_form_success: function( settings ) {
+			return $.fn.popmake.cookies.form_success.apply( this, arguments );
 		},
-		gforms_form_success: function(settings) {
-			return $.fn.popmake.cookies.form_success.apply(this, arguments);
-		}
-	});
+		gforms_form_success: function( settings ) {
+			return $.fn.popmake.cookies.form_success.apply( this, arguments );
+		},
+	} );
 
 	// Register All Cookies for a Popup
-	$(document)
-		.ready(function() {
-			var $cookies = $(".pum-cookie");
-
-			$cookies.each(function() {
-				var $cookie = $(this),
-					index = $cookies.index($cookie),
-					args = $cookie.data("cookie-args");
-
-				// If only-onscreen not set or false, set the cookie immediately.
-				if (!$cookie.data("only-onscreen")) {
-					setCookie(args);
-				} else {
-					// If the element is visible on page load, set the cookie.
-					if ($cookie.isInViewport() && $cookie.is(":visible")) {
-						setCookie(args);
-					} else {
-						// Add a throttled scroll listener, when its in view, set the cookie.
-						$(window).on(
-							"scroll.pum-cookie-" + index,
-							$.fn.popmake.utilities.throttle(function(event) {
-								if (
-									$cookie.isInViewport() &&
-									$cookie.is(":visible")
-								) {
-									setCookie(args);
-
-									$(window).off("scroll.pum-cookie-" + index);
-								}
-							}, 100)
-						);
-					}
-				}
-			});
-		})
-		.on("pumInit", ".pum", function() {
-			var $popup = PUM.getPopup(this),
-				settings = $popup.popmake("getSettings"),
+	$( document )
+		.on( 'pumInit', '.pum', function() {
+			var $popup = PUM.getPopup( this ),
+				settings = $popup.popmake( 'getSettings' ),
 				cookies = settings.cookies || [],
 				cookie = null,
 				i;
 
-			if (cookies.length) {
-				for (i = 0; cookies.length > i; i += 1) {
-					cookie = cookies[i];
-					$popup.popmake("addCookie", cookie.event, cookie.settings);
+			if ( cookies.length ) {
+				for ( i = 0; cookies.length > i; i += 1 ) {
+					cookie = cookies[ i ];
+					$popup.popmake(
+						'addCookie',
+						cookie.event,
+						cookie.settings
+					);
 				}
 			}
-		});
-})(jQuery, document);
+		} );
+
+	// Initiate when ready.
+	$( function() {
+		var $cookies = $( '.pum-cookie' );
+
+		$cookies.each( function() {
+			var $cookie = $( this ),
+				index = $cookies.index( $cookie ),
+				args = $cookie.data( 'cookie-args' );
+
+			// If only-onscreen not set or false, set the cookie immediately.
+			if ( ! $cookie.data( 'only-onscreen' ) ) {
+				setCookie( args );
+			} else {
+				// If the element is visible on page load, set the cookie.
+				if ( $cookie.isInViewport() && $cookie.is( ':visible' ) ) {
+					setCookie( args );
+				} else {
+					// Add a throttled scroll listener, when its in view, set the cookie.
+					$( window ).on(
+						'scroll.pum-cookie-' + index,
+						$.fn.popmake.utilities.throttle( function( event ) {
+							if (
+								$cookie.isInViewport() &&
+								$cookie.is( ':visible' )
+							) {
+								setCookie( args );
+
+								$( window ).off(
+									'scroll.pum-cookie-' + index
+								);
+							}
+						}, 100 )
+					);
+				}
+			}
+		} );
+	} )
+} )( jQuery, document );
 
 var pum_debug_mode = false,
-    pum_debug;
-(function ($, pum_vars) {
-
-    pum_vars = window.pum_vars || {
-        debug_mode: false
-    };
-
-    pum_debug_mode = pum_vars.debug_mode !== undefined && pum_vars.debug_mode;
-
-    // Force Debug Mode when the ?pum_debug query arg is present.
-    if (!pum_debug_mode && window.location.href.indexOf('pum_debug') !== -1) {
-        pum_debug_mode = true;
-    }
-
-    if (pum_debug_mode) {
-
-        var inited = false,
-            current_popup_event = false,
-            vars = window.pum_debug_vars || {
-                'debug_mode_enabled': 'Popup Maker: Debug Mode Enabled',
-                'debug_started_at': 'Debug started at:',
-                'debug_more_info': 'For more information on how to use this information visit https://docs.wppopupmaker.com/?utm_medium=js-debug-info&utm_campaign=ContextualHelp&utm_source=browser-console&utm_content=more-info',
-                'global_info': 'Global Information',
-                'localized_vars': 'Localized variables',
-                'popups_initializing': 'Popups Initializing',
-                'popups_initialized': 'Popups Initialized',
-                'single_popup_label': 'Popup: #',
-                'theme_id': 'Theme ID: ',
-                'label_method_call': 'Method Call:',
-                'label_method_args': 'Method Arguments:',
-                'label_popup_settings': 'Settings',
-                'label_triggers': 'Triggers',
-                'label_cookies': 'Cookies',
-                'label_delay': 'Delay:',
-                'label_conditions': 'Conditions',
-                'label_cookie': 'Cookie:',
-                'label_settings': 'Settings:',
-                'label_selector': 'Selector:',
-                'label_mobile_disabled': 'Mobile Disabled:',
-                'label_tablet_disabled': 'Tablet Disabled:',
-                'label_event': 'Event: %s',
-                'triggers': [],
-                'cookies': []
-            };
-
-        pum_debug = {
-            odump: function (o) {
-                return $.extend({}, o);
-            },
-            logo: function () {
-                console.log("" +
-                    " -------------------------------------------------------------" + '\n' +
-                    "|  ____                           __  __       _              |" + '\n' +
-                    "| |  _ \\ ___  _ __  _   _ _ __   |  \\/  | __ _| | _____ _ __  |" + '\n' +
-                    "| | |_) / _ \\| '_ \\| | | | '_ \\  | |\\/| |/ _` | |/ / _ \\ '__| |" + '\n' +
-                    "| |  __/ (_) | |_) | |_| | |_) | | |  | | (_| |   <  __/ |    |" + '\n' +
-                    "| |_|   \\___/| .__/ \\__,_| .__/  |_|  |_|\\__,_|_|\\_\\___|_|    |" + '\n' +
-                    "|            |_|         |_|                                  |" + '\n' +
-                    " -------------------------------------------------------------"
-                );
-            },
-            initialize: function () {
-                inited = true;
-
-                // Clear Console
-                //console.clear();
-
-                // Render Logo
-                pum_debug.logo();
-
-                console.debug(vars.debug_mode_enabled);
-                console.log(vars.debug_started_at, new Date());
-                console.info(vars.debug_more_info);
-
-                // Global Info Divider
-                pum_debug.divider(vars.global_info);
-
-                // Localized Variables
-                console.groupCollapsed(vars.localized_vars);
-                console.log('pum_vars:', pum_debug.odump(pum_vars));
-                $(document).trigger('pum_debug_initialize_localized_vars');
-                console.groupEnd();
-
-                // Trigger to add more debug info from extensions.
-                $(document).trigger('pum_debug_initialize');
-            },
-            popup_event_header: function ($popup) {
-                var settings = $popup.popmake('getSettings');
-
-
-                if (current_popup_event === settings.id) {
-                    return;
-                }
-
-                current_popup_event = settings.id;
-                pum_debug.divider(vars.single_popup_label + settings.id + ' - ' + settings.slug);
-            },
-            divider: function (heading) {
-                var totalWidth = 62,
-                    extraSpace = 62,
-                    padding = 0,
-                    line = " " + new Array(totalWidth + 1).join("-") + " ";
-
-                if (typeof heading === 'string') {
-                    extraSpace = totalWidth - heading.length;
-                    padding = {
-                        left: Math.floor(extraSpace / 2),
-                        right: Math.floor(extraSpace / 2)
-                    };
-
-                    if (padding.left + padding.right === extraSpace - 1) {
-                        padding.right++;
-                    }
-
-                    padding.left = new Array(padding.left + 1).join(" ");
-                    padding.right = new Array(padding.right + 1).join(" ");
-
-                    console.log("" +
-                        line + '\n' +
-                        "|" + padding.left + heading + padding.right + "|" + '\n' +
-                        line
-                    );
-                } else {
-                    console.log(line);
-                }
-            },
-            click_trigger: function ($popup, trigger_settings) {
-                var settings = $popup.popmake('getSettings'),
-                    trigger_selectors = [
-                        '.popmake-' + settings.id,
-                        '.popmake-' + decodeURIComponent(settings.slug),
-                        'a[href$="#popmake-' + settings.id + '"]'
-                    ],
-                    trigger_selector;
-
-                if (trigger_settings.extra_selectors && trigger_settings.extra_selectors !== '') {
-                    trigger_selectors.push(trigger_settings.extra_selectors);
-                }
-
-                trigger_selectors = pum.hooks.applyFilters('pum.trigger.click_open.selectors', trigger_selectors, trigger_settings, $popup);
-
-                trigger_selector = trigger_selectors.join(', ');
-
-                console.log(vars.label_selector, trigger_selector);
-            },
-            trigger: function ($popup, trigger) {
-                if (typeof vars.triggers[trigger.type] === 'string') {
-
-                    console.groupCollapsed(vars.triggers[trigger.type]);
-
-                    switch (trigger.type) {
-                    case 'auto_open':
-                        console.log(vars.label_delay, trigger.settings.delay);
-                        console.log(vars.label_cookie, trigger.settings.cookie_name);
-                        break;
-                    case 'click_open':
-                        pum_debug.click_trigger($popup, trigger.settings);
-                        console.log(vars.label_cookie, trigger.settings.cookie_name);
-                        break;
-                    }
-
-                    $(document).trigger('pum_debug_render_trigger', $popup, trigger);
-
-                    console.groupEnd();
-                }
-            },
-            cookie: function ($popup, cookie) {
-                if (typeof vars.cookies[cookie.event] === 'string') {
-                    console.groupCollapsed(vars.cookies[cookie.event]);
-
-                    switch (cookie.event) {
-                    case 'on_popup_open':
-                    case 'on_popup_close':
-                    case 'manual':
-                    case 'ninja_form_success':
-                        console.log(vars.label_cookie, pum_debug.odump(cookie.settings));
-                        break;
-                    }
-
-                    $(document).trigger('pum_debug_render_trigger', $popup, cookie);
-
-                    console.groupEnd();
-                }
-            }
-        };
-
-        $(document)
-            .on('pumInit', '.pum', function () {
-                var $popup = PUM.getPopup($(this)),
-                    settings = $popup.popmake('getSettings'),
-                    triggers = settings.triggers || [],
-                    cookies = settings.cookies || [],
-                    conditions = settings.conditions || [],
-                    i = 0;
-
-                if (!inited) {
-                    pum_debug.initialize();
-                    pum_debug.divider(vars.popups_initializing);
-                }
-
-                console.groupCollapsed(vars.single_popup_label + settings.id + ' - ' + settings.slug);
-
-                // Popup Theme ID
-                console.log(vars.theme_id, settings.theme_id);
-
-                // Triggers
-                if (triggers.length) {
-                    console.groupCollapsed(vars.label_triggers);
-                    for (i = 0; triggers.length > i; i++) {
-                        pum_debug.trigger($popup, triggers[i]);
-                    }
-                    console.groupEnd();
-                }
-
-                // Cookies
-                if (cookies.length) {
-                    console.groupCollapsed(vars.label_cookies);
-                    for (i = 0; cookies.length > i; i += 1) {
-                        pum_debug.cookie($popup, cookies[i]);
-                    }
-                    console.groupEnd();
-                }
-
-                // Conditions
-                if (conditions.length) {
-                    console.groupCollapsed(vars.label_conditions);
-                    console.log(conditions);
-                    console.groupEnd();
-                }
-
-                console.groupCollapsed(vars.label_popup_settings);
-
-
-                // Mobile Disabled.
-                console.log(vars.label_mobile_disabled, settings.disable_on_mobile !== false);
-
-                // Tablet Disabled.
-                console.log(vars.label_tablet_disabled, settings.disable_on_tablet !== false);
-
-                // Settings.
-                console.log(vars.label_display_settings, pum_debug.odump(settings));
-
-                // Trigger to add more debug info from extensions.
-                $popup.trigger('pum_debug_popup_settings');
-
-                console.groupEnd();
-
-                console.groupEnd();
+	pum_debug;
+(function($, pum_vars) {
+	pum_vars = window.pum_vars || {
+		debug_mode: false
+	};
+
+	pum_debug_mode = pum_vars.debug_mode !== undefined && pum_vars.debug_mode;
+
+	// Force Debug Mode when the ?pum_debug query arg is present.
+	if (!pum_debug_mode && window.location.href.indexOf("pum_debug") !== -1) {
+		pum_debug_mode = true;
+	}
+
+	if (pum_debug_mode) {
+		var inited = false,
+			current_popup_event = false,
+			vars = window.pum_debug_vars || {
+				debug_mode_enabled: "Popup Maker: Debug Mode Enabled",
+				debug_started_at: "Debug started at:",
+				debug_more_info:
+					"For more information on how to use this information visit https://docs.wppopupmaker.com/?utm_medium=js-debug-info&utm_campaign=contextual-help&utm_source=browser-console&utm_content=more-info",
+				global_info: "Global Information",
+				localized_vars: "Localized variables",
+				popups_initializing: "Popups Initializing",
+				popups_initialized: "Popups Initialized",
+				single_popup_label: "Popup: #",
+				theme_id: "Theme ID: ",
+				label_method_call: "Method Call:",
+				label_method_args: "Method Arguments:",
+				label_popup_settings: "Settings",
+				label_triggers: "Triggers",
+				label_cookies: "Cookies",
+				label_delay: "Delay:",
+				label_conditions: "Conditions",
+				label_cookie: "Cookie:",
+				label_settings: "Settings:",
+				label_selector: "Selector:",
+				label_mobile_disabled: "Mobile Disabled:",
+				label_tablet_disabled: "Tablet Disabled:",
+				label_event: "Event: %s",
+				triggers: [],
+				cookies: []
+			};
+
+		pum_debug = {
+			odump: function(o) {
+				return $.extend({}, o);
+			},
+			logo: function() {
+				console.log(
+					"" +
+						" -------------------------------------------------------------" +
+						"\n" +
+						"|  ____                           __  __       _              |" +
+						"\n" +
+						"| |  _ \\ ___  _ __  _   _ _ __   |  \\/  | __ _| | _____ _ __  |" +
+						"\n" +
+						"| | |_) / _ \\| '_ \\| | | | '_ \\  | |\\/| |/ _` | |/ / _ \\ '__| |" +
+						"\n" +
+						"| |  __/ (_) | |_) | |_| | |_) | | |  | | (_| |   <  __/ |    |" +
+						"\n" +
+						"| |_|   \\___/| .__/ \\__,_| .__/  |_|  |_|\\__,_|_|\\_\\___|_|    |" +
+						"\n" +
+						"|            |_|         |_|                                  |" +
+						"\n" +
+						" -------------------------------------------------------------"
+				);
+			},
+			initialize: function() {
+				inited = true;
+
+				// Clear Console
+				//console.clear();
+
+				// Render Logo
+				pum_debug.logo();
+
+				console.debug(vars.debug_mode_enabled);
+				console.log(vars.debug_started_at, new Date());
+				console.info(vars.debug_more_info);
+
+				// Global Info Divider
+				pum_debug.divider(vars.global_info);
+
+				// Localized Variables
+				console.groupCollapsed(vars.localized_vars);
+				console.log("pum_vars:", pum_debug.odump(pum_vars));
+				$(document).trigger("pum_debug_initialize_localized_vars");
+				console.groupEnd();
+
+				// Trigger to add more debug info from extensions.
+				$(document).trigger("pum_debug_initialize");
+			},
+			popup_event_header: function($popup) {
+				var settings = $popup.popmake("getSettings");
+
+				if (current_popup_event === settings.id) {
+					return;
+				}
+
+				current_popup_event = settings.id;
+				pum_debug.divider(
+					vars.single_popup_label +
+						settings.id +
+						" - " +
+						settings.slug
+				);
+			},
+			divider: function(heading) {
+				var totalWidth = 62,
+					extraSpace = 62,
+					padding = 0,
+					line = " " + new Array(totalWidth + 1).join("-") + " ";
+
+				if (typeof heading === "string") {
+					extraSpace = totalWidth - heading.length;
+					padding = {
+						left: Math.floor(extraSpace / 2),
+						right: Math.floor(extraSpace / 2)
+					};
+
+					if (padding.left + padding.right === extraSpace - 1) {
+						padding.right++;
+					}
+
+					padding.left = new Array(padding.left + 1).join(" ");
+					padding.right = new Array(padding.right + 1).join(" ");
+
+					console.log(
+						"" +
+							line +
+							"\n" +
+							"|" +
+							padding.left +
+							heading +
+							padding.right +
+							"|" +
+							"\n" +
+							line
+					);
+				} else {
+					console.log(line);
+				}
+			},
+			click_trigger: function($popup, trigger_settings) {
+				var settings = $popup.popmake("getSettings"),
+					trigger_selectors = [
+						".popmake-" + settings.id,
+						".popmake-" + decodeURIComponent(settings.slug),
+						'a[href$="#popmake-' + settings.id + '"]'
+					],
+					trigger_selector;
+
+				if (
+					trigger_settings.extra_selectors &&
+					trigger_settings.extra_selectors !== ""
+				) {
+					trigger_selectors.push(trigger_settings.extra_selectors);
+				}
+
+				trigger_selectors = pum.hooks.applyFilters(
+					"pum.trigger.click_open.selectors",
+					trigger_selectors,
+					trigger_settings,
+					$popup
+				);
+
+				trigger_selector = trigger_selectors.join(", ");
+
+				console.log(vars.label_selector, trigger_selector);
+			},
+			trigger: function($popup, trigger) {
+				if (typeof vars.triggers[trigger.type] === "string") {
+					console.groupCollapsed(vars.triggers[trigger.type]);
+
+					switch (trigger.type) {
+						case "auto_open":
+							console.log(
+								vars.label_delay,
+								trigger.settings.delay
+							);
+							console.log(
+								vars.label_cookie,
+								trigger.settings.cookie_name
+							);
+							break;
+						case "click_open":
+							pum_debug.click_trigger($popup, trigger.settings);
+							console.log(
+								vars.label_cookie,
+								trigger.settings.cookie_name
+							);
+							break;
+					}
+
+					$(document).trigger(
+						"pum_debug_render_trigger",
+						$popup,
+						trigger
+					);
+
+					console.groupEnd();
+				}
+			},
+			cookie: function($popup, cookie) {
+				if (typeof vars.cookies[cookie.event] === "string") {
+					console.groupCollapsed(vars.cookies[cookie.event]);
+
+					switch (cookie.event) {
+						case "on_popup_open":
+						case "on_popup_close":
+						case "manual":
+						case "ninja_form_success":
+							console.log(
+								vars.label_cookie,
+								pum_debug.odump(cookie.settings)
+							);
+							break;
+					}
+
+					$(document).trigger(
+						"pum_debug_render_trigger",
+						$popup,
+						cookie
+					);
+
+					console.groupEnd();
+				}
+			}
+		};
+
+		$(document)
+			.on("pumInit", ".pum", function() {
+				var $popup = PUM.getPopup($(this)),
+					settings = $popup.popmake("getSettings"),
+					triggers = settings.triggers || [],
+					cookies = settings.cookies || [],
+					conditions = settings.conditions || [],
+					i = 0;
+
+				if (!inited) {
+					pum_debug.initialize();
+					pum_debug.divider(vars.popups_initializing);
+				}
+
+				console.groupCollapsed(
+					vars.single_popup_label +
+						settings.id +
+						" - " +
+						settings.slug
+				);
+
+				// Popup Theme ID
+				console.log(vars.theme_id, settings.theme_id);
+
+				// Triggers
+				if (triggers.length) {
+					console.groupCollapsed(vars.label_triggers);
+					for (i = 0; triggers.length > i; i++) {
+						pum_debug.trigger($popup, triggers[i]);
+					}
+					console.groupEnd();
+				}
+
+				// Cookies
+				if (cookies.length) {
+					console.groupCollapsed(vars.label_cookies);
+					for (i = 0; cookies.length > i; i += 1) {
+						pum_debug.cookie($popup, cookies[i]);
+					}
+					console.groupEnd();
+				}
+
+				// Conditions
+				if (conditions.length) {
+					console.groupCollapsed(vars.label_conditions);
+					console.log(conditions);
+					console.groupEnd();
+				}
+
+				console.groupCollapsed(vars.label_popup_settings);
+
+				// Mobile Disabled.
+				console.log(
+					vars.label_mobile_disabled,
+					settings.disable_on_mobile !== false
+				);
+
+				// Tablet Disabled.
+				console.log(
+					vars.label_tablet_disabled,
+					settings.disable_on_tablet !== false
+				);
+
+				// Settings.
+				console.log(
+					vars.label_display_settings,
+					pum_debug.odump(settings)
+				);
+
+				// Trigger to add more debug info from extensions.
+				$popup.trigger("pum_debug_popup_settings");
+
+				console.groupEnd();
+
+				console.groupEnd();
+			})
+			.on("pumBeforeOpen", ".pum", function() {
+				var $popup = PUM.getPopup($(this)),
+					$last_trigger = $.fn.popmake.last_open_trigger;
+
+				pum_debug.popup_event_header($popup);
+
+				console.groupCollapsed(
+					vars.label_event.replace("%s", "pumBeforeOpen")
+				);
+
+				try {
+					$last_trigger = $($.fn.popmake.last_open_trigger);
+					$last_trigger = $last_trigger.length
+						? $last_trigger
+						: $.fn.popmake.last_open_trigger.toString();
+				} catch (error) {
+					$last_trigger = "";
+				} finally {
+					console.log(vars.label_triggers, [$last_trigger]);
+				}
+
+				console.groupEnd();
+			})
+			.on("pumOpenPrevented", ".pum", function() {
+				var $popup = PUM.getPopup($(this));
+
+				pum_debug.popup_event_header($popup);
+
+				console.groupCollapsed(
+					vars.label_event.replace("%s", "pumOpenPrevented")
+				);
+
+				console.groupEnd();
+			})
+			.on("pumAfterOpen", ".pum", function() {
+				var $popup = PUM.getPopup($(this));
+
+				pum_debug.popup_event_header($popup);
+
+				console.groupCollapsed(
+					vars.label_event.replace("%s", "pumAfterOpen")
+				);
+
+				console.groupEnd();
+			})
+			.on("pumSetupClose", ".pum", function() {
+				var $popup = PUM.getPopup($(this));
+
+				pum_debug.popup_event_header($popup);
+
+				console.groupCollapsed(
+					vars.label_event.replace("%s", "pumSetupClose")
+				);
+
+				console.groupEnd();
+			})
+			.on("pumClosePrevented", ".pum", function() {
+				var $popup = PUM.getPopup($(this));
+
+				pum_debug.popup_event_header($popup);
+
+				console.groupCollapsed(
+					vars.label_event.replace("%s", "pumClosePrevented")
+				);
+
+				console.groupEnd();
+			})
+			.on("pumBeforeClose", ".pum", function() {
+				var $popup = PUM.getPopup($(this));
+
+				pum_debug.popup_event_header($popup);
+
+				console.groupCollapsed(
+					vars.label_event.replace("%s", "pumBeforeClose")
+				);
+
+				console.groupEnd();
+			})
+			.on("pumAfterClose", ".pum", function() {
+				var $popup = PUM.getPopup($(this));
+
+				pum_debug.popup_event_header($popup);
+
+				console.groupCollapsed(
+					vars.label_event.replace("%s", "pumAfterClose")
+				);
+
+				console.groupEnd();
+			})
+			.on("pumBeforeReposition", ".pum", function() {
+				var $popup = PUM.getPopup($(this));
+
+				pum_debug.popup_event_header($popup);
+
+				console.groupCollapsed(
+					vars.label_event.replace("%s", "pumBeforeReposition")
+				);
+
+				console.groupEnd();
+			})
+			.on("pumAfterReposition", ".pum", function() {
+				var $popup = PUM.getPopup($(this));
+
+				pum_debug.popup_event_header($popup);
+
+				console.groupCollapsed(
+					vars.label_event.replace("%s", "pumAfterReposition")
+				);
+
+				console.groupEnd();
+			})
+			.on("pumCheckingCondition", ".pum", function(
+				event,
+				result,
+				condition
+			) {
+				var $popup = PUM.getPopup($(this));
+
+				pum_debug.popup_event_header($popup);
+
+				console.groupCollapsed(
+					vars.label_event.replace("%s", "pumCheckingCondition")
+				);
+
+				console.log(
+					(condition.not_operand ? "(!) " : "") +
+						condition.target +
+						": " +
+						result,
+					condition
+				);
+
+				console.groupEnd();
+			});
+	}
+})(jQuery);
 
-            })
-            .on('pumBeforeOpen', '.pum', function () {
-                var $popup = PUM.getPopup($(this)),
-                    $last_trigger = $.fn.popmake.last_open_trigger;
-
-                pum_debug.popup_event_header($popup);
-
-                console.groupCollapsed(vars.label_event.replace('%s', 'pumBeforeOpen'));
-
-                try {
-                    $last_trigger = $($.fn.popmake.last_open_trigger);
-                    $last_trigger = $last_trigger.length ? $last_trigger : $.fn.popmake.last_open_trigger.toString();
-                } catch (error) {
-                    $last_trigger = "";
-                } finally {
-                    console.log(vars.label_triggers, [$last_trigger]);
-                }
-
-                console.groupEnd();
-            })
-            .on('pumOpenPrevented', '.pum', function () {
-                var $popup = PUM.getPopup($(this));
-
-                pum_debug.popup_event_header($popup);
-
-                console.groupCollapsed(vars.label_event.replace('%s', 'pumOpenPrevented'));
-
-                console.groupEnd();
-            })
-            .on('pumAfterOpen', '.pum', function () {
-                var $popup = PUM.getPopup($(this));
-
-                pum_debug.popup_event_header($popup);
-
-                console.groupCollapsed(vars.label_event.replace('%s', 'pumAfterOpen'));
-
-                console.groupEnd();
-            })
-            .on('pumSetupClose', '.pum', function () {
-                var $popup = PUM.getPopup($(this));
-
-                pum_debug.popup_event_header($popup);
-
-                console.groupCollapsed(vars.label_event.replace('%s', 'pumSetupClose'));
-
-                console.groupEnd();
-            })
-            .on('pumClosePrevented', '.pum', function () {
-                var $popup = PUM.getPopup($(this));
-
-                pum_debug.popup_event_header($popup);
-
-                console.groupCollapsed(vars.label_event.replace('%s', 'pumClosePrevented'));
-
-                console.groupEnd();
-            })
-            .on('pumBeforeClose', '.pum', function () {
-                var $popup = PUM.getPopup($(this));
-
-                pum_debug.popup_event_header($popup);
-
-                console.groupCollapsed(vars.label_event.replace('%s', 'pumBeforeClose'));
-
-                console.groupEnd();
-            })
-            .on('pumAfterClose', '.pum', function () {
-                var $popup = PUM.getPopup($(this));
-
-                pum_debug.popup_event_header($popup);
-
-                console.groupCollapsed(vars.label_event.replace('%s', 'pumAfterClose'));
-
-                console.groupEnd();
-            })
-            .on('pumBeforeReposition', '.pum', function () {
-                var $popup = PUM.getPopup($(this));
-
-                pum_debug.popup_event_header($popup);
-
-                console.groupCollapsed(vars.label_event.replace('%s', 'pumBeforeReposition'));
-
-                console.groupEnd();
-            })
-            .on('pumAfterReposition', '.pum', function () {
-                var $popup = PUM.getPopup($(this));
-
-                pum_debug.popup_event_header($popup);
-
-                console.groupCollapsed(vars.label_event.replace('%s', 'pumAfterReposition'));
-
-                console.groupEnd();
-            })
-            .on('pumCheckingCondition', '.pum', function (event, result, condition) {
-                var $popup = PUM.getPopup($(this));
-
-                pum_debug.popup_event_header($popup);
-
-                console.groupCollapsed(vars.label_event.replace('%s', 'pumCheckingCondition'));
-
-                console.log((condition.not_operand ? '(!) ' : '') + condition.target + ': ' + result, condition);
-
-                console.groupEnd();
-            });
-    }
-
-}(jQuery));
 /**
  * Defines the core $.popmake defaults.
  * Version 1.4
@@ -5244,6 +4176,1319 @@ var pum_debug_mode = false,
 
     return FormSerializer;
 }));
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/calderaforms.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./assets/js/src/integration/calderaforms.js":
+/*!***************************************************!*\
+  !*** ./assets/js/src/integration/calderaforms.js ***!
+  \***************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/*******************************************************************************
+ * Copyright (c) 2020, WP Popup Maker
+ ******************************************************************************/
+{
+  var formProvider = 'calderaforms';
+  var $ = window.jQuery;
+  var $form;
+  /**
+   * This function is run before every CF Ajax call to store the form being submitted.
+   *
+   * @param event
+   * @param obj
+   */
+
+  var beforeAjax = function beforeAjax(event, obj) {
+    return $form = obj.$form;
+  };
+
+  $(document).on('cf.ajax.request', beforeAjax) // After all requests
+  .on('cf.submission', function (event, obj) {
+    // Only if status of request is complete|success.
+    if ('complete' === obj.data.status || 'success' === obj.data.status) {
+      //get the form that is submiting's ID attribute
+      var _$form$attr$split = $form.attr('id').split('_'),
+          _$form$attr$split2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_$form$attr$split, 2),
+          formId = _$form$attr$split2[0],
+          _$form$attr$split2$ = _$form$attr$split2[1],
+          formInstanceId = _$form$attr$split2$ === void 0 ? null : _$form$attr$split2$; // All the magic happens here.
+
+
+      window.PUM.integrations.formSubmission($form, {
+        formProvider: formProvider,
+        formId: formId,
+        formInstanceId: formInstanceId,
+        extras: {
+          state: window.cfstate.hasOwnProperty(formId) ? window.cfstate[formId] : null
+        }
+      });
+    }
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayLikeToArray.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+
+module.exports = _arrayLikeToArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayWithHoles.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+module.exports = _arrayWithHoles;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+module.exports = _iterableToArrayLimit;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/nonIterableRest.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/nonIterableRest.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableRest;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/slicedToArray.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/slicedToArray.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayWithHoles = __webpack_require__(/*! ./arrayWithHoles */ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js");
+
+var iterableToArrayLimit = __webpack_require__(/*! ./iterableToArrayLimit */ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js");
+
+var unsupportedIterableToArray = __webpack_require__(/*! ./unsupportedIterableToArray */ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js");
+
+var nonIterableRest = __webpack_require__(/*! ./nonIterableRest */ "./node_modules/@babel/runtime/helpers/nonIterableRest.js");
+
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+}
+
+module.exports = _slicedToArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayLikeToArray = __webpack_require__(/*! ./arrayLikeToArray */ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js");
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+}
+
+module.exports = _unsupportedIterableToArray;
+
+/***/ })
+
+/******/ });
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/contactform7.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./assets/js/src/integration/contactform7.js":
+/*!***************************************************!*\
+  !*** ./assets/js/src/integration/contactform7.js ***!
+  \***************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/typeof.js");
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/**************************************
+ * Copyright (c) 2020, Popup Maker
+ *************************************/
+{
+  var formProvider = "contactform7";
+  var $ = window.jQuery;
+  $(document).on("wpcf7mailsent", function (event, details) {
+    var formId = event.detail.contactFormId,
+        $form = $(event.target),
+        identifier = event.detail.id || event.detail.unitTag,
+        // Converts string like wpcf7-f190-p2-o11 and reduces it to simply 11, the last o11 is the instance ID.
+    // More accurate way of doing it in case things change in the future, this version filters out all but the o param.
+    // formInstanceId = .split('-').filter((string) => string.indexOf('o') === 0)[0].replace('o','');
+    // Simpler version that simply splits and pops the last item in the array. This requires it always be the last.
+    formInstanceId = identifier.split("-").pop().replace("o", ""); // All the magic happens here.
+
+    window.PUM.integrations.formSubmission($form, {
+      formProvider: formProvider,
+      formId: formId,
+      formInstanceId: formInstanceId,
+      extras: {
+        details: details
+      }
+    });
+    /**
+     * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
+     *
+     * Listen for older popup actions applied directly to the form.
+     *
+     * This is here for backward compatibility with form actions prior to v1.9.
+     */
+
+    var $settings = $form.find("input.wpcf7-pum"),
+        settings = $settings.length ? JSON.parse($settings.val()) : false;
+
+    if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) === "object" && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
+      settings.closedelay = settings.closedelay / 1000;
+    } // Nothing should happen if older action settings not applied
+    // except triggering of pumFormSuccess event for old cookie method.
+
+
+    window.PUM.forms.success($form, settings);
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/typeof.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/typeof.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    module.exports = _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    module.exports = _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+module.exports = _typeof;
+
+/***/ })
+
+/******/ });
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/formidableforms.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./assets/js/src/integration/formidableforms.js":
+/*!******************************************************!*\
+  !*** ./assets/js/src/integration/formidableforms.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/***********************************
+ * Copyright (c) 2020, Popup Maker
+ **********************************/
+{
+  var formProvider = "formidableforms";
+  var $ = window.jQuery;
+  $(document).on("frmFormComplete", function (event, form, response) {
+    var $form = $(form);
+    var formId = $form.find('input[name="form_id"]').val();
+    var $popup = PUM.getPopup($form.find('input[name="pum_form_popup_id"]').val()); // All the magic happens here.
+
+    window.PUM.integrations.formSubmission($form, {
+      popup: $popup,
+      formProvider: formProvider,
+      formId: formId,
+      extras: {
+        response: response
+      }
+    });
+  });
+}
+
+/***/ })
+
+/******/ });
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/gravityforms.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./assets/js/src/integration/gravityforms.js":
+/*!***************************************************!*\
+  !*** ./assets/js/src/integration/gravityforms.js ***!
+  \***************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/typeof.js");
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/***************************************
+ * Copyright (c) 2020, Popup Maker
+ ***************************************/
+{
+  var formProvider = "gravityforms";
+  var $ = window.jQuery;
+  var gFormSettings = {};
+  $(document).on("gform_confirmation_loaded", function (event, formId) {
+    var $form = $("#gform_confirmation_wrapper_" + formId + ",#gforms_confirmation_message_" + formId)[0]; // All the magic happens here.
+
+    window.PUM.integrations.formSubmission($form, {
+      formProvider: formProvider,
+      formId: formId
+    });
+    /**
+     * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
+     *
+     * Listen for older popup actions applied directly to the form.
+     *
+     * This is here for backward compatibility with form actions prior to v1.9.
+     */
+    // Nothing should happen if older action settings not applied
+    // except triggering of pumFormSuccess event for old cookie method.
+
+    window.PUM.forms.success($form, gFormSettings[formId] || {});
+  });
+  /**
+   * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
+   *
+   * Listen for older popup actions applied directly to the form.
+   *
+   * This is here for backward compatibility with form actions prior to v1.9.
+   */
+
+  $(function () {
+    $(".gform_wrapper > form").each(function () {
+      var $form = $(this),
+          formId = $form.attr("id").replace("gform_", ""),
+          $settings = $form.find("input.gforms-pum"),
+          settings = $settings.length ? JSON.parse($settings.val()) : false;
+
+      if (!settings || _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) !== "object") {
+        return;
+      }
+
+      if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) === "object" && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
+        settings.closedelay = settings.closedelay / 1000;
+      }
+
+      gFormSettings[formId] = settings;
+    });
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/typeof.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/typeof.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    module.exports = _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    module.exports = _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+module.exports = _typeof;
+
+/***/ })
+
+/******/ });
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/mc4wp.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./assets/js/src/integration/mc4wp.js":
+/*!********************************************!*\
+  !*** ./assets/js/src/integration/mc4wp.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*******************************************************************************
+ * Copyright (c) 2020, WP Popup Maker
+ ******************************************************************************/
+{
+  var formProvider = 'mc4wp';
+  var $ = window.jQuery; // Initiate when ready.
+
+  $(function () {
+    if (typeof mc4wp !== 'undefined') {
+      mc4wp.forms.on('success', function (form, data) {
+        var $form = $(form.element),
+            formId = form.id,
+            formInstanceId = $('.mc4wp-form-' + form.id).index($form) + 1; // All the magic happens here.
+
+        window.PUM.integrations.formSubmission($form, {
+          formProvider: formProvider,
+          formId: formId,
+          formInstanceId: formInstanceId,
+          extras: {
+            form: form,
+            data: data
+          }
+        });
+      });
+    }
+  });
+}
+
+/***/ })
+
+/******/ });
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/ninjaforms.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./assets/js/src/integration/ninjaforms.js":
+/*!*************************************************!*\
+  !*** ./assets/js/src/integration/ninjaforms.js ***!
+  \*************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/*******************************************************************************
+ * Copyright (c) 2020, WP Popup Maker
+ ******************************************************************************/
+{
+  var formProvider = 'ninjaforms';
+  var $ = window.jQuery;
+  var pumNFController = false;
+
+  var initialize_nf_support = function initialize_nf_support() {
+    /** Ninja Forms Support */
+    if (typeof Marionette !== 'undefined' && typeof nfRadio !== 'undefined' && false === pumNFController) {
+      pumNFController = Marionette.Object.extend({
+        initialize: function initialize() {
+          this.listenTo(nfRadio.channel('forms'), 'submit:response', this.popupMaker);
+        },
+        popupMaker: function popupMaker(response, textStatus, jqXHR, formIdentifier) {
+          var $form = $('#nf-form-' + formIdentifier + '-cont'),
+              _formIdentifier$split = formIdentifier.split('_'),
+              _formIdentifier$split2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_formIdentifier$split, 2),
+              formId = _formIdentifier$split2[0],
+              _formIdentifier$split3 = _formIdentifier$split2[1],
+              formInstanceId = _formIdentifier$split3 === void 0 ? null : _formIdentifier$split3,
+              settings = {}; // Bail if submission failed.
+
+
+          if (response.errors && response.errors.length) {
+            return;
+          } // All the magic happens here.
+
+
+          window.PUM.integrations.formSubmission($form, {
+            formProvider: formProvider,
+            formId: formId,
+            formInstanceId: formInstanceId,
+            extras: {
+              response: response
+            }
+          });
+          /**
+           * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
+           *
+           * Listen for older popup actions applied directly to the form.
+           *
+           * This is here for backward compatibility with form actions prior to v1.9.
+           */
+
+          if (response.data && response.data.actions) {
+            settings.openpopup = 'undefined' !== typeof response.data.actions.openpopup;
+            settings.openpopup_id = settings.openpopup ? parseInt(response.data.actions.openpopup) : 0;
+            settings.closepopup = 'undefined' !== typeof response.data.actions.closepopup;
+            settings.closedelay = settings.closepopup ? parseInt(response.data.actions.closepopup) : 0;
+
+            if (settings.closepopup && response.data.actions.closedelay) {
+              settings.closedelay = parseInt(response.data.actions.closedelay);
+            }
+          } // Nothing should happen if older action settings not applied
+          // except triggering of pumFormSuccess event for old cookie method.
+
+
+          window.PUM.forms.success($form, settings);
+        }
+      }); // Initialize it.
+
+      new pumNFController();
+    }
+  }; // Initiate when ready.
+
+
+  $(initialize_nf_support);
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayLikeToArray.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+
+module.exports = _arrayLikeToArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayWithHoles.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+module.exports = _arrayWithHoles;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+module.exports = _iterableToArrayLimit;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/nonIterableRest.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/nonIterableRest.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableRest;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/slicedToArray.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/slicedToArray.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayWithHoles = __webpack_require__(/*! ./arrayWithHoles */ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js");
+
+var iterableToArrayLimit = __webpack_require__(/*! ./iterableToArrayLimit */ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js");
+
+var unsupportedIterableToArray = __webpack_require__(/*! ./unsupportedIterableToArray */ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js");
+
+var nonIterableRest = __webpack_require__(/*! ./nonIterableRest */ "./node_modules/@babel/runtime/helpers/nonIterableRest.js");
+
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+}
+
+module.exports = _slicedToArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayLikeToArray = __webpack_require__(/*! ./arrayLikeToArray */ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js");
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+}
+
+module.exports = _unsupportedIterableToArray;
+
+/***/ })
+
+/******/ });
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/wpforms.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./assets/js/src/integration/wpforms.js":
+/*!**********************************************!*\
+  !*** ./assets/js/src/integration/wpforms.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*******************************************************************************
+ * Copyright (c) 2020, WP Popup Maker
+ ******************************************************************************/
+{
+  var formProvider = 'wpforms';
+  var $ = window.jQuery;
+  $(document).on('wpformsAjaxSubmitSuccess', '.wpforms-ajax-form', function (event, details) {
+    var $form = $(this),
+        formId = $form.data('formid'),
+        formInstanceId = $('form#' + $form.attr('id')).index($form) + 1; // All the magic happens here.
+
+    window.PUM.integrations.formSubmission($form, {
+      formProvider: formProvider,
+      formId: formId,
+      formInstanceId: formInstanceId
+    });
+  });
+}
+
+/***/ })
+
+/******/ });
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
 	typeof define === 'function' && define.amd ? define(factory) :

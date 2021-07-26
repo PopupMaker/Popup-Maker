@@ -73,6 +73,20 @@ function pum_popup_data_attr( $popup_id = null ) {
 	echo 'data-popmake="' . esc_attr( wp_json_encode( $popup->get_data_attr() ) ) . '"';
 }
 
+/**
+ * Render the popup's content tabindex attribute to make focusable 
+ * if needed.
+ */
+function pum_popup_content_tabindex_attr( $popup_id = null ) {
+	$popup = pum_get_popup( $popup_id );
+
+	if ( ! pum_is_popup( $popup ) ) {
+		return;
+	}
+
+	// Greater or equal to 0 makes it focusable.
+	echo 'tabindex="0"';
+}
 
 /**
  * Render the popup close button text.

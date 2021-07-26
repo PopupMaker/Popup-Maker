@@ -99,7 +99,7 @@ add_filter( 'pum_popup_content', 'pum_deprecated_get_the_popup_content_filter', 
  *
  * @return mixed
  */
-function pum_deprecated_pum_popup_get_data_attr_filter( $data_attr = array(), $popup_id ) {
+function pum_deprecated_pum_popup_get_data_attr_filter( $data_attr, $popup_id ) {
 	if ( has_filter( 'pum_popup_get_data_attr' ) ) {
 		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:pum_popup_get_data_attr', '1.7.0', 'filter:pum_popup_data_attr' );
 		/**

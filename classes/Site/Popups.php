@@ -27,12 +27,12 @@ class PUM_Site_Popups {
 	/**
 	 * @var array
 	 */
-	public static $cached_content = array();
+	public static $cached_content = [];
 
 	/**
 	 * @var array
 	 */
-	public static $loaded_ids = array();
+	public static $loaded_ids = [];
 
 	/**
 	 * Hook the initialize method to the WP init action.
@@ -40,12 +40,15 @@ class PUM_Site_Popups {
 	public static function init() {
 
 		// Preload the $loaded query.
-		add_action( 'init', array( __CLASS__, 'get_loaded_popups' ) );
+		add_action( 'init', [ __CLASS__, 'get_loaded_popups' ] );
+
+		// Check content for popups.
+		add_filter( 'the_content', [ __CLASS__, 'check_content_for_popups' ] );
 
 		// TODO determine if the late priority is needed.
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'load_popups' ), 11 );
+		add_action( 'wp_enqueue_scripts', [ __CLASS__, 'load_popups' ], 11 );
 
-		add_action( 'wp_footer', array( __CLASS__, 'render_popups' ) );
+		add_action( 'wp_footer', [ __CLASS__, 'render_popups' ] );
 	}
 
 	/**
@@ -76,7 +79,7 @@ class PUM_Site_Popups {
 	public static function get_loaded_popups() {
 		if ( ! self::$loaded instanceof WP_Query ) {
 			self::$loaded        = new WP_Query();
-			self::$loaded->posts = array();
+			self::$loaded->posts = [];
 		}
 
 		return self::$loaded;
@@ -110,13 +113,59 @@ class PUM_Site_Popups {
 			// Clear the global $current.
 			pum()->current_popup = null;
 		}
+	}
 
+	/**
+	 * Checks post content to see if there are popups we need to automagically load
+	 *
+	 * @param string $content The content from the filter.
+	 * @return string The content.
+	 * @since 1.15
+	 */
+	public static function check_content_for_popups( $content ) {
+
+		// Only search for popups in the main query of a singular page.
+		if ( is_singular() && in_the_loop() && is_main_query() ) {
+			/**
+			 * We want to detect instances of popmake-### but only within classes and not in the actual text.
+			 * So, we check to make sure it is wrapped by quotes to make sure it's in the class="" attribute
+			 * but also allow for whitespace and characters in case there are classes before or after it.
+			 */
+			preg_match_all( '/[\'\"][\s\w\-\_]*?popmake-(\d+)[\s\w\-\_]*?[\'\"]/', $content, $matches );
+
+			// Then, if we find any popups, let's preload it.
+			foreach ( $matches[1] as $popup_id ) {
+				self::preload_popup_by_id_if_enabled( $popup_id );
+			}
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Preloads popup, if enabled
+	 *
+	 * @param int $popup_id The popup's ID.
+	 * @since 1.15
+	 */
+	public static function preload_popup_by_id_if_enabled( $popup_id ) {
+		if ( ! in_array( $popup_id, self::$loaded_ids ) ) {
+			$popup = pum_get_popup( $popup_id );
+			if ( $popup->is_enabled() ) {
+				self::preload_popup( $popup );
+			}
+		}
 	}
 
 	/**
 	 * @param PUM_Model_Popup $popup
 	 */
 	public static function preload_popup( $popup ) {
+		// Bail early if the popup is preloaded already.
+		if ( in_array( $popup->ID, self::$loaded_ids, true ) ) {
+			return;
+		}
+
 		// Add to the $loaded_ids list.
 		self::$loaded_ids[] = $popup->ID;
 
@@ -136,13 +185,14 @@ class PUM_Site_Popups {
 	// REWRITE THIS
 	public static function load_popup( $id ) {
 		if ( did_action( 'wp_head' ) && ! in_array( $id, self::$loaded_ids ) ) {
-			$args1 = array(
+			$args1 = [
 				'post_type' => 'popup',
 				'p'         => $id,
-			);
+			];
 			$query = new WP_Query( $args1 );
 			if ( $query->have_posts() ) {
-				while ( $query->have_posts() ) : $query->next_post();
+				while ( $query->have_posts() ) :
+					$query->next_post();
 					pum()->current_popup = $query->post;
 					self::preload_popup( $query->post );
 				endwhile;
@@ -161,7 +211,8 @@ class PUM_Site_Popups {
 		$loaded = self::get_loaded_popups();
 
 		if ( $loaded->have_posts() ) {
-			while ( $loaded->have_posts() ) : $loaded->next_post();
+			while ( $loaded->have_posts() ) :
+				$loaded->next_post();
 				pum()->current_popup = $loaded->post;
 				pum_template_part( 'popup' );
 			endwhile;
@@ -179,4 +230,3 @@ class PUM_Site_Popups {
 	}
 
 }
-

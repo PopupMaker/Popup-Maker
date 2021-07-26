@@ -22,6 +22,11 @@ class PUM_Admin_Onboarding {
 		add_filter( 'pum_admin_pointers-popup', array( __CLASS__, 'popup_editor_main_tour' ) );
 		add_filter( 'pum_admin_pointers-edit-popup', array( __CLASS__, 'all_popups_main_tour' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'set_up_pointers' ) );
+
+		add_action( 'admin_init', array( __CLASS__, 'welcome_redirect' ) );
+		if ( ! empty( $_GET['page'] ) && 'pum-welcome' === $_GET['page'] ) {
+			add_action( 'admin_menu', array( __CLASS__, 'set_up_welcome_page' ) );
+		}
 	}
 
 	/**
@@ -258,22 +263,55 @@ class PUM_Admin_Onboarding {
 		$pointers['all-popups-1'] = array(
 			'target'  => 'nav.nav-tab-wrapper a:nth-child(4)',
 			'options' => array(
-				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
+				'content'  => sprintf(
+					'<h3> %s </h3> <p> %s </p>',
 					__( 'Welcome to Popup Maker!', 'popup-maker' ),
-					__( 'Click the "Add New Popup" button to create your first popup.', 'popup-maker' )
+					__( 'Click the "Create New Popup" button to create your first popup.', 'popup-maker' )
 				),
 				'position' => array( 'edge' => 'top' ),
-			)
+			),
 		);
 		$pointers['all-popups-2'] = array(
+			'target'  => '.wp-list-table #the-list tr:first-child .column-enabled',
+			'options' => array(
+				'content'  => sprintf(
+					'<h3> %s </h3> <p> %s </p>',
+					__( 'Enable Popups', 'popup-maker' ),
+					__( 'You can enable or disable your popups at any time using this toggle.', 'popup-maker' )
+				),
+				'position' => array(
+					'edge'  => 'top',
+					'align' => 'left',
+				),
+			),
+		);
+		$pointers['all-popups-3'] = array(
+			'target'  => '.wp-list-table #the-list tr:first-child .column-conversions',
+			'options' => array(
+				'content'  => sprintf(
+					'<h3> %s </h3> <p> %s </p>',
+					__( 'Review Popup Metrics', 'popup-maker' ),
+					__( 'Popup Maker will automatically track opens and conversions so you can easily see which popups convert the best.', 'popup-maker' )
+				),
+				'position' => array(
+					'edge'  => 'top',
+					'align' => 'left',
+				),
+			),
+		);
+		$pointers['all-popups-4'] = array(
 			'target'  => '#screen-options-link-wrap #show-settings-link',
 			'options' => array(
-				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
+				'content'  => sprintf(
+					'<h3> %s </h3> <p> %s </p>',
 					__( 'Adjust Columns', 'popup-maker' ),
 					__( 'You can show or hide columns from the table on this page using the Screen Options. Popup Heading and Published Date are hidden by default.', 'popup-maker' )
 				),
-				'position' => array( 'edge' => 'top', 'align' => 'center' ),
-			)
+				'position' => array(
+					'edge'  => 'top',
+					'align' => 'center',
+				),
+			),
 		);
 
 		return $pointers;
@@ -314,6 +352,83 @@ class PUM_Admin_Onboarding {
 
 		$random_tip = array_rand( $tips );
 		return $tips[ $random_tip ];
+	}
+
+	/**
+	 * Redirect to the welcome screen, if needed
+	 *
+	 * @since 1.14.0
+	 */
+	public static function welcome_redirect() {
+		// Redirect idea from Better Click To Tweet's welcome screen. Thanks Ben!
+		if ( get_transient( 'pum_activation_redirect' ) ) {
+			$do_redirect  = true;
+			$current_page = isset( $_GET['page'] ) ? wp_unslash( $_GET['page'] ) : false;
+			// Bailout redirect during these events.
+			if ( wp_doing_ajax() || is_network_admin() || ! current_user_can( 'manage_options' ) ) {
+				$do_redirect = false;
+			}
+			// Bailout redirect on these pages & events.
+			if ( 'pum-welcome' === $current_page || isset( $_GET['activate-multi'] ) ) {
+				delete_transient( 'pum_activation_redirect' );
+				$do_redirect = false;
+			}
+			if ( $do_redirect ) {
+				delete_transient( 'pum_activation_redirect' );
+				update_option( 'pum_seen_welcome', 1 );
+				wp_safe_redirect( admin_url( 'admin.php?page=pum-welcome' ) );
+				exit;
+			}
+		}
+	}
+
+	/**
+	 * Adds our welcome page to the dashboard
+	 *
+	 * @since 1.14.0
+	 */
+	public static function set_up_welcome_page() {
+		add_dashboard_page( '', '', 'manage_options', 'pum-welcome', array( __CLASS__, 'display_welcome_page' ) );
+	}
+
+	/**
+	 * Displays the contents for the welcome page
+	 *
+	 * @since 1.14.0
+	 */
+	public static function display_welcome_page() {
+		wp_enqueue_style( 'pum-admin-general' );
+		$gravatar_url = get_avatar_url( 'danieliser@wizardinternetsolutions.com', array( 'size' => 60 ) );
+		?>
+		<div class="pum-welcome-wrapper">
+			<div>
+				<h1>Welcome to Popup Maker!</h1>
+			</div>
+			<div>
+				<p>Popup Maker was created to help us create effective popups on our own WordPress sites to boost our conversions. Now, over 4 years later, the plugin is installed on <strong>over 600,000 websites and has over 3,900 5-star reviews</strong>.</p>
+				<p>There are a lot of ways you can use Popup Maker within your site including:</p>
+				<ul>
+					<li>Adding an auto-opening announcement popup</li>
+					<li>Growing your email list with opt-in or lead magnet popups</li>
+					<li>Increase order size by recommending products in a WooCommerce cross-sell popup</li>
+					<li>Adding a content upgrade to your blog posts</li>
+					<li>Greet a visitor from ProductHunt</li>
+					<li>Reduce cart abandonment on your WooCommerce checkout page</li>
+					<li>Adding post-sale WooCommerce surveys</li>
+					<li>Using scroll-triggered popups to ask a site visitor if they have any questions</li>
+					<li>And much more!</li>
+				</ul>
+				<p>Feel free to reach out if we can help with anything. We look forward to helping you increase your site’s conversions!</p>
+				<div class="pum-welcome-signature">
+					<img src="<?php echo esc_url( $gravatar_url ); ?>" alt="Daniel Iser, founder of Popup Maker">
+					<p>~ Daniel and the Popup Maker team</p>
+				</div>
+			</div>
+			<div class="pum-welcome-cta">
+				<a class="button button-primary" href="<?php echo esc_url( admin_url( 'post-new.php?post_type=popup' ) ); ?>">Create your first popup!</a>
+			</div>
+		</div>
+		<?php
 	}
 
 	/**

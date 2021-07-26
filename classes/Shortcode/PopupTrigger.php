@@ -141,12 +141,12 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	 * @return string
 	 */
 	public function handler( $atts, $content = null ) {
-		$atts = $this->shortcode_atts( $atts );
-
-
-		$return = '<' . $atts['tag'] . ' class="pum-trigger  popmake-' . $atts['id'] . ' ' . $atts['classes'] . '"  data-do-default="' . esc_attr( $atts['do_default'] ) . '">';
+		$atts    = $this->shortcode_atts( $atts );
+		$return  = '<' . $atts['tag'] . ' class="pum-trigger  popmake-' . $atts['id'] . ' ' . $atts['classes'] . '"  data-do-default="' . esc_attr( $atts['do_default'] ) . '">';
 		$return .= PUM_Helpers::do_shortcode( $content );
 		$return .= '</' . $atts['tag'] . '>';
+
+		PUM_Site_Popups::preload_popup_by_id_if_enabled( $atts['id'] );
 
 		return $return;
 	}

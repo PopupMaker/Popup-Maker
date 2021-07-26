@@ -27,7 +27,6 @@ class PUM_Admin_Pages {
 	public static function init() {
 		add_action( 'admin_menu', array( __CLASS__, 'register_pages' ) );
 		add_action( 'admin_head',  array( __CLASS__, 'reorder_admin_submenu' ) );
-		add_action( 'admin_menu', array( 'PUM_Admin_Extend', 'append_count_to_menu_item' ), 999 );
 	}
 
 	/**
@@ -59,7 +58,7 @@ class PUM_Admin_Pages {
 				'callback'    => array( 'PUM_Admin_Settings', 'page' ),
 			),
 			'extensions' => array(
-				'page_title'  => __( 'Extend', 'popup-maker' ),
+				'page_title'  => __( 'Upgrade', 'popup-maker' ),
 				'capability'  => 'edit_posts',
 				'callback'    => array( 'PUM_Admin_Extend', 'page' ),
 			),

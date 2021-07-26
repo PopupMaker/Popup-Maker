@@ -8,14 +8,14 @@
 }
 
 @mixin button-style__focus-active() {
-	box-shadow: 0 0 0 1px color($theme-color);
+	box-shadow: 0 0 0 1px var(--wp-admin-theme-color);
 
 	// Windows High Contrast mode will show this outline, but not the box-shadow.
 	outline: 1px solid transparent;
 }
 
 @mixin block-toolbar-button-style__focus() {
-	box-shadow: inset 0 0 0 $border-width-focus $theme-color, inset 0 0 0 4px $white;
+	box-shadow: inset 0 0 0 $border-width-focus var(--wp-admin-theme-color), inset 0 0 0 4px $white;
 
 	// Windows High Contrast mode will show this outline, but not the box-shadow.
 	outline: 2px solid transparent;
@@ -96,7 +96,7 @@
 
 .block-editor-popup-trigger-popover__settings {
 	display: block;
-	padding: $panel-padding;
+	padding: $grid-unit-20;
 	border-top: $border-width solid $light-gray-500;
 
 	.components-base-control:last-child,

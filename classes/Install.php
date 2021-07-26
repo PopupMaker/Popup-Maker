@@ -111,8 +111,14 @@ class PUM_Install {
 		// If its missing then we know its a fresh install.
 		delete_option( '_pum_installed' );
 
+		// Prepare to redirect to welcome screen, if not seen before.
+		if ( false === get_option( 'pum_seen_welcome' ) ) {
+			set_transient( 'pum_activation_redirect', 1, 60 );
+		}
+
 		pum_get_default_theme_id();
 		pum_install_built_in_themes();
+		pum_install_example_popups();
 
 		// Reset JS/CSS assets for regeneration.
 		pum_reset_assets();
@@ -156,6 +162,12 @@ class PUM_Install {
 
 			// Delete all Popup Maker related user meta.
 			$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE '_pum_%' OR meta_key lIKE 'pum_%'" );
+
+			// Delete subscribers table.
+			$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}pum_subscribers" );
+
+			// Delete error log.
+			PUM_Utils_Logging::instance()->clear_log();
 
 			// Reset JS/CSS assets for regeneration.
 			pum_reset_assets();

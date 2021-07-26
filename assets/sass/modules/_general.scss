@@ -3,49 +3,48 @@
  ******************************************************************************/
 
 .no-button {
-  border: 0;
-  padding: 0;
-  background: none;
-  cursor: pointer;
+	border: 0;
+	padding: 0;
+	background: none;
+	cursor: pointer;
 
-  &.link-button {
-    color: #0073aa;
-    &:hover {
-      color: #00a0d2;
-    }
-  }
+	&.link-button {
+		color: #0073aa;
+		&:hover {
+			color: #00a0d2;
+		}
+	}
 
-  &.delete-button {
-    color: #a00;
-    &:hover {
-      color: #f00;
-    }
-  }
+	&.delete-button {
+		color: #a00;
+		&:hover {
+			color: #f00;
+		}
+	}
 }
 
-
 .pum-half {
-  width: 47.5%;
-  max-width: 47.5%;
-  margin-right: 5%;
-  display: inline-block;
+	width: 47.5%;
+	max-width: 47.5%;
+	margin-right: 5%;
+	display: inline-block;
 
+	&.pum-dependencies-met {
+		display: inline-block !important;
+	}
 
-  &.pum-dependencies-met {
-    display: inline-block!important;
-  }
+	> * {
+		max-width: 100%;
+	}
 
-  > * {
-    max-width: 100%;
-  }
-
-  input, textarea, select {
-    max-width: 100%;
-    width: auto;
-  }
-
+	input,
+	textarea,
+	select {
+		max-width: 100%;
+		width: auto;
+	}
 }
 
 .pum-last {
-  margin-right:0!important;
+	margin-right: 0 !important;
 }

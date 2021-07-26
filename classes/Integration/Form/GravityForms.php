@@ -70,7 +70,7 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 		}
 
 		// This key is set when Gravity Forms is submitted via AJAX.
-		if ( isset( $_POST['gform_ajax'] ) || ! is_null( $_POST['gform_ajax'] ) ) {
+		if ( isset( $_POST['gform_ajax'] ) && ! is_null( $_POST['gform_ajax'] ) ) {
 			return;
 		}
 

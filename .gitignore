@@ -6,7 +6,6 @@ project.properties
 .project
 .settings*
 .idea
-.vscode
 *.sublime-project
 *.sublime-workspace
 .sublimelinterrc
@@ -15,6 +14,7 @@ project.properties
 /build/
 /node_modules/
 /release/
+npm-debug.log
 
 # Testing
 .phpunit.result.cache

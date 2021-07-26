@@ -19,6 +19,7 @@ class PUM_Modules_Admin_Bar {
 	 */
 	public static function init() {
 		add_action( 'admin_bar_menu', array( __CLASS__, 'toolbar_links' ), 999 );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_files' ) );
 		add_action( 'init', array( __CLASS__, 'show_debug_bar' ) );
 	}
 
@@ -64,8 +65,6 @@ class PUM_Modules_Admin_Bar {
 			return;
 		}
 
-		self::enqueue_files();
-
 		$wp_admin_bar->add_node( array(
 			'id'     => 'popup-maker',
 			'title'  => __( 'Popup Maker', 'popup-maker' ),
@@ -74,12 +73,10 @@ class PUM_Modules_Admin_Bar {
 			'parent' => false,
 		) );
 
-		$popups_url = current_user_can( 'edit_posts' ) ? admin_url( 'edit.php?post_type=popup' ) : '#';
-
 		$wp_admin_bar->add_node( array(
 			'id'     => 'popups',
 			'title'  => __( 'Popups', 'popup-maker' ),
-			'href'   => $popups_url,
+			'href'   => '#',
 			'parent' => 'popup-maker',
 		) );
 
@@ -171,6 +168,21 @@ class PUM_Modules_Admin_Bar {
 			) );
 		}
 
+		if ( current_user_can( 'edit_posts' ) ) {
+			$wp_admin_bar->add_node( array(
+				'id'     => 'all-popups',
+				'title'  => __( 'All Popups', 'popup-maker' ),
+				'href'   => admin_url( 'edit.php?post_type=popup' ),
+				'parent' => 'popup-maker',
+			) );
+			$wp_admin_bar->add_node( array(
+				'id'     => 'new-popups', // Just `new-popup` moves this to the top of the menu for some reason. Leave the `s` to keep it in the right place.
+				'title'  => __( 'Create New Popup', 'popup-maker' ),
+				'href'   => admin_url( 'post-new.php?post_type=popup' ),
+				'parent' => 'popup-maker',
+			) );
+		}
+
 		/**
 		 * Tools
 		 */
@@ -180,6 +192,15 @@ class PUM_Modules_Admin_Bar {
 			'href'   => '#popup-maker-tools',
 			'parent' => 'popup-maker',
 		) );
+
+		$wp_admin_bar->add_node(
+			array(
+				'id'     => 'flush-popup-cache',
+				'title'  => __( 'Flush Popup Cache', 'popup-maker' ),
+				'href'   => add_query_arg( 'flush_popup_cache', 'yes' ),
+				'parent' => 'pum-tools',
+			)
+		);
 
 		/**
 		 * Get Selector
@@ -212,9 +233,12 @@ class PUM_Modules_Admin_Bar {
 	 * @since 1.11.0
 	 */
 	public static function enqueue_files() {
+		if ( ! self::should_render() ) {
+			return;
+		}
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		wp_enqueue_script( 'pum-admin-bar', Popup_Maker::$URL . 'assets/js/admin-bar' . $suffix .'.js', array( 'jquery' ) );
-		wp_enqueue_style( 'pum-admin-bar-style', Popup_Maker::$URL . 'assets/css/pum-admin-bar' . $suffix .'.css');
+		wp_enqueue_script( 'pum-admin-bar', Popup_Maker::$URL . 'assets/js/admin-bar' . $suffix . '.js', array( 'jquery' ), Popup_Maker::$VER, true );
+		wp_enqueue_style( 'pum-admin-bar-style', Popup_Maker::$URL . 'assets/css/pum-admin-bar' . $suffix . '.css', array(), Popup_Maker::$VER );
 
 		$admin_bar_text = array(
 			'instructions' => __( 'After clicking ok, click the element you want a selector for.', 'popup-maker' ),

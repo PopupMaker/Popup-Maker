@@ -20,7 +20,7 @@
 						settings = {};
 
 					// Bail if submission failed.
-					if ( response.errors.length ) {
+					if ( response.errors && response.errors.length ) {
 						return;
 					}
 
@@ -41,7 +41,7 @@
 					 *
 					 * This is here for backward compatibility with form actions prior to v1.9.
 					 */
-					if ( 'undefined' !== typeof response.data.actions ) {
+					if (response.data && response.data.actions) {
 						settings.openpopup = 'undefined' !== typeof response.data.actions.openpopup;
 						settings.openpopup_id = settings.openpopup ? parseInt( response.data.actions.openpopup ) : 0;
 						settings.closepopup = 'undefined' !== typeof response.data.actions.closepopup;
@@ -62,5 +62,6 @@
 		}
 	};
 
-	$( document ).ready( initialize_nf_support );
+	// Initiate when ready.
+	$( initialize_nf_support );
 }
