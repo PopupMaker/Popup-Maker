@@ -22,9 +22,11 @@ $input-size: 300px;
 	input[type="text"],
 	select {
 		width: 100%;
+		min-width: $input-size;
 
 		@include break-small() {
 			width: $input-size;
+
 		}
 		border: none;
 		border-radius: 0;
