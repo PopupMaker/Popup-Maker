@@ -172,8 +172,10 @@ class PUM_Utils_Array {
 	}
 
 	/**
-	 * @param array $array
-	 * @param array $allowed_keys
+	 * Extract only allowed keys from an array.
+	 *
+	 * @param array    $array Array to be extracted from.
+	 * @param string[] $allowed_keys List of keys.
 	 *
 	 * @return array
 	 */
@@ -184,19 +186,19 @@ class PUM_Utils_Array {
 	/**
 	 * This works exactly the same as wp_parse_args, except we remove unused keys for sanitization.
 	 *
-	 * @param array $array
+	 * @param array $array Array to be parsed.
 	 * @param array $allowed_args Array of key=>defaultValue pairs for each allowed argument.
 	 *
 	 * @return array
 	 */
-	public static function parse_allowed_args( $array, $default_allowed_args = [] ) {
-		$array = wp_parse_args( $array, $default_allowed_args );
+	public static function parse_allowed_args( $array, $allowed_args = [] ) {
+		$array = wp_parse_args( $array, $allowed_args );
 
-		return self::allowed_keys( $array, array_keys( $default_allowed_args ) );
+		return self::allowed_keys( $array, array_keys( $allowed_args ) );
 	}
 
 	/**
-	 * Pluck all array keys ending with string.
+	 * Pluck specified array keys.
 	 *
 	 * @param array    $array
 	 * @param string[] $keys
@@ -208,7 +210,7 @@ class PUM_Utils_Array {
 	}
 
 	/**
-	 * Pluck all array keys ending with string.
+	 * Pluck all array keys containing a string or strings.
 	 *
 	 * @param array    $array
 	 * @param string[] $strings
