@@ -28,6 +28,10 @@ function js_site_watcher() {
 	$fn.saneWatch(path.join(srcPath, 'site', '/**/*.js'), {debounce: 300}, gulp.parallel('js_site'));
 }
 
+function block_editor_watcher() {
+	$fn.saneWatch(path.join('src/**/*.(js|scss)'), {debounce: 300}, gulp.parallel(["webpack:blockEditor"]));
+}
+
 js_site_watcher.description = "Starts site Javascript file watcher.";
 
 function langpack_watcher() {
@@ -40,6 +44,7 @@ gulp.task(sass_watcher);
 gulp.task(js_admin_watcher);
 gulp.task(js_site_watcher);
 gulp.task(langpack_watcher);
+gulp.task(block_editor_watcher);
 gulp.task('js_watcher', gulp.parallel(['js_admin_watcher', 'js_site_watcher']));
 gulp.task('watch', gulp.parallel(['sass_watcher', 'js_watcher', 'langpack_watcher']));
 
@@ -48,4 +53,3 @@ let js_watcher = gulp.task('js_watcher'),
 
 js_watcher.description = "Starts all js file watchers.";
 watch.description = "Start the file watchers.";
-
