@@ -7,7 +7,7 @@ Tags:  marketing, ecommerce, popup, popups, optin, conversion, promotion, pop-up
 Requires at least: 4.9
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 1.16.2
+Stable tag: 1.16.3
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -181,6 +181,11 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
+= v1.16.3 - 11/16/2021 =
+* Improvement: Code cleanup/simplifications, and more inline documentation.
+* Improvement: Added enhancements in the analytics systems for upcoming extension updates.
+* Fix: Issue with width of some popup editor select fields.
+
 = v1.16.2 - 07/07/2021 =
 * Improvement: All plugin images optimized for size. This only affects our admin pages.
 * Improvement: Various label & text changes.
@@ -210,30 +215,3 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 * Fix: pum-admin-bar Script Fails to Load [Issue $907](https://github.com/PopupMaker/Popup-Maker/issues/907) Thanks @fluxism!
 * Fix: JS error: Uncaught TypeError: Cannot set property 'popups' of undefined [Issue $635](https://github.com/PopupMaker/Popup-Maker/issues/635)
 * Fix: Undefined SCSS variable causing errors in building block components
-
-= v1.14.0 - 12/16/2020 =
-* Improvement: Add a link to popups to admin bar [Issue #892](https://github.com/PopupMaker/Popup-Maker/issues/892)
-* Improvement: Add a link to create a new popup to admin bar [Issue #892](https://github.com/PopupMaker/Popup-Maker/issues/892)
-* Improvement: Add new welcome screen upon first activation [Issue #900](https://github.com/PopupMaker/Popup-Maker/issues/900)
-* Improvement: Create example popup upon install [Issue #857](https://github.com/PopupMaker/Popup-Maker/issues/857)
-* Improvement: Ensure subscribers table gets deleted if doing full deletion [Issue #895](https://github.com/PopupMaker/Popup-Maker/issues/895)
-* Improvement: Add logging for DB table management and creation [Issue #879](https://github.com/PopupMaker/Popup-Maker/issues/879)
-* Improvement: Set up continous integration for unit and integration tests [Issue #640](https://github.com/PopupMaker/Popup-Maker/issues/640)
-* Improvement: Add filter to exclude blocks with isAllowedForBlockType [Issue #835](https://github.com/PopupMaker/Popup-Maker/issues/835)
-* Fix: Backtick in settings page [Issue #904](https://github.com/PopupMaker/Popup-Maker/issues/904)
-
-= v1.13.1 - 11/4/2020 =
-* Fix: PHP error notice appears when submitting Gravity Forms without AJAX
-
-= v1.13.0 - 10/30/2020 =
-* Feature: Conversion tracking [Issue #775](https://github.com/PopupMaker/Popup-Maker/issues/775)
-* Feature: Bypass adblockers for tracking opens and conversions [Issue #783](https://github.com/PopupMaker/Popup-Maker/issues/783)
-* Feature: Periodical suggestions to improve plugin usage [Issue #834](https://github.com/PopupMaker/Popup-Maker/issues/834)
-* Improvement: Reduce clutter in All Popups table [Issue #878](https://github.com/PopupMaker/Popup-Maker/issues/878)
-* Improvement: Switch tab navigation to NAV elements instead of H2 [Issue #818](https://github.com/PopupMaker/Popup-Maker/issues/818)
-* Improvement: Set up PHPUnit for integration and unit tests [Issue #563](https://github.com/PopupMaker/Popup-Maker/issues/563)
-* Improvement: Continuously deploy readme and screenshot changes [Issue #827](https://github.com/PopupMaker/Popup-Maker/issues/827)
-* Fix: AJAX for Gravity Forms not setting cookies [Issue #706](https://github.com/PopupMaker/Popup-Maker/issues/706)
-* Fix: Disabling asset cache causes form integrations not to load their assets [Issue #755](https://github.com/PopupMaker/Popup-Maker/issues/755)
-* Fix: Form submission cookies are not being set for some form integrations [Issue #886](https://github.com/PopupMaker/Popup-Maker/issues/886)
-* Fix: Some form integrations are calling both AJAX and PHP submission handlers [Issue #887](https://github.com/PopupMaker/Popup-Maker/issues/887)
