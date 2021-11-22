@@ -1,6 +1,13 @@
 # Popup Maker Changelog
 
+## v1.16.3 - 11/16/2021
+
+* Improvement: Code cleanup/simplifications, and more inline documentation.
+* Improvement: Added enhancements in the analytics systems for upcoming extension updates.
+* Fix: Issue with width of some popup editor select fields.
+
 ## v1.16.2 - 07/07/2021
+
 * Improvement: All plugin images optimized for size. This only affects our admin pages.
 * Improvement: Various label & text changes.
 * Improvement: Improved focus when popups content is taller than screen and first focusable element is off screen.

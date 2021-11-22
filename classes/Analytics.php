@@ -27,6 +27,8 @@ class PUM_Analytics {
 	}
 
 	/**
+	 * Checks whether analytics is enabled.
+	 *
 	 * @return bool
 	 */
 	public static function analytics_enabled() {
@@ -36,7 +38,16 @@ class PUM_Analytics {
 	}
 
 	/**
-	 * @param $event
+	 * Get a list of key pairs for each event type.
+	 * Internally used only for meta keys.
+	 *
+	 * Example returns [[open,opened],[conversion,conversion]].
+	 *
+	 * Usage examples:
+	 * - popup_open_count, popup_last_opened
+	 * - popup_conversion_count, popup_last_conversion
+	 *
+	 * @param string $event Event key.
 	 *
 	 * @return mixed
 	 */
@@ -48,6 +59,15 @@ class PUM_Analytics {
 		}
 
 		return apply_filters( 'pum_analytics_event_keys', $keys, $event );
+	}
+
+	/**
+	 * Returns an array of valid event types.
+	 *
+	 * @return string[]
+	 */
+	public static function valid_events() {
+		return apply_filters( 'pum_analytics_valid_events', array( 'open', 'conversion' ) );
 	}
 
 	/**
@@ -71,7 +91,7 @@ class PUM_Analytics {
 
 		$popup = pum_get_popup( $args['pid'] );
 
-		if ( ! pum_is_popup( $popup ) || ! in_array( $event, apply_filters( 'pum_analytics_valid_events', array( 'open', 'conversion' ) ) ) ) {
+		if ( ! pum_is_popup( $popup ) || ! in_array( $event, self::valid_events(), true ) ) {
 			return;
 		}
 

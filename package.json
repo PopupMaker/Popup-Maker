@@ -1,6 +1,6 @@
 {
   "name": "popup-maker",
-  "version": "1.16.2",
+  "version": "1.16.3",
   "description": "WordPress Popup Plugin",
   "homepage": "https://wppopupmaker.com",
   "author": "Code Atlantic LLC",
@@ -24,11 +24,12 @@
     "check-engines": "wp-scripts check-engines",
     "check-licenses": "wp-scripts check-licenses",
     "format:js": "wp-scripts format-js",
-    "format:js:src": "wp-scripts format-js assets/js/src",
+    "format:js:src": "wp-scripts format-js ./src",
     "lint:style": "wp-scripts lint-style",
     "lint:css:src": "wp-scripts lint-style 'src/**/*.css'",
     "lint:js": "wp-scripts lint-js",
-    "lint:js:src": "wp-scripts lint-js assets/js/src",
+    "lint:md:docs": "wp-scripts lint-md-docs",
+    "lint:md:js": "wp-scripts lint-md-js",
     "lint:pkg-json": "wp-scripts lint-pkg-json",
     "packages-update": "wp-scripts packages-update",
     "postpackages-update": "npm run build",
@@ -42,6 +43,11 @@
       "@wordpress/babel-preset-default"
     ]
   },
+  "eslintConfig": {
+    "extends": [
+      "plugin:@wordpress/eslint-plugin/recommended"
+    ]
+  },
   "dependencies": {
     "iframe-resizer": "^4.2.10",
     "mobile-detect": "^1.4.4"
@@ -50,7 +56,7 @@
     "@wordpress/base-styles": "^1.5.0",
     "@wordpress/eslint-plugin": "^8.0.2",
     "@wordpress/prettier-config": "^1.0.1",
-    "@wordpress/scripts": "^7.2.0",
+    "@wordpress/scripts": "^10.0.0",
     "classnames": "^2.2.6",
     "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.5.0",

@@ -21,8 +21,8 @@ class PUM_Utils_Array {
 	 *
 	 * @return array
 	 */
-	public static function filter_null( $array = array() ) {
-		return array_filter( $array, array( __CLASS__, '_filter_null' ) );
+	public static function filter_null( $array = [] ) {
+		return array_filter( $array, [ __CLASS__, '_filter_null' ] );
 	}
 
 	/**
@@ -46,7 +46,7 @@ class PUM_Utils_Array {
 			return sanitize_text_field( $var );
 		}
 
-		return array_map( array( __CLASS__, 'sanitize' ), (array) $var );
+		return array_map( [ __CLASS__, 'sanitize' ], (array) $var );
 	}
 
 	/**
@@ -93,7 +93,10 @@ class PUM_Utils_Array {
 
 		$i = 0;
 		foreach ( $arr as &$val ) {
-			$val = array( 'sort' => ( ++ $i * 10 ), 'val' => $val );
+			$val = [
+				'sort' => ( ++ $i * 10 ),
+				'val'  => $val,
+			];
 		}
 
 		// Add a quick keyword `swap` to make syntax simpler to remember.
@@ -132,7 +135,7 @@ class PUM_Utils_Array {
 			}
 		}
 
-		uasort( $arr, array( __CLASS__, 'sort_by_sort' ) );
+		uasort( $arr, [ __CLASS__, 'sort_by_sort' ] );
 
 		foreach ( $arr as &$val ) {
 			$val = $val['val'];
@@ -151,7 +154,7 @@ class PUM_Utils_Array {
 	 *
 	 * @return array
 	 */
-	public static function pluck_keys_starting_with( $array, $strings = array() ) {
+	public static function pluck_keys_starting_with( $array, $strings = [] ) {
 		$to_be_removed = self::remove_keys_starting_with( $array, $strings );
 
 		return array_diff_key( $array, $to_be_removed );
@@ -165,15 +168,17 @@ class PUM_Utils_Array {
 	 *
 	 * @return array
 	 */
-	public static function pluck_keys_ending_with( $array, $strings = array() ) {
+	public static function pluck_keys_ending_with( $array, $strings = [] ) {
 		$to_be_removed = self::remove_keys_ending_with( $array, $strings );
 
 		return array_diff_key( $array, $to_be_removed );
 	}
 
 	/**
-	 * @param array $array
-	 * @param array $allowed_keys
+	 * Extract only allowed keys from an array.
+	 *
+	 * @param array    $array Array to be extracted from.
+	 * @param string[] $allowed_keys List of keys.
 	 *
 	 * @return array
 	 */
@@ -184,19 +189,19 @@ class PUM_Utils_Array {
 	/**
 	 * This works exactly the same as wp_parse_args, except we remove unused keys for sanitization.
 	 *
-	 * @param array $array
+	 * @param array $array Array to be parsed.
 	 * @param array $allowed_args Array of key=>defaultValue pairs for each allowed argument.
 	 *
 	 * @return array
 	 */
-	public static function parse_allowed_args( $array, $default_allowed_args = [] ) {
-		$array = wp_parse_args( $array, $default_allowed_args );
+	public static function parse_allowed_args( $array, $allowed_args = [] ) {
+		$array = wp_parse_args( $array, $allowed_args );
 
-		return self::allowed_keys( $array, array_keys( $default_allowed_args ) );
+		return self::allowed_keys( $array, array_keys( $allowed_args ) );
 	}
 
 	/**
-	 * Pluck all array keys ending with string.
+	 * Pluck specified array keys.
 	 *
 	 * @param array    $array
 	 * @param string[] $keys
@@ -208,14 +213,14 @@ class PUM_Utils_Array {
 	}
 
 	/**
-	 * Pluck all array keys ending with string.
+	 * Pluck all array keys containing a string or strings.
 	 *
 	 * @param array    $array
 	 * @param string[] $strings
 	 *
 	 * @return array
 	 */
-	public static function pluck_keys_containing( $array, $strings = array() ) {
+	public static function pluck_keys_containing( $array, $strings = [] ) {
 		$to_be_removed = self::remove_keys_containing( $array, $strings );
 
 		return array_diff_key( $array, $to_be_removed );
@@ -229,13 +234,13 @@ class PUM_Utils_Array {
 	 *
 	 * @return array
 	 */
-	public static function remove_keys_starting_with( $array, $strings = array() ) {
+	public static function remove_keys_starting_with( $array, $strings = [] ) {
 		if ( ! $strings ) {
 			return $array;
 		}
 
 		if ( ! is_array( $strings ) ) {
-			$strings = array( $strings );
+			$strings = [ $strings ];
 		}
 
 		foreach ( $array as $key => $value ) {
@@ -257,13 +262,13 @@ class PUM_Utils_Array {
 	 *
 	 * @return array
 	 */
-	public static function remove_keys_ending_with( $array, $strings = array() ) {
+	public static function remove_keys_ending_with( $array, $strings = [] ) {
 		if ( ! $strings ) {
 			return $array;
 		}
 
 		if ( ! is_array( $strings ) ) {
-			$strings = array( $strings );
+			$strings = [ $strings ];
 		}
 
 		foreach ( $array as $key => $value ) {
@@ -287,14 +292,14 @@ class PUM_Utils_Array {
 	 *
 	 * @return array
 	 */
-	public static function remove_keys_containing( $array, $strings = array() ) {
+	public static function remove_keys_containing( $array, $strings = [] ) {
 
 		if ( ! $strings ) {
 			return $array;
 		}
 
 		if ( ! is_array( $strings ) ) {
-			$strings = array( $strings );
+			$strings = [ $strings ];
 		}
 
 		foreach ( $array as $key => $value ) {
@@ -316,14 +321,14 @@ class PUM_Utils_Array {
 	 *
 	 * @return array
 	 */
-	public static function remove_keys( $array, $keys = array() ) {
+	public static function remove_keys( $array, $keys = [] ) {
 
 		if ( empty( $keys ) ) {
 			return $array;
 		}
 
 		if ( is_string( $keys ) ) {
-			$keys = array( $keys );
+			$keys = [ $keys ];
 		}
 
 		foreach ( (array) $keys as $key ) {
@@ -344,7 +349,7 @@ class PUM_Utils_Array {
 	 *
 	 * @return array
 	 */
-	public static function sort( $array = array(), $type = 'key', $reverse = false ) {
+	public static function sort( $array = [], $type = 'key', $reverse = false ) {
 		if ( ! is_array( $array ) ) {
 			return $array;
 		}
@@ -364,9 +369,9 @@ class PUM_Utils_Array {
 
 			case 'priority':
 				if ( ! $reverse ) {
-					uasort( $array, array( __CLASS__, 'sort_by_priority' ) );
+					uasort( $array, [ __CLASS__, 'sort_by_priority' ] );
 				} else {
-					uasort( $array, array( __CLASS__, 'rsort_by_priority' ) );
+					uasort( $array, [ __CLASS__, 'rsort_by_priority' ] );
 				}
 				break;
 		}
@@ -434,7 +439,7 @@ class PUM_Utils_Array {
 	public static function replace_key( $array, $old_key, $new_key ) {
 		$keys = array_keys( $array );
 		if ( false === $index = array_search( $old_key, $keys, true ) ) {
-			//throw new \Exception( sprintf( 'Key "%s" does not exit', $old_key ) );
+			// throw new \Exception( sprintf( 'Key "%s" does not exit', $old_key ) );
 		}
 		$keys[ $index ] = $new_key;
 
@@ -452,7 +457,7 @@ class PUM_Utils_Array {
 
 		if ( is_array( $data ) ) {
 			foreach ( (array) $data as $key => $value ) {
-				if ( is_string( $value ) && in_array( $value, array( 'true', 'false' ) ) ) {
+				if ( is_string( $value ) && in_array( $value, [ 'true', 'false' ] ) ) {
 					$data[ $key ] = json_decode( $value );
 				} elseif ( is_array( $value ) ) {
 					$data[ $key ] = self::fix_json_boolean_values( $value );
@@ -473,7 +478,7 @@ class PUM_Utils_Array {
 			$obj = (array) $obj;
 		}
 		if ( is_array( $obj ) ) {
-			$new = array();
+			$new = [];
 			foreach ( $obj as $key => $val ) {
 				$new[ $key ] = self::from_object( $val );
 			}
@@ -510,8 +515,8 @@ class PUM_Utils_Array {
 	 *
 	 * @return mixed|string
 	 */
-	public static function safe_json_encode( $data = array() ) {
-		return wp_json_encode( self:: make_safe_for_json_encode( $data ) );
+	public static function safe_json_encode( $data = [] ) {
+		return wp_json_encode( self::make_safe_for_json_encode( $data ) );
 	}
 
 	/**
@@ -523,7 +528,7 @@ class PUM_Utils_Array {
 	 *
 	 * @return array|string
 	 */
-	public static function make_safe_for_json_encode( $data = array() ) {
+	public static function make_safe_for_json_encode( $data = [] ) {
 		if ( is_scalar( $data ) ) {
 			return html_entity_decode( (string) $data, ENT_QUOTES, 'UTF-8' );
 		}
@@ -551,7 +556,7 @@ class PUM_Utils_Array {
 			foreach ( $d as $k => $v ) {
 				$d[ $k ] = self::utf8_encode_recursive( $v );
 			}
-		} else if ( is_string( $d ) ) {
+		} elseif ( is_string( $d ) ) {
 			return utf8_encode( $d );
 		}
 
@@ -561,7 +566,7 @@ class PUM_Utils_Array {
 
 	/**
 	 * @param      $value
-	 * @param bool $encode
+	 * @param bool  $encode
 	 *
 	 * @return string
 	 */
@@ -596,4 +601,3 @@ class PUM_Utils_Array {
 		return $array;
 	}
 }
-

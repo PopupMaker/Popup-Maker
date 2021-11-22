@@ -946,27 +946,24 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @return int
 	 */
 	public function get_event_count( $event = 'open', $which = 'current' ) {
-
-		$keys = PUM_Analytics::event_keys( $event );
-
 		switch ( $which ) {
-			case 'current' :
-				$current = $this->get_meta( 'popup_' . $keys[0] . '_count' );
+			case 'current':
+				$current = $this->get_meta( "popup_{$event}_count" );
 
 				// Save future queries by inserting a valid count.
 				if ( $current === false || ! is_numeric( $current ) ) {
 					$current = 0;
-					$this->update_meta( 'popup_' . $keys[0] . '_count', $current );
+					$this->update_meta( "popup_{$event}_count", $current );
 				}
 
 				return absint( $current );
-			case 'total'   :
-				$total = $this->get_meta( 'popup_' . $keys[0] . '_count_total' );
+			case 'total':
+				$total = $this->get_meta( "popup_{$event}_count_total" );
 
 				// Save future queries by inserting a valid count.
 				if ( $total === false || ! is_numeric( $total ) ) {
 					$total = 0;
-					$this->update_meta( 'popup_' . $keys[0] . '_count_total', $total );
+					$this->update_meta( "popup_{$event}_count_total", $total );
 				}
 
 				return absint( $total );
@@ -1169,4 +1166,3 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		return pum_get_popup( $id );
 	}
 }
-

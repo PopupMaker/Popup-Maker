@@ -96,7 +96,7 @@ class PUM_Modules_Admin_Bar {
 				// Single Popup Menu Node
 				$wp_admin_bar->add_node( array(
 					'id'     => $node_id,
-					'title'  => $popup->post_title,
+					'title'  => esc_html( $popup->post_title ),
 					'href'   => $edit_url,
 					'parent' => 'popups',
 				) );

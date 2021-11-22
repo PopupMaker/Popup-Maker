@@ -51,13 +51,13 @@ const config = webpackMerge.strategy(
 				test: /\.(sc|sa|c)ss$/,
 				exclude: /node_modules/,
 				use: [
-					MiniCssExtractPlugin.loader,
-					{
-						loader: 'css-loader',
-						options: {
-							sourceMap: ! production,
-						},
-					},
+					// MiniCssExtractPlugin.loader,
+					// {
+					// 	loader: 'css-loader',
+					// 	options: {
+					// 		sourceMap: ! production,
+					// 	},
+					// },
 					{
 						loader: 'postcss-loader',
 						options: {
