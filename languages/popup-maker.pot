@@ -27,11 +27,11 @@ msgstr ""
 msgid "Translate"
 msgstr ""
 
-#: classes/Analytics.php:157
+#: classes/Analytics.php:177
 msgid "Event Type"
 msgstr ""
 
-#: classes/Analytics.php:162, classes/Shortcode/Subscribe.php:410, includes/integrations/ninja-forms/Actions/OpenPopup.php:42
+#: classes/Analytics.php:182, classes/Shortcode/Subscribe.php:410, includes/integrations/ninja-forms/Actions/OpenPopup.php:42
 msgid "Popup ID"
 msgstr ""
 

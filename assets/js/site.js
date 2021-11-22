@@ -1031,7 +1031,7 @@ var PUM_Accessibility;
  */
 
 var PUM_Analytics;
-( function( $ ) {
+( function ( $ ) {
 	'use strict';
 
 	$.fn.popmake.last_open_trigger = null;
@@ -1043,7 +1043,7 @@ var PUM_Analytics;
 	);
 
 	PUM_Analytics = {
-		beacon: function( data, callback ) {
+		beacon: function ( data, callback ) {
 			var beacon = new Image(),
 				url = rest_enabled ? pum_vars.analytics_api : pum_vars.ajaxurl,
 				opts = {
@@ -1066,7 +1066,7 @@ var PUM_Analytics;
 					callback:
 						typeof callback === 'function'
 							? callback
-							: function() {},
+							: function () {},
 				};
 
 			if ( ! rest_enabled ) {
@@ -1087,15 +1087,18 @@ var PUM_Analytics;
 	};
 
 	if (
-		typeof pum_vars.disable_tracking === 'undefined' ||
-		! pum_vars.disable_tracking
+		( typeof pum_vars.disable_tracking === 'undefined' ||
+			! pum_vars.disable_tracking ) &&
+		// Check for extensions disabling core tracking events.
+		( typeof pum_vars.disable_core_tracking === 'undefined' ||
+			! pum_vars.disable_core_tracking )
 	) {
 		// Only popups from the editor should fire analytics events.
 		$( document )
 			/**
 			 * Track opens for popups.
 			 */
-			.on( 'pumAfterOpen.core_analytics', '.pum', function() {
+			.on( 'pumAfterOpen.core_analytics', '.pum', function () {
 				var $popup = PUM.getPopup( this ),
 					data = {
 						pid:
@@ -1116,37 +1119,37 @@ var PUM_Analytics;
 		/**
 		 * Track form submission conversions
 		 */
-		$( function() {
-			PUM.hooks.addAction( 'pum.integration.form.success', function(
-				form,
-				args
-			) {
-				// If the submission has already been counted in the backend, we can bail early.
-				if ( args.ajax === false ) {
-					return;
-				}
+		$( function () {
+			PUM.hooks.addAction(
+				'pum.integration.form.success',
+				function ( form, args ) {
+					// If the submission has already been counted in the backend, we can bail early.
+					if ( args.ajax === false ) {
+						return;
+					}
 
-				// If no popup is included in the args, we can bail early since we only record conversions within popups.
-				if ( args.popup.length === 0 ) {
-					return;
-				}
-				var data = {
-					pid:
-						parseInt(
-							args.popup.popmake( 'getSettings' ).id,
-							10
-						) || null,
-					event: 'conversion',
-				};
+					// If no popup is included in the args, we can bail early since we only record conversions within popups.
+					if ( args.popup.length === 0 ) {
+						return;
+					}
+					var data = {
+						pid:
+							parseInt(
+								args.popup.popmake( 'getSettings' ).id,
+								10
+							) || null,
+						event: 'conversion',
+					};
 
-				// Shortcode popups use negative numbers, and single-popup (preview mode) shouldn't be tracked.
-				if (
-					data.pid > 0 &&
-					! $( 'body' ).hasClass( 'single-popup' )
-				) {
-					PUM_Analytics.beacon( data );
+					// Shortcode popups use negative numbers, and single-popup (preview mode) shouldn't be tracked.
+					if (
+						data.pid > 0 &&
+						! $( 'body' ).hasClass( 'single-popup' )
+					) {
+						PUM_Analytics.beacon( data );
+					}
 				}
-			} );
+			);
 		} );
 	}
 } )( jQuery );
