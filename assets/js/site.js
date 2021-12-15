@@ -2219,8 +2219,10 @@ var pum_debug_mode = false,
 						padding.right++;
 					}
 
-					padding.left = new Array(padding.left + 1).join(" ");
-					padding.right = new Array(padding.right + 1).join(" ");
+                    const padl = parseInt(padding.left) + 1;
+                    padding.left = new Array(padl > 0 ? padl : 0).join(" "); 
+                    const padr = parseInt(padding.right) + 1;
+                    padding.right = new Array(padr > 0 ? padr : 0).join(" ");
 
 					console.log(
 						"" +
