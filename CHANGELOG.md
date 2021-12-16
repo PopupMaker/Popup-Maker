@@ -1,5 +1,9 @@
 # Popup Maker Changelog
 
+## Unreleased
+
+* Improvement: Prevent changing aria-hidden if its already set when showing a popup.
+
 ## v1.16.3 - 11/16/2021
 
 * Improvement: Code cleanup/simplifications, and more inline documentation.
