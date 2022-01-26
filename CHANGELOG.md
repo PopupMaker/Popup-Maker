@@ -3,6 +3,11 @@
 ## Unreleased
 
 * Improvement: Prevent changing aria-hidden if its already set when showing a popup.
+* Improvement: Remove usage of !important in several CSS rules.
+* Improvement: Pass wp_get_environment_type to license server to prevent dev servers from taking a site activation.
+* Improvement: Add new prerequisite checking class for extensions to use for more reliable activations.
+* Improvement: Add new `pumBeforeInit` jQuery event.
+* Fix: Remove unwanted outline when no focusable elements existed in popups.
 
 ## v1.16.3 - 11/16/2021
 
