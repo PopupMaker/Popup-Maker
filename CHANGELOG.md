@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.16.4 - 01/25/2022
+
 * Improvement: Prevent changing aria-hidden if its already set when showing a popup.
 * Improvement: Remove usage of !important in several CSS rules.
 * Improvement: Pass wp_get_environment_type to license server to prevent dev servers from taking a site activation.

@@ -5,9 +5,9 @@ Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&ut
 Donate link:
 Tags:  marketing, ecommerce, popup, popups, optin, conversion, promotion, pop-up, lightbox, modal, popupmaker
 Requires at least: 4.9
-Tested up to: 5.8
+Tested up to: 5.9
 Requires PHP: 5.6
-Stable tag: 1.16.3
+Stable tag: 1.16.4
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -180,6 +180,15 @@ There are several common causes for this, check [this guide for help](https://do
 == Changelog ==
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
+
+= v1.16.4 - 01/25/2022 =
+* Improvement: Prevent changing aria-hidden if its already set when showing a popup.
+* Improvement: Remove usage of !important in several CSS rules.
+* Improvement: Pass wp_get_environment_type to license server to prevent dev servers from taking a site activation.
+* Improvement: Add new prerequisite checking class for extensions to use for more reliable activations.
+* Improvement: Add new `pumBeforeInit` jQuery event.
+* Fix: Remove unwanted outline when no focusable elements existed in popups.
+
 
 = v1.16.3 - 11/16/2021 =
 * Improvement: Code cleanup/simplifications, and more inline documentation.
