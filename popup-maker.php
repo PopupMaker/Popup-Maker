@@ -361,6 +361,7 @@ function pum() {
  * Initialize Popup Maker if requirements are met.
  */
 function pum_init() {
+	// TODO Replace this with PUM_Utils_Prerequisites.
 	if ( ! PUM_Install::meets_activation_requirements() ) {
 		require_once 'includes/failsafes.php';
 		add_action( 'admin_notices', array( 'PUM_Install', 'activation_failure_admin_notice' ) );
