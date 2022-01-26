@@ -224,9 +224,10 @@ class PUM_Extension_License {
 		$api_params = array(
 			'edd_action' => 'activate_license',
 			'license'    => $license,
-			'item_name'  => urlencode( $this->item_name ),
 			'item_id'    => $this->item_id,
+			'item_name'  => rawurlencode( $this->item_name ),
 			'url'        => home_url(),
+			'environment' => function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production',
 		);
 
 		// Call the API

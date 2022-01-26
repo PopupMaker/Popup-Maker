@@ -175,6 +175,10 @@
   margin-bottom: 0.5em;
 }
 
+.pum-container .pum-content:focus {
+  outline: none;
+}
+
 .pum-container .pum-content > :first-child {
   margin-top: 0;
 }
