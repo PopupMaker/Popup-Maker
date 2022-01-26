@@ -1,4 +1,4 @@
-# Copyright (C) 2021 WordPress Popup Plugin
+# Copyright (C) 2022 WordPress Popup Plugin
 # This file is distributed under the same license as the WordPress Popup Plugin package.
 msgid ""
 msgstr ""
@@ -63,11 +63,11 @@ msgstr ""
 msgid "Posts"
 msgstr ""
 
-#: classes/Conditions.php:110, classes/Admin/Pages.php:144, classes/Admin/Popups.php:1208
+#: classes/Conditions.php:110, classes/Admin/Pages.php:144, classes/Admin/Popups.php:1143
 msgid "Categories"
 msgstr ""
 
-#: classes/Conditions.php:111, classes/Admin/Pages.php:145, classes/Admin/Popups.php:1204
+#: classes/Conditions.php:111, classes/Admin/Pages.php:145, classes/Admin/Popups.php:1139
 msgid "Tags"
 msgstr ""
 
@@ -483,7 +483,7 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: classes/Privacy.php:223, classes/Admin/Popups.php:1189, classes/Admin/Templates.php:649, classes/Shortcode/Subscribe.php:182, classes/Shortcode/Subscribe.php:236
+#: classes/Privacy.php:223, classes/Admin/Popups.php:1124, classes/Admin/Templates.php:649, classes/Shortcode/Subscribe.php:182, classes/Shortcode/Subscribe.php:236
 msgid "Name"
 msgstr ""
 
@@ -717,7 +717,7 @@ msgstr ""
 msgid "Upgrade"
 msgstr ""
 
-#: includes/class-popmake-fields.php:175, classes/Admin/Helpers.php:204, classes/Admin/Popups.php:596, classes/Admin/Popups.php:792, classes/Admin/Popups.php:909, classes/Shortcode/Popup.php:228, classes/Utils/Fields.php:128
+#: includes/class-popmake-fields.php:175, classes/Admin/Helpers.php:204, classes/Admin/Popups.php:596, classes/Admin/Popups.php:792, classes/Shortcode/Popup.php:228, classes/Utils/Fields.php:128
 msgid "ms"
 msgstr ""
 
@@ -1470,59 +1470,59 @@ msgstr ""
 msgid "This includes trapping the tab key & focus inside popup while open, force focus the first element when popup open, and refocus last click trigger when closed."
 msgstr ""
 
-#: classes/Admin/Popups.php:1084, classes/Admin/Popups.php:1193
+#: classes/Admin/Popups.php:1019, classes/Admin/Popups.php:1128
 msgid "Opens"
 msgstr ""
 
-#: classes/Admin/Popups.php:1088, classes/Admin/Popups.php:1194
+#: classes/Admin/Popups.php:1023, classes/Admin/Popups.php:1129
 msgid "Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:1092, classes/Admin/Popups.php:1195
+#: classes/Admin/Popups.php:1027, classes/Admin/Popups.php:1130
 msgid "Conversion Rate"
 msgstr ""
 
-#: classes/Admin/Popups.php:1098
+#: classes/Admin/Popups.php:1033
 msgid "Reset Counts"
 msgstr ""
 
-#: classes/Admin/Popups.php:1102
+#: classes/Admin/Popups.php:1037
 msgid "Last Reset"
 msgstr ""
 
-#: classes/Admin/Popups.php:1103
+#: classes/Admin/Popups.php:1038
 msgid "Previous Opens"
 msgstr ""
 
-#: classes/Admin/Popups.php:1107
+#: classes/Admin/Popups.php:1042
 msgid "Previous Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:1110
+#: classes/Admin/Popups.php:1045
 msgid "Lifetime Opens"
 msgstr ""
 
-#: classes/Admin/Popups.php:1114
+#: classes/Admin/Popups.php:1049
 msgid "Lifetime Conversions"
 msgstr ""
 
-#: classes/Admin/Popups.php:1190, classes/Shortcode/Subscribe.php:309
+#: classes/Admin/Popups.php:1125, classes/Shortcode/Subscribe.php:309
 msgid "Enabled"
 msgstr ""
 
-#: classes/Admin/Popups.php:1191, classes/Admin/Themes.php:333
+#: classes/Admin/Popups.php:1126, classes/Admin/Themes.php:333
 msgid "Title"
 msgstr ""
 
-#: classes/Admin/Popups.php:1192, classes/Shortcode/PopupClose.php:89, classes/Shortcode/PopupTrigger.php:112, classes/Shortcode/PopupTrigger.php:113
+#: classes/Admin/Popups.php:1127, classes/Shortcode/PopupClose.php:89, classes/Shortcode/PopupTrigger.php:112, classes/Shortcode/PopupTrigger.php:113
 msgid "CSS Class"
 msgstr ""
 
-#: classes/Admin/Popups.php:1386
+#: classes/Admin/Popups.php:1321
 msgid "Show all categories"
 msgstr ""
 
-#: classes/Admin/Popups.php:1399
+#: classes/Admin/Popups.php:1334
 msgid "Show all tags"
 msgstr ""
 
@@ -2330,15 +2330,15 @@ msgstr ""
 msgid "%1$s"
 msgstr ""
 
-#: classes/Extension/License.php:393, classes/Extension/License.php:429
+#: classes/Extension/License.php:394, classes/Extension/License.php:430
 msgid "You have invalid or expired license keys for Popup Maker. Please go to the %sLicenses page%s to correct this issue."
 msgstr ""
 
-#: classes/Extension/License.php:385
+#: classes/Extension/License.php:386
 msgid "One or more of your extensions are missing license keys. You will not be able to receive updates until the extension has a valid license key entered. Please go to the %sLicenses page%s to add your license keys."
 msgstr ""
 
-#: classes/Extension/License.php:462
+#: classes/Extension/License.php:463
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
@@ -2793,6 +2793,32 @@ msgstr ""
 
 #: classes/Utils/Format.php:87
 msgid "%ss"
+msgstr ""
+
+#. translators: 1. PHP Version
+#: classes/Utils/Prerequisites.php:273
+msgid "This plugin requires <b>PHP %s</b> or higher in order to run."
+msgstr ""
+
+#: classes/Utils/Prerequisites.php:317
+msgid "install it"
+msgstr ""
+
+#. translators: 1. Plugin Name, 2. Required Plugin Name, 3. `install it` link.
+#: classes/Utils/Prerequisites.php:321, classes/Utils/Prerequisites.php:298
+msgid "The plugin \"%1$s\" requires %2$s! Please %3$s to continue!"
+msgstr ""
+
+#: classes/Utils/Prerequisites.php:305
+msgid "update it"
+msgstr ""
+
+#: classes/Utils/Prerequisites.php:309
+msgid "The plugin \"%1$s\" requires %2$s v%3$s or higher! Please %4$s to continue!"
+msgstr ""
+
+#: classes/Utils/Prerequisites.php:294
+msgid "activate it"
 msgstr ""
 
 #: classes/Utils/Upgrades.php:349
