@@ -144,7 +144,7 @@ class PUM_Cookies {
 				'id'              => '',
 				'name'            => '',
 				'modal_title'     => __( 'Cookie Settings', 'popup-maker' ),
-				'settings_column' => sprintf( '%s%s%s', '<# if (typeof data.session === "undefined" || data.session !== "1") { print(data.time); } else { print("', __( 'Sessions', 'popup-maker' ), '"); } #>' ),
+				'settings_column' => sprintf( '%s%s%s', '{{ (typeof data.session === "undefined" || data.session !== "1") ? data.time : "', __( 'Sessions', 'popup-maker' ), '" }}' ),
 				'priority'        => 10,
 				'tabs'            => $this->get_tabs(),
 				'fields'          => $this->cookie_fields(),
