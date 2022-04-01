@@ -22,7 +22,7 @@ function pum_popup_ID( $popup_id = null ) {
  * @param null|int $popup_id
  */
 function pum_popup_title( $popup_id = null ) {
-	echo pum_get_popup_title( $popup_id );
+	echo esc_html( pum_get_popup_title( $popup_id ) );
 }
 
 /**
@@ -39,7 +39,7 @@ function pum_popup_content( $popup_id = null ) {
 
 	$cached_content = PUM_Site_Popups::get_cache_content( $popup->ID );
 
-	echo false !== $cached_content ? $cached_content : $popup->get_content();
+	echo esc_html( false !== $cached_content ? $cached_content : $popup->get_content() );
 }
 
 /**
@@ -74,7 +74,7 @@ function pum_popup_data_attr( $popup_id = null ) {
 }
 
 /**
- * Render the popup's content tabindex attribute to make focusable 
+ * Render the popup's content tabindex attribute to make focusable
  * if needed.
  */
 function pum_popup_content_tabindex_attr( $popup_id = null ) {
