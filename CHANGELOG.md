@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v1.16.5 - 04/04/2022
+
+* Improvement: Add precautionary escaping of some generated outputs.
+* Improvement: Remove leftover console logging code.
+* Fix: Typo in admin template rendering for cookie editor.
+
 ## v1.16.4 - 01/25/2022
 
 * Improvement: Prevent changing aria-hidden if its already set when showing a popup.
