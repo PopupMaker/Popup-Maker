@@ -1,6 +1,6 @@
 {
   "name": "popup-maker",
-  "version": "1.16.5",
+  "version": "1.16.6",
   "description": "WordPress Popup Plugin",
   "homepage": "https://wppopupmaker.com",
   "author": "Code Atlantic LLC",
@@ -34,6 +34,7 @@
     "packages-update": "wp-scripts packages-update",
     "postpackages-update": "npm run build",
     "start": "wp-scripts start",
+    "release": "gulp release",
     "test:e2e": "wp-scripts test-e2e",
     "test:unit": "wp-scripts test-unit-js",
     "test": "echo \"Error: no test specified\" && exit 1"

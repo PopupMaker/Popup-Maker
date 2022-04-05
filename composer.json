@@ -25,5 +25,11 @@
   "minimum-stability": "dev",
   "scripts": {
     "tests" : "vendor/bin/phpunit"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }

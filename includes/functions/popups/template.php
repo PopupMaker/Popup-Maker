@@ -39,7 +39,7 @@ function pum_popup_content( $popup_id = null ) {
 
 	$cached_content = PUM_Site_Popups::get_cache_content( $popup->ID );
 
-	echo esc_html( false !== $cached_content ? $cached_content : $popup->get_content() );
+	echo false !== $cached_content ? $cached_content : $popup->get_content();
 }
 
 /**
