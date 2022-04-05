@@ -7,7 +7,7 @@ Tags:  marketing, ecommerce, popup, popups, optin, conversion, promotion, pop-up
 Requires at least: 4.9
 Tested up to: 5.9
 Requires PHP: 5.6
-Stable tag: 1.16.4
+Stable tag: 1.16.5
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -181,7 +181,14 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
+= v1.16.5 - 04/04/2022 =
+
+* Improvement: Add precautionary escaping of some generated outputs.
+* Improvement: Remove leftover console logging code.
+* Fix: Typo in admin template rendering for cookie editor.
+
 = v1.16.4 - 01/25/2022 =
+
 * Improvement: Prevent changing aria-hidden if its already set when showing a popup.
 * Improvement: Remove usage of !important in several CSS rules.
 * Improvement: Pass wp_get_environment_type to license server to prevent dev servers from taking a site activation.
@@ -189,13 +196,14 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 * Improvement: Add new `pumBeforeInit` jQuery event.
 * Fix: Remove unwanted outline when no focusable elements existed in popups.
 
-
 = v1.16.3 - 11/16/2021 =
+
 * Improvement: Code cleanup/simplifications, and more inline documentation.
 * Improvement: Added enhancements in the analytics systems for upcoming extension updates.
 * Fix: Issue with width of some popup editor select fields.
 
 = v1.16.2 - 07/07/2021 =
+
 * Improvement: All plugin images optimized for size. This only affects our admin pages.
 * Improvement: Various label & text changes.
 * Improvement: Improved focus when popups content is taller than screen and first focusable element is off screen.
@@ -203,9 +211,11 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 * Fix: Deprecated function parameter notices on PHP 8.
 
 = v1.16.1 - 03/21/2021 =
+
 * Fix: WP <5.0 and ClassicPress saw errors in the admin for usage of WP_Block_Type_Registry. [Issue #995](https://github.com/PopupMaker/Popup-Maker/issues/995)
 
 = v1.16.0 - 03/09/2021 =
+
 * Feature: Add 'flush popup cache' link in admin bar menu to quickly clear cached plugin JS & CSS files. [Issue #931](https://github.com/PopupMaker/Popup-Maker/issues/931)
 * Improvement: Remove 'Tools -> System Info' page, use WP Site Health page instead. [Issue #862](https://github.com/PopupMaker/Popup-Maker/issues/862)
 * Improvement: Accessibility forced focus can now focus main close button if nothing else is available. [Issue #943](https://github.com/PopupMaker/Popup-Maker/issues/943)
@@ -216,6 +226,7 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 * Fix: Update integration with Contact Form 7 due to breaking changes in their recent v5.4 update. [Issue #946](https://github.com/PopupMaker/Popup-Maker/issues/946)
 
 = v1.15.0 - 01/12/2021 =
+
 * Feature: Automatically enqueue popups when detected during page load [Issue $543](https://github.com/PopupMaker/Popup-Maker/issues/543)
 * Improvement: Improvements to 'Extend' page [Issue $913](https://github.com/PopupMaker/Popup-Maker/issues/913)
 * Improvement: Start working toward more consistent linking/documentation strategy
