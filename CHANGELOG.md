@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## v1.16.6 - 04/04/2022
+
+* Fix: Regression fix due to breaking content rendering.
+
 ## v1.16.5 - 04/04/2022
 
 * Improvement: Add precautionary escaping of some generated outputs.
