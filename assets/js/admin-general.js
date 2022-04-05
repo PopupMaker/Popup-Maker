@@ -1475,9 +1475,6 @@ function pumChecked(val1, val2, print) {
         }
 
         function encode(pair) {
-
-            console.log(pair);
-
             switch ($('[name="' + pair.name + '"]', $form).attr("type")) {
 
 
