@@ -34,6 +34,7 @@
     "packages-update": "wp-scripts packages-update",
     "postpackages-update": "npm run build",
     "start": "wp-scripts start",
+    "release": "gulp release",
     "test:e2e": "wp-scripts test-e2e",
     "test:unit": "wp-scripts test-unit-js",
     "test": "echo \"Error: no test specified\" && exit 1"
