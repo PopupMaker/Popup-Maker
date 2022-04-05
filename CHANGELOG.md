@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-## v1.16.6 - 04/04/2022
+## v1.16.7 - 04/05/2022
 
+* Note: Bumped 2 versions as v1.16.6 may not have fully fixed it fully.
 * Fix: Regression fix due to breaking content rendering.
 
 ## v1.16.5 - 04/04/2022
