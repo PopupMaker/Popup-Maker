@@ -2204,42 +2204,50 @@ var pum_debug_mode = false,
 				);
 			},
 			divider: function(heading) {
-				var totalWidth = 62,
+                try {
+                    var totalWidth = 62,
 					extraSpace = 62,
 					padding = 0,
-					line = " " + new Array(totalWidth + 1).join("-") + " ";
+					line = " " + new Array(totalWidth + 1).join("-") + " ",
+                    fitHeading = heading;
 
-				if (typeof heading === "string") {
-					extraSpace = totalWidth - heading.length;
-					padding = {
-						left: Math.floor(extraSpace / 2),
-						right: Math.floor(extraSpace / 2)
-					};
+				    if (typeof heading === "string") {
+                        // Check the heading length to avoid negative padding numbers.
+                        if (heading.length > totalWidth) {
+                            // Truncate the heading if it's longer than the max width.
+                            fitHeading = fitHeading.substring(0, totalWidth);
+                        }
+                        extraSpace = totalWidth - fitHeading.length;
+				    	padding = {
+				    		left: Math.floor(extraSpace / 2),
+				    		right: Math.floor(extraSpace / 2)
+				    	};
 
-					if (padding.left + padding.right === extraSpace - 1) {
-						padding.right++;
-					}
+				    	if (padding.left + padding.right === extraSpace - 1) {
+				    		padding.right++;
+				    	}
 
-                    const padl = parseInt(padding.left) + 1;
-                    padding.left = new Array(padl > 0 ? padl : 0).join(" "); 
-                    const padr = parseInt(padding.right) + 1;
-                    padding.right = new Array(padr > 0 ? padr : 0).join(" ");
+                        padding.left = new Array(padding.left + 1).join(" ");
+                       	padding.right = new Array(padding.right + 1).join(" ");
 
-					console.log(
-						"" +
-							line +
-							"\n" +
-							"|" +
-							padding.left +
-							heading +
-							padding.right +
-							"|" +
-							"\n" +
-							line
-					);
-				} else {
-					console.log(line);
-				}
+				    	console.log(
+				    		"" +
+				    			line +
+				    			"\n" +
+				    			"|" +
+				    			padding.left +
+				    			fitHeading +
+				    			padding.right +
+				    			"|" +
+				    			"\n" +
+				    			line
+				    	);
+				    } else {
+				    	console.log(line);
+				    }
+                } catch (err) {
+                    console.error("Got a '" + err + "' when printing out the heading divider to the console.");
+                }  
 			},
 			click_trigger: function($popup, trigger_settings) {
 				var settings = $popup.popmake("getSettings"),
