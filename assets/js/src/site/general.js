@@ -15,6 +15,7 @@
 
     window.PUM.init = function () {
         console.log('init popups ✔');
+        $(document).trigger('pumBeforeInit');
         $('.pum').popmake();
         $(document).trigger('pumInitialized');
 

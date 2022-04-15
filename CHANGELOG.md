@@ -1,5 +1,27 @@
 # Popup Maker Changelog
 
+## Unreleased
+
+## v1.16.7 - 04/05/2022
+
+* Note: Bumped 2 versions as v1.16.6 may not have fully fixed it fully.
+* Fix: Regression fix due to breaking content rendering.
+
+## v1.16.5 - 04/04/2022
+
+* Improvement: Add precautionary escaping of some generated outputs.
+* Improvement: Remove leftover console logging code.
+* Fix: Typo in admin template rendering for cookie editor.
+
+## v1.16.4 - 01/25/2022
+
+* Improvement: Prevent changing aria-hidden if its already set when showing a popup.
+* Improvement: Remove usage of !important in several CSS rules.
+* Improvement: Pass wp_get_environment_type to license server to prevent dev servers from taking a site activation.
+* Improvement: Add new prerequisite checking class for extensions to use for more reliable activations.
+* Improvement: Add new `pumBeforeInit` jQuery event.
+* Fix: Remove unwanted outline when no focusable elements existed in popups.
+
 ## v1.16.3 - 11/16/2021
 
 * Improvement: Code cleanup/simplifications, and more inline documentation.

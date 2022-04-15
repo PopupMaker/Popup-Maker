@@ -84,7 +84,7 @@ var PUM_Accessibility;
 				.on( 'keydown.pum_accessibility', PUM_Accessibility.trapTabKey )
 				.attr( 'aria-hidden', 'false' );
 
-			$top_level_elements = $( 'body > *' )
+			$top_level_elements = $( 'body > *:not([aria-hidden="true"])' )
 				.filter( ':visible' )
 				.not( currentModal );
 			$top_level_elements.attr( 'aria-hidden', 'true' );

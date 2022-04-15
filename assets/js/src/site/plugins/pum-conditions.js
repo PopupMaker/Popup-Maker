@@ -120,5 +120,5 @@
 		},
 	} );
 
-	$.fn.popmake.conditions = {};
+	$.fn.popmake.conditions = $.fn.popmake.conditions || {};
 } )( jQuery, document );
