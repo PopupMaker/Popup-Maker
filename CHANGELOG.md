@@ -9,7 +9,7 @@
 
 ## v1.16.5 - 04/04/2022
 
-* Improvement: Add precautionary escaping of some generated outputs.
+* Improvement: Add precautionary escaping of some generated outputs. Shout out to @roelvb79 for the report.
 * Improvement: Remove leftover console logging code.
 * Fix: Typo in admin template rendering for cookie editor.
 
