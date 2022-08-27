@@ -24,9 +24,12 @@
   },
   "minimum-stability": "dev",
   "scripts": {
-    "tests" : "vendor/bin/phpunit"
+    "tests": "vendor/bin/phpunit"
   },
   "config": {
+    "platform": {
+      "php": "7.4"
+    },
     "allow-plugins": {
       "composer/installers": true,
       "dealerdirect/phpcodesniffer-composer-installer": true
