@@ -239,12 +239,40 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		$filters = array( 'js_only' => true );
 
 		if ( $this->has_conditions( $filters ) ) {
-			$settings['conditions'] = $this->get_conditions( $filters );
+			$settings['conditions'] = $this->get_parsed_js_conditions();
 		}
 
 		return apply_filters( 'pum_popup_get_public_settings', $settings, $this );
 	}
 
+	/**
+	 * Preprocess PHP conditions in order for more accurate JS handling.
+	 *
+	 * @return array
+	 */
+	public function get_parsed_js_conditions() {
+		$parsed_conditions = $this->get_conditions();
+
+		foreach ( $parsed_conditions as $group_index => $conditions ) {
+			foreach ( $conditions as $index => $condition ) {
+
+				// Check each non js condition, replace it with true/false depending on its result.
+				if ( ! $this->is_js_condition( $condition ) ) {
+					$return = false;
+
+					if ( ! $condition['not_operand'] && $this->check_condition( $condition ) ) {
+						$return = true;
+					} elseif ( $condition['not_operand'] && ! $this->check_condition( $condition ) ) {
+						$return = true;
+					}
+
+					$parsed_conditions[ $group_index ][ $index ] = $return;
+				}
+			}
+		}
+
+		return $parsed_conditions;
+	}
 
 	/**
 	 * Check if a given condition is JS based.
