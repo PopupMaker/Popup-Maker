@@ -19,10 +19,26 @@ class PUM_Previews {
 	 */
 	public static function init() {
 		// add_filter( 'template_include', array( __CLASS__, 'template_include' ), 1000, 2 );
+		add_action( 'template_redirect', [ __CLASS__, 'force_load_preview' ] );
 		add_filter( 'pum_popup_is_loadable', array( __CLASS__, 'is_loadable' ), 1000, 2 );
 		add_filter( 'pum_popup_data_attr', array( __CLASS__, 'data_attr' ), 1000, 2 );
 		add_filter( 'pum_popup_get_public_settings', array( __CLASS__, 'get_public_settings' ), 1000, 2 );
 
+	}
+
+	/**
+	 * Force popup to load no matter its status if its supposed to be previewed.
+	 */
+	public static function force_load_preview() {
+		if ( ! isset( $_GET['popup_preview'] ) || ! isset( $_GET['popup'] ) ) {
+			return;
+		}
+
+		$popup = pum_get_popup( absint( $_GET['popup'] ) );
+
+		if ( $popup->is_valid() && $popup->is_preview() ) {
+			PUM_Site_Popups::preload_popup( $popup );
+		}
 	}
 
 	/**
