@@ -1,6 +1,8 @@
 # Popup Maker Changelog
 
 ## Unreleased
+
+## v1.16.8 - 08/27/2022
 * Fix: Error caused by non unicode characters when Debug Mode was enabled.
 
 ## v1.16.7 - 04/05/2022
