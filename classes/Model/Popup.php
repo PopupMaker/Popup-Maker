@@ -944,7 +944,12 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			return false;
 		}
 
-		$condition['settings'] = isset( $condition['settings'] ) && is_array( $condition['settings'] ) ? $condition['settings'] : array();
+		// Bail early with true for conditions that will be processed in JavaScript later.
+		if ( $this->is_js_condition( $condition ) ) {
+			return true;
+		}
+
+		$condition['settings'] = isset( $condition['settings'] ) && is_array( $condition['settings'] ) ? $condition['settings'] : [];
 
 		return (bool) call_user_func( $condition_args['callback'], $condition, $this );
 	}
