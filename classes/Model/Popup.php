@@ -894,7 +894,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			return false;
 		}
 
-		$filters = array( 'php_only' => true );
+		$filters = [];
 
 		if ( $this->has_conditions( $filters ) ) {
 
