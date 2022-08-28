@@ -245,6 +245,25 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		return apply_filters( 'pum_popup_get_public_settings', $settings, $this );
 	}
 
+
+	/**
+	 * Check if a given condition is JS based.
+	 *
+	 * @param array $condition
+	 *
+	 * @return bool
+	 */
+	public function is_js_condition( $condition = [] ) {
+		$condition_args = PUM_Conditions::instance()->get_condition( $condition['target'] );
+
+		if ( ! $condition_args ) {
+			return false;
+		}
+
+		// Bail early with true for conditions that will be processed in JavaScript later.
+		return $condition_args['advanced'] === true;
+	}
+
 	/**
 	 * @return array
 	 */
