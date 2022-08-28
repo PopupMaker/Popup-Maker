@@ -845,6 +845,17 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Check if popup is currently in preview mode.
+	 *
+	 * @return bool
+	 */
+	public function is_preview() {
+		return isset( $_GET['popup_preview'] )
+			&& isset( $_GET['popup'] )
+			&& $this->ID === absint( $_GET['popup'] );
+	}
+
+	/**
 	 * Returns whether or not the popup is visible in the loop.
 	 *
 	 * @return bool
