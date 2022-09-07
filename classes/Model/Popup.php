@@ -949,6 +949,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 				// If any group of conditions doesn't pass, popup is not loadable.
 				if ( ! $group_check ) {
 					$loadable = false;
+					break;
 				}
 
 			}
