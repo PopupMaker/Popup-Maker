@@ -181,8 +181,10 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
-= v1.16.8 - 08/27/2022 =
+= v1.16.8 - 09/12/2022 =
 
+* Fix: Error on widgets screen when using the new `Block` based widget editor due to an old script being loaded.
+* Fix: Previews were not working when popup was in draft status, or when not enabled. Now they always work.
 * Fix: Error caused by non unicode characters when Debug Mode was enabled.
 
 = v1.16.7 - 04/05/2022 =
