@@ -55,6 +55,17 @@
 
 					// At least one group condition must be true. Break this loop if any condition is true.
 					for ( c = 0; group.length > c; c++ ) {
+						// Handle preprocessed PHP conditions.
+						if ( typeof group[ c ] === 'boolean' ) {
+							if ( !! group[ c ] ) {
+
+								group_check = true;
+								break;
+							} else {
+								continue;
+							}
+						}
+
 						condition = $.extend(
 							{},
 							{

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v1.16.8 - 09/12/2022
+
+* Fix: Error on widgets screen when using the new `Block` based widget editor due to an old script being loaded.
+* Fix: Previews were not working when popup was in draft status, or when not enabled. Now they always work.
+* Fix: Error caused by non unicode characters when Debug Mode was enabled.
+
 ## v1.16.7 - 04/05/2022
 
 * Note: Bumped 2 versions as v1.16.6 may not have fully fixed it fully.
@@ -9,7 +15,7 @@
 
 ## v1.16.5 - 04/04/2022
 
-* Improvement: Add precautionary escaping of some generated outputs.
+* Improvement: Add precautionary escaping of some generated outputs. Shout out to [@roelvb79](https://twitter.com/roelvb79) for the report.
 * Improvement: Remove leftover console logging code.
 * Fix: Typo in admin template rendering for cookie editor.
 
