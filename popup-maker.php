@@ -3,7 +3,7 @@
  * Plugin Name:  Popup Maker
  * Plugin URI:   https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&utm_medium=plugin-uri
  * Description:  Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
- * Version:      1.16.7
+ * Version:      1.16.8
  * Author:       Popup Maker
  * Author URI:   https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&utm_medium=author-uri
  * License:      GPL2 or later
@@ -93,7 +93,7 @@ class Popup_Maker {
 	/**
 	 * @var string Plugin Version
 	 */
-	public static $VER = '1.16.7';
+	public static $VER = '1.16.8';
 
 	/**
 	 * @var int DB Version

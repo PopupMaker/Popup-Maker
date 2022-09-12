@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.16.8 - 09/12/2022
+
 * Fix: Error on widgets screen when using the new `Block` based widget editor due to an old script being loaded.
 * Fix: Previews were not working when popup was in draft status, or when not enabled. Now they always work.
 * Fix: Error caused by non unicode characters when Debug Mode was enabled.
