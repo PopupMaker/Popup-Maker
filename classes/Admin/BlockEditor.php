@@ -39,7 +39,10 @@ class PUM_Admin_BlockEditor {
 	 *
 	 * @since 1.10.0
 	 */
-	public static function register_editor_assets() {
+	public static function register_editor_assets( $hook ) {
+
+		$screen = get_current_screen();
+
 		$build_path = 'dist/block-editor/';
 
 		$script_path       = $build_path . 'block-editor.js';
@@ -49,7 +52,14 @@ class PUM_Admin_BlockEditor {
 			'version'      => Popup_Maker::$VER,
 		];
 		$script_url        = plugins_url( $script_path, Popup_Maker::$FILE );
-		wp_enqueue_script( 'popup-maker-block-editor', $script_url, array_merge( $script_asset['dependencies'], [ 'wp-edit-post' ] ), $script_asset['version'] );
+		$script_deps = $script_asset['dependencies'];
+
+		if ( $screen->id !== 'widgets' ) {
+			$script_deps = array_merge( $script_deps, [ 'wp-edit-post' ] );
+		}
+
+
+		wp_enqueue_script( 'popup-maker-block-editor', $script_url, $script_deps, $script_asset['version'] );
 
 		wp_localize_script(
 			'popup-maker-block-editor',
