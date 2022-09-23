@@ -142,9 +142,12 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	 */
 	public function handler( $atts, $content = null ) {
 		$atts    = $this->shortcode_atts( $atts );
-		$return  = '<' . $atts['tag'] . ' class="pum-trigger  popmake-' . $atts['id'] . ' ' . $atts['classes'] . '"  data-do-default="' . esc_attr( $atts['do_default'] ) . '">';
-		$return .= PUM_Helpers::do_shortcode( $content );
-		$return .= '</' . $atts['tag'] . '>';
+
+		$tag = esc_attr( $atts['tag'] );
+
+		$return  = '<' . $tag . ' class="pum-trigger  popmake-' . esc_attr( $atts['id'] ) . ' ' . esc_attr( $atts['classes'] ) . '"  data-do-default="' . esc_attr( $atts['do_default'] ) . '">';
+		$return .= esc_html( PUM_Helpers::do_shortcode( $content ) );
+		$return .= '</' . $tag . '>';
 
 		PUM_Site_Popups::preload_popup_by_id_if_enabled( $atts['id'] );
 
@@ -161,9 +164,11 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	 * @return array
 	 */
 	public function shortcode_atts( $atts ) {
+		global $allowedtags;
+
 		$atts = parent::shortcode_atts( $atts );
 
-		if ( empty( $atts['tag'] ) ) {
+		if ( empty( $atts['tag'] ) || ! in_array( $atts['tag'], array_keys( $allowedtags ) ) ) {
 			$atts['tag'] = 'span';
 		}
 
@@ -176,15 +181,17 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 			unset( $atts['class'] );
 		}
 
-
 		return $atts;
 	}
 
-	/**
-	 *
-	 */
-	public function template() { ?>
-		<{{{attrs.tag}}} class="pum-trigger  popmake-{{{attrs.id}}} {{{attrs.classes}}}">{{{attrs._inner_content}}}</{{{attrs.tag}}}><?php
+	public function template() {
+		global $allowedtags;
+		?>
+		<#
+			const allowedTags = <?php echo json_encode( array_keys( $allowedtags )	 ); ?>;
+			const tag = allowedTags.indexOf( attrs.tag ) >= 0 ? attrs.tag : 'span';
+		#>
+		<{{{tag}}} class="pum-trigger  popmake-{{{attrs.id}}} {{{attrs.classes}}}">{{{attrs._inner_content}}}</{{{tag}}}><?php
 	}
 
 }

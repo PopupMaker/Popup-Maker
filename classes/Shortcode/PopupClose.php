@@ -112,9 +112,11 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 	 * @return array
 	 */
 	public function shortcode_atts( $atts ) {
+		global $allowedtags;
+
 		$atts = parent::shortcode_atts( $atts );
 
-		if ( empty( $atts['tag'] ) ) {
+		if ( empty( $atts['tag'] ) || ! in_array( $atts['tag'], array_keys( $allowedtags ) ) ) {
 			$atts['tag'] = 'span';
 		}
 
@@ -141,22 +143,32 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 	public function handler( $atts, $content = null ) {
 		$atts = $this->shortcode_atts( $atts );
 
-		$do_default = $atts['do_default'] ? " data-do-default='" . esc_attr( $atts['do_default'] ) . "'" : '';
+		$tag = esc_attr( $atts['tag'] );
+
+		$do_default = $atts['do_default'] ? " data-do-default='true'" : '';
 
 		// Sets up our href and target, if the tag is an `a`.
-		$href   = 'a' === $atts['tag'] ? "href='{$atts['href']}'" : '';
-		$target = 'a' === $atts['tag'] && ! empty( $atts['target'] ) ? "target='{$atts['target']}'" : '';
+		$href   = 'a' === $atts['tag'] ? "href='{" . esc_attr( $atts['href'] ) . "}'" : '';
+		$target = 'a' === $atts['tag'] && ! empty( $atts['target'] ) ? "target='" . esc_attr( $atts['target'] ) . "'" : '';
 
-		$return = "<{$atts['tag']} $href $target class='pum-close popmake-close {$atts['classes']}' {$do_default}>";
-		$return .= PUM_Helpers::do_shortcode( $content );
-		$return .= "</{$atts['tag']}>";
+		$return = "<{$tag} $href $target class='pum-close popmake-close " . esc_attr( $atts['classes'] ) . "' {$do_default}>";
+		$return .= esc_html( PUM_Helpers::do_shortcode( $content ) );
+		$return .= "</{$tag}>";
 
 		return $return;
 	}
 
-	public function template() { ?>
-		<{{{attrs.tag}}} class="pum-close  popmake-close <# if (typeof attrs.classes !== 'undefined') print(attrs.classes); #>">{{{attrs._inner_content}}}</{{{attrs.tag}}}><?php
+	/**
+	 * NOTE: Data comes here already filtered through shortcode_atts above.
+	 */
+	public function template() {
+		global $allowedtags;
+		?>
+		<#
+			const allowedTags = <?php echo json_encode( array_keys( $allowedtags ) ); ?>;
+			const tag = allowedTags.indexOf( attrs.tag ) >= 0 ? attrs.tag : 'span';
+		#>
+		<{{{tag}}} class="pum-close  popmake-close <# if (typeof attrs.classes !== 'undefined') print(attrs.classes); #>">{{{attrs._inner_content}}}</{{{tag}}}><?php
 	}
 
 }
-
