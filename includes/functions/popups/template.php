@@ -22,7 +22,7 @@ function pum_popup_ID( $popup_id = null ) {
  * @param null|int $popup_id Popup ID.
  */
 function pum_popup_title( $popup_id = null ) {
-	echo pum_get_popup_title( $popup_id );
+	echo esc_html( pum_get_popup_title( $popup_id ) );
 }
 
 /**

@@ -36,8 +36,6 @@ function pum_get_popup_title( $popup_id = null ) {
 		return "";
 	}
 
-	$title = $popup->get_title();
-
 	return $popup->get_title();
 }
 
