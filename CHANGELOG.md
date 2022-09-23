@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Security: Patched an XSS vulnerability allowing contributors to run scripts.
+
 ## v1.16.8 - 09/12/2022
 
 * Fix: Error on widgets screen when using the new `Block` based widget editor due to an old script being loaded.
