@@ -1,8 +1,8 @@
 # Popup Maker Changelog
 
-## Unreleased
+## v1.16.9 - 09/23/2022
 
-* Security: Patched an XSS vulnerability allowing contributors to run scripts.
+* Security: Patched XSS vulnerability allowing contributors to run unfiltered JavaScript.
 
 ## v1.16.8 - 09/12/2022
 
