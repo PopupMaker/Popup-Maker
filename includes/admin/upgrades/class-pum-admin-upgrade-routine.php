@@ -42,7 +42,7 @@ class PUM_Admin_Upgrade_Routine {
 	 * @param string $redirect
 	 */
 	public static function redirect( $redirect = '' ) {
-		wp_redirect( $redirect );
+		wp_safe_redirect( $redirect );
 		exit;
 	}
 

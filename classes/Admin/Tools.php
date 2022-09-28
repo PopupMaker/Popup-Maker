@@ -277,7 +277,7 @@ class PUM_Admin_Tools {
 			return;
 		}
 		popmake_emodal_v2_import();
-		wp_redirect( admin_url( 'edit.php?post_type=popup&page=pum-tools&imported=1' ), 302 );
+		wp_safe_redirect( admin_url( 'edit.php?post_type=popup&page=pum-tools&imported=1' ), 302 );
 	}
 
 	/**
