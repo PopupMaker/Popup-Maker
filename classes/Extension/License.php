@@ -440,7 +440,7 @@ class PUM_Extension_License {
 			foreach ( $messages as $message ) {
 
 				echo '<div class="error">';
-				echo '<p>' . $message . '</p>';
+				echo '<p>' . esc_html( $message ) . '</p>';
 				echo '</div>';
 
 			}

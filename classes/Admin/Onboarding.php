@@ -363,7 +363,7 @@ class PUM_Admin_Onboarding {
 		// Redirect idea from Better Click To Tweet's welcome screen. Thanks Ben!
 		if ( get_transient( 'pum_activation_redirect' ) ) {
 			$do_redirect  = true;
-			$current_page = isset( $_GET['page'] ) ? wp_unslash( $_GET['page'] ) : false;
+			$current_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : false;
 			// Bailout redirect during these events.
 			if ( wp_doing_ajax() || is_network_admin() || ! current_user_can( 'manage_options' ) ) {
 				$do_redirect = false;

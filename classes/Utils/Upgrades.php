@@ -574,7 +574,7 @@ class PUM_Utils_Upgrades {
 		// Handle pre-fetching data.
 		if ( $using_prefetch ) {
 			// Initialize any data needed to process a step.
-			$data = isset( $_REQUEST['form'] ) ? $_REQUEST['form'] : array();
+			$data = isset( $_REQUEST['form'] ) ? sanitize_key( $_REQUEST['form'] ) : array();
 
 			$upgrade->init( $data );
 			$upgrade->pre_fetch();

@@ -7,25 +7,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Abstract database class.
+ *
+ * @package PopupMaker
+ */
 abstract class PUM_Abstract_Database {
 
 	/**
+	 * Instance of the class.
+	 *
 	 * @var static
 	 */
 	public static $instance;
 
 	/**
-	 * The name of our database table
+	 * The name of our database table.
+	 *
+	 * @var string
 	 */
 	public $table_name = '';
 
 	/**
-	 * The version of our database table
+	 * The version of our database table.
+	 *
+	 * @var integer
 	 */
 	public $version = 1;
 
 	/**
-	 * The name of the primary column
+	 * The name of the primary column.
+	 *
+	 * @var string
 	 */
 	public $primary_key = 'ID';
 
