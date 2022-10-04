@@ -1,5 +1,10 @@
 # Popup Maker Changelog
 
+## Unreleased
+
+* Improvement: Standardizing coding standards, convert to short arrays.
+* Fix: Bug caused by security patch in v1.16.9 which caused shortcodes to render content strangely.
+
 ## v1.16.9 - 09/23/2022
 
 * Security: Patched XSS vulnerability allowing contributors to run unfiltered JavaScript.
