@@ -375,7 +375,8 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 
 	public function template() { ?>
 		<p class="pum-sub-form-desc">
-			<?php _e( 'Popup', 'popup-maker' ); ?>: ID "{{attrs.id}}" </p>
+			<?php esc_html_e( 'Popup', 'popup-maker' ); ?>: ID "{{attrs.id}}"
+		</p>
 		<?php
 	}
 
