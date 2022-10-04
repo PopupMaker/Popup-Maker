@@ -15,7 +15,7 @@ class PUM_Integrations {
 	/**
 	 * @var PUM_Abstract_Integration[]|PUM_Abstract_Integration_Form[]
 	 */
-	public static $integrations = array();
+	public static $integrations = [];
 
 	/**
 	 * @var bool
@@ -49,18 +49,18 @@ class PUM_Integrations {
 
 		self::$preload_posts = isset( $_GET['page'] ) && $_GET['page'] == 'pum-settings';
 
-		add_filter( 'pum_settings_fields', array( __CLASS__, 'settings_fields' ) );
-		add_action( 'pum_preload_popup', array( __CLASS__, 'enqueue_assets' ) );
-		add_filter( 'pum_registered_conditions', array( __CLASS__, 'register_conditions' ) );
+		add_filter( 'pum_settings_fields', [ __CLASS__, 'settings_fields' ] );
+		add_action( 'pum_preload_popup', [ __CLASS__, 'enqueue_assets' ] );
+		add_filter( 'pum_registered_conditions', [ __CLASS__, 'register_conditions' ] );
 
-		add_filter( 'pum_vars', array( __CLASS__, 'pum_vars' ) );
+		add_filter( 'pum_vars', [ __CLASS__, 'pum_vars' ] );
 
-		add_action( 'init', array( __CLASS__, 'wp_init_late' ), 99 );
-		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
-		add_filter( 'pum_popup_post_type_args', array( __CLASS__, 'popup_post_type_args' ) );
-		add_filter( 'pum_generated_js', array( __CLASS__, 'generated_js' ) );
-		add_filter( 'pum_generated_css', array( __CLASS__, 'generated_css' ) );
-		add_filter( 'pum_popup_settings', array( __CLASS__, 'popup_settings' ), 10, 2 );
+		add_action( 'init', [ __CLASS__, 'wp_init_late' ], 99 );
+		add_action( 'admin_init', [ __CLASS__, 'admin_init' ] );
+		add_filter( 'pum_popup_post_type_args', [ __CLASS__, 'popup_post_type_args' ] );
+		add_filter( 'pum_generated_js', [ __CLASS__, 'generated_js' ] );
+		add_filter( 'pum_generated_css', [ __CLASS__, 'generated_css' ] );
+		add_filter( 'pum_popup_settings', [ __CLASS__, 'popup_settings' ], 10, 2 );
 
 		PUM_Integration_GoogleFonts::init();
 	}
@@ -170,7 +170,7 @@ class PUM_Integrations {
 	 *
 	 * @return array
 	 */
-	public static function settings_fields( $fields = array() ) {
+	public static function settings_fields( $fields = [] ) {
 
 		foreach ( self::$integrations as $key => $integration ) {
 			if ( ! ( $integration instanceof PUM_Interface_Integration_Settings ) || ! $integration->enabled() ) {
@@ -196,10 +196,9 @@ class PUM_Integrations {
 		}
 
 		// Do stuff here.
-
 	}
 
-	public static function register_conditions( $conditions = array() ) {
+	public static function register_conditions( $conditions = [] ) {
 
 		foreach ( self::$integrations as $key => $enabled ) {
 			if ( ! $enabled ) {
@@ -207,7 +206,6 @@ class PUM_Integrations {
 			}
 
 			switch ( $key ) {
-
 
 			}
 		}
@@ -233,10 +231,13 @@ class PUM_Integrations {
 	 * Runs during admin_init
 	 */
 	public static function admin_init() {
-		if ( ! self::enabled( 'visualcomposer' ) && ( is_admin() && isset( $_GET['page'] ) && in_array( $_GET['page'], array(
-					'vc_settings',
-					'fl-builder-settings',
-				) ) ) || pum_is_popup_editor() ) {
+		if ( ! self::enabled( 'visualcomposer' ) && ( is_admin() && isset( $_GET['page'] ) && in_array(
+			$_GET['page'],
+			[
+				'vc_settings',
+				'fl-builder-settings',
+			]
+		) ) || pum_is_popup_editor() ) {
 			add_filter( 'vc_role_access_with_post_types_get_state', '__return_true' );
 			add_filter( 'vc_role_access_with_backend_editor_get_state', '__return_true' );
 			add_filter( 'vc_role_access_with_frontend_editor_get_state', '__return_false' );
@@ -244,27 +245,36 @@ class PUM_Integrations {
 		}
 	}
 
-	public static function popup_post_type_args( $args = array() ) {
+	public static function popup_post_type_args( $args = [] ) {
 
 		if ( self::enabled( 'kingcomposer' ) && ( ( is_admin() && isset( $_GET['page'] ) && $_GET['page'] == 'kingcomposer' ) || pum_is_popup_editor() ) ) {
-			$args = array_merge( $args, array(
-				'public'              => true,
-				'exclude_from_search' => true,
-				'publicly_queryable'  => false,
-				'show_in_nav_menus'   => false,
-			) );
+			$args = array_merge(
+				$args,
+				[
+					'public'              => true,
+					'exclude_from_search' => true,
+					'publicly_queryable'  => false,
+					'show_in_nav_menus'   => false,
+				]
+			);
 		}
 
-		if ( self::enabled( 'visualcomposer' ) && ( is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) && ( ( isset( $_GET['page'] ) && in_array( $_GET['page'], array(
-							'vc_settings',
-							'fl-builder-settings',
-						) ) ) || ( isset( $_POST['option_page'] ) && $_POST['option_page'] == 'wpb_js_composer_settings_general' ) || pum_is_popup_editor() ) ) ) {
-			$args = array_merge( $args, array(
-				'public'              => true,
-				'exclude_from_search' => true,
-				'publicly_queryable'  => false, // Was true, verify this isn't a problem.
-				'show_in_nav_menus'   => false,
-			) );
+		if ( self::enabled( 'visualcomposer' ) && ( is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) && ( ( isset( $_GET['page'] ) && in_array(
+			$_GET['page'],
+			[
+				'vc_settings',
+				'fl-builder-settings',
+			]
+		) ) || ( isset( $_POST['option_page'] ) && $_POST['option_page'] == 'wpb_js_composer_settings_general' ) || pum_is_popup_editor() ) ) ) {
+			$args = array_merge(
+				$args,
+				[
+					'public'              => true,
+					'exclude_from_search' => true,
+					'publicly_queryable'  => false, // Was true, verify this isn't a problem.
+					'show_in_nav_menus'   => false,
+				]
+			);
 		}
 
 		return $args;
@@ -292,7 +302,7 @@ class PUM_Integrations {
 	 *
 	 * @return array $css
 	 */
-	public static function generated_css( $css = array() ) {
+	public static function generated_css( $css = [] ) {
 
 		foreach ( self::$integrations as $integration ) {
 			if ( $integration->enabled() && method_exists( $integration, 'custom_styles' ) ) {
@@ -307,7 +317,7 @@ class PUM_Integrations {
 	 * Modify popup settings.
 	 *
 	 * @param array $settings
-	 * @param int $popup_id
+	 * @param int   $popup_id
 	 *
 	 * @return array
 	 */
@@ -340,7 +350,7 @@ class PUM_Integrations {
 		 * If submission exists for this popup remove auto open triggers and add an admin_debug trigger to reshow the popup.
 		 */
 		if ( ! in_array( false, $should_reopen ) ) {
-			$triggers = ! empty( $settings['triggers'] ) ? $settings['triggers'] : array();
+			$triggers = ! empty( $settings['triggers'] ) ? $settings['triggers'] : [];
 
 			foreach ( $triggers as $key => $trigger ) {
 				if ( $trigger['type'] == 'auto_open' ) {
@@ -348,9 +358,9 @@ class PUM_Integrations {
 				}
 			}
 
-			$settings['triggers'][] = array(
+			$settings['triggers'][] = [
 				'type' => 'admin_debug',
-			);
+			];
 		}
 
 		return $settings;
@@ -366,27 +376,33 @@ class PUM_Integrations {
 	 *
 	 * @return array
 	 */
-	public static function pum_vars( $vars = array() ) {
+	public static function pum_vars( $vars = [] ) {
 
 		/**
 		 * If a form was submitted via non-ajax methods this checks if a successful submission was reported.
 		 */
 		if ( isset( self::$form_success ) && ! empty( self::$form_success['popup_id'] ) ) {
-			self::$form_success['settings'] = wp_parse_args( self::$form_success['settings'], array(
-				'openpopup'        => false,
-				'openpopup_id'     => 0,
-				'closepopup'       => false,
-				'closedelay'       => 0,
-				'redirect_enabled' => false,
-				'redirect'         => '',
-				'cookie'           => false,
-			) );
+			self::$form_success['settings'] = wp_parse_args(
+				self::$form_success['settings'],
+				[
+					'openpopup'        => false,
+					'openpopup_id'     => 0,
+					'closepopup'       => false,
+					'closedelay'       => 0,
+					'redirect_enabled' => false,
+					'redirect'         => '',
+					'cookie'           => false,
+				]
+			);
 
 			if ( is_array( self::$form_success['settings']['cookie'] ) ) {
-				self::$form_success['settings']['cookie'] = wp_parse_args( self::$form_success['settings']['cookie'], array(
-					'name'    => 'pum-' . self::$form_success['popup_id'],
-					'expires' => '+1 year',
-				) );
+				self::$form_success['settings']['cookie'] = wp_parse_args(
+					self::$form_success['settings']['cookie'],
+					[
+						'name'    => 'pum-' . self::$form_success['popup_id'],
+						'expires' => '+1 year',
+					]
+				);
 			}
 
 			$vars['form_success'] = self::$form_success;
@@ -394,12 +410,15 @@ class PUM_Integrations {
 
 		if ( ! empty( self::$form_submission ) ) {
 			// Remap values from PHP underscore_case to JS camelCase
-			$vars['form_submission'] = PUM_Utils_Array::remap_keys( self::$form_submission, [
-				'form_provider'    => 'formProvider',
-				'form_id'          => 'formId',
-				'form_instance_id' => 'formInstanceId',
-				'popup_id'         => 'popupId',
-			] );
+			$vars['form_submission'] = PUM_Utils_Array::remap_keys(
+				self::$form_submission,
+				[
+					'form_provider'    => 'formProvider',
+					'form_id'          => 'formId',
+					'form_instance_id' => 'formInstanceId',
+					'popup_id'         => 'popupId',
+				]
+			);
 		}
 
 		return $vars;
@@ -411,7 +430,7 @@ class PUM_Integrations {
 	 * @return array
 	 */
 	public static function get_integrated_forms_selectlist() {
-		$enabled_form_integrations = PUM_Integrations::get_enabled_form_integrations();
+		$enabled_form_integrations = self::get_enabled_form_integrations();
 
 		$options = [];
 

@@ -31,25 +31,25 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 	}
 
 	public function inner_content_labels() {
-		return array(
+		return [
 			'label'       => __( 'Content', 'popup-maker' ),
 			'description' => __( 'Can contain other shortcodes, images, text or html content.' ),
-		);
+		];
 	}
 
 	public function post_types() {
-		return array( 'popup' );
+		return [ 'popup' ];
 	}
 
 	public function fields() {
-		return array(
-			'general' => array(
-				'main' => array(
-					'tag'        => array(
-						'label'       => __( 'HTML Tag', 'popup-maker' ),
-						'desc'        => __( 'The HTML tag used for this element.', 'popup-maker' ),
-						'type'         => 'select',
-						'options'      => array(
+		return [
+			'general' => [
+				'main' => [
+					'tag'    => [
+						'label'    => __( 'HTML Tag', 'popup-maker' ),
+						'desc'     => __( 'The HTML tag used for this element.', 'popup-maker' ),
+						'type'     => 'select',
+						'options'  => [
 							'a'      => 'a',
 							'button' => 'button',
 							'div'    => 'div',
@@ -57,49 +57,49 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 							'li'     => 'li',
 							'p'      => 'p',
 							'span'   => 'span',
-						),
-						'std'         => 'span',
-						'required'    => true,
-					),
-					'href'   => array(
+						],
+						'std'      => 'span',
+						'required' => true,
+					],
+					'href'   => [
 						'label'        => __( 'Value for href', 'popup-maker' ),
 						'placeholder'  => '#',
 						'desc'         => __( 'Enter the href value for your link. Leave blank if you do not want this link to take the visitor to a different page.', 'popup-maker' ),
 						'type'         => 'text',
 						'std'          => '',
-						'dependencies' => array(
-							'tag' => array( 'a' ),
-						),
-					),
-					'target'   => array(
+						'dependencies' => [
+							'tag' => [ 'a' ],
+						],
+					],
+					'target' => [
 						'label'        => __( 'Target for the element', 'popup-maker' ),
 						'placeholder'  => '',
 						'desc'         => __( 'Enter the target value for your link. Can be left blank.', 'popup-maker' ),
 						'type'         => 'text',
 						'std'          => '',
-						'dependencies' => array(
-							'tag' => array( 'a' ),
-						),
-					),
-				),
-			),
-			'options' => array(
-				'main' => array(
-					'classes'    => array(
+						'dependencies' => [
+							'tag' => [ 'a' ],
+						],
+					],
+				],
+			],
+			'options' => [
+				'main' => [
+					'classes'    => [
 						'label'       => __( 'CSS Class', 'popup-maker' ),
 						'placeholder' => 'my-custom-class',
 						'type'        => 'text',
 						'desc'        => __( 'Add additional classes for styling.', 'popup-maker' ),
 						'std'         => '',
-					),
-					'do_default' => array(
-						'type'     => 'checkbox',
-						'label'    => __( 'Do not prevent the default click functionality.', 'popup-maker' ),
-						'desc'     => __( 'This prevents us from disabling the browsers default action when a close button is clicked. It can be used to allow a link to a file to both close a popup and still download the file.', 'popup-maker' ),
-					),
-				),
-			),
-		);
+					],
+					'do_default' => [
+						'type'  => 'checkbox',
+						'label' => __( 'Do not prevent the default click functionality.', 'popup-maker' ),
+						'desc'  => __( 'This prevents us from disabling the browsers default action when a close button is clicked. It can be used to allow a link to a file to both close a popup and still download the file.', 'popup-maker' ),
+					],
+				],
+			],
+		];
 	}
 
 	/**
@@ -167,7 +167,7 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 			const allowedTags = <?php echo json_encode( array_keys( $allowedtags ) ); ?>;
 			const tag = allowedTags.indexOf( attrs.tag ) >= 0 ? attrs.tag : 'span';
 		#>
-		<{{{tag}}} class="pum - close  popmake - close < // if (typeof attrs.classes !== 'undefined') print(attrs.classes); #>">{{{attrs._inner_content}}}</{{{tag}}}>
+		<{{{tag}}} class="pum-close  popmake-close <# if (typeof attrs.classes !== 'undefined') print(attrs.classes); #>">{{{attrs._inner_content}}}</{{{tag}}}>
 		<?php
 	}
 

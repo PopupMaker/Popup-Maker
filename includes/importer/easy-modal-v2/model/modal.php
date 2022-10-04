@@ -9,7 +9,7 @@ class EModal_Model_Modal extends EModal_Model {
 	protected $_class_name = 'EModal_Model_Modal';
 	protected $_table_name = 'em_modals';
 	protected $meta;
-	protected $_default_fields = array(
+	protected $_default_fields = [
 		'id'          => null,
 		'theme_id'    => 1,
 		'name'        => '',
@@ -19,8 +19,8 @@ class EModal_Model_Modal extends EModal_Model {
 		'modified'    => '0000-00-00 00:00:00',
 		'is_sitewide' => 0,
 		'is_system'   => 0,
-		'is_trash'    => 0
-	);
+		'is_trash'    => 0,
+	];
 
 	public function __construct( $id = null ) {
 		parent::__construct( $id );
@@ -70,19 +70,19 @@ class EModal_Model_Modal extends EModal_Model {
 	}
 }
 
-if ( ! function_exists( "get_all_modals" ) ) {
-	function get_all_modals( $where = "is_trash != 1" ) {
+if ( ! function_exists( 'get_all_modals' ) ) {
+	function get_all_modals( $where = 'is_trash != 1' ) {
 		global $wpdb;
-		$modals                  = array();
-		$modal_ids               = array();
-		$EModal_Model_Modal      = new EModal_Model_Modal;
-		$EModal_Model_Modal_Meta = new EModal_Model_Modal_Meta;
-		foreach ( $EModal_Model_Modal->load( "SELECT * FROM {$wpdb->prefix}em_modals" . ( $where ? " WHERE " . $where : '' ) ) as $modal ) {
+		$modals                  = [];
+		$modal_ids               = [];
+		$EModal_Model_Modal      = new EModal_Model_Modal();
+		$EModal_Model_Modal_Meta = new EModal_Model_Modal_Meta();
+		foreach ( $EModal_Model_Modal->load( "SELECT * FROM {$wpdb->prefix}em_modals" . ( $where ? ' WHERE ' . $where : '' ) ) as $modal ) {
 			$modals[ $modal->id ] = $modal;
 			$modal_ids[]          = $modal->id;
 		}
 		if ( count( $modals ) ) {
-			foreach ( $EModal_Model_Modal_Meta->load( "SELECT * FROM {$wpdb->prefix}em_modal_metas WHERE modal_id IN (" . implode( ',', $modal_ids ) . ")" ) as $meta ) {
+			foreach ( $EModal_Model_Modal_Meta->load( "SELECT * FROM {$wpdb->prefix}em_modal_metas WHERE modal_id IN (" . implode( ',', $modal_ids ) . ')' ) as $meta ) {
 				$modals[ $meta->modal_id ]->meta->process_load( $meta->as_array() );
 			}
 		}
@@ -91,7 +91,7 @@ if ( ! function_exists( "get_all_modals" ) ) {
 	}
 }
 
-if ( ! function_exists( "get_current_modal" ) ) {
+if ( ! function_exists( 'get_current_modal' ) ) {
 	function get_current_modal( $key = null ) {
 		global $current_modal;
 		if ( ! $key ) {
@@ -104,7 +104,7 @@ if ( ! function_exists( "get_current_modal" ) ) {
 	}
 }
 
-if ( ! function_exists( "get_current_modal_id" ) ) {
+if ( ! function_exists( 'get_current_modal_id' ) ) {
 	function get_current_modal_id() {
 		global $current_modal;
 
@@ -112,7 +112,7 @@ if ( ! function_exists( "get_current_modal_id" ) ) {
 	}
 }
 
-if ( ! function_exists( "count_all_modals" ) ) {
+if ( ! function_exists( 'count_all_modals' ) ) {
 	function count_all_modals() {
 		global $wpdb;
 
@@ -120,7 +120,7 @@ if ( ! function_exists( "count_all_modals" ) ) {
 	}
 }
 
-if ( ! function_exists( "count_deleted_modals" ) ) {
+if ( ! function_exists( 'count_deleted_modals' ) ) {
 	function count_deleted_modals() {
 		global $wpdb;
 

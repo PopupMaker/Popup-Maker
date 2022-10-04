@@ -35,7 +35,7 @@ interface PUM_Interface_Repository {
 	 *
 	 * @return WP_Post[||PUM_Abstract_Model_Post[]
 	 */
-	public function get_items( $args = array() );
+	public function get_items( $args = [] );
 
 	/**
 	 * @param array $data

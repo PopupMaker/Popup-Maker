@@ -18,7 +18,7 @@ class PUM_Integration_Form_ContactForm7 extends PUM_Abstract_Integration_Form {
 	 * Could be used for other initiations as well where needed.
 	 */
 	public function __construct() {
-		add_action( 'wpcf7_mail_sent', array( $this, 'on_success' ), 1 );
+		add_action( 'wpcf7_mail_sent', [ $this, 'on_success' ], 1 );
 	}
 
 	/**
@@ -45,10 +45,12 @@ class PUM_Integration_Form_ContactForm7 extends PUM_Abstract_Integration_Form {
 	 * @return array
 	 */
 	public function get_forms() {
-		return get_posts( [
-			'post_type'      => 'wpcf7_contact_form',
-			'posts_per_page' => - 1,
-		] );
+		return get_posts(
+			[
+				'post_type'      => 'wpcf7_contact_form',
+				'posts_per_page' => - 1,
+			]
+		);
 	}
 
 	/**
@@ -94,11 +96,13 @@ class PUM_Integration_Form_ContactForm7 extends PUM_Abstract_Integration_Form {
 		$popup_id = self::get_popup_id();
 		self::increase_conversion( $popup_id );
 
-		pum_integrated_form_submission( [
-			'popup_id'      => $popup_id,
-			'form_provider' => $this->key,
-			'form_id'       => $cfdata->id(),
-		] );
+		pum_integrated_form_submission(
+			[
+				'popup_id'      => $popup_id,
+				'form_provider' => $this->key,
+				'form_id'       => $cfdata->id(),
+			]
+		);
 	}
 
 	/**

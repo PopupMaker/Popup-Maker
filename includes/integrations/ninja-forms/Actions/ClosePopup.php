@@ -15,7 +15,7 @@ final class NF_PUM_Actions_ClosePopup extends NF_Abstracts_Action {
 	/**
 	 * @var array
 	 */
-	protected $_tags = array();
+	protected $_tags = [];
 
 	/**
 	 * @var string
@@ -35,8 +35,8 @@ final class NF_PUM_Actions_ClosePopup extends NF_Abstracts_Action {
 
 		$this->_nicename = __( 'Close Popup', 'popup-maker' );
 
-		$settings = array(
-			'close_delay' => array(
+		$settings = [
+			'close_delay' => [
 				'name'        => 'close_delay',
 				'type'        => 'number',
 				'group'       => 'primary',
@@ -44,8 +44,8 @@ final class NF_PUM_Actions_ClosePopup extends NF_Abstracts_Action {
 				'placeholder' => '',
 				'width'       => 'full',
 				'value'       => __( '0', 'popup-maker' ),
-			),
-		);
+			],
+		];
 
 		$this->_settings = array_merge( $this->_settings, $settings );
 	}

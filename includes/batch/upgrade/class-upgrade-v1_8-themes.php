@@ -29,21 +29,21 @@ class PUM_Upgrade_v1_8_Themes extends PUM_Abstract_Upgrade_Themes {
 	 * @return array
 	 */
 	public function custom_query_args() {
-		return array(
-			'meta_query' => array(
+		return [
+			'meta_query' => [
 				'relation' => 'OR',
-				array(
+				[
 					'key'     => 'popup_theme_data_version',
 					'compare' => 'NOT EXISTS',
 					'value'   => 'deprecated', // Here for WP 3.9 or less.
-				),
-				array(
+				],
+				[
 					'key'     => 'popup_theme_data_version',
 					'compare' => '<',
 					'value'   => 3,
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 
 	/**

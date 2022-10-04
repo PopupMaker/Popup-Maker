@@ -230,10 +230,14 @@ class PUM_Utils_Prerequisites {
 	 */
 	private function get_plugin_data( $slug, $header = null ) {
 		if ( ! isset( static::$cache['get_plugin_data'][ $slug ] ) ) {
-			$headers = \get_file_data( WP_PLUGIN_DIR . '/' . $slug, [
-				'Name'    => 'Plugin Name',
-				'Version' => 'Version',
-			], 'plugin' );
+			$headers = \get_file_data(
+				WP_PLUGIN_DIR . '/' . $slug,
+				[
+					'Name'    => 'Plugin Name',
+					'Version' => 'Version',
+				],
+				'plugin'
+			);
 
 			static::$cache['get_plugin_data'][ $slug ] = $headers;
 		}

@@ -22,7 +22,7 @@ class PUM_Admin_Templates {
 		if ( did_action( 'admin_footer' ) || doing_action( 'admin_footer' ) ) {
 			self::render();
 		} else {
-			add_action( 'admin_footer', array( __CLASS__, 'render' ) );
+			add_action( 'admin_footer', [ __CLASS__, 'render' ] );
 		}
 	}
 
@@ -278,7 +278,7 @@ class PUM_Admin_Templates {
 
 		<script type="text/html" id="tmpl-pum-field-wrapper">
 			<div class="pum-field pum-field-{{data.type}} {{data.id}}-wrapper {{data.classes}}"
-			      data-id="{{data.id}}" <# print( data.dependencies !== '' ? "data-pum-dependencies='" + data.dependencies + "'" : ''); #> <# print( data.dynamic_desc !== '' ? "data-pum-dynamic-desc='" + data.dynamic_desc + "'" : ''); #>>
+				  data-id="{{data.id}}" <# print( data.dependencies !== '' ? "data-pum-dependencies='" + data.dependencies + "'" : ''); #> <# print( data.dynamic_desc !== '' ? "data-pum-dynamic-desc='" + data.dynamic_desc + "'" : ''); #>>
 			<# if (typeof data.label === 'string' && data.label.length > 0) { #>
 			<label for="{{data.id}}">
 				{{{data.label}}}
@@ -432,8 +432,8 @@ class PUM_Admin_Templates {
 
 				<!--				<div class="no-triggers  no-list-items">-->
 				<!--					<div class="pum-field pum-field-select pum-field-select2">-->
-				<!--						<label for="pum-first-trigger">--><?php //_e( 'Choose a type of trigger to get started.', 'popup-maker' ); ?><!--</label>-->
-				<!--						<# print(PUM_Admin.triggers.template.selectbox({id: 'pum-first-trigger', name: "", placeholder: "--><?php //_e( 'Select a trigger type.', 'popup-maker' ); ?><!--"})); #>-->
+				<!--						<label for="pum-first-trigger">--><?php // _e( 'Choose a type of trigger to get started.', 'popup-maker' ); ?><!--</label>-->
+				<!--						<# print(PUM_Admin.triggers.template.selectbox({id: 'pum-first-trigger', name: "", placeholder: "--><?php // _e( 'Select a trigger type.', 'popup-maker' ); ?><!--"})); #>-->
 				<!--					</div>-->
 				<!--				</div>-->
 			</div>
@@ -458,12 +458,15 @@ class PUM_Admin_Templates {
 		</script>
 
 		<?php
-		$presets = apply_filters( 'pum_click_selector_presets', array(
-			'a[href="exact_url"]'    => __( 'Link: Exact Match', 'popup-maker' ),
-			'a[href*="contains"]'    => __( 'Link: Containing', 'popup-maker' ),
-			'a[href^="begins_with"]' => __( 'Link: Begins With', 'popup-maker' ),
-			'a[href$="ends_with"]'   => __( 'Link: Ends With', 'popup-maker' ),
-		) );
+		$presets = apply_filters(
+			'pum_click_selector_presets',
+			[
+				'a[href="exact_url"]'    => __( 'Link: Exact Match', 'popup-maker' ),
+				'a[href*="contains"]'    => __( 'Link: Containing', 'popup-maker' ),
+				'a[href^="begins_with"]' => __( 'Link: Begins With', 'popup-maker' ),
+				'a[href$="ends_with"]'   => __( 'Link: Ends With', 'popup-maker' ),
+			]
+		);
 		?>
 
 		<script type="text/html" id="tmpl-pum-click-selector-presets">
@@ -481,41 +484,47 @@ class PUM_Admin_Templates {
 
 		<script type="text/html" id="tmpl-pum-trigger-add-type">
 			<#
-			var form_args = <?php echo PUM_Utils_Array::safe_json_encode( array(
-				'id'     => 'pum-add-trigger',
-				'fields' => array(
-					'popup_trigger_add_type'         => array(
-						'id'      => 'popup_trigger_add_type',
-						'name'    => "",
-						'label'   => __( 'What kind of trigger do you want?', 'popup-maker' ),
-						'type'    => 'select',
-						'options' => PUM_Triggers::instance()->dropdown_list(),
-					),
-					'popup_trigger_add_cookie'       => array(
-						'id'    => 'popup_trigger_add_cookie',
-						'name'  => "",
-						'type'  => 'checkbox',
-						'std'   => true,
-						'label' => __( 'Prevent popup from showing to visitor again using a cookie?', 'popup-maker' ),
-						'meta'  => array('checked' => 'checked')
-					),
-					'popup_trigger_add_cookie_event' => array(
-						'id'           => 'popup_trigger_add_cookie_event',
-						'name'         => "",
-						'type'         => 'select',
-						'label'        => __( 'Stop showing popup once visitor takes this action:', 'popup-maker' ),
-						'options'      => PUM_Cookies::instance()->dropdown_list(),
-						'dependencies' => array(
-							'popup_trigger_add_cookie' => true,
-						),
-					),
-					'popup_trigger_add_cookie_info' => array(
-						'id'      => 'popup_trigger_add_cookie_info',
-						'type'    => 'html',
-						'content' => '<p>Learn more about <a href="https://docs.wppopupmaker.com/article/358-popup-settings-box-cookies-option-settings?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=new-trigger-cookie-info">how Popup Maker cookies work</a>.</p>'
-					),
-				),
-			) ); ?>,
+			var form_args = 
+			<?php
+			echo PUM_Utils_Array::safe_json_encode(
+				[
+					'id'     => 'pum-add-trigger',
+					'fields' => [
+						'popup_trigger_add_type'         => [
+							'id'      => 'popup_trigger_add_type',
+							'name'    => '',
+							'label'   => __( 'What kind of trigger do you want?', 'popup-maker' ),
+							'type'    => 'select',
+							'options' => PUM_Triggers::instance()->dropdown_list(),
+						],
+						'popup_trigger_add_cookie'       => [
+							'id'    => 'popup_trigger_add_cookie',
+							'name'  => '',
+							'type'  => 'checkbox',
+							'std'   => true,
+							'label' => __( 'Prevent popup from showing to visitor again using a cookie?', 'popup-maker' ),
+							'meta'  => [ 'checked' => 'checked' ],
+						],
+						'popup_trigger_add_cookie_event' => [
+							'id'           => 'popup_trigger_add_cookie_event',
+							'name'         => '',
+							'type'         => 'select',
+							'label'        => __( 'Stop showing popup once visitor takes this action:', 'popup-maker' ),
+							'options'      => PUM_Cookies::instance()->dropdown_list(),
+							'dependencies' => [
+								'popup_trigger_add_cookie' => true,
+							],
+						],
+						'popup_trigger_add_cookie_info'  => [
+							'id'      => 'popup_trigger_add_cookie_info',
+							'type'    => 'html',
+							'content' => '<p>Learn more about <a href="https://docs.wppopupmaker.com/article/358-popup-settings-box-cookies-option-settings?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=new-trigger-cookie-info">how Popup Maker cookies work</a>.</p>',
+						],
+					],
+				]
+			);
+			?>
+			,
 			content = PUM_Admin.forms.render(form_args, {});
 
 			print(PUM_Admin.templates.modal({
@@ -553,7 +562,7 @@ class PUM_Admin_Templates {
 				<ul class="ul-disc">
 					<li><?php _e( 'By default, this popup will be loaded on every page of your site for all users.', 'popup-maker' ); ?></li>
 					<li><?php _e( 'Target the popup to a specific segment by adding conditions below.', 'popup-maker' ); ?></li>
-					<li><?php printf( __( 'Click the %s button for any condition to check the opposite of the chosen condition. The button will turn red %s when active.', 'popup-maker' ), '<i style="font-size: 1em; width: 1em; height: 1em; line-height:1.5em;" class="dashicons dashicons-warning"></i>', '<i style="width: 1em; height: 1em; font-size: 1em; line-height:1.5em; color:#a00;" class="dashicons dashicons-warning"></i>' ); ?></li>
+					<li><?php printf( __( 'Click the %1$s button for any condition to check the opposite of the chosen condition. The button will turn red %2$s when active.', 'popup-maker' ), '<i style="font-size: 1em; width: 1em; height: 1em; line-height:1.5em;" class="dashicons dashicons-warning"></i>', '<i style="width: 1em; height: 1em; font-size: 1em; line-height:1.5em; color:#a00;" class="dashicons dashicons-warning"></i>' ); ?></li>
 				</ul>
 
 				<section class="pum-alert-box" style="display:none"></section>
@@ -667,8 +676,8 @@ class PUM_Admin_Templates {
 
 				<!--				<div class="no-cookies  no-list-items">-->
 				<!--					<div class="pum-field pum-field-select pum-field-select2">-->
-				<!--						<label for="pum-first-cookie">--><?php //_e( 'Choose when you want to set a cookie to get started.', 'popup-maker' ); ?><!--</label>-->
-				<!--						<# print(PUM_Admin.cookies.template.selectbox({id: 'pum-first-cookie', name: "", placeholder: "--><?php //_e( 'Select an event.', 'popup-maker' ); ?><!--"})); #>-->
+				<!--						<label for="pum-first-cookie">--><?php // _e( 'Choose when you want to set a cookie to get started.', 'popup-maker' ); ?><!--</label>-->
+				<!--						<# print(PUM_Admin.cookies.template.selectbox({id: 'pum-first-cookie', name: "", placeholder: "--><?php // _e( 'Select an event.', 'popup-maker' ); ?><!--"})); #>-->
 				<!--					</div>-->
 				<!--				</div>-->
 			</div>

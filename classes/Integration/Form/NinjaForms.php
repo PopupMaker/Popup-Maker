@@ -11,8 +11,8 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	public $key = 'ninjaforms';
 
 	public function __construct() {
-		add_action( 'ninja_forms_pre_process', array( $this, 'on_success_v2' ) );
-		add_action( 'ninja_forms_after_submission', array( $this, 'on_success_v3' ) );
+		add_action( 'ninja_forms_pre_process', [ $this, 'on_success_v2' ] );
+		add_action( 'ninja_forms_after_submission', [ $this, 'on_success_v3' ] );
 	}
 
 	/**
@@ -72,11 +72,13 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 		$popup_id = self::get_popup_id();
 		self::increase_conversion( $popup_id );
 
-		pum_integrated_form_submission( [
-			'popup_id'      => $popup_id,
-			'form_provider' => $this->key,
-			'form_id'       => $ninja_forms_processing->get_form_ID(),
-		] );
+		pum_integrated_form_submission(
+			[
+				'popup_id'      => $popup_id,
+				'form_provider' => $this->key,
+				'form_id'       => $ninja_forms_processing->get_form_ID(),
+			]
+		);
 	}
 
 	/**
@@ -88,11 +90,13 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 		}
 		$popup_id = self::get_popup_id();
 		self::increase_conversion( $popup_id );
-		pum_integrated_form_submission( [
-			'popup_id'      => $popup_id,
-			'form_provider' => $this->key,
-			'form_id'       => $form_data['form_id'],
-		] );
+		pum_integrated_form_submission(
+			[
+				'popup_id'      => $popup_id,
+				'form_provider' => $this->key,
+				'form_id'       => $form_data['form_id'],
+			]
+		);
 	}
 
 	/**

@@ -52,12 +52,11 @@ class PUM_Admin_BlockEditor {
 			'version'      => Popup_Maker::$VER,
 		];
 		$script_url        = plugins_url( $script_path, Popup_Maker::$FILE );
-		$script_deps = $script_asset['dependencies'];
+		$script_deps       = $script_asset['dependencies'];
 
 		if ( $screen->id !== 'widgets' ) {
 			$script_deps = array_merge( $script_deps, [ 'wp-edit-post' ] );
 		}
-
 
 		wp_enqueue_script( 'popup-maker-block-editor', $script_url, $script_deps, $script_asset['version'] );
 

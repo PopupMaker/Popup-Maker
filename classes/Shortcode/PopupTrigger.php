@@ -48,33 +48,33 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	 * @return array
 	 */
 	public function inner_content_labels() {
-		return array(
+		return [
 			'label'       => __( 'Trigger Content', 'popup-maker' ),
 			'description' => __( 'Can contain other shortcodes, images, text or html content.' ),
-		);
+		];
 	}
 
 	/**
 	 * @return array
 	 */
 	public function post_types() {
-		return array( 'post', 'page', 'popup' );
+		return [ 'post', 'page', 'popup' ];
 	}
 
 	/**
 	 * @return array
 	 */
 	public function fields() {
-		$select_args = array();
+		$select_args = [];
 
 		if ( isset( $_GET['post'] ) && is_int( (int) $_GET['post'] ) && isset( $_GET['action'] ) && $_GET['action'] == 'edit' ) {
-			$select_args['post__not_in'] = wp_parse_id_list( array( get_the_ID(), $_GET['post'] ) );
+			$select_args['post__not_in'] = wp_parse_id_list( [ get_the_ID(), $_GET['post'] ] );
 		}
 
-		return array(
-			'general' => array(
-				'main' => array(
-					'id'        => array(
+		return [
+			'general' => [
+				'main' => [
+					'id'        => [
 						'label'       => __( 'Targeted Popup', 'popup-maker' ),
 						'placeholder' => __( 'Choose a Popup', 'popup-maker' ),
 						'desc'        => __( 'Choose which popup will be targeted by this trigger.', 'popup-maker' ),
@@ -82,24 +82,24 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 						'post_type'   => 'popup',
 						'priority'    => 5,
 						'required'    => true,
-						'options'     => PUM_Helpers::popup_selectlist( $select_args ) + array(
-								'custom' => __( 'Custom', 'popup-maker' ),
-							),
+						'options'     => PUM_Helpers::popup_selectlist( $select_args ) + [
+							'custom' => __( 'Custom', 'popup-maker' ),
+						],
 						'std'         => 0,
-					),
-					'custom_id' => array(
+					],
+					'custom_id' => [
 						'label'        => __( 'Custom Popup ID', 'popup-maker' ),
 						'type'         => 'text',
-						'dependencies' => array(
+						'dependencies' => [
 							'id' => 'custom',
-						),
+						],
 						'std'          => '',
-					),
-				),
-			),
-			'options' => array(
-				'main' => array(
-					'tag'        => array(
+					],
+				],
+			],
+			'options' => [
+				'main' => [
+					'tag'        => [
 						'label'       => __( 'HTML Tag', 'popup-maker' ),
 						'placeholder' => __( 'HTML Tags: button, span etc.', 'popup-maker' ),
 						'desc'        => __( 'The HTML tag used to generate the trigger and wrap your text.', 'popup-maker' ),
@@ -107,29 +107,29 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 						'std'         => '',
 						'priority'    => 10,
 						'required'    => true,
-					),
-					'classes'    => array(
+					],
+					'classes'    => [
 						'label'       => __( 'CSS Class', 'popup-maker' ),
 						'placeholder' => __( 'CSS Class', 'popup-maker' ),
 						'type'        => 'text',
 						'desc'        => __( 'Add additional classes for styling.', 'popup-maker' ),
 						'priority'    => 15,
 						'std'         => '',
-					),
-					'class' => array(
-					    'type' => 'hidden',
-                    ),
-					'do_default' => array(
+					],
+					'class'      => [
+						'type' => 'hidden',
+					],
+					'do_default' => [
 						'type'     => 'checkbox',
 						'label'    => __( 'Do not prevent the default click functionality.', 'popup-maker' ),
 						'desc'     => __( 'This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file.', 'popup-maker' ),
 						'priority' => 20,
 						'std'      => false,
-					),
+					],
 
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 
 	/**
@@ -193,7 +193,8 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 			const allowedTags = <?php echo wp_json_encode( array_keys( $allowedtags )	 ); ?>;
 			const tag = allowedTags.indexOf( attrs.tag ) >= 0 ? attrs.tag : 'span';
 		#>
-		<{{{tag}}} class="pum-trigger  popmake-{{{attrs.id}}} {{{attrs.classes}}}">{{{attrs._inner_content}}}</{{{tag}}}><?php
+		<{{{tag}}} class="pum-trigger  popmake-{{{attrs.id}}} {{{attrs.classes}}}">{{{attrs._inner_content}}}</{{{tag}}}>
+		<?php
 	}
 
 }
