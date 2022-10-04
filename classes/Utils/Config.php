@@ -26,7 +26,7 @@ class PUM_Utils_Config {
 		$file = plugin_dir_path( __DIR__ ) . DIRECTORY_SEPARATOR . 'configs' . DIRECTORY_SEPARATOR . $file_name . '.php';
 
 		if ( ! file_exists( $file ) ) {
-			return array();
+			return [];
 		}
 
 		return include $file;

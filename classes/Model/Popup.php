@@ -18,7 +18,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	protected $required_post_type = 'popup';
 
 	/** @var array */
-	public $conditions_filtered = array();
+	public $conditions_filtered = [];
 
 	/**
 	 * @var string
@@ -53,7 +53,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 */
 	public $data_version;
 
-	# TODO Remove these once no longer needed.
+	// TODO Remove these once no longer needed.
 
 	/**
 	 * @var array
@@ -143,7 +143,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			$settings = isset( $this->settings ) ? $this->settings : $this->get_meta( 'popup_settings' );
 
 			if ( ! is_array( $settings ) ) {
-				$settings = array();
+				$settings = [];
 			}
 
 			// Review: the above should be removed and replaced with a hooked filter here to supply defaults when $settings === false.
@@ -175,7 +175,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 */
 	public function update_setting( $key, $value ) {
 		// TODO Once fields have been merged into the model itself, add automatic validation here.
-		$new_settings = array( $key => $value );
+		$new_settings = [ $key => $value ];
 
 		return $this->update_settings( $new_settings, true );
 	}
@@ -186,7 +186,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 *
 	 * @return bool|int
 	 */
-	public function update_settings( $new_settings = array(), $merge = true ) {
+	public function update_settings( $new_settings = [], $merge = true ) {
 		$settings = $this->get_settings();
 
 		// TODO Once fields have been merged into the model itself, add automatic validation here.
@@ -236,7 +236,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		$settings['id']   = $this->ID;
 		$settings['slug'] = $this->post_name;
 
-		$filters = array( 'js_only' => true );
+		$filters = [ 'js_only' => true ];
 
 		if ( $this->has_conditions( $filters ) ) {
 			$settings['conditions'] = $this->get_parsed_js_conditions();
@@ -296,7 +296,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @return array
 	 */
 	public function get_cookies() {
-		return apply_filters( 'pum_popup_get_cookies', $this->get_setting( 'cookies', array() ), $this->ID );
+		return apply_filters( 'pum_popup_get_cookies', $this->get_setting( 'cookies', [] ), $this->ID );
 	}
 
 	/**
@@ -318,7 +318,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @return array
 	 */
 	public function get_triggers() {
-		$triggers = $this->get_setting( 'triggers', array() );
+		$triggers = $this->get_setting( 'triggers', [] );
 
 		// Automatically add click trigger when on the front end.
 		if ( ! is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
@@ -331,13 +331,13 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			}
 
 			if ( ! $has_click_trigger && apply_filters( 'pum_add_default_click_trigger', true, $this->ID ) ) {
-				$triggers[] = array(
+				$triggers[] = [
 					'type'     => 'click_open',
-					'settings' => array(
+					'settings' => [
 						'extra_selectors' => '',
 						'cookie_name'     => null,
-					),
-				);
+					],
+				];
 			}
 		}
 
@@ -379,13 +379,13 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * Retrieve settings in the form of deprecated grouped arrays.
 	 *
 	 * @param      $group
-	 * @param null $key
+	 * @param null  $key
 	 *
 	 * @return mixed
 	 */
 	protected function _dep_get_settings_group( $group, $key = null ) {
 		if ( $this->mock ) {
-			return array();
+			return [];
 		}
 
 		if ( ! $this->$group ) {
@@ -398,7 +398,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			$group_values = $this->get_meta( "popup_$group" );
 
 			if ( ! $group_values || ! is_array( $group_values ) ) {
-				$group_values = array();
+				$group_values = [];
 			}
 
 			// Data manipulation begins here. We don't want any of this saved, only returned for backward compatibility.
@@ -414,10 +414,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 					if ( ! isset( $group_values[ $old_key ] ) ) {
 						$group_values[ $old_key ] = $value;
 					}
-
 				}
 			}
-
 
 			$this->$group = $group_values;
 		}
@@ -428,7 +426,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			return $values;
 		}
 
-		$value = isset ( $values[ $key ] ) ? $values[ $key ] : null;
+		$value = isset( $values[ $key ] ) ? $values[ $key ] : null;
 
 		if ( ! isset( $value ) ) {
 			$value = $this->get_meta( "popup_{$group}_{$key}" );
@@ -443,8 +441,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @return array|mixed
 	 */
 	public function remapped_meta_settings_keys( $group ) {
-		$remapped_meta_settings_keys = array(
-			'display' => array(
+		$remapped_meta_settings_keys = [
+			'display' => [
 				'stackable'                 => 'stackable',
 				'overlay_disabled'          => 'overlay_disabled',
 				'scrollable_content'        => 'scrollable_content',
@@ -471,18 +469,17 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 				'animation_origin'          => 'animation_origin',
 				'overlay_zindex'            => 'overlay_zindex',
 				'zindex'                    => 'zindex',
-			),
-			'close'   => array(
+			],
+			'close'   => [
 				'text'          => 'close_text',
 				'button_delay'  => 'close_button_delay',
 				'overlay_click' => 'close_on_overlay_click',
 				'esc_press'     => 'close_on_esc_press',
 				'f4_press'      => 'close_on_f4_press',
-			),
-		);
+			],
+		];
 
-		return isset( $remapped_meta_settings_keys[ $group ] ) ? $remapped_meta_settings_keys[ $group ] : array();
-
+		return isset( $remapped_meta_settings_keys[ $group ] ) ? $remapped_meta_settings_keys[ $group ] : [];
 
 	}
 
@@ -499,12 +496,12 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		$display = $this->_dep_get_settings_group( 'display', $key );
 
 		foreach (
-			array(
+			[
 				'responsive_min_width',
 				'responsive_max_width',
 				'custom_width',
 				'custom_height',
-			) as $key => $value
+			] as $key => $value
 		) {
 			$temp = isset( $display[ $key ] ) ? $display[ $key ] : false;
 
@@ -554,51 +551,57 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @return array $classes
 	 */
 	public function get_classes( $element = 'overlay' ) {
-		$classes = array(
-			'overlay'   => array(
+		$classes = [
+			'overlay'   => [
 				'pum',
 				'pum-overlay',
 				'pum-theme-' . $this->get_theme_id(),
 				'pum-theme-' . $this->get_theme_slug(),
 				'popmake-overlay', // Backward Compatibility
-			),
-			'container' => array(
+			],
+			'container' => [
 				'pum-container',
 				'popmake', // Backward Compatibility
 				'theme-' . $this->get_theme_id(), // Backward Compatibility
-			),
-			'title'     => array(
+			],
+			'title'     => [
 				'pum-title',
 				'popmake-title', // Backward Compatibility
-			),
-			'content'   => array(
+			],
+			'content'   => [
 				'pum-content',
 				'popmake-content', // Backward Compatibility
-			),
-			'close'     => array(
+			],
+			'close'     => [
 				'pum-close',
-				'popmake-close' // Backward Compatibility
-			),
-		);
+				'popmake-close', // Backward Compatibility
+			],
+		];
 
 		$size = $this->get_setting( 'size', 'medium' );
 
-		if ( in_array( $size, array( 'nano', 'micro', 'tiny', 'small', 'medium', 'normal', 'large', 'xlarge' ) ) ) {
-			$classes['container'] = array_merge( $classes['container'], array(
-				'pum-responsive',
-				'pum-responsive-' . $size,
-				'responsive', // Backward Compatibility
-				'size-' . $size, // Backward Compatibility
-			) );
+		if ( in_array( $size, [ 'nano', 'micro', 'tiny', 'small', 'medium', 'normal', 'large', 'xlarge' ] ) ) {
+			$classes['container'] = array_merge(
+				$classes['container'],
+				[
+					'pum-responsive',
+					'pum-responsive-' . $size,
+					'responsive', // Backward Compatibility
+					'size-' . $size, // Backward Compatibility
+				]
+			);
 		} elseif ( $size == 'custom' ) {
 			$classes['container'][] = 'size-custom'; // Backward Compatibility
 		}
 
 		if ( ! $this->get_setting( 'custom_height_auto' ) && $this->get_setting( 'scrollable_content' ) ) {
-			$classes['container'] = array_merge( $classes['container'], array(
-				'pum-scrollable',
-				'scrollable', // Backward Compatibility
-			) );
+			$classes['container'] = array_merge(
+				$classes['container'],
+				[
+					'pum-scrollable',
+					'scrollable', // Backward Compatibility
+				]
+			);
 		}
 
 		if ( $this->get_setting( 'position_fixed' ) ) {
@@ -628,11 +631,10 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			$classes['overlay'][] = 'pum-preview';
 		}
 
-
 		$classes = apply_filters( 'pum_popup_classes', $classes, $this->ID );
 
 		if ( ! isset( $classes[ $element ] ) ) {
-			$classes[ $element ] = array();
+			$classes[ $element ] = [];
 		}
 
 		return apply_filters( "pum_popup_{$element}_classes", $classes[ $element ], $this->ID );
@@ -650,7 +652,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			return false;
 		}
 
-		$data_attr = array(
+		$data_attr = [
 			'id'              => $this->ID,
 			'slug'            => $this->post_name,
 			'theme_id'        => $this->get_theme_id(),
@@ -658,15 +660,15 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			'triggers'        => $this->get_triggers(),
 			'mobile_disabled' => $this->mobile_disabled() ? true : null,
 			'tablet_disabled' => $this->tablet_disabled() ? true : null,
-			'meta'            => array(
+			'meta'            => [
 				'display'    => $this->get_display(),
 				'close'      => $this->get_close(),
 				// Added here for backward compatibility in extensions.
 				'click_open' => popmake_get_popup_meta( 'click_open', $this->ID ),
-			),
-		);
+			],
+		];
 
-		$filters = array( 'js_only' => true );
+		$filters = [ 'js_only' => true ];
 
 		if ( $this->has_conditions( $filters ) ) {
 			$data_attr['conditions'] = $this->get_conditions( $filters );
@@ -709,12 +711,15 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 *
 	 * @return array
 	 */
-	public function get_conditions( $filters = array() ) {
+	public function get_conditions( $filters = [] ) {
 
-		$filters = wp_parse_args( $filters, array(
-			'php_only' => null,
-			'js_only'  => null,
-		) );
+		$filters = wp_parse_args(
+			$filters,
+			[
+				'php_only' => null,
+				'js_only'  => null,
+			]
+		);
 
 		$cache_key = hash( 'md5', json_encode( $filters ) );
 
@@ -722,7 +727,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		$conditions = isset( $this->conditions_filtered[ $cache_key ] ) ? $this->conditions_filtered[ $cache_key ] : false;
 
 		if ( ! $conditions ) {
-			$conditions = $this->get_setting( 'conditions', array() );
+			$conditions = $this->get_setting( 'conditions', [] );
 			// Sanity Check on the values not operand value.
 			foreach ( $conditions as $group_key => $group ) {
 
@@ -763,11 +768,14 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @return array
 	 */
 	public function parse_condition( $condition ) {
-		$condition = wp_parse_args( $condition, array(
-			'target'      => '',
-			'not_operand' => false,
-			'settings'    => array(),
-		) );
+		$condition = wp_parse_args(
+			$condition,
+			[
+				'target'      => '',
+				'not_operand' => false,
+				'settings'    => [],
+			]
+		);
 
 		$condition['not_operand'] = (bool) $condition['not_operand'];
 
@@ -782,11 +790,11 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 
 	/**
 	 * @param       $condition
-	 * @param array $filters
+	 * @param array     $filters
 	 *
 	 * @return bool
 	 */
-	public function exclude_condition( $condition, $filters = array() ) {
+	public function exclude_condition( $condition, $filters = [] ) {
 
 		$exclude = false;
 
@@ -818,7 +826,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 *
 	 * @return bool
 	 */
-	public function has_conditions( $filters = array() ) {
+	public function has_conditions( $filters = [] ) {
 		return (bool) count( $this->get_conditions( $filters ) );
 	}
 
@@ -840,7 +848,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		$found = false;
 
 		if ( ! is_array( $conditions ) ) {
-			$conditions = array( $conditions );
+			$conditions = [ $conditions ];
 		}
 
 		foreach ( $this->get_conditions() as $group => $conds ) {
@@ -850,9 +858,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 				if ( in_array( $condition['target'], $conditions ) ) {
 					$found = true;
 				}
-
 			}
-
 		}
 
 		return (bool) $found;
@@ -880,7 +886,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		} else {
 			// Else, load it in.
 			$enabled = intval( $enabled );
-			if ( ! in_array( $enabled, array( 0, 1 ), true ) ) {
+			if ( ! in_array( $enabled, [ 0, 1 ], true ) ) {
 				$enabled = 1;
 			}
 		}
@@ -943,7 +949,6 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 						$group_check = true;
 						break;
 					}
-
 				}
 
 				// If any group of conditions doesn't pass, popup is not loadable.
@@ -951,9 +956,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 					$loadable = false;
 					break;
 				}
-
 			}
-
 		}
 
 		return apply_filters( 'pum_popup_is_loadable', $loadable, $this->ID );
@@ -966,7 +969,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 *
 	 * @return bool
 	 */
-	public function check_condition( $condition = array() ) {
+	public function check_condition( $condition = [] ) {
 		$condition_args = PUM_Conditions::instance()->get_condition( $condition['target'] );
 
 		if ( ! $condition_args ) {
@@ -1046,7 +1049,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		/**
 		 * This section simply ensures that all keys exist before the below query runs. This should only ever cause extra queries once per popup, usually in the admin.
 		 */
-		//$this->set_event_defaults( $event );
+		// $this->set_event_defaults( $event );
 
 		$keys = PUM_Analytics::event_keys( $event );
 
@@ -1100,13 +1103,17 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 */
 	public function reset_counts() {
 		// Log the reset time and count.
-		add_post_meta( $this->ID, 'popup_count_reset', array(
-			'timestamp'   => current_time( 'timestamp', 0 ),
-			'opens'       => absint( $this->get_event_count( 'open', 'current' ) ),
-			'conversions' => absint( $this->get_event_count( 'conversion', 'current' ) ),
-		) );
+		add_post_meta(
+			$this->ID,
+			'popup_count_reset',
+			[
+				'timestamp'   => current_time( 'timestamp', 0 ),
+				'opens'       => absint( $this->get_event_count( 'open', 'current' ) ),
+				'conversions' => absint( $this->get_event_count( 'conversion', 'current' ) ),
+			]
+		);
 
-		foreach ( array( 'open', 'conversion' ) as $event ) {
+		foreach ( [ 'open', 'conversion' ] as $event ) {
 			$keys = PUM_Analytics::event_keys( $event );
 			$this->update_meta( 'popup_' . $keys[0] . '_count', 0 );
 			$this->update_meta( 'popup_last_' . $keys[1], 0 );
@@ -1121,7 +1128,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	public function get_last_count_reset() {
 		$resets = $this->get_meta( 'popup_count_reset', false );
 
-		if ( empty ( $resets ) ) {
+		if ( empty( $resets ) ) {
 			// No results found.
 			return false;
 		}
@@ -1136,7 +1143,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			return $resets[0];
 		}
 
-		usort( $resets, array( $this, "compare_resets" ) );
+		usort( $resets, [ $this, 'compare_resets' ] );
 
 		return $resets[0];
 	}
@@ -1148,7 +1155,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @return bool
 	 */
 	public function compare_resets( $a, $b ) {
-		return ( float ) $a['timestamp'] < ( float ) $b['timestamp'];
+		return (float) $a['timestamp'] < (float) $b['timestamp'];
 	}
 
 	/**
@@ -1193,7 +1200,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		$this->doing_passive_migration = true;
 
 		for ( $i = $this->data_version; $this->data_version < $this->model_version; $i ++ ) {
-			do_action_ref_array( 'pum_popup_passive_migration_' . $this->data_version, array( &$this ) );
+			do_action_ref_array( 'pum_popup_passive_migration_' . $this->data_version, [ &$this ] );
 			$this->data_version ++;
 
 			/**
@@ -1202,7 +1209,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			$this->update_meta( 'data_version', $this->data_version );
 		}
 
-		do_action_ref_array( 'pum_popup_passive_migration', array( &$this, $this->data_version ) );
+		do_action_ref_array( 'pum_popup_passive_migration', [ &$this, $this->data_version ] );
 
 		$this->doing_passive_migration = false;
 	}

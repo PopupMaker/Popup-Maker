@@ -17,13 +17,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param null $popup_id
  */
 function popmake_enqueue_scripts( $popup_id = null ) {
-	$scripts_needed = apply_filters( 'popmake_enqueue_scripts', array(), $popup_id );
+	$scripts_needed = apply_filters( 'popmake_enqueue_scripts', [], $popup_id );
 	foreach ( $scripts_needed as $script ) {
 		if ( wp_script_is( $script, 'registered' ) ) {
 			wp_enqueue_script( $script );
 		}
 	}
-	$styles_needed = apply_filters( 'popmake_enqueue_styles', array(), $popup_id );
+	$styles_needed = apply_filters( 'popmake_enqueue_styles', [], $popup_id );
 	foreach ( $styles_needed as $style ) {
 		if ( wp_style_is( $style, 'registered' ) ) {
 			wp_enqueue_style( $style );
@@ -43,7 +43,7 @@ add_action( 'popmake_preload_popup', 'popmake_enqueue_scripts' );
  *
  * @return mixed
  */
-function pum_deprecated_popmake_settings_extensions_sanitize_filter( $settings = array() ) {
+function pum_deprecated_popmake_settings_extensions_sanitize_filter( $settings = [] ) {
 	if ( has_filter( 'popmake_settings_extensions_sanitize' ) ) {
 		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:popmake_settings_extensions_sanitize', '1.7.0', 'filter:pum_settings_sanitize' );
 		/**

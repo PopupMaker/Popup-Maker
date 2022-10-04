@@ -22,9 +22,11 @@ function pum_passive_popup_upgrades_enabled() {
 		$popup_count = get_transient( 'pum_popup_count' );
 
 		if ( $popup_count === false ) {
-			$popup_count = pum_count_popups( array(
-				'post_status'    => array( 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ),
-			) );
+			$popup_count = pum_count_popups(
+				[
+					'post_status' => [ 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ],
+				]
+			);
 
 			set_transient( 'pum_popup_count', $popup_count, HOUR_IN_SECONDS * 24 );
 		}
@@ -43,7 +45,7 @@ function pum_passive_popup_upgrades_enabled() {
 function pum_popup_migration_2( &$popup ) {
 
 	$changed     = false;
-	$delete_meta = array();
+	$delete_meta = [];
 
 	/**
 	 * Update pum_sub_form shortcode args
@@ -66,8 +68,8 @@ function pum_popup_migration_2( &$popup ) {
 	$theme = $popup->get_meta( 'popup_theme' );
 	if ( ! empty( $theme ) && is_numeric( $theme ) ) {
 		$settings['theme_id'] = absint( $theme );
-		$changed                     = true;
-		$delete_meta[]               = 'popup_theme';
+		$changed              = true;
+		$delete_meta[]        = 'popup_theme';
 	}
 
 	/**
@@ -81,15 +83,18 @@ function pum_popup_migration_2( &$popup ) {
 		foreach ( $keys as $old_key => $new_key ) {
 			if ( isset( $display[ $old_key ] ) && ! empty( $display[ $old_key ] ) ) {
 				$settings[ $new_key ] = $display[ $old_key ];
-				$changed                     = true;
+				$changed              = true;
 				unset( $display[ $old_key ] );
 
-				if ( in_array( $old_key, array(
+				if ( in_array(
+					$old_key,
+					[
 						'responsive_min_width',
 						'responsive_max_width',
 						'custom_width',
 						'custom_height',
-					) ) && isset( $display[ $old_key . '_unit' ] ) ) {
+					]
+				) && isset( $display[ $old_key . '_unit' ] ) ) {
 					$settings[ $new_key ] .= $display[ $old_key . '_unit' ];
 					unset( $display[ $old_key . '_unit' ] );
 				}
@@ -115,7 +120,7 @@ function pum_popup_migration_2( &$popup ) {
 		foreach ( $keys as $old_key => $new_key ) {
 			if ( isset( $close[ $old_key ] ) ) {
 				$settings[ $new_key ] = $close[ $old_key ];
-				$changed                     = true;
+				$changed              = true;
 				unset( $close[ $old_key ] );
 			}
 		}
@@ -143,7 +148,7 @@ function pum_popup_migration_2( &$popup ) {
 		}
 
 		$settings['triggers'] = $triggers;
-		$changed                     = true;
+		$changed              = true;
 
 		$delete_meta[] = 'popup_triggers';
 	}
@@ -153,10 +158,10 @@ function pum_popup_migration_2( &$popup ) {
 	 */
 	$cookies = $popup->get_meta( 'popup_cookies' );
 	if ( ! empty( $cookies ) && is_array( $cookies ) ) {
-		$cookies                    = ! empty( $settings['cookies'] ) && is_array( $settings['cookies'] ) ? array_merge( $settings['cookies'], $cookies ) : $cookies;
+		$cookies             = ! empty( $settings['cookies'] ) && is_array( $settings['cookies'] ) ? array_merge( $settings['cookies'], $cookies ) : $cookies;
 		$settings['cookies'] = $cookies;
-		$changed                    = true;
-		$delete_meta[]              = 'popup_cookies';
+		$changed             = true;
+		$delete_meta[]       = 'popup_cookies';
 	}
 
 	/**
@@ -172,14 +177,14 @@ function pum_popup_migration_2( &$popup ) {
 
 					// Clean empty conditions.
 					if ( ! empty( $condition['target'] ) ) {
-						$fixed_condition = array(
+						$fixed_condition = [
 							'target'      => $condition['target'],
 							'not_operand' => isset( $condition['not_operand'] ) ? (bool) $condition['not_operand'] : false,
-							'settings'    => isset( $condition['settings'] ) ? $condition['settings'] : array(),
-						);
+							'settings'    => isset( $condition['settings'] ) ? $condition['settings'] : [],
+						];
 
 						foreach ( $condition as $key => $val ) {
-							if ( ! in_array( $key, array( 'target', 'not_operand', 'settings' ) ) ) {
+							if ( ! in_array( $key, [ 'target', 'not_operand', 'settings' ] ) ) {
 								$fixed_condition['settings'][ $key ] = $val;
 							}
 						}
@@ -198,8 +203,8 @@ function pum_popup_migration_2( &$popup ) {
 		}
 
 		$settings['conditions'] = $conditions;
-		$changed                       = true;
-		$delete_meta[]                 = 'popup_conditions';
+		$changed                = true;
+		$delete_meta[]          = 'popup_conditions';
 	}
 
 	/**
@@ -208,8 +213,8 @@ function pum_popup_migration_2( &$popup ) {
 	$mobile_disabled = $popup->get_meta( 'popup_mobile_disabled' );
 	if ( ! empty( $mobile_disabled ) ) {
 		$settings['disable_on_mobile'] = (bool) ( $mobile_disabled );
-		$changed                              = true;
-		$delete_meta[]                        = 'popup_mobile_disabled';
+		$changed                       = true;
+		$delete_meta[]                 = 'popup_mobile_disabled';
 	}
 
 	/**
@@ -218,8 +223,8 @@ function pum_popup_migration_2( &$popup ) {
 	$tablet_disabled = $popup->get_meta( 'popup_tablet_disabled' );
 	if ( ! empty( $tablet_disabled ) ) {
 		$settings['disable_on_tablet'] = (bool) ( $tablet_disabled );
-		$changed                              = true;
-		$delete_meta[]                        = 'popup_tablet_disabled';
+		$changed                       = true;
+		$delete_meta[]                 = 'popup_tablet_disabled';
 	}
 
 	/**
@@ -229,11 +234,15 @@ function pum_popup_migration_2( &$popup ) {
 	if ( ! empty( $open_count_reset ) && is_array( $open_count_reset ) ) {
 		foreach ( $open_count_reset as $key => $reset ) {
 			if ( is_array( $reset ) ) {
-				add_post_meta( $popup->ID, 'popup_count_reset', array(
-					'timestamp'   => ! empty( $reset['timestamp'] ) ? $reset['timestamp'] : '',
-					'opens'       => ! empty( $reset['count'] ) ? absint( $reset['count'] ) : 0,
-					'conversions' => 0,
-				) );
+				add_post_meta(
+					$popup->ID,
+					'popup_count_reset',
+					[
+						'timestamp'   => ! empty( $reset['timestamp'] ) ? $reset['timestamp'] : '',
+						'opens'       => ! empty( $reset['count'] ) ? absint( $reset['count'] ) : 0,
+						'conversions' => 0,
+					]
+				);
 			}
 		}
 

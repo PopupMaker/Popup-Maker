@@ -18,9 +18,9 @@ class PUM_Admin_Ajax {
 	 * Hooks our methods into AJAX actions.
 	 */
 	public static function init() {
-		add_action( 'wp_ajax_pum_object_search', array( __CLASS__, 'object_search' ) );
-		add_action( 'wp_ajax_pum_process_batch_request', array( __CLASS__, 'process_batch_request' ) );
-		add_action( 'wp_ajax_pum_save_enabled_state', array( __CLASS__, 'save_popup_enabled_state' ) );
+		add_action( 'wp_ajax_pum_object_search', [ __CLASS__, 'object_search' ] );
+		add_action( 'wp_ajax_pum_process_batch_request', [ __CLASS__, 'process_batch_request' ] );
+		add_action( 'wp_ajax_pum_save_enabled_state', [ __CLASS__, 'save_popup_enabled_state' ] );
 	}
 
 	/**
@@ -31,10 +31,10 @@ class PUM_Admin_Ajax {
 	public static function save_popup_enabled_state() {
 		$args = wp_parse_args(
 			$_REQUEST,
-			array(
+			[
 				'popupID' => 0,
 				'active'  => 1,
-			)
+			]
 		);
 
 		// Ensures Popup ID is an int and not 0.
@@ -45,7 +45,7 @@ class PUM_Admin_Ajax {
 
 		// Ensures active state is 0 or 1.
 		$enabled = intval( $args['enabled'] );
-		if ( ! in_array( $enabled, array( 0, 1 ), true ) ) {
+		if ( ! in_array( $enabled, [ 0, 1 ], true ) ) {
 			wp_send_json_error( 'Invalid enabled state provided.' );
 		}
 
@@ -80,10 +80,10 @@ class PUM_Admin_Ajax {
 	 * Uses passed array with keys of object_type, object_key, include, exclude. Echos our results as JSON.
 	 */
 	public static function object_search() {
-		$results = array(
-			'items'       => array(),
+		$results = [
+			'items'       => [],
 			'total_count' => 0,
-		);
+		];
 
 		$object_type = sanitize_text_field( $_REQUEST['object_type'] );
 		$include     = ! empty( $_REQUEST['include'] ) ? wp_parse_id_list( $_REQUEST['include'] ) : [];
@@ -100,18 +100,18 @@ class PUM_Admin_Ajax {
 				if ( ! empty( $include ) ) {
 					$include_query = PUM_Helpers::post_type_selectlist_query(
 						$post_type,
-						array(
+						[
 							'post__in'       => $include,
 							'posts_per_page' => - 1,
-						),
+						],
 						true
 					);
 
 					foreach ( $include_query['items'] as $id => $name ) {
-						$results['items'][] = array(
+						$results['items'][] = [
 							'id'   => $id,
 							'text' => "$name (ID: $id)",
-						);
+						];
 					}
 
 					$results['total_count'] += (int) $include_query['total_count'];
@@ -119,20 +119,20 @@ class PUM_Admin_Ajax {
 
 				$query = PUM_Helpers::post_type_selectlist_query(
 					$post_type,
-					array(
+					[
 						's'              => ! empty( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : null,
 						'paged'          => ! empty( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : null,
 						'post__not_in'   => $exclude,
 						'posts_per_page' => 10,
-					),
+					],
 					true
 				);
 
 				foreach ( $query['items'] as $id => $name ) {
-					$results['items'][] = array(
+					$results['items'][] = [
 						'id'   => $id,
 						'text' => "$name (ID: $id)",
-					);
+					];
 				}
 
 				$results['total_count'] += (int) $query['total_count'];
@@ -144,18 +144,18 @@ class PUM_Admin_Ajax {
 				if ( ! empty( $include ) ) {
 					$include_query = PUM_Helpers::taxonomy_selectlist_query(
 						$taxonomy,
-						array(
+						[
 							'include' => $include,
 							'number'  => 0,
-						),
+						],
 						true
 					);
 
 					foreach ( $include_query['items'] as $id => $name ) {
-						$results['items'][] = array(
+						$results['items'][] = [
 							'id'   => $id,
 							'text' => "$name (ID: $id)",
-						);
+						];
 					}
 
 					$results['total_count'] += (int) $include_query['total_count'];
@@ -163,20 +163,20 @@ class PUM_Admin_Ajax {
 
 				$query = PUM_Helpers::taxonomy_selectlist_query(
 					$taxonomy,
-					array(
+					[
 						'search'  => ! empty( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : null,
 						'paged'   => ! empty( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : null,
 						'exclude' => $exclude,
 						'number'  => 10,
-					),
+					],
 					true
 				);
 
 				foreach ( $query['items'] as $id => $name ) {
-					$results['items'][] = array(
+					$results['items'][] = [
 						'id'   => $id,
 						'text' => "$name (ID: $id)",
-					);
+					];
 				}
 
 				$results['total_count'] += (int) $query['total_count'];
@@ -186,40 +186,40 @@ class PUM_Admin_Ajax {
 
 				if ( ! empty( $include ) ) {
 					$include_query = PUM_Helpers::user_selectlist_query(
-						array(
+						[
 							'role'    => $user_role,
 							'include' => $include,
 							'number'  => - 1,
-						),
+						],
 						true
 					);
 
 					foreach ( $include_query['items'] as $id => $name ) {
-						$results['items'][] = array(
+						$results['items'][] = [
 							'id'   => $id,
 							'text' => "$name (ID: $id)",
-						);
+						];
 					}
 
 					$results['total_count'] += (int) $include_query['total_count'];
 				}
 
 				$query = PUM_Helpers::user_selectlist_query(
-					array(
+					[
 						'role'    => $user_role,
 						'search'  => ! empty( $_REQUEST['s'] ) ? '*' . $_REQUEST['s'] . '*' : null,
 						'paged'   => ! empty( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : null,
 						'exclude' => $exclude,
 						'number'  => 10,
-					),
+					],
 					true
 				);
 
 				foreach ( $query['items'] as $id => $name ) {
-					$results['items'][] = array(
+					$results['items'][] = [
 						'id'   => $id,
 						'text' => "$name (ID: $id)",
-					);
+					];
 				}
 
 				$results['total_count'] += (int) $query['total_count'];
@@ -243,18 +243,18 @@ class PUM_Admin_Ajax {
 
 		if ( ! $batch_id ) {
 			wp_send_json_error(
-				array(
+				[
 					'error' => __( 'A batch process ID must be present to continue.', 'popup-maker' ),
-				)
+				]
 			);
 		}
 
 		// Nonce.
 		if ( ! isset( $_REQUEST['nonce'] ) || ( isset( $_REQUEST['nonce'] ) && false === wp_verify_nonce( $_REQUEST['nonce'], "{$batch_id}_step_nonce" ) ) ) {
 			wp_send_json_error(
-				array(
+				[
 					'error' => __( 'You do not have permission to initiate this request. Contact an administrator for more information.', 'popup-maker' ),
-				)
+				]
 			);
 		}
 
@@ -263,9 +263,9 @@ class PUM_Admin_Ajax {
 
 		if ( false === $batch ) {
 			wp_send_json_error(
-				array(
+				[
 					'error' => sprintf( __( '%s is an invalid batch process ID.', 'popup-maker' ), esc_html( $_REQUEST['batch_id'] ) ),
-				)
+				]
 			);
 		}
 
@@ -274,9 +274,9 @@ class PUM_Admin_Ajax {
 
 		if ( empty( $class_file ) || ! file_exists( $class_file ) ) {
 			wp_send_json_error(
-				array(
+				[
 					'error' => sprintf( __( 'An invalid file path is registered for the %1$s batch process handler.', 'popup-maker' ), "<code>{$batch_id}</code>" ),
-				)
+				]
 			);
 		} else {
 			require_once $class_file;
@@ -284,9 +284,9 @@ class PUM_Admin_Ajax {
 
 		if ( empty( $class ) || ! class_exists( $class ) ) {
 			wp_send_json_error(
-				array(
+				[
 					'error' => sprintf( __( '%1$s is an invalid handler for the %2$s batch process. Please try again.', 'popup-maker' ), "<code>{$class}</code>", "<code>{$batch_id}</code>" ),
-				)
+				]
 			);
 		}
 
@@ -321,7 +321,7 @@ class PUM_Admin_Ajax {
 		// Handle pre-fetching data.
 		if ( $using_prefetch ) {
 			// Initialize any data needed to process a step.
-			$data = isset( $_REQUEST['form'] ) ? $_REQUEST['form'] : array();
+			$data = isset( $_REQUEST['form'] ) ? $_REQUEST['form'] : [];
 
 			$process->init( $data );
 			$process->pre_fetch();
@@ -333,7 +333,7 @@ class PUM_Admin_Ajax {
 		if ( is_wp_error( $step ) ) {
 			wp_send_json_error( $step );
 		} else {
-			$response_data = array( 'step' => $step );
+			$response_data = [ 'step' => $step ];
 
 			// Map fields if this is an import.
 			if ( isset( $process->field_mapping ) && ( $process instanceof PUM_Interface_CSV_Importer ) ) {
@@ -352,12 +352,12 @@ class PUM_Admin_Ajax {
 					if ( ! $process->is_empty ) {
 						$response_data['url'] = pum_admin_url(
 							'tools',
-							array(
+							[
 								'step'       => $step,
 								'nonce'      => wp_create_nonce( 'pum-batch-export' ),
 								'batch_id'   => $batch_id,
 								'pum_action' => 'download_batch_export',
-							)
+							]
 						);
 					}
 				}

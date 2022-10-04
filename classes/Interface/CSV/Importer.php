@@ -21,7 +21,7 @@ interface PUM_Interface_CSV_Importer extends PUM_Interface_Batch_Importer {
 	 *
 	 * @param array $import_fields Import fields to map.
 	 */
-	public function map_fields( $import_fields = array() );
+	public function map_fields( $import_fields = [] );
 
 	/**
 	 * Retrieves the CSV columns.

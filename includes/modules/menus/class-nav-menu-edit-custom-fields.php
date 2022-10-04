@@ -16,6 +16,7 @@ if ( ! class_exists( 'Walker_Nav_Menu_Edit' ) ) {
  * Add wp_nav_menu_item_custom_fields hook to the nav menu editor.
  *
  * Credits:
+ *
  * @helgatheviking - Initial concept which has made adding settings in the menu editor in a compatible way.
  * @kucrut - preg_replace() method so that we no longer have to translate core strings
  * @danieliser - refactor for less complexity between WP versions & updating versioned classes for proper backward compatibility with the new methods.
@@ -32,13 +33,13 @@ class Walker_Nav_Menu_Edit_Custom_Fields extends Walker_Nav_Menu_Edit {
 	 *
 	 * @param string $output Passed by reference. Used to append additional content.
 	 * @param object $item Menu item data object.
-	 * @param int $depth Depth of menu item.
-	 * @param array $args
-	 * @param int $id
+	 * @param int    $depth Depth of menu item.
+	 * @param array  $args
+	 * @param int    $id
 	 */
-	public function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
+	public function start_el( &$output, $item, $depth = 0, $args = [], $id = 0 ) {
 		$item_output = '';
-		$output      .= parent::start_el( $item_output, $item, $depth, $args, $id );
+		$output     .= parent::start_el( $item_output, $item, $depth, $args, $id );
 		// NOTE: Check this regex on major WP version updates!
 		$output .= preg_replace( '/(?=<fieldset[^>]+class="[^"]*field-move)/', $this->get_custom_fields( $item, $depth, $args ), $item_output );
 	}
@@ -50,12 +51,12 @@ class Walker_Nav_Menu_Edit_Custom_Fields extends Walker_Nav_Menu_Edit {
 	 * @uses do_action() Calls 'menu_item_custom_fields' hook
 	 *
 	 * @param object $item Menu item data object.
-	 * @param int $depth Depth of menu item. Used for padding.
-	 * @param array $args Menu item args.
+	 * @param int    $depth Depth of menu item. Used for padding.
+	 * @param array  $args Menu item args.
 	 *
 	 * @return string Additional fields or html for the nav menu editor.
 	 */
-	protected function get_custom_fields( $item, $depth, $args = array() ) {
+	protected function get_custom_fields( $item, $depth, $args = [] ) {
 		ob_start();
 		$item_id = intval( $item->ID );
 		/**

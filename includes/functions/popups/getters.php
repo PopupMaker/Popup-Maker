@@ -33,7 +33,7 @@ function pum_get_popup_title( $popup_id = null ) {
 	$popup = pum_get_popup( $popup_id );
 
 	if ( ! pum_is_popup_object( $popup ) ) {
-		return "";
+		return '';
 	}
 
 	return $popup->get_title();
@@ -44,13 +44,12 @@ function pum_get_popup_title( $popup_id = null ) {
  *
  * @return array
  * @deprecated 1.8.0
- *
  */
 function pum_get_popup_triggers( $popup_id = null ) {
 	$popup = pum_get_popup( $popup_id );
 
 	if ( ! pum_is_popup_object( $popup ) ) {
-		return array();
+		return [];
 	}
 
 	return $popup->get_triggers();

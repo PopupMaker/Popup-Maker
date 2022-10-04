@@ -112,7 +112,7 @@ abstract class PUM_Abstract_Database {
 		$class = get_called_class();
 
 		if ( ! isset( self::$instance[ $class ] ) ) {
-			self::$instance[ $class ] = new $class;
+			self::$instance[ $class ] = new $class();
 		}
 
 		return self::$instance[ $class ];
@@ -273,7 +273,7 @@ abstract class PUM_Abstract_Database {
 	 * @return  array
 	 */
 	public function get_column_defaults() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -282,7 +282,7 @@ abstract class PUM_Abstract_Database {
 	 * @return  array
 	 */
 	public function get_columns() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -294,7 +294,7 @@ abstract class PUM_Abstract_Database {
 	 *
 	 * @return  bool
 	 */
-	public function update( $row_id, $data = array(), $where = '' ) {
+	public function update( $row_id, $data = [], $where = '' ) {
 
 		global $wpdb;
 
@@ -328,7 +328,7 @@ abstract class PUM_Abstract_Database {
 		$data_keys      = array_keys( $data );
 		$column_formats = array_merge( array_flip( $data_keys ), $column_formats );
 
-		if ( false === $wpdb->update( $this->table_name(), $data, array( $where => $row_id ), $column_formats ) ) {
+		if ( false === $wpdb->update( $this->table_name(), $data, [ $where => $row_id ], $column_formats ) ) {
 			return false;
 		}
 
@@ -388,7 +388,7 @@ abstract class PUM_Abstract_Database {
 	 *
 	 * @return string
 	 */
-	public function prepare_query( $query, $args = array() ) {
+	public function prepare_query( $query, $args = [] ) {
 
 		if ( $args['orderby'] ) {
 			$query .= " ORDER BY {$args['orderby']} {$args['order']}";
@@ -412,18 +412,21 @@ abstract class PUM_Abstract_Database {
 	 *
 	 * @return array|mixed|object[]
 	 */
-	public function query( $args = array(), $return_type = OBJECT ) {
+	public function query( $args = [], $return_type = OBJECT ) {
 		global $wpdb;
 
-		$args = wp_parse_args( $args, array(
-			'fields'  => '*',
-			'page'    => null,
-			'limit'   => null,
-			'offset'  => null,
-			's'       => null,
-			'orderby' => null,
-			'order'   => null,
-		) );
+		$args = wp_parse_args(
+			$args,
+			[
+				'fields'  => '*',
+				'page'    => null,
+				'limit'   => null,
+				'offset'  => null,
+				's'       => null,
+				'orderby' => null,
+				'order'   => null,
+			]
+		);
 
 		$columns = $this->get_columns();
 
@@ -443,17 +446,17 @@ abstract class PUM_Abstract_Database {
 		$query = "SELECT `$select_fields` FROM {$this->table_name()}";
 
 		// Set up $values array for wpdb::prepare
-		$values = array();
+		$values = [];
 
 		// Define an empty WHERE clause to start from.
-		$where = "WHERE 1=1";
+		$where = 'WHERE 1=1';
 
 		// Build search query.
 		if ( $args['s'] && ! empty( $args['s'] ) ) {
 
 			$search = wp_unslash( trim( $args['s'] ) );
 
-			$search_where = array();
+			$search_where = [];
 
 			foreach ( $columns as $key => $type ) {
 				if ( in_array( $key, $fields ) ) {
@@ -472,24 +475,24 @@ abstract class PUM_Abstract_Database {
 		$query .= " $where";
 
 		if ( ! empty( $args['orderby'] ) ) {
-			$query    .= " ORDER BY %s";
+			$query   .= ' ORDER BY %s';
 			$values[] = wp_unslash( trim( $args['orderby'] ) );
 
 			switch ( $args['order'] ) {
 				case 'asc':
 				case 'ASC':
-					$query .= " ASC";
+					$query .= ' ASC';
 					break;
 				case 'desc':
 				case 'DESC':
 				default:
-					$query .= " DESC";
+					$query .= ' DESC';
 					break;
 			}
 		}
 
 		if ( ! empty( $args['limit'] ) ) {
-			$query    .= " LIMIT %d";
+			$query   .= ' LIMIT %d';
 			$values[] = absint( $args['limit'] );
 		}
 
@@ -499,7 +502,7 @@ abstract class PUM_Abstract_Database {
 		}
 
 		if ( ! empty( $args['offset'] ) ) {
-			$query    .= " OFFSET %d";
+			$query   .= ' OFFSET %d';
 			$values[] = absint( $args['offset'] );
 		}
 

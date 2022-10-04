@@ -20,8 +20,8 @@ class PUM_Utils_Format {
 	 * @return mixed|string
 	 */
 	public static function unwrap_urls( $content = '' ) {
-		$content = preg_replace( "/<\\w+>((([A-Za-z]{3,9}:(?:\\/\\/)?)(?:[-;:&=\\+\\$,\\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\\+\\$,\\w]+@)[A-Za-z0-9.-]+)((?:\\/[\\+~%\\/.\\w-_]*)?\\??(?:[-\\+=&;%@.\\w_]*)#?(?:[.\\!\\/\\\\w]*))?)<\\/\\w+>/", "$1\n\n", $content );
-		$content = str_replace( "</p>", "</p>\n\n", $content );
+		$content = preg_replace( '/<\\w+>((([A-Za-z]{3,9}:(?:\\/\\/)?)(?:[-;:&=\\+\$,\\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\\+\$,\\w]+@)[A-Za-z0-9.-]+)((?:\\/[\\+~%\\/.\\w-_]*)?\\??(?:[-\\+=&;%@.\\w_]*)#?(?:[.\\!\\/\\\\w]*))?)<\\/\\w+>/', "$1\n\n", $content );
+		$content = str_replace( '</p>', "</p>\n\n", $content );
 
 		return $content;
 	}
@@ -85,7 +85,7 @@ class PUM_Utils_Format {
 
 		if ( $diff < 60 ) {
 			$since = sprintf( __( '%ss', 'popup-maker' ), $diff );
-		} else if ( $diff < HOUR_IN_SECONDS ) {
+		} elseif ( $diff < HOUR_IN_SECONDS ) {
 			$mins = round( $diff / MINUTE_IN_SECONDS );
 			if ( $mins <= 1 ) {
 				$mins = 1;
@@ -150,7 +150,7 @@ class PUM_Utils_Format {
 	 * @return mixed
 	 */
 	public static function strip_white_space( $string = '' ) {
-		return str_replace( array( "\t", "\r", "\n" ), '', $string );
+		return str_replace( [ "\t", "\r", "\n" ], '', $string );
 	}
 
 }

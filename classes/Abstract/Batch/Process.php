@@ -131,7 +131,6 @@ abstract class PUM_Abstract_Batch_Process implements PUM_Interface_Batch_Process
 
 	/**
 	 * Defines logic to execute once batch processing is complete.
-	 *
 	 */
 	public function finish() {
 		PUM_DataStorage::delete_by_match( "^{$this->batch_id}[0-9a-z\_]+" );

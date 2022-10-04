@@ -15,20 +15,20 @@ class PUM_Admin_Tools {
 	/**
 	 * @var array
 	 */
-	public static $notices = array();
+	public static $notices = [];
 
 	/**
 	 * Initializes the "Tools" page.
 	 */
 	public static function init() {
-		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
-		add_action( 'admin_init', array( __CLASS__, 'emodal_process_import' ) );
-		add_action( 'pum_tools_page_tab_betas', array( __CLASS__, 'betas_display' ) );
-		add_action( 'pum_tools_page_tab_error_log', array( __CLASS__, 'errorlog_display' ) );
-		add_action( 'pum_tools_page_tab_action_scheduler', array( __CLASS__, 'action_scheduler_display' ) );
-		add_action( 'pum_tools_page_tab_import', array( __CLASS__, 'import_display' ) );
-		add_action( 'pum_save_enabled_betas', array( __CLASS__, 'save_enabled_betas' ) );
-		add_action( 'pum_empty_error_log', array( __CLASS__, 'error_log_empty' ) );
+		add_action( 'admin_notices', [ __CLASS__, 'notices' ] );
+		add_action( 'admin_init', [ __CLASS__, 'emodal_process_import' ] );
+		add_action( 'pum_tools_page_tab_betas', [ __CLASS__, 'betas_display' ] );
+		add_action( 'pum_tools_page_tab_error_log', [ __CLASS__, 'errorlog_display' ] );
+		add_action( 'pum_tools_page_tab_action_scheduler', [ __CLASS__, 'action_scheduler_display' ] );
+		add_action( 'pum_tools_page_tab_import', [ __CLASS__, 'import_display' ] );
+		add_action( 'pum_save_enabled_betas', [ __CLASS__, 'save_enabled_betas' ] );
+		add_action( 'pum_empty_error_log', [ __CLASS__, 'error_log_empty' ] );
 	}
 
 	/**
@@ -45,10 +45,10 @@ class PUM_Admin_Tools {
 		}
 
 		if ( isset( $_GET['success'] ) && get_option( 'pum_settings_admin_notice' ) ) {
-			self::$notices[] = array(
+			self::$notices[] = [
 				'type'    => $_GET['success'] ? 'success' : 'error',
 				'message' => get_option( 'pum_settings_admin_notice' ),
-			);
+			];
 
 			delete_option( 'pum_settings_admin_notice' );
 		}
@@ -87,10 +87,10 @@ class PUM_Admin_Tools {
 					<?php
 					foreach ( self::tabs() as $tab_id => $tab_name ) {
 						$tab_url = add_query_arg(
-							array(
+							[
 								'tools-updated' => false,
 								'tab'           => $tab_id,
-							)
+							]
 						);
 
 						printf( '<a href="%s" title="%s" class="nav-tab %s">%s</a>', esc_url( $tab_url ), esc_attr( $tab_name ), $active_tab == $tab_id ? ' nav-tab-active' : '', esc_html( $tab_name ) );
@@ -121,12 +121,12 @@ class PUM_Admin_Tools {
 		if ( ! isset( $tabs ) ) {
 			$tabs = apply_filters(
 				'pum_tools_tabs',
-				array(
+				[
 					'betas'            => __( 'Beta Versions', 'popup-maker' ),
 					'error_log'        => __( 'Error Log', 'popup-maker' ),
 					'action_scheduler' => __( 'Scheduled Actions', 'popup-maker' ),
 					'import'           => __( 'Import / Export', 'popup-maker' ),
-				)
+				]
 			);
 
 			/** @deprecated 1.7.0 */
@@ -145,7 +145,7 @@ class PUM_Admin_Tools {
 	 * @since       1.5
 	 */
 	public static function get_beta_enabled_extensions() {
-		return apply_filters( 'pum_beta_enabled_extensions', array() );
+		return apply_filters( 'pum_beta_enabled_extensions', [] );
 	}
 
 	/**
@@ -297,10 +297,10 @@ class PUM_Admin_Tools {
 		if ( ! empty( $_POST['enabled_betas'] ) ) {
 			$enabled_betas = array_filter(
 				array_map(
-					array(
+					[
 						__CLASS__,
 						'enabled_betas_sanitize_value',
-					),
+					],
 					$_POST['enabled_betas']
 				)
 			);
@@ -331,7 +331,7 @@ class PUM_Admin_Tools {
 	 * @since       1.5
 	 */
 	public static function extension_has_beta_support( $slug ) {
-		$enabled_betas = PUM_Utils_Options::get( 'enabled_betas', array() );
+		$enabled_betas = PUM_Utils_Options::get( 'enabled_betas', [] );
 		$return        = false;
 
 		if ( array_key_exists( $slug, $enabled_betas ) ) {

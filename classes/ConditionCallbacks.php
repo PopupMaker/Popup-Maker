@@ -12,7 +12,7 @@ class PUM_ConditionCallbacks {
 	 *
 	 * @return bool
 	 */
-	public static function post_type( $condition = array() ) {
+	public static function post_type( $condition = [] ) {
 		global $post;
 
 		$target = explode( '_', $condition['target'] );
@@ -23,7 +23,7 @@ class PUM_ConditionCallbacks {
 		// Post type is the remaining keys combined.
 		$post_type = implode( '_', $target );
 
-		$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : array();
+		$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : [];
 
 		switch ( $modifier ) {
 			case 'index':
@@ -96,7 +96,7 @@ class PUM_ConditionCallbacks {
 	 *
 	 * @return bool
 	 */
-	public static function taxonomy( $condition = array() ) {
+	public static function taxonomy( $condition = [] ) {
 
 		$target = explode( '_', $condition['target'] );
 
@@ -124,7 +124,7 @@ class PUM_ConditionCallbacks {
 
 			case 'ID':
 			case 'selected':
-				$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : array();
+				$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : [];
 
 				if ( is_tax( $taxonomy, wp_parse_id_list( $selected ) ) ) {
 					return true;
@@ -142,7 +142,7 @@ class PUM_ConditionCallbacks {
 	 *
 	 * @return bool
 	 */
-	public static function category( $condition = array() ) {
+	public static function category( $condition = [] ) {
 
 		$target = explode( '_', $condition['target'] );
 
@@ -157,7 +157,7 @@ class PUM_ConditionCallbacks {
 				break;
 
 			case 'selected':
-				$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : array();
+				$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : [];
 				if ( is_category( wp_parse_id_list( $selected ) ) ) {
 					return true;
 				}
@@ -174,7 +174,7 @@ class PUM_ConditionCallbacks {
 	 *
 	 * @return bool
 	 */
-	public static function post_tag( $condition = array() ) {
+	public static function post_tag( $condition = [] ) {
 
 		$target = explode( '_', $condition['target'] );
 
@@ -189,7 +189,7 @@ class PUM_ConditionCallbacks {
 				break;
 
 			case 'selected':
-				$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : array();
+				$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : [];
 				if ( is_tag( wp_parse_id_list( $selected ) ) ) {
 					return true;
 				}
@@ -206,7 +206,7 @@ class PUM_ConditionCallbacks {
 	 *
 	 * @return bool
 	 */
-	public static function post_type_tax( $condition = array() ) {
+	public static function post_type_tax( $condition = [] ) {
 
 		$target = explode( '_w_', $condition['target'] );
 
@@ -222,7 +222,7 @@ class PUM_ConditionCallbacks {
 			return self::post_type_tag( $condition );
 		}
 
-		$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : array();
+		$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : [];
 		if ( self::is_post_type( $post_type ) && has_term( wp_parse_id_list( $selected ), $taxonomy ) ) {
 			return true;
 		}
@@ -237,14 +237,14 @@ class PUM_ConditionCallbacks {
 	 *
 	 * @return bool
 	 */
-	public static function post_type_category( $condition = array() ) {
+	public static function post_type_category( $condition = [] ) {
 
 		$target = explode( '_w_', $condition['target'] );
 
 		// First key is the post type.
 		$post_type = array_shift( $target );
 
-		$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : array();
+		$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : [];
 		if ( self::is_post_type( $post_type ) && has_category( wp_parse_id_list( $selected ) ) ) {
 			return true;
 		}
@@ -259,14 +259,14 @@ class PUM_ConditionCallbacks {
 	 *
 	 * @return bool
 	 */
-	public static function post_type_tag( $condition = array() ) {
+	public static function post_type_tag( $condition = [] ) {
 
 		$target = explode( '_w_', $condition['target'] );
 
 		// First key is the post type.
 		$post_type = array_shift( $target );
 
-		$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : array();
+		$selected = ! empty( $condition['settings']['selected'] ) ? $condition['settings']['selected'] : [];
 		if ( self::is_post_type( $post_type ) && has_tag( wp_parse_id_list( $selected ) ) ) {
 			return true;
 		}

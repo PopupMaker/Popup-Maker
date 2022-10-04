@@ -37,7 +37,7 @@ function pum_get_popup( $popup_id = null ) {
  *
  * @return PUM_Model_Popup[]
  */
-function pum_get_popups( $args = array() ) {
+function pum_get_popups( $args = [] ) {
 	return pum()->popups->get_items( $args );
 }
 
@@ -48,7 +48,7 @@ function pum_get_popups( $args = array() ) {
  *
  * @return PUM_Model_Popup[]
  */
-function pum_get_all_popups( $args = array() ) {
+function pum_get_all_popups( $args = [] ) {
 	$args['posts_per_page'] = -1;
 
 	return pum_get_popups( $args );
@@ -61,10 +61,13 @@ function pum_get_all_popups( $args = array() ) {
  *
  * @return int
  */
-function pum_count_popups( $args = array() ) {
-	$args = wp_parse_args( $args, array(
-		'post_status' => 'publish',
-	) );
+function pum_count_popups( $args = [] ) {
+	$args = wp_parse_args(
+		$args,
+		[
+			'post_status' => 'publish',
+		]
+	);
 
 	return pum()->popups->count_items( $args );
 }

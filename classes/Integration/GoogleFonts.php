@@ -22,7 +22,7 @@ class PUM_Integration_GoogleFonts {
 		// Set the API key based on options first then default second.
 		self::$api_key = pum_get_option( 'google_fonts_api_key', self::$default_api_key );
 
-		add_filter( 'pum_theme_font_family_options', array( __CLASS__, 'font_family_options' ), 20 );
+		add_filter( 'pum_theme_font_family_options', [ __CLASS__, 'font_family_options' ], 20 );
 	}
 
 	/**
@@ -49,7 +49,7 @@ class PUM_Integration_GoogleFonts {
 		}
 
 		$google_api_url = 'https://www.googleapis.com/webfonts/v1/webfonts?key=' . self::$api_key . '&sort=' . $sort;
-		$response       = wp_remote_retrieve_body( wp_remote_get( $google_api_url, array( 'sslverify' => false ) ) );
+		$response       = wp_remote_retrieve_body( wp_remote_get( $google_api_url, [ 'sslverify' => false ] ) );
 
 		if ( ! is_wp_error( $response ) ) {
 			$data = json_decode( $response, true );
@@ -65,7 +65,7 @@ class PUM_Integration_GoogleFonts {
 		}
 
 		$items     = $data['items'];
-		$font_list = array();
+		$font_list = [];
 
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
@@ -92,19 +92,17 @@ class PUM_Integration_GoogleFonts {
 			return $options;
 		}
 
-		$new_options = array(
+		$new_options = [];
 
-		);
-
-//		$options = array_merge( $options, array(
-//			'' => __( 'Google Web Fonts', 'popup-maker' ) . ' &#10549;',
-//		) );
+		// $options = array_merge( $options, array(
+		// '' => __( 'Google Web Fonts', 'popup-maker' ) . ' &#10549;',
+		// ) );
 
 		foreach ( $font_list as $font_family => $font ) {
 			$new_options[ $font_family ] = $font_family;
 		}
 
-		$options[__( 'Google Web Fonts', 'popup-maker' )] = $new_options;
+		$options[ __( 'Google Web Fonts', 'popup-maker' ) ] = $new_options;
 
 		return $options;
 	}

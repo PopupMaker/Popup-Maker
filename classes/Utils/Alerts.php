@@ -16,13 +16,13 @@ class PUM_Utils_Alerts {
 	 *
 	 */
 	public static function init() {
-		add_action( 'admin_init', array( __CLASS__, 'hooks' ) );
-		add_action( 'admin_init', array( __CLASS__, 'php_handler' ) );
-		add_action( 'wp_ajax_pum_alerts_action', array( __CLASS__, 'ajax_handler' ) );
-		add_filter( 'pum_alert_list', array( __CLASS__, 'whats_new_alerts' ), 0 );
-		add_filter( 'pum_alert_list', array( __CLASS__, 'integration_alerts' ), 5 );
-		add_filter( 'pum_alert_list', array( __CLASS__, 'translation_request' ), 10 );
-		add_action( 'admin_menu', array( __CLASS__, 'append_alert_count' ), 999 );
+		add_action( 'admin_init', [ __CLASS__, 'hooks' ] );
+		add_action( 'admin_init', [ __CLASS__, 'php_handler' ] );
+		add_action( 'wp_ajax_pum_alerts_action', [ __CLASS__, 'ajax_handler' ] );
+		add_filter( 'pum_alert_list', [ __CLASS__, 'whats_new_alerts' ], 0 );
+		add_filter( 'pum_alert_list', [ __CLASS__, 'integration_alerts' ], 5 );
+		add_filter( 'pum_alert_list', [ __CLASS__, 'translation_request' ], 10 );
+		add_action( 'admin_menu', [ __CLASS__, 'append_alert_count' ], 999 );
 	}
 
 	/**
@@ -52,7 +52,7 @@ class PUM_Utils_Alerts {
 	 *
 	 * @return array
 	 */
-	public static function translation_request( $alerts = array() ) {
+	public static function translation_request( $alerts = [] ) {
 
 		$version = explode( '.', Popup_Maker::$VER );
 		// Get only the major.minor version exclude the point releases.
@@ -120,7 +120,7 @@ class PUM_Utils_Alerts {
 		$locales_supported_by_wordpress = PUM_Utils_I10n::available_locales();
 
 		// Get the native language names of the locales.
-		$suggest_translated_locale_names = array();
+		$suggest_translated_locale_names = [];
 		foreach ( $suggested_locales_with_langpack as $locale ) {
 			$suggest_translated_locale_names[ $locale ] = $locales_supported_by_wordpress[ $locale ]['native_name'];
 		}
@@ -139,7 +139,10 @@ class PUM_Utils_Alerts {
 				$language = current( $suggest_translated_locale_names );
 
 				$suggest_string = sprintf( /* translators: %s: native language name. */
-					__( 'This plugin is also available in %1$s. <a href="%2$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ), $language, esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' ) );
+					__( 'This plugin is also available in %1$s. <a href="%2$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ),
+					$language,
+					esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
+				);
 
 				// Multiple locale suggestions.
 			} elseif ( ! empty( $suggest_translated_locale_names ) ) {
@@ -152,7 +155,11 @@ class PUM_Utils_Alerts {
 				}
 
 				$suggest_string = sprintf( /* translators: 1: native language name, 2: other native language names, comma separated */
-					__( 'This plugin is also available in %1$s (also: %2$s). <a href="%3$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ), $primary_language, trim( $other_suggest, ' ,' ), esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' ) );
+					__( 'This plugin is also available in %1$s (also: %2$s). <a href="%3$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ),
+					$primary_language,
+					trim( $other_suggest, ' ,' ),
+					esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
+				);
 
 				// Non-English locale in header, no translations.
 			} elseif ( ! empty( $non_en_locales_from_header ) ) {
@@ -161,7 +168,10 @@ class PUM_Utils_Alerts {
 					$locale = reset( $non_en_locales_from_header );
 
 					$suggest_string = sprintf( /* translators: 1: native language name, 2: URL to translate.wordpress.org */
-						__( 'This plugin is not translated into %1$s yet. <a href="%2$s" target="_blank">Help translate it!</a>', 'popup-maker' ), $locales_supported_by_wordpress[ $locale ]['native_name'], esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' ) );
+						__( 'This plugin is not translated into %1$s yet. <a href="%2$s" target="_blank">Help translate it!</a>', 'popup-maker' ),
+						$locales_supported_by_wordpress[ $locale ]['native_name'],
+						esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
+					);
 				} else {
 					$primary_locale   = reset( $non_en_locales_from_header );
 					$primary_language = $locales_supported_by_wordpress[ $primary_locale ]['native_name'];
@@ -173,7 +183,11 @@ class PUM_Utils_Alerts {
 					}
 
 					$suggest_string = sprintf( /* translators: 1: native language name, 2: other native language names, comma separated */
-						__( 'This plugin is also available in %1$s (also: %2$s). <a href="%3$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ), $primary_language, trim( $other_suggest, ' ,' ), esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' ) );
+						__( 'This plugin is also available in %1$s (also: %2$s). <a href="%3$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ),
+						$primary_language,
+						trim( $other_suggest, ' ,' ),
+						esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
+					);
 				}
 			}
 
@@ -183,16 +197,18 @@ class PUM_Utils_Alerts {
 			// The plugin has translations for current locale, but they are out of date.
 		} elseif ( $current_locale_is_suggested && $current_locale_is_translated && version_compare( $locale_translation_versions[ $current_locale ], Popup_Maker::$VER, '<' ) ) {
 			$suggest_string = sprintf( /* translators: %s: native language name. */
-				__( 'This plugin\'s translation for %1$s is out of date. <a href="%2$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ), $locales_supported_by_wordpress[ $current_locale ]['native_name'], esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' ) );
+				__( 'This plugin\'s translation for %1$s is out of date. <a href="%2$s" target="_blank">Help improve the translation!</a>', 'popup-maker' ),
+				$locales_supported_by_wordpress[ $current_locale ]['native_name'],
+				esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' )
+			);
 		}
 
-
 		if ( ! empty( $suggest_string ) ) {
-			$alerts[] = array(
+			$alerts[] = [
 				'code'    => $code,
 				'message' => $suggest_string,
 				'type'    => 'info',
-			);
+			];
 		}
 
 		return $alerts;
@@ -203,29 +219,36 @@ class PUM_Utils_Alerts {
 	 *
 	 * @return array
 	 */
-	public static function whats_new_alerts( $alerts = array() ) {
+	public static function whats_new_alerts( $alerts = [] ) {
 
 		$upgraded_from = PUM_Utils_Upgrades::$upgraded_from;
 
 		if ( version_compare( $upgraded_from, '0.0.0', '>' ) ) {
 
 			if ( version_compare( $upgraded_from, '1.8.0', '<' ) ) {
-				$alerts[] = array(
+				$alerts[] = [
 					'code'     => 'whats_new_1_8_0',
 					'type'     => 'success',
-					'message'  => sprintf( '<strong>' . __( 'See whats new in v%s - (%sview all changes%s)', 'popup-maker' ) . '</strong>', '1.8.0', '<a href="' . add_query_arg( array(
-							'tab'       => 'plugin-information',
-							'plugin'    => 'popup-maker',
-							'section'   => 'changelog',
-							'TB_iframe' => true,
-							'width'     => 722,
-							'height'    => 949,
-						), admin_url( 'plugin-install.php' ) ) . '" target="_blank">', '</a>' ),
-					'html'     => "<ul class='ul-disc'>" . "<li>" . 'New UX for the Popup Theme editor.' . "</li>" . "<li>" . 'New close button positions: top center, bottom center, middle left & middle right.' . "</li>" . "<li>" . 'New option to position close button outside of popup.' . "</li>" . "</ul>",
+					'message'  => sprintf(
+						'<strong>' . __( 'See whats new in v%1$s - (%2$sview all changes%3$s)', 'popup-maker' ) . '</strong>',
+						'1.8.0',
+						'<a href="' . add_query_arg(
+							[
+								'tab'       => 'plugin-information',
+								'plugin'    => 'popup-maker',
+								'section'   => 'changelog',
+								'TB_iframe' => true,
+								'width'     => 722,
+								'height'    => 949,
+							],
+							admin_url( 'plugin-install.php' )
+						) . '" target="_blank">',
+						'</a>'
+					),
+					'html'     => "<ul class='ul-disc'>" . '<li>' . 'New UX for the Popup Theme editor.' . '</li>' . '<li>' . 'New close button positions: top center, bottom center, middle left & middle right.' . '</li>' . '<li>' . 'New option to position close button outside of popup.' . '</li>' . '</ul>',
 					'priority' => 100,
-				);
+				];
 			}
-
 		}
 
 		return $alerts;
@@ -236,18 +259,18 @@ class PUM_Utils_Alerts {
 	 *
 	 * @return array
 	 */
-	public static function integration_alerts( $alerts = array() ) {
+	public static function integration_alerts( $alerts = [] ) {
 
-		$integrations = array(
-			'buddypress' => array(
+		$integrations = [
+			'buddypress' => [
 				'label'          => __( 'BuddyPress', 'buddypress' ),
 				'learn_more_url' => 'https://wppopupmaker.com/works-with/buddypress/',
 				'conditions'     => ! class_exists( 'PUM_BuddyPress' ) && ( function_exists( 'buddypress' ) || class_exists( 'BuddyPress' ) ),
 				'slug'           => 'popup-maker-buddypress-integration',
 				'name'           => 'Popup Maker - BuddyPress Integration',
 				'free'           => true,
-			),
-		);
+			],
+		];
 
 		foreach ( $integrations as $key => $integration ) {
 
@@ -261,16 +284,15 @@ class PUM_Utils_Alerts {
 				$text = $installed ? __( 'activate it now', 'popup-maker' ) : __( 'install it now', 'popup-maker' );
 				$url  = $installed ? esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $path ), 'activate-plugin_' . $path ) ) : esc_url( wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=popup-maker-buddypress-integration' ), 'install-plugin_popup-maker-buddypress-integration' ) );
 
-				$alerts[] = array(
+				$alerts[] = [
 					'code'        => $key . '_integration_available',
-					'message'     => sprintf( __( '%sDid you know:%s Popup Maker has custom integrations with %s, %slearn more%s or %s%s%s!', 'popup-maker' ), '<strong>', '</strong>', $integration['label'], '<a href="' . $integration['learn_more_url'] . '" target="_blank">', '</a>', '<a href="' . $url . '">', $text, '</a>' ),
+					'message'     => sprintf( __( '%1$sDid you know:%2$s Popup Maker has custom integrations with %3$s, %4$slearn more%5$s or %6$s%7$s%8$s!', 'popup-maker' ), '<strong>', '</strong>', $integration['label'], '<a href="' . $integration['learn_more_url'] . '" target="_blank">', '</a>', '<a href="' . $url . '">', $text, '</a>' ),
 					'dismissible' => true,
 					'global'      => false,
 					'type'        => $installed ? 'warning' : 'info',
-				);
+				];
 
 			}
-
 		}
 
 		return $alerts;
@@ -281,9 +303,9 @@ class PUM_Utils_Alerts {
 	 */
 	public static function hooks() {
 		if ( is_admin() && current_user_can( 'edit_posts' ) ) {
-			add_action( 'admin_notices', array( __CLASS__, 'admin_notices' ) );
-			add_action( 'network_admin_notices', array( __CLASS__, 'admin_notices' ) );
-			add_action( 'user_admin_notices', array( __CLASS__, 'admin_notices' ) );
+			add_action( 'admin_notices', [ __CLASS__, 'admin_notices' ] );
+			add_action( 'network_admin_notices', [ __CLASS__, 'admin_notices' ] );
+			add_action( 'user_admin_notices', [ __CLASS__, 'admin_notices' ] );
 		}
 	}
 
@@ -291,10 +313,13 @@ class PUM_Utils_Alerts {
 	 * @return bool
 	 */
 	public static function should_show_alerts() {
-		return in_array( true, array(
-			pum_is_admin_page(),
-			count( self::get_global_alerts() ) > 0,
-		) );
+		return in_array(
+			true,
+			[
+				pum_is_admin_page(),
+				count( self::get_global_alerts() ) > 0,
+			]
+		);
 	}
 
 	/**
@@ -322,7 +347,7 @@ class PUM_Utils_Alerts {
 		?>
 
 		<script type="text/javascript">
-            window.pum_alerts_nonce = '<?php echo $nonce ?>';
+			window.pum_alerts_nonce = '<?php echo $nonce; ?>';
 		</script>
 
 		<div class="pum-alerts">
@@ -333,14 +358,17 @@ class PUM_Utils_Alerts {
 
 			<p><?php __( 'Check out the following notifications from Popup Maker.', 'popup-maker' ); ?></p>
 
-			<?php foreach ( $alerts as $alert ) {
-				$expires = 1 == $alert['dismissible'] ? '' :  $alert['dismissible'];
-				$dismiss_url = add_query_arg( array(
-					'nonce'             => $nonce,
-					'code'              => $alert['code'],
-					'pum_dismiss_alert' => 'dismiss',
-					'expires'           => $expires,
-				));
+			<?php
+			foreach ( $alerts as $alert ) {
+				$expires     = 1 == $alert['dismissible'] ? '' : $alert['dismissible'];
+				$dismiss_url = add_query_arg(
+					[
+						'nonce'             => $nonce,
+						'code'              => $alert['code'],
+						'pum_dismiss_alert' => 'dismiss',
+						'expires'           => $expires,
+					]
+				);
 				?>
 
 				<div class="pum-alert-holder" data-code="<?php echo $alert['code']; ?>" class="<?php echo $alert['dismissible'] ? 'is-dismissible' : ''; ?>" data-dismissible="<?php echo esc_attr( $alert['dismissible'] ); ?>">
@@ -364,12 +392,14 @@ class PUM_Utils_Alerts {
 										$url        = $action['href'];
 										$attributes = 'target="_blank" rel="noreferrer noopener"';
 									} else {
-										$url = add_query_arg( array(
-											'nonce'             => $nonce,
-											'code'              => $alert['code'],
-											'pum_dismiss_alert' => $action['action'],
-											'expires'           => $expires,
-										));
+										$url = add_query_arg(
+											[
+												'nonce'   => $nonce,
+												'code'    => $alert['code'],
+												'pum_dismiss_alert' => $action['action'],
+												'expires' => $expires,
+											]
+										);
 
 										$attributes = 'class="pum-dismiss"';
 									}
@@ -404,7 +434,7 @@ class PUM_Utils_Alerts {
 	public static function get_global_alerts() {
 		$alerts = self::get_alerts();
 
-		$global_alerts = array();
+		$global_alerts = [];
 
 		foreach ( $alerts as $alert ) {
 			if ( $alert['global'] ) {
@@ -423,10 +453,10 @@ class PUM_Utils_Alerts {
 		static $alert_list;
 
 		if ( ! isset( $alert_list ) ) {
-			$alert_list = apply_filters( 'pum_alert_list', array() );
+			$alert_list = apply_filters( 'pum_alert_list', [] );
 		}
 
-		$alerts = array();
+		$alerts = [];
 
 		foreach ( $alert_list as $alert ) {
 
@@ -435,15 +465,18 @@ class PUM_Utils_Alerts {
 				continue;
 			}
 
-			$alerts[] = wp_parse_args( $alert, array(
-				'code'        => 'default',
-				'priority'    => 10,
-				'message'     => '',
-				'type'        => 'info',
-				'html'        => '',
-				'dismissible' => true,
-				'global'      => false,
-			) );
+			$alerts[] = wp_parse_args(
+				$alert,
+				[
+					'code'        => 'default',
+					'priority'    => 10,
+					'message'     => '',
+					'type'        => 'info',
+					'html'        => '',
+					'dismissible' => true,
+					'global'      => false,
+				]
+			);
 
 		}
 
@@ -458,11 +491,14 @@ class PUM_Utils_Alerts {
 	 * Handles if alert was dismissed AJAX
 	 */
 	public static function ajax_handler() {
-		$args = wp_parse_args( $_REQUEST, array(
-			'code'              => '',
-			'expires'           => '',
-			'pum_dismiss_alert' => '',
-		));
+		$args = wp_parse_args(
+			$_REQUEST,
+			[
+				'code'              => '',
+				'expires'           => '',
+				'pum_dismiss_alert' => '',
+			]
+		);
 
 		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'pum_alerts_action' ) ) {
 			wp_send_json_error();
@@ -490,11 +526,14 @@ class PUM_Utils_Alerts {
 			return;
 		}
 
-		$args = wp_parse_args( $_REQUEST, array(
-			'code'              => '',
-			'expires'           => '',
-			'pum_dismiss_alert' => '',
-		));
+		$args = wp_parse_args(
+			$_REQUEST,
+			[
+				'code'              => '',
+				'expires'           => '',
+				'pum_dismiss_alert' => '',
+			]
+		);
 
 		self::action_handler( $args['code'], $args['pum_dismiss_alert'], $args['expires'] );
 	}
@@ -559,7 +598,7 @@ class PUM_Utils_Alerts {
 		$dismissed_alerts = get_user_meta( $user_id, '_pum_dismissed_alerts', true );
 
 		if ( ! is_array( $dismissed_alerts ) ) {
-			$dismissed_alerts = array();
+			$dismissed_alerts = [];
 			update_user_meta( $user_id, '_pum_dismissed_alerts', $dismissed_alerts );
 		}
 

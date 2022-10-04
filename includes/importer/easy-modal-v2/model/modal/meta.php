@@ -6,15 +6,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class EModal_Model_Modal_Meta extends EModal_Model {
-	protected $_class_name = 'EModal_Model_Modal_Meta';
-	protected $_table_name = 'em_modal_metas';
-	protected $_pk = 'modal_id';
-	protected $_default_fields = array(
+	protected $_class_name     = 'EModal_Model_Modal_Meta';
+	protected $_table_name     = 'em_modal_metas';
+	protected $_pk             = 'modal_id';
+	protected $_default_fields = [
 		'id'       => null,
 		'modal_id' => null,
-		'display'  => array(),
-		'close'    => array(),
-	);
+		'display'  => [],
+		'close'    => [],
+	];
 
 	public function __construct( $id = null ) {
 		global $wpdb;
@@ -31,7 +31,7 @@ class EModal_Model_Modal_Meta extends EModal_Model {
 				$this->process_load( $row );
 			}
 		} else {
-			$this->set_fields( apply_filters( "{$class_name}_defaults", array() ) );
+			$this->set_fields( apply_filters( "{$class_name}_defaults", [] ) );
 		}
 
 		return $this;
@@ -44,7 +44,7 @@ class EModal_Model_Modal_Meta extends EModal_Model {
 		$rows = $wpdb->get_col( "SELECT id FROM $table_name WHERE modal_id = $this->modal_id ORDER BY id DESC" );
 		if ( count( $rows ) ) {
 			$this->id = $rows[0];
-			$wpdb->update( $table_name, $this->serialized_values(), array( 'id' => $this->id ) );
+			$wpdb->update( $table_name, $this->serialized_values(), [ 'id' => $this->id ] );
 		} else {
 			$wpdb->insert( $table_name, $this->serialized_values() );
 			$this->id = $wpdb->insert_id;

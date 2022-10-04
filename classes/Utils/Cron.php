@@ -18,8 +18,8 @@ class PUM_Utils_Cron {
 	 * PUM_Utils_Cron constructor.
 	 */
 	public function __construct() {
-		add_filter( 'cron_schedules', array( $this, 'add_schedules' ) );
-		add_action( 'wp', array( $this, 'schedule_events' ) );
+		add_filter( 'cron_schedules', [ $this, 'add_schedules' ] );
+		add_action( 'wp', [ $this, 'schedule_events' ] );
 	}
 
 	/**
@@ -29,12 +29,12 @@ class PUM_Utils_Cron {
 	 *
 	 * @return array
 	 */
-	public function add_schedules( $schedules = array() ) {
+	public function add_schedules( $schedules = [] ) {
 		// Adds once weekly to the existing schedules.
-		$schedules['weekly'] = array(
+		$schedules['weekly'] = [
 			'interval' => 604800,
-			'display'  => __( 'Once Weekly', 'popup-maker' )
-		);
+			'display'  => __( 'Once Weekly', 'popup-maker' ),
+		];
 
 		return $schedules;
 	}

@@ -20,9 +20,9 @@ class PUM_Previews {
 	public static function init() {
 		// add_filter( 'template_include', array( __CLASS__, 'template_include' ), 1000, 2 );
 		add_action( 'template_redirect', [ __CLASS__, 'force_load_preview' ] );
-		add_filter( 'pum_popup_is_loadable', array( __CLASS__, 'is_loadable' ), 1000, 2 );
-		add_filter( 'pum_popup_data_attr', array( __CLASS__, 'data_attr' ), 1000, 2 );
-		add_filter( 'pum_popup_get_public_settings', array( __CLASS__, 'get_public_settings' ), 1000, 2 );
+		add_filter( 'pum_popup_is_loadable', [ __CLASS__, 'is_loadable' ], 1000, 2 );
+		add_filter( 'pum_popup_data_attr', [ __CLASS__, 'data_attr' ], 1000, 2 );
+		add_filter( 'pum_popup_get_public_settings', [ __CLASS__, 'get_public_settings' ], 1000, 2 );
 
 	}
 
@@ -60,7 +60,7 @@ class PUM_Previews {
 	 * For popup previews this will force only the correct popup to load.
 	 *
 	 * @param bool $loadable
-	 * @param int $popup_id
+	 * @param int  $popup_id
 	 *
 	 * @return bool
 	 */
@@ -78,10 +78,9 @@ class PUM_Previews {
 	 * @return bool
 	 */
 	public static function should_preview_popup( $popup_id = 0 ) {
-		if ( defined( "DOING_AJAX" ) && DOING_AJAX ) {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			return false;
 		}
-
 
 		if ( isset( $_GET['popup_preview'] ) && $_GET['popup_preview'] && isset( $_GET['popup'] ) ) {
 
@@ -117,11 +116,11 @@ class PUM_Previews {
 			return $data_attr;
 		}
 
-		$data_attr['triggers'] = array(
-			array(
+		$data_attr['triggers'] = [
+			[
 				'type' => 'admin_debug',
-			),
-		);
+			],
+		];
 
 		return $data_attr;
 	}
@@ -129,7 +128,7 @@ class PUM_Previews {
 	/**
 	 * On popup previews add an admin debug trigger.
 	 *
-	 * @param array $settings
+	 * @param array           $settings
 	 * @param PUM_Model_Popup $popup
 	 *
 	 * @return array
@@ -139,11 +138,11 @@ class PUM_Previews {
 			return $settings;
 		}
 
-		$settings['triggers'] = array(
-			array(
+		$settings['triggers'] = [
+			[
 				'type' => 'admin_debug',
-			),
-		);
+			],
+		];
 
 		return $settings;
 	}

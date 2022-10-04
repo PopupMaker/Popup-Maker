@@ -42,7 +42,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self();
-			add_action( 'init', array( self::$instance, 'init' ), -9999 );
+			add_action( 'init', [ self::$instance, 'init' ], -9999 );
 		}
 
 		return self::$instance;
@@ -81,7 +81,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 	/**
 	 * Adds an upgrade to the registry.
 	 *
-	 * @param int $upgrade_id upgrade ID.
+	 * @param int   $upgrade_id upgrade ID.
 	 * @param array $attributes {
 	 *     Upgrade attributes.
 	 *
@@ -92,11 +92,14 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 	 * @return true Always true.
 	 */
 	public function add_upgrade( $upgrade_id, $attributes ) {
-		$attributes = wp_parse_args( $attributes, array(
-			'rules' => array(),
-			'class' => '',
-			'file'  => '',
-		) );
+		$attributes = wp_parse_args(
+			$attributes,
+			[
+				'rules' => [],
+				'class' => '',
+				'file'  => '',
+			]
+		);
 
 		// Log an error if it's too late to register the process.
 		if ( did_action( 'pum_upgrade_process_init' ) ) {

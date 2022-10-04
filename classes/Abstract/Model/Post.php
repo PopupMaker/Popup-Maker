@@ -209,7 +209,7 @@ abstract class PUM_Abstract_Model_Post {
 			if ( is_array( $this->required_post_type ) && ! in_array( $post->post_type, $this->required_post_type ) ) {
 
 				return false;
-			} else if ( is_string( $this->required_post_type ) && $this->required_post_type !== $post->post_type ) {
+			} elseif ( is_string( $this->required_post_type ) && $this->required_post_type !== $post->post_type ) {
 
 				return false;
 			}
@@ -229,7 +229,7 @@ abstract class PUM_Abstract_Model_Post {
 	 */
 	public function __call( $name, $arguments ) {
 		if ( method_exists( $this, 'get_' . $name ) ) {
-			return call_user_func_array( array( $this, 'get_' . $name ), $arguments );
+			return call_user_func_array( [ $this, 'get_' . $name ], $arguments );
 		}
 	}
 
@@ -244,7 +244,7 @@ abstract class PUM_Abstract_Model_Post {
 
 		if ( method_exists( $this, 'get_' . $key ) ) {
 
-			return call_user_func( array( $this, 'get_' . $key ) );
+			return call_user_func( [ $this, 'get_' . $key ] );
 
 		} else {
 
