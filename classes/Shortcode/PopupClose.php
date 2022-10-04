@@ -143,9 +143,10 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 	public function handler( $atts, $content = null ) {
 		$atts = $this->shortcode_atts( $atts );
 
-		$tag         = esc_attr( $atts['tag'] );
-		$classes     = esc_attr( $atts['classes'] );
-		$do_default  = esc_attr( $atts['do_default'] ? " data-do-default='true'" : '' );
+		$tag        = esc_attr( $atts['tag'] );
+		$classes    = esc_attr( $atts['classes'] );
+		$do_default = esc_attr( $atts['do_default'] ? " data-do-default='true'" : '' );
+		// Escaped using notes here: https://wordpress.stackexchange.com/a/357349/63942.
 		$esc_content = PUM_Helpers::do_shortcode( force_balance_tags( wp_kses_post( $content ) ) );
 
 		// Sets up our href and target, if the tag is an `a`.

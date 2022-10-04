@@ -143,10 +143,11 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	public function handler( $atts, $content = null ) {
 		$atts = $this->shortcode_atts( $atts );
 
-		$tag         = esc_attr( $atts['tag'] );
-		$id          = esc_attr( $atts['id'] );
-		$classes     = esc_attr( $atts['classes'] );
-		$do_default  = esc_attr( $atts['do_default'] );
+		$tag        = esc_attr( $atts['tag'] );
+		$id         = esc_attr( $atts['id'] );
+		$classes    = esc_attr( $atts['classes'] );
+		$do_default = esc_attr( $atts['do_default'] );
+		// Escaped using notes here: https://wordpress.stackexchange.com/a/357349/63942.
 		$esc_content = PUM_Helpers::do_shortcode( force_balance_tags( wp_kses_post( $content ) ) );
 
 		$return = "<$tag class='pum-trigger  popmake-$id  $classes' data-do-default='$do_default'>$esc_content</$tag>";
@@ -190,7 +191,7 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 		global $allowedtags;
 		?>
 		<#
-			const allowedTags = <?php echo wp_json_encode( array_keys( $allowedtags )	 ); ?>;
+			const allowedTags = <?php echo wp_json_encode( array_keys( $allowedtags ) ); ?>;
 			const tag = allowedTags.indexOf( attrs.tag ) >= 0 ? attrs.tag : 'span';
 		#>
 		<{{{tag}}} class="pum-trigger  popmake-{{{attrs.id}}} {{{attrs.classes}}}">{{{attrs._inner_content}}}</{{{tag}}}>
