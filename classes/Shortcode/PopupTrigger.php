@@ -143,11 +143,13 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	public function handler( $atts, $content = null ) {
 		$atts = $this->shortcode_atts( $atts );
 
-		$tag = esc_attr( $atts['tag'] );
+		$tag         = esc_attr( $atts['tag'] );
+		$id          = esc_attr( $atts['id'] );
+		$classes     = esc_attr( $atts['classes'] );
+		$do_default  = esc_attr( $atts['do_default'] );
+		$esc_content = PUM_Helpers::do_shortcode( force_balance_tags( wp_kses_post( $content ) ) );
 
-		$return  = '<' . $tag . ' class="pum-trigger  popmake-' . esc_attr( $atts['id'] ) . ' ' . esc_attr( $atts['classes'] ) . '"  data-do-default="' . esc_attr( $atts['do_default'] ) . '">';
-		$return .= esc_html( PUM_Helpers::do_shortcode( $content ) );
-		$return .= '</' . $tag . '>';
+		$return = "<$tag class='pum-trigger  popmake-$id  $classes' data-do-default='$do_default'>$esc_content</$tag>";
 
 		PUM_Site_Popups::preload_popup_by_id_if_enabled( $atts['id'] );
 
@@ -172,7 +174,7 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 			$atts['tag'] = 'span';
 		}
 
-		if ( $atts['id'] == 'custom' ) {
+		if ( 'custom' === $atts['id'] ) {
 			$atts['id'] = $atts['custom_id'];
 		}
 
@@ -188,7 +190,7 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 		global $allowedtags;
 		?>
 		<#
-			const allowedTags = <?php echo json_encode( array_keys( $allowedtags ) ); ?>;
+			const allowedTags = <?php echo wp_json_encode( array_keys( $allowedtags )	 ); ?>;
 			const tag = allowedTags.indexOf( attrs.tag ) >= 0 ? attrs.tag : 'span';
 		#>
 		<{{{tag}}} class="pum-trigger  popmake-{{{attrs.id}}} {{{attrs.classes}}}">{{{attrs._inner_content}}}</{{{tag}}}>

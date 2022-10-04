@@ -143,17 +143,16 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 	public function handler( $atts, $content = null ) {
 		$atts = $this->shortcode_atts( $atts );
 
-		$tag = esc_attr( $atts['tag'] );
-
-		$do_default = $atts['do_default'] ? " data-do-default='true'" : '';
+		$tag         = esc_attr( $atts['tag'] );
+		$classes     = esc_attr( $atts['classes'] );
+		$do_default  = esc_attr( $atts['do_default'] ? " data-do-default='true'" : '' );
+		$esc_content = PUM_Helpers::do_shortcode( force_balance_tags( wp_kses_post( $content ) ) );
 
 		// Sets up our href and target, if the tag is an `a`.
-		$href   = 'a' === $atts['tag'] ? "href='{" . esc_attr( $atts['href'] ) . "}'" : '';
+		$href   = 'a' === $atts['tag'] ? "href='" . esc_attr( $atts['href'] ) . "'" : '';
 		$target = 'a' === $atts['tag'] && ! empty( $atts['target'] ) ? "target='" . esc_attr( $atts['target'] ) . "'" : '';
 
-		$return  = "<{$tag} $href $target class='pum-close popmake-close " . esc_attr( $atts['classes'] ) . "' {$do_default}>";
-		$return .= esc_html( PUM_Helpers::do_shortcode( $content ) );
-		$return .= "</{$tag}>";
+		$return = "<$tag $href $target class='pum-close popmake-close $classes' $do_default>$esc_content</$tag>";
 
 		return $return;
 	}
