@@ -211,7 +211,7 @@ class PUM_Admin_Popups {
 		wp_enqueue_script( 'popup-maker-admin' );
 		?>
 		<script type="text/javascript">
-			window.pum_popup_settings_editor = 
+			window.pum_popup_settings_editor =
 			<?php
 			echo PUM_Utils_Array::safe_json_encode(
 				apply_filters(
@@ -228,6 +228,7 @@ class PUM_Admin_Popups {
 						'triggers'              => PUM_Triggers::instance()->get_triggers(),
 						'cookies'               => PUM_Cookies::instance()->get_cookies(),
 						'current_values'        => self::render_form_values( $settings ),
+						'preview_nonce'         => wp_create_nonce( 'popup-preview' ),
 					]
 				)
 			);
