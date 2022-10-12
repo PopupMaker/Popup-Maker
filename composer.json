@@ -21,7 +21,8 @@
     "squizlabs/php_codesniffer": "^3.0@dev",
     "wp-coding-standards/wpcs": "dev-master",
     "dealerdirect/phpcodesniffer-composer-installer": "dev-master",
-    "phpunit/phpunit": "^7.5"
+    "phpunit/phpunit": "^7.5",
+    "phpcompatibility/phpcompatibility-wp": "^2.1" 
   },
   "minimum-stability": "dev",
   "scripts": {

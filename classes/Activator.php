@@ -1,9 +1,10 @@
 <?php
 /*******************************************************************************
  * Copyright (c) 2019, Code Atlantic LLC
+ * @package Popup-Maker
  ******************************************************************************/
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -29,7 +30,7 @@ class PUM_Activator extends PUM_Install {
 	 * @since    1.4
 	 * @deprecated 1.9.0
 	 *
-	 * @param bool $network_wide
+	 * @param bool $network_wide Enable for all sites in the network.
 	 */
 	public static function activate( $network_wide = false ) {
 		parent::activate_plugin( $network_wide );

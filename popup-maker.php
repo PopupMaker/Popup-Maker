@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Autoloader
  *
- * @param $class
+ * @param string $class Class name for attempt autoloading.
  */
 function pum_autoloader( $class ) {
 
