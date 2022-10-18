@@ -2,7 +2,12 @@
 
 ## Unreleased
 
+## v1.16.10 - 10/18/2022
+
+* Improvement: Added nonce to previews.
 * Improvement: Standardizing coding standards, convert to short arrays.
+* Improvement: First phase of a large clean up of older code.
+* Fix: Recent improvements to conditions handling caused some issues in some cases.
 * Fix: Bug caused by security patch in v1.16.9 which caused shortcodes to render content strangely.
 
 ## v1.16.9 - 09/23/2022
