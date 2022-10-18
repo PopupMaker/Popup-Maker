@@ -3,7 +3,7 @@
  * Plugin Name:  Popup Maker
  * Plugin URI:   https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&utm_medium=plugin-uri
  * Description:  Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
- * Version:      1.16.9
+ * Version:      1.16.10
  * Author:       Popup Maker
  * Author URI:   https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&utm_medium=author-uri
  * License:      GPL2 or later
@@ -32,20 +32,26 @@ function pum_autoloader( $class ) {
 		return;
 	}
 
-	$pum_autoloaders = apply_filters( 'pum_autoloaders', array(
-		array(
-			'prefix' => 'PUM_',
-			'dir'    => dirname( __FILE__ ) . '/classes/',
-		),
-	) );
+	$pum_autoloaders = apply_filters(
+		'pum_autoloaders',
+		[
+			[
+				'prefix' => 'PUM_',
+				'dir'    => dirname( __FILE__ ) . '/classes/',
+			],
+		]
+	);
 
 	foreach ( $pum_autoloaders as $autoloader ) {
-		$autoloader = wp_parse_args( $autoloader, array(
-			'prefix'  => 'PUM_',
-			'dir'     => dirname( __FILE__ ) . '/classes/',
-			'search'  => '_',
-			'replace' => '/',
-		) );
+		$autoloader = wp_parse_args(
+			$autoloader,
+			[
+				'prefix'  => 'PUM_',
+				'dir'     => dirname( __FILE__ ) . '/classes/',
+				'search'  => '_',
+				'replace' => '/',
+			]
+		);
 
 		// project-specific namespace prefix
 		$prefix = $autoloader['prefix'];
@@ -93,7 +99,7 @@ class Popup_Maker {
 	/**
 	 * @var string Plugin Version
 	 */
-	public static $VER = '1.16.9';
+	public static $VER = '1.16.10';
 
 	/**
 	 * @var int DB Version
@@ -174,10 +180,10 @@ class Popup_Maker {
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Popup_Maker ) ) {
-			self::$instance = new Popup_Maker;
+			self::$instance = new Popup_Maker();
 			self::$instance->setup_constants();
 			self::$instance->includes();
-			add_action( 'init', array( self::$instance, 'load_textdomain' ) );
+			add_action( 'init', [ self::$instance, 'load_textdomain' ] );
 			self::$instance->init();
 		}
 
@@ -307,7 +313,7 @@ class Popup_Maker {
 	}
 
 	public function init() {
-		$this->cron   = new PUM_Utils_Cron;
+		$this->cron   = new PUM_Utils_Cron();
 		$this->popups = new PUM_Repository_Popups();
 		$this->themes = new PUM_Repository_Themes();
 
@@ -351,7 +357,6 @@ class Popup_Maker {
  *
  * @return Popup_Maker
  * @since      1.8.0
- *
  */
 function pum() {
 	return Popup_Maker::instance();
@@ -364,7 +369,7 @@ function pum_init() {
 	// TODO Replace this with PUM_Utils_Prerequisites.
 	if ( ! PUM_Install::meets_activation_requirements() ) {
 		require_once 'includes/failsafes.php';
-		add_action( 'admin_notices', array( 'PUM_Install', 'activation_failure_admin_notice' ) );
+		add_action( 'admin_notices', [ 'PUM_Install', 'activation_failure_admin_notice' ] );
 		return;
 	}
 
@@ -378,12 +383,12 @@ function pum_init() {
 add_action( 'plugins_loaded', 'pum_init', 9 );
 
 // Ensure plugin & environment compatibility.
-register_activation_hook( __FILE__, array( 'PUM_Install', 'activation_check' ) );
+register_activation_hook( __FILE__, [ 'PUM_Install', 'activation_check' ] );
 
 // Register activation, deactivation & uninstall hooks.
-register_activation_hook( __FILE__, array( 'PUM_Install', 'activate_plugin' ) );
-register_deactivation_hook( __FILE__, array( 'PUM_Install', 'deactivate_plugin' ) );
-register_uninstall_hook( __FILE__, array( 'PUM_Install', 'uninstall_plugin' ) );
+register_activation_hook( __FILE__, [ 'PUM_Install', 'activate_plugin' ] );
+register_deactivation_hook( __FILE__, [ 'PUM_Install', 'deactivate_plugin' ] );
+register_uninstall_hook( __FILE__, [ 'PUM_Install', 'uninstall_plugin' ] );
 
 /**
  * @deprecated 1.7.0

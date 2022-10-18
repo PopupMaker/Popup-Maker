@@ -50,9 +50,9 @@ class PUM_Utils_Options {
 	 * @return array settings
 	 */
 	public static function get_all() {
-		$settings = get_option( self::$_prefix . 'settings', array() );
+		$settings = get_option( self::$_prefix . 'settings', [] );
 		if ( ! is_array( $settings ) ) {
-			$settings = array();
+			$settings = [];
 		}
 
 		/* @deprecated filter. */
@@ -133,7 +133,7 @@ class PUM_Utils_Options {
 	 *
 	 * @return bool
 	 */
-	public static function update_all( $new_options = array() ) {
+	public static function update_all( $new_options = [] ) {
 		// First let's grab the current settings
 		$options = get_option( self::$_prefix . 'settings' );
 
@@ -157,7 +157,7 @@ class PUM_Utils_Options {
 	 *
 	 * @return bool
 	 */
-	public static function merge( $new_options = array() ) {
+	public static function merge( $new_options = [] ) {
 
 		$options = self::get_all();
 
@@ -192,8 +192,8 @@ class PUM_Utils_Options {
 		// If no key, exit
 		if ( empty( $keys ) ) {
 			return false;
-		} else if ( is_string( $keys ) ) {
-			$keys = array( $keys );
+		} elseif ( is_string( $keys ) ) {
+			$keys = [ $keys ];
 		}
 
 		// First let's grab the current settings
@@ -223,7 +223,7 @@ class PUM_Utils_Options {
 	 *
 	 * @return bool
 	 */
-	public static function remap_keys( $remap_array = array() ) {
+	public static function remap_keys( $remap_array = [] ) {
 		$options = self::get_all();
 
 		foreach ( $remap_array as $key => $new_key ) {

@@ -32,7 +32,7 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	 *
 	 * @return array
 	 */
-	public function custom_scripts( $js = []) {
+	public function custom_scripts( $js = [] ) {
 		return $js;
 	}
 

@@ -1,7 +1,7 @@
 {
   "name": "popupmaker/popup-maker",
   "type": "wordpress-plugin",
-  "version": "1.16.9",
+  "version": "1.16.10",
   "description": "The easiest way to create any popup imaginable with WordPress.",
   "keywords": [
     "popup maker",
@@ -21,10 +21,13 @@
     "squizlabs/php_codesniffer": "^3.0@dev",
     "wp-coding-standards/wpcs": "dev-master",
     "dealerdirect/phpcodesniffer-composer-installer": "dev-master",
-    "phpunit/phpunit": "^7.5"
+    "phpunit/phpunit": "^7.5",
+    "phpcompatibility/phpcompatibility-wp": "^2.1"
   },
   "minimum-stability": "dev",
   "scripts": {
+    "lint": "vendor/bin/phpcs ./popup-maker.php ./classes/**/*.php  ./includes/**/*.php",
+    "lint:priority": "vendor/bin/phpcs --severity=8 ./popup-maker.php ./classes/**/*.php  ./includes/**/*.php",
     "tests": "vendor/bin/phpunit"
   },
   "config": {

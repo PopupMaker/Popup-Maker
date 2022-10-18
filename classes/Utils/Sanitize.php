@@ -18,7 +18,7 @@ class PUM_Utils_Sanitize {
 	 *
 	 * @return string
 	 */
-	public static function text( $value = '', $args = array() ) {
+	public static function text( $value = '', $args = [] ) {
 		return sanitize_text_field( $value );
 	}
 
@@ -28,7 +28,7 @@ class PUM_Utils_Sanitize {
 	 *
 	 * @return bool|int
 	 */
-	public static function checkbox( $value = null, $args = array() ) {
+	public static function checkbox( $value = null, $args = [] ) {
 		if ( intval( $value ) == 1 ) {
 			return 1;
 		}
@@ -36,7 +36,7 @@ class PUM_Utils_Sanitize {
 		return 0;
 	}
 
-	public static function measure( $value = '', $args = array(), $fields = array(), $values = array() ) {
+	public static function measure( $value = '', $args = [], $fields = [], $values = [] ) {
 		if ( isset( $values[ $args['id'] . '_unit' ] ) ) {
 			$value .= $values[ $args['id'] . '_unit' ];
 		}

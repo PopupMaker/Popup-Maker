@@ -21,11 +21,11 @@ function pum_is_admin_page() {
 
 	$typenow = pum_typenow();
 
-	$tests = array(
+	$tests = [
 		'popup' == $typenow,
 		'popup_theme' == $typenow,
 		! empty( $GLOBALS['hook_suffix'] ) && in_array( $GLOBALS['hook_suffix'], PUM_Admin_Pages::$pages ),
-	);
+	];
 
 	return in_array( true, $tests );
 }
@@ -40,11 +40,11 @@ function pum_is_admin_page() {
 function pum_is_all_popups_page() {
 	$screen = get_current_screen();
 
-	$tests = array(
+	$tests = [
 		pum_is_admin_page(),
 		'edit-popup' === $screen->id,
 		pum_typenow() === 'popup',
-	);
+	];
 
 	return ! in_array( false, $tests, true );
 }
@@ -59,12 +59,12 @@ function pum_is_all_popups_page() {
 function pum_is_popup_editor() {
 	global $pagenow;
 
-	$tests = array(
+	$tests = [
 		is_admin(),
 		pum_is_admin_page(),
 		'popup' == pum_typenow(),
-		in_array( $pagenow, array( 'post-new.php', 'post.php' ) ),
-	);
+		in_array( $pagenow, [ 'post-new.php', 'post.php' ] ),
+	];
 
 	return ! in_array( false, $tests );
 }
@@ -79,12 +79,12 @@ function pum_is_popup_editor() {
 function pum_is_popup_theme_editor() {
 	global $pagenow;
 
-	$tests = array(
+	$tests = [
 		is_admin(),
 		pum_is_admin_page(),
 		'popup_theme' == pum_typenow(),
-		in_array( $pagenow, array( 'post-new.php', 'post.php' ) ),
-	);
+		in_array( $pagenow, [ 'post-new.php', 'post.php' ] ),
+	];
 
 	return ! in_array( false, $tests );
 }
@@ -99,14 +99,14 @@ function pum_is_popup_theme_editor() {
  * @return bool
  */
 function pum_is_submenu_page( $key = null ) {
-	$tests = array(
+	$tests = [
 		is_admin(),
 		pum_is_admin_page(),
 		! pum_is_popup_editor(),
 		! pum_is_popup_theme_editor(),
 		$key && ! empty( $GLOBALS['hook_suffix'] ) ? $GLOBALS['hook_suffix'] == PUM_Admin_Pages::get_page( $key ) : true,
 		! isset( $key ) && ! empty( $GLOBALS['hook_suffix'] ) ? in_array( $GLOBALS['hook_suffix'], PUM_Admin_Pages::$pages ) : true,
-	);
+	];
 
 	return ! in_array( false, $tests );
 }

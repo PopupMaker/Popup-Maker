@@ -22,14 +22,14 @@ class PUM_Newsletter_Providers {
 	/**
 	 * @var array
 	 */
-	public $providers = array();
+	public $providers = [];
 
 	/**
 	 * @return PUM_Newsletter_Providers
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
-			self::$instance = new self;
+			self::$instance = new self();
 		}
 
 		return self::$instance;
@@ -47,7 +47,7 @@ class PUM_Newsletter_Providers {
 	}
 
 	public static function selectlist() {
-		$selectlist = array();
+		$selectlist = [];
 
 		foreach ( self::instance()->get_providers() as $id => $provider ) {
 			$selectlist[ $provider->name ] = $id;
@@ -61,7 +61,7 @@ class PUM_Newsletter_Providers {
 	 */
 	public static function dropdown_list() {
 		$providers = self::instance()->get_providers();
-		$list  = array();
+		$list      = [];
 
 		foreach ( $providers as $id => $provider ) {
 			$list[ $id ] = $provider->name;

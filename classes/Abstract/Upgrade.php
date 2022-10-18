@@ -22,10 +22,13 @@ abstract class PUM_Abstract_Upgrade extends PUM_Abstract_Batch_Process {
 	 * @param int $step
 	 */
 	public function __construct( $step = 1 ) {
-		update_option( 'pum_doing_upgrade', array(
-			'upgrade_id' => $this->batch_id,
-			'step'       => $step,
-		) );
+		update_option(
+			'pum_doing_upgrade',
+			[
+				'upgrade_id' => $this->batch_id,
+				'step'       => $step,
+			]
+		);
 
 		parent::__construct( $step );
 	}

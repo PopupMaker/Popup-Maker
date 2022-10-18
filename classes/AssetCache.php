@@ -60,25 +60,25 @@ class PUM_AssetCache {
 			if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
 				self::$disabled = true;
 			} else {
-				self::$disabled  = pum_get_option( 'disable_asset_caching', false );
+				self::$disabled = pum_get_option( 'disable_asset_caching', false );
 			}
 
-			add_action( 'pum_extension_updated', array( __CLASS__, 'reset_cache' ) );
-			add_action( 'pum_extension_deactivated', array( __CLASS__, 'reset_cache' ) );
-			add_action( 'pum_extension_activated', array( __CLASS__, 'reset_cache' ) );
-			add_action( 'pum_regenerate_asset_cache', array( __CLASS__, 'reset_cache' ) );
-			add_action( 'pum_save_settings', array( __CLASS__, 'reset_cache' ) );
-			add_action( 'pum_save_popup', array( __CLASS__, 'reset_cache' ) );
-			add_action( 'pum_save_theme', array( __CLASS__, 'reset_cache' ) );
-			add_action( 'pum_update_core_version', array( __CLASS__, 'reset_cache' ) );
+			add_action( 'pum_extension_updated', [ __CLASS__, 'reset_cache' ] );
+			add_action( 'pum_extension_deactivated', [ __CLASS__, 'reset_cache' ] );
+			add_action( 'pum_extension_activated', [ __CLASS__, 'reset_cache' ] );
+			add_action( 'pum_regenerate_asset_cache', [ __CLASS__, 'reset_cache' ] );
+			add_action( 'pum_save_settings', [ __CLASS__, 'reset_cache' ] );
+			add_action( 'pum_save_popup', [ __CLASS__, 'reset_cache' ] );
+			add_action( 'pum_save_theme', [ __CLASS__, 'reset_cache' ] );
+			add_action( 'pum_update_core_version', [ __CLASS__, 'reset_cache' ] );
 
 			if ( isset( $_GET['flush_popup_cache'] ) ) {
-				add_action( 'init', array( __CLASS__, 'reset_cache' ) );
+				add_action( 'init', [ __CLASS__, 'reset_cache' ] );
 			}
 
-			add_filter( 'pum_alert_list', array( __CLASS__, 'cache_alert' ) );
+			add_filter( 'pum_alert_list', [ __CLASS__, 'cache_alert' ] );
 
-			add_action( 'pum_styles', array( __CLASS__, 'global_custom_styles' ) );
+			add_action( 'pum_styles', [ __CLASS__, 'global_custom_styles' ] );
 
 			if ( null === get_option( 'pum_files_writeable', null ) ) {
 				add_option( 'pum_files_writeable', true );
@@ -87,7 +87,7 @@ class PUM_AssetCache {
 			}
 
 			if ( is_admin() && current_user_can( 'edit_posts' ) ) {
-				add_action( 'init', array( __CLASS__, 'admin_notice_check' ) );
+				add_action( 'init', [ __CLASS__, 'admin_notice_check' ] );
 			}
 
 			// Prevent reinitialization.
@@ -126,7 +126,7 @@ class PUM_AssetCache {
 		global $wp_filesystem;
 
 		if ( ! function_exists( 'WP_Filesystem' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+			require_once ABSPATH . 'wp-admin/includes/file.php';
 		}
 
 		$results = WP_Filesystem();
@@ -220,9 +220,9 @@ class PUM_AssetCache {
 		}
 		$js_file = self::generate_cache_filename( 'pum-site-scripts' ) . '.js';
 
-		$js = "/**\n";
+		$js  = "/**\n";
 		$js .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
-		$js .= " * Last modified time: " . date( 'M d Y, h:i:s' ) . "\n";
+		$js .= ' * Last modified time: ' . date( 'M d Y, h:i:s' ) . "\n";
 		$js .= " */\n\n\n";
 		$js .= self::generate_js();
 
@@ -242,9 +242,9 @@ class PUM_AssetCache {
 		}
 		$css_file = self::generate_cache_filename( 'pum-site-styles' ) . '.css';
 
-		$css = "/**\n";
+		$css  = "/**\n";
 		$css .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
-		$css .= " * Last modified time: " . date( 'M d Y, h:i:s' ) . "\n";
+		$css .= ' * Last modified time: ' . date( 'M d Y, h:i:s' ) . "\n";
 		$css .= " */\n\n\n";
 		$css .= self::generate_css();
 
@@ -270,12 +270,12 @@ class PUM_AssetCache {
 		 *  8 Integrations
 		 * 10 Per Popup JS
 		 */
-		$js = array(
-			'core' => array(
+		$js = [
+			'core' => [
 				'content'  => $core_js,
 				'priority' => 0,
-			),
-		);
+			],
+		];
 
 		$popups = pum_get_all_popups();
 
@@ -295,9 +295,9 @@ class PUM_AssetCache {
 				$popup_js = ob_get_clean();
 
 				if ( ! empty( $popup_js ) ) {
-					$js[ 'popup-' . $popup->ID ] = array(
+					$js[ 'popup-' . $popup->ID ] = [
 						'content' => $popup_js,
-					);
+					];
 				}
 			}
 
@@ -309,13 +309,16 @@ class PUM_AssetCache {
 		$js = apply_filters( 'pum_generated_js', $js );
 
 		foreach ( $js as $key => $code ) {
-			$js[ $key ] = wp_parse_args( $code, array(
-				'content'  => '',
-				'priority' => 10,
-			) );
+			$js[ $key ] = wp_parse_args(
+				$code,
+				[
+					'content'  => '',
+					'priority' => 10,
+				]
+			);
 		}
 
-		uasort( $js, array( 'PUM_Helpers', 'sort_by_priority' ) );
+		uasort( $js, [ 'PUM_Helpers', 'sort_by_priority' ] );
 
 		$js_code = '';
 		foreach ( $js as $key => $code ) {
@@ -340,7 +343,7 @@ class PUM_AssetCache {
 			return false;
 		}
 		if ( ! function_exists( 'WP_Filesystem' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+			require_once ABSPATH . 'wp-admin/includes/file.php';
 		}
 
 		$file = trailingslashit( self::$cache_dir ) . $filename;
@@ -370,7 +373,7 @@ class PUM_AssetCache {
 	 */
 	public static function generate_css() {
 		// Include core styles so we can eliminate another stylesheet.
-		$core_css = file_get_contents( Popup_Maker::$DIR . 'assets/css/pum-site' . (is_rtl() ? '-rtl' : '') . self::$suffix . '.css' );
+		$core_css = file_get_contents( Popup_Maker::$DIR . 'assets/css/pum-site' . ( is_rtl() ? '-rtl' : '' ) . self::$suffix . '.css' );
 
 		/**
 		 *  0 Core
@@ -378,39 +381,42 @@ class PUM_AssetCache {
 		 *  5 Extensions
 		 * 10 Per Popup CSS
 		 */
-		$css = array(
-			'imports' => array(
+		$css = [
+			'imports' => [
 				'content'  => self::generate_font_imports(),
 				'priority' => - 1,
-			),
-			'core'    => array(
+			],
+			'core'    => [
 				'content'  => $core_css,
 				'priority' => 0,
-			),
-			'themes'  => array(
+			],
+			'themes'  => [
 				'content'  => self::generate_popup_theme_styles(),
 				'priority' => 1,
-			),
-			'popups'  => array(
+			],
+			'popups'  => [
 				'content'  => self::generate_popup_styles(),
 				'priority' => 15,
-			),
-			'custom'  => array(
+			],
+			'custom'  => [
 				'content'  => self::custom_css(),
 				'priority' => 20,
-			),
-		);
+			],
+		];
 
 		$css = apply_filters( 'pum_generated_css', $css );
 
 		foreach ( $css as $key => $code ) {
-			$css[ $key ] = wp_parse_args( $code, array(
-				'content'  => '',
-				'priority' => 10,
-			) );
+			$css[ $key ] = wp_parse_args(
+				$code,
+				[
+					'content'  => '',
+					'priority' => 10,
+				]
+			);
 		}
 
-		uasort( $css, array( 'PUM_Helpers', 'sort_by_priority' ) );
+		uasort( $css, [ 'PUM_Helpers', 'sort_by_priority' ] );
 
 		$css_code = '';
 		foreach ( $css as $key => $code ) {
@@ -425,7 +431,7 @@ class PUM_AssetCache {
 	public static function global_custom_styles() {
 
 		if ( pum_get_option( 'adjust_body_padding' ) ) {
-			echo "html.pum-open.pum-open-overlay.pum-open-scrollable body > *[aria-hidden] { padding-right: " . pum_get_option( 'body_padding_override', '15px' ) . "!important; }";
+			echo 'html.pum-open.pum-open-overlay.pum-open-scrollable body > *[aria-hidden] { padding-right: ' . pum_get_option( 'body_padding_override', '15px' ) . '!important; }';
 		}
 
 	}
@@ -525,22 +531,22 @@ class PUM_AssetCache {
 	public static function generate_font_imports() {
 		$imports = '';
 
-		$google_fonts = array();
+		$google_fonts = [];
 
 		foreach ( pum_get_all_themes() as $theme ) {
 			$google_fonts = array_merge( $google_fonts, pum_get_theme( $theme->ID )->get_google_fonts_used() );
 		}
 
 		if ( ! empty( $google_fonts ) && ! pum_get_option( 'disable_google_font_loading', false ) ) {
-			$link = "//fonts.googleapis.com/css?family=";
+			$link = '//fonts.googleapis.com/css?family=';
 			foreach ( $google_fonts as $font_family => $variants ) {
-				if ( $link != "//fonts.googleapis.com/css?family=" ) {
-					$link .= "|";
+				if ( $link != '//fonts.googleapis.com/css?family=' ) {
+					$link .= '|';
 				}
 				$link .= $font_family;
 				if ( is_array( $variants ) ) {
 					if ( implode( ',', $variants ) != '' ) {
-						$link .= ":";
+						$link .= ':';
 						$link .= trim( implode( ',', $variants ), ':' );
 					}
 				}
@@ -569,7 +575,7 @@ class PUM_AssetCache {
 			$theme_styles = pum_get_rendered_theme_styles( $theme->ID );
 
 			if ( $theme_styles != '' ) {
-				$styles .= "/* Popup Theme " . $theme->ID . ": " . $theme->post_title . " */\r\n";
+				$styles .= '/* Popup Theme ' . $theme->ID . ': ' . $theme->post_title . " */\r\n";
 				$styles .= $theme_styles . "\r\n";
 			}
 		}
@@ -602,8 +608,8 @@ class PUM_AssetCache {
 			return $alerts;
 		}
 
-		$undo_url     = add_query_arg( 'pum_writeable_notice_check', 'undo' );
-		$dismiss_url  = add_query_arg( 'pum_writeable_notice_check', 'dismiss' );
+		$undo_url    = add_query_arg( 'pum_writeable_notice_check', 'undo' );
+		$dismiss_url = add_query_arg( 'pum_writeable_notice_check', 'dismiss' );
 
 		ob_start();
 		?>
@@ -613,8 +619,8 @@ class PUM_AssetCache {
 			<li><a href="https://docs.wppopupmaker.com/article/521-debugging-filesystem-errors?utm_source=filesystem-error-alert&utm_medium=inline-doclink&utm_campaign=filesystem-error" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a></li>
 		</ul>
 		<?php
-		$html = ob_get_clean();
-		$alerts[] = array(
+		$html     = ob_get_clean();
+		$alerts[] = [
 			'code'        => 'pum_writeable_notice',
 			'type'        => 'warning',
 			'message'     => esc_html__( "Popup Maker detected an issue with your file system's ability and is unable to create & save cached assets for your popup styling and settings. This may lead to suboptimal performance. Please check your filesystem and contact your hosting provide to ensure Popup Maker can create and write to cache files.", 'popup-maker' ),
@@ -622,7 +628,7 @@ class PUM_AssetCache {
 			'priority'    => 1000,
 			'dismissible' => '2 weeks',
 			'global'      => true,
-		);
+		];
 		return $alerts;
 	}
 
@@ -669,12 +675,15 @@ class PUM_AssetCache {
 		if ( false === $cache_url ) {
 			PUM_Utils_Logging::instance()->log( 'Cannot access cache file when tested. Cache URL returned false.' );
 		}
-		$protocol  = is_ssl() ? 'https:' : 'http:';
-		$file      = $protocol . $cache_url . '/' . $filename;
-		$results   = wp_remote_request( $file, array(
-			'method'    => 'HEAD',
-			'sslverify' => false,
-		));
+		$protocol = is_ssl() ? 'https:' : 'http:';
+		$file     = $protocol . $cache_url . '/' . $filename;
+		$results  = wp_remote_request(
+			$file,
+			[
+				'method'    => 'HEAD',
+				'sslverify' => false,
+			]
+		);
 
 		// If it returned a WP_Error, let's log its error message.
 		if ( is_wp_error( $results ) ) {

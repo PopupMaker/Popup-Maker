@@ -22,7 +22,7 @@ class PUM_Shortcodes {
 	/**
 	 * @var array Holds array of registered $shortcode_tags => $shortcode_objects.
 	 */
-	private $shortcodes = array();
+	private $shortcodes = [];
 
 	/**
 	 * Main PUM_Shortcodes Instance
@@ -31,7 +31,7 @@ class PUM_Shortcodes {
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof PUM_Shortcodes ) ) {
-			self::$instance = new self;
+			self::$instance = new self();
 		}
 
 		return self::$instance;

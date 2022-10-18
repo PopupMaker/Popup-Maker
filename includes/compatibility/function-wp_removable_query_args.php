@@ -8,7 +8,7 @@
  * @return array An array of parameters to remove from the URL.
  */
 function wp_removable_query_args() {
-	$removable_query_args = array(
+	$removable_query_args = [
 		'activate',
 		'activated',
 		'approved',
@@ -32,7 +32,7 @@ function wp_removable_query_args() {
 		'update',
 		'updated',
 		'wp-post-new-reload',
-	);
+	];
 
 	/**
 	 * Filters the list of query variables to remove.

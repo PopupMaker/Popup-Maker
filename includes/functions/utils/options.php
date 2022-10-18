@@ -20,7 +20,7 @@ function pum_get_options() {
  * Get a forum option.
  *
  * @param string $key
- * @param mixed $default
+ * @param mixed  $default
  *
  * @return mixed
  */
@@ -32,7 +32,7 @@ function pum_get_option( $key, $default = false ) {
  * Update a forum option.
  *
  * @param string $key
- * @param bool $value
+ * @param bool   $value
  *
  * @return bool
  */
@@ -47,7 +47,7 @@ function pum_update_option( $key = '', $value = false ) {
  *
  * @return bool
  */
-function pum_merge_options( $new_options = array() ){
+function pum_merge_options( $new_options = [] ) {
 	return PUM_Utils_Options::merge( $new_options );
 }
 
@@ -69,7 +69,7 @@ function pum_delete_option( $key = '' ) {
  *
  * @return bool
  */
-function pum_delete_options( $keys = array() ) {
+function pum_delete_options( $keys = [] ) {
 	return PUM_Utils_Options::delete( $keys );
 }
 
@@ -80,7 +80,7 @@ function pum_delete_options( $keys = array() ) {
  *
  * @return bool
  */
-function pum_remap_options( $remap_array = array() ) {
+function pum_remap_options( $remap_array = [] ) {
 	return PUM_Utils_Options::remap_keys( $remap_array );
 }
 

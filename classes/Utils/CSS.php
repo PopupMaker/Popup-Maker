@@ -15,7 +15,7 @@ class PUM_Utils_CSS {
 		if ( is_array( $hex ) ) {
 			$hex = implode( '', $hex );
 		}
-		$hex = str_replace( "#", "", $hex );
+		$hex = str_replace( '#', '', $hex );
 
 		if ( strlen( $hex ) == 3 ) {
 			$r = hexdec( substr( $hex, 0, 1 ) . substr( $hex, 0, 1 ) );
@@ -27,13 +27,13 @@ class PUM_Utils_CSS {
 			$b = hexdec( substr( $hex, 4, 2 ) );
 		}
 
-		$rgb = array( $r, $g, $b );
+		$rgb = [ $r, $g, $b ];
 
 		if ( $return_type === 'array' ) {
 			return $rgb; // returns an array with the rgb values
 		}
 
-		return 'rgb(' . implode( ",", $rgb ) . ')'; // returns the rgb values separated by commas
+		return 'rgb(' . implode( ',', $rgb ) . ')'; // returns the rgb values separated by commas
 	}
 
 	/**

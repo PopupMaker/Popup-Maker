@@ -19,7 +19,7 @@ class PUM_Form extends PUM_Fields {
 	 * @param array $id
 	 * @param array $args
 	 */
-	public function __construct( $id, $args = array() ) {
+	public function __construct( $id, $args = [] ) {
 		$this->id = $id;
 
 		if ( empty( $args['id'] ) ) {

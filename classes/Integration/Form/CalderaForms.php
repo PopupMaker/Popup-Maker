@@ -11,7 +11,7 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	public $key = 'calderaforms';
 
 	public function __construct() {
-		add_action( 'caldera_forms_submit_complete', array( $this, 'on_success' ) );
+		add_action( 'caldera_forms_submit_complete', [ $this, 'on_success' ] );
 	}
 
 	/**
@@ -69,11 +69,13 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 		$popup_id = self::get_popup_id();
 		self::increase_conversion( $popup_id );
 
-		pum_integrated_form_submission( [
-			'popup_id'      => $popup_id,
-			'form_provider' => $this->key,
-			'form_id'       => $form['ID'],
-		] );
+		pum_integrated_form_submission(
+			[
+				'popup_id'      => $popup_id,
+				'form_provider' => $this->key,
+				'form_id'       => $form['ID'],
+			]
+		);
 	}
 
 	/**

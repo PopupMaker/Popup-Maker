@@ -35,7 +35,7 @@ function pum_get_theme_generated_styles( $theme_id = 0 ) {
 	$theme = pum_get_theme( $theme_id );
 
 	if ( ! pum_is_theme_object( $theme ) ) {
-		return array();
+		return [];
 	}
 
 	return $theme->get_generated_styles();

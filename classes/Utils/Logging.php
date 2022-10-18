@@ -191,7 +191,7 @@ class PUM_Utils_Logging {
 	public function truncate_log() {
 		$content       = $this->get_file();
 		$lines         = explode( "\r\n", $content );
-		$lines         = array_slice( $lines, 0, 250 ); //50 is how many lines you want to keep
+		$lines         = array_slice( $lines, 0, 250 ); // 50 is how many lines you want to keep
 		$this->content = implode( "\r\n", $lines );
 		$this->save_logs();
 	}
@@ -206,7 +206,7 @@ class PUM_Utils_Logging {
 	/**
 	 * @param      $function
 	 * @param      $version
-	 * @param null $replacement
+	 * @param null     $replacement
 	 */
 	public function log_deprecated_notice( $function, $version, $replacement = null ) {
 		if ( ! is_null( $replacement ) ) {

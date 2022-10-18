@@ -29,7 +29,7 @@ function pum_format_number( $number, $format = '' ) {
 
 /**
  * @param int|float $number
- * @param string $format U|human|human-readable
+ * @param string    $format U|human|human-readable
  *
  * @return int|string
  */

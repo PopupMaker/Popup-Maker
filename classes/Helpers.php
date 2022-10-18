@@ -28,15 +28,15 @@ class PUM_Helpers {
 
 	public static function get_shortcodes_from_content( $content ) {
 		$pattern    = get_shortcode_regex();
-		$shortcodes = array();
+		$shortcodes = [];
 		if ( preg_match_all( '/' . $pattern . '/s', $content, $matches ) ) {
 			foreach ( $matches[0] as $key => $value ) {
-				$shortcodes[ $key ] = array(
+				$shortcodes[ $key ] = [
 					'full_text' => $value,
 					'tag'       => $matches[2][ $key ],
 					'atts'      => shortcode_parse_atts( $matches[3][ $key ] ),
 					'content'   => $matches[5][ $key ],
-				);
+				];
 
 				if ( ! empty( $shortcodes[ $key ]['atts'] ) ) {
 					foreach ( $shortcodes[ $key ]['atts'] as $attr_name => $attr_value ) {
@@ -145,7 +145,7 @@ class PUM_Helpers {
 		$upload_dir = $upload_dir['baseurl'];
 		$upload_dir = preg_replace( '/^https?:/', '', $upload_dir );
 
-		if ( ! empty ( $path ) ) {
+		if ( ! empty( $path ) ) {
 			$upload_dir = trailingslashit( $upload_dir ) . $path;
 		}
 
@@ -171,55 +171,57 @@ class PUM_Helpers {
 	/**
 	 * Sort nested arrays with various options.
 	 *
-	 * @param array $array
+	 * @param array  $array
 	 * @param string $type
-	 * @param bool $reverse
+	 * @param bool   $reverse
 	 *
 	 * @return array
 	 * @deprecated 1.7.20
 	 * @see        PUM_Utils_Array::sort instead.
-	 *
 	 */
-	public static function sort_array( $array = array(), $type = 'key', $reverse = false ) {
+	public static function sort_array( $array = [], $type = 'key', $reverse = false ) {
 		return PUM_Utils_Array::sort( $array, $type, $reverse );
 	}
 
-	public static function post_type_selectlist_query( $post_type, $args = array(), $include_total = false ) {
+	public static function post_type_selectlist_query( $post_type, $args = [], $include_total = false ) {
 
-		$args = wp_parse_args( $args, array(
-			'posts_per_page'         => 10,
-			'post_type'              => $post_type,
-			'post__in'               => null,
-			'post__not_in'           => null,
-			'post_status'            => null,
-			'page'                   => 1,
-			// Performance Optimization.
-			'no_found_rows'          => ! $include_total ? true : false,
-			'update_post_term_cache' => false,
-			'update_post_meta_cache' => false,
-		) );
+		$args = wp_parse_args(
+			$args,
+			[
+				'posts_per_page'         => 10,
+				'post_type'              => $post_type,
+				'post__in'               => null,
+				'post__not_in'           => null,
+				'post_status'            => null,
+				'page'                   => 1,
+				// Performance Optimization.
+				'no_found_rows'          => ! $include_total ? true : false,
+				'update_post_term_cache' => false,
+				'update_post_meta_cache' => false,
+			]
+		);
 
 		if ( $post_type == 'attachment' ) {
 			$args['post_status'] = 'inherit';
 		}
 
 		// Query Caching.
-		static $queries = array();
+		static $queries = [];
 
 		$key = md5( serialize( $args ) );
 
 		if ( ! isset( $queries[ $key ] ) ) {
 			$query = new WP_Query( $args );
 
-			$posts = array();
+			$posts = [];
 			foreach ( $query->posts as $post ) {
 				$posts[ $post->ID ] = $post->post_title;
 			}
 
-			$results = array(
+			$results = [
 				'items'       => $posts,
 				'total_count' => $query->found_posts,
-			);
+			];
 
 			$queries[ $key ] = $results;
 		} else {
@@ -229,32 +231,35 @@ class PUM_Helpers {
 		return ! $include_total ? $results['items'] : $results;
 	}
 
-	public static function taxonomy_selectlist_query( $taxonomies = array(), $args = array(), $include_total = false ) {
-		if ( empty ( $taxonomies ) ) {
-			$taxonomies = array( 'category' );
+	public static function taxonomy_selectlist_query( $taxonomies = [], $args = [], $include_total = false ) {
+		if ( empty( $taxonomies ) ) {
+			$taxonomies = [ 'category' ];
 		}
 
-		$args = wp_parse_args( $args, array(
-			'hide_empty' => false,
-			'number'     => 10,
-			'search'     => '',
-			'include'    => null,
-			'exclude'    => null,
-			'offset'     => 0,
-			'page'       => null,
-		) );
+		$args = wp_parse_args(
+			$args,
+			[
+				'hide_empty' => false,
+				'number'     => 10,
+				'search'     => '',
+				'include'    => null,
+				'exclude'    => null,
+				'offset'     => 0,
+				'page'       => null,
+			]
+		);
 
 		if ( $args['page'] ) {
 			$args['offset'] = ( $args['page'] - 1 ) * $args['number'];
 		}
 
 		// Query Caching.
-		static $queries = array();
+		static $queries = [];
 
 		$key = md5( serialize( $args ) );
 
 		if ( ! isset( $queries[ $key ] ) ) {
-			$terms = array();
+			$terms = [];
 
 			foreach ( get_terms( $taxonomies, $args ) as $term ) {
 				$terms[ $term->term_id ] = $term->name;
@@ -264,10 +269,10 @@ class PUM_Helpers {
 			unset( $total_args['number'] );
 			unset( $total_args['offset'] );
 
-			$results = array(
+			$results = [
 				'items'       => $terms,
 				'total_count' => $include_total ? wp_count_terms( $taxonomies, $total_args ) : null,
-			);
+			];
 
 			$queries[ $key ] = $results;
 		} else {
@@ -280,35 +285,38 @@ class PUM_Helpers {
 
 	/**
 	 * @param array $args
-	 * @param bool $include_total
+	 * @param bool  $include_total
 	 *
 	 * @return array|mixed
 	 */
-	public static function user_selectlist_query( $args = array(), $include_total = false ) {
+	public static function user_selectlist_query( $args = [], $include_total = false ) {
 
-		$args = wp_parse_args( $args, array(
-			'role'        => null,
-			'count_total' => ! $include_total ? true : false,
-		) );
+		$args = wp_parse_args(
+			$args,
+			[
+				'role'        => null,
+				'count_total' => ! $include_total ? true : false,
+			]
+		);
 
 		// Query Caching.
-		static $queries = array();
+		static $queries = [];
 
 		$key = md5( serialize( $args ) );
 
 		if ( ! isset( $queries[ $key ] ) ) {
 			$query = new WP_User_Query( $args );
 
-			$users = array();
+			$users = [];
 			foreach ( $query->get_results() as $user ) {
 				/** @var WP_User $user */
 				$users[ $user->ID ] = $user->display_name;
 			}
 
-			$results = array(
+			$results = [
 				'items'       => $users,
 				'total_count' => $query->get_total(),
-			);
+			];
 
 			$queries[ $key ] = $results;
 		} else {
@@ -320,7 +328,7 @@ class PUM_Helpers {
 
 	public static function popup_theme_selectlist() {
 
-		$themes = array();
+		$themes = [];
 
 		foreach ( pum_get_all_themes() as $theme ) {
 			$themes[ $theme->ID ] = $theme->post_title;
@@ -330,8 +338,8 @@ class PUM_Helpers {
 
 	}
 
-	public static function popup_selectlist( $args = array() ) {
-		$popup_list = array();
+	public static function popup_selectlist( $args = [] ) {
+		$popup_list = [];
 
 		$popups = pum_get_all_popups( $args );
 

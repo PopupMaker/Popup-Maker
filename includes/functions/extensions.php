@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 function pum_enabled_extensions() {
-	return apply_filters( 'pum_enabled_extensions', array() );
+	return apply_filters( 'pum_enabled_extensions', [] );
 }
 
 /**

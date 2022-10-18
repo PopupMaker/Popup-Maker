@@ -5,9 +5,9 @@ Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&ut
 Donate link:
 Tags:  marketing, ecommerce, popup, popups, optin, conversion, promotion, pop-up, lightbox, modal, popupmaker
 Requires at least: 4.9
-Tested up to: 6.1
+Tested up to: 6.0.2
 Requires PHP: 5.6
-Stable tag: 1.16.9
+Stable tag: 1.16.10
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -180,6 +180,14 @@ There are several common causes for this, check [this guide for help](https://do
 == Changelog ==
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
+
+= v1.16.10 - 10/18/2022 =
+
+* Improvement: Added nonce to previews.
+* Improvement: Standardizing coding standards, convert to short arrays.
+* Improvement: First phase of a large clean up of older code.
+* Fix: Recent improvements to conditions handling caused some issues in some cases.
+* Fix: Bug caused by security patch in v1.16.9 which caused shortcodes to render content strangely.
 
 = v1.16.9 - 09/23/2022 =
 

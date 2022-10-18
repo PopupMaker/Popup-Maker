@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! function_exists( "get_all_modals" ) ) {
+if ( ! function_exists( 'get_all_modals' ) ) {
 	function enqueue_modal( $id ) {
 		if ( ! is_array( $id ) ) {
 			EModal_Modals::enqueue_modal( $id );
@@ -17,7 +17,7 @@ if ( ! function_exists( "get_all_modals" ) ) {
 	}
 }
 
-if ( ! function_exists( "emodal_get_option" ) ) {
+if ( ! function_exists( 'emodal_get_option' ) ) {
 	function emodal_get_option( $key ) {
 		global $blog_id;
 		if ( function_exists( 'is_multisite' ) && is_multisite() && $blog_id ) {
@@ -29,7 +29,7 @@ if ( ! function_exists( "emodal_get_option" ) ) {
 }
 
 
-if ( ! function_exists( "emodal_update_option" ) ) {
+if ( ! function_exists( 'emodal_update_option' ) ) {
 	function emodal_update_option( $key, $value ) {
 		global $blog_id;
 		if ( function_exists( 'is_multisite' ) && is_multisite() && $blog_id ) {
@@ -40,7 +40,7 @@ if ( ! function_exists( "emodal_update_option" ) ) {
 	}
 }
 
-if ( ! function_exists( "emodal_delete_option" ) ) {
+if ( ! function_exists( 'emodal_delete_option' ) ) {
 	function emodal_delete_option( $key ) {
 		global $blog_id;
 		if ( function_exists( 'is_multisite' ) && is_multisite() && $blog_id ) {
@@ -51,20 +51,20 @@ if ( ! function_exists( "emodal_delete_option" ) ) {
 	}
 }
 
-if ( ! function_exists( "emodal_get_license" ) ) {
+if ( ! function_exists( 'emodal_get_license' ) ) {
 	function emodal_get_license( $key = null ) {
 		$license = emodal_get_option( EMCORE_SLUG . '-license' );
 		if ( ! $license ) {
-			$license = array(
+			$license = [
 				'valid'  => false,
 				'key'    => '',
-				'status' => array(
+				'status' => [
 					'code'    => null,
 					'message' => null,
 					'expires' => null,
-					'domains' => null
-				)
-			);
+					'domains' => null,
+				],
+			];
 			emodal_update_option( EMCORE_SLUG . '-license', $license );
 		}
 
@@ -73,7 +73,7 @@ if ( ! function_exists( "emodal_get_license" ) ) {
 }
 
 
-if ( ! function_exists( "emresolve" ) ) {
+if ( ! function_exists( 'emresolve' ) ) {
 	function emresolve( array $a, $path, $default = null ) {
 		$current = $a;
 		$p       = strtok( $path, '.' );

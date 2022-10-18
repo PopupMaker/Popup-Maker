@@ -29,7 +29,7 @@ class PUM_Utils_Fields {
 	 *
 	 * @return array
 	 */
-	public static function get_form_default_values( $fields = array() ) {
+	public static function get_form_default_values( $fields = [] ) {
 		$fields = static::flatten_fields_array( $fields );
 
 		return static::get_field_default_values( $fields );
@@ -40,11 +40,11 @@ class PUM_Utils_Fields {
 	 *
 	 * @return array
 	 */
-	public static function get_field_default_values( $fields = array() ) {
-		$defaults = array();
+	public static function get_field_default_values( $fields = [] ) {
+		$defaults = [];
 
 		foreach ( $fields as $field_id => $field ) {
-			switch( $field['type'] ) {
+			switch ( $field['type'] ) {
 				case 'checkbox':
 					$defaults[ $field_id ] = ! empty( $field['std'] ) ? $field['std'] : false;
 					break;
@@ -62,7 +62,7 @@ class PUM_Utils_Fields {
 	 * @return array
 	 */
 	public static function flatten_fields_array( $tabs ) {
-		$fields = array();
+		$fields = [];
 
 		foreach ( $tabs as $tab_id => $tab_sections ) {
 
@@ -94,67 +94,73 @@ class PUM_Utils_Fields {
 	 * @return array
 	 */
 	public static function parse_field( $field ) {
-		return wp_parse_args( $field, array(
-			'section'        => 'main',
-			'type'           => 'text',
-			'id'             => null,
-			'label'          => '',
-			'desc'           => '',
-			'name'           => null,
-			'templ_name'     => null,
-			'size'           => 'regular',
-			'options'        => array(),
-			'std'            => null,
-			'rows'           => 5,
-			'cols'           => 50,
-			'min'            => 0,
-			'max'            => 50,
-			'force_minmax'   => false,
-			'step'           => 1,
-			'select2'        => null,
-			'object_type'    => 'post_type',
-			'object_key'     => 'post',
-			'post_type'      => null,
-			'taxonomy'       => null,
-			'multiple'       => null,
-			'as_array'       => false,
-			'placeholder'    => null,
-			'checkbox_val'   => 1,
-			'allow_blank'    => true,
-			'readonly'       => false,
-			'required'       => false,
-			'disabled'       => false,
-			'hook'           => null,
-			'unit'           => __( 'ms', 'popup-maker' ),
-			'desc_position'  => 'bottom',
-			'units'          => array(
-				'px'  => 'px',
-				'%'   => '%',
-				'em'  => 'em',
-				'rem' => 'rem',
-			),
-			'priority'       => 10,
-			'doclink'        => '',
-			'button_type'    => 'submit',
-			'class'          => '',
-			'messages'       => array(),
-			'license_status' => '',
-			'value'          => null,
-			'private'        => false,
-		) );
+		return wp_parse_args(
+			$field,
+			[
+				'section'        => 'main',
+				'type'           => 'text',
+				'id'             => null,
+				'label'          => '',
+				'desc'           => '',
+				'name'           => null,
+				'templ_name'     => null,
+				'size'           => 'regular',
+				'options'        => [],
+				'std'            => null,
+				'rows'           => 5,
+				'cols'           => 50,
+				'min'            => 0,
+				'max'            => 50,
+				'force_minmax'   => false,
+				'step'           => 1,
+				'select2'        => null,
+				'object_type'    => 'post_type',
+				'object_key'     => 'post',
+				'post_type'      => null,
+				'taxonomy'       => null,
+				'multiple'       => null,
+				'as_array'       => false,
+				'placeholder'    => null,
+				'checkbox_val'   => 1,
+				'allow_blank'    => true,
+				'readonly'       => false,
+				'required'       => false,
+				'disabled'       => false,
+				'hook'           => null,
+				'unit'           => __( 'ms', 'popup-maker' ),
+				'desc_position'  => 'bottom',
+				'units'          => [
+					'px'  => 'px',
+					'%'   => '%',
+					'em'  => 'em',
+					'rem' => 'rem',
+				],
+				'priority'       => 10,
+				'doclink'        => '',
+				'button_type'    => 'submit',
+				'class'          => '',
+				'messages'       => [],
+				'license_status' => '',
+				'value'          => null,
+				'private'        => false,
+			]
+		);
 	}
 
 	/**
 	 * @param       $fields
-	 * @param array $args
+	 * @param array  $args
 	 *
 	 * @return mixed
 	 */
-	public static function parse_tab_fields( $fields, $args = array() ) {
-		$args = wp_parse_args( $args, array(
-			'has_sections' => false,
-			'name'         => '%s',
-		) );
+	public static function parse_tab_fields( $fields, $args = [] ) {
+		$args = wp_parse_args(
+			$args,
+			[
+				'has_sections' => false,
+				'name'         => '%s',
+			]
+		);
 
 		if ( $args['has_sections'] ) {
 			foreach ( $fields as $tab_id => $tab_sections ) {
@@ -162,14 +168,13 @@ class PUM_Utils_Fields {
 					if ( self::is_field( $section_fields ) ) {
 						// Allow for flat tabs with no sections.
 						$section_id     = 'main';
-						$section_fields = array(
+						$section_fields = [
 							$section_id => $section_fields,
-						);
+						];
 					}
 
 					$fields[ $tab_id ][ $section_id ] = self::parse_fields( $section_fields, $args['name'] );
 				}
-
 			}
 		} else {
 			foreach ( $fields as $tab_id => $tab_fields ) {
@@ -225,11 +230,11 @@ class PUM_Utils_Fields {
 	 *
 	 * @return bool
 	 */
-	public static function is_field( $array = array() ) {
-		$field_tests = array(
+	public static function is_field( $array = [] ) {
+		$field_tests = [
 			! isset( $array['type'] ) && ( isset( $array['label'] ) || isset( $array['desc'] ) ),
 			isset( $array['type'] ) && is_string( $array['type'] ),
-		);
+		];
 
 		return in_array( true, $field_tests );
 	}
@@ -241,14 +246,14 @@ class PUM_Utils_Fields {
 	 *
 	 * @return bool
 	 */
-	public static function is_section( $array = array() ) {
+	public static function is_section( $array = [] ) {
 		return ! self::is_field( $array );
 	}
 
 	/**
 	 * @param array $args
 	 */
-	public static function render_field( $args = array() ) {
+	public static function render_field( $args = [] ) {
 		$args = static::parse_field( $args );
 
 		// If no type default to text.
@@ -264,8 +269,8 @@ class PUM_Utils_Fields {
 				/**
 				 * Check if renderer method exists and load that.
 				 */
-				$function_name = array( 'PUM_Form_Fields', $type . '_callback' );
-			} else if ( function_exists( "pum_{$type}_callback" ) ) {
+				$function_name = [ 'PUM_Form_Fields', $type . '_callback' ];
+			} elseif ( function_exists( "pum_{$type}_callback" ) ) {
 				/**
 				 * Check if function exists and load that.
 				 */
@@ -274,13 +279,13 @@ class PUM_Utils_Fields {
 				/**
 				 * No method exists, lets notify them the field type doesn't exist.
 				 */
-				$function_name = array( 'PUM_Form_Fields', 'missing_callback' );
+				$function_name = [ 'PUM_Form_Fields', 'missing_callback' ];
 			}
 
 			/**
 			 * Call the determined method, passing the field args & $value to the callback.
 			 */
-			call_user_func_array( $function_name, array( $args ) );
+			call_user_func_array( $function_name, [ $args ] );
 		}
 	}
 
@@ -325,7 +330,7 @@ class PUM_Utils_Fields {
 	 *
 	 * @return mixed
 	 */
-	public static function sanitize_fields( $values, $fields = array() ) {
+	public static function sanitize_fields( $values, $fields = [] ) {
 
 		foreach ( $values as $key => $value ) {
 			if ( is_string( $value ) ) {
@@ -350,7 +355,7 @@ class PUM_Utils_Fields {
 	 *
 	 * @return mixed|null
 	 */
-	public static function sanitize_field( $args, $value = null, $fields = array(), $values = array() ) {
+	public static function sanitize_field( $args, $value = null, $fields = [], $values = [] ) {
 
 		// If no type default to text.
 		$type = ! empty( $args['type'] ) ? $args['type'] : 'text';
@@ -369,18 +374,17 @@ class PUM_Utils_Fields {
 			} /**
 			 * Check if core method exists and load that.
 			 */ elseif ( method_exists( 'PUM_Utils_Sanitize', $type ) ) {
-				$function_name = array( 'PUM_Utils_Sanitize', $type );
-			} else {
-				$function_name = null;
-			}
+				$function_name = [ 'PUM_Utils_Sanitize', $type ];
+} else {
+	$function_name = null;
+}
 
-			if ( $function_name ) {
-				/**
-				 * Call the determined method, passing the field args & $value to the callback.
-				 */
-				$value = call_user_func_array( $function_name, array( $value, $args, $fields, $values ) );
-			}
-
+if ( $function_name ) {
+	/**
+	 * Call the determined method, passing the field args & $value to the callback.
+	 */
+	$value = call_user_func_array( $function_name, [ $value, $args, $fields, $values ] );
+}
 		}
 
 		$value = apply_filters( 'pum_settings_sanitize', $value, $args, $fields, $values );

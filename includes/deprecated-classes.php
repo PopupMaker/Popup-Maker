@@ -9,12 +9,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
-* PopMake_License Class
-*
-* @deprecated 1.5.0
-*
-* Use PUM_Extension_License instead.
-*/
+ * PopMake_License Class
+ *
+ * @deprecated 1.5.0
+ *
+ * Use PUM_Extension_License instead.
+ */
 class PopMake_License extends PUM_Extension_License {}
 
 /**
@@ -47,7 +47,7 @@ class PUM_Popup_Query {
 	 * @var array
 	 * @access public
 	 */
-	public $args = array();
+	public $args = [];
 
 	/**
 	 * Default query arguments.
@@ -57,7 +57,7 @@ class PUM_Popup_Query {
 	 *
 	 * @param array $args The array of arguments that can be passed in and used for setting up this popup query.
 	 */
-	public function __construct( $args = array() ) {
+	public function __construct( $args = [] ) {
 		$this->args = $args;
 	}
 
@@ -83,8 +83,8 @@ class PUM_Popup_Query {
  * @deprecated 1.8.0 - Don't use this. Use Popup_Maker instead.
  */
 class PUM {
-	const DB_VER = null;
-	const VER = null;
+	const DB_VER   = null;
+	const VER      = null;
 	static $DB_VER = null;
-	static $VER = null;
+	static $VER    = null;
 }

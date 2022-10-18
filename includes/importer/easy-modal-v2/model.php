@@ -6,12 +6,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class EModal_Model {
-	protected $_class_name = 'EModal_Model';
-	protected $_table_name = '';
-	protected $_pk = 'id';
-	protected $_data = array();
-	protected $_default_fields = array();
-	protected $_state = null;
+	protected $_class_name     = 'EModal_Model';
+	protected $_table_name     = '';
+	protected $_pk             = 'id';
+	protected $_data           = [];
+	protected $_default_fields = [];
+	protected $_state          = null;
 
 	public function __construct( $id = null, $limit = 1 ) {
 		global $wpdb;
@@ -26,7 +26,7 @@ class EModal_Model {
 				$this->process_load( $row );
 			}
 		} else {
-			$this->set_fields( apply_filters( "{$class_name}_defaults", array() ) );
+			$this->set_fields( apply_filters( "{$class_name}_defaults", [] ) );
 		}
 
 		return $this;
@@ -41,9 +41,9 @@ class EModal_Model {
 		}
 		$rows = $wpdb->get_results( $query, ARRAY_A );
 		if ( ! empty( $rows ) ) {
-			$results = array();
+			$results = [];
 			foreach ( $rows as $row ) {
-				$model = new $this->_class_name;
+				$model = new $this->_class_name();
 				$model->process_load( $row );
 				$results[] = $model;
 			}
@@ -51,14 +51,14 @@ class EModal_Model {
 			return $results;
 		}
 
-		return array();
+		return [];
 	}
 
 	public function save() {
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->_table_name;
 		if ( $this->id ) {
-			if ( ! $wpdb->update( $table_name, $this->serialized_values(), array( $this->_pk => $this->{$this->_pk} ) ) ) {
+			if ( ! $wpdb->update( $table_name, $this->serialized_values(), [ $this->_pk => $this->{$this->_pk} ] ) ) {
 				$wpdb->insert( $table_name, $this->serialized_values() );
 				$this->id = $wpdb->insert_id;
 			}
@@ -72,7 +72,7 @@ class EModal_Model {
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->_table_name;
 
-		return $wpdb->delete( $table_name, array( $this->_pk => $this->{$this->_pk} ) );
+		return $wpdb->delete( $table_name, [ $this->_pk => $this->{$this->_pk} ] );
 	}
 
 	public function as_array() {

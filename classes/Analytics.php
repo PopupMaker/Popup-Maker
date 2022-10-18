@@ -20,10 +20,10 @@ class PUM_Analytics {
 			return;
 		}
 
-		add_action( 'rest_api_init', array( __CLASS__, 'register_endpoints' ) );
-		add_action( 'wp_ajax_pum_analytics', array( __CLASS__, 'ajax_request' ) );
-		add_action( 'wp_ajax_nopriv_pum_analytics', array( __CLASS__, 'ajax_request' ) );
-		add_filter( 'pum_vars', array( __CLASS__, 'pum_vars' ) );
+		add_action( 'rest_api_init', [ __CLASS__, 'register_endpoints' ] );
+		add_action( 'wp_ajax_pum_analytics', [ __CLASS__, 'ajax_request' ] );
+		add_action( 'wp_ajax_nopriv_pum_analytics', [ __CLASS__, 'ajax_request' ] );
+		add_filter( 'pum_vars', [ __CLASS__, 'pum_vars' ] );
 	}
 
 	/**
@@ -52,7 +52,7 @@ class PUM_Analytics {
 	 * @return mixed
 	 */
 	public static function event_keys( $event ) {
-		$keys = array( $event, rtrim( $event, 'e' ) . 'ed' );
+		$keys = [ $event, rtrim( $event, 'e' ) . 'ed' ];
 
 		if ( 'conversion' === $event ) {
 			$keys[1] = 'conversion';
@@ -67,7 +67,7 @@ class PUM_Analytics {
 	 * @return string[]
 	 */
 	public static function valid_events() {
-		return apply_filters( 'pum_analytics_valid_events', array( 'open', 'conversion' ) );
+		return apply_filters( 'pum_analytics_valid_events', [ 'open', 'conversion' ] );
 	}
 
 	/**
@@ -79,13 +79,13 @@ class PUM_Analytics {
 	 *
 	 * @param array $args
 	 */
-	public static function track( $args = array() ) {
-		if ( empty ( $args['pid'] ) || $args['pid'] <= 0 ) {
+	public static function track( $args = [] ) {
+		if ( empty( $args['pid'] ) || $args['pid'] <= 0 ) {
 			return;
 		}
 
-//		$uuid = isset( $_COOKIE['__pum'] ) ? sanitize_text_field( $_COOKIE['__pum'] ) : false;
-//		$session = $uuid && isset( $_COOKIE[ $uuid ] ) ? PUM_Utils_Array::safe_json_decode( $_COOKIE[ $uuid ] ) : false;
+		// $uuid = isset( $_COOKIE['__pum'] ) ? sanitize_text_field( $_COOKIE['__pum'] ) : false;
+		// $session = $uuid && isset( $_COOKIE[ $uuid ] ) ? PUM_Utils_Array::safe_json_decode( $_COOKIE[ $uuid ] ) : false;
 
 		$event = sanitize_text_field( $args['event'] );
 
@@ -111,11 +111,14 @@ class PUM_Analytics {
 	 */
 	public static function ajax_request() {
 
-		$args = wp_parse_args( $_REQUEST, array(
-			'event'  => null,
-			'pid'    => null,
-			'method' => null,
-		) );
+		$args = wp_parse_args(
+			$_REQUEST,
+			[
+				'event'  => null,
+				'pid'    => null,
+				'method' => null,
+			]
+		);
 
 		self::track( $args );
 
@@ -144,7 +147,7 @@ class PUM_Analytics {
 		$args = $request->get_params();
 
 		if ( ! $args || empty( $args['pid'] ) ) {
-			return new WP_Error( 'missing_params', __( 'Missing Parameters.' ), array( 'status' => 404 ) );
+			return new WP_Error( 'missing_params', __( 'Missing Parameters.' ), [ 'status' => 404 ] );
 		}
 
 		self::track( $args );
@@ -167,25 +170,32 @@ class PUM_Analytics {
 	 * Registers the analytics endpoints
 	 */
 	public static function register_endpoints() {
-		register_rest_route( self::get_analytics_namespace(), self::get_analytics_route(), apply_filters( 'pum_analytics_rest_route_args', array(
-			'methods'             => 'GET',
-			'callback'            => array( __CLASS__, 'analytics_endpoint' ),
-			'permission_callback' => '__return_true',
-			'args'                => array(
-				'event' => array(
-					'required'    => true,
-					'description' => __( 'Event Type', 'popup-maker' ),
-					'type'        => 'string',
-				),
-				'pid'   => array(
-					'required'            => true,
-					'description'         => __( 'Popup ID', 'popup-maker' ),
-					'type'                => 'integer',
-					'validation_callback' => array( __CLASS__, 'endpoint_absint' ),
-					'sanitize_callback'   => 'absint',
-				),
-			),
-		) ) );
+		register_rest_route(
+			self::get_analytics_namespace(),
+			self::get_analytics_route(),
+			apply_filters(
+				'pum_analytics_rest_route_args',
+				[
+					'methods'             => 'GET',
+					'callback'            => [ __CLASS__, 'analytics_endpoint' ],
+					'permission_callback' => '__return_true',
+					'args'                => [
+						'event' => [
+							'required'    => true,
+							'description' => __( 'Event Type', 'popup-maker' ),
+							'type'        => 'string',
+						],
+						'pid'   => [
+							'required'            => true,
+							'description'         => __( 'Popup ID', 'popup-maker' ),
+							'type'                => 'integer',
+							'validation_callback' => [ __CLASS__, 'endpoint_absint' ],
+							'sanitize_callback'   => 'absint',
+						],
+					],
+				]
+			)
+		);
 	}
 
 	/**
@@ -194,7 +204,7 @@ class PUM_Analytics {
 	 * @param array $vars The current pum_vars.
 	 * @return array The updates pum_vars
 	 */
-	public static function pum_vars( $vars = array() ) {
+	public static function pum_vars( $vars = [] ) {
 		$vars['analytics_route'] = self::get_analytics_route();
 		if ( function_exists( 'rest_url' ) ) {
 			$vars['analytics_api'] = esc_url_raw( rest_url( self::get_analytics_namespace() ) );
@@ -289,7 +299,7 @@ class PUM_Analytics {
 	 * Returns a 204 no content header.
 	 */
 	public static function serve_no_content() {
-		header( "HTTP/1.0 204 No Content" );
+		header( 'HTTP/1.0 204 No Content' );
 		header( 'Content-Type: image/gif' );
 		header( 'Content-Length: 0' );
 		exit;

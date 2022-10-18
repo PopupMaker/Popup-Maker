@@ -20,7 +20,7 @@ add_filter( 'pum_settings_fields', 'pum_merge_deprecated_settings_fields' );
  *
  * @return array
  */
-function pum_merge_deprecated_settings_fields( $tabs = array() ) {
+function pum_merge_deprecated_settings_fields( $tabs = [] ) {
 	/**
 	 * Apply @deprecated filters & process old fields for compatibility.
 	 */
@@ -41,9 +41,9 @@ function pum_merge_deprecated_settings_fields( $tabs = array() ) {
 
 				if ( $field_args['type'] == 'header' ) {
 					$field_args['type'] = 'separator';
-				} else if ( $field_args['type'] == 'gaeventlabel' ) {
+				} elseif ( $field_args['type'] == 'gaeventlabel' ) {
 					$field_args['type'] = 'ga_event_labels';
-				} else if ( $field_args['type'] == 'hook' ) {
+				} elseif ( $field_args['type'] == 'hook' ) {
 					$field_args['type'] = 'html';
 
 					ob_start();

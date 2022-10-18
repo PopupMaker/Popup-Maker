@@ -67,7 +67,7 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * @var array An array of keys that can be accessed via the $this->user (WP_User) object.
 	 */
-	public $core_data_keys = array(
+	public $core_data_keys = [
 		'nickname',
 		'description',
 		'user_description',
@@ -95,7 +95,7 @@ abstract class PUM_Abstract_Model_User {
 		'roles',
 		'allcaps',
 		'filter',
-	);
+	];
 
 	/**
 	 * The required permission|user_role|capability|user_level of the user.
@@ -169,7 +169,7 @@ abstract class PUM_Abstract_Model_User {
 
 		} elseif ( method_exists( $this, 'get_' . $key ) ) {
 
-			return call_user_func( array( $this, 'get_' . $key ) );
+			return call_user_func( [ $this, 'get_' . $key ] );
 
 		} else {
 
@@ -192,7 +192,7 @@ abstract class PUM_Abstract_Model_User {
 	 */
 	public function __call( $name, $arguments ) {
 		if ( method_exists( $this->user, $name ) ) {
-			return call_user_func_array( array( $this->user, $name ), $arguments );
+			return call_user_func_array( [ $this->user, $name ], $arguments );
 		}
 	}
 
@@ -212,7 +212,7 @@ abstract class PUM_Abstract_Model_User {
 	 *
 	 * @param      $key
 	 * @param      $value
-	 * @param bool $global
+	 * @param bool  $global
 	 *
 	 * @return bool|int
 	 */
@@ -276,7 +276,7 @@ abstract class PUM_Abstract_Model_User {
 	 *
 	 * @return bool|int
 	 */
-	public function delete_meta( $key, $value = "" ) {
+	public function delete_meta( $key, $value = '' ) {
 		return delete_user_meta( $this->ID, $key, $value );
 	}
 

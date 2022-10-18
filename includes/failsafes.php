@@ -6,7 +6,7 @@
 if ( ! function_exists( 'popmake_get_option' ) ) {
 	/**
 	 * @param string $key
-	 * @param bool $default
+	 * @param bool   $default
 	 *
 	 * @return bool
 	 */
@@ -69,7 +69,7 @@ if ( ! function_exists( 'popmake_get_template_part' ) ) {
 	 * @return string
 	 */
 	function popmake_get_template_part( $slug, $name = null, $load = true ) {
-		if ($load ) {
+		if ( $load ) {
 			return;
 		}
 
