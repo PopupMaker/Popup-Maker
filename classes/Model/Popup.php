@@ -266,9 +266,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		$settings['id']   = $this->ID;
 		$settings['slug'] = $this->post_name;
 
-		$filters = [ 'js_only' => true ];
-
-		if ( $this->has_conditions( $filters ) ) {
+		// Pass conditions only if there are JS conditions.
+		if ( $this->has_conditions( [ 'js_only' => true ] ) ) {
 			$settings['conditions'] = $this->get_parsed_js_conditions();
 		}
 
@@ -710,10 +709,9 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			],
 		];
 
-		$filters = [ 'js_only' => true ];
-
-		if ( $this->has_conditions( $filters ) ) {
-			$data_attr['conditions'] = $this->get_conditions( $filters );
+		// Pass conditions only if there are JS conditions.
+		if ( $this->has_conditions( [ 'js_only' => true ] ) ) {
+			$data_attr['conditions'] = $this->get_parsed_js_conditions();
 		}
 
 		return apply_filters( 'pum_popup_data_attr', $data_attr, $this->ID );
@@ -749,19 +747,21 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	/**
 	 * Get the popups conditions.
 	 *
-	 * @param array $filters Array of condition filters @deprecated 1.16.9.
+	 * @param boolean|string[] $filters Array of condition filters @deprecated 1.16.9.
 	 *
 	 * @return array
 	 */
-	public function get_conditions( $filters = [] ) {
+	public function get_conditions( $filters = false ) {
 
-		$filters = wp_parse_args(
-			$filters,
-			[
-				'php_only' => null,
-				'js_only'  => null,
-			]
-		);
+		if ( false !== $filters ) {
+			$filters = wp_parse_args(
+				$filters,
+				[
+					'php_only' => null,
+					'js_only'  => null,
+				]
+			);
+		}
 
 		$cache_key = hash( 'md5', wp_json_encode( $filters ) );
 
@@ -775,7 +775,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 
 				foreach ( $group as $key => $condition ) {
 
-					if ( $this->exclude_condition( $condition, $filters ) ) {
+					if ( false !== $filters && $this->exclude_condition( $condition, $filters ) ) {
 						unset( $conditions[ $group_key ][ $key ] );
 						if ( empty( $conditions[ $group_key ] ) ) {
 							unset( $conditions[ $group_key ] );
@@ -866,11 +866,11 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	/**
 	 * Checks if this popup has any conditions.
 	 *
-	 * @param string[] $filters Array of filters to use.
+	 * @param false|string[] $filters Array of filters to use.
 	 *
 	 * @return bool
 	 */
-	public function has_conditions( $filters = [] ) {
+	public function has_conditions( $filters = false ) {
 		return (bool) count( $this->get_conditions( $filters ) );
 	}
 
@@ -961,12 +961,10 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			return false;
 		}
 
-		$filters = [];
-
-		if ( $this->has_conditions( $filters ) ) {
+		if ( $this->has_conditions() ) {
 
 			// All Groups Must Return True. Break if any is false and set $loadable to false.
-			foreach ( $this->get_conditions( $filters ) as $group => $conditions ) {
+			foreach ( $this->get_conditions() as $group => $conditions ) {
 
 				// Groups are false until a condition proves true.
 				$group_check = false;
