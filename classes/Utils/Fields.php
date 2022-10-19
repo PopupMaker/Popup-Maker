@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Fields utility.
+ *
+ * @package     PUM
+ * @copyright   Copyright (c) 2022, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -392,4 +395,3 @@ if ( $function_name ) {
 		return $value;
 	}
 }
-

@@ -1,7 +1,10 @@
 <?php
-/*********************************************
- * Copyright (c) 2020, Code Atlantic LLC
- ********************************************/
+/**
+ * Triggers Controller
+ *
+ * @package     PUM
+ * @copyright   Copyright (c) 2022, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	// Exit if accessed directly.

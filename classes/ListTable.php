@@ -5,6 +5,7 @@
  * @package WordPress
  * @subpackage List_Table
  * @since 3.1.0
+ * @copyright   Copyright (c) 2022, Code Atlantic LLC
  */
 
 /**

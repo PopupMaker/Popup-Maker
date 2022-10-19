@@ -1,8 +1,14 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2020, WP Popup Maker
- ******************************************************************************/
+/**
+ * Handler for Abstract Integration
+ *
+ * @package     PUM
+ * @copyright   Copyright (c) 2022, Code Atlantic LLC
+ */
 
+/**
+ * Class PUM_Abstract_Integration
+ */
 abstract class PUM_Abstract_Integration implements PUM_Interface_Integration {
 
 	/**

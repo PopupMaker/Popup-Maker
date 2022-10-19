@@ -3,6 +3,7 @@
  * Prerequisite handler.
  *
  * @package PUM\Core
+ * @copyright   Copyright (c) 2022, Code Atlantic LLC
  */
 
 /**

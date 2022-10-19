@@ -10,8 +10,7 @@
  * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
  */
 
-
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -31,6 +30,9 @@ class PUM_Ajax {
 		exit( $gif );
 	}
 
+	/**
+	 * Returns file.
+	 */
 	public static function get_file( $path ) {
 
 		if ( function_exists( 'realpath' ) ) {

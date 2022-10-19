@@ -9,6 +9,7 @@
  * @deprecated 1.9.0 Use PUM_Install instead.
  * @package    PUM
  * @subpackage PUM/includes
+ * @copyright  Copyright (c) 2022, Code Atlantic LLC
  * @author     Daniel Iser <danieliser@wizardinternetsolutions.com>
  */
 class PUM_Deactivator extends PUM_Install {
