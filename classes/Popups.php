@@ -7,6 +7,7 @@
  * @copyright   Copyright (c) 2022, Code Atlantic LLC
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
