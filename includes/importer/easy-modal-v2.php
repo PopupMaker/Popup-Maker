@@ -1,6 +1,6 @@
 <?php
 /**
- *  Function
+ *  Easy-Modal-v2 Function for Importer
  *
  * @package  POPMAKE_EMODAL
  * @subpackage  Functions/Import

@@ -1,6 +1,9 @@
 <?php
 /**
  * Selectbox options,and other array based data sets used for options.
+ *
+ * @package     PUM
+ * @copyright   Copyright (c) 2022, Code Atlantic LLC
  */
 
 // Exit if accessed directly

@@ -1,9 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
+/**
+ * Activation Controller
  *
- * @package Popup-Maker
- ******************************************************************************/
+ * @package     PUM
+ * @copyright   Copyright (c) 2022, Code Atlantic LLC
+ */
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

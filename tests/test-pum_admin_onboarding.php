@@ -2,7 +2,8 @@
 /**
  * Class PUM_Admin_OnboardingTEST
  *
- * @package Popup_Maker
+ * @package     Popup Maker
+ * @copyright   Copyright (c) 2022, Code Atlantic LLC
  */
 
 

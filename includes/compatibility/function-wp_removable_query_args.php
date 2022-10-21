@@ -1,4 +1,10 @@
 <?php
+/**
+ * Removable Query Function for Compatibility
+ *
+ * @package     PUM
+ * @copyright   Copyright (c) 2022, Code Atlantic LLC
+ */
 
 /**
  * Returns an array of single-use query variable names that can be removed from a URL.

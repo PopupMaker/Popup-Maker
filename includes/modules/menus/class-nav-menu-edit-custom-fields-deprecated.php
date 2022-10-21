@@ -1,4 +1,10 @@
 <?php
+/**
+ * WP nav-menu editor deprecated
+ *
+ * @package     PUM
+ * @copyright   Copyright (c) 2022, Code Atlantic LLC
+ */
 
 if ( ! class_exists( 'Walker_Nav_Menu_Edit' ) ) {
 	/** Walker_Nav_Menu_Edit class */

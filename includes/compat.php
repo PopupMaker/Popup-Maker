@@ -1,4 +1,10 @@
 <?php
+/**
+ * Compat Handler
+ *
+ * @package     PUM
+ * @copyright   Copyright (c) 2022, Code Atlantic LLC
+ */
 
 // SPL can be disabled on PHP 5.2
 if ( ! function_exists( 'spl_autoload_register' ) ) {

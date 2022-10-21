@@ -1,4 +1,12 @@
-<?php if ( ! defined( 'ABSPATH' ) ) {
+<?php
+/**
+ * ClosePopup Action for Ninja-Forms Integration
+ *
+ * @package     PUM
+ * @copyright   Copyright (c) 2022, Code Atlantic LLC
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
