@@ -6,7 +6,7 @@
  * @copyright   Copyright (c) 2022, Code Atlantic LLC
  */
 
-// SPL can be disabled on PHP 5.2
+// SPL can be disabled on PHP 5.2.
 if ( ! function_exists( 'spl_autoload_register' ) ) {
 	$_wp_spl_autoloaders = [];
 
