@@ -6,6 +6,9 @@
  * @copyright   Copyright (c) 2022, Code Atlantic LLC
  */
 
+/**
+ * Class PUM_Abstract_Integration_Form
+ */
 abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration implements PUM_Interface_Integration_Form {
 
 	/**
