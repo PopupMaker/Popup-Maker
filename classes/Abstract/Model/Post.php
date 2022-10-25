@@ -113,6 +113,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $post_password = '';
 
 	/**
+	 * The post name. Default is the sanitized post title when creating a new post.
+	 *
 	 * @var string
 	 */
 	public $post_name = '';
