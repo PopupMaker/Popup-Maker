@@ -155,6 +155,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $post_modified_gmt = '0000-00-00 00:00:00';
 
 	/**
+	 * The filtered post content.
+	 *
 	 * @var string
 	 */
 	public $post_content_filtered = '';
