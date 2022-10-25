@@ -85,6 +85,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $post_excerpt = '';
 
 	/**
+	 * The post status.
+	 *
 	 * @var string
 	 */
 	public $post_status = 'publish';
