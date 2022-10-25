@@ -443,7 +443,7 @@ abstract class PUM_Abstract_Model_Post {
 	 * @return bool
 	 */
 	public function is_private() {
-		return get_post_status( $this->ID ) == 'private';
+		return get_post_status( $this->ID ) === 'private';
 	}
 
 	/**
