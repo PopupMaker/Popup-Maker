@@ -426,6 +426,8 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Function is_published.
+	 *
 	 * @return bool
 	 */
 	public function is_published() {
@@ -433,6 +435,8 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Function is_draft.
+	 *
 	 * @return bool
 	 */
 	public function is_draft() {
