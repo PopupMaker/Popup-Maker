@@ -78,6 +78,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $post_title = '';
 
 	/**
+	 * The post excerpt. Default empty.
+	 *
 	 * @var string
 	 */
 	public $post_excerpt = '';
