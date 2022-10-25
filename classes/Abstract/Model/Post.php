@@ -436,7 +436,7 @@ abstract class PUM_Abstract_Model_Post {
 	 * @return bool
 	 */
 	public function is_draft() {
-		return get_post_status( $this->ID ) == 'draft';
+		return get_post_status( $this->ID ) === 'draft';
 	}
 
 	/**
