@@ -281,7 +281,7 @@ abstract class PUM_Abstract_Model_Post {
 	/**
 	 * is triggered when invoking inaccessible methods in an object context.
 	 *
-	 * @param $name      string
+	 * @param $name      string  The name of the method being called.
 	 * @param $arguments array
 	 *
 	 * @return mixed
