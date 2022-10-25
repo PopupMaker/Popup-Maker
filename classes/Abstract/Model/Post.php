@@ -99,6 +99,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $comment_status = 'open';
 
 	/**
+	 * Whether the post can accept pings.
+	 *
 	 * @var string
 	 */
 	public $ping_status = 'open';
