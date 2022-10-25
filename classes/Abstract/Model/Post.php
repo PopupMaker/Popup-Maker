@@ -183,6 +183,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $menu_order = 0;
 
 	/**
+	 * Mime type of the post.
+	 *
 	 * @var string
 	 */
 	public $post_mime_type = '';
