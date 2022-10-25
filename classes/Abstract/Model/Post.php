@@ -44,6 +44,8 @@ abstract class PUM_Abstract_Model_Post {
 
 	/**
 	 * Declare the default properties in WP_Post as we can't extend it
+	 * 
+	 * @var string
 	 */
 	public $post_author = 0;
 
