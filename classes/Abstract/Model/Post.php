@@ -333,8 +333,8 @@ abstract class PUM_Abstract_Model_Post {
 	/**
 	 * Function get_meta.
 	 *
-	 * @param mixed  $key  Metadata key.
-	 * @param bool $single  If true, return only the first value of the specified value.
+	 * @param mixed $key  Metadata key.
+	 * @param bool  $single  If true, return only the first value of the specified value.
 	 *
 	 * @return mixed|false
 	 */
