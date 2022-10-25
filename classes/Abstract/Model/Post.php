@@ -92,6 +92,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $post_status = 'publish';
 
 	/**
+	 * Whether the post can accept comments.
+	 *
 	 * @var string
 	 */
 	public $comment_status = 'open';
