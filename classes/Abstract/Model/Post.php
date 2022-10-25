@@ -219,6 +219,8 @@ abstract class PUM_Abstract_Model_Post {
 
 	/**
 	 * Whether the object is valid.
+	 *
+	 * @var bool
 	 */
 	protected $valid = true;
 
