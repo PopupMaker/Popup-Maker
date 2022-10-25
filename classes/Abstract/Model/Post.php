@@ -57,6 +57,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $post_date = '0000-00-00 00:00:00';
 
 	/**
+	 * Date of the post in the GMT timezone.
+	 *
 	 * @var string
 	 */
 	public $post_date_gmt = '0000-00-00 00:00:00';
