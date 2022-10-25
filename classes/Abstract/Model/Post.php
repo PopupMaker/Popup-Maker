@@ -37,6 +37,8 @@ abstract class PUM_Abstract_Model_Post {
 
 	/**
 	 * The post ID
+	 * 
+	 * @var string
 	 */
 	public $ID = 0;
 
