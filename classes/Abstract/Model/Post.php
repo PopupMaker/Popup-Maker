@@ -417,7 +417,7 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
-	 * Retrieves the post status.
+	 * Function is_trash.
 	 *
 	 * @return bool
 	 */
