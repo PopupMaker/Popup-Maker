@@ -212,6 +212,8 @@ abstract class PUM_Abstract_Model_Post {
 
 	/**
 	 * The required post type of the object.
+	 *
+	 * @var bool
 	 */
 	protected $required_post_type = false;
 
