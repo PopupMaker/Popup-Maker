@@ -50,6 +50,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $post_author = 0;
 
 	/**
+	 * Date of the post. 
+	 *
 	 * @var string
 	 */
 	public $post_date = '0000-00-00 00:00:00';
