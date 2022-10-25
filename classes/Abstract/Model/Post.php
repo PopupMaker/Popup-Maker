@@ -453,6 +453,8 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Function is_pending.
+	 *
 	 * @return bool
 	 */
 	public function is_pending() {
