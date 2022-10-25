@@ -257,7 +257,7 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
-	 * @param WP_Post $post
+	 * @param WP_Post $post  Post object.
 	 *
 	 * @return bool
 	 */
