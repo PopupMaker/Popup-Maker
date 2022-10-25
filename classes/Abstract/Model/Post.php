@@ -141,6 +141,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $pinged = '';
 
 	/**
+	 * Date when the post was last modified.
+	 *
 	 * @var string
 	 */
 	public $post_modified = '0000-00-00 00:00:00';
