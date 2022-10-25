@@ -169,6 +169,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $post_parent = 0;
 
 	/**
+	 * Global Unique ID for referencing the post.
+	 *
 	 * @var string
 	 */
 	public $guid = '';
