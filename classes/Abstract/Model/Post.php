@@ -350,7 +350,7 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
-	 * Function add_meta.
+	 * Adds post meta data for a post with given ID.
 	 *
 	 * @param string $key
 	 * @param mixed  $value
@@ -363,8 +363,6 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
-	 * Function update_meta.
-	 *
 	 * @param string $key
 	 * @param mixed  $value
 	 *
