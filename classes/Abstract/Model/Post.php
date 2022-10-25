@@ -279,7 +279,7 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
-	 * is triggered when invoking inaccessible methods in an object context.
+	 * Is triggered when invoking inaccessible methods in an object context.
 	 *
 	 * @param $name      string  The name of the method being called.
 	 * @param $arguments array  An enumerated array containing the parameters passed to the method.
