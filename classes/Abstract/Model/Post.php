@@ -162,6 +162,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $post_content_filtered = '';
 
 	/**
+	 * Set this for the post it belongs to, if any. Default 0.
+	 *
 	 * @var int
 	 */
 	public $post_parent = 0;
