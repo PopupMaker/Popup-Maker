@@ -1,6 +1,6 @@
 <?php
 /**
- * Form Integration for Abstract
+ * Form Integration for Abstract.
  *
  * @package     PUM
  * @copyright   Copyright (c) 2022, Code Atlantic LLC
@@ -12,14 +12,14 @@
 abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration implements PUM_Interface_Integration_Form {
 
 	/**
-	 * Sets string
+	 * Sets string.
 	 *
 	 * @var string
 	 */
 	public $type = 'form';
 
 	/**
-	 * Retrieves form
+	 * Retrieves form.
 	 *
 	 * @return array
 	 */
@@ -35,14 +35,14 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	abstract public function get_form( $id );
 
 	/**
-	 * Function get_form_selectlist
+	 * Function get_form_selectlist.
 	 *
 	 * @return array
 	 */
 	abstract public function get_form_selectlist();
 
 	/**
-	 * Function custom_scripts
+	 * Function custom_scripts.
 	 *
 	 * @param array $js  Custom scripts.
 	 *
@@ -53,7 +53,7 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	}
 
 	/**
-	 * Function custom_styles
+	 * Function custom_styles.
 	 *
 	 * @param array $css  Custom styles for popup associated with form.
 	 *
@@ -64,7 +64,7 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	}
 
 	/**
-	 * Retrieves the popup ID associated with the form, if any
+	 * Retrieves the popup ID associated with the form, if any.
 	 *
 	 * @return false|int
 	 * @since 1.13.0
@@ -74,7 +74,7 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	}
 
 	/**
-	 * Increase the conversion count for popup
+	 * Increase the conversion count for popup.
 	 *
 	 * @param int $popup_id The ID for the popup.
 	 * @since 1.13.0
@@ -86,9 +86,9 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	}
 
 	/**
-	 * Returns whether or now we should process any form submissions
+	 * Returns whether or now we should process any form submissions.
 	 *
-	 * @return bool True if we should process the form submission
+	 * @return bool True if we should process the form submission.
 	 * @since 1.13.0
 	 */
 	public function should_process_submission() {
