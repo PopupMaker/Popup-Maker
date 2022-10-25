@@ -134,6 +134,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $to_ping = '';
 
 	/**
+	 * URL that was pinged.
+	 *
 	 * @var string
 	 */
 	public $pinged = '';
