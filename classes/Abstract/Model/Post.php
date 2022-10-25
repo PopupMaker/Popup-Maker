@@ -397,6 +397,8 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Retrieves post author id.
+	 *
 	 * @return int
 	 */
 	public function author_id() {
