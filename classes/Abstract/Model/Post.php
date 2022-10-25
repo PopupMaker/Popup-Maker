@@ -314,6 +314,7 @@ abstract class PUM_Abstract_Model_Post {
 				return $meta;
 			}
 
+			/* translators: returns error. */
 			return new WP_Error( 'post-invalid-property', sprintf( __( 'Can\'t get property %s' ), $key ) );
 
 		}
