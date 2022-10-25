@@ -282,7 +282,7 @@ abstract class PUM_Abstract_Model_Post {
 	 * is triggered when invoking inaccessible methods in an object context.
 	 *
 	 * @param $name      string  The name of the method being called.
-	 * @param $arguments array
+	 * @param $arguments array  An enumerated array containing the parameters passed to the method.
 	 *
 	 * @return mixed
 	 * @link http://php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.methods
