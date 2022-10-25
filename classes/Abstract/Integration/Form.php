@@ -35,6 +35,8 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	abstract public function get_form( $id );
 
 	/**
+	 * Function get_form_selectlist
+	 *
 	 * @return array
 	 */
 	abstract public function get_form_selectlist();
