@@ -50,7 +50,7 @@ abstract class PUM_Abstract_Model_Post {
 	public $post_author = 0;
 
 	/**
-	 * Date of the post. 
+	 * Date of the post.
 	 *
 	 * @var string
 	 */
