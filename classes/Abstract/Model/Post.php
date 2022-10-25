@@ -176,6 +176,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $guid = '';
 
 	/**
+	 * Order the post should be displayed in.
+	 *
 	 * @var int
 	 */
 	public $menu_order = 0;
