@@ -429,7 +429,7 @@ abstract class PUM_Abstract_Model_Post {
 	 * @return bool
 	 */
 	public function is_published() {
-		return get_post_status( $this->ID ) == 'publish';
+		return get_post_status( $this->ID ) === 'publish';
 	}
 
 	/**
