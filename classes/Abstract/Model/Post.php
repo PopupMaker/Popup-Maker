@@ -296,7 +296,7 @@ abstract class PUM_Abstract_Model_Post {
 	/**
 	 * Magic __get function to dispatch a call to retrieve a private property.
 	 *
-	 * @param $key Private property being retrieved.
+	 * @param mixed $key Private property being retrieved.
 	 *
 	 * @return mixed|WP_Error
 	 */
