@@ -444,6 +444,8 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Function is_private.
+	 *
 	 * @return bool
 	 */
 	public function is_private() {
