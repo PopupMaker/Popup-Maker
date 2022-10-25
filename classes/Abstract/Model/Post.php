@@ -331,6 +331,8 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Function get_meta.
+	 *
 	 * @param      $key
 	 * @param bool $single
 	 *
