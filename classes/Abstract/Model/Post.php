@@ -240,7 +240,7 @@ abstract class PUM_Abstract_Model_Post {
 	/**
 	 * Given the post data, let's set the variables
 	 *
-	 * @param WP_Post $post
+	 * @param WP_Post $post  Validate post.
 	 */
 	protected function setup( $post ) {
 		if ( ! is_a( $post, 'WP_Post' ) || ! $this->is_required_post_type( $post ) ) {
