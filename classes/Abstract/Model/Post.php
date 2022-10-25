@@ -225,7 +225,7 @@ abstract class PUM_Abstract_Model_Post {
 	protected $valid = true;
 
 	/**
-	 * Get things going
+	 * Get things going.
 	 *
 	 * @param WP_Post|int $post  Post int.
 	 */
@@ -238,7 +238,7 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
-	 * Given the post data, let's set the variables
+	 * Given the post data, let's set the variables.
 	 *
 	 * @param WP_Post $post  Validate post.
 	 */
@@ -294,7 +294,7 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
-	 * Magic __get function to dispatch a call to retrieve a private property
+	 * Magic __get function to dispatch a call to retrieve a private property.
 	 *
 	 * @param $key Private property being retrieved.
 	 *
