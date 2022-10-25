@@ -12,6 +12,8 @@
 abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration implements PUM_Interface_Integration_Form {
 
 	/**
+	 * Sets string
+	 *
 	 * @var string
 	 */
 	public $type = 'form';
