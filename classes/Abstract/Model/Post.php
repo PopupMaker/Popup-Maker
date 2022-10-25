@@ -257,6 +257,8 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Function is_required_post_type - returns boolean.
+	 *
 	 * @param WP_Post $post  Post object.
 	 *
 	 * @return bool
