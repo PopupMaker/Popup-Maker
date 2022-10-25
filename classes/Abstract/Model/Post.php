@@ -422,7 +422,7 @@ abstract class PUM_Abstract_Model_Post {
 	 * @return bool
 	 */
 	public function is_trash() {
-		return get_post_status( $this->ID ) == 'trash';
+		return get_post_status( $this->ID ) === 'trash';
 	}
 
 	/**
