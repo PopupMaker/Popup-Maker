@@ -190,6 +190,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $post_mime_type = '';
 
 	/**
+	 * Comment count for post.
+	 *
 	 * @var int
 	 */
 	public $comment_count = 0;
