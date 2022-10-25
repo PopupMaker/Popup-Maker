@@ -22,7 +22,7 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	abstract public function get_forms();
 
 	/**
-	 * @param string $id
+	 * @param string $id  ID for form.
 	 *
 	 * @return mixed
 	 */
@@ -43,7 +43,7 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	}
 
 	/**
-	 * @param array $css
+	 * @param array $css  Custom styles for popup associated with form.
 	 *
 	 * @return array
 	 */
