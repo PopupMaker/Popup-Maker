@@ -53,6 +53,8 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	}
 
 	/**
+	 * Function custom_styles
+	 *
 	 * @param array $css  Custom styles for popup associated with form.
 	 *
 	 * @return array
