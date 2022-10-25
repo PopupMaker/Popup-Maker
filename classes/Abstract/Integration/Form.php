@@ -44,7 +44,7 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	/**
 	 * Function custom_scripts
 	 *
-	 * @param array $js
+	 * @param array $js  Custom scripts
 	 *
 	 * @return array
 	 */
