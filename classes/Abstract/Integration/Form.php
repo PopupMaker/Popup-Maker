@@ -17,6 +17,8 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	public $type = 'form';
 
 	/**
+	 * Retrieves form
+	 * 
 	 * @return array
 	 */
 	abstract public function get_forms();
