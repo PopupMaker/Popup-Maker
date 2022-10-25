@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract Integration Handler
+ * Abstract for Handling Integrations
  *
  * @package     PUM
  * @copyright   Copyright (c) 2022, Code Atlantic LLC
