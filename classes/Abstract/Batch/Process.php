@@ -122,7 +122,7 @@ abstract class PUM_Abstract_Batch_Process implements PUM_Interface_Batch_Process
 			case 'done':
 				$final_count = $this->get_current_count();
 
-				/* translators: $final_count was successfully processed. */
+				/* translators: 1. number of items processed */
 				$message = sprintf( _n( '%s item was successfully processed.', '%s items were successfully processed.', $final_count, 'popup-maker' ), number_format_i18n( $final_count ) );
 				break;
 
