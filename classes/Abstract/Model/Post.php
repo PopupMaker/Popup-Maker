@@ -64,6 +64,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $post_date_gmt = '0000-00-00 00:00:00';
 
 	/**
+	 * The post content. Default empty.
+	 *
 	 * @var string
 	 */
 	public $post_content = '';
