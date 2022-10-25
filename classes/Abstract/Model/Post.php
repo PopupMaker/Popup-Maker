@@ -204,7 +204,7 @@ abstract class PUM_Abstract_Model_Post {
 	public $filter;
 
 	/**
-	 * Post.
+	 * The post object for the current post.
 	 *
 	 * @var WP_Post
 	 */
