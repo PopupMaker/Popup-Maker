@@ -363,6 +363,8 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Function update_meta.
+	 *
 	 * @param string $key
 	 * @param mixed  $value
 	 *
