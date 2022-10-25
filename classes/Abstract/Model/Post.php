@@ -199,7 +199,7 @@ abstract class PUM_Abstract_Model_Post {
 	/**
 	 * Post filter.
 	 *
-	 * @var
+	 * @var string
 	 */
 	public $filter;
 
