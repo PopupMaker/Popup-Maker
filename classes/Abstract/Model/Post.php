@@ -227,7 +227,7 @@ abstract class PUM_Abstract_Model_Post {
 	/**
 	 * Get things going
 	 *
-	 * @param WP_Post|int $post  Post object.
+	 * @param WP_Post|int $post  Post int.
 	 */
 	public function __construct( $post ) {
 		if ( ! is_a( $post, 'WP_Post' ) ) {
