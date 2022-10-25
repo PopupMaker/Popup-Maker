@@ -375,6 +375,8 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Deletes post meta data by meta ID.
+	 *
 	 * @param string $key
 	 *
 	 * @return bool
