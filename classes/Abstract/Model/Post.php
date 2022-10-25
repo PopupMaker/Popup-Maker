@@ -350,6 +350,8 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Function add_meta.
+	 *
 	 * @param string $key
 	 * @param mixed  $value
 	 * @param bool   $unique
