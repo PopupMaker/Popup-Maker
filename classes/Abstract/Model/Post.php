@@ -120,6 +120,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $post_name = '';
 
 	/**
+	 * The post type.
+	 *
 	 * @var string
 	 */
 	public $post_type = '';
