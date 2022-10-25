@@ -71,6 +71,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $post_content = '';
 
 	/**
+	 * The post title.
+	 *
 	 * @var string
 	 */
 	public $post_title = '';
