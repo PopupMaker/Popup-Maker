@@ -353,7 +353,7 @@ abstract class PUM_Abstract_Model_Post {
 	 * Adds post meta data for a post with given ID.
 	 *
 	 * @param string $key  Meta key.
-	 * @param mixed  $value
+	 * @param mixed  $value  Meta value.
 	 * @param bool   $unique
 	 *
 	 * @return bool|int
