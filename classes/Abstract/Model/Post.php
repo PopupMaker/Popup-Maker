@@ -197,6 +197,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $comment_count = 0;
 
 	/**
+	 * Post filter.
+	 *
 	 * @var
 	 */
 	public $filter;
