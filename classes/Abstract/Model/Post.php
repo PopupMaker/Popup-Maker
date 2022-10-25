@@ -104,6 +104,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $ping_status = 'open';
 
 	/**
+	 * The password to access the post.
+	 *
 	 * @var string
 	 */
 	public $post_password = '';
