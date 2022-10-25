@@ -33,3 +33,6 @@ contributors.md
 /yarn-error.log
 assets/.DS_Store
 assets/css/.DS_Store
+
+./DS_Store
+./Popup-Maker.code-workspace 
