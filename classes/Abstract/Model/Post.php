@@ -354,7 +354,7 @@ abstract class PUM_Abstract_Model_Post {
 	 *
 	 * @param string $key  Meta key.
 	 * @param mixed  $value  Meta value.
-	 * @param bool   $unique
+	 * @param bool   $unique  Unique meta bool value.
 	 *
 	 * @return bool|int
 	 */
