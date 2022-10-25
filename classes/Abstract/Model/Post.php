@@ -388,7 +388,7 @@ abstract class PUM_Abstract_Model_Post {
 	/**
 	 * Allows for easy backward compatibility layer management in each child class.
 	 *
-	 * @param string $key
+	 * @param string $key  Meta key.
 	 *
 	 * @return bool
 	 */
