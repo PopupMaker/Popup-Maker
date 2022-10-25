@@ -148,6 +148,8 @@ abstract class PUM_Abstract_Model_Post {
 	public $post_modified = '0000-00-00 00:00:00';
 
 	/**
+	 * Date when the post was last modified in the GMT timezone.
+	 *
 	 * @var string
 	 */
 	public $post_modified_gmt = '0000-00-00 00:00:00';
