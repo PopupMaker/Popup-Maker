@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Improvement: Optimize dashboard support page to load much quicker.
+
 ## v1.16.11 - 10/25/2022
 
 * Security: Cleaned up mustache js templates usage of unescaped output.
