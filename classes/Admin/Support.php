@@ -53,7 +53,7 @@ class PUM_Admin_Support {
 				(function ($) {
 					var frame = $('<iframe scrolling="no">')
 						.css({height: '535px'})
-						.attr('src', '<?php echo 'https://api.wppopupmaker.com/dashboard-support/?' . build_query( pum_support_assist_args() ); ?>')
+						.attr('src', 'https://api.wppopupmaker.com/dashboard-support/')
 						.appendTo('#pum-support-frame');
 
 					frame.iFrameResize({
