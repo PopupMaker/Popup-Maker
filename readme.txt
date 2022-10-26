@@ -7,7 +7,7 @@ Tags:  marketing, ecommerce, popup, popups, optin, conversion, promotion, pop-up
 Requires at least: 4.9
 Tested up to: 6.0.2
 Requires PHP: 5.6
-Stable tag: 1.16.10
+Stable tag: 1.16.11
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -180,6 +180,11 @@ There are several common causes for this, check [this guide for help](https://do
 == Changelog ==
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
+
+= v1.16.11 - 10/25/2022 =
+
+* Security: Cleaned up mustache js templates usage of unescaped output.
+* Fix: Bug in `popup_trigger` & `popup_close` shortcode's when using `tag="button"`.
 
 = v1.16.10 - 10/18/2022 =
 
