@@ -64,11 +64,15 @@ abstract class PUM_Abstract_Model_User {
 	public $ID = 0;
 
 	/**
+	 * The user.
+	 *
 	 * @var \WP_User
 	 */
 	public $user;
 
 	/**
+	 * Array of data keys.
+	 *
 	 * @var array An array of keys that can be accessed via the $this->user (WP_User) object.
 	 */
 	public $core_data_keys = [
@@ -140,6 +144,8 @@ abstract class PUM_Abstract_Model_User {
 	}
 
 	/**
+	 * Check if set.
+	 *
 	 * @param $key
 	 *
 	 * @return bool
@@ -151,6 +157,8 @@ abstract class PUM_Abstract_Model_User {
 	}
 
 	/**
+	 * Method for unsetting a certain field.
+	 *
 	 * @param $key
 	 */
 	public function __unset( $key ) {
@@ -189,6 +197,8 @@ abstract class PUM_Abstract_Model_User {
 	}
 
 	/**
+	 * Function __call.
+	 *
 	 * @param $name
 	 * @param $arguments
 	 *
@@ -285,6 +295,8 @@ abstract class PUM_Abstract_Model_User {
 	}
 
 	/**
+	 * Retrieve the avatar.
+	 *
 	 * @param int $size
 	 *
 	 * @return false|string
