@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.16.12 - 10/26/2022
+
 * Improvement: Optimize dashboard support page to load much quicker.
 
 ## v1.16.11 - 10/25/2022

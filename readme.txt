@@ -181,6 +181,10 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
+= v1.16.12 - 10/26/2022 =
+
+* Improvement: Optimize dashboard support page to load much quicker.
+
 = v1.16.11 - 10/25/2022 =
 
 * Security: Cleaned up mustache js templates usage of unescaped output.
