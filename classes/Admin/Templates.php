@@ -75,7 +75,7 @@ class PUM_Admin_Templates {
 
 				if (option.options !== undefined && option.options.length) { #>
 
-				<optgroup label="{{{option.label}}}">
+				<optgroup label="{{option.label}}">
 
 					<# _.each(option.options, function(option, key) { #>
 					<option value="{{option.value}}" {{{option.meta}}}>{{option.label}}</option>
@@ -84,7 +84,7 @@ class PUM_Admin_Templates {
 				</optgroup>
 
 				<# } else { #>
-				<option value="{{option.value}}" {{{option.meta}}}>{{{option.label}}}</option>
+				<option value="{{option.value}}" {{{option.meta}}}>{{option.label}}</option>
 				<# }
 
 				}); #>
@@ -97,7 +97,7 @@ class PUM_Admin_Templates {
 				<li
 				<# print(option.value === data.value ? 'class="pum-selected"' : ''); #>>
 				<input type="radio" id="{{data.id}}_{{key}}" name="{{data.name}}" value="{{option.value}}" {{{option.meta}}}/>
-				<label for="{{data.id}}_{{key}}">{{{option.label}}}</label>
+				<label for="{{data.id}}_{{key}}">{{option.label}}</label>
 				</li>
 				<# }); #>
 			</ul>
@@ -112,7 +112,7 @@ class PUM_Admin_Templates {
 				<# _.each(data.options, function(option, key) { #>
 				<li>
 					<input type="checkbox" id="{{data.id}}_{{key}}" name="{{data.name}}[{{option.value}}]" value="{{option.value}}" {{{option.meta}}}/>
-					<label for="{{data.id}}_{{key}}">{{{option.label}}}</label>
+					<label for="{{data.id}}_{{key}}">{{option.label}}</label>
 				</li>
 				<# }); #>
 			</ul>
@@ -183,9 +183,10 @@ class PUM_Admin_Templates {
 		</script>
 
 		<script type="text/html" id="tmpl-pum-field-measure">
-			<input type="number" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" size="5" {{{data.meta}}}/>            <select id="{{data.id}}_unit" name="<# print(data.name.replace(data.id, data.id + '_unit')); #>">
+			<input type="number" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" size="5" {{{data.meta}}}/>
+			<select id="{{data.id}}_unit" name="<# print(data.name.replace(data.id, data.id + '_unit')); #>">
 				<# _.each(data.units, function(option, key) { #>
-				<option value="{{option.value}}" {{{option.meta}}}>{{{option.label}}}</option>
+				<option value="{{option.value}}" {{{option.meta}}}>{{option.label}}</option>
 				<# }); #>
 			</select>
 		</script>
@@ -281,7 +282,7 @@ class PUM_Admin_Templates {
 				  data-id="{{data.id}}" <# print( data.dependencies !== '' ? "data-pum-dependencies='" + data.dependencies + "'" : ''); #> <# print( data.dynamic_desc !== '' ? "data-pum-dynamic-desc='" + data.dynamic_desc + "'" : ''); #>>
 			<# if (typeof data.label === 'string' && data.label.length > 0) { #>
 			<label for="{{data.id}}">
-				{{{data.label}}}
+				{{data.label}}
 				<# if (typeof data.doclink === 'string' && data.doclink !== '') { #>
 				<a href="{{data.doclink}}" title="<?php _e( 'Documentation', 'popup-maker' ); ?>: {{data.label}}" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
 				<# } #>
@@ -484,7 +485,7 @@ class PUM_Admin_Templates {
 
 		<script type="text/html" id="tmpl-pum-trigger-add-type">
 			<#
-			var form_args = 
+			var form_args =
 			<?php
 			echo PUM_Utils_Array::safe_json_encode(
 				[

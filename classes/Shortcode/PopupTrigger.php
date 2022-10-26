@@ -171,7 +171,10 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 
 		$atts = parent::shortcode_atts( $atts );
 
-		if ( empty( $atts['tag'] ) || ! in_array( $atts['tag'], array_keys( $allowedtags ) ) ) {
+		// Add button to allowed tags.
+		$tags_allowed = array_merge( array_keys( $allowedtags ), [ 'button' ] ) ;
+
+		if ( empty( $atts['tag'] ) || ! in_array( $atts['tag'], $tags_allowed ) ) {
 			$atts['tag'] = 'span';
 		}
 

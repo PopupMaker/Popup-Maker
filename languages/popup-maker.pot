@@ -19,7 +19,7 @@ msgstr ""
 msgid "Integrations"
 msgstr ""
 
-#: classes/Admin.php:61, classes/Admin/Pages.php:58, classes/Admin/Pages.php:160, classes/Admin/Templates.php:415, classes/Admin/Templates.php:659, classes/Site/Assets.php:276
+#: classes/Admin.php:61, classes/Admin/Pages.php:58, classes/Admin/Pages.php:160, classes/Admin/Templates.php:416, classes/Admin/Templates.php:660, classes/Site/Assets.php:276
 msgid "Settings"
 msgstr ""
 
@@ -483,7 +483,7 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: classes/Privacy.php:232, classes/Admin/Popups.php:1157, classes/Admin/Templates.php:658, classes/Shortcode/Subscribe.php:187, classes/Shortcode/Subscribe.php:241
+#: classes/Privacy.php:232, classes/Admin/Popups.php:1157, classes/Admin/Templates.php:659, classes/Shortcode/Subscribe.php:187, classes/Shortcode/Subscribe.php:241
 msgid "Name"
 msgstr ""
 
@@ -604,11 +604,11 @@ msgstr ""
 msgid "Choose which cookies will disable this trigger?"
 msgstr ""
 
-#: classes/Triggers.php:338, classes/Admin/Templates.php:644
+#: classes/Triggers.php:338, classes/Admin/Templates.php:645
 msgid "Add New Cookie"
 msgstr ""
 
-#: classes/Triggers.php:361, classes/Admin/Templates.php:414
+#: classes/Triggers.php:361, classes/Admin/Templates.php:415
 msgid "Cookie"
 msgstr ""
 
@@ -901,7 +901,7 @@ msgstr ""
 msgid "Content Only - For use with page builders or block editor"
 msgstr ""
 
-#: templates/popup.php:48, classes/Admin/Helpers.php:387, classes/Admin/Popups.php:376, classes/Admin/Popups.php:810, classes/Admin/Templates.php:334, classes/Admin/Themes.php:173, classes/Admin/Themes.php:350, classes/Shortcode/Popup.php:55, classes/Shortcode/Popup.php:79
+#: templates/popup.php:48, classes/Admin/Helpers.php:387, classes/Admin/Popups.php:376, classes/Admin/Popups.php:810, classes/Admin/Templates.php:335, classes/Admin/Themes.php:173, classes/Admin/Themes.php:350, classes/Shortcode/Popup.php:55, classes/Shortcode/Popup.php:79
 msgid "Close"
 msgstr ""
 
@@ -929,7 +929,7 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: classes/Admin/Assets.php:72, classes/Admin/Helpers.php:368, classes/Admin/Templates.php:534, classes/Admin/Templates.php:710
+#: classes/Admin/Assets.php:72, classes/Admin/Helpers.php:368, classes/Admin/Templates.php:535, classes/Admin/Templates.php:711
 msgid "Add"
 msgstr ""
 
@@ -1916,185 +1916,185 @@ msgstr ""
 msgid "Check"
 msgstr ""
 
-#: classes/Admin/Templates.php:199
+#: classes/Admin/Templates.php:200
 msgid "Active"
 msgstr ""
 
-#: classes/Admin/Templates.php:200
+#: classes/Admin/Templates.php:201
 msgid "Deactivate License"
 msgstr ""
 
-#: classes/Admin/Templates.php:202
+#: classes/Admin/Templates.php:203
 msgid "Inactive"
 msgstr ""
 
-#: classes/Admin/Templates.php:203
+#: classes/Admin/Templates.php:204
 msgid "Activate License"
 msgstr ""
 
-#: classes/Admin/Templates.php:242
+#: classes/Admin/Templates.php:243
 msgid "Category"
 msgstr ""
 
-#: classes/Admin/Templates.php:246
+#: classes/Admin/Templates.php:247
 msgid "Action"
 msgstr ""
 
-#: classes/Admin/Templates.php:250
+#: classes/Admin/Templates.php:251
 msgid "Label"
 msgstr ""
 
-#: classes/Admin/Templates.php:254
+#: classes/Admin/Templates.php:255
 msgid "Value"
 msgstr ""
 
-#: classes/Admin/Templates.php:286, classes/Admin/Templates.php:291
+#: classes/Admin/Templates.php:287, classes/Admin/Templates.php:292
 msgid "Documentation"
 msgstr ""
 
-#: classes/Admin/Templates.php:400
+#: classes/Admin/Templates.php:401
 msgid "Add New Trigger"
 msgstr ""
 
-#: classes/Admin/Templates.php:404
+#: classes/Admin/Templates.php:405
 msgid "Triggers cause a popup to open."
 msgstr ""
 
-#: classes/Admin/Templates.php:413
+#: classes/Admin/Templates.php:414
 msgid "Type"
 msgstr ""
 
-#: classes/Admin/Templates.php:416, classes/Admin/Templates.php:660, classes/Shortcode/Subscribe.php:63
+#: classes/Admin/Templates.php:417, classes/Admin/Templates.php:661, classes/Shortcode/Subscribe.php:63
 msgid "Actions"
 msgstr ""
 
-#: classes/Admin/Templates.php:445, classes/Admin/Templates.php:454
+#: classes/Admin/Templates.php:446, classes/Admin/Templates.php:455
 msgid "Edit this trigger"
 msgstr ""
 
-#: classes/Admin/Templates.php:455
+#: classes/Admin/Templates.php:456
 msgid "Delete this trigger"
 msgstr ""
 
-#: classes/Admin/Templates.php:464
+#: classes/Admin/Templates.php:465
 msgid "Link: Exact Match"
 msgstr ""
 
-#: classes/Admin/Templates.php:465
+#: classes/Admin/Templates.php:466
 msgid "Link: Containing"
 msgstr ""
 
-#: classes/Admin/Templates.php:466
+#: classes/Admin/Templates.php:467
 msgid "Link: Begins With"
 msgstr ""
 
-#: classes/Admin/Templates.php:467
+#: classes/Admin/Templates.php:468
 msgid "Link: Ends With"
 msgstr ""
 
-#: classes/Admin/Templates.php:474
+#: classes/Admin/Templates.php:475
 msgid "Insert Preset"
 msgstr ""
 
-#: classes/Admin/Templates.php:496
+#: classes/Admin/Templates.php:497
 msgid "What kind of trigger do you want?"
 msgstr ""
 
-#: classes/Admin/Templates.php:505
+#: classes/Admin/Templates.php:506
 msgid "Prevent popup from showing to visitor again using a cookie?"
 msgstr ""
 
-#: classes/Admin/Templates.php:512
+#: classes/Admin/Templates.php:513
 msgid "Stop showing popup once visitor takes this action:"
 msgstr ""
 
-#: classes/Admin/Templates.php:532
+#: classes/Admin/Templates.php:533
 msgid "New Trigger"
 msgstr ""
 
-#: classes/Admin/Templates.php:556
+#: classes/Admin/Templates.php:557
 msgid "Conditions allow you to show your popup to a targeted segment of your sites users."
 msgstr ""
 
-#: classes/Admin/Templates.php:558
+#: classes/Admin/Templates.php:559
 msgid "Learn more about %s"
 msgstr ""
 
-#: classes/Admin/Templates.php:558
+#: classes/Admin/Templates.php:559
 msgid "Targeting Conditions"
 msgstr ""
 
-#: classes/Admin/Templates.php:563
+#: classes/Admin/Templates.php:564
 msgid "By default, this popup will be loaded on every page of your site for all users."
 msgstr ""
 
-#: classes/Admin/Templates.php:564
+#: classes/Admin/Templates.php:565
 msgid "Target the popup to a specific segment by adding conditions below."
 msgstr ""
 
-#: classes/Admin/Templates.php:565
+#: classes/Admin/Templates.php:566
 msgid "Click the %1$s button for any condition to check the opposite of the chosen condition. The button will turn red %2$s when active."
 msgstr ""
 
-#: classes/Admin/Templates.php:580
+#: classes/Admin/Templates.php:581
 msgid "Choose a condition to target your popup to specific content or various other segments."
 msgstr ""
 
-#: classes/Admin/Templates.php:582, classes/Admin/Templates.php:614
+#: classes/Admin/Templates.php:583, classes/Admin/Templates.php:615
 msgid "Enable the Not Operand"
 msgstr ""
 
-#: classes/Admin/Templates.php:585, classes/Admin/Templates.php:618
+#: classes/Admin/Templates.php:586, classes/Admin/Templates.php:619
 msgid "Choose a condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:601
+#: classes/Admin/Templates.php:602
 msgctxt "aria-label for add new OR condition button"
 msgid "Add another OR condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:601, classes/Admin/Templates.php:612
+#: classes/Admin/Templates.php:602, classes/Admin/Templates.php:613
 msgid "or"
 msgstr ""
 
-#: classes/Admin/Templates.php:605
+#: classes/Admin/Templates.php:606
 msgctxt "aria-label for add new AND condition button"
 msgid "Add another AND condition group"
 msgstr ""
 
-#: classes/Admin/Templates.php:605
+#: classes/Admin/Templates.php:606
 msgid "and"
 msgstr ""
 
-#: classes/Admin/Templates.php:626
+#: classes/Admin/Templates.php:627
 msgid "Remove Condition"
 msgstr ""
 
-#: classes/Admin/Templates.php:648
+#: classes/Admin/Templates.php:649
 msgid "Cookies control the repeat display of a popup."
 msgstr ""
 
-#: classes/Admin/Templates.php:657
+#: classes/Admin/Templates.php:658
 msgid "Event"
 msgstr ""
 
-#: classes/Admin/Templates.php:689, classes/Admin/Templates.php:698
+#: classes/Admin/Templates.php:690, classes/Admin/Templates.php:699
 msgid "Edit this cookie"
 msgstr ""
 
-#: classes/Admin/Templates.php:699
+#: classes/Admin/Templates.php:700
 msgid "Delete this cookie"
 msgstr ""
 
-#: classes/Admin/Templates.php:708
+#: classes/Admin/Templates.php:709
 msgid "When should your cookie be created?"
 msgstr ""
 
-#: classes/Admin/Templates.php:709
+#: classes/Admin/Templates.php:710
 msgid "Select a cookie type."
 msgstr ""
 
-#: classes/Admin/Templates.php:717
+#: classes/Admin/Templates.php:718
 msgid "Reset Cookie Key"
 msgstr ""
 

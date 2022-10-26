@@ -2,9 +2,14 @@
 
 ## Unreleased
 
+## v1.16.11 - 10/25/2022
+
+* Security: Cleaned up mustache js templates usage of unescaped output.
+* Fix: Bug in `popup_trigger` & `popup_close` shortcode's when using `tag="button"`.
+
 ## v1.16.10 - 10/18/2022
 
-* Improvement: Added nonce to previews.
+* Security: Added nonce to previews.
 * Improvement: Standardizing coding standards, convert to short arrays.
 * Improvement: First phase of a large clean up of older code.
 * Fix: Recent improvements to conditions handling caused some issues in some cases.
