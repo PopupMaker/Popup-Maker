@@ -113,7 +113,7 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * Get things going
 	 *
-	 * @param WP_User|int $user
+	 * @param WP_User|int $user  The user.
 	 */
 	public function __construct( $user ) {
 		if ( ! is_a( $user, 'WP_User' ) ) {
@@ -146,7 +146,7 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * Check if set.
 	 *
-	 * @param $key
+	 * @param $key  Property to check.
 	 *
 	 * @return bool
 	 */
@@ -159,7 +159,7 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * Method for unsetting a certain field.
 	 *
-	 * @param $key
+	 * @param $key  Property to unset.
 	 */
 	public function __unset( $key ) {
 		if ( in_array( $key, $this->core_data_keys ) ) {
@@ -170,7 +170,7 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * Magic __get function to dispatch a call to retrieve a private property
 	 *
-	 * @param $key
+	 * @param $key Property to be retrieved.
 	 *
 	 * @return mixed|WP_Error
 	 */
@@ -199,8 +199,8 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * Function __call.
 	 *
-	 * @param $name
-	 * @param $arguments
+	 * @param $name  Method to call.
+	 * @param $arguments  Arguments to pass when calling.
 	 *
 	 * @return mixed
 	 */
@@ -213,7 +213,7 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * Get per site or global user options.
 	 *
-	 * @param $key
+	 * @param $key  Option to retrieve.
 	 *
 	 * @return mixed
 	 */
@@ -224,9 +224,9 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * Used to set per site or global user options.
 	 *
-	 * @param      $key
-	 * @param      $value
-	 * @param bool  $global
+	 * @param      $key  Name of the option to update.
+	 * @param      $value  Option value. Must be serializable if non-scalar.
+	 * @param bool  $global  Whether to load the option when WordPress starts up.
 	 *
 	 * @return bool|int
 	 */
@@ -237,8 +237,8 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * Used to delete per site or global user options.
 	 *
-	 * @param      $key
-	 * @param bool $global
+	 * @param      $key  Name of the option to delete.
+	 * @param bool $global  Whether to delete option.
 	 *
 	 * @return bool
 	 */
@@ -249,8 +249,8 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * Get user meta.
 	 *
-	 * @param      $key
-	 * @param bool $single
+	 * @param      $key  Data to retrieve.
+	 * @param bool $single  If true, return only the first value of the specified.
 	 *
 	 * @return mixed
 	 */
@@ -261,8 +261,8 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * Add user meta.
 	 *
-	 * @param $key
-	 * @param $value
+	 * @param $key  Metadata key.
+	 * @param $value  Metadata value.
 	 *
 	 * @return bool|int
 	 */
@@ -273,8 +273,8 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * Update user meta.
 	 *
-	 * @param $key
-	 * @param $value
+	 * @param $key  Metadata key.
+	 * @param $value  Metadata value.
 	 *
 	 * @return bool|int
 	 */
@@ -285,8 +285,8 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * Delete user meta.
 	 *
-	 * @param $key
-	 * @param $value
+	 * @param $key  Metadata key.
+	 * @param $value  Metadata value.
 	 *
 	 * @return bool|int
 	 */
@@ -297,7 +297,7 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * Retrieve the avatar.
 	 *
-	 * @param int $size
+	 * @param int $size  Height and width of the avatar image file in pixels.
 	 *
 	 * @return false|string
 	 */
