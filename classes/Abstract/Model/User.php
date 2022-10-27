@@ -200,7 +200,7 @@ abstract class PUM_Abstract_Model_User {
 	 * Function __call.
 	 *
 	 * @param string $name  Method to call.
-	 * @param array $arguments  Arguments to pass when calling.
+	 * @param array  $arguments  Arguments to pass when calling.
 	 *
 	 * @return mixed
 	 */
@@ -224,9 +224,9 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * Used to set per site or global user options.
 	 *
-	 * @param   string   $key  Name of the option to update.
-	 * @param   mixed   $value  Option value. Must be serializable if non-scalar.
-	 * @param bool  $global  Whether to load the option when WordPress starts up.
+	 * @param string $key  Name of the option to update.
+	 * @param mixed  $value  Option value. Must be serializable if non-scalar.
+	 * @param bool   $global  Whether to load the option when WordPress starts up.
 	 *
 	 * @return bool|int
 	 */
@@ -237,8 +237,8 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * Used to delete per site or global user options.
 	 *
-	 * @param   string   $key  Name of the option to delete.
-	 * @param bool $global  Whether to delete option.
+	 * @param string $key  Name of the option to delete.
+	 * @param bool   $global  Whether to delete option.
 	 *
 	 * @return bool
 	 */
@@ -249,8 +249,8 @@ abstract class PUM_Abstract_Model_User {
 	/**
 	 * Get user meta.
 	 *
-	 * @param   string   $key  Data to retrieve.
-	 * @param bool $single  If true, return only the first value of the specified.
+	 * @param string $key  Data to retrieve.
+	 * @param bool   $single  If true, return only the first value of the specified.
 	 *
 	 * @return mixed
 	 */
@@ -262,7 +262,7 @@ abstract class PUM_Abstract_Model_User {
 	 * Add user meta.
 	 *
 	 * @param string $key  Metadata key.
-	 * @param mixed $value  Metadata value.
+	 * @param mixed  $value  Metadata value.
 	 *
 	 * @return bool|int
 	 */
