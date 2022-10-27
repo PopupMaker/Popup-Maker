@@ -1,6 +1,6 @@
 <?php
 /**
- * User Model Handler
+ * User Model Handler.
  *
  * @package     PUM
  * @copyright   Copyright (c) 2022, Code Atlantic LLC
@@ -111,7 +111,7 @@ abstract class PUM_Abstract_Model_User {
 	protected $required_permission = '';
 
 	/**
-	 * Get things going
+	 * Get things going.
 	 *
 	 * @param WP_User|int $user  The user.
 	 */
@@ -124,9 +124,9 @@ abstract class PUM_Abstract_Model_User {
 	}
 
 	/**
-	 * Given the user data, let's set the variables
+	 * Given the user data, let's set the variables.
 	 *
-	 * @param WP_User $user The User Object
+	 * @param WP_User $user The User Object.
 	 */
 	protected function setup( $user ) {
 		if ( ! is_a( $user, 'WP_User' ) || ( $this->required_permission && ! $user->has_cap( $this->required_permission ) ) ) {
@@ -168,7 +168,7 @@ abstract class PUM_Abstract_Model_User {
 	}
 
 	/**
-	 * Magic __get function to dispatch a call to retrieve a private property
+	 * Magic __get function to dispatch a call to retrieve a private property.
 	 *
 	 * @param $key Property to be retrieved.
 	 *
