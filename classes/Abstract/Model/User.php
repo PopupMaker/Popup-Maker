@@ -263,7 +263,7 @@ abstract class PUM_Abstract_Model_User {
 	 *
 	 * @param string $key  Metadata key.
 	 * @param mixed  $value  Metadata value.
-	 * @param bool   $unique
+	 * @param bool   $unique Whether the specified data should be unique for the object.
 	 *
 	 * @return bool|int
 	 */
