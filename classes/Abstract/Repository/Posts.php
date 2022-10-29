@@ -36,6 +36,8 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	];
 
 	/**
+	 * Model.
+	 *
 	 * @var string
 	 */
 	protected $model;
