@@ -105,8 +105,8 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Sets a specific query arg to a strict value.
 	 *
-	 * @param      $key
-	 * @param null $value
+	 * @param      $key  Specified query arg.
+	 * @param null $value  Value.
 	 */
 	protected function set_strict_query_arg( $key, $value = null ) {
 		$this->strict_query_args[ $key ] = $value;
@@ -126,7 +126,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Build query based on an array.
 	 *
-	 * @param array $args
+	 * @param array $args  Array of query args.
 	 *
 	 * @return array
 	 */
@@ -141,7 +141,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Retrieves arguments.
 	 *
-	 * @param array $args
+	 * @param array $args  Array of query args.
 	 *
 	 * @return array
 	 */
@@ -152,7 +152,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Retrieves id for abstract model.
 	 *
-	 * @param int $id
+	 * @param int $id  Id for model.
 	 *
 	 * @return WP_Post|PUM_Abstract_Model_Post
 	 * @throws \InvalidArgumentException
@@ -168,8 +168,8 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Retrieves field and value for specied id.
 	 *
-	 * @param $field
-	 * @param $value
+	 * @param $field  Field to be retrieved.
+	 * @param $value Value to be retrieved.
 	 *
 	 * @return PUM_Abstract_Model_Post|\WP_Post
 	 */
@@ -188,7 +188,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Returns post type for specified id.
 	 *
-	 * @param int $id
+	 * @param int $id  Id for post.
 	 *
 	 * @return bool
 	 */
@@ -199,7 +199,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Get hash of given string.
 	 *
-	 * @param $args
+	 * @param $args  Arg to serialize.
 	 *
 	 * @return string
 	 */
@@ -210,7 +210,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Retrieves an array of arguments.
 	 *
-	 * @param array $args
+	 * @param array $args  Query args.
 	 *
 	 * @return WP_Post[]|PUM_Abstract_Model_Post[]
 	 */
@@ -254,7 +254,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Function count_items.
 	 *
-	 * @param array $args
+	 * @param array $args  Array of args.
 	 *
 	 * @return int
 	 */
@@ -284,7 +284,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Assert that data is valid.
 	 *
-	 * @param array $data
+	 * @param array $data  Data to be asserted.
 	 *
 	 * @throws InvalidArgumentException
 	 *
@@ -301,7 +301,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Creates posted based on data retrieved.
 	 *
-	 * @param array $data
+	 * @param array $data  Array of data for the post.
 	 *
 	 * @return WP_Post|PUM_Abstract_Model_Post
 	 * @throws InvalidArgumentException
@@ -340,8 +340,8 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Update specified post.
 	 *
-	 * @param int   $id
-	 * @param array $data
+	 * @param int   $id  Id for post getting updated.
+	 * @param array $data  Data for post to update.
 	 *
 	 * @return WP_Post|PUM_Abstract_Model_Post
 	 * @throws Exception
@@ -389,9 +389,9 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	}
 
 	/**
-	 * Retrieves has for specified post.
+	 * Retrieves hash for specified post.
 	 *
-	 * @param $post
+	 * @param $post  Post.
 	 *
 	 * @return string
 	 */
@@ -402,7 +402,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Checks if cache for specified post exists.
 	 *
-	 * @param $post
+	 * @param $post  Post to check.
 	 *
 	 * @return bool
 	 */
@@ -413,7 +413,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Retrieves specified post.
 	 *
-	 * @param int|WP_Post $id
+	 * @param int|WP_Post $id  Id for post.
 	 *
 	 * @return WP_Post|PUM_Abstract_Model_Post
 	 */
@@ -443,7 +443,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Delete given post.
 	 *
-	 * @param int $id
+	 * @param int $id  Id for post.
 	 *
 	 * @return bool
 	 */
@@ -454,7 +454,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Deletes item for given id.
 	 *
-	 * @param int $id
+	 * @param int $id  Id for post.
 	 *
 	 * @return bool
 	 */
@@ -465,7 +465,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Retrieves item deleted for given id.
 	 *
-	 * @param int $id
+	 * @param int $id  Id for post.
 	 *
 	 * @return bool
 	 */
@@ -476,7 +476,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	/**
 	 * Force deletes item for given id.
 	 *
-	 * @param int $id
+	 * @param int $id  Id for post to force delete.
 	 *
 	 * @return bool
 	 */
