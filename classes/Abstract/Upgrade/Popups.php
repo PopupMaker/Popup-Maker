@@ -32,7 +32,7 @@ abstract class PUM_Abstract_Upgrade_Popups extends PUM_Abstract_Upgrade_Posts im
 	/**
 	 * Process needed upgrades on each post.
 	 *
-	 * @param int $post_id
+	 * @param int $post_id  Post to process.
 	 */
 	public function process_post( $post_id = 0 ) {
 		$this->process_popup( $post_id );
@@ -41,7 +41,7 @@ abstract class PUM_Abstract_Upgrade_Popups extends PUM_Abstract_Upgrade_Posts im
 	/**
 	 * Process needed upgrades on each popup.
 	 *
-	 * @param int $popup_id
+	 * @param int $popup_id  Popup to process.
 	 */
 	abstract public function process_popup( $popup_id = 0 );
 
