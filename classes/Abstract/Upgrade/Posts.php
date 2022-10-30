@@ -51,11 +51,15 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	public $per_step = 1;
 
 	/**
+	 * Array of post ids.
+	 *
 	 * @var array
 	 */
 	public $post_ids;
 
 	/**
+	 * Posts that have been upgraded.
+	 *
 	 * @var array
 	 */
 	public $completed_post_ids;
@@ -139,6 +143,8 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 
 
 	/**
+	 * Function of custom args.
+	 *
 	 * @return array
 	 */
 	public function custom_query_args() {
