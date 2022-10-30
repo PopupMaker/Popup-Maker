@@ -82,9 +82,19 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 */
 	public $prefetch_ids = true;
 
+	/**
+	 * Initialize.
+	 *
+	 * @param null $data  Data is set to null.
+	 */
 	public function init( $data = null ) {
 	}
 
+	/**
+	 * Gets posts.
+	 *
+	 * @var $total_to_migrate
+	 */
 	public function pre_fetch() {
 		$total_to_migrate = $this->get_total_count();
 
