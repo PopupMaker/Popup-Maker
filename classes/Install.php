@@ -222,7 +222,7 @@ class PUM_Install {
 	 */
 	public static function get_activation_failure_notice() {
 		$flag    = self::get_activation_flag();
-		$version = 'PHP' == $flag ? Popup_Maker::$MIN_PHP_VER : Popup_Maker::$MIN_WP_VER;
+		$version = 'PHP' === $flag ? Popup_Maker::$MIN_PHP_VER : Popup_Maker::$MIN_WP_VER;
 
 		return sprintf( __( 'The %4$s %1$s %5$s plugin requires %2$s version %3$s or greater.', 'popup-maker' ), Popup_Maker::$NAME, $flag, $version, '<strong>', '</strong>' );
 	}

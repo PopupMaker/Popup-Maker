@@ -310,7 +310,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 */
 	public function has_cookie( $event ) {
 		foreach ( (array) $this->get_cookies() as $cookie ) {
-			if ( $cookie['event'] == $event ) {
+			if ( $cookie['event'] === $event ) {
 				return true;
 			}
 		}
@@ -329,7 +329,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			$has_click_trigger = false;
 
 			foreach ( $triggers as $trigger ) {
-				if ( $trigger['type'] == 'click_open' ) {
+				if ( $trigger['type'] === 'click_open' ) {
 					$has_click_trigger = true;
 				}
 			}
@@ -357,7 +357,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		$triggers = $this->get_triggers();
 
 		foreach ( $triggers as $trigger ) {
-			if ( $trigger['type'] == $type ) {
+			if ( $trigger['type'] === $type ) {
 				return true;
 			}
 		}
@@ -594,7 +594,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 					'size-' . $size, // Backward Compatibility
 				]
 			);
-		} elseif ( $size == 'custom' ) {
+		} elseif ( $size === 'custom' ) {
 			$classes['container'][] = 'size-custom'; // Backward Compatibility
 		}
 
@@ -814,9 +814,9 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			return true;
 		}
 
-		if ( $filters['js_only'] && $condition_args['advanced'] != true ) {
+		if ( $filters['js_only'] && $condition_args['advanced'] !== true ) {
 			return true;
-		} elseif ( $filters['php_only'] && $condition_args['advanced'] != false ) {
+		} elseif ( $filters['php_only'] && $condition_args['advanced'] !== false ) {
 			return true;
 		}
 
@@ -1142,7 +1142,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			return $resets;
 		}
 
-		if ( count( $resets ) == 1 ) {
+		if ( count( $resets ) === 1 ) {
 			// Looks like we only got one result, return it.
 			return $resets[0];
 		}

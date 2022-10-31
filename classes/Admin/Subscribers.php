@@ -94,7 +94,7 @@ class PUM_Admin_Subscribers {
 	 */
 	public static function set_option( $status, $option, $value ) {
 
-		if ( 'pum_subscribers_per_page' == $option ) {
+		if ( 'pum_subscribers_per_page' === $option ) {
 			return $value;
 		}
 

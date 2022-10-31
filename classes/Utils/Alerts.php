@@ -45,7 +45,7 @@ class PUM_Utils_Alerts {
 		global $menu;
 		$count = self::alert_count();
 		foreach ( $menu as $key => $item ) {
-			if ( $item[2] == 'edit.php?post_type=popup' ) {
+			if ( $item[2] === 'edit.php?post_type=popup' ) {
 				$menu[ $key ][0] .= $count ? ' <span class="update-plugins count-' . $count . '"><span class="plugin-count pum-alert-count" aria-hidden="true">' . $count . '</span></span>' : '';
 			}
 		}
@@ -364,7 +364,7 @@ class PUM_Utils_Alerts {
 
 			<?php
 			foreach ( $alerts as $alert ) {
-				$expires     = 1 == $alert['dismissible'] ? '' : $alert['dismissible'];
+				$expires     = 1 === $alert['dismissible'] ? '' : $alert['dismissible'];
 				$dismiss_url = add_query_arg(
 					[
 						'nonce'             => $nonce,

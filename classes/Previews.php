@@ -99,7 +99,7 @@ class PUM_Previews {
 				}
 			}
 
-			if ( $popup_id == $popup && current_user_can( 'edit_post', $popup ) ) {
+			if ( $popup_id === $popup && current_user_can( 'edit_post', $popup ) ) {
 				return true;
 			}
 		}

@@ -80,7 +80,7 @@ abstract class PUM_Shortcode {
 	public function __construct( $args = [] ) {
 		if ( ! did_action( 'init' ) ) {
 			add_action( 'init', [ $this, 'register' ] );
-		} elseif ( ! did_action( 'admin_head' ) && current_action() != 'init' ) {
+		} elseif ( ! did_action( 'admin_head' ) && current_action() !== 'init' ) {
 			add_action( 'admin_head', [ $this, 'register' ] );
 		} else {
 			$this->register();
@@ -355,7 +355,7 @@ abstract class PUM_Shortcode {
 			foreach ( $fields as $field_id => $field ) {
 
 				// Don't register inner content fields.
-				if ( '_inner_content' == $field_id ) {
+				if ( '_inner_content' === $field_id ) {
 					continue;
 				}
 
