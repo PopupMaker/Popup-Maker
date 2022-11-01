@@ -19,10 +19,10 @@ class PUM_Gravity_Forms_Integation {
 	}
 
 	public static function force_ajax() {
-		if ( current_action() == 'popmake_popup_before_inner' ) {
+		if ( current_action() === 'popmake_popup_before_inner' ) {
 			add_filter( 'shortcode_atts_gravityforms', [ __CLASS__, 'gfrorms_shortcode_atts' ] );
 		}
-		if ( current_action() == 'popmake_popup_after_inner' ) {
+		if ( current_action() === 'popmake_popup_after_inner' ) {
 			remove_filter( 'shortcode_atts_gravityforms', [ __CLASS__, 'gfrorms_shortcode_atts' ] );
 		}
 	}

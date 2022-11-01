@@ -1,6 +1,6 @@
 <div id="pum-<?php pum_popup_ID(); ?>" class="<?php pum_popup_classes(); ?>" <?php pum_popup_data_attr(); ?> role="dialog" aria-hidden="true" 
 								   <?php
-									if ( pum_get_popup_title() != '' ) :
+									if ( pum_get_popup_title() !== '' ) :
 										?>
 	aria-labelledby="pum_popup_title_<?php pum_popup_ID(); ?>"<?php endif; ?>>
 
@@ -15,7 +15,7 @@
 		 * Render the title if not empty.
 		 */
 		?>
-		<?php if ( pum_get_popup_title() != '' ) : ?>
+		<?php if ( pum_get_popup_title() !== '' ) : ?>
 			<div id="pum_popup_title_<?php pum_popup_ID(); ?>" class="<?php pum_popup_classes( null, 'title' ); ?>">
 				<?php pum_popup_title(); ?>
 			</div>

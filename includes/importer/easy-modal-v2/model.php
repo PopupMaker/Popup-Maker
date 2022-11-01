@@ -102,7 +102,7 @@ class EModal_Model {
 		$values = $this->_data;
 
 		foreach ( $values as $key => $value ) {
-			if ( $key != 'id' ) {
+			if ( $key !== 'id' ) {
 				$values[ $key ] = maybe_serialize( $this->$key );
 			}
 		}
@@ -113,7 +113,7 @@ class EModal_Model {
 	public function __get( $key ) {
 		if ( array_key_exists( $key, $this->_data ) ) {
 			return $this->_data[ $key ];
-		} elseif ( $key == 'id' ) {
+		} elseif ( $key === 'id' ) {
 			if ( array_key_exists( $this->_pk, $this->_data ) ) {
 				return $this->_data[ $this->_pk ];
 			}
