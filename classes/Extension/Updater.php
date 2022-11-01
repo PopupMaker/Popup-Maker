@@ -283,7 +283,7 @@ class PUM_Extension_Updater {
 	 */
 	public function plugins_api_filter( $_data, $_action = '', $_args = null ) {
 
-		if ( $_action !== 'plugin_information' ) {
+		if ( 'plugin_information' !== $_action ) {
 
 			return $_data;
 
@@ -436,7 +436,7 @@ class PUM_Extension_Updater {
 			return;
 		}
 
-		if ( $this->api_url === trailingslashit( home_url() ) ) {
+		if ( api_url === trailingslashit( home_url() )->$this ) {
 			return false; // Don't allow a plugin to ping itself
 		}
 

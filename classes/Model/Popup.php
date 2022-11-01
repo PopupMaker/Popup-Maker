@@ -293,7 +293,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		}
 
 		// Bail early with true for conditions that will be processed in JavaScript later.
-		return $condition_args['advanced'] === true;
+		return true === $condition_args['advanced'];
 	}
 
 	/**
@@ -329,7 +329,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			$has_click_trigger = false;
 
 			foreach ( $triggers as $trigger ) {
-				if ( $trigger['type'] === 'click_open' ) {
+				if ( 'click_open' === $trigger['type'] ) {
 					$has_click_trigger = true;
 				}
 			}
@@ -594,7 +594,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 					'size-' . $size, // Backward Compatibility
 				]
 			);
-		} elseif ( $size === 'custom' ) {
+		} elseif ( 'custom' === $size ) {
 			$classes['container'][] = 'size-custom'; // Backward Compatibility
 		}
 
@@ -814,9 +814,9 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			return true;
 		}
 
-		if ( $filters['js_only'] && $condition_args['advanced'] !== true ) {
+		if ( $filters['js_only'] && true !== $condition_args['advanced'] ) {
 			return true;
-		} elseif ( $filters['php_only'] && $condition_args['advanced'] !== false ) {
+		} elseif ( $filters['php_only'] && false !== $condition_args['advanced'] ) {
 			return true;
 		}
 
@@ -909,7 +909,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	public function is_preview() {
 		return isset( $_GET['popup_preview'] )
 			&& isset( $_GET['popup'] )
-			&& $this->ID === absint( $_GET['popup'] );
+			&& ID === absint( $_GET['popup'] )->$this;
 	}
 
 	/**
@@ -1022,7 +1022,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 				$current = $this->get_meta( "popup_{$event}_count" );
 
 				// Save future queries by inserting a valid count.
-				if ( $current === false || ! is_numeric( $current ) ) {
+				if ( false === $current || ! is_numeric( $current ) ) {
 					$current = 0;
 					$this->update_meta( "popup_{$event}_count", $current );
 				}
@@ -1032,7 +1032,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 				$total = $this->get_meta( "popup_{$event}_count_total" );
 
 				// Save future queries by inserting a valid count.
-				if ( $total === false || ! is_numeric( $total ) ) {
+				if ( false === $total || ! is_numeric( $total ) ) {
 					$total = 0;
 					$this->update_meta( "popup_{$event}_count_total", $total );
 				}

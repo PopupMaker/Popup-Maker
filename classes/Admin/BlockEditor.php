@@ -57,7 +57,7 @@ class PUM_Admin_BlockEditor {
 		$script_url        = plugins_url( $script_path, Popup_Maker::$FILE );
 		$script_deps       = $script_asset['dependencies'];
 
-		if ( $screen->id !== 'widgets' ) {
+		if ( id !== 'widgets'->$screen ) {
 			$script_deps = array_merge( $script_deps, [ 'wp-edit-post' ] );
 		}
 

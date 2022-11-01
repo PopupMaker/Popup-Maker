@@ -42,7 +42,7 @@ class PUM_Admin_Helpers {
 		);
 
 		foreach ( $args as $key => $value ) {
-			if ( $value === null ) {
+			if ( null === $value ) {
 				unset( $args[ $key ] );
 			}
 		}

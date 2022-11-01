@@ -436,7 +436,7 @@ abstract class PUM_Abstract_Database {
 
 		$fields = $args['fields'];
 
-		if ( $fields === '*' ) {
+		if ( '*' === $fields ) {
 			$fields = array_keys( $columns );
 		} else {
 			$fields = explode( ',', $args['fields'] );
@@ -464,7 +464,7 @@ abstract class PUM_Abstract_Database {
 
 			foreach ( $columns as $key => $type ) {
 				if ( in_array( $key, $fields ) ) {
-					if ( $type === '%s' || ( $type === '%d' && is_numeric( $search ) ) ) {
+					if ( '%s' === $type || ( '%d' === $type && is_numeric( $search ) ) ) {
 						$values[]       = '%' . $wpdb->esc_like( $search ) . '%';
 						$search_where[] = "`$key` LIKE '%s'";
 					}
