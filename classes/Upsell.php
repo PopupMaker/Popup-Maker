@@ -179,7 +179,7 @@ class PUM_Upsell {
 			$active_tab = false;
 
 			// Calculate which tab is currently active.
-			if ( isset( $_GET['page'] ) && $_GET['page'] === 'pum-extensions' ) {
+			if ( isset( $_GET['page'] ) && 'pum-extensions' === $_GET['page'] ) {
 				$active_tab = 'integrations';
 			} elseif ( ! isset( $_GET['page'] ) && isset( $_GET['post_type'] ) ) {
 				switch ( $_GET['post_type'] ) {

@@ -141,7 +141,7 @@ class PUM_Utils_Format {
 		$d = $n < 1000000 ? 1000 : 1000000;
 		$f = round( $n / $d, 1 );
 
-		return number_format( $f, $f - intval( $f ) ? 1 : 0, $point, $sep ) . ( $d === 1000 ? 'K' : 'M' );
+		return number_format( $f, $f - intval( $f ) ? 1 : 0, $point, $sep ) . ( 1000 === $d ? 'K' : 'M' );
 	}
 
 	/**

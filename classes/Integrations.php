@@ -51,7 +51,7 @@ class PUM_Integrations {
 			]
 		);
 
-		self::$preload_posts = isset( $_GET['page'] ) && $_GET['page'] === 'pum-settings';
+		self::$preload_posts = isset( $_GET['page'] ) && 'pum-settings' === $_GET['page'];
 
 		add_filter( 'pum_settings_fields', [ __CLASS__, 'settings_fields' ] );
 		add_action( 'pum_preload_popup', [ __CLASS__, 'enqueue_assets' ] );
@@ -251,7 +251,7 @@ class PUM_Integrations {
 
 	public static function popup_post_type_args( $args = [] ) {
 
-		if ( self::enabled( 'kingcomposer' ) && ( ( is_admin() && isset( $_GET['page'] ) && $_GET['page'] === 'kingcomposer' ) || pum_is_popup_editor() ) ) {
+		if ( self::enabled( 'kingcomposer' ) && ( ( is_admin() && isset( $_GET['page'] ) && 'kingcomposer' === $_GET['page'] ) || pum_is_popup_editor() ) ) {
 			$args = array_merge(
 				$args,
 				[
@@ -269,7 +269,7 @@ class PUM_Integrations {
 				'vc_settings',
 				'fl-builder-settings',
 			]
-		) ) || ( isset( $_POST['option_page'] ) && $_POST['option_page'] === 'wpb_js_composer_settings_general' ) || pum_is_popup_editor() ) ) ) {
+		) ) || ( isset( $_POST['option_page'] ) && 'wpb_js_composer_settings_general' === $_POST['option_page'] ) || pum_is_popup_editor() ) ) ) {
 			$args = array_merge(
 				$args,
 				[
@@ -357,7 +357,7 @@ class PUM_Integrations {
 			$triggers = ! empty( $settings['triggers'] ) ? $settings['triggers'] : [];
 
 			foreach ( $triggers as $key => $trigger ) {
-				if ( $trigger['type'] === 'auto_open' ) {
+				if ( 'auto_open' === $trigger['type'] ) {
 					unset( $triggers[ $key ] );
 				}
 			}

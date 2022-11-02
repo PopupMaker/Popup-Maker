@@ -86,7 +86,7 @@ class PUM_Fields extends Popmake_Fields {
 	 */
 	public function text_callback( $args, $value = null ) {
 
-		if ( $args['type'] !== 'text' ) {
+		if ( 'text' !== $args['type'] ) {
 			$args['class'] .= '  pum-field-text';
 		}
 
@@ -421,7 +421,7 @@ class PUM_Fields extends Popmake_Fields {
 	 */
 	public function objectselect_callback( $args, $value = null ) {
 
-		if ( $args['type'] !== 'objectselect' ) {
+		if ( 'objectselect' !== $args['type'] ) {
 			$args['class'] .= '  pum-field-objectselect';
 		}
 
@@ -556,7 +556,7 @@ class PUM_Fields extends Popmake_Fields {
 
 	public function text_templ_callback( $args ) {
 
-		if ( $args['type'] !== 'text' ) {
+		if ( 'text' !== $args['type'] ) {
 			$args['class'] .= '  pum-field-text';
 		}
 
@@ -739,7 +739,7 @@ class PUM_Fields extends Popmake_Fields {
 	}
 
 	public function objectselect_templ_callback( $args ) {
-		if ( $args['type'] !== 'objectselect' ) {
+		if ( 'objectselect' !== $args['type'] ) {
 			$args['class'] .= '  pum-field-objectselect';
 		}
 

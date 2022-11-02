@@ -24,7 +24,7 @@ function pum_passive_popup_upgrades_enabled() {
 	if ( ! $popup_count ) {
 		$popup_count = get_transient( 'pum_popup_count' );
 
-		if ( $popup_count === false ) {
+		if ( false === $popup_count ) {
 			$popup_count = pum_count_popups(
 				[
 					'post_status' => [ 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ],

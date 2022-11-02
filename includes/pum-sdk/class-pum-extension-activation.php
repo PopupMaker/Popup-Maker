@@ -53,7 +53,7 @@ class PUM_Extension_Activation {
 
 		// Is Popup Maker installed?
 		foreach ( $plugins as $plugin_path => $plugin ) {
-			if ( $plugin['Name'] === 'Popup Maker' ) {
+			if ( 'Popup Maker' === $plugin['Name'] ) {
 				$this->has_popmake  = true;
 				$this->popmake_base = $plugin_path;
 				break;

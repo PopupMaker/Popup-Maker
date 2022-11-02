@@ -207,7 +207,7 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 			$categories = 0;
 		}
 
-		$popmake_options['disable_popup_category_tag'] = $categories === 0 && $tags === 0;
+		$popmake_options['disable_popup_category_tag'] = 0 === $categories && 0 === $tags;
 
 		update_option( 'popmake_settings', $popmake_options );
 	}

@@ -32,7 +32,7 @@ class PUM_Utils_CSS {
 
 		$rgb = [ $r, $g, $b ];
 
-		if ( $return_type === 'array' ) {
+		if ( 'array' === $return_type ) {
 			return $rgb; // returns an array with the rgb values
 		}
 
@@ -75,7 +75,7 @@ class PUM_Utils_CSS {
 	 * @return string
 	 */
 	public static function box_shadow_style( $horizontal = 0, $vertical = 0, $blur = 0, $spread = 0, $hex = '#000000', $opacity = 50, $inset = 'no' ) {
-		return "{$horizontal}px {$vertical}px {$blur}px {$spread}px " . self::hex2rgba( $hex, $opacity ) . ( $inset === 'yes' ? ' inset' : '' );
+		return "{$horizontal}px {$vertical}px {$blur}px {$spread}px " . self::hex2rgba( $hex, $opacity ) . ( 'yes' === $inset ? ' inset' : '' );
 	}
 
 	/**

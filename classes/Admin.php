@@ -39,7 +39,7 @@ class PUM_Admin {
 	 */
 	public static function prevent_default_theme_deletion( $allcaps, $caps, $args ) {
 		global $wpdb;
-		if ( isset( $args[0] ) && isset( $args[2] ) && $args[2] === pum_get_option( 'default_theme' ) && $args[0] === 'delete_post' ) {
+		if ( isset( $args[0] ) && isset( $args[2] ) && pum_get_option( 'default_theme' ) === $args[2] && 'delete_post' === $args[0] ) {
 			$allcaps[ $caps[0] ] = false;
 		}
 
@@ -56,7 +56,7 @@ class PUM_Admin {
 	 */
 	public static function plugin_action_links( $links, $file ) {
 
-		if ( $file === plugin_basename( POPMAKE ) ) {
+		if ( plugin_basename( POPMAKE ) === $file ) {
 			$plugin_action_links = apply_filters(
 				'pum_plugin_action_links',
 				[

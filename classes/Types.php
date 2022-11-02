@@ -55,7 +55,7 @@ class PUM_Types {
 			);
 
 			// Temporary Yoast Fixes
-			if ( is_admin() && isset( $_GET['page'] ) && $_GET['page'] === 'wpseo_titles' ) {
+			if ( is_admin() && isset( $_GET['page'] ) && 'wpseo_titles' === $_GET['page'] ) {
 				$popup_args['public'] = false;
 			}
 

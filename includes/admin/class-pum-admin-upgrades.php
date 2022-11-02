@@ -133,7 +133,7 @@ class PUM_Admin_Upgrades {
 
 		$page = isset( $_GET['page'] ) ? $_GET['page'] : '';
 
-		if ( ! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $_REQUEST['action'] === 'pum_trigger_upgrades' ) && $page !== 'pum-upgrades' ) {
+		if ( ! ( defined( 'DOING_AJAX' ) && DOING_AJAX && 'pum_trigger_upgrades' === $_REQUEST['action'] ) && 'pum-upgrades' !== $page ) {
 			return;
 		}
 
@@ -176,7 +176,7 @@ class PUM_Admin_Upgrades {
 	public function set_arg( $key, $value = null ) {
 
 		$this->upgrade_args[ $key ] = $value;
-		if ( $key === 'number' || $key === 'total' ) {
+		if ( 'number' === $key || 'total' === $key ) {
 			$this->upgrade_args['steps'] = ceil( $this->upgrade_args['total'] / $this->upgrade_args['number'] );
 		}
 		if ( $this->upgrade_args['step'] > $this->upgrade_args['steps'] ) {

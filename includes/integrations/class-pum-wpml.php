@@ -60,7 +60,7 @@ class PUM_WPML_Integration {
 	public static function is_new_popup_translation( $post_id = 0 ) {
 		global $pagenow, $sitepress;
 
-		return is_admin() && $pagenow === 'post-new.php' && ! empty( $_GET['post_type'] ) && $_GET['post_type'] === 'popup' && self::source_id( $post_id ) > 0;
+		return is_admin() && 'post-new.php' === $pagenow && ! empty( $_GET['post_type'] ) && 'popup' === $_GET['post_type'] && self::source_id( $post_id ) > 0;
 	}
 
 	/**
@@ -366,7 +366,7 @@ class PUM_WPML_Integration {
 				continue;
 			}
 
-			if ( $key === 'popup_conditions' ) {
+			if ( 'popup_conditions' === $key ) {
 				$value = self::remap_conditions( $value, $lang );
 			}
 

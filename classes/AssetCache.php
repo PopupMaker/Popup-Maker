@@ -544,7 +544,7 @@ class PUM_AssetCache {
 		if ( ! empty( $google_fonts ) && ! pum_get_option( 'disable_google_font_loading', false ) ) {
 			$link = '//fonts.googleapis.com/css?family=';
 			foreach ( $google_fonts as $font_family => $variants ) {
-				if ( $link !== '//fonts.googleapis.com/css?family=' ) {
+				if ( '//fonts.googleapis.com/css?family=' !== $link ) {
 					$link .= '|';
 				}
 				$link .= $font_family;
@@ -578,7 +578,7 @@ class PUM_AssetCache {
 
 			$theme_styles = pum_get_rendered_theme_styles( $theme->ID );
 
-			if ( $theme_styles !== '' ) {
+			if ( '' !== $theme_styles ) {
 				$styles .= '/* Popup Theme ' . $theme->ID . ': ' . $theme->post_title . " */\r\n";
 				$styles .= $theme_styles . "\r\n";
 			}
