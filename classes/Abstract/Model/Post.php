@@ -339,10 +339,11 @@ abstract class PUM_Abstract_Model_Post {
 	 * @return mixed|false
 	 */
 	public function get_meta( $key, $single = true ) {
+		$remapped_value = $this;
 		/**
 		 * Checks for remapped meta values. This allows easily adding compatibility layers in the object meta.
 		 */
-		if ( false !== $remapped_value = $this->remapped_meta( $key ) ) {
+		if ( false !== $this->remapped_meta( $key ) ) {
 			return $remapped_value;
 		}
 
