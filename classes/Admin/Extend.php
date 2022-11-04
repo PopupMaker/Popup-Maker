@@ -117,7 +117,7 @@ class PUM_Admin_Extend {
 								<?php echo esc_html( $extension['name'] ); ?>
 							</a>
 						</h3>
-						<?php $image = in_array( $extension['slug'], $existing_extension_images ) ? POPMAKE_URL . '/assets/images/extensions/' . $extension['slug'] . '.png' : $extension['image']; ?>
+						<?php $image = in_array( $extension['slug'], $existing_extension_images, true ) ? POPMAKE_URL . '/assets/images/extensions/' . $extension['slug'] . '.png' : $extension['image']; ?>
 						<img class="extension-thumbnail" src="<?php echo esc_attr( $image ); ?>" />
 
 						<p><?php echo esc_html( $extension['excerpt'] ); ?></p>

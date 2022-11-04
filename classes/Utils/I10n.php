@@ -134,7 +134,7 @@ class PUM_Utils_I10n {
 		$available_locales = array_keys( $available_locales );
 
 		foreach ( $variants as $variant ) {
-			if ( in_array( $variant, $available_locales ) ) {
+			if ( in_array( $variant, $available_locales, true ) ) {
 				return $variant;
 			}
 		}

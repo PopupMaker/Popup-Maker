@@ -463,7 +463,7 @@ class PUM_Utils_Upgrades {
 
 		$completed_upgrades = $this->get_completed_upgrades();
 
-		if ( ! in_array( $upgrade_id, $completed_upgrades ) ) {
+		if ( ! in_array( $upgrade_id, $completed_upgrades, true ) ) {
 			$completed_upgrades[] = $upgrade_id;
 
 			do_action( 'pum_set_upgrade_complete', $upgrade_id );

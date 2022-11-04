@@ -141,7 +141,7 @@ class PUM_Admin_Shortcode_UI {
 			/**
 			 * @var $shortcode PUM_Shortcode
 			 */
-			if ( ! in_array( '*', $post_types ) && ! in_array( $type, $post_types ) ) {
+			if ( ! in_array( '*', $post_types, true ) && ! in_array( $type, $post_types, true ) ) {
 				continue;
 			}
 

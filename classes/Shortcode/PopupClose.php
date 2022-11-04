@@ -123,7 +123,7 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 
 		$atts = parent::shortcode_atts( $atts );
 
-		if ( empty( $atts['tag'] ) || ! in_array( $atts['tag'], array_keys( $allowedtags ) ) ) {
+		if ( empty( $atts['tag'] ) || ! in_array( $atts['tag'], array_keys( $allowedtags ), true ) ) {
 			$atts['tag'] = 'span';
 		}
 

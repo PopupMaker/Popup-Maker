@@ -130,7 +130,7 @@ class PUM_Admin_Onboarding {
 			}
 
 			// Skip if pointer has already been dismissed.
-			if ( in_array( $pointer_id, $dismissed ) ) {
+			if ( in_array( $pointer_id, $dismissed, true ) ) {
 				continue;
 			}
 

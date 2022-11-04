@@ -177,7 +177,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 			$search_where = [];
 
 			foreach ( $columns as $key => $type ) {
-				if ( in_array( $key, $fields ) ) {
+				if ( in_array( $key, $fields, true ) ) {
 					if ( '%s' === $type || ( '%d' === $type && is_numeric( $search ) ) ) {
 						$values[]       = '%' . $wpdb->esc_like( $search ) . '%';
 						$search_where[] = "`$key` LIKE '%s'";

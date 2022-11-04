@@ -72,7 +72,7 @@ class PUM_Admin_Themes {
 		$defaults = self::defaults();
 		foreach ( $defaults as $field_id => $default_value ) {
 			$field = PUM_Utils_Fields::get_field( self::fields(), $field_id );
-			if ( isset( $settings[ $field_id ] ) || in_array( $field['type'], $excluded_field_types ) ) {
+			if ( isset( $settings[ $field_id ] ) || in_array( $field['type'], $excluded_field_types, true ) ) {
 				continue;
 			}
 

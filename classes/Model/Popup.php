@@ -584,7 +584,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 
 		$size = $this->get_setting( 'size', 'medium' );
 
-		if ( in_array( $size, [ 'nano', 'micro', 'tiny', 'small', 'medium', 'normal', 'large', 'xlarge' ] ) ) {
+		if ( in_array( $size, [ 'nano', 'micro', 'tiny', 'small', 'medium', 'normal', 'large', 'xlarge' ], true ) ) {
 			$classes['container'] = array_merge(
 				$classes['container'],
 				[
@@ -626,7 +626,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 
 		// Add a class for each trigger type.
 		foreach ( $this->get_triggers() as $trigger ) {
-			if ( ! in_array( $trigger['type'], $classes['overlay'] ) ) {
+			if ( ! in_array( $trigger['type'], $classes['overlay'], true ) ) {
 				$classes['overlay'][] = $trigger['type'];
 			}
 		}
@@ -859,7 +859,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 
 			foreach ( $conds as $condition ) {
 
-				if ( in_array( $condition['target'], $conditions ) ) {
+				if ( in_array( $condition['target'], $conditions, true ) ) {
 					$found = true;
 				}
 			}

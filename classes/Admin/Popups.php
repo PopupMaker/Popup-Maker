@@ -135,7 +135,7 @@ class PUM_Admin_Popups {
 			return;
 		}
 
-		if ( 'popup' === $typenow && in_array( $pagenow, [ 'post-new.php', 'post.php' ] ) ) {
+		if ( 'popup' === $typenow && in_array( $pagenow, [ 'post-new.php', 'post.php' ], true ) ) {
 			?>
 
 			<div id="popup-titlediv" class="pum-form">
@@ -167,7 +167,7 @@ class PUM_Admin_Popups {
 			return;
 		}
 
-		if ( 'popup' === $typenow && in_array( $pagenow, [ 'post-new.php', 'post.php' ] ) ) {
+		if ( 'popup' === $typenow && in_array( $pagenow, [ 'post-new.php', 'post.php' ], true ) ) {
 			?>
 			<p class="pum-desc"><?php echo '(' . esc_html__( 'Required', 'popup-maker' ) . ') ' . esc_html__( 'Enter a name to help you remember what this popup is about. Only you will see this.', 'popup-maker' ); ?></p>
 			<?php
@@ -1014,7 +1014,7 @@ class PUM_Admin_Popups {
 		$defaults = self::defaults();
 		foreach ( $defaults as $field_id => $default_value ) {
 			$field = self::get_field( $field_id );
-			if ( isset( $settings[ $field_id ] ) || in_array( $field['type'], $excluded_field_types ) ) {
+			if ( isset( $settings[ $field_id ] ) || in_array( $field['type'], $excluded_field_types, true ) ) {
 				continue;
 			}
 

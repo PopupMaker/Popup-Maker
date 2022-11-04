@@ -60,7 +60,7 @@ class PUM_Repository_Themes extends PUM_Abstract_Repository_Posts {
 		 */
 		if ( ! isset( $args['orderby'] ) ) {
 			$orderby['post_modified'] = isset( $args['order'] ) ? $args['order'] : 'DESC';
-		} elseif ( ! empty( $args['post__in'] ) && in_array( $args['orderby'], [ 'post__in', 'user_order' ] ) ) {
+		} elseif ( ! empty( $args['post__in'] ) && in_array( $args['orderby'], [ 'post__in', 'user_order' ], true ) ) {
 			// This one can't be part of an $orderby array so needs to override.
 			$orderby = 'post__in';
 		} else {

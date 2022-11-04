@@ -151,7 +151,7 @@ abstract class PUM_Abstract_Model_User {
 	 * @return bool
 	 */
 	public function __isset( $key ) {
-		if ( in_array( $key, $this->core_data_keys ) ) {
+		if ( in_array( $key, $this->core_data_keys, true ) ) {
 			return isset( $this->user->$key );
 		}
 	}
@@ -162,7 +162,7 @@ abstract class PUM_Abstract_Model_User {
 	 * @param string $key  Property to unset.
 	 */
 	public function __unset( $key ) {
-		if ( in_array( $key, $this->core_data_keys ) ) {
+		if ( in_array( $key, $this->core_data_keys, true ) ) {
 			unset( $this->user->$key );
 		}
 	}
@@ -175,7 +175,7 @@ abstract class PUM_Abstract_Model_User {
 	 * @return mixed|WP_Error
 	 */
 	public function __get( $key ) {
-		if ( in_array( $key, $this->core_data_keys ) ) {
+		if ( in_array( $key, $this->core_data_keys, true ) ) {
 
 			return $this->user->$key;
 

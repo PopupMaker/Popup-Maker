@@ -50,7 +50,7 @@ class PUM_Admin_Helpers {
 		$options = [];
 
 		foreach ( get_post_types( $args, 'objects', $compare ) as $post_type ) {
-			if ( in_array( $post_type->name, [ 'revision', 'nav_menu_item', 'custom_css', 'customize_changeset', 'oembed_cache', 'popup_theme', 'nf_sub' ] ) ) {
+			if ( in_array( $post_type->name, [ 'revision', 'nav_menu_item', 'custom_css', 'customize_changeset', 'oembed_cache', 'popup_theme', 'nf_sub' ], true ) ) {
 				// continue;
 			}
 

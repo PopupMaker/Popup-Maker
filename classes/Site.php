@@ -150,7 +150,7 @@ class PUM_Site {
 
 		$action = sanitize_text_field( $_REQUEST['pum_action'] );
 
-		if ( ! in_array( $action, $valid_actions ) || ! has_action( 'pum_' . $action ) ) {
+		if ( ! in_array( $action, $valid_actions, true ) || ! has_action( 'pum_' . $action ) ) {
 			return;
 		}
 

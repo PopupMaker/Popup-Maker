@@ -461,7 +461,7 @@ class PUM_Utils_Array {
 
 		if ( is_array( $data ) ) {
 			foreach ( (array) $data as $key => $value ) {
-				if ( is_string( $value ) && in_array( $value, [ 'true', 'false' ] ) ) {
+				if ( is_string( $value ) && in_array( $value, [ 'true', 'false' ], true ) ) {
 					$data[ $key ] = json_decode( $value );
 				} elseif ( is_array( $value ) ) {
 					$data[ $key ] = self::fix_json_boolean_values( $value );

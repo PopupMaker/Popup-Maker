@@ -266,7 +266,7 @@ abstract class PUM_Abstract_Model_Post {
 	protected function is_required_post_type( $post ) {
 		if ( $this->required_post_type ) {
 
-			if ( is_array( $this->required_post_type ) && ! in_array( $post->post_type, $this->required_post_type ) ) {
+			if ( is_array( $this->required_post_type ) && ! in_array( $post->post_type, $this->required_post_type, true ) ) {
 
 				return false;
 			} elseif ( is_string( $this->required_post_type ) && $this->required_post_type !== $post->post_type ) {

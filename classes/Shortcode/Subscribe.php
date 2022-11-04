@@ -736,7 +736,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 		$data_attr_fields = $this->data_attr_fields();
 
 		foreach ( $atts as $key => $value ) {
-			if ( in_array( $key, $data_attr_fields ) ) {
+			if ( in_array( $key, $data_attr_fields, true ) ) {
 				$data[ $key ] = $value;
 
 				if ( 'redirect' === $key ) {

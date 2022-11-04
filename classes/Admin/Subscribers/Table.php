@@ -335,7 +335,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 		// Detect when a bulk action is being triggered...
 		$action1 = $this->current_action();
 
-		if ( in_array( $action1, [ 'delete', 'bulk-delete' ] ) ) {
+		if ( in_array( $action1, [ 'delete', 'bulk-delete' ], true ) ) {
 
 			// verify the nonce.
 			if ( ! wp_verify_nonce( wp_unslash( $_REQUEST['_wpnonce'] ), 'delete' === $action1 ? 'pum_subscribers_table_action_nonce' : 'bulk-subscribers' ) ) {
@@ -358,7 +358,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 						$status[] = PUM_DB_Subscribers::instance()->delete( $subscriber_id );
 					}
 
-					if ( ! in_array( false, $status ) ) {
+					if ( ! in_array( false, $status, true ) ) {
 						wp_die(
 							sprintf( _n( 'Subscriber deleted!', '%d Subscribers deleted!', count( $subscribers ), 'popup-maker' ), count( $subscribers ) ),
 							__( 'Success', 'popup-maker' ),

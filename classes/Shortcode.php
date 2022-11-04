@@ -487,7 +487,7 @@ abstract class PUM_Shortcode {
 					/**
 					 * Apply field compatibility fixes for shortcodes still on v1.
 					 */
-					if ( ! empty( $field['type'] ) && in_array( $field['type'], [ 'select', 'postselect', 'radio', 'multicheck' ] ) ) {
+					if ( ! empty( $field['type'] ) && in_array( $field['type'], [ 'select', 'postselect', 'radio', 'multicheck' ], true ) ) {
 						$fields[ $tab_id ][ $field_id ]['options'] = ! empty( $field['options'] ) ? array_flip( $field['options'] ) : [];
 					}
 				}

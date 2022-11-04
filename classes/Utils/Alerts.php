@@ -111,8 +111,8 @@ class PUM_Utils_Alerts {
 
 		// Suggests existing langpacks
 		$suggested_locales_with_langpack = array_values( array_intersect( $non_en_locales_from_header, $locales_with_translations ) );
-		$current_locale_is_suggested     = in_array( $current_locale, $suggested_locales_with_langpack );
-		$current_locale_is_translated    = in_array( $current_locale, $locales_with_translations );
+		$current_locale_is_suggested     = in_array( $current_locale, $suggested_locales_with_langpack, true );
+		$current_locale_is_translated    = in_array( $current_locale, $locales_with_translations, true );
 
 		// Last chance to abort early before querying all available languages.
 		// We abort here if the user is already using a translated language that is up to date!

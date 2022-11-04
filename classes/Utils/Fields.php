@@ -240,7 +240,7 @@ class PUM_Utils_Fields {
 			isset( $array['type'] ) && is_string( $array['type'] ),
 		];
 
-		return in_array( true, $field_tests );
+		return in_array( true, $field_tests, true );
 	}
 
 	/**
