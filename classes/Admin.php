@@ -95,7 +95,7 @@ class PUM_Admin {
 
 		$already_installed = get_option( '_pum_installed' );
 
-		// Exit if not in admin or the transient doesn't exist
+		// Exit if not in admin or the transient doesn't exist.
 		if ( false === $already_installed ) {
 			do_action( 'pum_after_install' );
 

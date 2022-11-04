@@ -112,7 +112,7 @@ class PUM_Utils_Upgrades {
 		if ( empty( self::$version ) ) {
 			$deprecated_ver = get_site_option( 'popmake_version' );
 
-			// set to the deprecated version or last version that didn't have the version option set
+			// set to the deprecated version or last version that didn't have the version option set.
 			self::$version = $deprecated_ver ? $deprecated_ver : Popup_Maker::$VER; // Since we had versioning in v1 if there isn't one stored its a new install.
 
 			update_option( 'pum_ver', self::$version );
@@ -150,10 +150,10 @@ class PUM_Utils_Upgrades {
 		}
 
 		if ( version_compare( self::$version, Popup_Maker::$VER, '<' ) ) {
-			// Allow processing of small core upgrades
+			// Allow processing of small core upgrades.
 			do_action( 'pum_update_core_version', self::$version );
 
-			// Save Upgraded From option
+			// Save Upgraded From option.
 			update_option( 'pum_ver_upgraded_from', self::$version );
 			update_option( 'pum_ver', Popup_Maker::$VER );
 			self::$upgraded_from = self::$version;
@@ -196,7 +196,7 @@ class PUM_Utils_Upgrades {
 	 */
 	public function register_processes( PUM_Upgrade_Registry $registry ) {
 
-		// v1.7 Upgrades
+		// v1.7 Upgrades.
 		$registry->add_upgrade(
 			'core-v1_7-popups',
 			[
@@ -469,7 +469,7 @@ class PUM_Utils_Upgrades {
 			do_action( 'pum_set_upgrade_complete', $upgrade_id );
 		}
 
-		// Remove any blanks, and only show uniques
+		// Remove any blanks, and only show uniques.
 		$completed_upgrades = array_unique( array_values( $completed_upgrades ) );
 
 		return update_option( 'pum_completed_upgrades', $completed_upgrades );

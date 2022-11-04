@@ -38,7 +38,7 @@ class PUM_Utils_Template {
 		/* @deprecated 1.8.9 */
 		$file_paths = apply_filters( 'popmake_template_paths', $file_paths );
 
-		// sort the file paths based on priority
+		// sort the file paths based on priority.
 		ksort( $file_paths, SORT_NUMERIC );
 
 		return array_map( 'trailingslashit', $file_paths );
@@ -64,23 +64,23 @@ class PUM_Utils_Template {
 	 * @internal param string $default_path (default: '')
 	 */
 	public static function locate( $template_names, $load = false, $require_once = true ) {
-		// No file found yet
+		// No file found yet.
 		$located = false;
 
 		$template_name = '';
 
-		// Try to find a template file
+		// Try to find a template file.
 		foreach ( (array) $template_names as $template_name ) {
 
-			// Continue if template is empty
+			// Continue if template is empty.
 			if ( empty( $template_name ) ) {
 				continue;
 			}
 
-			// Trim off any slashes from the template name
+			// Trim off any slashes from the template name.
 			$template_name = ltrim( $template_name, '/' );
 
-			// try locating this template file by looping through the template paths
+			// try locating this template file by looping through the template paths.
 			foreach ( self::paths() as $template_path ) {
 
 				if ( file_exists( $template_path . $template_name ) ) {
@@ -94,7 +94,7 @@ class PUM_Utils_Template {
 			}
 		}
 
-		// Return what we found
+		// Return what we found.
 		$located = apply_filters( 'pum_locate_template', $located, $template_name );
 
 		if ( ( true === $load ) && ! empty( $located ) ) {
@@ -118,20 +118,20 @@ class PUM_Utils_Template {
 	public static function locate_part( $slug, $name = null, $load = false ) {
 		$templates = [];
 		if ( $name ) {
-			// slug-name.php
+			// slug-name.php.
 			$templates[] = "{$slug}-{$name}.php";
 		}
 
-		// slug.php
+		// slug.php.
 		$templates[] = "{$slug}.php";
 
-		// Allow template parts to be filtered
+		// Allow template parts to be filtered.
 		$templates = apply_filters( 'pum_locate_template_part', $templates, $slug, $name );
 
 		/* @deprecated 1.8.0 */
 		$templates = apply_filters( 'popmake_get_template_part', $templates, $slug, $name );
 
-		// Return the part that is found
+		// Return the part that is found.
 		return self::locate( $templates, $load, false );
 	}
 

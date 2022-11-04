@@ -100,7 +100,7 @@ class PUM_Utils_Options {
 		// Passive initialization.
 		self::init();
 
-		// If no key, exit
+		// If no key, exit.
 		if ( empty( $key ) ) {
 			return false;
 		}
@@ -111,17 +111,17 @@ class PUM_Utils_Options {
 			return $remove_option;
 		}
 
-		// First let's grab the current settings
+		// First let's grab the current settings.
 		$options = get_option( self::$_prefix . 'settings' );
 
-		// Let's let devs alter that value coming in
+		// Let's let devs alter that value coming in.
 		$value = apply_filters( self::$_prefix . 'update_option', $value, $key );
 
-		// Next let's try to update the value
+		// Next let's try to update the value.
 		$options[ $key ] = $value;
 		$did_update      = update_option( self::$_prefix . 'settings', $options );
 
-		// If it updated, let's update the global variable
+		// If it updated, let's update the global variable.
 		if ( $did_update ) {
 			self::$_data[ $key ] = $value;
 
@@ -138,7 +138,7 @@ class PUM_Utils_Options {
 	 * @return bool
 	 */
 	public static function update_all( $new_options = [] ) {
-		// First let's grab the current settings
+		// First let's grab the current settings.
 		$options = get_option( self::$_prefix . 'settings' );
 
 		// Lets merge options that may exist previously that are not existing now.
@@ -146,7 +146,7 @@ class PUM_Utils_Options {
 
 		$did_update = update_option( self::$_prefix . 'settings', $new_options );
 
-		// If it updated, let's update the global variable
+		// If it updated, let's update the global variable.
 		if ( $did_update ) {
 			self::$_data = $new_options;
 		}
@@ -172,7 +172,7 @@ class PUM_Utils_Options {
 
 		$did_update = update_option( self::$_prefix . 'settings', $options );
 
-		// If it updated, let's update the global variable
+		// If it updated, let's update the global variable.
 		if ( $did_update ) {
 			self::$_data = $options;
 		}
@@ -193,14 +193,14 @@ class PUM_Utils_Options {
 		// Passive initialization.
 		self::init();
 
-		// If no key, exit
+		// If no key, exit.
 		if ( empty( $keys ) ) {
 			return false;
 		} elseif ( is_string( $keys ) ) {
 			$keys = [ $keys ];
 		}
 
-		// First let's grab the current settings
+		// First let's grab the current settings.
 		$options = get_option( self::$_prefix . 'settings' );
 
 		// Remove each key/value pair.
@@ -212,7 +212,7 @@ class PUM_Utils_Options {
 
 		$did_update = update_option( self::$_prefix . 'settings', $options );
 
-		// If it updated, let's update the global variable
+		// If it updated, let's update the global variable.
 		if ( $did_update ) {
 			self::$_data = $options;
 		}
@@ -240,7 +240,7 @@ class PUM_Utils_Options {
 
 		$did_update = update_option( self::$_prefix . 'settings', $options );
 
-		// If it updated, let's update the global variable
+		// If it updated, let's update the global variable.
 		if ( $did_update ) {
 			self::$_data = $options;
 		}
