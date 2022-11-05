@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Admin_Templates {
 
 	/**
-	 *
+	 * Initializes admin footer.
 	 */
 	public static function init() {
 		if ( did_action( 'admin_footer' ) || doing_action( 'admin_footer' ) ) {
@@ -31,7 +31,7 @@ class PUM_Admin_Templates {
 	}
 
 	/**
-	 *
+	 * Functions to render.
 	 */
 	public static function render() {
 		self::general_fields();
@@ -61,7 +61,7 @@ class PUM_Admin_Templates {
 	}
 
 	/**
-	 *
+	 * General feilds to load.
 	 */
 	public static function general_fields() {
 		?>
@@ -133,7 +133,7 @@ class PUM_Admin_Templates {
 	}
 
 	/**
-	 *
+	 * Loads html5 fields.
 	 */
 	public static function html5_fields() {
 		?>
@@ -164,7 +164,7 @@ class PUM_Admin_Templates {
 	}
 
 	/**
-	 *
+	 * Custom fields to display.
 	 */
 	public static function custom_fields() {
 		?>
@@ -268,7 +268,7 @@ class PUM_Admin_Templates {
 	}
 
 	/**
-	 *
+	 * Loads misc fields.
 	 */
 	public static function misc_fields() {
 		?>
@@ -323,7 +323,7 @@ class PUM_Admin_Templates {
 	}
 
 	/**
-	 *
+	 * Loads template.
 	 */
 	public static function helpers() {
 		?>
@@ -391,7 +391,7 @@ class PUM_Admin_Templates {
 	}
 
 	/**
-	 *
+	 * Loads triggers_editor.
 	 */
 	public static function triggers_editor() {
 		?>
@@ -545,7 +545,7 @@ class PUM_Admin_Templates {
 	}
 
 	/**
-	 *
+	 * Loads conditions_editor.
 	 */
 	public static function conditions_editor() {
 		?>
@@ -635,7 +635,7 @@ class PUM_Admin_Templates {
 	}
 
 	/**
-	 *
+	 * Loads cookies_editor.
 	 */
 	public static function cookies_editor() {
 		?>
