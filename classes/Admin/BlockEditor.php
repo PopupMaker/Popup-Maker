@@ -43,6 +43,7 @@ class PUM_Admin_BlockEditor {
 	 *
 	 * Passes translations to JavaScript.
 	 *
+	 * @param $hook
 	 * @since 1.10.0
 	 */
 	public static function register_editor_assets( $hook ) {
