@@ -153,8 +153,8 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	/**
 	 * Render a column when no column specific method exists.
 	 *
-	 * @param array  $item
-	 * @param string $column_name
+	 * @param array  $item  Array of items.
+	 * @param string $column_name  Column name.
 	 *
 	 * @return mixed
 	 */
