@@ -13,6 +13,9 @@
  */
 class PUM_Admin_BlockEditor {
 
+	/**
+	 * @var string $version  BlockEditor version.
+	 */
 	public static $version = '1.0.0';
 
 	/**
