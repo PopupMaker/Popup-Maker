@@ -25,6 +25,16 @@
 		<exclude-pattern>*</exclude-pattern>
 	</rule>
 
+	<!-- This prevents notices when declaring globals using our own prefixes. -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="pum"/>
+				<element value="popmake"/>
+			</property>
+		</properties>
+	</rule>
+
 	<!-- Allow short syntax arrays. -->
 	<rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
 
