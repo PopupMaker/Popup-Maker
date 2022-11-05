@@ -125,11 +125,19 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		update_option( $this->table_name . '_db_version', $this->version );
 	}
 
+	/**
+	 * Gets subscriber email.
+	 *
+	 * @param string $email  Specified subscriber email.
+	 */
 	public function get_by_email( $email = '' ) {
 
 	}
 
 
+	/**
+	 * Db query.
+	 */
 	public function query( $args = [], $return_type = 'OBJECT' ) {
 		global $wpdb;
 
@@ -232,6 +240,8 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 	}
 
 	/**
+	 * Function total_rows.
+	 *
 	 * @param $args
 	 *
 	 * @return int

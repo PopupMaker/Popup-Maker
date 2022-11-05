@@ -21,11 +21,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Batch_Process_Registry extends PUM_Abstract_Registry {
 
 	/**
+	 * Instance for batch process.
+	 *
 	 * @var PUM_Batch_Process_Registry
 	 */
 	public static $instance;
 
 	/**
+	 * Function instance for batch process.
+	 *
 	 * @return PUM_Batch_Process_Registry
 	 */
 	public static function instance() {
