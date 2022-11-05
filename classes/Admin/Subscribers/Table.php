@@ -172,7 +172,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 *
 	 * The special 'cb' column
 	 *
-	 * @param object $item A row's data
+	 * @param object $item A row's data.
 	 *
 	 * @return string Text to be placed inside the column <td>.
 	 */
@@ -197,7 +197,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 *
 	 * @see WP_List_Table::::single_row_columns()
 	 *
-	 * @param array $item A singular item (one full row's worth of data)
+	 * @param array $item A singular item (one full row's worth of data).
 	 *
 	 * @return string Text to be placed inside the column <td> (movie title only)
 	 **************************************************************************/
@@ -226,7 +226,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 			$url
 		);
 
-		// Build row actions
+		// Build row actions.
 		$actions = [
 			// 'edit'   => sprintf( '<a href="%s">Edit</a>', $edit_url ),
 			'delete' => sprintf( '<a href="%s">Delete</a>', $delete_url ),
@@ -255,7 +255,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 *
 	 * @see WP_List_Table::::single_row_columns()
 	 *
-	 * @param array $item A singular item (one full row's worth of data)
+	 * @param array $item A singular item (one full row's worth of data).
 	 *
 	 * @return string Text to be placed inside the column <td> (movie title only)
 	 **************************************************************************/
@@ -286,7 +286,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 *
 	 * @see WP_List_Table::::single_row_columns()
 	 *
-	 * @param array $item A singular item (one full row's worth of data)
+	 * @param array $item A singular item (one full row's worth of data).
 	 *
 	 * @return string Text to be placed inside the column <td> (movie title only)
 	 **************************************************************************/
