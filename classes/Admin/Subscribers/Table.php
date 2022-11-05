@@ -45,7 +45,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 			[
 				'plural'   => 'subscribers',    // Plural value used for labels and the objects being listed.
 				'singular' => 'subscriber',        // Singular label for an object being listed, e.g. 'post'.
-				'ajax'     => false,        // If true, the parent class will call the _js_vars() method in the footer
+				'ajax'     => false,        // If true, the parent class will call the _js_vars() method in the footer.
 			]
 		);
 
@@ -232,7 +232,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 			'delete' => sprintf( '<a href="%s">Delete</a>', $delete_url ),
 		];
 
-		// Return the title contents
+		// Return the title contents.
 		return sprintf(
 			'%1$s <span style="color:silver">(id:%2$s)</span>%3$s', /*$1%s*/
 			$item['email'], /*$2%s*/
@@ -265,7 +265,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 		if ( $user_id ) {
 			$url = admin_url( "user-edit.php?user_id=$user_id" );
 
-			// Return the title contents
+			// Return the title contents.
 			return sprintf( '%s<br/><small style="color:silver">(%s: <a href="%s">#%s</a>)</small>', $item['name'], __( 'User ID', 'popup-maker' ), $url, $item['user_id'] );
 		} else {
 			return $item['name'];
@@ -298,7 +298,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 		if ( $popup_id && pum_is_popup( $popup ) ) {
 			$url = admin_url( "post.php?post={$popup_id}&action=edit" );
 
-			// Return the title contents
+			// Return the title contents.
 			return sprintf( '%s<br/><small style="color:silver">(%s: <a href="%s">#%s</a>)</small>', $popup->post_title, __( 'ID', 'popup-maker' ), $url, $item['popup_id'] );
 		} else {
 			return __( 'N/A', 'popup-maker' );
@@ -414,7 +414,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 		 * action2 - is set if checkbox the bottom-most select-all checkbox is set, otherwise returns -1
 		 */
 
-		// check for individual row actions
+		// check for individual row actions.
 		$the_table_action = $this->current_action();
 
 		if ( 'view_usermeta' === $the_table_action ) {
@@ -439,7 +439,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 			}
 		}
 
-		// check for table bulk actions
+		// check for table bulk actions.
 		if ( ( isset( $_REQUEST['action'] ) && 'bulk-download' === $_REQUEST['action'] ) || ( isset( $_REQUEST['action2'] ) && 'bulk-download' === $_REQUEST['action2'] ) ) {
 
 			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
