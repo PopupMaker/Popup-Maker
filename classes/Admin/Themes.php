@@ -160,7 +160,7 @@ class PUM_Admin_Themes {
 
 		$deprecated_atb_enabled = class_exists( 'PUM_ATB' ) && ! pum_extension_enabled( 'advanced-theme-builder' );
 
-		// Remove this div after PUM ATC updated properly
+		// Remove this div after PUM ATC updated properly.
 		if ( $deprecated_atb_enabled ) {
 			echo '<div id="PopMake-Preview">';
 		}
@@ -191,7 +191,7 @@ class PUM_Admin_Themes {
 		</div>
 
 		<?php
-		// Remove this div after PUM ATC updated properly
+		// Remove this div after PUM ATC updated properly.
 		if ( $deprecated_atb_enabled ) {
 			echo '</div>';
 		}
@@ -1286,7 +1286,7 @@ class PUM_Admin_Themes {
 		// Fix broken opacity fields.
 		$content = str_replace( [ 'class="bg_opacity"', 'class="bg_overlay_opacity"' ], [ 'class="bg_opacity pum-field-rangeslider"', 'class="bg_overlay_opacity pum-field-rangeslider"' ], $content );
 
-		// TEMPORARY. REMOVE THIS
+		// TEMPORARY. REMOVE THIS.
 		$content = '<table class="form-table"><tbody>' . $content . '</tbody></table>';
 
 		return $content;
