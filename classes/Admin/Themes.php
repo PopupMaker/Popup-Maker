@@ -151,7 +151,7 @@ class PUM_Admin_Themes {
 	}
 
 	/**
-	 *
+	 * Renders preview for meta box.
 	 */
 	public static function render_preview_meta_box() {
 		global $post;
@@ -227,8 +227,10 @@ class PUM_Admin_Themes {
 	}
 
 	/**
-	 * @param $post_id
-	 * @param $post
+	 * Sets specified post.
+	 *
+	 * @param $post_id  Specified post.
+	 * @param $post  Post object.
 	 *
 	 * @return bool
 	 */
@@ -257,8 +259,10 @@ class PUM_Admin_Themes {
 	}
 
 	/**
-	 * @param $post_id
-	 * @param $post
+	 * Saves specified post.
+	 *
+	 * @param $post_id  Specified post.
+	 * @param $post  Post object.
 	 */
 	public static function save( $post_id, $post ) {
 
@@ -294,8 +298,10 @@ class PUM_Admin_Themes {
 	}
 
 	/**
-	 * @param $post_id
-	 * @param $post
+	 * Process deprecated saves.
+	 *
+	 * @param $post_id  Specified post.
+	 * @param $post  Post object.
 	 */
 	public static function process_deprecated_saves( $post_id, $post ) {
 
@@ -1210,6 +1216,9 @@ class PUM_Admin_Themes {
 		return $fields;
 	}
 
+	/**
+	 * Append deprecated fields.
+	 */
 	public static function append_deprecated_fields( $fields = [] ) {
 		global $post;
 
@@ -1270,6 +1279,9 @@ class PUM_Admin_Themes {
 		return $fields;
 	}
 
+	/**
+	 * Fix Deprecated Fields.
+	 */
 	public static function fix_deprecated_fields( $content = '' ) {
 
 		// Remove "Background" heading.
@@ -1294,6 +1306,8 @@ class PUM_Admin_Themes {
 	}
 
 	/**
+	 * Gets form defaults.
+	 *
 	 * @return array
 	 */
 	public static function defaults() {
