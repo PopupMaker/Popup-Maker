@@ -137,6 +137,10 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 
 	/**
 	 * Db query.
+	 *
+	 * @param array $args Arguments to query.
+	 * 
+	 * @return $return_type
 	 */
 	public function query( $args = [], $return_type = 'OBJECT' ) {
 		global $wpdb;
@@ -242,7 +246,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 	/**
 	 * Function total_rows.
 	 *
-	 * @param $args
+	 * @param $args  Arguments to check.
 	 *
 	 * @return int
 	 */
