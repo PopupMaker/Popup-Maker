@@ -747,8 +747,14 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	/**
 	 * Placeholder in a series of changes to officially remove condition filtering.
 	 * This is a temporary method to allow for backwards compatibility.
+	 *
+	 * @since 1.16.13
+	 *
+	 * @param array $filters Array of condition filters.
+	 *
+	 * @return array
 	 */
-	public function get_conditions_with_filters( $filters = [] ) {
+	public function get_conditions_with_filters( $filters = [ 'string' => false, 'string2' => true] ) {
 
 		$js_only = isset( $filters[ 'js_only'] ) && $filters[ 'js_only' ];
 		$php_only = isset( $filters[ 'php_only'] ) && $filters[ 'php_only' ];
@@ -802,6 +808,29 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		$conditions = array_values( $conditions );
 
 		return apply_filters( 'pum_popup_get_conditions', $conditions, $this->ID, $filters );
+	}
+
+	/**
+	 * Return a flattened list of conditions (no groups).
+	 *
+	 * @since 1.16.13
+	 *
+	 * @param boolean|string[] $filters Array of condition filters.
+	 *
+	 * @return array
+	 */
+	public function get_conditions_list( $filters = false ) {
+		$conditions = $this->get_conditions( $filters );
+
+		$conditions_list = [];
+
+		foreach ( $conditions as $group ) {
+			foreach ( $group as $condition ) {
+				$conditions_list[] = $condition;
+			}
+		}
+
+		return $conditions_list;
 	}
 
 	/**
