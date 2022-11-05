@@ -133,7 +133,7 @@ class PUM_Admin_Settings {
 	/**
 	 * Sanitizes specified settings.
 	 *
-	 * @param array $settings
+	 * @param array $settings  Specified field to sanitize.
 	 *
 	 * @return array
 	 */
@@ -195,7 +195,7 @@ class PUM_Admin_Settings {
 	}
 
 	/**
-	 * @param $id
+	 * @param $id  Specified field.
 	 *
 	 * @return bool
 	 */
@@ -831,7 +831,7 @@ class PUM_Admin_Settings {
 	}
 
 	/**
-	 * @param array $meta
+	 * @param array $meta  Specified meta value.
 	 *
 	 * @return array
 	 */
