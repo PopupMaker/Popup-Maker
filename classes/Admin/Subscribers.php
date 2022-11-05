@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Admin_Subscribers {
 
 	/**
-	 *
+	 * Initializes admin menu and screen options.
 	 */
 	public static function init() {
 		add_action( 'admin_menu', [ __CLASS__, 'after_page_registration' ], 11 );
@@ -50,6 +50,8 @@ class PUM_Admin_Subscribers {
 	}
 
 	/**
+	 * Sets list_table.
+	 *
 	 * @return PUM_Admin_Subscribers_Table
 	 */
 	public static function list_table() {
@@ -62,10 +64,16 @@ class PUM_Admin_Subscribers {
 		return $list_table;
 	}
 
+	/**
+	 * Page after registration.
+	 */
 	public static function after_page_registration() {
 		add_action( 'load-' . PUM_Admin_Pages::$pages['subscribers'], [ 'PUM_Admin_Subscribers', 'load_user_list_table_screen_options' ] );
 	}
 
+	/**
+	 * Retrieves subscribers list table screen options.
+	 */
 	public static function load_user_list_table_screen_options() {
 		add_screen_option(
 			'per_page',

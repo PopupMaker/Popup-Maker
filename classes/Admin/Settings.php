@@ -22,7 +22,7 @@ class PUM_Admin_Settings {
 	public static $notices = [];
 
 	/**
-	 *
+	 * Initializes admin screen and prints admin screen notices.
 	 */
 	public static function init() {
 		add_action( 'admin_notices', [ __CLASS__, 'notices' ] );
@@ -562,6 +562,8 @@ class PUM_Admin_Settings {
 	}
 
 	/**
+	 * Retrieves styles.
+	 *
 	 * @return string
 	 */
 	public static function field_pum_styles() {
@@ -594,6 +596,8 @@ class PUM_Admin_Settings {
 
 
 	/**
+	 * Retrieves options for specified user role.
+	 *
 	 * @return array
 	 */
 	public static function user_role_options() {
@@ -670,6 +674,8 @@ class PUM_Admin_Settings {
 	}
 
 	/**
+	 * Sets defaults to specified field.
+	 *
 	 * @return array
 	 */
 	public static function defaults() {
@@ -748,6 +754,8 @@ class PUM_Admin_Settings {
 	}
 
 	/**
+	 * Retrieves active tab.
+	 *
 	 * @return int|null|string
 	 */
 	public static function get_active_tab() {
@@ -757,6 +765,8 @@ class PUM_Admin_Settings {
 	}
 
 	/**
+	 * Retrieves active section.
+	 *
 	 * @return bool|int|null|string
 	 */
 	public static function get_active_section() {
@@ -831,6 +841,8 @@ class PUM_Admin_Settings {
 	}
 
 	/**
+	 * Sanitizes specified meta object.
+	 *
 	 * @param array $meta  Specified meta value.
 	 *
 	 * @return array
