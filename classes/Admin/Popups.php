@@ -938,7 +938,7 @@ class PUM_Admin_Popups {
 	 *
 	 * Also handles pre save manipulations for some field types (measure/license).
 	 *
-	 * @param array $settings
+	 * @param array $settings  Array of fields to sanitize.
 	 *
 	 * @return array
 	 */
@@ -1009,7 +1009,7 @@ class PUM_Admin_Popups {
 	 *
 	 * Excludes checkbox type fields where a false value is represented by the field being unset.
 	 *
-	 * @param array $settings
+	 * @param array $settings  Array of settings.
 	 *
 	 * @return array
 	 */
@@ -1106,7 +1106,7 @@ class PUM_Admin_Popups {
 	}
 
 	/**
-	 * @param array $meta
+	 * @param array $meta  Value to be sanitized.
 	 *
 	 * @return array
 	 */
