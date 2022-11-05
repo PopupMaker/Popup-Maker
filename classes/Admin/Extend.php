@@ -63,7 +63,7 @@ class PUM_Admin_Extend {
 	 * Render extension tab extensions list.
 	 */
 	public static function render_extension_list() {
-		// Set a new campaign for tracking purposes
+		// Set a new campaign for tracking purposes.
 		$campaign   = 'PUMExtensionsPage';
 		$extensions = self::available_extensions();
 
