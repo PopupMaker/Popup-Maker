@@ -1218,6 +1218,8 @@ class PUM_Admin_Themes {
 
 	/**
 	 * Append deprecated fields.
+	 *
+	 * @param array $fields Array of fields.
 	 */
 	public static function append_deprecated_fields( $fields = [] ) {
 		global $post;
@@ -1281,6 +1283,8 @@ class PUM_Admin_Themes {
 
 	/**
 	 * Fix Deprecated Fields.
+	 *
+	 * @param string $content  Fields to change.
 	 */
 	public static function fix_deprecated_fields( $content = '' ) {
 
