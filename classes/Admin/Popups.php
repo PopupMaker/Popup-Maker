@@ -1106,6 +1106,8 @@ class PUM_Admin_Popups {
 	}
 
 	/**
+	 * Sanitizes meta value.
+	 *
 	 * @param array $meta  Value to be sanitized.
 	 *
 	 * @return array
