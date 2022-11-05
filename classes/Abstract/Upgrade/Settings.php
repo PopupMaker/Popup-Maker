@@ -78,7 +78,7 @@ abstract class PUM_Abstract_Upgrade_Settings extends PUM_Abstract_Upgrade {
 	 *
 	 * You need to handle saving!!!
 	 *
-	 * @param array $settings
+	 * @param array $settings  Array of process settings.
 	 */
 	abstract public function process_settings( $settings = [] );
 }

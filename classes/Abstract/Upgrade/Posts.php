@@ -121,7 +121,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	/**
 	 * Gets the results of a custom post query.
 	 *
-	 * @param array $args
+	 * @param array $args  Array of query args.
 	 *
 	 * @return array
 	 */
@@ -134,7 +134,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 *
 	 * @uses self::custom_query_args();
 	 *
-	 * @param array $args
+	 * @param array $args  Array of query args.
 	 *
 	 * @return array
 	 */
@@ -241,7 +241,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	/**
 	 * Process needed upgrades on each post.
 	 *
-	 * @param int $post_id
+	 * @param int $post_id  Id for post.
 	 */
 	abstract public function process_post( $post_id = 0 );
 

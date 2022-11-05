@@ -32,7 +32,7 @@ abstract class PUM_Abstract_Upgrade_Themes extends PUM_Abstract_Upgrade_Posts im
 	/**
 	 * Process needed upgrades on each post.
 	 *
-	 * @param int $post_id
+	 * @param int $post_id  Id for post.
 	 */
 	public function process_post( $post_id = 0 ) {
 		$this->process_theme( $post_id );
@@ -41,7 +41,7 @@ abstract class PUM_Abstract_Upgrade_Themes extends PUM_Abstract_Upgrade_Posts im
 	/**
 	 * Process needed upgrades on each popup theme.
 	 *
-	 * @param int $theme_id
+	 * @param int $theme_id  Id for theme.
 	 *
 	 * @return int $theme_id
 	 */
