@@ -902,6 +902,11 @@ class PUM_Admin_Popups {
 		return $tabs;
 	}
 
+	/**
+	 * Retrieves field for specified item.
+	 * 
+	 * @param $id  Specified id.
+	 */
 	public static function get_field( $id ) {
 		$tabs = self::fields();
 
