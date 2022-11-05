@@ -21,9 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 abstract class PUM_Abstract_Upgrade extends PUM_Abstract_Batch_Process {
 
 	/**
-	 * Store the current upgrade args in case we need to redo somehting
+	 * Store the current upgrade args in case we need to redo something
 	 *
-	 * @param int $step
+	 * @param int $step  Step in upgrade.
 	 */
 	public function __construct( $step = 1 ) {
 		update_option(

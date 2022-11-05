@@ -78,7 +78,7 @@ class PUM_Admin_Shortcode_UI {
 	/**
 	 * Adds our tinymce button
 	 *
-	 * @param  array $buttons
+	 * @param  array $buttons  Array of buttons.
 	 *
 	 * @return array
 	 */
@@ -163,7 +163,7 @@ class PUM_Admin_Shortcode_UI {
 	/**
 	 * Adds our tinymce plugin js
 	 *
-	 * @param  array $plugin_array
+	 * @param  array $plugin_array  Array of our tinymce plugin.
 	 *
 	 * @return array
 	 */
