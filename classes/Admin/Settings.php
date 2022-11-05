@@ -131,6 +131,8 @@ class PUM_Admin_Settings {
 	}
 
 	/**
+	 * Sanitizes specified settings.
+	 *
 	 * @param array $settings
 	 *
 	 * @return array
