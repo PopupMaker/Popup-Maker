@@ -318,7 +318,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		}
 
 		// Bail early with true for conditions that will be processed in JavaScript later.
-		return true === $condition_args['advanced'];
+		return true === $condition_args['advanced'] || empty( $condition_args['callback'] );
 	}
 
 	/**
@@ -745,59 +745,61 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Placeholder in a series of changes to officially remove condition filtering.
+	 * This is a temporary method to allow for backwards compatibility.
+	 */
+	public function get_conditions_with_filters( $filters = [] ) {
+
+		$js_only = isset( $filters[ 'js_only'] ) && $filters[ 'js_only' ];
+		$php_only = isset( $filters[ 'php_only'] ) && $filters[ 'php_only' ];
+
+		$conditions = $this->get_setting( 'conditions', [] );
+		// Sanity Check on the values not operand value.
+		foreach ( $conditions as $group_key => $group ) {
+			foreach ( $group as $key => $condition ) {
+				if (
+					( $js_only && ! $this->is_js_condition( $condition ) ) ||
+					( $php_only && $this->is_js_condition( $condition ) )
+				) {
+					unset( $conditions[ $group_key ][ $key ] );
+					continue;
+				}
+			}
+
+			if ( empty( $conditions[ $group_key ] ) ) {
+				unset( $conditions[ $group_key ] );
+				continue;
+			}
+		}
+
+		return $conditions;
+	}
+
+	/**
 	 * Get the popups conditions.
 	 *
-	 * @param boolean|string[] $filters Array of condition filters @deprecated 1.16.9.
+	 * @param boolean|string[] $filters Array of condition filters.
 	 *
 	 * @return array
 	 */
 	public function get_conditions( $filters = false ) {
 
-		if ( false !== $filters ) {
-			$filters = wp_parse_args(
-				$filters,
-				[
-					'php_only' => null,
-					'js_only'  => null,
-				]
-			);
-		}
+		// Backwards compatibility for old filters.
+		$conditions = false === $filters ? $this->get_setting( 'conditions', [] ) :  $this->get_conditions_with_filters( $filters );
 
-		$cache_key = hash( 'md5', wp_json_encode( $filters ) );
-
-		// Check if these exclusion filters have already been applied and prevent extra processing.
-		$conditions = isset( $this->conditions_filtered[ $cache_key ] ) ? $this->conditions_filtered[ $cache_key ] : false;
-
-		if ( ! $conditions ) {
-			$conditions = $this->get_setting( 'conditions', [] );
-			// Sanity Check on the values not operand value.
-			foreach ( $conditions as $group_key => $group ) {
-
-				foreach ( $group as $key => $condition ) {
-
-					if ( false !== $filters && $this->exclude_condition( $condition, $filters ) ) {
-						unset( $conditions[ $group_key ][ $key ] );
-						if ( empty( $conditions[ $group_key ] ) ) {
-							unset( $conditions[ $group_key ] );
-							break;
-						}
-						continue;
-					}
-
-					$conditions[ $group_key ][ $key ] = $this->parse_condition( $condition );
-				}
-
-				if ( ! empty( $conditions[ $group_key ] ) ) {
-					// Renumber each subarray.
-					$conditions[ $group_key ] = array_values( $conditions[ $group_key ] );
-				}
+		foreach ( $conditions as $group_key => $group ) {
+			foreach ( $group as $key => $condition ) {
+				$conditions[ $group_key ][ $key ] = $this->parse_condition( $condition );
 			}
 
-			// Renumber top arrays.
-			$conditions = array_values( $conditions );
-
-			$this->conditions_filtered[ $cache_key ] = $conditions;
+			if ( ! empty( $conditions[ $group_key ] ) ) {
+				// Renumber each subarray.
+				$conditions[ $group_key ] = array_values( $conditions[ $group_key ] );
+			}
 		}
+
+		// Renumber top arrays.
+		$conditions = array_values( $conditions );
 
 		return apply_filters( 'pum_popup_get_conditions', $conditions, $this->ID, $filters );
 	}
@@ -828,39 +830,6 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 
 		// The not operand value is missing, set it to false.
 		return $condition;
-	}
-
-	/**
-	 * Check if a given condition should be excluded based on $filters.
-	 *
-	 * @param array    $condition Condition to be checked.
-	 * @param string[] $filters Array of filters to be used.
-	 *
-	 * @return bool
-	 */
-	public function exclude_condition( $condition, $filters = [] ) {
-
-		$exclude = false;
-
-		// The condition target doesn't exist. Lets ignore this condition.
-		if ( empty( $condition['target'] ) ) {
-			return true;
-		}
-
-		$condition_args = PUM_Conditions::instance()->get_condition( $condition['target'] );
-
-		// The condition target doesn't exist. Lets ignore this condition.
-		if ( ! $condition_args ) {
-			return true;
-		}
-
-		if ( true !== $filters['js_only'] && $condition_args['advanced'] ) {
-			return true;
-		} elseif ( false !== $filters['php_only'] && $condition_args['advanced'] ) {
-			return true;
-		}
-
-		return $exclude;
 	}
 
 	/**
