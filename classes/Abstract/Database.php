@@ -240,21 +240,21 @@ abstract class PUM_Abstract_Database {
 	public function insert( $data ) {
 		global $wpdb;
 
-		// Set default values
+		// Set default values.
 		$data = wp_parse_args( $data, $this->get_column_defaults() );
 
 		do_action( 'pum_pre_insert_' . $this->table_name, $data );
 
-		// Initialise column format array
+		// Initialise column format array.
 		$column_formats = $this->get_columns();
 
-		// Force fields to lower case
+		// Force fields to lower case.
 		$data = array_change_key_case( $data );
 
-		// White list columns
+		// White list columns.
 		$data = array_intersect_key( $data, $column_formats );
 
-		// Reorder $column_formats to match the order of columns given in $data
+		// Reorder $column_formats to match the order of columns given in $data.
 		$data_keys      = array_keys( $data );
 		$column_formats = array_merge( array_flip( $data_keys ), $column_formats );
 
@@ -302,7 +302,7 @@ abstract class PUM_Abstract_Database {
 
 		global $wpdb;
 
-		// Row ID must be positive integer
+		// Row ID must be positive integer.
 		$row_id = absint( $row_id );
 
 		if ( empty( $row_id ) ) {
@@ -313,13 +313,13 @@ abstract class PUM_Abstract_Database {
 			$where = $this->primary_key;
 		}
 
-		// Initialise column format array
+		// Initialise column format array.
 		$column_formats = $this->get_columns();
 
-		// Force fields to lower case
+		// Force fields to lower case.
 		$data = array_change_key_case( $data );
 
-		// White list columns
+		// White list columns.
 		$data = array_intersect_key( $data, $column_formats );
 
 		foreach ( $data as $key => $value ) {
@@ -328,7 +328,7 @@ abstract class PUM_Abstract_Database {
 			}
 		}
 
-		// Reorder $column_formats to match the order of columns given in $data
+		// Reorder $column_formats to match the order of columns given in $data.
 		$data_keys      = array_keys( $data );
 		$column_formats = array_merge( array_flip( $data_keys ), $column_formats );
 
@@ -350,7 +350,7 @@ abstract class PUM_Abstract_Database {
 
 		global $wpdb;
 
-		// Row ID must be positive integer
+		// Row ID must be positive integer.
 		$row_id = absint( $row_id );
 
 		if ( empty( $row_id ) ) {
@@ -449,7 +449,7 @@ abstract class PUM_Abstract_Database {
 		// Begin building query.
 		$query = "SELECT `$select_fields` FROM {$this->table_name()}";
 
-		// Set up $values array for wpdb::prepare
+		// Set up $values array for wpdb::prepare.
 		$values = [];
 
 		// Define an empty WHERE clause to start from.
