@@ -127,7 +127,7 @@ class PUM_Admin_Pages {
 		global $submenu;
 
 		if ( isset( $submenu['edit.php?post_type=popup'] ) ) {
-			// Sort the menu according to your preferences
+			// Sort the menu according to your preferences.
 			usort( $submenu['edit.php?post_type=popup'], [ __CLASS__, 'reorder_submenu_array' ] );
 		}
 	}
@@ -197,7 +197,7 @@ class PUM_Admin_Pages {
 			return ( $a_key < $b_key ) ? - 1 : 1;
 		}
 
-		// Sort remaining keys
+		// Sort remaining keys.
 		return $a > $b ? 1 : - 1;
 	}
 }
