@@ -31,7 +31,7 @@ class PUM_Admin_Settings {
 		// add_action( 'pum_license_check_failed', array( __CLASS__, 'license_deactivated' ) );
 	}
 
-	// display default admin notice
+	// display default admin notice.
 
 	/**
 	 * Displays any saved admin notices.

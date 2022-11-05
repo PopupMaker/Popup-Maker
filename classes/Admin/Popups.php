@@ -1155,7 +1155,7 @@ class PUM_Admin_Popups {
 	/**
 	 * Defines the custom columns and their order
 	 *
-	 * @param array $_columns Array of popup columns
+	 * @param array $_columns Array of popup columns.
 	 *
 	 * @return array $columns Updated array of popup columns for
 	 *  Post Type List Table
@@ -1195,8 +1195,8 @@ class PUM_Admin_Popups {
 	/**
 	 * Render Columns
 	 *
-	 * @param string $column_name Column name
-	 * @param int    $post_id     (Post) ID
+	 * @param string $column_name Column name.
+	 * @param int    $post_id     (Post) ID.
 	 */
 	public static function render_columns( $column_name, $post_id ) {
 		$post = get_post( $post_id );
@@ -1285,7 +1285,7 @@ class PUM_Admin_Popups {
 	/**
 	 * Registers the sortable columns in the list table
 	 *
-	 * @param array $columns Array of the columns
+	 * @param array $columns Array of the columns.
 	 *
 	 * @return array $columns Array of sortable columns
 	 */
@@ -1300,14 +1300,14 @@ class PUM_Admin_Popups {
 	/**
 	 * Sorts Columns in the List Table
 	 *
-	 * @param array $vars Array of all the sort variables
+	 * @param array $vars Array of all the sort variables.
 	 *
 	 * @return array $vars Array of all the sort variables
 	 */
 	public static function sort_columns( $vars ) {
-		// Check if we're viewing the "popup" post type
+		// Check if we're viewing the "popup" post type.
 		if ( isset( $vars['post_type'] ) && 'popup' === $vars['post_type'] ) {
-			// Check if 'orderby' is set to "name"
+			// Check if 'orderby' is set to "name".
 			if ( isset( $vars['orderby'] ) ) {
 				switch ( $vars['orderby'] ) {
 					case 'popup_title':
@@ -1363,7 +1363,7 @@ class PUM_Admin_Popups {
 	public static function add_popup_filters() {
 		global $typenow;
 
-		// Checks if the current post type is 'popup'
+		// Checks if the current post type is 'popup'.
 		if ( 'popup' === $typenow ) {
 
 			if ( get_taxonomy( 'popup_category' ) ) {
