@@ -904,7 +904,7 @@ class PUM_Admin_Popups {
 
 	/**
 	 * Retrieves field for specified item.
-	 * 
+	 *
 	 * @param $id  Specified id.
 	 */
 	public static function get_field( $id ) {
