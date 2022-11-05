@@ -36,7 +36,7 @@ class PUM_Admin_Pages {
 	/**
 	 * Returns the requested pages handle.
 	 *
-	 * @param $key
+	 * @param $key Specified page.
 	 *
 	 * @return bool|mixed
 	 */

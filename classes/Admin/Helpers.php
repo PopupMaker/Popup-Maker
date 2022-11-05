@@ -18,7 +18,7 @@ class PUM_Admin_Helpers {
 
 
 	/**
-	 * @param array $args
+	 * @param array $args  Array of args.
 	 *
 	 * @return array
 	 */
@@ -67,10 +67,10 @@ class PUM_Admin_Helpers {
 	 * @deprecated 1.7.20
 	 * @see        PUM_Helper_Array::move_item
 	 *
-	 * @param array       $ref_arr
-	 * @param string      $key1
+	 * @param array       $ref_arr  Array being referenced.
+	 * @param string      $key1  Specified string.
 	 * @param int|string  $move
-	 * @param string|null $key2
+	 * @param string|null $key2  Specified string.
 	 *
 	 * @return bool
 	 */
@@ -82,8 +82,8 @@ class PUM_Admin_Helpers {
 	 * @deprecated 1.7.20
 	 * @see        PUM_Helper_Array::remove_keys_starting_with
 	 *
-	 * @param array $array
-	 * @param bool  $string
+	 * @param array $array  Array referened.
+	 * @param bool  $string  Item to check.
 	 *
 	 * @return array
 	 */
@@ -105,7 +105,7 @@ class PUM_Admin_Helpers {
 	}
 
 	/**
-	 * @param array $fields
+	 * @param array $fields  Array of fields.
 	 *
 	 * @return array
 	 */
@@ -140,7 +140,7 @@ class PUM_Admin_Helpers {
 	}
 
 	/**
-	 * @param $tabs
+	 * @param $tabs  Value to be converted.
 	 *
 	 * @return array
 	 */
@@ -231,7 +231,7 @@ class PUM_Admin_Helpers {
 
 	/**
 	 * @param       $fields
-	 * @param array  $args
+	 * @param array  $args  Array of arguments.
 	 *
 	 * @return mixed
 	 */
@@ -269,8 +269,8 @@ class PUM_Admin_Helpers {
 	}
 
 	/**
-	 * @param array  $fields
-	 * @param string $name
+	 * @param array  $fields  Array of fields.
+	 * @param string $name  Name to retrieved.
 	 *
 	 * @return mixed
 	 */
@@ -329,7 +329,7 @@ class PUM_Admin_Helpers {
 	/**
 	 * Checks if an array is a field.
 	 *
-	 * @param array $array
+	 * @param array $array  Array to check.
 	 *
 	 * @return bool
 	 */
@@ -345,7 +345,7 @@ class PUM_Admin_Helpers {
 	/**
 	 * Checks if an array is a section.
 	 *
-	 * @param array $array
+	 * @param array $array Array to check.
 	 *
 	 * @return bool
 	 */
@@ -356,7 +356,7 @@ class PUM_Admin_Helpers {
 	/**
 	 * @deprecated 1.7.0
 	 *
-	 * @param array $args
+	 * @param array $args  Array of arguments to parse.
 	 */
 	public static function modal( $args = [] ) {
 		$args = wp_parse_args(
