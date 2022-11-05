@@ -106,7 +106,7 @@ class PUM_ConditionCallbacks {
 		// Remove the tax_ prefix.
 		array_shift( $target );
 
-		// Assign the last key as the modifier _all, _selected
+		// Assign the last key as the modifier _all, _selected.
 		$modifier = array_pop( $target );
 
 		// Whatever is left is the taxonomy.
@@ -149,7 +149,7 @@ class PUM_ConditionCallbacks {
 
 		$target = explode( '_', $condition['target'] );
 
-		// Assign the last key as the modifier _all, _selected
+		// Assign the last key as the modifier _all, _selected.
 		$modifier = array_pop( $target );
 
 		switch ( $modifier ) {
@@ -181,7 +181,7 @@ class PUM_ConditionCallbacks {
 
 		$target = explode( '_', $condition['target'] );
 
-		// Assign the last key as the modifier _all, _selected
+		// Assign the last key as the modifier _all, _selected.
 		$modifier = array_pop( $target );
 
 		switch ( $modifier ) {
@@ -216,7 +216,7 @@ class PUM_ConditionCallbacks {
 		// First key is the post type.
 		$post_type = array_shift( $target );
 
-		// Last Key is the taxonomy
+		// Last Key is the taxonomy.
 		$taxonomy = array_pop( $target );
 
 		if ( 'category' === $taxonomy ) {

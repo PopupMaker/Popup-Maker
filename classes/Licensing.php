@@ -50,7 +50,7 @@ class PUM_Licensing {
 		$status = $has_key ? 'inactive' : 'empty';
 
 		if ( self::has_license( $license ) ) {
-			// activate_license 'invalid' on anything other than valid, so if there was an error capture it
+			// activate_license 'invalid' on anything other than valid, so if there was an error capture it.
 			if ( false === $license->success ) {
 				$error = property_exists( $license, 'error' ) ? $license->error : $status;
 
@@ -89,7 +89,7 @@ class PUM_Licensing {
 
 		if ( self::has_license( $license ) ) {
 
-			// activate_license 'invalid' on anything other than valid, so if there was an error capture it
+			// activate_license 'invalid' on anything other than valid, so if there was an error capture it.
 			if ( false === $license->success ) {
 
 				switch ( $license->error ) {

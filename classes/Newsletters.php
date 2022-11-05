@@ -277,7 +277,7 @@ class PUM_Newsletters {
 		if ( isset( $values['name'] ) ) {
 			$values['name'] = trim( sanitize_text_field( $values['name'] ) );
 
-			// Creates last name
+			// Creates last name.
 			$name = explode( ' ', $values['name'] );
 			if ( ! isset( $name[1] ) ) {
 				$name[1] = '';

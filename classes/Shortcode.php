@@ -359,7 +359,7 @@ abstract class PUM_Shortcode {
 					continue;
 				}
 
-				// text, checkbox, textarea, radio, select, email, url, number, date, attachment, color, post_select
+				// text, checkbox, textarea, radio, select, email, url, number, date, attachment, color, post_select.
 				switch ( $field['type'] ) {
 					case 'select':
 						$shortcode_ui_args['attrs'][] = [

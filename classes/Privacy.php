@@ -180,7 +180,7 @@ class PUM_Privacy {
 	 * @return array
 	 */
 	public static function exporter( $email_address, $page = 1 ) {
-		$number = 500; // Limit us to avoid timing out
+		$number = 500; // Limit us to avoid timing out.
 		$page   = (int) $page;
 
 		$export_items = [];
@@ -200,20 +200,20 @@ class PUM_Privacy {
 				// Most item IDs should look like postType-postID
 				// If you don't have a post, comment or other ID to work with,
 				// use a unique value to avoid having this item's export
-				// combined in the final report with other items of the same id
+				// combined in the final report with other items of the same id.
 				$item_id = "pum-subscriber-{$subscriber['ID']}";
 
 				// Core group IDs include 'comments', 'posts', etc.
-				// But you can add your own group IDs as needed
+				// But you can add your own group IDs as needed.
 				$group_id = 'pum-subscribers';
 
 				// Optional group label. Core provides these for core groups.
 				// If you define your own group, the first exporter to
 				// include a label will be used as the group label in the
-				// final exported report
+				// final exported report.
 				$group_label = __( 'Subscriber Data' );
 
-				// Plugins can add as many items in the item data array as they want
+				// Plugins can add as many items in the item data array as they want.
 
 				$data = [];
 
@@ -324,7 +324,7 @@ class PUM_Privacy {
 			}
 		}
 
-		// Tell core if we have more comments to work on still
+		// Tell core if we have more comments to work on still.
 		$done = count( $subscribers ) < $number;
 
 		return [
@@ -358,7 +358,7 @@ class PUM_Privacy {
 		$items_removed  = false;
 		$items_retained = false;
 
-		$number = 500; // Limit us to avoid timing out
+		$number = 500; // Limit us to avoid timing out.
 		$page   = (int) $page;
 
 		$subscribers = PUM_DB_Subscribers::instance()->query(
@@ -395,7 +395,7 @@ class PUM_Privacy {
 			}
 		}
 
-		// Tell core if we have more comments to work on still
+		// Tell core if we have more comments to work on still.
 		$done = count( $subscribers ) < $number;
 
 		return [

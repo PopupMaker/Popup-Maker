@@ -413,7 +413,7 @@ class PUM_Integrations {
 		}
 
 		if ( ! empty( self::$form_submission ) ) {
-			// Remap values from PHP underscore_case to JS camelCase
+			// Remap values from PHP underscore_case to JS camelCase.
 			$vars['form_submission'] = PUM_Utils_Array::remap_keys(
 				self::$form_submission,
 				[
@@ -446,7 +446,7 @@ class PUM_Integrations {
 					];
 
 					foreach ( $integration->get_form_selectlist() as $formId => $formLabel ) {
-						// ex. ninjaforms_1, contactform7_55
+						// ex. ninjaforms_1, contactform7_55.
 						$group_options[ $integration->key . '_' . $formId ] = $formLabel;
 					}
 
