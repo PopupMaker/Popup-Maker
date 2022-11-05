@@ -210,7 +210,7 @@ class PUM_Triggers {
 				],
 				'form_submission' => [
 					'name'   => __( 'Form Submission', 'popup-maker' ),
-					// 'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Form', 'popup-maker' ), '' ),
+					/** 'settings_column' => sprintf( '<strong>%1$s</strong>: %2$s', __( 'Form', 'popup-maker' ), '' ), */
 					'fields' => [
 						'general' => [
 							'form'  => [
