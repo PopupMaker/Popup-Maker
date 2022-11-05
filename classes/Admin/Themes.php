@@ -41,7 +41,7 @@ class PUM_Admin_Themes {
 	/**
 	 * Ensures integrity of values.
 	 *
-	 * @param array $values
+	 * @param array $values  Array of values.
 	 *
 	 * @return array
 	 */
@@ -62,7 +62,7 @@ class PUM_Admin_Themes {
 	 *
 	 * Excludes checkbox type fields where a false value is represented by the field being unset.
 	 *
-	 * @param array $settings
+	 * @param array $settings  Specified setting to set.
 	 *
 	 * @return array
 	 */
@@ -88,7 +88,7 @@ class PUM_Admin_Themes {
 	 *
 	 * Add additional data for license_key fields, split the measure fields etc.
 	 *
-	 * @param $settings
+	 * @param $settings  Specified value.
 	 *
 	 * @return mixed
 	 */
