@@ -94,9 +94,9 @@ class PUM_Admin_Subscribers {
 	/**
 	 * Force WP to save the option.
 	 *
-	 * @param $status
-	 * @param $option
-	 * @param $value
+	 * @param $status  Status to save.
+	 * @param $option  Specified option to set.
+	 * @param $value  Value to save.
 	 *
 	 * @return mixed
 	 */
