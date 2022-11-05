@@ -72,7 +72,7 @@ class PUM_Admin_Shortcode_UI {
 
 		// Process live previews.
 		add_action( 'wp_ajax_pum_do_shortcode', [ __CLASS__, 'do_shortcode' ] );
-		// add_action( 'wp_ajax_pum_do_shortcode', array( __CLASS__, 'wp_ajax_pum_do_shortcode' ) );
+		/** add_action( 'wp_ajax_pum_do_shortcode', array( __CLASS__, 'wp_ajax_pum_do_shortcode' ) ); */
 	}
 
 	/**
