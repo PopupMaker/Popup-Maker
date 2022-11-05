@@ -17,6 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Admin_Tools {
 
 	/**
+	 * Sets notices to an array.
+	 *
 	 * @var array
 	 */
 	public static $notices = [];
@@ -153,6 +155,8 @@ class PUM_Admin_Tools {
 	}
 
 	/**
+	 * Get active tab for admin tools.
+	 *
 	 * @return int|null|string
 	 */
 	public static function get_active_tab() {

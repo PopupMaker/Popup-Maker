@@ -409,6 +409,8 @@ class PUM_Admin_Themes {
 	}
 
 	/**
+	 * Border style options.
+	 *
 	 * @return mixed
 	 */
 	public static function border_style_options() {
@@ -429,6 +431,8 @@ class PUM_Admin_Themes {
 	}
 
 	/**
+	 * Size unit options.
+	 *
 	 * @return mixed
 	 */
 	public static function size_unit_options() {
@@ -444,6 +448,8 @@ class PUM_Admin_Themes {
 	}
 
 	/**
+	 * Font family options.
+	 *
 	 * @return mixed
 	 */
 	public static function font_family_options() {
@@ -469,6 +475,8 @@ class PUM_Admin_Themes {
 	}
 
 	/**
+	 * Font weight options.
+	 *
 	 * @return mixed
 	 */
 	public static function font_weight_options() {
