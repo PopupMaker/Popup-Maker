@@ -151,7 +151,7 @@ class PUM_Extension_Updater {
 	}
 
 	/**
-	 * show update nofication row -- needed for multisite subsites, because WP won't tell you otherwise!
+	 * Show update nofication row -- needed for multisite subsites, because WP won't tell you otherwise!
 	 *
 	 * @param string $file
 	 * @param array  $plugin
