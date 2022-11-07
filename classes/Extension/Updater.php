@@ -436,7 +436,7 @@ class PUM_Extension_Updater {
 			return;
 		}
 
-		if ( $this->api_url === trailingslashit( home_url() ) ) {
+		if ( trailingslashit( home_url() ) === $this->api_url ) {
 			return false; // Don't allow a plugin to ping itself.
 		}
 

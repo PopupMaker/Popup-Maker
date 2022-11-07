@@ -909,7 +909,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	public function is_preview() {
 		return isset( $_GET['popup_preview'] )
 			&& isset( $_GET['popup'] )
-			&& ID === absint( $_GET['popup'] )->$this;
+			&& absint( $_GET['popup'] ) === $this->ID;
 	}
 
 	/**
