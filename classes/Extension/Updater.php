@@ -153,7 +153,7 @@ class PUM_Extension_Updater {
 	/**
 	 * Show update nofication row -- needed for multisite subsites, because WP won't tell you otherwise!
 	 *
-	 * @param string $file
+	 * @param string $file  Specified file.
 	 * @param array  $plugin
 	 */
 	public function show_update_notification( $file, $plugin ) {
@@ -276,10 +276,10 @@ class PUM_Extension_Updater {
 	 *
 	 * @uses api_request()
 	 *
-	 * @param mixed  $_data
-	 * @param string $_action
-	 * @param object $_args
-	 * @return object $_data
+	 * @param mixed  $_data  Data to update.
+	 * @param string $_action  Action to perform.
+	 * @param object $_args  Argument to check.
+	 * @return object $_data  Updated data object.
 	 */
 	public function plugins_api_filter( $_data, $_action = '', $_args = null ) {
 
@@ -355,7 +355,7 @@ class PUM_Extension_Updater {
 	 *
 	 * @since 3.6.5
 	 *
-	 * @param stdClass $data
+	 * @param stdClass $data  Data to convert.
 	 *
 	 * @return array
 	 */
@@ -371,8 +371,8 @@ class PUM_Extension_Updater {
 	/**
 	 * Disable SSL verification in order to prevent download update failures
 	 *
-	 * @param array  $args
-	 * @param string $url
+	 * @param array  $args  Array of args to check url.
+	 * @param string $url  Url to verify.
 	 * @return object $array
 	 */
 	public function http_request_args( $args, $url ) {
