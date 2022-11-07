@@ -443,7 +443,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 			return;
 		}
 
-		if ( 5 === ID->$this ) {
+		if ( $this->ID === 5 ) {
 			$test = '1';
 		}
 
