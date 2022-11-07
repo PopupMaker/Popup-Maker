@@ -174,7 +174,7 @@ class PUM_Extension_Updater {
 			return;
 		}
 
-		// Remove our filter on the site transient
+		// Remove our filter on the site transient.
 		remove_filter( 'pre_set_site_transient_update_plugins', [ $this, 'check_update' ], 10 );
 
 		$update_cache = get_site_transient( 'update_plugins' );
@@ -231,12 +231,12 @@ class PUM_Extension_Updater {
 
 		}
 
-		// Restore our filter
+		// Restore our filter.
 		add_filter( 'pre_set_site_transient_update_plugins', [ $this, 'check_update' ] );
 
 		if ( ! empty( $update_cache->response[ $this->name ] ) && version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
-			// build a plugin list row, with update notification
+			// build a plugin list row, with update notification.
 			$wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );
 			// <tr class="plugin-update-tr"><td colspan="' . $wp_list_table->get_column_count() . '" class="plugin-update colspanchange">
 			echo '<tr class="plugin-update-tr" id="' . $this->slug . '-update" data-slug="' . $this->slug . '" data-plugin="' . $this->slug . '/' . $file . '">';
@@ -307,7 +307,7 @@ class PUM_Extension_Updater {
 
 		$cache_key = 'edd_api_request_' . md5( serialize( $this->slug . $this->api_data['license'] . $this->beta ) );
 
-		// Get the transient where we store the api request for this plugin for 24 hours
+		// Get the transient where we store the api request for this plugin for 24 hours.
 		$edd_api_request_transient = $this->get_cached_version_info( $cache_key );
 
 		// If we have no transient-saved value, run the API, set a fresh transient with the API value, and return that value too right now.
@@ -315,7 +315,7 @@ class PUM_Extension_Updater {
 
 			$api_response = $this->api_request( 'plugin_information', $to_send );
 
-			// Expires in 3 hours
+			// Expires in 3 hours.
 			$this->set_version_info_cache( $api_response, $cache_key );
 
 			if ( false !== $api_response ) {
@@ -437,7 +437,7 @@ class PUM_Extension_Updater {
 		}
 
 		if ( $this->api_url === trailingslashit( home_url() ) ) {
-			return false; // Don't allow a plugin to ping itself
+			return false; // Don't allow a plugin to ping itself.
 		}
 
 		$api_params = [
@@ -571,7 +571,7 @@ class PUM_Extension_Updater {
 		$cache = get_option( $cache_key );
 
 		if ( empty( $cache['timeout'] ) || time() > $cache['timeout'] ) {
-			return false; // Cache is expired
+			return false; // Cache is expired.
 		}
 
 		// We need to turn the icons into an array, thanks to WP Core forcing these into an object at some point.
