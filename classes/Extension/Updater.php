@@ -562,6 +562,9 @@ class PUM_Extension_Updater {
 		exit;
 	}
 
+	/**
+	 * Gets cached version info for Extension Updater.
+	 */
 	public function get_cached_version_info( $cache_key = '' ) {
 
 		if ( empty( $cache_key ) ) {
@@ -584,6 +587,9 @@ class PUM_Extension_Updater {
 
 	}
 
+	/**
+	 * Sets version info cache for Extension Updater.
+	 */
 	public function set_version_info_cache( $value = '', $cache_key = '' ) {
 
 		if ( empty( $cache_key ) ) {
