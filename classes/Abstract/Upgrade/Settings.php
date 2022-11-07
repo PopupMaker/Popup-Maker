@@ -58,6 +58,7 @@ abstract class PUM_Abstract_Upgrade_Settings extends PUM_Abstract_Upgrade {
 		switch ( $code ) {
 
 			case 'start':
+				/* translators: 1. number of items updated */
 				$message = sprintf( __( 'Updating settings for v%s compatibility.', 'popup-maker' ), '1.7' );
 				break;
 
