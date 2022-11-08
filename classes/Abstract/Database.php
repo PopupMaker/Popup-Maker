@@ -130,7 +130,7 @@ abstract class PUM_Abstract_Database {
 	/**
 	 * Retrieve a row by the primary key
 	 *
-	 * @param $row_id
+	 * @param $row_id  Row id.
 	 *
 	 * @return  object
 	 */
@@ -200,8 +200,8 @@ abstract class PUM_Abstract_Database {
 	/**
 	 * Retrieve a row by a specific column / value
 	 *
-	 * @param $column
-	 * @param $row_id
+	 * @param $column  Column.
+	 * @param $row_id  Row id.
 	 *
 	 * @return  object
 	 */
@@ -214,8 +214,8 @@ abstract class PUM_Abstract_Database {
 	/**
 	 * Retrieve a specific column's value by the primary key
 	 *
-	 * @param $column
-	 * @param $row_id
+	 * @param $column  Column.
+	 * @param $row_id  Row id.
 	 *
 	 * @return  string
 	 */
@@ -228,9 +228,9 @@ abstract class PUM_Abstract_Database {
 	/**
 	 * Retrieve a specific column's value by the the specified column / value
 	 *
-	 * @param $column
-	 * @param $column_where
-	 * @param $column_value
+	 * @param $column  Column.
+	 * @param $column_where  Column location.
+	 * @param $column_value  Column value.
 	 *
 	 * @return  string
 	 */
@@ -303,7 +303,7 @@ abstract class PUM_Abstract_Database {
 	/**
 	 * Update a row
 	 *
-	 * @param        $row_id
+	 * @param        $row_id  Row id.
 	 * @param array  $data  Array of data.
 	 * @param string $where  Where row is located.
 	 *
@@ -378,8 +378,8 @@ abstract class PUM_Abstract_Database {
 	/**
 	 * Delete a row identified by the primary key
 	 *
-	 * @param $column
-	 * @param $row_id
+	 * @param $column  Column.
+	 * @param $row_id  Row id.
 	 *
 	 * @return  bool
 	 */
@@ -398,7 +398,7 @@ abstract class PUM_Abstract_Database {
 	/**
 	 * Prepare query.
 	 *
-	 * @param       $query
+	 * @param       $query  Item to prepare.
 	 * @param array $args  Array of query args.
 	 *
 	 * @return string
@@ -531,7 +531,7 @@ abstract class PUM_Abstract_Database {
 	/**
 	 * Queries for total rows
 	 *
-	 * @param $args
+	 * @param $args  Arguments to check.
 	 *
 	 * @return int
 	 */
