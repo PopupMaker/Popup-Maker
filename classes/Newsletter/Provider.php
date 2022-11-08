@@ -18,7 +18,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 abstract class PUM_Newsletter_Provider extends PUM_Abstract_Provider {
 
-
+	/**
+	 * Constructor.
+	 */
 	public function __construct() {
 		parent::__construct();
 
