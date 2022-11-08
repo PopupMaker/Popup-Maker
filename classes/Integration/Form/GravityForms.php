@@ -9,15 +9,22 @@
 class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 
 	/**
+	 * Unique key identifier for this provider.
+	 *
 	 * @var string
 	 */
 	public $key = 'gravityforms';
 
+	/**
+	 * Constructor - action for after form is successfully submitted.
+	 */
 	public function __construct() {
 		add_action( 'gform_after_submission', [ $this, 'on_success' ], 10, 2 );
 	}
 
 	/**
+	 * Text label for Gravity Forms.
+	 *
 	 * @return string
 	 */
 	public function label() {
@@ -25,6 +32,8 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Returns true when form is enabled.
+	 *
 	 * @return bool
 	 */
 	public function enabled() {
@@ -32,6 +41,8 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Gets forms.
+	 *
 	 * @return array
 	 */
 	public function get_forms() {
@@ -39,6 +50,8 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Gets single form by id.
+	 *
 	 * @param string $id
 	 *
 	 * @return mixed
@@ -48,6 +61,8 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Gets selectlist of forms.
+	 *
 	 * @return array
 	 */
 	public function get_form_selectlist() {
@@ -64,6 +79,8 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 
 
 	/**
+	 * Handles form submission. 
+	 *
 	 * @param $entry
 	 * @param $form
 	 */
@@ -90,6 +107,8 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Custom scripts for Gravity Forms form.
+	 *
 	 * @param array $js
 	 *
 	 * @return array
@@ -99,6 +118,8 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Custom styles.
+	 *
 	 * @param array $css
 	 *
 	 * @return array

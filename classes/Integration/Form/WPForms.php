@@ -9,6 +9,8 @@
 class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 
 	/**
+	 * Unique key for provider.
+	 *
 	 * @var string
 	 */
 	public $key = 'wpforms';
@@ -18,6 +20,8 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Text label for provider.
+	 *
 	 * @return string
 	 */
 	public function label() {
@@ -25,6 +29,8 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Returns true if the plugin is enabled.
+	 *
 	 * @return bool
 	 */
 	public function enabled() {
@@ -32,6 +38,8 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Gets forms.
+	 *
 	 * @return array|bool|null|WP_Post[]
 	 */
 	public function get_forms() {
@@ -39,6 +47,8 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Gets specified form.
+	 *
 	 * @param int|string $id
 	 *
 	 * @return array|bool|null|WP_Post
@@ -48,6 +58,8 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Gets form selectlist.
+	 *
 	 * @return array
 	 */
 	public function get_form_selectlist() {
@@ -65,6 +77,8 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Handles form submission.
+	 *
 	 * @link https://wpforms.com/developers/wpforms_process_complete/
 	 *
 	 * @param array $fields Sanitized entry field values/properties.
@@ -88,6 +102,8 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Custom scripts.
+	 *
 	 * @param array $js
 	 *
 	 * @return array
@@ -97,6 +113,8 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Custom styles.
+	 *
 	 * @param array $css
 	 *
 	 * @return array

@@ -9,17 +9,21 @@
 class PUM_Integration_GoogleFonts {
 
 	/**
+	 * Unique key.
+	 *
 	 * @var string
 	 */
 	private static $default_api_key = 'AIzaSyA1Q0uFOhEh3zv_Pk31FqlACArFquyBeQU';
 
 	/**
+	 * Unique key for api.
+	 *
 	 * @var string
 	 */
 	public static $api_key;
 
 	/**
-	 *
+	 * Sets api key.
 	 */
 	public static function init() {
 		// Set the API key based on options first then default second.

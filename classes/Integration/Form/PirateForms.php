@@ -9,6 +9,8 @@
 class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 
 	/**
+	 * Unique key for this provider.
+	 *
 	 * @var string
 	 */
 	public $key = 'pirateforms';
@@ -18,6 +20,8 @@ class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Text label for provider.
+	 *
 	 * @return string
 	 */
 	public function label() {
@@ -25,6 +29,8 @@ class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Returns true if plugin is enabled.
+	 *
 	 * @return bool
 	 */
 	public function enabled() {
@@ -32,6 +38,8 @@ class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Gets forms.
+	 *
 	 * @return array
 	 */
 	public function get_forms() {
@@ -107,6 +115,8 @@ class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Gets form selectlist.
+	 *
 	 * @return array
 	 */
 	public function get_form_selectlist() {
@@ -122,6 +132,8 @@ class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Handles form submission.
+	 *
 	 * @link https://wpforms.com/developers/wpforms_process_complete/
 	 *
 	 * @param array $fields Sanitized entry field values/properties.
@@ -145,6 +157,8 @@ class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Custom scripts.
+	 *
 	 * @param array $js
 	 *
 	 * @return array
@@ -154,6 +168,8 @@ class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Custom styles.
+	 *
 	 * @param array $css
 	 *
 	 * @return array

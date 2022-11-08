@@ -8,7 +8,9 @@
 
 class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 
-	/**
+	/** 
+	 * Unique key for provider.
+	 *
 	 * @var string
 	 */
 	public $key = 'ninjaforms';
@@ -19,6 +21,8 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Text label for Ninja Forms.
+	 *
 	 * @return string
 	 */
 	public function label() {
@@ -26,6 +30,8 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Returns true if plugin is active.
+	 *
 	 * @return bool
 	 */
 	public function enabled() {
@@ -33,6 +39,8 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Gets forms.
+	 *
 	 * @return array
 	 */
 	public function get_forms() {
@@ -40,6 +48,8 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Gets form by id.
+	 *
 	 * @param string $id
 	 *
 	 * @return mixed
@@ -49,6 +59,8 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Gets form selectlist.
+	 *
 	 * @return array
 	 */
 	public function get_form_selectlist() {
@@ -64,6 +76,8 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Handles form submission for version 2.
+	 *
 	 * @global $ninja_forms_processing
 	 */
 	public function on_success_v2() {
@@ -85,6 +99,8 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Handles form submission for version 3.
+	 *
 	 * @param $form_data
 	 */
 	public function on_success_v3( $form_data ) {
@@ -103,6 +119,8 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Custom scripts.
+	 *
 	 * @param array $js
 	 *
 	 * @return array
@@ -112,6 +130,8 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Custom styles.
+	 *
 	 * @param array $css
 	 *
 	 * @return array
