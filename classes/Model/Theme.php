@@ -18,10 +18,18 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 
-	/** @var string */
+	/**
+	 * $required_post_type variable
+	 *
+	 * @var string 
+	 */
 	protected $required_post_type = 'popup_theme';
 
-	/** @var array */
+	/**
+	 * $settings variable
+	 *
+	 * @var array
+	 */
 	public $settings;
 
 	/** @var bool */
