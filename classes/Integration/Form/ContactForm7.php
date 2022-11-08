@@ -59,7 +59,7 @@ class PUM_Integration_Form_ContactForm7 extends PUM_Abstract_Integration_Form {
 	/**
 	 * Return a single form by ID.
 	 *
-	 * @param string $id
+	 * @param string $id  Form id.
 	 *
 	 * @return mixed
 	 */
@@ -89,7 +89,7 @@ class PUM_Integration_Form_ContactForm7 extends PUM_Abstract_Integration_Form {
 	/**
 	 * Hooks in a success functions specific to this provider for non AJAX submission handling.
 	 *
-	 * @param WPCF7_ContactForm $cfdata
+	 * @param WPCF7_ContactForm $cfdata  Form data.
 	 */
 	public function on_success( $cfdata ) {
 
@@ -111,7 +111,7 @@ class PUM_Integration_Form_ContactForm7 extends PUM_Abstract_Integration_Form {
 	/**
 	 * Load a custom script file to handle AJAX based submissions or other integrations with Popup Maker frontend.
 	 *
-	 * @param array $js
+	 * @param array $js  Array of custom js.
 	 *
 	 * @return array
 	 */
@@ -122,7 +122,7 @@ class PUM_Integration_Form_ContactForm7 extends PUM_Abstract_Integration_Form {
 	/**
 	 * Load custom styles for hacking some elements specifically inside popups, such as datepickers.
 	 *
-	 * @param array $css
+	 * @param array $css  Array of styles.
 	 *
 	 * @return array
 	 */
