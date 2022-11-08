@@ -489,7 +489,7 @@ class PUM_Extension_Updater {
 	}
 
 	/**
-	 * Function show_changelog
+	 * Shows changelog.
 	 */
 	public function show_changelog() {
 
