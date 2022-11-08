@@ -29,14 +29,23 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 		return 'popup_close';
 	}
 
+	/**
+	 * Text label.
+	 */
 	public function label() {
 		return __( 'Popup Close Button', 'popup-maker' );
 	}
 
+	/**
+	 * Retrieves PopupClose shortcode description.
+	 */
 	public function description() {
 		return __( 'Make text or html a close trigger for your popup.', 'popup-maker' );
 	}
 
+	/**
+	 * Shortcode inner content labels.
+	 */
 	public function inner_content_labels() {
 		return [
 			'label'       => __( 'Content', 'popup-maker' ),
@@ -44,10 +53,16 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 		];
 	}
 
+	/**
+	 * Shortcode post types.
+	 */
 	public function post_types() {
 		return [ 'popup' ];
 	}
 
+	/**
+	 * Shortcode fields.
+	 */
 	public function fields() {
 		return [
 			'general' => [

@@ -31,14 +31,23 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 		return 'popup';
 	}
 
+	/**
+	 * Shortcode label.
+	 */
 	public function label() {
 		return __( 'Popup', 'popup-maker' );
 	}
 
+	/**
+	 * Retrieves popup shortcode description.
+	 */
 	public function description() {
 		return __( 'Insert a popup inline rather. Great for simple popups used for supporting content.', 'popup-maker' );
 	}
 
+	/**
+	 * Popup Shortcode inner content labels.
+	 */
 	public function inner_content_labels() {
 		return [
 			'label'       => __( 'Content', 'popup-maker' ),
@@ -46,6 +55,9 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 		];
 	}
 
+	/**
+	 * Popup shortcode post types.
+	 */
 	public function post_types() {
 		return [];
 	}
@@ -93,6 +105,9 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 		);
 	}
 
+	/**
+	 * Fields for popup shortcode.
+	 */
 	public function fields() {
 		return [
 			'general'   => [
@@ -397,6 +412,9 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 		return $return;
 	}
 
+	/**
+	 * Popup Shortcode template.
+	 */
 	public function template() { ?>
 		<p class="pum-sub-form-desc">
 			<?php esc_html_e( 'Popup', 'popup-maker' ); ?>: ID "{{attrs.id}}"
