@@ -19,16 +19,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Newsletter_Providers {
 
 	/**
+	 * $instance variable
+	 *
 	 * @var PUM_Newsletter_Providers
 	 */
 	public static $instance;
 
 	/**
+	 * $providers variable
+	 *
 	 * @var array
 	 */
 	public $providers = [];
 
 	/**
+	 * Function instance.
+	 *
 	 * @return PUM_Newsletter_Providers
 	 */
 	public static function instance() {
@@ -44,6 +50,8 @@ class PUM_Newsletter_Providers {
 	}
 
 	/**
+	 * Retrieves providers.
+	 *
 	 * @return array PUM_Shortcode
 	 */
 	public function get_providers() {
@@ -61,6 +69,8 @@ class PUM_Newsletter_Providers {
 	}
 
 	/**
+	 * Dropdown list of Newsletter providers.
+	 *
 	 * @return array
 	 */
 	public static function dropdown_list() {
