@@ -423,7 +423,7 @@ class PUM_Admin_Onboarding {
 	 */
 	public static function display_welcome_page() {
 		wp_enqueue_style( 'pum-admin-general' );
-		$gravatar_url = get_avatar_url( 'danieliser@wizardinternetsolutions.com', [ 'size' => 60 ] );
+		$gravatar_url = get_avatar_url( 'danieliser@wizardinternetsolutions.com', [ 'size' => 256 ] );
 		?>
 		<div class="pum-welcome-wrapper">
 			<div>

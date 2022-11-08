@@ -231,7 +231,7 @@ class PUM_Extension_License {
 		];
 
 		// Call the API
-		$response = wp_remote_post(
+		$response = wp_remote_get(
 			$this->api_url,
 			[
 				'timeout'   => 15,
@@ -287,7 +287,7 @@ class PUM_Extension_License {
 			];
 
 			// Call the API
-			$response = wp_remote_post(
+			$response = wp_remote_get(
 				$this->api_url,
 				[
 					'timeout'   => 15,
@@ -336,7 +336,7 @@ class PUM_Extension_License {
 		];
 
 		// Call the API
-		$response = wp_remote_post(
+		$response = wp_remote_get(
 			$this->api_url,
 			[
 				'timeout'   => 15,

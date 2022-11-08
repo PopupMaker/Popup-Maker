@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v1.16.13 - 11/08/2022
+
+* Improvement: Removed some complex functionalities that were no longer needed but causing intermittent issues.
+* Improvement: Replace wp_remote_post with wp_remote_get for extension API calls to allow caching.
+* Improvement: Fixed low quality images on welcome screen.
+
 ## v1.16.12 - 10/26/2022
 
 * Improvement: Optimize dashboard support page to load much quicker.
