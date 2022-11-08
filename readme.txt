@@ -7,7 +7,7 @@ Tags:  marketing, ecommerce, popup, popups, optin, conversion, promotion, pop-up
 Requires at least: 4.9
 Tested up to: 6.1
 Requires PHP: 5.6
-Stable tag: 1.16.12
+Stable tag: 1.16.13
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -180,6 +180,12 @@ There are several common causes for this, check [this guide for help](https://do
 == Changelog ==
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
+
+= v1.16.13 - 11/08/2022 =
+
+* Improvement: Removed some complex functionalities that were no longer needed but causing intermittent issues.
+* Improvement: Replace wp_remote_post with wp_remote_get for extension API calls to allow caching.
+* Improvement: Fixed low quality images on welcome screen.
 
 = v1.16.12 - 10/26/2022 =
 
