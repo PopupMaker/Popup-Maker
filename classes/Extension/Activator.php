@@ -22,31 +22,43 @@ class PUM_Extension_Activator {
 	public $extension_class_name;
 
 	/**
+	 * $extension_name variable.
+	 *
 	 * @var string
 	 */
 	public $extension_name;
 
 	/**
+	 * $extension_slug variable.
+	 *
 	 * @var string
 	 */
 	public $extension_slug;
 
 	/**
+	 * $extension_id variable.
+	 *
 	 * @var int
 	 */
 	public $extension_id;
 
 	/**
+	 * $extension_version variable.
+	 *
 	 * @var string
 	 */
 	public $extension_version;
 
 	/**
+	 * $extension_wp_repo variable.
+	 *
 	 * @var bool|string
 	 */
 	public $extension_wp_repo = false;
 
 	/**
+	 * $extension_file variable.
+	 *
 	 * @var string
 	 */
 	public $extension_file;
@@ -54,6 +66,8 @@ class PUM_Extension_Activator {
 	public $required_core_version;
 
 	/**
+	 * $core_installed variable.
+	 *
 	 * @var bool
 	 */
 	public $core_installed = false;
@@ -61,6 +75,8 @@ class PUM_Extension_Activator {
 	public $core_path;
 
 	/**
+	 * Retrieves static property value.
+	 *
 	 * @param $class_name
 	 * @param $prop_name
 	 *
@@ -192,6 +208,8 @@ class PUM_Extension_Activator {
 	}
 
 	/**
+	 * Returns enabled extensions.
+	 *
 	 * @param array $enabled_extensions
 	 *
 	 * @return array

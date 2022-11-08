@@ -17,6 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Admin_Settings {
 
 	/**
+	 * $notices variable.
+	 *
 	 * @var array
 	 */
 	public static $notices = [];
@@ -195,6 +197,8 @@ class PUM_Admin_Settings {
 	}
 
 	/**
+	 * Gets specified item.
+	 *
 	 * @param $id  Specified field.
 	 *
 	 * @return bool

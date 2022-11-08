@@ -277,6 +277,8 @@ class PUM_Admin_Popups {
 	}
 
 	/**
+	 * Save popup for post.
+	 *
 	 * @param $post_id
 	 * @param $post
 	 */
@@ -986,6 +988,8 @@ class PUM_Admin_Popups {
 	}
 
 	/**
+	 * Function defaults.
+	 *
 	 * @return array
 	 */
 	public static function defaults() {
