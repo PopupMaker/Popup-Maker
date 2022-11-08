@@ -82,6 +82,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	public $display;
 
 	/**
+	 * $close variable
+	 *
 	 * @var array
 	 * @deprecated 1.7.0
 	 */
@@ -112,6 +114,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	public $mock = false;
 
 	/**
+	 * Function get_meta.
+	 *
 	 * @param      $key
 	 * @param bool $single
 	 *
@@ -1120,6 +1124,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Sets event defaults.
+	 *
 	 * @param $event
 	 */
 	public function set_event_defaults( $event ) {
@@ -1185,6 +1191,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Function compare_resets.
+	 *
 	 * @param $a
 	 * @param $b
 	 *
@@ -1195,6 +1203,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Setup post for popup model.
+	 *
 	 * @param $post WP_Post
 	 */
 	public function setup( $post ) {

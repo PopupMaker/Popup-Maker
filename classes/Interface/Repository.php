@@ -21,6 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 interface PUM_Interface_Repository {
 
 	/**
+	 * Get specified item.
+	 *
 	 * @param int $id
 	 *
 	 * @return WP_Post|PUM_Abstract_Model_Post
@@ -28,6 +30,8 @@ interface PUM_Interface_Repository {
 	public function get_item( $id );
 
 	/**
+	 * Function has_item.
+	 *
 	 * @param int $id
 	 *
 	 * @return bool
@@ -35,6 +39,8 @@ interface PUM_Interface_Repository {
 	public function has_item( $id );
 
 	/**
+	 * Gets items.
+	 *
 	 * @param array $args
 	 *
 	 * @return WP_Post[||PUM_Abstract_Model_Post[]
@@ -42,6 +48,8 @@ interface PUM_Interface_Repository {
 	public function get_items( $args = [] );
 
 	/**
+	 * Creates item with data.
+	 *
 	 * @param array $data
 	 *
 	 * @return WP_Post|PUM_Abstract_Model_Post
@@ -49,6 +57,8 @@ interface PUM_Interface_Repository {
 	public function create_item( $data );
 
 	/**
+	 * Updates item.
+	 *
 	 * @param int   $id
 	 * @param array $data
 	 *
@@ -57,6 +67,8 @@ interface PUM_Interface_Repository {
 	public function update_item( $id, $data );
 
 	/**
+	 * Delete specified item.
+	 *
 	 * @param int $id
 	 *
 	 * @return bool

@@ -32,7 +32,11 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 */
 	public $settings;
 
-	/** @var bool */
+	/**
+	 * $doing_passive_migration variable.
+	 * 
+	 * @var bool
+	 */
 	public $doing_passive_migration = false;
 
 	/**
