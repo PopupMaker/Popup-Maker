@@ -21,7 +21,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	/**
 	 * $required_post_type variable
 	 *
-	 * @var string 
+	 * @var string
 	 */
 	protected $required_post_type = 'popup_theme';
 
