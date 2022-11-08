@@ -589,24 +589,24 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 				'pum-overlay',
 				'pum-theme-' . $this->get_theme_id(),
 				'pum-theme-' . $this->get_theme_slug(),
-				'popmake-overlay', // Backward Compatibility
+				'popmake-overlay', // Backward Compatibility.
 			],
 			'container' => [
 				'pum-container',
-				'popmake', // Backward Compatibility
-				'theme-' . $this->get_theme_id(), // Backward Compatibility
+				'popmake', // Backward Compatibility.
+				'theme-' . $this->get_theme_id(), // Backward Compatibility.
 			],
 			'title'     => [
 				'pum-title',
-				'popmake-title', // Backward Compatibility
+				'popmake-title', // Backward Compatibility.
 			],
 			'content'   => [
 				'pum-content',
-				'popmake-content', // Backward Compatibility
+				'popmake-content', // Backward Compatibility.
 			],
 			'close'     => [
 				'pum-close',
-				'popmake-close', // Backward Compatibility
+				'popmake-close', // Backward Compatibility.
 			],
 		];
 
@@ -618,12 +618,12 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 				[
 					'pum-responsive',
 					'pum-responsive-' . $size,
-					'responsive', // Backward Compatibility
-					'size-' . $size, // Backward Compatibility
+					'responsive', // Backward Compatibility.
+					'size-' . $size, // Backward Compatibility.
 				]
 			);
 		} elseif ( 'custom' === $size ) {
-			$classes['container'][] = 'size-custom'; // Backward Compatibility
+			$classes['container'][] = 'size-custom'; // Backward Compatibility.
 		}
 
 		if ( ! $this->get_setting( 'custom_height_auto' ) && $this->get_setting( 'scrollable_content' ) ) {
@@ -631,7 +631,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 				$classes['container'],
 				[
 					'pum-scrollable',
-					'scrollable', // Backward Compatibility
+					'scrollable', // Backward Compatibility.
 				]
 			);
 		}
@@ -952,7 +952,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 
 		if ( ! $this->ID ) {
 			return false;
-			// Published/private
+			// Published/private.
 		}
 
 		// If popup is not enabled, this popup is not loadable.
@@ -1085,7 +1085,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 
 		$keys = PUM_Analytics::event_keys( $event );
 
-		// Set the current count
+		// Set the current count.
 		$current = $this->get_event_count( $event );
 		if ( ! $current ) {
 			$current = 0;
