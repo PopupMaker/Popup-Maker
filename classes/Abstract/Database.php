@@ -95,6 +95,9 @@ abstract class PUM_Abstract_Database {
 		return (float) $db_version_old_key;
 	}
 
+	/**
+	 * Update database version for Abstract.
+	 */
 	public function update_db_version() {
 		// Get list of all current db table versions.
 		$db_versions = get_option( 'pum_db_versions', [] );
