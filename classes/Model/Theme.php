@@ -364,6 +364,8 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Remapped meta settings keys.
+	 *
 	 * @param $group
 	 *
 	 * @return array|mixed
@@ -451,6 +453,8 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Setup popup.
+	 *
 	 * @param WP_Post $post
 	 */
 	public function setup( $post ) {
@@ -487,7 +491,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 
 		if ( $this->data_version < $this->model_version && pum_passive_theme_upgrades_enabled() ) {
 			/**
-			 * Process passive settings migration as each popup is loaded. The will only run each migration routine once for each popup.
+			 * Process passive settings migration as each popup is loaded. Then it will only run each migration routine once for each popup.
 			 */
 			$this->passive_migration();
 		}
