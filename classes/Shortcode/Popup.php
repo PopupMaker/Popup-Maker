@@ -328,7 +328,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 		);
 
 		// We need to fake a popup using the PUM_Popup data model.
-		$post_id              = rand( - 99999, - 1 ); // negative ID, to avoid clash with a valid post
+		$post_id              = rand( - 99999, - 1 ); // negative ID, to avoid clash with a valid post.
 		$post                 = new stdClass();
 		$post->ID             = $post_id;
 		$post->post_author    = 1;
@@ -339,21 +339,21 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 		$post->post_status    = 'publish';
 		$post->comment_status = 'closed';
 		$post->ping_status    = 'closed';
-		$post->post_name      = $atts['id']; // append random number to avoid clash
+		$post->post_name      = $atts['id']; // append random number to avoid clash.
 		$post->post_type      = 'popup';
 		$post->filter         = 'raw'; // important!
 		$post->data_version   = 3;
 		$post->mock           = true;
 
-		// Convert to WP_Post object
+		// Convert to WP_Post object.
 		$wp_post = new WP_Post( $post );
 
-		// Add the fake post to the cache
+		// Add the fake post to the cache.
 		wp_cache_add( $post_id, $wp_post, 'posts' );
 
 		$popup = new PUM_Model_Popup( $wp_post );
 
-		// Get Theme ID
+		// Get Theme ID.
 		if ( ! $atts['theme_id'] ) {
 			$atts['theme_id'] = $atts['theme'] ? $atts['theme'] : pum_get_default_theme_id();
 		}
