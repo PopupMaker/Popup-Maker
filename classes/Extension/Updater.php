@@ -488,6 +488,9 @@ class PUM_Extension_Updater {
 		return $request;
 	}
 
+	/**
+	 * Function show_changelog
+	 */
 	public function show_changelog() {
 
 		global $edd_plugin_data;
