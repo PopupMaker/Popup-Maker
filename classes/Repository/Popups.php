@@ -17,11 +17,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Repository_Popups extends PUM_Abstract_Repository_Posts {
 
 	/**
+	 * Protected variable.
+	 *
 	 * @var string
 	 */
 	protected $model = 'PUM_Model_Popup';
 
 	/**
+	 * Returns popups post type.
+	 *
 	 * @return string
 	 */
 	protected function get_post_type() {
@@ -90,6 +94,8 @@ class PUM_Repository_Popups extends PUM_Abstract_Repository_Posts {
 	}
 
 	/**
+	 * Get item by id.
+	 *
 	 * @param int $id
 	 *
 	 * @return PUM_Model_Popup|WP_Post
@@ -100,6 +106,8 @@ class PUM_Repository_Popups extends PUM_Abstract_Repository_Posts {
 	}
 
 	/**
+	 * Get items depending on the arguments.
+	 *
 	 * @param array $args
 	 *
 	 * @return PUM_Model_Popup[]|WP_Post[]
@@ -109,6 +117,8 @@ class PUM_Repository_Popups extends PUM_Abstract_Repository_Posts {
 	}
 
 	/**
+	 * Create item.
+	 *
 	 * @param array $data
 	 *
 	 * @return PUM_Model_Popup|WP_Post
@@ -119,6 +129,8 @@ class PUM_Repository_Popups extends PUM_Abstract_Repository_Posts {
 	}
 
 	/**
+	 * Updates data for specified item.
+	 *
 	 * @param int   $id
 	 * @param array $data
 	 *

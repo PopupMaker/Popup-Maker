@@ -51,6 +51,8 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 	}
 
 	/**
+	 * Shortcode tabs.
+	 *
 	 * @return array
 	 */
 	public function tabs() {
@@ -64,6 +66,8 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 	}
 
 	/**
+	 * Shortcode subtabs.
+	 *
 	 * @return array
 	 */
 	public function subtabs() {
