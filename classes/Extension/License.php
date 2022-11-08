@@ -77,7 +77,7 @@ class PUM_Extension_License {
 			}
 		}
 
-		// Setup hooks
+		// Setup hooks.
 		$this->includes();
 		$this->hooks();
 	}
@@ -99,33 +99,33 @@ class PUM_Extension_License {
 	 */
 	private function hooks() {
 
-		// Register settings
+		// Register settings.
 		add_filter( 'pum_settings_fields', [ $this, 'settings' ], 1 );
 
-		// Activate license key on settings save
+		// Activate license key on settings save.
 		add_action( 'admin_init', [ $this, 'activate_license' ] );
 
-		// Deactivate license key
+		// Deactivate license key.
 		add_action( 'admin_init', [ $this, 'deactivate_license' ] );
 
-		// Check that license is valid once per week
+		// Check that license is valid once per week.
 		add_action( 'popmake_weekly_scheduled_events', [ $this, 'weekly_license_check' ] );
 
 		// For testing license notices, uncomment this line to force checks on every page load
 		// add_action( 'admin_init', array( $this, 'weekly_license_check' ) );
 
-		// Updater
+		// Updater.
 		add_action( 'admin_init', [ $this, 'auto_updater' ], 0 );
 
-		// Display notices to admins
+		// Display notices to admins.
 		// add_action( 'admin_notices', array( $this, 'notices' ) );
 
-		// Display notices to admins
+		// Display notices to admins.
 		add_filter( 'pum_alert_list', [ $this, 'alerts' ] );
 
 		add_action( 'in_plugin_update_message-' . plugin_basename( $this->file ), [ $this, 'plugin_row_license_missing' ], 10, 2 );
 
-		// Register plugins for beta support
+		// Register plugins for beta support.
 		add_filter( 'pum_beta_enabled_extensions', [ $this, 'register_beta_support' ] );
 	}
 
@@ -149,7 +149,7 @@ class PUM_Extension_License {
 			$args['item_name'] = $this->item_name;
 		}
 
-		// Setup the updater
+		// Setup the updater.
 		$popmake_updater = new PUM_Extension_Updater( $this->api_url, $this->file, $args );
 	}
 
@@ -203,7 +203,7 @@ class PUM_Extension_License {
 			return;
 		}
 
-		// Don't activate a key when deactivating a different key
+		// Don't activate a key when deactivating a different key.
 		if ( ! empty( $_POST['pum_license_deactivate'] ) ) {
 			return;
 		}
@@ -224,7 +224,7 @@ class PUM_Extension_License {
 			return;
 		}
 
-		// Data to send to the API
+		// Data to send to the API.
 		$api_params = [
 			'edd_action'  => 'activate_license',
 			'license'     => $license,
@@ -234,7 +234,7 @@ class PUM_Extension_License {
 			'environment' => function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production',
 		];
 
-		// Call the API
+		// Call the API.
 		$response = wp_remote_post(
 			$this->api_url,
 			[
@@ -244,15 +244,15 @@ class PUM_Extension_License {
 			]
 		);
 
-		// Make sure there are no errors
+		// Make sure there are no errors.
 		if ( is_wp_error( $response ) ) {
 			return;
 		}
 
-		// Tell WordPress to look for updates
+		// Tell WordPress to look for updates.
 		set_site_transient( 'update_plugins', null );
 
-		// Decode license data
+		// Decode license data.
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
 		update_option( $this->item_shortname . '_license_active', $license_data );
@@ -279,10 +279,10 @@ class PUM_Extension_License {
 			return;
 		}
 
-		// Run on deactivate button press
+		// Run on deactivate button press.
 		if ( isset( $_POST['pum_license_deactivate'][ $this->item_shortname . '_license_key' ] ) ) {
 
-			// Data to send to the API
+			// Data to send to the API.
 			$api_params = [
 				'edd_action' => 'deactivate_license',
 				'license'    => $this->license,
@@ -290,7 +290,7 @@ class PUM_Extension_License {
 				'url'        => home_url(),
 			];
 
-			// Call the API
+			// Call the API.
 			$response = wp_remote_post(
 				$this->api_url,
 				[
@@ -300,12 +300,12 @@ class PUM_Extension_License {
 				]
 			);
 
-			// Make sure there are no errors
+			// Make sure there are no errors.
 			if ( is_wp_error( $response ) ) {
 				return;
 			}
 
-			// Decode the license data
+			// Decode the license data.
 			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
 			delete_option( $this->item_shortname . '_license_active' );
@@ -324,14 +324,14 @@ class PUM_Extension_License {
 	public function weekly_license_check() {
 
 		if ( ! empty( $_POST['popmake_settings'] ) ) {
-			return; // Don't fire when saving settings
+			return; // Don't fire when saving settings.
 		}
 
 		if ( empty( $this->license ) ) {
 			return;
 		}
 
-		// data to send in our API request
+		// data to send in our API request.
 		$api_params = [
 			'edd_action' => 'check_license',
 			'license'    => $this->license,
@@ -339,7 +339,7 @@ class PUM_Extension_License {
 			'url'        => home_url(),
 		];
 
-		// Call the API
+		// Call the API.
 		$response = wp_remote_post(
 			$this->api_url,
 			[
@@ -349,7 +349,7 @@ class PUM_Extension_License {
 			]
 		);
 
-		// make sure the response came back okay
+		// make sure the response came back okay.
 		if ( is_wp_error( $response ) ) {
 			return;
 		}
