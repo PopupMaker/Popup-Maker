@@ -57,6 +57,9 @@ class PUM_Admin_Assets {
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'fix_broken_extension_scripts' ], 100 );
 	}
 
+	/**
+	 * Fix broken extension scripts for Admin Assets.
+	 */
 	public static function fix_broken_extension_scripts() {
 
 		if ( wp_script_is( 'pum-mci-admin' ) && class_exists( 'PUM_MCI' ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ) && ! pum_is_settings_page() ) {
@@ -140,7 +143,7 @@ class PUM_Admin_Assets {
 	}
 
 	/**
-	 *
+	 * Templates for Admin Assets.
 	 */
 	public static function maybe_localize_and_templates() {
 		if ( wp_script_is( 'pum-admin-general' ) || wp_script_is( 'popup-maker-admin' ) ) {
@@ -206,6 +209,8 @@ class PUM_Admin_Assets {
 	}
 
 	/**
+	 * Load admin scripts for Admin Assets.
+	 *
 	 * @return bool
 	 */
 	public static function should_load() {
