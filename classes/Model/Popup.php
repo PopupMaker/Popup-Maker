@@ -18,13 +18,23 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 
-	/** @var string */
+	/*
+	 * $required_post_type variable
+	 *
+	 * @var string
+	 */
 	protected $required_post_type = 'popup';
 
-	/** @var array */
+	/**
+	 * $conditions_filtered variable
+	 *
+	 * @var array
+	 */
 	public $conditions_filtered = [];
 
 	/**
+	 * $content variable
+	 *
 	 * @var string
 	 *
 	 * @deprecated  1.8.0 Was used in PUM ALM extension, needs time to get those changes published.
@@ -32,7 +42,11 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 */
 	public $content;
 
-	/** @var bool */
+	/**
+	 * $doing_passive_migration variable
+	 *
+	 *  @var bool
+	 */
 	public $doing_passive_migration = false;
 
 	/**
@@ -60,6 +74,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	// TODO Remove these once no longer needed.
 
 	/**
+	 * $display variable
+	 *
 	 * @var array
 	 * @deprecated 1.7.0
 	 */
@@ -172,6 +188,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Update setting once merged.
+	 *
 	 * @param string $key
 	 * @param mixed  $value
 	 *
@@ -185,6 +203,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Update settings.
+	 *
 	 * @param array $new_settings
 	 * @param bool  $merge
 	 *
@@ -297,6 +317,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Gets cookies.
+	 *
 	 * @return array
 	 */
 	public function get_cookies() {
@@ -304,6 +326,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Checks if model popup has cookies.
+	 *
 	 * @param $event
 	 *
 	 * @return bool
@@ -319,6 +343,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Gets popup triggers.
+	 *
 	 * @return array
 	 */
 	public function get_triggers() {
@@ -349,6 +375,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Checks if model popup has triggers.
+	 *
 	 * @param $type
 	 *
 	 * @return bool
