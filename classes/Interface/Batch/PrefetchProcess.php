@@ -24,7 +24,7 @@ interface PUM_Interface_Batch_PrefetchProcess extends PUM_Interface_Batch_Proces
 	 *
 	 * This is the point where any relevant data should be initialized for use by the processor methods.
 	 *
-	 * @param null|mixed $data
+	 * @param null|mixed $data  Data to process.
 	 *
 	 * @return void
 	 */

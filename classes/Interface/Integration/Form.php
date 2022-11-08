@@ -14,7 +14,7 @@ interface PUM_Interface_Integration_Form extends PUM_Interface_Integration {
 	public function get_forms();
 
 	/**
-	 * @param string $id
+	 * @param string $id  Form id.
 	 *
 	 * @return mixed
 	 */
@@ -26,14 +26,14 @@ interface PUM_Interface_Integration_Form extends PUM_Interface_Integration {
 	public function get_form_selectlist();
 
 	/**
-	 * @param array $js
+	 * @param array $js  Array of custom js.
 	 *
 	 * @return array
 	 */
 	public function custom_scripts( $js = [] );
 
 	/**
-	 * @param array $css
+	 * @param array $css  Array of custom styles.
 	 *
 	 * @return array
 	 */
