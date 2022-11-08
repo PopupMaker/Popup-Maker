@@ -449,7 +449,7 @@ class PUM_Extension_Updater {
 			'beta'       => ! empty( $data['beta'] ),
 		];
 
-		$request = wp_remote_post(
+		$request = wp_remote_get(
 			$this->api_url,
 			[
 				'timeout'   => 15,
@@ -523,7 +523,7 @@ class PUM_Extension_Updater {
 			];
 
 			$verify_ssl = $this->verify_ssl();
-			$request    = wp_remote_post(
+			$request    = wp_remote_get(
 				$this->api_url,
 				[
 					'timeout'   => 15,
