@@ -112,6 +112,8 @@ abstract class PUM_Abstract_Database {
 	abstract public function create_table();
 
 	/**
+	 * Function instance for Database Abstract.
+	 *
 	 * @return static
 	 * @throws \Exception
 	 */
@@ -139,6 +141,8 @@ abstract class PUM_Abstract_Database {
 	}
 
 	/**
+	 * Prepare result for Database Abstract.
+	 *
 	 * @param object|array $result  Array being returned.
 	 *
 	 * @return object|array
@@ -167,6 +171,8 @@ abstract class PUM_Abstract_Database {
 	}
 
 	/**
+	 * Prepare results for Database Abstract.
+	 *
 	 * @param array|object[] $results  Array being returned.
 	 *
 	 * @return mixed
@@ -181,6 +187,8 @@ abstract class PUM_Abstract_Database {
 	}
 
 	/**
+	 * Database Abstract table name.
+	 *
 	 * @return string
 	 */
 	public function table_name() {
