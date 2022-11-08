@@ -79,6 +79,8 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Update theme setting.
+	 *
 	 * @param string $key
 	 * @param mixed  $value
 	 *
@@ -93,6 +95,8 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Update theme settings.
+	 *
 	 * @param array $merge_settings
 	 *
 	 * @return bool|int
@@ -145,6 +149,8 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Gets styles.
+	 *
 	 * @return array
 	 */
 	public function get_generated_styles() {
@@ -280,6 +286,9 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		return (array) apply_filters( 'pum_theme_get_generated_styles', (array) $styles, $this->ID );
 	}
 
+	/**
+	 * Deprecated Styles.
+	 */
 	public function get_deprecated_settings() {
 		return [
 			'overlay'   => $this->_dep_get_settings_group( 'overlay' ),

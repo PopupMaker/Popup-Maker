@@ -468,6 +468,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Function remapped_meta_settings_keys.
+	 *
 	 * @param $group
 	 *
 	 * @return array|mixed
@@ -821,6 +823,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Checks if there are conditions to exclude.
+	 *
 	 * @param       $condition
 	 * @param array     $filters
 	 *
@@ -1247,6 +1251,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Saves model popup.
+	 *
 	 * @deprecated 1.7.0 Still used in several extension migration routines, so needs to stay for now.
 	 */
 	public function save() {
@@ -1258,6 +1264,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Gets specified popup.
+	 *
 	 * @deprecated 1.8.0 Only here to prevent possible errors.
 	 *
 	 * @param      $id
