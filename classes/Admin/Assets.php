@@ -14,21 +14,29 @@
 class PUM_Admin_Assets {
 
 	/**
+	 * $suffix variable for Admin Assets.
+	 *
 	 * @var
 	 */
 	public static $suffix;
 
 	/**
+	 * $js_url variable.
+	 *
 	 * @var
 	 */
 	public static $js_url;
 
 	/**
+	 * $css_url variable
+	 *
 	 * @var
 	 */
 	public static $css_url;
 
 	/**
+	 * $debug variable
+	 *
 	 * @var bool Use minified libraries if SCRIPT_DEBUG is turned off.
 	 */
 	public static $debug;

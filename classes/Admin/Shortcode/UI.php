@@ -139,6 +139,8 @@ class PUM_Admin_Shortcode_UI {
 			$post_types = apply_filters( 'pum_shortcode_post_types', $shortcode->post_types(), $shortcode );
 
 			/**
+			 * Checks if shortcode is in array.
+			 *
 			 * @var $shortcode PUM_Shortcode
 			 */
 			if ( ! in_array( '*', $post_types, true ) && ! in_array( $type, $post_types, true ) ) {

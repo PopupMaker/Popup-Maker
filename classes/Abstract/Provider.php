@@ -220,7 +220,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	}
 
 	/**
-	 *
+	 * Shortcode tab id for Provider Abstract.
 	 *
 	 * @return string $tab_id;
 	 */
