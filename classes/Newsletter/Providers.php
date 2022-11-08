@@ -45,6 +45,9 @@ class PUM_Newsletter_Providers {
 		return self::$instance;
 	}
 
+	/**
+	 * Adds provider.
+	 */
 	public function add_provider( PUM_Abstract_Provider $provider ) {
 		$this->providers[ $provider->id ] = $provider;
 	}
@@ -58,6 +61,9 @@ class PUM_Newsletter_Providers {
 		return $this->providers;
 	}
 
+	/**
+	 * Select list of Newsletter Providers.
+	 */
 	public static function selectlist() {
 		$selectlist = [];
 
