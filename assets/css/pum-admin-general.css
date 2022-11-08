@@ -2287,6 +2287,7 @@ Styles for welcome screen
 .pum-welcome-wrapper .pum-welcome-signature img {
   margin-right: 10px;
   width: 60px;
+  border-radius: 100px;
 }
 
 .pum-welcome-wrapper .pum-welcome-cta {
