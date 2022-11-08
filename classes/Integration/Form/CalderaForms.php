@@ -9,15 +9,22 @@
 class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 
 	/**
+	 * $key variable
+	 *
 	 * @var string
 	 */
 	public $key = 'calderaforms';
 
+	/**
+	 * Constructor - adds action for when caldera form is successfully submitted.
+	 */
 	public function __construct() {
 		add_action( 'caldera_forms_submit_complete', [ $this, 'on_success' ] );
 	}
 
 	/**
+	 * Label function.
+	 *
 	 * @return string
 	 */
 	public function label() {
@@ -25,6 +32,8 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Function enabled() for Caldera Forms.
+	 *
 	 * @return bool
 	 */
 	public function enabled() {
@@ -32,6 +41,8 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Gets forms from Caldera Forms.
+	 *
 	 * @return array
 	 */
 	public function get_forms() {
@@ -39,6 +50,8 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Gets specified form.
+	 *
 	 * @param string $id
 	 *
 	 * @return mixed
@@ -48,6 +61,8 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Gets form selectlist.
+	 *
 	 * @return array
 	 */
 	public function get_form_selectlist() {
@@ -63,6 +78,8 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Form was submitted successfully.
+	 *
 	 * @param array $form
 	 */
 	public function on_success( $form ) {
@@ -82,6 +99,8 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Custom scripts for Caldera Forms.
+	 *
 	 * @param array $js
 	 *
 	 * @return array
@@ -91,6 +110,8 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Custom styles.
+	 *
 	 * @param array $css
 	 *
 	 * @return array

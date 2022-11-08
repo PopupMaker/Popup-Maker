@@ -8,16 +8,22 @@
 class PUM_Integration_Builder_VisualComposer extends PUM_Abstract_Integration {
 
 	/**
+	 * $key variable
+	 *
 	 * @var string
 	 */
 	public $key = 'visualcomposer';
 
 	/**
+	 * $type variable
+	 *
 	 * @var string
 	 */
 	public $type = 'builder';
 
 	/**
+	 * Label function.
+	 *
 	 * @return string
 	 */
 	public function label() {
@@ -25,6 +31,8 @@ class PUM_Integration_Builder_VisualComposer extends PUM_Abstract_Integration {
 	}
 
 	/**
+	 * Function enabled() for Visual Composer.
+	 *
 	 * @return bool
 	 */
 	public function enabled() {
