@@ -21,6 +21,8 @@ class PUM_Admin_Pages {
 
 
 	/**
+	 * $pages variable.
+	 *
 	 * @var array
 	 */
 	public static $pages = [];

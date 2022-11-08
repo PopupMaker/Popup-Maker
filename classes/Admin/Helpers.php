@@ -18,6 +18,8 @@ class PUM_Admin_Helpers {
 
 
 	/**
+	 * Dropdown options for Admin Helpers.
+	 *
 	 * @param array $args  Array of args.
 	 *
 	 * @return array
@@ -64,6 +66,8 @@ class PUM_Admin_Helpers {
 
 
 	/**
+	 * Function move_item.
+	 *
 	 * @deprecated 1.7.20
 	 * @see        PUM_Helper_Array::move_item
 	 *
@@ -79,6 +83,8 @@ class PUM_Admin_Helpers {
 	}
 
 	/**
+	 * Remove keys for Admin Helpers.
+	 *
 	 * @deprecated 1.7.20
 	 * @see        PUM_Helper_Array::remove_keys_starting_with
 	 *
@@ -92,6 +98,8 @@ class PUM_Admin_Helpers {
 	}
 
 	/**
+	 * Function sort_by_sort.
+	 *
 	 * @deprecated 1.7.20
 	 * @see        PUM_Helper_Array::sort_by_sort
 	 *
@@ -105,6 +113,8 @@ class PUM_Admin_Helpers {
 	}
 
 	/**
+	 * Gets field results.
+	 *
 	 * @param array $fields  Array of fields.
 	 *
 	 * @return array
@@ -125,6 +135,8 @@ class PUM_Admin_Helpers {
 	}
 
 	/**
+	 * Replaces key.
+	 *
 	 * @deprecated 1.7.20
 	 * @see        PUM_Utils_Array::from_object instead.
 	 *
@@ -140,6 +152,8 @@ class PUM_Admin_Helpers {
 	}
 
 	/**
+	 * Flatten fields.
+	 *
 	 * @param $tabs  Value to be converted.
 	 *
 	 * @return array
@@ -172,6 +186,8 @@ class PUM_Admin_Helpers {
 	}
 
 	/**
+	 * Function parse_field.
+	 *
 	 * @param $field
 	 *
 	 * @return array
@@ -230,6 +246,8 @@ class PUM_Admin_Helpers {
 	}
 
 	/**
+	 * Function parse_tab_fields.
+	 *
 	 * @param       $fields
 	 * @param array  $args  Array of arguments.
 	 *
@@ -269,6 +287,8 @@ class PUM_Admin_Helpers {
 	}
 
 	/**
+	 * Parses the fields.
+	 *
 	 * @param array  $fields  Array of fields.
 	 * @param string $name  Name to retrieved.
 	 *
@@ -421,6 +441,8 @@ class PUM_Admin_Helpers {
 	}
 
 	/**
+	 * Converts object to array.
+	 *
 	 * @deprecated 1.7.20
 	 * @see        PUM_Utils_Array::from_object instead.
 	 *

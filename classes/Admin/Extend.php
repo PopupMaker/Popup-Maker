@@ -184,6 +184,8 @@ class PUM_Admin_Extend {
 	}
 
 	/**
+	 * Extensions with local image for Admin Extend.
+	 *
 	 * @return array
 	 */
 	public static function extensions_with_local_image() {
