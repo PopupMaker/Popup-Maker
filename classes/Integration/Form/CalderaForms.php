@@ -52,7 +52,7 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	/**
 	 * Gets specified form.
 	 *
-	 * @param string $id
+	 * @param string $id  Form id.
 	 *
 	 * @return mixed
 	 */
@@ -80,7 +80,7 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	/**
 	 * Form was submitted successfully.
 	 *
-	 * @param array $form
+	 * @param array $form  Specified form.
 	 */
 	public function on_success( $form ) {
 		if ( ! self::should_process_submission() ) {
@@ -101,7 +101,7 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	/**
 	 * Custom scripts for Caldera Forms.
 	 *
-	 * @param array $js
+	 * @param array $js  Array of custom js.
 	 *
 	 * @return array
 	 */
@@ -112,7 +112,7 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	/**
 	 * Custom styles.
 	 *
-	 * @param array $css
+	 * @param array $css  Array of css styles.
 	 *
 	 * @return array
 	 */
