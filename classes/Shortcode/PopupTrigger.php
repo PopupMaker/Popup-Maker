@@ -213,6 +213,9 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 		return $atts;
 	}
 
+	/**
+	 * Shortcode Popup trigger template.
+	 */
 	public function template() {
 		global $allowedtags;
 		?>
