@@ -19,15 +19,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 
 	/**
+	 * $version variable
+	 *
 	 * @var int
 	 */
 	public $version = 2;
 
 	/**
+	 * $has_content variable
+	 *
 	 * @var bool
 	 */
 	public $has_content = true;
 
+	/**
+	 * $ajax_rendering variable
+	 *
+	 * @var bool
+	 */
 	public $ajax_rendering = true;
 
 	/**
@@ -38,6 +47,8 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	}
 
 	/**
+	 * Popup trigger shortcode label
+	 *
 	 * @return string
 	 */
 	public function label() {
@@ -45,6 +56,8 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	}
 
 	/**
+	 * Retrieves PopupTrigger shortcode description.
+	 *
 	 * @return string
 	 */
 	public function description() {
@@ -52,6 +65,8 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	}
 
 	/**
+	 * Shortcode Popup trigger inner content labels
+	 *
 	 * @return array
 	 */
 	public function inner_content_labels() {
@@ -62,6 +77,8 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	}
 
 	/**
+	 * Popup trigger post types for shortcode.
+	 *
 	 * @return array
 	 */
 	public function post_types() {
@@ -69,6 +86,8 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	}
 
 	/**
+	 * Shortcode Popup trigger fields.
+	 *
 	 * @return array
 	 */
 	public function fields() {
