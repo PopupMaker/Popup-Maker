@@ -9,46 +9,64 @@
 class PUM_Site_Assets {
 
 	/**
+	 * Site assets $cache-url variable
+	 *
 	 * @var
 	 */
 	public static $cache_url;
 
 	/**
+	 * $suffix variable
+	 *
 	 * @var
 	 */
 	public static $suffix;
 
 	/**
+	 * Site assets $js_url variable
+	 *
 	 * @var
 	 */
 	public static $js_url;
 
 	/**
+	 * Site assets $css_url variable
+	 *
 	 * @var
 	 */
 	public static $css_url;
 
 	/**
+	 * Array of enqueued scripts for site assets
+	 *
 	 * @var array
 	 */
 	public static $enqueued_scripts = [];
 
 	/**
+	 * Array of enqueued styles for site assets
+	 *
 	 * @var array
 	 */
 	public static $enqueued_styles = [];
 
 	/**
+	 * Register scripts
+	 *
 	 * @var bool
 	 */
 	public static $scripts_registered = false;
 
 	/**
+	 * Register styles
+	 *
 	 * @var bool
 	 */
 	public static $styles_registered = false;
 
 	/**
+	 * $debug variable
+	 *
 	 * @var bool Use minified libraries if SCRIPT_DEBUG is turned off.
 	 */
 	public static $debug;
@@ -144,6 +162,8 @@ class PUM_Site_Assets {
 	}
 
 	/**
+	 * Enqueue popup assets
+	 *
 	 * @param int $popup_id
 	 */
 	public static function enqueue_popup_assets( $popup_id = 0 ) {

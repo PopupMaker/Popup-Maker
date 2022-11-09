@@ -52,6 +52,8 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
+	 * Translation request utility function
+	 *
 	 * @param array $alerts
 	 *
 	 * @return array
@@ -219,6 +221,8 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
+	 * New alters function
+	 *
 	 * @param array $alerts
 	 *
 	 * @return array
@@ -259,6 +263,8 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
+	 * Integration alerts function utility
+	 *
 	 * @param array $alerts
 	 *
 	 * @return array
@@ -314,6 +320,8 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
+	 * should_show_alerts function
+	 *
 	 * @return bool
 	 */
 	public static function should_show_alerts() {
@@ -433,6 +441,8 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
+	 * Gets global alerts
+	 *
 	 * @return array
 	 */
 	public static function get_global_alerts() {
@@ -450,6 +460,8 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
+	 * Gets alerts from alerts list
+	 *
 	 * @return array
 	 */
 	public static function get_alerts() {
@@ -574,6 +586,8 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
+	 * Checks if there's dismissed alerts
+	 *
 	 * @param string $code
 	 *
 	 * @return bool

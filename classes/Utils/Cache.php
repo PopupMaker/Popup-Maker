@@ -18,11 +18,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Utils_Cache {
 
 	/**
+	 * Sets prefix
+	 *
 	 * @var string
 	 */
 	static $prefix = 'pum';
 
 	/**
+	 * Checks if enabled
+	 *
 	 * @return bool
 	 */
 	public static function enabled() {
@@ -41,6 +45,8 @@ class PUM_Utils_Cache {
 	}
 
 	/**
+	 * Gets cache timeout
+	 *
 	 * @param        $key
 	 * @param string $group
 	 *
@@ -51,6 +57,8 @@ class PUM_Utils_Cache {
 	}
 
 	/**
+	 * Add cache function utility
+	 *
 	 * @param        $key
 	 * @param        $data
 	 * @param string $group
@@ -66,6 +74,8 @@ class PUM_Utils_Cache {
 	}
 
 	/**
+	 * Replaces cache
+	 *
 	 * @param        $key
 	 * @param        $data
 	 * @param string $group
@@ -81,6 +91,8 @@ class PUM_Utils_Cache {
 	}
 
 	/**
+	 * Sets cache
+	 *
 	 * @param        $key
 	 * @param        $data
 	 * @param string $group
@@ -96,6 +108,8 @@ class PUM_Utils_Cache {
 	}
 
 	/**
+	 * Gets cache
+	 *
 	 * @param        $key
 	 * @param string $group
 	 * @param bool   $force
@@ -112,6 +126,8 @@ class PUM_Utils_Cache {
 	}
 
 	/**
+	 * Delete cache
+	 *
 	 * @param        $key
 	 * @param string $group
 	 *
@@ -126,6 +142,8 @@ class PUM_Utils_Cache {
 	}
 
 	/**
+	 * Cache Delete Group
+	 *
 	 * @param string $group
 	 *
 	 * @return bool
@@ -145,6 +163,8 @@ class PUM_Utils_Cache {
 
 
 	/**
+	 * Increments numeric cache item’s value.
+	 *
 	 * @param        $key
 	 * @param int    $offset
 	 * @param string $group
@@ -160,6 +180,8 @@ class PUM_Utils_Cache {
 	}
 
 	/**
+	 * Decrements numeric cache item’s value.
+	 *
 	 * @param        $key
 	 * @param int    $offset
 	 * @param string $group

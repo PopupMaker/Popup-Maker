@@ -21,26 +21,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 
 	/**
+	 * Registered version
+	 *
 	 * @var string Currently installed version.
 	 */
 	public $version;
 
 	/**
+	 * Version upgraded from
+	 *
 	 * @var string Upgraded from version.
 	 */
 	public $upgraded_from;
 
 	/**
+	 * Initial version
+	 *
 	 * @var string Initially installed version.
 	 */
 	public $initial_version;
 
 	/**
+	 * Upgrade Registry instance
+	 *
 	 * @var PUM_Upgrade_Registry
 	 */
 	public static $instance;
 
 	/**
+	 * Returns Registry upgrade instance
+	 *
 	 * @return PUM_Upgrade_Registry
 	 */
 	public static function instance() {

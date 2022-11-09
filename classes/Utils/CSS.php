@@ -9,6 +9,8 @@
 class PUM_Utils_CSS {
 
 	/**
+	 * Converts hex value to rgba value.
+	 *
 	 * @param string $hex
 	 * @param string $return_type
 	 *
@@ -40,6 +42,8 @@ class PUM_Utils_CSS {
 	}
 
 	/**
+	 * Converts hex value to rgba value and adds opacity.
+	 *
 	 * @param string $hex
 	 * @param int    $opacity
 	 *
@@ -53,6 +57,8 @@ class PUM_Utils_CSS {
 	}
 
 	/**
+	 * CSS utility border style function
+	 *
 	 * @param int    $thickness
 	 * @param string $style
 	 * @param string $color
@@ -64,6 +70,8 @@ class PUM_Utils_CSS {
 	}
 
 	/**
+	 * CSS utility box shadow style
+	 *
 	 * @param int    $horizontal
 	 * @param int    $vertical
 	 * @param int    $blur
@@ -79,6 +87,8 @@ class PUM_Utils_CSS {
 	}
 
 	/**
+	 * CSS utility text shadow style
+	 *
 	 * @param int    $horizontal
 	 * @param int    $vertical
 	 * @param int    $blur
@@ -92,6 +102,8 @@ class PUM_Utils_CSS {
 	}
 
 	/**
+	 * CSS utility font style
+	 *
 	 * @param int|string       $size
 	 * @param int|string       $weight
 	 * @param float|int|string $line_height

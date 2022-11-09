@@ -17,6 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Utils_Fields {
 
 	/**
+	 * Gets field
+	 *
 	 * @param $fields
 	 * @param $field_id
 	 *
@@ -29,6 +31,8 @@ class PUM_Utils_Fields {
 	}
 
 	/**
+	 * Gets form default values
+	 *
 	 * @param array $fields
 	 *
 	 * @return array
@@ -40,6 +44,8 @@ class PUM_Utils_Fields {
 	}
 
 	/**
+	 * Gets field default values
+	 *
 	 * @param array $fields
 	 *
 	 * @return array
@@ -61,6 +67,8 @@ class PUM_Utils_Fields {
 	}
 
 	/**
+	 * Returns an array containing the references of the passed tabs
+	 *
 	 * @param $tabs
 	 *
 	 * @return array

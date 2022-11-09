@@ -17,11 +17,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 	/**
+	 * Shortcode subscribe $version variable
+	 *
 	 * @var int
 	 */
 	public $version = 2;
 
 	/**
+	 * Ajax rendering variable for shortcode subcribe
+	 *
 	 * @var bool
 	 */
 	public $ajax_rendering = true;
@@ -36,6 +40,8 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	}
 
 	/**
+	 * Subscribe label for shortcode
+	 *
 	 * @return string
 	 */
 	public function label() {
@@ -43,6 +49,8 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	}
 
 	/**
+	 * Retrieves description for subscribe
+	 *
 	 * @return string
 	 */
 	public function description() {
@@ -50,6 +58,8 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	}
 
 	/**
+	 * Subcribe post types
+	 *
 	 * @return array
 	 */
 	public function post_types() {
@@ -57,6 +67,8 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	}
 
 	/**
+	 * Shortcode subscribe tabs
+	 *
 	 * @return array
 	 */
 	public function tabs() {
@@ -76,6 +88,8 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	}
 
 	/**
+	 * Shortcode subscribe subtabs
+	 *
 	 * @return array
 	 */
 	public function subtabs() {
@@ -106,6 +120,8 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	}
 
 	/**
+	 * Shortcode subscribe fields
+	 *
 	 * @return array
 	 */
 	public function fields() {

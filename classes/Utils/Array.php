@@ -30,6 +30,8 @@ class PUM_Utils_Array {
 	}
 
 	/**
+	 * Filter null function
+	 *
 	 * @param null $val
 	 *
 	 * @return bool
@@ -473,6 +475,8 @@ class PUM_Utils_Array {
 	}
 
 	/**
+	 * from_object utility function
+	 *
 	 * @param $obj
 	 *
 	 * @return array
@@ -494,6 +498,8 @@ class PUM_Utils_Array {
 	}
 
 	/**
+	 * Safe json decode
+	 *
 	 * @param $array
 	 *
 	 * @return array
@@ -551,6 +557,8 @@ class PUM_Utils_Array {
 	}
 
 	/**
+	 * Utf8 encodes value
+	 *
 	 * @param $d
 	 *
 	 * @return array|string
@@ -569,6 +577,8 @@ class PUM_Utils_Array {
 
 
 	/**
+	 * Json encodes value
+	 *
 	 * @param      $value
 	 * @param bool  $encode
 	 *

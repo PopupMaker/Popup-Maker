@@ -17,6 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Site_Popups {
 
 	/**
+	 * Site popups $current - deprecated
+	 *
 	 * @var PUM_Popup|null
 	 *
 	 * @deprecated 1.8.0
@@ -24,16 +26,22 @@ class PUM_Site_Popups {
 	public static $current;
 
 	/**
+	 * Site popups loaded
+	 *
 	 * @var WP_Query|null
 	 */
 	public static $loaded;
 
 	/**
+	 * Array of cached content
+	 *
 	 * @var array
 	 */
 	public static $cached_content = [];
 
 	/**
+	 * Array of loaded ids
+	 *
 	 * @var array
 	 */
 	public static $loaded_ids = [];
@@ -162,6 +170,8 @@ class PUM_Site_Popups {
 	}
 
 	/**
+	 * Preload popup
+	 *
 	 * @param PUM_Model_Popup $popup
 	 */
 	public static function preload_popup( $popup ) {
@@ -225,6 +235,8 @@ class PUM_Site_Popups {
 	}
 
 	/**
+	 * Gets cache content for specified popup
+	 *
 	 * @param $popup_id
 	 *
 	 * @return string|bool
