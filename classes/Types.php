@@ -6,6 +6,9 @@
  * @copyright   Copyright (c) 2022, Code Atlantic LLC
  */
 
+/**
+ * Class PUM_Types
+ */
 class PUM_Types {
 
 	/**
