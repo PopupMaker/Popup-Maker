@@ -78,12 +78,12 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 
 				$_conditions = $conditions = [];
 
-				// Convert Conditions
+				// Convert Conditions.
 				$targeting_conditions = popmake_get_popup_meta_group( 'targeting_condition', $popup->ID );
 
 				if ( empty( $targeting_conditions ) ) {
 					if ( 'publish' === $popup->post_status ) {
-						// Default popups with no conditions to draft
+						// Default popups with no conditions to draft.
 						self::change_post_status( $popup->ID, 'draft' );
 					}
 					update_post_meta( $popup->ID, 'popup_conditions', $conditions );
@@ -161,32 +161,37 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 
 			$condition = null;
 
-			// Front Page
+			// Front Page.
 			if ( strpos( $key, 'on_home' ) !== false ) {
 				$condition = [
 					'target' => 'is_front_page',
 				];
-			} // Blog Index
+			}
+			// Blog Index.
 			elseif ( strpos( $key, 'on_blog' ) !== false ) {
 				$condition = [
 					'target' => 'is_home',
 				];
-			} // Search Pages
+			}
+			// Search Pages.
 			elseif ( strpos( $key, 'on_search' ) !== false ) {
 				$condition = [
 					'target' => 'is_search',
 				];
-			} // 404 Pages
+			}
+			// 404 Pages.
 			elseif ( strpos( $key, 'on_404' ) !== false ) {
 				$condition = [
 					'target' => 'is_404',
 				];
-			} // WooCommerce Pages
+			}
+			// WooCommerce Pages.
 			elseif ( strpos( $key, 'on_woocommerce' ) !== false ) {
 				$condition = [
 					'target' => 'is_woocommerce',
 				];
-			} // WooCommerce Shop Pages
+			}
+			// WooCommerce Shop Pages
 			elseif ( strpos( $key, 'on_shop' ) !== false ) {
 				$condition = [
 					'target' => 'is_shop',
@@ -249,7 +254,7 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 				continue;
 			}
 
-			// Remove non ID keys
+			// Remove non ID keys.
 			unset( $tax_conditions[ "on_{$tax_name}s" ] );
 			unset( $tax_conditions[ "on_specific_{$tax_name}s" ] );
 
