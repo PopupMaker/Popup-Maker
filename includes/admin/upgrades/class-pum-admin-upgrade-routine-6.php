@@ -24,11 +24,15 @@ if ( ! class_exists( 'PUM_Admin_Upgrade_Routine' ) ) {
 final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 
 	/**
+	 * $valid_themes variable
+	 *
 	 * @var null
 	 */
 	public static $valid_themes = null;
 
 	/**
+	 * $default variable
+	 *
 	 * @var null
 	 */
 	public static $default_theme = null;

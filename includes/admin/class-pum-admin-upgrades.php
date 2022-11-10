@@ -17,11 +17,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Admin_Upgrades {
 
 	/**
+	 * $instance variable
+	 *
 	 * @var PUM_Admin_Upgrades The one true PUM_Admin_Upgrades
 	 */
 	private static $instance;
 
 	/**
+	 * $upgrade_args variable
+	 *
 	 * @var $upgrade_args
 	 */
 	public $upgrade_args = [];
