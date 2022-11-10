@@ -54,12 +54,16 @@ abstract class PUM_Shortcode {
 	public $inner_content_priority = 5;
 
 	/**
+	 * Shortcode field prefix variable
+	 *
 	 * @deprecated 1.7.0
 	 * @var string
 	 */
 	public $field_prefix = 'attrs';
 
 	/**
+	 * Field name format
+	 *
 	 * @deprecated 1.7.0
 	 * @var string
 	 */
@@ -104,6 +108,8 @@ abstract class PUM_Shortcode {
 	abstract public function tag();
 
 	/**
+	 * Returns called class for Shortcode
+	 *
 	 * @return mixed
 	 */
 	public static function init() {
@@ -267,6 +273,8 @@ abstract class PUM_Shortcode {
 	}
 
 	/**
+	 * Deprecated function _template
+	 *
 	 * @deprecated 1.7.0 Use template() instead.
 	 */
 	public function _template() {
@@ -299,6 +307,8 @@ abstract class PUM_Shortcode {
 	public function template_styles() {}
 
 	/**
+	 * Shortcode template styles
+	 *
 	 * @deprecated 1.7.0 use template_styles() instead.
 	 *
 	 * @return string
@@ -442,6 +452,8 @@ abstract class PUM_Shortcode {
 	}
 
 	/**
+	 * Shortcode inner content labels
+	 *
 	 * @todo Remove the inner function calls and just have this function define them directly.
 	 *
 	 * @return array
@@ -498,6 +510,8 @@ abstract class PUM_Shortcode {
 	}
 
 	/**
+	 * Shortcode description
+	 *
 	 * @return string
 	 */
 	abstract public function description();

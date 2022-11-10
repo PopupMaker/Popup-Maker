@@ -407,6 +407,8 @@ class PUM_Privacy {
 	}
 
 	/**
+	 * Gets all cookies
+	 *
 	 * @return array
 	 */
 	public static function get_all_cookies() {

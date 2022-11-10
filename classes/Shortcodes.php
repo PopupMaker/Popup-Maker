@@ -19,12 +19,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Shortcodes {
 
 	/**
+	 * Shortcode instance variable
+	 *
 	 * @var PUM_Shortcodes Static Instance
 	 */
 	private static $instance;
 
 	/**
-	 * @var array Holds array of registered $shortcode_tags => $shortcode_objects.
+	 * Holds array of registered $shortcode_tags => $shortcode_objects.
+	 *
+	 * @var array
 	 */
 	private $shortcodes = [];
 

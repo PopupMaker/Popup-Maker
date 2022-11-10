@@ -17,16 +17,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Triggers {
 
 	/**
+	 * $instance variable
+	 *
 	 * @var PUM_Triggers
 	 */
 	public static $instance;
 
 	/**
+	 * Preload posts variable for triggers
+	 *
 	 * @var bool
 	 */
 	public $preload_posts = false;
 
 	/**
+	 * $triggers variable
+	 *
 	 * @var array
 	 */
 	public $triggers;
@@ -144,6 +150,8 @@ class PUM_Triggers {
 	}
 
 	/**
+	 * Validates trigger
+	 *
 	 * @param null  $trigger
 	 * @param array $settings
 	 *
