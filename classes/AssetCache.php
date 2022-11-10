@@ -14,36 +14,50 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_AssetCache {
 
 	/**
+	 * $cache_dir variable
+	 *
 	 * @var
 	 */
 	public static $cache_dir;
 
 	/**
+	 * $suffix variable
+	 *
 	 * @var
 	 */
 	public static $suffix;
 
 	/**
+	 * $asset_url variable
+	 *
 	 * @var
 	 */
 	public static $asset_url;
 
 	/**
+	 * $js_url variable
+	 *
 	 * @var
 	 */
 	public static $js_url;
 
 	/**
+	 * $css_url variable
+	 *
 	 * @var
 	 */
 	public static $css_url;
 
 	/**
+	 * $disabled variable
+	 *
 	 * @var bool
 	 */
 	public static $disabled = true;
 
 	/**
+	 * $debug variable
+	 *
 	 * @var
 	 */
 	public static $debug;
@@ -187,6 +201,8 @@ class PUM_AssetCache {
 	}
 
 	/**
+	 * Checks if site has ad blocker, generates cache file name.
+	 *
 	 * @param $filename
 	 *
 	 * @return string
@@ -441,6 +457,8 @@ class PUM_AssetCache {
 	}
 
 	/**
+	 * Generates popup styles
+	 *
 	 * @return string
 	 */
 	public static function generate_popup_styles() {
@@ -510,6 +528,8 @@ class PUM_AssetCache {
 	}
 
 	/**
+	 * Gets custom fields - if any.
+	 *
 	 * @return string
 	 */
 	public static function custom_css() {

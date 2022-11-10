@@ -17,6 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Utils_Template {
 
 	/**
+	 * Template paths
+	 *
 	 * @return array
 	 */
 	public static function paths() {

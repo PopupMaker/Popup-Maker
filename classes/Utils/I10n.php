@@ -93,6 +93,8 @@ class PUM_Utils_I10n {
 	}
 
 	/**
+	 * Gets the available translations
+	 *
 	 * @return array
 	 */
 	public static function available_locales() {

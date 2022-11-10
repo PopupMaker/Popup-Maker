@@ -16,6 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Utils_Sanitize {
 
 	/**
+	 * Sanitizes value
+	 *
 	 * @param string $value
 	 * @param array  $args
 	 *
@@ -26,6 +28,8 @@ class PUM_Utils_Sanitize {
 	}
 
 	/**
+	 * Checks value
+	 *
 	 * @param mixed|int $value
 	 * @param array     $args
 	 *

@@ -1280,6 +1280,7 @@ class PUM_ListTable {
 	}
 
 	/**
+	 * Renders a column when no other specific method exists for that column.
 	 *
 	 * @param object $item
 	 * @param string $column_name
@@ -1287,6 +1288,7 @@ class PUM_ListTable {
 	protected function column_default( $item, $column_name ) {}
 
 	/**
+	 * Callback for column
 	 *
 	 * @param object $item
 	 */

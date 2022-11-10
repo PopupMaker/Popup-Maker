@@ -143,6 +143,8 @@ class PUM_Analytics {
 	}
 
 	/**
+	 * Checks analytics endpoint
+	 *
 	 * @param WP_REST_Request $request
 	 *
 	 * @return WP_Error|mixed
@@ -162,6 +164,8 @@ class PUM_Analytics {
 	}
 
 	/**
+	 * Converts analytics endpoint
+	 *
 	 * @param $param
 	 *
 	 * @return bool
@@ -282,6 +286,8 @@ class PUM_Analytics {
 	}
 
 	/**
+	 * Retrieves file
+	 *
 	 * @param $path
 	 *
 	 * @return bool|string

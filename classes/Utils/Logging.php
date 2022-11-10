@@ -14,31 +14,43 @@
 class PUM_Utils_Logging {
 
 	/**
+	 * $is_writable variable
+	 *
 	 * @var bool
 	 */
 	public $is_writable = true;
 
 	/**
+	 * Name of file
+	 *
 	 * @var string
 	 */
 	private $filename = '';
 
 	/**
+	 * File
+	 *
 	 * @var string
 	 */
 	private $file = '';
 
 	/**
+	 * Data
+	 *
 	 * @var string
 	 */
 	private $content;
 
 	/**
+	 * Logging instance variable
+	 *
 	 * @var PUM_Utils_Logging
 	 */
 	public static $instance;
 
 	/**
+	 * Instance logging utility function 
+	 *
 	 * @return PUM_Utils_Logging
 	 */
 	public static function instance() {

@@ -139,6 +139,8 @@ class PUM_Helpers {
 	}
 
 	/**
+	 * Deprecated function upload_dir_url
+	 *
 	 * @deprecated Use get_upload_dir_url instead.
 	 */
 	public static function upload_dir_url( $path = '' ) {
@@ -285,6 +287,8 @@ class PUM_Helpers {
 
 
 	/**
+	 * Returns results after checking users query
+	 *
 	 * @param array $args
 	 * @param bool  $include_total
 	 *

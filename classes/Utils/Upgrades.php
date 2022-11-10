@@ -17,11 +17,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Utils_Upgrades {
 
 	/**
+	 * Upgrade registry
+	 *
 	 * @var PUM_Upgrade_Registry
 	 */
 	protected $registry;
 
 	/**
+	 * Upgrades utility instance variable
+	 *
 	 * @var self
 	 */
 	public static $instance;
@@ -192,6 +196,8 @@ class PUM_Utils_Upgrades {
 	}
 
 	/**
+	 * Handles registering the upgrades
+	 *
 	 * @param PUM_Upgrade_Registry $registry
 	 */
 	public function register_processes( PUM_Upgrade_Registry $registry ) {
@@ -232,6 +238,8 @@ class PUM_Utils_Upgrades {
 	}
 
 	/**
+	 * Checks if using v1.8, if not core upgrades to 1.8 themes
+	 *
 	 * @return bool
 	 */
 	public function needs_v1_8_theme_upgrade() {
@@ -318,6 +326,8 @@ class PUM_Utils_Upgrades {
 
 
 	/**
+	 * Alerts user if upgrade has not been done
+	 *
 	 * @param array $alerts
 	 *
 	 * @return array

@@ -17,21 +17,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Conditions {
 
 	/**
+	 * $instance variable for conditions
+	 *
 	 * @var
 	 */
 	public static $instance;
 
 	/**
+	 * $preload_posts variable
+	 *
 	 * @var bool
 	 */
 	public $preload_posts = false;
 
 	/**
+	 * $conditions variable
+	 *
 	 * @var array
 	 */
 	public $conditions;
 
 	/**
+	 * $condition_sort_order variable
+	 *
 	 * @var array
 	 */
 	public $condition_sort_order = [];
@@ -44,6 +52,8 @@ class PUM_Conditions {
 	}
 
 	/**
+	 * Retrieves preloaded post
+	 *
 	 * @return self
 	 */
 	public static function instance() {
@@ -56,6 +66,8 @@ class PUM_Conditions {
 	}
 
 	/**
+	 * Add conditions
+	 *
 	 * @param array $conditions
 	 */
 	public function add_conditions( $conditions = [] ) {
@@ -69,6 +81,8 @@ class PUM_Conditions {
 	}
 
 	/**
+	 * Adds a single condition
+	 *
 	 * @param array $condition
 	 */
 	public function add_condition( $condition = [] ) {
@@ -93,6 +107,8 @@ class PUM_Conditions {
 	}
 
 	/**
+	 * Get conditions
+	 *
 	 * @return array
 	 */
 	public function get_conditions() {
@@ -104,6 +120,8 @@ class PUM_Conditions {
 	}
 
 	/**
+	 * Filters conditions based on order.
+	 *
 	 * @return array|mixed
 	 */
 	public function condition_sort_order() {
@@ -148,6 +166,8 @@ class PUM_Conditions {
 	}
 
 	/**
+	 * Sorts condition groups based on sorted condition order.
+	 *
 	 * @param $a
 	 * @param $b
 	 *
@@ -169,6 +189,8 @@ class PUM_Conditions {
 	}
 
 	/**
+	 * Gets group of conditions
+	 *
 	 * @return array
 	 */
 	public function get_conditions_by_group() {
@@ -190,6 +212,8 @@ class PUM_Conditions {
 	}
 
 	/**
+	 * Returns group of conditions
+	 *
 	 * @return array
 	 */
 	public function dropdown_list() {
@@ -212,6 +236,8 @@ class PUM_Conditions {
 	}
 
 	/**
+	 * Gets condition if it's set
+	 *
 	 * @param null $condition
 	 *
 	 * @return mixed|null
@@ -223,6 +249,8 @@ class PUM_Conditions {
 	}
 
 	/**
+	 * Generates post type conditions
+	 *
 	 * @return array
 	 */
 	public function generate_post_type_conditions() {
@@ -338,6 +366,8 @@ class PUM_Conditions {
 	}
 
 	/**
+	 * Generates post type conditions for taxonomies
+	 *
 	 * @param $name
 	 *
 	 * @return array

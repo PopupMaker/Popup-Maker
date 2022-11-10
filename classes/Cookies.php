@@ -17,16 +17,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Cookies {
 
 	/**
+	 * $instance variable
+	 *
 	 * @var PUM_Cookies
 	 */
 	public static $instance;
 
 	/**
+	 * $preload_posts variable
+	 *
 	 * @var bool
 	 */
 	public $preload_posts = false;
 
 	/**
+	 * $cookies variable
+	 *
 	 * @var array
 	 */
 	public $cookies;
@@ -40,6 +46,8 @@ class PUM_Cookies {
 	}
 
 	/**
+	 * Instance function for Cookies
+	 *
 	 * @return PUM_Cookies
 	 */
 	public static function instance() {
@@ -52,6 +60,8 @@ class PUM_Cookies {
 	}
 
 	/**
+	 * Gets cookie if the cookie is set
+	 *
 	 * @param null $cookie
 	 *
 	 * @return mixed|null
@@ -63,6 +73,8 @@ class PUM_Cookies {
 	}
 
 	/**
+	 * If cookies are not set, register cookies
+	 *
 	 * @return array
 	 */
 	public function get_cookies() {
@@ -136,6 +148,8 @@ class PUM_Cookies {
 	}
 
 	/**
+	 * Adds cookies
+	 *
 	 * @param array $cookies
 	 */
 	public function add_cookies( $cookies = [] ) {
@@ -149,6 +163,8 @@ class PUM_Cookies {
 	}
 
 	/**
+	 * Adds cookie
+	 *
 	 * @param null $cookie
 	 */
 	public function add_cookie( $cookie = null ) {
@@ -302,6 +318,8 @@ class PUM_Cookies {
 
 
 	/**
+	 * Returns cookies
+	 *
 	 * @return array
 	 */
 	public function dropdown_list() {

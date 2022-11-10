@@ -160,6 +160,8 @@ class PUM_Utils_Fields {
 	}
 
 	/**
+	 * Parse tab fields utility function
+	 *
 	 * @param       $fields
 	 * @param array  $args
 	 *
@@ -198,6 +200,8 @@ class PUM_Utils_Fields {
 	}
 
 	/**
+	 * Parse fields
+	 *
 	 * @param array  $fields
 	 * @param string $name
 	 *
@@ -263,6 +267,8 @@ class PUM_Utils_Fields {
 	}
 
 	/**
+	 * Renders specified field
+	 *
 	 * @param array $args
 	 */
 	public static function render_field( $args = [] ) {
@@ -302,6 +308,8 @@ class PUM_Utils_Fields {
 	}
 
 	/**
+	 * Renders form fields
+	 *
 	 * @param PUM_Form $form
 	 */
 	public static function render_form_fields( $form ) {

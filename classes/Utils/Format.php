@@ -32,6 +32,8 @@ class PUM_Utils_Format {
 
 
 	/**
+	 * Formats time
+	 *
 	 * @param        $time
 	 * @param string $format U|human
 	 *
@@ -57,6 +59,8 @@ class PUM_Utils_Format {
 
 
 	/**
+	 * Formats number
+	 *
 	 * @param int|float $number
 	 * @param string    $format
 	 *

@@ -19,6 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Install {
 
 	/**
+	 * Activates plugin
+	 *
 	 * @param $network_wide
 	 */
 	public static function activate_plugin( $network_wide ) {
@@ -26,6 +28,8 @@ class PUM_Install {
 	}
 
 	/**
+	 * Deactivates plugin
+	 *
 	 * @param $network_wide
 	 */
 	public static function deactivate_plugin( $network_wide ) {
@@ -33,13 +37,15 @@ class PUM_Install {
 	}
 
 	/**
-	 *
+	 * Uninstalls plugin
 	 */
 	public static function uninstall_plugin() {
 		self::do_multisite( true, [ __CLASS__, 'uninstall_site' ] );
 	}
 
 	/**
+	 * Does install for multisite
+	 *
 	 * @param       $network_wide
 	 * @param       $method
 	 * @param array        $args
