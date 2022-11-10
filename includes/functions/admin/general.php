@@ -7,7 +7,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -21,7 +21,7 @@ function pum_typenow() {
 	}
 
 	// when editing pages, $typenow isn't set until later!
-	// try to pick it up from the query string
+	// try to pick it up from the query string.
 	if ( ! empty( $_GET['post_type'] ) ) {
 		return sanitize_text_field( $_GET['post_type'] );
 	} elseif ( ! empty( $_GET['post'] ) && $_GET['post'] > 0 ) {
