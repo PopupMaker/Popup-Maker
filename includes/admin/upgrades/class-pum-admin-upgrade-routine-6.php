@@ -60,10 +60,10 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 		$completed = $upgrades->get_arg( 'completed' );
 		$total     = $upgrades->get_arg( 'total' );
 
-		// Install new themes
+		// Install new themes.
 		pum_install_built_in_themes();
 
-		// Refresh CSS transients
+		// Refresh CSS transients.
 		pum_reset_assets();
 
 		// Set the correct total.
@@ -99,7 +99,7 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 
 			foreach ( $popups as $popup ) {
 
-				// Check that each popup has a valid theme id
+				// Check that each popup has a valid theme id.
 				if ( ! array_key_exists( $popup->get_theme_id(), self::$valid_themes ) ) {
 					// Set a valid theme.
 					update_post_meta( $popup->ID, 'popup_theme', self::$default_theme );
@@ -193,7 +193,7 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 	public static function process_popup_cats_tags() {
 		global $popmake_options;
 
-		// Setup the Popup Taxonomies
+		// Setup the Popup Taxonomies.
 		popmake_setup_taxonomies( true );
 
 		$categories = wp_count_terms( 'popup_category', [ 'hide_empty' => true ] );
