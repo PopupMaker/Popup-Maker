@@ -37,14 +37,14 @@ class PUM_Extension_Activation {
 
 		$plugins = get_plugins();
 
-		// Set plugin directory
+		// Set plugin directory.
 		$plugin_path       = array_filter( explode( '/', $plugin_path ) );
 		$this->plugin_path = end( $plugin_path );
 
-		// Set plugin file
+		// Set plugin file.
 		$this->plugin_file = $plugin_file;
 
-		// Set plugin name
+		// Set plugin name.
 		if ( isset( $plugins[ $this->plugin_path . '/' . $this->plugin_file ]['Name'] ) ) {
 			$this->plugin_name = str_replace( 'Popup Maker - ', '', $plugins[ $this->plugin_path . '/' . $this->plugin_file ]['Name'] );
 		} else {
@@ -70,7 +70,7 @@ class PUM_Extension_Activation {
 	 * @return      void
 	 */
 	public function run() {
-		// Display notice
+		// Display notice.
 		add_action( 'admin_notices', [ $this, 'missing_popmake_notice' ] );
 	}
 
