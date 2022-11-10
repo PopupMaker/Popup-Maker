@@ -34,6 +34,8 @@ function pum_trigger_popup_form_success( $popup_id = null, $settings = [] ) {
 }
 
 /**
+ * Developers pum_integrated_form_submission function
+ *
  * @param array $args {
  *      An array of parameters that customize the way the parser works.
  *

@@ -12,6 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Newsletter autoloader
+ *
  * @deprecated 1.7.0 Here to prevent PUM_Newsletter_  classes from being loaded anywhere except from core.
  *
  * @param $class
@@ -19,6 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 function pum_newsletter_autoloader( $class ) {}
 
 /**
+ * Gets newsletter provider
+ *
  * @param $provider_id
  *
  * @return bool|PUM_Newsletter_Provider
@@ -30,6 +34,8 @@ function pum_get_newsletter_provider( $provider_id ) {
 }
 
 /**
+ * Get newsletter provider message
+ *
  * @param string $provider_id
  * @param string $context
  * @param array  $values

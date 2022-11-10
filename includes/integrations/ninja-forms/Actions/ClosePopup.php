@@ -17,21 +17,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class NF_PUM_Actions_ClosePopup extends NF_Abstracts_Action {
 
 	/**
+	 * Close popup name
+	 *
 	 * @var string
 	 */
 	protected $_name = 'closepopup';
 
 	/**
+	 * Close popup tags
+	 *
 	 * @var array
 	 */
 	protected $_tags = [];
 
 	/**
+	 * $_timing variable
+	 *
 	 * @var string
 	 */
 	protected $_timing = 'late';
 
 	/**
+	 * $_priority variable
+	 *
 	 * @var int
 	 */
 	protected $_priority = 10;

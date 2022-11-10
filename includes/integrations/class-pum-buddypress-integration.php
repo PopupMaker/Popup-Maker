@@ -25,6 +25,8 @@ class PUM_BuddyPress_Integration {
 	}
 
 	/**
+	 * Register conditions for BuddyPress Integration
+	 *
 	 * @param array $conditions
 	 *
 	 * @return array
@@ -135,6 +137,8 @@ class PUM_BuddyPress_Integration {
 	}
 
 	/**
+	 * Component option list
+	 *
 	 * @return array
 	 */
 	public static function component_option_list() {
@@ -240,6 +244,8 @@ class PUM_BuddyPress_Integration {
 	}
 
 	/**
+	 * Function condition_sort_order for BuddyPress Integrations
+	 *
 	 * @param array $order
 	 *
 	 * @return array

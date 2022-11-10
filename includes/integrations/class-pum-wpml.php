@@ -36,6 +36,8 @@ class PUM_WPML_Integration {
 	}
 
 	/**
+	 * Gets popup for WPML integrations
+	 *
 	 * @param      $popup
 	 * @param null  $popup_id
 	 *
@@ -53,6 +55,8 @@ class PUM_WPML_Integration {
 	}
 
 	/**
+	 * Retrieves translations for popup with WPML integrations
+	 *
 	 * @param int $post_id
 	 *
 	 * @return bool
@@ -64,6 +68,8 @@ class PUM_WPML_Integration {
 	}
 
 	/**
+	 * Gets post source id
+	 *
 	 * @param int $post_id
 	 *
 	 * @return int
@@ -81,6 +87,8 @@ class PUM_WPML_Integration {
 	}
 
 	/**
+	 * Function $source_lang
+	 *
 	 * @param int $post_id
 	 */
 	public static function source_lang( $post_id = 0 ) {
@@ -88,6 +96,8 @@ class PUM_WPML_Integration {
 	}
 
 	/**
+	 * Function $trid for WPML integrations
+	 *
 	 * @param int $post_id
 	 *
 	 * @return int
@@ -105,6 +115,8 @@ class PUM_WPML_Integration {
 	}
 
 	/**
+	 * Checks whether item is disabled for mobile
+	 *
 	 * @param $disabled
 	 * @param $post_id
 	 *
@@ -121,6 +133,8 @@ class PUM_WPML_Integration {
 	}
 
 	/**
+	 * Checks whether item is disabled for tablet
+	 *
 	 * @param $disabled
 	 * @param $post_id
 	 *
@@ -137,6 +151,8 @@ class PUM_WPML_Integration {
 	}
 
 	/**
+	 * Gets popup triggers
+	 *
 	 * @param $triggers
 	 * @param $post_id
 	 *
@@ -153,6 +169,8 @@ class PUM_WPML_Integration {
 	}
 
 	/**
+	 * Gets popups display
+	 *
 	 * @param $display
 	 * @param $post_id
 	 *
@@ -169,6 +187,8 @@ class PUM_WPML_Integration {
 	}
 
 	/**
+	 * Function popup_get_close
+	 *
 	 * @param $close
 	 * @param $post_id
 	 *
@@ -185,6 +205,8 @@ class PUM_WPML_Integration {
 	}
 
 	/**
+	 * Gets popups cookies
+	 *
 	 * @param $cookies
 	 * @param $post_id
 	 *
@@ -201,6 +223,8 @@ class PUM_WPML_Integration {
 	}
 
 	/**
+	 * Gets popups theme id
+	 *
 	 * @param $theme_id
 	 * @param $post_id
 	 *
@@ -217,6 +241,8 @@ class PUM_WPML_Integration {
 	}
 
 	/**
+	 * Remaps conditions
+	 *
 	 * @param      $conditions
 	 * @param null       $new_lang
 	 *
@@ -291,6 +317,8 @@ class PUM_WPML_Integration {
 	}
 
 	/**
+	 * Gets popups conditions for WPML integrations
+	 *
 	 * @param $conditions
 	 * @param $post_id
 	 *
@@ -312,6 +340,8 @@ class PUM_WPML_Integration {
 	}
 
 	/**
+	 * Returns untranslatable meta keys
+	 *
 	 * @return mixed|void
 	 */
 	public static function untranslatable_meta_keys() {
@@ -331,6 +361,8 @@ class PUM_WPML_Integration {
 
 
 	/**
+	 * Returns translatable meta keys
+	 *
 	 * @return mixed|void
 	 */
 	public static function translatable_meta_keys() {

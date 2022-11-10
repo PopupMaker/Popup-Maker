@@ -103,6 +103,8 @@ function pum_update_all_themes_close_text_cache() {
 add_action( 'pum_save_theme', 'pum_update_all_themes_close_text_cache', 100 );
 
 /**
+ * Asset path
+ *
  * @param string $path
  *
  * @return string
@@ -112,6 +114,8 @@ function pum_asset_path( $path = '' ) {
 }
 
 /**
+ * Asset URL
+ *
  * @param string $path
  *
  * @return string
@@ -121,6 +125,8 @@ function pum_asset_url( $path = '' ) {
 }
 
 /**
+ * Retrieves svg icon
+ *
  * @param string $encode
  *
  * @return string

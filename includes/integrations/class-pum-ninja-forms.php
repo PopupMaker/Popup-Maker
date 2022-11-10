@@ -19,6 +19,8 @@ final class NF_PUM {
 	const PREFIX = 'NF_PUM';
 
 	/**
+	 * $instance variable for Ninja Forms integration
+	 *
 	 * @var NF_PUM
 	 * @since 3.0
 	 */
