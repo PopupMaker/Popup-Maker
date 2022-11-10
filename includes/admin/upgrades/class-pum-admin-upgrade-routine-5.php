@@ -99,9 +99,10 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 			update_site_option( 'pum_site_total_open_count', $site_total_open_count + $total_open_count );
 		}
 
-			/**
+		/**
 		 * TODO Move this to v1.5 routines.
 		 */
+
 		/*
 		// Check for popup analytics extension and import those stats if available.
 		$total_conversion_count = get_site_option( 'popup_analytics_total_conversion_count', 0 );
@@ -139,6 +140,7 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 		/**
 		 * TODO Move this to v1.5 routines.
 		 */
+
 		/*
 		// Conversion Count
 		$conversion_count = get_post_meta( $popup_id, 'popup_analytic_conversion_count', true );
