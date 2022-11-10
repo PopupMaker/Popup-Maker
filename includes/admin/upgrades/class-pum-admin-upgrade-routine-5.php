@@ -24,6 +24,8 @@ if ( ! class_exists( 'PUM_Admin_Upgrade_Routine' ) ) {
 final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 
 	/**
+	 * Admin upgrade routine description - initializes popup analytics
+	 *
 	 * @return mixed|void
 	 */
 	public static function description() {
@@ -31,7 +33,7 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 	}
 
 	/**
-	 *
+	 * Runs admin upgrade routine 5
 	 */
 	public static function run() {
 		if ( ! current_user_can( PUM_Admin_Upgrades::instance()->required_cap ) ) {
