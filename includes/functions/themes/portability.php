@@ -7,6 +7,8 @@
  */
 
 /**
+ * Installs theme
+ *
  * @param       $name
  * @param null  $settings
  * @param array $extra_meta
@@ -41,6 +43,8 @@ function pum_install_theme( $name, $settings = null, $extra_meta = [] ) {
 }
 
 /**
+ * Imports theme from repo
+ *
  * @param $hash
  *
  * @return mixed

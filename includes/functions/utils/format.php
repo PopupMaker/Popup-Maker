@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Determines the difference between two time stamps
+ *
  * @param int      $time
  * @param int|null $current
  *
@@ -21,6 +23,8 @@ function pum_human_time( $time, $current = null ) {
 }
 
 /**
+ * Formats number - function for utility
+ *
  * @param int|float $number
  * @param string    $format
  *

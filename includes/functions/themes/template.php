@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Get rendered theme styles
+ *
  * @param $theme_id
  *
  * @return string
