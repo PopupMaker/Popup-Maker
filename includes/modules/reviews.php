@@ -106,6 +106,8 @@ class PUM_Modules_Reviews {
 	}
 
 	/**
+	 * Retrieves trigger group
+	 *
 	 * @return int|string
 	 */
 	public static function get_trigger_group() {
@@ -135,6 +137,8 @@ class PUM_Modules_Reviews {
 	}
 
 	/**
+	 * Gets trigger code for reviews modules
+	 *
 	 * @return int|string
 	 */
 	public static function get_trigger_code() {
@@ -162,6 +166,8 @@ class PUM_Modules_Reviews {
 	}
 
 	/**
+	 * Gets current trigger
+	 *
 	 * @param null $key
 	 *
 	 * @return bool|mixed|void

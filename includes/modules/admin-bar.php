@@ -243,6 +243,8 @@ class PUM_Modules_Admin_Bar {
 	}
 
 	/**
+	 * Gets loaded popups
+	 *
 	 * @return array
 	 */
 	public static function loaded_popups() {

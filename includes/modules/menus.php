@@ -142,6 +142,8 @@ class PUM_Modules_Menu {
 	}
 
 	/**
+	 * Gets menus item options
+	 *
 	 * @param int $item_id
 	 *
 	 * @return array
@@ -155,6 +157,8 @@ class PUM_Modules_Menu {
 	}
 
 	/**
+	 * Parse menu item options
+	 *
 	 * @param array $options
 	 *
 	 * @return array
