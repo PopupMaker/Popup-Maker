@@ -22,7 +22,7 @@ class PUM_Previews {
 	 * Initiator method.
 	 */
 	public static function init() {
-		// add_filter( 'template_include', array( __CLASS__, 'template_include' ), 1000, 2 );
+		/** add_filter( 'template_include', array( __CLASS__, 'template_include' ), 1000, 2 ); */
 		add_action( 'template_redirect', [ __CLASS__, 'force_load_preview' ] );
 		add_filter( 'pum_popup_is_loadable', [ __CLASS__, 'is_loadable' ], 1000, 2 );
 		add_filter( 'pum_popup_data_attr', [ __CLASS__, 'data_attr' ], 1000, 2 );
