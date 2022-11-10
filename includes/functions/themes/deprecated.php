@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Gets generated themes styles
+ *
  * @deprecated 1.8.0 use pum_get_theme_generated_styles
  *
  * @param int $popup_theme_id
@@ -415,6 +417,8 @@ function popmake_get_popup_theme_meta( $group, $popup_theme_id = null, $key = nu
 }
 
 /**
+ * 
+ *
  * @deprecated 1.3.0
  * @remove     2.0.0
  *
@@ -425,6 +429,8 @@ function popmake_popup_theme_overlay_defaults() {
 }
 
 /**
+ * Gets popup theme container defaults
+ *
  * @deprecated 1.3.0
  * @remove     2.0.0
  *
@@ -435,6 +441,8 @@ function popmake_popup_theme_container_defaults() {
 }
 
 /**
+ * Gets popup theme title defaults
+ *
  * @deprecated 1.3.0
  * @remove     2.0.0
  *
@@ -445,6 +453,8 @@ function popmake_popup_theme_title_defaults() {
 }
 
 /**
+ * Gets popup theme content defaults
+ *
  * @deprecated 1.3.0
  * @remove     2.0.0
  *
@@ -455,6 +465,8 @@ function popmake_popup_theme_content_defaults() {
 }
 
 /**
+ * Gets popup theme close defaults
+ *
  * @deprecated 1.3.0
  * @remove     2.0.0
  *
@@ -465,6 +477,8 @@ function popmake_popup_theme_close_defaults() {
 }
 
 /**
+ * Gets all popup themes
+ *
  * @deprecated 1.8.0
  *
  * @return \PUM_Model_Theme[]
@@ -474,6 +488,8 @@ function popmake_get_all_popup_themes() {
 }
 
 /**
+ * Gets deafault theme id
+ *
  * @deprecated 1.8.0
  *
  * @return false|int

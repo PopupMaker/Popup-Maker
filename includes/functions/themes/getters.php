@@ -30,6 +30,8 @@ function pum_get_theme_id( $theme_id = 0 ) {
 }
 
 /**
+ * Gets theme generated styles by theme id
+ *
  * @param int $theme_id
  *
  * @return array
