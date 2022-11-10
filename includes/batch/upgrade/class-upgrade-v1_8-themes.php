@@ -67,6 +67,9 @@ class PUM_Upgrade_v1_8_Themes extends PUM_Abstract_Upgrade_Themes {
 		}
 	}
 
+	/**
+	 * Function finish() for batch upgrade V1.8 themes
+	 */
 	public function finish() {
 		// Clean up transient used to determine when updates are needed.
 		delete_transient( 'pum_needs_1_8_theme_upgrades' );
