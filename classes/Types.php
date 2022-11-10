@@ -99,6 +99,8 @@ class PUM_Types {
 	}
 
 	/**
+	 * Post type labels
+	 *
 	 * @param $singular
 	 * @param $plural
 	 *
