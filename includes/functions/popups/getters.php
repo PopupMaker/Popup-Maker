@@ -28,6 +28,8 @@ function pum_get_popup_id( $popup_id = null ) {
 }
 
 /**
+ * Gets popup title for specified popup
+ *
  * @param int $popup_id
  *
  * @return string
@@ -43,6 +45,8 @@ function pum_get_popup_title( $popup_id = null ) {
 }
 
 /**
+ * Gets triggers for specified triggers
+ *
  * @param int $popup_id
  *
  * @return array
