@@ -119,13 +119,13 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 	 * @param $popup_id
 	 */
 	public static function initialize_analytics( $popup_id ) {
-		// Open Count
+		// Open Count.
 		$open_count = get_post_meta( $popup_id, 'popup_analytic_opened_count', true );
 		if ( ! $open_count ) {
 			$open_count = 0;
 		}
 
-		// Last Open
+		// Last Open.
 		$last_open = get_post_meta( $popup_id, 'popup_analytic_last_opened', true );
 		if ( ! $last_open ) {
 			$last_open = 0;
