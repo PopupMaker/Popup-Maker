@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Popups Controller
  *
@@ -25,6 +24,8 @@ class PUM_Popups {
 
 
 	/**
+	 * Retrieves query
+	 *
 	 * @deprecated 1.8.0
 	 * @remove 1.9.0
 	 *
@@ -41,6 +42,8 @@ class PUM_Popups {
 	}
 
 	/**
+	 * Deprecated function query
+	 *
 	 * @deprecated 1.8.0
 	 * @remove 1.9.0
 	 *
