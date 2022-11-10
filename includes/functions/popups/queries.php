@@ -7,7 +7,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -28,7 +28,7 @@ function pum_get_popup( $popup_id = null ) {
 	try {
 		return pum()->popups->get_item( $popup_id );
 	} catch ( InvalidArgumentException $e ) {
-		// Return empty object
+		// Return empty object.
 		return new PUM_Model_Popup( $popup_id );
 	}
 }
