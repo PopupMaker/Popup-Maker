@@ -161,7 +161,7 @@ class PUM_ListTable {
 		$this->_args = $args;
 
 		if ( $args['ajax'] ) {
-			// wp_enqueue_script( 'list-table' );
+			/** wp_enqueue_script( 'list-table' ); */
 			add_action( 'admin_footer', [ $this, '_js_vars' ] );
 		}
 
