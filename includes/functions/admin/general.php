@@ -67,6 +67,8 @@ function pum_admin_url( $type = '', $query_args = [] ) {
 }
 
 /**
+ * Force logout any users.
+ *
  * @return array
  */
 function pum_support_assist_args() {
