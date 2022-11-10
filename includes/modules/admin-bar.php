@@ -101,7 +101,7 @@ class PUM_Modules_Admin_Bar {
 
 				$edit_url = $can_edit ? admin_url( 'post.php?post=' . $popup->ID . '&action=edit' ) : '#';
 
-				// Single Popup Menu Node
+				// Single Popup Menu Node.
 				$wp_admin_bar->add_node(
 					[
 						'id'     => $node_id,
@@ -111,7 +111,7 @@ class PUM_Modules_Admin_Bar {
 					]
 				);
 
-				// Trigger Link
+				// Trigger Link.
 				$wp_admin_bar->add_node(
 					[
 						'id'     => $node_id . '-open',
@@ -163,7 +163,7 @@ class PUM_Modules_Admin_Bar {
 				);
 
 				if ( $can_edit ) {
-					// Edit Popup Link
+					// Edit Popup Link.
 					$wp_admin_bar->add_node(
 						[
 							'id'     => $node_id . '-edit',
