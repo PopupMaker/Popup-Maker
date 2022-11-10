@@ -231,14 +231,14 @@ class PUM_Admin_Upgrades {
 		$screen = get_current_screen();
 
 		if ( $screen->id === $this->page ) {
-			return; // Don't show notices on the upgrades page
+			return; // Don't show notices on the upgrades page.
 		}
 
 		if ( ! $this->has_upgrades() ) {
 			return;
 		}
 
-		// Sequential Orders was the first stepped upgrade, so check if we have a stalled upgrade
+		// Sequential Orders was the first stepped upgrade, so check if we have a stalled upgrade.
 		$resume_upgrade = $this->maybe_resume_upgrade();
 
 		if ( ! empty( $resume_upgrade ) ) {
@@ -283,14 +283,14 @@ class PUM_Admin_Upgrades {
 		$deprecated_ver = get_site_option( 'popmake_version', false );
 		$current_ver    = get_option( 'pum_ver', $deprecated_ver );
 
-		// Save Upgraded From option
+		// Save Upgraded From option.
 		if ( $current_ver ) {
 			update_option( 'pum_ver_upgraded_from', $current_ver );
 		}
 
 		update_option( 'pum_ver', Popup_Maker::$VER );
 
-		// Process DB Upgrades
+		// Process DB Upgrades.
 		$this->process_upgrades();
 
 		if ( DOING_AJAX ) {
@@ -305,7 +305,7 @@ class PUM_Admin_Upgrades {
 					'redirect'  => admin_url( 'edit.php?post_type=popup' ),
 					'countdown' => 5000,
 				]
-			); // Let AJAX know that the upgrade is complete
+			); // Let AJAX know that the upgrade is complete.
 			exit;
 		}
 	}
@@ -328,7 +328,7 @@ class PUM_Admin_Upgrades {
 
 		$upgraded_from = get_option( 'pum_ver_upgraded_from', false );
 
-		// this is the current database schema version number
+		// this is the current database schema version number.
 		$current_db_ver = pum_get_db_ver();
 
 		// If no current db version, but prior install detected, set db version correctly.
@@ -359,7 +359,7 @@ class PUM_Admin_Upgrades {
 		static $pum_db_ver;
 
 		if ( ! isset( $pum_db_ver ) ) {
-			// this is the current database schema version number
+			// this is the current database schema version number.
 			$pum_db_ver = pum_get_db_ver();
 		}
 
@@ -378,16 +378,16 @@ class PUM_Admin_Upgrades {
 	 */
 	public function process_upgrades() {
 
-		// this is the target version that we need to reach
+		// this is the target version that we need to reach.
 		$target_db_ver = Popup_Maker::$DB_VER;
 
-		// this is the current database schema version number
+		// this is the current database schema version number.
 		$current_db_ver = $this->get_pum_db_ver();
 
 		// Run upgrade routine until target version reached.
 		while ( $current_db_ver < $target_db_ver ) {
 
-			// increment the current db_ver by one
+			// increment the current db_ver by one.
 			$current_db_ver ++;
 
 			$this->current_routine = $current_db_ver;
@@ -422,10 +422,10 @@ class PUM_Admin_Upgrades {
 	 */
 	public function get_upgrades() {
 
-		// this is the target version that we need to reach
+		// this is the target version that we need to reach.
 		$target_db_ver = Popup_Maker::$DB_VER;
 
-		// this is the current database schema version number
+		// this is the current database schema version number.
 		$current_db_ver = $this->get_pum_db_ver();
 
 		$upgrades = [];
@@ -433,7 +433,7 @@ class PUM_Admin_Upgrades {
 		// Run upgrade routine until target version reached.
 		while ( $current_db_ver < $target_db_ver ) {
 
-			// increment the current db_ver by one
+			// increment the current db_ver by one.
 			$current_db_ver ++;
 
 			if ( file_exists( POPMAKE_DIR . "includes/admin/upgrades/class-pum-admin-upgrade-routine-{$current_db_ver}.php" ) ) {
@@ -501,7 +501,7 @@ class PUM_Admin_Upgrades {
 		$completed_upgrades   = $this->get_completed_upgrades();
 		$completed_upgrades[] = $upgrade_action;
 
-		// Remove any blanks, and only show uniques
+		// Remove any blanks, and only show uniques.
 		$completed_upgrades = array_unique( array_values( $completed_upgrades ) );
 
 		return update_option( 'pum_completed_upgrades', $completed_upgrades );
