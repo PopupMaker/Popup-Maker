@@ -206,7 +206,11 @@ class PUM_Admin_Shortcode_UI {
 			setup_postdata( $post );
 		}
 
-		/** @var string $content Rendered shortcode content. */
+		/**
+		 * Rendered shortcode content.
+		 *
+		 * @var string $content
+		 */
 		$content = PUM_Helpers::do_shortcode( $shortcode );
 
 		/** If no matching tag or $content wasn't rendered die. */

@@ -422,6 +422,8 @@ abstract class PUM_Abstract_Database {
 	}
 
 	/**
+	 * Query function
+	 *
 	 * @param array  $args  Array of arguments.
 	 * @param string $return_type  Object being returned.
 	 *
