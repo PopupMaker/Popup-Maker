@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class PUM_Fields extends Popmake_Fields {
 
-	// region Non Fields
+	// region Non Fields.
 
 	/**
 	 * Hook Callback
@@ -49,9 +49,9 @@ class PUM_Fields extends Popmake_Fields {
 	}
 
 
-	// endregion Non Fields
+	// endregion Non Fields.
 
-	// region Standard Fields
+	// region Standard Fields.
 
 	/**
 	 * Button Callback
@@ -297,9 +297,9 @@ class PUM_Fields extends Popmake_Fields {
 		$this->field_after();
 	}
 
-	// endregion Standard Fields
+	// endregion Standard Fields.
 
-	// region HTML5 Text Fields
+	// region HTML5 Text Fields.
 
 	/**
 	 * Password Callback
@@ -406,9 +406,9 @@ class PUM_Fields extends Popmake_Fields {
 		$this->text_callback( $args, $value );
 	}
 
-	// endregion HTML5 Text Fields
+	// endregion HTML5 Text Fields.
 
-	// region Custom Fields (post_type, taxonomy, object, rangeslider)
+	// region Custom Fields (post_type, taxonomy, object, rangeslider).
 
 	/**
 	 * Object Select Callback
@@ -543,15 +543,15 @@ class PUM_Fields extends Popmake_Fields {
 
 																$this->field_after();
 	}
-	// endregion Custom Fields (post_type, taxonomy, object, rangeslider)
+	// endregion Custom Fields (post_type, taxonomy, object, rangeslider).
 
-	// region Templ Non Fields
+	// region Templ Non Fields.
 
 	public function heading_templ_callback( $args ) {
 		$this->heading_callback( $args );
 	}
 
-	// endregion Non Fields
+	// endregion Non Fields.
 
 
 	public function text_templ_callback( $args ) {
