@@ -70,7 +70,11 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	 * @since 1.13.0
 	 */
 	public function get_popup_id() {
-		return isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false;
+		// return isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false;
+
+		if ( isset( $_REQUEST['pum_form_popup_id'], $_REQUEST['pum_form_popup_id_nonce'] ) && wp_verify_nonce( absint( sanitize_key( $_REQUEST['pum_form_popup_id_nonce'] ) ), 'pum_form_popup_id_action' ) > 0 ) {
+			$pum_form_popup_id = absint( $_REQUEST['pum_form_popup_id'] );
+		} false;
 	}
 
 	/**
