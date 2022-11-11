@@ -19,41 +19,57 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Popmake_Fields {
 
 	/**
+	 * Prefix for fields
+	 *
 	 * @var string
 	 */
 	public $field_prefix = 'settings';
 
 	/**
+	 * Format name field variable
+	 *
 	 * @var string
 	 */
 	public $field_name_format = '{$prefix}[{$section}][{$field}]';
 
 	/**
+	 * Format template value variable
+	 *
 	 * @var string
 	 */
 	public $templ_value_format = '{$prefix}{$section}.{$field}';
 
 	/**
+	 * $fields variable
+	 *
 	 * @var array
 	 */
 	public $fields = [];
 
 	/**
+	 * $sections variable
+	 *
 	 * @var array
 	 */
 	public $sections = [];
 
 	/**
+	 * Arguments variable
+	 *
 	 * @var array
 	 */
 	public $args = [];
 
 	/**
+	 * $instances variable
+	 *
 	 * @var array
 	 */
 	private static $instances = [];
 
 	/**
+	 * Constructor - returns set fields
+	 *
 	 * @param array $args
 	 */
 	public function __construct( $args = [] ) {
@@ -76,6 +92,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * Function instance
+	 *
 	 * @param array $args
 	 *
 	 * @return mixed
@@ -113,6 +131,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * Adds sections
+	 *
 	 * @param $sections
 	 */
 	public function add_sections( $sections ) {
@@ -132,6 +152,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * Adds section
+	 *
 	 * @param $section
 	 */
 	public function add_section( $section ) {
@@ -148,6 +170,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * Adds field
+	 *
 	 * @param array $field
 	 */
 	public function add_field( $field = [] ) {
@@ -205,6 +229,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * Adds fields
+	 *
 	 * @param array $fields
 	 * @param null  $section
 	 */
@@ -248,6 +274,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * Gets sections
+	 *
 	 * @return array
 	 */
 	public function get_sections() {
@@ -255,6 +283,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * Gets fields
+	 *
 	 * @param null $section
 	 *
 	 * @return array
@@ -287,6 +317,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * Gets all fields
+	 *
 	 * @return array
 	 */
 	public function get_all_fields() {
@@ -330,6 +362,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * Gets field names
+	 *
 	 * @param $section
 	 *
 	 * @return array
@@ -345,6 +379,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * Gets template name
+	 *
 	 * @param $args
 	 *
 	 * @return mixed|string
@@ -366,6 +402,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * Function render_fields_by_section
+	 *
 	 * @param string $section
 	 * @param array  $values
 	 */
@@ -378,6 +416,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * Renders fields
+	 *
 	 * @param array $values
 	 */
 	function render_fields( $values = [] ) {
@@ -391,6 +431,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * Renders field
+	 *
 	 * @param array $args
 	 * @param null  $value
 	 */
@@ -439,6 +481,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * Renders template fields by section
+	 *
 	 * @param string $section
 	 */
 	public function render_templ_fields_by_section( $section = 'general' ) {
@@ -448,6 +492,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * Renders template field
+	 *
 	 * @param array $args
 	 */
 	public function render_templ_field( $args = [] ) {
@@ -489,6 +535,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * Function field_before
+	 *
 	 * @param array $args
 	 */
 	public function field_before( $args = [] ) {
@@ -498,7 +546,7 @@ class Popmake_Fields {
 	}
 
 	/**
-	 *
+	 * Function field_after
 	 */
 	public function field_after() {
 		?>
@@ -507,6 +555,8 @@ class Popmake_Fields {
 	}
 
 	/**
+	 * 
+	 *
 	 * @param $args
 	 * @param null $class
 	 *
