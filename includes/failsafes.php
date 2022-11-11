@@ -8,6 +8,8 @@
 
 if ( ! function_exists( 'popmake_get_option' ) ) {
 	/**
+	 * Gets option
+	 *
 	 * @param string $key
 	 * @param bool   $default
 	 *
@@ -20,6 +22,8 @@ if ( ! function_exists( 'popmake_get_option' ) ) {
 
 if ( ! function_exists( 'popmake_is_admin_page' ) ) {
 	/**
+	 * Returns false for popmake admin page
+	 *
 	 * @return bool
 	 */
 	function popmake_is_admin_page() {
@@ -29,6 +33,8 @@ if ( ! function_exists( 'popmake_is_admin_page' ) ) {
 
 if ( ! function_exists( 'pum_is_admin_page' ) ) {
 	/**
+	 * Returns false for pum admin page
+	 *
 	 * @return bool
 	 */
 	function pum_is_admin_page() {
@@ -38,6 +44,8 @@ if ( ! function_exists( 'pum_is_admin_page' ) ) {
 
 if ( ! function_exists( 'popmake_is_admin_popup_page' ) ) {
 	/**
+	 * Returns false for admin popup page
+	 *
 	 * @return bool
 	 */
 	function popmake_is_admin_popup_page() {
@@ -47,6 +55,8 @@ if ( ! function_exists( 'popmake_is_admin_popup_page' ) ) {
 
 if ( ! function_exists( 'pum_is_popup_editor' ) ) {
 	/**
+	 * Returns false for popup editor
+	 *
 	 * @return bool
 	 */
 	function pum_is_popup_editor() {
@@ -56,6 +66,8 @@ if ( ! function_exists( 'pum_is_popup_editor' ) ) {
 
 if ( ! function_exists( 'pum_is_settings_page' ) ) {
 	/**
+	 * Returns false for settings page
+	 *
 	 * @return bool
 	 */
 	function pum_is_settings_page() {
@@ -65,6 +77,8 @@ if ( ! function_exists( 'pum_is_settings_page' ) ) {
 
 if ( ! function_exists( 'popmake_get_template_part' ) ) {
 	/**
+	 * Gets template part
+	 *
 	 * @param $slug
 	 * @param null $name
 	 * @param bool $load

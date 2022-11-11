@@ -50,6 +50,8 @@ function pum_deprecated_popmake_settings_extensions_sanitize_filter( $settings =
 	if ( has_filter( 'popmake_settings_extensions_sanitize' ) ) {
 		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:popmake_settings_extensions_sanitize', '1.7.0', 'filter:pum_settings_sanitize' );
 		/**
+		 * Filters to process
+		 *
 		 * @deprecated 1.7
 		 *
 		 * @param array $settings
@@ -78,6 +80,8 @@ function pum_deprecated_get_the_popup_content_filter( $content, $popup_id ) {
 	if ( has_filter( 'the_popup_content' ) ) {
 		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:the_popup_content', '1.7.0', 'filter:pum_popup_content' );
 		/**
+		 * Filters to process
+		 *
 		 * @deprecated 1.7
 		 *
 		 * @param string $content
@@ -106,6 +110,8 @@ function pum_deprecated_pum_popup_get_data_attr_filter( $data_attr, $popup_id ) 
 	if ( has_filter( 'pum_popup_get_data_attr' ) ) {
 		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:pum_popup_get_data_attr', '1.7.0', 'filter:pum_popup_data_attr' );
 		/**
+		 * Filters to process
+		 *
 		 * @deprecated 1.7
 		 *
 		 * @param string $content
@@ -134,6 +140,8 @@ function pum_deprecated_pum_popup_get_classes_filter( $classes, $popup_id ) {
 	if ( has_filter( 'pum_popup_get_classes' ) ) {
 		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:pum_popup_get_classes', '1.7.0', 'filter:pum_popup_container_classes' );
 		/**
+		 * Filters to process
+		 *
 		 * @deprecated 1.7
 		 *
 		 * @param array $classes
@@ -162,6 +170,8 @@ function pum_deprecated_get_the_popup_data_attr_filter( $data_attr, $popup_id ) 
 	if ( has_filter( 'popmake_get_the_popup_data_attr' ) ) {
 		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:popmake_get_the_popup_data_attr', '1.7.0', 'filter:pum_popup_data_attr' );
 		/**
+		 * Filters to process
+		 *
 		 * @deprecated 1.7
 		 *
 		 * @param array $data_attr

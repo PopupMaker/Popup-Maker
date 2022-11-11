@@ -52,6 +52,8 @@ add_action( 'pum_update_core_version', 'pum_install_new_themes_on_update' );
 
 
 /**
+ * Install the built in themes
+ *
  * @param bool $network_wide
  */
 function pum_install_built_in_themes( $network_wide = false ) {

@@ -14,6 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 // region Deprecated 1.7.0
 
 /**
+ * Loads popup
+ *
  * @deprecated 1.7.0 Use pum_load_popup
  *
  * @param $id
@@ -66,6 +68,8 @@ function pum_settings_page() {
 }
 
 /**
+ * Gets label
+ *
  * @deprecated 1.7.0
  *
  * @param string $string
@@ -77,6 +81,8 @@ function popmake_get_label_singular( $string = '' ) {
 }
 
 /**
+ * Gets labels
+ *
  * @deprecated 1.7.0
  *
  * @param string $string
@@ -153,6 +159,8 @@ function popmake_is_admin_popup_theme_page() {
 }
 
 /**
+ * Output PUM styles
+ *
  * @deprecated 1.7.0
  */
 function popmake_output_pum_styles() {
@@ -305,6 +313,8 @@ function pum_force_theme_css_refresh() {
 }
 
 /**
+ * Converts hex to rgb
+ *
  * @deprecated 1.8.0
  *
  * @param $hex
@@ -316,6 +326,8 @@ function popmake_hex2rgb( $hex ) {
 }
 
 /**
+ * Gets rgb value
+ *
  * @deprecated 1.8.0
  *
  * @param     $hex
@@ -328,6 +340,8 @@ function popmake_get_rgba_value( $hex, $opacity = 100 ) {
 }
 
 /**
+ * Gets the border style
+ *
  * @deprecated 1.8.0
  *
  * @param int    $thickness
@@ -341,6 +355,8 @@ function popmake_get_border_style( $thickness = 1, $style = 'solid', $color = '#
 }
 
 /**
+ * Gets style for box shadow
+ *
  * @deprecated 1.8.0
  *
  * @param int    $horizontal
@@ -358,6 +374,8 @@ function popmake_get_box_shadow_style( $horizontal = 0, $vertical = 0, $blur = 0
 }
 
 /**
+ * Gets text shadow styles
+ *
  * @deprecated 1.8.0
  *
  * @param int    $horizontal
@@ -373,6 +391,8 @@ function popmake_get_text_shadow_style( $horizontal = 0, $vertical = 0, $blur = 
 }
 
 /**
+ * Loads popup
+ *
  * @deprecated 1.8.0
  *
  * @param $id
