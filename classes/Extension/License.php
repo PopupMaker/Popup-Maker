@@ -171,13 +171,16 @@ class PUM_Extension_License {
 
 			$tabs['licenses']['main']['license_help_text'] = [
 				'type'     => 'html',
-				'content'  => '<p><strong>' . sprintf( __( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please %1$srenew your license%2$s.', 'popup-maker' ), '<a href="https://docs.wppopupmaker.com/article/177-license-renewal?utm_medium=license-help-text&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab" target="_blank">', '</a>' ) . '</strong></p>',
+				'content'  => '<p><strong>' . sprintf(
+					/* translators: 1. enter license key, 2 activation */
+					__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please %1$srenew your license%2$s.', 'popup-maker' ), '<a href="https://docs.wppopupmaker.com/article/177-license-renewal?utm_medium=license-help-text&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab" target="_blank">', '</a>' ) . '</strong></p>',
 				'priority' => 0,
 			];
 		}
 
 		$tabs['licenses']['main'][ $this->item_shortname . '_license_key' ] = [
 			'type'    => 'license_key',
+			/* translators: 1. item name */
 			'label'   => sprintf( __( '%1$s', 'popup-maker' ), $this->item_name ),
 			'options' => [
 				'is_valid_license_option' => $this->item_shortname . '_license_active',
@@ -396,7 +399,9 @@ class PUM_Extension_License {
 		if ( empty( $this->license ) ) {
 			$alerts[] = [
 				'code'        => 'license_not_valid',
-				'message'     => sprintf( __( 'One or more of your extensions are missing license keys. You will not be able to receive updates until the extension has a valid license key entered. Please go to the %1$sLicenses page%2$s to add your license keys.', 'popup-maker' ), '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=licenses' ) . '">', '</a>' ),
+				'message'     => sprintf(
+					/* translators: 1. plugin name, 2 enter key to renew */
+					__( 'One or more of your extensions are missing license keys. You will not be able to receive updates until the extension has a valid license key entered. Please go to the %1$sLicenses page%2$s to add your license keys.', 'popup-maker' ), '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=licenses' ) . '">', '</a>' ),
 				'type'        => 'error',
 				'dismissible' => '4 weeks',
 				'priority'    => 0,
@@ -404,7 +409,9 @@ class PUM_Extension_License {
 		} else {
 			$alerts[] = [
 				'code'        => 'license_not_valid',
-				'message'     => sprintf( __( 'You have invalid or expired license keys for Popup Maker. Please go to the %1$sLicenses page%2$s to correct this issue.', 'popup-maker' ), '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=licenses' ) . '">', '</a>' ),
+				'message'     => sprintf( 
+					/* translators: 1. plugin name, 2 activation */
+					__( 'You have invalid or expired license keys for Popup Maker. Please go to the %1$sLicenses page%2$s to correct this issue.', 'popup-maker' ), '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=licenses' ) . '">', '</a>' ),
 				'type'        => 'error',
 				'dismissible' => '4 weeks',
 				'priority'    => 0,
@@ -440,7 +447,9 @@ class PUM_Extension_License {
 
 			if ( empty( $_GET['tab'] ) || 'licenses' !== $_GET['tab'] ) {
 
-				$messages[] = sprintf( __( 'You have invalid or expired license keys for Popup Maker. Please go to the %1$sLicenses page%2$s to correct this issue.', 'popup-maker' ), '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=licenses' ) . '">', '</a>' );
+				$messages[] = sprintf( 
+					/* translators: 1. plugin name, 2 activation */
+					__( 'You have invalid or expired license keys for Popup Maker. Please go to the %1$sLicenses page%2$s to correct this issue.', 'popup-maker' ), '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=licenses' ) . '">', '</a>' );
 
 				$showed_invalid_message = true;
 
