@@ -159,6 +159,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 */
 	public function get_item( $id ) {
 		if ( ! $this->has_item( $id ) ) {
+			/* translators: 1. post types, 2 id of post type not found */
 			throw new InvalidArgumentException( sprintf( __( 'No %1$s found with id %2$d.', 'popup-maker' ), $this->get_post_type(), $id ) );
 		}
 
@@ -179,6 +180,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 		$id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE %s = %s", $field, $value ) );
 
 		if ( ! $id || ! $this->has_item( $id ) ) {
+			/* translators: 1. field, 2 value */
 			throw new InvalidArgumentException( sprintf( __( 'No user found with %1$s %2$s.', 'popup-maker' ), $field, $value ) );
 		}
 

@@ -268,6 +268,7 @@ class PUM_Admin_Ajax {
 		if ( false === $batch ) {
 			wp_send_json_error(
 				[
+					/* translators: 1. batch id being processed */
 					'error' => sprintf( __( '%s is an invalid batch process ID.', 'popup-maker' ), esc_html( $_REQUEST['batch_id'] ) ),
 				]
 			);
@@ -279,6 +280,7 @@ class PUM_Admin_Ajax {
 		if ( empty( $class_file ) || ! file_exists( $class_file ) ) {
 			wp_send_json_error(
 				[
+					/* translators: 1. batch id */
 					'error' => sprintf( __( 'An invalid file path is registered for the %1$s batch process handler.', 'popup-maker' ), "<code>{$batch_id}</code>" ),
 				]
 			);

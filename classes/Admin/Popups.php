@@ -241,7 +241,12 @@ class PUM_Admin_Popups {
 
 		<div id="pum-popup-settings-container" class="pum-popup-settings-container">
 			<div class="pum-no-js" style="padding: 0 12px;">
-				<p><?php printf( esc_html__( 'If you are seeing this, the page is still loading or there are Javascript errors on this page. %1$sView troubleshooting guide%2$s', 'popup-maker' ), '<a href="https://docs.wppopupmaker.com/article/373-checking-for-javascript-errors" target="_blank">', '</a>' ); ?></p>
+				<p>
+					<?php 
+						/* translators: 1. page is loading, 2 view troubleshooting guide */
+						printf( esc_html__( 'If you are seeing this, the page is still loading or there are Javascript errors on this page. %1$sView troubleshooting guide%2$s', 'popup-maker' ), '<a href="https://docs.wppopupmaker.com/article/373-checking-for-javascript-errors" target="_blank">', '</a>' );
+					?>
+				</p>
 			</div>
 		</div>
 		<?php
@@ -707,6 +712,7 @@ class PUM_Admin_Popups {
 								],
 								'position_top'          => [
 									'label'        => __( 'Top', 'popup-maker' ),
+									/* translators: 1. top position */
 									'desc'         => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Top', 'popup-maker' ) ) ),
 									'type'         => 'rangeslider',
 									'std'          => 100,
@@ -721,6 +727,7 @@ class PUM_Admin_Popups {
 								],
 								'position_bottom'       => [
 									'label'        => __( 'Bottom', 'popup-maker' ),
+									/* translators: 1. bottom position */
 									'desc'         => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Bottom', 'popup-maker' ) ) ),
 									'type'         => 'rangeslider',
 									'std'          => 0,
@@ -735,6 +742,7 @@ class PUM_Admin_Popups {
 								],
 								'position_left'         => [
 									'label'        => __( 'Left', 'popup-maker' ),
+									/* translators: 1. left position */
 									'desc'         => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Left', 'popup-maker' ) ) ),
 									'type'         => 'rangeslider',
 									'std'          => 0,
@@ -749,6 +757,7 @@ class PUM_Admin_Popups {
 								],
 								'position_right'        => [
 									'label'        => __( 'Right', 'popup-maker' ),
+									/* translators: 1. right position */
 									'desc'         => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Right', 'popup-maker' ) ) ),
 									'type'         => 'rangeslider',
 									'std'          => 0,
@@ -763,6 +772,7 @@ class PUM_Admin_Popups {
 								],
 								'position_from_trigger' => [
 									'label'    => __( 'Position from Trigger', 'popup-maker' ),
+									/* translators: 1. trigger, 2 position */
 									'desc'     => sprintf( __( 'This will position the popup in relation to the %1$sClick Trigger%2$s.', 'popup-maker' ), '<a target="_blank" href="https://docs.wppopupmaker.com/article/395-trigger-click-open-overview-methods?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=position-from-trigger">', '</a>' ),
 									'type'     => 'checkbox',
 									'std'      => false,

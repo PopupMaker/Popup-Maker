@@ -407,7 +407,12 @@ class PUM_Admin_Templates {
 					<strong>
 						<?php _e( 'Triggers cause a popup to open.', 'popup-maker' ); ?>
 						<a href="<?php echo esc_url( 'https://docs.wppopupmaker.com/article/141-triggers?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=triggers-option-settings' ); ?>" target="_blank"
-						   class="pum-doclink dashicons dashicons-editor-help" title="<?php esc_attr_e( sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Triggers', 'popup-maker' ) ) ); ?>"></a>
+						class="pum-doclink dashicons dashicons-editor-help" title="
+						<?php
+							/* translators: 1. an item, learn */
+							esc_attr_e( sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Triggers', 'popup-maker' ) ) );
+						?>">
+						</a>
 					</strong>
 				</p>
 
