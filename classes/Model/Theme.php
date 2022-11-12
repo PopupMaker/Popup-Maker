@@ -292,7 +292,11 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 				break;
 		}
 
-		/** @deprecated 1.8.0 filter */
+		/**
+		 * Apply filters for deprecated settings styles
+		 *
+		 * @deprecated 1.8.0 filter
+		 */
 		$styles = (array) apply_filters( 'popmake_generate_theme_styles', (array) $styles, $this->ID, $this->get_deprecated_settings() );
 
 		return (array) apply_filters( 'pum_theme_get_generated_styles', (array) $styles, $this->ID );
