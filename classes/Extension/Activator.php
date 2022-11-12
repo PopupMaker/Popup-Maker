@@ -134,6 +134,8 @@ class PUM_Extension_Activator {
 	}
 
 	/**
+	 * Checks if PUM is installed and which version.
+	 *
 	 * @return string
 	 */
 	public function get_status() {
