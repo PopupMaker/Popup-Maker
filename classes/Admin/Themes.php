@@ -466,7 +466,11 @@ class PUM_Admin_Themes {
 			],
 		];
 
-		/** @deprecated 1.8.0 This filter is no longer in use */
+		/**
+		 * This filter is no longer in use
+		 *
+		 * @deprecated 1.8.0
+		 */
 		$old_fonts = apply_filters( 'popmake_font_family_options', [] );
 
 		$fonts = array_merge( $fonts, array_flip( $old_fonts ) );
