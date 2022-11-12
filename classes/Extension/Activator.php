@@ -186,12 +186,14 @@ class PUM_Extension_Activator {
 			case 'not_activated':
 				$url  = esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $this->core_path ), 'activate-plugin_' . $this->core_path ) );
 				$link = '<a href="' . $url . '">' . __( 'activate it' ) . '</a>';
+				/* translators: 1. extension name, 2 activation, 3 click */
 				echo '<div class="error"><p>' . sprintf( __( 'The plugin "%1$s" requires %2$s! Please %3$s to continue!' ), $this->extension_name, '<strong>' . __( 'Popup Maker' ) . '</strong>', $link ) . '</p></div>';
 
 				break;
 			case 'not_updated':
 				$url  = esc_url( wp_nonce_url( admin_url( 'update.php?action=upgrade-plugin&plugin=' . $this->core_path ), 'upgrade-plugin_' . $this->core_path ) );
 				$link = '<a href="' . $url . '">' . __( 'update it' ) . '</a>';
+				/* translators: 1. extension name, 2 an update, 3 to version */
 				echo '<div class="error"><p>' . sprintf( __( 'The plugin "%1$s" requires %2$s v%3$s or higher! Please %4$s to continue!' ), $this->extension_name, '<strong>' . __( 'Popup Maker' ) . '</strong>', '<strong>' . $this->required_core_version . '</strong>', $link ) . '</p></div>';
 
 				break;
