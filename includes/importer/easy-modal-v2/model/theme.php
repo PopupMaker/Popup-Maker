@@ -41,9 +41,9 @@ class EModal_Model_Theme extends EModal_Model {
 
 	public function save() {
 		if ( ! $this->id ) {
-			$this->created = date( 'Y-m-d H:i:s' );
+			$this->created = gmdate( 'Y-m-d H:i:s' );
 		}
-		$this->modified = date( 'Y-m-d H:i:s' );
+		$this->modified = gmdate( 'Y-m-d H:i:s' );
 		parent::save();
 		$this->meta->theme_id = $this->id;
 		$this->meta->save();
