@@ -87,6 +87,6 @@ class PUM_Extension_Activation {
 			$link = '<a href="' . $url . '">' . __( 'install it', 'popmake-extension-activation' ) . '</a>';
 		}
 
-		echo '<div class="error"><p>' . $this->plugin_name . sprintf( __( ' requires Popup Maker! Please %s to continue!', 'popmake-extension-activation' ), $link ) . '</p></div>';
+		echo '<div class="error"><p>' . $this->plugin_name . sprintf( /* translators: 1. activate */__( ' requires Popup Maker! Please %s to continue!', 'popmake-extension-activation' ), $link ) . '</p></div>';
 	}
 }

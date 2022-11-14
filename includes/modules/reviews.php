@@ -240,6 +240,7 @@ class PUM_Modules_Reviews {
 
 		if ( ! isset( $triggers ) ) {
 
+			/* translators: 1.  amount of time using PUM */
 			$time_message = __( 'Hi there! You\'ve been using Popup Maker on your site for %s - I hope it\'s been helpful. If you\'re enjoying my plugin, would you mind rating it 5-stars to help spread the word?', 'popup-maker' );
 			$triggers     = [
 				'time_installed' => [
@@ -279,6 +280,7 @@ class PUM_Modules_Reviews {
 			];
 
 			$pri          = 10;
+			/* translators: 1.  amount of PUM popup views */
 			$open_message = __( 'Hi there! You\'ve recently hit %s popup views on your site – that’s awesome!! If you\'d like to celebrate this milestone, rate Popup Maker 5-stars to help spread the word!', 'popup-maker' );
 			foreach ( [ 50, 100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000 ] as $num ) {
 				$triggers['open_count']['triggers'][ $num . '_opens' ] = [
