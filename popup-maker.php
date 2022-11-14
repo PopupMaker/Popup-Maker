@@ -53,17 +53,17 @@ function pum_autoloader( $class ) {
 			]
 		);
 
-		// project-specific namespace prefix
+		// project-specific namespace prefix.
 		$prefix = $autoloader['prefix'];
 
 		// does the class use the namespace prefix?
 		$len = strlen( $prefix );
 		if ( strncmp( $prefix, $class, $len ) !== 0 ) {
-			// no, move to the next registered autoloader
+			// no, move to the next registered autoloader.
 			continue;
 		}
 
-		// get the relative class name
+		// get the relative class name.
 		$relative_class = substr( $class, $len );
 
 		// replace the namespace prefix with the base directory, replace namespace
@@ -71,7 +71,7 @@ function pum_autoloader( $class ) {
 		// with .php
 		$file = $autoloader['dir'] . str_replace( $autoloader['search'], $autoloader['replace'], $relative_class ) . '.php';
 
-		// if the file exists, require it
+		// if the file exists, require it.
 		if ( file_exists( $file ) ) {
 			require_once $file;
 		}
@@ -82,7 +82,7 @@ if ( ! function_exists( 'spl_autoload_register' ) ) {
 	include 'includes/compat.php';
 }
 
-spl_autoload_register( 'pum_autoloader' ); // Register autoloader
+spl_autoload_register( 'pum_autoloader' ); // Register autoloader.
 
 /**
  * Main Popup_Maker Class
@@ -247,7 +247,7 @@ class Popup_Maker {
 
 		require_once self::$DIR . 'includes/compat.php';
 
-		// Initialize global options
+		// Initialize global options.
 		PUM_Utils_Options::init();
 
 		/** Loads most of our core functions */
@@ -266,7 +266,7 @@ class Popup_Maker {
 
 		require_once self::$DIR . 'includes/importer/easy-modal-v2.php';
 
-		// Phasing Out
+		// Phasing Out.
 		require_once self::$DIR . 'includes/class-popmake-fields.php';
 		require_once self::$DIR . 'includes/class-popmake-popup-fields.php';
 
@@ -276,7 +276,7 @@ class Popup_Maker {
 		require_once self::$DIR . 'includes/class-pum-fields.php';
 		require_once self::$DIR . 'includes/class-pum-form.php';
 
-		// Modules
+		// Modules.
 		require_once self::$DIR . 'includes/modules/menus.php';
 		require_once self::$DIR . 'includes/modules/admin-bar.php';
 		require_once self::$DIR . 'includes/modules/reviews.php';
@@ -288,25 +288,25 @@ class Popup_Maker {
 	 * Loads the plugin language files
 	 */
 	public function load_textdomain() {
-		// Set filter for plugin's languages directory
+		// Set filter for plugin's languages directory.
 		$lang_dir = apply_filters( 'pum_lang_dir', dirname( plugin_basename( POPMAKE ) ) . '/languages/' );
 		$lang_dir = apply_filters( 'popmake_languages_directory', $lang_dir );
 
 		// Try to load Langpacks first, if they are not available fallback to local files.
 		if ( ! load_plugin_textdomain( 'popup-maker', false, $lang_dir ) ) {
-			// Traditional WordPress plugin locale filter
+			// Traditional WordPress plugin locale filter.
 			$locale = apply_filters( 'plugin_locale', get_locale(), 'popup-maker' );
 			$mofile = sprintf( '%1$s-%2$s.mo', 'popup-maker', $locale );
 
-			// Setup paths to current locale file
+			// Setup paths to current locale file.
 			$mofile_local  = $lang_dir . $mofile;
 			$mofile_global = WP_LANG_DIR . '/popup-maker/' . $mofile;
 
 			if ( file_exists( $mofile_global ) ) {
-				// Look in global /wp-content/languages/popup-maker folder
+				// Look in global /wp-content/languages/popup-maker folder.
 				load_textdomain( 'popup-maker', $mofile_global );
 			} elseif ( file_exists( $mofile_local ) ) {
-				// Look in local /wp-content/plugins/popup-maker/languages/ folder
+				// Look in local /wp-content/plugins/popup-maker/languages/ folder.
 				load_textdomain( 'popup-maker', $mofile_local );
 			}
 		}
@@ -373,13 +373,13 @@ function pum_init() {
 		return;
 	}
 
-	// Get Popup Maker
+	// Get Popup Maker.
 	pum();
 
 	add_action( 'plugins_loaded', 'popmake_initialize' );
 }
 
-// Get Popup Maker running
+// Get Popup Maker running.
 add_action( 'plugins_loaded', 'pum_init', 9 );
 
 // Ensure plugin & environment compatibility.
@@ -397,7 +397,7 @@ function popmake_initialize() {
 	// Disable Unlimited Themes extension if active.
 	remove_action( 'popmake_initialize', 'popmake_ut_initialize' );
 
-	// Initialize old PUM extensions
+	// Initialize old PUM extensions.
 	do_action( 'pum_initialize' );
 	do_action( 'popmake_initialize' );
 }
