@@ -95,7 +95,7 @@ class PUM_Triggers {
 			);
 
 			if ( empty( $trigger['modal_title'] ) && ! empty( $trigger['name'] ) ) {
-				$trigger['modal_title'] = sprintf( _x( '%s Trigger Settings', 'trigger settings modal title', 'popup-maker' ), $trigger['name'] );
+				$trigger['modal_title'] = sprintf( /* translators: 1. trigger name */_x( '%s Trigger Settings', 'trigger settings modal title', 'popup-maker' ), $trigger['name'] );
 			}
 
 			// Here for backward compatibility to merge in labels properly.

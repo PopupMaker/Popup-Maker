@@ -92,30 +92,35 @@ class PUM_Utils_Format {
 		$diff = (int) abs( $current - $time );
 
 		if ( $diff < 60 ) {
+			/* translators: 1. string of seconds */
 			$since = sprintf( __( '%ss', 'popup-maker' ), $diff );
 		} elseif ( $diff < HOUR_IN_SECONDS ) {
 			$mins = round( $diff / MINUTE_IN_SECONDS );
 			if ( $mins <= 1 ) {
 				$mins = 1;
 			}
+			/* translators: 1. string minutes */
 			$since = sprintf( __( '%smin', 'popup-maker' ), $mins );
 		} elseif ( $diff < DAY_IN_SECONDS && $diff >= HOUR_IN_SECONDS ) {
 			$hours = round( $diff / HOUR_IN_SECONDS );
 			if ( $hours <= 1 ) {
 				$hours = 1;
 			}
+			/* translators: 1. string of hours */
 			$since = sprintf( __( '%shr', 'popup-maker' ), $hours );
 		} elseif ( $diff < WEEK_IN_SECONDS && $diff >= DAY_IN_SECONDS ) {
 			$days = round( $diff / DAY_IN_SECONDS );
 			if ( $days <= 1 ) {
 				$days = 1;
 			}
+			/* translators: 1. string of days */
 			$since = sprintf( __( '%sd', 'popup-maker' ), $days );
 		} elseif ( $diff < MONTH_IN_SECONDS && $diff >= WEEK_IN_SECONDS ) {
 			$weeks = round( $diff / WEEK_IN_SECONDS );
 			if ( $weeks <= 1 ) {
 				$weeks = 1;
 			}
+			/* translators: 1. string of weeks */
 			$since = sprintf( __( '%sw', 'popup-maker' ), $weeks );
 		} else {
 			$since = '';

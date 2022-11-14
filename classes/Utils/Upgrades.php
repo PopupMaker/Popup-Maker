@@ -589,7 +589,7 @@ class PUM_Utils_Upgrades {
 		if ( false === $upgrade ) {
 			wp_send_json_error(
 				[
-					'error' => sprintf( __( '%s is an invalid batch process ID.', 'popup-maker' ), esc_html( $upgrade_id ) ),
+					'error' => sprintf( /* translators: 1. batch process id */__( '%s is an invalid batch process ID.', 'popup-maker' ), esc_html( $upgrade_id ) ),
 				]
 			);
 		}
@@ -698,7 +698,7 @@ class PUM_Utils_Upgrades {
 		} else {
 			wp_send_json_error(
 				[
-					'error' => sprintf( __( 'An invalid file path is registered for the %1$s batch process handler.', 'popup-maker' ), "<code>{$upgrade_id}</code>" ),
+					'error' => sprintf( /* translators: 1. upgrade id */__( 'An invalid file path is registered for the %1$s batch process handler.', 'popup-maker' ), "<code>{$upgrade_id}</code>" ),
 				]
 			);
 		}
@@ -706,7 +706,7 @@ class PUM_Utils_Upgrades {
 		if ( empty( $class ) || ! class_exists( $class ) ) {
 			wp_send_json_error(
 				[
-					'error' => sprintf( __( '%1$s is an invalid handler for the %2$s batch process. Please try again.', 'popup-maker' ), "<code>{$class}</code>", "<code>{$upgrade_id}</code>" ),
+					'error' => sprintf( /* translators: 1. class, 2 upgrade id */__( '%1$s is an invalid handler for the %2$s batch process. Please try again.', 'popup-maker' ), "<code>{$class}</code>", "<code>{$upgrade_id}</code>" ),
 				]
 			);
 		}

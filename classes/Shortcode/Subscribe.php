@@ -411,7 +411,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						],
 						'privacy_usage_text'           => [
 							'label'        => __( 'Consent Usage Text', 'popup-maker' ),
-							'desc'         => function_exists( 'get_privacy_policy_url' ) ? sprintf( __( 'You can use %1$s%2$s to insert a link to your privacy policy. To customize the link text use %1$s:Link Text%2$s', 'popup-maker' ), '{{privacy_link', '}}' ) : '',
+							'desc'         => function_exists( 'get_privacy_policy_url' ) ? sprintf( /* translators: 1. content name, 2 text label */ __( 'You can use %1$s%2$s to insert a link to your privacy policy. To customize the link text use %1$s:Link Text%2$s', 'popup-maker' ), '{{privacy_link', '}}' ) : '',
 							'type'         => 'text',
 							'std'          => pum_get_option( 'default_privacy_usage_text', __( 'If you opt in above we use this information send related content, discounts and other special offers.', 'popup-maker' ) ),
 							'dependencies' => $privacy_enabled_dependency,

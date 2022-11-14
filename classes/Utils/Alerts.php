@@ -199,7 +199,7 @@ class PUM_Utils_Alerts {
 
 			// The plugin has no translation for the current locale.
 		} elseif ( ! $current_locale_is_suggested && ! $current_locale_is_translated ) {
-			$suggest_string = sprintf( __( 'This plugin is not translated into %1$s yet. <a href="%2$s" target="_blank">Help translate it!</a>', 'popup-maker' ), $locales_supported_by_wordpress[ $current_locale ]['native_name'], esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' ) );
+			$suggest_string = sprintf( /* translators: 1. location string, 2 redirection site to help translate */__( 'This plugin is not translated into %1$s yet. <a href="%2$s" target="_blank">Help translate it!</a>', 'popup-maker' ), $locales_supported_by_wordpress[ $current_locale ]['native_name'], esc_url( 'https://translate.wordpress.org/projects/wp-plugins/popup-maker' ) );
 			// The plugin has translations for current locale, but they are out of date.
 		} elseif ( $current_locale_is_suggested && $current_locale_is_translated && version_compare( $locale_translation_versions[ $current_locale ], Popup_Maker::$VER, '<' ) ) {
 			$suggest_string = sprintf( /* translators: %s: native language name. */
@@ -238,6 +238,7 @@ class PUM_Utils_Alerts {
 					'code'     => 'whats_new_1_8_0',
 					'type'     => 'success',
 					'message'  => sprintf(
+						/* translators: 1. version, 2 upgrade, 3 changes */
 						'<strong>' . __( 'See whats new in v%1$s - (%2$sview all changes%3$s)', 'popup-maker' ) . '</strong>',
 						'1.8.0',
 						'<a href="' . add_query_arg(
@@ -296,6 +297,7 @@ class PUM_Utils_Alerts {
 
 				$alerts[] = [
 					'code'        => $key . '_integration_available',
+					/* translators: 1. string, 2 string, 3 integrated plugin label, 4 string, 5 string, 6 integrated plugin label, 7 integrated plugin label, 8 integrated plugin label */
 					'message'     => sprintf( __( '%1$sDid you know:%2$s Popup Maker has custom integrations with %3$s, %4$slearn more%5$s or %6$s%7$s%8$s!', 'popup-maker' ), '<strong>', '</strong>', $integration['label'], '<a href="' . $integration['learn_more_url'] . '" target="_blank">', '</a>', '<a href="' . $url . '">', $text, '</a>' ),
 					'dismissible' => true,
 					'global'      => false,

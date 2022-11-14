@@ -442,7 +442,7 @@ class PUM_Integrations {
 			switch ( $integration->key ) {
 				default:
 					$group_options = [
-						$integration->key . '_any' => sprintf( __( 'Any %s Form', 'popup-maker' ), $integration->label() ),
+						$integration->key . '_any' => sprintf( /* translators: 1. integration label */__( 'Any %s Form', 'popup-maker' ), $integration->label() ),
 					];
 
 					foreach ( $integration->get_form_selectlist() as $formId => $formLabel ) {

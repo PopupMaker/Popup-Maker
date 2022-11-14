@@ -791,7 +791,7 @@ class PUM_ListTable {
 			$this->screen->render_screen_reader_content( 'heading_pagination' );
 		}
 
-		$output = '<span class="displaying-num">' . sprintf( _n( '%s item', '%s items', $total_items ), number_format_i18n( $total_items ) ) . '</span>';
+		$output = '<span class="displaying-num">' . sprintf( /* translators: 1. display number */_n( '%s item', '%s items', $total_items ), number_format_i18n( $total_items ) ) . '</span>';
 
 		$current = $this->get_pagenum();
 
@@ -861,7 +861,7 @@ class PUM_ListTable {
 			);
 		}
 		$html_total_pages = sprintf( "<span class='total-pages'>%s</span>", number_format_i18n( $total_pages ) );
-		$page_links[]     = $total_pages_before . sprintf( _x( '%1$s of %2$s', 'paging' ), $html_current_page, $html_total_pages ) . $total_pages_after;
+		$page_links[]     = $total_pages_before . sprintf( /* translators: 1. total, 2 pages */_x( '%1$s of %2$s', 'paging' ), $html_current_page, $html_total_pages ) . $total_pages_after;
 
 		if ( $disable_next ) {
 			$page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&rsaquo;</span>';
@@ -1381,6 +1381,7 @@ class PUM_ListTable {
 
 		if ( isset( $this->_pagination_args['total_items'] ) ) {
 			$response['total_items_i18n'] = sprintf(
+				/* translators: 1. total items */
 				_n( '%s item', '%s items', $this->_pagination_args['total_items'] ),
 				number_format_i18n( $this->_pagination_args['total_items'] )
 			);

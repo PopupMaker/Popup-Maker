@@ -263,7 +263,7 @@ class PUM_Cookies {
 				'advanced' => [
 					'session' => [
 						'label'    => __( 'Use Session Cookie?', 'popup-maker' ),
-						'desc'     => __( 'Session cookies expire when the user closes their browser.', 'popup-maker' ) . ' ' . sprintf( __( '%1$sNote%2$s: Modern browsers that reopen your last browser session\'s tabs do not properly clear session cookies', 'popup-maker' ), '<strong>', '</strong>' ),
+						'desc'     => __( 'Session cookies expire when the user closes their browser.', 'popup-maker' ) . ' ' . sprintf( /* translators: 1. string, 2 string */__( '%1$sNote%2$s: Modern browsers that reopen your last browser session\'s tabs do not properly clear session cookies', 'popup-maker' ), '<strong>', '</strong>' ),
 						'type'     => 'checkbox',
 						'std'      => false,
 						'priority' => 1,

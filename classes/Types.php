@@ -112,15 +112,15 @@ class PUM_Types {
 			[
 				'name'               => '%2$s',
 				'singular_name'      => '%1$s',
-				'add_new_item'       => _x( 'Create New %1$s', 'Post Type Singular: "Popup", "Popup Theme"', 'popup-maker' ),
-				'add_new'            => _x( 'Create %1$s', 'Post Type Singular: "Popup", "Popup Theme"', 'popup-maker' ),
-				'edit_item'          => _x( 'Edit %1$s', 'Post Type Singular: "Popup", "Popup Theme"', 'popup-maker' ),
-				'new_item'           => _x( 'New %1$s', 'Post Type Singular: "Popup", "Popup Theme"', 'popup-maker' ),
-				'all_items'          => _x( 'All %2$s', 'Post Type Plural: "Popups", "Popup Themes"', 'popup-maker' ),
-				'view_item'          => _x( 'View %1$s', 'Post Type Singular: "Popup", "Popup Theme"', 'popup-maker' ),
-				'search_items'       => _x( 'Search %2$s', 'Post Type Plural: "Popups", "Popup Themes"', 'popup-maker' ),
-				'not_found'          => _x( 'No %2$s found', 'Post Type Plural: "Popups", "Popup Themes"', 'popup-maker' ),
-				'not_found_in_trash' => _x( 'No %2$s found in Trash', 'Post Type Plural: "Popups", "Popup Themes"', 'popup-maker' ),
+				'add_new_item'       => /* translators: 1. item */_x( 'Create New %1$s', 'Post Type Singular: "Popup", "Popup Theme"', 'popup-maker' ),
+				'add_new'            => /* translators: 1. item */_x( 'Create %1$s', 'Post Type Singular: "Popup", "Popup Theme"', 'popup-maker' ),
+				'edit_item'          => /* translators: 1. item */_x( 'Edit %1$s', 'Post Type Singular: "Popup", "Popup Theme"', 'popup-maker' ),
+				'new_item'           => /* translators: 1. item */_x( 'New %1$s', 'Post Type Singular: "Popup", "Popup Theme"', 'popup-maker' ),
+				'all_items'          => /* translators: 1. items */_x( 'All %2$s', 'Post Type Plural: "Popups", "Popup Themes"', 'popup-maker' ),
+				'view_item'          => /* translators: 1. item */_x( 'View %1$s', 'Post Type Singular: "Popup", "Popup Theme"', 'popup-maker' ),
+				'search_items'       => /* translators: 1. items */_x( 'Search %2$s', 'Post Type Plural: "Popups", "Popup Themes"', 'popup-maker' ),
+				'not_found'          => /* translators: 1. item */_x( 'No %2$s found', 'Post Type Plural: "Popups", "Popup Themes"', 'popup-maker' ),
+				'not_found_in_trash' => /* translators: 1. item */_x( 'No %2$s found in Trash', 'Post Type Plural: "Popups", "Popup Themes"', 'popup-maker' ),
 			]
 		);
 
@@ -189,11 +189,11 @@ class PUM_Types {
 	public static function updated_messages( $messages ) {
 
 		$labels = [
-			1 => _x( '%1$s updated.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
-			4 => _x( '%1$s updated.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
-			6 => _x( '%1$s published.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
-			7 => _x( '%1$s saved.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
-			8 => _x( '%1$s submitted.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
+			1 => /* translators: 1. item */_x( '%1$s updated.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
+			4 => /* translators: 1. item */_x( '%1$s updated.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
+			6 => /* translators: 1. item */_x( '%1$s published.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
+			7 => /* translators: 1. item */_x( '%1$s saved.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
+			8 => /* translators: 1. item */_x( '%1$s submitted.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
 		];
 
 		$messages['popup']       = [];
