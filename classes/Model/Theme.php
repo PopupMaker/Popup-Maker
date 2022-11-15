@@ -293,7 +293,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		}
 
 		/**
-		 * Apply filters for deprecated settings styles
+		 * Apply filters for settings styles
 		 *
 		 * @deprecated 1.8.0 filter
 		 */
