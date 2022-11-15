@@ -220,13 +220,13 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 
 			case 'start':
 				$total_count = $this->get_total_count();
-
+				/* translators: 1. total count */
 				$message = sprintf( _n( 'Updating %d %2$s.', 'Updating %d %3$s.', $total_count, 'popup-maker' ), number_format_i18n( $total_count ), $singular, $plural );
 				break;
 
 			case 'done':
 				$final_count = $this->get_current_count();
-
+				/* translators: 1. final count */
 				$message = sprintf( _n( '%s %2$s was updated successfully.', '%s %3$s were updated successfully.', $final_count, 'popup-maker' ), number_format_i18n( $final_count ), $singular, $plural );
 				break;
 

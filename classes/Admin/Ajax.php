@@ -291,7 +291,7 @@ class PUM_Admin_Ajax {
 		if ( empty( $class ) || ! class_exists( $class ) ) {
 			wp_send_json_error(
 				[
-					'error' => sprintf( __( '%1$s is an invalid handler for the %2$s batch process. Please try again.', 'popup-maker' ), "<code>{$class}</code>", "<code>{$batch_id}</code>" ),
+					'error' => sprintf( /* translators: 1. class to handle batch process, 2 batch id */__( '%1$s is an invalid handler for the %2$s batch process. Please try again.', 'popup-maker' ), "<code>{$class}</code>", "<code>{$batch_id}</code>" ),
 				]
 			);
 		}

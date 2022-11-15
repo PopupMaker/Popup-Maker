@@ -177,7 +177,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 * @return string Text to be placed inside the column <td>.
 	 */
 	protected function column_cb( $item ) {
-		$label = sprintf( '<label class="screen-reader-text" for="subscriber_%d">%s</label>', $item['ID'], sprintf( __( 'Select %s' ), $item['name'] ) );
+		$label = sprintf( '<label class="screen-reader-text" for="subscriber_%d">%s</label>', $item['ID'], sprintf( /* translators: 1. item */__( 'Select %s' ), $item['name'] ) );
 
 		$input = sprintf( '<input type="checkbox" name="%1$s[]" id="subscriber_%2$d" value="%2$d" />', $this->_args['singular'], $item['ID'] );
 
@@ -360,6 +360,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 
 					if ( ! in_array( false, $status, true ) ) {
 						wp_die(
+							/* translators: 1. amount of subscribers deleted */
 							sprintf( _n( 'Subscriber deleted!', '%d Subscribers deleted!', count( $subscribers ), 'popup-maker' ), count( $subscribers ) ),
 							__( 'Success', 'popup-maker' ),
 							[
