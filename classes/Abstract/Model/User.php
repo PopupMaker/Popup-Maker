@@ -107,6 +107,8 @@ abstract class PUM_Abstract_Model_User {
 
 	/**
 	 * The required permission|user_role|capability|user_level of the user.
+	 *
+	 * @var
 	 */
 	protected $required_permission = '';
 
