@@ -5,7 +5,6 @@
  * @package     PUM
  * @copyright   Copyright (c) 2022, Code Atlantic LLC
  */
-
 class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 
 	/** 
