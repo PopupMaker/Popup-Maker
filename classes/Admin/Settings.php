@@ -718,7 +718,11 @@ class PUM_Admin_Settings {
 				]
 			);
 
-			/** @deprecated 1.7.0 */
+			/**
+			 * Filter tabs
+			 *
+			 * @deprecated 1.7.0
+			 */
 			$tabs = apply_filters( 'popmake_settings_tabs', $tabs );
 		}
 
@@ -839,7 +843,7 @@ class PUM_Admin_Settings {
 	}
 
 	/**
-	 *
+	 * Function license_deactivated
 	 */
 	public static function license_deactivated() {
 
