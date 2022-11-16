@@ -285,6 +285,7 @@ class PUM_Extension_Updater {
 
 			if ( empty( $version_info->download_link ) ) {
 				printf(
+					/* translators: 1. plugin name, 2 string view, 3 string version, 4 string details */
 					__( 'There is a new version of %1$s available. %2$sView version %3$s details%4$s.', 'popup-maker' ),
 					esc_html( $version_info->name ),
 					'<a target="_blank" class="thickbox" href="' . esc_url( $changelog_link ) . '">',
@@ -293,6 +294,7 @@ class PUM_Extension_Updater {
 				);
 			} else {
 				printf(
+					/* translators: 1. plugin name, 2 string view, 3 string version, 4 string details, 5 string update, 6 string now */
 					__( 'There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s.', 'popup-maker' ),
 					esc_html( $version_info->name ),
 					'<a target="_blank" class="thickbox" href="' . esc_url( $changelog_link ) . '">',
