@@ -144,7 +144,7 @@ class PUM_Admin_Themes {
 
 		<div id="pum-theme-settings-container" class="pum-theme-settings-container">
 			<div class="pum-no-js" style="padding: 0 12px;">
-				<p><?php printf( __( 'If you are seeing this, the page is still loading or there are Javascript errors on this page. %1$sView troubleshooting guide%2$s', 'popup-maker' ), '<a href="https://docs.wppopupmaker.com/article/373-checking-for-javascript-errors" target="_blank">', '</a>' ); ?></p>
+				<p><?php printf( /* translators: 1. string, string */__( 'If you are seeing this, the page is still loading or there are Javascript errors on this page. %1$sView troubleshooting guide%2$s', 'popup-maker' ), '<a href="https://docs.wppopupmaker.com/article/373-checking-for-javascript-errors" target="_blank">', '</a>' ); ?></p>
 			</div>
 		</div>
 		<?php
