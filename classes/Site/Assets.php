@@ -287,7 +287,7 @@ class PUM_Site_Assets {
 					[
 						'debug_mode_enabled'    => __( 'Popup Maker', 'popup-maker' ) . ': ' . __( 'Debug Mode Enabled', 'popup-maker' ),
 						'debug_started_at'      => __( 'Debug started at:', 'popup-maker' ),
-						'debug_more_info'       => sprintf( __( 'For more information on how to use this information visit %s', 'popup-maker' ), 'https://docs.wppopupmaker.com/?utm_medium=js-debug-info&utm_campaign=contextual-help&utm_source=browser-console&utm_content=more-info' ),
+						'debug_more_info'       => sprintf( /* translators: 1. plugin site */__( 'For more information on how to use this information visit %s', 'popup-maker' ), 'https://docs.wppopupmaker.com/?utm_medium=js-debug-info&utm_campaign=contextual-help&utm_source=browser-console&utm_content=more-info' ),
 						'global_info'           => __( 'Global Information', 'popup-maker' ),
 						'localized_vars'        => __( 'Localized variables', 'popup-maker' ),
 						'popups_initializing'   => __( 'Popups Initializing', 'popup-maker' ),
@@ -306,7 +306,7 @@ class PUM_Site_Assets {
 						'label_selector'        => __( 'Selector:', 'popup-maker' ),
 						'label_mobile_disabled' => __( 'Mobile Disabled:', 'popup-maker' ),
 						'label_tablet_disabled' => __( 'Tablet Disabled:', 'popup-maker' ),
-						'label_event'           => __( 'Event: %s', 'popup-maker' ),
+						'label_event'           => /* translators: 1. event string */__( 'Event: %s', 'popup-maker' ),
 						'triggers'              => PUM_Triggers::instance()->dropdown_list(),
 						'cookies'               => PUM_Cookies::instance()->dropdown_list(),
 					]
