@@ -20,15 +20,53 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @version 1.6.18
  */
 class PUM_Extension_Updater {
-
+	/**
+	 * Url to update
+	 *
+	 * @var string
+	 */
 	private $api_url     = '';
+	/**
+	 * Data to update
+	 *
+	 * @var array
+	 */
 	private $api_data    = [];
+	/**
+	 * Name to update
+	 *
+	 * @var string
+	 */
 	private $name        = '';
+	/**
+	 * Slug to update
+	 *
+	 * @var string
+	 */
 	private $slug        = '';
+	/**
+	 * Version to update
+	 *
+	 * @var string
+	 */
 	private $version     = '';
+	/**
+	 * Updates private value
+	 *
+	 * @var bool
+	 */
 	private $wp_override = false;
+	/**
+	 * Cache to update
+	 *
+	 * @var string
+	 */
 	private $cache_key   = '';
-
+	/**
+	 * Health check updater
+	 *
+	 * @var int
+	 */
 	private $health_check_timeout = 5;
 
 	/**
