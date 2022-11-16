@@ -17,9 +17,18 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Registers the popup_cookie shortcode.
  */
 class PUM_Shortcode_PopupCookie extends PUM_Shortcode {
-
+	/**
+	 * Popup Cookie version
+	 *
+	 * @var int
+	 */
 	public $version = 2;
 
+	/**
+	 * Popup Cookie content variable
+	 *
+	 * @var int
+	 */
 	public $has_content = false;
 
 	/**

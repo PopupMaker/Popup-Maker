@@ -17,11 +17,25 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Registers the popup_close shortcode.
  */
 class PUM_Shortcode_Popup extends PUM_Shortcode {
-
+	/**
+	 * Popup version
+	 *
+	 * @var int $version
+	 */
 	public $version = 2;
 
+	/**
+	 * Popup has content
+	 *
+	 * @var bool $has_content
+	 */
 	public $has_content = true;
 
+	/**
+	 * Popups content priority
+	 *
+	 * @var int $inner_content_priority
+	 */
 	public $inner_content_priority = 15;
 
 	/**

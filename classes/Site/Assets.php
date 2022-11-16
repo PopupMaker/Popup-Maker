@@ -11,28 +11,28 @@ class PUM_Site_Assets {
 	/**
 	 * Site assets $cache-url variable
 	 *
-	 * @var
+	 * @var $cache_url
 	 */
 	public static $cache_url;
 
 	/**
 	 * $suffix variable
 	 *
-	 * @var
+	 * @var $suffix
 	 */
 	public static $suffix;
 
 	/**
 	 * Site assets $js_url variable
 	 *
-	 * @var
+	 * @var $js_url
 	 */
 	public static $js_url;
 
 	/**
 	 * Site assets $css_url variable
 	 *
-	 * @var
+	 * @var $css_url
 	 */
 	public static $css_url;
 
