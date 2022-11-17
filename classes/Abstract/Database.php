@@ -243,7 +243,7 @@ abstract class PUM_Abstract_Database {
 	/**
 	 * Insert a new row
 	 *
-	 * @param        $data
+	 * @param        $data  Data to insert
 	 * @param string $type  Type of data to insert.
 	 *
 	 * @return  int
