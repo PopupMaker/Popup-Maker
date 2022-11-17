@@ -662,9 +662,9 @@ class PUM_ListTable {
 		$approved_comments_number = number_format_i18n( $approved_comments );
 		$pending_comments_number  = number_format_i18n( $pending_comments );
 
-		$approved_only_phrase = sprintf( _n( '%s comment', '%s comments', $approved_comments ), $approved_comments_number );
-		$approved_phrase      = sprintf( _n( '%s approved comment', '%s approved comments', $approved_comments ), $approved_comments_number );
-		$pending_phrase       = sprintf( _n( '%s pending comment', '%s pending comments', $pending_comments ), $pending_comments_number );
+		$approved_only_phrase = sprintf( /* translators: 1. approved comments, 2 approved comments number */_n( '%s comment', '%s comments', $approved_comments ), $approved_comments_number );
+		$approved_phrase      = sprintf( /* translators: 1. approved comments, 2 approved comments number */_n( '%s approved comment', '%s approved comments', $approved_comments ), $approved_comments_number );
+		$pending_phrase       = sprintf( /* translators: 1. pending comments, 2 pending comments number */_n( '%s pending comment', '%s pending comments', $pending_comments ), $pending_comments_number );
 
 		// No comments at all.
 		if ( ! $approved_comments && ! $pending_comments ) {
