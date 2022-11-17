@@ -17,12 +17,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Integrations {
 
 	/**
+	 * Integrations array
+	 *
 	 * @var PUM_Abstract_Integration[]|PUM_Abstract_Integration_Form[]
 	 */
 	public static $integrations = [];
 
 	/**
-	 * @var bool
+	 * Preload posts for Integrations
+	 *
+	 * @var bool $preload_posts
 	 */
 	public static $preload_posts = false;
 
@@ -81,6 +85,8 @@ class PUM_Integrations {
 	}
 
 	/**
+	 * Retrieves enabled forms
+	 *
 	 * @return PUM_Abstract_Integration_Form[]
 	 */
 	public static function get_enabled_form_integrations() {
@@ -113,6 +119,8 @@ class PUM_Integrations {
 	}
 
 	/**
+	 * Gets integration data for specified item
+	 *
 	 * @param $key
 	 *
 	 * @return bool|PUM_Abstract_Integration|PUM_Abstract_Integration_Form
@@ -122,6 +130,8 @@ class PUM_Integrations {
 	}
 
 	/**
+	 * Gets forms for integration
+	 *
 	 * @param string $key
 	 *
 	 * @return array
@@ -137,6 +147,8 @@ class PUM_Integrations {
 	}
 
 	/**
+	 * Gets specified form
+	 *
 	 * @param $key
 	 * @param $id
 	 *
@@ -153,6 +165,8 @@ class PUM_Integrations {
 	}
 
 	/**
+	 * Gets the form selectlist
+	 *
 	 * @param $key
 	 *
 	 * @return array
@@ -286,6 +300,8 @@ class PUM_Integrations {
 
 
 	/**
+	 * Generated js for Integrations
+	 *
 	 * @param array $js
 	 *
 	 * @return array
@@ -302,6 +318,8 @@ class PUM_Integrations {
 	}
 
 	/**
+	 * Generated css for integrations
+	 *
 	 * @param array $css
 	 *
 	 * @return array $css
