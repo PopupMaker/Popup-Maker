@@ -219,6 +219,8 @@ class PUM_Utils_Logging {
 	}
 
 	/**
+	 * Log deprecated notice
+	 *
 	 * @param      $function
 	 * @param      $version
 	 * @param null     $replacement

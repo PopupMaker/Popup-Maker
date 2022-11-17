@@ -615,7 +615,11 @@ class PUM_Utils_Upgrades {
 			$upgrade->pre_fetch();
 		}
 
-		/** @var int|string|WP_Error $step */
+		/**
+		 * $step variable for Upgrades
+		 *
+		 * @var int|string|WP_Error $step
+		 */
 		$step = $upgrade->process_step();
 
 		if ( ! is_wp_error( $step ) ) {
@@ -712,6 +716,8 @@ class PUM_Utils_Upgrades {
 		}
 
 		/**
+		 * New $step to upgrade
+		 *
 		 * @var PUM_Interface_Batch_Process|PUM_Interface_Batch_PrefetchProcess
 		 */
 		return new $class( $step );

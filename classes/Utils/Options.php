@@ -41,7 +41,11 @@ class PUM_Utils_Options {
 		if ( ! isset( self::$_data ) || $force ) {
 			self::$_data = self::get_all();
 
-			/** @deprecated 1.7.0 */
+			/**
+			 * $popmake_options variable
+			 *
+			 * @deprecated 1.7.0
+			 */
 			$popmake_options = self::$_data;
 		}
 	}
