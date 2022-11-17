@@ -17,16 +17,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Conditions {
 
 	/**
-	 * $instance variable for conditions
+	 * Instance for conditions
 	 *
-	 * @var
+	 * @var $instance
 	 */
 	public static $instance;
 
 	/**
-	 * $preload_posts variable
+	 * Preload posts
 	 *
-	 * @var bool
+	 * @var bool $preload_posts
 	 */
 	public $preload_posts = false;
 
