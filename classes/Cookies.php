@@ -288,6 +288,8 @@ class PUM_Cookies {
 	}
 
 	/**
+	 * Gets labels for cookies
+	 *
 	 * @return array
 	 */
 	public function get_labels() {
@@ -306,6 +308,8 @@ class PUM_Cookies {
 	}
 
 	/**
+	 * Validate cookie
+	 *
 	 * @param null  $cookie
 	 * @param array $settings
 	 *
