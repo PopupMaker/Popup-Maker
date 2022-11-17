@@ -245,7 +245,11 @@ abstract class PUM_Shortcode {
 			$this->template();
 			echo '</script>';
 		} else {
-			/** @deprecated, here in case shortcode doesn't yet have the new $this->template() method. */
+			/**
+			 * Here in this case shortcode doesn't yet have the new $this->template() method.
+			 *
+			 * @deprecated
+			 */
 			$this->_template();
 		}
 	}

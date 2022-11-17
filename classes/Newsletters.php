@@ -14,10 +14,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Newsletters {
 
 	/**
+	 * Newsletters errors
+	 *
 	 * @var WP_Error
 	 */
 	public static $errors;
 
+	/**
+	 * Newsletters disabled
+	 *
+	 * @var bool $disabled
+	 */
 	public static $disabled = false;
 
 	public static function init() {
