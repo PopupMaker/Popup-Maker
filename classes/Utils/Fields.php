@@ -101,6 +101,8 @@ class PUM_Utils_Fields {
 	}
 
 	/**
+	 * Utility Fields to parse
+	 *
 	 * @param $field
 	 *
 	 * @return array
@@ -368,6 +370,8 @@ class PUM_Utils_Fields {
 	}
 
 	/**
+	 * Sanitizes field
+	 *
 	 * @param array $args
 	 * @param mixed $value
 	 * @param array $fields
