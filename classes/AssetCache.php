@@ -379,7 +379,11 @@ class PUM_AssetCache {
 
 		WP_Filesystem();
 
-		/** @var WP_Filesystem_Base $wp_filesystem */
+		/**
+		 * Global File system for Asset Cache
+		 *
+		 * @var WP_Filesystem_Base $wp_filesystem
+		 */
 		global $wp_filesystem;
 
 		$results = $wp_filesystem->put_contents( $file, $contents, defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : false );
