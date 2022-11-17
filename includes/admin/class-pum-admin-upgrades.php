@@ -257,7 +257,7 @@ class PUM_Admin_Upgrades {
 				__( 'Important', 'popup-maker' ),
 				__( 'Database upgrades required.', 'popup-maker' ),
 				sprintf(
-					__( 'Please click %1$shere%2$s to complete these changes now.', 'popup-maker' ),
+					/* translators: 1. string, 2 string to click */__( 'Please click %1$shere%2$s to complete these changes now.', 'popup-maker' ),
 					'<a href="' . esc_url( admin_url( 'options.php?page=pum-upgrades' ) ) . '">',
 					'</a>'
 				)
