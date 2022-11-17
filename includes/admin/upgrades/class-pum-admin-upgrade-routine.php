@@ -58,7 +58,7 @@ class PUM_Admin_Upgrade_Routine {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			echo wp_json_encode(
 				[
-					'status' => sprintf( __( 'Step %1$d of approximately %2$d running', 'popup-maker' ), $upgrades->get_arg( 'step' ), $upgrades->get_arg( 'steps' ) ),
+					'status' => sprintf( /* translators: 1. number in process, 2 total amount of step numbers to process */__( 'Step %1$d of approximately %2$d running', 'popup-maker' ), $upgrades->get_arg( 'step' ), $upgrades->get_arg( 'steps' ) ),
 					'next'   => $upgrades->get_args(),
 				]
 			);
