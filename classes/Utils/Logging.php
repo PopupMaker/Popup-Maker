@@ -49,7 +49,7 @@ class PUM_Utils_Logging {
 	public static $instance;
 
 	/**
-	 * Instance logging utility function 
+	 * Instance logging utility function
 	 *
 	 * @return PUM_Utils_Logging
 	 */
