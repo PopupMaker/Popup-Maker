@@ -14,58 +14,63 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_AssetCache {
 
 	/**
-	 * $cache_dir variable
+	 * Cache directory
 	 *
-	 * @var
+	 * @var $cache_dir
 	 */
 	public static $cache_dir;
 
 	/**
 	 * $suffix variable
 	 *
-	 * @var
+	 * @var $suffix
 	 */
 	public static $suffix;
 
 	/**
-	 * $asset_url variable
+	 * Asset url
 	 *
-	 * @var
+	 * @var $asset_url
 	 */
 	public static $asset_url;
 
 	/**
-	 * $js_url variable
+	 * Url for js
 	 *
-	 * @var
+	 * @var $js_url
 	 */
 	public static $js_url;
 
 	/**
-	 * $css_url variable
+	 * Url for css
 	 *
-	 * @var
+	 * @var $css_url
 	 */
 	public static $css_url;
 
 	/**
-	 * $disabled variable
+	 * Disabled for asset cache
 	 *
-	 * @var bool
+	 * @var bool $disabled
 	 */
 	public static $disabled = true;
 
 	/**
-	 * $debug variable
+	 * Debug for asset cache
 	 *
-	 * @var
+	 * @var $debug
 	 */
 	public static $debug;
 
+	/**
+	 * Initialized for Asset Cache
+	 *
+	 * @var bool $initialized
+	 */
 	public static $initialized = false;
 
 	/**
-	 *
+	 * Initialize asset cache
 	 */
 	public static function init() {
 		if ( ! self::$initialized ) {
@@ -165,7 +170,11 @@ class PUM_AssetCache {
 		// Checks and create cachedir.
 		if ( false !== self::$cache_dir && ! is_dir( self::$cache_dir ) ) {
 
-			/** @var WP_Filesystem_Base $wp_filesystem */
+			/**
+			 * File system for Asset Cache
+			 *
+			 * @var WP_Filesystem_Base $wp_filesystem
+			 */
 			$wp_filesystem->mkdir( self::$cache_dir );
 		}
 
