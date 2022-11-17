@@ -14,7 +14,11 @@
  * @return bool
  */
 function pum_passive_popup_upgrades_enabled() {
-	/** @var int $popup_count */
+	/**
+	 * Popup count
+	 *
+	 * @var int $popup_count
+	 */
 	static $popup_count;
 
 	if ( defined( 'PUM_DISABLE_PASSIVE_UPGRADES' ) && PUM_DISABLE_PASSIVE_UPGRADES ) {

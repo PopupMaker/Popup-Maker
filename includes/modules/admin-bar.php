@@ -93,7 +93,11 @@ class PUM_Modules_Admin_Bar {
 		if ( count( $popups ) ) {
 
 			foreach ( $popups as $popup ) {
-				/** @var WP_Post $popup */
+				/**
+				 * Loaded popup
+				 *
+				 * @var WP_Post $popup
+				 */
 
 				$node_id = 'popup-' . $popup->ID;
 

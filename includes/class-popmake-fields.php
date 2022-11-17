@@ -555,7 +555,7 @@ class Popmake_Fields {
 	}
 
 	/**
-	 * 
+	 * Fields classes
 	 *
 	 * @param $args
 	 * @param null $class

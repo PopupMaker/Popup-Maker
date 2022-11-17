@@ -33,6 +33,8 @@ function pum_is_popup_object( $popup ) {
 }
 
 /**
+ * Checks if popup is loadable
+ *
  * @param int $popup_id
  *
  * @return bool

@@ -92,84 +92,114 @@ spl_autoload_register( 'pum_autoloader' ); // Register autoloader.
 class Popup_Maker {
 
 	/**
-	 * @var string Plugin Name
+	 * Plugin Name
+	 *
+	 * @var string $NAME
 	 */
 	public static $NAME = 'Popup Maker';
 
 	/**
-	 * @var string Plugin Version
+	 * Plugin Version
+	 *
+	 * @var string $VER
 	 */
 	public static $VER = '1.16.9';
 
 	/**
-	 * @var int DB Version
+	 * DB Version
+	 *
+	 * @var int $DB_VER
 	 */
 	public static $DB_VER = 8;
 
 	/**
-	 * @var string License API URL
+	 * License API URL
+	 *
+	 * @var string $API_URL
 	 */
 	public static $API_URL = 'https://wppopupmaker.com';
 
 	/**
-	 * @var string
+	 * Minimum PHP version
+	 *
+	 * @var string $MIN_PHP_VER
 	 */
 	public static $MIN_PHP_VER = '5.6';
 
 	/**
-	 * @var string
+	 * Minimum Wordpress version
+	 *
+	 * @var string $MIN_WP_VER
 	 */
 	public static $MIN_WP_VER = '4.9';
 
 	/**
-	 * @var string Plugin URL
+	 * Plugin URL
+	 *
+	 * @var string $URL
 	 */
 	public static $URL;
 
 	/**
-	 * @var string Plugin Directory
+	 * Plugin Directory
+	 *
+	 * @var string $DIR
 	 */
 	public static $DIR;
 
 	/**
-	 * @var string Plugin FILE
+	 * Plugin FILE
+	 *
+	 * @var string $FILE
 	 */
 	public static $FILE;
 
 	/**
 	 * Used to test if debug_mode is enabled.
 	 *
-	 * @var bool
+	 * @var bool $DEBUG_MODE
 	 */
 	public static $DEBUG_MODE = false;
 
 	/**
+	 * Cron
+	 *
 	 * @var PUM_Utils_Cron
 	 */
 	public $cron;
 
 	/**
+	 * Popups repository
+	 *
 	 * @var PUM_Repository_Popups
 	 */
 	public $popups;
 
 	/**
+	 * Themes repository
+	 *
 	 * @var PUM_Repository_Themes
 	 */
 	public $themes;
 
 	/**
+	 * Current Popup
+	 *
 	 * @var null|PUM_Model_Popup
 	 */
 	public $current_popup;
 
 	/**
+	 * Current theme
+	 *
 	 * @var null|PUM_Model_Theme
 	 */
 	public $current_theme;
 
 	/**
-	 * @var Popup_Maker The one true Popup_Maker
+	 * The one true Popup_Maker
+	 *
+	 * @var Popup_Maker $instance
 	 */
 	private static $instance;
 
@@ -391,6 +421,8 @@ register_deactivation_hook( __FILE__, [ 'PUM_Install', 'deactivate_plugin' ] );
 register_uninstall_hook( __FILE__, [ 'PUM_Install', 'uninstall_plugin' ] );
 
 /**
+ * Initialize PUM
+ *
  * @deprecated 1.7.0
  */
 function popmake_initialize() {

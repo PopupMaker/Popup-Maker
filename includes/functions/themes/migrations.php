@@ -14,7 +14,11 @@
  * @return bool
  */
 function pum_passive_theme_upgrades_enabled() {
-	/** @var int $theme_count */
+	/**
+	 * Theme count
+	 *
+	 * @var int $theme_count
+	 */
 	static $theme_count;
 
 	if ( defined( 'PUM_DISABLE_PASSIVE_UPGRADES' ) && PUM_DISABLE_PASSIVE_UPGRADES ) {
