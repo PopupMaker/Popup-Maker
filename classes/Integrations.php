@@ -30,8 +30,18 @@ class PUM_Integrations {
 	 */
 	public static $preload_posts = false;
 
+	/**
+	 * Form success for Integrations
+	 *
+	 * @var $form_success
+	 */
 	public static $form_success;
 
+	/**
+	 * Form submission for Integrations
+	 *
+	 * @var $form_submission
+	 */
 	public static $form_submission;
 
 	/**
