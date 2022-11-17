@@ -24,20 +24,45 @@ class PUM_Admin_Upgrades {
 	private static $instance;
 
 	/**
-	 * $upgrade_args variable
+	 * Upgrade arguments for Class PUM
 	 *
-	 * @var $upgrade_args
+	 * @var array $upgrade_args
 	 */
 	public $upgrade_args = [];
 
+	/**
+	 * Page for Class PUM upgrades
+	 *
+	 * @var $page
+	 */
 	public $page = null;
 
+	/**
+	 * Doing upgrades for Class PUM upgrades
+	 *
+	 * @var bool $doing_upgrades
+	 */
 	public $doing_upgrades = false;
 
+	/**
+	 * Required cap for class pum upgrades
+	 *
+	 * @var $required_cap
+	 */
 	public $required_cap = 'manage_options';
 
+	/**
+	 * Current routine for class pum upgrades
+	 *
+	 * @var $current_routine
+	 */
 	public $current_routine = null;
 
+	/**
+	 * Next routine for class pum upgrades
+	 *
+	 * @var $next_routine
+	 */
 	public $next_routine = null;
 
 	/**
