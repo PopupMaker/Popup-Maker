@@ -47,6 +47,8 @@ class PUM_Newsletter_Providers {
 
 	/**
 	 * Adds provider.
+	 *
+	 * @param $provider  Abstract provider
 	 */
 	public function add_provider( PUM_Abstract_Provider $provider ) {
 		$this->providers[ $provider->id ] = $provider;

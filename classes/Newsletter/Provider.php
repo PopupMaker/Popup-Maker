@@ -32,7 +32,7 @@ abstract class PUM_Newsletter_Provider extends PUM_Abstract_Provider {
 	/**
 	 * Process deprecated settings field registration from extensions that haven't updated.
 	 *
-	 * @param $fields
+	 * @param $fields  Settings field
 	 *
 	 * @return mixed
 	 */

@@ -138,7 +138,7 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 	 *
 	 * Also remaps and cleans old ones.
 	 *
-	 * @param $atts
+	 * @param $atts  Shortcode attributes
 	 *
 	 * @return array
 	 */

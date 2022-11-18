@@ -79,8 +79,8 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	/**
 	 * Returns a specific theme setting with optional default value when not found.
 	 *
-	 * @param      $key
-	 * @param bool $default
+	 * @param      $key Theme setting
+	 * @param bool $default Default value
 	 *
 	 * @return bool|mixed
 	 */
@@ -318,8 +318,8 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	/**
 	 * Retrieve settings in the form of deprecated grouped arrays.
 	 *
-	 * @param      $group
-	 * @param null  $key
+	 * @param      $group Theme group
+	 * @param null  $key  Settings to retrieve
 	 *
 	 * @return mixed
 	 */
@@ -374,7 +374,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	/**
 	 * Remapped meta settings keys.
 	 *
-	 * @param $group
+	 * @param $group  Theme group
 	 *
 	 * @return array|mixed
 	 */
