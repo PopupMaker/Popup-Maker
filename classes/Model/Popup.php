@@ -19,23 +19,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 
 	/*
-	 * $required_post_type variable
+	 * Popup required post type
 	 *
-	 * @var string
+	 * @var string $required_post_type
 	 */
 	protected $required_post_type = 'popup';
 
 	/**
-	 * $conditions_filtered variable
+	 * Popup filtered conditions
 	 *
-	 * @var array
+	 * @var array $conditions_filtered
 	 */
 	public $conditions_filtered = [];
 
 	/**
-	 * $content variable
+	 * Popup content
 	 *
-	 * @var string
+	 * @var string $content
 	 *
 	 * @deprecated  1.8.0 Was used in PUM ALM extension, needs time to get those changes published.
 	 * @toberemoved v1.9.0
@@ -43,9 +43,9 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	public $content;
 
 	/**
-	 * $doing_passive_migration variable
+	 * Popup doing passive migration
 	 *
-	 *  @var bool
+	 * @var bool $doing_passive_migration
 	 */
 	public $doing_passive_migration = false;
 
@@ -56,7 +56,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * 2 - v1.4.0
 	 * 3 - v1.7.0
 	 *
-	 * @var int
+	 * @var int $model_version
 	 */
 	public $model_version = 3;
 
@@ -67,7 +67,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * 2 - v1.4.0
 	 * 3 - v1.7.0
 	 *
-	 * @var int
+	 * @var int $data_version
 	 */
 	public $data_version;
 
@@ -84,7 +84,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	/**
 	 * $close variable
 	 *
-	 * @var array
+	 * @var array $close
 	 * @deprecated 1.7.0
 	 */
 	public $close;
@@ -92,7 +92,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	/**
 	 * Used to hackishly insert settings for generated popups not stored in DB. (Shortcodes).
 	 *
-	 * @var array
+	 * @var array $settings
 	 * @since 1.8.0
 	 */
 	public $settings = null;
@@ -100,7 +100,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	/**
 	 * Used to hackishly insert title for generated popups not stored in DB. (Shortcodes).
 	 *
-	 * @var string
+	 * @var string $title
 	 * @since 1.8.0
 	 */
 	public $title = null;
@@ -108,7 +108,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	/**
 	 * Used to hackishly change the model to prevent queries. (Shortcodes).
 	 *
-	 * @var string
+	 * @var string $mock
 	 * @since 1.8.0
 	 */
 	public $mock = false;
@@ -116,8 +116,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	/**
 	 * Function get_meta.
 	 *
-	 * @param      $key
-	 * @param bool $single
+	 * @param      $key Meta key
+	 * @param bool $single 
 	 *
 	 * @return mixed|false
 	 */
@@ -180,8 +180,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	/**
 	 * Returns a specific popup setting with optional default value when not found.
 	 *
-	 * @param      $key
-	 * @param bool $default
+	 * @param      $key Specific popup setting
+	 * @param bool $default Default
 	 *
 	 * @return bool|mixed
 	 */
