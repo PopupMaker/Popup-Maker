@@ -77,8 +77,8 @@ class PUM_Extension_Activator {
 	/**
 	 * Retrieves static property value.
 	 *
-	 * @param $class_name
-	 * @param $prop_name
+	 * @param $class_name Class name
+	 * @param $prop_name Prop name
 	 *
 	 * @return null|mixed
 	 */
@@ -99,7 +99,7 @@ class PUM_Extension_Activator {
 	/**
 	 * Setup the activator class
 	 *
-	 * @param  $class_name
+	 * @param  $class_name Class name
 	 */
 	public function __construct( $class_name ) {
 		// We need plugin.php!

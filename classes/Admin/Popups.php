@@ -284,8 +284,8 @@ class PUM_Admin_Popups {
 	/**
 	 * Save popup for post.
 	 *
-	 * @param $post_id
-	 * @param $post
+	 * @param $post_id  Specified post
+	 * @param $post     Post
 	 */
 	public static function save( $post_id, $post ) {
 
@@ -353,7 +353,7 @@ class PUM_Admin_Popups {
 	 *
 	 * Add additional data for license_key fields, split the measure fields etc.
 	 *
-	 * @param $settings
+	 * @param $settings  Data to retrieve
 	 *
 	 * @return mixed
 	 */
@@ -1152,8 +1152,8 @@ class PUM_Admin_Popups {
 	/**
 	 * Ensures that the popups have unique slugs.
 	 *
-	 * @param $data
-	 * @param $postarr
+	 * @param $data  Data retrieved
+	 * @param $postarr  Unique id
 	 *
 	 * @return mixed
 	 */

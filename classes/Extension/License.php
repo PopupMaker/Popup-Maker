@@ -471,6 +471,9 @@ class PUM_Extension_License {
 
 	/**
 	 * Displays message inline on plugin row that the license key is missing
+	 *
+	 * @param $plugin_data Plugin data
+	 * @param $version_info Version information
 	 */
 	public function plugin_row_license_missing( $plugin_data, $version_info ) {
 

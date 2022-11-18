@@ -80,8 +80,8 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 	/**
 	 * Handles form submission. 
 	 *
-	 * @param $entry
-	 * @param $form
+	 * @param $entry Form entry.
+	 * @param $form  Form
 	 */
 	public function on_success( $entry, $form ) {
 		if ( ! self::should_process_submission() ) {

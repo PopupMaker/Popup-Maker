@@ -796,7 +796,7 @@ class PUM_Admin_Settings {
 	 *
 	 * Add additional data for license_key fields, split the measure fields etc.
 	 *
-	 * @param $settings
+	 * @param $settings Data for settings
 	 *
 	 * @return mixed
 	 */

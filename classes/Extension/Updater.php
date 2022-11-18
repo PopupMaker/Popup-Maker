@@ -607,6 +607,8 @@ class PUM_Extension_Updater {
 
 	/**
 	 * Gets cached version info for Extension Updater.
+	 *
+	 * @param $cache_key Cache key.
 	 */
 	public function get_cached_version_info( $cache_key = '' ) {
 

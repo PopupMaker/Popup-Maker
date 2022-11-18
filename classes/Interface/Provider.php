@@ -47,7 +47,7 @@ interface PUM_Interface_Provider {
 	/**
 	 * Creates the inputs for each of the needed extra fields for the email provider
 	 *
-	 * @param $shortcode_atts
+	 * @param $shortcode_atts Shortcode atts for Provider.
 	 */
 	public function render_fields( $shortcode_atts );
 
@@ -73,9 +73,9 @@ interface PUM_Interface_Provider {
 	/**
 	 * Subscribes the user to the list.
 	 *
-	 * @param $values
-	 * @param array    $json_response
-	 * @param WP_Error $errors
+	 * @param $values Provider Values
+	 * @param array    $json_response Json response
+	 * @param WP_Error $errors Errors
 	 */
 	public function form_submission( $values, &$json_response, WP_Error &$errors );
 

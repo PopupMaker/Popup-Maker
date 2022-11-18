@@ -73,7 +73,7 @@ class PUM_Admin_Helpers {
 	 *
 	 * @param array       $ref_arr  Array being referenced.
 	 * @param string      $key1  Specified string.
-	 * @param int|string  $move
+	 * @param int|string  $move  Moves item.
 	 * @param string|null $key2  Specified string.
 	 *
 	 * @return bool
@@ -103,8 +103,8 @@ class PUM_Admin_Helpers {
 	 * @deprecated 1.7.20
 	 * @see        PUM_Helper_Array::sort_by_sort
 	 *
-	 * @param array $a
-	 * @param array $b
+	 * @param array $a Array to sort
+	 * @param array $b Array to sort
 	 *
 	 * @return array
 	 */
@@ -140,9 +140,9 @@ class PUM_Admin_Helpers {
 	 * @deprecated 1.7.20
 	 * @see        PUM_Utils_Array::from_object instead.
 	 *
-	 * @param $array
-	 * @param $old_key
-	 * @param $new_key
+	 * @param $array    Array
+	 * @param $old_key  Old key to replace
+	 * @param $new_key  New key
 	 *
 	 * @return array
 	 * @throws Exception
@@ -188,7 +188,7 @@ class PUM_Admin_Helpers {
 	/**
 	 * Function parse_field.
 	 *
-	 * @param $field
+	 * @param $field  Field to be parsed
 	 *
 	 * @return array
 	 */
@@ -248,7 +248,7 @@ class PUM_Admin_Helpers {
 	/**
 	 * Function parse_tab_fields.
 	 *
-	 * @param       $fields
+	 * @param       $fields  Tab fields to parse
 	 * @param array  $args  Array of arguments.
 	 *
 	 * @return mixed
@@ -337,8 +337,8 @@ class PUM_Admin_Helpers {
 	 * @deprecated 1.7.20
 	 * @see        PUM_Utils_Array::sort_by_priority instead.
 	 *
-	 * @param $a
-	 * @param $b
+	 * @param $a  Value to sort
+	 * @param $b  Value to sort
 	 *
 	 * @return int
 	 */
@@ -446,7 +446,7 @@ class PUM_Admin_Helpers {
 	 * @deprecated 1.7.20
 	 * @see        PUM_Utils_Array::from_object instead.
 	 *
-	 * @param $obj
+	 * @param $obj  Object to convert
 	 *
 	 * @return array
 	 */

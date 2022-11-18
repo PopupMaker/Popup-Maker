@@ -100,7 +100,7 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	/**
 	 * Handles form submission for version 3.
 	 *
-	 * @param $form_data
+	 * @param $form_data Form data
 	 */
 	public function on_success_v3( $form_data ) {
 		if ( ! self::should_process_submission() ) {

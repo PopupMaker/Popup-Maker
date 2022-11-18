@@ -87,7 +87,7 @@ class PUM_Integration_GoogleFonts {
 	/**
 	 * Adds options to the font family dropdowns.
 	 *
-	 * @param $options
+	 * @param $options Dropdowns options
 	 *
 	 * @return array
 	 */

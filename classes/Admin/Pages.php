@@ -21,9 +21,9 @@ class PUM_Admin_Pages {
 
 
 	/**
-	 * $pages variable.
+	 *  Pages array
 	 *
-	 * @var array
+	 * @var array $pages
 	 */
 	public static $pages = [];
 
@@ -143,8 +143,8 @@ class PUM_Admin_Pages {
 	 *
 	 * @since 1.4
 	 *
-	 * @param $a
-	 * @param $b
+	 * @param $a  Value
+	 * @param $b  Value
 	 *
 	 * @return int
 	 */
