@@ -98,8 +98,8 @@ class PUM_Shortcode_PopupCookie extends PUM_Shortcode {
 	/**
 	 * Shortcode handler
 	 *
-	 * @param array  $atts    shortcode attributes
-	 * @param string $content shortcode content
+	 * @param array  $atts    Shortcode attributes.
+	 * @param string $content Shortcode content.
 	 *
 	 * @return string
 	 */
