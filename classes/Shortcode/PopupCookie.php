@@ -38,18 +38,30 @@ class PUM_Shortcode_PopupCookie extends PUM_Shortcode {
 		return 'popup_cookie';
 	}
 
+	/**
+	 * Popup cookie label function
+	 */
 	public function label() {
 		return __( 'Popup Cookie', 'popup-maker' );
 	}
 
+	/**
+	 * Popup cookie description function
+	 */
 	public function description() {
 		return __( 'Insert this to manually set cookies when users view the content containing the code.', 'popup-maker' );
 	}
 
+	/**
+	 * Post types function
+	 */
 	public function post_types() {
 		return [ '*' ];
 	}
 
+	/**
+	 * Popup cookie fields
+	 */
 	public function fields() {
 		return [
 			'general' => [
@@ -111,6 +123,9 @@ class PUM_Shortcode_PopupCookie extends PUM_Shortcode {
 		return "<div class='pum-cookie' data-cookie-args='$args' $onscreen></div>";
 	}
 
+	/**
+	 * Popup cookie template
+	 */
 	public function template() { ?>
 		<div class="pum-cookie"><?php esc_html_e( 'Popup Cookie', 'popup-maker' ); ?></div>
 		<?php
