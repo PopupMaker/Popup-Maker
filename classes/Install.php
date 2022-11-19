@@ -187,6 +187,8 @@ class PUM_Install {
 	}
 
 	/**
+	 * Uninstall site function
+	 *
 	 * @since 1.9.0
 	 */
 	public static function uninstall_site() {
