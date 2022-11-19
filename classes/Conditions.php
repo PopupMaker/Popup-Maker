@@ -68,7 +68,7 @@ class PUM_Conditions {
 	/**
 	 * Add conditions
 	 *
-	 * @param array $conditions
+	 * @param array $conditions Array of conditions to add.
 	 */
 	public function add_conditions( $conditions = [] ) {
 		foreach ( $conditions as $key => $condition ) {
@@ -83,7 +83,7 @@ class PUM_Conditions {
 	/**
 	 * Adds a single condition
 	 *
-	 * @param array $condition
+	 * @param array $condition Array of conditions - retrieves specified condition.
 	 */
 	public function add_condition( $condition = [] ) {
 		if ( ! empty( $condition['id'] ) && ! isset( $this->conditions[ $condition['id'] ] ) ) {
@@ -238,7 +238,7 @@ class PUM_Conditions {
 	/**
 	 * Gets condition if it's set
 	 *
-	 * @param null $condition
+	 * @param null $condition Condition to retrieve
 	 *
 	 * @return mixed|null
 	 */

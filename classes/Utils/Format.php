@@ -34,8 +34,8 @@ class PUM_Utils_Format {
 	/**
 	 * Formats time
 	 *
-	 * @param        $time
-	 * @param string $format U|human
+	 * @param        $time Time
+	 * @param string $format U|human Format of time.
 	 *
 	 * @return false|int|mixed
 	 */

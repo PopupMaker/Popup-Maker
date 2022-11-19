@@ -174,9 +174,9 @@ class PUM_Helpers {
 	/**
 	 * Sort nested arrays with various options.
 	 *
-	 * @param array  $array
-	 * @param string $type
-	 * @param bool   $reverse
+	 * @param array  $array Array to sort
+	 * @param string $type Type of data to sort.
+	 * @param bool   $reverse Sort array.
 	 *
 	 * @return array
 	 * @deprecated 1.7.20
@@ -289,8 +289,8 @@ class PUM_Helpers {
 	/**
 	 * Returns results after checking users query
 	 *
-	 * @param array $args
-	 * @param bool  $include_total
+	 * @param array $args Array of arguments to check.
+	 * @param bool  $include_total Query to include total.
 	 *
 	 * @return array|mixed
 	 */

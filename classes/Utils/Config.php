@@ -19,7 +19,7 @@ class PUM_Utils_Config {
 	/**
 	 * Config
 	 *
-	 * @param $file_name
+	 * @param $file_name Name of file.
 	 *
 	 * @return mixed
 	 */

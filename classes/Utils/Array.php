@@ -43,7 +43,7 @@ class PUM_Utils_Array {
 	/**
 	 * Clean variables using sanitize_text_field.
 	 *
-	 * @param $var
+	 * @param $var  Variable to sanitize.
 	 *
 	 * @return array|string
 	 */
@@ -386,8 +386,8 @@ class PUM_Utils_Array {
 	}
 
 	/**
-	 * @param $a
-	 * @param $b
+	 * @param array $a
+	 * @param array $b
 	 *
 	 * @return bool
 	 */
@@ -398,8 +398,8 @@ class PUM_Utils_Array {
 	/**
 	 * Sort array by priority value
 	 *
-	 * @param $a
-	 * @param $b
+	 * @param array $a
+	 * @param array $b
 	 *
 	 * @return int
 	 */
@@ -417,8 +417,8 @@ class PUM_Utils_Array {
 	/**
 	 * Sort array in reverse by priority value
 	 *
-	 * @param $a
-	 * @param $b
+	 * @param array $a
+	 * @param array $b
 	 *
 	 * @return int
 	 */
@@ -436,9 +436,9 @@ class PUM_Utils_Array {
 	/**
 	 * Replace array key with new key name in same order
 	 *
-	 * @param $array
-	 * @param $old_key
-	 * @param $new_key
+	 * @param $array Data to be replaced
+	 * @param $old_key Old data
+	 * @param $new_key New data
 	 *
 	 * @return array
 	 */
@@ -475,9 +475,9 @@ class PUM_Utils_Array {
 	}
 
 	/**
-	 * from_object utility function
+	 * from_object array utility function
 	 *
-	 * @param $obj
+	 * @param $obj Object array.
 	 *
 	 * @return array
 	 */
@@ -500,7 +500,7 @@ class PUM_Utils_Array {
 	/**
 	 * Safe json decode
 	 *
-	 * @param $array
+	 * @param $array Object array.
 	 *
 	 * @return array
 	 */
@@ -521,7 +521,7 @@ class PUM_Utils_Array {
 	/**
 	 * Ensures proper encoding for strings before json_encode is used.
 	 *
-	 * @param array|string $data
+	 * @param array|string $data Array of data.
 	 *
 	 * @return mixed|string
 	 */
@@ -534,7 +534,7 @@ class PUM_Utils_Array {
 	 *
 	 * This function does that recursively.
 	 *
-	 * @param array|string $data
+	 * @param array|string $data Array of data.
 	 *
 	 * @return array|string
 	 */
@@ -559,7 +559,7 @@ class PUM_Utils_Array {
 	/**
 	 * Utf8 encodes value
 	 *
-	 * @param $d
+	 * @param $d Array value to be encoded.
 	 *
 	 * @return array|string
 	 */
@@ -579,8 +579,8 @@ class PUM_Utils_Array {
 	/**
 	 * Json encodes value
 	 *
-	 * @param      $value
-	 * @param bool  $encode
+	 * @param      $value Value.
+	 * @param bool  $encode Whether to encode - false by default.
 	 *
 	 * @return string
 	 */

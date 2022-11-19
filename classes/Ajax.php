@@ -59,7 +59,7 @@ class PUM_Ajax {
 	/**
 	 * Serves a proper json response.
 	 *
-	 * @param mixed $data
+	 * @param mixed $data Data to serve
 	 */
 	public static function serve_json( $data = 0 ) {
 		header( 'Content-Type: application/json' );

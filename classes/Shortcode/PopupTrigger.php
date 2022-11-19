@@ -188,7 +188,7 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	 *
 	 * Also remaps and cleans old ones.
 	 *
-	 * @param $atts Shortcode attributes
+	 * @param array $atts Shortcode attributes.
 	 *
 	 * @return array
 	 */

@@ -198,7 +198,7 @@ class PUM_Utils_Upgrades {
 	/**
 	 * Handles registering the upgrades
 	 *
-	 * @param PUM_Upgrade_Registry $registry
+	 * @param PUM_Upgrade_Registry $registry Register upgrades
 	 */
 	public function register_processes( PUM_Upgrade_Registry $registry ) {
 
@@ -328,7 +328,7 @@ class PUM_Utils_Upgrades {
 	/**
 	 * Alerts user if upgrade has not been done
 	 *
-	 * @param array $alerts
+	 * @param array $alerts Array of alerts
 	 *
 	 * @return array
 	 */
@@ -682,8 +682,8 @@ class PUM_Utils_Upgrades {
 	/**
 	 * Gets the upgrade process object.
 	 *
-	 * @param string $upgrade_id
-	 * @param int    $step
+	 * @param string $upgrade_id Item to upgrade.
+	 * @param int    $step Step to upgrade.
 	 *
 	 * @return bool|PUM_Interface_Batch_Process|PUM_Interface_Batch_PrefetchProcess
 	 */
@@ -726,7 +726,7 @@ class PUM_Utils_Upgrades {
 	/**
 	 * Add upgrades tab to tools page if there are upgrades available.
 	 *
-	 * @param array $tabs
+	 * @param array $tabs Array of tabs
 	 *
 	 * @return array
 	 */

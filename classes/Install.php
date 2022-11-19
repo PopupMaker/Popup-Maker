@@ -46,9 +46,9 @@ class PUM_Install {
 	/**
 	 * Does install for multisite
 	 *
-	 * @param       $network_wide
-	 * @param       $method
-	 * @param array        $args
+	 * @param       $network_wide PUM activated network wide.
+	 * @param       $method Method parameter
+	 * @param array        $args Array of arguments.
 	 */
 	private static function do_multisite( $network_wide, $method, $args = [] ) {
 		global $wpdb;

@@ -108,7 +108,7 @@ class PUM_Utils_Logging {
 	/**
 	 * Log message to file
 	 *
-	 * @param string $message
+	 * @param string $message Message to log.
 	 */
 	public function log( $message = '' ) {
 		$this->write_to_log( date( 'Y-n-d H:i:s' ) . ' - ' . $message );
@@ -117,7 +117,7 @@ class PUM_Utils_Logging {
 	/**
 	 * Log unique message to file.
 	 *
-	 * @param string $message
+	 * @param string $message Unique message to log.
 	 */
 	public function log_unique( $message = '' ) {
 		$contents = $this->get_file();
@@ -157,7 +157,7 @@ class PUM_Utils_Logging {
 	/**
 	 * Write the log message
 	 *
-	 * @param string $message
+	 * @param string $message Log message to write.
 	 */
 	protected function write_to_log( $message = '' ) {
 
@@ -221,9 +221,9 @@ class PUM_Utils_Logging {
 	/**
 	 * Log deprecated notice
 	 *
-	 * @param      $function
-	 * @param      $version
-	 * @param null     $replacement
+	 * @param   string   $function Deprecated function variable
+	 * @param   string   $version Deprecated version
+	 * @param null     $replacement Replacement version - default is null.
 	 */
 	public function log_deprecated_notice( $function, $version, $replacement = null ) {
 		if ( ! is_null( $replacement ) ) {

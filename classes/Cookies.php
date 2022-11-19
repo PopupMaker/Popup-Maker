@@ -62,7 +62,7 @@ class PUM_Cookies {
 	/**
 	 * Gets cookie if the cookie is set
 	 *
-	 * @param null $cookie
+	 * @param null $cookie Cookie to set
 	 *
 	 * @return mixed|null
 	 */
@@ -150,7 +150,7 @@ class PUM_Cookies {
 	/**
 	 * Adds cookies
 	 *
-	 * @param array $cookies
+	 * @param array $cookies Array of cookies
 	 */
 	public function add_cookies( $cookies = [] ) {
 		foreach ( $cookies as $key => $cookie ) {
@@ -165,7 +165,7 @@ class PUM_Cookies {
 	/**
 	 * Adds cookie
 	 *
-	 * @param null $cookie
+	 * @param null $cookie Cookie to add.
 	 */
 	public function add_cookie( $cookie = null ) {
 		if ( ! empty( $cookie['id'] ) && ! isset( $this->cookies[ $cookie['id'] ] ) ) {
@@ -310,8 +310,8 @@ class PUM_Cookies {
 	/**
 	 * Validate cookie
 	 *
-	 * @param null  $cookie
-	 * @param array $settings
+	 * @param null  $cookie Cookie to validate.
+	 * @param array $settings Array of settings.
 	 *
 	 * @return array
 	 * @deprecated

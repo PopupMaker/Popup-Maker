@@ -11,7 +11,7 @@ class PUM_ConditionCallbacks {
 	/**
 	 * Checks if this is one of the selected post_type items.
 	 *
-	 * @param array $condition
+	 * @param array $condition Array of conditions
 	 *
 	 * @return bool
 	 */
@@ -93,9 +93,9 @@ class PUM_ConditionCallbacks {
 	}
 
 	/**
-	 * Checks if this is one of the selected taxonomy term.
+	 * Checks if this is one of the selected taxonomy terms.
 	 *
-	 * @param array $condition
+	 * @param array $condition Array of conditions
 	 *
 	 * @return bool
 	 */
@@ -141,7 +141,7 @@ class PUM_ConditionCallbacks {
 	/**
 	 * Checks if this is one of the selected categories.
 	 *
-	 * @param array $condition
+	 * @param array $condition Array of conditions
 	 *
 	 * @return bool
 	 */
@@ -173,7 +173,7 @@ class PUM_ConditionCallbacks {
 	/**
 	 * Checks if this is one of the selected tags.
 	 *
-	 * @param array $condition
+	 * @param array $condition Array of conditions
 	 *
 	 * @return bool
 	 */
@@ -205,7 +205,7 @@ class PUM_ConditionCallbacks {
 	/**
 	 * Checks if the post_type has the selected categories.
 	 *
-	 * @param array $condition
+	 * @param array $condition Array of conditions
 	 *
 	 * @return bool
 	 */
@@ -236,7 +236,7 @@ class PUM_ConditionCallbacks {
 	/**
 	 * Checks if the post_type has the selected categories.
 	 *
-	 * @param array $condition
+	 * @param array $condition Array of conditions
 	 *
 	 * @return bool
 	 */
@@ -258,7 +258,7 @@ class PUM_ConditionCallbacks {
 	/**
 	 * Checks is a post_type has the selected tags.
 	 *
-	 * @param array $condition
+	 * @param array $condition Array of conditions
 	 *
 	 * @return bool
 	 */

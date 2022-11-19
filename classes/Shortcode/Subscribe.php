@@ -477,7 +477,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	/**
 	 * Sorts tabs so that providers come first.
 	 *
-	 * @param array $tabs
+	 * @param array $tabs Array of tabs.
 	 *
 	 * @return array
 	 */
@@ -696,7 +696,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	 *
 	 * Also remaps and cleans old ones.
 	 *
-	 * @param $atts
+	 * @param array $atts  Shortcode attrbutes.
 	 *
 	 * @return array
 	 */
@@ -784,7 +784,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	}
 
 	/**
-	 *
+	 * Subscribe template function for Shortcode
 	 */
 	public function template() {
 		?>

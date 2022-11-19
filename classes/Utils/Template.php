@@ -57,9 +57,9 @@ class PUM_Utils_Template {
 	 *
 	 * @access   public
 	 *
-	 * @param string|array $template_names
-	 * @param bool         $load
-	 * @param bool         $require_once
+	 * @param string|array $template_names Template names
+	 * @param bool         $load Load path - false by default.
+	 * @param bool         $require_once Checks if file has been included.
 	 *
 	 * @return string
 	 * @internal param string $template_path (default: '')
@@ -111,9 +111,9 @@ class PUM_Utils_Template {
 	 *
 	 * Popup_Maker::$DEBUG will prevent overrides in themes from taking priority.
 	 *
-	 * @param mixed       $slug
+	 * @param mixed       $slug Slug name
 	 * @param string|bool $name (default: false)
-	 * @param bool        $load
+	 * @param bool        $load Load template being located.
 	 *
 	 * @return string
 	 */
@@ -140,8 +140,8 @@ class PUM_Utils_Template {
 	/**
 	 * Render file with extracted arguments.
 	 *
-	 * @param       $template
-	 * @param array    $args
+	 * @param       $template Template to render
+	 * @param array    $args Array of arguments
 	 */
 	public static function render( $template, $args = [] ) {
 
@@ -163,9 +163,9 @@ class PUM_Utils_Template {
 	 *
 	 * Allows passing arguments that will be globally accessible in the template.
 	 *
-	 * @param string $slug
-	 * @param string $name
-	 * @param array  $args
+	 * @param string $slug Template slug
+	 * @param string $name Template name
+	 * @param array  $args Array of arguments
 	 */
 	public static function part( $slug, $name = null, $args = [] ) {
 		echo self::get_part( $slug, $name, $args );
@@ -176,9 +176,9 @@ class PUM_Utils_Template {
 	 *
 	 * Allows passing arguments that will be globally accessible in the template.
 	 *
-	 * @param string $slug
-	 * @param string $name
-	 * @param array  $args
+	 * @param string $slug Template slug
+	 * @param string $name Template name
+	 * @param array  $args Array of arguments
 	 *
 	 * @return string
 	 */
@@ -203,8 +203,8 @@ class PUM_Utils_Template {
 	/**
 	 * Gets the rendered contents of the specified template file.
 	 *
-	 * @param       $template_name
-	 * @param array         $args
+	 * @param       $template_name Template name
+	 * @param array         $args Array of arguments
 	 *
 	 * @return string
 	 */

@@ -81,7 +81,7 @@ class PUM_Analytics {
 	 *
 	 * Can be used externally such as after purchase tracking.
 	 *
-	 * @param array $args
+	 * @param array $args Array of arguments
 	 */
 	public static function track( $args = [] ) {
 		if ( empty( $args['pid'] ) || $args['pid'] <= 0 ) {
@@ -145,7 +145,7 @@ class PUM_Analytics {
 	/**
 	 * Checks analytics endpoint
 	 *
-	 * @param WP_REST_Request $request
+	 * @param WP_REST_Request $request Parameters to check
 	 *
 	 * @return WP_Error|mixed
 	 */
@@ -166,7 +166,7 @@ class PUM_Analytics {
 	/**
 	 * Converts analytics endpoint
 	 *
-	 * @param $param
+	 * @param $param Item to convert
 	 *
 	 * @return bool
 	 */
@@ -288,7 +288,7 @@ class PUM_Analytics {
 	/**
 	 * Retrieves file
 	 *
-	 * @param $path
+	 * @param $path Path to retrieve.
 	 *
 	 * @return bool|string
 	 */
@@ -318,7 +318,7 @@ class PUM_Analytics {
 	/**
 	 * Serves a proper json response.
 	 *
-	 * @param mixed $data
+	 * @param mixed $data Data to serve
 	 */
 	public static function serve_json( $data = 0 ) {
 		header( 'Content-Type: application/json' );

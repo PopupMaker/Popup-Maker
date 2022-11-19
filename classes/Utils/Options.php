@@ -33,7 +33,7 @@ class PUM_Utils_Options {
 	/**
 	 * Initialize Options on run.
 	 *
-	 * @param bool $force
+	 * @param bool $force Force init - false by default.
 	 */
 	public static function init( $force = false ) {
 		global $popmake_options;
@@ -74,8 +74,8 @@ class PUM_Utils_Options {
 	 *
 	 * Looks to see if the specified setting exists, returns default if not
 	 *
-	 * @param string $key
-	 * @param bool   $default
+	 * @param string $key Specified option
+	 * @param bool   $default A value
 	 *
 	 * @return mixed
 	 */
@@ -137,7 +137,7 @@ class PUM_Utils_Options {
 	/**
 	 * Update the entire settings array from a new array.
 	 *
-	 * @param array $new_options
+	 * @param array $new_options New array
 	 *
 	 * @return bool
 	 */
@@ -161,7 +161,7 @@ class PUM_Utils_Options {
 	/**
 	 * Merge the new options into the settings array.
 	 *
-	 * @param array $new_options
+	 * @param array $new_options Array of new options to merge.
 	 *
 	 * @return bool
 	 */

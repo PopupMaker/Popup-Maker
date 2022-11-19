@@ -417,7 +417,7 @@ class PUM_Site_Assets {
 	}
 
 	/**
-	 *
+	 * Function to check force script loading
 	 */
 	public static function check_force_script_loading() {
 		global $wp_query;

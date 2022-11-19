@@ -18,8 +18,8 @@ class PUM_Utils_Sanitize {
 	/**
 	 * Sanitizes value
 	 *
-	 * @param string $value
-	 * @param array  $args
+	 * @param string $value Value to be sanitized
+	 * @param array  $args Array of arguments
 	 *
 	 * @return string
 	 */
@@ -30,8 +30,8 @@ class PUM_Utils_Sanitize {
 	/**
 	 * Checks value
 	 *
-	 * @param mixed|int $value
-	 * @param array     $args
+	 * @param mixed|int $value Value to check - null by default.
+	 * @param array     $args  Array of arguments.
 	 *
 	 * @return bool|int
 	 */

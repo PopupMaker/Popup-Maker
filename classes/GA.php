@@ -87,7 +87,7 @@ class PUM_GA {
 	 *
 	 * See https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
 	 *
-	 * @param null $data
+	 * @param null $data Data to retrieve.
 	 *
 	 * @return array|bool|WP_Error
 	 */

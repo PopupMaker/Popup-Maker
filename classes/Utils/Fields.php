@@ -19,8 +19,8 @@ class PUM_Utils_Fields {
 	/**
 	 * Gets field
 	 *
-	 * @param $fields
-	 * @param $field_id
+	 * @param $fields Fields
+	 * @param $field_id Field id
 	 *
 	 * @return bool|mixed
 	 */
@@ -33,7 +33,7 @@ class PUM_Utils_Fields {
 	/**
 	 * Gets form default values
 	 *
-	 * @param array $fields
+	 * @param array $fields Array of fields.
 	 *
 	 * @return array
 	 */
@@ -46,7 +46,7 @@ class PUM_Utils_Fields {
 	/**
 	 * Gets field default values
 	 *
-	 * @param array $fields
+	 * @param array $fields Array of fields.
 	 *
 	 * @return array
 	 */
@@ -69,7 +69,7 @@ class PUM_Utils_Fields {
 	/**
 	 * Returns an array containing the references of the passed tabs
 	 *
-	 * @param $tabs
+	 * @param $tabs Tabs
 	 *
 	 * @return array
 	 */
@@ -103,7 +103,7 @@ class PUM_Utils_Fields {
 	/**
 	 * Utility Fields to parse
 	 *
-	 * @param $field
+	 * @param $field Field to parse
 	 *
 	 * @return array
 	 */
@@ -164,8 +164,8 @@ class PUM_Utils_Fields {
 	/**
 	 * Parse tab fields utility function
 	 *
-	 * @param       $fields
-	 * @param array  $args
+	 * @param       $fields Fields
+	 * @param array  $args Arguments
 	 *
 	 * @return mixed
 	 */
@@ -347,8 +347,8 @@ class PUM_Utils_Fields {
 	/**
 	 * Sanitizes an array of field values.
 	 *
-	 * @param $fields
-	 * @param $values
+	 * @param array $fields Fields
+	 * @param $values Value
 	 *
 	 * @return mixed
 	 */

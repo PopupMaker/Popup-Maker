@@ -237,7 +237,7 @@ class PUM_Site_Popups {
 	/**
 	 * Gets cache content for specified popup
 	 *
-	 * @param $popup_id
+	 * @param $popup_id  Specified popup.
 	 *
 	 * @return string|bool
 	 */

@@ -47,8 +47,8 @@ class PUM_Utils_Cache {
 	/**
 	 * Gets cache timeout
 	 *
-	 * @param        $key
-	 * @param string $group
+	 * @param        $key Specified item.
+	 * @param string $group Group to retrieve.
 	 *
 	 * @return mixed
 	 */
@@ -59,9 +59,9 @@ class PUM_Utils_Cache {
 	/**
 	 * Add cache function utility
 	 *
-	 * @param        $key
-	 * @param        $data
-	 * @param string $group
+	 * @param        $key Specified item
+	 * @param        $data Data
+	 * @param string $group Group string
 	 *
 	 * @return bool
 	 */
@@ -76,9 +76,9 @@ class PUM_Utils_Cache {
 	/**
 	 * Replaces cache
 	 *
-	 * @param        $key
-	 * @param        $data
-	 * @param string $group
+	 * @param        $key Specified item.
+	 * @param        $data Data
+	 * @param string $group Group
 	 *
 	 * @return bool
 	 */
@@ -93,9 +93,9 @@ class PUM_Utils_Cache {
 	/**
 	 * Sets cache
 	 *
-	 * @param        $key
-	 * @param        $data
-	 * @param string $group
+	 * @param        $key Specified item.
+	 * @param        $data Data
+	 * @param string $group Group
 	 *
 	 * @return bool
 	 */
@@ -110,10 +110,10 @@ class PUM_Utils_Cache {
 	/**
 	 * Gets cache
 	 *
-	 * @param        $key
-	 * @param string $group
-	 * @param bool   $force
-	 * @param null   $found
+	 * @param        $key Specified item.
+	 * @param string $group Group
+	 * @param bool   $force Force get cache - false by default.
+	 * @param null   $found Found get cache - null by default.
 	 *
 	 * @return bool|mixed
 	 */
@@ -128,8 +128,8 @@ class PUM_Utils_Cache {
 	/**
 	 * Delete cache
 	 *
-	 * @param        $key
-	 * @param string $group
+	 * @param        $key Specified item.
+	 * @param string $group Group
 	 *
 	 * @return bool
 	 */
@@ -144,7 +144,7 @@ class PUM_Utils_Cache {
 	/**
 	 * Cache Delete Group
 	 *
-	 * @param string $group
+	 * @param string $group Group to delete.
 	 *
 	 * @return bool
 	 */
@@ -165,9 +165,9 @@ class PUM_Utils_Cache {
 	/**
 	 * Increments numeric cache item’s value.
 	 *
-	 * @param        $key
-	 * @param int    $offset
-	 * @param string $group
+	 * @param        $key Specified item.
+	 * @param int    $offset Amount to increment.
+	 * @param string $group Group
 	 *
 	 * @return bool|false|int
 	 */
@@ -182,9 +182,9 @@ class PUM_Utils_Cache {
 	/**
 	 * Decrements numeric cache item’s value.
 	 *
-	 * @param        $key
-	 * @param int    $offset
-	 * @param string $group
+	 * @param        $key Specified item.
+	 * @param int    $offset Amount to decrement.
+	 * @param string $group Group
 	 *
 	 * @return bool|false|int
 	 */
