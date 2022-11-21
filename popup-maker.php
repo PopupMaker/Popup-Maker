@@ -342,6 +342,9 @@ class Popup_Maker {
 		}
 	}
 
+	/**
+	 * Initialize Popup Maker
+	 */
 	public function init() {
 		$this->cron   = new PUM_Utils_Cron();
 		$this->popups = new PUM_Repository_Popups();
