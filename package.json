@@ -35,6 +35,7 @@
     "postpackages-update": "npm run build",
     "start": "wp-scripts start",
     "release": "gulp release",
+    "gulp:start": "gulp",
     "gulp:build": "gulp prebuild",
     "test:e2e": "wp-scripts test-e2e",
     "test:unit": "wp-scripts test-unit-js",
