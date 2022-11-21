@@ -19,7 +19,7 @@ add_filter( 'pum_settings_fields', 'pum_merge_deprecated_settings_fields' );
  * @since      1.7.0
  * @deprecated 1.7.0
  *
- * @param array $tabs
+ * @param array $tabs Array of tabs.
  *
  * @return array
  */

@@ -15,9 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Allows passing arguments that will be globally accessible in the templates.
  *
- * @param string $slug
- * @param string $name
- * @param array  $args
+ * @param string $slug Slug
+ * @param string $name Template name
+ * @param array  $args Arguments
  *
  * @return string
  */
@@ -31,9 +31,9 @@ function pum_get_template_part( $slug, $name = null, $args = null ) {
  *
  * Allows passing arguments that will be globally accessible in the templates.
  *
- * @param string $slug
- * @param string $name
- * @param array  $args
+ * @param string $slug Slug
+ * @param string $name Template name
+ * @param array  $args Arguments
  */
 function pum_template_part( $slug, $name = null, $args = [] ) {
 	echo pum_get_template_part( $slug, $name, $args );
@@ -43,7 +43,7 @@ function pum_template_part( $slug, $name = null, $args = [] ) {
  * Gets the rendered contents of the specified templates file.
  *
  * @param $template_name
- * @param array         $args
+ * @param array         $args Array of arguments
  *
  * @return string
  */

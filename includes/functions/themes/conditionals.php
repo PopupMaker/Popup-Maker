@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Checks if the $theme is valid.
  *
- * @param mixed|PUM_Model_Theme $theme
+ * @param mixed|PUM_Model_Theme $theme Theme to check.
  *
  * @return bool
  */
@@ -24,7 +24,7 @@ function pum_is_theme( $theme ) {
 /**
  * Tests a given value to see if its a valid Theme model.
  *
- * @param mixed|PUM_Model_Theme $theme
+ * @param mixed|PUM_Model_Theme $theme Theme to test.
  *
  * @return bool
  */

@@ -63,8 +63,8 @@ class PUM_Previews {
 	/**
 	 * For popup previews this will force only the correct popup to load.
 	 *
-	 * @param bool $loadable
-	 * @param int  $popup_id
+	 * @param bool $loadable Load popup
+	 * @param int  $popup_id Specified popup
 	 *
 	 * @return bool
 	 */
@@ -77,7 +77,7 @@ class PUM_Previews {
 	 *
 	 * This enables them to use the built in preview links.
 	 *
-	 * @param int $popup_id
+	 * @param int $popup_id Specified popup
 	 *
 	 * @return bool
 	 */
@@ -132,8 +132,8 @@ class PUM_Previews {
 	/**
 	 * On popup previews add an admin debug trigger.
 	 *
-	 * @param array           $settings
-	 * @param PUM_Model_Popup $popup
+	 * @param array           $settings Settings to add
+	 * @param PUM_Model_Popup $popup Popup to preview
 	 *
 	 * @return array
 	 */

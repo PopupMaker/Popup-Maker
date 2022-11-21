@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @deprecated 1.8.0 use pum_get_theme_generated_styles
  *
- * @param int $popup_theme_id
+ * @param int $popup_theme_id Popup theme id.
  *
  * @return array
  */
@@ -28,7 +28,7 @@ function popmake_generate_theme_styles( $popup_theme_id = 0 ) {
  *
  * @since 1.8.0
  *
- * @param null|string $group
+ * @param null|string $group Theme name
  *
  * @return array|bool|mixed
  */
@@ -47,9 +47,9 @@ function pum_get_theme_v1_meta_defaults() {
  * @since      1.8.0
  *
  * @param      $group
- * @param null  $popup_theme_id
- * @param null  $key
- * @param null  $default
+ * @param null  $popup_theme_id Popup theme id
+ * @param null  $key Specified value
+ * @param null  $default Default value
  *
  * @return mixed
  */
@@ -99,7 +99,7 @@ function pum_get_theme_v1_meta( $group, $popup_theme_id = null, $key = null, $de
  *
  * @since 1.8.0
  *
- * @param null|string $group
+ * @param null|string $group Meta defaults group
  *
  * @return array|bool|mixed
  */
@@ -194,7 +194,7 @@ function pum_get_theme_v2_meta_defaults( $group = null ) {
 /**
  * Fetch themes v2 meta as a single array.
  *
- * @param null|int $theme_id
+ * @param null|int $theme_id Theme id
  *
  * @return array|bool
  */
@@ -228,10 +228,10 @@ function pum_get_theme_v2_meta( $theme_id = null ) {
  * @deprecated 1.3.0
  * @since      1.8.0
  *
- * @param string      $meta_group
- * @param null|int    $theme_id
- * @param null|string $option_key
- * @param null|mixed  $default
+ * @param string      $meta_group Meta group
+ * @param null|int    $theme_id Theme
+ * @param null|string $option_key Option key
+ * @param null|mixed  $default Default value
  *
  * @return mixed
  */
@@ -265,9 +265,8 @@ function pum_get_theme_v2_meta_group( $meta_group, $theme_id = null, $option_key
  * @remove     2.0.0
  *
  * @param int  $popup_theme_id ID number of the popup to retrieve a overlay meta for
- *
- * @param null $key
- * @param null $default
+ * @param null $key Key
+ * @param null $default Default value
  *
  * @return mixed array|string of the popup overlay meta
  */
@@ -284,8 +283,8 @@ function popmake_get_popup_theme_overlay( $popup_theme_id = null, $key = null, $
  *
  * @param int  $popup_theme_id ID number of the popup to retrieve a container meta for
  *
- * @param null $key
- * @param null $default
+ * @param null $key Key
+ * @param null $default Default value
  *
  * @return mixed array|string of the popup container meta
  */
@@ -300,9 +299,9 @@ function popmake_get_popup_theme_container( $popup_theme_id = null, $key = null,
  * @deprecated 1.8.0
  * @remove     2.0.0
  *
- * @param int  $popup_theme_id ID number of the popup to retrieve a title meta for
- * @param null $key
- * @param null $default
+ * @param int  $popup_theme_id ID number of the popup to retrieve a title meta for the theme
+ * @param null $key Specified value
+ * @param null $default Default value
  *
  * @return mixed array|string of the popup title meta
  */
@@ -319,8 +318,8 @@ function popmake_get_popup_theme_title( $popup_theme_id = null, $key = null, $de
  *
  * @param int  $popup_theme_id ID number of the popup to retrieve a content meta for
  *
- * @param null $key
- * @param null $default
+ * @param null $key Specified value
+ * @param null $default Default value
  *
  * @return mixed array|string of the popup content meta
  */
@@ -337,8 +336,8 @@ function popmake_get_popup_theme_content( $popup_theme_id = null, $key = null, $
  *
  * @param int  $popup_theme_id ID number of the popup to retrieve a close meta for
  *
- * @param null $key
- * @param null $default
+ * @param null $key Specified value
+ * @param null $default Default value
  *
  * @return mixed array|string of the popup close meta
  */
@@ -350,7 +349,7 @@ function popmake_get_popup_theme_close( $popup_theme_id = null, $key = null, $de
  *
  * @deprecated 1.8.0
  *
- * @param int $theme_id
+ * @param int $theme_id Theme id.
  *
  * @return mixed
  */
@@ -388,9 +387,9 @@ function popmake_get_popup_themes_data() {
  * @remove     2.0.0
  *
  * @param      $group
- * @param int   $popup_theme_id ID number of the popup to retrieve a overlay meta for
- * @param null  $key
- * @param null  $default
+ * @param int   $popup_theme_id ID number of the popup to retrieve an overlay meta for theme
+ * @param null  $key Specified value
+ * @param null  $default Default value
  *
  * @return mixed array|string of the popup overlay meta
  */
@@ -405,10 +404,10 @@ function popmake_get_popup_theme_meta_group( $group, $popup_theme_id = null, $ke
  * @deprecated 1.7.0
  * @remove     2.0.0
  *
- * @param      $group
- * @param null  $popup_theme_id
- * @param null  $key
- * @param null  $default
+ * @param      $group Meta group
+ * @param null  $popup_theme_id Popup theme id
+ * @param null  $key Specified value
+ * @param null  $default Default value
  *
  * @return mixed
  */

@@ -95,7 +95,7 @@ class PUM_CF7_Integration {
 	/**
 	 * Registers new cookie events.
 	 *
-	 * @param array $cookies
+	 * @param array $cookies Array of cookies to register.
 	 *
 	 * @return array
 	 */
@@ -113,7 +113,7 @@ class PUM_CF7_Integration {
 	/**
 	 * Register new CF7 form editor tab.
 	 *
-	 * @param array $panels
+	 * @param array $panels Array of panels
 	 *
 	 * @return array
 	 */
@@ -132,7 +132,7 @@ class PUM_CF7_Integration {
 	/**
 	 * Render the popup tab.
 	 *
-	 * @param object $args
+	 * @param object $args Arguments
 	 */
 	public static function editor_panel( $args ) {
 

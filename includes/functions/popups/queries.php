@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get a popup model instance.
  *
- * @param int $popup_id
+ * @param int $popup_id Popup id
  *
  * @return PUM_Model_Popup
  */
@@ -36,7 +36,7 @@ function pum_get_popup( $popup_id = null ) {
 /**
  * Queries popups and returns them in a specific format.
  *
- * @param array $args
+ * @param array $args Array of arguments.
  *
  * @return PUM_Model_Popup[]
  */
@@ -47,7 +47,7 @@ function pum_get_popups( $args = [] ) {
 /**
  * Queries popups and returns them in a specific format.
  *
- * @param array $args
+ * @param array $args Array of arguments.
  *
  * @return PUM_Model_Popup[]
  */
@@ -60,7 +60,7 @@ function pum_get_all_popups( $args = [] ) {
 /**
  * Gets a count popups with specified args.
  *
- * @param array $args
+ * @param array $args Array of arguments.
  *
  * @return int
  */

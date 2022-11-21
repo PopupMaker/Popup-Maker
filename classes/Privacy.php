@@ -174,8 +174,8 @@ class PUM_Privacy {
 	 *
 	 * @see https://github.com/allendav/wp-privacy-requests/blob/master/EXPORT.md
 	 *
-	 * @param     $email_address
-	 * @param int           $page
+	 * @param     $email_address Email address
+	 * @param int           $page Page
 	 *
 	 * @return array
 	 */
@@ -339,8 +339,8 @@ class PUM_Privacy {
 	 *
 	 * @see https://github.com/allendav/wp-privacy-requests/blob/master/EXPORT.md
 	 *
-	 * @param     $email_address
-	 * @param int           $page
+	 * @param     $email_address Email address
+	 * @param int           $page Page
 	 *
 	 * @return array
 	 */

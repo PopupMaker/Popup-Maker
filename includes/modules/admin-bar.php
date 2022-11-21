@@ -61,7 +61,7 @@ class PUM_Modules_Admin_Bar {
 	/**
 	 * Add additional toolbar menu items to the front end.
 	 *
-	 * @param WP_Admin_Bar $wp_admin_bar
+	 * @param WP_Admin_Bar $wp_admin_bar Admin bar.
 	 */
 	public static function toolbar_links( $wp_admin_bar ) {
 

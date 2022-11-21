@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.7.0
  * @deprecated 1.7.0
  *
- * @param null $popup_id
+ * @param null $popup_id Popup id
  */
 function popmake_enqueue_scripts( $popup_id = null ) {
 	$scripts_needed = apply_filters( 'popmake_enqueue_scripts', [], $popup_id );
@@ -131,8 +131,8 @@ add_filter( 'pum_popup_data_attr', 'pum_deprecated_pum_popup_get_data_attr_filte
  * @since 1.7.0
  * @deprecated 1.7.0
  *
- * @param array $classes
- * @param int   $popup_id
+ * @param array $classes Array of classes
+ * @param int   $popup_id Popup id
  *
  * @return array
  */
@@ -161,8 +161,8 @@ add_filter( 'pum_popup_classes', 'pum_deprecated_pum_popup_get_classes_filter', 
  * @since 1.7.0
  * @deprecated 1.7.0
  *
- * @param array $data_attr
- * @param int   $popup_id
+ * @param array $data_attr Data attributes
+ * @param int   $popup_id Popup id
  *
  * @return array
  */

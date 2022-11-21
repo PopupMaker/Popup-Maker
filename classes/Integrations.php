@@ -142,7 +142,7 @@ class PUM_Integrations {
 	/**
 	 * Gets forms for integration
 	 *
-	 * @param string $key
+	 * @param string $key Specified form from forms provider.
 	 *
 	 * @return array
 	 */
@@ -194,7 +194,7 @@ class PUM_Integrations {
 	/**
 	 * Adds additional settings to help better integrate with 3rd party plugins.
 	 *
-	 * @param array $fields
+	 * @param array $fields Array of fields
 	 *
 	 * @return array
 	 */
@@ -312,7 +312,7 @@ class PUM_Integrations {
 	/**
 	 * Generated js for Integrations
 	 *
-	 * @param array $js
+	 * @param array $js Array of generated js.
 	 *
 	 * @return array
 	 */
@@ -330,7 +330,7 @@ class PUM_Integrations {
 	/**
 	 * Generated css for integrations
 	 *
-	 * @param array $css
+	 * @param array $css Array of generated css
 	 *
 	 * @return array $css
 	 */
@@ -348,8 +348,8 @@ class PUM_Integrations {
 	/**
 	 * Modify popup settings.
 	 *
-	 * @param array $settings
-	 * @param int   $popup_id
+	 * @param array $settings Array of settings
+	 * @param int   $popup_id Specified popup
 	 *
 	 * @return array
 	 */
@@ -404,7 +404,7 @@ class PUM_Integrations {
 	 *
 	 * Primarily used to pass form success options for custom integrations and custom code.
 	 *
-	 * @param array $vars
+	 * @param array $vars Array of form submission utilities.
 	 *
 	 * @return array
 	 */

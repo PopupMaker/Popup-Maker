@@ -99,7 +99,7 @@ class PUM_Gravity_Forms_Integation {
 	/**
 	 * Registers new cookie events.
 	 *
-	 * @param array $cookies
+	 * @param array $cookies Array of cookies to register.
 	 *
 	 * @return array
 	 */

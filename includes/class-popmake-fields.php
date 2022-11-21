@@ -70,7 +70,7 @@ class Popmake_Fields {
 	/**
 	 * Constructor - returns set fields
 	 *
-	 * @param array $args
+	 * @param array $args Array of arguments.
 	 */
 	public function __construct( $args = [] ) {
 
@@ -94,7 +94,7 @@ class Popmake_Fields {
 	/**
 	 * Function instance
 	 *
-	 * @param array $args
+	 * @param array $args Array of arguments.
 	 *
 	 * @return mixed
 	 */
@@ -116,9 +116,9 @@ class Popmake_Fields {
 	 *
 	 * @deprecated 1.4 Replace with add_section()
 	 *
-	 * @param $id
-	 * @param $title
-	 * @param null  $callback
+	 * @param $id Section id.
+	 * @param $title Section title.
+	 * @param null  $callback Callback
 	 */
 	public function register_section( $id, $title, $callback = null ) {
 		$this->add_section(
@@ -172,7 +172,7 @@ class Popmake_Fields {
 	/**
 	 * Adds field
 	 *
-	 * @param array $field
+	 * @param array $field Field to add.
 	 */
 	public function add_field( $field = [] ) {
 
@@ -231,8 +231,8 @@ class Popmake_Fields {
 	/**
 	 * Adds fields
 	 *
-	 * @param array $fields
-	 * @param null  $section
+	 * @param array $fields Array of fields.
+	 * @param null  $section Section
 	 */
 	public function add_fields( $fields = [], $section = null ) {
 
@@ -285,7 +285,7 @@ class Popmake_Fields {
 	/**
 	 * Gets fields
 	 *
-	 * @param null $section
+	 * @param null $section Section
 	 *
 	 * @return array
 	 */
@@ -404,8 +404,8 @@ class Popmake_Fields {
 	/**
 	 * Function render_fields_by_section
 	 *
-	 * @param string $section
-	 * @param array  $values
+	 * @param string $section Field section
+	 * @param array  $values Array of values
 	 */
 	function render_fields_by_section( $section = 'general', $values = [] ) {
 		foreach ( $this->get_fields( $section ) as $key => $args ) {
@@ -418,7 +418,7 @@ class Popmake_Fields {
 	/**
 	 * Renders fields
 	 *
-	 * @param array $values
+	 * @param array $values Array of values.
 	 */
 	function render_fields( $values = [] ) {
 		foreach ( $this->get_all_fields() as $section => $fields ) {
@@ -433,8 +433,8 @@ class Popmake_Fields {
 	/**
 	 * Renders field
 	 *
-	 * @param array $args
-	 * @param null  $value
+	 * @param array $args Array of arguments
+	 * @param null  $value Value
 	 */
 	public function render_field( $args = [], $value = null ) {
 
@@ -483,7 +483,7 @@ class Popmake_Fields {
 	/**
 	 * Renders template fields by section
 	 *
-	 * @param string $section
+	 * @param string $section Fields section
 	 */
 	public function render_templ_fields_by_section( $section = 'general' ) {
 		foreach ( $this->get_fields( $section ) as $key => $args ) {
@@ -494,7 +494,7 @@ class Popmake_Fields {
 	/**
 	 * Renders template field
 	 *
-	 * @param array $args
+	 * @param array $args Array of arguments
 	 */
 	public function render_templ_field( $args = [] ) {
 
@@ -537,7 +537,7 @@ class Popmake_Fields {
 	/**
 	 * Function field_before
 	 *
-	 * @param array $args
+	 * @param array $args Array of arguments.
 	 */
 	public function field_before( $args = [] ) {
 		$classes = is_array( $args ) ? $this->field_classes( $args ) : ( is_string( $args ) ? $args : '' );
@@ -557,8 +557,8 @@ class Popmake_Fields {
 	/**
 	 * Fields classes
 	 *
-	 * @param $args
-	 * @param null $class
+	 * @param $args Arguments
+	 * @param null $class Fields class
 	 *
 	 * @return string
 	 */
@@ -665,7 +665,7 @@ if ( $function_name ) {
 	/**
 	 * Sanitize fields
 	 *
-	 * @param array $values
+	 * @param array $values Array of values to sanitize.
 	 *
 	 * @return array|mixed $input Sanitized value
 	 * @internal param array $input The value inputted in the field

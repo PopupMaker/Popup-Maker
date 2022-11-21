@@ -79,7 +79,7 @@ abstract class PUM_Shortcode {
 	/**
 	 * Class constructor will set the needed filter and action hooks
 	 *
-	 * @param array $args
+	 * @param array $args Array of arguments
 	 */
 	public function __construct( $args = [] ) {
 		if ( ! did_action( 'init' ) ) {

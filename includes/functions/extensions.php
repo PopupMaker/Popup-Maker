@@ -27,7 +27,7 @@ function pum_enabled_extensions() {
  *
  * @since 1.7.0
  *
- * @param string $extension
+ * @param string $extension Extension
  *
  * @return bool
  */

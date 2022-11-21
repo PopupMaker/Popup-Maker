@@ -38,8 +38,8 @@ class PUM_WPML_Integration {
 	/**
 	 * Gets popup for WPML integrations
 	 *
-	 * @param      $popup
-	 * @param null  $popup_id
+	 * @param      $popup Popup
+	 * @param null  $popup_id Popup id
 	 *
 	 * @return \PUM_Model_Popup
 	 */
@@ -57,7 +57,7 @@ class PUM_WPML_Integration {
 	/**
 	 * Retrieves translations for popup with WPML integrations
 	 *
-	 * @param int $post_id
+	 * @param int $post_id Post id
 	 *
 	 * @return bool
 	 */
@@ -70,7 +70,7 @@ class PUM_WPML_Integration {
 	/**
 	 * Gets post source id
 	 *
-	 * @param int $post_id
+	 * @param int $post_id Specified post
 	 *
 	 * @return int
 	 */
@@ -89,7 +89,7 @@ class PUM_WPML_Integration {
 	/**
 	 * Function $source_lang
 	 *
-	 * @param int $post_id
+	 * @param int $post_id Post id
 	 */
 	public static function source_lang( $post_id = 0 ) {
 
@@ -98,7 +98,7 @@ class PUM_WPML_Integration {
 	/**
 	 * Function $trid for WPML integrations
 	 *
-	 * @param int $post_id
+	 * @param int $post_id Post id
 	 *
 	 * @return int
 	 */
@@ -243,8 +243,8 @@ class PUM_WPML_Integration {
 	/**
 	 * Remaps conditions
 	 *
-	 * @param      $conditions
-	 * @param null       $new_lang
+	 * @param      $conditions Conditions
+	 * @param null       $new_lang New lang
 	 *
 	 * @return mixed
 	 */

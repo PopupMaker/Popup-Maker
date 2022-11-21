@@ -52,7 +52,7 @@ function pum_get_default_theme_id() {
  *
  * @since 1.8.0
  *
- * @param int $theme_id
+ * @param int $theme_id Theme id
  *
  * @return string
  */
@@ -105,7 +105,7 @@ add_action( 'pum_save_theme', 'pum_update_all_themes_close_text_cache', 100 );
 /**
  * Asset path
  *
- * @param string $path
+ * @param string $path Path
  *
  * @return string
  */
@@ -116,7 +116,7 @@ function pum_asset_path( $path = '' ) {
 /**
  * Asset URL
  *
- * @param string $path
+ * @param string $path Path
  *
  * @return string
  */
@@ -127,7 +127,7 @@ function pum_asset_url( $path = '' ) {
 /**
  * Retrieves svg icon
  *
- * @param string $encode
+ * @param bool $encode Encode
  *
  * @return string
  */

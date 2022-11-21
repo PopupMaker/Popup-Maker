@@ -10,8 +10,8 @@
  * Installs theme
  *
  * @param       $name
- * @param null  $settings
- * @param array $extra_meta
+ * @param null  $settings Settings
+ * @param array $extra_meta Array of meta
  *
  * @return int|\WP_Error
  */

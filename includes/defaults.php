@@ -17,7 +17,7 @@ add_filter( 'pum_popup_display_defaults', 'popmake_popup_display_defaults', 0 );
 /**
  * Returns default display settings for popups.
  *
- * @param  array $defaults
+ * @param  array $defaults Default settings
  *
  * @return array
  */

@@ -152,8 +152,8 @@ class PUM_Triggers {
 	/**
 	 * Validates trigger
 	 *
-	 * @param null  $trigger
-	 * @param array $settings
+	 * @param null  $trigger Item to validate
+	 * @param array $settings Array of settings
 	 *
 	 * @return array
 	 * @deprecated

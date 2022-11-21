@@ -30,7 +30,7 @@ class PUM_Upgrade_v1_7_Popups extends PUM_Abstract_Upgrade_Popups {
 	/**
 	 * Process needed upgrades on each popup.
 	 *
-	 * @param int $popup_id
+	 * @param int $popup_id Popup id
 	 */
 	public function process_popup( $popup_id = 0 ) {
 

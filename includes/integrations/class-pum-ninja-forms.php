@@ -124,8 +124,8 @@ final class NF_PUM {
 	/**
 	 * Template
 	 *
-	 * @param string $file_name
-	 * @param array  $data
+	 * @param string $file_name File name
+	 * @param array  $data Array of data
 	 */
 	public static function template( $file_name = '', array $data = [] ) {
 		if ( ! $file_name ) {

@@ -33,7 +33,7 @@ function pum_get_theme( $theme_id = 0 ) {
 /**
  * Queries themes and returns them in a specific format.
  *
- * @param array $args
+ * @param array $args Array of arguments
  *
  * @return PUM_Model_Theme[]
  */
@@ -44,7 +44,7 @@ function pum_get_themes( $args = [] ) {
 /**
  * Queries themes and returns them in a specific format.
  *
- * @param array $args
+ * @param array $args Array of arguments
  *
  * @return PUM_Model_Theme[]
  */
@@ -57,7 +57,7 @@ function pum_get_all_themes( $args = [] ) {
 /**
  * Gets a count themes with specified args.
  *
- * @param array $args
+ * @param array $args Array of arguments
  *
  * @return int
  */

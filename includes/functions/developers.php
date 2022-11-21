@@ -17,8 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.7.0
  *
- * @param int   $popup_id
- * @param array $settings
+ * @param int   $popup_id Popup id
+ * @param array $settings Array of settings
  */
 function pum_trigger_popup_form_success( $popup_id = null, $settings = [] ) {
 	if ( ! isset( $popup_id ) ) {

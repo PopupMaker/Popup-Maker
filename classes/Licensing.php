@@ -11,7 +11,7 @@ class PUM_Licensing {
 	/**
 	 * Is the license currently active?
 	 *
-	 * @param object|bool|null $license
+	 * @param object|bool|null $license Value status to check.
 	 *
 	 * @return bool
 	 */
@@ -22,7 +22,7 @@ class PUM_Licensing {
 	/**
 	 * Checks if there's a license
 	 *
-	 * @param object|bool|null $license
+	 * @param object|bool|null $license Value to check.
 	 *
 	 * @return bool
 	 */
@@ -33,7 +33,7 @@ class PUM_Licensing {
 	/**
 	 * Gets license expiration
 	 *
-	 * @param object|bool|null $license
+	 * @param object|bool|null $license Expiration value to check.
 	 *
 	 * @return bool|false|int|string
 	 */
@@ -84,9 +84,9 @@ class PUM_Licensing {
 	/**
 	 * Gets status messages
 	 *
-	 * @param object|bool|null $license
+	 * @param object|bool|null $license Status value to check.
 	 *
-	 * @param string           $key
+	 * @param string           $key Specified item.
 	 *
 	 * @return array
 	 */
@@ -156,7 +156,7 @@ class PUM_Licensing {
 	/**
 	 * Get status classes for licensing
 	 *
-	 * @param object|bool|null $license
+	 * @param object|bool|null $license Status to check.
 	 *
 	 * @return bool|string
 	 */

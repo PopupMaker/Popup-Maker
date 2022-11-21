@@ -134,7 +134,7 @@ class PUM_Types {
 	/**
 	 * Register optional taxonomies.
 	 *
-	 * @param bool $force
+	 * @param bool $force Force register taxonomies
 	 */
 	public static function register_taxonomies( $force = false ) {
 		if ( ! $force && popmake_get_option( 'disable_popup_category_tag', false ) ) {
@@ -213,7 +213,7 @@ class PUM_Types {
 	/**
 	 * Remove popups from accessible post type list in Yoast.
 	 *
-	 * @param array $post_types
+	 * @param array $post_types Array of post types
 	 *
 	 * @return array
 	 */

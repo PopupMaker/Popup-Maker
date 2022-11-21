@@ -539,7 +539,7 @@ class PUM_ListTable {
 	 * @global wpdb      $wpdb
 	 * @global WP_Locale $wp_locale
 	 *
-	 * @param string $post_type
+	 * @param string $post_type Items.
 	 */
 	protected function months_dropdown( $post_type ) {
 		global $wpdb, $wp_locale;
@@ -624,7 +624,7 @@ class PUM_ListTable {
 	 *
 	 * @since 3.1.0
 	 *
-	 * @param string $current_mode
+	 * @param string $current_mode Current mode
 	 */
 	protected function view_switcher( $current_mode ) {
 		?>
@@ -742,8 +742,8 @@ class PUM_ListTable {
 	 *
 	 * @since 3.1.0
 	 *
-	 * @param string $option
-	 * @param int    $default
+	 * @param string $option Item to display
+	 * @param int    $default Number of items
 	 * @return int
 	 */
 	protected function get_items_per_page( $option, $default = 20 ) {
@@ -773,7 +773,7 @@ class PUM_ListTable {
 	 *
 	 * @since 3.1.0
 	 *
-	 * @param string $which
+	 * @param string $which Pagination to display
 	 */
 	protected function pagination( $which ) {
 		if ( empty( $this->_pagination_args ) ) {
@@ -1207,7 +1207,7 @@ class PUM_ListTable {
 	 * Generate the table navigation above or below the table
 	 *
 	 * @since 3.1.0
-	 * @param string $which
+	 * @param string $which Table navigation to generate
 	 */
 	protected function display_tablenav( $which ) {
 		if ( 'top' === $which ) {
@@ -1236,7 +1236,7 @@ class PUM_ListTable {
 	 *
 	 * @since 3.1.0
 	 *
-	 * @param string $which
+	 * @param string $which Extra controls to display
 	 */
 	protected function extra_tablenav( $which ) {}
 
@@ -1282,15 +1282,15 @@ class PUM_ListTable {
 	/**
 	 * Renders a column when no other specific method exists for that column.
 	 *
-	 * @param object $item
-	 * @param string $column_name
+	 * @param object $item Item
+	 * @param string $column_name Name of column
 	 */
 	protected function column_default( $item, $column_name ) {}
 
 	/**
 	 * Callback for column
 	 *
-	 * @param object $item
+	 * @param object $item item to callback
 	 */
 	protected function column_cb( $item ) {}
 

@@ -13,9 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Add a cache key via PUM Cache.
  *
- * @param $key
- * @param $data
- * @param string $group
+ * @param $key Cache key to be added.
+ * @param $data Data
+ * @param string $group Group
  *
  * @return bool
  */
@@ -26,9 +26,9 @@ function pum_cache_add( $key, $data, $group = '' ) {
 /**
  * Set a cache key via PUM Cache.
  *
- * @param $key
- * @param $data
- * @param string $group
+ * @param $key Cache key to set.
+ * @param $data Data
+ * @param string $group Group
  *
  * @return bool
  */
@@ -39,9 +39,9 @@ function pum_cache_set( $key, $data, $group = '' ) {
 /**
  * Replace a cache key via PUM Cache.
  *
- * @param $key
- * @param $data
- * @param string $group
+ * @param $key Key to replace
+ * @param $data Data
+ * @param string $group Group
  *
  * @return bool
  */
@@ -52,10 +52,10 @@ function pum_cache_replace( $key, $data, $group = '' ) {
 /**
  * Get a cache key via PUM Cache.
  *
- * @param $key
- * @param string $group
- * @param bool   $force
- * @param null   $found
+ * @param $key Cache key to get.
+ * @param string $group Group
+ * @param bool   $force Force
+ * @param null   $found Found
  *
  * @return bool|mixed
  */
@@ -66,8 +66,8 @@ function pum_cache_get( $key, $group = '', $force = false, &$found = null ) {
 /**
  * Delete a cache key via PUM Cache.
  *
- * @param $key
- * @param string $group
+ * @param $key Key to delete
+ * @param string $group Group
  *
  * @return bool
  */
@@ -89,9 +89,9 @@ function pum_cache_delete_group( $group = '' ) {
 /**
  * Increase a numeric cache value by the offset.
  *
- * @param $key
- * @param int    $offset
- * @param string $group
+ * @param $key Key value
+ * @param int    $offset Amount to increment
+ * @param string $group Group
  *
  * @return bool|false|int
  */
@@ -102,9 +102,9 @@ function pum_cache_incr( $key, $offset = 1, $group = '' ) {
 /**
  * Decrease a numeric cache value by the offset.
  *
- * @param $key
- * @param int    $offset
- * @param string $group
+ * @param $key Key value
+ * @param int    $offset Amount to decrement
+ * @param string $group Group
  *
  * @return bool|false|int
  */

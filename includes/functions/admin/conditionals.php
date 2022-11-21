@@ -97,7 +97,7 @@ function pum_is_popup_theme_editor() {
  *
  * @since 1.7.0
  *
- * @param null|string $key
+ * @param null|string $key Specified page key
  *
  * @return bool
  */

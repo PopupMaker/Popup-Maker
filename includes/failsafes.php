@@ -10,8 +10,8 @@ if ( ! function_exists( 'popmake_get_option' ) ) {
 	/**
 	 * Gets option
 	 *
-	 * @param string $key
-	 * @param bool   $default
+	 * @param string $key Specified key
+	 * @param bool   $default Default
 	 *
 	 * @return bool
 	 */
@@ -79,9 +79,9 @@ if ( ! function_exists( 'popmake_get_template_part' ) ) {
 	/**
 	 * Gets template part
 	 *
-	 * @param $slug
-	 * @param null $name
-	 * @param bool $load
+	 * @param $slug Template slug
+	 * @param null $name Template name
+	 * @param bool $load Load template part
 	 *
 	 * @return string
 	 */

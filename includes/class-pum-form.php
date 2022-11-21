@@ -22,8 +22,8 @@ class PUM_Form extends PUM_Fields {
 	/**
 	 * Sets the $id of the Cookie and returns the parent __construct()
 	 *
-	 * @param array $id
-	 * @param array $args
+	 * @param array $id Id
+	 * @param array $args Array of arguments.
 	 */
 	public function __construct( $id, $args = [] ) {
 		$this->id = $id;

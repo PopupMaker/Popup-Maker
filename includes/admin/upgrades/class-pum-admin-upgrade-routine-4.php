@@ -148,7 +148,7 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 	/**
 	 * Converts old condition keys into new condition arrays.
 	 *
-	 * @param array $targeting_conditions
+	 * @param array $targeting_conditions Array of targeting conditions.
 	 *
 	 * @return array
 	 */
@@ -318,7 +318,7 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 	/**
 	 * Filters out only inclusionary conditions.
 	 *
-	 * @param array $conditions
+	 * @param array $conditions Array of conditions to filter.
 	 *
 	 * @return array
 	 */
@@ -337,7 +337,7 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 	/**
 	 * Filters out only exclusionary conditions.
 	 *
-	 * @param array $conditions
+	 * @param array $conditions Array of conditions to filter.
 	 *
 	 * @return array
 	 */

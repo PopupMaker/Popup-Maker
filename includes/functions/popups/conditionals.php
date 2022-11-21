@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Checks if the $popup is valid.
  *
- * @param mixed|PUM_Model_Popup $popup
+ * @param mixed|PUM_Model_Popup $popup Popup to check.
  *
  * @return bool
  */
@@ -24,7 +24,7 @@ function pum_is_popup( $popup ) {
 /**
  * Tests a given value to see if its a valid Popup model.
  *
- * @param PUM_Model_Popup|mixed $popup
+ * @param PUM_Model_Popup|mixed $popup Popup to check.
  *
  * @return bool
  */
@@ -35,7 +35,7 @@ function pum_is_popup_object( $popup ) {
 /**
  * Checks if popup is loadable
  *
- * @param int $popup_id
+ * @param int $popup_id Popup id.
  *
  * @return bool
  */
@@ -52,7 +52,7 @@ function pum_is_popup_loadable( $popup_id = null ) {
 /**
  * Returns true if the close button should be shown.
  *
- * @param null|int $popup_id
+ * @param null|int $popup_id Popup id.
  *
  * @return bool
  */

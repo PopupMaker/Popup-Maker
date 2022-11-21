@@ -27,7 +27,7 @@ class PUM_BuddyPress_Integration {
 	/**
 	 * Register conditions for BuddyPress Integration
 	 *
-	 * @param array $conditions
+	 * @param array $conditions Conditions to register
 	 *
 	 * @return array
 	 */
@@ -156,7 +156,7 @@ class PUM_BuddyPress_Integration {
 	/**
 	 * Checks if the current page is the selected bp components.
 	 *
-	 * @param array $settings
+	 * @param array $settings Array of settings
 	 *
 	 * @return bool
 	 */
@@ -189,7 +189,7 @@ class PUM_BuddyPress_Integration {
 	/**
 	 * Checks if the current page is the selected bp action.
 	 *
-	 * @param array $settings
+	 * @param array $settings Array of settings
 	 *
 	 * @return bool
 	 */
@@ -218,7 +218,7 @@ class PUM_BuddyPress_Integration {
 	/**
 	 * Checks if the current page is the selected bp action variable.
 	 *
-	 * @param array $settings
+	 * @param array $settings Array of settings
 	 *
 	 * @return bool
 	 */
@@ -246,7 +246,7 @@ class PUM_BuddyPress_Integration {
 	/**
 	 * Function condition_sort_order for BuddyPress Integrations
 	 *
-	 * @param array $order
+	 * @param array $order Array of order
 	 *
 	 * @return array
 	 */

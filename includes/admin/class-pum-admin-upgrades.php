@@ -198,7 +198,7 @@ class PUM_Admin_Upgrades {
 	/**
 	 * Get upgrade arg.
 	 *
-	 * @param string $key
+	 * @param string $key Specified item to upgrade.
 	 *
 	 * @return bool|null
 	 */
@@ -220,7 +220,7 @@ class PUM_Admin_Upgrades {
 	/**
 	 * Get upgrade arg.
 	 *
-	 * @param string $key
+	 * @param string $key Upgrade arg to retrieve
 	 *
 	 * @return bool|null
 	 */
@@ -340,7 +340,7 @@ class PUM_Admin_Upgrades {
 	 *
 	 * If no $version is passed a default value will be established.
 	 *
-	 * @param null $version
+	 * @param null $version Db version to update.
 	 */
 	public function set_pum_db_ver( $version = null ) {
 

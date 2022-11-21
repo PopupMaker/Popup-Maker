@@ -36,9 +36,9 @@ function pum_get_newsletter_provider( $provider_id ) {
 /**
  * Get newsletter provider message
  *
- * @param string $provider_id
- * @param string $context
- * @param array  $values
+ * @param string $provider_id Provider id
+ * @param string $context Context
+ * @param array  $values Array of values
  *
  * @return mixed|string
  */
@@ -58,7 +58,7 @@ function pum_get_newsletter_provider_message( $provider_id, $context, $values = 
 /**
  * Gets default messages.
  *
- * @param null $context
+ * @param null $context Context
  *
  * @return array|mixed|string
  */

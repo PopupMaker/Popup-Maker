@@ -53,7 +53,7 @@ class PUM_Upgrade_v1_8_Themes extends PUM_Abstract_Upgrade_Themes {
 	/**
 	 * Process needed upgrades on each theme.
 	 *
-	 * @param int $theme_id
+	 * @param int $theme_id Theme id
 	 */
 	public function process_theme( $theme_id = 0 ) {
 

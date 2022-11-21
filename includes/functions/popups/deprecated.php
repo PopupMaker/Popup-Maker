@@ -11,7 +11,7 @@
  *
  * @deprecated 1.7
  *
- * @param null $popup_id
+ * @param null $popup_id Popup id.
  *
  * @return false|PUM_Model_Popup
  */
@@ -27,8 +27,8 @@ function pum_popup( $popup_id = null ) {
  *
  * @param $group
  * @param int   $popup_id ID number of the popup to retrieve a overlay meta for
- * @param null  $key
- * @param null  $default
+ * @param null  $key Key to check - null by default.
+ * @param null  $default Default
  *
  * @return mixed array|string
  */

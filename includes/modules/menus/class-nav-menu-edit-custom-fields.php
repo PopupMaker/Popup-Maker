@@ -40,8 +40,8 @@ class Walker_Nav_Menu_Edit_Custom_Fields extends Walker_Nav_Menu_Edit {
 	 * @param string $output Passed by reference. Used to append additional content.
 	 * @param object $item Menu item data object.
 	 * @param int    $depth Depth of menu item.
-	 * @param array  $args
-	 * @param int    $id
+	 * @param array  $args Array of arguments.
+	 * @param int    $id Specified item.
 	 */
 	public function start_el( &$output, $item, $depth = 0, $args = [], $id = 0 ) {
 		$item_output = '';

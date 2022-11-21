@@ -32,8 +32,8 @@ function popmake_enqueue_popup( $id ) {
  * @since       1.0
  * @deprecated  1.7.0
  *
- * @param string $key
- * @param bool   $default
+ * @param string $key Specified key
+ * @param bool   $default Default
  *
  * @return mixed
  */
@@ -72,7 +72,7 @@ function pum_settings_page() {
  *
  * @deprecated 1.7.0
  *
- * @param string $string
+ * @param string $string Single label
  *
  * @return string
  */
@@ -85,7 +85,7 @@ function popmake_get_label_singular( $string = '' ) {
  *
  * @deprecated 1.7.0
  *
- * @param string $string
+ * @param string $string Labels
  *
  * @return string
  */
@@ -330,8 +330,8 @@ function popmake_hex2rgb( $hex ) {
  *
  * @deprecated 1.8.0
  *
- * @param     $hex
- * @param int $opacity
+ * @param     $hex Hex value
+ * @param int $opacity Opacity
  *
  * @return string
  */
@@ -344,9 +344,9 @@ function popmake_get_rgba_value( $hex, $opacity = 100 ) {
  *
  * @deprecated 1.8.0
  *
- * @param int    $thickness
- * @param string $style
- * @param string $color
+ * @param int    $thickness Border thickness
+ * @param string $style Style
+ * @param string $color Border color
  *
  * @return string
  */
@@ -359,13 +359,13 @@ function popmake_get_border_style( $thickness = 1, $style = 'solid', $color = '#
  *
  * @deprecated 1.8.0
  *
- * @param int    $horizontal
- * @param int    $vertical
- * @param int    $blur
- * @param int    $spread
- * @param string $hex
- * @param int    $opacity
- * @param string $inset
+ * @param int    $horizontal Horizontal style.
+ * @param int    $vertical Vertical style.
+ * @param int    $blur Blur box-shadow.
+ * @param int    $spread Spread style.
+ * @param string $hex Hex value.
+ * @param int    $opacity Box-shadow opacity.
+ * @param string $inset String value.
  *
  * @return string
  */
@@ -378,11 +378,11 @@ function popmake_get_box_shadow_style( $horizontal = 0, $vertical = 0, $blur = 0
  *
  * @deprecated 1.8.0
  *
- * @param int    $horizontal
- * @param int    $vertical
- * @param int    $blur
- * @param string $hex
- * @param int    $opacity
+ * @param int    $horizontal Horizontal style.
+ * @param int    $vertical Vertical style.
+ * @param int    $blur Blur text shadow.
+ * @param string $hex Hex value.
+ * @param int    $opacity Text shadow opacity.
  *
  * @return string
  */
@@ -406,9 +406,9 @@ function pum_load_popup( $id ) {
  *
  * @deprecated 1.8.0 Use pum_get_template_part instead.
  *
- * @param string      $slug
- * @param null|string $name
- * @param bool        $load
+ * @param string      $slug Template slug.
+ * @param null|string $name Tamplate part name.
+ * @param bool        $load Load template part.
  *
  * @return string
  */

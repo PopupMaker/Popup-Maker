@@ -82,7 +82,7 @@ class PUM_Fields extends Popmake_Fields {
 	 *
 	 * @param array  $args Arguments passed by the setting
 	 *
-	 * @param string $value
+	 * @param string $value Value
 	 */
 	public function text_callback( $args, $value = null ) {
 
@@ -119,7 +119,7 @@ class PUM_Fields extends Popmake_Fields {
 	 *
 	 * @param array  $args Arguments passed by the setting
 	 *
-	 * @param string $value
+	 * @param string $value Value
 	 */
 	public function textarea_callback( $args, $value = null ) {
 		$this->field_before( $args );
@@ -251,7 +251,7 @@ class PUM_Fields extends Popmake_Fields {
 	 *
 	 * @param array $args Arguments passed by the setting
 	 *
-	 * @param array $values
+	 * @param array $values Array of values.
 	 */
 	public function multicheck_callback( $args, $values = [] ) {
 		$this->field_before( $args );
@@ -308,7 +308,7 @@ class PUM_Fields extends Popmake_Fields {
 	 *
 	 * @param array  $args Arguments passed by the setting
 	 *
-	 * @param string $value
+	 * @param string $value Value to retrieve
 	 */
 	public function password_callback( $args, $value = null ) {
 		$args['type'] = 'password';
@@ -323,7 +323,7 @@ class PUM_Fields extends Popmake_Fields {
 	 *
 	 * @param array  $args Arguments passed by the setting
 	 *
-	 * @param string $value
+	 * @param string $value Value to retrieve.
 	 */
 	public function email_callback( $args, $value = null ) {
 		$args['type'] = 'email';
@@ -338,7 +338,7 @@ class PUM_Fields extends Popmake_Fields {
 	 *
 	 * @param array  $args Arguments passed by the setting
 	 *
-	 * @param string $value
+	 * @param string $value Value to retrieve
 	 */
 	public function search_callback( $args, $value = null ) {
 		$args['type'] = 'search';
@@ -353,7 +353,7 @@ class PUM_Fields extends Popmake_Fields {
 	 *
 	 * @param array  $args Arguments passed by the setting
 	 *
-	 * @param string $value
+	 * @param string $value Value to retrieve
 	 */
 	public function url_callback( $args, $value = null ) {
 		$args['type'] = 'url';
@@ -368,7 +368,7 @@ class PUM_Fields extends Popmake_Fields {
 	 *
 	 * @param array  $args Arguments passed by the setting
 	 *
-	 * @param string $value
+	 * @param string $value Value to retrieve
 	 */
 	public function tel_callback( $args, $value = null ) {
 		$args['type'] = 'tel';
@@ -383,7 +383,7 @@ class PUM_Fields extends Popmake_Fields {
 	 *
 	 * @param array  $args Arguments passed by the setting
 	 *
-	 * @param string $value
+	 * @param string $value Value to retrieve
 	 */
 	public function number_callback( $args, $value = null ) {
 		$args['type'] = 'number';
@@ -398,7 +398,7 @@ class PUM_Fields extends Popmake_Fields {
 	 *
 	 * @param array  $args Arguments passed by the setting
 	 *
-	 * @param string $value
+	 * @param string $value Value to retrieve
 	 */
 	public function range_callback( $args, $value = null ) {
 		$args['type'] = 'range';
@@ -417,7 +417,7 @@ class PUM_Fields extends Popmake_Fields {
 	 *
 	 * @param array $args Arguments passed by the setting
 	 *
-	 * @param null  $value
+	 * @param null  $value Value
 	 */
 	public function objectselect_callback( $args, $value = null ) {
 

@@ -145,7 +145,7 @@ class PUM_Modules_Menu {
 	/**
 	 * Gets menus item options
 	 *
-	 * @param int $item_id
+	 * @param int $item_id Item id.
 	 *
 	 * @return array
 	 */
@@ -160,7 +160,7 @@ class PUM_Modules_Menu {
 	/**
 	 * Parse menu item options
 	 *
-	 * @param array $options
+	 * @param array $options Array of options.
 	 *
 	 * @return array
 	 */
@@ -181,10 +181,10 @@ class PUM_Modules_Menu {
 	/**
 	 * Adds custom fields to the menu item editor.
 	 *
-	 * @param $item_id
-	 * @param $item
-	 * @param $depth
-	 * @param $args
+	 * @param $item_id Specified item.
+	 * @param $item Item
+	 * @param $depth Depth
+	 * @param $args Arguments
 	 */
 	public static function fields( $item_id, $item, $depth, $args ) {
 

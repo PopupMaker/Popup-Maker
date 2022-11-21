@@ -13,8 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Determines the difference between two time stamps
  *
- * @param int      $time
- * @param int|null $current
+ * @param int      $time Time to format
+ * @param int|null $current Current time
  *
  * @return mixed
  */
@@ -25,8 +25,8 @@ function pum_human_time( $time, $current = null ) {
 /**
  * Formats number - function for utility
  *
- * @param int|float $number
- * @param string    $format
+ * @param int|float $number Number to format
+ * @param string    $format Format
  *
  * @return int|string
  */
@@ -35,7 +35,7 @@ function pum_format_number( $number, $format = '' ) {
 }
 
 /**
- * @param int|float $number
+ * @param int|float $number Number
  * @param string    $format U|human|human-readable
  *
  * @return int|string
@@ -47,7 +47,7 @@ function pum_format_time( $number, $format = '' ) {
 /**
  * Removes <p></p> around URLs
  *
- * @param string $content
+ * @param string $content Content to remove paragraph tags from.
  *
  * @return string
  */

@@ -168,7 +168,7 @@ class PUM_Modules_Reviews {
 	/**
 	 * Gets current trigger
 	 *
-	 * @param null $key
+	 * @param null $key Trigger key.
 	 *
 	 * @return bool|mixed|void
 	 */
@@ -230,8 +230,8 @@ class PUM_Modules_Reviews {
 	/**
 	 * Gets a list of triggers.
 	 *
-	 * @param null $group
-	 * @param null $code
+	 * @param null $group Group
+	 * @param null $code Code
 	 *
 	 * @return bool|mixed
 	 */
@@ -324,7 +324,7 @@ class PUM_Modules_Reviews {
 	/**
 	 * Register alert when review request is available.
 	 *
-	 * @param array $alerts
+	 * @param array $alerts Array of alerts
 	 *
 	 * @return array
 	 */

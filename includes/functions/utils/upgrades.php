@@ -53,8 +53,8 @@ function pum_has_completed_upgrade( $upgrade_id = '' ) {
 /**
  * Clean up postmeta by removing all keys from the given post_id.
  *
- * @param int   $post_id
- * @param array $keys_to_delete
+ * @param int   $post_id Post id
+ * @param array $keys_to_delete Keys to delete
  */
 function pum_cleanup_post_meta_keys( $post_id = 0, $keys_to_delete = [] ) {
 	/**

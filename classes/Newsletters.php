@@ -133,8 +133,8 @@ class PUM_Newsletters {
 	 *
 	 * Optionally pass extra data to send back to front end.
 	 *
-	 * @param       $errors WP_Error
-	 * @param array           $extra_response_args
+	 * @param      WP_Error   $errors Errors
+	 * @param array           $extra_response_args Array of extra arguments
 	 */
 	public static function send_errors( WP_Error $errors, $extra_response_args = [] ) {
 		if ( ! $errors || ! is_wp_error( $errors ) ) {
@@ -156,7 +156,7 @@ class PUM_Newsletters {
 	/**
 	 * Send a success response with passed data.
 	 *
-	 * @param array|mixed $response
+	 * @param array|mixed $response Array of success responses
 	 */
 	public static function send_success( $response = [] ) {
 		wp_send_json_success( array_filter( $response ) );
@@ -166,7 +166,7 @@ class PUM_Newsletters {
 	/**
 	 * Prepare errors for response.
 	 *
-	 * @param WP_Error $_errors
+	 * @param WP_Error $_errors Errors
 	 *
 	 * @return array
 	 */
@@ -191,7 +191,7 @@ class PUM_Newsletters {
 	/**
 	 * Records the submission into a database table.
 	 *
-	 * @param array $values
+	 * @param array $values Values to submit
 	 */
 	public static function record_submission( $values = [] ) {
 		$data = wp_parse_args(
@@ -235,7 +235,7 @@ class PUM_Newsletters {
 	/**
 	 * Provides basic field sanitization.
 	 *
-	 * @param array $values
+	 * @param array $values Values to sanitize
 	 *
 	 * @return array
 	 */
@@ -308,8 +308,8 @@ class PUM_Newsletters {
 	/**
 	 * Provides basic field validation.
 	 *
-	 * @param WP_Error $errors
-	 * @param array    $values
+	 * @param WP_Error $errors Errors
+	 * @param array    $values Array of values to validate.
 	 *
 	 * @return WP_Error
 	 */

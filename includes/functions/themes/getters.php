@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Return the theme id.
  *
- * @param int $theme_id
+ * @param int $theme_id Theme id.
  *
  * @return int
  */
@@ -32,7 +32,7 @@ function pum_get_theme_id( $theme_id = 0 ) {
 /**
  * Gets theme generated styles by theme id
  *
- * @param int $theme_id
+ * @param int $theme_id Theme id.
  *
  * @return array
  */

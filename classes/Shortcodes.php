@@ -48,7 +48,7 @@ class PUM_Shortcodes {
 	/**
 	 * Add a shortcode object to the collection.
 	 *
-	 * @param PUM_Shortcode $shortcode
+	 * @param PUM_Shortcode $shortcode Shortcode to add
 	 */
 	public function add_shortcode( PUM_Shortcode $shortcode ) {
 		$this->shortcodes[ $shortcode->tag() ] = $shortcode;

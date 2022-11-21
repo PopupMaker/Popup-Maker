@@ -47,7 +47,7 @@ function pum_passive_theme_upgrades_enabled() {
  *
  * @since 1.8.0
  *
- * @param PUM_Model_Theme $theme
+ * @param PUM_Model_Theme $theme Theme
  */
 function pum_theme_migration_1( &$theme ) {
 
@@ -91,7 +91,7 @@ add_action( 'pum_theme_passive_migration_1', 'pum_theme_migration_1' );
  *
  * @since 1.8.0
  *
- * @param PUM_Model_Theme $theme
+ * @param PUM_Model_Theme $theme Theme
  */
 function pum_theme_migration_2( &$theme ) {
 

@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Return the popup id.
  *
- * @param int $popup_id
+ * @param int $popup_id Popup id.
  *
  * @return int
  */
@@ -30,7 +30,7 @@ function pum_get_popup_id( $popup_id = null ) {
 /**
  * Gets popup title for specified popup
  *
- * @param int $popup_id
+ * @param int $popup_id Specified popup.
  *
  * @return string
  */
@@ -45,9 +45,9 @@ function pum_get_popup_title( $popup_id = null ) {
 }
 
 /**
- * Gets triggers for specified triggers
+ * Gets triggers for specified popup
  *
- * @param int $popup_id
+ * @param int $popup_id Popup id.
  *
  * @return array
  * @deprecated 1.8.0
