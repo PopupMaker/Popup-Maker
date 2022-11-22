@@ -31,6 +31,9 @@ class PUM_Admin_Shortcode_UI {
 		self::init();
 	}
 
+	/**
+	 * Initialize UI for Shortcode
+	 */
 	public static function init() {
 		if ( ! self::$initialized ) {
 			add_action( 'admin_init', [ __CLASS__, 'init_editor' ], 20 );
