@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v1.17.0 - 11/24/2022
+
+* Improvement: Added contextual notification system to be able to notify site admins about important information including security notices, beta tests, extension sales & more without requiring a plugin update.
+* Improvement: Render analytic reset times in server properly rather than UTC.
+* Tweak: Remove all reference to `select2` without the prefixed `pumselect2` to prevent confusion and further isolate our dependencies from 3rd party interference.
+
 ## v1.16.13 - 11/08/2022
 
 * Improvement: Removed some complex functionalities that were no longer needed but causing intermittent issues.
