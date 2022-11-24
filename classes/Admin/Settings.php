@@ -508,6 +508,10 @@ class PUM_Admin_Settings {
 								'type'  => 'checkbox',
 								'label' => __( 'Disable Popup Maker occasionally showing random tips to improve your popups.', 'popup-maker' ),
 							],
+							'disable_notices'               => [
+								'type'  => 'checkbox',
+								'label' => __( 'Disable Popup Maker occasionally showing community notices such as security alerts, new features or sales on our extensions.', 'popup-maker' ),
+							],
 							'complete_uninstall'         => [
 								'type'     => 'checkbox',
 								'label'    => __( 'Delete all Popup Maker data on deactivation', 'popup-maker' ),
@@ -627,7 +631,7 @@ class PUM_Admin_Settings {
 				</div>
 
 				<script type="text/javascript">
-					window.pum_settings_editor = 
+					window.pum_settings_editor =
 					<?php
 					echo PUM_Utils_Array::safe_json_encode(
 						apply_filters(

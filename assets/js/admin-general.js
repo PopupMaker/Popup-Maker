@@ -1174,9 +1174,6 @@ function pumChecked(val1, val2, print) {
 (function ($) {
     "use strict";
 
-    // Here because some plugins load additional copies, big no-no. This is the best we can do.
-    $.fn.pumselect2 = $.fn.pumselect2 || $.fn.select2;
-
     var select2 = {
         init: function () {
             $('.pum-field-select2 select').filter(':not(.pumselect2-initialized)').each(function () {

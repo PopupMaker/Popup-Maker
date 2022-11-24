@@ -1,15 +1,17 @@
 <?php
 /**
- * Plugin Name:  Popup Maker
- * Plugin URI:   https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&utm_medium=plugin-uri
- * Description:  Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
- * Version:      1.16.14
- * Author:       Popup Maker
- * Author URI:   https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&utm_medium=author-uri
- * License:      GPL2 or later
- * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:  popup-maker
- * Domain Path:  /languages/
+ * Plugin Name:       Popup Maker
+ * Plugin URI:        https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&utm_medium=plugin-uri
+ * Description:       Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
+ * Version:           1.17.0
+ * Requires PHP:      5.6
+ * Requires at least: 4.9
+ * Author:            Popup Maker
+ * Author URI:        https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&utm_medium=author-uri
+ * License:           GPL2 or later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain:       popup-maker
+ * Domain Path:       /languages/
  *
  * @package     PopupMaker
  * @author      Daniel Iser
@@ -99,7 +101,7 @@ class Popup_Maker {
 	/**
 	 * @var string Plugin Version
 	 */
-	public static $VER = '1.16.14';
+	public static $VER = '1.17.0';
 
 	/**
 	 * @var int DB Version

@@ -323,6 +323,24 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
+	 * Allow additional style properties for notice alerts.
+	 *
+	 * @param array $styles Array of allowed style properties.
+	 * @return array
+	 */
+	public static function allow_inline_styles( $styles ) {
+		$styles[] = 'display';
+		$styles[] = 'list-style';
+		$styles[] = 'margin';
+		$styles[] = 'padding';
+		$styles[] = 'margin-left';
+		$styles[] = 'margin-right';
+		$styles[] = 'margin-top';
+		$styles[] = 'margin-bottom';
+		return $styles;
+	}
+
+	/**
 	 * Render admin alerts if available.
 	 */
 	public static function admin_notices() {
@@ -359,8 +377,11 @@ class PUM_Utils_Alerts {
 			<p><?php __( 'Check out the following notifications from Popup Maker.', 'popup-maker' ); ?></p>
 
 			<?php
+
+			add_filter( 'safe_style_css', [ __CLASS__, 'allow_inline_styles' ] );
+
 			foreach ( $alerts as $alert ) {
-				$expires     = 1 == $alert['dismissible'] ? '' : $alert['dismissible'];
+				$expires     = 1 === $alert['dismissible'] ? '' : $alert['dismissible'];
 				$dismiss_url = add_query_arg(
 					[
 						'nonce'             => $nonce,
@@ -371,16 +392,16 @@ class PUM_Utils_Alerts {
 				);
 				?>
 
-				<div class="pum-alert-holder" data-code="<?php echo $alert['code']; ?>" class="<?php echo $alert['dismissible'] ? 'is-dismissible' : ''; ?>" data-dismissible="<?php echo esc_attr( $alert['dismissible'] ); ?>">
+				<div class="pum-alert-holder" data-code="<?php echo esc_attr( $alert['code'] ); ?>" class="<?php echo $alert['dismissible'] ? 'is-dismissible' : ''; ?>" data-dismissible="<?php echo esc_attr( $alert['dismissible'] ); ?>">
 
 					<div class="pum-alert <?php echo '' !== $alert['type'] ? 'pum-alert__' . esc_attr( $alert['type'] ) : ''; ?>">
 
 						<?php if ( ! empty( $alert['message'] ) ) : ?>
-							<p><?php echo $alert['message']; ?></p>
+							<p><?php echo wp_kses_post( $alert['message'] ); ?></p>
 						<?php endif; ?>
 
 						<?php if ( ! empty( $alert['html'] ) ) : ?>
-							<?php echo function_exists( 'wp_encode_emoji' ) ? wp_encode_emoji( $alert['html'] ) : $alert['html']; ?>
+							<?php echo wp_kses_post( function_exists( 'wp_encode_emoji' ) ? wp_encode_emoji( $alert['html'] ) : $alert['html'] ); ?>
 						<?php endif; ?>
 
 						<?php if ( ! empty( $alert['actions'] ) && is_array( $alert['actions'] ) ) : ?>
@@ -425,7 +446,10 @@ class PUM_Utils_Alerts {
 
 		</div>
 
+
 		<?php
+		remove_filter( 'safe_style_css', [ __CLASS__, 'allow_inline_styles' ] );
+
 	}
 
 	/**
