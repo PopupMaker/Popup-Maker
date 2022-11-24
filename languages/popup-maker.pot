@@ -15,15 +15,15 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: classes/Admin.php:60
+#: classes/Admin.php:61
 msgid "Integrations"
 msgstr ""
 
-#: classes/Admin.php:61, classes/Admin/Pages.php:58, classes/Admin/Pages.php:160, classes/Admin/Templates.php:416, classes/Admin/Templates.php:660, classes/Site/Assets.php:276
+#: classes/Admin.php:62, classes/Admin/Pages.php:58, classes/Admin/Pages.php:160, classes/Admin/Templates.php:416, classes/Admin/Templates.php:660, classes/Site/Assets.php:276
 msgid "Settings"
 msgstr ""
 
-#: classes/Admin.php:67
+#: classes/Admin.php:68
 msgid "Translate"
 msgstr ""
 
@@ -43,7 +43,7 @@ msgstr ""
 msgid "Keep current method"
 msgstr ""
 
-#: classes/AssetCache.php:619, classes/Telemetry.php:268, classes/Admin/Extend.php:122, classes/Admin/Onboarding.php:59
+#: classes/AssetCache.php:619, classes/Telemetry.php:268, classes/Admin/Extend.php:122, classes/Admin/Notices.php:64, classes/Admin/Onboarding.php:59
 msgid "Learn more"
 msgstr ""
 
@@ -51,7 +51,7 @@ msgstr ""
 msgid "Popup Maker detected an issue with your file system's ability and is unable to create & save cached assets for your popup styling and settings. This may lead to suboptimal performance. Please check your filesystem and contact your hosting provide to ensure Popup Maker can create and write to cache files."
 msgstr ""
 
-#: classes/Conditions.php:109, classes/Conditions.php:422, classes/Conditions.php:436, classes/Conditions.php:442, classes/Cookies.php:210, classes/Shortcode.php:151, classes/Shortcode.php:163, classes/Shortcode.php:176, classes/Triggers.php:360, includes/class-popmake-fields.php:57, classes/Admin/Popups.php:374, classes/Admin/Settings.php:695, classes/Admin/Settings.php:721, classes/Admin/Settings.php:724, classes/Admin/Settings.php:733, classes/Admin/Themes.php:345, classes/Admin/Themes.php:366, classes/Admin/Themes.php:385, classes/Shortcode/Popup.php:51, classes/Shortcode/Popup.php:67, classes/Shortcode/Subscribe.php:60, classes/Shortcode/Subscribe.php:82, classes/Shortcode/Subscribe.php:85
+#: classes/Conditions.php:109, classes/Conditions.php:422, classes/Conditions.php:436, classes/Conditions.php:442, classes/Cookies.php:210, classes/Shortcode.php:151, classes/Shortcode.php:163, classes/Shortcode.php:176, classes/Triggers.php:360, includes/class-popmake-fields.php:57, classes/Admin/Popups.php:374, classes/Admin/Settings.php:699, classes/Admin/Settings.php:725, classes/Admin/Settings.php:728, classes/Admin/Settings.php:737, classes/Admin/Themes.php:345, classes/Admin/Themes.php:366, classes/Admin/Themes.php:385, classes/Shortcode/Popup.php:51, classes/Shortcode/Popup.php:67, classes/Shortcode/Subscribe.php:60, classes/Shortcode/Subscribe.php:82, classes/Shortcode/Subscribe.php:85
 msgid "General"
 msgstr ""
 
@@ -195,7 +195,7 @@ msgstr ""
 msgid "Any Supported Form*"
 msgstr ""
 
-#: classes/Cookies.php:97, classes/Privacy.php:33, classes/Triggers.php:219, classes/Types.php:23, classes/Site/Assets.php:265, classes/Utils/Alerts.php:356, includes/admin/class-pum-admin-upgrades.php:250, includes/integrations/class-pum-gravity-forms.php:51, includes/modules/admin-bar.php:71
+#: classes/Cookies.php:97, classes/Privacy.php:33, classes/Triggers.php:219, classes/Types.php:23, classes/Site/Assets.php:265, classes/Utils/Alerts.php:374, includes/admin/class-pum-admin-upgrades.php:250, includes/integrations/class-pum-gravity-forms.php:51, includes/modules/admin-bar.php:71
 msgid "Popup Maker"
 msgstr ""
 
@@ -933,7 +933,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: classes/Admin/Assets.php:73, classes/Admin/Settings.php:657, classes/Admin/Tools.php:83, classes/Admin/Tools.php:195, includes/integrations/class-pum-gravity-forms.php:175
+#: classes/Admin/Assets.php:73, classes/Admin/Settings.php:661, classes/Admin/Tools.php:83, classes/Admin/Tools.php:195, includes/integrations/class-pum-gravity-forms.php:175
 msgid "Save"
 msgstr ""
 
@@ -981,8 +981,12 @@ msgstr ""
 msgid "See All Premium Features"
 msgstr ""
 
-#: classes/Admin/Onboarding.php:65
+#: classes/Admin/Notices.php:72, classes/Admin/Onboarding.php:65
 msgid "Dismiss"
+msgstr ""
+
+#: classes/Admin/Notices.php:79
+msgid "Turn off these occasional notices"
 msgstr ""
 
 #: classes/Admin/Onboarding.php:71
@@ -1129,7 +1133,7 @@ msgstr ""
 msgid "Popup Settings"
 msgstr ""
 
-#: classes/Admin/Popups.php:241, classes/Admin/Settings.php:625, classes/Admin/Themes.php:143
+#: classes/Admin/Popups.php:241, classes/Admin/Settings.php:629, classes/Admin/Themes.php:143
 msgid "If you are seeing this, the page is still loading or there are Javascript errors on this page. %1$sView troubleshooting guide%2$s"
 msgstr ""
 
@@ -1817,86 +1821,90 @@ msgid "Disable Popup Maker occasionally showing random tips to improve your popu
 msgstr ""
 
 #: classes/Admin/Settings.php:513
+msgid "Disable Popup Maker occasionally showing community notices such as security alerts, new features or sales on our extensions."
+msgstr ""
+
+#: classes/Admin/Settings.php:517
 msgid "Delete all Popup Maker data on deactivation"
 msgstr ""
 
-#: classes/Admin/Settings.php:514
+#: classes/Admin/Settings.php:518
 msgid "Check this to completely uninstall Popup Maker."
 msgstr ""
 
-#: classes/Admin/Settings.php:521
+#: classes/Admin/Settings.php:525
 msgid "Don't Load Google Fonts"
 msgstr ""
 
-#: classes/Admin/Settings.php:522
+#: classes/Admin/Settings.php:526
 msgid "Check this disable loading of google fonts, useful if the fonts you chose are already loaded with your theme."
 msgstr ""
 
-#: classes/Admin/Settings.php:526
+#: classes/Admin/Settings.php:530
 msgid "Don't load Popup Maker core stylesheet."
 msgstr ""
 
-#: classes/Admin/Settings.php:527
+#: classes/Admin/Settings.php:531
 msgid "Check this if you have copied the Popup Maker core styles to your own stylesheet or are using custom styles."
 msgstr ""
 
-#: classes/Admin/Settings.php:531
+#: classes/Admin/Settings.php:535
 msgid "Don't load popup theme styles to the head."
 msgstr ""
 
-#: classes/Admin/Settings.php:532
+#: classes/Admin/Settings.php:536
 msgid "Check this if you have copied the popup theme styles to your own stylesheet or are using custom styles."
 msgstr ""
 
-#: classes/Admin/Settings.php:569
+#: classes/Admin/Settings.php:573
 msgid "Show Popup Maker CSS"
 msgstr ""
 
-#: classes/Admin/Settings.php:570
+#: classes/Admin/Settings.php:574
 msgid "Use this to quickly copy Popup Maker's CSS to your own stylesheet."
 msgstr ""
 
-#: classes/Admin/Settings.php:573
+#: classes/Admin/Settings.php:577
 msgid "Core Styles"
 msgstr ""
 
-#: classes/Admin/Settings.php:579
+#: classes/Admin/Settings.php:583
 msgid "Generated Popup & Popup Theme Styles"
 msgstr ""
 
-#: classes/Admin/Settings.php:622
+#: classes/Admin/Settings.php:626
 msgid "Popup Maker Settings"
 msgstr ""
 
-#: classes/Admin/Settings.php:696
+#: classes/Admin/Settings.php:700
 msgid "Subscriptions"
 msgstr ""
 
-#: classes/Admin/Settings.php:697
+#: classes/Admin/Settings.php:701
 msgid "Extensions"
 msgstr ""
 
-#: classes/Admin/Settings.php:698, classes/Admin/Settings.php:730
+#: classes/Admin/Settings.php:702, classes/Admin/Settings.php:734
 msgid "Licenses"
 msgstr ""
 
-#: classes/Admin/Settings.php:699, classes/Shortcode/Subscribe.php:62, classes/Shortcode/Subscribe.php:92
+#: classes/Admin/Settings.php:703, classes/Shortcode/Subscribe.php:62, classes/Shortcode/Subscribe.php:92
 msgid "Privacy"
 msgstr ""
 
-#: classes/Admin/Settings.php:700, classes/Admin/Settings.php:737
+#: classes/Admin/Settings.php:704, classes/Admin/Settings.php:741
 msgid "Misc"
 msgstr ""
 
-#: classes/Admin/Settings.php:727
+#: classes/Admin/Settings.php:731
 msgid "Extension Settings"
 msgstr ""
 
-#: classes/Admin/Settings.php:734
+#: classes/Admin/Settings.php:738
 msgid "Subscription Forms"
 msgstr ""
 
-#: classes/Admin/Settings.php:738
+#: classes/Admin/Settings.php:742
 msgid "Assets"
 msgstr ""
 
@@ -2759,15 +2767,15 @@ msgstr ""
 msgid "%1$sDid you know:%2$s Popup Maker has custom integrations with %3$s, %4$slearn more%5$s or %6$s%7$s%8$s!"
 msgstr ""
 
-#: classes/Utils/Alerts.php:356
+#: classes/Utils/Alerts.php:374
 msgid "Notifications"
 msgstr ""
 
-#: classes/Utils/Alerts.php:359
+#: classes/Utils/Alerts.php:377
 msgid "Check out the following notifications from Popup Maker."
 msgstr ""
 
-#: classes/Utils/Alerts.php:417
+#: classes/Utils/Alerts.php:438
 msgid "Dismiss this item."
 msgstr ""
 
