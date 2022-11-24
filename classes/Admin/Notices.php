@@ -111,7 +111,7 @@ class PUM_Admin_Notices {
 			}
 		}
 
-			// Removed filtered notices.
+		// Removed filtered notices.
 		foreach ( $notices as $key => $notice ) {
 			if ( ! empty( $notice['filters'] ) ) {
 				foreach ( $notice['filters'] as $filter ) {
@@ -133,8 +133,8 @@ class PUM_Admin_Notices {
 								}
 								break;
 
-							case 'developer':
-								if ( ! self::is_dev_env() ) {
+							case 'environment':
+								if ( $extra && ! self::check_environment( $extra ) ) {
 									unset( $notices[ $key ] );
 								}
 								break;
@@ -251,16 +251,26 @@ class PUM_Admin_Notices {
 	}
 
 	/**
-	 * Determines if the site is in a local environment
+	 * Checks if the current environment is a development environment.
 	 *
-	 * @return bool True for local
 	 * @since 1.17.0
+	 *
+	 * @param string $type The type of environment to check for.
+	 *
+	 * @return bool
 	 */
-	public static function is_dev_env() {
+	public static function check_environment( $type ) {
 		$env = wp_get_environment_type();
 
-		if ( 'local' === $env || 'development' === $env ) {
-			return true;
+		switch ( $type ) {
+			case 'local':
+				return 'local' === $env;
+			case 'staging':
+				return 'staging' === $env;
+			case 'development':
+				return 'development' === $env;
+			case 'production':
+				return 'production' === $env;
 		}
 
 		return false;
