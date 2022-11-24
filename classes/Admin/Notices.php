@@ -39,9 +39,6 @@ class PUM_Admin_Notices {
 			return $alerts;
 		}
 
-		// Temporary!
-		delete_transient( 'pum_plugin_notices' );
-
 		$notices = self::get_notices();
 
 		if ( empty( $notices ) ) {
@@ -116,8 +113,8 @@ class PUM_Admin_Notices {
 			if ( ! empty( $notice['filters'] ) ) {
 				foreach ( $notice['filters'] as $filter ) {
 					$filter = explode( ':', $filter );
-					$type   = $filter[0];
-					$extra  = ! empty( $filter[1] ) ? $filter[1] : '';
+					$type   = trim( $filter[0] );
+					$extra  = trim( ! empty( $filter[1] ) ? $filter[1] : '' );
 
 					if ( ! empty( $type ) ) {
 						switch ( $type ) {
@@ -179,7 +176,7 @@ class PUM_Admin_Notices {
 			];
 		}
 
-		set_transient( 'pum_plugin_notices', $notices, DAY_IN_SECONDS );
+		set_transient( 'pum_plugin_notices', $notices, 12 * HOUR_IN_SECONDS );
 
 		return $notices;
 	}
@@ -218,7 +215,7 @@ class PUM_Admin_Notices {
 		}
 
 		if ( strtotime( self::get_installed_on() . ' +3 days' ) < time() ) {
-			return false;
+			// return false;
 		}
 
 		return true;
