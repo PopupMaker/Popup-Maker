@@ -20,6 +20,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PUM_Admin_Shortcode_UI {
 
+	/**
+	 * Variable to initialize UI in class.
+	 *
+	 * @var bool $initialized
+	 */
 	private static $initialized = false;
 
 	/**
