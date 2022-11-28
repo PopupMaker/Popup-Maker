@@ -186,6 +186,13 @@ class PUM_Admin_Shortcode_UI {
 		);
 	}
 
+	/**
+	 * Runs shortcode
+	 * 
+	 * @var $tag
+	 * @var $shortcode
+	 * @var $post_id
+	 */
 	public static function do_shortcode() {
 
 		check_ajax_referer( 'pum-shortcode-ui-nonce', 'nonce' );
