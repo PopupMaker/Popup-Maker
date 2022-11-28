@@ -346,7 +346,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 		);
 
 		// We need to fake a popup using the PUM_Popup data model.
-		$post_id              = rand( - 99999, - 1 ); // negative ID, to avoid clash with a valid post.
+		$post_id              = wp_rand( - 99999, - 1 ); // negative ID, to avoid clash with a valid post.
 		$post                 = new stdClass();
 		$post->ID             = $post_id;
 		$post->post_author    = 1;
