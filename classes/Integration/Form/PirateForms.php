@@ -14,6 +14,9 @@ class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 	 */
 	public $key = 'pirateforms';
 
+	/**
+	 * PirateForms constructor.
+	 */
 	public function __construct() {
 		// add_action( 'wpforms_process_complete', array( $this, 'on_success' ), 10, 4 );
 	}

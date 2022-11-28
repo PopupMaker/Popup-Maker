@@ -14,6 +14,9 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	 */
 	public $key = 'ninjaforms';
 
+	/**
+	 * Ninja forms constructor.
+	 */
 	public function __construct() {
 		add_action( 'ninja_forms_pre_process', [ $this, 'on_success_v2' ] );
 		add_action( 'ninja_forms_after_submission', [ $this, 'on_success_v3' ] );
