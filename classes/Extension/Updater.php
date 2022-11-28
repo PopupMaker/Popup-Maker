@@ -25,31 +25,31 @@ class PUM_Extension_Updater {
 	 *
 	 * @var string
 	 */
-	private $api_url     = '';
+	private $api_url = '';
 	/**
 	 * Data to update
 	 *
 	 * @var array
 	 */
-	private $api_data    = [];
+	private $api_data = [];
 	/**
 	 * Name to update
 	 *
 	 * @var string
 	 */
-	private $name        = '';
+	private $name = '';
 	/**
 	 * Slug to update
 	 *
 	 * @var string
 	 */
-	private $slug        = '';
+	private $slug = '';
 	/**
 	 * Version to update
 	 *
 	 * @var string
 	 */
-	private $version     = '';
+	private $version = '';
 	/**
 	 * Updates private value
 	 *
@@ -61,7 +61,7 @@ class PUM_Extension_Updater {
 	 *
 	 * @var string
 	 */
-	private $cache_key   = '';
+	private $cache_key = '';
 	/**
 	 * Health check updater
 	 *
