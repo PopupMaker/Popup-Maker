@@ -337,6 +337,8 @@ class Popup_Maker {
 		PUM_Shortcode_PopupCookie::init();
 
 		PUM_Telemetry::init();
+
+		new PUM_Extensions();
 	}
 
 	/**
