@@ -340,7 +340,7 @@ class PUM_Modules_Reviews {
 
 		<ul>
 			<li>
-				<a class="pum-dismiss" target="_blank" href="<?php echo esc_attr( $trigger['link'] ); ?>>" data-reason="am_now"> <strong><?php _e( 'Ok, you deserve it', 'popup-maker' ); ?></strong> </a>
+				<a class="pum-dismiss" target="_blank" href="<?php echo esc_attr( $trigger['link'] ); ?>" data-reason="am_now"> <strong><?php _e( 'Ok, you deserve it', 'popup-maker' ); ?></strong> </a>
 			</li>
 			<li>
 				<a href="#" class="pum-dismiss" data-reason="maybe_later">
@@ -477,7 +477,7 @@ class PUM_Modules_Reviews {
 			</p>
 			<ul>
 				<li>
-					<a class="pum-dismiss" target="_blank" href="<?php echo esc_attr( $trigger['link'] ); ?>>" data-reason="am_now">
+					<a class="pum-dismiss" target="_blank" href="<?php echo esc_attr( $trigger['link'] ); ?>" data-reason="am_now">
 						<strong><?php esc_html_e( 'Ok, you deserve it', 'popup-maker' ); ?></strong>
 					</a>
 				</li>
