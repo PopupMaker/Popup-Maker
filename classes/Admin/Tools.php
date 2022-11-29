@@ -72,7 +72,7 @@ class PUM_Admin_Tools {
 	 */
 	public static function page() {
 
-		$active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], self::tabs() ) ? $_GET['tab'] : 'system_info';
+		$active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], self::tabs() ) ? $_GET['tab'] : 'error_log';
 		wp_enqueue_style( 'pum-admin-general' );
 		?>
 
@@ -122,9 +122,9 @@ class PUM_Admin_Tools {
 			$tabs = apply_filters(
 				'pum_tools_tabs',
 				[
-					'betas'            => __( 'Beta Versions', 'popup-maker' ),
-					'error_log'        => __( 'Error Log', 'popup-maker' ),
-					'import'           => __( 'Import / Export', 'popup-maker' ),
+					'betas'     => __( 'Beta Versions', 'popup-maker' ),
+					'error_log' => __( 'Error Log', 'popup-maker' ),
+					'import'    => __( 'Import / Export', 'popup-maker' ),
 				]
 			);
 
