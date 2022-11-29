@@ -1,11 +1,12 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Popup Maker Extension Licinging.
+ *
+ * @package PUM
+ */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * License handler for Popup Maker
@@ -18,20 +19,60 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PUM_Extension_License {
 
+	/**
+	 * Plugin file.
+	 *
+	 * @var string
+	 */
 	private $file;
 
+	/**
+	 * License key.
+	 *
+	 * @var string
+	 */
 	private $license;
 
+	/**
+	 * Plugin name.
+	 *
+	 * @var string
+	 */
 	private $item_name;
 
+	/**
+	 * Plugin EDD item ID.
+	 *
+	 * @var int
+	 */
 	private $item_id;
 
+	/**
+	 * Plugin shortname.
+	 *
+	 * @var string
+	 */
 	private $item_shortname;
 
+	/**
+	 * Plugin version.
+	 *
+	 * @var string
+	 */
 	private $version;
 
+	/**
+	 * Plugin author.
+	 *
+	 * @var string
+	 */
 	private $author;
 
+	/**
+	 * API URL.
+	 *
+	 * @var string
+	 */
 	private $api_url = 'https://wppopupmaker.com/edd-sl-api/';
 
 	/**
@@ -195,6 +236,7 @@ class PUM_Extension_License {
 		if ( ! isset( $_POST['pum_settings'] ) ) {
 			return;
 		}
+
 		if ( ! isset( $_POST['pum_settings'][ $this->item_shortname . '_license_key' ] ) ) {
 			return;
 		}
@@ -280,10 +322,12 @@ class PUM_Extension_License {
 
 			// Data to send to the API
 			$api_params = [
-				'edd_action' => 'deactivate_license',
-				'license'    => $this->license,
-				'item_name'  => urlencode( $this->item_name ),
-				'url'        => home_url(),
+				'edd_action'  => 'deactivate_license',
+				'license'     => $this->license,
+				'item_id'     => $this->item_id,
+				'item_name'   => rawurlencode( $this->item_name ),
+				'url'         => home_url(),
+				'environment' => function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production',
 			];
 
 			// Call the API
@@ -329,10 +373,12 @@ class PUM_Extension_License {
 
 		// data to send in our API request
 		$api_params = [
-			'edd_action' => 'check_license',
-			'license'    => $this->license,
-			'item_name'  => urlencode( $this->item_name ),
-			'url'        => home_url(),
+			'edd_action'  => 'check_license',
+			'license'     => $this->license,
+			'item_id'     => $this->item_id,
+			'item_name'   => rawurlencode( $this->item_name ),
+			'url'         => home_url(),
+			'environment' => function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production',
 		];
 
 		// Call the API
