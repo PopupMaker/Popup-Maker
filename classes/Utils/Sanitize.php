@@ -43,6 +43,14 @@ class PUM_Utils_Sanitize {
 		return 0;
 	}
 
+	/**
+	 * Measures value.
+	 * 
+	 * @param string $value Value to sanitize.
+	 * @param array $args Array of arguments.
+	 * @param array $fields Array of fields.
+	 * @param array $values Array of values.
+	 */
 	public static function measure( $value = '', $args = [], $fields = [], $values = [] ) {
 		if ( isset( $values[ $args['id'] . '_unit' ] ) ) {
 			$value .= $values[ $args['id'] . '_unit' ];

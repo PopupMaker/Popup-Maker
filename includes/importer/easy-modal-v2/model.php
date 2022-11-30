@@ -19,6 +19,12 @@ class EModal_Model {
 	protected $_default_fields = [];
 	protected $_state          = null;
 
+	/**
+	 * Importer Model constructor.
+	 *
+	 * @param $id
+	 * @param int $limit
+	 */
 	public function __construct( $id = null, $limit = 1 ) {
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->_table_name;
@@ -38,6 +44,11 @@ class EModal_Model {
 		return $this;
 	}
 
+	/**
+	 * Load model table name.
+	 *
+	 * @param $query
+	 */
 	public function load( $query = null ) {
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->_table_name;
@@ -60,6 +71,9 @@ class EModal_Model {
 		return [];
 	}
 
+	/**
+	 * Saves model table name.
+	 */
 	public function save() {
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->_table_name;
@@ -74,6 +88,9 @@ class EModal_Model {
 		}
 	}
 
+	/**
+	 * Delete model table name.
+	 */
 	public function delete() {
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->_table_name;
@@ -81,6 +98,9 @@ class EModal_Model {
 		return $wpdb->delete( $table_name, [ $this->_pk => $this->{$this->_pk} ] );
 	}
 
+	/**
+	 * Returns values as an array of keys.
+	 */
 	public function as_array() {
 		$values = $this->_data;
 		foreach ( $values as $key => $value ) {
@@ -90,6 +110,11 @@ class EModal_Model {
 		return $values;
 	}
 
+	/**
+	 * Process load.
+	 *
+	 * @param array $data Values to load.
+	 */
 	public function process_load( $data ) {
 		foreach ( $data as $key => $val ) {
 			if ( array_key_exists( $key, $this->_data ) ) {
@@ -98,6 +123,9 @@ class EModal_Model {
 		}
 	}
 
+	/**
+	 * Checks values and serializes it if needed.
+	 */
 	public function serialized_values() {
 		$values = $this->_data;
 
@@ -110,6 +138,11 @@ class EModal_Model {
 		return $values;
 	}
 
+	/**
+	 * Gets existing key data.
+	 *
+	 * @param array key Data being passed in.
+	 */
 	public function __get( $key ) {
 		if ( array_key_exists( $key, $this->_data ) ) {
 			return $this->_data[ $key ];
@@ -120,6 +153,12 @@ class EModal_Model {
 		}
 	}
 
+	/**
+	 * Sets value.
+	 *
+	 * @param $key Item.
+	 * @param $value Value.
+	 */
 	public function __set( $key, $value ) {
 		if ( array_key_exists( $key, $this->_data ) ) {
 			$this->_data[ $key ] = $value;
@@ -128,14 +167,25 @@ class EModal_Model {
 		}
 	}
 
+	/**
+	 * Checks if property is set.
+	 *
+	 * @param $name Item to check.
+	 */
 	public function __isset( $name ) {
 		return isset( $this->_data[ $name ] );
 	}
 
+	/**
+	 * Retrieves data.
+	 */
 	public function fields() {
 		return array_keys( $this->_data );
 	}
 
+	/**
+	 * Sets fields data.
+	 */
 	public function set_fields( array $data ) {
 		foreach ( $data as $key => $val ) {
 			if ( array_key_exists( $key, $this->_data ) ) {
@@ -153,14 +203,30 @@ class EModal_Model {
 		return array_key_exists( $key, $this->as_array() );
 	}
 
+	/**
+	 * Sets the given items.
+	 *
+	 * @param $key Item to set.
+	 * @param $value Value to set.
+	 */
 	public function offsetSet( $key, $value ) {
 		$this->__set( $key, $value );
 	}
 
+	/**
+	 * Gets the value for the item.
+	 *
+	 * @param $key Item to get.
+	 */
 	public function offsetGet( $key ) {
 		return $this->$key;
 	}
 
+	/**
+	 * Unsets the given item.
+	 *
+	 * @param $key Item to unset.
+	 */
 	public function offsetUnset( $key ) {
 		$this->_data[ $key ] = null;
 	}

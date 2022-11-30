@@ -70,6 +70,9 @@ class PUM_Admin_Upgrade_Routine {
 
 	}
 
+	/**
+	 * Checks upgrade routine is done.
+	 */
 	public static function done() {
 
 		$upgrades = PUM_Admin_Upgrades::instance();

@@ -277,6 +277,11 @@ class PUM_ConditionCallbacks {
 		return false;
 	}
 
+	/**
+	 * Checks if object is a post type.
+	 * 
+	 * @param  $post_type Value to check.
+	 */
 	public static function is_post_type( $post_type ) {
 		global $post;
 		return is_object( $post ) && ( is_singular( $post_type ) || $post->post_type === $post_type );

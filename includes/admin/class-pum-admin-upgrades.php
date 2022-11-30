@@ -100,6 +100,9 @@ class PUM_Admin_Upgrades {
 		add_action( 'admin_notices', [ $this, 'show_upgrade_notices' ] );
 	}
 
+	/**
+	 * Checks plugin version to determine whether or not to upgrade it.
+	 */
 	public function update_plugin_version() {
 
 		$current_ver = get_option( 'pum_ver', false );
@@ -238,10 +241,16 @@ class PUM_Admin_Upgrades {
 
 	}
 
+	/**
+	 * Gets upgrade arguments.
+	 */
 	public function get_args() {
 		return $this->upgrade_args;
 	}
 
+	/**
+	 * Does upgrades.
+	 */
 	public function doing_upgrades() {
 		return $this->doing_upgrades;
 	}
@@ -432,10 +441,16 @@ class PUM_Admin_Upgrades {
 
 	}
 
+	/**
+	 * Returns current routine.
+	 */
 	public function current_routine() {
 		return $this->current_routine;
 	}
 
+	/**
+	 * Returns next routine.
+	 */
 	public function next_routine() {
 		return $this->next_routine;
 	}
@@ -475,6 +490,9 @@ class PUM_Admin_Upgrades {
 		return $upgrades;
 	}
 
+	/**
+	 * Gets and checks PUM upgrades version.
+	 */
 	public function get_upgrade( $version = null ) {
 		$upgrades = $this->get_upgrades();
 		if ( isset( $upgrades[ $version ] ) ) {
@@ -568,6 +586,9 @@ class PUM_Admin_Upgrades {
 
 	}
 
+	/**
+	 * Determines whether or not to upgrade the step.
+	 */
 	public function step_up() {
 		$step = $this->upgrade_args['step'];
 		if ( $step >= $this->upgrade_args['steps'] ) {

@@ -98,6 +98,9 @@ class PUM_Site_Assets {
 		add_action( 'wp_head', [ __CLASS__, 'check_force_script_loading' ] );
 	}
 
+	/**
+	 * Compares versions and fixes broken extension scripts.
+	 */
 	public static function fix_broken_extension_scripts() {
 		if ( wp_script_is( 'pum_aweber_integration_js' ) && class_exists( 'PUM_Aweber_Integration' ) && defined( 'PUM_AWEBER_INTEGRATION_VER' ) && version_compare( PUM_AWEBER_INTEGRATION_VER, '1.1.0', '<' ) ) {
 			wp_dequeue_script( 'pum_aweber_integration_js' );

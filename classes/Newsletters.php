@@ -27,6 +27,9 @@ class PUM_Newsletters {
 	 */
 	public static $disabled = false;
 
+	/**
+	 * Checks if plugins are loaded for Newsletters.
+	 */
 	public static function init() {
 		if ( doing_action( 'plugins_loaded' ) || ! did_action( 'plugins_loaded' ) ) {
 			add_action( 'plugins_loaded', [ __CLASS__, 'delayed_init' ], 11 );
@@ -35,6 +38,9 @@ class PUM_Newsletters {
 		}
 	}
 
+	/**
+	 * Checks versions - initializes Newsletters.
+	 */
 	public static function delayed_init() {
 		// TODO Once PUM-Aweber has been updated properly for a few months remove these if checks.
 		// TODO Consider adding notice to update aweber.

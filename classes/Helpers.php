@@ -13,6 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class PUM_Helpers {
 
+	/**
+	 * Returns content.
+	 *
+	 * @param string $shortcode_text Shortcode contents.
+	 */
 	public static function do_shortcode( $shortcode_text = '' ) {
 		ob_start();
 
@@ -27,6 +32,11 @@ class PUM_Helpers {
 		return $content;
 	}
 
+	/**
+	 * Gets content.
+	 *
+	 * @param $content Shortcode content
+	 */
 	public static function get_shortcodes_from_content( $content ) {
 		$pattern    = get_shortcode_regex();
 		$shortcodes = [];
@@ -186,6 +196,13 @@ class PUM_Helpers {
 		return PUM_Utils_Array::sort( $array, $type, $reverse );
 	}
 
+	/**
+	 * Query post types for Helpers.
+	 *
+	 * @param $post_type
+	 * @param array $args
+	 * @param bool $include_total
+	 */
 	public static function post_type_selectlist_query( $post_type, $args = [], $include_total = false ) {
 
 		$args = wp_parse_args(
@@ -234,6 +251,13 @@ class PUM_Helpers {
 		return ! $include_total ? $results['items'] : $results;
 	}
 
+	/**
+	 * Query taxonomies for class Helpers.
+	 *
+	 * @param array $taxonomies Array of values
+	 * @param array $args Array of properties
+	 * @param bool $include_total
+	 */
 	public static function taxonomy_selectlist_query( $taxonomies = [], $args = [], $include_total = false ) {
 		if ( empty( $taxonomies ) ) {
 			$taxonomies = [ 'category' ];
@@ -331,6 +355,11 @@ class PUM_Helpers {
 		return ! $include_total ? $results['items'] : $results;
 	}
 
+	/**
+	 * Retrieves themes for popups.
+	 *
+	 * @var array $themes Array of themes
+	 */
 	public static function popup_theme_selectlist() {
 
 		$themes = [];
@@ -343,6 +372,13 @@ class PUM_Helpers {
 
 	}
 
+	/**
+	 * Retrieves popups
+	 *
+	 * @param array $args Array of arguments.
+	 * 
+	 * @var array $popup_list Array of popups.
+	 */
 	public static function popup_selectlist( $args = [] ) {
 		$popup_list = [];
 

@@ -215,6 +215,13 @@ class PUM_Integrations {
 		return $fields;
 	}
 
+	/**
+	 * Retrieves popup by id.
+	 *
+	 * @param int $popup_id Specified popup
+	 *
+	 * @var $popup Popup
+	 */
 	public static function enqueue_assets( $popup_id = 0 ) {
 
 		$popup = pum_get_popup( $popup_id );
@@ -226,6 +233,11 @@ class PUM_Integrations {
 		// Do stuff here.
 	}
 
+	/**
+	 * Registers conditions.
+	 *
+	 * @param array $conditions Array of conditions
+	 */
 	public static function register_conditions( $conditions = [] ) {
 
 		foreach ( self::$integrations as $key => $enabled ) {
@@ -273,6 +285,11 @@ class PUM_Integrations {
 		}
 	}
 
+	/**
+ 	 * Gets post type for integrated plugin if it's enabled.
+	 *
+	 * @param array $args Array of post type arguments.
+	 */
 	public static function popup_post_type_args( $args = [] ) {
 
 		if ( self::enabled( 'kingcomposer' ) && ( ( is_admin() && isset( $_GET['page'] ) && 'kingcomposer' === $_GET['page'] ) || pum_is_popup_editor() ) ) {

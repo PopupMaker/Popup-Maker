@@ -18,6 +18,9 @@ class PUM_Gravity_Forms_Integation {
 		add_action( 'popmake_popup_after_inner', [ __CLASS__, 'force_ajax' ] );
 	}
 
+	/**
+	 * Checks current action and forces ajax for gravity forms integrations.
+	 */
 	public static function force_ajax() {
 		if ( current_action() === 'popmake_popup_before_inner' ) {
 			add_filter( 'shortcode_atts_gravityforms', [ __CLASS__, 'gfrorms_shortcode_atts' ] );
@@ -27,13 +30,22 @@ class PUM_Gravity_Forms_Integation {
 		}
 	}
 
+	/**
+	 * Shortcode attributes for gravity forms integrations.
+	 *
+	 * @param $out
+	 */
 	public static function gfrorms_shortcode_atts( $out ) {
 		$out['ajax'] = 'true';
 
 		return $out;
 	}
 
-
+	/**
+	 * Preloads specified popup.
+	 *
+	 * @param $popup_id Item to preload.
+	 */
 	public static function preload( $popup_id ) {
 		if ( function_exists( 'gravity_form_enqueue_scripts' ) ) {
 			$popup = pum_get_popup( $popup_id );
@@ -50,7 +62,11 @@ class PUM_Gravity_Forms_Integation {
 		}
 	}
 
-
+	/**
+	 * Retrieves settings menu.
+	 *
+	 * @param $setting_tabs Menu tabs.
+	 */
 	public static function settings_menu( $setting_tabs ) {
 		$setting_tabs['998.002'] = [
 			'name'  => 'popup-maker',
@@ -60,7 +76,12 @@ class PUM_Gravity_Forms_Integation {
 		return $setting_tabs;
 	}
 
-
+	/**
+	 * Gets gravity forms form.
+	 *
+	 * @param $form_string
+	 * @param $form
+	 */
 	public static function get_form( $form_string, $form ) {
 		$settings    = wp_json_encode( self::form_options( $form['id'] ) );
 		$field       = "<input type='hidden' class='gforms-pum' value='$settings' />";
@@ -114,7 +135,9 @@ class PUM_Gravity_Forms_Integation {
 		return $cookies;
 	}
 
-
+	/**
+	 * Renders settings page for gravity forms popup.
+	 */
 	public static function render_settings_page() {
 		$form_id = rgget( 'id' );
 

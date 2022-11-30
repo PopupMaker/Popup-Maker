@@ -25,6 +25,9 @@ class EModal_Model_Theme_Meta extends EModal_Model {
 		'content'   => [],
 	];
 
+	/**
+	 * Constructor for theme meta.
+	 */
 	public function __construct( $id = null ) {
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->_table_name;

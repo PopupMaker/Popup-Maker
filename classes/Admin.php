@@ -8,6 +8,9 @@
 
 class PUM_Admin {
 
+	/**
+	 * Sets up the current user.
+	 */
 	public static function init() {
 		PUM_Admin_BlockEditor::init();
 		PUM_Admin_Pages::init();

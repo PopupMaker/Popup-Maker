@@ -127,12 +127,18 @@ abstract class PUM_Shortcode {
 	 */
 	abstract public function handler( $atts, $content = null );
 
+	/**
+	 * Filters tabs for Shortcode.
+	 */
 	public function _tabs() {
 		$tabs = $this->version < 2 && method_exists( $this, 'sections' ) ? $this->sections() : $this->tabs();
 
 		return apply_filters( 'pum_shortcode_tabs', $tabs, $this->tag() );
 	}
 
+	/**
+	 * Filters subtabs for Shortcode.
+	 */
 	public function _subtabs() {
 		$subtabs = $this->version >= 2 && method_exists( $this, 'subtabs' ) ? $this->subtabs() : false;
 

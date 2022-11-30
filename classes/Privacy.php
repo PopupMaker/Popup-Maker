@@ -17,6 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PUM_Privacy {
 
+	/**
+	 * Initializes Privacy class.
+	 */
 	public static function init() {
 		add_filter( 'wp_privacy_personal_data_exporters', [ __CLASS__, 'register_exporter' ], 10 );
 		add_filter( 'wp_privacy_personal_data_erasers', [ __CLASS__, 'register_erasers' ], 10 );
@@ -24,6 +27,9 @@ class PUM_Privacy {
 		add_action( 'pum_save_popup', [ __CLASS__, 'clear_cookie_list' ] );
 	}
 
+	/**
+	 * Clears privacy cookies.
+	 */
 	public static function clear_cookie_list() {
 		delete_option( 'pum_privacy_cookie_list' );
 	}

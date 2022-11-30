@@ -211,7 +211,9 @@ function popmake_emodal_v2_import() {
 	}
 }
 
-
+/**
+ * Initializes emodel for Importer.
+ */
 function popmake_emodal_init() {
 	if ( pum_get_option( 'enable_easy_modal_compatibility_mode' ) ) {
 		if ( ! shortcode_exists( 'modal' ) ) {
@@ -227,7 +229,12 @@ function popmake_emodal_init() {
 
 add_action( 'init', 'popmake_emodal_init' );
 
-
+/**
+ * Checks if popup is loadable.
+ * 
+ * @param $return Value to return.
+ * @param $popup_id Specified item.
+ */
 function popmake_emodal_popup_is_loadable( $return, $popup_id ) {
 	global $post;
 	if ( empty( $post ) || ! isset( $post->ID ) ) {
@@ -242,6 +249,12 @@ function popmake_emodal_popup_is_loadable( $return, $popup_id ) {
 	return true;
 }
 
+/**
+ * Gets popup meta data for easy-modal.
+ *
+ * @param $data_attr Data attribute.
+ * @param $popup_id Specified item.
+ */
 function popmake_emodal_get_the_popup_data_attr( $data_attr, $popup_id ) {
 	$easy_modal_id = get_post_meta( $popup_id, 'popup_old_easy_modal_id', true );
 	if ( ! $easy_modal_id ) {
@@ -256,6 +269,12 @@ function popmake_emodal_get_the_popup_data_attr( $data_attr, $popup_id ) {
 	);
 }
 
+/**
+ * Gets attributes for shortcode modal and performs it.
+ * 
+ * @param $atts Shortcode attributes.
+ * @param $content Shortcode content.
+ */
 function popmake_emodal_shortcode_modal( $atts, $content = null ) {
 	$atts = shortcode_atts(
 		apply_filters(
@@ -328,7 +347,11 @@ function popmake_emodal_shortcode_modal( $atts, $content = null ) {
 	return do_shortcode( $shortcode );
 }
 
-
+/**
+ * Returns popup shortcode attribute defaults.
+ * 
+ * @param array $default_atts Default attributes.
+ */
 function popmake_emodal_shortcode_popup_default_atts( $default_atts = [] ) {
 	return array_merge(
 		$default_atts,
@@ -338,7 +361,12 @@ function popmake_emodal_shortcode_popup_default_atts( $default_atts = [] ) {
 	);
 }
 
-
+/**
+ * Retrieves data for emodal shortcode.
+ *
+ * @param $data Data to be retrieved.
+ * @param $attr Specified emodal.
+ */
 function popmake_emodal_shortcode_data_attr( $data, $attr ) {
 	if ( ! empty( $attr['emodal_id'] ) ) {
 		$data['old_easy_modal_id'] = $attr['emodal_id'];

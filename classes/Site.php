@@ -11,6 +11,9 @@
  */
 class PUM_Site {
 
+	/**
+	 * Initializes PUM_Site class.
+	 */
 	public static function init() {
 		PUM_Site_Assets::init();
 		PUM_Site_Popups::init();

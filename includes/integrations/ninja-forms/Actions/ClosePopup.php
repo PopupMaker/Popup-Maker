@@ -68,13 +68,19 @@ final class NF_PUM_Actions_ClosePopup extends NF_Abstracts_Action {
 	}
 
 	/*
-	* PUBLIC METHODS
-	*/
-
+	 * PUBLIC METHODS
+	 */
 	public function save( $action_settings ) {
 
 	}
 
+	/**
+	 * Process to close popup with ninja-forms.
+	 *
+	 * @param $action_settings
+	 * @param $form_id
+	 * @param $data
+	 */
 	public function process( $action_settings, $form_id, $data ) {
 
 		if ( ! isset( $data['actions'] ) || ! isset( $data['actions']['closepopup'] ) ) {

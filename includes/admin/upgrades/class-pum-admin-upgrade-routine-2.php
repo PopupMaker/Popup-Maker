@@ -23,10 +23,16 @@ if ( ! class_exists( 'PUM_Admin_Upgrade_Routine' ) ) {
  */
 final class PUM_Admin_Upgrade_Routine_2 extends PUM_Admin_Upgrade_Routine {
 
+	/**
+	 * Lets the user know to update their settings.
+	 */
 	public static function description() {
 		return __( 'Update your popups settings.', 'popup-maker' );
 	}
 
+	/**
+	 * Checks if user can do upgrade.
+	 */
 	public static function run() {
 		if ( ! current_user_can( PUM_Admin_Upgrades::instance()->required_cap ) ) {
 			wp_die( __( 'You do not have permission to do upgrades', 'popup-maker' ), __( 'Error', 'popup-maker' ), [ 'response' => 403 ] );
@@ -42,6 +48,9 @@ final class PUM_Admin_Upgrade_Routine_2 extends PUM_Admin_Upgrade_Routine {
 		self::cleanup_old_data();
 	}
 
+	/**
+	 * Processes popups.
+	 */
 	public static function process_popups() {
 
 		$popups = get_posts(
@@ -70,6 +79,9 @@ final class PUM_Admin_Upgrade_Routine_2 extends PUM_Admin_Upgrade_Routine {
 
 	}
 
+	/**
+	 * Cleans up old data for upgrade routine 2.
+	 */
 	public static function cleanup_old_data() {
 		global $wpdb;
 

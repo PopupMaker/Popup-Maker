@@ -69,10 +69,16 @@ final class NF_PUM_Actions_OpenPopup extends NF_Abstracts_Action {
 	/*
 	* PUBLIC METHODS
 	*/
-
 	public function save( $action_settings ) {
 	}
 
+	/**
+	 * Processes opening of popup with ninja-forms.
+	 *
+	 * @param $action_settings Popup settings.
+	 * @param $form_id Specified form.
+	 * @param $data Data to perform.
+	 */
 	public function process( $action_settings, $form_id, $data ) {
 		if ( ! isset( $data['actions'] ) || ! isset( $data['actions']['openpopup'] ) ) {
 			$data['actions']['openpopup'] = false;
@@ -85,6 +91,9 @@ final class NF_PUM_Actions_OpenPopup extends NF_Abstracts_Action {
 		return $data;
 	}
 
+	/**
+	 * Gets popup list for ninja-forms intgrations.
+	 */
 	public function get_popup_list() {
 		$popup_list = [
 			[

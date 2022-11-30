@@ -22,6 +22,11 @@ class EModal_Model_Modal_Meta extends EModal_Model {
 		'close'    => [],
 	];
 
+	/**
+	 * Constructor for modal meta.
+	 *
+	 * @param $id
+	 */
 	public function __construct( $id = null ) {
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->_table_name;
@@ -43,6 +48,9 @@ class EModal_Model_Modal_Meta extends EModal_Model {
 		return $this;
 	}
 
+	/**
+	 * Saves id to database.
+	 */
 	public function save() {
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->_table_name;
