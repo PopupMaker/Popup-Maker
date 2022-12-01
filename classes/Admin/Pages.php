@@ -28,7 +28,7 @@ class PUM_Admin_Pages {
 	public static $pages = [];
 
 	/**
-	 * Initialize admin menu and submenu. 
+	 * Initialize admin menu and submenu.
 	 */
 	public static function init() {
 		add_action( 'admin_menu', [ __CLASS__, 'register_pages' ] );
