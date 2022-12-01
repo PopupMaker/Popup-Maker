@@ -594,6 +594,11 @@ class Popmake_Fields {
 		return implode( '  ', $classes );
 	}
 
+	/**
+	 * Retrieves field description.
+	 *
+	 * @param array $args Array of arguments.
+	 */
 	public function field_description( $args ) {
 		if ( '' !== $args['desc'] ) {
 			?>
@@ -607,6 +612,11 @@ class Popmake_Fields {
 		*/
 	}
 
+	/**
+	 * Retrieves field label.
+	 *
+	 * @param array $args Array of arguments.
+	 */
 	public function field_label( $args ) {
 		if ( ! empty( $args['label'] ) ) {
 			?>
@@ -624,7 +634,12 @@ class Popmake_Fields {
 		}
 	}
 
-
+	/**
+	 * Sanitizes field.
+	 *
+	 * @param array $args Array of arguments.
+	 * @param $value Value
+	 */
 	public function sanitize_field( $args, $value = null ) {
 
 		// If no type default to text.
@@ -705,6 +720,12 @@ if ( $function_name ) {
 		return ( $a['priority'] < $b['priority'] ) ? - 1 : 1;
 	}
 
+	/**
+	 * Checks value.
+	 *
+	 * @param $value Value to check.
+	 * @param array $args Array of arguments.
+	 */
 	public function checkbox_sanitize( $value = null, $args = [] ) {
 		if ( intval( $value ) === 1 ) {
 			return 1;

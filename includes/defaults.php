@@ -58,6 +58,12 @@ function popmake_popup_display_defaults( $defaults = [] ) {
 
 add_filter( 'popmake_popup_close_defaults', 'popmake_popup_close_defaults', 0 );
 add_filter( 'pum_popup_close_defaults', 'popmake_popup_close_defaults', 0 );
+
+/**
+ * Returns popup close defaults.
+ *
+ * @param array $defaults Array of defaults actions.
+ */
 function popmake_popup_close_defaults( $defaults = [] ) {
 	return array_merge(
 		$defaults,

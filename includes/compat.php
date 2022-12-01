@@ -78,12 +78,18 @@ if ( ! function_exists( 'spl_autoload_register' ) ) {
 }
 
 if ( ! function_exists( 'current_action' ) ) {
+	/**
+	 * Gets current action if function doesn't exist.
+	 */
 	function current_action() {
 		return current_filter();
 	}
 }
 
 if ( ! function_exists( 'get_called_class' ) ) {
+	/**
+	 * Gets the called class if function doesn't exist.
+	 */
 	function get_called_class( $bt = false, $l = 1 ) {
 		if ( ! $bt ) {
 			$bt = debug_backtrace();
@@ -136,6 +142,12 @@ if ( ! function_exists( 'get_called_class' ) ) {
 }
 
 if ( ! function_exists( 'get_term_name' ) ) {
+	/**
+	 * Gets term name if function doesn't exist.
+	 *
+	 * @param $term_id Specified item.
+	 * @param $taxonomy
+	 */
 	function get_term_name( $term_id, $taxonomy ) {
 		$term = get_term_by( 'id', absint( $term_id ), $taxonomy );
 
@@ -145,6 +157,12 @@ if ( ! function_exists( 'get_term_name' ) ) {
 
 // For WP versions before 3.6
 if ( ! function_exists( 'has_shortcode' ) ) {
+	/**
+	 * Checks if version has shortcode.
+	 *
+	 * @param $content Content
+	 * @param $tag Tag
+	 */
 	function has_shortcode( $content, $tag ) {
 		if ( false === strpos( $content, '[' ) ) {
 			return false;
@@ -170,6 +188,11 @@ if ( ! function_exists( 'has_shortcode' ) ) {
 }
 
 if ( ! function_exists( 'shortcode_exists' ) ) {
+	/**
+	 * Checks if shortcode exists for compat.
+	 *
+	 * @param $tag Tag
+	 */
 	function shortcode_exists( $tag ) {
 		global $shortcode_tags;
 
@@ -181,6 +204,12 @@ if ( ! function_exists( 'shortcode_exists' ) ) {
  * Deprecated PHP v5.3 functions.
  */
 if ( ! function_exists( 'array_replace_recursive' ) ) {
+	/**
+	 * Replaces specified arguments.
+	 *
+	 * @param array $array Array of arguments.
+	 * @param $array1
+	 */
 	function array_replace_recursive( $array, $array1 ) {
 		// handle the arguments, merge one by one
 		$args  = func_get_args();
@@ -199,6 +228,12 @@ if ( ! function_exists( 'array_replace_recursive' ) ) {
 }
 
 if ( ! function_exists( 'recurse' ) ) {
+	/**
+	 * Checks if item exists, if not creates it. Overwrites specified value.
+	 *
+	 * @param array $array Array of values.
+	 * @param array $array1 Array of values.
+	 */
 	function recurse( $array, $array1 ) {
 		foreach ( $array1 as $key => $value ) {
 			// create new key in $array, if it is empty or not an array
@@ -218,6 +253,11 @@ if ( ! function_exists( 'recurse' ) ) {
 }
 
 if ( ! function_exists( 'write_log' ) ) {
+	/**
+	 * Checks if item is an array or an object.
+	 *
+	 * @param $log Log.
+	 */
 	function write_log( $log ) {
 		if ( is_array( $log ) || is_object( $log ) ) {
 			error_log( print_r( $log, true ) );
@@ -228,12 +268,23 @@ if ( ! function_exists( 'write_log' ) ) {
 }
 
 if ( ! function_exists( 'boolval' ) ) {
+	/**
+	 * Retrieves value for bool.
+	 *
+	 * @param bool $val Value to check.
+	 */
 	function boolval( $val ) {
 		return (bool) $val;
 	}
 }
 
 if ( ! function_exists( 'maybe_json_attr' ) ) {
+	/**
+	 * Checks if value is an object or an array.
+	 *
+	 * @param $value Value to check.
+	 * @param bool $encode Value - false by default.
+	 */
 	function maybe_json_attr( $value, $encode = false ) {
 		if ( is_object( $value ) || is_array( $value ) ) {
 			return $encode ? htmlspecialchars( wp_json_encode( $value ) ) : wp_json_encode( $value );

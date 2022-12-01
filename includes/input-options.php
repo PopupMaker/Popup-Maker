@@ -14,6 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 // TODO LEFT OFF HERE!! MOVE THESE INTO  <-- Themes <--
 
 add_filter( 'popmake_size_unit_options', 'popmake_core_size_unit_options', 10 );
+/**
+ * Size unit options for input-options.
+ *
+ * @param $options Unit options.
+ */
 function popmake_core_size_unit_options( $options ) {
 	return array_merge(
 		$options,
@@ -30,6 +35,11 @@ function popmake_core_size_unit_options( $options ) {
 
 
 add_filter( 'popmake_font_style_options', 'popmake_core_font_style_options', 10 );
+/**
+ * Returns font style options.
+ *
+ * @param $options Font style options.
+ */
 function popmake_core_font_style_options( $options ) {
 	return array_merge(
 		$options,
@@ -42,6 +52,11 @@ function popmake_core_font_style_options( $options ) {
 
 
 add_filter( 'popmake_text_align_options', 'popmake_core_text_align_options', 10 );
+/**
+ * Returns text align options for input-options.
+ *
+ * @param $options Text align options.
+ */
 function popmake_core_text_align_options( $options ) {
 	return array_merge(
 		$options,
@@ -55,6 +70,11 @@ function popmake_core_text_align_options( $options ) {
 }
 
 add_filter( 'popmake_popup_display_size_options', 'popmake_popup_display_size_options_responsive', 10 );
+/**
+ * Returns responsive display size options.
+ *
+ * @param $options Responsive size options.
+ */
 function popmake_popup_display_size_options_responsive( $options ) {
 	return array_merge(
 		$options,
@@ -78,6 +98,11 @@ function popmake_popup_display_size_options_responsive( $options ) {
 
 
 add_filter( 'popmake_popup_display_animation_type_options', 'popmake_core_popup_display_animation_type_options', 10 );
+/**
+ * Returns display animation options.
+ *
+ * @param $options Animation options.
+ */
 function popmake_core_popup_display_animation_type_options( $options ) {
 	return array_merge(
 		$options,
@@ -95,6 +120,11 @@ function popmake_core_popup_display_animation_type_options( $options ) {
 
 
 add_filter( 'popmake_popup_display_animation_origin_options', 'popmake_core_popup_display_animation_origins_options', 10 );
+/**
+ * Returns display animation origins options.
+ *
+ * @param $options Animation origins options.
+ */
 function popmake_core_popup_display_animation_origins_options( $options ) {
 	return array_merge(
 		$options,
@@ -119,6 +149,11 @@ function popmake_core_popup_display_animation_origins_options( $options ) {
 }
 
 add_filter( 'popmake_popup_display_location_options', 'popmake_core_popup_display_location_options', 10 );
+/**
+ * Returns display location options.
+ *
+ * @param $options Location options.
+ */
 function popmake_core_popup_display_location_options( $options ) {
 	return array_merge(
 		$options,
@@ -139,6 +174,11 @@ function popmake_core_popup_display_location_options( $options ) {
 
 
 add_filter( 'popmake_theme_close_location_options', 'popmake_core_theme_close_location_options', 10 );
+/**
+ * Returns theme close location options.
+ *
+ * @param $options Location options.
+ */
 function popmake_core_theme_close_location_options( $options ) {
 	return array_merge(
 		$options,
@@ -154,6 +194,11 @@ function popmake_core_theme_close_location_options( $options ) {
 
 
 add_filter( 'popmake_cookie_trigger_options', 'popmake_cookie_trigger_options', 10 );
+/**
+ * Returns cookie trigger options for input-options.
+ *
+ * @param $options Cookie trigger options.
+ */
 function popmake_cookie_trigger_options( $options ) {
 	return array_merge(
 		$options,

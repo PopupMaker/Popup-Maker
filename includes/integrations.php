@@ -14,6 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Ninja Forms Integration
 require_once 'integrations/class-pum-ninja-forms.php';
 
+/**
+ * Initializes integrations.
+ */
 function pum_initialize_integrations() {
 	// WooCommerce Integration
 	if ( function_exists( 'WC' ) || class_exists( 'WooCommerce' ) ) {

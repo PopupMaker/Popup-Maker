@@ -683,6 +683,11 @@ class PUM_Fields extends Popmake_Fields {
 											   <?php
 	}
 
+	/**
+	 * Retrieves selected template.
+	 *
+	 * @param array $args Array of arguments.
+	 */
 	public function select_templ_callback( $args ) {
 		if ( $args['select2'] ) {
 			$args['class'] .= '  pum-field-select2';
@@ -738,6 +743,11 @@ class PUM_Fields extends Popmake_Fields {
 
 	}
 
+	/**
+	 * Retrieves selected template.
+	 *
+	 * @param array $args Array of arguments.
+	 */
 	public function objectselect_templ_callback( $args ) {
 		if ( 'objectselect' !== $args['type'] ) {
 			$args['class'] .= '  pum-field-objectselect';
@@ -797,6 +807,11 @@ class PUM_Fields extends Popmake_Fields {
 		$this->objectselect_templ_callback( $args );
 	}
 
+	/**
+	 * Retrieves checkbox field.
+	 *
+	 * @param $args
+	 */
 	public function checkbox_templ_callback( $args ) {
 		$this->field_before( $args );
 
@@ -813,6 +828,11 @@ class PUM_Fields extends Popmake_Fields {
 												$this->field_after();
 	}
 
+	/**
+	 * Checks multiple attributes of field before returning the field.
+	 *
+	 * @param $args
+	 */
 	public function multicheck_templ_callback( $args ) {
 			$this->field_before( $args );
 
@@ -841,19 +861,42 @@ class PUM_Fields extends Popmake_Fields {
 			$this->field_after();
 	}
 
+	/**
+	 * Retrieves template for rangeslider.
+	 *
+	 * @param $args
+	 */
 	public function rangeslider_templ_callback( $args ) {
 		$value = '{{data.' . $args['templ_name'] . '}}';
 		$this->rangeslider_callback( $args, $value );
 	}
 
+	/**
+	 * Sanitizes specified selected item.
+	 *
+	 * @param array $value Array of values.
+	 * @param array $args Array of arguments.
+	 */
 	public function postselect_sanitize( $value = [], $args = [] ) {
 		return $this->objectselect_sanitize( $value, $args );
 	}
 
+	/**
+	 * Returns parsed value.
+	 *
+	 * @param array $value Array of values.
+	 * @param array $args Array of arguments.
+	 */
 	public function objectselect_sanitize( $value = [], $args = [] ) {
 		return wp_parse_id_list( $value );
 	}
 
+	/**
+	 * Sanitizes specified taxonomy item selected.
+	 *
+	 * @param array $value Array of values.
+	 * @param array $args Array of arguments.
+	 */
 	public function taxonomyselect_sanitize( $value = [], $args = [] ) {
 		return $this->objectselect_sanitize( $value, $args );
 	}

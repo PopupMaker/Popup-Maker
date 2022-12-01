@@ -43,6 +43,9 @@ class PUM_Form extends PUM_Fields {
 		return parent::__construct( $args );
 	}
 
+	/**
+	 * Gets PUM form id.
+	 */
 	public function get_id() {
 		return $this->id;
 	}
