@@ -127,7 +127,7 @@ class Popup_Maker {
 	public static $MIN_PHP_VER = '5.6';
 
 	/**
-	 * Minimum Wordpress version
+	 * Minimum WordPress version
 	 *
 	 * @var string $MIN_WP_VER
 	 */
