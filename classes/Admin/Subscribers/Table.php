@@ -445,6 +445,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 
 			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
 			// verify the nonce.
+			
 			/*
 			 * Note: the nonce field is set by the parent class
 			 * wp_nonce_field( 'bulk-' . $this->_args['plural'] );
