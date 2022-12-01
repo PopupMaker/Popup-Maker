@@ -205,7 +205,11 @@ class PUM_Admin_Shortcode_UI {
 			return esc_html__( 'You do not have access to preview this post.', 'popup-maker' );
 		}
 
-		/** @var PUM_Shortcode $shortcode */
+		/**
+		 * Shortcode object.
+		 *
+		 * @var PUM_Shortcode $shortcode
+		 */
 		$shortcode_object = PUM_Shortcodes::instance()->get_shortcode( $tag );
 
 		if ( ! defined( 'PUM_DOING_PREVIEW' ) ) {
