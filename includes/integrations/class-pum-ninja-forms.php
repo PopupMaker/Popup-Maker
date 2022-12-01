@@ -67,6 +67,9 @@ final class NF_PUM {
 		return self::$instance;
 	}
 
+	/**
+	 * Constructor for ninja forms integrations.
+	 */
 	public function __construct() {
 		$this->register_actions();
 		add_filter( 'pum_registered_cookies', [ $this, 'register_cookies' ] );

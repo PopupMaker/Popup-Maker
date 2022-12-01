@@ -13,11 +13,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class PUM_Woocommerce_Integration {
 
+	/**
+	 * Initializes integration for woocommerce.
+	 */
 	public static function init() {
 		add_filter( 'pum_registered_conditions', [ __CLASS__, 'register_conditions' ] );
 		add_filter( 'pum_condition_sort_order', [ __CLASS__, 'condition_sort_order' ] );
 	}
 
+	/**
+	 * Retrieves data.
+	 *
+	 * @param array $settings Array of settings.
+	 */
 	public static function is_wc_endpoint_url( $settings = [] ) {
 		$results = [];
 
@@ -28,6 +36,11 @@ class PUM_Woocommerce_Integration {
 		return in_array( true, $results );
 	}
 
+	/**
+	 * Checks and returns specified conditions.
+	 *
+	 * @param array $conditions Array of condiitions.
+	 */
 	public static function register_conditions( $conditions = [] ) {
 
 		// Add Additional Conditions
@@ -92,6 +105,11 @@ class PUM_Woocommerce_Integration {
 		return $conditions;
 	}
 
+	/**
+	 * Sorts item.
+	 *
+	 * @param array $order Array
+	 */
 	public static function condition_sort_order( $order = [] ) {
 		$order[ __( 'WooCommerce', 'woocommerce' ) ] = 5.256;
 

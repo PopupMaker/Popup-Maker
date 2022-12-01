@@ -39,6 +39,11 @@ class PUM_Modules_Menu {
 		add_filter( 'manage_nav-menus_columns', [ __CLASS__, 'nav_menu_columns' ], 11 );
 	}
 
+	/**
+	 * Modeles menu settings.
+	 *
+	 * @param $settings Menus settings.
+	 */
 	public static function settings( $settings ) {
 		return array_merge(
 			$settings,
@@ -59,6 +64,11 @@ class PUM_Modules_Menu {
 		);
 	}
 
+	/**
+	 * Retrieves menus columns.
+	 *
+	 * @param array $columns Array of columns for menus.
+	 */
 	public static function nav_menu_columns( $columns = [] ) {
 		$columns['popup_id'] = __( 'Popup', 'popup-maker' );
 
