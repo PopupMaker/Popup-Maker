@@ -384,7 +384,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 
 						} else {
 							wp_die(
-								sprintf( __( '%1$d Subscribers deleted, %2$d failed', 'popup-maker' ), $succeeded, $failed ),
+								sprintf( /* translators: 1. Error, 2 Plugin name */__( '%1$d Subscribers deleted, %2$d failed', 'popup-maker' ), $succeeded, $failed ),
 								__( 'Error', 'popup-maker' ),
 								[
 									'response'  => 200,
