@@ -103,8 +103,8 @@ class PUM_Admin_Helpers {
 	 * @deprecated 1.7.20
 	 * @see        PUM_Helper_Array::sort_by_sort
 	 *
-	 * @param array $a Array to sort
-	 * @param array $b Array to sort
+	 * @param array $a Array to sort.
+	 * @param array $b Array to sort.
 	 *
 	 * @return array
 	 */
