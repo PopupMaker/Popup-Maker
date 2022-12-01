@@ -20,6 +20,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PUM_Extension_Activation {
 
+	/**
+	 * @var $plugin_name Plugin name.
+	 * @var $plugin_path Plugin path.
+	 * @var $plugin_file Plugin file.
+	 * @var $has_popmake Plugin installed.
+	 * @var $popmake_base Plugin base.
+	 */
 	public $plugin_name, $plugin_path, $plugin_file, $has_popmake, $popmake_base;
 
 	/**
