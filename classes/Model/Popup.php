@@ -277,7 +277,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	/**
 	 * Preprocess PHP conditions in order for more accurate JS handling.
 	 *
-	 * @return array
+	 * @return array Array of conditions, whith PHP conditions replaced with boolean values.
 	 */
 	public function get_parsed_js_conditions() {
 		$parsed_conditions = $this->get_conditions();
@@ -969,6 +969,12 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 
 				// At least one group condition must be true. Break this loop if any condition is true.
 				foreach ( $conditions as $condition ) {
+
+					// If this is JS condition, popup must load to check it later. Group can't be known false til then.
+					if ( $this->is_js_condition( $condition ) ) {
+						$group_check = true;
+						break;
+					}
 
 					// If any condition passes, set $group_check true and break.
 					if ( ! $condition['not_operand'] && $this->check_condition( $condition ) ) {
