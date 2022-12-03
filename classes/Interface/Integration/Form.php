@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2020, WP Popup Maker
- ******************************************************************************/
+/**
+ * Form Integration Handler for Interface
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2022, Code Atlantic LLC
+ */
 
 interface PUM_Interface_Integration_Form extends PUM_Interface_Integration {
 
