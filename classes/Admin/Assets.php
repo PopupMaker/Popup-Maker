@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Admin Assets Handler
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2022, Code Atlantic LLC
+ */
 
 /**
  * Class PUM_Admin_Assets

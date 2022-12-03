@@ -1,4 +1,10 @@
 <?php
+/**
+ * Subscribers DB Handler
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2022, Code Atlantic LLC
+ */
 // Exit if accessed directly
 
 /*******************************************************************************

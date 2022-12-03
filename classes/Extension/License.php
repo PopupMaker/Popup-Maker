@@ -1,8 +1,9 @@
 <?php
 /**
- * Popup Maker Extension Licinging.
+ * License Extension Handler
  *
- * @package PUM
+ * @package   PUM
+ * @copyright Copyright (c) 2022, Code Atlantic LLC
  */
 
 // Exit if accessed directly.

@@ -2,7 +2,8 @@
 /**
  * Popup Maker Extension Updater
  *
- * @package PUM
+ * @package   PUM
+ * @copyright Copyright (c) 2022, Code Atlantic LLC
  */
 
 // Exit if accessed directly.

@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2020, WP Popup Maker
- ******************************************************************************/
+/**
+ * KingComposer Builder for Integration
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2022, Code Atlantic LLC
+ */
 
 class PUM_Integration_Builder_KingComposer extends PUM_Abstract_Integration {
 

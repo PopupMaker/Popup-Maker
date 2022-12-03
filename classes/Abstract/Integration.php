@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2020, WP Popup Maker
- ******************************************************************************/
+/**
+ * Integration handler for Abstract.
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2022, Code Atlantic LLC
+ */
 
 abstract class PUM_Abstract_Integration implements PUM_Interface_Integration {
 

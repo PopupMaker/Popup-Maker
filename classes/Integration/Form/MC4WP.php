@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2020, WP Popup Maker
- ******************************************************************************/
+/**
+ * MC4WP Form Integration Handler
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2022, Code Atlantic LLC
+ */
 
 class PUM_Integration_Form_MC4WP extends PUM_Abstract_Integration_Form {
 
