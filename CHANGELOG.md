@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## v1.17.1 - 12/04/2022
+
 * Improvement: Update EDD Updater to latest for extension update handling.
 * Improvement: Add handler for properly renaming extension folder names during update without manual reactivation by user.
 * Tweak: Set proper default tab on Tools page.
