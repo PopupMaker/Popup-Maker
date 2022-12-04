@@ -1,6 +1,6 @@
 <?php
 /**
- * License Extension Handler
+ * Extension License Handler
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

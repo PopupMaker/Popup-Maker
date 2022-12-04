@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Subscribers Handler
+ * Class for Admin Subscribers
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

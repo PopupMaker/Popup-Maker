@@ -1,6 +1,6 @@
 <?php
 /**
- * KingComposer Builder for Integration
+ * Integration for KingComposer
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

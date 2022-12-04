@@ -1,6 +1,6 @@
 <?php
 /**
- * Post Model Handler
+ * Abstract for post models
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

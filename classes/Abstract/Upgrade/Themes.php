@@ -1,6 +1,6 @@
 <?php
 /**
- * Themes Upgrade Handler for Abstract.
+ * Abstract for themes upgrade
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

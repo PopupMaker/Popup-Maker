@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Onboarding Handler
+ * Class for Admin Onboarding
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

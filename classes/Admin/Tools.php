@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Tools Handler
+ * Class for Admin Tools
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

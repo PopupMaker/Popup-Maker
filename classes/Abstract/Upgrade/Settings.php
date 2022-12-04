@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings Upgrade Handler
+ * Abstract for settings upgrade
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

@@ -1,6 +1,6 @@
 <?php
 /**
- * GravityForms Form Integration Handler
+ * Integration for GravityForms Form
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Notices handler.
+ * Class for Admin Notices
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

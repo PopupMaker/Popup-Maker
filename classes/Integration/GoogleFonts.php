@@ -1,6 +1,6 @@
 <?php
 /**
- * GoogleFonts Integration Handler
+ * Integration for GoogleFonts
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

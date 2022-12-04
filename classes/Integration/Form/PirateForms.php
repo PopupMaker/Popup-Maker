@@ -1,6 +1,6 @@
 <?php
 /**
- * PirateForms Form Integration Handler
+ * Integration for PirateForms Form
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

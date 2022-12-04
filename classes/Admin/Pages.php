@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Pages Handler
+ * Class for Admin Pages
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

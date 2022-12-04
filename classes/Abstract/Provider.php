@@ -1,6 +1,6 @@
 <?php
 /**
- * Provider Abstract
+ * Abstract class for Provider
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

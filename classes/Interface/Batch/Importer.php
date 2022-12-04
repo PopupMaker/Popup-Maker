@@ -1,6 +1,6 @@
 <?php
 /**
- * Batch Importer Handler for Interface
+ * Interface for Batch Importer
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

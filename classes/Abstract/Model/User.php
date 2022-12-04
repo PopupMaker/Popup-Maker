@@ -1,6 +1,6 @@
 <?php
 /**
- * User Model Handler.
+ * Abstract for user model
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

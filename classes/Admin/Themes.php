@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Themes Handler
+ * Class for Admin Themes
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

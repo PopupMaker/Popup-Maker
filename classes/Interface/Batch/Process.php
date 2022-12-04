@@ -1,6 +1,6 @@
 <?php
 /**
- * Batch Process Handler for Interface
+ * Interface for Batch Process
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Helpers Handler
+ * Admin Helpers
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

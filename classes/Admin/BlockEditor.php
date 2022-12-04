@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin BlockEditor Handler
+ * Admin BlockEditor
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

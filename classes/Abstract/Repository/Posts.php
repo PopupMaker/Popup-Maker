@@ -1,6 +1,6 @@
 <?php
 /**
- * Posts Repository Handler
+ * Abstract for posts repository
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

@@ -1,6 +1,6 @@
 <?php
 /**
- * Form Integration for Abstract.
+ * Abstract for Integration Form
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

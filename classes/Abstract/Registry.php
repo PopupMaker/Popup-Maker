@@ -1,6 +1,6 @@
 <?php
 /**
- * Registry Abstract
+ * Abstract class for Registry
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Support Controller
+ * Class for Admin Support
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

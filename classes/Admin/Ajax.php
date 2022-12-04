@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Ajax Handler
+ * Class for Admin Ajax
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

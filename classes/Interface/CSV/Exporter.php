@@ -1,6 +1,6 @@
 <?php
 /**
- * CSV Exporter Handler for Interface
+ * Interface for CSV Exporter
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

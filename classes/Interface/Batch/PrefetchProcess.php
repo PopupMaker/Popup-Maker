@@ -1,6 +1,6 @@
 <?php
 /**
- * Batch PrefetchProcess for Interface
+ * Interface for Batch PrefetchProcess
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

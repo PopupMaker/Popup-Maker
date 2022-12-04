@@ -1,6 +1,6 @@
 <?php
 /**
- * ContactForm7 Form Integration Handler
+ * Integration for ContactForm7 Form
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

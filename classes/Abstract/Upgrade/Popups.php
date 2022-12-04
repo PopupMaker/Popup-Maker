@@ -1,6 +1,6 @@
 <?php
 /**
- * Popups Upgrade Handler
+ * Abstract for Popup Upgrades
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

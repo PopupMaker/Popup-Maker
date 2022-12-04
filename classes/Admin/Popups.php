@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Popups Handler
+ * Class for Admin Popups
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

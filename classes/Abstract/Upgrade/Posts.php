@@ -1,6 +1,6 @@
 <?php
 /**
- * Posts Upgrade Handler
+ * Abstract for posts upgrade
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

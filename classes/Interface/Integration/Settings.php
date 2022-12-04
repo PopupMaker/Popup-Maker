@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings Integration for Interface
+ * Interface for Settings Integration
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

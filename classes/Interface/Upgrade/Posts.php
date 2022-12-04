@@ -1,6 +1,6 @@
 <?php
 /**
- * Upgrade Posts for Interface
+ * Interface for Posts Upgrade
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

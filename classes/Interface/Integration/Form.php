@@ -1,6 +1,6 @@
 <?php
 /**
- * Form Integration Handler for Interface
+ * Interface for Form Integration
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

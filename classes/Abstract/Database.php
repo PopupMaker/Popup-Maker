@@ -1,6 +1,6 @@
 <?php
 /**
- * Database Abstract
+ * Abstract class for database
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC

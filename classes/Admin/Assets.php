@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Assets Handler
+ * Class for Admin Assets
  *
  * @package   PUM
  * @copyright Copyright (c) 2022, Code Atlantic LLC
