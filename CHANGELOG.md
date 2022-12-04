@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+
+## v1.17.1 - 12/04/2022
+
+* Improvement: Update EDD Updater to latest for extension update handling.
+* Improvement: Add handler for properly renaming extension folder names during update without manual reactivation by user.
+* Tweak: Set proper default tab on Tools page.
+* Tweak: Removed deprecated Scheduled Actions tab.
+* Fix: Rendering issue with review request.
+* Fix: ATC Cookie condition was preventing popup from loading.
+
 ## v1.17.0 - 11/24/2022
 
 * Improvement: Added contextual notification system to be able to notify site admins about important information including security notices, beta tests, extension sales & more without requiring a plugin update.

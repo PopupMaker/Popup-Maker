@@ -341,6 +341,19 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
+	 * Return array of allowed html tags.
+	 *
+	 * @return array
+	 */
+	public static function allowed_tags() {
+		return array_merge_recursive(
+			wp_kses_allowed_html( 'post' ),
+			// Allow script tags with type="" attribute.
+			[ 'script' => [ 'type' => true ] ]
+		);
+	}
+
+	/**
 	 * Render admin alerts if available.
 	 */
 	public static function admin_notices() {
@@ -401,7 +414,12 @@ class PUM_Utils_Alerts {
 						<?php endif; ?>
 
 						<?php if ( ! empty( $alert['html'] ) ) : ?>
-							<?php echo wp_kses_post( function_exists( 'wp_encode_emoji' ) ? wp_encode_emoji( $alert['html'] ) : $alert['html'] ); ?>
+							<?php
+							echo wp_kses(
+								function_exists( 'wp_encode_emoji' ) ? wp_encode_emoji( $alert['html'] ) : $alert['html'],
+								self::allowed_tags()
+							);
+							?>
 						<?php endif; ?>
 
 						<?php if ( ! empty( $alert['actions'] ) && is_array( $alert['actions'] ) ) : ?>
