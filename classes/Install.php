@@ -1,7 +1,10 @@
 <?php
-/********************************************
- * Copyright (c) 2020, Code Atlantic LLC.
- *******************************************/
+/**
+ * Class for Install
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2022, Code Atlantic LLC
+ */
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

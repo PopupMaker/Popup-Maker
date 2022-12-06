@@ -1,4 +1,10 @@
 <?php
+/**
+ * Class for Upsell
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2022, Code Atlantic LLC
+ */
 
 /**
  * Handles displaying promotional text throughout plugin UI

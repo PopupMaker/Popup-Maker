@@ -1,4 +1,10 @@
 <?php
+/**
+ * Shortcode for PopupTrigger
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2022, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
