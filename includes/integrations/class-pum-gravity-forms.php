@@ -1,4 +1,10 @@
 <?php
+/**
+ * Gravity-forms Integrations class
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2022, Code Atlantic LLC
+ */
 
 class PUM_Gravity_Forms_Integation {
 
