@@ -207,7 +207,7 @@ class PUM_Admin_Shortcode_UI {
 		$content = PUM_Helpers::do_shortcode( $shortcode );
 
 		/** If no matching tag or $content wasn't rendered die. */
-		if ( ! $shortcode_object || $content == $shortcode ) {
+		if ( ! $shortcode_object || $content === $shortcode ) {
 			wp_send_json_error();
 		}
 

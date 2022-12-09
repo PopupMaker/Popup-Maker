@@ -32,7 +32,7 @@ class PUM_Utils_Sanitize {
 	 * @return bool|int
 	 */
 	public static function checkbox( $value = null, $args = [] ) {
-		if ( intval( $value ) == 1 ) {
+		if ( intval( $value ) === 1 ) {
 			return 1;
 		}
 

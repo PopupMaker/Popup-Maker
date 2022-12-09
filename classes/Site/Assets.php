@@ -373,7 +373,7 @@ class PUM_Site_Assets {
 	 * Render popup inline styles.
 	 */
 	public static function inline_styles() {
-		if ( ( current_action() == 'wp_head' && popmake_get_option( 'disable_popup_theme_styles', false ) ) || ( current_action() == 'admin_head' && ! popmake_is_admin_popup_page() ) ) {
+		if ( ( current_action() === 'wp_head' && popmake_get_option( 'disable_popup_theme_styles', false ) ) || ( current_action() === 'admin_head' && ! popmake_is_admin_popup_page() ) ) {
 			return;
 		}
 

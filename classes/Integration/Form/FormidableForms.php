@@ -94,7 +94,7 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 
 		// Determine if form has AJAX submission enabled. Only do our form submission method if AJAX is not enabled.
 		$form = $this->get_form( intval( $form_id ) );
-		if ( isset( $form->options['ajax_submit'] ) && true == $form->options['ajax_submit'] ) {
+		if ( isset( $form->options['ajax_submit'] ) && true === $form->options['ajax_submit'] ) {
 			return;
 		}
 

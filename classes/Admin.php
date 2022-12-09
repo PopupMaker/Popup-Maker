@@ -40,7 +40,7 @@ class PUM_Admin {
 	 */
 	public static function prevent_default_theme_deletion( $allcaps, $caps, $args ) {
 		global $wpdb;
-		if ( isset( $args[0] ) && isset( $args[2] ) && $args[2] == pum_get_option( 'default_theme' ) && $args[0] == 'delete_post' ) {
+		if ( isset( $args[0] ) && isset( $args[2] ) && $args[2] === pum_get_option( 'default_theme' ) && $args[0] === 'delete_post' ) {
 			$allcaps[ $caps[0] ] = false;
 		}
 
@@ -57,7 +57,7 @@ class PUM_Admin {
 	 */
 	public static function plugin_action_links( $links, $file ) {
 
-		if ( $file == plugin_basename( POPMAKE ) ) {
+		if ( $file === plugin_basename( POPMAKE ) ) {
 			$plugin_action_links = apply_filters(
 				'pum_plugin_action_links',
 				[
@@ -67,7 +67,7 @@ class PUM_Admin {
 			);
 
 			// TODO Rewrite this to take full advantage of our polyglot detection code in Alerts for translation requests.
-			if ( substr( get_locale(), 0, 2 ) != 'en' ) {
+			if ( substr( get_locale(), 0, 2 ) !== 'en' ) {
 				$plugin_action_links = array_merge( [ 'translate' => '<a href="' . sprintf( 'https://translate.wordpress.org/locale/%s/default/wp-plugins/popup-maker', substr( get_locale(), 0, 2 ) ) . '" target="_blank">' . __( 'Translate', 'popup-maker' ) . '</a>' ], $plugin_action_links );
 			}
 

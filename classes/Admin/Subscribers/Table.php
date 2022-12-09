@@ -337,7 +337,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 		if ( in_array( $action1, [ 'delete', 'bulk-delete' ] ) ) {
 
 			// verify the nonce.
-			if ( ! wp_verify_nonce( wp_unslash( $_REQUEST['_wpnonce'] ), $action1 == 'delete' ? 'pum_subscribers_table_action_nonce' : 'bulk-subscribers' ) ) {
+			if ( ! wp_verify_nonce( wp_unslash( $_REQUEST['_wpnonce'] ), $action1 === 'delete' ? 'pum_subscribers_table_action_nonce' : 'bulk-subscribers' ) ) {
 				$this->invalid_nonce_redirect();
 			} else {
 
@@ -370,7 +370,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 						$succeeded = count( array_filter( $status ) );
 						$failed    = count( $subscribers ) - $succeeded;
 
-						if ( count( $subscribers ) == 1 ) {
+						if ( count( $subscribers ) === 1 ) {
 							wp_die(
 								__( 'Deleting subscriber failed.', 'popup-maker' ),
 								__( 'Error', 'popup-maker' ),

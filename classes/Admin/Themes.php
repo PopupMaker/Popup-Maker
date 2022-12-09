@@ -232,7 +232,7 @@ class PUM_Admin_Themes {
 	 * @return bool
 	 */
 	public static function can_save( $post_id, $post ) {
-		if ( isset( $post->post_type ) && 'popup_theme' != $post->post_type ) {
+		if ( isset( $post->post_type ) && 'popup_theme' !== $post->post_type ) {
 			return false;
 		}
 
@@ -244,7 +244,7 @@ class PUM_Admin_Themes {
 			return false;
 		}
 
-		if ( isset( $post->post_type ) && 'revision' == $post->post_type ) {
+		if ( isset( $post->post_type ) && 'revision' === $post->post_type ) {
 			return false;
 		}
 

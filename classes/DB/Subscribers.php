@@ -154,7 +154,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 
 		$fields = $args['fields'];
 
-		if ( $fields == '*' ) {
+		if ( $fields === '*' ) {
 			$fields = array_keys( $columns );
 		} else {
 			$fields = explode( ',', $args['fields'] );
@@ -182,7 +182,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 
 			foreach ( $columns as $key => $type ) {
 				if ( in_array( $key, $fields ) ) {
-					if ( $type == '%s' || ( $type == '%d' && is_numeric( $search ) ) ) {
+					if ( $type === '%s' || ( $type === '%d' && is_numeric( $search ) ) ) {
 						$values[]       = '%' . $wpdb->esc_like( $search ) . '%';
 						$search_where[] = "`$key` LIKE '%s'";
 					}

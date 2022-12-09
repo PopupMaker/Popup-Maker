@@ -240,7 +240,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 		foreach ( $tabs as $tab_id => $label ) {
 			$resorted_tabs[ $tab_id ] = $label;
 
-			if ( 'general' == $tab_id ) {
+			if ( 'general' === $tab_id ) {
 				$resorted_tabs[ $this->shortcode_tab_id() ] = $this->name;
 			}
 		}

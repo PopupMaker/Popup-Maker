@@ -96,7 +96,7 @@ class PUM_Utils_Template {
 		// Return what we found
 		$located = apply_filters( 'pum_locate_template', $located, $template_name );
 
-		if ( ( true == $load ) && ! empty( $located ) ) {
+		if ( ( true === $load ) && ! empty( $located ) ) {
 			load_template( $located, $require_once );
 		}
 

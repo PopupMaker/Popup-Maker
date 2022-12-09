@@ -173,7 +173,7 @@ class PUM_Admin_Settings {
 						$old = PUM_Utils_Options::get( $key );
 						$new = trim( $value );
 
-						if ( $old && $old != $new ) {
+						if ( $old && $old !== $new ) {
 							delete_option( str_replace( '_license_key', '_license_active', $key ) );
 							call_user_func( $field['options']['activation_callback'] );
 						}
@@ -212,7 +212,7 @@ class PUM_Admin_Settings {
 			foreach ( $sections as $section => $fields ) {
 
 				foreach ( $fields as $key => $args ) {
-					if ( $key == $id ) {
+					if ( $key === $id ) {
 						return $args;
 					}
 				}

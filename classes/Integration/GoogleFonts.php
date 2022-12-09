@@ -59,7 +59,7 @@ class PUM_Integration_GoogleFonts {
 		}
 
 		// Store transient for a long time after fetching from Google to save API key hits.
-		$transient_time = self::$api_key == self::$default_api_key ? 8 * WEEK_IN_SECONDS : 1 * WEEK_IN_SECONDS;
+		$transient_time = self::$api_key === self::$default_api_key ? 8 * WEEK_IN_SECONDS : 1 * WEEK_IN_SECONDS;
 
 		if ( ! empty( $data['errors'] ) || empty( $data['items'] ) ) {
 			$data = self::load_backup_fonts();
