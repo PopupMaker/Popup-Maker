@@ -125,7 +125,7 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 
 		foreach ( pum_get_all_themes() as $theme ) {
 			self::$valid_themes[ $theme->ID ] = $theme;
-			if ( pum_get_default_theme_id() == $theme->ID ) {
+			if ( pum_get_default_theme_id() === $theme->ID ) {
 				self::$default_theme = $theme->ID;
 			}
 		}
@@ -207,7 +207,7 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 			$categories = 0;
 		}
 
-		$popmake_options['disable_popup_category_tag'] = $categories == 0 && $tags == 0;
+		$popmake_options['disable_popup_category_tag'] = $categories === 0 && $tags === 0;
 
 		update_option( 'popmake_settings', $popmake_options );
 	}

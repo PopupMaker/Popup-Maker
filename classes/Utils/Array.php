@@ -83,7 +83,7 @@ class PUM_Utils_Array {
 	public static function move_item( &$ref_arr, $key1, $move, $key2 = null ) {
 		$arr = $ref_arr;
 
-		if ( $key2 == null ) {
+		if ( $key2 === null ) {
 			$key2 = $key1;
 		}
 
@@ -105,24 +105,24 @@ class PUM_Utils_Array {
 		}
 
 		if ( is_numeric( $move ) ) {
-			if ( $move == 0 && $key1 == $key2 ) {
+			if ( $move === 0 && $key1 === $key2 ) {
 				return true;
-			} elseif ( $move == 0 ) {
+			} elseif ( $move === 0 ) {
 				$tmp                  = $arr[ $key1 ]['sort'];
 				$arr[ $key1 ]['sort'] = $arr[ $key2 ]['sort'];
 				$arr[ $key2 ]['sort'] = $tmp;
 			} else {
-				$arr[ $key1 ]['sort'] = $arr[ $key2 ]['sort'] + ( $move * 10 + ( $key1 == $key2 ? ( $move < 0 ? - 5 : 5 ) : 0 ) );
+				$arr[ $key1 ]['sort'] = $arr[ $key2 ]['sort'] + ( $move * 10 + ( $key1 === $key2 ? ( $move < 0 ? - 5 : 5 ) : 0 ) );
 			}
 		} else {
 			switch ( $move ) {
 				case 'up':
 				case 'before':
-					$arr[ $key1 ]['sort'] = $arr[ $key2 ]['sort'] - ( $key1 == $key2 ? 15 : 5 );
+					$arr[ $key1 ]['sort'] = $arr[ $key2 ]['sort'] - ( $key1 === $key2 ? 15 : 5 );
 					break;
 				case 'down':
 				case 'after':
-					$arr[ $key1 ]['sort'] = $arr[ $key2 ]['sort'] + ( $key1 == $key2 ? 15 : 5 );
+					$arr[ $key1 ]['sort'] = $arr[ $key2 ]['sort'] + ( $key1 === $key2 ? 15 : 5 );
 					break;
 				case 'top':
 					$arr[ $key1 ]['sort'] = 5;

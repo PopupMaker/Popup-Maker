@@ -371,7 +371,7 @@ class PUM_Admin_Helpers {
 		?>
 		<div id="<?php echo $args['id']; ?>" class="pum-modal-background <?php echo esc_attr( $args['class'] ); ?>" role="dialog" aria-hidden="true" aria-labelledby="<?php echo $args['id']; ?>-title"
 			<?php
-			if ( '' != $args['description'] ) {
+			if ( '' !== $args['description'] ) {
 				?>
 				aria-describedby="<?php echo $args['id']; ?>-description"<?php } ?>>
 
@@ -381,13 +381,13 @@ class PUM_Admin_Helpers {
 
 					<div class="pum-modal-header">
 
-						<?php if ( '' != $args['title'] ) { ?>
+						<?php if ( '' !== $args['title'] ) { ?>
 							<span id="<?php echo $args['id']; ?>-title" class="pum-modal-title"><?php echo $args['title']; ?></span>
 						<?php } ?>
 						<button type="button" class="pum-modal-close" aria-label="<?php _e( 'Close', 'popup-maker' ); ?>"></button>
 					</div>
 
-					<?php if ( '' != $args['description'] ) { ?>
+					<?php if ( '' !== $args['description'] ) { ?>
 						<span id="<?php echo $args['id']; ?>-description" class="screen-reader-text"><?php echo $args['description']; ?></span>
 					<?php } ?>
 

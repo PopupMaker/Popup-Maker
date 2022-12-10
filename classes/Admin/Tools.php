@@ -93,7 +93,7 @@ class PUM_Admin_Tools {
 							]
 						);
 
-						printf( '<a href="%s" title="%s" class="nav-tab %s">%s</a>', esc_url( $tab_url ), esc_attr( $tab_name ), $active_tab == $tab_id ? ' nav-tab-active' : '', esc_html( $tab_name ) );
+						printf( '<a href="%s" title="%s" class="nav-tab %s">%s</a>', esc_url( $tab_url ), esc_attr( $tab_name ), $active_tab === $tab_id ? ' nav-tab-active' : '', esc_html( $tab_name ) );
 					}
 					?>
 				</h2>
