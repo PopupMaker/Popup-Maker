@@ -53,7 +53,7 @@ function pum_popup_migration_2( &$popup ) {
 	if ( has_shortcode( $popup->post_content, 'pum_sub_form' ) ) {
 		$new_content = preg_replace( '/\[pum_sub_form(.*)provider="none"(.*)\]/', '[pum_sub_form$1 provider=""$2]', $popup->post_content );
 
-		if ( $popup->post_content != $new_content ) {
+		if ( $popup->post_content !== $new_content ) {
 			$popup->post_content = $new_content;
 			$changed             = true;
 			$popup->save( false );

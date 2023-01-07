@@ -32,7 +32,7 @@ class PUM_Upgrade_v1_7_Settings extends PUM_Abstract_Upgrade_Settings {
 		$changed = false;
 
 		// popmake_settings['newsletter_default_provider'] == '' should be changed to 'none'
-		if ( isset( $settings['newsletter_default_provider'] ) && $settings['newsletter_default_provider'] == '' ) {
+		if ( isset( $settings['newsletter_default_provider'] ) && $settings['newsletter_default_provider'] === '' ) {
 			$settings['newsletter_default_provider'] = 'none';
 			$changed                                 = true;
 		}

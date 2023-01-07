@@ -48,7 +48,7 @@ function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default
 		// Check for dot notation key value.
 		$test  = uniqid();
 		$value = popmake_resolve( $values, $key, $test );
-		if ( $value == $test ) {
+		if ( $value === $test ) {
 
 			$key = str_replace( '.', '_', $key );
 
@@ -95,7 +95,7 @@ function popmake_get_popup_meta_group( $group, $popup_id = null, $key = null, $d
 	foreach ( $post_meta as $meta_key => $value ) {
 		if ( strpos( $meta_key, "popup_{$group}_" ) !== false ) {
 			$new_key = str_replace( "popup_{$group}_", '', $meta_key );
-			if ( count( $value ) == 1 ) {
+			if ( count( $value ) === 1 ) {
 				$group_values[ $new_key ] = $value[0];
 			} else {
 				$group_values[ $new_key ] = $value;

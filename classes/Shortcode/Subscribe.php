@@ -107,11 +107,11 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	public function fields() {
 		$select_args = [];
 
-		if ( isset( $_GET['post'] ) && is_int( (int) $_GET['post'] ) && isset( $_GET['action'] ) && $_GET['action'] == 'edit' ) {
+		if ( isset( $_GET['post'] ) && is_int( (int) $_GET['post'] ) && isset( $_GET['action'] ) && $_GET['action'] === 'edit' ) {
 			$select_args['post__not_in'] = wp_parse_id_list( [ get_the_ID(), $_GET['post'] ] );
 		}
 
-		$privacy_always_enabled = pum_get_option( 'privacy_consent_always_enabled', 'no' ) == 'yes';
+		$privacy_always_enabled = pum_get_option( 'privacy_consent_always_enabled', 'no' ) === 'yes';
 
 		$privacy_enabled_dependency = [
 			'privacy_consent_enabled' => 'yes',
@@ -517,7 +517,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 			<?php
 
-			if ( ! $atts['name_field_type'] != 'disabled' ) :
+			if ( ! $atts['name_field_type'] !== 'disabled' ) :
 
 				$required = ! $atts['name_optional'] ? 'required' : '';
 
@@ -586,7 +586,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 			<input type="hidden" name="provider" value="<?php echo esc_attr( $atts['provider'] ); ?>" />
 
 			<?php
-			if ( $atts['privacy_consent_enabled'] == 'yes' ) :
+			if ( $atts['privacy_consent_enabled'] === 'yes' ) :
 				$consent_text = trim( $atts['privacy_consent_label'] );
 				$consent_args = [
 					'enabled'  => 'yes',
@@ -735,7 +735,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 			if ( in_array( $key, $data_attr_fields ) ) {
 				$data[ $key ] = $value;
 
-				if ( $key == 'redirect' ) {
+				if ( $key === 'redirect' ) {
 					$data[ $key ] = base64_encode( esc_url( $value ) );
 				}
 			}

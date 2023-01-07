@@ -107,7 +107,7 @@ class PUM_Extension_Activator {
 
 		$popup_maker_data = get_plugin_data( WP_PLUGIN_DIR . '/popup-maker/popup-maker.php', false, false );
 
-		if ( $popup_maker_data['Name'] == 'Popup Maker' ) {
+		if ( $popup_maker_data['Name'] === 'Popup Maker' ) {
 			$this->core_installed = true;
 			$this->core_path      = 'popup-maker/popup-maker.php';
 		}
@@ -134,7 +134,7 @@ class PUM_Extension_Activator {
 	 * @access      public
 	 */
 	public function run() {
-		if ( $this->get_status() != 'active' ) {
+		if ( $this->get_status() !== 'active' ) {
 			// Display notice
 			add_action( 'admin_notices', [ $this, 'missing_popmake_notice' ] );
 		} else {

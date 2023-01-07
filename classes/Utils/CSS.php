@@ -17,7 +17,7 @@ class PUM_Utils_CSS {
 		}
 		$hex = str_replace( '#', '', $hex );
 
-		if ( strlen( $hex ) == 3 ) {
+		if ( strlen( $hex ) === 3 ) {
 			$r = hexdec( substr( $hex, 0, 1 ) . substr( $hex, 0, 1 ) );
 			$g = hexdec( substr( $hex, 1, 1 ) . substr( $hex, 1, 1 ) );
 			$b = hexdec( substr( $hex, 2, 1 ) . substr( $hex, 2, 1 ) );
@@ -72,7 +72,7 @@ class PUM_Utils_CSS {
 	 * @return string
 	 */
 	public static function box_shadow_style( $horizontal = 0, $vertical = 0, $blur = 0, $spread = 0, $hex = '#000000', $opacity = 50, $inset = 'no' ) {
-		return "{$horizontal}px {$vertical}px {$blur}px {$spread}px " . self::hex2rgba( $hex, $opacity ) . ( $inset == 'yes' ? ' inset' : '' );
+		return "{$horizontal}px {$vertical}px {$blur}px {$spread}px " . self::hex2rgba( $hex, $opacity ) . ( $inset === 'yes' ? ' inset' : '' );
 	}
 
 	/**

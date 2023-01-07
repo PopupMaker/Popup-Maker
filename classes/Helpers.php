@@ -201,7 +201,7 @@ class PUM_Helpers {
 			]
 		);
 
-		if ( $post_type == 'attachment' ) {
+		if ( $post_type === 'attachment' ) {
 			$args['post_status'] = 'inherit';
 		}
 

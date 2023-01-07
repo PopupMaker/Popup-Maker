@@ -172,7 +172,7 @@ function popmake_get_pages( $force = false ) {
 
 	$pages_options = [ 0 => '' ]; // Blank option
 
-	if ( ( ! isset( $_GET['page'] ) || 'pum-settings' != $_GET['page'] ) && ! $force ) {
+	if ( ( ! isset( $_GET['page'] ) || 'pum-settings' !== $_GET['page'] ) && ! $force ) {
 		return $pages_options;
 	}
 
