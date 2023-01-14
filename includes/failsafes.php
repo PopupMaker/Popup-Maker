@@ -3,7 +3,7 @@
  * Failsafes
  *
  * @package   PUM
- * @copyright Copyright (c) 2022, Code Atlantic LLC
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
  */
 
 if ( ! function_exists( 'popmake_get_option' ) ) {

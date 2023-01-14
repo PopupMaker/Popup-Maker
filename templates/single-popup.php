@@ -3,7 +3,7 @@
  * Single-Popup Templates
  *
  * @package   PUM
- * @copyright Copyright (c) 2022, Code Atlantic LLC
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
  */
 
 get_header(); ?>

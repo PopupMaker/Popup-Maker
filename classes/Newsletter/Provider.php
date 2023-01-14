@@ -3,7 +3,7 @@
  * Newsletter for Provider
  *
  * @package   PUM
- * @copyright Copyright (c) 2022, Code Atlantic LLC
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
