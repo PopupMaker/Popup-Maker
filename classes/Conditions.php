@@ -227,7 +227,7 @@ class PUM_Conditions {
 
 		foreach ( $post_types as $name => $post_type ) {
 
-			if ( $name === 'popup' || $name === 'popup_theme' ) {
+			if ( 'popup' === $name || 'popup_theme' === $name ) {
 				continue;
 			}
 
@@ -309,7 +309,7 @@ class PUM_Conditions {
 
 			$templates = wp_get_theme()->get_page_templates();
 
-			if ( $name === 'page' && ! empty( $templates ) ) {
+			if ( 'page' === $name && ! empty( $templates ) ) {
 				$conditions[ $name . '_template' ] = [
 					'group'    => $post_type->labels->name,
 					'name'     => sprintf( _x( '%s: With Template', 'condition: post type plural label ie. Pages: With Template', 'popup-maker' ), $post_type->labels->name ),

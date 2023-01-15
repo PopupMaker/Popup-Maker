@@ -21,7 +21,7 @@ function pum_passive_theme_upgrades_enabled() {
 	if ( ! $theme_count ) {
 		$theme_count = get_transient( 'pum_theme_count' );
 
-		if ( $theme_count === false ) {
+		if ( false === $theme_count ) {
 			$theme_count = pum_count_themes(
 				[
 					'post_status' => [ 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ],

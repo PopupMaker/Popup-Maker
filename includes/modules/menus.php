@@ -76,7 +76,7 @@ class PUM_Modules_Menu {
 			// not sure about this one, was part of the original solution.
 			doing_filter( 'plugins_loaded' ),
 			// No need if its already loaded by another plugin.
-			$walker === 'Walker_Nav_Menu_Edit_Custom_Fields',
+			'Walker_Nav_Menu_Edit_Custom_Fields' === $walker,
 		];
 
 		if ( in_array( true, $bail_early ) ) {

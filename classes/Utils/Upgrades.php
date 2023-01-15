@@ -157,7 +157,7 @@ class PUM_Utils_Upgrades {
 
 			// Reset JS/CSS assets for regeneration.
 			pum_reset_assets();
-		} elseif ( ! self::$upgraded_from || self::$upgraded_from === 'false' ) {
+		} elseif ( ! self::$upgraded_from || self::$upgraded_from === 'false' ) {  // phpcs:ignore
 			// Here to prevent constant extra queries.
 			self::$upgraded_from = '0.0.0';
 			update_option( 'pum_ver_upgraded_from', self::$upgraded_from );
@@ -237,7 +237,7 @@ class PUM_Utils_Upgrades {
 
 		$needs_upgrade = get_transient( 'pum_needs_1_8_theme_upgrades' );
 
-		if ( $needs_upgrade === false ) {
+		if ( false === $needs_upgrade ) {
 			$query = new WP_Query(
 				[
 					'post_type'   => 'popup_theme',
@@ -479,7 +479,7 @@ class PUM_Utils_Upgrades {
 	public function get_completed_upgrades() {
 		$completed_upgrades = get_option( 'pum_completed_upgrades' );
 
-		if ( $completed_upgrades === false ) {
+		if ( false === $completed_upgrades ) {
 			$completed_upgrades = [];
 			update_option( 'pum_completed_upgrades', $completed_upgrades );
 		}
@@ -572,7 +572,7 @@ class PUM_Utils_Upgrades {
 		 */
 		$upgrade = $this->get_upgrade( $upgrade_id, $step );
 
-		if ( $upgrade === false ) {
+		if ( false === $upgrade ) {
 			wp_send_json_error(
 				[
 					'error' => sprintf( __( '%s is an invalid batch process ID.', 'popup-maker' ), esc_html( $upgrade_id ) ),

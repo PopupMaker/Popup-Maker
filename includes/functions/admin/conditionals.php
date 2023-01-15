@@ -104,7 +104,7 @@ function pum_is_submenu_page( $key = null ) {
 		pum_is_admin_page(),
 		! pum_is_popup_editor(),
 		! pum_is_popup_theme_editor(),
-		$key && ! empty( $GLOBALS['hook_suffix'] ) ? $GLOBALS['hook_suffix'] === PUM_Admin_Pages::get_page( $key ) : true,
+		$key && ! empty( $GLOBALS['hook_suffix'] ) ? $GLOBALS['hook_suffix'] === PUM_Admin_Pages::get_page( $key ) : true,  //  phpcs:ignore
 		! isset( $key ) && ! empty( $GLOBALS['hook_suffix'] ) ? in_array( $GLOBALS['hook_suffix'], PUM_Admin_Pages::$pages ) : true,
 	];
 

@@ -191,7 +191,7 @@ function popmake_emodal_v2_import() {
 			$Modal
 		);
 
-		if ( $modal['is_sitewide'] === 1 ) {
+		if ( 1 === $modal['is_sitewide'] ) {
 			$modal_meta['popup_targeting_condition_on_entire_site'] = true;
 		}
 
@@ -346,5 +346,3 @@ function popmake_emodal_shortcode_data_attr( $data, $attr ) {
 
 	return $data;
 }
-
-

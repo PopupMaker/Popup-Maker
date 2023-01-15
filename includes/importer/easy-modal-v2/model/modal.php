@@ -30,7 +30,7 @@ class EModal_Model_Modal extends EModal_Model {
 	}
 
 	public function __get( $key ) {
-		if ( $key === 'meta' ) {
+		if ( 'meta' === $key ) {
 			return $this->meta;
 		} else {
 			return parent::__get( $key );

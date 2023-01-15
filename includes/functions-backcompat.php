@@ -39,11 +39,11 @@ function pum_merge_deprecated_settings_fields( $tabs = [] ) {
 
 				$field_args['label'] = ! empty( $field_args['name'] ) ? $field_args['name'] : '';
 
-				if ( $field_args['type'] === 'header' ) {
+				if ( 'header' === $field_args['type'] ) {
 					$field_args['type'] = 'separator';
-				} elseif ( $field_args['type'] === 'gaeventlabel' ) {
+				} elseif ( 'gaeventlabel' === $field_args['type'] ) {
 					$field_args['type'] = 'ga_event_labels';
-				} elseif ( $field_args['type'] === 'hook' ) {
+				} elseif ( 'hook' === $field_args['type'] ) {
 					$field_args['type'] = 'html';
 
 					ob_start();

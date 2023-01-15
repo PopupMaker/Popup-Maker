@@ -988,7 +988,7 @@ class PUM_Admin_Popups {
 		foreach ( $tabs as $tab_id => $sections ) {
 			foreach ( $sections as $section_id => $fields ) {
 				foreach ( $fields as $key => $field ) {
-					$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : ( $field['type'] === 'checkbox' ? false : null );
+					$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : ( 'checkbox' === $field['type'] ? false : null );
 				}
 			}
 		}
@@ -1134,7 +1134,7 @@ class PUM_Admin_Popups {
 	 * @return mixed
 	 */
 	public static function set_slug( $data, $postarr ) {
-		if ( $data['post_type'] === 'popup' ) {
+		if ( 'popup' === $data['post_type'] ) {
 			$data['post_name'] = wp_unique_post_slug( sanitize_title( popmake_post( 'popup_name' ) ), $postarr['ID'], $data['post_status'], $data['post_type'], $data['post_parent'] );
 		}
 
@@ -1354,7 +1354,7 @@ class PUM_Admin_Popups {
 		global $typenow;
 
 		// Checks if the current post type is 'popup'
-		if ( $typenow === 'popup' ) {
+		if ( 'popup' === $typenow ) {
 
 			if ( get_taxonomy( 'popup_category' ) ) {
 				$terms = get_terms( 'popup_category' );

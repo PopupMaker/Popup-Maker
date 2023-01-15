@@ -83,7 +83,7 @@ class PUM_Utils_Array {
 	public static function move_item( &$ref_arr, $key1, $move, $key2 = null ) {
 		$arr = $ref_arr;
 
-		if ( $key2 === null ) {
+		if ( null === $key2 ) {
 			$key2 = $key1;
 		}
 
@@ -105,9 +105,9 @@ class PUM_Utils_Array {
 		}
 
 		if ( is_numeric( $move ) ) {
-			if ( $move === 0 && $key1 === $key2 ) {
+			if ( 0 === $move && $key1 === $key2 ) {
 				return true;
-			} elseif ( $move === 0 ) {
+			} elseif ( 0 === $move ) {
 				$tmp                  = $arr[ $key1 ]['sort'];
 				$arr[ $key1 ]['sort'] = $arr[ $key2 ]['sort'];
 				$arr[ $key2 ]['sort'] = $tmp;
