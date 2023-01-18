@@ -54,6 +54,11 @@ class PUM_Admin_Ajax {
 			wp_send_json_error();
 		}
 
+		// Dissallow if user cannot edit this popup.
+		if ( ! current_user_can( 'edit_post', $popup_id ) ) {
+			wp_send_json_error( 'You do not have permission to edit this popup.' );
+		}
+
 		// Get our popup and previous value.
 		$popup    = pum_get_popup( $popup_id );
 		$previous = $popup->get_meta( 'enabled' );
