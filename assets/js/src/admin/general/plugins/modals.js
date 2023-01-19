@@ -6,7 +6,6 @@
 
     var $html = $('html'),
         $document = $(document),
-        $top_level_elements,
         focusableElementsString = "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]",
         previouslyFocused,
         modals = {
@@ -63,11 +62,6 @@
                     .hide(0, function () {
                         $('html').css({overflow: 'visible', width: 'auto'});
 
-                        if ($top_level_elements) {
-                            $top_level_elements.attr('aria-hidden', 'false');
-                            $top_level_elements = null;
-                        }
-
                         // Accessibility: Focus back on the previously focused element.
                         if (previouslyFocused.length) {
                             previouslyFocused.focus();
@@ -82,14 +76,14 @@
                             callback();
                         }
                     })
-                    .attr('aria-hidden', 'true');
+                    .attr('aria-modal', 'false');
 
             },
             show: function (modal, callback) {
                 $('.pum-modal-background')
                     .off('keydown.pum_modal')
                     .hide(0)
-                    .attr('aria-hidden', 'true');
+                    .attr('aria-modal', 'true');
 
                 $html
                     .data('origwidth', $html.innerWidth())
@@ -112,9 +106,6 @@
                         PUM_Admin.modals.trapTabKey(e);
                     })
                     .show(0, function () {
-                        $top_level_elements = $('body > *').filter(':visible').not(PUM_Admin.modals._current);
-                        $top_level_elements.attr('aria-hidden', 'true');
-
                         PUM_Admin.modals._current
                             .trigger('pum_init')
                             // Accessibility: Add focus check that prevents tabbing outside of modal.
@@ -126,8 +117,7 @@
                         if (undefined !== callback) {
                             callback();
                         }
-                    })
-                    .attr('aria-hidden', 'false');
+                    });
 
             },
             remove: function (modal) {

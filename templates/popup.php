@@ -1,4 +1,4 @@
-<div id="pum-<?php pum_popup_ID(); ?>" class="<?php pum_popup_classes(); ?>" <?php pum_popup_data_attr(); ?> role="dialog" aria-hidden="true" 
+<div id="pum-<?php pum_popup_ID(); ?>" class="<?php pum_popup_classes(); ?>" <?php pum_popup_data_attr(); ?> role="dialog" aria-modal="false"
 								   <?php
 									if ( pum_get_popup_title() !== '' ) :
 										?>

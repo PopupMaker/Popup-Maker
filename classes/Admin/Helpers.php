@@ -369,7 +369,7 @@ class PUM_Admin_Helpers {
 			]
 		);
 		?>
-		<div id="<?php echo $args['id']; ?>" class="pum-modal-background <?php echo esc_attr( $args['class'] ); ?>" role="dialog" aria-hidden="true" aria-labelledby="<?php echo $args['id']; ?>-title"
+		<div id="<?php echo $args['id']; ?>" class="pum-modal-background <?php echo esc_attr( $args['class'] ); ?>" role="dialog" aria-modal="false" aria-labelledby="<?php echo $args['id']; ?>-title"
 			<?php
 			if ( '' !== $args['description'] ) {
 				?>
@@ -429,4 +429,3 @@ class PUM_Admin_Helpers {
 	}
 
 }
-

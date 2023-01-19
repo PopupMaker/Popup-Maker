@@ -234,7 +234,7 @@ html.pum-open {
 		}
 
 		&.pum-open-scrollable {
-			body > *[aria-hidden] {
+			body > *:not([aria-modal="true"]) {
 				padding-right: 15px;
 			}
 
