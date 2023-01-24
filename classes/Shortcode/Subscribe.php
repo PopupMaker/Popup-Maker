@@ -640,8 +640,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						<p>
 							<small>
 							<?php
-							echo esc_html(
-								wp_kses(
+							echo wp_kses(
 									$usage_text,
 									[
 										'a' => [
@@ -649,8 +648,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 											'href'   => true,
 										],
 									]
-								)
-							);
+								);
 							?>
 									</small>
 						</p>
