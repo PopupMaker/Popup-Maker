@@ -640,17 +640,15 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						<p>
 							<small>
 							<?php
-							echo esc_html(
-								wp_kses(
-									$usage_text,
-									[
-										'a' => [
-											'target' => true,
-											'href'   => true,
-										],
-									]
-								)
-							);
+							echo wp_kses(
+								$usage_text,
+								[
+									'a' => [
+										'target' => true,
+										'href'   => true,
+									],
+								]
+								);
 							?>
 									</small>
 						</p>
