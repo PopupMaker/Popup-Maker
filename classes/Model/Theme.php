@@ -439,7 +439,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 			return;
 		}
 
-		if ( $this->ID === 5 ) {  // phpcs:ignore
+		if ( 5 === $this->ID ) {
 			$test = '1';
 		}
 

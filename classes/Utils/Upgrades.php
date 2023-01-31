@@ -157,7 +157,7 @@ class PUM_Utils_Upgrades {
 
 			// Reset JS/CSS assets for regeneration.
 			pum_reset_assets();
-		} elseif ( ! self::$upgraded_from || self::$upgraded_from === 'false' ) {  // phpcs:ignore
+		} elseif ( ! self::$upgraded_from || 'false' === self::$upgraded_from ) {
 			// Here to prevent constant extra queries.
 			self::$upgraded_from = '0.0.0';
 			update_option( 'pum_ver_upgraded_from', self::$upgraded_from );

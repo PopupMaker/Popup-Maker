@@ -82,7 +82,7 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 				$targeting_conditions = popmake_get_popup_meta_group( 'targeting_condition', $popup->ID );
 
 				if ( empty( $targeting_conditions ) ) {
-					if ( $popup->post_status === 'publish' ) {  // phpcs:ignore
+					if ( 'publish' === $popup->post_status ) {
 						// Default popups with no conditions to draft
 						self::change_post_status( $popup->ID, 'draft' );
 					}

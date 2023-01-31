@@ -149,7 +149,7 @@ class PUM_Admin_Shortcode_UI {
 				'sections'       => $shortcode->_subtabs(),
 				'fields'         => $shortcode->_fields(),
 				'has_content'    => $shortcode->has_content,
-				'ajax_rendering' => $shortcode->ajax_rendering === true,  // phpcs:ignore
+				'ajax_rendering' => $shortcode->ajax_rendering,
 			];
 		}
 
