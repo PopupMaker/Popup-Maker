@@ -1,6 +1,6 @@
 <?php
 /**
- * Newsletter for Providers
+ * Handler for Newsletter Providers
  *
  * @package   PUM
  * @copyright Copyright (c) 2023, Code Atlantic LLC
