@@ -1,6 +1,6 @@
 <?php
 /**
- * GA class
+ * Google Analytics helpers
  *
  * @package   PUM
  * @copyright Copyright (c) 2023, Code Atlantic LLC
