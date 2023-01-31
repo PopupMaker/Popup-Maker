@@ -147,7 +147,9 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
 				[].slice.call( arguments )
 			);
 		};
-		api.defaults = {};
+		api.defaults = {
+			domain: pum_vars.cookie_domain ?  pum_vars.cookie_domain : '',
+		};
 
 		api.remove = function( key, attributes ) {
 			// Clears keys with current path.
