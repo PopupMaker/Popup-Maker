@@ -1,6 +1,6 @@
 <?php
 /**
- * Newsletter for Provider
+ * Newsletter Provider Base class
  *
  * @package   PUM
  * @copyright Copyright (c) 2023, Code Atlantic LLC
