@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Fix: Removes html from displaying in popup in place of privacy policy link.
 * Developer: New `pum_cookie_domain` filter.
 
 ## v1.17.1 - 12/04/2022
