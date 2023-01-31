@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Developer: New `pum_cookie_domain` filter.
 
 ## v1.17.1 - 12/04/2022
 
