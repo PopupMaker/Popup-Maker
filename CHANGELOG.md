@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Improvement: Font Awesome 6 support for close button text.
 * Fix: Removes html from displaying in popup in place of privacy policy link.
 * Developer: New `pum_cookie_domain` filter.
 
