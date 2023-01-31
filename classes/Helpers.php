@@ -6,12 +6,7 @@
  * @copyright Copyright (c) 2023, Code Atlantic LLC
  */
 
-// Exit if accessed directly
-
-/*******************************************************************************
- * Copyright (c) 2023, Code Atlantic LLC
- ******************************************************************************/
-
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
