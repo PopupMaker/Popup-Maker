@@ -2,9 +2,19 @@
 
 ## Unreleased
 
+* Accessibility: Use newer WCAG `aria-modal` attributes and remove `aria-hidden` methods.
 * Improvement: Font Awesome 6 support for close button text.
+* Improvement: Add currently loaded popup count to Admin toolbar if enabled.
+* Improvement: Debug logging now auto truncates, and limits to 1 write per page load.
+* Tweak: Remove extra slash `/` from some asset paths.
 * Fix: Removes html from displaying in popup in place of privacy policy link.
+* Fix: Resolve issues with upgrade process button not always starting when clicked.
+* Fix: Extra escaping was causing some code to HTML to not render in dashboard notices.
+* Security: Obfuscate debug log file location using hash in file.
+* Security: Only allow users with permission to edit popup to toggle it on/off.
+* Security: Add nonce to object search API requests
 * Developer: New `pum_cookie_domain` filter.
+* Developer: Lots of PHPCS notices cleaned up, more to come.
 
 ## v1.17.1 - 12/04/2022
 
