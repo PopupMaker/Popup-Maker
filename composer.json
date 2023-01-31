@@ -1,7 +1,7 @@
 {
   "name": "popupmaker/popup-maker",
   "type": "wordpress-plugin",
-  "version": "1.17.0",
+  "version": "1.17.1",
   "description": "The easiest way to create any popup imaginable with WordPress.",
   "keywords": [
     "popup maker",
@@ -19,8 +19,8 @@
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.0@dev",
-    "wp-coding-standards/wpcs": "dev-master",
-    "dealerdirect/phpcodesniffer-composer-installer": "dev-master",
+    "code-atlantic/coding-standards": "dev-develop",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
     "phpunit/phpunit": "^7.5",
     "phpcompatibility/phpcompatibility-wp": "^2.1"
   },

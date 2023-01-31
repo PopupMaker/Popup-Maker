@@ -119,11 +119,15 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		) $charset_collate;";
 
 		$results = dbDelta( $sql );
-		PUM_Utils_Logging::instance()->log( 'Subscriber table results: ' . implode( ',', $results ) );
+
+		// Strip prefix to ensure it doesn't leak unintentionally.
+		$results = str_replace( $wpdb->prefix, '', implode( ',', $results ) );
+
+		PUM_Utils_Logging::instance()->log( 'Subscriber table results: ' . $results );
 
 		$previous_error = $wpdb->last_error; // The show tables query will erase the last error. So, record it now in case we need it.
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '{$this->table_name()}'" ) !== $this->table_name() ) {
-			PUM_Utils_Logging::instance()->log( "Subscriber table exists check failed! Last error from wpdb: $previous_error." );
+			PUM_Utils_Logging::instance()->log( "Subscriber table exists check failed! Last error from wpdb: " . str_replace( $wpdb->prefix, '', $previous_error ) );
 		}
 
 		update_option( $this->table_name . '_db_version', $this->version );

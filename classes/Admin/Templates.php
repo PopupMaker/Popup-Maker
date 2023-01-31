@@ -328,7 +328,7 @@ class PUM_Admin_Templates {
 	public static function helpers() {
 		?>
 		<script type="text/html" id="tmpl-pum-modal">
-			<div id="{{data.id}}" class="pum-modal-background {{data.classes}}" role="dialog" aria-hidden="true" aria-labelledby="{{data.id}}-title" aria-describedby="{{data.id}}-description" {{{data.meta}}}>
+			<div id="{{data.id}}" class="pum-modal-background {{data.classes}}" role="dialog" aria-modal="false" aria-labelledby="{{data.id}}-title" aria-describedby="{{data.id}}-description" {{{data.meta}}}>
 				<div class="pum-modal-wrap">
 					<form class="pum-form">
 						<div class="pum-modal-header">

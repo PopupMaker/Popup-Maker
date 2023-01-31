@@ -195,7 +195,7 @@ msgstr ""
 msgid "Any Supported Form*"
 msgstr ""
 
-#: classes/Cookies.php:97, classes/Privacy.php:33, classes/Triggers.php:219, classes/Types.php:23, classes/Site/Assets.php:265, classes/Utils/Alerts.php:374, includes/admin/class-pum-admin-upgrades.php:250, includes/integrations/class-pum-gravity-forms.php:51, includes/modules/admin-bar.php:71
+#: classes/Cookies.php:97, classes/Privacy.php:33, classes/Triggers.php:219, classes/Types.php:23, classes/Site/Assets.php:265, classes/Utils/Alerts.php:387, includes/admin/class-pum-admin-upgrades.php:250, includes/integrations/class-pum-gravity-forms.php:51, includes/modules/admin-bar.php:71
 msgid "Popup Maker"
 msgstr ""
 
@@ -933,7 +933,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: classes/Admin/Assets.php:73, classes/Admin/Settings.php:661, classes/Admin/Tools.php:83, classes/Admin/Tools.php:195, includes/integrations/class-pum-gravity-forms.php:175
+#: classes/Admin/Assets.php:73, classes/Admin/Settings.php:661, classes/Admin/Tools.php:83, classes/Admin/Tools.php:194, includes/integrations/class-pum-gravity-forms.php:175
 msgid "Save"
 msgstr ""
 
@@ -2307,62 +2307,71 @@ msgid "Error Log"
 msgstr ""
 
 #: classes/Admin/Tools.php:127
-msgid "Scheduled Actions"
-msgstr ""
-
-#: classes/Admin/Tools.php:128
 msgid "Import / Export"
 msgstr ""
 
-#: classes/Admin/Tools.php:176
+#: classes/Admin/Tools.php:175
 msgid "Enable Beta Versions"
 msgstr ""
 
-#: classes/Admin/Tools.php:178
+#: classes/Admin/Tools.php:177
 msgid "Checking any of the below checkboxes will opt you in to receive pre-release update notifications. You can opt-out at any time. Pre-release updates do not install automatically, you will still have the opportunity to ignore update notifications."
 msgstr ""
 
-#: classes/Admin/Tools.php:187
+#: classes/Admin/Tools.php:186
 msgid "Get updates for pre-release versions of %s"
 msgstr ""
 
-#: classes/Admin/Tools.php:246
+#: classes/Admin/Tools.php:245
 msgid "Import From Easy Modal v2"
 msgstr ""
 
-#: classes/Extension/License.php:170
+#: classes/Extension/License.php:211
 msgid "Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please %1$srenew your license%2$s."
 msgstr ""
 
-#: classes/Extension/License.php:177
+#: classes/Extension/License.php:218
 msgid "%1$s"
 msgstr ""
 
-#: classes/Extension/License.php:403, classes/Extension/License.php:439
+#: classes/Extension/License.php:449, classes/Extension/License.php:485
 msgid "You have invalid or expired license keys for Popup Maker. Please go to the %1$sLicenses page%2$s to correct this issue."
 msgstr ""
 
-#: classes/Extension/License.php:395
+#: classes/Extension/License.php:441
 msgid "One or more of your extensions are missing license keys. You will not be able to receive updates until the extension has a valid license key entered. Please go to the %1$sLicenses page%2$s to add your license keys."
 msgstr ""
 
-#: classes/Extension/License.php:470
+#: classes/Extension/License.php:516
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
-#: classes/Extension/Updater.php:255
-msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s."
+#. translators: the plugin name.
+#: classes/Extension/Updater.php:313
+msgid "There is a new version of %1$s available."
 msgstr ""
 
-#: classes/Extension/Updater.php:247
-msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
+#: classes/Extension/Updater.php:344
+msgid "Update now."
 msgstr ""
 
-#: classes/Extension/Updater.php:505
+#: classes/Extension/Updater.php:333
+msgid "%1$sView version %2$s details%3$s or %4$supdate now%5$s."
+msgstr ""
+
+#: classes/Extension/Updater.php:324
+msgid "%1$sView version %2$s details%3$s."
+msgstr ""
+
+#: classes/Extension/Updater.php:319
+msgid "Contact your network administrator to install the update."
+msgstr ""
+
+#: classes/Extension/Updater.php:580
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: classes/Extension/Updater.php:505, includes/admin/class-pum-admin-upgrades.php:274, classes/Admin/Subscribers/Table.php:383, classes/Admin/Subscribers/Table.php:373, classes/Admin/Subscribers/Table.php:395, classes/Admin/Subscribers/Table.php:464, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50
+#: classes/Extension/Updater.php:580, includes/admin/class-pum-admin-upgrades.php:274, classes/Admin/Subscribers/Table.php:383, classes/Admin/Subscribers/Table.php:373, classes/Admin/Subscribers/Table.php:395, classes/Admin/Subscribers/Table.php:464, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50
 msgid "Error"
 msgstr ""
 
@@ -2767,15 +2776,15 @@ msgstr ""
 msgid "%1$sDid you know:%2$s Popup Maker has custom integrations with %3$s, %4$slearn more%5$s or %6$s%7$s%8$s!"
 msgstr ""
 
-#: classes/Utils/Alerts.php:374
+#: classes/Utils/Alerts.php:387
 msgid "Notifications"
 msgstr ""
 
-#: classes/Utils/Alerts.php:377
+#: classes/Utils/Alerts.php:390
 msgid "Check out the following notifications from Popup Maker."
 msgstr ""
 
-#: classes/Utils/Alerts.php:438
+#: classes/Utils/Alerts.php:456
 msgid "Dismiss this item."
 msgstr ""
 

@@ -63,15 +63,18 @@ class PUM_Modules_Admin_Bar {
 	 * @param WP_Admin_Bar $wp_admin_bar
 	 */
 	public static function toolbar_links( $wp_admin_bar ) {
-
 		if ( ! self::should_render() ) {
 			return;
 		}
 
+		$popups = self::loaded_popups();
+
+		$count = count( $popups );
+
 		$wp_admin_bar->add_node(
 			[
 				'id'     => 'popup-maker',
-				'title'  => __( 'Popup Maker', 'popup-maker' ),
+				'title'  => sprintf( '%s <span class="counter">%d</span>', __( 'Popup Maker', 'popup-maker' ), $count ),
 				'href'   => '#popup-maker',
 				'meta'   => [ 'class' => 'popup-maker-toolbar' ],
 				'parent' => false,
@@ -81,16 +84,13 @@ class PUM_Modules_Admin_Bar {
 		$wp_admin_bar->add_node(
 			[
 				'id'     => 'popups',
-				'title'  => __( 'Popups', 'popup-maker' ),
+				'title'  => sprintf( '%s <span class="counter">%d</span>', __( 'Popups', 'popup-maker' ), $count ),
 				'href'   => '#',
 				'parent' => 'popup-maker',
 			]
 		);
 
-		$popups = self::loaded_popups();
-
-		if ( count( $popups ) ) {
-
+		if ( $count ) {
 			foreach ( $popups as $popup ) {
 				/** @var WP_Post $popup */
 

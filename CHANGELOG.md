@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+* Improvement: Font Awesome 6 support for close button text.
+* Fix: Removes html from displaying in popup in place of privacy policy link.
+* Developer: New `pum_cookie_domain` filter.
+
+## v1.17.1 - 12/04/2022
+
 * Improvement: Update EDD Updater to latest for extension update handling.
 * Improvement: Add handler for properly renaming extension folder names during update without manual reactivation by user.
 * Tweak: Set proper default tab on Tools page.

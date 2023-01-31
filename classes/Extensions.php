@@ -39,8 +39,13 @@ class PUM_Extensions {
 	public function get_renamed_plugin_map() {
 		// Array of old plugin name => new plugin name.
 		$renamed_plugin_map = [
-			'pum-scheduling/pum-scheduling.php'     => 'popup-maker-scheduling/popup-maker-scheduling.php',
-			'pum-geotargeting/pum-geotargeting.php' => 'popup-maker-geotargeting/popup-maker-geotargeting.php',
+			// phpcs:disable Squiz.PHP.CommentedOutCode.Found
+			// 'popup-maker-edd/popup-maker-edd.php' => 'popup-maker-edd-pro/popup-maker-edd-pro.php',
+			// 'pum-aweber-integration/pum-aweber-integration.php' => 'popup-maker-aweber-integration/popup-maker-aweber-integration.php',
+			// 'pum-mailchimp-integration/pum-mailchimp-integration.php' => 'popup-maker-mailchimp-integration/popup-maker-mailchimp-integration.php',
+			'pum-scheduling/pum-scheduling.php' => 'popup-maker-scheduling/popup-maker-scheduling.php',
+			// 'pum-videos/pum-videos.php'           => 'popup-maker-videos/popup-maker-videos.php',
+			// phpcs:enable Squiz.PHP.CommentedOutCode.Found
 		];
 
 		return $renamed_plugin_map;

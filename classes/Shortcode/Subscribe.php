@@ -643,7 +643,6 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						<p>
 							<small>
 							<?php
-							echo esc_html(
 								wp_kses(
 									$usage_text,
 									[
@@ -652,10 +651,9 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 											'href'   => true,
 										],
 									]
-								)
-							);
+								);
 							?>
-									</small>
+							</small>
 						</p>
 					<?php endif; ?>
 				</div>

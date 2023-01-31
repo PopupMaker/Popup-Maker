@@ -434,7 +434,7 @@ class PUM_AssetCache {
 	public static function global_custom_styles() {
 
 		if ( pum_get_option( 'adjust_body_padding' ) ) {
-			echo 'html.pum-open.pum-open-overlay.pum-open-scrollable body > *[aria-hidden] { padding-right: ' . pum_get_option( 'body_padding_override', '15px' ) . '!important; }';
+			echo 'html.pum-open.pum-open-overlay.pum-open-scrollable body > *:not([aria-modal="true"]) { padding-right: ' . pum_get_option( 'body_padding_override', '15px' ) . '!important; }';
 		}
 
 	}

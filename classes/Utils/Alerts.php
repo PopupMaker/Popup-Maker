@@ -352,7 +352,94 @@ class PUM_Utils_Alerts {
 		return array_merge_recursive(
 			wp_kses_allowed_html( 'post' ),
 			// Allow script tags with type="" attribute.
-			[ 'script' => [ 'type' => true ] ]
+			[
+				'script'   => [ 'type' => true ],
+				'progress' => [
+					'class' => true,
+					'max'   => true,
+					'min'   => true,
+				],
+				'input'    => [
+					'type'    => true,
+					'class'   => true,
+					'id'      => true,
+					'name'    => true,
+					'value'   => true,
+					'checked' => true,
+				],
+				'button'   => [
+					'type'  => true,
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+					'value' => true,
+				],
+				'fieldset' => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+				],
+				'legend'   => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+				],
+				'div'      => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+				],
+				'span'     => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+				],
+				'ul'       => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+				],
+				'li'       => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+				],
+				'label'    => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+					'for'   => true,
+				],
+				'select'   => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+					'for'   => true,
+				],
+				'option'   => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+					'for'   => true,
+				],
+				'form'     => [
+					'action' => true,
+					'method' => true,
+					'id'     => true,
+					'class'  => true,
+					'style'  => true,
+					'data-*' => true,
+				],
+				'img'      => [
+					'class'  => true,
+					'id'     => true,
+					'name'   => true,
+					'src'    => true,
+					'alt'    => true,
+					'width'  => true,
+					'height' => true,
+				],
+			]
 		);
 	}
 

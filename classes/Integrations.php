@@ -50,7 +50,7 @@ class PUM_Integrations {
 			]
 		);
 
-		self::$preload_posts = isset( $_GET['page'] ) && $_GET['page'] == 'pum-settings';
+		self::$preload_posts = isset( $_GET['page'] ) && $_GET['page'] === 'pum-settings';
 
 		add_filter( 'pum_settings_fields', [ __CLASS__, 'settings_fields' ] );
 		add_action( 'pum_preload_popup', [ __CLASS__, 'enqueue_assets' ] );
@@ -250,7 +250,7 @@ class PUM_Integrations {
 
 	public static function popup_post_type_args( $args = [] ) {
 
-		if ( self::enabled( 'kingcomposer' ) && ( ( is_admin() && isset( $_GET['page'] ) && $_GET['page'] == 'kingcomposer' ) || pum_is_popup_editor() ) ) {
+		if ( self::enabled( 'kingcomposer' ) && ( ( is_admin() && isset( $_GET['page'] ) && $_GET['page'] === 'kingcomposer' ) || pum_is_popup_editor() ) ) {
 			$args = array_merge(
 				$args,
 				[
@@ -268,7 +268,7 @@ class PUM_Integrations {
 				'vc_settings',
 				'fl-builder-settings',
 			]
-		) ) || ( isset( $_POST['option_page'] ) && $_POST['option_page'] == 'wpb_js_composer_settings_general' ) || pum_is_popup_editor() ) ) ) {
+		) ) || ( isset( $_POST['option_page'] ) && $_POST['option_page'] === 'wpb_js_composer_settings_general' ) || pum_is_popup_editor() ) ) ) {
 			$args = array_merge(
 				$args,
 				[
@@ -342,7 +342,7 @@ class PUM_Integrations {
 		// Should it reopen? Only if all of the following are true.
 		$should_reopen = [
 			// Form popup was submitted and matches this popup.
-			$form_popup_id && $popup_id == $form_popup_id,
+			$form_popup_id && $popup_id === $form_popup_id,
 			// Form reopen was not marked disable.
 			empty( $settings['disable_form_reopen'] ) || ! $settings['disable_form_reopen'],
 			// Close on form submission is disbaled, or has a timer larger than 0.
@@ -356,7 +356,7 @@ class PUM_Integrations {
 			$triggers = ! empty( $settings['triggers'] ) ? $settings['triggers'] : [];
 
 			foreach ( $triggers as $key => $trigger ) {
-				if ( $trigger['type'] == 'auto_open' ) {
+				if ( $trigger['type'] === 'auto_open' ) {
 					unset( $triggers[ $key ] );
 				}
 			}
