@@ -439,10 +439,6 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 			return;
 		}
 
-		if ( 5 === $this->ID ) {
-			$test = '1';
-		}
-
 		if ( ! isset( $this->data_version ) ) {
 			$this->data_version = (int) $this->get_meta( 'popup_theme_data_version' );
 
