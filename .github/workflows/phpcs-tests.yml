@@ -37,8 +37,4 @@ jobs:
       run: composer install --prefer-dist --no-progress
 
     - name: Run PHPCS tests
-      uses: thenabeel/action-phpcs@v8
-      with:
-        files: "**.php" # you may customize glob as needed
-        phpcs_path: vendor/bin/phpcs
-        standard: .phpcs.dist.xml
+      run: composer run-script lint
