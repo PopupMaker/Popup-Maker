@@ -2,9 +2,9 @@ name: PHP Linter (PHPCS)
 
 on:
   push:
-    branches: [ "master", "develop", "release/*", "issue/*", "feature/*" ]
+    branches: [ develop ]
   pull_request:
-    branches: [ "master", "develop" ]
+    branches: [ master, develop ]
   workflow_dispatch:
     
 permissions:
