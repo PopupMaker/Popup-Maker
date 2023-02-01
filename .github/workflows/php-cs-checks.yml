@@ -1,4 +1,4 @@
-name: "PHPCS Inline Checks"
+name: PHPCS Tests
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - "**.php"
       - ".phpcs.dist.xml"
       - ".github/workflows/phpcs.yml"
-  worklow_dispatch:
+  workflow_dispatch:
 
 jobs:
   phpcs:
