@@ -21,6 +21,9 @@ jobs:
       with:
         fetch-depth: 0 # important!
 
+    - name: Remove composer.lock
+      run: rm composer.lock
+
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
 
@@ -32,10 +35,12 @@ jobs:
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
         restore-keys: |
           ${{ runner.os }}-php-
+
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - uses: thenabeel/action-phpcs@v8
+    - name: Run PHPCS tests
+      uses: thenabeel/action-phpcs@v8
       with:
         files: "**.php" # you may customize glob as needed
         phpcs_path: vendor/bin/phpcs
