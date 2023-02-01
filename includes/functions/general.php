@@ -158,7 +158,7 @@ function pum_reset_assets() {
 function popmake_resolve( array $a, $path, $default = null ) {
 	$current = $a;
 	$p       = strtok( $path, '.' );
-	while ( $p !== false ) {
+	while ( false !== $p ) {
 		if ( ! isset( $current[ $p ] ) ) {
 			return $default;
 		}

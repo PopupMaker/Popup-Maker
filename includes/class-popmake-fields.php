@@ -352,7 +352,7 @@ class Popmake_Fields {
 			],
 			[
 				$this->field_prefix,
-				$args['section'] !== 'general' ? ".{$args['section']}" : '',
+				'general' !== $args['section'] ? ".{$args['section']}" : '',
 				$args['id'],
 			],
 			$this->templ_value_format
@@ -466,7 +466,7 @@ class Popmake_Fields {
 				$function_name = [ $this, $type . '_templ_callback' ];
 } /**
 			 * Check if the field type is hook.
-			 */ elseif ( $type === 'hook' ) {
+			 */ elseif ( 'hook' === $type ) {
 				$function_name = [ $this, 'hook_callback' ];
 } /**
 			 * No method exists, lets notify them the field type doesn't exist.
@@ -525,7 +525,7 @@ class Popmake_Fields {
 			'pum-field-' . $args['type'],
 		];
 
-		if ( $args['doclink'] !== '' ) {
+		if ( '' !== $args['doclink'] ) {
 			$classes[] = 'pum-field--has-doclink';
 		}
 
@@ -539,7 +539,7 @@ class Popmake_Fields {
 	}
 
 	public function field_description( $args ) {
-		if ( $args['desc'] !== '' ) {
+		if ( '' !== $args['desc'] ) {
 			?>
 			<p class="pum-desc"><?php echo esc_html( $args['desc'] ); ?></p>
 										   <?php
@@ -557,7 +557,7 @@ class Popmake_Fields {
 			<label for="<?php echo esc_attr( $args['id'] ); ?>">
 								   <?php
 									echo esc_html( $args['label'] );
-									if ( $args['doclink'] !== '' ) {
+									if ( '' !== $args['doclink'] ) {
 										?>
 					<a href="<?php echo esc_url( $args['doclink'] ); ?>" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
 										<?php

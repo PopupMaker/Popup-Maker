@@ -77,7 +77,7 @@ if ( ! function_exists( 'emresolve' ) ) {
 	function emresolve( array $a, $path, $default = null ) {
 		$current = $a;
 		$p       = strtok( $path, '.' );
-		while ( $p !== false ) {
+		while ( false !== $p ) {
 			if ( ! isset( $current[ $p ] ) ) {
 				return $default;
 			}

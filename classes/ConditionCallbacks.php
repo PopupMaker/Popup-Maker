@@ -34,7 +34,7 @@ class PUM_ConditionCallbacks {
 
 			case 'all':
 				// Checks for valid post type, if $post_type is page, then include the front page as most users simply expect this.
-				if ( self::is_post_type( $post_type ) || ( $post_type === 'page' && is_front_page() ) ) {
+				if ( self::is_post_type( $post_type ) || ( 'page' === $post_type && is_front_page() ) ) {
 					return true;
 				}
 				break;
@@ -109,9 +109,9 @@ class PUM_ConditionCallbacks {
 		// Whatever is left is the taxonomy.
 		$taxonomy = implode( '_', $target );
 
-		if ( $taxonomy === 'category' ) {
+		if ( 'category' === $taxonomy ) {
 			return self::category( $condition );
-		} elseif ( $taxonomy === 'post_tag' ) {
+		} elseif ( 'post_tag' === $taxonomy ) {
 			return self::post_tag( $condition );
 		}
 
@@ -216,9 +216,9 @@ class PUM_ConditionCallbacks {
 		// Last Key is the taxonomy
 		$taxonomy = array_pop( $target );
 
-		if ( $taxonomy === 'category' ) {
+		if ( 'category' === $taxonomy ) {
 			return self::post_type_category( $condition );
-		} elseif ( $taxonomy === 'post_tag' ) {
+		} elseif ( 'post_tag' === $taxonomy ) {
 			return self::post_type_tag( $condition );
 		}
 

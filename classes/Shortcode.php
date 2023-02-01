@@ -257,7 +257,7 @@ abstract class PUM_Shortcode {
 	public function style_block() {
 		$styles = $this->get_template_styles();
 
-		if ( $styles !== false ) {
+		if ( false !== $styles ) {
 			echo '<style>' . $styles . '</style>';
 		}
 	}

@@ -63,7 +63,7 @@ class PUM_Site_Popups {
 	public static function current_popup( $new_popup = false ) {
 		global $popup;
 
-		if ( $new_popup !== false ) {
+		if ( false !== $new_popup ) {
 			pum()->current_popup = $new_popup;
 			$popup               = $new_popup;
 		}
