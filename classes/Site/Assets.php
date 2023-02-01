@@ -251,6 +251,7 @@ class PUM_Site_Assets {
 					'message_position'       => 'top',
 					'core_sub_forms_enabled' => ! PUM_Newsletters::$disabled,
 					'popups'                 => [],
+					'cookie_domain'          => apply_filters( 'pum_cookie_domain', '' ),
 				]
 			)
 		);

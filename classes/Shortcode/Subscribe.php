@@ -650,7 +650,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 								]
 								);
 							?>
-									</small>
+							</small>
 						</p>
 					<?php endif; ?>
 				</div>
