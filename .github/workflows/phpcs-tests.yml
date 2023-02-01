@@ -2,13 +2,10 @@ name: PHPCS Tests
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ master, develop ]
   pull_request:
     branches: [ master, develop ]
-    paths:
-      - "**.php"
-      - ".phpcs.dist.xml"
-      - ".github/workflows/phpcs-tests.yml"
+
   workflow_dispatch:
 
 jobs:
