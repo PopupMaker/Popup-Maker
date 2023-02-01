@@ -1,6 +1,7 @@
-name: PHP Composer
+name: PHP Linter (PHPCS)
 
 on:
+  workflow_dispatch:
   push:
     branches:
     - master
