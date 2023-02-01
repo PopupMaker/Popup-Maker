@@ -517,7 +517,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 			<?php
 
-			if ( ! 'disabled' !== $atts['name_field_type'] ) :
+			if ( 'disabled' !== $atts['name_field_type'] ) :
 
 				$required = ! $atts['name_optional'] ? 'required' : '';
 
