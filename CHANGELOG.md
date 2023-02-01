@@ -10,6 +10,7 @@
 * Fix: Removes html from displaying in popup in place of privacy policy link.
 * Fix: Resolve issues with upgrade process button not always starting when clicked.
 * Fix: Extra escaping was causing some code to HTML to not render in dashboard notices.
+* Fix: Bug causing disabled name field to be shown in sub forms.
 * Security: Obfuscate debug log file location using hash in file.
 * Security: Only allow users with permission to edit popup to toggle it on/off.
 * Security: Add nonce to object search API requests
