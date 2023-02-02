@@ -1,8 +1,9 @@
 <?php
 /**
- * Prerequisite handler.
+ * Prerequisites Utility
  *
- * @package PUM\Core
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
  */
 
 /**

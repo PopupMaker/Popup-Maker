@@ -1,7 +1,10 @@
 <?php
-/************************************
- * Copyright (c) 2020, Popup Maker
- ************************************/
+/**
+ * Integration for FormidableForms Form
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 /**
  * Handles the integration with Formidable Forms (https://wordpress.org/plugins/formidable/)

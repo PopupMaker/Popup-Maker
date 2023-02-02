@@ -1,4 +1,10 @@
 <?php
+/**
+ * Integrations for woocommerce
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -93,4 +99,3 @@ class PUM_Woocommerce_Integration {
 	}
 
 }
-

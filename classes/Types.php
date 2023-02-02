@@ -1,4 +1,10 @@
 <?php
+/**
+ * Class for Types
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 class PUM_Types {
 

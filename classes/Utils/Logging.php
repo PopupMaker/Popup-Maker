@@ -1,9 +1,9 @@
 <?php
 /**
- * Debug logging class.
+ * Debug Logging Utility
  *
- * @package     PUM\Utils
- * @copyright   Copyright (c) 2023, Code Atlantic LLC
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
  */
 
 /**

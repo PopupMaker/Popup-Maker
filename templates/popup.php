@@ -1,3 +1,11 @@
+<?php
+/**
+ * Popup Templates
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
+?>
 <div id="pum-<?php pum_popup_ID(); ?>" class="<?php pum_popup_classes(); ?>" <?php pum_popup_data_attr(); ?> role="dialog" aria-modal="false"
 								   <?php
 									if ( pum_get_popup_title() !== '' ) :

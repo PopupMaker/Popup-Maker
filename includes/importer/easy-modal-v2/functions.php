@@ -1,4 +1,10 @@
 <?php
+/**
+ * Importer for easy-modal functions
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {

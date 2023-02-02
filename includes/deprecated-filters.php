@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Deprecated filters
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -171,4 +174,3 @@ function pum_deprecated_get_the_popup_data_attr_filter( $data_attr, $popup_id ) 
 }
 
 add_filter( 'pum_popup_data_attr', 'pum_deprecated_get_the_popup_data_attr_filter', 10, 2 );
-

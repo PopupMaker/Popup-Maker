@@ -1,8 +1,9 @@
 <?php
 /**
- * Notices handler.
+ * Class for Admin Notices
  *
- * @package PUM\Core
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
