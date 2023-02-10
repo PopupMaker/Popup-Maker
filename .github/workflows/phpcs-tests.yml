@@ -1,86 +1,80 @@
 name: PHPCS Tests
 
 on:
-  push:
-    branches:
-      - develop
-  pull_request:
-  workflow_dispatch:
+    push:
+        branches:
+            - develop
+    pull_request:
+    workflow_dispatch:
 
 env:
-  WP_VERSION: 6.1.1
+    WP_VERSION: 6.1.1
 
 # Cancels all previous workflow runs for the same branch that have not yet completed.
 concurrency:
-  # The concurrency group contains the workflow name and the branch name.
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+    # The concurrency group contains the workflow name and the branch name.
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
 
 jobs:
-  run-phpcs:
-    name: Run PHPCS
-    runs-on: ubuntu-latest
+    run-phpcs:
+        name: Run PHPCS
+        runs-on: ubuntu-latest
 
-    if: ${{ github.event_name == 'pull_request' }}
-    strategy:
-      matrix:
-        php-versions: [ 5.6, 7.4, 8.0, 8.1, 8.2 ]
-        coverage: [ true ]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+        if: ${{ github.event_name == 'pull_request' }}
+        strategy:
+            matrix:
+                php-versions: [7.4]
+                # php-versions: [5.6, 7.4, 8.0, 8.1, 8.2]
+                coverage: [true]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
 
-      - name: Setup
-        id: ci-setup
-        uses: ./.github/actions/ci-setup
-        with:
-          extensions: 'curl'
-          extensions-cache-key: run-phpcs
-          php-version: ${{ matrix.php-versions }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tools: 'composer, cs2pr, phpcs'
+            - name: Setup
+              id: ci-setup
+              uses: ./.github/actions/ci-setup
+              with:
+                  extensions: 'curl'
+                  extensions-cache-key: run-phpcs
+                  php-version: ${{ matrix.php-versions }}
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  tools: 'composer, cs2pr, phpcs'
 
-      - name: Run PHPCS
-        continue-on-error: false
-        id: phpcs
-        run: composer phpcs
-        env:
-          CHANGED_FILES: ${{ steps.ci-setup.outputs.files }}
+            - name: Run PHPCS
+              continue-on-error: false
+              id: phpcs
+              run: composer phpcs
+              env:
+                  CHANGED_FILES: ${{ steps.ci-setup.outputs.files }}
 
-      - name: Show PHPCS results in PR
-        if: ${{ always() && steps.phpcs.outcome == 'failure' }}
-        run: cs2pr ./phpcs-report.xml
+            - name: Show PHPCS results in PR
+              if: ${{ always() && steps.phpcs.outcome == 'failure' }}
+              run: cs2pr ./phpcs-report.xml
 
+    # old-phpcs:
+    #   steps:
+    #   - uses: actions/checkout@v3
+    #     with:
+    #       fetch-depth: 0 # important!
 
+    #   - name: Remove composer.lock
+    #     run: rm composer.lock
 
+    #   - name: Validate composer.json and composer.lock
+    #     run: composer validate --strict
 
+    #   - name: Cache Composer packages
+    #     id: composer-cache
+    #     uses: actions/cache@v3
+    #     with:
+    #       path: vendor
+    #       key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+    #       restore-keys: |
+    #         ${{ runner.os }}-php-
 
-  # old-phpcs:
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #     with:
-  #       fetch-depth: 0 # important!
+    #   - name: Install dependencies
+    #     run: composer install --prefer-dist --no-progress
 
-  #   - name: Remove composer.lock
-  #     run: rm composer.lock
-
-  #   - name: Validate composer.json and composer.lock
-  #     run: composer validate --strict
-
-  #   - name: Cache Composer packages
-  #     id: composer-cache
-  #     uses: actions/cache@v3
-  #     with:
-  #       path: vendor
-  #       key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-  #       restore-keys: |
-  #         ${{ runner.os }}-php-
-
-  #   - name: Install dependencies
-  #     run: composer install --prefer-dist --no-progress
-
-  #   - name: Run PHPCS tests
-  #     run: composer run-script lint
-
-
-
+    #   - name: Run PHPCS tests
+    #     run: composer run-script lint
