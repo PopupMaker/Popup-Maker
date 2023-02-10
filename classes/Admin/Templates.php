@@ -115,7 +115,7 @@ class PUM_Admin_Templates {
 				<# _.each(data.options, function(option, key) { #>
 				<li>
 					<input type="checkbox" id="{{data.id}}_{{key}}" name="{{data.name}}[{{option.value}}]" value="{{option.value}}" {{{option.meta}}}/>
-					<label for="{{data.id}}_{{key}}">{{option.label}}</label>
+					<label for="{{data.id}}_{{key}}">{{{option.label}}}</label>
 				</li>
 				<# }); #>
 			</ul>
