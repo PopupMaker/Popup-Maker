@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.18.0 - 02/10/2023
+
 * Accessibility: Use newer WCAG `aria-modal` attributes and remove `aria-hidden` methods.
 * Improvement: Font Awesome 6 support for close button text.
 * Improvement: Add currently loaded popup count to Admin toolbar if enabled.
