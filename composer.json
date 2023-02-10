@@ -25,6 +25,7 @@
   },
   "minimum-stability": "dev",
   "scripts": {
+    "phpcs": "vendor/bin/phpcs --report-full --report-checkstyle=./phpcs-report.xml",
     "lint": "vendor/bin/phpcs ./popup-maker.php ./classes/**/*.php  ./includes/**/*.php",
     "lint:priority": "vendor/bin/phpcs --severity=8 ./popup-maker.php ./classes/**/*.php  ./includes/**/*.php",
     "tests": "vendor/bin/phpunit"
