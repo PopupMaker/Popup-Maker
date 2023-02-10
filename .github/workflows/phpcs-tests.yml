@@ -2,39 +2,122 @@ name: PHPCS Tests
 
 on:
   push:
-    branches: [ master, develop ]
+    branches:
+      - develop
   pull_request:
-    branches: [ master, develop ]
-
   workflow_dispatch:
 
-jobs:
-  phpcs:
+env:
+  WP_VERSION: 6.1.1
 
+# Cancels all previous workflow runs for the same branch that have not yet completed.
+concurrency:
+  # The concurrency group contains the workflow name and the branch name.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  run-phpcs:
+    name: Run PHPCS
     runs-on: ubuntu-latest
 
+    if: ${{ github.event_name == 'pull_request' }}
+    strategy:
+      matrix:
+        php-versions: [ 5.6, 7.4, 8.0, 8.1, 8.2 ]
+        coverage: [ true ]
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0 # important!
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Remove composer.lock
-      run: rm composer.lock
+      - name: Setup
+        id: ci-setup
+        uses: ./.github/actions/ci-setup
+        with:
+          extensions: 'curl'
+          extensions-cache-key: run-phpcs
+          php-version: ${{ matrix.php-versions }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tools: 'composer, cs2pr, phpcs'
 
-    - name: Validate composer.json and composer.lock
-      run: composer validate --strict
+      - name: Run PHPCS
+        continue-on-error: false
+        id: phpcs
+        run: composer phpcs
+        env:
+          CHANGED_FILES: ${{ steps.ci-setup.outputs.files }}
 
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v3
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
+      - name: Show PHPCS results in PR
+        if: ${{ always() && steps.phpcs.outcome == 'failure' }}
+        run: cs2pr ./phpcs-report.xml
 
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
 
-    - name: Run PHPCS tests
-      run: composer run-script lint
+
+
+
+  # old-phpcs:
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #     with:
+  #       fetch-depth: 0 # important!
+
+  #   - name: Remove composer.lock
+  #     run: rm composer.lock
+
+  #   - name: Validate composer.json and composer.lock
+  #     run: composer validate --strict
+
+  #   - name: Cache Composer packages
+  #     id: composer-cache
+  #     uses: actions/cache@v3
+  #     with:
+  #       path: vendor
+  #       key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+  #       restore-keys: |
+  #         ${{ runner.os }}-php-
+
+  #   - name: Install dependencies
+  #     run: composer install --prefer-dist --no-progress
+
+  #   - name: Run PHPCS tests
+  #     run: composer run-script lint
+
+
+
+
+
+
+
+  # run-phpunit:
+  #   name: Run PHPUnit
+  #   runs-on: ubuntu-20.04
+  #   if: ${{ github.event_name == 'pull_request' }}
+  #   strategy:
+  #     matrix:
+  #       php-versions: [ 8.0, 8.1, 8.2 ]
+  #       coverage: [ true ]
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+
+  #     - name: Setup
+  #       id: ci-setup
+  #       uses: ./.github/actions/ci-setup
+  #       with:
+  #         extensions: 'curl, mysql, mysqli, tar, zip'
+  #         extensions-cache-key: run-phpunit
+  #         php-version: ${{ matrix.php-versions }}
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         tools: 'composer, phpunit'
+
+  #     - name: Run PHPUnit
+  #       continue-on-error: false
+  #       id: phpunit
+  #       run:  composer phpunit
+  #       env:
+  #         CHANGED_FILES: ${{ steps.ci-setup.outputs.files }}
+
+  #     - name: Upload coverage to Codecov
+  #       uses: codecov/codecov-action@v3
+  #       with:
+  #         fail_ci_if_error: false
