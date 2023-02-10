@@ -238,7 +238,7 @@ html.pum-open.pum-open-overlay.pum-open-fixed .pum-container {
   position: fixed;
 }
 
-html.pum-open.pum-open-overlay.pum-open-scrollable body > *[aria-hidden] {
+html.pum-open.pum-open-overlay.pum-open-scrollable body > *:not([aria-modal="true"]) {
   padding-left: 15px;
 }
 

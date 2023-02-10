@@ -7,7 +7,7 @@ Tags:  marketing, ecommerce, popup, popups, optin, conversion, promotion, pop-up
 Requires at least: 4.9
 Tested up to: 6.1.1
 Requires PHP: 5.6
-Stable tag: 1.17.1
+Stable tag: 1.18.0
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -180,6 +180,24 @@ There are several common causes for this, check [this guide for help](https://do
 == Changelog ==
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
+
+= v1.18.0 - 02/10/2023 =
+
+* Accessibility: Use newer WCAG `aria-modal` attributes and remove `aria-hidden` methods.
+* Improvement: Font Awesome 6 support for close button text.
+* Improvement: Add currently loaded popup count to Admin toolbar if enabled.
+* Improvement: Debug logging now auto truncates, and limits to 1 write per page load.
+* Tweak: Remove extra slash `/` from some asset paths.
+* Fix: Removes html from displaying in popup in place of privacy policy link.
+* Fix: Resolve issues with upgrade process button not always starting when clicked.
+* Fix: Extra escaping was causing some code to HTML to not render in dashboard notices.
+* Fix: Bug causing disabled name field to be shown in sub forms.
+* Fix: HTML entities in some trigger option fields were not being rendered properly.
+* Security: Obfuscate debug log file location using hash in file.
+* Security: Only allow users with permission to edit popup to toggle it on/off.
+* Security: Add nonce to object search API requests
+* Developer: New `pum_cookie_domain` filter.
+* Developer: Lots of PHPCS notices cleaned up, more to come.
 
 = v1.17.1 - 12/04/2022 =
 

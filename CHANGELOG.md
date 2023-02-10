@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.18.0 - 02/10/2023
+
 * Accessibility: Use newer WCAG `aria-modal` attributes and remove `aria-hidden` methods.
 * Improvement: Font Awesome 6 support for close button text.
 * Improvement: Add currently loaded popup count to Admin toolbar if enabled.
@@ -11,6 +13,7 @@
 * Fix: Resolve issues with upgrade process button not always starting when clicked.
 * Fix: Extra escaping was causing some code to HTML to not render in dashboard notices.
 * Fix: Bug causing disabled name field to be shown in sub forms.
+* Fix: HTML entities in some trigger option fields were not being rendered properly.
 * Security: Obfuscate debug log file location using hash in file.
 * Security: Only allow users with permission to edit popup to toggle it on/off.
 * Security: Add nonce to object search API requests
