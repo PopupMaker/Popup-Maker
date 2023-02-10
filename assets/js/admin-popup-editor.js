@@ -89,7 +89,7 @@
 						if ( notThese.indexOf( e.target.value ) === -1 ) {
 							var audio = new Audio(
 								pum_admin_vars.pm_dir_url +
-									'/assets/sounds/' +
+									'assets/sounds/' +
 									e.target.value
 							);
 							audio.addEventListener(

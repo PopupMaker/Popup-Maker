@@ -1,4 +1,10 @@
 <?php
+/**
+ * Shortcode for PopupCookie
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

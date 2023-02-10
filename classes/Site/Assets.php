@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Site Assets
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 class PUM_Site_Assets {
 
@@ -251,6 +254,7 @@ class PUM_Site_Assets {
 					'message_position'       => 'top',
 					'core_sub_forms_enabled' => ! PUM_Newsletters::$disabled,
 					'popups'                 => [],
+					'cookie_domain'          => apply_filters( 'pum_cookie_domain', '' ),
 				]
 			)
 		);
@@ -370,7 +374,7 @@ class PUM_Site_Assets {
 	 * Render popup inline styles.
 	 */
 	public static function inline_styles() {
-		if ( ( current_action() == 'wp_head' && popmake_get_option( 'disable_popup_theme_styles', false ) ) || ( current_action() == 'admin_head' && ! popmake_is_admin_popup_page() ) ) {
+		if ( ( current_action() === 'wp_head' && popmake_get_option( 'disable_popup_theme_styles', false ) ) || ( current_action() === 'admin_head' && ! popmake_is_admin_popup_page() ) ) {
 			return;
 		}
 

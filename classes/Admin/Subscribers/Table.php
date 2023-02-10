@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Admin Subscribers Table Handler
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -334,7 +337,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 		if ( in_array( $action1, [ 'delete', 'bulk-delete' ] ) ) {
 
 			// verify the nonce.
-			if ( ! wp_verify_nonce( wp_unslash( $_REQUEST['_wpnonce'] ), $action1 == 'delete' ? 'pum_subscribers_table_action_nonce' : 'bulk-subscribers' ) ) {
+			if ( ! wp_verify_nonce( wp_unslash( $_REQUEST['_wpnonce'] ), 'delete' === $action1 ? 'pum_subscribers_table_action_nonce' : 'bulk-subscribers' ) ) {
 				$this->invalid_nonce_redirect();
 			} else {
 
@@ -367,7 +370,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 						$succeeded = count( array_filter( $status ) );
 						$failed    = count( $subscribers ) - $succeeded;
 
-						if ( count( $subscribers ) == 1 ) {
+						if ( count( $subscribers ) === 1 ) {
 							wp_die(
 								__( 'Deleting subscriber failed.', 'popup-maker' ),
 								__( 'Error', 'popup-maker' ),
@@ -436,7 +439,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 		}
 
 		// check for table bulk actions
-		if ( ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'bulk-download' ) || ( isset( $_REQUEST['action2'] ) && $_REQUEST['action2'] === 'bulk-download' ) ) {
+		if ( ( isset( $_REQUEST['action'] ) && 'bulk-download' === $_REQUEST['action'] ) || ( isset( $_REQUEST['action2'] ) && 'bulk-download' === $_REQUEST['action2'] ) ) {
 
 			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
 			// verify the nonce.
@@ -469,4 +472,3 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 		);
 	}
 }
-

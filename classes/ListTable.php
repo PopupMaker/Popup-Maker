@@ -489,11 +489,11 @@ class PUM_ListTable {
 			return false;
 		}
 
-		if ( isset( $_REQUEST['action'] ) && -1 != $_REQUEST['action'] ) {
+		if ( isset( $_REQUEST['action'] ) && -1 !== $_REQUEST['action'] ) {
 			return $_REQUEST['action'];
 		}
 
-		if ( isset( $_REQUEST['action2'] ) && -1 != $_REQUEST['action2'] ) {
+		if ( isset( $_REQUEST['action2'] ) && -1 !== $_REQUEST['action2'] ) {
 			return $_REQUEST['action2'];
 		}
 
@@ -520,7 +520,7 @@ class PUM_ListTable {
 		$out = '<div class="' . ( $always_visible ? 'row-actions visible' : 'row-actions' ) . '">';
 		foreach ( $actions as $action => $link ) {
 			++$i;
-			( $i == $action_count ) ? $sep = '' : $sep = ' | ';
+			( $i === $action_count ) ? $sep = '' : $sep = ' | ';
 			$out                          .= "<span class='$action'>$link$sep</span>";
 		}
 		$out .= '</div>';
@@ -587,7 +587,7 @@ class PUM_ListTable {
 
 		$month_count = count( $months );
 
-		if ( ! $month_count || ( 1 == $month_count && 0 == $months[0]->month ) ) {
+		if ( ! $month_count || ( 1 === $month_count && 0 === $months[0]->month ) ) {
 			return;
 		}
 
@@ -598,7 +598,7 @@ class PUM_ListTable {
 			<option<?php selected( $m, 0 ); ?> value="0"><?php _e( 'All dates' ); ?></option>
 		<?php
 		foreach ( $months as $arc_row ) {
-			if ( 0 == $arc_row->year ) {
+			if ( 0 === $arc_row->year ) {
 				continue;
 			}
 
@@ -811,18 +811,18 @@ class PUM_ListTable {
 
 		$disable_first = $disable_last = $disable_prev = $disable_next = false;
 
-		if ( $current == 1 ) {
+		if ( 1 === $current ) {
 			$disable_first = true;
 			$disable_prev  = true;
 		}
-		if ( $current == 2 ) {
+		if ( 2 === $current ) {
 			$disable_first = true;
 		}
-		if ( $current == $total_pages ) {
+		if ( $current === $total_pages ) {
 			$disable_last = true;
 			$disable_next = true;
 		}
-		if ( $current == $total_pages - 1 ) {
+		if ( $current === $total_pages - 1 ) {
 			$disable_last = true;
 		}
 

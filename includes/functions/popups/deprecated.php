@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for Deprecated Popups
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 /**
  * Returns a popup object.
@@ -48,7 +51,7 @@ function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default
 		// Check for dot notation key value.
 		$test  = uniqid();
 		$value = popmake_resolve( $values, $key, $test );
-		if ( $value == $test ) {
+		if ( $value === $test ) {
 
 			$key = str_replace( '.', '_', $key );
 
@@ -76,7 +79,7 @@ function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default
  * @return mixed array|string
  */
 function popmake_get_popup_meta_group( $group, $popup_id = null, $key = null, $default = null ) {
-	if ( ! $popup_id || $group === 'secure_logout' ) {
+	if ( ! $popup_id || 'secure_logout' === $group ) {
 		$popup_id = pum_get_popup_id();
 	}
 
@@ -95,7 +98,7 @@ function popmake_get_popup_meta_group( $group, $popup_id = null, $key = null, $d
 	foreach ( $post_meta as $meta_key => $value ) {
 		if ( strpos( $meta_key, "popup_{$group}_" ) !== false ) {
 			$new_key = str_replace( "popup_{$group}_", '', $meta_key );
-			if ( count( $value ) == 1 ) {
+			if ( count( $value ) === 1 ) {
 				$group_values[ $new_key ] = $value[0];
 			} else {
 				$group_values[ $new_key ] = $value;

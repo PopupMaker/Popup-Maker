@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Sanitize Utility
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -29,7 +32,7 @@ class PUM_Utils_Sanitize {
 	 * @return bool|int
 	 */
 	public static function checkbox( $value = null, $args = [] ) {
-		if ( intval( $value ) == 1 ) {
+		if ( intval( $value ) === 1 ) {
 			return 1;
 		}
 

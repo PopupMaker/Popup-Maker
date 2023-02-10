@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Integration for GoogleFonts
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 class PUM_Integration_GoogleFonts {
 
@@ -56,7 +59,7 @@ class PUM_Integration_GoogleFonts {
 		}
 
 		// Store transient for a long time after fetching from Google to save API key hits.
-		$transient_time = self::$api_key == self::$default_api_key ? 8 * WEEK_IN_SECONDS : 1 * WEEK_IN_SECONDS;
+		$transient_time = self::$api_key === self::$default_api_key ? 8 * WEEK_IN_SECONDS : 1 * WEEK_IN_SECONDS;
 
 		if ( ! empty( $data['errors'] ) || empty( $data['items'] ) ) {
 			$data = self::load_backup_fonts();

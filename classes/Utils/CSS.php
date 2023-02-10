@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * CSS Utility
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 class PUM_Utils_CSS {
 
@@ -17,7 +20,7 @@ class PUM_Utils_CSS {
 		}
 		$hex = str_replace( '#', '', $hex );
 
-		if ( strlen( $hex ) == 3 ) {
+		if ( strlen( $hex ) === 3 ) {
 			$r = hexdec( substr( $hex, 0, 1 ) . substr( $hex, 0, 1 ) );
 			$g = hexdec( substr( $hex, 1, 1 ) . substr( $hex, 1, 1 ) );
 			$b = hexdec( substr( $hex, 2, 1 ) . substr( $hex, 2, 1 ) );
@@ -29,7 +32,7 @@ class PUM_Utils_CSS {
 
 		$rgb = [ $r, $g, $b ];
 
-		if ( $return_type === 'array' ) {
+		if ( 'array' === $return_type ) {
 			return $rgb; // returns an array with the rgb values
 		}
 
@@ -72,7 +75,7 @@ class PUM_Utils_CSS {
 	 * @return string
 	 */
 	public static function box_shadow_style( $horizontal = 0, $vertical = 0, $blur = 0, $spread = 0, $hex = '#000000', $opacity = 50, $inset = 'no' ) {
-		return "{$horizontal}px {$vertical}px {$blur}px {$spread}px " . self::hex2rgba( $hex, $opacity ) . ( $inset == 'yes' ? ' inset' : '' );
+		return "{$horizontal}px {$vertical}px {$blur}px {$spread}px " . self::hex2rgba( $hex, $opacity ) . ( 'yes' === $inset ? ' inset' : '' );
 	}
 
 	/**

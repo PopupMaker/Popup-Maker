@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Privacy class
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -192,7 +195,7 @@ class PUM_Privacy {
 		);
 
 		foreach ( (array) $subscribers as $subscriber ) {
-			if ( $subscriber['email'] == $email_address ) {
+			if ( $subscriber['email'] === $email_address ) {
 				// Most item IDs should look like postType-postID
 				// If you don't have a post, comment or other ID to work with,
 				// use a unique value to avoid having this item's export
@@ -369,7 +372,7 @@ class PUM_Privacy {
 		);
 
 		foreach ( (array) $subscribers as $subscriber ) {
-			if ( $subscriber['email'] == $email_address ) {
+			if ( $subscriber['email'] === $email_address ) {
 
 				// Data should not be deleted if the user was left subscribed to a service provider.
 				$unsubscribed = apply_filters( 'pum_privacy_eraser_subscriber_was_unsubscribed', true, $email_address, $subscriber );

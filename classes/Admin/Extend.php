@@ -1,7 +1,10 @@
 <?php
-/********************************************
- * Copyright (c) 2020, Code Atlantic LLC
- *******************************************/
+/**
+ * Class for Admin Extend
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

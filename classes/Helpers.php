@@ -1,11 +1,12 @@
 <?php
+/**
+ * Helpers class
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
-// Exit if accessed directly
-
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
-
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -201,7 +202,7 @@ class PUM_Helpers {
 			]
 		);
 
-		if ( $post_type == 'attachment' ) {
+		if ( 'attachment' === $post_type ) {
 			$args['post_status'] = 'inherit';
 		}
 

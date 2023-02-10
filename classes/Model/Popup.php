@@ -1,8 +1,9 @@
 <?php
 /**
- * Popup model class.
+ * Model for Popup
  *
- * @package PopupMaker
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

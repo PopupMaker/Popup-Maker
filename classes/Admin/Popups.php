@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Class for Admin Popups
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -131,7 +134,7 @@ class PUM_Admin_Popups {
 			return;
 		}
 
-		if ( 'popup' == $typenow && in_array( $pagenow, [ 'post-new.php', 'post.php' ] ) ) {
+		if ( 'popup' === $typenow && in_array( $pagenow, [ 'post-new.php', 'post.php' ] ) ) {
 			?>
 
 			<div id="popup-titlediv" class="pum-form">
@@ -163,7 +166,7 @@ class PUM_Admin_Popups {
 			return;
 		}
 
-		if ( 'popup' == $typenow && in_array( $pagenow, [ 'post-new.php', 'post.php' ] ) ) {
+		if ( 'popup' === $typenow && in_array( $pagenow, [ 'post-new.php', 'post.php' ] ) ) {
 			?>
 			<p class="pum-desc"><?php echo '(' . esc_html__( 'Required', 'popup-maker' ) . ') ' . esc_html__( 'Enter a name to help you remember what this popup is about. Only you will see this.', 'popup-maker' ); ?></p>
 			<?php
@@ -279,7 +282,7 @@ class PUM_Admin_Popups {
 	 */
 	public static function save( $post_id, $post ) {
 
-		if ( isset( $post->post_type ) && 'popup' != $post->post_type ) {
+		if ( isset( $post->post_type ) && 'popup' !== $post->post_type ) {
 			return;
 		}
 
@@ -291,7 +294,7 @@ class PUM_Admin_Popups {
 			return;
 		}
 
-		if ( isset( $post->post_type ) && 'revision' == $post->post_type ) {
+		if ( isset( $post->post_type ) && 'revision' === $post->post_type ) {
 			return;
 		}
 
@@ -915,7 +918,7 @@ class PUM_Admin_Popups {
 			foreach ( $sections as $section => $fields ) {
 
 				foreach ( $fields as $key => $args ) {
-					if ( $key == $id ) {
+					if ( $key === $id ) {
 						return $args;
 					}
 				}
@@ -988,7 +991,7 @@ class PUM_Admin_Popups {
 		foreach ( $tabs as $tab_id => $sections ) {
 			foreach ( $sections as $section_id => $fields ) {
 				foreach ( $fields as $key => $field ) {
-					$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : ( $field['type'] == 'checkbox' ? false : null );
+					$defaults[ $key ] = isset( $field['std'] ) ? $field['std'] : ( 'checkbox' === $field['type'] ? false : null );
 				}
 			}
 		}
@@ -1134,7 +1137,7 @@ class PUM_Admin_Popups {
 	 * @return mixed
 	 */
 	public static function set_slug( $data, $postarr ) {
-		if ( $data['post_type'] == 'popup' ) {
+		if ( 'popup' === $data['post_type'] ) {
 			$data['post_name'] = wp_unique_post_slug( sanitize_title( popmake_post( 'popup_name' ) ), $postarr['ID'], $data['post_status'], $data['post_type'], $data['post_parent'] );
 		}
 
@@ -1296,7 +1299,7 @@ class PUM_Admin_Popups {
 	 */
 	public static function sort_columns( $vars ) {
 		// Check if we're viewing the "popup" post type
-		if ( isset( $vars['post_type'] ) && 'popup' == $vars['post_type'] ) {
+		if ( isset( $vars['post_type'] ) && 'popup' === $vars['post_type'] ) {
 			// Check if 'orderby' is set to "name"
 			if ( isset( $vars['orderby'] ) ) {
 				switch ( $vars['orderby'] ) {
@@ -1354,7 +1357,7 @@ class PUM_Admin_Popups {
 		global $typenow;
 
 		// Checks if the current post type is 'popup'
-		if ( $typenow == 'popup' ) {
+		if ( 'popup' === $typenow ) {
 
 			if ( get_taxonomy( 'popup_category' ) ) {
 				$terms = get_terms( 'popup_category' );
@@ -1362,7 +1365,7 @@ class PUM_Admin_Popups {
 					echo "<select name='popup_category' id='popup_category' class='postform'>";
 					echo "<option value=''>" . __( 'Show all categories', 'popup-maker' ) . '</option>';
 					foreach ( $terms as $term ) {
-						$selected = isset( $_GET['popup_category'] ) && $_GET['popup_category'] == $term->slug ? 'selected="selected"' : '';
+						$selected = isset( $_GET['popup_category'] ) && $_GET['popup_category'] === $term->slug ? 'selected="selected"' : '';
 						echo '<option value="' . esc_attr( $term->slug ) . '" ' . $selected . '>' . esc_html( $term->name ) . ' (' . $term->count . ')</option>';
 					}
 					echo '</select>';
@@ -1375,7 +1378,7 @@ class PUM_Admin_Popups {
 					echo "<select name='popup_tag' id='popup_tag' class='postform'>";
 					echo "<option value=''>" . __( 'Show all tags', 'popup-maker' ) . '</option>';
 					foreach ( $terms as $term ) {
-						$selected = isset( $_GET['popup_tag'] ) && $_GET['popup_tag'] == $term->slug ? 'selected="selected"' : '';
+						$selected = isset( $_GET['popup_tag'] ) && $_GET['popup_tag'] === $term->slug ? 'selected="selected"' : '';
 						echo '<option value="' . esc_attr( $term->slug ) . '" ' . $selected . '>' . esc_html( $term->name ) . ' (' . $term->count . ')</option>';
 					}
 					echo '</select>';

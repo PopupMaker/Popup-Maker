@@ -1,4 +1,10 @@
 <?php
+/**
+ * Shortcode for PopupTrigger
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -67,7 +73,7 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	public function fields() {
 		$select_args = [];
 
-		if ( isset( $_GET['post'] ) && is_int( (int) $_GET['post'] ) && isset( $_GET['action'] ) && $_GET['action'] == 'edit' ) {
+		if ( isset( $_GET['post'] ) && is_int( (int) $_GET['post'] ) && isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 			$select_args['post__not_in'] = wp_parse_id_list( [ get_the_ID(), $_GET['post'] ] );
 		}
 

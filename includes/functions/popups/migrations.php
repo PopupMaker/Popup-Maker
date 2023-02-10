@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for Popup Migrations
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 /**
  * Checks if passive migration for popups should be enabled.
@@ -21,7 +24,7 @@ function pum_passive_popup_upgrades_enabled() {
 	if ( ! $popup_count ) {
 		$popup_count = get_transient( 'pum_popup_count' );
 
-		if ( $popup_count === false ) {
+		if ( false === $popup_count ) {
 			$popup_count = pum_count_popups(
 				[
 					'post_status' => [ 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ],
@@ -53,7 +56,7 @@ function pum_popup_migration_2( &$popup ) {
 	if ( has_shortcode( $popup->post_content, 'pum_sub_form' ) ) {
 		$new_content = preg_replace( '/\[pum_sub_form(.*)provider="none"(.*)\]/', '[pum_sub_form$1 provider=""$2]', $popup->post_content );
 
-		if ( $popup->post_content != $new_content ) {
+		if ( $popup->post_content !== $new_content ) {
 			$popup->post_content = $new_content;
 			$changed             = true;
 			$popup->save( false );

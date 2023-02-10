@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for Deprecated Themes
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -68,7 +71,7 @@ function pum_get_theme_v1_meta( $group, $popup_theme_id = null, $key = null, $de
 	foreach ( $post_meta as $meta_key => $value ) {
 		if ( strpos( $meta_key, "popup_theme_{$group}_" ) !== false ) {
 			$new_key = str_replace( "popup_theme_{$group}_", '', $meta_key );
-			if ( count( $value ) == 1 ) {
+			if ( count( $value ) === 1 ) {
 				$group_values[ $new_key ] = $value[0];
 			} else {
 				$group_values[ $new_key ] = $value;

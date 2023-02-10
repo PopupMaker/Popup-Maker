@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Newsletters class
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -260,7 +263,7 @@ class PUM_Newsletters {
 		);
 
 		// Anonymize the data if they didn't consent and privacy is enabled.
-		if ( $values['consent_args']['enabled'] === 'yes' && ! $values['consent_args']['required'] && $values['consent'] === 'no' ) {
+		if ( 'yes' === $values['consent_args']['enabled'] && ! $values['consent_args']['required'] && 'no' === $values['consent'] ) {
 			$values['uuid']    = '';
 			$values['user_id'] = 0;
 			$values['name']    = '';
@@ -309,7 +312,7 @@ class PUM_Newsletters {
 			$errors->add( 'invalid_email', pum_get_newsletter_provider_message( $values['provider'], 'invalid_email', $values ), 'email' );
 		}
 
-		if ( $values['consent_args']['enabled'] === 'yes' && $values['consent_args']['required'] && $values['consent'] === 'no' ) {
+		if ( 'yes' === $values['consent_args']['enabled'] && $values['consent_args']['required'] && 'no' === $values['consent'] ) {
 			$errors->add( 'consent_required', pum_get_newsletter_provider_message( $values['provider'], 'consent_required', $values ), 'consent' );
 		}
 

@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Abstract for post models
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -349,35 +352,35 @@ abstract class PUM_Abstract_Model_Post {
 	 * @return bool
 	 */
 	public function is_trash() {
-		return get_post_status( $this->ID ) == 'trash';
+		return get_post_status( $this->ID ) === 'trash';
 	}
 
 	/**
 	 * @return bool
 	 */
 	public function is_published() {
-		return get_post_status( $this->ID ) == 'publish';
+		return get_post_status( $this->ID ) === 'publish';
 	}
 
 	/**
 	 * @return bool
 	 */
 	public function is_draft() {
-		return get_post_status( $this->ID ) == 'draft';
+		return get_post_status( $this->ID ) === 'draft';
 	}
 
 	/**
 	 * @return bool
 	 */
 	public function is_private() {
-		return get_post_status( $this->ID ) == 'private';
+		return get_post_status( $this->ID ) === 'private';
 	}
 
 	/**
 	 * @return bool
 	 */
 	public function is_pending() {
-		return get_post_status( $this->ID ) == 'pending';
+		return get_post_status( $this->ID ) === 'pending';
 
 	}
 }

@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * ConditionCallbacks class
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 class PUM_ConditionCallbacks {
 
@@ -34,7 +37,7 @@ class PUM_ConditionCallbacks {
 
 			case 'all':
 				// Checks for valid post type, if $post_type is page, then include the front page as most users simply expect this.
-				if ( self::is_post_type( $post_type ) || ( $post_type == 'page' && is_front_page() ) ) {
+				if ( self::is_post_type( $post_type ) || ( 'page' === $post_type && is_front_page() ) ) {
 					return true;
 				}
 				break;
@@ -55,7 +58,7 @@ class PUM_ConditionCallbacks {
 				$selected = wp_parse_id_list( $selected );
 
 				foreach ( $selected as $id ) {
-					if ( $post->post_parent == $id ) {
+					if ( $post->post_parent === $id ) {
 						return true;
 					}
 				}
@@ -109,9 +112,9 @@ class PUM_ConditionCallbacks {
 		// Whatever is left is the taxonomy.
 		$taxonomy = implode( '_', $target );
 
-		if ( $taxonomy == 'category' ) {
+		if ( 'category' === $taxonomy ) {
 			return self::category( $condition );
-		} elseif ( $taxonomy == 'post_tag' ) {
+		} elseif ( 'post_tag' === $taxonomy ) {
 			return self::post_tag( $condition );
 		}
 
@@ -216,9 +219,9 @@ class PUM_ConditionCallbacks {
 		// Last Key is the taxonomy
 		$taxonomy = array_pop( $target );
 
-		if ( $taxonomy == 'category' ) {
+		if ( 'category' === $taxonomy ) {
 			return self::post_type_category( $condition );
-		} elseif ( $taxonomy == 'post_tag' ) {
+		} elseif ( 'post_tag' === $taxonomy ) {
 			return self::post_type_tag( $condition );
 		}
 
@@ -276,7 +279,7 @@ class PUM_ConditionCallbacks {
 
 	public static function is_post_type( $post_type ) {
 		global $post;
-		return is_object( $post ) && ( is_singular( $post_type ) || $post->post_type == $post_type );
+		return is_object( $post ) && ( is_singular( $post_type ) || $post->post_type === $post_type );
 	}
 
 }

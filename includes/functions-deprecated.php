@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Deprecated functions
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -172,7 +175,7 @@ function popmake_get_pages( $force = false ) {
 
 	$pages_options = [ 0 => '' ]; // Blank option
 
-	if ( ( ! isset( $_GET['page'] ) || 'pum-settings' != $_GET['page'] ) && ! $force ) {
+	if ( ( ! isset( $_GET['page'] ) || 'pum-settings' !== $_GET['page'] ) && ! $force ) {
 		return $pages_options;
 	}
 

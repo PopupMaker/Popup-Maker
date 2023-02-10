@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2020, Code Atlantic LLC.
- ******************************************************************************/
+/**
+ * Failsafes
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! function_exists( 'popmake_get_option' ) ) {
 	/**
@@ -76,4 +79,3 @@ if ( ! function_exists( 'popmake_get_template_part' ) ) {
 		return __DIR__ . '/index.php';
 	}
 }
-

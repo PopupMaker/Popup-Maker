@@ -340,7 +340,7 @@ var PUM;
                 // If our opening sound setting is not set to None...
                 if ( settings.open_sound && 'none' !== settings.open_sound ) {
 					// ... then set up our audio. Once loaded, add to popup data.
-					var audio = 'custom' !== settings.open_sound ? new Audio( pum_vars.pm_dir_url + '/assets/sounds/' + settings.open_sound ) : new Audio( settings.custom_sound );
+					var audio = 'custom' !== settings.open_sound ? new Audio( pum_vars.pm_dir_url + 'assets/sounds/' + settings.open_sound ) : new Audio( settings.custom_sound );
 					audio.addEventListener('canplaythrough', function() {
 						$popup.data('popAudio', audio);
 					});
@@ -964,13 +964,7 @@ var PUM_Accessibility;
 			// Accessibility: Sets the current modal for focus checks.
 			currentModal = $popup
 				// Accessibility: Trap tab key.
-				.on( 'keydown.pum_accessibility', PUM_Accessibility.trapTabKey )
-				.attr( 'aria-hidden', 'false' );
-
-			$top_level_elements = $( 'body > *:not([aria-hidden="true"])' )
-				.filter( ':visible' )
-				.not( currentModal );
-			$top_level_elements.attr( 'aria-hidden', 'true' );
+				.on( 'keydown.pum_accessibility', PUM_Accessibility.trapTabKey );
 
 			// Accessibility: Add focus check first time focus changes after popup opens that prevents tabbing outside of modal.
 			$( document ).one(
@@ -996,18 +990,19 @@ var PUM_Accessibility;
 		} )
 		.on( 'pumBeforeOpen', selector, function() {} )
 		.on( 'pumAfterOpen', selector, PUM_Accessibility.initiateFocusLock )
+		.on( 'pumAfterOpen', selector, function() {
+			var $popup = PUM.getPopup( this );
+
+			// Accessibility: Sets the current modal as open.
+			currentModal = $popup.attr( 'aria-modal', 'true' );
+		})
 		.on( 'pumBeforeClose', selector, function() {} )
 		.on( 'pumAfterClose', selector, function() {
 			var $popup = PUM.getPopup( this );
 
 			$popup
 				.off( 'keydown.pum_accessibility' )
-				.attr( 'aria-hidden', 'true' );
-
-			if ( $top_level_elements ) {
-				$top_level_elements.attr( 'aria-hidden', 'false' );
-				$top_level_elements = null;
-			}
+				.attr( 'aria-modal', 'false' );
 
 			// Accessibility: Focus back on the previously focused element.
 			if ( previouslyFocused !== undefined && previouslyFocused.length ) {
@@ -1821,7 +1816,9 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
 				[].slice.call( arguments )
 			);
 		};
-		api.defaults = {};
+		api.defaults = {
+			domain: pum_vars.cookie_domain ?  pum_vars.cookie_domain : '',
+		};
 
 		api.remove = function( key, attributes ) {
 			// Clears keys with current path.

@@ -4,7 +4,7 @@
  *
  * @package     PUM
  * @subpackage  Classes/PUM_Fields
- * @copyright   Copyright (c) 2019, Code Atlantic LLC
+ * @copyright   Copyright (c) 2023, Code Atlantic LLC
  * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
  * @since       1.4
  */
@@ -86,7 +86,7 @@ class PUM_Fields extends Popmake_Fields {
 	 */
 	public function text_callback( $args, $value = null ) {
 
-		if ( $args['type'] != 'text' ) {
+		if ( 'text' !== $args['type'] ) {
 			$args['class'] .= '  pum-field-text';
 		}
 
@@ -206,7 +206,7 @@ class PUM_Fields extends Popmake_Fields {
 		<?php
 		if ( ! empty( $args['options'] ) ) {
 			foreach ( $args['options'] as $label => $option ) {
-				$selected = ( ! $multiple && $option == $value ) || ( $multiple && in_array( $option, $value ) );
+				$selected = ( ! $multiple && $option === $value ) || ( $multiple && in_array( $option, $value ) );
 				?>
 				<option value="<?php echo esc_attr( $option ); ?>" <?php selected( 1, $selected ); ?>><?php echo esc_html( $label ); ?></option>
 										  <?php
@@ -421,7 +421,7 @@ class PUM_Fields extends Popmake_Fields {
 	 */
 	public function objectselect_callback( $args, $value = null ) {
 
-		if ( $args['type'] != 'objectselect' ) {
+		if ( 'objectselect' !== $args['type'] ) {
 			$args['class'] .= '  pum-field-objectselect';
 		}
 
@@ -454,7 +454,7 @@ class PUM_Fields extends Popmake_Fields {
 			<?php
 			if ( ! empty( $args['options'] ) ) {
 				foreach ( $args['options'] as $label => $option ) {
-					$selected = ( $multiple && in_array( $option, $value ) ) || ( ! $multiple && $option == $value );
+					$selected = ( $multiple && in_array( $option, $value ) ) || ( ! $multiple && $option === $value );
 					?>
 					<option value="<?php echo esc_attr( $option ); ?>" <?php selected( 1, $selected ); ?>><?php echo esc_html( $label ); ?></option>
 											  <?php
@@ -556,7 +556,7 @@ class PUM_Fields extends Popmake_Fields {
 
 	public function text_templ_callback( $args ) {
 
-		if ( $args['type'] != 'text' ) {
+		if ( 'text' !== $args['type'] ) {
 			$args['class'] .= '  pum-field-text';
 		}
 
@@ -739,7 +739,7 @@ class PUM_Fields extends Popmake_Fields {
 	}
 
 	public function objectselect_templ_callback( $args ) {
-		if ( $args['type'] != 'objectselect' ) {
+		if ( 'objectselect' !== $args['type'] ) {
 			$args['class'] .= '  pum-field-objectselect';
 		}
 

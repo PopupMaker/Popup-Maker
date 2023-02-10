@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * AssestCache class
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -119,7 +122,7 @@ class PUM_AssetCache {
 		}
 
 		// If we have already determined files to not be writeable, go ahead and return.
-		if ( true != get_option( 'pum_files_writeable', true ) ) {
+		if ( true !== get_option( 'pum_files_writeable', true ) ) {
 			return false;
 		}
 
@@ -431,7 +434,7 @@ class PUM_AssetCache {
 	public static function global_custom_styles() {
 
 		if ( pum_get_option( 'adjust_body_padding' ) ) {
-			echo 'html.pum-open.pum-open-overlay.pum-open-scrollable body > *[aria-hidden] { padding-right: ' . pum_get_option( 'body_padding_override', '15px' ) . '!important; }';
+			echo 'html.pum-open.pum-open-overlay.pum-open-scrollable body > *:not([aria-modal="true"]) { padding-right: ' . pum_get_option( 'body_padding_override', '15px' ) . '!important; }';
 		}
 
 	}
@@ -540,12 +543,12 @@ class PUM_AssetCache {
 		if ( ! empty( $google_fonts ) && ! pum_get_option( 'disable_google_font_loading', false ) ) {
 			$link = '//fonts.googleapis.com/css?family=';
 			foreach ( $google_fonts as $font_family => $variants ) {
-				if ( $link != '//fonts.googleapis.com/css?family=' ) {
+				if ( '//fonts.googleapis.com/css?family=' !== $link ) {
 					$link .= '|';
 				}
 				$link .= $font_family;
 				if ( is_array( $variants ) ) {
-					if ( implode( ',', $variants ) != '' ) {
+					if ( implode( ',', $variants ) !== '' ) {
 						$link .= ':';
 						$link .= trim( implode( ',', $variants ), ':' );
 					}
@@ -574,7 +577,7 @@ class PUM_AssetCache {
 
 			$theme_styles = pum_get_rendered_theme_styles( $theme->ID );
 
-			if ( $theme_styles != '' ) {
+			if ( '' !== $theme_styles ) {
 				$styles .= '/* Popup Theme ' . $theme->ID . ': ' . $theme->post_title . " */\r\n";
 				$styles .= $theme_styles . "\r\n";
 			}
@@ -657,7 +660,7 @@ class PUM_AssetCache {
 	 * @return bool True if notice should not be shown
 	 */
 	public static function should_not_show_alert() {
-		return true == get_option( 'pum_files_writeable', true ) || true == get_option( '_pum_writeable_notice_dismissed', true );
+		return true === get_option( 'pum_files_writeable', true ) || true === get_option( '_pum_writeable_notice_dismissed', true );
 	}
 
 	/**

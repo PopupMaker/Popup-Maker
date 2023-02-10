@@ -1,7 +1,10 @@
 <?php
-/*************************************************
- * Copyright (c) 2020, Code Atlantic LLC
- *************************************************/
+/**
+ * Class for Admin Ajax
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -54,6 +57,11 @@ class PUM_Admin_Ajax {
 			wp_send_json_error();
 		}
 
+		// Dissallow if user cannot edit this popup.
+		if ( ! current_user_can( 'edit_post', $popup_id ) ) {
+			wp_send_json_error( 'You do not have permission to edit this popup.' );
+		}
+
 		// Get our popup and previous value.
 		$popup    = pum_get_popup( $popup_id );
 		$previous = $popup->get_meta( 'enabled' );
@@ -80,6 +88,10 @@ class PUM_Admin_Ajax {
 	 * Uses passed array with keys of object_type, object_key, include, exclude. Echos our results as JSON.
 	 */
 	public static function object_search() {
+		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['nonce'] ) ), 'pum_ajax_object_search_nonce' ) ) {
+			wp_send_json_error();
+		}
+
 		$results = [
 			'items'       => [],
 			'total_count' => 0,
@@ -182,6 +194,10 @@ class PUM_Admin_Ajax {
 				$results['total_count'] += (int) $query['total_count'];
 				break;
 			case 'user':
+				if ( ! current_user_can( 'list_users' ) ) {
+					wp_send_json_error();
+				}
+
 				$user_role = ! empty( $_REQUEST['object_key'] ) ? $_REQUEST['object_key'] : null;
 
 				if ( ! empty( $include ) ) {

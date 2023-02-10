@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Extension Activator Handler
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -107,7 +110,7 @@ class PUM_Extension_Activator {
 
 		$popup_maker_data = get_plugin_data( WP_PLUGIN_DIR . '/popup-maker/popup-maker.php', false, false );
 
-		if ( $popup_maker_data['Name'] == 'Popup Maker' ) {
+		if ( 'Popup Maker' === $popup_maker_data['Name'] ) {
 			$this->core_installed = true;
 			$this->core_path      = 'popup-maker/popup-maker.php';
 		}
@@ -134,7 +137,7 @@ class PUM_Extension_Activator {
 	 * @access      public
 	 */
 	public function run() {
-		if ( $this->get_status() != 'active' ) {
+		if ( $this->get_status() !== 'active' ) {
 			// Display notice
 			add_action( 'admin_notices', [ $this, 'missing_popmake_notice' ] );
 		} else {

@@ -81,13 +81,7 @@ var PUM_Accessibility;
 			// Accessibility: Sets the current modal for focus checks.
 			currentModal = $popup
 				// Accessibility: Trap tab key.
-				.on( 'keydown.pum_accessibility', PUM_Accessibility.trapTabKey )
-				.attr( 'aria-hidden', 'false' );
-
-			$top_level_elements = $( 'body > *:not([aria-hidden="true"])' )
-				.filter( ':visible' )
-				.not( currentModal );
-			$top_level_elements.attr( 'aria-hidden', 'true' );
+				.on( 'keydown.pum_accessibility', PUM_Accessibility.trapTabKey );
 
 			// Accessibility: Add focus check first time focus changes after popup opens that prevents tabbing outside of modal.
 			$( document ).one(
@@ -113,18 +107,19 @@ var PUM_Accessibility;
 		} )
 		.on( 'pumBeforeOpen', selector, function() {} )
 		.on( 'pumAfterOpen', selector, PUM_Accessibility.initiateFocusLock )
+		.on( 'pumAfterOpen', selector, function() {
+			var $popup = PUM.getPopup( this );
+
+			// Accessibility: Sets the current modal as open.
+			currentModal = $popup.attr( 'aria-modal', 'true' );
+		})
 		.on( 'pumBeforeClose', selector, function() {} )
 		.on( 'pumAfterClose', selector, function() {
 			var $popup = PUM.getPopup( this );
 
 			$popup
 				.off( 'keydown.pum_accessibility' )
-				.attr( 'aria-hidden', 'true' );
-
-			if ( $top_level_elements ) {
-				$top_level_elements.attr( 'aria-hidden', 'false' );
-				$top_level_elements = null;
-			}
+				.attr( 'aria-modal', 'false' );
 
 			// Accessibility: Focus back on the previously focused element.
 			if ( previouslyFocused !== undefined && previouslyFocused.length ) {

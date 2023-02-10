@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for Admin Conditionals
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -22,8 +25,8 @@ function pum_is_admin_page() {
 	$typenow = pum_typenow();
 
 	$tests = [
-		'popup' == $typenow,
-		'popup_theme' == $typenow,
+		'popup' === $typenow,
+		'popup_theme' === $typenow,
 		! empty( $GLOBALS['hook_suffix'] ) && in_array( $GLOBALS['hook_suffix'], PUM_Admin_Pages::$pages ),
 	];
 
@@ -62,7 +65,7 @@ function pum_is_popup_editor() {
 	$tests = [
 		is_admin(),
 		pum_is_admin_page(),
-		'popup' == pum_typenow(),
+		'popup' === pum_typenow(),
 		in_array( $pagenow, [ 'post-new.php', 'post.php' ] ),
 	];
 
@@ -82,7 +85,7 @@ function pum_is_popup_theme_editor() {
 	$tests = [
 		is_admin(),
 		pum_is_admin_page(),
-		'popup_theme' == pum_typenow(),
+		'popup_theme' === pum_typenow(),
 		in_array( $pagenow, [ 'post-new.php', 'post.php' ] ),
 	];
 
@@ -104,7 +107,7 @@ function pum_is_submenu_page( $key = null ) {
 		pum_is_admin_page(),
 		! pum_is_popup_editor(),
 		! pum_is_popup_theme_editor(),
-		$key && ! empty( $GLOBALS['hook_suffix'] ) ? $GLOBALS['hook_suffix'] == PUM_Admin_Pages::get_page( $key ) : true,
+		$key && ! empty( $GLOBALS['hook_suffix'] ) ? PUM_Admin_Pages::get_page( $key ) === $GLOBALS['hook_suffix'] : true,
 		! isset( $key ) && ! empty( $GLOBALS['hook_suffix'] ) ? in_array( $GLOBALS['hook_suffix'], PUM_Admin_Pages::$pages ) : true,
 	];
 

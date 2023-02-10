@@ -4,7 +4,7 @@
  *
  * @package     PUM
  * @subpackage  Functions/Install
- * @copyright   Copyright (c) 2019, Code Atlantic LLC
+ * @copyright   Copyright (c) 2023, Code Atlantic LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
  */

@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for Options Utility
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -83,5 +86,3 @@ function pum_delete_options( $keys = [] ) {
 function pum_remap_options( $remap_array = [] ) {
 	return PUM_Utils_Options::remap_keys( $remap_array );
 }
-
-

@@ -4,7 +4,7 @@
  *
  * @package  POPMAKE_EMODAL
  * @subpackage  Functions/Import
- * @copyright   Copyright (c) 2019, Code Atlantic LLC
+ * @copyright   Copyright (c) 2023, Code Atlantic LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since   1.0
  */
@@ -143,7 +143,7 @@ function popmake_emodal_v2_import() {
 		$theme_id_map[ $theme['id'] ] = $new_theme_id;
 	}
 
-	if ( count( $themes ) == 1 ) {
+	if ( count( $themes ) === 1 ) {
 		update_post_meta( $new_theme_id, 'popup_theme_defaults_set', true );
 		update_option( 'popmake_default_theme', $new_theme_id );
 	}
@@ -191,7 +191,7 @@ function popmake_emodal_v2_import() {
 			$Modal
 		);
 
-		if ( $modal['is_sitewide'] == 1 ) {
+		if ( 1 === $modal['is_sitewide'] ) {
 			$modal_meta['popup_targeting_condition_on_entire_site'] = true;
 		}
 
@@ -346,5 +346,3 @@ function popmake_emodal_shortcode_data_attr( $data, $attr ) {
 
 	return $data;
 }
-
-

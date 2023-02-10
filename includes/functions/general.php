@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * General functions
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -158,7 +161,7 @@ function pum_reset_assets() {
 function popmake_resolve( array $a, $path, $default = null ) {
 	$current = $a;
 	$p       = strtok( $path, '.' );
-	while ( $p !== false ) {
+	while ( false !== $p ) {
 		if ( ! isset( $current[ $p ] ) ) {
 			return $default;
 		}

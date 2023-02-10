@@ -831,7 +831,6 @@ function pumChecked(val1, val2, print) {
 
     var $html = $('html'),
         $document = $(document),
-        $top_level_elements,
         focusableElementsString = "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]",
         previouslyFocused,
         modals = {
@@ -888,11 +887,6 @@ function pumChecked(val1, val2, print) {
                     .hide(0, function () {
                         $('html').css({overflow: 'visible', width: 'auto'});
 
-                        if ($top_level_elements) {
-                            $top_level_elements.attr('aria-hidden', 'false');
-                            $top_level_elements = null;
-                        }
-
                         // Accessibility: Focus back on the previously focused element.
                         if (previouslyFocused.length) {
                             previouslyFocused.focus();
@@ -907,14 +901,14 @@ function pumChecked(val1, val2, print) {
                             callback();
                         }
                     })
-                    .attr('aria-hidden', 'true');
+                    .attr('aria-modal', 'false');
 
             },
             show: function (modal, callback) {
                 $('.pum-modal-background')
                     .off('keydown.pum_modal')
                     .hide(0)
-                    .attr('aria-hidden', 'true');
+                    .attr('aria-modal', 'true');
 
                 $html
                     .data('origwidth', $html.innerWidth())
@@ -937,9 +931,6 @@ function pumChecked(val1, val2, print) {
                         PUM_Admin.modals.trapTabKey(e);
                     })
                     .show(0, function () {
-                        $top_level_elements = $('body > *').filter(':visible').not(PUM_Admin.modals._current);
-                        $top_level_elements.attr('aria-hidden', 'true');
-
                         PUM_Admin.modals._current
                             .trigger('pum_init')
                             // Accessibility: Add focus check that prevents tabbing outside of modal.
@@ -951,8 +942,7 @@ function pumChecked(val1, val2, print) {
                         if (undefined !== callback) {
                             callback();
                         }
-                    })
-                    .attr('aria-hidden', 'false');
+                    });
 
             },
             remove: function (modal) {
@@ -1200,9 +1190,11 @@ function pumChecked(val1, val2, print) {
                             delay: 250,
                             data: function (params) {
                                 return {
+                                    action: 'pum_object_search',
+                                    nonce:
+                                        pum_admin_vars.object_search_nonce,
                                     s: params.term, // search term
                                     paged: params.page,
-                                    action: "pum_object_search",
                                     object_type: object_type,
                                     object_key: object_key,
                                     exclude: object_excludes
@@ -1254,7 +1246,9 @@ function pumChecked(val1, val2, print) {
                     $.ajax({
                         url: ajaxurl,
                         data: {
-                            action: "pum_object_search",
+                            action: 'pum_object_search',
+                            nonce:
+                                pum_admin_vars.object_search_nonce,
                             object_type: object_type,
                             object_key: object_key,
                             exclude: object_excludes,

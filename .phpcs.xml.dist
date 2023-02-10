@@ -2,34 +2,33 @@
 <ruleset name="WordPress Coding Standards for Plugin">
 	<description>Sniffs for WordPress plugins</description>
 
-	<rule ref="PHPCompatibilityWP"/>
-	<config name="testVersion" value="5.6-"/>
-
-	<rule ref="WordPress-Extra"/>
-	<rule ref="WordPress-Docs"/>
-	<rule ref="WordPress.WP.I18n"/>
-	<config name="text_domain" value="popup-maker,default"/>
-
-	<!-- Show progress and sniff codes in all reports -->
-	<arg value="ps"/>
-
-	<arg name="extensions" value="php"/>
-
-	<!-- Exclude these -->
+	<file>.</file>
+	<exclude-pattern type="relative">^/dist/*</exclude-pattern>
+	<exclude-pattern type="relative">^/build/*</exclude-pattern>
+		<!-- Exclude these -->
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/tests/*</exclude-pattern>
 	<exclude-pattern>*.js</exclude-pattern>
 
-	<!-- Temporary due to usage of CONSTANT like names for core variables. -->
-	<rule ref="WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase">
-		<exclude-pattern>*</exclude-pattern>
+	<arg name="extensions" value="php"/>
+	<!-- Show progress and sniff codes in all reports -->
+	<arg value="ps"/>
+
+	<!-- https://github.com/PHPCompatibility/PHPCompatibility#sniffing-your-code-for-compatibility-with-specific-php-versions -->
+	<config name="testVersion" value="5.6-"/>
+	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties -->
+	<config name="minimum_supported_wp_version" value="5.6"/>
+	<config name="text_domain" value="popup-maker, default" />
+
+	<!-- Force short syntax arrays. -->
+	<rule ref="CodeAtlantic">
+		<rule ref="Universal.Arrays.DisallowLongArraySyntax"/>
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax" />
 	</rule>
 
-	<!-- Allow short syntax arrays. -->
-	<rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
 
-	<!-- Disallow long array syntax -->
-	<rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
+	<!-- Temporary due to usage of CONSTANT like names for core variables. -->
+	<rule ref="WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase">
 		<exclude-pattern>*</exclude-pattern>
 	</rule>
 

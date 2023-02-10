@@ -4,7 +4,7 @@
  *
  * @package     PUM
  * @subpackage  Admin/Upgrades
- * @copyright   Copyright (c) 2019, Code Atlantic LLC
+ * @copyright   Copyright (c) 2023, Code Atlantic LLC
  * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
  * @since       1.4
  */
@@ -109,7 +109,7 @@ final class PUM_Admin_Upgrade_Routine_3 extends PUM_Admin_Upgrade_Routine {
 					$trigger_cookie = null;
 
 					// If cookie trigger not disabled create a new cookie and add it to the auto open trigger.
-					if ( $cookie_trigger != 'disabled' ) {
+					if ( 'disabled' !== $cookie_trigger ) {
 
 						// Add the new cookie to the auto open trigger.
 						$trigger_cookie = [ $cookie_name ];

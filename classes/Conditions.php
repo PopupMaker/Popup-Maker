@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Conditions class
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -156,7 +159,7 @@ class PUM_Conditions {
 		$ai = isset( $order[ $a ] ) ? intval( $order[ $a ] ) : 10;
 		$bi = isset( $order[ $b ] ) ? intval( $order[ $b ] ) : 10;
 
-		if ( $ai == $bi ) {
+		if ( $ai === $bi ) {
 			return 0;
 		}
 
@@ -227,7 +230,7 @@ class PUM_Conditions {
 
 		foreach ( $post_types as $name => $post_type ) {
 
-			if ( $name == 'popup' || $name == 'popup_theme' ) {
+			if ( 'popup' === $name || 'popup_theme' === $name ) {
 				continue;
 			}
 
@@ -309,7 +312,7 @@ class PUM_Conditions {
 
 			$templates = wp_get_theme()->get_page_templates();
 
-			if ( $name == 'page' && ! empty( $templates ) ) {
+			if ( 'page' === $name && ! empty( $templates ) ) {
 				$conditions[ $name . '_template' ] = [
 					'group'    => $post_type->labels->name,
 					'name'     => sprintf( _x( '%s: With Template', 'condition: post type plural label ie. Pages: With Template', 'popup-maker' ), $post_type->labels->name ),

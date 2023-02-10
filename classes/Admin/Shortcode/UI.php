@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Admin Shortcode UI Handler
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -149,7 +152,7 @@ class PUM_Admin_Shortcode_UI {
 				'sections'       => $shortcode->_subtabs(),
 				'fields'         => $shortcode->_fields(),
 				'has_content'    => $shortcode->has_content,
-				'ajax_rendering' => $shortcode->ajax_rendering === true,
+				'ajax_rendering' => $shortcode->ajax_rendering,
 			];
 		}
 
@@ -204,7 +207,7 @@ class PUM_Admin_Shortcode_UI {
 		$content = PUM_Helpers::do_shortcode( $shortcode );
 
 		/** If no matching tag or $content wasn't rendered die. */
-		if ( ! $shortcode_object || $content == $shortcode ) {
+		if ( ! $shortcode_object || $content === $shortcode ) {
 			wp_send_json_error();
 		}
 

@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Class for Admin Tools
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -35,7 +38,6 @@ class PUM_Admin_Tools {
 	 * Displays any saved admin notices.
 	 */
 	public static function notices() {
-
 		if ( isset( $_GET['imported'] ) ) {
 			?>
 			<div class="updated">
@@ -71,7 +73,6 @@ class PUM_Admin_Tools {
 	 * Render settings page with tabs.
 	 */
 	public static function page() {
-
 		$active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], self::tabs() ) ? $_GET['tab'] : 'error_log';
 		wp_enqueue_style( 'pum-admin-general' );
 		?>
@@ -93,7 +94,7 @@ class PUM_Admin_Tools {
 							]
 						);
 
-						printf( '<a href="%s" title="%s" class="nav-tab %s">%s</a>', esc_url( $tab_url ), esc_attr( $tab_name ), $active_tab == $tab_id ? ' nav-tab-active' : '', esc_html( $tab_name ) );
+						printf( '<a href="%s" title="%s" class="nav-tab %s">%s</a>', esc_url( $tab_url ), esc_attr( $tab_name ), $active_tab === $tab_id ? ' nav-tab-active' : '', esc_html( $tab_name ) );
 					}
 					?>
 				</h2>
@@ -347,6 +348,14 @@ class PUM_Admin_Tools {
 	 * @since 1.12.0
 	 */
 	public static function display_error_log() {
-		return PUM_Utils_Logging::instance()->get_log();
+		$logger = PUM_Utils_Logging::instance();
+
+		if ( ! $logger->enabled() ) {
+			return __( 'Debug logging is disabled.', 'popup-maker' );
+		}
+
+		$logger->log( 'Log viewed from Tools page' );
+
+		return $logger->get_log();
 	}
 }

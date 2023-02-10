@@ -1,4 +1,10 @@
 <?php
+/**
+ * Subscribers DB Handler
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 // Exit if accessed directly
 
 /*******************************************************************************
@@ -113,11 +119,15 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		) $charset_collate;";
 
 		$results = dbDelta( $sql );
-		PUM_Utils_Logging::instance()->log( 'Subscriber table results: ' . implode( ',', $results ) );
+
+		// Strip prefix to ensure it doesn't leak unintentionally.
+		$results = str_replace( $wpdb->prefix, '', implode( ',', $results ) );
+
+		PUM_Utils_Logging::instance()->log( 'Subscriber table results: ' . $results );
 
 		$previous_error = $wpdb->last_error; // The show tables query will erase the last error. So, record it now in case we need it.
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '{$this->table_name()}'" ) !== $this->table_name() ) {
-			PUM_Utils_Logging::instance()->log( "Subscriber table exists check failed! Last error from wpdb: $previous_error." );
+			PUM_Utils_Logging::instance()->log( "Subscriber table exists check failed! Last error from wpdb: " . str_replace( $wpdb->prefix, '', $previous_error ) );
 		}
 
 		update_option( $this->table_name . '_db_version', $this->version );
@@ -148,7 +158,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 
 		$fields = $args['fields'];
 
-		if ( $fields == '*' ) {
+		if ( '*' === $fields ) {
 			$fields = array_keys( $columns );
 		} else {
 			$fields = explode( ',', $args['fields'] );
@@ -176,7 +186,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 
 			foreach ( $columns as $key => $type ) {
 				if ( in_array( $key, $fields ) ) {
-					if ( $type == '%s' || ( $type == '%d' && is_numeric( $search ) ) ) {
+					if ( '%s' === $type || ( '%d' === $type && is_numeric( $search ) ) ) {
 						$values[]       = '%' . $wpdb->esc_like( $search ) . '%';
 						$search_where[] = "`$key` LIKE '%s'";
 					}

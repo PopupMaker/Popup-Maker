@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Class for Admin Assets
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 /**
  * Class PUM_Admin_Assets
@@ -57,17 +60,17 @@ class PUM_Admin_Assets {
 	 * Load Admin Scripts
 	 */
 	public static function register_admin_scripts() {
-
 		$admin_vars = apply_filters(
 			'pum_admin_vars',
 			apply_filters(
 				'pum_admin_var',
 				[
-					'post_id'          => ! empty( $_GET['post'] ) ? intval( $_GET['post'] ) : null,
-					'pm_dir_url'       => Popup_Maker::$URL,
-					'default_provider' => pum_get_option( 'newsletter_default_provider', 'none' ),
-					'homeurl'          => home_url(),
-					'I10n'             => [
+					'post_id'             => ! empty( $_GET['post'] ) ? intval( $_GET['post'] ) : null,
+					'pm_dir_url'          => Popup_Maker::$URL,
+					'default_provider'    => pum_get_option( 'newsletter_default_provider', 'none' ),
+					'homeurl'             => home_url(),
+					'object_search_nonce' => wp_create_nonce( 'pum_ajax_object_search_nonce' ),
+					'I10n'                => [
 						'preview_popup'                   => __( 'Preview', 'popup-maker' ),
 						'add'                             => __( 'Add', 'popup-maker' ),
 						'save'                            => __( 'Save', 'popup-maker' ),

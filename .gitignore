@@ -25,6 +25,7 @@ npm-debug.log
 # Composer
 /vendor/
 contributors.md
+phpcs-report.xml
 
 # Packages
 /packages/*

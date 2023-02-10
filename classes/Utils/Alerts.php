@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Alerts Utility
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -41,7 +44,7 @@ class PUM_Utils_Alerts {
 		global $menu;
 		$count = self::alert_count();
 		foreach ( $menu as $key => $item ) {
-			if ( $item[2] == 'edit.php?post_type=popup' ) {
+			if ( 'edit.php?post_type=popup' === $item[2] ) {
 				$menu[ $key ][0] .= $count ? ' <span class="update-plugins count-' . $count . '"><span class="plugin-count pum-alert-count" aria-hidden="true">' . $count . '</span></span>' : '';
 			}
 		}
@@ -349,7 +352,94 @@ class PUM_Utils_Alerts {
 		return array_merge_recursive(
 			wp_kses_allowed_html( 'post' ),
 			// Allow script tags with type="" attribute.
-			[ 'script' => [ 'type' => true ] ]
+			[
+				'script'   => [ 'type' => true ],
+				'progress' => [
+					'class' => true,
+					'max'   => true,
+					'min'   => true,
+				],
+				'input'    => [
+					'type'    => true,
+					'class'   => true,
+					'id'      => true,
+					'name'    => true,
+					'value'   => true,
+					'checked' => true,
+				],
+				'button'   => [
+					'type'  => true,
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+					'value' => true,
+				],
+				'fieldset' => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+				],
+				'legend'   => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+				],
+				'div'      => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+				],
+				'span'     => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+				],
+				'ul'       => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+				],
+				'li'       => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+				],
+				'label'    => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+					'for'   => true,
+				],
+				'select'   => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+					'for'   => true,
+				],
+				'option'   => [
+					'class' => true,
+					'id'    => true,
+					'name'  => true,
+					'for'   => true,
+				],
+				'form'     => [
+					'action' => true,
+					'method' => true,
+					'id'     => true,
+					'class'  => true,
+					'style'  => true,
+					'data-*' => true,
+				],
+				'img'      => [
+					'class'  => true,
+					'id'     => true,
+					'name'   => true,
+					'src'    => true,
+					'alt'    => true,
+					'width'  => true,
+					'height' => true,
+				],
+			]
 		);
 	}
 

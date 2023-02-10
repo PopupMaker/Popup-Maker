@@ -1,8 +1,10 @@
 <?php
-
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Class for Admin Upgrades
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -131,7 +133,7 @@ class PUM_Admin_Upgrades {
 
 		$page = isset( $_GET['page'] ) ? $_GET['page'] : '';
 
-		if ( ! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $_REQUEST['action'] == 'pum_trigger_upgrades' ) && $page != 'pum-upgrades' ) {
+		if ( ! ( defined( 'DOING_AJAX' ) && DOING_AJAX && 'pum_trigger_upgrades' === $_REQUEST['action'] ) && 'pum-upgrades' !== $page ) {
 			return;
 		}
 
@@ -174,7 +176,7 @@ class PUM_Admin_Upgrades {
 	public function set_arg( $key, $value = null ) {
 
 		$this->upgrade_args[ $key ] = $value;
-		if ( $key == 'number' || $key == 'total' ) {
+		if ( 'number' === $key || 'total' === $key ) {
 			$this->upgrade_args['steps'] = ceil( $this->upgrade_args['total'] / $this->upgrade_args['number'] );
 		}
 		if ( $this->upgrade_args['step'] > $this->upgrade_args['steps'] ) {
@@ -224,7 +226,7 @@ class PUM_Admin_Upgrades {
 
 		$screen = get_current_screen();
 
-		if ( $screen->id == $this->page ) {
+		if ( $screen->id === $this->page ) {
 			return; // Don't show notices on the upgrades page
 		}
 
@@ -386,7 +388,7 @@ class PUM_Admin_Upgrades {
 
 			$this->current_routine = $current_db_ver;
 
-			$this->next_routine = $current_db_ver == $target_db_ver ? null : $current_db_ver + 1;
+			$this->next_routine = $current_db_ver === $target_db_ver ? null : $current_db_ver + 1;
 
 			if ( file_exists( POPMAKE_DIR . "includes/admin/upgrades/class-pum-admin-upgrade-routine-{$current_db_ver}.php" ) ) {
 

@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Format Utility
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -137,7 +140,7 @@ class PUM_Utils_Format {
 		$d = $n < 1000000 ? 1000 : 1000000;
 		$f = round( $n / $d, 1 );
 
-		return number_format( $f, $f - intval( $f ) ? 1 : 0, $point, $sep ) . ( $d == 1000 ? 'K' : 'M' );
+		return number_format( $f, $f - intval( $f ) ? 1 : 0, $point, $sep ) . ( 1000 === $d ? 'K' : 'M' );
 	}
 
 	/**

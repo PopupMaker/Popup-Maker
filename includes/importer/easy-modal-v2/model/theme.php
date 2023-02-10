@@ -1,4 +1,10 @@
 <?php
+/**
+ * Importer for easy-modal model theme
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -26,7 +32,7 @@ class EModal_Model_Theme extends EModal_Model {
 	}
 
 	public function __get( $key ) {
-		if ( $key == 'meta' ) {
+		if ( 'meta' === $key ) {
 			return $this->meta;
 		} else {
 			return parent::__get( $key );

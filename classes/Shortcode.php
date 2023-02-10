@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Shortcode class
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -76,7 +79,7 @@ abstract class PUM_Shortcode {
 	public function __construct( $args = [] ) {
 		if ( ! did_action( 'init' ) ) {
 			add_action( 'init', [ $this, 'register' ] );
-		} elseif ( ! did_action( 'admin_head' ) && current_action() != 'init' ) {
+		} elseif ( ! did_action( 'admin_head' ) && current_action() !== 'init' ) {
 			add_action( 'admin_head', [ $this, 'register' ] );
 		} else {
 			$this->register();
@@ -257,7 +260,7 @@ abstract class PUM_Shortcode {
 	public function style_block() {
 		$styles = $this->get_template_styles();
 
-		if ( $styles !== false ) {
+		if ( false !== $styles ) {
 			echo '<style>' . $styles . '</style>';
 		}
 	}
@@ -351,7 +354,7 @@ abstract class PUM_Shortcode {
 			foreach ( $fields as $field_id => $field ) {
 
 				// Don't register inner content fields.
-				if ( '_inner_content' == $field_id ) {
+				if ( '_inner_content' === $field_id ) {
 					continue;
 				}
 

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Importer for easy-modal functions
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -77,7 +83,7 @@ if ( ! function_exists( 'emresolve' ) ) {
 	function emresolve( array $a, $path, $default = null ) {
 		$current = $a;
 		$p       = strtok( $path, '.' );
-		while ( $p !== false ) {
+		while ( false !== $p ) {
 			if ( ! isset( $current[ $p ] ) ) {
 				return $default;
 			}

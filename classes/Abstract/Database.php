@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Abstract class for database
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -54,7 +57,7 @@ abstract class PUM_Abstract_Database {
 			// Install the table.
 			@$this->create_table();
 
-			if ( $wpdb->get_var( "SHOW TABLES LIKE '{$this->table_name()}'" ) == $this->table_name() ) {
+			if ( $wpdb->get_var( "SHOW TABLES LIKE '{$this->table_name()}'" ) === $this->table_name() ) {
 				$this->update_db_version();
 			}
 		}
@@ -432,7 +435,7 @@ abstract class PUM_Abstract_Database {
 
 		$fields = $args['fields'];
 
-		if ( $fields == '*' ) {
+		if ( '*' === $fields ) {
 			$fields = array_keys( $columns );
 		} else {
 			$fields = explode( ',', $args['fields'] );
@@ -460,7 +463,7 @@ abstract class PUM_Abstract_Database {
 
 			foreach ( $columns as $key => $type ) {
 				if ( in_array( $key, $fields ) ) {
-					if ( $type == '%s' || ( $type == '%d' && is_numeric( $search ) ) ) {
+					if ( '%s' === $type || ( '%d' === $type && is_numeric( $search ) ) ) {
 						$values[]       = '%' . $wpdb->esc_like( $search ) . '%';
 						$search_where[] = "`$key` LIKE '%s'";
 					}

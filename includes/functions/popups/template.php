@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for Popups Template
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -105,7 +108,7 @@ function pum_popup_close_text( $popup_id = null ) {
 	$close_text = $popup->close_text();
 
 	// If the close text is a font awesome icon (E.g. "fas fa-camera"), add the icon instead of the text.
-	if ( preg_match( '/^fa[srldb]?\s.+/i', $close_text ) ) {
+	if ( preg_match( '/^fa[srldb]?\s.+/i', $close_text ) || preg_match( '/^fa-((solid)|(regular)|(light)|(thin)|(duotone))?\sfa[-]?.+/i', $close_text ) ) {
 		echo '<i class="' . esc_attr( $close_text ) . '"></i>';
 	} else {
 		echo esc_html( $close_text );

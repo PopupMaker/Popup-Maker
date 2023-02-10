@@ -4,7 +4,7 @@
  *
  * @package     PUM
  * @subpackage  Admin/Upgrades
- * @copyright   Copyright (c) 2019, Code Atlantic LLC
+ * @copyright   Copyright (c) 2023, Code Atlantic LLC
  * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
  * @since       1.4
  */
@@ -82,7 +82,7 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 				$targeting_conditions = popmake_get_popup_meta_group( 'targeting_condition', $popup->ID );
 
 				if ( empty( $targeting_conditions ) ) {
-					if ( $popup->post_status == 'publish' ) {
+					if ( 'publish' === $popup->post_status ) {
 						// Default popups with no conditions to draft
 						self::change_post_status( $popup->ID, 'draft' );
 					}
@@ -285,7 +285,7 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 		$conditions = [];
 
 		foreach ( $targeting_conditions as $index => $key ) {
-			if ( $string == '_post' && strpos( $key, '_post_tag' ) !== false ) {
+			if ( $string === '_post' && strpos( $key, '_post_tag' ) !== false ) {
 				continue;
 			}
 			if ( strpos( $key, $string ) !== false ) {
