@@ -66,6 +66,8 @@ class PUM_AssetCache {
 				self::$disabled = pum_get_option( 'disable_asset_caching', false );
 			}
 
+			do_action( 'qm/debug', 'Popup Maker: Asset Cache Initialized' );
+
 			add_action( 'pum_extension_updated', [ __CLASS__, 'reset_cache' ] );
 			add_action( 'pum_extension_deactivated', [ __CLASS__, 'reset_cache' ] );
 			add_action( 'pum_extension_activated', [ __CLASS__, 'reset_cache' ] );
@@ -77,6 +79,8 @@ class PUM_AssetCache {
 
 			if ( isset( $_GET['flush_popup_cache'] ) ) {
 				add_action( 'init', [ __CLASS__, 'reset_cache' ] );
+
+				do_action( 'qm/debug', 'Popup Maker: Asset Cache Flushed' );
 			}
 
 			add_filter( 'pum_alert_list', [ __CLASS__, 'cache_alert' ] );
@@ -84,6 +88,8 @@ class PUM_AssetCache {
 			add_action( 'pum_styles', [ __CLASS__, 'global_custom_styles' ] );
 
 			if ( null === get_option( 'pum_files_writeable', null ) ) {
+				do_action( 'qm/debug', 'Popup Maker: Asset Cache - Write Test Incomplete' );
+
 				add_option( 'pum_files_writeable', true );
 				add_option( '_pum_writeable_notice_dismissed', true );
 				pum_reset_assets();
@@ -121,8 +127,10 @@ class PUM_AssetCache {
 			return false;
 		}
 
+		$test = get_option( 'pum_files_writeable' );
+
 		// If we have already determined files to not be writeable, go ahead and return.
-		if ( true !== get_option( 'pum_files_writeable', true ) ) {
+		if ( true !== (bool) get_option( 'pum_files_writeable', true ) ) {
 			return false;
 		}
 
@@ -191,7 +199,6 @@ class PUM_AssetCache {
 	 * @return string
 	 */
 	public static function generate_cache_filename( $filename ) {
-
 		if ( ! pum_get_option( 'bypass_adblockers', false ) ) {
 			global $blog_id;
 			$is_multisite = ( is_multisite() ) ? '-' . $blog_id : '';
@@ -306,7 +313,6 @@ class PUM_AssetCache {
 
 			// Clear the global $current.
 			pum()->current_popup = null;
-
 		}
 
 		$js = apply_filters( 'pum_generated_js', $js );
@@ -432,11 +438,9 @@ class PUM_AssetCache {
 	}
 
 	public static function global_custom_styles() {
-
 		if ( pum_get_option( 'adjust_body_padding' ) ) {
 			echo 'html.pum-open.pum-open-overlay.pum-open-scrollable body > *:not([aria-modal="true"]) { padding-right: ' . pum_get_option( 'body_padding_override', '15px' ) . '!important; }';
 		}
-
 	}
 
 	/**
@@ -448,7 +452,6 @@ class PUM_AssetCache {
 		$popups = pum_get_all_popups();
 
 		if ( ! empty( $popups ) ) {
-
 			foreach ( $popups as $popup ) {
 				// Set this popup as the global $current.
 				pum()->current_popup = $popup;
@@ -473,12 +476,10 @@ class PUM_AssetCache {
 				do_action( 'pum_generate_popup_css', $popup->ID );
 
 				$popup_css .= ob_get_clean();
-
 			}
 
 			// Clear the global $current.
 			pum()->current_popup = null;
-
 		}
 
 		return $popup_css;
@@ -574,7 +575,6 @@ class PUM_AssetCache {
 		$themes = pum_get_all_themes();
 
 		foreach ( $themes as $theme ) {
-
 			$theme_styles = pum_get_rendered_theme_styles( $theme->ID );
 
 			if ( '' !== $theme_styles ) {
