@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Fix: Add backcompat fix for WP >5.3 `wp_date` errors.
+
 ## v1.18.0 - 02/10/2023
 
 * Accessibility: Use newer WCAG `aria-modal` attributes and remove `aria-hidden` methods.
