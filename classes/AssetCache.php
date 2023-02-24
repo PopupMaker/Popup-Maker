@@ -603,8 +603,17 @@ class PUM_AssetCache {
 			return $alerts;
 		}
 
-		$undo_url    = add_query_arg( 'pum_writeable_notice_check', 'undo' );
-		$dismiss_url = add_query_arg( 'pum_writeable_notice_check', 'dismiss' );
+		$nonce = wp_create_nonce( 'pum-write-notice-action' );
+
+		$undo_url = add_query_arg( [
+			'pum_writeable_notice_check' => 'undo',
+			'nonce'                      => $nonce,
+		] );
+
+		$dismiss_url = add_query_arg([
+			'pum_writeable_notice_check' => 'dismiss',
+			'nonce'                      => $nonce,
+		] );
 
 		ob_start();
 		?>
@@ -634,6 +643,11 @@ class PUM_AssetCache {
 	 */
 	public static function admin_notice_check() {
 		if ( isset( $_GET['pum_writeable_notice_check'] ) ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+			if ( ! wp_verify_nonce( isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : '', 'pum-write-notice-action' ) ) {
+				wp_die();
+			}
+
 			// If either dismiss or try again button is clicked, hide the admin notice.
 			update_option( '_pum_writeable_notice_dismissed', true );
 			if ( 'undo' === $_GET['pum_writeable_notice_check'] ) {
