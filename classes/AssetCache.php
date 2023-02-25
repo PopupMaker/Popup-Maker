@@ -75,6 +75,8 @@ class PUM_AssetCache {
 			add_action( 'pum_save_theme', [ __CLASS__, 'reset_cache' ] );
 			add_action( 'pum_update_core_version', [ __CLASS__, 'reset_cache' ] );
 
+			add_action( 'pum_update_core_version', [ __CLASS__, 'maybe_reset_asset_cache_notices' ] );
+
 			if ( isset( $_GET['flush_popup_cache'] ) ) {
 				add_action( 'init', [ __CLASS__, 'reset_cache' ] );
 			}
@@ -150,7 +152,11 @@ class PUM_AssetCache {
 		// Checks and create cachedir.
 		if ( false !== self::$cache_dir && ! is_dir( self::$cache_dir ) ) {
 
-			/** @var WP_Filesystem_Base $wp_filesystem */
+			/**
+			 * Filesystem.
+			 *
+			 * @var \WP_Filesystem_Base $wp_filesystem
+			 */
 			$wp_filesystem->mkdir( self::$cache_dir );
 		}
 
@@ -712,5 +718,19 @@ class PUM_AssetCache {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Process a change to options conditionally if the user came from a bugged version.
+	 *
+	 * @param string $upgraded_from The version the user upgraded from.
+	 */
+	public static function maybe_reset_asset_cache_notices( $upgraded_from ) {
+		// If version compoare upgraded from was v1.18.0 exactly delete the notice.
+		if ( '1.18.0' === $upgraded_from ) {
+			update_option( 'pum_files_writeable', true );
+			update_option( '_pum_writeable_notice_dismissed', true );
+			pum_update_option( 'disable_asset_caching', false );
+		}
 	}
 }
