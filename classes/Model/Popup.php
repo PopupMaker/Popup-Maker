@@ -414,6 +414,13 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Array of deprecated settings groups.
+	 *
+	 * @var array
+	 */
+	public $dep_groups = [];
+
+	/**
 	 * Retrieve settings in the form of deprecated grouped arrays.
 	 *
 	 * @deprecated
@@ -428,7 +435,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			return [];
 		}
 
-		if ( ! $this->$group ) {
+		if ( ! isset( $this->dep_groups[ $group ] ) {
 			/**
 			 * Remap old meta settings to new settings location for v1.7. This acts as a passive migration when needed.
 			 */
@@ -457,10 +464,10 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 				}
 			}
 
-			$this->$group = $group_values;
+			$this->dep_groups[ $group ] = $group_values;
 		}
 
-		$values = apply_filters( "pum_popup_get_$group", $this->$group, $this->ID );
+		$values = apply_filters( "pum_popup_get_$group", $this->dep_groups[ $group ], $this->ID );
 
 		if ( ! $key ) {
 			return $values;
