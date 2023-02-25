@@ -435,7 +435,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			return [];
 		}
 
-		if ( ! isset( $this->dep_groups[ $group ] ) {
+		if ( ! isset( $this->dep_groups[ $group ] ) ) {
 			/**
 			 * Remap old meta settings to new settings location for v1.7. This acts as a passive migration when needed.
 			 */
