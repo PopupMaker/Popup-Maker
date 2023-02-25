@@ -10,47 +10,69 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * AssetCache class.
+ */
 class PUM_AssetCache {
 
 	/**
-	 * @var
+	 * Cache directory.
+	 *
+	 * @var string
 	 */
 	public static $cache_dir;
 
 	/**
-	 * @var
+	 * Suffix for minified assets.
+	 *
+	 * @var string
 	 */
 	public static $suffix;
 
 	/**
-	 * @var
+	 * Asset url.
+	 *
+	 * @var string
 	 */
 	public static $asset_url;
 
 	/**
-	 * @var
+	 * JS Url.
+	 *
+	 * @var string
 	 */
 	public static $js_url;
 
 	/**
-	 * @var
+	 * CSS Url.
+	 *
+	 * @var string
 	 */
 	public static $css_url;
 
 	/**
+	 * Should we disable asset caching?
+	 *
 	 * @var bool
 	 */
 	public static $disabled = true;
 
 	/**
-	 * @var
+	 * Should we output debug information?
+	 *
+	 * @var bool
 	 */
 	public static $debug;
 
+	/**
+	 * Check to see if the cache has been initialized.
+	 *
+	 * @var boolean
+	 */
 	public static $initialized = false;
 
 	/**
-	 *
+	 * Initialize asset cache.
 	 */
 	public static function init() {
 		if ( ! self::$initialized ) {
@@ -77,7 +99,7 @@ class PUM_AssetCache {
 
 			add_action( 'pum_update_core_version', [ __CLASS__, 'maybe_reset_asset_cache_notices' ] );
 
-			if ( isset( $_GET['flush_popup_cache'] ) ) {
+			if ( isset( $_GET['flush_popup_cache'] ) && check_admin_referer( 'flush_popup_cache' ) ) {
 				add_action( 'init', [ __CLASS__, 'reset_cache' ] );
 			}
 
@@ -128,6 +150,11 @@ class PUM_AssetCache {
 			return false;
 		}
 
+		/**
+		 * Filesystem.
+		 *
+		 * @var \WP_Filesystem_Base $wp_filesystem
+		 */
 		global $wp_filesystem;
 
 		if ( ! function_exists( 'WP_Filesystem' ) ) {
@@ -151,16 +178,11 @@ class PUM_AssetCache {
 
 		// Checks and create cachedir.
 		if ( false !== self::$cache_dir && ! is_dir( self::$cache_dir ) ) {
-
-			/**
-			 * Filesystem.
-			 *
-			 * @var \WP_Filesystem_Base $wp_filesystem
-			 */
 			$wp_filesystem->mkdir( self::$cache_dir );
 		}
 
-		return false !== self::$cache_dir && is_writable( self::$cache_dir ) && ! isset( $_POST['wp_customize'] );
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		return false !== self::$cache_dir && $wp_filesystem->is_writable( self::$cache_dir ) && ! isset( $_POST['wp_customize'] );
 	}
 
 	/**
@@ -192,7 +214,9 @@ class PUM_AssetCache {
 	}
 
 	/**
-	 * @param $filename
+	 * Generates a cache filename based on the current adblock bypass settings.
+	 *
+	 * @param string $filename Filename.
 	 *
 	 * @return string
 	 */
@@ -230,7 +254,7 @@ class PUM_AssetCache {
 
 		$js  = "/**\n";
 		$js .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
-		$js .= ' * Last modified time: ' . date( 'M d Y, h:i:s' ) . "\n";
+		$js .= ' * Last modified time: ' . wp_date( 'M d Y, h:i:s' ) . "\n";
 		$js .= " */\n\n\n";
 		$js .= self::generate_js();
 
@@ -252,7 +276,7 @@ class PUM_AssetCache {
 
 		$css  = "/**\n";
 		$css .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
-		$css .= ' * Last modified time: ' . date( 'M d Y, h:i:s' ) . "\n";
+		$css .= ' * Last modified time: ' . wp_date( 'M d Y, h:i:s' ) . "\n";
 		$css .= " */\n\n\n";
 		$css .= self::generate_css();
 
@@ -269,8 +293,15 @@ class PUM_AssetCache {
 	 * @return string
 	 */
 	public static function generate_js() {
+		/**
+		 * Filesystem.
+		 *
+		 * @var \WP_Filesystem_Base $wp_filesystem
+		 */
+		global $wp_filesystem;
+
 		// Load core scripts so we can eliminate another stylesheet.
-		$core_js = file_get_contents( Popup_Maker::$DIR . 'assets/js/site' . self::$suffix . '.js' );
+		$core_js = $wp_filesystem->get_contents( Popup_Maker::$DIR . 'assets/js/site' . self::$suffix . '.js' );
 
 		/**
 		 *  0 Core
@@ -291,9 +322,6 @@ class PUM_AssetCache {
 			foreach ( $popups as $popup ) {
 				// Set this popup as the global $current.
 				pum()->current_popup = $popup;
-
-				// Preprocess the content for shortcodes that need to enqueue their own assets.
-				// PUM_Helpers::do_shortcode( $popup->post_content );
 
 				ob_start();
 
@@ -346,9 +374,17 @@ class PUM_AssetCache {
 	 * @return bool
 	 */
 	public static function cache_file( $filename, $contents ) {
+		/**
+		 * WP Filesystem.
+		 *
+		 * @var \WP_Filesystem_Base $wp_filesystem
+		 */
+		global $wp_filesystem;
+
 		if ( false === self::$cache_dir ) {
 			return false;
 		}
+
 		if ( ! function_exists( 'WP_Filesystem' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 		}
@@ -356,9 +392,6 @@ class PUM_AssetCache {
 		$file = trailingslashit( self::$cache_dir ) . $filename;
 
 		WP_Filesystem();
-
-		/** @var WP_Filesystem_Base $wp_filesystem */
-		global $wp_filesystem;
 
 		$results = $wp_filesystem->put_contents( $file, $contents, defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : false );
 
@@ -379,8 +412,15 @@ class PUM_AssetCache {
 	 * @return string
 	 */
 	public static function generate_css() {
+		/**
+		 * WP Filesystem.
+		 *
+		 * @var \WP_Filesystem_Base $wp_filesystem
+		 */
+		global $wp_filesystem;
+
 		// Include core styles so we can eliminate another stylesheet.
-		$core_css = file_get_contents( Popup_Maker::$DIR . 'assets/css/pum-site' . ( is_rtl() ? '-rtl' : '' ) . self::$suffix . '.css' );
+		$core_css = $wp_filesystem->get_contents( Popup_Maker::$DIR . 'assets/css/pum-site' . ( is_rtl() ? '-rtl' : '' ) . self::$suffix . '.css' );
 
 		/**
 		 *  0 Core
@@ -435,13 +475,18 @@ class PUM_AssetCache {
 		return $css_code;
 	}
 
+	/**
+	 * Render global custom styles.
+	 */
 	public static function global_custom_styles() {
 		if ( pum_get_option( 'adjust_body_padding' ) ) {
-			echo 'html.pum-open.pum-open-overlay.pum-open-scrollable body > *:not([aria-modal="true"]) { padding-right: ' . pum_get_option( 'body_padding_override', '15px' ) . '!important; }';
+			echo 'html.pum-open.pum-open-overlay.pum-open-scrollable body > *:not([aria-modal="true"]) { padding-right: ' . esc_attr( pum_get_option( 'body_padding_override', '15px' ) ) . '!important; }';
 		}
 	}
 
 	/**
+	 * Generate Popup Styles
+	 *
 	 * @return string
 	 */
 	public static function generate_popup_styles() {
@@ -454,9 +499,6 @@ class PUM_AssetCache {
 				// Set this popup as the global $current.
 				pum()->current_popup = $popup;
 
-				// Preprocess the content for shortcodes that need to enqueue their own assets.
-				// PUM_Helpers::do_shortcode( $popup->post_content );
-
 				$popup = pum_get_popup( $popup->ID );
 
 				if ( ! pum_is_popup( $popup ) ) {
@@ -466,8 +508,8 @@ class PUM_AssetCache {
 				ob_start();
 
 				if ( $popup->get_setting( 'zindex', false ) ) {
-					$zindex = absint( $popup->get_setting( 'zindex' ) );
-					echo "#pum-{$popup->ID} {z-index: $zindex}\r\n";
+					$zindex = esc_attr( $popup->get_setting( 'zindex' ) );
+					echo sprintf( "#pum-%d {z-index: %d}\r\n", esc_attr( $popup->ID ), esc_attr( $zindex ) );
 				}
 
 				// Allow per popup CSS additions.
@@ -491,23 +533,23 @@ class PUM_AssetCache {
 	public static function inline_css() {
 		ob_start();
 
+		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo self::generate_font_imports();
 		echo self::generate_popup_theme_styles();
 
+		// Render popup styles.
 		echo self::generate_popup_styles();
 
 		// Render any extra styles globally added.
-		if ( ! empty( $GLOBALS['pum_extra_styles'] ) ) {
-			echo $GLOBALS['pum_extra_styles'];
-		}
+		echo self::custom_css();
 
-		// Allows rendering extra css via action.
-		do_action( 'pum_styles' );
-
+		// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 		return ob_get_clean();
 	}
 
 	/**
+	 * Generate Popup Theme Styles
+	 *
 	 * @return string
 	 */
 	public static function custom_css() {
@@ -516,6 +558,7 @@ class PUM_AssetCache {
 
 		// Render any extra styles globally added.
 		if ( ! empty( $GLOBALS['pum_extra_styles'] ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $GLOBALS['pum_extra_styles'];
 		}
 
@@ -613,12 +656,12 @@ class PUM_AssetCache {
 
 		$undo_url = add_query_arg( [
 			'pum_writeable_notice_check' => 'undo',
-			'nonce'                      => $nonce,
+			'_wpnonce'                   => $nonce,
 		] );
 
 		$dismiss_url = add_query_arg([
 			'pum_writeable_notice_check' => 'dismiss',
-			'nonce'                      => $nonce,
+			'_wpnonce'                   => $nonce,
 		] );
 
 		ob_start();
@@ -650,9 +693,7 @@ class PUM_AssetCache {
 	public static function admin_notice_check() {
 		if ( isset( $_GET['pum_writeable_notice_check'] ) ) {
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-			if ( ! wp_verify_nonce( isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : '', 'pum-write-notice-action' ) ) {
-				wp_die();
-			}
+			check_admin_referer( 'pum-write-notice-action' );
 
 			// If either dismiss or try again button is clicked, hide the admin notice.
 			update_option( '_pum_writeable_notice_dismissed', true );
@@ -672,7 +713,7 @@ class PUM_AssetCache {
 	 * @return bool True if notice should not be shown
 	 */
 	public static function should_not_show_alert() {
-		return true === get_option( 'pum_files_writeable', true ) || true === get_option( '_pum_writeable_notice_dismissed', true );
+		return true === (bool) get_option( 'pum_files_writeable', true ) || true === (bool) get_option( '_pum_writeable_notice_dismissed', true );
 	}
 
 	/**
@@ -683,6 +724,7 @@ class PUM_AssetCache {
 	 */
 	private static function is_file_accessible( $filename ) {
 		if ( ! $filename || empty( $filename ) || ! is_string( $filename ) ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 			PUM_Utils_Logging::instance()->log( 'Cannot check if file is accessible. Filename passed: ' . print_r( $filename, true ) );
 			return false;
 		}
