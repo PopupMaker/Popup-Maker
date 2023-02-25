@@ -223,7 +223,7 @@ class PUM_Modules_Admin_Bar {
 			[
 				'id'     => 'flush-popup-cache',
 				'title'  => __( 'Flush Popup Cache', 'popup-maker' ),
-				'href'   => add_query_arg( 'flush_popup_cache', 'yes' ),
+				'href'   => wp_nonce_url( add_query_arg( 'flush_popup_cache', 'yes' ), 'flush_popup_cache' ),
 				'parent' => 'pum-tools',
 			]
 		);
