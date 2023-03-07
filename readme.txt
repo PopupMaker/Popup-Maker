@@ -31,7 +31,7 @@ With Popup Maker, you can create popups such as:
 * Ecommerce popups,
 * Contact form popups,
 * Coronavirus/COVID-19 announcements,
-* [EU cookie notices](https://ninjaforms.com/eu-cookie-notices-ninja-forms/),
+* [EU cookie notices](https://ninjaforms.com/blog/eu-cookie-notices-ninja-forms/),
 * Popups to greet visitors from ProductHunt (requires [premium Advanced Targeting Conditions feature](https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=greet-producthunt)),
 * WooCommerce upsell popups (requires [premium WooCommerce feature](https://wppopupmaker.com/extensions/woocommerce-pro/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=woocommerce-upsells)),
 * WooCommerce cross-sell popups (requires [premium WooCommerce feature](https://wppopupmaker.com/extensions/woocommerce-pro/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=woocommerce-crosssells)),
