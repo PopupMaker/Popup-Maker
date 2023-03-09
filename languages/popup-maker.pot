@@ -35,19 +35,19 @@ msgstr ""
 msgid "Popup ID"
 msgstr ""
 
-#: classes/AssetCache.php:620
+#: classes/AssetCache.php:670
 msgid "Try to create cache again"
 msgstr ""
 
-#: classes/AssetCache.php:621
+#: classes/AssetCache.php:671
 msgid "Keep current method"
 msgstr ""
 
-#: classes/AssetCache.php:622, classes/Telemetry.php:271, classes/Admin/Extend.php:125, classes/Admin/Notices.php:65, classes/Admin/Onboarding.php:65
+#: classes/AssetCache.php:672, classes/Telemetry.php:271, classes/Admin/Extend.php:125, classes/Admin/Notices.php:65, classes/Admin/Onboarding.php:65
 msgid "Learn more"
 msgstr ""
 
-#: classes/AssetCache.php:629
+#: classes/AssetCache.php:679
 msgid "Popup Maker detected an issue with your file system's ability and is unable to create & save cached assets for your popup styling and settings. This may lead to suboptimal performance. Please check your filesystem and contact your hosting provide to ensure Popup Maker can create and write to cache files."
 msgstr ""
 

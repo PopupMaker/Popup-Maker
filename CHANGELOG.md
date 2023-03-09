@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.18.1 - 03/08/2023
+
 * Improvement: Add nonce to asset cache purging for admins.
 * Fix: PHP 8.2 Deprecated notices.
 * Fix: Bug in asset caching causing assets to falsly determine they couldn't be writtien.
