@@ -7,7 +7,7 @@ Tags:  marketing, ecommerce, popup, popups, optin, conversion, promotion, pop-up
 Requires at least: 4.9
 Tested up to: 6.1.1
 Requires PHP: 5.6
-Stable tag: 1.18.0
+Stable tag: 1.18.1
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,7 +31,7 @@ With Popup Maker, you can create popups such as:
 * Ecommerce popups,
 * Contact form popups,
 * Coronavirus/COVID-19 announcements,
-* [EU cookie notices](https://ninjaforms.com/eu-cookie-notices-ninja-forms/),
+* [EU cookie notices](https://ninjaforms.com/blog/eu-cookie-notices-ninja-forms/),
 * Popups to greet visitors from ProductHunt (requires [premium Advanced Targeting Conditions feature](https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=greet-producthunt)),
 * WooCommerce upsell popups (requires [premium WooCommerce feature](https://wppopupmaker.com/extensions/woocommerce-pro/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=woocommerce-upsells)),
 * WooCommerce cross-sell popups (requires [premium WooCommerce feature](https://wppopupmaker.com/extensions/woocommerce-pro/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=woocommerce-crosssells)),
@@ -180,6 +180,13 @@ There are several common causes for this, check [this guide for help](https://do
 == Changelog ==
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
+
+= v1.18.1 - 03/08/23 =
+
+* Improvement: Add nonce to asset cache purging for admins.
+* Fix: PHP 8.2 Deprecated notices.
+* Fix: Bug in asset caching causing assets to falsly determine they couldn't be writtien.
+* Fix: Add backcompat fix for WP >5.3 `wp_date` errors.
 
 = v1.18.0 - 02/10/2023 =
 

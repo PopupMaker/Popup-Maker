@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v1.18.1 - 03/08/2023
+
+* Improvement: Add nonce to asset cache purging for admins.
+* Fix: PHP 8.2 Deprecated notices.
+* Fix: Bug in asset caching causing assets to falsly determine they couldn't be writtien.
+* Fix: Add backcompat fix for WP >5.3 `wp_date` errors.
+
 ## v1.18.0 - 02/10/2023
 
 * Accessibility: Use newer WCAG `aria-modal` attributes and remove `aria-hidden` methods.

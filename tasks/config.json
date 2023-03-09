@@ -33,7 +33,7 @@
       "./github/**",
       "./vscode/**",
       "./wordpress-org/**",
-      
+
 
       "./bin/**",
       "./build/**",
@@ -71,6 +71,7 @@
       "./package-lock.json",
       "./phpci.yml",
       "./phpunit.xml.dist",
+      "./phpcs-report.xml",
       "./postcss.config.js",
       "./yarn.lock",
       "./yarn-error.log"
