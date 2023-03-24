@@ -88,7 +88,7 @@ class PUM_Utils_Logging {
 	}
 
 	/**
-	 * Chek if logging is enabled.
+	 * Check if logging is enabled.
 	 *
 	 * @return bool
 	 */
