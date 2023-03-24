@@ -79,7 +79,7 @@ class PUM_Utils_Logging {
 
 		$this->is_writable = false !== $this->fs && 'direct' === $this->fs->method;
 
-		if ( defined( 'VIP_GO_ENV' ) ) {
+		if ( defined( 'WPCOM_IS_VIP_ENV' ) ) {
 			$this->is_writable = false !== $this->fs && 'vip' === $this->fs->method;
 		}
 
@@ -116,7 +116,7 @@ class PUM_Utils_Logging {
 			return false;
 		}
 
-		if ( defined( 'VIP_GO_ENV' ) ) {
+		if ( defined( 'WPCOM_IS_VIP_ENV' ) ) {
 			if ( ! is_a( $wp_filesystem, 'WP_Filesystem_Base' ) ) {
 				$creds    = request_filesystem_credentials( site_url() );
 				$writable = WP_Filesystem( $creds );
