@@ -79,6 +79,10 @@ class PUM_Utils_Logging {
 
 		$this->is_writable = false !== $this->fs && 'direct' === $this->fs->method;
 
+		if ( defined( 'VIP_GO_ENV' ) ) {
+			$this->is_writable = false !== $this->fs && 'vip' === $this->fs->method;
+		}
+
 		$upload_dir = PUM_Helpers::get_upload_dir();
 		if ( is_object( $this->fs ) && ! $this->fs->is_writable( $upload_dir['basedir'] ) ) {
 			$this->is_writable = false;
@@ -110,6 +114,14 @@ class PUM_Utils_Logging {
 		// If for some reason the include doesn't work as expected just return false.
 		if ( ! function_exists( 'WP_Filesystem' ) ) {
 			return false;
+		}
+
+		if ( defined( 'VIP_GO_ENV' ) ) {
+			if ( ! is_a( $wp_filesystem, 'WP_Filesystem_Base' ) ) {
+				$creds    = request_filesystem_credentials( site_url() );
+				$writable = WP_Filesystem( $creds );
+				return ( $writable && 'vip' === $wp_filesystem->method ) ? $wp_filesystem : false;
+			}
 		}
 
 		$writable = WP_Filesystem( false, '', true );
