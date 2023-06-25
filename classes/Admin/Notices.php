@@ -120,7 +120,7 @@ class PUM_Admin_Notices {
 					if ( ! empty( $type ) ) {
 						switch ( $type ) {
 							case 'plugin':
-								if ( $extra && ! is_plugin_active( $extra ) ) {
+								if ( $extra && ! is_plugin_active( "$extra/$extra.php" ) ) {
 									unset( $notices[ $key ] );
 								}
 								break;
