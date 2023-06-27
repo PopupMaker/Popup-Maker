@@ -258,7 +258,7 @@ class PUM_Admin_Notices {
 	 * @return bool
 	 */
 	public static function check_environment( $type ) {
-		$env = wp_get_environment_type();
+		$env = function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production';
 
 		switch ( $type ) {
 			case 'local':
