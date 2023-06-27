@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Fix: WP 4.9 missing `wp_get_environment_type` function notices
+
 ## v1.18.1 - 03/08/2023
 
 * Improvement: Add nonce to asset cache purging for admins.
