@@ -79,8 +79,12 @@ class PUM_Utils_Logging {
 
 		$this->is_writable = false !== $this->fs && 'direct' === $this->fs->method;
 
+		if ( defined( 'WPCOM_IS_VIP_ENV' ) ) {
+			$this->is_writable = false !== $this->fs && 'vip' === $this->fs->method;
+		}
+
 		$upload_dir = PUM_Helpers::get_upload_dir();
-		if ( ! $this->fs->is_writable( $upload_dir['basedir'] ) ) {
+		if ( is_object( $this->fs ) && ! $this->fs->is_writable( $upload_dir['basedir'] ) ) {
 			$this->is_writable = false;
 		}
 
@@ -112,6 +116,14 @@ class PUM_Utils_Logging {
 			return false;
 		}
 
+		if ( defined( 'WPCOM_IS_VIP_ENV' ) ) {
+			if ( ! is_a( $wp_filesystem, 'WP_Filesystem_Base' ) ) {
+				$creds    = request_filesystem_credentials( site_url() );
+				$writable = WP_Filesystem( $creds );
+				return ( $writable && 'vip' === $wp_filesystem->method ) ? $wp_filesystem : false;
+			}
+		}
+
 		$writable = WP_Filesystem( false, '', true );
 
 		// We consider the directory as writable if it uses the direct transport,
@@ -136,7 +148,7 @@ class PUM_Utils_Logging {
 		$old_file       = trailingslashit( $upload_dir['basedir'] ) . 'pum-debug.log';
 
 		// If old file exists, move it.
-		if ( $this->fs->exists( $old_file ) ) {
+		if ( is_object( $this->fs ) && $this->fs->exists( $old_file ) ) {
 			$old_content = $this->get_file( $old_file );
 			$this->set_log_content( $old_content, true );
 
@@ -149,14 +161,14 @@ class PUM_Utils_Logging {
 			if ( $this->fs->exists( $old_file ) ) {
 				$this->fs->delete( $old_file );
 			}
-		} elseif ( ! $this->fs->exists( $this->file ) ) {
+		} elseif ( is_object( $this->fs ) && ! $this->fs->exists( $this->file ) ) {
 			$this->setup_new_log();
 		} else {
 			$this->content = $this->get_file( $this->file );
 		}
 
 		// Truncate long log files.
-		if ( $this->fs->exists( $this->file ) && $this->fs->size( $this->file ) >= 1048576 ) {
+		if ( is_object( $this->fs ) && $this->fs->exists( $this->file ) && $this->fs->size( $this->file ) >= 1048576 ) {
 			$this->truncate_log();
 		}
 	}
@@ -248,7 +260,7 @@ class PUM_Utils_Logging {
 
 		$content = '';
 
-		if ( $this->fs->exists( $file ) ) {
+		if ( is_object( $this->fs ) && $this->fs->exists( $file ) ) {
 			$content = $this->fs->get_contents( $file );
 		}
 
@@ -279,7 +291,7 @@ class PUM_Utils_Logging {
 	 * Save the current contents to file.
 	 */
 	public function save_logs() {
-		if ( ! $this->enabled() ) {
+		if ( ! $this->enabled() || ! is_object( $this->fs ) ) {
 			return;
 		}
 
@@ -323,7 +335,7 @@ class PUM_Utils_Logging {
 	 */
 	public function clear_log() {
 		// Delete the file.
-		@$this->fs->delete( $this->file );
+		is_object( $this->fs ) && @$this->fs->delete( $this->file );
 
 		if ( $this->enabled() ) {
 			$this->setup_new_log();
