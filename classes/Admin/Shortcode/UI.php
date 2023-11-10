@@ -167,12 +167,15 @@ class PUM_Admin_Shortcode_UI {
 	 * @return array
 	 */
 	public static function mce_external_plugins( $plugin_array ) {
-		return array_merge(
-			$plugin_array,
-			[
-				'pum_shortcodes' => add_query_arg( [ 'version' => Popup_Maker::$VER ], PUM_Admin_Assets::$js_url . 'mce-buttons' . PUM_Admin_Assets::$suffix . '.js' ),
-			]
-		);
+
+		if( is_array( $plugin_array ) ){
+			return array_merge(
+				$plugin_array,
+				[
+					'pum_shortcodes' => add_query_arg( [ 'version' => Popup_Maker::$VER ], PUM_Admin_Assets::$js_url . 'mce-buttons' . PUM_Admin_Assets::$suffix . '.js' ),
+				]
+			);
+		} else return;
 	}
 
 	public static function do_shortcode() {
