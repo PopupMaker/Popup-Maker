@@ -131,7 +131,7 @@ class PUM_Helpers {
 		}
 
 		if ( isset( $wp_upload_dir['error'] ) && false !== $wp_upload_dir['error'] ) {
-			PUM_Utils_Logging::instance()->log( sprintf( 'Getting uploads directory failed. Error given: %s', esc_html( $wp_upload_dir['error'] ) ) );
+			pum_log_message( sprintf( 'Getting uploads directory failed. Error given: %s', esc_html( $wp_upload_dir['error'] ) ) );
 			return false;
 		} else {
 			return $wp_upload_dir;

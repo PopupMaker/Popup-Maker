@@ -224,7 +224,7 @@ class PUM_Telemetry {
 
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
-			PUM_Utils_Logging::instance()->log( sprintf( 'Cannot send telemetry data. Error received was: %s', esc_html( $error_message ) ) );
+			pum_log_message( sprintf( 'Cannot send telemetry data. Error received was: %s', esc_html( $error_message ) ) );
 			return false;
 		}
 

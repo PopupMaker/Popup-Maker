@@ -169,9 +169,9 @@ class PUM_AssetCache {
 			update_option( '_pum_writeable_notice_dismissed', false );
 			if ( ! is_null( $results ) && is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->has_errors() ) {
 				$error = $wp_filesystem->errors->get_error_message();
-				PUM_Utils_Logging::instance()->log( sprintf( 'Cache directory is not writeable due to filesystem error. Error given: %s', esc_html( $error ) ) );
+				pum_log_message( sprintf( 'Cache directory is not writeable due to filesystem error. Error given: %s', esc_html( $error ) ) );
 			} else {
-				PUM_Utils_Logging::instance()->log( 'Cache directory is not writeable due to incorrect filesystem method.' );
+				pum_log_message( 'Cache directory is not writeable due to incorrect filesystem method.' );
 			}
 			return false;
 		}
@@ -725,12 +725,12 @@ class PUM_AssetCache {
 	private static function is_file_accessible( $filename ) {
 		if ( ! $filename || empty( $filename ) || ! is_string( $filename ) ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
-			PUM_Utils_Logging::instance()->log( 'Cannot check if file is accessible. Filename passed: ' . print_r( $filename, true ) );
+			pum_log_message( 'Cannot check if file is accessible. Filename passed: ' . print_r( $filename, true ) );
 			return false;
 		}
 		$cache_url = PUM_Helpers::get_cache_dir_url();
 		if ( false === $cache_url ) {
-			PUM_Utils_Logging::instance()->log( 'Cannot access cache file when tested. Cache URL returned false.' );
+			pum_log_message( 'Cannot access cache file when tested. Cache URL returned false.' );
 		}
 		$protocol = is_ssl() ? 'https:' : 'http:';
 		$file     = $protocol . $cache_url . '/' . $filename;
@@ -745,7 +745,7 @@ class PUM_AssetCache {
 		// If it returned a WP_Error, let's log its error message.
 		if ( is_wp_error( $results ) ) {
 			$error = $results->get_error_message();
-			PUM_Utils_Logging::instance()->log( sprintf( 'Cannot access cache file when tested. Tested file: %s Error given: %s', esc_html( $file ), esc_html( $error ) ) );
+			pum_log_message( sprintf( 'Cannot access cache file when tested. Tested file: %s Error given: %s', esc_html( $file ), esc_html( $error ) ) );
 		}
 
 		// If it returned valid array...
@@ -756,7 +756,7 @@ class PUM_AssetCache {
 			if ( false !== $status_code && ( 200 <= $status_code && 300 > $status_code ) ) {
 				return true;
 			} else {
-				PUM_Utils_Logging::instance()->log( sprintf( 'Cannot access cache file when tested. Status code received was: %s', esc_html( $status_code ) ) );
+				pum_log_message( sprintf( 'Cannot access cache file when tested. Status code received was: %s', esc_html( $status_code ) ) );
 			}
 		}
 		return false;

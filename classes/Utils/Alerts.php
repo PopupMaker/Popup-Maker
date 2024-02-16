@@ -693,7 +693,7 @@ class PUM_Utils_Alerts {
 				return true;
 
 			} catch ( Exception $e ) {
-				PUM_Utils_Logging::instance()->log( 'Error dismissing alert. Exception: ' . $e->getMessage() );
+				pum_log_message( 'Error dismissing alert. Exception: ' . $e->getMessage() );
 				return false;
 			}
 		}
