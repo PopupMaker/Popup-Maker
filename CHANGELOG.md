@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+* Improvement: Added new pum_log_message function to simplify logging & reduce potential for errors.
+* Fix: Prevent errors when logging file is not writable in some systems.
+
 ## v1.18.2 - 07/03/2023
 
 * Fix: WP 4.9 missing `wp_get_environment_type` function notices
