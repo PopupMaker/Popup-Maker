@@ -18,6 +18,7 @@ require_once 'functions/newsletter.php';
 
 /** Utility Functions */
 require_once 'functions/utils/cache.php';
+require_once 'functions/utils/filesystem.php';
 require_once 'functions/utils/format.php';
 require_once 'functions/utils/options.php';
 require_once 'functions/utils/template.php';

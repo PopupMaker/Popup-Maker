@@ -80,7 +80,7 @@ class PUM_Utils_Logging {
 		$this->is_writable = false !== $this->fs && 'direct' === $this->fs->method;
 
 		$upload_dir = PUM_Helpers::get_upload_dir();
-		if ( ! $this->fs->is_writable( $upload_dir['basedir'] ) ) {
+		if ( ! $this->fs || ! $this->fs->is_writable( $upload_dir['basedir'] ) ) {
 			$this->is_writable = false;
 		}
 

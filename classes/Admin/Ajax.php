@@ -76,7 +76,7 @@ class PUM_Admin_Ajax {
 
 		if ( false === $results ) {
 			wp_send_json_error( 'Error updating enabled state.' );
-			PUM_Utils_Logging::instance()->log( "Error updating enabled state on $popup_id. Previous value: $previous. New value: $enabled" );
+			pum_log_message( "Error updating enabled state on $popup_id. Previous value: $previous. New value: $enabled" );
 		} else {
 			wp_send_json_success();
 		}
