@@ -64,10 +64,10 @@ class PUM_Site_Assets {
 		self::$css_url   = Popup_Maker::$URL . 'assets/css/';
 
 		// Register assets early.
-		add_action( 'wp_enqueue_scripts', [ __CLASS__, 'register_styles' ] );
-		add_action( 'wp_enqueue_scripts', [ __CLASS__, 'register_scripts' ] );
+		add_action( 'init', [ __CLASS__, 'register_styles' ] );
+		add_action( 'init', [ __CLASS__, 'register_scripts' ] );
 
-		// Localize after popups rendered in PUM_Site_Popups
+		// Localize after popups rendered in PUM_Site_Popups.
 		add_action( 'wp_footer', [ __CLASS__, 'late_localize_scripts' ], 19 );
 
 		// Checks preloaded popups in the head for which assets to enqueue.
@@ -98,7 +98,6 @@ class PUM_Site_Assets {
 				false,
 				true
 			);
-
 		}
 
 		$mc_ver_test = in_array(
@@ -128,7 +127,6 @@ class PUM_Site_Assets {
 				]
 			);
 		}
-
 	}
 
 	/**
