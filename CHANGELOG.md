@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## v1.18.3 - 03/18/2024
+
+* Security: Popup Close shortcode escaping was not working correctly on urls. Admins could insert unsecure urls into the popup close button which could be triggered on middle click.
 * Improvement: Added new pum_log_message function to simplify logging & reduce potential for errors.
 * Fix: Prevent errors when logging file is not writable in some systems.
 
