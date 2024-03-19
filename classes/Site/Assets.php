@@ -64,8 +64,8 @@ class PUM_Site_Assets {
 		self::$css_url   = Popup_Maker::$URL . 'assets/css/';
 
 		// Register assets early.
-		add_action( 'init', [ __CLASS__, 'register_styles' ] );
-		add_action( 'init', [ __CLASS__, 'register_scripts' ] );
+		add_action( 'wp_enqueue_scripts', [ __CLASS__, 'register_styles' ], 9 );
+		add_action( 'wp_enqueue_scripts', [ __CLASS__, 'register_scripts' ], 9 );
 
 		// Localize after popups rendered in PUM_Site_Popups.
 		add_action( 'wp_footer', [ __CLASS__, 'late_localize_scripts' ], 19 );

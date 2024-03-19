@@ -1,4 +1,4 @@
-# Copyright (C) 2023 WordPress Popup Plugin
+# Copyright (C) 2024 WordPress Popup Plugin
 # This file is distributed under the same license as the WordPress Popup Plugin package.
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 msgid "Integrations"
 msgstr ""
 
-#: classes/Admin.php:65, classes/Admin/Pages.php:61, classes/Admin/Pages.php:163, classes/Admin/Templates.php:419, classes/Admin/Templates.php:663, classes/Site/Assets.php:280
+#: classes/Admin.php:65, classes/Admin/Pages.php:61, classes/Admin/Pages.php:163, classes/Admin/Templates.php:419, classes/Admin/Templates.php:663, classes/Site/Assets.php:278
 msgid "Settings"
 msgstr ""
 
@@ -195,7 +195,7 @@ msgstr ""
 msgid "Any Supported Form*"
 msgstr ""
 
-#: classes/Cookies.php:100, classes/Privacy.php:36, classes/Triggers.php:222, classes/Types.php:29, classes/Site/Assets.php:269, classes/Utils/Alerts.php:477, includes/admin/class-pum-admin-upgrades.php:252, includes/integrations/class-pum-gravity-forms.php:57, includes/modules/admin-bar.php:77
+#: classes/Cookies.php:100, classes/Privacy.php:36, classes/Triggers.php:222, classes/Types.php:29, classes/Site/Assets.php:267, classes/Utils/Alerts.php:477, includes/admin/class-pum-admin-upgrades.php:252, includes/integrations/class-pum-gravity-forms.php:57, includes/modules/admin-bar.php:77
 msgid "Popup Maker"
 msgstr ""
 
@@ -411,7 +411,7 @@ msgstr ""
 msgid "You can opt our or unsubscribe at any time in the future by clicking link in the bottom of any email."
 msgstr ""
 
-#: classes/Privacy.php:67, classes/Site/Assets.php:282
+#: classes/Privacy.php:67, classes/Site/Assets.php:280
 msgid "Cookies"
 msgstr ""
 
@@ -1141,7 +1141,7 @@ msgstr ""
 msgid "Display"
 msgstr ""
 
-#: classes/Admin/Popups.php:380, classes/Site/Assets.php:281
+#: classes/Admin/Popups.php:380, classes/Site/Assets.php:279
 msgid "Triggers"
 msgstr ""
 
@@ -1157,7 +1157,7 @@ msgstr ""
 msgid "Triggers & Cookies"
 msgstr ""
 
-#: classes/Admin/Popups.php:403, classes/Site/Assets.php:284
+#: classes/Admin/Popups.php:403, classes/Site/Assets.php:282
 msgid "Conditions"
 msgstr ""
 
@@ -2675,75 +2675,75 @@ msgstr ""
 msgid "Subscription Form Placeholder"
 msgstr ""
 
-#: classes/Site/Assets.php:269
+#: classes/Site/Assets.php:267
 msgid "Debug Mode Enabled"
 msgstr ""
 
-#: classes/Site/Assets.php:270
+#: classes/Site/Assets.php:268
 msgid "Debug started at:"
 msgstr ""
 
-#: classes/Site/Assets.php:271
+#: classes/Site/Assets.php:269
 msgid "For more information on how to use this information visit %s"
 msgstr ""
 
-#: classes/Site/Assets.php:272
+#: classes/Site/Assets.php:270
 msgid "Global Information"
 msgstr ""
 
-#: classes/Site/Assets.php:273
+#: classes/Site/Assets.php:271
 msgid "Localized variables"
 msgstr ""
 
-#: classes/Site/Assets.php:274
+#: classes/Site/Assets.php:272
 msgid "Popups Initializing"
 msgstr ""
 
-#: classes/Site/Assets.php:275
+#: classes/Site/Assets.php:273
 msgid "Popups Initialized"
 msgstr ""
 
-#: classes/Site/Assets.php:276
+#: classes/Site/Assets.php:274
 msgid "Popup: #"
 msgstr ""
 
-#: classes/Site/Assets.php:277
+#: classes/Site/Assets.php:275
 msgid "Theme ID: "
 msgstr ""
 
-#: classes/Site/Assets.php:278
+#: classes/Site/Assets.php:276
 msgid "Method Call:"
 msgstr ""
 
-#: classes/Site/Assets.php:279
+#: classes/Site/Assets.php:277
 msgid "Method Arguments:"
 msgstr ""
 
-#: classes/Site/Assets.php:283
+#: classes/Site/Assets.php:281
 msgid "Delay:"
 msgstr ""
 
-#: classes/Site/Assets.php:285
+#: classes/Site/Assets.php:283
 msgid "Cookie:"
 msgstr ""
 
-#: classes/Site/Assets.php:286
+#: classes/Site/Assets.php:284
 msgid "Settings:"
 msgstr ""
 
-#: classes/Site/Assets.php:287
+#: classes/Site/Assets.php:285
 msgid "Selector:"
 msgstr ""
 
-#: classes/Site/Assets.php:288
+#: classes/Site/Assets.php:286
 msgid "Mobile Disabled:"
 msgstr ""
 
-#: classes/Site/Assets.php:289
+#: classes/Site/Assets.php:287
 msgid "Tablet Disabled:"
 msgstr ""
 
-#: classes/Site/Assets.php:290
+#: classes/Site/Assets.php:288
 msgid "Event: %s"
 msgstr ""
 
