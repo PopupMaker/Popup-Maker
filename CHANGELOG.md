@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## v1.18.5 - 03/19/2024
+
+* Fix: Error in some extensions due to action timing change. Reverting.
+
+## v1.18.4 - 03/18/2024
+
+* Fix: Missing file error due to SVN commit issue with v1.18.3.
+
 ## v1.18.3 - 03/18/2024
 
 * Security: Popup Close shortcode escaping was not working correctly on urls. Admins could insert unsecure urls into the popup close button which could be triggered on middle click.

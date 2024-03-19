@@ -7,7 +7,7 @@ Tags:  marketing, ecommerce, popup, popups, optin, conversion, promotion, pop-up
 Requires at least: 4.9
 Tested up to: 6.5.0
 Requires PHP: 5.6
-Stable tag: 1.18.3
+Stable tag: 1.18.5
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -180,6 +180,14 @@ There are several common causes for this, check [this guide for help](https://do
 == Changelog ==
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
+
+= v1.18.5 - 03/19/2024 =
+
+* Fix: Error in some extensions due to action timing change. Reverting.
+
+= v1.18.4 - 03/18/2024 =
+
+* Fix: Missing file error due to SVN commit issue with v1.18.3.
 
 = v1.18.3 - 03/18/2024 =
 
