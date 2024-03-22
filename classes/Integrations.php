@@ -43,6 +43,7 @@ class PUM_Integrations {
 				'calderaforms'    => new PUM_Integration_Form_CalderaForms(),
 				'mc4wp'           => new PUM_Integration_Form_MC4WP(),
 				'wpforms'         => new PUM_Integration_Form_WPForms(),
+				'wsforms'		  => new PUM_Integration_Form_WSForms(),
 				'formidableforms' => new PUM_Integration_Form_FormidableForms(),
 				// Builders.
 				'kingcomposer'    => new PUM_Integration_Builder_KingComposer(),
