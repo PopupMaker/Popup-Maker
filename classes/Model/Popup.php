@@ -1198,10 +1198,10 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @param array $a Array with `timestamp` key for comparison.
 	 * @param array $b Array with `timestamp` key for comparison.
 	 *
-	 * @return bool
+	 * @return int
 	 */
 	public function compare_resets( $a, $b ) {
-		return (float) $a['timestamp'] < (float) $b['timestamp'];
+		return (float) $b['timestamp'] <=> (float) $a['timestamp'];
 	}
 
 	/**
