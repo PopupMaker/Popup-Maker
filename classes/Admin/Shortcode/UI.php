@@ -167,6 +167,10 @@ class PUM_Admin_Shortcode_UI {
 	 * @return array
 	 */
 	public static function mce_external_plugins( $plugin_array ) {
+		if ( ! is_array( $plugin_array ) ) {
+			$plugin_array = [];
+		}
+
 		return array_merge(
 			$plugin_array,
 			[
