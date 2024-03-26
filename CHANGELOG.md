@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+* Feature: Add WS Forms integration.
+* Tweak: Don't show error message when saving settings without making changes.
+
 ## v1.18.5 - 03/19/2024
 
 * Fix: Error in some extensions due to action timing change. Reverting.

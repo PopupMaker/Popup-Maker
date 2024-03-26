@@ -85,11 +85,6 @@ class PUM_Admin_Settings {
 				];
 
 				do_action( 'pum_save_settings', $settings );
-			} else {
-				self::$notices[] = [
-					'type'    => 'error',
-					'message' => __( 'There must have been an error, settings not saved successfully!', 'popup-maker' ),
-				];
 			}
 
 			return;
