@@ -595,16 +595,16 @@ class Popmake_Fields {
 			 * Check if core method exists and load that.
 			 */ elseif ( method_exists( $this, $type . '_sanitize' ) ) {
 				$function_name = [ $this, $type . '_sanitize' ];
-} else {
-	$function_name = null;
-}
+			} else {
+				$function_name = null;
+			}
 
-if ( $function_name ) {
-	/**
-	 * Call the determined method, passing the field args & $value to the callback.
-	 */
-	$value = call_user_func_array( $function_name, [ $value, $args ] );
-}
+			if ( $function_name ) {
+				/**
+				 * Call the determined method, passing the field args & $value to the callback.
+				 */
+				$value = call_user_func_array( $function_name, [ $value, $args ] );
+			}
 		}
 
 		$value = apply_filters( 'pum_settings_sanitize', $value, $args );
