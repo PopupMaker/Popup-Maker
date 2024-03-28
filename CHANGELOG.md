@@ -4,8 +4,11 @@
 
 * Feature: Add WS Forms integration.
 * Tweak: Don't show error message when saving settings without making changes.
+* Fix: Improved disabled logging logic to prevent errors with logger even with logging disabled.
 * Fix: Error when value was numeric in popup theme hex fields without a hash.
+* Fix: Ninja Forms datepicker appeared behind popups.
 * Fix: Errors when 3rd party plugins returned invalid value in `mce_external_plugins` filter.
+* Fix: Random unkown key errors when extensions were active.
 
 ## v1.18.5 - 03/19/2024
 
