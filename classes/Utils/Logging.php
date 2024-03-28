@@ -6,6 +6,7 @@
  * @copyright Copyright (c) 2023, Code Atlantic LLC
  */
 
+ define( 'PUM_DISABLE_LOGGING', true );
 /**
  * Class PUM_Utils_Logging
  *
@@ -37,7 +38,7 @@ class PUM_Utils_Logging {
 	/**
 	 * File system API.
 	 *
-	 * @var WP_Filesystem_Base
+	 * @var WP_Filesystem_Base|false
 	 */
 	private $fs;
 
@@ -72,29 +73,73 @@ class PUM_Utils_Logging {
 	 * Get things started
 	 */
 	public function __construct() {
-		// On shutdown, save the log file.
-		add_action( 'shutdown', [ $this, 'save_logs' ] );
-
-		$this->fs = $this->file_system();
-
-		$this->is_writable = false !== $this->fs && 'direct' === $this->fs->method;
-
-		$upload_dir = PUM_Helpers::get_upload_dir();
-		if ( ! $this->fs || ! $this->fs->is_writable( $upload_dir['basedir'] ) ) {
-			$this->is_writable = false;
+		if ( $this->disabled() ) {
+			return;
 		}
 
+		$this->init_fs();
 		$this->init();
+
+		// On shutdown, save the log file.
+		add_action( 'shutdown', [ $this, 'save_logs' ] );
 	}
 
 	/**
-	 * Check if logging is enabled.
+	 * Check if logging is disabled.
+	 * 
+	 * @return bool
+	 */
+	public function disabled() { 
+		return defined( 'PUM_DISABLE_LOGGING' ) && PUM_DISABLE_LOGGING;
+	}
+
+	/**
+	 * Check if logging is writeable & not disabled.
+	 * 
+	 * If this is true the $fs property will be set.
 	 *
 	 * @return bool
 	 */
 	public function enabled() {
 		// Disable logging by adding define( 'PUM_DISABLE_LOGGING', true );.
-		return $this->is_writable && ( ! defined( 'PUM_DISABLE_LOGGING' ) || ! PUM_DISABLE_LOGGING );
+		return  ! $this->disabled() && $this->is_writable;
+	}
+
+	/**
+	 * Initialize the file system.
+	 * 
+	 * - Check if the file system is writable.
+	 * - Check if the upload directory is writable.
+	 * - Set the file system instance.
+	 * 
+	 * @return void
+	 */
+	public function init_fs() {
+		$this->fs = $this->file_system();
+
+		// If the file system is not set, we can't check if it's writable.
+		if ( ! $this->fs ) {
+			return;
+		}
+
+		$this->is_writable = false !== $this->fs && 'direct' === $this->fs->method;
+
+		if ( ! $this->is_writable ) {
+			return;
+		}
+
+		$upload_dir = PUM_Helpers::get_upload_dir();
+		
+		if ( ! $upload_dir ) {
+			$this->is_writable = false;
+		}
+
+		if (
+			! method_exists( $this->fs, 'is_writable' ) ||
+			! $this->fs->is_writable( $upload_dir['basedir'] )
+		) {
+			$this->is_writable = false;
+		}
 	}
 
 	/**
@@ -120,9 +165,21 @@ class PUM_Utils_Logging {
 	}
 
 	/**
-	 * Get things started
+	 * Get things started.
+	 * 
+	 * - Get filetoken & name.
+	 * - Check if old log file exists, move it to new location.
+	 * - Check if new log file exists, if not create it.
+	 * - Set log content.
+	 * - Truncate long log files.
+	 * 
+	 * @return void
 	 */
 	public function init() {
+		if ( ! $this->enabled() ) {
+			return;
+		}
+
 		$upload_dir = PUM_Helpers::get_upload_dir();
 
 		$file_token = get_option( 'pum_debug_log_token' );
@@ -323,7 +380,9 @@ class PUM_Utils_Logging {
 	 */
 	public function clear_log() {
 		// Delete the file.
-		@$this->fs->delete( $this->file );
+		if ( $this->fs && method_exists( $this->fs, 'delete' ) ) {
+			@$this->fs->delete( $this->file );
+		}
 
 		if ( $this->enabled() ) {
 			$this->setup_new_log();
