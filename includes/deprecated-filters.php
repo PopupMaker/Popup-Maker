@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Deprecated filters
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -17,13 +20,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param null $popup_id
  */
 function popmake_enqueue_scripts( $popup_id = null ) {
-	$scripts_needed = apply_filters( 'popmake_enqueue_scripts', array(), $popup_id );
+	$scripts_needed = apply_filters( 'popmake_enqueue_scripts', [], $popup_id );
 	foreach ( $scripts_needed as $script ) {
 		if ( wp_script_is( $script, 'registered' ) ) {
 			wp_enqueue_script( $script );
 		}
 	}
-	$styles_needed = apply_filters( 'popmake_enqueue_styles', array(), $popup_id );
+	$styles_needed = apply_filters( 'popmake_enqueue_styles', [], $popup_id );
 	foreach ( $styles_needed as $style ) {
 		if ( wp_style_is( $style, 'registered' ) ) {
 			wp_enqueue_style( $style );
@@ -43,7 +46,7 @@ add_action( 'popmake_preload_popup', 'popmake_enqueue_scripts' );
  *
  * @return mixed
  */
-function pum_deprecated_popmake_settings_extensions_sanitize_filter( $settings = array() ) {
+function pum_deprecated_popmake_settings_extensions_sanitize_filter( $settings = [] ) {
 	if ( has_filter( 'popmake_settings_extensions_sanitize' ) ) {
 		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:popmake_settings_extensions_sanitize', '1.7.0', 'filter:pum_settings_sanitize' );
 		/**
@@ -99,7 +102,7 @@ add_filter( 'pum_popup_content', 'pum_deprecated_get_the_popup_content_filter', 
  *
  * @return mixed
  */
-function pum_deprecated_pum_popup_get_data_attr_filter( $data_attr = array(), $popup_id ) {
+function pum_deprecated_pum_popup_get_data_attr_filter( $data_attr, $popup_id ) {
 	if ( has_filter( 'pum_popup_get_data_attr' ) ) {
 		PUM_Utils_Logging::instance()->log_deprecated_notice( 'filter:pum_popup_get_data_attr', '1.7.0', 'filter:pum_popup_data_attr' );
 		/**
@@ -171,4 +174,3 @@ function pum_deprecated_get_the_popup_data_attr_filter( $data_attr, $popup_id ) 
 }
 
 add_filter( 'pum_popup_data_attr', 'pum_deprecated_get_the_popup_data_attr_filter', 10, 2 );
-

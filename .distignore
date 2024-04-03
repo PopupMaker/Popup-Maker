@@ -1,6 +1,7 @@
-/.wordpress-org
 /.git
 /.github
+/.vscode
+/.wordpress-org
 /assets/js/src
 /assets/sass
 /bin
@@ -20,11 +21,18 @@
 .gitattributes
 .gitignore
 .jshintrc
+.nvmrc
+.npmrc
+.php-version
+.phpcs.xml.dist
+.prettierrc.js
 .scrutinizer.yml
 .stylelintignore
 .stylelintrc.json
 .travis.yml
+.wp-env.json
 apigen.neon
+CHANGELOG.md
 composer.json
 composer.lock
 gulpfile.js
@@ -34,4 +42,6 @@ package.json
 package-lock.json
 phpci.yml
 phpunit.xml.dist
+postcss.config.js
+readme.md
 yarn-lock.json

@@ -2,7 +2,7 @@
 
 // SPL can be disabled on PHP 5.2
 if ( ! function_exists( 'spl_autoload_register' ) ) {
-	$_wp_spl_autoloaders = array();
+	$_wp_spl_autoloaders = [];
 
 	/**
 	 * Registers a function to be autoloaded.
@@ -10,10 +10,10 @@ if ( ! function_exists( 'spl_autoload_register' ) ) {
 	 * @since 4.6.0
 	 *
 	 * @param callable $autoload_function The function to register.
-	 * @param bool $throw Optional. Whether the function should throw an exception
-	 *                                    if the function isn't callable. Default true.
-	 * @param bool $prepend Whether the function should be prepended to the stack.
-	 *                                    Default false.
+	 * @param bool     $throw Optional. Whether the function should throw an exception
+	 *                                        if the function isn't callable. Default true.
+	 * @param bool     $prepend Whether the function should be prepended to the stack.
+	 *                                        Default false.
 	 *
 	 * @throws Exception
 	 */
@@ -82,47 +82,49 @@ if ( ! function_exists( 'get_called_class' ) ) {
 		if ( ! $bt ) {
 			$bt = debug_backtrace();
 		}
-		if ( ! isset ( $bt[ $l ] ) ) {
-			throw new Exception ( "Cannot find called class -> stack level too deep." );
+		if ( ! isset( $bt[ $l ] ) ) {
+			throw new Exception( 'Cannot find called class -> stack level too deep.' );
 		}
 		if ( ! isset( $bt[ $l ]['type'] ) ) {
-			throw new Exception ( 'type not set' );
-		} else switch ( $bt[ $l ]['type'] ) {
-			case '::':
-				$lines      = file( $bt[ $l ]['file'] );
-				$i          = 0;
-				$callerLine = '';
-				do {
-					$i ++;
-					$callerLine = $lines[ $bt[ $l ]['line'] - $i ] . $callerLine;
-				} while ( stripos( $callerLine, $bt[ $l ]['function'] ) === false );
-				preg_match( '/([a-zA-Z0-9\_]+)::' . $bt[ $l ]['function'] . '/', $callerLine, $matches );
-				if ( ! isset( $matches[1] ) ) {
-					// must be an edge case.
-					throw new Exception ( "Could not find caller class: originating method call is obscured." );
-				}
-				switch ( $matches[1] ) {
-					case 'self':
-					case 'parent':
-						return get_called_class( $bt, $l + 1 );
-					default:
-						return $matches[1];
-				}
-			// won't get here.
-			case '->':
-				switch ( $bt[ $l ]['function'] ) {
-					case '__get':
-						// edge case -> get class of calling object
-						if ( ! is_object( $bt[ $l ]['object'] ) ) {
-							throw new Exception ( "Edge case fail. __get called on non object." );
-						}
+			throw new Exception( 'type not set' );
+		} else {
+			switch ( $bt[ $l ]['type'] ) {
+				case '::':
+					$lines      = file( $bt[ $l ]['file'] );
+					$i          = 0;
+					$callerLine = '';
+					do {
+						$i ++;
+						$callerLine = $lines[ $bt[ $l ]['line'] - $i ] . $callerLine;
+					} while ( stripos( $callerLine, $bt[ $l ]['function'] ) === false );
+					preg_match( '/([a-zA-Z0-9\_]+)::' . $bt[ $l ]['function'] . '/', $callerLine, $matches );
+					if ( ! isset( $matches[1] ) ) {
+						// must be an edge case.
+						throw new Exception( 'Could not find caller class: originating method call is obscured.' );
+					}
+					switch ( $matches[1] ) {
+						case 'self':
+						case 'parent':
+							return get_called_class( $bt, $l + 1 );
+						default:
+							return $matches[1];
+					}
+					// won't get here.
+				case '->':
+					switch ( $bt[ $l ]['function'] ) {
+						case '__get':
+							// edge case -> get class of calling object
+							if ( ! is_object( $bt[ $l ]['object'] ) ) {
+								throw new Exception( 'Edge case fail. __get called on non object.' );
+							}
 
-						return get_class( $bt[ $l ]['object'] );
-					default:
-						return get_class( $bt[ $l ]['object'] );
-				}
-			default:
-				throw new Exception ( "Unknown backtrace method type" );
+							return get_class( $bt[ $l ]['object'] );
+						default:
+							return get_class( $bt[ $l ]['object'] );
+					}
+				default:
+					throw new Exception( 'Unknown backtrace method type' );
+			}
 		}
 	}
 }
@@ -195,7 +197,7 @@ if ( ! function_exists( 'recurse' ) ) {
 		foreach ( $array1 as $key => $value ) {
 			// create new key in $array, if it is empty or not an array
 			if ( ! isset( $array[ $key ] ) || ( isset( $array[ $key ] ) && ! is_array( $array[ $key ] ) ) ) {
-				$array[ $key ] = array();
+				$array[ $key ] = [];
 			}
 
 			// overwrite the value in the base array
@@ -221,7 +223,7 @@ if ( ! function_exists( 'write_log' ) ) {
 
 if ( ! function_exists( 'boolval' ) ) {
 	function boolval( $val ) {
-		return ( bool ) $val;
+		return (bool) $val;
 	}
 }
 
@@ -258,5 +260,101 @@ if ( ! function_exists( 'has_blocks' ) ) {
 
 		return false !== strpos( (string) $post, '<!-- wp:' );
 	}
+}
 
+/**
+ * Aweful hack for backward compatibility with WP <5.3.
+ */
+if ( ! function_exists( 'wp_date' ) ) {
+	function wp_date( $format, $timestamp = null, $timezone = null ) {
+		global $wp_locale;
+
+		if ( null === $timestamp ) {
+			$timestamp = time();
+		} elseif ( ! is_numeric( $timestamp ) ) {
+			return false;
+		}
+
+		if ( ! $timezone ) {
+			if ( function_exists( 'wp_timezone' ) ) {
+				$timezone = wp_timezone();
+			} else {
+				// Get the server timezone
+				$server_timezone = get_option( 'timezone_string' );
+
+				// If timezone_string is not set, get the default timezone of the server
+				if ( empty( $server_timezone ) ) {
+					$server_timezone = date_default_timezone_get();
+				}
+
+				$timezone = new DateTimeZone( $server_timezone );
+			}
+		}
+
+		$datetime = date_create( '@' . $timestamp );
+		$datetime->setTimezone( $timezone );
+
+		if ( empty( $wp_locale->month ) || empty( $wp_locale->weekday ) ) {
+			$date = $datetime->format( $format );
+		} else {
+			// We need to unpack shorthand `r` format because it has parts that might be localized.
+			$format = preg_replace( '/(?<!\\\\)r/', DATE_RFC2822, $format );
+
+			$new_format    = '';
+			$format_length = strlen( $format );
+			$month         = $wp_locale->get_month( $datetime->format( 'm' ) );
+			$weekday       = $wp_locale->get_weekday( $datetime->format( 'w' ) );
+
+			for ( $i = 0; $i < $format_length; $i++ ) {
+				switch ( $format[ $i ] ) {
+					case 'D':
+						$new_format .= addcslashes( $wp_locale->get_weekday_abbrev( $weekday ), '\\A..Za..z' );
+						break;
+					case 'F':
+						$new_format .= addcslashes( $month, '\\A..Za..z' );
+						break;
+					case 'l':
+						$new_format .= addcslashes( $weekday, '\\A..Za..z' );
+						break;
+					case 'M':
+						$new_format .= addcslashes( $wp_locale->get_month_abbrev( $month ), '\\A..Za..z' );
+						break;
+					case 'a':
+						$new_format .= addcslashes( $wp_locale->get_meridiem( $datetime->format( 'a' ) ), '\\A..Za..z' );
+						break;
+					case 'A':
+						$new_format .= addcslashes( $wp_locale->get_meridiem( $datetime->format( 'A' ) ), '\\A..Za..z' );
+						break;
+					case '\\':
+						$new_format .= $format[ $i ];
+
+						// If character follows a slash, we add it without translating.
+						if ( $i < $format_length ) {
+							$new_format .= $format[ ++$i ];
+						}
+						break;
+					default:
+						$new_format .= $format[ $i ];
+						break;
+				}
+			}
+
+			$date = $datetime->format( $new_format );
+			$date = wp_maybe_decline_date( $date, $format );
+		}
+
+		/**
+		 * Filters the date formatted based on the locale.
+		 *
+		 * @since 5.3.0
+		 *
+		 * @param string       $date      Formatted date string.
+		 * @param string       $format    Format to display the date.
+		 * @param int          $timestamp Unix timestamp.
+		 * @param DateTimeZone $timezone  Timezone.
+		 */
+		$date = apply_filters( 'wp_date', $date, $format, $timestamp, $timezone );
+
+		return $date;
+	}
 }

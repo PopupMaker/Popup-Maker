@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2020, WP Popup Maker
- ******************************************************************************/
+/**
+ * Integration for GravityForms Form
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 
@@ -11,7 +14,7 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 	public $key = 'gravityforms';
 
 	public function __construct() {
-		add_action( 'gform_after_submission', array( $this, 'on_success' ), 10, 2 );
+		add_action( 'gform_after_submission', [ $this, 'on_success' ], 10, 2 );
 	}
 
 	/**
@@ -77,11 +80,13 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 		$popup_id = self::get_popup_id();
 		self::increase_conversion( $popup_id );
 
-		pum_integrated_form_submission( [
-			'popup_id'      => $popup_id,
-			'form_provider' => $this->key,
-			'form_id'       => $form['id'],
-		] );
+		pum_integrated_form_submission(
+			[
+				'popup_id'      => $popup_id,
+				'form_provider' => $this->key,
+				'form_id'       => $form['id'],
+			]
+		);
 	}
 
 	/**

@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Site Popups
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -27,12 +30,12 @@ class PUM_Site_Popups {
 	/**
 	 * @var array
 	 */
-	public static $cached_content = array();
+	public static $cached_content = [];
 
 	/**
 	 * @var array
 	 */
-	public static $loaded_ids = array();
+	public static $loaded_ids = [];
 
 	/**
 	 * Hook the initialize method to the WP init action.
@@ -40,15 +43,15 @@ class PUM_Site_Popups {
 	public static function init() {
 
 		// Preload the $loaded query.
-		add_action( 'init', array( __CLASS__, 'get_loaded_popups' ) );
+		add_action( 'init', [ __CLASS__, 'get_loaded_popups' ] );
 
 		// Check content for popups.
-		add_filter( 'the_content', array( __CLASS__, 'check_content_for_popups' ) );
+		add_filter( 'the_content', [ __CLASS__, 'check_content_for_popups' ] );
 
 		// TODO determine if the late priority is needed.
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'load_popups' ), 11 );
+		add_action( 'wp_enqueue_scripts', [ __CLASS__, 'load_popups' ], 11 );
 
-		add_action( 'wp_footer', array( __CLASS__, 'render_popups' ) );
+		add_action( 'wp_footer', [ __CLASS__, 'render_popups' ] );
 	}
 
 	/**
@@ -56,14 +59,14 @@ class PUM_Site_Popups {
 	 *
 	 * @param bool|object|null $new_popup
 	 *
-	 * @return null|PUM_Popup
+	 * @return null|PUM_Model_Popup
 	 *
 	 * @deprecated 1.8.0
 	 */
 	public static function current_popup( $new_popup = false ) {
 		global $popup;
 
-		if ( $new_popup !== false ) {
+		if ( false !== $new_popup ) {
 			pum()->current_popup = $new_popup;
 			$popup               = $new_popup;
 		}
@@ -79,7 +82,7 @@ class PUM_Site_Popups {
 	public static function get_loaded_popups() {
 		if ( ! self::$loaded instanceof WP_Query ) {
 			self::$loaded        = new WP_Query();
-			self::$loaded->posts = array();
+			self::$loaded->posts = [];
 		}
 
 		return self::$loaded;
@@ -96,7 +99,7 @@ class PUM_Site_Popups {
 			return;
 		}
 
-		$popups = pum_get_all_popups();
+		$popups = pum_get_all_popups( [ 'post_status' => [ 'publish', 'private' ] ] );
 
 		if ( ! empty( $popups ) ) {
 
@@ -161,6 +164,11 @@ class PUM_Site_Popups {
 	 * @param PUM_Model_Popup $popup
 	 */
 	public static function preload_popup( $popup ) {
+		// Bail early if the popup is preloaded already.
+		if ( in_array( $popup->ID, self::$loaded_ids, true ) ) {
+			return;
+		}
+
 		// Add to the $loaded_ids list.
 		self::$loaded_ids[] = $popup->ID;
 
@@ -180,13 +188,14 @@ class PUM_Site_Popups {
 	// REWRITE THIS
 	public static function load_popup( $id ) {
 		if ( did_action( 'wp_head' ) && ! in_array( $id, self::$loaded_ids ) ) {
-			$args1 = array(
+			$args1 = [
 				'post_type' => 'popup',
 				'p'         => $id,
-			);
+			];
 			$query = new WP_Query( $args1 );
 			if ( $query->have_posts() ) {
-				while ( $query->have_posts() ) : $query->next_post();
+				while ( $query->have_posts() ) :
+					$query->next_post();
 					pum()->current_popup = $query->post;
 					self::preload_popup( $query->post );
 				endwhile;
@@ -205,7 +214,8 @@ class PUM_Site_Popups {
 		$loaded = self::get_loaded_popups();
 
 		if ( $loaded->have_posts() ) {
-			while ( $loaded->have_posts() ) : $loaded->next_post();
+			while ( $loaded->have_posts() ) :
+				$loaded->next_post();
 				pum()->current_popup = $loaded->post;
 				pum_template_part( 'popup' );
 			endwhile;
@@ -223,4 +233,3 @@ class PUM_Site_Popups {
 	}
 
 }
-

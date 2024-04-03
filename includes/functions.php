@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -15,9 +18,9 @@ require_once 'functions/newsletter.php';
 
 /** Utility Functions */
 require_once 'functions/utils/cache.php';
+require_once 'functions/utils/filesystem.php';
 require_once 'functions/utils/format.php';
 require_once 'functions/utils/options.php';
-require_once 'functions/utils/scheduled-actions.php';
 require_once 'functions/utils/template.php';
 require_once 'functions/utils/upgrades.php';
 

@@ -4,7 +4,7 @@
  *
  * @package     PUM
  * @subpackage  Admin/Upgrades
- * @copyright   Copyright (c) 2019, Code Atlantic LLC
+ * @copyright   Copyright (c) 2023, Code Atlantic LLC
  * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
  * @since       1.4
  */
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'PUM_Admin_Upgrade_Routine' ) ) {
-	require_once POPMAKE_DIR . "includes/admin/upgrades/class-pum-admin-upgrade-routine.php";
+	require_once POPMAKE_DIR . 'includes/admin/upgrades/class-pum-admin-upgrade-routine.php';
 }
 
 /**
@@ -35,7 +35,7 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 	 */
 	public static function run() {
 		if ( ! current_user_can( PUM_Admin_Upgrades::instance()->required_cap ) ) {
-			wp_die( __( 'You do not have permission to do upgrades', 'popup-maker' ), __( 'Error', 'popup-maker' ), array( 'response' => 403 ) );
+			wp_die( __( 'You do not have permission to do upgrades', 'popup-maker' ), __( 'Error', 'popup-maker' ), [ 'response' => 403 ] );
 		}
 
 		ignore_user_abort( true );
@@ -58,12 +58,14 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 			$upgrades->set_arg( 'total', $total );
 		}
 
-		$popups = pum_get_popups( array(
-			'number' => $upgrades->get_arg( 'number' ),
-			'page'   => $upgrades->get_arg( 'step' ),
-			'status' => array( 'any', 'trash', 'auto-draft' ),
-			'order'  => 'ASC',
-		) );
+		$popups = pum_get_popups(
+			[
+				'number' => $upgrades->get_arg( 'number' ),
+				'page'   => $upgrades->get_arg( 'step' ),
+				'status' => [ 'any', 'trash', 'auto-draft' ],
+				'order'  => 'ASC',
+			]
+		);
 
 		if ( $popups ) {
 
@@ -72,16 +74,15 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 				/**
 				 * Initialize the popup meta values for core analytics.
 				 */
-				PUM_Admin_Upgrade_Routine_5::initialize_analytics( $popup->ID );
+				self::initialize_analytics( $popup->ID );
 
 				$completed ++;
 			}
 
 			if ( $completed < $total ) {
 				$upgrades->set_arg( 'completed', $completed );
-				PUM_Admin_Upgrade_Routine_5::next_step();
+				self::next_step();
 			}
-
 		}
 
 		// Check for popup analytics extension and import those stats if available.
@@ -107,7 +108,7 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 		update_site_option( 'pum_total_conversion_count', $total_conversion_count );
 		 */
 
-		PUM_Admin_Upgrade_Routine_5::done();
+		self::done();
 	}
 
 	/**

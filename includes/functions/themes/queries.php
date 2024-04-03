@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for Theme Queries
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -34,7 +37,7 @@ function pum_get_theme( $theme_id = 0 ) {
  *
  * @return PUM_Model_Theme[]
  */
-function pum_get_themes( $args = array() ) {
+function pum_get_themes( $args = [] ) {
 	return pum()->themes->get_items( $args );
 }
 
@@ -45,7 +48,7 @@ function pum_get_themes( $args = array() ) {
  *
  * @return PUM_Model_Theme[]
  */
-function pum_get_all_themes( $args = array() ) {
+function pum_get_all_themes( $args = [] ) {
 	$args['posts_per_page'] = -1;
 
 	return pum_get_themes( $args );
@@ -58,10 +61,13 @@ function pum_get_all_themes( $args = array() ) {
  *
  * @return int
  */
-function pum_count_themes( $args = array() ) {
-	$args = wp_parse_args( $args, array(
-		'post_status' => 'publish',
-	) );
+function pum_count_themes( $args = [] ) {
+	$args = wp_parse_args(
+		$args,
+		[
+			'post_status' => 'publish',
+		]
+	);
 
 	return pum()->themes->count_items( $args );
 }

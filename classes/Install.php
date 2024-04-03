@@ -1,7 +1,10 @@
 <?php
-/********************************************
- * Copyright (c) 2020, Code Atlantic LLC.
- *******************************************/
+/**
+ * Class for Install
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,7 +22,7 @@ class PUM_Install {
 	 * @param $network_wide
 	 */
 	public static function activate_plugin( $network_wide ) {
-		self::do_multisite( $network_wide, array( __CLASS__, 'activate_site' ) );
+		self::do_multisite( $network_wide, [ __CLASS__, 'activate_site' ] );
 	}
 
 	/**
@@ -33,20 +36,20 @@ class PUM_Install {
 	 *
 	 */
 	public static function uninstall_plugin() {
-		self::do_multisite( true, array( __CLASS__, 'uninstall_site' ) );
+		self::do_multisite( true, [ __CLASS__, 'uninstall_site' ] );
 	}
 
 	/**
 	 * @param       $network_wide
 	 * @param       $method
-	 * @param array $args
+	 * @param array        $args
 	 */
-	private static function do_multisite( $network_wide, $method, $args = array() ) {
+	private static function do_multisite( $network_wide, $method, $args = [] ) {
 		global $wpdb;
 
 		if ( is_multisite() && $network_wide ) {
 
-			$activated = get_site_option( 'pum_activated', array() );
+			$activated = get_site_option( 'pum_activated', [] );
 
 			$blog_ids = $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs}" );
 
@@ -62,7 +65,7 @@ class PUM_Install {
 
 			foreach ( $blog_ids as $blog_id ) {
 				switch_to_blog( $blog_id );
-				call_user_func_array( $method, array( $args ) );
+				call_user_func_array( $method, [ $args ] );
 
 				$activated[] = $blog_id;
 
@@ -71,9 +74,8 @@ class PUM_Install {
 
 			update_site_option( 'pum_activated', $activated );
 
-
 		} else {
-			call_user_func_array( $method, array( $args ) );
+			call_user_func_array( $method, [ $args ] );
 		}
 	}
 
@@ -84,10 +86,10 @@ class PUM_Install {
 
 		// Add default values where needed.
 		$options = array_merge(
-			get_option( 'popmake_settings', array() ),
-				array(
+			get_option( 'popmake_settings', [] ),
+			[
 				'disable_popup_category_tag' => 1,
-			)
+			]
 		);
 
 		// Setup some default options.
@@ -150,12 +152,12 @@ class PUM_Install {
 			$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key LIKE 'popup_%'" );
 
 			/** Delete All the Taxonomies */
-			foreach ( array( 'popup_category', 'popup_tag' ) as $taxonomy ) {
+			foreach ( [ 'popup_category', 'popup_tag' ] as $taxonomy ) {
 				// Prepare & excecute SQL, Delete Terms.
 				$wpdb->get_results( $wpdb->prepare( "DELETE t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('%s')", $taxonomy ) );
 
 				// Delete Taxonomy.
-				$wpdb->delete( $wpdb->term_taxonomy, array( 'taxonomy' => $taxonomy ), array( '%s' ) );
+				$wpdb->delete( $wpdb->term_taxonomy, [ 'taxonomy' => $taxonomy ], [ '%s' ] );
 			}
 
 			$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'popmake%' OR option_name LIKE '_pum_%' OR option_name LIKE 'pum_%' OR option_name LIKE 'popup_analytics_%'" );
@@ -220,9 +222,9 @@ class PUM_Install {
 	 */
 	public static function get_activation_failure_notice() {
 		$flag    = self::get_activation_flag();
-		$version = 'PHP' == $flag ? Popup_Maker::$MIN_PHP_VER : Popup_Maker::$MIN_WP_VER;
+		$version = 'PHP' === $flag ? Popup_Maker::$MIN_PHP_VER : Popup_Maker::$MIN_WP_VER;
 
-		return sprintf( __( 'The %4$s %1$s %5$s plugin requires %2$s version %3$s or greater.', 'popup-maker' ), Popup_Maker::$NAME, $flag, $version, "<strong>", "</strong>" );
+		return sprintf( __( 'The %4$s %1$s %5$s plugin requires %2$s version %3$s or greater.', 'popup-maker' ), Popup_Maker::$NAME, $flag, $version, '<strong>', '</strong>' );
 	}
 
 	/**
@@ -251,10 +253,14 @@ class PUM_Install {
 
 		$notice = self::get_activation_failure_notice();
 
-		wp_die( "<p>$notice</p>", __( 'Plugin Activation Error', 'popup-maker' ), array(
-			'response'  => 200,
-			'back_link' => true,
-		) );
+		wp_die(
+			"<p>$notice</p>",
+			__( 'Plugin Activation Error', 'popup-maker' ),
+			[
+				'response'  => 200,
+				'back_link' => true,
+			]
+		);
 	}
 
 }

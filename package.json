@@ -15,7 +15,7 @@
   },
   "main": "gulpfile.js",
   "engines": {
-    "node": ">=14.15.0",
+	"node": ">=14.15.0",
     "npm": ">=6.13.0",
     "yarn": ">=1.12.0"
   },
@@ -29,10 +29,15 @@
     "lint:css:src": "wp-scripts lint-style 'src/**/*.css'",
     "lint:js": "wp-scripts lint-js",
     "lint:js:src": "wp-scripts lint-js assets/js/src",
+	"lint:md:docs": "wp-scripts lint-md-docs",
+	"lint:md:js": "wp-scripts lint-md-js",
     "lint:pkg-json": "wp-scripts lint-pkg-json",
     "packages-update": "wp-scripts packages-update",
     "postpackages-update": "npm run build",
     "start": "wp-scripts start",
+	"release": "gulp release",
+	"gulp:start": "gulp",
+	"gulp:build": "gulp prebuild",
     "test:e2e": "wp-scripts test-e2e",
     "test:unit": "wp-scripts test-unit-js",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -43,6 +48,12 @@
       "@wordpress/babel-preset-default"
     ]
   },
+  "eslintConfig": {
+	"extends": [
+		"plugin:@wordpress/eslint-plugin/recommended"
+	]
+  },
+  "prettier": "@wordpress/prettier-config",
   "dependencies": {
     "iframe-resizer": "^4.2.10",
     "mobile-detect": "^1.4.4"
@@ -50,16 +61,17 @@
   "devDependencies": {
     "@wordpress/base-styles": "^3.3.0",
     "@wordpress/block-library": "^2.26.6",
-    "@wordpress/prettier-config": "^0.4.0",
+	"@wordpress/eslint-plugin": "^8.0.2",
+    "@wordpress/prettier-config": "^1.0.1",
     "@wordpress/scripts": "^12.5.0",
     "classnames": "^2.2.6",
-    "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.5.0",
+    "copy-webpack-plugin": "^5.1.1",
     "del": "^4.0.0",
-    "eslint-plugin-eslint-comments": "^3.2.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.1.0",
+	"eslint-plugin-eslint-comments": "^3.2.0",
+	"eslint-plugin-import": "^2.22.1",
+	"eslint-plugin-promise": "^4.3.1",
+	"eslint-plugin-standard": "^5.0.0",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^6.0.0",
     "gulp-clean-css": "^4.3.0",
@@ -78,11 +90,11 @@
     "gulp-util": "^3.0.8",
     "gulp-wp-pot": "^2.5.0",
     "gulp-zip": "^4.2.0",
-    "ignore-emit-webpack-plugin": "^2.0.3",
+	"ignore-emit-webpack-plugin": "^2.0.3",
     "merge-stream": "^1.0.1",
     "mini-css-extract-plugin": "^1.3.1",
-    "nanoid": "^3.1.20",
-    "node-sass": "4.14.0",
+	"nanoid": "^3.1.20",
+    "node-sass": "4.13.1",
     "path": "^0.12.7",
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.7.0",
@@ -92,35 +104,5 @@
     "uglifyjs-webpack-plugin": "^2.2.0",
     "unminified-webpack-plugin": "^2.0.0",
     "webpack-merge": "^4.2.2"
-  },
-  "comments": {
-    "devDependencies": {
-      "note": "These are non required dependencies, but adding them above allows your IDE to autocomplete correctly. They are loaded in WP core and are not needed beyond this purpose.",
-      "@wordpress/block-editor": "^3.8.0",
-      "@wordpress/blocks": "^6.10.0",
-      "@wordpress/components": "^9.3.0",
-      "@wordpress/compose": "^3.12.0",
-      "@wordpress/data": "^4.12.0",
-      "@wordpress/dom": "^2.8.0",
-      "@wordpress/dom-ready": "^2.8.0",
-      "@wordpress/element": "^2.12.0",
-      "@wordpress/format-library": "^1.15.0",
-      "@wordpress/hooks": "^2.7.0",
-      "@wordpress/i18n": "^3.10.0",
-      "@wordpress/keycodes": "^2.8.0",
-      "@wordpress/rich-text": "^3.13.0"
-    }
-  },
-  "notes": {
-    "note": "These are pre-block editor dependencies that need to be merged back into the list aboe",
-    "babel-loader": "^8.1.0",
-    "@babel/core": "^7.9.0",
-    "@wordpress/babel-preset-default": "^4.11.0",
-    "@wordpress/eslint-plugin": "^2.1.0",
-    "cross-env": "^5.2.0",
-    "eslint": "^5.15.3",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0"
-  },
-  "prettier": "@wordpress/prettier-config"
+  }
 }

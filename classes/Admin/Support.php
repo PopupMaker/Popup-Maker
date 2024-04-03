@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Class for Admin Support
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -50,16 +53,16 @@ class PUM_Admin_Support {
 		</div>
 		<div id="pum-support-frame" class="wrap">
 			<script type="text/javascript">
-                (function ($) {
-                    var frame = $('<iframe scrolling="no">')
-                        .css({height: '535px'})
-                        .attr('src', '<?php echo 'https://api.wppopupmaker.com/dashboard-support/?' . build_query( pum_support_assist_args() ); ?>')
-                        .appendTo('#pum-support-frame');
+				(function ($) {
+					var frame = $('<iframe scrolling="no">')
+						.css({height: '535px'})
+						.attr('src', 'https://api.wppopupmaker.com/dashboard-support/')
+						.appendTo('#pum-support-frame');
 
-                    frame.iFrameResize({
-                        checkOrigin: false
-                    });
-                })(jQuery);
+					frame.iFrameResize({
+						checkOrigin: false
+					});
+				})(jQuery);
 			</script>
 		</div>
 

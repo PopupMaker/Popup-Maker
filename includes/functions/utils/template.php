@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for Template Utility
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -14,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param string $slug
  * @param string $name
- * @param array $args
+ * @param array  $args
  *
  * @return string
  */
@@ -30,9 +33,9 @@ function pum_get_template_part( $slug, $name = null, $args = null ) {
  *
  * @param string $slug
  * @param string $name
- * @param array $args
+ * @param array  $args
  */
-function pum_template_part( $slug, $name = null, $args = array() ) {
+function pum_template_part( $slug, $name = null, $args = [] ) {
 	echo pum_get_template_part( $slug, $name, $args );
 }
 
@@ -40,11 +43,11 @@ function pum_template_part( $slug, $name = null, $args = array() ) {
  * Gets the rendered contents of the specified templates file.
  *
  * @param $template_name
- * @param array $args
+ * @param array         $args
  *
  * @return string
  */
-function pum_get_template( $template_name, $args = array() ) {
+function pum_get_template( $template_name, $args = [] ) {
 	return PUM_Utils_Template::get( $template_name, $args );
 }
 
@@ -54,8 +57,8 @@ function pum_get_template( $template_name, $args = array() ) {
  * @deprecated Likely a better way @see pum_template_part()
  *
  * @param string $template_name Template file name with extension: file-name.php
- * @param array $args (default: array())
+ * @param array  $args (default: array())
  */
-function pum_load_template( $template_name, $args = array() ) {
+function pum_load_template( $template_name, $args = [] ) {
 	echo pum_get_template( $template_name, $args );
 }

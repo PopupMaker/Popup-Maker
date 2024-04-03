@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for Cache Utility
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -51,8 +54,8 @@ function pum_cache_replace( $key, $data, $group = '' ) {
  *
  * @param $key
  * @param string $group
- * @param bool $force
- * @param null $found
+ * @param bool   $force
+ * @param null   $found
  *
  * @return bool|mixed
  */
@@ -87,7 +90,7 @@ function pum_cache_delete_group( $group = '' ) {
  * Increase a numeric cache value by the offset.
  *
  * @param $key
- * @param int $offset
+ * @param int    $offset
  * @param string $group
  *
  * @return bool|false|int
@@ -100,7 +103,7 @@ function pum_cache_incr( $key, $offset = 1, $group = '' ) {
  * Decrease a numeric cache value by the offset.
  *
  * @param $key
- * @param int $offset
+ * @param int    $offset
  * @param string $group
  *
  * @return bool|false|int
@@ -120,7 +123,7 @@ function pum_cache_timeout( $key ) {
 	static $timeouts;
 
 	if ( ! isset( $timeouts ) ) {
-		$timeouts = apply_filters( 'pum_cache_timeouts', array() );
+		$timeouts = apply_filters( 'pum_cache_timeouts', [] );
 	}
 
 	return isset( $timeouts[ $key ] ) ? $timeouts[ $key ] : 0;

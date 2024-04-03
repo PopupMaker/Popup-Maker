@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Interface for CSV Importer
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -21,7 +24,7 @@ interface PUM_Interface_CSV_Importer extends PUM_Interface_Batch_Importer {
 	 *
 	 * @param array $import_fields Import fields to map.
 	 */
-	public function map_fields( $import_fields = array() );
+	public function map_fields( $import_fields = [] );
 
 	/**
 	 * Retrieves the CSV columns.

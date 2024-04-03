@@ -90,7 +90,7 @@
   font-weight: bold;
   height: auto;
   position: relative;
-  transition: transform .5s;
+  transition: transform 0.5s;
 }
 
 .extensions-available li > .action-links .button.install {
@@ -125,7 +125,7 @@
 
 .extensions-available .core-extensions-bundle h3 {
   color: #fff;
-  background: #98B727;
+  background: #98b727;
 }
 
 .extensions-available .core-extensions-bundle p {
@@ -134,8 +134,8 @@
 }
 
 .extensions-available .core-extensions-bundle .action-links {
-  background: #98B727;
-  border-top: 1px solid #A8C53A;
+  background: #98b727;
+  border-top: 1px solid #a8c53a;
 }
 
 /*# sourceMappingURL=pum-admin-extensions-page.css.map */

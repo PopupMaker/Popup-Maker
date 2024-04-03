@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Abstract class for Provider
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -55,8 +58,8 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 		PUM_Newsletter_Providers::instance()->add_provider( $this );
 
 		/** Settings */
-		add_filter( 'pum_settings_fields', array( $this, 'register_settings' ) );
-		add_filter( 'pum_settings_tab_sections', array( $this, 'register_settings_tab_section' ) );
+		add_filter( 'pum_settings_fields', [ $this, 'register_settings' ] );
+		add_filter( 'pum_settings_tab_sections', [ $this, 'register_settings_tab_section' ] );
 
 		/**
 		 * Don't add the shortcodes or default options or process anything if the provider is disabled.
@@ -66,18 +69,18 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 		}
 
 		/** Shortcodes Fields */
-		add_filter( 'pum_sub_form_shortcode_tabs', array( $this, 'shortcode_tabs' ) );
-		add_filter( 'pum_sub_form_shortcode_subtabs', array( $this, 'shortcode_subtabs' ) );
-		add_filter( 'pum_sub_form_shortcode_fields', array( $this, 'shortcode_fields' ) );
-		add_filter( 'pum_sub_form_shortcode_defaults', array( $this, 'shortcode_defaults' ) );
+		add_filter( 'pum_sub_form_shortcode_tabs', [ $this, 'shortcode_tabs' ] );
+		add_filter( 'pum_sub_form_shortcode_subtabs', [ $this, 'shortcode_subtabs' ] );
+		add_filter( 'pum_sub_form_shortcode_fields', [ $this, 'shortcode_fields' ] );
+		add_filter( 'pum_sub_form_shortcode_defaults', [ $this, 'shortcode_defaults' ] );
 
 		/** Forms Processing & AJAX */
-		add_filter( 'pum_sub_form_sanitization', array( $this, 'process_form_sanitization' ), 10 );
-		add_filter( 'pum_sub_form_validation', array( $this, 'process_form_validation' ), 10, 2 );
-		add_action( 'pum_sub_form_submission', array( $this, 'process_form_submission' ), 10, 3 );
+		add_filter( 'pum_sub_form_sanitization', [ $this, 'process_form_sanitization' ], 10 );
+		add_filter( 'pum_sub_form_validation', [ $this, 'process_form_validation' ], 10, 2 );
+		add_action( 'pum_sub_form_submission', [ $this, 'process_form_submission' ], 10, 3 );
 
 		/** Form Rendering */
-		add_action( 'pum_sub_form_fields', array( $this, 'render_fields' ) );
+		add_action( 'pum_sub_form_fields', [ $this, 'render_fields' ] );
 	}
 
 	/**
@@ -113,7 +116,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 *
 	 * @return array
 	 */
-	public function register_settings_tab_section( $sections = array() ) {
+	public function register_settings_tab_section( $sections = [] ) {
 		$sections['subscriptions'][ $this->id ] = $this->name;
 
 		return $sections;
@@ -143,7 +146,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 *
 	 * @return array $values
 	 */
-	public function form_sanitization( $values = array() ) {
+	public function form_sanitization( $values = [] ) {
 		return $values;
 	}
 
@@ -155,7 +158,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 *
 	 * @return WP_Error
 	 */
-	public function form_validation( WP_Error $errors, $values = array() ) {
+	public function form_validation( WP_Error $errors, $values = [] ) {
 		return $errors;
 	}
 
@@ -176,7 +179,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 *
 	 * @return array $values
 	 */
-	public function process_form_sanitization( $values = array() ) {
+	public function process_form_sanitization( $values = [] ) {
 		if ( $this->id !== $values['provider'] && ( 'none' === $values['provider'] && PUM_Utils_Options::get( 'newsletter_default_provider' ) !== $this->id ) ) {
 			return $values;
 		}
@@ -192,7 +195,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 *
 	 * @return WP_Error
 	 */
-	public function process_form_validation( WP_Error $errors, $values = array() ) {
+	public function process_form_validation( WP_Error $errors, $values = [] ) {
 		if ( $this->id !== $values['provider'] && ( 'none' === $values['provider'] && PUM_Utils_Options::get( 'newsletter_default_provider' ) !== $this->id ) ) {
 			return $errors;
 		}
@@ -231,13 +234,13 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 *
 	 * @return array
 	 */
-	public function shortcode_tabs( $tabs = array() ) {
-		$resorted_tabs = array();
+	public function shortcode_tabs( $tabs = [] ) {
+		$resorted_tabs = [];
 
 		foreach ( $tabs as $tab_id => $label ) {
 			$resorted_tabs[ $tab_id ] = $label;
 
-			if ( 'general' == $tab_id ) {
+			if ( 'general' === $tab_id ) {
 				$resorted_tabs[ $this->shortcode_tab_id() ] = $this->name;
 			}
 		}
@@ -252,12 +255,15 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 *
 	 * @return array
 	 */
-	public function shortcode_subtabs( $subtabs = array() ) {
-		return array_merge( $subtabs, array(
-			$this->shortcode_tab_id() => array(
-				'main' => $this->name,
-			),
-		) );
+	public function shortcode_subtabs( $subtabs = [] ) {
+		return array_merge(
+			$subtabs,
+			[
+				$this->shortcode_tab_id() => [
+					'main' => $this->name,
+				],
+			]
+		);
 	}
 
 	/**
@@ -267,9 +273,9 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 *
 	 * @return array
 	 */
-	public function shortcode_fields( $fields = array() ) {
+	public function shortcode_fields( $fields = [] ) {
 
-		$new_fields = $this->version < 2 ? PUM_Admin_Helpers::flatten_fields_array( $this->fields() ) : array();
+		$new_fields = $this->version < 2 ? PUM_Admin_Helpers::flatten_fields_array( $this->fields() ) : [];
 
 		foreach ( $new_fields as $field_id => $field ) {
 			if ( isset( $field['options'] ) ) {
@@ -277,11 +283,14 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 			}
 		}
 
-		return array_merge( $fields, array(
-			$this->shortcode_tab_id() => array(
-				'main' => $new_fields,
-			),
-		) );
+		return array_merge(
+			$fields,
+			[
+				$this->shortcode_tab_id() => [
+					'main' => $new_fields,
+				],
+			]
+		);
 	}
 
 	/**
@@ -317,7 +326,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 *
 	 * @return string
 	 */
-	public function get_message( $context, $values = array() ) {
+	public function get_message( $context, $values = [] ) {
 		$message = PUM_Utils_Options::get( "{$this->opt_prefix}{$context}_message", '' );
 
 		if ( empty( $message ) ) {
@@ -340,7 +349,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 *
 	 * @return mixed|string
 	 */
-	protected function dynamic_message( $message = '', $values = array() ) {
+	protected function dynamic_message( $message = '', $values = [] ) {
 
 		preg_match_all( '/{(.*?)}/', $message, $found );
 
@@ -366,7 +375,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 *
 	 * @return mixed|string
 	 */
-	protected function message_text_replace( $message = '', $match = '', $values = array() ) {
+	protected function message_text_replace( $message = '', $match = '', $values = [] ) {
 
 		if ( empty( $match ) ) {
 			return $message;
@@ -375,7 +384,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 		if ( strpos( $match, '||' ) !== false ) {
 			$matches = explode( '||', $match );
 		} else {
-			$matches = array( $match );
+			$matches = [ $match ];
 		}
 
 		$replace = '';

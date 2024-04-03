@@ -1,64 +1,64 @@
-@import "defaults";
-@import "../../mixins/gradients";
+@import 'defaults';
+@import '../../mixins/gradients';
 
 .pumselect2-container--classic {
-  @import "single";
-  @import "multiple";
+	@import 'single';
+	@import 'multiple';
 
-  .pumselect2-search--dropdown {
-    .pumselect2-search__field {
-      border: 1px solid $border-color;
-      outline: 0;
-    }
-  }
+	.pumselect2-search--dropdown {
+		.pumselect2-search__field {
+			border: 1px solid $border-color;
+			outline: 0;
+		}
+	}
 
-  .pumselect2-search--inline {
-    .pumselect2-search__field {
-      outline: 0;
-      box-shadow: none;
-    }
-  }
+	.pumselect2-search--inline {
+		.pumselect2-search__field {
+			outline: 0;
+			box-shadow: none;
+		}
+	}
 
-  .pumselect2-dropdown {
-    background-color: $dropdown-bg-color;
-    border: 1px solid transparent;
-  }
+	.pumselect2-dropdown {
+		background-color: $dropdown-bg-color;
+		border: 1px solid transparent;
+	}
 
-  .pumselect2-dropdown--above {
-    border-bottom: none;
-  }
+	.pumselect2-dropdown--above {
+		border-bottom: none;
+	}
 
-  .pumselect2-dropdown--below {
-    border-top: none;
-  }
+	.pumselect2-dropdown--below {
+		border-top: none;
+	}
 
-  .pumselect2-results > .pumselect2-results__options {
-    max-height: $results-max-height;
-    overflow-y: auto;
-  }
+	.pumselect2-results > .pumselect2-results__options {
+		max-height: $results-max-height;
+		overflow-y: auto;
+	}
 
-  .pumselect2-results__option {
-    &[role=group] {
-      padding: 0;
-    }
+	.pumselect2-results__option {
+		&[role='group'] {
+			padding: 0;
+		}
 
-    &[aria-disabled=true] {
-      color: $results-choice-fg-unselectable-color;
-    }
-  }
+		&[aria-disabled='true'] {
+			color: $results-choice-fg-unselectable-color;
+		}
+	}
 
-  .pumselect2-results__option--highlighted[aria-selected] {
-    background-color: $results-choice-bg-hover-color;
-    color: $results-choice-fg-hover-color;
-  }
+	.pumselect2-results__option--highlighted[aria-selected] {
+		background-color: $results-choice-bg-hover-color;
+		color: $results-choice-fg-hover-color;
+	}
 
-  .pumselect2-results__group {
-    cursor: default;
-    display: block;
-    padding: 6px;
-  }
+	.pumselect2-results__group {
+		cursor: default;
+		display: block;
+		padding: 6px;
+	}
 
-  &.pumselect2-container--open .pumselect2-dropdown {
-    border-color: $focus-border-color;
-  }
+	&.pumselect2-container--open .pumselect2-dropdown {
+		border-color: $focus-border-color;
+	}
 }

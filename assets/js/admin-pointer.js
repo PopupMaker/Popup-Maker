@@ -96,7 +96,7 @@
 		$( 'html, body' ).animate( { scrollTop: $target.offset().top - 200 } );
 		this_pointer.pointer( 'open' );
 	}
-	$( document ).ready( function( $ ) {
+	$( function( $ ) {
 		/**
 		 * Since many of our fields and screens are dynamically loaded, we need to ensure
 		 * the first pointer doesn't start until after they are loaded. But, we can set those

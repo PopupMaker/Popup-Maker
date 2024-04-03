@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for backward compatibility
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -20,7 +23,7 @@ add_filter( 'pum_settings_fields', 'pum_merge_deprecated_settings_fields' );
  *
  * @return array
  */
-function pum_merge_deprecated_settings_fields( $tabs = array() ) {
+function pum_merge_deprecated_settings_fields( $tabs = [] ) {
 	/**
 	 * Apply @deprecated filters & process old fields for compatibility.
 	 */
@@ -39,11 +42,11 @@ function pum_merge_deprecated_settings_fields( $tabs = array() ) {
 
 				$field_args['label'] = ! empty( $field_args['name'] ) ? $field_args['name'] : '';
 
-				if ( $field_args['type'] == 'header' ) {
+				if ( 'header' === $field_args['type'] ) {
 					$field_args['type'] = 'separator';
-				} else if ( $field_args['type'] == 'gaeventlabel' ) {
+				} elseif ( 'gaeventlabel' === $field_args['type'] ) {
 					$field_args['type'] = 'ga_event_labels';
-				} else if ( $field_args['type'] == 'hook' ) {
+				} elseif ( 'hook' === $field_args['type'] ) {
 					$field_args['type'] = 'html';
 
 					ob_start();

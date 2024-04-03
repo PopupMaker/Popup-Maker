@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Model for Theme
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -54,7 +57,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		$this->settings = $this->get_meta( 'popup_theme_settings' );
 
 		if ( ! is_array( $this->settings ) ) {
-			$this->settings = array();
+			$this->settings = [];
 		}
 
 		return apply_filters( 'pum_theme_settings', $this->settings, $this->ID );
@@ -93,7 +96,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 *
 	 * @return bool|int
 	 */
-	public function update_settings( $merge_settings = array() ) {
+	public function update_settings( $merge_settings = [] ) {
 		$settings = $this->get_settings();
 
 		foreach ( $merge_settings as $key => $value ) {
@@ -109,29 +112,29 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 * @return array
 	 */
 	public function get_google_fonts_used() {
-		$fonts_used = array();
+		$fonts_used = [];
 
 		$settings = $this->get_settings();
 
 		$google_fonts = PUM_Integration_GoogleFonts::fetch_fonts();
 
 		if ( ! empty( $settings['title_font_family'] ) && is_string( $settings['title_font_family'] ) && array_key_exists( $settings['title_font_family'], $google_fonts ) ) {
-			$variant = ! empty( $settings['title_font_weight'] ) && $settings['title_font_weight'] != 'normal' ? $settings['title_font_weight'] : '';
-			if ( isset( $settings['title_font_style'] ) && $settings['title_font_style'] == 'italic' ) {
+			$variant = ! empty( $settings['title_font_weight'] ) && 'normal' !== $settings['title_font_weight'] ? $settings['title_font_weight'] : '';
+			if ( isset( $settings['title_font_style'] ) && 'italic' === $settings['title_font_style'] ) {
 				$variant .= 'italic';
 			}
 			$fonts_used[ $settings['title_font_family'] ][ $variant ] = $variant;
 		}
 		if ( ! empty( $settings['content_font_family'] ) && is_string( $settings['content_font_family'] ) && array_key_exists( $settings['content_font_family'], $google_fonts ) ) {
-			$variant = ! empty( $settings['content_font_weight'] ) && $settings['content_font_weight'] != 'normal' ? $settings['content_font_weight'] : '';
-			if ( isset( $settings['content_font_style'] ) && $settings['content_font_style'] == 'italic' ) {
+			$variant = ! empty( $settings['content_font_weight'] ) && 'normal' !== $settings['content_font_weight'] ? $settings['content_font_weight'] : '';
+			if ( isset( $settings['content_font_style'] ) && 'italic' === $settings['content_font_style'] ) {
 				$variant .= 'italic';
 			}
 			$fonts_used[ $settings['content_font_family'] ][ $variant ] = $variant;
 		}
 		if ( ! empty( $settings['close_font_family'] ) && is_string( $settings['close_font_family'] ) && array_key_exists( $settings['close_font_family'], $google_fonts ) ) {
-			$variant = ! empty( $settings['close_font_weight'] ) && $settings['close_font_weight'] != 'normal' ? $settings['close_font_weight'] : '';
-			if ( isset( $settings['close_font_style'] ) && $settings['close_font_style'] == 'italic' ) {
+			$variant = ! empty( $settings['close_font_weight'] ) && 'normal' !== $settings['close_font_weight'] ? $settings['close_font_weight'] : '';
+			if ( isset( $settings['close_font_style'] ) && 'italic' === $settings['close_font_style'] ) {
 				$variant .= 'italic';
 			}
 			$fonts_used[ $settings['close_font_family'] ][ $variant ] = $variant;
@@ -145,13 +148,13 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 */
 	public function get_generated_styles() {
 
-		$styles = array(
-			'overlay'   => array(),
-			'container' => array(),
-			'title'     => array(),
-			'content'   => array(),
-			'close'     => array(),
-		);
+		$styles = [
+			'overlay'   => [],
+			'container' => [],
+			'title'     => [],
+			'content'   => [],
+			'close'     => [],
+		];
 
 		/*
 		 * Overlay Styles
@@ -163,12 +166,12 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		/*
 		 * Container Styles
 		 */
-		$styles['container'] = array(
+		$styles['container'] = [
 			'padding'       => "{$this->get_setting('container_padding')}px",
 			'border-radius' => "{$this->get_setting('container_border_radius')}px",
 			'border'        => PUM_Utils_CSS::border_style( $this->get_setting( 'container_border_width' ), $this->get_setting( 'container_border_style' ), $this->get_setting( 'container_border_color' ) ),
 			'box-shadow'    => PUM_Utils_CSS::box_shadow_style( $this->get_setting( 'container_boxshadow_horizontal' ), $this->get_setting( 'container_boxshadow_vertical' ), $this->get_setting( 'container_boxshadow_blur' ), $this->get_setting( 'container_boxshadow_spread' ), $this->get_setting( 'container_boxshadow_color' ), $this->get_setting( 'container_boxshadow_opacity' ), $this->get_setting( 'container_boxshadow_inset' ) ),
-		);
+		];
 
 		if ( $this->get_setting( 'container_background_color' ) ) {
 			$styles['container']['background-color'] = PUM_Utils_CSS::hex2rgba( $this->get_setting( 'container_background_color' ), $this->get_setting( 'container_background_opacity' ) );
@@ -177,7 +180,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		/*
 		 * Title Styles
 		 */
-		$styles['title'] = array(
+		$styles['title'] = [
 			'color'       => $this->get_setting( 'title_font_color' ),
 			'text-align'  => $this->get_setting( 'title_text_align' ),
 			'text-shadow' => PUM_Utils_CSS::text_shadow_style( $this->get_setting( 'title_textshadow_horizontal' ), $this->get_setting( 'title_textshadow_vertical' ), $this->get_setting( 'title_textshadow_blur' ), $this->get_setting( 'title_textshadow_color' ), $this->get_setting( 'title_textshadow_opacity' ) ),
@@ -186,22 +189,22 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 			'font-size'   => "{$this->get_setting( 'title_font_size' )}px",
 			'font-style'  => $this->get_setting( 'title_font_style' ),
 			'line-height' => "{$this->get_setting( 'title_line_height' )}px",
-		);
+		];
 
 		/*
 		 * Content Styles
 		 */
-		$styles['content'] = array(
+		$styles['content'] = [
 			'color'       => $this->get_setting( 'content_font_color' ),
 			'font-family' => $this->get_setting( 'content_font_family' ),
 			'font-weight' => $this->get_setting( 'content_font_weight' ),
 			'font-style'  => $this->get_setting( 'content_font_style' ),
-		);
+		];
 
 		/*
 		 * Close Styles
 		 */
-		$styles['close'] = array(
+		$styles['close'] = [
 			'position'      => $this->get_setting( 'close_position_outside' ) ? 'fixed' : 'absolute',
 			'height'        => ! $this->get_setting( 'close_height' ) || $this->get_setting( 'close_height' ) <= 0 ? 'auto' : "{$this->get_setting('close_height')}px",
 			'width'         => ! $this->get_setting( 'close_width' ) || $this->get_setting( 'close_width' ) <= 0 ? 'auto' : "{$this->get_setting('close_width')}px",
@@ -220,7 +223,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 			'border-radius' => "{$this->get_setting('close_border_radius')}px",
 			'box-shadow'    => PUM_Utils_CSS::box_shadow_style( $this->get_setting( 'close_boxshadow_horizontal' ), $this->get_setting( 'close_boxshadow_vertical' ), $this->get_setting( 'close_boxshadow_blur' ), $this->get_setting( 'close_boxshadow_spread' ), $this->get_setting( 'close_boxshadow_color' ), $this->get_setting( 'close_boxshadow_opacity' ), $this->get_setting( 'close_boxshadow_inset' ) ),
 			'text-shadow'   => PUM_Utils_CSS::text_shadow_style( $this->get_setting( 'close_textshadow_horizontal' ), $this->get_setting( 'close_textshadow_vertical' ), $this->get_setting( 'close_textshadow_blur' ), $this->get_setting( 'close_textshadow_color' ), $this->get_setting( 'close_textshadow_opacity' ) ),
-		);
+		];
 
 		if ( $this->get_setting( 'close_background_color' ) ) {
 			$styles['close']['background-color'] = PUM_Utils_CSS::hex2rgba( $this->get_setting( 'close_background_color' ), $this->get_setting( 'close_background_opacity' ) );
@@ -232,39 +235,39 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		$bottom = "{$this->get_setting('close_position_bottom')}px";
 
 		switch ( $this->get_setting( 'close_location' ) ) {
-			case "topleft":
+			case 'topleft':
 				$styles['close']['top']  = $top;
 				$styles['close']['left'] = $left;
 				break;
-			case "topcenter":
+			case 'topcenter':
 				$styles['close']['top']       = $top;
-				$styles['close']['left']      = "50%";
-				$styles['close']['transform'] = "translateX(-50%)";
+				$styles['close']['left']      = '50%';
+				$styles['close']['transform'] = 'translateX(-50%)';
 				break;
-			case "topright":
+			case 'topright':
 				$styles['close']['top']   = $top;
 				$styles['close']['right'] = $right;
 				break;
 			case 'middleleft':
-				$styles['close']['top']       = "50%";
+				$styles['close']['top']       = '50%';
 				$styles['close']['left']      = $left;
-				$styles['close']['transform'] = "translate(0, -50%)";
+				$styles['close']['transform'] = 'translate(0, -50%)';
 				break;
 			case 'middleright':
-				$styles['close']['top']       = "50%";
+				$styles['close']['top']       = '50%';
 				$styles['close']['right']     = $right;
-				$styles['close']['transform'] = "translate(0, -50%)";
+				$styles['close']['transform'] = 'translate(0, -50%)';
 				break;
-			case "bottomleft":
+			case 'bottomleft':
 				$styles['close']['bottom'] = $bottom;
 				$styles['close']['left']   = $left;
 				break;
-			case "bottomcenter":
+			case 'bottomcenter':
 				$styles['close']['bottom']    = $bottom;
-				$styles['close']['left']      = "50%";
-				$styles['close']['transform'] = "translateX(-50%)";
+				$styles['close']['left']      = '50%';
+				$styles['close']['transform'] = 'translateX(-50%)';
 				break;
-			case "bottomright":
+			case 'bottomright':
 				$styles['close']['bottom'] = $bottom;
 				$styles['close']['right']  = $right;
 				break;
@@ -277,25 +280,33 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	}
 
 	public function get_deprecated_settings() {
-		return array(
+		return [
 			'overlay'   => $this->_dep_get_settings_group( 'overlay' ),
 			'container' => $this->_dep_get_settings_group( 'container' ),
 			'title'     => $this->_dep_get_settings_group( 'title' ),
 			'content'   => $this->_dep_get_settings_group( 'content' ),
 			'close'     => $this->_dep_get_settings_group( 'close' ),
-		);
+		];
 	}
+
+
+	/**
+	 * Deprecated settings keys that have been remapped to new settings.
+	 *
+	 * @var array
+	 */
+	public $dep_groups = [];
 
 	/**
 	 * Retrieve settings in the form of deprecated grouped arrays.
 	 *
 	 * @param      $group
-	 * @param null $key
+	 * @param null  $key
 	 *
 	 * @return mixed
 	 */
 	public function _dep_get_settings_group( $group, $key = null ) {
-		if ( ! isset( $this->$group ) ) {
+		if ( ! isset( $this->dep_groups[ $group ] ) ) {
 			/**
 			 * Remap old meta settings to new settings location for v1.7. This acts as a passive migration when needed.
 			 */
@@ -305,7 +316,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 			$group_values = $this->get_meta( "popup_theme_$group" );
 
 			if ( ! $group_values || ! is_array( $group_values ) ) {
-				$group_values = array();
+				$group_values = [];
 			}
 
 			// Data manipulation begins here. We don't want any of this saved, only returned for backward compatibility.
@@ -321,21 +332,19 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 					if ( ! isset( $group_values[ $old_key ] ) ) {
 						$group_values[ $old_key ] = $value;
 					}
-
 				}
 			}
 
-
-			$this->$group = $group_values;
+			$this->dep_groups[ $group ] = $group_values;
 		}
 
-		$values = apply_filters( "pum_theme_get_$group", $this->$group, $this->ID );
+		$values = apply_filters( "pum_theme_get_$group", $this->dep_groups[ $group ], $this->ID );
 
 		if ( ! $key ) {
 			return $values;
 		}
 
-		$value = isset ( $values[ $key ] ) ? $values[ $key ] : null;
+		$value = isset( $values[ $key ] ) ? $values[ $key ] : null;
 
 		if ( ! isset( $value ) ) {
 			$value = $this->get_meta( "popup_theme_{$group}_{$key}" );
@@ -350,12 +359,12 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 * @return array|mixed
 	 */
 	public function remapped_meta_settings_keys( $group ) {
-		$remapped_meta_settings_keys = array(
-			'overlay'   => array(
+		$remapped_meta_settings_keys = [
+			'overlay'   => [
 				'background_color'   => 'overlay_background_color',
 				'background_opacity' => 'overlay_background_opacity',
-			),
-			'container' => array(
+			],
+			'container' => [
 				'padding'              => 'container_padding',
 				'background_color'     => 'container_background_color',
 				'background_opacity'   => 'container_background_opacity',
@@ -370,8 +379,8 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 				'boxshadow_spread'     => 'container_boxshadow_spread',
 				'boxshadow_color'      => 'container_boxshadow_color',
 				'boxshadow_opacity'    => 'container_boxshadow_opacity',
-			),
-			'title'     => array(
+			],
+			'title'     => [
 				'font_color'            => 'title_font_color',
 				'line_height'           => 'title_line_height',
 				'font_size'             => 'title_font_size',
@@ -384,14 +393,14 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 				'textshadow_blur'       => 'title_textshadow_blur',
 				'textshadow_color'      => 'title_textshadow_color',
 				'textshadow_opacity'    => 'title_textshadow_opacity',
-			),
-			'content'   => array(
+			],
+			'content'   => [
 				'font_color'  => 'content_font_color',
 				'font_family' => 'content_font_family',
 				'font_weight' => 'content_font_weight',
 				'font_style'  => 'content_font_style',
-			),
-			'close'     => array(
+			],
+			'close'     => [
 				'text'                  => 'close_text',
 				'location'              => 'close_location',
 				'position_top'          => 'close_position_top',
@@ -425,10 +434,10 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 				'textshadow_blur'       => 'close_textshadow_blur',
 				'textshadow_color'      => 'close_textshadow_color',
 				'textshadow_opacity'    => 'close_textshadow_opacity',
-			),
-		);
+			],
+		];
 
-		return isset( $remapped_meta_settings_keys[ $group ] ) ? $remapped_meta_settings_keys[ $group ] : array();
+		return isset( $remapped_meta_settings_keys[ $group ] ) ? $remapped_meta_settings_keys[ $group ] : [];
 	}
 
 	/**
@@ -439,10 +448,6 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 
 		if ( ! $this->is_valid() ) {
 			return;
-		}
-
-		if ( $this->ID === 5 ) {
-			$test = '1';
 		}
 
 		if ( ! isset( $this->data_version ) ) {
@@ -456,7 +461,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 				// Otherwise set to the current version as this is a new popup.
 				if ( ! empty( $theme_overlay_v1 ) ) {
 					$this->data_version = 1;
-				} else if ( ! empty( $theme_overlay_v2 ) && is_array( $theme_overlay_v2 ) ) {
+				} elseif ( ! empty( $theme_overlay_v2 ) && is_array( $theme_overlay_v2 ) ) {
 					$this->data_version = 2;
 				} else {
 					$this->data_version = $this->model_version;
@@ -482,7 +487,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 
 		for ( $i = $this->data_version; $this->data_version < $this->model_version; $i ++ ) {
 			// Process migration for current version. ex. current version is 2, runs pum_theme_passive_migration_2.
-			do_action_ref_array( 'pum_theme_passive_migration_' . $this->data_version, array( &$this ) );
+			do_action_ref_array( 'pum_theme_passive_migration_' . $this->data_version, [ &$this ] );
 			$this->data_version ++;
 
 			/**
@@ -491,9 +496,8 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 			$this->update_meta( 'popup_theme_data_version', $this->data_version );
 		}
 
-		do_action_ref_array( 'pum_theme_passive_migration', array( &$this, $this->data_version ) );
+		do_action_ref_array( 'pum_theme_passive_migration', [ &$this, $this->data_version ] );
 
 		$this->doing_passive_migration = false;
 	}
 }
-

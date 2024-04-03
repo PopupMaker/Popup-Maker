@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Admin Helpers
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -18,32 +21,35 @@ class PUM_Admin_Helpers {
 	 *
 	 * @return array
 	 */
-	public static function post_type_dropdown_options( $args = array(), $compare = 'and' ) {
-		$args = wp_parse_args( $args, array(
-			'public'              => null,
-			'publicly_queryable'  => null,
-			'exclude_from_search' => null,
-			'show_ui'             => null,
-			'capability_type'     => null,
-			'hierarchical'        => null,
-			'menu_position'       => null,
-			'menu_icon'           => null,
-			'permalink_epmask'    => null,
-			'rewrite'             => null,
-			'query_var'           => null,
-			'_builtin'            => null,
-		) );
+	public static function post_type_dropdown_options( $args = [], $compare = 'and' ) {
+		$args = wp_parse_args(
+			$args,
+			[
+				'public'              => null,
+				'publicly_queryable'  => null,
+				'exclude_from_search' => null,
+				'show_ui'             => null,
+				'capability_type'     => null,
+				'hierarchical'        => null,
+				'menu_position'       => null,
+				'menu_icon'           => null,
+				'permalink_epmask'    => null,
+				'rewrite'             => null,
+				'query_var'           => null,
+				'_builtin'            => null,
+			]
+		);
 
-		foreach( $args as $key => $value ) {
-			if ( $value === null ) {
+		foreach ( $args as $key => $value ) {
+			if ( null === $value ) {
 				unset( $args[ $key ] );
 			}
 		}
 
-		$options = array();
+		$options = [];
 
 		foreach ( get_post_types( $args, 'objects', $compare ) as $post_type ) {
-			if ( in_array( $post_type->name, array( 'revision', 'nav_menu_item', 'custom_css', 'customize_changeset', 'oembed_cache', 'popup_theme', 'nf_sub' ) ) ) {
+			if ( in_array( $post_type->name, [ 'revision', 'nav_menu_item', 'custom_css', 'customize_changeset', 'oembed_cache', 'popup_theme', 'nf_sub' ] ) ) {
 				// continue;
 			}
 
@@ -89,7 +95,7 @@ class PUM_Admin_Helpers {
 	 * @see        PUM_Helper_Array::sort_by_sort
 	 *
 	 * @param array $a
-	 * @param array  $b
+	 * @param array $b
 	 *
 	 * @return array
 	 */
@@ -102,8 +108,8 @@ class PUM_Admin_Helpers {
 	 *
 	 * @return array
 	 */
-	public static function get_field_defaults( $fields = array() ) {
-		$defaults = array();
+	public static function get_field_defaults( $fields = [] ) {
+		$defaults = [];
 
 		foreach ( $fields as $field_id => $field ) {
 			if ( isset( $field['std'] ) ) {
@@ -138,7 +144,7 @@ class PUM_Admin_Helpers {
 	 * @return array
 	 */
 	public static function flatten_fields_array( $tabs ) {
-		$fields = array();
+		$fields = [];
 
 		foreach ( $tabs as $tab_id => $tab_sections ) {
 
@@ -170,66 +176,72 @@ class PUM_Admin_Helpers {
 	 * @return array
 	 */
 	public static function parse_field( $field ) {
-		return wp_parse_args( $field, array(
-			'section'        => 'main',
-			'type'           => 'text',
-			'id'             => null,
-			'label'          => '',
-			'desc'           => '',
-			'name'           => null,
-			'templ_name'     => null,
-			'size'           => 'regular',
-			'options'        => array(),
-			'std'            => null,
-			'rows'           => 5,
-			'cols'           => 50,
-			'min'            => 0,
-			'max'            => 50,
-			'force_minmax'   => false,
-			'step'           => 1,
-			'select2'        => null,
-			'object_type'    => 'post_type',
-			'object_key'     => 'post',
-			'post_type'      => null,
-			'taxonomy'       => null,
-			'multiple'       => null,
-			'as_array'       => false,
-			'placeholder'    => null,
-			'checkbox_val'   => 1,
-			'allow_blank'    => true,
-			'readonly'       => false,
-			'required'       => false,
-			'disabled'       => false,
-			'hook'           => null,
-			'unit'           => __( 'ms', 'popup-maker' ),
-			'desc_position'  => 'bottom',
-			'units'          => array(
-				'px'  => 'px',
-				'%'   => '%',
-				'em'  => 'em',
-				'rem' => 'rem',
-			),
-			'priority'       => 10,
-			'doclink'        => '',
-			'button_type'    => 'submit',
-			'class'          => '',
-			'messages'       => array(),
-			'license_status' => '',
-			'private'        => false,
-		) );
+		return wp_parse_args(
+			$field,
+			[
+				'section'        => 'main',
+				'type'           => 'text',
+				'id'             => null,
+				'label'          => '',
+				'desc'           => '',
+				'name'           => null,
+				'templ_name'     => null,
+				'size'           => 'regular',
+				'options'        => [],
+				'std'            => null,
+				'rows'           => 5,
+				'cols'           => 50,
+				'min'            => 0,
+				'max'            => 50,
+				'force_minmax'   => false,
+				'step'           => 1,
+				'select2'        => null,
+				'object_type'    => 'post_type',
+				'object_key'     => 'post',
+				'post_type'      => null,
+				'taxonomy'       => null,
+				'multiple'       => null,
+				'as_array'       => false,
+				'placeholder'    => null,
+				'checkbox_val'   => 1,
+				'allow_blank'    => true,
+				'readonly'       => false,
+				'required'       => false,
+				'disabled'       => false,
+				'hook'           => null,
+				'unit'           => __( 'ms', 'popup-maker' ),
+				'desc_position'  => 'bottom',
+				'units'          => [
+					'px'  => 'px',
+					'%'   => '%',
+					'em'  => 'em',
+					'rem' => 'rem',
+				],
+				'priority'       => 10,
+				'doclink'        => '',
+				'button_type'    => 'submit',
+				'class'          => '',
+				'messages'       => [],
+				'license_status' => '',
+				'private'        => false,
+			]
+		);
 	}
 
 	/**
 	 * @param       $fields
-	 * @param array $args
+	 * @param array  $args
 	 *
 	 * @return mixed
 	 */
-	public static function parse_tab_fields( $fields, $args = array() ) {
-		$args = wp_parse_args( $args, array(
-			'has_subtabs' => false,
-			'name'        => '%s',
-		) );
+	public static function parse_tab_fields( $fields, $args = [] ) {
+		$args = wp_parse_args(
+			$args,
+			[
+				'has_subtabs' => false,
+				'name'        => '%s',
+			]
+		);
 
 		if ( $args['has_subtabs'] ) {
 			foreach ( $fields as $tab_id => $tab_sections ) {
@@ -237,14 +249,13 @@ class PUM_Admin_Helpers {
 					if ( self::is_field( $section_fields ) ) {
 						// Allow for flat tabs with no sections.
 						$section_id     = 'main';
-						$section_fields = array(
+						$section_fields = [
 							$section_id => $section_fields,
-						);
+						];
 					}
 
 					$fields[ $tab_id ][ $section_id ] = self::parse_fields( $section_fields, $args['name'] );
 				}
-
 			}
 		} else {
 			foreach ( $fields as $tab_id => $tab_fields ) {
@@ -321,11 +332,11 @@ class PUM_Admin_Helpers {
 	 *
 	 * @return bool
 	 */
-	public static function is_field( $array = array() ) {
-		$field_tests = array(
+	public static function is_field( $array = [] ) {
+		$field_tests = [
 			! isset( $array['type'] ) && ( isset( $array['label'] ) || isset( $array['desc'] ) ),
 			isset( $array['type'] ) && is_string( $array['type'] ),
-		);
+		];
 
 		return in_array( true, $field_tests );
 	}
@@ -337,7 +348,7 @@ class PUM_Admin_Helpers {
 	 *
 	 * @return bool
 	 */
-	public static function is_section( $array = array() ) {
+	public static function is_section( $array = [] ) {
 		return ! self::is_field( $array );
 	}
 
@@ -346,20 +357,26 @@ class PUM_Admin_Helpers {
 	 *
 	 * @param array $args
 	 */
-	public static function modal( $args = array() ) {
-		$args = wp_parse_args( $args, array(
-			'id'                 => 'default',
-			'title'              => '',
-			'description'        => '',
-			'class'              => '',
-			'cancel_button'      => true,
-			'cancel_button_text' => __( 'Cancel', 'popup-maker' ),
-			'save_button'        => true,
-			'save_button_text'   => __( 'Add', 'popup-maker' ),
-		) );
+	public static function modal( $args = [] ) {
+		$args = wp_parse_args(
+			$args,
+			[
+				'id'                 => 'default',
+				'title'              => '',
+				'description'        => '',
+				'class'              => '',
+				'cancel_button'      => true,
+				'cancel_button_text' => __( 'Cancel', 'popup-maker' ),
+				'save_button'        => true,
+				'save_button_text'   => __( 'Add', 'popup-maker' ),
+			]
+		);
 		?>
-		<div id="<?php echo $args['id']; ?>" class="pum-modal-background <?php echo esc_attr( $args['class'] ); ?>" role="dialog" aria-hidden="true" aria-labelledby="<?php echo $args['id']; ?>-title"
-			<?php if ( '' != $args['description'] ) { ?>aria-describedby="<?php echo $args['id']; ?>-description"<?php } ?>>
+		<div id="<?php echo $args['id']; ?>" class="pum-modal-background <?php echo esc_attr( $args['class'] ); ?>" role="dialog" aria-modal="false" aria-labelledby="<?php echo $args['id']; ?>-title"
+			<?php
+			if ( '' !== $args['description'] ) {
+				?>
+				aria-describedby="<?php echo $args['id']; ?>-description"<?php } ?>>
 
 			<div class="pum-modal-wrap">
 
@@ -367,13 +384,13 @@ class PUM_Admin_Helpers {
 
 					<div class="pum-modal-header">
 
-						<?php if ( '' != $args['title'] ) { ?>
+						<?php if ( '' !== $args['title'] ) { ?>
 							<span id="<?php echo $args['id']; ?>-title" class="pum-modal-title"><?php echo $args['title']; ?></span>
 						<?php } ?>
 						<button type="button" class="pum-modal-close" aria-label="<?php _e( 'Close', 'popup-maker' ); ?>"></button>
 					</div>
 
-					<?php if ( '' != $args['description'] ) { ?>
+					<?php if ( '' !== $args['description'] ) { ?>
 						<span id="<?php echo $args['id']; ?>-description" class="screen-reader-text"><?php echo $args['description']; ?></span>
 					<?php } ?>
 
@@ -415,4 +432,3 @@ class PUM_Admin_Helpers {
 	}
 
 }
-

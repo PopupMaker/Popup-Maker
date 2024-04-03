@@ -1,0 +1,13 @@
+{
+    "plugins": [
+        "."
+    ],
+    "env": {
+        "development": {
+            "config": {
+                "WP_DEBUG": true,
+                "WP_DEBUG_LOG": true
+            }
+        }
+    }
+}

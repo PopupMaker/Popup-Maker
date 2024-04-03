@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Class for Admin Pages
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,14 +22,14 @@ class PUM_Admin_Pages {
 	/**
 	 * @var array
 	 */
-	public static $pages = array();
+	public static $pages = [];
 
 	/**
 	 *
 	 */
 	public static function init() {
-		add_action( 'admin_menu', array( __CLASS__, 'register_pages' ) );
-		add_action( 'admin_head',  array( __CLASS__, 'reorder_admin_submenu' ) );
+		add_action( 'admin_menu', [ __CLASS__, 'register_pages' ] );
+		add_action( 'admin_head', [ __CLASS__, 'reorder_admin_submenu' ] );
 	}
 
 	/**
@@ -46,43 +49,49 @@ class PUM_Admin_Pages {
 	 */
 	public static function register_pages() {
 
-		$admin_pages = apply_filters( 'pum_admin_pages', array(
-			'subscribers' => array(
-				'page_title'  => __( 'Subscribers', 'popup-maker' ),
-				'capability'  => 'manage_options',
-				'callback'    => array( 'PUM_Admin_Subscribers', 'page' ),
-			),
-			'settings'   => array(
-				'page_title'  => __( 'Settings', 'popup-maker' ),
-				'capability'  => 'manage_options',
-				'callback'    => array( 'PUM_Admin_Settings', 'page' ),
-			),
-			'extensions' => array(
-				'page_title'  => __( 'Upgrade', 'popup-maker' ),
-				'capability'  => 'edit_posts',
-				'callback'    => array( 'PUM_Admin_Extend', 'page' ),
-			),
-			'support'    => array(
-				'page_title'  => __( 'Help & Support', 'popup-maker' ),
-				'capability'  => 'edit_posts',
-				'callback'    => array( 'PUM_Admin_Support', 'page' ),
-			),
-			'tools'      => array(
-				'page_title'  => __( 'Tools', 'popup-maker' ),
-				'capability'  => 'manage_options',
-				'callback'    => array( 'PUM_Admin_Tools', 'page' ),
-			),
-		) );
+		$admin_pages = apply_filters(
+			'pum_admin_pages',
+			[
+				'subscribers' => [
+					'page_title' => __( 'Subscribers', 'popup-maker' ),
+					'capability' => 'manage_options',
+					'callback'   => [ 'PUM_Admin_Subscribers', 'page' ],
+				],
+				'settings'    => [
+					'page_title' => __( 'Settings', 'popup-maker' ),
+					'capability' => 'manage_options',
+					'callback'   => [ 'PUM_Admin_Settings', 'page' ],
+				],
+				'extensions'  => [
+					'page_title' => __( 'Upgrade', 'popup-maker' ),
+					'capability' => 'edit_posts',
+					'callback'   => [ 'PUM_Admin_Extend', 'page' ],
+				],
+				'support'     => [
+					'page_title' => __( 'Help & Support', 'popup-maker' ),
+					'capability' => 'edit_posts',
+					'callback'   => [ 'PUM_Admin_Support', 'page' ],
+				],
+				'tools'       => [
+					'page_title' => __( 'Tools', 'popup-maker' ),
+					'capability' => 'manage_options',
+					'callback'   => [ 'PUM_Admin_Tools', 'page' ],
+				],
+			]
+		);
 
 		foreach ( $admin_pages as $key => $page ) {
-			$page = wp_parse_args( $page, array(
-				'parent_slug' => 'edit.php?post_type=popup',
-				'page_title'  => '',
-				'menu_title'  => '',
-				'capability'  => 'manage_options',
-				'menu_slug'   => '',
-				'callback'    => '',
-			) );
+			$page = wp_parse_args(
+				$page,
+				[
+					'parent_slug' => 'edit.php?post_type=popup',
+					'page_title'  => '',
+					'menu_title'  => '',
+					'capability'  => 'manage_options',
+					'menu_slug'   => '',
+					'callback'    => '',
+				]
+			);
 
 			// Backward compatibility.
 			$page['capability'] = apply_filters( 'popmake_admin_submenu_' . $key . '_capability', $page['capability'] );
@@ -99,7 +108,7 @@ class PUM_Admin_Pages {
 
 			self::$pages[ $key ] = add_submenu_page( $page['parent_slug'], $page['page_title'], $page['menu_title'], $page['capability'], $page['menu_slug'], $page['callback'] );
 			// For backward compatibility.
-			$GLOBALS[ "popmake_" . $key . "_page" ] = self::$pages[ $key ];
+			$GLOBALS[ 'popmake_' . $key . '_page' ] = self::$pages[ $key ];
 		}
 
 		// Add shortcut to theme editor from Appearance menu.
@@ -108,7 +117,7 @@ class PUM_Admin_Pages {
 
 
 	/**
-	 * Submenu filter function. Tested with Wordpress 4.1.1
+	 * Submenu filter function. Tested with WordPress 4.1.1
 	 * Sort and order submenu positions to match our custom order.
 	 *
 	 * @since 1.4
@@ -118,7 +127,7 @@ class PUM_Admin_Pages {
 
 		if ( isset( $submenu['edit.php?post_type=popup'] ) ) {
 			// Sort the menu according to your preferences
-			usort( $submenu['edit.php?post_type=popup'], array( __CLASS__, 'reorder_submenu_array' ) );
+			usort( $submenu['edit.php?post_type=popup'], [ __CLASS__, 'reorder_submenu_array' ] );
 		}
 	}
 
@@ -137,22 +146,28 @@ class PUM_Admin_Pages {
 	 * @return int
 	 */
 	public static function reorder_submenu_array( $a, $b ) {
-		$first_pages = apply_filters( 'pum_admin_submenu_first_pages', array(
-			__( 'All Popups', 'popup-maker' ),
-			__( 'Add New', 'popup-maker' ),
-			__( 'All Themes', 'popup-maker' ),
-			__( 'Categories', 'popup-maker' ),
-			__( 'Tags', 'popup-maker' ),
-		) );
-		$last_pages  = apply_filters( 'pum_admin_submenu_last_pages', array(
-			__( 'Extend', 'popup-maker' ),
-			__( 'Settings', 'popup-maker' ),
-			__( 'Tools', 'popup-maker' ),
-			__( 'Support Forum', 'popup-maker' ),
-			__( 'Account', 'popup-maker' ),
-			__( 'Contact Us', 'popup-maker' ),
-			__( 'Help & Support', 'popup-maker' ),
-		) );
+		$first_pages = apply_filters(
+			'pum_admin_submenu_first_pages',
+			[
+				__( 'All Popups', 'popup-maker' ),
+				__( 'Add New', 'popup-maker' ),
+				__( 'All Themes', 'popup-maker' ),
+				__( 'Categories', 'popup-maker' ),
+				__( 'Tags', 'popup-maker' ),
+			]
+		);
+		$last_pages  = apply_filters(
+			'pum_admin_submenu_last_pages',
+			[
+				__( 'Extend', 'popup-maker' ),
+				__( 'Settings', 'popup-maker' ),
+				__( 'Tools', 'popup-maker' ),
+				__( 'Support Forum', 'popup-maker' ),
+				__( 'Account', 'popup-maker' ),
+				__( 'Contact Us', 'popup-maker' ),
+				__( 'Help & Support', 'popup-maker' ),
+			]
+		);
 
 		$a_val = strip_tags( $a[0], false );
 		$b_val = strip_tags( $b[0], false );

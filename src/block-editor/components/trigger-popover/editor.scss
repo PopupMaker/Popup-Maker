@@ -5,8 +5,22 @@
 @mixin button-style__active() {
 	outline: none;
 	background-color: $white;
-	color: $gray-900;
-	box-shadow: inset 0 0 0 1px $gray-700, inset 0 0 0 2px $white;
+	color: $dark-gray-900;
+	box-shadow: inset 0 0 0 1px $light-gray-700, inset 0 0 0 2px $white;
+}
+
+@mixin button-style__focus-active() {
+	box-shadow: 0 0 0 1px var(--wp-admin-theme-color);
+
+	// Windows High Contrast mode will show this outline, but not the box-shadow.
+	outline: 1px solid transparent;
+}
+
+@mixin block-toolbar-button-style__focus() {
+	box-shadow: inset 0 0 0 $border-width-focus var(--wp-admin-theme-color), inset 0 0 0 4px $white;
+
+	// Windows High Contrast mode will show this outline, but not the box-shadow.
+	outline: 2px solid transparent;
 }
 
 /** Copied from @wordpress/block-editor/src/components/url-popover/style.scss */
@@ -85,7 +99,7 @@
 .block-editor-popup-trigger-popover__settings {
 	display: block;
 	padding: $grid-unit-20;
-	border-top: $border-width solid $gray-600;
+	border-top: $border-width solid $light-gray-500;
 
 	.components-base-control:last-child,
 	.components-base-control:last-child .components-base-control__field {

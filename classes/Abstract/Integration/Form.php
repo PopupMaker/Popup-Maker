@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2020, WP Popup Maker
- ******************************************************************************/
+/**
+ * Abstract for Integration Form
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration implements PUM_Interface_Integration_Form {
 
@@ -32,7 +35,7 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	 *
 	 * @return array
 	 */
-	public function custom_scripts( $js = []) {
+	public function custom_scripts( $js = [] ) {
 		return $js;
 	}
 
@@ -68,7 +71,7 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	}
 
 	/**
-	 * Returns whether or now we should process any form submissions
+	 * Returns whether or not we should process any form submissions
 	 *
 	 * @return bool True if we should process the form submission
 	 * @since 1.13.0

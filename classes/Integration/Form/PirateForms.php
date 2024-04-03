@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2020, WP Popup Maker
- ******************************************************************************/
+/**
+ * Integration for PirateForms Form
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 
@@ -54,10 +57,10 @@ class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 
 		// Just make sure that it's there and not broken.
 		if ( empty( $form ) ) {
-			return array();
+			return [];
 		}
 
-		return array( 0 => esc_html__( 'Default Form', 'wpforms-lite' ) );
+		return [ 0 => esc_html__( 'Default Form', 'wpforms-lite' ) ];
 	}
 
 	/**
@@ -69,15 +72,15 @@ class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 	 */
 	protected function get_pro_forms() {
 
-		$forms = array();
+		$forms = [];
 		$query = new WP_Query(
-			array(
+			[
 				'post_type'              => 'pf_form',
 				'post_status'            => 'publish',
 				'posts_per_page'         => - 1,
 				'update_post_meta_cache' => false,
 				'update_post_term_cache' => false,
-			)
+			]
 		);
 
 		if ( $query->have_posts() ) {
@@ -124,7 +127,7 @@ class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 	 * @param array $fields Sanitized entry field values/properties.
 	 * @param array $entry Original $_POST global.
 	 * @param array $form_data Form data and settings.
-	 * @param int $entry_id Entry ID. Will return 0 if entry storage is disabled or using WPForms Lite.
+	 * @param int   $entry_id Entry ID. Will return 0 if entry storage is disabled or using WPForms Lite.
 	 */
 	public function on_success( $fields, $entry, $form_data, $entry_id ) {
 		if ( ! self::should_process_submission() ) {
@@ -132,11 +135,13 @@ class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 		}
 		$popup_id = self::get_popup_id();
 		self::increase_conversion( $popup_id );
-		pum_integrated_form_submission( [
-			'popup_id'      => $popup_id,
-			'form_provider' => $this->key,
-			'form_id'       => $form_data['id'],
-		] );
+		pum_integrated_form_submission(
+			[
+				'popup_id'      => $popup_id,
+				'form_provider' => $this->key,
+				'form_id'       => $form_data['id'],
+			]
+		);
 	}
 
 	/**

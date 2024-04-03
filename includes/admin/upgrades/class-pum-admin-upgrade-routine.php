@@ -4,7 +4,7 @@
  *
  * @package     PUM
  * @subpackage  Admin/Upgrades
- * @copyright   Copyright (c) 2019, Code Atlantic LLC
+ * @copyright   Copyright (c) 2023, Code Atlantic LLC
  * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
  * @since       1.4
  */
@@ -42,7 +42,7 @@ class PUM_Admin_Upgrade_Routine {
 	 * @param string $redirect
 	 */
 	public static function redirect( $redirect = '' ) {
-		wp_redirect( $redirect );
+		wp_safe_redirect( $redirect );
 		exit;
 	}
 
@@ -56,14 +56,16 @@ class PUM_Admin_Upgrade_Routine {
 		$upgrades->step_up();
 
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			echo wp_json_encode( array(
-				'status' => sprintf( __( 'Step %d of approximately %d running', 'popup-maker' ), $upgrades->get_arg( 'step' ), $upgrades->get_arg( 'steps' ) ),
-				'next'   => $upgrades->get_args(),
-			) );
+			echo wp_json_encode(
+				[
+					'status' => sprintf( __( 'Step %1$d of approximately %2$d running', 'popup-maker' ), $upgrades->get_arg( 'step' ), $upgrades->get_arg( 'steps' ) ),
+					'next'   => $upgrades->get_args(),
+				]
+			);
 			exit;
 		} else {
 			$redirect = add_query_arg( $upgrades->get_args(), admin_url() );
-			PUM_Admin_Upgrade_Routine::redirect( $redirect );
+			self::redirect( $redirect );
 		}
 
 	}
@@ -87,10 +89,12 @@ class PUM_Admin_Upgrade_Routine {
 				$upgrades->set_arg( 'completed', 0 );
 				$upgrades->set_arg( 'pum-upgrade', $next_routine );
 
-				echo wp_json_encode( array(
-					'status' => sprintf( '<strong>%s</strong>', $upgrades->get_upgrade( $next_routine ) ),
-					'next'   => $upgrades->get_args(),
-				) );
+				echo wp_json_encode(
+					[
+						'status' => sprintf( '<strong>%s</strong>', $upgrades->get_upgrade( $next_routine ) ),
+						'next'   => $upgrades->get_args(),
+					]
+				);
 				exit;
 			}
 		}

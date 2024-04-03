@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Batch Process Handler.
+ *
+ * @package     PUM
+ * @copyright   Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -131,7 +134,6 @@ abstract class PUM_Abstract_Batch_Process implements PUM_Interface_Batch_Process
 
 	/**
 	 * Defines logic to execute once batch processing is complete.
-	 *
 	 */
 	public function finish() {
 		PUM_DataStorage::delete_by_match( "^{$this->batch_id}[0-9a-z\_]+" );

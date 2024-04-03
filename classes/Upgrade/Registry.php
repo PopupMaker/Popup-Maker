@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Upgrade Registry
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -42,7 +45,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self();
-			add_action( 'init', array( self::$instance, 'init' ), -9999 );
+			add_action( 'init', [ self::$instance, 'init' ], -9999 );
 		}
 
 		return self::$instance;
@@ -81,7 +84,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 	/**
 	 * Adds an upgrade to the registry.
 	 *
-	 * @param int $upgrade_id upgrade ID.
+	 * @param int   $upgrade_id upgrade ID.
 	 * @param array $attributes {
 	 *     Upgrade attributes.
 	 *
@@ -92,15 +95,18 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 	 * @return true Always true.
 	 */
 	public function add_upgrade( $upgrade_id, $attributes ) {
-		$attributes = wp_parse_args( $attributes, array(
-			'rules' => array(),
-			'class' => '',
-			'file'  => '',
-		) );
+		$attributes = wp_parse_args(
+			$attributes,
+			[
+				'rules' => [],
+				'class' => '',
+				'file'  => '',
+			]
+		);
 
 		// Log an error if it's too late to register the process.
 		if ( did_action( 'pum_upgrade_process_init' ) ) {
-			PUM_Utils_Logging::instance()->log( sprintf( 'The %s upgrade process was registered too late. Registrations must occur while/before <code>pum_upgrade_process_init</code> fires.', esc_html( $upgrade_id ) ) );
+			pum_log_message( sprintf( 'The %s upgrade process was registered too late. Registrations must occur while/before <code>pum_upgrade_process_init</code> fires.', esc_html( $upgrade_id ) ) );
 			return false;
 		}
 

@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for Deprecated Themes
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -31,9 +34,9 @@ function pum_get_theme_v1_meta_defaults() {
 
 }
 
-# TODO LEFT OFF HERE
-# REFACTOR v1 meta getter & defaults.
-# CONTINUE PURGING CODE.
+// TODO LEFT OFF HERE
+// REFACTOR v1 meta getter & defaults.
+// CONTINUE PURGING CODE.
 
 /**
  * Fetches theme meta group data from v1 data format.
@@ -42,9 +45,9 @@ function pum_get_theme_v1_meta_defaults() {
  * @since      1.8.0
  *
  * @param      $group
- * @param null $popup_theme_id
- * @param null $key
- * @param null $default
+ * @param null  $popup_theme_id
+ * @param null  $key
+ * @param null  $default
  *
  * @return mixed
  */
@@ -56,19 +59,19 @@ function pum_get_theme_v1_meta( $group, $popup_theme_id = null, $key = null, $de
 	$post_meta = get_post_custom( $popup_theme_id );
 
 	if ( ! is_array( $post_meta ) ) {
-		$post_meta = array();
+		$post_meta = [];
 	}
 
 	$default_check_key = 'popup_theme_defaults_set';
-	if ( ! in_array( $group, array( 'overlay', 'close', 'display', 'targeting_condition' ) ) ) {
+	if ( ! in_array( $group, [ 'overlay', 'close', 'display', 'targeting_condition' ] ) ) {
 		$default_check_key = "popup_{$group}_defaults_set";
 	}
 
-	$group_values = array_key_exists( $default_check_key, $post_meta ) ? array() : apply_filters( "popmake_popup_theme_{$group}_defaults", array() );
+	$group_values = array_key_exists( $default_check_key, $post_meta ) ? [] : apply_filters( "popmake_popup_theme_{$group}_defaults", [] );
 	foreach ( $post_meta as $meta_key => $value ) {
 		if ( strpos( $meta_key, "popup_theme_{$group}_" ) !== false ) {
 			$new_key = str_replace( "popup_theme_{$group}_", '', $meta_key );
-			if ( count( $value ) == 1 ) {
+			if ( count( $value ) === 1 ) {
 				$group_values[ $new_key ] = $value[0];
 			} else {
 				$group_values[ $new_key ] = $value;
@@ -99,12 +102,12 @@ function pum_get_theme_v1_meta( $group, $popup_theme_id = null, $key = null, $de
  * @return array|bool|mixed
  */
 function pum_get_theme_v2_meta_defaults( $group = null ) {
-	$defaults = array(
-		'overlay'   => array(
+	$defaults = [
+		'overlay'   => [
 			'background_color'   => '#ffffff',
 			'background_opacity' => 100,
-		),
-		'container' => array(
+		],
+		'container' => [
 			'padding'              => 18,
 			'background_color'     => '#f9f9f9',
 			'background_opacity'   => 100,
@@ -119,8 +122,8 @@ function pum_get_theme_v2_meta_defaults( $group = null ) {
 			'boxshadow_spread'     => 0,
 			'boxshadow_color'      => '#020202',
 			'boxshadow_opacity'    => 23,
-		),
-		'title'     => array(
+		],
+		'title'     => [
 			'font_color'            => '#000000',
 			'line_height'           => 36,
 			'font_size'             => 32,
@@ -133,14 +136,14 @@ function pum_get_theme_v2_meta_defaults( $group = null ) {
 			'textshadow_blur'       => 0,
 			'textshadow_color'      => '#020202',
 			'textshadow_opacity'    => 23,
-		),
-		'content'   => array(
+		],
+		'content'   => [
 			'font_color'  => '#8c8c8c',
 			'font_family' => 'inherit',
 			'font_weight' => 'inherit',
 			'font_style'  => 'normal',
-		),
-		'close'     => array(
+		],
+		'close'     => [
 			'text'                  => __( 'CLOSE', 'popup-maker' ),
 			'location'              => 'topright',
 			'position_top'          => 0,
@@ -174,8 +177,8 @@ function pum_get_theme_v2_meta_defaults( $group = null ) {
 			'textshadow_blur'       => 0,
 			'textshadow_color'      => '#000000',
 			'textshadow_opacity'    => 23,
-		),
-	);
+		],
+	];
 
 	// Here for backward compatibility with extensions.
 	foreach ( $defaults as $key => $values ) {
@@ -202,13 +205,13 @@ function pum_get_theme_v2_meta( $theme_id = null ) {
 
 	$defaults = pum_get_theme_v2_meta_defaults();
 
-	$values = array(
+	$values = [
 		'overlay'   => $theme->get_meta( 'popup_theme_overlay' ),
 		'container' => $theme->get_meta( 'popup_theme_container' ),
 		'title'     => $theme->get_meta( 'popup_theme_title' ),
 		'content'   => $theme->get_meta( 'popup_theme_content' ),
 		'close'     => $theme->get_meta( 'popup_theme_close' ),
-	);
+	];
 
 	foreach ( array_keys( $values ) as $array_key ) {
 		$values[ $array_key ] = wp_parse_args( $values[ $array_key ], $defaults[ $array_key ] );
@@ -342,6 +345,7 @@ function popmake_get_popup_theme_close( $popup_theme_id = null, $key = null, $de
 }
 
 /**\
+ *
  * @deprecated 1.8.0
  *
  * @param int $theme_id
@@ -363,7 +367,7 @@ function popmake_get_popup_theme_data_attr( $theme_id = 0 ) {
 function popmake_get_popup_themes_data() {
 	$themes = pum_get_all_themes();
 
-	$popmake_themes = array();
+	$popmake_themes = [];
 
 	foreach ( $themes as $theme ) {
 		$popmake_themes[ $theme->ID ] = popmake_get_popup_theme_data_attr( $theme->ID );
@@ -382,9 +386,9 @@ function popmake_get_popup_themes_data() {
  * @remove     2.0.0
  *
  * @param      $group
- * @param int  $popup_theme_id ID number of the popup to retrieve a overlay meta for
- * @param null $key
- * @param null $default
+ * @param int   $popup_theme_id ID number of the popup to retrieve a overlay meta for
+ * @param null  $key
+ * @param null  $default
  *
  * @return mixed array|string of the popup overlay meta
  */
@@ -400,9 +404,9 @@ function popmake_get_popup_theme_meta_group( $group, $popup_theme_id = null, $ke
  * @remove     2.0.0
  *
  * @param      $group
- * @param null $popup_theme_id
- * @param null $key
- * @param null $default
+ * @param null  $popup_theme_id
+ * @param null  $key
+ * @param null  $default
  *
  * @return mixed
  */

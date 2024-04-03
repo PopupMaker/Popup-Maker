@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Template Utility
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -20,13 +23,16 @@ class PUM_Utils_Template {
 
 		$old_template_dir = apply_filters( 'popmake_templates_dir', 'popmake_templates' );
 
-		$file_paths = apply_filters( 'pum_template_paths', array(
-			1   => trailingslashit( get_stylesheet_directory() ) . $template_dir,
-			2   => trailingslashit( get_stylesheet_directory() ) . $old_template_dir,
-			10  => trailingslashit( get_template_directory() ) . $template_dir,
-			11  => trailingslashit( get_template_directory() ) . $old_template_dir,
-			100 => Popup_Maker::$DIR . 'templates',
-		) );
+		$file_paths = apply_filters(
+			'pum_template_paths',
+			[
+				1   => trailingslashit( get_stylesheet_directory() ) . $template_dir,
+				2   => trailingslashit( get_stylesheet_directory() ) . $old_template_dir,
+				10  => trailingslashit( get_template_directory() ) . $template_dir,
+				11  => trailingslashit( get_template_directory() ) . $old_template_dir,
+				100 => Popup_Maker::$DIR . 'templates',
+			]
+		);
 
 		/* @deprecated 1.8.9 */
 		$file_paths = apply_filters( 'popmake_template_paths', $file_paths );
@@ -55,7 +61,6 @@ class PUM_Utils_Template {
 	 * @return string
 	 * @internal param string $template_path (default: '')
 	 * @internal param string $default_path (default: '')
-	 *
 	 */
 	public static function locate( $template_names, $load = false, $require_once = true ) {
 		// No file found yet
@@ -91,7 +96,7 @@ class PUM_Utils_Template {
 		// Return what we found
 		$located = apply_filters( 'pum_locate_template', $located, $template_name );
 
-		if ( ( true == $load ) && ! empty( $located ) ) {
+		if ( ( true === $load ) && ! empty( $located ) ) {
 			load_template( $located, $require_once );
 		}
 
@@ -110,7 +115,7 @@ class PUM_Utils_Template {
 	 * @return string
 	 */
 	public static function locate_part( $slug, $name = null, $load = false ) {
-		$templates = array();
+		$templates = [];
 		if ( $name ) {
 			// slug-name.php
 			$templates[] = "{$slug}-{$name}.php";
@@ -133,9 +138,9 @@ class PUM_Utils_Template {
 	 * Render file with extracted arguments.
 	 *
 	 * @param       $template
-	 * @param array $args
+	 * @param array    $args
 	 */
-	public static function render( $template, $args = array() ) {
+	public static function render( $template, $args = [] ) {
 
 		if ( ! $template || ! file_exists( $template ) ) {
 			_doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', $template ), '1.0.0' );
@@ -159,7 +164,7 @@ class PUM_Utils_Template {
 	 * @param string $name
 	 * @param array  $args
 	 */
-	public static function part( $slug, $name = null, $args = array() ) {
+	public static function part( $slug, $name = null, $args = [] ) {
 		echo self::get_part( $slug, $name, $args );
 	}
 
@@ -174,7 +179,7 @@ class PUM_Utils_Template {
 	 *
 	 * @return string
 	 */
-	public static function get_part( $slug, $name = null, $args = array() ) {
+	public static function get_part( $slug, $name = null, $args = [] ) {
 
 		$template = self::locate_part( $slug, $name );
 
@@ -196,11 +201,11 @@ class PUM_Utils_Template {
 	 * Gets the rendered contents of the specified template file.
 	 *
 	 * @param       $template_name
-	 * @param array $args
+	 * @param array         $args
 	 *
 	 * @return string
 	 */
-	public static function get( $template_name, $args = array() ) {
+	public static function get( $template_name, $args = [] ) {
 		$template = self::locate( $template_name );
 
 		// Allow 3rd party plugin filter template file from their plugin.
@@ -225,7 +230,7 @@ class PUM_Utils_Template {
 	 * @param string $template_name Template file name with extension: file-name.php
 	 * @param array  $args          (default: array())
 	 */
-	public static function load( $template_name, $args = array() ) {
+	public static function load( $template_name, $args = [] ) {
 		echo self::get( $template_name, $args );
 	}
 

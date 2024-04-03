@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Utility for I10n
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -29,7 +32,7 @@ class PUM_Utils_I10n {
 			set_transient( 'pum_alerts_translation_status', $translations, 604800 );
 		}
 
-		$ret = array();
+		$ret = [];
 
 		foreach ( $translations as $translation ) {
 			$ret[ $translation['language'] ] = $translation;
@@ -45,7 +48,7 @@ class PUM_Utils_I10n {
 	 * @return array List of locales.
 	 */
 	public static function get_non_en_accepted_wp_locales_from_header() {
-		$res = array();
+		$res = [];
 
 		$http_locales = self::get_http_locales();
 
@@ -96,7 +99,7 @@ class PUM_Utils_I10n {
 
 		if ( ! isset( $available_locales ) ) {
 			if ( ! function_exists( 'wp_get_available_translations' ) ) {
-				require_once( ABSPATH . 'wp-admin/includes/translation-install.php' );
+				require_once ABSPATH . 'wp-admin/includes/translation-install.php';
 			}
 
 			$available_locales = wp_get_available_translations();
@@ -116,14 +119,14 @@ class PUM_Utils_I10n {
 	public static function map_locale( $lang, $region ) {
 		$uregion  = strtoupper( $region );
 		$ulang    = strtoupper( $lang );
-		$variants = array(
+		$variants = [
 			"$lang-$region",
 			"{$lang}_$region",
 			"$lang-$uregion",
 			"{$lang}_$uregion",
 			"{$lang}_$ulang",
 			$lang,
-		);
+		];
 
 		$available_locales = self::available_locales();
 
@@ -158,7 +161,7 @@ class PUM_Utils_I10n {
 		if ( preg_match_all( "/$locale_re/i", isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '', $matches ) ) {
 			return $matches[0];
 		} else {
-			return array();
+			return [];
 		}
 	}
 

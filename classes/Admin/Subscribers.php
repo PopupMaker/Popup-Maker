@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Class for Admin Subscribers
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -16,8 +19,8 @@ class PUM_Admin_Subscribers {
 	 *
 	 */
 	public static function init() {
-		add_action( 'admin_menu', array( __CLASS__, 'after_page_registration' ), 11 );
-		add_filter( 'set-screen-option', array( __CLASS__, 'set_option' ), 10, 3 );
+		add_action( 'admin_menu', [ __CLASS__, 'after_page_registration' ], 11 );
+		add_filter( 'set-screen-option', [ __CLASS__, 'set_option' ], 10, 3 );
 	}
 
 	/**
@@ -59,15 +62,18 @@ class PUM_Admin_Subscribers {
 	}
 
 	public static function after_page_registration() {
-		add_action( 'load-' . PUM_Admin_Pages::$pages['subscribers'], array( 'PUM_Admin_Subscribers', 'load_user_list_table_screen_options' ) );
+		add_action( 'load-' . PUM_Admin_Pages::$pages['subscribers'], [ 'PUM_Admin_Subscribers', 'load_user_list_table_screen_options' ] );
 	}
 
 	public static function load_user_list_table_screen_options() {
-		add_screen_option( 'per_page', array(
-			'label'   => __( 'Subscribers Per Page', 'popup-maker' ),
-			'default' => 20,
-			'option'  => 'pum_subscribers_per_page',
-		) );
+		add_screen_option(
+			'per_page',
+			[
+				'label'   => __( 'Subscribers Per Page', 'popup-maker' ),
+				'default' => 20,
+				'option'  => 'pum_subscribers_per_page',
+			]
+		);
 
 		/*
 		 * Instantiate the User List Table. Creating an instance here will allow the core WP_List_Table class to automatically
@@ -87,7 +93,7 @@ class PUM_Admin_Subscribers {
 	 */
 	public static function set_option( $status, $option, $value ) {
 
-		if ( 'pum_subscribers_per_page' == $option ) {
+		if ( 'pum_subscribers_per_page' === $option ) {
 			return $value;
 		}
 
@@ -95,4 +101,3 @@ class PUM_Admin_Subscribers {
 
 	}
 }
-

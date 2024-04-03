@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Abstract for settings upgrade
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -76,5 +79,5 @@ abstract class PUM_Abstract_Upgrade_Settings extends PUM_Abstract_Upgrade {
 	 *
 	 * @param array $settings
 	 */
-	abstract public function process_settings( $settings = array() );
+	abstract public function process_settings( $settings = [] );
 }

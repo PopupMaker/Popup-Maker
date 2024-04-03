@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Newsletter Provider Base class
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -18,9 +21,9 @@ abstract class PUM_Newsletter_Provider extends PUM_Abstract_Provider {
 	public function __construct() {
 		parent::__construct();
 
-		remove_filter( 'pum_settings_fields', array( $this, 'register_settings' ) );
-		add_filter( 'pum_settings_fields', array( $this, 'process_deprecated_settings_fields' ) );
-		//add_filter( 'pum_newsletter_settings', array( $this, 'register_settings' ) );
+		remove_filter( 'pum_settings_fields', [ $this, 'register_settings' ] );
+		add_filter( 'pum_settings_fields', [ $this, 'process_deprecated_settings_fields' ] );
+		// add_filter( 'pum_newsletter_settings', array( $this, 'register_settings' ) );
 	}
 
 	/**

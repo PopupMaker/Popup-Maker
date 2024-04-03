@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2020, WP Popup Maker
- ******************************************************************************/
+/**
+ * Integration for WPForms Form
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 
@@ -11,7 +14,7 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	public $key = 'wpforms';
 
 	public function __construct() {
-		add_action( 'wpforms_process_complete', array( $this, 'on_success' ), 10, 4 );
+		add_action( 'wpforms_process_complete', [ $this, 'on_success' ], 10, 4 );
 	}
 
 	/**
@@ -67,7 +70,7 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	 * @param array $fields Sanitized entry field values/properties.
 	 * @param array $entry Original $_POST global.
 	 * @param array $form_data Form data and settings.
-	 * @param int $entry_id Entry ID. Will return 0 if entry storage is disabled or using WPForms Lite.
+	 * @param int   $entry_id Entry ID. Will return 0 if entry storage is disabled or using WPForms Lite.
 	 */
 	public function on_success( $fields, $entry, $form_data, $entry_id ) {
 		if ( ! self::should_process_submission() ) {
@@ -75,11 +78,13 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 		}
 		$popup_id = self::get_popup_id();
 		self::increase_conversion( $popup_id );
-		pum_integrated_form_submission( [
-			'popup_id'      => $popup_id,
-			'form_provider' => $this->key,
-			'form_id'       => $form_data['id'],
-		] );
+		pum_integrated_form_submission(
+			[
+				'popup_id'      => $popup_id,
+				'form_provider' => $this->key,
+				'form_id'       => $form_data['id'],
+			]
+		);
 	}
 
 	/**
@@ -97,10 +102,10 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	 * @return array
 	 */
 	public function custom_styles( $css = [] ) {
-//		$css[ $this->key ] = [
-//			'content'  => ".pac-container { z-index: 2000000000 !important; }\n",
-//			'priority' => 8,
-//		];
+		// $css[ $this->key ] = [
+		// 'content'  => ".pac-container { z-index: 2000000000 !important; }\n",
+		// 'priority' => 8,
+		// ];
 
 		return $css;
 	}

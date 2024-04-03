@@ -5,29 +5,29 @@
 $wpblue: #20252b;
 
 .popmake-support-links {
-  list-style: none;
+	list-style: none;
 
-  li {
-    margin-bottom: 10px;
-  }
+	li {
+		margin-bottom: 10px;
+	}
 
-  a {
-    color: $wpblue;
-    font-size: 1.25em;
-    text-decoration: none;
-    text-transform: uppercase;
+	a {
+		color: $wpblue;
+		font-size: 1.25em;
+		text-decoration: none;
+		text-transform: uppercase;
 
-    span {
-      margin-left: 10px;
-    }
+		span {
+			margin-left: 10px;
+		}
 
-    img {
-      max-height: 24px;
-      max-width: 24px;
-      min-height: 24px;
-      min-width: 24px;
-      position: relative;
-      top: 6px;
-    }
-  }
+		img {
+			max-height: 24px;
+			max-width: 24px;
+			min-height: 24px;
+			min-width: 24px;
+			position: relative;
+			top: 6px;
+		}
+	}
 }

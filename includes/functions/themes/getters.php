@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for Theme Getters
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -35,7 +38,7 @@ function pum_get_theme_generated_styles( $theme_id = 0 ) {
 	$theme = pum_get_theme( $theme_id );
 
 	if ( ! pum_is_theme_object( $theme ) ) {
-		return array();
+		return [];
 	}
 
 	return $theme->get_generated_styles();

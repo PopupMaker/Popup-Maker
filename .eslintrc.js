@@ -41,6 +41,8 @@ const eslintConfig = {
 				'no-useless-constructor': 'off',
 				'no-var': 'off',
 				'object-shorthand': 'off',
+				'wrap-iife': 'off',
+				camelcase: 'any',
 			},
 		},
 	],

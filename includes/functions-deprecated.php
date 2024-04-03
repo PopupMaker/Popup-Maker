@@ -1,14 +1,17 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Deprecated functions
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-#region Deprecated 1.7.0
+// region Deprecated 1.7.0
 
 /**
  * @deprecated 1.7.0 Use pum_load_popup
@@ -97,15 +100,15 @@ function popmake_get_registered_settings() {
 	 * 'Whitelisted' POPMAKE settings, filters are provided for each settings
 	 * section to allow extensions and other plugins to add their own settings
 	 */
-	$popmake_settings = array(
+	$popmake_settings = [
 		/** General Settings */
-		'general'    => apply_filters( 'popmake_settings_general', array() ),
-		'assets'     => apply_filters( 'popmake_settings_assets', array() ),
+		'general'    => apply_filters( 'popmake_settings_general', [] ),
+		'assets'     => apply_filters( 'popmake_settings_assets', [] ),
 		/** Extension Settings */
-		'extensions' => apply_filters( 'popmake_settings_extensions', array() ),
-		'licenses'   => apply_filters( 'popmake_settings_licenses', array() ),
-		'misc'       => apply_filters( 'popmake_settings_misc', array() ),
-	);
+		'extensions' => apply_filters( 'popmake_settings_extensions', [] ),
+		'licenses'   => apply_filters( 'popmake_settings_licenses', [] ),
+		'misc'       => apply_filters( 'popmake_settings_misc', [] ),
+	];
 
 	return apply_filters( 'popmake_registered_settings', $popmake_settings );
 }
@@ -170,9 +173,9 @@ function popmake_output_pum_styles() {
  */
 function popmake_get_pages( $force = false ) {
 
-	$pages_options = array( 0 => '' ); // Blank option
+	$pages_options = [ 0 => '' ]; // Blank option
 
-	if ( ( ! isset( $_GET['page'] ) || 'pum-settings' != $_GET['page'] ) && ! $force ) {
+	if ( ( ! isset( $_GET['page'] ) || 'pum-settings' !== $_GET['page'] ) && ! $force ) {
 		return $pages_options;
 	}
 
@@ -241,9 +244,9 @@ function pum_get_trigger_section_labels() {
 	return PUM_Triggers::instance()->get_tabs();
 }
 
-#endregion
+// endregion
 
-#region Deprecated 1.8.0
+// region Deprecated 1.8.0
 
 
 /**
@@ -257,19 +260,21 @@ function pum_get_trigger_section_labels() {
 function popmake_install_default_theme() {
 	$defaults = PUM_Admin_Themes::defaults();
 
-	$default_theme = @wp_insert_post( array(
-		'post_title'     => __( 'Default Theme', 'popup-maker' ),
-		'post_status'    => 'publish',
-		'post_author'    => 1,
-		'post_type'      => 'popup_theme',
-		'comment_status' => 'closed',
-		'meta_input'     => array(
-			'_pum_built_in'        => 'default-theme',
-			'_pum_default_theme'   => true,
-			'popup_theme_settings' => $defaults,
-			'popup_theme_data_version' => 3,
-		),
-	) );
+	$default_theme = @wp_insert_post(
+		[
+			'post_title'     => __( 'Default Theme', 'popup-maker' ),
+			'post_status'    => 'publish',
+			'post_author'    => 1,
+			'post_type'      => 'popup_theme',
+			'comment_status' => 'closed',
+			'meta_input'     => [
+				'_pum_built_in'            => 'default-theme',
+				'_pum_default_theme'       => true,
+				'popup_theme_settings'     => $defaults,
+				'popup_theme_data_version' => 3,
+			],
+		]
+	);
 
 	update_option( 'popmake_default_theme', $default_theme );
 	pum_reset_assets();
@@ -418,7 +423,8 @@ function popmake_render_popup_theme_overlay_meta_box() {
 		<?php do_action( 'popmake_popup_theme_overlay_meta_box_fields', $post->ID ); ?>
 		</tbody>
 	</table>
-	</div><?php
+	</div>
+	<?php
 }
 
 /**
@@ -435,14 +441,16 @@ function popmake_render_popup_theme_container_meta_box() {
 		return;
 	}
 
-	global $post; ?>
+	global $post;
+	?>
 	<div id="popmake_popup_theme_container_fields" class="popmake_meta_table_wrap">
 	<table class="form-table">
 		<tbody>
 		<?php do_action( 'popmake_popup_theme_container_meta_box_fields', $post->ID ); ?>
 		</tbody>
 	</table>
-	</div><?php
+	</div>
+	<?php
 }
 
 /**
@@ -459,15 +467,17 @@ function popmake_render_popup_theme_close_meta_box() {
 		return;
 	}
 
-	global $post; ?>
+	global $post;
+	?>
 	<div id="popmake_popup_theme_close_fields" class="popmake_meta_table_wrap">
 	<table class="form-table">
 		<tbody>
 		<?php do_action( 'popmake_popup_theme_close_meta_box_fields', $post->ID ); ?>
 		</tbody>
 	</table>
-	</div><?php
+	</div>
+	<?php
 }
 
 
-#endregion
+// endregion

@@ -324,21 +324,6 @@
     };
 
     $(document)
-        .ready(function () {
-            $(this).trigger('pum_init');
-
-            var $container = $('#pum-theme-settings-container'),
-                args = pum_theme_settings_editor.form_args || {},
-                values = pum_theme_settings_editor.current_values || {};
-
-            if ($container.length) {
-                $container.find('.pum-no-js').hide();
-                PUM_Admin.forms.render(args, values, $container);
-            }
-
-            PUM_Admin.themeEditor.preview_fixed_scroll();
-            PUM_Admin.themeEditor.refresh_preview();
-        })
         .on('change', 'select[id$="_font_family"]', function () {
             var prefix = $(this).attr('id').replace('_font_family', '');
 
@@ -382,4 +367,22 @@
         .on('change colorchange input focusout', '.pum-field select, .pum-field input', function () {
             PUM_Admin.themeEditor.refresh_preview();
         });
+
+	// Initiate when ready.
+	$(function () {
+		$(this).trigger('pum_init');
+
+		var $container = $('#pum-theme-settings-container'),
+			args = pum_theme_settings_editor.form_args || {},
+			values = pum_theme_settings_editor.current_values || {};
+
+		if ($container.length) {
+			$container.find('.pum-no-js').hide();
+			PUM_Admin.forms.render(args, values, $container);
+		}
+
+		PUM_Admin.themeEditor.preview_fixed_scroll();
+		PUM_Admin.themeEditor.refresh_preview();
+	});
+
 }(jQuery));

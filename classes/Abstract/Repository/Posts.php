@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Abstract for posts repository
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -26,10 +29,10 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 *
 	 * @var array
 	 */
-	protected $cache = array(
-		'objects' => array(),
-		'queries' => array(),
-	);
+	protected $cache = [
+		'objects' => [],
+		'queries' => [],
+	];
 
 	/**
 	 * @var string
@@ -49,7 +52,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 * Initialize the repository.
 	 */
 	protected function init() {
-		$this->query = new WP_Query;
+		$this->query = new WP_Query();
 		$this->reset_strict_query_args();
 	}
 
@@ -61,13 +64,13 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 * @return array
 	 */
 	public function default_query_args() {
-		return array();
+		return [];
 	}
 
 	/**
 	 * @var array
 	 */
-	protected $strict_query_args = array();
+	protected $strict_query_args = [];
 
 	/**
 	 * Returns an array of default strict query args that can't be over ridden, such as post type.
@@ -75,9 +78,9 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 * @return array
 	 */
 	protected function default_strict_query_args() {
-		return array(
+		return [
 			'post_type' => $this->get_post_type(),
-		);
+		];
 	}
 
 	/**
@@ -115,7 +118,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 *
 	 * @return array
 	 */
-	protected function _build_wp_query_args( $args = array() ) {
+	protected function _build_wp_query_args( $args = [] ) {
 		$args = wp_parse_args( $args, $this->default_query_args() );
 
 		$args = $this->build_wp_query_args( $args );
@@ -128,7 +131,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 *
 	 * @return array
 	 */
-	protected function build_wp_query_args( $args = array() ) {
+	protected function build_wp_query_args( $args = [] ) {
 		return $args;
 	}
 
@@ -140,7 +143,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 */
 	public function get_item( $id ) {
 		if ( ! $this->has_item( $id ) ) {
-			throw new InvalidArgumentException( sprintf( __( 'No %s found with id %d.', 'popup-maker' ), $this->get_post_type(), $id ) );
+			throw new InvalidArgumentException( sprintf( __( 'No %1$s found with id %2$d.', 'popup-maker' ), $this->get_post_type(), $id ) );
 		}
 
 		return $this->get_model( $id );
@@ -158,7 +161,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 		$id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE %s = %s", $field, $value ) );
 
 		if ( ! $id || ! $this->has_item( $id ) ) {
-			throw new InvalidArgumentException( sprintf( __( 'No user found with %s %s.', 'popup-maker' ), $field, $value ) );
+			throw new InvalidArgumentException( sprintf( __( 'No user found with %1$s %2$s.', 'popup-maker' ), $field, $value ) );
 		}
 
 		return $this->get_model( $id );
@@ -187,7 +190,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 *
 	 * @return WP_Post[]|PUM_Abstract_Model_Post[]
 	 */
-	public function get_items( $args = array() ) {
+	public function get_items( $args = [] ) {
 		/** Reset default strict query args. */
 		$this->reset_strict_query_args();
 
@@ -225,7 +228,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 *
 	 * @return int
 	 */
-	public function count_items( $args = array() ) {
+	public function count_items( $args = [] ) {
 		/** Reset default strict query args. */
 		$this->reset_strict_query_args();
 
@@ -271,21 +274,27 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 */
 	public function create_item( $data ) {
 
-		$data = wp_parse_args( $data, array(
-			'content'    => '',
-			'title'      => '',
-			'meta_input' => array(),
-		) );
+		$data = wp_parse_args(
+			$data,
+			[
+				'content'    => '',
+				'title'      => '',
+				'meta_input' => [],
+			]
+		);
 
 		$this->assert_data( $data );
 
-		$post_id = wp_insert_post( array(
-			'post_type'    => $this->get_post_type(),
-			'post_status'  => 'publish',
-			'post_title'   => $data['title'],
-			'post_content' => $data['content'],
-			'meta_input'   => $data['meta_input'],
-		), true );
+		$post_id = wp_insert_post(
+			[
+				'post_type'    => $this->get_post_type(),
+				'post_status'  => 'publish',
+				'post_title'   => $data['title'],
+				'post_content' => $data['content'],
+				'meta_input'   => $data['meta_input'],
+			],
+			true
+		);
 
 		if ( is_wp_error( $post_id ) ) {
 			throw new InvalidArgumentException( $post_id->get_error_message() );
@@ -308,7 +317,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 		/** @var WP_Post|PUM_Abstract_Model_Post $original */
 		$original = $this->get_item( $id );
 
-		$post_update = array();
+		$post_update = [];
 
 		foreach ( $data as $key => $value ) {
 			if ( $original->$key === $value ) {
@@ -376,10 +385,10 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 		if ( ! $this->cached_model_exists( $post ) ) {
 			$object = new $model( $post );
 
-			$this->cache['objects'][ $post->ID ] = array(
+			$this->cache['objects'][ $post->ID ] = [
 				'object' => $object,
-				'hash' => $this->get_post_hash( $post )
-			);
+				'hash'   => $this->get_post_hash( $post ),
+			];
 		}
 
 		return $this->cache['objects'][ $post->ID ]['object'];

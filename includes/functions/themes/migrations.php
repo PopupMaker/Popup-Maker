@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for Theme Migrations
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 /**
  * Checks if passive migration for popups should be enabled.
@@ -21,10 +24,12 @@ function pum_passive_theme_upgrades_enabled() {
 	if ( ! $theme_count ) {
 		$theme_count = get_transient( 'pum_theme_count' );
 
-		if ( $theme_count === false ) {
-			$theme_count = pum_count_themes( array(
-				'post_status' => array( 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ),
-			) );
+		if ( false === $theme_count ) {
+			$theme_count = pum_count_themes(
+				[
+					'post_status' => [ 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ],
+				]
+			);
 
 			set_transient( 'pum_theme_count', $theme_count, MINUTE_IN_SECONDS );
 		}
@@ -42,7 +47,7 @@ function pum_passive_theme_upgrades_enabled() {
  */
 function pum_theme_migration_1( &$theme ) {
 
-	$delete_meta = array( 'popup_theme_defaults_set' );
+	$delete_meta = [ 'popup_theme_defaults_set' ];
 
 	// Used to merge with existing values to ensure data integrity.
 	$meta_defaults = pum_get_theme_v2_meta_defaults();
@@ -87,17 +92,17 @@ add_action( 'pum_theme_passive_migration_1', 'pum_theme_migration_1' );
 function pum_theme_migration_2( &$theme ) {
 
 	$changed     = false;
-	$delete_meta = array();
+	$delete_meta = [];
 
 	$settings = $theme->get_settings();
 
-	$old_meta_elements = array(
+	$old_meta_elements = [
 		'overlay',
 		'container',
 		'title',
 		'content',
 		'close',
-	);
+	];
 
 	foreach ( $old_meta_elements as $element ) {
 		$meta_key = 'popup_theme_' . $element;
@@ -125,7 +130,6 @@ function pum_theme_migration_2( &$theme ) {
 				$theme->update_meta( $meta_key, $element_data );
 			}
 		}
-
 	}
 
 	/**

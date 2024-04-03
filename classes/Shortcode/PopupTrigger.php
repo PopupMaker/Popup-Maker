@@ -1,4 +1,10 @@
 <?php
+/**
+ * Shortcode for PopupTrigger
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -48,33 +54,33 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	 * @return array
 	 */
 	public function inner_content_labels() {
-		return array(
+		return [
 			'label'       => __( 'Trigger Content', 'popup-maker' ),
 			'description' => __( 'Can contain other shortcodes, images, text or html content.' ),
-		);
+		];
 	}
 
 	/**
 	 * @return array
 	 */
 	public function post_types() {
-		return array( 'post', 'page', 'popup' );
+		return [ 'post', 'page', 'popup' ];
 	}
 
 	/**
 	 * @return array
 	 */
 	public function fields() {
-		$select_args = array();
+		$select_args = [];
 
-		if ( isset( $_GET['post'] ) && is_int( (int) $_GET['post'] ) && isset( $_GET['action'] ) && $_GET['action'] == 'edit' ) {
-			$select_args['post__not_in'] = wp_parse_id_list( array( get_the_ID(), $_GET['post'] ) );
+		if ( isset( $_GET['post'] ) && is_int( (int) $_GET['post'] ) && isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
+			$select_args['post__not_in'] = wp_parse_id_list( [ get_the_ID(), $_GET['post'] ] );
 		}
 
-		return array(
-			'general' => array(
-				'main' => array(
-					'id'        => array(
+		return [
+			'general' => [
+				'main' => [
+					'id'        => [
 						'label'       => __( 'Targeted Popup', 'popup-maker' ),
 						'placeholder' => __( 'Choose a Popup', 'popup-maker' ),
 						'desc'        => __( 'Choose which popup will be targeted by this trigger.', 'popup-maker' ),
@@ -82,24 +88,24 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 						'post_type'   => 'popup',
 						'priority'    => 5,
 						'required'    => true,
-						'options'     => PUM_Helpers::popup_selectlist( $select_args ) + array(
-								'custom' => __( 'Custom', 'popup-maker' ),
-							),
+						'options'     => PUM_Helpers::popup_selectlist( $select_args ) + [
+							'custom' => __( 'Custom', 'popup-maker' ),
+						],
 						'std'         => 0,
-					),
-					'custom_id' => array(
+					],
+					'custom_id' => [
 						'label'        => __( 'Custom Popup ID', 'popup-maker' ),
 						'type'         => 'text',
-						'dependencies' => array(
+						'dependencies' => [
 							'id' => 'custom',
-						),
+						],
 						'std'          => '',
-					),
-				),
-			),
-			'options' => array(
-				'main' => array(
-					'tag'        => array(
+					],
+				],
+			],
+			'options' => [
+				'main' => [
+					'tag'        => [
 						'label'       => __( 'HTML Tag', 'popup-maker' ),
 						'placeholder' => __( 'HTML Tags: button, span etc.', 'popup-maker' ),
 						'desc'        => __( 'The HTML tag used to generate the trigger and wrap your text.', 'popup-maker' ),
@@ -107,29 +113,29 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 						'std'         => '',
 						'priority'    => 10,
 						'required'    => true,
-					),
-					'classes'    => array(
+					],
+					'classes'    => [
 						'label'       => __( 'CSS Class', 'popup-maker' ),
 						'placeholder' => __( 'CSS Class', 'popup-maker' ),
 						'type'        => 'text',
 						'desc'        => __( 'Add additional classes for styling.', 'popup-maker' ),
 						'priority'    => 15,
 						'std'         => '',
-					),
-					'class' => array(
-					    'type' => 'hidden',
-                    ),
-					'do_default' => array(
+					],
+					'class'      => [
+						'type' => 'hidden',
+					],
+					'do_default' => [
 						'type'     => 'checkbox',
 						'label'    => __( 'Do not prevent the default click functionality.', 'popup-maker' ),
 						'desc'     => __( 'This prevents us from disabling the browsers default action when a trigger is clicked. It can be used to allow a link to a file to both trigger a popup and still download the file.', 'popup-maker' ),
 						'priority' => 20,
 						'std'      => false,
-					),
+					],
 
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 
 	/**
@@ -141,10 +147,16 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	 * @return string
 	 */
 	public function handler( $atts, $content = null ) {
-		$atts    = $this->shortcode_atts( $atts );
-		$return  = '<' . $atts['tag'] . ' class="pum-trigger  popmake-' . $atts['id'] . ' ' . $atts['classes'] . '"  data-do-default="' . esc_attr( $atts['do_default'] ) . '">';
-		$return .= PUM_Helpers::do_shortcode( $content );
-		$return .= '</' . $atts['tag'] . '>';
+		$atts = $this->shortcode_atts( $atts );
+
+		$tag        = esc_attr( $atts['tag'] );
+		$id         = esc_attr( $atts['id'] );
+		$classes    = esc_attr( $atts['classes'] );
+		$do_default = esc_attr( $atts['do_default'] );
+		// Escaped using notes here: https://wordpress.stackexchange.com/a/357349/63942.
+		$esc_content = PUM_Helpers::do_shortcode( force_balance_tags( wp_kses_post( $content ) ) );
+
+		$return = "<$tag class='pum-trigger  popmake-$id  $classes' data-do-default='$do_default'>$esc_content</$tag>";
 
 		PUM_Site_Popups::preload_popup_by_id_if_enabled( $atts['id'] );
 
@@ -161,13 +173,18 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	 * @return array
 	 */
 	public function shortcode_atts( $atts ) {
+		global $allowedtags;
+
 		$atts = parent::shortcode_atts( $atts );
 
-		if ( empty( $atts['tag'] ) ) {
+		// Add button to allowed tags.
+		$tags_allowed = array_merge( array_keys( $allowedtags ), [ 'button' ] ) ;
+
+		if ( empty( $atts['tag'] ) || ! in_array( $atts['tag'], $tags_allowed ) ) {
 			$atts['tag'] = 'span';
 		}
 
-		if ( $atts['id'] == 'custom' ) {
+		if ( 'custom' === $atts['id'] ) {
 			$atts['id'] = $atts['custom_id'];
 		}
 
@@ -176,15 +193,18 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 			unset( $atts['class'] );
 		}
 
-
 		return $atts;
 	}
 
-	/**
-	 *
-	 */
-	public function template() { ?>
-		<{{{attrs.tag}}} class="pum-trigger  popmake-{{{attrs.id}}} {{{attrs.classes}}}">{{{attrs._inner_content}}}</{{{attrs.tag}}}><?php
+	public function template() {
+		global $allowedtags;
+		?>
+		<#
+			const allowedTags = <?php echo wp_json_encode( array_keys( $allowedtags ) ); ?>;
+			const tag = allowedTags.indexOf( attrs.tag ) >= 0 ? attrs.tag : 'span';
+		#>
+		<{{{tag}}} class="pum-trigger  popmake-{{{attrs.id}}} {{{attrs.classes}}}">{{{attrs._inner_content}}}</{{{tag}}}>
+		<?php
 	}
 
 }

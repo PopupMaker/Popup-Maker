@@ -1,8 +1,10 @@
 <?php
-
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Popups class
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -42,11 +44,14 @@ class PUM_Popups {
 	 *
 	 * @return \WP_Query
 	 */
-	public static function query( $args = array() ) {
-		$args = wp_parse_args( $args, array(
-			'post_type'      => 'popup',
-			'posts_per_page' => - 1,
-		) );
+	public static function query( $args = [] ) {
+		$args = wp_parse_args(
+			$args,
+			[
+				'post_type'      => 'popup',
+				'posts_per_page' => - 1,
+			]
+		);
 
 		return new WP_Query( $args );
 	}

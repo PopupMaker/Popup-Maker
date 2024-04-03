@@ -272,13 +272,12 @@
                 batch_upgrades.process_step($form.data('step') || 1, data);
             }
 
-        })
-        .ready(function () {
         });
 
 }(jQuery));
 
-jQuery(document).ready(function ($) {
+// Initiate when ready.
+jQuery(function ($) {
 
     $.extend({
         arrayMerge: function () {

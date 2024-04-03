@@ -1,12 +1,15 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2020, Code Atlantic LLC.
- ******************************************************************************/
+/**
+ * Failsafes
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! function_exists( 'popmake_get_option' ) ) {
 	/**
 	 * @param string $key
-	 * @param bool $default
+	 * @param bool   $default
 	 *
 	 * @return bool
 	 */
@@ -69,11 +72,10 @@ if ( ! function_exists( 'popmake_get_template_part' ) ) {
 	 * @return string
 	 */
 	function popmake_get_template_part( $slug, $name = null, $load = true ) {
-		if ($load ) {
+		if ( $load ) {
 			return;
 		}
 
 		return __DIR__ . '/index.php';
 	}
 }
-

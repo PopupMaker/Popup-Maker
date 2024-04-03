@@ -1,4 +1,10 @@
 <?php
+/**
+ * Integrations for ninja-forms
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -46,7 +52,7 @@ final class NF_PUM {
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof NF_PUM ) ) {
-			spl_autoload_register( array( __CLASS__, 'autoloader' ) );
+			spl_autoload_register( [ __CLASS__, 'autoloader' ] );
 
 			self::$instance = new NF_PUM();
 
@@ -60,7 +66,7 @@ final class NF_PUM {
 
 	public function __construct() {
 		$this->register_actions();
-		add_filter( 'pum_registered_cookies', array( $this, 'register_cookies' ) );
+		add_filter( 'pum_registered_cookies', [ $this, 'register_cookies' ] );
 	}
 
 	/**
@@ -70,7 +76,7 @@ final class NF_PUM {
 	 */
 	public function register_actions() {
 		Ninja_Forms()->actions['closepopup'] = new NF_PUM_Actions_ClosePopup();
-		Ninja_Forms()->actions['openpopup'] = new NF_PUM_Actions_OpenPopup();
+		Ninja_Forms()->actions['openpopup']  = new NF_PUM_Actions_OpenPopup();
 	}
 
 
@@ -78,12 +84,12 @@ final class NF_PUM {
 	 * Optional. If your extension creates a new field interaction or display template...
 	 */
 	public function register_cookies( $cookies ) {
-		$cookies['ninja_form_success'] = array(
-			'labels' => array(
+		$cookies['ninja_form_success'] = [
+			'labels' => [
 				'name' => __( 'Ninja Form Success (deprecated. Use Form Submission instead.)', 'popup-maker' ),
-			),
+			],
 			'fields' => pum_get_cookie_fields(),
-		);
+		];
 
 		return $cookies;
 	}
@@ -116,9 +122,9 @@ final class NF_PUM {
 	 * Template
 	 *
 	 * @param string $file_name
-	 * @param array $data
+	 * @param array  $data
 	 */
-	public static function template( $file_name = '', array $data = array() ) {
+	public static function template( $file_name = '', array $data = [] ) {
 		if ( ! $file_name ) {
 			return;
 		}

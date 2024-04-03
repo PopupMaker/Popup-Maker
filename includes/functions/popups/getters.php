@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for Popup Getters
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -33,10 +36,8 @@ function pum_get_popup_title( $popup_id = null ) {
 	$popup = pum_get_popup( $popup_id );
 
 	if ( ! pum_is_popup_object( $popup ) ) {
-		return "";
+		return '';
 	}
-
-	$title = $popup->get_title();
 
 	return $popup->get_title();
 }
@@ -46,13 +47,12 @@ function pum_get_popup_title( $popup_id = null ) {
  *
  * @return array
  * @deprecated 1.8.0
- *
  */
 function pum_get_popup_triggers( $popup_id = null ) {
 	$popup = pum_get_popup( $popup_id );
 
 	if ( ! pum_is_popup_object( $popup ) ) {
-		return array();
+		return [];
 	}
 
 	return $popup->get_triggers();

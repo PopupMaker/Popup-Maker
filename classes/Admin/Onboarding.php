@@ -1,4 +1,10 @@
 <?php
+/**
+ * Class for Admin Onboarding
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -16,16 +22,16 @@ class PUM_Admin_Onboarding {
 	 */
 	public static function init() {
 		if ( is_admin() && current_user_can( 'manage_options' ) ) {
-			add_filter( 'pum_alert_list', array( __CLASS__, 'tips_alert' ) );
-			add_action( 'pum_alert_dismissed', array( __CLASS__, 'alert_handler' ), 10, 2 );
+			add_filter( 'pum_alert_list', [ __CLASS__, 'tips_alert' ] );
+			add_action( 'pum_alert_dismissed', [ __CLASS__, 'alert_handler' ], 10, 2 );
 		}
-		add_filter( 'pum_admin_pointers-popup', array( __CLASS__, 'popup_editor_main_tour' ) );
-		add_filter( 'pum_admin_pointers-edit-popup', array( __CLASS__, 'all_popups_main_tour' ) );
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'set_up_pointers' ) );
+		add_filter( 'pum_admin_pointers-popup', [ __CLASS__, 'popup_editor_main_tour' ] );
+		add_filter( 'pum_admin_pointers-edit-popup', [ __CLASS__, 'all_popups_main_tour' ] );
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'set_up_pointers' ] );
 
-		add_action( 'admin_init', array( __CLASS__, 'welcome_redirect' ) );
+		add_action( 'admin_init', [ __CLASS__, 'welcome_redirect' ] );
 		if ( ! empty( $_GET['page'] ) && 'pum-welcome' === $_GET['page'] ) {
-			add_action( 'admin_menu', array( __CLASS__, 'set_up_welcome_page' ) );
+			add_action( 'admin_menu', [ __CLASS__, 'set_up_welcome_page' ] );
 		}
 	}
 
@@ -43,35 +49,35 @@ class PUM_Admin_Onboarding {
 
 		$tip = self::get_random_tip();
 
-		$alerts[] = array(
+		$alerts[] = [
 			'code'        => 'pum_tip_alert',
 			'type'        => 'info',
 			'message'     => $tip['msg'],
 			'priority'    => 10,
 			'dismissible' => '1 month',
 			'global'      => false,
-			'actions'     => array(
-				array(
+			'actions'     => [
+				[
 					'primary' => true,
 					'type'    => 'link',
 					'action'  => '',
 					'href'    => $tip['link'],
 					'text'    => __( 'Learn more', 'popup-maker' ),
-				),
-				array(
+				],
+				[
 					'primary' => false,
 					'type'    => 'action',
 					'action'  => 'dismiss',
 					'text'    => __( 'Dismiss', 'popup-maker' ),
-				),
-				array(
+				],
+				[
 					'primary' => false,
 					'type'    => 'action',
 					'action'  => 'disable_tips',
 					'text'    => __( 'Turn off these occasional tips', 'popup-maker' ),
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $alerts;
 	}
@@ -105,7 +111,7 @@ class PUM_Admin_Onboarding {
 
 		// Get dismissed pointers.
 		$dismissed      = self::get_dismissed_pointers();
-		$valid_pointers = array();
+		$valid_pointers = [];
 
 		// Cycles through pointers and only add valid ones.
 		foreach ( $pointers as $pointer_id => $pointer ) {
@@ -123,8 +129,9 @@ class PUM_Admin_Onboarding {
 			}
 
 			// Skip if pointer has already been dismissed.
-			if ( in_array( $pointer_id, $dismissed ) )
+			if ( in_array( $pointer_id, $dismissed ) ) {
 				continue;
+			}
 
 			// Add the pointer to $valid_pointers array.
 			$valid_pointers['pointers'][] = $pointer;
@@ -139,7 +146,7 @@ class PUM_Admin_Onboarding {
 		wp_enqueue_style( 'wp-pointer' );
 
 		// Add pointers script to queue. Add custom script.
-		wp_enqueue_script( 'pum-pointer', Popup_Maker::$URL . 'assets/js/admin-pointer.js', array( 'wp-pointer' ), Popup_Maker::$VER, true );
+		wp_enqueue_script( 'pum-pointer', Popup_Maker::$URL . 'assets/js/admin-pointer.js', [ 'wp-pointer' ], Popup_Maker::$VER, true );
 
 		// Add pointer options to script.
 		wp_localize_script( 'pum-pointer', 'pumPointers', $valid_pointers );
@@ -157,10 +164,10 @@ class PUM_Admin_Onboarding {
 			$screen = get_current_screen();
 		}
 		$screen_id = $screen->id;
-		$pointers  = apply_filters( 'pum_admin_pointers-' . $screen_id, array() );
+		$pointers  = apply_filters( 'pum_admin_pointers-' . $screen_id, [] );
 
 		if ( ! $pointers || ! is_array( $pointers ) ) {
-			return array();
+			return [];
 		}
 
 		return $pointers;
@@ -183,72 +190,96 @@ class PUM_Admin_Onboarding {
 		 * @see https://jqueryui.com/position/
 		 */
 
-		$pointers['popup-editor-1'] = array(
+		$pointers['popup-editor-1'] = [
 			'target'  => '#title',
-			'options' => array(
-				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
-					__( 'Popup Name' ,'popup-maker'),
-					__( 'Name your popup so you can find it later. Site visitors will not see this.','popup-maker')
+			'options' => [
+				'content'  => sprintf(
+					'<h3> %s </h3> <p> %s </p>',
+					__( 'Popup Name', 'popup-maker' ),
+					__( 'Name your popup so you can find it later. Site visitors will not see this.', 'popup-maker' )
 				),
-				'position' => array( 'edge' => 'top', 'align' => 'center' ),
-			)
-		);
-		$pointers['popup-editor-2'] = array(
+				'position' => [
+					'edge'  => 'top',
+					'align' => 'center',
+				],
+			],
+		];
+		$pointers['popup-editor-2'] = [
 			'target'  => '#wp-content-editor-container',
-			'options' => array(
-				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
-					__( 'Popup Content' ,'popup-maker'),
-					__( 'Add content for your popup here.','popup-maker')
+			'options' => [
+				'content'  => sprintf(
+					'<h3> %s </h3> <p> %s </p>',
+					__( 'Popup Content', 'popup-maker' ),
+					__( 'Add content for your popup here.', 'popup-maker' )
 				),
-				'position' => array( 'edge' => 'bottom', 'align' => 'center' ),
-			)
-		);
-		$pointers['popup-editor-3'] = array(
+				'position' => [
+					'edge'  => 'bottom',
+					'align' => 'center',
+				],
+			],
+		];
+		$pointers['popup-editor-3'] = [
 			'target'  => 'a[href="#pum-popup-settings_triggers"]',
-			'options' => array(
-				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
-					__( 'Popup Triggers' ,'popup-maker'),
-					__( 'Use triggers to choose  what causes the popup to open.','popup-maker')
+			'options' => [
+				'content'  => sprintf(
+					'<h3> %s </h3> <p> %s </p>',
+					__( 'Popup Triggers', 'popup-maker' ),
+					__( 'Use triggers to choose  what causes the popup to open.', 'popup-maker' )
 				),
-				'position' => array( 'edge' => 'left', 'align' => 'center' ),
-			)
-		);
-		$pointers['popup-editor-4'] = array(
+				'position' => [
+					'edge'  => 'left',
+					'align' => 'center',
+				],
+			],
+		];
+		$pointers['popup-editor-4'] = [
 			'target'  => 'a[href="#pum-popup-settings_targeting"]',
-			'options' => array(
-				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
-					__( 'Popup Targeting' ,'popup-maker'),
-					__( 'Use targeting to choose where on your site the popup should load and who to show the popup to.','popup-maker')
+			'options' => [
+				'content'  => sprintf(
+					'<h3> %s </h3> <p> %s </p>',
+					__( 'Popup Targeting', 'popup-maker' ),
+					__( 'Use targeting to choose where on your site the popup should load and who to show the popup to.', 'popup-maker' )
 				),
-				'position' => array( 'edge' => 'left', 'align' => 'center'  ),
-			)
-		);
-		$pointers['popup-editor-5'] = array(
+				'position' => [
+					'edge'  => 'left',
+					'align' => 'center',
+				],
+			],
+		];
+		$pointers['popup-editor-5'] = [
 			'target'  => 'a[href="#pum-popup-settings_display"]',
-			'options' => array(
-				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
-					__( 'Popup Display' ,'popup-maker'),
-					__( 'Use display settings to choose where on the screen the popup appears and what it looks like.','popup-maker')
+			'options' => [
+				'content'  => sprintf(
+					'<h3> %s </h3> <p> %s </p>',
+					__( 'Popup Display', 'popup-maker' ),
+					__( 'Use display settings to choose where on the screen the popup appears and what it looks like.', 'popup-maker' )
 				),
-				'position' => array( 'edge' => 'left', 'align' => 'center'  ),
-			)
-		);
-		$pointers['popup-editor-6'] = array(
+				'position' => [
+					'edge'  => 'left',
+					'align' => 'center',
+				],
+			],
+		];
+		$pointers['popup-editor-6'] = [
 			'target'  => 'select#theme_id',
-			'options' => array(
-				'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
-					__( 'Popup Theme' ,'popup-maker'),
-					__( 'Choose the popup theme which controls the visual appearance of your popup including; colors, spacing, and fonts.','popup-maker')
+			'options' => [
+				'content'  => sprintf(
+					'<h3> %s </h3> <p> %s </p>',
+					__( 'Popup Theme', 'popup-maker' ),
+					__( 'Choose the popup theme which controls the visual appearance of your popup including; colors, spacing, and fonts.', 'popup-maker' )
 				),
-				'position' => array( 'edge' => 'bottom', 'align' => 'left'  ),
-			),
-			'pre'     => array(
-				'clicks' => array(
+				'position' => [
+					'edge'  => 'bottom',
+					'align' => 'left',
+				],
+			],
+			'pre'     => [
+				'clicks' => [
 					'a[href="#pum-popup-settings_display"]',
 					'a[href="#pum-popup-settings-display-subtabs_main"]',
-				),
-			),
-		);
+				],
+			],
+		];
 		return $pointers;
 	}
 
@@ -260,59 +291,59 @@ class PUM_Admin_Onboarding {
 	 * @since 1.11.0
 	 */
 	public static function all_popups_main_tour( $pointers ) {
-		$pointers['all-popups-1'] = array(
+		$pointers['all-popups-1'] = [
 			'target'  => 'nav.nav-tab-wrapper a:nth-child(4)',
-			'options' => array(
+			'options' => [
 				'content'  => sprintf(
 					'<h3> %s </h3> <p> %s </p>',
 					__( 'Welcome to Popup Maker!', 'popup-maker' ),
 					__( 'Click the "Create New Popup" button to create your first popup.', 'popup-maker' )
 				),
-				'position' => array( 'edge' => 'top' ),
-			),
-		);
-		$pointers['all-popups-2'] = array(
+				'position' => [ 'edge' => 'top' ],
+			],
+		];
+		$pointers['all-popups-2'] = [
 			'target'  => '.wp-list-table #the-list tr:first-child .column-enabled',
-			'options' => array(
+			'options' => [
 				'content'  => sprintf(
 					'<h3> %s </h3> <p> %s </p>',
 					__( 'Enable Popups', 'popup-maker' ),
 					__( 'You can enable or disable your popups at any time using this toggle.', 'popup-maker' )
 				),
-				'position' => array(
+				'position' => [
 					'edge'  => 'top',
 					'align' => 'left',
-				),
-			),
-		);
-		$pointers['all-popups-3'] = array(
+				],
+			],
+		];
+		$pointers['all-popups-3'] = [
 			'target'  => '.wp-list-table #the-list tr:first-child .column-conversions',
-			'options' => array(
+			'options' => [
 				'content'  => sprintf(
 					'<h3> %s </h3> <p> %s </p>',
 					__( 'Review Popup Metrics', 'popup-maker' ),
 					__( 'Popup Maker will automatically track opens and conversions so you can easily see which popups convert the best.', 'popup-maker' )
 				),
-				'position' => array(
+				'position' => [
 					'edge'  => 'top',
 					'align' => 'left',
-				),
-			),
-		);
-		$pointers['all-popups-4'] = array(
+				],
+			],
+		];
+		$pointers['all-popups-4'] = [
 			'target'  => '#screen-options-link-wrap #show-settings-link',
-			'options' => array(
+			'options' => [
 				'content'  => sprintf(
 					'<h3> %s </h3> <p> %s </p>',
 					__( 'Adjust Columns', 'popup-maker' ),
 					__( 'You can show or hide columns from the table on this page using the Screen Options. Popup Heading and Published Date are hidden by default.', 'popup-maker' )
 				),
-				'position' => array(
+				'position' => [
 					'edge'  => 'top',
 					'align' => 'center',
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $pointers;
 	}
@@ -324,30 +355,30 @@ class PUM_Admin_Onboarding {
 	 * @since 1.13.0
 	 */
 	public static function get_random_tip() {
-		$tips = array(
-			array(
+		$tips = [
+			[
 				'msg'  => 'Did you know: Popup Maker has a setting to let you try to bypass adblockers? Enabling it randomizes cache filenames and other endpoints to try to get around adblockers.',
 				'link' => admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=pum-settings_misc' ),
-			),
-			array(
+			],
+			[
 				'msg'  => "Want to use the block editor to create your popups? Enable it over on Popup Maker's settings page.",
 				'link' => admin_url( 'edit.php?post_type=popup&page=pum-settings' ),
-			),
-			array(
+			],
+			[
 				'msg'  => 'Using the Popup Maker menu in your admin bar, you can open and close popups, check conditions, reseet cookies, and more!',
 				'link' => 'https://docs.wppopupmaker.com/article/300-the-popup-maker-admin-toolbar',
-			),
-			array(
+			],
+			[
 				'msg'  => "Did you know: You can easily customize your site's navigation to have a link open a popup by using the 'Trigger a Popup' option when editing your menus?",
 				'link' => 'https://docs.wppopupmaker.com/article/51-open-a-popup-from-a-wordpress-nav-menu',
-			),
-		);
+			],
+		];
 
 		if ( 7 < pum_count_popups() ) {
-			$tips[] = array(
+			$tips[] = [
 				'msg'  => 'Want to organize your popups? Enable categories on the settings page to group similar popups together!',
 				'link' => admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=pum-settings_misc' ),
-			);
+			];
 		}
 
 		$random_tip = array_rand( $tips );
@@ -363,7 +394,7 @@ class PUM_Admin_Onboarding {
 		// Redirect idea from Better Click To Tweet's welcome screen. Thanks Ben!
 		if ( get_transient( 'pum_activation_redirect' ) ) {
 			$do_redirect  = true;
-			$current_page = isset( $_GET['page'] ) ? wp_unslash( $_GET['page'] ) : false;
+			$current_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : false;
 			// Bailout redirect during these events.
 			if ( wp_doing_ajax() || is_network_admin() || ! current_user_can( 'manage_options' ) ) {
 				$do_redirect = false;
@@ -388,7 +419,7 @@ class PUM_Admin_Onboarding {
 	 * @since 1.14.0
 	 */
 	public static function set_up_welcome_page() {
-		add_dashboard_page( '', '', 'manage_options', 'pum-welcome', array( __CLASS__, 'display_welcome_page' ) );
+		add_dashboard_page( '', '', 'manage_options', 'pum-welcome', [ __CLASS__, 'display_welcome_page' ] );
 	}
 
 	/**
@@ -398,7 +429,7 @@ class PUM_Admin_Onboarding {
 	 */
 	public static function display_welcome_page() {
 		wp_enqueue_style( 'pum-admin-general' );
-		$gravatar_url = get_avatar_url( 'danieliser@wizardinternetsolutions.com', array( 'size' => 60 ) );
+		$gravatar_url = get_avatar_url( 'danieliser@wizardinternetsolutions.com', [ 'size' => 256 ] );
 		?>
 		<div class="pum-welcome-wrapper">
 			<div>
@@ -443,11 +474,11 @@ class PUM_Admin_Onboarding {
 			$user_id = get_current_user_id();
 		}
 		if ( 0 === intval( $user_id ) ) {
-			return array();
+			return [];
 		}
 		$pointers = explode( ',', (string) get_user_meta( $user_id, 'dismissed_wp_pointers', true ) );
 		if ( ! is_array( $pointers ) ) {
-			return array();
+			return [];
 		}
 		return $pointers;
 	}

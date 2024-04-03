@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for Deprecated Popups
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 /**
  * Returns a popup object.
@@ -23,9 +26,9 @@ function pum_popup( $popup_id = null ) {
  * @deprecated 1.4
  *
  * @param $group
- * @param int $popup_id ID number of the popup to retrieve a overlay meta for
- * @param null $key
- * @param null $default
+ * @param int   $popup_id ID number of the popup to retrieve a overlay meta for
+ * @param null  $key
+ * @param null  $default
  *
  * @return mixed array|string
  */
@@ -37,8 +40,8 @@ function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default
 	$values = get_post_meta( $popup_id, "popup_{$group}", true );
 
 	if ( ! $values ) {
-		$defaults = apply_filters( "popmake_popup_{$group}_defaults", array() );
-		$values = array_merge( $defaults, popmake_get_popup_meta_group( $group, $popup_id ) );
+		$defaults = apply_filters( "popmake_popup_{$group}_defaults", [] );
+		$values   = array_merge( $defaults, popmake_get_popup_meta_group( $group, $popup_id ) );
 	} else {
 		$values = array_merge( popmake_get_popup_meta_group( $group, $popup_id ), $values );
 	}
@@ -48,7 +51,7 @@ function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default
 		// Check for dot notation key value.
 		$test  = uniqid();
 		$value = popmake_resolve( $values, $key, $test );
-		if ( $value == $test ) {
+		if ( $value === $test ) {
 
 			$key = str_replace( '.', '_', $key );
 
@@ -57,7 +60,6 @@ function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default
 			} else {
 				$value = $values[ $key ];
 			}
-
 		}
 
 		return apply_filters( "popmake_get_popup_{$group}_$key", $value, $popup_id );
@@ -77,26 +79,26 @@ function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default
  * @return mixed array|string
  */
 function popmake_get_popup_meta_group( $group, $popup_id = null, $key = null, $default = null ) {
-	if ( ! $popup_id || $group === 'secure_logout') {
+	if ( ! $popup_id || 'secure_logout' === $group ) {
 		$popup_id = pum_get_popup_id();
 	}
 
-	$post_meta         = get_post_custom( $popup_id );
+	$post_meta = get_post_custom( $popup_id );
 
 	if ( ! is_array( $post_meta ) ) {
-		$post_meta = array();
+		$post_meta = [];
 	}
 
 	$default_check_key = 'popup_defaults_set';
-	if ( ! in_array( $group, array( 'auto_open', 'close', 'display', 'targeting_condition' ) ) ) {
+	if ( ! in_array( $group, [ 'auto_open', 'close', 'display', 'targeting_condition' ] ) ) {
 		$default_check_key = "popup_{$group}_defaults_set";
 	}
 
-	$group_values = array_key_exists( $default_check_key, $post_meta ) ? array() : apply_filters( "popmake_popup_{$group}_defaults", array() );
+	$group_values = array_key_exists( $default_check_key, $post_meta ) ? [] : apply_filters( "popmake_popup_{$group}_defaults", [] );
 	foreach ( $post_meta as $meta_key => $value ) {
 		if ( strpos( $meta_key, "popup_{$group}_" ) !== false ) {
 			$new_key = str_replace( "popup_{$group}_", '', $meta_key );
-			if ( count( $value ) == 1 ) {
+			if ( count( $value ) === 1 ) {
 				$group_values[ $new_key ] = $value[0];
 			} else {
 				$group_values[ $new_key ] = $value;

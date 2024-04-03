@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Interface for Repository
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -35,7 +38,7 @@ interface PUM_Interface_Repository {
 	 *
 	 * @return WP_Post[||PUM_Abstract_Model_Post[]
 	 */
-	public function get_items( $args = array() );
+	public function get_items( $args = [] );
 
 	/**
 	 * @param array $data

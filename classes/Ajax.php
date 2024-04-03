@@ -6,7 +6,7 @@
  * @package     PUM
  * @subpackage  PUM/includes
  * @author      Daniel Iser <danieliser@wizardinternetsolutions.com>
- * @copyright   Copyright (c) 2019, Code Atlantic LLC
+ * @copyright   Copyright (c) 2023, Code Atlantic LLC
  * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
  */
 
@@ -18,7 +18,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Controls the basic analytics methods for Popup Maker
- *
  */
 class PUM_Ajax {
 
@@ -26,7 +25,7 @@ class PUM_Ajax {
 	 * Creates and returns a 1x1 tracking gif to the browser.
 	 */
 	public static function serve_pixel() {
-		$gif = PUM_Ajax::get_file( POPMAKE_DIR . 'assets/images/beacon.gif' );
+		$gif = self::get_file( POPMAKE_DIR . 'assets/images/beacon.gif' );
 		header( 'Content-Type: image/gif' );
 		header( 'Content-Length: ' . strlen( $gif ) );
 		exit( $gif );
@@ -49,7 +48,7 @@ class PUM_Ajax {
 	 * Returns a 204 no content header.
 	 */
 	public static function serve_no_content() {
-		header( "HTTP/1.0 204 No Content" );
+		header( 'HTTP/1.0 204 No Content' );
 		header( 'Content-Type: image/gif' );
 		header( 'Content-Length: 0' );
 		exit;

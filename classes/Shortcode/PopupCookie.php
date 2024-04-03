@@ -1,4 +1,10 @@
 <?php
+/**
+ * Shortcode for PopupCookie
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -31,7 +37,7 @@ class PUM_Shortcode_PopupCookie extends PUM_Shortcode {
 	}
 
 	public function post_types() {
-		return array( '*' );
+		return [ '*' ];
 	}
 
 	public function fields() {
@@ -44,7 +50,7 @@ class PUM_Shortcode_PopupCookie extends PUM_Shortcode {
 						'desc'        => __( 'The name that will be used when checking for or saving this cookie.', 'popup-maker' ),
 						'std'         => '',
 					],
-					'expires'          => [
+					'expires'       => [
 						'label'       => __( 'Cookie Time', 'popup-maker' ),
 						'placeholder' => __( '364 days 23 hours 59 minutes 59 seconds', 'popup-maker' ),
 						'desc'        => __( 'Enter a plain english time before cookie expires.', 'popup-maker' ),
@@ -78,23 +84,26 @@ class PUM_Shortcode_PopupCookie extends PUM_Shortcode {
 	public function handler( $atts, $content = null ) {
 		$atts = $this->shortcode_atts( $atts );
 
-		$args = [
-			'name' => $atts['name'],
-			'time' => $atts['expires'],
-			'path' => $atts['sitewide'],
-		];
-
 		// This shortcode requires our scripts, but can be used on pages where no popups exist.
 		wp_enqueue_script( 'popup-maker-site' );
 
-		$onscreen = 'data-only-onscreen="' . ( $atts['only_onscreen'] ? 1 : 0 ) . '"';
+		$onscreen = esc_attr( 'data-only-onscreen="' . ( $atts['only_onscreen'] ? 1 : 0 ) . '"' );
+		$args     = esc_attr(
+			wp_json_encode(
+				[
+					'name' => $atts['name'],
+					'time' => $atts['expires'],
+					'path' => $atts['sitewide'],
+				]
+			)
+		);
 
-		return "<div class='pum-cookie' data-cookie-args='" . json_encode( $args ) . "' $onscreen></div>";
+		return "<div class='pum-cookie' data-cookie-args='$args' $onscreen></div>";
 	}
 
 	public function template() { ?>
-		<div class="pum-cookie"><?php echo __( 'Popup Cookie', 'popup-maker' ); ?></div><?php
+		<div class="pum-cookie"><?php esc_html_e( 'Popup Cookie', 'popup-maker' ); ?></div>
+		<?php
 	}
 
 }
-

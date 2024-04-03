@@ -1,22 +1,26 @@
 /** Backward Compatibility */
 .popmake-close {
-  cursor: pointer;
+	cursor: pointer;
 }
 
 /* Formidable forms fix */
 .pum-container {
-  iframe.formidable {
-    width: 100%;
-    overflow: visible;
-  }
+	iframe.formidable {
+		width: 100%;
+		overflow: visible;
+	}
 }
 
 // jQuery UI Datepicker shows up behind the popups without this.
 body div#ui-datepicker-div[style] {
-  z-index: 9999999999 !important;
+	z-index: 9999999999 !important;
 }
 
 /* NF DatePicker Fix */
 .pika-single {
-  z-index: 9999999999 !important;
+	z-index: 9999999999 !important;
+}
+
+.flatpickr-calendar.open {
+	z-index: 9999999999 !important;
 }

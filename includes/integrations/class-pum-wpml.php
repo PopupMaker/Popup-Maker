@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Integrations for wpml
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,32 +20,32 @@ class PUM_WPML_Integration {
 	 *
 	 */
 	public static function init() {
-		add_action( 'icl_make_duplicate', array( __CLASS__, 'duplicate_post' ), 10, 4 );
+		add_action( 'icl_make_duplicate', [ __CLASS__, 'duplicate_post' ], 10, 4 );
 		/*
 		add_filter( 'pum_popup', array( __CLASS__, 'pum_popup' ), 10, 2 );
 		TODO Further testing of this filter may prove 80+% of the following unneeded.
 		*/
-		add_filter( 'pum_popup_get_display', array( __CLASS__, 'popup_get_display' ), 10, 2 );
-		add_filter( 'pum_popup_get_close', array( __CLASS__, 'popup_get_close' ), 10, 2 );
-		add_filter( 'pum_popup_get_triggers', array( __CLASS__, 'popup_get_triggers' ), 10, 2 );
-		add_filter( 'pum_popup_get_cookies', array( __CLASS__, 'popup_get_cookies' ), 10, 2 );
-		add_filter( 'pum_popup_get_conditions', array( __CLASS__, 'popup_get_conditions' ), 10, 2 );
-		add_filter( 'pum_popup_get_theme_id', array( __CLASS__, 'popup_get_theme_id' ), 10, 2 );
-		add_filter( 'pum_popup_mobile_disabled', array( __CLASS__, 'popup_mobile_disabled' ), 10, 2 );
-		add_filter( 'pum_popup_tablet_disabled', array( __CLASS__, 'popup_tablet_disabled' ), 10, 2 );
+		add_filter( 'pum_popup_get_display', [ __CLASS__, 'popup_get_display' ], 10, 2 );
+		add_filter( 'pum_popup_get_close', [ __CLASS__, 'popup_get_close' ], 10, 2 );
+		add_filter( 'pum_popup_get_triggers', [ __CLASS__, 'popup_get_triggers' ], 10, 2 );
+		add_filter( 'pum_popup_get_cookies', [ __CLASS__, 'popup_get_cookies' ], 10, 2 );
+		add_filter( 'pum_popup_get_conditions', [ __CLASS__, 'popup_get_conditions' ], 10, 2 );
+		add_filter( 'pum_popup_get_theme_id', [ __CLASS__, 'popup_get_theme_id' ], 10, 2 );
+		add_filter( 'pum_popup_mobile_disabled', [ __CLASS__, 'popup_mobile_disabled' ], 10, 2 );
+		add_filter( 'pum_popup_tablet_disabled', [ __CLASS__, 'popup_tablet_disabled' ], 10, 2 );
 	}
 
 	/**
 	 * @param      $popup
-	 * @param null $popup_id
+	 * @param null  $popup_id
 	 *
 	 * @return \PUM_Model_Popup
 	 */
 	public static function pum_popup( $popup, $popup_id = null ) {
 		if ( self::is_new_popup_translation( $popup_id ) ) {
-			remove_filter( 'pum_popup', array( __CLASS__, 'pum_popup' ), 10 );
+			remove_filter( 'pum_popup', [ __CLASS__, 'pum_popup' ], 10 );
 			$popup = pum_get_popup( self::source_id( $popup_id ) );
-			add_filter( 'pum_popup', array( __CLASS__, 'pum_popup' ), 10, 2 );
+			add_filter( 'pum_popup', [ __CLASS__, 'pum_popup' ], 10, 2 );
 		}
 
 		return $popup;
@@ -55,7 +60,7 @@ class PUM_WPML_Integration {
 	public static function is_new_popup_translation( $post_id = 0 ) {
 		global $pagenow, $sitepress;
 
-		return is_admin() && $pagenow == 'post-new.php' && ! empty( $_GET['post_type'] ) && $_GET['post_type'] == 'popup' && self::source_id( $post_id ) > 0;
+		return is_admin() && 'post-new.php' === $pagenow && ! empty( $_GET['post_type'] ) && 'popup' === $_GET['post_type'] && self::source_id( $post_id ) > 0;
 	}
 
 	/**
@@ -92,7 +97,7 @@ class PUM_WPML_Integration {
 
 		static $trid;
 
-		if ( ! isset( $trid )  && ! empty( $sitepress ) && method_exists( $sitepress, 'get_element_trid' )) {
+		if ( ! isset( $trid ) && ! empty( $sitepress ) && method_exists( $sitepress, 'get_element_trid' ) ) {
 			$trid = absint( $sitepress->get_element_trid( $post_id, 'post_popup' ) );
 		}
 
@@ -107,9 +112,9 @@ class PUM_WPML_Integration {
 	 */
 	public static function popup_mobile_disabled( $disabled, $post_id ) {
 		if ( self::is_new_popup_translation( $post_id ) ) {
-			remove_filter( 'pum_popup_mobile_disabled', array( __CLASS__, 'popup_mobile_disabled' ), 10 );
+			remove_filter( 'pum_popup_mobile_disabled', [ __CLASS__, 'popup_mobile_disabled' ], 10 );
 			$disabled = pum_get_popup( self::source_id( $post_id ) )->mobile_disabled();
-			add_filter( 'pum_popup_mobile_disabled', array( __CLASS__, 'popup_mobile_disabled' ), 10, 2 );
+			add_filter( 'pum_popup_mobile_disabled', [ __CLASS__, 'popup_mobile_disabled' ], 10, 2 );
 		}
 
 		return $disabled;
@@ -123,9 +128,9 @@ class PUM_WPML_Integration {
 	 */
 	public static function popup_tablet_disabled( $disabled, $post_id ) {
 		if ( self::is_new_popup_translation( $post_id ) ) {
-			remove_filter( 'pum_popup_tablet_disabled', array( __CLASS__, 'popup_tablet_disabled' ), 10 );
+			remove_filter( 'pum_popup_tablet_disabled', [ __CLASS__, 'popup_tablet_disabled' ], 10 );
 			$disabled = pum_get_popup( self::source_id( $post_id ) )->tablet_disabled();
-			add_filter( 'pum_popup_tablet_disabled', array( __CLASS__, 'popup_tablet_disabled' ), 10, 2 );
+			add_filter( 'pum_popup_tablet_disabled', [ __CLASS__, 'popup_tablet_disabled' ], 10, 2 );
 		}
 
 		return $disabled;
@@ -139,9 +144,9 @@ class PUM_WPML_Integration {
 	 */
 	public static function popup_get_triggers( $triggers, $post_id ) {
 		if ( self::is_new_popup_translation( $post_id ) ) {
-			remove_filter( 'pum_popup_get_triggers', array( __CLASS__, 'popup_get_triggers' ), 10 );
+			remove_filter( 'pum_popup_get_triggers', [ __CLASS__, 'popup_get_triggers' ], 10 );
 			$triggers = pum_get_popup( self::source_id( $post_id ) )->get_triggers();
-			add_filter( 'pum_popup_get_triggers', array( __CLASS__, 'popup_get_triggers' ), 10, 2 );
+			add_filter( 'pum_popup_get_triggers', [ __CLASS__, 'popup_get_triggers' ], 10, 2 );
 		}
 
 		return $triggers;
@@ -155,9 +160,9 @@ class PUM_WPML_Integration {
 	 */
 	public static function popup_get_display( $display, $post_id ) {
 		if ( self::is_new_popup_translation( $post_id ) ) {
-			remove_filter( 'pum_popup_get_display', array( __CLASS__, 'popup_get_display' ), 10 );
+			remove_filter( 'pum_popup_get_display', [ __CLASS__, 'popup_get_display' ], 10 );
 			$display = pum_get_popup( self::source_id( $post_id ) )->get_display();
-			add_filter( 'pum_popup_get_display', array( __CLASS__, 'popup_get_display' ), 10, 2 );
+			add_filter( 'pum_popup_get_display', [ __CLASS__, 'popup_get_display' ], 10, 2 );
 		}
 
 		return $display;
@@ -171,9 +176,9 @@ class PUM_WPML_Integration {
 	 */
 	public static function popup_get_close( $close, $post_id ) {
 		if ( self::is_new_popup_translation( $post_id ) ) {
-			remove_filter( 'pum_popup_get_close', array( __CLASS__, 'popup_get_close' ), 10 );
+			remove_filter( 'pum_popup_get_close', [ __CLASS__, 'popup_get_close' ], 10 );
 			$close = pum_get_popup( self::source_id( $post_id ) )->get_close();
-			add_filter( 'pum_popup_get_close', array( __CLASS__, 'popup_get_close' ), 10, 2 );
+			add_filter( 'pum_popup_get_close', [ __CLASS__, 'popup_get_close' ], 10, 2 );
 		}
 
 		return $close;
@@ -187,9 +192,9 @@ class PUM_WPML_Integration {
 	 */
 	public static function popup_get_cookies( $cookies, $post_id ) {
 		if ( self::is_new_popup_translation( $post_id ) ) {
-			remove_filter( 'pum_popup_get_cookies', array( __CLASS__, 'popup_get_cookies' ), 10 );
+			remove_filter( 'pum_popup_get_cookies', [ __CLASS__, 'popup_get_cookies' ], 10 );
 			$cookies = pum_get_popup( self::source_id( $post_id ) )->get_cookies();
-			add_filter( 'pum_popup_get_cookies', array( __CLASS__, 'popup_get_cookies' ), 10, 2 );
+			add_filter( 'pum_popup_get_cookies', [ __CLASS__, 'popup_get_cookies' ], 10, 2 );
 		}
 
 		return $cookies;
@@ -203,9 +208,9 @@ class PUM_WPML_Integration {
 	 */
 	public static function popup_get_theme_id( $theme_id, $post_id ) {
 		if ( self::is_new_popup_translation( $post_id ) ) {
-			remove_filter( 'pum_popup_get_theme_id', array( __CLASS__, 'popup_get_theme_id' ), 10 );
+			remove_filter( 'pum_popup_get_theme_id', [ __CLASS__, 'popup_get_theme_id' ], 10 );
 			$theme_id = pum_get_popup( self::source_id( $post_id ) )->get_theme_id();
-			add_filter( 'pum_popup_get_theme_id', array( __CLASS__, 'popup_get_theme_id' ), 10, 2 );
+			add_filter( 'pum_popup_get_theme_id', [ __CLASS__, 'popup_get_theme_id' ], 10, 2 );
 		}
 
 		return $theme_id;
@@ -213,7 +218,7 @@ class PUM_WPML_Integration {
 
 	/**
 	 * @param      $conditions
-	 * @param null $new_lang
+	 * @param null       $new_lang
 	 *
 	 * @return mixed
 	 */
@@ -232,13 +237,13 @@ class PUM_WPML_Integration {
 
 				$target = $condition['target'];
 
-				$tests = array(
+				$tests = [
 					strpos( $target, '_selected' ) !== false,
 					strpos( $target, '_ID' ) !== false,
 					strpos( $target, '_children' ) !== false,
 					strpos( $target, '_ancestors' ) !== false,
 					strpos( $target, '_w_' ) !== false,
-				);
+				];
 
 				if ( ! in_array( true, $tests ) ) {
 					continue;
@@ -270,7 +275,7 @@ class PUM_WPML_Integration {
 				}
 
 				// To hold the newly remapped selection.
-				$selected = array();
+				$selected = [];
 
 				foreach ( wp_parse_id_list( $condition['selected'] ) as $object_id ) {
 					// Insert the translated post_id or the original if no translation exists.
@@ -293,14 +298,14 @@ class PUM_WPML_Integration {
 	 */
 	public static function popup_get_conditions( $conditions, $post_id ) {
 		if ( self::is_new_popup_translation( $post_id ) ) {
-			remove_filter( 'pum_popup_get_conditions', array( __CLASS__, 'popup_get_conditions' ), 10 );
+			remove_filter( 'pum_popup_get_conditions', [ __CLASS__, 'popup_get_conditions' ], 10 );
 
-			$popup = pum_get_popup(  self::source_id( $post_id ) );
+			$popup      = pum_get_popup( self::source_id( $post_id ) );
 			$conditions = $popup->get_conditions();
 
 			$conditions = self::remap_conditions( $conditions, $post_id );
 
-			add_filter( 'pum_popup_get_conditions', array( __CLASS__, 'popup_get_conditions' ), 10, 2 );
+			add_filter( 'pum_popup_get_conditions', [ __CLASS__, 'popup_get_conditions' ], 10, 2 );
 		}
 
 		return $conditions;
@@ -310,15 +315,18 @@ class PUM_WPML_Integration {
 	 * @return mixed|void
 	 */
 	public static function untranslatable_meta_keys() {
-		return apply_filters( 'pum_wpml_untranslatable_meta_keys', array(
-			'popup_display',
-			'popup_theme',
-			'popup_triggers',
-			'popup_cookies',
-			'popup_conditions',
-			'popup_mobile_disabled',
-			'popup_tablet_disabled',
-		) );
+		return apply_filters(
+			'pum_wpml_untranslatable_meta_keys',
+			[
+				'popup_display',
+				'popup_theme',
+				'popup_triggers',
+				'popup_cookies',
+				'popup_conditions',
+				'popup_mobile_disabled',
+				'popup_tablet_disabled',
+			]
+		);
 	}
 
 
@@ -326,10 +334,13 @@ class PUM_WPML_Integration {
 	 * @return mixed|void
 	 */
 	public static function translatable_meta_keys() {
-		return apply_filters( 'pum_wpml_translatable_meta_keys', array(
-			'popup_close',
-			'popup_title',
-		) );
+		return apply_filters(
+			'pum_wpml_translatable_meta_keys',
+			[
+				'popup_close',
+				'popup_title',
+			]
+		);
 	}
 
 
@@ -340,12 +351,12 @@ class PUM_WPML_Integration {
 	 *
 	 * @param $master_post_id int Original post_ID.
 	 * @param $lang string The new language.
-	 * @param $post_array array The $post array for the new/duplicate post.
+	 * @param post_array array The                          $post array for the new/duplicate post.
 	 * @param $id int The post_ID for the new/duplicate post.
 	 */
 	public static function duplicate_post( $master_post_id, $lang, $post_array, $id ) {
 		// Only do this for popups.
-		if ( get_post_type( $master_post_id ) != 'popup' ) {
+		if ( get_post_type( $master_post_id ) !== 'popup' ) {
 			return;
 		}
 
@@ -355,7 +366,7 @@ class PUM_WPML_Integration {
 				continue;
 			}
 
-			if ( $key == 'popup_conditions' ) {
+			if ( 'popup_conditions' === $key ) {
 				$value = self::remap_conditions( $value, $lang );
 			}
 

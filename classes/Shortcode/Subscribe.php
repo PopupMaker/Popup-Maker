@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Shortcode Subscribe
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -49,19 +52,19 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	 * @return array
 	 */
 	public function post_types() {
-		return array( 'page', 'post', 'popup' );
+		return [ 'page', 'post', 'popup' ];
 	}
 
 	/**
 	 * @return array
 	 */
 	public function tabs() {
-		$tabs = array(
+		$tabs = [
 			'general' => __( 'General', 'popup-maker' ),
 			'form'    => __( 'Form', 'popup-maker' ),
 			'privacy' => __( 'Privacy', 'popup-maker' ),
 			'actions' => __( 'Actions', 'popup-maker' ),
-		);
+		];
 
 		// Deprecated filter
 		$tabs = apply_filters( 'pum_sub_form_shortcode_sections', $tabs );
@@ -75,25 +78,28 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	 * @return array
 	 */
 	public function subtabs() {
-		$subtabs = apply_filters( 'pum_sub_form_shortcode_subtabs', array(
-			'general' => array(
-				'main' => __( 'General', 'popup-maker' ),
-			),
-			'privacy' => array(
-				'main' => __( 'General', 'popup-maker' ),
-			),
-			'form'    => array(
-				'appearance'   => __( 'Appearance', 'popup-maker' ),
-				'fields'       => __( 'Fields', 'popup-maker' ),
-				'labels'       => __( 'Labels', 'popup-maker' ),
-				'placeholders' => __( 'Placeholders', 'popup-maker' ),
-				'privacy'      => __( 'Privacy', 'popup-maker' ),
-			),
-			'actions' => array(
-				'popup'    => __( 'Popup', 'popup-maker' ),
-				'redirect' => __( 'Redirect', 'popup-maker' ),
-			),
-		) );
+		$subtabs = apply_filters(
+			'pum_sub_form_shortcode_subtabs',
+			[
+				'general' => [
+					'main' => __( 'General', 'popup-maker' ),
+				],
+				'privacy' => [
+					'main' => __( 'General', 'popup-maker' ),
+				],
+				'form'    => [
+					'appearance'   => __( 'Appearance', 'popup-maker' ),
+					'fields'       => __( 'Fields', 'popup-maker' ),
+					'labels'       => __( 'Labels', 'popup-maker' ),
+					'placeholders' => __( 'Placeholders', 'popup-maker' ),
+					'privacy'      => __( 'Privacy', 'popup-maker' ),
+				],
+				'actions' => [
+					'popup'    => __( 'Popup', 'popup-maker' ),
+					'redirect' => __( 'Redirect', 'popup-maker' ),
+				],
+			]
+		);
 
 		return $this->resort_provider_tabs( $subtabs );
 	}
@@ -102,339 +108,351 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	 * @return array
 	 */
 	public function fields() {
-		$select_args = array();
+		$select_args = [];
 
-		if ( isset( $_GET['post'] ) && is_int( (int) $_GET['post'] ) && isset( $_GET['action'] ) && $_GET['action'] == 'edit' ) {
-			$select_args['post__not_in'] = wp_parse_id_list( array( get_the_ID(), $_GET['post'] ) );
+		if ( isset( $_GET['post'] ) && is_int( (int) $_GET['post'] ) && isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
+			$select_args['post__not_in'] = wp_parse_id_list( [ get_the_ID(), $_GET['post'] ] );
 		}
 
-		$privacy_always_enabled = pum_get_option( 'privacy_consent_always_enabled', 'no' ) == 'yes';
+		$privacy_always_enabled = pum_get_option( 'privacy_consent_always_enabled', 'no' ) === 'yes';
 
-		$privacy_enabled_dependency = array(
+		$privacy_enabled_dependency = [
 			'privacy_consent_enabled' => 'yes',
+		];
+
+		$fields = apply_filters(
+			'pum_sub_form_shortcode_fields',
+			[
+				'general' => [
+					'main' => [
+						'provider' => [
+							'label'   => __( 'Service Provider', 'popup-maker' ),
+							'desc'    => __( 'Choose which service provider to submit to.', 'popup-maker' ),
+							'type'    => 'select',
+							'options' => array_merge( [ '' => __( 'Default', 'popup-maker' ) ], PUM_Newsletter_Providers::dropdown_list(), [ 'none' => __( 'None', 'popup-maker' ) ] ),
+							'std'     => '',
+						],
+					],
+				],
+				'form'    => [
+					'fields'       => [
+						'name_field_type' => [
+							'label'   => __( 'Name Field Type', 'popup-maker' ),
+							'type'    => 'select',
+							'options' => [
+								'disabled'   => __( 'None', 'popup-maker' ),
+								'fullname'   => __( 'Full', 'popup-maker' ),
+								'first_only' => __( 'First Only', 'popup-maker' ),
+								'first_last' => __( 'First & Last', 'popup-maker' ),
+							],
+							'std'     => 'fullname',
+							'private' => true,
+						],
+						'name_optional'   => [
+							'label'        => __( 'Name Optional', 'popup-maker' ),
+							'desc'         => __( 'Makes the name field optional.', 'popup-maker' ),
+							'type'         => 'checkbox',
+							'dependencies' => [
+								'name_field_type' => [ 'fullname', 'first_only', 'first_last' ],
+							],
+							'private'      => true,
+						],
+						'name_disabled'   => [
+							'label'        => __( 'Name Disabled', 'popup-maker' ),
+							'desc'         => __( 'Removes the name field.', 'popup-maker' ),
+							'type'         => 'checkbox',
+							'dependencies' => [
+								'name_field_type' => false,
+							],
+							'private'      => true,
+						],
+
+					],
+					'labels'       => [
+						'disable_labels' => [
+							'label'   => __( 'Disable Labels', 'popup-maker' ),
+							'desc'    => __( 'Disables the display of field labels.', 'popup-maker' ),
+							'type'    => 'checkbox',
+							'private' => true,
+						],
+						'heading_labels' => [
+							'label'   => __( 'Labels', 'popup-maker' ),
+							'desc'    => __( 'Field label text', 'popup-maker' ),
+							'type'    => 'heading',
+							'private' => true,
+						],
+						'label_name'     => [
+							'label'        => __( 'Full Name', 'popup-maker' ),
+							'dependencies' => [
+								'disable_labels'  => false,
+								'name_field_type' => [ 'fullname' ],
+							],
+							'std'          => __( 'Name', 'popup-maker' ),
+							'private'      => true,
+						],
+						'label_fname'    => [
+							'label'        => __( 'First Name', 'popup-maker' ),
+							'dependencies' => [
+								'disable_labels'  => false,
+								'name_field_type' => [ 'first_only', 'first_last' ],
+							],
+							'std'          => __( 'First Name', 'popup-maker' ),
+							'private'      => true,
+						],
+						'label_lname'    => [
+							'label'        => __( 'Last Name', 'popup-maker' ),
+							'dependencies' => [
+								'disable_labels'  => false,
+								'name_field_type' => [ 'first_last' ],
+							],
+							'std'          => __( 'Last Name', 'popup-maker' ),
+							'private'      => true,
+						],
+						'label_email'    => [
+							'label'        => __( 'Email', 'popup-maker' ),
+							'dependencies' => [
+								'disable_labels' => false,
+							],
+							'std'          => __( 'Email', 'popup-maker' ),
+							'private'      => true,
+						],
+						'label_submit'   => [
+							'label'   => __( 'Submit Button', 'popup-maker' ),
+							'std'     => __( 'Subscribe', 'popup-maker' ),
+							'private' => true,
+						],
+						// Deprecated fields.
+						'name_text'      => [
+							'type'    => 'hidden',
+							'private' => true,
+						],
+						'email_text'     => [
+							'private' => true,
+							'type'    => 'hidden',
+						],
+						'button_text'    => [
+							'type'    => 'hidden',
+							'private' => true,
+						],
+					],
+					'placeholders' => [
+						'placeholder_name'  => [
+							'label'        => __( 'Full Name', 'popup-maker' ),
+							'dependencies' => [
+								'name_field_type' => [ 'fullname' ],
+							],
+							'std'          => __( 'Name', 'popup-maker' ),
+							'private'      => true,
+						],
+						'placeholder_fname' => [
+							'label'        => __( 'First Name', 'popup-maker' ),
+							'dependencies' => [
+								'name_field_type' => [ 'first_only', 'first_last' ],
+							],
+							'std'          => __( 'First Name', 'popup-maker' ),
+							'private'      => true,
+						],
+						'placeholder_lname' => [
+							'label'        => __( 'Last Name', 'popup-maker' ),
+							'dependencies' => [
+								'name_field_type' => [ 'first_last' ],
+							],
+							'std'          => __( 'Last Name', 'popup-maker' ),
+							'private'      => true,
+						],
+						'placeholder_email' => [
+							'label'   => __( 'Email', 'popup-maker' ),
+							'std'     => __( 'Email', 'popup-maker' ),
+							'private' => true,
+						],
+
+					],
+					'appearance'   => [
+						'form_layout'    => [
+							'label'   => __( 'Form Layout', 'popup-maker' ),
+							'desc'    => __( 'Choose a form layout.', 'popup-maker' ),
+							'type'    => 'select',
+							'options' => [
+								'block'  => __( 'Block', 'popup-maker' ),
+								'inline' => __( 'Inline', 'popup-maker' ),
+							],
+							'std'     => 'block',
+							'private' => true,
+						],
+						'form_alignment' => [
+							'label'   => __( 'Form Alignment', 'popup-maker' ),
+							'desc'    => __( 'Choose a form alignment.', 'popup-maker' ),
+							'type'    => 'select',
+							'options' => [
+								'left'   => __( 'Left', 'popup-maker' ),
+								'center' => __( 'Center', 'popup-maker' ),
+								'right'  => __( 'Right', 'popup-maker' ),
+							],
+							'std'     => 'center',
+							'private' => true,
+						],
+						'form_style'     => [
+							'label'   => __( 'Form Style', 'popup-maker' ),
+							'desc'    => __( 'Choose how you want your form styled.', 'popup-maker' ),
+							'type'    => 'select',
+							'options' => [
+								''        => __( 'None', 'popup-maker' ),
+								'default' => __( 'Default', 'popup-maker' ),
+							],
+							'std'     => 'default',
+						],
+						'layout'         => [
+							'type'    => 'hidden',
+							'private' => true,
+						],
+						'style'          => [
+							'type'    => 'hidden',
+							'private' => true,
+						],
+					],
+				],
+				'privacy' => [
+					'main' => [
+						'privacy_consent_enabled'      => [
+							'label'   => __( 'Enabled', 'popup-maker' ),
+							'desc'    => __( 'When enabled, the successful completion will result in normal success actions, but if they do not opt-in no records will be made.', 'popup-maker' ),
+							'type'    => $privacy_always_enabled ? 'hidden' : 'select',
+							'options' => [
+								'yes' => __( 'Yes', 'popup-maker' ),
+								'no'  => __( 'No', 'popup-maker' ),
+							],
+							'std'     => 'yes',
+							'value'   => $privacy_always_enabled ? 'yes' : null,
+							'private' => true,
+						],
+						'privacy_consent_label'        => [
+							'label'        => __( 'Consent Field Label', 'popup-maker' ),
+							'type'         => 'text',
+							'std'          => pum_get_option( 'default_privacy_consent_label', __( 'Notify me about related content and special offers.', 'popup-maker' ) ),
+							'private'      => true,
+							'dependencies' => $privacy_enabled_dependency,
+						],
+						'privacy_consent_required'     => [
+							'label'        => __( 'Consent Required', 'popup-maker' ),
+							'desc'         => __( 'Note: Requiring consent may not be compliant with GDPR for all situations. Be sure to do your research or check with legal council.', 'popup-maker' ),
+							'type'         => 'checkbox',
+							'std'          => pum_get_option( 'default_privacy_consent_required' ),
+							'private'      => true,
+							'dependencies' => $privacy_enabled_dependency,
+						],
+						'privacy_consent_type'         => [
+							'label'        => __( 'Field Type', 'popup-maker' ),
+							'desc'         => __( 'Radio forces the user to make a choice, often resulting in more optins.', 'popup-maker' ),
+							'type'         => 'select',
+							'options'      => [
+								'radio'    => __( 'Radio', 'popup-maker' ),
+								'checkbox' => __( 'Checkbox', 'popup-maker' ),
+							],
+							'std'          => pum_get_option( 'default_privacy_consent_type', 'radio' ),
+							'private'      => true,
+							'dependencies' => $privacy_enabled_dependency,
+						],
+						'privacy_consent_radio_layout' => [
+							'label'        => __( 'Consent Radio Layout', 'popup-maker' ),
+							'type'         => 'select',
+							'options'      => [
+								'inline'  => __( 'Inline', 'popup-maker' ),
+								'stacked' => __( 'Stacked', 'popup-maker' ),
+							],
+							'std'          => pum_get_option( 'default_privacy_consent_radio_layout', 'inline' ),
+							'private'      => true,
+							'dependencies' => array_merge(
+								$privacy_enabled_dependency,
+								[
+									'privacy_consent_type' => 'radio',
+								]
+							),
+						],
+						'privacy_consent_yes_label'    => [
+							'label'        => __( 'Consent Yes Label', 'popup-maker' ),
+							'type'         => 'text',
+							'std'          => pum_get_option( 'default_privacy_consent_yes_label', __( 'Yes', 'popup-maker' ) ),
+							'private'      => true,
+							'dependencies' => array_merge(
+								$privacy_enabled_dependency,
+								[
+									'privacy_consent_type' => 'radio',
+								]
+							),
+						],
+						'privacy_consent_no_label'     => [
+							'label'        => __( 'Consent No Label', 'popup-maker' ),
+							'type'         => 'text',
+							'std'          => pum_get_option( 'default_privacy_consent_no_label', __( 'No', 'popup-maker' ) ),
+							'private'      => true,
+							'dependencies' => array_merge(
+								$privacy_enabled_dependency,
+								[
+									'privacy_consent_type' => 'radio',
+								]
+							),
+						],
+						'privacy_usage_text'           => [
+							'label'        => __( 'Consent Usage Text', 'popup-maker' ),
+							'desc'         => function_exists( 'get_privacy_policy_url' ) ? sprintf( __( 'You can use %1$s%2$s to insert a link to your privacy policy. To customize the link text use %1$s:Link Text%2$s', 'popup-maker' ), '{{privacy_link', '}}' ) : '',
+							'type'         => 'text',
+							'std'          => pum_get_option( 'default_privacy_usage_text', __( 'If you opt in above we use this information send related content, discounts and other special offers.', 'popup-maker' ) ),
+							'dependencies' => $privacy_enabled_dependency,
+						],
+					],
+				],
+				'actions' => [
+					'popup'    => [
+						'closepopup'   => [
+							'label' => __( 'Close Popup', 'popup-maker' ),
+							'type'  => 'checkbox',
+						],
+						'closedelay'   => [
+							'label'        => __( 'Delay', 'popup-maker' ),
+							'type'         => 'rangeslider',
+							'min'          => 0,
+							'max'          => 180,
+							'step'         => 1,
+							'unit'         => 's',
+							'std'          => 0,
+							'dependencies' => [
+								'closepopup' => true,
+							],
+						],
+						'openpopup'    => [
+							'label' => __( 'Open Popup', 'popup-maker' ),
+							'type'  => 'checkbox',
+						],
+						'openpopup_id' => [
+							'label'        => __( 'Popup ID', 'popup-maker' ),
+							'type'         => 'select',
+							'options'      => [
+								0 => __( 'Select a popup', 'popup-maker' ),
+							] + PUM_Helpers::popup_selectlist( $select_args ),
+							'std'          => 0,
+							'dependencies' => [
+								'openpopup' => true,
+							],
+						],
+					],
+					'redirect' => [
+						'redirect_enabled' => [
+							'label' => __( 'Redirect', 'popup-maker' ),
+							'desc'  => __( 'Enable refreshing the page or redirecting after success.', 'popup-maker' ),
+							'type'  => 'checkbox',
+						],
+						'redirect'         => [
+							'label'        => __( 'Redirect URL', 'popup-maker' ),
+							'desc'         => __( 'Leave blank to refresh, or enter a url that users will be taken to after success.', 'popup-maker' ),
+							'std'          => '',
+							'dependencies' => [
+								'redirect_enabled' => true,
+							],
+						],
+					],
+				],
+			]
 		);
-
-		$fields = apply_filters( 'pum_sub_form_shortcode_fields', array(
-			'general' => array(
-				'main' => array(
-					'provider' => array(
-						'label'   => __( 'Service Provider', 'popup-maker' ),
-						'desc'    => __( 'Choose which service provider to submit to.', 'popup-maker' ),
-						'type'    => 'select',
-						'options' => array_merge( array( '' => __( 'Default', 'popup-maker' ) ), PUM_Newsletter_Providers::dropdown_list(), array( 'none' => __( 'None', 'popup-maker' ) ) ),
-						'std'     => '',
-					),
-				),
-			),
-			'form'    => array(
-				'fields'       => array(
-					'name_field_type' => array(
-						'label'   => __( 'Name Field Type', 'popup-maker' ),
-						'type'    => 'select',
-						'options' => array(
-							'disabled'   => __( 'None', 'popup-maker' ),
-							'fullname'   => __( 'Full', 'popup-maker' ),
-							'first_only' => __( 'First Only', 'popup-maker' ),
-							'first_last' => __( 'First & Last', 'popup-maker' ),
-						),
-						'std'     => 'fullname',
-						'private' => true,
-					),
-					'name_optional'   => array(
-						'label'        => __( 'Name Optional', 'popup-maker' ),
-						'desc'         => __( 'Makes the name field optional.', 'popup-maker' ),
-						'type'         => 'checkbox',
-						'dependencies' => array(
-							'name_field_type' => array( 'fullname', 'first_only', 'first_last' ),
-						),
-						'private'      => true,
-					),
-					'name_disabled'   => array(
-						'label'        => __( 'Name Disabled', 'popup-maker' ),
-						'desc'         => __( 'Removes the name field.', 'popup-maker' ),
-						'type'         => 'checkbox',
-						'dependencies' => array(
-							'name_field_type' => false,
-						),
-						'private'      => true,
-					),
-
-				),
-				'labels'       => array(
-					'disable_labels' => array(
-						'label'   => __( 'Disable Labels', 'popup-maker' ),
-						'desc'    => __( 'Disables the display of field labels.', 'popup-maker' ),
-						'type'    => 'checkbox',
-						'private' => true,
-					),
-					'heading_labels' => array(
-						'label'   => __( 'Labels', 'popup-maker' ),
-						'desc'    => __( 'Field label text', 'popup-maker' ),
-						'type'    => 'heading',
-						'private' => true,
-					),
-					'label_name'     => array(
-						'label'        => __( 'Full Name', 'popup-maker' ),
-						'dependencies' => array(
-							'disable_labels'  => false,
-							'name_field_type' => array( 'fullname' ),
-						),
-						'std'          => __( 'Name', 'popup-maker' ),
-						'private'      => true,
-					),
-					'label_fname'    => array(
-						'label'        => __( 'First Name', 'popup-maker' ),
-						'dependencies' => array(
-							'disable_labels'  => false,
-							'name_field_type' => array( 'first_only', 'first_last' ),
-						),
-						'std'          => __( 'First Name', 'popup-maker' ),
-						'private'      => true,
-					),
-					'label_lname'    => array(
-						'label'        => __( 'Last Name', 'popup-maker' ),
-						'dependencies' => array(
-							'disable_labels'  => false,
-							'name_field_type' => array( 'first_last' ),
-						),
-						'std'          => __( 'Last Name', 'popup-maker' ),
-						'private'      => true,
-					),
-					'label_email'    => array(
-						'label'        => __( 'Email', 'popup-maker' ),
-						'dependencies' => array(
-							'disable_labels' => false,
-						),
-						'std'          => __( 'Email', 'popup-maker' ),
-						'private'      => true,
-					),
-					'label_submit'   => array(
-						'label'   => __( 'Submit Button', 'popup-maker' ),
-						'std'     => __( 'Subscribe', 'popup-maker' ),
-						'private' => true,
-					),
-					// Deprecated fields.
-					'name_text'      => array(
-						'type'    => 'hidden',
-						'private' => true,
-					),
-					'email_text'     => array(
-						'private' => true,
-						'type'    => 'hidden',
-					),
-					'button_text'    => array(
-						'type'    => 'hidden',
-						'private' => true,
-					),
-				),
-				'placeholders' => array(
-					'placeholder_name'  => array(
-						'label'        => __( 'Full Name', 'popup-maker' ),
-						'dependencies' => array(
-							'name_field_type' => array( 'fullname' ),
-						),
-						'std'          => __( 'Name', 'popup-maker' ),
-						'private'      => true,
-					),
-					'placeholder_fname' => array(
-						'label'        => __( 'First Name', 'popup-maker' ),
-						'dependencies' => array(
-							'name_field_type' => array( 'first_only', 'first_last' ),
-						),
-						'std'          => __( 'First Name', 'popup-maker' ),
-						'private'      => true,
-					),
-					'placeholder_lname' => array(
-						'label'        => __( 'Last Name', 'popup-maker' ),
-						'dependencies' => array(
-							'name_field_type' => array( 'first_last' ),
-						),
-						'std'          => __( 'Last Name', 'popup-maker' ),
-						'private'      => true,
-					),
-					'placeholder_email' => array(
-						'label'   => __( 'Email', 'popup-maker' ),
-						'std'     => __( 'Email', 'popup-maker' ),
-						'private' => true,
-					),
-
-				),
-				'appearance'   => array(
-					'form_layout'    => array(
-						'label'   => __( 'Form Layout', 'popup-maker' ),
-						'desc'    => __( 'Choose a form layout.', 'popup-maker' ),
-						'type'    => 'select',
-						'options' => array(
-							'block'  => __( 'Block', 'popup-maker' ),
-							'inline' => __( 'Inline', 'popup-maker' ),
-						),
-						'std'     => 'block',
-						'private' => true,
-					),
-					'form_alignment' => array(
-						'label'   => __( 'Form Alignment', 'popup-maker' ),
-						'desc'    => __( 'Choose a form alignment.', 'popup-maker' ),
-						'type'    => 'select',
-						'options' => array(
-							'left'   => __( 'Left', 'popup-maker' ),
-							'center' => __( 'Center', 'popup-maker' ),
-							'right'  => __( 'Right', 'popup-maker' ),
-						),
-						'std'     => 'center',
-						'private' => true,
-					),
-					'form_style'     => array(
-						'label'   => __( 'Form Style', 'popup-maker' ),
-						'desc'    => __( 'Choose how you want your form styled.', 'popup-maker' ),
-						'type'    => 'select',
-						'options' => array(
-							''        => __( 'None', 'popup-maker' ),
-							'default' => __( 'Default', 'popup-maker' ),
-						),
-						'std'     => 'default',
-					),
-					'layout'         => array(
-						'type'    => 'hidden',
-						'private' => true,
-					),
-					'style'          => array(
-						'type'    => 'hidden',
-						'private' => true,
-					),
-				),
-			),
-			'privacy' => array(
-				'main' => array(
-					'privacy_consent_enabled'      => array(
-						'label'   => __( 'Enabled', 'popup-maker' ),
-						'desc'    => __( 'When enabled, the successful completion will result in normal success actions, but if they do not opt-in no records will be made.', 'popup-maker' ),
-						'type'    => $privacy_always_enabled ? 'hidden' : 'select',
-						'options' => array(
-							'yes' => __( 'Yes', 'popup-maker' ),
-							'no'  => __( 'No', 'popup-maker' ),
-						),
-						'std'     => 'yes',
-						'value'   => $privacy_always_enabled ? 'yes' : null,
-						'private' => true,
-					),
-					'privacy_consent_label'        => array(
-						'label'        => __( 'Consent Field Label', 'popup-maker' ),
-						'type'         => 'text',
-						'std'          => pum_get_option( 'default_privacy_consent_label', __( 'Notify me about related content and special offers.', 'popup-maker' ) ),
-						'private'      => true,
-						'dependencies' => $privacy_enabled_dependency,
-					),
-					'privacy_consent_required'        => array(
-						'label'        => __( 'Consent Required', 'popup-maker' ),
-						'desc'        => __( 'Note: Requiring consent may not be compliant with GDPR for all situations. Be sure to do your research or check with legal council.', 'popup-maker' ),
-						'type'         => 'checkbox',
-						'std'          => pum_get_option( 'default_privacy_consent_required' ),
-						'private'      => true,
-						'dependencies' => $privacy_enabled_dependency,
-					),
-					'privacy_consent_type'         => array(
-						'label'        => __( 'Field Type', 'popup-maker' ),
-						'desc'         => __( 'Radio forces the user to make a choice, often resulting in more optins.', 'popup-maker' ),
-						'type'         => 'select',
-						'options'      => array(
-							'radio'    => __( 'Radio', 'popup-maker' ),
-							'checkbox' => __( 'Checkbox', 'popup-maker' ),
-						),
-						'std'          => pum_get_option( 'default_privacy_consent_type', 'radio' ),
-						'private'      => true,
-						'dependencies' => $privacy_enabled_dependency,
-					),
-					'privacy_consent_radio_layout' => array(
-						'label'        => __( 'Consent Radio Layout', 'popup-maker' ),
-						'type'         => 'select',
-						'options'      => array(
-							'inline'  => __( 'Inline', 'popup-maker' ),
-							'stacked' => __( 'Stacked', 'popup-maker' ),
-						),
-						'std'          => pum_get_option( 'default_privacy_consent_radio_layout', 'inline' ),
-						'private'      => true,
-						'dependencies' => array_merge( $privacy_enabled_dependency, array(
-							'privacy_consent_type' => 'radio',
-						) ),
-					),
-					'privacy_consent_yes_label'    => array(
-						'label'        => __( 'Consent Yes Label', 'popup-maker' ),
-						'type'         => 'text',
-						'std'          => pum_get_option( 'default_privacy_consent_yes_label', __( 'Yes', 'popup-maker' ) ),
-						'private'      => true,
-						'dependencies' => array_merge( $privacy_enabled_dependency, array(
-							'privacy_consent_type' => 'radio',
-						) ),
-					),
-					'privacy_consent_no_label'     => array(
-						'label'        => __( 'Consent No Label', 'popup-maker' ),
-						'type'         => 'text',
-						'std'          => pum_get_option( 'default_privacy_consent_no_label', __( 'No', 'popup-maker' ) ),
-						'private'      => true,
-						'dependencies' => array_merge( $privacy_enabled_dependency, array(
-							'privacy_consent_type' => 'radio',
-						) ),
-					),
-					'privacy_usage_text'           => array(
-						'label'        => __( 'Consent Usage Text', 'popup-maker' ),
-						'desc'         => function_exists( 'get_privacy_policy_url' ) ? sprintf( __( 'You can use %1$s%2$s to insert a link to your privacy policy. To customize the link text use %1$s:Link Text%2$s', 'popup-maker' ), '{{privacy_link', '}}' ) : '',
-						'type'         => 'text',
-						'std'          => pum_get_option( 'default_privacy_usage_text', __( 'If you opt in above we use this information send related content, discounts and other special offers.', 'popup-maker' ) ),
-						'dependencies' => $privacy_enabled_dependency,
-					),
-				),
-			),
-			'actions' => array(
-				'popup'    => array(
-					'closepopup'   => array(
-						'label' => __( 'Close Popup', 'popup-maker' ),
-						'type'  => 'checkbox',
-					),
-					'closedelay'   => array(
-						'label'        => __( 'Delay', 'popup-maker' ),
-						'type'         => 'rangeslider',
-						'min'          => 0,
-						'max'          => 180,
-						'step'         => 1,
-						'unit'         => 's',
-						'std'          => 0,
-						'dependencies' => array(
-							'closepopup' => true,
-						),
-					),
-					'openpopup'    => array(
-						'label' => __( 'Open Popup', 'popup-maker' ),
-						'type'  => 'checkbox',
-					),
-					'openpopup_id' => array(
-						'label'        => __( 'Popup ID', 'popup-maker' ),
-						'type'         => 'select',
-						'options'      => array(
-							                  0 => __( 'Select a popup', 'popup-maker' ),
-						                  ) + PUM_Helpers::popup_selectlist( $select_args ),
-						'std'          => 0,
-						'dependencies' => array(
-							'openpopup' => true,
-						),
-					),
-				),
-				'redirect' => array(
-					'redirect_enabled' => array(
-						'label' => __( 'Redirect', 'popup-maker' ),
-						'desc'  => __( 'Enable refreshing the page or redirecting after success.', 'popup-maker' ),
-						'type'  => 'checkbox',
-					),
-					'redirect'         => array(
-						'label'        => __( 'Redirect URL', 'popup-maker' ),
-						'desc'         => __( 'Leave blank to refresh, or enter a url that users will be taken to after success.', 'popup-maker' ),
-						'std'          => '',
-						'dependencies' => array(
-							'redirect_enabled' => true,
-						),
-					),
-				),
-			),
-		) );
 
 		return $this->resort_provider_tabs( $fields );
 	}
@@ -446,7 +464,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	 *
 	 * @return array
 	 */
-	public function resort_provider_tabs( $tabs = array() ) {
+	public function resort_provider_tabs( $tabs = [] ) {
 		$sorted_tabs = $tabs;
 
 		foreach ( $tabs as $tab_id => $tab ) {
@@ -479,18 +497,21 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 		$data_attr = $this->data_attr( $atts );
 
-		$classes = implode( ' ', array(
-			'pum_sub_form',
-			$atts['provider'],
-			$atts['form_layout'],
-			$atts['form_style'],
-			'pum-sub-form',
-			'pum-form',
-			'pum-sub-form--provider-' . $atts['provider'],
-			'pum-form--layout-' . $atts['form_layout'],
-			'pum-form--style-' . $atts['form_style'],
-			'pum-form--alignment-' . $atts['form_alignment'],
-		) ); ?>
+		$classes = implode(
+			' ',
+			[
+				'pum_sub_form',
+				$atts['provider'],
+				$atts['form_layout'],
+				$atts['form_style'],
+				'pum-sub-form',
+				'pum-form',
+				'pum-sub-form--provider-' . $atts['provider'],
+				'pum-form--layout-' . $atts['form_layout'],
+				'pum-form--style-' . $atts['form_style'],
+				'pum-form--alignment-' . $atts['form_alignment'],
+			]
+		); ?>
 
 
 		<form class="<?php echo esc_attr( $classes ); ?>" data-settings="<?php echo esc_attr( PUM_Utils_Array::safe_json_encode( $data_attr ) ); ?>">
@@ -499,61 +520,64 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 			<?php
 
-
-			if ( ! $atts['name_field_type'] != 'disabled' ) :
+			if ( 'disabled' !== $atts['name_field_type'] ) :
 
 				$required = ! $atts['name_optional'] ? 'required' : '';
 
 				switch ( $atts['name_field_type'] ) {
-					case 'fullname': ?>
+					case 'fullname':
+						?>
 
 						<div class="pum-form__field  pum-form__field--name  pum-sub-form-field  pum-sub-form-field--name">
 							<?php if ( ! $atts['disable_labels'] ) : ?>
-								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_name']; ?></label>
+								<label class="pum-form__label  pum-sub-form-label"><?php echo esc_html( $atts['label_name'] ); ?></label>
 							<?php endif; ?>
-							<input type="text" name="name" <?php echo $required; ?> placeholder="<?php echo esc_attr( $atts['placeholder_name'] ); ?>" />
+							<input type="text" name="name" <?php echo esc_attr( $required ); ?> placeholder="<?php echo esc_attr( $atts['placeholder_name'] ); ?>" />
 						</div>
 
 						<?php
 						break;
 
-					case 'first_only': ?>
+					case 'first_only':
+						?>
 
 						<div class="pum-form__field  pum-form__field--fname  pum-sub-form-field  pum-sub-form-field--fname">
 							<?php if ( ! $atts['disable_labels'] ) : ?>
-								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_fname']; ?></label>
+								<label class="pum-form__label  pum-sub-form-label"><?php echo esc_html( $atts['label_fname'] ); ?></label>
 							<?php endif; ?>
-							<input type="text" name="fname" <?php echo $required; ?> placeholder="<?php echo esc_attr( $atts['placeholder_fname'] ); ?>" />
+							<input type="text" name="fname" <?php echo esc_attr( $required ); ?> placeholder="<?php echo esc_attr( $atts['placeholder_fname'] ); ?>" />
 						</div>
 
 						<?php
 						break;
 
-					case 'first_last': ?>
+					case 'first_last':
+						?>
 
 						<div class="pum-form__field  pum-form__field--fname  pum-sub-form-field  pum-sub-form-field--fname">
 							<?php if ( ! $atts['disable_labels'] ) : ?>
-								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_fname']; ?></label>
+								<label class="pum-form__label  pum-sub-form-label"><?php echo esc_html( $atts['label_fname'] ); ?></label>
 							<?php endif; ?>
-							<input type="text" name="fname" <?php echo $required; ?> placeholder="<?php echo esc_attr( $atts['placeholder_fname'] ); ?>" />
+							<input type="text" name="fname" <?php echo esc_attr( $required ); ?> placeholder="<?php echo esc_attr( $atts['placeholder_fname'] ); ?>" />
 						</div>
 
 						<div class="pum-form__field  pum-form__field--lname  pum-sub-form-field  pum-sub-form-field--lname">
 							<?php if ( ! $atts['disable_labels'] ) : ?>
-								<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_lname']; ?></label>
+								<label class="pum-form__label  pum-sub-form-label"><?php echo esc_html( $atts['label_lname'] ); ?></label>
 							<?php endif; ?>
-							<input type="text" name="lname" <?php echo $required; ?> placeholder="<?php echo esc_attr( $atts['placeholder_lname'] ); ?>" />
+							<input type="text" name="lname" <?php echo esc_attr( $required ); ?> placeholder="<?php echo esc_attr( $atts['placeholder_lname'] ); ?>" />
 						</div>
 
 						<?php
 						break;
-				} ?>
+				}
+				?>
 
 			<?php endif; ?>
 
 			<div class="pum-form__field  pum-form__field--email  pum-sub-form-field  pum-sub-form-field--email">
 				<?php if ( ! $atts['disable_labels'] ) : ?>
-					<label class="pum-form__label  pum-sub-form-label"><?php echo $atts['label_email']; ?></label>
+					<label class="pum-form__label  pum-sub-form-label"><?php echo esc_html( $atts['label_email'] ); ?></label>
 				<?php endif; ?>
 				<input type="email" name="email" required placeholder="<?php echo esc_attr( $atts['placeholder_email'] ); ?>" />
 			</div>
@@ -562,37 +586,41 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 			<?php do_action( 'pum_newsletter_fields', $atts ); ?>
 
-			<input type="hidden" name="provider" value="<?php echo $atts['provider']; ?>" />
+			<input type="hidden" name="provider" value="<?php echo esc_attr( $atts['provider'] ); ?>" />
 
-			<?php if ( $atts['privacy_consent_enabled'] == 'yes' ) :
+			<?php
+			if ( 'yes' === $atts['privacy_consent_enabled'] ) :
 				$consent_text = trim( $atts['privacy_consent_label'] );
-				$consent_args = array(
-					'enabled' => 'yes',
+				$consent_args = [
+					'enabled'  => 'yes',
 					'required' => isset( $atts['privacy_consent_required'] ) && $atts['privacy_consent_required'],
-					'text' => ! empty( $consent_text ) ? $consent_text : ( ! empty( $atts['privacy_consent_yes_label'] ) ? $atts['privacy_consent_yes_label'] : '' ),
-				);
+					'text'     => ! empty( $consent_text ) ? $consent_text : ( ! empty( $atts['privacy_consent_yes_label'] ) ? $atts['privacy_consent_yes_label'] : '' ),
+				];
 				?>
 
 				<input type="hidden" name="consent_args" value="<?php echo esc_attr( PUM_Utils_Array::safe_json_encode( $consent_args ) ); ?>" />
 
 				<div class="pum-form__field  pum-form__field--<?php echo esc_attr( $atts['privacy_consent_type'] ); ?>  pum-form__field--consent  pum-sub-form-field">
-					<?php switch ( $atts['privacy_consent_type'] ) {
-						case 'checkbox': ?>
+					<?php
+					switch ( $atts['privacy_consent_type'] ) {
+						case 'checkbox':
+							?>
 							<label class="pum-form__label  pum-sub-form-label">
-								<input type="checkbox" value="yes" name="consent" <?php echo $consent_args['required'] ? 'required="required"' : ''; ?> /> <?php echo wp_kses( $consent_text, array() ); ?>
+								<input type="checkbox" value="yes" name="consent" <?php echo $consent_args['required'] ? 'required="required"' : ''; ?> /> <?php echo wp_kses( $consent_text, [] ); ?>
 							</label>
 							<?php
 							break;
-						case 'radio': ?>
+						case 'radio':
+							?>
 							<?php if ( ! empty( $consent_text ) ) : ?>
-								<label class="pum-form__label  pum-sub-form-label"><?php echo wp_kses( $consent_text, array() ); ?></label>
+								<label class="pum-form__label  pum-sub-form-label"><?php echo esc_html( wp_kses( $consent_text, [] ) ); ?></label>
 							<?php endif; ?>
 							<div class="pum-form__consent-radios  pum-form__consent-radios--<?php echo esc_attr( $atts['privacy_consent_radio_layout'] ); ?>">
 								<label class="pum-form__label  pum-sub-form-label">
-									<input type="radio" value="yes" name="consent" <?php echo $consent_args['required'] ? 'required="required"' : ''; ?> /> <?php echo wp_kses( $atts['privacy_consent_yes_label'], array() ); ?>
+									<input type="radio" value="yes" name="consent" <?php echo $consent_args['required'] ? 'required="required"' : ''; ?> /> <?php echo esc_html( wp_kses( $atts['privacy_consent_yes_label'], [] ) ); ?>
 								</label>
 								<label class="pum-form__label  pum-sub-form-label">
-									<input type="radio" value="no" name="consent" /> <?php echo wp_kses( $atts['privacy_consent_no_label'], array() ); ?>
+									<input type="radio" value="no" name="consent" /> <?php echo esc_html( wp_kses( $atts['privacy_consent_no_label'], [] ) ); ?>
 								</label>
 							</div>
 							<?php
@@ -603,7 +631,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						$usage_text = trim( $atts['privacy_usage_text'] );
 
 						if ( strpos( $usage_text, '{{privacy_link' ) !== false && function_exists( 'get_privacy_policy_url' ) && get_privacy_policy_url() !== '' ) {
-							preg_match_all( "/{{privacy_link:?(.*)}}/", $usage_text, $matches );
+							preg_match_all( '/{{privacy_link:?(.*)}}/', $usage_text, $matches );
 
 							$link = '<a href="' . get_privacy_policy_url() . '" target="_blank">%s</a>';
 
@@ -613,14 +641,26 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						}
 						?>
 						<p>
-							<small><?php echo wp_kses( $usage_text, array( 'a' => array( 'target' => true, 'href' => true ) ) ); ?></small>
+							<small>
+							<?php
+							echo wp_kses(
+								$usage_text,
+								[
+									'a' => [
+										'target' => true,
+										'href'   => true,
+									],
+								]
+								);
+							?>
+							</small>
 						</p>
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>
 
 			<div class="pum-form__field  pum-form__field--submit  pum-sub-form-field  pum-sub-form-field--submit">
-				<button class="pum-form__submit  pum-sub-form-submit"><?php echo $atts['label_submit']; ?></button>
+				<button class="pum-form__submit  pum-sub-form-submit"><?php echo esc_html( $atts['label_submit'] ); ?></button>
 			</div>
 
 			<?php do_action( 'pum_sub_form_after', $atts ); ?>
@@ -628,7 +668,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 		<?php
 
-		//return content
+		// return content
 		return ob_get_clean();
 	}
 
@@ -687,8 +727,8 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	 *
 	 * @return array
 	 */
-	public function data_attr( $atts = array() ) {
-		$data = array();
+	public function data_attr( $atts = [] ) {
+		$data = [];
 
 		$data_attr_fields = $this->data_attr_fields();
 
@@ -696,8 +736,8 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 			if ( in_array( $key, $data_attr_fields ) ) {
 				$data[ $key ] = $value;
 
-				if ( $key == 'redirect' ) {
-					$data[ $key ] = base64_encode( $value );
+				if ( 'redirect' === $key ) {
+					$data[ $key ] = base64_encode( esc_url( $value ) );
 				}
 			}
 		}
@@ -711,20 +751,24 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	 * @return mixed
 	 */
 	public function data_attr_fields() {
-		return apply_filters( 'pum_sub_form_data_attr_fields', array(
-			'closepopup',
-			'closedelay',
-			'openpopup',
-			'openpopup_id',
-			'redirect_enabled',
-			'redirect',
-		) );
+		return apply_filters(
+			'pum_sub_form_data_attr_fields',
+			[
+				'closepopup',
+				'closedelay',
+				'openpopup',
+				'openpopup_id',
+				'redirect_enabled',
+				'redirect',
+			]
+		);
 	}
 
 	/**
 	 *
 	 */
-	public function template() { ?>
+	public function template() {
+		?>
 		<p class="pum-sub-form-desc">
 			<?php _e( 'Subscription Form Placeholder', 'popup-maker' ); ?>
 		</p>
@@ -732,4 +776,3 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	}
 
 }
-

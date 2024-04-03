@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for General Admin
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -13,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return bool|string
  */
 function pum_typenow() {
-	if ( ! empty ( $GLOBALS['typenow'] ) ) {
+	if ( ! empty( $GLOBALS['typenow'] ) ) {
 		return $GLOBALS['typenow'];
 	}
 
@@ -40,7 +43,7 @@ function pum_typenow() {
  *
  * @return string Constructed admin URL.
  */
-function pum_admin_url( $type = '', $query_args = array() ) {
+function pum_admin_url( $type = '', $query_args = [] ) {
 	$page = '';
 
 	$whitelist = PUM_Admin_Pages::$pages;
@@ -49,7 +52,7 @@ function pum_admin_url( $type = '', $query_args = array() ) {
 		$page = "pum-{$type}";
 	}
 
-	$admin_query_args = array_merge( array( 'page' => $page ), $query_args );
+	$admin_query_args = array_merge( [ 'page' => $page ], $query_args );
 
 	$url = add_query_arg( $admin_query_args, admin_url( 'edit.php?post_type=popup' ) );
 
@@ -67,12 +70,12 @@ function pum_admin_url( $type = '', $query_args = array() ) {
  * @return array
  */
 function pum_support_assist_args() {
-	return array(
+	return [
 		// Forces the dashboard to force logout any users.
 		'nouser' => true,
 		'fname'  => wp_get_current_user()->first_name,
 		'lname'  => wp_get_current_user()->last_name,
 		'email'  => wp_get_current_user()->user_email,
 		'url'    => home_url(),
-	);
+	];
 }

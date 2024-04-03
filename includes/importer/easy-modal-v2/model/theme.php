@@ -1,4 +1,10 @@
 <?php
+/**
+ * Importer for easy-modal model theme
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -9,14 +15,14 @@ class EModal_Model_Theme extends EModal_Model {
 	protected $_class_name = 'EModal_Model_Theme';
 	protected $_table_name = 'em_themes';
 	protected $meta;
-	protected $_default_fields = array(
+	protected $_default_fields = [
 		'id'        => null,
 		'name'      => 'Default',
 		'created'   => '0000-00-00 00:00:00',
 		'modified'  => '0000-00-00 00:00:00',
 		'is_system' => 0,
-		'is_trash'  => 0
-	);
+		'is_trash'  => 0,
+	];
 
 	public function __construct( $id = null ) {
 		parent::__construct( $id );
@@ -26,7 +32,7 @@ class EModal_Model_Theme extends EModal_Model {
 	}
 
 	public function __get( $key ) {
-		if ( $key == 'meta' ) {
+		if ( 'meta' === $key ) {
 			return $this->meta;
 		} else {
 			return parent::__get( $key );
@@ -67,20 +73,20 @@ class EModal_Model_Theme extends EModal_Model {
 	}
 }
 
-if ( ! function_exists( "get_all_modal_themes" ) ) {
-	function get_all_modal_themes( $where = "is_trash != 1" ) {
+if ( ! function_exists( 'get_all_modal_themes' ) ) {
+	function get_all_modal_themes( $where = 'is_trash != 1' ) {
 		global $wpdb;
 
-		$themes                  = array();
-		$theme_ids               = array();
-		$EModal_Model_Theme      = new EModal_Model_Theme;
-		$EModal_Model_Theme_Meta = new EModal_Model_Theme_Meta;
-		foreach ( $EModal_Model_Theme->load( "SELECT * FROM  {$wpdb->prefix}em_themes" . ( $where ? " WHERE " . $where : '' ) ) as $theme ) {
+		$themes                  = [];
+		$theme_ids               = [];
+		$EModal_Model_Theme      = new EModal_Model_Theme();
+		$EModal_Model_Theme_Meta = new EModal_Model_Theme_Meta();
+		foreach ( $EModal_Model_Theme->load( "SELECT * FROM  {$wpdb->prefix}em_themes" . ( $where ? ' WHERE ' . $where : '' ) ) as $theme ) {
 			$themes[ $theme->id ] = $theme;
 			$theme_ids[]          = $theme->id;
 		}
 		if ( count( $themes ) ) {
-			foreach ( $EModal_Model_Theme_Meta->load( "SELECT * FROM  {$wpdb->prefix}em_theme_metas WHERE theme_id IN (" . implode( ',', $theme_ids ) . ")" ) as $meta ) {
+			foreach ( $EModal_Model_Theme_Meta->load( "SELECT * FROM  {$wpdb->prefix}em_theme_metas WHERE theme_id IN (" . implode( ',', $theme_ids ) . ')' ) as $meta ) {
 				$themes[ $meta->theme_id ]->meta->process_load( $meta->as_array() );
 			}
 		}
@@ -89,7 +95,7 @@ if ( ! function_exists( "get_all_modal_themes" ) ) {
 	}
 }
 
-if ( ! function_exists( "get_current_modal_theme" ) ) {
+if ( ! function_exists( 'get_current_modal_theme' ) ) {
 	function get_current_modal_theme( $key = null ) {
 		global $current_theme;
 		if ( ! $key ) {
@@ -102,7 +108,7 @@ if ( ! function_exists( "get_current_modal_theme" ) ) {
 	}
 }
 
-if ( ! function_exists( "get_current_modal_theme_id" ) ) {
+if ( ! function_exists( 'get_current_modal_theme_id' ) ) {
 	function get_current_modal_theme_id() {
 		global $current_theme;
 
@@ -111,7 +117,7 @@ if ( ! function_exists( "get_current_modal_theme_id" ) ) {
 }
 
 
-if ( ! function_exists( "count_all_modal_themes" ) ) {
+if ( ! function_exists( 'count_all_modal_themes' ) ) {
 	function count_all_modal_themes() {
 		global $wpdb;
 
@@ -119,7 +125,7 @@ if ( ! function_exists( "count_all_modal_themes" ) ) {
 	}
 }
 
-if ( ! function_exists( "count_deleted_modal_themes" ) ) {
+if ( ! function_exists( 'count_deleted_modal_themes' ) ) {
 	function count_deleted_modal_themes() {
 		global $wpdb;
 

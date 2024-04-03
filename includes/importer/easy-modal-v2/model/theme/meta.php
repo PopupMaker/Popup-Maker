@@ -1,4 +1,10 @@
 <?php
+/**
+ * Importer for easy-modal model theme meta
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -6,18 +12,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class EModal_Model_Theme_Meta extends EModal_Model {
-	protected $_class_name = 'EModal_Model_Theme_Meta';
-	protected $_table_name = 'em_theme_metas';
-	protected $_pk = 'theme_id';
-	protected $_default_fields = array(
+	protected $_class_name     = 'EModal_Model_Theme_Meta';
+	protected $_table_name     = 'em_theme_metas';
+	protected $_pk             = 'theme_id';
+	protected $_default_fields = [
 		'id'        => null,
 		'theme_id'  => null,
-		'overlay'   => array(),
-		'container' => array(),
-		'close'     => array(),
-		'title'     => array(),
-		'content'   => array(),
-	);
+		'overlay'   => [],
+		'container' => [],
+		'close'     => [],
+		'title'     => [],
+		'content'   => [],
+	];
 
 	public function __construct( $id = null ) {
 		global $wpdb;
@@ -32,7 +38,7 @@ class EModal_Model_Theme_Meta extends EModal_Model {
 				$this->process_load( $row );
 			}
 		} else {
-			$this->set_fields( apply_filters( "{$class_name}_defaults", array() ) );
+			$this->set_fields( apply_filters( "{$class_name}_defaults", [] ) );
 		}
 
 		return $this;
@@ -45,7 +51,7 @@ class EModal_Model_Theme_Meta extends EModal_Model {
 		$rows = $wpdb->get_col( "SELECT id FROM $table_name WHERE theme_id = $this->theme_id ORDER BY id DESC" );
 		if ( count( $rows ) ) {
 			$this->id = $rows[0];
-			$wpdb->update( $table_name, $this->serialized_values(), array( 'id' => $this->id ) );
+			$wpdb->update( $table_name, $this->serialized_values(), [ 'id' => $this->id ] );
 		} else {
 			$wpdb->insert( $table_name, $this->serialized_values() );
 			$this->id = $wpdb->insert_id;

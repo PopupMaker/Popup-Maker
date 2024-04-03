@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Telemetry class
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	// Exit if accessed directly.
@@ -21,10 +24,10 @@ class PUM_Telemetry {
 	 * Initialization method
 	 */
 	public static function init() {
-		add_action( 'pum_daily_scheduled_events', array( __CLASS__, 'track_check' ) );
+		add_action( 'pum_daily_scheduled_events', [ __CLASS__, 'track_check' ] );
 		if ( is_admin() && current_user_can( 'manage_options' ) ) {
-			add_filter( 'pum_alert_list', array( __CLASS__, 'optin_alert' ) );
-			add_action( 'pum_alert_dismissed', array( __CLASS__, 'optin_alert_check' ), 10, 2 );
+			add_filter( 'pum_alert_list', [ __CLASS__, 'optin_alert' ] );
+			add_action( 'pum_alert_dismissed', [ __CLASS__, 'optin_alert_check' ], 10, 2 );
 		}
 	}
 
@@ -60,7 +63,7 @@ class PUM_Telemetry {
 		}
 
 		$plugins        = array_keys( get_plugins() );
-		$active_plugins = get_option( 'active_plugins', array() );
+		$active_plugins = get_option( 'active_plugins', [] );
 
 		foreach ( $plugins as $key => $plugin ) {
 			if ( in_array( $plugin, $active_plugins ) ) {
@@ -81,12 +84,12 @@ class PUM_Telemetry {
 
 		// Aggregates important settings across all popups.
 		$all_popups = pum_get_all_popups();
-		$triggers   = array();
-		$cookies    = array();
-		$conditions = array();
-		$location   = array();
-		$sizes      = array();
-		$sounds     = array();
+		$triggers   = [];
+		$cookies    = [];
+		$conditions = [];
+		$location   = [];
+		$sizes      = [];
+		$sounds     = [];
 
 		// Cycle through each popup.
 		foreach ( $all_popups as $popup ) {
@@ -143,7 +146,7 @@ class PUM_Telemetry {
 			}
 		}
 
-		return array(
+		return [
 			// UID.
 			'uid'                    => self::get_uuid(),
 
@@ -172,7 +175,7 @@ class PUM_Telemetry {
 			// Popup Maker Settings.
 			'block_editor_enabled'   => pum_get_option( 'gutenberg_support_enabled' ),
 			'bypass_ad_blockers'     => pum_get_option( 'bypass_adblockers' ),
-			'disable_taxonimies'     => pum_get_option( 'disable_popup_category_tag' ),
+			'disable_taxonomies'     => pum_get_option( 'disable_popup_category_tag' ),
 			'disable_asset_cache'    => pum_get_option( 'disable_asset_caching' ),
 			'disable_open_tracking'  => pum_get_option( 'disable_popup_open_tracking' ),
 			'default_email_provider' => pum_get_option( 'newsletter_default_provider', 'none' ),
@@ -184,7 +187,7 @@ class PUM_Telemetry {
 			'locations'              => $location,
 			'sizes'                  => $sizes,
 			'sounds'                 => $sounds,
-		);
+		];
 	}
 
 	/**
@@ -193,7 +196,7 @@ class PUM_Telemetry {
 	 * @param array $data Telemetry data to send.
 	 * @since 1.11.0
 	 */
-	public static function send_data( $data = array() ) {
+	public static function send_data( $data = [] ) {
 		self::api_call( 'check_in', $data );
 	}
 
@@ -205,10 +208,10 @@ class PUM_Telemetry {
 	 * @return array|bool False if WP Error. Otherwise, array response from wp_remote_post.
 	 * @since 1.11.0
 	 */
-	public static function api_call( $action = '', $data = array() ) {
+	public static function api_call( $action = '', $data = [] ) {
 		$response = wp_remote_post(
 			'https://api.wppopupmaker.com/wp-json/pmapi/v2/' . $action,
-			array(
+			[
 				'method'      => 'POST',
 				'timeout'     => 20,
 				'redirection' => 5,
@@ -216,12 +219,12 @@ class PUM_Telemetry {
 				'blocking'    => false,
 				'body'        => $data,
 				'user-agent'  => 'POPMAKE/' . Popup_Maker::$VER . '; ' . get_site_url(),
-			)
+			]
 		);
 
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
-			PUM_Utils_Logging::instance()->log( sprintf( 'Cannot send telemetry data. Error received was: %s', esc_html( $error_message ) ) );
+			pum_log_message( sprintf( 'Cannot send telemetry data. Error received was: %s', esc_html( $error_message ) ) );
 			return false;
 		}
 
@@ -240,35 +243,35 @@ class PUM_Telemetry {
 			return $alerts;
 		}
 
-		$alerts[] = array(
+		$alerts[] = [
 			'code'        => 'pum_telemetry_notice',
 			'type'        => 'info',
 			'message'     => esc_html__( "We are constantly improving Popup Maker but that's difficult to do if we don't know how it's being used. Please allow data sharing so that we can receive a little information on how it is used. You can change this setting at any time on our Settings page. No user data is sent to our servers. No sensitive data is tracked.", 'popup-maker' ),
 			'priority'    => 10,
 			'dismissible' => true,
 			'global'      => false,
-			'actions'     => array(
-				array(
+			'actions'     => [
+				[
 					'primary' => true,
 					'type'    => 'action',
 					'action'  => 'pum_optin_check_allow',
 					'text'    => __( 'Allow', 'popup-maker' ),
-				),
-				array(
+				],
+				[
 					'primary' => false,
 					'type'    => 'action',
 					'action'  => 'dismiss',
 					'text'    => __( 'Do not allow', 'popup-maker' ),
-				),
-				array(
+				],
+				[
 					'primary' => false,
 					'type'    => 'link',
 					'action'  => '',
 					'href'    => 'https://docs.wppopupmaker.com/article/528-the-data-the-popup-maker-plugin-collects',
 					'text'    => __( 'Learn more', 'popup-maker' ),
-				),
-			),
-		);
+				],
+			],
+		];
 		return $alerts;
 	}
 

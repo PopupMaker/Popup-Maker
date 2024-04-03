@@ -34,6 +34,8 @@ function webpack_block_editor_watcher() {
 	$fn.saneWatch( path.join( config.root.dir, 'src/block-editor', '/**/*.s+(a|c)ss' ), { debounce: 300 }, gulp.parallel( 'webpack:blockEditor' ) );
 }
 
+webpack_block_editor_watcher.description = "Starts site Webpack file watcher.";
+
 function langpack_watcher() {
 	$fn.saneWatch( '**/*.php', { debounce: 300 }, gulp.parallel( 'langpack' ) );
 }

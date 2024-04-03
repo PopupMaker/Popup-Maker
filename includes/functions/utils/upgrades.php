@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Functions for Upgrades Utility
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -52,7 +55,7 @@ function pum_has_completed_upgrade( $upgrade_id = '' ) {
  * @param int   $post_id
  * @param array $keys_to_delete
  */
-function pum_cleanup_post_meta_keys( $post_id = 0, $keys_to_delete = array() ) {
+function pum_cleanup_post_meta_keys( $post_id = 0, $keys_to_delete = [] ) {
 	/**
 	 * Clean up automatically.
 	 */
@@ -60,7 +63,7 @@ function pum_cleanup_post_meta_keys( $post_id = 0, $keys_to_delete = array() ) {
 		global $wpdb;
 
 		$keys_to_delete = array_map( 'esc_sql', (array) $keys_to_delete );
-		$meta_keys = implode( "','", $keys_to_delete );
+		$meta_keys      = implode( "','", $keys_to_delete );
 
 		$query = $wpdb->prepare( "DELETE FROM `$wpdb->postmeta` WHERE `post_id` = %d AND `meta_key` IN ('{$meta_keys}')", $post_id );
 

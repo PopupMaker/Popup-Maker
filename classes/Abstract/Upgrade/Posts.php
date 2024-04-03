@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Abstract for posts upgrade
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -37,7 +40,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 *
 	 * @var array
 	 */
-	public $post_status = array( 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' );
+	public $post_status = [ 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ];
 
 	/**
 	 * Number of posts to migrate per step.
@@ -81,10 +84,12 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 		$total_to_migrate = $this->get_total_count();
 
 		if ( ! $total_to_migrate ) {
-			$posts = $this->get_posts( array(
-				'fields'         => 'ids',
-				'posts_per_page' => - 1,
-			) );
+			$posts = $this->get_posts(
+				[
+					'fields'         => 'ids',
+					'posts_per_page' => - 1,
+				]
+			);
 
 			$posts = wp_parse_id_list( $posts );
 
@@ -105,7 +110,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 *
 	 * @return array
 	 */
-	public function get_posts( $args = array() ) {
+	public function get_posts( $args = [] ) {
 		return get_posts( $this->query_args( $args ) );
 	}
 
@@ -118,12 +123,15 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 *
 	 * @return array
 	 */
-	public function query_args( $args = array() ) {
+	public function query_args( $args = [] ) {
 
-		$defaults = wp_parse_args( $this->custom_query_args(), array(
-			'post_status' => $this->post_status,
-			'post_type'   => $this->post_type,
-		) );
+		$defaults = wp_parse_args(
+			$this->custom_query_args(),
+			[
+				'post_status' => $this->post_status,
+				'post_type'   => $this->post_type,
+			]
+		);
 
 		return wp_parse_args( $args, $defaults );
 	}
@@ -133,7 +141,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 * @return array
 	 */
 	public function custom_query_args() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -145,17 +153,19 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 		$completed_post_ids = $this->get_completed_post_ids();
 
 		if ( $this->prefetch_ids ) {
-			$all_posts = $this->get_post_ids();
+			$all_posts          = $this->get_post_ids();
 			$remaining_post_ids = array_diff( $all_posts, $completed_post_ids );
-			$posts = array_slice( $remaining_post_ids, 0, $this->per_step );
+			$posts              = array_slice( $remaining_post_ids, 0, $this->per_step );
 		} else {
-			$posts = $this->get_posts( array(
-				'fields'         => 'ids',
-				'posts_per_page' => $this->per_step,
-				'offset'         => $this->get_offset(),
-				'orderby'        => 'ID',
-				'order'          => 'ASC',
-			) );
+			$posts = $this->get_posts(
+				[
+					'fields'         => 'ids',
+					'posts_per_page' => $this->per_step,
+					'offset'         => $this->get_offset(),
+					'orderby'        => 'ID',
+					'order'          => 'ASC',
+				]
+			);
 		}
 
 		if ( empty( $posts ) ) {
@@ -185,9 +195,9 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 */
 	public function get_message( $code ) {
 		$post_type = get_post_type_object( $this->post_type );
-		$labels = get_post_type_labels( $post_type );
-		$singular = strtolower( $labels->singular_name );
-		$plural = strtolower( $labels->name );
+		$labels    = get_post_type_labels( $post_type );
+		$singular  = strtolower( $labels->singular_name );
+		$plural    = strtolower( $labels->name );
 
 		switch ( $code ) {
 
@@ -225,7 +235,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 */
 	protected function get_post_ids() {
 		if ( ! isset( $this->post_ids ) || ! $this->post_ids ) {
-			$this->post_ids =  PUM_DataStorage::get( "{$this->batch_id}_post_ids", false );
+			$this->post_ids = PUM_DataStorage::get( "{$this->batch_id}_post_ids", false );
 
 			if ( is_array( $this->post_ids ) ) {
 				$this->post_ids = wp_parse_id_list( $this->post_ids );
@@ -240,7 +250,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 *
 	 * @param array $post_ids Full list of post_ids to be processed.
 	 */
-	protected function set_post_ids( $post_ids = array() ) {
+	protected function set_post_ids( $post_ids = [] ) {
 		$this->post_ids = $post_ids;
 
 		PUM_DataStorage::write( "{$this->batch_id}_post_ids", $post_ids );
@@ -262,7 +272,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 */
 	protected function get_completed_post_ids() {
 		if ( ! isset( $this->completed_post_ids ) || ! $this->completed_post_ids ) {
-			$completed_post_ids =  PUM_DataStorage::get( "{$this->batch_id}_completed_post_ids", array() );
+			$completed_post_ids       = PUM_DataStorage::get( "{$this->batch_id}_completed_post_ids", [] );
 			$this->completed_post_ids = wp_parse_id_list( $completed_post_ids );
 		}
 
@@ -274,7 +284,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 *
 	 * @param array $completed_post_ids Full list of post_ids to be processed.
 	 */
-	protected function set_completed_post_ids( $completed_post_ids = array() ) {
+	protected function set_completed_post_ids( $completed_post_ids = [] ) {
 		$this->completed_post_ids = wp_parse_id_list( $completed_post_ids );
 
 		PUM_DataStorage::write( "{$this->batch_id}_completed_post_ids", $completed_post_ids );

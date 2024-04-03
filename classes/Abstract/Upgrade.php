@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Abstract class for Upgrade
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,10 +25,13 @@ abstract class PUM_Abstract_Upgrade extends PUM_Abstract_Batch_Process {
 	 * @param int $step
 	 */
 	public function __construct( $step = 1 ) {
-		update_option( 'pum_doing_upgrade', array(
-			'upgrade_id' => $this->batch_id,
-			'step'       => $step,
-		) );
+		update_option(
+			'pum_doing_upgrade',
+			[
+				'upgrade_id' => $this->batch_id,
+				'step'       => $step,
+			]
+		);
 
 		parent::__construct( $step );
 	}

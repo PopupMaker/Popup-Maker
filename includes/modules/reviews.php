@@ -1,4 +1,10 @@
 <?php
+/**
+ * Modules for reviews
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,9 +28,9 @@ class PUM_Modules_Reviews {
 	 *
 	 */
 	public static function init() {
-		//add_action( 'init', array( __CLASS__, 'hooks' ) );
-		add_filter( 'pum_alert_list', array( __CLASS__, 'review_alert' ) );
-		add_action( 'wp_ajax_pum_review_action', array( __CLASS__, 'ajax_handler' ) );
+		// add_action( 'init', array( __CLASS__, 'hooks' ) );
+		add_filter( 'pum_alert_list', [ __CLASS__, 'review_alert' ] );
+		add_action( 'wp_ajax_pum_review_action', [ __CLASS__, 'ajax_handler' ] );
 	}
 
 	/**
@@ -33,9 +39,9 @@ class PUM_Modules_Reviews {
 	public static function hooks() {
 		if ( is_admin() && current_user_can( 'edit_posts' ) ) {
 			self::installed_on();
-			add_action( 'admin_notices', array( __CLASS__, 'admin_notices' ) );
-			add_action( 'network_admin_notices', array( __CLASS__, 'admin_notices' ) );
-			add_action( 'user_admin_notices', array( __CLASS__, 'admin_notices' ) );
+			add_action( 'admin_notices', [ __CLASS__, 'admin_notices' ] );
+			add_action( 'network_admin_notices', [ __CLASS__, 'admin_notices' ] );
+			add_action( 'user_admin_notices', [ __CLASS__, 'admin_notices' ] );
 		}
 	}
 
@@ -59,13 +65,15 @@ class PUM_Modules_Reviews {
 	 *
 	 */
 	public static function ajax_handler() {
-		$args = wp_parse_args( $_REQUEST, array(
-			'group'  => self::get_trigger_group(),
-			'code'   => self::get_trigger_code(),
-			'pri'    => self::get_current_trigger( 'pri' ),
-			'reason' => 'maybe_later',
-		) );
-
+		$args = wp_parse_args(
+			$_REQUEST,
+			[
+				'group'  => self::get_trigger_group(),
+				'code'   => self::get_trigger_code(),
+				'pri'    => self::get_current_trigger( 'pri' ),
+				'reason' => 'maybe_later',
+			]
+		);
 
 		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'pum_review_action' ) ) {
 			wp_send_json_error();
@@ -187,7 +195,7 @@ class PUM_Modules_Reviews {
 		$dismissed_triggers = get_user_meta( $user_id, '_pum_reviews_dismissed_triggers', true );
 
 		if ( ! $dismissed_triggers ) {
-			$dismissed_triggers = array();
+			$dismissed_triggers = [];
 		}
 
 		return $dismissed_triggers;
@@ -226,54 +234,54 @@ class PUM_Modules_Reviews {
 		if ( ! isset( $triggers ) ) {
 
 			$time_message = __( 'Hi there! You\'ve been using Popup Maker on your site for %s - I hope it\'s been helpful. If you\'re enjoying my plugin, would you mind rating it 5-stars to help spread the word?', 'popup-maker' );
-			$triggers     = array(
-				'time_installed' => array(
-					'triggers' => array(
-						'one_week'     => array(
+			$triggers     = [
+				'time_installed' => [
+					'triggers' => [
+						'one_week'     => [
 							'message'    => sprintf( $time_message, __( '1 week', 'popup-maker' ) ),
-							'conditions' => array(
+							'conditions' => [
 								strtotime( self::installed_on() . ' +1 week' ) < time(),
-							),
+							],
 							'link'       => 'https://wordpress.org/support/plugin/popup-maker/reviews/?rate=5#rate-response',
 							'pri'        => 10,
-						),
-						'one_month'    => array(
+						],
+						'one_month'    => [
 							'message'    => sprintf( $time_message, __( '1 month', 'popup-maker' ) ),
-							'conditions' => array(
+							'conditions' => [
 								strtotime( self::installed_on() . ' +1 month' ) < time(),
-							),
+							],
 							'link'       => 'https://wordpress.org/support/plugin/popup-maker/reviews/?rate=5#rate-response',
 							'pri'        => 20,
-						),
-						'three_months' => array(
+						],
+						'three_months' => [
 							'message'    => sprintf( $time_message, __( '3 months', 'popup-maker' ) ),
-							'conditions' => array(
+							'conditions' => [
 								strtotime( self::installed_on() . ' +3 months' ) < time(),
-							),
+							],
 							'link'       => 'https://wordpress.org/support/plugin/popup-maker/reviews/?rate=5#rate-response',
 							'pri'        => 30,
-						),
+						],
 
-					),
+					],
 					'pri'      => 10,
-				),
-				'open_count'     => array(
-					'triggers' => array(),
+				],
+				'open_count'     => [
+					'triggers' => [],
 					'pri'      => 50,
-				),
-			);
+				],
+			];
 
 			$pri          = 10;
 			$open_message = __( 'Hi there! You\'ve recently hit %s popup views on your site – that’s awesome!! If you\'d like to celebrate this milestone, rate Popup Maker 5-stars to help spread the word!', 'popup-maker' );
-			foreach ( array( 50, 100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000 ) as $num ) {
-				$triggers['open_count']['triggers'][ $num . '_opens' ] = array(
+			foreach ( [ 50, 100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000 ] as $num ) {
+				$triggers['open_count']['triggers'][ $num . '_opens' ] = [
 					'message'    => sprintf( $open_message, number_format( $num ) ),
-					'conditions' => array(
+					'conditions' => [
 						get_option( 'pum_total_open_count', 0 ) > $num,
-					),
+					],
 					'link'       => 'https://wordpress.org/support/plugin/popup-maker/reviews/?rate=5#rate-response',
 					'pri'        => $pri,
-				);
+				];
 
 				$pri += 10;
 			}
@@ -281,11 +289,11 @@ class PUM_Modules_Reviews {
 			$triggers = apply_filters( 'pum_reviews_triggers', $triggers );
 
 			// Sort Groups
-			uasort( $triggers, array( __CLASS__, 'rsort_by_priority' ) );
+			uasort( $triggers, [ __CLASS__, 'rsort_by_priority' ] );
 
 			// Sort each groups triggers.
 			foreach ( $triggers as $k => $v ) {
-				uasort( $triggers[ $k ]['triggers'], array( __CLASS__, 'rsort_by_priority' ) );
+				uasort( $triggers[ $k ]['triggers'], [ __CLASS__, 'rsort_by_priority' ] );
 			}
 		}
 
@@ -311,7 +319,7 @@ class PUM_Modules_Reviews {
 	 *
 	 * @return array
 	 */
-	public static function review_alert( $alerts = array() ) {
+	public static function review_alert( $alerts = [] ) {
 		if ( self::hide_notices() ) {
 			return $alerts;
 		}
@@ -327,18 +335,18 @@ class PUM_Modules_Reviews {
 
 		<script type="text/javascript">
 			window.pum_review_nonce = '<?php echo wp_create_nonce( 'pum_review_action' ); ?>';
-			window.pum_review_api_url = '<?php echo self::$api_url; ?>';
-			window.pum_review_uuid = '<?php echo $uuid; ?>';
+			window.pum_review_api_url = '<?php echo esc_attr( self::$api_url ); ?>';
+			window.pum_review_uuid = '<?php echo esc_attr( $uuid ); ?>';
 			window.pum_review_trigger = {
-				group: '<?php echo self::get_trigger_group(); ?>',
-				code: '<?php echo self::get_trigger_code(); ?>',
-				pri: '<?php echo self::get_current_trigger( 'pri' ); ?>'
+				group: '<?php echo esc_attr( self::get_trigger_group() ); ?>',
+				code: '<?php echo esc_attr( self::get_trigger_code() ); ?>',
+				pri: '<?php echo esc_attr( self::get_current_trigger( 'pri' ) ); ?>'
 			};
 		</script>
 
 		<ul>
 			<li>
-				<a class="pum-dismiss" target="_blank" href="<?php echo $trigger['link']; ?>>" data-reason="am_now"> <strong><?php _e( 'Ok, you deserve it', 'popup-maker' ); ?></strong> </a>
+				<a class="pum-dismiss" target="_blank" href="<?php echo esc_attr( $trigger['link'] ); ?>" data-reason="am_now"> <strong><?php _e( 'Ok, you deserve it', 'popup-maker' ); ?></strong> </a>
 			</li>
 			<li>
 				<a href="#" class="pum-dismiss" data-reason="maybe_later">
@@ -356,12 +364,12 @@ class PUM_Modules_Reviews {
 
 		$html = ob_get_clean();
 
-		$alerts[] = array(
+		$alerts[] = [
 			'code'    => 'review_request',
 			'message' => '<strong>' . $trigger['message'] . '<br />~ danieliser' . '</strong>',
 			'html'    => $html,
 			'type'    => 'success',
-		);
+		];
 
 		return $alerts;
 	}
@@ -390,9 +398,9 @@ class PUM_Modules_Reviews {
 		<script type="text/javascript">
 			(function ($) {
 				var trigger = {
-					group: '<?php echo $group; ?>',
-					code: '<?php echo $code; ?>',
-					pri: '<?php echo $pri; ?>'
+					group: '<?php echo esc_attr( $group ); ?>',
+					code: '<?php echo esc_attr( $code ); ?>',
+					pri: '<?php echo esc_attr( $pri ); ?>'
 				};
 
 				function dismiss(reason) {
@@ -414,12 +422,12 @@ class PUM_Modules_Reviews {
 					$.ajax({
 						method: "POST",
 						dataType: "json",
-						url: '<?php echo self::$api_url; ?>',
+						url: '<?php echo esc_attr( self::$api_url ); ?>',
 						data: {
 							trigger_group: trigger.group,
 							trigger_code: trigger.code,
 							reason: reason,
-							uuid: '<?php echo $uuid; ?>'
+							uuid: '<?php echo esc_attr( $uuid ); ?>'
 						}
 					});
 					<?php endif; ?>
@@ -468,25 +476,25 @@ class PUM_Modules_Reviews {
 			<p>
 				<img class="logo" src="<?php echo POPMAKE_URL; ?>/assets/images/icon-256x256.jpg" />
 				<strong>
-					<?php echo $trigger['message']; ?>
+					<?php esc_html_e( $trigger['message'] ); ?>
 					<br />
 					~ danieliser
 				</strong>
 			</p>
 			<ul>
 				<li>
-					<a class="pum-dismiss" target="_blank" href="<?php echo $trigger['link']; ?>>" data-reason="am_now">
-						<strong><?php _e( 'Ok, you deserve it', 'popup-maker' ); ?></strong>
+					<a class="pum-dismiss" target="_blank" href="<?php echo esc_attr( $trigger['link'] ); ?>" data-reason="am_now">
+						<strong><?php esc_html_e( 'Ok, you deserve it', 'popup-maker' ); ?></strong>
 					</a>
 				</li>
 				<li>
 					<a href="#" class="pum-dismiss" data-reason="maybe_later">
-						<?php _e( 'Nope, maybe later', 'popup-maker' ); ?>
+						<?php esc_html_e( 'Nope, maybe later', 'popup-maker' ); ?>
 					</a>
 				</li>
 				<li>
 					<a href="#" class="pum-dismiss" data-reason="already_did">
-						<?php _e( 'I already did', 'popup-maker' ); ?>
+						<?php esc_html_e( 'I already did', 'popup-maker' ); ?>
 					</a>
 				</li>
 			</ul>
@@ -504,11 +512,11 @@ class PUM_Modules_Reviews {
 	public static function hide_notices() {
 		$trigger_code = self::get_trigger_code();
 
-		$conditions = array(
+		$conditions = [
 			self::already_did(),
 			self::last_dismissed() && strtotime( self::last_dismissed() . ' +2 weeks' ) > time(),
 			empty( $trigger_code ),
-		);
+		];
 
 		return in_array( true, $conditions );
 	}

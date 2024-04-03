@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Admin BlockEditor
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 /**
  * Class PUM_Admin_BlockEditor
@@ -25,6 +28,7 @@ class PUM_Admin_BlockEditor {
 		add_action( 'enqueue_block_editor_assets', [ __CLASS__, 'register_editor_assets' ] );
 		add_action( 'enqueue_block_editor_assets', [ __CLASS__, 'register_block_assets' ] );
 		add_action( 'enqueue_block_assets', [ __CLASS__, 'register_block_assets' ] );
+		add_action( 'wp_loaded', [ __CLASS__, 'add_attributes_to_registered_blocks' ], 999 );
 	}
 
 	/**
@@ -37,6 +41,9 @@ class PUM_Admin_BlockEditor {
 	 */
 	public static function register_editor_assets() {
 		global $wp_version;
+
+		$screen = get_current_screen();
+
 		$build_path = 'dist/block-editor/';
 
 		$script_path       = $build_path . 'block-editor.js';
@@ -46,7 +53,13 @@ class PUM_Admin_BlockEditor {
 			'version'      => Popup_Maker::$VER,
 		];
 		$script_url        = plugins_url( $script_path, Popup_Maker::$FILE );
-		wp_enqueue_script( 'popup-maker-block-editor', $script_url, array_merge( $script_asset['dependencies'], [ 'wp-edit-post' ] ), $script_asset['version'] );
+		$script_deps       = $script_asset['dependencies'];
+
+		if ( 'widgets' !== $screen->id ) {
+			$script_deps = array_merge( $script_deps, [ 'wp-edit-post' ] );
+		}
+
+		wp_enqueue_script( 'popup-maker-block-editor', $script_url, $script_deps, $script_asset['version'] );
 
 		self::register_block_assets();
 
@@ -102,4 +115,33 @@ class PUM_Admin_BlockEditor {
 		];
 		wp_enqueue_style( 'popup-maker-block-styles', plugins_url( $block_styles_path, Popup_Maker::$FILE ), [], $block_styles_asset['version'] );
 	}
+
+	/**
+	 * This is needed to resolve an issue with blocks that use the
+	 * ServerSideRender component. Registering the attributes only in js
+	 * can cause an error message to appear. Registering the attributes in
+	 * PHP as well, seems to resolve the issue. Ideally, this bug will be
+	 * fixed in the future.
+	 *
+	 * Reference: https://github.com/WordPress/gutenberg/issues/16850
+	 *
+	 * @since 1.16.0
+	 */
+	public static function add_attributes_to_registered_blocks() {
+		global $wp_version;
+
+		if ( version_compare( $wp_version, '5.0' ) === -1 ) {
+			return;
+		}
+
+		$registered_blocks = WP_Block_Type_Registry::get_instance()->get_all_registered();
+
+		foreach ( $registered_blocks as $block ) {
+			$block->attributes['openPopupId'] = [
+				'type'    => 'string',
+				'default' => '',
+			];
+		}
+	}
+
 }

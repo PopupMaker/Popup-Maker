@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Interface for Provider
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -37,7 +40,7 @@ interface PUM_Interface_Provider {
 	 *
 	 * @return array
 	 */
-	public function register_settings_tab_section( $sections = array() );
+	public function register_settings_tab_section( $sections = [] );
 
 
 	/**
@@ -54,23 +57,23 @@ interface PUM_Interface_Provider {
 	 *
 	 * @return array $values
 	 */
-	public function form_sanitization( $values = array() );
+	public function form_sanitization( $values = [] );
 
 	/**
 	 * Allows processing of form value validation.
 	 *
 	 * @param WP_Error $errors
-	 * @param array $values
+	 * @param array    $values
 	 *
 	 * @return WP_Error
 	 */
-	public function form_validation( WP_Error $errors, $values = array() );
+	public function form_validation( WP_Error $errors, $values = [] );
 
 	/**
 	 * Subscribes the user to the list.
 	 *
 	 * @param $values
-	 * @param array $json_response
+	 * @param array    $json_response
 	 * @param WP_Error $errors
 	 */
 	public function form_submission( $values, &$json_response, WP_Error &$errors );

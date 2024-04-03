@@ -108,11 +108,12 @@ __webpack_require__.r(__webpack_exports__);
   $(document).on("wpcf7mailsent", function (event, details) {
     var formId = event.detail.contactFormId,
         $form = $(event.target),
+        identifier = event.detail.id || event.detail.unitTag,
         // Converts string like wpcf7-f190-p2-o11 and reduces it to simply 11, the last o11 is the instance ID.
     // More accurate way of doing it in case things change in the future, this version filters out all but the o param.
     // formInstanceId = .split('-').filter((string) => string.indexOf('o') === 0)[0].replace('o','');
     // Simpler version that simply splits and pops the last item in the array. This requires it always be the last.
-    formInstanceId = event.detail.id.split("-").pop().replace("o", ""); // All the magic happens here.
+    formInstanceId = identifier.split("-").pop().replace("o", ""); // All the magic happens here.
 
     window.PUM.integrations.formSubmission($form, {
       formProvider: formProvider,

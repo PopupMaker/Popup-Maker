@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Cookies class
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -40,7 +43,7 @@ class PUM_Cookies {
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
-			self::$instance                = new self;
+			self::$instance                = new self();
 			self::$instance->preload_posts = pum_is_popup_editor();
 		}
 
@@ -73,48 +76,57 @@ class PUM_Cookies {
 	 * Registers all known cookies when called.
 	 */
 	public function register_cookies() {
-		$cookies = apply_filters( 'pum_registered_cookies', array(
-			'on_popup_close'                  => array(
-				'name' => __( 'On Popup Close', 'popup-maker' ),
-			),
-			'on_popup_open'                   => array(
-				'name' => __( 'On Popup Open', 'popup-maker' ),
-			),
-			'form_submission'                 => [
-				'name'   => __( 'Form Submission', 'popup-maker' ),
-				'fields' => array_merge_recursive( $this->cookie_fields(), [
-					'general' => [
-						'form'          => [
-							'type'    => 'select',
-							'label'   => __( 'Form', 'popup-maker' ),
-							'options' => $this->preload_posts ? array_merge( [
-								'any'                              => __( 'Any Supported Form*', 'popup-maker' ),
-								__( 'Popup Maker', 'popup-maker' ) => [
-									'pumsubform' => __( 'Subscription Form', 'popup-maker' ),
+		$cookies = apply_filters(
+			'pum_registered_cookies',
+			[
+				'on_popup_close'                  => [
+					'name' => __( 'On Popup Close', 'popup-maker' ),
+				],
+				'on_popup_open'                   => [
+					'name' => __( 'On Popup Open', 'popup-maker' ),
+				],
+				'form_submission'                 => [
+					'name'   => __( 'Form Submission', 'popup-maker' ),
+					'fields' => array_merge_recursive(
+						$this->cookie_fields(),
+						[
+							'general' => [
+								'form'          => [
+									'type'    => 'select',
+									'label'   => __( 'Form', 'popup-maker' ),
+									'options' => $this->preload_posts ? array_merge(
+										[
+											'any' => __( 'Any Supported Form*', 'popup-maker' ),
+											__( 'Popup Maker', 'popup-maker' ) => [
+												'pumsubform' => __( 'Subscription Form', 'popup-maker' ),
+											],
+										],
+										PUM_Integrations::get_integrated_forms_selectlist()
+									) : [],
+									'pri'     => - 1,
+									'std'     => 'any',
 								],
-							], PUM_Integrations::get_integrated_forms_selectlist() ) : array(),
-							'pri'     => - 1,
-							'std'     => 'any',
-						],
-						'only_in_popup' => [
-							'type'  => 'checkbox',
-							'label' => __( 'Only in this popup', 'popup-maker' ),
-							'std'   => '1',
-						],
-					],
-				] ),
-			],
-			'pum_sub_form_success'            => array(
-				'name' => __( 'Subscription Form: Successful', 'popup-maker' ),
-			),
-			'pum_sub_form_already_subscribed' => array(
-				'name' => __( 'Subscription Form: Already Subscribed', 'popup-maker' ),
-			),
-			'manual'                          => array(
-				'name' => __( 'Manual', 'popup-maker' ),
-				'settings_column' => '<pre class="manual-cookie-shortcode"><code>[popup_cookie name="{{data.name}}" expires="{{data.time}}" sitewide="{{data.path ? 1 : 0}}"]</code></pre>',
-			),
-		) );
+								'only_in_popup' => [
+									'type'  => 'checkbox',
+									'label' => __( 'Only in this popup', 'popup-maker' ),
+									'std'   => '1',
+								],
+							],
+						]
+					),
+				],
+				'pum_sub_form_success'            => [
+					'name' => __( 'Subscription Form: Successful', 'popup-maker' ),
+				],
+				'pum_sub_form_already_subscribed' => [
+					'name' => __( 'Subscription Form: Already Subscribed', 'popup-maker' ),
+				],
+				'manual'                          => [
+					'name'            => __( 'Manual', 'popup-maker' ),
+					'settings_column' => '<pre class="manual-cookie-shortcode"><code>[popup_cookie name="{{data.name}}" expires="{{data.time}}" sitewide="{{data.path ? 1 : 0}}"]</code></pre>',
+				],
+			]
+		);
 
 		// @deprecated filter.
 		$cookies = apply_filters( 'pum_get_cookies', $cookies );
@@ -125,7 +137,7 @@ class PUM_Cookies {
 	/**
 	 * @param array $cookies
 	 */
-	public function add_cookies( $cookies = array() ) {
+	public function add_cookies( $cookies = [] ) {
 		foreach ( $cookies as $key => $cookie ) {
 			if ( empty( $cookie['id'] ) && ! is_numeric( $key ) ) {
 				$cookie['id'] = $key;
@@ -139,16 +151,19 @@ class PUM_Cookies {
 	 * @param null $cookie
 	 */
 	public function add_cookie( $cookie = null ) {
-		if ( ! empty( $cookie['id'] ) && ! isset ( $this->cookies[ $cookie['id'] ] ) ) {
-			$cookie = wp_parse_args( $cookie, array(
-				'id'              => '',
-				'name'            => '',
-				'modal_title'     => __( 'Cookie Settings', 'popup-maker' ),
-				'settings_column' => sprintf( '%s%s%s', '<# if (typeof data.session === "undefined" || data.session !== "1") { print(data.time); } else { print("', __( 'Sessions', 'popup-maker' ), '"); } #>' ),
-				'priority'        => 10,
-				'tabs'            => $this->get_tabs(),
-				'fields'          => $this->cookie_fields(),
-			) );
+		if ( ! empty( $cookie['id'] ) && ! isset( $this->cookies[ $cookie['id'] ] ) ) {
+			$cookie = wp_parse_args(
+				$cookie,
+				[
+					'id'              => '',
+					'name'            => '',
+					'modal_title'     => __( 'Cookie Settings', 'popup-maker' ),
+					'settings_column' => sprintf( '%s%s%s', '{{ (typeof data.session === "undefined" || data.session !== "1") ? data.time : "', __( 'Sessions', 'popup-maker' ), '" }}' ),
+					'priority'        => 10,
+					'tabs'            => $this->get_tabs(),
+					'fields'          => $this->cookie_fields(),
+				]
+			);
 
 			// Here for backward compatibility to merge in labels properly.
 			if ( ! empty( $cookie['labels'] ) ) {
@@ -164,10 +179,13 @@ class PUM_Cookies {
 				$cookie['fields'] = $this->cookie_fields();
 			}
 
-			$cookie['fields'] = PUM_Admin_Helpers::parse_tab_fields( $cookie['fields'], array(
-				'has_subtabs' => false,
-				'name'        => '%s',
-			) );
+			$cookie['fields'] = PUM_Admin_Helpers::parse_tab_fields(
+				$cookie['fields'],
+				[
+					'has_subtabs' => false,
+					'name'        => '%s',
+				]
+			);
 
 			$this->cookies[ $cookie['id'] ] = $cookie;
 		}
@@ -189,10 +207,13 @@ class PUM_Cookies {
 		 *
 		 * @param array $to_do The list of trigger section labels.
 		 */
-		return apply_filters( 'pum_get_trigger_tabs', array(
-			'general'  => __( 'General', 'popup-maker' ),
-			'advanced' => __( 'Advanced', 'popup-maker' ),
-		) );
+		return apply_filters(
+			'pum_get_trigger_tabs',
+			[
+				'general'  => __( 'General', 'popup-maker' ),
+				'advanced' => __( 'Advanced', 'popup-maker' ),
+			]
+		);
 	}
 
 	/**
@@ -201,50 +222,52 @@ class PUM_Cookies {
 	 * @return array
 	 *
 	 * @uses filter pum_get_cookie_fields
-	 *
 	 */
 	public function cookie_fields() {
-		return apply_filters( 'pum_get_cookie_fields', array(
-			'general'  => array(
-				'name' => array(
-					'label'       => __( 'Cookie Name', 'popup-maker' ),
-					'placeholder' => __( 'Cookie Name ex. popmaker-123', 'popup-maker' ),
-					'desc'        => __( 'The name that will be used when checking for or saving this cookie.', 'popup-maker' ),
-					'std'         => '',
-					'priority'    => 1,
-				),
-				'time' => array(
-					'label'       => __( 'Cookie Time', 'popup-maker' ),
-					'placeholder' => __( '364 days 23 hours 59 minutes 59 seconds', 'popup-maker' ),
-					'desc'        => __( 'Enter a plain english time before cookie expires.', 'popup-maker' ),
-					'std'         => '1 month',
-					'priority'    => 2,
-				),
-			),
-			'advanced' => array(
-				'session' => array(
-					'label'    => __( 'Use Session Cookie?', 'popup-maker' ),
-					'desc'     => __( 'Session cookies expire when the user closes their browser.', 'popup-maker' ) . ' ' . sprintf( __( '%sNote%s: Modern browsers that reopen your last browser session\'s tabs do not properly clear session cookies', 'popup-maker' ), '<strong>', '</strong>' ),
-					'type'     => 'checkbox',
-					'std'      => false,
-					'priority' => 1,
-				),
-				'path'    => array(
-					'label'    => __( 'Sitewide Cookie', 'popup-maker' ),
-					'desc'     => __( 'This will prevent the popup from triggering on all pages until the cookie expires.', 'popup-maker' ),
-					'type'     => 'checkbox',
-					'std'      => true,
-					'priority' => 2,
-				),
-				'key'     => array(
-					'label'    => __( 'Cookie Key', 'popup-maker' ),
-					'desc'     => __( 'Changing this will cause all existing cookies to be invalid.', 'popup-maker' ),
-					'type'     => 'cookie_key',
-					'std'      => '',
-					'priority' => 3,
-				),
-			),
-		) );
+		return apply_filters(
+			'pum_get_cookie_fields',
+			[
+				'general'  => [
+					'name' => [
+						'label'       => __( 'Cookie Name', 'popup-maker' ),
+						'placeholder' => __( 'Cookie Name ex. popmaker-123', 'popup-maker' ),
+						'desc'        => __( 'The name that will be used when checking for or saving this cookie.', 'popup-maker' ),
+						'std'         => '',
+						'priority'    => 1,
+					],
+					'time' => [
+						'label'       => __( 'Cookie Time', 'popup-maker' ),
+						'placeholder' => __( '364 days 23 hours 59 minutes 59 seconds', 'popup-maker' ),
+						'desc'        => __( 'Enter a plain english time before cookie expires.', 'popup-maker' ),
+						'std'         => '1 month',
+						'priority'    => 2,
+					],
+				],
+				'advanced' => [
+					'session' => [
+						'label'    => __( 'Use Session Cookie?', 'popup-maker' ),
+						'desc'     => __( 'Session cookies expire when the user closes their browser.', 'popup-maker' ) . ' ' . sprintf( __( '%1$sNote%2$s: Modern browsers that reopen your last browser session\'s tabs do not properly clear session cookies', 'popup-maker' ), '<strong>', '</strong>' ),
+						'type'     => 'checkbox',
+						'std'      => false,
+						'priority' => 1,
+					],
+					'path'    => [
+						'label'    => __( 'Sitewide Cookie', 'popup-maker' ),
+						'desc'     => __( 'This will prevent the popup from triggering on all pages until the cookie expires.', 'popup-maker' ),
+						'type'     => 'checkbox',
+						'std'      => true,
+						'priority' => 2,
+					],
+					'key'     => [
+						'label'    => __( 'Cookie Key', 'popup-maker' ),
+						'desc'     => __( 'Changing this will cause all existing cookies to be invalid.', 'popup-maker' ),
+						'type'     => 'cookie_key',
+						'std'      => '',
+						'priority' => 3,
+					],
+				],
+			]
+		);
 	}
 
 	/**
@@ -259,7 +282,7 @@ class PUM_Cookies {
 			 *
 			 * @param array $to_do The list of cookie labels.
 			 */
-			$labels = apply_filters( 'pum_get_cookie_labels', array() );
+			$labels = apply_filters( 'pum_get_cookie_labels', [] );
 		}
 
 		return $labels;
@@ -271,9 +294,8 @@ class PUM_Cookies {
 	 *
 	 * @return array
 	 * @deprecated
-	 *
 	 */
-	public function validate_cookie( $cookie = null, $settings = array() ) {
+	public function validate_cookie( $cookie = null, $settings = [] ) {
 		return $settings;
 	}
 
@@ -283,7 +305,7 @@ class PUM_Cookies {
 	 */
 	public function dropdown_list() {
 		$_cookies = $this->get_cookies();
-		$cookies  = array();
+		$cookies  = [];
 
 		foreach ( $_cookies as $id => $cookie ) {
 			$cookies[ $id ] = $cookie['name'];

@@ -4,7 +4,7 @@
  *
  * @package     PUM
  * @subpackage  Admin/Upgrades
- * @copyright   Copyright (c) 2019, Code Atlantic LLC
+ * @copyright   Copyright (c) 2023, Code Atlantic LLC
  * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
  * @since       1.4
  */
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'PUM_Admin_Upgrade_Routine' ) ) {
-	require_once POPMAKE_DIR . "includes/admin/upgrades/class-pum-admin-upgrade-routine.php";
+	require_once POPMAKE_DIR . 'includes/admin/upgrades/class-pum-admin-upgrade-routine.php';
 }
 
 /**
@@ -47,7 +47,7 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 	 */
 	public static function run() {
 		if ( ! current_user_can( PUM_Admin_Upgrades::instance()->required_cap ) ) {
-			wp_die( __( 'You do not have permission to do upgrades', 'popup-maker' ), __( 'Error', 'popup-maker' ), array( 'response' => 403 ) );
+			wp_die( __( 'You do not have permission to do upgrades', 'popup-maker' ), __( 'Error', 'popup-maker' ), [ 'response' => 403 ] );
 		}
 
 		ignore_user_abort( true );
@@ -76,31 +76,33 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 			$upgrades->set_arg( 'total', $total );
 		}
 
-		$popups = pum_get_popups( array(
-			'number' => $upgrades->get_arg( 'number' ),
-			'page'   => $upgrades->get_arg( 'step' ),
-			'status' => array( 'any', 'trash', 'auto-draft' ),
-			'order'  => 'ASC',
-		) );
+		$popups = pum_get_popups(
+			[
+				'number' => $upgrades->get_arg( 'number' ),
+				'page'   => $upgrades->get_arg( 'step' ),
+				'status' => [ 'any', 'trash', 'auto-draft' ],
+				'order'  => 'ASC',
+			]
+		);
 
-		PUM_Admin_Upgrade_Routine_6::setup_valid_themes();
+		self::setup_valid_themes();
 
 		// Delete All old meta keys.
-		PUM_Admin_Upgrade_Routine_6::delete_all_old_meta_keys();
+		self::delete_all_old_meta_keys();
 
 		// Delete All orphaned meta keys.
-		PUM_Admin_Upgrade_Routine_6::delete_all_orphaned_meta_keys();
+		self::delete_all_orphaned_meta_keys();
 
-		PUM_Admin_Upgrade_Routine_6::process_popup_cats_tags();
+		self::process_popup_cats_tags();
 
 		if ( $popups ) {
 
 			foreach ( $popups as $popup ) {
 
 				// Check that each popup has a valid theme id
-				if ( ! array_key_exists( $popup->get_theme_id(), PUM_Admin_Upgrade_Routine_6::$valid_themes ) ) {
+				if ( ! array_key_exists( $popup->get_theme_id(), self::$valid_themes ) ) {
 					// Set a valid theme.
-					update_post_meta( $popup->ID, 'popup_theme', PUM_Admin_Upgrade_Routine_6::$default_theme );
+					update_post_meta( $popup->ID, 'popup_theme', self::$default_theme );
 				}
 
 				$completed ++;
@@ -108,31 +110,29 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 
 			if ( $completed < $total ) {
 				$upgrades->set_arg( 'completed', $completed );
-				PUM_Admin_Upgrade_Routine_6::next_step();
+				self::next_step();
 			}
-
 		}
 
-		PUM_Admin_Upgrade_Routine_6::done();
+		self::done();
 	}
 
 	/**
 	 * Create a list of valid popup themes.
 	 */
 	public static function setup_valid_themes() {
-		PUM_Admin_Upgrade_Routine_6::$valid_themes = array();
+		self::$valid_themes = [];
 
 		foreach ( pum_get_all_themes() as $theme ) {
-			PUM_Admin_Upgrade_Routine_6::$valid_themes[ $theme->ID ] = $theme;
-			if ( pum_get_default_theme_id() == $theme->ID ) {
-				PUM_Admin_Upgrade_Routine_6::$default_theme = $theme->ID;
+			self::$valid_themes[ $theme->ID ] = $theme;
+			if ( pum_get_default_theme_id() === $theme->ID ) {
+				self::$default_theme = $theme->ID;
 			}
 		}
 
-
-		if ( ! PUM_Admin_Upgrade_Routine_6::$default_theme ) {
-			reset( PUM_Admin_Upgrade_Routine_6::$valid_themes );
-			PUM_Admin_Upgrade_Routine_6::$default_theme = PUM_Admin_Upgrade_Routine_6::$valid_themes[ key( PUM_Admin_Upgrade_Routine_6::$valid_themes ) ]->ID;
+		if ( ! self::$default_theme ) {
+			reset( self::$valid_themes );
+			self::$default_theme = self::$valid_themes[ key( self::$valid_themes ) ]->ID;
 		}
 	}
 
@@ -142,7 +142,8 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 	public static function delete_all_orphaned_meta_keys() {
 		global $wpdb;
 
-		$wpdb->query( "
+		$wpdb->query(
+			"
 			DELETE pm
 			FROM $wpdb->postmeta pm
 			LEFT JOIN $wpdb->posts wp ON wp.ID = pm.post_id
@@ -159,7 +160,8 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 	public static function delete_all_old_meta_keys() {
 		global $wpdb;
 
-		$query = $wpdb->query( "
+		$query = $wpdb->query(
+			"
 			DELETE FROM $wpdb->postmeta
 			WHERE meta_key LIKE 'popup_display_%'
 			OR meta_key LIKE 'popup_close_%'
@@ -194,8 +196,8 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 		// Setup the Popup Taxonomies
 		popmake_setup_taxonomies( true );
 
-		$categories =  wp_count_terms( 'popup_category', array( 'hide_empty' => true) );
-		$tags =  wp_count_terms( 'popup_tag', array( 'hide_empty' => true) );
+		$categories = wp_count_terms( 'popup_category', [ 'hide_empty' => true ] );
+		$tags       = wp_count_terms( 'popup_tag', [ 'hide_empty' => true ] );
 
 		if ( is_wp_error( $tags ) ) {
 			$tags = 0;
@@ -205,7 +207,7 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 			$categories = 0;
 		}
 
-		$popmake_options['disable_popup_category_tag'] = $categories == 0 && $tags == 0;
+		$popmake_options['disable_popup_category_tag'] = 0 === $categories && 0 === $tags;
 
 		update_option( 'popmake_settings', $popmake_options );
 	}

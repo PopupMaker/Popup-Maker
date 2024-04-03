@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Repository Themes
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -31,15 +34,15 @@ class PUM_Repository_Themes extends PUM_Abstract_Repository_Posts {
 	 *
 	 * @return array
 	 */
-	protected function build_wp_query_args( $args = array() ) {
+	protected function build_wp_query_args( $args = [] ) {
 		// Ordering
-		$orderby = array();
+		$orderby = [];
 
 		// Meta Query
 		if ( ! isset( $args['meta_query'] ) ) {
-			$args['meta_query'] = array(
+			$args['meta_query'] = [
 				'relation' => 'AND',
-			);
+			];
 		}
 
 		if ( isset( $args['themes'] ) ) {
@@ -56,15 +59,15 @@ class PUM_Repository_Themes extends PUM_Abstract_Repository_Posts {
 		 */
 		if ( ! isset( $args['orderby'] ) ) {
 			$orderby['post_modified'] = isset( $args['order'] ) ? $args['order'] : 'DESC';
-		} elseif ( ! empty( $args['post__in'] ) && in_array( $args['orderby'], array( 'post__in', 'user_order' ) ) ) {
+		} elseif ( ! empty( $args['post__in'] ) && in_array( $args['orderby'], [ 'post__in', 'user_order' ] ) ) {
 			// This one can't be part of an $orderby array so needs to override.
 			$orderby = 'post__in';
 		} else {
 			switch ( $args['orderby'] ) {
-				case 'name' :
+				case 'name':
 					$orderby['post_title'] = isset( $args['order'] ) ? $args['order'] : 'ASC';
 					break;
-				case 'date' :
+				case 'date':
 					$orderby['post_date'] = isset( $args['order'] ) ? $args['order'] : 'DESC';
 					break;
 				case 'activity':
@@ -100,7 +103,7 @@ class PUM_Repository_Themes extends PUM_Abstract_Repository_Posts {
 	 *
 	 * @return PUM_Model_Theme[]|WP_Post[]
 	 */
-	public function get_items( $args = array() ) {
+	public function get_items( $args = [] ) {
 		return parent::get_items( $args );
 	}
 

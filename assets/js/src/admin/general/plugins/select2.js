@@ -4,9 +4,6 @@
 (function ($) {
     "use strict";
 
-    // Here because some plugins load additional copies, big no-no. This is the best we can do.
-    $.fn.pumselect2 = $.fn.pumselect2 || $.fn.select2;
-
     var select2 = {
         init: function () {
             $('.pum-field-select2 select').filter(':not(.pumselect2-initialized)').each(function () {
@@ -33,9 +30,11 @@
                             delay: 250,
                             data: function (params) {
                                 return {
+                                    action: 'pum_object_search',
+                                    nonce:
+                                        pum_admin_vars.object_search_nonce,
                                     s: params.term, // search term
                                     paged: params.page,
-                                    action: "pum_object_search",
                                     object_type: object_type,
                                     object_key: object_key,
                                     exclude: object_excludes
@@ -87,7 +86,9 @@
                     $.ajax({
                         url: ajaxurl,
                         data: {
-                            action: "pum_object_search",
+                            action: 'pum_object_search',
+                            nonce:
+                                pum_admin_vars.object_search_nonce,
                             object_type: object_type,
                             object_key: object_key,
                             exclude: object_excludes,

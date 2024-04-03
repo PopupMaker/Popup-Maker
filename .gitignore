@@ -6,7 +6,6 @@ project.properties
 .project
 .settings*
 .idea
-.vscode
 *.sublime-project
 *.sublime-workspace
 .sublimelinterrc
@@ -26,9 +25,12 @@ npm-debug.log
 # Composer
 /vendor/
 contributors.md
+phpcs-report.xml
 
 # Packages
 /packages/*
 !/packages/README.md
 
 /yarn-error.log
+assets/.DS_Store
+assets/css/.DS_Store

@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Integrations for cf7
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -16,11 +19,11 @@ class PUM_CF7_Integration {
 	 * Initialize if CF7 is active.
 	 */
 	public static function init() {
-		add_filter( 'pum_get_cookies', array( __CLASS__, 'register_cookies' ) );
-		add_filter( 'wpcf7_editor_panels', array( __CLASS__, 'editor_panels' ) );
-		add_action( 'wpcf7_after_save', array( __CLASS__, 'save' ) );
-		add_filter( 'wpcf7_form_elements', array( __CLASS__, 'form_elements' ) );
-		add_action( 'popmake_preload_popup', array( __CLASS__, 'preload' ) );
+		add_filter( 'pum_get_cookies', [ __CLASS__, 'register_cookies' ] );
+		add_filter( 'wpcf7_editor_panels', [ __CLASS__, 'editor_panels' ] );
+		add_action( 'wpcf7_after_save', [ __CLASS__, 'save' ] );
+		add_filter( 'wpcf7_form_elements', [ __CLASS__, 'form_elements' ] );
+		add_action( 'popmake_preload_popup', [ __CLASS__, 'preload' ] );
 	}
 
 	/**
@@ -32,9 +35,9 @@ class PUM_CF7_Integration {
 		$popup = pum_get_popup( $popup_id );
 
 		if ( has_shortcode( $popup->post_content, 'contact-form-7' ) ) {
-		    if ( defined( 'WPCF7_LOAD_JS' ) && ! WPCF7_LOAD_JS ) {
-		        return;
-            }
+			if ( defined( 'WPCF7_LOAD_JS' ) && ! WPCF7_LOAD_JS ) {
+				return;
+			}
 
 			if ( function_exists( 'wpcf7_enqueue_scripts' ) ) {
 				wpcf7_enqueue_scripts();
@@ -80,12 +83,12 @@ class PUM_CF7_Integration {
 	 * @return array
 	 */
 	public static function defaults() {
-		return array(
+		return [
 			'closepopup'   => false,
 			'closedelay'   => 0,
 			'openpopup'    => false,
 			'openpopup_id' => 0,
-		);
+		];
 	}
 
 	/**
@@ -95,13 +98,13 @@ class PUM_CF7_Integration {
 	 *
 	 * @return array
 	 */
-	public static function register_cookies( $cookies = array() ) {
-		$cookies['cf7_form_success'] = array(
-			'labels' => array(
+	public static function register_cookies( $cookies = [] ) {
+		$cookies['cf7_form_success'] = [
+			'labels' => [
 				'name' => __( 'Contact Form 7 Success (deprecated. Use Form Submission instead.)', 'popup-maker' ),
-			),
+			],
 			'fields' => pum_get_cookie_fields(),
-		);
+		];
 
 		return $cookies;
 	}
@@ -113,13 +116,16 @@ class PUM_CF7_Integration {
 	 *
 	 * @return array
 	 */
-	public static function editor_panels( $panels = array() ) {
-		return array_merge( $panels, array(
-			'popups' => array(
-				'title'    => __( 'Popup Settings', 'popup-maker' ),
-				'callback' => array( __CLASS__, 'editor_panel' ),
-			),
-		) );
+	public static function editor_panels( $panels = [] ) {
+		return array_merge(
+			$panels,
+			[
+				'popups' => [
+					'title'    => __( 'Popup Settings', 'popup-maker' ),
+					'callback' => [ __CLASS__, 'editor_panel' ],
+				],
+			]
+		);
 	}
 
 	/**
@@ -130,83 +136,85 @@ class PUM_CF7_Integration {
 	public static function editor_panel( $args ) {
 
 		$settings = self::form_options( $args->id() ); ?>
-        <h2><?php _e( 'Popup Settings', 'popup-maker' ); ?></h2>
-        <p class="description"><?php _e( 'These settings control popups after successful form submissions.', 'popup-maker' ); ?></p>
-        <table class="form-table">
-            <tbody>
-            <tr>
-	            <th scope="row">
-		            <label for="wpcf7-pum-closepopup"><?php _e( 'Close Popup', 'popup-maker' ); ?></label>
-	            </th>
-	            <td>
-		            <input type="checkbox" id="wpcf7-pum-closepopup" name="wpcf7-pum[closepopup]" value="true" <?php checked( $settings['closepopup'], true ); ?> />
-	            </td>
-            </tr>
-            <tr id="wpcf7-pum-closedelay-wrapper">
-	            <th scope="row">
-		            <label for="wpcf7-pum-closedelay"><?php _e( 'Delay', 'popup-maker' ); ?></label>
-	            </th>
-	            <td>
-		            <?php if ( strlen( $settings['closedelay'] ) >= 3 ) {
-			            $settings['closedelay'] = $settings['closedelay'] / 1000;
-		            } ?>
+		<h2><?php _e( 'Popup Settings', 'popup-maker' ); ?></h2>
+		<p class="description"><?php _e( 'These settings control popups after successful form submissions.', 'popup-maker' ); ?></p>
+		<table class="form-table">
+			<tbody>
+			<tr>
+				<th scope="row">
+					<label for="wpcf7-pum-closepopup"><?php _e( 'Close Popup', 'popup-maker' ); ?></label>
+				</th>
+				<td>
+					<input type="checkbox" id="wpcf7-pum-closepopup" name="wpcf7-pum[closepopup]" value="true" <?php checked( $settings['closepopup'], true ); ?> />
+				</td>
+			</tr>
+			<tr id="wpcf7-pum-closedelay-wrapper">
+				<th scope="row">
+					<label for="wpcf7-pum-closedelay"><?php _e( 'Delay', 'popup-maker' ); ?></label>
+				</th>
+				<td>
+					<?php
+					if ( strlen( $settings['closedelay'] ) >= 3 ) {
+						$settings['closedelay'] = $settings['closedelay'] / 1000;
+					}
+					?>
 
-		            <input type="number" id="wpcf7-pum-closedelay" min="0" step="1" name="wpcf7-pum[closedelay]" style="width: 100px;" value="<?php echo esc_attr( $settings['closedelay'] ); ?>" /><?php _e( 'seconds', 'popup-maker' ); ?>
-	            </td>
-            </tr>
-            <tr>
-                <th scope="row">
-                    <label for="wpcf7-pum-openpopup"><?php _e( 'Open Popup', 'popup-maker' ); ?></label>
-                </th>
-                <td>
-                    <input type="checkbox" id="wpcf7-pum-openpopup" name="wpcf7-pum[openpopup]" value="true" <?php checked( $settings['openpopup'], true ); ?> />
-                </td>
-            </tr>
-            <tr id="wpcf7-pum-openpopup_id-wrapper">
-                <th scope="row">
-                    <label for="wpcf7-pum-openpopup_id"><?php _e( 'Popup', 'popup-maker' ); ?></label>
-                </th>
-                <td>
-                    <select id="wpcf7-pum-openpopup_id" name="wpcf7-pum[openpopup_id]">
+					<input type="number" id="wpcf7-pum-closedelay" min="0" step="1" name="wpcf7-pum[closedelay]" style="width: 100px;" value="<?php echo esc_attr( $settings['closedelay'] ); ?>" /><?php _e( 'seconds', 'popup-maker' ); ?>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="wpcf7-pum-openpopup"><?php _e( 'Open Popup', 'popup-maker' ); ?></label>
+				</th>
+				<td>
+					<input type="checkbox" id="wpcf7-pum-openpopup" name="wpcf7-pum[openpopup]" value="true" <?php checked( $settings['openpopup'], true ); ?> />
+				</td>
+			</tr>
+			<tr id="wpcf7-pum-openpopup_id-wrapper">
+				<th scope="row">
+					<label for="wpcf7-pum-openpopup_id"><?php _e( 'Popup', 'popup-maker' ); ?></label>
+				</th>
+				<td>
+					<select id="wpcf7-pum-openpopup_id" name="wpcf7-pum[openpopup_id]">
 						<?php foreach ( self::get_popup_list() as $option ) { ?>
-                            <option value="<?php echo esc_attr( $option['value'] ); ?>" <?php selected( $settings['openpopup_id'], $option['value'] ); ?>><?php echo $option['label']; ?></option>
+							<option value="<?php echo esc_attr( $option['value'] ); ?>" <?php selected( $settings['openpopup_id'], $option['value'] ); ?>><?php echo $option['label']; ?></option>
 						<?php } ?>
-                    </select>
-                </td>
-            </tr>
+					</select>
+				</td>
+			</tr>
 
-            </tbody>
-        </table>
-        <script>
-            (function ($) {
-                var $open = $('#wpcf7-pum-openpopup'),
-                    $close = $('#wpcf7-pum-closepopup'),
-                    $popup_id_wrapper = $('#wpcf7-pum-openpopup_id-wrapper'),
-                    $delay_wrapper = $('#wpcf7-pum-closedelay-wrapper');
+			</tbody>
+		</table>
+		<script>
+			(function ($) {
+				var $open = $('#wpcf7-pum-openpopup'),
+					$close = $('#wpcf7-pum-closepopup'),
+					$popup_id_wrapper = $('#wpcf7-pum-openpopup_id-wrapper'),
+					$delay_wrapper = $('#wpcf7-pum-closedelay-wrapper');
 
-                function check_open() {
-                    if ($open.is(':checked')) {
-                        $popup_id_wrapper.show();
-                    } else {
-                        $popup_id_wrapper.hide();
-                    }
-                }
+				function check_open() {
+					if ($open.is(':checked')) {
+						$popup_id_wrapper.show();
+					} else {
+						$popup_id_wrapper.hide();
+					}
+				}
 
-                function check_close() {
-                    if ($close.is(':checked')) {
-                        $delay_wrapper.show();
-                    } else {
-                        $delay_wrapper.hide();
-                    }
-                }
+				function check_close() {
+					if ($close.is(':checked')) {
+						$delay_wrapper.show();
+					} else {
+						$delay_wrapper.hide();
+					}
+				}
 
-                check_open();
-                check_close();
+				check_open();
+				check_close();
 
-                $open.on('click', check_open);
-                $close.on('click', check_close);
-            }(jQuery));
-        </script>
+				$open.on('click', check_open);
+				$close.on('click', check_close);
+			}(jQuery));
+		</script>
 		<?php
 	}
 
@@ -216,24 +224,26 @@ class PUM_CF7_Integration {
 	 * @return array
 	 */
 	public static function get_popup_list() {
-		$popup_list = array(
-			array(
+		$popup_list = [
+			[
 				'value' => 0,
 				'label' => __( 'Select a popup', 'popup-maker' ),
-			),
+			],
+		];
+
+		$popups = get_posts(
+			[
+				'post_type'      => 'popup',
+				'post_status'    => [ 'publish' ],
+				'posts_per_page' => - 1,
+			]
 		);
 
-		$popups = get_posts( array(
-			'post_type'      => 'popup',
-			'post_status'    => array( 'publish' ),
-			'posts_per_page' => - 1,
-		) );
-
 		foreach ( $popups as $popup ) {
-			$popup_list[] = array(
+			$popup_list[] = [
 				'value' => $popup->ID,
 				'label' => $popup->post_title,
-			);
+			];
 
 		}
 

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Shortcode for PopupClose
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -31,25 +37,25 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 	}
 
 	public function inner_content_labels() {
-		return array(
+		return [
 			'label'       => __( 'Content', 'popup-maker' ),
 			'description' => __( 'Can contain other shortcodes, images, text or html content.' ),
-		);
+		];
 	}
 
 	public function post_types() {
-		return array( 'popup' );
+		return [ 'popup' ];
 	}
 
 	public function fields() {
-		return array(
-			'general' => array(
-				'main' => array(
-					'tag'        => array(
-						'label'       => __( 'HTML Tag', 'popup-maker' ),
-						'desc'        => __( 'The HTML tag used for this element.', 'popup-maker' ),
-						'type'         => 'select',
-						'options'      => array(
+		return [
+			'general' => [
+				'main' => [
+					'tag'    => [
+						'label'    => __( 'HTML Tag', 'popup-maker' ),
+						'desc'     => __( 'The HTML tag used for this element.', 'popup-maker' ),
+						'type'     => 'select',
+						'options'  => [
 							'a'      => 'a',
 							'button' => 'button',
 							'div'    => 'div',
@@ -57,49 +63,49 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 							'li'     => 'li',
 							'p'      => 'p',
 							'span'   => 'span',
-						),
-						'std'         => 'span',
-						'required'    => true,
-					),
-					'href'   => array(
+						],
+						'std'      => 'span',
+						'required' => true,
+					],
+					'href'   => [
 						'label'        => __( 'Value for href', 'popup-maker' ),
 						'placeholder'  => '#',
 						'desc'         => __( 'Enter the href value for your link. Leave blank if you do not want this link to take the visitor to a different page.', 'popup-maker' ),
 						'type'         => 'text',
 						'std'          => '',
-						'dependencies' => array(
-							'tag' => array( 'a' ),
-						),
-					),
-					'target'   => array(
+						'dependencies' => [
+							'tag' => [ 'a' ],
+						],
+					],
+					'target' => [
 						'label'        => __( 'Target for the element', 'popup-maker' ),
 						'placeholder'  => '',
 						'desc'         => __( 'Enter the target value for your link. Can be left blank.', 'popup-maker' ),
 						'type'         => 'text',
 						'std'          => '',
-						'dependencies' => array(
-							'tag' => array( 'a' ),
-						),
-					),
-				),
-			),
-			'options' => array(
-				'main' => array(
-					'classes'    => array(
+						'dependencies' => [
+							'tag' => [ 'a' ],
+						],
+					],
+				],
+			],
+			'options' => [
+				'main' => [
+					'classes'    => [
 						'label'       => __( 'CSS Class', 'popup-maker' ),
 						'placeholder' => 'my-custom-class',
 						'type'        => 'text',
 						'desc'        => __( 'Add additional classes for styling.', 'popup-maker' ),
 						'std'         => '',
-					),
-					'do_default' => array(
-						'type'     => 'checkbox',
-						'label'    => __( 'Do not prevent the default click functionality.', 'popup-maker' ),
-						'desc'     => __( 'This prevents us from disabling the browsers default action when a close button is clicked. It can be used to allow a link to a file to both close a popup and still download the file.', 'popup-maker' ),
-					),
-				),
-			),
-		);
+					],
+					'do_default' => [
+						'type'  => 'checkbox',
+						'label' => __( 'Do not prevent the default click functionality.', 'popup-maker' ),
+						'desc'  => __( 'This prevents us from disabling the browsers default action when a close button is clicked. It can be used to allow a link to a file to both close a popup and still download the file.', 'popup-maker' ),
+					],
+				],
+			],
+		];
 	}
 
 	/**
@@ -112,9 +118,14 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 	 * @return array
 	 */
 	public function shortcode_atts( $atts ) {
+		global $allowedtags;
+
 		$atts = parent::shortcode_atts( $atts );
 
-		if ( empty( $atts['tag'] ) ) {
+		// Add button to allowed tags.
+		$tags_allowed = array_merge( array_keys( $allowedtags ), [ 'button' ] );
+
+		if ( empty( $atts['tag'] ) || ! in_array( $atts['tag'], $tags_allowed, true ) ) {
 			$atts['tag'] = 'span';
 		}
 
@@ -141,22 +152,32 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 	public function handler( $atts, $content = null ) {
 		$atts = $this->shortcode_atts( $atts );
 
-		$do_default = $atts['do_default'] ? " data-do-default='" . esc_attr( $atts['do_default'] ) . "'" : '';
+		$tag        = esc_attr( $atts['tag'] );
+		$classes    = esc_attr( $atts['classes'] );
+		$do_default = esc_attr( $atts['do_default'] ? " data-do-default='true'" : '' );
+		// Escaped using notes here: https://wordpress.stackexchange.com/a/357349/63942.
+		$esc_content = PUM_Helpers::do_shortcode( force_balance_tags( wp_kses_post( $content ) ) );
 
 		// Sets up our href and target, if the tag is an `a`.
-		$href   = 'a' === $atts['tag'] ? "href='{$atts['href']}'" : '';
-		$target = 'a' === $atts['tag'] && ! empty( $atts['target'] ) ? "target='{$atts['target']}'" : '';
+		$href   = 'a' === $atts['tag'] ? "href='" . esc_url( $atts['href'] ) . "'" : '';
+		$target = 'a' === $atts['tag'] && ! empty( $atts['target'] ) ? "target='" . esc_attr( $atts['target'] ) . "'" : '';
 
-		$return = "<{$atts['tag']} $href $target class='pum-close popmake-close {$atts['classes']}' {$do_default}>";
-		$return .= PUM_Helpers::do_shortcode( $content );
-		$return .= "</{$atts['tag']}>";
+		$return = "<$tag $href $target class='pum-close popmake-close $classes' $do_default>$esc_content</$tag>";
 
 		return $return;
 	}
 
-	public function template() { ?>
-		<{{{attrs.tag}}} class="pum-close  popmake-close <# if (typeof attrs.classes !== 'undefined') print(attrs.classes); #>">{{{attrs._inner_content}}}</{{{attrs.tag}}}><?php
+	/**
+	 * NOTE: Data comes here already filtered through shortcode_atts above.
+	 */
+	public function template() {
+		global $allowedtags;
+		?>
+		<#
+			const allowedTags = <?php echo json_encode( array_keys( $allowedtags ) ); ?>;
+			const tag = allowedTags.indexOf( attrs.tag ) >= 0 ? attrs.tag : 'span';
+		#>
+		<{{{tag}}} class="pum-close  popmake-close <# if (typeof attrs.classes !== 'undefined') print(attrs.classes); #>">{{{attrs._inner_content}}}</{{{tag}}}>
+		<?php
 	}
-
 }
-
