@@ -1,11 +1,11 @@
-=== Popup Maker - Popup for opt-ins, lead gen, & more ===
+=== Popup Maker - The Best WordPress popup plugin for boosting sales & growing subsribers ===
 Contributors: danieliser, codeatlantic
 Author URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=author-url
 Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=plugin-url
 Donate link:
-Tags:  marketing, ecommerce, popup, popups, optin, conversion, promotion, pop-up, lightbox, modal, popupmaker
+Tags:  marketing, popup, popups, optin, conversion, promotion, pop-up, lightbox, modal, ecommerce,
 Requires at least: 4.9
-Tested up to: 6.5.0
+Tested up to: 6.5.2
 Requires PHP: 5.6
 Stable tag: 1.18.5
 License: GPLv2 or later
@@ -26,11 +26,12 @@ Create conversion-focused campaigns to grow your revenue and email list on your 
 With Popup Maker, you can create popups such as:
 
 * Email opt-in popups,
+* Lead generation popups,
+* Subscription list popups
 * Content upgrade popups,
-* Lead gen popups,
 * Ecommerce popups,
 * Contact form popups,
-* Coronavirus/COVID-19 announcements,
+* Coronavirus/COVID-19 styleannouncements,
 * [EU cookie notices](https://ninjaforms.com/blog/eu-cookie-notices-ninja-forms/),
 * Popups to greet visitors from ProductHunt (requires [premium Advanced Targeting Conditions feature](https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=greet-producthunt)),
 * WooCommerce upsell popups (requires [premium WooCommerce feature](https://wppopupmaker.com/extensions/woocommerce-pro/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=woocommerce-upsells)),
@@ -61,6 +62,7 @@ Popup Maker integrates with all of the most popular form plugins to allow you to
 * Contact Form 7 (CF7)
 * Caldera Forms
 * WPForms
+* WSForm
 * Mailchimp for WordPress (MC4WP)
 * Formidable Forms
 * and more!
