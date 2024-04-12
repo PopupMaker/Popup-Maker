@@ -1,12 +1,9 @@
-.wp-block[data-align="center"] > .pum-cta-button {
-	text-align: center;
-	margin-left: auto;
-	margin-right: auto;
-}
+.wp-block[data-type='pum/call-to-action'].alignfull {
+	display: block;
 
-.wp-block[data-align="right"] > .pum-cta-button {
-	/*!rtl:ignore*/
-	text-align: right;
+	> .pum-cta-button > .pum-cta-button__link {
+		width: 100%;
+	}
 }
 
 .pum-cta-button {
@@ -14,13 +11,14 @@
 	cursor: text;
 
 	// Make placeholder text white unless custom colors or outline versions are chosen.
-	&:not(.has-text-color):not(.is-style-outline) [data-rich-text-placeholder]::after {
+	&:not( .has-text-color ):not( .is-style-outline )
+		[data-rich-text-placeholder]::after {
 		color: $white;
 	}
 
 	// Add outline to button on focus to indicate focus-state
 	&:focus {
-		box-shadow: 0 0 0 1px $white, 0 0 0 3px var(--wp-admin-theme-color);
+		box-shadow: 0 0 0 1px $white, 0 0 0 3px var( --wp-admin-theme-color );
 
 		// Windows' High Contrast mode will show this outline, but not the box-shadow.
 		outline: 2px solid transparent;
@@ -49,7 +47,6 @@
 		&-input__suggestions {
 			max-width: 260px;
 		}
-
 	}
 	@include break-large() {
 		max-width: 290px;
@@ -57,7 +54,6 @@
 		&-input__suggestions {
 			max-width: 290px;
 		}
-
 	}
 
 	.is-selected & {
@@ -68,6 +64,6 @@
 }
 
 // Display "table" is used because the button container should only wrap the content and not takes the full width.
-div[data-type="pum/call-to-action"] {
+div[data-type='pum/call-to-action'] {
 	display: table;
 }
