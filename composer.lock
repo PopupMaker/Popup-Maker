@@ -32,7 +32,6 @@
                 "symfony/phpunit-bridge": "^5.3",
                 "symfony/process": "^5"
             },
-            "default-branch": true,
             "type": "composer-plugin",
             "extra": {
                 "class": "Composer\\Installers\\Plugin",
@@ -811,12 +810,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-                "reference": "f627b49f14be0f9f1283a1d4ed3df60a666a0a50"
+                "reference": "ee0216db6b3bcb8eada12e756a5095662d86830c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/f627b49f14be0f9f1283a1d4ed3df60a666a0a50",
-                "reference": "f627b49f14be0f9f1283a1d4ed3df60a666a0a50",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/ee0216db6b3bcb8eada12e756a5095662d86830c",
+                "reference": "ee0216db6b3bcb8eada12e756a5095662d86830c",
                 "shasum": ""
             },
             "require": {
@@ -892,7 +891,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-03-18T01:22:26+00:00"
+            "time": "2024-04-01T08:05:56+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -1018,19 +1017,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "153ae662783729388a584b4361f2545e4d841e3c"
+                "reference": "483fb7fe262607b0a5ec32f99bdc42e2212b22fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/153ae662783729388a584b4361f2545e4d841e3c",
-                "reference": "153ae662783729388a584b4361f2545e4d841e3c",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/483fb7fe262607b0a5ec32f99bdc42e2212b22fe",
+                "reference": "483fb7fe262607b0a5ec32f99bdc42e2212b22fe",
                 "shasum": ""
             },
             "require": {
                 "doctrine/deprecations": "^1.0",
                 "php": "^7.3 || ^8.0",
                 "phpdocumentor/reflection-common": "^2.0",
-                "phpstan/phpdoc-parser": "^1.13"
+                "phpstan/phpdoc-parser": "^1.18"
             },
             "require-dev": {
                 "ext-tokenizer": "*",
@@ -1067,9 +1066,9 @@
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
             "support": {
                 "issues": "https://github.com/phpDocumentor/TypeResolver/issues",
-                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.8.2"
+                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.x"
             },
-            "time": "2024-02-23T11:10:43+00:00"
+            "time": "2024-03-29T20:21:22+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -1077,12 +1076,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "bce45deab908198868823b75ce22f6b8623f6ced"
+                "reference": "f9e07be0992e7bf1cad210829055b99318df142f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/bce45deab908198868823b75ce22f6b8623f6ced",
-                "reference": "bce45deab908198868823b75ce22f6b8623f6ced",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/f9e07be0992e7bf1cad210829055b99318df142f",
+                "reference": "f9e07be0992e7bf1cad210829055b99318df142f",
                 "shasum": ""
             },
             "require": {
@@ -1139,7 +1138,7 @@
                 "issues": "https://github.com/phpspec/prophecy/issues",
                 "source": "https://github.com/phpspec/prophecy/tree/master"
             },
-            "time": "2024-03-11T13:14:51+00:00"
+            "time": "2024-03-29T09:25:04+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
@@ -2236,12 +2235,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "8b8ef253834ef826d0442c88a4b30688f60e4d7a"
+                "reference": "872add027f04396bb712c22032a40d892bc612f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/8b8ef253834ef826d0442c88a4b30688f60e4d7a",
-                "reference": "8b8ef253834ef826d0442c88a4b30688f60e4d7a",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/872add027f04396bb712c22032a40d892bc612f4",
+                "reference": "872add027f04396bb712c22032a40d892bc612f4",
                 "shasum": ""
             },
             "require": {
@@ -2309,7 +2308,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-03-20T16:13:41+00:00"
+            "time": "2024-04-03T01:07:48+00:00"
         },
         {
             "name": "theseer/tokenizer",
@@ -2421,16 +2420,16 @@
         },
         {
             "name": "wp-coding-standards/wpcs",
-            "version": "3.0.1",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "b4caf9689f1a0e4a4c632679a44e638c1c67aff1"
+                "reference": "9333efcbff231f10dfd9c56bb7b65818b4733ca7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/b4caf9689f1a0e4a4c632679a44e638c1c67aff1",
-                "reference": "b4caf9689f1a0e4a4c632679a44e638c1c67aff1",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/9333efcbff231f10dfd9c56bb7b65818b4733ca7",
+                "reference": "9333efcbff231f10dfd9c56bb7b65818b4733ca7",
                 "shasum": ""
             },
             "require": {
@@ -2439,16 +2438,16 @@
                 "ext-tokenizer": "*",
                 "ext-xmlreader": "*",
                 "php": ">=5.4",
-                "phpcsstandards/phpcsextra": "^1.1.0",
-                "phpcsstandards/phpcsutils": "^1.0.8",
-                "squizlabs/php_codesniffer": "^3.7.2"
+                "phpcsstandards/phpcsextra": "^1.2.1",
+                "phpcsstandards/phpcsutils": "^1.0.10",
+                "squizlabs/php_codesniffer": "^3.9.0"
             },
             "require-dev": {
                 "php-parallel-lint/php-console-highlighter": "^1.0.0",
                 "php-parallel-lint/php-parallel-lint": "^1.3.2",
                 "phpcompatibility/php-compatibility": "^9.0",
                 "phpcsstandards/phpcsdevtools": "^1.2.0",
-                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0"
+                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.0"
             },
             "suggest": {
                 "ext-iconv": "For improved results",
@@ -2479,11 +2478,11 @@
             },
             "funding": [
                 {
-                    "url": "https://opencollective.com/thewpcc/contribute/wp-php-63406",
+                    "url": "https://opencollective.com/php_codesniffer",
                     "type": "custom"
                 }
             ],
-            "time": "2023-09-14T07:06:09+00:00"
+            "time": "2024-03-25T16:39:00+00:00"
         }
     ],
     "aliases": [],
