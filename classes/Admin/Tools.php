@@ -358,7 +358,7 @@ class PUM_Admin_Tools {
 			return __( 'Debug logging is disabled.', 'popup-maker' );
 		}
 
-		$logger->log( 'Log viewed from Tools page' );
+		// $logger->log( 'Log viewed from Tools page' );
 
 		return $logger->get_log();
 	}

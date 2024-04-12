@@ -6,7 +6,6 @@
  * @copyright Copyright (c) 2023, Code Atlantic LLC
  */
 
- define( 'PUM_DISABLE_LOGGING', true );
 /**
  * Class PUM_Utils_Logging
  *
@@ -90,6 +89,7 @@ class PUM_Utils_Logging {
 	 * @return bool
 	 */
 	public function disabled() { 
+		// Disable logging by adding define( 'PUM_DISABLE_LOGGING', true );.
 		return defined( 'PUM_DISABLE_LOGGING' ) && PUM_DISABLE_LOGGING;
 	}
 
@@ -101,7 +101,6 @@ class PUM_Utils_Logging {
 	 * @return bool
 	 */
 	public function enabled() {
-		// Disable logging by adding define( 'PUM_DISABLE_LOGGING', true );.
 		return  ! $this->disabled() && $this->is_writable;
 	}
 
