@@ -529,4 +529,8 @@ body div#ui-datepicker-div[style] {
   z-index: 9999999999 !important;
 }
 
+.flatpickr-calendar.open {
+  z-index: 9999999999 !important;
+}
+
 /*# sourceMappingURL=pum-site.css.map */

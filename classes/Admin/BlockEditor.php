@@ -24,14 +24,11 @@ class PUM_Admin_BlockEditor {
 			return;
 		}
 
-		// TODO Test if this is needed in core or not.
 		add_action( 'enqueue_block_editor_assets', [ 'PUM_Site_Assets', 'register_styles' ] );
 		add_action( 'enqueue_block_editor_assets', [ __CLASS__, 'register_editor_assets' ] );
-
+		add_action( 'enqueue_block_editor_assets', [ __CLASS__, 'register_block_assets' ] );
+		add_action( 'enqueue_block_assets', [ __CLASS__, 'register_block_assets' ] );
 		add_action( 'wp_loaded', [ __CLASS__, 'add_attributes_to_registered_blocks' ], 999 );
-
-		// Here for future use.
-		// add_action( 'enqueue_block_assets', [ __CLASS__, 'register_block_assets' ] );
 	}
 
 	/**
@@ -42,7 +39,8 @@ class PUM_Admin_BlockEditor {
 	 *
 	 * @since 1.10.0
 	 */
-	public static function register_editor_assets( $hook ) {
+	public static function register_editor_assets() {
+		global $wp_version;
 
 		$screen = get_current_screen();
 
@@ -63,18 +61,27 @@ class PUM_Admin_BlockEditor {
 
 		wp_enqueue_script( 'popup-maker-block-editor', $script_url, $script_deps, $script_asset['version'] );
 
+		self::register_block_assets();
+
 		wp_localize_script(
 			'popup-maker-block-editor',
 			'pum_block_editor_vars',
-			[
-				'popups'                        => pum_get_all_popups(),
-				'popup_trigger_excluded_blocks' => apply_filters(
-					'pum_block_editor_popup_trigger_excluded_blocks',
-					[
-						'core/nextpage',
-					]
-				),
-			]
+			apply_filters(
+				'pum_block_editor_vars',
+				[
+					'compat56'                      => version_compare( $wp_version, '5.6' ),
+					'popups'                        => pum_get_all_popups(),
+					'ctas'                          => PUM_CallToActions::instance()->get_as_array(),
+					'popup_trigger_excluded_blocks' => apply_filters(
+						'pum_block_editor_popup_trigger_excluded_blocks',
+						[
+							'core/nextpage',
+							'pum/call-to-action',
+							'pum/call-to-actions',
+						]
+					),
+				]
+			)
 		);
 
 		$editor_styles_path       = $build_path . 'block-editor-styles.css';

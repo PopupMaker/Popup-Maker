@@ -98,15 +98,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
 
-
 /*******************************************************************************
  * Copyright (c) 2020, WP Popup Maker
  ******************************************************************************/
+
 {
   var formProvider = 'ninjaforms';
   var $ = window.jQuery;
   var pumNFController = false;
-
   var initialize_nf_support = function initialize_nf_support() {
     /** Ninja Forms Support */
     if (typeof Marionette !== 'undefined' && typeof nfRadio !== 'undefined' && false === pumNFController) {
@@ -116,19 +115,19 @@ __webpack_require__.r(__webpack_exports__);
         },
         popupMaker: function popupMaker(response, textStatus, jqXHR, formIdentifier) {
           var $form = $('#nf-form-' + formIdentifier + '-cont'),
-              _formIdentifier$split = formIdentifier.split('_'),
-              _formIdentifier$split2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_formIdentifier$split, 2),
-              formId = _formIdentifier$split2[0],
-              _formIdentifier$split3 = _formIdentifier$split2[1],
-              formInstanceId = _formIdentifier$split3 === void 0 ? null : _formIdentifier$split3,
-              settings = {}; // Bail if submission failed.
+            _formIdentifier$split = formIdentifier.split('_'),
+            _formIdentifier$split2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_formIdentifier$split, 2),
+            formId = _formIdentifier$split2[0],
+            _formIdentifier$split3 = _formIdentifier$split2[1],
+            formInstanceId = _formIdentifier$split3 === void 0 ? null : _formIdentifier$split3,
+            settings = {};
 
-
+          // Bail if submission failed.
           if (response.errors && response.errors.length) {
             return;
-          } // All the magic happens here.
+          }
 
-
+          // All the magic happens here.
           window.PUM.integrations.formSubmission($form, {
             formProvider: formProvider,
             formId: formId,
@@ -137,6 +136,7 @@ __webpack_require__.r(__webpack_exports__);
               response: response
             }
           });
+
           /**
            * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
            *
@@ -144,29 +144,28 @@ __webpack_require__.r(__webpack_exports__);
            *
            * This is here for backward compatibility with form actions prior to v1.9.
            */
-
           if (response.data && response.data.actions) {
             settings.openpopup = 'undefined' !== typeof response.data.actions.openpopup;
             settings.openpopup_id = settings.openpopup ? parseInt(response.data.actions.openpopup) : 0;
             settings.closepopup = 'undefined' !== typeof response.data.actions.closepopup;
             settings.closedelay = settings.closepopup ? parseInt(response.data.actions.closepopup) : 0;
-
             if (settings.closepopup && response.data.actions.closedelay) {
               settings.closedelay = parseInt(response.data.actions.closedelay);
             }
-          } // Nothing should happen if older action settings not applied
+          }
+
+          // Nothing should happen if older action settings not applied
           // except triggering of pumFormSuccess event for old cookie method.
-
-
           window.PUM.forms.success($form, settings);
         }
-      }); // Initialize it.
+      });
 
+      // Initialize it.
       new pumNFController();
     }
-  }; // Initiate when ready.
+  };
 
-
+  // Initiate when ready.
   $(initialize_nf_support);
 }
 
@@ -181,15 +180,10 @@ __webpack_require__.r(__webpack_exports__);
 
 function _arrayLikeToArray(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
   return arr2;
 }
-
-module.exports = _arrayLikeToArray;
+module.exports = _arrayLikeToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -203,8 +197,7 @@ module.exports = _arrayLikeToArray;
 function _arrayWithHoles(arr) {
   if (Array.isArray(arr)) return arr;
 }
-
-module.exports = _arrayWithHoles;
+module.exports = _arrayWithHoles, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -215,34 +208,34 @@ module.exports = _arrayWithHoles;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
+function _iterableToArrayLimit(r, l) {
+  var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+  if (null != t) {
+    var e,
+      n,
+      i,
+      u,
+      a = [],
+      f = !0,
+      o = !1;
     try {
-      if (!_n && _i["return"] != null) _i["return"]();
+      if (i = (t = t.call(r)).next, 0 === l) {
+        if (Object(t) !== t) return;
+        f = !1;
+      } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
+    } catch (r) {
+      o = !0, n = r;
     } finally {
-      if (_d) throw _e;
+      try {
+        if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return;
+      } finally {
+        if (o) throw n;
+      }
     }
+    return a;
   }
-
-  return _arr;
 }
-
-module.exports = _iterableToArrayLimit;
+module.exports = _iterableToArrayLimit, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -256,8 +249,7 @@ module.exports = _iterableToArrayLimit;
 function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-
-module.exports = _nonIterableRest;
+module.exports = _nonIterableRest, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -268,19 +260,14 @@ module.exports = _nonIterableRest;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var arrayWithHoles = __webpack_require__(/*! ./arrayWithHoles */ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js");
-
-var iterableToArrayLimit = __webpack_require__(/*! ./iterableToArrayLimit */ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js");
-
-var unsupportedIterableToArray = __webpack_require__(/*! ./unsupportedIterableToArray */ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js");
-
-var nonIterableRest = __webpack_require__(/*! ./nonIterableRest */ "./node_modules/@babel/runtime/helpers/nonIterableRest.js");
-
+var arrayWithHoles = __webpack_require__(/*! ./arrayWithHoles.js */ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js");
+var iterableToArrayLimit = __webpack_require__(/*! ./iterableToArrayLimit.js */ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js");
+var unsupportedIterableToArray = __webpack_require__(/*! ./unsupportedIterableToArray.js */ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js");
+var nonIterableRest = __webpack_require__(/*! ./nonIterableRest.js */ "./node_modules/@babel/runtime/helpers/nonIterableRest.js");
 function _slicedToArray(arr, i) {
   return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
 }
-
-module.exports = _slicedToArray;
+module.exports = _slicedToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -291,8 +278,7 @@ module.exports = _slicedToArray;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var arrayLikeToArray = __webpack_require__(/*! ./arrayLikeToArray */ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js");
-
+var arrayLikeToArray = __webpack_require__(/*! ./arrayLikeToArray.js */ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js");
 function _unsupportedIterableToArray(o, minLen) {
   if (!o) return;
   if (typeof o === "string") return arrayLikeToArray(o, minLen);
@@ -301,8 +287,7 @@ function _unsupportedIterableToArray(o, minLen) {
   if (n === "Map" || n === "Set") return Array.from(o);
   if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
 }
-
-module.exports = _unsupportedIterableToArray;
+module.exports = _unsupportedIterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ })
 

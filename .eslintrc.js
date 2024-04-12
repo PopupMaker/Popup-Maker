@@ -8,10 +8,12 @@ const eslintConfig = {
 	],
 	plugins: [ 'standard', 'import', 'promise' ],
 	globals: {
+		_: 'readonly',
 		wp: 'readonly',
-		pum_admin_vars: 'readonly',
-		pum_site_vars: 'readonly',
 		pum_vars: 'readonly',
+		pum_site_vars: 'readonly',
+		pum_admin_vars: 'readonly',
+		pum_block_editor_vars: 'readonly',
 	},
 	env: {
 		browser: true,

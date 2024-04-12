@@ -1,0 +1,88 @@
+@import '~@wordpress/base-styles/colors';
+
+$blocks-button__height: 3.1em;
+
+// Prefer the link selector instead of the regular button classname
+// to support the previous markup in addition to the new one.
+.pum-cta-button__link {
+	color: $white;
+	background-color: #32373c;
+	border: none;
+	border-radius: $blocks-button__height / 2;
+	box-shadow: none;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 1.125em;
+	padding: 0.667em 1.333em;
+	text-align: center;
+	text-decoration: none;
+	overflow-wrap: break-word;
+
+	&:hover,
+	&:focus,
+	&:active,
+	&:visited {
+		color: $white;
+	}
+
+	&.aligncenter {
+		text-align: center;
+	}
+
+	&.alignright {
+		/*rtl:ignore*/
+		text-align: right;
+	}
+}
+
+[data-type="pum/call-to-action"][data-align="left"],
+.wp-block-pum-call-to-action.alignleft {
+		text-align: left;
+}
+
+[data-type="pum/call-to-action"][data-align="right"],
+.wp-block-pum-call-to-action.alignright {
+		text-align: right;
+}
+
+[data-type="pum/call-to-action"][data-align="center"],
+.wp-block-pum-call-to-action.aligncenter {
+		text-align: center;
+}
+
+[data-type="pum/call-to-action"][data-align="full"],
+.wp-block-pum-call-to-action.alignfull {
+		text-align: center;
+
+		.pum-cta-button__link {
+			width: 100%;
+			display: block;
+		}
+}
+
+
+.pum-cta-button.no-border-radius,
+.pum-cta-button__link.no-border-radius {
+	border-radius: 0 !important;
+}
+
+.is-style-outline > .pum-cta-button__link,
+.pum-cta-button__link.is-style-outline {
+	border: 2px solid;
+}
+
+.is-style-outline > .pum-cta-button__link:not( .has-text-color ),
+.pum-cta-button__link.is-style-outline:not( .has-text-color ) {
+	color: #32373c;
+}
+
+.is-style-outline > .pum-cta-button__link:not( .has-background ),
+.pum-cta-button__link.is-style-outline:not( .has-background ) {
+	background-color: transparent;
+}
+
+.is-style-text-only > .pum-cta-button__link,
+.pum-cta-button__link.is-style-text-only {
+	background-color: transparent;
+	border: none;
+}
