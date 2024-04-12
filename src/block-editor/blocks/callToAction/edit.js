@@ -29,7 +29,10 @@ import {
 	RichText,
 	useBlockProps,
 	__experimentalLinkControl as LinkControl,
-	__experimentalUseEditorFeature as useEditorFeature,
+	__experimentalUseBorderProps as useBorderProps,
+	__experimentalUseColorProps as useColorProps,
+	__experimentalGetSpacingClassesAndStyles as useSpacingProps,
+	__experimentalGetShadowClassesAndStyles as useShadowProps,
 } from '@wordpress/block-editor';
 import { rawShortcut, displayShortcut } from '@wordpress/keycodes';
 import { link, linkOff } from '@wordpress/icons';
@@ -41,8 +44,6 @@ import { useSelect } from '@wordpress/data';
  */
 import Fields from './../../components/fields';
 import { getCta } from './utils';
-import ColorEdit from './color-edit';
-import getColorAndStyleProps from './color-props';
 
 const NEW_TAB_REL = 'noreferrer noopener';
 const MIN_BORDER_RADIUS_VALUE = 0;
@@ -176,6 +177,10 @@ function ButtonEdit( props ) {
 		pid,
 		uuid,
 		type,
+		textAlign,
+		style,
+		fontSize,
+		width,
 		borderRadius,
 		linkTarget,
 		placeholder,
@@ -197,6 +202,50 @@ function ButtonEdit( props ) {
 						otherUuid !== undefined && otherUuid === uuid
 				).length <= 1
 	);
+
+	const blockProps = useBlockProps();
+
+	const borderProps = useBorderProps( attributes );
+	const colorProps = useColorProps( attributes );
+	const spacingProps = useSpacingProps( attributes );
+	const shadowProps = useShadowProps( attributes );
+
+	const wrapper = {
+		style: {},
+		className: classnames(
+			[ className, 'pum-cta-button', 'pum-cta-button--' + type ],
+			{
+				[ `has-text-align-${ textAlign }` ]: textAlign,
+				// For backwards compatibility add style that isn't provided via
+				// block support.
+				'no-border-radius': style?.border?.radius === 0,
+			}
+		),
+	};
+
+	const button = {
+		style: {
+			...colorProps.style,
+			...borderProps.style,
+			...spacingProps.style,
+			...shadowProps.style,
+		},
+		className: classnames(
+			'pum-cta-button__link',
+			colorProps.className,
+			borderProps.className,
+			spacingProps.className,
+			shadowProps.className,
+			{
+				'no-border-radius': style?.border?.radius === 0,
+			},
+			{
+				[ `has-custom-width pum-cta-button__width-${ width }` ]: width,
+				[ `has-custom-font-size` ]:
+					fontSize || style?.typography?.fontSize,
+			}
+		),
+	};
 
 	/**
 	 * Check for missing or invalid attributes, correct them and update.
@@ -232,8 +281,6 @@ function ButtonEdit( props ) {
 		[ setAttributes ]
 	);
 
-	const colors = useEditorFeature( 'color.palette' ) || EMPTY_ARRAY;
-
 	const onToggleOpenInNewTab = useCallback(
 		( value ) => {
 			const newLinkTarget = value ? '_blank' : undefined;
@@ -260,26 +307,15 @@ function ButtonEdit( props ) {
 
 	return (
 		<>
-			<div { ...blockProps }>
+			<div className={ wrapper.className } { ...blockProps }>
 				<RichText
+					tagName="a"
 					placeholder={ placeholder || __( 'Add text…' ) }
 					value={ text }
 					onChange={ ( value ) => setAttributes( { text: value } ) }
 					withoutInteractiveFormatting
-					className={ classnames(
-						className,
-						'pum-cta-button__link',
-						colorProps.className,
-						{
-							'no-border-radius': borderRadius === 0,
-						}
-					) }
-					style={ {
-						borderRadius: borderRadius
-							? borderRadius + 'px'
-							: undefined,
-						...colorProps.style,
-					} }
+					className={ button.className }
+					style={ button.style }
 					onSplit={ ( value ) =>
 						createBlock( 'core/button', {
 							...attributes,
