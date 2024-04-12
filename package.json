@@ -1,108 +1,109 @@
 {
-  "name": "popup-maker",
-  "version": "1.14.0",
-  "description": "WordPress Popup Plugin",
-  "homepage": "https://wppopupmaker.com",
-  "author": "Code Atlantic LLC",
-  "private": true,
-  "license": "GPL-2.0-or-later",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/PopupMaker/Popup-Maker/"
-  },
-  "bugs": {
-    "url": "https://github.com/PopupMaker/Popup-Maker/issues"
-  },
-  "main": "gulpfile.js",
-  "engines": {
-	"node": ">=14.15.0",
-    "npm": ">=6.13.0",
-    "yarn": ">=1.12.0"
-  },
-  "scripts": {
-    "build": "wp-scripts build",
-    "check-engines": "wp-scripts check-engines",
-    "check-licenses": "wp-scripts check-licenses",
-    "format:js": "wp-scripts format-js",
-    "format:js:src": "wp-scripts format-js assets/js/src",
-    "lint:style": "wp-scripts lint-style",
-    "lint:css:src": "wp-scripts lint-style 'src/**/*.css'",
-    "lint:js": "wp-scripts lint-js",
-    "lint:js:src": "wp-scripts lint-js assets/js/src",
-	"lint:md:docs": "wp-scripts lint-md-docs",
-	"lint:md:js": "wp-scripts lint-md-js",
-    "lint:pkg-json": "wp-scripts lint-pkg-json",
-    "packages-update": "wp-scripts packages-update",
-    "postpackages-update": "npm run build",
-    "start": "wp-scripts start",
-	"release": "gulp release",
-	"gulp:start": "gulp",
-	"gulp:build": "gulp prebuild",
-    "test:e2e": "wp-scripts test-e2e",
-    "test:unit": "wp-scripts test-unit-js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch:block-editor": "gulp webpack_block_editor_watcher"
-  },
-  "babel": {
-    "presets": [
-      "@wordpress/babel-preset-default"
-    ]
-  },
-  "eslintConfig": {
-	"extends": [
-		"plugin:@wordpress/eslint-plugin/recommended"
-	]
-  },
-  "prettier": "@wordpress/prettier-config",
-  "dependencies": {
-    "iframe-resizer": "^4.2.10",
-    "mobile-detect": "^1.4.4"
-  },
-  "devDependencies": {
-    "@wordpress/base-styles": "^3.3.0",
-    "@wordpress/block-library": "^2.26.6",
-	"@wordpress/eslint-plugin": "^8.0.2",
-    "@wordpress/prettier-config": "^1.0.1",
-    "@wordpress/scripts": "^12.5.0",
-    "classnames": "^2.2.6",
-    "css-loader": "^3.5.0",
-    "copy-webpack-plugin": "^5.1.1",
-    "del": "^4.0.0",
-	"eslint-plugin-eslint-comments": "^3.2.0",
-	"eslint-plugin-import": "^2.22.1",
-	"eslint-plugin-promise": "^4.3.1",
-	"eslint-plugin-standard": "^5.0.0",
-    "gulp": "^4.0.2",
-    "gulp-autoprefixer": "^6.0.0",
-    "gulp-clean-css": "^4.3.0",
-    "gulp-concat": "^2.6.1",
-    "gulp-filter": "^5.1.0",
-    "gulp-load-plugins": "^1.5.0",
-    "gulp-notify": "^3.2.0",
-    "gulp-order": "^1.2.0",
-    "gulp-plumber": "^1.2.1",
-    "gulp-rename": "^1.4.0",
-    "gulp-rtlcss": "^1.4.1",
-    "gulp-sane-watch": "^3.0.2",
-    "gulp-sass": "^4.0.2",
-    "gulp-sourcemaps": "^2.6.5",
-    "gulp-uglify": "^3.0.2",
-    "gulp-util": "^3.0.8",
-    "gulp-wp-pot": "^2.5.0",
-    "gulp-zip": "^4.2.0",
-	"ignore-emit-webpack-plugin": "^2.0.3",
-    "merge-stream": "^1.0.1",
-    "mini-css-extract-plugin": "^1.3.1",
-	"nanoid": "^3.1.20",
-    "node-sass": "4.13.1",
-    "path": "^0.12.7",
-    "postcss-loader": "^3.0.0",
-    "postcss-preset-env": "^6.7.0",
-    "require-dir": "^1.2.0",
-    "sass-loader": "^8.0.2",
-    "uglify-es": "^3.3.9",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "unminified-webpack-plugin": "^2.0.0",
-    "webpack-merge": "^4.2.2"
-  }
+	"name": "popup-maker",
+	"version": "1.14.0",
+	"description": "WordPress Popup Plugin",
+	"homepage": "https://wppopupmaker.com",
+	"author": "Code Atlantic LLC",
+	"private": true,
+	"license": "GPL-2.0-or-later",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/PopupMaker/Popup-Maker/"
+	},
+	"bugs": {
+		"url": "https://github.com/PopupMaker/Popup-Maker/issues"
+	},
+	"main": "gulpfile.js",
+	"engines": {
+		"node": ">=14.15.0",
+		"npm": ">=6.13.0",
+		"yarn": ">=1.12.0"
+	},
+	"scripts": {
+		"build": "wp-scripts build",
+		"check-engines": "wp-scripts check-engines",
+		"check-licenses": "wp-scripts check-licenses",
+		"format:js": "wp-scripts format-js",
+		"format:js:src": "wp-scripts format-js assets/js/src",
+		"lint:style": "wp-scripts lint-style",
+		"lint:css:src": "wp-scripts lint-style 'src/**/*.css'",
+		"lint:js": "wp-scripts lint-js",
+		"lint:js:src": "wp-scripts lint-js assets/js/src",
+		"lint:md:docs": "wp-scripts lint-md-docs",
+		"lint:md:js": "wp-scripts lint-md-js",
+		"lint:pkg-json": "wp-scripts lint-pkg-json",
+		"packages-update": "wp-scripts packages-update",
+		"postpackages-update": "npm run build",
+		"start": "wp-scripts start",
+		"start:hot": "wp-scripts start --hot",
+		"release": "gulp release",
+		"gulp:start": "gulp",
+		"gulp:build": "gulp prebuild",
+		"test:e2e": "wp-scripts test-e2e",
+		"test:unit": "wp-scripts test-unit-js",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"watch:block-editor": "gulp webpack_block_editor_watcher"
+	},
+	"babel": {
+		"presets": [
+			"@wordpress/babel-preset-default"
+		]
+	},
+	"eslintConfig": {
+		"extends": [
+			"plugin:@wordpress/eslint-plugin/recommended"
+		]
+	},
+	"prettier": "@wordpress/prettier-config",
+	"dependencies": {
+		"iframe-resizer": "^4.2.10",
+		"mobile-detect": "^1.4.4"
+	},
+	"devDependencies": {
+		"@wordpress/base-styles": "^3.3.0",
+		"@wordpress/block-library": "^2.26.6",
+		"@wordpress/eslint-plugin": "^8.0.2",
+		"@wordpress/prettier-config": "^1.0.1",
+		"@wordpress/scripts": "^12.5.0",
+		"classnames": "^2.2.6",
+		"copy-webpack-plugin": "^5.1.1",
+		"css-loader": "^3.5.0",
+		"del": "^4.0.0",
+		"eslint-plugin-eslint-comments": "^3.2.0",
+		"eslint-plugin-import": "^2.22.1",
+		"eslint-plugin-promise": "^4.2.1",
+		"eslint-plugin-standard": "^4.1.0",
+		"gulp": "^4.0.2",
+		"gulp-autoprefixer": "^6.0.0",
+		"gulp-clean-css": "^4.3.0",
+		"gulp-concat": "^2.6.1",
+		"gulp-filter": "^5.1.0",
+		"gulp-load-plugins": "^1.5.0",
+		"gulp-notify": "^3.2.0",
+		"gulp-order": "^1.2.0",
+		"gulp-plumber": "^1.2.1",
+		"gulp-rename": "^1.4.0",
+		"gulp-rtlcss": "^1.4.1",
+		"gulp-sane-watch": "^3.0.2",
+		"gulp-sass": "^4.0.2",
+		"gulp-sourcemaps": "^2.6.5",
+		"gulp-uglify": "^3.0.2",
+		"gulp-util": "^3.0.8",
+		"gulp-wp-pot": "^2.5.0",
+		"gulp-zip": "^4.2.0",
+		"ignore-emit-webpack-plugin": "^2.0.3",
+		"merge-stream": "^1.0.1",
+		"mini-css-extract-plugin": "^1.3.1",
+		"nanoid": "^3.1.20",
+		"node-sass": "4.14.0",
+		"path": "^0.12.7",
+		"postcss-loader": "^3.0.0",
+		"postcss-preset-env": "^6.7.0",
+		"require-dir": "^1.2.0",
+		"sass-loader": "^8.0.2",
+		"uglify-es": "^3.3.9",
+		"uglifyjs-webpack-plugin": "^2.2.0",
+		"unminified-webpack-plugin": "^2.0.0",
+		"webpack-merge": "^4.2.2"
+	}
 }
