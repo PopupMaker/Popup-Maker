@@ -5613,13 +5613,12 @@ module.exports = _unsupportedIterableToArray;
   var formProvider = 'wsforms';
   var $ = window.jQuery;
   $(document).on('wsf-submit-success wsf-save-success', function (event, formObject, formId, formInstanceId, formEl, formCanvasEl) {
-    return (// All the magic happens here.
-      window.PUM.integrations.formSubmission($(formEl), {
-        formProvider: formProvider,
-        formId: formId,
-        formInstanceId: formInstanceId
-      })
-    );
+    // All the magic happens here.
+    window.PUM.integrations.formSubmission($(formEl), {
+      formProvider: formProvider,
+      formId: formId,
+      formInstanceId: formInstanceId
+    });
   });
 }
 
