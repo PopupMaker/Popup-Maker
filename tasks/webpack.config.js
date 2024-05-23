@@ -49,6 +49,7 @@ const webpackConfig = {
 			'pum-integration-mc4wp': `${JS_DEV}/integration/mc4wp.js`,
 			'pum-integration-ninjaforms': `${JS_DEV}/integration/ninjaforms.js`,
 			'pum-integration-wpforms': `${JS_DEV}/integration/wpforms.js`,
+			'pum-integration-wsforms': `${JS_DEV}/integration/wsforms.js`,
 			'pum-admin-deprecated': `${JS_DEV}/admin/deprecated.js`,
 			'popup-maker-easy-modal-importer-site': `${JS_DEV}/popup-maker-easy-modal-importer-site.js`,
 			'mce-buttons': `${JS_DEV}/mce-buttons.js`

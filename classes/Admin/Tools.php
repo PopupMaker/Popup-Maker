@@ -206,14 +206,18 @@ class PUM_Admin_Tools {
 	 * @since 1.12.0
 	 */
 	public static function errorlog_display() {
+		$enabled = PUM_Utils_Logging::instance()->enabled();
+
 		?>
-		<h2>Error Log</h2>
+		<h2>Error Log<?php echo esc_html( $enabled ? '' : ' (disabled)' ); ?></h2>
+		<?php if ( $enabled ) : ?>
 		<a target="_blank" rel="noreferrer noopener" href="<?php echo esc_url( PUM_Utils_Logging::instance()->get_file_url() ); ?>" download="pum-debug.log" class="button button-primary button-with-icon"><i class="dashicons dashicons-download"></i>Download Error Log</a>
 		<form action="" method="POST">
 			<input type="hidden" name="pum_action" value="empty_error_log" />
 			<?php wp_nonce_field( 'pum_popup_empty_log_nonce', 'pum_popup_empty_log_nonce' ); ?>
 			<?php submit_button( 'Empty Error Log', '', 'popmake-empty-log', false ); ?>
 		</form>
+		<?php endif; ?>
 		<div id="log-viewer">
 			<pre><?php echo esc_html( self::display_error_log() ); ?></pre>
 		</div>
@@ -354,7 +358,7 @@ class PUM_Admin_Tools {
 			return __( 'Debug logging is disabled.', 'popup-maker' );
 		}
 
-		$logger->log( 'Log viewed from Tools page' );
+		// $logger->log( 'Log viewed from Tools page' );
 
 		return $logger->get_log();
 	}

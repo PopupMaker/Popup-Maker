@@ -20,3 +20,7 @@ body div#ui-datepicker-div[style] {
 .pika-single {
 	z-index: 9999999999 !important;
 }
+
+.flatpickr-calendar.open {
+	z-index: 9999999999 !important;
+}

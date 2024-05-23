@@ -378,16 +378,16 @@ class PUM_Utils_Fields {
 			 * Check if core method exists and load that.
 			 */ elseif ( method_exists( 'PUM_Utils_Sanitize', $type ) ) {
 				$function_name = [ 'PUM_Utils_Sanitize', $type ];
-} else {
-	$function_name = null;
-}
+			} else {
+				$function_name = null;
+			}
 
-if ( $function_name ) {
-	/**
-	 * Call the determined method, passing the field args & $value to the callback.
-	 */
-	$value = call_user_func_array( $function_name, [ $value, $args, $fields, $values ] );
-}
+			if ( $function_name ) {
+				/**
+				 * Call the determined method, passing the field args & $value to the callback.
+				 */
+				$value = call_user_func_array( $function_name, [ $value, $args, $fields, $values ] );
+			}
 		}
 
 		$value = apply_filters( 'pum_settings_sanitize', $value, $args, $fields, $values );

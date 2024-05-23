@@ -195,17 +195,21 @@ class PUM_Site_Assets {
 				$cached = get_option( 'pum-has-cached-js' );
 			}
 
+			$cached_script_deps = apply_filters( 'pum_site_cached_scripts_dependencies', [
+				'jquery',
+				'jquery-ui-core',
+				'jquery-ui-position',
+			] );
+
 			wp_register_script(
 				'popup-maker-site',
 				self::$cache_url . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-scripts' ) . '.js?defer&generated=' . $cached,
-				[
-					'jquery',
-					'jquery-ui-core',
-					'jquery-ui-position',
-				],
+				$cached_script_deps,
 				Popup_Maker::$VER,
 				true
 			);
+
+			do_action( 'pum_registered_cached_scripts' );
 		} else {
 			wp_register_script(
 				'popup-maker-site',
@@ -219,6 +223,8 @@ class PUM_Site_Assets {
 				true
 			);
 		}
+
+		do_action( 'pum_registered_scripts' );
 
 		if ( popmake_get_option( 'enable_easy_modal_compatibility_mode', false ) ) {
 			wp_register_script( 'popup-maker-easy-modal-importer-site', self::$js_url . 'popup-maker-easy-modal-importer-site' . self::$suffix . '?defer', [ 'popup-maker-site' ], POPMAKE_VERSION, true );
@@ -361,11 +367,17 @@ class PUM_Site_Assets {
 				$cached = get_option( 'pum-has-cached-css' );
 			}
 
-			wp_register_style( 'popup-maker-site', self::$cache_url . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-styles' ) . '.css?generated=' . $cached, [], Popup_Maker::$VER );
+			$cached_style_deps = apply_filters( 'pum_site_cached_styles_dependencies', [] );
+			
+			wp_register_style( 'popup-maker-site', self::$cache_url . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-styles' ) . '.css?generated=' . $cached, $cached_style_deps, Popup_Maker::$VER );
+			
+			do_action( 'pum_registered_cached_styles' );
 		} else {
 			wp_register_style( 'popup-maker-site', self::$css_url . 'pum-site' . ( is_rtl() ? '-rtl' : '' ) . self::$suffix . '.css', [], Popup_Maker::$VER );
 			self::inline_styles();
 		}
+
+		do_action( 'pum_registered_styles' );
 	}
 
 	/**

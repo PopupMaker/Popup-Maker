@@ -71,7 +71,7 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	}
 
 	/**
-	 * Returns whether or now we should process any form submissions
+	 * Returns whether or not we should process any form submissions
 	 *
 	 * @return bool True if we should process the form submission
 	 * @since 1.13.0

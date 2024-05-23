@@ -1,13 +1,13 @@
-=== Popup Maker - Popup for opt-ins, lead gen, & more ===
+=== Popup Maker - The Best WordPress popup plugin for boosting sales & growing subsribers ===
 Contributors: danieliser, codeatlantic
 Author URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=author-url
 Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=plugin-url
 Donate link:
-Tags:  marketing, ecommerce, popup, popups, optin, conversion, promotion, pop-up, lightbox, modal, popupmaker
+Tags:  marketing, popup, popups, optin, conversion
 Requires at least: 4.9
-Tested up to: 6.5.0
+Tested up to: 6.5.3
 Requires PHP: 5.6
-Stable tag: 1.18.5
+Stable tag: 1.19.0
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,7 +18,7 @@ Looking to boost your marketing and lead gen efforts? Using popups are a great w
 = Drive More Sales and Email List Opt-Ins Using Popups =
 Create conversion-focused campaigns to grow your revenue and email list on your WordPress site with popups, slide-ins, banners, and more!
 
-[Popup Maker](https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=main-site-link)™ is the **best popup plugin WordPress** has to offer. It is incredibly versatile & flexible. Bend it to create any type of popup, modal, or content overlay for your WordPress website.
+[Popup Maker](https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=main-site-link)™ is the **[best WordPress popup plugin](https://wppopupmaker.com/conversion-optimization/best-wordpress-popup-plugins/)** around. It is incredibly versatile & flexible. Bend it to create any type of popup, modal, or content overlay for your WordPress website.
 
 > **Great plugin! Got the job done**
 > "Love how easy it was to make popups with this!" ~[Zac Gordon](https://wordpress.org/support/topic/great-plugin-got-the-job-done/)
@@ -26,11 +26,12 @@ Create conversion-focused campaigns to grow your revenue and email list on your 
 With Popup Maker, you can create popups such as:
 
 * Email opt-in popups,
+* Lead generation popups,
+* Subscription list popups
 * Content upgrade popups,
-* Lead gen popups,
 * Ecommerce popups,
 * Contact form popups,
-* Coronavirus/COVID-19 announcements,
+* Coronavirus/COVID-19 styleannouncements,
 * [EU cookie notices](https://ninjaforms.com/blog/eu-cookie-notices-ninja-forms/),
 * Popups to greet visitors from ProductHunt (requires [premium Advanced Targeting Conditions feature](https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=greet-producthunt)),
 * WooCommerce upsell popups (requires [premium WooCommerce feature](https://wppopupmaker.com/extensions/woocommerce-pro/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=woocommerce-upsells)),
@@ -61,6 +62,7 @@ Popup Maker integrates with all of the most popular form plugins to allow you to
 * Contact Form 7 (CF7)
 * Caldera Forms
 * WPForms
+* WSForm
 * Mailchimp for WordPress (MC4WP)
 * Formidable Forms
 * and more!
@@ -180,6 +182,16 @@ There are several common causes for this, check [this guide for help](https://do
 == Changelog ==
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
+
+= v1.19.0 - 05/23/2024 =
+
+* Feature: Add WS Forms integration.
+* Tweak: Don't show error message when saving settings without making changes.
+* Fix: Improved disabled logging logic to prevent errors with logger even with logging disabled.
+* Fix: Error when value was numeric in popup theme hex fields without a hash.
+* Fix: Ninja Forms datepicker appeared behind popups.
+* Fix: Errors when 3rd party plugins returned invalid value in `mce_external_plugins` filter.
+* Fix: Random unkown key errors when extensions were active.
 
 = v1.18.5 - 03/19/2024 =
 
