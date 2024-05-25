@@ -1,7 +1,26 @@
 # Set default behaviour to automatically normalize line endings.
 * text eol=lf
+
+# Handle binary files.
 *.png binary
 *.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.mov binary
+*.mp4 binary
+*.mp3 binary
+*.flv binary
+*.fla binary
+*.swf binary
+*.gz binary
+*.zip binary
+*.7z binary
+*.ttf binary
+*.eot binary
+*.woff binary
+*.pyc binary
+*.pdf binary
 
 # Items to ignore when downloading a zip
 /.* export-ignore
