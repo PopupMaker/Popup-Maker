@@ -94,7 +94,7 @@ Already created a form in your email marketing service? Using our free version, 
 * Dictate the frequency at which users see your popups using **Cookies**, and edit how the cookies are created using Cookie Creation Events.
 
  = Trusted by many people just like you! =
-Popup Maker is used on over 600,000 websites and has received over 3,900 5-star reviews just like this one:
+Popup Maker is used on over 780,000 websites and has received over 4,200 5-star reviews just like this one:
 
 > **Great plugin, everything I needed**
 > "Really nice plugin, simple to use, responsive, a good catch !" ~[@lemmmy](https://wordpress.org/support/topic/great-plugin-everything-i-needed/)
@@ -183,7 +183,7 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
-= v1.19.0 - 05/23/2024 =
+= v1.19.0 - 05/23/2024 - WP Popup Builder for WS Forms =
 
 * Feature: Add WS Forms integration.
 * Tweak: Don't show error message when saving settings without making changes.
@@ -218,7 +218,7 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 * Fix: Bug in asset caching causing assets to falsly determine they couldn't be writtien.
 * Fix: Add backcompat fix for WP >5.3 `wp_date` errors.
 
-= v1.18.0 - 02/10/2023 =
+= v1.18.0 - 02/10/2023 - Accessible WordPress Popup Builder for all! =
 
 * Accessibility: Use newer WCAG `aria-modal` attributes and remove `aria-hidden` methods.
 * Improvement: Font Awesome 6 support for close button text.
@@ -245,7 +245,7 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 * Fix: Rendering issue with review request.
 * Fix: ATC Cookie condition was preventing popup from loading.
 
-= v1.17.0 - 11/24/2022 =
+= v1.17.0 - 11/24/2022 - Giving popup builders peice of mind =
 
 * Improvement: Added contextual notification system to be able to notify site admins about important information including security notices, beta tests, extension sales & more without requiring a plugin update.
 * Improvement: Render analytic reset times in server properly rather than UTC.
@@ -326,7 +326,7 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 
 * Fix: WP <5.0 and ClassicPress saw errors in the admin for usage of WP_Block_Type_Registry. [Issue #995](https://github.com/PopupMaker/Popup-Maker/issues/995)
 
-= v1.16.0 - 03/09/2021 =
+= v1.16.0 - 03/09/2021 - Make Cache Friendly WordPress Popups Easier =
 
 * Feature: Add 'flush popup cache' link in admin bar menu to quickly clear cached plugin JS & CSS files. [Issue #931](https://github.com/PopupMaker/Popup-Maker/issues/931)
 * Improvement: Remove 'Tools -> System Info' page, use WP Site Health page instead. [Issue #862](https://github.com/PopupMaker/Popup-Maker/issues/862)
@@ -337,7 +337,7 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 * Fix: Removed Action Scheduler library due to edge case issues with no reasonable long term solutions. [Issue #853](https://github.com/PopupMaker/Popup-Maker/issues/853)
 * Fix: Update integration with Contact Form 7 due to breaking changes in their recent v5.4 update. [Issue #946](https://github.com/PopupMaker/Popup-Maker/issues/946)
 
-= v1.15.0 - 01/12/2021 =
+= v1.15.0 - 01/12/2021 - Smart WordPress Popups, Magically Load When Needed =
 
 * Feature: Automatically enqueue popups when detected during page load [Issue $543](https://github.com/PopupMaker/Popup-Maker/issues/543)
 * Improvement: Improvements to 'Extend' page [Issue $913](https://github.com/PopupMaker/Popup-Maker/issues/913)
