@@ -1,4 +1,4 @@
-=== Popup Maker - The Best WordPress popup plugin for boosting sales & growing subsribers ===
+=== Popup Maker - Boost Sales & Grow Optin Subscribers with Customizable WP Popups ===
 Contributors: danieliser, codeatlantic
 Author URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=author-url
 Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=plugin-url
