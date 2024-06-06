@@ -1,4 +1,4 @@
-=== Popup Maker – Boost Sales & Grow Optin Subscribers with Complete WP Popup Builder ===
+=== Popup Maker – Boost Sales, Grow Subscribers with a Complete WP Popup Builder ===
 Contributors: danieliser, codeatlantic
 Author URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=author-url
 Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=plugin-url
