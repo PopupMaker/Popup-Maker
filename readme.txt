@@ -11,7 +11,7 @@ Stable tag: 1.19.0
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
-Looking to boost your marketing and lead gen efforts? Using popups are a great way to increase your site's conversions!
+Want to boost sales & marketing efforts? Using popups are a great way to increase conversions! Use your favorite form plugins & builder, keep your data.
 
 == Description ==
 
