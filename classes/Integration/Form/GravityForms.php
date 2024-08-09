@@ -87,6 +87,19 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 				'form_id'       => $form['id'],
 			]
 		);
+
+		// Check for a page or URL redirect confirmation.
+		$confirmations = rgar( $form, 'confirmations' );
+		
+		foreach ($form['confirmations'] as $conf) {
+			if ($conf['isDefault'] === true) {
+				// Set a cookie if the form has a redirect.
+				if ( !empty( $conf['pageId'] ) || !empty( $conf['url'] ) ) {
+					$gf_id = rgar( $form, 'id' );
+					setcookie( 'gf-form-'.$gf_id.'-sub', 'true', time() + (60), '/' ); // In seconds. E.g., 86400 seconds = 1 day
+				} // if
+			} // if
+		}
 	}
 
 	/**
