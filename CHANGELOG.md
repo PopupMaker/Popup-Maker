@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+* Security: Only allow admins to save HTML in plugin settings if they have `unfiltered_html` capability.
+  * Note: User had to be an admin to be able to edit these settings already, but some sites have advanced capabilities set up, so using `unfiltered_html` specifically is the right move matching with WP core.
+* Improvement: Only allow addon updater to check for updates during CRONs or for site admins.
+* Tweak: Use GET requests for extension update checks, allowing for more performant update checks.
+
 ## v1.19.0 - 05/23/2024
 
 * Feature: Add WS Forms integration.
