@@ -621,7 +621,7 @@ class PUM_Extension_Updater {
 		 */
 		$api_params = apply_filters( 'edd_sl_plugin_updater_api_params', $api_params, $this->api_data, $this->plugin_file );
 
-		$request = wp_remote_post(
+		$request = wp_remote_get(
 			$this->api_url,
 			[
 				'timeout'   => 15,
