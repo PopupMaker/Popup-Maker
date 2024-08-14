@@ -174,9 +174,16 @@ class PUM_Extension_License {
 	 * @return  void
 	 */
 	public function auto_updater() {
+		// To support auto-updates, this needs to run during the wp_version_check cron job for privileged users.
+		$doing_cron = defined( 'DOING_CRON' ) && DOING_CRON;
+		if ( ! current_user_can( 'manage_options' ) && ! $doing_cron ) {
+			return;
+		}
+
 		$args = [
 			'version' => $this->version,
 			'license' => $this->license,
+			'item_id' => $this->item_id,
 			'author'  => $this->author,
 			'beta'    => PUM_Admin_Tools::extension_has_beta_support( $this->item_shortname ),
 		];
