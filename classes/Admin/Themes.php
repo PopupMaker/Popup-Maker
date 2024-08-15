@@ -79,7 +79,6 @@ class PUM_Admin_Themes {
 		}
 
 		return $settings;
-
 	}
 
 	/**
@@ -171,10 +170,10 @@ class PUM_Admin_Themes {
 			<div class="pum-popup-container <?php echo $deprecated_atb_enabled ? 'example-popup' : ''; ?>">
 				<div class="pum-popup-title"><?php _e( 'Title Text', 'popup-maker' ); ?></div>
 				<div class="pum-popup-content">
-					<?php echo apply_filters( 'pum_example_popup_content', '<p>Suspendisse ipsum eros, tincidunt sed commodo ut, viverra vitae ipsum. Etiam non porta neque. Pellentesque nulla elit, aliquam in ullamcorper at, bibendum sed eros. Morbi non sapien tellus, ac vestibulum eros. In hac habitasse platea dictumst. Nulla vestibulum, diam vel porttitor placerat, eros tortor ultrices lectus, eget faucibus arcu justo eget massa. Maecenas id tellus vitae justo posuere hendrerit aliquet ut dolor.</p>' ); ?>
+					<?php echo esc_html( apply_filters( 'pum_example_popup_content', '<p>Suspendisse ipsum eros, tincidunt sed commodo ut, viverra vitae ipsum. Etiam non porta neque. Pellentesque nulla elit, aliquam in ullamcorper at, bibendum sed eros. Morbi non sapien tellus, ac vestibulum eros. In hac habitasse platea dictumst. Nulla vestibulum, diam vel porttitor placerat, eros tortor ultrices lectus, eget faucibus arcu justo eget massa. Maecenas id tellus vitae justo posuere hendrerit aliquet ut dolor.</p>' ) ); ?>
 				</div>
 				<button type="button" class="pum-popup-close <?php echo $deprecated_atb_enabled ? 'close-popup' : ''; ?>" aria-label="<?php _e( 'Close', 'popup-maker' ); ?>">
-					<?php echo $theme->get_setting( 'close_text', '&#215;' ); ?>
+					<?php echo esc_html( $theme->get_setting( 'close_text', '&#215;' ) ); ?>
 				</button>
 			</div>
 			<p class="pum-desc">
@@ -185,7 +184,7 @@ class PUM_Admin_Themes {
 				];
 				$key  = array_rand( $tips, 1 );
 				?>
-				<i class="dashicons dashicons-info"></i> <?php echo '<strong>' . __( 'Did you know:', 'popup-maker' ) . '</strong>  ' . $tips[ $key ]; ?>
+				<i class="dashicons dashicons-info"></i> <?php echo esc_html( '<strong>' . __( 'Did you know:', 'popup-maker' ) . '</strong>  ' . $tips[ $key ] ); ?>
 			</p>
 		</div>
 
@@ -490,7 +489,6 @@ class PUM_Admin_Themes {
 		static $fields;
 
 		if ( ! isset( $fields ) ) {
-
 			$size_unit_options    = self::size_unit_options();
 			$border_style_options = self::border_style_options();
 			$font_family_options  = self::font_family_options();
@@ -1203,7 +1201,6 @@ class PUM_Admin_Themes {
 					'name'         => 'theme_settings[%s]',
 				]
 			);
-
 		}
 
 		return $fields;
@@ -1289,7 +1286,6 @@ class PUM_Admin_Themes {
 		$content = '<table class="form-table"><tbody>' . $content . '</tbody></table>';
 
 		return $content;
-
 	}
 
 	/**
