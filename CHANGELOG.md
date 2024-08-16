@@ -8,11 +8,13 @@
 * Tweak: If Google Fonts are disabled from loading, prevent fetching the list of fonts and storing as a transient.
 * Tweak: Use GET requests for extension update checks, allowing for more performant update checks.
 * Fix: Sorting subscribers table by date was not working correctly.
+* Fix: Bug causing example popup to reinstall every time plugin was activated.
 * Fix: Edge case for Multisite causing fatal error on activation due to missing function.
+* Fix: Typos in settings labels.
 
 ## v1.19.0 - 05/23/2024
 
-* Feature: Add WS Forms integration.
+* Feature: Add WS Forms integration.  
 * Tweak: Don't show error message when saving settings without making changes.
 * Fix: Improved disabled logging logic to prevent errors with logger even with logging disabled.
 * Fix: Error when value was numeric in popup theme hex fields without a hash.

@@ -20,23 +20,96 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.14.0
  */
 function pum_install_example_popups() {
-	$popup_id = wp_insert_post(
-		[
-			'post_title'   => 'Example: Auto-opening announcement popup',
-			'post_type'    => 'popup',
-			'post_content' => 'You can see how this popup was set up in our step-by-step guide: https://wppopupmaker.com/guides/auto-opening-announcement-popups/',
-			'post_status'  => 'publish',
-		]
-	);
-	update_post_meta( $popup_id, 'popup_title', 'Our Spring Sale Has Started' );
-	update_post_meta( $popup_id, 'enabled', 0 );
+	$example_popups = [
+		'auto_open_announcement' => [
+			'post_title'     => 'Example: Auto-opening announcement popup',
+			'post_type'      => 'popup',
+			'post_content'   => 'You can see how this popup was set up in our step-by-step guide: https://wppopupmaker.com/guides/auto-opening-announcement-popups/',
+			'post_status'    => 'publish',
+			'popup_title'    => 'Our Spring Sale Has Started',
+			'popup_settings' => 'a:39:{s:8:"triggers";a:1:{i:0;a:2:{s:4:"type";s:9:"auto_open";s:8:"settings";a:2:{s:11:"cookie_name";a:1:{i:0;s:8:"pum-2094";}s:5:"delay";i:500;}}}s:7:"cookies";a:1:{i:0;a:2:{s:5:"event";s:14:"on_popup_close";s:8:"settings";a:5:{s:4:"name";s:8:"pum-2094";s:3:"key";s:0:"";s:7:"session";b:0;s:4:"time";s:7:"1 month";s:4:"path";s:1:"1";}}}s:10:"conditions";a:1:{i:0;a:1:{i:0;a:1:{s:6:"target";s:13:"is_front_page";}}}s:8:"theme_id";s:4:"2085";s:4:"size";s:6:"medium";s:20:"responsive_min_width";s:2:"0%";s:20:"responsive_max_width";s:4:"100%";s:12:"custom_width";s:5:"640px";s:13:"custom_height";s:5:"380px";s:14:"animation_type";s:4:"fade";s:15:"animation_speed";s:3:"350";s:16:"animation_origin";s:10:"center top";s:10:"open_sound";s:4:"none";s:12:"custom_sound";s:0:"";s:8:"location";s:6:"center";s:12:"position_top";s:3:"100";s:15:"position_bottom";s:1:"0";s:13:"position_left";s:1:"0";s:14:"position_right";s:1:"0";s:6:"zindex";s:10:"1999999999";s:10:"close_text";s:0:"";s:18:"close_button_delay";s:1:"0";s:30:"close_on_form_submission_delay";s:1:"0";s:17:"disable_on_mobile";b:0;s:17:"disable_on_tablet";b:0;s:18:"custom_height_auto";b:0;s:18:"scrollable_content";b:0;s:21:"position_from_trigger";b:0;s:14:"position_fixed";b:0;s:16:"overlay_disabled";b:0;s:9:"stackable";b:0;s:18:"disable_reposition";b:0;s:24:"close_on_form_submission";b:0;s:22:"close_on_overlay_click";b:0;s:18:"close_on_esc_press";b:0;s:17:"close_on_f4_press";b:0;s:19:"disable_form_reopen";b:0;s:21:"disable_accessibility";b:0;s:10:"theme_slug";s:13:"default-theme";}',
+		],
+		// Always append new popups to the end of the array. This will be required until we have key based installations.
+	];
 
-	// Sets up popup settings and saves it as the post meta.
-	$popup_settings = maybe_unserialize( 'a:39:{s:8:"triggers";a:1:{i:0;a:2:{s:4:"type";s:9:"auto_open";s:8:"settings";a:2:{s:11:"cookie_name";a:1:{i:0;s:8:"pum-2094";}s:5:"delay";i:500;}}}s:7:"cookies";a:1:{i:0;a:2:{s:5:"event";s:14:"on_popup_close";s:8:"settings";a:5:{s:4:"name";s:8:"pum-2094";s:3:"key";s:0:"";s:7:"session";b:0;s:4:"time";s:7:"1 month";s:4:"path";s:1:"1";}}}s:10:"conditions";a:1:{i:0;a:1:{i:0;a:1:{s:6:"target";s:13:"is_front_page";}}}s:8:"theme_id";s:4:"2085";s:4:"size";s:6:"medium";s:20:"responsive_min_width";s:2:"0%";s:20:"responsive_max_width";s:4:"100%";s:12:"custom_width";s:5:"640px";s:13:"custom_height";s:5:"380px";s:14:"animation_type";s:4:"fade";s:15:"animation_speed";s:3:"350";s:16:"animation_origin";s:10:"center top";s:10:"open_sound";s:4:"none";s:12:"custom_sound";s:0:"";s:8:"location";s:6:"center";s:12:"position_top";s:3:"100";s:15:"position_bottom";s:1:"0";s:13:"position_left";s:1:"0";s:14:"position_right";s:1:"0";s:6:"zindex";s:10:"1999999999";s:10:"close_text";s:0:"";s:18:"close_button_delay";s:1:"0";s:30:"close_on_form_submission_delay";s:1:"0";s:17:"disable_on_mobile";b:0;s:17:"disable_on_tablet";b:0;s:18:"custom_height_auto";b:0;s:18:"scrollable_content";b:0;s:21:"position_from_trigger";b:0;s:14:"position_fixed";b:0;s:16:"overlay_disabled";b:0;s:9:"stackable";b:0;s:18:"disable_reposition";b:0;s:24:"close_on_form_submission";b:0;s:22:"close_on_overlay_click";b:0;s:18:"close_on_esc_press";b:0;s:17:"close_on_f4_press";b:0;s:19:"disable_form_reopen";b:0;s:21:"disable_accessibility";b:0;s:10:"theme_slug";s:13:"default-theme";}' );
-	$popup_settings['triggers'][0]['settings']['cookie_name'] = "pum-$popup_id";
-	$popup_settings['cookies'][0]['settings']['name']         = "pum-$popup_id";
-	$popup_settings['theme_id']                               = pum_get_default_theme_id();
-	update_post_meta( $popup_id, 'popup_settings', $popup_settings );
+	$example_popup_count = count( $example_popups );
+
+	$example_popups_installed = get_option( 'pum_example_popups_installed', null );
+
+	if ( $example_popups_installed >= $example_popup_count || false === $example_popups_installed ) {
+		return;
+	}
+
+	// Check if the popups are installed.
+	// Check for the post meta key pum_example_popup.
+	$popups = get_posts( [
+		'post_type'      => 'popup',
+		'post_status'    => 'any',
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+		'meta_query'     => [
+			'relation' => 'AND',
+			[
+				'key'     => 'pum_example_popup',
+				'compare' => 'EXISTS',
+			],
+		],
+		'posts_per_page' => - 1,
+	] );
+
+	if ( count( $popups ) > 0 ) {
+		$example_popup_count = count( $popups );
+	} elseif ( 0 === $example_popups_installed ) {
+		// Check by post_title `'Example: Auto-opening announcement popup'`.
+		$popups = get_posts(
+			[
+				'post_type'      => 'popup',
+				'post_status'    => 'any',
+				'post_title'     => 'Example: Auto-opening announcement popup',
+				'posts_per_page' => - 1,
+			]
+		);
+
+		if ( count( $popups ) > 0 ) {
+			// Set it to 1 as that is how many existed at the time this was written.
+			$example_popups_installed = 1;
+		}
+	}
+
+	if ( $example_popups_installed >= $example_popup_count ) {
+		update_option( 'pum_example_popups_installed', $example_popups_installed, true );
+		return;
+	}
+
+	// Remove the first X example popups where X is the number of example popups installed.
+	$example_popups = array_slice( $example_popups, $example_popups_installed );
+
+	// Loop through the example popups.
+	foreach ( $example_popups as $key => $popup ) {
+		// Get post_title, type, content & status into a new array.
+		$popup_post = array_intersect_key( $popup, array_flip( [ 'post_title', 'post_type', 'post_content', 'post_status' ] ) );
+
+		// Get popup ID after inserting the post.
+		$popup_id = wp_insert_post( $popup_post );
+
+		// Set the post meta.
+		update_post_meta( $popup_id, 'popup_title', $popup['popup_title'] );
+		update_post_meta( $popup_id, 'enabled', 0 );
+		update_post_meta( $popup_id, 'pum_example_popup', $key );
+
+		// Sets up popup settings and saves it as the post meta.
+		$popup_settings = maybe_unserialize( $popup['popup_settings'] );
+		// Update cookie names to be prefixed with the popup ID.
+		$popup_settings['triggers'][0]['settings']['cookie_name'] = "pum-$popup_id";
+		$popup_settings['cookies'][0]['settings']['name']         = "pum-$popup_id";
+		// Set the theme ID.
+		$popup_settings['theme_id'] = pum_get_default_theme_id();
+		// Update the post meta.
+		update_post_meta( $popup_id, 'popup_settings', $popup_settings );
+
+		++$example_popup_count;
+	}
+
+	update_option( 'pum_example_popups_installed', $example_popups_installed, true );
 }
 
 /**
@@ -52,7 +125,9 @@ add_action( 'pum_update_core_version', 'pum_install_new_themes_on_update' );
 
 
 /**
- * @param bool $network_wide
+ * Installs the built in themes.
+ *
+ * @param bool $network_wide Whether to install the themes for all sites in the network.
  */
 function pum_install_built_in_themes( $network_wide = false ) {
 
@@ -113,8 +188,7 @@ function pum_install_built_in_themes( $network_wide = false ) {
 	$new_theme_installed = false;
 
 	foreach ( $built_in_themes as $post_name => $_theme ) {
-
-		if ( ! in_array( $post_name, $installed_themes ) ) {
+		if ( ! in_array( $post_name, $installed_themes, true ) ) {
 			$_theme['post_name']                   = $post_name;
 			$_theme['post_type']                   = 'popup_theme';
 			$_theme['post_status']                 = 'publish';
