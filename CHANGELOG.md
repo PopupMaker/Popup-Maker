@@ -8,6 +8,7 @@
 * Tweak: If Google Fonts are disabled from loading, prevent fetching the list of fonts and storing as a transient.
 * Tweak: Use GET requests for extension update checks, allowing for more performant update checks.
 * Fix: Sorting subscribers table by date was not working correctly.
+* Fix: Edge case for Multisite causing fatal error on activation due to missing function.
 
 ## v1.19.0 - 05/23/2024
 

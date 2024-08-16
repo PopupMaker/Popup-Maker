@@ -47,6 +47,11 @@ class PUM_Install {
 	private static function do_multisite( $network_wide, $method, $args = [] ) {
 		global $wpdb;
 
+		// Ensure all global functions are loaded.
+		if ( ! function_exists( 'pum_is_func_disabled' ) ) {
+			require_once __DIR__ . '/../includes/functions.php';
+		}
+
 		if ( is_multisite() && $network_wide ) {
 
 			$activated = get_site_option( 'pum_activated', [] );
