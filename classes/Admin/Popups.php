@@ -767,7 +767,7 @@ class PUM_Admin_Popups {
 									'priority' => 40,
 								],
 								'position_fixed'        => [
-									'label'    => __( 'Fixed Postioning', 'popup-maker' ),
+									'label'    => __( 'Fixed Positioning', 'popup-maker' ),
 									'desc'     => __( 'Checking this sets the positioning of the popup to fixed.', 'popup-maker' ),
 									'type'     => 'checkbox',
 									'priority' => 50,
