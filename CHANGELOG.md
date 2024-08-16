@@ -7,6 +7,7 @@
 * Improvement: Only allow addon updater to check for updates during CRONs or for site admins.
 * Tweak: If Google Fonts are disabled from loading, prevent fetching the list of fonts and storing as a transient.
 * Tweak: Use GET requests for extension update checks, allowing for more performant update checks.
+* Fix: Sorting subscribers table by date was not working correctly.
 
 ## v1.19.0 - 05/23/2024
 
