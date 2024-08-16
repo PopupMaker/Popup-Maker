@@ -89,6 +89,11 @@ class PUM_Integration_GoogleFonts {
 	 * @return array
 	 */
 	public static function font_family_options( $options ) {
+		// If Google Fonts are disabled, return early preventing transient creation and font fetching.
+		if ( pum_get_option( 'disable_google_font_loading', false ) ) {
+			return $options;
+		}
+
 		$font_list = self::fetch_fonts();
 
 		if ( empty( $font_list ) ) {
@@ -109,5 +114,4 @@ class PUM_Integration_GoogleFonts {
 
 		return $options;
 	}
-
 }
