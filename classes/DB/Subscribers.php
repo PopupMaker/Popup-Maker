@@ -72,7 +72,6 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 			'consent'      => 'no',
 			'created'      => current_time( 'mysql', 0 ),
 		];
-
 	}
 
 	/**
@@ -127,14 +126,13 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 
 		$previous_error = $wpdb->last_error; // The show tables query will erase the last error. So, record it now in case we need it.
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '{$this->table_name()}'" ) !== $this->table_name() ) {
-			pum_log_message( "Subscriber table exists check failed! Last error from wpdb: " . str_replace( $wpdb->prefix, '', $previous_error ) );
+			pum_log_message( 'Subscriber table exists check failed! Last error from wpdb: ' . str_replace( $wpdb->prefix, '', $previous_error ) );
 		}
 
 		update_option( $this->table_name . '_db_version', $this->version );
 	}
 
 	public function get_by_email( $email = '' ) {
-
 	}
 
 
@@ -179,7 +177,6 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 
 		// Build search query.
 		if ( $args['s'] && ! empty( $args['s'] ) ) {
-
 			$search = wp_unslash( trim( $args['s'] ) );
 
 			$search_where = [];
@@ -201,7 +198,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		$query .= " $where";
 
 		if ( ! empty( $args['orderby'] ) ) {
-			$query   .= ' ORDER BY %s';
+			$query   .= ' ORDER BY %i';
 			$values[] = wp_unslash( trim( $args['orderby'] ) );
 
 			switch ( $args['order'] ) {
@@ -232,7 +229,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 			$values[] = absint( $args['offset'] );
 		}
 
-		if ( strpos( $query, '%s' ) || strpos( $query, '%d' ) ) {
+		if ( strpos( $query, '%s' ) || strpos( $query, '%d' ) || strpos( $query, '%i' ) ) {
 			$query = $wpdb->prepare( $query, $values );
 		}
 
