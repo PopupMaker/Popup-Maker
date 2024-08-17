@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.19.1 - 08/17/2024
+
 * Security: Only allow admins to save HTML in plugin settings if they have `unfiltered_html` capability.
   * Note: User had to be an admin to be able to edit these settings already, but some sites have advanced capabilities set up, so using `unfiltered_html` specifically is the right move matching with WP core.
 * Improvement: Only allow addon updater to check for updates during CRONs or for site admins.
