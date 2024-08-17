@@ -217,7 +217,7 @@
                 fontStyle: theme.content_font_style,
                 fontWeight: theme.content_font_weight
             });
-            $close.html(theme.close_text).removeAttr('style').css({
+            $close.removeAttr('style').css({
                 position: theme.close_position_outside ? 'fixed' : 'absolute',
                 padding: theme.close_padding + 'px',
                 height: theme.close_height > 0 ? theme.close_height + 'px' : 'auto',
@@ -237,6 +237,9 @@
                 textShadow: theme.close_textshadow_horizontal + 'px ' + theme.close_textshadow_vertical + 'px ' + theme.close_textshadow_blur + 'px ' + window.PUM_Admin.utils.convert_hex(theme.close_textshadow_color, theme.close_textshadow_opacity)
             });
 
+            // Escape the close text.
+            theme.close_text = theme.close_text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            $close.html(theme.close_text);
 
             top = theme.close_position_top + (theme.close_position_outside ? $('#wpadminbar').outerHeight() : 0);
             left = theme.close_position_left + (theme.close_position_outside ? $('#adminmenuwrap').outerWidth() : 0);

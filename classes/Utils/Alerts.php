@@ -267,7 +267,7 @@ class PUM_Utils_Alerts {
 		$integrations = [
 			'buddypress' => [
 				'label'          => __( 'BuddyPress', 'buddypress' ),
-				'learn_more_url' => 'https://wppopupmaker.com/works-with/buddypress/',
+				'learn_more_url' => 'https://wppopupmaker.com/social-integrations/buddypress/',
 				'conditions'     => ! class_exists( 'PUM_BuddyPress' ) && ( function_exists( 'buddypress' ) || class_exists( 'BuddyPress' ) ),
 				'slug'           => 'popup-maker-buddypress-integration',
 				'name'           => 'Popup Maker - BuddyPress Integration',

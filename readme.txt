@@ -5,9 +5,9 @@ Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&ut
 Donate link:
 Tags:  marketing, popup, popups, optin, conversion
 Requires at least: 4.9
-Tested up to: 6.5.3
+Tested up to: 6.6.1
 Requires PHP: 5.6
-Stable tag: 1.19.0
+Stable tag: 1.19.1
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -182,6 +182,18 @@ There are several common causes for this, check [this guide for help](https://do
 == Changelog ==
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
+
+= v1.19.1 - 08/17/2024 =
+
+* Security: Only allow admins to save HTML in plugin settings if they have `unfiltered_html` capability.
+  * Note: User had to be an admin to be able to edit these settings already, but some sites have advanced capabilities set up, so using `unfiltered_html` specifically is the right move matching with WP core.
+* Improvement: Only allow addon updater to check for updates during CRONs or for site admins.
+* Tweak: If Google Fonts are disabled from loading, prevent fetching the list of fonts and storing as a transient.
+* Tweak: Use GET requests for extension update checks, allowing for more performant update checks.
+* Fix: Sorting subscribers table by date was not working correctly.
+* Fix: Bug causing example popup to reinstall every time plugin was activated.
+* Fix: Edge case for Multisite causing fatal error on activation due to missing function.
+* Fix: Typos in settings labels.
 
 = v1.19.0 - 05/23/2024 - WP Popup Builder for WS Forms =
 

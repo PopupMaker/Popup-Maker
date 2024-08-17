@@ -336,15 +336,19 @@ class PUM_Utils_Fields {
 	public static function sanitize_fields( $values, $fields = [] ) {
 
 		foreach ( $values as $key => $value ) {
+			// Here to ensure undefined fields are still sanitized.
 			if ( is_string( $value ) ) {
-				$values[ $key ] = sanitize_text_field( $value );
+				$value = sanitize_text_field( $value );
 			}
 
 			$field = self::get_field( $fields, $key );
 
 			if ( $field ) {
-				$values[ $key ] = self::sanitize_field( $field, $value );
+				$value = self::sanitize_field( $field, $value );
 			}
+
+			// Update the value.
+			$values[ $key ] = $value;
 		}
 
 		return $values;
@@ -374,9 +378,11 @@ class PUM_Utils_Fields {
 			 */
 			if ( function_exists( "pum_{$type}_sanitize" ) ) {
 				$function_name = "pum_{$type}_sanitize";
-			} /**
+			}
+			/**
 			 * Check if core method exists and load that.
-			 */ elseif ( method_exists( 'PUM_Utils_Sanitize', $type ) ) {
+			 */
+			elseif ( method_exists( 'PUM_Utils_Sanitize', $type ) ) {
 				$function_name = [ 'PUM_Utils_Sanitize', $type ];
 			} else {
 				$function_name = null;

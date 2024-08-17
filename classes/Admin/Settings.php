@@ -151,8 +151,10 @@ class PUM_Admin_Settings {
 			if ( $field ) {
 
 				// Sanitize every string value.
-				if ( is_string( $value ) ) {
-					$settings[ $key ] = sanitize_text_field( $value );
+				if ( is_string( $value ) && ! current_user_can( 'unfiltered_html' ) ) {
+					// If current user can't save unfiltered html, strip unsafe tags.
+					$value = sanitize_text_field( $value );
+					// $value = wp_kses( $settings[ $key ], wp_kses_allowed_html() );
 				}
 
 				switch ( $field['type'] ) {
