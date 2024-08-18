@@ -9,6 +9,10 @@
 $input-padding: 8px;
 $input-size: 300px;
 
+.pum-block-inspector-popup-controls {
+	border-bottom: 1px solid #e2e4e7 !important;
+}
+
 //.block-editor-popup-select-input,
 .components-popover .block-editor-popup-select-input {
 	flex-grow: 1;

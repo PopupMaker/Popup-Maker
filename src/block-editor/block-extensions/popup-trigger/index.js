@@ -83,7 +83,7 @@ const withAdvancedControls = createHigherOrderComponent( ( BlockEdit ) => {
 				<BlockEdit { ...props } />
 				{ isSelected && isAllowedForBlockType( name ) && (
 					<InspectorControls>
-						<Panel>
+						<Panel className="pum-block-inspector-popup-controls">
 							<PanelBody
 								title={ __( 'Popup Controls', 'popup-maker' ) }
 								icon={ GearIcon }
