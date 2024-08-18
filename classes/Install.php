@@ -124,8 +124,24 @@ class PUM_Install {
 		}
 
 		pum_get_default_theme_id();
-		pum_install_built_in_themes();
-		pum_install_example_popups();
+
+		// Allow disabling of built in themes.
+		// Example add_filter'pum_disable_install_themes', '__return_true' );.
+		$themes_disabled = DEFINED( 'PUM_DISABLE_INSTALL_THEMES' ) && PUM_DISABLE_INSTALL_THEMES ? true : false;
+		$themes_disabled = apply_filters( 'pum_disable_install_themes', $themes_disabled );
+
+		if ( true !== $themes_disabled ) {
+			pum_install_built_in_themes();
+		}
+
+		// Allow disabling of example popups.
+		// Example add_filter'pum_disable_install_examples', '__return_true' );.
+		$examples_disabled = DEFINED( 'PUM_DISABLE_INSTALL_EXAMPLES' ) && PUM_DISABLE_INSTALL_EXAMPLES ? true : false;
+		$examples_disabled = apply_filters( 'pum_disable_install_examples', $examples_disabled );
+
+		if ( true !== $examples_disabled ) {
+			pum_install_example_popups();
+		}
 
 		// Reset JS/CSS assets for regeneration.
 		pum_reset_assets();
