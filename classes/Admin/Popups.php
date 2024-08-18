@@ -211,7 +211,12 @@ class PUM_Admin_Popups {
 		$popup = pum_get_popup( $post->ID );
 
 		// Get the meta directly rather than from cached object.
-		$settings = self::parse_values( $popup->get_settings() );
+		$settings = $popup->get_meta( 'popup_settings' );
+
+		// If this is a new popup, use the defaults.
+		if ( '' === $settings ) {
+			$settings = self::defaults(); // Fallback to defaults as this is likely a new popup.
+		}
 
 		wp_nonce_field( basename( __FILE__ ), 'pum_popup_settings_nonce' );
 		wp_enqueue_script( 'popup-maker-admin' );
@@ -327,7 +332,6 @@ class PUM_Admin_Popups {
 		$settings = apply_filters( 'pum_popup_setting_pre_save', $settings, $post->ID );
 
 		$settings = self::sanitize_settings( $settings );
-		$settings = self::parse_values( $settings );
 
 		$popup->update_settings( $settings, false );
 
