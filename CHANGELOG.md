@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Feature: Add font size and font select buttons to the classic editor.
+
 ## v1.19.1 - 08/17/2024
 
 * Security: Only allow admins to save HTML in plugin settings if they have `unfiltered_html` capability.

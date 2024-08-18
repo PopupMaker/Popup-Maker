@@ -53,6 +53,9 @@ class PUM_Admin_Popups {
 		add_filter( 'post_row_actions', [ __CLASS__, 'add_id_row_actions' ], 2, 100 );
 
 		add_action( 'post_submitbox_misc_actions', [ __CLASS__, 'add_enabled_toggle_editor' ], 10, 1 );
+
+		add_filter( 'mce_buttons_2', [ __CLASS__, 'add_mce_buttons' ], 10, 1 );
+		add_filter( 'tiny_mce_before_init', [ __CLASS__, 'increase_available_font_sizes' ], 10, 1 );
 	}
 
 	/**
@@ -1405,4 +1408,33 @@ class PUM_Admin_Popups {
 		return $actions;
 	}
 
+	/**
+	 * Add font size and font select buttons to the editor.
+	 *
+	 * @param array $buttons The array of buttons.
+	 *
+	 * @return array
+	 */
+	public static function add_mce_buttons( $buttons ) {
+		if ( ! pum_is_popup_editor() ) {
+			return $buttons;
+		}
+
+		array_unshift( $buttons, 'fontselect' );
+		array_unshift( $buttons, 'fontsizeselect' );
+
+		return $buttons;
+	}
+
+	/**
+	 * Increase the available font sizes.
+	 *
+	 * @param array $init_array The TinyMCE init array.
+	 *
+	 * @return array
+	 */
+	public static function increase_available_font_sizes( $init_array ) {
+		$init_array['fontsize_formats'] = '9px 10px 12px 13px 14px 16px 18px 21px 24px 28px 32px 36px 42px 48px 54px 60px 66px 72px 80px 90px';
+		return $init_array;
+	}
 }
