@@ -513,7 +513,7 @@ class PUM_Admin_Templates {
 							'id'           => 'popup_trigger_add_cookie_event',
 							'name'         => '',
 							'type'         => 'select',
-							'label'        => __( 'Stop showing popup once visitor takes this action:', 'popup-maker' ),
+							'label'        => __( 'Stop showing popup once visitor takes this action', 'popup-maker' ),
 							'options'      => PUM_Cookies::instance()->dropdown_list(),
 							'dependencies' => [
 								'popup_trigger_add_cookie' => true,

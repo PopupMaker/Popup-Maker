@@ -523,7 +523,7 @@ class PUM_Admin_Settings {
 							'disable_google_font_loading' => [
 								'type'  => 'checkbox',
 								'label' => __( "Don't Load Google Fonts", 'popup-maker' ),
-								'desc'  => __( 'Check this disable loading of google fonts, useful if the fonts you chose are already loaded with your theme.', 'popup-maker' ),
+								'desc'  => __( ' This stops Popup Maker from loading Google Fonts, useful if the fonts you chose are already loaded with your theme.', 'popup-maker' ),
 							],
 							'disable_popup_maker_core_styles' => [
 								'type'  => 'checkbox',
