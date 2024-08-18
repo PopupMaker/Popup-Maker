@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Feature: Add font size and font select buttons to the classic editor.
+* Improvement: Keep the same popup editor, theme editor & settings page tab after saving or refreshing the page.
 
 ## v1.19.1 - 08/17/2024
 
