@@ -93,6 +93,35 @@ class PUM_Types {
 				)
 			);
 		}
+		
+		// Register a cta post type for popup maker.
+		if ( ! post_type_exists( 'pum_cta' ) ) {
+			$labels = self::post_type_labels( __( 'Call To Action', 'popup-maker' ), __( 'CTAs', 'popup-maker' ) );
+
+			$labels['all_items'] = __( 'CTAs', 'popup-maker' );
+
+			$labels = apply_filters( 'pum/types/cta/labels', $labels );
+
+			register_post_type(
+				'pum_cta',
+				apply_filters(
+					'pum/types/cta/post_type_args',
+					[
+						'labels'            => $labels,
+						'show_ui'           => true,
+						'show_in_nav_menus' => false,
+						'show_in_menu'      => 'edit.php?post_type=popup',
+						'show_in_admin_bar' => false,
+						'query_var'         => false,
+						'rewrite'           => false,
+						'supports'          => [
+							'title',
+							'author',
+						]
+					]
+				)
+			);
+		}
 	}
 
 	/**
