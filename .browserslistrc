@@ -1,1 +1,1 @@
-extends @code-atlantic/browserslist-config
+extends @wordpress/browserslist-config

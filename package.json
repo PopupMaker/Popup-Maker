@@ -18,7 +18,7 @@
 		"url": "https://github.com/PopupMaker/Popup-Maker/issues"
 	},
 	"engines": {
-		"node": "^14.15.0"
+		"node": "^13.14.0"
 	},
 	"files": [
 		"assets/**/*",
