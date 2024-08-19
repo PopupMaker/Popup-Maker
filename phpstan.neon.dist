@@ -1,14 +1,18 @@
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
 parameters:
     level: 6
     paths:
         - classes/
-        - inc/
+        - includes/
+        - templates/
         - popup-maker.php
         - uninstall.php
     scanDirectories:
         - bin/
         - classes/
-        - inc/
+        - includes/
+        - templates/
     scanFiles:
         - popup-maker.php
         - uninstall.php
@@ -17,11 +21,9 @@ parameters:
     stubFiles:
         - bin/stubs/elementor.php
         - bin/stubs/query-monitor.php
-        - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
     excludePaths:
         - tests/
     dynamicConstantNames:
         - 'IS_WPCOM'
         - 'WP_CLI'
     ignoreErrors:
-        -
