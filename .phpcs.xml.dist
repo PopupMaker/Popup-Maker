@@ -38,11 +38,11 @@
 		<exclude-pattern>tests/*</exclude-pattern>
 	</rule>
 
-	<!-- Force short syntax arrays.
+	<!-- Force short syntax arrays. -->
 	<rule ref="CodeAtlantic">
 		<rule ref="Universal.Arrays.DisallowLongArraySyntax"/>
 		<exclude name="Universal.Arrays.DisallowShortArraySyntax" />
-	</rule> -->
+	</rule>
 
 	<!-- Temporary due to usage of CONSTANT like names for core variables. -->
 	<rule ref="WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase">
