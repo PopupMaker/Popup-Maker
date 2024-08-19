@@ -3,9 +3,11 @@ const eslintConfig = {
 	extends: [ 'plugin:@code-atlantic/eslint-plugin/recommended' ],
 	globals: {
 		wp: 'readonly',
-		pum_admin_vars: 'readonly',
-		pum_site_vars: 'readonly',
+		wpApiSettings: 'readonly',
 		pum_vars: 'readonly',
+		pum_site_vars: 'readonly',
+		pum_admin_vars: 'readonly',
+		pum_block_editor_vars: 'readonly',
 		window: 'readonly',
 	},
 	env: {

@@ -9,6 +9,7 @@
 /release
 /src
 /tests
+/vendor
 
 .browserslistrc
 .distignore
@@ -60,4 +61,3 @@ yarn-lock.json
 /assets/js/src
 /assets/sass
 /tasks
-/vendor

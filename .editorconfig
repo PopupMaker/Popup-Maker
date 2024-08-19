@@ -30,6 +30,9 @@ indent_size = 4
 [*.txt,wp-config-sample.php]
 end_of_line = crlf
 
+[*.md]
+trim_trailing_whitespace = false
+
 # Matches the exact files
 [{package.json, bower.json, .bowerrc, .eslintrc.js, .travis.yml, .sass-lint.yml, phpcs.xml}]
 indent_style = space
