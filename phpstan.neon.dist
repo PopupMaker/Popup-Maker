@@ -1,0 +1,27 @@
+parameters:
+    level: 6
+    paths:
+        - classes/
+        - inc/
+        - popup-maker.php
+        - uninstall.php
+    scanDirectories:
+        - bin/
+        - classes/
+        - inc/
+    scanFiles:
+        - popup-maker.php
+        - uninstall.php
+    bootstrapFiles:
+        - bin/phpstan-bootstrap.php
+    stubFiles:
+        - bin/stubs/elementor.php
+        - bin/stubs/query-monitor.php
+        - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+    excludePaths:
+        - tests/
+    dynamicConstantNames:
+        - 'IS_WPCOM'
+        - 'WP_CLI'
+    ignoreErrors:
+        -

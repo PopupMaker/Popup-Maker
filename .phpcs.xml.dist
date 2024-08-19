@@ -3,90 +3,78 @@
 	<description>Sniffs for WordPress plugins</description>
 
 	<file>.</file>
-	<exclude-pattern type="relative">^/dist/*</exclude-pattern>
-	<exclude-pattern type="relative">^/build/*</exclude-pattern>
-		<!-- Exclude these -->
-	<exclude-pattern>*/vendor/*</exclude-pattern>
-	<exclude-pattern>*/tests/*</exclude-pattern>
-	<exclude-pattern>*.js</exclude-pattern>
+	<!-- Exclude these -->
+	<exclude-pattern type="relative">bin/*</exclude-pattern>
+	<exclude-pattern type="relative">build/*</exclude-pattern>
+	<exclude-pattern type="relative">dist/*</exclude-pattern>
+	<exclude-pattern type="relative">vendor/*</exclude-pattern>
+	<exclude-pattern type="relative">vendor-prefixed/*</exclude-pattern>
+	<exclude-pattern type="relative">tests/*</exclude-pattern>
 
 	<arg name="extensions" value="php"/>
 	<!-- Show progress and sniff codes in all reports -->
 	<arg value="ps"/>
 
 	<!-- https://github.com/PHPCompatibility/PHPCompatibility#sniffing-your-code-for-compatibility-with-specific-php-versions -->
-	<config name="testVersion" value="5.6-"/>
+	<config name="testVersion" value="7.4-" />
 	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties -->
 	<config name="minimum_supported_wp_version" value="5.6"/>
 	<config name="text_domain" value="popup-maker, default" />
 
-	<!-- Force short syntax arrays. -->
+	<rule ref="CodeAtlantic" />
+
+	<rule ref="PHPCompatibility">
+		<exclude-pattern>bin/*</exclude-pattern>
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.ValidVariableName">
+		<exclude-pattern>bin/*</exclude-pattern>
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+
+	<rule ref="Squiz.Commenting.FunctionComment">
+		<exclude-pattern>bin/*</exclude-pattern>
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+
+	<!-- Force short syntax arrays.
 	<rule ref="CodeAtlantic">
 		<rule ref="Universal.Arrays.DisallowLongArraySyntax"/>
 		<exclude name="Universal.Arrays.DisallowShortArraySyntax" />
-	</rule>
-
+	</rule> -->
 
 	<!-- Temporary due to usage of CONSTANT like names for core variables. -->
 	<rule ref="WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase">
-		<exclude-pattern>*</exclude-pattern>
+		<!-- <exclude-pattern>*</exclude-pattern> -->
 	</rule>
 
 	<!-- Allow PSR file name & class names. -->
 	<rule ref="WordPress.Files.FileName.NotHyphenatedLowercase">
-		<exclude-pattern>*</exclude-pattern>
+		<!-- <exclude-pattern>*</exclude-pattern> -->
 	</rule>
 
 	<rule ref="WordPress.Files.FileName.InvalidClassFileName">
-		<exclude-pattern>*</exclude-pattern>
+		<!-- <exclude-pattern>*</exclude-pattern> -->
 	</rule>
 
 	<rule ref="WordPress-Core">
-		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
-		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+		<!-- <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" /> -->
 	</rule>
 
 	<rule ref="WordPress">
 		<!-- <exclude name="WordPress.Files.FileName" /> -->
-		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+		<!-- <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
 		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
 		<exclude name="WordPress.NamingConventions.ValidVariableName" />
 		<exclude name="WordPress.WP.I18n.NonSingularStringLiteralText" />
 		<exclude name="WordPress.PHP.NoSilencedErrors.Discouraged" />
-		<exclude name="WordPress.PHP.DisallowShortTernary.Found" />
+		<exclude name="WordPress.PHP.DisallowShortTernary.Found" /> -->
 	</rule>
 
 	<!-- Enforce space before closing parenthesis -->
-	<rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingBeforeClose">
+	<!-- <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingBeforeClose">
 		<severity>5</severity>
-	</rule>
-
-	<!-- Do not require docblocks for unit tests -->
-	<!-- <rule ref="Squiz.Commenting.FunctionComment.Missing">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule>
-	<rule ref="Squiz.Commenting.FileComment.Missing">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule>
-	<rule ref="Squiz.Commenting.ClassComment.Missing">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule>
-	<rule ref="Squiz.Commenting.ClassComment.SpacingAfter">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule>
-	<rule ref="Squiz.Commenting.FunctionComment.MissingParamTag">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule>
-	<rule ref="Generic.Commenting.DocComment.Empty">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule>
-	<rule ref="Generic.Commenting.DocComment.MissingShort">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule>
-	<rule ref="Squiz.Commenting.VariableComment.Missing">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule>
-	<rule ref="Squiz.Commenting.FunctionCommentThrowTag.Missing">
-		<exclude-pattern>phpunit/*</exclude-pattern>
 	</rule> -->
 </ruleset>

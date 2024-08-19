@@ -6,31 +6,52 @@ project.properties
 .project
 .settings*
 .idea
+*.code-workspace
+.vscode/*
+!.vscode/*.code-workspace
 *.sublime-project
 *.sublime-workspace
 .sublimelinterrc
+.wp-env.override.json
 
-# Gulp / Build
-/build/
-/node_modules/
-/release/
-npm-debug.log
+# Languages folder (built at release).
+/languages/*
 
 # Testing
 .phpunit.result.cache
+phpcs-report.xml
+
+# Built code
+**/build/
+**/build/**/*
+**/build-types/
+**/build-types/**/*
+node_modules
+release
+dist
+vendor
+vendor-prefixed
+.nx
+npm-debug.log
+
+# Coverage
+coverage
 
 # Logs
-/logs
+logs
 
-# Composer
-/vendor/
-contributors.md
-phpcs-report.xml
+# OS & generated files.
+yarn-error.log
+.php_cs.cache
+*.tsbuildinfo
+lerna-debug.log
+npm-debug.log
+packages/*/lib
+.idea
+strauss.phar
+*.zip
+.DS_Store
 
 # Packages
 /packages/*
 !/packages/README.md
-
-/yarn-error.log
-assets/.DS_Store
-assets/css/.DS_Store

@@ -2,16 +2,13 @@
 /.github
 /.vscode
 /.wordpress-org
-/assets/js/src
-/assets/sass
 /bin
 /build
 /node_modules
+/packages
 /release
 /src
-/tasks
 /tests
-/vendor
 
 .browserslistrc
 .distignore
@@ -25,6 +22,7 @@
 .npmrc
 .php-version
 .phpcs.xml.dist
+.phpstorm.meta.php
 .prettierrc.js
 .scrutinizer.yml
 .stylelintignore
@@ -33,15 +31,33 @@
 .wp-env.json
 apigen.neon
 CHANGELOG.md
+babel.config.js
 composer.json
 composer.lock
 gulpfile.js
 labels.json
 npm-debug.log
+LICENSE
+nx.json
 package.json
 package-lock.json
 phpci.yml
+phpunit-watcher.yml.dist
 phpunit.xml.dist
 postcss.config.js
 readme.md
+strauss.phar
+tsconfig.base.json
+tsconfig.json
+webpack.config.js
 yarn-lock.json
+*.css.map
+
+# plugin release zip
+*.zip
+
+# To be removed
+/assets/js/src
+/assets/sass
+/tasks
+/vendor

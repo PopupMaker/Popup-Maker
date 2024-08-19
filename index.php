@@ -1,2 +1,6 @@
 <?php
-// Silence is golden.
+/**
+ * Content Control Silence is Golden.
+ *
+ * @package PopupMaker
+ */

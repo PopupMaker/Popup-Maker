@@ -1,7 +1,8 @@
-node_modules
-vendor
-public
-release
-build
+/build/*
+/build-types/*
+/node_modules/*
+/vendor/*
+/.vscode/*
+/release/*
 assets/js/*.js
 assets/js/*.js.map
