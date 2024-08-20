@@ -2,8 +2,8 @@
 /**
  * Abstract class for Provider
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -366,26 +366,26 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 	 * Replaces a single matched message.
 	 *
 	 * @param string $message Message.
-	 * @param string $match   Matched phrase.
+	 * @param string $search   Matched phrase.
 	 * @param array  $values  Values for replacement.
 	 *
 	 * @return mixed|string
 	 */
-	protected function message_text_replace( $message = '', $match = '', $values = [] ) {
+	protected function message_text_replace( $message = '', $search = '', $values = [] ) {
 
-		if ( empty( $match ) ) {
+		if ( empty( $search ) ) {
 			return $message;
 		}
 
-		if ( strpos( $match, '||' ) !== false ) {
-			$matches = explode( '||', $match );
+		if ( strpos( $search, '||' ) !== false ) {
+			$searches = explode( '||', $search );
 		} else {
-			$matches = [ $match ];
+			$searches = [ $search ];
 		}
 
 		$replace = '';
 
-		foreach ( $matches as $string ) {
+		foreach ( $searches as $string ) {
 			if ( ! array_key_exists( $string, $values ) ) {
 
 				// If its not a valid code it is likely a fallback.
@@ -406,7 +406,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 			}
 		}
 
-		return str_replace( '{' . $match . '}', $replace, $message );
+		return str_replace( '{' . $search . '}', $replace, $message );
 	}
 
 	/**

@@ -2,8 +2,8 @@
 /**
  * Abstract class for Registry
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -81,7 +81,7 @@ abstract class PUM_Abstract_Registry {
 	/**
 	 * Only intended for use by tests.
 	 */
-	public function _reset_items() {
+	public function _reset_items() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
 		if ( ! defined( 'WP_TESTS_DOMAIN' ) ) {
 			_doing_it_wrong( 'PUM_Abstract_Registry::_reset_items', 'This method is only intended for use in phpunit tests', '1.7.0' );
 		} else {

@@ -2,7 +2,8 @@
 /**
  * Popup Maker Uninstall File
  *
- * @package PopupMaker
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 namespace PopupMaker;

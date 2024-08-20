@@ -2,10 +2,13 @@
 /**
  * Abstract for Integration Form
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
+/**
+ * Abstract for Form Integration
+ */
 abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration implements PUM_Interface_Integration_Form {
 
 	/**
@@ -55,7 +58,11 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	 * @since 1.13.0
 	 */
 	public function get_popup_id() {
-		return isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false;
+		// Ignored because this piggy backs on the nonce check in the form submission handler, and only allows for absint or false.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$popup_id = isset( $_REQUEST['pum_form_popup_id'] ) ? absint( $_REQUEST['pum_form_popup_id'] ) : false;
+
+		return $popup_id > 0 ? $popup_id : false;
 	}
 
 	/**

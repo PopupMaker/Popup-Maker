@@ -2,8 +2,8 @@
 /**
  * Batch Process Handler.
  *
- * @package     PUM
- * @copyright   Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -120,6 +120,7 @@ abstract class PUM_Abstract_Batch_Process implements PUM_Interface_Batch_Process
 			case 'done':
 				$final_count = $this->get_current_count();
 
+				/* translators: 1: Number of items processed. */
 				$message = sprintf( _n( '%s item was successfully processed.', '%s items were successfully processed.', $final_count, 'popup-maker' ), number_format_i18n( $final_count ) );
 				break;
 
@@ -135,7 +136,7 @@ abstract class PUM_Abstract_Batch_Process implements PUM_Interface_Batch_Process
 	 * Defines logic to execute once batch processing is complete.
 	 */
 	public function finish() {
-		PUM_DataStorage::delete_by_match( "^{$this->batch_id}[0-9a-z\_]+" );
+		PUM_Utils_DataStorage::delete_by_match( "^{$this->batch_id}[0-9a-z\_]+" );
 	}
 
 	/**
@@ -155,7 +156,7 @@ abstract class PUM_Abstract_Batch_Process implements PUM_Interface_Batch_Process
 	 * @return int Current number of processed items. Default 0.
 	 */
 	protected function get_current_count() {
-		return PUM_DataStorage::get( "{$this->batch_id}_current_count", 0 );
+		return PUM_Utils_DataStorage::get( "{$this->batch_id}_current_count", 0 );
 	}
 
 	/**
@@ -164,7 +165,7 @@ abstract class PUM_Abstract_Batch_Process implements PUM_Interface_Batch_Process
 	 * @param int $count Number of processed items.
 	 */
 	protected function set_current_count( $count ) {
-		PUM_DataStorage::write( "{$this->batch_id}_current_count", $count );
+		PUM_Utils_DataStorage::write( "{$this->batch_id}_current_count", $count );
 	}
 
 	/**
@@ -175,7 +176,7 @@ abstract class PUM_Abstract_Batch_Process implements PUM_Interface_Batch_Process
 	 * @return int Current number of processed items. Default 0.
 	 */
 	protected function get_total_count() {
-		return PUM_DataStorage::get( "{$this->batch_id}_total_count", 0 );
+		return PUM_Utils_DataStorage::get( "{$this->batch_id}_total_count", 0 );
 	}
 
 	/**
@@ -184,14 +185,14 @@ abstract class PUM_Abstract_Batch_Process implements PUM_Interface_Batch_Process
 	 * @param int $count Number of items to process.
 	 */
 	protected function set_total_count( $count ) {
-		PUM_DataStorage::write( "{$this->batch_id}_total_count", $count );
+		PUM_Utils_DataStorage::write( "{$this->batch_id}_total_count", $count );
 	}
 
 	/**
 	 * Deletes the stored current and total counts of processed items.
 	 */
 	protected function delete_counts() {
-		PUM_DataStorage::delete( "{$this->batch_id}_current_count" );
-		PUM_DataStorage::delete( "{$this->batch_id}_total_count" );
+		PUM_Utils_DataStorage::delete( "{$this->batch_id}_current_count" );
+		PUM_Utils_DataStorage::delete( "{$this->batch_id}_total_count" );
 	}
 }

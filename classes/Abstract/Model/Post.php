@@ -2,8 +2,8 @@
 /**
  * Abstract for post models
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -161,6 +161,8 @@ abstract class PUM_Abstract_Model_Post {
 
 	/**
 	 * The required post type of the object.
+	 *
+	 * @var string|string[]|false
 	 */
 	protected $required_post_type = false;
 
@@ -208,7 +210,7 @@ abstract class PUM_Abstract_Model_Post {
 	 */
 	protected function is_required_post_type( $post ) {
 		if ( $this->required_post_type ) {
-			if ( is_array( $this->required_post_type ) && ! in_array( $post->post_type, $this->required_post_type ) ) {
+			if ( is_array( $this->required_post_type ) && ! in_array( $post->post_type, $this->required_post_type, true ) ) {
 				return false;
 			} elseif ( is_string( $this->required_post_type ) && $this->required_post_type !== $post->post_type ) {
 				return false;
@@ -251,7 +253,14 @@ abstract class PUM_Abstract_Model_Post {
 				return $meta;
 			}
 
-			return new WP_Error( 'post-invalid-property', sprintf( __( 'Can\'t get property %s' ), $key ) );
+			return new WP_Error(
+				'post-invalid-property',
+				sprintf(
+					/* translators: %s is the property name. */
+					__( 'Can\'t get property %s', 'default' ),
+					$key
+				)
+			);
 		}
 	}
 
@@ -274,7 +283,9 @@ abstract class PUM_Abstract_Model_Post {
 		/**
 		 * Checks for remapped meta values. This allows easily adding compatibility layers in the object meta.
 		 */
-		if ( false !== $remapped_value = $this->remapped_meta( $key ) ) {
+		$remapped_value = $this->remapped_meta( $key );
+
+		if ( false !== $remapped_value ) {
 			return $remapped_value;
 		}
 
