@@ -328,7 +328,6 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 
 			if ( ! empty( $deprecated_values ) ) {
 				foreach ( $deprecated_values as $old_key => $value ) {
-
 					if ( ! isset( $group_values[ $old_key ] ) ) {
 						$group_values[ $old_key ] = $value;
 					}
@@ -485,10 +484,10 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	public function passive_migration() {
 		$this->doing_passive_migration = true;
 
-		for ( $i = $this->data_version; $this->data_version < $this->model_version; $i ++ ) {
+		for ( $i = $this->data_version; $this->data_version < $this->model_version; $i++ ) {
 			// Process migration for current version. ex. current version is 2, runs pum_theme_passive_migration_2.
 			do_action_ref_array( 'pum_theme_passive_migration_' . $this->data_version, [ &$this ] );
-			$this->data_version ++;
+			++$this->data_version;
 
 			/**
 			 * Update the themes data version.

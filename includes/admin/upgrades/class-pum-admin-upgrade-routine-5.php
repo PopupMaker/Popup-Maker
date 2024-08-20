@@ -68,7 +68,6 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 		);
 
 		if ( $popups ) {
-
 			foreach ( $popups as $popup ) {
 
 				/**
@@ -76,7 +75,7 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 				 */
 				self::initialize_analytics( $popup->ID );
 
-				$completed ++;
+				++$completed;
 			}
 
 			if ( $completed < $total ) {
@@ -159,5 +158,4 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 		update_post_meta( $popup_id, 'popup_conversion_rate', $conversion_rate );
 		*/
 	}
-
 }

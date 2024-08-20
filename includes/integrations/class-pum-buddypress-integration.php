@@ -249,5 +249,4 @@ class PUM_BuddyPress_Integration {
 
 		return $order;
 	}
-
 }

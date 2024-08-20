@@ -208,12 +208,9 @@ abstract class PUM_Abstract_Model_Post {
 	 */
 	protected function is_required_post_type( $post ) {
 		if ( $this->required_post_type ) {
-
 			if ( is_array( $this->required_post_type ) && ! in_array( $post->post_type, $this->required_post_type ) ) {
-
 				return false;
 			} elseif ( is_string( $this->required_post_type ) && $this->required_post_type !== $post->post_type ) {
-
 				return false;
 			}
 		}
@@ -246,11 +243,8 @@ abstract class PUM_Abstract_Model_Post {
 	public function __get( $key ) {
 
 		if ( method_exists( $this, 'get_' . $key ) ) {
-
 			return call_user_func( [ $this, 'get_' . $key ] );
-
 		} else {
-
 			$meta = $this->get_meta( $key );
 
 			if ( $meta ) {
@@ -258,9 +252,7 @@ abstract class PUM_Abstract_Model_Post {
 			}
 
 			return new WP_Error( 'post-invalid-property', sprintf( __( 'Can\'t get property %s' ), $key ) );
-
 		}
-
 	}
 
 	/**
@@ -381,6 +373,5 @@ abstract class PUM_Abstract_Model_Post {
 	 */
 	public function is_pending() {
 		return get_post_status( $this->ID ) === 'pending';
-
 	}
 }

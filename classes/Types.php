@@ -217,6 +217,4 @@ class PUM_Types {
 
 		return $post_types;
 	}
-
-
 }

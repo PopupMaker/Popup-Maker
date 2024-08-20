@@ -46,5 +46,4 @@ class PUM_Form extends PUM_Fields {
 	public function get_id() {
 		return $this->id;
 	}
-
 }

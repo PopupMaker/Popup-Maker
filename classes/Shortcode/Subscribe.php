@@ -489,7 +489,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 		static $instance = 0;
 
-		$instance ++;
+		++$instance;
 
 		$atts['instance'] = $instance;
 
@@ -521,7 +521,6 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 			<?php
 
 			if ( 'disabled' !== $atts['name_field_type'] ) :
-
 				$required = ! $atts['name_optional'] ? 'required' : '';
 
 				switch ( $atts['name_field_type'] ) {
@@ -651,7 +650,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 										'href'   => true,
 									],
 								]
-								);
+							);
 							?>
 							</small>
 						</p>
@@ -774,5 +773,4 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 		</p>
 		<?php
 	}
-
 }

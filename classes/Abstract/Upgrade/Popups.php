@@ -43,5 +43,4 @@ abstract class PUM_Abstract_Upgrade_Popups extends PUM_Abstract_Upgrade_Posts im
 	 * @param int $popup_id
 	 */
 	abstract public function process_popup( $popup_id = 0 );
-
 }

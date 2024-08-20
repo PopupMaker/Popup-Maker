@@ -91,7 +91,6 @@ class PUM_Licensing {
 
 			// activate_license 'invalid' on anything other than valid, so if there was an error capture it
 			if ( false === $license->success ) {
-
 				switch ( $license->error ) {
 					case 'expired':
 						$messages[] = sprintf( __( 'Your license key expired on %1$s. Please %2$srenew your license key%3$s.', 'popup-maker' ), date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), '<a target="_blank" href="https://wppopupmaker.com/checkout/?edd_license_key=' . $key . '&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_medium=expired&utm_content=pum_license">', '</a>' );
@@ -122,7 +121,6 @@ class PUM_Licensing {
 						break;
 				}
 			} else {
-
 				switch ( $license->license ) {
 					case 'valid':
 					default:
@@ -141,7 +139,6 @@ class PUM_Licensing {
 			}
 		} else {
 			$messages[] = sprintf( __( 'To receive updates, please enter your valid %s license key.', 'popup-maker' ), Popup_Maker::$NAME );
-
 		}
 
 		return $messages;
@@ -170,5 +167,4 @@ class PUM_Licensing {
 
 		return $class;
 	}
-
 }

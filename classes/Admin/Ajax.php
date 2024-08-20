@@ -318,12 +318,10 @@ class PUM_Admin_Ajax {
 			// If this is an import, instantiate with the file and step.
 			$file    = sanitize_text_field( $_REQUEST['data']['upload']['file'] );
 			$process = new $class( $file, $step );
-
 		} else {
 
 			// Otherwise just the step.
 			$process = new $class( $step );
-
 		}
 
 		// Garbage collect any old temporary data.
@@ -364,7 +362,6 @@ class PUM_Admin_Ajax {
 
 				// If this is an export class and not an empty export, send the download URL.
 				if ( method_exists( $process, 'can_export' ) ) {
-
 					if ( ! $process->is_empty ) {
 						$response_data['url'] = pum_admin_url(
 							'tools',
@@ -387,7 +384,5 @@ class PUM_Admin_Ajax {
 
 			wp_send_json_success( $response_data );
 		}
-
 	}
-
 }

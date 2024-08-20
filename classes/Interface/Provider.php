@@ -77,5 +77,4 @@ interface PUM_Interface_Provider {
 	 * @param WP_Error $errors
 	 */
 	public function form_submission( $values, &$json_response, WP_Error &$errors );
-
 }

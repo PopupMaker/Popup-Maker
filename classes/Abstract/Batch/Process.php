@@ -117,7 +117,6 @@ abstract class PUM_Abstract_Batch_Process implements PUM_Interface_Batch_Process
 	 */
 	public function get_message( $code ) {
 		switch ( $code ) {
-
 			case 'done':
 				$final_count = $this->get_current_count();
 
@@ -195,5 +194,4 @@ abstract class PUM_Abstract_Batch_Process implements PUM_Interface_Batch_Process
 		PUM_DataStorage::delete( "{$this->batch_id}_current_count" );
 		PUM_DataStorage::delete( "{$this->batch_id}_total_count" );
 	}
-
 }

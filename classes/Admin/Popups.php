@@ -915,7 +915,6 @@ class PUM_Admin_Popups {
 		$tabs = self::fields();
 
 		foreach ( $tabs as $tab => $sections ) {
-
 			if ( PUM_Admin_Helpers::is_field( $sections ) ) {
 				$sections = [
 					'main' => [
@@ -925,7 +924,6 @@ class PUM_Admin_Popups {
 			}
 
 			foreach ( $sections as $section => $fields ) {
-
 				foreach ( $fields as $key => $args ) {
 					if ( $key === $id ) {
 						return $args;
@@ -1031,7 +1029,6 @@ class PUM_Admin_Popups {
 		}
 
 		return $settings;
-
 	}
 
 	/**
@@ -1116,9 +1113,7 @@ class PUM_Admin_Popups {
 	 */
 	public static function sanitize_meta( $meta = [] ) {
 		if ( ! empty( $meta ) ) {
-
 			foreach ( $meta as $key => $value ) {
-
 				if ( is_array( $value ) ) {
 					$meta[ $key ] = self::sanitize_meta( $value );
 				} elseif ( is_string( $value ) ) {
@@ -1203,7 +1198,6 @@ class PUM_Admin_Popups {
 	public static function render_columns( $column_name, $post_id ) {
 		$post = get_post( $post_id );
 		if ( 'popup' === $post->post_type ) {
-
 			$popup = pum_get_popup( $post_id );
 
 			/**
@@ -1367,7 +1361,6 @@ class PUM_Admin_Popups {
 
 		// Checks if the current post type is 'popup'
 		if ( 'popup' === $typenow ) {
-
 			if ( get_taxonomy( 'popup_category' ) ) {
 				$terms = get_terms( 'popup_category' );
 				if ( count( $terms ) > 0 ) {
@@ -1394,7 +1387,6 @@ class PUM_Admin_Popups {
 				}
 			}
 		}
-
 	}
 
 	/**

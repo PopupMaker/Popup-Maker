@@ -120,7 +120,6 @@ class PUM_Admin_Helpers {
 		}
 
 		return $defaults;
-
 	}
 
 	/**
@@ -147,13 +146,11 @@ class PUM_Admin_Helpers {
 		$fields = [];
 
 		foreach ( $tabs as $tab_id => $tab_sections ) {
-
 			if ( self::is_field( $tab_sections ) ) {
 				$fields[ $tab_id ] = $tab_sections;
 				continue;
 			} else {
 				foreach ( $tab_sections as $section_id => $section_fields ) {
-
 					if ( self::is_field( $tab_sections ) ) {
 						$fields[ $section_id ] = $section_fields;
 						continue;
@@ -264,7 +261,6 @@ class PUM_Admin_Helpers {
 		}
 
 		return $fields;
-
 	}
 
 	/**
@@ -430,5 +426,4 @@ class PUM_Admin_Helpers {
 	public static function object_to_array( $obj ) {
 		return PUM_Utils_Array::from_object( $obj );
 	}
-
 }

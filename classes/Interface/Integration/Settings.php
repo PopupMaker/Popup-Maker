@@ -14,5 +14,4 @@ interface PUM_Interface_Integration_Settings extends PUM_Interface_Integration {
 	 * @return array
 	 */
 	public function append_fields( $fields = [] );
-
 }

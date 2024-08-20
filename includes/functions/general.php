@@ -135,7 +135,7 @@ function pum_get_svg_icon( $encode = false ) {
 
 /**
  * Log a message to the Popup Maker log file.
- * 
+ *
  * @param string $message
  *
  * @return void
@@ -144,7 +144,7 @@ function pum_log_message( $message ) {
 	$logger = PUM_Utils_Logging::instance();
 
 	// Check if the logger is enabled & can write to the log file.
-	if ( ! $logger->enabled() ) { 
+	if ( ! $logger->enabled() ) {
 		return;
 	}
 
@@ -153,7 +153,7 @@ function pum_log_message( $message ) {
 
 /**
  * Log a unique message (only once) to the Popup Maker log file.
- * 
+ *
  * @param string $message
  *
  * @return void
@@ -162,7 +162,7 @@ function pum_log_unique_message( $message ) {
 	$logger = PUM_Utils_Logging::instance();
 
 	// Check if the logger is enabled & can write to the log file.
-	if ( ! $logger->enabled() ) { 
+	if ( ! $logger->enabled() ) {
 		return;
 	}
 

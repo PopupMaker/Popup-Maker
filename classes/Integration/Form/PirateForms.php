@@ -166,6 +166,4 @@ class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 
 		return $css;
 	}
-
-
 }

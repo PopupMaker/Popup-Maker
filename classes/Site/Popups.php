@@ -102,7 +102,6 @@ class PUM_Site_Popups {
 		$popups = pum_get_all_popups( [ 'post_status' => [ 'publish', 'private' ] ] );
 
 		if ( ! empty( $popups ) ) {
-
 			foreach ( $popups as $popup ) {
 				// Set this popup as the global $current.
 				pum()->current_popup = $popup;
@@ -174,7 +173,7 @@ class PUM_Site_Popups {
 
 		// Add to the $loaded query.
 		self::$loaded->posts[] = $popup;
-		self::$loaded->post_count ++;
+		++self::$loaded->post_count;
 
 		// Preprocess the content for shortcodes that need to enqueue their own assets.
 		self::$cached_content[ $popup->ID ] = $popup->get_content();
@@ -231,5 +230,4 @@ class PUM_Site_Popups {
 	public static function get_cache_content( $popup_id ) {
 		return isset( self::$cached_content[ $popup_id ] ) ? self::$cached_content[ $popup_id ] : false;
 	}
-
 }

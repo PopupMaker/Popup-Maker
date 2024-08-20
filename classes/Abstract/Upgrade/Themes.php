@@ -45,5 +45,4 @@ abstract class PUM_Abstract_Upgrade_Themes extends PUM_Abstract_Upgrade_Posts im
 	 * @return int $theme_id
 	 */
 	abstract public function process_theme( $theme_id = 0 );
-
 }

@@ -507,5 +507,4 @@ abstract class PUM_Shortcode {
 	 * @return array
 	 */
 	abstract public function fields();
-
 }

@@ -71,5 +71,4 @@ function pum_cleanup_post_meta_keys( $post_id = 0, $keys_to_delete = [] ) {
 
 		wp_cache_delete( $post_id, 'post_meta' );
 	}
-
 }

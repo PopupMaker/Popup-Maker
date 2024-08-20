@@ -65,7 +65,6 @@ class PUM_Admin_Settings {
 	 */
 	public static function save() {
 		if ( ! empty( $_POST['pum_settings'] ) && empty( $_POST['pum_license_activate'] ) && empty( $_POST['pum_license_deactivate'] ) ) {
-
 			if ( ! isset( $_POST['pum_settings_nonce'] ) || ! wp_verify_nonce( $_POST['pum_settings_nonce'], basename( __FILE__ ) ) ) {
 				return;
 			}
@@ -121,7 +120,6 @@ class PUM_Admin_Settings {
 			 * }
 			 */
 		}
-
 	}
 
 	/**
@@ -197,7 +195,6 @@ class PUM_Admin_Settings {
 		$tabs = self::fields();
 
 		foreach ( $tabs as $tab => $sections ) {
-
 			if ( PUM_Admin_Helpers::is_field( $sections ) ) {
 				$sections = [
 					'main' => [
@@ -207,7 +204,6 @@ class PUM_Admin_Settings {
 			}
 
 			foreach ( $sections as $section => $fields ) {
-
 				foreach ( $fields as $key => $args ) {
 					if ( $key === $id ) {
 						return $args;
@@ -229,7 +225,6 @@ class PUM_Admin_Settings {
 		static $fields;
 
 		if ( ! isset( $fields ) ) {
-
 			$fields = [
 				'general' => [
 					'main' => [
@@ -508,7 +503,7 @@ class PUM_Admin_Settings {
 								'type'  => 'checkbox',
 								'label' => __( 'Disable Popup Maker occasionally showing random tips to improve your popups.', 'popup-maker' ),
 							],
-							'disable_notices'               => [
+							'disable_notices'            => [
 								'type'  => 'checkbox',
 								'label' => __( 'Disable Popup Maker occasionally showing community notices such as security alerts, new features or sales on our extensions.', 'popup-maker' ),
 							],
@@ -825,7 +820,6 @@ class PUM_Admin_Settings {
 	 *
 	 */
 	public static function license_deactivated() {
-
 	}
 
 	/**
@@ -835,9 +829,7 @@ class PUM_Admin_Settings {
 	 */
 	public static function sanitize_objects( $meta = [] ) {
 		if ( ! empty( $meta ) ) {
-
 			foreach ( $meta as $key => $value ) {
-
 				if ( is_string( $value ) ) {
 					try {
 						$value = json_decode( stripslashes( $value ) );
@@ -851,6 +843,4 @@ class PUM_Admin_Settings {
 
 		return $meta;
 	}
-
-
 }

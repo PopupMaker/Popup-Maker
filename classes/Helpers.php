@@ -336,7 +336,6 @@ class PUM_Helpers {
 		}
 
 		return $themes;
-
 	}
 
 	public static function popup_selectlist( $args = [] ) {
@@ -352,5 +351,4 @@ class PUM_Helpers {
 
 		return $popup_list;
 	}
-
 }

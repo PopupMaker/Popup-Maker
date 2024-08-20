@@ -130,5 +130,4 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 	public function get_upgrades() {
 		return parent::get_items();
 	}
-
 }

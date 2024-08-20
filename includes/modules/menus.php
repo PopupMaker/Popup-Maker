@@ -216,7 +216,6 @@ class PUM_Modules_Menu {
 		static $popup_list;
 
 		if ( ! isset( $popup_list ) ) {
-
 			$popup_list = [];
 
 			$popups = pum_get_all_popups();

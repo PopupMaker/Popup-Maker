@@ -155,5 +155,4 @@ class PUM_Utils_Format {
 	public static function strip_white_space( $string = '' ) {
 		return str_replace( [ "\t", "\r", "\n" ], '', $string );
 	}
-
 }

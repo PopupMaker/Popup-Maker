@@ -31,7 +31,6 @@ class PUM_Batch_Process_Registry extends PUM_Abstract_Registry {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self();
 			self::$instance->init();
-
 		}
 
 		return self::$instance;
@@ -55,7 +54,6 @@ class PUM_Batch_Process_Registry extends PUM_Abstract_Registry {
 	 * Registers core batch processes.
 	 */
 	protected function register_core_processes() {
-
 	}
 
 	/**
@@ -98,5 +96,4 @@ class PUM_Batch_Process_Registry extends PUM_Abstract_Registry {
 	public function remove_process( $batch_id ) {
 		$this->remove_item( $batch_id );
 	}
-
 }

@@ -251,7 +251,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		foreach ( $settings as $key => $value ) {
 			$field = PUM_Admin_Popups::get_field( $key );
 
-			if ( false === $field  ) {
+			if ( false === $field ) {
 				if ( isset( $value ) ) {
 					// This is a value set programatically, not by a defined field. ex theme_slug.
 					$settings[ $key ] = $value;
@@ -459,7 +459,6 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 
 			if ( ! empty( $deprecated_values ) ) {
 				foreach ( $deprecated_values as $old_key => $value ) {
-
 					if ( ! isset( $group_values[ $old_key ] ) ) {
 						$group_values[ $old_key ] = $value;
 					}
@@ -531,7 +530,6 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		];
 
 		return isset( $remapped_meta_settings_keys[ $group ] ) ? $remapped_meta_settings_keys[ $group ] : [];
-
 	}
 
 	/**
@@ -764,10 +762,13 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 *
 	 * @return array
 	 */
-	public function get_conditions_with_filters( $filters = [ 'string' => false, 'string2' => true] ) {
+	public function get_conditions_with_filters( $filters = [
+		'string'  => false,
+		'string2' => true,
+	] ) {
 
-		$js_only = isset( $filters[ 'js_only'] ) && $filters[ 'js_only' ];
-		$php_only = isset( $filters[ 'php_only'] ) && $filters[ 'php_only' ];
+		$js_only  = isset( $filters['js_only'] ) && $filters['js_only'];
+		$php_only = isset( $filters['php_only'] ) && $filters['php_only'];
 
 		$conditions = $this->get_setting( 'conditions', [] );
 		// Sanity Check on the values not operand value.
@@ -801,7 +802,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	public function get_conditions( $filters = false ) {
 
 		// Backwards compatibility for old filters.
-		$conditions = false === $filters ? $this->get_setting( 'conditions', [] ) :  $this->get_conditions_with_filters( $filters );
+		$conditions = false === $filters ? $this->get_setting( 'conditions', [] ) : $this->get_conditions_with_filters( $filters );
 
 		foreach ( $conditions as $group_key => $group ) {
 			foreach ( $group as $key => $condition ) {
@@ -904,9 +905,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		}
 
 		foreach ( $this->get_conditions() as $group ) {
-
 			foreach ( $group as $condition ) {
-
 				if ( in_array( $condition['target'], $conditions, true ) ) {
 					$found = true;
 				}
@@ -1116,7 +1115,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		$this->update_meta( 'popup_last_' . $keys[1], time() );
 
 		$site_total = get_option( 'pum_total_' . $keys[0] . '_count', 0 );
-		$site_total++;
+		++$site_total;
 		update_option( 'pum_total_' . $keys[0] . '_count', $site_total );
 
 		// If is multisite add this blogs total to the site totals.
@@ -1249,9 +1248,9 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	public function passive_migration() {
 		$this->doing_passive_migration = true;
 
-		for ( $i = $this->data_version; $this->data_version < $this->model_version; $i ++ ) {
+		for ( $i = $this->data_version; $this->data_version < $this->model_version; $i++ ) {
 			do_action_ref_array( 'pum_popup_passive_migration_' . $this->data_version, [ &$this ] );
-			$this->data_version ++;
+			++$this->data_version;
 
 			/**
 			 * Update the popups data version.

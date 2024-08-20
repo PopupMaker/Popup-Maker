@@ -388,6 +388,4 @@ class PUM_Triggers {
 
 		return $labels;
 	}
-
-
 }

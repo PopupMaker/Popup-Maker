@@ -167,15 +167,10 @@ abstract class PUM_Abstract_Model_User {
 	 */
 	public function __get( $key ) {
 		if ( in_array( $key, $this->core_data_keys ) ) {
-
 			return $this->user->$key;
-
 		} elseif ( method_exists( $this, 'get_' . $key ) ) {
-
 			return call_user_func( [ $this, 'get_' . $key ] );
-
 		} else {
-
 			$meta = get_user_meta( $this->ID, $key, true );
 
 			if ( $meta ) {
@@ -183,7 +178,6 @@ abstract class PUM_Abstract_Model_User {
 			}
 
 			return new WP_Error( 'user-invalid-property', sprintf( __( 'Can\'t get property %s' ), $key ) );
-
 		}
 	}
 

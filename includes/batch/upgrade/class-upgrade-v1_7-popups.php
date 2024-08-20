@@ -53,5 +53,4 @@ class PUM_Upgrade_v1_7_Popups extends PUM_Abstract_Upgrade_Popups {
 			$popup->update_meta( 'data_version', 3 );
 		}
 	}
-
 }

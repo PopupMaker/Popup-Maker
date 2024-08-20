@@ -49,7 +49,6 @@ class PUM_WPML_Integration {
 		}
 
 		return $popup;
-
 	}
 
 	/**
@@ -84,7 +83,6 @@ class PUM_WPML_Integration {
 	 * @param int $post_id
 	 */
 	public static function source_lang( $post_id = 0 ) {
-
 	}
 
 	/**
@@ -232,9 +230,7 @@ class PUM_WPML_Integration {
 		}
 
 		foreach ( $conditions as $group_key => $group ) {
-
 			foreach ( $group as $key => $condition ) {
-
 				$target = $condition['target'];
 
 				$tests = [
@@ -373,5 +369,4 @@ class PUM_WPML_Integration {
 			update_post_meta( $id, $key, $value );
 		}
 	}
-
 }

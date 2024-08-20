@@ -207,7 +207,6 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 			$this->query->query( $args );
 
 			$this->cache['queries'][ $hash ] = (array) $this->query->posts;
-
 		}
 
 		/** @var array $posts */
@@ -429,5 +428,4 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	public function force_delete_item( $id ) {
 		return (bool) wp_delete_post( $id, true );
 	}
-
 }

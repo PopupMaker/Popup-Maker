@@ -25,7 +25,7 @@ class PopMake_License extends PUM_Extension_License {}
  *
  * @deprecated 1.5.0 Use PUM_Extension_Updater.
  */
-class PopupMaker_Plugin_Updater  extends PUM_Extension_Updater {}
+class PopupMaker_Plugin_Updater extends PUM_Extension_Updater {}
 
 /**
  * Popmake_Cron Class
@@ -35,7 +35,7 @@ class PopupMaker_Plugin_Updater  extends PUM_Extension_Updater {}
  * @since 1.3.0
  * @deprecated 1.8.0
  */
-class Popmake_Cron  extends PUM_Utils_Cron {}
+class Popmake_Cron extends PUM_Utils_Cron {}
 
 /**
  * Class PUM_Popup_Query
@@ -77,7 +77,6 @@ class PUM_Popup_Query {
 	public function get_popups() {
 		return pum_get_popups( $this->args );
 	}
-
 }
 
 /**

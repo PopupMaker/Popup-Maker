@@ -96,7 +96,6 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 		self::process_popup_cats_tags();
 
 		if ( $popups ) {
-
 			foreach ( $popups as $popup ) {
 
 				// Check that each popup has a valid theme id
@@ -105,7 +104,7 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 					update_post_meta( $popup->ID, 'popup_theme', self::$default_theme );
 				}
 
-				$completed ++;
+				++$completed;
 			}
 
 			if ( $completed < $total ) {
@@ -211,5 +210,4 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 
 		update_option( 'popmake_settings', $popmake_options );
 	}
-
 }

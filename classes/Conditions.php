@@ -107,7 +107,6 @@ class PUM_Conditions {
 	 */
 	public function condition_sort_order() {
 		if ( ! $this->condition_sort_order ) {
-
 			$order = [
 				__( 'General', 'popup-maker' )    => 1,
 				__( 'Pages', 'popup-maker' )      => 5,
@@ -140,7 +139,6 @@ class PUM_Conditions {
 			}
 
 			$this->condition_sort_order = apply_filters( 'pum_condition_sort_order', $order );
-
 		}
 
 		return $this->condition_sort_order;
@@ -174,7 +172,6 @@ class PUM_Conditions {
 		static $groups;
 
 		if ( ! isset( $groups ) ) {
-
 			$groups = [];
 
 			foreach ( $this->get_conditions() as $condition ) {
@@ -182,7 +179,6 @@ class PUM_Conditions {
 			}
 
 			uksort( $groups, [ $this, 'sort_condition_groups' ] );
-
 		}
 
 		return $groups;
@@ -197,7 +193,6 @@ class PUM_Conditions {
 		$conditions_by_group = $this->get_conditions_by_group();
 
 		foreach ( $conditions_by_group as $group => $_conditions ) {
-
 			$conditions = [];
 
 			foreach ( $_conditions as $id => $condition ) {
@@ -229,7 +224,6 @@ class PUM_Conditions {
 		$post_types = get_post_types( [ 'public' => true ], 'objects' );
 
 		foreach ( $post_types as $name => $post_type ) {
-
 			if ( 'popup' === $name || 'popup_theme' === $name ) {
 				continue;
 			}
@@ -307,7 +301,6 @@ class PUM_Conditions {
 					],
 					'callback' => [ 'PUM_ConditionCallbacks', 'post_type' ],
 				];
-
 			}
 
 			$templates = wp_get_theme()->get_page_templates();
@@ -330,7 +323,6 @@ class PUM_Conditions {
 			}
 
 			$conditions = array_merge( $conditions, $this->generate_post_type_tax_conditions( $name ) );
-
 		}
 
 		return $conditions;
@@ -346,7 +338,6 @@ class PUM_Conditions {
 		$taxonomies = get_object_taxonomies( $name, 'object' );
 		$conditions = [];
 		foreach ( $taxonomies as $tax_name => $taxonomy ) {
-
 			$conditions[ $name . '_w_' . $tax_name ] = [
 				'group'    => $post_type->labels->name,
 				'name'     => sprintf( _x( '%1$s: With %2$s', 'condition: post type plural and taxonomy singular label ie. Posts: With Category', 'popup-maker' ), $post_type->labels->name, $taxonomy->labels->singular_name ),
@@ -376,7 +367,6 @@ class PUM_Conditions {
 		$taxonomies = get_taxonomies( [ 'public' => true ], 'objects' );
 
 		foreach ( $taxonomies as $tax_name => $taxonomy ) {
-
 			$conditions[ 'tax_' . $tax_name . '_all' ] = [
 				'group'    => $taxonomy->labels->name,
 				'name'     => sprintf( _x( '%s: All', 'condition: taxonomy plural label ie. Categories: All', 'popup-maker' ), $taxonomy->labels->name ),
@@ -409,7 +399,6 @@ class PUM_Conditions {
 				],
 				'callback' => [ 'PUM_ConditionCallbacks', 'taxonomy' ],
 			];
-
 		}
 
 		return $conditions;
@@ -487,5 +476,4 @@ class PUM_Conditions {
 
 		return $roles;
 	}
-
 }

@@ -103,7 +103,6 @@ class PUM_Newsletters {
 				case 'api_errors':
 					$response['message'] = pum_get_newsletter_provider_message( $values['provider'], 'error', $values );
 					break;
-
 			}
 			self::send_errors( self::$errors, $response );
 		} else {
@@ -318,6 +317,4 @@ class PUM_Newsletters {
 
 		return $errors;
 	}
-
-
 }

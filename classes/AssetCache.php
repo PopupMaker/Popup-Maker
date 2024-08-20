@@ -509,7 +509,7 @@ class PUM_AssetCache {
 
 				if ( $popup->get_setting( 'zindex', false ) ) {
 					$zindex = esc_attr( $popup->get_setting( 'zindex' ) );
-					echo sprintf( "#pum-%d {z-index: %d}\r\n", esc_attr( $popup->ID ), esc_attr( $zindex ) );
+					printf( "#pum-%d {z-index: %d}\r\n", esc_attr( $popup->ID ), esc_attr( $zindex ) );
 				}
 
 				// Allow per popup CSS additions.

@@ -94,7 +94,7 @@ if ( ! function_exists( 'get_called_class' ) ) {
 					$i          = 0;
 					$callerLine = '';
 					do {
-						$i ++;
+						++$i;
 						$callerLine = $lines[ $bt[ $l ]['line'] - $i ] . $callerLine;
 					} while ( stripos( $callerLine, $bt[ $l ]['function'] ) === false );
 					preg_match( '/([a-zA-Z0-9\_]+)::' . $bt[ $l ]['function'] . '/', $callerLine, $matches );
@@ -182,7 +182,7 @@ if ( ! function_exists( 'array_replace_recursive' ) ) {
 		if ( ! is_array( $array ) ) {
 			return $array;
 		}
-		for ( $i = 1; $i < count( $args ); $i ++ ) {
+		for ( $i = 1; $i < count( $args ); $i++ ) {
 			if ( is_array( $args[ $i ] ) ) {
 				$array = recurse( $array, $args[ $i ] );
 			}

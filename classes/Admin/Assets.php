@@ -212,5 +212,4 @@ class PUM_Admin_Assets {
 
 		return pum_is_admin_page();
 	}
-
 }

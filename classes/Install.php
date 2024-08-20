@@ -53,14 +53,12 @@ class PUM_Install {
 		}
 
 		if ( is_multisite() && $network_wide ) {
-
 			$activated = get_site_option( 'pum_activated', [] );
 
 			$blog_ids = $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs}" );
 
 			// Try to reduce the chances of a timeout with a large number of sites.
 			if ( count( $blog_ids ) > 2 ) {
-
 				ignore_user_abort( true );
 
 				if ( ! pum_is_func_disabled( 'set_time_limit' ) ) {
@@ -78,7 +76,6 @@ class PUM_Install {
 			}
 
 			update_site_option( 'pum_activated', $activated );
-
 		} else {
 			call_user_func_array( $method, [ $args ] );
 		}
@@ -205,7 +202,6 @@ class PUM_Install {
 	 * @since 1.9.0
 	 */
 	public static function uninstall_site() {
-
 	}
 
 	/**
@@ -283,5 +279,4 @@ class PUM_Install {
 			]
 		);
 	}
-
 }

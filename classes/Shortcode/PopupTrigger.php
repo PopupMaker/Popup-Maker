@@ -178,7 +178,7 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 		$atts = parent::shortcode_atts( $atts );
 
 		// Add button to allowed tags.
-		$tags_allowed = array_merge( array_keys( $allowedtags ), [ 'button' ] ) ;
+		$tags_allowed = array_merge( array_keys( $allowedtags ), [ 'button' ] );
 
 		if ( empty( $atts['tag'] ) || ! in_array( $atts['tag'], $tags_allowed ) ) {
 			$atts['tag'] = 'span';
@@ -206,5 +206,4 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 		<{{{tag}}} class="pum-trigger  popmake-{{{attrs.id}}} {{{attrs.classes}}}">{{{attrs._inner_content}}}</{{{tag}}}>
 		<?php
 	}
-
 }

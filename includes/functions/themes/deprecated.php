@@ -31,7 +31,6 @@ function popmake_generate_theme_styles( $popup_theme_id = 0 ) {
  * @return array|bool|mixed
  */
 function pum_get_theme_v1_meta_defaults() {
-
 }
 
 // TODO LEFT OFF HERE
@@ -186,7 +185,6 @@ function pum_get_theme_v2_meta_defaults( $group = null ) {
 	}
 
 	return isset( $group ) ? ( isset( $defaults[ $group ] ) ? $defaults[ $group ] : false ) : $defaults;
-
 }
 
 /**

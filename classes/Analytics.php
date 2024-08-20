@@ -138,7 +138,6 @@ class PUM_Analytics {
 				self::serve_no_content();
 				break;
 		}
-
 	}
 
 	/**
@@ -318,5 +317,4 @@ class PUM_Analytics {
 		echo PUM_Utils_Array::safe_json_encode( $data );
 		exit;
 	}
-
 }

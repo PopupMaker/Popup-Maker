@@ -81,7 +81,6 @@ class PUM_Utils_Template {
 
 			// try locating this template file by looping through the template paths
 			foreach ( self::paths() as $template_path ) {
-
 				if ( file_exists( $template_path . $template_name ) ) {
 					$located = $template_path . $template_name;
 					break;
@@ -233,5 +232,4 @@ class PUM_Utils_Template {
 	public static function load( $template_name, $args = [] ) {
 		echo self::get( $template_name, $args );
 	}
-
 }

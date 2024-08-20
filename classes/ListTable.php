@@ -521,7 +521,7 @@ class PUM_ListTable {
 		foreach ( $actions as $action => $link ) {
 			++$i;
 			( $i === $action_count ) ? $sep = '' : $sep = ' | ';
-			$out                          .= "<span class='$action'>$link$sep</span>";
+			$out                           .= "<span class='$action'>$link$sep</span>";
 		}
 		$out .= '</div>';
 
@@ -1103,7 +1103,7 @@ class PUM_ListTable {
 			static $cb_counter = 1;
 			$columns['cb']     = '<label class="screen-reader-text" for="cb-select-all-' . $cb_counter . '">' . __( 'Select All' ) . '</label>'
 				. '<input id="cb-select-all-' . $cb_counter . '" type="checkbox" />';
-			$cb_counter++;
+			++$cb_counter;
 		}
 
 		foreach ( $columns as $column_key => $column_display_name ) {

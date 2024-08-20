@@ -64,5 +64,4 @@ class PUM_Ajax {
 		echo PUM_Utils_Array::safe_json_encode( $data );
 		exit;
 	}
-
 }

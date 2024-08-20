@@ -172,5 +172,4 @@ class PUM_Utils_Cache {
 
 		return wp_cache_decr( $key, $offset, self::prefix_( $group ) );
 	}
-
 }

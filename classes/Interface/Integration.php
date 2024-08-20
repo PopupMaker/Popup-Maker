@@ -17,5 +17,4 @@ interface PUM_Interface_Integration {
 	 * @return bool
 	 */
 	public function enabled();
-
 }

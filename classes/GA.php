@@ -102,5 +102,4 @@ class PUM_GA {
 
 		return false;
 	}
-
 }

@@ -103,6 +103,4 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 
 		return $css;
 	}
-
-
 }

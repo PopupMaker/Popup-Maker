@@ -44,5 +44,4 @@ interface PUM_Interface_Batch_Exporter {
 	 * @return void
 	 */
 	public function export();
-
 }

@@ -73,7 +73,6 @@ final class PUM_Admin_Upgrade_Routine_3 extends PUM_Admin_Upgrade_Routine {
 		);
 
 		if ( $popups ) {
-
 			foreach ( $popups as $popup ) {
 				$_cookies  = $cookies = [];
 				$_triggers = $triggers = [];
@@ -166,8 +165,7 @@ final class PUM_Admin_Upgrade_Routine_3 extends PUM_Admin_Upgrade_Routine {
 
 				update_post_meta( $popup->ID, 'popup_cookies', $cookies );
 
-				$completed ++;
-
+				++$completed;
 			}
 
 			if ( $completed < $total ) {
@@ -177,7 +175,6 @@ final class PUM_Admin_Upgrade_Routine_3 extends PUM_Admin_Upgrade_Routine {
 		}
 
 		self::done();
-
 	}
 
 	/**

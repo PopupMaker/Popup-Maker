@@ -123,7 +123,6 @@ class PUM_Utils_Options {
 		// If it updated, let's update the global variable
 		if ( $did_update ) {
 			self::$_data[ $key ] = $value;
-
 		}
 
 		return $did_update;
@@ -246,5 +245,4 @@ class PUM_Utils_Options {
 
 		return $did_update;
 	}
-
 }

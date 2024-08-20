@@ -51,5 +51,4 @@ interface PUM_Interface_Batch_Process {
 	 * Defines logic to execute once batch processing is complete.
 	 */
 	public function finish();
-
 }

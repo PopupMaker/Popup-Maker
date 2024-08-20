@@ -37,5 +37,4 @@ interface PUM_Interface_Batch_Importer {
 	 * @return void
 	 */
 	public function import();
-
 }

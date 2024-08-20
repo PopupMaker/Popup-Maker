@@ -37,7 +37,6 @@ function pum_install_theme( $name, $settings = null, $extra_meta = [] ) {
 	pum_reset_assets();
 
 	return $new_theme_id;
-
 }
 
 /**

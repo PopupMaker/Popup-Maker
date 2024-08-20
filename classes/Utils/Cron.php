@@ -67,5 +67,4 @@ class PUM_Utils_Cron {
 			wp_schedule_event( current_time( 'timestamp' ), 'daily', 'pum_daily_scheduled_events' );
 		}
 	}
-
 }

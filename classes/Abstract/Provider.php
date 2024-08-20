@@ -354,16 +354,12 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 		preg_match_all( '/{(.*?)}/', $message, $found );
 
 		if ( count( $found[1] ) ) {
-
 			foreach ( $found[1] as $key => $match ) {
-
 				$message = $this->message_text_replace( $message, $match, $values );
-
 			}
 		}
 
 		return $message;
-
 	}
 
 	/**
@@ -390,21 +386,17 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 		$replace = '';
 
 		foreach ( $matches as $string ) {
-
 			if ( ! array_key_exists( $string, $values ) ) {
 
 				// If its not a valid code it is likely a fallback.
 				$replace = $string;
-
 			} else {
 
 				// This is a form field value, replace accordingly.
 				switch ( $string ) {
-
 					default:
 						$replace = $values[ $string ];
 						break;
-
 				}
 			}
 

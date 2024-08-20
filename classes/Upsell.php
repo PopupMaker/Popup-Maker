@@ -213,5 +213,4 @@ class PUM_Upsell {
 		</nav>
 		<?php
 	}
-
 }

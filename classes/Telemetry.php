@@ -354,7 +354,6 @@ class PUM_Telemetry {
 	public static function is_localhost() {
 		$url = network_site_url( '/' );
 		return stristr( $url, 'dev' ) !== false || stristr( $url, 'localhost' ) !== false || stristr( $url, ':8888' ) !== false;
-
 	}
 
 	/**

@@ -120,5 +120,4 @@ class PUM_Utils_DataStorage {
 
 		return $result;
 	}
-
 }

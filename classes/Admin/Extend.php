@@ -98,7 +98,6 @@ class PUM_Admin_Extend {
 			$existing_extension_images = self::extensions_with_local_image();
 
 			if ( ! empty( $extensions ) ) {
-
 				shuffle( $extensions );
 
 				foreach ( $extensions as $key => $ext ) {
@@ -173,7 +172,7 @@ class PUM_Admin_Extend {
 
 					</li>
 					<?php
-					$i ++;
+					++$i;
 				endforeach;
 			}
 			?>
@@ -211,5 +210,4 @@ class PUM_Admin_Extend {
 			]
 		);
 	}
-
 }

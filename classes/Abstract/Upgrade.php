@@ -48,6 +48,4 @@ abstract class PUM_Abstract_Upgrade extends PUM_Abstract_Batch_Process {
 
 		parent::finish();
 	}
-
-
 }

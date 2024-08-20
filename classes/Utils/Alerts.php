@@ -166,7 +166,6 @@ class PUM_Utils_Alerts {
 
 				// Non-English locale in header, no translations.
 			} elseif ( ! empty( $non_en_locales_from_header ) ) {
-
 				if ( 1 === count( $non_en_locales_from_header ) ) {
 					$locale = reset( $non_en_locales_from_header );
 
@@ -227,7 +226,6 @@ class PUM_Utils_Alerts {
 		$upgraded_from = PUM_Utils_Upgrades::$upgraded_from;
 
 		if ( version_compare( $upgraded_from, '0.0.0', '>' ) ) {
-
 			if ( version_compare( $upgraded_from, '1.8.0', '<' ) ) {
 				$alerts[] = [
 					'code'     => 'whats_new_1_8_0',
@@ -276,9 +274,7 @@ class PUM_Utils_Alerts {
 		];
 
 		foreach ( $integrations as $key => $integration ) {
-
 			if ( $integration['conditions'] ) {
-
 				$path        = "{$integration['slug']}/{$integration['slug']}.php";
 				$plugin_data = file_exists( WP_PLUGIN_DIR . '/' . $path ) ? get_plugin_data( WP_PLUGIN_DIR . '/' . $path, false, false ) : false;
 
@@ -294,7 +290,6 @@ class PUM_Utils_Alerts {
 					'global'      => false,
 					'type'        => $installed ? 'warning' : 'info',
 				];
-
 			}
 		}
 
@@ -557,7 +552,6 @@ class PUM_Utils_Alerts {
 
 		<?php
 		remove_filter( 'safe_style_css', [ __CLASS__, 'allow_inline_styles' ] );
-
 	}
 
 	/**
@@ -609,7 +603,6 @@ class PUM_Utils_Alerts {
 					'global'      => false,
 				]
 			);
-
 		}
 
 		// Sort alerts by priority, highest to lowest.
@@ -691,7 +684,6 @@ class PUM_Utils_Alerts {
 				$user_id = get_current_user_id();
 				update_user_meta( $user_id, '_pum_dismissed_alerts', $dismissed_alerts );
 				return true;
-
 			} catch ( Exception $e ) {
 				pum_log_message( 'Error dismissing alert. Exception: ' . $e->getMessage() );
 				return false;
@@ -736,5 +728,4 @@ class PUM_Utils_Alerts {
 
 		return $dismissed_alerts;
 	}
-
 }

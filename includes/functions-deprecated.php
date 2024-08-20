@@ -379,7 +379,7 @@ function popmake_get_text_shadow_style( $horizontal = 0, $vertical = 0, $blur = 
  */
 function pum_load_popup( $id ) {
 	PUM_Site_Popups::load_popup( $id );
-};
+}
 
 /**
  * Retrieves a template part

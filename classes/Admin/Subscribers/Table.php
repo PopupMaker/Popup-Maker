@@ -340,7 +340,6 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 			if ( ! wp_verify_nonce( wp_unslash( $_REQUEST['_wpnonce'] ), 'delete' === $action1 ? 'pum_subscribers_table_action_nonce' : 'bulk-subscribers' ) ) {
 				$this->invalid_nonce_redirect();
 			} else {
-
 				$subscribers = isset( $_REQUEST['subscriber'] ) ? $_REQUEST['subscriber'] : [];
 
 				if ( is_numeric( $subscribers ) ) {
@@ -350,7 +349,6 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 				$subscribers = wp_parse_id_list( $subscribers );
 
 				if ( $subscribers ) {
-
 					$status = [];
 
 					foreach ( $subscribers as $subscriber_id ) {
@@ -379,7 +377,6 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 									'back_link' => esc_url( admin_url( 'edit.php?page=pum-subscribers&post_type=popup' ) ),
 								]
 							);
-
 						} else {
 							wp_die(
 								sprintf( __( '%1$d Subscribers deleted, %2$d failed', 'popup-maker' ), $succeeded, $failed ),
@@ -440,7 +437,6 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 
 		// check for table bulk actions
 		if ( ( isset( $_REQUEST['action'] ) && 'bulk-download' === $_REQUEST['action'] ) || ( isset( $_REQUEST['action2'] ) && 'bulk-download' === $_REQUEST['action2'] ) ) {
-
 			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
 			// verify the nonce.
 			/*
@@ -455,7 +451,6 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 				$this->graceful_exit();
 			}
 		}
-
 	}
 
 	/**

@@ -67,7 +67,6 @@ class PUM_Admin_Upgrade_Routine {
 			$redirect = add_query_arg( $upgrades->get_args(), admin_url() );
 			self::redirect( $redirect );
 		}
-
 	}
 
 	public static function done() {
@@ -84,7 +83,6 @@ class PUM_Admin_Upgrade_Routine {
 
 		if ( $upgrades->has_upgrades() && $next_routine && $upgrades->get_upgrade( $next_routine ) ) {
 			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-
 				$upgrades->set_arg( 'step', 1 );
 				$upgrades->set_arg( 'completed', 0 );
 				$upgrades->set_arg( 'pum-upgrade', $next_routine );
@@ -98,6 +96,5 @@ class PUM_Admin_Upgrade_Routine {
 				exit;
 			}
 		}
-
 	}
 }

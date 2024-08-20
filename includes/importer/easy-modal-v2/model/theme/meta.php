@@ -57,5 +57,4 @@ class EModal_Model_Theme_Meta extends EModal_Model {
 			$this->id = $wpdb->insert_id;
 		}
 	}
-
 }

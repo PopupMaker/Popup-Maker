@@ -55,5 +55,4 @@ class PUM_Popups {
 
 		return new WP_Query( $args );
 	}
-
 }

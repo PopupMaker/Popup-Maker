@@ -406,7 +406,6 @@ abstract class PUM_Abstract_Database {
 		$query .= ';';
 
 		return $query;
-
 	}
 
 	/**
@@ -456,7 +455,6 @@ abstract class PUM_Abstract_Database {
 
 		// Build search query.
 		if ( $args['s'] && ! empty( $args['s'] ) ) {
-
 			$search = wp_unslash( trim( $args['s'] ) );
 
 			$search_where = [];

@@ -27,5 +27,4 @@ abstract class PUM_Abstract_Integration implements PUM_Interface_Integration {
 	 * @return bool
 	 */
 	abstract public function enabled();
-
 }

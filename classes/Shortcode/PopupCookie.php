@@ -101,9 +101,9 @@ class PUM_Shortcode_PopupCookie extends PUM_Shortcode {
 		return "<div class='pum-cookie' data-cookie-args='$args' $onscreen></div>";
 	}
 
-	public function template() { ?>
+	public function template() {
+		?>
 		<div class="pum-cookie"><?php esc_html_e( 'Popup Cookie', 'popup-maker' ); ?></div>
 		<?php
 	}
-
 }

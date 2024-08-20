@@ -136,5 +136,4 @@ class PUM_Admin_BlockEditor {
 			];
 		}
 	}
-
 }

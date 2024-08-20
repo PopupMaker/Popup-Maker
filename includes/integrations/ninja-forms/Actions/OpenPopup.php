@@ -38,7 +38,7 @@ final class NF_PUM_Actions_OpenPopup extends NF_Abstracts_Action {
 	 * Constructor
 	 */
 	public function __construct() {
-		 parent::__construct();
+		parent::__construct();
 
 		$this->_nicename = __( 'Open Popup', 'popup-maker' );
 
@@ -95,5 +95,4 @@ final class NF_PUM_Actions_OpenPopup extends NF_Abstracts_Action {
 
 		return $popup_list;
 	}
-
 }

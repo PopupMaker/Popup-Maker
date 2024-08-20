@@ -68,5 +68,4 @@ class PUM_Shortcodes {
 	public function get_shortcode( $tag ) {
 		return isset( $this->shortcodes[ $tag ] ) ? $this->shortcodes[ $tag ] : false;
 	}
-
 }

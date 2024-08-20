@@ -282,7 +282,7 @@ class PUM_Admin_Templates {
 
 		<script type="text/html" id="tmpl-pum-field-wrapper">
 			<div class="pum-field pum-field-{{data.type}} {{data.id}}-wrapper {{data.classes}}"
-				  data-id="{{data.id}}" <# print( data.dependencies !== '' ? "data-pum-dependencies='" + data.dependencies + "'" : ''); #> <# print( data.dynamic_desc !== '' ? "data-pum-dynamic-desc='" + data.dynamic_desc + "'" : ''); #>>
+					data-id="{{data.id}}" <# print( data.dependencies !== '' ? "data-pum-dependencies='" + data.dependencies + "'" : ''); #> <# print( data.dynamic_desc !== '' ? "data-pum-dynamic-desc='" + data.dynamic_desc + "'" : ''); #>>
 			<# if (typeof data.label === 'string' && data.label.length > 0) { #>
 			<label for="{{data.id}}">
 				{{data.label}}
@@ -407,7 +407,7 @@ class PUM_Admin_Templates {
 					<strong>
 						<?php _e( 'Triggers cause a popup to open.', 'popup-maker' ); ?>
 						<a href="<?php echo esc_url( 'https://docs.wppopupmaker.com/article/141-triggers?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=triggers-option-settings' ); ?>" target="_blank"
-						   class="pum-doclink dashicons dashicons-editor-help" title="<?php esc_attr_e( sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Triggers', 'popup-maker' ) ) ); ?>"></a>
+							class="pum-doclink dashicons dashicons-editor-help" title="<?php esc_attr_e( sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Triggers', 'popup-maker' ) ) ); ?>"></a>
 					</strong>
 				</p>
 
@@ -541,7 +541,6 @@ class PUM_Admin_Templates {
 		</script>
 
 		<?php
-
 	}
 
 	/**
@@ -651,7 +650,7 @@ class PUM_Admin_Templates {
 					<strong>
 						<?php _e( 'Cookies control the repeat display of a popup.', 'popup-maker' ); ?>
 						<a href="<?php echo esc_url( 'https://docs.wppopupmaker.com/article/358-popup-settings-box-cookies-option-settings?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=cookies-option-settings' ); ?>"
-						   target="_blank" class="pum-doclink dashicons dashicons-editor-help" title="<?php esc_attr_e( sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Cookies', 'popup-maker' ) ) ); ?>"></a>
+							target="_blank" class="pum-doclink dashicons dashicons-editor-help" title="<?php esc_attr_e( sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Cookies', 'popup-maker' ) ) ); ?>"></a>
 					</strong>
 				</p>
 
@@ -724,7 +723,5 @@ class PUM_Admin_Templates {
 		</script>
 
 		<?php
-
 	}
-
 }

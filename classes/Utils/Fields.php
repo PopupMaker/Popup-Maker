@@ -68,13 +68,11 @@ class PUM_Utils_Fields {
 		$fields = [];
 
 		foreach ( $tabs as $tab_id => $tab_sections ) {
-
 			if ( self::is_field( $tab_sections ) ) {
 				$fields[ $tab_id ] = $tab_sections;
 				continue;
 			} else {
 				foreach ( $tab_sections as $section_id => $section_fields ) {
-
 					if ( self::is_field( $tab_sections ) ) {
 						$fields[ $section_id ] = $section_fields;
 						continue;
@@ -322,7 +320,6 @@ class PUM_Utils_Fields {
 				static::render_field( $field_args );
 			}
 		}
-
 	}
 
 	/**

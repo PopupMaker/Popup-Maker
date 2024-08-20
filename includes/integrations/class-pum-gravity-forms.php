@@ -220,7 +220,6 @@ class PUM_Gravity_Forms_Integation {
 		<?php
 
 		GFFormSettings::page_footer();
-
 	}
 
 
@@ -250,7 +249,6 @@ class PUM_Gravity_Forms_Integation {
 				'value' => $popup->ID,
 				'label' => $popup->post_title,
 			];
-
 		}
 
 		return $popup_list;
@@ -281,7 +279,6 @@ class PUM_Gravity_Forms_Integation {
 			delete_option( 'gforms_pum_' . $form_id );
 		}
 	}
-
 }
 
 /**

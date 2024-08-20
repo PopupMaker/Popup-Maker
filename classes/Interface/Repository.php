@@ -61,5 +61,4 @@ interface PUM_Interface_Repository {
 	 * @return bool
 	 */
 	public function delete_item( $id );
-
 }

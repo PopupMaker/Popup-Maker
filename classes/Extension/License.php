@@ -357,7 +357,6 @@ class PUM_Extension_License {
 			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
 			delete_option( $this->item_shortname . '_license_active' );
-
 		}
 	}
 
@@ -407,7 +406,6 @@ class PUM_Extension_License {
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
 		update_option( $this->item_shortname . '_license_active', $license_data );
-
 	}
 
 	/**
@@ -487,27 +485,20 @@ class PUM_Extension_License {
 		$license = get_option( $this->item_shortname . '_license_active' );
 
 		if ( is_object( $license ) && 'valid' !== $license->license ) {
-
 			if ( empty( $_GET['tab'] ) || 'licenses' !== $_GET['tab'] ) {
-
 				$messages[] = sprintf( __( 'You have invalid or expired license keys for Popup Maker. Please go to the %1$sLicenses page%2$s to correct this issue.', 'popup-maker' ), '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=licenses' ) . '">', '</a>' );
 
 				$showed_invalid_message = true;
-
 			}
 		}
 
 		if ( ! empty( $messages ) ) {
-
 			foreach ( $messages as $message ) {
-
 				echo '<div class="error">';
 				echo '<p>' . esc_html( $message ) . '</p>';
 				echo '</div>';
-
 			}
 		}
-
 	}
 
 	/**
@@ -520,11 +511,9 @@ class PUM_Extension_License {
 		$license = get_option( $this->item_shortname . '_license_active' );
 
 		if ( ( ! is_object( $license ) || 'valid' !== $license->license ) && empty( $showed_imissing_key_message[ $this->item_shortname ] ) ) {
-
 			echo '&nbsp;<strong><a href="' . esc_url( admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=licenses' ) ) . '">' . __( 'Enter valid license key for automatic updates.', 'popup-maker' ) . '</a></strong>';
 			$showed_imissing_key_message[ $this->item_shortname ] = true;
 		}
-
 	}
 
 	/**
@@ -541,5 +530,4 @@ class PUM_Extension_License {
 
 		return $products;
 	}
-
 }

@@ -134,7 +134,6 @@ class PUM_Admin_Shortcode_UI {
 		$shortcodes = [];
 
 		foreach ( PUM_Shortcodes::instance()->get_shortcodes() as $tag => $shortcode ) {
-
 			$post_types = apply_filters( 'pum_shortcode_post_types', $shortcode->post_types(), $shortcode );
 
 			/**
@@ -220,5 +219,4 @@ class PUM_Admin_Shortcode_UI {
 
 		wp_send_json_success( $styles . $content );
 	}
-
 }

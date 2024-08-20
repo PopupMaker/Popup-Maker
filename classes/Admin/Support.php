@@ -20,7 +20,8 @@ class PUM_Admin_Support {
 	 *
 	 * Renders the support page contents.
 	 */
-	public static function page() { ?>
+	public static function page() {
+		?>
 		<style>
 			.pum-secure-notice {
 				position: fixed;
@@ -68,5 +69,4 @@ class PUM_Admin_Support {
 
 		<?php
 	}
-
 }

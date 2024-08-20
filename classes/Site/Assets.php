@@ -368,9 +368,9 @@ class PUM_Site_Assets {
 			}
 
 			$cached_style_deps = apply_filters( 'pum_site_cached_styles_dependencies', [] );
-			
+
 			wp_register_style( 'popup-maker-site', self::$cache_url . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-styles' ) . '.css?generated=' . $cached, $cached_style_deps, Popup_Maker::$VER );
-			
+
 			do_action( 'pum_registered_cached_styles' );
 		} else {
 			wp_register_style( 'popup-maker-site', self::$css_url . 'pum-site' . ( is_rtl() ? '-rtl' : '' ) . self::$suffix . '.css', [], Popup_Maker::$VER );

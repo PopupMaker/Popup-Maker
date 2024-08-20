@@ -165,5 +165,4 @@ class PUM_Extensions {
 			set_transient( 'pum_renamed_plugins', $_transient_data, DAY_IN_SECONDS );
 		}
 	}
-
 }

@@ -7,7 +7,7 @@
  */
 ?>
 <div id="pum-<?php pum_popup_ID(); ?>" class="<?php pum_popup_classes(); ?>" <?php pum_popup_data_attr(); ?> role="dialog" aria-modal="false"
-								   <?php
+									<?php
 									if ( pum_get_popup_title() !== '' ) :
 										?>
 	aria-labelledby="pum_popup_title_<?php pum_popup_ID(); ?>"<?php endif; ?>>

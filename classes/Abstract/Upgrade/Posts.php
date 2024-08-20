@@ -183,7 +183,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 
 		$this->set_current_count( count( $completed_post_ids ) );
 
-		return ++ $this->step;
+		return ++$this->step;
 	}
 
 	/**
@@ -200,7 +200,6 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 		$plural    = strtolower( $labels->name );
 
 		switch ( $code ) {
-
 			case 'start':
 				$total_count = $this->get_total_count();
 

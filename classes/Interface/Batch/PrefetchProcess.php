@@ -33,5 +33,4 @@ interface PUM_Interface_Batch_PrefetchProcess extends PUM_Interface_Batch_Proces
 	 * Pre-fetches data to speed up processing.
 	 */
 	public function pre_fetch();
-
 }

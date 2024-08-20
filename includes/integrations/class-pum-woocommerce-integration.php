@@ -97,5 +97,4 @@ class PUM_Woocommerce_Integration {
 
 		return $order;
 	}
-
 }

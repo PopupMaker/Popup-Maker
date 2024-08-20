@@ -61,13 +61,11 @@ final class PUM_Admin_Upgrade_Routine_2 extends PUM_Admin_Upgrade_Routine {
 		];
 
 		foreach ( $popups as $popup ) {
-
 			foreach ( $popup_groups as $group => $defaults ) {
 				$values = array_merge( $defaults, popmake_get_popup_meta_group( $group, $popup->ID ) );
 				update_post_meta( $popup->ID, "popup_{$group}", $values );
 			}
 		}
-
 	}
 
 	public static function cleanup_old_data() {
@@ -93,5 +91,4 @@ final class PUM_Admin_Upgrade_Routine_2 extends PUM_Admin_Upgrade_Routine {
 
 		$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key IN('$popup_fields');" );
 	}
-
 }

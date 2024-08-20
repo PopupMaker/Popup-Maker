@@ -67,5 +67,3 @@ function popmake_popup_close_defaults( $defaults = [] ) {
 		]
 	);
 }
-
-

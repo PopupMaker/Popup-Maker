@@ -281,5 +281,4 @@ class PUM_ConditionCallbacks {
 		global $post;
 		return is_object( $post ) && ( is_singular( $post_type ) || $post->post_type === $post_type );
 	}
-
 }

@@ -121,7 +121,6 @@ class PUM_Utils_Upgrades {
 		 * Back fill the initial version with the oldest version we can detect.
 		 */
 		if ( ! self::$initial_version ) {
-
 			$oldest_known = Popup_Maker::$VER;
 
 			if ( self::$version && version_compare( self::$version, $oldest_known, '<' ) ) {
@@ -275,7 +274,6 @@ class PUM_Utils_Upgrades {
 		set_transient( 'pum_needs_1_8_theme_upgrades', $needs_upgrade );
 
 		return (bool) $needs_upgrade;
-
 	}
 
 	/**

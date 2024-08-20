@@ -34,7 +34,6 @@ function pum_get_rendered_theme_styles( $theme_id ) {
 
 	foreach ( $theme_styles as $element => $element_rules ) {
 		switch ( $element ) {
-
 			case 'overlay':
 				$css_selector = ".pum-theme-{$theme_id}";
 				if ( $slug ) {
@@ -64,7 +63,6 @@ function pum_get_rendered_theme_styles( $theme_id ) {
 					$css_selector .= ", .pum-theme-{$slug} .pum-{$element}";
 				}
 				break;
-
 		}
 
 		$rule_set = $sep = '';

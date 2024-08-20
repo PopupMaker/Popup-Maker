@@ -244,7 +244,6 @@ class PUM_CF7_Integration {
 				'value' => $popup->ID,
 				'label' => $popup->post_title,
 			];
-
 		}
 
 		return $popup_list;

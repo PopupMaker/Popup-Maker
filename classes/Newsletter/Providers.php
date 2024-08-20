@@ -72,6 +72,4 @@ class PUM_Newsletter_Providers {
 
 		return $list;
 	}
-
-
 }

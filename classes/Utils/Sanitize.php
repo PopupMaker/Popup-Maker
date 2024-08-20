@@ -46,5 +46,4 @@ class PUM_Utils_Sanitize {
 
 		return sanitize_text_field( $value );
 	}
-
 }

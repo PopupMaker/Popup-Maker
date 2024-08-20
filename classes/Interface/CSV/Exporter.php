@@ -46,5 +46,4 @@ interface PUM_Interface_CSV_Exporter extends PUM_Interface_Batch_Exporter {
 	 * @return void
 	 */
 	public function csv_rows_out();
-
 }

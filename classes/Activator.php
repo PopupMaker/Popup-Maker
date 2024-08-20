@@ -37,5 +37,4 @@ class PUM_Activator extends PUM_Install {
 	public static function activate( $network_wide = false ) {
 		parent::activate_plugin( $network_wide );
 	}
-
 }

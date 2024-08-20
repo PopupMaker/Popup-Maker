@@ -98,6 +98,5 @@ class PUM_Admin_Subscribers {
 		}
 
 		return $status;
-
 	}
 }

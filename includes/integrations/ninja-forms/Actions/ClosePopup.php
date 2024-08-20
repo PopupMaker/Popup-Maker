@@ -63,7 +63,6 @@ final class NF_PUM_Actions_ClosePopup extends NF_Abstracts_Action {
 	*/
 
 	public function save( $action_settings ) {
-
 	}
 
 	public function process( $action_settings, $form_id, $data ) {
@@ -73,7 +72,6 @@ final class NF_PUM_Actions_ClosePopup extends NF_Abstracts_Action {
 		}
 
 		if ( isset( $action_settings['close_delay'] ) ) {
-
 			$data['actions']['closedelay'] = intval( $action_settings['close_delay'] );
 
 			if ( strlen( $data['actions']['closedelay'] ) >= 3 ) {

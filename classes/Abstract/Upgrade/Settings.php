@@ -42,7 +42,7 @@ abstract class PUM_Abstract_Upgrade_Settings extends PUM_Abstract_Upgrade {
 
 		$this->process_settings( $settings );
 
-		return ++ $this->step;
+		return ++$this->step;
 	}
 
 	/**
@@ -55,7 +55,6 @@ abstract class PUM_Abstract_Upgrade_Settings extends PUM_Abstract_Upgrade {
 	public function get_message( $code ) {
 
 		switch ( $code ) {
-
 			case 'start':
 				$message = sprintf( __( 'Updating settings for v%s compatibility.', 'popup-maker' ), '1.7' );
 				break;

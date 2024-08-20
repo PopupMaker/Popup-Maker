@@ -98,7 +98,6 @@ class PUM_Modules_Reviews {
 			}
 
 			wp_send_json_success();
-
 		} catch ( Exception $e ) {
 			wp_send_json_error( $e );
 		}
@@ -111,7 +110,6 @@ class PUM_Modules_Reviews {
 		static $selected;
 
 		if ( ! isset( $selected ) ) {
-
 			$dismissed_triggers = self::dismissed_triggers();
 
 			$triggers = self::triggers();
@@ -140,7 +138,6 @@ class PUM_Modules_Reviews {
 		static $selected;
 
 		if ( ! isset( $selected ) ) {
-
 			$dismissed_triggers = self::dismissed_triggers();
 
 			foreach ( self::triggers() as $g => $group ) {
@@ -232,7 +229,6 @@ class PUM_Modules_Reviews {
 		static $triggers;
 
 		if ( ! isset( $triggers ) ) {
-
 			$time_message = __( 'Hi there! You\'ve been using Popup Maker on your site for %s - I hope it\'s been helpful. If you\'re enjoying my plugin, would you mind rating it 5-stars to help spread the word?', 'popup-maker' );
 			$triggers     = [
 				'time_installed' => [
@@ -563,7 +559,6 @@ class PUM_Modules_Reviews {
 
 		return ( $a['pri'] < $b['pri'] ) ? 1 : - 1;
 	}
-
 }
 
 PUM_Modules_Reviews::init();

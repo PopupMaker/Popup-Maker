@@ -107,5 +107,4 @@ class PUM_Utils_CSS {
 
 		return str_replace( '  ', ' ', trim( "$style $variant $weight {$size}/{$line_height} \"$family\"" ) );
 	}
-
 }

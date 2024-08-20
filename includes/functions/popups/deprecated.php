@@ -52,7 +52,6 @@ function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default
 		$test  = uniqid();
 		$value = popmake_resolve( $values, $key, $test );
 		if ( $value === $test ) {
-
 			$key = str_replace( '.', '_', $key );
 
 			if ( ! isset( $values[ $key ] ) ) {

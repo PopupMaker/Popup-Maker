@@ -31,5 +31,4 @@ class PUM_Integration_Builder_KingComposer extends PUM_Abstract_Integration {
 	public function enabled() {
 		return class_exists( 'KingComposer' ) || defined( 'KC_VERSION' );
 	}
-
 }

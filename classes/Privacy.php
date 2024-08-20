@@ -129,7 +129,6 @@ class PUM_Privacy {
 		 * @param $content string The default policy content.
 		 */
 		return apply_filters( 'pum_get_default_privacy_policy_content', $content );
-
 	}
 
 	/**
@@ -378,7 +377,6 @@ class PUM_Privacy {
 				$unsubscribed = apply_filters( 'pum_privacy_eraser_subscriber_was_unsubscribed', true, $email_address, $subscriber );
 
 				if ( $unsubscribed ) {
-
 					$deleted = PUM_DB_Subscribers::instance()->delete( $subscriber['ID'] );
 
 					if ( $deleted ) {
@@ -416,9 +414,7 @@ class PUM_Privacy {
 			$popups = pum_get_all_popups();
 
 			if ( ! empty( $popups ) ) {
-
 				foreach ( $popups as $popup ) {
-
 					if ( ! pum_is_popup( $popup ) ) {
 						continue;
 					}
@@ -455,7 +451,6 @@ class PUM_Privacy {
 
 				// Clear the global $current.
 				pum()->current_popup = null;
-
 			}
 
 			// Update cookie list so we don't have to regenerate it every page load.

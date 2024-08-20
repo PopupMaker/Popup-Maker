@@ -38,5 +38,4 @@ abstract class PUM_Newsletter_Provider extends PUM_Abstract_Provider {
 
 		return $fields;
 	}
-
 }

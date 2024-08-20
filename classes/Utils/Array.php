@@ -97,7 +97,7 @@ class PUM_Utils_Array {
 		$i = 0;
 		foreach ( $arr as &$val ) {
 			$val = [
-				'sort' => ( ++ $i * 10 ),
+				'sort' => ( ++$i * 10 ),
 				'val'  => $val,
 			];
 		}

@@ -191,7 +191,6 @@ class PUM_Cookies {
 		}
 
 		return;
-
 	}
 
 	/**

@@ -24,5 +24,4 @@ interface PUM_Interface_Upgrade_Posts extends PUM_Interface_Batch_PrefetchProces
 	 * @return array Returns an array of popup post type query args for this upgrade.
 	 */
 	public function custom_query_args();
-
 }
