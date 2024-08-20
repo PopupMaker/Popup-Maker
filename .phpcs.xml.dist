@@ -42,39 +42,43 @@
 	<rule ref="CodeAtlantic">
 		<rule ref="Universal.Arrays.DisallowLongArraySyntax"/>
 		<exclude name="Universal.Arrays.DisallowShortArraySyntax" />
+
+		<!-- Temporary due to usage of CONSTANT like names for core variables. -->
+		<exclude name="WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase" />
+		<exclude name="WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase" />
+		<!-- Allow PSR file name & class names. -->
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+
+		<!-- Temporary to prioritize CS issues.-->
+		<exclude name="Squiz.Commenting.FunctionComment.MissingParamType" />
+		<exclude name="Squiz.Commenting.FunctionComment.MissingParamTag" />
+		<exclude name="Squiz.Commenting.VariableComment.MissingVar" />
+		<exclude name="Squiz.Commenting.VariableComment.EmptyVar" />
+		<exclude name="Squiz.Commenting.InlineComment.InvalidEndChar" />
+		<exclude name="Generic.Commenting.DocComment.MissingShort" />
+		<exclude name="Generic.Commenting.DocComment.ShortNotCapital" />
+		<exclude name="Squiz.Commenting.FunctionComment.Missing" />
+		<exclude name="Squiz.Commenting.FileComment.Missing" />
+		<exclude name="Squiz.Commenting.FunctionComment.MissingParamComment" />
+		<exclude name="Squiz.Commenting.FunctionComment.EmptyThrows" />
+		<exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.Found" />
+		<exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop" />
+
 	</rule>
 
-	<!-- Temporary due to usage of CONSTANT like names for core variables. -->
-	<rule ref="WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase">
-		<!-- <exclude-pattern>*</exclude-pattern> -->
-	</rule>
+	<!-- <rule ref="WordPress-Core">
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+	</rule> -->
 
-	<!-- Allow PSR file name & class names. -->
-	<rule ref="WordPress.Files.FileName.NotHyphenatedLowercase">
-		<!-- <exclude-pattern>*</exclude-pattern> -->
-	</rule>
-
-	<rule ref="WordPress.Files.FileName.InvalidClassFileName">
-		<!-- <exclude-pattern>*</exclude-pattern> -->
-	</rule>
-
-	<rule ref="WordPress-Core">
-		<!-- <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
-		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" /> -->
-	</rule>
-
-	<rule ref="WordPress">
-		<!-- <exclude name="WordPress.Files.FileName" /> -->
-		<!-- <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+	<!-- <rule ref="WordPress">
+		<exclude name="WordPress.Files.FileName" />
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
 		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
 		<exclude name="WordPress.NamingConventions.ValidVariableName" />
 		<exclude name="WordPress.WP.I18n.NonSingularStringLiteralText" />
 		<exclude name="WordPress.PHP.NoSilencedErrors.Discouraged" />
-		<exclude name="WordPress.PHP.DisallowShortTernary.Found" /> -->
-	</rule>
-
-	<!-- Enforce space before closing parenthesis -->
-	<!-- <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingBeforeClose">
-		<severity>5</severity>
+		<exclude name="WordPress.PHP.DisallowShortTernary.Found" />
 	</rule> -->
 </ruleset>

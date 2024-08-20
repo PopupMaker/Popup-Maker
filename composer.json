@@ -32,7 +32,7 @@
 	"scripts": {
 		"format": "vendor/bin/phpcbf --standard=.phpcs.xml.dist --report-summary --report-source",
 		"lint": "vendor/bin/phpcs --standard=.phpcs.xml.dist",
-		"lint:rerport": "vendor/bin/phpcs --standard=.phpcs.xml.dist --report-full --report-checkstyle=./phpcs-report.xml",
+		"lint:report": "vendor/bin/phpcs --standard=.phpcs.xml.dist --report-full --report-checkstyle=./phpcs-report.xml",
 		"generate-stubs": "vendor/bin/generate-stubs --finder=./bin/generate-stubs.php --out=content-control.stub --stats --force --include-inaccessible-class-nodes",
 		"install-strauss": [
 			"test -f strauss.phar || curl -o strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.19.2/strauss.phar"
