@@ -2,8 +2,8 @@
 /**
  * Failsafes
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! function_exists( 'popmake_get_option' ) ) {

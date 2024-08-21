@@ -2,8 +2,8 @@
 /**
  * Popup Maker Extension Updater
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 // Exit if accessed directly.
@@ -311,8 +311,8 @@ class PUM_Extension_Updater {
 
 		printf(
 			'<tr class="plugin-update-tr %3$s" id="%1$s-update" data-slug="%1$s" data-plugin="%2$s">',
-			$this->slug,
-			$file,
+			esc_attr( $this->slug ),
+			esc_attr( $file ),
 			in_array( $this->name, $this->get_active_plugins(), true ) ? 'active' : 'inactive'
 		);
 
