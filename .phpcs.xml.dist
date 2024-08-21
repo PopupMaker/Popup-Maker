@@ -50,7 +50,7 @@
 		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
 		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
 
-		<!-- Temporary to prioritize CS issues.-->
+		<!-- Temporary to prioritize non-trivial CS issues.-->
 		<exclude name="Squiz.Commenting.FunctionComment.MissingParamType" />
 		<exclude name="Squiz.Commenting.FunctionComment.MissingParamTag" />
 		<exclude name="Squiz.Commenting.VariableComment.MissingVar" />
@@ -69,6 +69,10 @@
 		<exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop" />
 		<exclude name="Squiz.PHP.CommentedOutCode.Found" />
 		<exclude name="Generic.CodeAnalysis.EmptyStatement.DetectedIf" />
+
+		<!-- First to be prioritized next.-->
+		<exclude name="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents" />
+		<exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed" />
 
 	</rule>
 
