@@ -32,6 +32,11 @@ class PUM_Admin_Ajax {
 	 * @since 1.12.0
 	 */
 	public static function save_popup_enabled_state() {
+		// Verify the nonce.
+		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['nonce'] ) ), 'pum_save_enabled_state' ) ) {
+			wp_send_json_error();
+		}
+
 		$args = wp_parse_args(
 			$_REQUEST,
 			[
@@ -50,11 +55,6 @@ class PUM_Admin_Ajax {
 		$enabled = intval( $args['enabled'] );
 		if ( ! in_array( $enabled, [ 0, 1 ], true ) ) {
 			wp_send_json_error( 'Invalid enabled state provided.' );
-		}
-
-		// Verify the nonce.
-		if ( ! wp_verify_nonce( $_REQUEST['nonce'], "pum_save_enabled_state_$popup_id" ) ) {
-			wp_send_json_error();
 		}
 
 		// Dissallow if user cannot edit this popup.

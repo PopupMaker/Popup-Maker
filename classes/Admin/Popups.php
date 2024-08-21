@@ -70,7 +70,7 @@ class PUM_Admin_Popups {
 		}
 		$popup   = pum_get_popup( $post->ID );
 		$enabled = $popup->is_enabled();
-		$nonce   = wp_create_nonce( "pum_save_enabled_state_{$popup->ID}" );
+		$nonce   = wp_create_nonce( 'pum_save_enabled_state' );
 		?>
 		<div class="misc-pub-section" style="display:flex;">
 			<span style="font-weight: bold; margin-right: 10px;">Popup Enabled </span>
@@ -1214,7 +1214,7 @@ class PUM_Admin_Popups {
 				case 'enabled':
 					if ( 'publish' === $post->post_status ) {
 						$enabled = $popup->is_enabled();
-						$nonce   = wp_create_nonce( "pum_save_enabled_state_{$popup->ID}" );
+						$nonce   = wp_create_nonce( 'pum_save_enabled_state' );
 						?>
 						<div class="pum-toggle-button">
 							<input id="pum-enabled-toggle-<?php echo esc_attr( $popup->ID ); ?>" type="checkbox" <?php checked( true, $enabled ); ?> class="pum-enabled-toggle-button" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-popup-id="<?php echo esc_attr( $popup->ID ); ?>">
