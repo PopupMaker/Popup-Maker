@@ -55,6 +55,7 @@ class PUM_Install {
 		if ( is_multisite() && $network_wide ) {
 			$activated = get_site_option( 'pum_activated', [] );
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$blog_ids = $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs}" );
 
 			// Try to reduce the chances of a timeout with a large number of sites.
@@ -62,6 +63,7 @@ class PUM_Install {
 				ignore_user_abort( true );
 
 				if ( ! pum_is_func_disabled( 'set_time_limit' ) ) {
+					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 					@set_time_limit( 0 );
 				}
 			}
@@ -144,12 +146,12 @@ class PUM_Install {
 		pum_reset_assets();
 	}
 
-	public static function get_option( $key, $default = false ) {
+	public static function get_option( $key, $default_value = false ) {
 		if ( function_exists( 'pum_get_option' ) ) {
-			return pum_get_option( $key, $default );
+			return pum_get_option( $key, $default_value );
 		}
 
-		return PUM_Utils_Options::get( $key, $default );
+		return PUM_Utils_Options::get( $key, $default_value );
 	}
 
 	/**
@@ -165,6 +167,8 @@ class PUM_Install {
 		if ( self::get_option( 'complete_uninstall' ) ) {
 			global $wpdb;
 
+			// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+
 			// Delete all popups and associated meta.
 			$wpdb->query( "DELETE a,b,c FROM $wpdb->posts a LEFT JOIN $wpdb->term_relationships b ON (a.ID = b.object_id) LEFT JOIN $wpdb->postmeta c ON (a.ID = c.post_id) WHERE a.post_type IN ('popup', 'popup_theme')" );
 			$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key LIKE 'popup_%'" );
@@ -172,7 +176,12 @@ class PUM_Install {
 			/** Delete All the Taxonomies */
 			foreach ( [ 'popup_category', 'popup_tag' ] as $taxonomy ) {
 				// Prepare & excecute SQL, Delete Terms.
-				$wpdb->get_results( $wpdb->prepare( "DELETE t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('%s')", $taxonomy ) );
+				$wpdb->get_results(
+					$wpdb->prepare(
+						"DELETE t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN (%s)",
+						$taxonomy
+					)
+				);
 
 				// Delete Taxonomy.
 				$wpdb->delete( $wpdb->term_taxonomy, [ 'taxonomy' => $taxonomy ], [ '%s' ] );
@@ -184,7 +193,10 @@ class PUM_Install {
 			$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE '_pum_%' OR meta_key lIKE 'pum_%'" );
 
 			// Delete subscribers table.
+			// phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
 			$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}pum_subscribers" );
+
+			// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 			// Delete error log.
 			PUM_Utils_Logging::instance()->clear_log();
@@ -241,7 +253,15 @@ class PUM_Install {
 		$flag    = self::get_activation_flag();
 		$version = 'PHP' === $flag ? Popup_Maker::$MIN_PHP_VER : Popup_Maker::$MIN_WP_VER;
 
-		return sprintf( __( 'The %4$s %1$s %5$s plugin requires %2$s version %3$s or greater.', 'popup-maker' ), Popup_Maker::$NAME, $flag, $version, '<strong>', '</strong>' );
+		return sprintf(
+			/* translators: 1. Plugin name, 2. Required plugin name, 3. Version number, 4. Opening HTML tag, 5. Closing HTML tag. */
+			__( 'The %4$s %1$s %5$s plugin requires %2$s version %3$s or greater.', 'popup-maker' ),
+			Popup_Maker::$NAME,
+			$flag,
+			$version,
+			'<strong>',
+			'</strong>'
+		);
 	}
 
 	/**
@@ -250,7 +270,7 @@ class PUM_Install {
 	public static function activation_failure_admin_notice() {
 		?>
 		<div class="notice notice-error is-dismissible">
-			<p><?php esc_html_e( self::get_activation_failure_notice() ); ?></p>
+			<p><?php echo esc_html( self::get_activation_failure_notice() ); ?></p>
 		</div>
 		<?php
 	}
@@ -271,8 +291,8 @@ class PUM_Install {
 		$notice = self::get_activation_failure_notice();
 
 		wp_die(
-			"<p>$notice</p>",
-			__( 'Plugin Activation Error', 'popup-maker' ),
+			esc_html( $notice ),
+			esc_html__( 'Plugin Activation Error', 'popup-maker' ),
 			[
 				'response'  => 200,
 				'back_link' => true,

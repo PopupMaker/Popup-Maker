@@ -66,7 +66,7 @@ class PUM_Telemetry {
 		$active_plugins = get_option( 'active_plugins', [] );
 
 		foreach ( $plugins as $key => $plugin ) {
-			if ( in_array( $plugin, $active_plugins ) ) {
+			if ( in_array( $plugin, $active_plugins, true ) ) {
 				// Remove active plugins from list so we can show active and inactive separately.
 				unset( $plugins[ $key ] );
 			}
@@ -93,7 +93,7 @@ class PUM_Telemetry {
 
 		// Cycle through each popup.
 		foreach ( $all_popups as $popup ) {
-			$settings = PUM_Admin_Popups::parse_values( $popup->get_settings() );
+			$settings = PUM_Admin_Popups::fill_missing_defaults( $popup->get_settings() );
 
 			// Cycle through each trigger to count the number of unique triggers.
 			foreach ( $settings['triggers'] as $trigger ) {
