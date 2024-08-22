@@ -320,7 +320,7 @@ class PUM_Extension_License {
 	 * @return  void
 	 */
 	public function deactivate_license() {
-		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'pum_settings_nonce' ) ) {
+		if ( ! isset( $_POST['pum_settings_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['pum_settings_nonce'] ) ), 'pum_settings_nonce' ) ) {
 			return;
 		}
 

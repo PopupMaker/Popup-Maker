@@ -37,21 +37,24 @@ class PUM_Admin_Settings {
 	 */
 	public static function notices() {
 
-		if ( isset( $_GET['success'] ) && get_option( 'pum_settings_admin_notice' ) ) {
-			self::$notices[] = [
-				'type'    => $_GET['success'] ? 'success' : 'error',
-				'message' => get_option( 'pum_settings_admin_notice' ),
-			];
+		if ( ! isset( $_POST['pum_settings_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['pum_settings_nonce'] ) ), 'pum_settings_nonce' ) ) {
+			if ( isset( $_GET['success'] ) && get_option( 'pum_settings_admin_notice' ) ) {
+				self::$notices[] = [
+					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					'type'    => (bool) $_GET['success'] ? 'success' : 'error',
+					'message' => get_option( 'pum_settings_admin_notice' ),
+				];
 
-			delete_option( 'pum_settings_admin_notice' );
+				delete_option( 'pum_settings_admin_notice' );
+			}
 		}
 
 		if ( ! empty( self::$notices ) ) {
 			foreach ( self::$notices as $notice ) { ?>
 				<div class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> is-dismissible">
-					<p><strong><?php esc_html_e( $notice['message'] ); ?></strong></p>
+					<p><strong><?php echo esc_html( $notice['message'] ); ?></strong></p>
 					<button type="button" class="notice-dismiss">
-						<span class="screen-reader-text"><?php _e( 'Dismiss this notice.', 'popup-maker' ); ?></span>
+						<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'popup-maker' ); ?></span>
 					</button>
 				</div>
 				<?php
@@ -59,13 +62,12 @@ class PUM_Admin_Settings {
 		}
 	}
 
-
 	/**
 	 * Save settings when needed.
 	 */
 	public static function save() {
 		if ( ! empty( $_POST['pum_settings'] ) && empty( $_POST['pum_license_activate'] ) && empty( $_POST['pum_license_deactivate'] ) ) {
-			if ( ! isset( $_POST['pum_settings_nonce'] ) || ! wp_verify_nonce( $_POST['pum_settings_nonce'], basename( __FILE__ ) ) ) {
+			if ( ! isset( $_POST['pum_settings_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['pum_settings_nonce'] ) ), 'pum_settings_nonce' ) ) {
 				return;
 			}
 
@@ -73,7 +75,8 @@ class PUM_Admin_Settings {
 				return;
 			}
 
-			$settings = self::sanitize_settings( $_POST['pum_settings'] );
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$settings = self::sanitize_settings( wp_unslash( $_POST['pum_settings'] ) );
 
 			$settings = apply_filters( 'pum_sanitize_settings', $settings );
 
@@ -411,7 +414,12 @@ class PUM_Admin_Settings {
 							],
 							'default_privacy_usage_text'   => [
 								'label'        => __( 'Consent Usage Text', 'popup-maker' ),
-								'desc'         => function_exists( 'get_privacy_policy_url' ) ? sprintf( __( 'You can use %1$s%2$s to insert a link to your privacy policy. To customize the link text use %1$s:Link Text%2$s', 'popup-maker' ), '{{privacy_link', '}}' ) : '',
+								'desc'         => function_exists( 'get_privacy_policy_url' ) ? sprintf(
+									/* translators: 1. opening tag, 2. closing tag. */
+									__( 'You can use %1$s%2$s to insert a link to your privacy policy. To customize the link text use %1$s:Link Text%2$s', 'popup-maker' ),
+									'{{privacy_link',
+									'}}'
+								) : '',
 								'type'         => 'text',
 								'std'          => __( 'If you opt in above we use this information send related content, discounts and other special offers.', 'popup-maker' ),
 								'dependencies' => [
@@ -565,19 +573,31 @@ class PUM_Admin_Settings {
 		ob_start();
 
 		?>
-		<button type="button" id="show_pum_styles" onclick="jQuery('#pum_style_output').slideDown();jQuery(this).hide();"><?php _e( 'Show Popup Maker CSS', 'popup-maker' ); ?></button>
+		<button type="button" id="show_pum_styles" onclick="jQuery('#pum_style_output').slideDown();jQuery(this).hide();"><?php esc_html_e( 'Show Popup Maker CSS', 'popup-maker' ); ?></button>
 		<p class="pum-desc desc"><?php __( "Use this to quickly copy Popup Maker's CSS to your own stylesheet.", 'popup-maker' ); ?></p>
 
 		<div id="pum_style_output" style="display:none;">
-			<label for="pum_core_styles"><?php _e( 'Core Styles', 'popup-maker' ); ?></label> <br />
+			<label for="pum_core_styles"><?php esc_html_e( 'Core Styles', 'popup-maker' ); ?></label> <br />
 
-			<textarea id="pum_core_styles" wrap="off" style="white-space: pre; width: 100%;" readonly="readonly"><?php echo $core_styles; ?></textarea>
+			<textarea id="pum_core_styles" wrap="off" style="white-space: pre; width: 100%;" readonly="readonly">
+				<?php
+				// Ignored because this is generated CSS.
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $core_styles;
+				?>
+			</textarea>
 
 			<br /> <br />
 
-			<label for="pum_generated_styles"><?php _e( 'Generated Popup & Popup Theme Styles', 'popup-maker' ); ?></label> <br />
+			<label for="pum_generated_styles"><?php esc_html_e( 'Generated Popup & Popup Theme Styles', 'popup-maker' ); ?></label> <br />
 
-			<textarea id="pum_generated_styles" wrap="off" style="white-space: pre; width: 100%; min-height: 200px;" readonly="readonly"><?php echo $user_styles; ?></textarea>
+			<textarea id="pum_generated_styles" wrap="off" style="white-space: pre; width: 100%; min-height: 200px;" readonly="readonly">
+				<?php
+				// Ignored because this is generated CSS.
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $user_styles;
+				?>
+			</textarea>
 		</div>
 
 		<?php
@@ -617,17 +637,27 @@ class PUM_Admin_Settings {
 
 			<form id="pum-settings" method="post" action="">
 
-				<?php wp_nonce_field( basename( __FILE__ ), 'pum_settings_nonce' ); ?>
-				<h1><?php _e( 'Popup Maker Settings', 'popup-maker' ); ?></h1>
+				<?php wp_nonce_field( 'pum_settings_nonce', 'pum_settings_nonce' ); ?>
+				<h1><?php esc_html_e( 'Popup Maker Settings', 'popup-maker' ); ?></h1>
 				<div id="pum-settings-container" class="pum-settings-container">
 					<div class="pum-no-js" style="padding: 0 12px;">
-						<p><?php printf( __( 'If you are seeing this, the page is still loading or there are Javascript errors on this page. %1$sView troubleshooting guide%2$s', 'popup-maker' ), '<a href="https://docs.wppopupmaker.com/article/373-checking-for-javascript-errors" target="_blank">', '</a>' ); ?></p>
+						<p>
+						<?php
+						printf(
+							/* translators: 1. URL to troubleshooting guide. 2. Closing tag. */
+							esc_html__( 'If you are seeing this, the page is still loading or there are Javascript errors on this page. %1$sView troubleshooting guide%2$s', 'popup-maker' ),
+							'<a href="https://docs.wppopupmaker.com/article/373-checking-for-javascript-errors" target="_blank">',
+							'</a>'
+						);
+						?>
+								</p>
 					</div>
 				</div>
 
 				<script type="text/javascript">
 					window.pum_settings_editor =
 					<?php
+					// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo PUM_Utils_Array::safe_json_encode(
 						apply_filters(
 							'pum_settings_editor_args',
@@ -649,11 +679,12 @@ class PUM_Admin_Settings {
 							]
 						)
 					);
+					// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 					?>
 					;
 				</script>
 
-				<button class="button-primary bottom" style="margin-left: 156px;"><?php _e( 'Save', 'popup-maker' ); ?></button>
+				<button class="button-primary bottom" style="margin-left: 156px;"><?php esc_html_e( 'Save', 'popup-maker' ); ?></button>
 
 			</form>
 
@@ -746,7 +777,11 @@ class PUM_Admin_Settings {
 	public static function get_active_tab() {
 		$tabs = self::tabs();
 
-		return isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_text_field( $_GET['tab'] ) : key( $tabs );
+		// Ignore because we only accept explitly valid tabs.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+
+		return array_key_exists( $tab, $tabs ) ? $tab : key( $tabs );
 	}
 
 	/**
@@ -762,7 +797,11 @@ class PUM_Admin_Settings {
 			return false;
 		}
 
-		return isset( $_GET['section'] ) && array_key_exists( $_GET['section'], $tab_sections ) ? sanitize_text_field( $_GET['section'] ) : key( $tab_sections );
+		// Ignore because we only accept explitly valid tabs.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$section = isset( $_GET['section'] ) ? sanitize_key( wp_unslash( $_GET['section'] ) ) : '';
+
+		return array_key_exists( $section, $tab_sections ) ? $section : key( $tab_sections );
 	}
 
 	/**
@@ -799,17 +838,6 @@ class PUM_Admin_Settings {
 						];
 						break;
 				}
-
-				/**
-				 * Process fields with specific ids.
-				 */
-				switch ( $field['id'] ) {
-					/*
-					case 'pum_license_status':
-						$settings[ $key ] = Licensing::get_status();
-						break;
-					*/
-				}
 			}
 		}
 
@@ -834,6 +862,7 @@ class PUM_Admin_Settings {
 					try {
 						$value = json_decode( stripslashes( $value ) );
 					} catch ( Exception $e ) {
+						$e;
 					}
 				}
 

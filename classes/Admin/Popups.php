@@ -26,7 +26,7 @@ class PUM_Admin_Popups {
 		add_action( 'edit_form_top', [ __CLASS__, 'add_popup_id' ] );
 
 		// Change title to popup name.
-		add_filter( 'enter_title_here', [ __CLASS__, '_default_title' ] );
+		add_filter( 'enter_title_here', [ __CLASS__, 'default_title' ] );
 
 		// Add popup title field.
 		add_action( 'edit_form_advanced', [ __CLASS__, 'title_meta_field' ] );
@@ -103,7 +103,7 @@ class PUM_Admin_Popups {
 	 * @param string $title Default title placeholder text.
 	 * @return string $title New placeholder text
 	 */
-	public static function _default_title( $title ) {
+	public static function default_title( $title ) {
 
 		if ( ! is_admin() ) {
 			return $title;
@@ -137,7 +137,7 @@ class PUM_Admin_Popups {
 			return;
 		}
 
-		if ( 'popup' === $typenow && in_array( $pagenow, [ 'post-new.php', 'post.php' ] ) ) {
+		if ( 'popup' === $typenow && in_array( $pagenow, [ 'post-new.php', 'post.php' ], true ) ) {
 			?>
 
 			<div id="popup-titlediv" class="pum-form">
@@ -169,7 +169,7 @@ class PUM_Admin_Popups {
 			return;
 		}
 
-		if ( 'popup' === $typenow && in_array( $pagenow, [ 'post-new.php', 'post.php' ] ) ) {
+		if ( 'popup' === $typenow && in_array( $pagenow, [ 'post-new.php', 'post.php' ], true ) ) {
 			?>
 			<p class="pum-desc"><?php echo '(' . esc_html__( 'Required', 'popup-maker' ) . ') ' . esc_html__( 'Enter a name to help you remember what this popup is about. Only you will see this.', 'popup-maker' ); ?></p>
 			<?php
@@ -226,6 +226,8 @@ class PUM_Admin_Popups {
 		<script type="text/javascript">
 			window.pum_popup_settings_editor =
 			<?php
+			// Ignored as this is a JSON string.
+			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo PUM_Utils_Array::safe_json_encode(
 				apply_filters(
 					'pum_popup_settings_editor_var',
@@ -245,13 +247,24 @@ class PUM_Admin_Popups {
 					]
 				)
 			);
+			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
+
 			?>
 			;
 		</script>
 
 		<div id="pum-popup-settings-container" class="pum-popup-settings-container">
 			<div class="pum-no-js" style="padding: 0 12px;">
-				<p><?php printf( esc_html__( 'If you are seeing this, the page is still loading or there are Javascript errors on this page. %1$sView troubleshooting guide%2$s', 'popup-maker' ), '<a href="https://docs.wppopupmaker.com/article/373-checking-for-javascript-errors" target="_blank">', '</a>' ); ?></p>
+				<p>
+				<?php
+					printf(
+					/* translators: 1. URL to view troubleshooting guide. 2. Closing HTML tag. */
+						esc_html__( 'If you are seeing this, the page is still loading or there are Javascript errors on this page. %1$sView troubleshooting guide%2$s', 'popup-maker' ),
+						'<a href="https://docs.wppopupmaker.com/article/373-checking-for-javascript-errors" target="_blank">',
+						'</a>'
+					);
+				?>
+				</p>
 			</div>
 		</div>
 		<?php
@@ -296,7 +309,7 @@ class PUM_Admin_Popups {
 			return;
 		}
 
-		if ( ! isset( $_POST['pum_popup_settings_nonce'] ) || ! wp_verify_nonce( $_POST['pum_popup_settings_nonce'], basename( __FILE__ ) ) ) {
+		if ( ! isset( $_POST['pum_popup_settings_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['pum_popup_settings_nonce'] ) ), basename( __FILE__ ) ) ) {
 			return;
 		}
 
@@ -321,10 +334,12 @@ class PUM_Admin_Popups {
 			$popup->reset_counts();
 		}
 
-		$title = ! empty( $_POST['popup_title'] ) ? trim( sanitize_text_field( $_POST['popup_title'] ) ) : '';
+		$title = ! empty( $_POST['popup_title'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['popup_title'] ) ) ) : '';
 		$popup->update_meta( 'popup_title', $title );
 
-		$settings = ! empty( $_POST['popup_settings'] ) ? $_POST['popup_settings'] : [];
+		// Ignored because this is a dynamic array and has sanitization applid to keys before usage.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$settings = ! empty( $_POST['popup_settings'] ) ? wp_unslash( $_POST['popup_settings'] ) : [];
 
 		// Sanitize JSON values.
 		$settings['conditions'] = isset( $settings['conditions'] ) ? self::sanitize_meta( $settings['conditions'] ) : [];
@@ -340,7 +355,9 @@ class PUM_Admin_Popups {
 		// TODO Remove this and all other code here. This should be clean and all code more compartmentalized.
 		foreach ( self::deprecated_meta_fields() as $field ) {
 			if ( isset( $_POST[ $field ] ) ) {
-				$new = apply_filters( 'popmake_metabox_save_' . $field, $_POST[ $field ] );
+				// Ignored because this should no longer be used, has been deprecated nd we don't know the format of each value safely to sanitize.
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				$new = apply_filters( 'popmake_metabox_save_' . $field, wp_unslash( $_POST[ $field ] ) );
 				update_post_meta( $post_id, $field, $new );
 			} else {
 				delete_post_meta( $post_id, $field );
@@ -714,7 +731,11 @@ class PUM_Admin_Popups {
 								],
 								'position_top'          => [
 									'label'        => __( 'Top', 'popup-maker' ),
-									'desc'         => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Top', 'popup-maker' ) ) ),
+									'desc'         => sprintf(
+										/* translators: 1. Screen Edge: top, bottom. */
+										_x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ),
+										strtolower( __( 'Top', 'popup-maker' ) )
+									),
 									'type'         => 'rangeslider',
 									'std'          => 100,
 									'step'         => 1,
@@ -728,7 +749,11 @@ class PUM_Admin_Popups {
 								],
 								'position_bottom'       => [
 									'label'        => __( 'Bottom', 'popup-maker' ),
-									'desc'         => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Bottom', 'popup-maker' ) ) ),
+									'desc'         => sprintf(
+										/* translators: 1. Screen Edge: top, bottom. */
+										_x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ),
+										strtolower( __( 'Bottom', 'popup-maker' ) )
+									),
 									'type'         => 'rangeslider',
 									'std'          => 0,
 									'step'         => 1,
@@ -742,7 +767,11 @@ class PUM_Admin_Popups {
 								],
 								'position_left'         => [
 									'label'        => __( 'Left', 'popup-maker' ),
-									'desc'         => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Left', 'popup-maker' ) ) ),
+									'desc'         => sprintf(
+										/* translators: 1. Screen Edge: top, bottom. */
+										_x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ),
+										strtolower( __( 'Left', 'popup-maker' ) )
+									),
 									'type'         => 'rangeslider',
 									'std'          => 0,
 									'step'         => 1,
@@ -756,7 +785,11 @@ class PUM_Admin_Popups {
 								],
 								'position_right'        => [
 									'label'        => __( 'Right', 'popup-maker' ),
-									'desc'         => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Right', 'popup-maker' ) ) ),
+									'desc'         => sprintf(
+										/* translators: 1. Screen Edge: top, bottom. */
+										_x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ),
+										strtolower( __( 'Right', 'popup-maker' ) )
+									),
 									'type'         => 'rangeslider',
 									'std'          => 0,
 									'step'         => 1,
@@ -770,7 +803,12 @@ class PUM_Admin_Popups {
 								],
 								'position_from_trigger' => [
 									'label'    => __( 'Position from Trigger', 'popup-maker' ),
-									'desc'     => sprintf( __( 'This will position the popup in relation to the %1$sClick Trigger%2$s.', 'popup-maker' ), '<a target="_blank" href="https://docs.wppopupmaker.com/article/395-trigger-click-open-overview-methods?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=position-from-trigger">', '</a>' ),
+									'desc'     => sprintf(
+										/* translators: 1. URL to documentation. 2. Closing HTML tag. */
+										__( 'This will position the popup in relation to the %1$sClick Trigger%2$s.', 'popup-maker' ),
+										'<a target="_blank" href="https://docs.wppopupmaker.com/article/395-trigger-click-open-overview-methods?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=position-from-trigger">',
+										'</a>'
+									),
 									'type'     => 'checkbox',
 									'std'      => false,
 									'priority' => 40,
@@ -1021,7 +1059,7 @@ class PUM_Admin_Popups {
 		$defaults = self::defaults();
 		foreach ( $defaults as $field_id => $default_value ) {
 			$field = self::get_field( $field_id );
-			if ( isset( $settings[ $field_id ] ) || in_array( $field['type'], $excluded_field_types ) ) {
+			if ( isset( $settings[ $field_id ] ) || in_array( $field['type'], $excluded_field_types, true ) ) {
 				continue;
 			}
 
@@ -1073,7 +1111,8 @@ class PUM_Admin_Popups {
 								<?php esc_html_e( 'Reset Counts', 'popup-maker' ); ?>
 							</label>
 							<?php
-							if ( ( $reset = $popup->get_last_count_reset() ) ) :
+							$reset = $popup->get_last_count_reset();
+							if ( $reset ) :
 								?>
 								<br />
 								<small>
@@ -1123,6 +1162,7 @@ class PUM_Admin_Popups {
 							$meta[ $key ] = PUM_Admin_Helpers::object_to_array( $value );
 						}
 					} catch ( Exception $e ) {
+						$e;
 					}
 				}
 			}
@@ -1310,6 +1350,7 @@ class PUM_Admin_Popups {
 						$vars = array_merge(
 							$vars,
 							[
+								// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 								'meta_key' => 'popup_title',
 								'orderby'  => 'meta_value',
 							]
@@ -1320,6 +1361,7 @@ class PUM_Admin_Popups {
 							$vars = array_merge(
 								$vars,
 								[
+									// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 									'meta_key' => 'popup_open_count',
 									'orderby'  => 'meta_value_num',
 								]
@@ -1331,6 +1373,7 @@ class PUM_Admin_Popups {
 							$vars = array_merge(
 								$vars,
 								[
+									// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 									'meta_key' => 'popup_conversion_count',
 									'orderby'  => 'meta_value_num',
 								]
@@ -1363,27 +1406,43 @@ class PUM_Admin_Popups {
 		if ( 'popup' === $typenow ) {
 			if ( get_taxonomy( 'popup_category' ) ) {
 				$terms = get_terms( 'popup_category' );
+
 				if ( count( $terms ) > 0 ) {
+					$category = '';
+
+					if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ), 'pum-popup-filter-nonce' ) ) {
+						$category = isset( $_GET['popup_category'] ) ? sanitize_key( wp_unslash( $_GET['popup_category'] ) ) : '';
+					}
+
 					echo "<select name='popup_category' id='popup_category' class='postform'>";
-					echo "<option value=''>" . __( 'Show all categories', 'popup-maker' ) . '</option>';
+					echo "<option value=''>" . esc_html__( 'Show all categories', 'popup-maker' ) . '</option>';
 					foreach ( $terms as $term ) {
-						$selected = isset( $_GET['popup_category'] ) && $_GET['popup_category'] === $term->slug ? 'selected="selected"' : '';
-						echo '<option value="' . esc_attr( $term->slug ) . '" ' . $selected . '>' . esc_html( $term->name ) . ' (' . $term->count . ')</option>';
+						$selected = $category === $term->slug ? 'selected="selected"' : '';
+						echo '<option value="' . esc_attr( $term->slug ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $term->name ) . ' (' . esc_html( $term->count ) . ')</option>';
 					}
 					echo '</select>';
+					wp_nonce_field( 'pum-popup-filter-nonce' );
 				}
 			}
 
 			if ( get_taxonomy( 'popup_tag' ) ) {
 				$terms = get_terms( 'popup_tag' );
+
 				if ( count( $terms ) > 0 ) {
+					$tag = '';
+
+					if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ), 'pum-popup-filter-nonce' ) ) {
+						$tag = isset( $_GET['popup_tag'] ) ? sanitize_key( wp_unslash( $_GET['popup_tag'] ) ) : '';
+					}
+
 					echo "<select name='popup_tag' id='popup_tag' class='postform'>";
-					echo "<option value=''>" . __( 'Show all tags', 'popup-maker' ) . '</option>';
+					echo "<option value=''>" . esc_html__( 'Show all tags', 'popup-maker' ) . '</option>';
 					foreach ( $terms as $term ) {
-						$selected = isset( $_GET['popup_tag'] ) && $_GET['popup_tag'] === $term->slug ? 'selected="selected"' : '';
-						echo '<option value="' . esc_attr( $term->slug ) . '" ' . $selected . '>' . esc_html( $term->name ) . ' (' . $term->count . ')</option>';
+						$selected = $tag === $term->slug ? 'selected="selected"' : '';
+						echo '<option value="' . esc_attr( $term->slug ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $term->name ) . ' (' . esc_html( $term->count ) . ')</option>';
 					}
 					echo '</select>';
+					wp_nonce_field( 'pum-popup-filter-nonce' );
 				}
 			}
 		}
