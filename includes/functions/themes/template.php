@@ -65,7 +65,8 @@ function pum_get_rendered_theme_styles( $theme_id ) {
 				break;
 		}
 
-		$rule_set = $sep = '';
+		$sep      = '';
+		$rule_set = '';
 		foreach ( $element_rules as $property => $value ) {
 			if ( ! empty( $value ) ) {
 				$rule_set .= $sep . $property . ': ' . $value;

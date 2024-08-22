@@ -21,10 +21,12 @@ class PUM_WPML_Integration {
 	 */
 	public static function init() {
 		add_action( 'icl_make_duplicate', [ __CLASS__, 'duplicate_post' ], 10, 4 );
+
 		/*
-		add_filter( 'pum_popup', array( __CLASS__, 'pum_popup' ), 10, 2 );
 		TODO Further testing of this filter may prove 80+% of the following unneeded.
+		add_filter( 'pum_popup', array( __CLASS__, 'pum_popup' ), 10, 2 );
 		*/
+
 		add_filter( 'pum_popup_get_display', [ __CLASS__, 'popup_get_display' ], 10, 2 );
 		add_filter( 'pum_popup_get_close', [ __CLASS__, 'popup_get_close' ], 10, 2 );
 		add_filter( 'pum_popup_get_triggers', [ __CLASS__, 'popup_get_triggers' ], 10, 2 );
@@ -59,6 +61,7 @@ class PUM_WPML_Integration {
 	public static function is_new_popup_translation( $post_id = 0 ) {
 		global $pagenow, $sitepress;
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		return is_admin() && 'post-new.php' === $pagenow && ! empty( $_GET['post_type'] ) && 'popup' === $_GET['post_type'] && self::source_id( $post_id ) > 0;
 	}
 
@@ -221,12 +224,14 @@ class PUM_WPML_Integration {
 	 * @return mixed
 	 */
 	public static function remap_conditions( $conditions, $new_lang = null ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( ! isset( $new_lang ) && empty( $_GET['lang'] ) ) {
 			return $conditions;
 		}
 
 		if ( ! isset( $new_lang ) ) {
-			$new_lang = $_GET['lang'];
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$new_lang = sanitize_key( wp_unslash( $_GET['lang'] ) );
 		}
 
 		foreach ( $conditions as $group_key => $group ) {
@@ -241,7 +246,7 @@ class PUM_WPML_Integration {
 					strpos( $target, '_w_' ) !== false,
 				];
 
-				if ( ! in_array( true, $tests ) ) {
+				if ( ! in_array( true, $tests, true ) ) {
 					continue;
 				}
 
@@ -254,15 +259,15 @@ class PUM_WPML_Integration {
 					$modifier = array_pop( $t );
 					// Whatever is left is the taxonomy.
 					$type = implode( '_', $t );
-				} // Post by Tax
-				elseif ( strpos( $target, '_w_' ) !== false ) {
+				} elseif ( strpos( $target, '_w_' ) !== false ) {
+					// Post by Tax.
 					$t = explode( '_w_', $target );
 					// First key is the post type.
 					$post_type = array_shift( $t );
 					// Last Key is the taxonomy
 					$type = array_pop( $t );
-				} // Post Type
-				else {
+				} else {
+					// Post Type.
 					$t = explode( '_', $target );
 					// Modifier should be the last key.
 					$modifier = array_pop( $t );
@@ -345,10 +350,10 @@ class PUM_WPML_Integration {
 	 *
 	 * Only copies untranslatable data.
 	 *
-	 * @param $master_post_id int Original post_ID.
-	 * @param $lang string The new language.
-	 * @param post_array array The                          $post array for the new/duplicate post.
-	 * @param $id int The post_ID for the new/duplicate post.
+	 * @param int    $master_post_id  Original post_ID.
+	 * @param string $lang  The new language.
+	 * @param array  $post_array  The                          $post array for the new/duplicate post.
+	 * @param int    $id  The post_ID for the new/duplicate post.
 	 */
 	public static function duplicate_post( $master_post_id, $lang, $post_array, $id ) {
 		// Only do this for popups.

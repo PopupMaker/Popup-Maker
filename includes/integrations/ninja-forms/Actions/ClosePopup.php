@@ -4,6 +4,8 @@
  *
  * @package   PopupMaker
  * @copyright Copyright (c) 2024, Code Atlantic LLC
+ *
+ * phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -62,6 +64,9 @@ final class NF_PUM_Actions_ClosePopup extends NF_Abstracts_Action {
 	* PUBLIC METHODS
 	*/
 
+	/**
+	 * Saves the settings.
+	 */
 	public function save( $action_settings ) {
 	}
 

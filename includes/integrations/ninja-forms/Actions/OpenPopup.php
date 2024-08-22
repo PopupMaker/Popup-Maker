@@ -4,6 +4,8 @@
  *
  * @package   PopupMaker
  * @copyright Copyright (c) 2024, Code Atlantic LLC
+ *
+ * phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -50,6 +52,8 @@ final class NF_PUM_Actions_OpenPopup extends NF_Abstracts_Action {
 				'label'       => __( 'Popup ID', 'popup-maker' ),
 				'placeholder' => '',
 				'width'       => 'full',
+				// Ignored because we are checking explicit page string matches.
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				'options'     => isset( $_GET['page'] ) && 'ninja-forms' === $_GET['page'] && ! empty( $_GET['form_id'] ) ? $this->get_popup_list() : [],
 			],
 		];
@@ -61,6 +65,9 @@ final class NF_PUM_Actions_OpenPopup extends NF_Abstracts_Action {
 	* PUBLIC METHODS
 	*/
 
+	/**
+	 * Saves the settings.
+	 */
 	public function save( $action_settings ) {
 	}
 

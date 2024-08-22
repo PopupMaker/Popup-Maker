@@ -4,6 +4,8 @@
  *
  * @package   PopupMaker
  * @copyright Copyright (c) 2024, Code Atlantic LLC
+ *
+ * phpcs:disable Generic.Files.OneObjectStructurePerFile.MultipleFound, PSR2.Classes.PropertyDeclaration.ScopeMissing
  */
 
 // Exit if accessed directly

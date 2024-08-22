@@ -4,6 +4,8 @@
  *
  * @package   PopupMaker
  * @copyright Copyright (c) 2024, Code Atlantic LLC
+ *
+ * phpcs:disable PEAR.NamingConventions.ValidClassName.Invalid
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

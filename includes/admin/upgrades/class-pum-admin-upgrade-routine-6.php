@@ -24,9 +24,9 @@ if ( ! class_exists( 'PUM_Admin_Upgrade_Routine' ) ) {
 final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 
 	/**
-	 * @var null
+	 * @var array
 	 */
-	public static $valid_themes = null;
+	public static $valid_themes;
 
 	/**
 	 * @var null
@@ -47,12 +47,13 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 	 */
 	public static function run() {
 		if ( ! current_user_can( PUM_Admin_Upgrades::instance()->required_cap ) ) {
-			wp_die( __( 'You do not have permission to do upgrades', 'popup-maker' ), __( 'Error', 'popup-maker' ), [ 'response' => 403 ] );
+			wp_die( esc_html__( 'You do not have permission to do upgrades', 'popup-maker' ), esc_html__( 'Error', 'popup-maker' ), [ 'response' => 403 ] );
 		}
 
 		ignore_user_abort( true );
 
 		if ( ! pum_is_func_disabled( 'set_time_limit' ) ) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			@set_time_limit( 0 );
 		}
 
@@ -141,14 +142,8 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 	public static function delete_all_orphaned_meta_keys() {
 		global $wpdb;
 
-		$wpdb->query(
-			"
-			DELETE pm
-			FROM $wpdb->postmeta pm
-			LEFT JOIN $wpdb->posts wp ON wp.ID = pm.post_id
-			WHERE wp.ID IS NULL
-			AND pm.meta_key LIKE 'popup_%'"
-		);
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$wpdb->query( "DELETE pm FROM $wpdb->postmeta pm LEFT JOIN $wpdb->posts wp ON wp.ID = pm.post_id WHERE wp.ID IS NULL AND pm.meta_key LIKE 'popup_%'" );
 	}
 
 	/**
@@ -159,6 +154,7 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 	public static function delete_all_old_meta_keys() {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$query = $wpdb->query(
 			"
 			DELETE FROM $wpdb->postmeta
@@ -193,10 +189,19 @@ final class PUM_Admin_Upgrade_Routine_6 extends PUM_Admin_Upgrade_Routine {
 		global $popmake_options;
 
 		// Setup the Popup Taxonomies
-		popmake_setup_taxonomies( true );
+		if ( function_exists( 'popmake_setup_taxonomies' ) ) {
+			popmake_setup_taxonomies( true );
+		}
 
-		$categories = wp_count_terms( 'popup_category', [ 'hide_empty' => true ] );
-		$tags       = wp_count_terms( 'popup_tag', [ 'hide_empty' => true ] );
+		$categories = wp_count_terms( [
+			'taxonomy'   => 'popup_category',
+			'hide_empty' => true,
+		] );
+
+		$tags = wp_count_terms( [
+			'taxonomy'   => 'popup_tag',
+			'hide_empty' => true,
+		] );
 
 		if ( is_wp_error( $tags ) ) {
 			$tags = 0;

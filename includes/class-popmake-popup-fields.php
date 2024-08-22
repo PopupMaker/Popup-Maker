@@ -11,7 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
+/**
+ * Popmake_Popup_Fields Class
+ */
 class Popmake_Popup_Fields extends Popmake_Fields {
 	public $field_prefix = 'popup_';
 }

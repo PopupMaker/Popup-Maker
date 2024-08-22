@@ -98,6 +98,7 @@ class PUM_Admin_Upgrades {
 		$parent = null;
 
 		/*
+		REVIEW
 		if ( function_exists( 'is_network_admin' ) && is_network_admin() ) {
 			add_menu_page(
 				__( 'Popup Maker', 'popup-maker' ),
@@ -128,21 +129,23 @@ class PUM_Admin_Upgrades {
 	 */
 	public function process_upgrade_args() {
 
-		$page = isset( $_GET['page'] ) ? $_GET['page'] : '';
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
 
-		if ( ! ( defined( 'DOING_AJAX' ) && DOING_AJAX && 'pum_trigger_upgrades' === $_REQUEST['action'] ) && 'pum-upgrades' !== $page ) {
+		if ( ! ( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['action'] ) && 'pum_trigger_upgrades' === $_REQUEST['action'] ) && 'pum-upgrades' !== $page ) {
 			return;
 		}
 
 		$this->doing_upgrades = true;
 
-		$action    = isset( $_REQUEST['pum-upgrade'] ) ? sanitize_text_field( $_REQUEST['pum-upgrade'] ) : $this->get_pum_db_ver() + 1;
+		$action    = isset( $_REQUEST['pum-upgrade'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['pum-upgrade'] ) ) : $this->get_pum_db_ver() + 1;
 		$step      = isset( $_REQUEST['step'] ) ? absint( $_REQUEST['step'] ) : 1;
 		$total     = isset( $_REQUEST['total'] ) ? absint( $_REQUEST['total'] ) : false;
 		$custom    = isset( $_REQUEST['custom'] ) ? absint( $_REQUEST['custom'] ) : 0;
 		$number    = isset( $_REQUEST['number'] ) ? absint( $_REQUEST['number'] ) : 100;
 		$completed = isset( $_REQUEST['completed'] ) ? absint( $_REQUEST['completed'] ) : false;
 		$steps     = ceil( $total / $number );
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		if ( $step > $steps ) {
 			// Prevent a weird case where the estimate was off. Usually only a couple.
@@ -166,8 +169,6 @@ class PUM_Admin_Upgrades {
 	 * Get upgrade arg.
 	 *
 	 * @param string $key
-	 *
-	 * @return bool|null
 	 */
 	public function set_arg( $key, $value = null ) {
 
@@ -234,17 +235,19 @@ class PUM_Admin_Upgrades {
 		if ( ! empty( $resume_upgrade ) ) {
 			$resume_url = add_query_arg( $resume_upgrade, admin_url( 'index.php' ) );
 			printf(
-				'<div class="error"><p>' . __( 'Popup Maker needs to complete a database upgrade that was previously started, click <a href="%s">here</a> to resume the upgrade.', 'popup-maker' ) . '</p></div>',
+				/* translators: %s: URL to upgrade page. */
+				'<div class="error"><p>' . esc_html__( 'Popup Maker needs to complete a database upgrade that was previously started, click <a href="%s">here</a> to resume the upgrade.', 'popup-maker' ) . '</p></div>',
 				esc_url( $resume_url )
 			);
 		} else {
 			printf(
 				'<div class="error"><p><strong>%s:</strong> <span class="dashicons dashicons-warning" style="color: #dc3232;"></span> %s %s %s</p></div>',
-				__( 'Popup Maker', 'popup-maker' ),
-				__( 'Important', 'popup-maker' ),
-				__( 'Database upgrades required.', 'popup-maker' ),
+				esc_html__( 'Popup Maker', 'popup-maker' ),
+				esc_html__( 'Important', 'popup-maker' ),
+				esc_html__( 'Database upgrades required.', 'popup-maker' ),
 				sprintf(
-					__( 'Please click %1$shere%2$s to complete these changes now.', 'popup-maker' ),
+					/* translators: %1$s: URL to upgrade page. %2$s: closing HTML tag. */
+					esc_html__( 'Please click %1$shere%2$s to complete these changes now.', 'popup-maker' ),
 					'<a href="' . esc_url( admin_url( 'options.php?page=pum-upgrades' ) ) . '">',
 					'</a>'
 				)
@@ -262,7 +265,7 @@ class PUM_Admin_Upgrades {
 	public function trigger_upgrades() {
 
 		if ( ! current_user_can( $this->required_cap ) ) {
-			wp_die( __( 'You do not have permission to do upgrades', 'popup-maker' ), __( 'Error', 'popup-maker' ), [ 'response' => 403 ] );
+			wp_die( esc_html__( 'You do not have permission to do upgrades', 'popup-maker' ), esc_html__( 'Error', 'popup-maker' ), [ 'response' => 403 ] );
 		}
 
 		$deprecated_ver = get_site_option( 'popmake_version', false );
@@ -502,7 +505,7 @@ class PUM_Admin_Upgrades {
 
 		$completed_upgrades = $this->get_completed_upgrades();
 
-		return in_array( $upgrade_action, $completed_upgrades );
+		return in_array( $upgrade_action, $completed_upgrades, true );
 	}
 
 	/**
@@ -540,8 +543,8 @@ class PUM_Admin_Upgrades {
 		?>
 		<div class="wrap">
 			<h2>
-				<?php _e( 'Popup Maker - Upgrades', 'popup-maker' ); ?>
-				<img src="<?php echo POPMAKE_URL . '/assets/images/admin/loading.gif'; ?>" id="pum-upgrade-loader"/>
+				<?php esc_html_e( 'Popup Maker - Upgrades', 'popup-maker' ); ?>
+				<img src="<?php echo esc_attr( POPMAKE_URL . '/assets/images/admin/loading.gif' ); ?>" id="pum-upgrade-loader"/>
 			</h2>
 
 			<style>
@@ -555,7 +558,7 @@ class PUM_Admin_Upgrades {
 				}
 			</style>
 			<p>
-				<?php _e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'popup-maker' ); ?>
+				<?php esc_html_e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'popup-maker' ); ?>
 			</p>
 			<div id="pum-upgrade-status"></div>
 			<script type="text/javascript">
@@ -630,14 +633,14 @@ class PUM_Admin_Upgrades {
 									}
 								})
 								.fail(function () {
-									update_status("<?php _e( 'Upgrade failed, please try again.', 'popup-maker' ); ?>");
+									update_status("<?php esc_attr_e( 'Upgrade failed, please try again.', 'popup-maker' ); ?>");
 								});
 					}
 
 					$(document).ready(function () {
 						// Trigger upgrades on page load
 						next_step(<?php echo wp_json_encode( $this->get_args() ); ?>);
-						update_status('<?php printf( '<strong>%s</strong>', $this->get_upgrade( $this->get_arg( 'pum-upgrade' ) ) ); ?>');
+						update_status('<?php printf( '<strong>%s</strong>', esc_html( $this->get_upgrade( $this->get_arg( 'pum-upgrade' ) ) ) ); ?>');
 					});
 				}(jQuery, document));
 			</script>

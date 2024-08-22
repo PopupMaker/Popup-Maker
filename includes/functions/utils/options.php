@@ -23,12 +23,12 @@ function pum_get_options() {
  * Get a forum option.
  *
  * @param string $key
- * @param mixed  $default
+ * @param mixed  $default_value
  *
  * @return mixed
  */
-function pum_get_option( $key, $default = false ) {
-	return PUM_Utils_Options::get( $key, $default );
+function pum_get_option( $key, $default_value = false ) {
+	return PUM_Utils_Options::get( $key, $default_value );
 }
 
 /**

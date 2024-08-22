@@ -54,7 +54,7 @@ class PUM_Modules_Admin_Bar {
 			( current_user_can( 'edit_others_posts' ) || current_user_can( 'manage_options' ) ),
 		];
 
-		return ! in_array( false, $tests );
+		return ! in_array( false, $tests, true );
 	}
 
 	/**

@@ -80,12 +80,12 @@ if ( ! function_exists( 'emodal_get_license' ) ) {
 
 
 if ( ! function_exists( 'emresolve' ) ) {
-	function emresolve( array $a, $path, $default = null ) {
+	function emresolve( array $a, $path, $default_value = null ) {
 		$current = $a;
 		$p       = strtok( $path, '.' );
 		while ( false !== $p ) {
 			if ( ! isset( $current[ $p ] ) ) {
-				return $default;
+				return $default_value;
 			}
 			$current = $current[ $p ];
 			$p       = strtok( '.' );

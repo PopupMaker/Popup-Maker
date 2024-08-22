@@ -11,6 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * PUM_Form Class
+ */
 class PUM_Form extends PUM_Fields {
 
 	public $id;
@@ -40,7 +43,7 @@ class PUM_Form extends PUM_Fields {
 			$this->field_name_format = $args['field_name_format'];
 		}
 
-		return parent::__construct( $args );
+		parent::__construct( $args );
 	}
 
 	public function get_id() {

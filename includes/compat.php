@@ -1,4 +1,10 @@
 <?php
+/**
+ * Compatibility functions
+ *
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
+ */
 
 // SPL can be disabled on PHP 5.2
 if ( ! function_exists( 'spl_autoload_register' ) ) {
@@ -10,15 +16,15 @@ if ( ! function_exists( 'spl_autoload_register' ) ) {
 	 * @since 4.6.0
 	 *
 	 * @param callable $autoload_function The function to register.
-	 * @param bool     $throw Optional. Whether the function should throw an exception
+	 * @param bool     $throw_error Optional. Whether the function should throw an exception
 	 *                                        if the function isn't callable. Default true.
 	 * @param bool     $prepend Whether the function should be prepended to the stack.
 	 *                                        Default false.
 	 *
 	 * @throws Exception
 	 */
-	function spl_autoload_register( $autoload_function, $throw = true, $prepend = false ) {
-		if ( $throw && ! is_callable( $autoload_function ) ) {
+	function spl_autoload_register( $autoload_function, $throw_error = true, $prepend = false ) {
+		if ( $throw_error && ! is_callable( $autoload_function ) ) {
 			// String not translated to match PHP core.
 			throw new Exception( 'Function not callable' );
 		}
@@ -26,7 +32,7 @@ if ( ! function_exists( 'spl_autoload_register' ) ) {
 		global $_wp_spl_autoloaders;
 
 		// Don't allow multiple registration.
-		if ( in_array( $autoload_function, $_wp_spl_autoloaders ) ) {
+		if ( in_array( $autoload_function, $_wp_spl_autoloaders, true ) ) {
 			return;
 		}
 
@@ -42,14 +48,14 @@ if ( ! function_exists( 'spl_autoload_register' ) ) {
 	 *
 	 * @since 4.6.0
 	 *
-	 * @param callable $function The function to unregister.
+	 * @param callable $function_name The function to unregister.
 	 *
 	 * @return bool True if the function was unregistered, false if it could not be.
 	 */
-	function spl_autoload_unregister( $function ) {
+	function spl_autoload_unregister( $function_name ) {
 		global $_wp_spl_autoloaders;
 		foreach ( $_wp_spl_autoloaders as &$autoloader ) {
-			if ( $autoloader === $function ) {
+			if ( $autoloader === $function_name ) {
 				unset( $autoloader );
 
 				return true;
@@ -80,6 +86,7 @@ if ( ! function_exists( 'current_action' ) ) {
 if ( ! function_exists( 'get_called_class' ) ) {
 	function get_called_class( $bt = false, $l = 1 ) {
 		if ( ! $bt ) {
+			// phpcs:ignore PHPCompatibility.FunctionUse.ArgumentFunctionsReportCurrentValue.NeedsInspection, WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
 			$bt = debug_backtrace();
 		}
 		if ( ! isset( $bt[ $l ] ) ) {
@@ -90,14 +97,14 @@ if ( ! function_exists( 'get_called_class' ) ) {
 		} else {
 			switch ( $bt[ $l ]['type'] ) {
 				case '::':
-					$lines      = file( $bt[ $l ]['file'] );
-					$i          = 0;
-					$callerLine = '';
+					$lines       = file( $bt[ $l ]['file'] );
+					$i           = 0;
+					$caller_line = '';
 					do {
 						++$i;
-						$callerLine = $lines[ $bt[ $l ]['line'] - $i ] . $callerLine;
-					} while ( stripos( $callerLine, $bt[ $l ]['function'] ) === false );
-					preg_match( '/([a-zA-Z0-9\_]+)::' . $bt[ $l ]['function'] . '/', $callerLine, $matches );
+						$caller_line = $lines[ $bt[ $l ]['line'] - $i ] . $caller_line;
+					} while ( stripos( $caller_line, $bt[ $l ]['function'] ) === false );
+					preg_match( '/([a-zA-Z0-9\_]+)::' . $bt[ $l ]['function'] . '/', $caller_line, $matches );
 					if ( ! isset( $matches[1] ) ) {
 						// must be an edge case.
 						throw new Exception( 'Could not find caller class: originating method call is obscured.' );
@@ -175,47 +182,52 @@ if ( ! function_exists( 'shortcode_exists' ) ) {
  * Deprecated PHP v5.3 functions.
  */
 if ( ! function_exists( 'array_replace_recursive' ) ) {
-	function array_replace_recursive( $array, $array1 ) {
+	function array_replace_recursive( $arr, $arr1 ) {
 		// handle the arguments, merge one by one
-		$args  = func_get_args();
-		$array = $args[0];
-		if ( ! is_array( $array ) ) {
-			return $array;
+		$args = func_get_args();
+		$arr  = $args[0];
+		if ( ! is_array( $arr ) ) {
+			return $arr;
 		}
-		for ( $i = 1; $i < count( $args ); $i++ ) {
+
+		$count = count( $args );
+
+		for ( $i = 1; $i < $count; $i++ ) {
 			if ( is_array( $args[ $i ] ) ) {
-				$array = recurse( $array, $args[ $i ] );
+				$arr = recurse( $arr, $args[ $i ] );
 			}
 		}
 
-		return $array;
+		return $arr;
 	}
 }
 
 if ( ! function_exists( 'recurse' ) ) {
-	function recurse( $array, $array1 ) {
-		foreach ( $array1 as $key => $value ) {
-			// create new key in $array, if it is empty or not an array
-			if ( ! isset( $array[ $key ] ) || ( isset( $array[ $key ] ) && ! is_array( $array[ $key ] ) ) ) {
-				$array[ $key ] = [];
+	function recurse( $arr, $arr1 ) {
+		foreach ( $arr1 as $key => $value ) {
+			// create new key in $arr, if it is empty or not an array
+			if ( ! isset( $arr[ $key ] ) || ( isset( $arr[ $key ] ) && ! is_array( $arr[ $key ] ) ) ) {
+				$arr[ $key ] = [];
 			}
 
 			// overwrite the value in the base array
 			if ( is_array( $value ) ) {
-				$value = recurse( $array[ $key ], $value );
+				$value = recurse( $arr[ $key ], $value );
 			}
-			$array[ $key ] = $value;
+			$arr[ $key ] = $value;
 		}
 
-		return $array;
+		return $arr;
 	}
 }
 
 if ( ! function_exists( 'write_log' ) ) {
 	function write_log( $log ) {
 		if ( is_array( $log ) || is_object( $log ) ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log, WordPress.PHP.DevelopmentFunctions.error_log_print_r
 			error_log( print_r( $log, true ) );
 		} else {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( $log );
 		}
 	}

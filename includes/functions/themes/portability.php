@@ -18,6 +18,8 @@ function pum_install_theme( $name, $settings = null, $extra_meta = [] ) {
 		$settings = PUM_Admin_Themes::defaults();
 	}
 
+	// Ignored as this occurs during install and can be done siliently later if it fails. Defaulting to passive error handling.
+	// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 	$new_theme_id = @wp_insert_post(
 		[
 			'post_title'     => $name,

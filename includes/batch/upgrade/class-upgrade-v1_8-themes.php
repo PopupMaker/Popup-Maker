@@ -4,6 +4,8 @@
  *
  * @package   PopupMaker
  * @copyright Copyright (c) 2024, Code Atlantic LLC
+ *
+ * phpcs:disable PEAR.NamingConventions.ValidClassName.Invalid
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -33,6 +35,7 @@ class PUM_Upgrade_v1_8_Themes extends PUM_Abstract_Upgrade_Themes {
 	 */
 	public function custom_query_args() {
 		return [
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'meta_query' => [
 				'relation' => 'OR',
 				[
