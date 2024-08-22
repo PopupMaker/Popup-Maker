@@ -16,6 +16,8 @@
  * @package     PopupMaker
  * @author      Daniel Iser
  * @copyright   Copyright (c) 2023, Code Atlantic LLC
+ *
+ * phpcs:disable Universal.Files.SeparateFunctionsFromOO.Mixed
  */
 
 // Exit if accessed directly.
@@ -26,11 +28,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Autoloader
  *
- * @param $class
+ * @param string $class_name The class name to load.
  */
-function pum_autoloader( $class ) {
+function pum_autoloader( $class_name ) {
 
-	if ( strncmp( 'PUM_Newsletter_', $class, strlen( 'PUM_Newsletter_' ) ) === 0 && class_exists( 'PUM_MCI' ) && ! empty( PUM_MCI::$VER ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ) ) {
+	if ( strncmp( 'PUM_Newsletter_', $class_name, strlen( 'PUM_Newsletter_' ) ) === 0 && class_exists( 'PUM_MCI' ) && ! empty( PUM_MCI::$VER ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ) ) {
 		return;
 	}
 
@@ -60,13 +62,13 @@ function pum_autoloader( $class ) {
 
 		// does the class use the namespace prefix?
 		$len = strlen( $prefix );
-		if ( strncmp( $prefix, $class, $len ) !== 0 ) {
+		if ( strncmp( $prefix, $class_name, $len ) !== 0 ) {
 			// no, move to the next registered autoloader
 			continue;
 		}
 
 		// get the relative class name
-		$relative_class = substr( $class, $len );
+		$relative_class = substr( $class_name, $len );
 
 		// replace the namespace prefix with the base directory, replace namespace
 		// separators with directory separators in the relative class name, append
@@ -92,6 +94,7 @@ spl_autoload_register( 'pum_autoloader' ); // Register autoloader
  * @since 1.0
  */
 class Popup_Maker {
+
 
 	/**
 	 * @var string Plugin Name
@@ -201,6 +204,8 @@ class Popup_Maker {
 		self::$URL  = plugins_url( '/', __FILE__ );
 		self::$FILE = __FILE__;
 
+		// Ignored as we are simply checking for a query var's existence.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( isset( $_GET['pum_debug'] ) || PUM_Utils_Options::get( 'debug_mode', false ) ) {
 			self::$DEBUG_MODE = true;
 		}
