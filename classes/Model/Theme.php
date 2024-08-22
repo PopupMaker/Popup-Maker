@@ -67,14 +67,14 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 * Returns a specific theme setting with optional default value when not found.
 	 *
 	 * @param      $key
-	 * @param bool $default
+	 * @param bool $default_value
 	 *
 	 * @return bool|mixed
 	 */
-	public function get_setting( $key, $default = false ) {
+	public function get_setting( $key, $default_value = false ) {
 		$settings = $this->get_settings();
 
-		return isset( $settings[ $key ] ) ? $settings[ $key ] : $default;
+		return isset( $settings[ $key ] ) ? $settings[ $key ] : $default_value;
 	}
 
 	/**
@@ -281,11 +281,11 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 
 	public function get_deprecated_settings() {
 		return [
-			'overlay'   => $this->_dep_get_settings_group( 'overlay' ),
-			'container' => $this->_dep_get_settings_group( 'container' ),
-			'title'     => $this->_dep_get_settings_group( 'title' ),
-			'content'   => $this->_dep_get_settings_group( 'content' ),
-			'close'     => $this->_dep_get_settings_group( 'close' ),
+			'overlay'   => $this->dep_get_settings_group( 'overlay' ),
+			'container' => $this->dep_get_settings_group( 'container' ),
+			'title'     => $this->dep_get_settings_group( 'title' ),
+			'content'   => $this->dep_get_settings_group( 'content' ),
+			'close'     => $this->dep_get_settings_group( 'close' ),
 		];
 	}
 
@@ -305,7 +305,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 *
 	 * @return mixed
 	 */
-	public function _dep_get_settings_group( $group, $key = null ) {
+	public function dep_get_settings_group( $group, $key = null ) {
 		if ( ! isset( $this->dep_groups[ $group ] ) ) {
 			/**
 			 * Remap old meta settings to new settings location for v1.7. This acts as a passive migration when needed.

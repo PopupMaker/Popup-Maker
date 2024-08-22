@@ -380,6 +380,7 @@ class PUM_Utils_Logging {
 	public function clear_log() {
 		// Delete the file.
 		if ( $this->fs && method_exists( $this->fs, 'delete' ) ) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			@$this->fs->delete( $this->file );
 		}
 

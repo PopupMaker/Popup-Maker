@@ -184,14 +184,14 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * Returns a specific popup setting with optional default value when not found.
 	 *
 	 * @param string $key Setting key.
-	 * @param mixed  $default Default value if not set.
+	 * @param mixed  $default_value Default value if not set.
 	 *
 	 * @return bool|mixed
 	 */
-	public function get_setting( $key, $default = false ) {
+	public function get_setting( $key, $default_value = false ) {
 		$settings = $this->get_settings();
 
-		return isset( $settings[ $key ] ) ? $settings[ $key ] : $default;
+		return isset( $settings[ $key ] ) ? $settings[ $key ] : $default_value;
 	}
 
 	/**

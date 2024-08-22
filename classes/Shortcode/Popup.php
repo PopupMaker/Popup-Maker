@@ -171,7 +171,11 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 					],
 					'position_top'    => [
 						'label'       => __( 'Top', 'popup-maker' ),
-						'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Top', 'popup-maker' ) ) ),
+						'description' => sprintf(
+							/* translators: 1. Screen Edge: top, bottom. */
+							_x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ),
+							strtolower( __( 'Top', 'popup-maker' ) )
+						),
 						'type'        => 'rangeslider',
 						'std'         => 100,
 						'priority'    => 10,
@@ -182,7 +186,11 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 					],
 					'position_bottom' => [
 						'label'       => __( 'Bottom', 'popup-maker' ),
-						'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Bottom', 'popup-maker' ) ) ),
+						'description' => sprintf(
+							/* translators: 1. Screen Edge: top, bottom. */
+							_x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ),
+							strtolower( __( 'Bottom', 'popup-maker' ) )
+						),
 						'type'        => 'rangeslider',
 						'std'         => 0,
 						'priority'    => 10,
@@ -193,7 +201,11 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 					],
 					'position_left'   => [
 						'label'       => __( 'Left', 'popup-maker' ),
-						'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Left', 'popup-maker' ) ) ),
+						'description' => sprintf(
+							/* translators: 1. Screen Edge: top, bottom. */
+							_x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ),
+							strtolower( __( 'Left', 'popup-maker' ) )
+						),
 						'type'        => 'rangeslider',
 						'std'         => 0,
 						'priority'    => 10,
@@ -204,7 +216,11 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 					],
 					'position_right'  => [
 						'label'       => __( 'Right', 'popup-maker' ),
-						'description' => sprintf( _x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ), strtolower( __( 'Right', 'popup-maker' ) ) ),
+						'description' => sprintf(
+							/* translators: 1. Screen Edge: top, bottom. */
+							_x( 'Distance from the %s edge of the screen.', 'Screen Edge: top, bottom', 'popup-maker' ),
+							strtolower( __( 'Right', 'popup-maker' ) )
+						),
 						'type'        => 'rangeslider',
 						'std'         => 0,
 						'priority'    => 10,
@@ -308,7 +324,7 @@ class PUM_Shortcode_Popup extends PUM_Shortcode {
 		);
 
 		// We need to fake a popup using the PUM_Popup data model.
-		$post_id              = rand( - 99999, - 1 ); // negative ID, to avoid clash with a valid post
+		$post_id              = wp_rand( -99999, - 1 ); // negative ID, to avoid clash with a valid post
 		$post                 = new stdClass();
 		$post->ID             = $post_id;
 		$post->post_author    = 1;

@@ -151,7 +151,7 @@ class PUM_Site_Popups {
 	 * @since 1.15
 	 */
 	public static function preload_popup_by_id_if_enabled( $popup_id ) {
-		if ( ! in_array( $popup_id, self::$loaded_ids ) ) {
+		if ( ! in_array( (int) $popup_id, self::$loaded_ids, true ) ) {
 			$popup = pum_get_popup( $popup_id );
 			if ( $popup->is_enabled() ) {
 				self::preload_popup( $popup );
@@ -184,9 +184,11 @@ class PUM_Site_Popups {
 		do_action( 'popmake_preload_popup', $popup->ID );
 	}
 
-	// REWRITE THIS
+	/**
+	 * REWRITE THIS
+	 */
 	public static function load_popup( $id ) {
-		if ( did_action( 'wp_head' ) && ! in_array( $id, self::$loaded_ids ) ) {
+		if ( did_action( 'wp_head' ) && ! in_array( (int) $id, self::$loaded_ids, true ) ) {
 			$args1 = [
 				'post_type' => 'popup',
 				'p'         => $id,
@@ -201,8 +203,6 @@ class PUM_Site_Popups {
 				pum()->current_popup = null;
 			}
 		}
-
-		return;
 	}
 
 

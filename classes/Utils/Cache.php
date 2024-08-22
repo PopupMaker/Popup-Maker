@@ -19,7 +19,7 @@ class PUM_Utils_Cache {
 	/**
 	 * @var string
 	 */
-	static $prefix = 'pum';
+	public static $prefix = 'pum';
 
 	/**
 	 * @return bool
@@ -31,12 +31,12 @@ class PUM_Utils_Cache {
 	/**
 	 * Returns the general
 	 *
-	 * @param string $string
+	 * @param string $str
 	 *
 	 * @return string
 	 */
-	public static function prefix_( $string = '' ) {
-		return empty( $string ) ? self::$prefix : self::$prefix . '_' . $string;
+	public static function prefix_( $str = '' ) {
+		return empty( $string ) ? self::$prefix : self::$prefix . '_' . $str;
 	}
 
 	/**

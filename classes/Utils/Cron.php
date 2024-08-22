@@ -55,7 +55,7 @@ class PUM_Utils_Cron {
 	 */
 	private function weekly_events() {
 		if ( ! wp_next_scheduled( 'pum_weekly_scheduled_events' ) ) {
-			wp_schedule_event( current_time( 'timestamp' ), 'weekly', 'pum_weekly_scheduled_events' );
+			wp_schedule_event( time(), 'weekly', 'pum_weekly_scheduled_events' );
 		}
 	}
 
@@ -64,7 +64,7 @@ class PUM_Utils_Cron {
 	 */
 	private function daily_events() {
 		if ( ! wp_next_scheduled( 'pum_daily_scheduled_events' ) ) {
-			wp_schedule_event( current_time( 'timestamp' ), 'daily', 'pum_daily_scheduled_events' );
+			wp_schedule_event( time(), 'daily', 'pum_daily_scheduled_events' );
 		}
 	}
 }
