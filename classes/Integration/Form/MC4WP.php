@@ -21,7 +21,8 @@ class PUM_Integration_Form_MC4WP extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return __( 'MailChimp for WordPress' );
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+		return __( 'MailChimp for WordPress', 'mc4wp' );
 	}
 
 	/**

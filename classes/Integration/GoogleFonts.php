@@ -47,7 +47,9 @@ class PUM_Integration_GoogleFonts {
 	 * @return array|mixed
 	 */
 	public static function fetch_fonts( $sort = 'alpha' ) {
-		if ( false !== $font_list = get_site_transient( 'pum_google_fonts_list' ) ) {
+		$font_list = get_site_transient( 'pum_google_fonts_list' );
+
+		if ( false !== $font_list ) {
 			return $font_list;
 		}
 

@@ -30,7 +30,8 @@ class PUM_Integration_Form_ContactForm7 extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return __( 'Contact Form 7' );
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+		return __( 'Contact Form 7', 'contact-form-7' );
 	}
 
 	/**
