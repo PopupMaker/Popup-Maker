@@ -548,7 +548,13 @@ class PUM_Utils_Alerts {
 										$attributes = 'class="pum-dismiss"';
 									}
 									?>
-									<li><a data-action="<?php echo esc_attr( $action['action'] ); ?>" href="<?php echo esc_url( $url ); ?>" <?php echo esc_attr( $attributes ); ?> ><?php echo esc_html( $link_text ); ?></a></li>
+									<li><a data-action="<?php echo esc_attr( $action['action'] ); ?>" href="<?php echo esc_url( $url ); ?>" <?php echo esc_attr( $attributes ); ?> >
+										<?php
+										// Ignored because this breaks the HTML and link is escaped above.
+										// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+										echo wp_kses_post( $link_text );
+										?>
+									</a></li>
 								<?php } ?>
 							</ul>
 						<?php endif; ?>

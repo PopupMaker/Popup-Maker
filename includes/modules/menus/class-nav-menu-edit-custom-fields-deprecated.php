@@ -1,5 +1,7 @@
 <?php
 
+// phpcs:disable Generic.Classes.DuplicateClassName.Found
+
 if ( ! class_exists( 'Walker_Nav_Menu_Edit' ) ) {
 	/** Walker_Nav_Menu_Edit class */
 	require_once ABSPATH . 'wp-admin/includes/nav-menu.php';

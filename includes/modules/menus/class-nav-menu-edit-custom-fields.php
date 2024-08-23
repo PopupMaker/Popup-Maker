@@ -1,5 +1,7 @@
 <?php
 
+// phpcs:disable Generic.Classes.DuplicateClassName.Found
+
 if ( ! class_exists( 'Walker_Nav_Menu_Edit' ) ) {
 	global $wp_version;
 	if ( version_compare( $wp_version, '4.4', '>=' ) ) {
