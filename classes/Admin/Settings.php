@@ -52,7 +52,13 @@ class PUM_Admin_Settings {
 		if ( ! empty( self::$notices ) ) {
 			foreach ( self::$notices as $notice ) { ?>
 				<div class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> is-dismissible">
-					<p><strong><?php echo esc_html( $notice['message'] ); ?></strong></p>
+					<p><strong>
+					<?php
+					// Ignored because this breaks the HTML and the notices are escaped when added to the array.
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo( $notice['message'] );
+					?>
+					</strong></p>
 					<button type="button" class="notice-dismiss">
 						<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'popup-maker' ); ?></span>
 					</button>
