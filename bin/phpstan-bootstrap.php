@@ -15,6 +15,10 @@ if ( ! defined( 'WP_CLI' ) ) {
 	define( 'WP_CLI', false );
 }
 
+if ( ! defined( 'DOING_AJAX' ) ) {
+	define( 'DOING_AJAX', false );
+}
+
 if ( ! defined( 'IS_WPCOM' ) ) {
 	/**
 	 * Is WPCOM.
@@ -77,4 +81,20 @@ if ( ! defined( 'POPMAKE_DB_VERSION' ) ) {
 
 if ( ! defined( 'POPMAKE_API_URL' ) ) {
 	define( 'POPMAKE_API_URL', 'https://wppopupmaker.com' );
+}
+
+if ( ! defined( 'PUM_AWEBER_INTEGRATION_URL' ) ) {
+	define( 'PUM_AWEBER_INTEGRATION_URL', 'https://wppopupmaker.com' );
+}
+
+if ( ! defined( 'PUM_NEWSLETTER_URL' ) ) {
+	define( 'PUM_NEWSLETTER_URL', 'https://wppopupmaker.com' );
+}
+
+if ( ! defined( 'PUM_NEWSLETTER_VERSION' ) ) {
+	define( 'PUM_NEWSLETTER_VERSION', '1.0.0' );
+}
+
+if ( ! defined( 'PUM_MAILCHIMP_INTEGRATION_VER' ) ) {
+	define( 'PUM_MAILCHIMP_INTEGRATION_VER', '1.0.0' );
 }
