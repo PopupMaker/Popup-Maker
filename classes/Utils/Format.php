@@ -16,21 +16,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Utils_Format {
 
 	/**
-	 * Removes <p></p> around URLs
-	 *
-	 * @param string $content
-	 *
-	 * @return mixed|string
-	 */
-	public static function unwrap_urls( $content = '' ) {
-		$content = preg_replace( '/<\\w+>((([A-Za-z]{3,9}:(?:\\/\\/)?)(?:[-;:&=\\+\$,\\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\\+\$,\\w]+@)[A-Za-z0-9.-]+)((?:\\/[\\+~%\\/.\\w-_]*)?\\??(?:[-\\+=&;%@.\\w_]*)#?(?:[.\\!\\/\\\\w]*))?)<\\/\\w+>/', "$1\n\n", $content );
-		$content = str_replace( '</p>', "</p>\n\n", $content );
-
-		return $content;
-	}
-
-
-	/**
 	 * @param        $time
 	 * @param string $format U|human
 	 *
