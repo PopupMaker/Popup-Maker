@@ -166,7 +166,7 @@ class PUM_Utils_Alerts {
 				);
 
 				// Non-English locale in header, no translations.
-			} elseif ( ! empty( $non_en_locales_from_header ) ) {
+			} elseif ( count( $non_en_locales_from_header ) ) {
 				if ( 1 === count( $non_en_locales_from_header ) ) {
 					$locale = reset( $non_en_locales_from_header );
 

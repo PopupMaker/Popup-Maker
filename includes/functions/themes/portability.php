@@ -8,8 +8,8 @@
 
 /**
  * @param       $name
- * @param null  $settings
- * @param array $extra_meta
+ * @param array|null $settings
+ * @param array      $extra_meta
  *
  * @return int|\WP_Error
  */

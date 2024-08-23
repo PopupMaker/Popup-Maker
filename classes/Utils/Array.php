@@ -29,7 +29,7 @@ class PUM_Utils_Array {
 	}
 
 	/**
-	 * @param null $val
+	 * @param mixed $val
 	 *
 	 * @return bool
 	 */

@@ -73,10 +73,8 @@ abstract class PUM_Shortcode {
 
 	/**
 	 * Class constructor will set the needed filter and action hooks
-	 *
-	 * @param array $args
 	 */
-	public function __construct( $args = [] ) {
+	public function __construct() {
 		if ( ! did_action( 'init' ) ) {
 			add_action( 'init', [ $this, 'register' ] );
 		} elseif ( ! did_action( 'admin_head' ) && current_action() !== 'init' ) {

@@ -21,6 +21,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0
  */
 class EModal_Model {
+
+	/** @var int */
+	protected $id;
+
+	/** @var string */
+	protected $created;
+
+	/** @var string */
+	protected $modified;
+
 	protected $_class_name     = 'EModal_Model';
 	protected $_table_name     = '';
 	protected $_pk             = 'id';
@@ -28,7 +38,7 @@ class EModal_Model {
 	protected $_default_fields = [];
 	protected $_state          = null;
 
-	public function __construct( $id = null, $limit = 1 ) {
+	public function __construct( $id = null ) {
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->_table_name;
 		$class_name = strtolower( $this->_class_name );

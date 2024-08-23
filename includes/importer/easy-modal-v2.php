@@ -143,7 +143,7 @@ function popmake_emodal_v2_import() {
 		$theme_id_map[ $theme['id'] ] = $new_theme_id;
 	}
 
-	if ( count( $themes ) === 1 ) {
+	if ( count( $themes ) === 1 && isset( $new_theme_id ) ) {
 		update_post_meta( $new_theme_id, 'popup_theme_defaults_set', true );
 		update_option( 'popmake_default_theme', $new_theme_id );
 	}
@@ -161,7 +161,7 @@ function popmake_emodal_v2_import() {
 			[
 				'popup_old_easy_modal_id'                 => $modal['id'],
 				'popup_defaults_set'                      => true,
-				'popup_theme'                             => isset( $theme_id_map[ $theme['id'] ] ) ? $theme_id_map[ $theme['id'] ] : null,
+				'popup_theme'                             => isset( $theme ) && isset( $theme_id_map[ $theme['id'] ] ) ? $theme_id_map[ $theme['id'] ] : null,
 				'popup_title'                             => $modal['title'],
 				'popup_display_scrollable_content'        => null,
 				'popup_display_overlay_disabled'          => $meta['display']['overlay_disabled'],
@@ -318,7 +318,7 @@ function popmake_emodal_shortcode_modal( $atts, $content = null ) {
 	$shortcode = '[popup ';
 
 	foreach ( $new_shortcode_atts as $attr => $val ) {
-		if ( $val && ! empty( $val ) ) {
+		if ( ! empty( $val ) ) {
 			$shortcode .= $attr . '="' . $val . '" ';
 		}
 	}

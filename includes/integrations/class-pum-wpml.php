@@ -219,7 +219,7 @@ class PUM_WPML_Integration {
 
 	/**
 	 * @param      $conditions
-	 * @param null       $new_lang
+	 * @param string|null $new_lang
 	 *
 	 * @return mixed
 	 */

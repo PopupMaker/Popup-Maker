@@ -21,6 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0
  */
 class EModal_Model_Theme_Meta extends EModal_Model {
+	/** @var int */
+	protected $theme_id;
 	protected $_class_name     = 'EModal_Model_Theme_Meta';
 	protected $_table_name     = 'em_theme_metas';
 	protected $_pk             = 'theme_id';

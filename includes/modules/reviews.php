@@ -158,7 +158,7 @@ class PUM_Modules_Reviews {
 	}
 
 	/**
-	 * @param null $key
+	 * @param string|null $key
 	 *
 	 * @return bool|mixed|void
 	 */
@@ -220,8 +220,8 @@ class PUM_Modules_Reviews {
 	/**
 	 * Gets a list of triggers.
 	 *
-	 * @param null $group
-	 * @param null $code
+	 * @param string|null $group
+	 * @param string|null $code
 	 *
 	 * @return bool|mixed
 	 */

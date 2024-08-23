@@ -1198,9 +1198,7 @@ class PUM_ListTable {
 			$scope = ( 'th' === $tag ) ? 'scope="col"' : '';
 			$id    = $with_id ? "id='$column_key'" : '';
 
-			if ( ! empty( $class ) ) {
-				$class = "class='" . join( ' ', $class ) . "'";
-			}
+			$class = "class='" . join( ' ', $class ) . "'";
 
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo "<$tag $scope $id $class>$column_display_name</$tag>";

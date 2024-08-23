@@ -508,7 +508,7 @@ class Popmake_Fields {
 
 	/**
 	 * @param $args
-	 * @param null $class_name
+	 * @param string|string[]|null $class_name
 	 *
 	 * @return string
 	 */

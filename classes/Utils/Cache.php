@@ -36,7 +36,7 @@ class PUM_Utils_Cache {
 	 * @return string
 	 */
 	public static function prefix_( $str = '' ) {
-		return empty( $string ) ? self::$prefix : self::$prefix . '_' . $str;
+		return empty( $str ) ? self::$prefix : self::$prefix . '_' . $str;
 	}
 
 	/**
