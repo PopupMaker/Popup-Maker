@@ -37,7 +37,7 @@ class PUM_Admin_Settings {
 	 */
 	public static function notices() {
 
-		if ( ! isset( $_POST['pum_settings_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['pum_settings_nonce'] ) ), 'pum_settings_nonce' ) ) {
+		if ( isset( $_POST['pum_settings_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['pum_settings_nonce'] ) ), 'pum_settings_nonce' ) ) {
 			if ( isset( $_GET['success'] ) && get_option( 'pum_settings_admin_notice' ) ) {
 				self::$notices[] = [
 					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
