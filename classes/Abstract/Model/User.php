@@ -147,6 +147,8 @@ abstract class PUM_Abstract_Model_User {
 		if ( in_array( $key, $this->core_data_keys, true ) ) {
 			return isset( $this->user->$key );
 		}
+
+		return false;
 	}
 
 	/**

@@ -43,7 +43,7 @@ class PUM_Site_Popups {
 	public static function init() {
 
 		// Preload the $loaded query.
-		add_action( 'init', [ __CLASS__, 'get_loaded_popups' ] );
+		add_action( 'init', [ __CLASS__, 'init_state' ] );
 
 		// Check content for popups.
 		add_filter( 'the_content', [ __CLASS__, 'check_content_for_popups' ] );
@@ -52,6 +52,15 @@ class PUM_Site_Popups {
 		add_action( 'wp_enqueue_scripts', [ __CLASS__, 'load_popups' ], 11 );
 
 		add_action( 'wp_footer', [ __CLASS__, 'render_popups' ] );
+	}
+
+	/**
+	 * Initializes this modules variables.
+	 *
+	 * @return void
+	 */
+	public static function init_state() {
+		self::get_loaded_popups();
 	}
 
 	/**

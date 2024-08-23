@@ -39,14 +39,3 @@ function pum_format_number( $number, $format = '' ) {
 function pum_format_time( $number, $format = '' ) {
 	return PUM_Utils_Format::time( $number, $format );
 }
-
-/**
- * Removes <p></p> around URLs
- *
- * @param string $content
- *
- * @return string
- */
-function pum_unwrap_urls( $content = '' ) {
-	return PUM_Utils_Format::unwrap_urls( $content );
-}

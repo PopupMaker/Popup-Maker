@@ -54,10 +54,11 @@ class PUM_Integration_GoogleFonts {
 		}
 
 		$google_api_url = 'https://www.googleapis.com/webfonts/v1/webfonts?key=' . self::$api_key . '&sort=' . $sort;
-		$response       = wp_remote_retrieve_body( wp_remote_get( $google_api_url, [ 'sslverify' => false ] ) );
+		$response       = wp_remote_get( $google_api_url, [ 'sslverify' => false ] );
 
 		if ( ! is_wp_error( $response ) ) {
-			$data = json_decode( $response, true );
+			$body = wp_remote_retrieve_body( $response );
+			$data = json_decode( $body, true );
 		}
 
 		// Store transient for a long time after fetching from Google to save API key hits.

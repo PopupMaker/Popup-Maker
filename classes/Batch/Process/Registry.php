@@ -45,7 +45,7 @@ class PUM_Batch_Process_Registry extends PUM_Abstract_Registry {
 		/**
 		 * Fires during instantiation of the batch processing registry.
 		 *
-		 * @param PUM_Batch_Process_Registry $this Registry instance.
+		 * @param PUM_Batch_Process_Registry $registry Registry instance.
 		 */
 		do_action( 'pum_batch_process_init', $this );
 	}

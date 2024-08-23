@@ -174,7 +174,7 @@ class Popup_Maker {
 	public $current_theme;
 
 	/**
-	 * @var Popup_Maker The one true Popup_Maker
+	 * @var Popup_Maker|null The one true Popup_Maker
 	 */
 	private static $instance;
 
@@ -184,7 +184,7 @@ class Popup_Maker {
 	 * @return Popup_Maker
 	 */
 	public static function instance() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Popup_Maker ) ) {
+		if ( ! isset( self::$instance ) || ! ( self::$instance instanceof Popup_Maker ) ) {
 			self::$instance = new Popup_Maker();
 			self::$instance->setup_constants();
 			self::$instance->includes();

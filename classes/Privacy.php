@@ -131,7 +131,7 @@ class PUM_Privacy {
 		/**
 		 * Filters the default content suggested for inclusion in a privacy policy.
 		 *
-		 * @param $content string The default policy content.
+		 * @param string $content The default policy content.
 		 */
 		return apply_filters( 'pum_get_default_privacy_policy_content', $content );
 	}

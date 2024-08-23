@@ -50,7 +50,7 @@ class PUM_Admin_Popups {
 		add_filter( 'default_hidden_columns', [ __CLASS__, 'hide_columns' ], 10, 2 );
 		add_action( 'load-edit.php', [ __CLASS__, 'load' ], 9999 );
 		add_action( 'restrict_manage_posts', [ __CLASS__, 'add_popup_filters' ], 100 );
-		add_filter( 'post_row_actions', [ __CLASS__, 'add_id_row_actions' ], 2, 100 );
+		add_filter( 'post_row_actions', [ __CLASS__, 'add_id_row_actions' ], 100, 2 );
 
 		add_action( 'post_submitbox_misc_actions', [ __CLASS__, 'add_enabled_toggle_editor' ], 10, 1 );
 

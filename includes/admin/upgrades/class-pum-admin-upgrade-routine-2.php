@@ -55,9 +55,9 @@ final class PUM_Admin_Upgrade_Routine_2 extends PUM_Admin_Upgrade_Routine {
 		$popup_groups = [
 			'display'     => popmake_popup_display_defaults(),
 			'close'       => popmake_popup_close_defaults(),
-			'click_open'  => popmake_popup_click_open_defaults(),
-			'auto_open'   => popmake_popup_auto_open_defaults(),
-			'admin_debug' => popmake_popup_admin_debug_defaults(),
+			'click_open'  => [],
+			'auto_open'   => [],
+			'admin_debug' => [],
 		];
 
 		foreach ( $popups as $popup ) {

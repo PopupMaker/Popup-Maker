@@ -62,7 +62,7 @@ abstract class PUM_Abstract_Batch_Process implements PUM_Interface_Batch_Process
 			 * type defined in each sub-class.
 			 *
 			 * @param int $per_step The number of items to process for each step. Default 100.
-			 * @param PUM_Abstract_Batch_Process $this Batch process instance.
+			 * @param PUM_Abstract_Batch_Process $process Batch process instance.
 			 */
 			$this->per_step = apply_filters( "pum_batch_per_step_{$this->batch_id}", $this->per_step, $this );
 		}

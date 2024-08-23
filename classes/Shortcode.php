@@ -248,11 +248,9 @@ abstract class PUM_Shortcode {
 	 *
 	 * @todo Once all shortcodes have been updated to use template over _template make this abstract.
 	 *
-	 * @return bool|string
+	 * @return void
 	 */
-	public function template() {
-		return false;
-	}
+	public function template() {}
 
 	/**
 	 * Render the template based on shortcode classes methods.

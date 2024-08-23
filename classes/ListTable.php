@@ -215,6 +215,8 @@ class PUM_ListTable {
 		if ( in_array( $name, $this->compat_fields, true ) ) {
 			return isset( $this->$name );
 		}
+
+		return false;
 	}
 
 	/**
@@ -315,6 +317,8 @@ class PUM_ListTable {
 		if ( isset( $this->_pagination_args[ $key ] ) ) {
 			return $this->_pagination_args[ $key ];
 		}
+
+		return null;
 	}
 
 	/**
@@ -949,10 +953,12 @@ class PUM_ListTable {
 	 * @since 3.1.0
 	 * @abstract
 	 *
-	 * @return array|void
+	 * @return array
 	 */
 	public function get_columns() {
-		die( 'function PUM_ListTable::get_columns() must be over-ridden in a sub-class.' );
+		// Doing it wrong
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'function PUM_ListTable::get_columns() must be over-ridden in a sub-class.', 'popup-maker' ), '1.7.0' );
+		return [];
 	}
 
 	/**

@@ -218,7 +218,7 @@ function popmake_emodal_init() {
 			add_shortcode( 'modal', 'popmake_emodal_shortcode_modal' );
 		}
 		add_filter( 'pum_popup_data_attr', 'popmake_emodal_get_the_popup_data_attr', 10, 2 );
-		add_filter( 'popmake_shortcode_popup_default_atts', 'popmake_emodal_shortcode_popup_default_atts', 10, 2 );
+		add_filter( 'popmake_shortcode_popup_default_atts', 'popmake_emodal_shortcode_popup_default_atts', 10 );
 		add_filter( 'popmake_shortcode_data_attr', 'popmake_emodal_shortcode_data_attr', 10, 2 );
 
 		add_filter( 'pum_popup_is_loadable', 'popmake_emodal_popup_is_loadable', 20, 2 );

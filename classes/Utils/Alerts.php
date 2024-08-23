@@ -711,6 +711,8 @@ class PUM_Utils_Alerts {
 		}
 
 		do_action( 'pum_alert_dismissed', $code, $action );
+
+		return true;
 	}
 
 	/**

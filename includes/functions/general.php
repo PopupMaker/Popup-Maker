@@ -100,7 +100,16 @@ function pum_update_all_themes_close_text_cache() {
 	return $all_themes_close_text;
 }
 
-add_action( 'pum_save_theme', 'pum_update_all_themes_close_text_cache', 100 );
+/**
+ * Updates the cache of theme close text to prevent un-needed queries on the front end.
+ *
+ * @return void
+ */
+function pum_update_theme_close_text_cache_on_save() {
+	pum_update_all_themes_close_text_cache();
+}
+
+add_action( 'pum_save_theme', 'pum_update_theme_close_text_cache_on_save', 100 );
 
 /**
  * @param string $path

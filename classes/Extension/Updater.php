@@ -645,9 +645,9 @@ class PUM_Extension_Updater {
 		/**
 		 * Filters the parameters sent in the API request.
 		 *
-		 * @param array  $api_params        The array of data sent in the request.
-		 * @param array  $this->api_data    The array of data set up in the class constructor.
-		 * @param string $this->plugin_file The full path and filename of the file.
+		 * @param array  $api_params  The array of data sent in the request.
+		 * @param array  $api_data    The array of data set up in the class constructor.
+		 * @param string $plugin_file The full path and filename of the file.
 		 */
 		$api_params = apply_filters( 'edd_sl_plugin_updater_api_params', $api_params, $this->api_data, $this->plugin_file );
 
@@ -695,7 +695,7 @@ class PUM_Extension_Updater {
 	 * Get the version info from the cache, if it exists.
 	 *
 	 * @param string $cache_key Cache key.
-	 * @return object
+	 * @return false|object
 	 */
 	public function get_cached_version_info( $cache_key = '' ) {
 
