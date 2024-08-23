@@ -130,7 +130,7 @@ function pum_asset_url( $path = '' ) {
 }
 
 /**
- * @param string $encode
+ * @param bool $encode
  *
  * @return string
  */

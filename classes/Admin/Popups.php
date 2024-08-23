@@ -62,7 +62,7 @@ class PUM_Admin_Popups {
 	 * Adds our enabled state toggle to the "Publish" meta box.
 	 *
 	 * @since 1.12
-	 * @param WP_POST $post The current post (i.e. the popup).
+	 * @param WP_Post $post The current post (i.e. the popup).
 	 */
 	public static function add_enabled_toggle_editor( $post ) {
 		if ( 'publish' !== $post->post_status || 'popup' !== $post->post_type ) {

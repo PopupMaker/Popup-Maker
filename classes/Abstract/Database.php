@@ -58,7 +58,7 @@ abstract class PUM_Abstract_Database {
 	 */
 	public function __construct() {
 		/**
-		 * @var \WPDB $wpdb
+		 * @var \wpdb $wpdb
 		 */
 		global $wpdb;
 

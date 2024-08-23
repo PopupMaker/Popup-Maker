@@ -9,22 +9,22 @@
 class PUM_Site_Assets {
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	public static $cache_url;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	public static $suffix;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	public static $js_url;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	public static $css_url;
 

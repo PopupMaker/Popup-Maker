@@ -157,6 +157,16 @@ function mc4wp_get_forms() {}
 function mc4wp_get_form( $form_id ) {}
 
 /**
+ * Class MC4WP_Form
+ */
+class MC4WP_Form {
+	/** @var int */
+	public $ID;
+	/** @var string */
+	public $name;
+}
+
+/**
  * Ninja Forms.
  *
  * @return Ninja_Forms
@@ -323,3 +333,13 @@ function wsf_form_get_all() {}
  * @return array<id:int,label:string>
  */
 function wsf_form_get_object( $form_id ) {}
+
+/**
+ * Class WS_Form_Submit
+ */
+class WS_Form_Submit {
+	/**
+	 * @var int
+	 */
+	public $form_id;
+}

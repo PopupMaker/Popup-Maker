@@ -102,7 +102,7 @@ class PUM_Modules_Menu {
 	/**
 	 * Merge Item data into the $item object.
 	 *
-	 * @param $item
+	 * @param object $item
 	 *
 	 * @return mixed
 	 */

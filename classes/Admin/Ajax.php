@@ -378,17 +378,15 @@ class PUM_Admin_Ajax {
 
 				// If this is an export class and not an empty export, send the download URL.
 				if ( method_exists( $process, 'can_export' ) ) {
-					if ( ! $process->is_empty ) {
-						$response_data['url'] = pum_admin_url(
-							'tools',
-							[
-								'step'       => $step,
-								'nonce'      => wp_create_nonce( 'pum-batch-export' ),
-								'batch_id'   => $batch_id,
-								'pum_action' => 'download_batch_export',
-							]
-						);
-					}
+					$response_data['url'] = pum_admin_url(
+						'tools',
+						[
+							'step'       => $step,
+							'nonce'      => wp_create_nonce( 'pum-batch-export' ),
+							'batch_id'   => $batch_id,
+							'pum_action' => 'download_batch_export',
+						]
+					);
 				}
 
 				// Once all calculations have finished, run cleanup.

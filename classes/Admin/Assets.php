@@ -14,17 +14,17 @@
 class PUM_Admin_Assets {
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	public static $suffix;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	public static $js_url;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	public static $css_url;
 

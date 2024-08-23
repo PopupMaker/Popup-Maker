@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Conditions {
 
 	/**
-	 * @var
+	 * @var PUM_Conditions
 	 */
 	public static $instance;
 
@@ -380,6 +380,11 @@ class PUM_Conditions {
 		$taxonomies = get_object_taxonomies( $name, 'object' );
 		$conditions = [];
 		foreach ( $taxonomies as $tax_name => $taxonomy ) {
+			if ( is_string( $taxonomy ) ) {
+				$taxonomy = get_taxonomy( $tax_name );
+			}
+
+			/* @var WP_Taxonomy[] $taxonomy */
 			$conditions[ $name . '_w_' . $tax_name ] = [
 				'group'    => $post_type->labels->name,
 				'name'     => sprintf(
