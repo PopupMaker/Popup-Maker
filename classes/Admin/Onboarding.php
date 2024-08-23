@@ -370,7 +370,7 @@ class PUM_Admin_Onboarding {
 				'link' => admin_url( 'edit.php?post_type=popup&page=pum-settings' ),
 			],
 			[
-				'msg'  => 'Using the Popup Maker menu in your admin bar, you can open and close popups, check conditions, reseet cookies, and more!',
+				'msg'  => 'Using the Popup Maker menu in your admin bar, you can open and close popups, check conditions, reset cookies, and more!',
 				'link' => 'https://docs.wppopupmaker.com/article/300-the-popup-maker-admin-toolbar',
 			],
 			[
