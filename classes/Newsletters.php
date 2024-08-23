@@ -134,10 +134,6 @@ class PUM_Newsletters {
 	 * @param array           $extra_response_args
 	 */
 	public static function send_errors( WP_Error $errors, $extra_response_args = [] ) {
-		if ( ! $errors || ! is_wp_error( $errors ) ) {
-			$errors = self::$errors;
-		}
-
 		$response = array_merge(
 			$extra_response_args,
 			[
@@ -168,10 +164,6 @@ class PUM_Newsletters {
 	 * @return array
 	 */
 	public static function prepare_errors( WP_Error $_errors ) {
-		if ( ! $_errors || ! is_wp_error( $_errors ) ) {
-			$_errors = self::$errors;
-		}
-
 		$errors = [];
 
 		foreach ( $_errors->get_error_codes() as $code ) {
