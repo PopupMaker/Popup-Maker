@@ -55,7 +55,7 @@
 		<exclude name="Squiz.Commenting.FunctionComment.MissingParamTag" />
 		<exclude name="Squiz.Commenting.VariableComment.MissingVar" />
 		<exclude name="Squiz.Commenting.VariableComment.EmptyVar" />
-		<exclude name="Squiz.Commenting.ClassComment.SpacingAfter" /> -->
+		<exclude name="Squiz.Commenting.ClassComment.SpacingAfter" />
 		<exclude name="WordPress.DB.DirectDatabaseQuery.NoCaching" />
 		<exclude name="Squiz.Commenting.InlineComment.InvalidEndChar" />
 		<exclude name="Generic.Commenting.DocComment.MissingShort" />
@@ -66,14 +66,11 @@
 		<exclude name="Generic.Commenting.DocComment.Empty" />
 		<exclude name="Squiz.Commenting.VariableComment.Missing" />
 		<exclude name="Squiz.Commenting.FunctionComment.EmptyThrows" />
-		<exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.Found" />
+		<exclude name="Generic.CodeAnalysis.UnusedFunctionParameter" />
 		<exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop" />
 		<exclude name="Squiz.PHP.CommentedOutCode.Found" />
 		<exclude name="Generic.CodeAnalysis.EmptyStatement.DetectedIf" />
-
-		<!-- First to be prioritized next.-->
 		<exclude name="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents" />
-		<exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed" />
 
 	</rule>
 
