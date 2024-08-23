@@ -251,9 +251,11 @@ class PirateForms_Util {
 	/**
 	 * Get default form options.
 	 *
+	 * @param int|null $form_id
+	 *
 	 * @return array
 	 */
-	public static function get_form_options() {}
+	public static function get_form_options( $form_id = null ) {}
 }
 
 /**
