@@ -42,3 +42,39 @@ if ( ! defined( 'WP_CONTENT_DIR' ) ) {
 	 */
 	define( 'WP_CONTENT_DIR', '/path/to/wp-content' );
 }
+
+if ( ! defined( 'POPMAKE' ) ) {
+	define( 'POPMAKE', '/path/to/wp-content/plugins/popup-maker/popup-maker.php' );
+}
+
+if ( ! defined( 'POPMAKE_NAME' ) ) {
+	define( 'POPMAKE_NAME', 'Popup Maker' );
+}
+
+if ( ! defined( 'POPMAKE_SLUG' ) ) {
+	define( 'POPMAKE_SLUG', 'popup-maker' );
+}
+
+if ( ! defined( 'POPMAKE_DIR' ) ) {
+	define( 'POPMAKE_DIR', '/path/to/wp-content/plugins/popup-maker/' );
+}
+
+if ( ! defined( 'POPMAKE_URL' ) ) {
+	define( 'POPMAKE_URL', '/wp-content/plugins/popup-maker/' );
+}
+
+if ( ! defined( 'POPMAKE_NONCE' ) ) {
+	define( 'POPMAKE_NONCE', 'popmake_nonce' );
+}
+
+if ( ! defined( 'POPMAKE_VERSION' ) ) {
+	define( 'POPMAKE_VERSION', '1.19.1' );
+}
+
+if ( ! defined( 'POPMAKE_DB_VERSION' ) ) {
+	define( 'POPMAKE_DB_VERSION', 8 );
+}
+
+if ( ! defined( 'POPMAKE_API_URL' ) ) {
+	define( 'POPMAKE_API_URL', 'https://wppopupmaker.com' );
+}
