@@ -288,15 +288,6 @@ class PUM_Install {
 		// Deactivate automatically due to insufficient PHP or WP Version.
 		deactivate_plugins( basename( __FILE__ ) );
 
-		$notice = self::get_activation_failure_notice();
-
-		wp_die(
-			esc_html( $notice ),
-			esc_html__( 'Plugin Activation Error', 'popup-maker' ),
-			[
-				'response'  => 200,
-				'back_link' => true,
-			]
-		);
+		add_action( 'admin_notices', [ __CLASS__, 'activation_failure_admin_notice' ] );
 	}
 }
