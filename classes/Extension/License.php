@@ -524,7 +524,7 @@ class PUM_Extension_License {
 		if ( ! empty( $messages ) ) {
 			foreach ( $messages as $message ) {
 				echo '<div class="error">';
-				echo '<p>' . esc_html( $message ) . '</p>';
+				echo '<p>' . wp_kses( $message, wp_kses_allowed_html( 'data' ) ) . '</p>';
 				echo '</div>';
 			}
 		}
