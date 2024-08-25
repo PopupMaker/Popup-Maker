@@ -873,31 +873,31 @@ msgstr ""
 msgid "On Close"
 msgstr ""
 
-#: includes/pum-install-functions.php:138
+#: includes/pum-install-functions.php:149
 msgid "Light Box"
 msgstr ""
 
-#: includes/pum-install-functions.php:145
+#: includes/pum-install-functions.php:156
 msgid "Enterprise Blue"
 msgstr ""
 
-#: includes/pum-install-functions.php:152
+#: includes/pum-install-functions.php:163
 msgid "Hello Box"
 msgstr ""
 
-#: includes/pum-install-functions.php:159
+#: includes/pum-install-functions.php:170
 msgid "Cutting Edge"
 msgstr ""
 
-#: includes/pum-install-functions.php:166
+#: includes/pum-install-functions.php:177
 msgid "Framed Border"
 msgstr ""
 
-#: includes/pum-install-functions.php:173
+#: includes/pum-install-functions.php:184
 msgid "Floating Bar - Soft Blue"
 msgstr ""
 
-#: includes/pum-install-functions.php:180
+#: includes/pum-install-functions.php:191
 msgid "Content Only - For use with page builders or block editor"
 msgstr ""
 
