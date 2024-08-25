@@ -228,12 +228,12 @@ class PUM_Extension_Updater {
 		$limited_data               = new \stdClass();
 		$limited_data->slug         = $this->slug;
 		$limited_data->plugin       = $this->name;
-		$limited_data->url          = $version_info->url;
-		$limited_data->package      = $version_info->package;
-		$limited_data->icons        = $this->convert_object_to_array( $version_info->icons );
-		$limited_data->banners      = $this->convert_object_to_array( $version_info->banners );
-		$limited_data->new_version  = $version_info->new_version;
-		$limited_data->tested       = $version_info->tested;
+		$limited_data->url          = isset( $version_info->url ) ? $version_info->url : '';
+		$limited_data->package      = isset( $version_info->package ) ? $version_info->package : '';
+		$limited_data->icons        = isset( $version_info->icons ) ? $this->convert_object_to_array( $version_info->icons ) : [];
+		$limited_data->banners      = isset( $version_info->banners ) ? $this->convert_object_to_array( $version_info->banners ) : [];
+		$limited_data->new_version  = isset( $version_info->new_version ) ? $version_info->new_version : '';
+		$limited_data->tested       = isset( $version_info->tested ) ? $version_info->tested : '';
 		$limited_data->requires     = isset( $version_info->requires ) ? $version_info->requires : '';
 		$limited_data->requires_php = isset( $version_info->requires_php ) ? $version_info->requires_php : '';
 

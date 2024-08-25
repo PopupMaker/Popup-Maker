@@ -5,6 +5,10 @@
 * Feature: Add font size and font select buttons to the classic editor.
 * Improvement: Keep the same popup editor, theme editor & settings page tab after saving or refreshing the page.
 
+## v1.19.2 - 08/25/2024
+
+* Fix: Error on activation for some users on fresh installs.
+
 ## v1.19.1 - 08/17/2024
 
 * Security: Only allow admins to save HTML in plugin settings if they have `unfiltered_html` capability.

@@ -18,6 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Creates the example popups
  *
  * @since 1.14.0
+ *
+ * @return void
  */
 function pum_install_example_popups() {
 	$example_popups = [
@@ -34,7 +36,12 @@ function pum_install_example_popups() {
 
 	$example_popup_count = count( $example_popups );
 
-	$example_popups_installed = get_option( 'pum_example_popups_installed', null );
+	/**
+	 * Stores the number of example popups installed.
+	 *
+	 * @var int|false False if skipped, null if not set, or the number of example popups installed.
+	 */
+	$example_popups_installed = get_option( 'pum_example_popups_installed', 0 );
 
 	if ( $example_popups_installed >= $example_popup_count || false === $example_popups_installed ) {
 		return;
@@ -81,7 +88,7 @@ function pum_install_example_popups() {
 	}
 
 	// Remove the first X example popups where X is the number of example popups installed.
-	$example_popups = array_slice( $example_popups, $example_popups_installed );
+	$example_popups = array_slice( $example_popups, (int) $example_popups_installed );
 
 	// Loop through the example popups.
 	foreach ( $example_popups as $key => $popup ) {
@@ -106,7 +113,7 @@ function pum_install_example_popups() {
 		// Update the post meta.
 		update_post_meta( $popup_id, 'popup_settings', $popup_settings );
 
-		++$example_popup_count;
+		++$example_popups_installed;
 	}
 
 	update_option( 'pum_example_popups_installed', $example_popups_installed, true );
@@ -116,6 +123,8 @@ function pum_install_example_popups() {
  * Enqueues our install theme function on wp_loaded if Popup Maker core was updated.
  *
  * @since 1.11.0
+ *
+ * @return void
  */
 function pum_install_new_themes_on_update() {
 	add_action( 'wp_loaded', 'pum_install_built_in_themes' );
@@ -128,6 +137,8 @@ add_action( 'pum_update_core_version', 'pum_install_new_themes_on_update' );
  * Installs the built in themes.
  *
  * @param bool $network_wide Whether to install the themes for all sites in the network.
+ *
+ * @return void
  */
 function pum_install_built_in_themes( $network_wide = false ) {
 
