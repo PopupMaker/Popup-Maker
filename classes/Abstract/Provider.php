@@ -134,7 +134,13 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 
 		foreach ( $fields as $key => $field ) {
 			if ( ! $field['private'] && isset( $shortcode_atts[ $key ] ) ) {
-				echo esc_html( '<input type="hidden" name="' . $key . '" value="' . $shortcode_atts[ $key ] . '" />' );
+				echo wp_kses( '<input type="hidden" name="' . $key . '" value="' . $shortcode_atts[ $key ] . '" />', [
+					'input' => [
+						'type'  => 'hidden',
+						'name'  => true,
+						'value' => true,
+					],
+				] );
 			}
 		}
 	}

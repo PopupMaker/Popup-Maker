@@ -118,7 +118,7 @@ class PUM_Admin_Extend {
 						<?php $image = in_array( $extension['slug'], $existing_extension_images, true ) ? POPMAKE_URL . '/assets/images/extensions/' . $extension['slug'] . '.png' : $extension['image']; ?>
 						<img class="extension-thumbnail" src="<?php echo esc_attr( $image ); ?>" />
 
-						<p><?php echo esc_html( $extension['excerpt'] ); ?></p>
+						<p><?php echo wp_kses( $extension['excerpt'], wp_kses_allowed_html( 'data' ) ); ?></p>
 
 						<span class="action-links">
 						<a class="button" target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=plugin&utm_campaign=upsell&utm_content=<?php echo esc_attr( rawurlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>-<?php echo esc_attr( $i ); ?>"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a>

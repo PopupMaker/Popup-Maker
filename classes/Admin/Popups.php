@@ -145,7 +145,7 @@ class PUM_Admin_Popups {
 					<label class="screen-reader-text" id="popup-title-prompt-text" for="popup-title">
 						<?php esc_html_e( 'Popup Title', 'popup-maker' ); ?>
 					</label>
-					<input tabindex="2" name="popup_title" size="30" value="<?php echo esc_attr( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php esc_html_e( 'Popup Title', 'popup-maker' ); ?>" />
+					<input tabindex="2" name="popup_title" size="30" value="<?php echo esc_attr( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php esc_attr_e( 'Popup Title', 'popup-maker' ); ?>" />
 					<p class="pum-desc"><?php echo '(' . esc_html__( 'Optional', 'popup-maker' ) . ') ' . esc_html__( 'Shown as headline inside the popup. Can be left blank.', 'popup-maker' ); ?></p>
 				</div>
 				<div class="inside"></div>

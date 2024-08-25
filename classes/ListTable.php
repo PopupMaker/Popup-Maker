@@ -423,7 +423,7 @@ class PUM_ListTable {
 		foreach ( $views as $class => $view ) {
 			$views[ $class ] = "\t<li class='$class'>$view";
 		}
-		echo esc_html( implode( " |</li>\n", $views ) . "</li>\n" );
+		echo wp_kses( implode( " |</li>\n", $views ) . "</li>\n", wp_kses_allowed_html( 'data' ) );
 		echo '</ul>';
 	}
 
@@ -1373,25 +1373,38 @@ class PUM_ListTable {
 
 			if ( 'cb' === $column_name ) {
 				echo '<th scope="row" class="check-column">';
-				echo esc_html( $this->column_cb( $item ) );
+				echo wp_kses( $this->column_cb( $item ), [
+					'input' => [
+						'type'  => 'checkbox',
+						'name'  => true,
+						'id'    => true,
+						'value' => true,
+					],
+					'label' => [
+						'for'   => true,
+						'class' => true,
+					],
+				] );
 				echo '</th>';
 			} elseif ( method_exists( $this, '_column_' . $column_name ) ) {
-				echo esc_html( call_user_func(
+				echo wp_kses( call_user_func(
 					[ $this, '_column_' . $column_name ],
 					$item,
 					$classes,
 					$data,
 					$primary
-				) );
+				), wp_kses_allowed_html( 'post' ) );
 			} elseif ( method_exists( $this, 'column_' . $column_name ) ) {
-				echo '<td ' . esc_attr( $attributes ) . '>';
-				echo esc_html( call_user_func( [ $this, 'column_' . $column_name ], $item ) );
-				echo esc_html( $this->handle_row_actions( $item, $column_name, $primary ) );
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<td ' . $attributes . '>';
+				echo wp_kses( call_user_func( [ $this, 'column_' . $column_name ], $item ), wp_kses_allowed_html( 'post' ) );
+				echo wp_kses( $this->handle_row_actions( $item, $column_name, $primary ), wp_kses_allowed_html( 'post' ) );
 				echo '</td>';
 			} else {
-				echo '<td ' . esc_attr( $attributes ) . '>';
-				echo esc_html( $this->column_default( $item, $column_name ) );
-				echo esc_html( $this->handle_row_actions( $item, $column_name, $primary ) );
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<td ' . $attributes . '>';
+				echo wp_kses( $this->column_default( $item, $column_name ), wp_kses_allowed_html( 'post' ) );
+				echo wp_kses( $this->handle_row_actions( $item, $column_name, $primary ), wp_kses_allowed_html( 'post' ) );
 				echo '</td>';
 			}
 		}

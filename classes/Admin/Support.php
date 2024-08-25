@@ -49,7 +49,7 @@ class PUM_Admin_Support {
 		</style>
 		<div class="pum-secure-notice">
 			<i class="dashicons dashicons-lock"></i>
-			<span><?php esc_html_e( '<b>Secure HTTPS contact page</b>, running via iframe from external domain', 'popup-maker' ); ?> </span>
+			<span><?php echo wp_kses( __( '<b>Secure HTTPS contact page</b>, running via iframe from external domain', 'popup-maker' ), [ 'b' => [] ] ); ?> </span>
 			<i class="dashicons dashicons-info" title="https://api.wppopupmaker.com/dashboard-support/"></i>
 		</div>
 		<div id="pum-support-frame" class="wrap">

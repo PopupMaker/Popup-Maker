@@ -373,7 +373,7 @@ abstract class PUM_Shortcode {
 							break;
 						}
 						$shortcode_ui_args['attrs'][] = [
-							'label'   => esc_html( $field['label'] ),
+							'label'   => wp_kses( $field['label'], wp_kses_allowed_html( 'post' ) ),
 							'attr'    => $field_id,
 							'type'    => 'post_select',
 							'options' => isset( $field['options'] ) ? $field['options'] : [],

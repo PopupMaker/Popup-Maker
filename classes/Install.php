@@ -270,7 +270,7 @@ class PUM_Install {
 	public static function activation_failure_admin_notice() {
 		?>
 		<div class="notice notice-error is-dismissible">
-			<p><?php echo esc_html( self::get_activation_failure_notice() ); ?></p>
+			<p><?php echo wp_kses( self::get_activation_failure_notice(), [ 'strong' => [] ] ); ?></p>
 		</div>
 		<?php
 	}

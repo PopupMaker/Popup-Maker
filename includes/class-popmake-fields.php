@@ -547,7 +547,7 @@ class Popmake_Fields {
 	public function field_description( $args ) {
 		if ( '' !== $args['desc'] ) {
 			?>
-			<p class="pum-desc"><?php echo esc_html( $args['desc'] ); ?></p>
+			<p class="pum-desc"><?php echo wp_kses( $args['desc'], wp_kses_allowed_html( 'data' ) ); ?></p>
 											<?php
 		}
 

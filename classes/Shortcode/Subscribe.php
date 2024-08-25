@@ -622,14 +622,14 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						case 'radio':
 							?>
 							<?php if ( ! empty( $consent_text ) ) : ?>
-								<label class="pum-form__label  pum-sub-form-label"><?php echo esc_html( wp_kses( $consent_text, [] ) ); ?></label>
+								<label class="pum-form__label  pum-sub-form-label"><?php echo wp_kses( $consent_text, wp_kses_allowed_html( 'data' ) ); ?></label>
 							<?php endif; ?>
 							<div class="pum-form__consent-radios  pum-form__consent-radios--<?php echo esc_attr( $atts['privacy_consent_radio_layout'] ); ?>">
 								<label class="pum-form__label  pum-sub-form-label">
-									<input type="radio" value="yes" name="consent" <?php echo $consent_args['required'] ? 'required="required"' : ''; ?> /> <?php echo esc_html( wp_kses( $atts['privacy_consent_yes_label'], [] ) ); ?>
+									<input type="radio" value="yes" name="consent" <?php echo $consent_args['required'] ? 'required="required"' : ''; ?> /> <?php echo wp_kses( $atts['privacy_consent_yes_label'], wp_kses_allowed_html( 'data' ) ); ?>
 								</label>
 								<label class="pum-form__label  pum-sub-form-label">
-									<input type="radio" value="no" name="consent" /> <?php echo esc_html( wp_kses( $atts['privacy_consent_no_label'], [] ) ); ?>
+									<input type="radio" value="no" name="consent" /> <?php echo wp_kses( $atts['privacy_consent_no_label'], wp_kses_allowed_html( 'data' ) ); ?>
 								</label>
 							</div>
 							<?php

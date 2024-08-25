@@ -238,7 +238,7 @@ class PUM_Admin_Tools {
 		</form>
 		<?php endif; ?>
 		<div id="log-viewer">
-			<pre><?php echo esc_html( self::display_error_log() ); ?></pre>
+			<pre><?php echo wp_kses( self::display_error_log(), wp_kses_allowed_html( 'data' ) ); ?></pre>
 		</div>
 		<?php
 	}
