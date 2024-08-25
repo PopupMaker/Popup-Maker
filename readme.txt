@@ -185,6 +185,7 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 
 = v1.19.2 - 08/25/2024 =
 
+* Fix: Warning notice shown when some users with extensions went to the update screen.
 * Fix: Error on activation for some users on fresh installs.
 
 = v1.19.1 - 08/17/2024 =
