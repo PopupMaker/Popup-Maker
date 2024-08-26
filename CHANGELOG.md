@@ -8,6 +8,7 @@
 ## v1.19.2 - 08/25/2024
 
 * Fix: Error on activation for some users on fresh installs.
+* Fix:  deprecated notice in PHP 8.3.
 
 ## v1.19.1 - 08/17/2024
 
