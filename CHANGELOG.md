@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Fix: Notice when popup is enqueued before init.
+
 ## v1.19.2 - 08/25/2024
 
 * Fix: Error on activation for some users on fresh installs.
