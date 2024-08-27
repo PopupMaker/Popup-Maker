@@ -172,9 +172,12 @@ class PUM_Site_Popups {
 		// Add to the $loaded_ids list.
 		self::$loaded_ids[] = $popup->ID;
 
+		// Ensure the loaded query is up to date.
+		self::get_loaded_popups();
+
 		// Add to the $loaded query.
 		self::$loaded->posts[] = $popup;
-		self::$loaded->post_count ++;
+		++self::$loaded->post_count;
 
 		// Preprocess the content for shortcodes that need to enqueue their own assets.
 		self::$cached_content[ $popup->ID ] = $popup->get_content();
