@@ -451,7 +451,7 @@ class PUM_Fields extends Popmake_Fields {
 		<select id="<?php echo esc_attr( $args['id'] ); ?>" name="<?php echo esc_attr( $args['name'] ); ?>" data-placeholder="<?php echo esc_attr( $args['placeholder'] ); ?>" data-allow-clear="true" <?php echo esc_attr( $multiple ); ?> data-objecttype="<?php echo esc_attr( $args['object_type'] ); ?>" data-objectkey="<?php echo esc_attr( $args['object_key'] ); ?>" data-current="
 			<?php
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo maybe_json_attr( $value, true );
+			echo PUM_Utils_Array::maybe_json_attr( $value, true );
 			?>
 			" 
 			<?php

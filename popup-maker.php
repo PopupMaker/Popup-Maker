@@ -82,10 +82,6 @@ function pum_autoloader( $class_name ) {
 	}
 }
 
-if ( ! function_exists( 'spl_autoload_register' ) ) {
-	include 'includes/compat.php';
-}
-
 spl_autoload_register( 'pum_autoloader' ); // Register autoloader
 
 /**
@@ -251,9 +247,6 @@ class Popup_Maker {
 	 * Include required files
 	 */
 	private function includes() {
-
-		require_once self::$DIR . 'includes/compat.php';
-
 		// Initialize global options
 		PUM_Utils_Options::init();
 

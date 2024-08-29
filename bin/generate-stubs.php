@@ -56,10 +56,6 @@ function pum_autoloader( $class_name ) {
 	}
 }
 
-if ( ! function_exists( 'spl_autoload_register' ) ) {
-	include 'includes/compat.php';
-}
-
 spl_autoload_register( 'pum_autoloader' ); // Register autoloader
 
 
