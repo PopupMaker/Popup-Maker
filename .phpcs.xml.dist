@@ -16,27 +16,10 @@
 	<arg value="ps"/>
 
 	<!-- https://github.com/PHPCompatibility/PHPCompatibility#sniffing-your-code-for-compatibility-with-specific-php-versions -->
-	<config name="testVersion" value="7.4-" />
+	<config name="testVersion" value="7.2-" />
 	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties -->
-	<config name="minimum_supported_wp_version" value="6.2"/>
+	<config name="minimum_supported_wp_version" value="5.8"/>
 	<config name="text_domain" value="popup-maker, default" />
-
-	<rule ref="CodeAtlantic" />
-
-	<rule ref="PHPCompatibility">
-		<exclude-pattern>bin/*</exclude-pattern>
-		<exclude-pattern>tests/*</exclude-pattern>
-	</rule>
-
-	<rule ref="WordPress.NamingConventions.ValidVariableName">
-		<exclude-pattern>bin/*</exclude-pattern>
-		<exclude-pattern>tests/*</exclude-pattern>
-	</rule>
-
-	<rule ref="Squiz.Commenting.FunctionComment">
-		<exclude-pattern>bin/*</exclude-pattern>
-		<exclude-pattern>tests/*</exclude-pattern>
-	</rule>
 
 	<!-- Force short syntax arrays. -->
 	<rule ref="CodeAtlantic">
@@ -71,21 +54,5 @@
 		<exclude name="Squiz.PHP.CommentedOutCode.Found" />
 		<exclude name="Generic.CodeAnalysis.EmptyStatement.DetectedIf" />
 		<exclude name="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents" />
-
 	</rule>
-
-	<!-- <rule ref="WordPress-Core">
-		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
-		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
-	</rule> -->
-
-	<!-- <rule ref="WordPress">
-		<exclude name="WordPress.Files.FileName" />
-		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
-		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
-		<exclude name="WordPress.NamingConventions.ValidVariableName" />
-		<exclude name="WordPress.WP.I18n.NonSingularStringLiteralText" />
-		<exclude name="WordPress.PHP.NoSilencedErrors.Discouraged" />
-		<exclude name="WordPress.PHP.DisallowShortTernary.Found" />
-	</rule> -->
 </ruleset>

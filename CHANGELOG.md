@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Important: Popup Maker will be transitioning to new minimum PHP & WP versions over the next few releases. [Read about our plans here](https://wppopupmaker.com/blog/popup-maker-new-minimum-php-and-wp-versions-coming-soon/).
 * Feature: Add font size and font select buttons to the classic editor.
 * Improvement: Keep the same popup editor, theme editor & settings page tab after saving or refreshing the page.
 

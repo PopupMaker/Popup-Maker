@@ -4,9 +4,9 @@ Author URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&ut
 Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=plugin-url
 Donate link:
 Tags:  marketing, popup, popups, optin, conversion
-Requires at least: 4.9
+Requires at least: 5.8
 Tested up to: 6.6.1
-Requires PHP: 5.6
+Requires PHP: 7.2
 Stable tag: 1.19.2
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
