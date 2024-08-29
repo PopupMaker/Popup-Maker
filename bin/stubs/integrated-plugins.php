@@ -95,7 +95,7 @@ class FrmForm {
  * Get a value from the query string.
  *
  * @param string $name — The key
- * @param array $arr The array to search through. If null, checks query strings. Defaults to null.
+ * @param array  $arr The array to search through. If null, checks query strings. Defaults to null.
  * @return string — The value. If none found, empty string.
  */
 function rgget( $key, $arr = null ) {}
