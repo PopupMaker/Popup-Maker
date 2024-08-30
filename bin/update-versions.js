@@ -9,6 +9,7 @@
  *   --dry-run  Prints the files that would be modified without actually modifying them.
  *   --plugin    Replaces the version in plugin files.
  *   --docblock  Replaces the version in docblocks.
+ *   --comment   Replaces the version in comments.
  *   --all       Replaces the version in all files.
  */
 
@@ -81,6 +82,30 @@ const docblockPatterns = [
 	},
 ];
 
+const commentPatterns = [
+	{
+		// Match // single line comments with X.X.X
+		regex: /(\/\/.*\s+)X.X.X/gm,
+		replacement: (newVersion) => (_match, prefix) => {
+			return `${prefix}${newVersion}`;
+		},
+	},
+	{
+		// Match /* single line comments with X.X.X */
+		regex: /(\/\*.*\s+)X.X.X/gm,
+		replacement: (newVersion) => (_match, prefix) => {
+			return `${prefix}${newVersion}`;
+		},
+	},
+	{
+		// Match /** multi line comments (start with *\s)
+		regex: /(\s+\*.*\s+)X.X.X/gm,
+		replacement: (newVersion) => (_match, prefix) => {
+			return `${prefix}${newVersion}`;
+		},
+	},
+];
+
 /**
  * Update version in specified files with the given patterns.
  *
@@ -143,10 +168,21 @@ if (replaceType === 'all' || replaceType === 'plugin') {
 	}
 }
 
-if (replaceType === 'all' || replaceType === 'docblock') {
+if (
+	replaceType === 'all' ||
+	replaceType === 'docblock' ||
+	replaceType === 'comment'
+) {
 	const files = glob.sync('**/*.php', { ignore: excludedDirs });
 
+	// One loop reduces the number of file system calls.
 	files.forEach((file) => {
-		updateVersionInFile(file, version, dryRun, docblockPatterns);
+		if (replaceType === 'all' || replaceType === 'docblock') {
+			updateVersionInFile(file, version, dryRun, docblockPatterns);
+		}
+
+		if (replaceType === 'all' || replaceType === 'comment') {
+			updateVersionInFile(file, version, dryRun, commentPatterns);
+		}
 	});
 }

@@ -4,6 +4,8 @@
  *
  * @package   PopupMaker
  * @copyright Copyright (c) 2024, Code Atlantic LLC
+ *
+ * phpcs:disable
  */
 
 define( 'EMCORE_SLUG', 'easy-modal' );
