@@ -5,7 +5,7 @@
  * @package   PopupMaker
  * @copyright Copyright (c) 2024, Code Atlantic LLC
  *
- * phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore, Generic.Files.OneObjectStructurePerFile.MultipleFound, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid, Universal.Files.SeparateFunctionsFromOO.Mixed, Universal.Namespaces.DisallowDeclarationWithoutName.Forbidden, Universal.Namespaces.DisallowCurlyBraceSyntax.Forbidden, WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid
+ * phpcs:disable
  */
 
 /**
@@ -20,7 +20,9 @@ class Caldera_Forms_Forms {
 	/**
 	 * Get a form.
 	 *
-	 * @return array<ID:string,name:string,description:string>
+	 * @param string $form_id Form ID.
+	 *
+	 * @return array{ID:string,name:string,description:string}
 	 */
 	public static function get_form( $form_id ) {}
 
@@ -29,7 +31,7 @@ class Caldera_Forms_Forms {
 	 *
 	 * @param bool $irrelevant Irrelevant.
 	 *
-	 * @return array<array<ID:int,name:string>>
+	 * @return array<array{ID:int,name:string}>
 	 */
 	public static function get_forms( $irrelevant = false ) {}
 }
@@ -73,7 +75,7 @@ class FrmForm {
 	 *
 	 * @param string $form_id Form ID.
 	 *
-	 * @return object<id:int,name:string>
+	 * @return object{id:int,name:string}
 	 */
 	public static function getOne( $form_id ) {}
 
@@ -82,7 +84,7 @@ class FrmForm {
 	 *
 	 * @param bool $irrelevant Irrelevant.
 	 *
-	 * @return array<array<ID:string,name:string>>
+	 * @return array<array{ID:string,name:string}>
 	 */
 	public static function getAll( $irrelevant = false ) {}
 }
@@ -94,8 +96,9 @@ class FrmForm {
 /**
  * Get a value from the query string.
  *
- * @param string $name — The key
- * @param array  $arr The array to search through. If null, checks query strings. Defaults to null.
+ * @param string              $key — The key
+ * @param array<string,mixed> $arr The array to search through. If null, checks query strings. Defaults to null.
+ * 
  * @return string — The value. If none found, empty string.
  */
 function rgget( $key, $arr = null ) {}
@@ -109,7 +112,7 @@ class GFAPI {
 	 *
 	 * @param string $form_id Form ID.
 	 *
-	 * @return array<id:int,title:string>|array<id:int,title:string>[]
+	 * @return array{id:int,title:string}|array{id:int,title:string}[]
 	 */
 	public static function get_forms( $form_id = null ) {}
 }
@@ -143,7 +146,7 @@ define( 'MC4WP_VERSION', '1.0.0' );
 /**
  * MC4WP Get Forms.
  *
- * @return array<array<ID:int,name:string>>
+ * @return array<array{ID:int,name:string}>
  */
 function mc4wp_get_forms() {}
 
@@ -152,7 +155,7 @@ function mc4wp_get_forms() {}
  *
  * @param string $form_id Form ID.
  *
- * @return array<array<ID:int,name:string>>
+ * @return array<array{ID:int,name:string}>
  */
 function mc4wp_get_form( $form_id ) {}
 
@@ -203,8 +206,6 @@ class Ninja_Forms_Form_Factory {
 
 	/**
 	 * Get all forms.
-	 *
-	 * @param string $form_id Form ID.
 	 *
 	 * @return Ninja_Forms_Form[]
 	 */
@@ -263,7 +264,7 @@ class PirateForms_Util {
 	 *
 	 * @param int|null $form_id
 	 *
-	 * @return array
+	 * @return array{ID:int,name:string,description:string}|null
 	 */
 	public static function get_form_options( $form_id = null ) {}
 }
@@ -301,7 +302,7 @@ class WP_Forms_Form_Factory {
 	 * Get a form.
 	 *
 	 * @param string $form_id Form ID.
-	 * @param array  $args    Arguments.
+	 * @param array<string,mixed>  $args    Arguments.
 	 *
 	 * @return WP_Forms_Form
 	 */
@@ -311,7 +312,21 @@ class WP_Forms_Form_Factory {
 /**
  * WP Forms Form.
  */
-class WP_Forms_Form extends WP_Post {}
+class WP_Forms_Form {
+	/**
+	 * The ID of the form.
+	 *
+	 * @var int
+	 */
+	public $ID = 0;
+
+	/**
+	 * The title of the form.
+	 *
+	 * @var string
+	 */
+	public $post_title = '';
+}
 
 /**
  * WS Forms
@@ -321,7 +336,7 @@ define( 'WS_FORM_VERSION', '1.0.0' );
 /**
  * Get all forms.
  *
- * @return array<array<id:int,label:string>>
+ * @return array<array{id:int,label:string}>
  */
 function wsf_form_get_all() {}
 
@@ -330,7 +345,7 @@ function wsf_form_get_all() {}
  *
  * @param int|string $form_id Form ID.
  *
- * @return array<id:int,label:string>
+ * @return array{id:int,label:string}
  */
 function wsf_form_get_object( $form_id ) {}
 

@@ -5,7 +5,7 @@
  * @package   PopupMaker
  * @copyright Copyright (c) 2024, Code Atlantic LLC
  *
- * phpcs:disable Generic.Files.OneObjectStructurePerFile.MultipleFound, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid, Universal.Files.SeparateFunctionsFromOO.Mixed, Universal.Namespaces.DisallowDeclarationWithoutName.Forbidden, Universal.Namespaces.DisallowCurlyBraceSyntax.Forbidden, WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid
+ * phpcs:disable
  */
 
 /**

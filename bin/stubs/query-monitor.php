@@ -4,9 +4,10 @@
  *
  * @package ContentControl
  * @license MIT
+ *
+ * phpcs:disable
  */
 
- // phpcs:disable Generic.Files.OneObjectStructurePerFile, Squiz.Commenting.ClassComment, Generic.CodeAnalysis.UnusedFunctionParameter
 
 
 class QM_Data {}
