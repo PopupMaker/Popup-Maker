@@ -1,11 +1,14 @@
 includes:
-    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+    # Uncomment for VSCode extension if it doesn't autodetect it.
+    # - vendor/szepeviktor/phpstan-wordpress/extension.neon
 parameters:
     level: 1
     paths:
         - classes/
         - includes/
         - templates/
+        - bootstrap.php
+        - bootstrap.legacy.php
         - popup-maker.php
     scanDirectories:
         - bin/
