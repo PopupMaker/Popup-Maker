@@ -6,6 +6,8 @@
  * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
+use function PopupMaker\config;
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -226,9 +228,9 @@ class PUM_Install {
 
 		$flag = null;
 
-		if ( version_compare( PHP_VERSION, Popup_Maker::$MIN_PHP_VER, '<' ) ) {
+		if ( version_compare( PHP_VERSION, config( 'min_php_ver' ), '<' ) ) {
 			$flag = 'PHP';
-		} elseif ( version_compare( $wp_version, Popup_Maker::$MIN_WP_VER, '<' ) ) {
+		} elseif ( version_compare( $wp_version, config( 'min_wp_ver' ), '<' ) ) {
 			$flag = 'WordPress';
 		}
 
@@ -251,12 +253,12 @@ class PUM_Install {
 	 */
 	public static function get_activation_failure_notice() {
 		$flag    = self::get_activation_flag();
-		$version = 'PHP' === $flag ? Popup_Maker::$MIN_PHP_VER : Popup_Maker::$MIN_WP_VER;
+		$version = 'PHP' === $flag ? config( 'min_php_ver' ) : config( 'min_wp_ver' );
 
 		return sprintf(
 			/* translators: 1. Plugin name, 2. Required plugin name, 3. Version number, 4. Opening HTML tag, 5. Closing HTML tag. */
 			__( 'The %4$s %1$s %5$s plugin requires %2$s version %3$s or greater.', 'popup-maker' ),
-			Popup_Maker::$NAME,
+			config( 'name' ),
 			$flag,
 			$version,
 			'<strong>',
