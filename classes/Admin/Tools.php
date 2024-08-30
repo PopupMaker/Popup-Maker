@@ -268,7 +268,9 @@ class PUM_Admin_Tools {
 		<button id="popmake_emodal_v2_import" name="popmake_emodal_v2_import" class="button button-large">
 			<?php esc_html_e( 'Import From Easy Modal v2', 'popup-maker' ); ?>
 		</button>
+		
 		<?php
+		wp_nonce_field( 'popmake_emodal_v2_import', 'popmake_emodal_v2_import_nonce' );
 	}
 
 	/**
@@ -301,9 +303,11 @@ class PUM_Admin_Tools {
 	 * Process em import.
 	 */
 	public static function emodal_process_import() {
-		// Ignored because this is a simple check for a valid request to bail early.
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( ! isset( $_REQUEST['popmake_emodal_v2_import'] ) ) {
+		if (
+			! isset( $_REQUEST['popmake_emodal_v2_import'] ) ||
+			! isset( $_REQUEST['popmake_emodal_v2_import_nonce'] ) ||
+			! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['popmake_emodal_v2_import_nonce'] ) ), 'popmake_emodal_v2_import_nonce' )
+		) {
 			return;
 		}
 
