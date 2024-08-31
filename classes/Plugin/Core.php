@@ -49,6 +49,15 @@ class Core {
 		$this->register_services();
 		$this->define_paths();
 		$this->initiate_controllers();
+
+		add_action( 'init', [ $this, 'load_textdomain' ] );
+	/**
+	 * Internationalization.
+	 *
+	 * @return void
+	 */
+	public function load_textdomain() {
+		load_plugin_textdomain( $this->container['text_domain'], false, $this->get_path( 'languages' ) );
 	}
 
 	/**
@@ -344,6 +353,20 @@ class Core {
 		$permissions = $this->get_permissions();
 
 		return isset( $permissions[ $cap ] ) ? $permissions[ $cap ] : 'manage_options';
+	}
+
+	/**
+	 * Check if debug mode is enabled.
+	 *
+	 * This is only used to change from minified to unminified
+	 * assets to make debugging easier, specifically when logged out.
+	 *
+	 * @return boolean
+	 */
+	public function is_debug_mode_enabled() {
+		// Ignored as we are simply checking for a query var's existence.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return isset( $_GET['pum_debug'] ) || \PUM_Utils_Options::get( 'debug_mode', false );
 	}
 
 	/**

@@ -1,4 +1,11 @@
 <?php
+/**
+ * Main plugin class - Legacy.
+ *
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
+ */
+
 
 use function PopupMaker\config;
 
@@ -101,7 +108,6 @@ class Popup_Maker {
 			self::$instance = new Popup_Maker();
 			self::$instance->setup_constants();
 			self::$instance->includes();
-			add_action( 'init', [ self::$instance, 'load_textdomain' ] );
 			self::$instance->init();
 		}
 
@@ -112,7 +118,6 @@ class Popup_Maker {
 	 * Setup plugin constants
 	 */
 	private function setup_constants() {
-
 		/**
 		 * Pull from new plugin config.
 		 *
@@ -127,47 +132,19 @@ class Popup_Maker {
 		self::$MIN_WP_VER  = config( 'min_wp_ver' );
 		self::$API_URL     = config( 'api_url' );
 
-		// Ignored as we are simply checking for a query var's existence.
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( isset( $_GET['pum_debug'] ) || PUM_Utils_Options::get( 'debug_mode', false ) ) {
+		if ( \PopupMaker\plugin()->is_debug_mode_enabled() ) {
 			self::$DEBUG_MODE = true;
 		}
 
-		if ( ! defined( 'POPMAKE' ) ) {
-			define( 'POPMAKE', self::$FILE );
-		}
-
-		if ( ! defined( 'POPMAKE_NAME' ) ) {
-			define( 'POPMAKE_NAME', self::$NAME );
-		}
-
-		if ( ! defined( 'POPMAKE_SLUG' ) ) {
-			define( 'POPMAKE_SLUG', trim( dirname( plugin_basename( self::$FILE ) ), '/' ) );
-		}
-
-		if ( ! defined( 'POPMAKE_DIR' ) ) {
-			define( 'POPMAKE_DIR', self::$DIR );
-		}
-
-		if ( ! defined( 'POPMAKE_URL' ) ) {
-			define( 'POPMAKE_URL', self::$URL );
-		}
-
-		if ( ! defined( 'POPMAKE_NONCE' ) ) {
-			define( 'POPMAKE_NONCE', 'popmake_nonce' );
-		}
-
-		if ( ! defined( 'POPMAKE_VERSION' ) ) {
-			define( 'POPMAKE_VERSION', self::$VER );
-		}
-
-		if ( ! defined( 'POPMAKE_DB_VERSION' ) ) {
-			define( 'POPMAKE_DB_VERSION', self::$DB_VER );
-		}
-
-		if ( ! defined( 'POPMAKE_API_URL' ) ) {
-			define( 'POPMAKE_API_URL', self::$API_URL );
-		}
+		defined( 'POPMAKE' ) || define( 'POPMAKE', self::$FILE );
+		defined( 'POPMAKE_NAME' ) || define( 'POPMAKE_NAME', self::$NAME );
+		defined( 'POPMAKE_SLUG' ) || define( 'POPMAKE_SLUG', trim( dirname( plugin_basename( self::$FILE ) ), '/' ) );
+		defined( 'POPMAKE_DIR' ) || define( 'POPMAKE_DIR', self::$DIR );
+		defined( 'POPMAKE_URL' ) || define( 'POPMAKE_URL', self::$URL );
+		defined( 'POPMAKE_NONCE' ) || define( 'POPMAKE_NONCE', 'popmake_nonce' );
+		defined( 'POPMAKE_VERSION' ) || define( 'POPMAKE_VERSION', self::$VER );
+		defined( 'POPMAKE_DB_VERSION' ) || define( 'POPMAKE_DB_VERSION', self::$DB_VER );
+		defined( 'POPMAKE_API_URL' ) || define( 'POPMAKE_API_URL', self::$API_URL );
 	}
 
 	/**
@@ -175,68 +152,10 @@ class Popup_Maker {
 	 */
 	private function includes() {
 		// Initialize global options
+		// TODO Replace this with Options class.
 		PUM_Utils_Options::init();
 
-		/** Loads most of our core functions */
-		require_once self::$DIR . 'includes/functions.php';
-
-		/** Deprecated functionality */
-		require_once self::$DIR . 'includes/functions-backcompat.php';
-		require_once self::$DIR . 'includes/functions-deprecated.php';
-		require_once self::$DIR . 'includes/deprecated-classes.php';
-		require_once self::$DIR . 'includes/deprecated-filters.php';
-		require_once self::$DIR . 'includes/integrations.php';
-
-		// Old Stuff.
-		require_once self::$DIR . 'includes/defaults.php';
-		require_once self::$DIR . 'includes/input-options.php';
-
-		require_once self::$DIR . 'includes/importer/easy-modal-v2.php';
-
-		// Phasing Out
-		require_once self::$DIR . 'includes/class-popmake-fields.php';
-		require_once self::$DIR . 'includes/class-popmake-popup-fields.php';
-
-		/**
-		 * v1.4 Additions
-		 */
-		require_once self::$DIR . 'includes/class-pum-fields.php';
-		require_once self::$DIR . 'includes/class-pum-form.php';
-
-		// Modules
-		require_once self::$DIR . 'includes/modules/menus.php';
-		require_once self::$DIR . 'includes/modules/admin-bar.php';
-		require_once self::$DIR . 'includes/modules/reviews.php';
-
-		require_once self::$DIR . 'includes/pum-install-functions.php';
-	}
-
-	/**
-	 * Loads the plugin language files
-	 */
-	public function load_textdomain() {
-		// Set filter for plugin's languages directory
-		$lang_dir = apply_filters( 'pum_lang_dir', dirname( plugin_basename( POPMAKE ) ) . '/languages/' );
-		$lang_dir = apply_filters( 'popmake_languages_directory', $lang_dir );
-
-		// Try to load Langpacks first, if they are not available fallback to local files.
-		if ( ! load_plugin_textdomain( 'popup-maker', false, $lang_dir ) ) {
-			// Traditional WordPress plugin locale filter
-			$locale = apply_filters( 'plugin_locale', get_locale(), 'popup-maker' );
-			$mofile = sprintf( '%1$s-%2$s.mo', 'popup-maker', $locale );
-
-			// Setup paths to current locale file
-			$mofile_local  = $lang_dir . $mofile;
-			$mofile_global = WP_LANG_DIR . '/popup-maker/' . $mofile;
-
-			if ( file_exists( $mofile_global ) ) {
-				// Look in global /wp-content/languages/popup-maker folder
-				load_textdomain( 'popup-maker', $mofile_global );
-			} elseif ( file_exists( $mofile_local ) ) {
-				// Look in local /wp-content/plugins/popup-maker/languages/ folder
-				load_textdomain( 'popup-maker', $mofile_local );
-			}
-		}
+		require_once self::$DIR . 'includes/entry--legacy-init.php';
 	}
 
 	public function init() {
@@ -270,8 +189,10 @@ class Popup_Maker {
 	 * Returns true when debug mode is enabled.
 	 *
 	 * @return bool
+	 *
+	 * @deprecated X.X.X - Use `\PopupMaker\plugin()->is_debug_mode()` instead.
 	 */
 	public static function debug_mode() {
-		return true === self::$DEBUG_MODE;
+		return \PopupMaker\plugin()->is_debug_mode_enabled();
 	}
 }

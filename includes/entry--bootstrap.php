@@ -1,7 +1,7 @@
 <?php
 /**
  * Function loader - General
- * - always loaded.
+ * - always loaded during bootstrap.
  *
  * File loader guidelines:
  *
@@ -19,4 +19,4 @@
 
 defined( 'ABSPATH' ) || exit;
 
-require_once 'namespaced/core.php';
+require_once __DIR__ . '/namespaced/core.php';
