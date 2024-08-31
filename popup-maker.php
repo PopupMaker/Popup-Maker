@@ -50,7 +50,7 @@ function popup_maker_config() {
 /**
  * Plugin functions loader.
  */
-require_once __DIR__ . '/includes/entry.php';
+require_once __DIR__ . '/includes/entry--bootstrap.php';
 
 /**
  * Legacy bootstrap.
