@@ -102,9 +102,7 @@ function pum_init() {
 		 * the bootstrap.php file meaning they would always be
 		 * available.
 		 */
-		if ( ! function_exists( 'pum_is_admin_page' ) ) {
-			require_once 'includes/failsafes.php';
-		}
+		require_once 'includes/entry--failsafes.php';
 		return;
 	}
 
