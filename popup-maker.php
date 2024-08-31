@@ -57,6 +57,11 @@ function popup_maker_config() {
 }
 
 /**
+ * Plugin functions loader.
+ */
+require_once __DIR__ . '/includes/entry.php';
+
+/**
  * Legacy bootstrap.
  *
  * Includes a non composer autoloadaer for backwards compatibility.
@@ -97,7 +102,9 @@ function pum_init() {
 		 * the bootstrap.php file meaning they would always be
 		 * available.
 		 */
-		require_once 'includes/failsafes.php';
+		if ( ! function_exists( 'pum_is_admin_page' ) ) {
+			require_once 'includes/failsafes.php';
+		}
 		return;
 	}
 
