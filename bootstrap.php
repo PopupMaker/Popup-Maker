@@ -87,10 +87,40 @@ function check_prerequisites() {
 	return true;
 }
 
-return;
+/**
+ * Initiates and/or retrieves an encapsulated container for the plugin.
+ *
+ * This kicks it all off, loads functions and initiates the plugins main class.
+ *
+ * @return \PopupMaker\Plugin\Core
+ */
+function plugin_instance() {
+	static $plugin;
 
-/*
-This is for future use.
+	if ( ! $plugin instanceof \PopupMaker\Plugin\Core ) {
+		require_once __DIR__ . '/includes/entry--on-init.php';
+		$plugin = new Plugin\Core( get_plugin_config() );
+	}
+
+	return $plugin;
+}
+
+/**
+ * Easy access to all plugin services from the container.
+ *
+ * @see \PopupMaker\plugin_instance
+ *
+ * @param string|null $service_or_config Key of service or config to fetch.
+ * @return \PopupMaker\Plugin\Core|mixed
+ */
+function plugin( $service_or_config = null ) {
+	if ( ! isset( $service_or_config ) ) {
+		return plugin_instance();
+	}
+
+	return plugin_instance()->get( $service_or_config );
+}
+
 add_action(
 	'plugins_loaded',
 	function () {
@@ -101,52 +131,6 @@ add_action(
 	// Core plugin loads at 11, Pro loads at 12 & addons load at 13.
 	11
 );
-*/
-
-/**
- * Initiates and/or retrieves an encapsulated container for the plugin.
- *
- * This kicks it all off, loads functions and initiates the plugins main class.
- *
- * @return \PopupMaker\Plugin\Core
- */
-
-/*
-This is for future use.
-
-function plugin_instance() {
-	static $plugin;
-
-	if ( ! $plugin instanceof \PopupMaker\Plugin\Core ) {
-		require_once __DIR__ . '/inc/functions.php';
-		require_once __DIR__ . '/inc/deprecated.php';
-		$plugin = new Plugin\Core( get_plugin_config() );
-	}
-
-	return $plugin;
-}
-*/
-
-/**
- * Easy access to all plugin services from the container.
- *
- * @see \PopupMaker\plugin_instance
- *
- * @param string|null $service_or_config Key of service or config to fetch.
- * @return \PopupMaker\Plugin\Core|mixed
- */
-
-/*
-This is for future use.
-
-function plugin( $service_or_config = null ) {
-	if ( ! isset( $service_or_config ) ) {
-		return plugin_instance();
-	}
-
-	return plugin_instance()->get( $service_or_config );
-}
-*/
 
 // Future use.
 // \register_activation_hook( __FILE__, '\PopupMaker\Plugin\Install::activate_plugin' );
