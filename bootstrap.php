@@ -98,7 +98,7 @@ function plugin_instance() {
 	static $plugin;
 
 	if ( ! $plugin instanceof \PopupMaker\Plugin\Core ) {
-		require_once __DIR__ . '/includes/entry--on-init.php';
+		require_once __DIR__ . '/includes/entry--plugin-init.php';
 		$plugin = new Plugin\Core( get_plugin_config() );
 	}
 
