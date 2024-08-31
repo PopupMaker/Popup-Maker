@@ -6,7 +6,6 @@
  * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
-
 use function PopupMaker\config;
 
 /**
