@@ -90,6 +90,7 @@ class PUM_Install {
 	 */
 	public static function activate_site() {
 
+		// TODO This needs complete overhaul.
 		// Add default values where needed.
 		$options = array_merge(
 			get_option( 'popmake_settings', [] ),
@@ -101,18 +102,7 @@ class PUM_Install {
 		// Setup some default options.
 		add_option( 'popmake_settings', $options );
 
-		add_option( 'pum_version', Popup_Maker::$VER );
-
 		pum();
-
-		// Setup the Popup & Theme Custom Post Type.
-		// PUM_Types::register_post_types();.
-
-		// Setup the Popup Taxonomies.
-		// PUM_Types::register_taxonomies( true );.
-
-		// Updates stored values for versioning.
-		// PUM_Utils_Upgrades::update_plugin_version();.
 
 		// We used transients before, but since the check for this option runs every admin page load it means 2 queries after its cleared.
 		// To prevent that we flipped it, now we delete the following option, and check for it.
