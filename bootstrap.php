@@ -26,7 +26,25 @@ function get_plugin_config() {
  *
  * @param string|null $key Key of config item to return.
  *
- * @return mixed
+ * @return ($key is null ? array{
+ *     name: string,
+ *     slug: string,
+ *     version: string,
+ *     option_prefix: string,
+ *     text_domain: string,
+ *     fullname: string,
+ *     min_php_ver: string,
+ *     min_wp_ver: string,
+ *     file: string,
+ *     basename: string,
+ *     url: string,
+ *     path: string,
+ *     api_url: string,
+ * } : (
+ *     $key is 'name'|'slug'|'version'|'option_prefix'|'text_domain'|'fullname'|'min_php_ver'|'min_wp_ver'|'file'|'basename'|'url'|'path'|'api_url'
+ *     ? string
+ *     : false
+ * ))
  *
  * @since 1.20.0
  */
