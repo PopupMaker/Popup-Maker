@@ -23,7 +23,21 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Define plugin's global configuration.
  *
- * @return array<string,string|bool>
+ * @return (array{
+ *     name: string,
+ *     slug: string,
+ *     version: string,
+ *     option_prefix: string,
+ *     text_domain: string,
+ *     fullname: string,
+ *     min_php_ver: string,
+ *     min_wp_ver: string,
+ *     file: string,
+ *     basename: string,
+ *     url: string,
+ *     path: string,
+ *     api_url: string,
+ * })
  *
  * @since 1.20.0
  */
@@ -80,6 +94,8 @@ require_once __DIR__ . '/bootstrap.php';
  *
  * NOTE: This will be replaced with the simpler init function
  * below once we add a plugin container class.
+ *
+ * @return void
  *
  * @since 1.8.0
  */
