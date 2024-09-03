@@ -52,9 +52,6 @@ class PUM_Admin_Upgrades {
 	 * Initialize the actions needed to process upgrades.
 	 */
 	public function init() {
-
-		$this->update_plugin_version();
-
 		$this->required_cap = apply_filters( 'pum_upgrade_required_cap', 'manage_options' );
 
 		// bail if this plugin data doesn't need updating
@@ -69,24 +66,6 @@ class PUM_Admin_Upgrades {
 
 		add_action( 'wp_ajax_pum_trigger_upgrades', [ $this, 'trigger_upgrades' ] );
 		add_action( 'admin_notices', [ $this, 'show_upgrade_notices' ] );
-	}
-
-	public function update_plugin_version() {
-
-		$current_ver = get_option( 'pum_ver', false );
-
-		if ( ! $current_ver ) {
-			$deprecated_ver = get_site_option( 'popmake_version', false );
-
-			$current_ver = $deprecated_ver ? $deprecated_ver : Popup_Maker::$VER;
-			add_option( 'pum_ver', Popup_Maker::$VER );
-		}
-
-		if ( version_compare( $current_ver, Popup_Maker::$VER, '<' ) ) {
-			// Save Upgraded From option
-			update_option( 'pum_ver_upgraded_from', $current_ver );
-			update_option( 'pum_ver', Popup_Maker::$VER );
-		}
 	}
 
 	/**

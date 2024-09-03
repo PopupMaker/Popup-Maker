@@ -50,7 +50,112 @@ class Core {
 		$this->define_paths();
 		$this->initiate_controllers();
 
+		$this->check_version();
+
 		add_action( 'init', [ $this, 'load_textdomain' ] );
+	}
+
+	/**
+	 * Update & track version info.
+	 *
+	 * @return void
+	 */
+	protected function check_version() {
+		// Get the version of the current plugin code.
+		$version = $this->get( 'version' );
+		// Generate option key for storing version info.
+		$option_key = $this->get( 'option_prefix' ) . '_version_info';
+		// Get the plugin version stored in the database.
+		$current_data = \get_option( $option_key, false );
+
+		$data = wp_parse_args(
+			// If the current data exists, use it.
+			false !== $current_data ? $current_data : [],
+			[
+				'version'         => $version,
+				'upgraded_from'   => null,
+				'initial_version' => $version,
+				'installed_on'    => gmdate( 'Y-m-d H:i:s' ),
+			]
+		);
+
+		// Process old version data storage, only runs once ever.
+		if ( false === $current_data ) {
+			$data = $this->process_version_data_migration( $data );
+
+			if ( \update_option( $option_key, $data ) ) {
+				\PopupMaker\cleanup_old_install_data();
+			}
+		}
+
+		if ( version_compare( $data['version'], (string) $version, '<' ) ) {
+			// Allow processing of small core upgrades.
+
+			/**
+			 * Fires when the plugin version is updated.
+			 *
+			 * Note: Old version is still available in options.
+			 *
+			 * @param string $old_version The old version.
+			 * @param string $new_version The new version.
+			 */
+			do_action( $this->get( 'option_prefix' ) . '/update_version', $data['version'], $version );
+
+			/**
+			 * Fires when the plugin version is updated.
+			 *
+			 * Allow processing of small core upgrades
+			 *
+			 * @param string $version The old version.
+			 *
+			 * @since 1.8.0
+			 * @deprecated X.X.X
+			 */
+			do_action( 'pum_update_core_version', $data['version'] );
+
+			// Save Upgraded From option.
+			$data['upgraded_from'] = $data['version'];
+			$data['version']       = $version;
+		}
+
+		if ( $current_data !== $data ) {
+			\update_option( $option_key, $data );
+		}
+	}
+
+	/**
+	 * Look for old version data and migrate it to the new format.
+	 *
+	 * @param array<string,string|null> $data Array of data.
+	 *
+	 * @return array{
+	 *     version: string,
+	 *     upgraded_from: string,
+	 *     initial_version: string,
+	 *     installed_on: string,
+	 * }
+	 */
+	protected function process_version_data_migration( $data ) {
+		// This class can be extended for addons, only do the following if this is core and not an extended class.
+		// If the current instance is not an extended class, check if old settings exist.
+		if ( get_called_class() === __CLASS__ ) {
+			$version         = \PopupMaker\detect_previous_install_version();
+			$initial_version = \PopupMaker\detect_initial_install_version();
+			$installed_on    = \PopupMaker\detect_initial_install_date();
+			$upgraded_from   = get_option( 'pum_ver_upgraded_from', null );
+
+			$data = [
+				// Setting to 0.0.0 if not set forces a "migration" to run.
+				'version'         => $version ? $version : '0.0.0',
+				'upgraded_from'   => $upgraded_from ? (string) $upgraded_from : null,
+				'initial_version' => $initial_version ? $initial_version : $version,
+				'installed_on'    => $installed_on,
+			];
+		}
+
+		return $data;
+	}
+
 	/**
 	 * Internationalization.
 	 *
