@@ -77,8 +77,20 @@ class PUM_Utils_Upgrades {
 	 * Sets up the Upgrades class instance.
 	 */
 	public function __construct() {
-		// Update stored plugin version info.
-		self::update_plugin_version();
+		// Here for backwards compatibility. Now using common API.
+		self::$version         = \PopupMaker\get_current_install_info( 'version' );
+		self::$installed_on    = \PopupMaker\get_current_install_info( 'installed_on' );
+		self::$initial_version = \PopupMaker\get_current_install_info( 'initial_version' );
+		self::$upgraded_from   = \PopupMaker\get_current_install_info( 'upgraded_from' );
+		self::$db_version      = get_option( 'pum_db_ver' );
+
+		// TODO When we refactor data migrations, this will be removed.
+		// If no current db version, but prior install detected, set db version correctly.
+		// Here for backward compatibility.
+		if ( ! self::$db_version || self::$db_version < Popup_Maker::$DB_VER ) {
+			self::$db_version = Popup_Maker::$DB_VER;
+			update_option( 'pum_db_ver', self::$db_version );
+		}
 
 		// Render upgrade admin notices.
 		add_filter( 'pum_alert_list', [ $this, 'upgrade_alert' ] );
@@ -93,100 +105,6 @@ class PUM_Utils_Upgrades {
 
 		// Initiate the upgrade registry. Must be done after versions update for proper comparisons.
 		$this->registry = PUM_Upgrade_Registry::instance();
-	}
-
-	/**
-	 * Update version info.
-	 */
-	public static function update_plugin_version() {
-		self::$version         = get_option( 'pum_ver' );
-		self::$upgraded_from   = get_option( 'pum_ver_upgraded_from' );
-		self::$initial_version = get_option( 'pum_initial_version' );
-		self::$db_version      = get_option( 'pum_db_ver' );
-		self::$installed_on    = get_option( 'pum_installed_on' );
-
-		/**
-		 * If no version set check if a deprecated one exists.
-		 */
-		if ( empty( self::$version ) ) {
-			$deprecated_ver = get_site_option( 'popmake_version' );
-
-			// set to the deprecated version or last version that didn't have the version option set
-			self::$version = $deprecated_ver ? $deprecated_ver : Popup_Maker::$VER; // Since we had versioning in v1 if there isn't one stored its a new install.
-
-			update_option( 'pum_ver', self::$version );
-		}
-
-		/**
-		 * Back fill the initial version with the oldest version we can detect.
-		 */
-		if ( ! self::$initial_version ) {
-			$oldest_known = Popup_Maker::$VER;
-
-			if ( self::$version && version_compare( self::$version, $oldest_known, '<' ) ) {
-				$oldest_known = self::$version;
-			}
-
-			if ( self::$upgraded_from && version_compare( self::$upgraded_from, $oldest_known, '<' ) ) {
-				$oldest_known = self::$upgraded_from;
-			}
-
-			$deprecated_ver = get_site_option( 'popmake_version' );
-			if ( $deprecated_ver && version_compare( $deprecated_ver, $oldest_known, '<' ) ) {
-				$oldest_known = $deprecated_ver;
-			}
-
-			$dep_upgraded_from = get_option( 'popmake_version_upgraded_from' );
-			if ( $dep_upgraded_from && version_compare( $dep_upgraded_from, $oldest_known, '<' ) ) {
-				$oldest_known = $dep_upgraded_from;
-			}
-
-			self::$initial_version = $oldest_known;
-
-			// Only set this value if it doesn't exist.
-			update_option( 'pum_initial_version', $oldest_known );
-		}
-
-		if ( version_compare( self::$version, Popup_Maker::$VER, '<' ) ) {
-			// Allow processing of small core upgrades
-			do_action( 'pum_update_core_version', self::$version );
-
-			// Save Upgraded From option
-			update_option( 'pum_ver_upgraded_from', self::$version );
-			update_option( 'pum_ver', Popup_Maker::$VER );
-			self::$upgraded_from = self::$version;
-			self::$version       = Popup_Maker::$VER;
-
-			// Reset JS/CSS assets for regeneration.
-			pum_reset_assets();
-		} elseif ( ! self::$upgraded_from || 'false' === self::$upgraded_from ) {
-			// Here to prevent constant extra queries.
-			self::$upgraded_from = '0.0.0';
-			update_option( 'pum_ver_upgraded_from', self::$upgraded_from );
-		}
-
-		// If no current db version, but prior install detected, set db version correctly.
-		// Here for backward compatibility.
-		if ( ! self::$db_version || self::$db_version < Popup_Maker::$DB_VER ) {
-			self::$db_version = Popup_Maker::$DB_VER;
-			update_option( 'pum_db_ver', self::$db_version );
-		}
-
-		/**
-		 * Back fill the initial version with the oldest version we can detect.
-		 */
-		if ( ! self::$installed_on ) {
-			$installed_on = current_time( 'mysql' );
-
-			$review_installed_on = get_option( 'pum_reviews_installed_on' );
-			if ( ! empty( $review_installed_on ) ) {
-				$installed_on = $review_installed_on;
-			}
-
-			self::$installed_on = $installed_on;
-
-			update_option( 'pum_installed_on', self::$installed_on );
-		}
 	}
 
 	/**
