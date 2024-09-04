@@ -9,7 +9,6 @@
 namespace PopupMaker\Plugin;
 
 use PopupMaker\Base\Container;
-use PopupMaker\Plugin\Options;
 use PopupMaker\Interfaces\Controller;
 
 defined( 'ABSPATH' ) || exit;
@@ -228,15 +227,15 @@ class Core {
 					return new \PopupMaker\Services\Logging( $container );
 				};
 
-			// $this->container['upgrader'] =
+			$this->container['upgrader'] =
 				/**
 				 * Get plugin upgrader.
 				 *
 				 * @return Upgrader
 				 */
-				// function ( $c ) {
-				// return new \PopupMaker\Plugin\Upgrader( $c );
-				// };
+				function ( $container ) {
+					return new \PopupMaker\Services\Upgrader( $container );
+				};
 
 			// $this->container['rules'] =
 				/**
