@@ -13,8 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Localized controller class.
  */
-interface Controller {
-
+interface Controller extends Service {
 	/**
 	 * Handle hooks & filters or various other init tasks.
 	 *
