@@ -188,45 +188,45 @@ class Core {
 		 * we only want to load the core services if this is the core plugin.
 		 */
 		if ( get_called_class() === __CLASS__ ) {
-			// $this->container['options'] =
+			$this->container['options'] =
 				/**
 				 * Get plugin options.
 				 *
-				 * @return Options
+				 * @return \PopupMaker\Services\Options
 				 */
-				// function ( $c ) {
-				// return new Options( $c->get( 'option_prefix' ) );
-				// };
+				function ( $container ) {
+					return new \PopupMaker\Services\Options( $container );
+				};
 
-			// $this->container['connect'] =
+			$this->container['connect'] =
 				/**
 				 * Get plugin connect.
 				 *
 				 * @return Connect
 				 */
-				// function ( $c ) {
-				// return new \PopupMaker\Plugin\Connect( $c );
-				// };
+				function ( $container ) {
+					return new \PopupMaker\Services\Connect( $container );
+				};
 
-			// $this->container['license'] =
+			$this->container['license'] =
 				/**
 				 * Get plugin license.
 				 *
 				 * @return License
 				 */
-				// function () {
-				// return new \PopupMaker\Plugin\License();
-				// };
+				function ( $container ) {
+					return new \PopupMaker\Services\License( $container );
+				};
 
-			// $this->container['logging'] =
+			$this->container['logging'] =
 				/**
 				 * Get plugin logging.
 				 *
 				 * @return Logging
 				 */
-				// function () {
-				// return new \PopupMaker\Plugin\Logging();
-				// };
+				function ( $container ) {
+					return new \PopupMaker\Services\Logging( $container );
+				};
 
 			// $this->container['upgrader'] =
 				/**

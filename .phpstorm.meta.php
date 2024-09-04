@@ -5,7 +5,7 @@
  * NOTE: VS Code can use this file as well when the PHP Intelliphense extension is installed to provide autocompletion.
  *
  * @author    Code Atlantic
- * @package   PopupMaker\Pro
+ * @package   PopupMaker
  * @copyright (c) 2024, Code Atlantic LLC.
  */
 
@@ -25,10 +25,10 @@ namespace PHPSTORM_META;
   override( \PopupMaker\Plugin\Core::get(0), map( [
     // Controllers.
     ''             => '@',
-    // 'connect'      => \PopupMaker\Plugin\Connect::class,
-    // 'license'      => \PopupMaker\Plugin\License::class,
-    // 'logging'      => \PopupMaker\Plugin\Logging::class,
-    // 'options'      => \PopupMaker\Plugin\Options::class,
+    'connect'      => \PopupMaker\Plugin\Connect::class,
+    'license'      => \PopupMaker\Plugin\License::class,
+    'logging'      => \PopupMaker\Plugin\Logging::class,
+    'options'      => \PopupMaker\Plugin\Options::class,
     // 'upgrader'     => \PopupMaker\Plugin\Upgrader::class,
     // 'rules'        => \PopupMaker\RuleEngine\Rules::class,
     // 'restrictions' => \PopupMaker\Services\Restrictions::class,
@@ -43,10 +43,10 @@ namespace PHPSTORM_META;
   override ( \PopupMaker\plugin(0), map( [
     // Controllers.
     '' => '@',
-    // 'connect'      => \PopupMaker\Plugin\Connect::class,
-    // 'license'      => \PopupMaker\Plugin\License::class,
-    // 'logging'      => \PopupMaker\Plugin\Logging::class,
-    // 'options'      => \PopupMaker\Plugin\Options::class,
+    'connect'      => \PopupMaker\Plugin\Connect::class,
+    'license'      => \PopupMaker\Plugin\License::class,
+    'logging'      => \PopupMaker\Plugin\Logging::class,
+    'options'      => \PopupMaker\Plugin\Options::class,
     // 'upgrader'     => \PopupMaker\Plugin\Upgrader::class,
     // 'rules'        => \PopupMaker\RuleEngine\Rules::class,
     // 'restrictions' => \PopupMaker\Services\Restrictions::class,
@@ -61,10 +61,10 @@ namespace PHPSTORM_META;
   override ( \PopupMaker\Base\Container::get(0), map( [
     // Controllers.
     '' => '@',
-    // 'connect'      => \PopupMaker\Plugin\Connect::class,
-    // 'license'      => \PopupMaker\Plugin\License::class,
-    // 'logging'      => \PopupMaker\Plugin\Logging::class,
-    // 'options'      => \PopupMaker\Plugin\Options::class,
+    'connect'      => \PopupMaker\Plugin\Connect::class,
+    'license'      => \PopupMaker\Plugin\License::class,
+    'logging'      => \PopupMaker\Plugin\Logging::class,
+    'options'      => \PopupMaker\Plugin\Options::class,
     // 'upgrader'     => \PopupMaker\Plugin\Upgrader::class,
     // 'rules'        => \PopupMaker\RuleEngine\Rules::class,
     // 'restrictions' => \PopupMaker\Services\Restrictions::class,
@@ -79,10 +79,10 @@ namespace PHPSTORM_META;
 override ( \PopupMaker\Base\Container::offsetGet(0), map( [
   // Controllers.
   '' => '@',
-  // 'connect'      => \PopupMaker\Plugin\Connect::class,
-  // 'license'      => \PopupMaker\Plugin\License::class,
-  // 'logging'      => \PopupMaker\Plugin\Logging::class,
-  // 'options'      => \PopupMaker\Plugin\Options::class,
+  'connect'      => \PopupMaker\Plugin\Connect::class,
+  'license'      => \PopupMaker\Plugin\License::class,
+  'logging'      => \PopupMaker\Plugin\Logging::class,
+  'options'      => \PopupMaker\Plugin\Options::class,
   // 'upgrader'     => \PopupMaker\Plugin\Upgrader::class,
   // 'rules'        => \PopupMaker\RuleEngine\Rules::class,
   // 'restrictions' => \PopupMaker\Services\Restrictions::class,
