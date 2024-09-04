@@ -422,6 +422,14 @@ class Core {
 	 * @return mixed
 	 */
 	public function get_option( $key, $default_value = false ) {
+		// Use old class directly to get all old options.
+		$deprecated_options = \PUM_Utils_Options::get_all();
+
+		if ( isset( $deprecated_options[ $key ] ) ) {
+			// Use the old class to get the option, specifically for backwards compatibility as it has filters.
+			return \PUM_Utils_Options::get( $key, $default_value );
+		}
+
 		return $this->get( 'options' )->get( $key, $default_value );
 	}
 
