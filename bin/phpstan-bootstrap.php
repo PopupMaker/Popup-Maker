@@ -98,3 +98,15 @@ if ( ! defined( 'PUM_NEWSLETTER_VERSION' ) ) {
 if ( ! defined( 'PUM_MAILCHIMP_INTEGRATION_VER' ) ) {
 	define( 'PUM_MAILCHIMP_INTEGRATION_VER', '1.0.0' );
 }
+
+if ( ! defined( 'POPUP_MAKER_DISABLE_LOGGING' ) ) {
+	define( 'POPUP_MAKER_DISABLE_LOGGING', false );
+}
+
+if ( ! defined( 'POPUP_MAKER_UPGRADE_DEBUG_LOGGING' ) ) {
+	define( 'POPUP_MAKER_UPGRADE_DEBUG_LOGGING', true );
+}
+
+if ( ! defined( 'POPUP_MAKER_LICENSE_KEY' ) ) {
+	define( 'POPUP_MAKER_LICENSE_KEY', '' );
+}
