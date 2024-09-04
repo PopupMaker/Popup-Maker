@@ -55,6 +55,24 @@ class Core {
 	}
 
 	/**
+	 * Check if this is the core plugin or an extension.
+	 *
+	 * @return bool
+	 */
+	public function is_core_plugin() {
+		return get_called_class() === __CLASS__;
+	}
+
+	/**
+	 * Check if this is the core plugin or an extension.
+	 *
+	 * @return bool
+	 */
+	public function is_addon_plugin() {
+		return ! $this->is_core_plugin();
+	}
+
+	/**
 	 * Update & track version info.
 	 *
 	 * @return void
@@ -137,7 +155,7 @@ class Core {
 	protected function process_version_data_migration( $data ) {
 		// This class can be extended for addons, only do the following if this is core and not an extended class.
 		// If the current instance is not an extended class, check if old settings exist.
-		if ( get_called_class() === __CLASS__ ) {
+		if ( $this->is_core_plugin() ) {
 			$version         = \PopupMaker\detect_previous_install_version();
 			$initial_version = \PopupMaker\detect_initial_install_version();
 			$installed_on    = \PopupMaker\detect_initial_install_date();
@@ -186,7 +204,7 @@ class Core {
 		 * Because extensions extend this class for access to services,
 		 * we only want to load the core services if this is the core plugin.
 		 */
-		if ( get_called_class() === __CLASS__ ) {
+		if ( $this->is_core_plugin() ) {
 			$this->container['options'] =
 				/**
 				 * Get plugin options.
@@ -388,7 +406,7 @@ class Core {
 		}
 
 		// 3. Check if the item exists in the global space.
-		if ( get_called_class() !== __CLASS__ ) {
+		if ( $this->is_addon_plugin() ) {
 			// If this is an addon, check if the service exists in the core plugin.
 			// Get core plugin container and see if the service exists there.
 			$plugin_service = \PopupMaker\plugin( $id );
