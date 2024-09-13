@@ -224,7 +224,7 @@ function popmake_resolve( array $a, $path, $default_value = null ) {
  *
  * @since 1.0
  *
- * @deprecated X.X.X
+ * @deprecated 1.20.0
  *
  * @param string $name is the key you are looking for. Can use dot notation for arrays such as my_meta.field1 which will resolve to $_POST['my_meta']['field1'].
  *

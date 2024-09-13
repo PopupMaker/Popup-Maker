@@ -190,7 +190,7 @@ class PUM_Admin_Popups {
 	 * @param array $values Array of settings.
 	 * @return array
 	 *
-	 * @deprecated X.X.X - Explicitly use ::defaults() and/or ::fill_missing_defaults() instead.
+	 * @deprecated 1.20.0 - Explicitly use ::defaults() and/or ::fill_missing_defaults() instead.
 	 */
 	public static function parse_values( $values = [] ) {
 		$defaults = self::defaults();

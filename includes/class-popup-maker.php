@@ -116,7 +116,7 @@ class Popup_Maker {
 		/**
 		 * Pull from new plugin config.
 		 *
-		 * @since X.X.X
+		 * @since 1.20.0
 		 */
 		self::$NAME        = config( 'name' );
 		self::$VER         = config( 'version' );

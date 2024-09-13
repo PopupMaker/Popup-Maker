@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array<string,string|bool>
  *
- * @since X.X.X
+ * @since 1.20.0
  */
 function get_plugin_config() {
 	return popup_maker_config();
@@ -28,7 +28,7 @@ function get_plugin_config() {
  *
  * @return mixed
  *
- * @since X.X.X
+ * @since 1.20.0
  */
 function config( $key = null ) {
 	$config = get_plugin_config();
@@ -54,7 +54,7 @@ if ( ! \PopupMaker\Vendor\CodeAtlantic\Autoloader\Autoloader::init( config( 'nam
  *
  * @return bool
  *
- * @since X.X.X
+ * @since 1.20.0
  */
 function check_prerequisites() {
 
