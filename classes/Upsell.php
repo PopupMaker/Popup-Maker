@@ -65,9 +65,11 @@ class PUM_Upsell {
 	 * @return array
 	 */
 	public static function popup_promotional_fields( $tabs = [] ) {
-		if ( ! pum_extension_enabled( 'forced-interaction' ) ) {
+		if ( ! pum_extension_enabled( 'forced-interaction' ) && ! pum_extension_enabled( 'pro' ) ) {
 			/* translators: %s url to product page. */
 			$message = sprintf( __( 'Want to disable the close button? Check out <a href="%s" target="_blank">Forced Interaction</a>!', 'popup-maker' ), 'https://wppopupmaker.com/extensions/forced-interaction/?utm_source=plugin-theme-editor&utm_medium=text-link&utm_campaign=upsell&utm_content=close-button-settings' );
+
+			// TODO Rewrite this for PM Pro instead of extension.
 
 			$promotion = [
 				'type'     => 'html',
