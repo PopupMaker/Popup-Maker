@@ -3,9 +3,9 @@
  * Plugin Name:       Popup Maker
  * Plugin URI:        https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&utm_medium=plugin-uri
  * Description:       Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
- * Version:           1.19.2
- * Requires PHP:      7.2
- * Requires at least: 5.8
+ * Version:           1.20.0
+ * Requires PHP:      5.6
+ * Requires at least: 4.9
  * Author:            Popup Maker
  * Author URI:        https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&utm_medium=author-uri
  * License:           GPL2 or later
@@ -25,23 +25,25 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array<string,string|bool>
  *
- * @since X.X.X
+ * @since 1.20.0
  */
 function popup_maker_config() {
 	return [
-		'name'          => __( 'Popup Maker', 'popup-maker' ),
-		'slug'          => 'popup-maker',
-		'version'       => '1.19.2',
-		'option_prefix' => 'popup_maker',
-		'text_domain'   => 'popup-maker',
-		'fullname'      => __( 'Popup Maker', 'popup-maker' ),
-		'min_php_ver'   => '7.4.0',
-		'min_wp_ver'    => '6.2.0',
-		'file'          => __FILE__,
-		'basename'      => plugin_basename( __FILE__ ),
-		'url'           => plugin_dir_url( __FILE__ ),
-		'path'          => __DIR__ . \DIRECTORY_SEPARATOR,
-		'api_url'       => 'https://wppopupmaker.com/',
+		'name'           => __( 'Popup Maker', 'popup-maker' ),
+		'slug'           => 'popup-maker',
+		'version'        => '1.19.2',
+		'option_prefix'  => 'popup_maker',
+		'text_domain'    => 'popup-maker',
+		'fullname'       => __( 'Popup Maker', 'popup-maker' ),
+		'min_wp_ver'     => '4.9.0',
+		'min_php_ver'    => '5.6.0',
+		'future_wp_req'  => '6.5.0',
+		'future_php_req' => '7.4.0',
+		'file'           => __FILE__,
+		'basename'       => plugin_basename( __FILE__ ),
+		'url'            => plugin_dir_url( __FILE__ ),
+		'path'           => __DIR__ . \DIRECTORY_SEPARATOR,
+		'api_url'        => 'https://wppopupmaker.com/',
 	];
 }
 

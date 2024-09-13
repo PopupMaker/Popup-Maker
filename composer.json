@@ -1,7 +1,7 @@
 {
 	"name": "popupmaker/popup-maker",
 	"description": "The easiest way to create any popup imaginable with WordPress.",
-	"version": "1.19.2",
+	"version": "1.20.0",
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",
 	"keywords": [

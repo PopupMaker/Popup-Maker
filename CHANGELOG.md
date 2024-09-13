@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.20.0 - 2024-09-13
+
 * Important: Popup Maker will be transitioning to new minimum PHP & WP versions over the next few releases. [Read about our plans here](https://wppopupmaker.com/blog/popup-maker-new-minimum-php-and-wp-versions-coming-soon/).
 * Feature: Add Form Integration for Fluent Forms, close or trigger popups, set cookies and more on form submission.
 * Feature: Add font size and font select buttons to the classic editor.
