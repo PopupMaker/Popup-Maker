@@ -2,8 +2,8 @@
 /**
  * Functions for Themes Template
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -34,7 +34,6 @@ function pum_get_rendered_theme_styles( $theme_id ) {
 
 	foreach ( $theme_styles as $element => $element_rules ) {
 		switch ( $element ) {
-
 			case 'overlay':
 				$css_selector = ".pum-theme-{$theme_id}";
 				if ( $slug ) {
@@ -64,10 +63,10 @@ function pum_get_rendered_theme_styles( $theme_id ) {
 					$css_selector .= ", .pum-theme-{$slug} .pum-{$element}";
 				}
 				break;
-
 		}
 
-		$rule_set = $sep = '';
+		$sep      = '';
+		$rule_set = '';
 		foreach ( $element_rules as $property => $value ) {
 			if ( ! empty( $value ) ) {
 				$rule_set .= $sep . $property . ': ' . $value;

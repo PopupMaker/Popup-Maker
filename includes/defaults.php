@@ -1,6 +1,9 @@
 <?php
 /**
  * Default Settings, Popup Settings, Theme Settings.
+ *
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 // Exit if accessed directly
@@ -67,5 +70,3 @@ function popmake_popup_close_defaults( $defaults = [] ) {
 		]
 	);
 }
-
-

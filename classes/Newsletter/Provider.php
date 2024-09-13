@@ -2,8 +2,8 @@
 /**
  * Newsletter Provider Base class
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -38,5 +38,4 @@ abstract class PUM_Newsletter_Provider extends PUM_Abstract_Provider {
 
 		return $fields;
 	}
-
 }

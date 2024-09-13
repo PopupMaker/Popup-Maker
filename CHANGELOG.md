@@ -2,9 +2,18 @@
 
 ## Unreleased
 
+## v1.20.0 - 2024-09-13
+
+* Important: Popup Maker will be transitioning to new minimum PHP & WP versions over the next few releases. [Read about our plans here](https://wppopupmaker.com/blog/popup-maker-new-minimum-php-and-wp-versions-coming-soon/).
+* Feature: Add Form Integration for Fluent Forms, close or trigger popups, set cookies and more on form submission.
+* Feature: Add font size and font select buttons to the classic editor.
+* Improvement: Keep the same popup editor, theme editor & settings page tab after saving or refreshing the page.
+* Fix: Deprecated notice on PHP 8.3 for converting bool to array.
+
 ## v1.19.2 - 08/25/2024
 
 * Fix: Error on activation for some users on fresh installs.
+* Fix:  deprecated notice in PHP 8.3.
 
 ## v1.19.1 - 08/17/2024
 

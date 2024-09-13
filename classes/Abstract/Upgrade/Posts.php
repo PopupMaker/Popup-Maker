@@ -2,8 +2,8 @@
 /**
  * Abstract for posts upgrade
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -183,7 +183,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 
 		$this->set_current_count( count( $completed_post_ids ) );
 
-		return ++ $this->step;
+		return ++$this->step;
 	}
 
 	/**
@@ -200,17 +200,26 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 		$plural    = strtolower( $labels->name );
 
 		switch ( $code ) {
-
 			case 'start':
 				$total_count = $this->get_total_count();
 
-				$message = sprintf( _n( 'Updating %d %2$s.', 'Updating %d %3$s.', $total_count, 'popup-maker' ), number_format_i18n( $total_count ), $singular, $plural );
+				$message = sprintf(
+					/* translators: 1: Number of items updated. 2: Singular or plural label. */
+					_n( 'Updating %1$d %2$s.', 'Updating %1$d %2$s.', $total_count, 'popup-maker' ),
+					number_format_i18n( $total_count ),
+					1 === $total_count ? $singular : $plural
+				);
 				break;
 
 			case 'done':
 				$final_count = $this->get_current_count();
 
-				$message = sprintf( _n( '%s %2$s was updated successfully.', '%s %3$s were updated successfully.', $final_count, 'popup-maker' ), number_format_i18n( $final_count ), $singular, $plural );
+				$message = sprintf(
+					/* translators: 1: Number of items updated. 2: Singular or plural label. */
+					_n( '%1$s %2$s was updated successfully.', '%1$s %2$s were updated successfully.', $final_count, 'popup-maker' ),
+					number_format_i18n( $final_count ),
+					1 === $final_count ? $singular : $plural
+				);
 				break;
 
 			default:
@@ -235,7 +244,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 */
 	protected function get_post_ids() {
 		if ( ! isset( $this->post_ids ) || ! $this->post_ids ) {
-			$this->post_ids = PUM_DataStorage::get( "{$this->batch_id}_post_ids", false );
+			$this->post_ids = PUM_Utils_DataStorage::get( "{$this->batch_id}_post_ids", false );
 
 			if ( is_array( $this->post_ids ) ) {
 				$this->post_ids = wp_parse_id_list( $this->post_ids );
@@ -253,7 +262,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	protected function set_post_ids( $post_ids = [] ) {
 		$this->post_ids = $post_ids;
 
-		PUM_DataStorage::write( "{$this->batch_id}_post_ids", $post_ids );
+		PUM_Utils_DataStorage::write( "{$this->batch_id}_post_ids", $post_ids );
 	}
 
 	/**
@@ -261,7 +270,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 */
 	protected function delete_post_ids() {
 		$this->post_ids = false;
-		PUM_DataStorage::delete( "{$this->batch_id}_post_ids" );
+		PUM_Utils_DataStorage::delete( "{$this->batch_id}_post_ids" );
 	}
 
 
@@ -272,7 +281,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 */
 	protected function get_completed_post_ids() {
 		if ( ! isset( $this->completed_post_ids ) || ! $this->completed_post_ids ) {
-			$completed_post_ids       = PUM_DataStorage::get( "{$this->batch_id}_completed_post_ids", [] );
+			$completed_post_ids       = PUM_Utils_DataStorage::get( "{$this->batch_id}_completed_post_ids", [] );
 			$this->completed_post_ids = wp_parse_id_list( $completed_post_ids );
 		}
 
@@ -287,7 +296,7 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	protected function set_completed_post_ids( $completed_post_ids = [] ) {
 		$this->completed_post_ids = wp_parse_id_list( $completed_post_ids );
 
-		PUM_DataStorage::write( "{$this->batch_id}_completed_post_ids", $completed_post_ids );
+		PUM_Utils_DataStorage::write( "{$this->batch_id}_completed_post_ids", $completed_post_ids );
 	}
 
 	/**
@@ -295,6 +304,6 @@ abstract class PUM_Abstract_Upgrade_Posts extends PUM_Abstract_Upgrade implement
 	 */
 	protected function delete_completed_post_ids() {
 		$this->completed_post_ids = false;
-		PUM_DataStorage::delete( "{$this->batch_id}_completed_post_ids" );
+		PUM_Utils_DataStorage::delete( "{$this->batch_id}_completed_post_ids" );
 	}
 }

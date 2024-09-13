@@ -2,8 +2,8 @@
 /**
  * Class for Upsell
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 /**
@@ -69,12 +69,16 @@ class PUM_Upsell {
 			/* translators: %s url to product page. */
 			$message = sprintf( __( 'Want to disable the close button? Check out <a href="%s" target="_blank">Forced Interaction</a>!', 'popup-maker' ), 'https://wppopupmaker.com/extensions/forced-interaction/?utm_source=plugin-theme-editor&utm_medium=text-link&utm_campaign=upsell&utm_content=close-button-settings' );
 
-			$tabs['close']['button']['fi_promotion'] = $tabs['close']['forms']['fi_promotion'] = $tabs['close']['alternate_methods']['fi_promotion'] = [
+			$promotion = [
 				'type'     => 'html',
 				'content'  => '<img src="' . pum_asset_url( 'images/upsell-icon-forced-interaction.png' ) . '" />' . $message,
 				'priority' => 999,
 				'class'    => 'pum-upgrade-tip',
 			];
+
+			$tabs['close']['button']['fi_promotion']            = $promotion;
+			$tabs['close']['forms']['fi_promotion']             = $promotion;
+			$tabs['close']['alternate_methods']['fi_promotion'] = $promotion;
 		}
 
 		if ( ! pum_extension_enabled( 'advanced-targeting-conditions' ) ) {
@@ -179,6 +183,8 @@ class PUM_Upsell {
 			$active_tab = false;
 
 			// Calculate which tab is currently active.
+
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended
 			if ( isset( $_GET['page'] ) && 'pum-extensions' === $_GET['page'] ) {
 				$active_tab = 'integrations';
 			} elseif ( ! isset( $_GET['page'] ) && isset( $_GET['post_type'] ) ) {
@@ -191,13 +197,14 @@ class PUM_Upsell {
 						break;
 				}
 			}
+			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 			// Add each tab, marking the current one as active.
 			foreach ( $tabs as $tab_id => $tab ) {
 				$active = $active_tab === $tab_id ? ' nav-tab-active' : '';
 				?>
 				<a href="<?php echo esc_url( $tab['url'] ); ?>" class="nav-tab<?php echo esc_attr( $active ); ?>">
-					<?php echo $tab['name']; ?>
+					<?php echo esc_html( $tab['name'] ); ?>
 				</a>
 				<?php
 			}
@@ -213,5 +220,4 @@ class PUM_Upsell {
 		</nav>
 		<?php
 	}
-
 }

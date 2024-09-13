@@ -2,8 +2,8 @@
 /**
  * Fields Utility
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -68,13 +68,11 @@ class PUM_Utils_Fields {
 		$fields = [];
 
 		foreach ( $tabs as $tab_id => $tab_sections ) {
-
 			if ( self::is_field( $tab_sections ) ) {
 				$fields[ $tab_id ] = $tab_sections;
 				continue;
 			} else {
 				foreach ( $tab_sections as $section_id => $section_fields ) {
-
 					if ( self::is_field( $tab_sections ) ) {
 						$fields[ $section_id ] = $section_fields;
 						continue;
@@ -206,6 +204,7 @@ class PUM_Utils_Fields {
 					try {
 						$fields = PUM_Utils_Array::replace_key( $fields, $field_id, $field['id'] );
 					} catch ( Exception $e ) {
+						$e;
 					}
 
 					$field_id = $field['id'];
@@ -229,28 +228,28 @@ class PUM_Utils_Fields {
 	/**
 	 * Checks if an array is a field.
 	 *
-	 * @param array $array
+	 * @param array $arr
 	 *
 	 * @return bool
 	 */
-	public static function is_field( $array = [] ) {
+	public static function is_field( $arr = [] ) {
 		$field_tests = [
-			! isset( $array['type'] ) && ( isset( $array['label'] ) || isset( $array['desc'] ) ),
-			isset( $array['type'] ) && is_string( $array['type'] ),
+			! isset( $arr['type'] ) && ( isset( $arr['label'] ) || isset( $arr['desc'] ) ),
+			isset( $arr['type'] ) && is_string( $arr['type'] ),
 		];
 
-		return in_array( true, $field_tests );
+		return in_array( true, $field_tests, true );
 	}
 
 	/**
 	 * Checks if an array is a section.
 	 *
-	 * @param array $array
+	 * @param array $arr
 	 *
 	 * @return bool
 	 */
-	public static function is_section( $array = [] ) {
-		return ! self::is_field( $array );
+	public static function is_section( $arr = [] ) {
+		return ! self::is_field( $arr );
 	}
 
 	/**
@@ -322,7 +321,6 @@ class PUM_Utils_Fields {
 				static::render_field( $field_args );
 			}
 		}
-
 	}
 
 	/**
@@ -378,11 +376,10 @@ class PUM_Utils_Fields {
 			 */
 			if ( function_exists( "pum_{$type}_sanitize" ) ) {
 				$function_name = "pum_{$type}_sanitize";
-			}
-			/**
-			 * Check if core method exists and load that.
-			 */
-			elseif ( method_exists( 'PUM_Utils_Sanitize', $type ) ) {
+			} elseif ( method_exists( 'PUM_Utils_Sanitize', $type ) ) {
+				/**
+				 * Check if core method exists and load that.
+				 */
 				$function_name = [ 'PUM_Utils_Sanitize', $type ];
 			} else {
 				$function_name = null;

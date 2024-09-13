@@ -2,8 +2,8 @@
 /**
  * Functions for Upgrades Utility
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -65,11 +65,15 @@ function pum_cleanup_post_meta_keys( $post_id = 0, $keys_to_delete = [] ) {
 		$keys_to_delete = array_map( 'esc_sql', (array) $keys_to_delete );
 		$meta_keys      = implode( "','", $keys_to_delete );
 
-		$query = $wpdb->prepare( "DELETE FROM `$wpdb->postmeta` WHERE `post_id` = %d AND `meta_key` IN ('{$meta_keys}')", $post_id );
-
-		$wpdb->query( $query );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$wpdb->query(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"DELETE FROM `$wpdb->postmeta` WHERE `post_id` = %d AND `meta_key` IN ('{$meta_keys}')",
+				$post_id
+			)
+		);
 
 		wp_cache_delete( $post_id, 'post_meta' );
 	}
-
 }

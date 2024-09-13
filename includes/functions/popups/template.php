@@ -2,8 +2,8 @@
 /**
  * Functions for Popups Template
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,8 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param null|int|string $popup_id Popup ID.
  */
-function pum_popup_ID( $popup_id = null ) {
-	echo pum_get_popup_id( $popup_id );
+function pum_popup_ID( $popup_id = null ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid
+	echo absint( pum_get_popup_id( $popup_id ) );
 }
 
 /**
@@ -42,6 +42,7 @@ function pum_popup_content( $popup_id = null ) {
 
 	$cached_content = PUM_Site_Popups::get_cache_content( $popup->ID );
 
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo false !== $cached_content ? $cached_content : $popup->get_content();
 }
 

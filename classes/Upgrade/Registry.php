@@ -2,8 +2,8 @@
 /**
  * Upgrade Registry
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -61,7 +61,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 		/**
 		 * Fires during instantiation of the batch processing registry.
 		 *
-		 * @param PUM_Upgrade_Registry $this PUM_Abstract_Registry instance.
+		 * @param PUM_Upgrade_Registry $registry PUM_Abstract_Registry instance.
 		 */
 		do_action( 'pum_upgrade_process_init', $this );
 	}
@@ -75,7 +75,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 		/**
 		 * Fires during instantiation of the batch processing registry allowing proper registration of upgrades.
 		 *
-		 * @param PUM_Upgrade_Registry $this PUM_Abstract_Registry instance.
+		 * @param PUM_Upgrade_Registry $registry PUM_Abstract_Registry instance.
 		 */
 		do_action( 'pum_register_upgrades', $this );
 	}
@@ -130,5 +130,4 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 	public function get_upgrades() {
 		return parent::get_items();
 	}
-
 }

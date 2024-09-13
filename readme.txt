@@ -5,9 +5,9 @@ Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&ut
 Donate link:
 Tags:  marketing, popup, popups, optin, conversion
 Requires at least: 4.9
-Tested up to: 6.6.1
+Tested up to: 6.6.2
 Requires PHP: 5.6
-Stable tag: 1.19.2
+Stable tag: 1.20.0
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -182,6 +182,14 @@ There are several common causes for this, check [this guide for help](https://do
 == Changelog ==
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
+
+= v1.20.0 - 2024-09-13 =
+
+* Important: Popup Maker will be transitioning to new minimum PHP & WP versions over the next few releases. [Read about our plans here](https://wppopupmaker.com/announcements/upcoming-php-wp-requirement-changes/).
+* Feature: Add Form Integration for Fluent Forms, close or trigger popups, set cookies and more on form submission.
+* Feature: Add font size and font select buttons to the classic editor.
+* Improvement: Keep the same popup editor, theme editor & settings page tab after saving or refreshing the page.
+* Fix: Deprecated notice on PHP 8.3 for converting bool to array.
 
 = v1.19.2 - 08/25/2024 =
 

@@ -2,8 +2,8 @@
 /**
  * Shortcode for PopupClose
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -39,7 +39,7 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 	public function inner_content_labels() {
 		return [
 			'label'       => __( 'Content', 'popup-maker' ),
-			'description' => __( 'Can contain other shortcodes, images, text or html content.' ),
+			'description' => __( 'Can contain other shortcodes, images, text or html content.', 'popup-maker' ),
 		];
 	}
 
@@ -174,7 +174,7 @@ class PUM_Shortcode_PopupClose extends PUM_Shortcode {
 		global $allowedtags;
 		?>
 		<#
-			const allowedTags = <?php echo json_encode( array_keys( $allowedtags ) ); ?>;
+			const allowedTags = <?php echo wp_json_encode( array_keys( $allowedtags ) ); ?>;
 			const tag = allowedTags.indexOf( attrs.tag ) >= 0 ? attrs.tag : 'span';
 		#>
 		<{{{tag}}} class="pum-close  popmake-close <# if (typeof attrs.classes !== 'undefined') print(attrs.classes); #>">{{{attrs._inner_content}}}</{{{tag}}}>

@@ -2,8 +2,8 @@
 /**
  * Integrations for buddypress
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 // Exit if accessed directly
@@ -36,60 +36,60 @@ class PUM_BuddyPress_Integration {
 			[
 				// Add Additional Conditions
 				'is_buddypress'           => [
-					'group'    => __( 'BuddyPress', 'buddypress' ),
+					'group'    => __( 'BuddyPress', 'buddypress' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 					'name'     => __( 'BP: Is a BuddyPress Page', 'popup-maker' ),
 					'callback' => 'is_buddypress',
 				],
 
 				'bp_is_user'              => [
-					'group'    => __( 'BuddyPress', 'buddypress' ),
+					'group'    => __( 'BuddyPress', 'buddypress' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 					'name'     => __( 'BP: Is User Page', 'popup-maker' ),
 					'callback' => 'bp_is_user',
 				],
 
 				'bp_is_group'             => [
-					'group'    => __( 'BuddyPress', 'buddypress' ),
+					'group'    => __( 'BuddyPress', 'buddypress' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 					'name'     => __( 'BP: Is Group Page', 'popup-maker' ),
 					'callback' => 'bp_is_group',
 				],
 
 				'bp_is_user_messages'     => [
-					'group'    => __( 'BuddyPress', 'buddypress' ),
+					'group'    => __( 'BuddyPress', 'buddypress' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 					'name'     => __( 'BP: Is User Messages Page', 'popup-maker' ),
 					'callback' => 'bp_is_user_messages',
 				],
 
 				'bp_is_activation_page'   => [
-					'group'    => __( 'BuddyPress', 'buddypress' ),
+					'group'    => __( 'BuddyPress', 'buddypress' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 					'name'     => __( 'BP: Is Activation Page', 'popup-maker' ),
 					'callback' => 'bp_is_activation_page',
 				],
 
 				'bp_is_register_page'     => [
-					'group'    => __( 'BuddyPress', 'buddypress' ),
+					'group'    => __( 'BuddyPress', 'buddypress' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 					'name'     => __( 'BP: Is Register Page', 'popup-maker' ),
 					'callback' => 'bp_is_register_page',
 				],
 
 				'bp_is_item_admin'        => [
-					'group'    => __( 'BuddyPress', 'buddypress' ),
+					'group'    => __( 'BuddyPress', 'buddypress' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 					'name'     => __( 'BP: Is Item Admin', 'popup-maker' ),
 					'callback' => 'bp_is_item_admin',
 				],
 
 				'bp_is_item_mod'          => [
-					'group'    => __( 'BuddyPress', 'buddypress' ),
+					'group'    => __( 'BuddyPress', 'buddypress' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 					'name'     => __( 'BP: Is Item Mod', 'popup-maker' ),
 					'callback' => 'bp_is_item_mod',
 				],
 
 				'bp_is_directory'         => [
-					'group'    => __( 'BuddyPress', 'buddypress' ),
+					'group'    => __( 'BuddyPress', 'buddypress' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 					'name'     => __( 'BP: Is Directory', 'popup-maker' ),
 					'callback' => 'bp_is_directory',
 				],
 				'bp_is_current_component' => [
-					'group'    => __( 'BuddyPress', 'buddypress' ),
+					'group'    => __( 'BuddyPress', 'buddypress' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 					'name'     => __( 'BP: Is Current Component', 'popup-maker' ),
 					'fields'   => [
 						'selected' => [
@@ -98,31 +98,31 @@ class PUM_BuddyPress_Integration {
 							'as_array' => true,
 							'select2'  => true,
 							'options'  => self::component_option_list(),
-							'label'    => __( 'Which components?' ),
+							'label'    => __( 'Which components?', 'popup-maker' ),
 						],
 					],
 					'callback' => [ __CLASS__, 'bp_is_current_component' ],
 				],
 
 				'bp_is_current_action'    => [
-					'group'    => __( 'BuddyPress', 'buddypress' ),
+					'group'    => __( 'BuddyPress', 'buddypress' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 					'name'     => __( 'BP: Is Current Action', 'popup-maker' ),
 					'fields'   => [
 						'selected' => [
 							'type'  => 'text',
-							'label' => __( 'Which actions?' ),
+							'label' => __( 'Which actions?', 'popup-maker' ),
 						],
 					],
 					'callback' => [ __CLASS__, 'bp_is_current_action' ],
 				],
 
 				'bp_is_action_variable'   => [
-					'group'    => __( 'BuddyPress', 'buddypress' ),
+					'group'    => __( 'BuddyPress', 'buddypress' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 					'name'     => __( 'BP: Is Action Variable', 'popup-maker' ),
 					'fields'   => [
 						'selected' => [
 							'type'  => 'text',
-							'label' => __( 'Which action variables?' ),
+							'label' => __( 'Which action variables?', 'popup-maker' ),
 						],
 					],
 					'callback' => [ __CLASS__, 'bp_is_action_variable' ],
@@ -245,9 +245,8 @@ class PUM_BuddyPress_Integration {
 	 * @return array
 	 */
 	public static function condition_sort_order( $order = [] ) {
-		$order[ __( 'BuddyPress', 'buddypress' ) ] = 5.756;
+		$order[ __( 'BuddyPress', 'buddypress' ) ] = 5.756; // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 
 		return $order;
 	}
-
 }

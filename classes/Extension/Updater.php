@@ -2,8 +2,8 @@
 /**
  * Popup Maker Extension Updater
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 // Exit if accessed directly.
@@ -311,8 +311,8 @@ class PUM_Extension_Updater {
 
 		printf(
 			'<tr class="plugin-update-tr %3$s" id="%1$s-update" data-slug="%1$s" data-plugin="%2$s">',
-			$this->slug,
-			$file,
+			esc_attr( $this->slug ),
+			esc_attr( $file ),
 			in_array( $this->name, $this->get_active_plugins(), true ) ? 'active' : 'inactive'
 		);
 
@@ -645,9 +645,9 @@ class PUM_Extension_Updater {
 		/**
 		 * Filters the parameters sent in the API request.
 		 *
-		 * @param array  $api_params        The array of data sent in the request.
-		 * @param array  $this->api_data    The array of data set up in the class constructor.
-		 * @param string $this->plugin_file The full path and filename of the file.
+		 * @param array  $api_params  The array of data sent in the request.
+		 * @param array  $api_data    The array of data set up in the class constructor.
+		 * @param string $plugin_file The full path and filename of the file.
 		 */
 		$api_params = apply_filters( 'edd_sl_plugin_updater_api_params', $api_params, $this->api_data, $this->plugin_file );
 
@@ -695,7 +695,7 @@ class PUM_Extension_Updater {
 	 * Get the version info from the cache, if it exists.
 	 *
 	 * @param string $cache_key Cache key.
-	 * @return object
+	 * @return false|object
 	 */
 	public function get_cached_version_info( $cache_key = '' ) {
 

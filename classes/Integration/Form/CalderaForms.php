@@ -2,8 +2,8 @@
 /**
  * Integration for CalderaForms Form
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
@@ -103,6 +103,4 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 
 		return $css;
 	}
-
-
 }

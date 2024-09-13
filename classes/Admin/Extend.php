@@ -2,8 +2,8 @@
 /**
  * Class for Admin Extend
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -33,7 +33,7 @@ class PUM_Admin_Extend {
 	public static function page() {
 		?>
 		<div class="wrap">
-			<h1><?php _e( 'Upgrade', 'popup-maker' ); ?></h1>
+			<h1><?php esc_html_e( 'Upgrade', 'popup-maker' ); ?></h1>
 			<?php PUM_Upsell::display_addon_tabs(); ?>
 			<article class="upgrade-wrapper">
 				<section class="upgrade-wrapper-hero">
@@ -50,7 +50,7 @@ class PUM_Admin_Extend {
 				<section class="upgrade-wrapper-features">
 					<h2>Our Most Popular Premium Features</h2>
 					<?php self::render_extension_list(); ?>
-					<a href="https://wppopupmaker.com/extensions/?utm_campaign=upsell&utm_medium=plugin&utm_source=plugin-extension-page&utm_content=browse-all-bottom" class="button-primary" title="<?php _e( 'See All Premium Features', 'popup-maker' ); ?>" target="_blank" rel="noreferrer noopener"><?php _e( 'See All Premium Features', 'popup-maker' ); ?></a>
+					<a href="https://wppopupmaker.com/extensions/?utm_campaign=upsell&utm_medium=plugin&utm_source=plugin-extension-page&utm_content=browse-all-bottom" class="button-primary" title="<?php esc_attr_e( 'See All Premium Features', 'popup-maker' ); ?>" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'See All Premium Features', 'popup-maker' ); ?></a>
 				</section>
 			</article>
 		</div>
@@ -98,7 +98,6 @@ class PUM_Admin_Extend {
 			$existing_extension_images = self::extensions_with_local_image();
 
 			if ( ! empty( $extensions ) ) {
-
 				shuffle( $extensions );
 
 				foreach ( $extensions as $key => $ext ) {
@@ -112,17 +111,17 @@ class PUM_Admin_Extend {
 					?>
 					<li class="available-extension-inner <?php echo esc_attr( $extension['slug'] ); ?>">
 						<h3>
-							<a target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=plugin&utm_campaign=upsell&utm_content=<?php echo esc_attr( urlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>-<?php echo esc_attr( $i ); ?>">
+							<a target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=plugin&utm_campaign=upsell&utm_content=<?php echo esc_attr( rawurlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>-<?php echo esc_attr( $i ); ?>">
 								<?php echo esc_html( $extension['name'] ); ?>
 							</a>
 						</h3>
-						<?php $image = in_array( $extension['slug'], $existing_extension_images ) ? POPMAKE_URL . '/assets/images/extensions/' . $extension['slug'] . '.png' : $extension['image']; ?>
+						<?php $image = in_array( $extension['slug'], $existing_extension_images, true ) ? POPMAKE_URL . '/assets/images/extensions/' . $extension['slug'] . '.png' : $extension['image']; ?>
 						<img class="extension-thumbnail" src="<?php echo esc_attr( $image ); ?>" />
 
-						<p><?php echo esc_html( $extension['excerpt'] ); ?></p>
+						<p><?php echo wp_kses( $extension['excerpt'], wp_kses_allowed_html( 'data' ) ); ?></p>
 
 						<span class="action-links">
-						<a class="button" target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=plugin&utm_campaign=upsell&utm_content=<?php echo esc_attr( urlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>-<?php echo esc_attr( $i ); ?>"><?php _e( 'Learn more', 'popup-maker' ); ?></a>
+						<a class="button" target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=plugin&utm_campaign=upsell&utm_content=<?php echo esc_attr( rawurlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>-<?php echo esc_attr( $i ); ?>"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a>
 					</span>
 
 						<!--					-->
@@ -173,7 +172,7 @@ class PUM_Admin_Extend {
 
 					</li>
 					<?php
-					$i ++;
+					++$i;
 				endforeach;
 			}
 			?>
@@ -211,5 +210,4 @@ class PUM_Admin_Extend {
 			]
 		);
 	}
-
 }

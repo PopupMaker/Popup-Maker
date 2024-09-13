@@ -2,8 +2,10 @@
 /**
  * Importer for easy-modal model theme
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
+ *
+ * phpcs:disable WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid, PSR2.Classes.PropertyDeclaration.Underscore, Universal.Files.SeparateFunctionsFromOO.Mixed, WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
  */
 
 // Exit if accessed directly
@@ -11,6 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class EModal_Model_Theme
+ *
+ * Used to mimic the EModal_Model_Theme class from Easy Modal plugin.
+ *
+ * @since 1.0
+ */
 class EModal_Model_Theme extends EModal_Model {
 	protected $_class_name = 'EModal_Model_Theme';
 	protected $_table_name = 'em_themes';
@@ -27,8 +36,6 @@ class EModal_Model_Theme extends EModal_Model {
 	public function __construct( $id = null ) {
 		parent::__construct( $id );
 		$this->load_meta();
-
-		return $this;
 	}
 
 	public function __get( $key ) {
@@ -41,9 +48,9 @@ class EModal_Model_Theme extends EModal_Model {
 
 	public function save() {
 		if ( ! $this->id ) {
-			$this->created = date( 'Y-m-d H:i:s' );
+			$this->created = gmdate( 'Y-m-d H:i:s' );
 		}
-		$this->modified = date( 'Y-m-d H:i:s' );
+		$this->modified = gmdate( 'Y-m-d H:i:s' );
 		parent::save();
 		$this->meta->theme_id = $this->id;
 		$this->meta->save();
@@ -121,6 +128,7 @@ if ( ! function_exists( 'count_all_modal_themes' ) ) {
 	function count_all_modal_themes() {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM  {$wpdb->prefix}em_themes WHERE is_trash = 0" );
 	}
 }
@@ -129,6 +137,7 @@ if ( ! function_exists( 'count_deleted_modal_themes' ) ) {
 	function count_deleted_modal_themes() {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM  {$wpdb->prefix}em_themes WHERE is_trash = 1" );
 	}
 }

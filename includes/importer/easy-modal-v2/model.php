@@ -2,8 +2,10 @@
 /**
  * Importer for easy-modal model
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
+ *
+ * phpcs:disable WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid, PSR2.Classes.PropertyDeclaration.Underscore
  */
 
 // Exit if accessed directly
@@ -11,7 +13,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class EModal_Model
+ *
+ * Used to mimic the EModal_Model class from Easy Modal plugin.
+ *
+ * @since 1.0
+ */
 class EModal_Model {
+
+	/** @var int */
+	protected $id;
+
+	/** @var string */
+	protected $created;
+
+	/** @var string */
+	protected $modified;
+
 	protected $_class_name     = 'EModal_Model';
 	protected $_table_name     = '';
 	protected $_pk             = 'id';
@@ -19,7 +38,7 @@ class EModal_Model {
 	protected $_default_fields = [];
 	protected $_state          = null;
 
-	public function __construct( $id = null, $limit = 1 ) {
+	public function __construct( $id = null ) {
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->_table_name;
 		$class_name = strtolower( $this->_class_name );
@@ -27,25 +46,26 @@ class EModal_Model {
 		$this->_data = apply_filters( "{$class_name}_fields", $this->_default_fields );
 
 		if ( $id && is_numeric( $id ) ) {
-			$row = $wpdb->get_row( "SELECT * FROM $table_name WHERE $this->_pk = $id LIMIT 1", ARRAY_A );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$row = $wpdb->get_row(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$wpdb->prepare( "SELECT * FROM $table_name WHERE $this->_pk = %d LIMIT 1", $id ),
+				ARRAY_A
+			);
 			if ( $row[ $this->_pk ] ) {
 				$this->process_load( $row );
 			}
 		} else {
 			$this->set_fields( apply_filters( "{$class_name}_defaults", [] ) );
 		}
-
-		return $this;
 	}
 
 	public function load( $query = null ) {
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->_table_name;
 
-		if ( ! $query ) {
-			$query = "SELECT * FROM $table_name";
-		}
-		$rows = $wpdb->get_results( $query, ARRAY_A );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$rows = $wpdb->get_results( $query ? $query : $wpdb->prepare( "SELECT * FROM $table_name" ), ARRAY_A );
 		if ( ! empty( $rows ) ) {
 			$results = [];
 			foreach ( $rows as $row ) {
@@ -64,11 +84,13 @@ class EModal_Model {
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->_table_name;
 		if ( $this->id ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			if ( ! $wpdb->update( $table_name, $this->serialized_values(), [ $this->_pk => $this->{$this->_pk} ] ) ) {
 				$wpdb->insert( $table_name, $this->serialized_values() );
 				$this->id = $wpdb->insert_id;
 			}
 		} else {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->insert( $table_name, $this->serialized_values() );
 			$this->id = $wpdb->insert_id;
 		}
@@ -78,6 +100,7 @@ class EModal_Model {
 		global $wpdb;
 		$table_name = $wpdb->prefix . $this->_table_name;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		return $wpdb->delete( $table_name, [ $this->_pk => $this->{$this->_pk} ] );
 	}
 
@@ -148,7 +171,6 @@ class EModal_Model {
 		}
 	}
 
-	// Array Access Interface
 	public function offsetExists( $key ) {
 		return array_key_exists( $key, $this->as_array() );
 	}

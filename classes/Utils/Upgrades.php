@@ -2,8 +2,8 @@
 /**
  * Upgrades Utility
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -121,7 +121,6 @@ class PUM_Utils_Upgrades {
 		 * Back fill the initial version with the oldest version we can detect.
 		 */
 		if ( ! self::$initial_version ) {
-
 			$oldest_known = Popup_Maker::$VER;
 
 			if ( self::$version && version_compare( self::$version, $oldest_known, '<' ) ) {
@@ -246,6 +245,7 @@ class PUM_Utils_Upgrades {
 					'post_type'   => 'popup_theme',
 					'post_status' => 'any',
 					'fields'      => 'ids',
+					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					'meta_query'  => [
 						'relation' => 'OR',
 						[
@@ -275,7 +275,6 @@ class PUM_Utils_Upgrades {
 		set_transient( 'pum_needs_1_8_theme_upgrades', $needs_upgrade );
 
 		return (bool) $needs_upgrade;
-
 	}
 
 	/**
@@ -359,10 +358,10 @@ class PUM_Utils_Upgrades {
 			<?php
 			if ( empty( $resume_upgrade ) ) {
 				?>
-				<strong><?php _e( 'The latest version of Popup Maker requires changes to the Popup Maker settings saved on your site.', 'popup-maker' ); ?></strong>
+				<strong><?php esc_html_e( 'The latest version of Popup Maker requires changes to the Popup Maker settings saved on your site.', 'popup-maker' ); ?></strong>
 				<?php
 			} else {
-				_e( 'Popup Maker needs to complete a the update of your settings that was previously started.', 'popup-maker' );
+				esc_html_e( 'Popup Maker needs to complete a the update of your settings that was previously started.', 'popup-maker' );
 			}
 			?>
 		</p>
@@ -385,11 +384,11 @@ class PUM_Utils_Upgrades {
 		}
 		?>
 
-		<form method="post" class="pum-form  pum-batch-form  pum-upgrade-form" data-ays="<?php _e( 'This can sometimes take a few minutes, are you ready to begin?', 'popup-maker' ); ?>" data-upgrade_id="<?php echo $args['upgrade_id']; ?>" data-step="<?php echo (int) $args['step']; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'pum_upgrade_ajax_nonce' ) ); ?>">
+		<form method="post" class="pum-form  pum-batch-form  pum-upgrade-form" data-ays="<?php esc_attr_e( 'This can sometimes take a few minutes, are you ready to begin?', 'popup-maker' ); ?>" data-upgrade_id="<?php echo esc_attr( $args['upgrade_id'] ); ?>" data-step="<?php echo (int) $args['step']; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'pum_upgrade_ajax_nonce' ) ); ?>">
 
 			<div class="pum-field  pum-field-button  pum-field-submit">
 				<p>
-					<small><?php _e( 'The button below will process these changes automatically for you.', 'popup-maker' ); ?></small>
+					<small><?php esc_html_e( 'The button below will process these changes automatically for you.', 'popup-maker' ); ?></small>
 				</p>
 				<?php submit_button( ! empty( $resume_upgrade ) ? __( 'Finish Upgrades', 'popup-maker' ) : __( 'Process Changes', 'popup-maker' ), 'secondary', 'submit', false ); ?>
 			</div>
@@ -462,7 +461,7 @@ class PUM_Utils_Upgrades {
 
 		$completed_upgrades = $this->get_completed_upgrades();
 
-		if ( ! in_array( $upgrade_id, $completed_upgrades ) ) {
+		if ( ! in_array( $upgrade_id, $completed_upgrades, true ) ) {
 			$completed_upgrades[] = $upgrade_id;
 
 			do_action( 'pum_set_upgrade_complete', $upgrade_id );
@@ -578,7 +577,11 @@ class PUM_Utils_Upgrades {
 		if ( false === $upgrade ) {
 			wp_send_json_error(
 				[
-					'error' => sprintf( __( '%s is an invalid batch process ID.', 'popup-maker' ), esc_html( $upgrade_id ) ),
+					'error' => sprintf(
+						/* translators: 1: Batch process ID. */
+						__( '%s is an invalid batch process ID.', 'popup-maker' ),
+						esc_html( $upgrade_id )
+					),
 				]
 			);
 		}
@@ -687,7 +690,11 @@ class PUM_Utils_Upgrades {
 		} else {
 			wp_send_json_error(
 				[
-					'error' => sprintf( __( 'An invalid file path is registered for the %1$s batch process handler.', 'popup-maker' ), "<code>{$upgrade_id}</code>" ),
+					'error' => sprintf(
+						/* translators: 1: Batch process ID. */
+						__( 'An invalid file path is registered for the %1$s batch process handler.', 'popup-maker' ),
+						"<code>{$upgrade_id}</code>"
+					),
 				]
 			);
 		}
@@ -695,7 +702,12 @@ class PUM_Utils_Upgrades {
 		if ( empty( $class ) || ! class_exists( $class ) ) {
 			wp_send_json_error(
 				[
-					'error' => sprintf( __( '%1$s is an invalid handler for the %2$s batch process. Please try again.', 'popup-maker' ), "<code>{$class}</code>", "<code>{$upgrade_id}</code>" ),
+					'error' => sprintf(
+						/* translators: 1: Class name, 2: Batch process ID. */
+						__( '%1$s is an invalid handler for the %2$s batch process. Please try again.', 'popup-maker' ),
+						"<code>{$class}</code>",
+						"<code>{$upgrade_id}</code>"
+					),
 				]
 			);
 		}
@@ -727,7 +739,7 @@ class PUM_Utils_Upgrades {
 	 */
 	public function tools_page_tab_content() {
 		if ( ! $this->has_uncomplete_upgrades() ) {
-			_e( 'No upgrades currently required.', 'popup-maker' );
+			esc_html_e( 'No upgrades currently required.', 'popup-maker' );
 
 			return;
 		}

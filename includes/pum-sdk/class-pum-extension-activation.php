@@ -2,9 +2,8 @@
 /**
  * Activation handler
  *
- * @package     PUM\SDK\ActivationHandler
- * @since       1.0.0
- * @copyright   Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 // Exit if accessed directly.
@@ -119,7 +118,13 @@ class PUM_Extension_Activation {
 			$link = '<a href="' . $url . '">' . __( 'install it', 'popup-maker' ) . '</a>';
 		}
 
-		// translators: 1. plugin name.
-		echo '<div class="error"><p>' . esc_html( $this->plugin_name . sprintf( __( ' requires Popup Maker! Please %s to continue!', 'popup-maker' ), $link ) ) . '</p></div>';
+		echo '<div class="error"><p>' . wp_kses(
+			$this->plugin_name . sprintf(
+				/* translators: 1. plugin name. */
+				__( ' requires Popup Maker! Please %s to continue!', 'popup-maker' ),
+				$link
+			),
+			wp_kses_allowed_html( 'data' )
+		) . '</p></div>';
 	}
 }

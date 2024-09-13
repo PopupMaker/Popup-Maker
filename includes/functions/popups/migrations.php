@@ -2,8 +2,8 @@
 /**
  * Functions for Popup Migrations
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 /**
@@ -96,7 +96,8 @@ function pum_popup_migration_2( &$popup ) {
 						'responsive_max_width',
 						'custom_width',
 						'custom_height',
-					]
+					],
+					true
 				) && isset( $display[ $old_key . '_unit' ] ) ) {
 					$settings[ $new_key ] .= $display[ $old_key . '_unit' ];
 					unset( $display[ $old_key . '_unit' ] );
@@ -187,7 +188,7 @@ function pum_popup_migration_2( &$popup ) {
 						];
 
 						foreach ( $condition as $key => $val ) {
-							if ( ! in_array( $key, [ 'target', 'not_operand', 'settings' ] ) ) {
+							if ( ! in_array( $key, [ 'target', 'not_operand', 'settings' ], true ) ) {
 								$fixed_condition['settings'][ $key ] = $val;
 							}
 						}

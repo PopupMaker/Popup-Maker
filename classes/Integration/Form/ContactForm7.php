@@ -2,8 +2,8 @@
 /**
  * Integration for ContactForm7 Form
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 class PUM_Integration_Form_ContactForm7 extends PUM_Abstract_Integration_Form {
@@ -30,7 +30,8 @@ class PUM_Integration_Form_ContactForm7 extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return __( 'Contact Form 7' );
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+		return __( 'Contact Form 7', 'contact-form-7' );
 	}
 
 	/**

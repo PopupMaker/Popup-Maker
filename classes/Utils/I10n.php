@@ -2,14 +2,17 @@
 /**
  * Utility for I10n
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class PUM_Utils_I10n
+ */
 class PUM_Utils_I10n {
 
 	/**
@@ -133,7 +136,7 @@ class PUM_Utils_I10n {
 		$available_locales = array_keys( $available_locales );
 
 		foreach ( $variants as $variant ) {
-			if ( in_array( $variant, $available_locales ) ) {
+			if ( in_array( $variant, $available_locales, true ) ) {
 				return $variant;
 			}
 		}
@@ -158,12 +161,10 @@ class PUM_Utils_I10n {
 		$locale_part_re = '[a-z]{2,}';
 		$locale_re      = "($locale_part_re(\-$locale_part_re)?)";
 
-		if ( preg_match_all( "/$locale_re/i", isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '', $matches ) ) {
+		if ( preg_match_all( "/$locale_re/i", isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ? sanitize_key( wp_unslash( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ) : '', $matches ) ) {
 			return $matches[0];
 		} else {
 			return [];
 		}
 	}
-
-
 }

@@ -2,8 +2,8 @@
 /**
  * Abstract class for Provider
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -134,7 +134,13 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 
 		foreach ( $fields as $key => $field ) {
 			if ( ! $field['private'] && isset( $shortcode_atts[ $key ] ) ) {
-				echo esc_html( '<input type="hidden" name="' . $key . '" value="' . $shortcode_atts[ $key ] . '" />' );
+				echo wp_kses( '<input type="hidden" name="' . $key . '" value="' . $shortcode_atts[ $key ] . '" />', [
+					'input' => [
+						'type'  => 'hidden',
+						'name'  => true,
+						'value' => true,
+					],
+				] );
 			}
 		}
 	}
@@ -354,57 +360,49 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 		preg_match_all( '/{(.*?)}/', $message, $found );
 
 		if ( count( $found[1] ) ) {
-
 			foreach ( $found[1] as $key => $match ) {
-
 				$message = $this->message_text_replace( $message, $match, $values );
-
 			}
 		}
 
 		return $message;
-
 	}
 
 	/**
 	 * Replaces a single matched message.
 	 *
 	 * @param string $message Message.
-	 * @param string $match   Matched phrase.
+	 * @param string $search   Matched phrase.
 	 * @param array  $values  Values for replacement.
 	 *
 	 * @return mixed|string
 	 */
-	protected function message_text_replace( $message = '', $match = '', $values = [] ) {
+	protected function message_text_replace( $message = '', $search = '', $values = [] ) {
 
-		if ( empty( $match ) ) {
+		if ( empty( $search ) ) {
 			return $message;
 		}
 
-		if ( strpos( $match, '||' ) !== false ) {
-			$matches = explode( '||', $match );
+		if ( strpos( $search, '||' ) !== false ) {
+			$searches = explode( '||', $search );
 		} else {
-			$matches = [ $match ];
+			$searches = [ $search ];
 		}
 
 		$replace = '';
 
-		foreach ( $matches as $string ) {
-
+		foreach ( $searches as $string ) {
 			if ( ! array_key_exists( $string, $values ) ) {
 
 				// If its not a valid code it is likely a fallback.
 				$replace = $string;
-
 			} else {
 
 				// This is a form field value, replace accordingly.
 				switch ( $string ) {
-
 					default:
 						$replace = $values[ $string ];
 						break;
-
 				}
 			}
 
@@ -414,7 +412,7 @@ abstract class PUM_Abstract_Provider implements PUM_Interface_Provider {
 			}
 		}
 
-		return str_replace( '{' . $match . '}', $replace, $message );
+		return str_replace( '{' . $search . '}', $replace, $message );
 	}
 
 	/**

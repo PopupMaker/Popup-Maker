@@ -58,7 +58,12 @@ class PUM_Admin_Upgrade_Routine {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			echo wp_json_encode(
 				[
-					'status' => sprintf( __( 'Step %1$d of approximately %2$d running', 'popup-maker' ), $upgrades->get_arg( 'step' ), $upgrades->get_arg( 'steps' ) ),
+					'status' => sprintf(
+						/* translators: 1: Step number, 2: Approximate number of steps. */
+						__( 'Step %1$d of approximately %2$d running', 'popup-maker' ),
+						$upgrades->get_arg( 'step' ),
+						$upgrades->get_arg( 'steps' )
+					),
 					'next'   => $upgrades->get_args(),
 				]
 			);
@@ -67,7 +72,6 @@ class PUM_Admin_Upgrade_Routine {
 			$redirect = add_query_arg( $upgrades->get_args(), admin_url() );
 			self::redirect( $redirect );
 		}
-
 	}
 
 	public static function done() {
@@ -84,7 +88,6 @@ class PUM_Admin_Upgrade_Routine {
 
 		if ( $upgrades->has_upgrades() && $next_routine && $upgrades->get_upgrade( $next_routine ) ) {
 			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-
 				$upgrades->set_arg( 'step', 1 );
 				$upgrades->set_arg( 'completed', 0 );
 				$upgrades->set_arg( 'pum-upgrade', $next_routine );
@@ -98,6 +101,5 @@ class PUM_Admin_Upgrade_Routine {
 				exit;
 			}
 		}
-
 	}
 }

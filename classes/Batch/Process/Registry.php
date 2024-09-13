@@ -2,8 +2,8 @@
 /**
  * Registry Batch Process
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -31,7 +31,6 @@ class PUM_Batch_Process_Registry extends PUM_Abstract_Registry {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self();
 			self::$instance->init();
-
 		}
 
 		return self::$instance;
@@ -46,7 +45,7 @@ class PUM_Batch_Process_Registry extends PUM_Abstract_Registry {
 		/**
 		 * Fires during instantiation of the batch processing registry.
 		 *
-		 * @param PUM_Batch_Process_Registry $this Registry instance.
+		 * @param PUM_Batch_Process_Registry $registry Registry instance.
 		 */
 		do_action( 'pum_batch_process_init', $this );
 	}
@@ -55,7 +54,6 @@ class PUM_Batch_Process_Registry extends PUM_Abstract_Registry {
 	 * Registers core batch processes.
 	 */
 	protected function register_core_processes() {
-
 	}
 
 	/**
@@ -98,5 +96,4 @@ class PUM_Batch_Process_Registry extends PUM_Abstract_Registry {
 	public function remove_process( $batch_id ) {
 		$this->remove_item( $batch_id );
 	}
-
 }

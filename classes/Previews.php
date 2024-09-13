@@ -60,7 +60,6 @@ class PUM_Previews {
 		}
 
 		return $preview_id;
-
 	}
 
 	/**

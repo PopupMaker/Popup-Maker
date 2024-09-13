@@ -2,8 +2,8 @@
 /**
  * Shortcodes class
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -68,5 +68,4 @@ class PUM_Shortcodes {
 	public function get_shortcode( $tag ) {
 		return isset( $this->shortcodes[ $tag ] ) ? $this->shortcodes[ $tag ] : false;
 	}
-
 }

@@ -2,8 +2,8 @@
 /**
  * Integrations for cf7
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -136,13 +136,13 @@ class PUM_CF7_Integration {
 	public static function editor_panel( $args ) {
 
 		$settings = self::form_options( $args->id() ); ?>
-		<h2><?php _e( 'Popup Settings', 'popup-maker' ); ?></h2>
-		<p class="description"><?php _e( 'These settings control popups after successful form submissions.', 'popup-maker' ); ?></p>
+		<h2><?php esc_html_e( 'Popup Settings', 'popup-maker' ); ?></h2>
+		<p class="description"><?php esc_html_e( 'These settings control popups after successful form submissions.', 'popup-maker' ); ?></p>
 		<table class="form-table">
 			<tbody>
 			<tr>
 				<th scope="row">
-					<label for="wpcf7-pum-closepopup"><?php _e( 'Close Popup', 'popup-maker' ); ?></label>
+					<label for="wpcf7-pum-closepopup"><?php esc_html_e( 'Close Popup', 'popup-maker' ); ?></label>
 				</th>
 				<td>
 					<input type="checkbox" id="wpcf7-pum-closepopup" name="wpcf7-pum[closepopup]" value="true" <?php checked( $settings['closepopup'], true ); ?> />
@@ -150,7 +150,7 @@ class PUM_CF7_Integration {
 			</tr>
 			<tr id="wpcf7-pum-closedelay-wrapper">
 				<th scope="row">
-					<label for="wpcf7-pum-closedelay"><?php _e( 'Delay', 'popup-maker' ); ?></label>
+					<label for="wpcf7-pum-closedelay"><?php esc_html_e( 'Delay', 'popup-maker' ); ?></label>
 				</th>
 				<td>
 					<?php
@@ -159,12 +159,12 @@ class PUM_CF7_Integration {
 					}
 					?>
 
-					<input type="number" id="wpcf7-pum-closedelay" min="0" step="1" name="wpcf7-pum[closedelay]" style="width: 100px;" value="<?php echo esc_attr( $settings['closedelay'] ); ?>" /><?php _e( 'seconds', 'popup-maker' ); ?>
+					<input type="number" id="wpcf7-pum-closedelay" min="0" step="1" name="wpcf7-pum[closedelay]" style="width: 100px;" value="<?php echo esc_attr( $settings['closedelay'] ); ?>" /><?php esc_html_e( 'seconds', 'popup-maker' ); ?>
 				</td>
 			</tr>
 			<tr>
 				<th scope="row">
-					<label for="wpcf7-pum-openpopup"><?php _e( 'Open Popup', 'popup-maker' ); ?></label>
+					<label for="wpcf7-pum-openpopup"><?php esc_html_e( 'Open Popup', 'popup-maker' ); ?></label>
 				</th>
 				<td>
 					<input type="checkbox" id="wpcf7-pum-openpopup" name="wpcf7-pum[openpopup]" value="true" <?php checked( $settings['openpopup'], true ); ?> />
@@ -172,12 +172,12 @@ class PUM_CF7_Integration {
 			</tr>
 			<tr id="wpcf7-pum-openpopup_id-wrapper">
 				<th scope="row">
-					<label for="wpcf7-pum-openpopup_id"><?php _e( 'Popup', 'popup-maker' ); ?></label>
+					<label for="wpcf7-pum-openpopup_id"><?php esc_html_e( 'Popup', 'popup-maker' ); ?></label>
 				</th>
 				<td>
 					<select id="wpcf7-pum-openpopup_id" name="wpcf7-pum[openpopup_id]">
 						<?php foreach ( self::get_popup_list() as $option ) { ?>
-							<option value="<?php echo esc_attr( $option['value'] ); ?>" <?php selected( $settings['openpopup_id'], $option['value'] ); ?>><?php echo $option['label']; ?></option>
+							<option value="<?php echo esc_attr( $option['value'] ); ?>" <?php selected( $settings['openpopup_id'], $option['value'] ); ?>><?php echo esc_html( $option['label'] ); ?></option>
 						<?php } ?>
 					</select>
 				</td>
@@ -244,7 +244,6 @@ class PUM_CF7_Integration {
 				'value' => $popup->ID,
 				'label' => $popup->post_title,
 			];
-
 		}
 
 		return $popup_list;
@@ -256,8 +255,13 @@ class PUM_CF7_Integration {
 	 * @param $args
 	 */
 	public static function save( $args ) {
-		if ( ! empty( $_POST['wpcf7-pum'] ) ) {
-			$settings = $_POST['wpcf7-pum'];
+		// Ignored because this is part of nonced form submission.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$pum_settings = isset( $_POST['wpcf7-pum'] ) ? wp_unslash( $_POST['wpcf7-pum'] ) : [];
+		if ( ! empty( $pum_settings ) ) {
+			$settings = $pum_settings;
 
 			// Sanitize values.
 			$settings['openpopup']    = ! empty( $settings['openpopup'] );

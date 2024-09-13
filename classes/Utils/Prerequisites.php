@@ -2,8 +2,8 @@
 /**
  * Prerequisites Utility
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 /**
@@ -344,7 +344,7 @@ class PUM_Utils_Prerequisites {
 			$message = method_exists( $this, 'get_' . $failure['type'] . '_message' ) ? $this->{'get_' . $failure['type'] . '_message'}( $failure ) : false;
 
 			/* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
-			echo sprintf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), $message );
+			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), $message );
 		}
 	}
 }

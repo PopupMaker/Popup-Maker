@@ -2,8 +2,8 @@
 /**
  * Repository Themes
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -39,10 +39,8 @@ class PUM_Repository_Themes extends PUM_Abstract_Repository_Posts {
 		$orderby = [];
 
 		// Meta Query
-		if ( ! isset( $args['meta_query'] ) ) {
-			$args['meta_query'] = [
-				'relation' => 'AND',
-			];
+		if ( isset( $args['meta_query'] ) && empty( $args['meta_query']['relation'] ) ) {
+			$args['meta_query']['relation'] = 'AND';
 		}
 
 		if ( isset( $args['themes'] ) ) {
@@ -59,7 +57,7 @@ class PUM_Repository_Themes extends PUM_Abstract_Repository_Posts {
 		 */
 		if ( ! isset( $args['orderby'] ) ) {
 			$orderby['post_modified'] = isset( $args['order'] ) ? $args['order'] : 'DESC';
-		} elseif ( ! empty( $args['post__in'] ) && in_array( $args['orderby'], [ 'post__in', 'user_order' ] ) ) {
+		} elseif ( ! empty( $args['post__in'] ) && in_array( $args['orderby'], [ 'post__in', 'user_order' ], true ) ) {
 			// This one can't be part of an $orderby array so needs to override.
 			$orderby = 'post__in';
 		} else {
@@ -93,8 +91,10 @@ class PUM_Repository_Themes extends PUM_Abstract_Repository_Posts {
 	 *
 	 * @return PUM_Model_Theme|WP_Post
 	 * @throws \InvalidArgumentException
+	 *
+	 * Ignore phpcs because this explictly overrides the parent method return type.
 	 */
-	public function get_item( $id ) {
+	public function get_item( $id ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
 		return parent::get_item( $id );
 	}
 
@@ -102,8 +102,10 @@ class PUM_Repository_Themes extends PUM_Abstract_Repository_Posts {
 	 * @param array $args
 	 *
 	 * @return PUM_Model_Theme[]|WP_Post[]
+	 *
+	 * Ignore phpcs because this explictly overrides the parent method return type.
 	 */
-	public function get_items( $args = [] ) {
+	public function get_items( $args = [] ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
 		return parent::get_items( $args );
 	}
 
@@ -112,8 +114,10 @@ class PUM_Repository_Themes extends PUM_Abstract_Repository_Posts {
 	 *
 	 * @return PUM_Model_Theme|WP_Post
 	 * @throws InvalidArgumentException
+	 *
+	 * Ignore phpcs because this explictly overrides the parent method return type.
 	 */
-	public function create_item( $data ) {
+	public function create_item( $data ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
 		return parent::create_item( $data );
 	}
 
@@ -123,8 +127,10 @@ class PUM_Repository_Themes extends PUM_Abstract_Repository_Posts {
 	 *
 	 * @return PUM_Model_Theme|WP_Post
 	 * @throws Exception
+	 *
+	 * Ignore phpcs because this explictly overrides the parent method return type.
 	 */
-	public function update_item( $id, $data ) {
+	public function update_item( $id, $data ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
 		return parent::update_item( $id, $data );
 	}
 

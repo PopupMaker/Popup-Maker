@@ -2,15 +2,13 @@
 /**
  * Subscribers DB Handler
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
+ *
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
  */
+
 // Exit if accessed directly
-
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -125,7 +123,16 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		pum_log_message( 'Subscriber table results: ' . $results );
 
 		$previous_error = $wpdb->last_error; // The show tables query will erase the last error. So, record it now in case we need it.
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '{$this->table_name()}'" ) !== $this->table_name() ) {
+
+		if ( $this->wp_version >= 6.2 ) {
+			$table_found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %i', $this->table_name() ) );
+		} else {
+			// Ignored because these are identifiersas we still support <=6.2
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$table_found = $wpdb->get_var( "SHOW TABLES LIKE '{$this->table_name()}'" );
+		}
+
+		if ( $this->table_name() !== $table_found ) {
 			pum_log_message( 'Subscriber table exists check failed! Last error from wpdb: ' . str_replace( $wpdb->prefix, '', $previous_error ) );
 		}
 
@@ -182,7 +189,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 			$search_where = [];
 
 			foreach ( $columns as $key => $type ) {
-				if ( in_array( $key, $fields ) ) {
+				if ( in_array( $key, $fields, true ) ) {
 					if ( '%s' === $type || ( '%d' === $type && is_numeric( $search ) ) ) {
 						$values[]       = '%' . $wpdb->esc_like( $search ) . '%';
 						$search_where[] = "`$key` LIKE '%s'";
@@ -230,9 +237,11 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		}
 
 		if ( strpos( $query, '%s' ) || strpos( $query, '%d' ) || strpos( $query, '%i' ) ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$query = $wpdb->prepare( $query, $values );
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		return $wpdb->get_results( $query, $return_type );
 	}
 

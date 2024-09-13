@@ -2,8 +2,8 @@
 /**
  * Integration for PirateForms Form
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
@@ -60,7 +60,8 @@ class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 			return [];
 		}
 
-		return [ 0 => esc_html__( 'Default Form', 'wpforms-lite' ) ];
+		// phpcs:ignore WordPress.WP.I18n.MissingArgDomainDefault
+		return [ 0 => esc_html__( 'Default Form' ) ];
 	}
 
 	/**
@@ -166,6 +167,4 @@ class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 
 		return $css;
 	}
-
-
 }

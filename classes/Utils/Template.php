@@ -2,8 +2,8 @@
 /**
  * Template Utility
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -56,13 +56,13 @@ class PUM_Utils_Template {
 	 *
 	 * @param string|array $template_names
 	 * @param bool         $load
-	 * @param bool         $require_once
+	 * @param bool         $use_require_once
 	 *
 	 * @return string
 	 * @internal param string $template_path (default: '')
 	 * @internal param string $default_path (default: '')
 	 */
-	public static function locate( $template_names, $load = false, $require_once = true ) {
+	public static function locate( $template_names, $load = false, $use_require_once = true ) {
 		// No file found yet
 		$located = false;
 
@@ -81,7 +81,6 @@ class PUM_Utils_Template {
 
 			// try locating this template file by looping through the template paths
 			foreach ( self::paths() as $template_path ) {
-
 				if ( file_exists( $template_path . $template_name ) ) {
 					$located = $template_path . $template_name;
 					break;
@@ -97,7 +96,7 @@ class PUM_Utils_Template {
 		$located = apply_filters( 'pum_locate_template', $located, $template_name );
 
 		if ( ( true === $load ) && ! empty( $located ) ) {
-			load_template( $located, $require_once );
+			load_template( $located, $use_require_once );
 		}
 
 		return $located;
@@ -143,12 +142,13 @@ class PUM_Utils_Template {
 	public static function render( $template, $args = [] ) {
 
 		if ( ! $template || ! file_exists( $template ) ) {
-			_doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', $template ), '1.0.0' );
+			_doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', esc_html( $template ) ), '1.0.0' );
 
 			return;
 		}
 
 		if ( $args && is_array( $args ) ) {
+			// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 			extract( $args );
 		}
 
@@ -165,6 +165,7 @@ class PUM_Utils_Template {
 	 * @param array  $args
 	 */
 	public static function part( $slug, $name = null, $args = [] ) {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo self::get_part( $slug, $name, $args );
 	}
 
@@ -231,7 +232,7 @@ class PUM_Utils_Template {
 	 * @param array  $args          (default: array())
 	 */
 	public static function load( $template_name, $args = [] ) {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo self::get( $template_name, $args );
 	}
-
 }

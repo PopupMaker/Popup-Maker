@@ -2,8 +2,8 @@
 /**
  * Functions for Admin Conditionals
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -27,10 +27,10 @@ function pum_is_admin_page() {
 	$tests = [
 		'popup' === $typenow,
 		'popup_theme' === $typenow,
-		! empty( $GLOBALS['hook_suffix'] ) && in_array( $GLOBALS['hook_suffix'], PUM_Admin_Pages::$pages ),
+		! empty( $GLOBALS['hook_suffix'] ) && in_array( $GLOBALS['hook_suffix'], PUM_Admin_Pages::$pages, true ),
 	];
 
-	return in_array( true, $tests );
+	return in_array( true, $tests, true );
 }
 
 
@@ -66,10 +66,10 @@ function pum_is_popup_editor() {
 		is_admin(),
 		pum_is_admin_page(),
 		'popup' === pum_typenow(),
-		in_array( $pagenow, [ 'post-new.php', 'post.php' ] ),
+		in_array( $pagenow, [ 'post-new.php', 'post.php' ], true ),
 	];
 
-	return ! in_array( false, $tests );
+	return ! in_array( false, $tests, true );
 }
 
 /**
@@ -86,10 +86,10 @@ function pum_is_popup_theme_editor() {
 		is_admin(),
 		pum_is_admin_page(),
 		'popup_theme' === pum_typenow(),
-		in_array( $pagenow, [ 'post-new.php', 'post.php' ] ),
+		in_array( $pagenow, [ 'post-new.php', 'post.php' ], true ),
 	];
 
-	return ! in_array( false, $tests );
+	return ! in_array( false, $tests, true );
 }
 
 /**
@@ -108,10 +108,10 @@ function pum_is_submenu_page( $key = null ) {
 		! pum_is_popup_editor(),
 		! pum_is_popup_theme_editor(),
 		$key && ! empty( $GLOBALS['hook_suffix'] ) ? PUM_Admin_Pages::get_page( $key ) === $GLOBALS['hook_suffix'] : true,
-		! isset( $key ) && ! empty( $GLOBALS['hook_suffix'] ) ? in_array( $GLOBALS['hook_suffix'], PUM_Admin_Pages::$pages ) : true,
+		! isset( $key ) && ! empty( $GLOBALS['hook_suffix'] ) ? in_array( $GLOBALS['hook_suffix'], PUM_Admin_Pages::$pages, true ) : true,
 	];
 
-	return ! in_array( false, $tests );
+	return ! in_array( false, $tests, true );
 }
 
 /**

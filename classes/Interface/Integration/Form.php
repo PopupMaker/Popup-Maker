@@ -2,8 +2,8 @@
 /**
  * Interface for Form Integration
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 interface PUM_Interface_Integration_Form extends PUM_Interface_Integration {
@@ -38,5 +38,4 @@ interface PUM_Interface_Integration_Form extends PUM_Interface_Integration {
 	 * @return array
 	 */
 	public function custom_styles( $css = [] );
-
 }

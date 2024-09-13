@@ -2,8 +2,8 @@
 /**
  * Deprecated filters
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 // Exit if accessed directly
@@ -52,8 +52,7 @@ function pum_deprecated_popmake_settings_extensions_sanitize_filter( $settings =
 		/**
 		 * @deprecated 1.7
 		 *
-		 * @param array $settings
-		 * @param int   $popup_id
+		 * @param array $settings The settings array.
 		 */
 		$settings = apply_filters( 'popmake_settings_extensions_sanitize', $settings );
 	}

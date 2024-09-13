@@ -2,8 +2,8 @@
 /**
  * Abstract class for Upgrade
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -48,6 +48,4 @@ abstract class PUM_Abstract_Upgrade extends PUM_Abstract_Batch_Process {
 
 		parent::finish();
 	}
-
-
 }

@@ -10,7 +10,6 @@
  * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
  */
 
-
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -28,7 +27,9 @@ class PUM_Ajax {
 		$gif = self::get_file( POPMAKE_DIR . 'assets/images/beacon.gif' );
 		header( 'Content-Type: image/gif' );
 		header( 'Content-Length: ' . strlen( $gif ) );
-		exit( $gif );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $gif;
+		exit;
 	}
 
 	public static function get_file( $path ) {
@@ -37,10 +38,12 @@ class PUM_Ajax {
 			$path = realpath( $path );
 		}
 
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		if ( ! $path || ! @is_file( $path ) ) {
 			return '';
 		}
 
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		return @file_get_contents( $path );
 	}
 
@@ -61,8 +64,8 @@ class PUM_Ajax {
 	 */
 	public static function serve_json( $data = 0 ) {
 		header( 'Content-Type: application/json' );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo PUM_Utils_Array::safe_json_encode( $data );
 		exit;
 	}
-
 }

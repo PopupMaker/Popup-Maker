@@ -2,21 +2,19 @@
 /**
  * Popup Templates
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
+
+$labelledby = pum_get_popup_title() !== '' ? 'aria-labelledby="pum_popup_title_' . pum_popup_ID() . '"' : '';
+
 ?>
-<div id="pum-<?php pum_popup_ID(); ?>" class="<?php pum_popup_classes(); ?>" <?php pum_popup_data_attr(); ?> role="dialog" aria-modal="false"
-								   <?php
-									if ( pum_get_popup_title() !== '' ) :
-										?>
-	aria-labelledby="pum_popup_title_<?php pum_popup_ID(); ?>"<?php endif; ?>>
+<div id="pum-<?php pum_popup_ID(); ?>" role="dialog" aria-modal="false" <?php echo esc_attr( $labelledby ); ?> class="<?php pum_popup_classes(); ?>" <?php pum_popup_data_attr(); ?>>
 
 	<div id="popmake-<?php pum_popup_ID(); ?>" class="<?php pum_popup_classes( null, 'container' ); ?>">
 
 		<?php do_action( 'pum_popup_before_title' ); ?>
 		<?php do_action( 'popmake_popup_before_inner' ); // Backward compatibility. ?>
-
 
 		<?php
 		/**
@@ -29,9 +27,7 @@
 			</div>
 		<?php endif; ?>
 
-
 		<?php do_action( 'pum_popup_before_content' ); ?>
-
 
 		<?php
 		/**
@@ -42,10 +38,8 @@
 			<?php pum_popup_content(); ?>
 		</div>
 
-
 		<?php do_action( 'pum_popup_after_content' ); ?>
 		<?php do_action( 'popmake_popup_after_inner' ); // Backward compatibility. ?>
-
 
 		<?php
 		/**
@@ -53,7 +47,7 @@
 		 */
 		?>
 		<?php if ( pum_show_close_button() ) : ?>
-			<button type="button" class="<?php pum_popup_classes( null, 'close' ); ?>" aria-label="<?php _e( 'Close', 'popup-maker' ); ?>">
+			<button type="button" class="<?php pum_popup_classes( null, 'close' ); ?>" aria-label="<?php esc_attr_e( 'Close', 'popup-maker' ); ?>">
 			<?php pum_popup_close_text(); ?>
 			</button>
 		<?php endif; ?>

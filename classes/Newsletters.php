@@ -2,14 +2,17 @@
 /**
  * Newsletters class
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class PUM_Newsletters
+ */
 class PUM_Newsletters {
 
 	/**
@@ -37,7 +40,8 @@ class PUM_Newsletters {
 				class_exists( 'PUM_Aweber_Integration' ) && defined( 'PUM_AWEBER_INTEGRATION_VER' ) && version_compare( PUM_AWEBER_INTEGRATION_VER, '1.1.0', '<' ),
 				class_exists( 'PUM_MailChimp_Integration' ) && defined( 'PUM_MAILCHIMP_INTEGRATION_VER' ) && PUM_MAILCHIMP_INTEGRATION_VER,
 				class_exists( 'PUM_MCI' ) && version_compare( PUM_MCI::$VER, '1.3.0', '<' ),
-			]
+			],
+			true
 		);
 
 		// Checks for single very specific versions.
@@ -65,7 +69,9 @@ class PUM_Newsletters {
 	public static function ajax_request() {
 		self::$errors = new WP_Error();
 
-		$values = isset( $_REQUEST['values'] ) ? $_REQUEST['values'] : [];
+		// Ignored because this form is shown on heavily cached pages to non-logged in users primarily. Values will be sanitized before usage.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$values = isset( $_REQUEST['values'] ) ? wp_unslash( $_REQUEST['values'] ) : [];
 
 		if ( empty( $values['popup_id'] ) && ! empty( $values['pum_form_popup_id'] ) ) {
 			$values['popup_id'] = absint( $values['pum_form_popup_id'] );
@@ -103,7 +109,6 @@ class PUM_Newsletters {
 				case 'api_errors':
 					$response['message'] = pum_get_newsletter_provider_message( $values['provider'], 'error', $values );
 					break;
-
 			}
 			self::send_errors( self::$errors, $response );
 		} else {
@@ -129,10 +134,6 @@ class PUM_Newsletters {
 	 * @param array           $extra_response_args
 	 */
 	public static function send_errors( WP_Error $errors, $extra_response_args = [] ) {
-		if ( ! $errors || ! is_wp_error( $errors ) ) {
-			$errors = self::$errors;
-		}
-
 		$response = array_merge(
 			$extra_response_args,
 			[
@@ -163,10 +164,6 @@ class PUM_Newsletters {
 	 * @return array
 	 */
 	public static function prepare_errors( WP_Error $_errors ) {
-		if ( ! $_errors || ! is_wp_error( $_errors ) ) {
-			$_errors = self::$errors;
-		}
-
 		$errors = [];
 
 		foreach ( $_errors->get_error_codes() as $code ) {
@@ -318,6 +315,4 @@ class PUM_Newsletters {
 
 		return $errors;
 	}
-
-
 }

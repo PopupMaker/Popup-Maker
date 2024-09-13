@@ -2,10 +2,11 @@
 /**
  * Admin Helpers
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
+// Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -14,7 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Class PUM_Admin_Helpers
  */
 class PUM_Admin_Helpers {
-
 
 	/**
 	 * @param array $args
@@ -49,7 +49,7 @@ class PUM_Admin_Helpers {
 		$options = [];
 
 		foreach ( get_post_types( $args, 'objects', $compare ) as $post_type ) {
-			if ( in_array( $post_type->name, [ 'revision', 'nav_menu_item', 'custom_css', 'customize_changeset', 'oembed_cache', 'popup_theme', 'nf_sub' ] ) ) {
+			if ( in_array( $post_type->name, [ 'revision', 'nav_menu_item', 'custom_css', 'customize_changeset', 'oembed_cache', 'popup_theme', 'nf_sub' ], true ) ) {
 				// continue;
 			}
 
@@ -81,13 +81,13 @@ class PUM_Admin_Helpers {
 	 * @deprecated 1.7.20
 	 * @see        PUM_Helper_Array::remove_keys_starting_with
 	 *
-	 * @param array $array
-	 * @param bool  $string
+	 * @param array $arr
+	 * @param bool  $str
 	 *
 	 * @return array
 	 */
-	public static function remove_keys_starting_with( $array, $string = false ) {
-		return PUM_Utils_Array::remove_keys_starting_with( $array, $string );
+	public static function remove_keys_starting_with( $arr, $str = false ) {
+		return PUM_Utils_Array::remove_keys_starting_with( $arr, $str );
 	}
 
 	/**
@@ -120,22 +120,21 @@ class PUM_Admin_Helpers {
 		}
 
 		return $defaults;
-
 	}
 
 	/**
 	 * @deprecated 1.7.20
 	 * @see        PUM_Utils_Array::from_object instead.
 	 *
-	 * @param $array
+	 * @param $arr
 	 * @param $old_key
 	 * @param $new_key
 	 *
 	 * @return array
 	 * @throws Exception
 	 */
-	public static function replace_key( $array, $old_key, $new_key ) {
-		return PUM_Utils_Array::replace_key( $array, $old_key, $new_key );
+	public static function replace_key( $arr, $old_key, $new_key ) {
+		return PUM_Utils_Array::replace_key( $arr, $old_key, $new_key );
 	}
 
 	/**
@@ -147,13 +146,11 @@ class PUM_Admin_Helpers {
 		$fields = [];
 
 		foreach ( $tabs as $tab_id => $tab_sections ) {
-
 			if ( self::is_field( $tab_sections ) ) {
 				$fields[ $tab_id ] = $tab_sections;
 				continue;
 			} else {
 				foreach ( $tab_sections as $section_id => $section_fields ) {
-
 					if ( self::is_field( $tab_sections ) ) {
 						$fields[ $section_id ] = $section_fields;
 						continue;
@@ -264,7 +261,6 @@ class PUM_Admin_Helpers {
 		}
 
 		return $fields;
-
 	}
 
 	/**
@@ -285,6 +281,7 @@ class PUM_Admin_Helpers {
 					try {
 						$fields = PUM_Utils_Array::replace_key( $fields, $field_id, $field['id'] );
 					} catch ( Exception $e ) {
+						$e;
 					}
 
 					$field_id = $field['id'];
@@ -328,28 +325,28 @@ class PUM_Admin_Helpers {
 	/**
 	 * Checks if an array is a field.
 	 *
-	 * @param array $array
+	 * @param array $arr
 	 *
 	 * @return bool
 	 */
-	public static function is_field( $array = [] ) {
+	public static function is_field( $arr = [] ) {
 		$field_tests = [
-			! isset( $array['type'] ) && ( isset( $array['label'] ) || isset( $array['desc'] ) ),
-			isset( $array['type'] ) && is_string( $array['type'] ),
+			! isset( $arr['type'] ) && ( isset( $arr['label'] ) || isset( $arr['desc'] ) ),
+			isset( $arr['type'] ) && is_string( $arr['type'] ),
 		];
 
-		return in_array( true, $field_tests );
+		return in_array( true, $field_tests, true );
 	}
 
 	/**
 	 * Checks if an array is a section.
 	 *
-	 * @param array $array
+	 * @param array $arr
 	 *
 	 * @return bool
 	 */
-	public static function is_section( $array = [] ) {
-		return ! self::is_field( $array );
+	public static function is_section( $arr = [] ) {
+		return ! self::is_field( $arr );
 	}
 
 	/**
@@ -372,11 +369,11 @@ class PUM_Admin_Helpers {
 			]
 		);
 		?>
-		<div id="<?php echo $args['id']; ?>" class="pum-modal-background <?php echo esc_attr( $args['class'] ); ?>" role="dialog" aria-modal="false" aria-labelledby="<?php echo $args['id']; ?>-title"
+		<div id="<?php echo esc_attr( $args['id'] ); ?>" class="pum-modal-background <?php echo esc_attr( $args['class'] ); ?>" role="dialog" aria-modal="false" aria-labelledby="<?php echo esc_attr( $args['id'] ); ?>-title"
 			<?php
 			if ( '' !== $args['description'] ) {
 				?>
-				aria-describedby="<?php echo $args['id']; ?>-description"<?php } ?>>
+				aria-describedby="<?php echo esc_attr( $args['id'] ); ?>-description"<?php } ?>>
 
 			<div class="pum-modal-wrap">
 
@@ -385,30 +382,34 @@ class PUM_Admin_Helpers {
 					<div class="pum-modal-header">
 
 						<?php if ( '' !== $args['title'] ) { ?>
-							<span id="<?php echo $args['id']; ?>-title" class="pum-modal-title"><?php echo $args['title']; ?></span>
+							<span id="<?php echo esc_attr( $args['id'] ); ?>-title" class="pum-modal-title"><?php echo esc_html( $args['title'] ); ?></span>
 						<?php } ?>
-						<button type="button" class="pum-modal-close" aria-label="<?php _e( 'Close', 'popup-maker' ); ?>"></button>
+						<button type="button" class="pum-modal-close" aria-label="<?php esc_attr_e( 'Close', 'popup-maker' ); ?>"></button>
 					</div>
 
 					<?php if ( '' !== $args['description'] ) { ?>
-						<span id="<?php echo $args['id']; ?>-description" class="screen-reader-text"><?php echo $args['description']; ?></span>
+						<span id="<?php echo esc_attr( $args['id'] ); ?>-description" class="screen-reader-text"><?php echo esc_html( $args['description'] ); ?></span>
 					<?php } ?>
 
 					<div class="pum-modal-content">
-						<?php echo $args['content']; ?>
+						<?php
+						// Ignore the escaping here as we are outputting data that should already be escaped.
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo $args['content'];
+						?>
 					</div>
 
 					<?php if ( $args['save_button'] || $args['cancel_button'] ) { ?>
 						<div class="pum-modal-footer submitbox">
 							<?php if ( $args['cancel_button'] ) { ?>
 								<div class="cancel">
-									<button type="button" class="submitdelete no-button" href="#"><?php echo $args['cancel_button_text']; ?></button>
+									<button type="button" class="submitdelete no-button" href="#"><?php echo esc_html( $args['cancel_button_text'] ); ?></button>
 								</div>
 							<?php } ?>
 							<?php if ( $args['save_button'] ) { ?>
 								<div class="pum-submit">
 									<span class="spinner"></span>
-									<button class="button button-primary"><?php echo $args['save_button_text']; ?></button>
+									<button class="button button-primary"><?php echo esc_html( $args['save_button_text'] ); ?></button>
 								</div>
 							<?php } ?>
 						</div>
@@ -430,5 +431,4 @@ class PUM_Admin_Helpers {
 	public static function object_to_array( $obj ) {
 		return PUM_Utils_Array::from_object( $obj );
 	}
-
 }

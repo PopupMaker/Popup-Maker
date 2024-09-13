@@ -3,90 +3,56 @@
 	<description>Sniffs for WordPress plugins</description>
 
 	<file>.</file>
-	<exclude-pattern type="relative">^/dist/*</exclude-pattern>
-	<exclude-pattern type="relative">^/build/*</exclude-pattern>
-		<!-- Exclude these -->
-	<exclude-pattern>*/vendor/*</exclude-pattern>
-	<exclude-pattern>*/tests/*</exclude-pattern>
-	<exclude-pattern>*.js</exclude-pattern>
+	<!-- Exclude these -->
+	<exclude-pattern type="relative">bin/*</exclude-pattern>
+	<exclude-pattern type="relative">build/*</exclude-pattern>
+	<exclude-pattern type="relative">dist/*</exclude-pattern>
+	<exclude-pattern type="relative">vendor/*</exclude-pattern>
+	<exclude-pattern type="relative">vendor-prefixed/*</exclude-pattern>
+	<exclude-pattern type="relative">tests/*</exclude-pattern>
 
 	<arg name="extensions" value="php"/>
 	<!-- Show progress and sniff codes in all reports -->
 	<arg value="ps"/>
 
 	<!-- https://github.com/PHPCompatibility/PHPCompatibility#sniffing-your-code-for-compatibility-with-specific-php-versions -->
-	<config name="testVersion" value="5.6-"/>
+	<config name="testVersion" value="7.2-" />
 	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties -->
-	<config name="minimum_supported_wp_version" value="5.6"/>
+	<config name="minimum_supported_wp_version" value="5.8"/>
 	<config name="text_domain" value="popup-maker, default" />
 
 	<!-- Force short syntax arrays. -->
 	<rule ref="CodeAtlantic">
 		<rule ref="Universal.Arrays.DisallowLongArraySyntax"/>
 		<exclude name="Universal.Arrays.DisallowShortArraySyntax" />
-	</rule>
 
-
-	<!-- Temporary due to usage of CONSTANT like names for core variables. -->
-	<rule ref="WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase">
-		<exclude-pattern>*</exclude-pattern>
-	</rule>
-
-	<!-- Allow PSR file name & class names. -->
-	<rule ref="WordPress.Files.FileName.NotHyphenatedLowercase">
-		<exclude-pattern>*</exclude-pattern>
-	</rule>
-
-	<rule ref="WordPress.Files.FileName.InvalidClassFileName">
-		<exclude-pattern>*</exclude-pattern>
-	</rule>
-
-	<rule ref="WordPress-Core">
-		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+		<!-- Temporary due to usage of CONSTANT like names for core variables. -->
+		<exclude name="WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase" />
+		<exclude name="WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase" />
+		<!-- Allow PSR file name & class names. -->
 		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
-	</rule>
-
-	<rule ref="WordPress">
-		<!-- <exclude name="WordPress.Files.FileName" /> -->
 		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
-		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
-		<exclude name="WordPress.NamingConventions.ValidVariableName" />
-		<exclude name="WordPress.WP.I18n.NonSingularStringLiteralText" />
-		<exclude name="WordPress.PHP.NoSilencedErrors.Discouraged" />
-		<exclude name="WordPress.PHP.DisallowShortTernary.Found" />
-	</rule>
 
-	<!-- Enforce space before closing parenthesis -->
-	<rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingBeforeClose">
-		<severity>5</severity>
+		<!-- Temporary to prioritize non-trivial CS issues.-->
+		<exclude name="Squiz.Commenting.FunctionComment.MissingParamType" />
+		<exclude name="Squiz.Commenting.FunctionComment.MissingParamTag" />
+		<exclude name="Squiz.Commenting.VariableComment.MissingVar" />
+		<exclude name="Squiz.Commenting.VariableComment.EmptyVar" />
+		<exclude name="Squiz.Commenting.ClassComment.SpacingAfter" />
+		<exclude name="WordPress.DB.DirectDatabaseQuery.NoCaching" />
+		<exclude name="Squiz.Commenting.InlineComment.InvalidEndChar" />
+		<exclude name="Generic.Commenting.DocComment.MissingShort" />
+		<exclude name="Generic.Commenting.DocComment.ShortNotCapital" />
+		<exclude name="Squiz.Commenting.FunctionComment.Missing" />
+		<exclude name="Squiz.Commenting.FileComment.Missing" />
+		<exclude name="Squiz.Commenting.FunctionComment.MissingParamComment" />
+		<exclude name="Generic.Commenting.DocComment.Empty" />
+		<exclude name="Squiz.Commenting.VariableComment.Missing" />
+		<exclude name="Squiz.Commenting.FunctionComment.EmptyThrows" />
+		<exclude name="Generic.CodeAnalysis.UnusedFunctionParameter" />
+		<exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop" />
+		<exclude name="Squiz.PHP.CommentedOutCode.Found" />
+		<exclude name="Generic.CodeAnalysis.EmptyStatement.DetectedIf" />
+		<exclude name="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents" />
 	</rule>
-
-	<!-- Do not require docblocks for unit tests -->
-	<!-- <rule ref="Squiz.Commenting.FunctionComment.Missing">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule>
-	<rule ref="Squiz.Commenting.FileComment.Missing">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule>
-	<rule ref="Squiz.Commenting.ClassComment.Missing">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule>
-	<rule ref="Squiz.Commenting.ClassComment.SpacingAfter">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule>
-	<rule ref="Squiz.Commenting.FunctionComment.MissingParamTag">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule>
-	<rule ref="Generic.Commenting.DocComment.Empty">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule>
-	<rule ref="Generic.Commenting.DocComment.MissingShort">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule>
-	<rule ref="Squiz.Commenting.VariableComment.Missing">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule>
-	<rule ref="Squiz.Commenting.FunctionCommentThrowTag.Missing">
-		<exclude-pattern>phpunit/*</exclude-pattern>
-	</rule> -->
 </ruleset>

@@ -1,0 +1,45 @@
+includes:
+    # Uncomment for VSCode extension if it doesn't autodetect it.
+    # - vendor/szepeviktor/phpstan-wordpress/extension.neon
+parameters:
+    level: 1
+    paths:
+        - classes/
+        - includes/
+        - templates/
+        - bootstrap.php
+        - bootstrap.legacy.php
+        - popup-maker.php
+    scanDirectories:
+        - bin/
+        - classes/
+        - includes/
+        - templates/
+    scanFiles:
+        - popup-maker.php
+    bootstrapFiles:
+        - bin/phpstan-bootstrap.php
+    stubFiles:
+        - bin/stubs/buddypress.php
+        - bin/stubs/easy-modal.php
+        - bin/stubs/elementor.php
+        - bin/stubs/integrated-plugins.php
+        - bin/stubs/query-monitor.php
+        - bin/stubs/woocommerce.php
+    excludePaths:
+        - tests/
+        - includes/modules/menus/class-nav-menu-edit-custom-fields-deprecated.php
+    dynamicConstantNames:
+        - 'IS_WPCOM'
+        - 'WP_CLI'
+        - 'POPMAKE'
+        - 'POPMAKE_NAME'
+        - 'POPMAKE_SLUG'
+        - 'POPMAKE_DIR'
+        - 'POPMAKE_URL'
+        - 'POPMAKE_NONCE'
+        - 'POPMAKE_VERSION'
+        - 'POPMAKE_DB_VERSION'
+        - 'POPMAKE_API_URL'
+        - 'DOING_AJAX'
+    ignoreErrors:

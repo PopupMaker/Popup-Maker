@@ -2,8 +2,8 @@
 /**
  * Class for Admin Assets
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 /**
@@ -14,17 +14,17 @@
 class PUM_Admin_Assets {
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	public static $suffix;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	public static $js_url;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	public static $css_url;
 
@@ -65,6 +65,7 @@ class PUM_Admin_Assets {
 			apply_filters(
 				'pum_admin_var',
 				[
+					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					'post_id'             => ! empty( $_GET['post'] ) ? intval( $_GET['post'] ) : null,
 					'pm_dir_url'          => Popup_Maker::$URL,
 					'default_provider'    => pum_get_option( 'newsletter_default_provider', 'none' ),
@@ -97,7 +98,7 @@ class PUM_Admin_Assets {
 		wp_register_script( 'pum-admin-theme-editor', self::$js_url . 'admin-theme-editor' . self::$suffix . '.js', [ 'pum-admin-general' ], Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-settings-page', self::$js_url . 'admin-settings-page' . self::$suffix . '.js', [ 'pum-admin-general' ], Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-shortcode-ui', self::$js_url . 'admin-shortcode-ui' . self::$suffix . '.js', [ 'pum-admin-general' ], Popup_Maker::$VER, true );
-		wp_register_script( 'iframe-resizer', self::$js_url . 'vendor/iframeResizer.min.js', [ 'jquery' ] );
+		wp_register_script( 'iframe-resizer', self::$js_url . 'vendor/iframeResizer.min.js', [ 'jquery' ], '4.3.1', false );
 
 		// @deprecated handle. Currently loads empty file and admin-general as dependency.
 		wp_register_script( 'popup-maker-admin', self::$js_url . 'pum-admin-deprecated' . self::$suffix . '.js', [ 'pum-admin-general' ], Popup_Maker::$VER, true );
@@ -212,5 +213,4 @@ class PUM_Admin_Assets {
 
 		return pum_is_admin_page();
 	}
-
 }

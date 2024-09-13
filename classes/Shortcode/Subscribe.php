@@ -2,8 +2,8 @@
 /**
  * Shortcode Subscribe
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -110,8 +110,13 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	public function fields() {
 		$select_args = [];
 
-		if ( isset( $_GET['post'] ) && is_int( (int) $_GET['post'] ) && isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
-			$select_args['post__not_in'] = wp_parse_id_list( [ get_the_ID(), $_GET['post'] ] );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$post = isset( $_GET['post'] ) ? absint( wp_unslash( $_GET['post'] ) ) : null;
+
+		if ( 'edit' === $action && is_int( $post ) ) {
+			$select_args['post__not_in'] = wp_parse_id_list( [ get_the_ID(), $post ] );
 		}
 
 		$privacy_always_enabled = pum_get_option( 'privacy_consent_always_enabled', 'no' ) === 'yes';
@@ -394,7 +399,12 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						],
 						'privacy_usage_text'           => [
 							'label'        => __( 'Consent Usage Text', 'popup-maker' ),
-							'desc'         => function_exists( 'get_privacy_policy_url' ) ? sprintf( __( 'You can use %1$s%2$s to insert a link to your privacy policy. To customize the link text use %1$s:Link Text%2$s', 'popup-maker' ), '{{privacy_link', '}}' ) : '',
+							'desc'         => function_exists( 'get_privacy_policy_url' ) ? sprintf(
+								/* translators: 1. opening tag, 2. closing tag. */
+								__( 'You can use %1$s%2$s to insert a link to your privacy policy. To customize the link text use %1$s:Link Text%2$s', 'popup-maker' ),
+								'{{privacy_link',
+								'}}'
+							) : '',
 							'type'         => 'text',
 							'std'          => pum_get_option( 'default_privacy_usage_text', __( 'If you opt in above we use this information send related content, discounts and other special offers.', 'popup-maker' ) ),
 							'dependencies' => $privacy_enabled_dependency,
@@ -489,7 +499,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 
 		static $instance = 0;
 
-		$instance ++;
+		++$instance;
 
 		$atts['instance'] = $instance;
 
@@ -521,7 +531,6 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 			<?php
 
 			if ( 'disabled' !== $atts['name_field_type'] ) :
-
 				$required = ! $atts['name_optional'] ? 'required' : '';
 
 				switch ( $atts['name_field_type'] ) {
@@ -613,14 +622,14 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						case 'radio':
 							?>
 							<?php if ( ! empty( $consent_text ) ) : ?>
-								<label class="pum-form__label  pum-sub-form-label"><?php echo esc_html( wp_kses( $consent_text, [] ) ); ?></label>
+								<label class="pum-form__label  pum-sub-form-label"><?php echo wp_kses( $consent_text, wp_kses_allowed_html( 'data' ) ); ?></label>
 							<?php endif; ?>
 							<div class="pum-form__consent-radios  pum-form__consent-radios--<?php echo esc_attr( $atts['privacy_consent_radio_layout'] ); ?>">
 								<label class="pum-form__label  pum-sub-form-label">
-									<input type="radio" value="yes" name="consent" <?php echo $consent_args['required'] ? 'required="required"' : ''; ?> /> <?php echo esc_html( wp_kses( $atts['privacy_consent_yes_label'], [] ) ); ?>
+									<input type="radio" value="yes" name="consent" <?php echo $consent_args['required'] ? 'required="required"' : ''; ?> /> <?php echo wp_kses( $atts['privacy_consent_yes_label'], wp_kses_allowed_html( 'data' ) ); ?>
 								</label>
 								<label class="pum-form__label  pum-sub-form-label">
-									<input type="radio" value="no" name="consent" /> <?php echo esc_html( wp_kses( $atts['privacy_consent_no_label'], [] ) ); ?>
+									<input type="radio" value="no" name="consent" /> <?php echo wp_kses( $atts['privacy_consent_no_label'], wp_kses_allowed_html( 'data' ) ); ?>
 								</label>
 							</div>
 							<?php
@@ -651,7 +660,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 										'href'   => true,
 									],
 								]
-								);
+							);
 							?>
 							</small>
 						</p>
@@ -733,10 +742,12 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 		$data_attr_fields = $this->data_attr_fields();
 
 		foreach ( $atts as $key => $value ) {
-			if ( in_array( $key, $data_attr_fields ) ) {
+			if ( in_array( $key, $data_attr_fields, true ) ) {
 				$data[ $key ] = $value;
 
 				if ( 'redirect' === $key ) {
+					// Ignore obfuscation as this is a specific function to mask redirect URLs from crawlers.
+					// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 					$data[ $key ] = base64_encode( esc_url( $value ) );
 				}
 			}
@@ -770,9 +781,8 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 	public function template() {
 		?>
 		<p class="pum-sub-form-desc">
-			<?php _e( 'Subscription Form Placeholder', 'popup-maker' ); ?>
+			<?php esc_html_e( 'Subscription Form Placeholder', 'popup-maker' ); ?>
 		</p>
 		<?php
 	}
-
 }

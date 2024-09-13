@@ -2,8 +2,8 @@
 /**
  * Integration for GoogleFonts
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 class PUM_Integration_GoogleFonts {
@@ -47,15 +47,18 @@ class PUM_Integration_GoogleFonts {
 	 * @return array|mixed
 	 */
 	public static function fetch_fonts( $sort = 'alpha' ) {
-		if ( false !== $font_list = get_site_transient( 'pum_google_fonts_list' ) ) {
+		$font_list = get_site_transient( 'pum_google_fonts_list' );
+
+		if ( false !== $font_list ) {
 			return $font_list;
 		}
 
 		$google_api_url = 'https://www.googleapis.com/webfonts/v1/webfonts?key=' . self::$api_key . '&sort=' . $sort;
-		$response       = wp_remote_retrieve_body( wp_remote_get( $google_api_url, [ 'sslverify' => false ] ) );
+		$response       = wp_remote_get( $google_api_url, [ 'sslverify' => false ] );
 
 		if ( ! is_wp_error( $response ) ) {
-			$data = json_decode( $response, true );
+			$body = wp_remote_retrieve_body( $response );
+			$data = json_decode( $body, true );
 		}
 
 		// Store transient for a long time after fetching from Google to save API key hits.

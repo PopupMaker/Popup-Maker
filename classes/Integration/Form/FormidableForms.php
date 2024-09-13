@@ -2,8 +2,8 @@
 /**
  * Integration for FormidableForms Form
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 /**
@@ -35,7 +35,8 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	 * @return string
 	 */
 	public function label() {
-		return __( 'Formidable Forms' );
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+		return __( 'Formidable Forms', 'formidable-forms' );
 	}
 
 	/**

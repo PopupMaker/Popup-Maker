@@ -2,14 +2,14 @@
 /**
  * Functions for Theme Portability
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 /**
  * @param       $name
- * @param null  $settings
- * @param array $extra_meta
+ * @param array|null $settings
+ * @param array      $extra_meta
  *
  * @return int|\WP_Error
  */
@@ -18,6 +18,8 @@ function pum_install_theme( $name, $settings = null, $extra_meta = [] ) {
 		$settings = PUM_Admin_Themes::defaults();
 	}
 
+	// Ignored as this occurs during install and can be done siliently later if it fails. Defaulting to passive error handling.
+	// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 	$new_theme_id = @wp_insert_post(
 		[
 			'post_title'     => $name,
@@ -37,7 +39,6 @@ function pum_install_theme( $name, $settings = null, $extra_meta = [] ) {
 	pum_reset_assets();
 
 	return $new_theme_id;
-
 }
 
 /**

@@ -24,5 +24,4 @@ class PUM_Deactivator extends PUM_Install {
 	public static function deactivate( $network_wide = false ) {
 		parent::deactivate_plugin( $network_wide );
 	}
-
 }

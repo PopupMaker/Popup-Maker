@@ -2,8 +2,8 @@
 /**
  * Debug Logging Utility
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 /**
@@ -85,32 +85,32 @@ class PUM_Utils_Logging {
 
 	/**
 	 * Check if logging is disabled.
-	 * 
+	 *
 	 * @return bool
 	 */
-	public function disabled() { 
+	public function disabled() {
 		// Disable logging by adding define( 'PUM_DISABLE_LOGGING', true );.
 		return defined( 'PUM_DISABLE_LOGGING' ) && PUM_DISABLE_LOGGING;
 	}
 
 	/**
 	 * Check if logging is writeable & not disabled.
-	 * 
+	 *
 	 * If this is true the $fs property will be set.
 	 *
 	 * @return bool
 	 */
 	public function enabled() {
-		return  ! $this->disabled() && $this->is_writable;
+		return ! $this->disabled() && $this->is_writable;
 	}
 
 	/**
 	 * Initialize the file system.
-	 * 
+	 *
 	 * - Check if the file system is writable.
 	 * - Check if the upload directory is writable.
 	 * - Set the file system instance.
-	 * 
+	 *
 	 * @return void
 	 */
 	public function init_fs() {
@@ -128,7 +128,7 @@ class PUM_Utils_Logging {
 		}
 
 		$upload_dir = PUM_Helpers::get_upload_dir();
-		
+
 		if ( ! $upload_dir ) {
 			$this->is_writable = false;
 		}
@@ -165,13 +165,13 @@ class PUM_Utils_Logging {
 
 	/**
 	 * Get things started.
-	 * 
+	 *
 	 * - Get filetoken & name.
 	 * - Check if old log file exists, move it to new location.
 	 * - Check if new log file exists, if not create it.
 	 * - Set log content.
 	 * - Truncate long log files.
-	 * 
+	 *
 	 * @return void
 	 */
 	public function init() {
@@ -380,6 +380,7 @@ class PUM_Utils_Logging {
 	public function clear_log() {
 		// Delete the file.
 		if ( $this->fs && method_exists( $this->fs, 'delete' ) ) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			@$this->fs->delete( $this->file );
 		}
 

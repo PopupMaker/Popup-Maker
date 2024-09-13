@@ -2,8 +2,8 @@
 /**
  * Class for Triggers
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -89,7 +89,11 @@ class PUM_Triggers {
 			);
 
 			if ( empty( $trigger['modal_title'] ) && ! empty( $trigger['name'] ) ) {
-				$trigger['modal_title'] = sprintf( _x( '%s Trigger Settings', 'trigger settings modal title', 'popup-maker' ), $trigger['name'] );
+				$trigger['modal_title'] = sprintf(
+					/* translators: 1. Trigger name. */
+					_x( '%s Trigger Settings', 'trigger settings modal title', 'popup-maker' ),
+					$trigger['name']
+				);
 			}
 
 			// Here for backward compatibility to merge in labels properly.
@@ -331,7 +335,7 @@ class PUM_Triggers {
 			'pum_trigger_cookie_field',
 			[
 				'label'    => __( 'Cookie Name', 'popup-maker' ),
-				'desc'     => __( 'Choose which cookies will disable this trigger?', 'popup-maker' ),
+				'desc'     => __( 'Choose which cookies will disable this trigger', 'popup-maker' ),
 				'type'     => 'select',
 				'multiple' => true,
 				'as_array' => true,
@@ -388,6 +392,4 @@ class PUM_Triggers {
 
 		return $labels;
 	}
-
-
 }

@@ -2,8 +2,8 @@
 /**
  * Site class
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 /**
@@ -102,7 +102,7 @@ class PUM_Site {
 		$priority = has_filter( 'pum_popup_content', 'wpautop' );
 		if ( false !== $priority && doing_filter( 'pum_popup_content' ) && has_blocks( $content ) ) {
 			remove_filter( 'pum_popup_content', 'wpautop', $priority );
-			add_filter( 'pum_popup_content', [ __CLASS__, '_restore_wpautop_hook' ], $priority + 1 );
+			add_filter( 'pum_popup_content', [ __CLASS__, 'restore_wpautop_hook' ], $priority + 1 );
 		}
 
 		return $output;
@@ -120,11 +120,11 @@ class PUM_Site {
 	 * @param string $content The post content running through this filter.
 	 * @return string The unmodified content.
 	 */
-	public static function _restore_wpautop_hook( $content ) {
-		$current_priority = has_filter( 'pum_popup_content', [ __CLASS__, '_restore_wpautop_hook' ] );
+	public static function restore_wpautop_hook( $content ) {
+		$current_priority = has_filter( 'pum_popup_content', [ __CLASS__, 'restore_wpautop_hook' ] );
 
 		add_filter( 'pum_popup_content', 'wpautop', $current_priority - 1 );
-		remove_filter( 'pum_popup_content', [ __CLASS__, '_restore_wpautop_hook' ], $current_priority );
+		remove_filter( 'pum_popup_content', [ __CLASS__, 'restore_wpautop_hook' ], $current_priority );
 
 		return $content;
 	}
@@ -135,9 +135,17 @@ class PUM_Site {
 	 * functions are called on init.
 	 */
 	public static function actions() {
-		if ( empty( $_REQUEST['pum_action'] ) ) {
+		// Ignored because this is validated against an explicit whitelist of actions.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$action = isset( $_REQUEST['pum_action'] ) ? (string) sanitize_key( wp_unslash( $_REQUEST['pum_action'] ) ) : '';
+
+		if ( empty( $action ) ) {
 			return;
 		}
+
+		// Ignored because this data is sanitized before usage further down.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$request = ! empty( $_REQUEST ) ? wp_unslash( $_REQUEST ) : '';
 
 		$valid_actions = apply_filters(
 			'pum_valid_request_actions',
@@ -148,12 +156,10 @@ class PUM_Site {
 			]
 		);
 
-		$action = sanitize_text_field( $_REQUEST['pum_action'] );
-
-		if ( ! in_array( $action, $valid_actions ) || ! has_action( 'pum_' . $action ) ) {
+		if ( ! in_array( $action, $valid_actions, true ) || ! has_action( 'pum_' . $action ) ) {
 			return;
 		}
 
-		do_action( 'pum_' . $action, $_REQUEST );
+		do_action( 'pum_' . $action, $request );
 	}
 }

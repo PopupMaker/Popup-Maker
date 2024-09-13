@@ -2,8 +2,8 @@
 /**
  * Site Popups
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -43,7 +43,7 @@ class PUM_Site_Popups {
 	public static function init() {
 
 		// Preload the $loaded query.
-		add_action( 'init', [ __CLASS__, 'get_loaded_popups' ] );
+		add_action( 'init', [ __CLASS__, 'init_state' ] );
 
 		// Check content for popups.
 		add_filter( 'the_content', [ __CLASS__, 'check_content_for_popups' ] );
@@ -52,6 +52,15 @@ class PUM_Site_Popups {
 		add_action( 'wp_enqueue_scripts', [ __CLASS__, 'load_popups' ], 11 );
 
 		add_action( 'wp_footer', [ __CLASS__, 'render_popups' ] );
+	}
+
+	/**
+	 * Initializes this modules variables.
+	 *
+	 * @return void
+	 */
+	public static function init_state() {
+		self::get_loaded_popups();
 	}
 
 	/**
@@ -102,7 +111,6 @@ class PUM_Site_Popups {
 		$popups = pum_get_all_popups( [ 'post_status' => [ 'publish', 'private' ] ] );
 
 		if ( ! empty( $popups ) ) {
-
 			foreach ( $popups as $popup ) {
 				// Set this popup as the global $current.
 				pum()->current_popup = $popup;
@@ -152,7 +160,7 @@ class PUM_Site_Popups {
 	 * @since 1.15
 	 */
 	public static function preload_popup_by_id_if_enabled( $popup_id ) {
-		if ( ! in_array( $popup_id, self::$loaded_ids ) ) {
+		if ( ! in_array( (int) $popup_id, self::$loaded_ids, true ) ) {
 			$popup = pum_get_popup( $popup_id );
 			if ( $popup->is_enabled() ) {
 				self::preload_popup( $popup );
@@ -174,7 +182,7 @@ class PUM_Site_Popups {
 
 		// Add to the $loaded query.
 		self::$loaded->posts[] = $popup;
-		self::$loaded->post_count ++;
+		++self::$loaded->post_count;
 
 		// Preprocess the content for shortcodes that need to enqueue their own assets.
 		self::$cached_content[ $popup->ID ] = $popup->get_content();
@@ -185,9 +193,11 @@ class PUM_Site_Popups {
 		do_action( 'popmake_preload_popup', $popup->ID );
 	}
 
-	// REWRITE THIS
+	/**
+	 * REWRITE THIS
+	 */
 	public static function load_popup( $id ) {
-		if ( did_action( 'wp_head' ) && ! in_array( $id, self::$loaded_ids ) ) {
+		if ( did_action( 'wp_head' ) && ! in_array( (int) $id, self::$loaded_ids, true ) ) {
 			$args1 = [
 				'post_type' => 'popup',
 				'p'         => $id,
@@ -202,8 +212,6 @@ class PUM_Site_Popups {
 				pum()->current_popup = null;
 			}
 		}
-
-		return;
 	}
 
 
@@ -231,5 +239,4 @@ class PUM_Site_Popups {
 	public static function get_cache_content( $popup_id ) {
 		return isset( self::$cached_content[ $popup_id ] ) ? self::$cached_content[ $popup_id ] : false;
 	}
-
 }

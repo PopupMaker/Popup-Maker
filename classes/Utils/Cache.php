@@ -2,8 +2,8 @@
 /**
  * Cache Utility
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,7 +19,7 @@ class PUM_Utils_Cache {
 	/**
 	 * @var string
 	 */
-	static $prefix = 'pum';
+	public static $prefix = 'pum';
 
 	/**
 	 * @return bool
@@ -31,12 +31,12 @@ class PUM_Utils_Cache {
 	/**
 	 * Returns the general
 	 *
-	 * @param string $string
+	 * @param string $str
 	 *
 	 * @return string
 	 */
-	public static function prefix_( $string = '' ) {
-		return empty( $string ) ? self::$prefix : self::$prefix . '_' . $string;
+	public static function prefix_( $str = '' ) {
+		return empty( $str ) ? self::$prefix : self::$prefix . '_' . $str;
 	}
 
 	/**
@@ -172,5 +172,4 @@ class PUM_Utils_Cache {
 
 		return wp_cache_decr( $key, $offset, self::prefix_( $group ) );
 	}
-
 }

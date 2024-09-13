@@ -2,8 +2,8 @@
 /**
  * Modules for menus
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -46,6 +46,7 @@ class PUM_Modules_Menu {
 					'id'   => 'disabled_menu_editor',
 					'name' => __( 'Disable Popups Menu Editor', 'popup-maker' ),
 					'desc' => sprintf(
+						/* translators: %1$s: opening and closing link HTML tags, %2$s: link text. */
 						esc_html_x( 'Use this if there is a conflict with your theme or another plugin in the nav menu editor. %1$sLearn more%2$s', '%s represent opening and closing link html', 'popup-maker' ),
 						'<a href="https://docs.wppopupmaker.com/article/297-popup-maker-is-overwriting-my-menu-editor-functions-how-can-i-fix-this?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=settings-page&utm_content=disable-popup-menu-editor" target="_blank" rel="noreferrer noopener">',
 						'</a>'
@@ -82,7 +83,7 @@ class PUM_Modules_Menu {
 			'Walker_Nav_Menu_Edit_Custom_Fields' === $walker,
 		];
 
-		if ( in_array( true, $bail_early ) ) {
+		if ( in_array( true, $bail_early, true ) ) {
 			return $walker;
 		}
 
@@ -101,7 +102,7 @@ class PUM_Modules_Menu {
 	/**
 	 * Merge Item data into the $item object.
 	 *
-	 * @param $item
+	 * @param object $item
 	 *
 	 * @return mixed
 	 */
@@ -186,19 +187,19 @@ class PUM_Modules_Menu {
 
 		<p class="field-popup_id  description  description-wide">
 
-			<label for="edit-menu-item-popup_id-<?php echo $item->ID; ?>">
-				<?php _e( 'Trigger a Popup', 'popup-maker' ); ?><br />
+			<label for="edit-menu-item-popup_id-<?php echo absint( $item->ID ); ?>">
+				<?php esc_html_e( 'Trigger a Popup', 'popup-maker' ); ?><br />
 
-				<select name="menu-item-pum[<?php echo $item->ID; ?>][popup_id]" id="edit-menu-item-popup_id-<?php echo $item->ID; ?>" class="widefat  edit-menu-item-popup_id">
+				<select name="menu-item-pum[<?php echo absint( $item->ID ); ?>][popup_id]" id="edit-menu-item-popup_id-<?php echo absint( $item->ID ); ?>" class="widefat  edit-menu-item-popup_id">
 					<option value=""></option>
 					<?php foreach ( self::popup_list() as $option => $label ) : ?>
-						<option value="<?php echo $option; ?>" <?php selected( $option, $item->popup_id ); ?>>
+						<option value="<?php echo esc_attr( $option ); ?>" <?php selected( $option, $item->popup_id ); ?>>
 							<?php echo esc_html( $label ); ?>
 						</option>
 					<?php endforeach; ?>
 				</select>
 
-				<span class="description"><?php _e( 'Choose a popup to trigger when this item is clicked.', 'popup-maker' ); ?></span>
+				<span class="description"><?php esc_html_e( 'Choose a popup to trigger when this item is clicked.', 'popup-maker' ); ?></span>
 			</label>
 
 		</p>
@@ -216,7 +217,6 @@ class PUM_Modules_Menu {
 		static $popup_list;
 
 		if ( ! isset( $popup_list ) ) {
-
 			$popup_list = [];
 
 			$popups = pum_get_all_popups();
@@ -243,7 +243,7 @@ class PUM_Modules_Menu {
 
 		$allowed_popups = wp_parse_id_list( array_keys( $popups ) );
 
-		if ( ! isset( $_POST['pum-menu-editor-nonce'] ) || ! wp_verify_nonce( $_POST['pum-menu-editor-nonce'], 'pum-menu-editor-nonce' ) ) {
+		if ( ! isset( $_POST['pum-menu-editor-nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['pum-menu-editor-nonce'] ) ), 'pum-menu-editor-nonce' ) ) {
 			return;
 		}
 
@@ -259,12 +259,15 @@ class PUM_Modules_Menu {
 		/**
 		 * Parse options array for valid keys.
 		 */
-		$item_options = self::parse_item_options( $_POST['menu-item-pum'][ $item_id ] );
+		$item_options = self::parse_item_options(
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			wp_unslash( $_POST['menu-item-pum'][ $item_id ] )
+		);
 
 		/**
 		 * Check for invalid values.
 		 */
-		if ( ! in_array( $item_options['popup_id'], $allowed_popups ) || $item_options['popup_id'] <= 0 ) {
+		if ( ! in_array( $item_options['popup_id'], $allowed_popups, true ) || $item_options['popup_id'] <= 0 ) {
 			unset( $item_options['popup_id'] );
 		}
 

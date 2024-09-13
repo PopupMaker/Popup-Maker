@@ -2,8 +2,8 @@
 /**
  * Integrations for woocommerce
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 // Exit if accessed directly
@@ -11,6 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * WooCommerce Integration
+ */
 class PUM_Woocommerce_Integration {
 
 	public static function init() {
@@ -25,40 +28,40 @@ class PUM_Woocommerce_Integration {
 			$results[] = is_wc_endpoint_url( $key );
 		}
 
-		return in_array( true, $results );
+		return in_array( true, $results, true );
 	}
 
 	public static function register_conditions( $conditions = [] ) {
 
 		// Add Additional Conditions
 		$conditions['is_woocommerce']  = [
-			'group'    => __( 'WooCommerce', 'woocommerce' ),
+			'group'    => __( 'WooCommerce', 'woocommerce' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 			'name'     => __( 'All WooCommerce', 'popup-maker' ),
 			'callback' => 'is_woocommerce',
 		];
 		$conditions['is_shop']         = [
-			'group'    => __( 'WooCommerce', 'woocommerce' ),
+			'group'    => __( 'WooCommerce', 'woocommerce' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 			'name'     => __( 'Shop Page', 'popup-maker' ),
 			'callback' => 'is_shop',
 		];
 		$conditions['is_cart']         = [
-			'group'    => __( 'WooCommerce', 'woocommerce' ),
+			'group'    => __( 'WooCommerce', 'woocommerce' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 			'name'     => __( 'Cart Page', 'popup-maker' ),
 			'callback' => 'is_cart',
 		];
 		$conditions['is_checkout']     = [
-			'group'    => __( 'WooCommerce', 'woocommerce' ),
+			'group'    => __( 'WooCommerce', 'woocommerce' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 			'name'     => __( 'Checkout Page', 'popup-maker' ),
 			'callback' => 'is_checkout',
 		];
 		$conditions['is_account_page'] = [
-			'group'    => __( 'WooCommerce', 'woocommerce' ),
+			'group'    => __( 'WooCommerce', 'woocommerce' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 			'name'     => __( 'Account Page', 'popup-maker' ),
 			'callback' => 'is_account_page',
 		];
 
 		$conditions['is_wc_endpoint_url'] = [
-			'group'    => __( 'WooCommerce', 'woocommerce' ),
+			'group'    => __( 'WooCommerce', 'woocommerce' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 			'name'     => __( 'Is Endpoint', 'popup-maker' ),
 			'fields'   => [
 				'selected' => [
@@ -93,9 +96,8 @@ class PUM_Woocommerce_Integration {
 	}
 
 	public static function condition_sort_order( $order = [] ) {
-		$order[ __( 'WooCommerce', 'woocommerce' ) ] = 5.256;
+		$order[ __( 'WooCommerce', 'woocommerce' ) ] = 5.256; // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
 
 		return $order;
 	}
-
 }

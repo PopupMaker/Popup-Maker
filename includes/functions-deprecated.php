@@ -2,8 +2,8 @@
 /**
  * Deprecated functions
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 // Exit if accessed directly
@@ -31,12 +31,12 @@ function popmake_enqueue_popup( $id ) {
  * @deprecated  1.7.0
  *
  * @param string $key
- * @param bool   $default
+ * @param bool   $default_value
  *
  * @return mixed
  */
-function popmake_get_option( $key = '', $default = false ) {
-	return pum_get_option( $key, $default );
+function popmake_get_option( $key = '', $default_value = false ) {
+	return pum_get_option( $key, $default_value );
 }
 
 /**
@@ -68,22 +68,22 @@ function pum_settings_page() {
 /**
  * @deprecated 1.7.0
  *
- * @param string $string
+ * @param string $str
  *
  * @return string
  */
-function popmake_get_label_singular( $string = '' ) {
+function popmake_get_label_singular( $str = '' ) {
 	return '';
 }
 
 /**
  * @deprecated 1.7.0
  *
- * @param string $string
+ * @param string $str
  *
  * @return string
  */
-function popmake_get_label_plural( $string = '' ) {
+function popmake_get_label_plural( $str = '' ) {
 	return '';
 }
 
@@ -175,6 +175,8 @@ function popmake_get_pages( $force = false ) {
 
 	$pages_options = [ 0 => '' ]; // Blank option
 
+	// Ignored because this is a simple string comparison from URL.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	if ( ( ! isset( $_GET['page'] ) || 'pum-settings' !== $_GET['page'] ) && ! $force ) {
 		return $pages_options;
 	}
@@ -260,6 +262,8 @@ function pum_get_trigger_section_labels() {
 function popmake_install_default_theme() {
 	$defaults = PUM_Admin_Themes::defaults();
 
+	// Ignored because this occurred during install and can be done siliently later if it fails. Defaulting to passive error handling.
+	// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 	$default_theme = @wp_insert_post(
 		[
 			'post_title'     => __( 'Default Theme', 'popup-maker' ),
@@ -283,7 +287,7 @@ function popmake_install_default_theme() {
 /**
  * Checks if the db_ver is v1.4 compatible.
  *
- * v1.4 compatibility is db_ver 6 or higher.
+ * V1.4 compatibility is db_ver 6 or higher.
  *
  * @depecated 1.8.0
  *
@@ -379,7 +383,7 @@ function popmake_get_text_shadow_style( $horizontal = 0, $vertical = 0, $blur = 
  */
 function pum_load_popup( $id ) {
 	PUM_Site_Popups::load_popup( $id );
-};
+}
 
 /**
  * Retrieves a template part

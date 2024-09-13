@@ -2,8 +2,8 @@
 /**
  * Gravity-forms Integrations class
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 class PUM_Gravity_Forms_Integation {
@@ -133,7 +133,7 @@ class PUM_Gravity_Forms_Integation {
 				<table class="form-table gforms_form_settings">
 					<tr>
 						<th scope="row">
-							<label for="gforms-pum-closepopup"><?php _e( 'Close Popup', 'popup-maker' ); ?></label>
+							<label for="gforms-pum-closepopup"><?php esc_html_e( 'Close Popup', 'popup-maker' ); ?></label>
 						</th>
 						<td>
 							<input type="checkbox" id="gforms-pum-closepopup" name="gforms-pum[closepopup]" value="true" <?php checked( $settings['closepopup'], true ); ?> />
@@ -141,7 +141,7 @@ class PUM_Gravity_Forms_Integation {
 					</tr>
 					<tr id="gforms-pum-closedelay-wrapper">
 						<th scope="row">
-							<label for="gforms-pum-closedelay"><?php _e( 'Delay', 'popup-maker' ); ?></label>
+							<label for="gforms-pum-closedelay"><?php esc_html_e( 'Delay', 'popup-maker' ); ?></label>
 						</th>
 						<td>
 							<?php
@@ -150,12 +150,12 @@ class PUM_Gravity_Forms_Integation {
 							}
 							?>
 
-							<input type="number" id="gforms-pum-closedelay" min="0" step="1" name="gforms-pum[closedelay]" style="width: 100px;" value="<?php echo esc_attr( $settings['closedelay'] ); ?>" /><?php _e( 'seconds', 'popup-maker' ); ?>
+							<input type="number" id="gforms-pum-closedelay" min="0" step="1" name="gforms-pum[closedelay]" style="width: 100px;" value="<?php echo esc_attr( $settings['closedelay'] ); ?>" /><?php esc_html_e( 'seconds', 'popup-maker' ); ?>
 						</td>
 					</tr>
 					<tr>
 						<th scope="row">
-							<label for="gforms-pum-openpopup"><?php _e( 'Open Popup', 'popup-maker' ); ?></label>
+							<label for="gforms-pum-openpopup"><?php esc_html_e( 'Open Popup', 'popup-maker' ); ?></label>
 						</th>
 						<td>
 							<input type="checkbox" id="gforms-pum-openpopup" name="gforms-pum[openpopup]" value="true" <?php checked( $settings['openpopup'], true ); ?> />
@@ -163,12 +163,12 @@ class PUM_Gravity_Forms_Integation {
 					</tr>
 					<tr id="gforms-pum-openpopup_id-wrapper">
 						<th scope="row">
-							<label for="gforms-pum-openpopup_id"><?php _e( 'Popup', 'popup-maker' ); ?></label>
+							<label for="gforms-pum-openpopup_id"><?php esc_html_e( 'Popup', 'popup-maker' ); ?></label>
 						</th>
 						<td>
 							<select id="gforms-pum-openpopup_id" name="gforms-pum[openpopup_id]">
 								<?php foreach ( self::get_popup_list() as $option ) { ?>
-									<option value="<?php echo esc_attr( $option['value'] ); ?>" <?php selected( $settings['openpopup_id'], $option['value'] ); ?>><?php echo $option['label']; ?></option>
+									<option value="<?php echo esc_attr( $option['value'] ); ?>" <?php selected( $settings['openpopup_id'], $option['value'] ); ?>><?php echo esc_html( $option['label'] ); ?></option>
 								<?php } ?>
 							</select>
 						</td>
@@ -178,7 +178,7 @@ class PUM_Gravity_Forms_Integation {
 				<input type="hidden" id="form_id" name="form_id" value="<?php echo esc_attr( $form_id ); ?>" />
 
 				<p class="submit">
-					<input type="submit" name="save" value="<?php _e( 'Save', 'popup-maker' ); ?>" class="button-primary">
+					<input type="submit" name="save" value="<?php esc_attr_e( 'Save', 'popup-maker' ); ?>" class="button-primary">
 				</p>
 
 				<?php wp_nonce_field( 'gform_popup_settings_edit', 'gform_popup_settings_edit' ); ?>
@@ -220,7 +220,6 @@ class PUM_Gravity_Forms_Integation {
 		<?php
 
 		GFFormSettings::page_footer();
-
 	}
 
 
@@ -250,7 +249,6 @@ class PUM_Gravity_Forms_Integation {
 				'value' => $popup->ID,
 				'label' => $popup->post_title,
 			];
-
 		}
 
 		return $popup_list;
@@ -268,7 +266,7 @@ class PUM_Gravity_Forms_Integation {
 		$form_id = rgget( 'id' );
 
 		if ( ! empty( $_POST['gforms-pum'] ) ) {
-			$settings = $_POST['gforms-pum'];
+			$settings = sanitize_key( wp_unslash( $_POST['gforms-pum'] ) );
 
 			// Sanitize values.
 			$settings['openpopup']    = ! empty( $settings['openpopup'] );
@@ -281,10 +279,12 @@ class PUM_Gravity_Forms_Integation {
 			delete_option( 'gforms_pum_' . $form_id );
 		}
 	}
-
 }
 
 /**
+ * Review
+ *
+ * This should be reviewed.
  *
  * add_action( 'gform_loaded', array( 'PUM_Gravity_Forms_Integration', 'load' ), 5 );
  *

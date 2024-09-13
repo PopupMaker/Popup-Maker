@@ -2,8 +2,8 @@
 /**
  * Admin Subscribers Table Handler
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -64,13 +64,15 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 
 		$limit = $this->get_items_per_page( 'pum_subscribers_per_page' );
 
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		$query_args = [
-			's'       => isset( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : null,
+			's'       => isset( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : null,
 			'limit'   => $limit,
 			'page'    => $this->get_pagenum(),
-			'orderby' => isset( $_REQUEST['orderby'] ) ? sanitize_text_field( $_REQUEST['orderby'] ) : null,
-			'order'   => isset( $_REQUEST['order'] ) ? sanitize_text_field( $_REQUEST['order'] ) : null,
+			'orderby' => isset( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : null,
+			'order'   => isset( $_REQUEST['order'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) : null,
 		];
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$this->items = PUM_DB_Subscribers::instance()->query( $query_args, 'ARRAY_A' );
 
@@ -146,7 +148,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 * Text displayed when no user data is available
 	 */
 	public function no_items() {
-		_e( 'No subscribers available.', 'popup-maker' );
+		esc_html_e( 'No subscribers available.', 'popup-maker' );
 	}
 
 	/**
@@ -176,7 +178,15 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 * @return string Text to be placed inside the column <td>.
 	 */
 	protected function column_cb( $item ) {
-		$label = sprintf( '<label class="screen-reader-text" for="subscriber_%d">%s</label>', $item['ID'], sprintf( __( 'Select %s' ), $item['name'] ) );
+		$label = sprintf(
+			'<label class="screen-reader-text" for="subscriber_%d">%s</label>',
+			$item['ID'],
+			sprintf(
+				/* translators: %s is the name of the subscriber. */
+				__( 'Select %s', 'popup-maker' ),
+				$item['name']
+			)
+		);
 
 		$input = sprintf( '<input type="checkbox" name="%1$s[]" id="subscriber_%2$d" value="%2$d" />', $this->_args['singular'], $item['ID'] );
 
@@ -200,11 +210,12 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 *
 	 * @return string Text to be placed inside the column <td> (movie title only)
 	 **************************************************************************/
-	function column_email( $item ) {
+	public function column_email( $item ) {
 
 		$url = add_query_arg(
 			[
-				'page'       => $_REQUEST['page'],
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				'page'       => isset( $_REQUEST['page'] ) ? sanitize_key( wp_unslash( $_REQUEST['page'] ) ) : null,
 				'subscriber' => $item['ID'],
 				'_wpnonce'   => wp_create_nonce( 'pum_subscribers_table_action_nonce' ),
 			],
@@ -258,7 +269,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 *
 	 * @return string Text to be placed inside the column <td> (movie title only)
 	 **************************************************************************/
-	function column_name( $item ) {
+	public function column_name( $item ) {
 		$user_id = $item['user_id'] > 0 ? absint( $item['user_id'] ) : null;
 
 		if ( $user_id ) {
@@ -289,7 +300,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 *
 	 * @return string Text to be placed inside the column <td> (movie title only)
 	 **************************************************************************/
-	function column_popup_id( $item ) {
+	public function column_popup_id( $item ) {
 		$popup_id = $item['popup_id'] > 0 ? absint( $item['popup_id'] ) : null;
 
 		$popup = pum_get_popup( $popup_id );
@@ -330,18 +341,26 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 * @since    1.0.0
 	 */
 	public function handle_table_actions() {
+		if ( ! isset( $_REQUEST['_wpnonce'] ) ) {
+			return;
+		}
+
+		$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_key( wp_unslash( $_REQUEST['_wpnonce'] ) ) : null;
+
+		if ( ! $nonce ) {
+			return;
+		}
 
 		// Detect when a bulk action is being triggered...
 		$action1 = $this->current_action();
 
-		if ( in_array( $action1, [ 'delete', 'bulk-delete' ] ) ) {
+		if ( in_array( $action1, [ 'delete', 'bulk-delete' ], true ) ) {
 
 			// verify the nonce.
-			if ( ! wp_verify_nonce( wp_unslash( $_REQUEST['_wpnonce'] ), 'delete' === $action1 ? 'pum_subscribers_table_action_nonce' : 'bulk-subscribers' ) ) {
+			if ( ! wp_verify_nonce( $nonce, 'delete' === $action1 ? 'pum_subscribers_table_action_nonce' : 'bulk-subscribers' ) ) {
 				$this->invalid_nonce_redirect();
 			} else {
-
-				$subscribers = isset( $_REQUEST['subscriber'] ) ? $_REQUEST['subscriber'] : [];
+				$subscribers = isset( $_REQUEST['subscriber'] ) ? sanitize_key( wp_unslash( $_REQUEST['subscriber'] ) ) : [];
 
 				if ( is_numeric( $subscribers ) ) {
 					$subscribers = [ $subscribers ];
@@ -350,17 +369,21 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 				$subscribers = wp_parse_id_list( $subscribers );
 
 				if ( $subscribers ) {
-
 					$status = [];
 
 					foreach ( $subscribers as $subscriber_id ) {
 						$status[] = PUM_DB_Subscribers::instance()->delete( $subscriber_id );
 					}
 
-					if ( ! in_array( false, $status ) ) {
+					if ( ! in_array( false, $status, true ) ) {
 						wp_die(
-							sprintf( _n( 'Subscriber deleted!', '%d Subscribers deleted!', count( $subscribers ), 'popup-maker' ), count( $subscribers ) ),
-							__( 'Success', 'popup-maker' ),
+							sprintf(
+								esc_attr(
+								/* translators: %d is the number of subscribers deleted. */
+								_n( '%d Subscriber deleted!', '%d Subscribers deleted!', count( $subscribers ), 'popup-maker' ) ),
+								count( $subscribers )
+							),
+							esc_attr__( 'Success', 'popup-maker' ),
 							[
 								'response'  => 200,
 								'back_link' => esc_url( admin_url( 'edit.php?page=pum-subscribers&post_type=popup' ) ),
@@ -372,18 +395,23 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 
 						if ( count( $subscribers ) === 1 ) {
 							wp_die(
-								__( 'Deleting subscriber failed.', 'popup-maker' ),
-								__( 'Error', 'popup-maker' ),
+								esc_html__( 'Deleting subscriber failed.', 'popup-maker' ),
+								esc_html__( 'Error', 'popup-maker' ),
 								[
 									'response'  => 200,
 									'back_link' => esc_url( admin_url( 'edit.php?page=pum-subscribers&post_type=popup' ) ),
 								]
 							);
-
 						} else {
 							wp_die(
-								sprintf( __( '%1$d Subscribers deleted, %2$d failed', 'popup-maker' ), $succeeded, $failed ),
-								__( 'Error', 'popup-maker' ),
+								esc_html(
+									sprintf(
+										/* translators: %1$d is the number of subscribers deleted, %2$d is the number of subscribers that failed to delete. */
+										__( '%1$d Subscribers deleted, %2$d failed', 'popup-maker' ),
+										$succeeded, $failed
+									)
+								),
+								esc_html__( 'Error', 'popup-maker' ),
 								[
 									'response'  => 200,
 									'back_link' => esc_url( admin_url( 'edit.php?page=pum-subscribers&post_type=popup' ) ),
@@ -394,8 +422,8 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 				}
 
 				wp_die(
-					__( 'Uh oh, the subscribers was not deleted successfully!', 'popup-maker' ),
-					__( 'Error', 'popup-maker' ),
+					esc_html__( 'Uh oh, the subscribers was not deleted successfully!', 'popup-maker' ),
+					esc_html__( 'Error', 'popup-maker' ),
 					[
 						'response'  => 200,
 						'back_link' => esc_url( admin_url( 'edit.php?page=pum-subscribers&post_type=popup' ) ),
@@ -405,57 +433,6 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 				exit;
 			}
 		}
-
-		/*
-		 * Note: Table bulk_actions can be identified by checking $_REQUEST['action'] and $_REQUEST['action2']
-		 *
-		 * action - is set if checkbox from top-most select-all is set, otherwise returns -1
-		 * action2 - is set if checkbox the bottom-most select-all checkbox is set, otherwise returns -1
-		 */
-
-		// check for individual row actions
-		$the_table_action = $this->current_action();
-
-		if ( 'view_usermeta' === $the_table_action ) {
-			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
-			// verify the nonce.
-			if ( ! wp_verify_nonce( $nonce, 'view_usermeta_nonce' ) ) {
-				$this->invalid_nonce_redirect();
-			} else {
-				$this->page_view_usermeta( absint( $_REQUEST['user_id'] ) );
-				$this->graceful_exit();
-			}
-		}
-
-		if ( 'add_usermeta' === $the_table_action ) {
-			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
-			// verify the nonce.
-			if ( ! wp_verify_nonce( $nonce, 'add_usermeta_nonce' ) ) {
-				$this->invalid_nonce_redirect();
-			} else {
-				$this->page_add_usermeta( absint( $_REQUEST['user_id'] ) );
-				$this->graceful_exit();
-			}
-		}
-
-		// check for table bulk actions
-		if ( ( isset( $_REQUEST['action'] ) && 'bulk-download' === $_REQUEST['action'] ) || ( isset( $_REQUEST['action2'] ) && 'bulk-download' === $_REQUEST['action2'] ) ) {
-
-			$nonce = wp_unslash( $_REQUEST['_wpnonce'] );
-			// verify the nonce.
-			/*
-			 * Note: the nonce field is set by the parent class
-			 * wp_nonce_field( 'bulk-' . $this->_args['plural'] );
-			 *
-			 */
-			if ( ! wp_verify_nonce( $nonce, 'bulk-users' ) ) {
-				$this->invalid_nonce_redirect();
-			} else {
-				$this->page_bulk_download( $_REQUEST['users'] );
-				$this->graceful_exit();
-			}
-		}
-
 	}
 
 	/**
@@ -463,8 +440,8 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 */
 	public function invalid_nonce_redirect() {
 		wp_die(
-			__( 'Invalid Nonce', 'popup-maker' ),
-			__( 'Error', 'popup-maker' ),
+			esc_html__( 'Invalid Nonce', 'popup-maker' ),
+			esc_html__( 'Error', 'popup-maker' ),
 			[
 				'response'  => 403,
 				'back_link' => esc_url( admin_url( 'edit.php?page=pum-subscribers&post_type=popup' ) ),

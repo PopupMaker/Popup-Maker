@@ -2,8 +2,8 @@
 /**
  * Options Utility
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,14 +20,14 @@ class PUM_Utils_Options {
 	 *
 	 * @var string
 	 */
-	public static $_prefix = 'popmake_';
+	public static $prefix = 'popmake_';
 
 	/**
 	 * Keeps static copy of the options during runtime.
 	 *
 	 * @var null|array
 	 */
-	private static $_data;
+	private static $data;
 
 	/**
 	 * Initialize Options on run.
@@ -37,11 +37,11 @@ class PUM_Utils_Options {
 	public static function init( $force = false ) {
 		global $popmake_options;
 
-		if ( ! isset( self::$_data ) || $force ) {
-			self::$_data = self::get_all();
+		if ( ! isset( self::$data ) || $force ) {
+			self::$data = self::get_all();
 
 			/** @deprecated 1.7.0 */
-			$popmake_options = self::$_data;
+			$popmake_options = self::$data;
 		}
 	}
 
@@ -53,7 +53,7 @@ class PUM_Utils_Options {
 	 * @return array settings
 	 */
 	public static function get_all() {
-		$settings = get_option( self::$_prefix . 'settings', [] );
+		$settings = get_option( self::$prefix . 'settings', [] );
 		if ( ! is_array( $settings ) ) {
 			$settings = [];
 		}
@@ -61,7 +61,7 @@ class PUM_Utils_Options {
 		/* @deprecated filter. */
 		$settings = apply_filters( 'popmake_get_settings', $settings );
 
-		return apply_filters( self::$_prefix . 'get_options', $settings );
+		return apply_filters( self::$prefix . 'get_options', $settings );
 	}
 
 	/**
@@ -70,17 +70,17 @@ class PUM_Utils_Options {
 	 * Looks to see if the specified setting exists, returns default if not
 	 *
 	 * @param string $key
-	 * @param bool   $default
+	 * @param bool   $default_value
 	 *
 	 * @return mixed
 	 */
-	public static function get( $key = '', $default = false ) {
+	public static function get( $key = '', $default_value = false ) {
 		// Passive initialization.
 		self::init();
 
-		$value = isset( self::$_data[ $key ] ) ? self::$_data[ $key ] : $default;
+		$value = isset( self::$data[ $key ] ) ? self::$data[ $key ] : $default_value;
 
-		return apply_filters( self::$_prefix . 'get_option', $value, $key, $default );
+		return apply_filters( self::$prefix . 'get_option', $value, $key, $default_value );
 	}
 
 	/**
@@ -111,19 +111,18 @@ class PUM_Utils_Options {
 		}
 
 		// First let's grab the current settings
-		$options = get_option( self::$_prefix . 'settings' );
+		$options = get_option( self::$prefix . 'settings' );
 
 		// Let's let devs alter that value coming in
-		$value = apply_filters( self::$_prefix . 'update_option', $value, $key );
+		$value = apply_filters( self::$prefix . 'update_option', $value, $key );
 
 		// Next let's try to update the value
 		$options[ $key ] = $value;
-		$did_update      = update_option( self::$_prefix . 'settings', $options );
+		$did_update      = update_option( self::$prefix . 'settings', $options );
 
 		// If it updated, let's update the global variable
 		if ( $did_update ) {
-			self::$_data[ $key ] = $value;
-
+			self::$data[ $key ] = $value;
 		}
 
 		return $did_update;
@@ -138,16 +137,16 @@ class PUM_Utils_Options {
 	 */
 	public static function update_all( $new_options = [] ) {
 		// First let's grab the current settings
-		$options = get_option( self::$_prefix . 'settings' );
+		$options = get_option( self::$prefix . 'settings' );
 
 		// Lets merge options that may exist previously that are not existing now.
 		$new_options = wp_parse_args( $new_options, $options );
 
-		$did_update = update_option( self::$_prefix . 'settings', $new_options );
+		$did_update = update_option( self::$prefix . 'settings', $new_options );
 
 		// If it updated, let's update the global variable
 		if ( $did_update ) {
-			self::$_data = $new_options;
+			self::$data = $new_options;
 		}
 
 		return $did_update;
@@ -169,11 +168,11 @@ class PUM_Utils_Options {
 			$options[ $key ] = ! empty( $val ) ? $val : false;
 		}
 
-		$did_update = update_option( self::$_prefix . 'settings', $options );
+		$did_update = update_option( self::$prefix . 'settings', $options );
 
 		// If it updated, let's update the global variable
 		if ( $did_update ) {
-			self::$_data = $options;
+			self::$data = $options;
 		}
 
 		return $did_update;
@@ -200,7 +199,7 @@ class PUM_Utils_Options {
 		}
 
 		// First let's grab the current settings
-		$options = get_option( self::$_prefix . 'settings' );
+		$options = get_option( self::$prefix . 'settings' );
 
 		// Remove each key/value pair.
 		foreach ( $keys as $key ) {
@@ -209,11 +208,11 @@ class PUM_Utils_Options {
 			}
 		}
 
-		$did_update = update_option( self::$_prefix . 'settings', $options );
+		$did_update = update_option( self::$prefix . 'settings', $options );
 
 		// If it updated, let's update the global variable
 		if ( $did_update ) {
-			self::$_data = $options;
+			self::$data = $options;
 		}
 
 		return $did_update;
@@ -237,14 +236,13 @@ class PUM_Utils_Options {
 			unset( $options[ $key ] );
 		}
 
-		$did_update = update_option( self::$_prefix . 'settings', $options );
+		$did_update = update_option( self::$prefix . 'settings', $options );
 
 		// If it updated, let's update the global variable
 		if ( $did_update ) {
-			self::$_data = $options;
+			self::$data = $options;
 		}
 
 		return $did_update;
 	}
-
 }

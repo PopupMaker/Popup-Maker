@@ -2,8 +2,8 @@
 /**
  * Popmake fields
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 // Exit if accessed directly
@@ -71,8 +71,6 @@ class Popmake_Fields {
 		}
 
 		$this->args = $args;
-
-		return $this;
 	}
 
 	/**
@@ -231,9 +229,8 @@ class Popmake_Fields {
 
 			if ( isset( $this->sections[ $key ] ) && is_array( $field[ $first_key ] ) ) {
 				$this->add_fields( $field, $key );
-			} // Process the fields.
-			else {
-
+			} else {
+				// Process the fields.
 				if ( $section ) {
 					$field['section'] = $section;
 				}
@@ -369,7 +366,7 @@ class Popmake_Fields {
 	 * @param string $section
 	 * @param array  $values
 	 */
-	function render_fields_by_section( $section = 'general', $values = [] ) {
+	public function render_fields_by_section( $section = 'general', $values = [] ) {
 		foreach ( $this->get_fields( $section ) as $key => $args ) {
 			$value = isset( $values[ $args['id'] ] ) ? $values[ $args['id'] ] : null;
 
@@ -380,7 +377,7 @@ class Popmake_Fields {
 	/**
 	 * @param array $values
 	 */
-	function render_fields( $values = [] ) {
+	public function render_fields( $values = [] ) {
 		foreach ( $this->get_all_fields() as $section => $fields ) {
 			foreach ( $fields as $id => $args ) {
 				$value = isset( $values[ $args['id'] ] ) ? $values[ $args['id'] ] : null;
@@ -410,22 +407,23 @@ class Popmake_Fields {
 			 */
 			if ( function_exists( "pum_{$type}_callback" ) ) {
 				$function_name = "pum_{$type}_callback";
-			} /**
-			 * Check if core method exists and load that.
-			 */ elseif ( method_exists( $this, $type . '_callback' ) ) {
+			} elseif ( method_exists( $this, $type . '_callback' ) ) {
+				/**
+				 * Check if core method exists and load that.
+				 */
 				$function_name = [ $this, $type . '_callback' ];
-} /**
-			 * No method exists, lets notify them the field type doesn't exist.
-			 */ else {
+			} else {
+				/**
+				 * No method exists, lets notify them the field type doesn't exist.
+				 */
 				$function_name = [ $this, 'missing_callback' ];
-}
+			}
 
 			/**
 			 * Call the determined method, passing the field args & $value to the callback.
 			 */
 			call_user_func_array( $function_name, [ $args, $value ] );
 		}
-
 	}
 
 	/**
@@ -461,31 +459,33 @@ class Popmake_Fields {
 		if ( has_action( "pum_{$type}_templ_field" ) ) {
 			do_action( "pum_{$type}_templ_field", $args, $this );
 		} else {
-			/**
-			 * Check if override or custom function exists and load that.
-			 */
 			if ( function_exists( "pum_{$type}_templ_callback" ) ) {
+				/**
+				 * Check if override or custom function exists and load that.
+				 */
 				$function_name = "pum_{$type}_templ_callback";
-			} /**
-			 * Check if core method exists and load that.
-			 */ elseif ( method_exists( $this, $type . '_templ_callback' ) ) {
+			} elseif ( method_exists( $this, $type . '_templ_callback' ) ) {
+				/**
+				 * Check if core method exists and load that.
+				 */
 				$function_name = [ $this, $type . '_templ_callback' ];
-} /**
-			 * Check if the field type is hook.
-			 */ elseif ( 'hook' === $type ) {
+			} elseif ( 'hook' === $type ) {
+				/**
+				 * Check if the field type is hook.
+				 */
 				$function_name = [ $this, 'hook_callback' ];
-} /**
-			 * No method exists, lets notify them the field type doesn't exist.
-			 */ else {
+			} else {
+				/**
+				 * No method exists, lets notify them the field type doesn't exist.
+				 */
 				$function_name = [ $this, 'missing_callback' ];
-}
+			}
 
 			/**
 			 * Call the determined method, passing the field args & $value to the callback.
 			 */
 			call_user_func_array( $function_name, [ $args, $this ] );
 		}
-
 	}
 
 	/**
@@ -508,11 +508,11 @@ class Popmake_Fields {
 
 	/**
 	 * @param $args
-	 * @param null $class
+	 * @param string|string[]|null $class_name
 	 *
 	 * @return string
 	 */
-	public function field_classes( $args, $class = null ) {
+	public function field_classes( $args, $class_name = null ) {
 
 		$args = wp_parse_args(
 			$args,
@@ -537,8 +537,8 @@ class Popmake_Fields {
 
 		$classes[] = is_array( $args['class'] ) ? implode( '  ', $args['class'] ) : $args['class'];
 
-		if ( isset( $class ) ) {
-			$classes[] = is_array( $class ) ? implode( '  ', $class ) : $class;
+		if ( isset( $class_name ) ) {
+			$classes[] = is_array( $class_name ) ? implode( '  ', $class_name ) : $class_name;
 		}
 
 		return implode( '  ', $classes );
@@ -547,10 +547,13 @@ class Popmake_Fields {
 	public function field_description( $args ) {
 		if ( '' !== $args['desc'] ) {
 			?>
-			<p class="pum-desc"><?php echo esc_html( $args['desc'] ); ?></p>
-										   <?php
+			<p class="pum-desc"><?php echo wp_kses( $args['desc'], wp_kses_allowed_html( 'data' ) ); ?></p>
+											<?php
 		}
+
 		/*
+		TODO Review.
+
 		if ( $args['doclink'] != '' ) { ?>
 			<a href="<?php echo esc_url( $args['doclink'] ); ?>" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a><?php
 		}
@@ -561,7 +564,7 @@ class Popmake_Fields {
 		if ( ! empty( $args['label'] ) ) {
 			?>
 			<label for="<?php echo esc_attr( $args['id'] ); ?>">
-								   <?php
+									<?php
 									echo esc_html( $args['label'] );
 									if ( '' !== $args['doclink'] ) {
 										?>
@@ -586,14 +589,15 @@ class Popmake_Fields {
 		if ( has_filter( "pum_{$type}_sanitize" ) ) {
 			$value = apply_filters( "pum_{$type}_sanitize", $value, $args );
 		} else {
-			/**
-			 * Check if override or custom function exists and load that.
-			 */
 			if ( function_exists( "pum_{$type}_sanitize" ) ) {
+				/**
+				 * Check if override or custom function exists and load that.
+				 */
 				$function_name = "pum_{$type}_sanitize";
-			} /**
-			 * Check if core method exists and load that.
-			 */ elseif ( method_exists( $this, $type . '_sanitize' ) ) {
+			} elseif ( method_exists( $this, $type . '_sanitize' ) ) {
+				/**
+				 * Check if core method exists and load that.
+				 */
 				$function_name = [ $this, $type . '_sanitize' ];
 			} else {
 				$function_name = null;
@@ -675,5 +679,4 @@ class Popmake_Fields {
 	public function hook_callback( $args ) {
 		do_action( 'popmake_' . $args['id'] );
 	}
-
 }

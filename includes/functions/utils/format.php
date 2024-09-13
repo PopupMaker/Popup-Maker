@@ -2,8 +2,8 @@
 /**
  * Functions for Format Utility
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -38,15 +38,4 @@ function pum_format_number( $number, $format = '' ) {
  */
 function pum_format_time( $number, $format = '' ) {
 	return PUM_Utils_Format::time( $number, $format );
-}
-
-/**
- * Removes <p></p> around URLs
- *
- * @param string $content
- *
- * @return string
- */
-function pum_unwrap_urls( $content = '' ) {
-	return PUM_Utils_Format::unwrap_urls( $content );
 }

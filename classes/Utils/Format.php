@@ -2,8 +2,8 @@
 /**
  * Format Utility
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,21 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Class PUM_Utils_Format
  */
 class PUM_Utils_Format {
-
-	/**
-	 * Removes <p></p> around URLs
-	 *
-	 * @param string $content
-	 *
-	 * @return mixed|string
-	 */
-	public static function unwrap_urls( $content = '' ) {
-		$content = preg_replace( '/<\\w+>((([A-Za-z]{3,9}:(?:\\/\\/)?)(?:[-;:&=\\+\$,\\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\\+\$,\\w]+@)[A-Za-z0-9.-]+)((?:\\/[\\+~%\\/.\\w-_]*)?\\??(?:[-\\+=&;%@.\\w_]*)#?(?:[.\\!\\/\\\\w]*))?)<\\/\\w+>/', "$1\n\n", $content );
-		$content = str_replace( '</p>', "</p>\n\n", $content );
-
-		return $content;
-	}
-
 
 	/**
 	 * @param        $time
@@ -45,12 +30,10 @@ class PUM_Utils_Format {
 			case 'human':
 			case 'human-readable':
 				return self::human_time( $time );
-				break;
 
 			default:
 			case 'U':
 				return $time;
-				break;
 		}
 	}
 
@@ -66,7 +49,6 @@ class PUM_Utils_Format {
 			default:
 			case 'abbreviated':
 				return self::abbreviated_number( $number );
-				break;
 		}
 	}
 
@@ -87,31 +69,51 @@ class PUM_Utils_Format {
 		$diff = (int) abs( $current - $time );
 
 		if ( $diff < 60 ) {
-			$since = sprintf( __( '%ss', 'popup-maker' ), $diff );
+			$since = sprintf(
+				/* translators: 1: Number of seconds. */
+				__( '%ss', 'popup-maker' ),
+				$diff
+			);
 		} elseif ( $diff < HOUR_IN_SECONDS ) {
 			$mins = round( $diff / MINUTE_IN_SECONDS );
 			if ( $mins <= 1 ) {
 				$mins = 1;
 			}
-			$since = sprintf( __( '%smin', 'popup-maker' ), $mins );
+			$since = sprintf(
+				/* translators: 1: Number of minutes. */
+				__( '%smin', 'popup-maker' ),
+				$mins
+			);
 		} elseif ( $diff < DAY_IN_SECONDS && $diff >= HOUR_IN_SECONDS ) {
 			$hours = round( $diff / HOUR_IN_SECONDS );
 			if ( $hours <= 1 ) {
 				$hours = 1;
 			}
-			$since = sprintf( __( '%shr', 'popup-maker' ), $hours );
+			$since = sprintf(
+				/* translators: 1: Number of hours. */
+				__( '%shr', 'popup-maker' ),
+				$hours
+			);
 		} elseif ( $diff < WEEK_IN_SECONDS && $diff >= DAY_IN_SECONDS ) {
 			$days = round( $diff / DAY_IN_SECONDS );
 			if ( $days <= 1 ) {
 				$days = 1;
 			}
-			$since = sprintf( __( '%sd', 'popup-maker' ), $days );
+			$since = sprintf(
+				/* translators: 1: Number of days. */
+				__( '%sd', 'popup-maker' ),
+				$days
+			);
 		} elseif ( $diff < MONTH_IN_SECONDS && $diff >= WEEK_IN_SECONDS ) {
 			$weeks = round( $diff / WEEK_IN_SECONDS );
 			if ( $weeks <= 1 ) {
 				$weeks = 1;
 			}
-			$since = sprintf( __( '%sw', 'popup-maker' ), $weeks );
+			$since = sprintf(
+				/* translators: 1: Number of weeks. */
+				__( '%sw', 'popup-maker' ),
+				$weeks
+			);
 		} else {
 			$since = '';
 		}
@@ -148,12 +150,11 @@ class PUM_Utils_Format {
 	 *
 	 * Used to prevent WP from adding <br> and <p> tags.
 	 *
-	 * @param string $string
+	 * @param string $str
 	 *
 	 * @return mixed
 	 */
-	public static function strip_white_space( $string = '' ) {
-		return str_replace( [ "\t", "\r", "\n" ], '', $string );
+	public static function strip_white_space( $str = '' ) {
+		return str_replace( [ "\t", "\r", "\n" ], '', $str );
 	}
-
 }

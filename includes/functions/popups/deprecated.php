@@ -2,8 +2,8 @@
 /**
  * Functions for Deprecated Popups
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 /**
@@ -28,11 +28,11 @@ function pum_popup( $popup_id = null ) {
  * @param $group
  * @param int   $popup_id ID number of the popup to retrieve a overlay meta for
  * @param null  $key
- * @param null  $default
+ * @param null  $default_value
  *
  * @return mixed array|string
  */
-function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default = null ) {
+function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default_value = null ) {
 	if ( ! $popup_id ) {
 		$popup_id = pum_get_popup_id();
 	}
@@ -52,11 +52,10 @@ function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default
 		$test  = uniqid();
 		$value = popmake_resolve( $values, $key, $test );
 		if ( $value === $test ) {
-
 			$key = str_replace( '.', '_', $key );
 
 			if ( ! isset( $values[ $key ] ) ) {
-				$value = $default;
+				$value = $default_value;
 			} else {
 				$value = $values[ $key ];
 			}
@@ -74,11 +73,11 @@ function popmake_get_popup_meta( $group, $popup_id = null, $key = null, $default
  * @since 1.0
  * @deprecated 1.3.0
  *
- * @param int $popup_id ID number of the popup to retrieve a overlay meta for
+ * @param int $group ID number of the popup to retrieve a overlay meta for
  *
  * @return mixed array|string
  */
-function popmake_get_popup_meta_group( $group, $popup_id = null, $key = null, $default = null ) {
+function popmake_get_popup_meta_group( $group, $popup_id = null, $key = null, $default_value = null ) {
 	if ( ! $popup_id || 'secure_logout' === $group ) {
 		$popup_id = pum_get_popup_id();
 	}
@@ -90,7 +89,7 @@ function popmake_get_popup_meta_group( $group, $popup_id = null, $key = null, $d
 	}
 
 	$default_check_key = 'popup_defaults_set';
-	if ( ! in_array( $group, [ 'auto_open', 'close', 'display', 'targeting_condition' ] ) ) {
+	if ( ! in_array( $group, [ 'auto_open', 'close', 'display', 'targeting_condition' ], true ) ) {
 		$default_check_key = "popup_{$group}_defaults_set";
 	}
 
@@ -108,7 +107,7 @@ function popmake_get_popup_meta_group( $group, $popup_id = null, $key = null, $d
 	if ( $key ) {
 		$key = str_replace( '.', '_', $key );
 		if ( ! isset( $group_values[ $key ] ) ) {
-			$value = $default;
+			$value = $default_value;
 		} else {
 			$value = $group_values[ $key ];
 		}

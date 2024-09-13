@@ -2,8 +2,8 @@
 /**
  * Abstract for settings upgrade
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -42,7 +42,7 @@ abstract class PUM_Abstract_Upgrade_Settings extends PUM_Abstract_Upgrade {
 
 		$this->process_settings( $settings );
 
-		return ++ $this->step;
+		return ++$this->step;
 	}
 
 	/**
@@ -55,9 +55,12 @@ abstract class PUM_Abstract_Upgrade_Settings extends PUM_Abstract_Upgrade {
 	public function get_message( $code ) {
 
 		switch ( $code ) {
-
 			case 'start':
-				$message = sprintf( __( 'Updating settings for v%s compatibility.', 'popup-maker' ), '1.7' );
+				$message = sprintf(
+					/* translators: 1: Version number. */
+					__( 'Updating settings for v%s compatibility.', 'popup-maker' ),
+					'1.7'
+				);
 				break;
 
 			case 'done':

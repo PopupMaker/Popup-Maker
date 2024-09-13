@@ -2,8 +2,8 @@
 /**
  * Integration for WS Forms
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 class PUM_Integration_Form_WSForms extends PUM_Abstract_Integration_Form {
@@ -30,7 +30,8 @@ class PUM_Integration_Form_WSForms extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return __( 'WS Forms' );
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+		return __( 'WS Forms', 'wsforms' );
 	}
 
 	/**

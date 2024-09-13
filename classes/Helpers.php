@@ -2,8 +2,8 @@
 /**
  * Helpers class
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 // Exit if accessed directly.
@@ -11,6 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class PUM_Helpers
+ */
 class PUM_Helpers {
 
 	public static function do_shortcode( $shortcode_text = '' ) {
@@ -172,7 +175,7 @@ class PUM_Helpers {
 	/**
 	 * Sort nested arrays with various options.
 	 *
-	 * @param array  $array
+	 * @param array  $arr
 	 * @param string $type
 	 * @param bool   $reverse
 	 *
@@ -180,8 +183,8 @@ class PUM_Helpers {
 	 * @deprecated 1.7.20
 	 * @see        PUM_Utils_Array::sort instead.
 	 */
-	public static function sort_array( $array = [], $type = 'key', $reverse = false ) {
-		return PUM_Utils_Array::sort( $array, $type, $reverse );
+	public static function sort_array( $arr = [], $type = 'key', $reverse = false ) {
+		return PUM_Utils_Array::sort( $arr, $type, $reverse );
 	}
 
 	public static function post_type_selectlist_query( $post_type, $args = [], $include_total = false ) {
@@ -209,7 +212,7 @@ class PUM_Helpers {
 		// Query Caching.
 		static $queries = [];
 
-		$key = md5( serialize( $args ) );
+		$key = md5( wp_json_encode( $args ) );
 
 		if ( ! isset( $queries[ $key ] ) ) {
 			$query = new WP_Query( $args );
@@ -250,6 +253,8 @@ class PUM_Helpers {
 			]
 		);
 
+		$args['taxonomy'] = $taxonomies;
+
 		if ( $args['page'] ) {
 			$args['offset'] = ( $args['page'] - 1 ) * $args['number'];
 		}
@@ -257,12 +262,12 @@ class PUM_Helpers {
 		// Query Caching.
 		static $queries = [];
 
-		$key = md5( serialize( $args ) );
+		$key = md5( wp_json_encode( $args ) );
 
 		if ( ! isset( $queries[ $key ] ) ) {
 			$terms = [];
 
-			foreach ( get_terms( $taxonomies, $args ) as $term ) {
+			foreach ( get_terms( $args ) as $term ) {
 				$terms[ $term->term_id ] = $term->name;
 			}
 
@@ -270,9 +275,11 @@ class PUM_Helpers {
 			unset( $total_args['number'] );
 			unset( $total_args['offset'] );
 
+			$total_args['taxonomy'] = $taxonomies;
+
 			$results = [
 				'items'       => $terms,
-				'total_count' => $include_total ? wp_count_terms( $taxonomies, $total_args ) : null,
+				'total_count' => $include_total ? wp_count_terms( $total_args ) : null,
 			];
 
 			$queries[ $key ] = $results;
@@ -303,7 +310,7 @@ class PUM_Helpers {
 		// Query Caching.
 		static $queries = [];
 
-		$key = md5( serialize( $args ) );
+		$key = md5( wp_json_encode( $args ) );
 
 		if ( ! isset( $queries[ $key ] ) ) {
 			$query = new WP_User_Query( $args );
@@ -336,7 +343,6 @@ class PUM_Helpers {
 		}
 
 		return $themes;
-
 	}
 
 	public static function popup_selectlist( $args = [] ) {
@@ -352,5 +358,4 @@ class PUM_Helpers {
 
 		return $popup_list;
 	}
-
 }

@@ -1,17 +1,14 @@
 const eslintConfig = {
 	root: true,
-	extends: [
-		'eslint:recommended',
-		'plugin:@wordpress/eslint-plugin/recommended-with-formatting',
-		'plugin:@wordpress/eslint-plugin/jsdoc',
-		'plugin:eslint-comments/recommended',
-	],
-	plugins: [ 'standard', 'import', 'promise' ],
+	extends: [ 'plugin:@code-atlantic/eslint-plugin/recommended' ],
 	globals: {
 		wp: 'readonly',
-		pum_admin_vars: 'readonly',
-		pum_site_vars: 'readonly',
+		wpApiSettings: 'readonly',
 		pum_vars: 'readonly',
+		pum_site_vars: 'readonly',
+		pum_admin_vars: 'readonly',
+		pum_block_editor_vars: 'readonly',
+		window: 'readonly',
 	},
 	env: {
 		browser: true,
@@ -20,6 +17,17 @@ const eslintConfig = {
 	settings: {
 		jsdoc: {
 			mode: 'typescript',
+		},
+		'import/resolver': {
+			node: {
+				moduleDirectory: [ 'node_modules' ],
+			},
+		},
+	},
+	parserOptions: {
+		requireConfigFile: false,
+		babelOptions: {
+			presets: [ require.resolve( '@wordpress/babel-preset-default' ) ],
 		},
 	},
 	rules: {},

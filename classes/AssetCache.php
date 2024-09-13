@@ -2,8 +2,8 @@
 /**
  * AssestCache class
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -167,7 +167,7 @@ class PUM_AssetCache {
 			// Prevents this from running again and set to show the admin notice.
 			update_option( 'pum_files_writeable', false );
 			update_option( '_pum_writeable_notice_dismissed', false );
-			if ( ! is_null( $results ) && is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->has_errors() ) {
+			if ( ! is_null( $results ) && isset( $wp_filesystem->errors ) && $wp_filesystem->errors->has_errors() ) {
 				$error = $wp_filesystem->errors->get_error_message();
 				pum_log_message( sprintf( 'Cache directory is not writeable due to filesystem error. Error given: %s', esc_html( $error ) ) );
 			} else {
@@ -509,7 +509,7 @@ class PUM_AssetCache {
 
 				if ( $popup->get_setting( 'zindex', false ) ) {
 					$zindex = esc_attr( $popup->get_setting( 'zindex' ) );
-					echo sprintf( "#pum-%d {z-index: %d}\r\n", esc_attr( $popup->ID ), esc_attr( $zindex ) );
+					printf( "#pum-%d {z-index: %d}\r\n", esc_attr( $popup->ID ), esc_attr( $zindex ) );
 				}
 
 				// Allow per popup CSS additions.
@@ -720,10 +720,11 @@ class PUM_AssetCache {
 	 * Tests whether the file is accessible and returns 200 status code
 	 *
 	 * @param string $filename Filename of cache file to test.
+	 *
 	 * @return bool True if file exists and is accessible
 	 */
 	private static function is_file_accessible( $filename ) {
-		if ( ! $filename || empty( $filename ) || ! is_string( $filename ) ) {
+		if ( ! $filename || ! is_string( $filename ) ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 			pum_log_message( 'Cannot check if file is accessible. Filename passed: ' . print_r( $filename, true ) );
 			return false;

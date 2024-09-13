@@ -2,8 +2,8 @@
 /**
  * Interface for Repository
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -61,5 +61,4 @@ interface PUM_Interface_Repository {
 	 * @return bool
 	 */
 	public function delete_item( $id );
-
 }

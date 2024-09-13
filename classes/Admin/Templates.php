@@ -2,14 +2,13 @@
 /**
  * Class for Admin Templates
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
 
 /**
  * Class PUM_Admin_Templates
@@ -46,10 +45,11 @@ class PUM_Admin_Templates {
 			?>
 
 			<script type="text/html" id="tmpl-pum-field-mc_api_key">
+				<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<# var valid = data.value !== '' && <?php echo PUM_Utils_Array::safe_json_encode( pum_get_option( 'mci_api_key_is_valid', false ) ); ?>; #>
 				<input type="{{valid ? 'password' : 'text'}}" placeholder="{{data.placeholder}}" class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" {{{data.meta}}}/>
 				<button type="button" class="pum-mci-check-api-key">
-					<?php _e( 'Check', 'popup-maker' ); ?>
+					<?php esc_html_e( 'Check', 'popup-maker' ); ?>
 					<i class="dashicons dashicons-{{valid ? 'yes' : 'no'}}" style="display: {{valid ? 'inline-block' : 'none'}};"></i>
 				</button>
 				<?php wp_nonce_field( 'pum-mci-check-api-key', null ); ?>
@@ -200,11 +200,11 @@ class PUM_Admin_Templates {
 			<# if (data.value.key !== '') { #>
 			<?php wp_nonce_field( 'pum_license_activation', 'pum_license_activation_nonce' ); ?>
 			<# if (data.value.status === 'valid') { #>
-			<span class="pum-license-status"><?php _e( 'Active', 'popup-maker' ); ?></span>
-			<input type="submit" class="button-secondary pum-license-deactivate" id="{{data.id}}_deactivate" name="pum_license_deactivate[{{data.id}}]" value="<?php _e( 'Deactivate License', 'popup-maker' ); ?>"/>
+			<span class="pum-license-status"><?php esc_html_e( 'Active', 'popup-maker' ); ?></span>
+			<input type="submit" class="button-secondary pum-license-deactivate" id="{{data.id}}_deactivate" name="pum_license_deactivate[{{data.id}}]" value="<?php esc_attr_e( 'Deactivate License', 'popup-maker' ); ?>"/>
 			<# } else { #>
-			<span class="pum-license-status"><?php _e( 'Inactive', 'popup-maker' ); ?></span>
-			<input type="submit" class="button-secondary pum-license-activate" id="{{data.id}}_activate" name="pum_license_activate[{{data.id}}]" value="<?php _e( 'Activate License', 'popup-maker' ); ?>"/>
+			<span class="pum-license-status"><?php esc_html_e( 'Inactive', 'popup-maker' ); ?></span>
+			<input type="submit" class="button-secondary pum-license-activate" id="{{data.id}}_activate" name="pum_license_activate[{{data.id}}]" value="<?php esc_attr_e( 'Activate License', 'popup-maker' ); ?>"/>
 			<# } #>
 			<# } #>
 
@@ -243,19 +243,19 @@ class PUM_Admin_Templates {
 				<tbody>
 				<tr>
 					<td>
-						<label for="{{data.id}}_category" style="padding-left: 3px;"><?php _e( 'Category', 'popup-maker' ); ?></label>
+						<label for="{{data.id}}_category" style="padding-left: 3px;"><?php esc_html_e( 'Category', 'popup-maker' ); ?></label>
 						<input type="text" style="width:100%;" id="{{data.id}}_category" name="{{data.name}}[category]" value="{{data.value.category}}"/>
 					</td>
 					<td>
-						<label for="{{data.id}}_action" style="padding-left: 3px;"><?php _e( 'Action', 'popup-maker' ); ?></label>
+						<label for="{{data.id}}_action" style="padding-left: 3px;"><?php esc_html_e( 'Action', 'popup-maker' ); ?></label>
 						<input type="text" style="width:100%;" id="{{data.id}}_action" name="{{data.name}}[action]" value="{{data.value.action}}"/>
 					</td>
 					<td>
-						<label for="{{data.id}}_label" style="padding-left: 3px;"><?php _e( 'Label', 'popup-maker' ); ?></label>
+						<label for="{{data.id}}_label" style="padding-left: 3px;"><?php esc_html_e( 'Label', 'popup-maker' ); ?></label>
 						<input type="text" style="width:100%;" id="{{data.id}}_label" name="{{data.name}}[label]" value="{{data.value.label}}"/>
 					</td>
 					<td>
-						<label for="{{data.id}}_value" style="padding-left: 3px;"><?php _e( 'Value', 'popup-maker' ); ?></label>
+						<label for="{{data.id}}_value" style="padding-left: 3px;"><?php esc_html_e( 'Value', 'popup-maker' ); ?></label>
 						<input type="number" style="width:100%;height: auto;" id="{{data.id}}_value" name="{{data.name}}[value]" value="{{data.value.value}}" step="0.01" max="999999" min="0"/>
 					</td>
 				</tr>
@@ -282,17 +282,17 @@ class PUM_Admin_Templates {
 
 		<script type="text/html" id="tmpl-pum-field-wrapper">
 			<div class="pum-field pum-field-{{data.type}} {{data.id}}-wrapper {{data.classes}}"
-				  data-id="{{data.id}}" <# print( data.dependencies !== '' ? "data-pum-dependencies='" + data.dependencies + "'" : ''); #> <# print( data.dynamic_desc !== '' ? "data-pum-dynamic-desc='" + data.dynamic_desc + "'" : ''); #>>
+					data-id="{{data.id}}" <# print( data.dependencies !== '' ? "data-pum-dependencies='" + data.dependencies + "'" : ''); #> <# print( data.dynamic_desc !== '' ? "data-pum-dynamic-desc='" + data.dynamic_desc + "'" : ''); #>>
 			<# if (typeof data.label === 'string' && data.label.length > 0) { #>
 			<label for="{{data.id}}">
 				{{data.label}}
 				<# if (typeof data.doclink === 'string' && data.doclink !== '') { #>
-				<a href="{{data.doclink}}" title="<?php _e( 'Documentation', 'popup-maker' ); ?>: {{data.label}}" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
+				<a href="{{data.doclink}}" title="<?php esc_attr_e( 'Documentation', 'popup-maker' ); ?>: {{data.label}}" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
 				<# } #>
 			</label>
 			<# } else { #>
 			<# if (typeof data.doclink === 'string' && data.doclink !== '') { #>
-			<a href="{{data.doclink}}" title="<?php _e( 'Documentation', 'popup-maker' ); ?>: {{data.label}}" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
+			<a href="{{data.doclink}}" title="<?php esc_attr_e( 'Documentation', 'popup-maker' ); ?>: {{data.label}}" target="_blank" class="pum-doclink dashicons dashicons-editor-help"></a>
 			<# } #>
 			<# } #>
 			{{{data.field}}}
@@ -335,7 +335,7 @@ class PUM_Admin_Templates {
 							<# if (data.title.length) { #>
 							<span id="{{data.id}}-title" class="pum-modal-title">{{data.title}}</span>
 							<# } #>
-							<button type="button" class="pum-modal-close" aria-label="<?php _e( 'Close', 'popup-maker' ); ?>"></button>
+							<button type="button" class="pum-modal-close" aria-label="<?php esc_attr_e( 'Close', 'popup-maker' ); ?>"></button>
 						</div>
 						<# if (data.description.length) { #>
 						<span id="{{data.id}}-description" class="screen-reader-text">{{data.description}}</span>
@@ -401,23 +401,30 @@ class PUM_Admin_Templates {
 
 		<script type="text/html" id="tmpl-pum-trigger-editor">
 			<div class="pum-popup-trigger-editor  <# if (data.triggers && data.triggers.length) { print('has-list-items'); } #>" data-field_name="{{data.name}}">
-				<button type="button" class="button button-primary pum-add-new no-button"><?php _e( 'Add New Trigger', 'popup-maker' ); ?></button>
+				<button type="button" class="button button-primary pum-add-new no-button"><?php esc_html_e( 'Add New Trigger', 'popup-maker' ); ?></button>
 
 				<p>
 					<strong>
-						<?php _e( 'Triggers cause a popup to open.', 'popup-maker' ); ?>
+						<?php
+						$learn_more_text = sprintf(
+							/* translators: 1. contextual help link text. */
+							__( 'Learn more about %s', 'popup-maker' ),
+							__( 'Triggers', 'popup-maker' )
+						);
+						?>
+						<?php esc_html_e( 'Triggers cause a popup to open.', 'popup-maker' ); ?>
 						<a href="<?php echo esc_url( 'https://docs.wppopupmaker.com/article/141-triggers?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=triggers-option-settings' ); ?>" target="_blank"
-						   class="pum-doclink dashicons dashicons-editor-help" title="<?php esc_attr_e( sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Triggers', 'popup-maker' ) ) ); ?>"></a>
+							class="pum-doclink dashicons dashicons-editor-help" title="<?php echo esc_attr( $learn_more_text ); ?>"></a>
 					</strong>
 				</p>
 
 				<table class="list-table form-table">
 					<thead>
 					<tr>
-						<th><?php _e( 'Type', 'popup-maker' ); ?></th>
-						<th><?php _e( 'Cookie', 'popup-maker' ); ?></th>
-						<th><?php _e( 'Settings', 'popup-maker' ); ?></th>
-						<th><?php _e( 'Actions', 'popup-maker' ); ?></th>
+						<th><?php esc_html_e( 'Type', 'popup-maker' ); ?></th>
+						<th><?php esc_html_e( 'Cookie', 'popup-maker' ); ?></th>
+						<th><?php esc_html_e( 'Settings', 'popup-maker' ); ?></th>
+						<th><?php esc_html_e( 'Actions', 'popup-maker' ); ?></th>
 					</tr>
 					</thead>
 					<tbody>
@@ -446,7 +453,7 @@ class PUM_Admin_Templates {
 		<script type="text/html" id="tmpl-pum-trigger-row">
 			<tr data-index="{{data.index}}">
 				<td class="type-column">
-					<button type="button" class="edit no-button link-button" aria-label="<?php _e( 'Edit this trigger', 'popup-maker' ); ?>">{{PUM_Admin.triggers.getLabel(data.type)}}</button>
+					<button type="button" class="edit no-button link-button" aria-label="<?php esc_attr_e( 'Edit this trigger', 'popup-maker' ); ?>">{{PUM_Admin.triggers.getLabel(data.type)}}</button>
 					<input class="popup_triggers_field_type" type="hidden" name="{{data.name}}[{{data.index}}][type]" value="{{data.type}}"/>
 					<input class="popup_triggers_field_settings" type="hidden" name="{{data.name}}[{{data.index}}][settings]" value="{{JSON.stringify(data.settings)}}"/>
 				</td>
@@ -455,8 +462,8 @@ class PUM_Admin_Templates {
 				</td>
 				<td class="settings-column">{{{PUM_Admin.triggers.getSettingsDesc(data.type, data.settings)}}}</td>
 				<td class="list-item-actions">
-					<button type="button" class="edit dashicons dashicons-edit no-button" aria-label="<?php _e( 'Edit this trigger', 'popup-maker' ); ?>"></button>
-					<button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php _e( 'Delete this trigger', 'popup-maker' ); ?>"></button>
+					<button type="button" class="edit dashicons dashicons-edit no-button" aria-label="<?php esc_attr_e( 'Edit this trigger', 'popup-maker' ); ?>"></button>
+					<button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php esc_attr_e( 'Delete this trigger', 'popup-maker' ); ?>"></button>
 				</td>
 			</tr>
 		</script>
@@ -475,11 +482,11 @@ class PUM_Admin_Templates {
 
 		<script type="text/html" id="tmpl-pum-click-selector-presets">
 			<div class="pum-click-selector-presets">
-				<span class="dashicons dashicons-arrow-left" title="<?php _e( 'Insert Preset', 'popup-maker' ); ?>"></span>
+				<span class="dashicons dashicons-arrow-left" title="<?php esc_attr_e( 'Insert Preset', 'popup-maker' ); ?>"></span>
 				<ul>
 					<?php foreach ( $presets as $preset => $label ) : ?>
-						<li data-preset='<?php echo $preset; ?>'>
-							<span><?php echo $label; ?></span>
+						<li data-preset='<?php echo esc_attr( $preset ); ?>'>
+							<span><?php echo esc_html( $label ); ?></span>
 						</li>
 					<?php endforeach; ?>
 				</ul>
@@ -490,6 +497,7 @@ class PUM_Admin_Templates {
 			<#
 			var form_args =
 			<?php
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo PUM_Utils_Array::safe_json_encode(
 				[
 					'id'     => 'pum-add-trigger',
@@ -497,8 +505,9 @@ class PUM_Admin_Templates {
 						'popup_trigger_add_type'         => [
 							'id'      => 'popup_trigger_add_type',
 							'name'    => '',
-							'label'   => __( 'What kind of trigger do you want?', 'popup-maker' ),
+							'label'   => esc_html__( 'What kind of trigger do you want?', 'popup-maker' ),
 							'type'    => 'select',
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							'options' => PUM_Triggers::instance()->dropdown_list(),
 						],
 						'popup_trigger_add_cookie'       => [
@@ -506,14 +515,15 @@ class PUM_Admin_Templates {
 							'name'  => '',
 							'type'  => 'checkbox',
 							'std'   => true,
-							'label' => __( 'Prevent popup from showing to visitor again using a cookie?', 'popup-maker' ),
+							'label' => esc_html__( 'Prevent popup from showing to visitor again using a cookie?', 'popup-maker' ),
 							'meta'  => [ 'checked' => 'checked' ],
 						],
 						'popup_trigger_add_cookie_event' => [
 							'id'           => 'popup_trigger_add_cookie_event',
 							'name'         => '',
 							'type'         => 'select',
-							'label'        => __( 'Stop showing popup once visitor takes this action:', 'popup-maker' ),
+							'label'        => esc_html__( 'Stop showing popup once visitor takes this action', 'popup-maker' ),
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							'options'      => PUM_Cookies::instance()->dropdown_list(),
 							'dependencies' => [
 								'popup_trigger_add_cookie' => true,
@@ -532,16 +542,15 @@ class PUM_Admin_Templates {
 			content = PUM_Admin.forms.render(form_args, {});
 
 			print(PUM_Admin.templates.modal({
-			id: 'pum_trigger_add_type_modal',
-			title: '<?php _e( 'New Trigger', 'popup-maker' ); ?>',
-			content: content,
-			save_button: pum_admin_vars.I10n.add || '<?php __( 'Add', 'popup-maker' ); ?>'
+				id: 'pum_trigger_add_type_modal',
+				title: '<?php esc_attr_e( 'New Trigger', 'popup-maker' ); ?>',
+				content: content,
+				save_button: pum_admin_vars.I10n.add || '<?php esc_attr__( 'Add', 'popup-maker' ); ?>'
 			}));
 			#>
 		</script>
 
 		<?php
-
 	}
 
 	/**
@@ -557,16 +566,36 @@ class PUM_Admin_Templates {
 			<div class="facet-builder <# if (data.groups && data.groups.length) { print('has-conditions'); } #>">
 				<p>
 					<strong>
-						<?php _e( 'Conditions allow you to show your popup to a targeted segment of your sites users.', 'popup-maker' ); ?>
+						<?php esc_html_e( 'Conditions allow you to show your popup to a targeted segment of your sites users.', 'popup-maker' ); ?>
 
-						<?php printf( '%2$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%3$s', sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Targeting Conditions', 'popup-maker' ) ), '<a href="https://docs.wppopupmaker.com/article/351-popup-settings-box-targeting-option-settings?utm_medium=inline-doclink&utm_campaign=contextual-help&utm_source=plugin-popup-editor&utm_content=targeting-option-settings" target="_blank">', '</a>' ); ?>
+						<?php
+						printf(
+							'%2$s<i class="dashicons dashicons-editor-help" title="%1$s"></i>%3$s',
+							sprintf(
+								/* translators: 1. contextual help link text. */
+								esc_html__( 'Learn more about %s', 'popup-maker' ),
+								esc_html__( 'Targeting Conditions', 'popup-maker' )
+							),
+							'<a href="https://docs.wppopupmaker.com/article/351-popup-settings-box-targeting-option-settings?utm_medium=inline-doclink&utm_campaign=contextual-help&utm_source=plugin-popup-editor&utm_content=targeting-option-settings" target="_blank">',
+							'</a>'
+						);
+						?>
 					</strong>
 				</p>
 
 				<ul class="ul-disc">
-					<li><?php _e( 'By default, this popup will be loaded on every page of your site for all users.', 'popup-maker' ); ?></li>
-					<li><?php _e( 'Target the popup to a specific segment by adding conditions below.', 'popup-maker' ); ?></li>
-					<li><?php printf( __( 'Click the %1$s button for any condition to check the opposite of the chosen condition. The button will turn red %2$s when active.', 'popup-maker' ), '<i style="font-size: 1em; width: 1em; height: 1em; line-height:1.5em;" class="dashicons dashicons-warning"></i>', '<i style="width: 1em; height: 1em; font-size: 1em; line-height:1.5em; color:#a00;" class="dashicons dashicons-warning"></i>' ); ?></li>
+					<li><?php esc_html_e( 'By default, this popup will be loaded on every page of your site for all users.', 'popup-maker' ); ?></li>
+					<li><?php esc_html_e( 'Target the popup to a specific segment by adding conditions below.', 'popup-maker' ); ?></li>
+					<li>
+					<?php
+					printf(
+						/* translators: 1. button text. 2. warning icon. */
+						esc_html__( 'Click the %1$s button for any condition to check the opposite of the chosen condition. The button will turn red %2$s when active.', 'popup-maker' ),
+						'<i style="font-size: 1em; width: 1em; height: 1em; line-height:1.5em;" class="dashicons dashicons-warning"></i>',
+						'<i style="width: 1em; height: 1em; font-size: 1em; line-height:1.5em; color:#a00;" class="dashicons dashicons-warning"></i>'
+					);
+					?>
+					</li>
 				</ul>
 
 				<section class="pum-alert-box" style="display:none"></section>
@@ -581,12 +610,12 @@ class PUM_Admin_Templates {
 					#>
 				</div>
 				<div class="no-facet-groups">
-					<label for="pum-first-condition"><?php _e( 'Choose a condition to target your popup to specific content or various other segments.', 'popup-maker' ); ?></label>
+					<label for="pum-first-condition"><?php esc_html_e( 'Choose a condition to target your popup to specific content or various other segments.', 'popup-maker' ); ?></label>
 					<div class="facet-target">
-						<button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
+						<button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php esc_attr_e( 'Enable the Not Operand', 'popup-maker' ); ?>">
 							<input type="checkbox" id="pum-first-facet-operand" value="1"/>
 						</button>
-						<# print(PUM_Admin.conditions.template.selectbox({id: 'pum-first-condition', name: "", placeholder: "<?php _e( 'Choose a condition', 'popup-maker' ); ?>"})); #>
+						<# print(PUM_Admin.conditions.template.selectbox({id: 'pum-first-condition', name: "", placeholder: "<?php esc_attr_e( 'Choose a condition', 'popup-maker' ); ?>"})); #>
 					</div>
 				</div>
 			</div>
@@ -602,24 +631,24 @@ class PUM_Admin_Templates {
 						}); #>
 					</div>
 					<div class="add-or">
-						<button type="button" class="add add-facet no-button" aria-label="<?php _ex( 'Add another OR condition', 'aria-label for add new OR condition button', 'popup-maker' ); ?>"><?php _e( 'or', 'popup-maker' ); ?></button>
+						<button type="button" class="add add-facet no-button" aria-label="<?php echo esc_attr_x( 'Add another OR condition', 'aria-label for add new OR condition button', 'popup-maker' ); ?>"><?php esc_html_e( 'or', 'popup-maker' ); ?></button>
 					</div>
 				</section>
 				<p class="and">
-					<button type="button" class="add-facet no-button" aria-label="<?php _ex( 'Add another AND condition group', 'aria-label for add new AND condition button', 'popup-maker' ); ?>"><?php _e( 'and', 'popup-maker' ); ?></button>
+					<button type="button" class="add-facet no-button" aria-label="<?php echo esc_attr_x( 'Add another AND condition group', 'aria-label for add new AND condition button', 'popup-maker' ); ?>"><?php esc_html_e( 'and', 'popup-maker' ); ?></button>
 				</p>
 			</div>
 		</script>
 
 		<script type="text/html" id="tmpl-pum-condition-facet">
 			<div class="facet" data-index="{{data.index}}" data-target="{{data.target}}">
-				<i class="or"><?php _e( 'or', 'popup-maker' ); ?></i>
+				<i class="or"><?php esc_html_e( 'or', 'popup-maker' ); ?></i>
 				<div class="facet-col facet-target <# if (typeof data.not_operand !== 'undefined' && data.not_operand == '1') print('not-operand-checked'); #>">
-					<button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php _e( 'Enable the Not Operand', 'popup-maker' ); ?>">
+					<button type="button" class="pum-not-operand dashicons-before dashicons-warning no-button" aria-label="<?php esc_attr_e( 'Enable the Not Operand', 'popup-maker' ); ?>">
 						<input type="checkbox" name="popup_settings[conditions][{{data.group}}][{{data.index}}][not_operand]" value="1"
 						<# if (typeof data.not_operand !== 'undefined') print(PUM_Admin.utils.checked(data.not_operand, true, true)); #> />
 					</button>
-					<# print(PUM_Admin.conditions.template.selectbox({index: data.index, group: data.group, value: data.target, placeholder: "<?php _e( 'Choose a condition', 'popup-maker' ); ?>"})); #>
+					<# print(PUM_Admin.conditions.template.selectbox({index: data.index, group: data.group, value: data.target, placeholder: "<?php esc_attr_e( 'Choose a condition', 'popup-maker' ); ?>"})); #>
 				</div>
 
 				<div class="facet-settings facet-col">
@@ -627,7 +656,7 @@ class PUM_Admin_Templates {
 				</div>
 
 				<div class="facet-actions">
-					<button type="button" class="remove remove-facet dashicons dashicons-dismiss no-button" aria-label="<?php _e( 'Remove Condition', 'popup-maker' ); ?>"></button>
+					<button type="button" class="remove remove-facet dashicons dashicons-dismiss no-button" aria-label="<?php esc_attr_e( 'Remove Condition', 'popup-maker' ); ?>"></button>
 				</div>
 			</div>
 		</script>
@@ -645,23 +674,30 @@ class PUM_Admin_Templates {
 
 		<script type="text/html" id="tmpl-pum-cookie-editor">
 			<div class="pum-popup-cookie-editor  <# if (data.cookies && data.cookies.length) { print('has-list-items'); } #>" data-field_name="{{data.name}}">
-				<button type="button" class="button button-primary pum-add-new no-button"><?php _e( 'Add New Cookie', 'popup-maker' ); ?></button>
+				<button type="button" class="button button-primary pum-add-new no-button"><?php esc_html_e( 'Add New Cookie', 'popup-maker' ); ?></button>
 
 				<p>
 					<strong>
-						<?php _e( 'Cookies control the repeat display of a popup.', 'popup-maker' ); ?>
+						<?php
+						$title_text = sprintf(
+							/* translators: 1. contextual help link text. */
+							__( 'Learn more about %s', 'popup-maker' ),
+							__( 'Cookies', 'popup-maker' )
+						);
+						?>
+						<?php esc_html_e( 'Cookies control the repeat display of a popup.', 'popup-maker' ); ?>
 						<a href="<?php echo esc_url( 'https://docs.wppopupmaker.com/article/358-popup-settings-box-cookies-option-settings?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=cookies-option-settings' ); ?>"
-						   target="_blank" class="pum-doclink dashicons dashicons-editor-help" title="<?php esc_attr_e( sprintf( __( 'Learn more about %s', 'popup-maker' ), __( 'Cookies', 'popup-maker' ) ) ); ?>"></a>
+							target="_blank" class="pum-doclink dashicons dashicons-editor-help" title="<?php echo esc_attr( $title_text ); ?>"></a>
 					</strong>
 				</p>
 
 				<table class="list-table form-table">
 					<thead>
 					<tr>
-						<th><?php _e( 'Event', 'popup-maker' ); ?></th>
-						<th><?php _e( 'Name', 'popup-maker' ); ?></th>
-						<th><?php _e( 'Settings', 'popup-maker' ); ?></th>
-						<th><?php _e( 'Actions', 'popup-maker' ); ?></th>
+						<th><?php esc_html_e( 'Event', 'popup-maker' ); ?></th>
+						<th><?php esc_html_e( 'Name', 'popup-maker' ); ?></th>
+						<th><?php esc_html_e( 'Settings', 'popup-maker' ); ?></th>
+						<th><?php esc_html_e( 'Actions', 'popup-maker' ); ?></th>
 					</tr>
 					</thead>
 					<tbody>
@@ -690,7 +726,7 @@ class PUM_Admin_Templates {
 		<script type="text/html" id="tmpl-pum-cookie-row">
 			<tr data-index="{{data.index}}">
 				<td class="event-column">
-					<button type="button" class="edit no-button link-button" aria-label="<?php _e( 'Edit this cookie', 'popup-maker' ); ?>">{{PUM_Admin.cookies.getLabel(data.event)}}</button>
+					<button type="button" class="edit no-button link-button" aria-label="<?php esc_attr_e( 'Edit this cookie', 'popup-maker' ); ?>">{{PUM_Admin.cookies.getLabel(data.event)}}</button>
 					<input class="popup_cookies_field_event" type="hidden" name="{{data.name}}[{{data.index}}][event]" value="{{data.event}}"/>
 					<input class="popup_cookies_field_settings" type="hidden" name="{{data.name}}[{{data.index}}][settings]" value="{{JSON.stringify(data.settings)}}"/>
 				</td>
@@ -699,8 +735,8 @@ class PUM_Admin_Templates {
 				</td>
 				<td class="settings-column">{{{PUM_Admin.cookies.getSettingsDesc(data.event, data.settings)}}}</td>
 				<td class="list-item-actions">
-					<button type="button" class="edit dashicons dashicons-edit no-button" aria-label="<?php _e( 'Edit this cookie', 'popup-maker' ); ?>"></button>
-					<button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php _e( 'Delete this cookie', 'popup-maker' ); ?>"></button>
+					<button type="button" class="edit dashicons dashicons-edit no-button" aria-label="<?php esc_attr_e( 'Edit this cookie', 'popup-maker' ); ?>"></button>
+					<button type="button" class="remove dashicons dashicons-no no-button" aria-label="<?php esc_attr_e( 'Delete this cookie', 'popup-maker' ); ?>"></button>
 				</td>
 			</tr>
 		</script>
@@ -709,8 +745,8 @@ class PUM_Admin_Templates {
 			<#
 			print(PUM_Admin.templates.modal({
 			id: 'pum_cookie_add_event_modal',
-			title: '<?php _e( 'When should your cookie be created?', 'popup-maker' ); ?>',
-			content: PUM_Admin.cookies.template.selectbox({id: 'popup_cookie_add_event', name: "", placeholder: "<?php _e( 'Select a cookie type.', 'popup-maker' ); ?>"}),
+			title: '<?php esc_attr_e( 'When should your cookie be created?', 'popup-maker' ); ?>',
+			content: PUM_Admin.cookies.template.selectbox({id: 'popup_cookie_add_event', name: "", placeholder: "<?php esc_attr_e( 'Select a cookie type.', 'popup-maker' ); ?>"}),
 			save_button: pum_admin_vars.I10n.add || '<?php __( 'Add', 'popup-maker' ); ?>'
 			}));
 			#>
@@ -718,13 +754,11 @@ class PUM_Admin_Templates {
 
 		<script type="text/html" id="tmpl-pum-field-cookie_key">
 			<div class="cookie-key">
-				<button type="button" class="reset dashicons-before dashicons-image-rotate" title="<?php _e( 'Reset Cookie Key', 'popup-maker' ); ?>"></button>
+				<button type="button" class="reset dashicons-before dashicons-image-rotate" title="<?php esc_attr_e( 'Reset Cookie Key', 'popup-maker' ); ?>"></button>
 				<input type="text" placeholder="{{data.placeholder}}" class="{{data.size}}-text dashicons-before dashicons-image-rotate" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}" {{{data.meta}}}/>
 			</div>
 		</script>
 
 		<?php
-
 	}
-
 }

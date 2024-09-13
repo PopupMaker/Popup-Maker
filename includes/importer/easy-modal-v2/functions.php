@@ -2,8 +2,8 @@
 /**
  * Importer for easy-modal functions
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 // Exit if accessed directly
@@ -80,12 +80,12 @@ if ( ! function_exists( 'emodal_get_license' ) ) {
 
 
 if ( ! function_exists( 'emresolve' ) ) {
-	function emresolve( array $a, $path, $default = null ) {
+	function emresolve( array $a, $path, $default_value = null ) {
 		$current = $a;
 		$p       = strtok( $path, '.' );
 		while ( false !== $p ) {
 			if ( ! isset( $current[ $p ] ) ) {
-				return $default;
+				return $default_value;
 			}
 			$current = $current[ $p ];
 			$p       = strtok( '.' );

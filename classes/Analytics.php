@@ -2,8 +2,8 @@
 /**
  * Analytics class
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -115,6 +115,7 @@ class PUM_Analytics {
 	public static function ajax_request() {
 
 		$args = wp_parse_args(
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$_REQUEST,
 			[
 				'event'  => null,
@@ -138,7 +139,6 @@ class PUM_Analytics {
 				self::serve_no_content();
 				break;
 		}
-
 	}
 
 	/**
@@ -150,7 +150,7 @@ class PUM_Analytics {
 		$args = $request->get_params();
 
 		if ( ! $args || empty( $args['pid'] ) ) {
-			return new WP_Error( 'missing_params', __( 'Missing Parameters.' ), [ 'status' => 404 ] );
+			return new WP_Error( 'missing_params', __( 'Missing Parameters.', 'default' ), [ 'status' => 404 ] );
 		}
 
 		self::track( $args );
@@ -277,7 +277,9 @@ class PUM_Analytics {
 		$gif = self::get_file( Popup_Maker::$DIR . 'assets/images/beacon.gif' );
 		header( 'Content-Type: image/gif' );
 		header( 'Content-Length: ' . strlen( $gif ) );
-		exit( $gif );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $gif;
+		exit;
 	}
 
 	/**
@@ -291,10 +293,12 @@ class PUM_Analytics {
 			$path = realpath( $path );
 		}
 
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		if ( ! $path || ! @is_file( $path ) ) {
 			return '';
 		}
 
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		return @file_get_contents( $path );
 	}
 
@@ -315,8 +319,8 @@ class PUM_Analytics {
 	 */
 	public static function serve_json( $data = 0 ) {
 		header( 'Content-Type: application/json' );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo PUM_Utils_Array::safe_json_encode( $data );
 		exit;
 	}
-
 }

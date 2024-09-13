@@ -35,12 +35,13 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 	 */
 	public static function run() {
 		if ( ! current_user_can( PUM_Admin_Upgrades::instance()->required_cap ) ) {
-			wp_die( __( 'You do not have permission to do upgrades', 'popup-maker' ), __( 'Error', 'popup-maker' ), [ 'response' => 403 ] );
+			wp_die( esc_html__( 'You do not have permission to do upgrades', 'popup-maker' ), esc_html__( 'Error', 'popup-maker' ), [ 'response' => 403 ] );
 		}
 
 		ignore_user_abort( true );
 
 		if ( ! pum_is_func_disabled( 'set_time_limit' ) ) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			@set_time_limit( 0 );
 		}
 
@@ -68,7 +69,6 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 		);
 
 		if ( $popups ) {
-
 			foreach ( $popups as $popup ) {
 
 				/**
@@ -76,7 +76,7 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 				 */
 				self::initialize_analytics( $popup->ID );
 
-				$completed ++;
+				++$completed;
 			}
 
 			if ( $completed < $total ) {
@@ -96,17 +96,6 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 			$site_total_open_count = get_site_option( 'pum_site_total_open_count', 0 );
 			update_site_option( 'pum_site_total_open_count', $site_total_open_count + $total_open_count );
 		}
-
-			/**
-		 * TODO Move this to v1.5 routines.
-		 */
-		/*
-		// Check for popup analytics extension and import those stats if available.
-		$total_conversion_count = get_site_option( 'popup_analytics_total_conversion_count', 0 );
-
-		// Set the sites total open count.
-		update_site_option( 'pum_total_conversion_count', $total_conversion_count );
-		 */
 
 		self::done();
 	}
@@ -133,31 +122,5 @@ final class PUM_Admin_Upgrade_Routine_5 extends PUM_Admin_Upgrade_Routine {
 		update_post_meta( $popup_id, 'popup_open_count', absint( $open_count ) );
 		update_post_meta( $popup_id, 'popup_open_count_total', absint( $open_count ) );
 		update_post_meta( $popup_id, 'popup_last_opened', absint( $last_open ) );
-
-		/**
-		 * TODO Move this to v1.5 routines.
-		 */
-		/*
-		// Conversion Count
-		$conversion_count = get_post_meta( $popup_id, 'popup_analytic_conversion_count', true );
-		if ( ! $conversion_count ) {
-			$conversion_count = 0;
-		}
-
-		// Last Conversion
-		$last_conversion = get_post_meta( $popup_id, 'popup_analytic_last_conversion', true );
-		if ( ! $last_conversion ) {
-			$last_conversion = 0;
-		}
-
-		// Calculate and set the conversion rate.
-		$conversion_rate = $conversion_count / $open_count * 100;
-
-		// Add the meta.
-		update_post_meta( $popup_id, 'popup_conversion_count', $conversion_count );
-		update_post_meta( $popup_id, 'popup_last_conversion', $last_conversion );
-		update_post_meta( $popup_id, 'popup_conversion_rate', $conversion_rate );
-		*/
 	}
-
 }

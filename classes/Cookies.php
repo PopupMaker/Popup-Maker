@@ -2,8 +2,8 @@
 /**
  * Cookies class
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -189,9 +189,6 @@ class PUM_Cookies {
 
 			$this->cookies[ $cookie['id'] ] = $cookie;
 		}
-
-		return;
-
 	}
 
 	/**
@@ -246,7 +243,12 @@ class PUM_Cookies {
 				'advanced' => [
 					'session' => [
 						'label'    => __( 'Use Session Cookie?', 'popup-maker' ),
-						'desc'     => __( 'Session cookies expire when the user closes their browser.', 'popup-maker' ) . ' ' . sprintf( __( '%1$sNote%2$s: Modern browsers that reopen your last browser session\'s tabs do not properly clear session cookies', 'popup-maker' ), '<strong>', '</strong>' ),
+						'desc'     => __( 'Session cookies expire when the user closes their browser.', 'popup-maker' ) . ' ' . sprintf(
+							/* translators: %1$s: bold start, %2$s: bold end. */
+							__( '%1$sNote%2$s: Modern browsers that reopen your last browser session\'s tabs do not properly clear session cookies', 'popup-maker' ),
+							'<strong>',
+							'</strong>'
+						),
 						'type'     => 'checkbox',
 						'std'      => false,
 						'priority' => 1,

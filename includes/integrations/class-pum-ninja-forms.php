@@ -2,8 +2,10 @@
 /**
  * Integrations for ninja-forms
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
+ *
+ * phpcs:disable Universal.Files.SeparateFunctionsFromOO.Mixed
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -96,10 +98,9 @@ final class NF_PUM {
 
 
 
-	/*
+	/**
 	 * Optional methods for convenience.
 	 */
-
 	public static function autoloader( $class_name ) {
 		if ( class_exists( $class_name ) ) {
 			return;
@@ -129,6 +130,8 @@ final class NF_PUM {
 			return;
 		}
 
+		// Ignore because this is specfic for template files.
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $data );
 
 		include self::$dir . 'includes/Templates/' . $file_name;
@@ -156,7 +159,7 @@ final class NF_PUM {
  * @since 3.0
  * @return {class} Highlander Instance
  */
-function NF_PUM() {
+function NF_PUM() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid
 	return NF_PUM::instance();
 }
 

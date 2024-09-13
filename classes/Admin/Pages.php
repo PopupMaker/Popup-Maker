@@ -2,14 +2,14 @@
 /**
  * Class for Admin Pages
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
 
 /**
  * Class PUM_Admin_Pages
@@ -156,7 +156,8 @@ class PUM_Admin_Pages {
 				__( 'Tags', 'popup-maker' ),
 			]
 		);
-		$last_pages  = apply_filters(
+
+		$last_pages = apply_filters(
 			'pum_admin_submenu_last_pages',
 			[
 				__( 'Extend', 'popup-maker' ),
@@ -173,25 +174,25 @@ class PUM_Admin_Pages {
 		$b_val = strip_tags( $b[0], false );
 
 		// Sort First Page Keys.
-		if ( in_array( $a_val, $first_pages ) && ! in_array( $b_val, $first_pages ) ) {
+		if ( in_array( $a_val, $first_pages, true ) && ! in_array( $b_val, $first_pages, true ) ) {
 			return - 1;
-		} elseif ( ! in_array( $a_val, $first_pages ) && in_array( $b_val, $first_pages ) ) {
+		} elseif ( ! in_array( $a_val, $first_pages, true ) && in_array( $b_val, $first_pages, true ) ) {
 			return 1;
-		} elseif ( in_array( $a_val, $first_pages ) && in_array( $b_val, $first_pages ) ) {
-			$a_key = array_search( $a_val, $first_pages );
-			$b_key = array_search( $b_val, $first_pages );
+		} elseif ( in_array( $a_val, $first_pages, true ) && in_array( $b_val, $first_pages, true ) ) {
+			$a_key = array_search( $a_val, $first_pages, true );
+			$b_key = array_search( $b_val, $first_pages, true );
 
 			return ( $a_key < $b_key ) ? - 1 : 1;
 		}
 
 		// Sort Last Page Keys.
-		if ( in_array( $a_val, $last_pages ) && ! in_array( $b_val, $last_pages ) ) {
+		if ( in_array( $a_val, $last_pages, true ) && ! in_array( $b_val, $last_pages, true ) ) {
 			return 1;
-		} elseif ( ! in_array( $a_val, $last_pages ) && in_array( $b_val, $last_pages ) ) {
+		} elseif ( ! in_array( $a_val, $last_pages, true ) && in_array( $b_val, $last_pages, true ) ) {
 			return - 1;
-		} elseif ( in_array( $a_val, $last_pages ) && in_array( $b_val, $last_pages ) ) {
-			$a_key = array_search( $a_val, $last_pages );
-			$b_key = array_search( $b_val, $last_pages );
+		} elseif ( in_array( $a_val, $last_pages, true ) && in_array( $b_val, $last_pages, true ) ) {
+			$a_key = array_search( $a_val, $last_pages, true );
+			$b_key = array_search( $b_val, $last_pages, true );
 
 			return ( $a_key < $b_key ) ? - 1 : 1;
 		}

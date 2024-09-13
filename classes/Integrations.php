@@ -2,8 +2,8 @@
 /**
  * Integrations class
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -43,14 +43,16 @@ class PUM_Integrations {
 				'calderaforms'    => new PUM_Integration_Form_CalderaForms(),
 				'mc4wp'           => new PUM_Integration_Form_MC4WP(),
 				'wpforms'         => new PUM_Integration_Form_WPForms(),
-				'wsforms'		  => new PUM_Integration_Form_WSForms(),
+				'wsforms'         => new PUM_Integration_Form_WSForms(),
 				'formidableforms' => new PUM_Integration_Form_FormidableForms(),
+				'fluentforms'     => new PUM_Integration_Form_FluentForms(),
 				// Builders.
 				'kingcomposer'    => new PUM_Integration_Builder_KingComposer(),
 				'visualcomposer'  => new PUM_Integration_Builder_VisualComposer(),
 			]
 		);
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		self::$preload_posts = isset( $_GET['page'] ) && 'pum-settings' === $_GET['page'];
 
 		add_filter( 'pum_settings_fields', [ __CLASS__, 'settings_fields' ] );
@@ -210,7 +212,10 @@ class PUM_Integrations {
 			}
 
 			switch ( $key ) {
-
+				default:
+					// Modify the conditions array.
+					$conditions;
+					break;
 			}
 		}
 
@@ -235,13 +240,16 @@ class PUM_Integrations {
 	 * Runs during admin_init
 	 */
 	public static function admin_init() {
-		if ( ! self::enabled( 'visualcomposer' ) && ( is_admin() && isset( $_GET['page'] ) && in_array(
-			$_GET['page'],
-			[
-				'vc_settings',
-				'fl-builder-settings',
-			]
-		) ) || pum_is_popup_editor() ) {
+		if ( ! self::enabled( 'visualcomposer' ) &&
+			(
+				is_admin() &&
+				(
+					pum_is_popup_editor() ||
+					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					( isset( $_GET['page'] ) && in_array( $_GET['page'], [ 'vc_settings', 'fl-builder-settings' ], true ) )
+				)
+			)
+		) {
 			add_filter( 'vc_role_access_with_post_types_get_state', '__return_true' );
 			add_filter( 'vc_role_access_with_backend_editor_get_state', '__return_true' );
 			add_filter( 'vc_role_access_with_frontend_editor_get_state', '__return_false' );
@@ -251,7 +259,14 @@ class PUM_Integrations {
 
 	public static function popup_post_type_args( $args = [] ) {
 
-		if ( self::enabled( 'kingcomposer' ) && ( ( is_admin() && isset( $_GET['page'] ) && 'kingcomposer' === $_GET['page'] ) || pum_is_popup_editor() ) ) {
+		if (
+			self::enabled( 'kingcomposer' ) &&
+			(
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				( is_admin() && isset( $_GET['page'] ) && 'kingcomposer' === $_GET['page'] ) ||
+				pum_is_popup_editor()
+			)
+		) {
 			$args = array_merge(
 				$args,
 				[
@@ -263,13 +278,24 @@ class PUM_Integrations {
 			);
 		}
 
-		if ( self::enabled( 'visualcomposer' ) && ( is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) && ( ( isset( $_GET['page'] ) && in_array(
-			$_GET['page'],
-			[
-				'vc_settings',
-				'fl-builder-settings',
-			]
-		) ) || ( isset( $_POST['option_page'] ) && 'wpb_js_composer_settings_general' === $_POST['option_page'] ) || pum_is_popup_editor() ) ) ) {
+		if (
+			self::enabled( 'visualcomposer' ) &&
+			(
+				is_admin() &&
+				! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) &&
+				(
+					(
+						// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+						isset( $_GET['page'] ) && in_array( $_GET['page'], [ 'vc_settings','fl-builder-settings' ], true )
+					) ||
+					(
+						// phpcs:ignore WordPress.Security.NonceVerification.Missing
+						isset( $_POST['option_page'] ) && 'wpb_js_composer_settings_general' === $_POST['option_page']
+					) ||
+					pum_is_popup_editor()
+				)
+			)
+		) {
 			$args = array_merge(
 				$args,
 				[
@@ -337,6 +363,7 @@ class PUM_Integrations {
 		 * Checks for popup form submission.
 		 */
 		if ( ! isset( $form_popup_id ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$form_popup_id = isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false;
 		}
 
@@ -353,7 +380,7 @@ class PUM_Integrations {
 		/**
 		 * If submission exists for this popup remove auto open triggers and add an admin_debug trigger to reshow the popup.
 		 */
-		if ( ! in_array( false, $should_reopen ) ) {
+		if ( ! in_array( false, $should_reopen, true ) ) {
 			$triggers = ! empty( $settings['triggers'] ) ? $settings['triggers'] : [];
 
 			foreach ( $triggers as $key => $trigger ) {
@@ -442,12 +469,16 @@ class PUM_Integrations {
 			switch ( $integration->key ) {
 				default:
 					$group_options = [
-						$integration->key . '_any' => sprintf( __( 'Any %s Form', 'popup-maker' ), $integration->label() ),
+						$integration->key . '_any' => sprintf(
+							/* translators: 1. Integration label. */
+							__( 'Any %s Form', 'popup-maker' ),
+							$integration->label()
+						),
 					];
 
-					foreach ( $integration->get_form_selectlist() as $formId => $formLabel ) {
+					foreach ( $integration->get_form_selectlist() as $form_id => $form_label ) {
 						// ex. ninjaforms_1, contactform7_55
-						$group_options[ $integration->key . '_' . $formId ] = $formLabel;
+						$group_options[ $integration->key . '_' . $form_id ] = $form_label;
 					}
 
 					$options[ $integration->label() ] = $group_options;
@@ -458,5 +489,4 @@ class PUM_Integrations {
 
 		return $options;
 	}
-
 }

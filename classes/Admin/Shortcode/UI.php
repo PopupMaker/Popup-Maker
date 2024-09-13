@@ -2,8 +2,8 @@
 /**
  * Admin Shortcode UI Handler
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -134,13 +134,12 @@ class PUM_Admin_Shortcode_UI {
 		$shortcodes = [];
 
 		foreach ( PUM_Shortcodes::instance()->get_shortcodes() as $tag => $shortcode ) {
-
 			$post_types = apply_filters( 'pum_shortcode_post_types', $shortcode->post_types(), $shortcode );
 
 			/**
 			 * @var $shortcode PUM_Shortcode
 			 */
-			if ( ! in_array( '*', $post_types ) && ! in_array( $type, $post_types ) ) {
+			if ( ! in_array( '*', $post_types, true ) && ! in_array( $type, $post_types, true ) ) {
 				continue;
 			}
 
@@ -184,7 +183,7 @@ class PUM_Admin_Shortcode_UI {
 		check_ajax_referer( 'pum-shortcode-ui-nonce', 'nonce' );
 
 		$tag       = ! empty( $_REQUEST['tag'] ) ? sanitize_key( $_REQUEST['tag'] ) : false;
-		$shortcode = ! empty( $_REQUEST['shortcode'] ) ? stripslashes( sanitize_text_field( $_REQUEST['shortcode'] ) ) : null;
+		$shortcode = ! empty( $_REQUEST['shortcode'] ) ? stripslashes( sanitize_text_field( wp_unslash( $_REQUEST['shortcode'] ) ) ) : null;
 		$post_id   = isset( $_REQUEST['post_id'] ) ? intval( $_REQUEST['post_id'] ) : null;
 
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
@@ -203,6 +202,7 @@ class PUM_Admin_Shortcode_UI {
 		 */
 		if ( ! empty( $post_id ) ) {
 			global $post;
+			// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 			$post = get_post( $post_id );
 			setup_postdata( $post );
 		}
@@ -220,5 +220,4 @@ class PUM_Admin_Shortcode_UI {
 
 		wp_send_json_success( $styles . $content );
 	}
-
 }

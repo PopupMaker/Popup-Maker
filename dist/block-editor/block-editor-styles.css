@@ -65,6 +65,9 @@
 /**
  * Breakpoints & Media Queries
  */
+.pum-block-inspector-popup-controls {
+  border-bottom: 1px solid #e2e4e7 !important; }
+
 .components-popover .block-editor-popup-select-input {
   flex-grow: 1;
   position: relative;

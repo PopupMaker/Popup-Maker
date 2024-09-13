@@ -2,8 +2,8 @@
 /**
  * Modules for reviews
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -65,6 +65,10 @@ class PUM_Modules_Reviews {
 	 *
 	 */
 	public static function ajax_handler() {
+		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['nonce'] ) ), 'pum_review_action' ) ) {
+			wp_send_json_error();
+		}
+
 		$args = wp_parse_args(
 			$_REQUEST,
 			[
@@ -74,10 +78,6 @@ class PUM_Modules_Reviews {
 				'reason' => 'maybe_later',
 			]
 		);
-
-		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'pum_review_action' ) ) {
-			wp_send_json_error();
-		}
 
 		try {
 			$user_id = get_current_user_id();
@@ -98,7 +98,6 @@ class PUM_Modules_Reviews {
 			}
 
 			wp_send_json_success();
-
 		} catch ( Exception $e ) {
 			wp_send_json_error( $e );
 		}
@@ -111,14 +110,13 @@ class PUM_Modules_Reviews {
 		static $selected;
 
 		if ( ! isset( $selected ) ) {
-
 			$dismissed_triggers = self::dismissed_triggers();
 
 			$triggers = self::triggers();
 
 			foreach ( $triggers as $g => $group ) {
 				foreach ( $group['triggers'] as $t => $trigger ) {
-					if ( ! in_array( false, $trigger['conditions'] ) && ( empty( $dismissed_triggers[ $g ] ) || $dismissed_triggers[ $g ] < $trigger['pri'] ) ) {
+					if ( ! in_array( false, $trigger['conditions'], true ) && ( empty( $dismissed_triggers[ $g ] ) || $dismissed_triggers[ $g ] < $trigger['pri'] ) ) {
 						$selected = $g;
 						break;
 					}
@@ -140,12 +138,11 @@ class PUM_Modules_Reviews {
 		static $selected;
 
 		if ( ! isset( $selected ) ) {
-
 			$dismissed_triggers = self::dismissed_triggers();
 
 			foreach ( self::triggers() as $g => $group ) {
 				foreach ( $group['triggers'] as $t => $trigger ) {
-					if ( ! in_array( false, $trigger['conditions'] ) && ( empty( $dismissed_triggers[ $g ] ) || $dismissed_triggers[ $g ] < $trigger['pri'] ) ) {
+					if ( ! in_array( false, $trigger['conditions'], true ) && ( empty( $dismissed_triggers[ $g ] ) || $dismissed_triggers[ $g ] < $trigger['pri'] ) ) {
 						$selected = $t;
 						break;
 					}
@@ -161,7 +158,7 @@ class PUM_Modules_Reviews {
 	}
 
 	/**
-	 * @param null $key
+	 * @param string|null $key
 	 *
 	 * @return bool|mixed|void
 	 */
@@ -223,8 +220,8 @@ class PUM_Modules_Reviews {
 	/**
 	 * Gets a list of triggers.
 	 *
-	 * @param null $group
-	 * @param null $code
+	 * @param string|null $group
+	 * @param string|null $code
 	 *
 	 * @return bool|mixed
 	 */
@@ -232,7 +229,7 @@ class PUM_Modules_Reviews {
 		static $triggers;
 
 		if ( ! isset( $triggers ) ) {
-
+			/* translators: %s: number of days. */
 			$time_message = __( 'Hi there! You\'ve been using Popup Maker on your site for %s - I hope it\'s been helpful. If you\'re enjoying my plugin, would you mind rating it 5-stars to help spread the word?', 'popup-maker' );
 			$triggers     = [
 				'time_installed' => [
@@ -271,7 +268,8 @@ class PUM_Modules_Reviews {
 				],
 			];
 
-			$pri          = 10;
+			$pri = 10;
+			/* translators: %s: number of popup views. */
 			$open_message = __( 'Hi there! You\'ve recently hit %s popup views on your site – that’s awesome!! If you\'d like to celebrate this milestone, rate Popup Maker 5-stars to help spread the word!', 'popup-maker' );
 			foreach ( [ 50, 100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000 ] as $num ) {
 				$triggers['open_count']['triggers'][ $num . '_opens' ] = [
@@ -334,7 +332,7 @@ class PUM_Modules_Reviews {
 		?>
 
 		<script type="text/javascript">
-			window.pum_review_nonce = '<?php echo wp_create_nonce( 'pum_review_action' ); ?>';
+			window.pum_review_nonce = '<?php echo esc_html( wp_create_nonce( 'pum_review_action' ) ); ?>';
 			window.pum_review_api_url = '<?php echo esc_attr( self::$api_url ); ?>';
 			window.pum_review_uuid = '<?php echo esc_attr( $uuid ); ?>';
 			window.pum_review_trigger = {
@@ -346,16 +344,16 @@ class PUM_Modules_Reviews {
 
 		<ul>
 			<li>
-				<a class="pum-dismiss" target="_blank" href="<?php echo esc_attr( $trigger['link'] ); ?>" data-reason="am_now"> <strong><?php _e( 'Ok, you deserve it', 'popup-maker' ); ?></strong> </a>
+				<a class="pum-dismiss" target="_blank" href="<?php echo esc_attr( $trigger['link'] ); ?>" data-reason="am_now"> <strong><?php esc_html_e( 'Ok, you deserve it', 'popup-maker' ); ?></strong> </a>
 			</li>
 			<li>
 				<a href="#" class="pum-dismiss" data-reason="maybe_later">
-					<?php _e( 'Nope, maybe later', 'popup-maker' ); ?>
+					<?php esc_html_e( 'Nope, maybe later', 'popup-maker' ); ?>
 				</a>
 			</li>
 			<li>
 				<a href="#" class="pum-dismiss" data-reason="already_did">
-					<?php _e( 'I already did', 'popup-maker' ); ?>
+					<?php esc_html_e( 'I already did', 'popup-maker' ); ?>
 				</a>
 			</li>
 		</ul>
@@ -366,7 +364,7 @@ class PUM_Modules_Reviews {
 
 		$alerts[] = [
 			'code'    => 'review_request',
-			'message' => '<strong>' . $trigger['message'] . '<br />~ danieliser' . '</strong>',
+			'message' => '<strong>' . $trigger['message'] . '<br />~ danieliser</strong>',
 			'html'    => $html,
 			'type'    => 'success',
 		];
@@ -410,7 +408,7 @@ class PUM_Modules_Reviews {
 						url: ajaxurl,
 						data: {
 							action: 'pum_review_action',
-							nonce: '<?php echo wp_create_nonce( 'pum_review_action' ); ?>',
+							nonce: '<?php echo esc_attr( wp_create_nonce( 'pum_review_action' ) ); ?>',
 							group: trigger.group,
 							code: trigger.code,
 							pri: trigger.pri,
@@ -474,9 +472,9 @@ class PUM_Modules_Reviews {
 		<div class="notice notice-success is-dismissible pum-notice">
 
 			<p>
-				<img class="logo" src="<?php echo POPMAKE_URL; ?>/assets/images/icon-256x256.jpg" />
+				<img class="logo" src="<?php echo esc_attr( POPMAKE_URL ); ?>/assets/images/icon-256x256.jpg" />
 				<strong>
-					<?php esc_html_e( $trigger['message'] ); ?>
+					<?php echo esc_html( $trigger['message'] ); ?>
 					<br />
 					~ danieliser
 				</strong>
@@ -518,7 +516,7 @@ class PUM_Modules_Reviews {
 			empty( $trigger_code ),
 		];
 
-		return in_array( true, $conditions );
+		return in_array( true, $conditions, true );
 	}
 
 	/**
@@ -563,7 +561,6 @@ class PUM_Modules_Reviews {
 
 		return ( $a['pri'] < $b['pri'] ) ? 1 : - 1;
 	}
-
 }
 
 PUM_Modules_Reviews::init();

@@ -2,8 +2,8 @@
 /**
  * ConditionCallbacks class
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 class PUM_ConditionCallbacks {
@@ -44,7 +44,7 @@ class PUM_ConditionCallbacks {
 
 			case 'ID':
 			case 'selected':
-				if ( self::is_post_type( $post_type ) && is_singular( $post_type ) && in_array( $post->ID, wp_parse_id_list( $selected ) ) ) {
+				if ( self::is_post_type( $post_type ) && is_singular( $post_type ) && in_array( $post->ID, wp_parse_id_list( $selected ), true ) ) {
 					return true;
 				}
 				break;
@@ -76,7 +76,7 @@ class PUM_ConditionCallbacks {
 				$selected = wp_parse_id_list( $selected );
 
 				foreach ( $selected as $id ) {
-					if ( in_array( $id, $ancestors ) ) {
+					if ( in_array( $id, $ancestors, true ) ) {
 						return true;
 					}
 				}
@@ -281,5 +281,4 @@ class PUM_ConditionCallbacks {
 		global $post;
 		return is_object( $post ) && ( is_singular( $post_type ) || $post->post_type === $post_type );
 	}
-
 }

@@ -2,8 +2,8 @@
 /**
  * Class for Admin Themes
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -71,7 +71,7 @@ class PUM_Admin_Themes {
 		$defaults = self::defaults();
 		foreach ( $defaults as $field_id => $default_value ) {
 			$field = PUM_Utils_Fields::get_field( self::fields(), $field_id );
-			if ( isset( $settings[ $field_id ] ) || in_array( $field['type'], $excluded_field_types ) ) {
+			if ( isset( $settings[ $field_id ] ) || in_array( $field['type'], $excluded_field_types, true ) ) {
 				continue;
 			}
 
@@ -116,12 +116,13 @@ class PUM_Admin_Themes {
 		// Get the meta directly rather than from cached object.
 		$settings = self::parse_values( $theme->get_settings() );
 
-		wp_nonce_field( basename( __FILE__ ), 'pum_theme_settings_nonce' );
+		wp_nonce_field( 'pum_theme_settings_nonce', 'pum_theme_settings_nonce' );
 		wp_enqueue_script( 'popup-maker-admin' );
 		?>
 		<script type="text/javascript">
 			window.pum_theme_settings_editor = 
 			<?php
+			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo PUM_Utils_Array::safe_json_encode(
 				apply_filters(
 					'pum_theme_settings_editor_var',
@@ -136,13 +137,23 @@ class PUM_Admin_Themes {
 					]
 				)
 			);
+			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 			;
 		</script>
 
 		<div id="pum-theme-settings-container" class="pum-theme-settings-container">
 			<div class="pum-no-js" style="padding: 0 12px;">
-				<p><?php printf( __( 'If you are seeing this, the page is still loading or there are Javascript errors on this page. %1$sView troubleshooting guide%2$s', 'popup-maker' ), '<a href="https://docs.wppopupmaker.com/article/373-checking-for-javascript-errors" target="_blank">', '</a>' ); ?></p>
+				<p>
+				<?php
+				printf(
+					/* translators: 1. URL to troubleshooting guide. 2. Closing tag. */
+					esc_html__( 'If you are seeing this, the page is still loading or there are Javascript errors on this page. %1$sView troubleshooting guide%2$s', 'popup-maker' ),
+					'<a href="https://docs.wppopupmaker.com/article/373-checking-for-javascript-errors" target="_blank">',
+					'</a>'
+				);
+				?>
+				</p>
 			</div>
 		</div>
 		<?php
@@ -168,11 +179,11 @@ class PUM_Admin_Themes {
 		<div class="pum-theme-preview">
 			<div class="pum-popup-overlay <?php echo $deprecated_atb_enabled ? 'example-popup-overlay' : ''; ?>"></div>
 			<div class="pum-popup-container <?php echo $deprecated_atb_enabled ? 'example-popup' : ''; ?>">
-				<div class="pum-popup-title"><?php _e( 'Title Text', 'popup-maker' ); ?></div>
+				<div class="pum-popup-title"><?php esc_html_e( 'Title Text', 'popup-maker' ); ?></div>
 				<div class="pum-popup-content">
-					<?php echo esc_html( apply_filters( 'pum_example_popup_content', '<p>Suspendisse ipsum eros, tincidunt sed commodo ut, viverra vitae ipsum. Etiam non porta neque. Pellentesque nulla elit, aliquam in ullamcorper at, bibendum sed eros. Morbi non sapien tellus, ac vestibulum eros. In hac habitasse platea dictumst. Nulla vestibulum, diam vel porttitor placerat, eros tortor ultrices lectus, eget faucibus arcu justo eget massa. Maecenas id tellus vitae justo posuere hendrerit aliquet ut dolor.</p>' ) ); ?>
+					<?php echo wp_kses_post( apply_filters( 'pum_example_popup_content', '<p>Suspendisse ipsum eros, tincidunt sed commodo ut, viverra vitae ipsum. Etiam non porta neque. Pellentesque nulla elit, aliquam in ullamcorper at, bibendum sed eros. Morbi non sapien tellus, ac vestibulum eros. In hac habitasse platea dictumst. Nulla vestibulum, diam vel porttitor placerat, eros tortor ultrices lectus, eget faucibus arcu justo eget massa. Maecenas id tellus vitae justo posuere hendrerit aliquet ut dolor.</p>' ) ); ?>
 				</div>
-				<button type="button" class="pum-popup-close <?php echo $deprecated_atb_enabled ? 'close-popup' : ''; ?>" aria-label="<?php _e( 'Close', 'popup-maker' ); ?>">
+				<button type="button" class="pum-popup-close <?php echo esc_attr( $deprecated_atb_enabled ) ? 'close-popup' : ''; ?>" aria-label="<?php esc_attr_e( 'Close', 'popup-maker' ); ?>">
 					<?php echo esc_html( $theme->get_setting( 'close_text', '&#215;' ) ); ?>
 				</button>
 			</div>
@@ -184,7 +195,7 @@ class PUM_Admin_Themes {
 				];
 				$key  = array_rand( $tips, 1 );
 				?>
-				<i class="dashicons dashicons-info"></i> <?php echo esc_html( '<strong>' . __( 'Did you know:', 'popup-maker' ) . '</strong>  ' . $tips[ $key ] ); ?>
+				<i class="dashicons dashicons-info"></i> <?php echo wp_kses_post( '<strong>' . __( 'Did you know:', 'popup-maker' ) . '</strong>  ' . $tips[ $key ] ); ?>
 			</p>
 		</div>
 
@@ -235,7 +246,7 @@ class PUM_Admin_Themes {
 			return false;
 		}
 
-		if ( ! isset( $_POST['pum_theme_settings_nonce'] ) || ! wp_verify_nonce( $_POST['pum_theme_settings_nonce'], basename( __FILE__ ) ) ) {
+		if ( ! isset( $_POST['pum_theme_settings_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['pum_theme_settings_nonce'] ) ), 'pum_theme_settings_nonce' ) ) {
 			return false;
 		}
 
@@ -264,9 +275,14 @@ class PUM_Admin_Themes {
 			return;
 		}
 
+		// Nonce was checked in can_save() above.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+
 		$theme = pum_get_theme( $post_id );
 
-		$settings = ! empty( $_POST['theme_settings'] ) ? $_POST['theme_settings'] : [];
+		// Ignore sanitize as this is an array of dynamic keys & values, extendable by extensions. Each sanitizes its own values.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$settings = ! empty( $_POST['theme_settings'] ) ? wp_unslash( $_POST['theme_settings'] ) : [];
 
 		$settings = wp_parse_args( $settings, self::defaults() );
 
@@ -289,6 +305,8 @@ class PUM_Admin_Themes {
 		self::process_deprecated_saves( $post_id, $post );
 
 		do_action( 'pum_save_theme', $post_id, $post );
+
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 
 	/**
@@ -296,6 +314,8 @@ class PUM_Admin_Themes {
 	 * @param $post
 	 */
 	public static function process_deprecated_saves( $post_id, $post ) {
+		// Nonce was checked in can_save() previously above.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
 
 		$field_prefix = 'popup_theme_';
 
@@ -316,8 +336,11 @@ class PUM_Admin_Themes {
 
 			foreach ( $fields as $field => $args ) {
 				$field_name = "{$section_prefix}_{$field}";
+
 				if ( isset( $_POST[ $field_name ] ) ) {
-					$meta_values[ $field ] = apply_filters( 'popmake_metabox_save_' . $field_name, $_POST[ $field_name ] );
+					// Ignored because this should no longer be used, has been deprecated nd we don't know the format of each value safely to sanitize.
+					// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					$meta_values[ $field ] = apply_filters( 'popmake_metabox_save_' . $field_name, wp_unslash( $_POST[ $field_name ] ) );
 				}
 			}
 
@@ -327,12 +350,16 @@ class PUM_Admin_Themes {
 		// TODO Remove this and all other code here. This should be clean and all code more compartmentalized.
 		foreach ( self::deprecated_meta_fields() as $field ) {
 			if ( isset( $_POST[ $field ] ) ) {
-				$new = apply_filters( 'popmake_metabox_save_' . $field, $_POST[ $field ] );
+				// Ignored because this should no longer be used, has been deprecated nd we don't know the format of each value safely to sanitize.
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				$new = apply_filters( 'popmake_metabox_save_' . $field, wp_unslash( $_POST[ $field ] ) );
 				update_post_meta( $post_id, $field, $new );
 			} else {
 				delete_post_meta( $post_id, $field );
 			}
 		}
+
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 
 	/**

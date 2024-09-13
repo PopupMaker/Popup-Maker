@@ -2,8 +2,8 @@
 /**
  * Abstract for themes upgrade
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -42,8 +42,7 @@ abstract class PUM_Abstract_Upgrade_Themes extends PUM_Abstract_Upgrade_Posts im
 	 *
 	 * @param int $theme_id
 	 *
-	 * @return int $theme_id
+	 * @return void
 	 */
 	abstract public function process_theme( $theme_id = 0 );
-
 }

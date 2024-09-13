@@ -2,14 +2,15 @@
 /**
  * Abstract class for database
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
+ *
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
 /**
  * Abstract database class.
  *
@@ -46,18 +47,40 @@ abstract class PUM_Abstract_Database {
 	public $primary_key = 'ID';
 
 	/**
+	 * The WordPress version.
+	 *
+	 * @var float
+	 */
+	public $wp_version = '';
+
+	/**
 	 * Get things started
 	 */
 	public function __construct() {
+		/**
+		 * @var \wpdb $wpdb
+		 */
 		global $wpdb;
+
+		$this->wp_version = floatval( get_bloginfo( 'version' ) );
 
 		$current_db_version = $this->get_installed_version();
 
 		if ( ! $current_db_version || $current_db_version < $this->version ) {
 			// Install the table.
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			@$this->create_table();
 
-			if ( $wpdb->get_var( "SHOW TABLES LIKE '{$this->table_name()}'" ) === $this->table_name() ) {
+			// Leaving this flagged for caching to optimize in future.
+			if ( $this->wp_version >= 6.2 ) {
+				$table_found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %i', $this->table_name() ) );
+			} else {
+				// Ignored because these are identifiersas we still support <=6.2
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$table_found = $wpdb->get_var( "SHOW TABLES LIKE '{$this->table_name()}'" );
+			}
+
+			if ( $this->table_name() === $table_found ) {
 				$this->update_db_version();
 			}
 		}
@@ -131,7 +154,28 @@ abstract class PUM_Abstract_Database {
 	public function get( $row_id ) {
 		global $wpdb;
 
-		return $this->prepare_result( $wpdb->get_row( "SELECT * FROM {$this->table_name()} WHERE $this->primary_key = $row_id LIMIT 1;" ) );
+		if ( $this->wp_version >= 6.2 ) {
+			// Use %i format.
+			$result = $wpdb->get_row(
+				$wpdb->prepare(
+					'SELECT * FROM %i WHERE %i = %d LIMIT 1;',
+					$this->table_name(),
+					$this->primary_key,
+					$row_id
+				)
+			);
+		} else {
+			$result = $wpdb->get_row(
+				$wpdb->prepare(
+					// Ignored because these are identifiersas we still support <=6.2
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"SELECT * FROM {$this->table_name()} WHERE $this->primary_key = %d LIMIT 1;",
+					$row_id
+				)
+			);
+		}
+
+		return $this->prepare_result( $result );
 	}
 
 	/**
@@ -188,29 +232,72 @@ abstract class PUM_Abstract_Database {
 	/**
 	 * Retrieve a row by a specific column / value
 	 *
-	 * @param $column
-	 * @param $row_id
+	 * @param string $column
+	 * @param int    $row_id
 	 *
 	 * @return  object
 	 */
 	public function get_by( $column, $row_id ) {
 		global $wpdb;
 
-		return $this->prepare_result( $wpdb->get_row( "SELECT * FROM {$this->table_name()} WHERE $column = '$row_id' LIMIT 1;" ) );
+		if ( $this->wp_version >= 6.2 ) {
+			// Use %i format.
+			$result = $wpdb->get_row(
+				$wpdb->prepare(
+					'SELECT * FROM %i WHERE %i = %s LIMIT 1;',
+					$this->table_name(),
+					$column,
+					$row_id
+				)
+			);
+		} else {
+			$result = $wpdb->get_row(
+				$wpdb->prepare(
+					// Ignored because these are identifiersas we still support <=6.2
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"SELECT * FROM {$this->table_name()} WHERE $column = %d LIMIT 1;",
+					$row_id
+				)
+			);
+		}
+
+		return $this->prepare_result( $result );
 	}
 
 	/**
 	 * Retrieve a specific column's value by the primary key
 	 *
-	 * @param $column
-	 * @param $row_id
+	 * @param string $column
+	 * @param int    $row_id
 	 *
 	 * @return  string
 	 */
 	public function get_column( $column, $row_id ) {
 		global $wpdb;
 
-		return $wpdb->get_var( "SELECT $column FROM {$this->table_name()} WHERE $this->primary_key = $row_id LIMIT 1;" );
+		if ( $this->wp_version >= 6.2 ) {
+			// Use %i format.
+			$result = $wpdb->get_var(
+				$wpdb->prepare(
+					'SELECT %i FROM %i WHERE %i = %d LIMIT 1;',
+					$column,
+					$this->table_name(),
+					$this->primary_key,
+					$row_id
+				)
+			);
+		} else {
+			$result = $wpdb->get_var(
+				$wpdb->prepare(
+					// Ignored because these are identifiers as we still support <=6.2
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"SELECT $column FROM {$this->table_name()} WHERE $this->primary_key = %d LIMIT 1;",
+					$row_id
+				)
+			);
+		}
+
+		return $this->prepare_result( $result );
 	}
 
 	/**
@@ -225,14 +312,35 @@ abstract class PUM_Abstract_Database {
 	public function get_column_by( $column, $column_where, $column_value ) {
 		global $wpdb;
 
-		return $wpdb->get_var( "SELECT $column FROM {$this->table_name()} WHERE $column_where = '$column_value' LIMIT 1;" );
+		if ( $this->wp_version >= 6.2 ) {
+			// Use %i format.
+			$result = $wpdb->get_var(
+				$wpdb->prepare(
+					'SELECT %i FROM %i WHERE %i = %s LIMIT 1;',
+					$column,
+					$this->table_name(),
+					$column_where,
+					$column_value
+				)
+			);
+		} else {
+			$result = $wpdb->get_var(
+				$wpdb->prepare(
+					// Ignored because these are identifiers as we still support <=6.2
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"SELECT $column FROM {$this->table_name()} WHERE $column_where = %s LIMIT 1;",
+					$column_value
+				)
+			);
+		}
+
+		return $this->prepare_result( $result );
 	}
 
 	/**
 	 * Insert a new row
 	 *
-	 * @param        $data
-	 * @param string $type
+	 * @param array $data
 	 *
 	 * @return  int
 	 */
@@ -356,7 +464,28 @@ abstract class PUM_Abstract_Database {
 			return false;
 		}
 
-		if ( false === $wpdb->query( $wpdb->prepare( "DELETE FROM {$this->table_name()} WHERE $this->primary_key = %d", $row_id ) ) ) {
+		if ( $this->wp_version >= 6.2 ) {
+			// Use %i format.
+			$result = $wpdb->query(
+				$wpdb->prepare(
+					'DELETE FROM %i WHERE %i = %d',
+					$this->table_name(),
+					$this->primary_key,
+					$row_id
+				)
+			);
+		} else {
+			$result = $wpdb->query(
+				$wpdb->prepare(
+					// Ignored because these are identifiersas we still support <=6.2
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"DELETE FROM {$this->table_name()} WHERE $this->primary_key = %d",
+					$row_id
+				)
+			);
+		}
+
+		if ( false === $result ) {
 			return false;
 		}
 
@@ -376,7 +505,29 @@ abstract class PUM_Abstract_Database {
 		if ( empty( $row_id ) ) {
 			return false;
 		}
-		if ( false === $wpdb->query( $wpdb->prepare( "DELETE FROM {$this->table_name()} WHERE $column = '%s'", $row_id ) ) ) {
+
+		if ( $this->wp_version >= 6.2 ) {
+			// Use %i format.
+			$result = $wpdb->query(
+				$wpdb->prepare(
+					'DELETE FROM %i WHERE %i = %s',
+					$this->table_name(),
+					$column,
+					$row_id
+				)
+			);
+		} else {
+			$result = $wpdb->query(
+				$wpdb->prepare(
+					// Ignored because these are identifiersas we still support <=6.2
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"DELETE FROM {$this->table_name()} WHERE $column = %s",
+					$row_id
+				)
+			);
+		}
+
+		if ( false === $result ) {
 			return false;
 		}
 
@@ -406,7 +557,6 @@ abstract class PUM_Abstract_Database {
 		$query .= ';';
 
 		return $query;
-
 	}
 
 	/**
@@ -456,13 +606,12 @@ abstract class PUM_Abstract_Database {
 
 		// Build search query.
 		if ( $args['s'] && ! empty( $args['s'] ) ) {
-
 			$search = wp_unslash( trim( $args['s'] ) );
 
 			$search_where = [];
 
 			foreach ( $columns as $key => $type ) {
-				if ( in_array( $key, $fields ) ) {
+				if ( in_array( $key, $fields, true ) ) {
 					if ( '%s' === $type || ( '%d' === $type && is_numeric( $search ) ) ) {
 						$values[]       = '%' . $wpdb->esc_like( $search ) . '%';
 						$search_where[] = "`$key` LIKE '%s'";
@@ -510,9 +659,11 @@ abstract class PUM_Abstract_Database {
 		}
 
 		if ( strpos( $query, '%s' ) || strpos( $query, '%d' ) ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$query = $wpdb->prepare( $query, $values );
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		return $this->prepare_results( $wpdb->get_results( $query, $return_type ) );
 	}
 

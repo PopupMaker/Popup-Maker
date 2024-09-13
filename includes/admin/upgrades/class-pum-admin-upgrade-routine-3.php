@@ -40,12 +40,13 @@ final class PUM_Admin_Upgrade_Routine_3 extends PUM_Admin_Upgrade_Routine {
 	 */
 	public static function run() {
 		if ( ! current_user_can( PUM_Admin_Upgrades::instance()->required_cap ) ) {
-			wp_die( __( 'You do not have permission to do upgrades', 'popup-maker' ), __( 'Error', 'popup-maker' ), [ 'response' => 403 ] );
+			wp_die( esc_html__( 'You do not have permission to do upgrades', 'popup-maker' ), esc_html__( 'Error', 'popup-maker' ), [ 'response' => 403 ] );
 		}
 
 		ignore_user_abort( true );
 
 		if ( ! pum_is_func_disabled( 'set_time_limit' ) ) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			@set_time_limit( 0 );
 		}
 
@@ -73,10 +74,11 @@ final class PUM_Admin_Upgrade_Routine_3 extends PUM_Admin_Upgrade_Routine {
 		);
 
 		if ( $popups ) {
-
 			foreach ( $popups as $popup ) {
-				$_cookies  = $cookies = [];
-				$_triggers = $triggers = [];
+				$cookies   = [];
+				$_cookies  = [];
+				$triggers  = [];
+				$_triggers = [];
 
 				// Convert Click Open Triggers.
 				$click_open  = popmake_get_popup_meta_group( 'click_open', $popup->ID );
@@ -166,8 +168,7 @@ final class PUM_Admin_Upgrade_Routine_3 extends PUM_Admin_Upgrade_Routine {
 
 				update_post_meta( $popup->ID, 'popup_cookies', $cookies );
 
-				$completed ++;
-
+				++$completed;
 			}
 
 			if ( $completed < $total ) {
@@ -177,7 +178,6 @@ final class PUM_Admin_Upgrade_Routine_3 extends PUM_Admin_Upgrade_Routine {
 		}
 
 		self::done();
-
 	}
 
 	/**
@@ -190,7 +190,7 @@ final class PUM_Admin_Upgrade_Routine_3 extends PUM_Admin_Upgrade_Routine {
 	 *
 	 * @return mixed array|string of the popup auto open meta
 	 */
-	public static function get_auto_open( $popup_id = null, $key = null, $default = null ) {
-		return popmake_get_popup_meta( 'auto_open', $popup_id, $key, $default );
+	public static function get_auto_open( $popup_id = null, $key = null, $default_value = null ) {
+		return popmake_get_popup_meta( 'auto_open', $popup_id, $key, $default_value );
 	}
 }

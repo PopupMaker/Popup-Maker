@@ -2,8 +2,8 @@
 /**
  * Functions for Template Utility
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -36,6 +36,7 @@ function pum_get_template_part( $slug, $name = null, $args = null ) {
  * @param array  $args
  */
 function pum_template_part( $slug, $name = null, $args = [] ) {
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo pum_get_template_part( $slug, $name, $args );
 }
 
@@ -60,5 +61,6 @@ function pum_get_template( $template_name, $args = [] ) {
  * @param array  $args (default: array())
  */
 function pum_load_template( $template_name, $args = [] ) {
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo pum_get_template( $template_name, $args );
 }

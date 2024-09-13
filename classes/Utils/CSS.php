@@ -2,8 +2,8 @@
 /**
  * CSS Utility
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 class PUM_Utils_CSS {
@@ -107,5 +107,4 @@ class PUM_Utils_CSS {
 
 		return str_replace( '  ', ' ', trim( "$style $variant $weight {$size}/{$line_height} \"$family\"" ) );
 	}
-
 }

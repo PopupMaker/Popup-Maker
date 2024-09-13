@@ -1,6 +1,9 @@
 <?php
 /**
  * Selectbox options,and other array based data sets used for options.
+ *
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 // Exit if accessed directly

@@ -40,12 +40,13 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 	 */
 	public static function run() {
 		if ( ! current_user_can( PUM_Admin_Upgrades::instance()->required_cap ) ) {
-			wp_die( __( 'You do not have permission to do upgrades', 'popup-maker' ), __( 'Error', 'popup-maker' ), [ 'response' => 403 ] );
+			wp_die( esc_html__( 'You do not have permission to do upgrades', 'popup-maker' ), esc_html__( 'Error', 'popup-maker' ), [ 'response' => 403 ] );
 		}
 
 		ignore_user_abort( true );
 
 		if ( ! pum_is_func_disabled( 'set_time_limit' ) ) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			@set_time_limit( 0 );
 		}
 
@@ -73,10 +74,9 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 		);
 
 		if ( $popups ) {
-
 			foreach ( $popups as $popup ) {
-
-				$_conditions = $conditions = [];
+				$conditions  = [];
+				$_conditions = [];
 
 				// Convert Conditions
 				$targeting_conditions = popmake_get_popup_meta_group( 'targeting_condition', $popup->ID );
@@ -87,7 +87,7 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 						self::change_post_status( $popup->ID, 'draft' );
 					}
 					update_post_meta( $popup->ID, 'popup_conditions', $conditions );
-					$completed ++;
+					++$completed;
 					continue;
 				}
 
@@ -112,8 +112,8 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 					// Add a new AND condition group.
 					if ( $sitewide ) {
 						$_conditions[] = [ $condition ];
-					} // Add a new OR condition to the group.
-					else {
+					} else {
+						// Add a new OR condition to the group.
 						$_group[] = $condition;
 					}
 				}
@@ -124,16 +124,13 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 
 				foreach ( $_conditions as $group_key => $group ) {
 					foreach ( $group as $condition_key => $condition ) {
-						$validated = PUM_Conditions::instance()->validate_condition( $condition );
-						if ( ! is_wp_error( $validated ) ) {
-							$conditions[ $group_key ][ $condition_key ] = $validated;
-						}
+						$conditions[ $group_key ][ $condition_key ] = $condition;
 					}
 				}
 
 				update_post_meta( $popup->ID, 'popup_conditions', $conditions );
 
-				$completed ++;
+				++$completed;
 			}
 
 			if ( $completed < $total ) {
@@ -158,36 +155,35 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 		$targeting_conditions = array_keys( $targeting_conditions );
 
 		foreach ( $targeting_conditions as $index => $key ) {
-
 			$condition = null;
 
-			// Front Page
 			if ( strpos( $key, 'on_home' ) !== false ) {
+				// Front Page.
 				$condition = [
 					'target' => 'is_front_page',
 				];
-			} // Blog Index
-			elseif ( strpos( $key, 'on_blog' ) !== false ) {
+			} elseif ( strpos( $key, 'on_blog' ) !== false ) {
+				// Blog Index.
 				$condition = [
 					'target' => 'is_home',
 				];
-			} // Search Pages
-			elseif ( strpos( $key, 'on_search' ) !== false ) {
+			} elseif ( strpos( $key, 'on_search' ) !== false ) {
+				// Search Pages.
 				$condition = [
 					'target' => 'is_search',
 				];
-			} // 404 Pages
-			elseif ( strpos( $key, 'on_404' ) !== false ) {
+			} elseif ( strpos( $key, 'on_404' ) !== false ) {
+				// 404 Pages.
 				$condition = [
 					'target' => 'is_404',
 				];
-			} // WooCommerce Pages
-			elseif ( strpos( $key, 'on_woocommerce' ) !== false ) {
+			} elseif ( strpos( $key, 'on_woocommerce' ) !== false ) {
+				// WooCommerce Pages.
 				$condition = [
 					'target' => 'is_woocommerce',
 				];
-			} // WooCommerce Shop Pages
-			elseif ( strpos( $key, 'on_shop' ) !== false ) {
+			} elseif ( strpos( $key, 'on_shop' ) !== false ) {
+				// WooCommerce Shop Pages.
 				$condition = [
 					'target' => 'is_shop',
 				];
@@ -206,7 +202,7 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 				continue;
 			}
 
-			if ( in_array( "on_{$name}s", $pt_conditions ) && ! in_array( "on_specific_{$name}s", $pt_conditions ) ) {
+			if ( in_array( "on_{$name}s", $pt_conditions, true ) && ! in_array( "on_specific_{$name}s", $pt_conditions, true ) ) {
 				$conditions[] = [
 					'target' => $name . '_all',
 				];
@@ -235,14 +231,13 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 		}
 
 		foreach ( get_taxonomies( [ 'public' => true ], 'objects' ) as $tax_name => $taxonomy ) {
-
 			$tax_conditions = self::filter_conditions( $targeting_conditions, '_' . $tax_name );
 
 			if ( empty( $tax_conditions ) ) {
 				continue;
 			}
 
-			if ( in_array( "on_{$tax_name}s", $tax_conditions ) && ! in_array( "on_specific_{$tax_name}s", $tax_conditions ) ) {
+			if ( in_array( "on_{$tax_name}s", $tax_conditions, true ) && ! in_array( "on_specific_{$tax_name}s", $tax_conditions, true ) ) {
 				$conditions[] = [
 					'target' => 'tax_' . $tax_name . '_all',
 				];
@@ -277,18 +272,18 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 	 * Filters conditions for substrings and removes keys from original array.
 	 *
 	 * @param $targeting_conditions
-	 * @param $string
+	 * @param $str
 	 *
 	 * @return array
 	 */
-	public static function filter_conditions( &$targeting_conditions, $string ) {
+	public static function filter_conditions( &$targeting_conditions, $str ) {
 		$conditions = [];
 
 		foreach ( $targeting_conditions as $index => $key ) {
-			if ( $string === '_post' && strpos( $key, '_post_tag' ) !== false ) {
+			if ( '_post' === $str && strpos( $key, '_post_tag' ) !== false ) {
 				continue;
 			}
-			if ( strpos( $key, $string ) !== false ) {
+			if ( strpos( $key, $str ) !== false ) {
 				$key                = str_replace( 'exclude_', '', $key );
 				$conditions[ $key ] = $key;
 				unset( $targeting_conditions[ $index ] );
@@ -347,5 +342,4 @@ final class PUM_Admin_Upgrade_Routine_4 extends PUM_Admin_Upgrade_Routine {
 
 		return $excludes;
 	}
-
 }

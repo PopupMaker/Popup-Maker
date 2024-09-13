@@ -2,8 +2,10 @@
 /**
  * Integrations for ninja-forms actions close popup
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
+ *
+ * phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -62,8 +64,10 @@ final class NF_PUM_Actions_ClosePopup extends NF_Abstracts_Action {
 	* PUBLIC METHODS
 	*/
 
+	/**
+	 * Saves the settings.
+	 */
 	public function save( $action_settings ) {
-
 	}
 
 	public function process( $action_settings, $form_id, $data ) {
@@ -73,7 +77,6 @@ final class NF_PUM_Actions_ClosePopup extends NF_Abstracts_Action {
 		}
 
 		if ( isset( $action_settings['close_delay'] ) ) {
-
 			$data['actions']['closedelay'] = intval( $action_settings['close_delay'] );
 
 			if ( strlen( $data['actions']['closedelay'] ) >= 3 ) {

@@ -2,8 +2,8 @@
 /**
  * Functions for developers
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -22,6 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function pum_trigger_popup_form_success( $popup_id = null, $settings = [] ) {
 	if ( ! isset( $popup_id ) ) {
+		// Ignored as this field is appended to existing forms and is limited to an absint.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$popup_id = isset( $_REQUEST['pum_form_popup_id'] ) && absint( $_REQUEST['pum_form_popup_id'] ) > 0 ? absint( $_REQUEST['pum_form_popup_id'] ) : false;
 	}
 

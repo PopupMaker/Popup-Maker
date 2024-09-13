@@ -2,8 +2,8 @@
 /**
  * Interface for Batch PrefetchProcess
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -33,5 +33,4 @@ interface PUM_Interface_Batch_PrefetchProcess extends PUM_Interface_Batch_Proces
 	 * Pre-fetches data to speed up processing.
 	 */
 	public function pre_fetch();
-
 }

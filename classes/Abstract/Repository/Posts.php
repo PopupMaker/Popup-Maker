@@ -2,8 +2,8 @@
 /**
  * Abstract for posts repository
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -118,7 +118,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 *
 	 * @return array
 	 */
-	protected function _build_wp_query_args( $args = [] ) {
+	protected function do_build_wp_query_args( $args = [] ) {
 		$args = wp_parse_args( $args, $this->default_query_args() );
 
 		$args = $this->build_wp_query_args( $args );
@@ -143,7 +143,14 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 */
 	public function get_item( $id ) {
 		if ( ! $this->has_item( $id ) ) {
-			throw new InvalidArgumentException( sprintf( __( 'No %1$s found with id %2$d.', 'popup-maker' ), $this->get_post_type(), $id ) );
+			throw new InvalidArgumentException(
+				sprintf(
+					/* translators: %1$s is the post type name, %2$d is the ID. */
+					esc_attr__( 'No %1$s found with id %2$d.', 'popup-maker' ),
+					esc_attr( $this->get_post_type() ),
+					absint( $id )
+				)
+			);
 		}
 
 		return $this->get_model( $id );
@@ -154,14 +161,25 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 * @param $value
 	 *
 	 * @return PUM_Abstract_Model_Post|\WP_Post
+	 * @throws InvalidArgumentException
 	 */
 	public function get_item_by( $field, $value ) {
 		global $wpdb;
 
+		// Will be circling back to this in the future to either add caching or defer to WP_Query entirely. Leaving NoCaching flagged for now.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE %s = %s", $field, $value ) );
 
 		if ( ! $id || ! $this->has_item( $id ) ) {
-			throw new InvalidArgumentException( sprintf( __( 'No user found with %1$s %2$s.', 'popup-maker' ), $field, $value ) );
+			throw new InvalidArgumentException(
+				sprintf(
+					/* translators: %1$s is the post type name, %2$s is the field name, %3$s is the value. */
+					esc_attr__( 'No %1$s found with %2$s %3$s.', 'popup-maker' ),
+					esc_attr( $this->get_post_type() ),
+					esc_attr( $field ),
+					esc_attr( $value )
+				)
+			);
 		}
 
 		return $this->get_model( $id );
@@ -182,7 +200,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 * @return string
 	 */
 	protected function get_args_hash( $args ) {
-		return md5( serialize( $args ) );
+		return md5( wp_json_encode( $args ) );
 	}
 
 	/**
@@ -194,7 +212,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 		/** Reset default strict query args. */
 		$this->reset_strict_query_args();
 
-		$args = $this->_build_wp_query_args( $args );
+		$args = $this->do_build_wp_query_args( $args );
 
 		$hash = $this->get_args_hash( $args );
 
@@ -207,7 +225,6 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 			$this->query->query( $args );
 
 			$this->cache['queries'][ $hash ] = (array) $this->query->posts;
-
 		}
 
 		/** @var array $posts */
@@ -237,7 +254,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 		$this->set_strict_query_arg( 'posts_per_page', 1 );
 
 		/** We don't use  $this->query here to avoid returning count queries via $this->>get_last_query(); */
-		$query = new WP_Query( $this->_build_wp_query_args( $args ) );
+		$query = new WP_Query( $this->do_build_wp_query_args( $args ) );
 
 		return (int) $query->found_posts;
 	}
@@ -297,7 +314,9 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 		);
 
 		if ( is_wp_error( $post_id ) ) {
-			throw new InvalidArgumentException( $post_id->get_error_message() );
+			throw new InvalidArgumentException(
+				esc_html( $post_id->get_error_message() )
+			);
 		}
 
 		return $this->get_item( $post_id );
@@ -354,7 +373,7 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	 * @return string
 	 */
 	protected function get_post_hash( $post ) {
-		return md5( serialize( $post ) );
+		return md5( wp_json_encode( $post ) );
 	}
 
 	/**
@@ -429,5 +448,4 @@ abstract class PUM_Abstract_Repository_Posts implements PUM_Interface_Repository
 	public function force_delete_item( $id ) {
 		return (bool) wp_delete_post( $id, true );
 	}
-
 }

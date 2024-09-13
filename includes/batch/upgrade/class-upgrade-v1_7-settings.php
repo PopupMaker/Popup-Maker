@@ -2,8 +2,10 @@
 /**
  * Upgrade Settings class for batch
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
+ *
+ * phpcs:disable PEAR.NamingConventions.ValidClassName.Invalid
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -47,5 +49,4 @@ class PUM_Upgrade_v1_7_Settings extends PUM_Abstract_Upgrade_Settings {
 			PUM_Utils_Options::update_all( $settings );
 		}
 	}
-
 }

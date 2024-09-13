@@ -2,8 +2,8 @@
 /**
  * Admin BlockEditor
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 /**
@@ -61,7 +61,7 @@ class PUM_Admin_BlockEditor {
 			$script_deps = array_merge( $script_deps, [ 'wp-edit-post' ] );
 		}
 
-		wp_enqueue_script( 'popup-maker-block-editor', $script_url, $script_deps, $script_asset['version'] );
+		wp_enqueue_script( 'popup-maker-block-editor', $script_url, $script_deps, $script_asset['version'], true );
 
 		wp_localize_script(
 			'popup-maker-block-editor',
@@ -136,5 +136,4 @@ class PUM_Admin_BlockEditor {
 			];
 		}
 	}
-
 }

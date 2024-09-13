@@ -2,10 +2,13 @@
 /**
  * Abstract class for Integrations.
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
+/**
+ * Abstract class for Integrations.
+ */
 abstract class PUM_Abstract_Integration implements PUM_Interface_Integration {
 
 	/**
@@ -27,5 +30,4 @@ abstract class PUM_Abstract_Integration implements PUM_Interface_Integration {
 	 * @return bool
 	 */
 	abstract public function enabled();
-
 }

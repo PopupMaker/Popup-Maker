@@ -2,8 +2,8 @@
 /**
  * Integration for VisualComposer
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 class PUM_Integration_Builder_VisualComposer extends PUM_Abstract_Integration {
@@ -31,5 +31,4 @@ class PUM_Integration_Builder_VisualComposer extends PUM_Abstract_Integration {
 	public function enabled() {
 		return defined( 'WPB_VC_VERSION' ) || defined( 'FL_BUILDER_VERSION' );
 	}
-
 }

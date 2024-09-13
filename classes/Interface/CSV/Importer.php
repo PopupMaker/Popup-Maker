@@ -2,8 +2,8 @@
 /**
  * Interface for CSV Importer
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -50,5 +50,4 @@ interface PUM_Interface_CSV_Importer extends PUM_Interface_Batch_Importer {
 	 * @return array The first row after the header of the CSV.
 	 */
 	public function get_first_row();
-
 }

@@ -2,8 +2,8 @@
 /**
  * Integration for GravityForms Form
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
@@ -72,7 +72,8 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 			return;
 		}
 
-		// This key is set when Gravity Forms is submitted via AJAX.
+		// This key is set when Gravity Forms is submitted via AJAX. Ignored because this is a simple boolean check.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['gform_ajax'] ) && ! is_null( $_POST['gform_ajax'] ) ) {
 			return;
 		}

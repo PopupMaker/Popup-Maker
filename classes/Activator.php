@@ -2,8 +2,8 @@
 /**
  * Activator class
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 // Exit if accessed directly
@@ -37,5 +37,4 @@ class PUM_Activator extends PUM_Install {
 	public static function activate( $network_wide = false ) {
 		parent::activate_plugin( $network_wide );
 	}
-
 }

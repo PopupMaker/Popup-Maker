@@ -2,14 +2,13 @@
 /**
  * Extension Activator Handler
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
 
 /**
  * Popup Maker Extension Activation Handler Class
@@ -96,7 +95,8 @@ class PUM_Extension_Activator {
 				property_exists( $class_name, 'NAME' ),
 				property_exists( $class_name, 'REQUIRED_CORE_VER' ),
 				method_exists( $class_name, 'instance' ),
-			]
+			],
+			true
 		) ) {
 			return;
 		}
@@ -168,20 +168,39 @@ class PUM_Extension_Activator {
 		switch ( $this->get_status() ) {
 			case 'not_activated':
 				$url  = esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $this->core_path ), 'activate-plugin_' . $this->core_path ) );
-				$link = '<a href="' . $url . '">' . __( 'activate it' ) . '</a>';
-				echo '<div class="error"><p>' . sprintf( __( 'The plugin "%1$s" requires %2$s! Please %3$s to continue!' ), $this->extension_name, '<strong>' . __( 'Popup Maker' ) . '</strong>', $link ) . '</p></div>';
+				$link = '<a href="' . $url . '">' . esc_html__( 'activate it', 'popup-maker' ) . '</a>';
+				echo '<div class="error"><p>' . sprintf(
+					/* translators: 1. Plugin name, 2. Required plugin name, 3. `activate it` link. */
+					esc_html__( 'The plugin "%1$s" requires %2$s! Please %3$s to continue!', 'popup-maker' ),
+					esc_attr( $this->extension_name ),
+					'<strong>' . esc_html__( 'Popup Maker', 'popup-maker' ) . '</strong>',
+					esc_attr( $link )
+				) . '</p></div>';
 
 				break;
 			case 'not_updated':
 				$url  = esc_url( wp_nonce_url( admin_url( 'update.php?action=upgrade-plugin&plugin=' . $this->core_path ), 'upgrade-plugin_' . $this->core_path ) );
-				$link = '<a href="' . $url . '">' . __( 'update it' ) . '</a>';
-				echo '<div class="error"><p>' . sprintf( __( 'The plugin "%1$s" requires %2$s v%3$s or higher! Please %4$s to continue!' ), $this->extension_name, '<strong>' . __( 'Popup Maker' ) . '</strong>', '<strong>' . $this->required_core_version . '</strong>', $link ) . '</p></div>';
+				$link = '<a href="' . $url . '">' . esc_html__( 'update it', 'popup-maker' ) . '</a>';
+				echo '<div class="error"><p>' . sprintf(
+					/* translators: 1. Plugin name, 2. Required plugin name, 3. Version number, 4. `update it` link. */
+					esc_html__( 'The plugin "%1$s" requires %2$s v%3$s or higher! Please %4$s to continue!', 'popup-maker' ),
+					esc_attr( $this->extension_name ),
+					'<strong>' . esc_html__( 'Popup Maker', 'popup-maker' ) . '</strong>',
+					'<strong>' . esc_html( $this->required_core_version ) . '</strong>',
+					esc_attr( $link )
+				) . '</p></div>';
 
 				break;
 			case 'not_installed':
 				$url  = esc_url( wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=popup-maker' ), 'install-plugin_popup-maker' ) );
-				$link = '<a href="' . $url . '">' . __( 'install it' ) . '</a>';
-				echo '<div class="error"><p>' . sprintf( __( 'The plugin "%1$s" requires %2$s! Please %3$s to continue!' ), $this->extension_name, '<strong>' . __( 'Popup Maker' ) . '</strong>', $link ) . '</p></div>';
+				$link = '<a href="' . $url . '">' . esc_html__( 'install it', 'popup-maker' ) . '</a>';
+				echo '<div class="error"><p>' . sprintf(
+					/* translators: 1. Plugin name, 2. Required plugin name, 3. `install it` link. */
+					esc_html__( 'The plugin "%1$s" requires %2$s! Please %3$s to continue!', 'popup-maker' ),
+					esc_attr( $this->extension_name ),
+					'<strong>' . esc_html__( 'Popup Maker', 'popup-maker' ) . '</strong>',
+					esc_attr( $link )
+				) . '</p></div>';
 
 				break;
 			case 'active':

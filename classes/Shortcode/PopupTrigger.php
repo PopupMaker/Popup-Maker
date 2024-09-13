@@ -2,8 +2,8 @@
 /**
  * Shortcode for PopupTrigger
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -56,7 +56,7 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	public function inner_content_labels() {
 		return [
 			'label'       => __( 'Trigger Content', 'popup-maker' ),
-			'description' => __( 'Can contain other shortcodes, images, text or html content.' ),
+			'description' => __( 'Can contain other shortcodes, images, text or html content.', 'popup-maker' ),
 		];
 	}
 
@@ -73,8 +73,13 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 	public function fields() {
 		$select_args = [];
 
-		if ( isset( $_GET['post'] ) && is_int( (int) $_GET['post'] ) && isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
-			$select_args['post__not_in'] = wp_parse_id_list( [ get_the_ID(), $_GET['post'] ] );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$post = isset( $_GET['post'] ) ? absint( wp_unslash( $_GET['post'] ) ) : null;
+
+		if ( 'edit' === $action && is_int( $post ) ) {
+			$select_args['post__not_in'] = wp_parse_id_list( [ get_the_ID(), $post ] );
 		}
 
 		return [
@@ -178,9 +183,9 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 		$atts = parent::shortcode_atts( $atts );
 
 		// Add button to allowed tags.
-		$tags_allowed = array_merge( array_keys( $allowedtags ), [ 'button' ] ) ;
+		$tags_allowed = array_merge( array_keys( $allowedtags ), [ 'button' ] );
 
-		if ( empty( $atts['tag'] ) || ! in_array( $atts['tag'], $tags_allowed ) ) {
+		if ( empty( $atts['tag'] ) || ! in_array( $atts['tag'], $tags_allowed, true ) ) {
 			$atts['tag'] = 'span';
 		}
 
@@ -206,5 +211,4 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 		<{{{tag}}} class="pum-trigger  popmake-{{{attrs.id}}} {{{attrs.classes}}}">{{{attrs._inner_content}}}</{{{tag}}}>
 		<?php
 	}
-
 }

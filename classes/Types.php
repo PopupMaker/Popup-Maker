@@ -2,8 +2,8 @@
 /**
  * Class for Types
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 class PUM_Types {
@@ -55,6 +55,7 @@ class PUM_Types {
 			);
 
 			// Temporary Yoast Fixes
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( is_admin() && isset( $_GET['page'] ) && 'wpseo_titles' === $_GET['page'] ) {
 				$popup_args['public'] = false;
 			}
@@ -107,14 +108,23 @@ class PUM_Types {
 			[
 				'name'               => '%2$s',
 				'singular_name'      => '%1$s',
+				/* translators: %1$s: Post Type Singular: "Popup", "Popup Theme" */
 				'add_new_item'       => _x( 'Create New %1$s', 'Post Type Singular: "Popup", "Popup Theme"', 'popup-maker' ),
+				/* translators: %1$s: Post Type Singular: "Popup", "Popup Theme" */
 				'add_new'            => _x( 'Create %1$s', 'Post Type Singular: "Popup", "Popup Theme"', 'popup-maker' ),
+				/* translators: %1$s: Post Type Singular: "Popup", "Popup Theme" */
 				'edit_item'          => _x( 'Edit %1$s', 'Post Type Singular: "Popup", "Popup Theme"', 'popup-maker' ),
+				/* translators: %1$s: Post Type Singular: "Popup", "Popup Theme" */
 				'new_item'           => _x( 'New %1$s', 'Post Type Singular: "Popup", "Popup Theme"', 'popup-maker' ),
+				/* translators: %2$s: Post Type Plural: "Popups", "Popup Themes" */
 				'all_items'          => _x( 'All %2$s', 'Post Type Plural: "Popups", "Popup Themes"', 'popup-maker' ),
+				/* translators: %1$s: Post Type Singular: "Popup", "Popup Theme" */
 				'view_item'          => _x( 'View %1$s', 'Post Type Singular: "Popup", "Popup Theme"', 'popup-maker' ),
+				/* translators: %2$s: Post Type Plural: "Popups", "Popup Themes" */
 				'search_items'       => _x( 'Search %2$s', 'Post Type Plural: "Popups", "Popup Themes"', 'popup-maker' ),
+				/* translators: %2$s: Post Type Plural: "Popups", "Popup Themes" */
 				'not_found'          => _x( 'No %2$s found', 'Post Type Plural: "Popups", "Popup Themes"', 'popup-maker' ),
+				/* translators: %2$s: Post Type Plural: "Popups", "Popup Themes" */
 				'not_found_in_trash' => _x( 'No %2$s found in Trash', 'Post Type Plural: "Popups", "Popup Themes"', 'popup-maker' ),
 			]
 		);
@@ -184,10 +194,15 @@ class PUM_Types {
 	public static function updated_messages( $messages ) {
 
 		$labels = [
+			/* translators: %1$s: Post Type Singular: Popup, Theme */
 			1 => _x( '%1$s updated.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
+			/* translators: %1$s: Post Type Singular: Popup, Theme */
 			4 => _x( '%1$s updated.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
+			/* translators: %1$s: Post Type Singular: Popup, Theme */
 			6 => _x( '%1$s published.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
+			/* translators: %1$s: Post Type Singular: Popup, Theme */
 			7 => _x( '%1$s saved.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
+			/* translators: %1$s: Post Type Singular: Popup, Theme */
 			8 => _x( '%1$s submitted.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
 		];
 
@@ -217,6 +232,4 @@ class PUM_Types {
 
 		return $post_types;
 	}
-
-
 }

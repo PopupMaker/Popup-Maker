@@ -2,8 +2,8 @@
 /**
  * Admin class
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 class PUM_Admin {
@@ -108,11 +108,17 @@ class PUM_Admin {
 	 * Cleans the UI area within our admin pages
 	 *
 	 * @since 1.12
+	 *
+	 * @return void
 	 */
 	public static function clean_ui() {
+		if ( ! class_exists( '\Elementor\Plugin' ) || ! isset( \Elementor\Plugin::$instance ) ) {
+			return;
+		}
+
 		// Elementor shows an upsell notice for their popup builder targeting only our admin area. This removes that.
-		if ( class_exists( 'Elementor\Plugin' ) && class_exists( 'Elementor\Core\Admin\Admin' ) && pum_is_admin_page() ) {
-			$instance = Elementor\Plugin::instance();
+		if ( class_exists( 'Elementor\Core\Admin\Admin' ) && pum_is_admin_page() ) {
+			$instance = \Elementor\Plugin::instance();
 			if ( isset( $instance->admin ) && is_a( $instance->admin, '\Elementor\Core\Admin\Admin' ) && method_exists( $instance->admin, 'get_component' ) ) {
 				$notices = $instance->admin->get_component( 'admin-notices' );
 				if ( false !== $notices && is_a( $notices, '\Elementor\Core\Admin\Admin_Notices' ) ) {

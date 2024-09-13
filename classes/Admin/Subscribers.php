@@ -2,8 +2,8 @@
 /**
  * Class for Admin Subscribers
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -30,12 +30,18 @@ class PUM_Admin_Subscribers {
 		self::list_table()->prepare_items(); ?>
 
 		<div class="wrap">
-			<h1><?php _e( 'Subscribers', 'popup-maker' ); ?></h1>
+			<h1><?php esc_html_e( 'Subscribers', 'popup-maker' ); ?></h1>
 			<div id="pum-subscribers">
 				<div id="pum-subscribers-post-body">
 					<form id="pum-subscribers-list-form" method="get">
-						<input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>"/>
-						<input type="hidden" name="post_type" value="<?php echo esc_attr( $_REQUEST['post_type'] ); ?>"/>
+						<?php
+						// phpcs:disable WordPress.Security.NonceVerification.Recommended
+						$page      = isset( $_REQUEST['page'] ) ? sanitize_key( wp_unslash( $_REQUEST['page'] ) ) : '';
+						$post_type = isset( $_REQUEST['post_type'] ) ? sanitize_key( wp_unslash( $_REQUEST['post_type'] ) ) : '';
+						// phpcs:enable WordPress.Security.NonceVerification.Recommended
+						?>
+						<input type = 'hidden' name = 'page' value = "<?php echo esc_attr( $page ); ?>" />
+						<input type = 'hidden' name = 'post_type' value = "<?php echo esc_attr( $post_type ); ?>" />
 						<?php
 						self::list_table()->search_box( __( 'Find', 'popup-maker' ), 'pum-subscriber-find' );
 						self::list_table()->display();
@@ -98,6 +104,5 @@ class PUM_Admin_Subscribers {
 		}
 
 		return $status;
-
 	}
 }

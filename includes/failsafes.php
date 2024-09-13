@@ -2,19 +2,19 @@
 /**
  * Failsafes
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! function_exists( 'popmake_get_option' ) ) {
 	/**
 	 * @param string $key
-	 * @param bool   $default
+	 * @param bool   $default_value
 	 *
 	 * @return bool
 	 */
-	function popmake_get_option( $key = '', $default = false ) {
-		return $default;
+	function popmake_get_option( $key = '', $default_value = false ) {
+		return $default_value;
 	}
 }
 

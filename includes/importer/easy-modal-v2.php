@@ -51,8 +51,8 @@ function popmake_emodal_v2_import() {
 
 	$themes       = get_all_modal_themes( '1 = 1' );
 	$theme_id_map = [];
-	foreach ( $themes as $Theme ) {
-		$theme = $Theme->as_array();
+	foreach ( $themes as $theme_object ) {
+		$theme = $theme_object->as_array();
 		$meta  = $theme['meta'];
 
 		$theme_meta = apply_filters(
@@ -123,7 +123,7 @@ function popmake_emodal_v2_import() {
 				'popup_theme_close_textshadow_color'       => $meta['close']['textshadow']['color'],
 				'popup_theme_close_textshadow_opacity'     => $meta['close']['textshadow']['opacity'],
 			],
-			$Theme
+			$theme_object
 		);
 
 		$new_theme_id = wp_insert_post(
@@ -143,7 +143,7 @@ function popmake_emodal_v2_import() {
 		$theme_id_map[ $theme['id'] ] = $new_theme_id;
 	}
 
-	if ( count( $themes ) === 1 ) {
+	if ( count( $themes ) === 1 && isset( $new_theme_id ) ) {
 		update_post_meta( $new_theme_id, 'popup_theme_defaults_set', true );
 		update_option( 'popmake_default_theme', $new_theme_id );
 	}
@@ -152,8 +152,8 @@ function popmake_emodal_v2_import() {
 
 	// echo '<pre>'; var_export(popmake_popup_meta_fields()); echo '</pre>';
 
-	foreach ( $modals as $Modal ) {
-		$modal = $Modal->as_array();
+	foreach ( $modals as $modal_object ) {
+		$modal = $modal_object->as_array();
 		$meta  = $modal['meta'];
 
 		$modal_meta = apply_filters(
@@ -161,7 +161,7 @@ function popmake_emodal_v2_import() {
 			[
 				'popup_old_easy_modal_id'                 => $modal['id'],
 				'popup_defaults_set'                      => true,
-				'popup_theme'                             => isset( $theme_id_map[ $theme['id'] ] ) ? $theme_id_map[ $theme['id'] ] : null,
+				'popup_theme'                             => isset( $theme ) && isset( $theme_id_map[ $theme['id'] ] ) ? $theme_id_map[ $theme['id'] ] : null,
 				'popup_title'                             => $modal['title'],
 				'popup_display_scrollable_content'        => null,
 				'popup_display_overlay_disabled'          => $meta['display']['overlay_disabled'],
@@ -188,7 +188,7 @@ function popmake_emodal_v2_import() {
 				'popup_close_esc_press'                   => $meta['close']['esc_press'],
 				'popup_close_f4_press'                    => null,
 			],
-			$Modal
+			$modal_object
 		);
 
 		if ( 1 === $modal['is_sitewide'] ) {
@@ -218,7 +218,7 @@ function popmake_emodal_init() {
 			add_shortcode( 'modal', 'popmake_emodal_shortcode_modal' );
 		}
 		add_filter( 'pum_popup_data_attr', 'popmake_emodal_get_the_popup_data_attr', 10, 2 );
-		add_filter( 'popmake_shortcode_popup_default_atts', 'popmake_emodal_shortcode_popup_default_atts', 10, 2 );
+		add_filter( 'popmake_shortcode_popup_default_atts', 'popmake_emodal_shortcode_popup_default_atts', 10 );
 		add_filter( 'popmake_shortcode_data_attr', 'popmake_emodal_shortcode_data_attr', 10, 2 );
 
 		add_filter( 'pum_popup_is_loadable', 'popmake_emodal_popup_is_loadable', 20, 2 );
@@ -228,15 +228,15 @@ function popmake_emodal_init() {
 add_action( 'init', 'popmake_emodal_init' );
 
 
-function popmake_emodal_popup_is_loadable( $return, $popup_id ) {
+function popmake_emodal_popup_is_loadable( $return_value, $popup_id ) {
 	global $post;
 	if ( empty( $post ) || ! isset( $post->ID ) ) {
-		return $return;
+		return $return_value;
 	}
 	$easy_modal_id = get_post_meta( $popup_id, 'popup_old_easy_modal_id', true );
 	$post_modals   = get_post_meta( $post->ID, 'easy-modal_post_modals', true );
-	if ( ! $easy_modal_id || empty( $post_modals ) || ! in_array( $easy_modal_id, $post_modals ) ) {
-		return $return;
+	if ( ! $easy_modal_id || empty( $post_modals ) || ! in_array( $easy_modal_id, $post_modals, true ) ) {
+		return $return_value;
 	}
 
 	return true;
@@ -318,7 +318,7 @@ function popmake_emodal_shortcode_modal( $atts, $content = null ) {
 	$shortcode = '[popup ';
 
 	foreach ( $new_shortcode_atts as $attr => $val ) {
-		if ( $val && ! empty( $val ) ) {
+		if ( ! empty( $val ) ) {
 			$shortcode .= $attr . '="' . $val . '" ';
 		}
 	}
