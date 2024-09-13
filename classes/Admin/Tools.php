@@ -306,7 +306,8 @@ class PUM_Admin_Tools {
 		if (
 			! isset( $_REQUEST['popmake_emodal_v2_import'] ) ||
 			! isset( $_REQUEST['popmake_emodal_v2_import_nonce'] ) ||
-			! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['popmake_emodal_v2_import_nonce'] ) ), 'popmake_emodal_v2_import_nonce' )
+			! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['popmake_emodal_v2_import_nonce'] ) ), 'popmake_emodal_v2_import_nonce' ) ||
+			! current_user_can( 'manage_options' )
 		) {
 			return;
 		}
