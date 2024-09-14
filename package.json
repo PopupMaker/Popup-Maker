@@ -25,6 +25,7 @@
 		"assets/css/*.css",
 		"assets/images/**/*",
 		"assets/js/*.js",
+		"assets/js/vendor/*.js",
 		"assets/sounds/**/*",
 		"classes/**/*",
 		"dist/**/*",

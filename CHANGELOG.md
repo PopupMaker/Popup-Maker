@@ -2,20 +2,21 @@
 
 ## Unreleased
 
-## v1.20.0 - 2024-09-13
+## v1.20.0 - 2024-09-14
 
 * Important: Popup Maker will be transitioning to new minimum PHP & WP versions over the next few releases. [Read about our plans here](https://wppopupmaker.com/blog/popup-maker-new-minimum-php-and-wp-versions-coming-soon/).
 * Feature: Add Form Integration for Fluent Forms, close or trigger popups, set cookies and more on form submission.
 * Feature: Add font size and font select buttons to the classic editor.
+* Improvement: Improved asset minification substantially reducing JS & CSS file sizes.
 * Improvement: Keep the same popup editor, theme editor & settings page tab after saving or refreshing the page.
 * Fix: Deprecated notice on PHP 8.3 for converting bool to array.
 
-## v1.19.2 - 08/25/2024
+## v1.19.2 - 2024-08-25
 
 * Fix: Error on activation for some users on fresh installs.
 * Fix:  deprecated notice in PHP 8.3.
 
-## v1.19.1 - 08/17/2024
+## v1.19.1 - 2024-08-17
 
 * Security: Only allow admins to save HTML in plugin settings if they have `unfiltered_html` capability.
   * Note: User had to be an admin to be able to edit these settings already, but some sites have advanced capabilities set up, so using `unfiltered_html` specifically is the right move matching with WP core.
@@ -27,7 +28,7 @@
 * Fix: Edge case for Multisite causing fatal error on activation due to missing function.
 * Fix: Typos in settings labels.
 
-## v1.19.0 - 05/23/2024
+## v1.19.0 - 2024-05-23
 
 * Feature: Add WS Forms integration.  
 * Tweak: Don't show error message when saving settings without making changes.
@@ -37,32 +38,32 @@
 * Fix: Errors when 3rd party plugins returned invalid value in `mce_external_plugins` filter.
 * Fix: Random unkown key errors when extensions were active.
 
-## v1.18.5 - 03/19/2024
+## v1.18.5 - 2024-03-19
 
 * Fix: Error in some extensions due to action timing change. Reverting.
 
-## v1.18.4 - 03/18/2024
+## v1.18.4 - 2024-03-18
 
 * Fix: Missing file error due to SVN commit issue with v1.18.3.
 
-## v1.18.3 - 03/18/2024
+## v1.18.3 - 2024-03-18
 
 * Security: Popup Close shortcode escaping was not working correctly on urls. Admins could insert unsecure urls into the popup close button which could be triggered on middle click.
 * Improvement: Added new pum_log_message function to simplify logging & reduce potential for errors.
 * Fix: Prevent errors when logging file is not writable in some systems.
 
-## v1.18.2 - 07/03/2023
+## v1.18.2 - 2023-07-03
 
 * Fix: WP 4.9 missing `wp_get_environment_type` function notices
 
-## v1.18.1 - 03/08/2023
+## v1.18.1 - 2023-03-08
 
 * Improvement: Add nonce to asset cache purging for admins.
 * Fix: PHP 8.2 Deprecated notices.
 * Fix: Bug in asset caching causing assets to falsly determine they couldn't be writtien.
 * Fix: Add backcompat fix for WP >5.3 `wp_date` errors.
 
-## v1.18.0 - 02/10/2023
+## v1.18.0 - 2023-02-10
 
 * Accessibility: Use newer WCAG `aria-modal` attributes and remove `aria-hidden` methods.
 * Improvement: Font Awesome 6 support for close button text.
@@ -80,7 +81,7 @@
 * Developer: New `pum_cookie_domain` filter.
 * Developer: Lots of PHPCS notices cleaned up, more to come.
 
-## v1.17.1 - 12/04/2022
+## v1.17.1 - 2022-12-04
 
 * Improvement: Update EDD Updater to latest for extension update handling.
 * Improvement: Add handler for properly renaming extension folder names during update without manual reactivation by user.
@@ -89,28 +90,28 @@
 * Fix: Rendering issue with review request.
 * Fix: ATC Cookie condition was preventing popup from loading.
 
-## v1.17.0 - 11/24/2022
+## v1.17.0 - 2022-11-24
 
 * Improvement: Added contextual notification system to be able to notify site admins about important information including security notices, beta tests, extension sales & more without requiring a plugin update.
 * Improvement: Render analytic reset times in server properly rather than UTC.
 * Tweak: Remove all reference to `select2` without the prefixed `pumselect2` to prevent confusion and further isolate our dependencies from 3rd party interference.
 
-## v1.16.13 - 11/08/2022
+## v1.16.13 - 2022-11-08
 
 * Improvement: Removed some complex functionalities that were no longer needed but causing intermittent issues.
 * Improvement: Replace wp_remote_post with wp_remote_get for extension API calls to allow caching.
 * Improvement: Fixed low quality images on welcome screen.
 
-## v1.16.12 - 10/26/2022
+## v1.16.12 - 2022-10-26
 
 * Improvement: Optimize dashboard support page to load much quicker.
 
-## v1.16.11 - 10/25/2022
+## v1.16.11 - 2022-10-25
 
 * Security: Cleaned up mustache js templates usage of unescaped output.
 * Fix: Bug in `popup_trigger` & `popup_close` shortcode's when using `tag="button"`.
 
-## v1.16.10 - 10/18/2022
+## v1.16.10 - 2022-10-18
 
 * Security: Added nonce to previews.
 * Improvement: Standardizing coding standards, convert to short arrays.
@@ -118,28 +119,28 @@
 * Fix: Recent improvements to conditions handling caused some issues in some cases.
 * Fix: Bug caused by security patch in v1.16.9 which caused shortcodes to render content strangely.
 
-## v1.16.9 - 09/23/2022
+## v1.16.9 - 2022-09-23
 
 * Security: Patched XSS vulnerability allowing contributors to run unfiltered JavaScript.
 
-## v1.16.8 - 09/12/2022
+## v1.16.8 - 2022-09-12
 
 * Fix: Error on widgets screen when using the new `Block` based widget editor due to an old script being loaded.
 * Fix: Previews were not working when popup was in draft status, or when not enabled. Now they always work.
 * Fix: Error caused by non unicode characters when Debug Mode was enabled.
 
-## v1.16.7 - 04/05/2022
+## v1.16.7 - 2022-04-05
 
 * Note: Bumped 2 versions as v1.16.6 may not have fully fixed it fully.
 * Fix: Regression fix due to breaking content rendering.
 
-## v1.16.5 - 04/04/2022
+## v1.16.5 - 2022-04-04
 
 * Improvement: Add precautionary escaping of some generated outputs. Shout out to [@roelvb79](https://twitter.com/roelvb79) for the report.
 * Improvement: Remove leftover console logging code.
 * Fix: Typo in admin template rendering for cookie editor.
 
-## v1.16.4 - 01/25/2022
+## v1.16.4 - 2022-01-25
 
 * Improvement: Prevent changing aria-hidden if its already set when showing a popup.
 * Improvement: Remove usage of !important in several CSS rules.
@@ -148,13 +149,13 @@
 * Improvement: Add new `pumBeforeInit` jQuery event.
 * Fix: Remove unwanted outline when no focusable elements existed in popups.
 
-## v1.16.3 - 11/16/2021
+## v1.16.3 - 2021-11-16
 
 * Improvement: Code cleanup/simplifications, and more inline documentation.
 * Improvement: Added enhancements in the analytics systems for upcoming extension updates.
 * Fix: Issue with width of some popup editor select fields.
 
-## v1.16.2 - 07/07/2021
+## v1.16.2 - 2021-07-07
 
 * Improvement: All plugin images optimized for size. This only affects our admin pages.
 * Improvement: Various label & text changes.
@@ -162,7 +163,7 @@
 * Fix: Focus trapping issue when no focusable elements within popup contents.
 * Fix: Deprecated function parameter notices on PHP 8.
 
-## v1.16.1 - 03/21/2021
+## v1.16.1 - 2021-03-21
 
 * Fix: WP <5.0 and ClassicPress saw errors in the admin for usage of WP_Block_Type_Registry. [Issue #995](https://github.com/PopupMaker/Popup-Maker/issues/995)
 
@@ -219,7 +220,7 @@
 * Fix: Form submission cookies are not being set for some form integrations [Issue #886](https://github.com/PopupMaker/Popup-Maker/issues/886)
 * Fix: Some form integrations are calling both AJAX and PHP submission handlers [Issue #887](https://github.com/PopupMaker/Popup-Maker/issues/887)
 
-## v1.12.0 - 09/29/2020
+## v1.12.0 - 2020-09-29
 
 * Feature: Add the ability to turn on/off popups [Issue #544](https://github.com/PopupMaker/Popup-Maker/issues/544)
 * Feature: Formidable Forms integration [Issue #750](https://github.com/PopupMaker/Popup-Maker/issues/750)
@@ -235,17 +236,17 @@
 * Fix: Trying to access 'private' key when the field is false error [Issue #873](https://github.com/PopupMaker/Popup-Maker/issues/873)
 * Fix: _pum_subscribers table fails to create on MySQL 8.0.19+ due to VALUES keyword [Issue #876](https://github.com/PopupMaker/Popup-Maker/issues/876)
 
-## v1.11.2 - 08/17/2020
+## v1.11.2 - 2020-08-17
 
 * Fix: `wp_make_content_images_responsive` is deprecated, use `wp_filter_content_tags()` instead
 * Fix: IE 11 does not support JS Promises
 * Fix: Missing permission_callback on REST endpoint
 
-## v1.11.1 - 07/22/2020
+## v1.11.1 - 2020-07-22
 
 * Fix: Form submission cookies no longer set with Contact Form 7 5.2
 
-## v1.11.0 - 06/25/2020
+## v1.11.0 - 2020-06-25
 
 * Feature: Add new floating bar theme.
 * Feature: New guided tour of popup editor for first time users.
@@ -259,19 +260,19 @@
 * Tweak: Move CSS and JS for our admin bar node to external file.
 * Tweak: Add our new optional telemetry system.
 
-## v1.10.2 - 06/09/2020
+## v1.10.2 - 2020-06-09
 
 * Fix: Popup Settings not working when WP Forms is active without forms
 * Fix: Missing closing div in new [popup_cookie] shortcode.
 * Fix: Shortcode popup_close tag attribute not functioning properly.
 
-## v1.10.1 - 04/21/2020
+## v1.10.1 - 2020-04-21
 
 * Fix: Typo in filter name caused extra p tags.
 * Fix: Add wp version check to prevent calling block functions on older versions or classicpress.
 * Fix: Font Awesome support now works for v4 fonts.
 
-## v1.10.0 - 04/20/2020
+## v1.10.0 - 2020-04-20
 
 * Feature: Display presets for top bar, bottom right slide-ins, full-screen popups & bottom left notifications to make it simple to get common setups done much quicker
 * Feature: Popup Trigger inline text format for the block editor.
@@ -288,15 +289,15 @@
 * Fix: Typo in admin editor CSS path.
 * Fix: Bug on fresh installs where default theme's close position is wrong.
 
-## v1.9.2 - 03/26/2020
+## v1.9.2 - 2020-03-26
 
 * Tweak: Add support for WP 5.4's new method of adding custom fields to the nav menu editor.
 
-## v1.9.1 - 02/13/2020
+## v1.9.1 - 2020-02-13
 
 * Fix: JS error when MailChimp for WordPress was active but no forms on the page.
 
-## v1.9.0 - 02/11/2020
+## v1.9.0 - 2020-02-11
 
 * Feature: New Form Submission trigger with option to choose specific forms for integrated forms.
 * Feature: New Form Submission cookie event with option to choose specific forms.
@@ -317,52 +318,52 @@
 * Fix: Error caused by invalid post ID returned by CF7 when saving new forms.
 * Fix: Bug when selecting more than 10 items in targeting rule post/page select fields.
 
-## v1.8.14 - 10/24/2019
+## v1.8.14 - 2019-10-24
 
 * Improvement: Updated nav menu editor walker class for adding custom fields to further improve compatibility.
 * Fix: Ninja Forms popup actions missing.
 
-## v1.8.13 - 10/11/2019
+## v1.8.13 - 2019-10-11
 
 * Tweak: Added cap check to ensure only authorized users can access support debug text file. @Credit goes to Ilias Dimopoulos from Neurosoft S.A , RedyOps Team.
 
-## v1.8.12 - 10/01/2019
+## v1.8.12 - 2019-10-01
 
 * Improvement: Changed hook that we initialize Ninja Forms on so that it can be disabled from theme functions.php.
 * Improvement: Don't load CF7 scripts if they are forced off.
 * Improvement: Fixed some old options checks that were always being detected as true resulting in minor performance improvements.
 * Tweak: Added nonce to the system info file download available under Popup Maker -> Tools and simplified the pum_actions system. @Credit goes to Ilias Dimopoulos from Neurosoft S.A , RedyOps Team.
 
-## v1.8.11 - 08/18/2019
+## v1.8.11 - 2019-08-18
 
 * Improvement: Trigger window resize event when popups open to fix issues with some sliders & JS sized content.
 * Fix: Updated form value processing to prevent some edge cases where string values were converted to Infinity.
 * Fix: Custom "already subscribed" messages in MailChimp integration were not working correctly.
 
-## v1.8.10 - 07/06/2019
+## v1.8.10 - 2019-07-06
 
 * Fix: PHP backward compatibility issue due to short array syntax usage.
 
-## v1.8.9 - 07/04/2019
+## v1.8.9 - 2019-07-04
 
 * Fix: Issue where popup titles wouldn't render.
 
-## v1.8.8 - 06/30/2019
+## v1.8.8 - 2019-06-30
 
 * Fix: Bug where red alert icons didn't go away when visiting the tabs from the "Extend" menu.
 
-## v1.8.7 - 06/29/2019
+## v1.8.7 - 2019-06-29
 
 * Tweak: Restricted the admin toolbar to only show under strict circumstances.
 * Tweak: Updated available WooCommerce endpoints in our targeting conditions
 * Fix: Issue with instance based shortcodes when asset caching was enabled but running on every request.
 
-## v1.8.6 - 05/05/2019
+## v1.8.6 - 2019-05-05
 
 * Fix: Typo in GDPR eraser that could sometimes result in errors when processing GDPR requests
 * Fix: Added function exists check to prevent errors on WP 4.1
 
-## v1.8.5 - 04/17/2019
+## v1.8.5 - 2019-04-17
 
 * Tweak: Removed unused settings.
 * Fix: Typo in method name that would generate errors in some extension migration routines.
@@ -370,25 +371,25 @@
 * Fix: Bug in JS due to missing default value.
 * Fix: Bug older extensions caused by deprecated filter not getting loaded properly.
 
-## v1.8.4 - 03/21/2019
+## v1.8.4 - 2019-03-21
 
 * Improvement: Added content caching in the head to prevent second call to do_shortcode in the footer.
 * Improvement: Added runtime model caching to reduce memory usage.
 
-## v1.8.3 - 02/27/2019
+## v1.8.3 - 2019-02-27
 
 * Fix: Added back deprecated function that got truncated previously.
 
-## v1.8.2 - 02/25/2019
+## v1.8.2 - 2019-02-25
 
 * Fix: Bug on older versions of PHP due to usage of [] rather than array().
 
-## v1.8.1 - 02/22/2019
+## v1.8.1 - 2019-02-22
 
 * Fix: Error on older versions of PHP when calling get_plugin_data on a plugin that wasn't installed.
 * Fix: "Fatal error: Can not use method return value in write context" on older versions of PHP.
 
-## v1.8.0 - 02/20/2019
+## v1.8.0 - 2019-02-20
 
 * Feature: New popup theme settings:
   * New close button positions top center, bottom center, middle left & middle right.
@@ -405,7 +406,7 @@
 * Fix: iOS Click overlay close not working.
 * Fix: Analytics not working for themes with incorrect wp_footer usage.
 
-## v1.7.30 - 09/06/2018
+## v1.7.30 - 2018-09-06
 
 * Improvement: Further added methods to log unique messages only once.
 * Tweak: Remove usage of Freemius.
@@ -416,36 +417,36 @@
 * Fix: Typo pointing to incorrect internal method call in new has_cookie method.
 * Fix: Issues with fields not being readonly.
 
-## v1.7.29 - 06/13/2018
+## v1.7.29 - 2018-06-13
 
 * Improvement: Added new enabled() method for the PUM_AssetCache class that checks both is writable and not disabled.
 * Improvement: Added option to disable just asset caching. This should help in the case your server is blocking the use of our JS from the /uploads/ folder with a 403 error.
 * Fix: Bug caused by string representations of boolean values passed in our subscription forms.
 
-## v1.7.28 - 06/10/2018
+## v1.7.28 - 2018-06-10
 
 * Tweak: Improved validation of subscription form data and messaging.
 * Fix: Bug with front end form serialization issue with single checkboxes (privacy field).
 
-## v1.7.27 - 06/08/2018
+## v1.7.27 - 2018-06-08
 
 * Improvement: Added additional variable checks to allow graceful failing during certain JS errors when page cache is out of date.
 
-## v1.7.26 - 06/07/2018
+## v1.7.26 - 2018-06-07
 
 * Fix: Add empty popups array to prevent errors due to page caching.
 
-## v1.7.25 - 06/05/2018
+## v1.7.25 - 2018-06-05
 
 * Tweak: Localized most variables earlier to prevent errors. Added in default values in case they do not get rendered to prevent fatal JS errors.
 * Fix: Tweaked extension activation class to be compatible with PHP 5.2.
 * Fix: Bug where boolean scalar values were changed to "" for json_encode.
 
-## v1.7.24 - 06/04/2018
+## v1.7.24 - 2018-06-04
 
 * Tweak: Updated subscriber table for existing sites that failed to add it properly before.
 
-## v1.7.23 - 06/04/2018
+## v1.7.23 - 2018-06-04
 
 * Improvement: Converted cookie privacy info to tabular rendering.
 * Tweak: Improved update notice text.
@@ -453,14 +454,14 @@
 * Fix: Bug not allowing more than one cookie for a trigger.
 * Fix: Undefined index errors in shortcake/shortcode-ui integration.
 
-## v1.7.22 - 05/25/2018
+## v1.7.22 - 2018-05-25
 
 * Tweak: Updated Freemius library for GDPR optin support.
 * Improvement: Made all popup loops more reliable.
 * Fix: Error where objects were processed incorrectly.
 * Fix: "Uncaught Error: Call to a member function get_setting() on boolean in /popup-maker/classes/AssetCache.php:314"
 
-## v1.7.21 - 05/24/2018
+## v1.7.21 - 2018-05-24
 
 * Tweak: Clear asset cache on settings save.
 * Improvement: Check that post is singular to prevent Post Selected conditions from working on site index.
@@ -468,7 +469,7 @@
 * Fix: Missing function errors if you don't have WordPress v4.9.6.
 * Fix: Added better & safer json encoding function that properly sanitizes data for encoding to prevent empty strings for non english sites.
 
-## v1.7.20 - 05/19/2018
+## v1.7.20 - 2018-05-19
 
 * Feature: Support for GDPR Personal Data Exporter
 * Feature: Support for GDPR Personal Data Eraser
@@ -477,15 +478,15 @@
 * Improvement: Updated dependency libs.
 * Fix: Bug in subscriber tables if no popup ID was stored.
 
-## v1.7.19 - 05/01/2018
+## v1.7.19 - 2018-05-01
 
 * Version bump due to svn file add issues during last commit.
 
-## v1.7.18 - 05/01/2018
+## v1.7.18 - 2018-05-01
 
 * Fix: Typo in JS that may cause errors for some.
 
-## v1.7.17 - 05/01/2018
+## v1.7.17 - 2018-05-01
 
 * Improvement: Added popup option to disable automatic re-triggering of popup after non-ajax form submission.
 * Improvement: Added notice when JS errors occur in Popup Maker admin interfaces with link to documentation for proper diagnosis & reporting.
@@ -494,7 +495,7 @@
 * Tweak: Simplified the post type batch processor setup for extensions.
 * Dev: Added base PUM_Extension_Activator class to standardize extension activation and various other things.
 
-## v1.7.16 - 04/24/2018
+## v1.7.16 - 2018-04-24
 
 * Tweak: Removed debug code.
 * Fix: Issue with valueless shortcode attributes not processing properly.
@@ -502,7 +503,7 @@
 * Dev: Added helper function to return array of shortcodes and data in usable format from any content.
 * Dev: Added support for measure fields for shortcodes.
 
-## v1.7.15 - 04/14/2018
+## v1.7.15 - 2018-04-14
 
 * Improvement: Removed metadata from object models to reduce cache size as WordPress already has them cached.
 * Tweak: Added new filter and corrected typo in existing ones for extension integrations.
@@ -511,14 +512,14 @@
 * Fix: Bug where google fonts didn't always get loaded correctly.
 * Fix: Missing styles from Advanced Theme Builder due to misordering.
 
-## v1.7.14 - 03/28/2018
+## v1.7.14 - 2018-03-28
 
 * Fix: Obscure PHP error caused by method from interface was marked abstract in an abstract class inheriting the interface.
 * Fix: Bug when jquery cookie is called from another plugin.
 * Fix: Bug where form submit button triggered popup close when overlay click to close was enabled.
 * Fix: Typo in previous patch for db_var not being updated properly.
 
-## v1.7.13 - 03/27/2018
+## v1.7.13 - 2018-03-27
 
 * Tweak: Added fallback methods for conditions using MobileDetect to prevent errors when for whatever reason it was not loaded properly.
 * Tweak: Added value type check to prevent errors in popup data.
@@ -528,7 +529,7 @@
 * Fix: Set a deprecated option on new installs for backward compatibility issues.
 * Fix: Selector correction in z-index setting application.
 
-## v1.7.12 - 03/21/2018
+## v1.7.12 - 2018-03-21
 
 * Improvement: Added option to disable the shortcode ui.
 * Tweak: Removed private popup type links from the nav menu editor.
@@ -538,12 +539,12 @@
 * Fix: Bugs in close delay settings for form integrations. Was in ms but needed to be in seconds.
 * Fix: Bug where Yoast SEO plugin shows popups in the xml sitemaps and showing Yoast metabox on popup editor.
 
-## v1.7.11 - 03/14/2018
+## v1.7.11 - 2018-03-14
 
 * Fix: Bug where Middle Center option wouldn't stay selected after saving.
 * Fix: Bug with incorrect field dependency for custom height & scrollable options.
 
-## v1.7.10 - 03/14/2018
+## v1.7.10 - 2018-03-14
 
 * Improvement: Further improved compatibility with shortcodes that echo/print rather than return content.
 * Fix: Bug where cookies wouldn't always be set in Edge & Safari due to cookie path including the root url.
@@ -551,51 +552,51 @@
 * Fix: Bug where extra close buttons didn't always work correctly.
 * Fix: Removal of deprecated function that triggered warnings in PHP 7.2.
 
-## v1.7.9 - 03/14/2018
+## v1.7.9 - 2018-03-14
 
 * Improvement: Replaced usage of pumSerializeForm with pumSerializeObject which is more reliable.
 * Fix: Bug where deprecated directory reference causes popup html not to render properly breaking popups that should have worked otherwise.
 * Fix: Bug where checkbox defaults continuously applied making it impossible to uncheck them.
 
-## v1.7.8 - 03/13/2018
+## v1.7.8 - 2018-03-13
 
 * Improvement: Added output buffering to early calls to do_shortcode to prevent premature output in the head.
 * Improvement: Added sanity checks to make sure only valid popup objects are used in some older template functions.
 
-## v1.7.7 - 03/13/2018
+## v1.7.7 - 2018-03-13
 
 * Fix: Removed jQuery.serializeJSON functionality which was unused and causing conflicts with WooCommerce.
 * Fix: SSL Issues due to not specifying protocol.
 * Fix: Error caused by invalid popup object being used in function.
 * Fix: PHP 5.2 compatibility issue.
 
-## v1.7.6 - 03/12/2018
+## v1.7.6 - 2018-03-12
 
 * Fix: Undid previous changes from 1.7.1 and reworked in a new way to be backward compatible with existing extensions.
 
-## v1.7.5 - 03/12/2018
+## v1.7.5 - 2018-03-12
 
 * Fix: Sticky Popup Maker settings checkboxes that wouldn't uncheck after save.
 
-## v1.7.4 - 03/12/2018
+## v1.7.4 - 2018-03-12
 
 * Fix: Invalid method declaration error introduced by v1.7.2 patch to Shortcode core class.
 
-## v1.7.3 - 03/12/2018
+## v1.7.3 - 2018-03-12
 
 * Fix: Error due to usage of __CLASS__ rather than $this.
 * Fix: Edge case where function returns can't be used inside empty().
 
-## v1.7.2 - 03/12/2018
+## v1.7.2 - 2018-03-12
 
 * Fix: Initialization variable wasn't set to true early enough.
 
-## v1.7.1 - 03/12/2018
+## v1.7.1 - 2018-03-12
 
 * Fix: Empty value errors.
 * Fix: Missing function for 3rd party plugin backward compatibility (Elementor).
 
-## v1.7.0 - 03/12/2018
+## v1.7.0 - 2018-03-12
 
 This was a monster update, our largest to date in terms of improving existing functionality, reducing maintenance and the time it takes to implement new features in the future.
 
@@ -657,11 +658,11 @@ Lastly we now have include our extendable subscription forms right in the free v
 * Fix: JS errors when Marionette JS library on page without Ninja Forms.
 * Fix: WPML missing variable errors.
 
-## v1.6.6 - 07/29/2017
+## v1.6.6 - 2017-07-29
 
 * Fix: Bug with closing forms using newest version of Gravity Forms.
 
-## v1.6.5 - 07/16/2017
+## v1.6.5 - 2017-07-16
 
 * Tweak: Added new popup class for theme names. Thanks @bluantinoo.
 * Fix: Bug in menu popups save and render functionality not working correctly.
@@ -670,7 +671,7 @@ Lastly we now have include our extendable subscription forms right in the free v
 * Fix: Errors in w3c validation scans from form meta fields.
 * Fix: Settings asset label mismatch.
 
-## v1.6.4 - 07/07/2017
+## v1.6.4 - 2017-07-07
 
 * Imporvement: Reworked all form integrations to be as DRY as possible making it more reliable.
 * Tweak: Added sanity check in case previous filter mucks up the $item object variable in menu item filters causing warnings.
@@ -684,20 +685,20 @@ Lastly we now have include our extendable subscription forms right in the free v
 * Fix: Bug with GForms closing popup after submission.
 * Fix: Bug where CF7 Forms with required fields trigger popup to close without being filled properly.
 
-## v1.6.3 - 05/19/2017
+## v1.6.3 - 2017-05-19
 
 * Fix: Removed 3rd parameter from number_format as it only accepts 1, 2 or 4 arguments, not 3 per php.net documentation.
 
-## v1.6.2 - 05/18/2017
+## v1.6.2 - 2017-05-18
 
 * Fix: Bug caused by rounding to whole numbers in opacity values.
 
-## v1.6.1 - 05/17/2017
+## v1.6.1 - 2017-05-17
 
 * Improvement: Major improvements to the Shortcode UI (builder & in editor previews). Now supports true live rendering of PM shortcodes. This will be most apparent in upcoming extension updates.
 * Fix: Forced decimal formatting in CSS output functions in case of locale changes to formatting. Fix thanks to @timhavinga
 
-## v1.6.0 - 04/26/2017
+## v1.6.0 - 2017-04-26
 
 * Feature: Added Gravity Forms direct integrations.
   * Close popup with delay when Gravity Form is submitted.
@@ -713,49 +714,49 @@ Lastly we now have include our extendable subscription forms right in the free v
 * Fix: Bug where you couldn't enter values higher than the rangeslider max.
 * Fix: JS error when creating a cookie before a trigger exists.
 
-## v1.5.8 - 04/04/2017
+## v1.5.8 - 2017-04-04
 
 * Fix: Error when extensions were active due to null values for checkboxes.
 
-## v1.5.7 - 03/27/2017
+## v1.5.7 - 2017-03-27
 
 * Improvement: Added option to disable the menu editors in case of a conflict.
 * Fix: Forced 100% width on page select boxes to prevent them from being too small.
 * Fix: Bug where checkboxes were not staying checked.
 
-## v1.5.6 - 03/16/2017
+## v1.5.6 - 2017-03-16
 
 * Feature: Admin Bar helper tool to assist in getting proper click trigger selectors easily.
 * Improvement: Further tweaks for maximium compatibitlity with nav menu editor.
 * Improvement: Added Popup option to nav menu editor Screen Options to easily hide them.
 * Fix: Updated the freemius-sdk to fix an obscure secured php core function error.
 
-## v1.5.5 - 03/13/2017
+## v1.5.5 - 2017-03-13
 
 * Improvment: Used generic Nav Menu Editor Walker classes for better support. This should remove the notices from other plugins as well.
 * Fix: Bug that causes click triggers to lag.
 
-## v1.5.4 - 03/13/2017
+## v1.5.4 - 2017-03-13
 
 * Fix: Typos in conditions.
 * Fix: Moved class_exists checks to better handle possible missing class errors.
 
-## v1.5.3 - 03/13/2017
+## v1.5.3 - 2017-03-13
 
 * Improvement: Added a catch for any triggers not initialized at page load.
 * Fix: Typo in multi check field template that led to admin JS errors.
 
-## v1.5.2 - 03/10/2017
+## v1.5.2 - 2017-03-10
 
 * Improvement: Added option to disable the admin bar Popups helper menu item.
 * Improvement: Simplified the nav menu editor modification class to reduce un-needed translation strings.
 * Fix: Added check for missing class in the nav menu editor walker classes.
 
-## v1.5.1 - 03/09/2017
+## v1.5.1 - 2017-03-09
 
 * Fix: PHP 5.2 Compatibility issue.
 
-## v1.5.0 - 03/08/2017
+## v1.5.0 - 2017-03-08
 
 * Feature: Position popups based on the click trigger. Tooltips & Popovers are now possible.
 * Feature: Added new conditions for targeting children & grandchildren / ancestors of selected content.
@@ -782,14 +783,14 @@ Lastly we now have include our extendable subscription forms right in the free v
 * Fix: Bug where links in the close button were not triggered even when do_default was enabled.
 * Fix: Bug with scrollbar "flashing" when popup opens.
 
-## v1.4.21 - 12/12/2016
+## v1.4.21 - 2016-12-12
 
 * Feature: Added option to disable popup on mobile to comply with [Google's new interstital policy](https://webmasters.googleblog.com/2016/08/helping-users-easily-access-content-on.html).
 * Tweak: Added additional paramter to the pum_popup_get_conditions filter.
 * Tweak: Fixed possible false init of NF integration if NF is not enabled.
 * Tweak: Added CSS override for Ninja Forms datepickers to properly layer them above popups.
 
-## v1.4.20 - 10/13/2016
+## v1.4.20 - 2016-10-13
 
 * Feature: Added [Ninja Forms](https://wppopupmaker.com/grab/ninja-forms?utm_source=readme-changelog&utm_medium=text-link&utm_campaign=Readme&utm_content=ninja-forms-features) success actions for opening & closing popups.
 * Feature: Added new cookie event for successful submission of a [Ninja Forms](https://wppopupmaker.com/recommends/ninja-forms) form.
@@ -961,7 +962,7 @@ __v1.4 Change Set Statistics:__
 365 Commits / 53 Major & Minor Issues Closed.
 285 changed files with 20,437 additions and 3,607 deletions.
 
-## v1.3.9 - 10/14/2015
+## v1.3.9 - 2015-10-14
 
 * Feature: New shortcode - [popup_close] allows adding custom close buttons/text. Ex. [popup_close] Click Me [/popup_close].
 * Improvement: Added SASS/SCSS files for the site & admin styles.

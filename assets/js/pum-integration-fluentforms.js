@@ -81,16 +81,12 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/fluentforms.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./assets/js/src/integration/fluentforms.js":
-/*!**************************************************!*\
-  !*** ./assets/js/src/integration/fluentforms.js ***!
-  \**************************************************/
-/*! no static exports found */
+/***/ 9:
 /***/ (function(module, exports) {
 
 /*******************************************************************************

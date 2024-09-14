@@ -183,20 +183,21 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
-= v1.20.0 - 2024-09-13 =
+= v1.20.0 - 2024-09-14 =
 
 * Important: Popup Maker will be transitioning to new minimum PHP & WP versions over the next few releases. [Read about our plans here](https://wppopupmaker.com/announcements/upcoming-php-wp-requirement-changes/).
 * Feature: Add Form Integration for Fluent Forms, close or trigger popups, set cookies and more on form submission.
 * Feature: Add font size and font select buttons to the classic editor.
+* Improvement: Improved asset minification substantially reducing JS & CSS file sizes.
 * Improvement: Keep the same popup editor, theme editor & settings page tab after saving or refreshing the page.
 * Fix: Deprecated notice on PHP 8.3 for converting bool to array.
 
-= v1.19.2 - 08/25/2024 =
+= v1.19.2 - 2024-08-25
 
 * Fix: Warning notice shown when some users with extensions went to the update screen.
 * Fix: Error on activation for some users on fresh installs.
 
-= v1.19.1 - 08/17/2024 =
+= v1.19.1 - 2024-08-17
 
 * Security: Only allow admins to save HTML in plugin settings if they have `unfiltered_html` capability.
   * Note: User had to be an admin to be able to edit these settings already, but some sites have advanced capabilities set up, so using `unfiltered_html` specifically is the right move matching with WP core.
@@ -208,7 +209,7 @@ View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/mas
 * Fix: Edge case for Multisite causing fatal error on activation due to missing function.
 * Fix: Typos in settings labels.
 
-= v1.19.0 - 05/23/2024 - WP Popup Builder for WS Forms =
+= v1.19.0 - 2024-05-23 - WP Popup Builder for WS Forms =
 
 * Feature: Add WS Forms integration.
 * Tweak: Don't show error message when saving settings without making changes.
