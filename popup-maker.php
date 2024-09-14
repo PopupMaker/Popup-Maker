@@ -31,7 +31,7 @@ function popup_maker_config() {
 	return [
 		'name'           => __( 'Popup Maker', 'popup-maker' ),
 		'slug'           => 'popup-maker',
-		'version'        => '1.19.2',
+		'version'        => '1.20.0',
 		'option_prefix'  => 'popup_maker',
 		'text_domain'    => 'popup-maker',
 		'fullname'       => __( 'Popup Maker', 'popup-maker' ),

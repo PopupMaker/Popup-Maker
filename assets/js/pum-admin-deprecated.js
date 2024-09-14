@@ -81,16 +81,12 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/admin/deprecated.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = 16);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./assets/js/src/admin/deprecated.js":
-/*!*******************************************!*\
-  !*** ./assets/js/src/admin/deprecated.js ***!
-  \*******************************************/
-/*! no static exports found */
+/***/ 16:
 /***/ (function(module, exports) {
 
 /*******************************************************************************

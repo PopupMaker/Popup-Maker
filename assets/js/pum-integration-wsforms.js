@@ -81,16 +81,12 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/wsforms.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./assets/js/src/integration/wsforms.js":
-/*!**********************************************!*\
-  !*** ./assets/js/src/integration/wsforms.js ***!
-  \**********************************************/
-/*! no static exports found */
+/***/ 15:
 /***/ (function(module, exports) {
 
 /*******************************************************************************
