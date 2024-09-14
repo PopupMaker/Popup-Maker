@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Fix: Notice when popup is enqueued before init.
+
 ## v1.20.0 - 2024-09-14
 
 * Important: Popup Maker will be transitioning to new minimum PHP & WP versions over the next few releases. [Read about our plans here](https://wppopupmaker.com/blog/popup-maker-new-minimum-php-and-wp-versions-coming-soon/).

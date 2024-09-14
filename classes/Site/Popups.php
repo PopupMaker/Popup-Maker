@@ -43,7 +43,7 @@ class PUM_Site_Popups {
 	public static function init() {
 
 		// Preload the $loaded query.
-		add_action( 'init', [ __CLASS__, 'init_state' ] );
+		add_action( 'init', [ __CLASS__, 'get_loaded_popups' ], 0 );
 
 		// Check content for popups.
 		add_filter( 'the_content', [ __CLASS__, 'check_content_for_popups' ] );
@@ -179,6 +179,9 @@ class PUM_Site_Popups {
 
 		// Add to the $loaded_ids list.
 		self::$loaded_ids[] = $popup->ID;
+
+		// Ensure the loaded query is up to date.
+		self::get_loaded_popups();
 
 		// Add to the $loaded query.
 		self::$loaded->posts[] = $popup;
