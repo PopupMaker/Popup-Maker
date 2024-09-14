@@ -1,32 +1,40 @@
-const webpackMerge = require( 'webpack-merge' );
-const defaultConfig = require( '../node_modules/@wordpress/scripts/config/webpack.config.js' );
-const path = require( 'path' );
-const postcssPresetEnv = require( 'postcss-preset-env' );
-const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
-const IgnoreEmitPlugin = require( 'ignore-emit-webpack-plugin' );
+const webpackMerge = require('webpack-merge');
+const defaultConfig = require('../node_modules/@wordpress/scripts/config/webpack.config.js');
+const path = require('path');
+const postcssPresetEnv = require('postcss-preset-env');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const IgnoreEmitPlugin = require('ignore-emit-webpack-plugin');
+const cssnano = require('cssnano'); // Add cssnano
 
-const production = process.env.NODE_ENV === '';
+const production = process.env.NODE_ENV === 'production';
 
 /**
  * Using webpackMerge.strategy to merge our config with the wp-scripts base config.
  *
  * strategy was used to ensure we overwrite the entry value entirely.
  */
-const config = webpackMerge.strategy(
-	{
-		entry: 'replace',
-	},
-)( {}, defaultConfig, {
+const config = webpackMerge.strategy({
+	entry: 'replace',
+})({}, defaultConfig, {
 	// Maps our buildList into a new object of { key: build.entry }.
 	entry: {
-		'block-editor/block-editor': path.resolve( process.cwd(), 'src', 'block-editor/index.js' ),
+		'block-editor/block-editor': path.resolve(
+			process.cwd(),
+			'src',
+			'block-editor/index.js'
+		),
 		// 'block-editor/block-styles': path.resolve( process.cwd(), 'src', 'block-editor/style.scss' ),
-		'block-editor/block-editor-styles': path.resolve( process.cwd(), 'src', 'block-editor/editor.scss' ),
+		'block-editor/block-editor-styles': path.resolve(
+			process.cwd(),
+			'src',
+			'block-editor/editor.scss'
+		),
 	},
 	output: {
-		path: path.resolve( process.cwd(), 'dist' ),
+		path: path.resolve(process.cwd(), 'dist'),
 	},
 	optimization: {
+		minimize: production, // Enable minification in production
 		splitChunks: {
 			cacheGroups: {
 				editor: {
@@ -63,7 +71,7 @@ const config = webpackMerge.strategy(
 						options: {
 							ident: 'postcss',
 							plugins: () => [
-								postcssPresetEnv( {
+								postcssPresetEnv({
 									stage: 3,
 									features: {
 										'custom-media-queries': {
@@ -74,14 +82,15 @@ const config = webpackMerge.strategy(
 										},
 										'nesting-rules': true,
 									},
-								} ),
+								}),
+								...(production ? [cssnano()] : []), // Add cssnano only in production
 							],
 						},
 					},
 					{
 						loader: 'sass-loader',
 						options: {
-							sourceMap: ! production,
+							sourceMap: !production,
 						},
 					},
 				],
@@ -89,11 +98,15 @@ const config = webpackMerge.strategy(
 		],
 	},
 	plugins: [
-		new MiniCssExtractPlugin( {
+		new MiniCssExtractPlugin({
 			filename: '[name].css',
-		} ),
-		new IgnoreEmitPlugin( [ /-styles.js$/, /-styles.min.js$/, /-styles.js.map$/ ]),
+		}),
+		new IgnoreEmitPlugin([
+			/-styles.js$/,
+			/-styles.min.js$/,
+			/-styles.js.map$/,
+		]),
 	],
-} );
+});
 
 module.exports = config;

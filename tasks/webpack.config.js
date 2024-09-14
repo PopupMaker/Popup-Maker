@@ -12,6 +12,10 @@ const JS_DIST = path.resolve(config.root.dist, config.js.dist);
 const UglifyJS = require('uglify-es');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const UnminifiedWebpackPlugin = require('unminified-webpack-plugin');
+const cssnano = require('cssnano'); // Add cssnano
+const { optimization } = require('@wordpress/scripts/config/webpack.config');
+
+const production = process.env.NODE_ENV === 'production';
 
 const adminPages = [
 	// 'customers',
@@ -29,16 +33,20 @@ const adminPages = [
 ];
 
 const minifyJs = (content) => {
-	return mode.production ? Promise.resolve(Buffer.from(UglifyJS.minify(content.toString()).code)) : content;
+	return mode.production
+		? Promise.resolve(Buffer.from(UglifyJS.minify(content.toString()).code))
+		: content;
 };
 
 const webpackConfig = {
-	mode: mode.production ? 'production' : 'development',
+	mode: production ? 'production' : 'development',
 	// context: JS_DEV,
 	entry: Object.assign(
 		// Dynamic entry points for individual admin pages.
 		adminPages.reduce((memo, path) => {
-			memo[`pum-admin-${path.replace('/', '-')}`] = `${JS_DEV}/admin/${path}`;
+			memo[
+				`pum-admin-${path.replace('/', '-')}`
+			] = `${JS_DEV}/admin/${path}`;
 			return memo;
 		}, {}),
 		{
@@ -53,12 +61,18 @@ const webpackConfig = {
 			'pum-integration-wsforms': `${JS_DEV}/integration/wsforms.js`,
 			'pum-admin-deprecated': `${JS_DEV}/admin/deprecated.js`,
 			'popup-maker-easy-modal-importer-site': `${JS_DEV}/popup-maker-easy-modal-importer-site.js`,
-			'mce-buttons': `${JS_DEV}/mce-buttons.js`
+			'mce-buttons': `${JS_DEV}/mce-buttons.js`,
 		}
 	),
 	output: {
 		filename: '[name].min.js',
-		path: JS_DIST
+		path: JS_DIST,
+	},
+	optimization: {
+		minimize: production, // Enable minification in production
+	},
+	module: {
+		rules: [],
 	},
 	module: {
 		rules: [
@@ -76,6 +90,47 @@ const webpackConfig = {
 				// 	],
 				// },
 			},
+
+			{
+				test: /\.(sc|sa|c)ss$/,
+				exclude: /node_modules/,
+				use: [
+					// MiniCssExtractPlugin.loader,
+					// {
+					// 	loader: 'css-loader',
+					// 	options: {
+					// 		sourceMap: ! production,
+					// 	},
+					// },
+					{
+						loader: 'postcss-loader',
+						options: {
+							ident: 'postcss',
+							plugins: () => [
+								postcssPresetEnv({
+									stage: 3,
+									features: {
+										'custom-media-queries': {
+											preserve: false,
+										},
+										'custom-properties': {
+											preserve: true,
+										},
+										'nesting-rules': true,
+									},
+								}),
+								...(production ? [cssnano()] : []), // Add cssnano only in production
+							],
+						},
+					},
+					{
+						loader: 'sass-loader',
+						options: {
+							sourceMap: !production,
+						},
+					},
+				],
+			},
 		],
 	},
 	externals: {
@@ -83,11 +138,7 @@ const webpackConfig = {
 		$: 'jQuery',
 	},
 	resolve: {
-		modules: [
-			JS_DEV,
-			config.modules.node,
-			config.modules.bower,
-		],
+		modules: [JS_DEV, config.modules.node, config.modules.bower],
 		extensions: config.js.extensions,
 	},
 	plugins: [
@@ -106,8 +157,8 @@ const webpackConfig = {
 			},
 		]),
 		new UglifyJsPlugin(),
-		new UnminifiedWebpackPlugin()
-	]
+		new UnminifiedWebpackPlugin(),
+	],
 };
 
 /**
@@ -115,9 +166,7 @@ const webpackConfig = {
  */
 if (mode.production) {
 	//webpackConfig.optimization.minimize = true;
-	webpackConfig.plugins.push(
-		new webpack.NoEmitOnErrorsPlugin(),
-	);
+	webpackConfig.plugins.push(new webpack.NoEmitOnErrorsPlugin());
 } else {
 	webpackConfig.devtool = 'inline-source-map';
 }
