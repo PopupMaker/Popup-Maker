@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Fix: Notice when popup is enqueued before init.
+* Fix: Popups with titles had their popup ID # rendered below site footer in some cases.
 
 ## v1.20.0 - 2024-09-14
 
