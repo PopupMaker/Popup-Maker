@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Fix: Bug causing menu item Trigger Popup settings to not be saved.
+
 ## v1.20.1 - 2024-09-18
 
 * Fix: Notice when popup is enqueued before init.
