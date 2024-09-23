@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## v1.20.1 - 2024-09-18
+
+* Fix: Notice when popup is enqueued before init.
+* Fix: Popups with titles had their popup ID # rendered below site footer in some cases.
+
 ## v1.20.0 - 2024-09-14
 
 * Important: Popup Maker will be transitioning to new minimum PHP & WP versions over the next few releases. [Read about our plans here](https://wppopupmaker.com/blog/popup-maker-new-minimum-php-and-wp-versions-coming-soon/).
