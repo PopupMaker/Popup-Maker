@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, conversion
 Requires at least: 4.9
 Tested up to: 6.6.2
 Requires PHP: 5.6
-Stable tag: 1.20.0
+Stable tag: 1.20.1
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -182,6 +182,11 @@ There are several common causes for this, check [this guide for help](https://do
 == Changelog ==
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
+
+= v1.20.1 - 2024-09-18 =
+
+* Fix: Notice when popup is enqueued before init.
+* Fix: Popups with titles had their popup ID # rendered below site footer in some cases.
 
 = v1.20.0 - 2024-09-14 =
 
