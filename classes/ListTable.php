@@ -199,7 +199,9 @@ class PUM_ListTable {
 	 */
 	public function __set( $name, $value ) {
 		if ( in_array( $name, $this->compat_fields, true ) ) {
-			return $this->$name = $value;
+			$this->$name = $value;
+
+			return $this->$name;
 		}
 	}
 
@@ -653,7 +655,7 @@ class PUM_ListTable {
 			}
 			printf(
 				"<a href='%s' class='%s' id='view-switch-" . esc_attr( $mode ) . "'><span class='screen-reader-text'>%s</span></a>\n",
-				esc_url( add_query_arg( 'mode', $mode ) ),
+				esc_url_raw( add_query_arg( 'mode', $mode ) ),
 				esc_attr( implode( ' ', $classes ) ),
 				esc_html( $title )
 			);
@@ -703,7 +705,7 @@ class PUM_ListTable {
 		} elseif ( $approved_comments ) {
 			printf(
 				'<a href="%s" class="post-com-count post-com-count-approved"><span class="comment-count-approved" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></a>',
-				esc_url(
+				esc_url_raw(
 					add_query_arg(
 						[
 							'p'              => $post_id,
@@ -726,7 +728,7 @@ class PUM_ListTable {
 		if ( $pending_comments ) {
 			printf(
 				'<a href="%s" class="post-com-count post-com-count-pending"><span class="comment-count-pending" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></a>',
-				esc_url(
+				esc_url_raw(
 					add_query_arg(
 						[
 							'p'              => $post_id,
@@ -834,10 +836,10 @@ class PUM_ListTable {
 
 		$removable_query_args = wp_removable_query_args();
 
-		$host        = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_url( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : wp_parse_url( home_url(), PHP_URL_HOST );
+		$host        = isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : wp_parse_url( home_url(), PHP_URL_HOST );
 		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
-		$current_url = set_url_scheme( 'http://' . $host . $request_uri );
+		$current_url = set_url_scheme( $host . $request_uri );
 
 		$current_url = remove_query_arg( $removable_query_args, $current_url );
 
@@ -871,7 +873,7 @@ class PUM_ListTable {
 		} else {
 			$page_links[] = sprintf(
 				"<a class='first-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
-				esc_url( remove_query_arg( 'paged', $current_url ) ),
+				esc_url_raw( remove_query_arg( 'paged', $current_url ) ),
 				__( 'First page' ),
 				'&laquo;'
 			);
@@ -882,7 +884,7 @@ class PUM_ListTable {
 		} else {
 			$page_links[] = sprintf(
 				"<a class='prev-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
-				esc_url( add_query_arg( 'paged', max( 1, $current - 1 ), $current_url ) ),
+				esc_url_raw( add_query_arg( 'paged', max( 1, $current - 1 ), $current_url ) ),
 				__( 'Previous page' ),
 				'&lsaquo;'
 			);
@@ -912,7 +914,7 @@ class PUM_ListTable {
 		} else {
 			$page_links[] = sprintf(
 				"<a class='next-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
-				esc_url( add_query_arg( 'paged', min( $total_pages, $current + 1 ), $current_url ) ),
+				esc_url_raw( add_query_arg( 'paged', min( $total_pages, $current + 1 ), $current_url ) ),
 				__( 'Next page' ),
 				'&rsaquo;'
 			);
@@ -923,7 +925,7 @@ class PUM_ListTable {
 		} else {
 			$page_links[] = sprintf(
 				"<a class='last-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
-				esc_url( add_query_arg( 'paged', $total_pages, $current_url ) ),
+				esc_url_raw( add_query_arg( 'paged', $total_pages, $current_url ) ),
 				__( 'Last page' ),
 				'&raquo;'
 			);
@@ -1191,7 +1193,7 @@ class PUM_ListTable {
 					$class[] = $desc_first ? 'asc' : 'desc';
 				}
 
-				$column_display_name = '<a href="' . esc_url( add_query_arg( compact( 'orderby', 'order' ), $current_url ) ) . '"><span>' . $column_display_name . '</span><span class="sorting-indicator"></span></a>';
+				$column_display_name = '<a href="' . esc_url_raw( add_query_arg( compact( 'orderby', 'order' ), $current_url ) ) . '"><span>' . $column_display_name . '</span><span class="sorting-indicator"></span></a>';
 			}
 
 			$tag   = ( 'cb' === $column_key ) ? 'td' : 'th';
