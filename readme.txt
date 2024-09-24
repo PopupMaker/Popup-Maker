@@ -184,6 +184,13 @@ There are several common causes for this, check [this guide for help](https://do
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
 
+= v1.20.2 - 2024-09-24 =
+
+* Fix: Bug where deleting subscribers led to an error rather than success notice.
+* Fix: Bug in Subscribers table pagination, urls were invalid leading to 404 due to duplicate protocols (<http://http://>).
+* Fix: Bug causing menu item Trigger Popup settings to not be saved. Caused by new strict type checking on string vs int.
+* Fix: Bug causing Click Trigger extra selector to not save properly. Caused by recent overzealous sanitization.
+
 = v1.20.1 - 2024-09-18 =
 
 * Fix: Notice when popup is enqueued before init.
