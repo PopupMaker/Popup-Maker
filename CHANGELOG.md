@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-* Fix: Bug causing menu item Trigger Popup settings to not be saved.
+* Fix: Bug causing menu item Trigger Popup settings to not be saved. Caused by new strict type checking on string vs int.
+* Fix: Bug causing Click Trigger extra selector to not save properly. Caused by recent overzealous sanitization.
 
 ## v1.20.1 - 2024-09-18
 
