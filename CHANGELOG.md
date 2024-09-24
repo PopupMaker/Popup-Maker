@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.20.2 - 2024-09-24
+
 * Fix: Bug where deleting subscribers led to an error rather than success notice.
 * Fix: Bug in Subscribers table pagination, urls were invalid leading to 404 due to duplicate protocols (<http://http://>).
 * Fix: Bug causing menu item Trigger Popup settings to not be saved. Caused by new strict type checking on string vs int.

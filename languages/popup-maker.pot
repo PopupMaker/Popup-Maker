@@ -365,7 +365,7 @@ msgstr ""
 msgid "There was an error with this license key: %1$s. Please %2$scontact our support team%3$s."
 msgstr ""
 
-#: classes/ListTable.php:960
+#: classes/ListTable.php:962
 msgid "function PUM_ListTable::get_columns() must be over-ridden in a sub-class."
 msgstr ""
 
@@ -2486,7 +2486,7 @@ msgstr ""
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: classes/Extension/Updater.php:611, includes/admin/class-pum-admin-upgrades.php:268, classes/Admin/Subscribers/Table.php:414, classes/Admin/Subscribers/Table.php:399, classes/Admin/Subscribers/Table.php:426, classes/Admin/Subscribers/Table.php:444, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50
+#: classes/Extension/Updater.php:611, includes/admin/class-pum-admin-upgrades.php:268, classes/Admin/Subscribers/Table.php:427, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50
 msgid "Error"
 msgstr ""
 
@@ -3134,7 +3134,7 @@ msgstr ""
 msgid "Reset Cookies"
 msgstr ""
 
-#: includes/modules/admin-bar.php:157, classes/Admin/Subscribers/Table.php:386
+#: includes/modules/admin-bar.php:157
 msgid "Success"
 msgstr ""
 
@@ -3294,26 +3294,19 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#. translators: %1$d is the number of subscribers deleted, %2$d is the number of subscribers that failed to delete.
-#: classes/Admin/Subscribers/Table.php:410
-msgid "%1$d Subscribers deleted, %2$d failed"
-msgstr ""
-
-#: classes/Admin/Subscribers/Table.php:398
-msgid "Deleting subscriber failed."
-msgstr ""
-
-#: classes/Admin/Subscribers/Table.php:383
-msgid "%d Subscriber deleted!"
-msgid_plural "%d Subscribers deleted!"
+#: classes/Admin/Subscribers/Table.php:409, classes/Admin/Subscribers/Table.php:402
+msgid "Subscriber deleted!"
+msgid_plural "Subscribers deleted!"
 msgstr[0] ""
 msgstr[1] ""
 
-#: classes/Admin/Subscribers/Table.php:425
-msgid "Uh oh, the subscribers was not deleted successfully!"
-msgstr ""
+#: classes/Admin/Subscribers/Table.php:415
+msgid "failed to delete."
+msgid_plural "failed to delete."
+msgstr[0] ""
+msgstr[1] ""
 
-#: classes/Admin/Subscribers/Table.php:443
+#: classes/Admin/Subscribers/Table.php:426
 msgid "Invalid Nonce"
 msgstr ""
 
