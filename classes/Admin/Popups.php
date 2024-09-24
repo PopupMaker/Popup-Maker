@@ -338,8 +338,8 @@ class PUM_Admin_Popups {
 		$popup->update_meta( 'popup_title', $title );
 
 		// Ignored because this is a dynamic array and has sanitization applid to keys before usage.
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$settings = ! empty( $_POST['popup_settings'] ) ? wp_unslash( $_POST['popup_settings'] ) : [];
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$settings = ! empty( $_POST['popup_settings'] ) ? $_POST['popup_settings'] : [];
 
 		// Sanitize JSON values.
 		$settings['conditions'] = isset( $settings['conditions'] ) ? self::sanitize_meta( $settings['conditions'] ) : [];

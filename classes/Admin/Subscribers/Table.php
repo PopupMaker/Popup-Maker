@@ -352,85 +352,68 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 		}
 
 		// Detect when a bulk action is being triggered...
-		$action1 = $this->current_action();
+		$action1      = $this->current_action();
+		$redirect_url = admin_url( 'edit.php?page=pum-subscribers&post_type=popup' );
 
 		if ( in_array( $action1, [ 'delete', 'bulk-delete' ], true ) ) {
 
-			// verify the nonce.
-			if ( ! wp_verify_nonce( $nonce, 'delete' === $action1 ? 'pum_subscribers_table_action_nonce' : 'bulk-subscribers' ) ) {
+			// Determine the appropriate nonce action based on the current action
+			$nonce_action = ( 'delete' === $action1 ) ? 'pum_subscribers_table_action_nonce' : 'bulk-subscribers';
+
+			// Verify the nonce
+			if ( ! wp_verify_nonce( $nonce, $nonce_action ) ) {
 				$this->invalid_nonce_redirect();
+				return;
+			}
+
+			// Sanitize subscriber IDs
+			$subscribers = isset( $_REQUEST['subscriber'] ) ? array_map( 'absint', (array) $_REQUEST['subscriber'] ) : [];
+
+			if ( empty( $subscribers ) ) {
+				// No subscribers selected
+				$redirect_url = add_query_arg( 'pum_action', 'error', $redirect_url );
+				wp_safe_redirect( $redirect_url );
+				exit;
+			}
+
+			// Initialize counters
+			$deleted = 0;
+			$failed  = 0;
+
+			foreach ( $subscribers as $subscriber_id ) {
+				$result = PUM_DB_Subscribers::instance()->delete( $subscriber_id );
+				if ( $result ) {
+					++$deleted;
+				} else {
+					++$failed;
+				}
+			}
+
+			// Prepare redirect URL with query parameters
+
+			// All deletions successful
+			$deleted_count = intval( $deleted );
+			$failed_count  = intval( $failed );
+
+			if ( $deleted_count >= count( $subscribers ) ) {
+				printf(
+					'<div class="notice notice-success is-dismissible"><p>%d %s</p></div>',
+					esc_attr( $deleted_count ),
+					esc_html( _n( 'Subscriber deleted!', 'Subscribers deleted!', $deleted_count, 'popup-maker' ) )
+				);
 			} else {
-				$subscribers = isset( $_REQUEST['subscriber'] ) ? sanitize_key( wp_unslash( $_REQUEST['subscriber'] ) ) : [];
-
-				if ( is_numeric( $subscribers ) ) {
-					$subscribers = [ $subscribers ];
-				}
-
-				$subscribers = wp_parse_id_list( $subscribers );
-
-				if ( $subscribers ) {
-					$status = [];
-
-					foreach ( $subscribers as $subscriber_id ) {
-						$status[] = PUM_DB_Subscribers::instance()->delete( $subscriber_id );
-					}
-
-					if ( ! in_array( false, $status, true ) ) {
-						wp_die(
-							sprintf(
-								esc_attr(
-								/* translators: %d is the number of subscribers deleted. */
-								_n( '%d Subscriber deleted!', '%d Subscribers deleted!', count( $subscribers ), 'popup-maker' ) ),
-								count( $subscribers )
-							),
-							esc_attr__( 'Success', 'popup-maker' ),
-							[
-								'response'  => 200,
-								'back_link' => esc_url( admin_url( 'edit.php?page=pum-subscribers&post_type=popup' ) ),
-							]
-						);
-					} else {
-						$succeeded = count( array_filter( $status ) );
-						$failed    = count( $subscribers ) - $succeeded;
-
-						if ( count( $subscribers ) === 1 ) {
-							wp_die(
-								esc_html__( 'Deleting subscriber failed.', 'popup-maker' ),
-								esc_html__( 'Error', 'popup-maker' ),
-								[
-									'response'  => 200,
-									'back_link' => esc_url( admin_url( 'edit.php?page=pum-subscribers&post_type=popup' ) ),
-								]
-							);
-						} else {
-							wp_die(
-								esc_html(
-									sprintf(
-										/* translators: %1$d is the number of subscribers deleted, %2$d is the number of subscribers that failed to delete. */
-										__( '%1$d Subscribers deleted, %2$d failed', 'popup-maker' ),
-										$succeeded, $failed
-									)
-								),
-								esc_html__( 'Error', 'popup-maker' ),
-								[
-									'response'  => 200,
-									'back_link' => esc_url( admin_url( 'edit.php?page=pum-subscribers&post_type=popup' ) ),
-								]
-							);
-						}
-					}
-				}
-
-				wp_die(
-					esc_html__( 'Uh oh, the subscribers was not deleted successfully!', 'popup-maker' ),
-					esc_html__( 'Error', 'popup-maker' ),
-					[
-						'response'  => 200,
-						'back_link' => esc_url( admin_url( 'edit.php?page=pum-subscribers&post_type=popup' ) ),
-					]
+				// Some deletions failed
+				printf(
+					'<div class="notice notice-success is-dismissible"><p>%d %s</p></div>',
+					esc_attr( $deleted_count ),
+					esc_html( _n( 'Subscriber deleted!', 'Subscribers deleted!', $deleted_count, 'popup-maker' ) )
 				);
 
-				exit;
+				printf(
+					'<div class="notice notice-error is-dismissible"><p>%d %s</p></div>',
+					esc_attr( $failed_count ),
+					esc_html( _n( 'failed to delete.', 'failed to delete.', $failed_count, 'popup-maker' ) )
+				);
 			}
 		}
 	}
