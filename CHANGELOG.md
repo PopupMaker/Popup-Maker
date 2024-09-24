@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Fix: Bug in Subscribers table pagination, urls were invalid leading to 404 due to duplicate protocols (<http://http://>).
 * Fix: Bug causing menu item Trigger Popup settings to not be saved. Caused by new strict type checking on string vs int.
 * Fix: Bug causing Click Trigger extra selector to not save properly. Caused by recent overzealous sanitization.
 
