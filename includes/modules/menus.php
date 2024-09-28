@@ -267,7 +267,7 @@ class PUM_Modules_Menu {
 		/**
 		 * Check for invalid values.
 		 */
-		if ( ! in_array( $item_options['popup_id'], $allowed_popups, true ) || $item_options['popup_id'] <= 0 ) {
+		if ( ! in_array( (int) $item_options['popup_id'], $allowed_popups, true ) || $item_options['popup_id'] <= 0 ) {
 			unset( $item_options['popup_id'] );
 		}
 

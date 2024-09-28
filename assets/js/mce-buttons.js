@@ -81,16 +81,12 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/mce-buttons.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./assets/js/src/mce-buttons.js":
-/*!**************************************!*\
-  !*** ./assets/js/src/mce-buttons.js ***!
-  \**************************************/
-/*! no static exports found */
+/***/ 18:
 /***/ (function(module, exports) {
 
 (function ($, tinymce) {

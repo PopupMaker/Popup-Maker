@@ -81,26 +81,31 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 14:
+/***/ 9:
 /***/ (function(module, exports) {
 
 /*******************************************************************************
- * Copyright (c) 2020, WP Popup Maker
+ * Copyright (c) 2024, WP Popup Maker
  ******************************************************************************/
 {
-  var formProvider = 'wpforms';
+  var formProvider = 'fluentforms';
   var $ = window.jQuery;
-  $(document).on('wpformsAjaxSubmitSuccess', '.wpforms-ajax-form', function (event, details) {
-    var $form = $(this),
-        formId = $form.data('formid'),
-        formInstanceId = $('form#' + $form.attr('id')).index($form) + 1; // All the magic happens here.
+  $(document).on('fluentform_submission_success', function (event, formDetails) {
+    // Extract necessary form details from the event.
+    var formEl = formDetails.form; // The form element
 
-    window.PUM.integrations.formSubmission($form, {
+    var formConfig = formDetails.config; // The form configuration (contains formId, etc.)
+
+    var formId = formConfig.id;
+    var formInstanceId = formEl.data('form_instance');
+    console.log(formId, formDetails); // All the magic happens here.
+
+    window.PUM.integrations.formSubmission($(formEl), {
       formProvider: formProvider,
       formId: formId,
       formInstanceId: formInstanceId

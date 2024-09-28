@@ -65,6 +65,8 @@ function pum_get_rendered_theme_styles( $theme_id ) {
 				break;
 		}
 
+		$css_selector = apply_filters( 'pum_theme_css_selector', $css_selector, $theme_id, $element, $slug );
+
 		$sep      = '';
 		$rule_set = '';
 		foreach ( $element_rules as $property => $value ) {

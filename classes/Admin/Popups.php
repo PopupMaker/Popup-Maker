@@ -190,7 +190,7 @@ class PUM_Admin_Popups {
 	 * @param array $values Array of settings.
 	 * @return array
 	 *
-	 * @deprecated X.X.X - Explicitly use ::defaults() and/or ::fill_missing_defaults() instead.
+	 * @deprecated 1.20.0 - Explicitly use ::defaults() and/or ::fill_missing_defaults() instead.
 	 */
 	public static function parse_values( $values = [] ) {
 		$defaults = self::defaults();
@@ -338,8 +338,8 @@ class PUM_Admin_Popups {
 		$popup->update_meta( 'popup_title', $title );
 
 		// Ignored because this is a dynamic array and has sanitization applid to keys before usage.
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$settings = ! empty( $_POST['popup_settings'] ) ? wp_unslash( $_POST['popup_settings'] ) : [];
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$settings = ! empty( $_POST['popup_settings'] ) ? $_POST['popup_settings'] : [];
 
 		// Sanitize JSON values.
 		$settings['conditions'] = isset( $settings['conditions'] ) ? self::sanitize_meta( $settings['conditions'] ) : [];

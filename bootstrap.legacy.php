@@ -22,8 +22,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array
  *
- * @since X.X.X
- * @deprecated X.X.X - Use composer autoloader instead.
+ * @since 1.20.0
+ * @deprecated 1.20.0 - Use composer autoloader instead.
  */
 function pum_get_deprecated_autoloaders() {
 	static $deprecated_autoloaders;
@@ -32,7 +32,7 @@ function pum_get_deprecated_autoloaders() {
 		$deprecated_autoloaders = apply_filters(
 			'pum_autoloaders',
 			[
-				// Popup Maker Core prior to X.X.X. To Be removed when all classes are namespaced.
+				// Popup Maker Core prior to 1.20.0. To Be removed when all classes are namespaced.
 				[
 					'prefix' => 'PUM_',
 					'dir'    => __DIR__ . '/classes/',
@@ -62,7 +62,7 @@ function pum_get_deprecated_autoloaders() {
  *
  * @param string $class_name The class name to load.
  *
- * @deprecated X.X.X - Use composer autoloader instead.
+ * @deprecated 1.20.0 - Use composer autoloader instead.
  */
 function pum_autoloader( $class_name ) {
 	$pum_autoloaders = pum_get_deprecated_autoloaders();

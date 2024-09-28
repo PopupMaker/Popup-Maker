@@ -125,7 +125,7 @@ abstract class PUM_Shortcode {
 	}
 
 	public function _subtabs() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-		$subtabs = $this->version >= 2 && method_exists( $this, 'subtabs' ) ? $this->subtabs() : false;
+		$subtabs = $this->version >= 2 && method_exists( $this, 'subtabs' ) ? $this->subtabs() : [];
 
 		foreach ( $this->_tabs() as $tab_id => $tab_label ) {
 			if ( empty( $subtabs[ $tab_id ] ) || ! is_array( $subtabs[ $tab_id ] ) ) {

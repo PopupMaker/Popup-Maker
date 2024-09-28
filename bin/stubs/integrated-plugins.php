@@ -358,3 +358,30 @@ class WS_Form_Submit {
 	 */
 	public $form_id;
 }
+
+/** 
+ * @param string $key
+ * 
+ * @return ($key is 'forms' ? FluentForms_Forms : mixed)
+*/
+function fluentFormApi( $key ) {}
+
+class FluentForms_Forms {
+	/**
+	 * Get a form.
+	 *
+	 * @param string $form_id Form ID.
+	 *
+	 * @return object{id:int,title:string}
+	 */
+	public function find( $form_id ) {}
+
+	/**
+	 * Get all forms.
+	 *
+	 * @param bool $irrelevant Irrelevant.
+	 *
+	 * @return array<object{id:int,title:string}>
+	 */
+	public function get_forms( $irrelevant = false ) {}
+}

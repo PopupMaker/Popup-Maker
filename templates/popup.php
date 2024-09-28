@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
-$labelledby = pum_get_popup_title() !== '' ? 'aria-labelledby="pum_popup_title_' . pum_popup_ID() . '"' : '';
+$labelledby = pum_get_popup_title() !== '' ? 'aria-labelledby="pum_popup_title_' . pum_get_popup_id() . '"' : '';
 
 ?>
 <div id="pum-<?php pum_popup_ID(); ?>" role="dialog" aria-modal="false" <?php echo esc_attr( $labelledby ); ?> class="<?php pum_popup_classes(); ?>" <?php pum_popup_data_attr(); ?>>
