@@ -66,3 +66,130 @@ function pum_integrated_form_submission( $args = [] ) {
 
 	do_action( 'pum_integrated_form_submission', $args );
 }
+
+/**
+ * Register a script for possible caching.
+ *
+ * @param string   $handle The script handle.
+ * @param string   $src The script src.
+ * @param string[] $deps The script dependencies.
+ * @param string   $version The script version.
+ * @param bool     $in_footer Whether to enqueue the script in the footer.
+ *
+ * @return bool
+ *
+ * @since X.X.X
+ */
+function pum_register_script( $handle, $src, $deps = [], $version = null, $in_footer = true ) {
+	return PUM_AssetCache::register_script( $handle, $src, $deps, $version, $in_footer );
+}
+
+/**
+ * Register a style for possible caching.
+ *
+ * @param string   $handle The style handle.
+ * @param string   $src The style src.
+ * @param string[] $deps The style dependencies.
+ * @param string   $version The style version.
+ * @param string   $media The style media.
+ *
+ * @return bool
+ *
+ * @since X.X.X
+ */
+function pum_register_style( $handle, $src, $deps = [], $version = false, $media = 'all' ) {
+	return PUM_AssetCache::register_style( $handle, $src, $deps, $version, $media );
+}
+
+/**
+ * Enqueue a script for possible caching.
+ *
+ * @param string   $handle The script handle.
+ * @param string   $src The script src.
+ * @param string[] $deps The script dependencies.
+ * @param string   $version The script version.
+ * @param bool     $in_footer Whether to enqueue the script in the footer.
+ *
+ * @return bool
+ *
+ * @since X.X.X
+ */
+function pum_enqueue_script( $handle, $src = '', $deps = [], $version = null, $in_footer = false ) {
+	return PUM_AssetCache::enqueue_script( $handle, $src, $deps, $version, $in_footer );
+}
+
+/**
+ * Enqueue a style for possible caching.
+ *
+ * @param string   $handle The style handle.
+ * @param string   $src The style src.
+ * @param string[] $deps The style dependencies.
+ * @param string   $version The style version.
+ * @param string   $media The style media.
+ *
+ * @return bool
+ *
+ * @since X.X.X
+ */
+function pum_enqueue_style( $handle, $src, $deps = [], $version = null, $media = false ) {
+	return PUM_AssetCache::enqueue_style( $handle, $src, $deps, $version, $media );
+}
+
+/**
+ * Dequeue a script.
+ *
+ * @param string $handle The script handle.
+ *
+ * @return bool
+ *
+ * @since X.X.X
+ */
+function pum_dequeue_script( $handle ) {
+	return PUM_AssetCache::dequeue_script( $handle );
+}
+
+/**
+ * Dequeue a style.
+ *
+ * @param string $handle The style handle.
+ *
+ * @return bool
+ *
+ * @since X.X.X
+ */
+function pum_dequeue_style( $handle ) {
+	return PUM_AssetCache::dequeue_style( $handle );
+}
+
+/**
+ * Localize a script.
+ *
+ * @param string              $handle      Script handle the data will be attached to.
+ * @param string              $object_name Name for the JavaScript object. Passed directly, so it should be qualified JS variable.
+ *                                         Example: '/[a-zA-Z0-9_]+/'.
+ * @param array<string,mixed> $value       The data itself. The data can be either a single or multi-dimensional array.
+ *
+ * @return bool
+ *
+ * @since X.X.X
+ */
+function pum_localize_script( $handle, $object_name, $value ) {
+	return PUM_AssetCache::localize_script( $handle, $object_name, $value );
+}
+
+/**
+ * Get the asset meta for a file.
+ *
+ * @param string $file The file path.
+ *
+ * @return array{
+ *     dependencies: array<string,string>,
+ *     version: string,
+ * }
+ */
+function pum_get_asset_meta( $file ) {
+	return file_exists( $file ) ? require $file : [
+		'dependencies' => [],
+		'version'      => '',
+	];
+}
