@@ -117,6 +117,27 @@ class PUM_AssetCache {
 				add_action( 'init', [ __CLASS__, 'admin_notice_check' ] );
 			}
 
+			// Run our own action for enqueuing scripts via our API.
+			add_action( 'wp_enqueue_scripts', function () {
+				do_action( 'pum_register_scripts' );
+			}, 0 );
+
+			// Run our own action for enqueuing scripts via our API.
+			add_action( 'wp_enqueue_scripts', function () {
+				do_action( 'pum_enqueue_scripts' );
+			}, 10 );
+
+			// Run our own action for enqueuing scripts via our API.
+			add_action( 'admin_enqueue_scripts', function () {
+				do_action( 'pum_register_scripts' );
+				do_action( 'pum_admin_register_scripts' );
+			}, 0 );
+
+			// Run our own action for enqueuing scripts via our API.
+			add_action( 'admin_enqueue_scripts', function () {
+				do_action( 'pum_admin_enqueue_scripts' );
+			}, 10 );
+
 			// Prevent reinitialization.
 			self::$initialized = true;
 		}
@@ -775,5 +796,274 @@ class PUM_AssetCache {
 			update_option( '_pum_writeable_notice_dismissed', true );
 			pum_update_option( 'disable_asset_caching', false );
 		}
+	}
+
+	/**
+	 * Stores registered scripts.
+	 *
+	 * @var array{src:string,deps:array,version:string,in_footer:bool}[]
+	 *
+	 * @since X.X.X
+	 */
+	public static $registered_scripts = [];
+
+	/**
+	 * Stores registered styles.
+	 *
+	 * @var array{src:string,deps:array,version:string,media:string}[]
+	 *
+	 * @since X.X.X
+	 */
+	public static $registered_styles = [];
+
+	/**
+	 * Stores enqueued scripts.
+	 *
+	 * @var string[]
+	 *
+	 * @since X.X.X
+	 */
+	public static $enqueued_scripts = [];
+
+	/**
+	 * Stores enqueued styles.
+	 *
+	 * @var string[]
+	 *
+	 * @since X.X.X
+	 */
+	public static $enqueued_styles = [];
+
+	/**
+	 * Stores localized scripts. Multiple for the same handle.
+	 *
+	 * @var array<string,array{object_name:string,value:mixed}[]>
+	 *
+	 * @since X.X.X
+	 */
+	public static $localized_scripts = [];
+
+	/**
+	 * Register a script for possible caching.
+	 *
+	 * @param string $handle The script handle.
+	 * @param string $src The script src.
+	 * @param array  $deps The script dependencies.
+	 * @param string $version The script version.
+	 * @param bool   $in_footer Whether to enqueue the script in the footer.
+	 *
+	 * @return bool
+	 *
+	 * @since X.X.X
+	 */
+	public static function register_script( $handle, $src, $deps = [], $version = null, $in_footer = false ) {
+		// Implement internal store of scripts. AssetCache will be built using this if enabled, otherwised passed to wp_register_* directly.
+		self::$registered_scripts[ $handle ] = [
+			'src'       => $src,
+			'deps'      => $deps,
+			'version'   => $version,
+			'in_footer' => $in_footer,
+		];
+
+		// Temporary until we handle this in a global way.
+		if ( ! self::enabled() ) {
+			wp_register_script( $handle, $src, $deps, $version, $in_footer );
+		} else {
+			add_filter( 'pum_generated_js', function ( $js = [] ) use ( $handle, $src ): array {
+				$js[ $handle ] = [
+					'content'  => file_get_contents( $src ),
+					'priority' => 5,
+				];
+
+				return $js;
+			} );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Register a style for possible caching.
+	 *
+	 * @param string $handle The style handle.
+	 * @param string $src The style src.
+	 * @param array  $deps The style dependencies.
+	 * @param string $version The style version.
+	 * @param string $media The style media.
+	 *
+	 * @return bool
+	 *
+	 * @since X.X.X
+	 */
+	public static function register_style( $handle, $src, $deps = [], $version = null, $media = 'all' ) {
+		// Implement internal store of styles. AssetCache will be built using this if enabled, otherwised passed to wp_register_* directly.
+		self::$registered_styles[ $handle ] = [
+			'src'     => $src,
+			'deps'    => $deps,
+			'version' => $version,
+			'media'   => $media,
+		];
+
+		// Temporary until we handle this in a global way.
+		if ( ! self::enabled() ) {
+			wp_register_style( $handle, $src, $deps, $version, $media );
+		} else {
+			add_filter( 'pum_generated_css', function ( $css = [] ) use ( $handle, $src ): array {
+				$css[ $handle ] = [
+					'content'  => file_get_contents( $src ),
+					'priority' => 5,
+				];
+
+				return $css;
+			} );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Enqueue a script for possible caching.
+	 *
+	 * @param string $handle The script handle.
+	 * @param string $src The script src.
+	 * @param array  $deps The script dependencies.
+	 * @param string $version The script version.
+	 * @param bool   $in_footer Whether to enqueue the script in the footer.
+	 *
+	 * @return bool
+	 *
+	 * @since X.X.X
+	 */
+	public static function enqueue_script( $handle, $src = '', $deps = [], $version = null, $in_footer = false ) {
+		// Implement internal store of scripts. AssetCache will be built using this if enabled, otherwised passed to wp_register_* directly.
+		if ( ! empty( $src ) ) {
+			self::$registered_scripts[ $handle ] = [
+				'src'       => $src,
+				'deps'      => $deps,
+				'version'   => $version,
+				'in_footer' => $in_footer,
+			];
+		}
+
+		self::$enqueued_scripts[] = $handle;
+
+		// Temporary until we handle this in a global way.
+		if ( ! self::enabled() ) {
+			wp_enqueue_script( $handle );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Enqueue a style for possible caching.
+	 *
+	 * @param string $handle The style handle.
+	 * @param string $src The style src.
+	 * @param array  $deps The style dependencies.
+	 * @param string $version The style version.
+	 * @param string $media The style media.
+	 *
+	 * @return bool
+	 *
+	 * @since X.X.X
+	 */
+	public static function enqueue_style( $handle, $src = '', $deps = [], $version = null, $media = 'all' ) {
+		// Implement internal store of styles. AssetCache will be built using this if enabled, otherwised passed to wp_register_* directly.
+		if ( ! empty( $src ) ) {
+			self::$registered_styles[ $handle ] = [
+				'src'     => $src,
+				'deps'    => $deps,
+				'version' => $version,
+				'media'   => $media,
+			];
+		}
+
+		self::$enqueued_styles[] = $handle;
+
+		// Temporary until we handle this in a global way.
+		if ( ! self::enabled() ) {
+			wp_enqueue_style( $handle );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Dequeue a script.
+	 *
+	 * @param string $handle The script handle.
+	 *
+	 * @return bool
+	 *
+	 * @since X.X.X
+	 */
+	public static function dequeue_script( $handle ) {
+		if ( in_array( $handle, self::$enqueued_scripts, true ) ) {
+			self::$enqueued_scripts = array_diff( self::$enqueued_scripts, [ $handle ] );
+
+			// Temporary until we handle this in a global way.
+			if ( ! self::enabled() ) {
+				wp_dequeue_script( $handle );
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Dequeue a style.
+	 *
+	 * @param string $handle The style handle.
+	 *
+	 * @return bool
+	 *
+	 * @since X.X.X
+	 */
+	public static function dequeue_style( $handle ) {
+		if ( in_array( $handle, self::$enqueued_styles, true ) ) {
+			self::$enqueued_styles = array_diff( self::$enqueued_styles, [ $handle ] );
+
+			// Temporary until we handle this in a global way.
+			if ( ! self::enabled() ) {
+				wp_dequeue_style( $handle );
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Localize a script.
+	 *
+	 * @param string $handle      Script handle the data will be attached to.
+	 * @param string $object_name Name for the JavaScript object. Passed directly, so it should be qualified JS variable.
+	 *                            Example: '/[a-zA-Z0-9_]+/'.
+	 * @param array  $value       The data itself. The data can be either a single or multi-dimensional array.
+	 *
+	 * @return bool
+	 *
+	 * @since X.X.X
+	 */
+	public static function localize_script( $handle, $object_name, $value ) {
+		if ( ! isset( self::$localized_scripts[ $handle ] ) ) {
+			self::$localized_scripts[ $handle ] = [];
+		}
+
+		self::$localized_scripts[ $handle ][] = [
+			'object' => $object_name,
+			'value'  => $value,
+		];
+
+		// Temporary until we handle this in a global way.
+		if ( ! self::enabled() ) {
+			wp_localize_script( $handle, $object_name, $value );
+		}
+
+		return true;
 	}
 }
