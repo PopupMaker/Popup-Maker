@@ -3380,7 +3380,7 @@
 				"utf8"
 			],
 			"support": {
-				"source": "https://github.com/symfony/string/tree/v5.4.44"
+				"source": "https://github.com/symfony/string/tree/v5.4.42"
 			},
 			"funding": [
 				{
@@ -3396,7 +3396,7 @@
 					"type": "tidelift"
 				}
 			],
-			"time": "2024-09-20T07:56:40+00:00"
+			"time": "2024-07-20T18:38:32+00:00"
 		},
 		{
 			"name": "szepeviktor/phpstan-wordpress",
