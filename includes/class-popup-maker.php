@@ -189,7 +189,7 @@ class Popup_Maker {
 	 *
 	 * @return bool
 	 *
-	 * @deprecated X.X.X - Use `\PopupMaker\plugin()->is_debug_mode()` instead.
+	 * @deprecated 1.20.0 - Use `\PopupMaker\plugin()->is_debug_mode()` instead.
 	 */
 	public static function debug_mode() {
 		return \PopupMaker\plugin()->is_debug_mode_enabled();
