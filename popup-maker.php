@@ -42,7 +42,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.20.0
  */
 function popup_maker_config() {
-	return [
+	static $config = [
 		'name'           => __( 'Popup Maker', 'popup-maker' ),
 		'slug'           => 'popup-maker',
 		'version'        => '1.20.2',
@@ -56,9 +56,11 @@ function popup_maker_config() {
 		'file'           => __FILE__,
 		'basename'       => plugin_basename( __FILE__ ),
 		'url'            => plugin_dir_url( __FILE__ ),
-		'path'           => __DIR__ . \DIRECTORY_SEPARATOR,
+		'path'           => plugin_dir_path( __FILE__ ),
 		'api_url'        => 'https://wppopupmaker.com/',
 	];
+
+	return $config;
 }
 
 /**
