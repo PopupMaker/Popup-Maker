@@ -16,7 +16,7 @@ Want to boost sales & marketing efforts? Using popups are a great way to increas
 == Description ==
 
 = Drive More Sales, Leads & Email List Opt-Ins Using Popups =
-Create conversion-focused campaigns to grow your revenue and email list on your WordPress site with popups, slide-ins, banners, and more!
+Create conversion-focused campaigns to grow your revenue and email list on your WordPress site with popups, exit intent, slide-ins, banners, and more!
 
 [Popup Maker](https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=main-site-link)™ is the **[best WordPress popup plugin](https://wppopupmaker.com/conversion-optimization/best-wordpress-popup-plugins/)** around. It is incredibly versatile & flexible. Bend it to build any type of popup, modal, or content overlay for your WordPress website.
 
@@ -26,6 +26,7 @@ Create conversion-focused campaigns to grow your revenue and email list on your 
 With Popup Maker, you have the ultimate popup builder toolkit at your disposal, create any type of popup in minutes:
 
 * Email opt-in popups,
+* Exit-Intent popups.
 * Lead generation popups,
 * Subscription list popups
 * Content upgrade popups,
