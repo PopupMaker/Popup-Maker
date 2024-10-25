@@ -576,6 +576,9 @@ class PUM_Admin_Settings {
 
 		$user_styles = PUM_AssetCache::generate_font_imports() . PUM_AssetCache::generate_popup_theme_styles() . PUM_AssetCache::generate_popup_styles();
 
+		// Remove any remaining dangerous closing tag sequences:
+		$safe_user_styles = str_replace( [ '</textarea>', '&lt;/textarea&gt;' ], '', $user_styles );
+
 		ob_start();
 
 		?>
@@ -585,11 +588,10 @@ class PUM_Admin_Settings {
 		<div id="pum_style_output" style="display:none;">
 			<label for="pum_core_styles"><?php esc_html_e( 'Core Styles', 'popup-maker' ); ?></label> <br />
 
-			<textarea id="pum_core_styles" wrap="off" style="white-space: pre; width: 100%;" readonly="readonly">
+			<textarea id="pum_core_styles" wrap="off" style="white-space: pre; width: 100%; min-height: 200px;" readonly="readonly">
 				<?php
 				// Ignored because this is generated CSS.
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo $core_styles;
+				echo esc_html( $core_styles );
 				?>
 			</textarea>
 
@@ -599,9 +601,7 @@ class PUM_Admin_Settings {
 
 			<textarea id="pum_generated_styles" wrap="off" style="white-space: pre; width: 100%; min-height: 200px;" readonly="readonly">
 				<?php
-				// Ignored because this is generated CSS.
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo $user_styles;
+				echo esc_html( $safe_user_styles );
 				?>
 			</textarea>
 		</div>

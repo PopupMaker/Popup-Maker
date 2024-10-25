@@ -619,7 +619,7 @@ class PUM_AssetCache {
 			$theme_styles = pum_get_rendered_theme_styles( $theme->ID );
 
 			if ( '' !== $theme_styles ) {
-				$styles .= '/* Popup Theme ' . $theme->ID . ': ' . $theme->post_title . " */\r\n";
+				$styles .= '/* Popup Theme ' . esc_attr( $theme->ID ) . ': ' . esc_html( $theme->post_title ) . " */\r\n";
 				$styles .= $theme_styles . "\r\n";
 			}
 		}
