@@ -576,8 +576,16 @@ class PUM_Admin_Settings {
 
 		$user_styles = PUM_AssetCache::generate_font_imports() . PUM_AssetCache::generate_popup_theme_styles() . PUM_AssetCache::generate_popup_styles();
 
-		// Remove any remaining dangerous closing tag sequences:
-		$safe_user_styles = str_replace( [ '</textarea>', '&lt;/textarea&gt;' ], '', $user_styles );
+		// Prevent both raw and HTML-encoded variations of textarea tag
+		// This regex prevents both HTML and HTML-encoded textarea tags:
+		// (<\/?\s*|&lt;\/?\s*) - Matches either < or &lt; optionally followed by /, with optional whitespace
+		// t\s*e\s*x\s*t\s*a\s*r\s*e\s*a\b - Matches "textarea" with optional whitespace between letters
+		// /i flag makes it case-insensitive
+		$safe_user_styles = preg_replace(
+			'/(<\/?\s*|&lt;\/?\s*)t\s*e\s*x\s*t\s*a\s*r\s*e\s*a\b/i',
+			'',
+			$user_styles
+		);
 
 		ob_start();
 
