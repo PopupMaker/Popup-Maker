@@ -13,6 +13,7 @@ parameters:
     scanDirectories:
         - bin/
         - classes/
+        - vendor-prefixed/
         - includes/
         - templates/
     scanFiles:
@@ -26,6 +27,7 @@ parameters:
         - bin/stubs/integrated-plugins.php
         - bin/stubs/query-monitor.php
         - bin/stubs/woocommerce.php
+        - bin/stubs/bricks.php
     excludePaths:
         - tests/
         - includes/modules/menus/class-nav-menu-edit-custom-fields-deprecated.php
