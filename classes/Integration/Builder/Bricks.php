@@ -145,6 +145,7 @@ class PUM_Integration_Builder_Bricks extends PUM_Abstract_Integration {
 	 */
 	public function custom_css_selector( $css_selector, $theme_id, $element ) {
 		if ( $this->is_bricks_editor_canvas() ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$popup_id = isset( $_GET['p'] ) ? intval( $_GET['p'] ) : false;
 
 			if ( ! $popup_id ) {
@@ -179,6 +180,7 @@ class PUM_Integration_Builder_Bricks extends PUM_Abstract_Integration {
 			return;
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$popup_id = isset( $_GET['p'] ) ? intval( $_GET['p'] ) : false;
 		if ( ! $popup_id ) {
 			return;
