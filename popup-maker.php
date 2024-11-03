@@ -42,23 +42,28 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.20.0
  */
 function popup_maker_config() {
-	static $config = [
-		'name'           => __( 'Popup Maker', 'popup-maker' ),
-		'slug'           => 'popup-maker',
-		'version'        => '1.20.2',
-		'option_prefix'  => 'popup_maker',
-		'text_domain'    => 'popup-maker',
-		'fullname'       => __( 'Popup Maker', 'popup-maker' ),
-		'min_wp_ver'     => '4.9.0',
-		'min_php_ver'    => '5.6.0',
-		'future_wp_req'  => '6.5.0',
-		'future_php_req' => '7.4.0',
-		'file'           => __FILE__,
-		'basename'       => plugin_basename( __FILE__ ),
-		'url'            => plugin_dir_url( __FILE__ ),
-		'path'           => plugin_dir_path( __FILE__ ),
-		'api_url'        => 'https://wppopupmaker.com/',
-	];
+	static $config;
+
+	if ( ! isset( $config ) ) {
+		$config = [
+
+			'name'           => __( 'Popup Maker', 'popup-maker' ),
+			'slug'           => 'popup-maker',
+			'version'        => '1.20.2',
+			'option_prefix'  => 'popup_maker',
+			'text_domain'    => 'popup-maker',
+			'fullname'       => __( 'Popup Maker', 'popup-maker' ),
+			'min_wp_ver'     => '4.9.0',
+			'min_php_ver'    => '5.6.0',
+			'future_wp_req'  => '6.5.0',
+			'future_php_req' => '7.4.0',
+			'file'           => __FILE__,
+			'basename'       => plugin_basename( __FILE__ ),
+			'url'            => plugin_dir_url( __FILE__ ),
+			'path'           => plugin_dir_path( __FILE__ ),
+			'api_url'        => 'https://wppopupmaker.com/',
+		];
+	}
 
 	return $config;
 }
