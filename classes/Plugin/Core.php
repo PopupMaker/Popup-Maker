@@ -80,10 +80,9 @@ class Core {
 	protected function check_version() {
 		// Get the version of the current plugin code.
 		$version = $this->get( 'version' );
-		// Generate option key for storing version info.
-		$option_key = $this->get( 'option_prefix' ) . '_version_info';
+
 		// Get the plugin version stored in the database.
-		$current_data = \get_option( $option_key, false );
+		$current_data = \get_option( 'popup_maker_version_info', false );
 
 		$data = wp_parse_args(
 			// If the current data exists, use it.
@@ -100,7 +99,7 @@ class Core {
 		if ( false === $current_data ) {
 			$data = $this->process_version_data_migration( $data );
 
-			if ( \update_option( $option_key, $data ) ) {
+			if ( \update_option( 'popup_maker_version_info', $data ) ) {
 				\PopupMaker\cleanup_old_install_data();
 			}
 		}
@@ -116,7 +115,7 @@ class Core {
 			 * @param string $old_version The old version.
 			 * @param string $new_version The new version.
 			 */
-			do_action( $this->get( 'option_prefix' ) . '/update_version', $data['version'], $version );
+			do_action( 'popup_maker/update_version', $data['version'], $version );
 
 			/**
 			 * Fires when the plugin version is updated.
@@ -136,7 +135,7 @@ class Core {
 		}
 
 		if ( $current_data !== $data ) {
-			\update_option( $option_key, $data );
+			\update_option( 'popup_maker_version_info', $data );
 		}
 	}
 
