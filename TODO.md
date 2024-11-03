@@ -1,15 +1,8 @@
 # TODO
-
-## Develop
-
-- [ ] Check for any low hanging fruits in support, github & feature request board on site.
-- [ ] Add global configs for PLANNED_PHP_VERSION and PLANNED_WP_VERSION
-  - When set, the plugin will display a notice in the admin area if the current PHP or WP version is below the planned version, warning the user that they should update their PHP or WP version before the next minor release.
-  - [ ] <https://github.com/GravityKit/GravityView/blob/develop/includes/class-gravityview-compatibility.php#L203-L233>
-
-- [ ] Test all PHPCS changes so far, and push current release to WordPress.org as v1.20.0.
   
 ## PM Pro branch
+
+- [ ] Add proper current_data_versions() versioning.
 
 - [ ] Move \PopupMaker\Plugin\Core to simply \PopupMaker\Core as there is no need for the Plugin namespace.
 
