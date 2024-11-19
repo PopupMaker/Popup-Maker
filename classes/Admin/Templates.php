@@ -107,7 +107,7 @@ class PUM_Admin_Templates {
 		</script>
 
 		<script type="text/html" id="tmpl-pum-field-checkbox">
-			<input type="checkbox" id="{{data.id}}" name="{{data.name}}" value="1" {{{data.meta}}}/>
+			<input type="checkbox" id="{{data.id}}" name="{{data.name}}" value="1" {{{data.meta}}} {{data.disabled ? 'disabled' : ''}} {{data.checked ? 'checked' : ''}} />
 		</script>
 
 		<script type="text/html" id="tmpl-pum-field-multicheck">

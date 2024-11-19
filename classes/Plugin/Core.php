@@ -372,7 +372,7 @@ class Core {
 	 * @param string $path Subpath to return.
 	 * @return string
 	 */
-	public function get_path( $path ) {
+	public function get_path( $path = '' ) {
 		return $this->container['path'] . $path;
 	}
 
