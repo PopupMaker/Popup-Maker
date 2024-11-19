@@ -180,16 +180,20 @@ function pum_localize_script( $handle, $object_name, $value ) {
 /**
  * Get the asset meta for a file.
  *
- * @param string $file The file path.
+ * @param string              $file The file path.
+ * @param array<string,mixed> $default_args Default arguments to merge with the asset meta.
  *
  * @return array{
  *     dependencies: array<string,string>,
  *     version: string,
  * }
  */
-function pum_get_asset_meta( $file ) {
-	return file_exists( $file ) ? require $file : [
-		'dependencies' => [],
-		'version'      => '',
-	];
+function pum_get_asset_meta( $file, $default_args = [] ) {
+	return file_exists( $file ) ? require $file : wp_parse_args(
+		$default_args,
+		[
+			'dependencies' => [],
+			'version'      => '',
+		]
+	);
 }
