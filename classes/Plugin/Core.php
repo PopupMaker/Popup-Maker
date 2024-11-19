@@ -37,6 +37,13 @@ class Core {
 	public $controllers;
 
 	/**
+	 * Modules instance.
+	 *
+	 * @var Modules
+	 */
+	protected $modules;
+
+	/**
 	 * Initiate the plugin.
 	 *
 	 * @param array<string,string|bool> $config Configuration variables passed from main plugin file.
@@ -47,11 +54,20 @@ class Core {
 
 		$this->register_services();
 		$this->define_paths();
+		$this->initiate_modules();
 		$this->initiate_controllers();
 
 		$this->check_version();
 
 		add_action( 'init', [ $this, 'load_textdomain' ] );
+	}
+
+	/**
+	 * Initiate modules.
+	 */
+	protected function initiate_modules() {
+		$this->modules = new Modules();
+		$this->modules->init();
 	}
 
 	/**
