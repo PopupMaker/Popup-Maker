@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Fix: Deprecated notice in WordPress 6.7+ for early translation loading in plugin configuration.
+
 ## v1.20.2 - 2024-09-24
 
 * Fix: Bug where deleting subscribers led to an error rather than success notice.
