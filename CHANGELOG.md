@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Fix: Deprecated notice in WordPress 6.7+ for early translation loading in plugin configuration.
+* Fix: Prevent textarea from being cut off in "Copy Plugin Styles" field on plugin settings page.
 
 ## v1.20.2 - 2024-09-24
 
