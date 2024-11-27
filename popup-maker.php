@@ -3,7 +3,7 @@
  * Plugin Name:       Popup Maker
  * Plugin URI:        https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&utm_medium=plugin-uri
  * Description:       Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
- * Version:           1.20.2
+ * Version:           1.20.3
  * Requires PHP:      5.6
  * Requires at least: 4.9
  * Author:            Popup Maker
@@ -28,23 +28,32 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.20.0
  */
 function popup_maker_config() {
-	return [
-		'name'           => __( 'Popup Maker', 'popup-maker' ),
-		'slug'           => 'popup-maker',
-		'version'        => '1.20.2',
-		'option_prefix'  => 'popup_maker',
-		'text_domain'    => 'popup-maker',
-		'fullname'       => __( 'Popup Maker', 'popup-maker' ),
-		'min_wp_ver'     => '4.9.0',
-		'min_php_ver'    => '5.6.0',
-		'future_wp_req'  => '6.5.0',
-		'future_php_req' => '7.4.0',
-		'file'           => __FILE__,
-		'basename'       => plugin_basename( __FILE__ ),
-		'url'            => plugin_dir_url( __FILE__ ),
-		'path'           => __DIR__ . \DIRECTORY_SEPARATOR,
-		'api_url'        => 'https://wppopupmaker.com/',
-	];
+	static $config;
+
+	if ( ! isset( $config ) ) {
+		$config = [
+
+			// Using untranslated strings in config to avoid early translation loading.
+			// Translations for these strings should be handled at the point of display.
+			'name'           => 'Popup Maker',
+			'slug'           => 'popup-maker',
+			'version'        => '1.20.3',
+			'option_prefix'  => 'popup_maker',
+			'text_domain'    => 'popup-maker',
+			'fullname'       => 'Popup Maker',
+			'min_wp_ver'     => '4.9.0',
+			'min_php_ver'    => '5.6.0',
+			'future_wp_req'  => '6.5.0',
+			'future_php_req' => '7.4.0',
+			'file'           => __FILE__,
+			'basename'       => plugin_basename( __FILE__ ),
+			'url'            => plugin_dir_url( __FILE__ ),
+			'path'           => plugin_dir_path( __FILE__ ),
+			'api_url'        => 'https://wppopupmaker.com/',
+		];
+	}
+
+	return $config;
 }
 
 /**

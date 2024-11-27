@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## v1.20.3 - 2024-11-27
+
+* Fix: Deprecated notice in WordPress 6.7+ for early translation loading in plugin configuration.
+* Fix: Prevent textarea from being cut off in "Copy Plugin Styles" field on plugin settings page.
+
 ## v1.20.2 - 2024-09-24
 
 * Fix: Bug where deleting subscribers led to an error rather than success notice.
@@ -16,7 +21,7 @@
 
 ## v1.20.0 - 2024-09-14
 
-* Important: Popup Maker will be transitioning to new minimum PHP & WP versions over the next few releases. [Read about our plans here](https://wppopupmaker.com/blog/popup-maker-new-minimum-php-and-wp-versions-coming-soon/).
+* Important: Popup Maker will be transitioning to new minimum PHP & WP versions over the next few releases. [Read about our plans here](https://wppopupmaker.com/announcements/upcoming-php-wp-requirement-changes/).
 * Feature: Add Form Integration for Fluent Forms, close or trigger popups, set cookies and more on form submission.
 * Feature: Add font size and font select buttons to the classic editor.
 * Improvement: Improved asset minification substantially reducing JS & CSS file sizes.

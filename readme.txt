@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, conversion
 Requires at least: 4.9
 Tested up to: 6.6.2
 Requires PHP: 5.6
-Stable tag: 1.20.2
+Stable tag: 1.20.3
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -183,6 +183,18 @@ There are several common causes for this, check [this guide for help](https://do
 == Changelog ==
 
 View our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.
+
+= v1.20.3 - 2024-11-27 =
+
+* Fix: Deprecated notice in WordPress 6.7+ for early translation loading in plugin configuration.
+* Fix: Prevent textarea from being closed prematurely in "Copy Plugin Styles" field on plugin settings page.
+
+= v1.20.2 - 2024-09-24 =
+
+* Fix: Bug where deleting subscribers led to an error rather than success notice.
+* Fix: Bug in Subscribers table pagination, urls were invalid leading to 404 due to duplicate protocols (<http://http://>).
+* Fix: Bug causing menu item Trigger Popup settings to not be saved. Caused by new strict type checking on string vs int.
+* Fix: Bug causing Click Trigger extra selector to not save properly. Caused by recent overzealous sanitization.
 
 = v1.20.1 - 2024-09-18 =
 
