@@ -15,10 +15,6 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: popup-maker.php:32, popup-maker.php:37, classes/Cookies.php:100, classes/Privacy.php:36, classes/Triggers.php:226, classes/Types.php:29, classes/Extension/Activator.php:176, classes/Extension/Activator.php:188, classes/Extension/Activator.php:201, classes/Site/Assets.php:275, classes/Utils/Alerts.php:492, includes/admin/class-pum-admin-upgrades.php:245, includes/integrations/class-pum-gravity-forms.php:57, includes/modules/admin-bar.php:77
-msgid "Popup Maker"
-msgstr ""
-
 #: classes/Admin.php:64
 msgid "Integrations"
 msgstr ""
@@ -47,7 +43,7 @@ msgstr ""
 msgid "Keep current method"
 msgstr ""
 
-#: classes/AssetCache.php:672, classes/Telemetry.php:271, classes/Admin/Extend.php:124, classes/Admin/Notices.php:66, classes/Admin/Onboarding.php:68
+#: classes/AssetCache.php:672, classes/Telemetry.php:271, classes/Admin/Extend.php:124, classes/Admin/Notices.php:67, classes/Admin/Onboarding.php:68
 msgid "Learn more"
 msgstr ""
 
@@ -55,7 +51,7 @@ msgstr ""
 msgid "Popup Maker detected an issue with your file system's ability and is unable to create & save cached assets for your popup styling and settings. This may lead to suboptimal performance. Please check your filesystem and contact your hosting provide to ensure Popup Maker can create and write to cache files."
 msgstr ""
 
-#: classes/Conditions.php:109, classes/Conditions.php:490, classes/Conditions.php:504, classes/Conditions.php:510, classes/Cookies.php:210, classes/Shortcode.php:152, classes/Shortcode.php:164, classes/Shortcode.php:177, classes/Triggers.php:367, includes/class-popmake-fields.php:63, classes/Admin/Popups.php:403, classes/Admin/Settings.php:731, classes/Admin/Settings.php:757, classes/Admin/Settings.php:760, classes/Admin/Settings.php:769, classes/Admin/Themes.php:374, classes/Admin/Themes.php:395, classes/Admin/Themes.php:414, classes/Shortcode/Popup.php:57, classes/Shortcode/Popup.php:73, classes/Shortcode/Subscribe.php:63, classes/Shortcode/Subscribe.php:85, classes/Shortcode/Subscribe.php:88
+#: classes/Conditions.php:109, classes/Conditions.php:490, classes/Conditions.php:504, classes/Conditions.php:510, classes/Cookies.php:210, classes/Shortcode.php:152, classes/Shortcode.php:164, classes/Shortcode.php:177, classes/Triggers.php:367, includes/class-popmake-fields.php:63, classes/Admin/Popups.php:403, classes/Admin/Settings.php:739, classes/Admin/Settings.php:765, classes/Admin/Settings.php:768, classes/Admin/Settings.php:777, classes/Admin/Themes.php:374, classes/Admin/Themes.php:395, classes/Admin/Themes.php:414, classes/Shortcode/Popup.php:57, classes/Shortcode/Popup.php:73, classes/Shortcode/Subscribe.php:63, classes/Shortcode/Subscribe.php:85, classes/Shortcode/Subscribe.php:88
 msgid "General"
 msgstr ""
 
@@ -217,6 +213,10 @@ msgstr ""
 msgid "Any Supported Form*"
 msgstr ""
 
+#: classes/Cookies.php:100, classes/Privacy.php:36, classes/Triggers.php:226, classes/Types.php:29, classes/Extension/Activator.php:176, classes/Extension/Activator.php:188, classes/Extension/Activator.php:201, classes/Site/Assets.php:275, classes/Utils/Alerts.php:492, includes/admin/class-pum-admin-upgrades.php:245, includes/integrations/class-pum-gravity-forms.php:57, includes/modules/admin-bar.php:77
+msgid "Popup Maker"
+msgstr ""
+
 #: classes/Cookies.php:101, classes/Triggers.php:227, classes/Shortcode/Subscribe.php:41
 msgid "Subscription Form"
 msgstr ""
@@ -308,7 +308,7 @@ msgid "The %4$s %1$s %5$s plugin requires %2$s version %3$s or greater."
 msgstr ""
 
 #. translators: 1. Integration label.
-#: classes/Integrations.php:474
+#: classes/Integrations.php:475
 msgid "Any %s Form"
 msgstr ""
 
@@ -984,7 +984,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: classes/Admin/Assets.php:77, classes/Admin/Settings.php:693, classes/Admin/Tools.php:91, classes/Admin/Tools.php:214, includes/integrations/class-pum-gravity-forms.php:181
+#: classes/Admin/Assets.php:77, classes/Admin/Settings.php:701, classes/Admin/Tools.php:91, classes/Admin/Tools.php:214, includes/integrations/class-pum-gravity-forms.php:181
 msgid "Save"
 msgstr ""
 
@@ -1032,26 +1032,26 @@ msgstr ""
 msgid "See All Premium Features"
 msgstr ""
 
-#: classes/Admin/Notices.php:74, classes/Admin/Onboarding.php:74
+#: classes/Admin/Notices.php:75, classes/Admin/Notices.php:404, classes/Admin/Onboarding.php:74
 msgid "Dismiss"
 msgstr ""
 
-#: classes/Admin/Notices.php:81
+#: classes/Admin/Notices.php:82
 msgid "Turn off these occasional notices"
 msgstr ""
 
-#: classes/Admin/Notices.php:298
+#: classes/Admin/Notices.php:297
 msgid "** You are seeing this notice because you are an administrator. Other users of the site will see nothing."
 msgstr ""
 
-#: classes/Admin/Notices.php:327
+#: classes/Admin/Notices.php:326
 msgid ""
 "%1$sPopup Maker will soon require PHP Version %2$s.%3$s \n"
 "\n"
 "You're using Version %4$s. Please ask your host to upgrade your server's PHP."
 msgstr ""
 
-#: classes/Admin/Notices.php:341
+#: classes/Admin/Notices.php:340
 msgid ""
 "%1$sPopup Maker will soon require WordPress Version %2$s.%3$s \n"
 "\n"
@@ -1205,7 +1205,7 @@ msgstr ""
 #. translators: 1. URL to view troubleshooting guide. 2. Closing HTML tag.
 #. translators: 1. URL to troubleshooting guide. 2. Closing tag.
 #. translators: 1. URL to troubleshooting guide. 2. Closing tag.
-#: classes/Admin/Popups.php:262, classes/Admin/Settings.php:654, classes/Admin/Themes.php:151
+#: classes/Admin/Popups.php:262, classes/Admin/Settings.php:662, classes/Admin/Themes.php:151
 msgid "If you are seeing this, the page is still loading or there are Javascript errors on this page. %1$sView troubleshooting guide%2$s"
 msgstr ""
 
@@ -1935,55 +1935,55 @@ msgstr ""
 msgid "Check this if you have copied the popup theme styles to your own stylesheet or are using custom styles."
 msgstr ""
 
-#: classes/Admin/Settings.php:582
+#: classes/Admin/Settings.php:593
 msgid "Show Popup Maker CSS"
 msgstr ""
 
-#: classes/Admin/Settings.php:583
+#: classes/Admin/Settings.php:594
 msgid "Use this to quickly copy Popup Maker's CSS to your own stylesheet."
 msgstr ""
 
-#: classes/Admin/Settings.php:586
+#: classes/Admin/Settings.php:597
 msgid "Core Styles"
 msgstr ""
 
-#: classes/Admin/Settings.php:598
+#: classes/Admin/Settings.php:608
 msgid "Generated Popup & Popup Theme Styles"
 msgstr ""
 
-#: classes/Admin/Settings.php:647
+#: classes/Admin/Settings.php:655
 msgid "Popup Maker Settings"
 msgstr ""
 
-#: classes/Admin/Settings.php:732
+#: classes/Admin/Settings.php:740
 msgid "Subscriptions"
 msgstr ""
 
-#: classes/Admin/Settings.php:733
+#: classes/Admin/Settings.php:741
 msgid "Extensions"
 msgstr ""
 
-#: classes/Admin/Settings.php:734, classes/Admin/Settings.php:766
+#: classes/Admin/Settings.php:742, classes/Admin/Settings.php:774
 msgid "Licenses"
 msgstr ""
 
-#: classes/Admin/Settings.php:735, classes/Shortcode/Subscribe.php:65, classes/Shortcode/Subscribe.php:95
+#: classes/Admin/Settings.php:743, classes/Shortcode/Subscribe.php:65, classes/Shortcode/Subscribe.php:95
 msgid "Privacy"
 msgstr ""
 
-#: classes/Admin/Settings.php:736, classes/Admin/Settings.php:773
+#: classes/Admin/Settings.php:744, classes/Admin/Settings.php:781
 msgid "Misc"
 msgstr ""
 
-#: classes/Admin/Settings.php:763
+#: classes/Admin/Settings.php:771
 msgid "Extension Settings"
 msgstr ""
 
-#: classes/Admin/Settings.php:770
+#: classes/Admin/Settings.php:778
 msgid "Subscription Forms"
 msgstr ""
 
-#: classes/Admin/Settings.php:774
+#: classes/Admin/Settings.php:782
 msgid "Assets"
 msgstr ""
 

@@ -53,11 +53,13 @@
 		count = parseInt($noticeCounts.eq(0).text());
 
 	function dismissAlert($alert, alertAction) {
-		var dismissible = $alert.data("dismissible"),
-			expires =
-				dismissible === "1" || dismissible === 1 || dismissible === true
+		var dismissible = $alert.data('dismissible'),
+			expires = typeof $alert.data('expires') !== 'undefined' ? $alert.data('expires') :
+				(dismissible === '1' ||
+				dismissible === 1 ||
+				dismissible === true
 					? null
-					: dismissible;
+					: dismissible + ' days');
 
 		$.ajax({
 			method: "POST",
