@@ -366,17 +366,17 @@ class PUM_Admin_Notices {
 
 		add_action( 'admin_print_footer_scripts', function () {
 			echo '<style>
-			[data-code="pum_bfcm_2024--"] .pum-alert {color: #fff; background-color: #072c16 !important; padding: 1em; }
-			[data-code="pum_bfcm_2024--"] .pum-alert h3 {font-size: 1.5em; background:transparent; color: #fff !important; border: none;}
-			[data-code="pum_bfcm_2024--"] .pum-alert a {font-size: 1.1em;color: #fff !important;}
-			[data-code="pum_bfcm_2024--"] .pum-alert li:first-child a {font-size: 1.2em;color: #fff !important;}
+			[data-code="pum_bfcm_2024"] .pum-alert {color: #fff; background-color: #072c16 !important; padding: 1em; }
+			[data-code="pum_bfcm_2024"] .pum-alert h3 {font-size: 1.5em; background:transparent; color: #fff !important; border: none;}
+			[data-code="pum_bfcm_2024"] .pum-alert a {font-size: 1.1em;color: #fff !important;}
+			[data-code="pum_bfcm_2024"] .pum-alert li:first-child a {font-size: 1.2em;color: #fff !important;}
 			</style>';
 		} );
 
-		$discount_amount = ( time() < strtotime( '2024-11-30 23:59:59 EST' ) ) ? 40 : 30;
+		$discount_amount = ( time() < strtotime( '2024-11-27 23:59:59 EST' ) ) ? 40 : 30;
 
 		$alerts[] = [
-			'code'        => 'pum_bfcm_2024--',
+			'code'        => 'pum_bfcm_2024',
 			'type'        => 'success',
 			'html'        => sprintf(
 				'%s',
@@ -388,7 +388,7 @@ class PUM_Admin_Notices {
 			),
 
 			'dismissible' => false,
-			'global'      => true,
+			'global'      => false,
 			'actions'     => [
 				[
 					'primary' => true,
