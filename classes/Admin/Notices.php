@@ -373,7 +373,7 @@ class PUM_Admin_Notices {
 			</style>';
 		} );
 
-		$discount_amount = ( time() < strtotime( '2024-11-27 23:59:59 EST' ) ) ? 40 : 30;
+		$discount_amount = ( time() < strtotime( '2024-11-30 23:59:59 EST' ) ) ? 40 : 30;
 
 		$alerts[] = [
 			'code'        => 'pum_bfcm_2024',
