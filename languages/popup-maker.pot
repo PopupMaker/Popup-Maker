@@ -35,19 +35,19 @@ msgstr ""
 msgid "Popup ID"
 msgstr ""
 
-#: classes/AssetCache.php:670
+#: classes/AssetCache.php:693
 msgid "Try to create cache again"
 msgstr ""
 
-#: classes/AssetCache.php:671
+#: classes/AssetCache.php:694
 msgid "Keep current method"
 msgstr ""
 
-#: classes/AssetCache.php:672, classes/Telemetry.php:271, classes/Admin/Extend.php:124, classes/Admin/Notices.php:67, classes/Admin/Onboarding.php:68
+#: classes/AssetCache.php:695, classes/Telemetry.php:271, classes/Admin/Extend.php:124, classes/Admin/Notices.php:67, classes/Admin/Onboarding.php:68
 msgid "Learn more"
 msgstr ""
 
-#: classes/AssetCache.php:679
+#: classes/AssetCache.php:702
 msgid "Popup Maker detected an issue with your file system's ability and is unable to create & save cached assets for your popup styling and settings. This may lead to suboptimal performance. Please check your filesystem and contact your hosting provide to ensure Popup Maker can create and write to cache files."
 msgstr ""
 
@@ -213,7 +213,7 @@ msgstr ""
 msgid "Any Supported Form*"
 msgstr ""
 
-#: classes/Cookies.php:100, classes/Privacy.php:36, classes/Triggers.php:226, classes/Types.php:29, classes/Extension/Activator.php:176, classes/Extension/Activator.php:188, classes/Extension/Activator.php:201, classes/Site/Assets.php:275, classes/Utils/Alerts.php:492, includes/admin/class-pum-admin-upgrades.php:245, includes/integrations/class-pum-gravity-forms.php:57, includes/modules/admin-bar.php:77
+#: classes/Cookies.php:100, classes/Privacy.php:36, classes/Triggers.php:226, classes/Types.php:29, classes/Extension/Activator.php:176, classes/Extension/Activator.php:188, classes/Extension/Activator.php:201, classes/Services/License.php:483, classes/Site/Assets.php:275, classes/Utils/Alerts.php:492, includes/admin/class-pum-admin-upgrades.php:224, includes/integrations/class-pum-gravity-forms.php:57, includes/modules/admin-bar.php:77
 msgid "Popup Maker"
 msgstr ""
 
@@ -303,7 +303,7 @@ msgid "Changing this will cause all existing cookies to be invalid."
 msgstr ""
 
 #. translators: 1. Plugin name, 2. Required plugin name, 3. Version number, 4. Opening HTML tag, 5. Closing HTML tag.
-#: classes/Install.php:260
+#: classes/Install.php:250
 msgid "The %4$s %1$s %5$s plugin requires %2$s version %3$s or greater."
 msgstr ""
 
@@ -345,7 +345,8 @@ msgstr ""
 msgid "Your %1$s is not active for this URL. Please %2$svisit your account page%3$s to manage your license key URLs."
 msgstr ""
 
-#: classes/Licensing.php:134
+#. translators: the plugin name
+#: classes/Licensing.php:134, classes/Services/License.php:482
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
@@ -643,19 +644,19 @@ msgstr ""
 msgid "Cookie"
 msgstr ""
 
-#: classes/Types.php:27, classes/Types.php:212, classes/Upsell.php:144, classes/Admin/Popups.php:115, classes/Shortcode/Popup.php:34, classes/Shortcode/Popup.php:414, classes/Shortcode/Subscribe.php:98, includes/integrations/class-pum-cf7.php:175, includes/integrations/class-pum-gravity-forms.php:166, includes/modules/menus.php:62, classes/Admin/Subscribers/Table.php:106
+#: classes/Types.php:27, classes/Types.php:212, classes/Upsell.php:146, classes/Admin/Popups.php:115, classes/Shortcode/Popup.php:34, classes/Shortcode/Popup.php:414, classes/Shortcode/Subscribe.php:98, includes/integrations/class-pum-cf7.php:175, includes/integrations/class-pum-gravity-forms.php:166, includes/modules/menus.php:62, classes/Admin/Subscribers/Table.php:106
 msgid "Popup"
 msgstr ""
 
-#: classes/Types.php:27, classes/Upsell.php:144, includes/modules/admin-bar.php:87
+#: classes/Types.php:27, classes/Upsell.php:146, includes/modules/admin-bar.php:87
 msgid "Popups"
 msgstr ""
 
-#: classes/Types.php:67, classes/Types.php:213, classes/Upsell.php:145, classes/Admin/Onboarding.php:273, classes/Admin/Popups.php:115, classes/Admin/Popups.php:536, classes/Shortcode/Popup.php:114
+#: classes/Types.php:67, classes/Types.php:213, classes/Upsell.php:147, classes/Admin/Onboarding.php:273, classes/Admin/Popups.php:115, classes/Admin/Popups.php:536, classes/Shortcode/Popup.php:114
 msgid "Popup Theme"
 msgstr ""
 
-#: classes/Types.php:67, classes/Types.php:69, classes/Upsell.php:145, classes/Admin/Pages.php:115, classes/Admin/Pages.php:115
+#: classes/Types.php:67, classes/Types.php:69, classes/Upsell.php:147, classes/Admin/Pages.php:115, classes/Admin/Pages.php:115
 msgid "Popup Themes"
 msgstr ""
 
@@ -749,16 +750,16 @@ msgid "Want to disable the close button? Check out <a href=\"%s\" target=\"_blan
 msgstr ""
 
 #. translators: %s url to product page.
-#: classes/Upsell.php:86
+#: classes/Upsell.php:88
 msgid "Need more <a href=\"%s\" target=\"_blank\">advanced targeting</a> options?"
 msgstr ""
 
 #. translators: %s url to product page.
-#: classes/Upsell.php:110
+#: classes/Upsell.php:112
 msgid "Want to use <a href=\"%s\" target=\"_blank\">background images</a>?"
 msgstr ""
 
-#: classes/Upsell.php:176, classes/Admin/Extend.php:36, classes/Admin/Pages.php:66
+#: classes/Upsell.php:178, classes/Admin/Extend.php:36, classes/Admin/Pages.php:66
 msgid "Upgrade"
 msgstr ""
 
@@ -950,29 +951,29 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: classes/Admin/Ajax.php:265, classes/Utils/Upgrades.php:550
+#: classes/Admin/Ajax.php:265, classes/Utils/Upgrades.php:468
 msgid "A batch process ID must be present to continue."
 msgstr ""
 
-#: classes/Admin/Ajax.php:274, classes/Utils/Upgrades.php:559
+#: classes/Admin/Ajax.php:274, classes/Utils/Upgrades.php:477
 msgid "You do not have permission to initiate this request. Contact an administrator for more information."
 msgstr ""
 
 #. translators: %s is the batch ID.
 #. translators: 1: Batch process ID.
-#: classes/Admin/Ajax.php:287, classes/Utils/Upgrades.php:582
+#: classes/Admin/Ajax.php:287, classes/Utils/Upgrades.php:500
 msgid "%s is an invalid batch process ID."
 msgstr ""
 
 #. translators: %s is the batch ID.
 #. translators: 1: Batch process ID.
-#: classes/Admin/Ajax.php:302, classes/Utils/Upgrades.php:695
+#: classes/Admin/Ajax.php:302, classes/Utils/Upgrades.php:613
 msgid "An invalid file path is registered for the %1$s batch process handler."
 msgstr ""
 
 #. translators: %1$s is the batch ID, %2$s is the batch handler class.
 #. translators: 1: Class name, 2: Batch process ID.
-#: classes/Admin/Ajax.php:316, classes/Utils/Upgrades.php:707
+#: classes/Admin/Ajax.php:316, classes/Utils/Upgrades.php:625
 msgid "%1$s is an invalid handler for the %2$s batch process. Please try again."
 msgstr ""
 
@@ -2462,32 +2463,94 @@ msgid "Enter valid license key for automatic updates."
 msgstr ""
 
 #. translators: the plugin name.
-#: classes/Extension/Updater.php:346
+#: classes/Extension/Updater.php:344
 msgid "There is a new version of %1$s available."
 msgstr ""
 
-#: classes/Extension/Updater.php:377
+#: classes/Extension/Updater.php:375
 msgid "Update now."
 msgstr ""
 
-#: classes/Extension/Updater.php:366
+#: classes/Extension/Updater.php:364
 msgid "%1$sView version %2$s details%3$s or %4$supdate now%5$s."
 msgstr ""
 
-#: classes/Extension/Updater.php:357
+#: classes/Extension/Updater.php:355
 msgid "%1$sView version %2$s details%3$s."
 msgstr ""
 
-#: classes/Extension/Updater.php:352
+#: classes/Extension/Updater.php:350
 msgid "Contact your network administrator to install the update."
 msgstr ""
 
-#: classes/Extension/Updater.php:611
+#: classes/Extension/Updater.php:609
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: classes/Extension/Updater.php:611, includes/admin/class-pum-admin-upgrades.php:268, classes/Admin/Subscribers/Table.php:427, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50
+#: classes/Extension/Updater.php:609, includes/admin/class-pum-admin-upgrades.php:247, classes/Admin/Subscribers/Table.php:427, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50
 msgid "Error"
+msgstr ""
+
+#: classes/Services/Connect.php:220
+msgid "Sorry, You Are Not Allowed to Access This Page."
+msgstr ""
+
+#: classes/Services/Connect.php:454, classes/Services/Connect.php:514
+msgid "There was an error while installing an upgrade. Please download the plugin from wppopupmaker.com and install it manually."
+msgstr ""
+
+#: classes/Services/Connect.php:494, classes/Services/Connect.php:505
+msgid "Plugin installed & activated."
+msgstr ""
+
+#: classes/Services/License.php:384, classes/Services/License.php:435, classes/Services/License.php:492
+msgid "An error occurred, please try again."
+msgstr ""
+
+#. translators: the license key expiration date
+#: classes/Services/License.php:460
+msgid "Your license key expired on %s."
+msgstr ""
+
+#: classes/Services/License.php:467
+msgid "Your license key has been disabled."
+msgstr ""
+
+#: classes/Services/License.php:471
+msgid "Invalid license."
+msgstr ""
+
+#: classes/Services/License.php:476
+msgid "Your license is not active for this URL."
+msgstr ""
+
+#: classes/Services/License.php:488
+msgid "Your license key has reached its activation limit."
+msgstr ""
+
+#: classes/Services/Upgrader.php:94
+msgid "Plugin basename empty."
+msgstr ""
+
+#: classes/Services/Upgrader.php:123
+msgid "Unable to get filesystem credentials."
+msgstr ""
+
+#: classes/Services/Upgrader.php:135
+msgid "Upgrader missing install method."
+msgstr ""
+
+#: classes/Services/UpgradeStream.php:126
+msgid "Starting upgrades..."
+msgstr ""
+
+#: classes/Services/UpgradeStream.php:144
+msgid "Upgrades complete."
+msgstr ""
+
+#. translators: %s: task name.
+#: classes/Services/UpgradeStream.php:202
+msgid "Completed: %s"
 msgstr ""
 
 #: classes/Shortcode/Popup.php:38
@@ -2937,76 +3000,76 @@ msgstr ""
 msgid "This plugin requires <b>PHP %s</b> or higher in order to run."
 msgstr ""
 
-#: classes/Utils/Upgrades.php:364
+#: classes/Utils/Upgrades.php:282
 msgid "Popup Maker needs to complete a the update of your settings that was previously started."
 msgstr ""
 
-#: classes/Utils/Upgrades.php:361
+#: classes/Utils/Upgrades.php:279
 msgid "The latest version of Popup Maker requires changes to the Popup Maker settings saved on your site."
 msgstr ""
 
-#: classes/Utils/Upgrades.php:387
+#: classes/Utils/Upgrades.php:305
 msgid "This can sometimes take a few minutes, are you ready to begin?"
 msgstr ""
 
-#: classes/Utils/Upgrades.php:391
+#: classes/Utils/Upgrades.php:309
 msgid "The button below will process these changes automatically for you."
 msgstr ""
 
-#: classes/Utils/Upgrades.php:393
+#: classes/Utils/Upgrades.php:311
 msgid "Finish Upgrades"
 msgstr ""
 
-#: classes/Utils/Upgrades.php:393
+#: classes/Utils/Upgrades.php:311
 msgid "Process Changes"
 msgstr ""
 
-#: classes/Utils/Upgrades.php:731
+#: classes/Utils/Upgrades.php:649
 msgid "Upgrades"
 msgstr ""
 
-#: classes/Utils/Upgrades.php:742
+#: classes/Utils/Upgrades.php:660
 msgid "No upgrades currently required."
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:117, includes/admin/class-pum-admin-upgrades.php:118
+#: includes/admin/class-pum-admin-upgrades.php:96, includes/admin/class-pum-admin-upgrades.php:97
 msgid "Popup Maker Upgrades"
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:246
+#: includes/admin/class-pum-admin-upgrades.php:225
 msgid "Important"
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:247
+#: includes/admin/class-pum-admin-upgrades.php:226
 msgid "Database upgrades required."
 msgstr ""
 
 #. translators: %1$s: URL to upgrade page. %2$s: closing HTML tag.
-#: includes/admin/class-pum-admin-upgrades.php:250
+#: includes/admin/class-pum-admin-upgrades.php:229
 msgid "Please click %1$shere%2$s to complete these changes now."
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:239
+#: includes/admin/class-pum-admin-upgrades.php:218
 msgid "Popup Maker needs to complete a database upgrade that was previously started, click <a href=\"%s\">here</a> to resume the upgrade."
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:268, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50
+#: includes/admin/class-pum-admin-upgrades.php:247, includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32, includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-4.php:43, includes/admin/upgrades/class-pum-admin-upgrade-routine-5.php:38, includes/admin/upgrades/class-pum-admin-upgrade-routine-6.php:50
 msgid "You do not have permission to do upgrades"
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:290
+#: includes/admin/class-pum-admin-upgrades.php:269
 msgid "Upgrades have been completed successfully."
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:546
+#: includes/admin/class-pum-admin-upgrades.php:525
 msgid "Popup Maker - Upgrades"
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:561
+#: includes/admin/class-pum-admin-upgrades.php:540
 msgid "The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished."
 msgstr ""
 
-#: includes/admin/class-pum-admin-upgrades.php:636
+#: includes/admin/class-pum-admin-upgrades.php:615
 msgid "Upgrade failed, please try again."
 msgstr ""
 
