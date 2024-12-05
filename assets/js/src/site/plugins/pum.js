@@ -354,6 +354,11 @@ var PUM;
                 $popup.popmake('close_all');
             }
 
+            /**
+             * Initialize the popup state to defaults.
+             */
+            $popup.popmake('initializeState');
+
             $popup.addClass('pum-active');
 
             /**
@@ -386,6 +391,14 @@ var PUM;
             $popup
                 .popmake('setup_close')
                 .popmake('reposition')
+                // TODO: Move this to its own event binding to keep this method clean and simple.
+                // This prevents animations from failing due to browser race conditions & styling queues.
+                .queue(function() {
+                    var $container = $popup.popmake('getContainer');
+                    $popup.css({ display: 'block', opacity: 0 });
+                    $container.css({ display: 'block', opacity: 0 });
+                    $(this).dequeue();
+                })
                 .popmake('animate', settings.animation_type, function () {
 
                     /**
@@ -419,6 +432,31 @@ var PUM;
 					});
 			}
 
+            return this;
+        },
+        initializeState: function() {
+            var $popup = PUM.getPopup(this),
+                $container = $popup.popmake('getContainer');
+                
+            // Clear any existing inline styles that might interfere
+            $popup.css({
+                display: '',
+                opacity: '',
+                height: '',
+                width: ''
+            });
+            
+            $container.css({
+                display: '',
+                opacity: '',
+                height: '',
+                width: ''
+            });
+            
+            // Force browser to drop any cached values
+            $popup[0].offsetHeight;
+            $container[0].offsetHeight;
+            
             return this;
         },
         setup_close: function () {
