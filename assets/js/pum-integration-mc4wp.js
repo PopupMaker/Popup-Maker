@@ -81,12 +81,16 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/mc4wp.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 12:
+/***/ "./assets/js/src/integration/mc4wp.js":
+/*!********************************************!*\
+  !*** ./assets/js/src/integration/mc4wp.js ***!
+  \********************************************/
+/*! no static exports found */
 /***/ (function(module, exports) {
 
 /*******************************************************************************
