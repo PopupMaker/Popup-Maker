@@ -138,6 +138,8 @@ class PUM_AssetCache {
 				do_action( 'pum_admin_enqueue_scripts' );
 			}, 10 );
 
+			add_action( 'wp_enqueue_scripts', [ __CLASS__, 'localize_bundled_scripts' ], 15 );
+
 			// Prevent reinitialization.
 			self::$initialized = true;
 		}
@@ -1065,5 +1067,18 @@ class PUM_AssetCache {
 		}
 
 		return true;
+	}
+
+	public static function localize_bundled_scripts() {
+		if ( ! self::enabled() ) {
+			return;
+		}
+
+		// Localize all registered scripts that have vars under the main plugin handle.
+		foreach ( self::$localized_scripts as $handle => $var_sets ) {
+			foreach ( $var_sets as $vars ) {
+				wp_localize_script( 'popup-maker-site', $vars['object'], $vars['value'] );
+			}
+		}
 	}
 }
