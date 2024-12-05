@@ -81,12 +81,16 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/wpforms.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 14:
+/***/ "./assets/js/src/integration/wpforms.js":
+/*!**********************************************!*\
+  !*** ./assets/js/src/integration/wpforms.js ***!
+  \**********************************************/
+/*! no static exports found */
 /***/ (function(module, exports) {
 
 /*******************************************************************************

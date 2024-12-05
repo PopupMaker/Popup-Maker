@@ -415,6 +415,11 @@ var PUM;
                 $popup.popmake('close_all');
             }
 
+            /**
+             * Initialize the popup state to defaults.
+             */
+            $popup.popmake('initializeState');
+
             $popup.addClass('pum-active');
 
             /**
@@ -447,6 +452,14 @@ var PUM;
             $popup
                 .popmake('setup_close')
                 .popmake('reposition')
+                // TODO: Move this to its own event binding to keep this method clean and simple.
+                // This prevents animations from failing due to browser race conditions & styling queues.
+                .queue(function() {
+                    var $container = $popup.popmake('getContainer');
+                    $popup.css({ display: 'block', opacity: 0 });
+                    $container.css({ display: 'block', opacity: 0 });
+                    $(this).dequeue();
+                })
                 .popmake('animate', settings.animation_type, function () {
 
                     /**
@@ -480,6 +493,31 @@ var PUM;
 					});
 			}
 
+            return this;
+        },
+        initializeState: function() {
+            var $popup = PUM.getPopup(this),
+                $container = $popup.popmake('getContainer');
+                
+            // Clear any existing inline styles that might interfere
+            $popup.css({
+                display: '',
+                opacity: '',
+                height: '',
+                width: ''
+            });
+            
+            $container.css({
+                display: '',
+                opacity: '',
+                height: '',
+                width: ''
+            });
+            
+            // Force browser to drop any cached values
+            $popup[0].offsetHeight;
+            $container[0].offsetHeight;
+            
             return this;
         },
         setup_close: function () {
@@ -3450,8 +3488,21 @@ var pum_debug_mode = false,
 (function ($, document, undefined) {
     "use strict";
 
+	window.PUM.getLastOpenTrigger = function () {
+		return $.fn.popmake.last_open_trigger;
+	};
+
+	window.PUM.setLastOpenTrigger = (trigger) => {
+		$.fn.popmake.last_open_trigger = trigger;
+	};
+
     $.extend($.fn.popmake.methods, {
         addTrigger: function (type) {
+			// Init Triggers.
+			getTriggers();
+
+			// TODO Refactor to use getTriggers return for method list.
+
             // Method calling logic
             if ($.fn.popmake.triggers[type]) {
                 return $.fn.popmake.triggers[type].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -3463,136 +3514,191 @@ var pum_debug_mode = false,
         }
     });
 
-    $.fn.popmake.triggers = {
-        auto_open: function (settings) {
-            var $popup = PUM.getPopup(this);
+	let popupTriggers = {};
+	function getTriggers() {
+		if ( Object.keys( popupTriggers ).length ) {
+			return popupTriggers;
+		}
 
-            // Set a delayed open.
-            setTimeout(function () {
+		popupTriggers = $.fn.popmake.triggers = window.PUM.hooks.applyFilters(
+			'popupMaker.triggers',
+			{
+				auto_open: function (settings) {
+					var $popup = PUM.getPopup(this);
 
-                // If the popup is already open return.
-                if ($popup.popmake('state', 'isOpen')) {
-                    return;
-                }
+					// Set a delayed open.
+					setTimeout(function () {
+						// If the popup is already open return.
+						if ($popup.popmake('state', 'isOpen')) {
+							return;
+						}
 
-                // If cookie exists or conditions fail return.
-                if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
-                    return;
-                }
+						// If cookie exists or conditions fail return.
+						if (
+							$popup.popmake('checkCookies', settings) ||
+							!$popup.popmake('checkConditions')
+						) {
+							return;
+						}
 
-                // Set the global last open trigger to the a text description of the trigger.
-                $.fn.popmake.last_open_trigger = 'Auto Open - Delay: ' + settings.delay;
+						// Set the global last open trigger to the a text description of the trigger.
+						$.fn.popmake.last_open_trigger =
+							'Auto Open - Delay: ' + settings.delay;
 
-                // Open the popup.
-                $popup.popmake('open');
+						// Open the popup.
+						$popup.popmake('open');
+					}, settings.delay);
+				},
+				click_open: function (settings) {
+					var $popup = PUM.getPopup(this),
+						popup_settings = $popup.popmake('getSettings'),
+						trigger_selectors = [
+							'.popmake-' + popup_settings.id,
+							'.popmake-' + decodeURIComponent(popup_settings.slug),
+							'a[href$="#popmake-' + popup_settings.id + '"]',
+						],
+						trigger_selector;
 
-            }, settings.delay);
-        },
-        click_open: function (settings) {
-            var $popup = PUM.getPopup(this),
-                popup_settings = $popup.popmake('getSettings'),
-                trigger_selectors = [
-                    '.popmake-' + popup_settings.id,
-                    '.popmake-' + decodeURIComponent(popup_settings.slug),
-                    'a[href$="#popmake-' + popup_settings.id + '"]'
-                ],
-                trigger_selector;
-
-
-            if (settings.extra_selectors && settings.extra_selectors !== '') {
-                trigger_selectors.push(settings.extra_selectors);
-            }
-
-            trigger_selectors = pum.hooks.applyFilters('pum.trigger.click_open.selectors', trigger_selectors, settings, $popup);
-
-            trigger_selector = trigger_selectors.join(', ');
-
-            $(trigger_selector)
-                .addClass('pum-trigger')
-                .css({cursor: "pointer"});
-
-            $(document).on('click.pumTrigger', trigger_selector, function (event) {
-                var $trigger = $(this),
-                    do_default = settings.do_default || false;
-
-                // If trigger is inside of the popup that it opens, do nothing.
-                if ($popup.has($trigger).length > 0) {
-                    return;
-                }
-
-                // If the popup is already open return.
-                if ($popup.popmake('state', 'isOpen')) {
-                    return;
-                }
-
-                // If cookie exists or conditions fail return.
-                if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
-                    return;
-                }
-
-                if ($trigger.data('do-default')) {
-                    do_default = $trigger.data('do-default');
-                } else if ($trigger.hasClass('do-default') || $trigger.hasClass('popmake-do-default') || $trigger.hasClass('pum-do-default')) {
-                    do_default = true;
-                }
-
-                // If trigger has the class do-default we don't prevent default actions.
-                if (!event.ctrlKey && !pum.hooks.applyFilters('pum.trigger.click_open.do_default', do_default, $popup, $trigger)) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-
-                // Set the global last open trigger to the clicked element.
-                $.fn.popmake.last_open_trigger = $trigger;
-
-                // Open the popup.
-                $popup.popmake('open');
-            });
-        },
-		form_submission: function (settings) {
-			var $popup = PUM.getPopup(this);
-
-			settings = $.extend({
-				form: '',
-				formInstanceId: '',
-				delay: 0
-			}, settings);
-
-			var onSuccess = function () {
-				setTimeout(function () {
-					// If the popup is already open return.
-					if ($popup.popmake('state', 'isOpen')) {
-						return;
+					if (
+						settings.extra_selectors &&
+						settings.extra_selectors !== ''
+					) {
+						trigger_selectors.push(settings.extra_selectors);
 					}
 
-					// If cookie exists or conditions fail return.
-					if ($popup.popmake('checkCookies', settings) || !$popup.popmake('checkConditions')) {
-						return;
-					}
+					trigger_selectors = pum.hooks.applyFilters(
+						'pum.trigger.click_open.selectors',
+						trigger_selectors,
+						settings,
+						$popup
+					);
 
-					// Set the global last open trigger to the a text description of the trigger.
-					$.fn.popmake.last_open_trigger = 'Form Submission';
+					trigger_selector = trigger_selectors.join(', ');
 
-					// Open the popup.
-					$popup.popmake('open');
-				}, settings.delay);
-			};
+					$(trigger_selector)
+						.addClass('pum-trigger')
+						.css({ cursor: 'pointer' });
 
-			// Listen for integrated form submissions.
-			PUM.hooks.addAction('pum.integration.form.success', function (form, args) {
-				if (!settings.form.length) {
-					return;
-				}
+					$(document).on(
+						'click.pumTrigger',
+						trigger_selector,
+						function (event) {
+							var $trigger = $(this),
+								do_default = settings.do_default || false;
 
-				if (PUM.integrations.checkFormKeyMatches(settings.form, settings.formInstanceId, args)) {
-					onSuccess();
-				}
-			});
-		},
-        admin_debug: function () {
-            PUM.getPopup(this).popmake('open');
-        }
-    };
+							// If trigger is inside of the popup that it opens, do nothing.
+							if ($popup.has($trigger).length > 0) {
+								return;
+							}
+
+							// If the popup is already open return.
+							if ($popup.popmake('state', 'isOpen')) {
+								return;
+							}
+
+							// If cookie exists or conditions fail return.
+							if (
+								$popup.popmake('checkCookies', settings) ||
+								!$popup.popmake('checkConditions')
+							) {
+								return;
+							}
+
+							if ($trigger.data('do-default')) {
+								do_default = $trigger.data('do-default');
+							} else if (
+								$trigger.hasClass('do-default') ||
+								$trigger.hasClass('popmake-do-default') ||
+								$trigger.hasClass('pum-do-default')
+							) {
+								do_default = true;
+							}
+
+							// If trigger has the class do-default we don't prevent default actions.
+							if (
+								!event.ctrlKey &&
+								!pum.hooks.applyFilters(
+									'pum.trigger.click_open.do_default',
+									do_default,
+									$popup,
+									$trigger
+								)
+							) {
+								event.preventDefault();
+								event.stopPropagation();
+							}
+
+							// Set the global last open trigger to the clicked element.
+							$.fn.popmake.last_open_trigger = $trigger;
+
+							// Open the popup.
+							$popup.popmake('open');
+						}
+					);
+				},
+				form_submission: function (settings) {
+					var $popup = PUM.getPopup(this);
+
+					settings = $.extend(
+						{
+							form: '',
+							formInstanceId: '',
+							delay: 0,
+						},
+						settings
+					);
+
+					var onSuccess = function () {
+						setTimeout(function () {
+							// If the popup is already open return.
+							if ($popup.popmake('state', 'isOpen')) {
+								return;
+							}
+
+							// If cookie exists or conditions fail return.
+							if (
+								$popup.popmake('checkCookies', settings) ||
+								!$popup.popmake('checkConditions')
+							) {
+								return;
+							}
+
+							// Set the global last open trigger to the a text description of the trigger.
+							$.fn.popmake.last_open_trigger = 'Form Submission';
+
+							// Open the popup.
+							$popup.popmake('open');
+						}, settings.delay);
+					};
+
+					// Listen for integrated form submissions.
+					PUM.hooks.addAction(
+						'pum.integration.form.success',
+						function (form, args) {
+							if (!settings.form.length) {
+								return;
+							}
+
+							if (
+								PUM.integrations.checkFormKeyMatches(
+									settings.form,
+									settings.formInstanceId,
+									args
+								)
+							) {
+								onSuccess();
+							}
+						}
+					);
+				},
+				admin_debug: function () {
+					PUM.getPopup(this).popmake('open');
+				},
+			}
+		);
+
+		return popupTriggers;
+	};
 
     // Register All Triggers for a Popup
     $(document)
@@ -4281,121 +4387,21 @@ var pum_debug_mode = false,
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/calderaforms.js");
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */,
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
+/******/ ({
 
-var arrayWithHoles = __webpack_require__(2);
-
-var iterableToArrayLimit = __webpack_require__(3);
-
-var unsupportedIterableToArray = __webpack_require__(4);
-
-var nonIterableRest = __webpack_require__(6);
-
-function _slicedToArray(arr, i) {
-  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
-}
-
-module.exports = _slicedToArray;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-module.exports = _arrayWithHoles;
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-
-  return _arr;
-}
-
-module.exports = _iterableToArrayLimit;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var arrayLikeToArray = __webpack_require__(5);
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
-}
-
-module.exports = _unsupportedIterableToArray;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-
-  return arr2;
-}
-
-module.exports = _arrayLikeToArray;
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports) {
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-module.exports = _nonIterableRest;
-
-/***/ }),
-/* 7 */
+/***/ "./assets/js/src/integration/calderaforms.js":
+/*!***************************************************!*\
+  !*** ./assets/js/src/integration/calderaforms.js ***!
+  \***************************************************/
+/*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
 
 
@@ -4441,172 +4447,139 @@ __webpack_require__.r(__webpack_exports__);
   });
 }
 
-/***/ })
-/******/ ]);
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
-/******/ })
-/************************************************************************/
-/******/ ({
+/***/ }),
 
-/***/ 0:
+/***/ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayLikeToArray.js ***!
+  \*****************************************************************/
+/*! no static exports found */
 /***/ (function(module, exports) {
 
-function _typeof(obj) {
-  "@babel/helpers - typeof";
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
 
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    module.exports = _typeof = function _typeof(obj) {
-      return typeof obj;
-    };
-  } else {
-    module.exports = _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
   }
 
-  return _typeof(obj);
+  return arr2;
 }
 
-module.exports = _typeof;
+module.exports = _arrayLikeToArray;
 
 /***/ }),
 
-/***/ 8:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayWithHoles.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
-/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
-
-
-/**************************************
- * Copyright (c) 2020, Popup Maker
- *************************************/
-{
-  var formProvider = "contactform7";
-  var $ = window.jQuery;
-  $(document).on("wpcf7mailsent", function (event, details) {
-    var formId = event.detail.contactFormId,
-        $form = $(event.target),
-        identifier = event.detail.id || event.detail.unitTag,
-        // Converts string like wpcf7-f190-p2-o11 and reduces it to simply 11, the last o11 is the instance ID.
-    // More accurate way of doing it in case things change in the future, this version filters out all but the o param.
-    // formInstanceId = .split('-').filter((string) => string.indexOf('o') === 0)[0].replace('o','');
-    // Simpler version that simply splits and pops the last item in the array. This requires it always be the last.
-    formInstanceId = identifier.split("-").pop().replace("o", ""); // All the magic happens here.
-
-    window.PUM.integrations.formSubmission($form, {
-      formProvider: formProvider,
-      formId: formId,
-      formInstanceId: formInstanceId,
-      extras: {
-        details: details
-      }
-    });
-    /**
-     * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
-     *
-     * Listen for older popup actions applied directly to the form.
-     *
-     * This is here for backward compatibility with form actions prior to v1.9.
-     */
-
-    var $settings = $form.find("input.wpcf7-pum"),
-        settings = $settings.length ? JSON.parse($settings.val()) : false;
-
-    if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) === "object" && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
-      settings.closedelay = settings.closedelay / 1000;
-    } // Nothing should happen if older action settings not applied
-    // except triggering of pumFormSuccess event for old cookie method.
-
-
-    window.PUM.forms.success($form, settings);
-  });
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
 }
+
+module.exports = _arrayWithHoles;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+module.exports = _iterableToArrayLimit;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/nonIterableRest.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/nonIterableRest.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableRest;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/slicedToArray.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/slicedToArray.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayWithHoles = __webpack_require__(/*! ./arrayWithHoles */ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js");
+
+var iterableToArrayLimit = __webpack_require__(/*! ./iterableToArrayLimit */ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js");
+
+var unsupportedIterableToArray = __webpack_require__(/*! ./unsupportedIterableToArray */ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js");
+
+var nonIterableRest = __webpack_require__(/*! ./nonIterableRest */ "./node_modules/@babel/runtime/helpers/nonIterableRest.js");
+
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+}
+
+module.exports = _slicedToArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayLikeToArray = __webpack_require__(/*! ./arrayLikeToArray */ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js");
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+}
+
+module.exports = _unsupportedIterableToArray;
 
 /***/ })
 
@@ -4694,12 +4667,192 @@ __webpack_require__.r(__webpack_exports__);
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/contactform7.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 9:
+/***/ "./assets/js/src/integration/contactform7.js":
+/*!***************************************************!*\
+  !*** ./assets/js/src/integration/contactform7.js ***!
+  \***************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/typeof.js");
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/**************************************
+ * Copyright (c) 2020, Popup Maker
+ *************************************/
+{
+  var formProvider = "contactform7";
+  var $ = window.jQuery;
+  $(document).on("wpcf7mailsent", function (event, details) {
+    var formId = event.detail.contactFormId,
+        $form = $(event.target),
+        identifier = event.detail.id || event.detail.unitTag,
+        // Converts string like wpcf7-f190-p2-o11 and reduces it to simply 11, the last o11 is the instance ID.
+    // More accurate way of doing it in case things change in the future, this version filters out all but the o param.
+    // formInstanceId = .split('-').filter((string) => string.indexOf('o') === 0)[0].replace('o','');
+    // Simpler version that simply splits and pops the last item in the array. This requires it always be the last.
+    formInstanceId = identifier.split("-").pop().replace("o", ""); // All the magic happens here.
+
+    window.PUM.integrations.formSubmission($form, {
+      formProvider: formProvider,
+      formId: formId,
+      formInstanceId: formInstanceId,
+      extras: {
+        details: details
+      }
+    });
+    /**
+     * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
+     *
+     * Listen for older popup actions applied directly to the form.
+     *
+     * This is here for backward compatibility with form actions prior to v1.9.
+     */
+
+    var $settings = $form.find("input.wpcf7-pum"),
+        settings = $settings.length ? JSON.parse($settings.val()) : false;
+
+    if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) === "object" && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
+      settings.closedelay = settings.closedelay / 1000;
+    } // Nothing should happen if older action settings not applied
+    // except triggering of pumFormSuccess event for old cookie method.
+
+
+    window.PUM.forms.success($form, settings);
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/typeof.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/typeof.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    module.exports = _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    module.exports = _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+module.exports = _typeof;
+
+/***/ })
+
+/******/ });
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/fluentforms.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./assets/js/src/integration/fluentforms.js":
+/*!**************************************************!*\
+  !*** ./assets/js/src/integration/fluentforms.js ***!
+  \**************************************************/
+/*! no static exports found */
 /***/ (function(module, exports) {
 
 /*******************************************************************************
@@ -4812,12 +4965,16 @@ __webpack_require__.r(__webpack_exports__);
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/formidableforms.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 10:
+/***/ "./assets/js/src/integration/formidableforms.js":
+/*!******************************************************!*\
+  !*** ./assets/js/src/integration/formidableforms.js ***!
+  \******************************************************/
+/*! no static exports found */
 /***/ (function(module, exports) {
 
 /***********************************
@@ -4928,40 +5085,21 @@ __webpack_require__.r(__webpack_exports__);
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/gravityforms.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 0:
-/***/ (function(module, exports) {
-
-function _typeof(obj) {
-  "@babel/helpers - typeof";
-
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    module.exports = _typeof = function _typeof(obj) {
-      return typeof obj;
-    };
-  } else {
-    module.exports = _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-  }
-
-  return _typeof(obj);
-}
-
-module.exports = _typeof;
-
-/***/ }),
-
-/***/ 11:
+/***/ "./assets/js/src/integration/gravityforms.js":
+/*!***************************************************!*\
+  !*** ./assets/js/src/integration/gravityforms.js ***!
+  \***************************************************/
+/*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/typeof.js");
 /* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
 
 
@@ -5018,6 +5156,33 @@ __webpack_require__.r(__webpack_exports__);
     });
   });
 }
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/typeof.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/typeof.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    module.exports = _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    module.exports = _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+module.exports = _typeof;
 
 /***/ })
 
@@ -5105,12 +5270,16 @@ __webpack_require__.r(__webpack_exports__);
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/mc4wp.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 12:
+/***/ "./assets/js/src/integration/mc4wp.js":
+/*!********************************************!*\
+  !*** ./assets/js/src/integration/mc4wp.js ***!
+  \********************************************/
+/*! no static exports found */
 /***/ (function(module, exports) {
 
 /*******************************************************************************
@@ -5227,127 +5396,21 @@ __webpack_require__.r(__webpack_exports__);
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 13);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/ninjaforms.js");
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */,
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
+/******/ ({
 
-var arrayWithHoles = __webpack_require__(2);
-
-var iterableToArrayLimit = __webpack_require__(3);
-
-var unsupportedIterableToArray = __webpack_require__(4);
-
-var nonIterableRest = __webpack_require__(6);
-
-function _slicedToArray(arr, i) {
-  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
-}
-
-module.exports = _slicedToArray;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-module.exports = _arrayWithHoles;
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-
-  return _arr;
-}
-
-module.exports = _iterableToArrayLimit;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var arrayLikeToArray = __webpack_require__(5);
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
-}
-
-module.exports = _unsupportedIterableToArray;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-
-  return arr2;
-}
-
-module.exports = _arrayLikeToArray;
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports) {
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-module.exports = _nonIterableRest;
-
-/***/ }),
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */,
-/* 12 */,
-/* 13 */
+/***/ "./assets/js/src/integration/ninjaforms.js":
+/*!*************************************************!*\
+  !*** ./assets/js/src/integration/ninjaforms.js ***!
+  \*************************************************/
+/*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
 
 
@@ -5422,8 +5485,143 @@ __webpack_require__.r(__webpack_exports__);
   $(initialize_nf_support);
 }
 
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayLikeToArray.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+
+module.exports = _arrayLikeToArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayWithHoles.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+module.exports = _arrayWithHoles;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+module.exports = _iterableToArrayLimit;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/nonIterableRest.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/nonIterableRest.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableRest;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/slicedToArray.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/slicedToArray.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayWithHoles = __webpack_require__(/*! ./arrayWithHoles */ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js");
+
+var iterableToArrayLimit = __webpack_require__(/*! ./iterableToArrayLimit */ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js");
+
+var unsupportedIterableToArray = __webpack_require__(/*! ./unsupportedIterableToArray */ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js");
+
+var nonIterableRest = __webpack_require__(/*! ./nonIterableRest */ "./node_modules/@babel/runtime/helpers/nonIterableRest.js");
+
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+}
+
+module.exports = _slicedToArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayLikeToArray = __webpack_require__(/*! ./arrayLikeToArray */ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js");
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+}
+
+module.exports = _unsupportedIterableToArray;
+
 /***/ })
-/******/ ]);
+
+/******/ });
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -5507,12 +5705,16 @@ __webpack_require__.r(__webpack_exports__);
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/wpforms.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 14:
+/***/ "./assets/js/src/integration/wpforms.js":
+/*!**********************************************!*\
+  !*** ./assets/js/src/integration/wpforms.js ***!
+  \**********************************************/
+/*! no static exports found */
 /***/ (function(module, exports) {
 
 /*******************************************************************************
@@ -5620,12 +5822,16 @@ __webpack_require__.r(__webpack_exports__);
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 15);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/src/integration/wsforms.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 15:
+/***/ "./assets/js/src/integration/wsforms.js":
+/*!**********************************************!*\
+  !*** ./assets/js/src/integration/wsforms.js ***!
+  \**********************************************/
+/*! no static exports found */
 /***/ (function(module, exports) {
 
 /*******************************************************************************
