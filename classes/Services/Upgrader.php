@@ -16,8 +16,8 @@ defined( 'ABSPATH' ) || exit;
  * Upgrader class.
  *
  * NOTE: For wordpress.org admins: This is only used if:
- * - The user explicitly entered a license key.
- * - They further opened a window to our site allowing the user to authorize the connection & installation of the pro upgrade.
+ * - The user explicitly entered a license key AND
+ * - They further opened a browser window and authorized the installation of the pro upgrade from our dashboard complying with the WordPress.org plugin guidelines explicitly.
  *
  * @package PopupMaker
  */
