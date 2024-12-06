@@ -6,6 +6,8 @@
  * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
+use function PopupMaker\plugin;
+
 /**
  * Handles displaying promotional text throughout plugin UI
  */
@@ -142,9 +144,9 @@ class PUM_Upsell {
 	 * @since 1.8.0
 	 */
 	public static function display_addon_tabs() {
-
-		$popup_labels = PUM_Types::post_type_labels( __( 'Popup', 'popup-maker' ), __( 'Popups', 'popup-maker' ) );
-		$theme_labels = PUM_Types::post_type_labels( __( 'Popup Theme', 'popup-maker' ), __( 'Popup Themes', 'popup-maker' ) );
+		// Get labels for the Popup and Popup Theme post types.
+		$popup_labels = (array) get_post_type_labels( get_post_type_object( plugin( 'PostTypes' )->get_type_key( 'popup' ) ) );
+		$theme_labels = (array) get_post_type_labels( get_post_type_object( plugin( 'PostTypes' )->get_type_key( 'popup_theme' ) ) );
 
 		?>
 		<style>
