@@ -42,6 +42,7 @@ class PostTypes extends Controller {
 			'popup_theme'    => 'popup_theme',
 			'popup_category' => 'popup_category',
 			'popup_tag'      => 'popup_tag',
+			'pum_cta'        => 'pum_cta',
 		];
 
 		return $keys;
@@ -66,6 +67,7 @@ class PostTypes extends Controller {
 	public function register_post_types() {
 		$this->register_popup_post_type();
 		$this->register_popup_theme_post_type();
+		$this->register_cta_post_type();
 
 		$this->register_popup_category_tax();
 		$this->register_popup_tag_tax();
@@ -213,6 +215,67 @@ class PostTypes extends Controller {
 		$popup_theme_args = apply_filters( 'popup_maker/popup_theme_post_type_args', $popup_theme_args );
 
 		register_post_type( $this->get_type_key( 'popup_theme' ), $popup_theme_args );
+	}
+
+	/**
+	 * Register Call to Action post type.
+	 *
+	 * @return void
+	 */
+	public function register_cta_post_type() {
+		$post_type_key = $this->get_type_key( 'pum_cta' );
+
+		$cta_labels = $this->post_type_labels(
+			__( 'Call to Action', 'popup-maker' ),
+			__( 'Call to Actions', 'popup-maker' ),
+			$post_type_key
+		);
+
+		$cta_args = [
+			'label'             => __( 'Call to Action', 'popup-maker' ),
+			'labels'            => array_merge( $cta_labels, [
+				'all_items' => __( 'Call to Actions', 'popup-maker' ),
+			] ),
+			'description'       => '',
+			// Basic.
+			'public'            => false, // TODO Test false.
+			// Visibility.
+			'show_ui'           => true,
+			'show_in_menu'      => 'edit.php?post_type=popup',
+			'show_in_admin_bar' => false,
+			// Features.
+			'supports'          => [
+				'title',
+				'excerpt',
+				'revisions',
+				'author',
+			],
+			// Rest.
+			'show_in_rest'      => true,
+			'rest_base'         => 'call-to-actions',
+			'rest_namespace'    => 'popup-maker/v2',
+			'show_in_graphql'   => false,
+			// Permissions.
+			'can_export'        => true,
+			'map_meta_cap'      => true,
+			'delete_with_user'  => false,
+			'capabilities'      => [
+				'create_posts' => $this->container->get_permission( 'edit_popups' ),
+				'edit_posts'   => $this->container->get_permission( 'edit_popups' ),
+				'delete_posts' => $this->container->get_permission( 'edit_popups' ),
+			],
+		];
+
+		/**
+		 * Filter: popup_maker/cta_post_type_args
+		 *
+		 * @param array<string,mixed> $args CTA post type args.
+		 *
+		 * @since X.X.X
+		 */
+		$cta_args = apply_filters( 'popup_maker/cta_post_type_args', $cta_args );
+
+		register_post_type( $this->get_type_key( 'pum_cta' ), $cta_args );
 	}
 
 	/**
