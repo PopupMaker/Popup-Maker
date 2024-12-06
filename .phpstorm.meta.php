@@ -24,7 +24,7 @@ namespace PHPSTORM_META;
   */
   override( \PopupMaker\Plugin\Core::get(0), map( [
     // Controllers.
-    ''             => '@',
+    // ''             => '@',
     'connect'      => \PopupMaker\Plugin\Connect::class,
     'license'      => \PopupMaker\Plugin\License::class,
     'logging'      => \PopupMaker\Plugin\Logging::class,
@@ -33,6 +33,7 @@ namespace PHPSTORM_META;
     // 'rules'        => \PopupMaker\RuleEngine\Rules::class,
     // 'restrictions' => \PopupMaker\Services\Restrictions::class,
     // 'globals'      => \PopupMaker\Services\Globals::class,
+    'PostTypes'    => \PopupMaker\Controllers\PostTypes::class,
     // 'Frontend\Restrictions\PostContent' => \PopupMaker\Controllers\Frontend\Restrictions\PostContent::class,
   ] ) );
 
@@ -42,7 +43,7 @@ namespace PHPSTORM_META;
   */
   override ( \PopupMaker\plugin(0), map( [
     // Controllers.
-    '' => '@',
+    // '' => '@',
     'connect'      => \PopupMaker\Plugin\Connect::class,
     'license'      => \PopupMaker\Plugin\License::class,
     'logging'      => \PopupMaker\Plugin\Logging::class,
@@ -51,6 +52,7 @@ namespace PHPSTORM_META;
     // 'rules'        => \PopupMaker\RuleEngine\Rules::class,
     // 'restrictions' => \PopupMaker\Services\Restrictions::class,
     // 'globals'      => \PopupMaker\Services\Globals::class,
+    'PostTypes'    => \PopupMaker\Controllers\PostTypes::class,
     // 'Frontend\Restrictions\PostContent' => \PopupMaker\Controllers\Frontend\Restrictions\PostContent::class,
   ] ) );
 
@@ -60,7 +62,7 @@ namespace PHPSTORM_META;
   */
   override ( \PopupMaker\Base\Container::get(0), map( [
     // Controllers.
-    '' => '@',
+    // '' => '@',
     'connect'      => \PopupMaker\Plugin\Connect::class,
     'license'      => \PopupMaker\Plugin\License::class,
     'logging'      => \PopupMaker\Plugin\Logging::class,
@@ -69,6 +71,7 @@ namespace PHPSTORM_META;
     // 'rules'        => \PopupMaker\RuleEngine\Rules::class,
     // 'restrictions' => \PopupMaker\Services\Restrictions::class,
     // 'globals'      => \PopupMaker\Services\Globals::class,
+    'PostTypes'    => \PopupMaker\Controllers\PostTypes::class,
     // 'Frontend\Restrictions\PostContent' => \PopupMaker\Controllers\Frontend\Restrictions\PostContent::class,
   ] ) );
 
@@ -78,7 +81,7 @@ namespace PHPSTORM_META;
   */
 override ( \PopupMaker\Base\Container::offsetGet(0), map( [
   // Controllers.
-  '' => '@',
+  // '' => '@',
   'connect'      => \PopupMaker\Plugin\Connect::class,
   'license'      => \PopupMaker\Plugin\License::class,
   'logging'      => \PopupMaker\Plugin\Logging::class,
@@ -87,5 +90,6 @@ override ( \PopupMaker\Base\Container::offsetGet(0), map( [
   // 'rules'        => \PopupMaker\RuleEngine\Rules::class,
   // 'restrictions' => \PopupMaker\Services\Restrictions::class,
   // 'globals'      => \PopupMaker\Services\Globals::class,
+  'PostTypes'    => \PopupMaker\Controllers\PostTypes::class,
   // 'Frontend\Restrictions\PostContent' => \PopupMaker\Controllers\Frontend\Restrictions\PostContent::class,
   ] ) );
