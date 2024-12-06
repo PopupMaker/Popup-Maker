@@ -25,7 +25,8 @@ function current_data_versions() {
 	// TODO: Add current data versions.
 	return apply_filters( 'popup_maker/current_data_versions', [
 		'settings'     => 2,
-		'restrictions' => 2,
+		'popups'       => 2,
+		'popup_themes' => 2,
 		'plugin_meta'  => 2,
 		'user_meta'    => 2,
 	] );
