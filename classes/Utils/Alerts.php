@@ -489,7 +489,7 @@ class PUM_Utils_Alerts {
 		<div class="pum-alerts">
 
 			<h3>
-				<img alt="" class="logo" width="30" src="<?php echo esc_attr( Popup_Maker::$URL ); ?>assets/images/logo.png" /> <?php printf( '%s%s (%s)', ( $global_only ? esc_html__( 'Popup Maker', 'popup-maker' ) . ' ' : '' ), esc_html__( 'Notifications', 'popup-maker' ), '<span class="pum-alert-count">' . esc_html( $count ) . '</span>' ); ?>
+				<img alt="" class="logo" width="30" src="<?php echo esc_attr( Popup_Maker::$URL ); ?>assets/images/mark-retro.png" /> <?php printf( '%s%s (%s)', ( $global_only ? esc_html__( 'Popup Maker', 'popup-maker' ) . ' ' : '' ), esc_html__( 'Notifications', 'popup-maker' ), '<span class="pum-alert-count">' . esc_html( $count ) . '</span>' ); ?>
 			</h3>
 
 			<p><?php __( 'Check out the following notifications from Popup Maker.', 'popup-maker' ); ?></p>
