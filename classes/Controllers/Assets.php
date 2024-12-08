@@ -66,11 +66,12 @@ class Assets extends Controller {
 	 */
 	public function register_scripts() {
 		$packages = $this->get_packages();
+		$path     = 'dist/packages/';
 
 		foreach ( $packages as $package => $package_data ) {
 			$handle = $package_data['handle'];
 
-			$meta_path = $this->container->get_path( "dist/pum-$package.asset.php" );
+			$meta_path = $this->container->get_path( "$path/$package.asset.php" );
 			$meta      = pum_get_asset_meta( $meta_path, [
 				'version' => $this->container->get( 'version' ),
 			] );
@@ -78,18 +79,18 @@ class Assets extends Controller {
 			$js_deps = isset( $package_data['deps'] ) ? $package_data['deps'] : [];
 
 			if ( $package_data['bundled'] ) {
-				pum_register_script( $handle, $this->container->get_url( "dist/pum-$package.js" ), array_merge( $meta['dependencies'], $js_deps ), $meta['version'], true );
+				pum_register_script( $handle, $this->container->get_url( "$path/$package.js" ), array_merge( $meta['dependencies'], $js_deps ), $meta['version'], true );
 			} else {
-				wp_register_script( $handle, $this->container->get_url( "dist/pum-$package.js" ), array_merge( $meta['dependencies'], $js_deps ), $meta['version'], true );
+				wp_register_script( $handle, $this->container->get_url( "$path/$package.js" ), array_merge( $meta['dependencies'], $js_deps ), $meta['version'], true );
 			}
 
 			if ( isset( $package_data['styles'] ) && $package_data['styles'] ) {
 				$rtl = is_rtl() ? '-rtl' : '';
 
 				if ( $package_data['bundled'] ) {
-					pum_register_style( $handle, $this->container->get_url( "dist/pum-$package{$rtl}.css" ), [ 'wp-components', 'wp-block-editor', 'dashicons' ], $meta['version'] );
+					pum_register_style( $handle, $this->container->get_url( "$path/$package{$rtl}.css" ), [ 'wp-components', 'wp-block-editor', 'dashicons' ], $meta['version'] );
 				} else {
-					wp_register_style( $handle, $this->container->get_url( "dist/pum-$package{$rtl}.css" ), [ 'wp-components', 'wp-block-editor', 'dashicons' ], $meta['version'] );
+					wp_register_style( $handle, $this->container->get_url( "$path/$package{$rtl}.css" ), [ 'wp-components', 'wp-block-editor', 'dashicons' ], $meta['version'] );
 				}
 			}
 

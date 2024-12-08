@@ -1,14 +1,14 @@
 var cookies;
-( function( $, document, undefined ) {
+( function ( $, document, undefined ) {
 	'use strict';
 
 	var I10n = pum_admin_vars.I10n,
 		current_editor,
 		cookies = {
-			get_cookies: function() {
+			get_cookies: function () {
 				return window.pum_popup_settings_editor.cookies;
 			},
-			get_cookie: function( event ) {
+			get_cookie: function ( event ) {
 				var cookies = this.get_cookies(),
 					cookie =
 						cookies[ event ] !== 'undefined'
@@ -30,7 +30,7 @@ var cookies;
 
 				return cookie;
 			},
-			getCookieDefaults: function( event ) {
+			getCookieDefaults: function ( event ) {
 				var cookie = cookies.get_cookie( event );
 				var defaultSettings = {};
 				for ( var tab in cookie.fields ) {
@@ -48,9 +48,9 @@ var cookies;
 				defaultSettings.name = 'pum-' + $( '#post_ID' ).val();
 				return defaultSettings;
 			},
-			parseFields: function( cookie ) {
-				_.each( cookie.fields, function( fields, tabID ) {
-					_.each( fields, function( field, fieldID ) {
+			parseFields: function ( cookie ) {
+				_.each( cookie.fields, function ( fields, tabID ) {
+					_.each( fields, function ( field, fieldID ) {
 						cookie.fields[ tabID ][ fieldID ].name =
 							'cookie_settings[' + fieldID + ']';
 
@@ -63,10 +63,10 @@ var cookies;
 
 				return cookie;
 			},
-			parseValues: function( values, type ) {
+			parseValues: function ( values, type ) {
 				return values;
 			},
-			select_list: function() {
+			select_list: function () {
 				var i,
 					_cookies = PUM_Admin.utils.object_to_array(
 						cookies.get_cookies()
@@ -84,7 +84,7 @@ var cookies;
 			 *
 			 * @param event
 			 */
-			getLabel: function( event ) {
+			getLabel: function ( event ) {
 				var cookie = cookies.get_cookie( event );
 
 				if ( ! cookie ) {
@@ -97,7 +97,7 @@ var cookies;
 			 * @param event
 			 * @param values
 			 */
-			getSettingsDesc: function( event, values ) {
+			getSettingsDesc: function ( event, values ) {
 				var cookie = cookies.get_cookie( event );
 
 				if ( ! cookie ) {
@@ -112,9 +112,9 @@ var cookies;
 			/**
 			 * Refresh all cookie row descriptions.
 			 */
-			refreshDescriptions: function() {
+			refreshDescriptions: function () {
 				$( '.pum-popup-cookie-editor table.list-table tbody tr' ).each(
-					function() {
+					function () {
 						var $row = $( this ),
 							event = $row
 								.find( '.popup_cookies_field_event' )
@@ -139,7 +139,7 @@ var cookies;
 			 * @param $editor
 			 * @param args
 			 */
-			insertCookie: function( $editor, args ) {
+			insertCookie: function ( $editor, args ) {
 				var defaultSettings = cookies.getCookieDefaults( args.event );
 				args = $.extend(
 					true,
@@ -153,7 +153,7 @@ var cookies;
 				cookies.rows.add( $editor, args );
 			},
 			template: {
-				form: function( event, values, callback ) {
+				form: function ( event, values, callback ) {
 					var cookie = cookies.get_cookie( event ),
 						modalID = 'pum_cookie_settings',
 						firstTab = Object.keys( cookie.fields )[ 0 ];
@@ -204,13 +204,13 @@ var cookies;
 					$( '#' + modalID + ' form' ).on(
 						'submit',
 						callback ||
-							function( e ) {
+							function ( e ) {
 								e.preventDefault();
 								PUM_Admin.modals.closeAll();
 							}
 					);
 				},
-				editor: function( args ) {
+				editor: function ( args ) {
 					var data = $.extend(
 						true,
 						{},
@@ -230,7 +230,7 @@ var cookies;
 						data
 					);
 				},
-				row: function( args ) {
+				row: function ( args ) {
 					var data = $.extend(
 						true,
 						{},
@@ -251,7 +251,7 @@ var cookies;
 
 					return PUM_Admin.templates.render( 'pum-cookie-row', data );
 				},
-				selectbox: function( args ) {
+				selectbox: function ( args ) {
 					var data = $.extend(
 						true,
 						{},
@@ -285,7 +285,7 @@ var cookies;
 				},
 			},
 			rows: {
-				add: function( editor, cookie ) {
+				add: function ( editor, cookie ) {
 					var $editor = $( editor ),
 						data = {
 							index:
@@ -320,7 +320,7 @@ var cookies;
 				 *
 				 * @param $cookie
 				 */
-				remove: function( $cookie ) {
+				remove: function ( $cookie ) {
 					var $editor = $cookie.parents( '.pum-popup-cookie-editor' );
 
 					$cookie.remove();
@@ -339,21 +339,18 @@ var cookies;
 				/**
 				 * Renumber all rows for all editors.
 				 */
-				renumber: function() {
+				renumber: function () {
 					$(
 						'.pum-popup-cookie-editor table.list-table tbody tr'
-					).each( function() {
+					).each( function () {
 						var $this = $( this ),
-							index = $this
-								.parent()
-								.children()
-								.index( $this );
+							index = $this.parent().children().index( $this );
 
 						$this
 							.attr( 'data-index', index )
 							.data( 'index', index );
 
-						$this.find( ':input, [name]' ).each( function() {
+						$this.find( ':input, [name]' ).each( function () {
 							if ( this.name && this.name !== '' ) {
 								this.name = this.name.replace(
 									/\[\d*?\]/,
@@ -371,13 +368,13 @@ var cookies;
 	window.PUM_Admin.cookies = cookies;
 
 	$( document )
-		.on( 'pum_init', function() {
+		.on( 'pum_init', function () {
 			cookies.refreshDescriptions();
 		} )
 		.on(
 			'select2:select pumselect2:select',
 			'#pum-first-cookie',
-			function() {
+			function () {
 				var $this = $( this ),
 					$editor = $this.parents( '.pum-popup-cookie-editor' ),
 					event = $this.val(),
@@ -389,7 +386,7 @@ var cookies;
 
 				$this.val( null ).trigger( 'change' );
 
-				cookies.template.form( event, values, function( e ) {
+				cookies.template.form( event, values, function ( e ) {
 					var $form = $( this ),
 						event = $form.find( 'input#event' ).val(),
 						index = $form.find( 'input#index' ).val(),
@@ -411,7 +408,7 @@ var cookies;
 				} );
 			}
 		)
-		.on( 'click', '.pum-popup-cookie-editor .pum-add-new', function() {
+		.on( 'click', '.pum-popup-cookie-editor .pum-add-new', function () {
 			current_editor = $( this ).parents( '.pum-popup-cookie-editor' );
 			var template = wp.template( 'pum-cookie-add-event' );
 			PUM_Admin.modals.reload(
@@ -419,7 +416,7 @@ var cookies;
 				template( { I10n: I10n } )
 			);
 		} )
-		.on( 'click', '.pum-popup-cookie-editor .edit', function( e ) {
+		.on( 'click', '.pum-popup-cookie-editor .edit', function ( e ) {
 			var $this = $( this ),
 				$editor = $this.parents( '.pum-popup-cookie-editor' ),
 				$row = $this.parents( 'tr:first' ),
@@ -430,17 +427,14 @@ var cookies;
 						$row.find( '.popup_cookies_field_settings:first' ).val()
 					),
 					{
-						index: $row
-							.parent()
-							.children()
-							.index( $row ),
+						index: $row.parent().children().index( $row ),
 						event: event,
 					}
 				);
 
 			e.preventDefault();
 
-			cookies.template.form( event, values, function( e ) {
+			cookies.template.form( event, values, function ( e ) {
 				var $form = $( this ),
 					event = $form.find( 'input#event' ).val(),
 					index = $form.find( 'input#index' ).val(),
@@ -461,7 +455,7 @@ var cookies;
 				PUM_Admin.modals.closeAll();
 			} );
 		} )
-		.on( 'click', '.pum-popup-cookie-editor .remove', function( e ) {
+		.on( 'click', '.pum-popup-cookie-editor .remove', function ( e ) {
 			var $this = $( this ),
 				$row = $this.parents( 'tr:first' );
 
@@ -471,13 +465,13 @@ var cookies;
 				cookies.rows.remove( $row );
 			}
 		} )
-		.on( 'click', '.pum-field-cookie_key button.reset', function( e ) {
+		.on( 'click', '.pum-field-cookie_key button.reset', function ( e ) {
 			var $this = $( this ),
 				newKey = new Date().getTime().toString( 16 );
 
 			$this.siblings( 'input[type="text"]:first' ).val( newKey );
 		} )
-		.on( 'submit', '#pum_cookie_add_event_modal .pum-form', function( e ) {
+		.on( 'submit', '#pum_cookie_add_event_modal .pum-form', function ( e ) {
 			var $editor = current_editor,
 				event = $( '#popup_cookie_add_event' ).val(),
 				values = {
@@ -488,7 +482,7 @@ var cookies;
 
 			e.preventDefault();
 
-			cookies.template.form( event, values, function( e ) {
+			cookies.template.form( event, values, function ( e ) {
 				var $form = $( this ),
 					event = $form.find( 'input#event' ).val(),
 					index = $form.find( 'input#index' ).val(),
@@ -520,22 +514,25 @@ var cookies;
 						trigger_settings = JSON.parse( $trigger.val() );
 
 					if ( typeof trigger_settings.cookie_name === 'string' ) {
-						trigger_settings.cookie_name = trigger_settings.cookie_name.replace(
-							'add_new',
-							values.cookie_settings.name
-						);
+						trigger_settings.cookie_name =
+							trigger_settings.cookie_name.replace(
+								'add_new',
+								values.cookie_settings.name
+							);
 					} else {
 						trigger_settings.cookie_name[
 							trigger_settings.cookie_name.indexOf( 'add_new' )
 						] = values.cookie_settings.name;
-						trigger_settings.cookie_name = trigger_settings.cookie_name.filter(
-							function( element, index, array ) {
+						trigger_settings.cookie_name =
+							trigger_settings.cookie_name.filter( function (
+								element,
+								index,
+								array
+							) {
 								return element in this
 									? false
 									: ( this[ element ] = true );
-							},
-							{}
-						);
+							}, {} );
 					}
 
 					$trigger.val( JSON.stringify( trigger_settings ) );

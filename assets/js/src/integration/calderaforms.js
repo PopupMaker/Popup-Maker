@@ -13,16 +13,21 @@
 	 * @param event
 	 * @param obj
 	 */
-	const beforeAjax = ( event, obj ) => $form = obj.$form;
+	const beforeAjax = ( event, obj ) => ( $form = obj.$form );
 
 	$( document )
 		.on( 'cf.ajax.request', beforeAjax )
 		// After all requests
 		.on( 'cf.submission', function ( event, obj ) {
 			// Only if status of request is complete|success.
-			if ( 'complete' === obj.data.status || 'success' === obj.data.status ) {
+			if (
+				'complete' === obj.data.status ||
+				'success' === obj.data.status
+			) {
 				//get the form that is submiting's ID attribute
-				const [ formId, formInstanceId = null ] = $form.attr( 'id' ).split( '_' );
+				const [ formId, formInstanceId = null ] = $form
+					.attr( 'id' )
+					.split( '_' );
 
 				// All the magic happens here.
 				window.PUM.integrations.formSubmission( $form, {
@@ -30,7 +35,9 @@
 					formId,
 					formInstanceId,
 					extras: {
-						state: window.cfstate.hasOwnProperty( formId ) ? window.cfstate[ formId ] : null,
+						state: window.cfstate.hasOwnProperty( formId )
+							? window.cfstate[ formId ]
+							: null,
 					},
 				} );
 			}

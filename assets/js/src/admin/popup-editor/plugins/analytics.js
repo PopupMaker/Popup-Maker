@@ -1,7 +1,7 @@
-( function( $, document, undefined ) {
+( function ( $, document, undefined ) {
 	'use strict';
 
-	$( document ).on( 'click', '#popup_reset_open_count', function() {
+	$( document ).on( 'click', '#popup_reset_open_count', function () {
 		var $this = $( this );
 		if (
 			$this.is( ':checked' ) &&

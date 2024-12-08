@@ -6,7 +6,7 @@
 	const formProvider = 'wsforms';
 	const $ = window.jQuery;
 
-	$(document).on(
+	$( document ).on(
 		'wsf-submit-success wsf-save-success',
 		function (
 			event,
@@ -17,11 +17,11 @@
 			formCanvasEl
 		) {
 			// All the magic happens here.
-			window.PUM.integrations.formSubmission($(formEl), {
+			window.PUM.integrations.formSubmission( $( formEl ), {
 				formProvider,
 				formId,
 				formInstanceId,
-			});
+			} );
 		}
 	);
 }

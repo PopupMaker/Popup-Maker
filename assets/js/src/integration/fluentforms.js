@@ -5,21 +5,21 @@
 	const formProvider = 'fluentforms';
 	const $ = window.jQuery;
 
-	$(document).on(
+	$( document ).on(
 		'fluentform_submission_success',
-		function (event, formDetails) {
+		function ( event, formDetails ) {
 			// Extract necessary form details from the event.
 			const formEl = formDetails.form; // The form element
 			const formConfig = formDetails.config; // The form configuration (contains formId, etc.)
 			const formId = formConfig.id;
-			const formInstanceId = formEl.data('form_instance');
-			console.log(formId, formDetails);
+			const formInstanceId = formEl.data( 'form_instance' );
+			console.log( formId, formDetails );
 			// All the magic happens here.
-			window.PUM.integrations.formSubmission($(formEl), {
+			window.PUM.integrations.formSubmission( $( formEl ), {
 				formProvider,
 				formId,
 				formInstanceId,
-			});
+			} );
 		}
 	);
 }
