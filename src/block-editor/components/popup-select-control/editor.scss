@@ -30,7 +30,6 @@ $input-size: 300px;
 
 		@include break-small() {
 			width: $input-size;
-
 		}
 		border: none;
 		border-radius: 0;

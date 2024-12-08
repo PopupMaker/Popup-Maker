@@ -60,8 +60,8 @@ class PUM_Site_Assets {
 		self::$cache_url = PUM_Helpers::get_cache_dir_url();
 		self::$debug     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
 		self::$suffix    = self::$debug ? '' : '.min';
-		self::$js_url    = Popup_Maker::$URL . 'assets/js/';
-		self::$css_url   = Popup_Maker::$URL . 'assets/css/';
+		self::$js_url    = Popup_Maker::$URL . 'dist/assets/';
+		self::$css_url   = Popup_Maker::$URL . 'dist/assets/';
 
 		// Register assets early.
 		add_action( 'wp_enqueue_scripts', [ __CLASS__, 'register_styles' ], 9 );
@@ -74,7 +74,7 @@ class PUM_Site_Assets {
 		add_action( 'pum_preload_popup', [ __CLASS__, 'enqueue_popup_assets' ] );
 		add_filter( 'wp_enqueue_scripts', [ __CLASS__, 'enqueue_page_assets' ] );
 
-		add_action( 'wp_enqueue_scripts', [ __CLASS__, 'fix_broken_extension_scripts' ], 100 );
+		// add_action( 'wp_enqueue_scripts', [ __CLASS__, 'fix_broken_extension_scripts' ], 100 );
 
 		// Allow forcing assets to load.
 		add_action( 'wp_head', [ __CLASS__, 'check_force_script_loading' ] );

@@ -1,6 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
+import './editor.scss';
+
 /* global PUM_Admin, jQuery, pum_google_fonts, pum_theme_settings_editor */
 ( function ( $ ) {
 	'use strict';
