@@ -89,7 +89,7 @@ class PUM_Upsell {
 
 			$tabs['targeting']['main']['atc_promotion'] = [
 				'type'     => 'html',
-				'content'  => '<img src="' . pum_asset_url( 'images/logo.png' ) . '" height="28" />' . $message,
+				'content'  => '<img src="' . pum_asset_url( 'images/mark-retro.png' ) . '" height="28" />' . $message,
 				'priority' => 999,
 				'class'    => 'pum-upgrade-tip',
 			];
