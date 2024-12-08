@@ -1,3 +1,5 @@
+import './styles.scss';
+
 import './vendor';
 import './plugins';
 

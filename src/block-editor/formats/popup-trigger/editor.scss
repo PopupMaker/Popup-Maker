@@ -3,9 +3,8 @@
 }
 
 .popup-trigger[data-popup-id]::after {
-	/*background: url("/wp-content/plugins/popup-maker/assets/images/mark-retro.png") bottom center no-repeat;*/
-	background: url(/wp-content/plugins/popup-maker/assets/images/mark-retro.png)
-		bottom center no-repeat;
+	/*background: url("~assets/images/mark-retro.png") bottom center no-repeat;*/
+	background: url("~assets/images/mark-retro.png") bottom center no-repeat;
 	display: inline-block;
 	width: 0.9em;
 	height: 0.9em;
