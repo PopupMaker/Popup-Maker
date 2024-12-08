@@ -20,6 +20,7 @@ defined( 'ABSPATH' ) || exit;
 function get_default_permissions() {
 	return [
 		// Settings.
+		'edit_popups'     => 'manage_options',
 		'manage_settings' => 'manage_options',
 	];
 }

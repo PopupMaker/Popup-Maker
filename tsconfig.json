@@ -1,0 +1,14 @@
+{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"baseUrl": "./src",
+		"paths": {}
+	},
+	"include": ["src/**/*"],
+	"exclude": ["**/node_modules/**"],
+	"references": [
+		{
+			"path": "packages/block-library"
+		}
+	]
+}
