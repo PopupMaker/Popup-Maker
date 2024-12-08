@@ -1,0 +1,13 @@
+{
+	"name": "popup-maker/dependency-extraction-webpack-plugin",
+	"description": "Popup Maker Dependency Extraction Webpack Plugin",
+	"type": "library",
+	"license": "GPL-3.0-or-later",
+	"minimum-stability": "dev",
+	"config": {
+		"platform": {
+			"php": "7.4"
+		}
+	},
+	"extra": {}
+}
