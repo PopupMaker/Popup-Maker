@@ -47,7 +47,6 @@ require_once __DIR__ . '/class-pum-form.php';
 
 // Modules
 require_once __DIR__ . '/modules/menus.php';
-require_once __DIR__ . '/modules/admin-bar.php';
 require_once __DIR__ . '/modules/reviews.php';
 
 require_once __DIR__ . '/pum-install-functions.php';

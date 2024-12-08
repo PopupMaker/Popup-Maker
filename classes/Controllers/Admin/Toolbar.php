@@ -1,36 +1,39 @@
 <?php
 /**
- * Admin-bar modules
+ * Toolbar
  *
  * @package   PopupMaker
  * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+namespace PopupMaker\Controllers\Admin;
+
+use Popup_Maker;
+use PUM_Site_Popups;
+
+defined( 'ABSPATH' ) || exit;
 
 /**
- * Class PUM_Modules_Admin_Bar
+ * Class Toolbar
  *
- * This class adds admin bar menu for Popup Management.
+ * @since X.X.X
  */
-class PUM_Modules_Admin_Bar {
+class Toolbar extends \PopupMaker\Controllers\Admin {
 
 	/**
 	 * Initializes this module.
 	 */
-	public static function init() {
-		add_action( 'admin_bar_menu', [ __CLASS__, 'toolbar_links' ], 999 );
-		add_action( 'wp_enqueue_scripts', [ __CLASS__, 'enqueue_files' ] );
-		add_action( 'init', [ __CLASS__, 'show_debug_bar' ] );
+	public function init() {
+		add_action( 'admin_bar_menu', [ $this, 'toolbar_links' ], 999 );
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_files' ] );
+		add_action( 'init', [ $this, 'show_debug_bar' ] );
 	}
 
 	/**
 	 * Renders the admin debug bar when PUM Debug is enabled.
 	 */
-	public static function show_debug_bar() {
-		if ( self::should_render() && Popup_Maker::debug_mode() ) {
+	public function show_debug_bar() {
+		if ( $this->should_render() && $this->container->is_debug_mode_enabled() ) {
 			show_admin_bar( true );
 		}
 	}
@@ -45,13 +48,16 @@ class PUM_Modules_Admin_Bar {
 	 *
 	 * @return bool
 	 */
-	public static function should_render() {
+	public function should_render() {
 		$tests = [
 			is_user_logged_in(),
 			! is_admin(),
 			is_admin_bar_showing(),
 			! pum_get_option( 'disabled_admin_bar' ),
-			( current_user_can( 'edit_others_posts' ) || current_user_can( 'manage_options' ) ),
+			(
+				current_user_can( $this->container->get_permission( 'edit_popups' ) ) ||
+				current_user_can( $this->container->get_permission( 'manage_settings' ) )
+			),
 		];
 
 		return ! in_array( false, $tests, true );
@@ -60,21 +66,26 @@ class PUM_Modules_Admin_Bar {
 	/**
 	 * Add additional toolbar menu items to the front end.
 	 *
-	 * @param WP_Admin_Bar $wp_admin_bar
+	 * @param \WP_Admin_Bar $wp_admin_bar
 	 */
-	public static function toolbar_links( $wp_admin_bar ) {
-		if ( ! self::should_render() ) {
+	public function toolbar_links( $wp_admin_bar ) {
+		if ( ! $this->should_render() ) {
 			return;
 		}
 
-		$popups = self::loaded_popups();
+		$popups       = $this->loaded_popups();
+		$popup_labels = \get_post_type_object( 'popup' )->labels;
 
 		$count = count( $popups );
 
 		$wp_admin_bar->add_node(
 			[
 				'id'     => 'popup-maker',
-				'title'  => sprintf( '%s <span class="counter">%d</span>', __( 'Popup Maker', 'popup-maker' ), $count ),
+				'title'  => sprintf(
+					'%s <span class="counter">%d</span>',
+					$popup_labels->menu_name,
+					$count
+				),
 				'href'   => '#popup-maker',
 				'meta'   => [ 'class' => 'popup-maker-toolbar' ],
 				'parent' => false,
@@ -84,7 +95,11 @@ class PUM_Modules_Admin_Bar {
 		$wp_admin_bar->add_node(
 			[
 				'id'     => 'popups',
-				'title'  => sprintf( '%s <span class="counter">%d</span>', __( 'Popups', 'popup-maker' ), $count ),
+				'title'  => sprintf(
+					'%s <span class="counter">%d</span>',
+					$popup_labels->name,
+					$count
+				),
 				'href'   => '#',
 				'parent' => 'popup-maker',
 			]
@@ -166,7 +181,7 @@ class PUM_Modules_Admin_Bar {
 					$wp_admin_bar->add_node(
 						[
 							'id'     => $node_id . '-edit',
-							'title'  => __( 'Edit Popup', 'popup-maker' ),
+							'title'  => $popup_labels->edit_item,
 							'href'   => $edit_url,
 							'parent' => $node_id,
 						]
@@ -177,7 +192,7 @@ class PUM_Modules_Admin_Bar {
 			$wp_admin_bar->add_node(
 				[
 					'id'     => 'no-popups-loaded',
-					'title'  => __( 'No Popups Loaded', 'popup-maker' ) . '<strong style="color:#fff; margin-left: 5px;">?</strong>',
+					'title'  => $popup_labels->no_items,
 					'href'   => 'https://docs.wppopupmaker.com/article/265-my-popup-wont-work-how-can-i-fix-it?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-admin-bar&utm_content=no-popups-loaded',
 					'parent' => 'popups',
 					'meta'   => [
@@ -192,7 +207,7 @@ class PUM_Modules_Admin_Bar {
 			$wp_admin_bar->add_node(
 				[
 					'id'     => 'all-popups',
-					'title'  => __( 'All Popups', 'popup-maker' ),
+					'title'  => $popup_labels->all_items,
 					'href'   => admin_url( 'edit.php?post_type=popup' ),
 					'parent' => 'popup-maker',
 				]
@@ -200,7 +215,7 @@ class PUM_Modules_Admin_Bar {
 			$wp_admin_bar->add_node(
 				[
 					'id'     => 'new-popups', // Just `new-popup` moves this to the top of the menu for some reason. Leave the `s` to keep it in the right place.
-					'title'  => __( 'Create New Popup', 'popup-maker' ),
+					'title'  => $popup_labels->add_new_item,
 					'href'   => admin_url( 'post-new.php?post_type=popup' ),
 					'parent' => 'popup-maker',
 				]
@@ -242,9 +257,11 @@ class PUM_Modules_Admin_Bar {
 	}
 
 	/**
-	 * @return array
+	 * Returns an array of loaded popups.
+	 *
+	 * @return \PUM_Model_Popup[]
 	 */
-	public static function loaded_popups() {
+	public function loaded_popups() {
 		static $popups;
 
 		if ( ! isset( $popups ) ) {
@@ -260,20 +277,11 @@ class PUM_Modules_Admin_Bar {
 	 *
 	 * @since 1.11.0
 	 */
-	public static function enqueue_files() {
-		if ( ! self::should_render() ) {
+	public function enqueue_files() {
+		if ( ! $this->should_render() ) {
 			return;
 		}
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		wp_enqueue_script( 'pum-admin-bar', Popup_Maker::$URL . 'assets/js/admin-bar' . $suffix . '.js', [ 'jquery' ], Popup_Maker::$VER, true );
-		wp_enqueue_style( 'pum-admin-bar-style', Popup_Maker::$URL . 'assets/css/pum-admin-bar' . $suffix . '.css', [], Popup_Maker::$VER );
 
-		$admin_bar_text = [
-			'instructions' => __( 'After clicking ok, click the element you want a selector for.', 'popup-maker' ),
-			'results'      => _x( 'Selector', 'JS alert for CSS get selector tool', 'popup-maker' ),
-		];
-		wp_localize_script( 'pum-admin-bar', 'pumAdminBarText', $admin_bar_text );
+		wp_enqueue_script( 'popup-maker-admin-bar' );
 	}
 }
-
-PUM_Modules_Admin_Bar::init();
