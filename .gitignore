@@ -29,8 +29,8 @@ phpcs-report.xml
 node_modules
 release
 dist
-vendor
-vendor-prefixed
+/vendor
+/vendor-prefixed
 .nx
 npm-debug.log
 
@@ -52,6 +52,3 @@ strauss.phar
 *.zip
 .DS_Store
 
-# Packages
-/packages/*
-!/packages/README.md
