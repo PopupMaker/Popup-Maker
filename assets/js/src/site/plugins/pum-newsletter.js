@@ -73,7 +73,7 @@
 
             $form[0].reset();
 
-            window.pum.hooks.doAction('pum-sub-form.success', data, $form);
+            window.PUM.hooks.doAction('pum-sub-form.success', data, $form);
 
             if (typeof settings.redirect === 'string') {
                 if (settings.redirect !== '') {
@@ -88,7 +88,7 @@
 
             $form.trigger('pumNewsletterError', [data]);
 
-            window.pum.hooks.doAction('pum-sub-form.errors', data, $form);
+            window.PUM.hooks.doAction('pum-sub-form.errors', data, $form);
         });
 
 }(jQuery));
