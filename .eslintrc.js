@@ -1,3 +1,5 @@
+const originalConfig = require( '@code-atlantic/eslint-plugin/lib/configs/recommended' );
+
 const eslintConfig = {
 	root: true,
 	extends: [ 'plugin:@code-atlantic/eslint-plugin/recommended' ],
@@ -15,9 +17,6 @@ const eslintConfig = {
 		jquery: true,
 	},
 	settings: {
-		jsdoc: {
-			mode: 'typescript',
-		},
 		'import/resolver': {
 			node: {
 				moduleDirectory: [ 'node_modules' ],
@@ -48,7 +47,7 @@ const eslintConfig = {
 				'no-var': 'off',
 				'object-shorthand': 'off',
 				'wrap-iife': 'off',
-				camelcase: 'any',
+				camelcase: 0,
 			},
 		},
 	],
