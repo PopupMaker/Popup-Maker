@@ -61,6 +61,7 @@
 	"scripts": {
 		"build": "wp-scripts build",
 		"build:old": "wp-scripts build --config webpack.old.config.js",
+		"build:all": "wp-scripts build --config webpack.config.js --config webpack.old.config.js",
 		"check-engines": "wp-scripts check-engines",
 		"check-licenses": "wp-scripts check-licenses",
 		"copy-build": "node bin/copy-build.js",
@@ -76,6 +77,7 @@
 		"postpackages-update": "npm run build",
 		"start": "wp-scripts start",
 		"start:old": "wp-scripts start --config webpack.old.config.js",
+		"start:all": "wp-scripts start --config webpack.config.js --config webpack.old.config.js",
 		"start:hot": "wp-scripts start --hot",
 		"start:hot:old": "wp-scripts start --hot --config webpack.old.config.js",
 		"build:release": "composer install -o --no-dev && npm run release && npm run copy-build",
