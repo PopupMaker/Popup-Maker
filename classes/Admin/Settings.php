@@ -572,7 +572,7 @@ class PUM_Admin_Settings {
 	 * @return string
 	 */
 	public static function field_pum_styles() {
-		$core_styles = file_get_contents( Popup_Maker::$DIR . 'assets/css/pum-site' . ( is_rtl() ? '-rtl' : '' ) . PUM_Site_Assets::$suffix . '.css' );
+		$core_styles = file_get_contents( Popup_Maker::$DIR . 'dist/assets/site' . ( is_rtl() ? '-rtl' : '' ) . '.css' );
 
 		$user_styles = PUM_AssetCache::generate_font_imports() . PUM_AssetCache::generate_popup_theme_styles() . PUM_AssetCache::generate_popup_styles();
 

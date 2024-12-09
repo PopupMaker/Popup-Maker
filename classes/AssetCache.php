@@ -324,7 +324,7 @@ class PUM_AssetCache {
 		global $wp_filesystem;
 
 		// Load core scripts so we can eliminate another stylesheet.
-		$core_js = $wp_filesystem->get_contents( Popup_Maker::$DIR . 'assets/js/site' . self::$suffix . '.js' );
+		$core_js = $wp_filesystem->get_contents( Popup_Maker::$DIR . 'dist/assets/site.js' );
 
 		/**
 		 *  0 Core
@@ -443,7 +443,7 @@ class PUM_AssetCache {
 		global $wp_filesystem;
 
 		// Include core styles so we can eliminate another stylesheet.
-		$core_css = $wp_filesystem->get_contents( Popup_Maker::$DIR . 'assets/css/pum-site' . ( is_rtl() ? '-rtl' : '' ) . self::$suffix . '.css' );
+		$core_css = $wp_filesystem->get_contents( Popup_Maker::$DIR . 'dist/assets/site' . ( is_rtl() ? '-rtl' : '' ) . '.css' );
 
 		/**
 		 *  0 Core

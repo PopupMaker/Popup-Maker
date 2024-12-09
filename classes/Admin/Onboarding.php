@@ -149,7 +149,7 @@ class PUM_Admin_Onboarding {
 		wp_enqueue_style( 'wp-pointer' );
 
 		// Add pointers script to queue. Add custom script.
-		wp_enqueue_script( 'pum-pointer', Popup_Maker::$URL . 'assets/js/admin-pointer.js', [ 'wp-pointer' ], Popup_Maker::$VER, true );
+		wp_enqueue_script( 'pum-pointer', Popup_Maker::$URL . 'dist/assets/admin-pointer.js', [ 'wp-pointer' ], Popup_Maker::$VER, true );
 
 		// Add pointer options to script.
 		wp_localize_script( 'pum-pointer', 'pumPointers', $valid_pointers );

@@ -29,9 +29,6 @@ class PUM_Admin_BlockEditor {
 		add_action( 'enqueue_block_editor_assets', [ __CLASS__, 'register_editor_assets' ] );
 
 		add_action( 'wp_loaded', [ __CLASS__, 'add_attributes_to_registered_blocks' ], 999 );
-
-		// Here for future use.
-		// add_action( 'enqueue_block_assets', [ __CLASS__, 'register_block_assets' ] );
 	}
 
 	/**
@@ -50,18 +47,23 @@ class PUM_Admin_BlockEditor {
 
 		$script_path       = $build_path . 'block-editor.js';
 		$script_asset_path = $build_path . 'block-editor.asset.php';
-		$script_asset      = file_exists( Popup_Maker::$DIR . $script_asset_path ) ? require Popup_Maker::$DIR . $script_asset_path : [
+		$script_asset      = pum_get_asset_meta( Popup_Maker::$DIR . $script_asset_path, [
 			'dependencies' => [],
 			'version'      => Popup_Maker::$VER,
-		];
-		$script_url        = plugins_url( $script_path, Popup_Maker::$FILE );
-		$script_deps       = $script_asset['dependencies'];
+		] );
+
+		$script_url  = plugins_url( $script_path, Popup_Maker::$FILE );
+		$script_deps = $script_asset['dependencies'];
 
 		if ( 'widgets' !== $screen->id ) {
 			$script_deps = array_merge( $script_deps, [ 'wp-edit-post' ] );
 		}
 
 		wp_enqueue_script( 'popup-maker-block-editor', $script_url, $script_deps, $script_asset['version'], true );
+
+		$is_rtl             = is_rtl();
+		$editor_styles_path = $build_path . 'block-editor' . ( $is_rtl ? '-rtl' : '' ) . '.css';
+		wp_enqueue_style( 'popup-maker-block-editor', plugins_url( $editor_styles_path, Popup_Maker::$FILE ), [], $script_asset['version'] );
 
 		wp_localize_script(
 			'popup-maker-block-editor',
@@ -77,14 +79,6 @@ class PUM_Admin_BlockEditor {
 			]
 		);
 
-		$editor_styles_path       = $build_path . 'block-editor-styles.css';
-		$editor_styles_asset_path = $build_path . 'block-editor-styles.asset.php';
-		$editor_styles_asset      = file_exists( Popup_Maker::$DIR . $editor_styles_asset_path ) ? require Popup_Maker::$DIR . $editor_styles_asset_path : [
-			'dependencies' => [],
-			'version'      => Popup_Maker::$VER,
-		];
-		wp_enqueue_style( 'popup-maker-block-editor', plugins_url( $editor_styles_path, Popup_Maker::$FILE ), [], $editor_styles_asset['version'] );
-
 		if ( function_exists( 'wp_set_script_translations' ) ) {
 			/**
 			 * May be extended to wp_set_script_translations( 'my-handle', 'my-domain',
@@ -93,20 +87,6 @@ class PUM_Admin_BlockEditor {
 			 */
 			wp_set_script_translations( 'popup-maker-block-editor', 'popup-maker' );
 		}
-	}
-
-	/**
-	 * Register assets for individual block styles
-	 */
-	public static function register_block_assets() {
-		$build_path              = 'dist/block-editor/';
-		$block_styles_path       = $build_path . 'block-styles.css';
-		$block_styles_asset_path = $build_path . 'block-styles.asset.php';
-		$block_styles_asset      = file_exists( Popup_Maker::$DIR . $block_styles_asset_path ) ? require Popup_Maker::$DIR . $block_styles_asset_path : [
-			'dependencies' => [],
-			'version'      => Popup_Maker::$VER,
-		];
-		wp_enqueue_style( 'popup-maker-block-styles', plugins_url( $block_styles_path, Popup_Maker::$FILE ), [], $block_styles_asset['version'] );
 	}
 
 	/**
