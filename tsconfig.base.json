@@ -6,10 +6,7 @@
 		"jsx": "preserve",
 		"target": "esnext",
 		"module": "esnext",
-		"lib": [
-			"dom",
-			"esnext"
-		],
+		"lib": [ "dom", "esnext" ],
 		"skipLibCheck": true,
 		"declaration": true,
 		"declarationDir": "build-types",

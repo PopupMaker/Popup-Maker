@@ -4,8 +4,8 @@
 		"baseUrl": "./src",
 		"paths": {}
 	},
-	"include": ["src/**/*"],
-	"exclude": ["**/node_modules/**"],
+	"include": [ "src/**/*" ],
+	"exclude": [ "**/node_modules/**" ],
 	"references": [
 		{
 			"path": "packages/block-library"

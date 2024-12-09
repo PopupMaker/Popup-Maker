@@ -60,7 +60,8 @@ fs.writeFileSync( changelogFilePath, updatedChangelog, 'utf8' );
 
 // Insert unreleased changes into readme.txt
 const readmeContent = fs.readFileSync( readmeFilePath, 'utf8' );
-const changelogPattern = /== Changelog ==([\s\S]*?)(= v\d+\.\d+\.\d+ - \d{2}\/\d{2}\/\d{4} =)/;
+const changelogPattern =
+	/== Changelog ==([\s\S]*?)(= v\d+\.\d+\.\d+ - \d{2}\/\d{2}\/\d{4} =)/;
 const changelogMatch = readmeContent.match( changelogPattern );
 
 const newChangelog = `== Changelog ==\n\nView our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.\n\n= v${ newVersion } - ${ releaseDate } =\n\n${ formattedFileChanges }\n\n${

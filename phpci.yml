@@ -1,25 +1,25 @@
 build_settings:
-  mysql:
-    host: "localhost"
-    user: "root"
-    pass: "root"
+    mysql:
+        host: 'localhost'
+        user: 'root'
+        pass: 'root'
 
 setup:
-  mysql:
-    - "DROP DATABASE IF EXISTS pum_tests;"
-    - "CREATE DATABASE pum_tests;"
-    - "GRANT ALL PRIVILEGES ON pum_tests.* TO pum_tests@'localhost' IDENTIFIED BY 'pum_tests';"
+    mysql:
+        - 'DROP DATABASE IF EXISTS pum_tests;'
+        - 'CREATE DATABASE pum_tests;'
+        - "GRANT ALL PRIVILEGES ON pum_tests.* TO pum_tests@'localhost' IDENTIFIED BY 'pum_tests';"
 
 test:
-  php_unit:
-    config:
-      - "phpunit.xml"
-    directory:
-      - "tests/"
-    run_from: "unit-tests/"
-  php_mess_detector:
-    allow_failures: true
+    php_unit:
+        config:
+            - 'phpunit.xml'
+        directory:
+            - 'tests/'
+        run_from: 'unit-tests/'
+    php_mess_detector:
+        allow_failures: true
 
 complete:
-  mysql:
-    - "DROP DATABASE IF EXISTS pum_tests;"
+    mysql:
+        - 'DROP DATABASE IF EXISTS pum_tests;'

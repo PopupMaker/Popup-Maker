@@ -3,7 +3,7 @@
  * Version 1.4
  */
 var PUM_Accessibility;
-( function( $, document, undefined ) {
+( function ( $, document, undefined ) {
 	'use strict';
 	var $top_level_elements,
 		focusableElementsString =
@@ -14,7 +14,7 @@ var PUM_Accessibility;
 
 	PUM_Accessibility = {
 		// Accessibility: Checks focus events to ensure they stay inside the modal.
-		forceFocus: function( e ) {
+		forceFocus: function ( e ) {
 			if (
 				currentModal &&
 				currentModal.length &&
@@ -24,7 +24,7 @@ var PUM_Accessibility;
 				PUM_Accessibility.setFocusToFirstItem();
 			}
 		},
-		trapTabKey: function( e ) {
+		trapTabKey: function ( e ) {
 			// if tab or shift-tab pressed
 			if ( e.keyCode === 9 ) {
 				// get list of focusable items
@@ -58,7 +58,7 @@ var PUM_Accessibility;
 				}
 			}
 		},
-		setFocusToFirstItem: function() {
+		setFocusToFirstItem: function () {
 			var $firstEl = currentModal
 				.find( '.pum-container *' )
 				.filter( focusableElementsString )
@@ -69,7 +69,7 @@ var PUM_Accessibility;
 			// set focus to first focusable item
 			$firstEl.focus();
 		},
-		initiateFocusLock: function() {
+		initiateFocusLock: function () {
 			var $popup = PUM.getPopup( this ),
 				$focused = $( ':focus' );
 
@@ -81,7 +81,10 @@ var PUM_Accessibility;
 			// Accessibility: Sets the current modal for focus checks.
 			currentModal = $popup
 				// Accessibility: Trap tab key.
-				.on( 'keydown.pum_accessibility', PUM_Accessibility.trapTabKey );
+				.on(
+					'keydown.pum_accessibility',
+					PUM_Accessibility.trapTabKey
+				);
 
 			// Accessibility: Add focus check first time focus changes after popup opens that prevents tabbing outside of modal.
 			$( document ).one(
@@ -95,26 +98,26 @@ var PUM_Accessibility;
 	};
 
 	$( document )
-		.on( 'pumInit', selector, function() {
+		.on( 'pumInit', selector, function () {
 			PUM.getPopup( this )
 				.find( '[tabindex]' )
-				.each( function() {
+				.each( function () {
 					var $this = $( this );
 					$this
 						.data( 'tabindex', $this.attr( 'tabindex' ) )
 						.prop( 'tabindex', '0' );
 				} );
 		} )
-		.on( 'pumBeforeOpen', selector, function() {} )
+		.on( 'pumBeforeOpen', selector, function () {} )
 		.on( 'pumAfterOpen', selector, PUM_Accessibility.initiateFocusLock )
-		.on( 'pumAfterOpen', selector, function() {
+		.on( 'pumAfterOpen', selector, function () {
 			var $popup = PUM.getPopup( this );
 
 			// Accessibility: Sets the current modal as open.
 			currentModal = $popup.attr( 'aria-modal', 'true' );
-		})
-		.on( 'pumBeforeClose', selector, function() {} )
-		.on( 'pumAfterClose', selector, function() {
+		} )
+		.on( 'pumBeforeClose', selector, function () {} )
+		.on( 'pumAfterClose', selector, function () {
 			var $popup = PUM.getPopup( this );
 
 			$popup
@@ -132,8 +135,8 @@ var PUM_Accessibility;
 			// Accessibility: Removes the force focus check.
 			$( document ).off( 'focusin.pum_accessibility' );
 		} )
-		.on( 'pumSetupClose', selector, function() {} )
-		.on( 'pumOpenPrevented', selector, function() {} )
-		.on( 'pumClosePrevented', selector, function() {} )
-		.on( 'pumBeforeReposition', selector, function() {} );
+		.on( 'pumSetupClose', selector, function () {} )
+		.on( 'pumOpenPrevented', selector, function () {} )
+		.on( 'pumClosePrevented', selector, function () {} )
+		.on( 'pumBeforeReposition', selector, function () {} );
 } )( jQuery, document );

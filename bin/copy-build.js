@@ -1,68 +1,68 @@
-const fs = require('fs');
-const path = require('path');
-const glob = require('glob');
+const fs = require( 'fs' );
+const path = require( 'path' );
+const glob = require( 'glob' );
 
-const projectRoot = path.join(__dirname, '..'); // Parent directory of 'bin'
-const buildPath = path.join(projectRoot, 'build');
+const projectRoot = path.join( __dirname, '..' ); // Parent directory of 'bin'
+const buildPath = path.join( projectRoot, 'build' );
 
 // Load package.json
-const packageJSON = require(path.join(projectRoot, 'package.json'));
+const packageJSON = require( path.join( projectRoot, 'package.json' ) );
 
 // Function to remove the directory with backward compatibility
-function removeDirectory(directoryPath) {
-	if (fs.existsSync(directoryPath)) {
-		if (fs.rmSync) {
+function removeDirectory( directoryPath ) {
+	if ( fs.existsSync( directoryPath ) ) {
+		if ( fs.rmSync ) {
 			// Use rmSync if available (Node 14.14+)
-			fs.rmSync(directoryPath, { recursive: true, force: true });
+			fs.rmSync( directoryPath, { recursive: true, force: true } );
 		} else {
 			// Use rmdirSync for backward compatibility
-			fs.rmdirSync(directoryPath, { recursive: true });
+			fs.rmdirSync( directoryPath, { recursive: true } );
 		}
 	}
 }
 
 // Ensure there's a 'build' directory
-if (fs.existsSync(buildPath)) {
-	removeDirectory(buildPath);
-	fs.mkdirSync(buildPath);
+if ( fs.existsSync( buildPath ) ) {
+	removeDirectory( buildPath );
+	fs.mkdirSync( buildPath );
 } else {
-	fs.mkdirSync(buildPath);
+	fs.mkdirSync( buildPath );
 }
 
 // Function to copy files
-function copyFiles(source, target) {
+function copyFiles( source, target ) {
 	let targetFile = target;
 
 	// Check if source is a directory
-	if (fs.lstatSync(source).isDirectory()) {
-		if (!fs.existsSync(targetFile)) {
-			fs.mkdirSync(targetFile, { recursive: true });
+	if ( fs.lstatSync( source ).isDirectory() ) {
+		if ( ! fs.existsSync( targetFile ) ) {
+			fs.mkdirSync( targetFile, { recursive: true } );
 		}
 	} else {
 		// If target is a directory, append the source file's basename to the target path
-		if (fs.existsSync(target) && fs.lstatSync(target).isDirectory()) {
-			targetFile = path.join(target, path.basename(source));
+		if ( fs.existsSync( target ) && fs.lstatSync( target ).isDirectory() ) {
+			targetFile = path.join( target, path.basename( source ) );
 		}
-		fs.copyFileSync(source, targetFile);
+		fs.copyFileSync( source, targetFile );
 	}
 }
 
 // Process each pattern in the 'files' array
-packageJSON.files.forEach((pattern) => {
+packageJSON.files.forEach( ( pattern ) => {
 	// Use glob to resolve the file paths, relative to the project root
-	const files = glob.sync(path.join(projectRoot, pattern));
+	const files = glob.sync( path.join( projectRoot, pattern ) );
 
-	files.forEach((file) => {
+	files.forEach( ( file ) => {
 		// Define the destination path
-		const dest = path.join(buildPath, path.relative(projectRoot, file));
-		const destDir = path.dirname(dest);
+		const dest = path.join( buildPath, path.relative( projectRoot, file ) );
+		const destDir = path.dirname( dest );
 
 		// Ensure the directory exists
-		if (!fs.existsSync(destDir)) {
-			fs.mkdirSync(destDir, { recursive: true });
+		if ( ! fs.existsSync( destDir ) ) {
+			fs.mkdirSync( destDir, { recursive: true } );
 		}
 
 		// Copy the file
-		copyFiles(file, dest);
-	});
-});
+		copyFiles( file, dest );
+	} );
+} );

@@ -2,22 +2,20 @@
  * Defines the core $.popmake binds.
  * Version 1.4
  */
-( function( $, document, undefined ) {
+( function ( $, document, undefined ) {
 	'use strict';
 
 	$( document )
 		// Backward Compatibility
 		// TODO: Add check for compatibility mode once available.
-		.on( 'pumInit', '.pum', function() {
-			$( this )
-				.popmake( 'getContainer' )
-				.trigger( 'popmakeInit' );
+		.on( 'pumInit', '.pum', function () {
+			$( this ).popmake( 'getContainer' ).trigger( 'popmakeInit' );
 		} )
 
 		/**
 		 * Fires the deprecated popmakeBeforeOpen event
 		 */
-		.on( 'pumBeforeOpen', '.pum', function() {
+		.on( 'pumBeforeOpen', '.pum', function () {
 			$( this )
 				.popmake( 'getContainer' )
 				.addClass( 'active' )
@@ -26,24 +24,20 @@
 		/**
 		 * Fires the deprecated popmakeAfterOpen event
 		 */
-		.on( 'pumAfterOpen', '.pum', function() {
-			$( this )
-				.popmake( 'getContainer' )
-				.trigger( 'popmakeAfterOpen' );
+		.on( 'pumAfterOpen', '.pum', function () {
+			$( this ).popmake( 'getContainer' ).trigger( 'popmakeAfterOpen' );
 		} )
 
 		/**
 		 * Fires the deprecated popmakeBeforeClose event
 		 */
-		.on( 'pumBeforeClose', '.pum', function() {
-			$( this )
-				.popmake( 'getContainer' )
-				.trigger( 'popmakeBeforeClose' );
+		.on( 'pumBeforeClose', '.pum', function () {
+			$( this ).popmake( 'getContainer' ).trigger( 'popmakeBeforeClose' );
 		} )
 		/**
 		 * Fires the deprecated popmakeAfterClose event
 		 */
-		.on( 'pumAfterClose', '.pum', function() {
+		.on( 'pumAfterClose', '.pum', function () {
 			$( this )
 				.popmake( 'getContainer' )
 				.removeClass( 'active' )
@@ -53,16 +47,14 @@
 		/**
 		 * Fires the deprecated popmakeSetupClose event
 		 */
-		.on( 'pumSetupClose', '.pum', function() {
-			$( this )
-				.popmake( 'getContainer' )
-				.trigger( 'popmakeSetupClose' );
+		.on( 'pumSetupClose', '.pum', function () {
+			$( this ).popmake( 'getContainer' ).trigger( 'popmakeSetupClose' );
 		} )
 
 		/**
 		 * Removes the prevent open classes if they exist.
 		 */
-		.on( 'pumOpenPrevented', '.pum', function() {
+		.on( 'pumOpenPrevented', '.pum', function () {
 			$( this )
 				.popmake( 'getContainer' )
 				.removeClass( 'preventOpen' )
@@ -71,16 +63,14 @@
 		/**
 		 * Removes the prevent close classes if they exist.
 		 */
-		.on( 'pumClosePrevented', '.pum', function() {
-			$( this )
-				.popmake( 'getContainer' )
-				.removeClass( 'preventClose' );
+		.on( 'pumClosePrevented', '.pum', function () {
+			$( this ).popmake( 'getContainer' ).removeClass( 'preventClose' );
 		} )
 
 		/**
 		 * Fires the deprecated popmakeBeforeReposition event
 		 */
-		.on( 'pumBeforeReposition', '.pum', function() {
+		.on( 'pumBeforeReposition', '.pum', function () {
 			$( this )
 				.popmake( 'getContainer' )
 				.trigger( 'popmakeBeforeReposition' );

@@ -10,7 +10,7 @@ jobs:
         steps:
             - name: Checkout master
               uses: actions/checkout@master
-              
+
             - name: Setup PHP to use 7.4 with composer v2
               uses: shivammathur/setup-php@v2
               with:

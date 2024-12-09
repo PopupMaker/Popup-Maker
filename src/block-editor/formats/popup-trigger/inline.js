@@ -3,7 +3,11 @@
  */
 import { __ } from '@wordpress/i18n';
 import { Component, createRef, useMemo } from '@wordpress/element';
-import { ToggleControl, withNotices, withSpokenMessages } from '@wordpress/components';
+import {
+	ToggleControl,
+	withNotices,
+	withSpokenMessages,
+} from '@wordpress/components';
 import { BACKSPACE, DOWN, ENTER, LEFT, RIGHT, UP } from '@wordpress/keycodes';
 import { getRectangleFromRange } from '@wordpress/dom';
 import { applyFormat, create, insert, isCollapsed } from '@wordpress/rich-text';
@@ -21,10 +25,16 @@ function isShowingInput( props, state ) {
 	return props.addingTrigger || state.editTrigger;
 }
 
-const TriggerPopoverAtText = ( { isActive, addingTrigger, value, ...props } ) => {
+const TriggerPopoverAtText = ( {
+	isActive,
+	addingTrigger,
+	value,
+	...props
+} ) => {
 	const anchorRect = useMemo( () => {
 		const selection = window.getSelection();
-		const range = selection.rangeCount > 0 ? selection.getRangeAt( 0 ) : null;
+		const range =
+			selection.rangeCount > 0 ? selection.getRangeAt( 0 ) : null;
 		if ( ! range ) {
 			return;
 		}
@@ -101,7 +111,11 @@ class InlinePopupTriggerUI extends Component {
 	}
 
 	onKeyDown( event ) {
-		if ( [ LEFT, DOWN, RIGHT, UP, BACKSPACE, ENTER ].indexOf( event.keyCode ) > -1 ) {
+		if (
+			[ LEFT, DOWN, RIGHT, UP, BACKSPACE, ENTER ].indexOf(
+				event.keyCode
+			) > -1
+		) {
 			// Stop the key event from propagating up to ObserveTyping.startTypingInTextField.
 			event.stopPropagation();
 		}
@@ -116,7 +130,10 @@ class InlinePopupTriggerUI extends Component {
 			noticeOperations.createNotice( {
 				id: 'missingPopupId',
 				status: 'error',
-				content: __( 'Choose a popup or the trigger won\'t function.', 'popup-maker' ),
+				content: __(
+					"Choose a popup or the trigger won't function.",
+					'popup-maker'
+				),
 			} );
 		}
 
@@ -124,16 +141,25 @@ class InlinePopupTriggerUI extends Component {
 	}
 
 	setDoDefault( doDefault ) {
-		const { activeAttributes: { popupId = 0 }, value, onChange } = this.props;
+		const {
+			activeAttributes: { popupId = 0 },
+			value,
+			onChange,
+		} = this.props;
 
 		this.setState( { doDefault } );
 
 		// Apply now if URL is not being edited.
 		if ( ! isShowingInput( this.props, this.state ) ) {
-			onChange( applyFormat( value, createTriggerFormat( {
-				popupId,
-				doDefault,
-			} ) ) );
+			onChange(
+				applyFormat(
+					value,
+					createTriggerFormat( {
+						popupId,
+						doDefault,
+					} )
+				)
+			);
 		}
 	}
 
@@ -153,7 +179,12 @@ class InlinePopupTriggerUI extends Component {
 		event.preventDefault();
 
 		if ( isCollapsed( value ) && ! isActive ) {
-			const toInsert = applyFormat( create( { text: __( 'Open Popup', 'popup-maker' ) } ), format, 0, __( 'Open Popup', 'popup-maker' ).length );
+			const toInsert = applyFormat(
+				create( { text: __( 'Open Popup', 'popup-maker' ) } ),
+				format,
+				0,
+				__( 'Open Popup', 'popup-maker' ).length
+			);
 			onChange( insert( value, toInsert ) );
 		} else {
 			onChange( applyFormat( value, format ) );
@@ -189,7 +220,12 @@ class InlinePopupTriggerUI extends Component {
 		 * @constant {number}  value.end             End offset of selected text.
 		 * @constant {string}  value.text            Selected text.
 		 */
-		const { isActive, /* activeAttributes, */ addingTrigger, value, noticeUI } = this.props;
+		const {
+			isActive,
+			/* activeAttributes, */ addingTrigger,
+			value,
+			noticeUI,
+		} = this.props;
 
 		// If the user is not adding a trigger from the toolbar or actively inside render nothing.
 		if ( ! isActive && ! addingTrigger ) {
@@ -210,7 +246,10 @@ class InlinePopupTriggerUI extends Component {
 				focusOnMount={ showInput ? 'firstElement' : false }
 				renderSettings={ () => (
 					<ToggleControl
-						label={ __( 'Do default browser action?', 'popup-maker' ) }
+						label={ __(
+							'Do default browser action?',
+							'popup-maker'
+						) }
 						checked={ doDefault }
 						onChange={ this.setDoDefault }
 					/>

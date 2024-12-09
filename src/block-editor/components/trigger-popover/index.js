@@ -13,7 +13,8 @@ export default class TriggerPopover extends Component {
 	constructor() {
 		super( ...arguments );
 
-		this.toggleSettingsVisibility = this.toggleSettingsVisibility.bind( this );
+		this.toggleSettingsVisibility =
+			this.toggleSettingsVisibility.bind( this );
 
 		this.state = {
 			isSettingsExpanded: false,
@@ -37,9 +38,7 @@ export default class TriggerPopover extends Component {
 			...popoverProps
 		} = this.props;
 
-		const {
-			isSettingsExpanded,
-		} = this.state;
+		const { isSettingsExpanded } = this.state;
 
 		const showSettings = !! renderSettings && isSettingsExpanded;
 
@@ -58,7 +57,10 @@ export default class TriggerPopover extends Component {
 							<IconButton
 								className="editor-popup-trigger-popover__settings-toggle block-editor-popup-trigger-popover__settings-toggle"
 								icon="arrow-down-alt2"
-								label={ __( 'Trigger settings', 'popup-maker' ) }
+								label={ __(
+									'Trigger settings',
+									'popup-maker'
+								) }
 								onClick={ this.toggleSettingsVisibility }
 								aria-expanded={ isSettingsExpanded }
 							/>
@@ -71,9 +73,7 @@ export default class TriggerPopover extends Component {
 					) }
 				</div>
 				{ additionalControls && ! showSettings && (
-					<div
-						className="block-editor-popup-trigger-popover__additional-controls"
-					>
+					<div className="block-editor-popup-trigger-popover__additional-controls">
 						{ additionalControls }
 					</div>
 				) }
