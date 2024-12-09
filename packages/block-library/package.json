@@ -1,0 +1,32 @@
+{
+	"name": "@popup-maker/block-library",
+	"version": "1.0.0",
+	"description": "Popup Maker Block Library",
+	"author": "Code Atlantic",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"wordpress",
+		"popup-maker"
+	],
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/block-library/README.md",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/popupmaker/popup-maker.git"
+	},
+	"bugs": {
+		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"main": "src/index.tsx",
+	"dependencies": {},
+	"devDependencies": {
+		"@types/jquery": "^3.5.32"
+	},
+	"scripts": {
+		"build:tsc": "tsc",
+		"build:types": "tsc --build",
+		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
+		"lint": "wp-scripts lint-js .",
+		"format": "wp-scripts lint-js . --fix",
+		"packages-update": "wp-scripts packages-update"
+	}
+}
