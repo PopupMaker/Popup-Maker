@@ -242,9 +242,13 @@
 
     };
 
-    window.pum = window.pum || {};
-    window.pum.hooks = window.pum.hooks || new EventManager();
-	window.PUM = window.PUM || {};
-	window.PUM.hooks = window.pum.hooks;
+    // Ensure PUM exists globally with proper casing
+    window.PUM = window.PUM || {};
+    
+    // Initialize hooks directly on PUM
+    window.PUM.hooks = window.PUM.hooks || new EventManager();
+    
+    // Maintain backward compatibility with lowercase pum
+    window.pum = window.PUM;
 
 })(window);

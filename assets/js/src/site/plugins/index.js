@@ -1,21 +1,36 @@
+// Core dependencies first
 import './compatibility';
+
+// Initialize jQuery plugins first
+import './serialize-object';
+
+// Initialize core popmake and methods
 import './pum';
-import './pum-accessibility';
-import './pum-analytics';
-import './pum-animations';
-import './pum-binds';
 import './pum-callbacks';
-import './pum-conditions';
+import './pum-defaults';
+
+// Extend core with utilities
+import './pum-hooks';
+import './pum-utilities';
+
+// Add core features
+import './pum-animations';
 import './pum-cookie';
 import './pum-cookies';
-import './pum-debug';
-import './pum-defaults';
+import './pum-conditions';
+import './pum-analytics';
+import './pum-accessibility';
+
+// Add form handling
 import './pum-forms';
-import './pum-hooks';
-import './pum-integrations';
 import './pum-newsletter';
+
+// Add integrations and triggers
+import './pum-integrations';
 import './pum-triggers';
-import './pum-utilities';
-import './pum-accessibility';
-import './pum-accessibility';
-import './serialize-object';
+
+// Add bindings last (after all features are loaded)
+import './pum-binds';
+
+// Debug tools
+import './pum-debug';

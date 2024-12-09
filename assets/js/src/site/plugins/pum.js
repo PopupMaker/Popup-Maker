@@ -2,7 +2,6 @@
  * Defines the core $.popmake function which will load the proper methods.
  * Version 1.4
  */
-var PUM;
 (function ($, document, undefined) {
     "use strict";
 
@@ -66,7 +65,7 @@ var PUM;
         return reference.split('.').reduce(dot_deref, object);
     }
 
-    PUM = {
+    window.PUM = {
         get: new Selector_Cache(),
         getPopup: function (el) {
             var $this;
@@ -791,3 +790,5 @@ var PUM;
     };
 
 }(jQuery, document));
+
+export default window.PUM;

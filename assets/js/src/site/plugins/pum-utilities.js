@@ -70,7 +70,11 @@
         }
     }
 
-    $.fn.popmake.utilities = {
+    // Ensure PUM exists globally
+    window.PUM = window.PUM || {};
+
+    // Define utilities on both jQuery and PUM global
+    $.fn.popmake.utilities = window.PUM.utilities = {
         scrollTo: function (target, callback) {
             var $target = $(target) || $();
 
@@ -424,13 +428,8 @@
         }
     };
 
-    //$.fn.pumSerializeObject = $.fn.popmake.utilities.serializeObject;
-
-    // Deprecated fix. utilies was renamed because of typo.
-    $.fn.popmake.utilies = $.fn.popmake.utilities;
-
-    window.PUM = window.PUM || {};
-    window.PUM.utilities = window.PUM.utilities || {};
-    window.PUM.utilities = $.extend(window.PUM.utilities, $.fn.popmake.utilities);
+    // Ensure backwards compatibility
+    $.fn.pumSerializeObject = window.PUM.utilities.serializeObject;
+    $.fn.popmake.utilies = $.fn.popmake.utilities; // Keep typo version for backwards compatibility
 
 }(jQuery, document));

@@ -4,6 +4,7 @@
 (function ($) {
 	"use strict";
 
+	// Ensure PUM exists globally
 	window.PUM = window.PUM || {};
 	window.PUM.integrations = window.PUM.integrations || {};
 
