@@ -254,6 +254,19 @@ class Toolbar extends \PopupMaker\Controllers\Admin {
 				'parent' => 'pum-tools',
 			]
 		);
+
+		/**
+		 * Plugin Settings.
+		 */
+		$wp_admin_bar->add_node(
+			[
+				'id'     => 'pum-settings',
+				'title'  => __( 'Settings', 'popup-maker' ),
+				'href'   => admin_url( 'edit.php?post_type=popup&page=pum-settings' ),
+				'parent' => 'popup-maker',
+				'target' => '_blank',
+			]
+		);
 	}
 
 	/**
