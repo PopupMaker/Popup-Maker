@@ -1,7 +1,7 @@
+import $ from 'jquery';
 import { __ } from '@wordpress/i18n';
 import { finder } from '@medv/finder';
 import { AdminBarText } from './types';
-import $ from 'jquery';
 
 declare const popupMakerAdminBar:
 	| {
@@ -41,6 +41,7 @@ export class AdminBar {
 			}
 			return this.fallbackCopyToClipboard( text );
 		} catch ( error ) {
+			// eslint-disable-next-line no-console
 			console.error( 'Failed to copy text:', error );
 			return this.fallbackCopyToClipboard( text );
 		}
@@ -57,6 +58,7 @@ export class AdminBar {
 			const success = document.execCommand( 'copy' );
 			return success;
 		} catch ( error ) {
+			// eslint-disable-next-line no-console
 			console.error( 'Fallback copy failed:', error );
 			return false;
 		} finally {
@@ -140,6 +142,7 @@ export class AdminBar {
 			'click',
 			'#wp-admin-bar-pum-get-selector',
 			( event: JQuery.ClickEvent ) => {
+				// eslint-disable-next-line no-alert
 				if ( ! confirm( this.text.instructions ) ) {
 					return;
 				}
