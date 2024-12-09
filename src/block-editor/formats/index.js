@@ -7,6 +7,6 @@ import { registerFormatType } from '@wordpress/rich-text';
  */
 import * as trigger from './popup-trigger';
 
-[
-	trigger,
-].forEach( ( { name, settings } ) => registerFormatType( name, settings ) );
+[ trigger ].forEach( ( { name, settings } ) =>
+	registerFormatType( name, settings )
+);

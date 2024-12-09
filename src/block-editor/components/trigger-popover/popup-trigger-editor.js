@@ -22,19 +22,26 @@ export default function PopupTriggerEditor( {
 		<form
 			className={ classnames(
 				'block-editor-popup-trigger-popover__popup-editor',
-				className,
+				className
 			) }
 			{ ...props }
 		>
 			<PopupSelectControl
-				emptyValueLabel={ __( 'Which popup should open?', 'popup-maker' ) }
+				emptyValueLabel={ __(
+					'Which popup should open?',
+					'popup-maker'
+				) }
 				hideLabelFromVision={ true }
 				value={ value }
 				onChange={ onChangeInputValue }
 				required={ true }
 				// postType="popup"
 			/>
-			<IconButton icon="editor-break" label={ __( 'Apply', 'popup-maker' ) } type="submit" />
+			<IconButton
+				icon="editor-break"
+				label={ __( 'Apply', 'popup-maker' ) }
+				type="submit"
+			/>
 		</form>
 	);
 }

@@ -2,10 +2,10 @@
  * Defines the core $.popmake animations.
  * Version 1.4
  */
-( function( $, document, undefined ) {
+( function ( $, document, undefined ) {
 	'use strict';
 
-	$.fn.popmake.methods.animate_overlay = function(
+	$.fn.popmake.methods.animate_overlay = function (
 		style,
 		duration,
 		callback
@@ -33,7 +33,7 @@
 		return this;
 	};
 
-	$.fn.popmake.methods.animate = function( style ) {
+	$.fn.popmake.methods.animate = function ( style ) {
 		// Method calling logic
 		if ( $.fn.popmake.animations[ style ] ) {
 			return $.fn.popmake.animations[ style ].apply(
@@ -97,7 +97,7 @@
 	 * - b. This usually takes place inside the callback for the overlay callback or after it.
 	 */
 	$.fn.popmake.animations = {
-		none: function( callback ) {
+		none: function ( callback ) {
 			var $popup = PUM.getPopup( this );
 
 			// Ensure the container is visible immediately.
@@ -105,7 +105,7 @@
 				.popmake( 'getContainer' )
 				.css( { opacity: 1, display: 'block' } );
 
-			$popup.popmake( 'animate_overlay', 'none', 0, function() {
+			$popup.popmake( 'animate_overlay', 'none', 0, function () {
 				// Fire user passed callback.
 				if ( callback !== undefined ) {
 					callback();
@@ -115,7 +115,7 @@
 			} );
 			return this;
 		},
-		slide: function( callback ) {
+		slide: function ( callback ) {
 			var $popup = PUM.getPopup( this ),
 				$container = $popup.popmake( 'getContainer' ),
 				settings = $popup.popmake( 'getSettings' ),
@@ -135,13 +135,13 @@
 				'animate_overlay',
 				'fade',
 				overlayAnimationSpeed( settings ),
-				function() {
-					$container.popmake( 'reposition', function( position ) {
+				function () {
+					$container.popmake( 'reposition', function ( position ) {
 						$container.animate(
 							position,
 							containerAnimationSpeed( settings ),
 							'swing',
-							function() {
+							function () {
 								// Fire user passed callback.
 								if ( callback !== undefined ) {
 									callback();
@@ -155,7 +155,7 @@
 			);
 			return this;
 		},
-		fade: function( callback ) {
+		fade: function ( callback ) {
 			var $popup = PUM.getPopup( this ),
 				$container = $popup.popmake( 'getContainer' ),
 				settings = $popup.popmake( 'getSettings' );
@@ -172,12 +172,12 @@
 				'animate_overlay',
 				'fade',
 				overlayAnimationSpeed( settings ),
-				function() {
+				function () {
 					$container.animate(
 						{ opacity: 1 },
 						containerAnimationSpeed( settings ),
 						'swing',
-						function() {
+						function () {
 							// Fire user passed callback.
 							if ( callback !== undefined ) {
 								callback();
@@ -190,7 +190,7 @@
 			);
 			return this;
 		},
-		fadeAndSlide: function( callback ) {
+		fadeAndSlide: function ( callback ) {
 			var $popup = PUM.getPopup( this ),
 				$container = $popup.popmake( 'getContainer' ),
 				settings = $popup.popmake( 'getSettings' ),
@@ -214,8 +214,8 @@
 				'animate_overlay',
 				'fade',
 				overlayAnimationSpeed( settings ),
-				function() {
-					$container.popmake( 'reposition', function( position ) {
+				function () {
+					$container.popmake( 'reposition', function ( position ) {
 						// Add opacity to the animation properties.
 						position.opacity = 1;
 						// Animate the fade & slide.
@@ -223,7 +223,7 @@
 							position,
 							containerAnimationSpeed( settings ),
 							'swing',
-							function() {
+							function () {
 								// Fire user passed callback.
 								if ( callback !== undefined ) {
 									callback();
@@ -242,14 +242,14 @@
 		 * @deprecated
 		 * @returns {$.fn.popmake.animations}
 		 */
-		grow: function( callback ) {
+		grow: function ( callback ) {
 			return $.fn.popmake.animations.fade.apply( this, arguments );
 		},
 		/**
 		 * @deprecated
 		 * @returns {$.fn.popmake.animations}
 		 */
-		growAndSlide: function( callback ) {
+		growAndSlide: function ( callback ) {
 			return $.fn.popmake.animations.fadeAndSlide.apply(
 				this,
 				arguments
@@ -258,19 +258,19 @@
 	};
 
 	$.fn.popmake.overlay_animations = {
-		none: function( duration, callback ) {
+		none: function ( duration, callback ) {
 			PUM.getPopup( this ).css( { opacity: 1, display: 'block' } );
 
 			if ( typeof callback === 'function' ) {
 				callback();
 			}
 		},
-		fade: function( duration, callback ) {
+		fade: function ( duration, callback ) {
 			PUM.getPopup( this )
 				.css( { opacity: 0, display: 'block' } )
 				.animate( { opacity: 1 }, duration, 'swing', callback );
 		},
-		slide: function( duration, callback ) {
+		slide: function ( duration, callback ) {
 			PUM.getPopup( this ).slideDown( duration, callback );
 		},
 	};

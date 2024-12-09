@@ -5,12 +5,12 @@
  * Defines the pm_cookie & pm_remove_cookie global functions.
  */
 var pm_cookie, pm_cookie_json, pm_remove_cookie;
-( function( $ ) {
+( function ( $ ) {
 	'use strict';
 
 	function cookie( converter ) {
 		if ( converter === undefined ) {
-			converter = function() {};
+			converter = function () {};
 		}
 
 		function api( key, value, attributes ) {
@@ -136,10 +136,10 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
 		}
 
 		api.set = api;
-		api.get = function( key ) {
+		api.get = function ( key ) {
 			return api.call( api, key );
 		};
-		api.getJSON = function() {
+		api.getJSON = function () {
 			return api.apply(
 				{
 					json: true,
@@ -148,10 +148,10 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
 			);
 		};
 		api.defaults = {
-			domain: pum_vars.cookie_domain ?  pum_vars.cookie_domain : '',
+			domain: pum_vars.cookie_domain ? pum_vars.cookie_domain : '',
 		};
 
-		api.remove = function( key, attributes ) {
+		api.remove = function ( key, attributes ) {
 			// Clears keys with current path.
 			api(
 				key,
@@ -180,7 +180,7 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
 		 * @param path (deprecated)
 		 * @return {*}
 		 */
-		api.process = function( key, value, attributes, path ) {
+		api.process = function ( key, value, attributes, path ) {
 			if (
 				arguments.length > 3 &&
 				typeof arguments[ 2 ] !== 'object' &&

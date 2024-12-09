@@ -1,29 +1,32 @@
 /*******************************************************************************
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
-(function ($) {
-	"use strict";
+( function ( $ ) {
+	'use strict';
 
 	// Ensure PUM exists globally
 	window.PUM = window.PUM || {};
 	window.PUM.integrations = window.PUM.integrations || {};
 
-	function filterNull(x) {
+	function filterNull( x ) {
 		return x;
 	}
 
-	$.extend(window.PUM.integrations, {
+	$.extend( window.PUM.integrations, {
 		init: function () {
-			if ("undefined" !== typeof pum_vars.form_submission) {
+			if ( 'undefined' !== typeof pum_vars.form_submission ) {
 				var submission = pum_vars.form_submission;
 
 				// Declare these are not AJAX submissions.
 				submission.ajax = false;
 
 				// Initialize the popup var based on passed popup ID.
-				submission.popup = submission.popupId > 0 ? PUM.getPopup(submission.popupId) : null;
+				submission.popup =
+					submission.popupId > 0
+						? PUM.getPopup( submission.popupId )
+						: null;
 
-				PUM.integrations.formSubmission(null, submission);
+				PUM.integrations.formSubmission( null, submission );
 			}
 		},
 		/**
@@ -40,22 +43,29 @@
 		 *     @type {int} formInstanceId Not all form plugins support this.
 		 * }
 		 */
-		formSubmission: function (form, args) {
-			args = $.extend({
-				popup: PUM.getPopup(form),
-				formProvider: null,
-				formId: null,
-				formInstanceId: null,
-				formKey: null,
-				ajax: true, // Allows detecting submissions that may have already been counted.
-				tracked: false
-			}, args);
+		formSubmission: function ( form, args ) {
+			args = $.extend(
+				{
+					popup: PUM.getPopup( form ),
+					formProvider: null,
+					formId: null,
+					formInstanceId: null,
+					formKey: null,
+					ajax: true, // Allows detecting submissions that may have already been counted.
+					tracked: false,
+				},
+				args
+			);
 
 			// Generate unique formKey identifier.
-			args.formKey = args.formKey || [args.formProvider, args.formId, args.formInstanceId].filter(filterNull).join('_');
+			args.formKey =
+				args.formKey ||
+				[ args.formProvider, args.formId, args.formInstanceId ]
+					.filter( filterNull )
+					.join( '_' );
 
-			if (args.popup && args.popup.length) {
-				args.popupId = PUM.getSetting(args.popup, 'id');
+			if ( args.popup && args.popup.length ) {
+				args.popupId = PUM.getSetting( args.popup, 'id' );
 				// Should this be here. It is the only thing not replicated by a new form trigger & cookie.
 				// $popup.trigger('pumFormSuccess');
 			}
@@ -77,31 +87,45 @@
 			 *     @type {Object} popup Usable jQuery object for the popup.
 			 * }
 			 */
-			window.PUM.hooks.doAction('pum.integration.form.success', form, args);
+			window.PUM.hooks.doAction(
+				'pum.integration.form.success',
+				form,
+				args
+			);
 		},
-		checkFormKeyMatches: function (formIdentifier, formInstanceId, submittedFormArgs) {
+		checkFormKeyMatches: function (
+			formIdentifier,
+			formInstanceId,
+			submittedFormArgs
+		) {
 			formInstanceId = '' === formInstanceId ? formInstanceId : false;
 			// Check if the submitted form matches trigger requirements.
 			var checks = [
-				// Any supported form.
-				formIdentifier === 'any',
+					// Any supported form.
+					formIdentifier === 'any',
 
-				// Checks for PM core sub form submissions.
-				'pumsubform' === formIdentifier && 'pumsubform' === submittedFormArgs.formProvider,
+					// Checks for PM core sub form submissions.
+					'pumsubform' === formIdentifier &&
+						'pumsubform' === submittedFormArgs.formProvider,
 
-				// Any provider form. ex. `ninjaforms_any`
-				formIdentifier === submittedFormArgs.formProvider + '_any',
+					// Any provider form. ex. `ninjaforms_any`
+					formIdentifier === submittedFormArgs.formProvider + '_any',
 
-				// Specific provider form with or without instance ID. ex. `ninjaforms_1` or `ninjaforms_1_*`
-				// Only run this test if not checking for a specific instanceId.
-				!formInstanceId && new RegExp('^' + formIdentifier + '(_[\d]*)?').test(submittedFormArgs.formKey),
+					// Specific provider form with or without instance ID. ex. `ninjaforms_1` or `ninjaforms_1_*`
+					// Only run this test if not checking for a specific instanceId.
+					! formInstanceId &&
+						new RegExp( '^' + formIdentifier + '(_[d]*)?' ).test(
+							submittedFormArgs.formKey
+						),
 
-				// Specific provider form with specific instance ID. ex `ninjaforms_1_1` or `calderaforms_jbakrhwkhg_1`
-				// Only run this test if we are checking for specific instanceId.
-				!!formInstanceId && formIdentifier + '_' + formInstanceId === submittedFormArgs.formKey
-			],
-			// If any check is true, set the cookie.
-			matchFound = -1 !== checks.indexOf(true);
+					// Specific provider form with specific instance ID. ex `ninjaforms_1_1` or `calderaforms_jbakrhwkhg_1`
+					// Only run this test if we are checking for specific instanceId.
+					!! formInstanceId &&
+						formIdentifier + '_' + formInstanceId ===
+							submittedFormArgs.formKey,
+				],
+				// If any check is true, set the cookie.
+				matchFound = -1 !== checks.indexOf( true );
 
 			/**
 			 * This filter is applied when checking if a form match was found.
@@ -126,13 +150,15 @@
 			 *
 			 * @returns {boolean}
 			 */
-			return window.PUM.hooks.applyFilters('pum.integration.checkFormKeyMatches', matchFound, {
-				formIdentifier: formIdentifier,
-				formInstanceId: formInstanceId,
-				submittedFormArgs: submittedFormArgs
-			} );
-		}
-	});
-
-
-}(window.jQuery));
+			return window.PUM.hooks.applyFilters(
+				'pum.integration.checkFormKeyMatches',
+				matchFound,
+				{
+					formIdentifier: formIdentifier,
+					formInstanceId: formInstanceId,
+					submittedFormArgs: submittedFormArgs,
+				}
+			);
+		},
+	} );
+} )( window.jQuery );

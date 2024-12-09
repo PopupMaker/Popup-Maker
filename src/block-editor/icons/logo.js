@@ -1,8 +1,12 @@
 import { createElement } from '@wordpress/element';
 
-const LogoIcon = createElement( 'svg',
+const LogoIcon = createElement(
+	'svg',
 	{
-		viewBox: '0 0 106 84', width: 24, height: 24, className: 'popup-trigger-button-svg',
+		viewBox: '0 0 106 84',
+		width: 24,
+		height: 24,
+		className: 'popup-trigger-button-svg',
 	},
 	createElement( 'path', {
 		d: 'M 74.98 0.00 L 80.18 0.00 C 86.85 0.96 93.11 3.19 97.92 8.09 C 102.82 12.91 105.07 19.19 106.00 25.89 L 106.00 29.25 C 105.01 36.93 101.84 43.76 95.96 48.90 C 85.62 57.23 75.10 65.38 64.88 73.86 C 58.14 79.85 49.63 82.94 40.76 84.00 L 36.17 84.00 C 27.56 83.00 19.39 80.03 12.89 74.16 C 5.17 67.38 1.08 57.89 0.00 47.78 L 0.00 43.19 C 1.06 33.34 4.97 24.08 12.35 17.32 C 19.55 10.62 29.39 7.33 38.98 6.07 C 50.98 4.07 63.06 2.41 74.98 0.00 Z',
@@ -31,7 +35,7 @@ const LogoIcon = createElement( 'svg',
 	createElement( 'path', {
 		d: 'M 33.46 26.53 C 40.08 24.87 47.25 27.17 51.85 32.16 C 57.28 37.94 58.59 46.87 54.94 53.94 C 51.18 61.61 42.36 65.97 33.97 64.14 C 25.47 62.43 18.97 54.70 18.77 46.02 C 18.32 36.96 24.64 28.60 33.46 26.53 Z',
 		fill: '#98b729',
-	} ),
+	} )
 );
 
 export default LogoIcon;

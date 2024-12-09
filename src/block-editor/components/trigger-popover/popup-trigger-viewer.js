@@ -20,13 +20,15 @@ function getPopupById( popupId = 0 ) {
 function PopupView( { popupId, className } ) {
 	const spanClassName = classnames(
 		className,
-		'block-editor-popup-trigger-popover__popup-viewer-text',
+		'block-editor-popup-trigger-popover__popup-viewer-text'
 	);
 
 	const popup = getPopupById( popupId );
-	const label = !! popup ? sprintf( __( 'Open "%s" popup', 'popup-maker' ), popup.post_title ) : '';
+	const label = !! popup
+		? sprintf( __( 'Open "%s" popup', 'popup-maker' ), popup.post_title )
+		: '';
 
-	return ( <span className={ spanClassName }>{ label }</span> );
+	return <span className={ spanClassName }>{ label }</span>;
 }
 
 export default function PopupTriggerViewer( {
@@ -40,16 +42,18 @@ export default function PopupTriggerViewer( {
 		<div
 			className={ classnames(
 				'block-editor-popup-trigger-popover__popup-viewer',
-				className,
+				className
 			) }
 			{ ...props }
 		>
 			<PopupView popupId={ popupId } className={ spanClassName } />
-			{ onEditLinkClick && <IconButton
-				icon="edit"
-				label={ __( 'Edit', 'popup-maker' ) }
-				onClick={ onEditLinkClick }
-			/> }
+			{ onEditLinkClick && (
+				<IconButton
+					icon="edit"
+					label={ __( 'Edit', 'popup-maker' ) }
+					onClick={ onEditLinkClick }
+				/>
+			) }
 		</div>
 	);
 }

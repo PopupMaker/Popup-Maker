@@ -1,18 +1,18 @@
-( function( $, document, undefined ) {
+( function ( $, document, undefined ) {
 	'use strict';
 
 	// Used for Mobile Detect when needed.
 	var _md,
-		md = function() {
+		md = function () {
 			if ( _md === undefined ) {
 				_md =
 					typeof MobileDetect !== 'undefined'
 						? new MobileDetect( window.navigator.userAgent )
 						: {
-								phone: function() {
+								phone: function () {
 									return false;
 								},
-								tablet: function() {
+								tablet: function () {
 									return false;
 								},
 						  };
@@ -22,7 +22,7 @@
 		};
 
 	$.extend( $.fn.popmake.methods, {
-		checkConditions: function() {
+		checkConditions: function () {
 			var $popup = PUM.getPopup( this ),
 				settings = $popup.popmake( 'getSettings' ),
 				// Loadable defaults to true if no conditions. Making the popup available everywhere.
@@ -58,7 +58,6 @@
 						// Handle preprocessed PHP conditions.
 						if ( typeof group[ c ] === 'boolean' ) {
 							if ( !! group[ c ] ) {
-
 								group_check = true;
 								break;
 							} else {
@@ -106,7 +105,7 @@
 
 			return loadable;
 		},
-		checkCondition: function( condition ) {
+		checkCondition: function ( condition ) {
 			var target = condition.target || null,
 				settings = condition.settings || condition,
 				check;
