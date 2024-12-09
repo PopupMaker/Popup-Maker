@@ -12,7 +12,7 @@
 	"homepage": "https://wppopupmaker.com",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/PopupMaker/Popup-Maker/"
+		"url": "git+https://github.com/PopupMaker/Popup-Maker.git"
 	},
 	"bugs": {
 		"url": "https://github.com/PopupMaker/Popup-Maker/issues"
@@ -42,6 +42,8 @@
 		"*.php"
 	],
 	"dependencies": {
+		"@popup-maker/admin-bar": "file:./packages/admin-bar",
+		"@popup-maker/block-library": "file:./packages/block-library",
 		"iframe-resizer": "^4.2.10",
 		"mobile-detect": "^1.4.5"
 	},
@@ -65,16 +67,20 @@
 		"check-engines": "wp-scripts check-engines",
 		"check-licenses": "wp-scripts check-licenses",
 		"copy-build": "node bin/copy-build.js",
-		"format:js": "wp-scripts format-js",
-		"format:packages": "nx run-many --target=format",
+		"format": "wp-scripts format",
 		"lint:style": "wp-scripts lint-style",
-		"lint:css:src": "wp-scripts lint-style 'src/**/*.css'",
 		"lint:js": "wp-scripts lint-js",
 		"lint:md:docs": "wp-scripts lint-md-docs",
 		"lint:md:js": "wp-scripts lint-md-js",
 		"lint:pkg-json": "wp-scripts lint-pkg-json",
-		"packages-update": "wp-scripts packages-update",
+		"packages:clean": "nx run-many --target=clean",
+		"packages:build:tsc": "nx run-many --target=build:tsc",
+		"packages:build:types": "nx run-many --target=build:types",
+		"packages:format": "nx run-many --target=format",
+		"packages:lint": "nx run-many --target=lint",
+		"packages-update": "wp-scripts packages-update && npx nx run-many --target=packages-update",
 		"postpackages-update": "npm run build",
+		"plugin-zip": "wp-scripts plugin-zip",
 		"start": "wp-scripts start",
 		"start:old": "wp-scripts start --config webpack.old.config.js",
 		"start:all": "wp-scripts start --config webpack.config.js --config webpack.old.config.js",
@@ -83,8 +89,6 @@
 		"build:release": "composer install -o --no-dev && npm run release && npm run copy-build",
 		"release": "NODE_ENV=production gulp release",
 		"zip:release": "npm run build:release && mv ./build ./popup-maker && zip -r popup-maker.zip ./popup-maker && rm -rf ./popup-maker",
-		"gulp:start": "gulp",
-		"gulp:build": "gulp prebuild",
 		"test:e2e": "wp-scripts test-e2e",
 		"test:unit": "wp-scripts test-unit-js",
 		"test": "echo \"Error: no test specified\" && exit 1"
