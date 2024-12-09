@@ -1,77 +1,97 @@
 const path = require( 'path' );
+const CustomTemplatedPathPlugin = require( '@popup-maker/custom-templated-path-webpack-plugin' );
+const DependencyExtractionWebpackPlugin = require( '@popup-maker/dependency-extraction-webpack-plugin' );
+const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
+// const UnminifiedWebpackPlugin = require( 'unminified-webpack-plugin' );
+
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
-const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extraction-webpack-plugin' );
-const { entry } = require( './webpack.config' );
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-const isProduction = NODE_ENV === 'production';
-const srcPath = path.join( process.cwd(), './assets/js/src' );
-const distPath = path.join( process.cwd(), './dist/assets' );
+const srcPath = path.join( process.cwd(), 'assets/js/src' );
+const distPath = path.join( process.cwd(), 'dist/assets' );
 
 const jsBuilds = {
+	// Site
+	site: `${ srcPath }/site/index.js`,
 	// Admin
-	'admin-batch': path.join( srcPath, 'admin/batch' ),
-	'admin-general': path.join( srcPath, 'admin/general' ),
-	'admin-marketing': path.join( srcPath, 'admin/marketing' ),
-	'admin-pointer': path.join( srcPath, 'admin/pointer' ),
-	'admin-popup-editor': path.join( srcPath, 'admin/popup-editor' ),
-	'admin-settings-page': path.join( srcPath, 'admin/settings-page' ),
-	'admin-shortcode-ui': path.join( srcPath, 'admin/shortcode-ui' ),
-	'admin-theme-editor': path.join( srcPath, 'admin/theme-editor' ),
-	'mce-buttons': path.join( srcPath, 'mce-buttons' ),
-	'popup-maker-easy-modal-importer-site': path.join(
-		srcPath,
-		'popup-maker-easy-modal-importer-site'
-	),
-	'pum-admin-deprecated': path.join( srcPath, 'admin/deprecated' ),
+	'admin-batch': `${ srcPath }/admin/batch/index.js`,
+	'admin-general': `${ srcPath }/admin/general/index.js`,
+	'admin-marketing': `${ srcPath }/admin/marketing/index.js`,
+	'admin-pointer': `${ srcPath }/admin/pointer/index.js`,
+	'admin-popup-editor': `${ srcPath }/admin/popup-editor/index.js`,
+	'admin-settings-page': `${ srcPath }/admin/settings-page/index.js`,
+	'admin-shortcode-ui': `${ srcPath }/admin/shortcode-ui/index.js`,
+	'admin-theme-editor': `${ srcPath }/admin/theme-editor/index.js`,
+	'mce-buttons': `${ srcPath }/mce-buttons.js`,
+	'popup-maker-easy-modal-importer-site': `${ srcPath }/popup-maker-easy-modal-importer-site.js`,
+	'admin-deprecated': `${ srcPath }/admin/deprecated.js`,
+
+	'admin-editor-styles': `${ srcPath }/admin/editor-styles.scss`,
+	'admin-extensions-page': `${ srcPath }/admin/extensions-page.scss`,
+	'admin-support-page': `${ srcPath }/admin/support-page.scss`,
 
 	// Integrations
-	// 'pum-integration-calderaforms': path.join(
-	// 	srcPath,
-	// 	'integration/calderaforms'
-	// ),
-	// 'pum-integration-contactform7': path.join(
-	// 	srcPath,
-	// 	'integration/contactform7'
-	// ),
-	// 'pum-integration-fluentforms': path.join(
-	// 	srcPath,
-	// 	'integration/fluentforms'
-	// ),
-	// 'pum-integration-formidableforms': path.join(
-	// 	srcPath,
-	// 	'integration/formidableforms'
-	// ),
-	// 'pum-integration-gravityforms': path.join(
-	// 	srcPath,
-	// 	'integration/gravityforms'
-	// ),
-	// 'pum-integration-mc4wp': path.join( srcPath, 'integration/mc4wp' ),
-	// 'pum-integration-ninjaforms': path.join(
-	// 	srcPath,
-	// 	'integration/ninjaforms'
-	// ),
-	// 'pum-integration-wpforms': path.join( srcPath, 'integration/wpforms' ),
-	// 'pum-integration-wsforms': path.join( srcPath, 'integration/wsforms' ),
-	// Site
-	site: path.join( srcPath, 'site' ),
+	// 'pum-integration-calderaforms': `${ srcPath }/integration/calderaforms/index.js`,
+	// 'pum-integration-contactform7': `${ srcPath }/integration/contactform7/index.js`,
+	// 'pum-integration-fluentforms': `${ srcPath }/integration/fluentforms/index.js`,
+	// 'pum-integration-formidableforms': `${ srcPath }/integration/formidableforms/index.js`,
+	// 'pum-integration-gravityforms': `${ srcPath }/integration/gravityforms/index.js`,
+	// 'pum-integration-mc4wp': `${ srcPath }/integration/mc4wp/index.js`,
+	// 'pum-integration-ninjaforms': `${ srcPath }/integration/ninjaforms/index.js`,
+	// 'pum-integration-wpforms': `${ srcPath }/integration/wpforms/index.js`,
+	// 'pum-integration-wsforms': `${ srcPath }/integration/wsforms/index.js`,
 };
 
 const config = {
 	...defaultConfig,
-	entry: jsBuilds,
+	entry: Object.entries( jsBuilds ).reduce(
+		( entry, [ packageName, packagePath ] ) => {
+			entry[ packageName ] = packagePath;
+			return entry;
+		},
+		{}
+	),
 	output: {
 		path: distPath,
 		filename: '[name].js',
+		assetModuleFilename: '../images/[name][ext]',
+		publicPath: '/wp-content/plugins/popup-maker/dist/assets/',
 		// Don't clean the output directory since we're testing in place
 		clean: false, // !IMPORTANT!
 	},
+	resolve: {
+		...defaultConfig.resolve,
+		extensions: [ '.json', '.js', '.jsx', '.ts', '.tsx' ],
+		alias: {
+			...defaultConfig.resolve.alias,
+			assets: path.resolve( __dirname, 'assets' ),
+		},
+	},
+	module: {
+		...defaultConfig.module,
+		rules: [
+			...defaultConfig.module.rules.map( ( rule ) => {
+				if (
+					'asset/resource' === rule.type &&
+					rule.test.test( '.png' )
+				) {
+					return {
+						...rule,
+						test: /\.(bmp|png|jpe?g|gif|webp|svg)$/i,
+						generator: {
+							filename: '../images/[name].[hash:8][ext]',
+						},
+					};
+				}
+				return rule;
+			} ),
+		],
+	},
+
 	optimization: {
 		...defaultConfig.optimization,
-		minimize: isProduction,
-		splitChunks: false,
-		runtimeChunk: false,
+		minimize: NODE_ENV !== 'development',
 	},
 	plugins: [
 		...defaultConfig.plugins.filter(
@@ -80,20 +100,41 @@ const config = {
 			// Disable the default cleaner, it will empty `/dist/` which we don't output to in this config.
 			// plugin.constructor.name !== 'CleanWebpackPlugin'
 		),
-		new DependencyExtractionWebpackPlugin( {
-			injectPolyfill: true,
-			requestToExternal( request ) {
-				if ( request === 'jquery' ) {
-					return 'jQuery';
+		new CopyWebpackPlugin( {
+			patterns: [
+				{
+					from: './node_modules/mobile-detect/mobile-detect.min.js',
+					to: path.join( distPath, 'vendor', 'mobile-detect.min.js' ),
+				},
+				{
+					from: './node_modules/iframe-resizer/js/iframeResizer.min.js',
+					to: path.join( distPath, 'vendor', 'iframeResizer.min.js' ),
+				},
+			],
+		} ),
+		// new UnminifiedWebpackPlugin(),
+		new CustomTemplatedPathPlugin( {
+			modulename( outputPath, data ) {
+				const entryName = data.chunk.name;
+				if ( entryName ) {
+					return entryName.replace( /-([a-z])/g, ( match, letter ) =>
+						letter.toUpperCase()
+					);
 				}
-			},
-			requestToHandle( request ) {
-				if ( request === 'jquery' ) {
-					return 'jquery';
-				}
+				return outputPath;
 			},
 		} ),
+		new DependencyExtractionWebpackPlugin( {
+			// injectPolyfill: true,
+			// useDefaults: true,
+			// combineAssets: true,
+			// combinedOutputFile: '../plugin-assets.php',
+		} ),
 	],
+	optimization: {
+		...defaultConfig.optimization,
+		minimize: NODE_ENV !== 'development',
+	},
 };
 
 module.exports = config;
