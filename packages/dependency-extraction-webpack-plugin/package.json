@@ -1,6 +1,6 @@
 {
 	"name": "@popup-maker/dependency-extraction-webpack-plugin",
-	"version": "1.0.0",
+	"version": "5.9.0",
 	"description": "Popup Maker Dependency Extraction Webpack Plugin",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
