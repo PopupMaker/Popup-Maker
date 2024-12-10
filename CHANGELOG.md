@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+**Improvements**
+
+-   Optimized popup `open` functions to improve browser animation reliability and consistent user experience. This update aims to eliminate visual inconsistencies and resolve issues where popups occasionally failed to display.
+-   Added plugin settings shortcut to the admin toolbar menu.
+-   Updated CSS selector generation tool with click-to-copy and improved selectors.
+-   Better grouping of Popup Maker extensions in the Plugins page.
+-   Updated build processes to rely on @wordpress/scripts & Webpack, as well as improved developer tooling. This should result in smaller JS & CSS file sizes, more reliable builds, and faster development cycles.
+-   Updated all branding to use SVGs and new marks/logos.
+
+**Developers**
+
+Updating frontend JavaScript to use hooks/filters system instead of global variables.
+
+-   Added new JS `popupMaker.triggers` filter to allow adding custom triggers.
+-   Added new helper methods for registering Popup Maker custom scripts & styles that will be bundled with our plugin JS/CSS files automatically via AssetCache API.
+-   Lots of WPCS & TypeScript/PHP Type enforcement fixes.
+
 ## v1.20.3 - 2024-11-27
 
 -   Fix: Deprecated notice in WordPress 6.7+ for early translation loading in plugin configuration.
