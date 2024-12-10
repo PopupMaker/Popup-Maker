@@ -87,8 +87,8 @@
 		"start:hot": "wp-scripts start --hot",
 		"start:hot:old": "wp-scripts start --hot --config webpack.old.config.js",
 		"build:release": "composer install -o --no-dev && npm run release && npm run copy-build",
-		"release": "NODE_ENV=production gulp release",
-		"zip:release": "npm run build:release && mv ./build ./popup-maker && zip -r popup-maker.zip ./popup-maker && rm -rf ./popup-maker",
+		"release": "composer install -o --no-dev && npm run build:all && npm run copy-build",
+		"zip:release": "npm run release && mv ./build ./popup-maker && zip -r popup-maker.zip ./popup-maker && rm -rf ./popup-maker",
 		"test:e2e": "wp-scripts test-e2e",
 		"test:unit": "wp-scripts test-unit-js",
 		"test": "echo \"Error: no test specified\" && exit 1"
