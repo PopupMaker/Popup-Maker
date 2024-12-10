@@ -147,99 +147,83 @@ class PluginsPage extends Controller {
 
                     // Process main plugin if present
                     const mainPlugin = document.querySelector('tr[data-slug="popup-maker"]');
+                    
+                    // Store update notices keyed by their plugin slug
+                    const updateNotices = new Map();
+                    document.querySelectorAll('tr.plugin-update-tr[data-slug^="popup-maker-"], tr.plugin-update-tr[data-slug^="pum-"]').forEach(notice => {
+                        updateNotices.set(notice.getAttribute('data-slug'), notice);
+                    });
+
+                    // Setup main plugin toggle if present
                     if (mainPlugin) {
                         mainPlugin.classList.add('pum-main-plugin');
                         addLogo(mainPlugin);
                         
-                        // Add toggle icon after the text
                         const titleStrong = mainPlugin.querySelector('.plugin-title strong');
-                        const currentText = titleStrong.textContent;
-                        titleStrong.innerHTML = currentText + TOGGLE_HTML;
-                        
+                        titleStrong.innerHTML += TOGGLE_HTML;
                         titleStrong.style.cursor = 'pointer';
                         
-                        // Set initial state - expanded by default
                         const icon = titleStrong.querySelector('.pum-toggle-icon');
-                        icon.classList.remove('dashicons-arrow-up-alt2');
                         icon.classList.add('dashicons-arrow-down-alt2');
                         
                         titleStrong.addEventListener('click', (e) => {
-                            // Prevent event from firing twice
                             e.stopPropagation();
-                            
-                            const isCollapsed = icon.classList.contains('dashicons-arrow-down-alt2');
-                            
-                            // Toggle icon
-                            icon.classList.toggle('dashicons-arrow-up-alt2', isCollapsed);
+                            const isCollapsed = icon.classList.toggle('dashicons-arrow-up-alt2');
+                            console.log(isCollapsed);
                             icon.classList.toggle('dashicons-arrow-down-alt2', !isCollapsed);
                             
-                            // Toggle visibility of addons
+                            const display = isCollapsed ? 'none' : 'table-row';
                             document.querySelectorAll('.pum-addon-plugin').forEach(addon => {
-                                addon.style.display = isCollapsed ? 'none' : 'table-row';
-                                
-                                // Toggle visibility of update notices
-                                const updateNotice = updateNotices.get(addon.getAttribute('data-slug'));
-                                if (!updateNotice) return;
-                                
-                                updateNotice.style.display = isCollapsed ? 'none' : 'table-row';
+                                addon.style.display = display;
+                                const notice = updateNotices.get(addon.getAttribute('data-slug'));
+                                if (notice) notice.style.display = display;
                             });
                         });
                     }
 
-                    // Get and process addons without the plugins-update-tr class.
+                    // Get and process addons
                     const addons = Array.from(document.querySelectorAll('tr[data-slug^="popup-maker-"]:not(.plugin-update-tr), tr[data-slug^="pum-"]:not(.plugin-update-tr)'));
                     if (!addons.length) return;
+
+                    // Initial addon setup
                     addons.forEach(addon => {
                         addon.classList.add('pum-addon-plugin');
-                        if (!mainPlugin) {
-                            addon.classList.add('no-main-plugin');
-                        }
-                        
+                        if (!mainPlugin) addon.classList.add('no-main-plugin');
                         addLogo(addon);
                         standardizeTitle(addon);
                     });
+
                     const insertionPoint = mainPlugin || addons[0].previousElementSibling;
-
-                    // Store update notices keyed by their plugin slug
-                    const updateNotices = new Map();
-                    document.querySelectorAll('tr.plugin-update-tr[data-slug^="popup-maker-"], tr.plugin-update-tr[data-slug^="pum-"]').forEach(notice => {
-                        const slug = notice.getAttribute('data-slug');
-                        updateNotices.set(slug, notice);
-                    });
-
-                   // Sort addons by priority first, then alphabetically
+                    
+                    // Sort addons.
                     addons.sort((a, b) => {
                         // Active plugins come first
                         if (isActive(a) !== isActive(b)) {
                             return isActive(b) ? -1 : 1;
                         }
-
+                        
                         const nameA = getName(a);
                         const nameB = getName(b);
                         const priorityA = getPriorityIndex(nameA);
                         const priorityB = getPriorityIndex(nameB);
-
+                        
                         // Priority list items come first
                         if (priorityA !== -1 || priorityB !== -1) {
                             return (priorityA || 999) - (priorityB || 999);
                         }
-
+                        
                         // Alphabetical sort
                         return nameB.localeCompare(nameA);
                     });
 
                     // Process each addon
                     addons.forEach(addon => {
-
                         addon.remove();
                         insertionPoint.parentNode.insertBefore(addon, insertionPoint.nextElementSibling);
-
-
-                        // Move its update notice (if any) right after it
-                        const slug = addon.getAttribute('data-slug');
-                        const updateNotice = updateNotices.get(slug);
-                        if (updateNotice) {
-                            addon.parentNode.insertBefore(updateNotice, addon.nextSibling);
+                        
+                        const notice = updateNotices.get(addon.getAttribute('data-slug'));
+                        if (notice) {
+                            addon.parentNode.insertBefore(notice, addon.nextSibling);
                         }
                     });
                 

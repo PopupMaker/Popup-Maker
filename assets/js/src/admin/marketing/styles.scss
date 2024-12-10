@@ -4,3 +4,97 @@
 		width: 18px !important;
 	}
 }
+
+.plugins {
+	tr[data-plugin].pum-main-plugin,
+	tr[data-plugin].pum-addon-plugin {
+		td.plugin-title {
+			.pum-plugin-icon {
+				width: 1.375rem !important;
+				height: auto !important;
+				aspect-ratio: 1 / 1;
+				padding-right: 0.5rem;
+				position: relative;
+				top: -1.5px;
+				opacity: 0.8;
+				transition: all 0.2s ease-in-out;
+			}
+
+			.pum-toggle-icon {
+				float: none;
+				padding: 0;
+				// margin-left: 0.5rem;
+				width: auto;
+				height: auto;
+
+				&::before {
+					background-color: transparent;
+					box-shadow: none;
+					font-size: 1em;
+					color: black;
+				}
+
+				&:hover {
+					color: #2271b1;
+				}
+			}
+		}
+
+		&.active,
+		&:hover {
+			td.plugin-title {
+				.pum-plugin-icon {
+					opacity: 1;
+				}
+			}
+		}
+
+		&:hover {
+			td.plugin-title {
+				.pum-plugin-icon {
+					transform: scale(1.2);
+				}
+			}
+		}
+
+		&.pum-addon-plugin {
+			th,
+			td {
+				opacity: 0.875;
+			}
+
+			&:not(.no-main-plugin) {
+				td.plugin-title {
+					padding-left: 1.5rem;
+				}
+			}
+
+			.no-main-plugin {
+				td,
+				th {
+					opacity: 1;
+				}
+				td.plugin-title {
+					&::before {
+						left: 0;
+					}
+				}
+			}
+		}
+	}
+
+	/* Improve spacing between plugins */
+	.pum-main-plugin + .pum-addon-plugin,
+	.pum-addon-plugin + .pum-addon-plugin {
+		border-top: none !important;
+	}
+
+	/* Ensure consistent heights */
+	.plugins tr.active + tr.inactive th,
+	.plugins tr.active + tr.inactive td,
+	.plugins tr.active th,
+	.plugins tr.active td {
+		box-shadow: none;
+		-webkit-box-shadow: none;
+	}
+}
