@@ -8,6 +8,8 @@
 
 namespace PopupMaker\Controllers\Admin\WP;
 
+use PopupMaker\Base\Controller;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -15,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since X.X.X
  */
-class PluginsPage {
+class PluginsPage extends Controller {
 
     /**
      * UTM arguments.
@@ -112,7 +114,7 @@ class PluginsPage {
 	}
 
 	/**
-	 * Better branding
+	 * Better branding.
 	 *
 	 * @return void
 	 */
@@ -122,14 +124,126 @@ class PluginsPage {
 		if ( 'plugins.php' === $pagenow ) {
 			?>
 			<script type="text/javascript" id="pum-branding">
-				document.querySelectorAll('tr[data-slug^="popup-maker"], tr[data-slug^="popup-maker-"], tr[data-slug^="pum-"]').forEach(function(el){
-					// Skip the main popup-maker plugin
-					if (el.getAttribute('data-slug') !== 'popup-maker') {
-						el.style.backgroundColor = '#f9f9f9';
-						el.querySelector('td.plugin-title div.name').style.paddingLeft = '1.5rem';
-					}
-					el.querySelector('td.plugin-title').innerHTML = '<img src="<?php echo esc_url( plugins_url( 'assets/images/mark.svg', POPMAKE ) ); ?>" alt="<?php esc_attr_e( 'Popup Maker', 'popup-maker' ); ?>" style="width: 1rem;height: 1rem;margin-right: -5px;top: 2px;position: relative;">' + el.querySelector('td.plugin-title').innerHTML;
-				});
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Constants
+                    const PRIORITY_LIST = ['Pro', 'Ecommerce Popups'];
+                    const LOGO_HTML = '<img class="pum-plugin-icon" src="<?php echo esc_url( plugins_url( 'assets/images/mark.svg', POPMAKE ) ); ?>" alt="Popup Maker Logo" />';
+                    const TOGGLE_HTML = '<span class="pum-toggle-icon dashicons dashicons-arrow-down-alt2"></span>';
+                    
+                    // Helper functions
+                    const cleanText = text => text.replace('Popup Maker', '').replace(/[-:]/g, '').trim();
+                    const getName = element => cleanText(element.querySelector('.plugin-title strong').textContent);
+                    const getPriorityIndex = name => PRIORITY_LIST.findIndex(item => cleanText(item) === name);
+                    const isActive = element => element.querySelector('.active') !== null;
+                    const addLogo = element => {
+                        const title = element.querySelector('.plugin-title');
+                        title.innerHTML = LOGO_HTML + title.innerHTML;
+                    };
+                    const standardizeTitle = element => {
+                        const name = getName(element);
+                        if (!name || name === 'Pro') return;
+                        element.querySelector('.plugin-title strong').textContent = `Popup Maker: ${name}`;
+                    };
+
+                    // Process main plugin if present
+                    const mainPlugin = document.querySelector('tr[data-slug="popup-maker"]');
+                    if (mainPlugin) {
+                        mainPlugin.classList.add('pum-main-plugin');
+                        addLogo(mainPlugin);
+                        
+                        // Add toggle icon after the text
+                        const titleStrong = mainPlugin.querySelector('.plugin-title strong');
+                        const currentText = titleStrong.textContent;
+                        titleStrong.innerHTML = currentText + TOGGLE_HTML;
+                        
+                        titleStrong.style.cursor = 'pointer';
+                        
+                        // Set initial state - expanded by default
+                        const icon = titleStrong.querySelector('.pum-toggle-icon');
+                        icon.classList.remove('dashicons-arrow-up-alt2');
+                        icon.classList.add('dashicons-arrow-down-alt2');
+                        
+                        titleStrong.addEventListener('click', (e) => {
+                            // Prevent event from firing twice
+                            e.stopPropagation();
+                            
+                            const isCollapsed = icon.classList.contains('dashicons-arrow-down-alt2');
+                            
+                            // Toggle icon
+                            icon.classList.toggle('dashicons-arrow-up-alt2', isCollapsed);
+                            icon.classList.toggle('dashicons-arrow-down-alt2', !isCollapsed);
+                            
+                            // Toggle visibility of addons
+                            document.querySelectorAll('.pum-addon-plugin').forEach(addon => {
+                                addon.style.display = isCollapsed ? 'none' : 'table-row';
+                                
+                                // Toggle visibility of update notices
+                                const updateNotice = updateNotices.get(addon.getAttribute('data-slug'));
+                                if (!updateNotice) return;
+                                
+                                updateNotice.style.display = isCollapsed ? 'none' : 'table-row';
+                            });
+                        });
+                    }
+
+                    // Get and process addons without the plugins-update-tr class.
+                    const addons = Array.from(document.querySelectorAll('tr[data-slug^="popup-maker-"]:not(.plugin-update-tr), tr[data-slug^="pum-"]:not(.plugin-update-tr)'));
+                    if (!addons.length) return;
+                    addons.forEach(addon => {
+                        addon.classList.add('pum-addon-plugin');
+                        if (!mainPlugin) {
+                            addon.classList.add('no-main-plugin');
+                        }
+                        
+                        addLogo(addon);
+                        standardizeTitle(addon);
+                    });
+                    const insertionPoint = mainPlugin || addons[0].previousElementSibling;
+
+                    // Store update notices keyed by their plugin slug
+                    const updateNotices = new Map();
+                    document.querySelectorAll('tr.plugin-update-tr[data-slug^="popup-maker-"], tr.plugin-update-tr[data-slug^="pum-"]').forEach(notice => {
+                        const slug = notice.getAttribute('data-slug');
+                        updateNotices.set(slug, notice);
+                    });
+
+                   // Sort addons by priority first, then alphabetically
+                    addons.sort((a, b) => {
+                        // Active plugins come first
+                        if (isActive(a) !== isActive(b)) {
+                            return isActive(b) ? -1 : 1;
+                        }
+
+                        const nameA = getName(a);
+                        const nameB = getName(b);
+                        const priorityA = getPriorityIndex(nameA);
+                        const priorityB = getPriorityIndex(nameB);
+
+                        // Priority list items come first
+                        if (priorityA !== -1 || priorityB !== -1) {
+                            return (priorityA || 999) - (priorityB || 999);
+                        }
+
+                        // Alphabetical sort
+                        return nameB.localeCompare(nameA);
+                    });
+
+                    // Process each addon
+                    addons.forEach(addon => {
+
+                        addon.remove();
+                        insertionPoint.parentNode.insertBefore(addon, insertionPoint.nextElementSibling);
+
+
+                        // Move its update notice (if any) right after it
+                        const slug = addon.getAttribute('data-slug');
+                        const updateNotice = updateNotices.get(slug);
+                        if (updateNotice) {
+                            addon.parentNode.insertBefore(updateNotice, addon.nextSibling);
+                        }
+                    });
+                
+                });
 			</script>
 			<?php
 		}
