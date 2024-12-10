@@ -24,7 +24,6 @@ class PUM_Admin {
 		PUM_Admin_Onboarding::init();
 
 		add_filter( 'user_has_cap', [ __CLASS__, 'prevent_default_theme_deletion' ], 10, 3 );
-		add_filter( 'plugin_action_links', [ __CLASS__, 'plugin_action_links' ], 10, 2 );
 		add_action( 'admin_init', [ __CLASS__, 'after_install' ] );
 		add_action( 'admin_head', [ __CLASS__, 'clean_ui' ] );
 	}
@@ -45,38 +44,6 @@ class PUM_Admin {
 		}
 
 		return $allcaps;
-	}
-
-	/**
-	 * Render plugin action links.
-	 *
-	 * @param $links
-	 * @param $file
-	 *
-	 * @return mixed
-	 */
-	public static function plugin_action_links( $links, $file ) {
-
-		if ( plugin_basename( POPMAKE ) === $file ) {
-			$plugin_action_links = apply_filters(
-				'pum_plugin_action_links',
-				[
-					'extend'   => '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-extensions' ) . '">' . __( 'Integrations', 'popup-maker' ) . '</a>',
-					'settings' => '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-settings' ) . '">' . __( 'Settings', 'popup-maker' ) . '</a>',
-				]
-			);
-
-			// TODO Rewrite this to take full advantage of our polyglot detection code in Alerts for translation requests.
-			if ( substr( get_locale(), 0, 2 ) !== 'en' ) {
-				$plugin_action_links = array_merge( [ 'translate' => '<a href="' . sprintf( 'https://translate.wordpress.org/locale/%s/default/wp-plugins/popup-maker', substr( get_locale(), 0, 2 ) ) . '" target="_blank">' . __( 'Translate', 'popup-maker' ) . '</a>' ], $plugin_action_links );
-			}
-
-			foreach ( $plugin_action_links as $link ) {
-				array_unshift( $links, $link );
-			}
-		}
-
-		return $links;
 	}
 
 	/**
@@ -103,6 +70,7 @@ class PUM_Admin {
 			update_option( '_pum_installed', true );
 		}
 	}
+
 
 	/**
 	 * Cleans the UI area within our admin pages
