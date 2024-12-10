@@ -27,6 +27,7 @@ const jsBuilds = {
 	'popup-maker-easy-modal-importer-site': `${ srcPath }/popup-maker-easy-modal-importer-site.js`,
 	'admin-deprecated': `${ srcPath }/admin/deprecated.js`,
 
+	// TODO These are currently outputting empty .js files.
 	'admin-editor-styles': `${ srcPath }/admin/editor-styles.scss`,
 	'admin-extensions-page': `${ srcPath }/admin/extensions-page.scss`,
 	'admin-support-page': `${ srcPath }/admin/support-page.scss`,
