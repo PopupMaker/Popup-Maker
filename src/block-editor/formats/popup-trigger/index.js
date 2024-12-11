@@ -12,7 +12,7 @@ import {
 /**
  * Internal dependencies
  */
-import LogoIcon from '../../icons/logo';
+import MarkIcon from '../../icons/mark';
 import InlinePopupTriggerUI from './inline';
 
 const title = __( 'Popup Trigger', 'popup-maker' );
@@ -73,7 +73,8 @@ export const settings = {
 						/>
 						{ isActive && (
 							<RichTextToolbarButton
-								icon={ LogoIcon }
+								icon={ MarkIcon }
+								iconSize={ 16 }
 								title={ __( 'Remove Trigger', 'popup-maker' ) }
 								onClick={ this.onRemoveFormat }
 								isActive={ isActive }
@@ -83,7 +84,8 @@ export const settings = {
 						) }
 						{ ! isActive && (
 							<RichTextToolbarButton
-								icon={ LogoIcon }
+								icon={ MarkIcon }
+								iconSize={ 16 }
 								title={ title }
 								onClick={ this.addTrigger }
 								isActive={ isActive }
