@@ -16,7 +16,7 @@
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
-	"main": "src/index.tsx",
+	"main": "src/index.ts",
 	"dependencies": {
 		"@medv/finder": "^3.2.0",
 		"@wordpress/i18n": "^5.13.0"
