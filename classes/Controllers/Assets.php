@@ -41,7 +41,7 @@ class Assets extends Controller {
 		}
 
 		$packages = [
-			'admin-bar' => [
+			'admin-bar'       => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-admin-bar',
 				'styles'   => true,
@@ -55,6 +55,13 @@ class Assets extends Controller {
 						'copied'       => _x( 'Copied to clipboard', 'JS alert for CSS get selector tool', 'popup-maker' ),
 					],
 				],
+			],
+			'admin-marketing' => [
+				'bundled'  => false,
+				'handle'   => 'popup-maker-admin-marketing',
+				'styles'   => true,
+				'varsName' => 'popupMakerAdminMarketing',
+				'vars'     => [],
 			],
 		];
 

@@ -9,7 +9,6 @@
 namespace PopupMaker\Controllers;
 
 use PopupMaker\Base\Controller;
-use PopupMaker\Controllers\Admin\CallToActions;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,12 +19,28 @@ defined( 'ABSPATH' ) || exit;
  */
 class Admin extends Controller {
 
+	/**
+	 * Initialize admin controller.
+	 */
 	public function init() {
 		$this->container->register_controllers( [
 			'Admin\Toolbar'        => new \PopupMaker\Controllers\Admin\Toolbar( $this->container ),
 			'Admin\WP\PluginsPage' => new \PopupMaker\Controllers\Admin\WP\PluginsPage( $this->container ),
-			'Admin\Toolbar' => new \PopupMaker\Controllers\Admin\Toolbar( $this->container ),
-			// 'Admin\CallToActions' => new \PopupMaker\Controllers\Admin\CallToActions( $this->container ),
+			'Admin\CallToActions'  => new \PopupMaker\Controllers\Admin\CallToActions( $this->container ),
 		] );
+
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
+	}
+
+	/**
+	 * Enqueue admin assets.
+	 */
+	public function enqueue_admin_assets() {
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		wp_enqueue_style( 'popup-maker-admin-marketing' );
+		wp_enqueue_script( 'popup-maker-admin-marketing' );
 	}
 }
