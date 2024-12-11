@@ -16,5 +16,9 @@
 	img {
 		float: left;
 		margin-right: 15px;
+		max-width: initial;
+		aspect-ratio: 1 / 1;
+		width: auto;
+		height: 2em;
 	}
 }
