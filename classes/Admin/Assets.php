@@ -95,7 +95,6 @@ class PUM_Admin_Assets {
 		wp_localize_script( 'pum-admin-general', 'pum_admin_vars', $admin_vars );
 
 		wp_register_script( 'pum-admin-batch', self::$js_url . 'admin-batch.js', [ 'pum-admin-general' ], Popup_Maker::$VER, true );
-		wp_register_script( 'pum-admin-marketing', self::$js_url . 'admin-marketing.js', null, Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-popup-editor', self::$js_url . 'admin-popup-editor.js', [ 'pum-admin-general' ], Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-theme-editor', self::$js_url . 'admin-theme-editor.js', [ 'pum-admin-general' ], Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-settings-page', self::$js_url . 'admin-settings-page.js', [ 'pum-admin-general' ], Popup_Maker::$VER, true );
@@ -105,8 +104,6 @@ class PUM_Admin_Assets {
 		// @deprecated handle. Currently loads empty file and admin-general as dependency.
 		wp_register_script( 'popup-maker-admin', self::$js_url . 'admin-deprecated.js', [ 'pum-admin-general' ], Popup_Maker::$VER, true );
 		wp_localize_script( 'pum-admin-general', 'pum_admin', $admin_vars );
-
-		wp_enqueue_script( 'pum-admin-marketing' );
 
 		if ( PUM_Utils_Upgrades::instance()->has_uncomplete_upgrades() ) {
 			wp_enqueue_script( 'pum-admin-batch' );
@@ -164,7 +161,6 @@ class PUM_Admin_Assets {
 
 		wp_register_style( 'pum-admin-general', self::$css_url . 'admin-general' . $rtl . '.css', [ 'dashicons', 'wp-color-picker' ], Popup_Maker::$VER );
 		wp_register_style( 'pum-admin-batch', self::$css_url . 'admin-batch' . $rtl . '.css', [ 'pum-admin-general' ], Popup_Maker::$VER );
-		wp_register_style( 'pum-admin-marketing', self::$css_url . 'admin-marketing' . $rtl . '.css', [ 'pum-admin-general' ], Popup_Maker::$VER );
 		wp_register_style( 'pum-admin-popup-editor', self::$css_url . 'admin-popup-editor' . $rtl . '.css', [ 'pum-admin-general' ], Popup_Maker::$VER );
 		wp_register_style( 'pum-admin-theme-editor', self::$css_url . 'admin-theme-editor' . $rtl . '.css', [ 'pum-admin-general' ], Popup_Maker::$VER );
 		wp_register_style( 'pum-admin-extensions-page', self::$css_url . 'admin-extensions-page' . $rtl . '.css', [ 'pum-admin-general' ], Popup_Maker::$VER );
@@ -174,8 +170,6 @@ class PUM_Admin_Assets {
 
 		// @deprecated handle. Currently loads empty file and admin-general as dependency.
 		wp_register_style( 'popup-maker-admin', self::$css_url . 'admin-deprecated' . $rtl . '.css', [ 'pum-admin-general' ], Popup_Maker::$VER );
-
-		wp_enqueue_style( 'pum-admin-marketing' );
 
 		if ( PUM_Utils_Upgrades::instance()->has_uncomplete_upgrades() ) {
 			wp_enqueue_style( 'pum-admin-batch' );
