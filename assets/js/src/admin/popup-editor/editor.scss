@@ -12,7 +12,7 @@ Display Switcher
 	justify-content: space-between;
 	width: 100%;
 
-	@media screen and ( min-width: 600px ) {
+	@media screen and (min-width: 600px) {
 		flex-direction: row;
 		flex-wrap: wrap;
 	}
@@ -22,44 +22,44 @@ Display Switcher
 		transition: transform 0.1s ease 0s;
 		cursor: pointer;
 
-		@media screen and ( min-width: 600px ) and ( max-width: 1279px ) {
+		@media screen and (min-width: 600px) and (max-width: 1279px) {
 			width: 47%;
 
-			&:nth-child( 2n + 1 ) {
+			&:nth-child(2n + 1) {
 				margin-left: 0; // First column in each row
 			}
 
-			&:nth-child( 2n + 2 ) {
+			&:nth-child(2n + 2) {
 				margin-right: 0; // Last Column in each row
 			}
 		}
 
-		@media screen and ( min-width: 1280px ) and ( max-width: 1365px ) {
+		@media screen and (min-width: 1280px) and (max-width: 1365px) {
 			width: 30%;
 
-			&:nth-child( 3n + 1 ) {
+			&:nth-child(3n + 1) {
 				margin-left: 0; // First column in each row
 			}
 
-			&:nth-child( 3n + 3 ) {
+			&:nth-child(3n + 3) {
 				margin-right: 0; // Last Column in each row
 			}
 		}
 
-		@media screen and ( min-width: 1366px ) {
+		@media screen and (min-width: 1366px) {
 			width: 22.75%;
 
-			&:nth-child( 4n + 1 ) {
+			&:nth-child(4n + 1) {
 				margin-left: 0; // First column in each row
 			}
 
-			&:nth-child( 4n + 4 ) {
+			&:nth-child(4n + 4) {
 				margin-right: 0; // Last Column in each row
 			}
 		}
 
 		&:hover {
-			transform: scale( 1.1 ); // Intentional ?
+			transform: scale(1.1); // Intentional ?
 		}
 
 		img {
@@ -164,7 +164,7 @@ Misc
 	> span {
 		border: 1px solid;
 		border-radius: 2px;
-		background-color: rgba( 0, 0, 0, 0.5 );
+		background-color: rgba(0, 0, 0, 0.5);
 		color: #fff;
 		text-align: center;
 		cursor: pointer;
@@ -193,13 +193,13 @@ Misc
 		width: auto;
 		z-index: 999;
 		box-shadow: 1px 1px 5px -1px;
-		border: 1px solid rgba( 0, 0, 0, 0.25 );
+		border: 1px solid rgba(0, 0, 0, 0.25);
 		min-width: 125px;
 
 		li {
 			display: block;
 			padding: 0.5em;
-			border-bottom: 1px dashed rgba( 0, 0, 0, 0.25 );
+			border-bottom: 1px dashed rgba(0, 0, 0, 0.25);
 
 			text-wrap: none;
 			margin: 0;
@@ -243,7 +243,7 @@ pre.manual-cookie-shortcode {
 
 		&::before,
 		&::after {
-			content: ' ';
+			content: " ";
 		}
 	}
 }
