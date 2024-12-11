@@ -472,7 +472,7 @@ class PUM_Modules_Reviews {
 		<div class="notice notice-success is-dismissible pum-notice">
 
 			<p>
-				<img class="logo" src="<?php echo esc_attr( POPMAKE_URL ); ?>/assets/images/icon-256x256.jpg" />
+				<img class="logo" src="<?php echo esc_attr( POPMAKE_URL ); ?>/assets/images/mark.svg" />
 				<strong>
 					<?php echo esc_html( $trigger['message'] ); ?>
 					<br />
