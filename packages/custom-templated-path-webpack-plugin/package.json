@@ -26,7 +26,8 @@
 	"files": [
 		"index.js"
 	],
-	"main": "index.js",
+	"main": "build/index",
+	"types": "build-types",
 	"dependencies": {
 		"escape-string-regexp": "^1.0.5"
 	},
