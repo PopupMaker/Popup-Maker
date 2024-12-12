@@ -20,7 +20,7 @@
 	"engines": {},
 	"main": "src/index",
 	"dependencies": {
-		"@wordpress/dependency-extraction-webpack-plugin": "^5.9.0"
+		"@wordpress/dependency-extraction-webpack-plugin": "5.9.0"
 	},
 	"publishConfig": {
 		"access": "public"
