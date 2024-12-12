@@ -1,6 +1,6 @@
 {
 	"name": "@popup-maker/example-package",
-	"version": "2.0.0",
+	"version": "1.0.0",
 	"description": "Popup Maker Example Package",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
@@ -11,12 +11,14 @@
 	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/example-package/README.md",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/popupmaker/popup-maker.git"
+		"url": "https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/example-package"
 	},
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
-	"main": "src/index.ts",
+	"main": "build/index",
+	"types": "build-types",
 	"dependencies": {},
 	"devDependencies": {
 		"@types/jquery": "^3.5.32"

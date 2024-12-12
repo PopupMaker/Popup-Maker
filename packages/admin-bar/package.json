@@ -1,6 +1,6 @@
 {
 	"name": "@popup-maker/admin-bar",
-	"version": "2.0.0",
+	"version": "1.0.0",
 	"description": "Popup Maker Admin Bar",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
@@ -16,7 +16,8 @@
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
-	"main": "src/index.ts",
+	"main": "build/index",
+	"types": "build-types",
 	"dependencies": {
 		"@medv/finder": "^3.2.0",
 		"@wordpress/i18n": "^5.13.0"

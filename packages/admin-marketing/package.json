@@ -1,6 +1,6 @@
 {
 	"name": "@popup-maker/admin-marketing",
-	"version": "2.0.0",
+	"version": "1.0.0",
 	"description": "Popup Maker Admin marketing implementation",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
@@ -16,7 +16,8 @@
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
-	"main": "src/index.tsx",
+	"main": "build/index",
+	"types": "build-types",
 	"dependencies": {},
 	"devDependencies": {
 		"@types/jquery": "^3.5.32"
