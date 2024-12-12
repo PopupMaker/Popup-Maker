@@ -60,12 +60,18 @@
 		"@code-atlantic/stylelint-config": "^1.3.0",
 		"@popup-maker/custom-templated-path-webpack-plugin": "file:./packages/custom-templated-path-webpack-plugin",
 		"@popup-maker/dependency-extraction-webpack-plugin": "file:./packages/dependency-extraction-webpack-plugin",
+		"@storybook/addon-essentials": "^8.4.7",
+		"@storybook/addon-webpack5-compiler-babel": "^3.0.3",
+		"@storybook/react": "^8.4.7",
+		"@storybook/react-webpack5": "^8.4.7",
 		"@wordpress/base-styles": "^5.14.0",
 		"@wordpress/scripts": "^30.7.0",
 		"classnames": "^2.5.1",
 		"nx": "17.3.2",
 		"path": "^0.12.7",
-		"prettier": "npm:wp-prettier@3.0.3"
+		"prettier": "npm:wp-prettier@3.0.3",
+		"react-docgen-typescript": "^2.2.2",
+		"storybook": "^8.4.7"
 	},
 	"scripts": {
 		"build": "wp-scripts build --config webpack.config.js --config webpack.old.config.js",
@@ -103,7 +109,9 @@
 		"zip:release": "npm run release && mv ./build ./popup-maker && zip -r popup-maker.zip ./popup-maker && rm -rf ./popup-maker",
 		"test:e2e": "wp-scripts test-e2e",
 		"test:unit": "wp-scripts test-unit-js",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"storybook": "storybook dev -p 6006",
+		"build-storybook": "storybook build"
 	},
 	"workspaces": [
 		"./packages/*"
