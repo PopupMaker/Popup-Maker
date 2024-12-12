@@ -18,7 +18,7 @@ export { default as localControls } from './controls';
 export * from './utils';
 
 // export * from './license';
-// export * from './settings';
+export * from './settings';
 // export * from './popups';
 export * from './url-search';
 export * from './constants';
