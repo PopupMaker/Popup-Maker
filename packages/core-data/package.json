@@ -1,0 +1,48 @@
+{
+	"name": "@popup-maker/core-data",
+	"version": "1.0.0",
+	"description": "Core data stores for Popup Maker.",
+	"author": "Code Atlantic",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"wordpress",
+		"popup-maker",
+		"data",
+		"redux"
+	],
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/core-data#readme",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/core-data"
+	},
+	"bugs": {
+		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"main": "build/index",
+	"types": "build-types",
+	"dependencies": {
+		"@wordpress/api-fetch": "^6.40.0",
+		"@wordpress/data": "^9.13.0",
+		"@wordpress/data-controls": "^3.12.0",
+		"@wordpress/i18n": "^4.43.0"
+	},
+	"devDependencies": {
+		"@types/wordpress__data": "^6.0.2",
+		"@types/wordpress__data-controls": "^2.2.0"
+	},
+	"peerDependencies": {
+		"react": "^18.2.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build:tsc": "tsc",
+		"build:types": "tsc --build",
+		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
+		"lint": "wp-scripts lint-js .",
+		"format": "wp-scripts lint-js . --fix",
+		"packages-update": "wp-scripts packages-update"
+	}
+}
