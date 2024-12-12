@@ -17,10 +17,10 @@ export * from './controls';
 export { default as localControls } from './controls';
 export * from './utils';
 
-// export * from './license';
+export * from './license';
 export * from './settings';
 // export * from './popups';
 export * from './url-search';
 export * from './constants';
 
-// export * from './hooks';
+export * from './hooks';
