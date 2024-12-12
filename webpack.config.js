@@ -10,11 +10,20 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Remove when block-editor is merged.
 const oldPackages = {
-	'block-editor': path.resolve( process.cwd(), 'src/block-editor' ),
+	// 'block-editor': path.resolve( process.cwd(), 'src/block-editor' ),
 };
 
 const packages = {
 	'admin-bar': 'packages/admin-bar',
+	'admin-marketing': 'packages/admin-marketing',
+	'block-editor': 'packages/block-editor',
+	'block-library': 'packages/block-library',
+	components: 'packages/components',
+	'core-data': 'packages/core-data',
+	data: 'packages/data',
+	// fields: 'packages/fields',
+	icons: 'packages/icons',
+	utils: 'packages/utils',
 };
 
 const config = {
