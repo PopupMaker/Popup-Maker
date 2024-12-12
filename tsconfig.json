@@ -8,7 +8,34 @@
 	"exclude": [ "**/node_modules/**" ],
 	"references": [
 		{
-			"path": "packages/block-library"
+			"path": "./packages/admin-bar"
+		},
+		{
+			"path": "./packages/admin-marketing"
+		},
+		{
+			"path": "./packages/block-editor"
+		},
+		{
+			"path": "./packages/block-library"
+		},
+		{
+			"path": "./packages/components"
+		},
+		{
+			"path": "./packages/core-data"
+		},
+		{
+			"path": "./packages/data"
+		},
+		// {
+		// 	"path": "./packages/fields"
+		// },
+		{
+			"path": "./packages/icons"
+		},
+		{
+			"path": "./packages/utils"
 		}
 	]
 }
