@@ -5,7 +5,8 @@ module.exports = [
 	'@popup-maker/block-library',
 	'@popup-maker/components',
 	'@popup-maker/core-data',
-	'@popup-maker/custom-templated-path-webpack-plugin',
 	'@popup-maker/data',
-	'@popup-maker/dependency-extraction-webpack-plugin',
+	'@popup-maker/fields',
+	'@popup-maker/icons',
+	'@popup-maker/utils',
 ];

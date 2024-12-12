@@ -18,8 +18,7 @@
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
 	"engines": {},
-	"main": "build/index",
-	"types": "build-types",
+	"main": "src/index",
 	"dependencies": {
 		"@wordpress/dependency-extraction-webpack-plugin": "^5.9.0"
 	},
