@@ -28,9 +28,9 @@
 		{
 			"path": "./packages/data"
 		},
-		// {
-		// 	"path": "./packages/fields"
-		// },
+		{
+			"path": "./packages/fields"
+		},
 		{
 			"path": "./packages/icons"
 		},

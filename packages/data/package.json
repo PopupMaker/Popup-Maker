@@ -27,8 +27,7 @@
 		"@wordpress/data": "^9.13.0"
 	},
 	"devDependencies": {
-		"@types/wordpress__core-data": "^2.4.5",
-		"@types/wordpress__data": "^6.0.2"
+		"@types/wordpress__core-data": "^2.4.5"
 	},
 	"peerDependencies": {
 		"react": "^18.2.0"

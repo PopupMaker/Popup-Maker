@@ -22,9 +22,7 @@
 	"main": "build/index",
 	"types": "build-types",
 	"dependencies": {},
-	"peerDependencies": {
-		"react": "^18.3.1"
-	},
+	"peerDependencies": {},
 	"publishConfig": {
 		"access": "public"
 	},

@@ -39,9 +39,7 @@
 		"react-tag-autocomplete": "^7.0.0-rc.5"
 	},
 	"devDependencies": {
-		"@types/lodash": "^4.17.13",
-		"@types/wordpress__components": "^23.8.0",
-		"@types/wordpress__data": "^7.0.0"
+		"@types/lodash": "^4.17.13"
 	},
 	"peerDependencies": {
 		"react": "^18.3.1"
