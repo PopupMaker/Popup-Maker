@@ -104,6 +104,8 @@ class Assets extends Controller {
 			if ( isset( $package_data['varsName'] ) && ! empty( $package_data['vars'] ) ) {
 				$localized_vars = apply_filters( "popup_maker/{$package}_localized_vars", $package_data['vars'] );
 
+				$this->setup_global_vars();
+
 				if ( $package_data['bundled'] ) {
 					pum_localize_script( $handle, $package_data['varsName'], $localized_vars );
 				} else {
@@ -120,6 +122,89 @@ class Assets extends Controller {
 			 */
 			wp_set_script_translations( $handle, 'popup-maker' );
 		}
+	}
+
+	/**
+	 * Setup global vars.
+	 *
+	 * @return void
+	 */
+	public function setup_global_vars() {
+		static $inited;
+
+		if ( $inited ) {
+			return;
+		}
+
+		$inited = true;
+
+		add_action( 'wp_footer', [ $this, 'print_global_vars' ] );
+		add_action( 'admin_footer', [ $this, 'print_global_vars' ] );
+	}
+
+	/**
+	 * Get global vars.
+	 *
+	 * @return array
+	 */
+	private function get_global_vars() {
+		$additional_global_vars = is_admin() ?
+			$this->get_admin_global_vars() :
+			$this->get_frontend_global_vars();
+
+		return apply_filters(
+			'popup_maker/global_vars',
+			array_merge(
+				[
+					'version'   => $this->container->get( 'version' ),
+					'assetsUrl' => $this->container->get_url( 'assets/' ),
+					'nonce'     => wp_create_nonce( 'popup-maker' ),
+				],
+				$additional_global_vars
+			)
+		);
+	}
+
+	/**
+	 * Get admin-onlyglobal vars.
+	 *
+	 * @return array
+	 */
+	private function get_admin_global_vars() {
+		return apply_filters( 'popup_maker/admin_global_vars', [] );
+	}
+
+	/**
+	 * Get frontend-only global vars.
+	 *
+	 * @return array
+	 */
+	private function get_frontend_global_vars() {
+		return apply_filters( 'popup_maker/frontend_global_vars', [] );
+	}
+
+	/**
+	 * Print global vars.
+	 *
+	 * @return void
+	 */
+	public function print_global_vars() {
+		static $printed;
+
+		if ( $printed ) {
+			return;
+		}
+
+		$printed = true;
+
+		$global_vars = $this->get_global_vars();
+
+		?>
+		<script id="popup-maker-global-vars">
+		window.popupMaker = window.popupMaker || {};
+		window.popupMaker.globalVars = <?php echo wp_json_encode( $global_vars ); ?>;
+		</script>
+		<?php
 	}
 
 	/**
