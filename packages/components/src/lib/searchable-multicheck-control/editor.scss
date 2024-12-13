@@ -1,0 +1,92 @@
+.component-searchable-multicheck-control {
+	position: relative;
+
+	.select-actions {
+		position: absolute;
+		right: 0;
+		top: 0;
+		display: flex;
+		gap: 16px;
+
+		.components-button {
+			font-size: 12px;
+			font-weight: 500;
+			line-height: 1.4;
+			text-decoration: none;
+		}
+	}
+
+	.icon-input {
+		position: relative;
+		vertical-align: middle;
+		display: flex;
+		align-items: center;
+
+		svg {
+			position: absolute;
+			right: 1em;
+		}
+	}
+
+	table {
+		width: 100%;
+		padding: 8px;
+		background: #fff;
+		border-spacing: 0;
+
+		* {
+			word-wrap: break-word;
+		}
+
+		.label-column {
+			text-align: left;
+			.components-button {
+				position: relative;
+				left: -4px;
+			}
+		}
+
+		thead {
+			td,
+			th {
+				border-bottom: 1px solid #cccccc;
+			}
+
+			&:after {
+				line-height: 0.5em;
+				content: "\200C";
+				display: block;
+			}
+		}
+
+		tbody tr {
+			th,
+			td {
+				padding: 4px 0;
+				color: #50575e;
+			}
+		}
+
+		tbody tr td:first-child {
+			font-weight: bold;
+			text-align: left;
+			> span {
+				cursor: pointer;
+			}
+		}
+
+		tbody tr th:last-child {
+			text-align: center;
+		}
+
+		.cb-column {
+			width: 80px;
+			text-align: center;
+
+			*,
+			.components-checkbox-control {
+				margin: 0;
+			}
+		}
+	}
+}

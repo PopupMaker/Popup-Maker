@@ -1,0 +1,35 @@
+.components-radio-button-control {
+	.options {
+		display: flex;
+
+		.components-button {
+			padding: 12px 12px;
+			justify-content: center;
+
+			.components-icon,
+			svg {
+				margin-right: 10px;
+
+				stroke: currentColor;
+
+				&.pum-icon {
+					fill: transparent;
+				}
+			}
+		}
+	}
+
+	&.vertical {
+		.options {
+			flex-direction: column;
+		}
+	}
+
+	&.equal-width {
+		.options {
+			.components-button {
+				flex: 1 0 0%;
+			}
+		}
+	}
+}

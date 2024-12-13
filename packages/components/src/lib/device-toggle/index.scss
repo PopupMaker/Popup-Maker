@@ -1,0 +1,38 @@
+@import "~@wordpress/base-styles/variables";
+@import "~@wordpress/base-styles/mixins";
+@import "~@wordpress/base-styles/colors";
+
+.pum__component-device-toggle {
+	display: flex;
+	justify-content: space-between;
+
+	.pum__component-device-toggle__label,
+	.pum__component-device-toggle__control {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: $grid-unit-20;
+	}
+
+	.pum__component-device-toggle__label {
+		svg {
+			margin-right: $grid-unit-10;
+		}
+	}
+
+	.pum__component-device-toggle__control {
+		.components-base-control,
+		.components-toggle-control .components-base-control__field {
+			margin-bottom: 0;
+
+			.components-form-toggle {
+				margin-right: 0;
+				margin-left: $grid-unit-10;
+			}
+		}
+
+		label {
+			display: none !important;
+		}
+	}
+}
