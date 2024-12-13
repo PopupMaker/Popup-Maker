@@ -1,7 +1,6 @@
-/**
- * External dependencies
- */
-const escapeStringRegexp = require( 'escape-string-regexp' );
+function escapeStringRegexp( string ) {
+	return string.replace( /[|\\{}()[\]^$+*?.]/g, '\\$&' );
+}
 
 /**
  * Webpack plugin for handling specific template tags in Webpack configuration
