@@ -21,7 +21,7 @@ const packages = {
 	components: 'packages/components',
 	'core-data': 'packages/core-data',
 	data: 'packages/data',
-	// fields: 'packages/fields',
+	fields: 'packages/fields',
 	icons: 'packages/icons',
 	utils: 'packages/utils',
 };

@@ -3,10 +3,8 @@
 	"compilerOptions": {
 		"rootDir": "src",
 		"outDir": "build",
-		"declarationDir": "build-types",
+		"declarationDir": "build-types"
 	},
-	"include": [
-		"./src/**/*"
-	],
-	"references": [],
+	"include": [ "./src/**/*" ],
+	"references": []
 }
