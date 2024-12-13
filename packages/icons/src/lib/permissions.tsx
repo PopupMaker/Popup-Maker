@@ -3,7 +3,7 @@
  */
 import { SVG, Path } from '@wordpress/primitives';
 
-const permissions = (
+const Permissions = (
 	<SVG
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 20 20"
@@ -27,4 +27,4 @@ const permissions = (
 	</SVG>
 );
 
-export default permissions;
+export default Permissions;

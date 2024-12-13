@@ -3,7 +3,7 @@
  */
 import { SVG, Path } from '@wordpress/primitives';
 
-const filterLines = (
+const FilterLines = (
 	<SVG
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 24 24"
@@ -20,4 +20,4 @@ const filterLines = (
 	</SVG>
 );
 
-export default filterLines;
+export default FilterLines;

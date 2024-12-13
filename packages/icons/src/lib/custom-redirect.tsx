@@ -3,7 +3,7 @@
  */
 import { SVG, Path } from '@wordpress/primitives';
 
-const customRedirects = (
+const CustomRedirects = (
 	<SVG
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 24 24"
@@ -20,4 +20,4 @@ const customRedirects = (
 	</SVG>
 );
 
-export default customRedirects;
+export default CustomRedirects;

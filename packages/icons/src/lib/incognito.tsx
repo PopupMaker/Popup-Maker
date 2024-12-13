@@ -3,7 +3,7 @@
  */
 import { SVG, Path } from '@wordpress/primitives';
 
-const incognito = (
+const Incognito = (
 	<SVG
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 20 22"
@@ -48,4 +48,4 @@ const incognito = (
 	</SVG>
 );
 
-export default incognito;
+export default Incognito;

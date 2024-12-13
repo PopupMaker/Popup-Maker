@@ -17,7 +17,6 @@ const jsBuilds = {
 	// Admin
 	'admin-batch': `${ srcPath }/admin/batch/index.js`,
 	'admin-general': `${ srcPath }/admin/general/index.js`,
-	'admin-marketing': `${ srcPath }/admin/marketing/index.js`,
 	'admin-pointer': `${ srcPath }/admin/pointer/index.js`,
 	'admin-popup-editor': `${ srcPath }/admin/popup-editor/index.js`,
 	'admin-settings-page': `${ srcPath }/admin/settings-page/index.js`,
@@ -71,23 +70,23 @@ const config = {
 	},
 	module: {
 		...defaultConfig.module,
-		rules: [
-			...defaultConfig.module.rules.map( ( rule ) => {
-				if (
-					'asset/resource' === rule.type &&
-					rule.test.test( '.png' )
-				) {
-					return {
-						...rule,
-						test: /\.(bmp|png|jpe?g|gif|webp|svg)$/i,
-						generator: {
-							filename: '../images/[name].[hash:8][ext]',
-						},
-					};
-				}
-				return rule;
-			} ),
-		],
+		// rules: [
+		// 	...defaultConfig.module.rules.map( ( rule ) => {
+		// 		if (
+		// 			'asset/resource' === rule.type &&
+		// 			rule.test.test( '.png' )
+		// 		) {
+		// 			return {
+		// 				...rule,
+		// 				test: /\.(bmp|png|jpe?g|gif|webp|svg)$/i,
+		// 				generator: {
+		// 					filename: '../images/[name].[hash:8][ext]',
+		// 				},
+		// 			};
+		// 		}
+		// 		return rule;
+		// 	} ),
+		// ],
 	},
 
 	optimization: {

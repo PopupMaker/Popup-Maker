@@ -1,14 +1,20 @@
 /** @type { import('@storybook/react-webpack5').StorybookConfig } */
+import path from 'path';
+
 const config = {
-	framework: '@storybook/react-webpack5',
 	stories: [ '../packages/*/src/**/*.stories.@(js|jsx|ts|tsx)' ],
 	addons: [
-		'@storybook/addon-essentials',
 		'@storybook/addon-webpack5-compiler-babel',
+		'@storybook/addon-essentials',
+		'@storybook/preset-scss',
+		'@storybook/addon-styling-webpack',
 	],
-	typescript: {
-		check: false,
-		reactDocgen: 'react-docgen-typescript',
+	framework: {
+		name: '@storybook/react-webpack5',
+		options: {},
+	},
+	docs: {
+		autodocs: true,
 	},
 };
 
