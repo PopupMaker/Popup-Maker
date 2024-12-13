@@ -1,0 +1,37 @@
+.components-field-row {
+	display: flex;
+	align-items: "flex-start";
+	justify-content: stretch;
+	padding: 15px 0;
+	margin: 0;
+
+	> .components-base-control {
+		margin-bottom: 0 !important;
+		width: 50%;
+		flex-grow: 1;
+	}
+
+	> .components-base-control__field {
+		width: 40%;
+	}
+
+	&.full-width {
+		> .components-base-control,
+		> .components-base-control__field {
+			width: 100%;
+		}
+	}
+
+	.components-base-control__help {
+		margin-top: calc(8px);
+		font-size: 12px;
+		font-style: normal;
+		color: rgb(117, 117, 117);
+		margin-bottom: revert;
+	}
+}
+
+.components-field-row + .components-field-row {
+	border-top: 1px solid #ddd;
+	padding-top: 30px;
+}

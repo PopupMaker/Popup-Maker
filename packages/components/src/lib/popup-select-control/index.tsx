@@ -33,7 +33,7 @@ export const PopupSelectControl = ( {
 			hideLabelFromVision={ hideLabelFromVision }
 			className={ clsx(
 				'pum-component-popup-select-control',
-				multiple && 'cc-popup-select-control--multiple'
+				multiple && 'pum-popup-select-control--multiple'
 			) }
 			options={ options }
 			{ ...{
