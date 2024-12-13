@@ -3,7 +3,7 @@
  */
 import { SVG, Path, G, Defs, Rect } from '@wordpress/primitives';
 
-const lockedUser = (
+const LockedUser = (
 	<SVG
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 25 24"
@@ -48,4 +48,4 @@ const lockedUser = (
 	</SVG>
 );
 
-export default lockedUser;
+export default LockedUser;

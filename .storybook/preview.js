@@ -1,7 +1,7 @@
 /** @type { import('@storybook/react').Preview } */
+
 const preview = {
-  parameters: {},
-  tags: ["autodocs", "autodocs", "autodocs"]
+	tags: [ 'autodocs', 'autodocs', 'autodocs' ],
 };
 
 export default preview;

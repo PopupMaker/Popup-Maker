@@ -1,108 +1,119 @@
 import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
-import BlockManager from '../lib/block-manager';
-import Block from '../lib/block';
-import CheckAll from '../lib/check-all';
-import CustomRedirect from '../lib/custom-redirect';
-import FilterLines from '../lib/filter-lines';
-import Incognito from '../lib/incognito';
-import LicenseKey from '../lib/license-key';
-import LockedUser from '../lib/locked-user';
-import Monitor from '../lib/monitor';
-import Permissions from '../lib/permissions';
-import ProtectedMessage from '../lib/protected-message';
-import Upgrade from '../lib/upgrade';
+import { action } from '@storybook/addon-actions';
 
-interface IconDisplayProps {
+import type { Meta, StoryObj } from '@storybook/react';
+
+import * as Icons from '../lib/index';
+
+import '../lib/editor.scss';
+
+interface IconProps {
+	name: string;
+	icon: JSX.Element;
 	size?: number;
 	color?: string;
 }
 
-const IconGrid: React.FC<
-	{ icon: JSX.Element; name: string } & IconDisplayProps
-> = ( { icon, name, size = 40, color = 'var(--wp-admin-theme-color)' } ) => (
+interface IconGridProps {
+	size?: number;
+	color?: string;
+}
+
+const Icon: React.FC< IconProps > = ( { icon, size, color } ) => (
 	<div
 		style={ {
-			padding: '20px',
-			display: 'flex',
-			flexDirection: 'column',
-			alignItems: 'center',
-			border: '1px solid #eee',
-			borderRadius: '8px',
-			margin: '10px',
+			width: size,
+			height: size,
+			aspectRatio: '1 / 1',
+			color,
 		} }
 	>
-		<div
-			style={ {
-				width: size,
-				height: size,
-				color: color,
-			} }
-		>
-			{ React.cloneElement( icon, {
-				style: {
-					width: '100%',
-					height: '100%',
-				},
-				stroke: 'currentColor',
-				fill: 'currentColor',
-				className: `pum-icon ${ icon.props.className || '' }`,
-			} ) }
-		</div>
-		<div style={ { marginTop: '10px', fontSize: '14px' } }>{ name }</div>
-		<div style={ { marginTop: '5px', fontSize: '12px', color: '#666' } }>
-			{ `<${ name } />` }
-		</div>
+		{ icon }
 	</div>
 );
 
-const IconDisplay: React.FC< IconDisplayProps > = ( {
-	size = 40,
-	color = 'var(--wp-admin-theme-color)',
-} ) => {
-	const icons = {
-		BlockManager,
-		Block,
-		CheckAll,
-		CustomRedirect,
-		FilterLines,
-		Incognito,
-		LicenseKey,
-		LockedUser,
-		Monitor,
-		Permissions,
-		ProtectedMessage,
-		Upgrade,
-	};
+const GridIcon: React.FC< IconProps > = ( { icon, name, size, color } ) => (
+	<>
+		<Icon name={ name } icon={ icon } size={ size } color={ color } />
+		<div
+			style={ {
+				marginTop: '10px',
+				fontSize: '14px',
+				textAlign: 'center',
+			} }
+		>
+			{ name }
+		</div>
+	</>
+);
+
+const IconGrid: React.FC< IconGridProps > = ( { size, color } ) => {
+	const [ copiedIcon, setCopiedIcon ] = React.useState< string | null >(
+		null
+	);
 
 	return (
 		<div
 			style={ {
 				display: 'grid',
-				gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-				gap: '20px',
-				padding: '20px',
+				gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+				gap: '10px',
+				padding: '0',
 			} }
 		>
-			{ Object.entries( icons ).map( ( [ name, icon ] ) => (
-				<IconGrid
+			{ Object.entries( Icons ).map( ( [ name, icon ] ) => (
+				<button
 					key={ name }
-					icon={ icon }
-					name={ name }
-					size={ size }
-					color={ color }
-				/>
+					style={ {
+						display: 'flex',
+						justifyContent: 'center',
+						flexDirection: 'column',
+						alignItems: 'center',
+						border: '1px solid #eee',
+						backgroundColor:
+							copiedIcon === name ? '#e6ffe6' : '#f5f5f5',
+						borderRadius: '8px',
+						aspectRatio: '1 / 1',
+						padding: '10px',
+						cursor: 'pointer',
+						transition: 'all 0.2s ease',
+						position: 'relative',
+					} }
+					onClick={ () => {
+						navigator.clipboard.writeText( `<${ name } />` );
+						action( 'Copied to clipboard' )( `<${ name } />` );
+						setCopiedIcon( name );
+						setTimeout( () => setCopiedIcon( null ), 1000 );
+					} }
+				>
+					<GridIcon
+						icon={ icon }
+						name={ name }
+						size={ size }
+						color={ color }
+					/>
+					{ copiedIcon === name && (
+						<div
+							style={ {
+								position: 'absolute',
+								bottom: '5px',
+								fontSize: '12px',
+								color: '#4CAF50',
+							} }
+						>
+							Copied!
+						</div>
+					) }
+				</button>
 			) ) }
 		</div>
 	);
 };
 
-const meta = {
+const meta: Meta = {
 	title: 'Popup Maker/Icons',
-	component: IconDisplay,
-	parameters: {
-		layout: 'fullscreen',
-	},
+	component: IconGrid,
+	parameters: {},
 	argTypes: {
 		size: {
 			control: { type: 'range', min: 16, max: 128, step: 8 },
@@ -113,14 +124,20 @@ const meta = {
 			description: 'Color of the icon',
 		},
 	},
-} satisfies Meta< typeof IconDisplay >;
+};
 
 export default meta;
-type Story = StoryObj< typeof IconDisplay >;
 
-export const AllIcons: Story = {
+export const AllIcons: StoryObj< typeof IconGrid > = {
 	args: {
 		size: 40,
-		color: 'var(--wp-admin-theme-color)',
+		color: '#000000',
+	},
+	parameters: {
+		docs: {
+			source: {
+				code: `import { Block } from '@popup-maker/icons';\n\n<Block />`,
+			},
+		},
 	},
 };

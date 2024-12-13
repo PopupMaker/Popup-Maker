@@ -3,7 +3,7 @@
  */
 import { SVG, Path, Defs, G } from '@wordpress/primitives';
 
-const upgrade = (
+const Upgrade = (
 	<SVG
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 16 17"
@@ -28,4 +28,4 @@ const upgrade = (
 	</SVG>
 );
 
-export default upgrade;
+export default Upgrade;
