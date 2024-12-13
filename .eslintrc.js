@@ -1,5 +1,3 @@
-const originalConfig = require( '@code-atlantic/eslint-plugin/lib/configs/recommended' );
-
 const eslintConfig = {
 	root: true,
 	extends: [ 'plugin:@code-atlantic/eslint-plugin/recommended' ],
@@ -13,15 +11,7 @@ const eslintConfig = {
 		window: 'readonly',
 	},
 	env: {
-		browser: true,
 		jquery: true,
-	},
-	settings: {
-		'import/resolver': {
-			node: {
-				moduleDirectory: [ 'node_modules' ],
-			},
-		},
 	},
 	parserOptions: {
 		requireConfigFile: false,
@@ -29,7 +19,15 @@ const eslintConfig = {
 			presets: [ require.resolve( '@wordpress/babel-preset-default' ) ],
 		},
 	},
-	rules: {},
+	rules: {
+		'import/no-unresolved': [
+			'error',
+			{
+				// Hate it but this is most reliable way to handle it since its already loaded.
+				ignore: [ 'jquery' ],
+			},
+		],
+	},
 	overrides: [
 		{
 			// Turns off some of esnext rules for our assets JS until we migrate to babel or other.
