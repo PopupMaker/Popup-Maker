@@ -2,7 +2,17 @@ import './styles.scss';
 
 import $ from 'jquery';
 
-import markLight from '../../../assets/images/mark-light.svg';
+declare global {
+	interface Window {
+		popupMaker: {
+			globalVars: {
+				assetUrl: string;
+			};
+		};
+	}
+}
+
+const { assetUrl } = window.popupMaker.globalVars;
 
 // Initiate when ready.
 $( () => {
@@ -11,6 +21,6 @@ $( () => {
 	} );
 
 	$( '#menu-posts-popup.wp-menu-open .wp-menu-image' ).css( {
-		backgroundImage: 'url(' + markLight + ')',
+		backgroundImage: `url('${ assetUrl }images/mark-light.svg')`,
 	} );
 } );
