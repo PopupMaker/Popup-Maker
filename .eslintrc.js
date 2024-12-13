@@ -13,12 +13,12 @@ const eslintConfig = {
 	env: {
 		jquery: true,
 	},
-	parserOptions: {
-		requireConfigFile: false,
-		babelOptions: {
-			presets: [ require.resolve( '@wordpress/babel-preset-default' ) ],
-		},
-	},
+	// parserOptions: {
+	// 	requireConfigFile: false,
+	// 	babelOptions: {
+	// 		presets: [ require.resolve( '@wordpress/babel-preset-default' ) ],
+	// 	},
+	// },
 	rules: {
 		'import/no-unresolved': [
 			'error',
