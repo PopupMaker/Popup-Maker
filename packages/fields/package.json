@@ -1,0 +1,60 @@
+{
+	"name": "@popup-maker/fields",
+	"version": "1.0.0",
+	"description": "Dynamic react field rendering.",
+	"author": "Code Atlantic",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"wordpress",
+		"popup maker",
+		"components"
+	],
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/HEAD/packages/fields#readme",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/fields"
+	},
+	"bugs": {
+		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"main": "build/index",
+	"types": "build-types",
+	"dependencies": {
+		"@popup-maker/components": "*",
+		"@popup-maker/core-data": "*",
+		"@popup-maker/utils": "*",
+		"@wordpress/base-styles": "^4.34.0",
+		"@wordpress/components": "^25.9.0",
+		"@wordpress/compose": "^6.20.0",
+		"@wordpress/core-data": "^6.20.0",
+		"@wordpress/data": "^9.13.0",
+		"@wordpress/element": "^5.20.0",
+		"@wordpress/html-entities": "^3.43.0",
+		"@wordpress/i18n": "^4.43.0",
+		"@wordpress/icons": "^9.34.0",
+		"@wordpress/url": "^3.44.0",
+		"classnames": "^2.5.1",
+		"lodash": "^4.17.21",
+		"react-tag-autocomplete": "^7.0.0-rc.5"
+	},
+	"devDependencies": {
+		"@types/lodash": "^4.17.13",
+		"@types/wordpress__components": "^23.8.0",
+		"@types/wordpress__data": "^7.0.0"
+	},
+	"peerDependencies": {
+		"react": "^18.3.1"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build:tsc": "tsc",
+		"build:types": "tsc --build",
+		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
+		"lint": "wp-scripts lint-js .",
+		"format": "wp-scripts lint-js . --fix",
+		"packages-update": "wp-scripts packages-update"
+	}
+}
