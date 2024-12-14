@@ -1,6 +1,27 @@
-import './styles.scss';
+import './block-extensions';
+import './formats';
 
-import $ from 'jquery';
+import type { Popup } from '@popup-maker/core-data';
 
-// Initialize the admin bar when the document is ready
-$( () => {} );
+declare global {
+	interface Window {
+		popupMaker: {
+			globalVars: {
+				assetUrl: string;
+				adminUrl: string;
+				pluginUrl: string;
+			};
+		};
+
+		popupMakerBlockEditor: {
+			popups: Popup[];
+			permissions: {
+				manage_settings: boolean;
+				edit_restrictions: boolean;
+				view_block_controls: boolean;
+				edit_block_controls: boolean;
+				[ key: string ]: boolean;
+			};
+		};
+	}
+}
