@@ -1,6 +1,7 @@
-import { Button, Flex, Modal } from '@wordpress/components';
-import { ModalProps } from '@wordpress/components/build-types/modal/types';
 import { __ } from '@wordpress/i18n';
+import { Button, Flex, Modal } from '@wordpress/components';
+
+import type { ModalProps } from '@wordpress/components/build-types/modal/types';
 
 type Props = {
 	message?: string;

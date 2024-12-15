@@ -1,4 +1,4 @@
-import classNames, { Argument as classNamesArg } from 'classnames';
+import clsx from 'clsx';
 
 import {
 	Button,
@@ -30,7 +30,7 @@ export type Props< T extends Token = Token > = {
 	onChange: ( value: T[] ) => void;
 	label?: string | JSX.Element;
 	placeholder?: string;
-	className?: classNamesArg;
+	className?: clsx.ClassValue;
 	classes?: {
 		container?: string;
 		popover?: string;
@@ -377,7 +377,7 @@ const SmartTokenControl = < T extends Token = string >(
 						? `${ id }-wrapper`
 						: `component-smart-token-control-${ instanceId }-wrapper`
 				}
-				className={ classNames( [
+				className={ clsx( [
 					elClasses.container,
 					isFocused && 'is-focused',
 					className,
@@ -414,7 +414,7 @@ const SmartTokenControl = < T extends Token = string >(
 					hideLabelFromVision={ hideLabelFromVision }
 				>
 					<div
-						className={ classNames( [
+						className={ clsx( [
 							elClasses.inputContainer,
 							! multiple && value.length > 0 && 'input-disabled',
 						] ) }
@@ -448,7 +448,7 @@ const SmartTokenControl = < T extends Token = string >(
 									: `component-smart-token-control-${ instanceId }`
 							}
 							type="text"
-							className={ classNames( [ elClasses.textInput ] ) }
+							className={ clsx( [ elClasses.textInput ] ) }
 							placeholder={ placeholder }
 							disabled={ ! multiple && value.length > 0 }
 							ref={ inputRef }
@@ -522,7 +522,7 @@ const SmartTokenControl = < T extends Token = string >(
 									<div
 										key={ i }
 										id={ `sug-${ i }` }
-										className={ classNames( [
+										className={ clsx( [
 											elClasses.suggestion,
 											i === currentIndex &&
 												'is-currently-highlighted',

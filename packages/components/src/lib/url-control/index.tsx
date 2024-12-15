@@ -1,9 +1,7 @@
 import './editor.scss';
 
-import classNames, { Argument } from 'classnames';
+import clsx from 'clsx';
 import { clamp, debounce } from 'lodash';
-
-import { urlSearchStore } from '@popup-maker/core-data';
 
 import {
 	BaseControl,
@@ -26,6 +24,8 @@ import {
 import { __ } from '@wordpress/i18n';
 import { edit, globe, keyboardReturn, link } from '@wordpress/icons';
 
+import { urlSearchStore } from '@popup-maker/core-data';
+
 import LinkSuggestion from './suggestion';
 
 import type { WPLinkSearchResult } from '@popup-maker/core-data';
@@ -44,7 +44,7 @@ type Props = {
 	label?: string;
 	value?: string | WPLinkSearchResult;
 	onChange?: ( value: WPLinkSearchResult ) => void;
-	className?: string | Argument;
+	className?: string | clsx.ClassValue;
 };
 
 const minQueryLength = 1;
@@ -281,7 +281,7 @@ const URLControl = (
 		<BaseControl
 			id={ inputId }
 			label={ label }
-			className={ classNames( [
+			className={ clsx( [
 				'components-url-control',
 				isFocused && 'is-focused',
 				className,
@@ -361,9 +361,7 @@ const URLControl = (
 				) : (
 					<KeyboardShortcuts shortcuts={ keyboardShortcuts }>
 						<div
-							className={ classNames( [
-								'url-control-wrapper',
-							] ) }
+							className={ clsx( [ 'url-control-wrapper' ] ) }
 							ref={ inputWrapperRef }
 						>
 							<div className="url-control">

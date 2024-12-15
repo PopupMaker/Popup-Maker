@@ -1,7 +1,7 @@
-import classnames from 'classnames';
+import clsx from 'clsx';
 
-import { NavigableMenu } from '@wordpress/components';
 import { withInstanceId } from '@wordpress/compose';
+import { NavigableMenu } from '@wordpress/components';
 
 import TabButton from './tab-button';
 
@@ -49,24 +49,19 @@ const TabPanel = ( {
 	};
 
 	return (
-		<div
-			className={ classnames(
-				className,
-				'pum-' + orientation + '-tabs'
-			) }
-		>
+		<div className={ clsx( className, 'pum-' + orientation + '-tabs' ) }>
 			<NavigableMenu
 				role="tablist"
 				orientation={ orientation }
 				onNavigate={ onNavigate }
-				className={ classnames( [
+				className={ clsx( [
 					tabsClass,
 					'components-tab-panel__tabs',
 				] ) }
 			>
 				{ tabs.map( ( tab ) => (
 					<TabButton
-						className={ classnames(
+						className={ clsx(
 							tabClass,
 							'components-tab-panel__tabs-item',
 							'components-tab-panel__tab',

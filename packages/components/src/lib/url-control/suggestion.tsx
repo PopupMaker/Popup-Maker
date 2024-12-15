@@ -1,4 +1,4 @@
-import classNames, { Argument } from 'classnames';
+import clsx from 'clsx';
 
 import { noop } from '@popup-maker/utils';
 import { Button, Icon } from '@wordpress/components';
@@ -10,7 +10,7 @@ type Props = {
 	info: string | React.ReactNode;
 	type?: string | React.ReactNode;
 	prefix?: string;
-	className?: Argument;
+	className?: clsx.ClassValue;
 	isSelected: boolean;
 	onFocus: () => void;
 	onSelect: () => void;
@@ -35,7 +35,7 @@ const Suggestion = forwardRef< HTMLButtonElement, Props >(
 		return (
 			<Button
 				type="button"
-				className={ classNames( [
+				className={ clsx( [
 					'suggestion',
 					isSelected && 'is-selected',
 					className,

@@ -2,6 +2,7 @@ export interface PopupSelectControlBaseProps {
 	label?: string;
 	hideLabelFromVision?: boolean;
 	emptyValueLabel?: string;
+	required?: boolean;
 	options?: {
 		value: string;
 		label: string;

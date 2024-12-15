@@ -1,4 +1,5 @@
 import { Button } from '@wordpress/components';
+
 import type { ButtonProps } from '@wordpress/components/build-types/button/types';
 
 type Props = ButtonProps & {
