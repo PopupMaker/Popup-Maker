@@ -23,14 +23,12 @@
 	"types": "build-types",
 	"dependencies": {
 		"@popup-maker/core-data": "*",
-		"@wordpress/core-data": "^6.20.0",
-		"@wordpress/data": "^9.13.0"
+		"@wordpress/core-data": "^7.14.0",
+		"@wordpress/data": "^10.14.0"
 	},
-	"devDependencies": {
-		"@types/wordpress__core-data": "^2.4.5"
-	},
+	"devDependencies": {},
 	"peerDependencies": {
-		"react": "^18.2.0"
+		"react": "^18.3.1"
 	},
 	"publishConfig": {
 		"access": "public"

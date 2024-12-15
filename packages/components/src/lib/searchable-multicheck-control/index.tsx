@@ -1,6 +1,6 @@
 import './editor.scss';
 
-import classnames, { Argument } from 'classnames';
+import clsx from 'clsx';
 
 import {
 	BaseControl,
@@ -22,7 +22,7 @@ type Props< T extends string | number > = {
 	value: T[];
 	options: { label: string; value: T; keywords?: string }[];
 	onChange: ( value: T[] ) => void;
-	className: Argument;
+	className: clsx.ClassValue;
 };
 
 const SearchableMulticheckControl = < T extends string | number >( {
@@ -71,7 +71,7 @@ const SearchableMulticheckControl = < T extends string | number >( {
 		<BaseControl
 			id={ `searchable-multicheck-control-${ instanceId }` }
 			label={ label }
-			className={ classnames( [
+			className={ clsx( [
 				'component-searchable-multicheck-control',
 				className,
 			] ) }
@@ -114,9 +114,7 @@ const SearchableMulticheckControl = < T extends string | number >( {
 					} }
 				/>
 			</div>
-			<div
-				className={ classnames( [ searchIcon ? 'icon-input' : null ] ) }
-			>
+			<div className={ clsx( [ searchIcon ? 'icon-input' : null ] ) }>
 				<input
 					type="text"
 					className="components-text-control__input"

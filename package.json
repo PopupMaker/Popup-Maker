@@ -59,6 +59,7 @@
 		"@code-atlantic/browserslist-config": "^1.0.1",
 		"@code-atlantic/eslint-plugin": "^1.3.1",
 		"@code-atlantic/stylelint-config": "^1.3.0",
+		"@popup-maker/types": "file:./packages/types",
 		"@popup-maker/custom-templated-path-webpack-plugin": "file:./packages/custom-templated-path-webpack-plugin",
 		"@popup-maker/dependency-extraction-webpack-plugin": "file:./packages/dependency-extraction-webpack-plugin",
 		"@storybook/addon-actions": "^8.4.7",

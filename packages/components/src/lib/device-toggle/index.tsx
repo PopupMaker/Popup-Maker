@@ -1,10 +1,10 @@
 import './index.scss';
 
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 import { noop } from '@popup-maker/utils';
-import { Icon, ToggleControl, Tooltip } from '@wordpress/components';
 import { _x, sprintf } from '@wordpress/i18n';
+import { Icon, ToggleControl, Tooltip } from '@wordpress/components';
 
 import type { IconType } from '@wordpress/components';
 
@@ -28,7 +28,7 @@ const DeviceToggle = ( { label, icon, isVisible, onChange = noop }: Props ) => {
 
 	return (
 		<div
-			className={ classNames( [
+			className={ clsx( [
 				'pum__component-device-toggle',
 				isVisible && 'is-checked',
 			] ) }

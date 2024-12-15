@@ -1,11 +1,11 @@
 import './editor.scss';
 
-import classNames, { Argument } from 'classnames';
+import clsx from 'clsx';
 
-import { Button, CheckboxControl, Icon } from '@wordpress/components';
-import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { arrowDown, arrowUp } from '@wordpress/icons';
+import { useEffect, useState } from '@wordpress/element';
+import { Button, CheckboxControl, Icon } from '@wordpress/components';
 
 import { useControlledState } from '../utils';
 import type { TableItemBase } from './types';
@@ -15,7 +15,7 @@ type Props< T extends TableItemBase > = {
 	columns: {
 		[ key: string ]: React.ReactNode | ( () => React.ReactNode );
 	};
-	rowClasses?: ( item: T ) => Argument;
+	rowClasses?: ( item: T ) => clsx.ClassValue;
 	renderCell: (
 		col: string,
 		item: T,
@@ -25,7 +25,7 @@ type Props< T extends TableItemBase > = {
 	idCol?: string;
 	noItemsText?: string;
 	showBulkSelect?: boolean;
-	className?: Argument;
+	className?: clsx.ClassValue;
 	selectedItems?: number[];
 	onSelectItems?: ( selectedItems: number[] ) => void;
 };
@@ -102,7 +102,7 @@ const ListTable = < T extends TableItemBase >( {
 					heading: ! isBulkSelect,
 					id: header && ! isBulkSelect ? col : undefined,
 					scope: ! isBulkSelect ? 'col' : undefined,
-					className: classNames( [
+					className: clsx( [
 						`column-${ col }`,
 						...( ! isBulkSelect && isSortable
 							? [ 'sortable', sortDirection.toLowerCase() ]
@@ -185,7 +185,7 @@ const ListTable = < T extends TableItemBase >( {
 
 	return (
 		<table
-			className={ classNames( [
+			className={ clsx( [
 				className,
 				'component-list-table',
 				'list-table',
@@ -202,7 +202,7 @@ const ListTable = < T extends TableItemBase >( {
 					sortedItems.map( ( item, rowIndex ) => (
 						<tr
 							key={ item.id }
-							className={ classNames( rowClasses( item ) ) }
+							className={ clsx( rowClasses( item ) ) }
 						>
 							{ Object.entries( cols ).map( ( [ col ] ) => {
 								const isIdCol = col === idCol;
@@ -211,7 +211,7 @@ const ListTable = < T extends TableItemBase >( {
 									<TableCell
 										key={ col }
 										heading={ isIdCol }
-										className={ classNames( [
+										className={ clsx( [
 											`column-${ col }`,
 											showBulkSelect &&
 												isIdCol &&

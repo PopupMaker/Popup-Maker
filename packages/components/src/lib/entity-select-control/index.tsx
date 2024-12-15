@@ -3,9 +3,11 @@ import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { useDebounce } from '@wordpress/compose';
 import { store as coreDataStore } from '@wordpress/core-data';
+
 import SmartTokenControl from '../smart-token-control';
 
 import type { Post, Taxonomy } from '@wordpress/core-data';
+
 import type { Props as SmartTokenControlProps } from '../smart-token-control';
 
 export type Props< T extends number | number[] > = Omit<

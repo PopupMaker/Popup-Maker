@@ -1,11 +1,10 @@
 import './editor.scss';
 
-import classnames, { Argument } from 'classnames';
+import clsx from 'clsx';
 
 import { __ } from '@wordpress/i18n';
 import { BaseControl } from '@wordpress/components';
 import { useEffect, useRef } from '@wordpress/element';
-
 import { F10, isKeyboardEvent } from '@wordpress/keycodes';
 import { debounce, useInstanceId } from '@wordpress/compose';
 
@@ -16,7 +15,7 @@ type Props< T extends string > = {
 	placeholder?: string;
 	value: T;
 	onChange: ( value: T ) => void;
-	className?: Argument;
+	className?: clsx.ClassValue;
 	minHeight?: number;
 };
 
@@ -265,7 +264,7 @@ const FreeFormEditControl = < T extends string >( props: Props< T > ) => {
 		<BaseControl
 			id={ `freeform-edit-control-${ instanceId }` }
 			label={ label }
-			className={ classnames( [
+			className={ clsx( [
 				'component-freeform-edit-control',
 				className,
 			] ) }

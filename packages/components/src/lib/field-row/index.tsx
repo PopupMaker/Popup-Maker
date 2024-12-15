@@ -1,4 +1,4 @@
-import classNames, { type Argument as ClassNameType } from 'classnames';
+import clsx from 'clsx';
 
 import './editor.scss';
 
@@ -12,10 +12,10 @@ const FieldRow = ( {
 	label: string;
 	id?: string;
 	description?: string;
-	className?: ClassNameType;
+	className?: clsx.ClassValue;
 	children: JSX.Element;
 } ) => (
-	<div className={ classNames( [ 'components-field-row', className ] ) }>
+	<div className={ clsx( [ 'components-field-row', className ] ) }>
 		<div className="components-base-control">
 			<label
 				htmlFor={ id }

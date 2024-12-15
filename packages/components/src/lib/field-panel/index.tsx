@@ -1,11 +1,12 @@
 import './editor.scss';
 
+import clsx from 'clsx';
+
 import { Panel, PanelBody } from '@wordpress/components';
-import classNames, { type Argument as ClassNameType } from 'classnames';
 
 type Props = {
 	title: string;
-	className?: ClassNameType;
+	className?: clsx.ClassValue;
 	children: React.ReactNode;
 };
 
@@ -13,7 +14,7 @@ const FieldPanel = ( { title, className, children }: Props ) => {
 	return (
 		<Panel
 			header={ title }
-			className={ classNames( [ 'components-field-panel', className ] ) }
+			className={ clsx( [ 'components-field-panel', className ] ) }
 		>
 			<PanelBody opened>{ children }</PanelBody>
 		</Panel>

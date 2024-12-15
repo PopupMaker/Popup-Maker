@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+
 import { __ } from '@wordpress/i18n';
 import { SelectControl } from '@wordpress/components';
 
@@ -13,6 +14,7 @@ export const PopupSelectControl = ( {
 	emptyValueLabel = __( 'Choose a popup', 'popup-maker' ),
 	hideLabelFromVision = false,
 	multiple = false,
+	required = false,
 	options = [
 		{
 			value: '',
@@ -36,6 +38,7 @@ export const PopupSelectControl = ( {
 				multiple && 'pum-popup-select-control--multiple'
 			) }
 			options={ options }
+			required={ required }
 			{ ...{
 				// Here for type safety.
 				...( multiple

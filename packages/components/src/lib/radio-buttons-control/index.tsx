@@ -1,17 +1,18 @@
 import './editor.scss';
 
-import classnames, { Argument as classNamesArg } from 'classnames';
+import clsx from 'clsx';
 
-import { BaseControl, Button } from '@wordpress/components';
 import { useInstanceId } from '@wordpress/compose';
-import { ButtonProps } from '@wordpress/components/build-types/button/types';
+import { BaseControl, Button } from '@wordpress/components';
+
+import type { ButtonProps } from '@wordpress/components/build-types/button/types';
 
 type Props< T extends string | number = string | number > = {
 	id?: string;
 	value: T;
 	onChange: ( value: T ) => void;
 	label?: string | JSX.Element;
-	className?: classNamesArg;
+	className?: clsx.ClassValue;
 	options: ( Partial< ButtonProps > & {
 		value: T;
 		label: string | JSX.Element;
@@ -40,7 +41,7 @@ const RadioButtonControl = < T extends string | number = string | number >( {
 		<BaseControl
 			id={ id ? id : `radio-button-control-${ instanceId }` }
 			label={ label }
-			className={ classnames(
+			className={ clsx(
 				'components-radio-button-control',
 				orientation,
 				equalWidth && 'equal-width',
