@@ -1,0 +1,186 @@
+
+const old = () => {
+	/// OLD!!!
+	// const [ popoverState, setState ] = useState< State >( {
+	// 	popupId: '',
+	// 	doDefault: false,
+	// 	editTrigger: false,
+	// } );
+
+	useEffect( () => {
+		const { popupId = '' } = activeAttributes;
+		let { doDefault = false } = activeAttributes;
+
+		// Convert string value to boolean for comparison.
+		if ( isString( doDefault ) ) {
+			doDefault = '1' === doDefault;
+		}
+
+		if ( ! isShowingInput( props, popoverState ) ) {
+			const update = {} as { popupId?: string; doDefault?: boolean };
+			if ( popupId !== popoverState.popupId ) {
+				update.popupId = popupId;
+			}
+
+			if ( doDefault !== popoverState.doDefault ) {
+				update.doDefault = doDefault;
+			}
+
+			if ( Object.keys( update ).length ) {
+				setState( ( prevState ) => ( {
+					...prevState,
+					...update,
+				} ) );
+			}
+		}
+	}, [ activeAttributes, props, popoverState ] );
+
+	const onKeyDown = ( event: React.KeyboardEvent ) => {
+		if (
+			(
+				[
+					LEFT,
+					DOWN,
+					RIGHT,
+					UP,
+					BACKSPACE,
+					ENTER,
+				] as unknown as number[]
+			 ).indexOf( parseInt( event.key ) ) > -1
+		) {
+			// Stop the key event from propagating up to ObserveTyping.startTypingInTextField.
+			event.stopPropagation();
+		}
+	};
+
+	const setPopupID = ( popupId: string ) => {
+		const { noticeOperations } = props;
+
+		noticeOperations.removeNotice( 'missingPopupId' );
+
+		if ( '' === popupId ) {
+			noticeOperations.createNotice( {
+				id: 'missingPopupId',
+				status: 'error',
+				content: __(
+					"Choose a popup or the trigger won't function.",
+					'popup-maker'
+				),
+			} );
+		}
+
+		setState( {
+			...popoverState,
+			popupId,
+		} );
+	};
+
+	const setDoDefault = ( doDefault: boolean ) => {
+		const { popupId = 0 } = activeAttributes;
+
+		setState( { ...popoverState, doDefault } );
+
+		// Apply now if URL is not being edited.
+		if ( ! isShowingInput( props, popoverState ) ) {
+			onChange(
+				applyFormat(
+					value,
+					createTriggerFormat( {
+						popupId: parseInt( String( popupId ), 10 ),
+						doDefault,
+					} )
+				)
+			);
+		}
+	};
+
+	const editTrigger = ( event: React.MouseEvent ) => {
+		setState( { ...popoverState, editTrigger: true } );
+		event.preventDefault();
+	};
+
+	const submitTrigger = ( event: React.FormEvent ) => {
+		const { popupId, doDefault } = popoverState;
+		const format = createTriggerFormat( {
+			popupId: parseInt( String( popupId ), 10 ),
+			doDefault,
+		} );
+
+		event.preventDefault();
+
+		if ( isCollapsed( value ) && ! isActive ) {
+			const toInsert = applyFormat(
+				create( { text: __( 'Open Popup', 'popup-maker' ) } ),
+				format,
+				0,
+				__( 'Open Popup', 'popup-maker' ).length
+			);
+			onChange( insert( value, toInsert ) );
+		} else {
+			onChange( applyFormat( value, format ) );
+		}
+
+		resetState();
+
+		if ( isActive ) {
+			speak( __( 'Trigger edited.', 'popup-maker' ), 'assertive' );
+		} else {
+			speak( __( 'Trigger inserted.', 'popup-maker' ), 'assertive' );
+		}
+	};
+
+	const onFocusOutside = () => {
+		resetState();
+	};
+
+	const resetState = () => {
+		props.stopAddingTrigger();
+		setState( { ...popoverState, editTrigger: false } );
+	};
+
+	// If the user is not adding a trigger from the toolbar or actively inside render nothing.
+	if ( ! isActive && ! addingTrigger ) {
+		return null;
+	}
+
+	const { popupId, doDefault } = popoverState;
+	const showInput = isShowingInput( props, popoverState );
+
+	return (
+		<TriggerPopoverAtText
+			value={ value }
+			isActive={ isActive }
+			addingTrigger={ addingTrigger }
+			openedBy={ openedBy }
+			onFocusOutside={ onFocusOutside }
+			onClose={ resetState }
+			noticeUI={ noticeUI }
+			focusOnMount={ showInput ? 'firstElement' : false }
+			renderSettings={ () => (
+				<ToggleControl
+					label={ __( 'Do default browser action?', 'popup-maker' ) }
+					checked={ doDefault }
+					onChange={ setDoDefault }
+				/>
+			) }
+		>
+			{ showInput ? (
+				<PopupTriggerEditor
+					className="editor-format-toolbar__trigger-container-content block-editor-format-toolbar__trigger-container-content"
+					value={ popupId }
+					onChangeInputValue={ setPopupID }
+					onKeyDown={ onKeyDown }
+					onKeyPress={ stopKeyPropagation }
+					// onSubmit={ submitTrigger }
+				/>
+			) : (
+				<PopupTriggerViewer
+					className="editor-format-toolbar__trigger-container-content block-editor-format-toolbar__trigger-container-content"
+					onKeyPress={ stopKeyPropagation }
+					popupId={ popupId }
+					onEditTriggerClick={ editTrigger }
+				/>
+			) }
+		</TriggerPopoverAtText>
+	);
+};

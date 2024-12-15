@@ -4,10 +4,10 @@ import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 import { PopupSelectControl } from '@popup-maker/components';
 
-type Props = {
+type Props = Pick< HTMLFormElement, 'onKeyDown' | 'onKeyPress' > & {
 	className?: string;
 	onChangeInputValue: ( value: string ) => void;
-	value: string;
+	value: string | number;
 };
 
 const PopupTriggerEditor = ( {
