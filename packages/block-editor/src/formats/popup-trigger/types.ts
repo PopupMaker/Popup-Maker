@@ -1,7 +1,7 @@
 export interface TriggerFormatAttributes {
 	class?: string;
-	popupId: string;
-	doDefault: string;
+	popupId: string | number;
+	doDefault: boolean | '0' | '1';
 }
 
 export interface TriggerFormat {

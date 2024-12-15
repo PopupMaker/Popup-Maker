@@ -15,6 +15,7 @@ declare global {
 
 		popupMakerBlockEditor: {
 			popups: Popup[];
+			popupTriggerExcludedBlocks?: string[];
 			permissions: {
 				manage_settings: boolean;
 				edit_restrictions: boolean;

@@ -34,13 +34,23 @@ function PopupView( {
 	return <span className={ spanClassName }>{ label }</span>;
 }
 
+type PopupTriggerViewerProps = {
+	className?: string;
+	spanClassName?: string;
+	onEditTriggerClick?: (
+		event: React.MouseEvent | React.KeyboardEvent
+	) => void;
+	popupId: number | string;
+	onKeyPress?: ( event: React.KeyboardEvent ) => void;
+};
+
 export default function PopupTriggerViewer( {
-	className,
-	spanClassName,
-	onEditLinkClick,
+	className = '',
+	spanClassName = '',
+	onEditTriggerClick,
 	popupId,
 	...props
-} ) {
+}: PopupTriggerViewerProps ) {
 	return (
 		<div
 			className={ clsx(
@@ -50,11 +60,11 @@ export default function PopupTriggerViewer( {
 			{ ...props }
 		>
 			<PopupView popupId={ popupId } className={ spanClassName } />
-			{ onEditLinkClick && (
+			{ onEditTriggerClick && (
 				<Button
 					icon="edit"
 					label={ __( 'Edit', 'popup-maker' ) }
-					onClick={ onEditLinkClick }
+					onClick={ onEditTriggerClick }
 				/>
 			) }
 		</div>

@@ -1,13 +1,7 @@
 import './editor.scss';
 
-/**
- * External Dependencies
- */
 import clsx from 'clsx';
 
-/**
- * WordPress Dependencies
- */
 import { __ } from '@wordpress/i18n';
 import { addFilter } from '@wordpress/hooks';
 import { InspectorControls } from '@wordpress/block-editor';
@@ -19,12 +13,13 @@ import {
 	Tooltip,
 } from '@wordpress/components';
 import { createHigherOrderComponent } from '@wordpress/compose';
+
 import { PopupSelectControl } from '@popup-maker/components';
 
-/**
- * Internal dependencies
- */
-import GearIcon from '../../../../../src/block-editor/icons/gears';
+import { Mark as MarkIcon } from '@popup-maker/icons';
+// import GearIcon from '../../../../../src/block-editor/icons/gears';
+
+const { popupTriggerExcludedBlocks } = window.popupMakerBlockEditor;
 
 /**
  * Either allowedBlocks or excludedBlocks should be used, not both.
@@ -32,10 +27,9 @@ import GearIcon from '../../../../../src/block-editor/icons/gears';
  * @type {Array}
  */
 const allowedBlocks: string[] = [];
-const excludedBlocks: string[] =
-	( pum_block_editor_vars.popup_trigger_excluded_blocks || [
-		'core/nextpage',
-	] ) as string[];
+const excludedBlocks: string[] = popupTriggerExcludedBlocks || [
+	'core/nextpage',
+];
 
 function isAllowedForBlockType( name: string ) {
 	if ( ! allowedBlocks.length && ! excludedBlocks.length ) {
@@ -104,7 +98,8 @@ const withAdvancedControls = createHigherOrderComponent( ( BlockEdit ) => {
 						<Panel className="pum-block-inspector-popup-controls">
 							<PanelBody
 								title={ __( 'Popup Controls', 'popup-maker' ) }
-								icon={ GearIcon }
+								// icon={ GearIcon }
+								icon={ MarkIcon }
 								initialOpen={ false }
 							>
 								<PanelRow>
