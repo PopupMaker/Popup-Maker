@@ -22,9 +22,15 @@ const PopupTriggerEditor = ( {
 				'block-editor-popup-trigger-popover__popup-editor',
 				className
 			) }
+			role="dialog"
+			aria-label={ __( 'Popup Trigger Editor', 'popup-maker' ) }
 			{ ...props }
 		>
-			<div className="block-editor-popup-select-input">
+			<div
+				className="block-editor-popup-select-input"
+				role="group"
+				aria-label={ __( 'Popup Selection Controls', 'popup-maker' ) }
+			>
 				<PopupSelectControl
 					emptyValueLabel={ __(
 						'Which popup should open?',

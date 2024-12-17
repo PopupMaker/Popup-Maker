@@ -42,14 +42,20 @@ $input-size: 300px;
 	position: relative;
 	padding: 1px;
 
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	gap: 0;
+
 	.components-base-control__field {
 		margin-bottom: 0;
 	}
 
 	input[type="text"],
 	select {
-		width: 100%;
-		min-width: $input-size;
+		min-height: 36px !important;
+		width: 100% !important;
+		min-width: $input-size !important;
 
 		@include break-small() {
 			width: $input-size;
@@ -67,6 +73,14 @@ $input-size: 300px;
 		&::-ms-clear {
 			display: none;
 		}
+	}
+
+	.components-input-control__backdrop {
+		border: none;
+	}
+
+	button[type="submit"] {
+		z-index: 1;
 	}
 }
 
