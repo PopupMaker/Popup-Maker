@@ -28,21 +28,8 @@ class PUM_Modules_Reviews {
 	 *
 	 */
 	public static function init() {
-		// add_action( 'init', array( __CLASS__, 'hooks' ) );
 		add_filter( 'pum_alert_list', [ __CLASS__, 'review_alert' ] );
 		add_action( 'wp_ajax_pum_review_action', [ __CLASS__, 'ajax_handler' ] );
-	}
-
-	/**
-	 * Hook into relevant WP actions.
-	 */
-	public static function hooks() {
-		if ( is_admin() && current_user_can( 'edit_posts' ) ) {
-			self::installed_on();
-			add_action( 'admin_notices', [ __CLASS__, 'admin_notices' ] );
-			add_action( 'network_admin_notices', [ __CLASS__, 'admin_notices' ] );
-			add_action( 'user_admin_notices', [ __CLASS__, 'admin_notices' ] );
-		}
 	}
 
 	/**
