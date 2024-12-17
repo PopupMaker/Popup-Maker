@@ -57,6 +57,13 @@
 		}
 	}
 
+	&--mark-colored {
+		path.pum-mark--center-path,
+		path:not(.pum-mark--center-path) {
+			fill: currentColor;
+		}
+	}
+
 	&--monitor {
 		path {
 			stroke: currentColor;

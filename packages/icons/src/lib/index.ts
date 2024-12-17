@@ -10,6 +10,7 @@ export { default as Gears } from './gears';
 export { default as LicenseKey } from './license-key';
 export { default as LockedUser } from './locked-user';
 export { default as Mark } from './mark';
+export { default as MarkColored } from './mark-colored';
 export { default as MarkLight } from './mark-light';
 export { default as MarkWhite } from './mark-white';
 export { default as MarkRetro } from './mark-retro';
