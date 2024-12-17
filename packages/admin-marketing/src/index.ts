@@ -6,13 +6,13 @@ declare global {
 	interface Window {
 		popupMaker: {
 			globalVars: {
-				assetUrl: string;
+				assetsUrl: string;
 			};
 		};
 	}
 }
 
-const { assetUrl } = window.popupMaker.globalVars;
+const { assetsUrl } = window.popupMaker.globalVars;
 
 // Initiate when ready.
 $( () => {
@@ -21,6 +21,6 @@ $( () => {
 	} );
 
 	$( '#menu-posts-popup.wp-menu-open .wp-menu-image' ).css( {
-		backgroundImage: `url('${ assetUrl }images/mark-light.svg')`,
+		backgroundImage: `url('${ assetsUrl }images/mark-light.svg')`,
 	} );
 } );

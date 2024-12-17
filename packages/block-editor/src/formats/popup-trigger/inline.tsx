@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { speak } from '@wordpress/a11y';
 import { useMemo, useState } from '@wordpress/element';
 import { useDispatch, useSelect } from '@wordpress/data';
@@ -15,16 +15,21 @@ import {
 	split,
 	concat,
 	useAnchor,
+	removeFormat,
 } from '@wordpress/rich-text';
 
 import type { RichTextValue } from '@wordpress/rich-text';
 import { name, settings } from './index';
 import { PopupTriggerEditor, PopupTriggerViewer } from './trigger-popover';
 // @ts-ignore
-import { createTriggerFormat, getFormatBoundary } from './utils';
+import {
+	createTriggerFormat,
+	triggerOptionsFromFormatAttrs,
+	getFormatBoundary,
+} from './utils';
 
 import type { WPFormat } from '@wordpress/rich-text/build-types/register-format-type';
-import type { TriggerFormatAttributes } from './types';
+import type { TriggerFormatAttributes, TriggerFormatOptions } from './types';
 
 const { popups = [] } = window.popupMakerBlockEditor;
 
@@ -66,7 +71,7 @@ type Props = {
 	isActive: boolean;
 	activeAttributes: TriggerFormatAttributes;
 	value: RichTextValue;
-	onChange: ( value: any ) => void;
+	onChange: ( value: RichTextValue ) => void;
 	onFocusOutside: () => void;
 	stopAddingTrigger: () => void;
 	contentRef: React.RefObject< HTMLElement >;
@@ -109,12 +114,9 @@ const InlinePopupTriggerUI = ( {
 		};
 	}, [] );
 
-	const triggerValue: Partial< TriggerFormatAttributes > = useMemo(
-		() => ( {
-			popupId: activeAttributes.popupId,
-			doDefault: activeAttributes.doDefault,
-		} ),
-		[ activeAttributes.popupId, activeAttributes.doDefault ]
+	const triggerValue: TriggerFormatOptions = useMemo(
+		() => triggerOptionsFromFormatAttrs( activeAttributes ),
+		[ activeAttributes ]
 	);
 
 	const [ isEditingTrigger, setIsEditingTrigger ] = useState(
@@ -126,33 +128,36 @@ const InlinePopupTriggerUI = ( {
 		event.preventDefault();
 	};
 
-	// const removeTrigger = () => {
-	// 	const newValue = removeFormat( value, name );
-	// 	onChange( newValue );
-	// 	stopAddingTrigger();
-	// 	speak( __( 'Trigger removed.', 'popup-maker' ), 'assertive' );
-	// };
+	const removeTrigger = () => {
+		onChange( removeFormat( value, name ) );
+		stopAddingTrigger();
+		speak( __( 'Trigger removed.', 'popup-maker' ), 'assertive' );
+	};
 
-	const onChangeTrigger = (
-		nextValue: Partial< TriggerFormatAttributes >
-	) => {
+	console.log( {
+		isCollapsed: isCollapsed( value ),
+		isActive,
+	} );
+
+	const onChangeTrigger = ( changes: Partial< TriggerFormatOptions > ) => {
 		const hasTrigger = triggerValue?.popupId;
 		const isNewTrigger = ! hasTrigger;
 
 		// Merge the next value with the current trigger value.
-		nextValue = {
+		const nextValue: TriggerFormatOptions = {
 			...triggerValue,
-			...nextValue,
+			...changes,
 		};
 
-		const triggerFormat = createTriggerFormat( {
-			popupId: nextValue.popupId ?? 0,
-			doDefault: nextValue.doDefault === '1',
-		} );
+		if ( ! isNewTrigger && ! nextValue?.popupId ) {
+			console.log( 'removing trigger' );
+			removeTrigger();
+			return;
+		}
 
-		const newText = nextValue.popupId
-			? popups[ nextValue.popupId ]?.title
-			: __( 'Open Popup', 'popup-maker' );
+		const triggerFormat = createTriggerFormat( nextValue );
+
+		const newText = __( 'Open Popup', 'popup-maker' );
 
 		// Scenario: we have any active text selection or an active format.
 		let newValue: RichTextValue;
@@ -194,7 +199,7 @@ const InlinePopupTriggerUI = ( {
 				newValue,
 				triggerFormat,
 				0,
-				newText.length
+				newText ? newText.length : 0
 			);
 
 			// Get the boundaries of the active trigger format.
@@ -234,7 +239,9 @@ const InlinePopupTriggerUI = ( {
 			newValue = concat( valBefore, newValAfter );
 		}
 
+		if ( newValue ) {
 		onChange( newValue );
+		}
 
 		// Focus should only be returned to the rich text on submit if this trigger is not
 		// being created for the first time. If it is then focus should remain within the
@@ -249,6 +256,43 @@ const InlinePopupTriggerUI = ( {
 		} else {
 			speak( __( 'Trigger inserted.' ), 'assertive' );
 		}
+	};
+
+	const { popupId, doDefault } = triggerValue;
+
+	const setDoDefault = ( newValue: boolean ) => {
+		onChangeTrigger( {
+			doDefault: newValue,
+		} );
+
+		return;
+		onChange(
+			applyFormat(
+				value,
+				createTriggerFormat( {
+					popupId,
+					doDefault: newValue,
+				} )
+			)
+		);
+	};
+
+	const setPopupID = ( newValue: string ) => {
+		onChangeTrigger( {
+			popupId: Number( newValue ),
+		} );
+
+		return;
+
+		onChange(
+			applyFormat(
+				value,
+				createTriggerFormat( {
+					popupId: Number( newValue ),
+					doDefault,
+				} )
+			)
+		);
 	};
 
 	const onKeyDown = ( event ) => {
@@ -284,16 +328,6 @@ const InlinePopupTriggerUI = ( {
 		setSettingsExpanded( ! isSettingsExpanded );
 	};
 
-	const { popupId, doDefault } = triggerValue;
-
-	const setDoDefault = ( newValue: boolean ) => {
-		onChangeTrigger( { doDefault: newValue } );
-	};
-
-	const setPopupID = ( newValue: string ) => {
-		onChangeTrigger( { popupId: newValue } );
-	};
-
 	const isEditing = isEditingTrigger || ! triggerValue.popupId;
 
 	return (
@@ -325,7 +359,7 @@ const InlinePopupTriggerUI = ( {
 						<PopupTriggerViewer
 							className="editor-format-toolbar__trigger-container-content block-editor-format-toolbar__trigger-container-content"
 							onKeyPress={ stopKeyPropagation }
-							popupId={ popupId ?? '' }
+							popupId={ popupId ?? 0 }
 							onEditTriggerClick={ editTrigger }
 						/>
 					) }

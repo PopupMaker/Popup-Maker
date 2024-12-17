@@ -2,12 +2,11 @@ import { name } from './index';
 
 import type { RichTextValue } from '@wordpress/rich-text';
 import type { RichTextFormat } from '@wordpress/rich-text/build-types/types';
-import type { TriggerFormat } from './types';
-
-type TriggerFormatOptions = {
-	popupId: number | string;
-	doDefault: boolean;
-};
+import type {
+	TriggerFormat,
+	TriggerFormatAttributes,
+	TriggerFormatOptions,
+} from './types';
 
 /**
  * Generates the format object that will be applied to the trigger text.
@@ -23,12 +22,18 @@ export const createTriggerFormat = ( {
 	type: name,
 	attributes: {
 		class: `popmake-${ popupId } ${ doDefault ? 'pum-do-default' : '' }`,
-		popupId: `${ popupId }`,
+		popupId: popupId.toString(),
 		doDefault: doDefault ? '1' : '0',
 	},
 } );
 
-/* eslint-disable jsdoc/no-undefined-types */
+export const triggerOptionsFromFormatAttrs = (
+	attributes: TriggerFormatAttributes
+) => ( {
+	popupId: parseInt( attributes.popupId ?? '0' ),
+	doDefault: attributes.doDefault === '1',
+} );
+
 /**
  * Get the start and end boundaries of a given format from a rich text value.
  *
@@ -39,7 +44,6 @@ export const createTriggerFormat = ( {
  * @param {number?}       endIndex   optional endIndex to seek from.
  * @return {Object}	object containing start and end values for the given format.
  */
-/* eslint-enable jsdoc/no-undefined-types */
 export function getFormatBoundary(
 	value: RichTextValue,
 	format: RichTextFormat,

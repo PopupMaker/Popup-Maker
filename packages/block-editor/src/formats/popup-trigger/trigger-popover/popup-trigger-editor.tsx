@@ -31,7 +31,7 @@ const PopupTriggerEditor = ( {
 						'popup-maker'
 					) }
 					hideLabelFromVision={ true }
-					value={ value }
+					value={ String( value ) }
 					onChange={ onChangeInputValue }
 					required={ true }
 					// postType="popup"

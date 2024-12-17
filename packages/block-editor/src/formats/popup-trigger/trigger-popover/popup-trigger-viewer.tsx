@@ -17,7 +17,7 @@ function PopupView( {
 	popupId,
 	className,
 }: {
-	popupId: number | string;
+	popupId: number;
 	className: string;
 } ) {
 	const spanClassName = clsx(
@@ -40,7 +40,7 @@ type PopupTriggerViewerProps = {
 	onEditTriggerClick?: (
 		event: React.MouseEvent | React.KeyboardEvent
 	) => void;
-	popupId: number | string;
+	popupId: number;
 	onKeyPress?: ( event: React.KeyboardEvent ) => void;
 };
 
