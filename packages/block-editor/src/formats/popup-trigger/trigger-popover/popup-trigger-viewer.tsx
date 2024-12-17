@@ -31,7 +31,11 @@ function PopupView( {
 		  sprintf( __( 'Open "%s" popup', 'popup-maker' ), popup.post_title )
 		: '';
 
-	return <span className={ spanClassName }>{ label }</span>;
+	return (
+		<span className={ spanClassName } role="button" aria-label={ label }>
+			{ label }
+		</span>
+	);
 }
 
 type PopupTriggerViewerProps = {
@@ -57,6 +61,8 @@ export default function PopupTriggerViewer( {
 				'block-editor-popup-trigger-popover__popup-viewer',
 				className
 			) }
+			role="region"
+			aria-label={ __( 'Popup Trigger Preview', 'popup-maker' ) }
 			{ ...props }
 		>
 			<PopupView popupId={ popupId } className={ spanClassName } />

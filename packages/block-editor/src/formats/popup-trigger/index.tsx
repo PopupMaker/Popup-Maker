@@ -217,10 +217,7 @@ export const TriggerEdit = withSpokenMessages(
 						isActive={ isActive }
 						activeAttributes={ activeAttributes }
 						value={ value }
-						onChange={ ( newValue ) => {
-							console.log( 'onChange called' );
-							onChange( newValue );
-						} }
+						onChange={ onChange }
 						contentRef={ contentRef }
 						focusOnMount={
 							shouldAutoFocus ? 'firstElement' : false
