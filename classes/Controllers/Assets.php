@@ -25,7 +25,10 @@ class Assets extends Controller {
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_scripts' ], 1 );
 		add_action( 'wp_print_scripts', [ $this, 'autoload_styles_for_scripts' ], 1 );
 		add_action( 'admin_enqueue_scripts', [ $this, 'register_scripts' ], 1 );
+		add_action( 'enqueue_block_editor_assets', [ $this, 'register_scripts' ], 1 );
 		add_action( 'admin_print_scripts', [ $this, 'autoload_styles_for_scripts' ], 1 );
+		// Add a hook to fix old handles that might be enqueueed and not loaded, load their replacements.
+		add_action( 'wp_enqueue_scripts', [ $this, 'fix_old_handles' ], 1 );
 	}
 
 	/**
@@ -57,10 +60,79 @@ class Assets extends Controller {
 				],
 			],
 			'admin-marketing' => [
-				'bundled'  => false,
-				'handle'   => 'popup-maker-admin-marketing',
+				'handle' => 'popup-maker-admin-marketing',
+				'styles' => true,
+			],
+			'block-editor'    => [
+				'handle'   => 'popup-maker-block-editor',
 				'styles'   => true,
-				'varsName' => 'popupMakerAdminMarketing',
+				'varsName' => 'popupMakerBlockEditor',
+				'vars'     => [
+					'popups'                     => pum_get_all_popups(),
+					'popupTriggerExcludedBlocks' => apply_filters(
+						'pum_block_editor_popup_trigger_excluded_blocks',
+						[
+							'core/nextpage',
+						]
+					),
+				],
+			],
+			'block-library'   => [
+				'bundled'  => false,
+				'handle'   => 'popup-maker-block-library',
+				'styles'   => true,
+				'varsName' => 'popupMakerBlockLibrary',
+				'vars'     => [],
+			],
+			'components'      => [
+				'bundled'  => false,
+				'handle'   => 'popup-maker-components',
+				'styles'   => true,
+				'varsName' => 'popupMakerComponents',
+				'vars'     => function () {
+					return [
+						'popups' => \pum_get_all_popups(),
+					];
+				},
+			],
+			'core-data'       => [
+				'bundled'  => false,
+				'handle'   => 'popup-maker-core-data',
+				'styles'   => false,
+				'varsName' => 'popupMakerCoreData',
+				'vars'     => function () {
+					return [
+						// TODO Migrate to use plugin('options')->get_all();
+						'currentSettings' => \pum_get_options(),
+					];
+				},
+			],
+			'data'            => [
+				'bundled'  => false,
+				'handle'   => 'popup-maker-data',
+				'styles'   => false,
+				'varsName' => 'popupMakerData',
+				'vars'     => [],
+			],
+			'fields'          => [
+				'bundled'  => false,
+				'handle'   => 'popup-maker-fields',
+				'styles'   => false,
+				'varsName' => 'popupMakerFields',
+				'vars'     => [],
+			],
+			'icons'           => [
+				'bundled'  => false,
+				'handle'   => 'popup-maker-icons',
+				'styles'   => true,
+				'varsName' => 'popupMakerIcons',
+				'vars'     => [],
+			],
+			'utils'           => [
+				'bundled'  => false,
+				'handle'   => 'popup-maker-utils',
+				'styles'   => false,
+				'varsName' => 'popupMakerUtils',
 				'vars'     => [],
 			],
 		];
@@ -72,44 +144,71 @@ class Assets extends Controller {
 	 * Register all package scripts & styles.
 	 */
 	public function register_scripts() {
+		static $registered;
+
+		if ( $registered ) {
+			return;
+		}
+		$registered = true;
+
+		$path          = 'dist/packages';
+		$packages_meta = pum_get_asset_group_meta( 'package', [
+			'version' => $this->container->get( 'version' ),
+		] );
+
 		$packages = $this->get_packages();
-		$path     = 'dist/packages/';
+
+		$screen = is_admin() ? get_current_screen() : false;
+		$rtl    = is_rtl() ? '-rtl' : '';
 
 		foreach ( $packages as $package => $package_data ) {
-			$handle = $package_data['handle'];
-
-			$meta_path = $this->container->get_path( "$path/$package.asset.php" );
-			$meta      = pum_get_asset_meta( $meta_path, [
-				'version' => $this->container->get( 'version' ),
-			] );
-
-			$js_deps = isset( $package_data['deps'] ) ? $package_data['deps'] : [];
-
-			if ( $package_data['bundled'] ) {
-				pum_register_script( $handle, $this->container->get_url( "$path/$package.js" ), array_merge( $meta['dependencies'], $js_deps ), $meta['version'], true );
-			} else {
-				wp_register_script( $handle, $this->container->get_url( "$path/$package.js" ), array_merge( $meta['dependencies'], $js_deps ), $meta['version'], true );
+			if (
+			! isset( $package_data['handle'] ) ||
+			! isset( $packages_meta[ "$package.js" ] )
+			) {
+				// Skip packages that don't have a handle or meta.
+				continue;
 			}
 
-			if ( isset( $package_data['styles'] ) && $package_data['styles'] ) {
-				$rtl = is_rtl() ? '-rtl' : '';
+			$handle       = $package_data['handle'];
+			$package_data = wp_parse_args( $package_data, [
+				'bundled' => true,
+			] );
 
-				if ( $package_data['bundled'] ) {
-					pum_register_style( $handle, $this->container->get_url( "$path/$package{$rtl}.css" ), [ 'wp-components', 'wp-block-editor', 'dashicons' ], $meta['version'] );
-				} else {
-					wp_register_style( $handle, $this->container->get_url( "$path/$package{$rtl}.css" ), [ 'wp-components', 'wp-block-editor', 'dashicons' ], $meta['version'] );
+			$bundled = (bool) $package_data['bundled'];
+
+			$meta = $packages_meta[ "$package.js" ];
+
+			$js_file = $this->container->get_url( "$path/$package.js" );
+			$js_deps = array_merge(
+				// Automated dependency registration.
+				$meta['dependencies'],
+				// Manual dependency registration.
+				isset( $package_data['deps'] ) ? $package_data['deps'] : []
+			);
+
+			if ( 'block-editor' === $package ) {
+				if ( 'widgets' !== $screen->id ) {
+					$js_deps = array_merge( $js_deps, [ 'wp-edit-post' ] );
 				}
 			}
 
-			if ( isset( $package_data['varsName'] ) && ! empty( $package_data['vars'] ) ) {
-				$localized_vars = apply_filters( "popup_maker/{$package}_localized_vars", $package_data['vars'] );
+			if ( $bundled ) {
+				pum_register_script( $handle, $js_file, $js_deps, $meta['version'], true );
+			} else {
+				// Though pum_* asset functions pass through to wp_* automatically when disabled, admin packages should never be bundled.
+				wp_register_script( $handle, $js_file, $js_deps, $meta['version'], true );
+			}
 
-				$this->setup_global_vars();
+			if ( isset( $package_data['styles'] ) && $package_data['styles'] ) {
+				$css_file = $this->container->get_url( "$path/$package{$rtl}.css" );
+				$css_deps = [ 'wp-components', 'wp-block-editor', 'dashicons' ];
 
-				if ( $package_data['bundled'] ) {
-					pum_localize_script( $handle, $package_data['varsName'], $localized_vars );
+				if ( $bundled ) {
+					pum_register_style( $handle, $css_file, $css_deps, $meta['version'] );
 				} else {
-					wp_localize_script( $handle, $package_data['varsName'], $localized_vars );
+					// Though pum_* asset functions pass through to wp_* automatically when disabled, admin packages should never be bundled.
+					wp_register_style( $handle, $css_file, $css_deps, $meta['version'] );
 				}
 			}
 
@@ -149,14 +248,15 @@ class Assets extends Controller {
 	 */
 	private function get_global_vars() {
 		$additional_global_vars = is_admin() ?
-			$this->get_admin_global_vars() :
-			$this->get_frontend_global_vars();
+		$this->get_admin_global_vars() :
+		$this->get_frontend_global_vars();
 
 		return apply_filters(
 			'popup_maker/global_vars',
 			array_merge(
 				[
 					'version'   => $this->container->get( 'version' ),
+					'pluginUrl' => $this->container->get_url( '' ),
 					'assetsUrl' => $this->container->get_url( 'assets/' ),
 					'nonce'     => wp_create_nonce( 'popup-maker' ),
 				],
@@ -171,7 +271,9 @@ class Assets extends Controller {
 	 * @return array
 	 */
 	private function get_admin_global_vars() {
-		return apply_filters( 'popup_maker/admin_global_vars', [] );
+		return apply_filters( 'popup_maker/admin_global_vars', [
+			'adminUrl' => admin_url(),
+		] );
 	}
 
 	/**
@@ -213,12 +315,54 @@ class Assets extends Controller {
 	public function autoload_styles_for_scripts() {
 		$packages = $this->get_packages();
 
-		foreach ( $packages as $package_data ) {
-			if ( wp_script_is( $package_data['handle'], 'enqueued' ) ) {
+		foreach ( $packages as $package => $package_data ) {
+			if ( ! isset( $package_data['handle'] ) ) {
+				// Skip packages that don't have a handle or meta.
+				continue;
+			}
+
+			$handle       = $package_data['handle'];
+			$package_data = wp_parse_args( $package_data, [
+				'bundled' => true,
+			] );
+
+			$bundled = (bool) $package_data['bundled'];
+
+			if ( wp_script_is( $handle, 'enqueued' ) ) {
+				$this->setup_global_vars();
+
 				if ( isset( $package_data['styles'] ) && $package_data['styles'] ) {
-					wp_enqueue_style( $package_data['handle'] );
+					if ( $bundled ) {
+						pum_enqueue_style( $handle );
+					} else {
+						// Though pum_* asset functions pass through to wp_* automatically when disabled, admin packages should never be bundled.
+						wp_enqueue_style( $handle );
+					}
+				}
+
+				if ( isset( $package_data['varsName'] ) && ! empty( $package_data['vars'] ) ) {
+					$localized_vars = is_callable( $package_data['vars'] ) ?
+						call_user_func( $package_data['vars'] ) :
+						$package_data['vars'];
+
+					$localized_vars = apply_filters( "popup_maker/{$package}_localized_vars", $localized_vars );
+
+					if ( $bundled ) {
+						pum_localize_script( $handle, $package_data['varsName'], $localized_vars );
+					} else {
+						// Though pum_* asset functions pass through to wp_* automatically when disabled, admin packages should never be bundled.
+						wp_localize_script( $handle, $package_data['varsName'], $localized_vars );
+					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * Fix old handles that might be enqueueed and not loaded, load their replacements.
+	 *
+	 * @return void
+	 */
+	public function fix_old_handles() {
 	}
 }
