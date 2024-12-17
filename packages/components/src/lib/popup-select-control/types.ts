@@ -1,5 +1,7 @@
+import type { ReactNode } from 'react';
+
 export interface PopupSelectControlBaseProps {
-	label?: string;
+	label?: string | ReactNode;
 	hideLabelFromVision?: boolean;
 	emptyValueLabel?: string;
 	required?: boolean;

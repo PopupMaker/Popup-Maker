@@ -7,7 +7,7 @@ interface Popup {
 
 declare global {
 	interface Window {
-		pum_block_editor_vars: {
+		popupMakerComponents: {
 			popups: Popup[];
 		};
 	}
