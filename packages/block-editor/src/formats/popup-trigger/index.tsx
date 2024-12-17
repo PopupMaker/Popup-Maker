@@ -1,13 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { speak } from '@wordpress/a11y';
 import { withSpokenMessages } from '@wordpress/components';
-import {
-	removeFormat,
-	isCollapsed,
-	getTextContent,
-	slice,
-	applyFormat,
-} from '@wordpress/rich-text';
+import { removeFormat, isCollapsed } from '@wordpress/rich-text';
 import { useState, useLayoutEffect, useEffect } from '@wordpress/element';
 import {
 	RichTextShortcut,
