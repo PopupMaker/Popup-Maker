@@ -1,14 +1,20 @@
 import { __ } from '@wordpress/i18n';
 import { speak } from '@wordpress/a11y';
 import { withSpokenMessages } from '@wordpress/components';
-import { removeFormat, isCollapsed } from '@wordpress/rich-text';
+import {
+	removeFormat,
+	isCollapsed,
+	getTextContent,
+	slice,
+	applyFormat,
+} from '@wordpress/rich-text';
 import { useState, useLayoutEffect, useEffect } from '@wordpress/element';
 import {
 	RichTextShortcut,
 	RichTextToolbarButton,
 } from '@wordpress/block-editor';
 
-import { Mark as MarkIcon } from '@popup-maker/icons';
+import { Mark as MarkIcon, MarkWhite } from '@popup-maker/icons';
 
 import InlinePopupTriggerUI from './inline';
 
@@ -52,9 +58,9 @@ export const TriggerEdit = withSpokenMessages(
 		} | null >( null );
 
 		useEffect( () => {
-			// When the link becomes inactive (i.e. isActive is false), reset the editingLink state
-			// and the creatingLink state. This means that if the Link UI is displayed and the link
-			// becomes inactive (e.g. used arrow keys to move cursor outside of link bounds), the UI will close.
+			// When the trigger becomes inactive (i.e. isActive is false), reset the editingTrigger state
+			// and the creatingTrigger state. This means that if the Trigger UI is displayed and the trigger
+			// becomes inactive (e.g. used arrow keys to move cursor outside of trigger bounds), the UI will close.
 			if ( ! isActive ) {
 				setAddingTrigger( false );
 			}
@@ -67,12 +73,12 @@ export const TriggerEdit = withSpokenMessages(
 			}
 
 			function handleClick( event: MouseEvent ) {
-				// There is a situation whereby there is an existing link in the rich text
-				// and the user clicks on the leftmost edge of that link and fails to activate
-				// the link format, but the click event still fires on the `<a>` element.
-				// This causes the `editingLink` state to be set to `true` and the link UI
+				// There is a situation whereby there is an existing trigger in the rich text
+				// and the user clicks on the leftmost edge of that trigger and fails to activate
+				// the trigger format, but the click event still fires on the `<span>` element.
+				// This causes the `editingTrigger` state to be set to `true` and the trigger UI
 				// to be rendered in "creating" mode. We need to check isActive to see if
-				// we have an active link format.
+				// we have an active trigger format.
 				const target = event.target as HTMLElement; // Assert that target is an HTMLElement
 				const trigger = target?.closest(
 					'[contenteditable] span.popup-trigger'
@@ -102,13 +108,15 @@ export const TriggerEdit = withSpokenMessages(
 			};
 		}, [ contentRef, isActive ] );
 
-		const addTrigger = ( target: HTMLElement ) => {
-			if ( target ) {
-				setOpenedBy( {
-					el: target,
-					action: null, // We don't need to distinguish between click or keyboard here
-				} );
-			}
+		const addTrigger = () => {
+			// const text = getTextContent( slice( value ) );
+
+			// onChange(
+			// 	applyFormat( value, {
+			// 		type: name,
+			// 		attributes: { popupId: 0, doDefault: false },
+			// 	} )
+			// );
 			setAddingTrigger( true );
 		};
 
@@ -157,7 +165,7 @@ export const TriggerEdit = withSpokenMessages(
 
 		// Only autofocus if we have clicked a link within the editor
 		const shouldAutoFocus = ! (
-			openedBy?.el?.tagName === 'A' && openedBy?.action === 'click'
+			openedBy?.el?.tagName === 'SPAN' && openedBy?.action === 'click'
 		);
 
 		const hasSelection = ! isCollapsed( value );
@@ -179,7 +187,7 @@ export const TriggerEdit = withSpokenMessages(
 
 				{ isActive ? (
 					<RichTextToolbarButton
-						icon={ MarkIcon }
+						icon={ MarkWhite }
 						iconSize={ 16 }
 						title={ __( 'Remove Trigger', 'popup-maker' ) }
 						onClick={ onRemoveFormat }
@@ -194,9 +202,7 @@ export const TriggerEdit = withSpokenMessages(
 						icon={ MarkIcon }
 						iconSize={ 16 }
 						title={ title }
-						onClick={ ( event ) => {
-							addTrigger( event.currentTarget );
-						} }
+						onClick={ addTrigger }
 						isActive={ isActive }
 						shortcutType="primary"
 						shortcutCharacter="p"
@@ -211,7 +217,10 @@ export const TriggerEdit = withSpokenMessages(
 						isActive={ isActive }
 						activeAttributes={ activeAttributes }
 						value={ value }
-						onChange={ onChange }
+						onChange={ ( newValue ) => {
+							console.log( 'onChange called' );
+							onChange( newValue );
+						} }
 						contentRef={ contentRef }
 						focusOnMount={
 							shouldAutoFocus ? 'firstElement' : false
