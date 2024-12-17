@@ -4,8 +4,9 @@ import { __ } from '@wordpress/i18n';
 import { SelectControl } from '@wordpress/components';
 
 import type { PopupSelectControlProps } from './types';
+import { SelectControlProps } from '@wordpress/components/build-types/select-control/types';
 
-const { popups } = window.pum_block_editor_vars;
+const { popups } = window.popupMakerComponents;
 
 export const PopupSelectControl = ( {
 	onChange,
@@ -28,7 +29,7 @@ export const PopupSelectControl = ( {
 		} ),
 	],
 	...props
-}: PopupSelectControlProps ) => {
+}: PopupSelectControlProps & Pick< SelectControlProps, 'help' > ) => {
 	return (
 		<SelectControl
 			label={ label }
