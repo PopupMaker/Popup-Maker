@@ -131,7 +131,7 @@ function pum_enqueue_script( $handle, $src = '', $deps = [], $version = null, $i
  *
  * @since X.X.X
  */
-function pum_enqueue_style( $handle, $src, $deps = [], $version = null, $media = false ) {
+function pum_enqueue_style( $handle, $src = '', $deps = [], $version = null, $media = false ) {
 	return PUM_AssetCache::enqueue_style( $handle, $src, $deps, $version, $media );
 }
 
