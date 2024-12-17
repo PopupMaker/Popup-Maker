@@ -6,6 +6,8 @@
  * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
+use function PopupMaker\plugin;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
@@ -196,4 +198,28 @@ function pum_get_asset_meta( $file, $default_args = [] ) {
 			'version'      => '',
 		]
 	);
+}
+
+
+/**
+ * Get the asset meta for a file.
+ *
+ * @param string              $group The group name.
+ * @param array<string,mixed> $default_args Default arguments to merge with the asset meta.
+ *
+ * @return array{
+ *     dependencies: array<string,string>,
+ *     version: string,
+ * }
+ */
+function pum_get_asset_group_meta( $group, $default_args = [] ) {
+	$file = plugin()->get_path( "dist/$group-assets.php" );
+
+	$meta = (array) file_exists( $file ) ? require $file : [];
+
+	foreach ( $meta as $key => $value ) {
+		$meta[ $key ] = wp_parse_args( $value, $default_args );
+	}
+
+	return $meta;
 }
