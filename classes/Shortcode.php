@@ -177,12 +177,9 @@ abstract class PUM_Shortcode {
 	 */
 	public function subtabs() {
 		return [
-			'general' => [
-		return [
 			'general'    => [
 				'main' => __( 'General', 'popup-maker' ),
 			],
-			'options'    => [],
 			'options'    => [
 				'main' => __( 'Options', 'popup-maker' ),
 			],
