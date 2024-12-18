@@ -1,7 +1,7 @@
 {
 	"name": "popupmaker/popup-maker",
 	"description": "The easiest way to create any popup imaginable with WordPress.",
-	"version": "1.20.4",
+	"version": "1.20.3",
 	"type": "wordpress-plugin",
 	"author": "Code Atlantic LLC",
 	"license": "GPL-2.0-or-later",
@@ -20,10 +20,10 @@
 	"require-dev": {
 		"code-atlantic/coding-standards": "1.1.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "v1.0.0",
-		"phpstan/phpstan": "^2.0.3",
+		"phpstan/phpstan": "^2.0.4",
 		"szepeviktor/phpstan-wordpress": "v2.0.1",
 		"phpstan/extension-installer": "^1.4.3",
-		"phpunit/phpunit": "^10.5.38",
+		"phpunit/phpunit": "^10.5.39",
 		"mockery/mockery": "^1.6.12",
 		"brain/monkey": "^2.6.2",
 		"phpcompatibility/phpcompatibility-wp": "^2.1.5",
