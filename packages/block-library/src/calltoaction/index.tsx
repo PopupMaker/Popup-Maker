@@ -7,6 +7,10 @@ import { useSelect } from '@wordpress/data';
 // Extend the core button block
 import { settings as buttonSettings } from '@wordpress/block-library/build/button';
 
+// TODO REVIEW ALL COMMITS FROM BELOW, RESTRUCTURE AS APPROPRIATE
+// TODO (MAYBE REVIEW BACKWARDS? FOR BETTER HISTORICAL CONTEXT)?
+// TODO - Commit: 'Add Initial CTA block' 86379c15f1d3074585bba2e688e0dfff0344c89b
+
 registerBlockType( 'popup-maker/cta', {
 	...buttonSettings,
 	title: __( 'PUM Call to Action', 'popup-maker' ),
