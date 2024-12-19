@@ -149,8 +149,10 @@ abstract class PUM_Shortcode {
 	 */
 	public function sections() {
 		return [
-			'general' => __( 'General', 'popup-maker' ),
-			'options' => __( 'Options', 'popup-maker' ),
+			'general'    => __( 'General', 'popup-maker' ),
+			'options'    => __( 'Options', 'popup-maker' ),
+			'appearance' => __( 'Appearance', 'popup-maker' ),
+			'extra'      => __( 'Extra', 'popup-maker' ),
 		];
 	}
 
@@ -161,8 +163,10 @@ abstract class PUM_Shortcode {
 	 */
 	public function tabs() {
 		return [
-			'general' => __( 'General', 'popup-maker' ),
-			'options' => __( 'Options', 'popup-maker' ),
+			'general'    => __( 'General', 'popup-maker' ),
+			'options'    => __( 'Options', 'popup-maker' ),
+			'appearance' => __( 'Appearance', 'popup-maker' ),
+			'extra'      => __( 'Extra', 'popup-maker' ),
 		];
 	}
 
@@ -173,11 +177,17 @@ abstract class PUM_Shortcode {
 	 */
 	public function subtabs() {
 		return [
-			'general' => [
+			'general'    => [
 				'main' => __( 'General', 'popup-maker' ),
 			],
-			'options' => [
+			'options'    => [
 				'main' => __( 'Options', 'popup-maker' ),
+			],
+			'appearance' => [
+				'main' => __( 'Appearance', 'popup-maker' ),
+			],
+			'extra'      => [
+				'main' => __( 'Extra', 'popup-maker' ),
 			],
 		];
 	}

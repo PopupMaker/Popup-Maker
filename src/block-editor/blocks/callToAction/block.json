@@ -1,0 +1,125 @@
+{
+	"apiVersion": 2,
+	"name": "pum/call-to-action",
+	"category": "design",
+	"parent": [ "pum/call-to-actions" ],
+	"attributes": {
+		"pid": {
+			"type": "number"
+		},
+		"uuid": {
+			"type": "string"
+		},
+		"text": {
+			"type": "rich-text",
+			"source": "rich-text",
+			"selector": "a",
+			"default": "Learn More!",
+			"__experimentalRole": "content"
+		},
+		"type": {
+			"type": "string",
+			"default": "button"
+		},
+		"url": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "a",
+			"attribute": "href",
+			"__experimentalRole": "content"
+		},
+		"title": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "a",
+			"attribute": "title",
+			"__experimentalRole": "content"
+		},
+		"linkTarget": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "a",
+			"attribute": "target",
+			"__experimentalRole": "content"
+		},
+		"rel": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "a",
+			"attribute": "rel",
+			"__experimentalRole": "content"
+		},
+		"placeholder": {
+			"type": "string"
+		},
+		"borderRadius": {
+			"type": "number"
+		},
+		"style": {
+			"type": "object"
+		},
+		"backgroundColor": {
+			"type": "string"
+		},
+		"textColor": {
+			"type": "string"
+		},
+		"gradient": {
+			"type": "string"
+		},
+		"align": {
+			"type": "string"
+		}
+	},
+	"supports": {
+		"anchor": false,
+		"align": [ "left", "center", "right", "full" ],
+		"alignWide": true,
+		"color": {
+			"text": true,
+			"background": true,
+			"gradients": true,
+			"__experimentalSkipSerialization": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true,
+			"__experimentalFontFamily": true,
+			"__experimentalFontWeight": true,
+			"__experimentalFontStyle": true,
+			"__experimentalTextTransform": true,
+			"__experimentalTextDecoration": true,
+			"__experimentalLetterSpacing": true,
+			"__experimentalDefaultControls": {
+				"fontSize": true
+			}
+		},
+		"reusable": false,
+		"shadow": {},
+		"spacing": {
+			"padding": [ "horizontal", "vertical" ],
+			"__experimentalDefaultControls": {
+				"padding": true
+			}
+		},
+		"__experimentalBorder": {
+			"color": true,
+			"radius": true,
+			"style": true,
+			"width": true,
+			"__experimentalDefaultControls": {
+				"color": true,
+				"radius": true,
+				"style": true,
+				"width": true
+			}
+		},
+		"__experimentalWidth": true,
+		"__experimentalSelector": ".pum-cta-button__link"
+	},
+	"selectors": {
+		"root": ".pum-cta-button__link"
+	},
+	"editorStyle": "popup-maker-block-styles",
+	"style": "popup-maker-block-styles"
+}

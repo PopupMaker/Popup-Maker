@@ -40,6 +40,18 @@ class PUM_Admin_BlockEditor {
 	 */
 	public static function register_editor_assets( $hook ) {
 		wp_enqueue_script( 'popup-maker-block-editor' );
+
+		wp_localize_script( 'popup-maker-block-editor', 'pum_block_editor_vars', [
+			'ctas'                          => PUM_CallToActions::instance()->get_as_array(),
+			'popup_trigger_excluded_blocks' => apply_filters(
+				'pum_block_editor_popup_trigger_excluded_blocks',
+				[
+					'core/nextpage',
+					'pum/call-to-action',
+					'pum/call-to-actions',
+				]
+			),
+		] );
 	}
 
 	/**
