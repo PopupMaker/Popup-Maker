@@ -284,15 +284,15 @@ class Core {
 				// return new \PopupMaker\Services\Restrictions();
 				// };
 
-			// $this->container['globals'] =
+			$this->container['globals'] =
 				/**
 				 * Get plugin global manager.
 				 *
 				 * @return \PopupMaker\Services\Globals
 				 */
-				// function () {
-				// return new \PopupMaker\Services\Globals();
-				// };
+				function () {
+					return new \PopupMaker\Services\Globals();
+				};
 		}
 
 		apply_filters( "{$this->get( 'option_prefix' )}/register_services", $this->container, $this );
