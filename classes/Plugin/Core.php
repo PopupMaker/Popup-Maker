@@ -254,6 +254,16 @@ class Core {
 					return new \PopupMaker\Services\Upgrader( $container );
 				};
 
+			$this->container['call_to_actions'] =
+				/**
+				 * Get plugin call to actions.
+				 *
+				 * @return \PopupMaker\Services\CallToActions
+				 */
+				function ( $container ) {
+					return new \PopupMaker\Services\CallToActions( $container );
+				};
+
 			// $this->container['rules'] =
 				/**
 				 * Get plugin rules.

@@ -20,6 +20,7 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/namespaced/core.php';
+require_once __DIR__ . '/namespaced/default-values.php';
 require_once __DIR__ . '/namespaced/install.php';
 require_once __DIR__ . '/namespaced/upgrades.php';
 require_once __DIR__ . '/namespaced/utils.php';
