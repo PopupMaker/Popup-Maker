@@ -250,6 +250,9 @@ class PostTypes extends Controller {
 				'revisions',
 				'author',
 			],
+			// Urls.
+			'query_var'         => false,
+			'rewrite'           => false,
 			// Rest.
 			'show_in_rest'      => true,
 			'rest_base'         => 'call-to-actions',
