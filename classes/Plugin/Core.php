@@ -254,7 +254,7 @@ class Core {
 					return new \PopupMaker\Services\Upgrader( $container );
 				};
 
-			$this->container['call_to_actions'] =
+			$this->container['ctas'] =
 				/**
 				 * Get plugin call to actions.
 				 *
@@ -274,16 +274,6 @@ class Core {
 				// return new \PopupMaker\RuleEngine\Rules();
 				// };
 
-			// $this->container['restrictions'] =
-				/**
-				 * Get plugin restrictions.
-				 *
-				 * @return \PopupMaker\Services\Restrictions
-				 */
-				// function () {
-				// return new \PopupMaker\Services\Restrictions();
-				// };
-
 			$this->container['globals'] =
 				/**
 				 * Get plugin global manager.
@@ -295,7 +285,7 @@ class Core {
 				};
 		}
 
-		apply_filters( "{$this->get( 'option_prefix' )}/register_services", $this->container, $this );
+		apply_filters( 'popup_maker/register_services', $this->container, $this );
 	}
 
 	/**
