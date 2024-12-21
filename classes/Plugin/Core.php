@@ -258,10 +258,10 @@ class Core {
 				/**
 				 * Get plugin call to actions.
 				 *
-				 * @return \PopupMaker\Services\CallToActions
+				 * @return \PopupMaker\Services\Repository\CallToActions
 				 */
 				function ( $container ) {
-					return new \PopupMaker\Services\CallToActions( $container );
+					return new \PopupMaker\Services\Repository\CallToActions( $container );
 				};
 
 			// $this->container['rules'] =

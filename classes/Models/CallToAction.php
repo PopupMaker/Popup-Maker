@@ -10,8 +10,7 @@
 namespace PopupMaker\Models;
 
 use WP_Post;
-
-use function PopupMaker\get_default_call_to_action_settings;
+use PopupMaker\Base\Model\Post;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,28 +19,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since X.X.X
  */
-class CallToAction {
+class CallToAction extends Post {
 
 	/**
 	 * Current model version.
 	 *
 	 * @var int
 	 */
-	const MODEL_VERSION = 3;
-
-	/**
-	 * Post object.
-	 *
-	 * @var \WP_Post
-	 */
-	private $post;
-
-	/**
-	 * Call To Action id.
-	 *
-	 * @var int
-	 */
-	public $id = 0;
+	const MODEL_VERSION = 1;
 
 	/**
 	 * Call To Action UUID.
@@ -51,32 +36,11 @@ class CallToAction {
 	public $uuid;
 
 	/**
-	 * Call To Action slug.
-	 *
-	 * @var string
-	 */
-	public $slug;
-
-	/**
-	 * Call To Action label.
-	 *
-	 * @var string
-	 */
-	public $title;
-
-	/**
 	 * Call To Action description.
 	 *
 	 * @var string|null
 	 */
 	public $description;
-
-	/**
-	 * Call To Action status.
-	 *
-	 * @var string
-	 */
-	public $status;
 
 	/**
 	 * Call To Action Settings.
@@ -86,21 +50,20 @@ class CallToAction {
 	public $settings;
 
 	/**
-	 * Data version.
-	 *
-	 * @var int
-	 */
-	public $data_version;
-
-
-	/**
 	 * Build a call to action.
 	 *
 	 * @param \WP_Post|array<string,mixed> $cta Call To Action data.
 	 */
 	public function __construct( $cta ) {
+		parent::__construct( $cta );
 
-		$this->post = $cta;
+		$custom_properties = [
+			'description' => null,
+		];
+
+		foreach ( $custom_properties as $key => $value ) {
+			$this->$key = $value;
+		}
 
 		/**
 		 * Call To Action settings.
@@ -116,23 +79,10 @@ class CallToAction {
 		// TODO REVIEW Should we fill missing settings or just do that at runtime?
 		// $settings = wp_parse_args(
 		// $settings,
-		// get_default_call_to_action_settings()
+		// \PopupMaker\get_default_call_to_action_settings()
 		// );
 
 		$this->settings = $settings;
-
-		$properties = [
-			'id'          => $cta->ID,
-			'slug'        => $cta->post_name,
-			'title'       => $cta->post_title,
-			'status'      => $cta->post_status,
-			// We set this late.. on first use.
-			'description' => null,
-		];
-
-		foreach ( $properties as $key => $value ) {
-			$this->$key = $value;
-		}
 
 		$this->data_version = get_post_meta( $cta->ID, 'data_version', true );
 
@@ -186,7 +136,6 @@ class CallToAction {
 		return apply_filters( 'popup_maker/get_call_to_action_setting', $value, $key, $default_value, $this->id );
 	}
 
-
 	/**
 	 * Get the description for this call to action.
 	 *
@@ -203,20 +152,6 @@ class CallToAction {
 
 		return $this->description;
 	}
-
-	/**
-	 * Get edit link.
-	 *
-	 * @return string
-	 */
-	public function get_edit_link() {
-		if ( current_user_can( 'edit_post', $this->id ) ) {
-			return admin_url( 'post.php?action=edit&post_type=pum_cta&post=' . absint( $this->id ) );
-		}
-
-		return '';
-	}
-
 
 	/**
 	 * Convert this call to action to an array.
