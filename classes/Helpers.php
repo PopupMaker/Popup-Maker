@@ -16,45 +16,30 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PUM_Helpers {
 
+	/**
+	 * Process do_shortcode without allowing printed side effects.
+	 *
+	 * @deprecated X.X.X Use PUM_Utils_Shortcodes::clean_do_shortcode
+	 *
+	 * @param string $shortcode_text Unprocessed string with shortcodes.
+	 *
+	 * @return string
+	 */
 	public static function do_shortcode( $shortcode_text = '' ) {
-		ob_start();
-
-		$content = do_shortcode( $shortcode_text );
-
-		$ob_content = ob_get_clean();
-
-		if ( ! empty( $ob_content ) ) {
-			$content .= $ob_content;
-		}
-
-		return $content;
+		return PUM_Utils_Shortcodes::clean_do_shortcode( $shortcode_text );
 	}
 
+	/**
+	 * Get all shortcodes from given content.
+	 *
+	 * @deprecated X.X.X Use PUM_Utils_Shortcodes::get_shortcodes_from_content
+	 *
+	 * @param string $content Content potentially containing shortcodes.
+	 *
+	 * @return array
+	 */
 	public static function get_shortcodes_from_content( $content ) {
-		$pattern    = get_shortcode_regex();
-		$shortcodes = [];
-		if ( preg_match_all( '/' . $pattern . '/s', $content, $matches ) ) {
-			foreach ( $matches[0] as $key => $value ) {
-				$shortcodes[ $key ] = [
-					'full_text' => $value,
-					'tag'       => $matches[2][ $key ],
-					'atts'      => shortcode_parse_atts( $matches[3][ $key ] ),
-					'content'   => $matches[5][ $key ],
-				];
-
-				if ( ! empty( $shortcodes[ $key ]['atts'] ) ) {
-					foreach ( $shortcodes[ $key ]['atts'] as $attr_name => $attr_value ) {
-						// Filter numeric keys as they are valueless/truthy attributes.
-						if ( is_numeric( $attr_name ) ) {
-							$shortcodes[ $key ]['atts'][ $attr_value ] = true;
-							unset( $shortcodes[ $key ]['atts'][ $attr_name ] );
-						}
-					}
-				}
-			}
-		}
-
-		return $shortcodes;
+		return PUM_Utils_Shortcodes::get_shortcodes_from_content( $content );
 	}
 
 	/**
