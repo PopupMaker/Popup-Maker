@@ -103,6 +103,15 @@ class CallToAction extends Post {
 	}
 
 	/**
+	 * Get public call to action settings array.
+	 *
+	 * @return array<string,mixed>
+	 */
+	public function get_public_settings() {
+		return [];
+	}
+
+	/**
 	 * Get a call to action setting.
 	 *
 	 * Settings are stored in JS based camelCase. But WP prefers snake_case.
