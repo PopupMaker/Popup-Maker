@@ -256,12 +256,22 @@ class Core {
 
 			$this->container['ctas'] =
 				/**
-				 * Get plugin call to actions.
+				 * Get user call to actions from the database.
 				 *
 				 * @return \PopupMaker\Services\Repository\CallToActions
 				 */
 				function ( $container ) {
 					return new \PopupMaker\Services\Repository\CallToActions( $container );
+				};
+
+			$this->container['cta_types'] =
+				/**
+				 * Get registered call to actions types.
+				 *
+				 * @return \PopupMaker\Services\Collector\CallToActions
+				 */
+				function ( $container ) {
+					return new \PopupMaker\Services\Collector\CallToActions( $container );
 				};
 
 			// $this->container['rules'] =
