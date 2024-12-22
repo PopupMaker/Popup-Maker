@@ -45,8 +45,11 @@ abstract class Repository extends Service {
 
 	/**
 	 * Initialize the service.
+	 *
+	 * @param \PopupMaker\Base\Container $container Container.
 	 */
-	public function __construct() {
+	public function __construct( $container ) {
+		parent::__construct( $container );
 		$this->post_type = $this->container->get( 'PostType' )->get_type_key( $this->post_type_key );
 	}
 

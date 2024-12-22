@@ -31,11 +31,13 @@ class CallToActions extends Repository {
 
 	/**
 	 * Initialize the service.
+	 *
+	 * @param \PopupMaker\Base\Container $container Container.
 	 */
-	public function __construct() {
-		parent::__construct();
+	public function __construct( $container ) {
+		parent::__construct( $container );
 		// Fire action to dependent services to initialize.
-		do_action( 'popup_maker/services/call_to_actions/init', $this );
+		do_action( 'popup_maker/services/repository/ctas/init', $this );
 	}
 
 	/**
