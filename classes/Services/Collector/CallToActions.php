@@ -9,6 +9,7 @@
 
 namespace PopupMaker\Services\Collector;
 
+use PopupMaker\Base\Service;
 use PopupMaker\Interfaces\CallToAction;
 
 defined( 'ABSPATH' ) || exit;
@@ -18,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * This class maintains a global set of all registered call to action types.
  */
-class CallToActions {
+class CallToActions extends Service {
 
 	/**
 	 * Holds array of registered $ctas.
