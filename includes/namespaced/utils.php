@@ -19,6 +19,8 @@ defined( 'ABSPATH' ) || exit;
  * @param string $str String to convert.
  *
  * @return string Converted string.
+ *
+ * @since X.X.X
  */
 function camel_case_to_snake_case( $str ) {
 	return strtolower( preg_replace( '/(?<!^)[A-Z]/', '_$0', $str ) );
@@ -30,6 +32,8 @@ function camel_case_to_snake_case( $str ) {
  * @param string $str String to convert.
  *
  * @return string Converted string.
+ *
+ * @since X.X.X
  */
 function snake_case_to_camel_case( $str ) {
 	return lcfirst( str_replace( '_', '', ucwords( $str, '_' ) ) );

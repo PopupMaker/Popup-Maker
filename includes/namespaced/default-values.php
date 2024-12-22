@@ -16,6 +16,8 @@ defined( 'ABSPATH' ) || exit;
  * Returns an array of the default settings.
  *
  * @return array<string,mixed> Default settings.
+ *
+ * @since X.X.X
  */
 function get_default_settings() {
 	return [
@@ -27,6 +29,8 @@ function get_default_settings() {
  * Get default call to action settings.
  *
  * @return array<string,mixed> Default call to action settings.
+ *
+ * @since X.X.X
  */
 function get_default_call_to_action_settings() {
 	return [];
