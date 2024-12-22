@@ -24,11 +24,7 @@ class PostTypes extends Controller {
 	 */
 	public function init() {
 		add_action( 'init', [ $this, 'register_post_types' ] );
-		add_action( 'init', [ $this, 'register_rest_fields' ] );
 		add_action( 'save_post_popup', [ $this, 'save_post' ], 10, 3 );
-		add_filter( 'rest_pre_dispatch', [ $this, 'rest_pre_dispatch' ], 10, 3 );
-		add_filter( 'content_control/sanitize_popup_settings', [ $this, 'sanitize_popup_settings' ], 10, 2 );
-		add_filter( 'content_control/validate_popup_settings', [ $this, 'validate_popup_settings' ], 10, 2 );
 	}
 
 	/**
@@ -37,15 +33,13 @@ class PostTypes extends Controller {
 	 * @return array<string,string> The post type keys.
 	 */
 	public function get_type_keys() {
-		static $keys = [
+		return [
 			'popup'          => 'popup',
 			'popup_theme'    => 'popup_theme',
 			'popup_category' => 'popup_category',
 			'popup_tag'      => 'popup_tag',
 			'pum_cta'        => 'pum_cta',
 		];
-
-		return $keys;
 	}
 
 	/**
@@ -255,7 +249,7 @@ class PostTypes extends Controller {
 			'rewrite'           => false,
 			// Rest.
 			'show_in_rest'      => true,
-			'rest_base'         => 'call-to-actions',
+			'rest_base'         => 'ctas',
 			'rest_namespace'    => 'popup-maker/v2',
 			'show_in_graphql'   => false,
 			// Permissions.
@@ -396,145 +390,24 @@ class PostTypes extends Controller {
 		 * @param array<string,mixed> $labels Post type labels.
 		 * @param string $singular Singular label.
 		 * @param string $plural Plural label.
+		 * @param string $post_type Post type.
 		 *
 		 * @since X.X.X
 		 */
 		$labels = apply_filters( 'popup_maker/post_type_labels', $labels, $singular, $plural, $post_type );
 
 		// Map labels.
-		$post_type_labels[ $post_type ] = array_map(
-			static fn( $value ) => sprintf( $value, $singular, $plural ),
-			$labels
-		);
+		$post_type_labels[ $post_type ] = [];
+
+		foreach ( $labels as $key => $value ) {
+			$post_type_labels[ $post_type ][ $key ] = sprintf( $value, $singular, $plural );
+		}
 
 		return $post_type_labels[ $post_type ];
 	}
 
 	/**
-	 * Registers custom REST API fields for popup post type.
-	 *
-	 * @return void
-	 */
-	public function register_rest_fields() {
-		register_rest_field( 'popup', 'settings', [
-			'get_callback'        => function ( $obj, $field, $request ) {
-				$popup = pum_get_popup( $obj['id'] );
-
-				// If edit context, return the current settings.
-				if ( 'edit' === $request['context'] ) {
-					$settings = $popup->get_settings();
-				} else {
-					// Otherwise, return the public settings.
-					$settings = $popup->get_public_settings();
-				}
-
-				return $settings;
-			},
-			'update_callback'     => function ( $value, $obj ) {
-				$popup = pum_get_popup( $obj->ID );
-				$popup->update_settings( $value );
-			},
-			'schema'              => [
-				'type'        => 'object',
-				'arg_options' => [
-					'sanitize_callback' => function ( $settings, $request ) {
-						/**
-						 * Sanitize the popup settings.
-						 *
-						 * @param array<string,mixed> $settings The settings to sanitize.
-						 * @param int   $id       The popup ID.
-						 * @param \WP_REST_Request $request The request object.
-						 *
-						 * @return array<string,mixed> The sanitized settings.
-						 */
-						return apply_filters( 'popup_maker/sanitize_popup_settings', $settings, $request->get_param( 'id' ), $request );
-					},
-					'validate_callback' => function ( $settings, $request ) {
-						/**
-						 * Validate the popup settings.
-						 *
-						 * @param array<string,mixed> $settings The settings to validate.
-						 * @param int   $id       The popup ID.
-						 * @param \WP_REST_Request $request The request object.
-						 *
-						 * @return bool|\WP_Error True if valid, WP_Error if not.
-						 */
-						return apply_filters( 'popup_maker/validate_popup_settings', $settings, $request->get_param( 'id' ), $request );
-					},
-				],
-			],
-			'permission_callback' => function () {
-				return current_user_can( $this->container->get_permission( 'edit_popups' ) );
-			},
-		] );
-
-		register_rest_field( 'popup', 'priority', [
-			'get_callback'        => function ( $obj ) {
-				return (int) get_post_field( 'menu_order', $obj['id'], 'raw' );
-			},
-			'update_callback'     => function ( $value, $obj ) {
-				wp_update_post( [
-					'ID'         => $obj->ID,
-					'menu_order' => $value,
-				] );
-			},
-			'permission_callback' => function () {
-				return current_user_can( $this->container->get_permission( 'edit_popups' ) );
-			},
-			'schema'              => [
-				'type'        => 'integer',
-				'arg_options' => [
-					'sanitize_callback' => function ( $priority ) {
-						return absint( $priority );
-					},
-					'validate_callback' => function ( $priority ) {
-						return is_int( $priority );
-					},
-				],
-			],
-		] );
-
-		register_rest_field( 'popup', 'data_version', [
-			'get_callback'        => function ( $obj ) {
-				return get_post_meta( $obj['id'], 'data_version', true );
-			},
-			'update_callback'     => function ( $value, $obj ) {
-				// Update the field/meta value.
-				update_post_meta( $obj->ID, 'data_version', $value );
-			},
-			'permission_callback' => function () {
-				return current_user_can( $this->container->get_permission( 'edit_popups' ) );
-			},
-		] );
-	}
-
-	/**
-	 * Sanitize popup settings.
-	 *
-	 * @param array<string,mixed> $settings The settings to sanitize.
-	 * @param int                 $id       The popup ID.
-	 *
-	 * @return array<string,mixed> The sanitized settings.
-	 */
-	public function sanitize_popup_settings( $settings, $id ) {
-		return $settings;
-	}
-
-	/**
-	 * Validate popup settings.
-	 *
-	 * @param array<string,mixed> $settings The settings to validate.
-	 * @param int                 $id       The popup ID.
-	 *
-	 * @return bool|\WP_Error True if valid, WP_Error if not.
-	 */
-	public function validate_popup_settings( $settings, $id ) {
-		// TODO Validate all known settings by type.
-		return true;
-	}
-
-	/**
-	 * Add data version meta to new popups.
+	 * Add data version meta to new Popup Maker post types.
 	 *
 	 * @param int      $post_id Post ID.
 	 * @param \WP_Post $post    Post object.
@@ -547,42 +420,12 @@ class PostTypes extends Controller {
 			return;
 		}
 
-		$current_popup_data_version = get_data_version( 'popups' );
+		if ( ! in_array( $post->post_type, [ 'popup', 'pum_cta', 'popup_theme' ], true ) ) {
+			return;
+		}
+
+		$current_popup_data_version = get_data_version( $post->post_type );
 
 		add_post_meta( $post_id, 'data_version', $current_popup_data_version );
-	}
-
-	/**
-	 * Prevent access to the popups endpoint.
-	 *
-	 * @param mixed                                 $result Response to replace the requested version with.
-	 * @param \WP_REST_Server                       $server Server instance.
-	 * @param \WP_REST_Request<array<string,mixed>> $request  Request used to generate the response.
-	 * @return mixed
-	 */
-	public function rest_pre_dispatch( $result, $server, $request ) {
-		// Get the route being requested.
-		$route = $request->get_route();
-
-		// Only proceed if we're creating a user.
-		if ( false === strpos( $route, '/popup-maker/v2/popups' ) ) {
-			return $result;
-		}
-
-		$current_user_can = current_user_can( $this->container->get_permission( 'edit_popups' ) );
-
-		// Prevent discovery of the endpoints data from unauthorized users.
-		if ( ! $current_user_can ) {
-			return new \WP_Error(
-				'rest_forbidden',
-				__( 'Access to this endpoint requires authorization.', 'popup-maker' ),
-				[
-					'status' => rest_authorization_required_code(),
-				]
-			);
-		}
-
-		// Return data to the client to parse.
-		return $result;
 	}
 }
