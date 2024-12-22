@@ -74,6 +74,8 @@ class Assets extends Controller {
 						'pum_block_editor_popup_trigger_excluded_blocks',
 						[
 							'core/nextpage',
+							'popup-maker/call-to-action',
+							'popup-maker/call-to-actions',
 						]
 					),
 				],
