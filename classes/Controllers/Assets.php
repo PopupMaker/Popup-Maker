@@ -68,6 +68,7 @@ class Assets extends Controller {
 				'styles'   => true,
 				'varsName' => 'popupMakerBlockEditor',
 				'vars'     => [
+					'cta_types'                  => $this->container->get( 'cta_types' )->get_as_array(),
 					'popups'                     => pum_get_all_popups(),
 					'popupTriggerExcludedBlocks' => apply_filters(
 						'pum_block_editor_popup_trigger_excluded_blocks',
