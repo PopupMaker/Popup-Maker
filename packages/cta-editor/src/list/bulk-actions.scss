@@ -1,0 +1,39 @@
+.list-table-bulk-actions__popover {
+	.components-popover__content {
+		padding: 8px;
+		width: max-content;
+
+		div[role="menu"] {
+			display: flex;
+			flex-direction: column;
+		}
+
+		hr {
+			width: 100%;
+		}
+
+		.components-button {
+			// width: 100%;
+			justify-content: left;
+
+			&.is-destructive:not(:disabled) {
+				box-shadow: none;
+				color: #1e1e1e;
+
+				svg {
+					color: #cc1818;
+				}
+			}
+
+			&:focus:not(:disabled) {
+				box-shadow: 0 0 0 var(--wp-admin-border-width-focus)
+					var(--wp-admin-theme-color);
+				outline: 3px solid #0000;
+			}
+
+			&.has-icon svg {
+				margin-right: 5px;
+			}
+		}
+	}
+}
