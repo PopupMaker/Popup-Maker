@@ -1,0 +1,21 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"rootDir": "src",
+		"outDir": "build",
+		"declarationDir": "build-types"
+	},
+	"include": [ "./src/**/*" ],
+	"types": [ "jquery" ],
+	"references": [
+		{
+			"path": "../core-data"
+		},
+		{
+			"path": "../data"
+		},
+		{
+			"path": "../fields"
+		}
+	]
+}

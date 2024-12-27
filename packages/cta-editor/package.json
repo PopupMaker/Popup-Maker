@@ -1,0 +1,49 @@
+{
+	"name": "@popup-maker/cta-editor",
+	"version": "1.0.0",
+	"description": "Popup Maker CTA editor implementation",
+	"author": "Code Atlantic",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"wordpress",
+		"popup-maker"
+	],
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/cta-editor/README.md",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/cta-editor"
+	},
+	"bugs": {
+		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"main": "build/index",
+	"types": "build-types",
+	"dependencies": {
+		"@popup-maker/components": "*",
+		"@popup-maker/core-data": "*",
+		"@popup-maker/data": "*",
+		"@popup-maker/fields": "*",
+		"@popup-maker/icons": "*",
+		"@popup-maker/utils": "*",
+		"@wordpress/components": "^29.0.0",
+		"@wordpress/data": "^10.14.0",
+		"@wordpress/dom-ready": "^4.14.0",
+		"@wordpress/element": "^6.14.0",
+		"@wordpress/i18n": "^5.14.0",
+		"@wordpress/icons": "^10.14.0",
+		"react-router-dom": "7.1.1",
+		"use-query-params": "2.2.1"
+	},
+	"devDependencies": {
+		"@types/react-router-dom": "^5.3.3"
+	},
+	"scripts": {
+		"build:tsc": "tsc",
+		"build:types": "tsc --build",
+		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
+		"lint": "wp-scripts lint-js .",
+		"format": "wp-scripts lint-js . --fix",
+		"packages-update": "wp-scripts packages-update"
+	}
+}
