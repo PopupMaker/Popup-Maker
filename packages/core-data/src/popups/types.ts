@@ -1,6 +1,11 @@
 // import type { Query } from '@popup-maker/rule-engine';
 import type { Statuses } from '../constants';
-import type { OmitFirstArgs, RemoveReturnTypes } from '../types';
+import type {
+	OmitFirstArgs,
+	RemoveReturnTypes,
+	EditorId,
+	AppNotice,
+} from '../types';
 
 /* temporary to prevent cyclical dependencies. */
 interface BaseItem {
@@ -34,8 +39,6 @@ interface GroupItem extends BaseItem {
 
 type Item = RuleItem | GroupItem;
 /* end temporary */
-
-export type EditorId = 'new' | number | undefined;
 
 /**
  * The settings for a popup.
@@ -73,14 +76,6 @@ export interface ApiPopup extends BasePopup {
 
 export type PopupStatuses = Popup[ 'status' ] | 'all' | string;
 
-export type AppNotice = {
-	id: string;
-	message: string;
-	type: 'success' | 'error' | 'warning' | 'info';
-	isDismissible?: boolean;
-	closeDelay?: number;
-};
-
 export type PopupsState = {
 	popups: Popup[];
 	editor: {
@@ -102,7 +97,7 @@ export interface PopupsStore {
 	StoreKey:
 		| 'popup-maker/popups'
 		| typeof import('../popups/index').POPUP_STORE
-		| typeof import('../popups/index').popupsStore;
+		| typeof import('../popups/index').popupStore;
 	State: PopupsState;
 	Actions: RemoveReturnTypes< typeof import('../popups/actions') >;
 	Selectors: OmitFirstArgs< typeof import('../popups/selectors') >;

@@ -1,7 +1,7 @@
 import type { AppNotice } from '../types';
-import type { Popup, PopupsState } from './types';
+import type { CallToAction, CallToActionsState } from './types';
 
-export const STORE_NAME = 'popup-maker/popups';
+export const STORE_NAME = 'popup-maker/call-to-actions';
 
 export const ACTION_TYPES = {
 	CREATE: 'CREATE',
@@ -15,11 +15,11 @@ export const ACTION_TYPES = {
 	EDITOR_CLEAR_DATA: 'EDITOR_CLEAR_DATA',
 	EDITOR_UPDATE_VALUES: 'EDITOR_UPDATE_VALUES',
 	CHANGE_ACTION_STATUS: 'CHANGE_ACTION_STATUS',
-	POPUPS_FETCH_ERROR: 'POPUPS_FETCH_ERROR',
+	CALL_TO_ACTIONS_FETCH_ERROR: 'CALL_TO_ACTIONS_FETCH_ERROR',
 };
 
-export const initialState: PopupsState = {
-	popups: [],
+export const initialState: CallToActionsState = {
+	callToActions: [],
 	editor: {},
 	notices: [],
 };
@@ -32,24 +32,20 @@ export const noticeDefaults: AppNotice = {
 };
 
 /**
- * Default values for a new popup.
+ * Default values for a new call to action.
  *
  * This should be kept in sync with the settings in the PHP code.
  *
- * @see /classes/Model/Popup.php
- * @see /includes/functions/install.php:get_default_popup_settings()
+ * @see /classes/Models/CallToAction.php
+ * @see /includes/namespaced/default-values.php
  */
-export const popupDefaults: Popup = {
+export const callToActionDefaults: CallToAction = {
 	id: 0,
 	title: '',
 	// content: '',
 	description: '',
 	status: 'draft',
-	priority: 0,
 	settings: {
-		conditions: {
-			logicalOperator: 'or',
-			items: [],
-		},
+		type: 'link',
 	},
 };

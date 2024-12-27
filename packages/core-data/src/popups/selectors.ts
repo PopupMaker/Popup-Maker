@@ -5,13 +5,8 @@ import { popupDefaults } from './constants';
 
 import type { Statuses } from '../constants';
 
-import type {
-	AppNotice,
-	EditorId,
-	Popup,
-	PopupsState,
-	PopupsStore,
-} from './types';
+import type { AppNotice, EditorId } from '../types';
+import type { Popup, PopupsState, PopupsStore } from './types';
 
 /**
  * Get notices.

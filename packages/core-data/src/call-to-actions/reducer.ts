@@ -2,7 +2,12 @@ import { ACTION_TYPES, initialState } from './constants';
 
 import type { AppNotice } from '../types';
 
-import type { Popup, PopupsState, PopupsStore, PopupStatuses } from './types';
+import type {
+	CallToAction,
+	CallToActionsState,
+	CallToActionsStore,
+	CallToActionStatuses,
+} from './types';
 
 const {
 	CREATE,
@@ -16,30 +21,30 @@ const {
 	EDITOR_CHANGE_ID,
 	EDITOR_CLEAR_DATA,
 	EDITOR_UPDATE_VALUES,
-	POPUPS_FETCH_ERROR,
+	CALL_TO_ACTIONS_FETCH_ERROR,
 } = ACTION_TYPES;
 
 type ActionPayloadTypes = {
 	type: keyof typeof ACTION_TYPES;
-	popup: Popup;
-	popups: Popup[];
-	popupId: Popup[ 'id' ];
-	editorId: PopupsState[ 'editor' ][ 'id' ];
-	editorValues: PopupsState[ 'editor' ][ 'values' ];
+	callToAction: CallToAction;
+	callToActions: CallToAction[];
+	callToActionId: CallToAction[ 'id' ];
+	editorId: CallToActionsState[ 'editor' ][ 'id' ];
+	editorValues: CallToActionsState[ 'editor' ][ 'values' ];
 	// Boilerplate.
-	actionName: PopupsStore[ 'ActionNames' ];
-	status: PopupStatuses;
+	actionName: CallToActionsStore[ 'ActionNames' ];
+	status: CallToActionStatuses;
 	message: string;
 	notice: AppNotice;
 	noticeId: AppNotice[ 'id' ];
 };
 
 const reducer = (
-	state: PopupsState = initialState,
+	state: CallToActionsState = initialState,
 	{
-		popups: incomingPopups,
-		popup,
-		popupId,
+		callToActions: incomingCallToActions,
+		callToAction,
+		callToActionId,
 		type,
 		editorId,
 		editorValues,
@@ -55,29 +60,29 @@ const reducer = (
 		case CREATE:
 			return {
 				...state,
-				popups: [ ...state.popups, popup ],
+				callToActions: [ ...state.callToActions, callToAction ],
 			};
 
 		case UPDATE:
 			return {
 				...state,
-				popups: state.popups
-					.filter( ( existing ) => existing.id !== popup.id )
-					.concat( [ popup ] ),
+				callToActions: state.callToActions
+					.filter( ( existing ) => existing.id !== callToAction.id )
+					.concat( [ callToAction ] ),
 			};
 
 		case DELETE:
 			return {
 				...state,
-				popups: state.popups.filter(
-					( existing ) => existing.id !== popupId
+				callToActions: state.callToActions.filter(
+					( existing ) => existing.id !== callToActionId
 				),
 			};
 
 		case HYDRATE:
 			return {
 				...state,
-				popups: incomingPopups,
+				callToActions: incomingCallToActions,
 			};
 
 		case ADD_NOTICE:
@@ -101,7 +106,7 @@ const reducer = (
 				notices: [],
 			};
 
-		case POPUPS_FETCH_ERROR:
+		case CALL_TO_ACTIONS_FETCH_ERROR:
 			return {
 				...state,
 				error: message,

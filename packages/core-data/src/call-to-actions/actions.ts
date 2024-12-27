@@ -5,13 +5,22 @@ import { fetch } from '../controls';
 import { getErrorMessage } from '../utils';
 import { Status, Statuses } from '../constants';
 
-import { getResourcePath, convertApiPopup, convertPopupToApi } from './utils';
-import { validatePopup } from './validation';
+import {
+	getResourcePath,
+	convertApiCallToAction,
+	convertCallToActionToApi,
+} from './utils';
+import { validateCallToAction } from './validation';
 import { ACTION_TYPES, STORE_NAME } from './constants';
 
 import type { AppNotice, EditorId } from '../types';
 
-import type { Popup, ApiPopup, PopupsState, PopupsStore } from './types';
+import type {
+	CallToAction,
+	ApiCallToAction,
+	CallToActionsState,
+	CallToActionsStore,
+} from './types';
 
 const {
 	CREATE,
@@ -30,18 +39,18 @@ const {
 /**
  * Change status of a dispatch action request.
  *
- * @param {PopupsStore[ 'ActionNames' ]} actionName Action name to change status of.
- * @param {Statuses}                     status     New status.
- * @param {string|undefined}             message    Optional error message.
+ * @param {CallToActionsStore[ 'ActionNames' ]} actionName Action name to change status of.
+ * @param {Statuses}                            status     New status.
+ * @param {string|undefined}                    message    Optional error message.
  * @return {Object} Action object.
  */
 export const changeActionStatus = (
-	actionName: PopupsStore[ 'ActionNames' ],
+	actionName: CallToActionsStore[ 'ActionNames' ],
 	status: Statuses,
 	message?: string | { message: string; [ key: string ]: any }
 ): {
 	type: string;
-	actionName: PopupsStore[ 'ActionNames' ];
+	actionName: CallToActionsStore[ 'ActionNames' ];
 	status: Statuses;
 	message?: string | { message: string; [ key: string ]: any };
 } => {
@@ -109,7 +118,7 @@ export const clearNotices = (): { type: string } => {
  * @return {Object} Action to be dispatched.
  */
 export function* changeEditorId(
-	editorId: PopupsState[ 'editor' ][ 'id' ]
+	editorId: CallToActionsState[ 'editor' ][ 'id' ]
 ): Generator {
 	// catch any request errors.
 	try {
@@ -121,19 +130,26 @@ export function* changeEditorId(
 			};
 		}
 
-		const popupDefaults = yield select( STORE_NAME, 'getPopupDefaults' );
+		const callToActionDefaults = yield select(
+			STORE_NAME,
+			'getCallToActionDefaults'
+		);
 
-		let popup: Popup | undefined =
-			editorId === 'new' ? popupDefaults : undefined;
+		let callToAction: CallToAction | undefined =
+			editorId === 'new' ? callToActionDefaults : undefined;
 
 		if ( typeof editorId === 'number' && editorId > 0 ) {
-			popup = yield select( STORE_NAME, 'getPopup', editorId );
+			callToAction = yield select(
+				STORE_NAME,
+				'getCallToAction',
+				editorId
+			);
 		}
 
 		return {
 			type: EDITOR_CHANGE_ID,
 			editorId,
-			editorValues: popup,
+			editorValues: callToAction,
 		};
 	} catch ( error ) {
 		// eslint-disable-next-line no-console
@@ -150,12 +166,12 @@ export function* changeEditorId(
 /**
  * Update value of the current editor data.
  *
- * @param {Partial< Popup >} editorValues Values to update.
+ * @param {Partial< CallToAction >} editorValues Values to update.
  * @return {Object} Action to be dispatched.
  */
 export const updateEditorValues = (
-	editorValues: Partial< Popup >
-): { type: string; editorValues: Partial< Popup > } => {
+	editorValues: Partial< CallToAction >
+): { type: string; editorValues: Partial< CallToAction > } => {
 	return {
 		type: EDITOR_UPDATE_VALUES,
 		editorValues,
@@ -163,7 +179,7 @@ export const updateEditorValues = (
 };
 
 /**
- * Update value of the current editor data.
+ * Clear the current editor data.
  *
  * @return {Object} Action to be dispatched.
  */
@@ -174,22 +190,22 @@ export const clearEditorData = (): { type: string } => {
 };
 
 /**
- * Update a popup.
+ * Update a call to action.
  *
- * @param {Popup} popup Popup to be updated.
+ * @param {CallToAction} callToAction Call to action to be updated.
  * @return {Generator} Action to be dispatched.
  */
-export function* createPopup( popup: Popup ): Generator {
-	const actionName = 'createPopup';
+export function* createCallToAction( callToAction: CallToAction ): Generator {
+	const actionName = 'createCallToAction';
 
 	// catch any request errors.
 	try {
 		yield changeActionStatus( actionName, Status.Resolving );
 
-		const { id, ...noIdPopup } = popup;
+		const { id, ...noIdCallToAction } = callToAction;
 
-		// Validate the popup.
-		const validation = validatePopup( popup );
+		// Validate the call to action.
+		const validation = validateCallToAction( callToAction );
 
 		if ( true !== validation ) {
 			yield changeActionStatus(
@@ -197,11 +213,11 @@ export function* createPopup( popup: Popup ): Generator {
 				Status.Error,
 				validation
 					? validation
-					: __( 'An error occurred, popup was not saved.' )
+					: __( 'An error occurred, call to action was not saved.' )
 			);
 
 			return addNotice( {
-				id: 'popup-error',
+				id: 'call-to-action-error',
 				type: 'error',
 				message:
 					typeof validation === 'object' ? validation.message : '',
@@ -211,9 +227,9 @@ export function* createPopup( popup: Popup ): Generator {
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const result: ApiPopup = yield fetch( getResourcePath(), {
+		const result: ApiCallToAction = yield fetch( getResourcePath(), {
 			method: 'POST',
-			body: convertPopupToApi( noIdPopup ),
+			body: convertCallToActionToApi( noIdCallToAction ),
 		} );
 
 		if ( result ) {
@@ -228,7 +244,7 @@ export function* createPopup( popup: Popup ): Generator {
 
 			const returnAction = {
 				type: CREATE,
-				popup: convertApiPopup( result ),
+				callToAction: convertApiCallToAction( result ),
 			};
 
 			if ( editorId === 'new' ) {
@@ -239,12 +255,15 @@ export function* createPopup( popup: Popup ): Generator {
 			}
 
 			yield addNotice( {
-				id: 'popup-saved',
+				id: 'call-to-action-saved',
 				type: 'success',
 				message: sprintf(
-					// translators: %s: popup title.
-					__( 'Popup "%s" saved successfully.', 'popup-maker' ),
-					popup?.title
+					// translators: %s: call to action title.
+					__(
+						'Call to action "%s" saved successfully.',
+						'popup-maker'
+					),
+					callToAction?.title
 				),
 				closeDelay: 5000,
 			} );
@@ -268,20 +287,20 @@ export function* createPopup( popup: Popup ): Generator {
 }
 
 /**
- * Update a popup.
+ * Update a call to action.
  *
- * @param {Popup} popup Popup to be updated.
+ * @param {CallToAction} callToAction Call to action to be updated.
  * @return {Generator} Action to be dispatched.
  */
-export function* updatePopup( popup: Popup ): Generator {
-	const actionName = 'updatePopup';
+export function* updateCallToAction( callToAction: CallToAction ): Generator {
+	const actionName = 'updateCallToAction';
 
 	// catch any request errors.
 	try {
 		yield changeActionStatus( actionName, Status.Resolving );
 
-		// Validate the popup.
-		const validation = validatePopup( popup );
+		// Validate the call to action.
+		const validation = validateCallToAction( callToAction );
 
 		if ( true !== validation ) {
 			yield changeActionStatus(
@@ -289,11 +308,11 @@ export function* updatePopup( popup: Popup ): Generator {
 				Status.Error,
 				validation
 					? validation
-					: __( 'An error occurred, popup was not saved.' )
+					: __( 'An error occurred, call to action was not saved.' )
 			);
 
 			return addNotice( {
-				id: 'popup-error',
+				id: 'call-to-action-error',
 				type: 'error',
 				message:
 					typeof validation === 'object' ? validation.message : '',
@@ -303,49 +322,55 @@ export function* updatePopup( popup: Popup ): Generator {
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const canonicalPopup: Popup = yield select(
+		const canonicalCallToAction: CallToAction = yield select(
 			STORE_NAME,
-			'getPopup',
-			popup.id
+			'getCallToAction',
+			callToAction.id
 		);
 
-		const result: ApiPopup = yield fetch(
-			getResourcePath( canonicalPopup.id ),
+		const result: ApiCallToAction = yield fetch(
+			getResourcePath( canonicalCallToAction.id ),
 			{
 				method: 'POST',
-				body: convertPopupToApi( popup ),
+				body: convertCallToActionToApi( callToAction ),
 			}
 		);
 
 		if ( result ) {
-			// thing was successfully updated so return the action object that will
+			// call to action was successfully updated so return the action object that will
 			// update the saved thing in the state.
 			yield changeActionStatus( actionName, Status.Success );
 
 			yield addNotice( {
-				id: 'popup-saved',
+				id: 'call-to-action-saved',
 				type: 'success',
 				message: sprintf(
-					// translators: %s: popup title.
-					__( 'Popup "%s" saved successfully.', 'popup-maker' ),
-					popup?.title
+					// translators: %s: call to action title.
+					__(
+						'Call to action "%s" saved successfully.',
+						'popup-maker'
+					),
+					callToAction?.title
 				),
 				closeDelay: 5000,
 			} );
 
 			return {
 				type: UPDATE,
-				popup: convertApiPopup( result ),
+				callToAction: convertApiCallToAction( result ),
 			};
 		}
 
-		// if execution arrives here, then thing didn't update in the state so return
+		// if execution arrives here, then call to action didn't update in the state so return
 		// action object that will add an error to the state about this.
 		// returning an action object that will save the update error to the state.
 		return changeActionStatus(
 			actionName,
 			Status.Error,
-			__( 'An error occurred, popup was not saved.', 'popup-maker' )
+			__(
+				'An error occurred, call to action was not saved.',
+				'popup-maker'
+			)
 		);
 	} catch ( error ) {
 		// returning an action object that will save the update error to the state.
@@ -358,17 +383,17 @@ export function* updatePopup( popup: Popup ): Generator {
 }
 
 /**
- * Delete a popup from the store.
+ * Delete a call to action from the store.
  *
- * @param {number}  popupId     Popup ID.
- * @param {boolean} forceDelete Whether to trash or force delete.
+ * @param {number}  callToActionId Call to action ID.
+ * @param {boolean} forceDelete    Whether to trash or force delete.
  * @return {Generator} Delete Action.
  */
-export function* deletePopup(
-	popupId: Popup[ 'id' ],
+export function* deleteCallToAction(
+	callToActionId: CallToAction[ 'id' ],
 	forceDelete: boolean = false
 ): Generator {
-	const actionName = 'deletePopup';
+	const actionName = 'deleteCallToAction';
 
 	// catch any request errors.
 	try {
@@ -376,10 +401,14 @@ export function* deletePopup(
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const popup: Popup = yield select( STORE_NAME, 'getPopup', popupId );
+		const callToAction: CallToAction = yield select(
+			STORE_NAME,
+			'getCallToAction',
+			callToActionId
+		);
 
 		const force = forceDelete ? '?force=true' : '';
-		const path = getResourcePath( popup.id ) + force;
+		const path = getResourcePath( callToAction.id ) + force;
 
 		const result: boolean = yield fetch( path, {
 			method: 'DELETE',
@@ -393,11 +422,11 @@ export function* deletePopup(
 			return forceDelete
 				? {
 						type: DELETE,
-						popupId,
+						callToActionId,
 				  }
 				: {
 						type: UPDATE,
-						popup: { ...popup, status: 'trash' },
+						callToAction: { ...callToAction, status: 'trash' },
 				  };
 		}
 
@@ -407,7 +436,10 @@ export function* deletePopup(
 		return changeActionStatus(
 			actionName,
 			Status.Error,
-			__( 'An error occurred, popup was not deleted.', 'popup-maker' )
+			__(
+				'An error occurred, call to action was not deleted.',
+				'popup-maker'
+			)
 		);
 	} catch ( error ) {
 		// returning an action object that will save the update error to the state.
@@ -420,16 +452,16 @@ export function* deletePopup(
 }
 
 /**
- * Hyrdate the popup store.
+ * Hyrdate the call to action store.
  *
- * @param {Popup[]} popups Array of popups.
+ * @param {CallToAction[]} callToActions Array of call to actions.
  * @return {Object} Action.
  */
 export const hydrate = (
-	popups: Popup[]
-): { type: string; popups: Popup[] } => {
+	callToActions: CallToAction[]
+): { type: string; callToActions: CallToAction[] } => {
 	return {
 		type: HYDRATE,
-		popups,
+		callToActions,
 	};
 };
