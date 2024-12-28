@@ -41,6 +41,7 @@ export interface ApiFormat {
 
 export interface BaseCallToAction {
 	id: number;
+	slug: string;
 	title: string;
 	description?: string;
 	status: 'publish' | 'draft' | 'pending' | 'trash';
