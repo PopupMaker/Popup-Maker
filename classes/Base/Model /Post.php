@@ -38,6 +38,9 @@ class Post {
 	 * Call To Action id.
 	 *
 	 * @var int
+	 *
+	 * TODO This should be ID mimicing WP_Post, as to make them more interchangeable.
+	 * TODO Declare all WP_Post properties on the Post class above, and add magic methods for getting them from $this->post;
 	 */
 	public $id = 0;
 
