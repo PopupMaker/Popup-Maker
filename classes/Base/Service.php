@@ -17,14 +17,14 @@ abstract class Service implements \PopupMaker\Interfaces\Service {
 	/**
 	 * Plugin Container.
 	 *
-	 * @var \PopupMaker\Plugin\Core
+	 * @var \PopupMaker\Plugin\Container
 	 */
 	public $container;
 
 	/**
 	 * Initialize based on dependency injection principles.
 	 *
-	 * @param \PopupMaker\Plugin\Core $container Plugin container.
+	 * @param \PopupMaker\Plugin\Container $container Plugin container.
 	 * @return void
 	 */
 	public function __construct( $container ) {

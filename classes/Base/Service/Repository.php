@@ -46,7 +46,7 @@ abstract class Repository extends Service {
 	/**
 	 * Initialize the service.
 	 *
-	 * @param \PopupMaker\Base\Container $container Container.
+	 * @param \PopupMaker\Plugin\Core $container Plugin container.
 	 */
 	public function __construct( $container ) {
 		parent::__construct( $container );
