@@ -21,7 +21,7 @@ export interface CallToActionTypes {
  * @see /includes/namespaced//default-values.php
  */
 export interface CallToActionBaseSettings {
-	type?: keyof CallToActionTypes;
+	type: keyof CallToActionTypes | '';
 	[ key: string ]: any;
 }
 
@@ -43,7 +43,7 @@ export interface BaseCallToAction {
 	id: number;
 	slug: string;
 	title: string;
-	description?: string;
+	description: string;
 	status: 'publish' | 'draft' | 'pending' | 'trash';
 	settings: CallToActionSettings;
 }
@@ -54,6 +54,7 @@ export interface ApiCallToAction {
 	id: number;
 	title: string | ApiFormat;
 	excerpt: string | ApiFormat;
+	slug: string;
 	status: 'publish' | 'draft' | 'pending' | 'trash';
 	settings: CallToActionSettings;
 }

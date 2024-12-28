@@ -42,6 +42,7 @@ export const noticeDefaults: AppNotice = {
 export const callToActionDefaults: CallToAction = {
 	id: 0,
 	title: '',
+	slug: '',
 	// content: '',
 	description: '',
 	status: 'draft',

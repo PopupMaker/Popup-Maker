@@ -5,6 +5,7 @@ module.exports = [
 	'@popup-maker/block-library',
 	'@popup-maker/components',
 	'@popup-maker/core-data',
+	'@popup-maker/cta-editor',
 	'@popup-maker/data',
 	'@popup-maker/fields',
 	'@popup-maker/icons',

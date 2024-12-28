@@ -3,7 +3,8 @@ import { createRegistry } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 
 import {
-	popupsStore,
+	callToActionStore,
+	popupStore,
 	licenseStore,
 	settingsStore,
 	urlSearchStore,
@@ -28,9 +29,10 @@ declare module '@wordpress/data' {
 const registry = createRegistry( {} );
 
 registry.register( coreStore );
+registry.register( callToActionStore );
 registry.register( licenseStore );
 registry.register( settingsStore );
-registry.register( popupsStore );
+registry.register( popupStore );
 registry.register( urlSearchStore );
 
 // On document ready

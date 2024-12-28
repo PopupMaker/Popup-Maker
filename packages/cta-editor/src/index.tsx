@@ -1,13 +1,16 @@
 import './editor.scss';
 
-import { CALL_TO_ACTION_STORE } from '@popup-maker/core-data';
-import { useSelect } from '@wordpress/data';
-import { __ } from '@wordpress/i18n';
+import { BrowserRouter } from 'react-router-dom';
+import { QueryParamProvider } from 'use-query-params';
+import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
 
-import Edit from './edit';
-import Header from './header';
-import List from './list';
-import Notices from './notices';
+import { createRoot } from '@wordpress/element';
+import { RegistryProvider } from '@wordpress/data';
+
+import { registry } from '@popup-maker/data';
+
+import App from './App';
+import domReady from '@wordpress/dom-ready';
 
 declare global {
 	interface Window {
@@ -24,51 +27,36 @@ declare global {
 					edit_popup_themes: boolean;
 					mange_settings: boolean;
 				};
+				isProInstalled?: '1' | '';
+				isProActivated?: '1' | '';
 			};
 		};
 	}
 }
 
-const {
-	permissions: { edit_ctas: userCanEditCallToActions },
-} = window.popupMaker.globalVars;
-
-/**
- * Generates the Call To Actions tab component & sub-app.
- */
-const CallToActionsView = () => {
-	// Fetch needed data from the @popup-maker/core-data & @wordpress/data stores.
-	const isEditorActive = useSelect(
-		( select ) => select( CALL_TO_ACTION_STORE ).isEditorActive(),
-		[]
-	);
-
-	// If the user doesn't have the manage_settings permission, show a message.
-	if ( ! userCanEditCallToActions ) {
-		return (
-			<div className="call-to-action-list permission-denied">
-				<Notices />
-				<h3>{ __( 'Permission Denied', 'popup-maker' ) }</h3>
-				<p>
-					<strong>
-						{ __(
-							'You do not have permission to manage Call To Actions.',
-							'popup-maker'
-						) }
-					</strong>
-				</p>
-			</div>
-		);
-	}
-
+const renderer = () => {
 	return (
-		<div className="call-to-action-list">
-			<Notices />
-			<Header />
-			<List />
-			{ isEditorActive && <Edit /> }
-		</div>
+		<BrowserRouter>
+			<QueryParamProvider adapter={ ReactRouter6Adapter }>
+				<RegistryProvider value={ registry }>
+					<App />
+				</RegistryProvider>
+			</QueryParamProvider>
+		</BrowserRouter>
 	);
 };
 
-export default CallToActionsView;
+export const init = () => {
+	const root = document.getElementById(
+		'popup-maker-call-to-actions-root-container'
+	);
+
+	if ( ! root ) {
+		return;
+	}
+
+	// createRoot was added in WP 6.2, so we need to check for it first.
+	createRoot( root ).render( renderer() );
+};
+
+domReady( init );
