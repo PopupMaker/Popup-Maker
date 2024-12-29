@@ -26,7 +26,7 @@ class CallToActions extends Service {
 	 *
 	 * @var CallToAction[]
 	 */
-	private $data;
+	private $data = [];
 
 	/**
 	 * Registers call to actions.
