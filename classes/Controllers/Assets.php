@@ -104,6 +104,9 @@ class Assets extends Controller {
 				'bundled'  => false,
 				'handle'   => 'popup-maker-core-data',
 				'styles'   => false,
+				'deps'     => [
+					'wp-api',
+				],
 				'varsName' => 'popupMakerCoreData',
 				'vars'     => function () {
 					return [
@@ -111,6 +114,14 @@ class Assets extends Controller {
 						'currentSettings' => \pum_get_options(),
 					];
 				},
+			],
+			'cta-editor'      => [
+				'bundled'  => false,
+				'handle'   => 'popup-maker-cta-editor',
+				'styles'   => true,
+				'varsName' => 'popupMakerCtaEditor',
+				'vars'     => [],
+				// 'head'     => true,
 			],
 			'data'            => [
 				'bundled'  => false,
