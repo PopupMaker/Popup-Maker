@@ -198,11 +198,13 @@ class Assets extends Controller {
 				}
 			}
 
+			$footer = $package_data['head'] ?? true;
+
 			if ( $bundled ) {
-				pum_register_script( $handle, $js_file, $js_deps, $meta['version'], true );
+				pum_register_script( $handle, $js_file, $js_deps, $meta['version'], $footer );
 			} else {
 				// Though pum_* asset functions pass through to wp_* automatically when disabled, admin packages should never be bundled.
-				wp_register_script( $handle, $js_file, $js_deps, $meta['version'], true );
+				wp_register_script( $handle, $js_file, $js_deps, $meta['version'], $footer );
 			}
 
 			if ( isset( $package_data['styles'] ) && $package_data['styles'] ) {
@@ -276,9 +278,24 @@ class Assets extends Controller {
 	 * @return array
 	 */
 	private function get_admin_global_vars() {
-		return apply_filters( 'popup_maker/admin_global_vars', [
-			'adminUrl' => admin_url(),
-		] );
+		$wp_version = get_bloginfo( 'version' );
+		// Strip last number from version as they won't be breaking changes.
+		$wp_version = preg_replace( '/\.\d+$/', '', $wp_version );
+
+		$permissions = $this->container->get_permissions();
+
+		foreach ( $permissions as $permission => $cap ) {
+			$permissions[ $permission ] = current_user_can( $cap );
+		}
+
+		return apply_filters(
+			'popup_maker/admin_global_vars',
+			[
+				'adminUrl'    => admin_url(),
+				'wpVersion'   => $wp_version,
+				'permissions' => $permissions,
+			]
+		);
 	}
 
 	/**
