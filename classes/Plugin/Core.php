@@ -298,6 +298,7 @@ class Core extends \PopupMaker\Plugin\Container {
 	 */
 	protected function registered_controllers() {
 		return [
+			'I18n'          => new \PopupMaker\Controllers\WP\I18n( $this ),
 			'PostTypes'     => new \PopupMaker\Controllers\PostTypes( $this ),
 			'Assets'        => new \PopupMaker\Controllers\Assets( $this ),
 			'Admin'         => new \PopupMaker\Controllers\Admin( $this ),
