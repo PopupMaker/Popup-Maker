@@ -249,10 +249,10 @@ class Core extends \PopupMaker\Plugin\Container {
 				/**
 				 * Get registered call to actions types.
 				 *
-				 * @return \PopupMaker\Services\Collector\CallToActions
+				 * @return \PopupMaker\Services\Collector\CallToActionTypes
 				 */
 				function ( $container ) {
-					return new \PopupMaker\Services\Collector\CallToActions( $container );
+					return new \PopupMaker\Services\Collector\CallToActionTypes( $container );
 				}
 			);
 

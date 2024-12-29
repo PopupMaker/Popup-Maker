@@ -1,6 +1,6 @@
 <?php
 /**
- * Call To Action collector.
+ * Call To Action type collector.
  *
  * @author    Code Atlantic
  * @package   PopupMaker
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * This class maintains a global set of all registered call to action types.
  */
-class CallToActions extends Service {
+class CallToActionTypes extends Service {
 
 	/**
 	 * Holds array of registered $ctas.
@@ -64,7 +64,7 @@ class CallToActions extends Service {
 	 *
 	 * @param CallToAction $call_to_action Instance of a call to action.
 	 */
-	public function add( CallToAction $call_to_action ) {
+	public function add( $call_to_action ) {
 		$this->data[ $call_to_action->key() ] = $call_to_action;
 	}
 
