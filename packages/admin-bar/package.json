@@ -11,7 +11,8 @@
 	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/admin-bar/README.md",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/popupmaker/popup-maker.git"
+		"url": "https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/admin-bar"
 	},
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
