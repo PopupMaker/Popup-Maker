@@ -19,6 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since X.X.X
  * @template TPost of Post
+ * @template-extends Service<\PopupMaker\Plugin\Core>
  */
 abstract class Repository extends Service {
 
@@ -50,7 +51,7 @@ abstract class Repository extends Service {
 	 */
 	public function __construct( $container ) {
 		parent::__construct( $container );
-		$this->post_type = $this->container->get( 'PostType' )->get_type_key( $this->post_type_key );
+		$this->post_type = $container->get_controller( 'PostTypes' )->get_type_key( $this->post_type_key );
 	}
 
 	/**

@@ -8,17 +8,11 @@
 
 namespace PopupMaker\Plugin;
 
-use PopupMaker\Plugin\Core as Container;
-
 /**
  * Main plugin container.
+ *
+ * @template-extends \PopupMaker\Base\Controller<\PopupMaker\Plugin\Core>
+ *
+ * @since X.X.X
  */
-abstract class Controller extends \PopupMaker\Base\Controller {
-
-	/**
-	 * Plugin Container.
-	 *
-	 * @var \PopupMaker\Plugin\Core
-	 */
-	public $container;
-}
+abstract class Controller extends \PopupMaker\Base\Controller {}

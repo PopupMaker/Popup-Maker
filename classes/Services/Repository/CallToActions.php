@@ -23,6 +23,13 @@ defined( 'ABSPATH' ) || exit;
 class CallToActions extends Repository {
 
 	/**
+	 * Post type key.
+	 *
+	 * @var string
+	 */
+	protected $post_type_key = 'pum_cta';
+
+	/**
 	 * Items by UUID.
 	 *
 	 * @var array<string,CallToAction>
@@ -32,7 +39,7 @@ class CallToActions extends Repository {
 	/**
 	 * Initialize the service.
 	 *
-	 * @param \PopupMaker\Base\Container $container Container.
+	 * @param \PopupMaker\Plugin\Core $container Container.
 	 */
 	public function __construct( $container ) {
 		parent::__construct( $container );

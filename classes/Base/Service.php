@@ -12,19 +12,21 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Localized service class.
+ *
+ * @template TContainer of \PopupMaker\Plugin\Container
  */
 abstract class Service implements \PopupMaker\Interfaces\Service {
 	/**
 	 * Plugin Container.
 	 *
-	 * @var \PopupMaker\Plugin\Container
+	 * @var TContainer
 	 */
 	public $container;
 
 	/**
 	 * Initialize based on dependency injection principles.
 	 *
-	 * @param \PopupMaker\Plugin\Container $container Plugin container.
+	 * @param TContainer $container Plugin container.
 	 * @return void
 	 */
 	public function __construct( $container ) {
