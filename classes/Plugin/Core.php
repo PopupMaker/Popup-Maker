@@ -34,21 +34,24 @@ class Core extends \PopupMaker\Plugin\Container {
 	}
 
 	/**
-	 * Check if this is the core plugin or an extension.
+	 * Update & track version info.
 	 *
-	 * @return bool
+	 * @return array<string,\PopupMaker\Base\Controller>
 	 */
-	public function is_core_plugin() {
-		return get_called_class() === __CLASS__;
-	}
-
-	/**
-	 * Check if this is the core plugin or an extension.
-	 *
-	 * @return bool
-	 */
-	public function is_addon_plugin() {
-		return ! $this->is_core_plugin();
+	protected function registered_controllers() {
+		return [
+			'Admin'         => new \PopupMaker\Controllers\Admin( $this ),
+			'Assets'        => new \PopupMaker\Controllers\Assets( $this ),
+			'CallToActions' => new \PopupMaker\Controllers\CallToActions( $this ),
+			'Compatibility' => new \PopupMaker\Controllers\Compatibility( $this ),
+			'PostTypes'     => new \PopupMaker\Controllers\PostTypes( $this ),
+			'RestAPI'       => new \PopupMaker\Controllers\RestAPI( $this ),
+			'WP'            => new \PopupMaker\Controllers\WP( $this ),
+			// 'BlockEditor'            => new \PopupMaker\Controllers\BlockEditor( $this ),
+			// 'Frontend'               => new \PopupMaker\Controllers\Frontend( $this ),
+			// 'Shortcodes'             => new \PopupMaker\Controllers\Shortcodes( $this ),
+			// 'TrustedLoginController' => new \PopupMaker\Controllers\TrustedLogin( $this ),
+		];
 	}
 
 	/**
