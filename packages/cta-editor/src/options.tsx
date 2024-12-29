@@ -8,6 +8,10 @@ export const callToActionTypeOptions: {
 	[ key: string ]: any;
 }[] = [
 	{
+		value: '',
+		label: __( 'Select a type', 'popup-maker' ),
+	},
+	{
 		value: 'link',
 		label: __( 'Link', 'popup-maker' ),
 	},
