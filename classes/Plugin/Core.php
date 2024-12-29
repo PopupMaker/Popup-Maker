@@ -304,7 +304,7 @@ class Core extends \PopupMaker\Plugin\Container {
 			'Admin'         => new \PopupMaker\Controllers\Admin( $this ),
 			'Compatibility' => new \PopupMaker\Controllers\Compatibility( $this ),
 			'CallToActions' => new \PopupMaker\Controllers\CallToActions( $this ),
-			// 'RestAPI'                => new \PopupMaker\Controllers\RestAPI( $this ),
+			'RestAPI'       => new \PopupMaker\Controllers\RestAPI( $this ),
 			// 'BlockEditor'            => new \PopupMaker\Controllers\BlockEditor( $this ),
 			// 'Frontend'               => new \PopupMaker\Controllers\Frontend( $this ),
 			// 'Shortcodes'             => new \PopupMaker\Controllers\Shortcodes( $this ),

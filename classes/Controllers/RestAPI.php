@@ -31,19 +31,35 @@ class RestAPI extends Controller {
 		add_filter( 'rest_pre_dispatch', [ $this, 'rest_pre_dispatch' ], 10, 3 );
 
 		// Sanitize and validate filters.
-		add_filter( 'popup_maker/sanitize_popup_settings', [ $this, 'sanitize_popup_settings' ], 10, 2 );
-		add_filter( 'popup_maker/validate_popup_settings', [ $this, 'validate_popup_settings' ], 10, 2 );
+		// add_filter( 'popup_maker/sanitize_popup_settings', [ $this, 'sanitize_popup_settings' ], 10, 2 );
+		// add_filter( 'popup_maker/validate_popup_settings', [ $this, 'validate_popup_settings' ], 10, 2 );
 		add_filter( 'popup_maker/sanitize_call_to_action_settings', [ $this, 'sanitize_call_to_action_settings' ], 10, 2 );
 		add_filter( 'popup_maker/validate_call_to_action_settings', [ $this, 'validate_call_to_action_settings' ], 10, 2 );
 	}
 
+	protected function register_data_version_field( $post_type, $update_permission ) {
+		register_rest_field( $post_type, 'data_version', [
+			'get_callback'        => function ( $obj ) {
+				return get_post_meta( $obj['id'], 'data_version', true );
+			},
+			'update_callback'     => function ( $value, $obj ) {
+				// Update the field/meta value.
+				update_post_meta( $obj->ID, 'data_version', $value );
+			},
+			'permission_callback' => function () use ( $update_permission ) {
+				return current_user_can( $update_permission );
+			},
+		] );
+	}
+
 	/**
-	 * Registers custom REST API fields for popup post type.
+	 * Register common REST fields for a given post type
 	 *
 	 * @return void
 	 */
 	public function register_popup_rest_fields() {
-		$post_type = $this->container->get( 'PostTypes' )->get_type_key( 'popup' );
+		$post_type       = $this->container->get_controller( 'PostTypes' )->get_type_key( 'popup' );
+		$edit_permission = $this->container->get_permission( 'edit_popups' );
 
 		register_rest_field( $post_type, 'settings', [
 			'get_callback'        => function ( $obj, $field, $request ) {
@@ -92,8 +108,8 @@ class RestAPI extends Controller {
 					},
 				],
 			],
-			'permission_callback' => function () {
-				return current_user_can( $this->container->get_permission( 'edit_popups' ) );
+			'permission_callback' => function () use ( $edit_permission ) {
+				return current_user_can( $edit_permission );
 			},
 		] );
 
@@ -107,8 +123,8 @@ class RestAPI extends Controller {
 					'menu_order' => $value,
 				] );
 			},
-			'permission_callback' => function () {
-				return current_user_can( $this->container->get_permission( 'edit_popups' ) );
+			'permission_callback' => function () use ( $edit_permission ) {
+				return current_user_can( $edit_permission );
 			},
 			'schema'              => [
 				'type'        => 'integer',
@@ -123,18 +139,8 @@ class RestAPI extends Controller {
 			],
 		] );
 
-		register_rest_field( $post_type, 'data_version', [
-			'get_callback'        => function ( $obj ) {
-				return get_post_meta( $obj['id'], 'data_version', true );
-			},
-			'update_callback'     => function ( $value, $obj ) {
-				// Update the field/meta value.
-				update_post_meta( $obj->ID, 'data_version', $value );
-			},
-			'permission_callback' => function () {
-				return current_user_can( $this->container->get_permission( 'edit_popups' ) );
-			},
-		] );
+		// Register data version field.
+		$this->register_data_version_field( $post_type, $edit_permission );
 	}
 
 	/**
@@ -168,7 +174,8 @@ class RestAPI extends Controller {
 	 * @return void
 	 */
 	public function register_cta_rest_fields() {
-		$post_type = $this->container->get( 'PostTypes' )->get_type_key( 'pum_cta' );
+		$post_type       = $this->container->get_controller( 'PostTypes' )->get_type_key( 'pum_cta' );
+		$edit_permission = $this->container->get_permission( 'edit_ctas' );
 
 		$ctas = $this->container->get( 'ctas' );
 
@@ -224,23 +231,13 @@ class RestAPI extends Controller {
 					},
 				],
 			],
-			'permission_callback' => function () {
-				return current_user_can( $this->container->get_permission( 'edit_ctas' ) );
+			'permission_callback' => function () use ( $edit_permission ) {
+				return current_user_can( $edit_permission );
 			},
 		] );
 
-		register_rest_field( $post_type, 'data_version', [
-			'get_callback'        => function ( $obj ) {
-				return get_post_meta( $obj['id'], 'data_version', true );
-			},
-			'update_callback'     => function ( $value, $obj ) {
-				// Update the field/meta value.
-				update_post_meta( $obj->ID, 'data_version', $value );
-			},
-			'permission_callback' => function () {
-				return current_user_can( $this->container->get_permission( 'edit_ctas' ) );
-			},
-		] );
+		// Register data version field.
+		$this->register_data_version_field( $post_type, $edit_permission );
 	}
 
 	/**
@@ -286,7 +283,7 @@ class RestAPI extends Controller {
 
 		$current_user_can = true;
 
-		// Only proceed if we're creating a user.
+		// Only proceed if the current user has permission.
 		if ( false !== strpos( $route, '/popup-maker/v2/popups' ) ) {
 			$current_user_can = current_user_can( $this->container->get_permission( 'edit_popups' ) );
 		} elseif ( false !== strpos( $route, '/popup-maker/v2/ctas' ) ) {

@@ -48,6 +48,20 @@ namespace PHPSTORM_META;
     // 'rules'        => \PopupMaker\RuleEngine\Rules::class,
 ]));
 
+/**
+  * NOTE: applies specifically to using the Plugin getter directly.
+  * Example Usage: $events = pum_Scheduling_plugin()->get( 'events' );
+  */
+  override(\PopupMaker\Plugin\Core::get_controller(0), map([
+    // Controllers
+    'PostTypes'     => \PopupMaker\Controllers\PostTypes::class,
+    'Assets'        => \PopupMaker\Controllers\Assets::class,
+    'Admin'         => \PopupMaker\Controllers\Admin::class,
+    'Compatibility' => \PopupMaker\Controllers\Compatibility::class,
+    'CallToActions' => \PopupMaker\Controllers\CallToActions::class,
+    'RestAPI'       => \PopupMaker\Controllers\RestAPI::class,
+]));
+
  /**
   * NOTE: applies specifically to using the global getter function.
   * Example Usage: $events = pum_scheduling( 'events' );
