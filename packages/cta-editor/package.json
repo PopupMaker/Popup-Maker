@@ -37,6 +37,7 @@
 		"use-query-params": "2.2.1"
 	},
 	"devDependencies": {
+		"@popup-maker/types": "*",
 		"@types/react-router-dom": "^5.3.3"
 	},
 	"scripts": {

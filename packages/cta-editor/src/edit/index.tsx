@@ -26,8 +26,8 @@ import GeneralTab from './general';
 export const documenationUrl =
 	'https://wppopupmaker.com/docs/?utm_campaign=documentation&utm_source=call-to-action-editor&utm_medium=plugin-ui&utm_content=footer-documentation-link';
 
+import type { TabComponent } from '@popup-maker/types';
 import type { CallToAction } from '@popup-maker/core-data';
-import type { TabComponent } from '../types';
 
 export type EditProps = {
 	onSave?: ( values: CallToAction ) => void;
