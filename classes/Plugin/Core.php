@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since X.X.X
  */
-class Core extends \PopupMaker\Plugin\Container {
+final class Core extends \PopupMaker\Plugin\Container {
 
 	/**
 	 * Initiate the plugin.
@@ -27,8 +27,6 @@ class Core extends \PopupMaker\Plugin\Container {
 	 */
 	public function __construct( $config ) {
 		parent::__construct( $config );
-
-		$this->register_services();
 
 		$this->check_version();
 	}
@@ -159,7 +157,7 @@ class Core extends \PopupMaker\Plugin\Container {
 	 *
 	 * @return void
 	 */
-	public function register_services() {
+	protected function register_services() {
 		/**
 		 * Attach our container to the global.
 		 */
@@ -290,78 +288,8 @@ class Core extends \PopupMaker\Plugin\Container {
 	 * @return \PopupMaker\Services\Options
 	 * @throws \PopupMaker\Vendor\Pimple\Exception\UnknownIdentifierException
 	 */
-	protected function options() {
+	public function options() {
 		return $this->get( 'options' );
-	}
-
-	/**
-	 * Update & track version info.
-	 *
-	 * @return array<string,\PopupMaker\Base\Controller>
-	 */
-	protected function registered_controllers() {
-		return [
-			'I18n'          => new \PopupMaker\Controllers\WP\I18n( $this ),
-			'PostTypes'     => new \PopupMaker\Controllers\PostTypes( $this ),
-			'Assets'        => new \PopupMaker\Controllers\Assets( $this ),
-			'Admin'         => new \PopupMaker\Controllers\Admin( $this ),
-			'Compatibility' => new \PopupMaker\Controllers\Compatibility( $this ),
-			'CallToActions' => new \PopupMaker\Controllers\CallToActions( $this ),
-			'RestAPI'       => new \PopupMaker\Controllers\RestAPI( $this ),
-			// 'BlockEditor'            => new \PopupMaker\Controllers\BlockEditor( $this ),
-			// 'Frontend'               => new \PopupMaker\Controllers\Frontend( $this ),
-			// 'Shortcodes'             => new \PopupMaker\Controllers\Shortcodes( $this ),
-			// 'TrustedLoginController' => new \PopupMaker\Controllers\TrustedLogin( $this ),
-		];
-	}
-
-	/**
-	 * Utility method to get a path.
-	 *
-	 * @param string $path Subpath to return.
-	 * @return string
-	 */
-	public function get_path( $path = '' ) {
-		return $this->get( 'path' ) . $path;
-	}
-
-	/**
-	 * Utility method to get a url.
-	 *
-	 * @param string $path Sub url to return.
-	 * @return string
-	 */
-	public function get_url( $path = '' ) {
-		return $this->get( 'url' ) . $path;
-	}
-
-	/**
-	 * Get item from container
-	 *
-	 * @param string $id Key for the item.
-	 *
-	 * @return mixed Current value of the item.
-	 *
-	 * @throws \PopupMaker\Vendor\Pimple\Exception\UnknownIdentifierException
-	 */
-	public function get( $id ) {
-		try {
-			return parent::get( $id );
-		} catch ( \PopupMaker\Vendor\Pimple\Exception\UnknownIdentifierException $e ) {
-			// Only check global space if parent container doesn't have the service.
-			if ( $this->is_addon_plugin() ) {
-				// If this is an addon, check if the service exists in the core plugin.
-				// Get core plugin container and see if the service exists there.
-				$plugin_service = \PopupMaker\plugin( $id );
-
-				if ( $plugin_service ) {
-					return $plugin_service;
-				}
-			}
-
-			// Re-throw the exception if we couldn't find the service.
-			throw $e;
-		}
 	}
 
 	/**

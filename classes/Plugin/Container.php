@@ -20,7 +20,7 @@ class Container extends \PopupMaker\Base\Container {
 	 *
 	 * Useful to unhook actions/filters from global space.
 	 *
-	 * @var Container
+	 * @var \PopupMaker\Base\Container
 	 */
 	public $controllers;
 
@@ -33,7 +33,18 @@ class Container extends \PopupMaker\Base\Container {
 		parent::__construct( $config );
 
 		$this->controllers = new \PopupMaker\Base\Container();
+
+		$this->register_services();
 		$this->initiate_controllers();
+	}
+
+	/**
+	 * Register services.
+	 *
+	 * @return void
+	 */
+	protected function register_services() {
+		// Override in child class if needed.
 	}
 
 	/**
@@ -109,5 +120,25 @@ class Container extends \PopupMaker\Base\Container {
 		}
 
 		return parent::get( $id );
+	}
+
+	/**
+	 * Utility method to get a path.
+	 *
+	 * @param string $path Subpath to return.
+	 * @return string
+	 */
+	public function get_path( $path = '' ) {
+		return $this->get( 'path' ) . $path;
+	}
+
+	/**
+	 * Utility method to get a url.
+	 *
+	 * @param string $path Sub url to return.
+	 * @return string
+	 */
+	public function get_url( $path = '' ) {
+		return $this->get( 'url' ) . $path;
 	}
 }
