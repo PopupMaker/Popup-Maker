@@ -38,18 +38,5 @@ export const validateCallToAction = (
 		};
 	}
 
-	if (
-		! callToAction.settings?.conditions?.items?.length &&
-		callToAction.status === 'publish'
-	) {
-		return {
-			message: __(
-				'Please provide at least one condition for this call to action before enabling it.',
-				'popup-paker'
-			),
-			tabName: 'content',
-		};
-	}
-
 	return true;
 };
