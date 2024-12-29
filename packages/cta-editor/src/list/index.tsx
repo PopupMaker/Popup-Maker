@@ -6,7 +6,7 @@ import {
 	ToggleControl,
 	Tooltip,
 } from '@wordpress/components';
-import { __, _n } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { info, search, trash } from '@wordpress/icons';
 
@@ -313,6 +313,9 @@ const List = () => {
 												</>
 											);
 										}
+
+										case 'type':
+											return callToAction.settings?.type;
 
 										default:
 											return (
