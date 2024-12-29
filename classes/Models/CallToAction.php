@@ -92,6 +92,22 @@ class CallToAction extends Post {
 		}
 	}
 
+	/**
+	 * Get the call to action UUID.
+	 *
+	 * @return string
+	 */
+	public function get_uuid() {
+		/**
+		 * Filter the call to action UUID.
+		 *
+		 * @param string $uuid Call to action UUID.
+		 * @param int $call_to_action_id Call to action ID.
+		 *
+		 * @return string
+		 */
+		return apply_filters( 'popup_maker/get_call_to_action_uuid', $this->uuid, $this->id );
+	}
 
 	/**
 	 * Get the call to action settings array.
@@ -162,6 +178,20 @@ class CallToAction extends Post {
 		return $this->description;
 	}
 
+	/**
+	 * Generate a call to action URL.
+	 *
+	 * @param int $pid Popup (post) ID (optional). The associated pid for tracking purposes.
+	 *
+	 * @return string
+	 */
+	public function generate_url( $pid = null ) {
+		return \add_query_arg( [
+			'cta'  => true,
+			'pid'  => $pid,
+			'uuid' => $this->get_uuid(),
+		], home_url() );
+	}
 	/**
 	 * Convert this call to action to an array.
 	 *
