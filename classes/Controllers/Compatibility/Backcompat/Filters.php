@@ -8,14 +8,14 @@
 
 namespace PopupMaker\Controllers\Compatibility\Backcompat;
 
-use PopupMaker\Base\Controller;
+use PopupMaker\Plugin\Controller;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Filters
  *
- * @package PopupMaker\Controllers\Compatibility\BackCompat
+ * @since X.X.X
  */
 class Filters extends Controller {
 

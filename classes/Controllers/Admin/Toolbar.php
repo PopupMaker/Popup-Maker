@@ -8,8 +8,8 @@
 
 namespace PopupMaker\Controllers\Admin;
 
-use Popup_Maker;
 use PUM_Site_Popups;
+use PopupMaker\Plugin\Controller;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since X.X.X
  */
-class Toolbar extends \PopupMaker\Controllers\Admin {
+class Toolbar extends Controller {
 
 	/**
 	 * Initializes this module.

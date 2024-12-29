@@ -8,10 +8,12 @@
 
 namespace PopupMaker\Controllers;
 
-use PopupMaker\Base\Controller;
+use PopupMaker\Plugin\Controller;
 
 /**
  * REST controller.
+ *
+ * @since X.X.X
  */
 class RestAPI extends Controller {
 

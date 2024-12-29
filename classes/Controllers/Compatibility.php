@@ -9,14 +9,14 @@
 
 namespace PopupMaker\Controllers;
 
-use PopupMaker\Base\Controller;
+use PopupMaker\Plugin\Controller;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Compatibility controller class.
  *
- * @package PopupMaker
+ * @since X.X.X
  */
 class Compatibility extends Controller {
 

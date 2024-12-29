@@ -8,12 +8,14 @@
 
 namespace PopupMaker\Controllers\Compatibility\SEO;
 
-use PopupMaker\Base\Controller;
+use PopupMaker\Plugin\Controller;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Yoast
+ *
+ * @since X.X.X
  */
 class Yoast extends Controller {
 

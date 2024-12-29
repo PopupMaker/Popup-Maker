@@ -9,12 +9,14 @@
 
 namespace PopupMaker\Controllers;
 
-use PopupMaker\Base\Controller;
+use PopupMaker\Plugin\Controller;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class CallToActions
+ *
+ * @since X.X.X
  */
 class CallToActions extends Controller {
 	/**

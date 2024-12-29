@@ -8,7 +8,7 @@
 
 namespace PopupMaker\Controllers\Admin;
 
-use PopupMaker\Base\Controller;
+use PopupMaker\Plugin\Controller;
 
 defined( 'ABSPATH' ) || exit;
 

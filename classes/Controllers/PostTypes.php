@@ -8,12 +8,14 @@
 
 namespace PopupMaker\Controllers;
 
-use PopupMaker\Base\Controller;
+use PopupMaker\Plugin\Controller;
 
 use function PopupMaker\get_data_version;
 
 /**
  * Post type controller.
+ *
+ * @since X.X.X
  */
 class PostTypes extends Controller {
 

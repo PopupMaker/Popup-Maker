@@ -9,12 +9,14 @@
 
 namespace PopupMaker\Controllers;
 
-use PopupMaker\Base\Controller;
+use PopupMaker\Plugin\Controller;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Admin assets controller.
+ * Assets controller.
+ *
+ * @since X.X.X
  */
 class Assets extends Controller {
 
