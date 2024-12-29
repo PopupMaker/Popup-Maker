@@ -17,13 +17,7 @@
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
-	"main": "build/index",
-	"types": "build-types",
-	"files": [
-		"src"
-	],
-	"dependencies": {},
-	"devDependencies": {},
+	"types": "./src/index.d.ts",
 	"scripts": {
 		"build:tsc": "tsc",
 		"build:types": "tsc --build",

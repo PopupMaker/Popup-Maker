@@ -12,7 +12,7 @@ import { lifesaver, login, pages, people } from '@wordpress/icons';
 
 import { ControlledTabPanel } from '@popup-maker/components';
 
-import type { TabComponent } from './types';
+import type { TabComponent } from '@popup-maker/types';
 
 type Props = {
 	tabs: TabComponent[];

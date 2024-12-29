@@ -12,28 +12,6 @@ import { registry } from '@popup-maker/data';
 import App from './App';
 import domReady from '@wordpress/dom-ready';
 
-declare global {
-	interface Window {
-		popupMaker: {
-			globalVars: {
-				assetsUrl: string;
-				wpVersion: number;
-				pluginUrl: string;
-				adminUrl: string;
-				version: string;
-				permissions: {
-					edit_ctas: boolean;
-					edit_popups: boolean;
-					edit_popup_themes: boolean;
-					mange_settings: boolean;
-				};
-				isProInstalled?: '1' | '';
-				isProActivated?: '1' | '';
-			};
-		};
-	}
-}
-
 const renderer = () => {
 	return (
 		<BrowserRouter>

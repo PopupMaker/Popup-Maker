@@ -9,7 +9,7 @@ import { Popover, SlotFillProvider } from '@wordpress/components';
 import Header from './header';
 import CallToActionsView from './call-to-actions-view';
 
-import type { TabComponent } from './types';
+import type { TabComponent } from '@popup-maker/types';
 
 const {
 	permissions: { edit_ctas: userCanEditCallToActions },
