@@ -236,8 +236,8 @@ class PostTypes extends Controller {
 			// Basic.
 			'public'            => false, // TODO Test false.
 			// Visibility.
-			'show_ui'           => true,
-			'show_in_menu'      => 'edit.php?post_type=popup',
+			'show_ui'           => false,
+			// 'show_in_menu'      => 'edit.php?post_type=popup',
 			'show_in_admin_bar' => false,
 			// Features.
 			'supports'          => [
