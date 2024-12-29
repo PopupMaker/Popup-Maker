@@ -26,6 +26,9 @@
 			"path": "./packages/core-data"
 		},
 		{
+			"path": "./packages/cta-editor"
+		},
+		{
 			"path": "./packages/data"
 		},
 		{

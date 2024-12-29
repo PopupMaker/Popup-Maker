@@ -48,6 +48,7 @@
 		"@popup-maker/block-library": "file:./packages/block-library",
 		"@popup-maker/components": "file:./packages/components",
 		"@popup-maker/core-data": "file:./packages/core-data",
+		"@popup-maker/cta-editor": "file:./packages/cta-editor",
 		"@popup-maker/data": "file:./packages/data",
 		"@popup-maker/fields": "file:./packages/fields",
 		"@popup-maker/icons": "file:./packages/icons",

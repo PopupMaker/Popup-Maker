@@ -13,6 +13,7 @@ const packages = {
 	'block-library': 'packages/block-library',
 	components: 'packages/components',
 	'core-data': 'packages/core-data',
+	'cta-editor': 'packages/cta-editor',
 	data: 'packages/data',
 	fields: 'packages/fields',
 	icons: 'packages/icons',
