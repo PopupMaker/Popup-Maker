@@ -204,7 +204,7 @@ class Assets extends Controller {
 			);
 
 			if ( 'block-editor' === $package ) {
-				if ( 'widgets' !== $screen->id ) {
+				if ( is_admin() && 'widgets' !== $screen->id ) {
 					$js_deps = array_merge( $js_deps, [ 'wp-edit-post' ] );
 				}
 			}
