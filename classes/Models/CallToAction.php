@@ -191,16 +191,17 @@ class CallToAction extends Post {
 	/**
 	 * Generate a call to action URL.
 	 *
-	 * @param int $pid Popup (post) ID (optional). The associated pid for tracking purposes.
+	 * @param string              $base_url Base URL.
+	 * @param array<string,mixed> $extra_args Extra arguments.
 	 *
 	 * @return string
 	 */
-	public function generate_url( $pid = null ) {
-		return \add_query_arg( [
-			'cta'  => true,
-			'pid'  => $pid,
-			'uuid' => $this->get_uuid(),
-		], home_url() );
+	public function generate_url( $base_url = '', $extra_args = [] ) {
+		$args = wp_parse_args( $extra_args, [
+			'cta' => $this->get_uuid(),
+		] );
+
+		return \add_query_arg( $args, $base_url );
 	}
 	/**
 	 * Convert this call to action to an array.
