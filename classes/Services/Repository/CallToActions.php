@@ -54,7 +54,7 @@ class CallToActions extends Repository {
 	 *
 	 * @return CallToAction|null
 	 */
-	public function instantiate_model_from_post( $post ): ?CallToAction {
+	public function instantiate_model_from_post( $post ) {
 		if ( ! $post instanceof \WP_Post ) {
 			return null;
 		}
@@ -62,9 +62,16 @@ class CallToActions extends Repository {
 		return new CallToAction( $post );
 	}
 
+	/**
+	 * Cache an item internally.
+	 *
+	 * @param CallToAction $item Item to cache.
+	 *
+	 * @return void
+	 */
 	protected function cache_item( $item ) {
 		parent::cache_item( $item );
-		$this->items_by_uuid[ $item->uuid ] = $item;
+		$this->items_by_uuid[ $item->get_uuid() ] = $item;
 	}
 
 	/**
@@ -74,18 +81,35 @@ class CallToActions extends Repository {
 	 *
 	 * @return CallToAction|null
 	 */
-	public function get_by_uuid( $uuid = '' ): ?CallToAction {
+	public function get_by_uuid( $uuid = '' ) {
 		if ( isset( $this->items_by_uuid[ $uuid ] ) ) {
 			return $this->items_by_uuid[ $uuid ];
 		}
 
-		$query = new \WP_Query( [
-			'post_type'      => $this->post_type,
-			'meta_key'       => 'uuid', // phpcs:ignore WordPress.DB.SlowDBQuery
+		$items = $this->query( [
+			'meta_key'       => 'cta_uuid', // phpcs:ignore WordPress.DB.SlowDBQuery
 			'meta_value'     => $uuid, // phpcs:ignore WordPress.DB.SlowDBQuery
 			'posts_per_page' => 1,
 		] );
 
-		return $query->have_posts() ? $this->instantiate_model_from_post( $query->posts[0] ) : null;
+		return ! empty( $items ) ? $items[0] : null;
+	}
+
+	/**
+	 * Generate select list query.
+	 *
+	 * @param array $args Query arguments.
+	 *
+	 * @return array
+	 */
+	public function generate_selectlist_query( $args = [] ) {
+		$items = $this->query( $args );
+
+		$options = [];
+		foreach ( $items as $item ) {
+			$options[ $item->id ] = $item->title;
+		}
+
+		return $options;
 	}
 }
