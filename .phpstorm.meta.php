@@ -17,42 +17,7 @@ namespace PHPSTORM_META;
  * Return lists below all must match, it cannot be defined as a variable.
  * Thus all the duplication is needed.
  */
-
-/**
-  * NOTE: applies specifically to using the Plugin getter directly.
-  * Example Usage: $events = pum_Scheduling_plugin()->get( 'events' );
-  */
-  override(\PopupMaker\Plugin\Core::get(0), map([
-    // Services
-    'ctas'         => \PopupMaker\Services\Repository\CallToActions::class,
-    'cta_types'    => \PopupMaker\Services\Collector\CallToActions::class,
-    'globals'      => \PopupMaker\Services\Globals::class,
-
-    // Controllers
-    'PostTypes'    => \PopupMaker\Controllers\PostTypes::class,
-    
-    // Config Values
-    'path'         => 'string',
-    'url'          => 'string',
-    'slug'         => 'string',
-    'version'      => 'string',
-    'db_ver'       => 'string',
-    'prefix'       => 'string',
-
-    // ''             => '@',
-    // 'connect'      => \PopupMaker\Plugin\Connect::class,
-    // 'license'      => \PopupMaker\Plugin\License::class,
-    // 'logging'      => \PopupMaker\Plugin\Logging::class,
-    // 'options'      => \PopupMaker\Plugin\Options::class,
-    // 'upgrader'     => \PopupMaker\Plugin\Upgrader::class,
-    // 'rules'        => \PopupMaker\RuleEngine\Rules::class,
-]));
-
-/**
-  * NOTE: applies specifically to using the Plugin getter directly.
-  * Example Usage: $events = pum_Scheduling_plugin()->get( 'events' );
-  */
-  override(\PopupMaker\Plugin\Core::get_controller(0), map([
+override(\PopupMaker\Plugin\Core::get_controller(0), map([
     // Controllers
     'PostTypes'     => \PopupMaker\Controllers\PostTypes::class,
     'Assets'        => \PopupMaker\Controllers\Assets::class,
@@ -62,18 +27,27 @@ namespace PHPSTORM_META;
     'RestAPI'       => \PopupMaker\Controllers\RestAPI::class,
 ]));
 
- /**
-  * NOTE: applies specifically to using the global getter function.
-  * Example Usage: $events = pum_scheduling( 'events' );
-  */
+override(\PopupMaker\Plugin\Core::get(0), map([
+    // Services
+    'ctas'         => \PopupMaker\Services\Repository\CallToActions::class,
+    'cta_types'    => \PopupMaker\Services\Collector\CallToActionTypes::class,
+    'globals'      => \PopupMaker\Services\Globals::class,
+    
+    // Config Values
+    'path'         => 'string',
+    'url'          => 'string',
+    'slug'         => 'string',
+    'version'      => 'string',
+    'db_ver'       => 'string',
+    'prefix'       => 'string',
+]));
+
+// Required for external plugin() function access.
 override(\PopupMaker\plugin(0), map([
     // Services
     'ctas'         => \PopupMaker\Services\Repository\CallToActions::class,
-    'cta_types'    => \PopupMaker\Services\Collector\CallToActions::class,
+    'cta_types'    => \PopupMaker\Services\Collector\CallToActionTypes::class,
     'globals'      => \PopupMaker\Services\Globals::class,
-
-    // Controllers
-    'PostTypes'    => \PopupMaker\Controllers\PostTypes::class,
     
     // Config Values
     'path'         => 'string',
@@ -84,40 +58,12 @@ override(\PopupMaker\plugin(0), map([
     'prefix'       => 'string',
 ]));
 
-  /**
-  * NOTE: applies specifically to using the global getter function.
-  * Example Usage: $events = pum_scheduling( 'events' );
-  */
-override(\PopupMaker\Base\Container::get(0), map([
+// Required for internal $controller->container->get($id);
+override( \PopupMaker\Plugin\Container::get(0), map([
     // Services
     'ctas'         => \PopupMaker\Services\Repository\CallToActions::class,
-    'cta_types'    => \PopupMaker\Services\Collector\CallToActions::class,
+    'cta_types'    => \PopupMaker\Services\Collector\CallToActionTypes::class,
     'globals'      => \PopupMaker\Services\Globals::class,
-
-    // Controllers
-    'PostTypes'    => \PopupMaker\Controllers\PostTypes::class,
-    
-    // Config Values
-    'path'         => 'string',
-    'url'          => 'string',
-    'slug'         => 'string',
-    'version'      => 'string',
-    'db_ver'       => 'string',
-    'prefix'       => 'string',
-]));
-
-    /**
-  * NOTE: applies specifically to using the global getter function.
-  * Example Usage: $events = pum_scheduling( 'events' );
-  */
-override(\PopupMaker\Base\Container::offsetGet(0), map([
-    // Services
-    'ctas'         => \PopupMaker\Services\Repository\CallToActions::class,
-    'cta_types'    => \PopupMaker\Services\Collector\CallToActions::class,
-    'globals'      => \PopupMaker\Services\Globals::class,
-
-    // Controllers
-    'PostTypes'    => \PopupMaker\Controllers\PostTypes::class,
     
     // Config Values
     'path'         => 'string',
