@@ -134,20 +134,18 @@ final class Core extends \PopupMaker\Plugin\Container {
 	protected function process_version_data_migration( $data ) {
 		// This class can be extended for addons, only do the following if this is core and not an extended class.
 		// If the current instance is not an extended class, check if old settings exist.
-		if ( $this->is_core_plugin() ) {
-			$version         = \PopupMaker\detect_previous_install_version();
-			$initial_version = \PopupMaker\detect_initial_install_version();
-			$installed_on    = \PopupMaker\detect_initial_install_date();
-			$upgraded_from   = get_option( 'pum_ver_upgraded_from', null );
+		$version         = \PopupMaker\detect_previous_install_version();
+		$initial_version = \PopupMaker\detect_initial_install_version();
+		$installed_on    = \PopupMaker\detect_initial_install_date();
+		$upgraded_from   = get_option( 'pum_ver_upgraded_from', null );
 
-			$data = [
-				// Setting to 0.0.0 if not set forces a "migration" to run.
-				'version'         => $version ? $version : '0.0.0',
-				'upgraded_from'   => $upgraded_from ? (string) $upgraded_from : null,
-				'initial_version' => $initial_version ? $initial_version : $version,
-				'installed_on'    => $installed_on,
-			];
-		}
+		$data = [
+			// Setting to 0.0.0 if not set forces a "migration" to run.
+			'version'         => $version ? $version : '0.0.0',
+			'upgraded_from'   => $upgraded_from ? (string) $upgraded_from : null,
+			'initial_version' => $initial_version ? $initial_version : $version,
+			'installed_on'    => $installed_on,
+		];
 
 		return $data;
 	}
@@ -169,115 +167,113 @@ final class Core extends \PopupMaker\Plugin\Container {
 		 * Because extensions extend this class for access to services,
 		 * we only want to load the core services if this is the core plugin.
 		 */
-		if ( $this->is_core_plugin() ) {
-			$this->set(
-				'options',
-				/**
-				 * Get plugin options.
-				 *
-				 * @return \PopupMaker\Services\Options
-				 */
-				function ( $container ) {
-					return new \PopupMaker\Services\Options( $container );
-				}
-			);
+		$this->set(
+			'options',
+			/**
+			 * Get plugin options.
+			 *
+			 * @return \PopupMaker\Services\Options
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\Options( $container );
+			}
+		);
 
-			$this->set(
-				'connect',
-				/**
-				 * Get plugin connect.
-				 *
-				 * @return Connect
-				 */
-				function ( $container ) {
-					return new \PopupMaker\Services\Connect( $container );
-				}
-			);
+		$this->set(
+			'connect',
+			/**
+			 * Get plugin connect.
+			 *
+			 * @return Connect
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\Connect( $container );
+			}
+		);
 
-			$this->set(
-				'license',
-				/**
-				 * Get plugin license.
-				 *
-				 * @return License
-				 */
-				function ( $container ) {
-					return new \PopupMaker\Services\License( $container );
-				}
-			);
+		$this->set(
+			'license',
+			/**
+			 * Get plugin license.
+			 *
+			 * @return License
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\License( $container );
+			}
+		);
 
-			$this->set(
-				'logging',
-				/**
-				 * Get plugin logging.
-				 *
-				 * @return Logging
-				 */
-				function ( $container ) {
-					return new \PopupMaker\Services\Logging( $container );
-				}
-			);
+		$this->set(
+			'logging',
+			/**
+			 * Get plugin logging.
+			 *
+			 * @return Logging
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\Logging( $container );
+			}
+		);
 
-			$this->set(
-				'upgrader',
-				/**
-				 * Get plugin upgrader.
-				 *
-				 * @return Upgrader
-				 */
-				function ( $container ) {
-					return new \PopupMaker\Services\Upgrader( $container );
-				}
-			);
+		$this->set(
+			'upgrader',
+			/**
+			 * Get plugin upgrader.
+			 *
+			 * @return Upgrader
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\Upgrader( $container );
+			}
+		);
 
-			$this->set(
-				'ctas',
-				/**
-				 * Get user call to actions from the database.
-				 *
-				 * @return \PopupMaker\Services\Repository\CallToActions
-				 */
-				function ( $container ) {
-					return new \PopupMaker\Services\Repository\CallToActions( $container );
-				}
-			);
+		$this->set(
+			'ctas',
+			/**
+			 * Get user call to actions from the database.
+			 *
+			 * @return \PopupMaker\Services\Repository\CallToActions
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\Repository\CallToActions( $container );
+			}
+		);
 
-			$this->set(
-				'cta_types',
-				/**
-				 * Get registered call to actions types.
-				 *
-				 * @return \PopupMaker\Services\Collector\CallToActionTypes
-				 */
-				function ( $container ) {
-					return new \PopupMaker\Services\Collector\CallToActionTypes( $container );
-				}
-			);
+		$this->set(
+			'cta_types',
+			/**
+			 * Get registered call to actions types.
+			 *
+			 * @return \PopupMaker\Services\Collector\CallToActionTypes
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\Collector\CallToActionTypes( $container );
+			}
+		);
 
-			// $this->set(
-			// 'rules',
-				/**
-				 * Get plugin rules.
-				 *
-				 * @return \PopupMaker\RuleEngine\Rules
-				 */
-				// function () {
-				// return new \PopupMaker\RuleEngine\Rules();
-				// }
-			// );
+		// $this->set(
+		// 'rules',
+			/**
+			 * Get plugin rules.
+			 *
+			 * @return \PopupMaker\RuleEngine\Rules
+			 */
+			// function () {
+			// return new \PopupMaker\RuleEngine\Rules();
+			// }
+		// );
 
-			$this->set(
-				'globals',
-				/**
-				 * Get plugin global manager.
-				 *
-				 * @return \PopupMaker\Services\Globals
-				 */
-				function () {
-					return new \PopupMaker\Services\Globals();
-				}
-			);
-		}
+		$this->set(
+			'globals',
+			/**
+			 * Get plugin global manager.
+			 *
+			 * @return \PopupMaker\Services\Globals
+			 */
+			function () {
+				return new \PopupMaker\Services\Globals();
+			}
+		);
 
 		do_action( 'popup_maker/register_services', $this );
 	}
