@@ -15,4 +15,12 @@ namespace PopupMaker\Plugin;
  *
  * @since X.X.X
  */
-abstract class Controller extends \PopupMaker\Base\Controller {}
+abstract class Controller extends \PopupMaker\Base\Controller {
+
+	/**
+	 * Plugin Container.
+	 *
+	 * @var \PopupMaker\Plugin\Core
+	 */
+	public $container;
+}
