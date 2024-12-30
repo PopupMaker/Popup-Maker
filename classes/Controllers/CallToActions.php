@@ -19,13 +19,13 @@ defined( 'ABSPATH' ) || exit;
  * @since X.X.X
  */
 class CallToActions extends Controller {
+
 	/**
 	 * Initialize cta actions
 	 */
 	public function init() {
 		add_action( 'template_redirect', [ $this, 'template_redirect' ] );
 	}
-
 	/**
 	 * Checks for valid requests and properly handles them.
 	 *
@@ -33,31 +33,29 @@ class CallToActions extends Controller {
 	 */
 	public function template_redirect() {
 		/* phpcs:disable WordPress.Security.NonceVerification.Recommended */
+		$cta_uuid = ! empty( $_GET['cta'] ) ? sanitize_text_field( wp_unslash( $_GET['cta'] ) ) : '';
 		$popup_id = ! empty( $_GET['pid'] ) ? absint( $_GET['pid'] ) : 0;
-		$cta_uuid = ! empty( $_GET['uuid'] ) ? sanitize_text_field( wp_unslash( $_GET['uuid'] ) ) : '';
 		/* phpcs:enable WordPress.Security.NonceVerification.Recommended */
 
-		// If no uuid is found, we don't have what we need, so return.
 		if ( empty( $cta_uuid ) ) {
+			return;
+		}
+
+		// Check for matching cta_{uuid}.
+		$cta_uuid = str_replace( 'cta_', '', $cta_uuid );
+
+		// Check for matching popup_{uuid}.
+		$cta = $this->container->get( 'ctas' )->get_by_uuid( $cta_uuid );
+
+		// If no uuid is found, we don't have what we need, so return.
+		if ( ! $cta ) {
 			return;
 		}
 
 		$popup = $popup_id > 0 ? pum_get_popup( $popup_id ) : false;
 
-		$cta = null;
-
-		// Query for a CTA by uuid.
-		$cta = $this->container->get( 'call_to_actions' )->get_by_uuid( $cta_uuid );
-
-		/**
-		 * If no matched CTA was found bail.
-		 */
-		if ( ! $cta ) {
-			return;
-		}
-
 		// TODO Is a switch for each CTA type needed, or should we do a named action? Or Simply a plain action with args.
-		switch ( $cta['type'] ) {
+		switch ( $cta->get_setting( 'type' ) ) {
 			/**
 			 * Built-ins.
 			 */
@@ -67,9 +65,11 @@ class CallToActions extends Controller {
 				 *
 				 * TODO This likely needs reworked to be more generic, not always requiring a popup id.
 				 */
-				pum_track_conversion_event( $popup_id );
+				pum_track_conversion_event( $popup_id, [
+					'cta_id' => $cta->id,
+				]);
 
-				$url = esc_url_raw( $cta['url'] );
+				$url = esc_url_raw( $cta->get_setting( 'url' ) );
 
 				wp_safe_redirect( $url );
 				exit;
