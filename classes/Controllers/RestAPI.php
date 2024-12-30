@@ -179,9 +179,28 @@ class RestAPI extends Controller {
 
 		$ctas = $this->container->get( 'ctas' );
 
+		// Register uuid field. Should be read-only &restricted to admins similar to edit only props.
+		register_rest_field( $post_type, 'uuid', [
+			'get_callback'        => function ( $obj ) {
+				$cta = \PopupMaker\get_cta_by_id( $obj['id'] );
+
+				if ( ! $cta ) {
+					return null;
+				}
+
+				$uuid = $cta->get_uuid();
+
+				return $uuid;
+			},
+			'permission_callback' => function () use ( $edit_permission ) {
+				return current_user_can( $edit_permission );
+			},
+		] );
+
+		// Register settings field.
 		register_rest_field( $post_type, 'settings', [
 			'get_callback'        => function ( $obj, $field, $request ) use ( $ctas ) {
-				$cta = $ctas->get_by_id( $obj['id'] );
+				$cta = \PopupMaker\get_cta_by_id( $obj['id'] );
 
 				if ( ! $cta ) {
 					return [];

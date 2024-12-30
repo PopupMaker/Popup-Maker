@@ -33,21 +33,21 @@ class CallToAction extends Post {
 	 *
 	 * @var string
 	 */
-	public $uuid;
+	protected $uuid;
 
 	/**
 	 * Call To Action description.
 	 *
 	 * @var string|null
 	 */
-	public $description;
+	protected $description;
 
 	/**
 	 * Call To Action Settings.
 	 *
 	 * @var array<string,mixed>
 	 */
-	public $settings;
+	protected $settings;
 
 	/**
 	 * Build a call to action.
@@ -58,7 +58,9 @@ class CallToAction extends Post {
 		parent::__construct( $cta );
 
 		$custom_properties = [
+			'uuid'        => null,
 			'description' => null,
+			'settings'    => [],
 		];
 
 		foreach ( $custom_properties as $key => $value ) {
@@ -70,17 +72,11 @@ class CallToAction extends Post {
 		 *
 		 * @var array<string,mixed>|false $settings
 		 */
-		$settings = get_post_meta( $cta->ID, 'cta_settings', true );
+		$settings = get_post_meta( $this->id, 'cta_settings', true );
 
-		if ( ! $settings ) {
-			$settings = [];
+		if ( empty( $settings ) ) {
+			$settings = \PopupMaker\get_default_call_to_action_settings();
 		}
-
-		// TODO REVIEW Should we fill missing settings or just do that at runtime?
-		// $settings = wp_parse_args(
-		// $settings,
-		// \PopupMaker\get_default_call_to_action_settings()
-		// );
 
 		$this->settings = $settings;
 
@@ -98,6 +94,18 @@ class CallToAction extends Post {
 	 * @return string
 	 */
 	public function get_uuid() {
+		if ( isset( $this->uuid ) ) {
+			return $this->uuid;
+		}
+
+		// Get or generate UUID
+		$uuid = get_post_meta( $this->id, 'cta_uuid', true );
+
+		if ( empty( $uuid ) ) {
+			$uuid = \PopupMaker\generate_unique_cta_uuid( $this->id );
+			update_post_meta( $this->id, 'cta_uuid', $uuid );
+		}
+
 		/**
 		 * Filter the call to action UUID.
 		 *
@@ -106,7 +114,9 @@ class CallToAction extends Post {
 		 *
 		 * @return string
 		 */
-		return apply_filters( 'popup_maker/get_call_to_action_uuid', $this->uuid, $this->id );
+		$this->uuid = apply_filters( 'popup_maker/get_call_to_action_uuid', $uuid, $this->id );
+
+		return $this->uuid;
 	}
 
 	/**
