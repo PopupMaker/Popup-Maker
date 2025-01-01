@@ -23,7 +23,7 @@ class Link extends \PopupMaker\Base\CallToAction {
 	 *
 	 * @var string
 	 */
-	protected $key = 'link';
+	public $key = 'link';
 
 	/**
 	 * Label for this cta.
