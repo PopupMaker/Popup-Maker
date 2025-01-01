@@ -12,6 +12,20 @@ import { registry } from '@popup-maker/data';
 import App from './App';
 import domReady from '@wordpress/dom-ready';
 
+import type { OldField } from '@popup-maker/fields';
+
+declare global {
+	interface Window {
+		popupMakerCtaEditor: {
+			cta_types: {
+				key: string;
+				label: string;
+				fields: OldField[];
+			}[];
+		};
+	}
+}
+
 const renderer = () => {
 	return (
 		<BrowserRouter>
