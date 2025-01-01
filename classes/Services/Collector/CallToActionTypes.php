@@ -93,9 +93,9 @@ class CallToActionTypes extends Service {
 	 * @return bool|CallToAction
 	 */
 	public function get( $key ) {
-		$calltoactions = $this->get_all();
+		$call_to_actions = $this->get_all();
 
-		return $calltoactions[ $key ] ?? false;
+		return $call_to_actions[ $key ] ?? false;
 	}
 
 	/**
@@ -104,13 +104,13 @@ class CallToActionTypes extends Service {
 	 * @return array<string,array<string,mixed>>
 	 */
 	public function get_as_array() {
-		$calltoactions = [];
+		$call_to_actions = [];
 
 		foreach ( $this->get_all() as $key => $value ) {
-			$calltoactions[ $key ] = $value->as_array();
+			$call_to_actions[ $key ] = $value->as_array();
 		}
 
-		return $calltoactions;
+		return apply_filters( 'popup_maker/cta_types_as_array', $call_to_actions );
 	}
 
 	/**
@@ -119,12 +119,12 @@ class CallToActionTypes extends Service {
 	 * @return array<string,string>
 	 */
 	public function get_select_list() {
-		$calltoactions = [];
+		$call_to_actions = [];
 
 		foreach ( $this->get_all() as $key => $value ) {
-			$calltoactions[ $key ] = $value->label();
+			$call_to_actions[ $key ] = $value->label();
 		}
 
-		return $calltoactions;
+		return apply_filters( 'popup_maker/cta_types_select_list', $call_to_actions );
 	}
 }

@@ -120,7 +120,11 @@ class Assets extends Controller {
 				'handle'   => 'popup-maker-cta-editor',
 				'styles'   => true,
 				'varsName' => 'popupMakerCtaEditor',
-				'vars'     => [],
+				'vars'     => function () {
+					return [
+						'cta_types' => $this->container->get( 'cta_types' )->get_as_array(),
+					];
+				},
 				// 'head'     => true,
 			],
 			'data'            => [
