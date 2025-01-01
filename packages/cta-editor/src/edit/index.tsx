@@ -22,6 +22,8 @@ import {
 
 import useEditor from '../hooks/use-editor';
 import GeneralTab from './general';
+import { initCustomFields } from './custom-fields';
+import { initLinkTypeFields } from './link-type-fields';
 
 export const documenationUrl =
 	'https://wppopupmaker.com/docs/?utm_campaign=documentation&utm_source=call-to-action-editor&utm_medium=plugin-ui&utm_content=footer-documentation-link';
@@ -41,6 +43,12 @@ export type EditTabProps = EditProps & {
 };
 
 const noop = () => {};
+
+// Initialize custom fields via filters.
+initCustomFields();
+
+// Initialize link type cta fields.
+initLinkTypeFields();
 
 const Edit = ( { onSave = noop, onClose = noop }: EditProps ) => {
 	const { tab, setTab, clearEditorParams } = useEditor();
