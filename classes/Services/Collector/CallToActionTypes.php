@@ -10,14 +10,16 @@
 namespace PopupMaker\Services\Collector;
 
 use PopupMaker\Base\Service;
-use PopupMaker\Interfaces\CallToAction;
+use PopupMaker\Base\CallToAction;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class CallToActions
+ * Class CallToActionTypes
  *
  * This class maintains a global set of all registered call to action types.
+ *
+ * @since X.X.X
  */
 class CallToActionTypes extends Service {
 
@@ -34,7 +36,9 @@ class CallToActionTypes extends Service {
 	 * @return void
 	 */
 	public function register_all() {
-		$ctas = [];
+		$ctas = [
+			'link' => new \PopupMaker\CallToAction\Link(),
+		];
 
 		/**
 		 * Allow registering additional call to actions quickly.
@@ -65,7 +69,7 @@ class CallToActionTypes extends Service {
 	 * @param CallToAction $call_to_action Instance of a call to action.
 	 */
 	public function add( $call_to_action ) {
-		$this->data[ $call_to_action->key() ] = $call_to_action;
+		$this->data[ $call_to_action->key ] = $call_to_action;
 	}
 
 	/**

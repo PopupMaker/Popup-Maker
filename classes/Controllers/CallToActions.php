@@ -47,12 +47,15 @@ class CallToActions extends Controller {
 		$cta_uuid = str_replace( 'cta_', '', $cta_uuid );
 
 		// Check for matching popup_{uuid}.
-		$cta = $this->container->get( 'ctas' )->get_by_uuid( $cta_uuid );
+		$call_to_action = $this->container->get( 'ctas' )->get_by_uuid( $cta_uuid );
 
 		// If no uuid is found, we don't have what we need, so return.
-		if ( ! $cta ) {
+		if ( ! $call_to_action ) {
 			return;
 		}
+
+		// Basic conversion tracking.
+		\pum_track_conversion_event( $popup_id );
 
 		/**
 		 * Allow extensions to handle their own CTA types.
@@ -64,45 +67,42 @@ class CallToActions extends Controller {
 		 *     @type string $cta_uuid The CTA UUID
 		 * }
 		 */
-		$actioned = apply_filters('popup_maker/cta_action', false, $cta, [
+		$actioned = apply_filters( 'popup_maker/cta_action', false, $call_to_action, [
 			'popup_id' => $popup_id,
-			'cta_uuid' => $cta_uuid,
-		]);
+		] );
 
-		if ( ! $actioned ) {
-			switch ( $cta->get_setting( 'type' ) ) {
-				case 'link':
-					// Simple link CTAs track basic conversion
-					pum_track_conversion_event( $popup_id, [
-						'cta_id' => $cta->id,
-					]);
-
-					// Get url from CTA (defaults to current URL) and strip CTA query args.
-					$url = remove_query_arg(
-						$cta_args,
-						$cta->get_setting( 'url' )
-					);
-
-					wp_safe_redirect( esc_url_raw( $url ) );
-					exit;
-
-				default:
-					/**
-					 * Allow extensions to handle their own CTA types.
-					 *
-					 * @param int $popup_id The popup ID if any.
-					 * @param CTA $cta The CTA object.
-					 *
-					 * @since X.X.X
-					 */
-					do_action( 'pum_cta_' . $cta->get_setting( 'type' ) . '_action', $popup_id, $cta );
-
-					// Default to current URL without CTA parameters.
-					$url = remove_query_arg( $cta_args );
-
-					wp_safe_redirect( esc_url_raw( $url ) );
-					exit;
-			}
+		if ( false !== $actioned ) {
+			return;
 		}
+
+		$cta_type = $call_to_action->get_setting( 'type' );
+
+		if ( empty( $cta_type ) ) {
+			return;
+		}
+
+		$extra_args = [
+			'popup_id' => $popup_id,
+		];
+
+		$cta_type_handler = $this->container->get( 'cta_types' )->get( $cta_type );
+
+		if ( ! $cta_type_handler instanceof \PopupMaker\Base\CallToAction ) {
+			/**
+			 * Allow extensions to handle their own CTA types.
+			 *
+			 * @param \PopupMaker\Base\CallToAction $call_to_action Call to action object.
+			 * @param array                         $extra_args     Optional. Additional data passed to the handler (will include popup_id).
+			 */
+			do_action( 'pum_cta_' . $cta_type . '_action', $call_to_action, $extra_args );
+
+			// Default to current URL without CTA parameters.
+			$url = remove_query_arg( $cta_args );
+
+			wp_safe_redirect( esc_url_raw( $url ) );
+			exit;
+		}
+
+		$cta_type_handler->action_handler( $call_to_action, $extra_args );
 	}
 }

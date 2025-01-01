@@ -1,36 +1,44 @@
 <?php
 /**
- * Call To Action interface.
+ * Call To Action abstract class.
  *
  * @author    Code Atlantic
  * @package   PopupMaker
  * @copyright (c) 2024, Code Atlantic LLC.
  */
 
-namespace PopupMaker\Interfaces;
+namespace PopupMaker\Base;
 
 defined( 'ABSPATH' ) || exit;
 
+
 /**
- * Interface CallToAction
+ * Class CallToAction
  *
  * @since X.X.X
  */
-interface CallToAction {
+abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
+
+	/**
+	 * Unique identifier token.
+	 *
+	 * @var string
+	 */
+	public $key;
 
 	/**
 	 * Label for reference.
 	 *
 	 * @return string
 	 */
-	public function label();
+	abstract public function label();
 
 	/**
 	 * Function that returns array of fields by group.
 	 *
 	 * @return array
 	 */
-	public function fields();
+	abstract public function fields();
 
 	/**
 	 * Handle the CTA action.
@@ -40,7 +48,7 @@ interface CallToAction {
 	 *
 	 * @return mixed The result of the action
 	 */
-	public function action_handler( $call_to_action, $extra_args = [] );
+	abstract public function action_handler( $call_to_action, $extra_args = [] );
 
 	/**
 	 * Returns an array that represents the cta.
@@ -49,5 +57,11 @@ interface CallToAction {
 	 *
 	 * @return array
 	 */
-	public function as_array();
+	public function as_array() {
+		return [
+			'key'    => $this->key,
+			'label'  => $this->label(),
+			'fields' => $this->fields(),
+		];
+	}
 }
