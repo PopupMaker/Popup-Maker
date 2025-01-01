@@ -24,6 +24,7 @@ export interface FieldBaseProps {
 	default?: any;
 	required?: boolean;
 	help?: string | React.ReactElement;
+	priority?: number;
 	dependencies?: { [ key: string ]: string | boolean | number };
 }
 
@@ -139,7 +140,7 @@ export interface SelectFieldProps extends SelectFieldBaseProps {
 }
 
 export interface TextFieldProps extends InputFieldProps< string > {
-	type: 'text' | 'email' | 'tel' | 'password';
+	type: 'text' | 'email' | 'tel' | 'password' | 'url';
 }
 
 export interface DateFieldProps extends InputFieldProps< string > {
