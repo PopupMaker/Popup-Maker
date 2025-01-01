@@ -22,6 +22,8 @@ import ListOptions from './options';
 
 import type { CallToAction } from '@popup-maker/core-data';
 
+const { cta_types: callToActions } = window.popupMakerCtaEditor;
+
 const List = () => {
 	// Get the shared method for setting editor Id & query params.
 	const { setEditorId } = useEditor();
@@ -35,6 +37,14 @@ const List = () => {
 	} >();
 
 	const clearConfirm = () => setConfirmDialogue( undefined );
+
+	const getCtaLabel = ( typeKey: string ) => {
+		const ctaType = Object.values( callToActions ).find(
+			( { key } ) => key === typeKey
+		);
+
+		return ctaType?.label ?? '';
+	};
 
 	return (
 		<ListProvider>
@@ -315,7 +325,9 @@ const List = () => {
 										}
 
 										case 'type':
-											return callToAction.settings?.type;
+											return getCtaLabel(
+												callToAction.settings.type
+											);
 
 										default:
 											return (
