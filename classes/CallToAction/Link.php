@@ -66,9 +66,10 @@ class Link extends \PopupMaker\Base\CallToAction {
 		return [
 			'general' => [
 				'url' => [
-					'type'     => 'url',
-					'label'    => __( 'Link', 'popup-maker' ),
-					'priority' => 1.2,
+					// 'type'     => 'url',
+					// 'label'    => __( 'Link', 'popup-maker' ),
+					// 'priority' => 1.2,
+					'std' => '',
 				],
 			],
 		];
