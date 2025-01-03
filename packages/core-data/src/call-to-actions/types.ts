@@ -41,6 +41,7 @@ export interface ApiFormat {
 
 export interface BaseCallToAction {
 	id: number;
+	uuid: string;
 	slug: string;
 	title: string;
 	description: string;
@@ -52,6 +53,7 @@ export interface CallToAction extends BaseCallToAction {}
 
 export interface ApiCallToAction {
 	id: number;
+	uuid: string;
 	title: string | ApiFormat;
 	excerpt: string | ApiFormat;
 	slug: string;
