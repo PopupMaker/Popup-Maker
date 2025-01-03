@@ -66,8 +66,12 @@ class Assets extends Controller {
 				'styles' => true,
 			],
 			'block-editor'    => [
+				'bundled'  => false,
 				'handle'   => 'popup-maker-block-editor',
 				'styles'   => true,
+				'deps'     => [
+					'popup-maker-block-library',
+				],
 				'varsName' => 'popupMakerBlockEditor',
 				'vars'     => [
 					'cta_types'                  => $this->container->get( 'cta_types' )->get_as_array(),
@@ -83,11 +87,12 @@ class Assets extends Controller {
 				],
 			],
 			'block-library'   => [
-				'bundled'  => false,
-				'handle'   => 'popup-maker-block-library',
-				'styles'   => true,
-				'varsName' => 'popupMakerBlockLibrary',
-				'vars'     => [],
+				'bundled'      => false,
+				'handle'       => 'popup-maker-block-library',
+				'styles'       => true,
+				'block_styles' => true,
+				'varsName'     => 'popupMakerBlockLibrary',
+				'vars'         => [],
 			],
 			'components'      => [
 				'bundled'  => false,
@@ -234,6 +239,17 @@ class Assets extends Controller {
 				}
 			}
 
+			if ( isset( $package_data['block_styles'] ) && $package_data['block_styles'] ) {
+				$block_css_file = $this->container->get_url( "$path/$package-style{$rtl}.css" );
+				$block_css_deps = [ 'wp-block-editor' ];
+
+				if ( $bundled ) {
+					pum_register_style( $handle . '-style', $block_css_file, $block_css_deps, $meta['version'] );
+				} else {
+					wp_register_style( $handle . '-style', $block_css_file, $block_css_deps, $meta['version'] );
+				}
+			}
+
 			/**
 			 * TODO Create pum_set_script_translations() function.
 			 *
@@ -372,8 +388,15 @@ class Assets extends Controller {
 					if ( $bundled ) {
 						pum_enqueue_style( $handle );
 					} else {
-						// Though pum_* asset functions pass through to wp_* automatically when disabled, admin packages should never be bundled.
 						wp_enqueue_style( $handle );
+					}
+				}
+
+				if ( isset( $package_data['block_styles'] ) && $package_data['block_styles'] ) {
+					if ( $bundled ) {
+						pum_enqueue_style( $handle . '-style' );
+					} else {
+						wp_enqueue_style( $handle . '-style' );
 					}
 				}
 
