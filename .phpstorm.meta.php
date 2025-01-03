@@ -27,6 +27,16 @@ override(\PopupMaker\Plugin\Core::get_controller(0), map([
     'RestAPI'       => \PopupMaker\Controllers\RestAPI::class,
 ]));
 
+override(\PopupMaker\Plugin\Container::get_controller(0), map([
+    // Controllers
+    'PostTypes'     => \PopupMaker\Controllers\PostTypes::class,
+    'Assets'        => \PopupMaker\Controllers\Assets::class,
+    'Admin'         => \PopupMaker\Controllers\Admin::class,
+    'Compatibility' => \PopupMaker\Controllers\Compatibility::class,
+    'CallToActions' => \PopupMaker\Controllers\CallToActions::class,
+    'RestAPI'       => \PopupMaker\Controllers\RestAPI::class,
+]));
+
 override(\PopupMaker\Plugin\Core::get(0), map([
     // Services
     'ctas'         => \PopupMaker\Services\Repository\CallToActions::class,
