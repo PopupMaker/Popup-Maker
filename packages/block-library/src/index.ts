@@ -1,12 +1,11 @@
-/**
- * WordPress dependencies
- */
-import { registerBlockType } from '@wordpress/blocks';
-/**
- * Internal dependencies
- */
-import * as cta from './calltoaction';
+import domReady from '@wordpress/dom-ready';
 
-[ cta ].forEach( ( { name, settings } ) =>
-	registerBlockType( name, settings )
-);
+// import './lib/call-to-action';
+
+import * as blocks from './lib';
+
+domReady( () => {
+	Object.values( blocks ).forEach( ( { init } ) => {
+		init();
+	} );
+} );
