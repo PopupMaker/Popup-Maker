@@ -1,6 +1,8 @@
 const path = require( 'path' );
 const CustomTemplatedPathPlugin = require( '@popup-maker/custom-templated-path-webpack-plugin' );
 const DependencyExtractionWebpackPlugin = require( '@popup-maker/dependency-extraction-webpack-plugin' );
+const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
+const RtlCssPlugin = require( 'rtlcss-webpack-plugin' );
 
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 
@@ -41,10 +43,6 @@ const config = {
 	},
 	output: {
 		path: path.resolve( process.cwd(), 'dist/packages' ),
-		filename: ( { chunk } ) => {
-			return '[name].js';
-		},
-		// assetModuleFilename: '../images/[name][ext]',
 		publicPath: '/wp-content/plugins/popup-maker/dist/packages/',
 		devtoolNamespace: 'popup-maker/core',
 		devtoolModuleFilenameTemplate:
@@ -77,9 +75,29 @@ const config = {
 	plugins: [
 		...defaultConfig.plugins.filter(
 			( plugin ) =>
-				plugin.constructor.name !== 'DependencyExtractionWebpackPlugin' // &&
+				plugin.constructor.name !==
+					'DependencyExtractionWebpackPlugin' &&
+				plugin.constructor.name !== 'MiniCssExtractPlugin' &&
+				plugin.constructor.name !== 'RtlCssPlugin'
 			// plugin.constructor.name !== 'CleanWebpackPlugin'
 		),
+		new MiniCssExtractPlugin( {
+			filename: ( { chunk } ) => {
+				if ( chunk.name.includes( 'style' ) ) {
+					return `${ chunk.runtime }-style.css`;
+				}
+
+				return `${ chunk.runtime }.css`;
+			},
+		} ),
+		new RtlCssPlugin( {
+			filename: ( { chunk } ) => {
+				if ( chunk.name.includes( 'style-' ) ) {
+					return `${ chunk.runtime }-style-rtl.css`;
+				}
+				return `${ chunk.runtime }-rtl.css`;
+			},
+		} ),
 		new CustomTemplatedPathPlugin( {
 			modulename( outputPath, data ) {
 				const entryName = data.chunk.name;

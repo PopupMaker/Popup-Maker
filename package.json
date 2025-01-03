@@ -60,9 +60,9 @@
 		"@code-atlantic/browserslist-config": "^1.0.1",
 		"@code-atlantic/eslint-plugin": "^1.3.1",
 		"@code-atlantic/stylelint-config": "^1.3.0",
-		"@popup-maker/types": "file:./packages/types",
 		"@popup-maker/custom-templated-path-webpack-plugin": "file:./packages/custom-templated-path-webpack-plugin",
 		"@popup-maker/dependency-extraction-webpack-plugin": "file:./packages/dependency-extraction-webpack-plugin",
+		"@popup-maker/types": "file:./packages/types",
 		"@storybook/addon-actions": "^8.4.7",
 		"@storybook/addon-essentials": "^8.4.7",
 		"@storybook/addon-styling-webpack": "^1.0.1",
@@ -73,10 +73,12 @@
 		"@wordpress/base-styles": "^5.14.0",
 		"@wordpress/scripts": "^27.9.0",
 		"classnames": "^2.5.1",
+		"mini-css-extract-plugin": "^2.9.2",
 		"nx": "17.3.2",
 		"path": "^0.12.7",
 		"prettier": "npm:wp-prettier@3.0.3",
 		"react-docgen-typescript": "^2.2.2",
+		"rtlcss-webpack-plugin": "^4.0.7",
 		"storybook": "^8.4.7"
 	},
 	"scripts": {
