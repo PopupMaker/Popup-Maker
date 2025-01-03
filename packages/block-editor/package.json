@@ -21,6 +21,7 @@
 	"types": "build-types",
 	"dependencies": {
 		"@popup-maker/components": "*",
+		"@popup-maker/core-data": "*",
 		"@popup-maker/icons": "*",
 		"@wordpress/block-editor": "^14.9.0",
 		"@wordpress/components": "^29.0.0",
