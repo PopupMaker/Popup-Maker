@@ -104,7 +104,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		$fields = [
 			'general'    => [
 				'main' => [
-					'id'         => [
+					'id'          => [
 						'type'      => 'postselect',
 						'post_type' => 'pum_cta',
 						'label'     => __( 'Which type of CTA would you like to use?', 'popup-maker' ),
@@ -120,7 +120,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 						'std'       => '',
 						'priority'  => 0,
 					],
-					'linkTarget' => [
+					'link_target' => [
 						'type'     => 'radio',
 						'label'    => __( 'Open in a new tab?', 'popup-maker' ),
 						'options'  => [
@@ -130,7 +130,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 						'std'      => '_self',
 						'priority' => 0.1,
 					],
-					'text'       => [
+					'text'        => [
 						'type'     => 'text',
 						'label'    => __( 'Enter text for your call to action.', 'popup-maker' ),
 						'std'      => __( 'Learn more', 'popup-maker' ),
@@ -226,7 +226,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		$atts = $this->shortcode_atts( $atts );
 
 		$cta_id = $atts['id'];
-		$target = $atts['linkTarget'];
+		$target = $atts['link_target'];
 
 		$text  = ! empty( $atts['text'] ) ? $atts['text'] : $content;
 		$style = $atts['style'];
