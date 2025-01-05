@@ -3,9 +3,10 @@
 	"compilerOptions": {
 		"rootDir": "src",
 		"outDir": "build",
-		"declarationDir": "build-types"
+		"declarationDir": "build-types",
+		"resolveJsonModule": true
 	},
-	"include": [ "./src/**/*" ],
+	"include": [ "./src/**/*.ts|tsx|js|json" ],
 	"types": [ "jquery" ],
 	"references": []
 }
