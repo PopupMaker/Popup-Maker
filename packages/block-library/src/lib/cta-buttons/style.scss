@@ -7,7 +7,6 @@ $blocks-block__margin: 0.5em;
 
 	&.is-vertical {
 		flex-direction: column;
-		> .wp-block-button,
 		> .wp-block-popup-maker-cta-button {
 			&:last-child {
 				margin-bottom: 0;
@@ -16,7 +15,6 @@ $blocks-block__margin: 0.5em;
 	}
 
 	// Increased specificity to override blocks default margin.
-	> .wp-block-button,
 	> .wp-block-popup-maker-cta-button {
 		display: inline-block;
 		margin: 0;
@@ -66,7 +64,6 @@ $blocks-block__margin: 0.5em;
 			.is-content-justification-left,
 			.is-content-justification-center
 		) {
-		.wp-block-button.aligncenter,
 		.wp-block-popup-maker-cta-button.aligncenter {
 			/* stylelint-enable @stylistic/indentation */
 			margin-left: auto;
@@ -76,16 +73,13 @@ $blocks-block__margin: 0.5em;
 	}
 
 	&[style*="text-decoration"] {
-		.wp-block-button,
 		.wp-block-popup-maker-cta-button,
-		.wp-block-button__link,
 		.wp-block-popup-maker-cta-button__link {
 			text-decoration: inherit;
 		}
 	}
 
 	&.has-custom-font-size {
-		.wp-block-button__link,
 		.wp-block-popup-maker-cta-button__link {
 			font-size: inherit;
 		}
@@ -93,7 +87,6 @@ $blocks-block__margin: 0.5em;
 }
 
 // Legacy buttons that did not come in a wrapping container.
-.wp-block-button.aligncenter,
 .wp-block-popup-maker-cta-button.aligncenter {
 	text-align: center;
 }

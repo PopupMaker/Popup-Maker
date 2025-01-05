@@ -6,6 +6,7 @@ import './style.scss';
  */
 import { __ } from '@wordpress/i18n';
 import { buttons as icon } from '@wordpress/icons';
+import { addFilter } from '@wordpress/hooks';
 
 /**
  * Internal dependencies
@@ -33,7 +34,7 @@ export const settings = {
 		innerBlocks: [
 			{
 				name: 'popup-maker/cta-button',
-				attributes: { text: __( 'Find out more' ) },
+				attributes: { text: __( 'Buy now' ) },
 			},
 			{
 				name: 'popup-maker/cta-button',
