@@ -74,6 +74,21 @@ const transforms = {
 		{
 			type: 'block',
 			isMultiBlock: true,
+			blocks: [ 'core/buttons' ],
+			transform: ( buttons ) =>
+				// Creates the cta-buttons block.
+				createBlock(
+					'popup-maker/cta-buttons',
+					{},
+					// Loop the selected buttons.
+					buttons.map( ( attributes ) =>
+						createBlock( 'core/button', attributes )
+					)
+				),
+		},
+		{
+			type: 'block',
+			isMultiBlock: true,
 			blocks: [ 'core/paragraph' ],
 			transform: ( buttons ) =>
 				// Creates the buttons block.

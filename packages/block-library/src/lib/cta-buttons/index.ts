@@ -49,3 +49,33 @@ export const settings = {
 };
 
 export const init = () => initBlock( { name, metadata, settings } );
+
+// Filter core/buttons to allow transforming to cta-buttons.
+addFilter(
+	'blocks.registerBlockType',
+	'popup-maker/cta-buttons',
+	( blockSettings ) => {
+		const { name: blockName } = blockSettings;
+
+		switch ( blockName ) {
+			case 'core/button':
+				return {
+					...blockSettings,
+					parent: [
+						...blockSettings.parent,
+						'popup-maker/cta-buttons',
+					],
+				};
+			case 'core/buttons':
+				return {
+					...blockSettings,
+					allowedBlocks: [
+						...blockSettings.allowedBlocks,
+						'popup-maker/cta-button',
+					],
+				};
+			default:
+				return blockSettings;
+		}
+	}
+);
