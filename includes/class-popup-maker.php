@@ -84,6 +84,8 @@ class Popup_Maker {
 
 	/**
 	 * @var null|PUM_Model_Popup
+	 *
+	 * @deprecated X.X.X
 	 */
 	public $current_popup;
 
