@@ -2,8 +2,9 @@
 /**
  * I18n Internationalization
  *
+ * @author    Code Atlantic
  * @package   PopupMaker
- * @copyright Copyright (c) 2024, Code Atlantic LLC
+ * @copyright (c) 2024, Code Atlantic LLC.
  */
 
 namespace PopupMaker\Controllers\WP;

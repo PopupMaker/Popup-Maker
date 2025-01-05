@@ -340,22 +340,22 @@ class PUM_Site_Assets {
 	 * @return array
 	 */
 	public static function get_popup_settings() {
-		$loaded = PUM_Site_Popups::get_loaded_popups();
+		$popups = \PopupMaker\plugin()->get_controller( 'Frontend\Popups' )->get_loaded_popups();
 
 		$settings = [];
 
-		$current_popup = pum()->current_popup;
+		// Get current popup to restore later.
+		$current_popup = \PopupMaker\get_current_popup();
 
-		if ( $loaded->have_posts() ) {
-			while ( $loaded->have_posts() ) :
-				$loaded->next_post();
-				pum()->current_popup = $loaded->post;
-				$popup               = pum_get_popup( $loaded->post->ID );
+		if ( $popups ) {
+			foreach ( $popups as $popup ) {
+				\PopupMaker\set_current_popup( $popup );
 				// Set the key to the CSS id of this popup for easy lookup.
 				$settings[ 'pum-' . $popup->ID ] = $popup->get_public_settings();
-			endwhile;
+			}
 
-			pum()->current_popup = $current_popup;
+			// Restore current popup.
+			\PopupMaker\set_current_popup( $current_popup );
 		}
 
 		return $settings;

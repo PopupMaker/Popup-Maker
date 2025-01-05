@@ -278,8 +278,7 @@ class Toolbar extends Controller {
 		static $popups;
 
 		if ( ! isset( $popups ) ) {
-			$loaded = PUM_Site_Popups::get_loaded_popups();
-			$popups = $loaded->posts;
+			$popups = $this->container->get_controller( 'Frontend\Popups' )->get_loaded_popups();
 		}
 
 		return $popups;
