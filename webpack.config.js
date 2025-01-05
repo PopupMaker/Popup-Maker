@@ -3,6 +3,7 @@ const CustomTemplatedPathPlugin = require( '@popup-maker/custom-templated-path-w
 const DependencyExtractionWebpackPlugin = require( '@popup-maker/dependency-extraction-webpack-plugin' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const RtlCssPlugin = require( 'rtlcss-webpack-plugin' );
+const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 
@@ -112,6 +113,23 @@ const config = {
 		new DependencyExtractionWebpackPlugin( {
 			combineAssets: true,
 			combinedOutputFile: '../package-assets.php',
+		} ),
+		new CopyWebpackPlugin( {
+			patterns: [
+				{
+					from: 'packages/block-library/src/lib/**/block.json',
+					to( { absoluteFilename } ) {
+						const pathParts = absoluteFilename.split( '/' );
+						const blockDirName = pathParts[ pathParts.length - 2 ];
+						return `../blocks/${ blockDirName }.block.json`;
+					},
+					context: '.',
+					noErrorOnMissing: true,
+					transform( content ) {
+						return content;
+					},
+				},
+			],
 		} ),
 	],
 	optimization: {

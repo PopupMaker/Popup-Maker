@@ -24,7 +24,8 @@ class WP extends Controller {
 	 */
 	public function init() {
 		$this->container->register_controllers( [
-			'WP\I18n' => new \PopupMaker\Controllers\WP\I18n( $this->container ),
+			'WP\Blocks' => new \PopupMaker\Controllers\WP\Blocks( $this->container ),
+			'WP\I18n'   => new \PopupMaker\Controllers\WP\I18n( $this->container ),
 		] );
 	}
 }

@@ -22,6 +22,7 @@ override(\PopupMaker\Plugin\Core::get_controller(0), map([
     'PostTypes'     => \PopupMaker\Controllers\PostTypes::class,
     'Assets'        => \PopupMaker\Controllers\Assets::class,
     'Admin'         => \PopupMaker\Controllers\Admin::class,
+    'Frontend\Popups' => \PopupMaker\Controllers\Frontend\Popups::class,
     'Compatibility' => \PopupMaker\Controllers\Compatibility::class,
     'CallToActions' => \PopupMaker\Controllers\CallToActions::class,
     'RestAPI'       => \PopupMaker\Controllers\RestAPI::class,
@@ -32,6 +33,7 @@ override(\PopupMaker\Plugin\Container::get_controller(0), map([
     'PostTypes'     => \PopupMaker\Controllers\PostTypes::class,
     'Assets'        => \PopupMaker\Controllers\Assets::class,
     'Admin'         => \PopupMaker\Controllers\Admin::class,
+    'Frontend\Popups' => \PopupMaker\Controllers\Frontend\Popups::class,
     'Compatibility' => \PopupMaker\Controllers\Compatibility::class,
     'CallToActions' => \PopupMaker\Controllers\CallToActions::class,
     'RestAPI'       => \PopupMaker\Controllers\RestAPI::class,
@@ -39,8 +41,10 @@ override(\PopupMaker\Plugin\Container::get_controller(0), map([
 
 override(\PopupMaker\Plugin\Core::get(0), map([
     // Services
+    'popups'       => \PopupMaker\Services\Repository\Popups::class,
     'ctas'         => \PopupMaker\Services\Repository\CallToActions::class,
     'cta_types'    => \PopupMaker\Services\Collector\CallToActionTypes::class,
+    'popuploader'  => \PopupMaker\Services\Collector\PopupLoader::class,
     'globals'      => \PopupMaker\Services\Globals::class,
     
     // Config Values
@@ -55,8 +59,10 @@ override(\PopupMaker\Plugin\Core::get(0), map([
 // Required for external plugin() function access.
 override(\PopupMaker\plugin(0), map([
     // Services
+    'popups'       => \PopupMaker\Services\Repository\Popups::class,
     'ctas'         => \PopupMaker\Services\Repository\CallToActions::class,
     'cta_types'    => \PopupMaker\Services\Collector\CallToActionTypes::class,
+    'popuploader'  => \PopupMaker\Services\Collector\PopupLoader::class,
     'globals'      => \PopupMaker\Services\Globals::class,
     
     // Config Values
@@ -71,8 +77,10 @@ override(\PopupMaker\plugin(0), map([
 // Required for internal $controller->container->get($id);
 override( \PopupMaker\Plugin\Container::get(0), map([
     // Services
+    'popups'       => \PopupMaker\Services\Repository\Popups::class,
     'ctas'         => \PopupMaker\Services\Repository\CallToActions::class,
     'cta_types'    => \PopupMaker\Services\Collector\CallToActionTypes::class,
+    'popuploader'  => \PopupMaker\Services\Collector\PopupLoader::class,
     'globals'      => \PopupMaker\Services\Globals::class,
     
     // Config Values
