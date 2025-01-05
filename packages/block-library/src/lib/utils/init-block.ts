@@ -1,7 +1,9 @@
 /**
  * WordPress dependencies
  */
-import { BlockConfiguration, registerBlockType } from '@wordpress/blocks';
+import { registerBlockType } from '@wordpress/blocks';
+
+import type { BlockConfiguration } from '@wordpress/blocks';
 
 type BlockMetadata = Omit< BlockConfiguration, 'name' >;
 
