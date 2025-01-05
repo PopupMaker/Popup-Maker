@@ -41,6 +41,7 @@ class PUM_Site_Popups {
 	 * Hook the initialize method to the WP init action.
 	 */
 	public static function init() {
+		return;
 
 		// Preload the $loaded query.
 		add_action( 'init', [ __CLASS__, 'init_state' ] );

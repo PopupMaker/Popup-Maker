@@ -45,6 +45,7 @@ final class Core extends \PopupMaker\Plugin\Container {
 			'PostTypes'     => new \PopupMaker\Controllers\PostTypes( $this ),
 			'RestAPI'       => new \PopupMaker\Controllers\RestAPI( $this ),
 			'WP'            => new \PopupMaker\Controllers\WP( $this ),
+			'Frontend'      => new \PopupMaker\Controllers\Frontend( $this ),
 			// 'BlockEditor'            => new \PopupMaker\Controllers\BlockEditor( $this ),
 			// 'Frontend'               => new \PopupMaker\Controllers\Frontend( $this ),
 			// 'Shortcodes'             => new \PopupMaker\Controllers\Shortcodes( $this ),
@@ -228,6 +229,18 @@ final class Core extends \PopupMaker\Plugin\Container {
 		);
 
 		$this->set(
+			'popups',
+			/**
+			 * Get user popups from the database.
+			 *
+			 * @return \PopupMaker\Services\Repository\Popups
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\Repository\Popups( $container );
+			}
+		);
+
+		$this->set(
 			'ctas',
 			/**
 			 * Get user call to actions from the database.
@@ -272,6 +285,18 @@ final class Core extends \PopupMaker\Plugin\Container {
 			 */
 			function () {
 				return new \PopupMaker\Services\Globals();
+			}
+		);
+
+		$this->set(
+			'popuploader',
+			/**
+			 * Get plugin popup loader.
+			 *
+			 * @return \PopupMaker\Services\PopupLoader
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\PopupLoader( $container );
 			}
 		);
 

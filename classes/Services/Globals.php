@@ -9,6 +9,8 @@
 
 namespace PopupMaker\Services;
 
+use PUM_Model_Popup as Popup;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -23,6 +25,7 @@ class Globals {
 	 */
 	private $allowed_properties = [
 		'current_rule',
+		'current_popup',
 	];
 
 	/**
@@ -31,6 +34,13 @@ class Globals {
 	 * @var \PopupMaker\Models\RuleEngine\Rule|null
 	 */
 	public $current_rule = null;
+
+	/**
+	 * Current popup.
+	 *
+	 * @var Popup|null
+	 */
+	public $current_popup = null;
 
 	/**
 	 * Constructor.
