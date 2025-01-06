@@ -45,7 +45,6 @@ declare module '@wordpress/data' {
 				< K extends StoreKeys >( key: K ): StoreSelectors< K >;
 				( key: any ): any;
 			},
-			bullshit: string
 		) => T,
 		deps?: any[]
 	): T;
