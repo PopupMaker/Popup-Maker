@@ -10,7 +10,7 @@ import type { Post, Taxonomy } from '@wordpress/core-data';
 
 import type { Props as SmartTokenControlProps } from '../smart-token-control';
 
-export type Props< T extends number | number[] > = Omit<
+export type Props< T extends number | number[] | string > = Omit<
 	SmartTokenControlProps,
 	'value' | 'onChange' | 'suggestions'
 > & {
@@ -156,8 +156,20 @@ const EntitySelectControl = <
 				onInputChange={ updateQueryText }
 				onChange={ ( newValue ) => {
 					const val = newValue
-						.map( ( v ) => parseInt( getTokenValue( v ), 10 ) )
-						.filter( ( v ) => ! isNaN( v ) );
+						.map( ( v ) => {
+							const tokenValue = getTokenValue( v );
+							// Check if it's a string (likely from extraOptions)
+							if (
+								typeof tokenValue === 'string' &&
+								! tokenValue.match( /^\d+$/ )
+							) {
+								return tokenValue;
+							}
+							// Otherwise treat as numeric ID
+							const numericValue = parseInt( tokenValue, 10 );
+							return isNaN( numericValue ) ? null : numericValue;
+						} )
+						.filter( ( v ): v is number | string => v !== null );
 
 					onChange( ( multiple ? val : val[ 0 ] ) as T );
 				} }

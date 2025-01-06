@@ -49,6 +49,11 @@ export type Props< T extends Token = Token > = {
 	};
 	multiple?: boolean;
 	suggestions: string[];
+	extraOptions?: Array< {
+		value: Token;
+		label: string;
+		onSelect?: () => void;
+	} >;
 	closeOnSelect?: boolean;
 	renderToken?: ( token: T ) => JSX.Element | string;
 
@@ -131,6 +136,7 @@ const SmartTokenControl = < T extends Token = string >(
 		extraKeyboardShortcuts = {},
 		multiple = false,
 		suggestions,
+		extraOptions = [],
 		messages = {
 			searchTokens: __( 'Search', 'popup-maker' ),
 			noSuggestions: __( 'No suggestions', 'popup-maker' ),
@@ -346,7 +352,7 @@ const SmartTokenControl = < T extends Token = string >(
 				} );
 			}
 
-			addNewToken( suggestions[ currentIndex ] );
+			handleSuggestionSelect( mergedSuggestions[ currentIndex ] );
 		},
 		// Close the popover.
 		escape: ( event: KeyboardEvent ) => {
@@ -373,6 +379,27 @@ const SmartTokenControl = < T extends Token = string >(
 			addNewToken( inputText );
 		},
 		...extraKeyboardShortcuts,
+	};
+
+	// Merge regular suggestions with extra options
+	const mergedSuggestions = [
+		...suggestions,
+		...extraOptions.map( ( opt ) => opt.label ),
+	];
+
+	const handleSuggestionSelect = ( suggestion: string ) => {
+		// Check if it's an extra option
+		const extraOption = extraOptions.find(
+			( opt ) => opt.label === suggestion
+		);
+		if ( extraOption ) {
+			extraOption.onSelect?.();
+			addNewToken( extraOption.value.toString() );
+			return;
+		}
+
+		// Regular suggestion
+		addNewToken( suggestion );
 	};
 
 	return (
@@ -526,8 +553,8 @@ const SmartTokenControl = < T extends Token = string >(
 								width: inputRef.current?.clientWidth,
 							} }
 						>
-							{ suggestions.length ? (
-								suggestions.map( ( suggestion, i ) => (
+							{ mergedSuggestions.length ? (
+								mergedSuggestions.map( ( suggestion, i ) => (
 									<div
 										key={ i }
 										id={ `sug-${ i }` }
@@ -548,7 +575,9 @@ const SmartTokenControl = < T extends Token = string >(
 										} }
 										onMouseDown={ ( event ) => {
 											event.preventDefault();
-											addNewToken( suggestions[ i ] );
+											handleSuggestionSelect(
+												mergedSuggestions[ i ]
+											);
 										} }
 										role="option"
 										tabIndex={ i }
