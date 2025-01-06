@@ -28,7 +28,6 @@ import {
 	ToggleControl,
 	Flex,
 	FlexItem,
-	ButtonGroup,
 } from '@wordpress/components';
 import { EntitySelectControl } from '@popup-maker/components';
 import {
