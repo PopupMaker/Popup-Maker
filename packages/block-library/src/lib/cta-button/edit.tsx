@@ -319,7 +319,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 	useEffect( () => {
 		if ( ctaId && selectedCTA ) {
 			setAttributes( {
-				url: `/?cta=${ selectedCTA.uuid }`,
+				url: `?cta=${ selectedCTA.uuid }`,
 				linkTarget: selectedCTA.settings.opensInNewTab
 					? NEW_TAB_TARGET
 					: undefined,
