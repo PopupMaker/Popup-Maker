@@ -441,8 +441,11 @@ function ButtonEdit( props: ButtonEditProps ) {
 									<FlexItem style={ { flexGrow: 1 } }>
 										<EntitySelectControl
 											value={ ctaId || 0 }
-											onChange={ ( newId ) => {
-												if ( newId === -1 ) {
+											onChange={ (
+												newId: number | string
+											) => {
+												console.log( newId );
+												if ( newId === 'create_new' ) {
 													// TODO: Implement create new CTA functionality
 													console.log(
 														'Create new CTA clicked'
@@ -450,7 +453,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 													return;
 												}
 												setAttributes( {
-													ctaId: newId as number,
+													ctaId: Number( newId ),
 												} );
 											} }
 											hideLabelFromVision
@@ -461,10 +464,15 @@ function ButtonEdit( props: ButtonEditProps ) {
 												'popup-maker'
 											) }
 											multiple={ false }
-											inputStyles={ {
-												minHeight: '30px',
-											} }
-											__nextHasNoMarginBottom
+											extraOptions={ [
+												{
+													value: 'create_new',
+													label: __(
+														'+ Create new CTA',
+														'popup-maker'
+													),
+												},
+											] }
 										/>
 									</FlexItem>
 									<FlexItem>
