@@ -63,6 +63,8 @@ import { useSelect, useDispatch } from '@wordpress/data';
 import { CALL_TO_ACTION_STORE } from '@popup-maker/core-data';
 import type { BlockInstance } from '@wordpress/blocks';
 
+import { Editor } from '@popup-maker/cta-editor';
+
 interface ButtonAttributes {
 	tagName: string;
 	textAlign?: string;
@@ -243,6 +245,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 
 	// Update isEditingCTA to be true when selected and has CTA or when explicitly editing
 	const [ isExplicitlyEditing, setIsExplicitlyEditing ] = useState( false );
+	const [ createNewCTA, setCreateNewCTA ] = useState( false );
 	const isEditingCTA = isSelected && ( isExplicitlyEditing || !! ctaId );
 
 	function onKeyDown( event: React.KeyboardEvent< HTMLDivElement > ) {
@@ -450,6 +453,8 @@ function ButtonEdit( props: ButtonEditProps ) {
 													console.log(
 														'Create new CTA clicked'
 													);
+
+													setCreateNewCTA( true );
 													return;
 												}
 												setAttributes( {
@@ -593,6 +598,22 @@ function ButtonEdit( props: ButtonEditProps ) {
 					/>
 				) }
 			</InspectorControls>
+
+			{ createNewCTA && (
+				<Editor
+					useModal={ true }
+					ctaId={ 'new' }
+					onSave={ ( values ) => {
+						setAttributes( {
+							ctaId: values.id,
+						} );
+						setCreateNewCTA( false );
+					} }
+					onClose={ () => {
+						setCreateNewCTA( false );
+					} }
+				/>
+			) }
 		</>
 	);
 }
