@@ -12,3 +12,4 @@ export { default as SearchableMulticheckControl } from './searchable-multicheck-
 export { default as SmartTokenControl } from './smart-token-control';
 export { default as TextHighlight } from './text-highlight';
 export { default as URLControl } from './url-control';
+export * from './utils';
