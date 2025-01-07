@@ -21,6 +21,13 @@ defined( 'ABSPATH' ) || exit;
 class Assets extends Controller {
 
 	/**
+	 * Whether global vars should be printed.
+	 *
+	 * @var bool
+	 */
+	private $should_print_global_vars = false;
+
+	/**
 	 * Initialize the assets controller.
 	 */
 	public function init() {
@@ -31,6 +38,8 @@ class Assets extends Controller {
 		add_action( 'admin_print_scripts', [ $this, 'autoload_styles_for_scripts' ], 1 );
 		// Add a hook to fix old handles that might be enqueueed and not loaded, load their replacements.
 		add_action( 'wp_enqueue_scripts', [ $this, 'fix_old_handles' ], 1 );
+		add_action( 'wp_footer', [ $this, 'print_global_vars' ], 10 ); // wp_print_footer_scripts is at 20.
+		add_action( 'admin_footer', [ $this, 'print_global_vars' ], 10 ); // admin_print_footer_scripts is at 20.
 	}
 
 	/**
@@ -262,24 +271,6 @@ class Assets extends Controller {
 	}
 
 	/**
-	 * Setup global vars.
-	 *
-	 * @return void
-	 */
-	public function setup_global_vars() {
-		static $inited;
-
-		if ( $inited ) {
-			return;
-		}
-
-		$inited = true;
-
-		add_action( 'wp_footer', [ $this, 'print_global_vars' ] );
-		add_action( 'admin_footer', [ $this, 'print_global_vars' ] );
-	}
-
-	/**
 	 * Get global vars.
 	 *
 	 * @return array
@@ -346,7 +337,7 @@ class Assets extends Controller {
 	public function print_global_vars() {
 		static $printed;
 
-		if ( $printed ) {
+		if ( $printed || ! $this->should_print_global_vars ) {
 			return;
 		}
 
@@ -382,7 +373,7 @@ class Assets extends Controller {
 			$bundled = (bool) $package_data['bundled'];
 
 			if ( wp_script_is( $handle, 'enqueued' ) ) {
-				$this->setup_global_vars();
+				$this->should_print_global_vars = true;
 
 				if ( isset( $package_data['styles'] ) && $package_data['styles'] ) {
 					if ( $bundled ) {
