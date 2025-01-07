@@ -34,6 +34,7 @@ declare global {
 				initialize: ( id: string, settings: any ) => void;
 				remove: ( id: string ) => void;
 			};
+			blocks?: unknown;
 		};
 	}
 }
