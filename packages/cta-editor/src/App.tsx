@@ -8,14 +8,14 @@ import { Popover, SlotFillProvider } from '@wordpress/components';
 
 import Header from './header';
 import CallToActionsView from './call-to-actions-view';
+import { getGlobalVars } from './utils';
 
 import type { TabComponent } from '@popup-maker/types';
 
-const {
-	permissions: { edit_ctas: userCanEditCallToActions },
-} = window.popupMaker.globalVars;
-
 const App = () => {
+	const { permissions = { edit_ctas: false } } = getGlobalVars();
+	const { edit_ctas: userCanEditCallToActions } = permissions;
+
 	const [ { view = 'call-to-actions' }, setParams ] = useQueryParams( {
 		tab: StringParam,
 		view: StringParam,

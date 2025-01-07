@@ -27,11 +27,11 @@ import {
 
 import { useList } from '../context';
 import { cleanCallToActionData } from './utils';
-
-const { version } = window.popupMaker.globalVars;
+import { getGlobalVars } from '../utils';
 
 const ListBulkActions = () => {
 	const registry = useRegistry();
+	const { version } = getGlobalVars();
 
 	const {
 		bulkSelection = [],

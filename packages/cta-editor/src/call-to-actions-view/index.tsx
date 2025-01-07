@@ -8,15 +8,15 @@ import Edit from '../edit';
 import Header from './header';
 import List from '../list';
 import Notices from './notices';
-
-const {
-	permissions: { edit_ctas: userCanEditCallToActions },
-} = window.popupMaker.globalVars;
+import { getGlobalVars } from '../utils';
 
 /**
  * Generates the Call To Actions tab component & sub-app.
  */
 const CallToActionsView = () => {
+	const { permissions = { edit_ctas: false } } = getGlobalVars();
+	const { edit_ctas: userCanEditCallToActions } = permissions;
+
 	// Fetch needed data from the @popup-maker/core-data & @wordpress/data stores.
 	const isEditorActive = useSelect(
 		( select ) => select( CALL_TO_ACTION_STORE ).isEditorActive(),

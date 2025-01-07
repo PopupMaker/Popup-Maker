@@ -13,14 +13,15 @@ import { lifesaver, login, pages, people } from '@wordpress/icons';
 import { ControlledTabPanel } from '@popup-maker/components';
 
 import type { TabComponent } from '@popup-maker/types';
+import { getGlobalVars } from './utils';
 
 type Props = {
 	tabs: TabComponent[];
 };
 
-const { assetsUrl, adminUrl } = window.popupMaker.globalVars;
-
 const Header = ( { tabs }: Props ) => {
+	const { assetsUrl, adminUrl } = getGlobalVars();
+
 	const [ view = 'callToActions', setView ] = useQueryParam(
 		'view',
 		StringParam
