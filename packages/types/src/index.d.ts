@@ -1,22 +1,39 @@
+/**
+ * Global types for Popup Maker
+ */
+
+export interface PopupMakerPermissions {
+	edit_ctas: boolean;
+	edit_popups: boolean;
+	edit_popup_themes: boolean;
+	mange_settings: boolean;
+}
+
+export interface PopupMakerGlobalVars {
+	version: string;
+	wpVersion: number;
+	assetsUrl: string;
+	adminUrl: string;
+	pluginUrl: string;
+	nonce: string;
+	permissions: PopupMakerPermissions;
+	isProInstalled?: '1' | '';
+	isProActivated?: '1' | '';
+}
+export interface PopupMakerWindow {
+	globalVars: PopupMakerGlobalVars;
+}
+export interface WordPressWindow {
+	oldEditor: {
+		initialize: ( id: string, settings: any ) => void;
+		remove: ( id: string ) => void;
+	};
+	blocks?: unknown;
+}
 declare global {
 	interface Window {
-		popupMaker: {
-			globalVars: {
-				version: string;
-				wpVersion: number;
-				assetUrl: string;
-				adminUrl: string;
-				pluginUrl: string;
-				permissions: {
-					edit_ctas: boolean;
-					edit_popups: boolean;
-					edit_popup_themes: boolean;
-					mange_settings: boolean;
-				};
-				isProInstalled?: '1' | '';
-				isProActivated?: '1' | '';
-			};
-		};
+		wp: WordPressWindow & Record< string, unknown >;
+		popupMaker: PopupMakerWindow & Record< string, unknown >;
 	}
 }
 

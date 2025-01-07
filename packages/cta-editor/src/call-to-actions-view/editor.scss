@@ -29,7 +29,7 @@ $gap4: $gap * 4;
 	}
 }
 
-.call-to-action-editor {
+.call-to-action-editor-modal {
 	width: 860px;
 	min-height: 65vh;
 	max-height: 85%;
@@ -94,8 +94,11 @@ $gap4: $gap * 4;
 			color: #00a32a;
 		}
 	}
+}
 
-	.modal-actions {
+.call-to-action-editor {
+	.modal-actions,
+	.editor-actions {
 		position: absolute;
 		height: $gap4;
 		box-sizing: border-box;

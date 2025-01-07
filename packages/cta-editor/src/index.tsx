@@ -14,6 +14,8 @@ import domReady from '@wordpress/dom-ready';
 
 import type { OldField } from '@popup-maker/fields';
 
+export * from './components';
+
 declare global {
 	interface Window {
 		popupMakerCtaEditor: {
