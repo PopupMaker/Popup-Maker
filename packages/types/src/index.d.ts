@@ -93,13 +93,59 @@ declare global {
 	}
 }
 
-export type TabComponent = {
+type Tab = {
+	/**
+	 * The key of the tab.
+	 */
+	name: string;
+	/**
+	 * The label of the tab.
+	 */
+	title: string;
+	/**
+	 * The class name to apply to the tab button.
+	 */
+	className?: string;
+	/**
+	 * The icon used for the tab button.
+	 */
+	icon?: IconType;
+	/**
+	 * Determines if the tab button should be disabled.
+	 */
+	disabled?: boolean;
+} & Record< any, any >;
+
+export interface TabComponent< TabProps extends any = unknown > extends Tab {
 	name: string;
 	title: string | JSX.Element;
 	badge?: string | JSX.Element;
 	className: string;
 	pageTitle: string;
 	heading: string;
+	/**
+	 * Predefined component to render in the tab, propless.
+	 *
+	 * @deprecated Use Component instead.
+	 */
 	comp?: () => JSX.Element;
+	/**
+	 * The component to render in the tab, can be passed tab defined tab props.
+	 */
+	Component?: React.ComponentType< TabProps >;
 	onClick?: () => void | false;
-};
+}
+
+export interface ComponentTab< TabProps extends any = unknown > extends Tab {
+	name: string;
+	title: string | JSX.Element;
+	badge?: string | JSX.Element;
+	className?: string;
+	pageTitle?: string;
+	heading?: string;
+	/**
+	 * The component to render in the tab, can be passed tab defined tab props.
+	 */
+	Component: React.ComponentType< TabProps >;
+	onClick?: () => void | false;
+}
