@@ -71,13 +71,10 @@ export function* activateLicense( licenseKey?: LicenseKey ): Generator {
 	try {
 		yield changeActionStatus( actionName, Status.Resolving );
 
-		const result: LicenseActivationResponse = yield fetch(
-			getResourcePath( 'activate' ),
-			{
-				method: 'POST',
-				body: { licenseKey },
-			}
-		);
+		const result = ( yield fetch( getResourcePath( 'activate' ), {
+			method: 'POST',
+			body: { licenseKey },
+		} ) ) as LicenseActivationResponse;
 
 		if ( result ) {
 			const { status, connectInfo } = result;
@@ -129,12 +126,9 @@ export function* deactivateLicense(): Generator {
 	try {
 		yield changeActionStatus( actionName, Status.Resolving );
 
-		const result: LicenseStatusResponse = yield fetch(
-			getResourcePath( 'deactivate' ),
-			{
-				method: 'POST',
-			}
-		);
+		const result = ( yield fetch( getResourcePath( 'deactivate' ), {
+			method: 'POST',
+		} ) ) as LicenseStatusResponse;
 
 		if ( result ) {
 			// thing was successfully updated so return the action object that will
@@ -176,12 +170,9 @@ export function* checkLicenseStatus(): Generator {
 	try {
 		yield changeActionStatus( actionName, Status.Resolving );
 
-		const result: LicenseStatusResponse = yield fetch(
-			getResourcePath( 'status' ),
-			{
-				method: 'POST',
-			}
-		);
+		const result = ( yield fetch( getResourcePath( 'status' ), {
+			method: 'POST',
+		} ) ) as LicenseStatusResponse;
 
 		if ( result ) {
 			// thing was successfully updated so return the action object that will
@@ -237,10 +228,10 @@ export function* updateLicenseKey( licenseKey: LicenseKey ): Generator {
 	try {
 		yield changeActionStatus( actionName, Status.Resolving );
 
-		const result: LicenseStatusResponse = yield fetch( getResourcePath(), {
+		const result = ( yield fetch( getResourcePath(), {
 			method: 'POST',
 			body: { licenseKey },
-		} );
+		} ) ) as LicenseStatusResponse;
 
 		if ( result ) {
 			// thing was successfully updated so return the action object that will
@@ -283,9 +274,9 @@ export function* removeLicense(): Generator {
 	try {
 		yield changeActionStatus( actionName, Status.Resolving );
 
-		const result: boolean = yield fetch( getResourcePath(), {
+		const result = ( yield fetch( getResourcePath(), {
 			method: 'DELETE',
-		} );
+		} ) ) as boolean;
 
 		if ( result ) {
 			// thing was successfully updated so return the action object that will
@@ -326,12 +317,9 @@ export function* activatePro(): Generator {
 	try {
 		yield changeActionStatus( actionName, Status.Resolving );
 
-		const result: boolean = yield fetch(
-			getResourcePath( 'activate-pro' ),
-			{
-				method: 'POST',
-			}
-		);
+		const result = ( yield fetch( getResourcePath( 'activate-pro' ), {
+			method: 'POST',
+		} ) ) as boolean;
 
 		if ( result ) {
 			// thing was successfully updated so return the action object that will

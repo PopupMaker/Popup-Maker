@@ -20,13 +20,13 @@ export function* getCallToActions(): Generator {
 	try {
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const callToActions: ApiCallToAction[] = yield fetch(
+		const callToActions = ( yield fetch(
 			appendUrlParams( getResourcePath(), {
 				status: [ 'any', 'trash', 'auto-draft' ],
 				per_page: 100,
 				context: 'edit',
 			} )
-		);
+		) ) as ApiCallToAction[];
 
 		if ( callToActions ) {
 			// Parse call to actions, replacing title & content with the API context versions.
@@ -71,11 +71,11 @@ export function* getCallToAction(
 	try {
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const callToAction: ApiCallToAction = yield fetch(
+		const callToAction = ( yield fetch(
 			appendUrlParams( getResourcePath( callToActionId ), {
 				context: 'edit',
 			} )
-		);
+		) ) as ApiCallToAction;
 
 		if ( callToAction ) {
 			return {

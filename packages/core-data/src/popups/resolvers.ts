@@ -20,13 +20,13 @@ export function* getPopups(): Generator {
 	try {
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const popups: ApiPopup[] = yield fetch(
+		const popups = ( yield fetch(
 			appendUrlParams( getResourcePath(), {
 				status: [ 'any', 'trash', 'auto-draft' ],
 				per_page: 100,
 				context: 'edit',
 			} )
-		);
+		) ) as ApiPopup[];
 
 		if ( popups ) {
 			// Parse popups, replacing title & content with the API context versions.
@@ -67,11 +67,11 @@ export function* getPopup( popupId: Popup[ 'id' ] ): Generator {
 	try {
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const popup: ApiPopup = yield fetch(
+		const popup = ( yield fetch(
 			appendUrlParams( getResourcePath( popupId ), {
 				context: 'edit',
 			} )
-		);
+		) ) as ApiPopup;
 
 		if ( popup ) {
 			return {

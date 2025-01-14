@@ -58,15 +58,12 @@ export function* updateSettings( settings: Partial< Settings > ): Generator {
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const currentSettings: Settings = yield select(
-			STORE_NAME,
-			'getSettings'
-		);
+		const currentSettings = yield* select( STORE_NAME, 'getSettings' );
 
-		const result: Settings = yield fetch( getResourcePath(), {
+		const result = ( yield fetch( getResourcePath(), {
 			method: 'PUT',
 			body: { settings: { ...currentSettings, ...settings } },
-		} );
+		} ) ) as Settings;
 
 		if ( result ) {
 			// thing was successfully updated so return the action object that will
@@ -110,20 +107,14 @@ export function* saveSettings() {
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const currentSettings: Settings = yield select(
-			STORE_NAME,
-			'getSettings'
-		);
+		const currentSettings = yield* select( STORE_NAME, 'getSettings' );
 
-		const unsavedChanges: Settings = yield select(
-			STORE_NAME,
-			'getUnsavedChanges'
-		);
+		const unsavedChanges = yield* select( STORE_NAME, 'getUnsavedChanges' );
 
-		const result: Settings = yield fetch( getResourcePath(), {
+		const result = ( yield fetch( getResourcePath(), {
 			method: 'PUT',
 			body: { settings: { ...currentSettings, ...unsavedChanges } },
-		} );
+		} ) ) as Settings;
 
 		if ( result ) {
 			// thing was successfully updated so return the action object that will

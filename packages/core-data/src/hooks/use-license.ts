@@ -1,7 +1,7 @@
 import { useMemo } from '@wordpress/element';
 import { useDispatch, useSelect } from '@wordpress/data';
 
-import { licenseStore } from '../license/index';
+import { LICENSE_STORE } from '../license/index';
 
 const useLicense = () => {
 	// Fetch needed data from the @popup-paker/core-data & @wordpress/data stores.
@@ -13,7 +13,7 @@ const useLicense = () => {
 		proWasActivated,
 		isActivatingPro,
 	} = useSelect( ( select ) => {
-		const storeSelect = select( licenseStore );
+		const storeSelect = select( LICENSE_STORE );
 		return {
 			connectInfo: storeSelect.getConnectInfo(),
 			licenseKey: storeSelect.getLicenseKey(),
@@ -37,7 +37,7 @@ const useLicense = () => {
 		updateLicenseKey,
 		removeLicense,
 		activatePro,
-	} = useDispatch( licenseStore );
+	} = useDispatch( LICENSE_STORE );
 
 	// Create some helper variables.
 

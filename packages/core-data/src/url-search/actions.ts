@@ -33,10 +33,10 @@ export function* updateSuggestions(
 
 		yield searchRequest( queryText );
 
-		const results: WPLinkSearchResult[] = yield fetchLinkSuggestions(
+		const results = ( yield fetchLinkSuggestions(
 			queryText,
 			searchOptions
-		);
+		) ) as WPLinkSearchResult[];
 
 		if ( results ) {
 			yield changeActionStatus( actionName, Status.Success );

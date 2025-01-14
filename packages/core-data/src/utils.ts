@@ -5,7 +5,7 @@
  * @param {Object} params Object of url parameters.
  * @return {string} Resulting resource path.
  */
-export const appendUrlParams = ( url: string, params: object ) => {
+export const appendUrlParams = ( url: string, params: object ): string => {
 	const filteredParams = Object.fromEntries(
 		Object.entries( params ).filter( ( [ , value ] ) => !! value )
 	);

@@ -1,6 +1,6 @@
 import type { LicenseStatus, LicenseState, License } from './types';
 
-export const STORE_NAME = 'popup-paker/license';
+export const STORE_NAME = 'popup-maker/license';
 
 export const ACTION_TYPES = {
 	ACTIVATE_LICENSE: 'ACTIVATE_LICENSE',

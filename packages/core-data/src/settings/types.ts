@@ -31,7 +31,7 @@ export type SettingsState = {
 
 export interface SettingsStore {
 	StoreKey:
-		| 'popup-paker/settings'
+		| 'popup-maker/settings'
 		| typeof import('../settings/index').SETTINGS_STORE
 		| typeof import('../settings/index').settingsStore;
 	State: SettingsState;

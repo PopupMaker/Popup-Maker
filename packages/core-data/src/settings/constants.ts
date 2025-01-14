@@ -2,7 +2,7 @@ import { applyFilters } from '@wordpress/hooks';
 
 import type { Settings, SettingsState } from './types';
 
-export const STORE_NAME = 'popup-paker/settings';
+export const STORE_NAME = 'popup-maker/settings';
 
 export const ACTION_TYPES = {
 	UPDATE: 'UPDATE',

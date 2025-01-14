@@ -15,12 +15,9 @@ export function* getSettings() {
 	try {
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const { settings }: { settings: Settings } = yield fetch(
-			getResourcePath(),
-			{
-				method: 'GET',
-			}
-		);
+		const { settings } = ( yield fetch( getResourcePath(), {
+			method: 'GET',
+		} ) ) as { settings: Settings };
 
 		if ( settings ) {
 			return hydrate( settings );

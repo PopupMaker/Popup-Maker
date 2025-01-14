@@ -121,13 +121,13 @@ export function* changeEditorId(
 			};
 		}
 
-		const popupDefaults = yield select( STORE_NAME, 'getPopupDefaults' );
+		const popupDefaults = yield* select( STORE_NAME, 'getPopupDefaults' );
 
 		let popup: Popup | undefined =
 			editorId === 'new' ? popupDefaults : undefined;
 
 		if ( typeof editorId === 'number' && editorId > 0 ) {
-			popup = yield select( STORE_NAME, 'getPopup', editorId );
+			popup = yield* select( STORE_NAME, 'getPopup', editorId );
 		}
 
 		return {
@@ -211,20 +211,17 @@ export function* createPopup( popup: Popup ): Generator {
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const result: ApiPopup = yield fetch( getResourcePath(), {
+		const result = ( yield fetch( getResourcePath(), {
 			method: 'POST',
 			body: convertPopupToApi( noIdPopup ),
-		} );
+		} ) ) as ApiPopup;
 
 		if ( result ) {
 			// thing was successfully updated so return the action object that will
 			// update the saved thing in the state.
 			yield changeActionStatus( actionName, Status.Success );
 
-			const editorId: EditorId = yield select(
-				STORE_NAME,
-				'getEditorId'
-			);
+			const editorId = yield* select( STORE_NAME, 'getEditorId' );
 
 			const returnAction = {
 				type: CREATE,
@@ -303,19 +300,24 @@ export function* updatePopup( popup: Popup ): Generator {
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const canonicalPopup: Popup = yield select(
+		const canonicalPopup = yield* select(
 			STORE_NAME,
 			'getPopup',
 			popup.id
 		);
 
-		const result: ApiPopup = yield fetch(
-			getResourcePath( canonicalPopup.id ),
-			{
-				method: 'POST',
-				body: convertPopupToApi( popup ),
-			}
-		);
+		if ( ! canonicalPopup ) {
+			return changeActionStatus(
+				actionName,
+				Status.Error,
+				__( 'Popup not found.', 'popup-maker' )
+			);
+		}
+
+		const result = ( yield fetch( getResourcePath( canonicalPopup.id ), {
+			method: 'POST',
+			body: convertPopupToApi( popup ),
+		} ) ) as ApiPopup;
 
 		if ( result ) {
 			// thing was successfully updated so return the action object that will
@@ -376,14 +378,22 @@ export function* deletePopup(
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const popup: Popup = yield select( STORE_NAME, 'getPopup', popupId );
+		const popup = yield* select( STORE_NAME, 'getPopup', popupId );
+
+		if ( ! popup ) {
+			return changeActionStatus(
+				actionName,
+				Status.Error,
+				__( 'Popup not found.', 'popup-maker' )
+			);
+		}
 
 		const force = forceDelete ? '?force=true' : '';
 		const path = getResourcePath( popup.id ) + force;
 
-		const result: boolean = yield fetch( path, {
+		const result = ( yield fetch( path, {
 			method: 'DELETE',
-		} );
+		} ) ) as boolean;
 
 		if ( result ) {
 			// thing was successfully updated so return the action object that will

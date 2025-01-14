@@ -1,5 +1,8 @@
 import type { CallToActionsStore } from './call-to-actions/types';
 import type { PopupsStore } from './popups/types';
+import type { SettingsStore } from './settings/types';
+import type { LicenseStore } from './license/types';
+import type { URLSearchStore } from './url-search/types';
 
 type StoreConfig = {
 	'popup-maker/call-to-actions': {
@@ -10,11 +13,30 @@ type StoreConfig = {
 		store: PopupsStore;
 		name: 'popup-maker/popups';
 	};
+	'popup-maker/settings': {
+		store: SettingsStore;
+		name: 'popup-maker/settings';
+	};
+	'popup-maker/license': {
+		store: LicenseStore;
+		name: 'popup-maker/license';
+	};
+	'popup-maker/url-search': {
+		store: URLSearchStore;
+		name: 'popup-maker/url-search';
+	};
 };
 
 type StoreMap = {
 	[ K in keyof StoreConfig ]: StoreConfig[ K ][ 'store' ];
-} & Record< string, CallToActionsStore | PopupsStore >;
+} & Record<
+	string,
+	| CallToActionsStore
+	| PopupsStore
+	| SettingsStore
+	| LicenseStore
+	| URLSearchStore
+>;
 
 type StoreKeys = keyof StoreMap;
 
@@ -40,14 +62,31 @@ declare module '@wordpress/data' {
 	): StoreActions< K >;
 
 	export function useSelect< T >(
-		selector: (
-			select: {
-				< K extends StoreKeys >( key: K ): StoreSelectors< K >;
-				( key: any ): any;
-			},
-		) => T,
+		selector: ( select: {
+			< K extends StoreKeys >( key: K ): StoreSelectors< K >;
+			( key: any ): any;
+		} ) => T,
 		deps?: any[]
 	): T;
+}
+
+declare module '@wordpress/data-controls' {
+	export function select<
+		K extends StoreKeys,
+		S extends keyof StoreSelectors< K >,
+	>(
+		storeName: K,
+		selectorName: S,
+		...args: StoreSelectors< K >[ S ] extends ( ...args: infer P ) => any
+			? P
+			: never
+	): Generator<
+		{ type: 'SELECT'; storeName: K; selectorName: S; args: any[] },
+		StoreSelectors< K >[ S ] extends ( ...args: any[] ) => infer R
+			? R
+			: never,
+		any
+	>;
 }
 
 export type EditorId = 'new' | number | undefined;

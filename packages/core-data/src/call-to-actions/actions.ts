@@ -21,6 +21,7 @@ import type {
 	CallToActionsState,
 	CallToActionsStore,
 } from './types';
+import { getEditorId } from './selectors';
 
 const {
 	CREATE,
@@ -130,7 +131,7 @@ export function* changeEditorId(
 			};
 		}
 
-		const callToActionDefaults = yield select(
+		const callToActionDefaults = yield* select(
 			STORE_NAME,
 			'getCallToActionDefaults'
 		);
@@ -139,7 +140,7 @@ export function* changeEditorId(
 			editorId === 'new' ? callToActionDefaults : undefined;
 
 		if ( typeof editorId === 'number' && editorId > 0 ) {
-			callToAction = yield select(
+			callToAction = yield* select(
 				STORE_NAME,
 				'getCallToAction',
 				editorId
@@ -227,20 +228,17 @@ export function* createCallToAction( callToAction: CallToAction ): Generator {
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const result: ApiCallToAction = yield fetch( getResourcePath(), {
+		const result = ( yield fetch( getResourcePath(), {
 			method: 'POST',
 			body: convertCallToActionToApi( noIdCallToAction ),
-		} );
+		} ) ) as ApiCallToAction;
 
 		if ( result ) {
 			// thing was successfully updated so return the action object that will
 			// update the saved thing in the state.
 			yield changeActionStatus( actionName, Status.Success );
 
-			const editorId: EditorId = yield select(
-				STORE_NAME,
-				'getEditorId'
-			);
+			const editorId = yield* select( STORE_NAME, 'getEditorId' );
 
 			const returnAction = {
 				type: CREATE,
@@ -287,6 +285,35 @@ export function* createCallToAction( callToAction: CallToAction ): Generator {
 }
 
 /**
+ * Save current editor values.
+ *
+ * @return {Generator} Action to be dispatched.
+ */
+export function* saveEditorValues(): Generator {
+	const values = yield* select( STORE_NAME, 'getEditorValues' );
+	const editorId = yield* select( STORE_NAME, 'getEditorId' ) ?? 'new';
+
+	if ( ! values ) {
+		return;
+	}
+
+	const exists = Number( editorId ) > 0;
+
+	const valuesToSave = {
+		...values,
+		settings: {
+			...values.settings,
+		},
+	};
+
+	if ( exists ) {
+		yield* updateCallToAction( valuesToSave );
+	} else {
+		yield* createCallToAction( valuesToSave );
+	}
+}
+
+/**
  * Update a call to action.
  *
  * @param {CallToAction} callToAction Call to action to be updated.
@@ -322,19 +349,27 @@ export function* updateCallToAction( callToAction: CallToAction ): Generator {
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const canonicalCallToAction: CallToAction = yield select(
+		const canonicalCallToAction = yield* select(
 			STORE_NAME,
 			'getCallToAction',
 			callToAction.id
 		);
 
-		const result: ApiCallToAction = yield fetch(
+		if ( ! canonicalCallToAction ) {
+			return changeActionStatus(
+				actionName,
+				Status.Error,
+				__( 'Call to action not found.', 'popup-maker' )
+			);
+		}
+
+		const result = ( yield fetch(
 			getResourcePath( canonicalCallToAction.id ),
 			{
 				method: 'POST',
 				body: convertCallToActionToApi( callToAction ),
 			}
-		);
+		) ) as ApiCallToAction;
 
 		if ( result ) {
 			// call to action was successfully updated so return the action object that will
@@ -401,18 +436,26 @@ export function* deleteCallToAction(
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const callToAction: CallToAction = yield select(
+		const callToAction = yield* select(
 			STORE_NAME,
 			'getCallToAction',
 			callToActionId
 		);
 
+		if ( ! callToAction ) {
+			return changeActionStatus(
+				actionName,
+				Status.Error,
+				__( 'Call to action not found.', 'popup-maker' )
+			);
+		}
+
 		const force = forceDelete ? '?force=true' : '';
 		const path = getResourcePath( callToAction.id ) + force;
 
-		const result: boolean = yield fetch( path, {
+		const result = ( yield fetch( path, {
 			method: 'DELETE',
-		} );
+		} ) ) as boolean;
 
 		if ( result ) {
 			// thing was successfully updated so return the action object that will

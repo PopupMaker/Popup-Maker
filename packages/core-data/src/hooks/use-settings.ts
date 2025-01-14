@@ -1,7 +1,7 @@
 import { useMemo } from '@wordpress/element';
 import { useDispatch, useSelect } from '@wordpress/data';
 
-import { settingsStore } from '../settings/index';
+import { SETTINGS_STORE } from '../settings/index';
 
 import type { Settings } from '../settings/types';
 
@@ -9,7 +9,7 @@ const useSettings = () => {
 	// Fetch needed data from the @popup-paker/core-data & @wordpress/data stores.
 	const { currentSettings, unsavedChanges, hasUnsavedChanges, isSaving } =
 		useSelect( ( select ) => {
-			const storeSelect = select( settingsStore );
+			const storeSelect = select( SETTINGS_STORE );
 			return {
 				unsavedChanges: storeSelect.getUnsavedChanges(),
 				hasUnsavedChanges: storeSelect.hasUnsavedChanges(),
@@ -22,7 +22,7 @@ const useSettings = () => {
 
 	// Grab needed action dispatchers.
 	const { updateSettings, saveSettings, stageUnsavedChanges } =
-		useDispatch( settingsStore );
+		useDispatch( SETTINGS_STORE );
 
 	// Merge current & unsaved changes.
 	const settings = useMemo(
