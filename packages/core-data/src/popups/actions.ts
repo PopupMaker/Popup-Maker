@@ -9,7 +9,7 @@ import { getResourcePath, convertApiPopup, convertPopupToApi } from './utils';
 import { validatePopup } from './validation';
 import { ACTION_TYPES, STORE_NAME } from './constants';
 
-import type { AppNotice, EditorId } from '../types';
+import type { AppNotice } from '../types';
 
 import type { Popup, ApiPopup, PopupsState, PopupsStore } from './types';
 

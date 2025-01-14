@@ -13,7 +13,7 @@ import {
 import { validateCallToAction } from './validation';
 import { ACTION_TYPES, STORE_NAME } from './constants';
 
-import type { AppNotice, EditorId } from '../types';
+import type { AppNotice } from '../types';
 
 import type {
 	CallToAction,
@@ -21,7 +21,6 @@ import type {
 	CallToActionsState,
 	CallToActionsStore,
 } from './types';
-import { getEditorId } from './selectors';
 
 const {
 	CREATE,
