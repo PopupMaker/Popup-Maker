@@ -12,10 +12,9 @@ import {
 	validateCallToAction,
 } from '@popup-maker/core-data';
 
-import { EditorWithDataStoreProps } from './with-data-store';
-
 import type { ComponentType } from 'react';
 import type { ModalProps } from '@wordpress/components/build-types/modal/types';
+import type { EditorWithDataStoreProps } from './with-data-store';
 
 export const documenationUrl =
 	'https://wppopupmaker.com/docs/?utm_campaign=documentation&utm_source=call-to-action-editor&utm_medium=plugin-ui&utm_content=footer-documentation-link';

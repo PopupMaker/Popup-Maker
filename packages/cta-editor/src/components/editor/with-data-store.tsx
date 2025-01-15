@@ -1,11 +1,7 @@
 import { __ } from '@wordpress/i18n';
+import { Notice } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
-import {
-	useCallback,
-	useCallback,
-	useEffect,
-	useState,
-} from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 
 import {
 	CALL_TO_ACTION_STORE,
@@ -16,7 +12,6 @@ import {
 
 import type { ComponentType } from 'react';
 import type { BaseEditorProps, EditorTab } from './types';
-import { Notice } from '@wordpress/components';
 
 /**
  * The props for the EditorWithDataStore component.

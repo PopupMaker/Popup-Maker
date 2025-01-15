@@ -8,11 +8,11 @@ import {
 	EditorId,
 } from '@popup-maker/core-data';
 
-import useEditor from '../hooks/use-editor';
+import { useEditor } from '../hooks';
 
 import type { ComponentType } from 'react';
-import type { EditorWithDataStoreProps } from './with-data-store';
 import type { EditorWithModalProps } from './with-modal';
+import type { EditorWithDataStoreProps } from './with-data-store';
 
 /**
  * Props for the EditorWithQueryParams component.
