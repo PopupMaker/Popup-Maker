@@ -15,7 +15,7 @@ import { noop } from '@popup-maker/utils';
 import { ConfirmDialogue, ListTable } from '@popup-maker/components';
 
 import { ListConsumer, ListProvider } from '../context';
-import useEditor from '../hooks/use-editor';
+import { useEditor } from '../components';
 import ListBulkActions from './bulk-actions';
 import ListFilters from './filters';
 import ListOptions from './options';
@@ -89,6 +89,8 @@ const List = () => {
 														: undefined,
 											} )
 										}
+										__next40pxDefaultSize
+										__nextHasNoMarginBottom
 									/>
 								</div>
 
@@ -135,7 +137,7 @@ const List = () => {
 												'Enable or disable the call to action',
 												'popup-maker'
 											) }
-											position="top right"
+											placement="top-end"
 										>
 											<span>
 												<Icon icon={ info } />
@@ -190,6 +192,7 @@ const List = () => {
 																: 'draft',
 														} );
 													} }
+													__nextHasNoMarginBottom
 												/>
 											);
 

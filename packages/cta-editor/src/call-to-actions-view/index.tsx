@@ -1,14 +1,19 @@
 import './editor.scss';
-
 import { CALL_TO_ACTION_STORE } from '@popup-maker/core-data';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
-import Edit from '../edit';
 import Header from './header';
 import List from '../list';
 import Notices from './notices';
 import { getGlobalVars } from '../utils';
+import {
+	Editor as BaseEditor,
+	withModal,
+	withQueryParams,
+} from '../components';
+
+const Editor = withQueryParams( withModal( BaseEditor ) );
 
 /**
  * Generates the Call To Actions tab component & sub-app.
@@ -46,7 +51,7 @@ const CallToActionsView = () => {
 			<Notices />
 			<Header />
 			<List />
-			{ isEditorActive && <Edit /> }
+			{ isEditorActive && <Editor /> }
 		</div>
 	);
 };

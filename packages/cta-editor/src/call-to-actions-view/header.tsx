@@ -4,7 +4,7 @@ import { Button, Spinner } from '@wordpress/components';
 
 import { CALL_TO_ACTION_STORE } from '@popup-maker/core-data';
 
-import useEditor from '../hooks/use-editor';
+import { useEditor } from '../components';
 
 const Header = () => {
 	const { setEditorId } = useEditor();
