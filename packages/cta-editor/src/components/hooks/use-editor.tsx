@@ -90,10 +90,12 @@ const useEditor = () => {
 	};
 
 	return {
-		tab,
+		tab: tab === null ? undefined : tab,
 		setTab: ( newTab: string ) => setQueryParams( { tab: newTab } ),
 		setEditorId,
 		clearEditorParams,
+		editorId,
+		isEditorActive,
 	};
 };
 

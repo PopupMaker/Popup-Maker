@@ -12,8 +12,6 @@ export type FieldDef = {
 };
 
 const useFields = () => {
-	// const { tab: currentTab } = useEditor();
-
 	const { updateEditorValues: updateValues } =
 		useDispatch( CALL_TO_ACTION_STORE );
 
