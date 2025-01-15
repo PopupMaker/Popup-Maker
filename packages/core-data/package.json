@@ -22,10 +22,10 @@
 	"main": "build/index",
 	"types": "build-types",
 	"dependencies": {
-		"@wordpress/api-fetch": "^7.14.0",
-		"@wordpress/data": "^10.14.0",
-		"@wordpress/data-controls": "^4.14.0",
-		"@wordpress/i18n": "^5.14.0"
+		"@wordpress/api-fetch": "^7.15.1",
+		"@wordpress/data": "^10.15.1",
+		"@wordpress/data-controls": "^4.15.1",
+		"@wordpress/i18n": "^5.15.1"
 	},
 	"peerDependencies": {
 		"react": "^18.3.1"
