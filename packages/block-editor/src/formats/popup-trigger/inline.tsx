@@ -299,7 +299,7 @@ const InlinePopupTriggerUI = ( {
 										doDefault: newValue,
 									} )
 								}
-								__nextHasNoMarginBottom={ true }
+								__nextHasNoMarginBottom
 							/>
 						</div>
 					) }

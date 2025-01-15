@@ -286,6 +286,7 @@ const URLControl = (
 				isFocused && 'is-focused',
 				className,
 			] ) }
+			__nextHasNoMarginBottom
 		>
 			<div
 				ref={ wrapperRef }

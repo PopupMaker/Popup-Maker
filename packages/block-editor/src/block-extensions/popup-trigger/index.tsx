@@ -119,7 +119,7 @@ const withAdvancedControls = createHigherOrderComponent( ( BlockEdit ) => {
 													'popup-maker'
 												) }
 												<Tooltip
-													position="top"
+													placement="top"
 													text={ __(
 														'This method does not work well with all block types.',
 														'popup-maker'

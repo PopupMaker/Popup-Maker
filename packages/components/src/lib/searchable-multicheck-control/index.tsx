@@ -75,6 +75,7 @@ const SearchableMulticheckControl = < T extends string | number >( {
 				'component-searchable-multicheck-control',
 				className,
 			] ) }
+			__nextHasNoMarginBottom
 		>
 			<div className="select-actions">
 				<Button
@@ -173,6 +174,7 @@ const SearchableMulticheckControl = < T extends string | number >( {
 										onChange={ () =>
 											toggleOption( optValue )
 										}
+										__nextHasNoMarginBottom
 									/>
 								</th>
 							</tr>

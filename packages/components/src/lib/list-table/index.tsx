@@ -153,6 +153,7 @@ const ListTable = < T extends TableItemBase >( {
 									selectedItems.length > 0 &&
 									selectedItems.length < items.length
 								}
+								__nextHasNoMarginBottom
 							/>
 						) }
 
@@ -243,6 +244,7 @@ const ListTable = < T extends TableItemBase >( {
 														item.id
 													) >= 0
 												}
+												__nextHasNoMarginBottom
 											/>
 										) : (
 											renderCell( col, item, rowIndex )

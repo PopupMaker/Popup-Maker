@@ -14,8 +14,7 @@ const TextAreaField = ( {
 			value={ value ?? '' }
 			onChange={ onChange }
 			rows={ rows }
-			/* @ts-ignore - This exists on all controls, but is not fully typed. */
-			__nextHasNoMarginBottom={ true }
+			__nextHasNoMarginBottom
 		/>
 	);
 };

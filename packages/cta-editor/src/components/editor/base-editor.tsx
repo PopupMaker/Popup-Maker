@@ -138,6 +138,7 @@ const BaseEditor = ( {
 							status: checked ? 'publish' : 'draft',
 						} )
 					}
+					__nextHasNoMarginBottom
 				/>
 			</div>
 

@@ -269,6 +269,7 @@ const FreeFormEditControl = < T extends string >( props: Props< T > ) => {
 				'component-freeform-edit-control',
 				className,
 			] ) }
+			__nextHasNoMarginBottom
 		>
 			<div
 				key="toolbar"

@@ -11,8 +11,8 @@ const DateField = ( {
 		<>
 			<BaseControl
 				{ ...fieldProps }
-				__nextHasNoMarginBottom={ true }
 				hideLabelFromVision={ true }
+				__nextHasNoMarginBottom
 			>
 				<input
 					type="date"

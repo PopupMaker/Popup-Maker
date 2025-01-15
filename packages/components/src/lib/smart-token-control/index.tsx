@@ -33,7 +33,6 @@ export type Props< T extends Token = Token > = {
 	className?: clsx.ClassValue;
 	inputStyles?: CSSProperties;
 	popoverStyles?: CSSProperties;
-	__nextHasNoMarginBottom?: boolean;
 	classes?: {
 		container?: string;
 		popover?: string;
@@ -122,7 +121,6 @@ const SmartTokenControl = < T extends Token = string >(
 		className,
 		inputStyles = {},
 		popoverStyles = {},
-		__nextHasNoMarginBottom = false,
 		tokenOnComma = false,
 		classes = defaultClasses,
 		renderToken = ( token ) => (
@@ -445,7 +443,7 @@ const SmartTokenControl = < T extends Token = string >(
 					}
 					label={ label }
 					hideLabelFromVision={ hideLabelFromVision }
-					__nextHasNoMarginBottom={ __nextHasNoMarginBottom }
+					__nextHasNoMarginBottom
 				>
 					<div
 						className={ clsx( [

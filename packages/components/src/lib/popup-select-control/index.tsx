@@ -54,6 +54,8 @@ export const PopupSelectControl = ( {
 					  } ),
 				...props,
 			} }
+			__next40pxDefaultSize
+			__nextHasNoMarginBottom
 		/>
 	);
 };

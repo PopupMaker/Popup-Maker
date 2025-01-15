@@ -48,6 +48,7 @@ const RadioButtonControl = < T extends string | number = string | number >( {
 				className
 			) }
 			hideLabelFromVision={ hideLabelFromVision }
+			__nextHasNoMarginBottom
 		>
 			<div
 				className="options"

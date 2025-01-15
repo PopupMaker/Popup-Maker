@@ -65,6 +65,7 @@ const DeviceToggle = ( { label, icon, isVisible, onChange = noop }: Props ) => {
 								),
 								label
 							) }
+							__nextHasNoMarginBottom
 						/>
 					</span>
 				</Tooltip>

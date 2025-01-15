@@ -45,6 +45,7 @@ const MulticheckField = ( {
 							label={ optLabel }
 							checked={ isChecked }
 							onChange={ toggleOption }
+							__nextHasNoMarginBottom
 						/>
 					);
 				}
@@ -53,6 +54,7 @@ const MulticheckField = ( {
 						key={ optValue }
 						id={ fieldProps.id + '-' + optValue.toString() }
 						label={ optLabel }
+						__nextHasNoMarginBottom
 					>
 						<FormToggle
 							checked={ isChecked }
