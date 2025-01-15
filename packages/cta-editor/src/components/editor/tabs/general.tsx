@@ -1,77 +1,11 @@
-import {
-	Notice,
-	SelectControl,
-	TextareaControl,
-	TextControl,
-} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { addFilter } from '@wordpress/hooks';
-import { useInstanceId } from '@wordpress/compose';
+import { Notice, TextareaControl, TextControl } from '@wordpress/components';
 
 import { clamp } from '@popup-maker/utils';
-import { FieldPanel, FieldRow } from '@popup-maker/components';
 
 import useFields from '../../hooks/use-fields';
-import { callToActionTypeOptions } from '../../../options';
 
-import type { CallToAction } from '@popup-maker/core-data';
 import type { BaseEditorTabProps } from '../types';
-
-const TypeField = ( {
-	settings,
-	updateSettings,
-}: {
-	settings: CallToAction[ 'settings' ];
-	updateSettings: ( settings: Partial< CallToAction[ 'settings' ] > ) => void;
-} ) => {
-	const instanceId = useInstanceId( TypeField );
-
-	return (
-		<FieldPanel title={ __( 'Type', 'popup-maker' ) }>
-			<FieldRow label={ __( 'Call to Action type', 'popup-maker' ) }>
-				<SelectControl
-					id={ `popup-maker-call-to-action-type-${ instanceId }` }
-					label={ __( 'Type', 'popup-maker' ) }
-					options={ callToActionTypeOptions }
-					value={ settings.type ?? '' }
-					onChange={ ( type ) => updateSettings( { type } ) }
-				/>
-			</FieldRow>
-		</FieldPanel>
-	);
-};
-
-addFilter(
-	'popupMaker.callToActionEditor.tabFields',
-	'popup-maker',
-	(
-		fields: Record<
-			string,
-			{ id: string; priority: number; component: React.JSX.Element }[]
-		>,
-		settings: CallToAction[ 'settings' ],
-		updateSettings: (
-			settings: Partial< CallToAction[ 'settings' ] >
-		) => void
-	) => {
-		const componentProps = {
-			settings,
-			updateSettings,
-		};
-
-		return {
-			...fields,
-			general: [
-				{
-					id: 'type',
-					priority: 3,
-					component: <TypeField { ...componentProps } />,
-				},
-				...( fields?.general ?? [] ),
-			],
-		};
-	}
-);
 
 export const name = 'general';
 
@@ -95,7 +29,9 @@ export const Component = ( {
 				className="title-field"
 				value={ callToAction.title ?? '' }
 				onChange={ ( title ) => updateFields( { title } ) }
-			/>
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+	/>
 
 			<TextareaControl
 				rows={ descriptionRows }
@@ -107,6 +43,7 @@ export const Component = ( {
 				className="description-field"
 				value={ callToAction.description ?? '' }
 				onChange={ ( description ) => updateFields( { description } ) }
+				__nextHasNoMarginBottom
 			/>
 
 			{ ( callToAction.title ?? '' ).length <= 0 && (

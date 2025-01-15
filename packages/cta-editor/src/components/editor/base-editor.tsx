@@ -3,7 +3,7 @@ import './editor.scss';
 import clsx from 'clsx';
 
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo } from '@wordpress/element';
+import { useMemo } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
 import { TabPanel, ToggleControl } from '@wordpress/components';
 
@@ -11,9 +11,14 @@ import { noop } from '@popup-maker/utils';
 import { useControlledState } from '@popup-maker/components';
 import { callToActionDefaults } from '@popup-maker/core-data';
 
-import { initTabs, deinitTabs } from './tab-init';
+import initEditor from './init';
 
 import type { BaseEditorProps, BaseEditorTabProps, EditorTab } from './types';
+
+/**
+ * Initialize the editor.
+ */
+initEditor();
 
 /**
  * The base editor component.
@@ -83,17 +88,6 @@ const BaseEditor = ( {
 			},
 		};
 	}, [ values, onChange ] );
-
-	/**
-	 * Initialize the tabs via filters on render.
-	 */
-	useEffect( () => {
-		initTabs();
-
-		return () => {
-			deinitTabs();
-		};
-	}, [] );
 
 	/**
 	 * Memoize the tabs.
