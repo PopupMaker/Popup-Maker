@@ -1,6 +1,5 @@
 import { __ } from '@wordpress/i18n';
 import { addFilter } from '@wordpress/hooks';
-import { useInstanceId } from '@wordpress/compose';
 
 import { FieldPanel, FieldRow, URLControl } from '@popup-maker/components';
 
@@ -13,8 +12,6 @@ const LinkFields = ( {
 	settings: CallToAction[ 'settings' ];
 	updateSettings: ( settings: Partial< CallToAction[ 'settings' ] > ) => void;
 } ) => {
-	const instanceId = useInstanceId( LinkFields );
-
 	return (
 		<FieldPanel title={ __( 'URL', 'popup-maker' ) }>
 			<FieldRow label={ __( 'Target URL', 'popup-maker' ) }>
