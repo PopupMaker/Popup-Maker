@@ -8,5 +8,9 @@
 	},
 	"include": [ "./src/**/*.ts|tsx|js|json" ],
 	"types": [ "jquery" ],
-	"references": []
+	"references": [
+		{
+			"path": "../core-data"
+		}
+	]
 }

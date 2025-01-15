@@ -6,5 +6,12 @@
 		"declarationDir": "build-types"
 	},
 	"include": [ "./src/**/*" ],
-	"references": []
+	"references": [
+		{
+			"path": "../core-data"
+		},
+		{
+			"path": "../utils"
+		}
+	]
 }

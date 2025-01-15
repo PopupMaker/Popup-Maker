@@ -9,6 +9,9 @@
 	"types": [ "jquery" ],
 	"references": [
 		{
+			"path": "../components"
+		},
+		{
 			"path": "../core-data"
 		},
 		{
@@ -16,6 +19,12 @@
 		},
 		{
 			"path": "../fields"
+		},
+		{
+			"path": "../icons"
+		},
+		{
+			"path": "../utils"
 		}
 	]
 }
