@@ -1,5 +1,5 @@
 import { __, sprintf } from '@wordpress/i18n';
-import { select } from '@wordpress/data-controls';
+import { resolveSelect } from '../utils';
 
 import { fetch } from '../controls';
 import { getErrorMessage } from '../utils';
@@ -130,7 +130,7 @@ export function* changeEditorId(
 			};
 		}
 
-		const callToActionDefaults = yield* select(
+		const callToActionDefaults = yield* resolveSelect(
 			STORE_NAME,
 			'getCallToActionDefaults'
 		);
@@ -139,7 +139,7 @@ export function* changeEditorId(
 			editorId === 'new' ? callToActionDefaults : undefined;
 
 		if ( typeof editorId === 'number' && editorId > 0 ) {
-			callToAction = yield* select(
+			callToAction = yield* resolveSelect(
 				STORE_NAME,
 				'getCallToAction',
 				editorId
@@ -237,7 +237,7 @@ export function* createCallToAction( callToAction: CallToAction ): Generator {
 			// update the saved thing in the state.
 			yield changeActionStatus( actionName, Status.Success );
 
-			const editorId = yield* select( STORE_NAME, 'getEditorId' );
+			const editorId = yield* resolveSelect( STORE_NAME, 'getEditorId' );
 
 			const returnAction = {
 				type: CREATE,
@@ -289,8 +289,8 @@ export function* createCallToAction( callToAction: CallToAction ): Generator {
  * @return {Generator} Action to be dispatched.
  */
 export function* saveEditorValues(): Generator {
-	const values = yield* select( STORE_NAME, 'getEditorValues' );
-	const editorId = yield* select( STORE_NAME, 'getEditorId' ) ?? 'new';
+	const values = yield* resolveSelect( STORE_NAME, 'getEditorValues' );
+	const editorId = yield* resolveSelect( STORE_NAME, 'getEditorId' ) ?? 'new';
 
 	if ( ! values ) {
 		return;
@@ -348,7 +348,7 @@ export function* updateCallToAction( callToAction: CallToAction ): Generator {
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const canonicalCallToAction = yield* select(
+		const canonicalCallToAction = yield* resolveSelect(
 			STORE_NAME,
 			'getCallToAction',
 			callToAction.id
@@ -435,7 +435,7 @@ export function* deleteCallToAction(
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const callToAction = yield* select(
+		const callToAction = yield* resolveSelect(
 			STORE_NAME,
 			'getCallToAction',
 			callToActionId

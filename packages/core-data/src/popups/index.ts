@@ -8,8 +8,6 @@ import reducer from './reducer';
 import * as resolvers from './resolvers';
 import * as selectors from './selectors';
 
-// import type { PopupsStore } from './types';
-
 const storeConfig = () => ( {
 	initialState,
 	selectors,
@@ -22,6 +20,7 @@ const storeConfig = () => ( {
 const store = createReduxStore( STORE_NAME, storeConfig() );
 
 export * from './types';
+export * from './validation';
 export { validatePopup } from './validation';
 export { STORE_NAME as POPUP_STORE };
 export { store as popupStore };

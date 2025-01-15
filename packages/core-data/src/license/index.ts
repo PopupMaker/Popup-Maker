@@ -8,8 +8,6 @@ import reducer from './reducer';
 import * as resolvers from './resolvers';
 import * as selectors from './selectors';
 
-import type { LicenseStore } from './types';
-
 const storeConfig = () => ( {
 	initialState,
 	selectors,
@@ -21,17 +19,7 @@ const storeConfig = () => ( {
 
 const store = createReduxStore( STORE_NAME, storeConfig() );
 
-type S = LicenseStore;
-
-declare module '@wordpress/data' {
-	// @ts-ignore
-	export function select( key: S[ 'StoreKey' ] ): S[ 'Selectors' ];
-	// @ts-ignore
-	export function dispatch( key: S[ 'StoreKey' ] ): S[ 'Actions' ];
-	// @ts-ignore
-	export function useDispatch( key: S[ 'StoreKey' ] ): S[ 'Actions' ];
-}
-
 export * from './types';
-
-export { STORE_NAME as LICENSE_STORE, store as licenseStore, licenseDefaults };
+export { STORE_NAME as LICENSE_STORE };
+export { store as licenseStore };
+export { licenseDefaults };

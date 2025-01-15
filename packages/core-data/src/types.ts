@@ -4,7 +4,7 @@ import type { SettingsStore } from './settings/types';
 import type { LicenseStore } from './license/types';
 import type { URLSearchStore } from './url-search/types';
 
-type StoreConfig = {
+export type StoreConfig = {
 	'popup-maker/call-to-actions': {
 		store: CallToActionsStore;
 		name: 'popup-maker/call-to-actions';
@@ -27,7 +27,7 @@ type StoreConfig = {
 	};
 };
 
-type StoreMap = {
+export type StoreMap = {
 	[ K in keyof StoreConfig ]: StoreConfig[ K ][ 'store' ];
 } & Record<
 	string,
@@ -38,15 +38,44 @@ type StoreMap = {
 	| URLSearchStore
 >;
 
-type StoreKeys = keyof StoreMap;
+export type StoreKeys = keyof StoreMap;
 
 type UnwrapStore< T > = T extends { Selectors: any; Actions: any } ? T : never;
-type StoreSelectors< K extends StoreKeys > = UnwrapStore<
+export type StoreSelectors< K extends StoreKeys > = UnwrapStore<
 	StoreMap[ K ]
 >[ 'Selectors' ];
-type StoreActions< K extends StoreKeys > = UnwrapStore<
+export type StoreActions< K extends StoreKeys > = UnwrapStore<
 	StoreMap[ K ]
 >[ 'Actions' ];
+
+export type EditorId = 'new' | number | undefined;
+
+export type AppNotice = {
+	id: string;
+	message: string;
+	type: 'success' | 'error' | 'warning' | 'info';
+	isDismissible?: boolean;
+	closeDelay?: number;
+};
+
+export type OmitFirstArg< F > = F extends (
+	x: any,
+	...args: infer P
+) => infer R
+	? ( ...args: P ) => R
+	: never;
+
+export type OmitFirstArgs< O > = {
+	[ K in keyof O ]: OmitFirstArg< O[ K ] >;
+};
+
+export type RemoveReturnType< F > = F extends ( ...args: infer P ) => any
+	? ( ...args: P ) => void
+	: never;
+
+export type RemoveReturnTypes< O > = {
+	[ K in keyof O ]: RemoveReturnType< O[ K ] >;
+};
 
 declare module '@wordpress/data' {
 	export function select< K extends StoreKeys >(
@@ -88,32 +117,3 @@ declare module '@wordpress/data-controls' {
 		any
 	>;
 }
-
-export type EditorId = 'new' | number | undefined;
-
-export type AppNotice = {
-	id: string;
-	message: string;
-	type: 'success' | 'error' | 'warning' | 'info';
-	isDismissible?: boolean;
-	closeDelay?: number;
-};
-
-export type OmitFirstArg< F > = F extends (
-	x: any,
-	...args: infer P
-) => infer R
-	? ( ...args: P ) => R
-	: never;
-
-export type OmitFirstArgs< O > = {
-	[ K in keyof O ]: OmitFirstArg< O[ K ] >;
-};
-
-export type RemoveReturnType< F > = F extends ( ...args: infer P ) => any
-	? ( ...args: P ) => void
-	: never;
-
-export type RemoveReturnTypes< O > = {
-	[ K in keyof O ]: RemoveReturnType< O[ K ] >;
-};

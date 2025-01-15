@@ -8,8 +8,6 @@ import reducer from './reducer';
 import * as resolvers from './resolvers';
 import * as selectors from './selectors';
 
-// import type { CallToActionsStore } from './types';
-
 const storeConfig = () => ( {
 	initialState,
 	selectors,
