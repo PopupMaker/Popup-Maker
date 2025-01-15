@@ -1,5 +1,6 @@
 import { __, sprintf } from '@wordpress/i18n';
-import { resolveSelect } from '../utils';
+import { select } from '@wordpress/data-controls';
+// import { resolveSelect } from '../utils';
 
 import { fetch } from '../controls';
 import { getErrorMessage } from '../utils';
@@ -13,7 +14,7 @@ import {
 import { validateCallToAction } from './validation';
 import { ACTION_TYPES, STORE_NAME } from './constants';
 
-import type { AppNotice } from '../types';
+import type { AppNotice, EditorId } from '../types';
 
 import type {
 	CallToAction,
@@ -130,20 +131,20 @@ export function* changeEditorId(
 			};
 		}
 
-		const callToActionDefaults = yield* resolveSelect(
+		const callToActionDefaults = ( yield select(
 			STORE_NAME,
 			'getCallToActionDefaults'
-		);
+		) ) as CallToAction;
 
 		let callToAction: CallToAction | undefined =
 			editorId === 'new' ? callToActionDefaults : undefined;
 
 		if ( typeof editorId === 'number' && editorId > 0 ) {
-			callToAction = yield* resolveSelect(
+			callToAction = ( yield select(
 				STORE_NAME,
 				'getCallToAction',
 				editorId
-			);
+			) ) as CallToAction | undefined;
 		}
 
 		return {
@@ -237,7 +238,7 @@ export function* createCallToAction( callToAction: CallToAction ): Generator {
 			// update the saved thing in the state.
 			yield changeActionStatus( actionName, Status.Success );
 
-			const editorId = yield* resolveSelect( STORE_NAME, 'getEditorId' );
+			const editorId = yield select( STORE_NAME, 'getEditorId' );
 
 			const returnAction = {
 				type: CREATE,
@@ -289,8 +290,11 @@ export function* createCallToAction( callToAction: CallToAction ): Generator {
  * @return {Generator} Action to be dispatched.
  */
 export function* saveEditorValues(): Generator {
-	const values = yield* resolveSelect( STORE_NAME, 'getEditorValues' );
-	const editorId = yield* resolveSelect( STORE_NAME, 'getEditorId' ) ?? 'new';
+	const values = ( yield select( STORE_NAME, 'getEditorValues' ) ) as
+		| CallToAction
+		| undefined;
+
+	const editorId = ( yield select( STORE_NAME, 'getEditorId' ) ) as EditorId;
 
 	if ( ! values ) {
 		return;
@@ -306,9 +310,9 @@ export function* saveEditorValues(): Generator {
 	};
 
 	if ( exists ) {
-		yield* updateCallToAction( valuesToSave );
+		yield updateCallToAction( valuesToSave );
 	} else {
-		yield* createCallToAction( valuesToSave );
+		yield createCallToAction( valuesToSave );
 	}
 }
 
@@ -348,11 +352,11 @@ export function* updateCallToAction( callToAction: CallToAction ): Generator {
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const canonicalCallToAction = yield* resolveSelect(
+		const canonicalCallToAction = ( yield select(
 			STORE_NAME,
 			'getCallToAction',
 			callToAction.id
-		);
+		) ) as CallToAction | undefined;
 
 		if ( ! canonicalCallToAction ) {
 			return changeActionStatus(
@@ -435,11 +439,11 @@ export function* deleteCallToAction(
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const callToAction = yield* resolveSelect(
+		const callToAction = ( yield select(
 			STORE_NAME,
 			'getCallToAction',
 			callToActionId
-		);
+		) ) as CallToAction | undefined;
 
 		if ( ! callToAction ) {
 			return changeActionStatus(

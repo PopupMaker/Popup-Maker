@@ -7,23 +7,20 @@ import type { StoreKeys, StoreSelectors } from './types';
  * @param storeName The name of the store.
  * @param selectorName The name of the selector.
  * @param args Arguments for the selector function.
- * @returns A generator object compatible with Redux flow.
+ * @returns The selector's return value.
  */
 export function resolveSelect<
 	K extends StoreKeys,
 	S extends keyof StoreSelectors< K >,
+	R = StoreSelectors< K >[ S ] extends ( ...args: any[] ) => infer T ? T : never
 >(
 	storeName: K,
 	selectorName: S,
 	...args: StoreSelectors< K >[ S ] extends ( ...args: infer P ) => any
 		? P
 		: never
-): Generator<
-	{ type: 'SELECT'; storeName: K; selectorName: S; args: any[] },
-	StoreSelectors< K >[ S ] extends ( ...args: any[] ) => infer R ? R : never,
-	any
-> {
-	return wpResolveSelect( storeName, selectorName, ...args );
+): R {
+	return wpResolveSelect( storeName, selectorName, ...args ) as R;
 }
 
 /**

@@ -9,7 +9,7 @@ import { getResourcePath, convertApiPopup, convertPopupToApi } from './utils';
 import { validatePopup } from './validation';
 import { ACTION_TYPES, STORE_NAME } from './constants';
 
-import type { AppNotice } from '../types';
+import type { AppNotice, EditorId } from '../types';
 
 import type { Popup, ApiPopup, PopupsState, PopupsStore } from './types';
 
@@ -121,13 +121,18 @@ export function* changeEditorId(
 			};
 		}
 
-		const popupDefaults = yield* select( STORE_NAME, 'getPopupDefaults' );
+		const popupDefaults = ( yield select(
+			STORE_NAME,
+			'getPopupDefaults'
+		) ) as Popup;
 
 		let popup: Popup | undefined =
 			editorId === 'new' ? popupDefaults : undefined;
 
 		if ( typeof editorId === 'number' && editorId > 0 ) {
-			popup = yield* select( STORE_NAME, 'getPopup', editorId );
+			popup = ( yield select( STORE_NAME, 'getPopup', editorId ) ) as
+				| Popup
+				| undefined;
 		}
 
 		return {
@@ -221,7 +226,10 @@ export function* createPopup( popup: Popup ): Generator {
 			// update the saved thing in the state.
 			yield changeActionStatus( actionName, Status.Success );
 
-			const editorId = yield* select( STORE_NAME, 'getEditorId' );
+			const editorId = ( yield select(
+				STORE_NAME,
+				'getEditorId'
+			) ) as EditorId;
 
 			const returnAction = {
 				type: CREATE,
@@ -300,11 +308,11 @@ export function* updatePopup( popup: Popup ): Generator {
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const canonicalPopup = yield* select(
+		const canonicalPopup = ( yield select(
 			STORE_NAME,
 			'getPopup',
 			popup.id
-		);
+		) ) as Popup | undefined;
 
 		if ( ! canonicalPopup ) {
 			return changeActionStatus(
@@ -378,7 +386,9 @@ export function* deletePopup(
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const popup = yield* select( STORE_NAME, 'getPopup', popupId );
+		const popup = ( yield select( STORE_NAME, 'getPopup', popupId ) ) as
+			| Popup
+			| undefined;
 
 		if ( ! popup ) {
 			return changeActionStatus(

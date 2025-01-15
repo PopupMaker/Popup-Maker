@@ -108,7 +108,7 @@ declare module '@wordpress/data-controls' {
 		selectorName: S,
 		...args: StoreSelectors< K >[ S ] extends ( ...args: infer P ) => any
 			? P
-			: never
+			: []
 	): Generator<
 		{ type: 'SELECT'; storeName: K; selectorName: S; args: any[] },
 		StoreSelectors< K >[ S ] extends ( ...args: any[] ) => infer R

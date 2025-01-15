@@ -43,11 +43,14 @@ export function* getLicenseData() {
 }
 
 export function* getLicenseKey() {
-	const { key } = yield select( STORE_NAME, 'getLicenseData' );
+	const { key } = ( yield select( STORE_NAME, 'getLicenseData' ) ) as License;
 	return key;
 }
 
 export function* getLicenseStatus() {
-	const { status } = yield select( STORE_NAME, 'getLicenseData' );
+	const { status } = ( yield select(
+		STORE_NAME,
+		'getLicenseData'
+	) ) as License;
 	return status;
 }

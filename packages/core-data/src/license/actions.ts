@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
-import { resolveSelect } from '../utils';
+import { select } from '@wordpress/data-controls';
+// import { resolveSelect } from '../utils';
 
 import { Status } from '../constants';
 import { fetch } from '../controls';
@@ -212,7 +213,9 @@ export function* checkLicenseStatus(): Generator {
 export function* updateLicenseKey( licenseKey: LicenseKey ): Generator {
 	const actionName = 'updateLicenseKey';
 
-	const currentKey = yield* resolveSelect( STORE_NAME, 'getLicenseKey' );
+	const currentKey = ( yield select( STORE_NAME, 'getLicenseKey' ) ) as
+		| LicenseKey
+		| undefined;
 
 	if ( currentKey === licenseKey ) {
 		return changeActionStatus(

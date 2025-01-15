@@ -1,8 +1,9 @@
 import { __ } from '@wordpress/i18n';
+import { select } from '@wordpress/data-controls';
 
 import { Status } from '../constants';
 import { fetch } from '../controls';
-import { getErrorMessage, resolveSelect } from '../utils';
+import { getErrorMessage } from '../utils';
 import { ACTION_TYPES, STORE_NAME } from './constants';
 import { getResourcePath } from './utils';
 
@@ -57,10 +58,10 @@ export function* updateSettings( settings: Partial< Settings > ): Generator {
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const currentSettings = yield* resolveSelect(
+		const currentSettings = ( yield select(
 			STORE_NAME,
 			'getSettings'
-		);
+		) ) as Settings | undefined;
 
 		const result = ( yield fetch( getResourcePath(), {
 			method: 'PUT',
@@ -109,15 +110,15 @@ export function* saveSettings() {
 
 		// execution will pause here until the `FETCH` control function's return
 		// value has resolved.
-		const currentSettings = yield* resolveSelect(
+		const currentSettings = ( yield select(
 			STORE_NAME,
 			'getSettings'
-		);
+		) ) as Settings | undefined;
 
-		const unsavedChanges = yield* resolveSelect(
+		const unsavedChanges = ( yield select(
 			STORE_NAME,
 			'getUnsavedChanges'
-		);
+		) ) as Partial< Settings > | undefined;
 
 		const result = ( yield fetch( getResourcePath(), {
 			method: 'PUT',
