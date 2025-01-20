@@ -1,27 +1,7 @@
-import { resolveSelect as wpResolveSelect } from '@wordpress/data';
-import type { StoreKeys, StoreSelectors } from './types';
-
-/**
- * Custom exported `resolveSelect` with the same type as `select` from `@wordpress/data`.
- *
- * @param storeName The name of the store.
- * @param selectorName The name of the selector.
- * @param args Arguments for the selector function.
- * @returns The selector's return value.
- */
-export function resolveSelect<
-	K extends StoreKeys,
-	S extends keyof StoreSelectors< K >,
-	R = StoreSelectors< K >[ S ] extends ( ...args: any[] ) => infer T ? T : never
->(
-	storeName: K,
-	selectorName: S,
-	...args: StoreSelectors< K >[ S ] extends ( ...args: infer P ) => any
-		? P
-		: never
-): R {
-	return wpResolveSelect( storeName, selectorName, ...args ) as R;
-}
+export { default as createNoticeActions } from './notice-actions';
+export { default as createNoticeSelectors } from './notice-selectors';
+export { default as createPostTypeActions } from './entity-actions';
+export { default as createPostTypeSelectors } from './entity-selectors';
 
 /**
  * Append params to url.
