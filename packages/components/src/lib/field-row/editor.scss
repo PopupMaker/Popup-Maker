@@ -1,18 +1,16 @@
 .components-field-row {
-	display: flex;
-	align-items: "flex-start";
-	justify-content: stretch;
+	display: grid;
+	grid-template-columns: 3fr 2.5fr;
 	padding: 15px 0;
 	margin: 0;
 
 	> .components-base-control {
-		margin-bottom: 0 !important;
-		width: 50%;
-		flex-grow: 1;
+		// margin-bottom: 0 !important;
+		// width: 50%;
 	}
 
 	> .components-base-control__field {
-		width: 40%;
+		// width: 40%;
 	}
 
 	&.full-width {
