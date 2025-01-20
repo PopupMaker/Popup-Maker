@@ -8,7 +8,6 @@ import { Button, Modal, Spinner } from '@wordpress/components';
 
 import {
 	CALL_TO_ACTION_STORE,
-	CallToAction,
 	validateCallToAction,
 } from '@popup-maker/core-data';
 
@@ -20,13 +19,6 @@ export const documenationUrl =
 	'https://wppopupmaker.com/docs/?utm_campaign=documentation&utm_source=call-to-action-editor&utm_medium=plugin-ui&utm_content=footer-documentation-link';
 
 export interface EditorWithModalProps extends EditorWithDataStoreProps {
-	/**
-	 * Callback to run when the CallToAction is saved.
-	 *
-	 * @param values The values saved. Data store already saved the values to the database.
-	 */
-	onSave?: ( values: CallToAction ) => void;
-
 	/**
 	 * The callback function to call when the editor is closed.
 	 */
@@ -67,7 +59,6 @@ export const withModal = (
 		closeOnSave = true,
 		showDocumentationLink = true,
 		showActions = true,
-		onSave,
 		onClose,
 		// @ts-ignore It exists but is not typed.
 		onRequestClose,
@@ -121,17 +112,17 @@ export const withModal = (
 		 */
 		const saveValues = useCallback( async () => {
 			try {
+				// Save to the database
 				await saveEditorValues();
 
-				onSave?.( values );
-
+				// Handle modal closing if needed
 				if ( closeOnSave ) {
 					closeModal();
 				}
 			} catch ( error ) {
 				console.error( 'Save failed:', error );
 			}
-		}, [ closeOnSave, closeModal, onSave, saveEditorValues, values ] );
+		}, [ closeOnSave, closeModal, saveEditorValues ] );
 
 		return (
 			<Modal
@@ -144,7 +135,7 @@ export const withModal = (
 				onRequestClose={ closeModal }
 				shouldCloseOnClickOutside={ false }
 			>
-				<WrappedComponent { ...componentProps } onSave={ saveValues } />
+				<WrappedComponent { ...componentProps } />
 
 				{ showActions && (
 					<div className="editor-actions">

@@ -23,84 +23,93 @@ const getCtaFields = (
 };
 
 export const initCustomFields = () => {
-// Initialize custom fields by adding them to the tab fields filter
-addFilter(
-	'popupMaker.callToActionEditor.tabFields',
-	'popup-maker',
-	(
-		fields: Record<
-			string,
-			{ id: string; priority: number; component: React.JSX.Element }[]
-		>,
-		settings: CallToAction[ 'settings' ],
-		updateSettings: (
-			settings: Partial< CallToAction[ 'settings' ] >
-		) => void
-	) => {
-		const extraFields = getCtaFields( settings.type );
+	// Initialize custom fields by adding them to the tab fields filter
+	addFilter(
+		'popupMaker.callToActionEditor.tabFields',
+		'popup-maker',
+		(
+			fields: Record<
+				string,
+				{ id: string; priority: number; component: React.JSX.Element }[]
+			>,
+			settings: CallToAction[ 'settings' ],
+			updateSettings: (
+				settings: Partial< CallToAction[ 'settings' ] >
+			) => void
+		) => {
+			const extraFields = getCtaFields( settings.type );
 
-		if ( Object.keys( extraFields ).length === 0 ) {
-			return fields;
-		}
+			if ( Object.keys( extraFields ).length === 0 ) {
+				return fields;
+			}
 
-		return Object.entries( extraFields ).reduce(
-			( acc, [ tab, tabFields ] ) => {
-				if ( ! acc[ tab ] ) {
-					acc[ tab ] = [];
-				}
+			return Object.entries( extraFields ).reduce(
+				( acc, [ tab, tabFields ] ) => {
+					if ( ! acc[ tab ] ) {
+						acc[ tab ] = [];
+					}
 
-				acc[ tab ] = [
-					...acc[ tab ],
-					...Object.entries( tabFields ).map(
-						( [ fieldId, field ] ) => {
-							if ( ! field || ! field.type ) {
-								return null;
+					acc[ tab ] = [
+						...acc[ tab ],
+						...Object.entries( tabFields ).map(
+							( [ fieldId, field ] ) => {
+								if ( ! field || ! field.type ) {
+									return null;
+								}
+
+								return {
+									...field,
+									id: fieldId,
+									priority: field?.priority ?? 0,
+									component:
+										'url' === field.type ? (
+											<FieldPanel
+												title={ field.label ?? '' }
+											>
+												<URLControl
+													key={ fieldId }
+													{ ...field }
+													value={
+														settings[ fieldId ]
+													}
+													onChange={ ( value ) =>
+														updateSettings( {
+															[ fieldId ]:
+																value.url,
+														} )
+													}
+												/>
+											</FieldPanel>
+										) : (
+											<FieldPanel
+												title={ field.label ?? '' }
+											>
+												<Field
+													key={ fieldId }
+													{ ...field }
+													value={
+														settings[ fieldId ]
+													}
+													onChange={ ( value ) =>
+														updateSettings( {
+															[ fieldId ]: value,
+														} )
+													}
+												/>
+											</FieldPanel>
+										),
+								};
 							}
+						),
+					]
+						.filter( ( item ) => item !== null )
+						.filter( Boolean );
 
-							return {
-								...field,
-								id: fieldId,
-								priority: field?.priority ?? 0,
-								component:
-									'url' === field.type ? (
-										<FieldPanel title={ field.label ?? '' }>
-											<URLControl
-												key={ fieldId }
-												{ ...field }
-												value={ settings[ fieldId ] }
-												onChange={ ( value ) =>
-													updateSettings( {
-														[ fieldId ]: value.url,
-													} )
-												}
-											/>
-										</FieldPanel>
-									) : (
-										<FieldPanel title={ field.label ?? '' }>
-											<Field
-												key={ fieldId }
-												{ ...field }
-												value={ settings[ fieldId ] }
-												onChange={ ( value ) =>
-													updateSettings( {
-														[ fieldId ]: value,
-													} )
-												}
-											/>
-										</FieldPanel>
-									),
-							};
-						}
-					),
-				]
-					.filter( ( item ) => item !== null )
-					.filter( Boolean );
-
-				return acc;
-			},
-			{ ...fields }
-		);
-	}
+					return acc;
+				},
+				{ ...fields }
+			);
+		}
 	);
 };
 

@@ -1,12 +1,13 @@
 import { __ } from '@wordpress/i18n';
 import { Notice } from '@wordpress/components';
-import { useDispatch, useSelect } from '@wordpress/data';
-import { useEffect, useState } from '@wordpress/element';
+import { useDispatch, useSelect, select } from '@wordpress/data';
+import { useEffect, useState, useRef } from '@wordpress/element';
 
 import {
 	CALL_TO_ACTION_STORE,
 	CallToAction,
 	callToActionDefaults,
+	EditorId,
 	Status,
 } from '@popup-maker/core-data';
 
@@ -24,6 +25,16 @@ import type { BaseEditorProps, EditorTab } from './types';
  */
 export interface EditorWithDataStoreProps
 	extends Omit< BaseEditorProps, 'values' | 'onChange' > {
+	/**
+	 * The editor id.
+	 */
+	id?: EditorId;
+
+	/**
+	 * The default values for the editor, only applicable when creating a new call to action.
+	 */
+	defaultValues?: Partial< CallToAction > | undefined;
+
 	/**
 	 * Callback to run when the CallToAction is saved.
 	 *
@@ -50,6 +61,8 @@ export const withDataStore = (
 	WrappedComponent: ComponentType< BaseEditorProps >
 ) => {
 	return function DataStoreWrappedEditor( {
+		id,
+		defaultValues,
 		onSave,
 		...componentProps
 	}: EditorWithDataStoreProps ) {
@@ -62,10 +75,15 @@ export const withDataStore = (
 
 		// TODO Consider putthing this in a hook or data s.
 		const [ triedSaving, setTriedSaving ] = useState< boolean >( false );
+		const saveHandledRef = useRef( false );
 
 		const {
 			// TODO Review if this has side effects.
-			values = callToActionDefaults,
+			values = {
+				...callToActionDefaults,
+				...( defaultValues ?? {} ),
+			},
+			editorId,
 			isEditorActive,
 			isSaving,
 			savedSuccessfully,
@@ -100,13 +118,16 @@ export const withDataStore = (
 			};
 		}, [] );
 
-		const { updateEditorValues, clearEditorData } =
+		const { updateEditorValues, clearEditorData, changeEditorId } =
 			useDispatch( CALL_TO_ACTION_STORE );
 
 		/**
 		 * Clear the editor data when the component unmounts.
 		 */
 		useEffect( () => {
+			if ( editorId !== id ) {
+				changeEditorId( id );
+			}
 			return () => {
 				clearEditorData();
 			};
@@ -127,13 +148,21 @@ export const withDataStore = (
 		 * Also clear the error message when the editor is saved.
 		 */
 		useEffect( () => {
-			if ( ! triedSaving || isSaving ) {
+			if ( ! triedSaving && isSaving ) {
+				setTriedSaving( true );
+				saveHandledRef.current = false;
 				return;
 			}
 
-			if ( savedSuccessfully ) {
-				onSave?.( values );
+			if ( savedSuccessfully && ! saveHandledRef.current ) {
+				saveHandledRef.current = true;
 				setErrorMessage( undefined );
+				setTriedSaving( false );
+				// Get the latest CTA from the store after save
+				const latestCta = select(
+					CALL_TO_ACTION_STORE
+				).getCallToAction( values.id );
+				onSave?.( latestCta || values );
 				return;
 			}
 		}, [ onSave, triedSaving, savedSuccessfully, values, isSaving ] );
@@ -210,12 +239,29 @@ export const withDataStore = (
 			</>
 		);
 
+		let editorValues = values;
+
+		/**
+		 * If the editor is new, use any default values passed in.
+		 *
+		 * This allows new ctas to have specific defaults depending on context.
+		 */
+		if ( 'new' === editorId ) {
+			editorValues = {
+				...values,
+				...defaultValues,
+				settings: {
+					...values.settings,
+					...defaultValues?.settings,
+				},
+			};
+		}
+
 		return (
 			<WrappedComponent
 				{ ...componentProps }
-				values={ values }
+				values={ editorValues }
 				onChange={ ( values ) => {
-					setTriedSaving( true );
 					updateEditorValues( values );
 				} }
 				tabsFilter={ tabsFilter }

@@ -31,7 +31,7 @@ export const Component = ( {
 				onChange={ ( title ) => updateFields( { title } ) }
 				__next40pxDefaultSize
 				__nextHasNoMarginBottom
-	/>
+			/>
 
 			<TextareaControl
 				rows={ descriptionRows }
