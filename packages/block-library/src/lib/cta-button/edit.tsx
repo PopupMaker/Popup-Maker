@@ -530,6 +530,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 																newLinkTarget,
 														} );
 													} }
+													__nextHasNoMarginBottom
 												/>
 												<ToggleControl
 													label={ __(
@@ -544,6 +545,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 																: undefined,
 														} );
 													} }
+													__nextHasNoMarginBottom
 												/>
 											</Flex>
 										) }
