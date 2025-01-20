@@ -20,6 +20,7 @@ export type Props< T extends number | number[] | string > = Omit<
 	multiple?: boolean;
 	entityKind: 'postType' | 'taxonomy';
 	entityType?: string;
+	forceRefresh?: boolean;
 };
 
 interface ObjectOption extends Post< 'edit' >, Taxonomy< 'edit' > {}
@@ -35,6 +36,7 @@ const EntitySelectControl = <
 	entityKind = 'postType',
 	entityType = 'post',
 	multiple = false,
+	forceRefresh = false,
 	...inputProps
 }: Props< T > ) => {
 	const [ queryText, setQueryText ] = useState( '' );
@@ -57,7 +59,7 @@ const EntitySelectControl = <
 				  ) as ObjectOption[] )
 				: [],
 		} ),
-		[ value, entityKind, entityType ]
+		[ value, entityKind, entityType, forceRefresh ]
 	);
 
 	const { suggestions = [], isSearching = false } = useSelect(
@@ -82,7 +84,7 @@ const EntitySelectControl = <
 				]
 			),
 		} ),
-		[ entityKind, entityType, queryText ]
+		[ entityKind, entityType, queryText, forceRefresh ]
 	);
 
 	const findSuggestion = ( _id: number | string ) => {

@@ -1,69 +1,63 @@
-/**
- * External dependencies
- */
 import clsx from 'clsx';
 import React from 'react';
 
-/**
- * Internal dependencies
- */
-import { NEW_TAB_TARGET, NOFOLLOW_REL } from './constants';
-import removeAnchorTag from '../utils/remove-anchor-tag';
-import { useToolsPanelDropdownMenuProps } from '../utils/hooks';
-
-/**
- * WordPress dependencies
- */
-import { __ } from '@wordpress/i18n';
-import { useEffect, useState, useRef } from '@wordpress/element';
 import {
-	TextControl,
-	ToolbarButton,
-	Popover,
-	Button,
-	__experimentalToolsPanel as ToolsPanel,
-	__experimentalToolsPanelItem as ToolsPanelItem,
-	__experimentalToggleGroupControl as ToggleGroupControl,
-	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
-	ToggleControl,
-	Flex,
-	FlexItem,
-} from '@wordpress/components';
-import { EntitySelectControl } from '@popup-maker/components';
-import {
+	RichText,
+	BlockControls,
+	useBlockProps,
+	InspectorControls,
 	// @ts-ignore - Experimental components
 	AlignmentControl,
-	BlockControls,
-	InspectorControls,
-	RichText,
-	useBlockProps,
 	// @ts-ignore - Experimental components
-	__experimentalUseBorderProps as useBorderProps,
+	__experimentalGetElementClassName,
 	// @ts-ignore - Experimental components
 	__experimentalUseColorProps as useColorProps,
 	// @ts-ignore - Experimental components
-	__experimentalGetSpacingClassesAndStyles as useSpacingProps,
+	__experimentalUseBorderProps as useBorderProps,
 	// @ts-ignore - Experimental components
 	__experimentalGetShadowClassesAndStyles as useShadowProps,
 	// @ts-ignore - Experimental components
-	__experimentalGetElementClassName,
+	__experimentalGetSpacingClassesAndStyles as useSpacingProps,
 	store as blockEditorStore,
 	// @ts-ignore - Experimental components
 	useBlockEditingMode,
 } from '@wordpress/block-editor';
-import { displayShortcut, isKeyboardEvent, ENTER } from '@wordpress/keycodes';
-import { linkOff, megaphone, edit, chevronDown, check } from '@wordpress/icons';
 import {
-	createBlock,
 	cloneBlock,
+	createBlock,
 	getDefaultBlockName,
 } from '@wordpress/blocks';
-import { useMergeRefs, useRefEffect } from '@wordpress/compose';
+import {
+	Flex,
+	Button,
+	Popover,
+	FlexItem,
+	TextControl,
+	ToolbarButton,
+	ToggleControl,
+	__experimentalToolsPanel as ToolsPanel,
+	__experimentalToolsPanelItem as ToolsPanelItem,
+	__experimentalToggleGroupControl as ToggleGroupControl,
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
+} from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 import { useSelect, useDispatch } from '@wordpress/data';
+
+import { useMergeRefs, useRefEffect } from '@wordpress/compose';
+import { useEffect, useState, useRef } from '@wordpress/element';
+import { displayShortcut, isKeyboardEvent, ENTER } from '@wordpress/keycodes';
+import { linkOff, megaphone, edit, chevronDown, check } from '@wordpress/icons';
+
+import { EntitySelectControl } from '@popup-maker/components';
 import { CALL_TO_ACTION_STORE } from '@popup-maker/core-data';
+import { Editor as BaseEditor, withModal } from '@popup-maker/cta-editor';
+
+import { removeAnchorTag, useToolsPanelDropdownMenuProps } from '../utils';
+import { NEW_TAB_TARGET, NOFOLLOW_REL } from './constants';
+
 import type { BlockInstance } from '@wordpress/blocks';
 
-import { Editor } from '@popup-maker/cta-editor';
+export const Editor = withModal( BaseEditor );
 
 interface ButtonAttributes {
 	tagName: string;
@@ -94,6 +88,11 @@ interface ButtonEditProps {
 	context: any;
 }
 
+interface WidthPanelProps {
+	selectedWidth?: number;
+	setAttributes: ( attrs: Partial< ButtonAttributes > ) => void;
+}
+``;
 function useEnter( props: { content: string; clientId: string } ) {
 	const { replaceBlocks, selectionChange } = useDispatch( blockEditorStore );
 	const { getBlock, getBlockRootClientId, getBlockIndex } = useSelect(
@@ -162,11 +161,6 @@ function useEnter( props: { content: string; clientId: string } ) {
 			element.removeEventListener( 'keydown', onKeyDown );
 		};
 	}, [] );
-}
-
-interface WidthPanelProps {
-	selectedWidth?: number;
-	setAttributes: ( attrs: Partial< ButtonAttributes > ) => void;
 }
 
 function WidthPanel( { selectedWidth, setAttributes }: WidthPanelProps ) {
@@ -243,11 +237,36 @@ function ButtonEdit( props: ButtonEditProps ) {
 
 	const TagName = tagName || 'a';
 
-	// Update isEditingCTA to be true when selected and has CTA or when explicitly editing
+	/**
+	 * Flag: Whether the user is explicitly editing the CTA.
+	 */
 	const [ isExplicitlyEditing, setIsExplicitlyEditing ] = useState( false );
+
+	/**
+	 * Flag: Whether to show the editor for creating a new CTA.
+	 */
 	const [ createNewCTA, setCreateNewCTA ] = useState( false );
+
+	/**
+	 * Flag: Whether the user is editing a CTA.
+	 *
+	 * True when selected and has CTA or when explicitly editing.
+	 */
 	const isEditingCTA = isSelected && ( isExplicitlyEditing || !! ctaId );
 
+	/**
+	 * State: The anchor element for the popover.
+	 *
+	 * REVIEW: Use internal state instead of a ref to make sure that the component \
+	 * REVIEW: re-renders when the popover's anchor updates.
+	 */
+	const [ popoverAnchor, setPopoverAnchor ] = useState< HTMLElement >();
+
+	/**
+	 * Function: Handle keydown events.
+	 *
+	 * @param {React.KeyboardEvent< HTMLDivElement >} event Keyboard event.
+	 */
 	function onKeyDown( event: React.KeyboardEvent< HTMLDivElement > ) {
 		if ( isKeyboardEvent.primary( event, 'k' ) ) {
 			event.preventDefault();
@@ -258,43 +277,40 @@ function ButtonEdit( props: ButtonEditProps ) {
 		}
 	}
 
-	// Use internal state instead of a ref to make sure that the component
-	// re-renders when the popover's anchor updates.
-	const [ popoverAnchor, setPopoverAnchor ] = useState< HTMLElement | null >(
-		null
-	);
-
-	const borderProps = useBorderProps( attributes );
-	const colorProps = useColorProps( attributes );
-	const spacingProps = useSpacingProps( attributes );
-	const shadowProps = useShadowProps( attributes );
+	// Refs.
 	const ref = useRef< HTMLElement >( null );
 	const richTextRef = useRef< HTMLInputElement >( null );
+
+	// Block editor props.
 	const blockProps = useBlockProps( {
 		ref: useMergeRefs( [ setPopoverAnchor, ref ] ),
 		onKeyDown,
 	} );
+	const borderProps = useBorderProps( attributes );
+	const colorProps = useColorProps( attributes );
+	const spacingProps = useSpacingProps( attributes );
+	const shadowProps = useShadowProps( attributes );
+
+	// Block editor state.
 	const blockEditingMode = useBlockEditingMode();
 
-	const isURLSet = !! url;
+	// CTA settings.
 	const opensInNewTab = linkTarget === NEW_TAB_TARGET;
 	const nofollow = !! rel?.includes( NOFOLLOW_REL );
 	const isLinkTag = 'a' === TagName;
 
 	// Get available CTAs from the store
 	const { ctas, selectedCTA } = useSelect(
-		( select ) => {
-			const allCTAs =
-				select( CALL_TO_ACTION_STORE ).getCallToActions() || [];
-			const currentCTA = ctaId
+		( select ) => ( {
+			ctas: select( CALL_TO_ACTION_STORE ).getCallToActions(),
+			selectedCTA: ctaId
 				? select( CALL_TO_ACTION_STORE ).getCallToAction( ctaId )
-				: undefined;
-
-			return {
-				ctas: allCTAs,
-				selectedCTA: currentCTA,
-			};
-		},
+				: undefined,
+			// recentlyFetchedCtas:
+			// 	select( CALL_TO_ACTION_STORE ).isDispatching(
+			// 		'getCallToActions'
+			// 	),
+		} ),
 		[ ctaId ]
 	);
 
@@ -346,6 +362,18 @@ function ButtonEdit( props: ButtonEditProps ) {
 	//    b. User is explicitly editing (showing edit mode)
 	const showPopover =
 		isLinkTag && isSelected && ( !! ctaId || isExplicitlyEditing );
+
+	const [ forceRefresh, setForceRefresh ] = useState( 0 );
+
+	// If a new CTA is created, don't show the popover
+	useEffect( () => {
+		if ( createNewCTA ) {
+			return;
+		}
+
+		setForceRefresh( ( prev ) => prev + 1 );
+		setIsExplicitlyEditing( true );
+	}, [ createNewCTA ] );
 
 	return (
 		<>
@@ -408,7 +436,11 @@ function ButtonEdit( props: ButtonEditProps ) {
 						icon={ megaphone }
 						title={ __( 'Add Call to Action', 'popup-maker' ) }
 						shortcut={ displayShortcut.primary( 'k' ) }
-						onClick={ ( event ) => {
+						onClick={ (
+							event:
+								| React.MouseEvent< HTMLButtonElement >
+								| React.MouseEvent< HTMLAnchorElement >
+						) => {
 							event.preventDefault();
 							startEditing();
 						} }
@@ -447,13 +479,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 											onChange={ (
 												newId: number | string
 											) => {
-												console.log( newId );
 												if ( newId === 'create_new' ) {
-													// TODO: Implement create new CTA functionality
-													console.log(
-														'Create new CTA clicked'
-													);
-
 													setCreateNewCTA( true );
 													return;
 												}
@@ -478,6 +504,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 													),
 												},
 											] }
+											forceRefresh={ forceRefresh }
 										/>
 									</FlexItem>
 									<FlexItem>
@@ -494,7 +521,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 									</FlexItem>
 								</Flex>
 
-								{ ctaId && (
+								{ !! ctaId && (
 									<>
 										<Flex justify="flex-start">
 											<Button
@@ -552,32 +579,40 @@ function ButtonEdit( props: ButtonEditProps ) {
 									</>
 								) }
 							</Flex>
-						) : selectedCTA ? (
-							<Flex align="center">
-								<FlexItem
-									style={ {
-										flexShrink: 0,
-									} }
-								>
-									{ /* TODO: Add conversion metrics here when available */ }
-									{ `${ selectedCTA.title } (#${ selectedCTA.id })` }
-								</FlexItem>
-								<Flex justify="flex-end">
-									<Button
-										icon={ edit }
-										label={ __( 'Edit', 'popup-maker' ) }
-										onClick={ () =>
-											setIsExplicitlyEditing( true )
-										}
-									/>
-									<Button
-										icon={ linkOff }
-										label={ __( 'Remove', 'popup-maker' ) }
-										onClick={ unlink }
-									/>
+						) : (
+							typeof selectedCTA !== 'undefined' && (
+								<Flex align="center">
+									<FlexItem
+										style={ {
+											flexShrink: 0,
+										} }
+									>
+										{ /* TODO: Add conversion metrics here when available */ }
+										{ `${ selectedCTA.title } (#${ selectedCTA.id })` }
+									</FlexItem>
+									<Flex justify="flex-end">
+										<Button
+											icon={ edit }
+											label={ __(
+												'Edit',
+												'popup-maker'
+											) }
+											onClick={ () =>
+												setIsExplicitlyEditing( true )
+											}
+										/>
+										<Button
+											icon={ linkOff }
+											label={ __(
+												'Remove',
+												'popup-maker'
+											) }
+											onClick={ unlink }
+										/>
+									</Flex>
 								</Flex>
-							</Flex>
-						) : null }
+							)
+						) }
 					</div>
 				</Popover>
 			) }
@@ -603,9 +638,12 @@ function ButtonEdit( props: ButtonEditProps ) {
 
 			{ createNewCTA && (
 				<Editor
-					useModal={ true }
-					ctaId={ 'new' }
+					id={ 'new' }
+					defaultValues={ {
+						status: 'publish',
+					} }
 					onSave={ ( values ) => {
+						console.log( 'values', values );
 						setAttributes( {
 							ctaId: values.id,
 						} );
