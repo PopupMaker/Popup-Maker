@@ -1,4 +1,5 @@
-import type { CallToAction, State } from './types';
+import type { CallToAction } from './types';
+import type { State } from './reducer';
 
 export const STORE_NAME = 'popup-maker/call-to-actions';
 

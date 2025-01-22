@@ -1,14 +1,23 @@
-import { createSelector } from '@wordpress/data';
 import { applyFilters } from '@wordpress/hooks';
+import { createSelector } from '@wordpress/data';
 
 import { defaultValues } from './constants';
+import { createNoticeSelectors, createPostTypeSelectors } from '../utils';
 
-import type { CallToAction, State } from './types';
+import type { CallToAction } from './types';
+import type { State } from './reducer';
+
+/**
+ * Generate entity & notice selectors.
+ */
+const entitySelectors =
+	createPostTypeSelectors< CallToAction< 'edit' > >( 'pum_cta' );
+const noticeSelectors = createNoticeSelectors( 'pum-cta-editor' );
 
 /**
  * Check if the editor is active.
  */
-export const getEditorId = createSelector(
+const getEditorId = createSelector(
 	( state: State ) => state?.editorId,
 	( state: State ) => [ state.editorId ]
 );
@@ -16,7 +25,7 @@ export const getEditorId = createSelector(
 /**
  * Check if the editor is active.
  */
-export const isEditorActive = createSelector(
+const isEditorActive = createSelector(
 	( state: State ): boolean => {
 		const editorId = state?.editorId;
 
@@ -32,9 +41,19 @@ export const isEditorActive = createSelector(
 /**
  * Get default entity values.
  */
-export const getEntityDefaults = ( _state: State ) => {
+const getEntityDefaults = ( _state: State ) => {
 	return applyFilters(
 		'popupMaker.callToAction.defaultValues',
 		defaultValues
-	) as CallToAction;
+	) as CallToAction< 'edit' >;
 };
+
+const selectors = {
+	...entitySelectors,
+	...noticeSelectors,
+	getEditorId,
+	isEditorActive,
+	getEntityDefaults,
+};
+
+export default selectors;

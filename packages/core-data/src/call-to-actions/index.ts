@@ -1,70 +1,27 @@
-import { createReduxStore } from '@wordpress/data';
-import type { Context } from '@wordpress/core-data';
-import { STORE_NAME, defaultValues } from './constants';
-
-import reducer from './reducer';
-import * as customActions from './actions';
-import * as customSelectors from './selectors';
-
-import {
-	createNoticeActions,
-	createNoticeSelectors,
-	createPostTypeActions,
-	createPostTypeSelectors,
-} from '../utils';
-
-import type { CallToAction, State as CallToActionsState } from './types';
-
-/**
- * Generate notice & entityactions.
- */
-const entityActions =
-	createPostTypeActions< CallToAction< Context > >( 'pum_cta' );
-const noticeActions = createNoticeActions( 'pum-cta-editor' );
-
-/**
- * Generate entity & notice selectors.
- */
-const entitySelectors =
-	createPostTypeSelectors< CallToAction< Context > >( 'pum_cta' );
-const noticeSelectors = createNoticeSelectors( 'pum-cta-editor' );
-
-/**
- * Generate store config.
- */
-const storeConfig = () => ( {
-	reducer,
-	actions: {
-		...entityActions,
-		...noticeActions,
-		...customActions,
-	},
-	selectors: {
-		...entitySelectors,
-		...noticeSelectors,
-		...customSelectors,
-	},
-} );
-
-/**
- * Store definition for the code data namespace.
- *
- * @see https://github.com/WordPress/gutenberg/blob/HEAD/packages/data/README.md#createReduxStore
- */
-const store = createReduxStore( STORE_NAME, storeConfig() );
-
-export default store;
-
-export type { CallToActionsState };
-
+export * from './constants';
+export * from './store';
 export * from './types';
 export * from './validation';
+
+// Export custom named variables.
 export {
-	STORE_NAME as CALL_TO_ACTIONS_STORE,
-	defaultValues as defaultCtaValues,
-	store as callToActionStore,
 	/**
-	 * @deprecated Use defaultCtaValues instead.
+	 * The Call to Action store.
 	 */
-	defaultValues as callToActionDefaults,
-};
+	default as store,
+	/**
+	 * The Call to Action store.
+	 */
+	default as callToActionStore,
+} from './store';
+
+export {
+	/**
+	 * The default values for the Call to Action store.
+	 */
+	defaultValues as defaultCtaValues,
+	/**
+	 * The name of the Call to Action store.
+	 */
+	STORE_NAME as CALL_TO_ACTIONS_STORE,
+} from './constants';

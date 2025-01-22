@@ -1,15 +1,24 @@
+import { store as noticesStore } from '@wordpress/notices';
+
+import { createNoticeActions, createPostTypeActions } from '../utils';
 import { ACTION_TYPES } from './constants';
-import { callToActionStore } from '.';
 
 import type { EditorId } from '../types';
-import type { CallToAction } from './types';
+import type { CallToAction, ThunkAction } from './types';
 
 const { EDITOR_CHANGE_ID } = ACTION_TYPES;
 
+/**
+ * Generate notice & entityactions.
+ */
+const entityActions =
+	createPostTypeActions< CallToAction< 'edit' > >( 'pum_cta' );
+const noticeActions = createNoticeActions( 'pum-cta-editor' );
+
 // Refactored changeEditorId using thunk and our selectors
-export const changeEditorId =
-	( editorId: EditorId ) =>
-	( { select, dispatch } ) => {
+const changeEditorId =
+	( editorId: EditorId ): ThunkAction< void > =>
+	( { select, dispatch, resolveSelect, registry } ) => {
 		return ( async () => {
 			try {
 				if ( typeof editorId === 'undefined' ) {
@@ -21,14 +30,12 @@ export const changeEditorId =
 					return;
 				}
 
-				let entityRecord: CallToAction | undefined;
+				let entityRecord: CallToAction< 'edit' > | undefined;
 
 				if ( editorId === 'new' ) {
 					entityRecord = select.getEntityDefaults();
 				} else if ( typeof editorId === 'number' && editorId > 0 ) {
-					// TODO These are not getting properly typed :(..
-					entityRecord =
-						await select( callToActionStore ).getById( editorId );
+					entityRecord = await select.getById( editorId );
 				}
 
 				dispatch( {
@@ -38,15 +45,25 @@ export const changeEditorId =
 				} );
 			} catch ( error ) {
 				console.error( 'Failed to change editor ID:', error );
-				dispatch( callToActionStore ).createNotice(
-					'error',
-					error instanceof Error
-						? error.message
-						: 'Failed to change editor',
-					{
-						id: 'editor-change-error',
-					}
-				);
+				registry
+					.dispatch( noticesStore )
+					.createNotice(
+						'error',
+						error instanceof Error
+							? error.message
+							: 'Failed to change editor',
+						{
+							id: 'editor-change-error',
+						}
+					);
 			}
 		} )();
 	};
+
+const actions = {
+	...entityActions,
+	...noticeActions,
+	changeEditorId,
+};
+
+export default actions;

@@ -1,15 +1,19 @@
-import type {
-	Context,
-	BaseEntityRecords as WPBaseEntityRecords,
-} from '@wordpress/core-data';
+import type { Context, BaseEntityRecords } from '@wordpress/core-data';
 
-import type { EditorId } from '../types';
-
+/**
+ * Declare a custom post type for custom post type.
+ */
 declare module '@wordpress/core-data' {
 	export namespace BaseEntityRecords {
 		export interface CallToAction< C extends Context >
 			extends BaseEntity< C > {
+			/**
+			 * Custom uuid field.
+			 */
 			uuid: string;
+			/**
+			 * Custom settings field.
+			 */
 			settings: CallToActionSettings;
 		}
 	}
@@ -19,7 +23,7 @@ declare module '@wordpress/core-data' {
  * The call to action interface.
  */
 export interface CallToAction< C extends Context = 'view' >
-	extends WPBaseEntityRecords.CallToAction< C > {}
+	extends BaseEntityRecords.CallToAction< C > {}
 
 /**
  * The settings for a call to action.
@@ -33,6 +37,11 @@ export interface CallToActionBaseSettings {
 	type: keyof CallToActionTypes | '';
 	[ key: string ]: any;
 }
+
+/**
+ * The statuses for a your custom type.
+ */
+export type CallToActionStatuses = CallToAction[ 'status' ] | 'all';
 
 /**
  * The types for a call to action.
@@ -57,23 +66,3 @@ export interface CallToActionLinkSettings extends CallToActionBaseSettings {
 export type CallToActionSettings =
 	| CallToActionLinkSettings
 	| CallToActionBaseSettings;
-
-/**
- * The shape of a call to action from the API.
- */
-export interface ApiCallToAction extends CallToAction {
-	uuid: string;
-	settings: CallToActionSettings;
-}
-
-/**
- * The statuses for a call to action.
- */
-export type CallToActionStatuses = CallToAction[ 'status' ] | 'all' | string;
-
-/**
- * The shape of the state for the call to actions store.
- */
-export type State = {
-	editorId?: EditorId;
-};

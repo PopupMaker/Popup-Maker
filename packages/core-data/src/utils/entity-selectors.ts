@@ -1,13 +1,10 @@
 import { store as coreDataStore } from '@wordpress/core-data';
 import { createRegistrySelector } from '@wordpress/data';
 
-import type {
-	Context,
-	BaseEntityRecords as WPBaseEntityRecords,
-} from '@wordpress/core-data';
+import type { BaseEntityRecords } from '@wordpress/core-data';
 
 export const createPostTypeSelectors = <
-	T extends WPBaseEntityRecords.BaseEntity< Context >,
+	T extends BaseEntityRecords.BaseEntity< 'edit' >,
 >(
 	name: string
 ) => {

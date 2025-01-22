@@ -1,7 +1,15 @@
 import { ACTION_TYPES, initialState } from './constants';
-import type { State } from './types';
+
+import type { EditorId } from '../types';
 
 const { EDITOR_CHANGE_ID } = ACTION_TYPES;
+
+/**
+ * The shape of the state for the call to actions store.
+ */
+export type State = {
+	editorId?: EditorId;
+};
 
 type ActionPayloadTypes = {
 	type: typeof EDITOR_CHANGE_ID;

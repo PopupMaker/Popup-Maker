@@ -2,16 +2,13 @@ import { __ } from '@wordpress/i18n';
 import { store as noticesStore } from '@wordpress/notices';
 import { store as coreDataStore } from '@wordpress/core-data';
 
-import { storeHasNotices } from '../types';
-
-import type {
-	Context,
-	BaseEntityRecords as WPBaseEntityRecords,
-} from '@wordpress/core-data';
-import type { ThunkAction, ThunkContext } from '../types';
+import { storeHasNotices } from './notice-types';
+import type { BaseEntityRecords } from '@wordpress/core-data';
+import type { ThunkAction, ThunkArgs } from '../types';
 
 export const createPostTypeActions = <
-	T extends WPBaseEntityRecords.BaseEntity< Context >,
+	T extends
+		BaseEntityRecords.BaseEntity< 'edit' > = BaseEntityRecords.BaseEntity< 'edit' >,
 >(
 	name: string
 ) => {
@@ -22,7 +19,7 @@ export const createPostTypeActions = <
 	 * Helper to handle notices with fallback to core notices
 	 */
 	const handleNotice = async (
-		context: ThunkContext,
+		context: ThunkArgs,
 		options: {
 			type: 'success' | 'error';
 			message: string;
@@ -52,7 +49,7 @@ export const createPostTypeActions = <
 				validate?: (
 					entity: Partial< T >
 				) => true | { message: string }
-			): ThunkAction< T | undefined > =>
+			): ThunkAction< T | undefined, S > =>
 			async ( context ) => {
 				try {
 					if ( validate ) {
@@ -94,7 +91,7 @@ export const createPostTypeActions = <
 		 * Store unsaved edits.
 		 */
 		edit:
-			( id: number, edits: Partial< T > ): ThunkAction< void > =>
+			( id: number, edits: Partial< T > ): ThunkAction< void, S > =>
 			async ( context ) => {
 				try {
 					await context
