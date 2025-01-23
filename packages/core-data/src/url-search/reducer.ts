@@ -1,59 +1,85 @@
 import { ACTION_TYPES, initialState } from './constants';
 
-import type { Statuses } from '../constants';
+import type { DispatchStatuses } from '../constants';
 import type {
-	URLSearchState,
-	URLSearchStore,
+	StoreActionNames,
 	WPLinkSearchResult,
+	URLSearchQuery,
 } from './types';
 
 const { SEARCH_ERROR, SEARCH_REQUEST, SEARCH_SUCCESS, CHANGE_ACTION_STATUS } =
 	ACTION_TYPES;
 
-interface ActionPayloadTypes {
+export type State = {
+	currentQuery?: string;
+	searchResults?: WPLinkSearchResult[];
+	queries: Record< URLSearchQuery[ 'text' ], URLSearchQuery >;
+	// Boilerplate
+	dispatchStatus?: {
+		[ Property in StoreActionNames ]?: {
+			status: string;
+			error: string;
+		};
+	};
+	error?: string;
+};
+
+type BaseAction = {
 	type: keyof typeof ACTION_TYPES;
+};
+
+type SearchRequestAction = BaseAction & {
+	type: typeof SEARCH_REQUEST;
+	queryText: string;
+};
+
+type SearchSuccessAction = BaseAction & {
+	type: typeof SEARCH_SUCCESS;
 	queryText: string;
 	results: WPLinkSearchResult[];
-	error: string;
-	// Boilerplate.
-	actionName: URLSearchStore[ 'ActionNames' ];
-	status: Statuses;
-	message: string;
-}
+};
 
-const reducer = (
-	state: URLSearchState = initialState,
-	{
-		type,
-		queryText,
-		results,
-		error,
-		// Boilerplate
-		actionName,
-		status,
-		message,
-	}: ActionPayloadTypes
-) => {
-	switch ( type ) {
+type SearchErrorAction = BaseAction & {
+	type: typeof SEARCH_ERROR;
+	queryText: string;
+	error: string;
+};
+
+type ChangeActionStatusAction = BaseAction & {
+	type: typeof CHANGE_ACTION_STATUS;
+	actionName: StoreActionNames;
+	status: DispatchStatuses;
+	message: string;
+};
+
+export type ReducerAction =
+	| SearchRequestAction
+	| SearchSuccessAction
+	| SearchErrorAction
+	| ChangeActionStatusAction;
+
+const reducer = ( state: State = initialState, action: ReducerAction ) => {
+	switch ( action.type ) {
 		case SEARCH_REQUEST:
 			return {
 				...state,
-				currentQuery: queryText,
+				currentQuery: action.queryText,
 			};
 
 		case SEARCH_SUCCESS:
-			if ( state.currentQuery === queryText ) {
+			if ( state.currentQuery === action.queryText ) {
 				return {
-					searchResults: results,
+					...state,
+					searchResults: action.results,
 				};
 			}
 			return state;
 
 		case SEARCH_ERROR:
-			if ( state.currentQuery === queryText ) {
+			if ( state.currentQuery === action.queryText ) {
 				return {
 					...state,
-					error,
+					error: action.error,
 				};
 			}
 			return state;
@@ -63,10 +89,11 @@ const reducer = (
 				...state,
 				dispatchStatus: {
 					...state.dispatchStatus,
-					[ actionName ]: {
-						...( state?.dispatchStatus?.[ actionName ] ?? {} ),
-						status,
-						error: message,
+					[ action.actionName ]: {
+						...( state?.dispatchStatus?.[ action.actionName ] ??
+							{} ),
+						status: action.status,
+						error: action.message,
 					},
 				},
 			};

@@ -1,14 +1,17 @@
 import { __ } from '@wordpress/i18n';
 
-import { Status } from '../constants';
+import { DispatchStatus } from '../constants';
 import { getErrorMessage } from '../utils';
-import { ACTION_TYPES } from './constants';
-import { fetchLinkSuggestions } from './controls';
 
-import type { Statuses } from '../constants';
+import { ACTION_TYPES } from './constants';
+import { fetchLinkSuggestions } from './utils';
+
+import type { DispatchStatuses } from '../constants';
+import type { ReducerAction } from './reducer';
 import type {
 	SearchOptions,
-	URLSearchStore,
+	StoreActionNames,
+	ThunkAction,
 	WPLinkSearchResult,
 } from './types';
 
@@ -17,116 +20,133 @@ const { SEARCH_REQUEST, SEARCH_SUCCESS, SEARCH_ERROR, CHANGE_ACTION_STATUS } =
 
 /**
  * Set query search text.
- *
- * @param {string}                    queryText     Query text.
- * @param {SearchOptions[]|undefined} searchOptions Search options.
- * @return {Generator} Action object.
  */
-export function* updateSuggestions(
-	queryText: string,
-	searchOptions?: SearchOptions
-): Generator {
-	const actionName = 'updateSuggestions';
+export const updateSuggestions =
+	(
+		/**
+		 * Query text.
+		 */
+		queryText: string,
+		/**
+		 * Search options.
+		 */
+		searchOptions?: SearchOptions
+	): ThunkAction =>
+	async ( { dispatch } ) => {
+		const actionName = 'updateSuggestions';
 
-	try {
-		yield changeActionStatus( actionName, Status.Resolving );
+		try {
+			dispatch.changeActionStatus( actionName, DispatchStatus.Resolving );
 
-		yield searchRequest( queryText );
+			dispatch.searchRequest( queryText );
 
-		const results = ( yield fetchLinkSuggestions(
-			queryText,
-			searchOptions
-		) ) as WPLinkSearchResult[];
+			const results = await fetchLinkSuggestions(
+				queryText,
+				searchOptions
+			);
 
-		if ( results ) {
-			yield changeActionStatus( actionName, Status.Success );
+			if ( results ) {
+				dispatch.changeActionStatus(
+					actionName,
+					DispatchStatus.Success
+				);
 
-			return searchSuccess( queryText, results );
+				dispatch.searchSuccess( queryText, results );
+			}
+
+			const errorMessage = __( 'No results returned', 'popup-paker' );
+
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				errorMessage
+			);
+
+			dispatch.searchError( queryText, errorMessage );
+		} catch ( error ) {
+			const errorMessage = getErrorMessage( error );
+
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				errorMessage
+			);
+			dispatch.searchError( queryText, errorMessage );
 		}
-
-		const errorMessage = __( 'No results returned', 'popup-paker' );
-
-		yield changeActionStatus( actionName, Status.Error, errorMessage );
-
-		return searchError( queryText, errorMessage );
-	} catch ( error ) {
-		const errorMessage = getErrorMessage( error );
-
-		yield changeActionStatus( actionName, Status.Error, errorMessage );
-		return searchError( queryText, errorMessage );
-	}
-}
+	};
 
 /**
  * Populate search results.
- *
- * @param {string} queryText Query text.
- * @return {Object} Action object.
  */
-export function searchRequest( queryText: string ): {
-	type: string;
-	queryText: string;
-} {
+export const searchRequest = (
+	/**
+	 * Query text.
+	 */
+	queryText: string
+): ReducerAction => {
 	return {
 		type: SEARCH_REQUEST,
 		queryText,
-	};
-}
+	} as ReducerAction;
+};
 
 /**
  * Populate search results.
- *
- * @param {string}               queryText Query text.
- * @param {WPLinkSearchResult[]} results   Search results.
- * @return {Object} Action object.
  */
-export function searchSuccess(
+export const searchSuccess = (
+	/**
+	 * Query text.
+	 */
 	queryText: string,
+	/**
+	 * Search results.
+	 */
 	results: WPLinkSearchResult[]
-): { type: string; queryText: string; results: WPLinkSearchResult[] } {
+): ReducerAction => {
 	return {
 		type: SEARCH_SUCCESS,
 		queryText,
 		results,
-	};
-}
+	} as ReducerAction;
+};
 
 /**
  * Generate a search error action.
- *
- * @param {string} queryText Query text.
- * @param {string} error     Error message.
- * @return {Object} Action object.
  */
-export function searchError(
+export const searchError = (
+	/**
+	 * Query text.
+	 */
 	queryText: string,
+	/**
+	 * Error message.
+	 */
 	error: string
-): { type: string; queryText: string; error: string } {
+): ReducerAction => {
 	return {
 		type: SEARCH_ERROR,
 		queryText,
 		error,
 	};
-}
+};
 
 /**
  * Change status of a dispatch action request.
- *
- * @param {URLSearchStore[ 'ActionNames' ]} actionName Action name to change status of.
- * @param {Statuses}                        status     New status.
- * @param {string | undefined}              message    Optional error message.
- * @return {Object} Action object.
  */
 export const changeActionStatus = (
-	actionName: URLSearchStore[ 'ActionNames' ],
-	status: Statuses,
+	/**
+	 * Action name.
+	 */
+	actionName: StoreActionNames,
+	/**
+	 * Status.
+	 */
+	status: DispatchStatuses,
+	/**
+	 * Message.
+	 */
 	message?: string | undefined
-): {
-	type: string;
-	actionName: URLSearchStore[ 'ActionNames' ];
-	status: Statuses;
-	message?: string;
-} => {
+) => {
 	if ( message ) {
 		// eslint-disable-next-line no-console
 		console.log( actionName, message );
@@ -137,5 +157,5 @@ export const changeActionStatus = (
 		actionName,
 		status,
 		message,
-	};
+	} as ReducerAction;
 };

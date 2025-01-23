@@ -1,94 +1,100 @@
-import { Status } from '../constants';
+import { createSelector } from '@wordpress/data';
 
-import type {
-	URLSearchState,
-	URLSearchStore,
-	WPLinkSearchResult,
-} from './types';
+import { DispatchStatus } from '../constants';
+
+import type { State } from './reducer';
+import type { StoreActionNames, WPLinkSearchResult } from './types';
 
 /**
  * Get search results for link suggestions.
- *
- * @param {URLSearchState} state Current state.
- * @return {WPLinkSearchResult[]} Array of link search results.
  */
-export const getSuggestions = ( state: URLSearchState ): WPLinkSearchResult[] =>
-	state.searchResults || [];
+export const getSuggestions = createSelector(
+	( state: State ): WPLinkSearchResult[] => state.searchResults || [],
+	( state: State ) => [ state.searchResults ]
+);
 
 /**
  * Get current status for dispatched action.
- *
- * @param {URLSearchState}                state      Current state.
- * @param {URLSearchStore['ActionNames']} actionName Action name to check.
- *
- * @return {string} Current status for dispatched action.
  */
 export const getDispatchStatus = (
-	state: URLSearchState,
-	actionName: URLSearchStore[ 'ActionNames' ]
+	state: State,
+	/**
+	 * Action name to check.
+	 */
+	actionName: StoreActionNames
 ): string | undefined => state?.dispatchStatus?.[ actionName ]?.status;
 
 /**
  * Check if action is dispatching.
- *
- * @param {URLSearchState}                                                state       Current state.
- * @param {URLSearchStore['ActionNames']|URLSearchStore['ActionNames'][]} actionNames Action name or array of names to check.
- *
- * @return {boolean} True if is dispatching.
  */
-export const isDispatching = (
-	state: URLSearchState,
-	actionNames:
-		| URLSearchStore[ 'ActionNames' ]
-		| URLSearchStore[ 'ActionNames' ][]
-): boolean => {
-	if ( ! Array.isArray( actionNames ) ) {
-		return getDispatchStatus( state, actionNames ) === Status.Resolving;
-	}
-
-	let dispatching = false;
-
-	for ( let i = 0; actionNames.length > i; i++ ) {
-		dispatching =
-			getDispatchStatus( state, actionNames[ i ] ) === Status.Resolving;
-
-		if ( dispatching ) {
-			return true;
+export const isDispatching = createSelector(
+	(
+		state: State,
+		/**
+		 * Action name to check.
+		 */
+		actionNames: StoreActionNames | StoreActionNames[]
+	): boolean => {
+		if ( ! Array.isArray( actionNames ) ) {
+			return (
+				getDispatchStatus( state, actionNames ) ===
+				DispatchStatus.Resolving
+			);
 		}
-	}
 
-	return dispatching;
-};
+		let dispatching = false;
+
+		for ( let i = 0; actionNames.length > i; i++ ) {
+			dispatching =
+				getDispatchStatus( state, actionNames[ i ] ) ===
+				DispatchStatus.Resolving;
+
+			if ( dispatching ) {
+				return true;
+			}
+		}
+
+		return dispatching;
+	},
+	( state: State, actionNames: StoreActionNames | StoreActionNames[] ) => [
+		state.dispatchStatus,
+		actionNames,
+	]
+);
 
 /**
  * Check if action has finished dispatching.
- *
- * @param {URLSearchState}                state      Current state.
- * @param {URLSearchStore['ActionNames']} actionName Action name to check.
- *
- * @return {boolean} True if dispatched.
  */
-export const hasDispatched = (
-	state: URLSearchState,
-	actionName: URLSearchStore[ 'ActionNames' ]
-): boolean => {
-	const status = getDispatchStatus( state, actionName );
+export const hasDispatched = createSelector(
+	(
+		state: State,
+		/**
+		 * Action name to check.
+		 */
+		actionName: StoreActionNames
+	): boolean => {
+		const status = getDispatchStatus( state, actionName );
 
-	return !! (
-		status &&
-		( [ Status.Success, Status.Error ] as string[] ).indexOf( status ) >= 0
-	);
-};
+		return !! (
+			status &&
+			(
+				[ DispatchStatus.Success, DispatchStatus.Error ] as string[]
+			 ).indexOf( status ) >= 0
+		);
+	},
+	( state: State, actionName: StoreActionNames ) => [
+		state.dispatchStatus,
+		actionName,
+	]
+);
 
 /**
- * Get dispatch action error if esists.
- *
- * @param {URLSearchState}                state      Current state.
- * @param {URLSearchStore['ActionNames']} actionName Action name to check.
- *
- * @return {string|undefined} Current error message.
+ * Get dispatch action error if exists.
  */
 export const getDispatchError = (
-	state: URLSearchState,
-	actionName: URLSearchStore[ 'ActionNames' ]
+	state: State,
+	/**
+	 * Action name to check.
+	 */
+	actionName: StoreActionNames
 ): string | undefined => state?.dispatchStatus?.[ actionName ]?.error;

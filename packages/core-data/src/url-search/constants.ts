@@ -1,17 +1,28 @@
-import type { URLSearchState } from './types';
+import type { State } from './reducer';
 
 export const STORE_NAME = 'popup-maker/url-search';
 
-export const ACTION_TYPES = {
-	SEARCH_REQUEST: 'SEARCH_REQUEST',
-	SEARCH_SUCCESS: 'SEARCH_SUCCESS',
-	SEARCH_ERROR: 'SEARCH_ERROR',
-	UPDATE_SUGGESTIONS: 'UPDATE_SUGGESTIONS',
-	// Boilerplate.
-	CHANGE_ACTION_STATUS: 'CHANGE_ACTION_STATUS',
+const SEARCH_REQUEST = 'SEARCH_REQUEST';
+const SEARCH_SUCCESS = 'SEARCH_SUCCESS';
+const SEARCH_ERROR = 'SEARCH_ERROR';
+const UPDATE_SUGGESTIONS = 'UPDATE_SUGGESTIONS';
+const CHANGE_ACTION_STATUS = 'CHANGE_ACTION_STATUS';
+
+export const ACTION_TYPES: {
+	SEARCH_REQUEST: typeof SEARCH_REQUEST;
+	SEARCH_SUCCESS: typeof SEARCH_SUCCESS;
+	SEARCH_ERROR: typeof SEARCH_ERROR;
+	UPDATE_SUGGESTIONS: typeof UPDATE_SUGGESTIONS;
+	CHANGE_ACTION_STATUS: typeof CHANGE_ACTION_STATUS;
+} = {
+	SEARCH_REQUEST,
+	SEARCH_SUCCESS,
+	SEARCH_ERROR,
+	UPDATE_SUGGESTIONS,
+	CHANGE_ACTION_STATUS,
 };
 
-export const initialState: URLSearchState = {
+export const initialState: State = {
 	currentQuery: '',
 	searchResults: [],
 	queries: {},
