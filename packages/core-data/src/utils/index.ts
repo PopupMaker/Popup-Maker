@@ -4,6 +4,8 @@ export { default as createPostTypeActions } from './entity-actions';
 export { default as createPostTypeSelectors } from './entity-selectors';
 export * from './notice-types';
 export * from './entity-types';
+export * from './controls';
+
 /**
  * Append params to url.
  *
