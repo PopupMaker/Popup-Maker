@@ -1,36 +1,25 @@
 import { __ } from '@wordpress/i18n';
-import { select } from '@wordpress/data-controls';
 
-import { Status } from '../constants';
-import { fetch } from '../controls';
-import { getErrorMessage } from '../utils';
-import { ACTION_TYPES, STORE_NAME } from './constants';
-import { getResourcePath } from './utils';
+import { DispatchStatus, DispatchStatuses } from '../constants';
+import { getErrorMessage, fetchFromApi } from '../utils';
 
-import type { Statuses } from '../constants';
-import type { Settings, SettingsStore } from './types';
+import { ACTION_TYPES } from './constants';
+import { apiPath } from './utils';
+
+import type { ReducerAction } from './reducer';
+import type { Settings, StoreActionNames, ThunkAction } from './types';
 
 const { UPDATE, SAVE_CHANGES, STAGE_CHANGES, HYDRATE, CHANGE_ACTION_STATUS } =
 	ACTION_TYPES;
 
 /**
  * Change status of a dispatch action request.
- *
- * @param {SettingsStore[ 'ActionNames' ]} actionName Action name to change status of.
- * @param {Statuses}                       status     New status.
- * @param {string | undefined}             message    Optional error message.
- * @return {Object} Action object.
  */
 export const changeActionStatus = (
-	actionName: SettingsStore[ 'ActionNames' ],
-	status: Statuses,
+	actionName: StoreActionNames,
+	status: DispatchStatuses,
 	message?: string | undefined
-): {
-	type: string;
-	actionName: SettingsStore[ 'ActionNames' ];
-	status: Statuses;
-	message?: string;
-} => {
+) => {
 	if ( message ) {
 		// eslint-disable-next-line no-console
 		console.log( actionName, message );
@@ -41,144 +30,153 @@ export const changeActionStatus = (
 		actionName,
 		status,
 		message,
-	};
+	} as ReducerAction;
 };
 
 /**
  * Update settings.
- *
- * @param {Partial< Settings >} settings Object of settings to update.
- * @return {Generator} Action object.
  */
-export function* updateSettings( settings: Partial< Settings > ): Generator {
-	const actionName = 'updateSettings';
+export const updateSettings =
+	(
+		/**
+		 * Settings to update.
+		 */
+		settings: Partial< Settings >
+	): ThunkAction =>
+	async ( { dispatch, resolveSelect } ) => {
+		const actionName = 'updateSettings';
 
-	try {
-		yield changeActionStatus( actionName, Status.Resolving );
+		try {
+			dispatch.changeActionStatus( actionName, DispatchStatus.Resolving );
 
-		// execution will pause here until the `FETCH` control function's return
-		// value has resolved.
-		const currentSettings = ( yield select(
-			STORE_NAME,
-			'getSettings'
-		) ) as Settings | undefined;
+			const currentSettings = await resolveSelect.getSettings();
 
-		const result = ( yield fetch( getResourcePath(), {
-			method: 'PUT',
-			body: { settings: { ...currentSettings, ...settings } },
-		} ) ) as Settings;
+			const result = await fetchFromApi( apiPath(), {
+				method: 'PUT',
+				body: JSON.stringify( {
+					settings: { ...currentSettings, ...settings },
+				} ),
+			} );
 
-		if ( result ) {
-			// thing was successfully updated so return the action object that will
-			// update the saved thing in the state.
-			yield changeActionStatus( actionName, Status.Success );
+			if ( result ) {
+				dispatch.changeActionStatus(
+					actionName,
+					DispatchStatus.Success
+				);
 
-			return {
-				type: UPDATE,
-				settings: result,
-			};
+				dispatch( {
+					type: UPDATE,
+					settings: result,
+				} as ReducerAction );
+
+				return;
+			}
+
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				__(
+					'An error occurred, settings were not saved.',
+					'popup-maker'
+				)
+			);
+		} catch ( error ) {
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				getErrorMessage( error )
+			);
 		}
-
-		// if execution arrives here, then thing didn't update in the state so return
-		// action object that will add an error to the state about this.
-		// returning an action object that will save the update error to the state.
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			__( 'An error occurred, settings were not saved.', 'popup-maker' )
-		);
-	} catch ( error ) {
-		// returning an action object that will save the update error to the state.
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			getErrorMessage( error )
-		);
-	}
-}
+	};
 
 /**
  * Save staged/unsaved changes.
- *
- * @return {Generator} Action object.
  */
-export function* saveSettings() {
-	const actionName = 'saveSettings';
+export const saveSettings =
+	(
+		/**
+		 * Settings to save.
+		 */
+		settings?: Partial< Settings >
+	): ThunkAction =>
+	async ( { dispatch, resolveSelect } ) => {
+		const actionName = 'saveSettings';
 
-	try {
-		yield changeActionStatus( actionName, Status.Resolving );
+		try {
+			dispatch.changeActionStatus( actionName, DispatchStatus.Resolving );
 
-		// execution will pause here until the `FETCH` control function's return
-		// value has resolved.
-		const currentSettings = ( yield select(
-			STORE_NAME,
-			'getSettings'
-		) ) as Settings | undefined;
+			const currentSettings = await resolveSelect.getSettings();
 
-		const unsavedChanges = ( yield select(
-			STORE_NAME,
-			'getUnsavedChanges'
-		) ) as Partial< Settings > | undefined;
+			const unsavedChanges = await resolveSelect.getUnsavedChanges();
 
-		const result = ( yield fetch( getResourcePath(), {
-			method: 'PUT',
-			body: { settings: { ...currentSettings, ...unsavedChanges } },
-		} ) ) as Settings;
+			const result = await fetchFromApi< Settings >( apiPath(), {
+				method: 'PUT',
+				body: JSON.stringify( {
+					settings: {
+						...currentSettings,
+						...unsavedChanges,
+						...settings,
+					},
+				} ),
+			} );
 
-		if ( result ) {
-			// thing was successfully updated so return the action object that will
-			// update the saved thing in the state.
-			yield changeActionStatus( actionName, Status.Success );
+			if ( result ) {
+				dispatch.changeActionStatus(
+					actionName,
+					DispatchStatus.Success
+				);
 
-			return {
-				type: SAVE_CHANGES,
-				settings: result,
-			};
+				dispatch( {
+					type: SAVE_CHANGES,
+					settings: result,
+				} as ReducerAction );
+
+				return;
+			}
+
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				__(
+					'An error occurred, settings were not saved.',
+					'popup-maker'
+				)
+			);
+		} catch ( error ) {
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				getErrorMessage( error )
+			);
 		}
-
-		// if execution arrives here, then thing didn't update in the state so return
-		// action object that will add an error to the state about this.
-		// returning an action object that will save the update error to the state.
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			__( 'An error occurred, settings were not saved.', 'popup-maker' )
-		);
-	} catch ( error ) {
-		// returning an action object that will save the update error to the state.
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			getErrorMessage( error )
-		);
-	}
-}
+	};
 
 /**
- * Update settings.
- *
- * @param {Partial< Settings >} settings Object of settings to update.
- * @return {Generator} Action object.
+ * Stage unsaved changes.
  */
 export const stageUnsavedChanges = (
+	/**
+	 * Settings to stage.
+	 */
 	settings: Partial< Settings >
-): { type: string; settings: Partial< Settings > } => {
+): ReducerAction => {
 	return {
 		type: STAGE_CHANGES,
 		settings,
-	};
+	} as ReducerAction;
 };
 
 /**
- *
- * @param {Settings} settings
- * @return {Object} Action object.
+ * Hydrate settings.
  */
 export const hydrate = (
+	/**
+	 * Settings to hydrate.
+	 */
 	settings: Settings
-): { type: string; settings: Settings } => {
+): ReducerAction => {
 	return {
 		type: HYDRATE,
 		settings,
-	};
+	} as ReducerAction;
 };
