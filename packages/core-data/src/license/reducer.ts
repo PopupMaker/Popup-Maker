@@ -79,7 +79,7 @@ type ChangeActionStatusAction = BaseAction & {
 	message: string;
 };
 
-type ReducerAction =
+export type ReducerAction =
 	| LicenseStatusAction
 	| ConnectSiteAction
 	| UpdateLicenseKeyAction
