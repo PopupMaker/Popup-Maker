@@ -6,7 +6,6 @@ import type {
 	LicenseConnect,
 	LicenseStatus,
 	StoreActionNames,
-	StoreActions,
 } from './types';
 
 const {
@@ -26,7 +25,7 @@ export type State = {
 	connectInfo?: LicenseConnect;
 	// Boilerplate
 	dispatchStatus?: {
-		[ key in keyof StoreActions ]?: {
+		[ Property in StoreActionNames ]?: {
 			status: string;
 			error: string;
 		};

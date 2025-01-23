@@ -1,12 +1,10 @@
 import { __ } from '@wordpress/i18n';
 
 import { getErrorMessage, fetchFromApi } from '../utils';
-import { ACTION_TYPES } from './constants';
+import { LICENSE_FETCH_ERROR } from './constants';
 import { apiPath } from './utils';
 
 import type { License, LicenseKey, LicenseStatus, ThunkAction } from './types';
-
-const { LICENSE_FETCH_ERROR } = ACTION_TYPES;
 
 export const getLicenseData =
 	(): ThunkAction =>
