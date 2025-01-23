@@ -1,21 +1,18 @@
 import { __ } from '@wordpress/i18n';
-import { select } from '@wordpress/data-controls';
-// import { resolveSelect } from '../utils';
 
-import { Status } from '../constants';
-import { fetch } from '../controls';
-import { getErrorMessage } from '../utils';
-import { ACTION_TYPES, STORE_NAME } from './constants';
-import { getResourcePath } from './utils';
+import { DispatchStatus } from '../constants';
+import { getErrorMessage, fetchFromApi } from '../utils';
 
-import type { Statuses } from '../constants';
+import { ACTION_TYPES } from './constants';
+import { apiPath } from './utils';
 
 import type {
 	License,
-	LicenseStatusResponse,
 	LicenseActivationResponse,
 	LicenseKey,
-	LicenseStore,
+	LicenseStatusResponse,
+	StoreActionNames,
+	ThunkAction,
 } from './types';
 
 const {
@@ -31,20 +28,15 @@ const {
 
 /**
  * Change status of a dispatch action request.
- *
- * @param {LicenseStore[ 'ActionNames' ]} actionName Action name to change status of.
- * @param {Statuses}                      status     New status.
- * @param {string | undefined}            message    Optional error message.
- * @return {Object} Action object.
  */
 export const changeActionStatus = (
-	actionName: LicenseStore[ 'ActionNames' ],
-	status: Statuses,
+	actionName: StoreActionNames,
+	status: DispatchStatus,
 	message?: string | undefined
 ): {
 	type: string;
-	actionName: LicenseStore[ 'ActionNames' ];
-	status: Statuses;
+	actionName: StoreActionNames;
+	status: DispatchStatus;
 	message?: string;
 } => {
 	if ( message ) {
@@ -62,297 +54,338 @@ export const changeActionStatus = (
 
 /**
  * Activate license.
- *
- * @param {LicenseKey|undefined} licenseKey License key to activate.
- * @return {Generator} Action object.
  */
-export function* activateLicense( licenseKey?: LicenseKey ): Generator {
-	const actionName = 'activateLicense';
+export const activateLicense =
+	( licenseKey?: LicenseKey ): ThunkAction =>
+	async ( { dispatch } ) => {
+		const actionName = 'activateLicense';
 
-	try {
-		yield changeActionStatus( actionName, Status.Resolving );
+		try {
+			dispatch.changeActionStatus( actionName, DispatchStatus.Resolving );
 
-		const result = ( yield fetch( getResourcePath( 'activate' ), {
-			method: 'POST',
-			body: { licenseKey },
-		} ) ) as LicenseActivationResponse;
+			const result = await fetchFromApi< LicenseActivationResponse >(
+				apiPath( 'activate' ),
+				{
+					method: 'POST',
+					body: JSON.stringify( { licenseKey } ),
+				}
+			);
 
-		if ( result ) {
-			const { status, connectInfo } = result;
+			if ( result ) {
+				const { status, connectInfo } = result;
 
-			// thing was successfully updated so return the action object that will
-			// update the saved thing in the state.
-			yield changeActionStatus( actionName, Status.Success );
+				dispatch.changeActionStatus(
+					actionName,
+					DispatchStatus.Success
+				);
 
-			if ( connectInfo !== undefined ) {
-				return {
-					type: CONNECT_SITE,
+				if ( connectInfo !== undefined ) {
+					dispatch( {
+						type: CONNECT_SITE,
+						licenseStatus: status,
+						connectInfo,
+					} );
+				}
+
+				dispatch( {
+					type: ACTIVATE_LICENSE,
 					licenseStatus: status,
-					connectInfo,
-				};
+				} );
+
+				return;
 			}
 
-			return {
-				type: ACTIVATE_LICENSE,
-				licenseStatus: status,
-			};
+			// if execution arrives here, then thing didn't update in the state so return
+			// action object that will add an error to the state about this.
+			// returning an action object that will save the update error to the state.
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				__(
+					'An error occurred, license were not saved.',
+					'popup-paker'
+				)
+			);
+		} catch ( error ) {
+			// returning an action object that will save the update error to the state.
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				getErrorMessage( error )
+			);
 		}
-
-		// if execution arrives here, then thing didn't update in the state so return
-		// action object that will add an error to the state about this.
-		// returning an action object that will save the update error to the state.
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			__( 'An error occurred, license were not saved.', 'popup-paker' )
-		);
-	} catch ( error ) {
-		// returning an action object that will save the update error to the state.
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			getErrorMessage( error )
-		);
-	}
-}
+	};
 
 /**
  * Deactivate license.
- *
- * @return {Generator} Action object.
  */
-export function* deactivateLicense(): Generator {
-	const actionName = 'deactivateLicense';
+export const deactivateLicense =
+	(): ThunkAction =>
+	async ( { dispatch } ) => {
+		const actionName = 'deactivateLicense';
 
-	try {
-		yield changeActionStatus( actionName, Status.Resolving );
+		try {
+			dispatch.changeActionStatus( actionName, DispatchStatus.Resolving );
 
-		const result = ( yield fetch( getResourcePath( 'deactivate' ), {
-			method: 'POST',
-		} ) ) as LicenseStatusResponse;
+			const result = await fetchFromApi< LicenseStatusResponse >(
+				apiPath( 'deactivate' ),
+				{
+					method: 'POST',
+				}
+			);
 
-		if ( result ) {
-			// thing was successfully updated so return the action object that will
-			// update the saved thing in the state.
-			yield changeActionStatus( actionName, Status.Success );
+			if ( result ) {
+				// thing was successfully updated so return the action object that will
+				// update the saved thing in the state.
+				dispatch.changeActionStatus(
+					actionName,
+					DispatchStatus.Success
+				);
 
-			return {
-				type: DEACTIVATE_LICENSE,
-				licenseStatus: result.status,
-			};
+				dispatch( {
+					type: DEACTIVATE_LICENSE,
+					licenseStatus: result.status,
+				} );
+
+				return;
+			}
+
+			// if execution arrives here, then thing didn't update in the state so return
+			// action object that will add an error to the state about this.
+			// returning an action object that will save the update error to the state.
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				__(
+					'An error occurred, license were not saved.',
+					'popup-paker'
+				)
+			);
+		} catch ( error ) {
+			// returning an action object that will save the update error to the state.
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				getErrorMessage( error )
+			);
 		}
-
-		// if execution arrives here, then thing didn't update in the state so return
-		// action object that will add an error to the state about this.
-		// returning an action object that will save the update error to the state.
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			__( 'An error occurred, license were not saved.', 'popup-paker' )
-		);
-	} catch ( error ) {
-		// returning an action object that will save the update error to the state.
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			getErrorMessage( error )
-		);
-	}
-}
+	};
 
 /**
  * Check license status.
- *
- * @return {Generator} Action object.
  */
-export function* checkLicenseStatus(): Generator {
-	const actionName = 'checkLicenseStatus';
+export const checkLicenseStatus =
+	(): ThunkAction =>
+	async ( { dispatch } ) => {
+		const actionName = 'checkLicenseStatus';
 
-	try {
-		yield changeActionStatus( actionName, Status.Resolving );
+		try {
+			dispatch.changeActionStatus( actionName, DispatchStatus.Resolving );
 
-		const result = ( yield fetch( getResourcePath( 'status' ), {
-			method: 'POST',
-		} ) ) as LicenseStatusResponse;
+			const result = await fetchFromApi< LicenseStatusResponse >(
+				apiPath( 'status' ),
+				{
+					method: 'POST',
+				}
+			);
 
-		if ( result ) {
-			// thing was successfully updated so return the action object that will
-			// update the saved thing in the state.
-			yield changeActionStatus( actionName, Status.Success );
+			if ( result ) {
+				dispatch.changeActionStatus(
+					actionName,
+					DispatchStatus.Success
+				);
 
-			return {
-				type: CHECK_LICENSE_STATUS,
-				licenseStatus: result.status,
-			};
+				dispatch( {
+					type: CHECK_LICENSE_STATUS,
+					licenseStatus: result.status,
+				} );
+
+				return;
+			}
+
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				__(
+					'An error occurred, license were not saved.',
+					'popup-paker'
+				)
+			);
+		} catch ( error ) {
+			// returning an action object that will save the update error to the state.
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				getErrorMessage( error )
+			);
 		}
-
-		// if execution arrives here, then thing didn't update in the state so return
-		// action object that will add an error to the state about this.
-		// returning an action object that will save the update error to the state.
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			__( 'An error occurred, license were not saved.', 'popup-paker' )
-		);
-	} catch ( error ) {
-		// returning an action object that will save the update error to the state.
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			getErrorMessage( error )
-		);
-	}
-}
+	};
 
 /**
  * Change license key.
- *
- * @param {LicenseKey} licenseKey License key to change to.
- * @return {Generator} Action object.
  */
-export function* updateLicenseKey( licenseKey: LicenseKey ): Generator {
-	const actionName = 'updateLicenseKey';
+export const updateLicenseKey =
+	( licenseKey: LicenseKey ): ThunkAction =>
+	async ( { select, dispatch } ) => {
+		const actionName = 'updateLicenseKey';
 
-	const currentKey = ( yield select( STORE_NAME, 'getLicenseKey' ) ) as
-		| LicenseKey
-		| undefined;
+		const currentKey = select.getLicenseKey();
 
-	if ( currentKey === licenseKey ) {
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			__(
-				'The license key is the same as the current one.',
-				'popup-paker'
-			)
-		);
-	}
+		if ( currentKey === licenseKey ) {
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				__(
+					'The license key is the same as the current one.',
+					'popup-paker'
+				)
+			);
 
-	try {
-		yield changeActionStatus( actionName, Status.Resolving );
-
-		const result = ( yield fetch( getResourcePath(), {
-			method: 'POST',
-			body: { licenseKey },
-		} ) ) as LicenseStatusResponse;
-
-		if ( result ) {
-			// thing was successfully updated so return the action object that will
-			// update the saved thing in the state.
-			yield changeActionStatus( actionName, Status.Success );
-
-			return {
-				type: UPDATE_LICENSE_KEY,
-				licenseKey,
-				licenseStatus: result.status,
-			};
+			return;
 		}
 
-		// if execution arrives here, then thing didn't update in the state so return
-		// action object that will add an error to the state about this.
-		// returning an action object that will save the update error to the state.
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			__( 'An error occurred, license were not saved.', 'popup-paker' )
-		);
-	} catch ( error ) {
-		// returning an action object that will save the update error to the state.
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			getErrorMessage( error )
-		);
-	}
-}
+		try {
+			dispatch.changeActionStatus( actionName, DispatchStatus.Resolving );
+
+			const result = await fetchFromApi< LicenseStatusResponse >(
+				apiPath(),
+				{
+					method: 'POST',
+					body: JSON.stringify( { licenseKey } ),
+				}
+			);
+
+			if ( result ) {
+				// thing was successfully updated so return the action object that will
+				// update the saved thing in the state.
+				dispatch.changeActionStatus(
+					actionName,
+					DispatchStatus.Success
+				);
+
+				dispatch( {
+					type: UPDATE_LICENSE_KEY,
+					licenseKey,
+					licenseStatus: result.status,
+				} );
+
+				return;
+			}
+
+			// if execution arrives here, then thing didn't update in the state so return
+			// action object that will add an error to the state about this.
+			// returning an action object that will save the update error to the state.
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				__(
+					'An error occurred, license were not saved.',
+					'popup-paker'
+				)
+			);
+		} catch ( error ) {
+			// returning an action object that will save the update error to the state.
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				getErrorMessage( error )
+			);
+		}
+	};
 
 /**
  * Remove license.
- *
- * @return {Generator} Action object.
  */
-export function* removeLicense(): Generator {
-	const actionName = 'removeLicense';
+export const removeLicense =
+	(): ThunkAction =>
+	async ( { dispatch } ) => {
+		const actionName = 'removeLicense';
 
-	try {
-		yield changeActionStatus( actionName, Status.Resolving );
+		try {
+			dispatch.changeActionStatus( actionName, DispatchStatus.Resolving );
 
-		const result = ( yield fetch( getResourcePath(), {
-			method: 'DELETE',
-		} ) ) as boolean;
+			const result = await fetchFromApi< boolean >( apiPath(), {
+				method: 'DELETE',
+			} );
 
-		if ( result ) {
-			// thing was successfully updated so return the action object that will
-			// update the saved thing in the state.
-			yield changeActionStatus( actionName, Status.Success );
+			if ( result ) {
+				dispatch.changeActionStatus(
+					actionName,
+					DispatchStatus.Success
+				);
 
-			return {
-				type: REMOVE_LICENSE,
-			};
+				dispatch( {
+					type: REMOVE_LICENSE,
+				} );
+
+				return;
+			}
+
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				__(
+					'An error occurred, license were not saved.',
+					'popup-paker'
+				)
+			);
+		} catch ( error ) {
+			// returning an action object that will save the update error to the state.
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				getErrorMessage( error )
+			);
 		}
-
-		// if execution arrives here, then thing didn't update in the state so return
-		// action object that will add an error to the state about this.
-		// returning an action object that will save the update error to the state.
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			__( 'An error occurred, license were not saved.', 'popup-paker' )
-		);
-	} catch ( error ) {
-		// returning an action object that will save the update error to the state.
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			getErrorMessage( error )
-		);
-	}
-}
+	};
 
 /**
  * Activate pro version if installed.
- *
- * @return {Generator} Action object.
  */
-export function* activatePro(): Generator {
-	const actionName = 'activatePro';
+export const activatePro =
+	(): ThunkAction =>
+	async ( { dispatch } ) => {
+		const actionName = 'activatePro';
 
-	try {
-		yield changeActionStatus( actionName, Status.Resolving );
+		try {
+			dispatch.changeActionStatus( actionName, DispatchStatus.Resolving );
 
-		const result = ( yield fetch( getResourcePath( 'activate-pro' ), {
-			method: 'POST',
-		} ) ) as boolean;
+			const result = await fetchFromApi< boolean >(
+				apiPath( 'activate-pro' ),
+				{
+					method: 'POST',
+				}
+			);
 
-		if ( result ) {
-			// thing was successfully updated so return the action object that will
-			// update the saved thing in the state.
-			return changeActionStatus( actionName, Status.Success );
+			if ( result ) {
+				dispatch.changeActionStatus(
+					actionName,
+					DispatchStatus.Success
+				);
+
+				return;
+			}
+
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				__(
+					'An error occurred, license were not saved.',
+					'popup-paker'
+				)
+			);
+		} catch ( error ) {
+			// returning an action object that will save the update error to the state.
+			dispatch.changeActionStatus(
+				actionName,
+				DispatchStatus.Error,
+				getErrorMessage( error )
+			);
 		}
-
-		// if execution arrives here, then thing didn't update in the state so return
-		// action object that will add an error to the state about this.
-		// returning an action object that will save the update error to the state.
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			__( 'An error occurred, license were not saved.', 'popup-paker' )
-		);
-	} catch ( error ) {
-		// returning an action object that will save the update error to the state.
-		return changeActionStatus(
-			actionName,
-			Status.Error,
-			getErrorMessage( error )
-		);
-	}
-}
+	};
 
 /**
  * Hydrate license data.
- *
- * @param {License} license
- * @return {Object} Action object.
  */
 export const hydrate = (
 	license: License

@@ -1,4 +1,4 @@
-export const getResourcePath = ( subpath = '' ) => {
+export const apiPath = ( subpath = '' ) => {
 	if ( subpath ) {
 		subpath = `/${ subpath }`;
 	}

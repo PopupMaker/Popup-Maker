@@ -1,25 +1,17 @@
-import { createReduxStore } from '@wordpress/data';
-import { controls as wpControls } from '@wordpress/data-controls';
-
-import localControls from '../controls';
-import * as actions from './actions';
-import { initialState, licenseDefaults, STORE_NAME } from './constants';
-import reducer from './reducer';
-import * as resolvers from './resolvers';
-import * as selectors from './selectors';
-
-const storeConfig = () => ( {
-	initialState,
-	selectors,
-	actions,
-	reducer,
-	resolvers,
-	controls: { ...wpControls, ...localControls },
-} );
-
-const store = createReduxStore( STORE_NAME, storeConfig() );
-
+export * from './constants';
+export * from './store';
 export * from './types';
-export { STORE_NAME as LICENSE_STORE };
-export { store as licenseStore };
-export { licenseDefaults };
+
+// Export custom named variables.
+export { default as store } from './store';
+
+export {
+	/**
+	 * The default values for the License store.
+	 */
+	defaultValues as defaultLicenseValues,
+	/**
+	 * The name of the License store.
+	 */
+	STORE_NAME as LICENSE_STORE,
+} from './constants';
