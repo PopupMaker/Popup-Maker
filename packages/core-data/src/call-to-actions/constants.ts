@@ -3,8 +3,12 @@ import type { State } from './reducer';
 
 export const STORE_NAME = 'popup-maker/call-to-actions';
 
-export const ACTION_TYPES = {
-	EDITOR_CHANGE_ID: 'EDITOR_CHANGE_ID',
+const EDITOR_CHANGE_ID = 'EDITOR_CHANGE_ID';
+
+export const ACTION_TYPES: {
+	EDITOR_CHANGE_ID: typeof EDITOR_CHANGE_ID;
+} = {
+	EDITOR_CHANGE_ID,
 };
 
 /**

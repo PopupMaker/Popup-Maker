@@ -11,20 +11,23 @@ export type State = {
 	editorId?: EditorId;
 };
 
-type ActionPayloadTypes = {
-	type: typeof EDITOR_CHANGE_ID;
-	editorId?: State[ 'editorId' ] | undefined;
+type BaseAction = {
+	type: keyof typeof ACTION_TYPES;
 };
 
-const reducer = (
-	state: State = initialState,
-	{ type, editorId }: ActionPayloadTypes
-) => {
-	switch ( type ) {
+type ChangeEditorAction = BaseAction & {
+	type: typeof EDITOR_CHANGE_ID;
+	editorId: EditorId;
+};
+
+export type ReducerAction = ChangeEditorAction;
+
+const reducer = ( state: State = initialState, action: ReducerAction ) => {
+	switch ( action.type ) {
 		case EDITOR_CHANGE_ID:
 			return {
 				...state,
-				editorId,
+				editorId: action.editorId,
 			};
 
 		default:

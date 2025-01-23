@@ -5,6 +5,7 @@ import { ACTION_TYPES } from './constants';
 
 import type { EditorId } from '../types';
 import type { CallToAction, ThunkAction } from './types';
+import type { ReducerAction } from './reducer';
 
 const { EDITOR_CHANGE_ID } = ACTION_TYPES;
 
@@ -18,15 +19,16 @@ const noticeActions = createNoticeActions( 'pum-cta-editor' );
 // Refactored changeEditorId using thunk and our selectors
 const changeEditorId =
 	( editorId: EditorId ): ThunkAction< void > =>
-	( { select, dispatch, resolveSelect, registry } ) => {
+	( { select, dispatch, registry } ) => {
 		return ( async () => {
 			try {
 				if ( typeof editorId === 'undefined' ) {
-					dispatch( {
+					const action: ReducerAction = {
 						type: EDITOR_CHANGE_ID,
 						editorId: undefined,
-						editorValues: undefined,
-					} );
+					};
+
+					dispatch( action );
 					return;
 				}
 
@@ -41,7 +43,6 @@ const changeEditorId =
 				dispatch( {
 					type: EDITOR_CHANGE_ID,
 					editorId,
-					editorValues: entityRecord,
 				} );
 			} catch ( error ) {
 				console.error( 'Failed to change editor ID:', error );

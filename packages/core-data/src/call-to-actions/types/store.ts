@@ -6,6 +6,7 @@ import type {
 import type reducer from '../reducer';
 import type actions from '../actions';
 import type selectors from '../selectors';
+import type { ReducerAction } from '../reducer';
 import type { STORE_NAME } from '../constants';
 
 import type { StoreThunkContext } from '../../types';
@@ -46,8 +47,11 @@ export interface StoreDescriptor extends StoreDescriptorType< StoreConfig > {
 export type ThunkContext = StoreThunkContext< StoreDescriptor >;
 
 /**
+ * Base Redux action shape
+ */
+export type DispatchAction = ReducerAction;
+
+/**
  * Define the ThunkAction shape.
  */
-export type ThunkAction< R > = (
-	context: StoreThunkContext< StoreDescriptor >
-) => Promise< R > | R;
+export type ThunkAction< R > = ( context: ThunkContext ) => Promise< R > | R;
