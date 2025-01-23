@@ -51,11 +51,11 @@ export const updateSettings =
 
 			const currentSettings = await resolveSelect.getSettings();
 
-			const result = await fetchFromApi( apiPath(), {
+			const result = await fetchFromApi< Settings >( apiPath(), {
 				method: 'PUT',
-				body: JSON.stringify( {
+				data: {
 					settings: { ...currentSettings, ...settings },
-				} ),
+				},
 			} );
 
 			if ( result ) {
@@ -111,13 +111,13 @@ export const saveSettings =
 
 			const result = await fetchFromApi< Settings >( apiPath(), {
 				method: 'PUT',
-				body: JSON.stringify( {
+				data: {
 					settings: {
 						...currentSettings,
 						...unsavedChanges,
 						...settings,
 					},
-				} ),
+				},
 			} );
 
 			if ( result ) {

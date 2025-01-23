@@ -67,7 +67,7 @@ export const activateLicense =
 				apiPath( 'activate' ),
 				{
 					method: 'POST',
-					body: JSON.stringify( { licenseKey } ),
+					data: { licenseKey },
 				}
 			);
 
@@ -251,7 +251,7 @@ export const updateLicenseKey =
 				apiPath(),
 				{
 					method: 'POST',
-					body: JSON.stringify( { licenseKey } ),
+					data: { licenseKey },
 				}
 			);
 

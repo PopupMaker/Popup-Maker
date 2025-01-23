@@ -1,11 +1,21 @@
+import apiFetch, { type APIFetchOptions } from '@wordpress/api-fetch';
+
 export const restBase = 'popup-maker/v2';
 
 export const restUrl = `${ wpApiSettings.root }${ restBase }/`;
 
+type WPError = {
+	code?: string;
+	message?: string;
+	data?: {
+		status?: number;
+	};
+};
+
 /**
  * Creates default headers with authentication and content type
  */
-const getDefaultHeaders = (): HeadersInit => ( {
+const getDefaultHeaders = (): Record< string, string > => ( {
 	'Content-Type': 'application/json',
 	'X-WP-Nonce': wpApiSettings.nonce,
 } );
@@ -26,8 +36,8 @@ const getModifiedPath = ( path: string ): string => {
  * Fetches data from the WordPress API with proper authentication and error handling
  *
  * @param {string} path - The API endpoint path
- * @param {RequestInit} [options={}] - Fetch options (method, body, etc.)
- * @return {Promise<any>} Promise that resolves with the JSON response
+ * @param {APIFetchOptions} [options={}] - API Fetch options
+ * @return {Promise<T>} Promise that resolves with the JSON response
  * @throws {Error} If the fetch fails or returns an error status
  *
  * Example usage:
@@ -48,41 +58,45 @@ const getModifiedPath = ( path: string ): string => {
  */
 export const fetchFromApi = async < T extends any = any >(
 	path: string,
-	options: RequestInit = {}
+	options: APIFetchOptions = {}
 ): Promise< T > => {
 	// Prepare the request body
-	if ( options.body && typeof options.body === 'object' ) {
-		options.body = JSON.stringify( options.body );
+	if ( options.data ) {
+		options.body = JSON.stringify( options.data );
 	}
 
 	// Combine default and custom headers
-	const headers = {
+	const headers: Record< string, string > = {
 		...getDefaultHeaders(),
-		...options.headers,
+		...( ( options.headers as Record< string, string > ) || {} ),
 	};
 
-	// Prepare the full request configuration
-	const fetchOptions: RequestInit = {
-		...options,
-		headers,
-		credentials: 'same-origin',
-	};
-
-	// Modify path if needed and add API root
+	// Modify path if needed
 	const modifiedPath = getModifiedPath( path );
-	const fullPath = `${ wpApiSettings.root }${ modifiedPath }`;
 
-	// Perform the fetch
-	const response = await window.fetch( fullPath, fetchOptions );
+	try {
+		// Use apiFetch instead of window.fetch
+		return await apiFetch< T >( {
+			url: `${ wpApiSettings.root }${ modifiedPath }`,
+			...options,
+			headers,
+			credentials: 'same-origin',
+			parse: true, // Let apiFetch handle JSON parsing
+		} );
+	} catch ( error ) {
+		// If it's already an Error instance, just throw it
+		if ( error instanceof Error ) {
+			throw error;
+		}
 
-	// Handle non-OK responses
-	if ( ! response.ok ) {
-		const error = await response.json().catch( () => ( {
-			message: response.statusText || 'Unknown error',
-		} ) );
-		throw new Error( error.message || 'API request failed' );
+		// Handle WordPress API error format
+		if ( typeof error === 'object' && error !== null ) {
+			const wpError = error as WPError;
+			const message = wpError.message || 'API request failed';
+			throw new Error( message );
+		}
+
+		// Fallback error
+		throw new Error( 'Unknown error occurred' );
 	}
-
-	// Parse and return the JSON response
-	return response.json() as Promise< T >;
 };
