@@ -32,12 +32,12 @@ const changeEditorId =
 					return;
 				}
 
-				let entityRecord: CallToAction< 'edit' > | undefined;
+				let _entityRecord: CallToAction< 'edit' > | undefined;
 
 				if ( editorId === 'new' ) {
-					entityRecord = select.getEntityDefaults();
+					_entityRecord = select.getEntityDefaults();
 				} else if ( typeof editorId === 'number' && editorId > 0 ) {
-					entityRecord = await select.getById( editorId );
+					_entityRecord = await select.getById( editorId );
 				}
 
 				dispatch( {

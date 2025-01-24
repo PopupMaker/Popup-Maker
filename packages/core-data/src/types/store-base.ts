@@ -1,14 +1,16 @@
 import type {
-	select as wpSelect,
 	dispatch as wpDispatch,
+	select as wpSelect,
 } from '@wordpress/data';
 
 import type {
+	ActionCreator,
+	ConfigOf,
 	CurriedSelectorsOf,
 	DataRegistry,
 	DispatchReturn,
+	ReduxStoreConfig,
 	StoreDescriptor,
-	ConfigOf,
 } from '@wordpress/data/src/types';
 
 import type { PromiseReturnMethods, StateOf } from './utils';
@@ -94,3 +96,29 @@ export type StoreThunkContext< S extends StoreDescriptor< any > | string > = {
 		dispatch: typeof wpDispatch & DispatchAny;
 	} & DataRegistry;
 };
+
+/**
+ * Helper type to extract selectors from a store config
+ */
+export type ExtractSelectors< T > = T extends ReduxStoreConfig<
+	any,
+	any,
+	infer S
+>
+	? S extends Record< string, ( ...args: any[] ) => any >
+		? S
+		: never
+	: never;
+
+/**
+ * Helper type to extract actions from a store config
+ */
+export type ExtractActions< T > = T extends ReduxStoreConfig<
+	any,
+	infer A,
+	any
+>
+	? A extends Record< string, ActionCreator >
+		? A
+		: never
+	: never;
