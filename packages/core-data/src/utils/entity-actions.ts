@@ -3,8 +3,9 @@ import { store as noticesStore } from '@wordpress/notices';
 import { store as coreDataStore } from '@wordpress/core-data';
 
 import { storeHasNotices } from './notice-types';
+
 import type { BaseEntityRecords } from '@wordpress/core-data';
-import type { ThunkAction, ThunkArgs } from '../types';
+import type { ThunkContext, ThunkAction } from './entity-types';
 
 export const createPostTypeActions = <
 	T extends
@@ -19,7 +20,7 @@ export const createPostTypeActions = <
 	 * Helper to handle notices with fallback to core notices
 	 */
 	const handleNotice = async (
-		context: ThunkArgs,
+		context: ThunkContext,
 		options: {
 			type: 'success' | 'error';
 			message: string;
@@ -31,7 +32,7 @@ export const createPostTypeActions = <
 			} );
 		} else {
 			// Fallback to core notices
-			await context
+			await context.registry
 				.dispatch( noticesStore )
 				.createNotice( options.type, options.message, {
 					context: NOTICE_CONTEXT,
@@ -45,12 +46,20 @@ export const createPostTypeActions = <
 		 */
 		create:
 			(
+				/**
+				 * Entity to create.
+				 */
 				entity: Partial< T >,
+				/**
+				 * Validation function.
+				 */
 				validate?: (
 					entity: Partial< T >
 				) => true | { message: string }
-			): ThunkAction< T | undefined, S > =>
+			): ThunkAction< T | boolean > =>
 			async ( context ) => {
+				const { registry } = context;
+
 				try {
 					if ( validate ) {
 						const validation = validate( entity );
@@ -59,11 +68,11 @@ export const createPostTypeActions = <
 								type: 'error',
 								message: validation.message,
 							} );
-							return;
+							return false;
 						}
 					}
 
-					const result = await context
+					const result: boolean = await registry
 						.dispatch( coreDataStore )
 						.saveEntityRecord( 'postType', name, entity );
 
@@ -91,10 +100,20 @@ export const createPostTypeActions = <
 		 * Store unsaved edits.
 		 */
 		edit:
-			( id: number, edits: Partial< T > ): ThunkAction< void, S > =>
+			(
+				/**
+				 * Entity ID.
+				 */
+				id: number,
+				/**
+				 * Entity edits.
+				 */
+				edits: Partial< T >
+			): ThunkAction =>
 			async ( context ) => {
+				const { registry } = context;
 				try {
-					await context
+					await registry
 						.dispatch( coreDataStore )
 						.editEntityRecord( 'postType', name, id, edits );
 				} catch ( error ) {
@@ -111,36 +130,41 @@ export const createPostTypeActions = <
 		 */
 		save:
 			(
+				/**
+				 * Entity ID.
+				 */
 				id: number,
+				/**
+				 * Validation function.
+				 */
 				validate?: ( entity: T ) => true | { message: string }
-			): ThunkAction< T | undefined > =>
+			): ThunkAction< boolean > =>
 			async ( context ) => {
-				const { select, dispatch } = context;
+				const { registry } = context;
 
 				try {
-					const entity = select(
-						coreDataStore
-					).getEditedEntityRecord(
-						'postType',
-						name,
-						id
-					) as unknown as T;
+					const entity = registry
+						.select( coreDataStore )
+						.getEditedEntityRecord( 'postType', name, id ) as
+						| T
+						| false;
 
 					// Run validation if provided
-					if ( validate ) {
+					if ( entity && validate ) {
 						const validation = validate( entity );
 						if ( validation !== true ) {
 							await handleNotice( context, {
 								type: 'error',
 								message: validation.message,
 							} );
-							return;
+
+							return false;
 						}
 					}
 
-					const result = await dispatch(
-						coreDataStore
-					).saveEntityRecord( 'postType', name, id );
+					const result: boolean = await registry
+						.dispatch( coreDataStore )
+						.saveEntityRecord( 'postType', name, id );
 
 					if ( result ) {
 						await handleNotice( context, {
@@ -164,10 +188,20 @@ export const createPostTypeActions = <
 		 * Delete with force option.
 		 */
 		delete:
-			( id: number, force = false ): ThunkAction< void > =>
+			(
+				/**
+				 * Entity ID.
+				 */
+				id: number,
+				/**
+				 * Force delete.
+				 */
+				force = false
+			): ThunkAction =>
 			async ( context ) => {
+				const { registry } = context;
 				try {
-					await context
+					await registry
 						.dispatch( coreDataStore )
 						.deleteEntityRecord( 'postType', name, id, { force } );
 
@@ -189,9 +223,11 @@ export const createPostTypeActions = <
 		 * Invalidate the entity list.
 		 */
 		invalidateList:
-			( query?: any ): ThunkAction< void > =>
+			( query?: any ): ThunkAction =>
 			async ( context ) => {
-				await context
+				const { registry } = context;
+
+				await registry
 					.dispatch( coreDataStore )
 					// @ts-expect-error
 					.invalidateResolution( 'getEntityRecords', [
@@ -205,27 +241,28 @@ export const createPostTypeActions = <
 		 * Reset edits.
 		 */
 		resetEdits:
-			( id: number ): ThunkAction< void > =>
-			async ( { dispatch } ) => {
-				await dispatch( coreDataStore ).editEntityRecord(
-					'postType',
-					name,
-					id,
-					{}
-				);
+			( id: number ): ThunkAction =>
+			async ( { registry } ) => {
+				await registry
+					.dispatch( coreDataStore )
+					.editEntityRecord( 'postType', name, id, {} );
 			},
 
 		/**
 		 * Undo/Redo.
 		 */
 		undo:
-			(): ThunkAction< void > =>
-			async ( { dispatch } ) =>
-				await dispatch( coreDataStore ).undo(),
+			(): ThunkAction =>
+			async ( { registry } ) =>
+				await registry.dispatch( coreDataStore ).undo(),
+
+		/**
+		 * Redo.
+		 */
 		redo:
-			(): ThunkAction< void > =>
-			async ( { dispatch } ) =>
-				await dispatch( coreDataStore ).redo(),
+			(): ThunkAction =>
+			async ( { registry } ) =>
+				await registry.dispatch( coreDataStore ).redo(),
 	};
 };
 

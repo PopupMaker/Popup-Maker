@@ -1,47 +1,39 @@
 import type {
 	ReduxStoreConfig,
-	// StoreDescriptor,
+	StoreDescriptor as StoreDescriptorType,
 } from '@wordpress/data/src/types';
-
-import type {
-	// ReduxStoreConfig,
-	StoreDescriptor,
-} from '@wordpress/data';
 
 import type createNoticeActions from './notice-actions';
 import type createNoticeSelectors from './notice-selectors';
-import type { ThunkArgs } from '../types';
+import type { StoreThunkContext } from '../types';
+
+export type StoreSelectors = ReturnType< typeof createNoticeSelectors >;
+
+export type StoreActions = ReturnType< typeof createNoticeActions >;
+
+export type StoreConfig = ReduxStoreConfig< any, StoreActions, StoreSelectors >;
+
+export interface StoreDescriptor extends StoreDescriptorType< StoreConfig > {}
 
 /**
- * Return type of createNoticeSelectors
+ * Define the ThunkArgs / ThunkAction shape.
  */
-export type NoticeSelectors = ReturnType< typeof createNoticeSelectors >;
+export type ThunkContext = StoreThunkContext< StoreDescriptor >;
 
 /**
- * Return type of createNoticeActions
+ * Define the ThunkAction shape.
  */
-export type NoticeActions = ReturnType< typeof createNoticeActions >;
-
-export type NoticeStoreConfig = ReduxStoreConfig<
-	any,
-	NoticeActions,
-	NoticeSelectors
->;
-
-export interface NoticesStore extends StoreDescriptor {
-	select: ReturnType< typeof wpSelect< S > > & typeof wpSelect ;
-	dispatch: NoticeActions;
-}
-
-export type NoticeStoreContext = ThunkArgs< NoticesStore >;
+export type ThunkAction< R = void > = (
+	context: ThunkContext
+) => Promise< R > | R;
 
 /**
  * Type guard to check if a store has notice functionality.
  * This checks if the store has both notice selectors and actions.
  */
 export const storeHasNotices = (
-	context: ThunkArgs
-): context is NoticeStoreContext => {
+	context: StoreThunkContext< any >
+): context is ThunkContext => {
 	return (
 		'select' in context &&
 		'hasContextNotices' in context.select &&

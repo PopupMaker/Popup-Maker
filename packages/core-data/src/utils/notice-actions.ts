@@ -1,5 +1,6 @@
 import { store as noticesStore } from '@wordpress/notices';
-import type { ThunkAction, ThunkArgs } from '../types';
+
+import type { ThunkAction } from './notice-types';
 
 /**
  * WP notice action.
@@ -74,68 +75,6 @@ export type NoticeOptions = {
 	closeDelay?: number | undefined;
 };
 
-// import { select as wpSelect, dispatch as wpDispatch, type StoreDescriptor } from '@wordpress/data';
-// import type createNoticeSelectors from './notice-selectors';
-// import type { StoreConfig } from '../call-to-actions';
-
-/**
- * Notice store types
- */
-// export type NoticeStoreActions = ReturnType< typeof createNoticeActions >;
-// export type NoticeStoreSelectors = ReturnType< typeof createNoticeSelectors >;
-
-// export interface NoticesStore extends StoreDescriptor {
-// actions: NoticeStoreActions;
-// selectors: NoticeStoreSelectors;
-// }
-
-/**
- * Type guard to check if a store has notice functionality.
- * This checks if the store has both notice selectors and actions.
- */
-// export const storeHasNotices = (
-// 	context: ThunkArgs< any >
-// ): context is ThunkArgs< any > & {
-// 	select: ReturnType< typeof wpSelect > & NoticeStoreSelectors;
-// 	dispatch: ReturnType< typeof wpDispatch > & NoticeStoreActions;
-// } => {
-// 	return (
-// 		'select' in context &&
-// 		'hasContextNotices' in context.select &&
-// 		'getNoticeById' in context.select &&
-// 		'dispatch' in context &&
-// 		'createNotice' in context.dispatch
-// 	);
-// };
-
-/**
- * Type for a store that has notice functionality.
- * This includes the hasContextNotices selector.
- */
-// export interface NoticeSelectors {
-// 	hasContextNotices: () => true;
-// }
-
-/**
- * Type for ThunkArgs that includes notice functionality
- */
-// export interface NoticeThunkArgs< S extends StoreDescriptor = any >
-// 	extends Omit< ThunkArgs< S >, 'select' > {
-// 	select: ReturnType< typeof wpSelect< S > > & {
-// 		hasContextNotices: () => true;
-// 	};
-// }
-
-/**
- * Type guard to check if a store has notice functionality.
- * This checks if the store has the hasContextNotices selector.
- */
-// export const storeHasNotices = (
-// 	context: ThunkArgs< any >
-// ): context is NoticeThunkArgs< any > => {
-// 	return typeof context?.select?.hasContextNotices === 'function';
-// };
-
 /**
  * Create notice actions.
  */
@@ -145,12 +84,21 @@ export const createNoticeActions = ( context: string ) => ( {
 	 */
 	createNotice:
 		(
+			/**
+			 * Notice status.
+			 */
 			status: NoticeOptions[ 'status' ] = 'info',
+			/**
+			 * Notice content.
+			 */
 			content: NoticeOptions[ 'content' ] = '',
+			/**
+			 * Notice options.
+			 */
 			options: Omit< NoticeOptions, 'status' | 'content' > = {}
 		): ThunkAction =>
-		async ( { dispatch } ) => {
-			dispatch( noticesStore ).createNotice( status, content, {
+		async ( { registry } ) => {
+			registry.dispatch( noticesStore ).createNotice( status, content, {
 				...options,
 				context,
 			} );
@@ -161,11 +109,17 @@ export const createNoticeActions = ( context: string ) => ( {
 	 */
 	createErrorNotice:
 		(
+			/**
+			 * Notice content.
+			 */
 			content: string,
+			/**
+			 * Notice options.
+			 */
 			options: Omit< NoticeOptions, 'status' | 'content' > = {}
 		): ThunkAction =>
-		async ( { dispatch } ) => {
-			dispatch( noticesStore ).createNotice( 'error', content, {
+		async ( { registry } ) => {
+			registry.dispatch( noticesStore ).createNotice( 'error', content, {
 				...options,
 				context,
 			} );
@@ -176,37 +130,57 @@ export const createNoticeActions = ( context: string ) => ( {
 	 */
 	createSuccessNotice:
 		(
+			/**
+			 * Notice content.
+			 */
 			content: string,
+			/**
+			 * Notice options.
+			 */
 			options: Omit< NoticeOptions, 'status' | 'content' > = {}
 		): ThunkAction =>
-		async ( { dispatch } ) => {
-			dispatch( noticesStore ).createNotice( 'success', content, {
-				...options,
-				context,
-			} );
+		async ( { registry } ) => {
+			registry
+				.dispatch( noticesStore )
+				.createNotice( 'success', content, {
+					...options,
+					context,
+				} );
 		},
 
 	/**
 	 * Remove a notice for a given context.
 	 */
 	removeNotice:
-		( id: string ): ThunkAction =>
-		async ( { dispatch } ) => {
-			dispatch( noticesStore ).removeNotice( id, context );
+		(
+			/**
+			 * Notice ID.
+			 */
+			id: string
+		): ThunkAction =>
+		async ( { registry } ) => {
+			registry.dispatch( noticesStore ).removeNotice( id, context );
 		},
 
 	/**
 	 * Remove all notices for a given context.
 	 */
 	removeAllNotices:
-		( ids?: string[] ): ThunkAction =>
-		async ( { select, dispatch } ) => {
+		(
+			/**
+			 * Notice IDs.
+			 */
+			ids?: string[]
+		): ThunkAction =>
+		async ( { registry } ) => {
 			if ( ids ) {
-				dispatch( noticesStore ).removeNotices( ids, context );
+				registry.dispatch( noticesStore ).removeNotices( ids, context );
 			} else {
-				const notices = select( noticesStore ).getNotices( context );
+				const notices = registry
+					.select( noticesStore )
+					.getNotices( context );
 				const ids = notices.map( ( notice ) => notice.id );
-				dispatch( noticesStore ).removeNotices( ids, context );
+				registry.dispatch( noticesStore ).removeNotices( ids, context );
 			}
 		},
 } );
