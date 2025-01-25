@@ -23,4 +23,13 @@ type WPAPISettings = {
 	nonce: string;
 };
 
+declare module '@wordpress/core-data' {
+	export interface PerPackageEntityRecords< C extends Context > {
+		'popup-maker':
+			| BaseEntityRecords.BaseEntity< C >
+			| BaseEntityRecords.CallToAction< C >
+			| BaseEntityRecords.Popup< C >;
+	}
+}
+
 export {};
