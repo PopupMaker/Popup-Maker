@@ -14,12 +14,14 @@ export type SearchOptions = Omit< SearchArgs, 'search' | 'per_page' > & {
 	perPage?: number;
 };
 
-export type WPLinkSearchResult = {
+export type WPLinkAPIResult = {
 	id?: number;
-	title?: string | {
-		raw?: string;
-		rendered?: string;
-	};
+	title?:
+		| string
+		| {
+				raw?: string;
+				rendered?: string;
+		  };
 	url: string;
 	source_url?: string;
 	type?: string;
@@ -27,6 +29,10 @@ export type WPLinkSearchResult = {
 	meta?: {
 		kind?: string;
 	};
+};
+
+export type WPLinkSearchResult = Omit< WPLinkAPIResult, 'title' > & {
+	title?: string;
 };
 
 export type URLSearchQuery = {

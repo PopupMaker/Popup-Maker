@@ -1,7 +1,12 @@
 import { __ } from '@wordpress/i18n';
 import { appendUrlParams, fetchFromApi } from '../utils';
 
-import type { SearchArgs, SearchOptions, WPLinkSearchResult } from './types';
+import type {
+	SearchArgs,
+	SearchOptions,
+	WPLinkAPIResult,
+	WPLinkSearchResult,
+} from './types';
 
 export const apiQueryUrl = ( queryParams: SearchArgs = { search: '' } ) =>
 	appendUrlParams( 'wp/v2/search', queryParams );
@@ -21,7 +26,7 @@ export const fetchLinkSuggestions = async (
 		perPage = isInitialSuggestions ? 3 : 20,
 	} = searchOptions;
 
-	const queries: Promise< WPLinkSearchResult[] >[] = [];
+	const queries: Promise< WPLinkAPIResult[] >[] = [];
 
 	const typeCheck = ( t: string ) =>
 		! type ||
@@ -31,7 +36,7 @@ export const fetchLinkSuggestions = async (
 	// Helper function to fetch and transform results
 	const fetchResults = async ( queryType?: string, kind?: string ) => {
 		try {
-			const results = await fetchFromApi< WPLinkSearchResult[] >(
+			const results = await fetchFromApi< WPLinkAPIResult[] >(
 				apiQueryUrl( {
 					search,
 					page,
@@ -75,7 +80,7 @@ export const fetchLinkSuggestions = async (
 
 	return results
 		.flat()
-		.filter( ( result ): result is WPLinkSearchResult => !! result.id )
+		.filter( ( result ): result is WPLinkAPIResult => !! result.id )
 		.slice( 0, perPage )
 		.map( ( result ) => {
 			const isMedia = result.type === 'attachment';
