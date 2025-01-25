@@ -8,4 +8,6 @@ export {
 export type {
 	StoreDescriptor as SettingsStore,
 	StoreState as SettingsStoreState,
+	StoreActions as SettingsStoreActions,
+	StoreSelectors as SettingsStoreSelectors,
 } from './types';

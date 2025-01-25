@@ -9,4 +9,6 @@ export type * from './types/licenses';
 export type {
 	StoreDescriptor as LicenseStore,
 	StoreState as LicenseStoreState,
+	StoreActions as LicenseStoreActions,
+	StoreSelectors as LicenseStoreSelectors,
 } from './types/store';

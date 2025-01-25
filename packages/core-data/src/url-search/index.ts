@@ -6,4 +6,6 @@ export type * from './types/url-search';
 export type {
 	StoreDescriptor as UrlSearchStore,
 	StoreState as UrlSearchStoreState,
+	StoreActions as UrlSearchStoreActions,
+	StoreSelectors as UrlSearchStoreSelectors,
 } from './types/store';

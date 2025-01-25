@@ -10,4 +10,6 @@ export type * from './types/posttype';
 export type {
 	StoreDescriptor as PopupStore,
 	StoreState as PopupStoreState,
+	StoreActions as PopupStoreActions,
+	StoreSelectors as PopupStoreSelectors,
 } from './types/store';
