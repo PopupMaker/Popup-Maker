@@ -309,7 +309,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 	// Get available CTAs from the store
 	const { ctas, selectedCTA } = useSelect(
 		( select ) => ( {
-			ctas: select( callToActionStore ).getAllCallToActions(),
+			ctas: select( callToActionStore ).getCallToActions(),
 			selectedCTA: ctaId
 				? select( callToActionStore ).getCallToAction( ctaId )
 				: undefined,
