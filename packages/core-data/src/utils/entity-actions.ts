@@ -5,7 +5,11 @@ import { store as coreDataStore } from '@wordpress/core-data';
 import { storeHasNotices } from './notice-types';
 
 import type { BaseEntityRecords } from '@wordpress/core-data';
-import type { ThunkContext, ThunkAction } from './entity-types';
+import type {
+	ThunkContext,
+	ThunkAction,
+	StoreDescriptor,
+} from './entity-types';
 
 export const createPostTypeActions = <
 	T extends
@@ -20,7 +24,7 @@ export const createPostTypeActions = <
 	 * Helper to handle notices with fallback to core notices
 	 */
 	const handleNotice = async (
-		context: ThunkContext,
+		context: ThunkContext< StoreDescriptor >,
 		options: {
 			type: 'success' | 'error';
 			message: string;

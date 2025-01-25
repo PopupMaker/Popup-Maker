@@ -2,8 +2,8 @@ export { default as createNoticeActions } from './notice-actions';
 export { default as createNoticeSelectors } from './notice-selectors';
 export { default as createPostTypeActions } from './entity-actions';
 export { default as createPostTypeSelectors } from './entity-selectors';
-export * from './notice-types';
-export * from './entity-types';
+export type { StoreDescriptor as NoticeStoreDescriptor } from './entity-types';
+export type { StoreDescriptor as EntityStoreDescriptor } from './entity-types';
 export * from './controls';
 
 /**
