@@ -8,7 +8,7 @@ const { popups = [] } = window.popupMakerBlockEditor;
 const getPopupById = ( popupId: number | string = 0 ) => {
 	popupId = parseInt( String( popupId ) ) || 0;
 
-	const popup = popups.filter( ( { ID } ) => popupId === ID );
+	const popup = popups.filter( ( { id } ) => popupId === id );
 
 	return popup.length === 1 ? popup[ 0 ] : false;
 };
@@ -28,7 +28,10 @@ function PopupView( {
 	const popup = getPopupById( popupId );
 	const label = popup
 		? /* translators: %s = popup title */
-		  sprintf( __( 'Open "%s" popup', 'popup-maker' ), popup.post_title )
+		  sprintf(
+				__( 'Open "%s" popup', 'popup-maker' ),
+				popup.title.rendered
+		  )
 		: '';
 
 	return (
