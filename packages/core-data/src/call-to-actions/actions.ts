@@ -32,6 +32,7 @@ const changeEditorId =
 					return;
 				}
 
+				// TODO REVIEW: This might not be needed to await the editor values chaning.
 				// @ts-ignore Not using now, testing if needed for future.
 				let _entityRecord: CallToAction< 'edit' > | undefined;
 
