@@ -7,17 +7,10 @@ import type reducer from '../reducer';
 import type * as actions from '../actions';
 import type * as selectors from '../selectors';
 import type * as resolvers from '../resolvers';
-import type { STORE_NAME, ACTION_TYPES } from '../constants';
+import type { STORE_NAME } from '../constants';
 
 import type { StoreThunkContext } from '../../types';
-
-/**
- * Base Redux action shape
- */
-export interface DispatchAction {
-	type: ( typeof ACTION_TYPES )[ keyof typeof ACTION_TYPES ];
-	[ key: string ]: any;
-}
+import type { ReducerAction } from '../../call-to-actions/reducer';
 
 /**
  * The shape of your store's "State" is typically what your reducer returns.
@@ -63,6 +56,11 @@ export interface StoreDescriptor extends StoreDescriptorType< StoreConfig > {
  * Define the ThunkArgs / ThunkAction shape.
  */
 export type ThunkContext = StoreThunkContext< StoreDescriptor >;
+
+/**
+ * Base Redux action shape
+ */
+export type DispatchAction = ReducerAction;
 
 /**
  * Define the ThunkAction shape.
