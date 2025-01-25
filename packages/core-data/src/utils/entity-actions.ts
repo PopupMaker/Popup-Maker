@@ -56,174 +56,228 @@ const createBaseActions = <
 		}
 	};
 
-	return {
-		create:
-			(
-				entity: Partial< T >,
-				validate?: (
-					entity: Partial< T >
-				) => true | { message: string }
-			): ThunkAction< T | boolean > =>
-			async ( context ) => {
-				const { registry } = context;
+	const create =
+		(
+			entity: Partial< T >,
+			validate?: ( entity: Partial< T > ) => true | { message: string }
+		): ThunkAction< T | boolean > =>
+		async ( context ) => {
+			const { registry } = context;
 
-				try {
-					if ( validate ) {
-						const validation = validate( entity );
-						if ( validation !== true ) {
-							await handleNotice( context, {
-								type: 'error',
-								message: validation.message,
-							} );
-							return false;
-						}
-					}
-
-					const result: boolean = await registry
-						.dispatch( coreDataStore )
-						.saveEntityRecord( 'postType', name, entity );
-
-					if ( result ) {
+			try {
+				if ( validate ) {
+					const validation = validate( entity );
+					if ( validation !== true ) {
 						await handleNotice( context, {
-							type: 'success',
-							message: __( 'Entity created successfully' ),
+							type: 'error',
+							message: validation.message,
 						} );
+						return false;
 					}
-
-					return result;
-				} catch ( error ) {
-					await handleNotice( context, {
-						type: 'error',
-						message:
-							error instanceof Error
-								? error.message
-								: __( 'Failed to create entity' ),
-					} );
-					throw error;
 				}
-			},
 
-		edit:
-			( id: number, edits: Partial< T > ): ThunkAction =>
-			async ( context ) => {
-				const { registry } = context;
-				try {
-					await registry
-						.dispatch( coreDataStore )
-						.editEntityRecord( 'postType', name, id, edits );
-				} catch ( error ) {
-					console.error( 'Edit failed:', error );
-					await handleNotice( context, {
-						type: 'error',
-						message: __( 'Failed to edit entity' ),
-					} );
-				}
-			},
+				const result: boolean = await registry
+					.dispatch( coreDataStore )
+					.saveEntityRecord( 'postType', name, entity );
 
-		save:
-			(
-				id: number,
-				validate?: ( entity: T ) => true | { message: string }
-			): ThunkAction< boolean > =>
-			async ( context ) => {
-				const { registry } = context;
-
-				try {
-					const entity = registry
-						.select( coreDataStore )
-						.getEditedEntityRecord( 'postType', name, id ) as
-						| T
-						| false;
-
-					if ( entity && validate ) {
-						const validation = validate( entity );
-						if ( validation !== true ) {
-							await handleNotice( context, {
-								type: 'error',
-								message: validation.message,
-							} );
-
-							return false;
-						}
-					}
-
-					const result: boolean = await registry
-						.dispatch( coreDataStore )
-						.saveEntityRecord( 'postType', name, id );
-
-					if ( result ) {
-						await handleNotice( context, {
-							type: 'success',
-							message: __( 'Entity saved successfully' ),
-						} );
-					}
-
-					return result;
-				} catch ( error ) {
-					console.error( 'Save failed:', error );
-					await handleNotice( context, {
-						type: 'error',
-						message: __( 'Failed to save entity' ),
-					} );
-					throw error;
-				}
-			},
-
-		delete:
-			( id: number, force = false ): ThunkAction =>
-			async ( context ) => {
-				const { registry } = context;
-				try {
-					await registry
-						.dispatch( coreDataStore )
-						.deleteEntityRecord( 'postType', name, id, { force } );
-
+				if ( result ) {
 					await handleNotice( context, {
 						type: 'success',
-						message: __( 'Entity deleted successfully' ),
+						message: __( 'Entity created successfully' ),
 					} );
-				} catch ( error ) {
-					console.error( 'Delete failed:', error );
-					await handleNotice( context, {
-						type: 'error',
-						message: __( 'Failed to delete entity' ),
-					} );
-					throw error;
 				}
-			},
 
-		invalidateList:
-			( query?: any ): ThunkAction =>
-			async ( context ) => {
-				const { registry } = context;
+				return result;
+			} catch ( error ) {
+				await handleNotice( context, {
+					type: 'error',
+					message:
+						error instanceof Error
+							? error.message
+							: __( 'Failed to create entity' ),
+				} );
+				throw error;
+			}
+		};
 
+	const update =
+		(
+			entity: Partial< T >,
+			validate?: ( entity: Partial< T > ) => true | { message: string }
+		): ThunkAction< T | boolean > =>
+		async ( context ) => {
+			const { registry } = context;
+
+			try {
+				if ( validate ) {
+					const validation = validate( entity );
+					if ( validation !== true ) {
+						await handleNotice( context, {
+							type: 'error',
+							message: validation.message,
+						} );
+						return false;
+					}
+				}
+
+				const isUpdate = 'id' in entity && entity.id;
+
+				const result: boolean = await registry
+					.dispatch( coreDataStore )
+					.saveEntityRecord( 'postType', name, entity );
+
+				if ( result ) {
+					await handleNotice( context, {
+						type: 'success',
+						message: isUpdate
+							? __( 'Entity updated successfully' )
+							: __( 'Entity created successfully' ),
+					} );
+				}
+
+				return result;
+			} catch ( error ) {
+				await handleNotice( context, {
+					type: 'error',
+					message:
+						error instanceof Error
+							? error.message
+							: __( 'Failed to save entity' ),
+				} );
+				throw error;
+			}
+		};
+
+	const edit =
+		( id: number, edits: Partial< T > ): ThunkAction =>
+		async ( context ) => {
+			const { registry } = context;
+			try {
 				await registry
 					.dispatch( coreDataStore )
-					// @ts-expect-error
-					.invalidateResolution( 'getEntityRecords', [
-						'postType',
-						name,
-						query ?? DEFAULT_QUERY,
-					] );
-			},
+					.editEntityRecord( 'postType', name, id, edits );
+			} catch ( error ) {
+				console.error( 'Edit failed:', error );
+				await handleNotice( context, {
+					type: 'error',
+					message: __( 'Failed to edit entity' ),
+				} );
+			}
+		};
 
-		resetEdits:
-			( id: number ): ThunkAction =>
-			async ( { registry } ) => {
+	const save =
+		(
+			id: number,
+			validate?: ( entity: T ) => true | { message: string }
+		): ThunkAction< boolean > =>
+		async ( context ) => {
+			const { registry } = context;
+
+			try {
+				const entity = registry
+					.select( coreDataStore )
+					.getEditedEntityRecord( 'postType', name, id ) as T | false;
+
+				if ( entity && validate ) {
+					const validation = validate( entity );
+					if ( validation !== true ) {
+						await handleNotice( context, {
+							type: 'error',
+							message: validation.message,
+						} );
+
+						return false;
+					}
+				}
+
+				const result: boolean = await registry
+					.dispatch( coreDataStore )
+					.saveEntityRecord( 'postType', name, id );
+
+				if ( result ) {
+					await handleNotice( context, {
+						type: 'success',
+						message: __( 'Entity saved successfully' ),
+					} );
+				}
+
+				return result;
+			} catch ( error ) {
+				console.error( 'Save failed:', error );
+				await handleNotice( context, {
+					type: 'error',
+					message: __( 'Failed to save entity' ),
+				} );
+				throw error;
+			}
+		};
+
+	const deleteEntity =
+		( id: number, force = false ): ThunkAction =>
+		async ( context ) => {
+			const { registry } = context;
+			try {
 				await registry
 					.dispatch( coreDataStore )
-					.editEntityRecord( 'postType', name, id, {} );
-			},
+					.deleteEntityRecord( 'postType', name, id, { force } );
 
-		undo:
-			(): ThunkAction =>
-			async ( { registry } ) =>
-				await registry.dispatch( coreDataStore ).undo(),
+				await handleNotice( context, {
+					type: 'success',
+					message: __( 'Entity deleted successfully' ),
+				} );
+			} catch ( error ) {
+				console.error( 'Delete failed:', error );
+				await handleNotice( context, {
+					type: 'error',
+					message: __( 'Failed to delete entity' ),
+				} );
+				throw error;
+			}
+		};
 
-		redo:
-			(): ThunkAction =>
-			async ( { registry } ) =>
-				await registry.dispatch( coreDataStore ).redo(),
+	const invalidateList =
+		( query?: any ): ThunkAction =>
+		async ( context ) => {
+			const { registry } = context;
+
+			await registry
+				.dispatch( coreDataStore )
+				// @ts-expect-error
+				.invalidateResolution( 'getEntityRecords', [
+					'postType',
+					name,
+					query ?? DEFAULT_QUERY,
+				] );
+		};
+
+	const resetEdits =
+		( id: number ): ThunkAction =>
+		async ( { registry } ) => {
+			await registry
+				.dispatch( coreDataStore )
+				.editEntityRecord( 'postType', name, id, {} );
+		};
+
+	const undo =
+		(): ThunkAction =>
+		async ( { registry } ) =>
+			await registry.dispatch( coreDataStore ).undo();
+
+	const redo =
+		(): ThunkAction =>
+		async ( { registry } ) =>
+			await registry.dispatch( coreDataStore ).redo();
+
+	return {
+		create,
+		update,
+		edit,
+		save,
+		delete: deleteEntity,
+		invalidateList,
+		resetEdits,
+		undo,
+		redo,
 	};
 };
 
