@@ -11,7 +11,19 @@ import type {
 	StoreDescriptor,
 } from './entity-types';
 
-export const createPostTypeActions = <
+type ActionMap< T extends BaseEntityRecords.BaseEntity< 'edit' > > = ReturnType<
+	typeof createBaseActions< T >
+>;
+
+type RemapKeys< T, M extends Partial< Record< keyof T, string > > > = {
+	[ K in keyof T as K extends keyof M ? never : K ]: T[ K ];
+} & {
+	[ P in keyof M as NonNullable< M[ P ] > ]: P extends keyof T
+		? T[ P ]
+		: never;
+};
+
+const createBaseActions = <
 	T extends
 		BaseEntityRecords.BaseEntity< 'edit' > = BaseEntityRecords.BaseEntity< 'edit' >,
 >(
@@ -45,18 +57,9 @@ export const createPostTypeActions = <
 	};
 
 	return {
-		/**
-		 * Create with validation support.
-		 */
 		create:
 			(
-				/**
-				 * Entity to create.
-				 */
 				entity: Partial< T >,
-				/**
-				 * Validation function.
-				 */
 				validate?: (
 					entity: Partial< T >
 				) => true | { message: string }
@@ -100,20 +103,8 @@ export const createPostTypeActions = <
 				}
 			},
 
-		/**
-		 * Store unsaved edits.
-		 */
 		edit:
-			(
-				/**
-				 * Entity ID.
-				 */
-				id: number,
-				/**
-				 * Entity edits.
-				 */
-				edits: Partial< T >
-			): ThunkAction =>
+			( id: number, edits: Partial< T > ): ThunkAction =>
 			async ( context ) => {
 				const { registry } = context;
 				try {
@@ -129,18 +120,9 @@ export const createPostTypeActions = <
 				}
 			},
 
-		/**
-		 * Save with validation support.
-		 */
 		save:
 			(
-				/**
-				 * Entity ID.
-				 */
 				id: number,
-				/**
-				 * Validation function.
-				 */
 				validate?: ( entity: T ) => true | { message: string }
 			): ThunkAction< boolean > =>
 			async ( context ) => {
@@ -153,7 +135,6 @@ export const createPostTypeActions = <
 						| T
 						| false;
 
-					// Run validation if provided
 					if ( entity && validate ) {
 						const validation = validate( entity );
 						if ( validation !== true ) {
@@ -188,20 +169,8 @@ export const createPostTypeActions = <
 				}
 			},
 
-		/**
-		 * Delete with force option.
-		 */
 		delete:
-			(
-				/**
-				 * Entity ID.
-				 */
-				id: number,
-				/**
-				 * Force delete.
-				 */
-				force = false
-			): ThunkAction =>
+			( id: number, force = false ): ThunkAction =>
 			async ( context ) => {
 				const { registry } = context;
 				try {
@@ -223,9 +192,6 @@ export const createPostTypeActions = <
 				}
 			},
 
-		/**
-		 * Invalidate the entity list.
-		 */
 		invalidateList:
 			( query?: any ): ThunkAction =>
 			async ( context ) => {
@@ -241,9 +207,6 @@ export const createPostTypeActions = <
 					] );
 			},
 
-		/**
-		 * Reset edits.
-		 */
 		resetEdits:
 			( id: number ): ThunkAction =>
 			async ( { registry } ) => {
@@ -252,22 +215,45 @@ export const createPostTypeActions = <
 					.editEntityRecord( 'postType', name, id, {} );
 			},
 
-		/**
-		 * Undo/Redo.
-		 */
 		undo:
 			(): ThunkAction =>
 			async ( { registry } ) =>
 				await registry.dispatch( coreDataStore ).undo(),
 
-		/**
-		 * Redo.
-		 */
 		redo:
 			(): ThunkAction =>
 			async ( { registry } ) =>
 				await registry.dispatch( coreDataStore ).redo(),
 	};
+};
+
+export const createPostTypeActions = <
+	T extends BaseEntityRecords.BaseEntity< 'edit' >,
+	M extends Partial< Record< keyof ActionMap< T >, string > > = {},
+>(
+	name: string,
+	mapping?: M
+): RemapKeys< ActionMap< T >, M > => {
+	const baseActions = createBaseActions< T >( name );
+
+	if ( ! mapping ) {
+		return baseActions as RemapKeys< ActionMap< T >, M >;
+	}
+
+	const remappedActions = { ...baseActions };
+
+	for ( const [ key, newKey ] of Object.entries( mapping ) ) {
+		if ( key in baseActions && newKey ) {
+			Object.defineProperty(
+				remappedActions,
+				newKey,
+				Object.getOwnPropertyDescriptor( baseActions, key ) || {}
+			);
+			delete remappedActions[ key as keyof typeof baseActions ];
+		}
+	}
+
+	return remappedActions as RemapKeys< ActionMap< T >, M >;
 };
 
 export default createPostTypeActions;

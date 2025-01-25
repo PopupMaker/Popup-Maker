@@ -3,7 +3,18 @@ import { createRegistrySelector } from '@wordpress/data';
 
 import type { BaseEntityRecords } from '@wordpress/core-data';
 
-export const createPostTypeSelectors = <
+type SelectorMap< T extends BaseEntityRecords.BaseEntity< 'edit' > > =
+	ReturnType< typeof createBaseSelectors< T > >;
+
+type RemapKeys< T, M extends Partial< Record< keyof T, string > > > = {
+	[ K in keyof T as K extends keyof M ? never : K ]: T[ K ];
+} & {
+	[ P in keyof M as NonNullable< M[ P ] > ]: P extends keyof T
+		? T[ P ]
+		: never;
+};
+
+const createBaseSelectors = <
 	T extends BaseEntityRecords.BaseEntity< 'edit' >,
 >(
 	name: string
@@ -159,6 +170,37 @@ export const createPostTypeSelectors = <
 					)
 		),
 	};
+};
+
+export const createPostTypeSelectors = <
+	T extends BaseEntityRecords.BaseEntity< 'edit' >,
+	M extends Partial< Record< keyof SelectorMap< T >, string > > = Partial<
+		Record< never, string >
+	>,
+>(
+	name: string,
+	mapping?: M
+): RemapKeys< SelectorMap< T >, M > => {
+	const baseSelectors = createBaseSelectors< T >( name );
+
+	if ( ! mapping ) {
+		return baseSelectors as RemapKeys< SelectorMap< T >, M >;
+	}
+
+	const remappedSelectors = { ...baseSelectors };
+
+	for ( const [ key, newKey ] of Object.entries( mapping ) ) {
+		if ( key in baseSelectors && newKey ) {
+			Object.defineProperty(
+				remappedSelectors,
+				newKey,
+				Object.getOwnPropertyDescriptor( baseSelectors, key ) || {}
+			);
+			delete remappedSelectors[ key as keyof typeof baseSelectors ];
+		}
+	}
+
+	return remappedSelectors as RemapKeys< SelectorMap< T >, M >;
 };
 
 export default createPostTypeSelectors;
