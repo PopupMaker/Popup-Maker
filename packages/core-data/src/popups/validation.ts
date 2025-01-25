@@ -9,7 +9,7 @@ import type { Popup } from './types';
  * @return {boolean} True when set values are valid.
  */
 export const validatePopup = (
-	popup: Popup
+	popup: Popup< 'edit' >
 ):
 	| boolean
 	| {
@@ -22,10 +22,9 @@ export const validatePopup = (
 		return false;
 	}
 
-	const title =
-		typeof popup.title === 'string' ? popup.title : popup.title?.raw;
+	const title = popup.title.raw;
 
-	if ( ! title.length ) {
+	if ( ! title?.length ) {
 		return {
 			message: __(
 				'Please provide a name for this popup.',

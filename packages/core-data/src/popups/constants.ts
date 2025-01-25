@@ -1,34 +1,21 @@
-import type { AppNotice } from '../types';
-import type { Popup, PopupsState } from './types';
+import type { Popup } from './types';
+import type { State } from './reducer';
 
 export const STORE_NAME = 'popup-maker/popups';
 
-export const ACTION_TYPES = {
-	CREATE: 'CREATE',
-	UPDATE: 'UPDATE',
-	DELETE: 'DELETE',
-	HYDRATE: 'HYDRATE',
-	ADD_NOTICE: 'ADD_NOTICE',
-	CLEAR_NOTICE: 'CLEAR_NOTICE',
-	CLEAR_NOTICES: 'CLEAR_NOTICES',
-	EDITOR_CHANGE_ID: 'EDITOR_CHANGE_ID',
-	EDITOR_CLEAR_DATA: 'EDITOR_CLEAR_DATA',
-	EDITOR_UPDATE_VALUES: 'EDITOR_UPDATE_VALUES',
-	CHANGE_ACTION_STATUS: 'CHANGE_ACTION_STATUS',
-	POPUPS_FETCH_ERROR: 'POPUPS_FETCH_ERROR',
+const EDITOR_CHANGE_ID = 'EDITOR_CHANGE_ID';
+
+export const ACTION_TYPES: {
+	EDITOR_CHANGE_ID: typeof EDITOR_CHANGE_ID;
+} = {
+	EDITOR_CHANGE_ID,
 };
 
-export const initialState: PopupsState = {
-	popups: [],
-	editor: {},
-	notices: [],
-};
-
-export const noticeDefaults: AppNotice = {
-	id: '',
-	message: '',
-	type: 'info',
-	isDismissible: true,
+/**
+ * Initial state for the call to actions store.
+ */
+export const initialState: State = {
+	editorId: undefined,
 };
 
 /**
@@ -39,17 +26,29 @@ export const noticeDefaults: AppNotice = {
  * @see /classes/Model/Popup.php
  * @see /includes/functions/install.php:get_default_popup_settings()
  */
-export const popupDefaults: Popup = {
+export const defaultValues: Popup< 'edit' > = {
 	id: 0,
-	title: '',
-	// content: '',
-	description: '',
+	uuid: '',
+	slug: '',
+	title: { rendered: '', raw: '' },
+	content: { rendered: '', raw: '', is_protected: false, block_version: '1' },
+	excerpt: { rendered: '', raw: '', protected: false },
 	status: 'draft',
-	priority: 0,
 	settings: {
 		conditions: {
 			logicalOperator: 'or',
 			items: [],
 		},
 	},
+	// Required Post fields
+	date: null,
+	date_gmt: null,
+	guid: { rendered: '', raw: '' },
+	link: '',
+	modified: '',
+	modified_gmt: '',
+	type: 'pum_cta',
+	author: 0,
+	generated_slug: '',
+	permalink_template: '',
 };
