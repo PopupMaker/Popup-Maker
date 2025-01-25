@@ -32,6 +32,7 @@ const changeEditorId =
 					return;
 				}
 
+				// @ts-ignore Not using now, testing if needed for future.
 				let _entityRecord: CallToAction< 'edit' > | undefined;
 
 				if ( editorId === 'new' ) {
