@@ -6,7 +6,7 @@ Core data redux store for Popup Maker plugins.
 
 ```js
 import { select } from '@wordpress/data';
-import { SETTINGS_STORE } from '@popup-maker/core-data';
+import { settingsStore } from '@popup-maker/core-data';
 
-select( SETTINGS_STORE ).getSetting( ... );
+select( settingsStore ).getSetting( ... );
 ```
