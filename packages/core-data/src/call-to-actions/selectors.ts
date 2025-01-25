@@ -9,7 +9,7 @@ import type { State } from './reducer';
 
 const entitySelectorMapping = {
 	getById: 'getCallToAction',
-	getAll: 'getAllCallToActions',
+	getAll: 'getCallToActions',
 } as const;
 
 type EntitySelectorMappingType = typeof entitySelectorMapping;

@@ -12,6 +12,8 @@ const { EDITOR_CHANGE_ID } = ACTION_TYPES;
 const entityActionMapping = {
 	create: 'createCallToAction',
 	update: 'updateCallToAction',
+	edit: 'editCallToAction',
+	save: 'saveCallToAction',
 	delete: 'deleteCallToAction',
 } as const;
 
