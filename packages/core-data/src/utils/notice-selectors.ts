@@ -1,8 +1,6 @@
 import { store as noticesStore } from '@wordpress/notices';
 import { createRegistrySelector } from '@wordpress/data';
 
-import type { WPNotice } from './notice-types';
-
 /**
  * Create notice selectors.
  */

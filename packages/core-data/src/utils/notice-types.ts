@@ -23,7 +23,7 @@ export interface WPNotice {
 	/**
 	 * Notice message.
 	 */
-	content: string;
+	content?: string;
 	/**
 	 * Audibly announced message text used by assistive technologies.
 	 */
@@ -53,6 +53,24 @@ export interface WPNotice {
 	 * User actions to present with notice.
 	 */
 	actions?: NoticeAction[];
+
+	/**
+	 * Notice icon.
+	 */
+	icon?: string | undefined;
+	/**
+	 * Notice explicit dismiss.
+	 */
+	explicitDismiss?: boolean | undefined;
+	/**
+	 * Notice on dismiss.
+	 */
+	onDismiss?: Function | undefined;
+
+	/**
+	 * Notice close delay.
+	 */
+	closeDelay?: number | undefined;
 }
 
 /**
@@ -73,60 +91,6 @@ export type NoticeAction = {
 	onClick: Function | null;
 };
 
-/**
- * Notice options.
- */
-export type NoticeOptions = {
-	/**
-	 * Notice status.
-	 */
-	status?: string | undefined;
-	/**
-	 * Notice content.
-	 */
-	content: string | undefined;
-	/**
-	 * Notice context.
-	 */
-	context?: string | undefined;
-	/**
-	 * Notice id.
-	 */
-	id?: string | undefined;
-	/**
-	 * Notice is dismissible.
-	 */
-	isDismissible?: boolean | undefined;
-	/**
-	 * Notice type.
-	 */
-	type?: string | undefined;
-	/**
-	 * Notice speak.
-	 */
-	speak?: boolean | undefined;
-	/**
-	 * Notice actions.
-	 */
-	actions?: NoticeAction[] | undefined;
-	/**
-	 * Notice icon.
-	 */
-	icon?: string | undefined;
-	/**
-	 * Notice explicit dismiss.
-	 */
-	explicitDismiss?: boolean | undefined;
-	/**
-	 * Notice on dismiss.
-	 */
-	onDismiss?: Function | undefined;
-
-	/**
-	 * Notice close delay.
-	 */
-	closeDelay?: number | undefined;
-};
 
 export type StoreSelectors = ReturnType< typeof createNoticeSelectors >;
 

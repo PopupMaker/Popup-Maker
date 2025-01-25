@@ -1,6 +1,6 @@
 import { store as noticesStore } from '@wordpress/notices';
 
-import type { ThunkAction, NoticeOptions } from './notice-types';
+import type { ThunkAction, WPNotice } from './notice-types';
 
 /**
  * Create notice actions.
@@ -14,15 +14,15 @@ export const createNoticeActions = ( context: string ) => ( {
 			/**
 			 * Notice status.
 			 */
-			status: NoticeOptions[ 'status' ] = 'info',
+			status: WPNotice[ 'status' ] = 'info',
 			/**
 			 * Notice content.
 			 */
-			content: NoticeOptions[ 'content' ] = '',
+			content: WPNotice[ 'content' ] = '',
 			/**
 			 * Notice options.
 			 */
-			options: Omit< NoticeOptions, 'status' | 'content' > = {}
+			options: Omit< WPNotice, 'status' | 'content' | 'id' > = {}
 		): ThunkAction =>
 		async ( { registry } ) => {
 			registry.dispatch( noticesStore ).createNotice( status, content, {
@@ -43,7 +43,7 @@ export const createNoticeActions = ( context: string ) => ( {
 			/**
 			 * Notice options.
 			 */
-			options: Omit< NoticeOptions, 'status' | 'content' > = {}
+			options: Omit< WPNotice, 'status' | 'content' | 'id' > = {}
 		): ThunkAction =>
 		async ( { registry } ) => {
 			registry.dispatch( noticesStore ).createNotice( 'error', content, {
@@ -64,7 +64,7 @@ export const createNoticeActions = ( context: string ) => ( {
 			/**
 			 * Notice options.
 			 */
-			options: Omit< NoticeOptions, 'status' | 'content' > = {}
+			options: Omit< WPNotice, 'status' | 'content' | 'id' > = {}
 		): ThunkAction =>
 		async ( { registry } ) => {
 			registry
