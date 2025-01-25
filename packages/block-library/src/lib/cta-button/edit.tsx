@@ -49,7 +49,7 @@ import { displayShortcut, isKeyboardEvent, ENTER } from '@wordpress/keycodes';
 import { linkOff, megaphone, edit, chevronDown, check } from '@wordpress/icons';
 
 import { EntitySelectControl } from '@popup-maker/components';
-import { CALL_TO_ACTION_STORE } from '@popup-maker/core-data';
+import { callToActionStore } from '@popup-maker/core-data';
 import { Editor as BaseEditor, withModal } from '@popup-maker/cta-editor';
 
 import { removeAnchorTag, useToolsPanelDropdownMenuProps } from '../utils';
@@ -92,27 +92,34 @@ interface WidthPanelProps {
 	selectedWidth?: number;
 	setAttributes: ( attrs: Partial< ButtonAttributes > ) => void;
 }
-``;
+
+/**
+ * Fill missing types from block editor store.
+ */
+interface BlockEditorSelectors {
+	getBlock: ( clientId: string ) => BlockInstance;
+	getBlockRootClientId: ( clientId: string ) => string;
+	getBlockIndex: ( clientId: string ) => number;
+}
+
 function useEnter( props: { content: string; clientId: string } ) {
 	const { replaceBlocks, selectionChange } = useDispatch( blockEditorStore );
 	const { getBlock, getBlockRootClientId, getBlockIndex } = useSelect(
 		( select ) => {
-			const store = select( blockEditorStore );
+			const store = select( blockEditorStore ) as BlockEditorSelectors;
+
 			return {
-				getBlock: store.getBlock as (
-					clientId: string
-				) => BlockInstance,
-				getBlockRootClientId: store.getBlockRootClientId as (
-					clientId: string
-				) => string,
-				getBlockIndex: store.getBlockIndex as (
-					clientId: string
-				) => number,
+				getBlock: store.getBlock,
+				getBlockRootClientId: store.getBlockRootClientId,
+				getBlockIndex: store.getBlockIndex,
 			};
-		}
+		},
+		[ props.clientId ]
 	);
+
 	const propsRef = useRef( props );
 	propsRef.current = props;
+
 	return useRefEffect( ( element: HTMLElement ) => {
 		function onKeyDown( event: KeyboardEvent ) {
 			if ( event.defaultPrevented || event.keyCode !== ENTER ) {
@@ -302,9 +309,9 @@ function ButtonEdit( props: ButtonEditProps ) {
 	// Get available CTAs from the store
 	const { ctas, selectedCTA } = useSelect(
 		( select ) => ( {
-			ctas: select( CALL_TO_ACTION_STORE ).getCallToActions(),
+			ctas: select( callToActionStore ).getAllCallToActions(),
 			selectedCTA: ctaId
-				? select( CALL_TO_ACTION_STORE ).getCallToAction( ctaId )
+				? select( callToActionStore ).getCallToAction( ctaId )
 				: undefined,
 			// recentlyFetchedCtas:
 			// 	select( CALL_TO_ACTION_STORE ).isDispatching(
@@ -504,7 +511,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 													),
 												},
 											] }
-											forceRefresh={ forceRefresh }
+											// forceRefresh={ forceRefresh }
 										/>
 									</FlexItem>
 									<FlexItem>
@@ -580,7 +587,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 								) }
 							</Flex>
 						) : (
-							typeof selectedCTA !== 'undefined' && (
+							selectedCTA && (
 								<Flex align="center">
 									<FlexItem
 										style={ {
@@ -588,7 +595,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 										} }
 									>
 										{ /* TODO: Add conversion metrics here when available */ }
-										{ `${ selectedCTA.title } (#${ selectedCTA.id })` }
+										{ `${ selectedCTA?.title?.rendered } (#${ selectedCTA?.id })` }
 									</FlexItem>
 									<Flex justify="flex-end">
 										<Button
