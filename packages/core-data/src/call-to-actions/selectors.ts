@@ -7,11 +7,21 @@ import { createNoticeSelectors, createPostTypeSelectors } from '../utils';
 import type { CallToAction } from './types';
 import type { State } from './reducer';
 
+const entitySelectorMapping = {
+	getById: 'getCallToAction',
+	getAll: 'getAllCallToActions',
+} as const;
+
+type EntitySelectorMappingType = typeof entitySelectorMapping;
+
 /**
  * Generate entity & notice selectors.
  */
-const entitySelectors =
-	createPostTypeSelectors< CallToAction< 'edit' > >( 'pum_cta' );
+const entitySelectors = createPostTypeSelectors<
+	CallToAction< 'edit' >,
+	EntitySelectorMappingType
+>( 'pum_cta', entitySelectorMapping );
+
 const noticeSelectors = createNoticeSelectors( 'pum-cta-editor' );
 
 /**

@@ -9,11 +9,22 @@ import type { ReducerAction } from './reducer';
 
 const { EDITOR_CHANGE_ID } = ACTION_TYPES;
 
+const entityActionMapping = {
+	create: 'createCallToAction',
+	update: 'updateCallToAction',
+	delete: 'deleteCallToAction',
+} as const;
+
+type EntityActionMappingType = typeof entityActionMapping;
+
 /**
- * Generate notice & entityactions.
+ * Generate notice & entity actions.
  */
-const entityActions =
-	createPostTypeActions< CallToAction< 'edit' > >( 'pum_cta' );
+const entityActions = createPostTypeActions<
+	CallToAction< 'edit' >,
+	EntityActionMappingType
+>( 'pum_cta', entityActionMapping );
+
 const noticeActions = createNoticeActions( 'pum-cta-editor' );
 
 // Refactored changeEditorId using thunk and our selectors
@@ -39,7 +50,7 @@ const changeEditorId =
 				if ( editorId === 'new' ) {
 					_entityRecord = select.getEntityDefaults();
 				} else if ( typeof editorId === 'number' && editorId > 0 ) {
-					_entityRecord = await select.getById( editorId );
+					_entityRecord = await select.getCallToAction( editorId );
 				}
 
 				dispatch( {
