@@ -3,9 +3,9 @@ import type {
 	StoreDescriptor as StoreDescriptorType,
 } from '@wordpress/data/src/types';
 
+import type { StoreThunkContext } from '../types';
 import type createNoticeActions from './notice-actions';
 import type createNoticeSelectors from './notice-selectors';
-import type { StoreThunkContext } from '../types';
 
 /**
  * Notice object from WordPress core.
@@ -19,7 +19,7 @@ export interface WPNotice {
 	 * Status of notice, one of `success`, `info`, `error`, or `warning`.
 	 * Defaults to `info`.
 	 */
-	status?: string;
+	status?: 'warning' | 'success' | 'error' | 'info' | string;
 	/**
 	 * Notice message.
 	 */
@@ -53,7 +53,16 @@ export interface WPNotice {
 	 * User actions to present with notice.
 	 */
 	actions?: NoticeAction[];
+}
 
+/**
+ * Notice object from WordPress core.
+ */
+export interface Notice extends WPNotice {
+	/**
+	 * Notice context. Unused?.
+	 */
+	context?: string | undefined;
 	/**
 	 * Notice icon.
 	 */
@@ -66,7 +75,6 @@ export interface WPNotice {
 	 * Notice on dismiss.
 	 */
 	onDismiss?: Function | undefined;
-
 	/**
 	 * Notice close delay.
 	 */
@@ -90,7 +98,6 @@ export type NoticeAction = {
 	 */
 	onClick: Function | null;
 };
-
 
 export type StoreSelectors = ReturnType< typeof createNoticeSelectors >;
 
