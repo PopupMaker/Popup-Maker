@@ -22,161 +22,197 @@ const createBaseSelectors = <
 	const DEFAULT_QUERY = { per_page: -1 } as const;
 
 	return {
-		getAll: createRegistrySelector(
-			( select ) => async ( _state: any ) =>
-				select( coreDataStore ).getEntityRecords< T >(
-					'postType',
-					name,
-					DEFAULT_QUERY
-				)
-		),
+		getAll: createRegistrySelector( ( select ) => ( _state: any ) => {
+			const records = select( coreDataStore ).getEntityRecords< T >(
+				'postType',
+				name,
+				DEFAULT_QUERY
+			);
+			return records;
+		} ),
 
 		getById: createRegistrySelector(
-			( select ) => async ( _state: any, id: number ) =>
-				select( coreDataStore ).getEntityRecord< T >(
+			( select ) => ( _state: any, id: number ) => {
+				const record = select( coreDataStore ).getEntityRecord< T >(
 					'postType',
 					name,
 					id
-				)
+				);
+				return record;
+			}
 		),
 
 		getEdited: createRegistrySelector(
-			( select ) => ( _state: any, id: number ) =>
-				select( coreDataStore ).getEditedEntityRecord(
+			( select ) => ( _state: any, id: number ) => {
+				const record = select( coreDataStore ).getEditedEntityRecord(
 					'postType',
 					name,
 					id
-				)
+				);
+				return record;
+			}
 		),
 
 		isSaving: createRegistrySelector(
-			( select ) => ( _state: any, id: number ) =>
-				select( coreDataStore ).isSavingEntityRecord(
+			( select ) => ( _state: any, id: number ) => {
+				const saving = select( coreDataStore ).isSavingEntityRecord(
 					'postType',
 					name,
 					id
-				)
+				);
+				return saving;
+			}
 		),
 
 		isDeleting: createRegistrySelector(
-			( select ) => ( _state: any, id: number ) =>
-				select( coreDataStore ).isDeletingEntityRecord(
+			( select ) => ( _state: any, id: number ) => {
+				const deleting = select( coreDataStore ).isDeletingEntityRecord(
 					'postType',
 					name,
 					id
-				)
+				);
+				return deleting;
+			}
 		),
 
 		hasEdits: createRegistrySelector(
-			( select ) => ( _state: any, id: number ) =>
-				select( coreDataStore ).hasEditsForEntityRecord(
-					'postType',
-					name,
-					id
-				)
+			( select ) => ( _state: any, id: number ) => {
+				const hasEdits = select(
+					coreDataStore
+				).hasEditsForEntityRecord( 'postType', name, id );
+				return hasEdits;
+			}
 		),
 
 		getLastSaveError: createRegistrySelector(
-			( select ) => ( _state: any, id: number ) =>
-				select( coreDataStore ).getLastEntitySaveError(
+			( select ) => ( _state: any, id: number ) => {
+				const error = select( coreDataStore ).getLastEntitySaveError(
 					'postType',
 					name,
 					id
-				)
+				);
+				return error;
+			}
 		),
 
-		hasUndo: createRegistrySelector(
-			( select ) => ( _state: any ) => select( coreDataStore ).hasUndo()
-		),
+		hasUndo: createRegistrySelector( ( select ) => ( _state: any ) => {
+			const hasUndo = select( coreDataStore ).hasUndo();
+			return hasUndo;
+		} ),
 
-		hasRedo: createRegistrySelector(
-			( select ) => ( _state: any ) => select( coreDataStore ).hasRedo()
-		),
+		hasRedo: createRegistrySelector( ( select ) => ( _state: any ) => {
+			const hasRedo = select( coreDataStore ).hasRedo();
+			return hasRedo;
+		} ),
 
 		isAutosaving: createRegistrySelector(
-			( select ) => ( _state: any, id: number ) =>
-				select( coreDataStore ).isAutosavingEntityRecord(
-					'postType',
-					name,
-					id
-				)
+			( select ) => ( _state: any, id: number ) => {
+				const autosaving = select(
+					coreDataStore
+				).isAutosavingEntityRecord( 'postType', name, id );
+				return autosaving;
+			}
 		),
 
 		getRawEntityRecord: createRegistrySelector(
-			( select ) => ( _state: any, id: number ) =>
-				select( coreDataStore ).getRawEntityRecord(
+			( select ) => ( _state: any, id: number ) => {
+				const record = select( coreDataStore ).getRawEntityRecord(
 					'postType',
 					name,
 					id
-				)
+				);
+				return record;
+			}
 		),
 
 		isFetchingEntity: createRegistrySelector(
-			( select ) => ( _state: any, id: number ) =>
+			( select ) => ( _state: any, id: number ) => {
 				// @ts-expect-error
-				select( coreDataStore ).isResolving( 'getEntityRecord', [
-					'postType',
-					name,
-					id,
-				] )
+				const fetching = select( coreDataStore ).isResolving(
+					'getEntityRecord',
+					[ 'postType', name, id ]
+				) as boolean;
+
+				return fetching;
+			}
 		),
 
 		isFetchingEntities: createRegistrySelector(
 			( select ) =>
-				( _state: any, query = DEFAULT_QUERY ) =>
+				( _state: any, query = DEFAULT_QUERY ) => {
 					// @ts-expect-error
-					select( coreDataStore ).isResolving( 'getEntityRecords', [
-						'postType',
-						name,
-						query,
-					] )
+					const fetching = select( coreDataStore ).isResolving(
+						'getEntityRecords',
+						[ 'postType', name, query ]
+					) as boolean;
+
+					return fetching;
+				}
 		),
 
 		hasFetchedEntity: createRegistrySelector(
-			( select ) => ( _state: any, id: number ) =>
-				// @ts-expect-error
-				select( coreDataStore ).hasFinishedResolution(
-					'getEntityRecord',
-					[ 'postType', name, id ]
-				)
+			( select ) => ( _state: any, id: number ) => {
+				const hasFetched = select( coreDataStore )
+					// @ts-expect-error
+					.hasFinishedResolution( 'getEntityRecord', [
+						'postType',
+						name,
+						id,
+					] ) as boolean;
+
+				return hasFetched;
+			}
 		),
 
 		hasFetchedEntities: createRegistrySelector(
 			( select ) =>
-				( _state: any, query = DEFAULT_QUERY ) =>
-					// @ts-expect-error
-					select( coreDataStore ).hasFinishedResolution(
-						'getEntityRecords',
-						[ 'postType', name, query ]
-					)
+				( _state: any, query = DEFAULT_QUERY ) => {
+					const hasFetched = select( coreDataStore )
+						// @ts-expect-error
+						.hasFinishedResolution( 'getEntityRecords', [
+							'postType',
+							name,
+							query,
+						] ) as boolean;
+
+					return hasFetched;
+				}
 		),
 
 		hasStartedEntityFetch: createRegistrySelector(
-			( select ) => ( _state: any, id: number ) =>
-				// @ts-expect-error
-				select( coreDataStore ).hasStartedResolution(
-					'getEntityRecord',
-					[ 'postType', name, id ]
-				)
+			( select ) => ( _state: any, id: number ) => {
+				const hasStarted = select( coreDataStore )
+					// @ts-expect-error
+					.hasStartedResolution( 'getEntityRecord', [
+						'postType',
+						name,
+						id,
+					] ) as boolean;
+
+				return hasStarted;
+			}
 		),
 
 		hasStartedEntitiesFetch: createRegistrySelector(
 			( select ) =>
-				( _state: any, query = DEFAULT_QUERY ) =>
-					// @ts-expect-error
-					select( coreDataStore ).hasStartedResolution(
-						'getEntityRecords',
-						[ 'postType', name, query ]
-					)
+				( _state: any, query = DEFAULT_QUERY ) => {
+					const hasStarted = select( coreDataStore )
+						// @ts-expect-error
+						.hasStartedResolution( 'getEntityRecords', [
+							'postType',
+							name,
+							query,
+						] ) as boolean;
+
+					return hasStarted;
+				}
 		),
 	};
 };
 
 export const createPostTypeSelectors = <
 	T extends BaseEntityRecords.BaseEntity< 'edit' >,
-	M extends Partial< Record< keyof SelectorMap< T >, string > > = Partial<
-		Record< never, string >
-	>,
+	M extends Partial< Record< keyof SelectorMap< T >, string > > = {},
 >(
 	name: string,
 	mapping?: M
