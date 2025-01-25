@@ -23,7 +23,7 @@ type EntityActionMappingType = typeof entityActionMapping;
  * Generate notice & entity actions.
  */
 const entityActions = createPostTypeActions<
-	CallToAction< 'edit' >,
+	CallToAction,
 	EntityActionMappingType
 >( 'pum_cta', entityActionMapping );
 

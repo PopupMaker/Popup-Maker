@@ -1,26 +1,6 @@
 import type { Context, BaseEntityRecords } from '@wordpress/core-data';
-import type {
-	ContextualField,
-	PostStatus,
-} from '@wordpress/core-data/src/entity-types/helpers';
 
 export type EditorId = 'new' | number | undefined;
-
-/**
- * Fields in the core post object type that we don't care about or utilize.
- */
-export type OmittedPostFields =
-	| 'password'
-	| 'featured_media'
-	| 'comment_status'
-	| 'ping_status'
-	| 'format'
-	| 'meta'
-	| 'sticky'
-	| 'template'
-	| 'categories'
-	| 'tags'
-	| 'status';
 
 /**
  * Declare a base post model with extra trash status.
@@ -29,10 +9,7 @@ export type OmittedPostFields =
  */
 declare module '@wordpress/core-data' {
 	export namespace BaseEntityRecords {
-		export interface BaseEntity< C extends Context >
-			extends Omit< Post< C >, OmittedPostFields > {
-			status: ContextualField< PostStatus, 'view' | 'edit', C > | 'trash';
-		}
+		export interface BaseEntity< C extends Context > extends Post< C > {}
 	}
 }
 

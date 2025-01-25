@@ -4,14 +4,18 @@ import { store as coreDataStore } from '@wordpress/core-data';
 
 import { storeHasNotices } from './notice-types';
 
-import type { BaseEntityRecords } from '@wordpress/core-data';
+import type {
+	EntityRecord,
+	Updatable,
+} from '@wordpress/core-data/src/entity-types';
+
 import type {
 	ThunkContext,
 	ThunkAction,
 	StoreDescriptor,
 } from './entity-types';
 
-type ActionMap< T extends BaseEntityRecords.BaseEntity< 'edit' > > = ReturnType<
+type ActionMap< T extends EntityRecord< 'edit' > > = ReturnType<
 	typeof createBaseActions< T >
 >;
 
@@ -24,8 +28,7 @@ type RemapKeys< T, M extends Partial< Record< keyof T, string > > > = {
 };
 
 const createBaseActions = <
-	T extends
-		BaseEntityRecords.BaseEntity< 'edit' > = BaseEntityRecords.BaseEntity< 'edit' >,
+	T extends EntityRecord< 'edit' > = EntityRecord< 'edit' >,
 >(
 	name: string
 ) => {
@@ -33,24 +36,29 @@ const createBaseActions = <
 	const NOTICE_CONTEXT = `${ name }-editor`;
 
 	/**
+	 * Shorthand type for editable string object fields like title, content, etc.
+	 */
+	type Editable = Partial< Updatable< T > >;
+
+	/**
 	 * Helper to handle notices with fallback to core notices
 	 */
 	const handleNotice = async (
 		context: ThunkContext< StoreDescriptor >,
 		options: {
-			type: 'success' | 'error';
-			message: string;
+			status: 'success' | 'error';
+			content: string;
 		}
 	) => {
 		if ( storeHasNotices( context ) ) {
-			context.dispatch.createNotice( options.type, options.message, {
-				context: NOTICE_CONTEXT,
+			context.dispatch.createNotice( options.status, options.content, {
+				// context: NOTICE_CONTEXT,
 			} );
 		} else {
 			// Fallback to core notices
 			await context.registry
 				.dispatch( noticesStore )
-				.createNotice( options.type, options.message, {
+				.createNotice( options.status, options.content, {
 					context: NOTICE_CONTEXT,
 				} );
 		}
@@ -58,8 +66,8 @@ const createBaseActions = <
 
 	const create =
 		(
-			entity: Partial< T >,
-			validate?: ( entity: Partial< T > ) => true | { message: string }
+			entity: Editable,
+			validate?: ( entity: Editable ) => true | { message: string }
 		): ThunkAction< T | boolean > =>
 		async ( context ) => {
 			const { registry } = context;
@@ -69,8 +77,8 @@ const createBaseActions = <
 					const validation = validate( entity );
 					if ( validation !== true ) {
 						await handleNotice( context, {
-							type: 'error',
-							message: validation.message,
+							status: 'error',
+							content: validation.message,
 						} );
 						return false;
 					}
@@ -82,16 +90,16 @@ const createBaseActions = <
 
 				if ( result ) {
 					await handleNotice( context, {
-						type: 'success',
-						message: __( 'Entity created successfully' ),
+						status: 'success',
+						content: __( 'Entity created successfully' ),
 					} );
 				}
 
 				return result;
 			} catch ( error ) {
 				await handleNotice( context, {
-					type: 'error',
-					message:
+					status: 'error',
+					content:
 						error instanceof Error
 							? error.message
 							: __( 'Failed to create entity' ),
@@ -102,8 +110,8 @@ const createBaseActions = <
 
 	const update =
 		(
-			entity: Partial< T >,
-			validate?: ( entity: Partial< T > ) => true | { message: string }
+			entity: Editable,
+			validate?: ( entity: Editable ) => true | { message: string }
 		): ThunkAction< T | boolean > =>
 		async ( context ) => {
 			const { registry } = context;
@@ -113,8 +121,8 @@ const createBaseActions = <
 					const validation = validate( entity );
 					if ( validation !== true ) {
 						await handleNotice( context, {
-							type: 'error',
-							message: validation.message,
+							status: 'error',
+							content: validation.message,
 						} );
 						return false;
 					}
@@ -128,8 +136,8 @@ const createBaseActions = <
 
 				if ( result ) {
 					await handleNotice( context, {
-						type: 'success',
-						message: isUpdate
+						status: 'success',
+						content: isUpdate
 							? __( 'Entity updated successfully' )
 							: __( 'Entity created successfully' ),
 					} );
@@ -138,8 +146,8 @@ const createBaseActions = <
 				return result;
 			} catch ( error ) {
 				await handleNotice( context, {
-					type: 'error',
-					message:
+					status: 'error',
+					content:
 						error instanceof Error
 							? error.message
 							: __( 'Failed to save entity' ),
@@ -149,7 +157,7 @@ const createBaseActions = <
 		};
 
 	const edit =
-		( id: number, edits: Partial< T > ): ThunkAction =>
+		( id: number, edits: Editable ): ThunkAction =>
 		async ( context ) => {
 			const { registry } = context;
 			try {
@@ -159,8 +167,8 @@ const createBaseActions = <
 			} catch ( error ) {
 				console.error( 'Edit failed:', error );
 				await handleNotice( context, {
-					type: 'error',
-					message: __( 'Failed to edit entity' ),
+					status: 'error',
+					content: __( 'Failed to edit entity' ),
 				} );
 			}
 		};
@@ -168,7 +176,7 @@ const createBaseActions = <
 	const save =
 		(
 			id: number,
-			validate?: ( entity: T ) => true | { message: string }
+			validate?: ( entity: Editable ) => true | { message: string }
 		): ThunkAction< boolean > =>
 		async ( context ) => {
 			const { registry } = context;
@@ -176,14 +184,16 @@ const createBaseActions = <
 			try {
 				const entity = registry
 					.select( coreDataStore )
-					.getEditedEntityRecord( 'postType', name, id ) as T | false;
+					.getEditedEntityRecord( 'postType', name, id ) as
+					| Editable
+					| false;
 
 				if ( entity && validate ) {
 					const validation = validate( entity );
 					if ( validation !== true ) {
 						await handleNotice( context, {
-							type: 'error',
-							message: validation.message,
+							status: 'error',
+							content: validation.message,
 						} );
 
 						return false;
@@ -196,8 +206,8 @@ const createBaseActions = <
 
 				if ( result ) {
 					await handleNotice( context, {
-						type: 'success',
-						message: __( 'Entity saved successfully' ),
+						status: 'success',
+						content: __( 'Entity saved successfully' ),
 					} );
 				}
 
@@ -205,8 +215,8 @@ const createBaseActions = <
 			} catch ( error ) {
 				console.error( 'Save failed:', error );
 				await handleNotice( context, {
-					type: 'error',
-					message: __( 'Failed to save entity' ),
+					status: 'error',
+					content: __( 'Failed to save entity' ),
 				} );
 				throw error;
 			}
@@ -222,14 +232,14 @@ const createBaseActions = <
 					.deleteEntityRecord( 'postType', name, id, { force } );
 
 				await handleNotice( context, {
-					type: 'success',
-					message: __( 'Entity deleted successfully' ),
+					status: 'success',
+					content: __( 'Entity deleted successfully' ),
 				} );
 			} catch ( error ) {
 				console.error( 'Delete failed:', error );
 				await handleNotice( context, {
-					type: 'error',
-					message: __( 'Failed to delete entity' ),
+					status: 'error',
+					content: __( 'Failed to delete entity' ),
 				} );
 				throw error;
 			}
@@ -282,7 +292,7 @@ const createBaseActions = <
 };
 
 export const createPostTypeActions = <
-	T extends BaseEntityRecords.BaseEntity< 'edit' >,
+	T extends EntityRecord< 'edit' >,
 	M extends Partial< Record< keyof ActionMap< T >, string > > = {},
 >(
 	name: string,
