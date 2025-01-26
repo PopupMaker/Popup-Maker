@@ -1,10 +1,12 @@
-import { store as coreDataStore } from '@wordpress/core-data';
+import { store as coreDataStore, type Updatable } from '@wordpress/core-data';
 import { createRegistrySelector } from '@wordpress/data';
 
-import type { BaseEntityRecords } from '@wordpress/core-data';
+import type { EntityRecord } from '@wordpress/core-data/src/entity-types';
+import type { GetRecordsHttpQuery } from '@wordpress/core-data/build-types/selectors';
 
-type SelectorMap< T extends BaseEntityRecords.BaseEntity< 'edit' > > =
-	ReturnType< typeof createBaseSelectors< T > >;
+type SelectorMap< T extends EntityRecord< 'edit' > > = ReturnType<
+	typeof createBaseSelectors< T >
+>;
 
 type RemapKeys< T, M extends Partial< Record< keyof T, string > > > = {
 	[ K in keyof T as K extends keyof M ? never : K ]: T[ K ];
@@ -15,21 +17,23 @@ type RemapKeys< T, M extends Partial< Record< keyof T, string > > > = {
 };
 
 const createBaseSelectors = <
-	T extends BaseEntityRecords.BaseEntity< 'edit' >,
+	T extends EntityRecord< 'edit' > = EntityRecord< 'edit' >,
 >(
 	name: string
 ) => {
 	const DEFAULT_QUERY = { per_page: -1 } as const;
 
 	return {
-		getAll: createRegistrySelector( ( select ) => ( _state: any ) => {
-			const records = select( coreDataStore ).getEntityRecords< T >(
-				'postType',
-				name,
-				DEFAULT_QUERY
-			);
-			return records;
-		} ),
+		getAll: createRegistrySelector(
+			( select ) => ( _state: any, query?: GetRecordsHttpQuery ) => {
+				const records = select( coreDataStore ).getEntityRecords< T >(
+					'postType',
+					name,
+					query ?? DEFAULT_QUERY
+				);
+				return records;
+			}
+		),
 
 		getById: createRegistrySelector(
 			( select ) => ( _state: any, id: number ) => {
@@ -42,13 +46,18 @@ const createBaseSelectors = <
 			}
 		),
 
-		getEdited: createRegistrySelector(
+		getEditedById: createRegistrySelector(
 			( select ) => ( _state: any, id: number ) => {
 				const record = select( coreDataStore ).getEditedEntityRecord(
 					'postType',
 					name,
 					id
-				);
+				) as Updatable< T >;
+
+				if ( ! record ) {
+					return undefined;
+				}
+
 				return record;
 			}
 		),
@@ -211,7 +220,7 @@ const createBaseSelectors = <
 };
 
 export const createPostTypeSelectors = <
-	T extends BaseEntityRecords.BaseEntity< 'edit' >,
+	T extends EntityRecord< 'edit' >,
 	M extends Partial< Record< keyof SelectorMap< T >, string > > = {},
 >(
 	name: string,

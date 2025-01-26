@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import type { CallToAction } from './types';
+import type { Updatable } from '@wordpress/core-data';
 
 /**
  * Checks of the set values are valid.
@@ -9,7 +10,7 @@ import type { CallToAction } from './types';
  * @return {boolean} True when set values are valid.
  */
 export const validateCallToAction = (
-	callToAction: CallToAction< 'edit' >
+	callToAction: Updatable< CallToAction< 'edit' > >
 ):
 	| boolean
 	| {
@@ -22,7 +23,7 @@ export const validateCallToAction = (
 		return false;
 	}
 
-	const title = callToAction.title.raw;
+	const title = callToAction.title;
 
 	if ( ! title?.length ) {
 		return {

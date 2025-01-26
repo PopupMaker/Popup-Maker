@@ -1,5 +1,6 @@
 import type { CallToAction } from './types';
 import type { State } from './reducer';
+import type { Updatable } from '@wordpress/core-data/src/entity-types';
 
 export const STORE_NAME = 'popup-maker/call-to-actions';
 
@@ -36,13 +37,13 @@ export const noticeDefaults = {
  * @see /classes/Models/CallToAction.php
  * @see /includes/namespaced/default-values.php
  */
-export const defaultValues: CallToAction< 'edit' > = {
+export const defaultValues: Updatable< CallToAction< 'edit' > > = {
 	id: 0,
 	uuid: '',
 	slug: '',
-	title: { rendered: '', raw: '' },
-	content: { rendered: '', raw: '', is_protected: false, block_version: '1' },
-	excerpt: { rendered: '', raw: '', protected: false },
+	title: '',
+	content: '',
+	excerpt: '',
 	status: 'draft',
 	settings: {
 		type: 'link',
@@ -50,7 +51,7 @@ export const defaultValues: CallToAction< 'edit' > = {
 	// Required Post fields
 	date: null,
 	date_gmt: null,
-	guid: { rendered: '', raw: '' },
+	guid: '',
 	link: '',
 	modified: '',
 	modified_gmt: '',
@@ -58,4 +59,14 @@ export const defaultValues: CallToAction< 'edit' > = {
 	author: 0,
 	generated_slug: '',
 	permalink_template: '',
+	password: '',
+	featured_media: 0,
+	comment_status: 'open',
+	ping_status: 'open',
+	format: 'standard',
+	meta: {},
+	sticky: false,
+	template: '',
+	categories: [],
+	tags: [],
 };

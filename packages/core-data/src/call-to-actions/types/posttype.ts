@@ -22,7 +22,7 @@ declare module '@wordpress/core-data' {
 /**
  * The call to action interface.
  */
-export interface CallToAction< C extends Context = 'view' >
+export interface CallToAction< C extends Context = Context >
 	extends BaseEntityRecords.CallToAction< C > {}
 
 /**

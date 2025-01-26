@@ -6,15 +6,16 @@ import { ACTION_TYPES } from './constants';
 import type { EditorId } from '../types';
 import type { CallToAction, ThunkAction } from './types';
 import type { ReducerAction } from './reducer';
+import type { Updatable } from '@wordpress/core-data';
 
 const { EDITOR_CHANGE_ID } = ACTION_TYPES;
 
 const entityActionMapping = {
-	create: 'createCallToAction',
-	update: 'updateCallToAction',
-	edit: 'editCallToAction',
-	save: 'saveCallToAction',
-	delete: 'deleteCallToAction',
+	createRecord: 'createCallToAction',
+	updateRecord: 'updateCallToAction',
+	editRecord: 'editCallToAction',
+	saveRecord: 'saveCallToAction',
+	deleteRecord: 'deleteCallToAction',
 } as const;
 
 type EntityActionMappingType = typeof entityActionMapping;
@@ -23,11 +24,44 @@ type EntityActionMappingType = typeof entityActionMapping;
  * Generate notice & entity actions.
  */
 const entityActions = createPostTypeActions<
-	CallToAction,
+	CallToAction< 'edit' >,
 	EntityActionMappingType
 >( 'pum_cta', entityActionMapping );
 
 const noticeActions = createNoticeActions( 'pum-cta-editor' );
+
+const updateEditorValues =
+	( values: Updatable< CallToAction< 'edit' > > ): ThunkAction< void > =>
+	async ( { dispatch, select } ) => {
+		const editorId = select.getEditorId();
+
+		if ( typeof editorId === 'undefined' ) {
+			return;
+		}
+
+		if ( typeof editorId === 'string' && editorId === 'new' ) {
+			return;
+		}
+
+		await dispatch.editCallToAction( editorId, values );
+	};
+
+const saveEditorValues =
+	(): ThunkAction< void > =>
+	async ( { dispatch, select } ) => {
+		const editorId = select.getEditorId();
+		const editorValues = select.currentEditorValues();
+
+		if ( ! editorValues ) {
+			return;
+		}
+
+		if ( typeof editorId === 'string' && editorId === 'new' ) {
+			await dispatch.createCallToAction( editorValues );
+		} else {
+			await dispatch.saveCallToAction( Number( editorId ) );
+		}
+	};
 
 // Refactored changeEditorId using thunk and our selectors
 const changeEditorId =
@@ -47,12 +81,13 @@ const changeEditorId =
 
 				// TODO REVIEW: This might not be needed to await the editor values chaning.
 				// @ts-ignore Not using now, testing if needed for future.
-				let _entityRecord: CallToAction< 'edit' > | undefined;
+				let _entityRecord: Updatable< CallToAction > | undefined;
 
 				if ( editorId === 'new' ) {
-					_entityRecord = select.getEntityDefaults();
+					_entityRecord = select.getDefaultValues();
 				} else if ( typeof editorId === 'number' && editorId > 0 ) {
-					_entityRecord = await select.getCallToAction( editorId );
+					// Await is needed, if no editor values set, it resolves from the API with existing.
+					_entityRecord = await select.getEditorValues( editorId );
 				}
 
 				dispatch( {
@@ -80,6 +115,8 @@ const actions = {
 	...entityActions,
 	...noticeActions,
 	changeEditorId,
+	updateEditorValues,
+	saveEditorValues,
 };
 
 export default actions;

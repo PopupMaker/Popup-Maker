@@ -10,8 +10,7 @@ import type { State } from './reducer';
 /**
  * Generate entity & notice selectors.
  */
-const entitySelectors =
-	createPostTypeSelectors< Popup< 'edit' > >( 'popup' );
+const entitySelectors = createPostTypeSelectors< Popup< 'edit' > >( 'popup' );
 const noticeSelectors = createNoticeSelectors( 'pum-popup-editor' );
 
 /**

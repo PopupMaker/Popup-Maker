@@ -1,5 +1,6 @@
 import type { Popup } from './types';
 import type { State } from './reducer';
+import type { Updatable } from '@wordpress/core-data/src/entity-types';
 
 export const STORE_NAME = 'popup-maker/popups';
 
@@ -26,13 +27,13 @@ export const initialState: State = {
  * @see /classes/Model/Popup.php
  * @see /includes/functions/install.php:get_default_popup_settings()
  */
-export const defaultValues: Popup< 'edit' > = {
+export const defaultValues: Updatable< Popup< 'edit' > > = {
 	id: 0,
 	uuid: '',
 	slug: '',
-	title: { rendered: '', raw: '' },
-	content: { rendered: '', raw: '', is_protected: false, block_version: '1' },
-	excerpt: { rendered: '', raw: '', protected: false },
+	title: '',
+	content: '',
+	excerpt: '',
 	status: 'draft',
 	settings: {
 		conditions: {
@@ -43,12 +44,22 @@ export const defaultValues: Popup< 'edit' > = {
 	// Required Post fields
 	date: null,
 	date_gmt: null,
-	guid: { rendered: '', raw: '' },
+	guid: '',
 	link: '',
 	modified: '',
 	modified_gmt: '',
-	type: 'pum_cta',
+	type: 'pum_popup',
 	author: 0,
 	generated_slug: '',
 	permalink_template: '',
+	password: '',
+	featured_media: 0,
+	comment_status: 'open',
+	ping_status: 'open',
+	format: 'standard',
+	meta: {},
+	sticky: false,
+	template: '',
+	categories: [],
+	tags: [],
 };

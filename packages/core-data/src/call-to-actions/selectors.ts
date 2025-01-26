@@ -1,15 +1,18 @@
 import { applyFilters } from '@wordpress/hooks';
-import { createSelector } from '@wordpress/data';
+import { createRegistrySelector, createSelector } from '@wordpress/data';
 
 import { defaultValues } from './constants';
 import { createNoticeSelectors, createPostTypeSelectors } from '../utils';
 
 import type { CallToAction } from './types';
 import type { State } from './reducer';
+import { callToActionStore } from '.';
+import type { Updatable } from '@wordpress/core-data/src/entity-types';
 
 const entitySelectorMapping = {
 	getById: 'getCallToAction',
 	getAll: 'getCallToActions',
+	getEdited: 'getEditorValues',
 } as const;
 
 type EntitySelectorMappingType = typeof entitySelectorMapping;
@@ -49,13 +52,34 @@ const isEditorActive = createSelector(
 );
 
 /**
+ * Get the current editor values.
+ */
+const currentEditorValues = createRegistrySelector(
+	( select ) => ( state: State ) => {
+		const editorId = state?.editorId;
+
+		if ( typeof editorId === 'undefined' ) {
+			return undefined;
+		}
+
+		if ( typeof editorId === 'string' && editorId === 'new' ) {
+			return getDefaultValues( state );
+		}
+
+		const record = select( callToActionStore ).getEditorValues( editorId );
+
+		return record;
+	}
+);
+
+/**
  * Get default entity values.
  */
-const getEntityDefaults = ( _state: State ) => {
+const getDefaultValues = ( _state: State ) => {
 	return applyFilters(
 		'popupMaker.callToAction.defaultValues',
 		defaultValues
-	) as CallToAction< 'edit' >;
+	) as Updatable< CallToAction< 'edit' > >;
 };
 
 const selectors = {
@@ -63,7 +87,8 @@ const selectors = {
 	...noticeSelectors,
 	getEditorId,
 	isEditorActive,
-	getEntityDefaults,
+	getDefaultValues,
+	currentEditorValues,
 };
 
 export default selectors;
