@@ -1,8 +1,8 @@
-import { useSelect } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { Button, Spinner } from '@wordpress/components';
 
-import { CALL_TO_ACTION_STORE } from '@popup-maker/core-data';
+import { callToActionStore } from '@popup-maker/core-data';
 
 import { useEditor } from '../components';
 
@@ -11,16 +11,17 @@ const Header = () => {
 
 	// Fetch needed data from the @popup-maker/core-data & @wordpress/data stores.
 	const { callToActions, isLoading } = useSelect( ( select ) => {
-		const sel = select( CALL_TO_ACTION_STORE );
+		const sel = select( callToActionStore );
 		// Call to Action List & Load Status.
 		return {
 			callToActions: sel.getCallToActions(),
-			// @ts-ignore temporarily ignore this for now.
-			isLoading: sel.isResolving( 'getCallToActions' ),
+			isLoading: sel.isFetchingEntities(),
 		};
 	}, [] );
 
-	const count = callToActions.length;
+	const { createCallToAction } = useDispatch( callToActionStore );
+
+	const count = callToActions?.length ?? 0;
 
 	return (
 		<header className="popup-maker-call-to-actions-view__header">

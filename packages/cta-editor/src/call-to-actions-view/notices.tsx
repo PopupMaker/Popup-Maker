@@ -3,23 +3,22 @@ import { Notice } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useCallback, useLayoutEffect, useRef } from '@wordpress/element';
 
-import { CALL_TO_ACTION_STORE } from '@popup-maker/core-data';
-
-import type { AppNotice } from '@popup-maker/core-data';
+import { callToActionStore } from '@popup-maker/core-data';
+import type { WPNotice } from '@popup-maker/core-data';
 
 const Notices = () => {
 	const noticeTimerRef = useRef< {
-		[ key: AppNotice[ 'id' ] ]: ReturnType< typeof setTimeout >;
+		[ key: WPNotice[ 'id' ] ]: ReturnType< typeof setTimeout >;
 	} >( {} );
 
 	const { notices } = useSelect(
 		( select ) => ( {
-			notices: select( CALL_TO_ACTION_STORE ).getNotices(),
+			notices: select( callToActionStore ).getNotices(),
 		} ),
 		[]
 	);
 
-	const { clearNotice } = useDispatch( CALL_TO_ACTION_STORE );
+	const { removeNotice } = useDispatch( callToActionStore );
 
 	const handleDismiss = useCallback(
 		( id: string ) => {
@@ -29,9 +28,9 @@ const Notices = () => {
 				delete noticeTimerRef.current[ id ];
 			}
 
-			clearNotice( id );
+			removeNotice( id );
 		},
-		[ clearNotice ]
+		[ removeNotice ]
 	);
 
 	// Handle auto-dismissing notices. Should this use effect and ref list?
@@ -60,12 +59,18 @@ const Notices = () => {
 			{ notices.map( ( notice ) => (
 				<Notice
 					key={ notice.id }
-					status={ notice.type }
+					status={
+						notice.status as
+							| 'warning'
+							| 'success'
+							| 'error'
+							| 'info'
+					}
 					isDismissible={ notice.isDismissible }
 					onRemove={ () => handleDismiss( notice.id ) }
 					// actions={ notice.actions }
 				>
-					{ notice.message }
+					{ notice.content }
 				</Notice>
 			) ) }
 		</div>

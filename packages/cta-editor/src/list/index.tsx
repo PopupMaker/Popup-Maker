@@ -163,8 +163,8 @@ const List = () => {
 									col:
 										| string
 										| keyof Pick<
-												CallToAction,
-												'id' | 'title' | 'description'
+												CallToAction< 'view' >,
+												'id' | 'title' | 'excerpt'
 										  >
 										| keyof CallToAction[ 'settings' ],
 									callToAction
@@ -186,7 +186,7 @@ const List = () => {
 													disabled={ isTrash }
 													onChange={ ( checked ) => {
 														updateCallToAction( {
-															...callToAction,
+															id: callToAction.id,
 															status: checked
 																? 'publish'
 																: 'draft',
@@ -231,7 +231,10 @@ const List = () => {
 															)
 														}
 													>
-														{ callToAction.title }
+														{
+															callToAction.title
+																.rendered
+														}
 													</Button>
 
 													<div className="item-actions">
@@ -277,7 +280,7 @@ const List = () => {
 																isTrash
 																	? updateCallToAction(
 																			{
-																				...callToAction,
+																				id: callToAction.id,
 																				status: 'draft',
 																			}
 																	  )

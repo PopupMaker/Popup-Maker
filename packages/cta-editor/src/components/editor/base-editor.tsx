@@ -9,7 +9,7 @@ import { TabPanel, ToggleControl } from '@wordpress/components';
 
 import { noop } from '@popup-maker/utils';
 import { useControlledState } from '@popup-maker/components';
-import { callToActionDefaults } from '@popup-maker/core-data';
+import { defaultCtaValues } from '@popup-maker/core-data';
 
 import initEditor from './init';
 
@@ -51,7 +51,7 @@ const BaseEditor = ( {
 	 */
 	const [ values, onChange ] = useControlledState(
 		props.values,
-		callToActionDefaults,
+		defaultCtaValues,
 		props.onChange ?? noop
 	);
 

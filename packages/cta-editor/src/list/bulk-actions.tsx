@@ -1,7 +1,7 @@
 import './bulk-actions.scss';
 
 import { ConfirmDialogue } from '@popup-maker/components';
-import { CALL_TO_ACTION_STORE } from '@popup-maker/core-data';
+import { callToActionStore } from '@popup-maker/core-data';
 import { CheckAll } from '@popup-maker/icons';
 import { saveFile } from '@popup-maker/utils';
 
@@ -43,12 +43,12 @@ const ListBulkActions = () => {
 
 	const { getCallToAction } = useSelect(
 		( select ) => ( {
-			getCallToAction: select( CALL_TO_ACTION_STORE ).getCallToAction,
+			getCallToAction: select( callToActionStore ).getCallToAction,
 		} ),
 		[]
 	);
 
-	const { addNotice } = useDispatch( CALL_TO_ACTION_STORE );
+	const { createNotice } = useDispatch( callToActionStore );
 
 	const [ confirmDialogue, setConfirmDialogue ] = useState< {
 		message: string;
@@ -153,17 +153,16 @@ const ListBulkActions = () => {
 
 										if ( callToAction?.id === id ) {
 											updateCallToAction( {
-												...callToAction,
+												id,
 												status: 'publish',
 											} );
 										}
 									} );
 									setBulkSelection( [] );
 
-									addNotice( {
-										id: 'bulk-enable',
-										type: 'success',
-										message: sprintf(
+									createNotice(
+										'sucess',
+										sprintf(
 											// translators: 1. number of items
 											_n(
 												'%d call to action enabled.',
@@ -173,8 +172,12 @@ const ListBulkActions = () => {
 											),
 											count
 										),
-										closeDelay: 3000,
-									} );
+										{
+											id: 'bulk-enable',
+											type: 'success',
+											closeDelay: 3000,
+										}
+									);
 								} );
 							} }
 						/>
@@ -193,17 +196,16 @@ const ListBulkActions = () => {
 
 										if ( callToAction?.id === id ) {
 											updateCallToAction( {
-												...callToAction,
+												id,
 												status: 'draft',
 											} );
 										}
 									} );
 									setBulkSelection( [] );
 
-									addNotice( {
-										id: 'bulk-disable',
-										type: 'success',
-										message: sprintf(
+									createNotice(
+										'success',
+										sprintf(
 											// translators: 1. number of items
 											_n(
 												'%d call to action disabled.',
@@ -212,8 +214,11 @@ const ListBulkActions = () => {
 											),
 											count
 										),
-										closeDelay: 3000,
-									} );
+										{
+											id: 'bulk-disable',
+											closeDelay: 3000,
+										}
+									);
 								} );
 							} }
 						/>
@@ -244,10 +249,9 @@ const ListBulkActions = () => {
 											);
 											setBulkSelection( [] );
 
-											addNotice( {
-												id: 'bulk-trash',
-												type: 'success',
-												message: sprintf(
+											createNotice(
+												'success',
+												sprintf(
 													// translators: 1. number of items
 													_n(
 														'%d call to action moved to trash.',
@@ -256,8 +260,11 @@ const ListBulkActions = () => {
 													),
 													count
 												),
-												closeDelay: 3000,
-											} );
+												{
+													id: 'bulk-trash',
+													closeDelay: 3000,
+												}
+											);
 										} );
 									},
 								} );
@@ -289,10 +296,9 @@ const ListBulkActions = () => {
 											);
 											setBulkSelection( [] );
 
-											addNotice( {
-												id: 'bulk-delete',
-												type: 'success',
-												message: sprintf(
+											createNotice(
+												'success',
+												sprintf(
 													// translators: 1. number of items
 													_n(
 														'%d call to action deleted.',
@@ -301,8 +307,11 @@ const ListBulkActions = () => {
 													),
 													count
 												),
-												closeDelay: 3000,
-											} );
+												{
+													id: 'bulk-delete',
+													closeDelay: 3000,
+												}
+											);
 										} );
 									},
 								} );

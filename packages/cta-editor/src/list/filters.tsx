@@ -38,7 +38,7 @@ const ListFilters = () => {
 	// List of unique statuses from all items.
 	const totalStatusCounts = useMemo(
 		() =>
-			callToActions.reduce< Record< CallToActionStatuses, number > >(
+			callToActions.reduce< StatusCounts >(
 				( s, r ) => {
 					s[ r.status ] = ( s[ r.status ] ?? 0 ) + 1;
 					s.all++;

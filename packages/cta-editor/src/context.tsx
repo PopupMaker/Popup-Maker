@@ -9,12 +9,10 @@ import {
 	createContext,
 } from '@wordpress/element';
 
-import { CALL_TO_ACTION_STORE } from '@popup-maker/core-data';
+import { callToActionStore } from '@popup-maker/core-data';
 
-import type {
-	CallToActionsState,
-	CallToActionsStore,
-} from '@popup-maker/core-data';
+import type { Updatable } from '@wordpress/core-data';
+import type { CallToAction } from '@popup-maker/core-data';
 
 type Filters = {
 	status?: string;
@@ -22,10 +20,12 @@ type Filters = {
 };
 
 type ListContext = {
-	callToActions: CallToActionsState[ 'callToActions' ];
-	filteredCallToActions: CallToActionsState[ 'callToActions' ];
-	updateCallToAction: CallToActionsStore[ 'Actions' ][ 'updateCallToAction' ];
-	deleteCallToAction: CallToActionsStore[ 'Actions' ][ 'deleteCallToAction' ];
+	callToActions: CallToAction< 'edit' >[];
+	filteredCallToActions: CallToAction< 'edit' >[];
+	updateCallToAction: (
+		values: Partial< Updatable< CallToAction< 'edit' > > >
+	) => void;
+	deleteCallToAction: ( id: number, force?: boolean ) => void;
 	bulkSelection: number[];
 	setBulkSelection: ( bulkSelection: number[] ) => void;
 	isLoading: boolean;
@@ -83,22 +83,27 @@ export const ListProvider = ( { value = {}, children }: ProviderProps ) => {
 
 	// Fetch needed data from the @popup-maker/core-data & @wordpress/data stores.
 	const { callToActions, isLoading, isDeleting } = useSelect( ( select ) => {
-		const sel = select( CALL_TO_ACTION_STORE );
+		const sel = select( callToActionStore );
 		// CallToAction List & Load Status.
 		return {
-			callToActions: sel.getCallToActions(),
+			callToActions: sel.getCallToActions( {
+				per_page: -1,
+				status: [ 'any', 'trash' ],
+			} ),
 			// @ts-ignore temporarily ignore this for now.
-			isLoading: sel.isResolving( 'getCallToActions' ),
-			isDeleting: sel.isDispatching( 'deleteCallToAction' ),
+			isLoading: sel.isFetchingEntities(),
+			isDeleting: sel.isDeleting( -1 ),
 		};
 	}, [] );
 
 	// Get action dispatchers.
 	const { updateCallToAction, deleteCallToAction } =
-		useDispatch( CALL_TO_ACTION_STORE );
+		useDispatch( callToActionStore );
 
 	// Filtered list of callToActions for the current status filter.
 	const filteredCallToActions = useMemo( () => {
+		if ( ! callToActions ) return [];
+
 		return callToActions
 			.filter( ( r ) =>
 				filters.status === 'all' ? true : filters.status === r.status
@@ -107,11 +112,11 @@ export const ListProvider = ( { value = {}, children }: ProviderProps ) => {
 				( r ) =>
 					! filters.searchText ||
 					! filters.searchText.length ||
-					r.title
+					r.title.rendered
 						.toLowerCase()
 						.indexOf( filters.searchText.toLowerCase() ) >= 0 ||
-					( r.description &&
-						r.description
+					( r.excerpt.rendered &&
+						r.excerpt.rendered
 							.toLowerCase()
 							.indexOf( filters.searchText.toLowerCase() ) >= 0 )
 			);
@@ -125,7 +130,7 @@ export const ListProvider = ( { value = {}, children }: ProviderProps ) => {
 				setFilters,
 				bulkSelection,
 				setBulkSelection,
-				callToActions,
+				callToActions: callToActions || [],
 				filteredCallToActions,
 				updateCallToAction,
 				deleteCallToAction,

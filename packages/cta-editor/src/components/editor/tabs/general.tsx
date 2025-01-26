@@ -17,7 +17,7 @@ export const Component = ( {
 }: BaseEditorTabProps ) => {
 	const { getTabFields } = useFields();
 
-	const descriptionRowEst = ( callToAction.description ?? '' ).length / 80;
+	const descriptionRowEst = ( callToAction.excerpt ?? '' ).length / 80;
 	const descriptionRows = clamp( descriptionRowEst, 1, 5 );
 
 	return (
@@ -41,8 +41,8 @@ export const Component = ( {
 				hideLabelFromVision={ true }
 				placeholder={ __( 'Add description…', 'popup-maker' ) }
 				className="description-field"
-				value={ callToAction.description ?? '' }
-				onChange={ ( description ) => updateFields( { description } ) }
+				value={ callToAction.excerpt ?? '' }
+				onChange={ ( excerpt ) => updateFields( { excerpt } ) }
 				__nextHasNoMarginBottom
 			/>
 

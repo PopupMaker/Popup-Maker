@@ -1,18 +1,20 @@
 import { __ } from '@wordpress/i18n';
 import { Notice } from '@wordpress/components';
-import { useDispatch, useSelect, select } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect, useState, useRef } from '@wordpress/element';
 
 import {
-	CALL_TO_ACTION_STORE,
 	CallToAction,
-	callToActionDefaults,
+	defaultCtaValues,
+	callToActionStore,
 	EditorId,
-	Status,
 } from '@popup-maker/core-data';
 
 import type { ComponentType } from 'react';
+import type { Updatable } from '@wordpress/core-data';
 import type { BaseEditorProps, EditorTab } from './types';
+
+type Editable = Updatable< CallToAction< 'edit' > >;
 
 /**
  * The props for the EditorWithDataStore component.
@@ -33,14 +35,14 @@ export interface EditorWithDataStoreProps
 	/**
 	 * The default values for the editor, only applicable when creating a new call to action.
 	 */
-	defaultValues?: Partial< CallToAction > | undefined;
+	defaultValues?: Partial< Editable > | undefined;
 
 	/**
 	 * Callback to run when the CallToAction is saved.
 	 *
 	 * @param values The values saved. Data store already saved the values to the database.
 	 */
-	onSave?: ( values: CallToAction ) => void;
+	onSave?: ( values: Editable ) => void;
 }
 
 type ErrorNotice = {
@@ -80,56 +82,62 @@ export const withDataStore = (
 		const {
 			// TODO Review if this has side effects.
 			values = {
-				...callToActionDefaults,
+				...defaultCtaValues,
 				...( defaultValues ?? {} ),
 			},
 			editorId,
 			isEditorActive,
 			isSaving,
-			savedSuccessfully,
 			hasError,
 			error,
+			getEditorValues,
 		} = useSelect( ( select ) => {
-			const store = select( CALL_TO_ACTION_STORE );
+			const store = select( callToActionStore );
 
-			const createErrors = store.getDispatchError( 'createCallToAction' );
-
-			const updateErrors = store.getDispatchError( 'updateCallToAction' );
-
-			const hasError = createErrors || updateErrors;
-			const error = createErrors ?? updateErrors;
+			const error = store.getLastSaveError( Number( id ) );
+			const hasError = error;
 
 			return {
 				editorId: store.getEditorId(),
-				values: store.getEditorValues(),
+				values: store.getEditorValues( Number( id ) ),
 				isEditorActive: store.isEditorActive(),
-				isSaving: store.isDispatching( [
-					'createCallToAction',
-					'updateCallToAction',
-				] ),
-
-				savedSuccessfully:
-					Status.Success ===
-						store.getDispatchStatus( 'createCallToAction' ) ||
-					Status.Success ===
-						store.getDispatchStatus( 'updateCallToAction' ),
+				isSaving: store.isSaving( Number( id ) ),
+				getEditorValues: store.getEditorValues,
+				// savedSuccessfully:
+				// 	Status.Success ===
+				// 		store.getDispatchStatus( 'createCallToAction' ) ||
+				// 	Status.Success ===
+				// 		store.getDispatchStatus( 'updateCallToAction' ),
 				hasError,
 				error,
 			};
 		}, [] );
 
-		const { updateEditorValues, clearEditorData, changeEditorId } =
-			useDispatch( CALL_TO_ACTION_STORE );
+		const [ savedSuccessfully, setSavedSuccessfully ] =
+			useState< boolean >( false );
+
+		useEffect( () => {
+			if ( isSaving ) {
+				setSavedSuccessfully( false );
+				return;
+			}
+
+			setSavedSuccessfully( ! hasError );
+		}, [ isSaving, hasError ] );
+
+		const { editCallToAction, resetRecordEdits, changeEditorId } =
+			useDispatch( callToActionStore );
 
 		/**
 		 * Clear the editor data when the component unmounts.
 		 */
 		useEffect( () => {
 			if ( editorId !== id ) {
+				console.log( 'changeEditorId', id, editorId );
 				changeEditorId( id );
 			}
 			return () => {
-				clearEditorData();
+				resetRecordEdits();
 			};
 		}, [] );
 
@@ -159,9 +167,7 @@ export const withDataStore = (
 				setErrorMessage( undefined );
 				setTriedSaving( false );
 				// Get the latest CTA from the store after save
-				const latestCta = select(
-					CALL_TO_ACTION_STORE
-				).getCallToAction( values.id );
+				const latestCta = getEditorValues( values.id );
 				onSave?.( latestCta || values );
 				return;
 			}
@@ -262,7 +268,7 @@ export const withDataStore = (
 				{ ...componentProps }
 				values={ editorValues }
 				onChange={ ( values ) => {
-					updateEditorValues( values );
+					editCallToAction( values.id, values );
 				} }
 				tabsFilter={ tabsFilter }
 				beforeTabs={

@@ -1,5 +1,5 @@
 import './editor.scss';
-import { CALL_TO_ACTION_STORE } from '@popup-maker/core-data';
+import { callToActionStore } from '@popup-maker/core-data';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
@@ -24,7 +24,7 @@ const CallToActionsView = () => {
 
 	// Fetch needed data from the @popup-maker/core-data & @wordpress/data stores.
 	const isEditorActive = useSelect(
-		( select ) => select( CALL_TO_ACTION_STORE ).isEditorActive(),
+		( select ) => select( callToActionStore ).isEditorActive(),
 		[]
 	);
 

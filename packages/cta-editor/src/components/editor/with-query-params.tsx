@@ -3,14 +3,15 @@ import { useSelect } from '@wordpress/data';
 import { useCallback, useEffect, useRef } from '@wordpress/element';
 
 import {
-	CALL_TO_ACTION_STORE,
 	CallToAction,
+	callToActionStore,
 	EditorId,
 } from '@popup-maker/core-data';
 
 import { useEditor } from '../hooks';
 
 import type { ComponentType } from 'react';
+import type { Updatable } from '@wordpress/core-data';
 import type { EditorWithModalProps } from './with-modal';
 import type { EditorWithDataStoreProps } from './with-data-store';
 
@@ -35,26 +36,25 @@ export const withQueryParams = (
 	return function QueryParamsWrappedEditor( {
 		...componentProps
 	}: EditorWithQueryParamsProps ) {
-		const { tab, setTab, clearEditorParams, setEditorId } = useEditor();
+		const { tab, setTab, clearEditorParams, editorId, setEditorId } =
+			useEditor();
 
 		// Fetch values separately so they will still be available to the component.
-		const { editorId, isEditorActive, isSaving } = useSelect(
+		const { isEditorActive, isSaving } = useSelect(
 			( select ) => {
-				const store = select( CALL_TO_ACTION_STORE );
+				const store = select( callToActionStore );
 
 				return {
-					editorId: store.getEditorId(),
 					isEditorActive: store.isEditorActive(),
 					values:
-						store.getEditorValues() ??
-						store.getCallToActionDefaults(),
-					isSaving: store.isDispatching( [
-						'createCallToAction',
-						'updateCallToAction',
-					] ),
+						store.currentEditorValues() ?? store.getDefaultValues(),
+					isSaving:
+						Number( editorId ) > 0
+							? store.isSaving( Number( editorId ) )
+							: false,
 				};
 			},
-			[]
+			[ editorId ]
 		);
 
 		// Set ref for editorId to check if it has changed.
@@ -83,7 +83,7 @@ export const withQueryParams = (
 		);
 
 		const onSave = useCallback(
-			( newValues: CallToAction ) => {
+			( newValues: Updatable< CallToAction< 'edit' > > ) => {
 				// If the editorId changed (due to getting an id from new), update the query params via setEditorId.
 				if ( editorId !== newValues.id ) {
 					setEditorId( newValues.id );

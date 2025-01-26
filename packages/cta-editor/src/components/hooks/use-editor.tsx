@@ -7,14 +7,14 @@ import {
 
 import { useEffect } from '@wordpress/element';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { CALL_TO_ACTION_STORE } from '@popup-maker/core-data';
+import { callToActionStore } from '@popup-maker/core-data';
 
 import type { EditorId } from '@popup-maker/core-data';
 
 const useEditor = () => {
 	// Fetch needed data from the @popup-maker/core-data & @wordpress/data stores.
 	const { isEditorActive, editorId } = useSelect( ( select ) => {
-		const storeSelect = select( CALL_TO_ACTION_STORE );
+		const storeSelect = select( callToActionStore );
 
 		return {
 			// Editor Status.
@@ -24,7 +24,7 @@ const useEditor = () => {
 	}, [] );
 
 	// Grab needed action dispatchers.
-	const { changeEditorId } = useDispatch( CALL_TO_ACTION_STORE );
+	const { changeEditorId } = useDispatch( callToActionStore );
 
 	// Allow initiating the editor directly from a url.
 	const [ queryParams, setQueryParams ] = useQueryParams( {

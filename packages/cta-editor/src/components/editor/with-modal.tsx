@@ -7,7 +7,7 @@ import { useCallback, useMemo } from '@wordpress/element';
 import { Button, Modal, Spinner } from '@wordpress/components';
 
 import {
-	CALL_TO_ACTION_STORE,
+	callToActionStore,
 	validateCallToAction,
 } from '@popup-maker/core-data';
 
@@ -67,19 +67,16 @@ export const withModal = (
 	}: EditorWithModalProps ) {
 		// Fetch values separately so they will still be available to the component.
 		const { values, isSaving } = useSelect( ( select ) => {
-			const store = select( CALL_TO_ACTION_STORE );
+			const store = select( callToActionStore );
+			const editorId = store.getEditorId();
 
 			return {
-				values:
-					store.getEditorValues() ?? store.getCallToActionDefaults(),
-				isSaving: store.isDispatching( [
-					'createCallToAction',
-					'updateCallToAction',
-				] ),
+				values: store.currentEditorValues() ?? store.getDefaultValues(),
+				isSaving: store.isSaving( Number( editorId ) ),
 			};
 		}, [] );
 
-		const { saveEditorValues } = useDispatch( CALL_TO_ACTION_STORE );
+		const { saveEditorValues } = useDispatch( callToActionStore );
 
 		/**
 		 * Get the modal title based on the CTA state.
