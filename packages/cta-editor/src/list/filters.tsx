@@ -11,13 +11,21 @@ import { useList } from '../context';
 
 import type { CallToActionStatuses } from '@popup-maker/core-data';
 
-const statusOptionLabels: Record< CallToActionStatuses, string > = {
+type ValidStatuses = CallToActionStatuses | 'trash';
+
+const statusOptionLabels: Record< ValidStatuses, string > = {
 	all: __( 'All', 'popup-maker' ),
 	publish: __( 'Enabled', 'popup-maker' ),
 	draft: __( 'Disabled', 'popup-maker' ),
 	pending: __( 'Pending', 'popup-maker' ),
 	trash: __( 'Trash', 'popup-maker' ),
+	future: __( 'Future', 'popup-maker' ),
+	private: __( 'Private', 'popup-maker' ),
 };
+
+type StatusCounts = { all: number } & Partial<
+	Record< Exclude< ValidStatuses, 'all' >, number >
+>;
 
 const ListFilters = () => {
 	const {
@@ -49,12 +57,10 @@ const ListFilters = () => {
 		[ callToActions ]
 	);
 
-	// List of unique statuses from all items.
+	// List of unique statuses from filtered items.
 	const activeStatusCounts = useMemo(
 		() =>
-			filteredCallToActions.reduce<
-				Record< CallToActionStatuses, number >
-			>(
+			filteredCallToActions.reduce< StatusCounts >(
 				( s, r ) => {
 					s[ r.status ] = ( s[ r.status ] ?? 0 ) + 1;
 					s.all++;
@@ -68,17 +74,27 @@ const ListFilters = () => {
 	/**
 	 * Checks if Status button should be visible.
 	 *
-	 * @param {CallToActionStatuses} s Status to check
+	 * @param {ValidStatuses} s Status to check
 	 * @return {boolean} True if button should be available.
 	 */
-	const isStatusActive = ( s: CallToActionStatuses ): boolean =>
-		activeStatusCounts?.[ s ] > 0;
+	const isStatusActive = ( s: ValidStatuses ): boolean =>
+		Boolean( activeStatusCounts?.[ s ] );
 
 	if ( bulkSelection.length > 0 ) {
 		return null;
 	}
 
-	const FilterControl = ( { name, label, currentSelection, children } ) => {
+	const FilterControl = ( {
+		name,
+		label,
+		currentSelection,
+		children,
+	}: {
+		name: string;
+		label: string;
+		currentSelection: string;
+		children: React.ReactNode;
+	} ) => {
 		const visible = visibleFilterControl === name;
 
 		return (
@@ -143,20 +159,19 @@ const ListFilters = () => {
 						// Filter statuses with 0 items.
 						.filter( ( [ value ] ) =>
 							// If the current status has no items, show all statuses that have items.
-							totalStatusCounts[ filters?.status ?? '' ] > 0
-								? isStatusActive( value )
-								: totalStatusCounts[ value ] > 0
+							( totalStatusCounts[ filters?.status ?? 'all' ] ??
+								0 ) > 0
+								? isStatusActive( value as ValidStatuses )
+								: ( totalStatusCounts[ value ] ?? 0 ) > 0
 						)
 						// Map statuses to options.
-						.map( ( [ value, label ] ) => {
-							return {
-								label: `${ label } (${
-									activeStatusCounts[ value ] ?? 0
-								})`,
-								value,
-							};
-						} ) }
-					onChange={ ( s ) => {
+						.map( ( [ value, label ] ) => ( {
+							label: `${ label } (${
+								activeStatusCounts[ value ] ?? 0
+							})`,
+							value,
+						} ) ) }
+					onChange={ ( s: string ) => {
 						setFilters( {
 							status: s,
 						} );
