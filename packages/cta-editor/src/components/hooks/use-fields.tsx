@@ -1,9 +1,10 @@
 import { applyFilters } from '@wordpress/hooks';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useCallback, useMemo } from '@wordpress/element';
-import { CALL_TO_ACTION_STORE } from '@popup-maker/core-data';
+import { callToActionStore, defaultCtaValues } from '@popup-maker/core-data';
 
 import type { CallToAction } from '@popup-maker/core-data';
+import type { Updatable } from '@wordpress/core-data';
 
 export type FieldDef = {
 	component: JSX.Element;
@@ -11,41 +12,55 @@ export type FieldDef = {
 	priority: number;
 };
 
+/**
+ * The current values for the call to action in the edit store format.
+ */
+type CurrentValues = Updatable< CallToAction< 'edit' > >;
+type CurrentSettings = CurrentValues[ 'settings' ];
+
 const useFields = () => {
 	const { updateEditorValues: updateValues } =
-		useDispatch( CALL_TO_ACTION_STORE );
+		useDispatch( callToActionStore );
 
-	const { values = {} as CallToAction } = useSelect(
-		( select ) => ( {
-			values: select( CALL_TO_ACTION_STORE ).getEditorValues(),
-			isEditorActive: select( CALL_TO_ACTION_STORE ).isEditorActive(),
-		} ),
-		[]
+	const { values } = useSelect( ( select ) => {
+		const storeSelectors = select( callToActionStore );
+		const values = storeSelectors.currentEditorValues();
+		const isEditorActive = storeSelectors.isEditorActive();
+
+		return {
+			values,
+			isEditorActive,
+		};
+	}, [] );
+
+	const currentValues: CurrentValues = useMemo(
+		() => values ?? defaultCtaValues,
+		[ values ]
 	);
 
-	const { settings } = values;
+	const { settings } = currentValues;
 
 	/**
 	 * Update settings for the given call to action.
 	 *
-	 * @param {Partial< CallToAction[ 'settings' ] >} newSettings Updated settings.
+	 * @param {Partial< CurrentValues[ 'settings' ] >} newSettings Updated settings.
 	 */
 	const updateSettings = useCallback(
-		( newSettings: Partial< CallToAction[ 'settings' ] > ) => {
+		( newSettings: Partial< CurrentSettings > ) => {
 			updateValues( {
-				...values,
+				...currentValues,
 				settings: {
-					...values?.settings,
+					...currentValues.settings,
 					...newSettings,
 				},
 			} );
 		},
-		[ updateValues, values ]
+		[ updateValues, currentValues ]
 	);
 
-	const updateField = < T extends keyof CallToAction[ 'settings' ] >(
+	const updateField = < T extends keyof CurrentSettings >(
 		field: T,
-		value: CallToAction[ 'settings' ][ T ]
+		value: CurrentSettings[ T ]
 	) => {
 		updateSettings( {
 			[ field ]: value,
@@ -53,7 +68,7 @@ const useFields = () => {
 	};
 
 	const fieldIsVisible = (
-		field: keyof CallToAction[ 'settings' ],
+		field: keyof CurrentSettings,
 		tab: string
 	): boolean => {
 		/**
@@ -61,7 +76,7 @@ const useFields = () => {
 		 *
 		 * @param {boolean|undefined}        show     The current value of the field.
 		 * @param {string}                   field    The field name.
-		 * @param {CallToAction['settings']} settings The current settings.
+		 * @param {CurrentSettings}          settings The current settings.
 		 * @param {string}                   tab      The current tab name.
 		 * @return {boolean|undefined} The new value of the field.
 		 */
@@ -87,7 +102,7 @@ const useFields = () => {
 		 * Allow external overrides via a filter with null default.
 		 *
 		 * @param {Record<string, FieldDef[]>} fields         The current fields.
-		 * @param {CallToAction['settings']}   values         The current settings.
+		 * @param {CurrentSettings}            settings       The current settings.
 		 * @param {Function}                   updateSettings The updateSettings function.
 		 *
 		 * @return {Record<string, FieldDef[]>} The new fields.

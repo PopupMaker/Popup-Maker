@@ -12,7 +12,7 @@ import type { Updatable } from '@wordpress/core-data/src/entity-types';
 const entitySelectorMapping = {
 	getById: 'getCallToAction',
 	getAll: 'getCallToActions',
-	getEdited: 'getEditorValues',
+	getEditedById: 'getEditedCallToAction',
 } as const;
 
 type EntitySelectorMappingType = typeof entitySelectorMapping;
