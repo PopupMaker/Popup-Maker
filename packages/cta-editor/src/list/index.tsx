@@ -170,7 +170,9 @@ const List = () => {
 									callToAction
 								) => {
 									const status = callToAction.status;
-									const isTrash = status === 'trash';
+									const isTrash =
+										status ===
+										( 'trash' as typeof callToAction.status );
 									const isPublish = status === 'publish';
 
 									switch ( col ) {
