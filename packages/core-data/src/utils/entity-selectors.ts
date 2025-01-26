@@ -73,6 +73,18 @@ const createBaseSelectors = <
 			}
 		),
 
+		savedSuccessfully: createRegistrySelector(
+			( _select ) => ( _state: any, _id?: number ) => {
+				return false;
+			}
+		),
+
+		isLoading: createRegistrySelector(
+			( _select ) => ( _state: any, _query?: GetRecordsHttpQuery ) => {
+				return false;
+			}
+		),
+
 		isDeleting: createRegistrySelector(
 			( select ) => ( _state: any, id: number ) => {
 				const deleting = select( coreDataStore ).isDeletingEntityRecord(

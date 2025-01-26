@@ -87,7 +87,7 @@ const changeEditorId =
 					_entityRecord = select.getDefaultValues();
 				} else if ( typeof editorId === 'number' && editorId > 0 ) {
 					// Await is needed, if no editor values set, it resolves from the API with existing.
-					_entityRecord = await select.getEditorValues( editorId );
+					_entityRecord = await select.getEditedCallToAction( editorId );
 				}
 
 				dispatch( {

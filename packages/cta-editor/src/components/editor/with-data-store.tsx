@@ -99,10 +99,10 @@ export const withDataStore = (
 
 			return {
 				editorId: store.getEditorId(),
-				values: store.getEditorValues( Number( id ) ),
+				values: store.getEditedCallToAction( Number( id ) ),
 				isEditorActive: store.isEditorActive(),
 				isSaving: store.isSaving( Number( id ) ),
-				getEditorValues: store.getEditorValues,
+				getEditorValues: store.getEditedCallToAction,
 				// savedSuccessfully:
 				// 	Status.Success ===
 				// 		store.getDispatchStatus( 'createCallToAction' ) ||

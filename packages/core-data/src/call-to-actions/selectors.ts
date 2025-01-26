@@ -66,7 +66,8 @@ const currentEditorValues = createRegistrySelector(
 			return getDefaultValues( state );
 		}
 
-		const record = select( callToActionStore ).getEditorValues( editorId );
+		const record =
+			select( callToActionStore ).getEditedCallToAction( editorId );
 
 		return record;
 	}
