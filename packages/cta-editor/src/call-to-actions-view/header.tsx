@@ -41,7 +41,15 @@ const Header = () => {
 			</span>
 			<Button
 				className="add-call-to-action"
-				onClick={ () => setEditorId( 'new' ) }
+				onClick={ async () => {
+					const newCta = await createCallToAction( {
+						title: __( 'New Call to Action', 'popup-maker' ),
+					} );
+
+					if ( newCta ) {
+						setEditorId( newCta.id );
+					}
+				} }
 				variant="primary"
 			>
 				{ __( 'Add Call to Action', 'popup-maker' ) }
