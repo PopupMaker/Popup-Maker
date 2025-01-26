@@ -183,6 +183,8 @@ class RestAPI extends Controller {
 
 		$ctas = $this->container->get( 'ctas' );
 
+		$valid_statuses = [ 'publish', 'future', 'draft', 'pending', 'private', 'trash' ];
+
 		register_rest_field( $post_type, 'status', [
 			'get_callback'        => function ( $obj ) {
 				return get_post_status( $obj['id'] );
@@ -201,11 +203,11 @@ class RestAPI extends Controller {
 				'enum'        => [ 'publish', 'trash', 'draft' ],
 				'default'     => 'publish',
 				'arg_options' => [
-					'sanitize_callback' => function ( $status ) {
-						return in_array( $status, [ 'publish', 'trash', 'draft' ], true ) ? $status : 'publish';
+					'sanitize_callback' => function ( $status ) use ( $valid_statuses ) {
+						return in_array( $status, $valid_statuses, true ) ? $status : 'publish';
 					},
-					'validate_callback' => function ( $status ) {
-						return in_array( $status, [ 'publish', 'trash', 'draft' ], true );
+					'validate_callback' => function ( $status ) use ( $valid_statuses ) {
+						return in_array( $status, $valid_statuses, true );
 					},
 				],
 			],
