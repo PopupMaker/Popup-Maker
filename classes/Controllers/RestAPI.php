@@ -9,6 +9,10 @@
 namespace PopupMaker\Controllers;
 
 use PopupMaker\Plugin\Controller;
+use PopupMaker\Plugin\Container;
+use WP_Error;
+use WP_REST_Server;
+use WP_REST_Request;
 
 /**
  * REST controller.
@@ -178,6 +182,34 @@ class RestAPI extends Controller {
 		$edit_permission = $this->container->get_permission( 'edit_ctas' );
 
 		$ctas = $this->container->get( 'ctas' );
+
+		register_rest_field( $post_type, 'status', [
+			'get_callback'        => function ( $obj ) {
+				return get_post_status( $obj['id'] );
+			},
+			'update_callback'     => function ( $value, $obj ) {
+				wp_update_post( [
+					'ID'          => $obj->ID,
+					'post_status' => $value,
+				] );
+			},
+			'permission_callback' => function () use ( $edit_permission ) {
+				return current_user_can( $edit_permission );
+			},
+			'schema'              => [
+				'type'        => 'string',
+				'enum'        => [ 'publish', 'trash', 'draft' ],
+				'default'     => 'publish',
+				'arg_options' => [
+					'sanitize_callback' => function ( $status ) {
+						return in_array( $status, [ 'publish', 'trash', 'draft' ], true ) ? $status : 'publish';
+					},
+					'validate_callback' => function ( $status ) {
+						return in_array( $status, [ 'publish', 'trash', 'draft' ], true );
+					},
+				],
+			],
+		] );
 
 		// Register uuid field. Should be read-only &restricted to admins similar to edit only props.
 		register_rest_field( $post_type, 'uuid', [
