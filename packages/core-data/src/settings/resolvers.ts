@@ -22,7 +22,7 @@ export const getSettings =
 				type: SETTINGS_FETCH_ERROR,
 				message: __(
 					'An error occurred, settings were not loaded.',
-					'popup-paker'
+					'popup-maker'
 				),
 			} );
 		} catch ( error ) {

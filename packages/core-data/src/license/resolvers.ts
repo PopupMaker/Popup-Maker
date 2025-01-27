@@ -23,7 +23,7 @@ export const getLicenseData =
 				type: LICENSE_FETCH_ERROR,
 				message: __(
 					'An error occurred, license data was not loaded.',
-					'popup-paker'
+					'popup-maker'
 				),
 			} );
 		} catch ( error ) {

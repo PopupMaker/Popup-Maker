@@ -54,7 +54,7 @@ export const updateSuggestions =
 				dispatch.searchSuccess( queryText, results );
 			}
 
-			const errorMessage = __( 'No results returned', 'popup-paker' );
+			const errorMessage = __( 'No results returned', 'popup-maker' );
 
 			dispatch.changeActionStatus(
 				actionName,

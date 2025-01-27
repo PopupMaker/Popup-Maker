@@ -103,7 +103,7 @@ export const activateLicense =
 				DispatchStatus.Error,
 				__(
 					'An error occurred, license were not saved.',
-					'popup-paker'
+					'popup-maker'
 				)
 			);
 		} catch ( error ) {
@@ -158,7 +158,7 @@ export const deactivateLicense =
 				DispatchStatus.Error,
 				__(
 					'An error occurred, license were not saved.',
-					'popup-paker'
+					'popup-maker'
 				)
 			);
 		} catch ( error ) {
@@ -208,7 +208,7 @@ export const checkLicenseStatus =
 				DispatchStatus.Error,
 				__(
 					'An error occurred, license were not saved.',
-					'popup-paker'
+					'popup-maker'
 				)
 			);
 		} catch ( error ) {
@@ -237,7 +237,7 @@ export const updateLicenseKey =
 				DispatchStatus.Error,
 				__(
 					'The license key is the same as the current one.',
-					'popup-paker'
+					'popup-maker'
 				)
 			);
 
@@ -280,7 +280,7 @@ export const updateLicenseKey =
 				DispatchStatus.Error,
 				__(
 					'An error occurred, license were not saved.',
-					'popup-paker'
+					'popup-maker'
 				)
 			);
 		} catch ( error ) {
@@ -326,7 +326,7 @@ export const removeLicense =
 				DispatchStatus.Error,
 				__(
 					'An error occurred, license were not saved.',
-					'popup-paker'
+					'popup-maker'
 				)
 			);
 		} catch ( error ) {
@@ -371,7 +371,7 @@ export const activatePro =
 				DispatchStatus.Error,
 				__(
 					'An error occurred, license were not saved.',
-					'popup-paker'
+					'popup-maker'
 				)
 			);
 		} catch ( error ) {

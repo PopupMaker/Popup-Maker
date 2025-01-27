@@ -30,7 +30,7 @@ export const validateCallToAction = (
 		return {
 			message: __(
 				'Please provide a name for this call to action.',
-				'popup-paker'
+				'popup-maker'
 			),
 			tabName: 'general',
 			field: 'title',

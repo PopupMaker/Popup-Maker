@@ -30,7 +30,7 @@ export const validatePopup = (
 		return {
 			message: __(
 				'Please provide a name for this popup.',
-				'popup-paker'
+				'popup-maker'
 			),
 			tabName: 'general',
 			field: 'title',
@@ -44,7 +44,7 @@ export const validatePopup = (
 		return {
 			message: __(
 				'Please provide at least one condition for this popup before enabling it.',
-				'popup-paker'
+				'popup-maker'
 			),
 			tabName: 'content',
 		};
