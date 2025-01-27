@@ -33,25 +33,16 @@
 		"strictNullChecks": true
 	},
 	"exclude": [
-		"**.js",
-		"**/*.android.js",
-		"**/*.ios.js",
-		"**/*.native.js",
+		"node_modules",
+		"**/node_modules/*",
+		"build",
+		"dist",
+		"build-types",
+		"**/*.js",
 		"**/assets/**",
-		"assets/**",
 		"**/build/**",
-		"build/**",
-		"**/build-types/**",
-		"build-types/**",
 		"**/dist/**",
-		"dist/**",
 		"**/vendor/**",
-		"vendor/**",
-		"**/node_modules/**",
-		"node_modules/**",
-		"packages/*/build-*/**",
-		"packages/*/build/**",
-		"**/test/**",
-		"packages/**/react-native-*/**"
+		"**/test/**"
 	]
 }

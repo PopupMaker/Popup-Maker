@@ -8,9 +8,5 @@
 		"declarationDir": "build-types"
 	},
 	"include": [ "./src/**/*" ],
-	"references": [
-		{
-			"path": "../core-data"
-		}
-	]
+	"references": []
 }
