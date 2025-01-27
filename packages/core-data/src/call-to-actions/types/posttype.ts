@@ -72,6 +72,18 @@ export type CallToActionSettings =
 	| CallToActionBaseSettings;
 
 /**
+ * The exported call to action shape.
+ */
+export type ExportedCallToAction = {
+	id: number;
+	slug: string;
+	status: CallToActionStatuses;
+	title: string;
+	excerpt: string;
+	settings: CallToActionSettings;
+};
+
+/**
  * The editable call to action with an ID.
  */
 export type EditableCta = Updatable< CallToAction< 'edit' > >;
