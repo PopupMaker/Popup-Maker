@@ -155,6 +155,13 @@ class Assets extends Controller {
 				'varsName' => 'popupMakerFields',
 				'vars'     => [],
 			],
+			'i18n'            => [
+				'bundled'  => false,
+				'handle'   => 'popup-maker-i18n',
+				'styles'   => false,
+				'varsName' => 'popupMakerI18n',
+				'vars'     => [],
+			],
 			'icons'           => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-icons',

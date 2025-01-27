@@ -51,6 +51,7 @@
 		"@popup-maker/cta-editor": "file:./packages/cta-editor",
 		"@popup-maker/data": "file:./packages/data",
 		"@popup-maker/fields": "file:./packages/fields",
+		"@popup-maker/i18n": "file:./packages/i18n",
 		"@popup-maker/icons": "file:./packages/icons",
 		"@popup-maker/utils": "file:./packages/utils",
 		"iframe-resizer": "^4.2.10",

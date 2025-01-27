@@ -8,6 +8,7 @@ module.exports = [
 	'@popup-maker/cta-editor',
 	'@popup-maker/data',
 	'@popup-maker/fields',
+	'@popup-maker/i18n',
 	'@popup-maker/icons',
 	'@popup-maker/utils',
 ];

@@ -19,6 +19,7 @@ const packages = {
 	'cta-editor': 'packages/cta-editor',
 	data: 'packages/data',
 	fields: 'packages/fields',
+	i18n: 'packages/i18n',
 	icons: 'packages/icons',
 	utils: 'packages/utils',
 };

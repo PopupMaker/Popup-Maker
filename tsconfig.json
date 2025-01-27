@@ -40,6 +40,9 @@
 			"path": "./packages/fields"
 		},
 		{
+			"path": "./packages/i18n"
+		},
+		{
 			"path": "./packages/icons"
 		},
 		{
