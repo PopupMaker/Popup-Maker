@@ -7,12 +7,10 @@
 		"outDir": "build",
 		"declarationDir": "build-types"
 	},
-	"include": [
-		"./src/**/*"
-	],
+	"include": [ "./src/**/*" ],
 	"references": [
 		{
 			"path": "../core-data"
 		}
-	],
+	]
 }

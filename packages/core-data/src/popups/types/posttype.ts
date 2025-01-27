@@ -85,7 +85,6 @@ export type PartialEditablePopup = Partial< EditablePopup > & { id: number };
  */
 export type PopupEdit = Omit< PartialEditablePopup, 'id' >;
 
-
 /* temporary to prevent cyclical dependencies. */
 interface BaseItem {
 	id: string;

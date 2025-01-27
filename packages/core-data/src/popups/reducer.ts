@@ -246,9 +246,7 @@ const reducer = ( state: State = initialState, action: ReducerAction ) => {
 			const { records, query = false } = action.payload;
 
 			// Add the new records to the byId object.
-			const byId = records.reduce<
-				Record< number, Popup< 'edit' > >
-			>(
+			const byId = records.reduce< Record< number, Popup< 'edit' > > >(
 				( acc, record ) => ( {
 					...acc,
 					[ record.id ]: record,

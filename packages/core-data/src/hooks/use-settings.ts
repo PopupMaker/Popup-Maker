@@ -8,19 +8,21 @@ import type { Settings } from '../settings/types';
 const useSettings = () => {
 	// Fetch needed data from the @popup-paker/core-data & @wordpress/data stores.
 	const { currentSettings, unsavedChanges, hasUnsavedChanges, isSaving } =
-		useSelect( ( select ) => {
-			const storeSelect = select( settingsStore );
-			return {
-				unsavedChanges: storeSelect.getUnsavedChanges(),
-				hasUnsavedChanges: storeSelect.hasUnsavedChanges(),
-				currentSettings: storeSelect.getSettings(),
-				isSaving:
-					storeSelect.isDispatching( 'updateSettings' ) ||
-					storeSelect.isDispatching( 'saveSettings' ),
-			};
-		},
-		// TODO REVIEW: Should this have any dependencies to refresh the data?
-		[] );
+		useSelect(
+			( select ) => {
+				const storeSelect = select( settingsStore );
+				return {
+					unsavedChanges: storeSelect.getUnsavedChanges(),
+					hasUnsavedChanges: storeSelect.hasUnsavedChanges(),
+					currentSettings: storeSelect.getSettings(),
+					isSaving:
+						storeSelect.isDispatching( 'updateSettings' ) ||
+						storeSelect.isDispatching( 'saveSettings' ),
+				};
+			},
+			// TODO REVIEW: Should this have any dependencies to refresh the data?
+			[]
+		);
 
 	// Grab needed action dispatchers.
 	const { updateSettings, saveSettings, stageUnsavedChanges } =
