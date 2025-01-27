@@ -52,7 +52,7 @@ const App = () => {
 		) as TabComponent[];
 
 		return _views;
-	}, [ view, setParams ] );
+	}, [ view, setParams, userCanEditCallToActions ] );
 
 	// Assign the current view from the list of views.
 	const currentView = views.find( ( _view ) => _view.name === view );

@@ -142,7 +142,7 @@ export class AdminBar {
 			'click',
 			'#wp-admin-bar-pum-get-selector',
 			( event: JQuery.ClickEvent ) => {
-				// eslint-disable-next-line no-alert
+				// eslint-disable-next-line no-restricted-globals, no-alert
 				if ( ! confirm( this.text.instructions ) ) {
 					return;
 				}
