@@ -24,6 +24,7 @@
 	"scripts": {
 		"build:tsc": "tsc",
 		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
 		"lint": "wp-scripts lint-js .",
 		"format": "wp-scripts lint-js . --fix",
 		"packages-update": "wp-scripts packages-update",

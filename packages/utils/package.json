@@ -29,6 +29,7 @@
 	"scripts": {
 		"build:tsc": "tsc",
 		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
 		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
 		"lint": "wp-scripts lint-js .",
 		"format": "wp-scripts lint-js . --fix",
