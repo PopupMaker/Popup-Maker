@@ -5,13 +5,13 @@ import { ACTION_TYPES, NOTICE_CONTEXT } from './constants';
 
 import type { EditorId, Notice } from '../types';
 import type {
-	CallToAction,
+	Popup,
 	ThunkAction,
-	EditableCta,
-	PartialEditableCta,
+	EditablePopup,
+	PartialEditablePopup,
 } from './types';
 import { fetchFromApi, getErrorMessage } from '../utils';
-import { validateCallToAction } from './validation';
+import { validatePopup } from './validation';
 import { editableEntity } from './utils';
 
 const {
@@ -41,22 +41,22 @@ const entityActions = {
 	 * @param {Function} validate An optional validation function.
 	 * @returns {Promise<Editable | boolean>} The created entity or false if validation fails.
 	 */
-	createCallToAction:
+	createPopup:
 		(
-			callToAction: Partial< EditableCta >,
+			popup: Partial< EditablePopup >,
 			validate: boolean = true
-		): ThunkAction< EditableCta | false > =>
+		): ThunkAction< EditablePopup | false > =>
 		async ( { dispatch } ) => {
-			const action = 'createCallToAction';
+			const action = 'createPopup';
 			const operation = 'POST';
 
 			try {
 				dispatch.startResolution( action, operation );
 
-				const { id, ...newCta } = callToAction;
+				const { id, ...newPopup } = popup;
 
 				if ( validate ) {
-					const validation = validateCallToAction( newCta );
+					const validation = validatePopup( newPopup );
 
 					if ( true !== validation ) {
 						dispatch.failResolution(
@@ -67,7 +67,7 @@ const entityActions = {
 						);
 						// TODO REVIEW: Do we need to handle this with a notice, or can we just get the message from resolution status?
 						await dispatch.createErrorNotice( validation.message, {
-							id: 'call-to-action-validation-error',
+							id: 'popup-validation-error',
 							closeDelay: 5000,
 						} );
 
@@ -75,9 +75,9 @@ const entityActions = {
 					}
 				}
 
-				const result = await fetchFromApi< EditableCta >( `/ctas`, {
+				const result = await fetchFromApi< EditablePopup >( `/popups`, {
 					method: 'POST',
-					data: newCta,
+					data: newPopup,
 				} );
 
 				if ( result ) {
@@ -85,15 +85,15 @@ const entityActions = {
 
 					dispatch.createSuccessNotice(
 						sprintf(
-							// translators: %s: call to action title.
+							// translators: %s: popup title.
 							__(
-								'Call to action "%s" saved successfully.',
+								'Popup "%s" saved successfully.',
 								'popup-maker'
 							),
 							result?.title
 						),
 						{
-							id: 'call-to-action-saved',
+							id: 'popup-saved',
 							closeDelay: 5000,
 						}
 					);
@@ -111,7 +111,7 @@ const entityActions = {
 				dispatch.failResolution(
 					action,
 					__(
-						'An error occurred, call to action was not saved.',
+						'An error occurred, popup was not saved.',
 						'popup-maker'
 					),
 					operation
@@ -120,11 +120,7 @@ const entityActions = {
 				const errorMessage = getErrorMessage( error );
 
 				// Mark resolution failed.
-				dispatch.failResolution(
-					'createCallToAction',
-					errorMessage,
-					'POST'
-				);
+				dispatch.failResolution( 'createPopup', errorMessage, 'POST' );
 
 				// Generate a generic error notice.
 				dispatch.createErrorNotice( errorMessage );
@@ -138,24 +134,24 @@ const entityActions = {
 	/**
 	 * Update an existing entity record. Values sent to the server immediately.
 	 *
-	 * @param {Partial<EditableCta>&{id:EditableCta[ 'id' ]}} entity The entity to update.
+	 * @param {Partial<EditablePopup>&{id:EditablePopup[ 'id' ]}} entity The entity to update.
 	 * @param {Function} validate An optional validation function.
 	 * @returns {Promise<T | boolean>} The updated entity or false if validation fails.
 	 */
-	updateCallToAction:
+	updatePopup:
 		(
-			callToAction: Partial< EditableCta > & { id: number },
+			popup: Partial< EditablePopup > & { id: number },
 			validate: boolean = true
-		): ThunkAction< CallToAction< 'edit' > | false > =>
+		): ThunkAction< Popup< 'edit' > | false > =>
 		async ( { select, dispatch } ) => {
-			const action = 'updateCallToAction';
+			const action = 'updatePopup';
 			const operation = 'POST';
 
 			try {
 				dispatch.startResolution( action, operation );
 
 				if ( validate ) {
-					const validation = validateCallToAction( callToAction );
+					const validation = validatePopup( popup );
 
 					if ( true !== validation ) {
 						dispatch.failResolution(
@@ -166,7 +162,7 @@ const entityActions = {
 						);
 						// TODO REVIEW: Do we need to handle this with a notice, or can we just get the message from resolution status?
 						await dispatch.createErrorNotice( validation.message, {
-							id: 'call-to-action-validation-error',
+							id: 'popup-validation-error',
 							closeDelay: 5000,
 						} );
 
@@ -174,25 +170,23 @@ const entityActions = {
 					}
 				}
 
-				const canonicalCallToAction = await select.getCallToAction(
-					callToAction.id
-				);
+				const canonicalPopup = await select.getPopup( popup.id );
 
-				if ( ! canonicalCallToAction ) {
+				if ( ! canonicalPopup ) {
 					dispatch.failResolution(
 						action,
-						__( 'Call to action not found', 'popup-maker' ),
+						__( 'Popup not found', 'popup-maker' ),
 						operation
 					);
 					return false;
 				}
 
 				// TODO REVIEW: Test the return types of each of these calls so we can be sure.
-				const result = await fetchFromApi< CallToAction< 'edit' > >(
-					`/ctas/${ canonicalCallToAction.id }`,
+				const result = await fetchFromApi< Popup< 'edit' > >(
+					`/popups/${ canonicalPopup.id }`,
 					{
 						method: 'POST',
-						data: callToAction,
+						data: popup,
 					}
 				);
 
@@ -201,15 +195,15 @@ const entityActions = {
 
 					dispatch.createSuccessNotice(
 						sprintf(
-							// translators: %s: call to action title.
+							// translators: %s: popup title.
 							__(
-								'Call to action "%s" updated successfully.',
+								'Popup "%s" updated successfully.',
 								'popup-maker'
 							),
 							result?.title
 						),
 						{
-							id: 'call-to-action-saved',
+							id: 'popup-saved',
 							closeDelay: 5000,
 						}
 					);
@@ -227,7 +221,7 @@ const entityActions = {
 				dispatch.failResolution(
 					action,
 					__(
-						'An error occurred, call to action was not saved.',
+						'An error occurred, popup was not saved.',
 						'popup-maker'
 					),
 					operation
@@ -257,7 +251,7 @@ const entityActions = {
 	deleteRecord:
 		( id: number, forceDelete: boolean = false ): ThunkAction< boolean > =>
 		async ( { dispatch } ) => {
-			const action = 'deleteCallToAction';
+			const action = 'deletePopup';
 			const operation = 'DELETE';
 
 			try {
@@ -265,14 +259,14 @@ const entityActions = {
 
 				// Get the canonical directly from server to verify it exists.
 				// TODO REVIEW: Test this.
-				const canonicalCallToAction = await fetchFromApi<
-					CallToAction< 'edit' >
-				>( `/ctas/${ id }?context=edit` );
+				const canonicalPopup = await fetchFromApi< Popup< 'edit' > >(
+					`/popups/${ id }?context=edit`
+				);
 
-				if ( ! canonicalCallToAction ) {
+				if ( ! canonicalPopup ) {
 					dispatch.failResolution(
 						action,
-						__( 'Call to action not found', 'popup-maker' ),
+						__( 'Popup not found', 'popup-maker' ),
 						operation
 					);
 
@@ -282,7 +276,7 @@ const entityActions = {
 				const force = forceDelete ? '?force=true' : '';
 
 				const result = await fetchFromApi< boolean >(
-					`/ctas/${ id }${ force }`,
+					`/popups/${ id }${ force }`,
 					{
 						method: 'DELETE',
 					}
@@ -293,15 +287,15 @@ const entityActions = {
 
 					dispatch.createSuccessNotice(
 						sprintf(
-							// translators: %s: call to action title.
+							// translators: %s: popup title.
 							__(
-								'Call to action "%s" deleted successfully.',
+								'Popup "%s" deleted successfully.',
 								'popup-maker'
 							),
-							canonicalCallToAction?.title
+							canonicalPopup?.title
 						),
 						{
-							id: 'call-to-action-deleted',
+							id: 'popup-deleted',
 							closeDelay: 5000,
 						}
 					);
@@ -318,7 +312,7 @@ const entityActions = {
 							type: RECIEVE_RECORD,
 							payload: {
 								record: {
-									...canonicalCallToAction,
+									...canonicalPopup,
 									status: 'trash',
 								},
 							},
@@ -348,11 +342,11 @@ const editorActions = {
 	 * Edit an existing entity record. Values are not sent to the server until save.
 	 *
 	 * @param {number} id The entity ID.
-	 * @param {Partial<EditableCta>} edit The edits to apply.
+	 * @param {Partial<EditablePopup>} edit The edits to apply.
 	 * @returns {Promise<boolean>} Whether the edit was successful.
 	 */
 	editRecord:
-		( id: number, edits: Partial< EditableCta > ): ThunkAction =>
+		( id: number, edits: Partial< EditablePopup > ): ThunkAction =>
 		async ( { select, dispatch } ) => {
 			const action = 'editRecord';
 			const operation = 'POST';
@@ -360,23 +354,23 @@ const editorActions = {
 			try {
 				dispatch.startResolution( action, operation );
 
-				let canonicalCallToAction: EditableCta | undefined;
+				let canonicalPopup: EditablePopup | undefined;
 
 				if ( select.hasEditedEntity( id ) ) {
-					canonicalCallToAction = select.getEditedEntity( id );
+					canonicalPopup = select.getEditedEntity( id );
 				} else {
-					canonicalCallToAction = await fetchFromApi<
-						CallToAction< 'edit' >
-					>( `/ctas/${ id }?context=edit` ).then( ( result ) =>
+					canonicalPopup = await fetchFromApi< Popup< 'edit' > >(
+						`/popups/${ id }?context=edit`
+					).then( ( result ) =>
 						// Convert to editable entity if found.
 						result
-							? editableEntity< CallToAction< 'edit' > >( result )
+							? editableEntity< Popup< 'edit' > >( result )
 							: undefined
 					);
-					if ( ! canonicalCallToAction ) {
+					if ( ! canonicalPopup ) {
 						dispatch.failResolution(
 							action,
-							__( 'Call to action not found', 'popup-maker' ),
+							__( 'Popup not found', 'popup-maker' ),
 							operation
 						);
 						return;
@@ -384,7 +378,7 @@ const editorActions = {
 
 					await dispatch( {
 						type: START_EDITING_RECORD,
-						payload: { id, editableEntity: canonicalCallToAction },
+						payload: { id, editableEntity: canonicalPopup },
 					} );
 				}
 
@@ -393,7 +387,7 @@ const editorActions = {
 					payload: {
 						id,
 						edits,
-						editableEntity: canonicalCallToAction,
+						editableEntity: canonicalPopup,
 					},
 				} );
 
@@ -441,9 +435,9 @@ const editorActions = {
 				}
 
 				const historyIndex = select.getCurrentEditHistoryIndex( id );
-				const editedCallToAction = select.getEditedCallToAction( id );
+				const editedPopup = select.getEditedPopup( id );
 
-				if ( ! editedCallToAction ) {
+				if ( ! editedPopup ) {
 					dispatch.failResolution(
 						action,
 						__( 'No edits to save', 'popup-maker' ),
@@ -453,9 +447,8 @@ const editorActions = {
 					return false;
 				}
 
-				if ( editedCallToAction && validate ) {
-					const validation =
-						validateCallToAction( editedCallToAction );
+				if ( editedPopup && validate ) {
+					const validation = validatePopup( editedPopup );
 
 					if ( true !== validation ) {
 						dispatch.failResolution(
@@ -466,7 +459,7 @@ const editorActions = {
 						);
 						// TODO REVIEW: Do we need to handle this with a notice, or can we just get the message from resolution status?
 						await dispatch.createErrorNotice( validation.message, {
-							id: 'call-to-action-validation-error',
+							id: 'popup-validation-error',
 							closeDelay: 5000,
 						} );
 
@@ -474,25 +467,22 @@ const editorActions = {
 					}
 				}
 
-				const result = await dispatch.updateCallToAction(
-					editedCallToAction,
-					false
-				);
+				const result = await dispatch.updatePopup( editedPopup, false );
 
 				if ( result ) {
 					dispatch.finishResolution( action, operation );
 
 					dispatch.createSuccessNotice(
 						sprintf(
-							// translators: %s: call to action title.
+							// translators: %s: popup title.
 							__(
-								'Call to action "%s" saved successfully.',
+								'Popup "%s" saved successfully.',
 								'popup-maker'
 							),
-							editedCallToAction.title
+							editedPopup.title
 						),
 						{
-							id: 'call-to-action-saved',
+							id: 'popup-saved',
 							closeDelay: 5000,
 						}
 					);
@@ -542,16 +532,16 @@ const editorActions = {
 	undo:
 		( id: number, steps: number = 1 ): ThunkAction =>
 		async ( { select, dispatch } ) => {
-			let ctaId = id > 0 ? id : select.getEditorId();
+			let popupId = id > 0 ? id : select.getEditorId();
 
-			if ( typeof ctaId === 'undefined' ) {
+			if ( typeof popupId === 'undefined' ) {
 				return;
 			}
 
 			await dispatch( {
 				type: UNDO_EDIT_RECORD,
 				payload: {
-					id: ctaId,
+					id: popupId,
 					steps,
 				},
 			} );
@@ -565,16 +555,16 @@ const editorActions = {
 	redo:
 		( id: number, steps: number = 1 ): ThunkAction =>
 		async ( { select, dispatch } ) => {
-			let ctaId = id > 0 ? id : select.getEditorId();
+			let popupId = id > 0 ? id : select.getEditorId();
 
-			if ( typeof ctaId === 'undefined' ) {
+			if ( typeof popupId === 'undefined' ) {
 				return;
 			}
 
 			await dispatch( {
 				type: REDO_EDIT_RECORD,
 				payload: {
-					id: ctaId,
+					id: popupId,
 					steps,
 				},
 			} );
@@ -589,22 +579,22 @@ const editorActions = {
 	resetRecordEdits:
 		( id: number ): ThunkAction =>
 		async ( { select, dispatch } ) => {
-			let ctaId = id > 0 ? id : select.getEditorId();
+			let popupId = id > 0 ? id : select.getEditorId();
 
-			if ( typeof ctaId === 'undefined' ) {
+			if ( typeof popupId === 'undefined' ) {
 				return;
 			}
 
 			dispatch( {
 				type: RESET_EDIT_RECORD,
 				payload: {
-					id: ctaId,
+					id: popupId,
 				},
 			} );
 		},
 
 	updateEditorValues:
-		( values: PartialEditableCta ): ThunkAction< void > =>
+		( values: PartialEditablePopup ): ThunkAction< void > =>
 		async ( { dispatch, select } ) => {
 			const editorId = select.getEditorId();
 
@@ -659,13 +649,13 @@ const editorActions = {
 				}
 
 				if ( ! select.hasEditedEntity( editorId ) ) {
-					const entity = await fetchFromApi< CallToAction< 'edit' > >(
-						`/ctas/${ editorId }?context=edit`
+					const entity = await fetchFromApi< Popup< 'edit' > >(
+						`/popups/${ editorId }?context=edit`
 					);
 
 					if ( ! entity ) {
 						dispatch.createErrorNotice(
-							__( 'Call to action not found', 'popup-maker' )
+							__( 'Popup not found', 'popup-maker' )
 						);
 						return;
 					}
