@@ -72,7 +72,7 @@ export const fetchFromApi = async < T extends any = any >(
 	try {
 		// Use apiFetch instead of window.fetch
 		return await apiFetch< T >( {
-			url: `${ wpApiSettings.root }${ modifiedPath }`,
+			url: `${ restUrl }${ modifiedPath }`,
 			...options,
 			headers,
 			credentials: 'same-origin',
