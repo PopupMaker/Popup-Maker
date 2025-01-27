@@ -85,10 +85,6 @@ export type PartialEditablePopup = Partial< EditablePopup > & { id: number };
  */
 export type PopupEdit = Omit< PartialEditablePopup, 'id' >;
 
-/**
- * The query for records.
- */
-export type GetRecordsHttpQuery = Record< string, any >;
 
 /* temporary to prevent cyclical dependencies. */
 interface BaseItem {

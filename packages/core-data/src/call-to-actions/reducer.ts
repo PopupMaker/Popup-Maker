@@ -2,10 +2,8 @@ import { DispatchStatus } from '../constants';
 import { ACTION_TYPES, initialState } from './constants';
 
 import type { DispatchStatuses } from '../constants';
-import type { EditorId, Notice } from '../types';
+import type { EditorId, Notice, GetRecordsHttpQuery } from '../types';
 import type { CallToAction, EditableCta, CtaEdit } from './types';
-
-type GetRecordsHttpQuery = Record< string, any >;
 
 const {
 	RECIEVE_RECORD,

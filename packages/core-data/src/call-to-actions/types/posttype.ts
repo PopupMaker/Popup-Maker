@@ -87,8 +87,3 @@ export type PartialEditableCta = Partial< EditableCta > & { id: number };
  * Used for edits that are not yet saved.
  */
 export type CtaEdit = Omit< PartialEditableCta, 'id' >;
-
-/**
- * The query for records.
- */
-export type GetRecordsHttpQuery = Record< string, any >;

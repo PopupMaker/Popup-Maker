@@ -1,6 +1,14 @@
 import type { Context, BaseEntityRecords } from '@wordpress/core-data';
 
+/**
+ * The ID of the editor.
+ */
 export type EditorId = number | undefined;
+
+/**
+ * The query for records.
+ */
+export type GetRecordsHttpQuery = Record< string, any >;
 
 /**
  * Declare a base post model with extra trash status.
