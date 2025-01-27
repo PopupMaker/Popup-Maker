@@ -1,4 +1,8 @@
-import { appendUrlParams, fetchFromApi, getErrorMessage } from '../utils';
+import {
+	appendUrlParams,
+	fetchFromApi,
+	// getErrorMessage
+} from '../utils';
 import { RECIEVE_RECORDS, RECIEVE_RECORD } from './constants';
 
 import type { CallToAction, ThunkAction } from './types';
@@ -7,10 +11,10 @@ const entityResolvers = {
 	getCallToActions:
 		(): ThunkAction =>
 		async ( { dispatch } ) => {
-			const action = 'getAll';
+			// const action = 'getAll';
 
 			try {
-				dispatch.startResolution( action );
+				// dispatch.startResolution( action );
 
 				const urlParams = {
 					status: [ 'any', 'trash', 'auto-draft' ],
@@ -30,26 +34,28 @@ const entityResolvers = {
 				if ( results.length ) {
 					dispatch( {
 						type: RECIEVE_RECORDS,
-						records: results,
+						payload: {
+							records: results,
+						},
 					} );
-					dispatch.finishResolution( action );
+					// dispatch.finishResolution( action );
 				}
 
-				dispatch.failResolution( action, 'No call to actions found' );
+				// dispatch.failResolution( action, 'No call to actions found' );
 			} catch ( error: any ) {
-				const errorMessage = getErrorMessage( error );
+				// const errorMessage = getErrorMessage( error );
 				console.error( error );
-				dispatch.failResolution( action, errorMessage );
+				// dispatch.failResolution( action, errorMessage );
 			}
 		},
 
-	getById:
+	getCallToAction:
 		( id: number ): ThunkAction =>
 		async ( { dispatch } ) => {
-			const action = 'getById';
+			// const action = 'getById';
 
 			try {
-				dispatch.startResolution( action );
+				// dispatch.startResolution( action );
 
 				const url = appendUrlParams( `ctas/${ id }`, {
 					context: 'edit',
@@ -69,11 +75,11 @@ const entityResolvers = {
 					},
 				} );
 
-				dispatch.finishResolution( action );
+				// dispatch.finishResolution( action );
 			} catch ( error: any ) {
-				const errorMessage = getErrorMessage( error );
+				// const errorMessage = getErrorMessage( error );
 				console.error( error );
-				dispatch.failResolution( action, errorMessage );
+				// dispatch.failResolution( action, errorMessage );
 			}
 		},
 };

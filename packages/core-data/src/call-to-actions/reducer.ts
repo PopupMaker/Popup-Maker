@@ -1,4 +1,3 @@
-import { DispatchStatus } from '../constants';
 import { ACTION_TYPES, initialState } from './constants';
 
 import type { DispatchStatuses } from '../constants';
@@ -17,9 +16,7 @@ const {
 	UNDO_EDIT_RECORD,
 	REDO_EDIT_RECORD,
 	RESET_EDIT_RECORD,
-	START_RESOLUTION,
-	FINISH_RESOLUTION,
-	FAIL_RESOLUTION,
+	CHANGE_ACTION_STATUS,
 	INVALIDATE_RESOLUTION,
 } = ACTION_TYPES;
 
@@ -73,10 +70,7 @@ export type State = {
 	/**
 	 * The resolution state for each operation.
 	 */
-	resolutionState: Record<
-		string,
-		Record< string | number, ResolutionState >
-	>;
+	resolutionState: Record< string | number, ResolutionState >;
 
 	/**
 	 * The notices for the call to actions.
@@ -173,31 +167,38 @@ export type SaveEditedRecordAction = BaseAction & {
 	};
 };
 
-export type StartResolutionAction = BaseAction & {
-	type: typeof START_RESOLUTION;
-	payload: {
-		id: number | string;
-		operation: string;
-	};
+export type ChangeActionStatusAction = BaseAction & {
+	type: typeof CHANGE_ACTION_STATUS;
+	actionName: string;
+	status: DispatchStatuses;
+	message?: string;
 };
 
-export type FinishResolutionAction = BaseAction & {
-	type: typeof FINISH_RESOLUTION;
-	payload: {
-		id: number | string;
-		operation: string;
-	};
-};
+// export type StartResolutionAction = BaseAction & {
+// 	type: typeof START_RESOLUTION;
+// 	payload: {
+// 		id: number | string;
+// 		operation: string;
+// 	};
+// };
 
-export type FailResolutionAction = BaseAction & {
-	type: typeof FAIL_RESOLUTION;
-	payload: {
-		id: number | string;
-		operation: string;
-		error: string;
-		extra?: Record< string, any >;
-	};
-};
+// export type FinishResolutionAction = BaseAction & {
+// 	type: typeof FINISH_RESOLUTION;
+// 	payload: {
+// 		id: number | string;
+// 		operation: string;
+// 	};
+// };
+
+// export type FailResolutionAction = BaseAction & {
+// 	type: typeof FAIL_RESOLUTION;
+// 	payload: {
+// 		id: number | string;
+// 		operation: string;
+// 		error: string;
+// 		extra?: Record< string, any >;
+// 	};
+// };
 
 export type InvalidateResolutionAction = BaseAction & {
 	type: typeof INVALIDATE_RESOLUTION;
@@ -219,9 +220,7 @@ export type ReducerAction =
 	| RedoEditRecordAction
 	| ResetEditRecordAction
 	| SaveEditedRecordAction
-	| StartResolutionAction
-	| FinishResolutionAction
-	| FailResolutionAction
+	| ChangeActionStatusAction
 	| InvalidateResolutionAction;
 
 const reducer = ( state: State = initialState, action: ReducerAction ) => {
@@ -442,61 +441,76 @@ const reducer = ( state: State = initialState, action: ReducerAction ) => {
 			};
 		}
 
-		case START_RESOLUTION: {
-			const { id, operation } = action.payload;
+		case CHANGE_ACTION_STATUS: {
+			const { actionName, status, message } = action;
 
 			return {
 				...state,
 				resolutionState: {
 					...state.resolutionState,
-					[ operation ]: {
-						...state.resolutionState?.[ operation ],
-						[ id ]: {
-							status: DispatchStatus.Resolving,
-							timestamp: Date.now(),
-						},
+					[ actionName ]: {
+						status,
+						error: message,
 					},
 				},
 			};
 		}
 
-		case FINISH_RESOLUTION: {
-			const { id, operation } = action.payload;
+		// case START_RESOLUTION: {
+		// 	const { id, operation } = action.payload;
 
-			return {
-				...state,
-				resolutionState: {
-					...state.resolutionState,
-					[ operation ]: {
-						...state.resolutionState?.[ operation ],
-						[ id ]: {
-							status: DispatchStatus.Success,
-							timestamp: Date.now(),
-						},
-					},
-				},
-			};
-		}
+		// 	return {
+		// 		...state,
+		// 		resolutionState: {
+		// 			...state.resolutionState,
+		// 			[ operation ]: {
+		// 				...state.resolutionState?.[ operation ],
+		// 				[ id ]: {
+		// 					status: DispatchStatus.Resolving,
+		// 					timestamp: Date.now(),
+		// 				},
+		// 			},
+		// 		},
+		// 	};
+		// }
 
-		case FAIL_RESOLUTION: {
-			const { id, operation, error, extra } = action.payload;
+		// case FINISH_RESOLUTION: {
+		// 	const { id, operation } = action.payload;
 
-			return {
-				...state,
-				resolutionState: {
-					...state.resolutionState,
-					[ operation ]: {
-						...state.resolutionState?.[ operation ],
-						[ id ]: {
-							status: DispatchStatus.Error,
-							error: error,
-							extra: extra,
-							timestamp: Date.now(),
-						},
-					},
-				},
-			};
-		}
+		// 	return {
+		// 		...state,
+		// 		resolutionState: {
+		// 			...state.resolutionState,
+		// 			[ operation ]: {
+		// 				...state.resolutionState?.[ operation ],
+		// 				[ id ]: {
+		// 					status: DispatchStatus.Success,
+		// 					timestamp: Date.now(),
+		// 				},
+		// 			},
+		// 		},
+		// 	};
+		// }
+
+		// case FAIL_RESOLUTION: {
+		// 	const { id, operation, error, extra } = action.payload;
+
+		// 	return {
+		// 		...state,
+		// 		resolutionState: {
+		// 			...state.resolutionState,
+		// 			[ operation ]: {
+		// 				...state.resolutionState?.[ operation ],
+		// 				[ id ]: {
+		// 					status: DispatchStatus.Error,
+		// 					error: error,
+		// 					extra: extra,
+		// 					timestamp: Date.now(),
+		// 				},
+		// 			},
+		// 		},
+		// 	};
+		// }
 
 		case INVALIDATE_RESOLUTION: {
 			const { id, operation } = action.payload;

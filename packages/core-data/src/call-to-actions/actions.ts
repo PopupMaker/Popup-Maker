@@ -1,4 +1,4 @@
-import { __, sprintf } from '@wordpress/i18n';
+import { __, sprintf } from '@popup-maker/i18n';
 import { store as noticesStore } from '@wordpress/notices';
 
 import { ACTION_TYPES, NOTICE_CONTEXT } from './constants';
@@ -10,6 +10,7 @@ import type {
 	EditableCta,
 	PartialEditableCta,
 } from './types';
+import { DispatchStatus } from '../constants';
 import { fetchFromApi, getErrorMessage } from '../utils';
 import { validateCallToAction } from './validation';
 import { editableEntity } from './utils';
@@ -24,9 +25,7 @@ const {
 	UNDO_EDIT_RECORD,
 	REDO_EDIT_RECORD,
 	RESET_EDIT_RECORD,
-	START_RESOLUTION,
-	FINISH_RESOLUTION,
-	FAIL_RESOLUTION,
+	CHANGE_ACTION_STATUS,
 	INVALIDATE_RESOLUTION,
 } = ACTION_TYPES;
 
@@ -45,13 +44,17 @@ const entityActions = {
 		(
 			callToAction: Partial< EditableCta >,
 			validate: boolean = true
-		): ThunkAction< EditableCta | false > =>
+		): ThunkAction< CallToAction< 'edit' > | false > =>
 		async ( { dispatch } ) => {
 			const action = 'createCallToAction';
-			const operation = 'POST';
 
 			try {
-				dispatch.startResolution( action, operation );
+				// dispatch.startResolution( action, operation );
+				dispatch( {
+					type: CHANGE_ACTION_STATUS,
+					actionName: action,
+					status: DispatchStatus.Resolving,
+				} );
 
 				const { id, ...newCta } = callToAction;
 
@@ -59,12 +62,18 @@ const entityActions = {
 					const validation = validateCallToAction( newCta );
 
 					if ( true !== validation ) {
-						dispatch.failResolution(
-							action,
-							validation.message,
-							operation,
-							validation
-						);
+						// dispatch.failResolution(
+						// 	action,
+						// 	validation.message,
+						// 	operation,
+						// 	validation
+						// );
+						dispatch( {
+							type: CHANGE_ACTION_STATUS,
+							actionName: action,
+							status: DispatchStatus.Error,
+							message: validation.message,
+						} );
 						// TODO REVIEW: Do we need to handle this with a notice, or can we just get the message from resolution status?
 						await dispatch.createErrorNotice( validation.message, {
 							id: 'call-to-action-validation-error',
@@ -75,13 +84,22 @@ const entityActions = {
 					}
 				}
 
-				const result = await fetchFromApi< EditableCta >( `/ctas`, {
-					method: 'POST',
-					data: newCta,
-				} );
+				const result = await fetchFromApi< CallToAction< 'edit' > >(
+					// TODO REVIEW: Is context=edit needed?
+					`ctas?context=edit`,
+					{
+						method: 'POST',
+						data: newCta,
+					}
+				);
 
 				if ( result ) {
-					dispatch.finishResolution( action, operation );
+					// dispatch.finishResolution( action, operation );
+					dispatch( {
+						type: CHANGE_ACTION_STATUS,
+						actionName: action,
+						status: DispatchStatus.Success,
+					} );
 
 					dispatch.createSuccessNotice(
 						sprintf(
@@ -90,7 +108,7 @@ const entityActions = {
 								'Call to action "%s" saved successfully.',
 								'popup-maker'
 							),
-							result?.title
+							result?.title.rendered
 						),
 						{
 							id: 'call-to-action-saved',
@@ -108,23 +126,38 @@ const entityActions = {
 					return result;
 				}
 
-				dispatch.failResolution(
-					action,
-					__(
+				// dispatch.failResolution(
+				// 	action,
+				// 	__(
+				// 		'An error occurred, call to action was not saved.',
+				// 		'popup-maker'
+				// 	),
+				// 	operation
+				// );
+				dispatch( {
+					type: CHANGE_ACTION_STATUS,
+					actionName: action,
+					status: DispatchStatus.Error,
+					message: __(
 						'An error occurred, call to action was not saved.',
 						'popup-maker'
 					),
-					operation
-				);
+				} );
 			} catch ( error ) {
 				const errorMessage = getErrorMessage( error );
 
 				// Mark resolution failed.
-				dispatch.failResolution(
-					'createCallToAction',
-					errorMessage,
-					'POST'
-				);
+				// dispatch.failResolution(
+				// 	'createCallToAction',
+				// 	errorMessage,
+				// 	'POST'
+				// );
+				dispatch( {
+					type: CHANGE_ACTION_STATUS,
+					actionName: action,
+					status: DispatchStatus.Error,
+					message: errorMessage,
+				} );
 
 				// Generate a generic error notice.
 				dispatch.createErrorNotice( errorMessage );
@@ -149,21 +182,32 @@ const entityActions = {
 		): ThunkAction< CallToAction< 'edit' > | false > =>
 		async ( { select, dispatch } ) => {
 			const action = 'updateCallToAction';
-			const operation = 'POST';
 
 			try {
-				dispatch.startResolution( action, operation );
+				// dispatch.startResolution( action, operation );
+				dispatch( {
+					type: CHANGE_ACTION_STATUS,
+					actionName: action,
+					status: DispatchStatus.Resolving,
+				} );
 
 				if ( validate ) {
 					const validation = validateCallToAction( callToAction );
 
 					if ( true !== validation ) {
-						dispatch.failResolution(
-							action,
-							validation.message,
-							operation,
-							validation
-						);
+						// dispatch.failResolution(
+						// 	action,
+						// 	validation.message,
+						// 	operation,
+						// 	validation
+						// );
+
+						dispatch( {
+							type: CHANGE_ACTION_STATUS,
+							actionName: action,
+							status: DispatchStatus.Error,
+							message: validation.message,
+						} );
 						// TODO REVIEW: Do we need to handle this with a notice, or can we just get the message from resolution status?
 						await dispatch.createErrorNotice( validation.message, {
 							id: 'call-to-action-validation-error',
@@ -179,17 +223,28 @@ const entityActions = {
 				);
 
 				if ( ! canonicalCallToAction ) {
-					dispatch.failResolution(
-						action,
-						__( 'Call to action not found', 'popup-maker' ),
-						operation
-					);
+					// dispatch.failResolution(
+					// 	action,
+					// 	__( 'Call to action not found', 'popup-maker' ),
+					// 	operation
+					// );
+
+					dispatch( {
+						type: CHANGE_ACTION_STATUS,
+						actionName: action,
+						status: DispatchStatus.Error,
+						message: __(
+							'Call to action not found',
+							'popup-maker'
+						),
+					} );
+
 					return false;
 				}
 
 				// TODO REVIEW: Test the return types of each of these calls so we can be sure.
 				const result = await fetchFromApi< CallToAction< 'edit' > >(
-					`/ctas/${ canonicalCallToAction.id }`,
+					`ctas/${ canonicalCallToAction.id }`,
 					{
 						method: 'POST',
 						data: callToAction,
@@ -197,7 +252,12 @@ const entityActions = {
 				);
 
 				if ( result ) {
-					dispatch.finishResolution( action, operation );
+					// dispatch.finishResolution( action, operation );
+					dispatch( {
+						type: CHANGE_ACTION_STATUS,
+						actionName: action,
+						status: DispatchStatus.Success,
+					} );
 
 					dispatch.createSuccessNotice(
 						sprintf(
@@ -206,7 +266,7 @@ const entityActions = {
 								'Call to action "%s" updated successfully.',
 								'popup-maker'
 							),
-							result?.title
+							result?.title.rendered
 						),
 						{
 							id: 'call-to-action-saved',
@@ -224,19 +284,36 @@ const entityActions = {
 					return result;
 				}
 
-				dispatch.failResolution(
-					action,
-					__(
+				// dispatch.failResolution(
+				// 	action,
+				// 	__(
+				// 		'An error occurred, call to action was not saved.',
+				// 		'popup-maker'
+				// 	),
+				// 	operation
+				// );
+
+				dispatch( {
+					type: CHANGE_ACTION_STATUS,
+					actionName: action,
+					status: DispatchStatus.Error,
+					message: __(
 						'An error occurred, call to action was not saved.',
 						'popup-maker'
 					),
-					operation
-				);
+				} );
 			} catch ( error ) {
 				const errorMessage = getErrorMessage( error );
 
 				// Mark resolution failed.
-				dispatch.failResolution( action, errorMessage, operation );
+				// dispatch.failResolution( action, errorMessage, operation );
+
+				dispatch( {
+					type: CHANGE_ACTION_STATUS,
+					actionName: action,
+					status: DispatchStatus.Error,
+					message: errorMessage,
+				} );
 
 				// Generate a generic error notice.
 				dispatch.createErrorNotice( errorMessage );
@@ -254,27 +331,40 @@ const entityActions = {
 	 * @param {boolean} forceDelete Whether to force the deletion.
 	 * @returns {Promise<boolean>} Whether the deletion was successful.
 	 */
-	deleteRecord:
+	deleteCallToAction:
 		( id: number, forceDelete: boolean = false ): ThunkAction< boolean > =>
 		async ( { dispatch } ) => {
 			const action = 'deleteCallToAction';
-			const operation = 'DELETE';
 
 			try {
-				await dispatch.startResolution( action, operation );
+				dispatch( {
+					type: CHANGE_ACTION_STATUS,
+					actionName: action,
+					status: DispatchStatus.Resolving,
+				} );
 
 				// Get the canonical directly from server to verify it exists.
 				// TODO REVIEW: Test this.
 				const canonicalCallToAction = await fetchFromApi<
 					CallToAction< 'edit' >
-				>( `/ctas/${ id }?context=edit` );
+				>( `ctas/${ id }?context=edit` );
 
 				if ( ! canonicalCallToAction ) {
-					dispatch.failResolution(
-						action,
-						__( 'Call to action not found', 'popup-maker' ),
-						operation
-					);
+					// dispatch.failResolution(
+					// 	action,
+					// 	__( 'Call to action not found', 'popup-maker' ),
+					// 	operation
+					// );
+
+					dispatch( {
+						type: CHANGE_ACTION_STATUS,
+						actionName: action,
+						status: DispatchStatus.Error,
+						message: __(
+							'Call to action not found',
+							'popup-maker'
+						),
+					} );
 
 					return false;
 				}
@@ -282,14 +372,19 @@ const entityActions = {
 				const force = forceDelete ? '?force=true' : '';
 
 				const result = await fetchFromApi< boolean >(
-					`/ctas/${ id }${ force }`,
+					`ctas/${ id }${ force }`,
 					{
 						method: 'DELETE',
 					}
 				);
 
 				if ( result ) {
-					dispatch.finishResolution( action, operation );
+					// dispatch.finishResolution( action, operation );
+					dispatch( {
+						type: CHANGE_ACTION_STATUS,
+						actionName: action,
+						status: DispatchStatus.Success,
+					} );
 
 					dispatch.createSuccessNotice(
 						sprintf(
@@ -298,7 +393,7 @@ const entityActions = {
 								'Call to action "%s" deleted successfully.',
 								'popup-maker'
 							),
-							canonicalCallToAction?.title
+							canonicalCallToAction?.title.rendered
 						),
 						{
 							id: 'call-to-action-deleted',
@@ -328,11 +423,18 @@ const entityActions = {
 
 				return result;
 			} catch ( error ) {
-				await dispatch.failResolution( action, operation );
+				// await dispatch.failResolution( action, operation );
+				dispatch( {
+					type: CHANGE_ACTION_STATUS,
+					actionName: action,
+					status: DispatchStatus.Error,
+					message: __( 'Call to action not found', 'popup-maker' ),
+				} );
+
 				await dispatch.createErrorNotice(
 					error instanceof Error
 						? error.message
-						: __( 'Failed to delete entity' )
+						: __( 'Failed to delete entity', 'popup-maker' )
 				);
 				throw error;
 			}
@@ -355,10 +457,14 @@ const editorActions = {
 		( id: number, edits: Partial< EditableCta > ): ThunkAction =>
 		async ( { select, dispatch } ) => {
 			const action = 'editRecord';
-			const operation = 'POST';
 
 			try {
-				dispatch.startResolution( action, operation );
+				// dispatch.startResolution( action, operation );
+				dispatch( {
+					type: CHANGE_ACTION_STATUS,
+					actionName: action,
+					status: DispatchStatus.Resolving,
+				} );
 
 				let canonicalCallToAction: EditableCta | undefined;
 
@@ -367,18 +473,29 @@ const editorActions = {
 				} else {
 					canonicalCallToAction = await fetchFromApi<
 						CallToAction< 'edit' >
-					>( `/ctas/${ id }?context=edit` ).then( ( result ) =>
+					>( `ctas/${ id }?context=edit` ).then( ( result ) =>
 						// Convert to editable entity if found.
 						result
 							? editableEntity< CallToAction< 'edit' > >( result )
 							: undefined
 					);
 					if ( ! canonicalCallToAction ) {
-						dispatch.failResolution(
-							action,
-							__( 'Call to action not found', 'popup-maker' ),
-							operation
-						);
+						// dispatch.failResolution(
+						// 	action,
+						// 	__( 'Call to action not found', 'popup-maker' ),
+						// 	operation
+						// );
+
+						dispatch( {
+							type: CHANGE_ACTION_STATUS,
+							actionName: action,
+							status: DispatchStatus.Error,
+							message: __(
+								'Call to action not found',
+								'popup-maker'
+							),
+						} );
+
 						return;
 					}
 
@@ -397,7 +514,12 @@ const editorActions = {
 					},
 				} );
 
-				dispatch.finishResolution( action, operation );
+				// dispatch.finishResolution( action, operation );
+				dispatch( {
+					type: CHANGE_ACTION_STATUS,
+					actionName: action,
+					status: DispatchStatus.Success,
+				} );
 			} catch ( error ) {
 				const errorMessage = getErrorMessage( error );
 
@@ -405,12 +527,19 @@ const editorActions = {
 
 				await dispatch.createErrorNotice( errorMessage );
 
-				dispatch.failResolution(
-					action,
-					errorMessage,
-					operation,
-					error as Record< string, any >
-				);
+				// dispatch.failResolution(
+				// 	action,
+				// 	errorMessage,
+				// 	operation,
+				// 	error as Record< string, any >
+				// );
+
+				dispatch( {
+					type: CHANGE_ACTION_STATUS,
+					actionName: action,
+					status: DispatchStatus.Error,
+					message: __( 'Call to action not found', 'popup-maker' ),
+				} );
 			}
 		},
 
@@ -425,17 +554,28 @@ const editorActions = {
 		( id: number, validate: boolean = true ): ThunkAction< boolean > =>
 		async ( { select, dispatch } ) => {
 			const action = 'saveRecord';
-			const operation = 'POST';
 
 			try {
-				dispatch.startResolution( action, operation );
+				// dispatch.startResolution( action, operation );
+				dispatch( {
+					type: CHANGE_ACTION_STATUS,
+					actionName: action,
+					status: DispatchStatus.Resolving,
+				} );
 
 				if ( ! select.hasEdits( id ) ) {
-					dispatch.failResolution(
-						action,
-						__( 'No edits to save', 'popup-maker' ),
-						operation
-					);
+					// dispatch.failResolution(
+					// 	action,
+					// 	__( 'No edits to save', 'popup-maker' ),
+					// 	operation
+					// );
+
+					dispatch( {
+						type: CHANGE_ACTION_STATUS,
+						actionName: action,
+						status: DispatchStatus.Error,
+						message: __( 'No edits to save', 'popup-maker' ),
+					} );
 
 					return false;
 				}
@@ -444,11 +584,18 @@ const editorActions = {
 				const editedCallToAction = select.getEditedCallToAction( id );
 
 				if ( ! editedCallToAction ) {
-					dispatch.failResolution(
-						action,
-						__( 'No edits to save', 'popup-maker' ),
-						operation
-					);
+					// dispatch.failResolution(
+					// 	action,
+					// 	__( 'No edits to save', 'popup-maker' ),
+					// 	operation
+					// );
+
+					dispatch( {
+						type: CHANGE_ACTION_STATUS,
+						actionName: action,
+						status: DispatchStatus.Error,
+						message: __( 'No edits to save', 'popup-maker' ),
+					} );
 
 					return false;
 				}
@@ -458,12 +605,20 @@ const editorActions = {
 						validateCallToAction( editedCallToAction );
 
 					if ( true !== validation ) {
-						dispatch.failResolution(
-							action,
-							validation.message,
-							operation,
-							validation
-						);
+						// dispatch.failResolution(
+						// 	action,
+						// 	validation.message,
+						// 	operation,
+						// 	validation
+						// );
+
+						dispatch( {
+							type: CHANGE_ACTION_STATUS,
+							actionName: action,
+							status: DispatchStatus.Error,
+							message: validation.message,
+						} );
+
 						// TODO REVIEW: Do we need to handle this with a notice, or can we just get the message from resolution status?
 						await dispatch.createErrorNotice( validation.message, {
 							id: 'call-to-action-validation-error',
@@ -480,7 +635,12 @@ const editorActions = {
 				);
 
 				if ( result ) {
-					dispatch.finishResolution( action, operation );
+					// dispatch.finishResolution( action, operation );
+					dispatch( {
+						type: CHANGE_ACTION_STATUS,
+						actionName: action,
+						status: DispatchStatus.Success,
+					} );
 
 					dispatch.createSuccessNotice(
 						sprintf(
@@ -489,7 +649,7 @@ const editorActions = {
 								'Call to action "%s" saved successfully.',
 								'popup-maker'
 							),
-							editedCallToAction.title
+							result?.title.rendered
 						),
 						{
 							id: 'call-to-action-saved',
@@ -524,11 +684,18 @@ const editorActions = {
 
 				await dispatch.createErrorNotice( errorMessage );
 
-				dispatch.failResolution(
-					action,
-					error instanceof Error ? error.message : 'Failed to save',
-					operation
-				);
+				// dispatch.failResolution(
+				// 	action,
+				// 	error instanceof Error ? error.message : 'Failed to save',
+				// 	operation
+				// );
+
+				dispatch( {
+					type: CHANGE_ACTION_STATUS,
+					actionName: action,
+					status: DispatchStatus.Error,
+					message: errorMessage,
+				} );
 
 				throw error;
 			}
@@ -660,7 +827,7 @@ const editorActions = {
 
 				if ( ! select.hasEditedEntity( editorId ) ) {
 					const entity = await fetchFromApi< CallToAction< 'edit' > >(
-						`/ctas/${ editorId }?context=edit`
+						`ctas/${ editorId }?context=edit`
 					);
 
 					if ( ! entity ) {
@@ -814,62 +981,91 @@ const noticeActions = {
  *****************************************************/
 const resolutionActions = {
 	/**
-	 * Start resolution for an entity.
+	 * Change status of a dispatch action request.
+	 *
+	 * @param {CallToActionsStore[ 'ActionNames' ]} actionName Action name to change status of.
+	 * @param {Statuses}                            status     New status.
+	 * @param {string|undefined}                    message    Optional error message.
+	 * @return {Object} Action object.
 	 */
-	startResolution:
-		( id: number | string, operation: string = 'fetch' ) =>
+	changeActionStatus:
+		(
+			actionName: string,
+			status: DispatchStatus,
+			message?: string | { message: string; [ key: string ]: any }
+		): ThunkAction =>
 		( { dispatch } ) => {
+			if ( message ) {
+				// eslint-disable-next-line no-console
+				console.log( actionName, message );
+			}
+
 			dispatch( {
-				type: START_RESOLUTION,
-				payload: {
-					id,
-					operation,
-				},
+				type: CHANGE_ACTION_STATUS,
+				actionName,
+				status,
+				message,
 			} );
 		},
+
+	/**
+	 * Start resolution for an entity.
+	 */
+	// startResolution:
+	// 	( id: number | string, operation: string = 'fetch' ) =>
+	// 	( { dispatch } ) => {
+	// 		console.log( 'startResolution', id, operation );
+	// 		dispatch( {
+	// 			type: START_RESOLUTION,
+	// 			payload: {
+	// 				id,
+	// 				operation,
+	// 			},
+	// 		} );
+	// 	},
 
 	/**
 	 * Finish resolution for an entity.
 	 */
-	finishResolution:
-		( id: number | string, operation: string = 'fetch' ) =>
-		( { dispatch } ) => {
-			dispatch( {
-				type: FINISH_RESOLUTION,
-				payload: {
-					id,
-					operation,
-				},
-			} );
-		},
+	// finishResolution:
+	// 	( id: number | string, operation: string = 'fetch' ) =>
+	// 	( { dispatch } ) => {
+	// 		dispatch( {
+	// 			type: FINISH_RESOLUTION,
+	// 			payload: {
+	// 				id,
+	// 				operation,
+	// 			},
+	// 		} );
+	// 	},
 
 	/**
 	 * Fail resolution for an entity.
 	 */
-	failResolution:
-		(
-			id: number | string,
-			error: string,
-			operation: string = 'fetch',
-			extra?: Record< string, any >
-		) =>
-		( { dispatch } ) => {
-			dispatch( {
-				type: FAIL_RESOLUTION,
-				payload: {
-					id,
-					error,
-					operation,
-					extra,
-				},
-			} );
-		},
+	// failResolution:
+	// 	(
+	// 		id: number | string,
+	// 		error: string,
+	// 		operation: string = 'fetch',
+	// 		extra?: Record< string, any >
+	// 	): ThunkAction =>
+	// 	( { dispatch } ) => {
+	// 		dispatch( {
+	// 			type: FAIL_RESOLUTION,
+	// 			payload: {
+	// 				id,
+	// 				error,
+	// 				operation,
+	// 				extra,
+	// 			},
+	// 		} );
+	// 	},
 
 	/**
 	 * Invalidate resolution for an entity.
 	 */
 	invalidateResolution:
-		( id: number | string, operation: string = 'fetch' ) =>
+		( id: number | string, operation: string = 'fetch' ): ThunkAction =>
 		( { dispatch } ) => {
 			dispatch( {
 				type: INVALIDATE_RESOLUTION,

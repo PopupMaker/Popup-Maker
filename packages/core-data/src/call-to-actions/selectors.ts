@@ -323,9 +323,8 @@ const resolutionSelectors = {
 	 * Get resolution state for a specific entity.
 	 */
 	getResolutionState: createSelector(
-		( state: State, id: number | string, operation: string = 'fetch' ) => {
-			const resolutionState =
-				state.resolutionState?.[ operation ]?.[ id ];
+		( state: State, id: number | string ) => {
+			const resolutionState = state.resolutionState?.[ id ];
 
 			// If no resolution state exists, return idle
 			if ( ! resolutionState ) {
@@ -343,11 +342,10 @@ const resolutionSelectors = {
 	 * Check if a resolution is idle.
 	 */
 	isIdle: createSelector(
-		( state: State, id: number | string, operation: string = 'fetch' ) => {
+		( state: State, id: number | string ) => {
 			const resolutionState = resolutionSelectors.getResolutionState(
 				state,
-				id,
-				operation
+				id
 			);
 			return resolutionState.status === DispatchStatus.Idle;
 		},
@@ -358,11 +356,10 @@ const resolutionSelectors = {
 	 * Check if an entity is currently being resolved.
 	 */
 	isResolving: createSelector(
-		( state: State, id: number | string, operation: string = 'fetch' ) => {
+		( state: State, id: number | string ) => {
 			const resolutionState = resolutionSelectors.getResolutionState(
 				state,
-				id,
-				operation
+				id
 			);
 			return resolutionState.status === DispatchStatus.Resolving;
 		},
@@ -373,11 +370,10 @@ const resolutionSelectors = {
 	 * Check if an entity resolution has completed successfully.
 	 */
 	hasResolved: createSelector(
-		( state: State, id: number | string, operation: string = 'fetch' ) => {
+		( state: State, id: number | string ) => {
 			const resolutionState = resolutionSelectors.getResolutionState(
 				state,
-				id,
-				operation
+				id
 			);
 			return resolutionState.status === DispatchStatus.Success;
 		},
@@ -388,11 +384,10 @@ const resolutionSelectors = {
 	 * Check if an entity resolution has failed.
 	 */
 	hasFailed: createSelector(
-		( state: State, id: number | string, operation: string = 'fetch' ) => {
+		( state: State, id: number | string ) => {
 			const resolutionState = resolutionSelectors.getResolutionState(
 				state,
-				id,
-				operation
+				id
 			);
 			return resolutionState.status === DispatchStatus.Error;
 		},
@@ -403,11 +398,10 @@ const resolutionSelectors = {
 	 * Get the error for a failed resolution.
 	 */
 	getResolutionError: createSelector(
-		( state: State, id: number | string, operation: string = 'fetch' ) => {
+		( state: State, id: number | string ) => {
 			const resolutionState = resolutionSelectors.getResolutionState(
 				state,
-				id,
-				operation
+				id
 			);
 			return resolutionState.error;
 		},
