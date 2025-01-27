@@ -6,10 +6,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { useCallback, useMemo } from '@wordpress/element';
 import { Button, Modal, Spinner } from '@wordpress/components';
 
-import {
-	callToActionStore,
-	validateCallToAction,
-} from '@popup-maker/core-data';
+import { callToActionStore } from '@popup-maker/core-data';
 
 import type { ComponentType } from 'react';
 import type { ModalProps } from '@wordpress/components/build-types/modal/types';
@@ -68,11 +65,11 @@ export const withModal = (
 		// Fetch values separately so they will still be available to the component.
 		const { values, isSaving } = useSelect( ( select ) => {
 			const store = select( callToActionStore );
-			const editorId = store.getEditorId();
 
 			return {
-				values: store.currentEditorValues() ?? store.getDefaultValues(),
-				isSaving: store.isSaving( Number( editorId ) ),
+				values:
+					store.getCurrentEditorValues() ?? store.getDefaultValues(),
+				isSaving: store.isResolving( 'updateCallToAction' ),
 			};
 		}, [] );
 
@@ -151,16 +148,6 @@ export const withModal = (
 								event: React.MouseEvent< HTMLButtonElement >
 							) => {
 								event.preventDefault();
-								// TODO Test adding this to the data store save methods, propagating errors through dispatch properly.
-								// Add additional validation error handling to the data store for per field etc.
-								const validation =
-									validateCallToAction( values );
-								if ( true !== validation ) {
-									if ( typeof validation === 'object' ) {
-										// setErrorMessage( validation );
-									}
-									return;
-								}
 
 								saveValues();
 							} }

@@ -1,6 +1,11 @@
-import type { CallToAction } from '@popup-maker/core-data';
+import type {
+	CallToAction,
+	ExportedCallToAction,
+} from '@popup-maker/core-data';
 
-const cleanCallToActionData = ( callToAction: CallToAction< 'edit' > ) => {
+const cleanCallToActionData = (
+	callToAction: CallToAction< 'edit' >
+): ExportedCallToAction => {
 	const { id, slug, status, title, excerpt, settings } = callToAction;
 
 	return {

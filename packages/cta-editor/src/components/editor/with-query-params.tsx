@@ -46,12 +46,7 @@ export const withQueryParams = (
 
 				return {
 					isEditorActive: store.isEditorActive(),
-					values:
-						store.currentEditorValues() ?? store.getDefaultValues(),
-					isSaving:
-						Number( editorId ) > 0
-							? store.isSaving( Number( editorId ) )
-							: false,
+					isSaving: store.isResolving( 'updateCallToAction' ),
 				};
 			},
 			[ editorId ]

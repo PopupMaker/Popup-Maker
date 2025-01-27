@@ -10,14 +10,14 @@ import { sprintf, _n, __ } from '@wordpress/i18n';
 import { moreVertical, upload } from '@wordpress/icons';
 import { useDispatch } from '@wordpress/data';
 
-import { CALL_TO_ACTION_STORE } from '@popup-maker/core-data';
+import { callToActionStore } from '@popup-maker/core-data';
 
-import type { CallToAction } from '@popup-maker/core-data';
+import type { ExportedCallToAction } from '@popup-maker/core-data';
 
 const ListOptions = () => {
 	// Get action dispatchers.
-	const { createCallToAction, addNotice } =
-		useDispatch( CALL_TO_ACTION_STORE );
+	const { createCallToAction, createErrorNotice, createSuccessNotice } =
+		useDispatch( callToActionStore );
 
 	const handleUpload = ( uploadData: string ) => {
 		const data = JSON.parse( uploadData );
@@ -28,7 +28,7 @@ const ListOptions = () => {
 
 		let errorCount = 0;
 
-		data.callToActions.forEach( ( callToAction: CallToAction ) => {
+		data.callToActions.forEach( ( callToAction: ExportedCallToAction ) => {
 			try {
 				// Create a call to action from the imported data, setting the status to draft.
 				createCallToAction( {
@@ -41,10 +41,8 @@ const ListOptions = () => {
 		} );
 
 		if ( errorCount ) {
-			addNotice( {
-				id: 'popup-maker-import-error',
-				type: 'error',
-				message: sprintf(
+			createErrorNotice(
+				sprintf(
 					// translators: %d is the number of call to actions that failed to import.
 					_n(
 						'%d Call to Action failed to import.',
@@ -54,8 +52,11 @@ const ListOptions = () => {
 					),
 					errorCount
 				),
-				isDismissible: true,
-			} );
+				{
+					id: 'popup-maker-import-error',
+					isDismissible: true,
+				}
+			);
 		}
 
 		if ( errorCount === data?.callToActions?.length ) {
@@ -64,10 +65,8 @@ const ListOptions = () => {
 
 		const successfullyAdded = data?.callToActions?.length - errorCount;
 
-		addNotice( {
-			id: 'popup-maker-import-success',
-			type: 'success',
-			message: sprintf(
+		createSuccessNotice(
+			sprintf(
 				// translators: %d is the number of call to actions imported.
 				_n(
 					'%d Call to Action imported successfully.',
@@ -77,9 +76,12 @@ const ListOptions = () => {
 				),
 				successfullyAdded
 			),
-			isDismissible: true,
-			closeDelay: 5000,
-		} );
+			{
+				id: 'popup-maker-import-success',
+				isDismissible: true,
+				closeDelay: 5000,
+			}
+		);
 	};
 
 	return (

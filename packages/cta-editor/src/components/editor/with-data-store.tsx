@@ -94,14 +94,14 @@ export const withDataStore = (
 		} = useSelect( ( select ) => {
 			const store = select( callToActionStore );
 
-			const error = store.getLastSaveError( Number( id ) );
+			const error = store.getResolutionError( id ?? 0 );
 			const hasError = error;
 
 			return {
 				editorId: store.getEditorId(),
-				values: store.getEditedCallToAction( Number( id ) ),
+				values: store.getEditedCallToAction( id ?? 0 ),
 				isEditorActive: store.isEditorActive(),
-				isSaving: store.isSaving( Number( id ) ),
+				isSaving: store.isResolving( 'updateCallToAction' ),
 				getEditorValues: store.getEditedCallToAction,
 				// savedSuccessfully:
 				// 	Status.Success ===
@@ -125,7 +125,7 @@ export const withDataStore = (
 			setSavedSuccessfully( ! hasError );
 		}, [ isSaving, hasError ] );
 
-		const { editCallToAction, resetRecordEdits, changeEditorId } =
+		const { editRecord, resetRecordEdits, changeEditorId } =
 			useDispatch( callToActionStore );
 
 		/**
@@ -137,7 +137,7 @@ export const withDataStore = (
 				changeEditorId( id );
 			}
 			return () => {
-				resetRecordEdits();
+				resetRecordEdits( id ?? 0 );
 			};
 		}, [] );
 
@@ -247,28 +247,12 @@ export const withDataStore = (
 
 		let editorValues = values;
 
-		/**
-		 * If the editor is new, use any default values passed in.
-		 *
-		 * This allows new ctas to have specific defaults depending on context.
-		 */
-		if ( 'new' === editorId ) {
-			editorValues = {
-				...values,
-				...defaultValues,
-				settings: {
-					...values.settings,
-					...defaultValues?.settings,
-				},
-			};
-		}
-
 		return (
 			<WrappedComponent
 				{ ...componentProps }
 				values={ editorValues }
 				onChange={ ( values ) => {
-					editCallToAction( values.id, values );
+					editRecord( values.id, values );
 				} }
 				tabsFilter={ tabsFilter }
 				beforeTabs={

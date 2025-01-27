@@ -51,10 +51,6 @@ const useEditor = () => {
 	useEffect( () => {
 		let urlId: EditorId = edit && edit > 0 ? edit : undefined;
 
-		if ( add ) {
-			urlId = 'new';
-		}
-
 		if ( urlId !== editorId ) {
 			changeEditorId( urlId );
 		}
@@ -81,9 +77,8 @@ const useEditor = () => {
 	 *
 	 * @param {number|'new'|undefined} id Id to edit.
 	 */
-	const setEditorId = ( id: number | 'new' | undefined ) => {
+	const setEditorId = ( id: number | undefined ) => {
 		setQueryParams( {
-			add: id === 'new' ? true : undefined,
 			edit: typeof id === 'number' && id > 0 ? id : undefined,
 		} );
 		changeEditorId( id );

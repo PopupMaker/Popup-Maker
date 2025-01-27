@@ -24,7 +24,7 @@ const useFields = () => {
 
 	const { values } = useSelect( ( select ) => {
 		const storeSelectors = select( callToActionStore );
-		const values = storeSelectors.currentEditorValues();
+		const values = storeSelectors.getCurrentEditorValues();
 		const isEditorActive = storeSelectors.isEditorActive();
 
 		return {

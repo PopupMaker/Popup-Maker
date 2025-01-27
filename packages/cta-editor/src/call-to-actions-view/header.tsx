@@ -15,7 +15,7 @@ const Header = () => {
 		// Call to Action List & Load Status.
 		return {
 			callToActions: sel.getCallToActions(),
-			isLoading: sel.isFetchingEntities(),
+			isLoading: sel.isResolving( 'getCallToActions' ),
 		};
 	}, [] );
 

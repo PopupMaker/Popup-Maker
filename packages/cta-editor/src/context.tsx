@@ -11,8 +11,12 @@ import {
 
 import { callToActionStore } from '@popup-maker/core-data';
 
-import type { Updatable } from '@wordpress/core-data';
-import type { CallToAction } from '@popup-maker/core-data';
+import type {
+	CallToAction,
+	CallToActionStore,
+	EditableCta,
+} from '@popup-maker/core-data';
+import type { ActionCreatorsOf, ConfigOf } from '@wordpress/data/src/types';
 
 type Filters = {
 	status?: string;
@@ -22,10 +26,12 @@ type Filters = {
 type ListContext = {
 	callToActions: CallToAction< 'edit' >[];
 	filteredCallToActions: CallToAction< 'edit' >[];
-	updateCallToAction: (
-		values: Partial< Updatable< CallToAction< 'edit' > > >
-	) => void;
-	deleteCallToAction: ( id: number, force?: boolean ) => void;
+	updateCallToAction: ActionCreatorsOf<
+		ConfigOf< CallToActionStore >
+	>[ 'updateCallToAction' ];
+	deleteCallToAction: ActionCreatorsOf<
+		ConfigOf< CallToActionStore >
+	>[ 'deleteCallToAction' ];
 	bulkSelection: number[];
 	setBulkSelection: ( bulkSelection: number[] ) => void;
 	isLoading: boolean;
@@ -40,9 +46,13 @@ const defaultContext: ListContext = {
 	callToActions: [],
 	filteredCallToActions: [],
 	bulkSelection: [],
-	setBulkSelection: noop,
-	updateCallToAction: noop,
-	deleteCallToAction: noop,
+	setBulkSelection: () => {},
+	updateCallToAction: (
+		_callToAction: Partial< EditableCta > & { id: number },
+		_validate?: boolean
+	) => Promise.resolve( false ),
+	deleteCallToAction: ( _id: number, _forceDelete: boolean = false ) =>
+		Promise.resolve( false ),
 	isLoading: false,
 	isDeleting: false,
 	filters: {
@@ -86,13 +96,9 @@ export const ListProvider = ( { value = {}, children }: ProviderProps ) => {
 		const sel = select( callToActionStore );
 		// CallToAction List & Load Status.
 		return {
-			callToActions: sel.getCallToActions( {
-				per_page: -1,
-				status: [ 'any', 'trash' ],
-			} ),
-			// @ts-ignore temporarily ignore this for now.
-			isLoading: sel.isFetchingEntities(),
-			isDeleting: sel.isDeleting( -1 ),
+			callToActions: sel.getCallToActions(),
+			isLoading: sel.isResolving( 'getCallToActions' ),
+			isDeleting: sel.isResolving( 'deleteCallToAction' ),
 		};
 	}, [] );
 
