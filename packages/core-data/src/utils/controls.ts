@@ -60,11 +60,6 @@ export const fetchFromApi = async < T extends any = any >(
 	path: string,
 	options: APIFetchOptions = {}
 ): Promise< T > => {
-	// Prepare the request body
-	if ( options.data ) {
-		options.body = JSON.stringify( options.data );
-	}
-
 	// Combine default and custom headers
 	const headers: Record< string, string > = {
 		...getDefaultHeaders(),

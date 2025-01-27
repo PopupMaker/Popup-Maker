@@ -1,6 +1,6 @@
 import type { Context, BaseEntityRecords } from '@wordpress/core-data';
 
-export type EditorId = 'new' | number | undefined;
+export type EditorId = number | undefined;
 
 /**
  * Declare a base post model with extra trash status.
