@@ -4,7 +4,7 @@ import './style.scss';
 /**
  * WordPress dependencies
  */
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { button as icon } from '@wordpress/icons';
 
 /**

@@ -2,7 +2,7 @@ import './editor.scss';
 
 import clsx from 'clsx';
 
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { BaseControl } from '@wordpress/components';
 import { useEffect, useRef } from '@wordpress/element';
 import { F10, isKeyboardEvent } from '@wordpress/keycodes';

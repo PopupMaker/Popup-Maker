@@ -3,7 +3,7 @@ import './index.scss';
 import clsx from 'clsx';
 
 import { noop } from '@popup-maker/utils';
-import { _x, sprintf } from '@wordpress/i18n';
+import { _x, sprintf } from '@popup-maker/i18n';
 import { Icon, ToggleControl, Tooltip } from '@wordpress/components';
 
 import type { IconType } from '@wordpress/components';

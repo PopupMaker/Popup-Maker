@@ -6,7 +6,7 @@ import {
 	MenuGroup,
 	MenuItem,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { useRef } from '@wordpress/element';
 import { lifesaver, login, pages, people } from '@wordpress/icons';
 

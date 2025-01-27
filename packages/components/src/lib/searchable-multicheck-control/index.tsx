@@ -10,7 +10,7 @@ import {
 } from '@wordpress/components';
 import { useInstanceId } from '@wordpress/compose';
 import { useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { chevronDown, chevronUp } from '@wordpress/icons';
 
 import type { IconType } from '@wordpress/components';

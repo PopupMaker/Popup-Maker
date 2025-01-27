@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { addFilter } from '@wordpress/hooks';
 
 import { FieldPanel, FieldRow, URLControl } from '@popup-maker/components';

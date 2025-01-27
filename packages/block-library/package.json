@@ -22,12 +22,12 @@
 	"react-native": "src/index",
 	"dependencies": {
 		"@popup-maker/core-data": "*",
+		"@popup-maker/i18n": "*",
 		"@wordpress/block-editor": "^14.10.1",
 		"@wordpress/block-library": "^9.15.1",
 		"@wordpress/blocks": "^14.4.1",
 		"@wordpress/components": "^29.1.1",
 		"@wordpress/element": "^6.15.1",
-		"@wordpress/i18n": "^5.15.1",
 		"@wordpress/icons": "^10.15.1",
 		"@wordpress/data": "^10.15.1",
 		"clsx": "^2.1.1"

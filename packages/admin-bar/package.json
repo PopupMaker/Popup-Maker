@@ -21,7 +21,7 @@
 	"types": "build-types",
 	"dependencies": {
 		"@medv/finder": "^3.2.0",
-		"@wordpress/i18n": "^5.13.0"
+		"@popup-maker/i18n": "*"
 	},
 	"devDependencies": {
 		"@types/jquery": "^3.5.32"

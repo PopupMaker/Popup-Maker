@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { finder } from '@medv/finder';
 import { AdminBarText } from './types';
 

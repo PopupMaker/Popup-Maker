@@ -6,7 +6,7 @@ import {
 	FormFileUpload,
 	NavigableMenu,
 } from '@wordpress/components';
-import { sprintf, _n, __ } from '@wordpress/i18n';
+import { sprintf, _n, __ } from '@popup-maker/i18n';
 import { moreVertical, upload } from '@wordpress/icons';
 import { useDispatch } from '@wordpress/data';
 

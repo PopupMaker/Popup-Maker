@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { __, sprintf } from '@wordpress/i18n';
+import { __, sprintf } from '@popup-maker/i18n';
 import { Button } from '@wordpress/components';
 
 const { popups = [] } = window.popupMakerBlockEditor;

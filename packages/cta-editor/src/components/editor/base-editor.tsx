@@ -2,7 +2,7 @@ import './editor.scss';
 
 import clsx from 'clsx';
 
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { useMemo } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
 import { TabPanel, ToggleControl } from '@wordpress/components';

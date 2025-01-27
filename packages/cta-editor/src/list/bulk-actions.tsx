@@ -12,7 +12,7 @@ import {
 	Icon,
 	NavigableMenu,
 } from '@wordpress/components';
-import { __, _n, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@popup-maker/i18n';
 import { useRef, useState } from '@wordpress/element';
 import { useDispatch, useRegistry, useSelect } from '@wordpress/data';
 import {
@@ -210,7 +210,8 @@ const ListBulkActions = () => {
 											_n(
 												'%d call to action disabled.',
 												'%d call to actions disabled.',
-												count
+												count,
+												'popup-maker'
 											),
 											count
 										),
@@ -256,7 +257,8 @@ const ListBulkActions = () => {
 													_n(
 														'%d call to action moved to trash.',
 														'%d call to actions moved to trash.',
-														count
+														count,
+														'popup-maker'
 													),
 													count
 												),
@@ -303,7 +305,8 @@ const ListBulkActions = () => {
 													_n(
 														'%d call to action deleted.',
 														'%d call to actions deleted.',
-														count
+														count,
+														'popup-maker'
 													),
 													count
 												),

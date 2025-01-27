@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { Button, Flex, Modal } from '@wordpress/components';
 
 import type { ModalProps } from '@wordpress/components/build-types/modal/types';

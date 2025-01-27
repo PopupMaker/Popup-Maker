@@ -1,5 +1,5 @@
 import { useDispatch, useSelect } from '@wordpress/data';
-import { __, _n, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@popup-maker/i18n';
 import { Button, Spinner } from '@wordpress/components';
 
 import { callToActionStore } from '@popup-maker/core-data';

@@ -2,7 +2,7 @@ import './editor.scss';
 
 import clsx from 'clsx';
 
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { arrowDown, arrowUp } from '@wordpress/icons';
 import { useEffect, useState } from '@wordpress/element';
 import { Button, CheckboxControl, Icon } from '@wordpress/components';

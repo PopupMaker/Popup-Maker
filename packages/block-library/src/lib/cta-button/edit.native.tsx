@@ -8,7 +8,7 @@ import { View, AccessibilityInfo, Platform, Text } from 'react-native';
  */
 import { useCallback, useEffect, useState, useRef } from '@wordpress/element';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { __, _x } from '@wordpress/i18n';
+import { __, _x } from '@popup-maker/i18n';
 import {
 	store as blockEditorStore,
 	getColorObjectByAttributeValues,

@@ -40,7 +40,7 @@ import {
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { useSelect, useDispatch } from '@wordpress/data';
 
 import { useMergeRefs, useRefEffect } from '@wordpress/compose';

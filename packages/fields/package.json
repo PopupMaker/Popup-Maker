@@ -23,6 +23,7 @@
 	"dependencies": {
 		"@popup-maker/components": "*",
 		"@popup-maker/core-data": "*",
+		"@popup-maker/i18n": "*",
 		"@popup-maker/utils": "*",
 		"@wordpress/base-styles": "^4.34.0",
 		"@wordpress/components": "^25.9.0",
@@ -31,7 +32,6 @@
 		"@wordpress/data": "^9.13.0",
 		"@wordpress/element": "^5.20.0",
 		"@wordpress/html-entities": "^3.43.0",
-		"@wordpress/i18n": "^4.43.0",
 		"@wordpress/icons": "^9.34.0",
 		"@wordpress/url": "^3.44.0",
 		"classnames": "^2.5.1",

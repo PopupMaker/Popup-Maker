@@ -6,7 +6,7 @@ import {
 	ToggleControl,
 	Tooltip,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { useState } from '@wordpress/element';
 import { info, search, trash } from '@wordpress/icons';
 
@@ -310,7 +310,8 @@ const List = () => {
 																		{
 																			message:
 																				__(
-																					'Are you sure you want to premanently delete this call to action?'
+																					'Are you sure you want to premanently delete this call to action?',
+																					'popup-maker'
 																				),
 																			callback:
 																				() => {

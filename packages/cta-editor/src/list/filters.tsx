@@ -2,7 +2,7 @@ import './filters.scss';
 
 import clsx from 'clsx';
 
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { chevronDown, chevronUp } from '@wordpress/icons';
 import { useMemo, useRef, useState } from '@wordpress/element';
 import { Button, Icon, Popover, RadioControl } from '@wordpress/components';

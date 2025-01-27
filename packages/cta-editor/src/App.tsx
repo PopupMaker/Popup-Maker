@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { StringParam, useQueryParams } from 'use-query-params';
 
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { applyFilters } from '@wordpress/hooks';
 import { useEffect, useMemo } from '@wordpress/element';
 import { Popover, SlotFillProvider } from '@wordpress/components';

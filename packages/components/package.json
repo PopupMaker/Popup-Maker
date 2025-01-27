@@ -21,6 +21,7 @@
 	"types": "build-types",
 	"dependencies": {
 		"@popup-maker/core-data": "*",
+		"@popup-maker/i18n": "*",
 		"@popup-maker/utils": "*",
 		"@wordpress/base-styles": "^5.14.0",
 		"@wordpress/components": "^29.0.0",
@@ -28,7 +29,6 @@
 		"@wordpress/core-data": "^7.14.0",
 		"@wordpress/data": "^10.14.0",
 		"@wordpress/element": "^6.14.0",
-		"@wordpress/i18n": "^5.14.0",
 		"@wordpress/icons": "^10.14.0",
 		"@wordpress/keycodes": "^4.14.0",
 		"@wordpress/url": "^4.14.0",

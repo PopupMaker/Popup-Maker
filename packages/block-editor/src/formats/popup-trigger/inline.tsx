@@ -1,6 +1,6 @@
 import { name, settings } from './index';
 
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { speak } from '@wordpress/a11y';
 import { useDispatch, useSelect } from '@wordpress/data';
 import {
@@ -163,9 +163,9 @@ const InlinePopupTriggerUI = ( {
 
 			// Announce the change
 			if ( isActive ) {
-				speak( __( 'Trigger edited.' ), 'assertive' );
+				speak( __( 'Trigger edited.', 'popup-maker' ), 'assertive' );
 			} else {
-				speak( __( 'Trigger inserted.' ), 'assertive' );
+				speak( __( 'Trigger inserted.', 'popup-maker' ), 'assertive' );
 			}
 		},
 		[

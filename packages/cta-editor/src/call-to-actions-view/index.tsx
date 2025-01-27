@@ -1,7 +1,7 @@
 import './editor.scss';
 import { callToActionStore } from '@popup-maker/core-data';
 import { useSelect } from '@wordpress/data';
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 
 import Header from './header';
 import List from '../list';

@@ -21,7 +21,7 @@ import {
 	useRef,
 	useState,
 } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { edit, globe, keyboardReturn, link } from '@wordpress/icons';
 
 import { urlSearchStore } from '@popup-maker/core-data';
@@ -320,7 +320,7 @@ const URLControl = (
 							// Otherwise, select the current query.
 							else {
 								newState.value = {
-									title: __( 'Custom URL' ),
+									title: __( 'Custom URL', 'popup-maker' ),
 									type: 'URL',
 									url: query,
 								};
@@ -397,7 +397,8 @@ const URLControl = (
 										label
 											? undefined
 											: __(
-													'URL'
+													'URL',
+													'popup-maker'
 											  ) /* Ensure input always has an accessible label */
 									}
 								/>
