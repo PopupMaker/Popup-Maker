@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 
 import { fetchFromApi, getErrorMessage } from '../utils';
 import { SETTINGS_FETCH_ERROR } from './constants';

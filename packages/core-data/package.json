@@ -22,11 +22,11 @@
 	"main": "build/index",
 	"types": "build-types",
 	"dependencies": {
+		"@popup-maker/i18n": "*",
 		"@wordpress/api-fetch": "^7.16.0",
 		"@wordpress/data": "^10.16.0",
 		"@wordpress/data-controls": "^4.16.0",
 		"@wordpress/core-data": "^7.16.0",
-		"@wordpress/i18n": "^5.16.0",
 		"@wordpress/notices": "^5.16.0"
 	},
 	"peerDependencies": {

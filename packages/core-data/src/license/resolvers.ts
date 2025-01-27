@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 
 import { getErrorMessage, fetchFromApi } from '../utils';
 import { LICENSE_FETCH_ERROR } from './constants';

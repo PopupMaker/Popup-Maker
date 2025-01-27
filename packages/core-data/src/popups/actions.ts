@@ -1,4 +1,4 @@
-import { __, sprintf } from '@wordpress/i18n';
+import { __, sprintf } from '@popup-maker/i18n';
 import { store as noticesStore } from '@wordpress/notices';
 
 import { ACTION_TYPES, NOTICE_CONTEXT } from './constants';
@@ -31,7 +31,6 @@ const {
 	// FAIL_RESOLUTION,
 	INVALIDATE_RESOLUTION,
 } = ACTION_TYPES;
-
 
 /*****************************************************
  * SECTION: Entity actions
@@ -112,7 +111,7 @@ const entityActions = {
 								'Call to action "%s" saved successfully.',
 								'popup-maker'
 							),
-							result?.title
+							result?.title.rendered
 						),
 						{
 							id: 'call-to-action-saved',
@@ -222,9 +221,7 @@ const entityActions = {
 					}
 				}
 
-				const canonicalPopup = await select.getPopup(
-					callToAction.id
-				);
+				const canonicalPopup = await select.getPopup( callToAction.id );
 
 				if ( ! canonicalPopup ) {
 					// dispatch.failResolution(
@@ -349,9 +346,9 @@ const entityActions = {
 
 				// Get the canonical directly from server to verify it exists.
 				// TODO REVIEW: Test this.
-				const canonicalPopup = await fetchFromApi<
-					Popup< 'edit' >
-				>( `ctas/${ id }?context=edit` );
+				const canonicalPopup = await fetchFromApi< Popup< 'edit' > >(
+					`ctas/${ id }?context=edit`
+				);
 
 				if ( ! canonicalPopup ) {
 					// dispatch.failResolution(
@@ -475,9 +472,9 @@ const editorActions = {
 				if ( select.hasEditedEntity( id ) ) {
 					canonicalPopup = select.getEditedEntity( id );
 				} else {
-					canonicalPopup = await fetchFromApi<
-						Popup< 'edit' >
-					>( `ctas/${ id }?context=edit` ).then( ( result ) =>
+					canonicalPopup = await fetchFromApi< Popup< 'edit' > >(
+						`ctas/${ id }?context=edit`
+					).then( ( result ) =>
 						// Convert to editable entity if found.
 						result
 							? editableEntity< Popup< 'edit' > >( result )
@@ -605,8 +602,7 @@ const editorActions = {
 				}
 
 				if ( editedPopup && validate ) {
-					const validation =
-						validatePopup( editedPopup );
+					const validation = validatePopup( editedPopup );
 
 					if ( true !== validation ) {
 						// dispatch.failResolution(
@@ -633,10 +629,7 @@ const editorActions = {
 					}
 				}
 
-				const result = await dispatch.updatePopup(
-					editedPopup,
-					false
-				);
+				const result = await dispatch.updatePopup( editedPopup, false );
 
 				if ( result ) {
 					// dispatch.finishResolution( action, operation );
@@ -653,10 +646,7 @@ const editorActions = {
 								'Call to action "%s" saved successfully.',
 								'popup-maker'
 							),
-							editedPopup.title,
-							{
-								test: 'test',
-							}
+							editedPopup.title
 						),
 						{
 							id: 'call-to-action-saved',
