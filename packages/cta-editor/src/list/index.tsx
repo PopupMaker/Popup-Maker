@@ -12,9 +12,13 @@ import { info, search, trash } from '@wordpress/icons';
 
 import { FilterLines } from '@popup-maker/icons';
 import { noop } from '@popup-maker/utils';
-import { ConfirmDialogue, ListTable } from '@popup-maker/components';
+import {
+	ConfirmDialogue,
+	ListTable,
+	SortDirection,
+} from '@popup-maker/components';
 
-import { ListConsumer, ListProvider } from '../context';
+import { ListConsumer, ListProvider, useList } from '../context';
 import { useEditor } from '../components';
 import ListBulkActions from './bulk-actions';
 import ListFilters from './filters';
@@ -27,6 +31,7 @@ const { cta_types: callToActions } = window.popupMakerCtaEditor;
 const List = () => {
 	// Get the shared method for setting editor Id & query params.
 	const { setEditorId } = useEditor();
+	const { sortConfig, setSortConfig } = useList();
 
 	const [ showFilters, setShowFilters ] = useState< boolean >( false );
 
@@ -153,6 +158,16 @@ const List = () => {
 									status: __( 'Status', 'popup-maker' ),
 								} }
 								sortableColumns={ [ 'type', 'title' ] }
+								onSort={ ( key, direction ) => {
+									setSortConfig( {
+										key,
+										direction:
+											direction === SortDirection.ASC
+												? SortDirection.ASC
+												: SortDirection.DESC,
+									} );
+								} }
+								initialSort={ sortConfig }
 								rowClasses={ ( callToAction ) => {
 									return [
 										`call-to-action-${ callToAction.id }`,

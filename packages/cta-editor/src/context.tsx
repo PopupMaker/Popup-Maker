@@ -10,6 +10,7 @@ import {
 } from '@wordpress/element';
 
 import { callToActionStore } from '@popup-maker/core-data';
+import { SortDirection, type SortConfig } from '@popup-maker/components';
 
 import type {
 	CallToAction,
@@ -38,6 +39,8 @@ type ListContext = {
 	isDeleting: boolean;
 	filters: Filters;
 	setFilters: ( filters: Partial< Filters > ) => void;
+	sortConfig: SortConfig | null;
+	setSortConfig: ( config: SortConfig | null ) => void;
 };
 
 const noop = () => {};
@@ -63,6 +66,8 @@ const defaultContext: ListContext = {
 		searchText: '',
 	},
 	setFilters: noop,
+	sortConfig: null,
+	setSortConfig: () => {},
 };
 
 const Context = createContext< ListContext >( defaultContext );
@@ -76,6 +81,7 @@ type ProviderProps = {
 
 export const ListProvider = ( { value = {}, children }: ProviderProps ) => {
 	const [ bulkSelection, setBulkSelection ] = useState< number[] >( [] );
+	const [ sortConfig, setSortConfig ] = useState< SortConfig | null >( null );
 
 	// Allow initiating the editor directly from a url.
 	const [ filters, setFilters ] = useQueryParams( {
@@ -115,7 +121,7 @@ export const ListProvider = ( { value = {}, children }: ProviderProps ) => {
 			return [];
 		}
 
-		return callToActions
+		const filtered = callToActions
 			.filter( ( r ) =>
 				filters.status === 'all' ? true : filters.status === r.status
 			)
@@ -131,22 +137,48 @@ export const ListProvider = ( { value = {}, children }: ProviderProps ) => {
 							.toLowerCase()
 							.indexOf( filters.searchText.toLowerCase() ) >= 0 )
 			);
-	}, [ callToActions, filters ] );
+
+		// Apply sorting if sort config exists
+		if ( sortConfig !== null ) {
+			filtered.sort( ( a, b ) => {
+				const aValue =
+					sortConfig.key === 'type'
+						? a.settings.type
+						: a.title.rendered.toLowerCase();
+				const bValue =
+					sortConfig.key === 'type'
+						? b.settings.type
+						: b.title.rendered.toLowerCase();
+
+				if ( aValue < bValue ) {
+					return sortConfig.direction === SortDirection.ASC ? -1 : 1;
+				}
+				if ( aValue > bValue ) {
+					return sortConfig.direction === SortDirection.ASC ? 1 : -1;
+				}
+				return 0;
+			} );
+		}
+
+		return filtered;
+	}, [ callToActions, filters, sortConfig ] );
 
 	return (
 		<Provider
 			value={ {
 				...value,
-				filters,
-				setFilters,
 				bulkSelection,
 				setBulkSelection,
-				callToActions: callToActions || [],
+				filters,
+				setFilters,
+				callToActions,
 				filteredCallToActions,
-				updateCallToAction,
-				deleteCallToAction,
 				isLoading,
 				isDeleting,
+				updateCallToAction,
+				deleteCallToAction,
+				sortConfig,
+				setSortConfig,
 			} }
 		>
 			{ children }
