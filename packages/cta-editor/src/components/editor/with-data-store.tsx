@@ -1,17 +1,12 @@
 import { __ } from '@popup-maker/i18n';
+import { defaultCtaValues, callToActionStore } from '@popup-maker/core-data';
 import { Notice } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect, useState, useRef } from '@wordpress/element';
 
-import {
-	CallToAction,
-	defaultCtaValues,
-	callToActionStore,
-	EditorId,
-} from '@popup-maker/core-data';
-
 import type { ComponentType } from 'react';
 import type { Updatable } from '@wordpress/core-data';
+import type { EditorId, CallToAction } from '@popup-maker/core-data';
 import type { BaseEditorProps, EditorTab } from './types';
 
 type Editable = Updatable< CallToAction< 'edit' > >;
@@ -55,9 +50,9 @@ type ErrorNotice = {
 /**
  * Wrap the editor with the data store.
  *
- * @param WrappedComponent The component to wrap.
+ * @param {ComponentType<EditorWithDataStoreProps>} WrappedComponent The component to wrap.
  *
- * @returns The wrapped component.
+ * @return {Function} The wrapped component.
  */
 export const withDataStore = (
 	WrappedComponent: ComponentType< BaseEditorProps >
@@ -91,27 +86,29 @@ export const withDataStore = (
 			hasError,
 			error,
 			getEditorValues,
-		} = useSelect( ( select ) => {
-			const store = select( callToActionStore );
+		} = useSelect(
+			( select ) => {
+				const store = select( callToActionStore );
 
-			const error = store.getResolutionError( id ?? 0 );
-			const hasError = error;
+				const resolutionError = store.getResolutionError( id ?? 0 );
 
-			return {
-				editorId: store.getEditorId(),
-				values: store.getEditedCallToAction( id ?? 0 ),
-				isEditorActive: store.isEditorActive(),
-				isSaving: store.isResolving( 'updateCallToAction' ),
-				getEditorValues: store.getEditedCallToAction,
-				// savedSuccessfully:
-				// 	Status.Success ===
-				// 		store.getDispatchStatus( 'createCallToAction' ) ||
-				// 	Status.Success ===
-				// 		store.getDispatchStatus( 'updateCallToAction' ),
-				hasError,
-				error,
-			};
-		}, [] );
+				return {
+					editorId: store.getEditorId(),
+					values: store.getEditedCallToAction( id ?? 0 ),
+					isEditorActive: store.isEditorActive(),
+					isSaving: store.isResolving( 'updateCallToAction' ),
+					getEditorValues: store.getEditedCallToAction,
+					// savedSuccessfully:
+					// 	Status.Success ===
+					// 		store.getDispatchStatus( 'createCallToAction' ) ||
+					// 	Status.Success ===
+					// 		store.getDispatchStatus( 'updateCallToAction' ),
+					hasError: !! resolutionError,
+					error: resolutionError,
+				};
+			},
+			[ id ]
+		);
 
 		const [ savedSuccessfully, setSavedSuccessfully ] =
 			useState< boolean >( false );
@@ -133,13 +130,14 @@ export const withDataStore = (
 		 */
 		useEffect( () => {
 			if ( editorId !== id ) {
+				// eslint-disable-next-line no-console
 				console.log( 'changeEditorId', id, editorId );
 				changeEditorId( id );
 			}
 			return () => {
 				resetRecordEdits( id ?? 0 );
 			};
-		}, [] );
+		}, [ id, editorId, changeEditorId, resetRecordEdits ] );
 
 		/**
 		 * Listen for errors and set the error message.
@@ -169,9 +167,15 @@ export const withDataStore = (
 				// Get the latest CTA from the store after save
 				const latestCta = getEditorValues( values.id );
 				onSave?.( latestCta || values );
-				return;
 			}
-		}, [ onSave, triedSaving, savedSuccessfully, values, isSaving ] );
+		}, [
+			onSave,
+			triedSaving,
+			savedSuccessfully,
+			getEditorValues,
+			values,
+			isSaving,
+		] );
 
 		// When no values, don't show the editor.
 		if ( ! values ) {
@@ -191,6 +195,8 @@ export const withDataStore = (
 
 		/**
 		 * Filter the tabs to add an error class to the tab that has an error.
+		 *
+		 * @param {EditorTab[]} tabs The tabs.
 		 */
 		const tabsFilter = ( tabs: EditorTab[] ) => {
 			/**
@@ -245,14 +251,14 @@ export const withDataStore = (
 			</>
 		);
 
-		let editorValues = values;
+		const editorValues = values;
 
 		return (
 			<WrappedComponent
 				{ ...componentProps }
 				values={ editorValues }
-				onChange={ ( values ) => {
-					editRecord( values.id, values );
+				onChange={ ( newValues ) => {
+					editRecord( newValues.id, newValues );
 				} }
 				tabsFilter={ tabsFilter }
 				beforeTabs={

@@ -1,4 +1,4 @@
-import { PopupMakerGlobalVars } from '@popup-maker/types';
+import type { PopupMakerGlobalVars } from '@popup-maker/types';
 
 /**
  * Get the Popup Maker global variables

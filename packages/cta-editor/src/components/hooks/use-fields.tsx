@@ -24,12 +24,10 @@ const useFields = () => {
 
 	const { values } = useSelect( ( select ) => {
 		const storeSelectors = select( callToActionStore );
-		const values = storeSelectors.getCurrentEditorValues();
-		const isEditorActive = storeSelectors.isEditorActive();
 
 		return {
-			values,
-			isEditorActive,
+			values: storeSelectors.getCurrentEditorValues(),
+			isEditorActive: storeSelectors.isEditorActive(),
 		};
 	}, [] );
 
@@ -74,10 +72,10 @@ const useFields = () => {
 		/**
 		 * Allow external overrides via a filter with null default.
 		 *
-		 * @param {boolean|undefined}        show     The current value of the field.
-		 * @param {string}                   field    The field name.
-		 * @param {CurrentSettings}          settings The current settings.
-		 * @param {string}                   tab      The current tab name.
+		 * @param {boolean|undefined} show     The current value of the field.
+		 * @param {string}            field    The field name.
+		 * @param {CurrentSettings}   settings The current settings.
+		 * @param {string}            tab      The current tab name.
 		 * @return {boolean|undefined} The new value of the field.
 		 */
 		const show = applyFilters(

@@ -48,9 +48,12 @@ const defaultContext: ListContext = {
 	bulkSelection: [],
 	setBulkSelection: () => {},
 	updateCallToAction: (
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		_callToAction: Partial< EditableCta > & { id: number },
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		_validate?: boolean
 	) => Promise.resolve( false ),
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	deleteCallToAction: ( _id: number, _forceDelete: boolean = false ) =>
 		Promise.resolve( false ),
 	isLoading: false,
@@ -108,7 +111,9 @@ export const ListProvider = ( { value = {}, children }: ProviderProps ) => {
 
 	// Filtered list of callToActions for the current status filter.
 	const filteredCallToActions = useMemo( () => {
-		if ( ! callToActions ) return [];
+		if ( ! callToActions ) {
+			return [];
+		}
 
 		return callToActions
 			.filter( ( r ) =>

@@ -89,6 +89,8 @@ const BaseEditor = ( {
 		};
 	}, [ values, onChange ] );
 
+	const { tabsFilter } = props;
+
 	/**
 	 * Memoize the tabs.
 	 */
@@ -108,8 +110,8 @@ const BaseEditor = ( {
 		/**
 		 * If a tabsFilter is provided, use it to filter the tabs.
 		 */
-		return props.tabsFilter ? props.tabsFilter( _tabs ) : _tabs;
-	}, [ props.tabsFilter ] );
+		return tabsFilter ? tabsFilter( _tabs ) : _tabs;
+	}, [ tabsFilter ] );
 
 	return (
 		<div className={ clsx( 'call-to-action-editor', className ) }>

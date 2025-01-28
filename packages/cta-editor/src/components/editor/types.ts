@@ -45,6 +45,9 @@ export interface BaseEditorProps {
 	afterTabs?: JSX.Element;
 }
 
+type SettingField< T extends CallToAction< 'edit' > > =
+	Updatable< T >[ 'settings' ][ keyof Updatable< T >[ 'settings' ] ];
+
 export interface BaseEditorTabProps<
 	T extends CallToAction< 'edit' > = CallToAction< 'edit' >,
 > {
@@ -80,11 +83,11 @@ export interface BaseEditorTabProps<
 	 * Method to update a specific CallToAction setting.
 	 *
 	 * @param {keyof Updatable< T >[ 'settings' ]} setting The setting to update.
-	 * @param {Updatable< T >[ 'settings' ][ keyof Updatable< T >[ 'settings' ] ]} value The value to update the setting with.
+	 * @param {SettingField<T>}                    value   The value to update the setting with.
 	 */
 	updateSetting: (
 		setting: keyof Updatable< T >[ 'settings' ],
-		value: Updatable< T >[ 'settings' ][ keyof Updatable< T >[ 'settings' ] ]
+		value: SettingField< T >
 	) => void;
 }
 

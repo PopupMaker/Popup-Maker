@@ -1,17 +1,13 @@
 import { __ } from '@popup-maker/i18n';
+import { callToActionStore } from '@popup-maker/core-data';
 import { useSelect } from '@wordpress/data';
 import { useCallback, useEffect, useRef } from '@wordpress/element';
-
-import {
-	CallToAction,
-	callToActionStore,
-	EditorId,
-} from '@popup-maker/core-data';
 
 import { useEditor } from '../hooks';
 
 import type { ComponentType } from 'react';
 import type { Updatable } from '@wordpress/core-data';
+import type { CallToAction, EditorId } from '@popup-maker/core-data';
 import type { EditorWithModalProps } from './with-modal';
 import type { EditorWithDataStoreProps } from './with-data-store';
 
@@ -26,9 +22,9 @@ export type EditorWithQueryParamsProps = EditorWithDataStoreProps &
 /**
  * Wrap the editor with a modal.
  *
- * @param WrappedComponent The component to wrap.
+ * @param {ComponentType<EditorWithDataStoreProps>} WrappedComponent The component to wrap.
  *
- * @returns The wrapped component.
+ * @return {Function} The wrapped component.
  */
 export const withQueryParams = (
 	WrappedComponent: ComponentType< EditorWithQueryParamsProps >
@@ -40,17 +36,14 @@ export const withQueryParams = (
 			useEditor();
 
 		// Fetch values separately so they will still be available to the component.
-		const { isEditorActive, isSaving } = useSelect(
-			( select ) => {
-				const store = select( callToActionStore );
+		const { isEditorActive, isSaving } = useSelect( ( select ) => {
+			const store = select( callToActionStore );
 
-				return {
-					isEditorActive: store.isEditorActive(),
-					isSaving: store.isResolving( 'updateCallToAction' ),
-				};
-			},
-			[ editorId ]
-		);
+			return {
+				isEditorActive: store.isEditorActive(),
+				isSaving: store.isResolving( 'updateCallToAction' ),
+			};
+		}, [] );
 
 		// Set ref for editorId to check if it has changed.
 		const currentEditorId = useRef< EditorId >( editorId );
@@ -86,7 +79,7 @@ export const withQueryParams = (
 
 				componentProps.onSave?.( newValues );
 			},
-			[ editorId, setEditorId ]
+			[ editorId, setEditorId, componentProps ]
 		);
 
 		const onClose = useCallback( () => {
@@ -96,7 +89,7 @@ export const withQueryParams = (
 
 			clearEditorParams();
 			componentProps.onClose?.();
-		}, [ componentProps.onClose, isSaving ] );
+		}, [ componentProps, isSaving, clearEditorParams ] );
 
 		// If the editor isn't active, return empty.
 		if ( ! isEditorActive ) {

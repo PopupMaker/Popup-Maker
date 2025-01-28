@@ -45,9 +45,9 @@ export interface EditorWithModalProps extends EditorWithDataStoreProps {
 /**
  * Wrap the editor with a modal.
  *
- * @param WrappedComponent The component to wrap.
+ * @param {ComponentType<EditorWithDataStoreProps>} WrappedComponent The component to wrap.
  *
- * @returns The wrapped component.
+ * @return {Function} The wrapped component.
  */
 export const withModal = (
 	WrappedComponent: ComponentType< EditorWithDataStoreProps >
@@ -114,6 +114,7 @@ export const withModal = (
 					closeModal();
 				}
 			} catch ( error ) {
+				// eslint-disable-next-line no-console
 				console.error( 'Save failed:', error );
 			}
 		}, [ closeOnSave, closeModal, saveEditorValues ] );

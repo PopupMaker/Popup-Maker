@@ -28,7 +28,7 @@ export const Component = ( {
 				placeholder={ __( 'Name…', 'popup-maker' ) }
 				className="title-field"
 				value={ callToAction.title ?? '' }
-				onChange={ ( title ) => updateFields( { title } ) }
+				onChange={ ( newTitle ) => updateFields( { title: newTitle } ) }
 				__next40pxDefaultSize
 				__nextHasNoMarginBottom
 			/>

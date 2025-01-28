@@ -49,7 +49,7 @@ const useEditor = () => {
 
 	// Sync url param changes for editor ID to the editor.
 	useEffect( () => {
-		let urlId: EditorId = edit && edit > 0 ? edit : undefined;
+		const urlId: EditorId = edit && edit > 0 ? edit : undefined;
 
 		if ( urlId !== editorId ) {
 			changeEditorId( urlId );
