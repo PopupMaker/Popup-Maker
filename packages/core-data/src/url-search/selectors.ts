@@ -15,6 +15,9 @@ export const getSuggestions = createSelector(
 
 /**
  * Get current status for dispatched action.
+ *
+ * @param {State}            state      State.
+ * @param {StoreActionNames} actionName Action name.
  */
 export const getDispatchStatus = (
 	state: State,
@@ -26,6 +29,9 @@ export const getDispatchStatus = (
 
 /**
  * Check if action is dispatching.
+ *
+ * @param {State}                                 state       State.
+ * @param {StoreActionNames | StoreActionNames[]} actionNames Action name or array of action names.
  */
 export const isDispatching = createSelector(
 	(
@@ -64,6 +70,9 @@ export const isDispatching = createSelector(
 
 /**
  * Check if action has finished dispatching.
+ *
+ * @param {State}            state      State.
+ * @param {StoreActionNames} actionName Action name.
  */
 export const hasDispatched = createSelector(
 	(
@@ -90,6 +99,9 @@ export const hasDispatched = createSelector(
 
 /**
  * Get dispatch action error if exists.
+ *
+ * @param {State}            state      State.
+ * @param {StoreActionNames} actionName Action name.
  */
 export const getDispatchError = (
 	state: State,

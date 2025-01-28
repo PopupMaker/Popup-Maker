@@ -39,9 +39,9 @@ const entityActions = {
 	/**
 	 * Create a new entity record. Values sent to the server immediately.
 	 *
-	 * @param {EditablePopup} entity The entity to create.
-	 * @param {Function} validate An optional validation function.
-	 * @returns {Promise<EditablePopup | boolean>} The created entity or false if validation fails.
+	 * @param {EditablePopup} callToAction The entity to create.
+	 * @param {Function}      validate     An optional validation function.
+	 * @return {Promise<EditablePopup | boolean>} The created entity or false if validation fails.
 	 */
 	createPopup:
 		(
@@ -174,9 +174,9 @@ const entityActions = {
 	/**
 	 * Update an existing entity record. Values sent to the server immediately.
 	 *
-	 * @param {Partial<EditablePopup>&{id:EditablePopup[ 'id' ]}} entity The entity to update.
-	 * @param {Function} validate An optional validation function.
-	 * @returns {Promise<T | boolean>} The updated entity or false if validation fails.
+	 * @param {Partial<EditablePopup>&{id:EditablePopup[ 'id' ]}} callToAction The entity to update.
+	 * @param {Function}                                          validate     An optional validation function.
+	 * @return {Promise<T | boolean>} The updated entity or false if validation fails.
 	 */
 	updatePopup:
 		(
@@ -328,9 +328,9 @@ const entityActions = {
 	/**
 	 * Delete an existing entity record.
 	 *
-	 * @param {number} id The entity ID.
+	 * @param {number}  id          The entity ID.
 	 * @param {boolean} forceDelete Whether to force the deletion.
-	 * @returns {Promise<boolean>} Whether the deletion was successful.
+	 * @return {Promise<boolean>} Whether the deletion was successful.
 	 */
 	deletePopup:
 		( id: number, forceDelete: boolean = false ): ThunkAction< boolean > =>
@@ -450,9 +450,9 @@ const editorActions = {
 	/**
 	 * Edit an existing entity record. Values are not sent to the server until save.
 	 *
-	 * @param {number} id The entity ID.
-	 * @param {Partial<EditablePopup>} edit The edits to apply.
-	 * @returns {Promise<boolean>} Whether the edit was successful.
+	 * @param {number}                 id    The entity ID.
+	 * @param {Partial<EditablePopup>} edits The edits to apply.
+	 * @return {Promise<boolean>} Whether the edit was successful.
 	 */
 	editRecord:
 		( id: number, edits: Partial< EditablePopup > ): ThunkAction =>
@@ -524,6 +524,7 @@ const editorActions = {
 			} catch ( error ) {
 				const errorMessage = getErrorMessage( error );
 
+				// eslint-disable-next-line no-console
 				console.error( 'Edit failed:', error );
 
 				await dispatch.createErrorNotice( errorMessage );
@@ -547,9 +548,9 @@ const editorActions = {
 	/**
 	 * Save an edited entity record.
 	 *
-	 * @param {number} id The entity ID.
+	 * @param {number}   id       The entity ID.
 	 * @param {Function} validate An optional validation function.
-	 * @returns {Promise<boolean>} Whether the save was successful.
+	 * @return {Promise<boolean>} Whether the save was successful.
 	 */
 	saveEditedRecord:
 		( id: number, validate: boolean = true ): ThunkAction< boolean > =>
@@ -677,6 +678,7 @@ const editorActions = {
 			} catch ( error ) {
 				const errorMessage = getErrorMessage( error );
 
+				// eslint-disable-next-line no-console
 				console.error( 'Save failed:', error );
 
 				await dispatch.createErrorNotice( errorMessage );
@@ -701,12 +703,14 @@ const editorActions = {
 	/**
 	 * Undo the last action.
 	 *
-	 * @returns {Promise<void>}
+	 * @param {number} id    The entity ID.
+	 * @param {number} steps The number of steps to undo.
+	 * @return {Promise<void>}
 	 */
 	undo:
 		( id: number, steps: number = 1 ): ThunkAction =>
 		async ( { select, dispatch } ) => {
-			let ctaId = id > 0 ? id : select.getEditorId();
+			const ctaId = id > 0 ? id : select.getEditorId();
 
 			if ( typeof ctaId === 'undefined' ) {
 				return;
@@ -724,12 +728,14 @@ const editorActions = {
 	/**
 	 * Redo the last action.
 	 *
-	 * @returns {Promise<void>}
+	 * @param {number} id    The entity ID.
+	 * @param {number} steps The number of steps to redo.
+	 * @return {Promise<void>}
 	 */
 	redo:
 		( id: number, steps: number = 1 ): ThunkAction =>
 		async ( { select, dispatch } ) => {
-			let ctaId = id > 0 ? id : select.getEditorId();
+			const ctaId = id > 0 ? id : select.getEditorId();
 
 			if ( typeof ctaId === 'undefined' ) {
 				return;
@@ -748,12 +754,12 @@ const editorActions = {
 	 * Reset the edits for an entity record.
 	 *
 	 * @param {number} id The entity ID.
-	 * @returns {Promise<void>}
+	 * @return {Promise<void>}
 	 */
 	resetRecordEdits:
 		( id: number ): ThunkAction =>
 		async ( { select, dispatch } ) => {
-			let ctaId = id > 0 ? id : select.getEditorId();
+			const ctaId = id > 0 ? id : select.getEditorId();
 
 			if ( typeof ctaId === 'undefined' ) {
 				return;
@@ -767,6 +773,12 @@ const editorActions = {
 			} );
 		},
 
+	/**
+	 * Update the editor values.
+	 *
+	 * @param {Partial<EditablePopup>} values The editor values.
+	 * @return {Promise<void>}
+	 */
 	updateEditorValues:
 		( values: PartialEditablePopup ): ThunkAction< void > =>
 		async ( { dispatch, select } ) => {
@@ -779,6 +791,11 @@ const editorActions = {
 			dispatch.editRecord( editorId, values );
 		},
 
+	/**
+	 * Save the editor values.
+	 *
+	 * @return {Promise<boolean>} Whether the save was successful.
+	 */
 	saveEditorValues:
 		(): ThunkAction< boolean > =>
 		async ( { dispatch, select } ) => {
@@ -795,6 +812,11 @@ const editorActions = {
 			return dispatch.saveEditedRecord( editorId );
 		},
 
+	/**
+	 * Reset the editor values.
+	 *
+	 * @return {Promise<void>}
+	 */
 	resetEditorValues:
 		(): ThunkAction< void > =>
 		async ( { dispatch, select } ) => {
@@ -807,7 +829,12 @@ const editorActions = {
 			dispatch.resetRecordEdits( editorId );
 		},
 
-	// Refactored changeEditorId using thunk and our selectors
+	/**
+	 * Change the editor ID.
+	 *
+	 * @param {EditorId} editorId The editor ID.
+	 * @return {Promise<void>}
+	 */
 	changeEditorId:
 		( editorId: EditorId ): ThunkAction< void > =>
 		async ( { select, dispatch } ) => {
@@ -851,7 +878,10 @@ const editorActions = {
 				} );
 			} catch ( error ) {
 				const errorMessage = getErrorMessage( error );
+
+				// eslint-disable-next-line no-console
 				console.error( 'Failed to change editor ID:', error );
+
 				dispatch.createErrorNotice( errorMessage );
 			}
 		},
@@ -863,6 +893,10 @@ const editorActions = {
 const noticeActions = {
 	/**
 	 * Create a notice.
+	 *
+	 * @param {Notice[ 'status' ]}  status  Notice status.
+	 * @param {Notice[ 'content' ]} content Notice content.
+	 * @param {Notice}              options Notice options.
 	 */
 	createNotice:
 		(
@@ -888,6 +922,9 @@ const noticeActions = {
 
 	/**
 	 * Create an error notice.
+	 *
+	 * @param {string}                             content Notice content.
+	 * @param {Omit<Notice, 'status' | 'content'>} options Notice options.
 	 */
 	createErrorNotice:
 		(
@@ -909,6 +946,9 @@ const noticeActions = {
 
 	/**
 	 * Create a success notice.
+	 *
+	 * @param {string}                             content Notice content.
+	 * @param {Omit<Notice, 'status' | 'content'>} options Notice options.
 	 */
 	createSuccessNotice:
 		(
@@ -932,6 +972,8 @@ const noticeActions = {
 
 	/**
 	 * Remove a notice for a given context.
+	 *
+	 * @param {string} id Notice ID.
 	 */
 	removeNotice:
 		(
@@ -948,6 +990,8 @@ const noticeActions = {
 
 	/**
 	 * Remove all notices for a given context.
+	 *
+	 * @param {string[]} ids Notice IDs.
 	 */
 	removeAllNotices:
 		(
@@ -965,10 +1009,10 @@ const noticeActions = {
 				const notices = registry
 					.select( noticesStore )
 					.getNotices( NOTICE_CONTEXT );
-				const ids = notices.map( ( notice ) => notice.id );
+				const noticeIds = notices.map( ( notice ) => notice.id );
 				registry
 					.dispatch( noticesStore )
-					.removeNotices( ids, NOTICE_CONTEXT );
+					.removeNotices( noticeIds, NOTICE_CONTEXT );
 			}
 		},
 };
@@ -981,8 +1025,8 @@ const resolutionActions = {
 	 * Change status of a dispatch action request.
 	 *
 	 * @param {PopupsStore[ 'ActionNames' ]} actionName Action name to change status of.
-	 * @param {Statuses}                            status     New status.
-	 * @param {string|undefined}                    message    Optional error message.
+	 * @param {Statuses}                     status     New status.
+	 * @param {string|undefined}             message    Optional error message.
 	 * @return {Object} Action object.
 	 */
 	changeActionStatus:
@@ -1060,6 +1104,9 @@ const resolutionActions = {
 
 	/**
 	 * Invalidate resolution for an entity.
+	 *
+	 * @param {number | string} id        The entity ID.
+	 * @param {string}          operation The operation.
 	 */
 	invalidateResolution:
 		( id: number | string, operation: string = 'fetch' ): ThunkAction =>

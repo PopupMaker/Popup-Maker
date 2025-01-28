@@ -36,9 +36,9 @@ const entityActions = {
 	/**
 	 * Create a new entity record. Values sent to the server immediately.
 	 *
-	 * @param {Editable} entity The entity to create.
-	 * @param {Function} validate An optional validation function.
-	 * @returns {Promise<Editable | boolean>} The created entity or false if validation fails.
+	 * @param {Editable} callToAction The entity to create.
+	 * @param {boolean}  validate     An optional validation function.
+	 * @return {Promise<CallToAction< 'edit' > | false>} The created entity or false if validation fails.
 	 */
 	createCallToAction:
 		(
@@ -171,13 +171,13 @@ const entityActions = {
 	/**
 	 * Update an existing entity record. Values sent to the server immediately.
 	 *
-	 * @param {Partial<EditableCta>&{id:EditableCta[ 'id' ]}} entity The entity to update.
-	 * @param {Function} validate An optional validation function.
-	 * @returns {Promise<T | boolean>} The updated entity or false if validation fails.
+	 * @param {PartialEditableCta} callToAction The entity to update.
+	 * @param {boolean}            validate     An optional validation function.
+	 * @return {Promise<T | boolean>} The updated entity or false if validation fails.
 	 */
 	updateCallToAction:
 		(
-			callToAction: Partial< EditableCta > & { id: number },
+			callToAction: PartialEditableCta,
 			validate: boolean = true
 		): ThunkAction< CallToAction< 'edit' > | false > =>
 		async ( { select, dispatch } ) => {
@@ -327,9 +327,9 @@ const entityActions = {
 	/**
 	 * Delete an existing entity record.
 	 *
-	 * @param {number} id The entity ID.
+	 * @param {number}  id          The entity ID.
 	 * @param {boolean} forceDelete Whether to force the deletion.
-	 * @returns {Promise<boolean>} Whether the deletion was successful.
+	 * @return {Promise<boolean>} Whether the deletion was successful.
 	 */
 	deleteCallToAction:
 		( id: number, forceDelete: boolean = false ): ThunkAction< boolean > =>
@@ -449,9 +449,9 @@ const editorActions = {
 	/**
 	 * Edit an existing entity record. Values are not sent to the server until save.
 	 *
-	 * @param {number} id The entity ID.
-	 * @param {Partial<EditableCta>} edit The edits to apply.
-	 * @returns {Promise<boolean>} Whether the edit was successful.
+	 * @param {number}               id    The entity ID.
+	 * @param {Partial<EditableCta>} edits The edits to apply.
+	 * @return {Promise<boolean>} Whether the edit was successful.
 	 */
 	editRecord:
 		( id: number, edits: Partial< EditableCta > ): ThunkAction =>
@@ -523,6 +523,7 @@ const editorActions = {
 			} catch ( error ) {
 				const errorMessage = getErrorMessage( error );
 
+				// eslint-disable-next-line no-console
 				console.error( 'Edit failed:', error );
 
 				await dispatch.createErrorNotice( errorMessage );
@@ -546,9 +547,9 @@ const editorActions = {
 	/**
 	 * Save an edited entity record.
 	 *
-	 * @param {number} id The entity ID.
-	 * @param {Function} validate An optional validation function.
-	 * @returns {Promise<boolean>} Whether the save was successful.
+	 * @param {number}  id       The entity ID.
+	 * @param {boolean} validate An optional validation function.
+	 * @return {Promise<boolean>} Whether the save was successful.
 	 */
 	saveEditedRecord:
 		( id: number, validate: boolean = true ): ThunkAction< boolean > =>
@@ -680,6 +681,7 @@ const editorActions = {
 			} catch ( error ) {
 				const errorMessage = getErrorMessage( error );
 
+				// eslint-disable-next-line no-console
 				console.error( 'Save failed:', error );
 
 				await dispatch.createErrorNotice( errorMessage );
@@ -704,12 +706,14 @@ const editorActions = {
 	/**
 	 * Undo the last action.
 	 *
-	 * @returns {Promise<void>}
+	 * @param {number} id    The entity ID.
+	 * @param {number} steps The number of steps to undo.
+	 * @return {Promise<void>}
 	 */
 	undo:
 		( id: number, steps: number = 1 ): ThunkAction =>
 		async ( { select, dispatch } ) => {
-			let ctaId = id > 0 ? id : select.getEditorId();
+			const ctaId = id > 0 ? id : select.getEditorId();
 
 			if ( typeof ctaId === 'undefined' ) {
 				return;
@@ -727,12 +731,14 @@ const editorActions = {
 	/**
 	 * Redo the last action.
 	 *
-	 * @returns {Promise<void>}
+	 * @param {number} id    The entity ID.
+	 * @param {number} steps The number of steps to redo.
+	 * @return {Promise<void>}
 	 */
 	redo:
 		( id: number, steps: number = 1 ): ThunkAction =>
 		async ( { select, dispatch } ) => {
-			let ctaId = id > 0 ? id : select.getEditorId();
+			const ctaId = id > 0 ? id : select.getEditorId();
 
 			if ( typeof ctaId === 'undefined' ) {
 				return;
@@ -751,12 +757,12 @@ const editorActions = {
 	 * Reset the edits for an entity record.
 	 *
 	 * @param {number} id The entity ID.
-	 * @returns {Promise<void>}
+	 * @return {Promise<void>}
 	 */
 	resetRecordEdits:
 		( id: number ): ThunkAction =>
 		async ( { select, dispatch } ) => {
-			let ctaId = id > 0 ? id : select.getEditorId();
+			const ctaId = id > 0 ? id : select.getEditorId();
 
 			if ( typeof ctaId === 'undefined' ) {
 				return;
@@ -770,6 +776,12 @@ const editorActions = {
 			} );
 		},
 
+	/**
+	 * Update the editor values.
+	 *
+	 * @param {Partial<EditableCta>} values The values to update.
+	 * @return {Promise<void>}
+	 */
 	updateEditorValues:
 		( values: PartialEditableCta ): ThunkAction< void > =>
 		async ( { dispatch, select } ) => {
@@ -782,6 +794,11 @@ const editorActions = {
 			dispatch.editRecord( editorId, values );
 		},
 
+	/**
+	 * Save the editor values.
+	 *
+	 * @return {Promise<boolean>} Whether the save was successful.
+	 */
 	saveEditorValues:
 		(): ThunkAction< boolean > =>
 		async ( { dispatch, select } ) => {
@@ -798,6 +815,11 @@ const editorActions = {
 			return dispatch.saveEditedRecord( editorId );
 		},
 
+	/**
+	 * Reset the editor values.
+	 *
+	 * @return {Promise<void>}
+	 */
 	resetEditorValues:
 		(): ThunkAction< void > =>
 		async ( { dispatch, select } ) => {
@@ -810,7 +832,12 @@ const editorActions = {
 			dispatch.resetRecordEdits( editorId );
 		},
 
-	// Refactored changeEditorId using thunk and our selectors
+	/**
+	 * Change the editor ID.
+	 *
+	 * @param {EditorId} editorId The editor ID.
+	 * @return {Promise<void>}
+	 */
 	changeEditorId:
 		( editorId: EditorId ): ThunkAction< void > =>
 		async ( { select, dispatch } ) => {
@@ -854,7 +881,10 @@ const editorActions = {
 				} );
 			} catch ( error ) {
 				const errorMessage = getErrorMessage( error );
+
+				// eslint-disable-next-line no-console
 				console.error( 'Failed to change editor ID:', error );
+
 				dispatch.createErrorNotice( errorMessage );
 			}
 		},
@@ -866,6 +896,11 @@ const editorActions = {
 const noticeActions = {
 	/**
 	 * Create a notice.
+	 *
+	 * @param {Notice[ 'status' ]}  status  The notice status.
+	 * @param {Notice[ 'content' ]} content The notice content.
+	 * @param {Notice}              options The notice options.
+	 * @return {Promise<void>}
 	 */
 	createNotice:
 		(
@@ -891,6 +926,10 @@ const noticeActions = {
 
 	/**
 	 * Create an error notice.
+	 *
+	 * @param {string}                             content The notice content.
+	 * @param {Omit<Notice, 'status' | 'content'>} options The notice options.
+	 * @return {Promise<void>}
 	 */
 	createErrorNotice:
 		(
@@ -912,6 +951,10 @@ const noticeActions = {
 
 	/**
 	 * Create a success notice.
+	 *
+	 * @param {string}                             content The notice content.
+	 * @param {Omit<Notice, 'status' | 'content'>} options The notice options.
+	 * @return {Promise<void>}
 	 */
 	createSuccessNotice:
 		(
@@ -935,14 +978,12 @@ const noticeActions = {
 
 	/**
 	 * Remove a notice for a given context.
+	 *
+	 * @param {string} id The notice ID.
+	 * @return {Promise<void>}
 	 */
 	removeNotice:
-		(
-			/**
-			 * Notice ID.
-			 */
-			id: string
-		): ThunkAction =>
+		( id: string ): ThunkAction =>
 		async ( { registry } ) => {
 			registry
 				.dispatch( noticesStore )
@@ -951,14 +992,12 @@ const noticeActions = {
 
 	/**
 	 * Remove all notices for a given context.
+	 *
+	 * @param {string[]} ids The notice IDs.
+	 * @return {Promise<void>}
 	 */
 	removeAllNotices:
-		(
-			/**
-			 * Notice IDs.
-			 */
-			ids?: string[]
-		): ThunkAction =>
+		( ids?: string[] ): ThunkAction =>
 		async ( { registry } ) => {
 			if ( ids ) {
 				registry
@@ -968,10 +1007,10 @@ const noticeActions = {
 				const notices = registry
 					.select( noticesStore )
 					.getNotices( NOTICE_CONTEXT );
-				const ids = notices.map( ( notice ) => notice.id );
+				const noticeIds = notices.map( ( notice ) => notice.id );
 				registry
 					.dispatch( noticesStore )
-					.removeNotices( ids, NOTICE_CONTEXT );
+					.removeNotices( noticeIds, NOTICE_CONTEXT );
 			}
 		},
 };
@@ -1063,15 +1102,17 @@ const resolutionActions = {
 
 	/**
 	 * Invalidate resolution for an entity.
+	 *
+	 * @param {number | string} id The entity ID.
+	 * @return {Promise<void>}
 	 */
 	invalidateResolution:
-		( id: number | string, operation: string = 'fetch' ): ThunkAction =>
+		( id: number | string ): ThunkAction =>
 		( { dispatch } ) => {
 			dispatch( {
 				type: INVALIDATE_RESOLUTION,
 				payload: {
 					id,
-					operation,
 				},
 			} );
 		},

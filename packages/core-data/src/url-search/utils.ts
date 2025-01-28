@@ -13,6 +13,11 @@ export const apiQueryUrl = ( queryParams: SearchArgs = { search: '' } ) =>
 
 /**
  * Fetch link suggestions from the WordPress API
+ *
+ * @param {string}        search        The search term.
+ * @param {SearchOptions} searchOptions The search options.
+ *
+ * @return {Promise<WPLinkSearchResult[]>} The link suggestions.
  */
 export const fetchLinkSuggestions = async (
 	search: string,

@@ -26,10 +26,12 @@ export const sprintf = (
 };
 
 export const __ = ( text: string, domain: TextDomain ) => {
+	// eslint-disable-next-line @wordpress/i18n-text-domain, @wordpress/i18n-no-variables
 	return i18n.__( text, domain );
 };
 
 export const _x = ( text: string, context: string, domain: TextDomain ) => {
+	// eslint-disable-next-line @wordpress/i18n-text-domain, @wordpress/i18n-no-variables
 	return i18n._x( text, context, domain );
 };
 
@@ -39,6 +41,7 @@ export const _n = (
 	number: number,
 	domain: TextDomain
 ) => {
+	// eslint-disable-next-line @wordpress/i18n-text-domain, @wordpress/i18n-no-variables
 	return i18n._n( single, plural, number, domain );
 };
 
@@ -48,6 +51,7 @@ export const _nx = (
 	number: number,
 	domain: TextDomain
 ) => {
+	// eslint-disable-next-line @wordpress/i18n-text-domain, @wordpress/i18n-no-variables
 	return i18n._nx( text, context, number, domain );
 };
 

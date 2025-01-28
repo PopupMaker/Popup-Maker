@@ -35,7 +35,7 @@ const getModifiedPath = ( path: string ): string => {
 /**
  * Fetches data from the WordPress API with proper authentication and error handling
  *
- * @param {string} path - The API endpoint path
+ * @param {string}          path         - The API endpoint path
  * @param {APIFetchOptions} [options={}] - API Fetch options
  * @return {Promise<T>} Promise that resolves with the JSON response
  * @throws {Error} If the fetch fails or returns an error status

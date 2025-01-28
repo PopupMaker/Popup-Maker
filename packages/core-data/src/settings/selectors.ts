@@ -7,11 +7,21 @@ import type { Settings, StoreActionNames } from './types';
 
 /**
  * Get setting by name.
+ *
+ * @param {State} state The state.
+ *
+ * @return {Settings} The settings.
  */
 export const getSettings = ( state: State ): Settings => state.settings;
 
 /**
  * Get setting by name.
+ *
+ * @param {State} state        The state.
+ * @param {K}     name         The setting name.
+ * @param {D}     defaultValue The default value.
+ *
+ * @return {Settings[K] | D} The setting value.
  */
 export const getSetting = <
 	K extends keyof Settings,
@@ -34,6 +44,10 @@ export const getSetting = <
 
 /**
  * Gets object of unsaved settings changes.
+ *
+ * @param {State} state The state.
+ *
+ * @return {State[ 'unsavedChanges' ]} The unsaved changes.
  */
 export const getUnsavedChanges = (
 	state: State
@@ -82,6 +96,11 @@ export const getReqPermission = createSelector(
 
 /**
  * Get current status for dispatched action.
+ *
+ * @param {State}            state      The state.
+ * @param {StoreActionNames} actionName The action name.
+ *
+ * @return {string | undefined} The status.
  */
 export const getDispatchStatus = (
 	state: State,
@@ -131,6 +150,11 @@ export const isDispatching = createSelector(
 
 /**
  * Check if action has finished dispatching.
+ *
+ * @param {State}            state      The state.
+ * @param {StoreActionNames} actionName The action name.
+ *
+ * @return {boolean} Whether the action has finished dispatching.
  */
 export const hasDispatched = (
 	state: State,
@@ -152,7 +176,7 @@ export const hasDispatched = (
 /**
  * Get dispatch action error if esists.
  *
- * @param {State}                state      Current state.
+ * @param {State}                        state      Current state.
  * @param {SettingsStore['ActionNames']} actionName Action name to check.
  *
  * @return {string|undefined} Current error message.

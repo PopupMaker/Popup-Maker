@@ -14,11 +14,19 @@ import type {
 
 /**
  * Get license
+ *
+ * @param {State} state State.
+ *
+ * @return {License} License.
  */
 export const getLicenseData = ( state: State ): License => state.license;
 
 /**
  * Get license key.
+ *
+ * @param {State} state State.
+ *
+ * @return {LicenseKey} License key.
  */
 export const getLicenseKey = ( state: State ): LicenseKey => {
 	const { key } = getLicenseData( state );
@@ -27,6 +35,10 @@ export const getLicenseKey = ( state: State ): LicenseKey => {
 
 /**
  * Get license status.
+ *
+ * @param {State} state State.
+ *
+ * @return {LicenseStatus} License status.
  */
 export const getLicenseStatus = createSelector(
 	( state: State ): LicenseStatus => {
@@ -42,12 +54,21 @@ export const getLicenseStatus = createSelector(
 
 /**
  * Get connect info for pro upgrade.
+ *
+ * @param {State} state State.
+ *
+ * @return {LicenseConnect | undefined} Connect info.
  */
 export const getConnectInfo = ( state: State ): LicenseConnect | undefined =>
 	state.connectInfo;
 
 /**
  * Get current status for dispatched action.
+ *
+ * @param {State}            state      State.
+ * @param {StoreActionNames} actionName Action name.
+ *
+ * @return {string | undefined} Status.
  */
 export const getDispatchStatus = (
 	state: State,
@@ -56,6 +77,11 @@ export const getDispatchStatus = (
 
 /**
  * Check if action is dispatching.
+ *
+ * @param {State}                                 state       State.
+ * @param {StoreActionNames | StoreActionNames[]} actionNames Action name or array of action names.
+ *
+ * @return {boolean} True if action is dispatching, false otherwise.
  */
 export const isDispatching = createSelector(
 	(
@@ -91,6 +117,11 @@ export const isDispatching = createSelector(
 
 /**
  * Check if action has finished dispatching.
+ *
+ * @param {State}            state      State.
+ * @param {StoreActionNames} actionName Action name.
+ *
+ * @return {boolean} True if action has finished dispatching, false otherwise.
  */
 export const hasDispatched = createSelector(
 	( state: State, actionName: StoreActionNames ): boolean => {
@@ -111,6 +142,11 @@ export const hasDispatched = createSelector(
 
 /**
  * Get dispatch action error if esists.
+ *
+ * @param {State}            state      State.
+ * @param {StoreActionNames} actionName Action name.
+ *
+ * @return {string | undefined} Error.
  */
 export const getDispatchError = (
 	state: State,

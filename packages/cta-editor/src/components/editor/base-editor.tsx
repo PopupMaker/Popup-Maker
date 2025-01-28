@@ -25,7 +25,7 @@ initEditor();
  *
  * @param {BaseEditorProps} props The props to pass to the editor.
  *
- * @returns {JSX.Element} The editor component.
+ * @return {JSX.Element} The editor component.
  */
 const BaseEditor = ( {
 	afterTabs,

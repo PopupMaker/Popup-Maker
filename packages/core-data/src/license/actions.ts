@@ -28,6 +28,10 @@ const {
 
 /**
  * Change status of a dispatch action request.
+ *
+ * @param {StoreActionNames} actionName Action name.
+ * @param {DispatchStatus}   status     Status.
+ * @param {string}           message    Message.
  */
 export const changeActionStatus = (
 	actionName: StoreActionNames,
@@ -54,6 +58,8 @@ export const changeActionStatus = (
 
 /**
  * Activate license.
+ *
+ * @param {LicenseKey} licenseKey License key.
  */
 export const activateLicense =
 	( licenseKey?: LicenseKey ): ThunkAction =>
@@ -223,6 +229,8 @@ export const checkLicenseStatus =
 
 /**
  * Change license key.
+ *
+ * @param {LicenseKey} licenseKey License key.
  */
 export const updateLicenseKey =
 	( licenseKey: LicenseKey ): ThunkAction =>
@@ -386,6 +394,8 @@ export const activatePro =
 
 /**
  * Hydrate license data.
+ *
+ * @param {License} license License.
  */
 export const hydrate = (
 	license: License

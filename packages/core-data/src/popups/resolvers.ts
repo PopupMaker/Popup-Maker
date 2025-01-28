@@ -41,6 +41,7 @@ const entityResolvers = {
 				// dispatch.failResolution( action, 'No call to actions found' );
 			} catch ( error: any ) {
 				// const errorMessage = getErrorMessage( error );
+				// eslint-disable-next-line no-console
 				console.error( error );
 				// dispatch.failResolution( action, errorMessage );
 			}
@@ -72,6 +73,7 @@ const entityResolvers = {
 				// dispatch.finishResolution( action );
 			} catch ( error: any ) {
 				// const errorMessage = getErrorMessage( error );
+				// eslint-disable-next-line no-console
 				console.error( error );
 				// dispatch.failResolution( action, errorMessage );
 			}

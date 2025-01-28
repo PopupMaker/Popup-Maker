@@ -487,8 +487,8 @@ const reducer = ( state: State = initialState, action: ReducerAction ) => {
 						...state.resolutionState?.[ operation ],
 						[ id ]: {
 							status: DispatchStatus.Error,
-							error: error,
-							extra: extra,
+							error,
+							extra,
 							timestamp: Date.now(),
 						},
 					},

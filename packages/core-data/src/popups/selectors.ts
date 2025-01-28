@@ -17,7 +17,7 @@ const entitySelectors = {
 	/**
 	 * Get all entities.
 	 *
-	 * @returns {Popup[]} All entities.
+	 * @return {Popup[]} All entities.
 	 */
 	getPopups: createSelector(
 		( state: State ) => state.allIds.map( ( id ) => state.byId[ id ] ),
@@ -29,7 +29,7 @@ const entitySelectors = {
 	 *
 	 * @param {number} id - The ID of the entity to get.
 	 *
-	 * @returns {Popup} The entity.
+	 * @return {Popup} The entity.
 	 */
 	getPopup: createSelector(
 		( state: State, id: number ) => {
@@ -42,10 +42,11 @@ const entitySelectors = {
 	/**
 	 * Get filtered entities.
 	 *
-	 * @param {Function} predicate - The predicate to filter the entities.
-	 * @param {boolean} maintainOrder - Whether to maintain the order of the entities.
+	 * @param {State}    state         The state.
+	 * @param {Function} predicate     - The predicate to filter the entities.
+	 * @param {boolean}  maintainOrder - Whether to maintain the order of the entities.
 	 *
-	 * @returns {Popup< 'edit' >[]} The filtered entities.
+	 * @return {Popup< 'edit' >[]} The filtered entities.
 	 */
 	getFiltered: (
 		state: State,
@@ -66,9 +67,10 @@ const entitySelectors = {
 	/**
 	 * Get filtered entity IDs.
 	 *
-	 * @param {Function} predicate - The predicate to filter the entities.
+	 * @param {State}    state     The state.
+	 * @param {Function} predicate The predicate to filter the entities.
 	 *
-	 * @returns {number[]} The filtered entity IDs.
+	 * @return {number[]} The filtered entity IDs.
 	 */
 	getFilteredIds: (
 		state: State,
@@ -83,7 +85,7 @@ const editorSelectors = {
 	/**
 	 * Get the editor ID.
 	 *
-	 * @returns {number | string} The editor ID.
+	 * @return {number | string} The editor ID.
 	 */
 	getEditorId: createSelector(
 		( state: State ) => state?.editorId,
@@ -93,7 +95,7 @@ const editorSelectors = {
 	/**
 	 * Check if the editor is active.
 	 *
-	 * @returns {boolean} Whether the editor is active.
+	 * @return {boolean} Whether the editor is active.
 	 */
 	isEditorActive: createSelector(
 		( state: State ): boolean => {
@@ -111,7 +113,7 @@ const editorSelectors = {
 	/**
 	 * Get the current editor values.
 	 *
-	 * @returns {EditablePopup} The current editor values.
+	 * @return {EditablePopup} The current editor values.
 	 */
 	getCurrentEditorValues: createSelector(
 		( state: State ) => {
@@ -136,7 +138,7 @@ const editorSelectors = {
 	 *
 	 * @param {number} id - The ID of the entity to check.
 	 *
-	 * @returns {boolean} Whether the entity has been edited.
+	 * @return {boolean} Whether the entity has been edited.
 	 */
 	hasEditedEntity: createSelector(
 		( state: State, id: number ) => {
@@ -150,7 +152,7 @@ const editorSelectors = {
 	 *
 	 * @param {number} id - The ID of the entity to get.
 	 *
-	 * @returns {EditablePopup} The edited entity.
+	 * @return {EditablePopup} The edited entity.
 	 */
 	getEditedEntity: createSelector(
 		( state: State, id: number ) => {
@@ -164,7 +166,7 @@ const editorSelectors = {
 	 *
 	 * @param {number} id - The ID of the entity to get.
 	 *
-	 * @returns {Partial<EditablePopup>[]} The edit history.
+	 * @return {Partial<EditablePopup>[]} The edit history.
 	 */
 	getEntityEditHistory: createSelector(
 		( state: State, id: number ) => {
@@ -178,7 +180,7 @@ const editorSelectors = {
 	 *
 	 * @param {number} id - The ID of the entity to get.
 	 *
-	 * @returns {number} The current edit history index.
+	 * @return {number} The current edit history index.
 	 */
 	getCurrentEditHistoryIndex: createSelector(
 		( state: State, id: number ) => {
@@ -192,7 +194,7 @@ const editorSelectors = {
 	 *
 	 * @param {number} id - The ID of the entity to check.
 	 *
-	 * @returns {boolean} Whether the entity has edits.
+	 * @return {boolean} Whether the entity has edits.
 	 */
 	hasEdits: createSelector(
 		( state: State, id: number ) => {
@@ -206,7 +208,7 @@ const editorSelectors = {
 	 *
 	 * @param {number} id - The ID of the entity to check.
 	 *
-	 * @returns {boolean} Whether the entity can be undone.
+	 * @return {boolean} Whether the entity can be undone.
 	 */
 	hasUndo: createSelector(
 		( state: State, id: number ) => {
@@ -220,7 +222,7 @@ const editorSelectors = {
 	 *
 	 * @param {number} id - The ID of the entity to check.
 	 *
-	 * @returns {boolean} Whether the entity can be redone.
+	 * @return {boolean} Whether the entity can be redone.
 	 */
 	hasRedo: createSelector(
 		( state: State, id: number ) => {
@@ -239,20 +241,20 @@ const editorSelectors = {
 	 *
 	 * @param {number} id - The ID of the entity to get.
 	 *
-	 * @returns {EditablePopup} The current entity values.
+	 * @return {EditablePopup} The current entity values.
 	 */
 	getEditedPopup: createSelector(
 		( state: State, id: number ) => {
-			const entity = state.editedEntities?.[ id ];
+			const baseEntity = state.editedEntities?.[ id ];
 			const editHistory = state.editHistory?.[ id ];
 			const editHistoryIndex = state.editHistoryIndex?.[ id ];
 
-			if ( ! entity ) {
+			if ( ! baseEntity ) {
 				return undefined;
 			}
 
 			if ( ! editHistory ) {
-				return entity;
+				return baseEntity;
 			}
 
 			const edits = editHistory.slice( 0, editHistoryIndex );
@@ -261,7 +263,7 @@ const editorSelectors = {
 				( entity: EditablePopup, edit: PopupEdit ) => {
 					return { ...entity, ...edit };
 				},
-				entity
+				baseEntity
 			);
 
 			return editedEntity;
@@ -278,6 +280,7 @@ const editorSelectors = {
 	 * Get default entity values.
 	 */
 	getDefaultValues: createSelector(
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		( _state: State ) => {
 			return applyFilters(
 				'popupMaker.popup.defaultValues',

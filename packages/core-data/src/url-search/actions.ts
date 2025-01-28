@@ -20,6 +20,8 @@ const { SEARCH_REQUEST, SEARCH_SUCCESS, SEARCH_ERROR, CHANGE_ACTION_STATUS } =
 
 /**
  * Set query search text.
+ * @param {string}        queryText     Query text.
+ * @param {SearchOptions} searchOptions Search options.
  */
 export const updateSuggestions =
 	(
@@ -77,6 +79,8 @@ export const updateSuggestions =
 
 /**
  * Populate search results.
+ *
+ * @param {string} queryText Query text.
  */
 export const searchRequest = (
 	/**
@@ -92,6 +96,9 @@ export const searchRequest = (
 
 /**
  * Populate search results.
+ *
+ * @param {string}               queryText Query text.
+ * @param {WPLinkSearchResult[]} results   Search results.
  */
 export const searchSuccess = (
 	/**
@@ -112,6 +119,9 @@ export const searchSuccess = (
 
 /**
  * Generate a search error action.
+ *
+ * @param {string} queryText Query text.
+ * @param {string} error     Error message.
  */
 export const searchError = (
 	/**
@@ -132,6 +142,10 @@ export const searchError = (
 
 /**
  * Change status of a dispatch action request.
+ *
+ * @param {string}           actionName Action name.
+ * @param {DispatchStatuses} status     Status.
+ * @param {string}           message    Message.
  */
 export const changeActionStatus = (
 	/**

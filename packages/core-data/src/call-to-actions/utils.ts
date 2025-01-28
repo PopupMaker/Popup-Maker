@@ -12,7 +12,7 @@ export function isRenderedText(
  * Convert an entity to an editable entity.
  *
  * @param {T} entity The entity to convert.
- * @returns {Updatable<T>} The editable entity.
+ * @return {Updatable<T>} The editable entity.
  */
 export function editableEntity< T extends BaseEntity< 'edit' > >(
 	entity: T

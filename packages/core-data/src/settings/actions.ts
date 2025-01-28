@@ -14,6 +14,12 @@ const { UPDATE, SAVE_CHANGES, STAGE_CHANGES, HYDRATE, CHANGE_ACTION_STATUS } =
 
 /**
  * Change status of a dispatch action request.
+ *
+ * @param {string}           actionName The action name.
+ * @param {DispatchStatuses} status     The status.
+ * @param {string}           message    The message.
+ *
+ * @return {ReducerAction} The action.
  */
 export const changeActionStatus = (
 	actionName: StoreActionNames,
@@ -35,6 +41,10 @@ export const changeActionStatus = (
 
 /**
  * Update settings.
+ *
+ * @param {Partial<Settings>} settings Settings to update.
+ *
+ * @return {ThunkAction} The action.
  */
 export const updateSettings =
 	(
@@ -91,6 +101,10 @@ export const updateSettings =
 
 /**
  * Save staged/unsaved changes.
+ *
+ * @param {Partial<Settings>} settings Settings to save.
+ *
+ * @return {ThunkAction} The action.
  */
 export const saveSettings =
 	(
@@ -153,6 +167,10 @@ export const saveSettings =
 
 /**
  * Stage unsaved changes.
+ *
+ * @param {Partial<Settings>} settings Settings to stage.
+ *
+ * @return {ReducerAction} The action.
  */
 export const stageUnsavedChanges = (
 	/**
@@ -168,6 +186,10 @@ export const stageUnsavedChanges = (
 
 /**
  * Hydrate settings.
+ *
+ * @param {Settings} settings Settings to hydrate.
+ *
+ * @return {ReducerAction} The action.
  */
 export const hydrate = (
 	/**
