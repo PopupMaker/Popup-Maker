@@ -5,7 +5,11 @@ export { default as EntitySelectControl } from './entity-select-control';
 export { default as FieldPanel } from './field-panel';
 export { default as FieldRow } from './field-row';
 export { default as FreeFormEditControl } from './freeform-control';
-export { default as ListTable } from './list-table';
+export {
+	default as ListTable,
+	type SortConfig,
+	SortDirection,
+} from './list-table';
 export { default as PopupSelectControl } from './popup-select-control';
 export { default as RadioButtonControl } from './radio-buttons-control';
 export { default as SearchableMulticheckControl } from './searchable-multicheck-control';
