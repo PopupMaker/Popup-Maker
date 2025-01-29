@@ -1,5 +1,10 @@
 import { __ } from '@popup-maker/i18n';
-import { defaultCtaValues, callToActionStore } from '@popup-maker/core-data';
+import {
+	defaultCtaValues,
+	callToActionStore,
+	getErrorMessage,
+	DispatchStatus,
+} from '@popup-maker/core-data';
 import { Notice } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect, useState, useRef } from '@wordpress/element';
@@ -28,12 +33,12 @@ export interface EditorWithDataStoreProps
 	/**
 	 * The editor id.
 	 */
-	id?: EditorId;
+	id: NonNullable< EditorId >;
 
 	/**
 	 * The default values for the editor, only applicable when creating a new call to action.
 	 */
-	defaultValues?: Partial< Editable > | undefined;
+	defaultValues?: Editable | undefined;
 
 	/**
 	 * Callback to run when the CallToAction is saved.
@@ -65,7 +70,7 @@ export const withDataStore = (
 ) => {
 	return function DataStoreWrappedEditor( {
 		id,
-		defaultValues,
+		defaultValues = defaultCtaValues,
 		onSave,
 		...componentProps
 	}: EditorWithDataStoreProps ) {
@@ -85,14 +90,10 @@ export const withDataStore = (
 		const saveHandledRef = useRef( false );
 
 		const {
-			// TODO Review if this has side effects.
-			values = {
-				...defaultCtaValues,
-				...( defaultValues ?? {} ),
-			},
-			editorId,
+			values = defaultValues,
 			isEditorActive,
 			isSaving,
+			savedSuccessfully,
 			hasError,
 			error,
 			getEditorValues,
@@ -100,19 +101,19 @@ export const withDataStore = (
 			( select ) => {
 				const store = select( callToActionStore );
 
-				const resolutionError = store.getResolutionError( id ?? 0 );
+				const resolutionState =
+					store.getResolutionState( 'createCallToAction' ) ||
+					store.getResolutionState( 'updateCallToAction' );
+
+				const resolutionError = store.getResolutionError( id );
 
 				return {
-					editorId: store.getEditorId(),
-					values: store.getEditedCallToAction( id ?? 0 ),
+					values: store.getEditedCallToAction( id ),
 					isEditorActive: store.isEditorActive(),
 					isSaving: store.isResolving( 'updateCallToAction' ),
 					getEditorValues: store.getEditedCallToAction,
-					// savedSuccessfully:
-					// 	Status.Success ===
-					// 		store.getDispatchStatus( 'createCallToAction' ) ||
-					// 	Status.Success ===
-					// 		store.getDispatchStatus( 'updateCallToAction' ),
+					savedSuccessfully:
+						resolutionState?.status === DispatchStatus.Success,
 					hasError: !! resolutionError,
 					error: resolutionError,
 				};
@@ -120,34 +121,7 @@ export const withDataStore = (
 			[ id ]
 		);
 
-		const [ savedSuccessfully, setSavedSuccessfully ] =
-			useState< boolean >( false );
-
-		useEffect( () => {
-			if ( isSaving ) {
-				setSavedSuccessfully( false );
-				return;
-			}
-
-			setSavedSuccessfully( ! hasError );
-		}, [ isSaving, hasError ] );
-
-		const { editRecord, resetRecordEdits, changeEditorId } =
-			useDispatch( callToActionStore );
-
-		/**
-		 * Clear the editor data when the component unmounts.
-		 */
-		useEffect( () => {
-			if ( editorId !== id ) {
-				// eslint-disable-next-line no-console
-				console.log( 'changeEditorId', id, editorId );
-				changeEditorId( id );
-			}
-			return () => {
-				resetRecordEdits( id ?? 0 );
-			};
-		}, [ id, editorId, changeEditorId, resetRecordEdits ] );
+		const { editRecord } = useDispatch( callToActionStore );
 
 		/**
 		 * Listen for errors and set the error message.
@@ -253,9 +227,7 @@ export const withDataStore = (
 							setErrorMessage( undefined );
 						} }
 					>
-						{ typeof errorMessage === 'string'
-							? errorMessage
-							: errorMessage.message }
+						{ getErrorMessage( errorMessage ) }
 					</Notice>
 				) }
 			</>

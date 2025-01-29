@@ -53,6 +53,20 @@ export const withQueryParams = (
 		}, [] );
 
 		/**
+		 * Clear the editor data when the component unmounts.
+		 */
+		// useEffect( () => {
+		// if ( editorId !== id ) {
+		// eslint-disable-next-line no-console
+		// console.log( 'changeEditorId', id, editorId );
+		// changeEditorId( id );
+		// }
+		// return () => {
+		// resetRecordEdits( id ?? 0 );
+		// };
+		// }, [ id, editorId, changeEditorId, resetRecordEdits ] );
+
+		/**
 		 * Handle clearing query params when the editor is saved.
 		 */
 		const onSave = useCallback(
