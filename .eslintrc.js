@@ -14,6 +14,12 @@ const eslintConfig = {
 		jquery: true,
 	},
 	rules: {
+		'@wordpress/i18n-text-domain': [
+			'error',
+			{
+				allowedTextDomain: [ 'popup-maker' ],
+			},
+		],
 		'import/no-unresolved': [
 			'error',
 			{
