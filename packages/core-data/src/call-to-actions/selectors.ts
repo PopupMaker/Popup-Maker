@@ -101,10 +101,6 @@ const editorSelectors = {
 		( state: State ): boolean => {
 			const editorId = state?.editorId;
 
-			if ( typeof editorId === 'string' && editorId === 'new' ) {
-				return true;
-			}
-
 			return typeof editorId === 'number' && editorId > 0;
 		},
 		( state: State ) => [ state.editorId ]
