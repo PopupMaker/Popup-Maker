@@ -56,17 +56,6 @@ const useEditor = () => {
 		}
 	}, [ edit, add, editorId, changeEditorId ] );
 
-	// Sync editorId changes to the URL.
-	useEffect(
-		() => {
-			if ( ! add && ! edit && ! isEditorActive ) {
-				clearEditorParams();
-			}
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[ isEditorActive, add, edit ]
-	);
-
 	/**
 	 * Set the editor to edit a specific restriction.
 	 *
@@ -75,13 +64,13 @@ const useEditor = () => {
 	 * NOTE: It is important that both get updated at the same time, to prevent
 	 * infinite state updates via useEffect above.
 	 *
-	 * @param {number|'new'|undefined} id Id to edit.
+	 * @param {number|undefined} id Id to edit.
 	 */
 	const setEditorId = ( id: number | undefined ) => {
-		setQueryParams( {
-			edit: typeof id === 'number' && id > 0 ? id : undefined,
-		} );
 		changeEditorId( id );
+		setQueryParams( {
+			edit: id,
+		} );
 	};
 
 	return {
