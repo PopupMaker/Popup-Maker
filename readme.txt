@@ -110,7 +110,7 @@ Need even more features? Popup Maker has over 20 premium features including:
 * [Scheduling](https://wppopupmaker.com/extensions/scheduling/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=scheduling)
 * And [many more](https://wppopupmaker.com/extensions/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=all-extensions)!
 
-Have questions? Check out [our documentation](https://docs.wppopupmaker.com?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=questions&utm_term=documentation) or [reach out to our support](https://wppopupmaker.com/support/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=questions&utm_term=support)!
+Have questions? Check out [our documentation](https://wppopupmaker.com/docs/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=questions&utm_term=documentation) or [reach out to our support](https://wppopupmaker.com/support/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=questions&utm_term=support)!
 
 Want to contribute? We are [on GitHub](https://github.com/PopupMaker/Popup-Maker)!
 
@@ -153,19 +153,19 @@ Some popups we have seen work well for ecommerce sites include:
 * Cart abandonment popups - offering discounts or support when someone is about to leave the checkout page
 
 = Where is your documentation? =
-You can find our documentation over on [our docs site](https://docs.wppopupmaker.com?utm_campaign=readme&utm_medium=referral&utm_source=readme-faqs&utm_content=documentation)
+You can find our documentation over on [our docs site](https://wppopupmaker.com/docs/?utm_campaign=readme&utm_medium=referral&utm_source=readme-faqs&utm_content=documentation)
 
 = How do I open a popup? =
-Using "triggers", you can customize what makes each popup open. Review [our triggers documentation here](https://docs.wppopupmaker.com/article/141-triggers-cookies?utm_campaign=readme&utm_medium=referral&utm_source=readme-faqs&utm_content=open-a-popup)
+Using "triggers", you can customize what makes each popup open. Review [our triggers documentation here](https://wppopupmaker.com/docs/controlling-popups/using-triggers-and-cookies-together/?utm_campaign=readme&utm_medium=referral&utm_source=readme-faqs&utm_content=open-a-popup)
 
 = How do I stop popups from opening repeatedly? =
-Using "cookies", you can set up how long until the popup opens again, if ever. Review [our cookies documentation](https://docs.wppopupmaker.com/article/148-cookies?utm_campaign=readme&utm_medium=referral&utm_source=readme-faqs&utm_content=stop-opening-repeatedly)
+Using "cookies", you can set up how long until the popup opens again, if ever. Review [our cookies documentation](https://wppopupmaker.com/docs/controlling-popups/cookies-settings-and-features/?utm_campaign=readme&utm_medium=referral&utm_source=readme-faqs&utm_content=stop-opening-repeatedly)
 
 = What do I do if I want a popup to show only on a certain page/post/etc? =
-Using "conditions", you can specify where the popup will be shown. Check out [our conditions documentation](https://docs.wppopupmaker.com/article/140-conditions?utm_campaign=readme&utm_medium=referral&utm_source=readme-faqs&utm_content=target-certain-pages)
+Using "conditions", you can specify where the popup will be shown. Check out [our conditions documentation](https://wppopupmaker.com/docs/controlling-popups/conditions/?utm_campaign=readme&utm_medium=referral&utm_source=readme-faqs&utm_content=target-certain-pages)
 
 = Why aren't my popups opening/working? =
-There are several common causes for this, check [this guide for help](https://docs.wppopupmaker.com/article/265-my-popup-wont-work-how-can-i-fix-it?utm_campaign=readme&utm_medium=referral&utm_source=readme-faqs&utm_content=popup-wont-open) resolving it.
+There are several common causes for this, check [this guide for help](https://wppopupmaker.com/docs/problem-solving/troubleshooting-your-first-popup/?utm_campaign=readme&utm_medium=referral&utm_source=readme-faqs&utm_content=popup-wont-open) resolving it.
 
 == Screenshots ==
 

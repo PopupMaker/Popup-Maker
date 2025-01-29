@@ -260,7 +260,7 @@ class PUM_Admin_Settings {
 							'desc'  => sprintf(
 								/* translators: 1 & 2 are opening and closing HTML of the link around "Learn more" */
 								esc_html__( 'Allow data sharing so that we can receive a little information on how it is used and help us make this plugin better? No user data is sent to our servers. No sensitive data is tracked. %1$sLearn more%2$s', 'popup-maker' ),
-								' <a target="_blank" rel="noreferrer noopener"  href="https://docs.wppopupmaker.com/article/528-the-data-the-popup-maker-plugin-collects?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=settings-page&utm_content=telemetry-setting">',
+								' <a target="_blank" rel="noreferrer noopener"  href="https://wppopupmaker.com/docs/policies/the-data-the-popup-maker-plugin-collects/?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=settings-page&utm_content=telemetry-setting">',
 								'</a>'
 							),
 						],
@@ -471,7 +471,7 @@ class PUM_Admin_Settings {
 								'desc'  => sprintf(
 									/* translators: 1 & 2 are opening and closing HTML of the link around "Learn more" */
 									esc_html__( 'Use this if your popups "jump" or "shift" when opened. %1$sLearn more%2$s', 'popup-maker' ),
-									'<a target="_blank" rel="noreferrer noopener" href="https://docs.wppopupmaker.com/article/314-why-does-my-site-shift-jump-or-skip-when-a-popup-is-triggered?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=settings-page&utm_content=adjust-right-padding">',
+									'<a target="_blank" rel="noreferrer noopener" href="https://wppopupmaker.com/docs/popup-display-front-end-behavior/why-does-my-site-shift-jump-or-skip-when-a-popup-is-triggered/?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=settings-page&utm_content=adjust-right-padding">',
 									'</a>'
 								),
 							],
@@ -660,7 +660,7 @@ class PUM_Admin_Settings {
 						printf(
 							/* translators: 1. URL to troubleshooting guide. 2. Closing tag. */
 							esc_html__( 'If you are seeing this, the page is still loading or there are Javascript errors on this page. %1$sView troubleshooting guide%2$s', 'popup-maker' ),
-							'<a href="https://docs.wppopupmaker.com/article/373-checking-for-javascript-errors" target="_blank">',
+							'<a href="https://wppopupmaker.com/docs/problem-solving/checking-javascript-errors/" target="_blank">',
 							'</a>'
 						);
 						?>
