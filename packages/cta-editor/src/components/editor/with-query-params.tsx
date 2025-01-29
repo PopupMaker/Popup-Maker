@@ -1,18 +1,19 @@
 import { __ } from '@popup-maker/i18n';
 import { callToActionStore } from '@popup-maker/core-data';
 import { useSelect } from '@wordpress/data';
-import { useCallback, useEffect, useRef } from '@wordpress/element';
+import { useCallback } from '@wordpress/element';
 
 import { useEditor } from '../hooks';
 
 import type { ComponentType } from 'react';
 import type { Updatable } from '@wordpress/core-data';
-import type { CallToAction, EditorId } from '@popup-maker/core-data';
+import type { CallToAction } from '@popup-maker/core-data';
 import type { EditorWithModalProps } from './with-modal';
 import type { EditorWithDataStoreProps } from './with-data-store';
 
 // TODO: Create a new hook & context for query params & consumers. Move any query param logic to this hook from useEditor.
 // TODO: Export the hook & context from this file.
+// TODO Move editorId to the query params, otherwise pass the id prop from the parent component.
 
 /**
  * Props for the EditorWithQueryParams component.
@@ -33,12 +34,15 @@ export const withQueryParams = (
 	WrappedComponent: ComponentType< EditorWithQueryParamsProps >
 ) => {
 	return function QueryParamsWrappedEditor( {
+		onSave: onSaveProp,
+		onClose: onCloseProp,
 		...componentProps
 	}: EditorWithQueryParamsProps ) {
-		const { tab, setTab, clearEditorParams, editorId, setEditorId } =
-			useEditor();
+		// Tempoary.
+		const closeOnSave = true;
 
-		// Fetch values separately so they will still be available to the component.
+		const { tab, setTab, clearEditorParams, editorId } = useEditor();
+
 		const { isEditorActive, isSaving } = useSelect( ( select ) => {
 			const store = select( callToActionStore );
 
@@ -48,51 +52,34 @@ export const withQueryParams = (
 			};
 		}, [] );
 
-		// Set ref for editorId to check if it has changed.
-		const currentEditorId = useRef< EditorId >( editorId );
-
 		/**
-		 * Update the query params when the editorId changes.
+		 * Handle clearing query params when the editor is saved.
 		 */
-		useEffect( () => {
-			// If the editorId changed (due to getting an id from new), update the query params via setEditorId.
-			if ( editorId !== currentEditorId.current ) {
-				setEditorId( editorId );
-				currentEditorId.current = editorId;
-			}
-		}, [ editorId, setEditorId, currentEditorId ] );
-
-		/**
-		 * Clear the editor params when the component unmounts.
-		 */
-		useEffect(
-			() => {
-				return clearEditorParams;
-			},
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-			[]
-		);
-
 		const onSave = useCallback(
 			( newValues: Updatable< CallToAction< 'edit' > > ) => {
-				// If the editorId changed (due to getting an id from new), update the query params via setEditorId.
-				if ( editorId !== newValues.id ) {
-					setEditorId( newValues.id );
+				if ( closeOnSave ) {
+					clearEditorParams();
 				}
 
-				componentProps.onSave?.( newValues );
+				// Save the values.
+				onSaveProp?.( newValues );
 			},
-			[ editorId, setEditorId, componentProps ]
+			[ onSaveProp, closeOnSave, clearEditorParams ]
 		);
 
+		/**
+		 * Clear the editor params if the editor is closed.
+		 */
 		const onClose = useCallback( () => {
 			if ( isSaving ) {
 				return;
 			}
 
 			clearEditorParams();
-			componentProps.onClose?.();
-		}, [ componentProps, isSaving, clearEditorParams ] );
+
+			// Pass the close event to the parent component.
+			onCloseProp?.();
+		}, [ isSaving, clearEditorParams, onCloseProp ] );
 
 		// If the editor isn't active, return empty.
 		if ( ! isEditorActive ) {
@@ -107,6 +94,7 @@ export const withQueryParams = (
 		return (
 			<WrappedComponent
 				{ ...componentProps }
+				id={ editorId }
 				tab={ tab }
 				setTab={ setTab }
 				onSave={ onSave }
