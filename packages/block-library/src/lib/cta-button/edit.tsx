@@ -252,7 +252,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 	/**
 	 * Flag: Whether to show the editor for creating a new CTA.
 	 */
-	const [ createNewCTA, setCreateNewCTA ] = useState( false );
+	const [ newCta, setNewCta ] = useState< number | boolean >( false );
 
 	/**
 	 * Flag: Whether the user is editing a CTA.
@@ -321,6 +321,8 @@ function ButtonEdit( props: ButtonEditProps ) {
 		[ ctaId ]
 	);
 
+	const { createCallToAction } = useDispatch( callToActionStore );
+
 	function startEditing() {
 		setIsExplicitlyEditing( true );
 	}
@@ -374,13 +376,28 @@ function ButtonEdit( props: ButtonEditProps ) {
 
 	// If a new CTA is created, don't show the popover
 	useEffect( () => {
-		if ( createNewCTA ) {
-			return;
+		async function createNewCTA() {
+			if ( false === newCta ) {
+				return;
+			}
+
+			if ( true === newCta ) {
+				const createdCta = await createCallToAction( {
+					title: __( 'New call to action', 'popup-maker' ),
+					status: 'publish',
+				} );
+
+				if ( createdCta ) {
+					setNewCta( createdCta.id );
+				}
+			}
+
+			setForceRefresh( ( prev ) => prev + 1 );
+			setIsExplicitlyEditing( true );
 		}
 
-		setForceRefresh( ( prev ) => prev + 1 );
-		setIsExplicitlyEditing( true );
-	}, [ createNewCTA ] );
+		createNewCTA();
+	}, [ newCta, createCallToAction ] );
 
 	return (
 		<>
@@ -483,11 +500,12 @@ function ButtonEdit( props: ButtonEditProps ) {
 									<FlexItem style={ { flexGrow: 1 } }>
 										<EntitySelectControl
 											value={ ctaId || 0 }
-											onChange={ (
+											onChange={ async (
 												newId: number | string
 											) => {
 												if ( newId === 'create_new' ) {
-													setCreateNewCTA( true );
+													setNewCta( true );
+
 													return;
 												}
 												setAttributes( {
@@ -643,21 +661,19 @@ function ButtonEdit( props: ButtonEditProps ) {
 				) }
 			</InspectorControls>
 
-			{ createNewCTA && (
+			{ typeof newCta === 'number' && newCta > 0 && (
 				<Editor
-					id={ 'new' }
+					id={ newCta }
 					defaultValues={ {
 						status: 'publish',
 					} }
 					onSave={ ( values ) => {
-						console.log( 'values', values );
 						setAttributes( {
 							ctaId: values.id,
 						} );
-						setCreateNewCTA( false );
 					} }
 					onClose={ () => {
-						setCreateNewCTA( false );
+						setNewCta( false );
 					} }
 				/>
 			) }
