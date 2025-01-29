@@ -85,7 +85,7 @@ const editorSelectors = {
 	/**
 	 * Get the editor ID.
 	 *
-	 * @return {number | string} The editor ID.
+	 * @return {number | undefined} The editor ID.
 	 */
 	getEditorId: createSelector(
 		( state: State ) => state?.editorId,

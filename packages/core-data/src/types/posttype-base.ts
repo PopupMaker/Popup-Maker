@@ -2,6 +2,8 @@ import type { Context, BaseEntityRecords } from '@wordpress/core-data';
 
 /**
  * The ID of the editor.
+ *
+ * TODO REVIEW: This maybe should not allow undefined, let those who use this type handle it.
  */
 export type EditorId = number | undefined;
 

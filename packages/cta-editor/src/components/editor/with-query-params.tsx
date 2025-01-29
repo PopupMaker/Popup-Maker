@@ -11,6 +11,9 @@ import type { CallToAction, EditorId } from '@popup-maker/core-data';
 import type { EditorWithModalProps } from './with-modal';
 import type { EditorWithDataStoreProps } from './with-data-store';
 
+// TODO: Create a new hook & context for query params & consumers. Move any query param logic to this hook from useEditor.
+// TODO: Export the hook & context from this file.
+
 /**
  * Props for the EditorWithQueryParams component.
  * This type extends EditorWithDataStoreProps (which is always required)
@@ -20,7 +23,7 @@ export type EditorWithQueryParamsProps = EditorWithDataStoreProps &
 	Partial< Omit< EditorWithModalProps, keyof EditorWithDataStoreProps > >;
 
 /**
- * Wrap the editor with a modal.
+ * Wrap the editor with query param handling.
  *
  * @param {ComponentType<EditorWithDataStoreProps>} WrappedComponent The component to wrap.
  *

@@ -12,6 +12,9 @@ import type { BaseEditorProps, EditorTab } from './types';
 type Editable = Updatable< CallToAction< 'edit' > >;
 
 /**
+ * Higher Order Component (HOC) that provides data store integration for Call To Action editors.
+ * This version has more robust error handling and state management.
+ *
  * The props for the EditorWithDataStore component.
  *
  * Does not implement saving by default. Dispatch createCallToAction or updateCallToAction from the data store.
@@ -40,6 +43,9 @@ export interface EditorWithDataStoreProps
 	onSave?: ( values: Editable ) => void;
 }
 
+/**
+ * Type definition for error notices that can include tab and field-specific information
+ */
 type ErrorNotice = {
 	message: string;
 	tabName?: string;
@@ -64,13 +70,17 @@ export const withDataStore = (
 		...componentProps
 	}: EditorWithDataStoreProps ) {
 		/**
-		 * State to store the error message.
+		 * State for tracking error messages and saving status
 		 */
 		const [ errorMessage, setErrorMessage ] = useState<
 			string | ErrorNotice
 		>();
 
-		// TODO Consider putthing this in a hook or data s.
+		/**
+		 * State for tracking save attempts and preventing duplicate saves
+		 *
+		 * TODO Consider putthing this in a hook or data s.
+		 */
 		const [ triedSaving, setTriedSaving ] = useState< boolean >( false );
 		const saveHandledRef = useRef( false );
 
