@@ -193,7 +193,7 @@ class Toolbar extends \PopupMaker\Controllers\Admin {
 				[
 					'id'     => 'no-popups-loaded',
 					'title'  => $popup_labels->no_items,
-					'href'   => 'https://docs.wppopupmaker.com/article/265-my-popup-wont-work-how-can-i-fix-it?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-admin-bar&utm_content=no-popups-loaded',
+					'href'   => 'https://wppopupmaker.com/docs/problem-solving/troubleshooting-your-first-popup/?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-admin-bar&utm_content=no-popups-loaded',
 					'parent' => 'popups',
 					'meta'   => [
 						'target' => '_blank',

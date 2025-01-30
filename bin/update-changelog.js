@@ -60,19 +60,31 @@ fs.writeFileSync( changelogFilePath, updatedChangelog, 'utf8' );
 
 // Insert unreleased changes into readme.txt
 const readmeContent = fs.readFileSync( readmeFilePath, 'utf8' );
-const changelogPattern =
-	/== Changelog ==([\s\S]*?)(= v\d+\.\d+\.\d+ - \d{2}\/\d{2}\/\d{4} =)/;
+
+// Find the changelog section and first version entry
+const changelogPattern = /== Changelog ==\n\nFor the latest updates and release information:.*?\n\n(= v\d+\.\d+\.\d+ - \d{4}-\d{2}-\d{2} =)/s;
 const changelogMatch = readmeContent.match( changelogPattern );
 
-const newChangelog = `== Changelog ==\n\nView our [complete changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md) for up-to-date information on what has been going on with the development of Popup Maker.\n\n= v${ newVersion } - ${ releaseDate } =\n\n${ formattedFileChanges }\n\n${
-	changelogMatch ? changelogMatch[ 2 ] : ''
-}`;
+if ( ! changelogMatch ) {
+	console.error( 'Could not find changelog section or first version entry' );
+	process.exit( 1 );
+}
 
-fs.writeFileSync(
-	readmeFilePath,
-	readmeContent.replace( changelogPattern, newChangelog ).trim(),
-	'utf8'
+// Create the new version entry
+const newVersionEntry = `= v${ newVersion } - ${ releaseDate } =\n\n${ formattedFileChanges }\n\n`;
+
+// Insert the new version entry before the first existing version
+const newChangelog = readmeContent.replace(
+	changelogPattern,
+	( match, firstVersion ) => {
+		return match.replace(
+			firstVersion,
+			`${ newVersionEntry }${ firstVersion }`
+		);
+	}
 );
+
+fs.writeFileSync( readmeFilePath, newChangelog.trim(), 'utf8' );
 
 // Output the count of changes
 console.log(

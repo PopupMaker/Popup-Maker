@@ -260,7 +260,7 @@ class PUM_Admin_Popups {
 					printf(
 					/* translators: 1. URL to view troubleshooting guide. 2. Closing HTML tag. */
 						esc_html__( 'If you are seeing this, the page is still loading or there are Javascript errors on this page. %1$sView troubleshooting guide%2$s', 'popup-maker' ),
-						'<a href="https://docs.wppopupmaker.com/article/373-checking-for-javascript-errors" target="_blank">',
+						'<a href="https://wppopupmaker.com/docs/problem-solving/checking-javascript-errors/" target="_blank">',
 						'</a>'
 					);
 				?>
@@ -806,7 +806,7 @@ class PUM_Admin_Popups {
 									'desc'     => sprintf(
 										/* translators: 1. URL to documentation. 2. Closing HTML tag. */
 										__( 'This will position the popup in relation to the %1$sClick Trigger%2$s.', 'popup-maker' ),
-										'<a target="_blank" href="https://docs.wppopupmaker.com/article/395-trigger-click-open-overview-methods?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=position-from-trigger">',
+										'<a target="_blank" href="https://wppopupmaker.com/docs/triggering-popups/trigger-click-open-overview-methods/?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=position-from-trigger">',
 										'</a>'
 									),
 									'type'     => 'checkbox',

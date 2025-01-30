@@ -413,7 +413,7 @@ class PUM_Admin_Templates {
 						);
 						?>
 						<?php esc_html_e( 'Triggers cause a popup to open.', 'popup-maker' ); ?>
-						<a href="<?php echo esc_url( 'https://docs.wppopupmaker.com/article/141-triggers?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=triggers-option-settings' ); ?>" target="_blank"
+						<a href="<?php echo esc_url( 'https://wppopupmaker.com/docs/getting-started/triggers/?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=triggers-option-settings' ); ?>" target="_blank"
 							class="pum-doclink dashicons dashicons-editor-help" title="<?php echo esc_attr( $learn_more_text ); ?>"></a>
 					</strong>
 				</p>
@@ -532,7 +532,7 @@ class PUM_Admin_Templates {
 						'popup_trigger_add_cookie_info'  => [
 							'id'      => 'popup_trigger_add_cookie_info',
 							'type'    => 'html',
-							'content' => '<p>Learn more about <a href="https://docs.wppopupmaker.com/article/358-popup-settings-box-cookies-option-settings?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=new-trigger-cookie-info">how Popup Maker cookies work</a>.</p>',
+							'content' => '<p>Learn more about <a href="https://wppopupmaker.com/docs/controlling-popups/popup-settings-box-cookies-option-settings/?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=new-trigger-cookie-info">how Popup Maker cookies work</a>.</p>',
 						],
 					],
 				]
@@ -576,7 +576,7 @@ class PUM_Admin_Templates {
 								esc_html__( 'Learn more about %s', 'popup-maker' ),
 								esc_html__( 'Targeting Conditions', 'popup-maker' )
 							),
-							'<a href="https://docs.wppopupmaker.com/article/351-popup-settings-box-targeting-option-settings?utm_medium=inline-doclink&utm_campaign=contextual-help&utm_source=plugin-popup-editor&utm_content=targeting-option-settings" target="_blank">',
+							'<a href="https://wppopupmaker.com/docs/controlling-popups/popup-settings-box-targeting-option-settings/?utm_medium=inline-doclink&utm_campaign=contextual-help&utm_source=plugin-popup-editor&utm_content=targeting-option-settings" target="_blank">',
 							'</a>'
 						);
 						?>
@@ -686,7 +686,7 @@ class PUM_Admin_Templates {
 						);
 						?>
 						<?php esc_html_e( 'Cookies control the repeat display of a popup.', 'popup-maker' ); ?>
-						<a href="<?php echo esc_url( 'https://docs.wppopupmaker.com/article/358-popup-settings-box-cookies-option-settings?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=cookies-option-settings' ); ?>"
+						<a href="<?php echo esc_url( 'https://wppopupmaker.com/docs/controlling-popups/popup-settings-box-cookies-option-settings/?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-popup-editor&utm_content=cookies-option-settings' ); ?>"
 							target="_blank" class="pum-doclink dashicons dashicons-editor-help" title="<?php echo esc_attr( $title_text ); ?>"></a>
 					</strong>
 				</p>

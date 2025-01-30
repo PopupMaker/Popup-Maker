@@ -110,36 +110,24 @@ const withAdvancedControls = createHigherOrderComponent( ( BlockEdit ) => {
 								</PanelRow>
 								<PanelRow>
 									<PopupSelectControl
-										label={
-											<>
-												{ __(
-													'Open Popup',
-													'popup-maker'
-												) }
-												<Tooltip
-													position="top"
-													text={ __(
-														'This method does not work well with all block types.',
-														'popup-maker'
-													) }
-												>
-													<a
-														href="https://docs.wppopupmaker.com/article/395-trigger-click-open-overview-methods"
-														target="_blank"
-														rel="noopener noreferrer"
-													>
-														<Icon
-															size={ 16 }
-															icon="editor-help"
-															style={ {
-																verticalAlign:
-																	'middle',
-															} }
-														/>
-													</a>
-												</Tooltip>
-											</>
-										}
+										label={ <>
+											{ __( 'Open Popup', 'popup-maker' ) }
+											<Tooltip
+												position="top"
+												text={ __( 'This method does not work well with all block types.', 'popup-maker' ) }
+											>
+												<a href="https://wppopupmaker.com/docs/triggering-popups/trigger-click-open-overview-methods/" target="_blank" rel="noopener noreferrer">
+													<Icon
+														size="16"
+														icon="editor-help"
+														title={ __( 'Open documentation', 'popup-maker' ) }
+														style={ {
+															verticalAlign: 'middle',
+														} }
+													/>
+												</a>
+											</Tooltip>
+										</> }
 										value={ openPopupId }
 										onChange={ ( popupId ) =>
 											setAttributes( {

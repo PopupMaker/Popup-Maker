@@ -371,11 +371,11 @@ class PUM_Admin_Onboarding {
 			],
 			[
 				'msg'  => 'Using the Popup Maker menu in your admin bar, you can open and close popups, check conditions, reset cookies, and more!',
-				'link' => 'https://docs.wppopupmaker.com/article/300-the-popup-maker-admin-toolbar',
+				'link' => 'https://wppopupmaker.com/docs/problem-solving/turning-on-the-popups-admin-bar/',
 			],
 			[
 				'msg'  => "Did you know: You can easily customize your site's navigation to have a link open a popup by using the 'Trigger a Popup' option when editing your menus?",
-				'link' => 'https://docs.wppopupmaker.com/article/51-open-a-popup-from-a-wordpress-nav-menu',
+				'link' => 'https://wppopupmaker.com/docs/menu/open-a-popup-from-a-wordpress-nav-menu/',
 			],
 		];
 
