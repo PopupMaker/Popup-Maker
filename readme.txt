@@ -174,12 +174,12 @@ We believe in making Popup Maker better together! Here's how you can get involve
 
 <h3>Created by Code Atlantic</h3>
 
-Popup Maker is built by the [Code Atlantic][https://code-atlantic.com] team. We create high-quality WordPress plugins that help you grow.
+Popup Maker is built by the [Code Atlantic](https://code-atlantic.com) team. We create high-quality WordPress plugins that help you grow.
 
 Check out some of our most popular plugins:
 
-* [Content Control][https://contentcontrolplugin.com/] - Restrict Access to Pages and Posts
-* [User Menus][https://wordpress.org/plugins/user-menus/] - Show Or Hide Menu Items For Different Users
+* [Content Control](https://contentcontrolplugin.com/) - Restrict Access to Pages and Posts
+* [User Menus](https://wordpress.org/plugins/user-menus/) - Show Or Hide Menu Items For Different Users
 
 
 == Frequently Asked Questions ==
