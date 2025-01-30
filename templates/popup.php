@@ -6,10 +6,19 @@
  * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
-$labelledby = pum_get_popup_title() !== '' ? 'aria-labelledby="pum_popup_title_' . pum_get_popup_id() . '"' : '';
+$has_title = pum_get_popup_title() !== '';
 
 ?>
-<div id="pum-<?php pum_popup_ID(); ?>" role="dialog" aria-modal="false" <?php echo esc_attr( $labelledby ); ?> class="<?php pum_popup_classes(); ?>" <?php pum_popup_data_attr(); ?>>
+<div 
+	id="pum-<?php pum_popup_ID(); ?>" 
+	role="dialog" 
+	aria-modal="false"
+<?php if ( $has_title ) : ?>
+	aria-labelledby="pum_popup_title_<?php pum_popup_ID(); ?>"
+<?php endif; ?>
+	class="<?php pum_popup_classes(); ?>" 
+	<?php pum_popup_data_attr(); ?>
+>
 
 	<div id="popmake-<?php pum_popup_ID(); ?>" class="<?php pum_popup_classes( null, 'container' ); ?>">
 
@@ -21,7 +30,7 @@ $labelledby = pum_get_popup_title() !== '' ? 'aria-labelledby="pum_popup_title_'
 		 * Render the title if not empty.
 		 */
 		?>
-		<?php if ( pum_get_popup_title() !== '' ) : ?>
+		<?php if ( $has_title ) : ?>
 			<div id="pum_popup_title_<?php pum_popup_ID(); ?>" class="<?php pum_popup_classes( null, 'title' ); ?>">
 				<?php pum_popup_title(); ?>
 			</div>

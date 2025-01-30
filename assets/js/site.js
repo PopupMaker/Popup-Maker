@@ -2123,7 +2123,7 @@ var pum_debug_mode = false,
 				debug_mode_enabled: "Popup Maker: Debug Mode Enabled",
 				debug_started_at: "Debug started at:",
 				debug_more_info:
-					"For more information on how to use this information visit https://docs.wppopupmaker.com/?utm_medium=js-debug-info&utm_campaign=contextual-help&utm_source=browser-console&utm_content=more-info",
+					"For more information on how to use this information visit https://wppopupmaker.com/docs/?utm_medium=js-debug-info&utm_campaign=contextual-help&utm_source=browser-console&utm_content=more-info",
 				global_info: "Global Information",
 				localized_vars: "Localized variables",
 				popups_initializing: "Popups Initializing",

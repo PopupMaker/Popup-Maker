@@ -11,7 +11,7 @@
 	function dismissAlert($alert, alertAction) {
 		var dismissible = $alert.data('dismissible'),
 			expires =
-				$alert.data('expires') ??
+				$alert.data('expires') ? $alert.data('expires') :
 				(dismissible === '1' ||
 				dismissible === 1 ||
 				dismissible === true

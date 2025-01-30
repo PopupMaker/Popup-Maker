@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Tweak: Updated documentation links to use new docs site.
+- Fix: Popup title aria-labelledby attribute was being double-quoted. Thanks  to the [Equalize Digital](https://equalizedigital.com/) team.
+
 ## v1.20.3 - 2024-11-27
 
 * Fix: Deprecated notice in WordPress 6.7+ for early translation loading in plugin configuration.
