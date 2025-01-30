@@ -19,6 +19,11 @@ Updating frontend JavaScript to use hooks/filters system instead of global varia
 -   Added new helper methods for registering Popup Maker custom scripts & styles that will be bundled with our plugin JS/CSS files automatically via AssetCache API.
 -   Lots of WPCS & TypeScript/PHP Type enforcement fixes.
 
+## v1.20.4 - 2025-01-29
+
+- Tweak: Updated documentation links to use new docs site.
+- Fix: Popup title aria-labelledby attribute was being double-quoted. Thanks  to the [Equalize Digital](https://equalizedigital.com/) team.
+
 ## v1.20.3 - 2024-11-27
 
 -   Fix: Deprecated notice in WordPress 6.7+ for early translation loading in plugin configuration.

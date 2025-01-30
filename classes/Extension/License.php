@@ -219,7 +219,7 @@ class PUM_Extension_License {
 				'content'  => '<p><strong>' . sprintf(
 					/* translators: 1. opening link text, 2. closing link text */
 					esc_html__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please %1$srenew your license%2$s.', 'popup-maker' ),
-					'<a href="https://docs.wppopupmaker.com/article/177-license-renewal?utm_medium=license-help-text&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab" target="_blank">',
+					'<a href="https://wppopupmaker.com/docs/policies/license-renewal/?utm_medium=license-help-text&utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab" target="_blank">',
 					'</a>'
 				) . '</strong></p>',
 				'priority' => 0,

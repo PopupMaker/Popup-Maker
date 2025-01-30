@@ -1,4 +1,4 @@
-# Copyright (C) 2024 WordPress Popup Plugin
+# Copyright (C) 2025 WordPress Popup Plugin
 # This file is distributed under the same license as the WordPress Popup Plugin package.
 msgid ""
 msgstr ""
@@ -947,7 +947,7 @@ msgstr ""
 msgid "Content Only - For use with page builders or block editor"
 msgstr ""
 
-#: templates/popup.php:50, classes/Admin/Helpers.php:387, classes/Admin/Popups.php:405, classes/Admin/Popups.php:860, classes/Admin/Templates.php:338, classes/Admin/Themes.php:186, classes/Admin/Themes.php:379, classes/Shortcode/Popup.php:61, classes/Shortcode/Popup.php:85
+#: templates/popup.php:59, classes/Admin/Helpers.php:387, classes/Admin/Popups.php:405, classes/Admin/Popups.php:860, classes/Admin/Templates.php:338, classes/Admin/Themes.php:186, classes/Admin/Themes.php:379, classes/Shortcode/Popup.php:61, classes/Shortcode/Popup.php:85
 msgid "Close"
 msgstr ""
 

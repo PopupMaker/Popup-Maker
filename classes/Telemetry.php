@@ -267,7 +267,7 @@ class PUM_Telemetry {
 					'primary' => false,
 					'type'    => 'link',
 					'action'  => '',
-					'href'    => 'https://docs.wppopupmaker.com/article/528-the-data-the-popup-maker-plugin-collects',
+					'href'    => 'https://wppopupmaker.com/docs/policies/the-data-the-popup-maker-plugin-collects/',
 					'text'    => __( 'Learn more', 'popup-maker' ),
 				],
 			],

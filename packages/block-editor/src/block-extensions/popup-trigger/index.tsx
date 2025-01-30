@@ -59,7 +59,10 @@ function isAllowedForBlockType( name: string ) {
  *
  * @return {Object} settings Modified settings.
  */
-function addAttributes( settings: { attributes: any; name: string } ): {
+function addAttributes( settings: {
+	attributes: any;
+	name: string;
+} ): {
 	attributes: any;
 	name: string;
 } {
@@ -126,13 +129,17 @@ const withAdvancedControls = createHigherOrderComponent( ( BlockEdit ) => {
 													) }
 												>
 													<a
-														href="https://docs.wppopupmaker.com/article/395-trigger-click-open-overview-methods"
+														href="https://wppopupmaker.com/docs/triggering-popups/trigger-click-open-overview-methods/"
 														target="_blank"
 														rel="noopener noreferrer"
 													>
 														<Icon
-															size={ 16 }
+															size="16"
 															icon="editor-help"
+															title={ __(
+																'Open documentation',
+																'popup-maker'
+															) }
 															style={ {
 																verticalAlign:
 																	'middle',
