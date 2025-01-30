@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.20.4 - 2025-01-29
+
 - Tweak: Updated documentation links to use new docs site.
 - Fix: Popup title aria-labelledby attribute was being double-quoted. Thanks  to the [Equalize Digital](https://equalizedigital.com/) team.
 

@@ -21,6 +21,12 @@ Want to boost sales & marketing efforts? Using popups are a great way to increas
 
 Transform your WordPress site into a conversion powerhouse! Create targeted campaigns using popups, exit-intent forms, slide-ins, and smart banners to skyrocket your revenue and build your email list faster than ever.
 
+> **We switched to Popup Maker for our popups and couldn't be happier.**
+>
+> "We recommend it to all our clients too. Popup Maker is an essential piece of our website for maximizing growing our email list, increasing sales conversions, and guiding users with strategic calls to action. Great support too."
+>
+> ~ **Chris Badgett, LifterLMS CEO**
+
 <h4>🔥 Ready to get started?</h4>
 
 👉 [Visit Our Website](https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=main-site-link) - Explore all features & pricing
@@ -33,12 +39,6 @@ Transform your WordPress site into a conversion powerhouse! Create targeted camp
 https://www.youtube.com/watch?v=PomnMganMVM
 
 [Stunning examples of what you can create in Popup Maker **(View Video)**](https://www.youtube.com/watch?v=PomnMganMVM)
-
-> **We switched to Popup Maker for our popups and couldn't be happier.**
->
-> "We recommend it to all our clients too. Popup Maker is an essential piece of our website for maximizing growing our email list, increasing sales conversions, and guiding users with strategic calls to action. Great support too."
->
-> ~ **Chris Badgett, LifterLMS CEO**
 
 <h3>🛠️ Ultimate WordPress Popup Builder: Every Type of Conversion Popup at Your Fingertips</h3>
 
@@ -238,7 +238,7 @@ For the latest updates and release information:
 * Visit our [changelog](https://wppopupmaker.com/changelog/) for detailed version history
 * View our [complete development changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md)
 
-= v1.20.3 - 2024-11-27 =
+= 1.20.4 - 2025-01-29 =
 
-* Fix: Deprecated notice in WordPress 6.7+ for early translation loading in plugin configuration.
-* Fix: Prevent textarea from being closed prematurely in "Copy Plugin Styles" field on plugin settings page.
+- Tweak: Updated documentation links to use new docs site.
+- Fix: Popup title aria-labelledby attribute was being double-quoted. Thanks  to the [Equalize Digital](https://equalizedigital.com/) team.
