@@ -4,6 +4,7 @@
 	"description": "Popup Maker Block Editor",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
+	"private": true,
 	"keywords": [
 		"wordpress",
 		"popup-maker"
@@ -16,6 +17,9 @@
 	},
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"publishConfig": {
+		"access": "restricted"
 	},
 	"main": "build/index",
 	"types": "build-types",
