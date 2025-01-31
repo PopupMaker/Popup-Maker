@@ -1,6 +1,6 @@
 {
 	"name": "@popup-maker/icons",
-	"version": "1.0.0",
+	"version": "1.0.0-beta.2",
 	"description": "Reusable icons for Popup Maker",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
@@ -13,14 +13,17 @@
 	"homepage": "https://github.com/popupmaker/popup-maker/tree/HEAD/packages/icons#readme",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/popupmaker/popup-maker.git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
 		"directory": "packages/icons"
 	},
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
-	"main": "build/index",
-	"types": "build-types",
+	"main": "build/index.js",
+	"module": "src/index.js",
+	"types": "build-types/index.d.ts",
+	"wpScript": true,
+	"sideEffects": false,
 	"scripts": {
 		"build:tsc": "tsc",
 		"build:types": "tsc --build",
@@ -51,5 +54,13 @@
 	},
 	"publishConfig": {
 		"access": "public"
-	}
+	},
+	"files": [
+		"build",
+		"build-types",
+		"src",
+		"tsconfig.json",
+		"README.md",
+		"LICENSE"
+	]
 }
