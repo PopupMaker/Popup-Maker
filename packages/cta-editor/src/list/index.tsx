@@ -25,8 +25,12 @@ import ListFilters from './filters';
 import ListOptions from './options';
 
 import type { CallToAction } from '@popup-maker/core-data';
+import init from './init';
 
 const { cta_types: callToActions } = window.popupMakerCtaEditor;
+
+// Initialize the registries.
+init();
 
 const List = () => {
 	// Get the shared method for setting editor Id & query params.

@@ -1,9 +1,8 @@
 import './bulk-actions.scss';
 
-import { ConfirmDialogue } from '@popup-maker/components';
-import { callToActionStore } from '@popup-maker/core-data';
 import { CheckAll } from '@popup-maker/icons';
-import { saveFile } from '@popup-maker/utils';
+import { __, _n, sprintf } from '@popup-maker/i18n';
+import { callToActionStore } from '@popup-maker/core-data';
 
 import {
 	Button,
@@ -12,31 +11,23 @@ import {
 	Icon,
 	NavigableMenu,
 } from '@wordpress/components';
-import { __, _n, sprintf } from '@popup-maker/i18n';
-import { useRef, useState } from '@wordpress/element';
+import { Fragment, useRef } from '@wordpress/element';
+import { chevronDown, chevronUp } from '@wordpress/icons';
 import { useDispatch, useRegistry, useSelect } from '@wordpress/data';
-import {
-	cancelCircleFilled,
-	chevronDown,
-	chevronUp,
-	download,
-	link,
-	linkOff,
-	trash,
-} from '@wordpress/icons';
 
 import { useList } from '../context';
-import { cleanCallToActionData } from './utils';
-import { getGlobalVars } from '../utils';
+import {
+	isBulkActionComponent,
+	useListBulkActions,
+	type ListBulkActionContext,
+} from '../registry';
 
 const ListBulkActions = () => {
 	const registry = useRegistry();
-	const { version } = getGlobalVars();
 
 	const {
 		bulkSelection = [],
 		setBulkSelection,
-		callToActions = [],
 		deleteCallToAction,
 		updateCallToAction,
 	} = useList();
@@ -50,15 +41,20 @@ const ListBulkActions = () => {
 
 	const { createNotice } = useDispatch( callToActionStore );
 
-	const [ confirmDialogue, setConfirmDialogue ] = useState< {
-		message: string;
-		callback: () => void;
-		isDestructive?: boolean;
-	} >();
-
-	const clearConfirm = () => setConfirmDialogue( undefined );
-
 	const bulkActionsBtnRef = useRef< HTMLButtonElement >();
+
+	const listBulkActions = useListBulkActions();
+
+	const bulkActionsContext: ListBulkActionContext = {
+		bulkSelection,
+		setBulkSelection,
+		// REVIEW: These can be accessed directly from the hooks.
+		createNotice,
+		registry,
+		getCallToAction,
+		updateCallToAction,
+		deleteCallToAction,
+	};
 
 	if ( bulkSelection.length === 0 ) {
 		return null;
@@ -66,7 +62,6 @@ const ListBulkActions = () => {
 
 	return (
 		<>
-			<ConfirmDialogue { ...confirmDialogue } onClose={ clearConfirm } />
 			<Dropdown
 				className="list-table-bulk-actions"
 				contentClassName="list-table-bulk-actions__popover"
@@ -116,210 +111,71 @@ const ListBulkActions = () => {
 				) }
 				renderContent={ () => (
 					<NavigableMenu orientation="vertical">
-						<Button
-							text={ __( 'Export Selected', 'popup-maker' ) }
-							icon={ download }
-							onClick={ () => {
-								const exportData = {
-									version,
-									callToActions: callToActions
-										.filter(
-											( { id } ) =>
-												bulkSelection.indexOf( id ) >= 0
-										)
-										.map( cleanCallToActionData ),
-								};
+						{ listBulkActions.map( ( action ) => {
+							const { id } = action;
 
-								saveFile(
-									JSON.stringify( exportData ),
-									'popup-maker-call-to-actions.json',
-									'text/json'
+							if ( isBulkActionComponent( action ) ) {
+								if ( typeof action?.component !== 'function' ) {
+									return null;
+								}
+
+								// Rename the component to Component to avoid the warning.
+								const Component = action.component;
+
+								return (
+									<Component
+										key={ id }
+										{ ...bulkActionsContext }
+									/>
 								);
-							} }
-						/>
-						<hr />
-						<Button
-							text={ __( 'Enable', 'popup-maker' ) }
-							icon={ link }
-							onClick={ () => {
-								// This will only rerender the components once.
-								// @ts-ignore not yet typed in WP.
-								registry.batch( () => {
-									const count = bulkSelection.length;
+							}
 
-									bulkSelection.forEach( ( id ) => {
-										const callToAction =
-											getCallToAction( id );
+							const {
+								icon,
+								label,
+								onClick,
+								isDestructive,
+								separator = 'none',
+							} = action;
 
-										if ( callToAction?.id === id ) {
-											updateCallToAction( {
-												id,
-												status: 'publish',
-											} );
-										}
-									} );
-									setBulkSelection( [] );
+							const shouldRender = action?.shouldRender?.( {
+								...bulkActionsContext,
+							} );
 
-									createNotice(
-										'sucess',
-										sprintf(
-											// translators: 1. number of items
-											_n(
-												'%d call to action enabled.',
-												'%d call to actions enabled.',
-												count,
-												'popup-maker'
-											),
-											count
-										),
-										{
-											id: 'bulk-enable',
-											type: 'success',
-											closeDelay: 3000,
-										}
-									);
-								} );
-							} }
-						/>
-						<Button
-							text={ __( 'Disable', 'popup-maker' ) }
-							icon={ linkOff }
-							onClick={ () => {
-								// This will only rerender the components once.
-								// @ts-ignore not yet typed in WP.
-								registry.batch( () => {
-									const count = bulkSelection.length;
+							const sepBefore = [ 'before', 'both' ].includes(
+								separator
+							);
 
-									bulkSelection.forEach( ( id ) => {
-										const callToAction =
-											getCallToAction( id );
+							const sepAfter = [ 'after', 'both' ].includes(
+								separator
+							);
 
-										if ( callToAction?.id === id ) {
-											updateCallToAction( {
-												id,
-												status: 'draft',
-											} );
-										}
-									} );
-									setBulkSelection( [] );
-
-									createNotice(
-										'success',
-										sprintf(
-											// translators: 1. number of items
-											_n(
-												'%d call to action disabled.',
-												'%d call to actions disabled.',
-												count,
-												'popup-maker'
-											),
-											count
-										),
-										{
-											id: 'bulk-disable',
-											closeDelay: 3000,
-										}
-									);
-								} );
-							} }
-						/>
-
-						<hr />
-						<Button
-							text={ __( 'Trash', 'popup-maker' ) }
-							icon={ trash }
-							onClick={ () => {
-								setConfirmDialogue( {
-									isDestructive: true,
-									message: sprintf(
-										// translators: 1. number of items
-										__(
-											'Are you sure you want to trash %d items?',
-											'popup-maker'
-										),
-										bulkSelection.length
-									),
-									callback: () => {
-										// This will only rerender the components once.
-										// @ts-ignore not yet typed in WP.
-										registry.batch( () => {
-											const count = bulkSelection.length;
-
-											bulkSelection.forEach( ( id ) =>
-												deleteCallToAction( id )
-											);
-											setBulkSelection( [] );
-
-											createNotice(
-												'success',
-												sprintf(
-													// translators: 1. number of items
-													_n(
-														'%d call to action moved to trash.',
-														'%d call to actions moved to trash.',
-														count,
-														'popup-maker'
-													),
-													count
-												),
-												{
-													id: 'bulk-trash',
-													closeDelay: 3000,
-												}
-											);
-										} );
-									},
-								} );
-							} }
-						/>
-						<Button
-							text={ __( 'Delete Permanently', 'popup-maker' ) }
-							icon={ cancelCircleFilled }
-							isDestructive={ true }
-							onClick={ () => {
-								setConfirmDialogue( {
-									isDestructive: true,
-									message: sprintf(
-										// translators: 1. call to action label.
-										__(
-											'Are you sure you want to premanently delete %d items?',
-											'popup-maker'
-										),
-										bulkSelection.length
-									),
-									callback: () => {
-										// This will only rerender the components once.
-										// @ts-ignore not yet typed in WP.
-										registry.batch( () => {
-											const count = bulkSelection.length;
-
-											bulkSelection.forEach( ( id ) =>
-												deleteCallToAction( id, true )
-											);
-											setBulkSelection( [] );
-
-											createNotice(
-												'success',
-												sprintf(
-													// translators: 1. number of items
-													_n(
-														'%d call to action deleted.',
-														'%d call to actions deleted.',
-														count,
-														'popup-maker'
-													),
-													count
-												),
-												{
-													id: 'bulk-delete',
-													closeDelay: 3000,
-												}
-											);
-										} );
-									},
-								} );
-							} }
-						/>
+							return (
+								shouldRender && (
+									<Fragment key={ id }>
+										{ sepBefore && <hr /> }
+										<Button
+											key={ id }
+											text={ label }
+											icon={ icon }
+											onClick={ async (
+												event?: React.MouseEvent<
+													| HTMLAnchorElement
+													| HTMLButtonElement
+												>
+											) => {
+												event?.preventDefault();
+												onClick?.( {
+													...bulkActionsContext,
+												} );
+											} }
+											isDestructive={ isDestructive }
+										/>
+										{ sepAfter && <hr /> }
+									</Fragment>
+								)
+							);
+						} ) }
 					</NavigableMenu>
 				) }
 			/>
