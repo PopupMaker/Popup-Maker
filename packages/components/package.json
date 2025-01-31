@@ -1,6 +1,6 @@
 {
 	"name": "@popup-maker/components",
-	"version": "1.0.0",
+	"version": "1.0.0-beta.2",
 	"description": "Popup Maker Components",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
@@ -11,14 +11,17 @@
 	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/components/README.md",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/popupmaker/popup-maker.git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
 		"directory": "packages/components"
 	},
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
-	"main": "build/index",
-	"types": "build-types",
+	"main": "build/index.js",
+	"module": "src/index.js",
+	"types": "build-types/index.d.ts",
+	"wpScript": true,
+	"sideEffects": false,
 	"dependencies": {
 		"@popup-maker/core-data": "*",
 		"@popup-maker/i18n": "*",
@@ -48,5 +51,16 @@
 		"lint": "wp-scripts lint-js .",
 		"format": "wp-scripts lint-js . --fix",
 		"packages-update": "wp-scripts packages-update"
-	}
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"files": [
+		"build",
+		"build-types",
+		"src",
+		"tsconfig.json",
+		"README.md",
+		"LICENSE"
+	]
 }
