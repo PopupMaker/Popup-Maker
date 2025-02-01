@@ -1,6 +1,6 @@
 {
 	"name": "@popup-maker/data",
-	"version": "1.0.0",
+	"version": "1.0.0-beta.1",
 	"description": "Data registry for Popup Maker.",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
@@ -13,11 +13,14 @@
 	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/data#readme",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/popupmaker/popup-maker.git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
 		"directory": "packages/data"
 	},
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"publishConfig": {
+		"access": "public"
 	},
 	"main": "build/index",
 	"types": "build-types",
@@ -29,9 +32,6 @@
 	"devDependencies": {},
 	"peerDependencies": {
 		"react": "^18.3.1"
-	},
-	"publishConfig": {
-		"access": "public"
 	},
 	"scripts": {
 		"build:tsc": "tsc",

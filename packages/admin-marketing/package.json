@@ -12,7 +12,7 @@
 	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/admin-marketing/README.md",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/popupmaker/popup-maker.git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
 		"directory": "packages/admin-marketing"
 	},
 	"bugs": {

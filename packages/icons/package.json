@@ -23,7 +23,6 @@
 	"module": "src/index.js",
 	"types": "build-types/index.d.ts",
 	"wpScript": true,
-	"sideEffects": false,
 	"scripts": {
 		"build:tsc": "tsc",
 		"build:types": "tsc --build",

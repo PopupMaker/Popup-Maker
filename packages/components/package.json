@@ -21,7 +21,6 @@
 	"module": "src/index.js",
 	"types": "build-types/index.d.ts",
 	"wpScript": true,
-	"sideEffects": false,
 	"dependencies": {
 		"@popup-maker/core-data": "*",
 		"@popup-maker/i18n": "*",

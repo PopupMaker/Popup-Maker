@@ -1,6 +1,6 @@
 {
 	"name": "@popup-maker/cta-editor",
-	"version": "1.0.0",
+	"version": "1.0.0-beta.1",
 	"description": "Popup Maker CTA editor implementation",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
@@ -11,7 +11,7 @@
 	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/cta-editor/README.md",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/popupmaker/popup-maker.git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
 		"directory": "packages/cta-editor"
 	},
 	"bugs": {
@@ -48,5 +48,8 @@
 		"lint": "wp-scripts lint-js .",
 		"format": "wp-scripts lint-js . --fix",
 		"packages-update": "wp-scripts packages-update"
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }

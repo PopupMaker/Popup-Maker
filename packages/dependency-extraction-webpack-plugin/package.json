@@ -1,6 +1,6 @@
 {
 	"name": "@popup-maker/dependency-extraction-webpack-plugin",
-	"version": "5.9.0",
+	"version": "5.9.1",
 	"description": "Popup Maker Dependency Extraction Webpack Plugin",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
@@ -11,23 +11,22 @@
 	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/dependency-extraction-webpack-plugin/README.md",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/popupmaker/popup-maker.git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
 		"directory": "packages/dependency-extraction-webpack-plugin"
 	},
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
-	"engines": {},
 	"main": "src/index",
 	"dependencies": {
 		"@wordpress/dependency-extraction-webpack-plugin": "5.9.0"
-	},
-	"publishConfig": {
-		"access": "public"
 	},
 	"scripts": {
 		"lint": "wp-scripts lint-js .",
 		"format": "wp-scripts lint-js . --fix",
 		"packages-update": "wp-scripts packages-update"
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }

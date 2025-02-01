@@ -1,9 +1,9 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
+		"noImplicitAny": true,
 		"rootDir": "src",
-		"outDir": "build",
-		"declarationDir": "build-types"
+		"outDir": "build"
 	},
 	"include": [ "./src/**/*" ],
 	"types": [ "jquery" ],
