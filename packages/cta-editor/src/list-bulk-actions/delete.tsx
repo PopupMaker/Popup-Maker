@@ -86,6 +86,7 @@ const DeleteBulkAction = ( {
 
 export default {
 	id: 'delete',
+	group: 'trash',
 	priority: 10,
-	component: DeleteBulkAction,
+	render: DeleteBulkAction,
 };

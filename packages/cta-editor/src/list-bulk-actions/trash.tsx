@@ -12,6 +12,7 @@ const TrashBulkAction = ( {
 	setBulkSelection,
 	registry,
 	deleteCallToAction,
+	getCallToAction,
 	createNotice,
 }: ListBulkActionContext ) => {
 	const [ confirm, setConfirm ] = useState< {
@@ -24,6 +25,15 @@ const TrashBulkAction = ( {
 		return null;
 	}
 
+	const otherThanTrashed = bulkSelection.some( ( id ) => {
+		const callToAction = getCallToAction( id );
+		return callToAction?.status !== 'trash';
+	} );
+
+	if ( ! otherThanTrashed ) {
+		return null;
+	}
+
 	return (
 		<>
 			{ confirm && (
@@ -32,7 +42,6 @@ const TrashBulkAction = ( {
 					onClose={ () => setConfirm( undefined ) }
 				/>
 			) }
-			<hr />
 			<Button
 				text={ __( 'Trash', 'popup-maker' ) }
 				icon={ trash }
@@ -86,7 +95,7 @@ const TrashBulkAction = ( {
 
 export default {
 	id: 'trash',
+	group: 'trash',
 	priority: 9,
-	component: TrashBulkAction,
-	separator: 'before',
+	render: TrashBulkAction,
 };
