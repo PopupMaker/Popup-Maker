@@ -19,7 +19,10 @@ export type GetRecordsHttpQuery = Record< string, any >;
  */
 declare module '@wordpress/core-data' {
 	export namespace BaseEntityRecords {
-		export interface BaseEntity< C extends Context > extends Post< C > {}
+		export interface BaseEntity< C extends Context >
+			extends Omit< Post< C >, 'status' > {
+			status: Post< C >[ 'status' ] | 'trash';
+		}
 	}
 }
 

@@ -1,6 +1,5 @@
-import type { Updatable } from '@wordpress/core-data/src/entity-types';
 import type { State } from './reducer';
-import type { Popup } from './types';
+import type { EditablePopup } from './types';
 
 export const STORE_NAME = 'popup-maker/popups';
 export const NOTICE_CONTEXT = 'pum-popup-editor';
@@ -102,7 +101,7 @@ export const noticeDefaults = {
  * @see /classes/Model/Popup.php
  * @see /includes/functions/install.php:get_default_popup_settings()
  */
-export const defaultValues: Updatable< Popup< 'edit' > > = {
+export const defaultValues: EditablePopup = {
 	id: 0,
 	uuid: '',
 	slug: '',

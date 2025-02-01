@@ -1,6 +1,5 @@
-import type { Updatable } from '@wordpress/core-data/src/entity-types';
 import type { State } from './reducer';
-import type { CallToAction } from './types';
+import type { EditableCta } from './types';
 
 export const STORE_NAME = 'popup-maker/call-to-actions';
 export const NOTICE_CONTEXT = 'pum-cta-editor';
@@ -101,7 +100,7 @@ export const noticeDefaults = {
  * @see /classes/Models/CallToAction.php
  * @see /includes/namespaced/default-values.php
  */
-export const defaultValues: Updatable< CallToAction< 'edit' > > = {
+export const defaultValues: EditableCta = {
 	id: 0,
 	uuid: '',
 	slug: '',
