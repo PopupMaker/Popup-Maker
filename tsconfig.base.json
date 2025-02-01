@@ -16,8 +16,9 @@
 		"isolatedModules": true,
 		/* Strict Type-Checking Options */
 		"strict": true,
-		/* Additional Checks */
+		/* This is done on a per package basis currently. */
 		"noImplicitAny": false,
+		/* Additional Checks */
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"noImplicitReturns": true,
