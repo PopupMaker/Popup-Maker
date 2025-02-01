@@ -12,17 +12,17 @@
 	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/example-package/README.md",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/popupmaker/popup-maker.git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
 		"directory": "packages/example-package"
 	},
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
-	"publishConfig": {
-		"access": "restricted"
-	},
-	"main": "build/index",
-	"types": "build-types",
+	"main": "build/index.js",
+	"module": "src/index.js",
+	"types": "build-types/index.d.ts",
+	"wpScript": true,
+	"sideEffects": false,
 	"dependencies": {},
 	"devDependencies": {
 		"@types/jquery": "^3.5.32"
@@ -35,5 +35,8 @@
 		"lint": "wp-scripts lint-js .",
 		"format": "wp-scripts lint-js . --fix",
 		"packages-update": "wp-scripts packages-update"
+	},
+	"publishConfig": {
+		"access": "restricted"
 	}
 }

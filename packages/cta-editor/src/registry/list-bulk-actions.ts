@@ -57,7 +57,7 @@ declare namespace PopupMaker {
 	interface BaseListBulkAction extends BasePopupMaker.RegistryItem {
 		id: string;
 		priority?: number;
-		separator?: 'before' | 'after' | 'both';
+		group?: string;
 	}
 
 	export interface SimpleListBulkAction extends BaseListBulkAction {
@@ -65,11 +65,13 @@ declare namespace PopupMaker {
 		icon: IconType | null | undefined;
 		onClick: ( context: ListBulkActionContext ) => void;
 		isDestructive?: boolean;
+		disabled?: boolean;
 		shouldRender?: ( context: ListBulkActionContext ) => boolean;
+		separator?: 'before' | 'after' | 'both';
 	}
 
 	export interface ComponentListBulkAction extends BaseListBulkAction {
-		component?: React.FC< ListBulkActionContext >;
+		render?: React.FC< ListBulkActionContext >;
 	}
 
 	export type ListBulkAction = SimpleListBulkAction | ComponentListBulkAction;
@@ -77,7 +79,7 @@ declare namespace PopupMaker {
 
 export const isBulkActionComponent = (
 	action: PopupMaker.ListBulkAction
-): action is PopupMaker.ComponentListBulkAction => 'component' in action;
+): action is PopupMaker.ComponentListBulkAction => 'render' in action;
 
 export const ListBulkActionsRegistry =
 	createRegistry< PopupMaker.ListBulkAction >( {
