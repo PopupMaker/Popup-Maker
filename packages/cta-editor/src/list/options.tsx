@@ -1,100 +1,58 @@
 import './options.scss';
 
-import {
-	Button,
-	Dropdown,
-	FormFileUpload,
-	NavigableMenu,
-} from '@wordpress/components';
-import { sprintf, _n, __ } from '@popup-maker/i18n';
-import { moreVertical, upload } from '@wordpress/icons';
-import { useDispatch } from '@wordpress/data';
+import { __ } from '@popup-maker/i18n';
+import { Fragment, useRef } from '@wordpress/element';
+import { moreVertical } from '@wordpress/icons';
+import { Button, Dropdown, NavigableMenu } from '@wordpress/components';
 
-import { callToActionStore } from '@popup-maker/core-data';
-
-import type { ExportedCallToAction } from '@popup-maker/core-data';
+import { useListOptions } from '../registry';
 
 const ListOptions = () => {
-	// Get action dispatchers.
-	const { createCallToAction, createErrorNotice, createSuccessNotice } =
-		useDispatch( callToActionStore );
+	const listOptionsBtnRef = useRef< HTMLButtonElement >();
+	const lastGroup = useRef< string | undefined >( undefined );
+	const listOptions = useListOptions();
 
-	const handleUpload = ( uploadData: string ) => {
-		const data = JSON.parse( uploadData );
+	const listOptionsContext = {};
 
-		if ( ! data?.callToActions?.length ) {
-			return;
+	/**
+	 * Separates new groups of options with a horizontal line.
+	 * @param {Object} props
+	 * @param {string} props.group
+	 */
+	const GroupSeparator = ( { group }: { group?: string } ) => {
+		// Store for comparison.
+		const currentGroup = lastGroup.current;
+
+		// Update ref before returning.
+		lastGroup.current = group;
+
+		if ( ! currentGroup || group !== currentGroup ) {
+			return <hr />;
 		}
 
-		let errorCount = 0;
-
-		data.callToActions.forEach( ( callToAction: ExportedCallToAction ) => {
-			try {
-				// Create a call to action from the imported data, setting the status to draft.
-				createCallToAction( {
-					...callToAction,
-					status: 'draft',
-				} );
-			} catch ( error ) {
-				errorCount++;
-			}
-		} );
-
-		if ( errorCount ) {
-			createErrorNotice(
-				sprintf(
-					// translators: %d is the number of call to actions that failed to import.
-					_n(
-						'%d Call to Action failed to import.',
-						'%d Call to Actions failed to import.',
-						errorCount,
-						'popup-maker'
-					),
-					errorCount
-				),
-				{
-					id: 'popup-maker-import-error',
-					isDismissible: true,
-				}
-			);
-		}
-
-		if ( errorCount === data?.callToActions?.length ) {
-			return;
-		}
-
-		const successfullyAdded = data?.callToActions?.length - errorCount;
-
-		createSuccessNotice(
-			sprintf(
-				// translators: %d is the number of call to actions imported.
-				_n(
-					'%d Call to Action imported successfully.',
-					'%d Call to Actions imported successfully.',
-					successfullyAdded,
-					'popup-maker'
-				),
-				successfullyAdded
-			),
-			{
-				id: 'popup-maker-import-success',
-				isDismissible: true,
-				closeDelay: 5000,
-			}
-		);
+		return null;
 	};
+	console.log( listOptions );
 
 	return (
 		<Dropdown
 			className="list-table-options-menu"
 			contentClassName="list-table-options-menu__popover"
-			// @ts-ignore this does function correctly, not yet typed in WP.
 			placement="bottom left"
 			focusOnMount="firstElement"
-			popoverProps={ { noArrow: false } }
+			popoverProps={ {
+				noArrow: false,
+				anchor: {
+					getBoundingClientRect: () =>
+						listOptionsBtnRef?.current?.getBoundingClientRect(),
+				} as Element,
+			} }
 			renderToggle={ ( { isOpen, onToggle } ) => (
 				<Button
 					className="popover-toggle"
+					ref={ ( ref: HTMLButtonElement ) => {
+						listOptionsBtnRef.current = ref;
+					} }
 					aria-label={ __( 'Additional options', 'popup-maker' ) }
 					onClick={ onToggle }
 					aria-expanded={ isOpen }
@@ -103,24 +61,17 @@ const ListOptions = () => {
 			) }
 			renderContent={ ( { onClose } ) => (
 				<NavigableMenu orientation="vertical">
-					<FormFileUpload
-						icon={ upload }
-						// @ts-ignore this does function correctly, not yet typed in WP.
-						text={ __( 'Import', 'popup-maker' ) }
-						accept="text/json"
-						onChange={ ( event ) => {
-							const count =
-								event.currentTarget.files?.length ?? 0;
-
-							for ( let i = 0; i < count; i++ ) {
-								event.currentTarget.files?.[ i ]
-									.text()
-									.then( handleUpload );
-							}
-
-							onClose();
-						} }
-					/>
+					{ listOptions.map( ( { id, group, render: Component } ) => {
+						return (
+							<Fragment key={ id }>
+								<GroupSeparator group={ group } />
+								<Component
+									{ ...listOptionsContext }
+									onClose={ onClose }
+								/>
+							</Fragment>
+						);
+					} ) }
 				</NavigableMenu>
 			) }
 		/>
