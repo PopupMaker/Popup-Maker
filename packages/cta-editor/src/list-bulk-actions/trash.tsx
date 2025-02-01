@@ -5,21 +5,33 @@ import { trash } from '@wordpress/icons';
 import { useState } from '@wordpress/element';
 import { Button } from '@wordpress/components';
 
-import type { ListBulkActionContext } from '../registry';
+import { useDispatch, useRegistry, useSelect } from '@wordpress/data';
+import { useList } from '../context';
+import { callToActionStore } from '@popup-maker/core-data';
 
-const TrashBulkAction = ( {
-	bulkSelection,
-	setBulkSelection,
-	registry,
-	deleteCallToAction,
-	getCallToAction,
-	createNotice,
-}: ListBulkActionContext ) => {
+const TrashBulkAction = () => {
 	const [ confirm, setConfirm ] = useState< {
 		message: string;
 		callback: () => void;
 		isDestructive?: boolean;
 	} >();
+
+	const {
+		bulkSelection = [],
+		setBulkSelection,
+		deleteCallToAction,
+	} = useList();
+
+	const registry = useRegistry();
+
+	const { getCallToAction } = useSelect(
+		( select ) => ( {
+			getCallToAction: select( callToActionStore ).getCallToAction,
+		} ),
+		[]
+	);
+
+	const { createNotice } = useDispatch( callToActionStore );
 
 	if ( bulkSelection.length === 0 ) {
 		return null;

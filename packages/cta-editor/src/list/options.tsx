@@ -32,7 +32,6 @@ const ListOptions = () => {
 
 		return null;
 	};
-	console.log( listOptions );
 
 	return (
 		<Dropdown

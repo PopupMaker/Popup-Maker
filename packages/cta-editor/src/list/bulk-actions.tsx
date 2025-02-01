@@ -2,7 +2,6 @@ import './bulk-actions.scss';
 
 import { CheckAll } from '@popup-maker/icons';
 import { __, _n, sprintf } from '@popup-maker/i18n';
-import { callToActionStore } from '@popup-maker/core-data';
 
 import {
 	Button,
@@ -13,47 +12,36 @@ import {
 } from '@wordpress/components';
 import { Fragment, useRef } from '@wordpress/element';
 import { chevronDown, chevronUp } from '@wordpress/icons';
-import { useDispatch, useRegistry, useSelect } from '@wordpress/data';
 
 import { useList } from '../context';
-import {
-	isBulkActionComponent,
-	useListBulkActions,
-	type ListBulkActionContext,
-} from '../registry';
+import { useListBulkActions } from '../registry';
 
 const ListBulkActions = () => {
-	const registry = useRegistry();
-
-	const {
-		bulkSelection = [],
-		setBulkSelection,
-		deleteCallToAction,
-		updateCallToAction,
-	} = useList();
-
-	const { getCallToAction } = useSelect(
-		( select ) => ( {
-			getCallToAction: select( callToActionStore ).getCallToAction,
-		} ),
-		[]
-	);
-
-	const { createNotice } = useDispatch( callToActionStore );
-
+	const lastGroup = useRef< string | undefined >( undefined );
 	const bulkActionsBtnRef = useRef< HTMLButtonElement >();
-
 	const listBulkActions = useListBulkActions();
 
-	const bulkActionsContext: ListBulkActionContext = {
-		bulkSelection,
-		setBulkSelection,
-		// REVIEW: These can be accessed directly from the hooks.
-		createNotice,
-		registry,
-		getCallToAction,
-		updateCallToAction,
-		deleteCallToAction,
+	const { bulkSelection = [] } = useList();
+
+	const bulkActionsContext = {};
+
+	/**
+	 * Separates new groups of options with a horizontal line.
+	 * @param {Object} props
+	 * @param {string} props.group
+	 */
+	const GroupSeparator = ( { group }: { group?: string } ) => {
+		// Store for comparison.
+		const currentGroup = lastGroup.current;
+
+		// Update ref before returning.
+		lastGroup.current = group;
+
+		if ( ! currentGroup || group !== currentGroup ) {
+			return <hr />;
+		}
+
+		return null;
 	};
 
 	if ( bulkSelection.length === 0 ) {
@@ -65,7 +53,6 @@ const ListBulkActions = () => {
 			<Dropdown
 				className="list-table-bulk-actions"
 				contentClassName="list-table-bulk-actions__popover"
-				// @ts-ignore this is not typed in WP yet.
 				placement="bottom left"
 				focusOnMount="firstElement"
 				popoverProps={ {
@@ -109,73 +96,21 @@ const ListBulkActions = () => {
 						</Button>
 					</Flex>
 				) }
-				renderContent={ () => (
+				renderContent={ ( { onClose } ) => (
 					<NavigableMenu orientation="vertical">
-						{ listBulkActions.map( ( action ) => {
-							const { id } = action;
-
-							if ( isBulkActionComponent( action ) ) {
-								if ( typeof action?.component !== 'function' ) {
-									return null;
-								}
-
-								// Rename the component to Component to avoid the warning.
-								const Component = action.component;
-
+						{ listBulkActions.map(
+							( { id, group, render: Component } ) => {
 								return (
-									<Component
-										key={ id }
-										{ ...bulkActionsContext }
-									/>
+									<Fragment key={ id }>
+										<GroupSeparator group={ group } />
+										<Component
+											{ ...bulkActionsContext }
+											onClose={ onClose }
+										/>
+									</Fragment>
 								);
 							}
-
-							const {
-								icon,
-								label,
-								onClick,
-								isDestructive,
-								separator = 'none',
-							} = action;
-
-							const shouldRender = action?.shouldRender?.( {
-								...bulkActionsContext,
-							} );
-
-							const sepBefore = [ 'before', 'both' ].includes(
-								separator
-							);
-
-							const sepAfter = [ 'after', 'both' ].includes(
-								separator
-							);
-
-							return (
-								shouldRender && (
-									<Fragment key={ id }>
-										{ sepBefore && <hr /> }
-										<Button
-											key={ id }
-											text={ label }
-											icon={ icon }
-											onClick={ async (
-												event?: React.MouseEvent<
-													| HTMLAnchorElement
-													| HTMLButtonElement
-												>
-											) => {
-												event?.preventDefault();
-												onClick?.( {
-													...bulkActionsContext,
-												} );
-											} }
-											isDestructive={ isDestructive }
-										/>
-										{ sepAfter && <hr /> }
-									</Fragment>
-								)
-							);
-						} ) }
+						) }
 					</NavigableMenu>
 				) }
 			/>

@@ -1,17 +1,27 @@
 import { linkOff } from '@wordpress/icons';
 import { Button } from '@wordpress/components';
+import { useRegistry, useSelect, useDispatch } from '@wordpress/data';
+
 import { __, _n, sprintf } from '@popup-maker/i18n';
+import { callToActionStore } from '@popup-maker/core-data';
 
-import type { ListBulkActionContext } from '../registry';
+import { useList } from '../context';
 
-const DisableBulkAction = ( {
-	bulkSelection,
-	setBulkSelection,
-	registry,
-	getCallToAction,
-	updateCallToAction,
-	createNotice,
-}: ListBulkActionContext ) => {
+const DisableBulkAction = () => {
+	const { bulkSelection = [], setBulkSelection } = useList();
+
+	const registry = useRegistry();
+
+	const { getCallToAction } = useSelect(
+		( select ) => ( {
+			getCallToAction: select( callToActionStore ).getCallToAction,
+		} ),
+		[]
+	);
+
+	const { createNotice, updateCallToAction } =
+		useDispatch( callToActionStore );
+
 	if ( bulkSelection.length === 0 ) {
 		return null;
 	}

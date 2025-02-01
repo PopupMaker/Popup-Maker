@@ -1,24 +1,27 @@
 import { __, _n, sprintf } from '@popup-maker/i18n';
 import { ConfirmDialogue } from '@popup-maker/components';
+import { callToActionStore } from '@popup-maker/core-data';
 
-import { cancelCircleFilled } from '@wordpress/icons';
 import { useState } from '@wordpress/element';
 import { Button } from '@wordpress/components';
+import { cancelCircleFilled } from '@wordpress/icons';
+import { useRegistry, useDispatch } from '@wordpress/data';
 
-import type { ListBulkActionContext } from '../registry';
+import { useList } from '../context';
 
-const DeleteBulkAction = ( {
-	bulkSelection,
-	setBulkSelection,
-	registry,
-	deleteCallToAction,
-	createNotice,
-}: ListBulkActionContext ) => {
+const DeleteBulkAction = () => {
 	const [ confirm, setConfirm ] = useState< {
 		message: string;
 		callback: () => void;
 		isDestructive?: boolean;
 	} >();
+
+	const { bulkSelection = [], setBulkSelection } = useList();
+
+	const registry = useRegistry();
+
+	const { createNotice, deleteCallToAction } =
+		useDispatch( callToActionStore );
 
 	if ( bulkSelection.length === 0 ) {
 		return null;
