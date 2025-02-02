@@ -1,6 +1,11 @@
 import { useSyncExternalStore } from '@wordpress/element';
 
 export declare namespace PopupMaker {
+	export interface RegistryGroup {
+		priority: number;
+		label?: string;
+	}
+
 	export interface RegistryItem {
 		/** Unique identifier for the item */
 		id: string;
@@ -8,17 +13,16 @@ export declare namespace PopupMaker {
 		priority?: number;
 		/** Group for sorting */
 		group?: string;
-
-		/**
-		 * Conditional render check (can use hooks)
-		 * @default () => true
-		 */
-		// shouldRender?: ( context?: any ) => boolean;
 	}
 
 	export type RegistryConfig = {
 		/** Unique name for the registry */
 		name: string;
+		/**
+		 * Group configuration with priorities (merged with core and global groups)
+		 * Use numbers between 0-99 to insert around core groups (10-30)
+		 */
+		groups?: Record< string, RegistryGroup >;
 	};
 }
 
@@ -29,7 +33,8 @@ export declare namespace PopupMaker {
 export function createRegistry< T extends PopupMaker.RegistryItem >(
 	config: PopupMaker.RegistryConfig
 ) {
-	const { name } = config;
+	const { name, groups = {} } = config;
+	let groupConfig = { ...groups };
 	let items: T[] = [];
 	const defaultPriority = 10;
 
@@ -48,13 +53,8 @@ export function createRegistry< T extends PopupMaker.RegistryItem >(
 
 		// Using the unique id, group and priority, check if the item already exists.
 		const existingItem = items.find(
-			( { id, group, priority } ) =>
-				id === newItem.id &&
-				group === newItem.group &&
-				priority === newItem.priority
+			( { id, group } ) => id === newItem.id && group === newItem.group
 		);
-
-		console.log( existingItem );
 
 		// If the item already exists, replace it.
 		if ( existingItem ) {
@@ -65,25 +65,8 @@ export function createRegistry< T extends PopupMaker.RegistryItem >(
 			items.push( newItem );
 		}
 
-		// Sort items by group -> priority
-		items.sort( ( a, b ) => {
-			// Same group - sort by priority
-			if ( a.group === b.group ) {
-				return a.priority! - b.priority!;
-			}
-
-			// Handle null/undefined groups as "ungrouped" that should come last
-			const aGroup = a.group ?? 'zzzz'; // 'zzzz' ensures null groups sort last
-			const bGroup = b.group ?? 'zzzz';
-
-			// First sort groups alphabetically
-			const groupCompare = aGroup.localeCompare( bGroup );
-
-			// If groups are different but have same sort order, then sort by priority
-			return groupCompare !== 0
-				? groupCompare
-				: a.priority! - b.priority!;
-		} );
+		// New sorting logic using configured group priorities
+		items.sort( sortComparator );
 
 		// Notify subscribers when items change
 		emitChange();
@@ -130,9 +113,37 @@ export function createRegistry< T extends PopupMaker.RegistryItem >(
 		subscribers.forEach( ( listener ) => listener() );
 	};
 
+	const registerGroup = (
+		groupName: string,
+		groupOptions: PopupMaker.RegistryGroup
+	) => {
+		groupConfig = { ...groupConfig, [ groupName ]: groupOptions };
+		// Re-sort existing items with new group configuration
+		items.sort( sortComparator );
+		emitChange();
+	};
+
+	const sortComparator = ( a: T, b: T ) => {
+		if ( a.group === b.group ) {
+			return a.priority! - b.priority!;
+		}
+
+		const getPriority = ( group?: string ) =>
+			group ? groupConfig[ group ]?.priority ?? 50 : Infinity;
+
+		const aPriority = getPriority( a.group );
+		const bPriority = getPriority( b.group );
+
+		return (
+			aPriority - bPriority ||
+			( a.group ?? 'zzzz' ).localeCompare( b.group ?? 'zzzz' )
+		);
+	};
+
 	const context = {
 		name,
 		register,
+		registerGroup,
 		getItems,
 		useItems,
 		filter,
