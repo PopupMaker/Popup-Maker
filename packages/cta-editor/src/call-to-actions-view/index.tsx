@@ -23,8 +23,11 @@ const CallToActionsView = () => {
 	const { edit_ctas: userCanEditCallToActions } = permissions;
 
 	// Fetch needed data from the @popup-maker/core-data & @wordpress/data stores.
-	const isEditorActive = useSelect(
-		( select ) => select( callToActionStore ).isEditorActive(),
+	const { isEditorActive, editorId } = useSelect(
+		( select ) => ( {
+			isEditorActive: select( callToActionStore ).isEditorActive(),
+			editorId: select( callToActionStore ).getEditorId(),
+		} ),
 		[]
 	);
 
@@ -51,7 +54,7 @@ const CallToActionsView = () => {
 			<Notices />
 			<Header />
 			<List />
-			{ isEditorActive && <Editor /> }
+			{ isEditorActive && editorId && <Editor id={ editorId } /> }
 		</div>
 	);
 };
