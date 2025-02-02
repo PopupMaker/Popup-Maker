@@ -10,7 +10,7 @@ import {
 	Icon,
 	NavigableMenu,
 } from '@wordpress/components';
-import { Fragment, useRef } from '@wordpress/element';
+import { Fragment, useRef, useState } from '@wordpress/element';
 import { chevronDown, chevronUp } from '@wordpress/icons';
 
 import { useList } from '../context';
@@ -18,12 +18,17 @@ import { useListBulkActions } from '../registry';
 
 const ListBulkActions = () => {
 	const lastGroup = useRef< string | undefined >( undefined );
-	const bulkActionsBtnRef = useRef< HTMLButtonElement >();
+	const btnRef = useRef< HTMLButtonElement >();
+	const [ isOpen, setIsOpen ] = useState( false );
 	const listBulkActions = useListBulkActions();
 
 	const { bulkSelection = [] } = useList();
 
 	const bulkActionsContext = {};
+
+	if ( bulkSelection.length === 0 ) {
+		return null;
+	}
 
 	/**
 	 * Separates new groups of options with a horizontal line.
@@ -31,22 +36,35 @@ const ListBulkActions = () => {
 	 * @param {string} props.group
 	 */
 	const GroupSeparator = ( { group }: { group?: string } ) => {
-		// Store for comparison.
-		const currentGroup = lastGroup.current;
-
-		// Update ref before returning.
-		lastGroup.current = group;
-
-		if ( ! currentGroup || group !== currentGroup ) {
-			return <hr />;
+		if ( ! group || group === lastGroup.current ) {
+			return null;
 		}
 
-		return null;
+		const previousGroup = lastGroup.current;
+		lastGroup.current = group;
+
+		return previousGroup ? <hr /> : null;
 	};
 
-	if ( bulkSelection.length === 0 ) {
-		return null;
-	}
+	const renderContent = ( { onClose }: { onClose: () => void } ) => {
+		lastGroup.current = undefined;
+
+		return (
+			<NavigableMenu orientation="vertical">
+				{ listBulkActions.map( ( { id, group, render: Component } ) => {
+					return (
+						<Fragment key={ id }>
+							<GroupSeparator group={ group } />
+							<Component
+								{ ...bulkActionsContext }
+								onClose={ onClose }
+							/>
+						</Fragment>
+					);
+				} ) }
+			</NavigableMenu>
+		);
+	};
 
 	return (
 		<>
@@ -55,14 +73,25 @@ const ListBulkActions = () => {
 				contentClassName="list-table-bulk-actions__popover"
 				placement="bottom left"
 				focusOnMount="firstElement"
+				open={ isOpen }
 				popoverProps={ {
 					noArrow: false,
 					anchor: {
-						getBoundingClientRect: () =>
-							bulkActionsBtnRef?.current?.getBoundingClientRect(),
-					} as Element,
+						getBoundingClientRect: () => {
+							return (
+								btnRef.current?.getBoundingClientRect() ||
+								new DOMRect()
+							);
+						},
+					},
+					onClose: () => {
+						setIsOpen( false );
+					},
+					onFocusOutside: () => {
+						setIsOpen( false );
+					},
 				} }
-				renderToggle={ ( { isOpen, onToggle } ) => (
+				renderToggle={ () => (
 					<Flex>
 						<span className="selected-items">
 							{ sprintf(
@@ -79,11 +108,11 @@ const ListBulkActions = () => {
 						<Button
 							className="popover-toggle"
 							ref={ ( ref: HTMLButtonElement ) => {
-								bulkActionsBtnRef.current = ref;
+								btnRef.current = ref;
 							} }
 							aria-label={ __( 'Bulk Actions', 'popup-maker' ) }
 							variant="secondary"
-							onClick={ onToggle }
+							onClick={ () => setIsOpen( ! isOpen ) }
 							aria-expanded={ isOpen }
 							icon={ CheckAll }
 							iconSize={ 20 }
@@ -96,23 +125,7 @@ const ListBulkActions = () => {
 						</Button>
 					</Flex>
 				) }
-				renderContent={ ( { onClose } ) => (
-					<NavigableMenu orientation="vertical">
-						{ listBulkActions.map(
-							( { id, group, render: Component } ) => {
-								return (
-									<Fragment key={ id }>
-										<GroupSeparator group={ group } />
-										<Component
-											{ ...bulkActionsContext }
-											onClose={ onClose }
-										/>
-									</Fragment>
-								);
-							}
-						) }
-					</NavigableMenu>
-				) }
+				renderContent={ renderContent }
 			/>
 		</>
 	);
