@@ -3,19 +3,18 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { useCallback, useMemo } from '@wordpress/element';
 import { callToActionStore, defaultCtaValues } from '@popup-maker/core-data';
 
-import type { CallToAction } from '@popup-maker/core-data';
-import type { Updatable } from '@wordpress/core-data';
+import type { EditableCta } from '@popup-maker/core-data';
 
 export type FieldDef = {
 	component: JSX.Element;
-	id: keyof CallToAction[ 'settings' ];
+	id: keyof EditableCta[ 'settings' ];
 	priority: number;
 };
 
 /**
  * The current values for the call to action in the edit store format.
  */
-type CurrentValues = Updatable< CallToAction< 'edit' > >;
+type CurrentValues = EditableCta;
 type CurrentSettings = CurrentValues[ 'settings' ];
 
 const useFields = () => {
