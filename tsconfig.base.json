@@ -9,7 +9,6 @@
 		"lib": [ "dom", "esnext" ],
 		"skipLibCheck": true,
 		"declaration": true,
-		"declarationDir": "build-types",
 		"declarationMap": true,
 		"composite": true,
 		"emitDeclarationOnly": false,
