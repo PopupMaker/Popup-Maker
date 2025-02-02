@@ -39,8 +39,8 @@ type ListContext = {
 	isDeleting: boolean;
 	filters: Filters;
 	setFilters: ( filters: Partial< Filters > ) => void;
-	sortConfig: SortConfig | null;
-	setSortConfig: ( config: SortConfig | null ) => void;
+	sortConfig: SortConfig;
+	setSortConfig: ( config: SortConfig ) => void;
 };
 
 const noop = () => {};
@@ -66,8 +66,11 @@ const defaultContext: ListContext = {
 		searchText: '',
 	},
 	setFilters: noop,
-	sortConfig: null,
-	setSortConfig: () => {},
+	sortConfig: {
+		orderby: 'id',
+		order: SortDirection.ASC,
+	},
+	setSortConfig: noop,
 };
 
 const Context = createContext< ListContext >( defaultContext );
@@ -81,7 +84,12 @@ type ProviderProps = {
 
 export const ListProvider = ( { value = {}, children }: ProviderProps ) => {
 	const [ bulkSelection, setBulkSelection ] = useState< number[] >( [] );
-	const [ sortConfig, setSortConfig ] = useState< SortConfig | null >( null );
+
+	// Allow setting sort config from query params.
+	const [ sortConfig, setSortConfig ] = useQueryParams( {
+		orderby: withDefault( StringParam, 'id' ),
+		order: withDefault( StringParam, SortDirection.ASC ),
+	} );
 
 	// Allow initiating the editor directly from a url.
 	const [ filters, setFilters ] = useQueryParams( {
@@ -142,20 +150,25 @@ export const ListProvider = ( { value = {}, children }: ProviderProps ) => {
 		if ( sortConfig !== null ) {
 			filtered.sort( ( a, b ) => {
 				const aValue =
-					sortConfig.key === 'type'
+					// TODO This will use TableColumnRegistry
+					sortConfig.orderby === 'type'
 						? a.settings.type
 						: a.title.rendered.toLowerCase();
+
 				const bValue =
-					sortConfig.key === 'type'
+					// TODO This will use TableColumnRegistry
+					sortConfig.orderby === 'type'
 						? b.settings.type
 						: b.title.rendered.toLowerCase();
 
 				if ( aValue < bValue ) {
-					return sortConfig.direction === SortDirection.ASC ? -1 : 1;
+					return sortConfig.order === SortDirection.ASC ? -1 : 1;
 				}
+
 				if ( aValue > bValue ) {
-					return sortConfig.direction === SortDirection.ASC ? 1 : -1;
+					return sortConfig.order === SortDirection.ASC ? 1 : -1;
 				}
+
 				return 0;
 			} );
 		}
@@ -177,7 +190,7 @@ export const ListProvider = ( { value = {}, children }: ProviderProps ) => {
 				isDeleting,
 				updateCallToAction,
 				deleteCallToAction,
-				sortConfig,
+				sortConfig: sortConfig as SortConfig,
 				setSortConfig,
 			} }
 		>

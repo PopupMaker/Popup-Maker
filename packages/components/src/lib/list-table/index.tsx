@@ -29,7 +29,7 @@ type Props< T extends TableItemBase > = {
 	className?: clsx.ClassValue;
 	selectedItems?: number[];
 	onSelectItems?: ( selectedItems: number[] ) => void;
-	onSort?: ( key: string, direction: SortDirection ) => void;
+	onSort?: ( orderby: string, order: SortDirection ) => void;
 	initialSort?: SortConfig | null;
 };
 
@@ -80,7 +80,7 @@ const ListTable = < T extends TableItemBase >( {
 			{ Object.entries( cols ).map( ( [ col, colLabel ] ) => {
 				const isIdCol = col === idCol;
 				const isBulkSelect = showBulkSelect && isIdCol;
-				const isSortedBy = initialSort?.key === col;
+				const isSortedBy = initialSort?.orderby === col;
 				const isSortable = ! isBulkSelect
 					? sortableColumns.indexOf( col ) >= 0
 					: false;
@@ -95,7 +95,7 @@ const ListTable = < T extends TableItemBase >( {
 						...( ! isBulkSelect && isSortable
 							? [
 									'sortable',
-									initialSort?.direction ?? SortDirection.ASC,
+									initialSort?.order ?? SortDirection.ASC,
 							  ]
 							: [] ),
 						isBulkSelect && 'check-column',
@@ -112,7 +112,7 @@ const ListTable = < T extends TableItemBase >( {
 								{ isSortedBy && (
 									<Icon
 										icon={
-											initialSort?.direction ===
+											initialSort?.order ===
 											SortDirection.ASC
 												? arrowUp
 												: arrowDown
@@ -156,9 +156,9 @@ const ListTable = < T extends TableItemBase >( {
 									if ( onSort ) {
 										let newDirection: SortDirection;
 
-										if ( initialSort?.key === col ) {
+										if ( initialSort?.orderby === col ) {
 											newDirection =
-												initialSort.direction ===
+												initialSort.order ===
 												SortDirection.ASC
 													? SortDirection.DESC
 													: SortDirection.ASC;

@@ -9,8 +9,8 @@ export enum SortDirection {
 }
 
 export interface SortConfig {
-	key: string;
-	direction: SortDirection;
+	orderby: string;
+	order: SortDirection;
 }
 
 export interface TableItem extends TableItemBase {

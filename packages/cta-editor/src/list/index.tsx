@@ -6,26 +6,22 @@ import {
 	ToggleControl,
 	Tooltip,
 } from '@wordpress/components';
-import { __ } from '@popup-maker/i18n';
 import { useState } from '@wordpress/element';
 import { info, search, trash } from '@wordpress/icons';
 
-import { FilterLines } from '@popup-maker/icons';
+import { __ } from '@popup-maker/i18n';
 import { noop } from '@popup-maker/utils';
-import {
-	ConfirmDialogue,
-	ListTable,
-	SortDirection,
-} from '@popup-maker/components';
+import { FilterLines } from '@popup-maker/icons';
+import { ConfirmDialogue, ListTable } from '@popup-maker/components';
 
-import { ListConsumer, ListProvider, useList } from '../context';
+import { ListConsumer, ListProvider } from '../context';
 import { useEditor } from '../components';
 import ListBulkActions from './bulk-actions';
 import ListFilters from './filters';
 import ListOptions from './options';
+import init from './init';
 
 import type { CallToAction } from '@popup-maker/core-data';
-import init from './init';
 
 const { cta_types: callToActions } = window.popupMakerCtaEditor;
 
@@ -35,7 +31,6 @@ init();
 const List = () => {
 	// Get the shared method for setting editor Id & query params.
 	const { setEditorId } = useEditor();
-	const { sortConfig, setSortConfig } = useList();
 
 	const [ showFilters, setShowFilters ] = useState< boolean >( false );
 
@@ -68,6 +63,8 @@ const List = () => {
 					deleteCallToAction = noop,
 					filters: { searchText = '' },
 					setFilters,
+					sortConfig,
+					setSortConfig,
 				} ) => (
 					<>
 						<ConfirmDialogue
@@ -162,13 +159,10 @@ const List = () => {
 									status: __( 'Status', 'popup-maker' ),
 								} }
 								sortableColumns={ [ 'type', 'title' ] }
-								onSort={ ( key, direction ) => {
+								onSort={ ( orderby, order ) => {
 									setSortConfig( {
-										key,
-										direction:
-											direction === SortDirection.ASC
-												? SortDirection.ASC
-												: SortDirection.DESC,
+										orderby,
+										order,
 									} );
 								} }
 								initialSort={ sortConfig }
