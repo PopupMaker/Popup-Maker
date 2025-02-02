@@ -59,10 +59,7 @@ function isAllowedForBlockType( name: string ) {
  *
  * @return {Object} settings Modified settings.
  */
-function addAttributes( settings: {
-	attributes: any;
-	name: string;
-} ): {
+function addAttributes( settings: { attributes: any; name: string } ): {
 	attributes: any;
 	name: string;
 } {
@@ -134,8 +131,9 @@ const withAdvancedControls = createHigherOrderComponent( ( BlockEdit ) => {
 														rel="noopener noreferrer"
 													>
 														<Icon
-															size="16"
+															size={ 16 }
 															icon="editor-help"
+															// @ts-expect-error
 															title={ __(
 																'Open documentation',
 																'popup-maker'
