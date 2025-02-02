@@ -6,8 +6,7 @@ import { useCallback } from '@wordpress/element';
 import { useEditor } from '../hooks';
 
 import type { ComponentType } from 'react';
-import type { Updatable } from '@wordpress/core-data';
-import type { CallToAction } from '@popup-maker/core-data';
+import type { EditableCta } from '@popup-maker/core-data';
 import type { EditorWithModalProps } from './with-modal';
 import type { EditorWithDataStoreProps } from './with-data-store';
 
@@ -70,7 +69,7 @@ export const withQueryParams = (
 		 * Handle clearing query params when the editor is saved.
 		 */
 		const onSave = useCallback(
-			( newValues: Updatable< CallToAction< 'edit' > > ) => {
+			( newValues: EditableCta ) => {
 				if ( closeOnSave ) {
 					clearEditorParams();
 				}

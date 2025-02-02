@@ -10,11 +10,10 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect, useState, useRef } from '@wordpress/element';
 
 import type { ComponentType } from 'react';
-import type { Updatable } from '@wordpress/core-data';
-import type { EditorId, CallToAction } from '@popup-maker/core-data';
+import type { EditorId, EditableCta } from '@popup-maker/core-data';
 import type { BaseEditorProps, EditorTab } from './types';
 
-type Editable = Updatable< CallToAction< 'edit' > >;
+type Editable = EditableCta;
 
 /**
  * Higher Order Component (HOC) that provides data store integration for Call To Action editors.

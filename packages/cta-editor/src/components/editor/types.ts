@@ -1,18 +1,17 @@
 import type { ClassValue } from 'clsx';
-import type { CallToAction } from '@popup-maker/core-data';
+import type { EditableCta } from '@popup-maker/core-data';
 import type { ComponentTab } from '@popup-maker/types';
-import type { Updatable } from '@wordpress/core-data/src/entity-types';
 
 export interface BaseEditorProps {
 	/**
 	 * The values to pass to the editor.
 	 */
-	values?: Updatable< CallToAction< 'edit' > > | undefined;
+	values?: EditableCta | undefined;
 
 	/**
 	 * The function to update the values.
 	 */
-	onChange?: ( values: Updatable< CallToAction< 'edit' > > ) => void;
+	onChange?: ( values: EditableCta ) => void;
 
 	/**
 	 * The tab to show in the editor.
@@ -45,48 +44,44 @@ export interface BaseEditorProps {
 	afterTabs?: JSX.Element;
 }
 
-type SettingField< T extends CallToAction< 'edit' > > =
-	Updatable< T >[ 'settings' ][ keyof Updatable< T >[ 'settings' ] ];
+type SettingField< T extends EditableCta > =
+	T[ 'settings' ][ keyof T[ 'settings' ] ];
 
-export interface BaseEditorTabProps<
-	T extends CallToAction< 'edit' > = CallToAction< 'edit' >,
-> {
+export interface BaseEditorTabProps< T extends EditableCta = EditableCta > {
 	/**
 	 * The CallToAction to edit.
 	 */
-	callToAction: Updatable< T >;
+	callToAction: T;
 
 	/**
 	 * Method to update the CallToAction values.
 	 *
 	 * @param values The values to update the CallToAction with.
 	 */
-	onChange: ( values: Updatable< T > ) => void;
+	onChange: ( values: T ) => void;
 
 	/**
 	 * Method to update a specific CallToAction field.
 	 *
-	 * @param {Partial< Updatable< T > >} fields The fields to update.
+	 * @param {Partial< T >} fields The fields to update.
 	 */
-	updateFields: ( fields: Partial< Updatable< T > > ) => void;
+	updateFields: ( fields: Partial< T > ) => void;
 
 	/**
 	 * Method to update the CallToAction settings.
 	 *
 	 * @param settings The settings to update the CallToAction with.
 	 */
-	updateSettings: (
-		settings: Partial< Updatable< T >[ 'settings' ] >
-	) => void;
+	updateSettings: ( settings: Partial< T[ 'settings' ] > ) => void;
 
 	/**
 	 * Method to update a specific CallToAction setting.
 	 *
-	 * @param {keyof Updatable< T >[ 'settings' ]} setting The setting to update.
-	 * @param {SettingField<T>}                    value   The value to update the setting with.
+	 * @param {keyof T[ 'settings' ]} setting The setting to update.
+	 * @param {SettingField<T>}       value   The value to update the setting with.
 	 */
 	updateSetting: (
-		setting: keyof Updatable< T >[ 'settings' ],
+		setting: keyof T[ 'settings' ],
 		value: SettingField< T >
 	) => void;
 }
