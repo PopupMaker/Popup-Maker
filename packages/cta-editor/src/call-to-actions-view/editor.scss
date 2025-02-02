@@ -307,7 +307,7 @@ $gap4: $gap * 4;
 
 		svg {
 			position: absolute;
-			top: 5px;
+			top: 6px;
 			left: 5px;
 		}
 
@@ -316,13 +316,13 @@ $gap4: $gap * 4;
 		}
 
 		input {
-			padding-left: 30px;
-			height: 36px;
+			padding-left: 30px !important;
+			height: 36px !important;
 		}
 	}
 
 	.filters-toggle {
-		padding: 6px 12px;
+		padding: 6px 20px;
 
 		svg {
 			margin-right: 5px;
