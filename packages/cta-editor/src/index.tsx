@@ -14,7 +14,12 @@ import App from './App';
 
 import type { OldField } from '@popup-maker/fields';
 
+export * from './context';
 export * from './components';
+export * from './registry';
+export * from './utils';
+export type * from './components';
+export type * from './registry';
 
 declare global {
 	interface Window {
