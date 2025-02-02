@@ -5,7 +5,7 @@ import { useRegistry, useSelect, useDispatch } from '@wordpress/data';
 import { __, _n, sprintf } from '@popup-maker/i18n';
 import { callToActionStore } from '@popup-maker/core-data';
 
-import { useList } from '../context';
+import { useList } from '../../context';
 
 export const EnableBulkAction = () => {
 	const registry = useRegistry();

@@ -1,10 +1,10 @@
 import { __ } from '@popup-maker/i18n';
 import { Mark } from '@popup-maker/icons';
-import { upload } from '@wordpress/icons';
+import { download } from '@wordpress/icons';
 import { useRef, useState } from '@wordpress/element';
 import { Button, Flex, Icon, Popover } from '@wordpress/components';
 
-export const ImportListOption = () => {
+export const ExportListOption = () => {
 	const [ showPopover, setShowPopover ] = useState( false );
 	const btnRef = useRef< HTMLButtonElement | null >( null );
 
@@ -21,27 +21,28 @@ export const ImportListOption = () => {
 						gap="16px"
 						justify="center"
 						align="center"
+						className="pmp-popover-content"
 						style={ { padding: '16px', minWidth: '350px' } }
 					>
 						<Icon icon={ Mark } size={ 28 } />
 
 						<h3 style={ { margin: 0 } }>
 							{ __(
-								'Quick imports with Popup Maker Pro',
+								'Quick exports with Popup Maker Pro',
 								'popup-maker'
 							) }
 						</h3>
 
 						<p style={ { margin: 0 } }>
 							{ __(
-								'Popup Maker Pro gives you the power to import your call to actions from a JSON file in seconds.',
+								'Popup Maker Pro gives you the power to import & export your call to actions to a JSON file in seconds.',
 								'popup-maker'
 							) }
 						</p>
 
 						<Button
 							variant="primary"
-							href="https://popupmaker.com/pricing/?utm_source=popup-maker&utm_medium=cta-editor&utm_campaign=import-cta"
+							href="https://popupmaker.com/pricing/?utm_source=popup-maker&utm_medium=cta-editor&utm_campaign=export-cta"
 							target="_blank"
 						>
 							{ __(
@@ -63,12 +64,12 @@ export const ImportListOption = () => {
 				} }
 			>
 				<Button
-					icon={ upload }
-					text={ __( 'Import', 'popup-maker' ) }
+					icon={ download }
+					text={ __( 'Export', 'popup-maker' ) }
 					disabled={ true }
 					showTooltip={ true }
 					label={ __(
-						'Import is available with Popup Maker Pro',
+						'Export is available with Popup Maker Pro',
 						'popup-maker'
 					) }
 					ref={ btnRef }
@@ -80,7 +81,7 @@ export const ImportListOption = () => {
 };
 
 export default {
-	id: 'import',
-	priority: 15,
-	render: ImportListOption,
+	id: 'export',
+	group: 'export',
+	render: ExportListOption,
 };

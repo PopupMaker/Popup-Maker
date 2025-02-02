@@ -1,6 +1,6 @@
 import { registerListBulkAction, registerListOption } from '../registry';
-import * as bulkActions from '../list-bulk-actions';
-import * as listOptions from '../list-options';
+import * as bulkActions from './list-bulk-actions';
+import * as listOptions from './list-options';
 
 const init = () => {
 	// Register core bluk list actions.

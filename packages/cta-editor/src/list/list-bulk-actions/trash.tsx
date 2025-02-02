@@ -1,29 +1,48 @@
 import { __, _n, sprintf } from '@popup-maker/i18n';
 import { ConfirmDialogue } from '@popup-maker/components';
-import { callToActionStore } from '@popup-maker/core-data';
 
+import { trash } from '@wordpress/icons';
 import { useState } from '@wordpress/element';
 import { Button } from '@wordpress/components';
-import { cancelCircleFilled } from '@wordpress/icons';
-import { useRegistry, useDispatch } from '@wordpress/data';
 
-import { useList } from '../context';
+import { useDispatch, useRegistry, useSelect } from '@wordpress/data';
+import { useList } from '../../context';
+import { callToActionStore } from '@popup-maker/core-data';
 
-const DeleteBulkAction = () => {
+const TrashBulkAction = () => {
 	const [ confirm, setConfirm ] = useState< {
 		message: string;
 		callback: () => void;
 		isDestructive?: boolean;
 	} >();
 
-	const { bulkSelection = [], setBulkSelection } = useList();
+	const {
+		bulkSelection = [],
+		setBulkSelection,
+		deleteCallToAction,
+	} = useList();
 
 	const registry = useRegistry();
 
-	const { createNotice, deleteCallToAction } =
-		useDispatch( callToActionStore );
+	const { getCallToAction } = useSelect(
+		( select ) => ( {
+			getCallToAction: select( callToActionStore ).getCallToAction,
+		} ),
+		[]
+	);
+
+	const { createNotice } = useDispatch( callToActionStore );
 
 	if ( bulkSelection.length === 0 ) {
+		return null;
+	}
+
+	const otherThanTrashed = bulkSelection.some( ( id ) => {
+		const callToAction = getCallToAction( id );
+		return callToAction?.status !== 'trash';
+	} );
+
+	if ( ! otherThanTrashed ) {
 		return null;
 	}
 
@@ -36,16 +55,15 @@ const DeleteBulkAction = () => {
 				/>
 			) }
 			<Button
-				text={ __( 'Delete Permanently', 'popup-maker' ) }
-				icon={ cancelCircleFilled }
-				isDestructive={ true }
+				text={ __( 'Trash', 'popup-maker' ) }
+				icon={ trash }
 				onClick={ () => {
 					setConfirm( {
 						isDestructive: true,
 						message: sprintf(
-							// translators: 1. call to action label.
+							// translators: 1. number of items
 							__(
-								'Are you sure you want to premanently delete %d items?',
+								'Are you sure you want to trash %d items?',
 								'popup-maker'
 							),
 							bulkSelection.length
@@ -57,7 +75,7 @@ const DeleteBulkAction = () => {
 								const count = bulkSelection.length;
 
 								bulkSelection.forEach( ( id ) =>
-									deleteCallToAction( id, true )
+									deleteCallToAction( id )
 								);
 								setBulkSelection( [] );
 
@@ -66,15 +84,15 @@ const DeleteBulkAction = () => {
 									sprintf(
 										// translators: 1. number of items
 										_n(
-											'%d call to action deleted.',
-											'%d call to actions deleted.',
+											'%d call to action moved to trash.',
+											'%d call to actions moved to trash.',
 											count,
 											'popup-maker'
 										),
 										count
 									),
 									{
-										id: 'bulk-delete',
+										id: 'bulk-trash',
 										closeDelay: 3000,
 									}
 								);
@@ -88,8 +106,8 @@ const DeleteBulkAction = () => {
 };
 
 export default {
-	id: 'delete',
+	id: 'trash',
 	group: 'trash',
-	priority: 10,
-	render: DeleteBulkAction,
+	priority: 5,
+	render: TrashBulkAction,
 };

@@ -5,7 +5,7 @@ import { useRegistry, useSelect, useDispatch } from '@wordpress/data';
 import { __, _n, sprintf } from '@popup-maker/i18n';
 import { callToActionStore } from '@popup-maker/core-data';
 
-import { useList } from '../context';
+import { useList } from '../../context';
 
 const DisableBulkAction = () => {
 	const { bulkSelection = [], setBulkSelection } = useList();
@@ -87,6 +87,6 @@ const DisableBulkAction = () => {
 export default {
 	id: 'disable',
 	group: 'status',
-	render: DisableBulkAction,
 	priority: 6,
+	render: DisableBulkAction,
 };
