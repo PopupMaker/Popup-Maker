@@ -21,7 +21,7 @@ const entitySelectors = {
 	 */
 	getCallToActions: createSelector(
 		( state: State ) => state.allIds.map( ( id ) => state.byId[ id ] ),
-		( state: State ) => [ state.allIds, state.byId ]
+		( state: State ) => [ state.allIds, Object.keys( state.byId ) ]
 	),
 
 	/**
