@@ -33,27 +33,19 @@ const useEditor = () => {
 		tab: StringParam,
 	} );
 
-	// Quick helper to reset all query params.
-	const clearEditorParams = () =>
-		setQueryParams( {
-			add: undefined,
-			edit: undefined,
-			tab: undefined,
-		} );
-
 	// Extract params with usable names.
 	const { edit, add, tab } = queryParams;
 
 	// Initialize on mount if URL has an ID
 	useEffect( () => {
-if ( initialized ) {
+		if ( initialized ) {
 			return;
 		}
 		initialized = true;
 
 		const urlId = edit && edit > 0 ? edit : undefined;
-			changeEditorId( urlId );
-		} );
+		changeEditorId( urlId );
+	} );
 
 	/**
 	 * Set the editor to edit a specific call to action.
@@ -67,14 +59,21 @@ if ( initialized ) {
 	 */
 	const setEditorId = useCallback(
 		( id: number | undefined ) => {
-		changeEditorId( id );
-		setQueryParams( {
-			edit: id,
+			changeEditorId( id );
+			setQueryParams( {
+				edit: id,
 			} );
 		},
 		[ changeEditorId, setQueryParams ]
 	);
 
+	// Quick helper to reset all query params.
+	const clearEditorParams = () => {
+		changeEditorId( undefined );
+		setQueryParams( {
+			add: undefined,
+			edit: undefined,
+			tab: undefined,
 		} );
 	};
 
