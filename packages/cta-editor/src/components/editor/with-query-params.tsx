@@ -33,7 +33,9 @@ export type EditorWithQueryParamsProps = Omit<
  * @return {Function} The wrapped component.
  */
 export const withQueryParams = (
-	WrappedComponent: ComponentType< EditorWithModalProps >
+	WrappedComponent: ComponentType<
+		EditorWithModalProps | EditorWithDataStoreProps
+	>
 ) => {
 	return function QueryParamsWrappedEditor( {
 		onSave: onSaveProp,
