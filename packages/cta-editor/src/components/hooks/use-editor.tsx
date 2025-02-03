@@ -9,7 +9,7 @@ import { useEffect, useCallback } from '@wordpress/element';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { callToActionStore } from '@popup-maker/core-data';
 
-import type { EditorId } from '@popup-maker/core-data';
+let initialized = false;
 
 const useEditor = () => {
 	// Fetch needed data from the @popup-maker/core-data & @wordpress/data stores.
@@ -44,17 +44,16 @@ const useEditor = () => {
 	// Extract params with usable names.
 	const { edit, add, tab } = queryParams;
 
-	// Clear params on component removal.
-	// useEffect( () => () => clearEditorParams(), [] );
-
-	// Sync url param changes for editor ID to the editor.
+	// Initialize on mount if URL has an ID
 	useEffect( () => {
-		const urlId: EditorId = edit && edit > 0 ? edit : undefined;
-
-		if ( urlId !== editorId ) {
-			changeEditorId( urlId );
+if ( initialized ) {
+			return;
 		}
-	}, [ edit, add, editorId, changeEditorId ] );
+		initialized = true;
+
+		const urlId = edit && edit > 0 ? edit : undefined;
+			changeEditorId( urlId );
+		} );
 
 	/**
 	 * Set the editor to edit a specific call to action.
