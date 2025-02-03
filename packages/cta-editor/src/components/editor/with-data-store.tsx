@@ -137,9 +137,11 @@ export const withDataStore = (
 		 * Also clear the error message when the editor is saved.
 		 */
 		useEffect( () => {
-			if ( ! triedSaving && isSaving ) {
-				setTriedSaving( true );
-				saveHandledRef.current = false;
+			if ( ! triedSaving ) {
+				if ( isSaving ) {
+					setTriedSaving( true );
+					saveHandledRef.current = false;
+				}
 				return;
 			}
 
