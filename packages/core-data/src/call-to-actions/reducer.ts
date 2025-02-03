@@ -86,7 +86,7 @@ type BaseAction = {
 export type RecieveRecordAction = BaseAction & {
 	type: typeof RECEIVE_RECORD;
 	payload: {
-		record: CallToAction;
+		record: CallToAction< 'edit' >;
 	};
 };
 
@@ -124,7 +124,7 @@ export type StartEditingRecordAction = BaseAction & {
 	payload: {
 		id: number;
 		editableEntity: EditableCta;
-setEditorId: boolean;
+		setEditorId: boolean;
 	};
 };
 
@@ -268,7 +268,9 @@ export function reducer( state = initialState, action: ReducerAction ): State {
 				queries: query
 					? {
 							...state.queries,
-							[ JSON.stringify( query ) ]: records,
+							[ JSON.stringify( query ) ]: records.map(
+								( r ) => r.id
+							),
 					  }
 					: state.queries,
 			};
