@@ -1,8 +1,4 @@
-import {
-	appendUrlParams,
-	fetchFromApi,
-	// getErrorMessage
-} from '../utils';
+import { appendUrlParams, fetchFromApi } from '../utils';
 import { RECEIVE_RECORDS, RECEIVE_RECORD } from './constants';
 
 import type { CallToAction, ThunkAction } from './types';
@@ -11,11 +7,7 @@ const entityResolvers = {
 	getCallToActions:
 		(): ThunkAction =>
 		async ( { dispatch } ) => {
-			// const action = 'getAll';
-
 			try {
-				// dispatch.startResolution( action );
-
 				const urlParams = {
 					status: [ 'any', 'trash', 'auto-draft' ],
 					per_page: 100,
@@ -38,26 +30,17 @@ const entityResolvers = {
 							records: results,
 						},
 					} );
-					// dispatch.finishResolution( action );
 				}
-
-				// dispatch.failResolution( action, 'No call to actions found' );
 			} catch ( error: any ) {
-				// const errorMessage = getErrorMessage( error );
 				// eslint-disable-next-line no-console
 				console.error( error );
-				// dispatch.failResolution( action, errorMessage );
 			}
 		},
 
 	getCallToAction:
 		( id: number ): ThunkAction =>
 		async ( { dispatch } ) => {
-			// const action = 'getById';
-
 			try {
-				// dispatch.startResolution( action );
-
 				const url = appendUrlParams( `ctas/${ id }`, {
 					context: 'edit',
 				} );
@@ -75,13 +58,9 @@ const entityResolvers = {
 						record,
 					},
 				} );
-
-				// dispatch.finishResolution( action );
 			} catch ( error: any ) {
-				// const errorMessage = getErrorMessage( error );
 				// eslint-disable-next-line no-console
 				console.error( error );
-				// dispatch.failResolution( action, errorMessage );
 			}
 		},
 };
