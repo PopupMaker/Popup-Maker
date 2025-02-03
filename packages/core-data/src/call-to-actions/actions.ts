@@ -45,7 +45,7 @@ const entityActions = {
 			callToAction: Partial< EditableCta >,
 			validate: boolean = true
 		): ThunkAction< CallToAction< 'edit' > | false > =>
-		async ( { dispatch } ) => {
+		async ( { dispatch, registry } ) => {
 			const action = 'createCallToAction';
 
 			try {
@@ -94,33 +94,35 @@ const entityActions = {
 				);
 
 				if ( result ) {
-					// dispatch.finishResolution( action, operation );
-					dispatch( {
-						type: CHANGE_ACTION_STATUS,
-						actionName: action,
-						status: DispatchStatus.Success,
-					} );
+					registry.batch( () => {
+						// dispatch.finishResolution( action, operation );
+						dispatch( {
+							type: CHANGE_ACTION_STATUS,
+							actionName: action,
+							status: DispatchStatus.Success,
+						} );
 
-					dispatch.createSuccessNotice(
-						sprintf(
-							// translators: %s: call to action title.
-							__(
-								'Call to action "%s" saved successfully.',
-								'popup-maker'
+						dispatch.createSuccessNotice(
+							sprintf(
+								// translators: %s: call to action title.
+								__(
+									'Call to action "%s" saved successfully.',
+									'popup-maker'
+								),
+								result?.title.rendered
 							),
-							result?.title.rendered
-						),
-						{
-							id: 'call-to-action-saved',
-							closeDelay: 5000,
-						}
-					);
+							{
+								id: 'call-to-action-saved',
+								closeDelay: 5000,
+							}
+						);
 
-					dispatch( {
-						type: RECEIVE_RECORD,
-						payload: {
-							record: result,
-						},
+						dispatch( {
+							type: RECEIVE_RECORD,
+							payload: {
+								record: result,
+							},
+						} );
 					} );
 
 					return result;
@@ -180,7 +182,7 @@ const entityActions = {
 			callToAction: PartialEditableCta,
 			validate: boolean = true
 		): ThunkAction< CallToAction< 'edit' > | false > =>
-		async ( { select, dispatch } ) => {
+		async ( { select, dispatch, registry } ) => {
 			const action = 'updateCallToAction';
 
 			try {
@@ -252,33 +254,35 @@ const entityActions = {
 				);
 
 				if ( result ) {
-					// dispatch.finishResolution( action, operation );
-					dispatch( {
-						type: CHANGE_ACTION_STATUS,
-						actionName: action,
-						status: DispatchStatus.Success,
-					} );
+					registry.batch( () => {
+						// dispatch.finishResolution( action, operation );
+						dispatch( {
+							type: CHANGE_ACTION_STATUS,
+							actionName: action,
+							status: DispatchStatus.Success,
+						} );
 
-					dispatch.createSuccessNotice(
-						sprintf(
-							// translators: %s: call to action title.
-							__(
-								'Call to action "%s" updated successfully.',
-								'popup-maker'
+						dispatch.createSuccessNotice(
+							sprintf(
+								// translators: %s: call to action title.
+								__(
+									'Call to action "%s" updated successfully.',
+									'popup-maker'
+								),
+								result?.title.rendered
 							),
-							result?.title.rendered
-						),
-						{
-							id: 'call-to-action-saved',
-							closeDelay: 5000,
-						}
-					);
+							{
+								id: 'call-to-action-saved',
+								closeDelay: 5000,
+							}
+						);
 
-					dispatch( {
-						type: RECEIVE_RECORD,
-						payload: {
-							record: result,
-						},
+						dispatch( {
+							type: RECEIVE_RECORD,
+							payload: {
+								record: result,
+							},
+						} );
 					} );
 
 					return result;
@@ -333,7 +337,7 @@ const entityActions = {
 	 */
 	deleteCallToAction:
 		( id: number, forceDelete: boolean = false ): ThunkAction< boolean > =>
-		async ( { dispatch } ) => {
+		async ( { dispatch, registry } ) => {
 			const action = 'deleteCallToAction';
 
 			try {
@@ -379,46 +383,48 @@ const entityActions = {
 				);
 
 				if ( result ) {
-					// dispatch.finishResolution( action, operation );
-					dispatch( {
-						type: CHANGE_ACTION_STATUS,
-						actionName: action,
-						status: DispatchStatus.Success,
-					} );
+					registry.batch( () => {
+						// dispatch.finishResolution( action, operation );
+						dispatch( {
+							type: CHANGE_ACTION_STATUS,
+							actionName: action,
+							status: DispatchStatus.Success,
+						} );
 
-					dispatch.createSuccessNotice(
-						sprintf(
-							// translators: %s: call to action title.
-							__(
-								'Call to action "%s" deleted successfully.',
-								'popup-maker'
+						dispatch.createSuccessNotice(
+							sprintf(
+								// translators: %s: call to action title.
+								__(
+									'Call to action "%s" deleted successfully.',
+									'popup-maker'
+								),
+								canonicalCallToAction?.title.rendered
 							),
-							canonicalCallToAction?.title.rendered
-						),
-						{
-							id: 'call-to-action-deleted',
-							closeDelay: 5000,
-						}
-					);
+							{
+								id: 'call-to-action-deleted',
+								closeDelay: 5000,
+							}
+						);
 
-					if ( forceDelete ) {
-						dispatch( {
-							type: PURGE_RECORD,
-							payload: {
-								id,
-							},
-						} );
-					} else {
-						dispatch( {
-							type: RECEIVE_RECORD,
-							payload: {
-								record: {
-									...canonicalCallToAction,
-									status: 'trash',
+						if ( forceDelete ) {
+							dispatch( {
+								type: PURGE_RECORD,
+								payload: {
+									id,
 								},
-							},
-						} );
-					}
+							} );
+						} else {
+							dispatch( {
+								type: RECEIVE_RECORD,
+								payload: {
+									record: {
+										...canonicalCallToAction,
+										status: 'trash',
+									},
+								},
+							} );
+						}
+					} );
 				}
 
 				return result;
@@ -455,7 +461,7 @@ const editorActions = {
 	 */
 	editRecord:
 		( id: number, edits: Partial< EditableCta > ): ThunkAction =>
-		async ( { select, dispatch } ) => {
+		async ( { select, dispatch, registry } ) => {
 			const action = 'editRecord';
 
 			try {
@@ -467,8 +473,9 @@ const editorActions = {
 				} );
 
 				let canonicalCallToAction: EditableCta | undefined;
+				const hasEditedEntity = select.hasEditedEntity( id );
 
-				if ( select.hasEditedEntity( id ) ) {
+				if ( hasEditedEntity ) {
 					canonicalCallToAction = select.getEditedEntity( id );
 				} else {
 					canonicalCallToAction = await fetchFromApi<
@@ -498,27 +505,34 @@ const editorActions = {
 
 						return;
 					}
-
-					await dispatch( {
-						type: START_EDITING_RECORD,
-						payload: { id, editableEntity: canonicalCallToAction },
-					} );
 				}
 
-				await dispatch( {
-					type: EDIT_RECORD,
-					payload: {
-						id,
-						edits,
-						editableEntity: canonicalCallToAction,
-					},
-				} );
+				registry.batch( async () => {
+					if ( ! hasEditedEntity ) {
+						await dispatch( {
+							type: START_EDITING_RECORD,
+							payload: {
+								id,
+								editableEntity: canonicalCallToAction,
+							},
+						} );
+					}
 
-				// dispatch.finishResolution( action, operation );
-				dispatch( {
-					type: CHANGE_ACTION_STATUS,
-					actionName: action,
-					status: DispatchStatus.Success,
+					await dispatch( {
+						type: EDIT_RECORD,
+						payload: {
+							id,
+							edits,
+							editableEntity: canonicalCallToAction,
+						},
+					} );
+
+					// dispatch.finishResolution( action, operation );
+					dispatch( {
+						type: CHANGE_ACTION_STATUS,
+						actionName: action,
+						status: DispatchStatus.Success,
+					} );
 				} );
 			} catch ( error ) {
 				const errorMessage = getErrorMessage( error );
@@ -553,7 +567,7 @@ const editorActions = {
 	 */
 	saveEditedRecord:
 		( id: number, validate: boolean = true ): ThunkAction< boolean > =>
-		async ( { select, dispatch } ) => {
+		async ( { select, dispatch, registry } ) => {
 			const action = 'saveRecord';
 
 			try {
@@ -613,17 +627,22 @@ const editorActions = {
 						// 	validation
 						// );
 
-						dispatch( {
-							type: CHANGE_ACTION_STATUS,
-							actionName: action,
-							status: DispatchStatus.Error,
-							message: validation.message,
-						} );
+						registry.batch( async () => {
+							dispatch( {
+								type: CHANGE_ACTION_STATUS,
+								actionName: action,
+								status: DispatchStatus.Error,
+								message: validation.message,
+							} );
 
-						// TODO REVIEW: Do we need to handle this with a notice, or can we just get the message from resolution status?
-						await dispatch.createErrorNotice( validation.message, {
-							id: 'call-to-action-validation-error',
-							closeDelay: 5000,
+							// TODO REVIEW: Do we need to handle this with a notice, or can we just get the message from resolution status?
+							await dispatch.createErrorNotice(
+								validation.message,
+								{
+									id: 'call-to-action-validation-error',
+									closeDelay: 5000,
+								}
+							);
 						} );
 
 						return false;
@@ -636,42 +655,44 @@ const editorActions = {
 				);
 
 				if ( result ) {
-					// dispatch.finishResolution( action, operation );
-					dispatch( {
-						type: CHANGE_ACTION_STATUS,
-						actionName: action,
-						status: DispatchStatus.Success,
-					} );
+					registry.batch( () => {
+						// dispatch.finishResolution( action, operation );
+						dispatch( {
+							type: CHANGE_ACTION_STATUS,
+							actionName: action,
+							status: DispatchStatus.Success,
+						} );
 
-					dispatch.createSuccessNotice(
-						sprintf(
-							// translators: %s: call to action title.
-							__(
-								'Call to action "%s" saved successfully.',
-								'popup-maker'
+						dispatch.createSuccessNotice(
+							sprintf(
+								// translators: %s: call to action title.
+								__(
+									'Call to action "%s" saved successfully.',
+									'popup-maker'
+								),
+								result?.title.rendered
 							),
-							result?.title.rendered
-						),
-						{
-							id: 'call-to-action-saved',
-							closeDelay: 5000,
-						}
-					);
+							{
+								id: 'call-to-action-saved',
+								closeDelay: 5000,
+							}
+						);
 
-					dispatch( {
-						type: RECEIVE_RECORD,
-						payload: {
-							record: result,
-						},
-					} );
+						dispatch( {
+							type: RECEIVE_RECORD,
+							payload: {
+								record: result,
+							},
+						} );
 
-					dispatch( {
-						type: SAVE_EDITED_RECORD,
-						payload: {
-							id,
-							historyIndex,
-							editedEntity: result,
-						},
+						dispatch( {
+							type: SAVE_EDITED_RECORD,
+							payload: {
+								id,
+								historyIndex,
+								editedEntity: result,
+							},
+						} );
 					} );
 
 					return true;
@@ -684,19 +705,21 @@ const editorActions = {
 				// eslint-disable-next-line no-console
 				console.error( 'Save failed:', error );
 
-				await dispatch.createErrorNotice( errorMessage );
+				registry.batch( async () => {
+					await dispatch.createErrorNotice( errorMessage );
 
-				// dispatch.failResolution(
-				// 	action,
-				// 	error instanceof Error ? error.message : 'Failed to save',
-				// 	operation
-				// );
+					// dispatch.failResolution(
+					// 	action,
+					// 	error instanceof Error ? error.message : 'Failed to save',
+					// 	operation
+					// );
 
-				dispatch( {
-					type: CHANGE_ACTION_STATUS,
-					actionName: action,
-					status: DispatchStatus.Error,
-					message: errorMessage,
+					dispatch( {
+						type: CHANGE_ACTION_STATUS,
+						actionName: action,
+						status: DispatchStatus.Error,
+						message: errorMessage,
+					} );
 				} );
 
 				throw error;
