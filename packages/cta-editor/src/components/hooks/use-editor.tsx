@@ -5,7 +5,7 @@ import {
 	useQueryParams,
 } from 'use-query-params';
 
-import { useEffect } from '@wordpress/element';
+import { useEffect, useCallback } from '@wordpress/element';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { callToActionStore } from '@popup-maker/core-data';
 
@@ -57,7 +57,7 @@ const useEditor = () => {
 	}, [ edit, add, editorId, changeEditorId ] );
 
 	/**
-	 * Set the editor to edit a specific restriction.
+	 * Set the editor to edit a specific call to action.
 	 *
 	 * This both updates the editorId & sets matching url params.
 	 *
@@ -66,10 +66,16 @@ const useEditor = () => {
 	 *
 	 * @param {number|undefined} id Id to edit.
 	 */
-	const setEditorId = ( id: number | undefined ) => {
+	const setEditorId = useCallback(
+		( id: number | undefined ) => {
 		changeEditorId( id );
 		setQueryParams( {
 			edit: id,
+			} );
+		},
+		[ changeEditorId, setQueryParams ]
+	);
+
 		} );
 	};
 
