@@ -19,8 +19,11 @@ import type { EditorWithDataStoreProps } from './with-data-store';
  * This type extends EditorWithDataStoreProps (which is always required)
  * and optionally includes modal-specific props from EditorWithModalProps.
  */
-export type EditorWithQueryParamsProps = EditorWithDataStoreProps &
-	Partial< Omit< EditorWithModalProps, keyof EditorWithDataStoreProps > >;
+export type EditorWithQueryParamsProps = Omit<
+	EditorWithDataStoreProps &
+		Partial< Omit< EditorWithModalProps, keyof EditorWithDataStoreProps > >,
+	'id'
+>;
 
 /**
  * Wrap the editor with query param handling.
@@ -30,7 +33,7 @@ export type EditorWithQueryParamsProps = EditorWithDataStoreProps &
  * @return {Function} The wrapped component.
  */
 export const withQueryParams = (
-	WrappedComponent: ComponentType< EditorWithQueryParamsProps >
+	WrappedComponent: ComponentType< EditorWithModalProps >
 ) => {
 	return function QueryParamsWrappedEditor( {
 		onSave: onSaveProp,

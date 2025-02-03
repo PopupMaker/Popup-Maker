@@ -1,6 +1,5 @@
 import './editor.scss';
-import { callToActionStore } from '@popup-maker/core-data';
-import { useSelect } from '@wordpress/data';
+
 import { __ } from '@popup-maker/i18n';
 
 import Header from './header';
@@ -21,15 +20,6 @@ const Editor = withQueryParams( withModal( BaseEditor ) );
 const CallToActionsView = () => {
 	const { permissions = { edit_ctas: false } } = getGlobalVars();
 	const { edit_ctas: userCanEditCallToActions } = permissions;
-
-	// Fetch needed data from the @popup-maker/core-data & @wordpress/data stores.
-	const { isEditorActive, editorId } = useSelect(
-		( select ) => ( {
-			isEditorActive: select( callToActionStore ).isEditorActive(),
-			editorId: select( callToActionStore ).getEditorId(),
-		} ),
-		[]
-	);
 
 	// If the user doesn't have the manage_settings permission, show a message.
 	if ( ! userCanEditCallToActions ) {
@@ -54,7 +44,7 @@ const CallToActionsView = () => {
 			<Notices />
 			<Header />
 			<List />
-			{ isEditorActive && editorId && <Editor id={ editorId } /> }
+			<Editor />
 		</div>
 	);
 };
