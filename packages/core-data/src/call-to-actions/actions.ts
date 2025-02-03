@@ -869,16 +869,17 @@ const editorActions = {
 						payload: {
 							id: editorId,
 							editableEntity: editableEntity( entity ),
+							setEditorId: true,
+						},
+					} );
+				} else {
+					dispatch( {
+						type: EDITOR_CHANGE_ID,
+						payload: {
+							editorId,
 						},
 					} );
 				}
-
-				dispatch( {
-					type: EDITOR_CHANGE_ID,
-					payload: {
-						editorId,
-					},
-				} );
 			} catch ( error ) {
 				const errorMessage = getErrorMessage( error );
 

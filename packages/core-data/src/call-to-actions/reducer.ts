@@ -124,6 +124,7 @@ export type StartEditingRecordAction = BaseAction & {
 	payload: {
 		id: number;
 		editableEntity: EditableCta;
+setEditorId: boolean;
 	};
 };
 
@@ -313,22 +314,23 @@ export function reducer( state = initialState, action: ReducerAction ): State {
 		}
 
 		case START_EDITING_RECORD: {
-			const { id, editableEntity } = action.payload;
+			const { id, editableEntity, setEditorId } = action.payload;
 
-			return {
+			const newState = {
 				...state,
 				editedEntities: {
 					...state.editedEntities,
 					[ id ]: editableEntity,
 				},
-				editHistory: {
-					...state.editHistory,
-					[ id ]: [],
-				},
-				editHistoryIndex: {
-					...state.editHistoryIndex,
-					[ id ]: 0,
-				},
+			};
+
+			if ( ! setEditorId ) {
+				return newState;
+			}
+
+			return {
+				...newState,
+				editorId: id,
 			};
 		}
 
