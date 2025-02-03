@@ -16,7 +16,7 @@ import { validateCallToAction } from './validation';
 import { editableEntity } from './utils';
 
 const {
-	RECIEVE_RECORD,
+	RECEIVE_RECORD,
 	PURGE_RECORD,
 	EDITOR_CHANGE_ID,
 	EDIT_RECORD,
@@ -117,7 +117,7 @@ const entityActions = {
 					);
 
 					dispatch( {
-						type: RECIEVE_RECORD,
+						type: RECEIVE_RECORD,
 						payload: {
 							record: result,
 						},
@@ -275,7 +275,7 @@ const entityActions = {
 					);
 
 					dispatch( {
-						type: RECIEVE_RECORD,
+						type: RECEIVE_RECORD,
 						payload: {
 							record: result,
 						},
@@ -410,7 +410,7 @@ const entityActions = {
 						} );
 					} else {
 						dispatch( {
-							type: RECIEVE_RECORD,
+							type: RECEIVE_RECORD,
 							payload: {
 								record: {
 									...canonicalCallToAction,
@@ -659,7 +659,7 @@ const editorActions = {
 					);
 
 					dispatch( {
-						type: RECIEVE_RECORD,
+						type: RECEIVE_RECORD,
 						payload: {
 							record: result,
 						},

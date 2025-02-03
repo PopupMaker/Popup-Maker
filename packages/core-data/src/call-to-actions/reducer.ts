@@ -5,9 +5,9 @@ import type { EditorId, Notice, GetRecordsHttpQuery } from '../types';
 import type { CallToAction, EditableCta, CtaEdit } from './types';
 
 const {
-	RECIEVE_RECORD,
-	RECIEVE_RECORDS,
-	RECIEVE_QUERY_RECORDS,
+	RECEIVE_RECORD,
+	RECEIVE_RECORDS,
+	RECEIVE_QUERY_RECORDS,
 	PURGE_RECORD,
 	EDITOR_CHANGE_ID,
 	EDIT_RECORD,
@@ -84,21 +84,21 @@ type BaseAction = {
 };
 
 export type RecieveRecordAction = BaseAction & {
-	type: typeof RECIEVE_RECORD;
+	type: typeof RECEIVE_RECORD;
 	payload: {
 		record: CallToAction;
 	};
 };
 
 export type RecieveRecordsAction = BaseAction & {
-	type: typeof RECIEVE_RECORDS;
+	type: typeof RECEIVE_RECORDS;
 	payload: {
 		records: CallToAction< 'edit' >[];
 	};
 };
 
 export type RecieveQueryRecordsAction = BaseAction & {
-	type: typeof RECIEVE_QUERY_RECORDS;
+	type: typeof RECEIVE_QUERY_RECORDS;
 	payload: {
 		query: GetRecordsHttpQuery;
 		records: CallToAction< 'edit' >[];
@@ -223,9 +223,9 @@ export type ReducerAction =
 	| ChangeActionStatusAction
 	| InvalidateResolutionAction;
 
-const reducer = ( state: State = initialState, action: ReducerAction ) => {
+export function reducer( state = initialState, action: ReducerAction ): State {
 	switch ( action.type ) {
-		case RECIEVE_RECORD: {
+		case RECEIVE_RECORD: {
 			const { record } = action.payload;
 
 			return {
@@ -240,8 +240,8 @@ const reducer = ( state: State = initialState, action: ReducerAction ) => {
 			};
 		}
 
-		case RECIEVE_RECORDS:
-		case RECIEVE_QUERY_RECORDS: {
+		case RECEIVE_RECORDS:
+		case RECEIVE_QUERY_RECORDS: {
 			const { records, query = false } = action.payload;
 
 			// Add the new records to the byId object.
@@ -530,6 +530,6 @@ const reducer = ( state: State = initialState, action: ReducerAction ) => {
 		default:
 			return state;
 	}
-};
+}
 
 export default reducer;

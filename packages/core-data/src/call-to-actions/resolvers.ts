@@ -3,7 +3,7 @@ import {
 	fetchFromApi,
 	// getErrorMessage
 } from '../utils';
-import { RECIEVE_RECORDS, RECIEVE_RECORD } from './constants';
+import { RECEIVE_RECORDS, RECEIVE_RECORD } from './constants';
 
 import type { CallToAction, ThunkAction } from './types';
 
@@ -33,7 +33,7 @@ const entityResolvers = {
 
 				if ( results.length ) {
 					dispatch( {
-						type: RECIEVE_RECORDS,
+						type: RECEIVE_RECORDS,
 						payload: {
 							records: results,
 						},
@@ -70,7 +70,7 @@ const entityResolvers = {
 				);
 
 				dispatch( {
-					type: RECIEVE_RECORD,
+					type: RECEIVE_RECORD,
 					payload: {
 						record,
 					},
