@@ -1,8 +1,14 @@
+import { compare as jsonpatchCompare } from 'fast-json-patch';
+
 import { __, sprintf } from '@popup-maker/i18n';
 import { store as noticesStore } from '@wordpress/notices';
 
 import { ACTION_TYPES, NOTICE_CONTEXT } from './constants';
 
+import { DispatchStatus } from '../constants';
+import { fetchFromApi, getErrorMessage } from '../utils';
+import { validateCallToAction } from './validation';
+import { editableEntity } from './utils';
 import type { EditorId, Notice } from '../types';
 import type {
 	CallToAction,
@@ -10,10 +16,7 @@ import type {
 	EditableCta,
 	PartialEditableCta,
 } from './types';
-import { DispatchStatus } from '../constants';
-import { fetchFromApi, getErrorMessage } from '../utils';
-import { validateCallToAction } from './validation';
-import { editableEntity } from './utils';
+import type { EditRecordAction } from './reducer';
 
 const {
 	RECEIVE_RECORD,
@@ -462,24 +465,17 @@ const editorActions = {
 	editRecord:
 		( id: number, edits: Partial< EditableCta > ): ThunkAction =>
 		async ( { select, dispatch, registry } ) => {
-			const action = 'editRecord';
-
 			try {
-				// dispatch.startResolution( action, operation );
-				dispatch( {
-					type: CHANGE_ACTION_STATUS,
-					actionName: action,
-					status: DispatchStatus.Resolving,
-				} );
-
 				let canonicalCallToAction: EditableCta | undefined;
 				const hasEditedEntity = select.hasEditedEntity( id );
 
 				if ( hasEditedEntity ) {
-					canonicalCallToAction = select.getEditedEntity( id );
+					canonicalCallToAction = select.getEditedCallToAction(
+						id
+					) as EditableCta;
 				} else {
 					canonicalCallToAction = await fetchFromApi<
-						CallToAction< 'edit' >
+						CallToAction< 'edit' > & { _links: any }
 					>( `ctas/${ id }?context=edit` ).then( ( result ) =>
 						// Convert to editable entity if found.
 						result
@@ -487,22 +483,6 @@ const editorActions = {
 							: undefined
 					);
 					if ( ! canonicalCallToAction ) {
-						// dispatch.failResolution(
-						// 	action,
-						// 	__( 'Call to action not found', 'popup-maker' ),
-						// 	operation
-						// );
-
-						dispatch( {
-							type: CHANGE_ACTION_STATUS,
-							actionName: action,
-							status: DispatchStatus.Error,
-							message: __(
-								'Call to action not found',
-								'popup-maker'
-							),
-						} );
-
 						return;
 					}
 				}
@@ -518,21 +498,18 @@ const editorActions = {
 						} );
 					}
 
+					const diff = jsonpatchCompare(
+						canonicalCallToAction,
+						edits
+					);
+
 					await dispatch( {
 						type: EDIT_RECORD,
 						payload: {
 							id,
-							edits,
-							editableEntity: canonicalCallToAction,
+							edits: diff,
 						},
-					} );
-
-					// dispatch.finishResolution( action, operation );
-					dispatch( {
-						type: CHANGE_ACTION_STATUS,
-						actionName: action,
-						status: DispatchStatus.Success,
-					} );
+					} as EditRecordAction );
 				} );
 			} catch ( error ) {
 				const errorMessage = getErrorMessage( error );
@@ -541,20 +518,6 @@ const editorActions = {
 				console.error( 'Edit failed:', error );
 
 				await dispatch.createErrorNotice( errorMessage );
-
-				// dispatch.failResolution(
-				// 	action,
-				// 	errorMessage,
-				// 	operation,
-				// 	error as Record< string, any >
-				// );
-
-				dispatch( {
-					type: CHANGE_ACTION_STATUS,
-					actionName: action,
-					status: DispatchStatus.Error,
-					message: __( 'Call to action not found', 'popup-maker' ),
-				} );
 			}
 		},
 

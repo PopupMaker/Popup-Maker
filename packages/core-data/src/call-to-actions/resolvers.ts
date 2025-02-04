@@ -16,18 +16,20 @@ const entityResolvers = {
 
 				const url = appendUrlParams( 'ctas', urlParams );
 
-				const results = await fetchFromApi< CallToAction< 'edit' >[] >(
-					url,
-					{
-						method: 'GET',
-					}
-				);
+				const results = await fetchFromApi<
+					( CallToAction< 'edit' > & { _links: any } )[]
+				>( url, {
+					method: 'GET',
+				} );
 
 				if ( results.length ) {
 					dispatch( {
 						type: RECEIVE_RECORDS,
 						payload: {
-							records: results,
+							records: results.map(
+								// Remove _links from the API record.
+								( { _links, ...record } ) => record
+							),
 						},
 					} );
 				}
@@ -45,12 +47,11 @@ const entityResolvers = {
 					context: 'edit',
 				} );
 
-				const record = await fetchFromApi< CallToAction< 'edit' > >(
-					url,
-					{
-						method: 'GET',
-					}
-				);
+				const { _links, ...record } = await fetchFromApi<
+					CallToAction< 'edit' > & { _links: any }
+				>( url, {
+					method: 'GET',
+				} );
 
 				dispatch( {
 					type: RECEIVE_RECORD,

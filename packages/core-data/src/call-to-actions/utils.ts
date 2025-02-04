@@ -14,9 +14,10 @@ export function isRenderedText(
  * @param {T} entity The entity to convert.
  * @return {Updatable<T>} The editable entity.
  */
-export function editableEntity< T extends BaseEntity< 'edit' > >(
-	entity: T
-): Updatable< T > {
+export function editableEntity< T extends BaseEntity< 'edit' > >( {
+	_links,
+	...entity
+}: T & { _links?: any } ): Updatable< T > {
 	return Object.fromEntries(
 		Object.entries( entity ).map( ( [ key, value ] ) => [
 			key,

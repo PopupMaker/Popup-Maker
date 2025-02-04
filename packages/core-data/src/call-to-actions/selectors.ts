@@ -1,3 +1,5 @@
+import { applyPatch } from 'fast-json-patch';
+
 import { applyFilters } from '@wordpress/hooks';
 import { store as noticesStore } from '@wordpress/notices';
 import { createRegistrySelector, createSelector } from '@wordpress/data';
@@ -8,7 +10,7 @@ import { defaultValues, NOTICE_CONTEXT } from './constants';
 import type { Updatable } from '@wordpress/core-data';
 import type { Notice } from '../types';
 import type { State } from './reducer';
-import type { CallToAction, CtaEdit, EditableCta } from './types';
+import type { CallToAction } from './types';
 
 /*****************************************************
  * SECTION: Entity selectors
@@ -243,24 +245,33 @@ const editorSelectors = {
 		( state: State, id: number ) => {
 			const baseEntity = state.editedEntities?.[ id ];
 			const editHistory = state.editHistory?.[ id ];
-			const editHistoryIndex = state.editHistoryIndex?.[ id ];
+			const editHistoryIndex = state.editHistoryIndex?.[ id ] ?? -1;
 
 			if ( ! baseEntity ) {
 				return undefined;
 			}
 
-			if ( ! editHistory ) {
+			// If index is -1, return base entity without edits
+			if ( editHistoryIndex === -1 ) {
 				return baseEntity;
 			}
 
-			const edits = editHistory.slice( 0, editHistoryIndex );
+			if ( ! editHistory?.length ) {
+				return baseEntity;
+			}
 
-			const editedEntity = edits.reduce(
-				( entity: EditableCta, edit: CtaEdit ) => {
-					return { ...entity, ...edit };
-				},
-				baseEntity
-			);
+			// Get the edits up to the current index
+			const editsToApply = editHistory.slice( 0, editHistoryIndex + 1 );
+
+			// Apply each patch set in sequence
+			const editedEntity = editsToApply.reduce( ( entity, patchSet ) => {
+				const patchArray = Array.isArray( patchSet )
+					? patchSet
+					: [ patchSet ];
+
+				const patched = applyPatch( entity, patchArray, true, false );
+				return patched.newDocument;
+			}, baseEntity );
 
 			return editedEntity;
 		},

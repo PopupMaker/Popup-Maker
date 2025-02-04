@@ -2,7 +2,8 @@ import { ACTION_TYPES, initialState } from './constants';
 
 import type { DispatchStatuses } from '../constants';
 import type { EditorId, Notice, GetRecordsHttpQuery } from '../types';
-import type { CallToAction, EditableCta, CtaEdit } from './types';
+import type { CallToAction, EditableCta } from './types';
+import type { Operation } from 'fast-json-patch';
 
 const {
 	RECEIVE_RECORD,
@@ -60,7 +61,7 @@ export type State = {
 	 *
 	 * Each edit is an object with the same shape as the editable entity, but without the `id` property.
 	 */
-	editHistory: Record< number, CtaEdit[] >;
+	editHistory: Record< number, Operation[][] >;
 
 	/**
 	 * The index of the current edit for each call to action.
@@ -132,7 +133,7 @@ export type EditRecordAction = BaseAction & {
 	type: typeof EDIT_RECORD;
 	payload: {
 		id: number;
-		edits: CtaEdit;
+		edits: Operation[];
 	};
 };
 
@@ -340,17 +341,23 @@ export function reducer( state = initialState, action: ReducerAction ): State {
 			const { id, edits } = action.payload;
 
 			const editHistory = state.editHistory[ id ] ?? [];
-			const newEditHistory = [ ...editHistory, edits ];
+			const currentIndex = state.editHistoryIndex[ id ] ?? -1;
+
+			// If we're not at the end of history, we need to clear future edits
+			const newEditHistory =
+				currentIndex < editHistory.length - 1
+					? editHistory.slice( 0, currentIndex + 1 )
+					: editHistory;
 
 			return {
 				...state,
 				editHistory: {
 					...state.editHistory,
-					[ id ]: newEditHistory,
+					[ id ]: [ ...newEditHistory, edits ],
 				},
 				editHistoryIndex: {
 					...state.editHistoryIndex,
-					[ id ]: newEditHistory.length - 1,
+					[ id ]: newEditHistory.length, // Points to the new edit
 				},
 			};
 		}
@@ -358,8 +365,8 @@ export function reducer( state = initialState, action: ReducerAction ): State {
 		case UNDO_EDIT_RECORD: {
 			const { id, steps = 1 } = action.payload;
 
-			const currentIndex = state.editHistoryIndex[ id ] ?? 0;
-			const newIndex = Math.max( 0, currentIndex - steps );
+			const currentIndex = state.editHistoryIndex[ id ] ?? -1;
+			const newIndex = Math.max( -1, currentIndex - steps );
 
 			return {
 				...state,
@@ -373,11 +380,13 @@ export function reducer( state = initialState, action: ReducerAction ): State {
 		case REDO_EDIT_RECORD: {
 			const { id, steps } = action.payload;
 
-			const currentIndex = state.editHistoryIndex[ id ] ?? 0;
-			const newIndex = Math.min(
-				state.editHistory[ id ].length - 1,
-				currentIndex + steps
-			);
+			const currentIndex = state.editHistoryIndex[ id ] ?? -1;
+			// Check if we have a history and if there are edits to redo
+			const maxIndex = ( state.editHistory[ id ]?.length ?? 0 ) - 1;
+			const newIndex =
+				maxIndex >= 0
+					? Math.min( maxIndex, currentIndex + steps )
+					: currentIndex;
 
 			return {
 				...state,
@@ -391,41 +400,25 @@ export function reducer( state = initialState, action: ReducerAction ): State {
 		case SAVE_EDITED_RECORD: {
 			const { id, historyIndex, editedEntity } = action.payload;
 
-			const remainingEdits = state.editHistory[ id ].slice(
+			// Get all edits up to current index
+			const currentEdits = state.editHistory[ id ].slice(
+				0,
 				historyIndex + 1
 			);
-
-			// If no edits, remove the edited entity & edit history.
-			if ( remainingEdits.length === 0 ) {
-				const { [ id ]: _1, ...editedEntities } = state.editedEntities;
-				const { [ id ]: _2, ...editHistory } = state.editHistory;
-				const { [ id ]: _3, ...editHistoryIndex } =
-					state.editHistoryIndex;
-
-				return {
-					...state,
-					editedEntities,
-					editHistory,
-					editHistoryIndex,
-				};
-			}
 
 			return {
 				...state,
 				editedEntities: {
 					...state.editedEntities,
-					// Replace the edited entity with the new entity.
 					[ id ]: editedEntity,
 				},
 				editHistory: {
 					...state.editHistory,
-					// Trim the edit history to the current index.
-					[ id ]: remainingEdits,
+					[ id ]: currentEdits,
 				},
 				editHistoryIndex: {
-					// Reset the edit history index to 0.
 					...state.editHistoryIndex,
-					[ id ]: 0,
+					[ id ]: currentEdits.length - 1,
 				},
 			};
 		}
