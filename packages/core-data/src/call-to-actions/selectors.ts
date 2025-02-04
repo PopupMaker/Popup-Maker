@@ -210,7 +210,14 @@ const editorSelectors = {
 	 */
 	hasUndo: createSelector(
 		( state: State, id: number ) => {
-			return state.editHistoryIndex?.[ id ] > 0;
+			if (
+				typeof state.editHistoryIndex?.[ id ] !== 'number' ||
+				typeof state.editHistory?.[ id ] !== 'object'
+			) {
+				return false;
+			}
+
+			return state.editHistoryIndex?.[ id ] >= 0;
 		},
 		( state: State, id: number ) => [ state.editHistoryIndex?.[ id ], id ]
 	),
@@ -224,6 +231,13 @@ const editorSelectors = {
 	 */
 	hasRedo: createSelector(
 		( state: State, id: number ) => {
+			if (
+				typeof state.editHistoryIndex?.[ id ] !== 'number' ||
+				typeof state.editHistory?.[ id ] !== 'object'
+			) {
+				return false;
+			}
+
 			return (
 				state.editHistoryIndex?.[ id ] <
 				state.editHistory?.[ id ]?.length - 1

@@ -4,7 +4,7 @@ import { __ } from '@popup-maker/i18n';
 import { link } from '@wordpress/icons';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useCallback, useMemo } from '@wordpress/element';
-import { Button, Modal, Spinner } from '@wordpress/components';
+import { Button, Flex, Modal, Spinner } from '@wordpress/components';
 
 import { callToActionStore } from '@popup-maker/core-data';
 
@@ -63,17 +63,39 @@ export const withModal = (
 		...componentProps
 	}: EditorWithModalProps ) {
 		// Fetch values separately so they will still be available to the component.
-		const { values, isSaving } = useSelect( ( select ) => {
+		const values = useSelect( ( select ) => {
 			const store = select( callToActionStore );
 
-			return {
-				values:
-					store.getCurrentEditorValues() ?? store.getDefaultValues(),
-				isSaving: store.isResolving( 'updateCallToAction' ),
-			};
+			return store.getCurrentEditorValues() ?? store.getDefaultValues();
 		}, [] );
 
-		const { saveEditorValues } = useDispatch( callToActionStore );
+		const isSaving = useSelect(
+			( select ) =>
+				select( callToActionStore ).isResolving( 'updateCallToAction' ),
+			[]
+		);
+
+		const { hasUndo, hasRedo } = useSelect(
+			( select ) => {
+				if ( ! values.id ) {
+					return {
+						hasUndo: false,
+						hasRedo: false,
+					};
+				}
+
+				const store = select( callToActionStore );
+
+				return {
+					hasUndo: store.hasUndo( values.id ),
+					hasRedo: store.hasRedo( values.id ),
+				};
+			},
+			[ values ]
+		);
+
+		const { saveEditorValues, undo, redo } =
+			useDispatch( callToActionStore );
 
 		/**
 		 * Get the modal title based on the CTA state.
@@ -130,6 +152,34 @@ export const withModal = (
 				onRequestClose={ closeModal }
 				shouldCloseOnClickOutside={ false }
 			>
+				<Flex
+					direction="row"
+					style={ {
+						justifyContent: 'space-between',
+						alignItems: 'center',
+						position: 'absolute',
+						top: 13,
+						right: 200,
+						zIndex: 100,
+						maxWidth: 'max-content',
+					} }
+				>
+					<Button
+						disabled={ isSaving || ! hasUndo }
+						variant="tertiary"
+						icon={ 'undo' }
+						aria-label={ __( 'Undo', 'popup-maker' ) }
+						onClick={ () => undo( values.id ) }
+					/>
+
+					<Button
+						disabled={ isSaving || ! hasRedo }
+						variant="tertiary"
+						icon={ 'redo' }
+						aria-label={ __( 'Redo', 'popup-maker' ) }
+						onClick={ () => redo( values.id ) }
+					/>
+				</Flex>
 				<WrappedComponent { ...componentProps } />
 
 				{ showActions && (
