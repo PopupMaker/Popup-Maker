@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { __ } from '@popup-maker/i18n';
 import { link } from '@wordpress/icons';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { useCallback, useMemo } from '@wordpress/element';
+import { useCallback, useEffect, useMemo } from '@wordpress/element';
 import { Button, Flex, Modal, Spinner } from '@wordpress/components';
 
 import { callToActionStore } from '@popup-maker/core-data';
@@ -75,7 +75,7 @@ export const withModal = (
 			[]
 		);
 
-		const { hasUndo, hasRedo } = useSelect(
+		const { hasUndo, hasRedo, hasEdits } = useSelect(
 			( select ) => {
 				if ( ! values.id ) {
 					return {
@@ -89,12 +89,13 @@ export const withModal = (
 				return {
 					hasUndo: store.hasUndo( values.id ),
 					hasRedo: store.hasRedo( values.id ),
+					hasEdits: store.hasEdits( values.id ),
 				};
 			},
 			[ values ]
 		);
 
-		const { saveEditorValues, undo, redo } =
+		const { saveEditorValues, undo, redo, resetRecordEdits } =
 			useDispatch( callToActionStore );
 
 		/**
@@ -112,6 +113,13 @@ export const withModal = (
 				: __( 'New Call to Action', 'popup-maker' );
 		}, [ modalProps?.title, values?.id, values?.title ] );
 
+		const confirmLoss = () => {
+			// eslint-disable-next-line no-alert, no-restricted-globals
+			return window.confirm(
+				__( 'Changes you made may not be saved.', 'popup-maker' )
+			);
+		};
+
 		/**
 		 * Handle the close event.
 		 */
@@ -120,8 +128,16 @@ export const withModal = (
 				return; // Prevent closing while saving
 			}
 
+			if ( hasEdits ) {
+				if ( confirmLoss() ) {
+					resetRecordEdits( values.id );
+				} else {
+					return;
+				}
+			}
+
 			onClose?.();
-		}, [ isSaving, onClose ] );
+		}, [ isSaving, onClose, hasEdits ] );
 
 		/**
 		 * Handle saving the values.
@@ -141,6 +157,43 @@ export const withModal = (
 			}
 		}, [ closeOnSave, closeModal, saveEditorValues ] );
 
+		const { id: valuesId } = values;
+
+		// Set up confirm to close dialogue as well as prevent changing pages in the brower while hasEdits.
+		useEffect(
+			() => {
+				// On beforeunload event, confirm loss of unsaved changes.
+				const confirmLossOfUnsavedChanges = (
+					event: BeforeUnloadEvent
+				) => {
+					if ( hasEdits ) {
+						if ( confirmLoss() ) {
+							resetRecordEdits( valuesId );
+						} else {
+							event.preventDefault();
+							return false;
+						}
+					}
+
+					return true;
+				};
+
+				window.addEventListener(
+					'beforeunload',
+					confirmLossOfUnsavedChanges
+				);
+
+				return () => {
+					window.removeEventListener(
+						'beforeunload',
+						confirmLossOfUnsavedChanges
+					);
+				};
+			},
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+			[ hasEdits, valuesId ]
+		);
+
 		return (
 			<Modal
 				{ ...modalProps }
@@ -150,7 +203,7 @@ export const withModal = (
 					modalProps?.className
 				) }
 				onRequestClose={ closeModal }
-				shouldCloseOnClickOutside={ false }
+				shouldCloseOnClickOutside={ true }
 			>
 				<Flex
 					direction="row"
