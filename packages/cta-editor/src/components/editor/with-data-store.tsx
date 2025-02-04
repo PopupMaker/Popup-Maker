@@ -241,7 +241,7 @@ export const withDataStore = (
 				{ ...componentProps }
 				values={ editorValues }
 				onChange={ ( newValues ) => {
-					editRecord( newValues.id, newValues );
+					editRecord( values.id, newValues );
 				} }
 				tabsFilter={ tabsFilter }
 				beforeTabs={
