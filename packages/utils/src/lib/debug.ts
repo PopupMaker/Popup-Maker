@@ -2,7 +2,7 @@
  * Whether debugging is enabled.
  * Can be enabled via localStorage.debug = 'pum:*' or specific features like 'pum:effects'
  */
-const getDebugConfig = () => {
+const getDebugConfig = (): DebugConfig => {
 	try {
 		const debug = localStorage.getItem( 'debug' ) || '';
 		if ( debug === 'pum:*' ) {
@@ -39,7 +39,7 @@ const getDebugConfig = () => {
 	}
 };
 
-interface DebugConfig {
+export interface DebugConfig {
 	component?: boolean;
 	effects?: boolean;
 	selectors?: boolean;
