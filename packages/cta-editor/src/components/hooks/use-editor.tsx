@@ -37,15 +37,25 @@ const useEditor = () => {
 	const { edit, add, tab } = queryParams;
 
 	// Initialize on mount if URL has an ID
-	useEffect( () => {
-		if ( initialized ) {
-			return;
-		}
-		initialized = true;
+	useEffect(
+		() => {
+			if ( initialized ) {
+				return;
+			}
 
-		const urlId = edit && edit > 0 ? edit : undefined;
-		changeEditorId( urlId );
-	} );
+			// Only once on app load.
+			initialized = true;
+			const urlId = edit && edit > 0 ? edit : undefined;
+
+			// Only initialize if we have a URL ID and no current editor ID
+			if ( urlId && ! editorId ) {
+				changeEditorId( urlId );
+			}
+		},
+		// Only run on mount.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[]
+	);
 
 	/**
 	 * Set the editor to edit a specific call to action.
