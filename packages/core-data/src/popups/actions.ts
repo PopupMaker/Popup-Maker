@@ -80,7 +80,6 @@ const entityActions = {
 						// TODO REVIEW: Do we need to handle this with a notice, or can we just get the message from resolution status?
 						await dispatch.createErrorNotice( validation.message, {
 							id: 'call-to-action-validation-error',
-							closeDelay: 5000,
 						} );
 
 						return false;
@@ -115,7 +114,6 @@ const entityActions = {
 						),
 						{
 							id: 'call-to-action-saved',
-							closeDelay: 5000,
 						}
 					);
 
@@ -214,7 +212,6 @@ const entityActions = {
 						// TODO REVIEW: Do we need to handle this with a notice, or can we just get the message from resolution status?
 						await dispatch.createErrorNotice( validation.message, {
 							id: 'call-to-action-validation-error',
-							closeDelay: 5000,
 						} );
 
 						return false;
@@ -271,7 +268,6 @@ const entityActions = {
 						),
 						{
 							id: 'call-to-action-saved',
-							closeDelay: 5000,
 						}
 					);
 
@@ -398,7 +394,6 @@ const entityActions = {
 						),
 						{
 							id: 'call-to-action-deleted',
-							closeDelay: 5000,
 						}
 					);
 
@@ -623,7 +618,6 @@ const editorActions = {
 						// TODO REVIEW: Do we need to handle this with a notice, or can we just get the message from resolution status?
 						await dispatch.createErrorNotice( validation.message, {
 							id: 'call-to-action-validation-error',
-							closeDelay: 5000,
 						} );
 
 						return false;
@@ -651,7 +645,6 @@ const editorActions = {
 						),
 						{
 							id: 'call-to-action-saved',
-							closeDelay: 5000,
 						}
 					);
 

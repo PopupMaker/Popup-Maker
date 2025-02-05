@@ -77,8 +77,6 @@ const DisableBulkAction = () => {
 							),
 							{
 								id: 'bulk-disable',
-								// type: 'success',
-								closeDelay: 3000,
 							}
 						);
 					} );

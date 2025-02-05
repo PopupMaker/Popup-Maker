@@ -79,7 +79,6 @@ const entityActions = {
 								validation.message,
 								{
 									id: 'call-to-action-validation-error',
-									closeDelay: 5000,
 								}
 							);
 						}
@@ -118,7 +117,6 @@ const entityActions = {
 								),
 								{
 									id: 'call-to-action-saved',
-									closeDelay: 5000,
 								}
 							);
 						}
@@ -206,7 +204,6 @@ const entityActions = {
 								validation.message,
 								{
 									id: 'call-to-action-validation-error',
-									closeDelay: 5000,
 								}
 							);
 						}
@@ -263,7 +260,6 @@ const entityActions = {
 								),
 								{
 									id: 'call-to-action-saved',
-									closeDelay: 5000,
 								}
 							);
 						}
@@ -382,7 +378,6 @@ const entityActions = {
 								),
 								{
 									id: 'call-to-action-deleted',
-									closeDelay: 5000,
 								}
 							);
 						}
@@ -570,7 +565,6 @@ const editorActions = {
 									validation.message,
 									{
 										id: 'call-to-action-validation-error',
-										closeDelay: 5000,
 									}
 								);
 							}
@@ -605,7 +599,6 @@ const editorActions = {
 								),
 								{
 									id: 'call-to-action-saved',
-									closeDelay: 5000,
 								}
 							);
 						}

@@ -75,7 +75,6 @@ const DeleteBulkAction = () => {
 									),
 									{
 										id: 'bulk-delete',
-										closeDelay: 3000,
 									}
 								);
 							} );

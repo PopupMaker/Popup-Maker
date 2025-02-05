@@ -74,8 +74,6 @@ export const EnableBulkAction = () => {
 						),
 						{
 							id: 'bulk-enable',
-							// type: 'success',
-							closeDelay: 3000,
 						}
 					);
 				} );

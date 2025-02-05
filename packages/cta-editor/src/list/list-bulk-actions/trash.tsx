@@ -93,7 +93,6 @@ const TrashBulkAction = () => {
 									),
 									{
 										id: 'bulk-trash',
-										closeDelay: 3000,
 									}
 								);
 							} );
