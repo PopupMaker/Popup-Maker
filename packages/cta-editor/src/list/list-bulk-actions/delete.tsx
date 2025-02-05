@@ -57,7 +57,7 @@ const DeleteBulkAction = () => {
 								const count = bulkSelection.length;
 
 								bulkSelection.forEach( ( id ) =>
-									deleteCallToAction( id, true )
+									deleteCallToAction( id, true, false )
 								);
 								setBulkSelection( [] );
 

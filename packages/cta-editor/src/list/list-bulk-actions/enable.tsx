@@ -48,10 +48,14 @@ export const EnableBulkAction = () => {
 						const callToAction = getCallToAction( id );
 
 						if ( callToAction?.id === id ) {
-							updateCallToAction( {
-								id,
-								status: 'publish',
-							} );
+							updateCallToAction(
+								{
+									id,
+									status: 'publish',
+								},
+								false,
+								false
+							);
 						}
 					} );
 					setBulkSelection( [] );

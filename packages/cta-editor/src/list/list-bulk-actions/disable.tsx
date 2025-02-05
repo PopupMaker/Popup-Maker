@@ -50,10 +50,14 @@ const DisableBulkAction = () => {
 							const callToAction = getCallToAction( id );
 
 							if ( callToAction?.id === id ) {
-								updateCallToAction( {
-									id,
-									status: 'draft',
-								} );
+								updateCallToAction(
+									{
+										id,
+										status: 'draft',
+									},
+									false,
+									false
+								);
 							}
 						} );
 

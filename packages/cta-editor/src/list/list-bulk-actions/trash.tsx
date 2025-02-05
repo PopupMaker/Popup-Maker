@@ -75,7 +75,7 @@ const TrashBulkAction = () => {
 								const count = bulkSelection.length;
 
 								bulkSelection.forEach( ( id ) =>
-									deleteCallToAction( id )
+									deleteCallToAction( id, false, false )
 								);
 								setBulkSelection( [] );
 
