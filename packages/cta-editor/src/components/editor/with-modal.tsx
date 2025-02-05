@@ -1,16 +1,23 @@
 import clsx from 'clsx';
 
 import { __ } from '@popup-maker/i18n';
-import { link } from '@wordpress/icons';
+import { close, link } from '@wordpress/icons';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { useCallback, useEffect, useMemo } from '@wordpress/element';
-import { Button, Flex, Modal, Spinner } from '@wordpress/components';
+import { useCallback, useEffect, useMemo, useState } from '@wordpress/element';
+import {
+	Button,
+	Flex,
+	Modal,
+	Spinner,
+	ToggleControl,
+} from '@wordpress/components';
 
 import { callToActionStore } from '@popup-maker/core-data';
 
 import type { ComponentType } from 'react';
 import type { ModalProps } from '@wordpress/components/build-types/modal/types';
 import type { EditorWithDataStoreProps } from './with-data-store';
+import { ConfirmDialogue } from '@popup-maker/components';
 
 export const documenationUrl =
 	'https://wppopupmaker.com/docs/?utm_campaign=documentation&utm_source=call-to-action-editor&utm_medium=plugin-ui&utm_content=footer-documentation-link';
@@ -62,7 +69,7 @@ export const withModal = (
 		modalProps,
 		...componentProps
 	}: EditorWithModalProps ) {
-const [ confirm, setConfirm ] = useState< {
+		const [ confirm, setConfirm ] = useState< {
 			message: string;
 			callback: () => void;
 			isDestructive?: boolean;
@@ -81,7 +88,7 @@ const [ confirm, setConfirm ] = useState< {
 			[]
 		);
 
-		const { hasUndo, hasRedo, hasEdits } = useSelect(
+		const { hasUndo, hasRedo, hasEdits, getHasEdits } = useSelect(
 			( select ) => {
 				if ( ! values.id ) {
 					return {
@@ -96,13 +103,19 @@ const [ confirm, setConfirm ] = useState< {
 					hasUndo: store.hasUndo( values.id ),
 					hasRedo: store.hasRedo( values.id ),
 					hasEdits: store.hasEdits( values.id ),
+					getHasEdits: store.hasEdits,
 				};
 			},
-			[ values ]
+			[ values, isSaving ]
 		);
 
-		const { saveEditorValues, undo, redo, resetRecordEdits } =
-			useDispatch( callToActionStore );
+		const {
+			saveEditorValues,
+			undo,
+			redo,
+			resetRecordEdits,
+			updateEditorValues,
+		} = useDispatch( callToActionStore );
 
 		/**
 		 * Get the modal title based on the CTA state.
@@ -141,13 +154,13 @@ const [ confirm, setConfirm ] = useState< {
 						'popup-maker'
 					),
 					callback: () => {
-					resetRecordEdits( values.id );
+						resetRecordEdits( values.id );
 						onClose?.();
 					},
 					isDestructive: true,
 				} );
-					return;
-							}
+				return;
+			}
 
 			onClose?.();
 		}, [ isSaving, onClose, hasEdits ] );
@@ -160,8 +173,9 @@ const [ confirm, setConfirm ] = useState< {
 				// Save to the database
 				await saveEditorValues();
 
+				const hasRemainingEdits = await getHasEdits( values.id );
 				// Handle modal closing if needed
-				if ( closeOnSave ) {
+				if ( ! hasRemainingEdits && closeOnSave ) {
 					closeModal();
 				}
 			} catch ( error ) {
@@ -215,85 +229,143 @@ const [ confirm, setConfirm ] = useState< {
 						onClose={ () => setConfirm( undefined ) }
 					/>
 				) }
-			<Modal
-				{ ...modalProps }
-				title={ modalTitle }
-				className={ clsx(
-					'call-to-action-editor-modal',
-					modalProps?.className
-				) }
-				onRequestClose={ closeModal }
-				shouldCloseOnClickOutside={ true }
-			>
-				<Flex
-					direction="row"
-					style={ {
-						justifyContent: 'space-between',
-						alignItems: 'center',
-						position: 'absolute',
-						top: 13,
-						right: 200,
-						zIndex: 100,
-						maxWidth: 'max-content',
-					} }
-				>
-					<Button
-						disabled={ isSaving || ! hasUndo }
-						variant="tertiary"
-						icon={ 'undo' }
-						aria-label={ __( 'Undo', 'popup-maker' ) }
-						onClick={ () => undo( values.id ) }
-					/>
-
-					<Button
-						disabled={ isSaving || ! hasRedo }
-						variant="tertiary"
-						icon={ 'redo' }
-						aria-label={ __( 'Redo', 'popup-maker' ) }
-						onClick={ () => redo( values.id ) }
-					/>
-				</Flex>
-				<WrappedComponent { ...componentProps } />
-
-				{ showActions && (
-					<div className="editor-actions">
-						<Button
-							text={ __( 'Cancel', 'popup-maker' ) }
-							disabled={ isSaving }
-							variant="tertiary"
-							isDestructive={ true }
-							onClick={ closeModal }
-							className="cancel-button"
-						/>
-						<Button
-							variant="primary"
-							disabled={ isSaving }
-							onClick={ (
-								event: React.MouseEvent< HTMLButtonElement >
-							) => {
-								event.preventDefault();
-
-								saveValues();
+				<Modal
+					{ ...modalProps }
+					title={ modalTitle }
+					className={ clsx(
+						'call-to-action-editor-modal',
+						modalProps?.className
+					) }
+					onRequestClose={ closeModal }
+					shouldCloseOnClickOutside={ true }
+					isDismissible={ false }
+					headerActions={
+						<Flex
+							direction="row"
+							style={ {
+								justifyContent: 'space-between',
+								alignItems: 'center',
+								// position: 'absolute',
+								// top: 13,
+								// right: 200,
+								// zIndex: 100,
+								maxWidth: 'max-content',
 							} }
 						>
-							{ isSaving && <Spinner /> }
-							{ typeof values.id === 'number' && values.id > 0
-								? __( 'Save Call to Action', 'popup-maker' )
-								: __( 'Add Call to Action', 'popup-maker' ) }
-						</Button>
+							{ showActions && hasEdits && (
+								<>
+									<Button
+										disabled={ isSaving || ! hasUndo }
+										variant="tertiary"
+										icon={ 'undo' }
+										aria-label={ __(
+											'Undo',
+											'popup-maker'
+										) }
+										onClick={ () => undo( values.id ) }
+									/>
 
-						{ showDocumentationLink && (
+									<Button
+										disabled={ isSaving || ! hasRedo }
+										variant="tertiary"
+										icon={ 'redo' }
+										aria-label={ __(
+											'Redo',
+											'popup-maker'
+										) }
+										onClick={ () => redo( values.id ) }
+									/>
+								</>
+							) }
+
+							<div
+								className={ clsx( [
+									'call-to-action-enabled-toggle',
+									values?.status === 'publish'
+										? 'enabled'
+										: 'disabled',
+								] ) }
+							>
+								<ToggleControl
+									disabled={ isSaving }
+									label={
+										values?.status === 'publish'
+											? __( 'Enabled', 'popup-maker' )
+											: __( 'Disabled', 'popup-maker' )
+									}
+									checked={ values?.status === 'publish' }
+									onChange={ ( checked ) =>
+										updateEditorValues( {
+											id: values.id,
+											status: checked
+												? 'publish'
+												: 'draft',
+										} )
+									}
+									__nextHasNoMarginBottom
+								/>
+							</div>
+
 							<Button
-								text={ __( 'Documentation', 'popup-maker' ) }
-								href={ documenationUrl }
-								target="_blank"
-								icon={ link }
-								iconSize={ 20 }
+								variant="link"
+								icon={ close }
+								aria-label={ __( 'Close', 'popup-maker' ) }
+								onClick={ closeModal }
+								style={ {
+									color: 'currentColor',
+								} }
 							/>
-						) }
-					</div>
-				) }
-			</Modal>
+						</Flex>
+					}
+				>
+					<WrappedComponent { ...componentProps } />
+
+					{ showActions && (
+						<div className="editor-actions">
+							<Button
+								text={ __( 'Cancel', 'popup-maker' ) }
+								disabled={ isSaving }
+								variant="tertiary"
+								isDestructive={ true }
+								onClick={ closeModal }
+								className="cancel-button"
+							/>
+							<Button
+								variant="primary"
+								disabled={ isSaving || ! hasEdits }
+								onClick={ (
+									event: React.MouseEvent< HTMLButtonElement >
+								) => {
+									event.preventDefault();
+
+									saveValues();
+								} }
+							>
+								{ isSaving && <Spinner /> }
+								{ typeof values.id === 'number' && values.id > 0
+									? __( 'Save Call to Action', 'popup-maker' )
+									: __(
+											'Add Call to Action',
+											'popup-maker'
+									  ) }
+							</Button>
+
+							{ showDocumentationLink && (
+								<Button
+									text={ __(
+										'Documentation',
+										'popup-maker'
+									) }
+									href={ documenationUrl }
+									target="_blank"
+									icon={ link }
+									iconSize={ 20 }
+								/>
+							) }
+						</div>
+					) }
+				</Modal>
+			</>
 		);
 	};
 };

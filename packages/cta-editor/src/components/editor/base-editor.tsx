@@ -2,10 +2,9 @@ import './editor.scss';
 
 import clsx from 'clsx';
 
-import { __ } from '@popup-maker/i18n';
 import { useMemo } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
-import { TabPanel, ToggleControl } from '@wordpress/components';
+import { TabPanel } from '@wordpress/components';
 
 import { noop } from '@popup-maker/utils';
 import { useControlledState } from '@popup-maker/components';
@@ -115,29 +114,6 @@ const BaseEditor = ( {
 
 	return (
 		<div className={ clsx( 'call-to-action-editor', className ) }>
-			<div
-				className={ clsx( [
-					'call-to-action-enabled-toggle',
-					values.status === 'publish' ? 'enabled' : 'disabled',
-				] ) }
-			>
-				<ToggleControl
-					label={
-						values.status === 'publish'
-							? __( 'Enabled', 'popup-maker' )
-							: __( 'Disabled', 'popup-maker' )
-					}
-					checked={ values.status === 'publish' }
-					onChange={ ( checked ) =>
-						onChange( {
-							...values,
-							status: checked ? 'publish' : 'draft',
-						} )
-					}
-					__nextHasNoMarginBottom
-				/>
-			</div>
-
 			{ beforeTabs && (
 				<div className="editor-tabs-before">{ beforeTabs }</div>
 			) }
