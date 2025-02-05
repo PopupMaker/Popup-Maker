@@ -584,6 +584,7 @@ const editorActions = {
 
 				const result = await dispatch.updateCallToAction(
 					editedCallToAction,
+					false,
 					false
 				);
 
@@ -623,7 +624,7 @@ const editorActions = {
 							payload: {
 								id,
 								historyIndex,
-								editedEntity: result,
+								editedEntity: editableEntity( result ),
 							},
 						} );
 					} );
