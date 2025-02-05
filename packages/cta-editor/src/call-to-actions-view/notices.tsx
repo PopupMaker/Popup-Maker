@@ -5,6 +5,11 @@ import { useCallback, useLayoutEffect, useRef } from '@wordpress/element';
 import { callToActionStore } from '@popup-maker/core-data';
 import type { WPNotice } from '@popup-maker/core-data';
 
+// REVIEW: We need to create our own notice store to handle the notices.
+// REVIEW: This one doesn't allow for extra options such as closeDelay.
+// REVIEW: We also need to allow typing/grouping of notices, such as toast or editor etc.
+
+
 const Notices = () => {
 	const noticeTimerRef = useRef< {
 		[ key: WPNotice[ 'id' ] ]: ReturnType< typeof setTimeout >;
@@ -12,6 +17,8 @@ const Notices = () => {
 
 	const { notices } = useSelect(
 		( select ) => ( {
+			// TODO: Segment this with a notice type based selector.
+			// TODO: These should be notices under the notice type, other types might be toast or editor etc.
 			notices: select( callToActionStore ).getNotices(),
 		} ),
 		[]
@@ -35,16 +42,15 @@ const Notices = () => {
 	// Handle auto-dismissing notices. Should this use effect and ref list?
 	useLayoutEffect( () => {
 		notices.forEach( ( notice ) => {
-			if ( notice.closeDelay ) {
-				// If existing timer, skip.
-				if ( noticeTimerRef.current[ notice.id ] ) {
-					return;
-				}
-				// Set a timer to dismiss the notice after the delay.
-				noticeTimerRef.current[ notice.id ] = setTimeout( () => {
-					handleDismiss( notice.id );
-				}, notice.closeDelay );
+			// If existing timer, skip.
+			if ( noticeTimerRef.current[ notice.id ] ) {
+				return;
 			}
+
+			// Set a timer to dismiss the notice after the delay.
+			noticeTimerRef.current[ notice.id ] = setTimeout( () => {
+				handleDismiss( notice.id );
+			}, 3000 );
 		} );
 	}, [ notices, handleDismiss ] );
 
