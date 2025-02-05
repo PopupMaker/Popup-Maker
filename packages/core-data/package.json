@@ -31,7 +31,8 @@
 		"@wordpress/data-controls": "^4.16.0",
 		"@wordpress/core-data": "^7.16.0",
 		"@wordpress/notices": "^5.16.0",
-		"fast-json-patch": "^3.1.1"
+		"fast-json-patch": "^3.1.1",
+		"lodash": "^4.17.21"
 	},
 	"peerDependencies": {
 		"react": "^18.3.1"
