@@ -62,6 +62,12 @@ export const withModal = (
 		modalProps,
 		...componentProps
 	}: EditorWithModalProps ) {
+const [ confirm, setConfirm ] = useState< {
+			message: string;
+			callback: () => void;
+			isDestructive?: boolean;
+		} >();
+
 		// Fetch values separately so they will still be available to the component.
 		const values = useSelect( ( select ) => {
 			const store = select( callToActionStore );
@@ -129,12 +135,19 @@ export const withModal = (
 			}
 
 			if ( hasEdits ) {
-				if ( confirmLoss() ) {
+				setConfirm( {
+					message: __(
+						'Changes you made may not be saved.',
+						'popup-maker'
+					),
+					callback: () => {
 					resetRecordEdits( values.id );
-				} else {
+						onClose?.();
+					},
+					isDestructive: true,
+				} );
 					return;
-				}
-			}
+							}
 
 			onClose?.();
 		}, [ isSaving, onClose, hasEdits ] );
@@ -195,6 +208,13 @@ export const withModal = (
 		);
 
 		return (
+			<>
+				{ confirm && (
+					<ConfirmDialogue
+						{ ...confirm }
+						onClose={ () => setConfirm( undefined ) }
+					/>
+				) }
 			<Modal
 				{ ...modalProps }
 				title={ modalTitle }
