@@ -17,6 +17,7 @@ import { ConfirmDialogue, ListTable } from '@popup-maker/components';
 import { ListConsumer, ListProvider } from '../context';
 import { useEditor } from '../components';
 import ListBulkActions from './bulk-actions';
+import ListQuickActions from './quick-acions';
 import ListFilters from './filters';
 import ListOptions from './options';
 import init from './init';
@@ -252,96 +253,9 @@ const List = () => {
 														}
 													</Button>
 
-													<div className="item-actions">
-														{ `${ __(
-															'ID',
-															'popup-maker'
-														) }: ${
-															callToAction.id
-														}` }
-														<Button
-															text={ __(
-																'Edit',
-																'popup-maker'
-															) }
-															variant="link"
-															onClick={ () =>
-																setEditorId(
-																	callToAction.id
-																)
-															}
-														/>
-
-														<Button
-															text={
-																isTrash
-																	? __(
-																			'Untrash',
-																			'popup-maker'
-																	  )
-																	: __(
-																			'Trash',
-																			'popup-maker'
-																	  )
-															}
-															variant="link"
-															isDestructive={
-																true
-															}
-															isBusy={
-																!! isDeleting
-															}
-															onClick={ () =>
-																isTrash
-																	? updateCallToAction(
-																			{
-																				id: callToAction.id,
-																				status: 'draft',
-																			}
-																	  )
-																	: deleteCallToAction(
-																			callToAction.id
-																	  )
-															}
-														/>
-
-														{ isTrash && (
-															<Button
-																text={ __(
-																	'Delete Permanently',
-																	'popup-maker'
-																) }
-																variant="link"
-																isDestructive={
-																	true
-																}
-																isBusy={
-																	!! isDeleting
-																}
-																onClick={ () =>
-																	setConfirmDialogue(
-																		{
-																			message:
-																				__(
-																					'Are you sure you want to premanently delete this call to action?',
-																					'popup-maker'
-																				),
-																			callback:
-																				() => {
-																					// This will only rerender the components once.
-																					deleteCallToAction(
-																						callToAction.id,
-																						true
-																					);
-																				},
-																			isDestructive:
-																				true,
-																		}
-																	)
-																}
-															/>
-														) }
-													</div>
+													<ListQuickActions
+														values={ callToAction }
+													/>
 												</>
 											);
 										}
