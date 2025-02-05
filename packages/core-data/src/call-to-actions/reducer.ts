@@ -10,6 +10,7 @@ const {
 	RECEIVE_RECORDS,
 	RECEIVE_QUERY_RECORDS,
 	PURGE_RECORD,
+	PURGE_RECORDS,
 	EDITOR_CHANGE_ID,
 	EDIT_RECORD,
 	START_EDITING_RECORD,
@@ -110,6 +111,13 @@ export type PurgeRecordAction = BaseAction & {
 	type: typeof PURGE_RECORD;
 	payload: {
 		id: CallToAction[ 'id' ];
+	};
+};
+
+export type PurgeRecordsAction = BaseAction & {
+	type: typeof PURGE_RECORDS;
+	payload: {
+		ids: CallToAction[ 'id' ][];
 	};
 };
 
@@ -215,6 +223,7 @@ export type ReducerAction =
 	| RecieveRecordsAction
 	| RecieveQueryRecordsAction
 	| PurgeRecordAction
+	| PurgeRecordsAction
 	| ChangeEditorAction
 	| StartEditingRecordAction
 	| EditRecordAction
@@ -277,25 +286,50 @@ export function reducer( state = initialState, action: ReducerAction ): State {
 			};
 		}
 
+		case PURGE_RECORDS:
 		case PURGE_RECORD: {
-			const { id: entityId } = action.payload;
+			const { ids = [], id = null } = action.payload;
+
+			if ( id && id > 0 ) {
+				ids.push( id );
+			}
+
+			if ( ids.length === 0 ) {
+				return state;
+			}
 
 			// Remove the entity from the allIds array.
-			const allIds = state.allIds.filter( ( id ) => id !== entityId );
+			const allIds = state.allIds.filter(
+				( _id ) => ! ids.includes( _id )
+			);
 
 			// Remove the entity from the byId object.
-			const { [ entityId ]: _1, ...byId } = state.byId;
+			const byId = Object.fromEntries(
+				Object.entries( state.byId ).filter(
+					( [ _id ] ) => ! ids.includes( _id )
+				)
+			);
 
 			// Remove the entity from the editedEntities object.
-			const { [ entityId ]: _2, ...editedEntities } =
-				state.editedEntities;
+			const editedEntities = Object.fromEntries(
+				Object.entries( state.editedEntities ).filter(
+					( [ _id ] ) => ! ids.includes( _id )
+				)
+			);
 
 			// Remove the entity from the editHistory object.
-			const { [ entityId ]: _3, ...editHistory } = state.editHistory;
+			const editHistory = Object.fromEntries(
+				Object.entries( state.editHistory ).filter(
+					( [ _id ] ) => ! ids.includes( _id )
+				)
+			);
 
 			// Remove the entity from the editHistoryIndex object.
-			const { [ entityId ]: _4, ...editHistoryIndex } =
-				state.editHistoryIndex;
+			const editHistoryIndex = Object.fromEntries(
+				Object.entries( state.editHistoryIndex ).filter(
+					( [ _id ] ) => ! ids.includes( _id )
+				)
+			);
 
 			return {
 				...state,
