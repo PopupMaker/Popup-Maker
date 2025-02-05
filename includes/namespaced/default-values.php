@@ -33,5 +33,7 @@ function get_default_settings() {
  * @since X.X.X
  */
 function get_default_call_to_action_settings() {
-	return [];
+	return [
+		'type' => 'link',
+	];
 }
