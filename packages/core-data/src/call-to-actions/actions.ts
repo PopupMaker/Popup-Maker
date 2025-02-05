@@ -1,3 +1,4 @@
+import { merge } from 'lodash';
 import { compare as jsonpatchCompare } from 'fast-json-patch';
 
 import { __, sprintf } from '@popup-maker/i18n';
@@ -474,9 +475,16 @@ const editorActions = {
 						} );
 					}
 
-					const diff = jsonpatchCompare(
+					// Create a new object with the edits deeply merged into the canonical entity
+					const editedEntity = merge(
+						{},
 						canonicalCallToAction,
 						edits
+					);
+
+					const diff = jsonpatchCompare(
+						canonicalCallToAction,
+						editedEntity
 					);
 
 					await dispatch( {
