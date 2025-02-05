@@ -120,7 +120,8 @@ export const withDataStore = (
 			[ id ]
 		);
 
-		const { editRecord } = useDispatch( callToActionStore );
+		const { editRecord, resetRecordEdits } =
+			useDispatch( callToActionStore );
 
 		/**
 		 * Listen for errors and set the error message.
@@ -161,6 +162,56 @@ export const withDataStore = (
 			values,
 			isSaving,
 		] );
+
+		const { id: valuesId } = values;
+
+		const hasEdits = useSelect(
+			( select ) => select( callToActionStore ).hasEdits( valuesId ),
+			[ valuesId ]
+		);
+
+		// Set up confirm to close dialogue as well as prevent changing pages in the brower while hasEdits.
+		useEffect(
+			() => {
+				// On beforeunload event, confirm loss of unsaved changes.
+				const confirmLossOfUnsavedChanges = (
+					event: BeforeUnloadEvent
+				) => {
+					if ( hasEdits ) {
+						if (
+							// eslint-disable-next-line no-alert, no-restricted-globals
+							window.confirm(
+								__(
+									'Changes you made may not be saved.',
+									'popup-maker'
+								)
+							)
+						) {
+							resetRecordEdits( valuesId );
+						} else {
+							event.preventDefault();
+							return false;
+						}
+					}
+
+					return true;
+				};
+
+				window.addEventListener(
+					'beforeunload',
+					confirmLossOfUnsavedChanges
+				);
+
+				return () => {
+					window.removeEventListener(
+						'beforeunload',
+						confirmLossOfUnsavedChanges
+					);
+				};
+			},
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+			[ hasEdits, valuesId ]
+		);
 
 		// When no values, don't show the editor.
 		if ( ! values ) {
