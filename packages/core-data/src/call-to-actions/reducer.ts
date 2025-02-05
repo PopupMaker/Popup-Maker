@@ -435,8 +435,7 @@ export function reducer( state = initialState, action: ReducerAction ): State {
 			const { id, historyIndex, editedEntity } = action.payload;
 
 			// Get all edits up to current index
-			const currentEdits = state.editHistory[ id ].slice(
-				0,
+			const remainingEdits = state.editHistory[ id ].slice(
 				historyIndex + 1
 			);
 
@@ -448,11 +447,11 @@ export function reducer( state = initialState, action: ReducerAction ): State {
 				},
 				editHistory: {
 					...state.editHistory,
-					[ id ]: currentEdits,
+					[ id ]: remainingEdits,
 				},
 				editHistoryIndex: {
 					...state.editHistoryIndex,
-					[ id ]: currentEdits.length - 1,
+					[ id ]: -1,
 				},
 			};
 		}
@@ -460,15 +459,24 @@ export function reducer( state = initialState, action: ReducerAction ): State {
 		case RESET_EDIT_RECORD: {
 			const { id } = action.payload;
 
-			const { [ id ]: _1, ...editedEntities } = state.editedEntities;
-			const { [ id ]: _2, ...editHistory } = state.editHistory;
-			const { [ id ]: _3, ...editHistoryIndex } = state.editHistoryIndex;
-
 			return {
 				...state,
-				editedEntities,
-				editHistory,
-				editHistoryIndex,
+				// Remove all edit history for this record.
+				editedEntities: Object.fromEntries(
+					Object.entries( state.editedEntities ).filter(
+						( [ _id ] ) => Number( _id ) !== id
+					)
+				),
+				editHistory: Object.fromEntries(
+					Object.entries( state.editHistory ).filter(
+						( [ _id ] ) => Number( _id ) !== id
+					)
+				),
+				editHistoryIndex: Object.fromEntries(
+					Object.entries( state.editHistoryIndex ).filter(
+						( [ _id ] ) => Number( _id ) !== id
+					)
+				),
 			};
 		}
 
