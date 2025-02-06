@@ -18,6 +18,8 @@ import type { ComponentType } from 'react';
 import type { ModalProps } from '@wordpress/components/build-types/modal/types';
 import type { EditorWithDataStoreProps } from './with-data-store';
 import { ConfirmDialogue } from '@popup-maker/components';
+import EditorHeaderActions from './header-actions';
+import EditorHeaderOptions from './header-options';
 
 export const documenationUrl =
 	'https://wppopupmaker.com/docs/?utm_campaign=documentation&utm_source=call-to-action-editor&utm_medium=plugin-ui&utm_content=footer-documentation-link';
@@ -88,12 +90,10 @@ export const withModal = (
 			[]
 		);
 
-		const { hasUndo, hasRedo, hasEdits, getHasEdits } = useSelect(
+		const { hasEdits, getHasEdits } = useSelect(
 			( select ) => {
 				if ( ! values.id ) {
 					return {
-						hasUndo: false,
-						hasRedo: false,
 						hasEdits: false,
 						getHasEdits: () => false,
 					};
@@ -102,8 +102,6 @@ export const withModal = (
 				const store = select( callToActionStore );
 
 				return {
-					hasUndo: store.hasUndo( values.id ),
-					hasRedo: store.hasRedo( values.id ),
 					hasEdits: store.hasEdits( values.id ),
 					getHasEdits: store.hasEdits,
 				};
@@ -112,13 +110,8 @@ export const withModal = (
 			[ values, isSaving ]
 		);
 
-		const {
-			saveEditorValues,
-			undo,
-			redo,
-			resetRecordEdits,
-			updateEditorValues,
-		} = useDispatch( callToActionStore );
+		const { saveEditorValues, resetRecordEdits } =
+			useDispatch( callToActionStore );
 
 		/**
 		 * Get the modal title based on the CTA state.
@@ -252,73 +245,19 @@ export const withModal = (
 					shouldCloseOnClickOutside={ true }
 					isDismissible={ false }
 					headerActions={
-						<Flex
-							direction="row"
-							style={ {
-								justifyContent: 'space-between',
-								alignItems: 'center',
-								// position: 'absolute',
-								// top: 13,
-								// right: 200,
-								// zIndex: 100,
-								maxWidth: 'max-content',
-							} }
-						>
-							{ showActions && hasEdits && (
-								<>
-									<Button
-										disabled={ isSaving || ! hasUndo }
-										variant="tertiary"
-										icon={ 'undo' }
-										aria-label={ __(
-											'Undo',
-											'popup-maker'
-										) }
-										onClick={ () => undo( values.id ) }
-									/>
+						<div className="editor-header-actions">
+							<EditorHeaderActions
+								values={ values }
+								closeModal={ closeModal }
+							/>
 
-									<Button
-										disabled={ isSaving || ! hasRedo }
-										variant="tertiary"
-										icon={ 'redo' }
-										aria-label={ __(
-											'Redo',
-											'popup-maker'
-										) }
-										onClick={ () => redo( values.id ) }
-									/>
-								</>
-							) }
-
-							<div
-								className={ clsx( [
-									'call-to-action-enabled-toggle',
-									values?.status === 'publish'
-										? 'enabled'
-										: 'disabled',
-								] ) }
-							>
-								<ToggleControl
-									disabled={ isSaving }
-									label={
-										values?.status === 'publish'
-											? __( 'Enabled', 'popup-maker' )
-											: __( 'Disabled', 'popup-maker' )
-									}
-									checked={ values?.status === 'publish' }
-									onChange={ ( checked ) =>
-										updateEditorValues( {
-											id: values.id,
-											status: checked
-												? 'publish'
-												: 'draft',
-										} )
-									}
-									__nextHasNoMarginBottom
-								/>
-							</div>
+							<EditorHeaderOptions
+								values={ values }
+								closeModal={ closeModal }
+							/>
 
 							<Button
+								className="close-button"
 								variant="link"
 								icon={ close }
 								aria-label={ __( 'Close', 'popup-maker' ) }
@@ -327,7 +266,7 @@ export const withModal = (
 									color: 'currentColor',
 								} }
 							/>
-						</Flex>
+						</div>
 					}
 				>
 					<WrappedComponent { ...componentProps } />

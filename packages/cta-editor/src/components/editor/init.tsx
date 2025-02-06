@@ -3,6 +3,26 @@ import * as tabs from './tabs';
 
 import { initFields } from './fields';
 
+import {
+	registerEditorHeaderAction,
+	registerEditorHeaderOption,
+} from '../../registry';
+
+import * as headerActions from './editor-header-actions';
+import * as headerOptions from './editor-header-options';
+
+export const initHeaderActions = () => {
+	// Register core editor header actions.
+	Object.values( headerActions ).forEach( ( action ) => {
+		registerEditorHeaderAction( action );
+	} );
+
+	// Register core editor header options.
+	Object.values( headerOptions ).forEach( ( option ) => {
+		registerEditorHeaderOption( option );
+	} );
+};
+
 export const initTabs = () => {
 	addFilter(
 		'popupMaker.callToActionEditor.tabs',
@@ -27,6 +47,7 @@ const initEditor = () => {
 
 	initTabs();
 	initFields();
+	initHeaderActions();
 
 	initialized = true;
 };

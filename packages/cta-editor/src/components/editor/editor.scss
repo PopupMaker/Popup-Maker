@@ -1,0 +1,26 @@
+.editor-header-actions {
+	display: flex;
+	flex-direction: row;
+	gap: 6px;
+	align-items: center;
+	justify-content: space-between;
+	max-width: max-content;
+
+	.components-button.close-button {
+		padding: 0;
+		min-width: auto;
+	}
+
+	.editor-header-options {
+		.components-button.popover-toggle {
+			padding-left: 4px;
+			padding-right: 4px;
+			min-width: auto;
+		}
+	}
+}
+.editor-header-options__popover {
+	.components-popover__content {
+		min-width: max-content;
+	}
+}

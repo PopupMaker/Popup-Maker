@@ -23,6 +23,11 @@ export declare namespace PopupMaker {
 		 * Use numbers between 0-99 to insert around core groups (10-30)
 		 */
 		groups?: Record< string, RegistryGroup >;
+
+		/**
+		 * Default group for items that don't specify a group
+		 */
+		defaultGroup?: string;
 	};
 }
 
@@ -33,7 +38,7 @@ export declare namespace PopupMaker {
 export function createRegistry< T extends PopupMaker.RegistryItem >(
 	config: PopupMaker.RegistryConfig
 ) {
-	const { name, groups = {} } = config;
+	const { name, groups = {}, defaultGroup = '' } = config;
 	let groupConfig = { ...groups };
 	let items: T[] = [];
 	const defaultPriority = 10;
@@ -48,6 +53,7 @@ export function createRegistry< T extends PopupMaker.RegistryItem >(
 	const register = ( item: T ) => {
 		const newItem = {
 			...item,
+			group: item.group ?? defaultGroup,
 			priority: item.priority ?? defaultPriority,
 		} as T;
 
