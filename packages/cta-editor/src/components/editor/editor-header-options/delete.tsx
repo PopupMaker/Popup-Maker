@@ -9,7 +9,7 @@ import { Button, ToggleControl } from '@wordpress/components';
 
 import type { EditorHeaderOptionsContext } from '../../../registry';
 
-const DeleteBulkAction = ( {
+const DeleteEditorHeaderOption = ( {
 	values,
 	closeModal,
 }: EditorHeaderOptionsContext ) => {
@@ -77,5 +77,5 @@ export default {
 	id: 'delete',
 	group: 'trash',
 	priority: 6,
-	render: DeleteBulkAction,
+	render: DeleteEditorHeaderOption,
 };
