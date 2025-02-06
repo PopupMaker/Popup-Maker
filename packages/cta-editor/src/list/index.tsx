@@ -56,12 +56,10 @@ const List = () => {
 			<ListConsumer>
 				{ ( {
 					isLoading,
-					isDeleting,
 					bulkSelection = [],
 					setBulkSelection = noop,
 					filteredCallToActions = [],
 					updateCallToAction = noop,
-					deleteCallToAction = noop,
 					filters: { searchText = '' },
 					setFilters,
 					sortConfig,

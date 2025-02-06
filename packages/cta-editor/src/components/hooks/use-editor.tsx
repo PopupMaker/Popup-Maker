@@ -34,7 +34,7 @@ const useEditor = () => {
 	} );
 
 	// Extract params with usable names.
-	const { edit, add, tab } = queryParams;
+	const { edit, tab } = queryParams;
 
 	// Initialize on mount if URL has an ID
 	useEffect(

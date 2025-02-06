@@ -4,13 +4,7 @@ import { __ } from '@popup-maker/i18n';
 import { close, link } from '@wordpress/icons';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useCallback, useEffect, useMemo, useState } from '@wordpress/element';
-import {
-	Button,
-	Flex,
-	Modal,
-	Spinner,
-	ToggleControl,
-} from '@wordpress/components';
+import { Button, Modal, Spinner } from '@wordpress/components';
 
 import { callToActionStore } from '@popup-maker/core-data';
 
