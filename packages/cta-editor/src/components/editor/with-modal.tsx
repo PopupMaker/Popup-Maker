@@ -94,6 +94,8 @@ export const withModal = (
 					return {
 						hasUndo: false,
 						hasRedo: false,
+						hasEdits: false,
+						getHasEdits: () => false,
 					};
 				}
 
@@ -106,6 +108,7 @@ export const withModal = (
 					getHasEdits: store.hasEdits,
 				};
 			},
+			// eslint-disable-next-line react-hooks/exhaustive-deps
 			[ values, isSaving ]
 		);
 
@@ -142,47 +145,56 @@ export const withModal = (
 		/**
 		 * Handle the close event.
 		 */
-		const closeModal = useCallback( () => {
-			if ( isSaving ) {
-				return; // Prevent closing while saving
-			}
+		const closeModal = useCallback(
+			() => {
+				if ( isSaving ) {
+					return; // Prevent closing while saving
+				}
 
-			if ( hasEdits ) {
-				setConfirm( {
-					message: __(
-						'Changes you made may not be saved.',
-						'popup-maker'
-					),
-					callback: () => {
-						resetRecordEdits( values.id );
-						onClose?.();
-					},
-					isDestructive: true,
-				} );
-				return;
-			}
+				if ( hasEdits ) {
+					setConfirm( {
+						message: __(
+							'Changes you made may not be saved.',
+							'popup-maker'
+						),
+						callback: () => {
+							resetRecordEdits( values.id );
+							onClose?.();
+						},
+						isDestructive: true,
+					} );
+					return;
+				}
 
-			onClose?.();
-		}, [ isSaving, onClose, hasEdits ] );
+				resetRecordEdits( values.id );
+				onClose?.();
+			},
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+			[ isSaving, onClose, hasEdits ]
+		);
 
 		/**
 		 * Handle saving the values.
 		 */
-		const saveValues = useCallback( async () => {
-			try {
-				// Save to the database
-				await saveEditorValues();
+		const saveValues = useCallback(
+			async () => {
+				try {
+					// Save to the database
+					await saveEditorValues();
 
-				const hasRemainingEdits = await getHasEdits( values.id );
-				// Handle modal closing if needed
-				if ( ! hasRemainingEdits && closeOnSave ) {
-					closeModal();
+					const hasRemainingEdits = getHasEdits( values.id );
+					// Handle modal closing if needed
+					if ( ! hasRemainingEdits && closeOnSave ) {
+						closeModal();
+					}
+				} catch ( error ) {
+					// eslint-disable-next-line no-console
+					console.error( 'Save failed:', error );
 				}
-			} catch ( error ) {
-				// eslint-disable-next-line no-console
-				console.error( 'Save failed:', error );
-			}
-		}, [ closeOnSave, closeModal, saveEditorValues ] );
+			},
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+			[ closeOnSave, closeModal, getHasEdits ]
+		);
 
 		const { id: valuesId } = values;
 
