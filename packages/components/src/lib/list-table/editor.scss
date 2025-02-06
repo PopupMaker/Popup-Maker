@@ -46,6 +46,8 @@ $border-options: solid #c3c4c7;
 			left: -9999px;
 
 			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
 			gap: 10px;
 
 			.components-button.is-link {
