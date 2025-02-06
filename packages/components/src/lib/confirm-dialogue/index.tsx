@@ -9,6 +9,7 @@ type Props = {
 	callback?: () => void;
 	onClose: () => void;
 	isDestructive?: boolean;
+	children?: React.ReactNode;
 } & Partial< ModalProps >;
 
 const ConfirmDialogue = ( {
@@ -16,6 +17,7 @@ const ConfirmDialogue = ( {
 	callback,
 	onClose,
 	isDestructive = false,
+	children,
 }: Props ) => {
 	const confirmButtonRef = useRef< HTMLButtonElement | null >( null );
 	const previousFocusRef = useRef< HTMLElement | null >( null );
@@ -41,7 +43,7 @@ const ConfirmDialogue = ( {
 		};
 	}, [ callback, onClose ] );
 
-	if ( ! message || ! message.length || ! callback ) {
+	if ( ( ( ! message || ! message.length ) && ! children ) || ! callback ) {
 		return null;
 	}
 
@@ -51,7 +53,7 @@ const ConfirmDialogue = ( {
 			onRequestClose={ onClose }
 			focusOnMount={ false }
 		>
-			<p>{ message }</p>
+			{ children || <p>{ message }</p> }
 			<Flex justify="right">
 				<Button
 					text={ __( 'Cancel', 'popup-maker' ) }
