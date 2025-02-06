@@ -5,6 +5,7 @@ import { QueryParamProvider } from 'use-query-params';
 import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
 
 import domReady from '@wordpress/dom-ready';
+import { doAction } from '@wordpress/hooks';
 import { createRoot } from '@wordpress/element';
 import { RegistryProvider } from '@wordpress/data';
 
@@ -53,6 +54,8 @@ export const init = () => {
 	if ( ! root ) {
 		return;
 	}
+
+	doAction( 'popupMaker.callToActionEditor.init' );
 
 	// createRoot was added in WP 6.2, so we need to check for it first.
 	createRoot( root ).render( renderer() );
