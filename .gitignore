@@ -51,4 +51,6 @@ packages/*/lib
 strauss.phar
 *.zip
 .DS_Store
-
+repomix-output.md
+repomix-output.json
+repomix-output.txt
