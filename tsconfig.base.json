@@ -30,7 +30,8 @@
 		/* This needs to be false so our types are possible to consume without setting this */
 		"esModuleInterop": false,
 		"resolveJsonModule": true,
-		"strictNullChecks": true
+		"strictNullChecks": true,
+		"types": [ "node", "react", "jest", "@testing-library/jest-dom" ]
 	},
 	"exclude": [
 		"node_modules",

@@ -1,20 +1,12 @@
+import '@testing-library/jest-dom/jest-globals';
+import '@testing-library/jest-dom';
 import { jest, describe, beforeEach, it, expect } from '@jest/globals';
 import { render, screen, waitFor, act } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { SlotFillProvider } from '@wordpress/components';
 import userEvent from '@testing-library/user-event';
-import { TypeFilter } from '../type';
-import type { CallToAction } from '@popup-maker/core-data';
 
-// Add type support for jest-dom matchers
-declare global {
-	namespace jest {
-		interface Matchers< R > {
-			toBeInTheDocument(): R;
-			toBeChecked(): R;
-		}
-	}
-}
+import { SlotFillProvider } from '@wordpress/components';
+import type { CallToAction } from '@popup-maker/core-data';
+import { TypeFilter } from '../type';
 
 describe( 'TypeFilter', () => {
 	beforeEach( () => {

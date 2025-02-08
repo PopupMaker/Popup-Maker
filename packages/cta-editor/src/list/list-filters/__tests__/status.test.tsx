@@ -1,4 +1,4 @@
-/// <reference types="@testing-library/jest-dom" />
+import '@testing-library/jest-dom/jest-globals';
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { jest, describe, beforeEach, it, expect } from '@jest/globals';
