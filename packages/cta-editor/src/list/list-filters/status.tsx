@@ -7,7 +7,7 @@ import { Button, Icon, Popover, RadioControl } from '@wordpress/components';
 import type { CallToActionStatuses } from '@popup-maker/core-data';
 import type { ListFilterContext } from '../../registry/list-filters';
 
-export type ValidStatuses = CallToActionStatuses | 'trash';
+export type ValidStatuses = CallToActionStatuses | 'trash' | 'all';
 export type StatusFilterKey = 'status';
 export type StatusFilterValue = ValidStatuses;
 
@@ -25,7 +25,7 @@ export type StatusCounts = { all: number } & Partial<
 	Record< Exclude< ValidStatuses, 'all' >, number >
 >;
 
-const StatusFilter = ( {
+export const StatusFilter = ( {
 	filters,
 	setFilters,
 	onClose,
@@ -63,8 +63,10 @@ const StatusFilter = ( {
 		[ filteredItems ]
 	);
 
-	const isStatusActive = ( s: ValidStatuses ) =>
-		Boolean( activeStatusCounts?.[ s ] );
+	const isStatusActive = ( status: ValidStatuses ): boolean =>
+		Boolean( activeStatusCounts?.[ status ] );
+
+	const currentStatus = filters?.status ?? 'all';
 
 	return (
 		<div
@@ -83,7 +85,7 @@ const StatusFilter = ( {
 				</span>
 				&nbsp;
 				<span className="filter-selection">
-					{ statusOptionLabels[ filters?.status ?? '' ] }
+					{ statusOptionLabels[ currentStatus ] }
 				</span>
 				<Icon
 					className="filter-icon"
@@ -107,21 +109,23 @@ const StatusFilter = ( {
 					<RadioControl
 						label={ __( 'Status', 'popup-maker' ) }
 						hideLabelFromVision={ true }
-						selected={ filters?.status ?? '' }
+						selected={ currentStatus }
 						options={ Object.entries( statusOptionLabels )
 							// Filter statuses with 0 items.
 							.filter( ( [ value ] ) =>
 								// If the current status has no items, show all statuses that have items.
-								( totalStatusCounts[
-									filters?.status ?? 'all'
-								] ?? 0 ) > 0
+								( totalStatusCounts[ currentStatus ] ?? 0 ) > 0
 									? isStatusActive( value as ValidStatuses )
-									: ( totalStatusCounts[ value ] ?? 0 ) > 0
+									: ( totalStatusCounts[
+											value as ValidStatuses
+									  ] ?? 0 ) > 0
 							)
 							// Map statuses to options.
 							.map( ( [ value, label ] ) => ( {
 								label: `${ label } (${
-									activeStatusCounts[ value ] ?? 0
+									activeStatusCounts[
+										value as ValidStatuses
+									] ?? 0
 								})`,
 								value,
 							} ) ) }
