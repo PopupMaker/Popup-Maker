@@ -1,13 +1,16 @@
 import {
 	registerListBulkAction,
+	registerListFilter,
 	registerListOption,
 	registerListQuickAction,
 } from '../registry';
 import * as bulkActions from './list-bulk-actions';
 import * as quickActions from './list-quick-actions';
 import * as listOptions from './list-options';
+import * as listFilters from './list-filters';
+
 const init = () => {
-	// Register core bluk list actions.
+	// Register core bulk list actions.
 	Object.values( bulkActions ).forEach( ( action ) => {
 		registerListBulkAction( action );
 	} );
@@ -20,6 +23,11 @@ const init = () => {
 	// Register core list quick actions.
 	Object.values( quickActions ).forEach( ( action ) => {
 		registerListQuickAction( action );
+	} );
+
+	// Register core list filters.
+	Object.values( listFilters ).forEach( ( filter ) => {
+		registerListFilter( filter );
 	} );
 };
 

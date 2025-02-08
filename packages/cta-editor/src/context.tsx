@@ -22,6 +22,7 @@ import type { ActionCreatorsOf, ConfigOf } from '@wordpress/data/src/types';
 type Filters = {
 	status?: string;
 	searchText?: string;
+	type?: string;
 };
 
 type ListContext = {
@@ -64,6 +65,7 @@ const defaultContext: ListContext = {
 	filters: {
 		status: 'all',
 		searchText: '',
+		type: 'all',
 	},
 	setFilters: noop,
 	sortConfig: {
@@ -95,11 +97,16 @@ export const ListProvider = ( { value = {}, children }: ProviderProps ) => {
 	const [ filters, setFilters ] = useQueryParams( {
 		status: withDefault( StringParam, 'all' ),
 		searchText: withDefault( StringParam, '' ),
+		type: withDefault( StringParam, 'all' ),
 	} );
 
 	// Quick helper to reset all query params.
 	const clearFilterParams = () =>
-		setFilters( { status: undefined, searchText: undefined } );
+		setFilters( {
+			status: undefined,
+			searchText: undefined,
+			type: undefined,
+		} );
 
 	// Self clear query params when component is removed.
 	useEffect(
@@ -144,6 +151,9 @@ export const ListProvider = ( { value = {}, children }: ProviderProps ) => {
 						r.excerpt.rendered
 							.toLowerCase()
 							.indexOf( filters.searchText.toLowerCase() ) >= 0 )
+			)
+			.filter( ( r ) =>
+				filters.type === 'all' ? true : filters.type === r.settings.type
 			);
 
 		// Apply sorting if sort config exists

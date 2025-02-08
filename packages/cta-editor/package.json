@@ -40,7 +40,11 @@
 	},
 	"devDependencies": {
 		"@popup-maker/types": "*",
-		"@types/react-router-dom": "^5.3.3"
+		"@types/react-router-dom": "^5.3.3",
+		"@testing-library/jest-dom": "^6.6.3",
+		"@testing-library/react": "^16.2.0",
+		"@jest/globals": "^29.7.0",
+		"@testing-library/user-event": "^14.6.1"
 	},
 	"scripts": {
 		"build:tsc": "tsc",
