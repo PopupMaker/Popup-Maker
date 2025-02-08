@@ -27,8 +27,10 @@ phpcs-report.xml
 **/build-types/
 **/build-types/**/*
 node_modules
+test-results
 release
 dist
+artifacts
 /vendor
 /vendor-prefixed
 .nx
