@@ -146,6 +146,11 @@ export function createRegistry< T extends PopupMaker.RegistryItem >(
 		);
 	};
 
+	const clear = () => {
+		items = [];
+		emitChange();
+	};
+
 	const context = {
 		name,
 		register,
@@ -154,6 +159,7 @@ export function createRegistry< T extends PopupMaker.RegistryItem >(
 		useItems,
 		filter,
 		emitChange,
+		clear,
 	};
 
 	return context;
