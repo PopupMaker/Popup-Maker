@@ -36,13 +36,6 @@ async function globalSetup( config: FullConfig ) {
 		requestUtils.deleteAllBlocks(),
 		requestUtils.resetPreferences(),
 
-		// requestUtils.createUser( {
-		// 	username: 'admin',
-		// 	password: 'password',
-		// 	email: 'admin@example.com',
-		// 	roles: [ 'administrator' ],
-		// } ),
-
 		requestUtils.createUser( {
 			username: 'subscriber',
 			password: 'password',
