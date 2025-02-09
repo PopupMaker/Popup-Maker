@@ -1,5 +1,6 @@
 import { __ } from '@popup-maker/i18n';
 import { Notice, TextareaControl, TextControl } from '@wordpress/components';
+import { cleanForSlug } from '@wordpress/url';
 
 import { clamp } from '@popup-maker/utils';
 
@@ -28,7 +29,12 @@ export const Component = ( {
 				placeholder={ __( 'Name…', 'popup-maker' ) }
 				className="title-field"
 				value={ callToAction.title ?? '' }
-				onChange={ ( newTitle ) => updateFields( { title: newTitle } ) }
+				onChange={ ( newTitle ) =>
+					updateFields( {
+						title: newTitle,
+						slug: cleanForSlug( newTitle ),
+					} )
+				}
 				__next40pxDefaultSize
 				__nextHasNoMarginBottom
 			/>
