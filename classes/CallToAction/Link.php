@@ -53,6 +53,8 @@ class Link extends \PopupMaker\Base\CallToAction {
 			$url = remove_query_arg( [ 'cta', 'pid' ] );
 		}
 
+		$call_to_action->increase_event_count( 'conversion' );
+
 		wp_safe_redirect( esc_url_raw( $url ) );
 		exit;
 	}

@@ -203,6 +203,7 @@ class CallToAction extends Post {
 
 		return \add_query_arg( $args, $base_url );
 	}
+
 	/**
 	 * Convert this call to action to an array.
 	 *
@@ -218,5 +219,57 @@ class CallToAction extends Post {
 			'description' => $this->get_description(),
 			'status'      => $this->status,
 		], $settings );
+	}
+
+	/**
+	 * Get a CTA's event count.
+	 *
+	 * @param string $event Event name.
+	 * @param string $which Which stats to get.
+	 *
+	 * @return int
+	 */
+	public function get_event_count( $event = 'conversion', $which = 'current' ) {
+		switch ( $which ) {
+			case 'current':
+				$current = $this->get_meta( "cta_{$event}_count" );
+
+				// Save future queries by inserting a valid count.
+				if ( false === $current || ! is_numeric( $current ) ) {
+					$current = 0;
+					$this->update_meta( "cta_{$event}_count", $current );
+				}
+
+				return absint( $current );
+			case 'total':
+				$total = $this->get_meta( "cta_{$event}_count_total" );
+
+				// Save future queries by inserting a valid count.
+				if ( false === $total || ! is_numeric( $total ) ) {
+					$total = 0;
+					$this->update_meta( "cta_{$event}_count_total", $total );
+				}
+
+				return absint( $total );
+		}
+
+		return 0;
+	}
+
+	/**
+	 * Increase a CTA's event count.
+	 *
+	 * @param string $event Event name.
+	 *
+	 * @return bool
+	 */
+	public function increase_event_count( $event = 'conversion' ) {
+		$current = $this->get_event_count( $event, 'current' );
+		$total   = $this->get_event_count( $event, 'total' );
+
+		$this->update_meta( "cta_{$event}_count", $current + 1 );
+		$this->update_meta( "cta_{$event}_count_total", $total + 1 );
+
+		return true;
 	}
 }

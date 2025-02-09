@@ -99,6 +99,8 @@ class CallToActions extends Controller {
 			// Default to current URL without CTA parameters.
 			$url = remove_query_arg( $cta_args );
 
+			$call_to_action->increase_event_count( 'conversion' );
+
 			wp_safe_redirect( esc_url_raw( $url ) );
 			exit;
 		}
