@@ -113,6 +113,30 @@ class Post {
 	}
 
 	/**
+	 * Get post meta value.
+	 *
+	 * @param string $key Meta key.
+	 * @param bool   $single Whether to return a single value.
+	 *
+	 * @return mixed
+	 */
+	public function get_meta( $key, $single = true ) {
+		return get_post_meta( $this->id, $key, $single );
+	}
+
+	/**
+	 * Update post meta value.
+	 *
+	 * @param string $key Meta key.
+	 * @param mixed  $value Meta value.
+	 *
+	 * @return bool|int
+	 */
+	public function update_meta( $key, $value ) {
+		return update_post_meta( $this->id, $key, $value );
+	}
+
+	/**
 	 * Convert this call to action to an array.
 	 *
 	 * @return array<string,mixed>
