@@ -75,7 +75,6 @@ const entityActions = {
 							message: validation.message,
 						} );
 						if ( withNotices ) {
-							// TODO REVIEW: Do we need to handle this with a notice, or can we just get the message from resolution status?
 							await dispatch.createErrorNotice(
 								validation.message,
 								{
@@ -89,7 +88,6 @@ const entityActions = {
 				}
 
 				const result = await fetchFromApi< CallToAction< 'edit' > >(
-					// TODO REVIEW: Is context=edit needed?
 					`ctas?context=edit`,
 					{
 						method: 'POST',
@@ -200,7 +198,6 @@ const entityActions = {
 						} );
 
 						if ( withNotices ) {
-							// TODO REVIEW: Do we need to handle this with a notice, or can we just get the message from resolution status?
 							await dispatch.createErrorNotice(
 								validation.message,
 								{
@@ -231,7 +228,6 @@ const entityActions = {
 					return false;
 				}
 
-				// TODO REVIEW: Test the return types of each of these calls so we can be sure.
 				const result = await fetchFromApi< CallToAction< 'edit' > >(
 					`ctas/${ canonicalCallToAction.id }`,
 					{
@@ -331,7 +327,6 @@ const entityActions = {
 				} );
 
 				// Get the canonical directly from server to verify it exists.
-				// TODO REVIEW: Test this.
 				const canonicalCallToAction = await fetchFromApi<
 					CallToAction< 'edit' >
 				>( `ctas/${ id }?context=edit` );
@@ -429,7 +424,6 @@ const entityActions = {
 
 /*****************************************************
  * SECTION: Editor actions
- * REVIEW: ALL OF THESE ACTIONS NEED TO BE REFACTORED TO USE THE NEW THUNK ACTIONS.
  *****************************************************/
 const editorActions = {
 	/**
@@ -568,7 +562,6 @@ const editorActions = {
 							} );
 
 							if ( withNotices ) {
-								// TODO REVIEW: Do we need to handle this with a notice, or can we just get the message from resolution status?
 								await dispatch.createErrorNotice(
 									validation.message,
 									{
@@ -611,13 +604,6 @@ const editorActions = {
 								}
 							);
 						}
-
-						dispatch( {
-							type: RECEIVE_RECORD,
-							payload: {
-								record: result,
-							},
-						} );
 
 						dispatch( {
 							type: SAVE_EDITED_RECORD,
