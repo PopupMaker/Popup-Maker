@@ -231,6 +231,31 @@ class RestAPI extends Controller {
 			},
 		] );
 
+		// Register conversion counts field.
+		register_rest_field(
+			$post_type,
+			'stats',
+			[
+				'get_callback'    => function ( $object ) {
+					$cta = \PopupMaker\get_cta_by_id( $object['id'] );
+					return [
+						'conversions' => $cta->get_event_count( 'conversion' ),
+					];
+				},
+				'update_callback' => null,
+				'schema'          => [
+					'description' => __( 'Stats for this CTA.', 'popup-maker' ),
+					'type'        => 'object',
+					'properties'  => [
+						'conversion' => [
+							'type'    => 'integer',
+							'minimum' => 0,
+						],
+					],
+				],
+			]
+		);
+
 		// Register settings field.
 		register_rest_field( $post_type, 'settings', [
 			'get_callback'        => function ( $obj, $field, $request ) use ( $ctas ) {

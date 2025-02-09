@@ -155,9 +155,17 @@ const List = () => {
 										'popup-maker'
 									),
 									type: __( 'Type', 'popup-maker' ),
+									conversions: __(
+										'Conversions',
+										'popup-maker'
+									),
 									status: __( 'Status', 'popup-maker' ),
 								} }
-								sortableColumns={ [ 'type', 'title' ] }
+								sortableColumns={ [
+									'type',
+									'title',
+									'conversions',
+								] }
 								onSort={ ( orderby, order ) => {
 									setSortConfig( {
 										orderby,
@@ -257,6 +265,12 @@ const List = () => {
 												</>
 											);
 										}
+
+										case 'conversions':
+											return (
+												callToAction.stats
+													?.conversions ?? 0
+											);
 
 										case 'type':
 											return getCtaLabel(

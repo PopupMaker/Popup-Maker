@@ -19,6 +19,13 @@ declare module '@wordpress/core-data' {
 			 * Custom settings field.
 			 */
 			settings: CallToActionSettings;
+			/**
+			 * Stats for the call to action.
+			 */
+			stats: {
+				conversions: number;
+				[ key: string ]: number | string | unknown;
+			};
 		}
 	}
 }
