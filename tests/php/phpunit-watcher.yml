@@ -3,8 +3,8 @@ watch:
     - ./popup-maker.php
   directories:
     - ./classes/
-    - ./inc/
-    - ./tests/
+    - ./includes/
+    - ./tests/php/tests/
 
 notifications:
   passingTests: false
