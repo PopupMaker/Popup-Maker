@@ -106,7 +106,7 @@ const URLControl = (
 		( select ) => ( {
 			unfilteredSuggestions: select( urlSearchStore ).getSuggestions(),
 			isFetchingSuggestions:
-				select( urlSearchStore ).isDispatching( 'updateSuggestions' ),
+				select( urlSearchStore ).isResolving( 'updateSuggestions' ),
 		} ),
 		[]
 	);
