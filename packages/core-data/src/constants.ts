@@ -7,3 +7,9 @@ export enum DispatchStatus {
 
 export type DispatchStatuses =
 	( typeof DispatchStatus )[ keyof typeof DispatchStatus ];
+
+export type ResolutionState = {
+	status: DispatchStatuses;
+	error?: string;
+	timestamp?: number;
+};

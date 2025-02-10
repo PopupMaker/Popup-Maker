@@ -1,6 +1,6 @@
 import { ACTION_TYPES, initialState } from './constants';
 
-import type { DispatchStatuses } from '../constants';
+import type { DispatchStatuses, ResolutionState } from '../constants';
 import type { EditorId, Notice, GetRecordsHttpQuery } from '../types';
 import type { CallToAction, EditableCta } from './types';
 import type { Operation } from 'fast-json-patch';
@@ -21,12 +21,6 @@ const {
 	CHANGE_ACTION_STATUS,
 	INVALIDATE_RESOLUTION,
 } = ACTION_TYPES;
-
-export type ResolutionState = {
-	status: DispatchStatuses;
-	error?: string;
-	timestamp?: number;
-};
 
 /**
  * The shape of the state for the call to actions store.
@@ -234,7 +228,10 @@ export type ReducerAction =
 	| ChangeActionStatusAction
 	| InvalidateResolutionAction;
 
-export function reducer( state = initialState, action: ReducerAction ): State {
+export const reducer = (
+	state = initialState,
+	action: ReducerAction
+): State => {
 	switch ( action.type ) {
 		case RECEIVE_RECORD: {
 			const { record } = action.payload;
@@ -569,6 +566,6 @@ export function reducer( state = initialState, action: ReducerAction ): State {
 		default:
 			return state;
 	}
-}
+};
 
 export default reducer;

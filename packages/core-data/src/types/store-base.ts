@@ -94,7 +94,7 @@ export type StoreThunkContext< S extends StoreDescriptor< any > | string > = {
 				storeNameOrDescriptor: T
 			) => PromiseReturnMethods< ReturnType< typeof wpSelect > > );
 		dispatch: typeof wpDispatch & DispatchAny;
-		batch: ( callback: () => void ) => void;
+		batch: ( callback: () => Promise< void > ) => Promise< void >;
 	} & DataRegistry;
 };
 
