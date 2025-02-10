@@ -27,17 +27,17 @@ phpcs-report.xml
 **/build-types/
 **/build-types/**/*
 node_modules
-test-results
 release
 dist
-artifacts
 /vendor
 /vendor-prefixed
 .nx
 npm-debug.log
 
 # Coverage
+artifacts
 coverage
+test-results
 
 # Logs
 logs
