@@ -1,5 +1,5 @@
 import { __ } from '@popup-maker/i18n';
-import { appendUrlParams, fetchFromApi } from '../utils';
+import { appendUrlParams, fetchFromWPApi } from '../utils';
 
 import type {
 	SearchArgs,
@@ -41,7 +41,7 @@ export const fetchLinkSuggestions = async (
 	// Helper function to fetch and transform results
 	const fetchResults = async ( queryType?: string, kind?: string ) => {
 		try {
-			const results = await fetchFromApi< WPLinkAPIResult[] >(
+			const results = await fetchFromWPApi< WPLinkAPIResult[] >(
 				apiQueryUrl( {
 					search,
 					page,

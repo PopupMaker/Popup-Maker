@@ -3,110 +3,120 @@ import { createSelector } from '@wordpress/data';
 import { DispatchStatus } from '../constants';
 
 import type { State } from './reducer';
-import type { StoreActionNames, WPLinkSearchResult } from './types';
+import type { WPLinkSearchResult } from './types';
 
-/**
- * Get search results for link suggestions.
- */
-export const getSuggestions = createSelector(
-	( state: State ): WPLinkSearchResult[] => state.searchResults || [],
-	( state: State ) => [ state.searchResults ]
-);
-
-/**
- * Get current status for dispatched action.
- *
- * @param {State}            state      State.
- * @param {StoreActionNames} actionName Action name.
- */
-export const getDispatchStatus = (
-	state: State,
+/*****************************************************
+ * SECTION: Suggestion selectors
+ *****************************************************/
+const suggestionSelectors = {
 	/**
-	 * Action name to check.
+	 * Get search results for link suggestions.
 	 */
-	actionName: StoreActionNames
-): string | undefined => state?.dispatchStatus?.[ actionName ]?.status;
+	getSuggestions: createSelector(
+		( state: State ): WPLinkSearchResult[] => state.searchResults || [],
+		( state: State ) => [ state.searchResults ]
+	),
+};
 
-/**
- * Check if action is dispatching.
- *
- * @param {State}                                 state       State.
- * @param {StoreActionNames | StoreActionNames[]} actionNames Action name or array of action names.
- */
-export const isDispatching = createSelector(
-	(
-		state: State,
-		/**
-		 * Action name to check.
-		 */
-		actionNames: StoreActionNames | StoreActionNames[]
-	): boolean => {
-		if ( ! Array.isArray( actionNames ) ) {
-			return (
-				getDispatchStatus( state, actionNames ) ===
-				DispatchStatus.Resolving
-			);
-		}
+/*****************************************************
+ * SECTION: Resolution state selectors
+ *****************************************************/
+const resolutionSelectors = {
+	/**
+	 * Get resolution state for a specific entity.
+	 */
+	getResolutionState: createSelector(
+		( state: State, id: number | string ) => {
+			const resolutionState = state.resolutionState?.[ id ];
 
-		let dispatching = false;
-
-		for ( let i = 0; actionNames.length > i; i++ ) {
-			dispatching =
-				getDispatchStatus( state, actionNames[ i ] ) ===
-				DispatchStatus.Resolving;
-
-			if ( dispatching ) {
-				return true;
+			// If no resolution state exists, return idle
+			if ( ! resolutionState ) {
+				return {
+					status: DispatchStatus.Idle,
+				};
 			}
-		}
 
-		return dispatching;
-	},
-	( state: State, actionNames: StoreActionNames | StoreActionNames[] ) => [
-		state.dispatchStatus,
-		actionNames,
-	]
-);
+			return resolutionState;
+		},
+		( _state: State, id: number | string ) => [ id ]
+	),
 
-/**
- * Check if action has finished dispatching.
- *
- * @param {State}            state      State.
- * @param {StoreActionNames} actionName Action name.
- */
-export const hasDispatched = createSelector(
-	(
-		state: State,
-		/**
-		 * Action name to check.
-		 */
-		actionName: StoreActionNames
-	): boolean => {
-		const status = getDispatchStatus( state, actionName );
-
-		return !! (
-			status &&
-			(
-				[ DispatchStatus.Success, DispatchStatus.Error ] as string[]
-			 ).indexOf( status ) >= 0
-		);
-	},
-	( state: State, actionName: StoreActionNames ) => [
-		state.dispatchStatus,
-		actionName,
-	]
-);
-
-/**
- * Get dispatch action error if exists.
- *
- * @param {State}            state      State.
- * @param {StoreActionNames} actionName Action name.
- */
-export const getDispatchError = (
-	state: State,
 	/**
-	 * Action name to check.
+	 * Check if a resolution is idle.
 	 */
-	actionName: StoreActionNames
-): string | undefined => state?.dispatchStatus?.[ actionName ]?.error;
+	isIdle: createSelector(
+		( state: State, id: number | string ) => {
+			const resolutionState = resolutionSelectors.getResolutionState(
+				state,
+				id
+			);
+			return resolutionState.status === DispatchStatus.Idle;
+		},
+		( _state: State, id: number | string ) => [ id ]
+	),
+
+	/**
+	 * Check if an entity is currently being resolved.
+	 */
+	isResolving: createSelector(
+		( state: State, id: number | string ) => {
+			const resolutionState = resolutionSelectors.getResolutionState(
+				state,
+				id
+			);
+			return resolutionState.status === DispatchStatus.Resolving;
+		},
+		( _state: State, id: number | string ) => [ id ]
+	),
+
+	/**
+	 * Check if an entity resolution has completed successfully.
+	 */
+	hasResolved: createSelector(
+		( state: State, id: number | string ) => {
+			const resolutionState = resolutionSelectors.getResolutionState(
+				state,
+				id
+			);
+			return resolutionState.status === DispatchStatus.Success;
+		},
+		( _state: State, id: number | string ) => [ id ]
+	),
+
+	/**
+	 * Check if an entity resolution has failed.
+	 */
+	hasFailed: createSelector(
+		( state: State, id: number | string ) => {
+			const resolutionState = resolutionSelectors.getResolutionState(
+				state,
+				id
+			);
+			return resolutionState.status === DispatchStatus.Error;
+		},
+		( _state: State, id: number | string ) => [ id ]
+	),
+
+	/**
+	 * Get the error for a failed resolution.
+	 */
+	getResolutionError: createSelector(
+		( state: State, id: number | string ) => {
+			const resolutionState = resolutionSelectors.getResolutionState(
+				state,
+				id
+			);
+			return resolutionState.error;
+		},
+		( _state: State, id: number | string ) => [ id ]
+	),
+};
+
+const selectors = {
+	// Suggestion selectors
+	...suggestionSelectors,
+	// Resolution state selectors
+	...resolutionSelectors,
+};
+
+export default selectors;

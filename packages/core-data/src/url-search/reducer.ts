@@ -1,102 +1,175 @@
+import type { DispatchStatuses, ResolutionState } from '../constants';
 import { ACTION_TYPES, initialState } from './constants';
 
-import type { DispatchStatuses } from '../constants';
-import type {
-	StoreActionNames,
-	WPLinkSearchResult,
-	URLSearchQuery,
-} from './types';
+import type { WPLinkSearchResult, URLSearchQuery } from './types';
 
-const { SEARCH_ERROR, SEARCH_REQUEST, SEARCH_SUCCESS, CHANGE_ACTION_STATUS } =
-	ACTION_TYPES;
+const {
+	SEARCH_ERROR,
+	SEARCH_REQUEST,
+	SEARCH_SUCCESS,
+	CHANGE_ACTION_STATUS,
+	INVALIDATE_RESOLUTION,
+} = ACTION_TYPES;
 
+/**
+ * The state of the URL search store.
+ */
 export type State = {
+	/**
+	 * The current query.
+	 */
 	currentQuery?: string;
+	/**
+	 * The search results.
+	 */
 	searchResults?: WPLinkSearchResult[];
+	/**
+	 * The queries.
+	 */
 	queries: Record< URLSearchQuery[ 'text' ], URLSearchQuery >;
-	// Boilerplate
-	dispatchStatus?: {
-		[ Property in StoreActionNames ]?: {
-			status: string;
-			error: string;
-		};
-	};
+	/**
+	 * The error.
+	 */
 	error?: string;
+
+	/**
+	 * The resolution state for each operation.
+	 */
+	resolutionState: Record< string | number, ResolutionState >;
 };
 
-type BaseAction = {
+/**
+ * The base action for the URL search store.
+ */
+export type BaseAction = {
 	type: keyof typeof ACTION_TYPES;
+	payload?: Record< string, any >;
 };
 
-type SearchRequestAction = BaseAction & {
+/**
+ * The action for the URL search store.
+ */
+export type SearchRequestAction = BaseAction & {
 	type: typeof SEARCH_REQUEST;
-	queryText: string;
+	payload: {
+		queryText: string;
+	};
 };
 
-type SearchSuccessAction = BaseAction & {
+/**
+ * The action for the URL search store.
+ */
+export type SearchSuccessAction = BaseAction & {
 	type: typeof SEARCH_SUCCESS;
-	queryText: string;
-	results: WPLinkSearchResult[];
+	payload: {
+		queryText: string;
+		results: WPLinkSearchResult[];
+	};
 };
 
-type SearchErrorAction = BaseAction & {
+/**
+ * The action for the URL search store.
+ */
+export type SearchErrorAction = BaseAction & {
 	type: typeof SEARCH_ERROR;
-	queryText: string;
-	error: string;
+	payload: {
+		queryText: string;
+		error: string;
+	};
 };
 
-type ChangeActionStatusAction = BaseAction & {
+export type ChangeActionStatusAction = BaseAction & {
 	type: typeof CHANGE_ACTION_STATUS;
-	actionName: StoreActionNames;
+	actionName: string;
 	status: DispatchStatuses;
-	message: string;
+	message?: string;
 };
 
+export type InvalidateResolutionAction = BaseAction & {
+	type: typeof INVALIDATE_RESOLUTION;
+	payload: {
+		id: number | string;
+		operation: string;
+	};
+};
+
+/**
+ * The action for the URL search store.
+ */
 export type ReducerAction =
 	| SearchRequestAction
 	| SearchSuccessAction
 	| SearchErrorAction
-	| ChangeActionStatusAction;
+	| ChangeActionStatusAction
+	| InvalidateResolutionAction;
 
-const reducer = ( state: State = initialState, action: ReducerAction ) => {
+export const reducer = (
+	state: State = initialState,
+	action: ReducerAction
+): State => {
 	switch ( action.type ) {
-		case SEARCH_REQUEST:
+		case SEARCH_REQUEST: {
+			const { queryText } = action.payload;
+
 			return {
 				...state,
-				currentQuery: action.queryText,
+				currentQuery: queryText,
 			};
+		}
 
-		case SEARCH_SUCCESS:
-			if ( state.currentQuery === action.queryText ) {
+		case SEARCH_SUCCESS: {
+			const { queryText, results } = action.payload;
+
+			if ( state.currentQuery === queryText ) {
 				return {
 					...state,
-					searchResults: action.results,
+					searchResults: results,
 				};
 			}
 			return state;
+		}
 
-		case SEARCH_ERROR:
-			if ( state.currentQuery === action.queryText ) {
+		case SEARCH_ERROR: {
+			const { queryText, error } = action.payload;
+
+			if ( state.currentQuery === queryText ) {
 				return {
 					...state,
-					error: action.error,
+					error,
 				};
 			}
 			return state;
+		}
 
-		case CHANGE_ACTION_STATUS:
+		case CHANGE_ACTION_STATUS: {
+			const { actionName, status, message } = action;
+
 			return {
 				...state,
-				dispatchStatus: {
-					...state.dispatchStatus,
-					[ action.actionName ]: {
-						...( state?.dispatchStatus?.[ action.actionName ] ??
-							{} ),
-						status: action.status,
-						error: action.message,
+				resolutionState: {
+					...state.resolutionState,
+					[ actionName ]: {
+						status,
+						error: message,
 					},
 				},
 			};
+		}
+
+		case INVALIDATE_RESOLUTION: {
+			const { id, operation } = action.payload;
+
+			return {
+				...state,
+				resolutionState: {
+					...state.resolutionState,
+					[ operation ]: {
+						...state.resolutionState?.[ operation ],
+						[ id ]: undefined,
+					},
+				},
+			};
+		}
 
 		default:
 			return state;

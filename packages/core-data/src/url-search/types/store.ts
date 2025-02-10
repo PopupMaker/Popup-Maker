@@ -3,13 +3,12 @@ import type {
 	StoreDescriptor as StoreDescriptorType,
 } from '@wordpress/data/src/types';
 
-import type reducer from '../reducer';
-import type * as actions from '../actions';
-import type * as selectors from '../selectors';
-import type { STORE_NAME } from '../constants';
-
 import type { StoreThunkContext } from '../../types';
-import type { ReducerAction } from '../../call-to-actions/reducer';
+
+import type { default as reducer, ReducerAction } from '../reducer';
+import actions from '../actions';
+import selectors from '../selectors';
+import type { STORE_NAME } from '../constants';
 
 /**
  * The shape of your store's "State" is typically what your reducer returns.
@@ -20,11 +19,6 @@ export type StoreState = ReturnType< typeof reducer >;
  * Actions object is `typeof actions` (your `./actions.ts`).
  */
 export type StoreActions = typeof actions;
-
-/**
- * Action names.
- */
-export type StoreActionNames = keyof StoreActions;
 
 /**
  * Selectors object is `typeof selectors` (your `./selectors.ts`).

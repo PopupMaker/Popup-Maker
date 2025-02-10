@@ -1,17 +1,20 @@
 import { createReduxStore } from '@wordpress/data';
 
 import reducer from './reducer';
-import * as actions from './actions';
-import * as selectors from './selectors';
+import actions from './actions';
+import selectors from './selectors';
 import { initialState, STORE_NAME } from './constants';
 
 import type { StoreActions, StoreSelectors, StoreState } from './types';
 
-const storeConfig = () => ( {
+/**
+ * Generate store config.
+ */
+export const storeConfig = () => ( {
 	initialState,
-	selectors,
-	actions,
 	reducer,
+	actions,
+	selectors,
 } );
 
 /**
