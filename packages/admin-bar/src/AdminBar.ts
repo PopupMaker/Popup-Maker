@@ -138,6 +138,8 @@ export class AdminBar {
 	};
 
 	private initialize(): void {
+		const { PUM } = window;
+
 		$( document ).on(
 			'click',
 			'#wp-admin-bar-pum-get-selector',
@@ -151,6 +153,47 @@ export class AdminBar {
 				event.stopPropagation();
 
 				$( document ).one( 'click', this.handleSelectorClick );
+			}
+		);
+
+		$( document ).on(
+			'click',
+			'.pum-toolbar-action',
+			( event: JQuery.ClickEvent ) => {
+				event.preventDefault();
+				event.stopPropagation();
+
+				const href = $( event.target ).attr( 'href' );
+
+				if ( ! href ) {
+					return;
+				}
+
+				const [ action, popupId ] = href
+					.split( '__' )[ 1 ]
+					.split( '--' );
+
+				switch ( action ) {
+					case 'open':
+						PUM.open( popupId );
+						break;
+					case 'close':
+						PUM.close( popupId );
+						break;
+					case 'check-conditions':
+						// eslint-disable-next-line no-alert
+						alert(
+							PUM.checkConditions( popupId )
+								? __( 'Pass', 'popup-maker' )
+								: __( 'Fail', 'popup-maker' )
+						);
+						break;
+					case 'reset-cookies':
+						PUM.clearCookies( popupId );
+						// eslint-disable-next-line no-alert
+						alert( __( 'Success', 'popup-maker' ) );
+						break;
+				}
 			}
 		);
 	}

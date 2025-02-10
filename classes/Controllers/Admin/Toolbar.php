@@ -131,9 +131,9 @@ class Toolbar extends Controller {
 						'id'     => $node_id . '-open',
 						'title'  => __( 'Open Popup', 'popup-maker' ),
 						'meta'   => [
-							'onclick' => 'PUM.open(' . $popup->ID . '); return false;',
+							'class' => 'pum-toolbar-action',
 						],
-						'href'   => '#popup-maker-open-popup-' . $popup->ID,
+						'href'   => '#pum-toolbar-action__open--' . $popup->ID,
 						'parent' => $node_id,
 					]
 				);
@@ -143,9 +143,9 @@ class Toolbar extends Controller {
 						'id'     => $node_id . '-close',
 						'title'  => __( 'Close Popup', 'popup-maker' ),
 						'meta'   => [
-							'onclick' => 'PUM.close(' . $popup->ID . '); return false;',
+							'class' => 'pum-toolbar-action',
 						],
-						'href'   => '#popup-maker-close-popup-' . $popup->ID,
+						'href'   => '#pum-toolbar-action__close--' . $popup->ID,
 						'parent' => $node_id,
 					]
 				);
@@ -156,9 +156,9 @@ class Toolbar extends Controller {
 							'id'     => $node_id . '-conditions',
 							'title'  => __( 'Check Conditions', 'popup-maker' ),
 							'meta'   => [
-								'onclick' => 'alert(PUM.checkConditions(' . $popup->ID . ') ? "Pass" : "Fail"); return false;',
+								'class' => 'pum-toolbar-action',
 							],
-							'href'   => '#popup-maker-check-conditions-popup-' . $popup->ID,
+							'href'   => '#pum-toolbar-action__check-conditions--' . $popup->ID,
 							'parent' => $node_id,
 						]
 					);
@@ -169,9 +169,9 @@ class Toolbar extends Controller {
 						'id'     => $node_id . '-reset-cookies',
 						'title'  => __( 'Reset Cookies', 'popup-maker' ),
 						'meta'   => [
-							'onclick' => 'PUM.clearCookies(' . $popup->ID . '); alert("' . __( 'Success', 'popup-maker' ) . '"); return false;',
+							'class' => 'pum-toolbar-action',
 						],
-						'href'   => '#popup-maker-reset-cookies-popup-' . $popup->ID,
+						'href'   => '#pum-toolbar-action__reset-cookies--' . $popup->ID,
 						'parent' => $node_id,
 					]
 				);

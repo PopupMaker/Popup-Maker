@@ -59,6 +59,7 @@ class Assets extends Controller {
 				'bundled'  => false,
 				'handle'   => 'popup-maker-admin-bar',
 				'styles'   => true,
+				'deps'     => [ 'popup-maker-site' ],
 				'varsName' => 'popupMakerAdminBar',
 				'vars'     => [
 					'i18n' => [
