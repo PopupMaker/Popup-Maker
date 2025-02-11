@@ -8,6 +8,7 @@ export namespace PopupMaker {
 	 * Base interface for text domains.
 	 */
 	export interface TextDomains {
+		default: never;
 		'popup-maker': never;
 	}
 
