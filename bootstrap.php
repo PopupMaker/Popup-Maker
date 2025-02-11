@@ -136,7 +136,14 @@ function plugin( $service_or_config = null ) {
 		return plugin_instance();
 	}
 
-	return plugin_instance()->get( $service_or_config );
+	$instance = plugin_instance();
+
+	// Check if this is a controller request first.
+	if ( $instance->controllers->offsetExists( $service_or_config ) ) {
+		return $instance->get_controller( $service_or_config );
+	}
+
+	return $instance->get( $service_or_config );
 }
 
 add_action(
